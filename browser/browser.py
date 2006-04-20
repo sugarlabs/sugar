@@ -1,13 +1,8 @@
 #!/usr/bin/env python
 
-import dbus
-import dbus.service
-import dbus.glib
-
 import pygtk
 pygtk.require('2.0')
 import gtk
-
 import geckoembed
 
 class AddressToolbar(gtk.Toolbar):
@@ -19,7 +14,8 @@ class AddressToolbar(gtk.Toolbar):
 		address_item.show()
 
 	def __open_address_cb(self, address):
-		web_activity.openAddress(address)
+		browser = BrowserWindow(address)
+		browser.show()
 
 class AddressItem(gtk.ToolItem):
 	def __init__(self, callback):
@@ -68,21 +64,13 @@ class AddressEntry(gtk.HBox):
 			image.show()
 
 			self.entry.show()
-			self.entry.grab_focus()
-
-	def get_folded(self):
-		return self.folded
-
-	def set_folded(self, folded):
-		self.folded = not self.folded
-		self._update_folded_state()		
 			
 	def __button_clicked_cb(self, button):
-		self.set_folded(not self.get_folded())
+		self.folded = not self.folded
+		self._update_folded_state()
 
 	def __activate_cb(self, entry):
 		self.callback(entry.get_text())
-		self.set_folded(True)
 
 class NavigationToolbar(gtk.Toolbar):
 	def __init__(self, embed):
@@ -137,35 +125,47 @@ class NavigationToolbar(gtk.Toolbar):
 	def __open_address_cb(self, address):
 		self.embed.load_url(address)
 		
-class BrowserActivity(gtk.VBox):
+class BrowserWindow(gtk.Window):
 	def __init__(self, uri):
-		gtk.VBox.__init__(self)
+		gtk.Window.__init__(self)
+		self.set_default_size(640, 480);
+
+		vbox = gtk.VBox()
 
 		self.embed = geckoembed.Embed()
-		self.pack_start(self.embed)
+		vbox.pack_start(self.embed)
 		self.embed.show()
 		self.embed.load_url(uri)
 		
 		nav_toolbar = NavigationToolbar(self.embed)
-		self.pack_start(nav_toolbar, False)
+		vbox.pack_start(nav_toolbar, False)
 		nav_toolbar.show()
 
-class SearchActivity(gtk.VBox):
+		self.add(vbox)
+		vbox.show()
+
+class SearchWindow(gtk.Window):
 	def __init__(self):
-		gtk.VBox.__init__(self)
+		gtk.Window.__init__(self)
 	
+		self.set_default_size(640, 480);
 		self.connect("delete-event", self.__delete_event);
+
+		vbox = gtk.VBox()
 
 		self.embed = geckoembed.Embed()
 		self.embed.connect("open-address", self.__open_address);
 		
-		self.pack_start(self.embed)
+		vbox.pack_start(self.embed)
 		self.embed.show()
 
 		address_toolbar = AddressToolbar()
-		self.pack_start(address_toolbar, False)
+		vbox.pack_start(address_toolbar, False)
 		address_toolbar.show()
 		
+		self.add(vbox)
+		vbox.show()
+
 		self.embed.load_url("http://www.google.com")
 
 	def __delete_event(self, widget, event, data=None):
@@ -175,39 +175,10 @@ class SearchActivity(gtk.VBox):
 		if uri.startswith("http://www.google.com"):
 			return False
 		else:
-			web_activity.openAddress(uri)
+			browser = BrowserWindow(uri)
+			browser.show()
 			return True
 
-class WebActivity:
-	def __init__(self):
-		bus = dbus.SessionBus()
-		container_object = bus.get_object("com.redhat.Sugar.Shell", \
-					   	"/com/redhat/Sugar/Shell/ActivityContainer")
-		self.container = dbus.Interface(container_object, \
-				    	"com.redhat.Sugar.Shell.ActivityContainer")
-
-	def run(self):
-		window_id = self.container.add_activity("Web")
-
-		plug = gtk.Plug(window_id)
-
-		window = SearchActivity()
-		plug.add(window)
-		window.show()
-
-		plug.show()
-		
-	def openAddress(self, uri):
-		window_id = self.container.add_activity("Page")
-
-		plug = gtk.Plug(window_id)
-
-		window = BrowserActivity(uri)
-		plug.add(window)
-		window.show()
-
-		plug.show()
-
-web_activity = WebActivity()
-web_activity.run()
+window = SearchWindow()
+window.show()
 gtk.main()

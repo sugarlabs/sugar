@@ -1,6 +1,3 @@
-#!/usr/bin/python -t
-
-
 import avahi, dbus, dbus.glib
 
 OLPC_CHAT_SERVICE = "_olpc_chat._udp"
