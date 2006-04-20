@@ -83,7 +83,7 @@
 	  <property name="spacing">0</property>
 
 	  <child>
-	    <widget class="GtkTreeView" id="buddyList">
+	    <widget class="GtkTreeView" id="buddyListView">
 	      <property name="border_width">2</property>
 	      <property name="width_request">167</property>
 	      <property name="visible">True</property>

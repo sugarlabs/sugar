@@ -1,10 +1,9 @@
-#!/usr/bin/python -t
-
-
 import avahi, dbus, dbus.glib
 
 OLPC_CHAT_SERVICE = "_olpc_chat._udp"
 
+ACTION_SERVICE_NEW = 'new'
+ACTION_SERVICE_REMOVED = 'removed'
 
 class PresenceDiscovery(object):
 	def __init__(self):
@@ -33,15 +32,13 @@ class PresenceDiscovery(object):
 
 	def new_service(self, interface, protocol, name, stype, domain, flags):
 #		print "Found service '%s' (%d) of type '%s' in domain '%s' on %i.%i." % (name, flags, stype, domain, interface, protocol)
-
 		for listener in self._service_listeners:
-			listener('added', interface, protocol, name, stype, domain, flags)
+			listener(ACTION_SERVICE_NEW, interface, protocol, name, stype, domain, flags)
 
 	def remove_service(self, interface, protocol, name, stype, domain, flags):
 #		print "Service '%s' of type '%s' in domain '%s' on %i.%i disappeared." % (name, stype, domain, interface, protocol)
-
 		for listener in self._service_listeners:
-			listener('removed', interface, protocol, name, stype, domain, flags)
+			listener(ACTION_SERVICE_REMOVED, interface, protocol, name, stype, domain, flags)
  
 	def new_service_type(self, interface, protocol, stype, domain, flags):
 		# Are we already browsing this domain for this type? 
