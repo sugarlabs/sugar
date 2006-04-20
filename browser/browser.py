@@ -68,13 +68,21 @@ class AddressEntry(gtk.HBox):
 			image.show()
 
 			self.entry.show()
+			self.entry.grab_focus()
+
+	def get_folded(self):
+		return self.folded
+
+	def set_folded(self, folded):
+		self.folded = not self.folded
+		self._update_folded_state()		
 			
 	def __button_clicked_cb(self, button):
-		self.folded = not self.folded
-		self._update_folded_state()
+		self.set_folded(not self.get_folded())
 
 	def __activate_cb(self, entry):
 		self.callback(entry.get_text())
+		self.set_folded(True)
 
 class NavigationToolbar(gtk.Toolbar):
 	def __init__(self, embed):
