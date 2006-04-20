@@ -129,7 +129,7 @@ class NavigationToolbar(gtk.Toolbar):
 	def __open_address_cb(self, address):
 		self.embed.load_url(address)
 		
-class BrowserPage(gtk.VBox):
+class BrowserActivity(gtk.VBox):
 	def __init__(self, uri):
 		gtk.VBox.__init__(self)
 
@@ -142,7 +142,7 @@ class BrowserPage(gtk.VBox):
 		self.pack_start(nav_toolbar, False)
 		nav_toolbar.show()
 
-class SearchPage(gtk.VBox):
+class SearchActivity(gtk.VBox):
 	def __init__(self):
 		gtk.VBox.__init__(self)
 	
@@ -183,7 +183,7 @@ class WebActivity:
 
 		plug = gtk.Plug(window_id)
 
-		window = SearchPage()
+		window = SearchActivity()
 		plug.add(window)
 		window.show()
 
@@ -194,7 +194,7 @@ class WebActivity:
 
 		plug = gtk.Plug(window_id)
 
-		window = BrowserPage(uri)
+		window = BrowserActivity(uri)
 		plug.add(window)
 		window.show()
 
