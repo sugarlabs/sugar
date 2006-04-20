@@ -33,6 +33,11 @@ class ChatApp(SimpleGladeApp):
 			realname = "Some Clueless User"
 		return (nick, realname)
 
+	def new_service(self, action, interface, protocol, name, stype, domain, flags):
+		if action != 'added' or stype != presence.OLPC_CHAT_SERVICE:
+			return
+		self._pdiscovery.resolve_service(interface, protocol, name, stype, domain, self.service_resolved)
+
 	def on_buddyList_buddy_selected(self, widget, *args):
 		(model, aniter) = widget.get_selection().get_selected()
 		name = self.treemodel.get(aniter,0)
@@ -67,6 +72,12 @@ class ChatApp(SimpleGladeApp):
 				res[tmp[0]] = ''
 		return res
 
+	def service_resolved(self, interface, protocol, name, stype, domain, host, aprotocol, address, port, txt, flags):
+		data = self._pair_to_dict(avahi.txt_array_to_string_array(txt))
+		if len(data) > 0 and 'name' in data.keys():
+			aniter = self.treemodel.insert_after(None,None)
+			self.treemodel.set(aniter, 0, data['name'])
+
 	def new(self):
 		self._group_chat_buffer = gtk.TextBuffer()
 		self.chatView.set_buffer(self._group_chat_buffer)
@@ -86,12 +97,11 @@ class ChatApp(SimpleGladeApp):
 		self.buddyList.append_column(column)
 
 		self._pannounce.register_service(self._realname, 6666, presence.OLPC_CHAT_SERVICE, name=self._nick)
+		self._pdiscovery.add_service_listener(self.new_service)
+		self._pdiscovery.start()
 
 		self._gc_controller = network.GroupChatController('224.0.0.221', 6666, self._recv_group_message)
 		self._gc_controller.start()
-
-			aniter = self.treemodel.insert_after(None,None)
-			self.treemodel.set(aniter, 0, data['name'])
 
 	def cleanup(self):
 		pass

@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 
+import dbus
+import dbus.service
+import dbus.glib
+
 import pygtk
 pygtk.require('2.0')
 import gtk
+
 import geckoembed
 
 class AddressToolbar(gtk.Toolbar):
@@ -14,8 +19,7 @@ class AddressToolbar(gtk.Toolbar):
 		address_item.show()
 
 	def __open_address_cb(self, address):
-		browser = BrowserWindow(address)
-		browser.show()
+		web_activity.openAddress(address)
 
 class AddressItem(gtk.ToolItem):
 	def __init__(self, callback):
@@ -125,47 +129,35 @@ class NavigationToolbar(gtk.Toolbar):
 	def __open_address_cb(self, address):
 		self.embed.load_url(address)
 		
-class BrowserWindow(gtk.Window):
+class BrowserActivity(gtk.VBox):
 	def __init__(self, uri):
-		gtk.Window.__init__(self)
-		self.set_default_size(640, 480);
-
-		vbox = gtk.VBox()
+		gtk.VBox.__init__(self)
 
 		self.embed = geckoembed.Embed()
-		vbox.pack_start(self.embed)
+		self.pack_start(self.embed)
 		self.embed.show()
 		self.embed.load_url(uri)
 		
 		nav_toolbar = NavigationToolbar(self.embed)
-		vbox.pack_start(nav_toolbar, False)
+		self.pack_start(nav_toolbar, False)
 		nav_toolbar.show()
 
-		self.add(vbox)
-		vbox.show()
-
-class SearchWindow(gtk.Window):
+class SearchActivity(gtk.VBox):
 	def __init__(self):
-		gtk.Window.__init__(self)
+		gtk.VBox.__init__(self)
 	
-		self.set_default_size(640, 480);
 		self.connect("delete-event", self.__delete_event);
-
-		vbox = gtk.VBox()
 
 		self.embed = geckoembed.Embed()
 		self.embed.connect("open-address", self.__open_address);
 		
-		vbox.pack_start(self.embed)
+		self.pack_start(self.embed)
 		self.embed.show()
 
 		address_toolbar = AddressToolbar()
-		vbox.pack_start(address_toolbar, False)
+		self.pack_start(address_toolbar, False)
 		address_toolbar.show()
 		
-		self.add(vbox)
-		vbox.show()
-
 		self.embed.load_url("http://www.google.com")
 
 	def __delete_event(self, widget, event, data=None):
@@ -175,10 +167,39 @@ class SearchWindow(gtk.Window):
 		if uri.startswith("http://www.google.com"):
 			return False
 		else:
-			browser = BrowserWindow(uri)
-			browser.show()
+			web_activity.openAddress(uri)
 			return True
 
-window = SearchWindow()
-window.show()
+class WebActivity:
+	def __init__(self):
+		bus = dbus.SessionBus()
+		container_object = bus.get_object("com.redhat.Sugar.Shell", \
+					   	"/com/redhat/Sugar/Shell/ActivityContainer")
+		self.container = dbus.Interface(container_object, \
+				    	"com.redhat.Sugar.Shell.ActivityContainer")
+
+	def run(self):
+		window_id = self.container.add_activity("Web")
+
+		plug = gtk.Plug(window_id)
+
+		window = SearchActivity()
+		plug.add(window)
+		window.show()
+
+		plug.show()
+		
+	def openAddress(self, uri):
+		window_id = self.container.add_activity("Page")
+
+		plug = gtk.Plug(window_id)
+
+		window = BrowserActivity(uri)
+		plug.add(window)
+		window.show()
+
+		plug.show()
+
+web_activity = WebActivity()
+web_activity.run()
 gtk.main()
