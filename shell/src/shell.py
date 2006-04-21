@@ -42,6 +42,9 @@ class ActivityHost(dbus.service.Object):
 	self.tab_label.show()
 
 	self.tab_close_button = gtk.Button()
+	settings = self.tab_close_button.get_settings()
+        [w, h] = gtk.icon_size_lookup_for_settings(settings, gtk.ICON_SIZE_MENU)
+	self.tab_close_button.set_size_request(w + 2, h + 2)
 	close_image = gtk.Image()
 	close_image.set_from_stock (gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
 	close_image.show()
