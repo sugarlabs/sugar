@@ -59,7 +59,10 @@ class ActivityHost(dbus.service.Object):
 	hbox.pack_start(self.tab_label)
 	hbox.pack_start(self.tab_close_button)
 	hbox.show()
-	self.activity_container.notebook.append_page(self.socket, hbox)
+	
+	notebook = self.activity_container.notebook
+	index = notebook.append_page(self.socket, hbox)
+	#notebook.set_current_page(index)
 
     def tab_close_button_clicked(self, button):
 	self.peer_service.close_from_user()
