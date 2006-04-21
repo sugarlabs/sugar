@@ -63,7 +63,6 @@ class ActivityHost(dbus.service.Object):
 		self.tab_close_button.add(close_image)
 		self.tab_close_button.set_relief(gtk.RELIEF_NONE)
 		self.tab_close_button.set_focus_on_click(gtk.FALSE)
-		self.tab_close_button.show()
 		self.tab_close_button.connect("clicked", self.tab_close_button_clicked)
 		
 		label_hbox.pack_start(self.tab_label)
@@ -97,6 +96,15 @@ class ActivityHost(dbus.service.Object):
 		self.peer_service = dbus.Interface(self.activity_container.bus.get_object( \
 				self.__peer_service_name, self.__peer_object_name), \
 										   "com.redhat.Sugar.Activity")
+
+	@dbus.service.method("com.redhat.Sugar.Shell.ActivityHost", \
+			 in_signature="b", \
+			 out_signature="")
+	def set_can_close(self, can_close):
+		if can_close:
+			self.tab_close_button.show()
+		else:
+			self.tab_close_button.hide()
 
 	@dbus.service.method("com.redhat.Sugar.Shell.ActivityHost", \
 			 in_signature="s", \

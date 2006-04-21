@@ -61,6 +61,13 @@ class Activity(dbus.service.Object):
 	def activity_get_gtk_plug(self):
 		return self.__plug
 
+	def activity_set_can_close(self, can_close):
+		self.__activity_object.set_can_close(can_close)
+
+	@dbus.service.method("com.redhat.Sugar.Activity", \
+						 in_signature="", \
+						 out_signature="")
+
 	def activity_set_tab_text(self, text):
 		self.__activity_object.set_tab_text(text)
 
@@ -273,6 +280,7 @@ class BrowserActivity(Activity):
 		self.uri = uri
 	
 	def activity_on_connected_to_shell(self):
+		self.activity_set_can_close(True)
 		self.activity_set_tab_text("Web Page")
 
 		vbox = gtk.VBox()
