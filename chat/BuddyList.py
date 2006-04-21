@@ -78,7 +78,8 @@ class BuddyList(object):
 		return None
 
 	def find_buddy_by_address(self, address):
-		for buddy in self._buddies.keys():
+		for buddy_name in self._buddies.keys():
+			buddy = self._buddies[buddy_name]
 			if buddy.address() == address:
 				return buddy
 		return None

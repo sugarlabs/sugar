@@ -173,7 +173,9 @@ class ChatActivity(activity.Activity):
 	def _get_current_chat(self):
 		selection = self._buddy_list_view.get_selection()
 		(model, aniter) = selection.get_selected()
-		buddy = model.get_value(aniter, 1)
+		buddy = None
+		if aniter:
+			buddy = model.get_value(aniter, 1)
 		if not buddy:
 			return self._group_chat
 		return buddy.chat()
