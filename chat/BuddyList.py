@@ -6,11 +6,14 @@ ACTION_BUDDY_REMOVED = "removed"
 
 
 class Buddy(object):
-	def __init__(self, nick, realname, servicename, key=None):
+	def __init__(self, nick, realname, servicename, host, address, port, key=None):
 		self._nick = nick
 		self._realname = realname
 		self._servicename = servicename
 		self._key = key
+		self._host = host
+		self._address = address
+		self._port = port
 
 	def nick(self):
 		return self._nick
@@ -20,6 +23,15 @@ class Buddy(object):
 
 	def servicename(self):
 		return self._servicename
+
+	def host(self):
+		return self._host
+
+	def address(self):
+		return self._address
+
+	def port(self):
+		return self._port
 
 	def key(self):
 		return self._key
@@ -37,9 +49,9 @@ class BuddyList(object):
 	def add_buddy_listener(self, listener):
 		self._listeners.append(listener)
 
-	def _add_buddy(self, host, address, servicename, data):
+	def _add_buddy(self, host, address, port, servicename, data):
 		if len(data) > 0 and 'name' in data.keys():
-			buddy = Buddy(data['name'], data['realname'], servicename)
+			buddy = Buddy(data['name'], data['realname'], servicename, host, address, port)
 			self._buddies[data['name']] = buddy
 			self._notify_listeners(ACTION_BUDDY_ADDED, buddy)
 
@@ -80,5 +92,5 @@ class BuddyList(object):
 
 	def _on_service_resolved(self, interface, protocol, name, stype, domain, host, aprotocol, address, port, txt, flags):
 		data = self._pair_to_dict(avahi.txt_array_to_string_array(txt))
-		self._add_buddy(host, address, name, data)
+		self._add_buddy(host, address, port, name, data)
 
