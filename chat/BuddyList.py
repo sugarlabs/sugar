@@ -1,5 +1,3 @@
-# -*- tab-width: 4; indent-tabs-mode: t -*- 
-
 import presence
 import avahi
 
@@ -16,13 +14,6 @@ class Buddy(object):
 		self._host = host
 		self._address = address
 		self._port = port
-		self._chat = None
-
-	def set_chat(self, chat):
-		self._chat = chat
-
-	def chat(self):
-		return self._chat
 
 	def nick(self):
 		return self._nick
@@ -72,12 +63,6 @@ class BuddyList(object):
 	def _find_buddy_by_service_name(self, servicename):
 		for buddy in self._buddies.keys():
 			if buddy.servicename() == servicename:
-				return buddy
-		return None
-
-	def find_buddy_by_address(self, address):
-		for buddy in self._buddies.keys():
-			if buddy.address() == address:
 				return buddy
 		return None
 

@@ -10,7 +10,7 @@ import gobject
 import pygtk
 pygtk.require('2.0')
 import gtk
-
+import pango
 
 activity_counter = 0
 
@@ -34,31 +34,42 @@ class ActivityHost(dbus.service.Object):
 		self.socket.set_data("sugar-activity", self)
 		self.socket.show()
 		
-		hbox = gtk.HBox();
+		hbox = gtk.HBox(False, 4);
+
 		self.tab_activity_image = gtk.Image()
 		self.tab_activity_image.set_from_stock(gtk.STOCK_CONVERT, gtk.ICON_SIZE_MENU)
-		self.tab_activity_image.show()
+		hbox.pack_start(self.tab_activity_image)
+		self.tab_activity_image.show()		
 		
+		label_hbox = gtk.HBox(False, 4);
+		label_hbox.connect("style-set", self.__tab_label_style_set_cb)
+		hbox.pack_start(label_hbox)
+
 		self.tab_label = gtk.Label(self.activity_name)
+		self.tab_label.set_ellipsize(pango.ELLIPSIZE_END)
+		self.tab_label.set_single_line_mode(True)
+		self.tab_label.set_alignment(0.0, 0.5)
+		self.tab_label.set_padding(0, 0)
 		self.tab_label.show()
 		
-		self.tab_close_button = gtk.Button()
-		settings = self.tab_close_button.get_settings()
-		[w, h] = gtk.icon_size_lookup_for_settings(settings, gtk.ICON_SIZE_MENU)
-		self.tab_close_button.set_size_request(w + 2, h + 2)
 		close_image = gtk.Image()
 		close_image.set_from_stock (gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
 		close_image.show()
+		
+		self.tab_close_button = gtk.Button()
+		rcstyle = gtk.RcStyle();
+		rcstyle.xthickness = rcstyle.ythickness = 0;
+		self.tab_close_button.modify_style (rcstyle);
 		self.tab_close_button.add(close_image)
 		self.tab_close_button.set_relief(gtk.RELIEF_NONE)
 		self.tab_close_button.set_focus_on_click(gtk.FALSE)
 		self.tab_close_button.show()
 		self.tab_close_button.connect("clicked", self.tab_close_button_clicked)
 		
-		hbox.set_spacing(4)
-		hbox.pack_start(self.tab_activity_image)
-		hbox.pack_start(self.tab_label)
-		hbox.pack_start(self.tab_close_button)
+		label_hbox.pack_start(self.tab_label)
+		label_hbox.pack_start(self.tab_close_button, False, False, 0)
+		label_hbox.show()
+		
 		hbox.show()
 		
 		notebook = self.activity_container.notebook
@@ -117,6 +128,13 @@ class ActivityHost(dbus.service.Object):
 	def get_object_path(self):
 		return self.dbus_object_name
 
+	def __tab_label_style_set_cb(self, widget, previous_style):
+		context = widget.get_pango_context()
+		metrics = context.get_metrics(widget.style.font_desc, context.get_language())
+		char_width = metrics.get_approximate_digit_width()
+		[w, h] = gtk.icon_size_lookup_for_settings(widget.get_settings(), gtk.ICON_SIZE_MENU)
+		widget.set_size_request(15 * pango.PIXELS(char_width) + 2 * w, -1);
+		self.tab_close_button.set_size_request (w + 5, h + 2)
 
 class ActivityContainer(dbus.service.Object):
 
