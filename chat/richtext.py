@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- tab-width: 4; indent-tabs-mode: t -*- 
 
 import pygtk
 pygtk.require('2.0')

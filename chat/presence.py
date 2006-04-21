@@ -1,3 +1,5 @@
+# -*- tab-width: 4; indent-tabs-mode: t -*- 
+
 import avahi, dbus, dbus.glib
 
 OLPC_CHAT_SERVICE = "_olpc_chat._udp"
