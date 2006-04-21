@@ -120,7 +120,7 @@ class AddressToolbar(gtk.Toolbar):
 		address_item.show()
 
 	def __open_address_cb(self, address):
-		browser = BrowserActivity(uri)
+		browser = BrowserActivity(address)
 		browser.activity_connect_to_shell()
 
 class AddressItem(gtk.ToolItem):
