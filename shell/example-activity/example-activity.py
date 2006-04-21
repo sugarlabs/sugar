@@ -2,6 +2,7 @@
 
 import string
 
+import gc
 import dbus
 import dbus.service
 import dbus.glib
@@ -86,6 +87,17 @@ class Activity(dbus.service.Object):
     def activity_get_id(self):
 	return self.__activity_id
 
+
+    def __reply_cb(self):
+	print "in __reply_cb"
+	self.activity_on_disconnected_from_shell()
+
+    def __error_cb(self, error):
+	print "in __error_cb"
+
+    def activity_shutdown(self):
+	self.__activity_object.shutdown(reply_handler = self.__reply_cb, error_handler = self.__error_cb)
+
     # pure virtual methods
 
     def activity_on_connected_to_shell(self):
@@ -134,11 +146,16 @@ class ExampleActivity(Activity):
     def activity_on_disconnected_from_shell(self):
 	print "act %d: in activity_on_disconnected_to_shell"%self.activity_get_id()
 	print "act %d: Shell disappeared..."%self.activity_get_id()
-	deferred_exit()
+	plug = self.activity_get_gtk_plug()		
+	plug.destroy()
+
+	del self
+
+	gc.collect()
 
     def activity_on_close_from_user(self):
 	print "act %d: in activity_on_close_from_user"%self.activity_get_id()
-	deferred_exit()
+	self.activity_shutdown()
 
     def activity_on_lost_focus(self):
 	print "act %d: in activity_on_lost_focus"%self.activity_get_id()
@@ -146,16 +163,19 @@ class ExampleActivity(Activity):
     def activity_on_got_focus(self):
 	print "act %d: in activity_on_got_focus"%self.activity_get_id()
 
+    def __del__(self):
+	print "in __del__ for ExampleActivity"
+
 
 if len(sys.argv) != 2:
     print "usage: example-activity.py <name_of_activity>"
     sys.exit(1)
 
+gc.set_debug(gc.DEBUG_LEAK)
+
 example_activity = ExampleActivity(sys.argv[1])
 example_activity.activity_connect_to_shell()
-
-example_activity2 = ExampleActivity(sys.argv[1] + " (2nd)")
-example_activity2.activity_connect_to_shell()
+example_activity = None
 
 gtk.main()
 

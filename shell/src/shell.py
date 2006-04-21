@@ -62,7 +62,7 @@ class ActivityHost(dbus.service.Object):
 	
 	notebook = self.activity_container.notebook
 	index = notebook.append_page(self.socket, hbox)
-	#notebook.set_current_page(index)
+	notebook.set_current_page(index)
 
     def tab_close_button_clicked(self, button):
 	self.peer_service.close_from_user()
@@ -92,6 +92,24 @@ class ActivityHost(dbus.service.Object):
     def set_tab_text(self, text):
 	self.tab_label.set_text(text)
 
+    @dbus.service.method("com.redhat.Sugar.Shell.ActivityHost", \
+			 in_signature="", \
+			 out_signature="")
+    def shutdown(self):
+	print "shutdown"
+	for owner, activity in self.activity_container.activities[:]:
+	    if activity == self:
+		self.activity_container.activities.remove((owner, activity))
+
+	for i in range(self.activity_container.notebook.get_n_pages()):
+	    child = self.activity_container.notebook.get_nth_page(i)
+	    if child == self.socket:
+		print "found child"
+		self.activity_container.notebook.remove_page(i)
+		break
+
+	del self
+
     def get_host_activity_id(self):
 	return self.activity_id
 
@@ -114,6 +132,7 @@ class ActivityContainer(dbus.service.Object):
 	self.window = gtk.Window()
 	self.window.set_title("OLPC Sugar")
 	self.window.resize(640, 480)
+	self.window.set_geometry_hints(min_width = 640, max_width = 640, min_height = 480, max_height = 480)
 	self.notebook = gtk.Notebook()
 	tab_label = gtk.Label("My Laptop")
 	empty_label = gtk.Label("This activity could launch other activities / be a help page")
@@ -129,6 +148,13 @@ class ActivityContainer(dbus.service.Object):
 	self.current_activity = None
 
 
+    def __focus_reply_cb(self):
+	pass
+
+    def __focus_error_cb(self, error):
+	pass
+
+
     def notebook_tab_changed(self, notebook, page, page_number):
 	print "in notebook_tab_changed"
 	new_activity = notebook.get_nth_page(page_number).get_data("sugar-activity")
@@ -136,13 +162,22 @@ class ActivityContainer(dbus.service.Object):
 	print " New activity:     ", new_activity
 
 	if self.current_activity != None:
-	    self.current_activity.peer_service.lost_focus()
+	    if self.has_activity(self.current_activity):
+		self.current_activity.peer_service.lost_focus(reply_handler = self.__focus_reply_cb, error_handler = self.__focus_error_cb)
 
 	self.current_activity = new_activity
 
 	if self.current_activity != None:
-	    self.current_activity.peer_service.got_focus()
+	    if self.has_activity(self.current_activity):
+		self.current_activity.peer_service.got_focus(reply_handler = self.__focus_reply_cb, error_handler = self.__focus_error_cb)
 
+
+    def has_activity(self, activity_to_check_for):
+	for owner, activity in self.activities[:]:
+	    if activity_to_check_for == activity:
+		return True
+	return False
+	
 
     def name_owner_changed(self, service_name, old_service_name, new_service_name):
         print "in name_owner_changed: svc=%s oldsvc=%s newsvc=%s"%(service_name, old_service_name, new_service_name)
