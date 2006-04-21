@@ -60,7 +60,14 @@ class Activity(dbus.service.Object):
 
 	def activity_get_gtk_plug(self):
 		return self.__plug
-		
+
+	def activity_set_ellipsize_tab(self, ellipsize):
+		self.__activity_object.set_ellipsize_tab(ellipsize)
+
+	@dbus.service.method("com.redhat.Sugar.Activity", \
+						 in_signature="", \
+						 out_signature="")
+
 	def activity_set_can_close(self, can_close):
 		self.__activity_object.set_can_close(can_close)
 

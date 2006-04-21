@@ -148,6 +148,7 @@ class BrowserActivity(activity.Activity):
 		self.uri = uri
 	
 	def activity_on_connected_to_shell(self):
+		self.activity_set_ellipsize_tab(True)
 		self.activity_set_can_close(True)
 		self.activity_set_tab_text("Web Page")
 

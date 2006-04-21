@@ -20,6 +20,7 @@ class ActivityHost(dbus.service.Object):
 		global activity_counter
 
 		self.activity_name = activity_name
+		self.ellipsize_tab = False
 
 		self.activity_container = activity_container
 		
@@ -41,12 +42,11 @@ class ActivityHost(dbus.service.Object):
 		hbox.pack_start(self.tab_activity_image)
 		self.tab_activity_image.show()		
 		
-		label_hbox = gtk.HBox(False, 4);
-		label_hbox.connect("style-set", self.__tab_label_style_set_cb)
-		hbox.pack_start(label_hbox)
+		self.label_hbox = gtk.HBox(False, 4);
+		self.label_hbox.connect("style-set", self.__tab_label_style_set_cb)
+		hbox.pack_start(self.label_hbox)
 
 		self.tab_label = gtk.Label(self.activity_name)
-		self.tab_label.set_ellipsize(pango.ELLIPSIZE_END)
 		self.tab_label.set_single_line_mode(True)
 		self.tab_label.set_alignment(0.0, 0.5)
 		self.tab_label.set_padding(0, 0)
@@ -65,9 +65,9 @@ class ActivityHost(dbus.service.Object):
 		self.tab_close_button.set_focus_on_click(gtk.FALSE)
 		self.tab_close_button.connect("clicked", self.tab_close_button_clicked)
 		
-		label_hbox.pack_start(self.tab_label)
-		label_hbox.pack_start(self.tab_close_button, False, False, 0)
-		label_hbox.show()
+		self.label_hbox.pack_start(self.tab_label)
+		self.label_hbox.pack_start(self.tab_close_button, False, False, 0)
+		self.label_hbox.show()
 		
 		hbox.show()
 		
@@ -96,6 +96,13 @@ class ActivityHost(dbus.service.Object):
 		self.peer_service = dbus.Interface(self.activity_container.bus.get_object( \
 				self.__peer_service_name, self.__peer_object_name), \
 										   "com.redhat.Sugar.Activity")
+
+	@dbus.service.method("com.redhat.Sugar.Shell.ActivityHost", \
+			 in_signature="b", \
+			 out_signature="")
+	def set_ellipsize_tab(self, ellipsize):
+		self.ellipsize_tab = True
+		self.update_tab_size()
 
 	@dbus.service.method("com.redhat.Sugar.Shell.ActivityHost", \
 			 in_signature="b", \
@@ -136,13 +143,29 @@ class ActivityHost(dbus.service.Object):
 	def get_object_path(self):
 		return self.dbus_object_name
 
+	def update_tab_size(self):
+		if self.ellipsize_tab:
+			self.tab_label.set_ellipsize(pango.ELLIPSIZE_END)
+
+			context = self.label_hbox.get_pango_context()
+			font_desc = self.label_hbox.style.font_desc
+			metrics = context.get_metrics(font_desc, context.get_language())
+			char_width = metrics.get_approximate_digit_width()
+			[w, h] = self.__get_close_icon_size()
+			tab_width = 15 * pango.PIXELS(char_width) + 2 * w
+			self.label_hbox.set_size_request(tab_width, -1);
+		else:
+			self.tab_label.set_ellipsize(pango.ELLIPSIZE_NONE)
+			widget.set_size_request(-1, -1)
+
+	def __get_close_icon_size(self):
+		settings = self.label_hbox.get_settings()
+		return gtk.icon_size_lookup_for_settings(settings, gtk.ICON_SIZE_MENU)
+
 	def __tab_label_style_set_cb(self, widget, previous_style):
-		context = widget.get_pango_context()
-		metrics = context.get_metrics(widget.style.font_desc, context.get_language())
-		char_width = metrics.get_approximate_digit_width()
-		[w, h] = gtk.icon_size_lookup_for_settings(widget.get_settings(), gtk.ICON_SIZE_MENU)
-		widget.set_size_request(15 * pango.PIXELS(char_width) + 2 * w, -1);
+		[w, h] = self.__get_close_icon_size()
 		self.tab_close_button.set_size_request (w + 5, h + 2)
+		self.update_tab_size()
 
 class ActivityContainer(dbus.service.Object):
 
