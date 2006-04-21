@@ -53,6 +53,8 @@ class BuddyList(object):
 		self._buddies = {}
 		self._pdiscovery = presence.PresenceDiscovery()
 		self._pdiscovery.add_service_listener(self._on_service_change)
+
+	def start(self):
 		self._pdiscovery.start()
 
 	def add_buddy_listener(self, listener):
