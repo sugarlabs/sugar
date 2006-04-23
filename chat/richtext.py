@@ -57,20 +57,13 @@ class RichTextToolbar(gtk.Toolbar):
 			self.buf.unapply_tag(tag_name)
  
 class RichTextHandler(xml.sax.handler.ContentHandler):
-	def __init__(self, buf):
+	def __init__(self, serializer, buf):
 		self.buf = buf
+		self.serializer = serializer
 		self.tags = []
 
-	def _deserialize_element(self, el_name):
-		if el_name == "bold":
-			return "bold"
-		elif el_name == "italic":
-			return "italic"
-		else:
-			return None
- 
 	def startElement(self, name, attributes):
-		tag = self._deserialize_element(name)
+		tag = self.serializer.deserialize_element(name)
 		if tag:
 			self.tags.append(tag)
  
@@ -84,21 +77,37 @@ class RichTextHandler(xml.sax.handler.ContentHandler):
 			self.buf.apply_tag_by_name(tag, start_it, it)
  
 	def endElement(self, name):
-		tag = self._deserialize_element(name)
+		tag = self.serializer.deserialize_element(name)
 		if tag:
 			self.tags.remove(tag)
 
 class RichTextSerializer:
 	def __init__(self):
-		self._open_xml_tags = []
-	
-	def _get_xml_tag(self, tag):
-		if tag.get_property("name") == "bold":
+		self._open_tags = []
+
+	def deserialize_element(self, el_name):
+		if el_name == "bold":
 			return "bold"
-		elif tag.get_property("name") == "italic":
+		elif el_name == "italic":
 			return "italic"
 		else:
-			return "unknown_tag"
+			return None
+	
+	def serialize_tag_start(self, tag):
+		if tag.get_property("name") == "bold":
+			return "<bold>"
+		elif tag.get_property("name") == "italic":
+			return "<italic>"
+		else:
+			return "<unknown>"
+
+	def serialize_tag_end(self, tag):
+		if tag.get_property("name") == "bold":
+			return "</bold>"
+		elif tag.get_property("name") == "italic":
+			return "</italic>"
+		else:
+			return "</unknown>"
 			
 	def serialize(self, buf):
 		xml = "<richtext>"
@@ -109,32 +118,26 @@ class RichTextSerializer:
 			if not next_it.forward_to_tag_toggle(None):
 				next_it = buf.get_end_iter()
 
-			reopen_xml_tags = []
+			reopen_tags = []
 			for tag in it.get_toggled_tags(False):
-				xml_tag = self._get_xml_tag(tag)
 				while 1:
-					open_xml_tag = self._open_xml_tags.pop()
-					if open_xml_tag != xml_tag:
-						xml += "</" + open_xml_tag + ">"
-						reopen_xml_tags.append(open_xml_tag)
+					open_tag = self._open_tags.pop()
+					if open_tag != tag:
+						xml += self.serialize_tag_end(open_tag)
+						reopen_tags.append(open_tag)
 					else:
-						xml += "</" + xml_tag + ">"
+						xml += self.serialize_tag_end(tag)
 						break
 				
-			for xml_tag in reopen_xml_tags:
-				self._open_xml_tags.append(xml_tag)
-				xml += "<" + xml_tag + ">"
-			
-			for tag in it.get_toggled_tags(True):
-				xml_tag = self._get_xml_tag(tag)
-				self._open_xml_tags.append(xml_tag)
-				xml += "<" + xml_tag + ">"
+			for tag in reopen_tags + it.get_toggled_tags(True):
+				self._open_tags.append(tag)
+				xml += self.serialize_tag_start(tag)
 			
 			xml += buf.get_text(it, next_it)
 
 		if next_it.is_end():
-			for xml_tag in self._open_xml_tags:
-				xml += "</" + xml_tag + ">"
+			for tag in self._open_tags:
+				xml += self.serialize_tag_end(tag)
 		
 		xml += "</richtext>"
 		
@@ -142,7 +145,7 @@ class RichTextSerializer:
 
 	def deserialize(self, xml_string, buf):
 		parser = xml.sax.make_parser()
-		handler = RichTextHandler(buf)
+		handler = RichTextHandler(self, buf)
 		parser.setContentHandler(handler)
 		parser.feed(xml_string)
 		parser.close()
