@@ -8,7 +8,6 @@ import dbus.glib
 import pygtk
 pygtk.require('2.0')
 import gtk, gobject
-import gtk.glade
 
 import sys
 import os
@@ -22,10 +21,11 @@ import activity
 import presence
 import BuddyList
 import network
+import richtext
 
 class Chat(object):
 	def __init__(self, view, label):
-		self._buffer = gtk.TextBuffer()
+		self._buffer = richtext.RichTextBuffer()
 		self._view = view
 		self._label = label
 
@@ -35,8 +35,13 @@ class Chat(object):
 
 	def recv_message(self, buddy, msg):
 		aniter = self._buffer.get_end_iter()
-		self._buffer.insert(aniter, buddy.nick() + ": " + msg + "\n")
+		self._buffer.insert(aniter, buddy.nick() + ": ")
+		
+		serializer = richtext.RichTextSerializer()
+		serializer.deserialize(msg, self._buffer)
 
+		aniter = self._buffer.get_end_iter()
+		self._buffer.insert(aniter, "\n")
 
 class GroupChat(Chat):
 	def __init__(self, parent, view, label):
@@ -68,17 +73,52 @@ class ChatActivity(activity.Activity):
 
 		(self._nick, self._realname) = self._get_name()
 
-		self._glade = gtk.glade.XML("chat.glade", "mainTable", None)
-
 	def _ui_setup(self, plug):
+		hbox = gtk.HBox(False, 6)
+
+		chat_vbox = gtk.VBox()
+		hbox.pack_start(chat_vbox)
+		chat_vbox.show()
+
+		self._chat_label = gtk.Label()
+		chat_vbox.pack_start(self._chat_label, False)
+		self._chat_label.show()
+		
+		sw = gtk.ScrolledWindow()
+		sw.set_policy(gtk.POLICY_NEVER, gtk.POLICY_ALWAYS)
+		self._chat_view = gtk.TextView()
+		sw.add(self._chat_view)
+		self._chat_view.show()
+		chat_vbox.pack_start(sw)
+		sw.show()
+
+		rich_buf = richtext.RichTextBuffer()		
+		chat_view_sw = gtk.ScrolledWindow()
+		chat_view_sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+		self._editor = gtk.TextView(rich_buf)
+		self._editor.connect("key-press-event", self.__key_press_event_cb)
+		self._editor.set_size_request(-1, 100)
+		chat_view_sw.add(self._editor)
+		self._editor.show()
+
+		toolbar = richtext.RichTextToolbar(rich_buf)
+		chat_vbox.pack_start(toolbar, False);
+		toolbar.show()		
+
+		chat_vbox.pack_start(chat_view_sw, False);
+		chat_view_sw.show()
+		
 		self._buddy_list_model = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_PYOBJECT)
-		self._buddy_list_view = self._glade.get_widget("buddyListView")
-		self._buddy_list_view.set_model(self._buddy_list_model)
+		sw = gtk.ScrolledWindow()
+		sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+		self._buddy_list_view = gtk.TreeView(self._buddy_list_model)
 		self._buddy_list_view.connect("cursor-changed", self._on_buddyList_buddy_selected)
 		self._buddy_list_view.connect("row-activated", self._on_buddyList_buddy_double_clicked)
-
-		self._entry = self._glade.get_widget("entry")
-		self._entry.connect("activate", self._send_chat_message)
+		sw.set_size_request(150, -1)
+		sw.add(self._buddy_list_view)
+		self._buddy_list_view.show()
+		hbox.pack_start(sw, False)
+		sw.show()
 
 		renderer = gtk.CellRendererText()
 		column = gtk.TreeViewColumn("", renderer, text=0)
@@ -87,13 +127,27 @@ class ChatActivity(activity.Activity):
 		column.set_expand(True);
 		self._buddy_list_view.append_column(column)
 
-		self._chat_view = self._glade.get_widget("chatView")
-		self._chat_label = self._glade.get_widget("chatLabel")
 		self._group_chat = GroupChat(self, self._chat_view, self._chat_label)
 		aniter = self._buddy_list_model.append(None)
 		self._buddy_list_model.set(aniter, 0, "Group", 1, None)
 		self._group_chat.activate()
-		plug.add(self._glade.get_widget("mainTable"))
+		plug.add(hbox)
+
+		hbox.show()
+		
+	def __key_press_event_cb(self, text_view, event):
+		if event.keyval == gtk.keysyms.Return:
+			buf = text_view.get_buffer()
+			chat = self._get_current_chat()
+			
+			serializer = richtext.RichTextSerializer()
+			text = serializer.serialize(buf)
+			chat.send_message(text)
+			
+			buf.set_text("")
+			buf.place_cursor(buf.get_start_iter())
+
+			return True
 
 	def _start(self):
 		self._buddy_list.start()
@@ -179,12 +233,6 @@ class ChatActivity(activity.Activity):
 		if not buddy:
 			return self._group_chat
 		return buddy.chat()
-
-	def _send_chat_message(self, widget, *args):
-		chat = self._get_current_chat()
-		text = widget.get_text()
-		chat.send_message(text)
-		widget.set_text("")	
 
 	def run(self):
 		gtk.main()

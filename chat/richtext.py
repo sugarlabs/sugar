@@ -9,7 +9,7 @@ import xml.sax
 class RichTextBuffer(gtk.TextBuffer):
 	def __init__(self):
 		gtk.TextBuffer.__init__(self)
-		
+
 		self.connect_after("insert-text", self.__insert_text_cb)
 		
 		self.__create_tags()
@@ -18,8 +18,10 @@ class RichTextBuffer(gtk.TextBuffer):
 	def apply_tag(self, tag_name):
 		self.active_tags.append(tag_name)
 		
-		[start, end] = self.get_selection_bounds()
-		self.apply_tag_by_name(tag_name, start, end)
+		bounds = self.get_selection_bounds()
+		if bounds:
+			[start, end] = bounds
+			self.apply_tag_by_name(tag_name, start, end)
 
 	def unapply_tag(self, tag_name):
 		self.active_tags.remove(tag_name)
@@ -45,6 +47,8 @@ class RichTextToolbar(gtk.Toolbar):
 		gtk.Toolbar.__init__(self)
 		
 		self.buf = buf
+		
+		self.set_style(gtk.TOOLBAR_ICONS)
 		
 		item = gtk.ToggleToolButton(gtk.STOCK_BOLD)
 		item.connect("toggled", self.__toggle_style_cb, "bold")
