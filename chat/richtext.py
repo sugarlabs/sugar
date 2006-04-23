@@ -17,9 +17,15 @@ class RichTextBuffer(gtk.TextBuffer):
 		
 	def apply_tag(self, tag_name):
 		self.active_tags.append(tag_name)
+		
+		[start, end] = self.get_selection_bounds()
+		self.apply_tag_by_name(tag_name, start, end)
 
 	def unapply_tag(self, tag_name):
 		self.active_tags.remove(tag_name)
+
+		[start, end] = self.get_selection_bounds()
+		self.remove_tag_by_name(tag_name, start, end)
 	
 	def __create_tags(self):
 		tag = self.create_tag("bold")
