@@ -235,7 +235,10 @@ class ChatActivity(activity.Activity):
 		return buddy.chat()
 
 	def run(self):
-		gtk.main()
+		try:
+			gtk.main()
+		except KeyboardInterrupt:
+			pass
 
 def main():
 	app = ChatActivity()
