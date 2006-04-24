@@ -213,7 +213,4 @@ class WebActivity(activity.Activity):
 
 web_activity = WebActivity()
 web_activity.activity_connect_to_shell()
-try:
-	gtk.main()
-except KeyboardInterrupt:
-	pass
+gtk.main()

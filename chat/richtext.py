@@ -128,24 +128,24 @@ class RichTextSerializer:
 			if not next_it.forward_to_tag_toggle(None):
 				next_it = buf.get_end_iter()
 
-			reopen_tags = []
+			tags_to_reopen = []
+
 			for tag in it.get_toggled_tags(False):
 				while 1:
 					open_tag = self._open_tags.pop()
-					if open_tag != tag:
-						xml += self.serialize_tag_end(open_tag)
-						reopen_tags.append(open_tag)
-					else:
-						xml += self.serialize_tag_end(tag)
-						break
-				
-			for tag in reopen_tags + it.get_toggled_tags(True):
+					xml += self.serialize_tag_end(tag)
+					if open_tag == tag:
+						break						
+					tags_to_reopen.append(open_tag)
+					
+			for tag in tags_to_reopen + it.get_toggled_tags(True):
 				self._open_tags.append(tag)
 				xml += self.serialize_tag_start(tag)
 			
 			xml += buf.get_text(it, next_it)
 
 		if next_it.is_end():
+			self._open_tags.reverse()
 			for tag in self._open_tags:
 				xml += self.serialize_tag_end(tag)
 		
@@ -171,8 +171,15 @@ if __name__ == "__main__":
 	vbox = gtk.VBox()
 	
 	rich_buf = RichTextBuffer()
-	
-	xml_string = "<richtext><bold><italic>Hello</italic>World</bold></richtext>"
+
+	xml_string = "<richtext>"	
+
+	#xml_string += "<bold><italic>Test</italic>one</bold>\n"
+	xml_string += "<bold><italic>Test two</italic></bold>"
+
+	xml_string += "</richtext>"
+
+
 	RichTextSerializer().deserialize(xml_string, rich_buf)
 	
 	view = gtk.TextView(rich_buf)
