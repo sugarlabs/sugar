@@ -254,10 +254,8 @@ class ChatActivity(activity.Activity):
 
 	def _start(self):
 		self._buddy_list.start()
-		print "Starting announce."
 		self._pannounce.register_service(self._realname, 6666, presence.OLPC_CHAT_SERVICE,
 				name = self._nick, realname = self._realname)
-		print "Done announce."
 
 		# Create the P2P chat XMLRPC server
 		self._p2p_req_handler = ChatRequestHandler(self, self._chat_view, self._chat_label)
