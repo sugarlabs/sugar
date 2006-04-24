@@ -270,10 +270,14 @@ class ChatActivity(activity.Activity):
 		if action == BuddyList.ACTION_BUDDY_ADDED:
 			aniter = self._buddy_list_model.append(None)
 			self._buddy_list_model.set(aniter, 0, buddy.nick(), 1, buddy)
-		elif action == BuddyList.ACCTION_BUDDY_REMOVED:
-			aniter = self._buddy_list_model.get_iter(buddy.nick())
-			if aniter:
-				self._buddy_list_model.remove(iter)
+		elif action == BuddyList.ACTION_BUDDY_REMOVED:
+			aniter = self._buddy_list_model.get_iter_first()
+			while aniter:
+				list_buddy = self._buddy_list_model.get_value(aniter, 1)
+				if buddy == list_buddy:
+					self._buddy_list_model.remove(aniter)
+					break
+				aniter = self._buddy_list_model.iter_next(aniter)
 
 	def find_buddy_by_address(self, address):
 		return self._buddy_list.find_buddy_by_address(address)

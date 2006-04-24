@@ -62,9 +62,11 @@ class BuddyList(object):
 
 	def _add_buddy(self, host, address, port, servicename, data):
 		if len(data) > 0 and 'name' in data.keys():
-			buddy = Buddy(data['name'], data['realname'], servicename, host, address, port)
-			self._buddies[data['name']] = buddy
-			self._notify_listeners(ACTION_BUDDY_ADDED, buddy)
+			buddy = self._find_buddy_by_service_name(servicename)
+			if not buddy:
+				buddy = Buddy(data['name'], data['realname'], servicename, host, address, port)
+				self._buddies[data['name']] = buddy
+				self._notify_listeners(ACTION_BUDDY_ADDED, buddy)
 
 	def _remove_buddy(self, buddy):
 		nick = buddy.nick()
@@ -72,7 +74,7 @@ class BuddyList(object):
 		del self._buddies[nick]
 
 	def _find_buddy_by_service_name(self, servicename):
-		for buddy in self._buddies.keys():
+		for buddy in self._buddies.values():
 			if buddy.servicename() == servicename:
 				return buddy
 		return None
