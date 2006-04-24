@@ -122,18 +122,17 @@ class ChatActivity(activity.Activity):
 
 		(self._nick, self._realname) = self._get_name()
 
-	def _ui_setup(self, plug):
-		hbox = gtk.HBox(False, 6)
-
+	def _create_chat(self):
 		chat_vbox = gtk.VBox()
-		hbox.pack_start(chat_vbox)
-		chat_vbox.show()
+		chat_vbox.set_spacing(6)
 
 		self._chat_label = gtk.Label()
 		chat_vbox.pack_start(self._chat_label, False)
-		self._chat_label.show()
+		# Do we actually need this label?
+		# self._chat_label.show()
 		
 		sw = gtk.ScrolledWindow()
+		sw.set_shadow_type(gtk.SHADOW_IN)
 		sw.set_policy(gtk.POLICY_NEVER, gtk.POLICY_ALWAYS)
 		self._chat_view = gtk.TextView()
 		sw.add(self._chat_view)
@@ -143,31 +142,41 @@ class ChatActivity(activity.Activity):
 
 		rich_buf = richtext.RichTextBuffer()		
 		chat_view_sw = gtk.ScrolledWindow()
+		chat_view_sw.set_shadow_type(gtk.SHADOW_IN)
 		chat_view_sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 		self._editor = gtk.TextView(rich_buf)
 		self._editor.connect("key-press-event", self.__key_press_event_cb)
-		self._editor.set_size_request(-1, 100)
+		self._editor.set_size_request(-1, 50)
 		chat_view_sw.add(self._editor)
 		self._editor.show()
 
-		toolbar = richtext.RichTextToolbar(rich_buf)
-		chat_vbox.pack_start(toolbar, False);
-		toolbar.show()		
-
-		chat_vbox.pack_start(chat_view_sw, False);
+		chat_vbox.pack_start(chat_view_sw, False)
 		chat_view_sw.show()
 		
+		return chat_vbox, rich_buf
+
+	def _create_sidebar(self):
+		vbox = gtk.VBox(False, 6)
+		
+		label = gtk.Label("Who's around:")
+		label.set_alignment(0.0, 0.5)
+		vbox.pack_start(label, False)
+		label.show()
+	
 		self._buddy_list_model = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_PYOBJECT)
+
 		sw = gtk.ScrolledWindow()
+		sw.set_shadow_type(gtk.SHADOW_IN)
 		sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+
 		self._buddy_list_view = gtk.TreeView(self._buddy_list_model)
+		self._buddy_list_view.set_headers_visible(False)
 		self._buddy_list_view.connect("cursor-changed", self._on_buddyList_buddy_selected)
 		self._buddy_list_view.connect("row-activated", self._on_buddyList_buddy_double_clicked)
-		sw.set_size_request(150, -1)
+
+		sw.set_size_request(120, -1)
 		sw.add(self._buddy_list_view)
 		self._buddy_list_view.show()
-		hbox.pack_start(sw, False)
-		sw.show()
 
 		renderer = gtk.CellRendererText()
 		column = gtk.TreeViewColumn("", renderer, text=0)
@@ -176,13 +185,49 @@ class ChatActivity(activity.Activity):
 		column.set_expand(True);
 		self._buddy_list_view.append_column(column)
 
+		vbox.pack_start(sw)
+		sw.show()
+
+		button_box = gtk.VButtonBox()
+		button_box.set_border_width(18)
+		
+		talk_alone_button = gtk.Button("Talk alone")
+		button_box.pack_start(talk_alone_button)
+		talk_alone_button.show()
+		
+		vbox.pack_start(button_box, False)
+		button_box.show()
+		
+		return vbox
+
+	def _ui_setup(self, plug):
+		vbox = gtk.VBox(False, 6)
+		vbox.set_border_width(12)
+
+		hbox = gtk.HBox(False, 12)
+
+		[chat, rich_buf] = self._create_chat()
+		hbox.pack_start(chat)
+		chat.show()
+		
+		sidebar = self._create_sidebar()
+		hbox.pack_start(sidebar, False)
+		sidebar.show()
+
+		vbox.pack_start(hbox)
+		hbox.show()
+
+		toolbar = richtext.RichTextToolbar(rich_buf)
+		vbox.pack_start(toolbar, False);
+		toolbar.show()		
+		
 		self._group_chat = GroupChat(self, self._chat_view, self._chat_label)
 		aniter = self._buddy_list_model.append(None)
 		self._buddy_list_model.set(aniter, 0, "Group", 1, None)
 		self._group_chat.activate()
-		plug.add(hbox)
 
-		hbox.show()
+		plug.add(vbox)
+		vbox.show()
 		
 	def __key_press_event_cb(self, text_view, event):
 		if event.keyval == gtk.keysyms.Return:
@@ -217,7 +262,7 @@ class ChatActivity(activity.Activity):
 		self.activity_set_tab_text(self._act_name)
 		self._plug = self.activity_get_gtk_plug()
 		self._ui_setup(self._plug)
-		self._plug.show_all()
+		self._plug.show()
 		self._start()
 
 	def activity_on_disconnected_from_shell(self):
