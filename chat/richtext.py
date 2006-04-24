@@ -26,8 +26,10 @@ class RichTextBuffer(gtk.TextBuffer):
 	def unapply_tag(self, tag_name):
 		self.active_tags.remove(tag_name)
 
-		[start, end] = self.get_selection_bounds()
-		self.remove_tag_by_name(tag_name, start, end)
+		bounds = self.get_selection_bounds()
+		if bounds:
+			[start, end] = bounds
+			self.remove_tag_by_name(tag_name, start, end)
 	
 	def __create_tags(self):
 		tag = self.create_tag("bold")
@@ -35,6 +37,24 @@ class RichTextBuffer(gtk.TextBuffer):
 		
 		tag = self.create_tag("italic")
 		tag.set_property("style", pango.STYLE_ITALIC)
+
+		tag = self.create_tag("font-size-xx-small")
+		tag.set_property("scale", pango.SCALE_XX_SMALL)
+
+		tag = self.create_tag("font-size-x-small")
+		tag.set_property("scale", pango.SCALE_X_SMALL)
+
+		tag = self.create_tag("font-size-small")
+		tag.set_property("scale", pango.SCALE_SMALL)
+
+		tag = self.create_tag("font-size-large")
+		tag.set_property("scale", pango.SCALE_LARGE)
+
+		tag = self.create_tag("font-size-x-large")
+		tag.set_property("scale", pango.SCALE_X_LARGE)
+
+		tag = self.create_tag("font-size-xx-large")
+		tag.set_property("scale", pango.SCALE_XX_LARGE)
 	
 	def __insert_text_cb(self, widget, pos, text, length):
 		for tag in self.active_tags:
@@ -50,6 +70,11 @@ class RichTextToolbar(gtk.Toolbar):
 		
 		self.set_style(gtk.TOOLBAR_ICONS)
 		
+		self._font_size = "normal"
+		self._font_scales = [ "xx-small", "x-small", "small",	\
+							  "normal",							\
+							  "large", "x-large", "xx-large" ]
+		
 		item = gtk.ToggleToolButton(gtk.STOCK_BOLD)
 		item.connect("toggled", self.__toggle_style_cb, "bold")
 		self.insert(item, -1)
@@ -59,22 +84,58 @@ class RichTextToolbar(gtk.Toolbar):
 		item.connect("toggled", self.__toggle_style_cb, "italic")
 		self.insert(item, -1)
 		item.show()
+
+		self._font_size_up = gtk.ToolButton(gtk.STOCK_GO_UP)
+		self._font_size_up.connect("clicked", self.__font_size_up_cb)
+		self.insert(self._font_size_up, -1)
+		self._font_size_up.show()
+
+		self._font_size_down = gtk.ToolButton(gtk.STOCK_GO_DOWN)
+		self._font_size_down.connect("clicked", self.__font_size_down_cb)
+		self.insert(self._font_size_down, -1)
+		self._font_size_down.show()
+	
+	def _get_font_size_index(self):
+		return self._font_scales.index(self._font_size);
 	
 	def __toggle_style_cb(self, toggle, tag_name):
 		if toggle.get_active():
 			self.buf.apply_tag(tag_name)
 		else:
 			self.buf.unapply_tag(tag_name)
- 
+
+	def _set_font_size(self, font_size):
+		if self._font_size != "normal":
+			self.buf.unapply_tag("font-size-" + self._font_size)
+		if font_size != "normal":
+			self.buf.apply_tag("font-size-" + font_size)
+			
+		self._font_size = font_size
+		
+		can_up = self._get_font_size_index() < len(self._font_scales) - 1
+		can_down = self._get_font_size_index() > 0
+		self._font_size_up.set_sensitive(can_up)
+		self._font_size_down.set_sensitive(can_down)
+
+	def __font_size_up_cb(self, button): 
+		index = self._get_font_size_index()
+		if index + 1 < len(self._font_scales):
+			self._set_font_size(self._font_scales[index + 1])
+
+	def __font_size_down_cb(self, button):
+		index = self._get_font_size_index()
+		if index > 0:
+			self._set_font_size(self._font_scales[index - 1])
+			
 class RichTextHandler(xml.sax.handler.ContentHandler):
 	def __init__(self, serializer, buf):
 		self.buf = buf
 		self.serializer = serializer
 		self.tags = []
 
-	def startElement(self, name, attributes):
-		tag = self.serializer.deserialize_element(name)
-		if tag:
+	def startElement(self, name, attrs):
+		if name != "richtext":
+			tag = self.serializer.deserialize_element(name, attrs)
 			self.tags.append(tag)
  
 	def characters(self, data):
@@ -87,35 +148,43 @@ class RichTextHandler(xml.sax.handler.ContentHandler):
 			self.buf.apply_tag_by_name(tag, start_it, it)
  
 	def endElement(self, name):
-		tag = self.serializer.deserialize_element(name)
-		if tag:
-			self.tags.remove(tag)
+		if name != "richtext":
+			self.tags.pop()
 
 class RichTextSerializer:
 	def __init__(self):
 		self._open_tags = []
 
-	def deserialize_element(self, el_name):
+	def deserialize_element(self, el_name, attributes):
 		if el_name == "bold":
 			return "bold"
 		elif el_name == "italic":
 			return "italic"
+		elif el_name == "font":
+			return "font-size-" + attributes["size"]
 		else:
 			return None
-	
+
 	def serialize_tag_start(self, tag):
-		if tag.get_property("name") == "bold":
+		name = tag.get_property("name")
+		if name == "bold":
 			return "<bold>"
-		elif tag.get_property("name") == "italic":
+		elif name == "italic":
 			return "<italic>"
+		elif name.startswith("font-size-"):
+			tag_name = name.replace("font-size-", "", 1)
+			return "<font size=\"" + tag_name + "\">"
 		else:
 			return "<unknown>"
 
 	def serialize_tag_end(self, tag):
+		name = tag.get_property("name")
 		if tag.get_property("name") == "bold":
 			return "</bold>"
 		elif tag.get_property("name") == "italic":
 			return "</italic>"
+		elif name.startswith("font-size-"):
+			return "</font>"
 		else:
 			return "</unknown>"
 			
@@ -174,11 +243,11 @@ if __name__ == "__main__":
 
 	xml_string = "<richtext>"	
 
-	#xml_string += "<bold><italic>Test</italic>one</bold>\n"
+	xml_string += "<bold><italic>Test</italic>one</bold>\n"
 	xml_string += "<bold><italic>Test two</italic></bold>"
+	xml_string += "<font size=\"xx-small\">Test three</font>"
 
 	xml_string += "</richtext>"
-
 
 	RichTextSerializer().deserialize(xml_string, rich_buf)
 	
