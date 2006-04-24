@@ -48,9 +48,10 @@ class Buddy(object):
 class BuddyList(object):
 	""" Manage a list of buddies """
 
-	def __init__(self):
+	def __init__(self, servicename):
 		self._listeners = []
 		self._buddies = {}
+		self._servicename = servicename
 		self._pdiscovery = presence.PresenceDiscovery()
 		self._pdiscovery.add_service_listener(self._on_service_change)
 
@@ -61,6 +62,10 @@ class BuddyList(object):
 		self._listeners.append(listener)
 
 	def _add_buddy(self, host, address, port, servicename, data):
+		# Ignore ourselves
+		if servicename == self._servicename:
+			return
+
 		if len(data) > 0 and 'name' in data.keys():
 			buddy = self._find_buddy_by_service_name(servicename)
 			if not buddy:

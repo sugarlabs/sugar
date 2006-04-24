@@ -117,10 +117,11 @@ class ChatActivity(activity.Activity):
 		activity.Activity.__init__(self)
 		self._act_name = "Chat"
 		self._pannounce = presence.PresenceAnnounce()
-		self._buddy_list = BuddyList.BuddyList()
-		self._buddy_list.add_buddy_listener(self._on_buddy_presence_event)
 
 		(self._nick, self._realname) = self._get_name()
+
+		self._buddy_list = BuddyList.BuddyList(self._realname)
+		self._buddy_list.add_buddy_listener(self._on_buddy_presence_event)
 
 	def _create_chat(self):
 		chat_vbox = gtk.VBox()
