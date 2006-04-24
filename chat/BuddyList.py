@@ -14,8 +14,8 @@ class Buddy(object):
 		self._servicename = servicename
 		self._key = key
 		self._host = host
-		self._address = address
-		self._port = port
+		self._address = str(address)
+		self._port = int(port)
 		self._chat = None
 
 	def set_chat(self, chat):

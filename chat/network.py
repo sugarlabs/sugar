@@ -6,6 +6,75 @@ import traceback
 import select
 import time
 import gobject
+import SimpleXMLRPCServer
+import SocketServer
+
+
+__authinfos = {}
+
+def _add_authinfo(authinfo):
+	__authinfos[threading.currentThread()] = authinfo
+
+def get_authinfo():
+	return __authinfos.get(threading.currentThread())
+
+def _del_authinfo():
+	del __authinfos[threading.currentThread()]
+
+
+class GlibTCPServer(SocketServer.TCPServer):
+	"""GlibTCPServer
+
+	Integrate socket accept into glib mainloop.
+	"""
+
+	allow_reuse_address = True
+	request_queue_size = 20
+
+	def __init__(self, server_address, RequestHandlerClass):
+		SocketServer.TCPServer.__init__(self, server_address, RequestHandlerClass)
+		self.socket.setblocking(0)  # Set nonblocking
+
+		# Watch the listener socket for data
+		gobject.io_add_watch(self.socket, gobject.IO_IN, self._handle_accept)
+
+	def _handle_accept(self, source, condition):
+		if not (condition & gobject.IO_IN):
+			return True
+		self.handle_request()
+		return True
+
+class GlibXMLRPCRequestHandler(SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
+	""" GlibXMLRPCRequestHandler
+	
+	The stock SimpleXMLRPCRequestHandler and server don't allow any way to pass
+	the client's address and/or SSL certificate into the function that actually
+	_processes_ the request.  So we have to store it in a thread-indexed dict.
+	"""
+
+	def do_POST(self):
+		_add_authinfo(self.client_address)
+		try:
+			SimpleXMLRPCServer.SimpleXMLRPCRequestHandler.do_POST(self)
+		except socket.timeout:
+			pass
+		except socket.error, e:
+			print "Error (%s): socket error - '%s'" % (self.client_address, e)
+		_del_authinfo()
+
+class GlibXMLRPCServer(GlibTCPServer, SimpleXMLRPCServer.SimpleXMLRPCDispatcher):
+	"""GlibXMLRPCServer
+	
+	Use nonblocking sockets and handle the accept via glib rather than
+	blocking on accept().
+	"""
+
+	def __init__(self, addr, requestHandler=GlibXMLRPCRequestHandler, logRequests=1):
+		self.logRequests = logRequests
+
+		SimpleXMLRPCServer.SimpleXMLRPCDispatcher.__init__(self)
+		GlibTCPServer.__init__(self, addr, requestHandler)
+
 
 class GroupChatController(object):
 
@@ -50,7 +119,7 @@ class GroupChatController(object):
 
 	def _handle_incoming_data(self, source, condition):
 		if not (condition & gobject.IO_IN):
-			return
+			return True
 		msg = {}
 		msg['data'], (msg['addr'], msg['port']) = source.recvfrom(self._MAX_MSG_SIZE)
 		if self._data_cb:

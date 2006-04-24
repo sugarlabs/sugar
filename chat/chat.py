@@ -13,6 +13,7 @@ import sys
 import os
 import pwd
 import gc
+import socket
 
 sys.path.append(os.getcwd())
 sys.path.append('../shell/example-activity/')
@@ -22,12 +23,18 @@ import presence
 import BuddyList
 import network
 import richtext
+import xmlrpclib
 
 class Chat(object):
-	def __init__(self, view, label):
+	def __init__(self, parent, view, label):
+		self._parent = parent
 		self._buffer = richtext.RichTextBuffer()
 		self._view = view
 		self._label = label
+
+	def error_message(self, msg):
+		aniter = self._buffer.get_end_iter()
+		self._buffer.insert(aniter, "Error: %s\n" % msg)
 
 	def activate(self, label):
 		self._view.set_buffer(self._buffer)
@@ -43,13 +50,36 @@ class Chat(object):
 		aniter = self._buffer.get_end_iter()
 		self._buffer.insert(aniter, "\n")
 
+class BuddyChat(Chat):
+	def __init__(self, parent, buddy, view, label):
+		self._buddy = buddy
+		Chat.__init__(self, parent, view, label)
+
+	def activate(self):
+		Chat.activate(self, self._buddy.nick())
+
+	def recv_message(self, msg):
+		Chat.recv_message(self, self._buddy, msg)
+
+	def send_message(self, text):
+		if len(text) <= 0:
+			return
+		addr = "http://%s:%d" % (self._buddy.address(), self._buddy.port())
+		peer = xmlrpclib.ServerProxy(addr)
+		msg = None
+		success = True
+		try:
+			peer.message(text)
+		except socket.error, e:
+			msg = str(e)
+			success = False
+		return (success, msg)
+
 class GroupChat(Chat):
 	def __init__(self, parent, view, label):
-		Chat.__init__(self, view, label)
-		self._parent = parent
+		Chat.__init__(self, parent, view, label)
 		self._gc_controller = network.GroupChatController('224.0.0.221', 6666, self._recv_group_message)
 		self._gc_controller.start()
-		self._label_prefix = "Cha"
 
 	def activate(self):
 		Chat.activate(self, "Group Chat")
@@ -57,11 +87,23 @@ class GroupChat(Chat):
 	def send_message(self, text):
 		if len(text) > 0:
 			self._gc_controller.send_msg(text)
+		return (True, None)
 
 	def _recv_group_message(self, msg):
 		buddy = self._parent.find_buddy_by_address(msg['addr'])
 		if buddy:
 			self.recv_message(buddy, msg['data'])
+
+
+class ChatRequestHandler(object):
+	def __init__(self, parent):
+		self._parent = parent
+
+	def message(self, message):
+		client_address = network.get_authinfo()
+		buddy = self._parent.find_buddy_by_address(client_address[0])
+		if buddy:
+			self.recv_message(buddy, message)
 
 class ChatActivity(activity.Activity):
 	def __init__(self):
@@ -142,8 +184,10 @@ class ChatActivity(activity.Activity):
 			
 			serializer = richtext.RichTextSerializer()
 			text = serializer.serialize(buf)
-			chat.send_message(text)
-			
+			(success, msg) = chat.send_message(text)
+			if not success:
+				chat.error_message(msg)
+
 			buf.set_text("")
 			buf.place_cursor(buf.get_start_iter())
 
@@ -151,8 +195,15 @@ class ChatActivity(activity.Activity):
 
 	def _start(self):
 		self._buddy_list.start()
+		print "Starting announce."
 		self._pannounce.register_service(self._realname, 6666, presence.OLPC_CHAT_SERVICE,
 				name = self._nick, realname = self._realname)
+		print "Done announce."
+
+		# Create the P2P chat XMLRPC server
+		self._p2p_req_handler = ChatRequestHandler(self)
+		self._p2p_server = network.GlibXMLRPCServer(("", 6666))
+		self._p2p_server.register_instance(self._p2p_req_handler)
 
 	def activity_on_connected_to_shell(self):
 		print "act %d: in activity_on_connected_to_shell" % self.activity_get_id()
@@ -202,12 +253,11 @@ class ChatActivity(activity.Activity):
 			chat = self._group_chat
 		else:
 			chat = buddy.chat()
+			if not chat:
+				chat = BuddyChat(self, buddy, self._chat_view, self._chat_label)
+				buddy.set_chat(chat)
 
-		if chat:
-			chat.activate()
-		else:
-			# start a new chat with them
-			pass
+		chat.activate()
 
 	def _on_buddy_presence_event(self, action, buddy):
 		if action == BuddyList.ACTION_BUDDY_ADDED:
