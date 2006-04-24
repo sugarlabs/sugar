@@ -96,14 +96,21 @@ class GroupChat(Chat):
 
 
 class ChatRequestHandler(object):
-	def __init__(self, parent):
+	def __init__(self, parent, chat_view, chat_label):
 		self._parent = parent
+		self._chat_view = chat_view
+		self._chat_label = chat_label
 
 	def message(self, message):
 		client_address = network.get_authinfo()
 		buddy = self._parent.find_buddy_by_address(client_address[0])
 		if buddy:
-			self.recv_message(buddy, message)
+			chat = buddy.chat()
+			if not chat:
+				chat = BuddyChat(self, buddy, self._chat_view, self._chat_label)
+				buddy.set_chat(chat)
+			chat.recv_message(message)
+		return True
 
 class ChatActivity(activity.Activity):
 	def __init__(self):
@@ -201,7 +208,7 @@ class ChatActivity(activity.Activity):
 		print "Done announce."
 
 		# Create the P2P chat XMLRPC server
-		self._p2p_req_handler = ChatRequestHandler(self)
+		self._p2p_req_handler = ChatRequestHandler(self, self._chat_view, self._chat_label)
 		self._p2p_server = network.GlibXMLRPCServer(("", 6666))
 		self._p2p_server.register_instance(self._p2p_req_handler)
 
