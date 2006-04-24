@@ -32,23 +32,31 @@ class Chat(object):
 		self._view = view
 		self._label = label
 
-	def error_message(self, msg):
-		aniter = self._buffer.get_end_iter()
-		self._buffer.insert(aniter, "Error: %s\n" % msg)
-
 	def activate(self, label):
 		self._view.set_buffer(self._buffer)
 		self._label.set_text(label)
 
 	def recv_message(self, buddy, msg):
+		self._insert_rich_message(buddy.nick(), msg)
+
+	def _insert_rich_message(self, nick, msg):
 		aniter = self._buffer.get_end_iter()
-		self._buffer.insert(aniter, buddy.nick() + ": ")
+		self._buffer.insert(aniter, nick + ": ")
 		
 		serializer = richtext.RichTextSerializer()
 		serializer.deserialize(msg, self._buffer)
 
 		aniter = self._buffer.get_end_iter()
 		self._buffer.insert(aniter, "\n")
+
+	def _local_message(self, success, text):
+		if not success:
+			message = "Error: %s\n" % text
+			aniter = self._buffer.get_end_iter()
+			self._buffer.insert(aniter, message)
+		else:
+			(nick, realname) = self._parent.local_name()
+			self._insert_rich_message(nick, text)
 
 class BuddyChat(Chat):
 	def __init__(self, parent, buddy, view, label):
@@ -66,14 +74,14 @@ class BuddyChat(Chat):
 			return
 		addr = "http://%s:%d" % (self._buddy.address(), self._buddy.port())
 		peer = xmlrpclib.ServerProxy(addr)
-		msg = None
+		msg = text
 		success = True
 		try:
 			peer.message(text)
 		except socket.error, e:
 			msg = str(e)
 			success = False
-		return (success, msg)
+		self._local_message(success, msg)
 
 class GroupChat(Chat):
 	def __init__(self, parent, view, label):
@@ -87,7 +95,7 @@ class GroupChat(Chat):
 	def send_message(self, text):
 		if len(text) > 0:
 			self._gc_controller.send_msg(text)
-		return (True, None)
+		self._local_message(True, text)
 
 	def _recv_group_message(self, msg):
 		buddy = self._parent.find_buddy_by_address(msg['addr'])
@@ -237,9 +245,7 @@ class ChatActivity(activity.Activity):
 			
 			serializer = richtext.RichTextSerializer()
 			text = serializer.serialize(buf)
-			(success, msg) = chat.send_message(text)
-			if not success:
-				chat.error_message(msg)
+			chat.send_message(text)
 
 			buf.set_text("")
 			buf.place_cursor(buf.get_start_iter())
@@ -327,6 +333,9 @@ class ChatActivity(activity.Activity):
 
 	def find_buddy_by_address(self, address):
 		return self._buddy_list.find_buddy_by_address(address)
+
+	def local_name(self):
+		return (self._nick, self._realname)
 
 	def _on_main_window_delete(self, widget, *args):
 		self.quit()
