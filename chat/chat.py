@@ -203,9 +203,9 @@ class ChatActivity(activity.Activity):
 
 	def _ui_setup(self, plug):
 		vbox = gtk.VBox(False, 6)
-		vbox.set_border_width(12)
 
 		hbox = gtk.HBox(False, 12)
+		hbox.set_border_width(12)
 
 		[chat, rich_buf] = self._create_chat()
 		hbox.pack_start(chat)
