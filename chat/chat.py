@@ -79,7 +79,7 @@ class BuddyChat(Chat):
 		success = True
 		try:
 			peer.message(text)
-		except socket.error, e:
+		except (socket.error, xmlrpclib.Fault), e:
 			msg = str(e)
 			success = False
 		self._local_message(success, msg)
