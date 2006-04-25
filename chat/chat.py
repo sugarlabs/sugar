@@ -120,7 +120,7 @@ class ChatRequestHandler(object):
 		if buddy:
 			chat = buddy.chat()
 			if not chat:
-				chat = BuddyChat(self, buddy, self._chat_view, self._chat_label)
+				chat = BuddyChat(self._parent, buddy, self._chat_view, self._chat_label)
 				buddy.set_chat(chat)
 			chat.recv_message(message)
 		return True
@@ -254,7 +254,7 @@ class ChatActivity(activity.Activity):
 		aniter = self._buddy_list_model.append(None)
 		self._buddy_list_model.set(aniter, self._MODEL_COL_NICK, "Group",
 				self._MODEL_COL_ICON, self._pixbuf_active_chat, self._MODEL_COL_BUDDY, None)
-		self._activate_chat(None)
+		self._activate_chat_for_buddy(None)
 
 		plug.add(vbox)
 		vbox.show()
@@ -327,14 +327,10 @@ class ChatActivity(activity.Activity):
 		(model, aniter) = widget.get_selection().get_selected()
 		chat = None
 		buddy = self._buddy_list_model.get_value(aniter, self._MODEL_COL_BUDDY)
-		if not buddy:
-			chat = self._group_chat
-		else:
-			chat = buddy.chat()
-			if not chat:
-				chat = BuddyChat(self, buddy, self._chat_view, self._chat_label)
-				buddy.set_chat(chat)
-		self._activate_chat(chat)
+		if buddy and not buddy.chat():
+			chat = BuddyChat(self, buddy, self._chat_view, self._chat_label)
+			buddy.set_chat(chat)
+		self._activate_chat_for_buddy(buddy)
 
 	def _on_buddy_presence_event(self, action, buddy):
 		if action == BuddyList.ACTION_BUDDY_ADDED:
@@ -365,7 +361,7 @@ class ChatActivity(activity.Activity):
 	def local_name(self):
 		return (self._nick, self._realname)
 
-	def _activate_chat(self, buddy):
+	def _activate_chat_for_buddy(self, buddy):
 		self._active_chat_buddy = buddy
 
 		# Clear the "new message" icon when the user activates the chat
@@ -376,7 +372,7 @@ class ChatActivity(activity.Activity):
 
 		# Actually activate the chat
 		chat = self._group_chat
-		if buddy:
+		if self._active_chat_buddy:
 			chat = buddy.chat()
 		chat.activate()
 
@@ -387,6 +383,7 @@ class ChatActivity(activity.Activity):
 		chat = self._group_chat
 		if self._active_chat_buddy:
 			chat = self._active_chat_buddy.chat()
+		return chat
 
 	def run(self):
 		try:
