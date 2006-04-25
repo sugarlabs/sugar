@@ -294,7 +294,7 @@ class ChatActivity(activity.Activity):
 	def activity_on_disconnected_from_shell(self):
 		print "act %d: in activity_on_disconnected_from_shell"%self.activity_get_id()
 		print "act %d: Shell disappeared..."%self.activity_get_id()
-
+		gtk.main_quit()
 		gc.collect()
 
 	def activity_on_close_from_user(self):
