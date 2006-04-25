@@ -79,7 +79,7 @@ class BuddyChat(Chat):
 		success = True
 		try:
 			peer.message(text)
-		except socket.error, e:
+		except (socket.error, xmlrpclib.Fault), e:
 			msg = str(e)
 			success = False
 		self._local_message(success, msg)
@@ -366,6 +366,10 @@ class ChatActivity(activity.Activity):
 
 		# Clear the "new message" icon when the user activates the chat
 		aniter = self._get_iter_for_buddy(buddy)
+		# Select the row in the list
+		if aniter:
+			selection = self._buddy_list_view.get_selection()
+			selection.select_iter(aniter)
 		icon = self._buddy_list_model.get_value(aniter, self._MODEL_COL_ICON)
 		if icon == self._pixbuf_new_message:
 			self._buddy_list_model.set_value(aniter, self._MODEL_COL_ICON, self._pixbuf_active_chat)
