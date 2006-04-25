@@ -74,9 +74,16 @@ class ActivityHost(dbus.service.Object):
 		notebook = self.activity_container.notebook
 		index = notebook.append_page(self.socket, hbox)
 		notebook.set_current_page(index)
+
+	def __close_button_clicked_reply_cb(self):
+		pass
+
+	def __close_button_clicked_error_cb(self, error):
+		pass
 		
 	def tab_close_button_clicked(self, button):
-		self.peer_service.close_from_user()
+		self.peer_service.close_from_user(reply_handler = self.__close_button_clicked_reply_cb, \
+										  error_handler = self.__close_button_clicked_error_cb)
 
 	@dbus.service.method("com.redhat.Sugar.Shell.ActivityHost", \
 							 in_signature="", \
