@@ -23,8 +23,7 @@ class AddressToolbar(gtk.Toolbar):
 		address_item.show()
 
 	def __open_address_cb(self, address):
-		browser = BrowserActivity(address)
-		browser.activity_connect_to_shell()
+		browser_shell.open_browser(address)
 
 class AddressItem(gtk.ToolItem):
 	def __init__(self, callback):
@@ -140,7 +139,7 @@ class NavigationToolbar(gtk.Toolbar):
 		self._update_sensitivity()
 
 	def __open_address_cb(self, address):
-		self.embed.load_url(address)
+		self.embed.load_address(address)
 		
 class BrowserActivity(activity.Activity):
 	def __init__(self, uri):
@@ -159,7 +158,7 @@ class BrowserActivity(activity.Activity):
 		vbox.pack_start(self.embed)
 		
 		self.embed.show()
-		self.embed.load_url(self.uri)
+		self.embed.load_address(self.uri)
 		
 		nav_toolbar = NavigationToolbar(self.embed)
 		vbox.pack_start(nav_toolbar, False)
@@ -170,7 +169,10 @@ class BrowserActivity(activity.Activity):
 		plug.show()
 
 		vbox.show()
-		
+	
+	def get_embed(self):
+		return self.embed
+	
 	def __title_cb(self, embed):
 		self.activity_set_tab_text(embed.get_title())
 
@@ -201,18 +203,44 @@ class WebActivity(activity.Activity):
 
 		vbox.show()
 		
-		self.embed.load_url("http://www.google.com")
+		self.embed.load_address("http://www.google.com")
 		
 	def __open_address(self, embed, uri, data=None):
 		if uri.startswith("http://www.google.com"):
 			return False
 		else:
-			browser = BrowserActivity(uri)
-			browser.activity_connect_to_shell()
+			browser_shell.open_browser(uri)
 			return True
 
+class BrowserShell(dbus.service.Object):
+	def __init__(self, bus_name, object_path='/com/redhat/Sugar/Browser'):
+		dbus.service.Object.__init__(self, bus_name, object_path)
+		self.__browsers = []
+
+	@dbus.service.method('com.redhat.Sugar.BrowserShell')
+	def get_links(self):
+		links = []
+		for browser in self.__browsers:
+			embed = browser.get_embed()
+			link = {}
+			link['title'] = embed.get_title()
+			link['address'] = embed.get_address()
+			links.append(link)
+		return links
+
+	@dbus.service.method('com.redhat.Sugar.BrowserShell')
+	def open_browser(self, uri):
+		browser = BrowserActivity(uri)
+		self.__browsers.append(browser)
+		browser.activity_connect_to_shell()
+      
 web_activity = WebActivity()
 web_activity.activity_connect_to_shell()
+
+session_bus = dbus.SessionBus()
+bus_name = dbus.service.BusName('com.redhat.Sugar.Browser', bus=session_bus)
+browser_shell = BrowserShell(bus_name)
+
 try:
 	gtk.main()
 except KeyboardInterrupt:

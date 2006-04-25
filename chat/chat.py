@@ -142,6 +142,13 @@ class ChatActivity(activity.Activity):
 		self._buddy_list = BuddyList.BuddyList(self._realname)
 		self._buddy_list.add_buddy_listener(self._on_buddy_presence_event)
 
+		bus = dbus.SessionBus()
+		proxy_obj = bus.get_object('com.redhat.Sugar.Browser', '/com/redhat/Sugar/Browser')
+		self.browser_shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.BrowserShell')
+
+	def __link_clicked_cb(self, view, address):
+		self.browser_shell.open_browser(address)
+
 	def _create_chat(self):
 		chat_vbox = gtk.VBox()
 		chat_vbox.set_spacing(6)
@@ -154,7 +161,8 @@ class ChatActivity(activity.Activity):
 		sw = gtk.ScrolledWindow()
 		sw.set_shadow_type(gtk.SHADOW_IN)
 		sw.set_policy(gtk.POLICY_NEVER, gtk.POLICY_ALWAYS)
-		self._chat_view = gtk.TextView()
+		self._chat_view = richtext.RichTextView()
+		self._chat_view.connect("link-clicked", self.__link_clicked_cb)
 		sw.add(self._chat_view)
 		self._chat_view.show()
 		chat_vbox.pack_start(sw)
@@ -164,7 +172,7 @@ class ChatActivity(activity.Activity):
 		chat_view_sw = gtk.ScrolledWindow()
 		chat_view_sw.set_shadow_type(gtk.SHADOW_IN)
 		chat_view_sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-		self._editor = gtk.TextView(rich_buf)
+		self._editor = richtext.RichTextView(rich_buf)
 		self._editor.connect("key-press-event", self.__key_press_event_cb)
 		self._editor.set_size_request(-1, 50)
 		chat_view_sw.add(self._editor)
@@ -229,6 +237,34 @@ class ChatActivity(activity.Activity):
 		
 		return vbox
 
+	def _create_toolbar(self, rich_buf):
+		toolbar = richtext.RichTextToolbar(rich_buf)
+
+		item = gtk.MenuToolButton(None, "Links")
+		item.set_menu(gtk.Menu())
+		item.connect("show-menu", self.__show_link_menu_cb)
+		toolbar.insert(item, -1)
+		item.show()
+		
+		return toolbar
+
+	def __link_activate_cb(self, item, link):
+		buf = self._editor.get_buffer()
+		buf.append_link(link['title'], link['address'])
+
+	def __show_link_menu_cb(self, button):
+		menu = gtk.Menu()
+		
+		links = self.browser_shell.get_links()
+
+		for link in links:
+			item = gtk.MenuItem(link['title'], False)
+			item.connect("activate", self.__link_activate_cb, link)
+			menu.append(item)
+			item.show()
+		
+		button.set_menu(menu)
+		
 	def _ui_setup(self, plug):
 		vbox = gtk.VBox(False, 6)
 
@@ -246,7 +282,7 @@ class ChatActivity(activity.Activity):
 		vbox.pack_start(hbox)
 		hbox.show()
 
-		toolbar = richtext.RichTextToolbar(rich_buf)
+		toolbar = self._create_toolbar(rich_buf)
 		vbox.pack_start(toolbar, False);
 		toolbar.show()		
 		
