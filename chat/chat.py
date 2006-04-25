@@ -38,6 +38,7 @@ class Chat(object):
 
 	def recv_message(self, buddy, msg):
 		self._insert_rich_message(buddy.nick(), msg)
+		self._parent.notify_new_message(self, buddy)
 
 	def _insert_rich_message(self, nick, msg):
 		aniter = self._buffer.get_end_iter()
@@ -97,6 +98,10 @@ class GroupChat(Chat):
 			self._gc_controller.send_msg(text)
 		self._local_message(True, text)
 
+	def recv_message(self, buddy, msg):
+		self._insert_rich_message(buddy.nick(), msg)
+		self._parent.notify_new_message(self, None)
+
 	def _recv_group_message(self, msg):
 		buddy = self._parent.find_buddy_by_address(msg['addr'])
 		if buddy:
@@ -121,9 +126,15 @@ class ChatRequestHandler(object):
 		return True
 
 class ChatActivity(activity.Activity):
+
+	_MODEL_COL_NICK = 0
+	_MODEL_COL_ICON = 1
+	_MODEL_COL_BUDDY = 2
+
 	def __init__(self):
 		activity.Activity.__init__(self)
 		self._act_name = "Chat"
+		self._active_chat_buddy = None
 		self._pannounce = presence.PresenceAnnounce()
 
 		(self._nick, self._realname) = self._get_name()
@@ -172,7 +183,10 @@ class ChatActivity(activity.Activity):
 		vbox.pack_start(label, False)
 		label.show()
 	
-		self._buddy_list_model = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_PYOBJECT)
+		self._buddy_list_model = gtk.ListStore(gobject.TYPE_STRING, gtk.gdk.Pixbuf, gobject.TYPE_PYOBJECT)
+
+		self._pixbuf_active_chat = gtk.gdk.pixbuf_new_from_file("bubbleOutline.png")
+		self._pixbuf_new_message = gtk.gdk.pixbuf_new_from_file("bubble.png")
 
 		sw = gtk.ScrolledWindow()
 		sw.set_shadow_type(gtk.SHADOW_IN)
@@ -187,8 +201,14 @@ class ChatActivity(activity.Activity):
 		sw.add(self._buddy_list_view)
 		self._buddy_list_view.show()
 
+		renderer = gtk.CellRendererPixbuf()
+		column = gtk.TreeViewColumn("", renderer, pixbuf=self._MODEL_COL_ICON)
+		column.set_resizable(False)
+		column.set_expand(False);
+		self._buddy_list_view.append_column(column)
+
 		renderer = gtk.CellRendererText()
-		column = gtk.TreeViewColumn("", renderer, text=0)
+		column = gtk.TreeViewColumn("", renderer, text=self._MODEL_COL_NICK)
 		column.set_resizable(True)
 		column.set_sizing("GTK_TREE_VIEW_COLUMN_GROW_ONLY");
 		column.set_expand(True);
@@ -232,8 +252,9 @@ class ChatActivity(activity.Activity):
 		
 		self._group_chat = GroupChat(self, self._chat_view, self._chat_label)
 		aniter = self._buddy_list_model.append(None)
-		self._buddy_list_model.set(aniter, 0, "Group", 1, None)
-		self._group_chat.activate()
+		self._buddy_list_model.set(aniter, self._MODEL_COL_NICK, "Group",
+				self._MODEL_COL_ICON, self._pixbuf_active_chat, self._MODEL_COL_BUDDY, None)
+		self._activate_chat(None)
 
 		plug.add(vbox)
 		vbox.show()
@@ -241,7 +262,7 @@ class ChatActivity(activity.Activity):
 	def __key_press_event_cb(self, text_view, event):
 		if event.keyval == gtk.keysyms.Return:
 			buf = text_view.get_buffer()
-			chat = self._get_current_chat()
+			chat = self._get_active_chat()
 			
 			serializer = richtext.RichTextSerializer()
 			text = serializer.serialize(buf)
@@ -298,14 +319,14 @@ class ChatActivity(activity.Activity):
 
 	def _on_buddyList_buddy_selected(self, widget, *args):
 		(model, aniter) = widget.get_selection().get_selected()
-		name = self._buddy_list_model.get(aniter,0)
+		name = self._buddy_list_model.get(aniter, self._MODEL_COL_NICK)
 		print "Selected %s" % name
 
 	def _on_buddyList_buddy_double_clicked(self, widget, *args):
 		""" Select the chat for this buddy or group """
 		(model, aniter) = widget.get_selection().get_selected()
 		chat = None
-		buddy = self._buddy_list_model.get_value(aniter, 1)
+		buddy = self._buddy_list_model.get_value(aniter, self._MODEL_COL_BUDDY)
 		if not buddy:
 			chat = self._group_chat
 		else:
@@ -313,21 +334,30 @@ class ChatActivity(activity.Activity):
 			if not chat:
 				chat = BuddyChat(self, buddy, self._chat_view, self._chat_label)
 				buddy.set_chat(chat)
-
-		chat.activate()
+		self._activate_chat(chat)
 
 	def _on_buddy_presence_event(self, action, buddy):
 		if action == BuddyList.ACTION_BUDDY_ADDED:
 			aniter = self._buddy_list_model.append(None)
-			self._buddy_list_model.set(aniter, 0, buddy.nick(), 1, buddy)
+			self._buddy_list_model.set(aniter, self._MODEL_COL_NICK, buddy.nick(),
+					self._MODEL_COL_ICON, None, self._MODEL_COL_BUDDY, buddy)
 		elif action == BuddyList.ACTION_BUDDY_REMOVED:
-			aniter = self._buddy_list_model.get_iter_first()
-			while aniter:
-				list_buddy = self._buddy_list_model.get_value(aniter, 1)
-				if buddy == list_buddy:
-					self._buddy_list_model.remove(aniter)
-					break
-				aniter = self._buddy_list_model.iter_next(aniter)
+			aniter = self._get_iter_for_buddy(buddy)
+			if aniter:
+				self._buddy_list_model.remove(aniter)
+
+	def _get_iter_for_buddy(self, buddy):
+		aniter = self._buddy_list_model.get_iter_first()
+		while aniter:
+			list_buddy = self._buddy_list_model.get_value(aniter, self._MODEL_COL_BUDDY)
+			if buddy == list_buddy:
+				return aniter
+			aniter = self._buddy_list_model.iter_next(aniter)
+
+	def notify_new_message(self, chat, buddy):
+		if chat != self._get_active_chat():
+			aniter = self._get_iter_for_buddy(buddy)
+			self._buddy_list_model.set(aniter, self._MODEL_COL_ICON, self._pixbuf_new_message)
 
 	def find_buddy_by_address(self, address):
 		return self._buddy_list.find_buddy_by_address(address)
@@ -335,18 +365,28 @@ class ChatActivity(activity.Activity):
 	def local_name(self):
 		return (self._nick, self._realname)
 
+	def _activate_chat(self, buddy):
+		self._active_chat_buddy = buddy
+
+		# Clear the "new message" icon when the user activates the chat
+		aniter = self._get_iter_for_buddy(buddy)
+		icon = self._buddy_list_model.get_value(aniter, self._MODEL_COL_ICON)
+		if icon == self._pixbuf_new_message:
+			self._buddy_list_model.set_value(aniter, self._MODEL_COL_ICON, self._pixbuf_active_chat)
+
+		# Actually activate the chat
+		chat = self._group_chat
+		if buddy:
+			chat = buddy.chat()
+		chat.activate()
+
 	def _on_main_window_delete(self, widget, *args):
 		self.quit()
 
-	def _get_current_chat(self):
-		selection = self._buddy_list_view.get_selection()
-		(model, aniter) = selection.get_selected()
-		buddy = None
-		if aniter:
-			buddy = model.get_value(aniter, 1)
-		if not buddy:
-			return self._group_chat
-		return buddy.chat()
+	def _get_active_chat(self):
+		chat = self._group_chat
+		if self._active_chat_buddy:
+			chat = self._active_chat_buddy.chat()
 
 	def run(self):
 		try:
