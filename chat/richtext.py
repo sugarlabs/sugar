@@ -35,8 +35,11 @@ class RichTextView(gtk.TextView):
 			gtk.gdk.flush()
 	
 	def __iter_is_link(self, it):
-		return it.has_tag(self.get_buffer().get_tag_table().lookup("link"))
-	
+		item = self.get_buffer().get_tag_table().lookup("link")
+		if item:
+			return it.has_tag(item)
+		return False
+
 	def __get_event_iter(self, event):
 		return self.get_iter_at_location(int(event.x), int(event.y))
 

@@ -1,1 +1,1 @@
-data_dir = "/home/marco/sugar/share/sugar"
+data_dir = "/usr/share/sugar"
