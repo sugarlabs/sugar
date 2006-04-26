@@ -1,6 +1,8 @@
 Building
 ========
 
+You will need gnome-common.
+
 ./autogen.sh
 make
 make install
