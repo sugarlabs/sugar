@@ -186,7 +186,7 @@ class ActivityHost(dbus.service.Object):
 			self.label_hbox.set_size_request(tab_width, -1);
 		else:
 			self.tab_label.set_ellipsize(pango.ELLIPSIZE_NONE)
-			widget.set_size_request(-1, -1)
+			self.label_hbox.set_size_request(-1, -1)
 
 	def __get_close_icon_size(self):
 		settings = self.label_hbox.get_settings()
