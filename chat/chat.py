@@ -46,6 +46,7 @@ class Chat(activity.Activity):
 		self._chat_view = richtext.RichTextView()
 		self._chat_view.connect("link-clicked", self.__link_clicked_cb)
 		self._chat_view.set_editable(False)
+		self._chat_view.set_cursor_visible(False)
 		sw.add(self._chat_view)
 		self._chat_view.show()
 		chat_vbox.pack_start(sw)
