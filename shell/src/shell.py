@@ -239,6 +239,7 @@ class ActivityContainer(dbus.service.Object):
 
 	def notebook_tab_changed(self, notebook, page, page_number):
 		print "in notebook_tab_changed"
+		print notebook.get_nth_page(page_number)
 		new_activity = notebook.get_nth_page(page_number).get_data("sugar-activity")
 		print " Current activity: ", self.current_activity
 		print " New activity:	 ", new_activity
@@ -295,7 +296,4 @@ def main():
 
 	activityContainer = ActivityContainer(service, session_bus)
 
-	try:
-		gtk.main()
-	except KeyboardInterrupt:
-		pass
+	gtk.main()
