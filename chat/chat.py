@@ -52,11 +52,10 @@ class Chat(activity.Activity):
 		chat_vbox.pack_start(sw)
 		sw.show()
 
-		rich_buf = richtext.RichTextBuffer()		
 		chat_view_sw = gtk.ScrolledWindow()
 		chat_view_sw.set_shadow_type(gtk.SHADOW_IN)
 		chat_view_sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-		self._editor = richtext.RichTextView(rich_buf)
+		self._editor = richtext.RichTextView()
 		self._editor.connect("key-press-event", self.__key_press_event_cb)
 		self._editor.set_size_request(-1, 50)
 		chat_view_sw.add(self._editor)
@@ -65,7 +64,7 @@ class Chat(activity.Activity):
 		chat_vbox.pack_start(chat_view_sw, False)
 		chat_view_sw.show()
 		
-		return chat_vbox, rich_buf
+		return chat_vbox, self._editor.get_buffer()
 
 	def _ui_setup(self, base):
 		vbox = gtk.VBox(False, 6)

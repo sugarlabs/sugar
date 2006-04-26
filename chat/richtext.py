@@ -14,8 +14,8 @@ class RichTextView(gtk.TextView):
 					    ([gobject.TYPE_STRING]))
 	}
 
-	def __init__(self, rich_buf = None):
-		gtk.TextView.__init__(self, rich_buf)
+	def __init__(self):
+		gtk.TextView.__init__(self, RichTextBuffer())
 		self.connect("motion-notify-event", self.__motion_notify_cb)
 		self.connect("button-press-event", self.__button_press_cb)
 		self.__hover_link = False
@@ -343,8 +343,13 @@ if __name__ == "__main__":
 	
 	vbox = gtk.VBox()
 	
-	rich_buf = RichTextBuffer()
+	view = RichTextView()
+	view.connect("link-clicked", link_clicked)
+	vbox.pack_start(view)
+	view.show()
 
+	rich_buf = view.get_buffer()
+	
 	xml_string = "<richtext>"	
 
 	xml_string += "<bold><italic>Test</italic>one</bold>\n"
@@ -354,11 +359,6 @@ if __name__ == "__main__":
 	xml_string += "</richtext>"
 
 	RichTextSerializer().deserialize(xml_string, rich_buf)
-	
-	view = RichTextView(rich_buf)
-	view.connect("link-clicked", link_clicked)
-	vbox.pack_start(view)
-	view.show()
 	
 	toolbar = RichTextToolbar(rich_buf)
 	vbox.pack_start(toolbar, False)
