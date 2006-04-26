@@ -8,6 +8,12 @@ make install
 Running
 =======
 
+sugar
+
+
+Debug
+=====
+
 To run the shell:
 
 sugar shell
