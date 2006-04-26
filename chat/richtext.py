@@ -55,6 +55,7 @@ class RichTextView(gtk.TextView):
 	def __button_press_cb(self, widget, event):
 		it = self.__get_event_iter(event)
 		if it and self.__iter_is_link(it):
+			buf = self.get_buffer()
 			address_tag = buf.get_tag_table().lookup("link-address")
 
 			address_end = it.copy()
@@ -63,7 +64,7 @@ class RichTextView(gtk.TextView):
 			address_start = address_end.copy()
 			address_start.backward_to_tag_toggle(address_tag)
 			
-			address = self.get_buffer().get_text(address_start, address_end)
+			address = buf.get_text(address_start, address_end)
 			self.emit("link-clicked", address)
 
 class RichTextBuffer(gtk.TextBuffer):
