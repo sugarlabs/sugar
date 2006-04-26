@@ -42,6 +42,11 @@ class ExampleActivity(activity.Activity):
 		plug.add(self.entry)
 		plug.show_all()
 
+	    icon_theme = gtk.icon_theme_get_default()
+		pixbuf = icon_theme.load_icon("gnome-dev-cdrom", gtk.ICON_SIZE_MENU, gtk.ICON_LOOKUP_USE_BUILTIN)
+		self.activity_set_icon(pixbuf)
+		self.activity_show_icon(True)
+
 	def activity_on_disconnected_from_shell(self):
 		print "act %d: in activity_on_disconnected_from_shell"%self.activity_get_id()
 		print "act %d: Shell disappeared..."%self.activity_get_id()

@@ -40,7 +40,7 @@ class ActivityHost(dbus.service.Object):
 		self.tab_activity_image = gtk.Image()
 		self.tab_activity_image.set_from_stock(gtk.STOCK_CONVERT, gtk.ICON_SIZE_MENU)
 		hbox.pack_start(self.tab_activity_image)
-		self.tab_activity_image.show()		
+		#self.tab_activity_image.show()		
 		
 		self.label_hbox = gtk.HBox(False, 4);
 		self.label_hbox.connect("style-set", self.__tab_label_style_set_cb)
@@ -121,10 +121,33 @@ class ActivityHost(dbus.service.Object):
 			self.tab_close_button.hide()
 
 	@dbus.service.method("com.redhat.Sugar.Shell.ActivityHost", \
+			 in_signature="b", \
+			 out_signature="")
+	def set_tab_show_icon(self, show_icon):
+		if show_icon:
+			self.tab_activity_image.show()
+		else:
+			self.tab_activity_image.hide()
+
+	@dbus.service.method("com.redhat.Sugar.Shell.ActivityHost", \
 			 in_signature="s", \
 			 out_signature="")
 	def set_tab_text(self, text):
 		self.tab_label.set_text(text)
+
+	@dbus.service.method("com.redhat.Sugar.Shell.ActivityHost", \
+			 in_signature="ayibiiii", \
+			 out_signature="")
+	def set_tab_icon(self, data, colorspace, has_alpha, bits_per_sample, width, height, rowstride):
+	    print "width=%d, height=%d"%(width, height)
+		print "  data = ", data
+		pixstr = ""
+		for c in data:
+		    pixstr += chr(c)
+
+		pixbuf = gtk.gdk.pixbuf_new_from_data(pixstr, colorspace, has_alpha, bits_per_sample, width, height, rowstride)
+		print pixbuf
+		self.tab_activity_image.set_from_pixbuf(pixbuf)
 
 	@dbus.service.method("com.redhat.Sugar.Shell.ActivityHost", \
 						 in_signature="", \
