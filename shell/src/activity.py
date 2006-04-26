@@ -74,6 +74,30 @@ class Activity(dbus.service.Object):
 	@dbus.service.method("com.redhat.Sugar.Activity", \
 						 in_signature="", \
 						 out_signature="")
+
+	def activity_show_icon(self, show_icon):
+		self.__activity_object.set_tab_show_icon(show_icon)
+
+	@dbus.service.method("com.redhat.Sugar.Activity", \
+						 in_signature="", \
+						 out_signature="")
+
+	def activity_set_icon(self, pixbuf):
+		pixarray = []
+		pixstr = pixbuf.get_pixels();
+		for c in pixstr:
+				pixarray.append(c)
+		self.__activity_object.set_tab_icon(pixarray, \
+											pixbuf.get_colorspace(), \
+											pixbuf.get_has_alpha(),  \
+											pixbuf.get_bits_per_sample(), \
+											pixbuf.get_width(), \
+											pixbuf.get_height(), \
+											pixbuf.get_rowstride())
+
+	@dbus.service.method("com.redhat.Sugar.Activity", \
+						 in_signature="", \
+						 out_signature="")
 						 
 	def activity_set_tab_text(self, text):
 		self.__activity_object.set_tab_text(text)
