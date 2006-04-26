@@ -24,7 +24,7 @@ class AddressToolbar(gtk.Toolbar):
 		address_item.show()
 
 	def __open_address_cb(self, address):
-		browser_shell.open_browser(address)
+		BrowserShell.get_instance().open_browser(address)
 
 class AddressItem(gtk.ToolItem):
 	def __init__(self, callback):
@@ -210,13 +210,31 @@ class WebActivity(activity.Activity):
 		if uri.startswith("http://www.google.com"):
 			return False
 		else:
-			browser_shell.open_browser(uri)
+			BrowserShell.get_instance().open_browser(uri)
 			return True
 
 class BrowserShell(dbus.service.Object):
-	def __init__(self, bus_name, object_path='/com/redhat/Sugar/Browser'):
+	instance = None
+
+	def get_instance():
+		if not BrowserShell.instance:
+			BrowserShell.instance = BrowserShell()
+		return BrowserShell.instance
+		
+	get_instance = staticmethod(get_instance)
+
+	def __init__(self):
+		session_bus = dbus.SessionBus()
+		bus_name = dbus.service.BusName('com.redhat.Sugar.Browser', bus=session_bus)
+		object_path = '/com/redhat/Sugar/Browser'
+
 		dbus.service.Object.__init__(self, bus_name, object_path)
+
 		self.__browsers = []
+
+	def open_web_activity(self):
+		web_activity = WebActivity()
+		web_activity.activity_connect_to_shell()
 
 	@dbus.service.method('com.redhat.Sugar.BrowserShell')
 	def get_links(self):
@@ -235,14 +253,9 @@ class BrowserShell(dbus.service.Object):
 		self.__browsers.append(browser)
 		browser.activity_connect_to_shell()
 
-def main():      
-	web_activity = WebActivity()
-	web_activity.activity_connect_to_shell()
-
-	session_bus = dbus.SessionBus()
-	bus_name = dbus.service.BusName('com.redhat.Sugar.Browser', bus=session_bus)
-	browser_shell = BrowserShell(bus_name)
-
+def main():
+	BrowserShell.get_instance().open_web_activity()
+	
 	try:
 		gtk.main()
 	except KeyboardInterrupt:
