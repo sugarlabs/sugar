@@ -11,8 +11,9 @@ import gtk
 import geckoembed
 
 import sys
-sys.path.append('../shell/example-activity/')
 import activity
+
+from sugar_globals import *
 
 class AddressToolbar(gtk.Toolbar):
 	def __init__(self):
@@ -60,14 +61,14 @@ class AddressEntry(gtk.HBox):
 	def _update_folded_state(self):
 		if self.folded:
 			image = gtk.Image()
-			image.set_from_file("unfold.png")
+			image.set_from_file(data_dir + "/unfold.png")
 			self.button.set_image(image)
 			image.show()
 
 			self.entry.hide()
 		else:
 			image = gtk.Image()
-			image.set_from_file("fold.png")
+			image.set_from_file(data_dir + "/fold.png")
 			self.button.set_image(image)
 			image.show()
 
@@ -233,15 +234,16 @@ class BrowserShell(dbus.service.Object):
 		browser = BrowserActivity(uri)
 		self.__browsers.append(browser)
 		browser.activity_connect_to_shell()
-      
-web_activity = WebActivity()
-web_activity.activity_connect_to_shell()
 
-session_bus = dbus.SessionBus()
-bus_name = dbus.service.BusName('com.redhat.Sugar.Browser', bus=session_bus)
-browser_shell = BrowserShell(bus_name)
+def main():      
+	web_activity = WebActivity()
+	web_activity.activity_connect_to_shell()
 
-try:
-	gtk.main()
-except KeyboardInterrupt:
-	pass
+	session_bus = dbus.SessionBus()
+	bus_name = dbus.service.BusName('com.redhat.Sugar.Browser', bus=session_bus)
+	browser_shell = BrowserShell(bus_name)
+
+	try:
+		gtk.main()
+	except KeyboardInterrupt:
+		pass

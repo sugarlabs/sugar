@@ -15,8 +15,6 @@ import pwd
 import gc
 import socket
 
-sys.path.append(os.getcwd())
-sys.path.append('../shell/example-activity/')
 import activity
 
 import presence
@@ -24,6 +22,8 @@ import BuddyList
 import network
 import richtext
 import xmlrpclib
+
+from sugar_globals import *
 
 class Chat(object):
 	def __init__(self, parent, view, label):
@@ -193,8 +193,8 @@ class ChatActivity(activity.Activity):
 	
 		self._buddy_list_model = gtk.ListStore(gobject.TYPE_STRING, gtk.gdk.Pixbuf, gobject.TYPE_PYOBJECT)
 
-		self._pixbuf_active_chat = gtk.gdk.pixbuf_new_from_file("bubbleOutline.png")
-		self._pixbuf_new_message = gtk.gdk.pixbuf_new_from_file("bubble.png")
+		self._pixbuf_active_chat = gtk.gdk.pixbuf_new_from_file(data_dir + "/bubbleOutline.png")
+		self._pixbuf_new_message = gtk.gdk.pixbuf_new_from_file(data_dir + "/bubble.png")
 
 		sw = gtk.ScrolledWindow()
 		sw.set_shadow_type(gtk.SHADOW_IN)

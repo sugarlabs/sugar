@@ -264,10 +264,10 @@ class ActivityContainer(dbus.service.Object):
 			i += 1
 
 
+def main():
+	session_bus = dbus.SessionBus()
+	service = dbus.service.BusName("com.redhat.Sugar.Shell", bus=session_bus)
 
-session_bus = dbus.SessionBus()
-service = dbus.service.BusName("com.redhat.Sugar.Shell", bus=session_bus)
+	activityContainer = ActivityContainer(service, session_bus)
 
-activityContainer = ActivityContainer(service, session_bus)
-
-gtk.main()
+	gtk.main()

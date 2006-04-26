@@ -1,0 +1,12 @@
+sugardir = $(pythondir)/sugar
+sugar_PYTHON =		\
+	BuddyList.py	\
+	chat.py		\
+	network.py	\
+	presence.py	\
+	richtext.py
+
+icondir = $(pkgdatadir)
+icon_DATA =			\
+	bubble.png		\
+	bubbleOutline.png
