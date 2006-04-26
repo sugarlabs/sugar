@@ -1,0 +1,22 @@
+Building
+========
+
+./autogen.sh
+make
+make install
+
+Running
+=======
+
+To run the shell:
+
+sugar shell
+
+To run the chat activity:
+
+sugar chat
+
+To run the web activity:
+
+sugar browser
+
