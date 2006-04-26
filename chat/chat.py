@@ -172,6 +172,10 @@ class BuddyChat(Chat):
 		self._act_name = "Chat: %s" % buddy.nick()
 		Chat.__init__(self, controller)
 
+	def activity_on_connected_to_shell(self):
+		Chat.activity_on_connected_to_shell(self)
+		self.activity_set_can_close(True)
+		
 	def recv_message(self, msg):
 		Chat.recv_message(self, self._buddy, msg)
 
@@ -189,6 +193,10 @@ class BuddyChat(Chat):
 			success = False
 		self._local_message(success, msg)
 
+	def activity_on_close_from_user(self):
+		Chat.activity_on_close_from_user(self)
+		self._buddy.set_chat(None)
+			
 class ChatRequestHandler(object):
 	def __init__(self, parent):
 		self._parent = parent
