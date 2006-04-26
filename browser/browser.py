@@ -213,6 +213,10 @@ class WebActivity(activity.Activity):
 			BrowserShell.get_instance().open_browser(uri)
 			return True
 
+	def activity_on_disconnected_from_shell(self):
+		gtk.main_quit()
+		gc.collect()
+
 class BrowserShell(dbus.service.Object):
 	instance = None
 
