@@ -1,9 +1,21 @@
 #!/usr/bin/python
 
 import sys
+import os
 
-# FIXME Without args we should startup the session thing
-if len(sys.argv) == 1 or sys.argv[1] == 'shell':
+if len(sys.argv) == 1:
+	# FIXME Start a session
+
+	# We are lucky and this
+	# currently behave as we want.
+	# The chat depends on the
+	# web browser, so both activities
+	# are spanned. But obviously we
+	# need something better.
+
+	import sugar.chat
+	sugar.chat.main()
+elif sys.argv[1] == 'shell':
 	import sugar.shell
 	sugar.shell.main()
 elif sys.argv[1] == 'chat':

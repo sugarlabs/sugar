@@ -191,10 +191,12 @@ class ActivityContainer(dbus.service.Object):
 		self.window.resize(640, 480)
 		self.window.set_geometry_hints(min_width = 640, max_width = 640, min_height = 480, max_height = 480)
 		self.notebook = gtk.Notebook()
-		tab_label = gtk.Label("My Laptop")
-		empty_label = gtk.Label("This activity could launch other activities / be a help page")
-		empty_label.show()
-		self.notebook.append_page(empty_label, tab_label)
+
+		#tab_label = gtk.Label("My Laptop")
+		#empty_label = gtk.Label("This activity could launch other activities / be a help page")
+		#empty_label.show()
+		#self.notebook.append_page(empty_label, tab_label)
+
 		self.notebook.show()
 		self.notebook.connect("switch-page", self.notebook_tab_changed)
 		self.window.add(self.notebook)
