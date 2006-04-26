@@ -16,17 +16,45 @@ class RichTextView(gtk.TextView):
 
 	def __init__(self, rich_buf = None):
 		gtk.TextView.__init__(self, rich_buf)
-#		self.connect("motion-notify-event", self.__motion_notify_cb)
+		self.connect("motion-notify-event", self.__motion_notify_cb)
 		self.connect("button-press-event", self.__button_press_cb)
+		self.__hover_link = False
 
-#	def __motion_notify_cb(self, widget, event):
-#		if event.is_hint:
-#			[x, y, state] = event.window.get_pointer();
+	def _set_hover_link(self, hover_link):
+		if hover_link != self.__hover_link:
+			self.__hover_link = hover_link
+			display = self.get_toplevel().get_display()
+			child_window = self.get_window(gtk.TEXT_WINDOW_TEXT)
+			
+			if hover_link:
+				cursor = gtk.gdk.Cursor(display, gtk.gdk.HAND2)
+			else:
+				cursor = gtk.gdk.Cursor(display, gtk.gdk.XTERM)
+				
+			child_window.set_cursor(cursor)
+			gtk.gdk.flush()
+	
+	def __iter_is_link(self, it):
+		return it.has_tag(self.get_buffer().get_tag_table().lookup("link"))
+	
+	def __get_event_iter(self, event):
+		return self.get_iter_at_location(int(event.x), int(event.y))
 
+	def __motion_notify_cb(self, widget, event):
+		if event.is_hint:
+			[x, y, state] = event.window.get_pointer();
+		
+		it = self.__get_event_iter(event)
+		if it:
+			hover_link = self.__iter_is_link(it)
+		else:
+			hover_link = False
+
+		self._set_hover_link(hover_link)
+		
 	def __button_press_cb(self, widget, event):
-		buf = self.get_buffer()
-		it = self.get_iter_at_location(int(event.x), int(event.y))
-		if it.has_tag(buf.get_tag_table().lookup("link")):
+		it = self.__get_event_iter(event)
+		if it and self.__iter_is_link(it):
 			address_tag = buf.get_tag_table().lookup("link-address")
 
 			address_end = it.copy()
@@ -35,7 +63,7 @@ class RichTextView(gtk.TextView):
 			address_start = address_end.copy()
 			address_start.backward_to_tag_toggle(address_tag)
 			
-			address = buf.get_text(address_start, address_end)
+			address = self.get_buffer().get_text(address_start, address_end)
 			self.emit("link-clicked", address)
 
 class RichTextBuffer(gtk.TextBuffer):
