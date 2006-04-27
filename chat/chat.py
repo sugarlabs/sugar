@@ -14,7 +14,7 @@ import os
 import pwd
 import socket
 
-import activity
+from sugar import activity
 
 import presence
 import BuddyList

@@ -20,7 +20,7 @@ Running
 
 To run the python sources from your source tree run
 
- $ ./setup-run-from-source.sh
+ $ source ./setup-run-from-source.sh # needs bash
 
 in the top-level directory. Icons and other resources are still loaded
 from the installed location though.
