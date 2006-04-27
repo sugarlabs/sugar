@@ -382,7 +382,7 @@ class GroupChat(Chat):
 
 	def recv_message(self, buddy, msg):
 		self._insert_rich_message(buddy.nick(), msg)
-		self._parent.notify_new_message(self, None)
+		self._controller.notify_new_message(self, None)
 
 	def _recv_group_message(self, msg):
 		buddy = self.find_buddy_by_address(msg['addr'])
