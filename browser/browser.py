@@ -11,7 +11,7 @@ import gtk
 import geckoembed
 
 import sys
-import activity
+from sugar import activity
 
 from sugar_globals import *
 
