@@ -1,0 +1,28 @@
+#!/usr/bin/python
+
+import sys
+import os
+
+if len(sys.argv) == 1:
+	# FIXME Start a session
+
+	# We are lucky and this
+	# currently behave as we want.
+	# The chat depends on the
+	# web browser, so both activities
+	# are spanned. But obviously we
+	# need something better.
+
+	import sugar.chat
+	sugar.chat.main()
+elif sys.argv[1] == 'shell':
+	import sugar.shell
+	sugar.shell.main()
+elif sys.argv[1] == 'chat':
+	import sugar.chat
+	sugar.chat.main()
+elif sys.argv[1] == 'browser':
+	import sugar.browser
+	sugar.browser.main()
+else:
+	print "Unkown activity"
