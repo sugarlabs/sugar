@@ -296,4 +296,7 @@ def main():
 
 	activityContainer = ActivityContainer(service, session_bus)
 
-	gtk.main()
+	try:
+		gtk.main()
+	except KeyboardInterrupt:
+		pass
