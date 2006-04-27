@@ -175,6 +175,8 @@ class BuddyChat(Chat):
 	def activity_on_connected_to_shell(self):
 		Chat.activity_on_connected_to_shell(self)
 		self.activity_set_can_close(True)
+		self.activity_set_tab_icon_name("im")
+		self.activity_show_icon(True)
 		
 	def recv_message(self, msg):
 		Chat.recv_message(self, self._buddy, msg)
@@ -303,6 +305,10 @@ class GroupChat(Chat):
 
 	def activity_on_connected_to_shell(self):
 		Chat.activity_on_connected_to_shell(self)
+		
+		self.activity_set_tab_icon_name("stock_help-chat")
+		self.activity_show_icon(True)
+
 		aniter = self._buddy_list_model.append(None)
 		self._buddy_list_model.set(aniter, self._MODEL_COL_NICK, "Group",
 				self._MODEL_COL_ICON, self._pixbuf_active_chat, self._MODEL_COL_BUDDY, None)

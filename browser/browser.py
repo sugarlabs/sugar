@@ -151,6 +151,8 @@ class BrowserActivity(activity.Activity):
 		self.activity_set_ellipsize_tab(True)
 		self.activity_set_can_close(True)
 		self.activity_set_tab_text("Web Page")
+		self.activity_set_tab_icon_name("web-browser")
+		self.activity_show_icon(True)
 
 		vbox = gtk.VBox()
 
@@ -186,6 +188,8 @@ class WebActivity(activity.Activity):
 	
 	def activity_on_connected_to_shell(self):
 		self.activity_set_tab_text("Web Browser")
+		self.activity_set_tab_icon_name("web-browser")
+		self.activity_show_icon(True)
 
 		vbox = gtk.VBox()
 			
@@ -264,6 +268,3 @@ def main():
 		gtk.main()
 	except KeyboardInterrupt:
 		pass
-
-if __name__=="__main__":
-		main()

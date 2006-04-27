@@ -11,28 +11,28 @@ Building
 
 You will need gnome-common.
 
-./autogen.sh --prefix=/usr --sysconfdir=/etc --localstatedir=/var
+./autogen.sh
 make
-make install # make require root privileges
+make install
 
 Running
 =======
 
-To run the python sources from your source tree run
+sugar
 
- $ ./setup-run-from-source.sh
 
-in the top-level directory. Icons and other resources are still loaded
-from the installed location though.
+Debug
+=====
 
-To run the shell
+To run the shell:
 
- $ cd shell/src
- $ ./shell.py
+sugar shell
 
-You can run activities like this
+To run the chat activity:
 
- $ cd browser
- $ ./browser.py
+sugar chat
 
-(Just remember to have the shell running)
+To run the web activity:
+
+sugar browser
+
