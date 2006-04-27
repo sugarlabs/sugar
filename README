@@ -13,7 +13,7 @@ You will need gnome-common.
 
 ./autogen.sh --prefix=/usr --sysconfdir=/etc --localstatedir=/var
 make
-make install
+make install # make require root privileges
 
 Running
 =======
@@ -35,4 +35,4 @@ You can run activities like this
  $ cd browser
  $ ./browser.py
 
-Just remember to have the shell running
+(Just remember to have the shell running)
