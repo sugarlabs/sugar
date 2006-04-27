@@ -28,7 +28,7 @@ class ActivityHost(dbus.service.Object):
 		activity_counter += 1
 		
 		self.dbus_object_name = "/com/redhat/Sugar/Shell/Activities/%d"%self.activity_id
-		print "object name = %s"%self.dbus_object_name
+		#print "object name = %s"%self.dbus_object_name
 		
 		dbus.service.Object.__init__(self, activity_container.service, self.dbus_object_name)
 		self.socket = gtk.Socket()
@@ -62,7 +62,7 @@ class ActivityHost(dbus.service.Object):
 		self.tab_close_button.modify_style (rcstyle);
 		self.tab_close_button.add(close_image)
 		self.tab_close_button.set_relief(gtk.RELIEF_NONE)
-		self.tab_close_button.set_focus_on_click(gtk.FALSE)
+		self.tab_close_button.set_focus_on_click(False)
 		self.tab_close_button.connect("clicked", self.tab_close_button_clicked)
 		
 		self.label_hbox.pack_start(self.tab_label)
@@ -90,14 +90,14 @@ class ActivityHost(dbus.service.Object):
 							 out_signature="t")
 	def get_host_xembed_id(self):
 		window_id = self.socket.get_id()
-		print "window_id = %d"%window_id
+		#print "window_id = %d"%window_id
 		return window_id
 
 	@dbus.service.method("com.redhat.Sugar.Shell.ActivityHost", \
 			 in_signature="ss", \
 			 out_signature="")
 	def set_peer_service_name(self, peer_service_name, peer_object_name):
-		print "peer_service_name = %s, peer_object_name = %s"%(peer_service_name, peer_object_name)
+		#print "peer_service_name = %s, peer_object_name = %s"%(peer_service_name, peer_object_name)
 		self.__peer_service_name = peer_service_name
 		self.__peer_object_name = peer_object_name
 		self.peer_service = dbus.Interface(self.activity_container.bus.get_object( \
@@ -139,21 +139,21 @@ class ActivityHost(dbus.service.Object):
 			 in_signature="ayibiiii", \
 			 out_signature="")
 	def set_tab_icon(self, data, colorspace, has_alpha, bits_per_sample, width, height, rowstride):
-	    print "width=%d, height=%d"%(width, height)
-		print "  data = ", data
+	    #print "width=%d, height=%d"%(width, height)
+		#print "  data = ", data
 		pixstr = ""
 		for c in data:
 		    pixstr += chr(c)
 
 		pixbuf = gtk.gdk.pixbuf_new_from_data(pixstr, colorspace, has_alpha, bits_per_sample, width, height, rowstride)
-		print pixbuf
+		#print pixbuf
 		self.tab_activity_image.set_from_pixbuf(pixbuf)
 
 	@dbus.service.method("com.redhat.Sugar.Shell.ActivityHost", \
 						 in_signature="", \
 						 out_signature="")
 	def shutdown(self):
-		print "shutdown"
+		#print "shutdown"
 		for owner, activity in self.activity_container.activities[:]:
 			if activity == self:
 				self.activity_container.activities.remove((owner, activity))
@@ -161,7 +161,7 @@ class ActivityHost(dbus.service.Object):
 		for i in range(self.activity_container.notebook.get_n_pages()):
 			child = self.activity_container.notebook.get_nth_page(i)
 			if child == self.socket:
-				print "found child"
+				#print "found child"
 				self.activity_container.notebook.remove_page(i)
 				break
 
@@ -238,11 +238,11 @@ class ActivityContainer(dbus.service.Object):
 
 
 	def notebook_tab_changed(self, notebook, page, page_number):
-		print "in notebook_tab_changed"
-		print notebook.get_nth_page(page_number)
+		#print "in notebook_tab_changed"
+		#print notebook.get_nth_page(page_number)
 		new_activity = notebook.get_nth_page(page_number).get_data("sugar-activity")
-		print " Current activity: ", self.current_activity
-		print " New activity:	 ", new_activity
+		#print " Current activity: ", self.current_activity
+		#print " New activity:	 ", new_activity
 
 		if self.current_activity != None:
 			if self.has_activity(self.current_activity):
@@ -263,11 +263,11 @@ class ActivityContainer(dbus.service.Object):
 	
 
 	def name_owner_changed(self, service_name, old_service_name, new_service_name):
-		print "in name_owner_changed: svc=%s oldsvc=%s newsvc=%s"%(service_name, old_service_name, new_service_name)
+		#print "in name_owner_changed: svc=%s oldsvc=%s newsvc=%s"%(service_name, old_service_name, new_service_name)
 		for owner, activity in self.activities[:]:
 			if owner == old_service_name:
 				self.activities.remove((owner, activity))
-		self.__print_activities()
+		#self.__print_activities()
 
 
 	@dbus.service.method("com.redhat.Sugar.Shell.ActivityContainer", \
@@ -275,11 +275,11 @@ class ActivityContainer(dbus.service.Object):
 			 out_signature="i", \
 			 sender_keyword="sender")
 	def add_activity(self, activity_name, sender):
-		print "hello world, activity_name = '%s', sender = '%s'"%(activity_name, sender)
+		#print "hello world, activity_name = '%s', sender = '%s'"%(activity_name, sender)
 		activity = ActivityHost(self, activity_name)
 		self.activities.append((sender, activity))
 
-		self.__print_activities()
+		#self.__print_activities()
 		return activity.get_host_activity_id()
 
 	def __print_activities(self):
