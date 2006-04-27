@@ -14,15 +14,18 @@ import os
 import pwd
 import socket
 
-import activity
+try:
+	import activity
+	from sugar_globals import *
+except ImportError:
+	from sugar import activity
+	from sugar.sugar_globals import *
 
 import presence
 import BuddyList
 import network
 import richtext
 import xmlrpclib
-
-from sugar_globals import *
 
 
 class Chat(activity.Activity):

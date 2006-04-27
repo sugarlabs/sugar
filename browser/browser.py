@@ -11,9 +11,13 @@ import gtk
 import geckoembed
 
 import sys
-import activity
 
-from sugar_globals import *
+try:
+	import activity
+	from sugar_globals import *
+except ImportError:
+	from sugar import activity
+	from sugar.sugar_globals import *
 
 class AddressToolbar(gtk.Toolbar):
 	def __init__(self):
