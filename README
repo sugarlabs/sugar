@@ -18,6 +18,10 @@ make install # make require root privileges
 Running
 =======
 
+Once installed you can run sugar with
+
+ $ sugar
+
 To run the python sources from your source tree run
 
  $ source ./setup-run-from-source.sh # needs bash
