@@ -1,4 +1,7 @@
 #!/bin/sh
 
 # for activity.py
-export PYTHON_PATH=`pwd`/shell/src/
+export PYTHONPATH=`pwd`/shell/src/
+
+# for sugar_globals.py
+export PYTHONPATH=$PYTHONPATH:`pwd`/
