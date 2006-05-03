@@ -1,10 +1,10 @@
 Dependencies
 ============
 
+xulrunner
 gecko-embed
 
-http://gnome.org/~marco/gecko-embed-0.1-5.i386.rpm
-http://gnome.org/~marco/gecko-embed-0.1-5.src.rpm
+http://gnome.org/~marco/olpc
 
 Building
 ========
