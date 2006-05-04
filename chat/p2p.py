@@ -57,14 +57,14 @@ class Group:
 	def join(self):
 		self._pannounce = presence.PresenceAnnounce()
 
-		realname = Owner.get_instance().get_realname()
+		rname = Owner.get_instance().get_realname()
 		nick = Owner.get_instance().get_nick()
-				
-		self._buddy_list = BuddyList.BuddyList(realname)
+
+		self._buddy_list = BuddyList.BuddyList(rname)
 		self._buddy_list.start()
 
-		self._pannounce.register_service(realname, self._SERVER_PORT, presence.OLPC_CHAT_SERVICE,
-				name = nick, realname = realname)
+		self._pannounce.register_service(rname, self._SERVER_PORT, presence.OLPC_CHAT_SERVICE,
+				name = nick, realname = rname)
 
 		self._p2p_req_handler = GroupRequestHandler(self)
 		self._p2p_server = network.GlibXMLRPCServer(("", self._SERVER_PORT))

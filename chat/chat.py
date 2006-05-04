@@ -19,6 +19,7 @@ except ImportError:
 	from sugar import activity
 	from sugar.sugar_globals import *
 
+import BuddyList
 import richtext
 import xmlrpclib
 import p2p
