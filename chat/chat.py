@@ -10,8 +10,6 @@ pygtk.require('2.0')
 import gtk, gobject
 
 import sys
-import os
-import pwd
 import socket
 
 try:
@@ -21,12 +19,9 @@ except ImportError:
 	from sugar import activity
 	from sugar.sugar_globals import *
 
-import presence
-import BuddyList
-import network
 import richtext
 import xmlrpclib
-
+import p2p
 
 class Chat(activity.Activity):
 	def __init__(self, controller):
@@ -166,7 +161,7 @@ class Chat(activity.Activity):
 			aniter = buffer.get_end_iter()
 			buffer.insert(aniter, message)
 		else:
-			(nick, realname) = self._controller.local_name()
+			nick = p2p.Owner.get_instance().get_nick()
 			self._insert_rich_message(nick, text)
 
 class BuddyChat(Chat):
@@ -175,71 +170,54 @@ class BuddyChat(Chat):
 		self._act_name = "Chat: %s" % buddy.nick()
 		Chat.__init__(self, controller)
 
+	def _start(self):
+		group = p2p.Group.get_instance()
+		input_pipe = InputPipe(group, "buddy-chat")
+		input_pipe.listen(self.recv_message)
+		self._output_pipe = OutputPipe(group, "buddy-chat")
+
 	def activity_on_connected_to_shell(self):
 		Chat.activity_on_connected_to_shell(self)
 		self.activity_set_can_close(True)
 		self.activity_set_tab_icon_name("im")
 		self.activity_show_icon(True)
 		
-	def recv_message(self, msg):
+	def recv_message(self, sender, msg):
 		Chat.recv_message(self, self._buddy, msg)
 
 	def send_message(self, text):
-		if len(text) <= 0:
-			return
-		addr = "http://%s:%d" % (self._buddy.address(), self._buddy.port())
-		peer = xmlrpclib.ServerProxy(addr)
-		msg = text
-		success = True
-		try:
-			peer.message(text)
-		except (socket.error, xmlrpclib.Fault), e:
-			msg = str(e)
-			success = False
-		self._local_message(success, msg)
+		if len(text) > 0:
+			self._output_pipe.send(self._buddy, text)
+			self._local_message(success, msg)
 
 	def activity_on_close_from_user(self):
 		Chat.activity_on_close_from_user(self)
 		self._buddy.set_chat(None)
 			
-class ChatRequestHandler(object):
-	def __init__(self, parent):
-		self._parent = parent
-
-	def message(self, message):
-		client_address = network.get_authinfo()
-		buddy = self._parent.find_buddy_by_address(client_address[0])
-		if buddy:
-			chat = buddy.chat()
-			if not chat:
-				chat = BuddyChat(self._parent, buddy)
-				buddy.set_chat(chat)
-				chat.activity_connect_to_shell()
-			chat.recv_message(message)
-		return True
-
 class GroupChat(Chat):
 
 	_MODEL_COL_NICK = 0
 	_MODEL_COL_ICON = 1
 	_MODEL_COL_BUDDY = 2
 	
-	_CHAT_SERVER_PORT = 6666
-
 	def __init__(self):
 		self._act_name = "Chat"
-		self._pannounce = presence.PresenceAnnounce()
-
-		(self._nick, self._realname) = self._get_name()
-
-		self._buddy_list = BuddyList.BuddyList(self._realname)
-		self._buddy_list.add_buddy_listener(self._on_buddy_presence_event)
-
+		
 		bus = dbus.SessionBus()
 		proxy_obj = bus.get_object('com.redhat.Sugar.Browser', '/com/redhat/Sugar/Browser')
 		self._browser_shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.BrowserShell')
 
 		Chat.__init__(self, self)
+
+	def _start(self):
+		group = p2p.Group.get_instance()
+		
+		self._buddy_list = group.get_buddy_list()
+		self._buddy_list.add_buddy_listener(self._on_buddy_presence_event)
+
+		input_pipe = p2p.InputPipe(group, "group-chat")
+		input_pipe.listen(self.recv_message)
+		self._output_pipe = p2p.BroadcastOutputPipe(group, "group-chat")
 
 	def _create_sidebar(self):
 		vbox = gtk.VBox(False, 6)
@@ -293,19 +271,6 @@ class GroupChat(Chat):
 		sidebar.show()
 		self._plug.show_all()
 
-	def _start(self):
-		self._buddy_list.start()
-		self._pannounce.register_service(self._realname, self._CHAT_SERVER_PORT, presence.OLPC_CHAT_SERVICE,
-				name = self._nick, realname = self._realname)
-
-		# Create the P2P chat XMLRPC server
-		self._p2p_req_handler = ChatRequestHandler(self)
-		self._p2p_server = network.GlibXMLRPCServer(("", self._CHAT_SERVER_PORT))
-		self._p2p_server.register_instance(self._p2p_req_handler)
-
-		self._gc_controller = network.GroupChatController('224.0.0.221', 6666, self._recv_group_message)
-		self._gc_controller.start()
-
 	def activity_on_connected_to_shell(self):
 		Chat.activity_on_connected_to_shell(self)
 		
@@ -320,16 +285,6 @@ class GroupChat(Chat):
 	def activity_on_disconnected_from_shell(self):
 		Chat.activity_on_disconnected_from_shell(self)
 		gtk.main_quit()
-
-	def _get_name(self):
-		ent = pwd.getpwuid(os.getuid())
-		nick = ent[0]
-		if not nick or not len(nick):
-			nick = "n00b"
-		realname = ent[4]
-		if not realname or not len(realname):
-			realname = "Some Clueless User"
-		return (nick, realname)
 
 	def _on_buddyList_buddy_selected(self, widget, *args):
 		(model, aniter) = widget.get_selection().get_selected()
@@ -372,25 +327,15 @@ class GroupChat(Chat):
 		aniter = self._get_iter_for_buddy(buddy)
 		self._buddy_list_model.set(aniter, self._MODEL_COL_ICON, self._pixbuf_active_chat)
 
-	def find_buddy_by_address(self, address):
-		return self._buddy_list.find_buddy_by_address(address)
-
-	def local_name(self):
-		return (self._nick, self._realname)
-
 	def send_message(self, text):
 		if len(text) > 0:
-			self._gc_controller.send_msg(text)
+			self._output_pipe.send(text)
 		self._local_message(True, text)
 
 	def recv_message(self, buddy, msg):
-		self._insert_rich_message(buddy.nick(), msg)
-		self._controller.notify_new_message(self, None)
-
-	def _recv_group_message(self, msg):
-		buddy = self.find_buddy_by_address(msg['addr'])
 		if buddy:
-			self.recv_message(buddy, msg['data'])
+			self._insert_rich_message(buddy.nick(), msg)
+			self._controller.notify_new_message(self, None)
 
 	def run(self):
 		try:

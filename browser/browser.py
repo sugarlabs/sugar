@@ -118,6 +118,16 @@ class NavigationToolbar(gtk.Toolbar):
 		separator = gtk.SeparatorToolItem()
 		self.insert(separator, -1)
 		separator.show()
+
+		item = gtk.MenuToolButton(None, "Share")
+		item.set_menu(gtk.Menu())
+		item.connect("show-menu", self.__show_share_menu_cb)
+		toolbar.insert(item, -1)
+		item.show()
+
+		separator = gtk.SeparatorToolItem()
+		self.insert(separator, -1)
+		separator.show()
 		
 		address_item = AddressItem(self.__open_address_cb)		
 		self.insert(address_item, -1)
@@ -145,7 +155,20 @@ class NavigationToolbar(gtk.Toolbar):
 
 	def __open_address_cb(self, address):
 		self.embed.load_address(address)
+
+	def __show_share_menu_cb(self, button):
+		menu = gtk.Menu()
 		
+		item = gtk.MenuItem("Group", False)
+		item.connect("activate", self.__share_group_activate_cb)
+		menu.append(item)
+		item.show()
+		
+		button.set_menu(menu)
+	
+	def __share_group_activate_cb(self, item, link):
+		pass
+
 class BrowserActivity(activity.Activity):
 	def __init__(self, uri):
 		activity.Activity.__init__(self)
