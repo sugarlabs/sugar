@@ -15,6 +15,7 @@ class GroupRequestHandler(object):
 	def message(self, message):
 		address = network.get_authinfo()
 		self._group.recv(address[0], message)
+		return True
 
 class Owner:
 	instance = None
