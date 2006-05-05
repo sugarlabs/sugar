@@ -346,16 +346,37 @@ class GroupChat(Chat):
 			chat.activity_connect_to_shell()
 		chat.recv_message(sender, msg)
 
-	def run(self):
-		try:
-			gtk.main()
-		except KeyboardInterrupt:
-			pass
+class ChatShell(dbus.service.Object):
+	instance = None
 
+	def get_instance():
+		if not ChatShell.instance:
+			ChatShell.instance = ChatShell()
+		return ChatShell.instance
+		
+	get_instance = staticmethod(get_instance)
+
+	def __init__(self):
+		session_bus = dbus.SessionBus()
+		bus_name = dbus.service.BusName('com.redhat.Sugar.Chat', bus=session_bus)
+		object_path = '/com/redhat/Sugar/Chat'
+
+		dbus.service.Object.__init__(self, bus_name, object_path)
+
+	def open_group_chat(self):
+		group_chat = GroupChat()
+		group_chat.activity_connect_to_shell()
+
+	@dbus.service.method('com.redhat.Sugar.ChatShell')
+	def send_message(self, message):
+		pass
+		
 def main():
-	app = GroupChat()
-	app.activity_connect_to_shell()
-	app.run()
+	ChatShell.get_instance().open_group_chat()
+	try:
+		gtk.main()
+	except KeyboardInterrupt:
+		pass
 
 if __name__ == "__main__":
 	main()

@@ -119,11 +119,10 @@ class NavigationToolbar(gtk.Toolbar):
 		self.insert(separator, -1)
 		separator.show()
 
-		item = gtk.MenuToolButton(None, "Share")
-		item.set_menu(gtk.Menu())
-		item.connect("show-menu", self.__show_share_menu_cb)
-		toolbar.insert(item, -1)
-		item.show()
+		share = gtk.ToolButton("Share")
+		share.connect("clicked", self.__share_cb)
+		self.insert(share, -1)
+		share.show()
 
 		separator = gtk.SeparatorToolItem()
 		self.insert(separator, -1)
@@ -149,25 +148,14 @@ class NavigationToolbar(gtk.Toolbar):
 		
 	def __reload_cb(self, button):
 		self.embed.reload()
-		
+
+	def __share_cb(self, button):
+
 	def __location_changed(self, embed):
 		self._update_sensitivity()
 
 	def __open_address_cb(self, address):
 		self.embed.load_address(address)
-
-	def __show_share_menu_cb(self, button):
-		menu = gtk.Menu()
-		
-		item = gtk.MenuItem("Group", False)
-		item.connect("activate", self.__share_group_activate_cb)
-		menu.append(item)
-		item.show()
-		
-		button.set_menu(menu)
-	
-	def __share_group_activate_cb(self, item, link):
-		pass
 
 class BrowserActivity(activity.Activity):
 	def __init__(self, uri):

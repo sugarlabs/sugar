@@ -2,7 +2,6 @@ import os
 import pwd
 import xmlrpclib
 import socket
-import traceback
 
 import presence
 import BuddyList
@@ -15,6 +14,7 @@ class GroupRequestHandler(object):
 	def message(self, message):
 		address = network.get_authinfo()
 		self._group.recv(address[0], message)
+		return True
 
 class Owner:
 	instance = None
@@ -93,11 +93,9 @@ class Group:
 		peer = xmlrpclib.ServerProxy(addr)
 		success = True
 		try:
-			print self._serialize_msg(pipe_id, msg)
 			peer.message(self._serialize_msg(pipe_id, msg))
-		except (socket.error, xmlrpclib.Fault, xmlrpclib.ProtocolError), e:
-			print "Message Send Error:"
-			traceback.print_exc()
+		except (socket.error, xmlrpclib.Fault), e:
+			print str(e)
 			success = False
 		return success
 	
