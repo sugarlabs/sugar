@@ -344,7 +344,7 @@ class GroupChat(Chat):
 			chat = BuddyChat(self, sender)
 			sender.set_chat(chat)
 			chat.activity_connect_to_shell()
-		chat.recv_message(message)
+		chat.recv_message(sender, msg)
 
 	def run(self):
 		try:

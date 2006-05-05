@@ -75,41 +75,6 @@ class GlibXMLRPCServer(GlibTCPServer, SimpleXMLRPCServer.SimpleXMLRPCDispatcher)
 		SimpleXMLRPCServer.SimpleXMLRPCDispatcher.__init__(self)
 		GlibTCPServer.__init__(self, addr, requestHandler)
 
-	def _marshaled_dispatch(self, data, dispatch_method = None):
-		"""Dispatches an XML-RPC method from marshalled (XML) data.
-
-		XML-RPC methods are dispatched from the marshalled (XML) data
-		using the _dispatch method and the result is returned as
-		marshalled data. For backwards compatibility, a dispatch
-		function can be provided as an argument (see comment in
-		SimpleXMLRPCRequestHandler.do_POST) but overriding the
-		existing method through subclassing is the prefered means
-		of changing method dispatch behavior.
-		"""
-
-		params, method = xmlrpclib.loads(data)
-
-		# generate response
-		try:
-			if dispatch_method is not None:
-				response = dispatch_method(method, params)
-			else:
-				response = self._dispatch(method, params)
-			# wrap response in a singleton tuple
-			response = (response,)
-			response = xmlrpclib.dumps(response, methodresponse=1)
-		except Fault, fault:
-			response = xmlrpclib.dumps(fault)
-		except:
-			print "Exception"
-			traceback.print_exc()
-			# report exception back to server
-			response = xmlrpclib.dumps(
-				xmlrpclib.Fault(1, "%s:%s" % (sys.exc_type, sys.exc_value))
-				)
-
-		return response
-
 
 class GroupChatController(object):
 
