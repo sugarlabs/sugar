@@ -13,7 +13,7 @@ class GroupRequestHandler(object):
 
 	def message(self, message):
 		address = network.get_authinfo()
-		self._group.recv(address[0], message)
+		self._group.recv(address, message)
 
 class Owner:
 	instance = None
