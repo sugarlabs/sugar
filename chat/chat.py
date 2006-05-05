@@ -339,10 +339,10 @@ class GroupChat(Chat):
 			self._controller.notify_new_message(self, None)
 
 	def _buddy_recv_message(self, sender, msg):
-		chat = buddy.chat()
+		chat = sender.chat()
 		if not chat:
-			chat = BuddyChat(self._parent, buddy)
-			buddy.set_chat(chat)
+			chat = BuddyChat(self._parent, sender)
+			sender.set_chat(chat)
 			chat.activity_connect_to_shell()
 		chat.recv_message(message)
 
