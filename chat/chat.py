@@ -10,7 +10,6 @@ pygtk.require('2.0')
 import gtk, gobject
 
 import sys
-import socket
 
 try:
 	import activity
@@ -21,7 +20,6 @@ except ImportError:
 
 import BuddyList
 import richtext
-import xmlrpclib
 import p2p
 
 class Chat(activity.Activity):
@@ -173,23 +171,22 @@ class BuddyChat(Chat):
 
 	def _start(self):
 		group = p2p.Group.get_instance()
-		input_pipe = InputPipe(group, "buddy-chat")
-		input_pipe.listen(self.recv_message)
-		self._output_pipe = OutputPipe(group, "buddy-chat")
+		self._output_pipe = p2p.OutputPipe(group, self._buddy, "buddy-chat")
 
 	def activity_on_connected_to_shell(self):
 		Chat.activity_on_connected_to_shell(self)
 		self.activity_set_can_close(True)
 		self.activity_set_tab_icon_name("im")
 		self.activity_show_icon(True)
+		self._start()
 		
 	def recv_message(self, sender, msg):
 		Chat.recv_message(self, self._buddy, msg)
 
 	def send_message(self, text):
 		if len(text) > 0:
-			self._output_pipe.send(self._buddy, text)
-			self._local_message(success, msg)
+			success = self._output_pipe.send(text)
+			self._local_message(success, text)
 
 	def activity_on_close_from_user(self):
 		Chat.activity_on_close_from_user(self)
@@ -219,6 +216,9 @@ class GroupChat(Chat):
 		input_pipe = p2p.InputPipe(group, "group-chat")
 		input_pipe.listen(self.recv_message)
 		self._output_pipe = p2p.BroadcastOutputPipe(group, "group-chat")
+
+		input_pipe = p2p.InputPipe(group, "buddy-chat")
+		input_pipe.listen(self._buddy_recv_message)
 
 	def _create_sidebar(self):
 		vbox = gtk.VBox(False, 6)
@@ -337,6 +337,14 @@ class GroupChat(Chat):
 		if buddy:
 			self._insert_rich_message(buddy.nick(), msg)
 			self._controller.notify_new_message(self, None)
+
+	def _buddy_recv_message(self, sender, msg):
+		chat = buddy.chat()
+		if not chat:
+			chat = BuddyChat(self._parent, buddy)
+			buddy.set_chat(chat)
+			chat.activity_connect_to_shell()
+		chat.recv_message(message)
 
 	def run(self):
 		try:

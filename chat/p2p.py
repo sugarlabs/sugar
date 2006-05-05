@@ -1,5 +1,7 @@
 import os
 import pwd
+import xmlrpclib
+import socket
 
 import presence
 import BuddyList
@@ -88,12 +90,11 @@ class Group:
 	def send(self, buddy, pipe_id, msg):
 		addr = "http://%s:%d" % (buddy.address(), buddy.port())
 		peer = xmlrpclib.ServerProxy(addr)
-		msg = text
 		success = True
 		try:
 			peer.message(self._serialize_msg(pipe_id, msg))
 		except (socket.error, xmlrpclib.Fault), e:
-			msg = str(e)
+			print str(e)
 			success = False
 		return success
 	
@@ -137,14 +138,14 @@ class OutputPipe(AbstractOutputPipe):
 		self._buddy = buddy
 	
 	def send(self, msg):
-		self._group.send(self._buddy, self._pipe_id, msg)
+		return self._group.send(self._buddy, self._pipe_id, msg)
 
 class BroadcastOutputPipe(AbstractOutputPipe):
 	def __init__(self, group, pipe_id=None):
 		AbstractOutputPipe.__init__(self, group, pipe_id)
 	
 	def send(self, msg):
-		self._group.broadcast(self._pipe_id, msg)
+		return self._group.broadcast(self._pipe_id, msg)
 		
 class InputPipe(AbstractPipe):
 	def __init__(self, group, pipe_id=None):
