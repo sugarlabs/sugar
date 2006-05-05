@@ -5,6 +5,9 @@ import threading
 import traceback
 import select
 import time
+import xmlrpclib
+import sys
+
 import gobject
 import SimpleXMLRPCServer
 import SocketServer
@@ -60,6 +63,9 @@ class GlibXMLRPCRequestHandler(SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
 			pass
 		except socket.error, e:
 			print "Error (%s): socket error - '%s'" % (self.client_address, e)
+		except:
+			print "Error while processing POST:"
+			traceback.print_exc()
 		_del_authinfo()
 
 class GlibXMLRPCServer(GlibTCPServer, SimpleXMLRPCServer.SimpleXMLRPCDispatcher):
@@ -98,18 +104,16 @@ class GlibXMLRPCServer(GlibTCPServer, SimpleXMLRPCServer.SimpleXMLRPCDispatcher)
 			# wrap response in a singleton tuple
 			response = (response,)
 			response = xmlrpclib.dumps(response, methodresponse=1)
-		except Fault, fault:
+		except xmlrpclib.Fault, fault:
 			response = xmlrpclib.dumps(fault)
 		except:
-			set = sys.exc_type
-			sev = sys.exc_value
-			ser = sys.exc_traceback
+			print "Exception while processing request:"
+			traceback.print_exc()
 
 			# report exception back to server
-			response = xmlrpclib.dumps(xmlrpclib.Fault(1, "%s:%s" % (set, sev)))
-
-			print "Exception while processing request:"
-			traceback.print_exception(set, sev, ser)
+			response = xmlrpclib.dumps(
+				xmlrpclib.Fault(1, "%s:%s" % (sys.exc_type, sys.exc_value))
+				)
 
 		return response
 
