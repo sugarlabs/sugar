@@ -150,6 +150,7 @@ class NavigationToolbar(gtk.Toolbar):
 		self.embed.reload()
 
 	def __share_cb(self, button):
+		pass
 
 	def __location_changed(self, embed):
 		self._update_sensitivity()
