@@ -25,4 +25,4 @@ elif sys.argv[1] == 'browser':
 	import sugar.browser
 	sugar.browser.main()
 else:
-	print "Unkown activity"
+	print "Unknown activity"
