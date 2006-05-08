@@ -10,3 +10,5 @@ icondir = $(pkgdatadir)
 icon_DATA =			\
 	bubble.png		\
 	bubbleOutline.png
+
+EXTRA_DIST = $(icon_DATA)

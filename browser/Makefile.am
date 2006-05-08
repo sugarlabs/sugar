@@ -17,7 +17,8 @@ $(service_DATA): $(service_in_files) Makefile
 
 EXTRA_DIST =			\
 	$(service_in_files)	\
-	$(service_DATA)
+	$(service_DATA)         \
+	$(icon_DATA)
 
 DISTCLEANFILES =		\
 	$(service_DATA)
