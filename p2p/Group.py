@@ -67,11 +67,13 @@ class LocalGroup(Group):
 						
 	def _on_service_resolved(self, interface, protocol, name, stype, domain,
 							 host, aprotocol, address, port, txt, flags):
-		service = Service(name, host, address, port)
-		self._services[name] = service
-		if stype == BUDDY_SERVICE_TYPE:
-			data = self._pair_to_dict(avahi.txt_array_to_string_array(txt))
-			self._add_buddy(service, data)
+		print name
+		if name != self._owner.get_service().get_name():
+			service = Service(name, host, address, port)
+			self._services[name] = service
+			if stype == BUDDY_SERVICE_TYPE:
+				data = self._pair_to_dict(avahi.txt_array_to_string_array(txt))
+				self._add_buddy(service, data)
 
 	def _add_buddy(self, service, data):
 		name = service.get_name()

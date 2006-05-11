@@ -37,5 +37,7 @@ class StreamReader:
 		self._recv(msg['addr'], msg['data'])
 	
 	def _recv(self, address, data):
-		buddy = self._group.get_buddy_from_address(address)
-		self._callback(buddy, data)
+		owner = self._group.get_owner()
+		if address != owner.get_service().get_address():
+			buddy = self._group.get_buddy_from_address(address)
+			self._callback(buddy, data)

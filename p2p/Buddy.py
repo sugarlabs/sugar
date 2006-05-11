@@ -31,8 +31,7 @@ class Owner(Buddy):
 		if not nick or not len(nick):
 			nick = "n00b"
 
-		service_name = nick + '.' + GROUP_SERVICE_TYPE
-		service = Service(service_name, '', '', GROUP_SERVICE_PORT)
+		service = Service(nick, '', '', GROUP_SERVICE_PORT)
 
 		Buddy.__init__(self, service, nick)
 		
