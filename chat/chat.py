@@ -13,14 +13,14 @@ import sys
 
 try:
 	import activity
+	from Group import *
 	from sugar_globals import *
 except ImportError:
 	from sugar import activity
+	from sugar.Group import *
 	from sugar.sugar_globals import *
 
-import BuddyList
 import richtext
-import p2p
 
 class Chat(activity.Activity):
 	def __init__(self, controller):
@@ -208,17 +208,9 @@ class GroupChat(Chat):
 		Chat.__init__(self, self)
 
 	def _start(self):
-		group = p2p.Group.get_instance()
-		
-		self._buddy_list = group.get_buddy_list()
-		self._buddy_list.add_buddy_listener(self._on_buddy_presence_event)
-
-		input_pipe = p2p.InputPipe(group, "group-chat")
-		input_pipe.listen(self.recv_message)
-		self._output_pipe = p2p.BroadcastOutputPipe(group, "group-chat")
-
-		input_pipe = p2p.InputPipe(group, "buddy-chat")
-		input_pipe.listen(self._buddy_recv_message)
+		self._group = LocalGroup()
+		self._group.add_listener(self._on_group_event)
+		self._group.join()
 
 	def _create_sidebar(self):
 		vbox = gtk.VBox(False, 6)
@@ -302,12 +294,12 @@ class GroupChat(Chat):
 			buddy.set_chat(chat)
 			chat.activity_connect_to_shell()
 
-	def _on_buddy_presence_event(self, action, buddy):
-		if action == BuddyList.ACTION_BUDDY_ADDED:
+	def _on_group_event(self, action, buddy):
+		if action == BUDDY_JOIN:
 			aniter = self._buddy_list_model.append(None)
-			self._buddy_list_model.set(aniter, self._MODEL_COL_NICK, buddy.nick(),
+			self._buddy_list_model.set(aniter, self._MODEL_COL_NICK, buddy.get_nick_name(),
 					self._MODEL_COL_ICON, None, self._MODEL_COL_BUDDY, buddy)
-		elif action == BuddyList.ACTION_BUDDY_REMOVED:
+		elif action == BUDDY_LEAVE:
 			aniter = self._get_iter_for_buddy(buddy)
 			if aniter:
 				self._buddy_list_model.remove(aniter)
