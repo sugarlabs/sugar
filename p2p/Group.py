@@ -67,7 +67,6 @@ class LocalGroup(Group):
 						
 	def _on_service_resolved(self, interface, protocol, name, stype, domain,
 							 host, aprotocol, address, port, txt, flags):
-		print name
 		if name != self._owner.get_service().get_name():
 			service = Service(name, host, address, port)
 			self._services[name] = service

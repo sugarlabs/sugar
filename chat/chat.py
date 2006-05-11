@@ -172,8 +172,9 @@ class BuddyChat(Chat):
 		Chat.__init__(self, controller)
 
 	def _start(self):
-		service_name = buddy.get_service_name()
-		self._stream_writer = StreamWriter(self._group, service_name)
+		service_name = self._buddy.get_service_name()
+		group = self._controller.get_group()
+		self._stream_writer = StreamWriter(group, service_name)
 
 	def activity_on_connected_to_shell(self):
 		Chat.activity_on_connected_to_shell(self)
@@ -192,7 +193,7 @@ class BuddyChat(Chat):
 
 	def activity_on_close_from_user(self):
 		Chat.activity_on_close_from_user(self)
-		self._buddy.set_chat(None)
+		del self._chats[self._buddy]
 			
 class GroupChat(Chat):
 
@@ -202,12 +203,16 @@ class GroupChat(Chat):
 	
 	def __init__(self):
 		self._act_name = "Chat"
+		self._chats = {}
 		
 		bus = dbus.SessionBus()
 		proxy_obj = bus.get_object('com.redhat.Sugar.Browser', '/com/redhat/Sugar/Browser')
 		self._browser_shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.BrowserShell')
 
 		Chat.__init__(self, self)
+
+	def get_group(self):
+		return self._group
 
 	def _start(self):
 		self._group = LocalGroup()
@@ -300,9 +305,9 @@ class GroupChat(Chat):
 		(model, aniter) = widget.get_selection().get_selected()
 		chat = None
 		buddy = self._buddy_list_model.get_value(aniter, self._MODEL_COL_BUDDY)
-		if buddy and not buddy.chat():
+		if buddy and not self._chats.has_key(buddy):
 			chat = BuddyChat(self, buddy)
-			buddy.set_chat(chat)
+			self._chats[buddy] = chat
 			chat.activity_connect_to_shell()
 
 	def _on_group_event(self, action, buddy):
@@ -342,10 +347,9 @@ class GroupChat(Chat):
 			self._controller.notify_new_message(self, None)
 
 	def _buddy_recv_message(self, sender, msg):
-		chat = sender.chat()
-		if not chat:
+		if self._chats.has_key[sender]:
 			chat = BuddyChat(self, sender)
-			sender.set_chat(chat)
+			self._chats[buddy] = chat
 			chat.activity_connect_to_shell()
 		chat.recv_message(sender, msg)
 
