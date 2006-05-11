@@ -7,9 +7,6 @@ from Service import *
 BUDDY_JOIN = "join"
 BUDDY_LEAVE = "leave"
 
-BUDDY_SERVICE_TYPE = "_olpc_buddy._tcp"
-BUDDY_SERVICE_PORT = 666
-
 class Group:
 	def __init__(self):
 		self._listeners = []
@@ -39,11 +36,26 @@ class LocalGroup(Group):
 		self._pdiscovery.add_service_listener(self._on_service_change)
 		self._pdiscovery.start()
 
+	def get_owner(self):
+		return self._owner
+
 	def join(self):
-		self._pannounce = presence.PresenceAnnounce()
-		name = Owner.get_instance().get_nick_name()
-		self._pannounce.register_service(name, BUDDY_SERVICE_PORT, BUDDY_SERVICE_TYPE,
-										 nickname = name)
+		self._owner = Owner()
+		self._owner.register()
+
+	def get_service_from_name(self, name):
+		if name == 'localgroup_multicast':
+			return Service('localgroup_multicast', '', '224.0.0.221', 6666, True)
+		elif name == self._owner.get_service().get_name():
+			return self._owner.get_service()
+		else:
+			return self._services[name]
+	
+	def get_buddy_from_address(self, address):
+		for buddy in self._buddies.values():
+			if buddy.get_service().get_address() == address:
+				return buddy
+		return None
 
 	def _on_service_change(self, action, interface, protocol, name, stype, domain, flags):
 		if action == presence.ACTION_SERVICE_NEW:
@@ -58,12 +70,12 @@ class LocalGroup(Group):
 		service = Service(name, host, address, port)
 		self._services[name] = service
 		if stype == BUDDY_SERVICE_TYPE:
-			self._add_buddy(service, txt)
+			data = self._pair_to_dict(avahi.txt_array_to_string_array(txt))
+			self._add_buddy(service, data)
 
-	def _add_buddy(self, service, txt):
+	def _add_buddy(self, service, data):
 		name = service.get_name()
 		if not self._buddies.has_key(name):
-			data = self._pair_to_dict(avahi.txt_array_to_string_array(txt))
 			buddy = Buddy(service, data['nickname'])
 			self._buddies[name] = buddy
 			self._notify_buddy_join(buddy)

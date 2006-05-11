@@ -12,7 +12,6 @@ import gobject
 import SimpleXMLRPCServer
 import SocketServer
 
-
 __authinfos = {}
 
 def _add_authinfo(authinfo):
@@ -117,8 +116,7 @@ class GlibXMLRPCServer(GlibTCPServer, SimpleXMLRPCServer.SimpleXMLRPCDispatcher)
 
 		return response
 
-
-class GroupChatController(object):
+class GroupServer(object):
 
 	_MAX_MSG_SIZE = 500
 
@@ -127,13 +125,7 @@ class GroupChatController(object):
 		self._port = port
 		self._data_cb = data_cb
 
-		self._setup_sender()
 		self._setup_listener()
-
-	def _setup_sender(self):
-		self._send_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-		# Make the socket multicast-aware, and set TTL.
-		self._send_sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 20) # Change TTL (=20) to suit
 
 	def _setup_listener(self):
 		# Listener socket
@@ -168,6 +160,17 @@ class GroupChatController(object):
 			self._data_cb(msg)
 		return True
 
+class GroupClient(object):
+
+	_MAX_MSG_SIZE = 500
+
+	def __init__(self, address, port):
+		self._address = address
+		self._port = port
+
+		self._send_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+		# Make the socket multicast-aware, and set TTL.
+		self._send_sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 20) # Change TTL (=20) to suit
+
 	def send_msg(self, data):
 		self._send_sock.sendto(data, (self._address, self._port))
-

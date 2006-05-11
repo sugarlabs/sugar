@@ -14,6 +14,8 @@ import sys
 try:
 	import activity
 	from Group import *
+	from StreamReader import *
+	from StreamWriter import *
 	from sugar_globals import *
 except ImportError:
 	from sugar import activity
@@ -139,7 +141,7 @@ class Chat(activity.Activity):
 		self._controller.notify_activate(self)
 
 	def recv_message(self, buddy, msg):
-		self._insert_rich_message(buddy.nick(), msg)
+		self._insert_rich_message(buddy.get_nick_name(), msg)
 		self._controller.notify_new_message(self, buddy)
 
 	def _insert_rich_message(self, nick, msg):
@@ -160,18 +162,18 @@ class Chat(activity.Activity):
 			aniter = buffer.get_end_iter()
 			buffer.insert(aniter, message)
 		else:
-			nick = p2p.Owner.get_instance().get_nick()
+			nick = self._group.get_owner().get_nick_name()
 			self._insert_rich_message(nick, text)
 
 class BuddyChat(Chat):
 	def __init__(self, controller, buddy):
 		self._buddy = buddy
-		self._act_name = "Chat: %s" % buddy.nick()
+		self._act_name = "Chat: %s" % buddy.get_nick_name()
 		Chat.__init__(self, controller)
 
 	def _start(self):
-		group = p2p.Group.get_instance()
-		self._output_pipe = p2p.OutputPipe(group, self._buddy, "buddy-chat")
+		service_name = buddy.get_service_name()
+		self._stream_writer = StreamWriter(self._group, service_name)
 
 	def activity_on_connected_to_shell(self):
 		Chat.activity_on_connected_to_shell(self)
@@ -185,7 +187,7 @@ class BuddyChat(Chat):
 
 	def send_message(self, text):
 		if len(text) > 0:
-			success = self._output_pipe.send(text)
+			success = self._stream_writer.write(text)
 			self._local_message(success, text)
 
 	def activity_on_close_from_user(self):
@@ -211,6 +213,15 @@ class GroupChat(Chat):
 		self._group = LocalGroup()
 		self._group.add_listener(self._on_group_event)
 		self._group.join()
+		
+		owner_service = self._group.get_owner().get_service_name()
+		self._buddy_reader = StreamReader(self._group, owner_service)
+		self._buddy_reader.set_listener(self._buddy_recv_message)
+
+		self._buddy_reader = StreamReader(self._group, "localgroup_multicast")
+		self._buddy_reader.set_listener(self.recv_message)
+		
+		self._stream_writer = StreamWriter(self._group, "localgroup_multicast")
 
 	def _create_sidebar(self):
 		vbox = gtk.VBox(False, 6)
@@ -322,12 +333,12 @@ class GroupChat(Chat):
 
 	def send_message(self, text):
 		if len(text) > 0:
-			self._output_pipe.send(text)
+			self._stream_writer.write(text)
 		self._local_message(True, text)
 
 	def recv_message(self, buddy, msg):
 		if buddy:
-			self._insert_rich_message(buddy.nick(), msg)
+			self._insert_rich_message(buddy.get_nick_name(), msg)
 			self._controller.notify_new_message(self, None)
 
 	def _buddy_recv_message(self, sender, msg):
