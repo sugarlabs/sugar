@@ -387,12 +387,12 @@ class ChatShell(dbus.service.Object):
 		dbus.service.Object.__init__(self, bus_name, object_path)
 
 	def open_group_chat(self):
-		group_chat = GroupChat()
-		group_chat.activity_connect_to_shell()
+		self._group_chat = GroupChat()
+		self._group_chat.activity_connect_to_shell()
 
 	@dbus.service.method('com.redhat.Sugar.ChatShell')
 	def send_message(self, message):
-		pass
+		self._group_chat.send_message(message)
 		
 def main():
 	ChatShell.get_instance().open_group_chat()

@@ -3,6 +3,7 @@ import avahi
 import presence
 from Buddy import *
 from Service import *
+import Model
 
 SERVICE_ADDED = "service_added"
 SERVICE_REMOVED = "service_removed"
@@ -14,6 +15,10 @@ class Group:
 	def __init__(self):
 		self._service_listeners = []
 		self._presence_listeners = []
+		self._store = Model.Store(self)
+	
+	def get_store(self):
+		return self._store
 	
 	def join(self, buddy):
 		pass
