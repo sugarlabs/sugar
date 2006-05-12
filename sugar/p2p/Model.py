@@ -25,7 +25,8 @@ class ModelRequestHandler(object):
 		return self._model.set_value(key, value)
 
 class LocalModel:
-	def __init__(self, model_id):
+	def __init__(self, group, model_id):
+		self._group = group
 		self._model_id = model_id
 		self._values = {}
 	
@@ -39,6 +40,7 @@ class LocalModel:
 		service = Service(self._model_id, MODEL_SERVICE_TYPE,
 						  '', MODEL_SERVICE_PORT)
 		self._setup_server(service)
+		service.register(self._group)
 		
 	# FIXME this is duplicated with StreamReader
 	def _setup_server(self, service):
@@ -61,7 +63,7 @@ class Store:
 		self._local_models = {}
 	
 	def create_model(self, model_id):
-		model = LocalModel(model_id)
+		model = LocalModel(self._group, model_id)
 		self._local_models[model_id] = model
 		return model
 	

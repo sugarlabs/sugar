@@ -159,8 +159,11 @@ class NavigationToolbar(gtk.Toolbar):
 class BrowserActivity(activity.Activity):
 	def __init__(self, group, uri):
 		activity.Activity.__init__(self)
+
 		self.uri = uri
 		self._group = group
+		
+		self._setup_shared(uri)		
 
 	def _setup_shared(self, uri):
 		self._model = self._group.get_store().get_model(uri) 
