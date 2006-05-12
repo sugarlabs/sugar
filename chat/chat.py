@@ -169,8 +169,8 @@ class Chat(activity.Activity):
 			aniter = buffer.get_end_iter()
 			buffer.insert(aniter, message)
 		else:
-			nick = self._group.get_owner().get_nick_name()
-			self._insert_rich_message(nick, text)
+			owner = self._controller.get_group().get_owner()
+			self._insert_rich_message(owner.get_nick_name(), text)
 
 class BuddyChat(Chat):
 	def __init__(self, controller, buddy):
