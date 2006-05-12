@@ -57,7 +57,7 @@ class LocalModel:
 		while not started and tries > 0:
 			try:
 				p2p_server = network.GlibXMLRPCServer(("", port))
-				p2p_server.register_instance(StreamReaderRequestHandler(self))
+				p2p_server.register_instance(ModelRequestHandler(self))
 				started = True
 			except:
 				port = port + 1
