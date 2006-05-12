@@ -179,9 +179,10 @@ class BuddyChat(Chat):
 		Chat.__init__(self, controller)
 
 	def _start(self):
-		service_name = self._buddy.get_service_name()
 		group = self._controller.get_group()
-		self._stream_writer = StreamWriter(group, service_name)
+		buddy_name = self._buddy.get_service_name()
+		service = group.get_service(buddy_name, CHAT_SERVICE_TYPE)
+		self._stream_writer = StreamWriter(group, service)
 
 	def activity_on_connected_to_shell(self):
 		Chat.activity_on_connected_to_shell(self)
