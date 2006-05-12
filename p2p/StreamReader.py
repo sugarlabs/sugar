@@ -44,8 +44,8 @@ class StreamReader:
 		
 	def _recv_multicast(self, msg):
 		[ nick_name, data ] = msg['data'].split(" |**| ", 2)
-		self._recv(nick_name, data)
+		self.recv(nick_name, data)
 	
-	def _recv(self, nick_name, data):
+	def recv(self, nick_name, data):
 		if nick_name != self._group.get_owner().get_nick_name():
 			self._callback(self._group.get_buddy(nick_name), data)
