@@ -24,6 +24,13 @@ except ImportError:
 
 import richtext
 
+CHAT_SERVICE_TYPE = "_olpc_chat._tcp"
+CHAT_SERVICE_PORT = 6100
+
+GROUP_CHAT_SERVICE_TYPE = "_olpc_group_chat._udp"
+GROUP_CHAT_SERVICE_ADDRESS = "224.0.0.221"
+GROUP_CHAT_SERVICE_PORT = 6200
+
 class Chat(activity.Activity):
 	def __init__(self, controller):
 		self._controller = controller
@@ -216,17 +223,24 @@ class GroupChat(Chat):
 
 	def _start(self):
 		self._group = LocalGroup()
-		self._group.add_listener(self._on_group_event)
+		self._group.add_presence_listener(self._on_group_event)
 		self._group.join()
 		
-		owner_service = self._group.get_owner().get_service_name()
-		self._buddy_reader = StreamReader(self._group, owner_service)
+		name = self._group.get_owner().get_service_name()
+		service = Service(name, CHAT_SERVICE_TYPE, '', CHAT_SERVICE_PORT)
+		self._buddy_reader = StreamReader(self._group, service)
 		self._buddy_reader.set_listener(self._buddy_recv_message)
+		service.register(self._group)
 
-		self._buddy_reader = StreamReader(self._group, "localgroup_multicast")
+		service = Service(name, GROUP_CHAT_SERVICE_TYPE,
+						  GROUP_CHAT_SERVICE_ADDRESS,
+						  GROUP_CHAT_SERVICE_PORT, True)
+		self._group.add_service(service)				  
+		
+		self._buddy_reader = StreamReader(self._group, service)
 		self._buddy_reader.set_listener(self.recv_message)
 		
-		self._stream_writer = StreamWriter(self._group, "localgroup_multicast")
+		self._stream_writer = StreamWriter(self._group, service)
 
 	def _create_sidebar(self):
 		vbox = gtk.VBox(False, 6)
@@ -311,7 +325,10 @@ class GroupChat(Chat):
 			chat.activity_connect_to_shell()
 
 	def _on_group_event(self, action, buddy):
-		if action == BUDDY_JOIN:
+		if buddy.get_nick_name() == self._group.get_owner().get_nick_name():
+			# Do not show ourself in the buddy list
+			pass
+		elif action == BUDDY_JOIN:
 			aniter = self._buddy_list_model.append(None)
 			self._buddy_list_model.set(aniter, self._MODEL_COL_NICK, buddy.get_nick_name(),
 					self._MODEL_COL_ICON, None, self._MODEL_COL_BUDDY, buddy)

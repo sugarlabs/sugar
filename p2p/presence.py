@@ -2,8 +2,6 @@
 
 import avahi, dbus, dbus.glib
 
-OLPC_CHAT_SERVICE = "_olpc_chat._udp"
-
 ACTION_SERVICE_NEW = 'new'
 ACTION_SERVICE_REMOVED = 'removed'
 
@@ -81,7 +79,6 @@ class PresenceAnnounce(object):
 
 	def register_service(self, rs_name, rs_port, rs_service, **kwargs):
 		g = dbus.Interface(self.bus.get_object(avahi.DBUS_NAME, self.server.EntryGroupNew()), avahi.DBUS_INTERFACE_ENTRY_GROUP)
-
 		if rs_name is None:
 			if self._hostname is None:
 				self._hostname = "%s:%s" % (self.server.GetHostName(), rs_port)

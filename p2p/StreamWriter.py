@@ -5,10 +5,9 @@ import socket
 import network
 
 class StreamWriter:
-	def __init__(self, group, service_name):
+	def __init__(self, group, service):
 		self._group = group
-		self._service_name = service_name
-		self._service = group.get_service_from_name(service_name)
+		self._service = service
 		self._address = self._service.get_address()
 		self._port = self._service.get_port()
 
