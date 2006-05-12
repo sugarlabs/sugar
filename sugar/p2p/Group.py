@@ -75,7 +75,7 @@ class LocalGroup(Group):
 	def get_service(self, name, stype):
 		if self._services.has_key((name, stype)):
 			return self._services[(name, stype)]
-		else
+		else:
 			return None
 
 	def get_buddy(self, name):
