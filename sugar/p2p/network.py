@@ -1,6 +1,10 @@
+# -*- tab-width: 4; indent-tabs-mode: t -*- 
+
 import socket
 import threading
 import traceback
+import select
+import time
 import xmlrpclib
 import sys
 
@@ -129,6 +133,10 @@ class GroupServer(object):
 
 		# Set some options to make it multicast-friendly
 		self._listen_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+		try:
+			self._listen_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+		except:
+			pass
 		self._listen_sock.setsockopt(socket.SOL_IP, socket.IP_MULTICAST_TTL, 20)
 		self._listen_sock.setsockopt(socket.SOL_IP, socket.IP_MULTICAST_LOOP, 1)
 

@@ -1,11 +1,15 @@
 # -*- tab-width: 4; indent-tabs-mode: t -*- 
 
+import string
+
+import gc
 import dbus
 import dbus.service
 import dbus.glib
+import gobject
 import pygtk
 pygtk.require('2.0')
-import gtk
+import gtk,sys
 
 
 class Activity(dbus.service.Object):
@@ -32,21 +36,21 @@ class Activity(dbus.service.Object):
 												   "com.redhat.Sugar.Shell.ActivityContainer")
 
 		self.__activity_id = self.__activity_container.add_activity("")
-		self.__object_path = "/com/redhat/Sugar/Shell/Activities/%d" % self.__activity_id
+		self.__object_path = "/com/redhat/Sugar/Shell/Activities/%d"%self.__activity_id
 
-		print "object_path = %s" % self.__object_path
+		print "object_path = %s"%self.__object_path
 
 		self.__activity_object = dbus.Interface(self.__bus.get_object("com.redhat.Sugar.Shell", self.__object_path), \
 											  "com.redhat.Sugar.Shell.ActivityHost")
 		self.__window_id = self.__activity_object.get_host_xembed_id()
 
-		print "XEMBED window_id = %d" % self.__window_id
+		print "XEMBED window_id = %d"%self.__window_id
 
 		self.__plug = gtk.Plug(self.__window_id)
 
 		# Now let the Activity register a peer service so the Shell can poke it
-		self.__peer_service_name = "com.redhat.Sugar.Activity%d" % self.__activity_id
-		self.__peer_object_name = "/com/redhat/Sugar/Activity/%d" % self.__activity_id
+		self.__peer_service_name = "com.redhat.Sugar.Activity%d"%self.__activity_id
+		self.__peer_object_name = "/com/redhat/Sugar/Activity/%d"%self.__activity_id
 		self.__service = dbus.service.BusName(self.__peer_service_name, bus=self.__bus)
 		dbus.service.Object.__init__(self, self.__service, self.__peer_object_name)
 
@@ -82,7 +86,7 @@ class Activity(dbus.service.Object):
 		pixarray = []
 		pixstr = pixbuf.get_pixels();
 		for c in pixstr:
-			pixarray.append(c)
+				pixarray.append(c)
 		self.__activity_object.set_tab_icon(pixarray, \
 											pixbuf.get_colorspace(), \
 											pixbuf.get_has_alpha(),  \
@@ -159,16 +163,16 @@ class Activity(dbus.service.Object):
 	# pure virtual methods
 
 	def activity_on_connected_to_shell(self):
-		print "act %d: you need to override activity_on_connected_to_shell" % self.activity_get_id()
+		print "act %d: you need to override activity_on_connected_to_shell"%self.activity_get_id()
 
 	def activity_on_disconnected_from_shell(self):
-		print "act %d: you need to override activity_on_disconnected_from_shell" % self.activity_get_id()
- 
+		print "act %d: you need to override activity_on_disconnected_from_shell"%self.activity_get_id()
+
 	def activity_on_close_from_user(self):
-		print "act %d: you need to override activity_on_close_from_user" % self.activity_get_id()
+		print "act %d: you need to override activity_on_close_from_user"%self.activity_get_id()
 
 	def activity_on_lost_focus(self):
-		print "act %d: you need to override activity_on_lost_focus" % self.activity_get_id()
+		print "act %d: you need to override activity_on_lost_focus"%self.activity_get_id()
 
 	def activity_on_got_focus(self):
-		print "act %d: you need to override activity_on_got_focus" % self.activity_get_id()
+		print "act %d: you need to override activity_on_got_focus"%self.activity_get_id()

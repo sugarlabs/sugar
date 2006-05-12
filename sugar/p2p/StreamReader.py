@@ -1,5 +1,3 @@
-import socket
-
 import network
 
 class StreamReaderRequestHandler(object):
@@ -7,6 +5,7 @@ class StreamReaderRequestHandler(object):
 		self._reader = reader
 
 	def message(self, nick_name, message):
+		address = network.get_authinfo()
 		self._reader.recv(nick_name, message)
 		return True
 
@@ -38,7 +37,7 @@ class StreamReader:
 				p2p_server = network.GlibXMLRPCServer(("", port))
 				p2p_server.register_instance(StreamReaderRequestHandler(self))
 				started = True
-			except(socket.error):
+			except:
 				port = port + 1
 				tries = tries - 1
 		self._service.set_port(port)

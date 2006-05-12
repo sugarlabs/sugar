@@ -31,7 +31,7 @@ class StreamWriter:
 			nick_name = self._group.get_owner().get_nick_name()
 			self._uclient.message(nick_name, data)
 			return True
-		except (socket.error, xmlrpclib.Fault, xmlrpclib.ProtocolError):
+		except (socket.error, xmlrpclib.Fault, xmlrpclib.ProtocolError), e:
 			traceback.print_exc()
 			return False
 

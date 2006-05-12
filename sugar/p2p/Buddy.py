@@ -1,7 +1,7 @@
 import pwd
 import os
 
-from Service import Service
+from Service import *
 
 PRESENCE_SERVICE_TYPE = "_olpc_presence._tcp"
 PRESENCE_SERVICE_PORT = 6000

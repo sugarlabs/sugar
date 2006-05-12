@@ -45,7 +45,7 @@ class RichTextView(gtk.TextView):
 
 	def __motion_notify_cb(self, widget, event):
 		if event.is_hint:
-			event.window.get_pointer();
+			[x, y, state] = event.window.get_pointer();
 		
 		it = self.__get_event_iter(event)
 		if it:
@@ -134,9 +134,9 @@ class RichTextBuffer(gtk.TextBuffer):
 	
 	def __insert_text_cb(self, widget, pos, text, length):
 		for tag in self.active_tags:
-			pos_end = pos.copy()
-			pos_end.backward_chars(length)
-			self.apply_tag_by_name(tag, pos, pos_end)
+				pos_end = pos.copy()
+				pos_end.backward_chars(length)
+				self.apply_tag_by_name(tag, pos, pos_end)
 		
 class RichTextToolbar(gtk.Toolbar):
 	def __init__(self, buf):
@@ -205,7 +205,6 @@ class RichTextToolbar(gtk.Toolbar):
 			
 class RichTextHandler(xml.sax.handler.ContentHandler):
 	def __init__(self, serializer, buf):
-		xml.sax.handler.ContentHandler.__init__(self)
 		self.buf = buf
 		self.serializer = serializer
 		self.tags = []
@@ -287,7 +286,7 @@ class RichTextSerializer:
 	def serialize(self, buf):
 		self.buf = buf
 		
-		res = "<richtext>"
+		xml = "<richtext>"
 
 		next_it = buf.get_start_iter()
 		while not next_it.is_end():
@@ -300,29 +299,29 @@ class RichTextSerializer:
 			for tag in it.get_toggled_tags(False):
 				while 1:
 					open_tag = self._open_tags.pop()
-					res += self.serialize_tag_end(tag)
+					xml += self.serialize_tag_end(tag)
 					if open_tag == tag:
 						break						
 					tags_to_reopen.append(open_tag)
 					
 			for tag in tags_to_reopen:
 				self._open_tags.append(tag)
-				res += self.serialize_tag_start(tag, it)
+				xml += self.serialize_tag_start(tag, it)
 			
 			for tag in it.get_toggled_tags(True):
 				self._open_tags.append(tag)
-				res += self.serialize_tag_start(tag, it)
+				xml += self.serialize_tag_start(tag, it)
 			
-			res += buf.get_text(it, next_it, False)
+			xml += buf.get_text(it, next_it, False)
 
 		if next_it.is_end():
 			self._open_tags.reverse()
 			for tag in self._open_tags:
-				res += self.serialize_tag_end(tag)
+				xml += self.serialize_tag_end(tag)
 		
-		res += "</richtext>"
+		xml += "</richtext>"
 		
-		return res
+		return xml
 
 	def deserialize(self, xml_string, buf):
 		parser = xml.sax.make_parser()
@@ -331,11 +330,11 @@ class RichTextSerializer:
 		parser.feed(xml_string)
 		parser.close()
 
-def test_quit(w, rb):
-	print RichTextSerializer().serialize(rb)
+def test_quit(window, rich_buf):
+	print RichTextSerializer().serialize(rich_buf)
 	gtk.main_quit()
 	
-def link_clicked(v, address):
+def link_clicked(view, address):
 	print "Link clicked " + address
 
 if __name__ == "__main__":
@@ -351,15 +350,15 @@ if __name__ == "__main__":
 
 	rich_buf = view.get_buffer()
 	
-	test_xml = "<richtext>"	
+	xml_string = "<richtext>"	
 
-	test_xml += "<bold><italic>Test</italic>one</bold>\n"
-	test_xml += "<bold><italic>Test two</italic></bold>"
-	test_xml += "<font size=\"xx-small\">Test three</font>"
-	test_xml += "<link href=\"http://www.gnome.org\">Test link</link>"
-	test_xml += "</richtext>"
+	xml_string += "<bold><italic>Test</italic>one</bold>\n"
+	xml_string += "<bold><italic>Test two</italic></bold>"
+	xml_string += "<font size=\"xx-small\">Test three</font>"
+	xml_string += "<link href=\"http://www.gnome.org\">Test link</link>"
+	xml_string += "</richtext>"
 
-	RichTextSerializer().deserialize(test_xml, rich_buf)
+	RichTextSerializer().deserialize(xml_string, rich_buf)
 	
 	toolbar = RichTextToolbar(rich_buf)
 	vbox.pack_start(toolbar, False)

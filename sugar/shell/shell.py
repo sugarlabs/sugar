@@ -1,9 +1,12 @@
 #!/usr/bin/python
 # -*- tab-width: 4; indent-tabs-mode: t -*- 
 
+import string
+
 import dbus
 import dbus.service
 import dbus.glib
+import gobject
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -24,7 +27,7 @@ class ActivityHost(dbus.service.Object):
 		self.activity_id = activity_counter
 		activity_counter += 1
 		
-		self.dbus_object_name = "/com/redhat/Sugar/Shell/Activities/%d" % self.activity_id
+		self.dbus_object_name = "/com/redhat/Sugar/Shell/Activities/%d"%self.activity_id
 		#print "object name = %s"%self.dbus_object_name
 		
 		dbus.service.Object.__init__(self, activity_container.service, self.dbus_object_name)
@@ -140,7 +143,7 @@ class ActivityHost(dbus.service.Object):
 		#print "  data = ", data
 		pixstr = ""
 		for c in data:
-			pixstr += chr(c)
+		    pixstr += chr(c)
 
 		pixbuf = gtk.gdk.pixbuf_new_from_data(pixstr, colorspace, has_alpha, bits_per_sample, width, height, rowstride)
 		#print pixbuf
@@ -222,11 +225,10 @@ class ActivityContainer(dbus.service.Object):
 		self.window.add(self.notebook)
 		
 		self.window.connect("destroy", lambda w: gtk.main_quit())
+		self.window.show()
 		
 		self.current_activity = None
 
-	def show(self):
-		self.window.show()
 
 	def __focus_reply_cb(self):
 		pass
@@ -281,10 +283,10 @@ class ActivityContainer(dbus.service.Object):
 		return activity.get_host_activity_id()
 
 	def __print_activities(self):
-		print "__print_activities: %d activities registered" % len(self.activities)
+		print "__print_activities: %d activities registered"%len(self.activities)
 		i = 0
 		for owner, activity in self.activities:
-			print "  %d: owner=%s activity_object_name=%s" % (i, owner, activity.dbus_object_name)
+			print "  %d: owner=%s activity_object_name=%s"%(i, owner, activity.dbus_object_name)
 			i += 1
 
 
@@ -293,9 +295,11 @@ def main():
 	service = dbus.service.BusName("com.redhat.Sugar.Shell", bus=session_bus)
 
 	activityContainer = ActivityContainer(service, session_bus)
-	activityContainer.show()
 
-	gtk.main()
+	try:
+		gtk.main()
+	except KeyboardInterrupt:
+		pass
 
-if __name__ == "__main__":
-	main()
+if __name__=="__main__":
+		main()

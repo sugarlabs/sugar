@@ -65,7 +65,7 @@ class PresenceDiscovery(object):
 
 		self._service_type_browsers[(interface, protocol, domain)] = b
 
-	def new_domain(self, interface, protocol, domain, flags):
+	def new_domain(self,interface, protocol, domain, flags):
 		if domain != "local":
 			return
 		self.browse_domain(interface, protocol, domain)
@@ -84,7 +84,7 @@ class PresenceAnnounce(object):
 				self._hostname = "%s:%s" % (self.server.GetHostName(), rs_port)
 				rs_name = self._hostname
 
-		info = ["%s=%s" % (k, v) for k, v in kwargs.items()]
+		info = ["%s=%s" % (k,v) for k,v in kwargs.items()]
 		g.AddService(avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, 0, rs_name, rs_service,
 				"", "", # domain, host (let the system figure it out)
 				dbus.UInt16(rs_port), info,)
