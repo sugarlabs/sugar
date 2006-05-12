@@ -71,7 +71,7 @@ class LocalGroup(Group):
 		return self._services[(name, stype)]
 
 	def get_buddy(self, name):
-		return self._buddy[name]
+		return self._buddies[name]
 	
 	def _add_buddy(self, buddy):
 		bid = buddy.get_nick_name()

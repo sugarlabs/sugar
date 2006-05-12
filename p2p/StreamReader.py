@@ -4,9 +4,9 @@ class StreamReaderRequestHandler(object):
 	def __init__(self, reader):
 		self._reader = reader
 
-	def message(self, message):
+	def message(self, nick_name, message):
 		address = network.get_authinfo()
-		self._reader.recv(address[0], message)
+		self._reader.recv(nick_name, message)
 		return True
 
 class StreamReader:
@@ -33,10 +33,9 @@ class StreamReader:
 		p2p_server.register_instance(StreamReaderRequestHandler(self))
 		
 	def _recv_multicast(self, msg):
-		self._recv(msg['addr'], msg['data'])
+		[ nick_name, data ] = msg['data'].split(" |**| ", 2)
+		self._recv(nick_name, data)
 	
-	def _recv(self, address, data):
-		owner = self._group.get_owner()
-		if address != owner.get_service().get_address():
-			buddy = self._group.get_buddy_from_address(address)
-			self._callback(buddy, data)
+	def _recv(self, nick_name, data):
+		if nick_name != self._group.get_owner().get_nick_name():
+			self._callback(self._group.get_buddy(nick_name), data)

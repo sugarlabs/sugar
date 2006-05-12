@@ -28,7 +28,8 @@ class StreamWriter:
 
 	def _unicast_write(self, data):
 		try:
-			self._uclient.message(data)
+			nick_name = self._group.get_owner().get_nick_name()
+			self._uclient.message(nick_name, data)
 			return True
 		except (socket.error, xmlrpclib.Fault, xmlrpclib.ProtocolError), e:
 			traceback.print_exc()
@@ -38,4 +39,5 @@ class StreamWriter:
 		self._mclient = network.GroupClient(self._address, self._port)
 		
 	def _multicast_write(self, data):
-		self._mclient.send_msg(data)
+		nick_name = self._group.get_owner().get_nick_name()
+		self._mclient.send_msg(nick_name + " |**| " + data)
