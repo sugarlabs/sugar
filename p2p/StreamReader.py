@@ -29,8 +29,18 @@ class StreamReader:
 		server.start()
 		
 	def _setup_unicast(self):
-		p2p_server = GlibXMLRPCServer(("", self._service.get_port()))
-		p2p_server.register_instance(StreamReaderRequestHandler(self))
+		started = False
+		tries = 10
+		port = self._service.get_port()
+		while not started and tries > 0:
+			try:
+				p2p_server = GlibXMLRPCServer(("", port))
+				p2p_server.register_instance(StreamReaderRequestHandler(self))
+				started = True
+			except:
+				port = port + 1
+				tries = tries - 1
+		self._service.set_port(port)
 		
 	def _recv_multicast(self, msg):
 		[ nick_name, data ] = msg['data'].split(" |**| ", 2)

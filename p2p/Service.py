@@ -19,6 +19,9 @@ class Service(object):
 
 	def get_port(self):
 		return self._port
+
+	def set_port(self, port):
+		self._port = port
 		
 	def is_multicast(self):
 		return self._multicast

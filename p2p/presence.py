@@ -31,7 +31,7 @@ class PresenceDiscovery(object):
 		self.server.ResolveService(int(interface), int(protocol), name, stype, domain, avahi.PROTO_UNSPEC, dbus.UInt32(0), reply_handler=reply_handler, error_handler=error_handler)
 
 	def new_service(self, interface, protocol, name, stype, domain, flags):
-		print "Found service '%s' (%d) of type '%s' in domain '%s' on %i.%i." % (name, flags, stype, domain, interface, protocol)
+#		print "Found service '%s' (%d) of type '%s' in domain '%s' on %i.%i." % (name, flags, stype, domain, interface, protocol)
 		for listener in self._service_listeners:
 			listener(ACTION_SERVICE_NEW, interface, protocol, name, stype, domain, flags)
 
