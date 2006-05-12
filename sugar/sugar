@@ -13,16 +13,16 @@ if len(sys.argv) == 1:
 	# are spanned. But obviously we
 	# need something better.
 
-	import sugar.chat
-	sugar.chat.main()
+	from sugar.chat import chat
+	chat.main()
 elif sys.argv[1] == 'shell':
-	import sugar.shell
-	sugar.shell.main()
+	from sugar.shell import shell
+	shell.main()
 elif sys.argv[1] == 'chat':
-	import sugar.chat
-	sugar.chat.main()
+	from sugar.chat import chat
+	chat.main()
 elif sys.argv[1] == 'browser':
-	import sugar.browser
-	sugar.browser.main()
+	from sugar.browser import browser
+	browser.main()
 else:
 	print "Unknown activity"
