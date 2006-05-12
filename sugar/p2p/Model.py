@@ -1,6 +1,11 @@
 MODEL_SERVICE_TYPE = "_olpc_model._tcp"
 MODEL_SERVICE_PORT = 6300
 
+import xmlrpclib
+
+from sugar.p2p.Service import Service
+import sugar.p2p.network
+
 class RemoteModel:
 	def __init__(self, service):
 		self._service = service
@@ -29,6 +34,8 @@ class LocalModel:
 		self._group = group
 		self._model_id = model_id
 		self._values = {}
+		
+		self._setup_service()
 	
 	def get_value(self, key):
 		return self._values[key]
