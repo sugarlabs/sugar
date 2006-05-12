@@ -1,2 +1,4 @@
+import os
+
 def internal_get_data_file(filename):
-	return "@prefix@/share/sugar"
+	return os.path.join('@prefix@/share/sugar', filename)
