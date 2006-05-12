@@ -1,0 +1,2 @@
+def internal_get_data_file(filename):
+	return "@prefix@/share/sugar"
