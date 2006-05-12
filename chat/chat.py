@@ -365,7 +365,7 @@ class GroupChat(Chat):
 			self._controller.notify_new_message(self, None)
 
 	def _buddy_recv_message(self, sender, msg):
-		if self._chats.has_key[sender]:
+		if self._chats.has_key(sender):
 			chat = BuddyChat(self, sender)
 			self._chats[buddy] = chat
 			chat.activity_connect_to_shell()
