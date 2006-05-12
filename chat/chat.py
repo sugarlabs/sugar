@@ -196,8 +196,8 @@ class BuddyChat(Chat):
 
 	def send_message(self, text):
 		if len(text) > 0:
-			success = self._stream_writer.write(text)
-			self._local_message(success, text)
+			self._stream_writer.write(text)
+			self._local_message(True, text)
 
 	def activity_on_close_from_user(self):
 		Chat.activity_on_close_from_user(self)
@@ -365,10 +365,12 @@ class GroupChat(Chat):
 			self._controller.notify_new_message(self, None)
 
 	def _buddy_recv_message(self, sender, msg):
-		if self._chats.has_key(sender):
+		if not self._chats.has_key(sender):
 			chat = BuddyChat(self, sender)
-			self._chats[buddy] = chat
+			self._chats[sender] = chat
 			chat.activity_connect_to_shell()
+		else:
+			chat = self._chats[sender]
 		chat.recv_message(sender, msg)
 
 class ChatShell(dbus.service.Object):
