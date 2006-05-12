@@ -1,4 +1,4 @@
-from network import *
+import network
 
 class StreamReaderRequestHandler(object):
 	def __init__(self, reader):
@@ -25,7 +25,7 @@ class StreamReader:
 	def _setup_multicast(self):
 		address = self._service.get_address()
 		port = self._service.get_port()
-		server = GroupServer(address, port, self._recv_multicast)
+		server = network.GroupServer(address, port, self._recv_multicast)
 		server.start()
 		
 	def _setup_unicast(self):
