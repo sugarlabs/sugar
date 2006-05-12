@@ -73,7 +73,10 @@ class LocalGroup(Group):
 		self._owner.register()
 
 	def get_service(self, name, stype):
-		return self._services[(name, stype)]
+		if self._services.has_key((name, stype)):
+			return self._services[(name, stype)]
+		else
+			return None
 
 	def get_buddy(self, name):
 		return self._buddies[name]
