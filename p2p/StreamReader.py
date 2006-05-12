@@ -34,7 +34,7 @@ class StreamReader:
 		port = self._service.get_port()
 		while not started and tries > 0:
 			try:
-				p2p_server = GlibXMLRPCServer(("", port))
+				p2p_server = network.GlibXMLRPCServer(("", port))
 				p2p_server.register_instance(StreamReaderRequestHandler(self))
 				started = True
 			except:
