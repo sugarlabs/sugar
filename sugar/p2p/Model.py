@@ -4,7 +4,7 @@ MODEL_SERVICE_PORT = 6300
 import xmlrpclib
 
 from sugar.p2p.Service import Service
-import sugar.p2p.network
+import network
 
 class RemoteModel:
 	def __init__(self, service):
