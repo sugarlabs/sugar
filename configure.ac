@@ -17,9 +17,10 @@ AC_SUBST(PYGTK_LIBS)
 
 AC_OUTPUT([
 Makefile
-sugar_globals.py
-browser/Makefile
-chat/Makefile
-shell/Makefile
-shell/src/Makefile
+sugar/Makefile
+sugar/__installed__.py
+sugar/browser/Makefile
+sugar/chat/Makefile
+sugar/p2p/Makefile
+sugar/shell/Makefile
 ])
