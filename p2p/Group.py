@@ -95,7 +95,7 @@ class LocalGroup(Group):
 						
 	def _on_service_resolved(self, interface, protocol, name, stype, domain,
 							 host, aprotocol, address, port, txt, flags):
-			service = Service(name, host, address, port)
+			service = Service(name, stype, address, port)
 			if stype == PRESENCE_SERVICE_TYPE:
 				self._add_buddy(Buddy(service, name))
 			elif stype.startswith("_olpc"):
