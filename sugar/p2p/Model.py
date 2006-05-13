@@ -14,7 +14,7 @@ class RemoteModel:
 		self._client = xmlrpclib.ServerProxy(addr)
 
 	def get_value(self, key):
-		self._client.get_value(key)
+		return self._client.get_value(key)
 		
 	def set_value(self, key, value):
 		self._client.set_value(key, value)
