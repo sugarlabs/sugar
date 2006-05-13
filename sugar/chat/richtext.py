@@ -322,7 +322,7 @@ class RichTextSerializer:
 		
 		res += "</richtext>"
 		
-		return xml
+		return res
 
 	def deserialize(self, xml_string, buf):
 		parser = xml.sax.make_parser()
