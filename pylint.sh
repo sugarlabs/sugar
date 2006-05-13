@@ -3,10 +3,9 @@
 # Errors that we may fix in the future
 #
 # C0301 Line length
-# W0603 Using the global statement
 # W0201 Attribute defined outside __init__
 # R0201 Method could be a function
-TODO="C0301,W0603,W0201,R0201"
+TODO="C0301,W0201,R0201"
 
 # Errors we don't like
 #
