@@ -78,7 +78,7 @@ class AddressEntry(gtk.HBox):
 		return self.folded
 	
 	def set_folded(self, folded):
-		self.folded = not self.folded
+		self.folded = folded
 		self._update_folded_state()		
 	
 	def __button_clicked_cb(self, button):
@@ -253,7 +253,6 @@ class WebActivity(activity.Activity):
 
 	def activity_on_disconnected_from_shell(self):
 		gtk.main_quit()
-		gc.collect()
 
 class BrowserShell(dbus.service.Object):
 	instance = None
@@ -298,11 +297,7 @@ class BrowserShell(dbus.service.Object):
 
 def main():
 	BrowserShell.get_instance().open_web_activity()
-	
-	try:
-		gtk.main()
-	except KeyboardInterrupt:
-		pass
+	gtk.main()
 
-if __name__=="__main__":
-		main()
+if __name__ == "__main__":
+	main()

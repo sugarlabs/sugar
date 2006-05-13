@@ -1,6 +1,7 @@
 MODEL_SERVICE_TYPE = "_olpc_model._tcp"
 MODEL_SERVICE_PORT = 6300
 
+import socket
 import xmlrpclib
 
 from sugar.p2p.Service import Service
@@ -59,7 +60,7 @@ class LocalModel:
 				p2p_server = network.GlibXMLRPCServer(("", port))
 				p2p_server.register_instance(ModelRequestHandler(self))
 				started = True
-			except:
+			except(socket.error):
 				port = port + 1
 				tries = tries - 1
 		service.set_port(port)

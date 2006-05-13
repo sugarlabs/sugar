@@ -3,6 +3,7 @@ sugar_PYTHON =			\
 	__init__.py		\
 	Buddy.py		\
 	Group.py		\
+	Model.py		\
 	Service.py		\
 	StreamReader.py		\
 	StreamWriter.py		\
