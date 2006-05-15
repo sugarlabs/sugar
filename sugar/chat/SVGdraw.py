@@ -227,6 +227,8 @@ class Attribute:
         self.value = value
         self.nsname = nsname
         self.nsref = nsref
+    def __repr__(self):
+        return "(%s=%s, ns: %s=%s)" % (self.name, self.value, self.nsname, self.nsref)
 
 def get_attr_value(attrs, name):
     return attrs[name]
@@ -271,7 +273,9 @@ class SVGelement:
     def setParent(self, parent):
         self._parent = parent
 
-    def setAttribute(self, attribute):
+    def setAttribute(self, attribute, replace=True):
+        if not replace and self.hasAttribute(attribute.name):
+            return
         self._attributes[attribute.name] = attribute
 
     def delAttribute(self, name):
@@ -287,19 +291,63 @@ class SVGelement:
         raise Exception("Can't construct a default object.")
     _construct = staticmethod(_construct)
 
+    def _get_namespace(attrname, nslist):
+        colon_idx = attrname.find(':')
+        if colon_idx <= 0:
+            return (attrname, None, None)
+        nsname = attrname[:colon_idx]
+        nsref = None
+        attrname = attrname[colon_idx+1:]
+        for (ns, val) in nslist:
+            if ns == nsname:
+                nsref = val
+                break
+        if not nsref:
+            nsname = None
+        return (attrname, nsname, nsref)
+    _get_namespace = staticmethod(_get_namespace)
+
+    _XMLNS_TAG = "xmlns:"
     def construct(name, attributes, text=None, cdata=None):
         try:
             eltClass = elementTable[name]
         except KeyError, e:
             print "Unknown SVG element %s." % e
             return None
-        element = eltClass._construct(attributes)
+        # Coalesce namespaces into the attributes themselves
+        attr_dict = {}
+        elt_namespace = None
+        namespaces = []
+        tmp_attrs = []
+        # Separate namespaces from actual attributes
         for attrname, attrvalue in attributes.items():
-            element.setAttribute(Attribute(attrname, attrvalue))
-        if text:
-            element.text = text
-        if cdata:
-            element.cdata = cdata
+            if attrname.startswith(SVGelement._XMLNS_TAG):
+                namespaces.append((attrname[len(SVGelement._XMLNS_TAG):], attrvalue))
+            elif attrname.startswith("xmlns"):
+                # Element-wide attribute
+                elt_namespace = attrvalue
+            else:
+                tmp_attrs.append((attrname, attrvalue))
+
+        # Create attributes and assign namespaces to them
+        for (attrname, attrvalue) in tmp_attrs:
+            nsname = nsref = None
+            attr = None
+            # search for its namespace, if any
+            (attrname, nsname, nsref) = SVGelement._get_namespace(attrname, namespaces)
+            attr = Attribute(attrname, attrvalue, nsname, nsref)
+            attr_dict[attrname] = attr
+
+        element = eltClass._construct(attr_dict)
+        if element:
+            for attr in attr_dict.values():
+                element.setAttribute(attr, replace=False)
+            if text:
+                element.text = text
+            if cdata:
+                element.cdata = cdata
+            if not element.namespace and elt_namespace:
+                element.namespace = elt_namespace
         return element
     construct = staticmethod(construct)
 
@@ -389,10 +437,10 @@ class tref(SVGelement):
         return s
 
     def _construct(attributes):
-        href = get_attr_value(attributes, 'xlink:href')
-        if href and href.startswith("xlink:"):
-            href = href[len("xlink:"):]
-        return tref(href)
+        href = get_attr_value(attributes, 'href')
+        if href and href.nsname == 'xlink':
+            return tref(href.value)
+        return None
     _construct = staticmethod(_construct)
     
 class spannedtext:
@@ -458,7 +506,7 @@ class rect(SVGelement):
     def _construct(attributes):
         width = get_attr_value(attributes, 'width')
         height = get_attr_value(attributes, 'height')
-        return rect(width=width, height=height)
+        return rect(width=width.value, height=height.value)
     _construct = staticmethod(_construct)
 
 
@@ -490,7 +538,7 @@ class ellipse(SVGelement):
     def _construct(attributes):
         rx = get_attr_value(attributes, 'rx')
         ry = get_attr_value(attributes, 'ry')
-        return ellipse(rx=rx, ry=ry)
+        return ellipse(rx=rx.value, ry=ry.value)
     _construct = staticmethod(_construct)
 
 
@@ -516,10 +564,10 @@ class circle(SVGelement):
 
     def _construct(attributes):
         r = get_attr_value(attributes, 'r')
-        if int(r) == 1:
+        if int(r.value) == 1:
             return point()
         else:
-            return circle(r=r)
+            return circle(r=r.value)
     _construct = staticmethod(_construct)
 
 
@@ -529,7 +577,7 @@ class point(circle):
     A point is defined as a circle with a size 1 radius. It may be more efficient to use a
     very small rectangle if you use many points because a circle is difficult to render.
     """
-    def __init__(self,x=None,y=None,fill='black',**args):
+    def __init__(self,x=None,y=None,fill=None,**args):
         circle.__init__(self,x,y,1,fill,**args)
 
 class line(SVGelement):
@@ -573,7 +621,7 @@ class polyline(SVGelement):
 
     def _construct(attributes):
         points = get_attr_value(attributes, 'points')
-        return polyline(points)
+        return polyline(points.value)
     _construct = staticmethod(_construct)
 
 
@@ -593,7 +641,7 @@ class polygon(SVGelement):
 
     def _construct(attributes):
         points = get_attr_value(attributes, 'points')
-        return polygon(points)
+        return polygon(points.value)
     _construct = staticmethod(_construct)
 
 
@@ -615,7 +663,7 @@ class path(SVGelement):
         
     def _construct(attributes):
         pathdata = get_attr_value(attributes, 'd')
-        return path(d)
+        return path(pathdata.value)
     _construct = staticmethod(_construct)
 
         
@@ -656,10 +704,10 @@ class textpath(SVGelement):
             self.text=text
 
     def _construct(attributes):
-        href = get_attr_value(attributes, 'xlink:href')
-        if href and href.startswith("xlink:"):
-            href = href[len("xlink:"):]
-        return textpath(href)
+        href = get_attr_value(attributes, 'href')
+        if href and href.nsname == 'xlink':
+            return textpath(href.value)
+        return None
     _construct = staticmethod(_construct)
 
 
@@ -782,7 +830,7 @@ class stop(SVGelement):
 
     def _construct(attributes):
         offset = get_attr_value(attributes, 'offset')
-        return stop(offset)
+        return stop(offset.value)
     _construct = staticmethod(_construct)
             
 class style(SVGelement):
@@ -795,7 +843,7 @@ class style(SVGelement):
 
     def _construct(attributes):
         type = get_attr_value(attributes, 'type')
-        return style(type)
+        return style(type.value)
     _construct = staticmethod(_construct)
         
             
@@ -820,12 +868,12 @@ class image(SVGelement):
             self.setAttribute(Attribute('y', y))
  
     def _construct(attributes):
-        href = get_attr_value(attributes, 'xlink:href')
-        if href and href.startswith("xlink:"):
-            href = href[len("xlink:"):]
+        href = get_attr_value(attributes, 'href')
         width = get_attr_value(attributes, 'width')
         height = get_attr_value(attributes, 'height')
-        return image(href, width=width, height=height)
+        if href and href.nsname == 'xlink':
+            return image(href.value, width=width.value, height=height.value)
+        return None
     _construct = staticmethod(_construct)
 
 
@@ -839,10 +887,10 @@ class cursor(SVGelement):
         self.setAttribute(Attribute('href', url, 'xlink', xlinkNSRef))
 
     def _construct(attributes):
-        href = get_attr_value(attributes, 'xlink:href')
-        if href and href.startswith("xlink:"):
-            href = href[len("xlink:"):]
-        return cursor(href)
+        href = get_attr_value(attributes, 'href')
+        if href and href.nsname == 'xlink':
+            return cursor(href.value)
+        return None
     _construct = staticmethod(_construct)
 
     
@@ -955,10 +1003,10 @@ class use(SVGelement):
             self.setAttribute(Attribute('height', height))
 
     def _construct(attributes):
-        href = get_attr_value(attributes, 'xlink:href')
-        if href and href.startswith("xlink:"):
-            href = href[len("xlink:"):]
-        return use(href)
+        href = get_attr_value(attributes, 'href')
+        if href and href.nsname == 'xlink':
+            return use(href.value)
+        return None
     _construct = staticmethod(_construct)
 
 
@@ -973,10 +1021,10 @@ class link(SVGelement):
         self.setAttribute(Attribute('href', link, 'xlink', xlinkNSRef))
 
     def _construct(attributes):
-        href = get_attr_value(attributes, 'xlink:href')
-        if href and href.startswith("xlink:"):
-            href = href[len("xlink:"):]
-        return link(href)
+        href = get_attr_value(attributes, 'href')
+        if href and href.nsname == 'xlink':
+            return link(href.value)
+        return None
     _construct = staticmethod(_construct)
 
         
@@ -1005,7 +1053,7 @@ class script(SVGelement):
 
     def _construct(attributes):
         type = get_attr_value(attributes, 'type')
-        return script(type, cdata=cdata)
+        return script(type.value, cdata=cdata.value)
     _construct = staticmethod(_construct)
 
         
@@ -1025,7 +1073,7 @@ class animate(SVGelement):
 
     def _construct(attributes):
         attribute = get_attr_value(attributes, 'attributeName')
-        return animate(attribute)
+        return animate(attribute.value)
     _construct = staticmethod(_construct)
 
         
@@ -1086,7 +1134,7 @@ class animateColor(SVGelement):
 
     def _construct(attributes):
         attribute = get_attr_value(attributes, 'attributeName')
-        return animateColor(attribute)
+        return animateColor(attribute.value)
     _construct = staticmethod(_construct)
 
 
@@ -1104,7 +1152,7 @@ class set(SVGelement):
 
     def _construct(attributes):
         attribute = get_attr_value(attributes, 'attributeName')
-        return set(attribute)
+        return set(attribute.value)
     _construct = staticmethod(_construct)
 
 
@@ -1190,13 +1238,15 @@ class SVGImportParser(object):
     def StartElementHandler(self, name, attrs):
         self.log("<%s>" % name)
         self._indent = self._indent + 1
+        import copy
+        attrs = copy.deepcopy(attrs)
         for attrname, attrvalue in attrs.items():
             self.log("%s = %s" % (attrname, attrvalue))
         parent = self._stack.peek()
         elt = SVGelement.construct(name, attrs)
         if not self._base:
             self._base = elt
-        if parent:
+        if parent and elt:
             parent.addElement(elt)
         self._stack.push(elt)
 
@@ -1214,6 +1264,8 @@ class SVGImportParser(object):
                 self.log("Text = '%s'" % content.strip())
                 elt = self._stack.peek()
                 if elt:
+                    if not elt.text:
+                        elt.text = ""
                     elt.text = elt.text + content.strip()
 
     def EndCdataSectionHandler(self):
@@ -1425,16 +1477,14 @@ elementTable = {
     'svg': svg
 }    
 
-def main():
-    d=drawing()
+def from_file(document):
     import sys
     f = open(sys.argv[1], "r")
     fc = f.read()
-    d.fromXml(fc)
-    print d.toXml()
-    return
+    document.fromXml(fc)
+    print document.toXml()
 
-
+def to_file(document):
     s=svg((0,0,100,100))
     r=rect(-100,-100,300,300,'cyan')
     s.addElement(r)
@@ -1465,10 +1515,14 @@ def main():
         for j in range(5,105,10):
             c=circle(i,j,1,'red','black',.5)
             s.addElement(c)
-    d.setSVG(s)
+    document.setSVG(s)
      
-    print d.toXml()
+    print document.toXml()
 
+def main():
+    d=drawing()
+    from_file(d)
+#    to_file(d)
 
 if __name__=='__main__':
     main()
