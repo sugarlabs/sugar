@@ -7,11 +7,10 @@ class Notifier:
 	PORT = 6300
 	
 	def __init__(self, group, name):
-		service = Service(name, Notifier.TYPE, Notifier.ADDRESS,
-						  Notifier.PORT, True)
+		service = Service(name, Notifier.TYPE, Notifier.PORT, Notifier.ADDRESS)
 		service.register(group)
 
-		address = service.get_address()
+		address = service.get_multicast_group()
 		port = service.get_port()
 		self._client = network.GroupClient(address, port)
 		

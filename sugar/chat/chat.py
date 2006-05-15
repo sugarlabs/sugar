@@ -223,14 +223,14 @@ class GroupChat(Chat):
 		self._group.join()
 		
 		name = self._group.get_owner().get_service_name()
-		service = Service(name, CHAT_SERVICE_TYPE, '', CHAT_SERVICE_PORT)
+		service = Service(name, CHAT_SERVICE_TYPE, CHAT_SERVICE_PORT)
 		self._buddy_reader = StreamReader(self._group, service)
 		self._buddy_reader.set_listener(self._buddy_recv_message)
 		service.register(self._group)
 
 		service = Service(name, GROUP_CHAT_SERVICE_TYPE,
-						  GROUP_CHAT_SERVICE_ADDRESS,
-						  GROUP_CHAT_SERVICE_PORT, True)
+						  GROUP_CHAT_SERVICE_PORT,
+						  GROUP_CHAT_SERVICE_ADDRESS)
 		self._group.add_service(service)				  
 		
 		self._buddy_reader = StreamReader(self._group, service)

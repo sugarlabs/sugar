@@ -1,3 +1,5 @@
+import avahi
+
 from Buddy import Buddy
 from Buddy import Owner
 from Buddy import PRESENCE_SERVICE_TYPE
@@ -103,7 +105,13 @@ class LocalGroup(Group):
 						
 	def _on_service_resolved(self, interface, protocol, name, stype, domain,
 							 host, aprotocol, address, port, txt, flags):
-		service = Service(name, stype, address, port)
+		multicast = None
+		for prop in avahi.txt_array_to_string_array(txt):
+			(key, value) = prop.split('=')
+			if key == 'multicast':
+				multicast = value
+
+		service = Service(name, stype, port, multicast)
 		if stype == PRESENCE_SERVICE_TYPE:
 			self._add_buddy(Buddy(service, name))
 		elif stype.startswith("_olpc"):

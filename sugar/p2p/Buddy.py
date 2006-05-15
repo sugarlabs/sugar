@@ -26,7 +26,7 @@ class Owner(Buddy):
 			nick = "n00b"
 
 		service = Service(nick, PRESENCE_SERVICE_TYPE,
-						  '', PRESENCE_SERVICE_PORT)
+						  PRESENCE_SERVICE_PORT)
 
 		Buddy.__init__(self, service, nick)
 		

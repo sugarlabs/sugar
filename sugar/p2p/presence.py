@@ -77,7 +77,7 @@ class PresenceAnnounce(object):
 		self.server = dbus.Interface(self.bus.get_object(avahi.DBUS_NAME, avahi.DBUS_PATH_SERVER), avahi.DBUS_INTERFACE_SERVER)
 		self._hostname = None
 
-	def register_service(self, rs_address, rs_name, rs_port, rs_service, **kwargs):
+	def register_service(self, rs_name, rs_port, rs_service, **kwargs):
 		g = dbus.Interface(self.bus.get_object(avahi.DBUS_NAME, self.server.EntryGroupNew()), avahi.DBUS_INTERFACE_ENTRY_GROUP)
 		if rs_name is None:
 			if self._hostname is None:

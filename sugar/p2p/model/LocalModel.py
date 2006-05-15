@@ -37,7 +37,7 @@ class LocalModel(AbstractModel):
 		self._notifier.notify(key)
 
 	def _setup_service(self):
-		service = Service(self._model_id, LocalModel.SERVICE_TYPE, '',
+		service = Service(self._model_id, LocalModel.SERVICE_TYPE,
 						  LocalModel.SERVICE_PORT)
 		self._setup_server(service)
 		service.register(self._group)
