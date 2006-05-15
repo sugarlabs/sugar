@@ -9,10 +9,10 @@ class NotificationListener:
 									 self._recv_multicast)
 		server.start()
 		
-		self._listeners = {}
+		self._listeners = []
 	
 	def add_listener(self, listener):
-		self._listeners.add(listener)
+		self._listeners.append(listener)
 	
 	def _recv_multicast(self, msg):
 		for listener in self._listeners:

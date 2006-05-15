@@ -29,7 +29,7 @@ class Service(object):
 	def set_address(self, address):
 		self._address = address
 
-	def set_group_address(self):
+	def set_group_address(self, group_address):
 		self._group_address = group_address
 
 	def is_multicast(self):

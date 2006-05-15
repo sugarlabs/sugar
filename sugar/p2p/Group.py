@@ -110,7 +110,7 @@ class LocalGroup(Group):
 			
 		for prop in avahi.txt_array_to_string_array(txt):
 			(key, value) = prop.split('=')
-			if key == 'multicast':
+			if key == 'group_address':
 				service.set_group_address(value)		
 
 		if stype == PRESENCE_SERVICE_TYPE:

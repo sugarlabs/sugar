@@ -157,15 +157,21 @@ class NavigationToolbar(gtk.Toolbar):
 		self._embed.load_address(address)
 
 class BrowserActivity(activity.Activity):
+	SOLO = 1
+	FOLLOWING = 2
+	LEADING = 3
+
 	def __init__(self, group, uri):
 		activity.Activity.__init__(self)
 
 		self.uri = uri
 		self._group = group
+		self._mode = BrowserActivity.SOLO
 		
 	def _setup_shared(self, uri):
 		self._model = self._group.get_store().get_model(uri)
 		if self._model:
+			self._mode = BrowserActivity.FOLLOWING
 			self._load_shared_address()
 			self._model.add_listener(self.__shared_address_changed_cb)
 	
@@ -205,6 +211,7 @@ class BrowserActivity(activity.Activity):
 		self._model = self._group.get_store().create_model(address)
 		self._model.set_value('current_address', address)
 		self._model.add_listener(self.__shared_address_changed_cb)
+		self._mode = MODE_LEADING
 	
 		bus = dbus.SessionBus()
 		proxy_obj = bus.get_object('com.redhat.Sugar.Chat', '/com/redhat/Sugar/Chat')
@@ -215,7 +222,8 @@ class BrowserActivity(activity.Activity):
 	def __title_cb(self, embed):
 		self.activity_set_tab_text(embed.get_title())
 		# Temporary hack, we need an UI
-		self._model.set_value('current_address', self.embed.get_address())
+		if self._mode == BrowserActivity.LEADING:
+			self._model.set_value('current_address', self.embed.get_address())
 
 	def _load_shared_address(self):
 		address = self._model.get_value("current_address")
