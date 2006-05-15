@@ -1,24 +1,10 @@
-MODEL_SERVICE_TYPE = "_olpc_model._tcp"
-MODEL_SERVICE_PORT = 6300
-
 import socket
 import xmlrpclib
 
 from sugar.p2p.Service import Service
-import network
 
-class RemoteModel:
-	def __init__(self, service):
-		self._service = service
-		
-		addr = "http://%s:%d" % (service.get_address(), service.get_port())
-		self._client = xmlrpclib.ServerProxy(addr)
-
-	def get_value(self, key):
-		return self._client.get_value(key)
-		
-	def set_value(self, key, value):
-		self._client.set_value(key, value)
+MODEL_SERVICE_TYPE = "_olpc_model._tcp"
+MODEL_SERVICE_PORT = 6300
 
 class ModelRequestHandler(object):
 	def __init__(self, model):
@@ -64,23 +50,3 @@ class LocalModel:
 				port = port + 1
 				tries = tries - 1
 		service.set_port(port)
-		
-class Store:
-	def __init__(self, group):
-		self._group = group
-		self._local_models = {}
-	
-	def create_model(self, model_id):
-		model = LocalModel(self._group, model_id)
-		self._local_models[model_id] = model
-		return model
-	
-	def get_model(self, model_id):
-		if self._local_models.has_key(model_id):
-			return self._local_models(model_id)
-		else:
-			service = self._group.get_service(model_id, MODEL_SERVICE_TYPE)
-			if service:
-				return RemoteModel(service)
-			else:
-				return None
