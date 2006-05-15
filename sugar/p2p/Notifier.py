@@ -1,5 +1,6 @@
 from sugar.p2p.NotificationListener import NotificationListener
 from sugar.p2p import network
+from sugar.p2p.Service import Service
 
 class Notifier:
 	TYPE = "_olpc_model_notification._udp"
@@ -7,9 +8,8 @@ class Notifier:
 	PORT = 6300
 	
 	def __init__(self, group, name):
-		service = Service(name, NotificationListener.TYPE,
-						  NotificationListener.ADDRESS,
-						  NotificationListener.PORT, True)
+		service = Service(name, Notifier.TYPE, Notifier.ADDRESS,
+						  Notifier.PORT, True)
 		service.register(group)
 
 		address = service.get_address()

@@ -195,7 +195,7 @@ class BrowserActivity(activity.Activity):
 
 		vbox.show()
 		
-		self._setup_shared(uri)
+		self._setup_shared(self.uri)
 	
 	def get_embed(self):
 		return self.embed
