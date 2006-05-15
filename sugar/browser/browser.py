@@ -166,9 +166,9 @@ class BrowserActivity(activity.Activity):
 		self._setup_shared(uri)		
 
 	def _setup_shared(self, uri):
-		self._model = self._group.get_store().get_model(uri) 
-		if self._model:
-			print self._model.get_value('current_address')
+		self._model = self._group.get_store().get_model(uri)
+		self._load_shared_address()
+		self._model.add_listener(self.__shared_address_changed_cb)
 	
 	def activity_on_connected_to_shell(self):
 		self.activity_set_ellipsize_tab(True)
@@ -203,6 +203,7 @@ class BrowserActivity(activity.Activity):
 		address = self.embed.get_address()
 		self._model = self._group.get_store().create_model(address)
 		self._model.set_value('current_address', address)
+		self._model.add_listener(self.__shared_address_changed_cb)
 	
 		bus = dbus.SessionBus()
 		proxy_obj = bus.get_object('com.redhat.Sugar.Chat', '/com/redhat/Sugar/Chat')
@@ -212,6 +213,16 @@ class BrowserActivity(activity.Activity):
 	
 	def __title_cb(self, embed):
 		self.activity_set_tab_text(embed.get_title())
+		# Temporary hack, we need an UI
+		self._model.set_value('current_address', self.embed.get_address())
+
+	def _load_shared_address(self):
+		address = self._model.get_value("current_address")
+		if (address != self.embed.get_address()):
+			self.embed.load_address(address)
+		
+	def __shared_address_changed_cb(self, model, key):
+		self._load_shared_address()
 
 	def activity_on_close_from_user(self):
 		self.activity_shutdown()

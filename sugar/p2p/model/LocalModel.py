@@ -1,10 +1,8 @@
 import socket
-import xmlrpclib
 
 from sugar.p2p.Service import Service
-
-MODEL_SERVICE_TYPE = "_olpc_model._tcp"
-MODEL_SERVICE_PORT = 6300
+from sugar.p2p.model.AbstractModel import AbstractModel
+import network
 
 class ModelRequestHandler(object):
 	def __init__(self, model):
@@ -16,26 +14,32 @@ class ModelRequestHandler(object):
 	def set_value(self, key, value):
 		return self._model.set_value(key, value)
 
-class LocalModel:
+class LocalModel(AbstractModel):
+	SERVICE_TYPE = "_olpc_model._tcp"
+	SERVICE_PORT = 6300
+
 	def __init__(self, group, model_id):
+		AbstractModel.__init__(self)
 		self._group = group
 		self._model_id = model_id
 		self._values = {}
 		
 		self._setup_service()
+		self._setup_notification()
 	
 	def get_value(self, key):
 		return self._values[key]
 		
 	def set_value(self, key, value):
 		self._values[key] = value
+		self._notify_model_change(key)
 
 	def _setup_service(self):
-		service = Service(self._model_id, MODEL_SERVICE_TYPE,
-						  '', MODEL_SERVICE_PORT)
+		service = Service(self._model_id, LocalModel.SERVICE_TYPE, '',
+						  LocalModel.SERVICE_PORT)
 		self._setup_server(service)
 		service.register(self._group)
-		
+	
 	# FIXME this is duplicated with StreamReader
 	def _setup_server(self, service):
 		started = False
