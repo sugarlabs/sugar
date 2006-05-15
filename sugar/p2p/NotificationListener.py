@@ -2,20 +2,12 @@ from Service import Service
 import network
 
 class NotificationListener:
-	TYPE = "_olpc_model_notification._udp"
-	ADDRESS = "224.0.0.222"
-	PORT = 6300
-	
 	def __init__(self, group, name):
-		server = network.GroupServer(NotificationListener.TYPE,
-									 NotificationListener.PORT,
+		service = group.get_service(name, Notifier.TYPE)
+		server = network.GroupServer(service.get_address(),
+									 service.get_port(),
 									 self._recv_multicast)
 		server.start()
-
-		service = Service(name, NotificationListener.TYPE,
-						  NotificationListener.ADDRESS,
-						  NotificationListener.PORT, True)
-		service.register(group)
 		
 		self._listeners = {}
 	

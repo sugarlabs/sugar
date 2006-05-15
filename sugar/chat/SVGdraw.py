@@ -69,7 +69,6 @@ __version__="1.0"
 # Anyway the text based approach is about 60 times faster than using the full dom implementation.
 use_dom_implementation=0
 
-from xml.parsers import expat
 
 import exceptions
 if use_dom_implementation<>0:
@@ -227,13 +226,7 @@ class Attribute:
         self.value = value
         self.nsname = nsname
         self.nsref = nsref
-    def __repr__(self):
-        return "(%s=%s, ns: %s=%s)" % (self.name, self.value, self.nsname, self.nsref)
-
-def get_attr_value(attrs, name):
-    return attrs[name]
-
-
+      
 class SVGelement:
     """SVGelement(type,attributes,elements,text,namespace,**args)
     Creates a arbitrary svg element and is intended to be subclassed not used on its own.
@@ -273,83 +266,8 @@ class SVGelement:
     def setParent(self, parent):
         self._parent = parent
 
-    def setAttribute(self, attribute, replace=True):
-        if not replace and self.hasAttribute(attribute.name):
-            return
+    def addAttribute(self, attribute):
         self._attributes[attribute.name] = attribute
-
-    def delAttribute(self, name):
-        if name in self._attributes.keys():
-            del self._attributes[name]
-
-    def hasAttribute(self, name):
-        if name in self._attributes.keys():
-            return True
-        return False
-
-    def _construct(attributes):
-        raise Exception("Can't construct a default object.")
-    _construct = staticmethod(_construct)
-
-    def _get_namespace(attrname, nslist):
-        colon_idx = attrname.find(':')
-        if colon_idx <= 0:
-            return (attrname, None, None)
-        nsname = attrname[:colon_idx]
-        nsref = None
-        attrname = attrname[colon_idx+1:]
-        for (ns, val) in nslist:
-            if ns == nsname:
-                nsref = val
-                break
-        if not nsref:
-            nsname = None
-        return (attrname, nsname, nsref)
-    _get_namespace = staticmethod(_get_namespace)
-
-    _XMLNS_TAG = "xmlns:"
-    def construct(name, attributes, text=None, cdata=None):
-        try:
-            eltClass = elementTable[name]
-        except KeyError, e:
-            print "Unknown SVG element %s." % e
-            return None
-        # Coalesce namespaces into the attributes themselves
-        attr_dict = {}
-        elt_namespace = None
-        namespaces = []
-        tmp_attrs = []
-        # Separate namespaces from actual attributes
-        for attrname, attrvalue in attributes.items():
-            if attrname.startswith(SVGelement._XMLNS_TAG):
-                namespaces.append((attrname[len(SVGelement._XMLNS_TAG):], attrvalue))
-            elif attrname.startswith("xmlns"):
-                # Element-wide attribute
-                elt_namespace = attrvalue
-            else:
-                tmp_attrs.append((attrname, attrvalue))
-
-        # Create attributes and assign namespaces to them
-        for (attrname, attrvalue) in tmp_attrs:
-            nsname = nsref = None
-            attr = None
-            # search for its namespace, if any
-            (attrname, nsname, nsref) = SVGelement._get_namespace(attrname, namespaces)
-            attr = Attribute(attrname, attrvalue, nsname, nsref)
-            attr_dict[attrname] = attr
-
-        element = eltClass._construct(attr_dict)
-        if element:
-            for attr in attr_dict.values():
-                element.setAttribute(attr, replace=False)
-            if text:
-                element.text = text
-            if cdata:
-                element.cdata = cdata
-            if not element.namespace and elt_namespace:
-                element.namespace = elt_namespace
-        return element
-    construct = staticmethod(construct)
 
     def toXml(self,level,f):
         f.write('\t'*level)
@@ -405,16 +323,11 @@ class tspan(SVGelement):
     def __repr__(self):
         s="<tspan"
         for key, attr in self._attributes.items():
-            s+= ' %s="%s"' % (key,attr.value)
+         s+= ' %s="%s"' % (key,attr.value)
         s+='>'
         s+=self.text
         s+='</tspan>'
         return s
-
-    def _construct(attributes):
-        return tspan()
-    _construct = staticmethod(_construct)
-
     
 class tref(SVGelement):
     """tr=tref(link='',**args)
@@ -428,20 +341,14 @@ class tref(SVGelement):
     """
     def __init__(self,link,**args):
         SVGelement.__init__(self,'tref',**args)
-        self.setAttribute(Attribute('href', link, 'xlink', xlinkNSRef))
+        self.addAttribute(Attribute('href', link, 'xlink', xlinkNSRef))
     def __repr__(self):
         s="<tref"
+        
         for key, attr in self._attributes.items():
-            s+= ' %s="%s"' % (key,attr.value)
+         s+= ' %s="%s"' % (key,attr.value)
         s+='/>'
         return s
-
-    def _construct(attributes):
-        href = get_attr_value(attributes, 'href')
-        if href and href.nsname == 'xlink':
-            return tref(href.value)
-        return None
-    _construct = staticmethod(_construct)
     
 class spannedtext:
     """st=spannedtext(textlist=[])
@@ -493,23 +400,16 @@ class rect(SVGelement):
                 raise ValueError, 'both height and width are required'
         SVGelement.__init__(self,'rect',{'width':width,'height':height},**args)
         if x<>None:
-            self.setAttribute(Attribute('x', x))
+            self.addAttribute(Attribute('x', x))
         if y<>None:
-            self.setAttribute(Attribute('y', y))
+            self.addAttribute(Attribute('y', y))
         if fill<>None:
-            self.setAttribute(Attribute('fill', fill))
+            self.addAttribute(Attribute('fill', fill))
         if stroke<>None:
-            self.setAttribute(Attribute('stroke', stroke))
+            self.addAttribute(Attribute('stroke', stroke))
         if stroke_width<>None:
-            self.setAttribute(Attribute('stroke-width', stroke_width))
-
-    def _construct(attributes):
-        width = get_attr_value(attributes, 'width')
-        height = get_attr_value(attributes, 'height')
-        return rect(width=width.value, height=height.value)
-    _construct = staticmethod(_construct)
-
-
+            self.addAttribute(Attribute('stroke-width', stroke_width))
+            
 class ellipse(SVGelement):
     """e=ellipse(rx,ry,x,y,fill,stroke,stroke_width,**args)
 
@@ -525,23 +425,17 @@ class ellipse(SVGelement):
                 raise ValueError, 'both rx and ry are required'
         SVGelement.__init__(self,'ellipse',{'rx':rx,'ry':ry},**args)
         if cx<>None:
-            self.setAttribute(Attribute('cx', cx))
+            self.addAttribute(Attribute('cx', cx))
         if cy<>None:
-            self.setAttribute(Attribute('cy', cy))
+            self.addAttribute(Attribute('cy', cy))
         if fill<>None:
-            self.setAttribute(Attribute('fill', fill))
+            self.addAttribute(Attribute('fill', fill))
         if stroke<>None:
-            self.setAttribute(Attribute('stroke', stroke))
+            self.addAttribute(Attribute('stroke', stroke))
         if stroke_width<>None:
-            self.setAttribute(Attribute('stroke-width', stroke_width))
+            self.addAttribute(Attribute('stroke-width', stroke_width))
         
-    def _construct(attributes):
-        rx = get_attr_value(attributes, 'rx')
-        ry = get_attr_value(attributes, 'ry')
-        return ellipse(rx=rx.value, ry=ry.value)
-    _construct = staticmethod(_construct)
-
-
+   
 class circle(SVGelement):
     """c=circle(x,y,radius,fill,stroke,stroke_width,**args)
 
@@ -552,24 +446,15 @@ class circle(SVGelement):
             raise ValueError, 'r is required'
         SVGelement.__init__(self,'circle',{'r':r},**args)
         if cx<>None:
-            self.setAttribute(Attribute('cx', cx))
+            self.addAttribute(Attribute('cx', cx))
         if cy<>None:
-            self.setAttribute(Attribute('cy', cy))
+            self.addAttribute(Attribute('cy', cy))
         if fill<>None:
-            self.setAttribute(Attribute('fill', fill))
+            self.addAttribute(Attribute('fill', fill))
         if stroke<>None:
-            self.setAttribute(Attribute('stroke', stroke))
+            self.addAttribute(Attribute('stroke', stroke))
         if stroke_width<>None:
-            self.setAttribute(Attribute('stroke-width', stroke_width))
-
-    def _construct(attributes):
-        r = get_attr_value(attributes, 'r')
-        if int(r.value) == 1:
-            return point()
-        else:
-            return circle(r=r.value)
-    _construct = staticmethod(_construct)
-
+            self.addAttribute(Attribute('stroke-width', stroke_width))
 
 class point(circle):
     """p=point(x,y,color)
@@ -577,7 +462,7 @@ class point(circle):
     A point is defined as a circle with a size 1 radius. It may be more efficient to use a
     very small rectangle if you use many points because a circle is difficult to render.
     """
-    def __init__(self,x=None,y=None,fill=None,**args):
+    def __init__(self,x,y,fill='black',**args):
         circle.__init__(self,x,y,1,fill,**args)
 
 class line(SVGelement):
@@ -588,22 +473,17 @@ class line(SVGelement):
     def __init__(self,x1=None,y1=None,x2=None,y2=None,stroke=None,stroke_width=None,**args):
         SVGelement.__init__(self,'line',**args)
         if x1<>None:
-            self.setAttribute(Attribute('x1', x1))
+            self.addAttribute(Attribute('x1', x1))
         if y1<>None:
-            self.setAttribute(Attribute('y1', y1))
+            self.addAttribute(Attribute('y1', y1))
         if x2<>None:
-            self.setAttribute(Attribute('x2', x2))
+            self.addAttribute(Attribute('x2', x2))
         if y2<>None:
-            self.setAttribute(Attribute('y2', y2))
+            self.addAttribute(Attribute('y2', y2))
         if stroke_width<>None:
-            self.setAttribute(Attribute('stroke-width', stroke_width))
+            self.addAttribute(Attribute('stroke-width', stroke_width))
         if stroke<>None:
-            self.setAttribute(Attribute('stroke', stroke))
-
-    def _construct(attributes):
-        return line()
-    _construct = staticmethod(_construct)
-
+            self.addAttribute(Attribute('stroke', stroke))
             
 class polyline(SVGelement):
     """pl=polyline([[x1,y1],[x2,y2],...],fill,stroke,stroke_width,**args)
@@ -613,17 +493,11 @@ class polyline(SVGelement):
     def __init__(self,points,fill=None,stroke=None,stroke_width=None,**args):
         SVGelement.__init__(self,'polyline',{'points':_xypointlist(points)},**args)
         if fill<>None:
-            self.setAttribute(Attribute('fill', fill))
+            self.addAttribute(Attribute('fill', fill))
         if stroke_width<>None:
-            self.setAttribute(Attribute('stroke-width', stroke_width))
+            self.addAttribute(Attribute('stroke-width', stroke_width))
         if stroke<>None:
-            self.setAttribute(Attribute('stroke', stroke))
-
-    def _construct(attributes):
-        points = get_attr_value(attributes, 'points')
-        return polyline(points.value)
-    _construct = staticmethod(_construct)
-
+            self.addAttribute(Attribute('stroke', stroke))
 
 class polygon(SVGelement):
     """pl=polyline([[x1,y1],[x2,y2],...],fill,stroke,stroke_width,**args)
@@ -633,17 +507,11 @@ class polygon(SVGelement):
     def __init__(self,points,fill=None,stroke=None,stroke_width=None,**args):
         SVGelement.__init__(self,'polygon',{'points':_xypointlist(points)},**args)
         if fill<>None:
-            self.setAttribute(Attribute('fill', fill))
+            self.addAttribute(Attribute('fill', fill))
         if stroke_width<>None:
-            self.setAttribute(Attribute('stroke-width', stroke_width))
+            self.addAttribute(Attribute('stroke-width', stroke_width))
         if stroke<>None:
-            self.setAttribute(Attribute('stroke', stroke))
-
-    def _construct(attributes):
-        points = get_attr_value(attributes, 'points')
-        return polygon(points.value)
-    _construct = staticmethod(_construct)
-
+            self.addAttribute(Attribute('stroke', stroke))
 
 class path(SVGelement):
     """p=path(path,fill,stroke,stroke_width,**args)
@@ -653,19 +521,14 @@ class path(SVGelement):
     def __init__(self,pathdata,fill=None,stroke=None,stroke_width=None,id=None,**args):
         SVGelement.__init__(self,'path',{'d':str(pathdata)},**args)
         if stroke<>None:
-            self.setAttribute(Attribute('stroke', stroke))
+            self.addAttribute(Attribute('stroke', stroke))
         if fill<>None:
-            self.setAttribute(Attribute('fill', fill))
+            self.addAttribute(Attribute('fill', fill))
         if stroke_width<>None:
-            self.setAttribute(Attribute('stroke-width', stroke_width))
+            self.addAttribute(Attribute('stroke-width', stroke_width))
         if id<>None:
-            self.setAttribute(Attribute('id', id))
+            self.addAttribute(Attribute('id', id))
         
-    def _construct(attributes):
-        pathdata = get_attr_value(attributes, 'd')
-        return path(pathdata.value)
-    _construct = staticmethod(_construct)
-
         
 class text(SVGelement):
     """t=text(x,y,text,font_size,font_family,**args)
@@ -675,21 +538,17 @@ class text(SVGelement):
     def __init__(self,x=None,y=None,text=None,font_size=None,font_family=None,text_anchor=None,**args):
         SVGelement.__init__(self,'text',**args)
         if x<>None:
-            self.setAttribute(Attribute('x', x))
+            self.addAttribute(Attribute('x', x))
         if y<>None:
-            self.setAttribute(Attribute('y', y))
+            self.addAttribute(Attribute('y', y))
         if font_size<>None:
-            self.setAttribute(Attribute('font-size', font_size))
+            self.addAttribute(Attribute('font-size', font_size))
         if font_family<>None:
-            self.setAttribute(Attribute('font-family', font_family))
+            self.addAttribute(Attribute('font-family', font_family))
         if text<>None:
             self.text=text
         if text_anchor<>None:
-            self.setAttribute(Attribute('text-anchor', text_anchor))
-
-    def _construct(attributes):
-        return text()
-    _construct = staticmethod(_construct)
+            self.addAttribute(Attribute('text-anchor', text_anchor))
 
 
 class textpath(SVGelement):
@@ -699,17 +558,9 @@ class textpath(SVGelement):
     """
     def __init__(self,link,text=None,**args):
         SVGelement.__init__(self,'textPath',**args)
-        self.setAttribute(Attribute('href', link, 'xlink', xlinkNSRef))
+        self.addAttribute(Attribute('href', link, 'xlink', xlinkNSRef))
         if text<>None:
             self.text=text
-
-    def _construct(attributes):
-        href = get_attr_value(attributes, 'href')
-        if href and href.nsname == 'xlink':
-            return textpath(href.value)
-        return None
-    _construct = staticmethod(_construct)
-
 
 class pattern(SVGelement):
     """p=pattern(x,y,width,height,patternUnits,**args)
@@ -721,20 +572,15 @@ class pattern(SVGelement):
     def __init__(self,x=None,y=None,width=None,height=None,patternUnits=None,**args):
         SVGelement.__init__(self,'pattern',**args)
         if x<>None:
-            self.setAttribute(Attribute('x', x))
+            self.addAttribute(Attribute('x', x))
         if y<>None:
-            self.setAttribute(Attribute('y', y))
+            self.addAttribute(Attribute('y', y))
         if width<>None:
-            self.setAttribute(Attribute('width', width))
+            self.addAttribute(Attribute('width', width))
         if height<>None:
-            self.setAttribute(Attribute('height', height))
+            self.addAttribute(Attribute('height', height))
         if patternUnits<>None:
-            self.setAttribute(Attribute('patternUnits', patternUnits))
-
-    def _construct(attributes):
-        return pattern()
-    _construct = staticmethod(_construct)
-
+            self.addAttribute(Attribute('patternUnits', patternUnits))
 
 class title(SVGelement):
     """t=title(text,**args)
@@ -747,11 +593,6 @@ class title(SVGelement):
         if text<>None:
             self.text=text
 
-    def _construct(attributes):
-        return title()
-    _construct = staticmethod(_construct)
-
-
 class description(SVGelement):
     """d=description(text,**args)
     
@@ -763,11 +604,6 @@ class description(SVGelement):
         if text<>None:
             self.text=text
 
-    def _construct(attributes):
-        return description()
-    _construct = staticmethod(_construct)
-
-
 class lineargradient(SVGelement):
     """lg=lineargradient(x1,y1,x2,y2,id,**args)
 
@@ -777,20 +613,15 @@ class lineargradient(SVGelement):
     def __init__(self,x1=None,y1=None,x2=None,y2=None,id=None,**args):
         SVGelement.__init__(self,'linearGradient',**args)
         if x1<>None:
-            self.setAttribute(Attribute('x1', x1))
+            self.addAttribute(Attribute('x1', x1))
         if y1<>None:
-            self.setAttribute(Attribute('y1', y1))
+            self.addAttribute(Attribute('y1', y1))
         if x2<>None:
-            self.setAttribute(Attribute('x2', x2))
+            self.addAttribute(Attribute('x2', x2))
         if y2<>None:
-            self.setAttribute(Attribute('y2', y2))
+            self.addAttribute(Attribute('y2', y2))
         if id<>None:
-            self.setAttribute(Attribute('id', id))
-
-    def _construct(attributes):
-        return lineargradient()
-    _construct = staticmethod(_construct)
-
+            self.addAttribute(Attribute('id', id))
 
 class radialgradient(SVGelement):
     """rg=radialgradient(cx,cy,r,fx,fy,id,**args)
@@ -801,22 +632,17 @@ class radialgradient(SVGelement):
     def __init__(self,cx=None,cy=None,r=None,fx=None,fy=None,id=None,**args):
         SVGelement.__init__(self,'radialGradient',**args)
         if cx<>None:
-            self.setAttribute(Attribute('cx', cx))
+            self.addAttribute(Attribute('cx', cx))
         if cy<>None:
-            self.setAttribute(Attribute('cy', cy))
+            self.addAttribute(Attribute('cy', cy))
         if r<>None:
-            self.setAttribute(Attribute('r', r))
+            self.addAttribute(Attribute('r', r))
         if fx<>None:
-            self.setAttribute(Attribute('fx', fx))
+            self.addAttribute(Attribute('fx', fx))
         if fy<>None:
-            self.setAttribute(Attribute('fy', fy))
+            self.addAttribute(Attribute('fy', fy))
         if id<>None:
-            self.setAttribute(Attribute('id', id))
-
-    def _construct(attributes):
-        return radialgradient()
-    _construct = staticmethod(_construct)
-
+            self.addAttribute(Attribute('id', id))
             
 class stop(SVGelement):
     """st=stop(offset,stop_color,**args)
@@ -826,12 +652,7 @@ class stop(SVGelement):
     def __init__(self,offset,stop_color=None,**args):
         SVGelement.__init__(self,'stop',{'offset':offset},**args)
         if stop_color<>None:
-            self.setAttribute(Attribute('stop-color', stop_color))
-
-    def _construct(attributes):
-        offset = get_attr_value(attributes, 'offset')
-        return stop(offset.value)
-    _construct = staticmethod(_construct)
+            self.addAttribute(Attribute('stop-color', stop_color))
             
 class style(SVGelement):
     """st=style(type,cdata=None,**args)
@@ -840,11 +661,6 @@ class style(SVGelement):
     """
     def __init__(self,type,cdata=None,**args):
         SVGelement.__init__(self,'style',{'type':type},cdata=cdata, **args)
-
-    def _construct(attributes):
-        type = get_attr_value(attributes, 'type')
-        return style(type.value)
-    _construct = staticmethod(_construct)
         
             
 class image(SVGelement):
@@ -861,22 +677,12 @@ class image(SVGelement):
             else:
                 raise ValueError, 'both height and width are required'
         SVGelement.__init__(self,'image',{'width':width,'height':height},**args)
-        self.setAttribute(Attribute('href', url, 'xlink', xlinkNSRef))
+        self.addAttribute(Attribute('href', url, 'xlink', xlinkNSRef))
         if x<>None:
-            self.setAttribute(Attribute('x', x))
+            self.addAttribute(Attribute('x', x))
         if y<>None:
-            self.setAttribute(Attribute('y', y))
+            self.addAttribute(Attribute('y', y))
  
-    def _construct(attributes):
-        href = get_attr_value(attributes, 'href')
-        width = get_attr_value(attributes, 'width')
-        height = get_attr_value(attributes, 'height')
-        if href and href.nsname == 'xlink':
-            return image(href.value, width=width.value, height=height.value)
-        return None
-    _construct = staticmethod(_construct)
-
-
 class cursor(SVGelement):
     """c=cursor(url,**args)
 
@@ -884,14 +690,7 @@ class cursor(SVGelement):
     """
     def __init__(self,url,**args):
         SVGelement.__init__(self,'cursor',**args)
-        self.setAttribute(Attribute('href', url, 'xlink', xlinkNSRef))
-
-    def _construct(attributes):
-        href = get_attr_value(attributes, 'href')
-        if href and href.nsname == 'xlink':
-            return cursor(href.value)
-        return None
-    _construct = staticmethod(_construct)
+        self.addAttribute(Attribute('href', url, 'xlink', xlinkNSRef))
 
     
 class marker(SVGelement):
@@ -903,22 +702,17 @@ class marker(SVGelement):
     def __init__(self,id=None,viewBox=None,refx=None,refy=None,markerWidth=None,markerHeight=None,**args):
         SVGelement.__init__(self,'marker',**args)
         if id<>None:
-            self.setAttribute(Attribute('id', id))
+            self.addAttribute(Attribute('id', id))
         if viewBox<>None:
-            self.setAttribute(Attribute('viewBox', _viewboxlist(viewBox)))
+            self.addAttribute(Attribute('viewBox', _viewboxlist(viewBox)))
         if refx<>None:
-            self.setAttribute(Attribute('refX', refx))
+            self.addAttribute(Attribute('refX', refx))
         if refy<>None:
-            self.setAttribute(Attribute('refY', refy))
+            self.addAttribute(Attribute('refY', refy))
         if markerWidth<>None:
-            self.setAttribute(Attribute('markerWidth', markerWidth))
+            self.addAttribute(Attribute('markerWidth', markerWidth))
         if markerHeight<>None:
-            self.setAttribute(Attribute('markerHeight', markerHeight))
-
-    def _construct(attributes):
-        return marker()
-    _construct = staticmethod(_construct)
-
+            self.addAttribute(Attribute('markerHeight', markerHeight))
         
 class group(SVGelement):
     """g=group(id,**args)
@@ -929,11 +723,7 @@ class group(SVGelement):
     def __init__(self,id=None,**args):
         SVGelement.__init__(self,'g',**args)
         if id<>None:
-            self.setAttribute(Attribute('id', id))
-
-    def _construct(attributes):
-        return group()
-    _construct = staticmethod(_construct)
+            self.addAttribute(Attribute('id', id))
 
 class symbol(SVGelement):
     """sy=symbol(id,viewbox,**args)
@@ -947,14 +737,9 @@ class symbol(SVGelement):
     def __init__(self,id=None,viewBox=None,**args):
         SVGelement.__init__(self,'symbol',**args)
         if id<>None:
-            self.setAttribute(Attribute('id', id))
+            self.addAttribute(Attribute('id', id))
         if viewBox<>None:
-            self.setAttribute(Attribute('viewBox', _viewboxlist(viewBox)))
-
-    def _construct(attributes):
-        return symbol()
-    _construct = staticmethod(_construct)
-
+            self.addAttribute(Attribute('viewBox', _viewboxlist(viewBox)))
             
 class defs(SVGelement):
     """d=defs(**args)
@@ -963,11 +748,6 @@ class defs(SVGelement):
     """
     def __init__(self,**args):
         SVGelement.__init__(self,'defs',**args)
-
-    def _construct(attributes):
-        return defs()
-    _construct = staticmethod(_construct)
-
 
 class switch(SVGelement):
     """sw=switch(**args)
@@ -979,11 +759,7 @@ class switch(SVGelement):
     def __init__(self,**args):
         SVGelement.__init__(self,'switch',**args)
 
-    def _construct(attributes):
-        return switch()
-    _construct = staticmethod(_construct)
-
-
+        
 class use(SVGelement):
     """u=use(link,x,y,width,height,**args)
     
@@ -991,25 +767,18 @@ class use(SVGelement):
     """
     def __init__(self,link,x=None,y=None,width=None,height=None,**args):
         SVGelement.__init__(self,'use',**args)
-        self.setAttribute(Attribute('href', link, 'xlink', xlinkNSRef))
+        self.addAttribute(Attribute('href', link, 'xlink', xlinkNSRef))
         if x<>None:
-            self.setAttribute(Attribute('x', x))
+            self.addAttribute(Attribute('x', x))
         if y<>None:
-            self.setAttribute(Attribute('y', y))
+            self.addAttribute(Attribute('y', y))
 
         if width<>None:
-            self.setAttribute(Attribute('width', width))
+            self.addAttribute(Attribute('width', width))
         if height<>None:
-            self.setAttribute(Attribute('height', height))
-
-    def _construct(attributes):
-        href = get_attr_value(attributes, 'href')
-        if href and href.nsname == 'xlink':
-            return use(href.value)
-        return None
-    _construct = staticmethod(_construct)
-
-
+            self.addAttribute(Attribute('height', height))
+            
+            
 class link(SVGelement):
     """a=link(url,**args)
 
@@ -1018,15 +787,7 @@ class link(SVGelement):
     """
     def __init__(self,link='',**args):
         SVGelement.__init__(self,'a',**args)
-        self.setAttribute(Attribute('href', link, 'xlink', xlinkNSRef))
-
-    def _construct(attributes):
-        href = get_attr_value(attributes, 'href')
-        if href and href.nsname == 'xlink':
-            return link(href.value)
-        return None
-    _construct = staticmethod(_construct)
-
+        self.addAttribute(Attribute('href', link, 'xlink', xlinkNSRef))
         
 class view(SVGelement):
     """v=view(id,**args)
@@ -1035,12 +796,7 @@ class view(SVGelement):
     def __init__(self,id=None,**args):
         SVGelement.__init__(self,'view',**args)
         if id<>None:
-            self.setAttribute(Attribute('id', id))
-
-    def _construct(attributes):
-        return view()
-    _construct = staticmethod(_construct)
-
+            self.addAttribute(Attribute('id', id))
 
 class script(SVGelement):
     """sc=script(type,type,cdata,**args)
@@ -1050,12 +806,6 @@ class script(SVGelement):
     """
     def __init__(self,type,cdata=None,**args):
         SVGelement.__init__(self,'script',{'type':type},cdata=cdata,**args)
-
-    def _construct(attributes):
-        type = get_attr_value(attributes, 'type')
-        return script(type.value, cdata=cdata.value)
-    _construct = staticmethod(_construct)
-
         
 class animate(SVGelement):
     """an=animate(attribute,from,to,during,**args)
@@ -1065,34 +815,23 @@ class animate(SVGelement):
     def __init__(self,attribute,fr=None,to=None,dur=None,**args):
         SVGelement.__init__(self,'animate',{'attributeName':attribute},**args)
         if fr<>None:
-            self.setAttribute(Attribute('from', fr))
+            self.addAttribute(Attribute('from', fr))
         if to<>None:
-            self.setAttribute(Attribute('to', to))
+            self.addAttribute(Attribute('to', to))
         if dur<>None:
-            self.setAttribute(Attribute('dur', dur))
-
-    def _construct(attributes):
-        attribute = get_attr_value(attributes, 'attributeName')
-        return animate(attribute.value)
-    _construct = staticmethod(_construct)
-
+            self.addAttribute(Attribute('dur', dur))
         
 class animateMotion(SVGelement):
     """an=animateMotion(pathdata,dur,**args)
 
     animates a SVGelement over the given path in dur seconds
     """
-    def __init__(self,pathdata=None,dur=None,**args):
+    def __init__(self,pathdata,dur,**args):
         SVGelement.__init__(self,'animateMotion',**args)
         if pathdata<>None:
-            self.setAttribute(Attribute('path', str(pathdata)))
+            self.addAttribute(Attribute('path', str(pathdata)))
         if dur<>None:
-            self.setAttribute(Attribute('dur', dur))
-
-    def _construct(attributes):
-        return animateMotion()
-    _construct = staticmethod(_construct)
-
+            self.addAttribute(Attribute('dur', dur))
 
 class animateTransform(SVGelement):
     """antr=animateTransform(type,from,to,dur,**args)
@@ -1103,19 +842,13 @@ class animateTransform(SVGelement):
         SVGelement.__init__(self,'animateTransform',{'attributeName':'transform'},**args)
         #As far as I know the attributeName is always transform
         if type<>None:
-            self.setAttribute(Attribute('type', type))
+            self.addAttribute(Attribute('type', type))
         if fr<>None:
-            self.setAttribute(Attribute('from', fr))
+            self.addAttribute(Attribute('from', fr))
         if to<>None:
-            self.setAttribute(Attribute('to', to))
+            self.addAttribute(Attribute('to', to))
         if dur<>None:
-            self.setAttribute(Attribute('dur', dur))
-
-    def _construct(attributes):
-        return animateTransform()
-    _construct = staticmethod(_construct)
-
-
+            self.addAttribute(Attribute('dur', dur))
 class animateColor(SVGelement):
     """ac=animateColor(attribute,type,from,to,dur,**args)
 
@@ -1124,20 +857,13 @@ class animateColor(SVGelement):
     def __init__(self,attribute,type=None,fr=None,to=None,dur=None,**args):
         SVGelement.__init__(self,'animateColor',{'attributeName':attribute},**args)
         if type<>None:
-            self.setAttribute(Attribute('type', type))
+            self.addAttribute(Attribute('type', type))
         if fr<>None:
-            self.setAttribute(Attribute('from', fr))
+            self.addAttribute(Attribute('from', fr))
         if to<>None:
-            self.setAttribute(Attribute('to', to))
+            self.addAttribute(Attribute('to', to))
         if dur<>None:
-            self.setAttribute(Attribute('dur', dur))        
-
-    def _construct(attributes):
-        attribute = get_attr_value(attributes, 'attributeName')
-        return animateColor(attribute.value)
-    _construct = staticmethod(_construct)
-
-
+            self.addAttribute(Attribute('dur', dur))        
 class set(SVGelement):
     """st=set(attribute,to,during,**args)
     
@@ -1146,16 +872,12 @@ class set(SVGelement):
     def __init__(self,attribute,to=None,dur=None,**args):
         SVGelement.__init__(self,'set',{'attributeName':attribute},**args)
         if to<>None:
-            self.setAttribute(Attribute('to', to))
+            self.addAttribute(Attribute('to', to))
         if dur<>None:
-            self.setAttribute(Attribute('dur', dur))
-
-    def _construct(attributes):
-        attribute = get_attr_value(attributes, 'attributeName')
-        return set(attribute.value)
-    _construct = staticmethod(_construct)
+            self.addAttribute(Attribute('dur', dur))
 
 
+            
 class svg(SVGelement):
     """s=svg(viewbox,width,height,**args)
     
@@ -1174,117 +896,12 @@ class svg(SVGelement):
     def __init__(self,viewBox=None, width=None, height=None,**args):
         SVGelement.__init__(self,'svg',**args)
         if viewBox<>None:
-            self.setAttribute(Attribute('viewBox', _viewboxlist(viewBox)))
+            self.addAttribute(Attribute('viewBox', _viewboxlist(viewBox)))
         if width<>None:
-            self.setAttribute(Attribute('width', width))
+            self.addAttribute(Attribute('width', width))
         if height<>None:
-            self.setAttribute(Attribute('height', height_))
+            self.addAttribute(Attribute('height', height_))
         self.namespace="http://www.w3.org/2000/svg"
-
-    def _construct(attributes):
-        return svg()
-    _construct = staticmethod(_construct)
-
-
-class ElementHelper(object):
-    def __init__(self, name, attrs):
-        self.name = name
-        self.attrs = attrs
-        self.cdata = None
-        self.text = None
-
-class Stack(object):
-    def __init__(self):
-        self._stack = []
-
-    def push(self, obj):
-        self._stack.append(obj)
-
-    def pop(self):
-        if len(self._stack) == 0:
-            return None
-        obj = self._stack[-1]
-        del self._stack[-1]
-        return obj
-
-    def peek(self):
-        if len(self._stack) == 0:
-            return None
-        return self._stack[-1]
-
-    def is_empty(self):
-        if len(self._stack) == 0:
-            return True
-        return False
-
-    def size(self):
-        return len(self._stack)
-
-class SVGImportParser(object):
-    def __init__(self):
-        self._indent = 0
-        self._cdata = 0
-        self._stack = Stack()
-        self._base = None
-        self._debug = False
-
-    def getBaseElement(self):
-        return self._base
-
-    def log(self, msg):
-        if self._debug:
-            print "    " * self._indent + msg
-
-    def StartElementHandler(self, name, attrs):
-        self.log("<%s>" % name)
-        self._indent = self._indent + 1
-        import copy
-        attrs = copy.deepcopy(attrs)
-        for attrname, attrvalue in attrs.items():
-            self.log("%s = %s" % (attrname, attrvalue))
-        parent = self._stack.peek()
-        elt = SVGelement.construct(name, attrs)
-        if not self._base:
-            self._base = elt
-        if parent and elt:
-            parent.addElement(elt)
-        self._stack.push(elt)
-
-    def StartCdataSectionHandler(self):
-        self._cdata = 1
-
-    def CharacterDataHandler(self, content):
-        if self._cdata:
-            self.log("CDATA = '%s'" % content)
-            elt = self._stack.peek()
-            if elt:
-                elt.cdata = elt.cdata + content
-        else:
-            if len(content) and not content.isspace():
-                self.log("Text = '%s'" % content.strip())
-                elt = self._stack.peek()
-                if elt:
-                    if not elt.text:
-                        elt.text = ""
-                    elt.text = elt.text + content.strip()
-
-    def EndCdataSectionHandler(self):
-        self._cdata = 0
-
-    def EndElementHandler(self, name):
-        self._indent = self._indent - 1
-        self.log("</%s>" % name)
-        self._stack.pop()
-
-    def CommentHandler(self, comment):
-        self.log("Comment = '%s'" % comment)
-
-    def StartNamespaceDeclHandler(self, prefix, uri):
-        self.log("Namespace = '%s' -> '%s'" % (prefix, uri))
-
-    def EndNamespaceDeclHandler(self, prefix):
-        self.log("Namespace = '%s'" % prefix)
-
         
 class drawing:
     """d=drawing()
@@ -1303,30 +920,6 @@ class drawing:
     def setSVG(self,svg):
         self.svg=svg
         #Voeg een element toe aan de grafiek toe.
-
-    def fromXml(self, xml):
-        HANDLER_NAMES = [
-            'StartElementHandler', 'EndElementHandler',
-            'CharacterDataHandler',
-            'StartNamespaceDeclHandler', 'EndNamespaceDeclHandler',
-            'CommentHandler',
-            'StartCdataSectionHandler', 'EndCdataSectionHandler',
-            ]
-
-        # Create a parser
-        parser = expat.ParserCreate()
-
-        handler = SVGImportParser()
-        for name in HANDLER_NAMES:
-            setattr(parser, name, getattr(handler, name))
-        parser.returns_unicode = 0
-
-        # Parse the XML
-        parser.Parse(xml)
-        base_element = handler.getBaseElement()
-        if not base_element or not isinstance(base_element, svg):
-            raise Exception("Base element was not SVG.")
-        self.setSVG(base_element)
 
     if use_dom_implementation==0:      
         def toXml(self, filename='',compress=False):
@@ -1439,58 +1032,13 @@ class drawing:
             print "SVG well formed"
 
 
-elementTable = {
-    'tspan': tspan,
-    'tref': tref,
-    'rect': rect,
-    'ellipse': ellipse,
-    'circle': circle,
-    'line': line,
-    'polyline': polyline,
-    'polygon': polygon,
-    'path': path,
-    'text': text,
-    'textPath': textpath,
-    'pattern': pattern,
-    'title': title,
-    'desc': description,
-    'linearGradient': lineargradient,
-    'radialGradient': radialgradient,
-    'stop': stop,
-    'style': style,
-    'image': image,
-    'cursor': cursor,
-    'marker': marker,
-    'g': group,
-    'symbol': symbol,
-    'defs': defs,
-    'switch': switch,
-    'use': use,
-    'a': link,
-    'view': view,
-    'script': script,
-    'animate': animate,
-    'animateMotion': animateMotion,
-    'animateTransform': animateTransform,
-    'animateColor': animateColor,
-    'set': set,
-    'svg': svg
-}    
+if __name__=='__main__':
 
-def from_file(document):
-    import sys
-    f = open(sys.argv[1], "r")
-    fc = f.read()
-    document.fromXml(fc)
-    print document.toXml()
-
-def to_file(document):
+    
+    d=drawing()
     s=svg((0,0,100,100))
     r=rect(-100,-100,300,300,'cyan')
     s.addElement(r)
-
-    text = tspan("Foobar")
-    s.addElement(text)
     
     t=title('SVGdraw Demo')
     s.addElement(t)
@@ -1504,8 +1052,8 @@ def to_file(document):
         pd.relsmbezier(10,5,0,10)
         pd.relsmbezier(-10,5,0,10)
     an=animateMotion(pd,10)
-    an.setAttribute(Attribute('rotate', 'auto-reverse'))
-    an.setAttribute(Attribute('repeatCount', "indefinite"))
+    an.addAttribute(Attribute('rotate', 'auto-reverse'))
+    an.addAttribute(Attribute('repeatCount', "indefinite"))
     g.addElement(an)
     s.addElement(g)
     for i in range(20,120,20):
@@ -1515,14 +1063,7 @@ def to_file(document):
         for j in range(5,105,10):
             c=circle(i,j,1,'red','black',.5)
             s.addElement(c)
-    document.setSVG(s)
+    d.setSVG(s)
      
-    print document.toXml()
+    print d.toXml()
 
-def main():
-    d=drawing()
-    from_file(d)
-#    to_file(d)
-
-if __name__=='__main__':
-    main()

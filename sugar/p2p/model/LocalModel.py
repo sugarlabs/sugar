@@ -1,6 +1,7 @@
 import socket
 
 from sugar.p2p.Service import Service
+from sugar.p2p.Notifier import Notifier
 from sugar.p2p.model.AbstractModel import AbstractModel
 from sugar.p2p import network
 
@@ -25,6 +26,7 @@ class LocalModel(AbstractModel):
 		self._values = {}
 		
 		self._setup_service()
+		self._notifier = Notifier(group, model_id)
 	
 	def get_value(self, key):
 		return self._values[key]
@@ -32,6 +34,7 @@ class LocalModel(AbstractModel):
 	def set_value(self, key, value):
 		self._values[key] = value
 		self._notify_model_change(key)
+		self._notifier.notify(key)
 
 	def _setup_service(self):
 		service = Service(self._model_id, LocalModel.SERVICE_TYPE, '',
