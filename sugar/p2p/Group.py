@@ -105,13 +105,14 @@ class LocalGroup(Group):
 						
 	def _on_service_resolved(self, interface, protocol, name, stype, domain,
 							 host, aprotocol, address, port, txt, flags):
-		multicast = None
+		service = Service(name, stype, port)
+		service.set_address(address)
+			
 		for prop in avahi.txt_array_to_string_array(txt):
 			(key, value) = prop.split('=')
 			if key == 'multicast':
-				multicast = value
+				service.set_group_address(value)		
 
-		service = Service(name, stype, port, multicast)
 		if stype == PRESENCE_SERVICE_TYPE:
 			self._add_buddy(Buddy(service, name))
 		elif stype.startswith("_olpc"):

@@ -25,8 +25,7 @@ class Owner(Buddy):
 		if not nick or not len(nick):
 			nick = "n00b"
 
-		service = Service(nick, PRESENCE_SERVICE_TYPE,
-						  PRESENCE_SERVICE_PORT)
+		service = Service(nick, PRESENCE_SERVICE_TYPE, PRESENCE_SERVICE_PORT)
 
 		Buddy.__init__(self, service, nick)
 		

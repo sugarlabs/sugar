@@ -10,7 +10,7 @@ class Notifier:
 		service = Service(name, Notifier.TYPE, Notifier.PORT, Notifier.ADDRESS)
 		service.register(group)
 
-		address = service.get_multicast_group()
+		address = service.get_group_address()
 		port = service.get_port()
 		self._client = network.GroupClient(address, port)
 		

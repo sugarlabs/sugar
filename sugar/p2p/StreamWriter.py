@@ -10,6 +10,7 @@ class StreamWriter:
 		self._service = service
 		self._address = self._service.get_address()
 		self._port = self._service.get_port()
+		self._group_address = self._service.get_group_address()
 
 		if self._service.is_multicast():
 			self._setup_multicast()
@@ -36,7 +37,7 @@ class StreamWriter:
 			return False
 
 	def _setup_multicast(self):
-		self._mclient = network.GroupClient(self._address, self._port)
+		self._mclient = network.GroupClient(self._group_address, self._port)
 		
 	def _multicast_write(self, data):
 		nick_name = self._group.get_owner().get_nick_name()

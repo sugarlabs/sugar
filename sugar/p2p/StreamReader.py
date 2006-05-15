@@ -24,7 +24,7 @@ class StreamReader:
 		self._callback = callback
 
 	def _setup_multicast(self):
-		address = self._service.get_address()
+		address = self._service.get_group_address()
 		port = self._service.get_port()
 		server = network.GroupServer(address, port, self._recv_multicast)
 		server.start()
