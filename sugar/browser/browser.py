@@ -211,7 +211,7 @@ class BrowserActivity(activity.Activity):
 		self._model = self._group.get_store().create_model(address)
 		self._model.set_value('current_address', address)
 		self._model.add_listener(self.__shared_address_changed_cb)
-		self._mode = MODE_LEADING
+		self._mode = BrowserActivity.LEADING
 	
 		bus = dbus.SessionBus()
 		proxy_obj = bus.get_object('com.redhat.Sugar.Chat', '/com/redhat/Sugar/Chat')
