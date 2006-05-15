@@ -28,4 +28,5 @@ class Service(object):
 	
 	def register(self, group):	
 		pannounce = presence.PresenceAnnounce()
-		pannounce.register_service(self._name, self._port, self._stype)
+		pannounce.register_service(self._address, self._name,
+								   self._port, self._stype)

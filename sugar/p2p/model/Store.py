@@ -17,6 +17,6 @@ class Store:
 		else:
 			service = self._group.get_service(model_id, LocalModel.SERVICE_TYPE)
 			if service:
-				return RemoteModel(service)
+				return RemoteModel(self._group, service)
 			else:
 				return None

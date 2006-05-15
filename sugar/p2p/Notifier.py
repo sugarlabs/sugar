@@ -1,4 +1,3 @@
-from sugar.p2p.NotificationListener import NotificationListener
 from sugar.p2p import network
 from sugar.p2p.Service import Service
 
