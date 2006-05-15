@@ -1,21 +1,26 @@
-import avahi
-
+from Buddy import Buddy
+from Buddy import Owner
+from Buddy import PRESENCE_SERVICE_TYPE
+from Service import Service
+from sugar.p2p.model.Store import Store
 import presence
-from Buddy import *
-from Service import *
-
-SERVICE_ADDED = "service_added"
-SERVICE_REMOVED = "service_removed"
-
-BUDDY_JOIN = "buddy_join"
-BUDDY_LEAVE = "buddy_leave"
 
 class Group:
+	SERVICE_ADDED = "service_added"
+	SERVICE_REMOVED = "service_removed"
+
+	BUDDY_JOIN = "buddy_join"
+	BUDDY_LEAVE = "buddy_leave"
+
 	def __init__(self):
 		self._service_listeners = []
 		self._presence_listeners = []
+		self._store = Store(self)
 	
-	def join(self, buddy):
+	def get_store(self):
+		return self._store
+	
+	def join(self):
 		pass
 	
 	def add_service_listener(self, listener):
@@ -26,19 +31,19 @@ class Group:
 		
 	def _notify_service_added(self, service):
 		for listener in self._service_listeners:
-			listener(SERVICE_ADDED, buddy)
+			listener(Group.SERVICE_ADDED, service)
 	
-	def _notify_service_removed(self, service):
+	def _notify_service_removed(self, service_id):
 		for listener in self._service_listeners:
-			listener(SERVICE_REMOVED,buddy)
+			listener(Group.SERVICE_REMOVED, service_id)
 
 	def _notify_buddy_join(self, buddy):
 		for listener in self._presence_listeners:
-			listener(BUDDY_JOIN, buddy)
+			listener(Group.BUDDY_JOIN, buddy)
 	
 	def _notify_buddy_leave(self, buddy):
 		for listener in self._presence_listeners:
-			listener(BUDDY_LEAVE, buddy)
+			listener(Group.BUDDY_LEAVE, buddy)
 
 class LocalGroup(Group):
 	def __init__(self):
@@ -59,16 +64,19 @@ class LocalGroup(Group):
 		self._services[sid] = service
 		self._notify_service_added(service)
 
-	def remove_service(self, sid):
-		self._notify_service_removed(service)
-		del self._services[sid]
+	def remove_service(self, service_id):
+		self._notify_service_removed(service_id)
+		del self._services[service_id]
 
 	def join(self):
 		self._owner = Owner(self)
 		self._owner.register()
 
 	def get_service(self, name, stype):
-		return self._services[(name, stype)]
+		if self._services.has_key((name, stype)):
+			return self._services[(name, stype)]
+		else:
+			return None
 
 	def get_buddy(self, name):
 		return self._buddies[name]
@@ -95,8 +103,8 @@ class LocalGroup(Group):
 						
 	def _on_service_resolved(self, interface, protocol, name, stype, domain,
 							 host, aprotocol, address, port, txt, flags):
-			service = Service(name, stype, address, port)
-			if stype == PRESENCE_SERVICE_TYPE:
-				self._add_buddy(Buddy(service, name))
-			elif stype.startswith("_olpc"):
-				self.add_service(service)
+		service = Service(name, stype, address, port)
+		if stype == PRESENCE_SERVICE_TYPE:
+			self._add_buddy(Buddy(service, name))
+		elif stype.startswith("_olpc"):
+			self.add_service(service)

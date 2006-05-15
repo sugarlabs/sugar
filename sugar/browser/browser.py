@@ -11,6 +11,7 @@ import gtk
 import geckoembed
 
 from sugar.shell import activity
+from sugar.p2p.Group import LocalGroup
 import sugar.env
 
 class AddressToolbar(gtk.Toolbar):
@@ -77,7 +78,7 @@ class AddressEntry(gtk.HBox):
 		return self.folded
 	
 	def set_folded(self, folded):
-		self.folded = not self.folded
+		self.folded = folded
 		self._update_folded_state()		
 	
 	def __button_clicked_cb(self, button):
@@ -88,11 +89,12 @@ class AddressEntry(gtk.HBox):
 		self.set_folded(True)
 
 class NavigationToolbar(gtk.Toolbar):
-	def __init__(self, embed):
+	def __init__(self, browser):
 		gtk.Toolbar.__init__(self)
-		self.embed = embed
+		self._browser = browser
+		self._embed = self._browser.get_embed()
 		
-		self.set_style(gtk.TOOLBAR_ICONS)
+		self.set_style(gtk.TOOLBAR_BOTH_HORIZ)
 		
 		self.back = gtk.ToolButton(gtk.STOCK_GO_BACK)
 		self.back.connect("clicked", self.__go_back_cb)
@@ -113,7 +115,9 @@ class NavigationToolbar(gtk.Toolbar):
 		self.insert(separator, -1)
 		separator.show()
 
-		share = gtk.ToolButton("Share")
+		share = gtk.ToolButton(None, "Share")
+		share.set_icon_name('stock_shared-by-me')
+		share.set_is_important(True)
 		share.connect("clicked", self.__share_cb)
 		self.insert(share, -1)
 		share.show()
@@ -128,34 +132,42 @@ class NavigationToolbar(gtk.Toolbar):
 
 		self._update_sensitivity()
 
-		self.embed.connect("location", self.__location_changed)
+		self._embed.connect("location", self.__location_changed)
 
 	def _update_sensitivity(self):
-		self.back.set_sensitive(self.embed.can_go_back())
-		self.forward.set_sensitive(self.embed.can_go_forward())
+		self.back.set_sensitive(self._embed.can_go_back())
+		self.forward.set_sensitive(self._embed.can_go_forward())
 		
 	def __go_back_cb(self, button):
-		self.embed.go_back()
+		self._embed.go_back()
 	
 	def __go_forward_cb(self, button):
-		self.embed.go_forward()
+		self._embed.go_forward()
 		
 	def __reload_cb(self, button):
-		self.embed.reload()
+		self._embed.reload()
 
 	def __share_cb(self, button):
-		pass
+		self._browser.share()
 
 	def __location_changed(self, embed):
 		self._update_sensitivity()
 
 	def __open_address_cb(self, address):
-		self.embed.load_address(address)
+		self._embed.load_address(address)
 
 class BrowserActivity(activity.Activity):
-	def __init__(self, uri):
+	def __init__(self, group, uri):
 		activity.Activity.__init__(self)
+
 		self.uri = uri
+		self._group = group
+		
+	def _setup_shared(self, uri):
+		self._model = self._group.get_store().get_model(uri)
+		if self._model:
+			self._load_shared_address()
+			self._model.add_listener(self.__shared_address_changed_cb)
 	
 	def activity_on_connected_to_shell(self):
 		self.activity_set_ellipsize_tab(True)
@@ -173,7 +185,7 @@ class BrowserActivity(activity.Activity):
 		self.embed.show()
 		self.embed.load_address(self.uri)
 		
-		nav_toolbar = NavigationToolbar(self.embed)
+		nav_toolbar = NavigationToolbar(self)
 		vbox.pack_start(nav_toolbar, False)
 		nav_toolbar.show()
 
@@ -182,12 +194,36 @@ class BrowserActivity(activity.Activity):
 		plug.show()
 
 		vbox.show()
+		
+		self._setup_shared(uri)
 	
 	def get_embed(self):
 		return self.embed
 	
+	def share(self):
+		address = self.embed.get_address()
+		self._model = self._group.get_store().create_model(address)
+		self._model.set_value('current_address', address)
+		self._model.add_listener(self.__shared_address_changed_cb)
+	
+		bus = dbus.SessionBus()
+		proxy_obj = bus.get_object('com.redhat.Sugar.Chat', '/com/redhat/Sugar/Chat')
+		chat_shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.ChatShell')
+		chat_shell.send_message('<richtext><link href="' + address + '">' +
+								self.embed.get_title() + '</link></richtext>')
+	
 	def __title_cb(self, embed):
 		self.activity_set_tab_text(embed.get_title())
+		# Temporary hack, we need an UI
+		self._model.set_value('current_address', self.embed.get_address())
+
+	def _load_shared_address(self):
+		address = self._model.get_value("current_address")
+		if address != self.embed.get_address():
+			self.embed.load_address(address)
+		
+	def __shared_address_changed_cb(self, model, key):
+		self._load_shared_address()
 
 	def activity_on_close_from_user(self):
 		self.activity_shutdown()
@@ -229,7 +265,6 @@ class WebActivity(activity.Activity):
 
 	def activity_on_disconnected_from_shell(self):
 		gtk.main_quit()
-		gc.collect()
 
 class BrowserShell(dbus.service.Object):
 	instance = None
@@ -249,6 +284,7 @@ class BrowserShell(dbus.service.Object):
 		dbus.service.Object.__init__(self, bus_name, object_path)
 
 		self.__browsers = []
+		self._group = LocalGroup()
 
 	def open_web_activity(self):
 		web_activity = WebActivity()
@@ -267,17 +303,13 @@ class BrowserShell(dbus.service.Object):
 
 	@dbus.service.method('com.redhat.Sugar.BrowserShell')
 	def open_browser(self, uri):
-		browser = BrowserActivity(uri)
+		browser = BrowserActivity(self._group, uri)
 		self.__browsers.append(browser)
 		browser.activity_connect_to_shell()
 
 def main():
 	BrowserShell.get_instance().open_web_activity()
-	
-	try:
-		gtk.main()
-	except KeyboardInterrupt:
-		pass
+	gtk.main()
 
-if __name__=="__main__":
-		main()
+if __name__ == "__main__":
+	main()

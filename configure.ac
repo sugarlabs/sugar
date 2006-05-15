@@ -22,5 +22,6 @@ sugar/__installed__.py
 sugar/browser/Makefile
 sugar/chat/Makefile
 sugar/p2p/Makefile
+sugar/p2p/model/Makefile
 sugar/shell/Makefile
 ])

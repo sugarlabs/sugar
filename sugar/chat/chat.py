@@ -10,9 +10,11 @@ pygtk.require('2.0')
 import gtk, gobject
 
 from sugar.shell import activity
-from sugar.p2p.Group import *
-from sugar.p2p.StreamReader import *
-from sugar.p2p.StreamWriter import *
+from sugar.p2p.Group import Group
+from sugar.p2p.Group import LocalGroup
+from sugar.p2p.Service import Service
+from sugar.p2p.StreamReader import StreamReader
+from sugar.p2p.StreamWriter import StreamWriter
 import sugar.env
 
 import richtext
@@ -71,14 +73,14 @@ class Chat(activity.Activity):
 		self._hbox = gtk.HBox(False, 12)
 		self._hbox.set_border_width(12)
 
-		[chat_vbox, buffer] = self._create_chat()
+		[chat_vbox, buf] = self._create_chat()
 		self._hbox.pack_start(chat_vbox)
 		chat_vbox.show()
 		
 		vbox.pack_start(self._hbox)
 		self._hbox.show()
 
-		toolbar = self._create_toolbar(buffer)
+		toolbar = self._create_toolbar(buf)
 		vbox.pack_start(toolbar, False)
 		toolbar.show()
 
@@ -130,37 +132,37 @@ class Chat(activity.Activity):
 		button.set_menu(menu)
 		
 	def activity_on_close_from_user(self):
-		print "act %d: in activity_on_close_from_user"%self.activity_get_id()
+		print "act %d: in activity_on_close_from_user" % self.activity_get_id()
 		self.activity_shutdown()
 
 	def activity_on_lost_focus(self):
-		print "act %d: in activity_on_lost_focus"%self.activity_get_id()
+		print "act %d: in activity_on_lost_focus" % self.activity_get_id()
 
 	def activity_on_got_focus(self):
-		print "act %d: in activity_on_got_focus"%self.activity_get_id()
-		self._controller.notify_activate(self)
+		print "act %d: in activity_on_got_focus" % self.activity_get_id()
+		# FIXME self._controller.notify_activate(self)
 
 	def recv_message(self, buddy, msg):
 		self._insert_rich_message(buddy.get_nick_name(), msg)
 		self._controller.notify_new_message(self, buddy)
 
 	def _insert_rich_message(self, nick, msg):
-		buffer = self._chat_view.get_buffer()
-		aniter = buffer.get_end_iter()
-		buffer.insert(aniter, nick + ": ")
+		buf = self._chat_view.get_buffer()
+		aniter = buf.get_end_iter()
+		buf.insert(aniter, nick + ": ")
 		
 		serializer = richtext.RichTextSerializer()
-		serializer.deserialize(msg, buffer)
+		serializer.deserialize(msg, buf)
 
-		aniter = buffer.get_end_iter()
-		buffer.insert(aniter, "\n")
+		aniter = buf.get_end_iter()
+		buf.insert(aniter, "\n")
 
 	def _local_message(self, success, text):
 		if not success:
 			message = "Error: %s\n" % text
-			buffer = self._chat_view.get_buffer()
-			aniter = buffer.get_end_iter()
-			buffer.insert(aniter, message)
+			buf = self._chat_view.get_buffer()
+			aniter = buf.get_end_iter()
+			buf.insert(aniter, message)
 		else:
 			owner = self._controller.get_group().get_owner()
 			self._insert_rich_message(owner.get_nick_name(), text)
@@ -325,11 +327,11 @@ class GroupChat(Chat):
 		if buddy.get_nick_name() == self._group.get_owner().get_nick_name():
 			# Do not show ourself in the buddy list
 			pass
-		elif action == BUDDY_JOIN:
+		elif action == Group.BUDDY_JOIN:
 			aniter = self._buddy_list_model.append(None)
 			self._buddy_list_model.set(aniter, self._MODEL_COL_NICK, buddy.get_nick_name(),
 					self._MODEL_COL_ICON, None, self._MODEL_COL_BUDDY, buddy)
-		elif action == BUDDY_LEAVE:
+		elif action == Group.BUDDY_LEAVE:
 			aniter = self._get_iter_for_buddy(buddy)
 			if aniter:
 				self._buddy_list_model.remove(aniter)
@@ -346,7 +348,7 @@ class GroupChat(Chat):
 		aniter = self._get_iter_for_buddy(buddy)
 		self._buddy_list_model.set(aniter, self._MODEL_COL_ICON, self._pixbuf_new_message)
 
-	def notify_activate(self, chat):
+	def notify_activate(self, chat, buddy):
 		aniter = self._get_iter_for_buddy(buddy)
 		self._buddy_list_model.set(aniter, self._MODEL_COL_ICON, self._pixbuf_active_chat)
 
@@ -387,19 +389,16 @@ class ChatShell(dbus.service.Object):
 		dbus.service.Object.__init__(self, bus_name, object_path)
 
 	def open_group_chat(self):
-		group_chat = GroupChat()
-		group_chat.activity_connect_to_shell()
+		self._group_chat = GroupChat()
+		self._group_chat.activity_connect_to_shell()
 
 	@dbus.service.method('com.redhat.Sugar.ChatShell')
 	def send_message(self, message):
-		pass
+		self._group_chat.send_message(message)
 		
 def main():
 	ChatShell.get_instance().open_group_chat()
-	try:
-		gtk.main()
-	except KeyboardInterrupt:
-		pass
+	gtk.main()
 
 if __name__ == "__main__":
 	main()
