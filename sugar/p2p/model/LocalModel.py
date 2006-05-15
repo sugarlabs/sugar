@@ -2,7 +2,7 @@ import socket
 
 from sugar.p2p.Service import Service
 from sugar.p2p.model.AbstractModel import AbstractModel
-import network
+from sugar.p2p import network
 
 class ModelRequestHandler(object):
 	def __init__(self, model):
@@ -25,7 +25,6 @@ class LocalModel(AbstractModel):
 		self._values = {}
 		
 		self._setup_service()
-		self._setup_notification()
 	
 	def get_value(self, key):
 		return self._values[key]

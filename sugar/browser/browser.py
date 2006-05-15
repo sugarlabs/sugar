@@ -163,12 +163,11 @@ class BrowserActivity(activity.Activity):
 		self.uri = uri
 		self._group = group
 		
-		self._setup_shared(uri)		
-
 	def _setup_shared(self, uri):
 		self._model = self._group.get_store().get_model(uri)
-		self._load_shared_address()
-		self._model.add_listener(self.__shared_address_changed_cb)
+		if self._model:
+			self._load_shared_address()
+			self._model.add_listener(self.__shared_address_changed_cb)
 	
 	def activity_on_connected_to_shell(self):
 		self.activity_set_ellipsize_tab(True)
@@ -195,6 +194,8 @@ class BrowserActivity(activity.Activity):
 		plug.show()
 
 		vbox.show()
+		
+		self._setup_shared(uri)
 	
 	def get_embed(self):
 		return self.embed
@@ -218,7 +219,7 @@ class BrowserActivity(activity.Activity):
 
 	def _load_shared_address(self):
 		address = self._model.get_value("current_address")
-		if (address != self.embed.get_address()):
+		if address != self.embed.get_address():
 			self.embed.load_address(address)
 		
 	def __shared_address_changed_cb(self, model, key):

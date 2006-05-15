@@ -2,7 +2,7 @@ from Buddy import Buddy
 from Buddy import Owner
 from Buddy import PRESENCE_SERVICE_TYPE
 from Service import Service
-import Model
+from sugar.p2p.model.Store import Store
 import presence
 
 class Group:
@@ -15,7 +15,7 @@ class Group:
 	def __init__(self):
 		self._service_listeners = []
 		self._presence_listeners = []
-		self._store = Model.Store(self)
+		self._store = Store(self)
 	
 	def get_store(self):
 		return self._store
