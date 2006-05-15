@@ -4,7 +4,7 @@ import network
 class NotificationListener:
 	def __init__(self, group, name):
 		service = group.get_service(name, Notifier.TYPE)
-		server = network.GroupServer(service.get_address(),
+		server = network.GroupServer(service.get_group_address(),
 									 service.get_port(),
 									 self._recv_multicast)
 		server.start()
