@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- tab-width: 4; indent-tabs-mode: t -*- 
 
+import sys
+
 import dbus
 import dbus.service
 import dbus.glib
@@ -8,6 +10,8 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import pango
+
+from sugar.session.LogWriter import LogWriter
 
 activity_counter = 0
 
@@ -287,10 +291,60 @@ class ActivityContainer(dbus.service.Object):
 			print "  %d: owner=%s activity_object_name=%s" % (i, owner, activity.dbus_object_name)
 			i += 1
 
+class ConsoleLogger(dbus.service.Object):
+	def __init__(self):
+		session_bus = dbus.SessionBus()
+		bus_name = dbus.service.BusName('com.redhat.Sugar.Logger', bus=session_bus)
+		object_path = '/com/redhat/Sugar/Logger'
+		dbus.service.Object.__init__(self, bus_name, object_path)
+
+		self._window = gtk.Window()
+		self._window.set_title("Console")
+		self._window.set_default_size(640, 480)
+		self._window.connect("delete_event", lambda w, e: w.hide_on_delete())
+		
+		self._nb = gtk.Notebook()
+		self._window.add(self._nb)
+		self._nb.show()
+				
+		self._consoles = {}
+
+	def set_parent_window(self, window):
+		window.connect("key-press-event", self.__key_press_event_cb)
+		self._window.connect("key-press-event", self.__key_press_event_cb)
+		
+	def __key_press_event_cb(self, window, event):
+		if event.keyval == gtk.keysyms.d and \
+		   event.state & gtk.gdk.CONTROL_MASK:
+		   	if self._window.get_property('visible'):
+		   		self._window.hide()
+		   	else:
+		   		self._window.show()
+
+	@dbus.service.method('com.redhat.Sugar.Logger')
+	def log(self, application, message):
+		if self._consoles.has_key(application):
+			console = self._consoles[application]
+		else:
+			console = gtk.TextView()
+			self._nb.append_page(console, gtk.Label(application))
+			console.show()
+			self._consoles[application] = console
+	
+		buf = console.get_buffer() 
+		buf.insert(buf.get_end_iter(), message)
 
 def main():
+	console = ConsoleLogger()
+
 	session_bus = dbus.SessionBus()
 	service = dbus.service.BusName("com.redhat.Sugar.Shell", bus=session_bus)
 
 	activityContainer = ActivityContainer(service, session_bus)
 	activityContainer.show()
+	
+	console.set_parent_window(activityContainer.window)
+	
+if __name__ == "__main__":
+	main()
+	gtk.main()

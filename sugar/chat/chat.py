@@ -1,6 +1,8 @@
 #!/usr/bin/python -t
 # -*- tab-width: 4; indent-tabs-mode: t -*- 
 
+import sys
+
 import dbus
 import dbus.service
 import dbus.glib
@@ -15,6 +17,7 @@ from sugar.p2p.Group import LocalGroup
 from sugar.p2p.Service import Service
 from sugar.p2p.StreamReader import StreamReader
 from sugar.p2p.StreamWriter import StreamWriter
+from sugar.session.LogWriter import LogWriter
 import sugar.env
 
 import richtext
@@ -396,9 +399,8 @@ class ChatShell(dbus.service.Object):
 	def send_message(self, message):
 		self._group_chat.send_message(message)
 		
-def main():
-	ChatShell.get_instance().open_group_chat()
-	gtk.main()
+sys.stdout = LogWriter("Chat")
+sys.stderr = LogWriter("Chat")
 
-if __name__ == "__main__":
-	main()
+ChatShell.get_instance().open_group_chat()
+gtk.main()

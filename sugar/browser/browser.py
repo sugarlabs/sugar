@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import sys
+
 import dbus
 import dbus.service
 import dbus.glib
@@ -10,6 +12,7 @@ import gtk
 
 import geckoembed
 
+from sugar.session.LogWriter import LogWriter
 from sugar.shell import activity
 from sugar.p2p.Group import LocalGroup
 import sugar.env
@@ -315,9 +318,8 @@ class BrowserShell(dbus.service.Object):
 		self.__browsers.append(browser)
 		browser.activity_connect_to_shell()
 
-def main():
-	BrowserShell.get_instance().open_web_activity()
-	gtk.main()
-
-if __name__ == "__main__":
-	main()
+sys.stdout = LogWriter("Web Browser")
+sys.stderr = LogWriter("Web Browser")
+	
+BrowserShell.get_instance().open_web_activity()
+gtk.main()
