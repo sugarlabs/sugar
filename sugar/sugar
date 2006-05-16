@@ -3,26 +3,18 @@
 import sys
 import os
 
-if len(sys.argv) == 1:
-	# FIXME Start a session
-
-	# We are lucky and this
-	# currently behave as we want.
-	# The chat depends on the
-	# web browser, so both activities
-	# are spanned. But obviously we
-	# need something better.
-
-	from sugar.chat import chat
-	chat.main()
-elif sys.argv[1] == 'shell':
-	from sugar.shell import shell
-	shell.main()
-elif sys.argv[1] == 'chat':
-	from sugar.chat import chat
-	chat.main()
-elif sys.argv[1] == 'browser':
-	from sugar.browser import browser
-	browser.main()
+basedir = os.path.dirname(os.path.dirname(__file__))
+if os.path.isfile(os.path.join(basedir, 'sugar', '__uninstalled__.py')):
+	if basedir == '':
+		print "Running sugar from current directory..."
+	else:
+		print "Running sugar from " + basedir + " ..."
+	sys.path.append(basedir)
+	os.environ['PYTHONPATH'] = basedir
 else:
-	print "Unknown activity"
+	print "Running the installed sugar..."
+	
+from sugar.session import session
+
+session.start()
+	

@@ -1,4 +1,4 @@
-AC_INIT([Sugar],[0.3],[],[sugar])
+AC_INIT([Sugar],[0.2],[],[sugar])
 
 AC_PREREQ([2.59])
 
@@ -24,4 +24,5 @@ sugar/chat/Makefile
 sugar/p2p/Makefile
 sugar/p2p/model/Makefile
 sugar/shell/Makefile
+sugar/session/Makefile
 ])

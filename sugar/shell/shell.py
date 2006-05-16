@@ -294,8 +294,3 @@ def main():
 
 	activityContainer = ActivityContainer(service, session_bus)
 	activityContainer.show()
-
-	gtk.main()
-
-if __name__ == "__main__":
-	main()

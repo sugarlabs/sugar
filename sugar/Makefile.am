@@ -1,4 +1,4 @@
-SUBDIRS = chat browser p2p shell
+SUBDIRS = chat browser p2p shell session
 
 bin_SCRIPTS = sugar
 

@@ -24,6 +24,10 @@ Once installed you can run sugar with
 
 To run the python sources from your source tree run
 
+ $ sugar/sugar
+
+You can also run the components separately:
+
  $ source ./setup-run-from-source.sh # needs bash
 
 in the top-level directory. Icons and other resources are still loaded
