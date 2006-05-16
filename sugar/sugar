@@ -3,8 +3,14 @@
 import sys
 import os
 
-basedir = os.path.dirname(os.path.dirname(__file__))
-if os.path.isfile(os.path.join(basedir, 'sugar', '__uninstalled__.py')):
+curdir = os.path.dirname(__file__)
+
+if curdir == '.':
+	basedir = os.path.dirname(os.getcwd())
+else:
+	basedir = os.path.dirname(curdir)
+	
+if os.path.isfile(os.path.join(curdir, '__uninstalled__.py')):
 	if basedir == '':
 		print "Running sugar from current directory..."
 	else:
