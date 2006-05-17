@@ -15,6 +15,7 @@ import geckoembed
 from sugar.session.LogWriter import LogWriter
 from sugar.shell import activity
 from sugar.p2p.Group import LocalGroup
+from sugar.browser.NotificationBar import NotificationBar
 import sugar.env
 
 class AddressToolbar(gtk.Toolbar):
@@ -171,12 +172,27 @@ class BrowserActivity(activity.Activity):
 		self._group = group
 		self._mode = BrowserActivity.SOLO
 		
+	def __notif_bar_action_cb(self, bar, action_id):
+		if action_id == 'set_shared_address':
+			address = self.embed.get_address()
+			self._model.set_value('current_address', address)
+		elif action_id == 'goto_shared_address':
+			address = self._model.get_value("current_address")
+			self.embed.load_address(address)
+			self._notif_bar.hide()
+
+	def set_mode(self, mode):
+		self._mode = mode
+		if mode == BrowserActivity.LEADING:
+			self._notif_bar.set_text("You are leading the browsing.")
+			self._notif_bar.set_action("set_shared_address", "Move Here")
+			self._notif_bar.show()
+
 	def _setup_shared(self, uri):
 		self._model = self._group.get_store().get_model(uri)
 		if self._model:
-			self._mode = BrowserActivity.FOLLOWING
-			self._load_shared_address()
-			self._model.add_listener(self.__shared_address_changed_cb)
+			self.set_mode(BrowserActivity.FOLLOWING)
+			self._model.add_listener(self.__shared_location_changed_cb)
 	
 	def activity_on_connected_to_shell(self):
 		self.activity_set_ellipsize_tab(True)
@@ -186,6 +202,10 @@ class BrowserActivity(activity.Activity):
 		self.activity_show_icon(True)
 
 		vbox = gtk.VBox()
+
+		self._notif_bar = NotificationBar()
+		vbox.pack_start(self._notif_bar, False)
+		self._notif_bar.connect('action', self.__notif_bar_action_cb)
 
 		self.embed = geckoembed.Embed()
 		self.embed.connect("title", self.__title_cb)
@@ -213,8 +233,7 @@ class BrowserActivity(activity.Activity):
 		address = self.embed.get_address()
 		self._model = self._group.get_store().create_model(address)
 		self._model.set_value('current_address', address)
-		self._model.add_listener(self.__shared_address_changed_cb)
-		self._mode = BrowserActivity.LEADING
+		self.set_mode(BrowserActivity.LEADING)
 	
 		bus = dbus.SessionBus()
 		proxy_obj = bus.get_object('com.redhat.Sugar.Chat', '/com/redhat/Sugar/Chat')
@@ -224,17 +243,14 @@ class BrowserActivity(activity.Activity):
 	
 	def __title_cb(self, embed):
 		self.activity_set_tab_text(embed.get_title())
-		# Temporary hack, we need an UI
-		if self._mode == BrowserActivity.LEADING:
-			self._model.set_value('current_address', self.embed.get_address())
 
-	def _load_shared_address(self):
-		address = self._model.get_value("current_address")
-		if address != self.embed.get_address():
-			self.embed.load_address(address)
-		
-	def __shared_address_changed_cb(self, model, key):
-		self._load_shared_address()
+	def __shared_location_changed_cb(self, model, key):
+		self._notify_shared_location_change()
+
+	def _notify_shared_location_change(self):
+		self._notif_bar.set_text("The lead moved to a new location.")
+		self._notif_bar.set_action("goto_shared_location", "Move There")
+		self._notif_bar.show()
 
 	def activity_on_close_from_user(self):
 		self.activity_shutdown()
