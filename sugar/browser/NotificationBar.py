@@ -27,5 +27,5 @@ class NotificationBar(gtk.HBox):
 		self._action_id = action_id
 		self._action_button.set_label(action_text)
 		
-	def __button_clicked(self):
+	def __button_clicked(self, button):
 		self.emit("action", self._action_id)
