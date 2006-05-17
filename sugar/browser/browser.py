@@ -318,8 +318,9 @@ class BrowserShell(dbus.service.Object):
 		self.__browsers.append(browser)
 		browser.activity_connect_to_shell()
 
-sys.stdout = LogWriter("Web Browser")
-sys.stderr = LogWriter("Web Browser")
+if len(sys.argv) > 1 and sys.argv[1] == "--console":
+	sys.stdout = LogWriter("Web Browser")
+	sys.stderr = LogWriter("Web Browser")
 	
 BrowserShell.get_instance().open_web_activity()
 gtk.main()

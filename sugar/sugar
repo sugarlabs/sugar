@@ -9,18 +9,24 @@ if curdir == '.':
 	basedir = os.path.dirname(os.getcwd())
 else:
 	basedir = os.path.dirname(curdir)
-	
+
+console = False
+
 if os.path.isfile(os.path.join(curdir, '__uninstalled__.py')):
 	if basedir == '':
-		print "Running sugar from current directory..."
+		print 'Running sugar from current directory...'
 	else:
-		print "Running sugar from " + basedir + " ..."
-	sys.path.append(basedir)
+		print 'Running sugar from ' + basedir + ' ...'
+	sys.path.insert(0, basedir)
 	os.environ['PYTHONPATH'] = basedir
+	console = True
 else:
-	print "Running the installed sugar..."
+	print 'Running the installed sugar...'
+
+if console:
+	print 'Redirecting output to the console, press ctrl+d to open it.'
 	
 from sugar.session import session
 
-session.start()
+session.start(console)
 	

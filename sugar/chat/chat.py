@@ -398,9 +398,10 @@ class ChatShell(dbus.service.Object):
 	@dbus.service.method('com.redhat.Sugar.ChatShell')
 	def send_message(self, message):
 		self._group_chat.send_message(message)
-		
-sys.stdout = LogWriter("Chat")
-sys.stderr = LogWriter("Chat")
+
+if len(sys.argv) > 1 and sys.argv[1] == "--console":		
+	sys.stdout = LogWriter("Chat")
+	sys.stderr = LogWriter("Chat")
 
 ChatShell.get_instance().open_group_chat()
 gtk.main()
