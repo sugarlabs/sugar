@@ -9,7 +9,7 @@ from sugar.shell import shell
 
 def start(console):
 	shell.main()
-	print 'aaaa'
+
 	activities = ['sugar/chat/chat', 'sugar/browser/browser']
 
 	for activity in activities:
