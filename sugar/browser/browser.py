@@ -173,9 +173,11 @@ class BrowserActivity(activity.Activity):
 		self._mode = BrowserActivity.SOLO
 		
 	def __notif_bar_action_cb(self, bar, action_id):
+		print action_id
 		if action_id == 'set_shared_address':
 			address = self.embed.get_address()
 			self._model.set_value('current_address', address)
+			print 'address set to ' + address
 		elif action_id == 'goto_shared_address':
 			address = self._model.get_value("current_address")
 			self.embed.load_address(address)
