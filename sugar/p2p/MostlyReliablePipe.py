@@ -236,6 +236,11 @@ class RetransmitSegment(SegmentBase):
 	# 20: total data sha1
 	#  2: segment number
 	_RT_DATA_TEMPLATE = "! H20sH"
+	_RT_DATA_LEN = struct.calcsize(_RT_DATA_TEMPLATE)
+
+	def data_template():
+		return RetransmitSegment._RT_DATA_TEMPLATE
+	data_template = staticmethod(data_template)
 
 	def __init__(self, segno, total_segs, msg_seq_num, master_sha):
 		"""Should not be called directly."""
@@ -243,20 +248,37 @@ class RetransmitSegment(SegmentBase):
 			raise ValueError("Retransmission request messages must have only one segment.")
 
 		SegmentBase.__init__(self, segno, total_segs, msg_seq_num, master_sha)
-		self._type = SegmentBase._SEGMENT_TYPE_DATA
+		self._type = SegmentBase._SEGMENT_TYPE_RETRANSMIT
+
+	def _verify_data(rt_msg_seq_num, rt_master_sha, rt_segment_number):
+		# Sanity checks on the message attributes
+		if not rt_segment_number or type(rt_segment_number) != type(1):
+			raise ValueError("RT Segment number must be in integer.")
+		if rt_segment_number < 1 or rt_segment_number > 65535:
+			raise ValueError("RT Segment number must be between 1 and 65535 inclusive.")
+		if not rt_msg_seq_num or type(rt_msg_seq_num) != type(1):
+			raise ValueError("RT Message sequnce number must be an integer.")
+		if rt_msg_seq_num < 1 or rt_msg_seq_num > 65535:
+			raise ValueError("RT Message sequence number must be between 1 and 65535 inclusive.")
+		if not rt_master_sha or type(rt_master_sha) != type("") or len(rt_master_sha) != 20:
+			raise ValueError("RT Message SHA1 checksum invalid.")
+	_verify_data = staticmethod(_verify_data)
 
 	def _make_rtms_data(rt_msg_seq_num, rt_master_sha, rt_segment_number):
 		"""Pack retransmission request payload."""
 		data = struct.pack(RetransmitSegment._RT_DATA_TEMPLATE, rt_msg_seq_num,
 				rt_master_sha, rt_segment_number)
-		return (data, _sha_data(data), struct.calcsize(RetransmitSegment._RT_DATA_TEMPLATE))
+		return (data, _sha_data(data))
 	_make_rtms_data = staticmethod(_make_rtms_data)
 
 	def new_from_parts(msg_seq_num, rt_msg_seq_num, rt_master_sha, rt_segment_number):
 		"""Static constructor for creation from individual attributes."""
-		(data, data_sha, data_len) = segment._make_rtms_data()
+
+		RetransmitSegment._verify_data(rt_msg_seq_num, rt_master_sha, rt_segment_number)
+		(data, data_sha) = RetransmitSegment._make_rtms_data(rt_msg_seq_num,
+				rt_master_sha, rt_segment_number)
 		segment = RetransmitSegment(1, 1, msg_seq_num, data_sha)
-		segment._data_len = data_len
+		segment._data_len = RetransmitSegment._RT_DATA_LEN
 		segment._data = data
 
 		segment._rt_msg_seq_num = rt_msg_seq_num
@@ -266,13 +288,14 @@ class RetransmitSegment(SegmentBase):
 	new_from_parts = staticmethod(new_from_parts)
 
 	def _unpack_data(self, stream, data_len):
-		if data_len != struct.calcsize(self._RT_DATA_TEMPLATE):
+		if data_len != self._RT_DATA_LEN:
 			raise ValueError("Retransmission request data had invalid length.")
+		data = stream.read(data_len)
+		(rt_msg_seq_num, rt_master_sha, rt_seg_no) = struct.unpack(self._RT_DATA_TEMPLATE, data)
+		RetransmitSegment._verify_data(rt_msg_seq_num, rt_master_sha, rt_seg_no)
+
+		self._data = data
 		self._data_len = data_len
-		(rt_msg_seq_num, rt_master_sha, rt_seg_no) = struct.unpack(self._RT_DATA_TEMPLATE,
-				stream.read(self._data_len))
-		self._data = struct.pack(self._RT_DATA_TEMPLATE, rt_msg_seq_num,
-				rt_master_sha, rt_seg_no)
 		self._rt_msg_seq_num = rt_msg_seq_num
 		self._rt_master_sha = rt_master_sha
 		self._rt_segment_number = rt_seg_no
@@ -684,6 +707,110 @@ class DataSegmentTestCase(SegmentBaseTestCase):
 	addToSuite = staticmethod(addToSuite)
 
 
+class RetransmitSegmentTestCase(SegmentBaseTestCase):
+	"""Test RetransmitSegment class specific initialization and stuff."""
+
+	def _test_init_fail(self, segno, total_segs, msg_seq_num, master_sha, fail_msg):
+		try:
+			seg = RetransmitSegment(segno, total_segs, msg_seq_num, master_sha)
+		except ValueError, exc:
+			pass
+		else:
+			self.fail("expected a ValueError for %s." % fail_msg)
+
+	def testInit(self):
+		self._test_init_fail(0, 1, self._DEF_MSG_SEQ_NUM, self._DEF_MASTER_SHA, "invalid segment number")
+		self._test_init_fail(2, 1, self._DEF_MSG_SEQ_NUM, self._DEF_MASTER_SHA, "invalid segment number")
+		self._test_init_fail(1, 0, self._DEF_MSG_SEQ_NUM, self._DEF_MASTER_SHA, "invalid number of total segments")
+		self._test_init_fail(1, 2, self._DEF_MSG_SEQ_NUM, self._DEF_MASTER_SHA, "invalid number of total segments")
+
+		# Something that's supposed to work
+		seg = RetransmitSegment(1, 1, self._DEF_MSG_SEQ_NUM, self._DEF_MASTER_SHA)
+		assert seg.segment_type() == SegmentBase.type_retransmit(), "Segment wasn't a retransmit segment."
+
+	def _test_new_from_parts_fail(self, msg_seq_num, rt_msg_seq_num, rt_master_sha, rt_segment_number, fail_msg):
+		try:
+			seg = RetransmitSegment.new_from_parts(msg_seq_num, rt_msg_seq_num, rt_master_sha, rt_segment_number)
+		except ValueError, exc:
+			pass
+		else:
+			self.fail("expected a ValueError for %s." % fail_msg)
+
+	def testNewFromParts(self):
+		"""Test RetransmitSegment's new_from_parts() functionality."""
+		self._test_new_from_parts_fail(0, self._DEF_MSG_SEQ_NUM, self._DEF_MASTER_SHA,
+				self._DEF_SEGNO, "invalid message sequence number")
+		self._test_new_from_parts_fail(65536, self._DEF_MSG_SEQ_NUM, self._DEF_MASTER_SHA,
+				self._DEF_SEGNO, "invalid message sequence number")
+		self._test_new_from_parts_fail(None, self._DEF_MSG_SEQ_NUM, self._DEF_MASTER_SHA,
+				self._DEF_SEGNO, "invalid message sequence number")
+		self._test_new_from_parts_fail("", self._DEF_MSG_SEQ_NUM, self._DEF_MASTER_SHA,
+				self._DEF_SEGNO, "invalid message sequence number")
+
+		self._test_new_from_parts_fail(self._DEF_MSG_SEQ_NUM, 0, self._DEF_MASTER_SHA,
+				self._DEF_SEGNO, "invalid retransmit message sequence number")
+		self._test_new_from_parts_fail(self._DEF_MSG_SEQ_NUM, 65536, self._DEF_MASTER_SHA,
+				self._DEF_SEGNO, "invalid retransmit message sequence number")
+		self._test_new_from_parts_fail(self._DEF_MSG_SEQ_NUM, None, self._DEF_MASTER_SHA,
+				self._DEF_SEGNO, "invalid retransmit message sequence number")
+		self._test_new_from_parts_fail(self._DEF_MSG_SEQ_NUM, "", self._DEF_MASTER_SHA,
+				self._DEF_SEGNO, "invalid retransmit message sequence number")
+
+		self._test_new_from_parts_fail(self._DEF_MSG_SEQ_NUM, self._DEF_MSG_SEQ_NUM, "1" * 19,
+				self._DEF_SEGNO, "invalid retransmit message master SHA")
+		self._test_new_from_parts_fail(self._DEF_MSG_SEQ_NUM, self._DEF_MSG_SEQ_NUM, "1" * 21,
+				self._DEF_SEGNO, "invalid retransmit message master SHA")
+		self._test_new_from_parts_fail(self._DEF_MSG_SEQ_NUM, self._DEF_MSG_SEQ_NUM, None,
+				self._DEF_SEGNO, "invalid retransmit message master SHA")
+		self._test_new_from_parts_fail(self._DEF_MSG_SEQ_NUM, self._DEF_MSG_SEQ_NUM, 1234,
+				self._DEF_SEGNO, "invalid retransmit message master SHA")
+
+		self._test_new_from_parts_fail(self._DEF_MSG_SEQ_NUM, self._DEF_MSG_SEQ_NUM,
+				self._DEF_MASTER_SHA, 0, "invalid retransmit message segment number")
+		self._test_new_from_parts_fail(self._DEF_MSG_SEQ_NUM, self._DEF_MSG_SEQ_NUM,
+				self._DEF_MASTER_SHA, 65536, "invalid retransmit message segment number")
+		self._test_new_from_parts_fail(self._DEF_MSG_SEQ_NUM, self._DEF_MSG_SEQ_NUM,
+				self._DEF_MASTER_SHA, None, "invalid retransmit message segment number")
+		self._test_new_from_parts_fail(self._DEF_MSG_SEQ_NUM, self._DEF_MSG_SEQ_NUM,
+				self._DEF_MASTER_SHA, "", "invalid retransmit message segment number")
+
+		# Ensure message data is same as we stuff in after object is instantiated
+		seg = RetransmitSegment.new_from_parts(self._DEF_MSG_SEQ_NUM, self._DEF_MSG_SEQ_NUM,
+				self._DEF_MASTER_SHA, self._DEF_SEGNO)
+		assert seg.rt_msg_seq_num() == self._DEF_MSG_SEQ_NUM, "RT message sequence number after segment creation didn't match expected."
+		assert seg.rt_master_sha() == self._DEF_MASTER_SHA, "RT master SHA after segment creation didn't match expected."
+		assert seg.rt_segment_number() == self._DEF_SEGNO, "RT segment number after segment creation didn't match expected."
+
+	def _test_new_from_data_fail(self, rt_msg_seq_num, rt_master_sha, rt_segment_number, fail_msg):
+		try:
+			payload = struct.pack(RetransmitSegment.data_template(), rt_msg_seq_num, rt_master_sha, rt_segment_number)
+			payload_sha = _sha_data(payload)
+			header_template = SegmentBase.header_template()
+			header = struct.pack(header_template, self._SEG_MAGIC, SegmentBase.type_retransmit(), 1, 1,
+					self._DEF_MSG_SEQ_NUM, payload_sha)
+			seg = SegmentBase.new_from_data(self._DEF_ADDRESS, header + payload)
+		except ValueError, exc:
+			pass
+		else:
+			self.fail("Expected a ValueError about %s." % fail_msg)
+
+	def testNewFromData(self):
+		"""Test DataSegment's new_from_data() functionality."""
+		self._test_new_from_data_fail(0, self._DEF_MASTER_SHA, self._DEF_SEGNO, "invalid RT message sequence number")
+		self._test_new_from_data_fail(65536, self._DEF_MASTER_SHA, self._DEF_SEGNO, "invalid RT message sequence number")
+		
+		self._test_new_from_data_fail(self._DEF_MSG_SEQ_NUM, self._DEF_MASTER_SHA, 0, "invalid RT segment number")
+		self._test_new_from_data_fail(self._DEF_MSG_SEQ_NUM, self._DEF_MASTER_SHA, 65536, "invalid RT segment number")
+
+		# TODO: Ensure something that should work
+
+	def addToSuite(suite):
+		suite.addTest(RetransmitSegmentTestCase("testInit"))
+		suite.addTest(RetransmitSegmentTestCase("testNewFromParts"))
+		suite.addTest(RetransmitSegmentTestCase("testNewFromData"))
+	addToSuite = staticmethod(addToSuite)
+
+
 class SHAUtilsTestCase(unittest.TestCase):
 	def testSHA(self):
 		data = "235jklqt3hjwasdv879wfe89723rqjh32tr3hwaejksdvd89udsv89dsgiougjktqjhk23tjht23hjt3qhjewagthjasgdgsd"
@@ -710,6 +837,7 @@ def main():
 	suite = unittest.TestSuite()
 	SegmentBaseInitTestCase.addToSuite(suite)
 	DataSegmentTestCase.addToSuite(suite)
+	RetransmitSegmentTestCase.addToSuite(suite)
 	SHAUtilsTestCase.addToSuite(suite)
 
 	runner = unittest.TextTestRunner()
