@@ -1,7 +1,8 @@
 sugardir = $(pythondir)/sugar/browser
-sugar_PYTHON =		\
-	__init__.py	\
-	browser.py	
+sugar_PYTHON =			\
+	__init__.py		\
+	browser.py		\
+	NotificationBar.py	
 
 icondir = $(pkgdatadir)
 icon_DATA =		\
