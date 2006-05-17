@@ -174,12 +174,12 @@ class BrowserActivity(activity.Activity):
 		
 	def __notif_bar_action_cb(self, bar, action_id):
 		print action_id
-		if action_id == 'set_shared_address':
+		if action_id == 'set_shared_location':
 			address = self.embed.get_address()
-			self._model.set_value('current_address', address)
-			print 'address set to ' + address
-		elif action_id == 'goto_shared_address':
-			address = self._model.get_value("current_address")
+			self._model.set_value('address', address)
+		elif action_id == 'goto_shared_location':
+			address = self._model.get_value("address")
+			print address
 			self.embed.load_address(address)
 			self._notif_bar.hide()
 
@@ -187,7 +187,7 @@ class BrowserActivity(activity.Activity):
 		self._mode = mode
 		if mode == BrowserActivity.LEADING:
 			self._notif_bar.set_text("You are leading the browsing.")
-			self._notif_bar.set_action("set_shared_address", "Move Here")
+			self._notif_bar.set_action("set_shared_location", "Move Here")
 			self._notif_bar.show()
 
 	def _setup_shared(self, uri):
@@ -234,7 +234,7 @@ class BrowserActivity(activity.Activity):
 	def share(self):
 		address = self.embed.get_address()
 		self._model = self._group.get_store().create_model(address)
-		self._model.set_value('current_address', address)
+		self._model.set_value('address', address)
 		self.set_mode(BrowserActivity.LEADING)
 	
 		bus = dbus.SessionBus()
