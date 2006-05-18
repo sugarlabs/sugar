@@ -14,8 +14,15 @@ def start(console):
 
 	activities = []
 	
+	activities_dirs = []
+	
 	for data_dir in env.get_data_dirs():
-		activities_dir = os.path.join(data_dir, env.get_activities_dir())
+		act_dir = os.path.join(data_dir, env.get_activities_dir())
+		activities_dirs.append(act_dir)
+
+	activities_dirs.append(os.path.expanduser('~/.sugar/activities'))
+	
+	for activities_dir in activities_dirs:
 		for filename in os.listdir(activities_dir):
 			if filename.endswith(".activity"):
 				path = os.path.join(activities_dir, filename)
