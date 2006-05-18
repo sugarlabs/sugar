@@ -172,12 +172,17 @@ class BrowserActivity(activity.Activity):
 		self.uri = uri
 		self._group = group
 		self._mode = BrowserActivity.SOLO
+
+	def _update_shared_location(self):
+		address = self.embed.get_address()
+		self._model.set_value('address', address)
+		title = self.embed.get_title()
+		self._model.set_value('title', title)
 		
 	def __notif_bar_action_cb(self, bar, action_id):
 		print action_id
 		if action_id == 'set_shared_location':
-			address = self.embed.get_address()
-			self._model.set_value('address', address)
+			self._update_shared_location()
 		elif action_id == 'goto_shared_location':
 			address = self._model.get_value("address")
 			print address
@@ -187,8 +192,8 @@ class BrowserActivity(activity.Activity):
 	def set_mode(self, mode):
 		self._mode = mode
 		if mode == BrowserActivity.LEADING:
-			self._notif_bar.set_text("You are leading the browsing.")
-			self._notif_bar.set_action("set_shared_location", "Move Here")
+			self._notif_bar.set_text("Share this page with the group.")
+			self._notif_bar.set_action("set_shared_location", "Share")
 			self._notif_bar.show()
 
 	def _setup_shared(self, uri):
@@ -235,7 +240,8 @@ class BrowserActivity(activity.Activity):
 	def share(self):
 		address = self.embed.get_address()
 		self._model = self._group.get_store().create_model(address)
-		self._model.set_value('address', address)
+		self._model.set_value('owner', self._group.get_owner().get_nick_name())
+		self._update_shared_location()
 		self.set_mode(BrowserActivity.LEADING)
 	
 		bus = dbus.SessionBus()
@@ -254,8 +260,12 @@ class BrowserActivity(activity.Activity):
 		self._notify_shared_location_change()
 
 	def _notify_shared_location_change(self):
-		self._notif_bar.set_text("The lead moved to a new location.")
-		self._notif_bar.set_action("goto_shared_location", "Move There")
+		owner = self._model.get_value('owner')
+		title = self._model.get_value('title')
+		
+		text = '<b>' + owner + '</b> is reading <i>' + title + '</i>'
+		self._notif_bar.set_text(text)
+		self._notif_bar.set_action("goto_shared_location", "Go There")
 		self._notif_bar.show()
 
 	def activity_on_close_from_user(self):

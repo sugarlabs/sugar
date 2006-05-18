@@ -42,7 +42,7 @@ class NotificationBar(gtk.HBox):
 		return False
 	
 	def set_text(self, text):
-		self._text_label.set_markup('<b>' + text + '</b>')
+		self._text_label.set_markup(text)
 	
 	def set_action(self, action_id, action_text):
 		self._action_id = action_id

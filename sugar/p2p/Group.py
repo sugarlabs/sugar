@@ -58,6 +58,8 @@ class LocalGroup(Group):
 		self._pdiscovery.add_service_listener(self._on_service_change)
 		self._pdiscovery.start()
 
+		self._owner = Owner(self)
+
 	def get_owner(self):
 		return self._owner
 
@@ -71,7 +73,6 @@ class LocalGroup(Group):
 		del self._services[service_id]
 
 	def join(self):
-		self._owner = Owner(self)
 		self._owner.register()
 
 	def get_service(self, name, stype):
