@@ -266,7 +266,8 @@ class BrowserActivity(activity.Activity):
 		
 		text = '<b>' + owner + '</b> is reading <i>' + title + '</i>'
 		self._notif_bar.set_text(text)
-		self._notif_bar.set_action("goto_shared_location", "Go There")
+		self._notif_bar.set_action('goto_shared_location', 'Go There')
+		self._notif_bar.set_icon('stock_right')
 		self._notif_bar.show()
 
 	def activity_on_close_from_user(self):
