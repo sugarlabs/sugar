@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-
 import sys
+
+from xml.sax import saxutils
 
 import dbus
 import dbus.service
@@ -240,8 +241,11 @@ class BrowserActivity(activity.Activity):
 		bus = dbus.SessionBus()
 		proxy_obj = bus.get_object('com.redhat.Sugar.Chat', '/com/redhat/Sugar/Chat')
 		chat_shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.ChatShell')
-		chat_shell.send_message('<richtext><link href="' + address + '">' +
-								self.embed.get_title() + '</link></richtext>')
+		
+		escaped_address = saxutils.escape(self.embed.get_title())
+		escaped_title = saxutils.escape(address)
+		chat_shell.send_message('<richtext><link href="' + escaped_address +
+								'">' + escaped_title + '</link></richtext>')
 	
 	def __title_cb(self, embed):
 		self.activity_set_tab_text(embed.get_title())
@@ -339,7 +343,7 @@ class BrowserShell(dbus.service.Object):
 if len(sys.argv) > 1 and sys.argv[1] == "--console":
 	sys.stdout = LogWriter("Web Browser")
 	sys.stderr = LogWriter("Web Browser")
-	
+
 gtk.rc_parse(sugar.env.get_data_file('browser.rc'))
 
 BrowserShell.get_instance().open_web_activity()

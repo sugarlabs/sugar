@@ -1,0 +1,7 @@
+style "NotificationBarButton" = "button"
+{
+    xthickness = 0
+    ythickness = 0
+}
+
+widget "*.notif bar.*GtkButton*" style "NotificationBarButton"
