@@ -23,15 +23,16 @@ def start(console):
 	activities_dirs.append(os.path.expanduser('~/.sugar/activities'))
 	
 	for activities_dir in activities_dirs:
-		for filename in os.listdir(activities_dir):
-			if filename.endswith(".activity"):
-				path = os.path.join(activities_dir, filename)
+		if os.path.isdir(activities_dir):
+			for filename in os.listdir(activities_dir):
+				if filename.endswith(".activity"):
+					path = os.path.join(activities_dir, filename)
 
-				cp = ConfigParser()
-				cp.read([path])
-				python_class = cp.get('Activity', "python_class")
+					cp = ConfigParser()
+					cp.read([path])
+					python_class = cp.get('Activity', "python_class")
 
-				activities.append(python_class)
+					activities.append(python_class)
 
 	for activity in activities:
 		args = [ 'python', '-m', activity ]
