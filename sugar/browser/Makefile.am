@@ -9,5 +9,11 @@ icon_DATA =		\
 	fold.png	\
 	unfold.png
 
+rcdir = $(pkgdatadir)
+rc_DATA = browser.rc
+
+activitydir = $(pkgdatadir)/activities
+activity_DATA = browser.activity
+
 EXTRA_DIST =			\
 	$(icon_DATA)

@@ -340,5 +340,8 @@ if len(sys.argv) > 1 and sys.argv[1] == "--console":
 	sys.stdout = LogWriter("Web Browser")
 	sys.stderr = LogWriter("Web Browser")
 	
+gtk.rc_parse(sugar.env.get_data_file('browser.rc'))
+
 BrowserShell.get_instance().open_web_activity()
+
 gtk.main()

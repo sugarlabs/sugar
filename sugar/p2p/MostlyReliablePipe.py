@@ -781,18 +781,14 @@ class RetransmitSegmentTestCase(SegmentBaseTestCase):
 		assert seg.rt_master_sha() == self._DEF_MASTER_SHA, "RT master SHA after segment creation didn't match expected."
 		assert seg.rt_segment_number() == self._DEF_SEGNO, "RT segment number after segment creation didn't match expected."
 
-	def _new_from_data(self, rt_msg_seq_num, rt_master_sha, rt_segment_number):
-		payload = struct.pack(RetransmitSegment.data_template(), rt_msg_seq_num, rt_master_sha, rt_segment_number)
-		payload_sha = _sha_data(payload)
-		header_template = SegmentBase.header_template()
-		header = struct.pack(header_template, self._SEG_MAGIC, SegmentBase.type_retransmit(), 1, 1,
-				self._DEF_MSG_SEQ_NUM, payload_sha)
-		return header + payload
-
 	def _test_new_from_data_fail(self, rt_msg_seq_num, rt_master_sha, rt_segment_number, fail_msg):
 		try:
-			packet = self._new_from_data(rt_msg_seq_num, rt_master_sha, rt_segment_number)
-			seg = SegmentBase.new_from_data(self._DEF_ADDRESS, packet)
+			payload = struct.pack(RetransmitSegment.data_template(), rt_msg_seq_num, rt_master_sha, rt_segment_number)
+			payload_sha = _sha_data(payload)
+			header_template = SegmentBase.header_template()
+			header = struct.pack(header_template, self._SEG_MAGIC, SegmentBase.type_retransmit(), 1, 1,
+					self._DEF_MSG_SEQ_NUM, payload_sha)
+			seg = SegmentBase.new_from_data(self._DEF_ADDRESS, header + payload)
 		except ValueError, exc:
 			pass
 		else:
@@ -806,13 +802,7 @@ class RetransmitSegmentTestCase(SegmentBaseTestCase):
 		self._test_new_from_data_fail(self._DEF_MSG_SEQ_NUM, self._DEF_MASTER_SHA, 0, "invalid RT segment number")
 		self._test_new_from_data_fail(self._DEF_MSG_SEQ_NUM, self._DEF_MASTER_SHA, 65536, "invalid RT segment number")
 
-		# Ensure something that should work
-		packet = self._new_from_data(self._DEF_MSG_SEQ_NUM, self._DEF_MASTER_SHA, self._DEF_SEGNO)
-		seg = SegmentBase.new_from_data(self._DEF_ADDRESS, packet)
-		assert seg.segment_type() == SegmentBase.type_retransmit(), "Segment wasn't expected type."
-		assert seg.rt_msg_seq_num() == self._DEF_MSG_SEQ_NUM, "Segment RT message sequence number didn't match expected."
-		assert seg.rt_master_sha() == self._DEF_MASTER_SHA, "Segment RT master SHA didn't match expected."
-		assert seg.rt_segment_number() == self._DEF_SEGNO, "Segment RT segment number didn't match expected."
+		# TODO: Ensure something that should work
 
 	def addToSuite(suite):
 		suite.addTest(RetransmitSegmentTestCase("testInit"))

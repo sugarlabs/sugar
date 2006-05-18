@@ -1,4 +1,3 @@
-import os
-
-def internal_get_data_file(filename):
-	return os.path.join('@prefix@/share/sugar', filename)
+data_basedir = '@prefix@/share/'
+data_dirs = [ 'sugar' ]
+activities_dir = 'activities'

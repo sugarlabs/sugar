@@ -9,4 +9,7 @@ icon_DATA =			\
 	bubble.png		\
 	bubbleOutline.png
 
+activitydir = $(pkgdatadir)/activities
+activity_DATA = chat.activity
+
 EXTRA_DIST = $(icon_DATA)
