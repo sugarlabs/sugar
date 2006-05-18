@@ -248,8 +248,8 @@ class BrowserActivity(activity.Activity):
 		proxy_obj = bus.get_object('com.redhat.Sugar.Chat', '/com/redhat/Sugar/Chat')
 		chat_shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.ChatShell')
 		
-		escaped_address = saxutils.escape(self.embed.get_title())
-		escaped_title = saxutils.escape(address)
+		escaped_title = saxutils.escape(self.embed.get_title())
+		escaped_address = saxutils.escape(address)
 		chat_shell.send_message('<richtext><link href="' + escaped_address +
 								'">' + escaped_title + '</link></richtext>')
 	
