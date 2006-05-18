@@ -5,6 +5,12 @@ import os
 
 curdir = os.path.dirname(__file__)
 
+def append_to_python_path(path):
+	if os.environ.has_key('PYTHONPATH'):
+		os.environ['PYTHONPATH'] += ':' + path
+	else:
+		os.environ['PYTHONPATH'] = path
+
 if curdir == '.':
 	basedir = os.path.dirname(os.getcwd())
 else:
@@ -18,12 +24,12 @@ if os.path.isfile(os.path.join(curdir, '__uninstalled__.py')):
 	else:
 		print 'Running sugar from ' + basedir + ' ...'
 	sys.path.insert(0, basedir)
-	os.environ['PYTHONPATH'] += ':' + basedir
+	append_to_python_path(basedir)
 	console = True
 else:
 	print 'Running the installed sugar...'
 	
-os.environ['PYTHONPATH'] += ':' + os.path.expanduser('~/.sugar/activities')
+append_to_python_path(os.path.expanduser('~/.sugar/activities'))
 
 if console:
 	print 'Redirecting output to the console, press ctrl+d to open it.'
