@@ -192,8 +192,9 @@ class BrowserActivity(activity.Activity):
 	def set_mode(self, mode):
 		self._mode = mode
 		if mode == BrowserActivity.LEADING:
-			self._notif_bar.set_text("Share this page with the group.")
-			self._notif_bar.set_action("set_shared_location", "Share")
+			self._notif_bar.set_text('Share this page with the group.')
+			self._notif_bar.set_action('set_shared_location', 'Share')
+			self._notif_bar.set_icon('stock_shared-by-me')
 			self._notif_bar.show()
 
 	def _setup_shared(self, uri):

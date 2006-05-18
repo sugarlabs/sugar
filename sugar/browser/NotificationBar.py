@@ -11,11 +11,14 @@ class NotificationBar(gtk.HBox):
 	}
 
 	def __init__(self):
-		gtk.HBox.__init__(self)
+		gtk.HBox.__init__(self, False, 12)
 
 		self.set_name("notif bar")
 		self.set_border_width(3)
 		
+		self._icon = gtk.Image()
+		self.pack_start(self._icon, False)
+				
 		self._text_label = gtk.Label()
 		self._text_label.set_alignment(0.0, 0.5)
 		self.pack_start(self._text_label)
@@ -40,6 +43,10 @@ class NotificationBar(gtk.HBox):
 		ctx.stroke()
 		
 		return False
+
+	def set_icon(self, icon_name):
+		self._icon.set_from_icon_name(icon_name, gtk.ICON_SIZE_BUTTON)
+		self._icon.show()
 	
 	def set_text(self, text):
 		self._text_label.set_markup(text)
