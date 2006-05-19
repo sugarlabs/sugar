@@ -44,3 +44,28 @@ You can run activities like this
  $ ./browser.py
 
 (Just remember to have the shell running)
+
+
+Running two instances on the same machine
+=========================================
+
+1) Install Xephyr
+2) Add another user to your machine, lets call that user 'sugar'
+2) Run Xepyhr as your normal user:
+
+ $ Xephyr -ac -host-cursor -screen 800x600 :1
+
+3) In a new shell:
+
+ $ su sugar -
+ $ dbus-daemon --session --print-address
+
+4) In another new shell 
+
+ $ su sugar -
+ $ export DISPLAY=:1
+ $ export DBUS_SESSION_BUS_ADDRESS=<output dbus-daemon command from above>
+ $ metacity &
+
+5) In the previous shell, run sugar
+
