@@ -251,7 +251,7 @@ class BrowserActivity(activity.Activity):
 		
 		escaped_title = saxutils.escape(self.embed.get_title())
 		escaped_address = saxutils.escape(address)
-		chat_shell.send_message('<richtext><link href="' + escaped_address +
+		chat_shell.send_text_message('<richtext><link href="' + escaped_address +
 								'">' + escaped_title + '</link></richtext>')
 	
 	def __title_cb(self, embed):

@@ -209,8 +209,16 @@ class RichTextHandler(xml.sax.handler.ContentHandler):
 		self.buf = buf
 		self.serializer = serializer
 		self.tags = []
+		self._in_richtext = False
+		self._done = False
 
 	def startElement(self, name, attrs):
+		# Look for, and only start parsing after 'richtext'
+		if not self._in_richtext and name == "richtext":
+			self._in_richtext = True
+		if not self._in_richtext:
+			return
+
 		if name != "richtext":
 			tag = self.serializer.deserialize_element(name, attrs)
 			self.tags.append(tag)
@@ -230,8 +238,12 @@ class RichTextHandler(xml.sax.handler.ContentHandler):
 											      "link", "link-address")
  
 	def endElement(self, name):
-		if name != "richtext":
-			self.tags.pop()
+		if not self._done and self._in_richtext:
+			if name != "richtext":
+				self.tags.pop()
+			if name == "richtext":
+				self._done = True
+				self._in_richtext = False
 
 class RichTextSerializer:
 	def __init__(self):
