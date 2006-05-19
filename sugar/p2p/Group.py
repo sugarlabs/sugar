@@ -90,7 +90,10 @@ class LocalGroup(Group):
 			self._buddies[bid] = buddy
 			self._notify_buddy_join(buddy)
 
-	def _remove_buddy(self, buddy):
+	def _remove_buddy(self, bid):
+		if not self._buddies.has_key(bid):
+			return
+		buddy = self._buddies[bid]
 		self._notify_buddy_leave(buddy)
 		del self._buddies[buddy.get_nick_name()]
 	
