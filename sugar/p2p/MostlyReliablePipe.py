@@ -537,20 +537,23 @@ class MostlyReliablePipe(object):
 		return False
 
 	def _retransmit_check_worker(self):
-		now = time.time()
-		for key in self._incoming.keys()[:]:
-			message = self._incoming[key]
-			if message.complete():
-				continue
-			next_rt = message.next_rt_time()
-			if next_rt == 0 or next_rt > now:
-				continue
-			if self._retransmit_request(message):
-				# Kill the message, too many retries
-				print "(MRP): Dropped message %s, exceeded retries." % _stringify_sha(message.sha())
-				self._dispatched[key] = message
-				message.set_dispatch_time()
-				del self._incoming[key]
+		try:
+			now = time.time()
+			for key in self._incoming.keys()[:]:
+				message = self._incoming[key]
+				if message.complete():
+					continue
+				next_rt = message.next_rt_time()
+				if next_rt == 0 or next_rt > now:
+					continue
+				if self._retransmit_request(message):
+					# Kill the message, too many retries
+					print "(MRP): Dropped message %s, exceeded retries." % _stringify_sha(message.sha())
+					self._dispatched[key] = message
+					message.set_dispatch_time()
+					del self._incoming[key]
+		except KeyboardInterrupt:
+			return False
 		return True
 
 	def _process_incoming_data(self, segment):
