@@ -99,7 +99,7 @@ class Chat(activity.Activity):
 			
 			serializer = richtext.RichTextSerializer()
 			text = serializer.serialize(buf)
-			self.send_message(text)
+			self.send_text_message(text)
 
 			buf.set_text("")
 			buf.place_cursor(buf.get_start_iter())
@@ -145,9 +145,6 @@ class Chat(activity.Activity):
 		print "act %d: in activity_on_got_focus" % self.activity_get_id()
 		# FIXME self._controller.notify_activate(self)
 
-	def recv_message(self, buddy, msg):
-		self._insert_rich_message(buddy.get_nick_name(), msg)
-
 	def _insert_rich_message(self, nick, msg):
 		buf = self._chat_view.get_buffer()
 		aniter = buf.get_end_iter()
@@ -159,7 +156,16 @@ class Chat(activity.Activity):
 		aniter = buf.get_end_iter()
 		buf.insert(aniter, "\n")
 
-	def send_message(self, text):
+	def _insert_sketch(self, sketch):
+		"""Insert a sketch object into the chat buffer."""
+		pass
+
+	def recv_message(self, buddy, msg):
+		"""Insert a remote chat message into the chat buffer."""
+		self._insert_rich_message(buddy.get_nick_name(), msg)
+
+	def send_text_message(self, text):
+		"""Send a chat message and insert it into the local buffer."""
 		if len(text) <= 0:
 			return
 		self._stream_writer.write(text)
@@ -351,7 +357,7 @@ class GroupChat(Chat):
 		self._buddy_list_model.set(aniter, self._MODEL_COL_ICON, self._pixbuf_active_chat)
 
 	def _group_recv_message(self, buddy, msg):
-		Chat.recv_message(self, buddy, msg)
+		self.recv_message(buddy, msg)
 		self._controller.notify_new_message(self, None)
 
 	def _buddy_recv_message(self, buddy, msg):
@@ -385,8 +391,8 @@ class ChatShell(dbus.service.Object):
 		self._group_chat.activity_connect_to_shell()
 
 	@dbus.service.method('com.redhat.Sugar.ChatShell')
-	def send_message(self, message):
-		self._group_chat.send_message(message)
+	def send_text_message(self, message):
+		self._group_chat.send_text_message(message)
 
 if len(sys.argv) > 1 and sys.argv[1] == "--console":		
 	sys.stdout = LogWriter("Chat")
