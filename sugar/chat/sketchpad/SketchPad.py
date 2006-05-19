@@ -5,6 +5,9 @@ import cairo
 
 from Sketch import Sketch
 
+from SVGdraw import drawing
+from SVGdraw import svg
+
 class SketchPad(gtk.DrawingArea):
 	def __init__(self):
 		gtk.DrawingArea.__init__(self)
@@ -42,7 +45,19 @@ class SketchPad(gtk.DrawingArea):
 		if self._active_sketch:
 			self._active_sketch.add_point(event.x, event.y)
 		self.window.invalidate_rect(None, False)
-		
+	
+	def to_svg(self):
+		d = drawing()
+		s = svg()
+		for sketch in self._sketches:
+			s.addElement(sketch.draw_to_svg())
+		d.setSVG(s)
+		return d.toXml()
+
+def test_quit(w, sketchpad):
+	print sketchpad.to_svg()
+	gtk.main_quit()
+
 if __name__ == "__main__":
 	window = gtk.Window()
 	window.set_default_size(400, 300)
@@ -54,4 +69,6 @@ if __name__ == "__main__":
 	
 	window.show()
 	
+	window.connect("destroy", test_quit, sketchpad)
+
 	gtk.main()

@@ -38,7 +38,4 @@ def start(console):
 			args.append('--console')
 		os.spawnvp(os.P_NOWAIT, 'python', args)
 
-	try:
-		gtk.main()
-	except KeyboardInterrupt:
-		pass
+	gtk.main()

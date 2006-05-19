@@ -60,14 +60,7 @@ class PresenceDiscovery(object):
 
 #		print "Browsing domain '%s' on %i.%i ..." % (domain, interface, protocol)
     
-		try:
-			b = dbus.Interface(self.bus.get_object(avahi.DBUS_NAME, self.server.ServiceTypeBrowserNew(interface, protocol, domain, dbus.UInt32(0))),  avahi.DBUS_INTERFACE_SERVICE_TYPE_BROWSER)
-		except dbus.DBusException, exc:
-			str_exc = str(exc)
-			if str_exc.find("The name org.freedesktop.Avahi was not provided by any .service files") >= 0:
-				raise Exception("Avahi does not appear to be running.  '%s'" % str_exc)
-			else:
-				raise exc
+		b = dbus.Interface(self.bus.get_object(avahi.DBUS_NAME, self.server.ServiceTypeBrowserNew(interface, protocol, domain, dbus.UInt32(0))),  avahi.DBUS_INTERFACE_SERVICE_TYPE_BROWSER)
 		b.connect_to_signal('ItemNew', self.new_service_type)
 
 		self._service_type_browsers[(interface, protocol, domain)] = b
