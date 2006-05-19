@@ -17,6 +17,8 @@ from sugar.p2p.Group import LocalGroup
 from sugar.p2p.Service import Service
 from sugar.p2p.Stream import Stream
 from sugar.session.LogWriter import LogWriter
+from sugar.chat.sketchpad.Toolbox import Toolbox
+from sugar.chat.sketchpad.SketchPad import SketchPad
 import sugar.env
 
 import richtext
@@ -39,7 +41,54 @@ class Chat(activity.Activity):
 		self._plug = self.activity_get_gtk_plug()
 		self._ui_setup(self._plug)
 		self._plug.show_all()
+	
+	def _create_toolbox(self):
+		vbox = gtk.VBox()
 		
+		toolbox = Toolbox()
+		toolbox.connect('tool-selected', self._tool_selected)
+		vbox.pack_start(toolbox, False)
+		toolbox.show()
+		
+		send_button = gtk.Button('Send')
+		vbox.pack_start(send_button, False)
+		send_button.connect('clicked', self.__send_button_clicked_cb)
+
+		return vbox
+		
+	def __send_button_clicked_cb(self, button):
+		print self._sketchpad.to_svg()
+	
+	def _tool_selected(self, toolbox, tool_id):
+		if tool_id == 'text':
+			self._editor_nb.set_current_page(0)
+		else:
+			self._editor_nb.set_current_page(1)
+	
+	def _create_chat_editor(self):
+		nb = gtk.Notebook()
+		nb.set_show_tabs(False)
+		nb.set_size_request(-1, 70)
+	
+		chat_view_sw = gtk.ScrolledWindow()
+		chat_view_sw.set_shadow_type(gtk.SHADOW_IN)
+		chat_view_sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+		self._editor = richtext.RichTextView()
+		self._editor.connect("key-press-event", self.__key_press_event_cb)
+		chat_view_sw.add(self._editor)
+		self._editor.show()
+		
+		nb.append_page(chat_view_sw)
+		chat_view_sw.show()
+		
+		self._sketchpad = SketchPad()
+		nb.append_page(self._sketchpad)
+		self._sketchpad.show()
+		
+		nb.set_current_page(0)
+		
+		return nb
+	
 	def _create_chat(self):
 		chat_vbox = gtk.VBox()
 		chat_vbox.set_spacing(6)
@@ -56,17 +105,9 @@ class Chat(activity.Activity):
 		chat_vbox.pack_start(sw)
 		sw.show()
 
-		chat_view_sw = gtk.ScrolledWindow()
-		chat_view_sw.set_shadow_type(gtk.SHADOW_IN)
-		chat_view_sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-		self._editor = richtext.RichTextView()
-		self._editor.connect("key-press-event", self.__key_press_event_cb)
-		self._editor.set_size_request(-1, 50)
-		chat_view_sw.add(self._editor)
-		self._editor.show()
-
-		chat_vbox.pack_start(chat_view_sw, False)
-		chat_view_sw.show()
+		self._editor_nb = self._create_chat_editor()
+		chat_vbox.pack_start(self._editor_nb, False)
+		self._editor_nb.show()
 		
 		return chat_vbox, self._editor.get_buffer()
 
@@ -99,7 +140,7 @@ class Chat(activity.Activity):
 			
 			serializer = richtext.RichTextSerializer()
 			text = serializer.serialize(buf)
-			self.send_text_message(text)
+			self.send_message(text)
 
 			buf.set_text("")
 			buf.place_cursor(buf.get_start_iter())
@@ -145,6 +186,9 @@ class Chat(activity.Activity):
 		print "act %d: in activity_on_got_focus" % self.activity_get_id()
 		# FIXME self._controller.notify_activate(self)
 
+	def recv_message(self, buddy, msg):
+		self._insert_rich_message(buddy.get_nick_name(), msg)
+
 	def _insert_rich_message(self, nick, msg):
 		buf = self._chat_view.get_buffer()
 		aniter = buf.get_end_iter()
@@ -156,16 +200,7 @@ class Chat(activity.Activity):
 		aniter = buf.get_end_iter()
 		buf.insert(aniter, "\n")
 
-	def _insert_sketch(self, sketch):
-		"""Insert a sketch object into the chat buffer."""
-		pass
-
-	def recv_message(self, buddy, msg):
-		"""Insert a remote chat message into the chat buffer."""
-		self._insert_rich_message(buddy.get_nick_name(), msg)
-
-	def send_text_message(self, text):
-		"""Send a chat message and insert it into the local buffer."""
+	def send_message(self, text):
 		if len(text) <= 0:
 			return
 		self._stream_writer.write(text)
@@ -292,9 +327,19 @@ class GroupChat(Chat):
 	def _ui_setup(self, base):
 		Chat._ui_setup(self, base)
 
+		vbox = gtk.VBox()
+
 		sidebar = self._create_sidebar()
-		self._hbox.pack_start(sidebar, False)
+		vbox.pack_start(sidebar)
 		sidebar.show()
+		
+		toolbox = self._create_toolbox()
+		vbox.pack_start(toolbox, False)
+		toolbox.show()
+		
+		self._hbox.pack_start(vbox, False)
+		vbox.show()
+		
 		self._plug.show_all()
 
 	def activity_on_connected_to_shell(self):
@@ -357,7 +402,7 @@ class GroupChat(Chat):
 		self._buddy_list_model.set(aniter, self._MODEL_COL_ICON, self._pixbuf_active_chat)
 
 	def _group_recv_message(self, buddy, msg):
-		self.recv_message(buddy, msg)
+		Chat.recv_message(self, buddy, msg)
 		self._controller.notify_new_message(self, None)
 
 	def _buddy_recv_message(self, buddy, msg):
@@ -391,8 +436,8 @@ class ChatShell(dbus.service.Object):
 		self._group_chat.activity_connect_to_shell()
 
 	@dbus.service.method('com.redhat.Sugar.ChatShell')
-	def send_text_message(self, message):
-		self._group_chat.send_text_message(message)
+	def send_message(self, message):
+		self._group_chat.send_message(message)
 
 if len(sys.argv) > 1 and sys.argv[1] == "--console":		
 	sys.stdout = LogWriter("Chat")
