@@ -15,8 +15,7 @@ from sugar.shell import activity
 from sugar.p2p.Group import Group
 from sugar.p2p.Group import LocalGroup
 from sugar.p2p.Service import Service
-from sugar.p2p.StreamReader import StreamReader
-from sugar.p2p.StreamWriter import StreamWriter
+from sugar.p2p.Stream import Stream
 from sugar.session.LogWriter import LogWriter
 import sugar.env
 
@@ -177,10 +176,7 @@ class BuddyChat(Chat):
 		Chat.__init__(self, controller)
 
 	def _start(self):
-		group = self._controller.get_group()
-		buddy_name = self._buddy.get_service_name()
-		service = group.get_service(buddy_name, CHAT_SERVICE_TYPE)
-		self._stream_writer = StreamWriter(group, service)
+		self._stream_writer = self._controller.new_buddy_writer(self._buddy.get_service_name())
 
 	def activity_on_connected_to_shell(self):
 		Chat.activity_on_connected_to_shell(self)
@@ -220,26 +216,33 @@ class GroupChat(Chat):
 	def get_group(self):
 		return self._group
 
+	def new_buddy_writer(self, buddy_name):
+		service = self._group.get_service(buddy_name, CHAT_SERVICE_TYPE)
+		return self._buddy_stream.new_writer(service)
+
 	def _start(self):
 		self._group = LocalGroup()
 		self._group.add_presence_listener(self._on_group_event)
 		self._group.join()
 		
 		name = self._group.get_owner().get_service_name()
-		service = Service(name, CHAT_SERVICE_TYPE, CHAT_SERVICE_PORT)
-		self._buddy_reader = StreamReader(self._group, service)
-		self._buddy_reader.set_listener(self._buddy_recv_message)
-		service.register(self._group)
 
-		service = Service(name, GROUP_CHAT_SERVICE_TYPE,
+		# Group controls the Stream for incoming messages for
+		# specific buddy chats
+		buddy_service = Service(name, CHAT_SERVICE_TYPE, CHAT_SERVICE_PORT)
+		self._buddy_stream = Stream.new_from_service(buddy_service, self._group)
+		self._buddy_stream.set_data_listener(self._buddy_recv_message)
+		buddy_service.register(self._group)
+
+		# Group chat Stream
+		group_service = Service(name, GROUP_CHAT_SERVICE_TYPE,
 						  GROUP_CHAT_SERVICE_PORT,
 						  GROUP_CHAT_SERVICE_ADDRESS)
-		self._group.add_service(service)				  
+		self._group.add_service(group_service)				  
 		
-		self._buddy_reader = StreamReader(self._group, service)
-		self._buddy_reader.set_listener(self.recv_message)
-		
-		self._stream_writer = StreamWriter(self._group, service)
+		self._group_stream = Stream.new_from_service(group_service, self._group)
+		self._group_stream.set_data_listener(self.recv_message)
+		self._stream_writer = self._group_stream.new_writer()
 
 	def _create_sidebar(self):
 		vbox = gtk.VBox(False, 6)
@@ -404,4 +407,7 @@ if len(sys.argv) > 1 and sys.argv[1] == "--console":
 	sys.stderr = LogWriter("Chat")
 
 ChatShell.get_instance().open_group_chat()
-gtk.main()
+try:
+	gtk.main()
+except KeyboardInterrupt:
+	pass

@@ -8,7 +8,7 @@ sugar_PYTHON =			\
 	NotificationListener.py	\
 	Notifier.py		\
 	Service.py		\
-	StreamReader.py		\
-	StreamWriter.py		\
+	Stream.py		\
+	MostlyReliablePipe.py \
 	network.py		\
 	presence.py
