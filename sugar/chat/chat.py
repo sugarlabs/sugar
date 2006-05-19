@@ -32,6 +32,7 @@ class Chat(activity.Activity):
 	def __init__(self, controller):
 		self._controller = controller
 		activity.Activity.__init__(self)
+		self._stream_writer = None
 
 	def activity_on_connected_to_shell(self):
 		self.activity_set_tab_text(self._act_name)
@@ -146,7 +147,6 @@ class Chat(activity.Activity):
 
 	def recv_message(self, buddy, msg):
 		self._insert_rich_message(buddy.get_nick_name(), msg)
-		self._controller.notify_new_message(self, buddy)
 
 	def _insert_rich_message(self, nick, msg):
 		buf = self._chat_view.get_buffer()
@@ -159,15 +159,13 @@ class Chat(activity.Activity):
 		aniter = buf.get_end_iter()
 		buf.insert(aniter, "\n")
 
-	def _local_message(self, success, text):
-		if not success:
-			message = "Error: %s\n" % text
-			buf = self._chat_view.get_buffer()
-			aniter = buf.get_end_iter()
-			buf.insert(aniter, message)
-		else:
-			owner = self._controller.get_group().get_owner()
-			self._insert_rich_message(owner.get_nick_name(), text)
+	def send_message(self, text):
+		if len(text) <= 0:
+			return
+		self._stream_writer.write(text)
+		owner = self._controller.get_group().get_owner()
+		self._insert_rich_message(owner.get_nick_name(), text)
+
 
 class BuddyChat(Chat):
 	def __init__(self, controller, buddy):
@@ -175,28 +173,22 @@ class BuddyChat(Chat):
 		self._act_name = "Chat: %s" % buddy.get_nick_name()
 		Chat.__init__(self, controller)
 
-	def _start(self):
-		self._stream_writer = self._controller.new_buddy_writer(self._buddy.get_service_name())
-
 	def activity_on_connected_to_shell(self):
 		Chat.activity_on_connected_to_shell(self)
 		self.activity_set_can_close(True)
 		self.activity_set_tab_icon_name("im")
 		self.activity_show_icon(True)
-		self._start()
+		self._stream_writer = self._controller.new_buddy_writer(self._buddy.get_service_name())
 		
 	def recv_message(self, sender, msg):
 		Chat.recv_message(self, self._buddy, msg)
-
-	def send_message(self, text):
-		if len(text) > 0:
-			self._stream_writer.write(text)
-			self._local_message(True, text)
+		self._controller.notify_new_message(self, self._buddy)
 
 	def activity_on_close_from_user(self):
 		Chat.activity_on_close_from_user(self)
 		del self._chats[self._buddy]
 			
+
 class GroupChat(Chat):
 
 	_MODEL_COL_NICK = 0
@@ -241,7 +233,7 @@ class GroupChat(Chat):
 		self._group.add_service(group_service)				  
 		
 		self._group_stream = Stream.new_from_service(group_service, self._group)
-		self._group_stream.set_data_listener(self.recv_message)
+		self._group_stream.set_data_listener(self._group_recv_message)
 		self._stream_writer = self._group_stream.new_writer()
 
 	def _create_sidebar(self):
@@ -358,24 +350,18 @@ class GroupChat(Chat):
 		aniter = self._get_iter_for_buddy(buddy)
 		self._buddy_list_model.set(aniter, self._MODEL_COL_ICON, self._pixbuf_active_chat)
 
-	def send_message(self, text):
-		if len(text) > 0:
-			self._stream_writer.write(text)
-		self._local_message(True, text)
+	def _group_recv_message(self, buddy, msg):
+		Chat.recv_message(self, buddy, msg)
+		self._controller.notify_new_message(self, None)
 
-	def recv_message(self, buddy, msg):
-		if buddy:
-			self._insert_rich_message(buddy.get_nick_name(), msg)
-			self._controller.notify_new_message(self, None)
-
-	def _buddy_recv_message(self, sender, msg):
-		if not self._chats.has_key(sender):
-			chat = BuddyChat(self, sender)
-			self._chats[sender] = chat
+	def _buddy_recv_message(self, buddy, msg):
+		if not self._chats.has_key(buddy):
+			chat = BuddyChat(self, buddy)
+			self._chats[buddy] = chat
 			chat.activity_connect_to_shell()
 		else:
-			chat = self._chats[sender]
-		chat.recv_message(sender, msg)
+			chat = self._chats[buddy]
+		chat.recv_message(buddy, msg)
 
 class ChatShell(dbus.service.Object):
 	instance = None
