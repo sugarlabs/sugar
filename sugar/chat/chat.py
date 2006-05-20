@@ -43,17 +43,22 @@ class Chat(activity.Activity):
 		self._plug.show_all()
 	
 	def _create_toolbox(self):
-		vbox = gtk.VBox()
+		vbox = gtk.VBox(False, 12)
 		
 		toolbox = Toolbox()
 		toolbox.connect('tool-selected', self._tool_selected)
 		vbox.pack_start(toolbox, False)
 		toolbox.show()
 		
+		button_box = gtk.HButtonBox()
+
 		send_button = gtk.Button('Send')
-		vbox.pack_start(send_button, False)
+		button_box.pack_start(send_button, False)
 		send_button.connect('clicked', self.__send_button_clicked_cb)
 
+		vbox.pack_start(button_box, False)
+		button_box.show()
+	
 		return vbox
 		
 	def __send_button_clicked_cb(self, button):
@@ -390,7 +395,7 @@ class GroupChat(Chat):
 	def _ui_setup(self, base):
 		Chat._ui_setup(self, base)
 
-		vbox = gtk.VBox()
+		vbox = gtk.VBox(False, 12)
 
 		sidebar = self._create_sidebar()
 		vbox.pack_start(sidebar)

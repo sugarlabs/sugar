@@ -26,6 +26,13 @@ class SketchPad(gtk.DrawingArea):
 		rect = self.get_allocation()
 		ctx = widget.window.cairo_create()
 		
+		ctx.set_source_rgb(0.6, 1, 0.4)
+		ctx.rectangle(0, 0, rect.width, rect.height)
+		ctx.fill_preserve()
+		
+		ctx.set_source_rgb(0, 0.3, 0.2)
+		ctx.stroke()
+		
 		for sketch in self._sketches:
 			sketch.draw(ctx)
 		
