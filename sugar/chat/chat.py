@@ -57,7 +57,7 @@ class Chat(activity.Activity):
 		return vbox
 		
 	def __send_button_clicked_cb(self, button):
-		print self._sketchpad.to_svg()
+		self.send_sketch(self._sketchpad.to_svg())
 	
 	def _tool_selected(self, toolbox, tool_id):
 		if tool_id == 'text':
@@ -197,13 +197,54 @@ class Chat(activity.Activity):
 		aniter = buf.get_end_iter()
 		buf.insert(aniter, "\n")
 
-	def _insert_sketch(self, sketch):
+	def _insert_sketch(self, buddy, svgdata):
 		"""Insert a sketch object into the chat buffer."""
-		pass
+		print "Got SVG: %s" % svgdata[:50]
+
+	def _get_first_richtext_chunk(self, msg):
+		rt_last = -1
+		tag_rt_start = "<richtext>"
+		tag_rt_end = "</richtext>"
+		rt_first = msg.find(tag_rt_start)
+		length = -1
+		if rt_first >= 0:
+			length = len(msg)
+			rt_last = msg.find(tag_rt_end, rt_first)
+		if rt_first >= 0 and rt_last >= (rt_first + len(tag_rt_start)) and length > 0:
+			return msg[rt_first:rt_last + len(tag_rt_end)]
+		return None
+
+	def _get_first_sketch_chunk(self, msg):
+		svg_last = -1
+		tag_svg_start = "<svg"
+		tag_svg_end = "</svg>"
+		svg_first = msg.find(tag_svg_start)
+		length = -1
+		if svg_first >= 0:
+			length = len(msg)
+			svg_last = msg.find(tag_svg_end, svg_first)
+		if svg_first >= 0 and svg_last >= (svg_first + len(tag_svg_start)) and length > 0:
+			return msg[svg_first:svg_last + len(tag_svg_end)]
+		return None
 
 	def recv_message(self, buddy, msg):
 		"""Insert a remote chat message into the chat buffer."""
-		self._insert_rich_message(buddy.get_nick_name(), msg)
+		chunk = self._get_first_richtext_chunk(msg)
+		if chunk:
+			self._insert_rich_message(buddy.get_nick_name(), chunk)
+			return
+
+		chunk = self._get_first_sketch_chunk(msg)
+		if chunk:
+			self._insert_sketch(buddy.get_nick_name(), chunk)
+			return
+
+	def send_sketch(self, svgdata):
+		if not svgdata or not len(svgdata):
+			return
+		self._stream_writer.write(svgdata)
+		owner = self._controller.get_group().get_owner()
+		self._insert_sketch(owner.get_nick_name(), svgdata)
 
 	def send_text_message(self, text):
 		"""Send a chat message and insert it into the local buffer."""
