@@ -197,9 +197,19 @@ class Chat(activity.Activity):
 		aniter = buf.get_end_iter()
 		buf.insert(aniter, "\n")
 
-	def _insert_sketch(self, buddy, svgdata):
+	def _insert_sketch(self, nick, svgdata):
 		"""Insert a sketch object into the chat buffer."""
-		print "Got SVG: %s" % svgdata[:50]
+		pbl = gtk.gdk.PixbufLoader("svg")
+		pbl.write(svgdata)
+		pbl.close()
+		pbuf = pbl.get_pixbuf()
+		
+		buf = self._chat_view.get_buffer()
+		aniter = buf.get_end_iter()
+		buf.insert(aniter, nick + ": ")
+		buf.insert_pixbuf(aniter, pbuf)
+		aniter = buf.get_end_iter()
+		buf.insert(aniter, "\n")
 
 	def _get_first_richtext_chunk(self, msg):
 		rt_last = -1
@@ -218,13 +228,19 @@ class Chat(activity.Activity):
 		svg_last = -1
 		tag_svg_start = "<svg"
 		tag_svg_end = "</svg>"
+		desc_start = msg.find("<?xml version='1.0' encoding='UTF-8'?>")
+		if desc_start < 0:
+			return None
+		ignore = msg.find("<!DOCTYPE svg")
+		if ignore < 0:
+			return None
 		svg_first = msg.find(tag_svg_start)
 		length = -1
 		if svg_first >= 0:
 			length = len(msg)
 			svg_last = msg.find(tag_svg_end, svg_first)
 		if svg_first >= 0 and svg_last >= (svg_first + len(tag_svg_start)) and length > 0:
-			return msg[svg_first:svg_last + len(tag_svg_end)]
+			return msg[desc_start:svg_last + len(tag_svg_end)]
 		return None
 
 	def recv_message(self, buddy, msg):
