@@ -59,7 +59,7 @@ class RichTextView(gtk.TextView):
 		it = self.__get_event_iter(event)
 		if it and self.__iter_is_link(it):
 			buf = self.get_buffer()
-			address_tag = buf.get_tag_table().lookup("object-id")
+			address_tag = buf.get_tag_table().lookup("link-address")
 
 			address_end = it.copy()
 			address_end.backward_to_tag_toggle(address_tag)
@@ -81,18 +81,9 @@ class RichTextBuffer(gtk.TextBuffer):
 
 	def append_link(self, title, address):
 		it = self.get_iter_at_mark(self.get_insert())
-		self.insert_with_tags_by_name(it, address, "link", "object-id")
+		self.insert_with_tags_by_name(it, address, "link", "link-address")
 		self.insert_with_tags_by_name(it, title, "link")
-
-	def append_icon(self, name, it = None):
-		if not it:
-			it = self.get_iter_at_mark(self.get_insert())
-
-		self.insert_with_tags_by_name(it, name, "icon", "object-id")
-		icon_theme = gtk.icon_theme_get_default()
-		pixbuf = icon_theme.load_icon(name, 16, 0)
-		self.insert_pixbuf(it, pixbuf)
-
+		
 	def apply_tag(self, tag_name):
 		self.active_tags.append(tag_name)
 		
@@ -110,13 +101,11 @@ class RichTextBuffer(gtk.TextBuffer):
 			self.remove_tag_by_name(tag_name, start, end)
 	
 	def __create_tags(self):
-		tag = self.create_tag("icon")
-
 		tag = self.create_tag("link")
 		tag.set_property("underline", pango.UNDERLINE_SINGLE)
 		tag.set_property("foreground", "#0000FF")
 
-		tag = self.create_tag("object-id")
+		tag = self.create_tag("link-address")
 		tag.set_property("invisible", True)
 
 		tag = self.create_tag("bold")
@@ -235,8 +224,6 @@ class RichTextHandler(xml.sax.handler.ContentHandler):
 			self.tags.append(tag)
 		if name == "link":
 			self.href = attrs['href']
-		elif name == "icon":
-			self.buf.append_icon(attrs['name'], self.buf.get_end_iter())
  
 	def characters(self, data):
 		start_it = it = self.buf.get_end_iter()
@@ -248,8 +235,8 @@ class RichTextHandler(xml.sax.handler.ContentHandler):
 			self.buf.apply_tag_by_name(tag, start_it, it)
 			if tag == "link":
 				self.buf.insert_with_tags_by_name(start_it, self.href,
-											      "link", "object-id")
-
+											      "link", "link-address")
+ 
 	def endElement(self, name):
 		if not self._done and self._in_richtext:
 			if name != "richtext":
@@ -271,16 +258,8 @@ class RichTextSerializer:
 			return "font-size-" + attributes["size"]
 		elif el_name == "link":
 			return "link"
-		elif el_name == "icon":
-			return "icon"
 		else:
 			return None
-
-	def _parse_object_id(self, it):
-		object_id_tag = self.buf.get_tag_table().lookup("object-id")
-		end = it.copy()
-		end.forward_to_tag_toggle(object_id_tag)
-		return self.buf.get_text(it, end)
 
 	def serialize_tag_start(self, tag, it):
 		name = tag.get_property("name")
@@ -289,12 +268,12 @@ class RichTextSerializer:
 		elif name == "italic":
 			return "<italic>"
 		elif name == "link":
-			address = self._parse_object_id(it)
+			address_tag = self.buf.get_tag_table().lookup("link-address")
+			end = it.copy()
+			end.forward_to_tag_toggle(address_tag)
+			address = self.buf.get_text(it, end)
 			return "<link " + "href=\"" + address + "\">"
-		elif name == "icon":
-			name = self._parse_object_id(it)
-			return "<icon " + "name=\"" + name + "\"/>"
-		elif name == "object-id":
+		elif name == "link-address":
 			return ""
 		elif name.startswith("font-size-"):
 			tag_name = name.replace("font-size-", "", 1)
@@ -310,9 +289,7 @@ class RichTextSerializer:
 			return "</italic>"
 		elif name == "link":
 			return "</link>"
-		elif name == "icon":
-			return ""
-		elif name == "object-id":
+		elif name == "link-address":
 			return ""
 		elif name.startswith("font-size-"):
 			return "</font>"
@@ -392,7 +369,6 @@ if __name__ == "__main__":
 	test_xml += "<bold><italic>Test two</italic></bold>"
 	test_xml += "<font size=\"xx-small\">Test three</font>"
 	test_xml += "<link href=\"http://www.gnome.org\">Test link</link>"
-	test_xml += "<icon name=\"stock_help-chat\"/>"
 	test_xml += "</richtext>"
 
 	RichTextSerializer().deserialize(test_xml, rich_buf)

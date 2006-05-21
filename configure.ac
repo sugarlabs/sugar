@@ -1,4 +1,4 @@
-AC_INIT([Sugar],[0.6],[],[sugar])
+AC_INIT([Sugar],[0.4],[],[sugar])
 
 AC_PREREQ([2.59])
 
@@ -21,7 +21,6 @@ sugar/Makefile
 sugar/__installed__.py
 sugar/browser/Makefile
 sugar/chat/Makefile
-sugar/chat/sketchpad/Makefile
 sugar/p2p/Makefile
 sugar/p2p/model/Makefile
 sugar/shell/Makefile

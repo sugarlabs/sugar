@@ -4,9 +4,6 @@ try:
 	from sugar.__uninstalled__ import *
 except ImportError:
 	from sugar.__installed__ import *
-
-def get_user_dir():
-	return os.path.expanduser('~/.sugar/')
 		
 def get_data_file(filename):
 	for data_dir in get_data_dirs():

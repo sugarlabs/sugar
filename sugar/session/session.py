@@ -20,7 +20,7 @@ def start(console):
 		act_dir = os.path.join(data_dir, env.get_activities_dir())
 		activities_dirs.append(act_dir)
 
-	activities_dirs.append(os.path.join(env.get_user_dir(), 'activities'))
+	activities_dirs.append(os.path.expanduser('~/.sugar/activities'))
 	
 	for activities_dir in activities_dirs:
 		if os.path.isdir(activities_dir):

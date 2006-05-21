@@ -16,6 +16,4 @@ activitydir = $(pkgdatadir)/activities
 activity_DATA = browser.activity
 
 EXTRA_DIST =			\
-	$(rc_DATA)		\
-	$(activity_DATA)	\
 	$(icon_DATA)

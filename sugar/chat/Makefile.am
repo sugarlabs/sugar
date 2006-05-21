@@ -1,5 +1,3 @@
-SUBDIRS = sketchpad
-
 sugardir = $(pythondir)/sugar/chat
 sugar_PYTHON =		\
 	__init__.py	\
@@ -14,6 +12,4 @@ icon_DATA =			\
 activitydir = $(pkgdatadir)/activities
 activity_DATA = chat.activity
 
-EXTRA_DIST = \
-	$(icon_DATA)		\
-	$(activity_DATA)
+EXTRA_DIST = $(icon_DATA)

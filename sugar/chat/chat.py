@@ -19,7 +19,6 @@ from sugar.p2p.Stream import Stream
 from sugar.session.LogWriter import LogWriter
 from sugar.chat.sketchpad.Toolbox import Toolbox
 from sugar.chat.sketchpad.SketchPad import SketchPad
-from sugar.chat.Emoticons import Emoticons
 import sugar.env
 
 import richtext
@@ -48,6 +47,7 @@ class Chat(activity.Activity):
 		
 		toolbox = Toolbox()
 		toolbox.connect('tool-selected', self._tool_selected)
+		toolbox.connect('color-selected', self._color_selected)
 		vbox.pack_start(toolbox, False)
 		toolbox.show()
 		
@@ -64,6 +64,9 @@ class Chat(activity.Activity):
 		
 	def __send_button_clicked_cb(self, button):
 		self.send_sketch(self._sketchpad.to_svg())
+
+	def _color_selected(self, toolbox, color):
+		self._sketchpad.set_color(color)
 	
 	def _tool_selected(self, toolbox, tool_id):
 		if tool_id == 'text':
@@ -193,8 +196,6 @@ class Chat(activity.Activity):
 		# FIXME self._controller.notify_activate(self)
 
 	def _insert_rich_message(self, nick, msg):
-		msg = Emoticons.get_instance().replace(msg)
-	
 		buf = self._chat_view.get_buffer()
 		aniter = buf.get_end_iter()
 		buf.insert(aniter, nick + ": ")
