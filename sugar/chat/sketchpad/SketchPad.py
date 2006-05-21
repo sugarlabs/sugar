@@ -41,17 +41,22 @@ class SketchPad(gtk.DrawingArea):
 	def add_sketch(self, sketch):
 		self._sketches.append(sketch)
 	
+	def add_point(self, event):
+		if self._active_sketch:
+			self._active_sketch.add_point(event.x, event.y)	
+		self.window.invalidate_rect(None, False)
+	
 	def __button_press_cb(self, widget, event):
 		self._active_sketch = Sketch()
 		self.add_sketch(self._active_sketch)
+		self.add_point(event)
 	
 	def __button_release_cb(self, widget, event):
+		self.add_point(event)
 		self._active_sketch = None
 	
 	def __motion_notify_cb(self, widget, event):
-		if self._active_sketch:
-			self._active_sketch.add_point(event.x, event.y)
-		self.window.invalidate_rect(None, False)
+		self.add_point(event)
 	
 	def to_svg(self):
 		d = drawing()
