@@ -1,12 +1,6 @@
 import xmlrpclib
 import socket
 import traceback
-import threading
-
-import pygtk
-pygtk.require('2.0')
-import gobject
-
 
 import network
 from MostlyReliablePipe import MostlyReliablePipe
@@ -38,7 +32,7 @@ class Stream(object):
 				self._callback(self._group.get_buddy(nick_name), data)
 
 
-class UnicastStreamWriterBase(object):
+class UnicastStreamWriter(object):
 	def __init__(self, stream, service, owner_nick_name):
 		# set up the writer
 		if not service:
@@ -48,10 +42,6 @@ class UnicastStreamWriterBase(object):
 		self._address = self._service.get_address()
 		self._port = self._service.get_port()
 		self._xmlrpc_addr = "http://%s:%d" % (self._address, self._port)
-
-class UnicastStreamWriter(UnicastStreamWriterBase):
-	def __init__(self, stream, service, owner_nick_name):
-		UnicastStreamWriterBase.__init__(self, stream, service, owner_nick_name)
 		self._writer = xmlrpclib.ServerProxy(self._xmlrpc_addr)
 
 	def write(self, data):
@@ -71,60 +61,6 @@ class UnicastStreamWriter(UnicastStreamWriterBase):
 		except (socket.error, xmlrpclib.Fault, xmlrpclib.ProtocolError):
 			traceback.print_exc()
 		return None
-
-
-class ThreadedRequest(threading.Thread):
-	def __init__(self, controller, addr, method, response_cb, user_data, *args):
-		threading.Thread.__init__(self)
-		self._controller = controller
-		self._method = method
-		self._args = args
-		self._response_cb = response_cb
-		self._user_data = user_data
-		self._writer = xmlrpclib.ServerProxy(addr)
-
-	def run(self):
-		response = None
-		try:
-			method = getattr(self._writer, self._method)
-			response = method(*self._args)
-		except (socket.error, xmlrpclib.Fault, xmlrpclib.ProtocolError):
-			traceback.print_exc()
-		if self._response_cb:
-			gobject.idle_add(self._response_cb, response, self._user_data)
-		self._controller.notify_request_done(self)
-
-class ThreadedUnicastStreamWriter(UnicastStreamWriterBase):
-	def __init__(self, stream, service, owner_nick_name):
-		self._requests_lock = threading.Lock()
-		self._requests = []
-		UnicastStreamWriterBase.__init__(self, stream, service, owner_nick_name)
-
-	def _add_request(self, request):
-		self._requests_lock.acquire()
-		if not request in self._requests:
-			self._requests.append(request)
-		self._requests_lock.release()
-
-	def write(self, response_cb, user_data, data):
-		"""Write some data to the default endpoint of this pipe on the remote server."""
-		request = ThreadedRequest(self, self._xmlrpc_addr, "message", response_cb,
-				user_data, self._owner_nick_name, data)
-		self._add_request(request)
-		request.start()
-
-	def custom_request(self, method_name, response_cb, user_data, *args):
-		"""Call a custom XML-RPC method on the remote server."""
-		request = ThreadedRequest(self, self._xmlrpc_addr, method_name, response_cb,
-				user_data, *args)
-		self._add_request(request)
-		request.start()
-
-	def notify_request_done(self, request):
-		self._requests_lock.acquire()
-		if request in self._requests:
-			self._requests.remove(request)
-		self._requests_lock.release()
 
 
 class UnicastStream(Stream):
@@ -158,11 +94,8 @@ class UnicastStream(Stream):
 			raise ValueError("Handler name 'message' is a reserved handler.")
 		self._reader.register_function(handler, name)
 
-	def new_writer(self, service, threaded=False):
-		if threaded:
-			return ThreadedUnicastStreamWriter(self, service, self._owner_nick_name)
-		else:
-			return UnicastStreamWriter(self, service, self._owner_nick_name)
+	def new_writer(self, service):
+		return UnicastStreamWriter(self, service, self._owner_nick_name)
 
 
 class MulticastStream(Stream):
@@ -182,5 +115,5 @@ class MulticastStream(Stream):
 		[ nick_name, data ] = data.split(" |**| ", 2)
 		self.recv(nick_name, data)
 
-	def new_writer(self, service=None, threaded=False):
+	def new_writer(self, service=None):
 		return self
