@@ -582,6 +582,10 @@ class GroupChat(Chat):
 						gobject.idle_add(self._request_buddy_icon, buddy)
 		elif action == Group.SERVICE_REMOVED:
 			pass
+			
+	def __buddy_icon_changed_cb(self, buddy):
+		it = self._get_iter_for_buddy(buddy)
+		self._buddy_list_model.set(it, self._MODEL_COL_ICON, buddy.get_icon_pixbuf())
 
 	def _on_group_presence_event(self, action, buddy):
 		if buddy.get_nick_name() == self._group.get_owner().get_nick_name():
@@ -591,8 +595,8 @@ class GroupChat(Chat):
 			aniter = self._buddy_list_model.append(None)
 			self._buddy_list_model.set(aniter,
 									   self._MODEL_COL_NICK, buddy.get_nick_name(),
-									   self._MODEL_COL_ICON, buddy.get_icon_pixbuf(),
 									   self._MODEL_COL_BUDDY, buddy)
+			buddy.connect('icon-changed', self.__buddy_icon_changed_cb)
 		elif action == Group.BUDDY_LEAVE:
 			aniter = self._get_iter_for_buddy(buddy)
 			if aniter:

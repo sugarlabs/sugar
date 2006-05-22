@@ -110,6 +110,10 @@ class Activity(dbus.service.Object):
 			scaled_pixbuf = pixbuf.scale_simple(16, 16, gtk.gdk.INTERP_BILINEAR)
 			self.activity_set_icon(scaled_pixbuf)
 
+	@dbus.service.method("com.redhat.Sugar.Activity", \
+						 in_signature="", \
+						 out_signature="")
+
 	def lost_focus(self):
 		self.activity_on_lost_focus()
 

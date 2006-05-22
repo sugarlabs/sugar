@@ -90,10 +90,6 @@ class LocalGroup(Group):
 		if self._buddies.has_key(name):
 			return self._buddies[name]
 		return None
-
-	def notify_service_registered(self, service):
-		"""A new service is automatically owned by the owner of this group."""
-		self._owner.notify_service_registered(service)
 	
 	def _add_buddy(self, buddy):
 		bid = buddy.get_nick_name()
@@ -134,7 +130,7 @@ class LocalGroup(Group):
 			if key == 'group_address':
 				service.set_group_address(value)
 
-		#print "ServiceResolved: name=%s, stype=%s, port=%s, address=%s" % (name, stype, port, address)
+		# print "ServiceResolved: name=%s, stype=%s, port=%s, address=%s" % (name, stype, port, address)
 		if stype in get_recognized_buddy_service_types():
 			# Service recognized as Buddy services either create a new
 			# buddy if one doesn't exist yet, or get added to the existing

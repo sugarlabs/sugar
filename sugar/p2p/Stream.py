@@ -69,7 +69,8 @@ class UnicastStreamWriter(UnicastStreamWriterBase):
 			method = getattr(self._writer, method_name)
 			return method(*args)
 		except (socket.error, xmlrpclib.Fault, xmlrpclib.ProtocolError):
-			traceback.print_exc()
+			pass
+			#traceback.print_exc()
 		return None
 
 

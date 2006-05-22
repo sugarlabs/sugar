@@ -3,7 +3,7 @@ import os
 
 import pygtk
 pygtk.require('2.0')
-import gtk
+import gtk, gobject
 
 from Service import Service
 from sugar import env
@@ -20,9 +20,14 @@ def recognize_buddy_service_type(stype):
 def get_recognized_buddy_service_types():
 	return __buddy_service_types[:]
 
+class Buddy(gobject.GObject):
+	__gsignals__ = {
+		'icon-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+						 ([]))
+	}
 
-class Buddy(object):
 	def __init__(self, service):
+		gobject.GObject.__init__(self)
 		self._services = {}
 		self._services[service.get_type()] = service
 		self._nick_name = service.get_name()
@@ -70,6 +75,7 @@ class Buddy(object):
 		"""Can only set icon for other buddies.  The Owner
 		takes care of setting it's own icon."""
 		self._icon = icon
+		self.emit('icon-changed')
 		
 
 class Owner(Buddy):
@@ -105,13 +111,3 @@ class Owner(Buddy):
 		
 	def register(self):
 		self._presence_service.register(self._group)
-
-	def notify_service_registered(self, service):
-		"""New services registered in our group are automatically owned
-		by us."""
-		self._services[service.get_type()] = service
-
-	def add_service(self, service):
-		"""Do nothing here, since all services we need to know about
-		are registered with us by our group."""
-		pass
