@@ -658,8 +658,6 @@ def main():
 		sys.stdout = LogWriter("Chat")
 		sys.stderr = LogWriter("Chat")
 
-	gtk.threads_init()
-	dbus.glib.threads_init()
 	ChatShell.get_instance().open_group_chat()
 	try:
 		gtk.main()
