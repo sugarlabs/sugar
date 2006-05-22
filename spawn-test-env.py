@@ -15,11 +15,10 @@ def change_user(user):
 	return pwrec[6]
 
 def shell_watch_cb(pid, condition, user_data=None):
-	print "In shell watch callback."
 	gtk.main_quit()
 
 def main():
-	if len(sys.argv) < 1:
+	if len(sys.argv) < 2:
 		print "Usage: %s <test user>" % sys.argv[0]
 	user = sys.argv[1]
 
