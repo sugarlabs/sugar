@@ -277,7 +277,7 @@ class Chat(activity.Activity):
 		# FIXME self._controller.notify_activate(self)
 
 	def _insert_buddy(self, buf, nick):
-		buddy = self._group.get_buddy(nick)
+		buddy = self._controller.get_group().get_buddy(nick)
 
 		if buddy.get_icon():
 			pbl = gtk.gdk.PixbufLoader()
