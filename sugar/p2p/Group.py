@@ -141,10 +141,8 @@ class LocalGroup(Group):
 			# buddy
 			buddy = self.get_buddy(name)
 			if buddy:
-				print "Found buddy %s" % name
 				buddy.add_service(service)
 			else:
-				print "New buddy %s" % name
 				self._add_buddy(Buddy(service))
 			self.add_service(service)
 		elif stype.startswith(_OLPC_SERVICE_TYPE_PREFIX):
