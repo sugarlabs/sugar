@@ -2,7 +2,6 @@
 # -*- tab-width: 4; indent-tabs-mode: t -*- 
 
 import sys
-import base64
 
 import dbus
 import dbus.service
@@ -37,6 +36,8 @@ class Chat(activity.Activity):
 		self._controller = controller
 		activity.Activity.__init__(self)
 		self._stream_writer = None
+		
+		self._emt_popup = None
 
 	def activity_on_connected_to_shell(self):
 		self.activity_set_tab_text(self._act_name)
@@ -49,7 +50,6 @@ class Chat(activity.Activity):
 		
 		toolbox = Toolbox()
 		toolbox.connect('tool-selected', self._tool_selected)
-		toolbox.connect('color-selected', self._color_selected)
 		vbox.pack_start(toolbox, False)
 		toolbox.show()
 		
@@ -66,9 +66,6 @@ class Chat(activity.Activity):
 		
 	def __send_button_clicked_cb(self, button):
 		self.send_sketch(self._sketchpad.to_svg())
-
-	def _color_selected(self, toolbox, color):
-		self._sketchpad.set_color(color)
 	
 	def _tool_selected(self, toolbox, tool_id):
 		if tool_id == 'text':
@@ -158,8 +155,63 @@ class Chat(activity.Activity):
 
 			return True
 
+	def _create_emoticons_popup(self):
+		model = gtk.ListStore(gtk.gdk.Pixbuf, str)
+		
+		for name in Emoticons.get_instance().get_all():
+			icon_theme = gtk.icon_theme_get_default()
+			pixbuf = icon_theme.load_icon(name, 16, 0)
+			model.append([pixbuf, name])
+		
+		icon_view = gtk.IconView(model)
+		icon_view.connect('selection-changed', self.__emoticon_selection_changed_cb)
+		icon_view.set_pixbuf_column(0)
+		icon_view.set_selection_mode(gtk.SELECTION_SINGLE)
+		
+		frame = gtk.Frame()
+		frame.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+		frame.add(icon_view)
+		icon_view.show()		
+		
+		window = gtk.Window(gtk.WINDOW_POPUP)
+		window.add(frame)
+		frame.show()
+		
+		return window
+		
+	def __emoticon_selection_changed_cb(self, icon_view):
+		items = icon_view.get_selected_items()
+		if items:
+			model = icon_view.get_model()
+			icon_name = model[items[0]][1]
+			self._editor.get_buffer().append_icon(icon_name)
+		self._emt_popup.hide()
+
 	def _create_toolbar(self, rich_buf):
 		toolbar = richtext.RichTextToolbar(rich_buf)
+
+		item = gtk.ToolButton()
+
+		hbox = gtk.HBox(False, 6)
+
+		e_image = gtk.Image()
+		e_image.set_from_icon_name('stock_smiley-1', gtk.ICON_SIZE_SMALL_TOOLBAR)
+		hbox.pack_start(e_image)
+		e_image.show()
+		
+		arrow = gtk.Arrow(gtk.ARROW_DOWN, gtk.SHADOW_NONE)
+		hbox.pack_start(arrow)
+		arrow.show()
+
+		item.set_icon_widget(hbox)
+		item.set_homogeneous(False)
+		item.connect("clicked", self.__emoticons_button_clicked_cb)
+		toolbar.insert(item, -1)
+		item.show()
+		
+		separator = gtk.SeparatorToolItem()
+		toolbar.insert(separator, -1)
+		separator.show()
 
 		item = gtk.MenuToolButton(None, "Links")
 		item.set_menu(gtk.Menu())
@@ -168,6 +220,26 @@ class Chat(activity.Activity):
 		item.show()
 		
 		return toolbar
+		
+	def __emoticons_button_clicked_cb(self, button):
+		# FIXME grabs...
+		if not self._emt_popup:
+			self._emt_popup = self._create_emoticons_popup()
+
+		if self._emt_popup.get_property('visible'):
+			self._emt_popup.hide()
+		else:
+			width = 180
+			height = 130
+		
+			self._emt_popup.set_default_size(width, height)
+		
+			[x, y] = button.window.get_origin()
+			x += button.allocation.x
+			y += button.allocation.y - height
+			self._emt_popup.move(x, y)
+		
+			self._emt_popup.show()
 
 	def __link_activate_cb(self, item, link):
 		buf = self._editor.get_buffer()
@@ -296,7 +368,7 @@ class BuddyChat(Chat):
 		self.activity_set_tab_icon_name("im")
 		self.activity_show_icon(True)
 		self._stream_writer = self._controller.new_buddy_writer(self._buddy.get_service_name())
-
+		
 	def recv_message(self, sender, msg):
 		Chat.recv_message(self, self._buddy, msg)
 		self._controller.notify_new_message(self, self._buddy)
@@ -304,21 +376,7 @@ class BuddyChat(Chat):
 	def activity_on_close_from_user(self):
 		Chat.activity_on_close_from_user(self)
 		del self._chats[self._buddy]
-
-
-class BuddyIconRequestHandler(object):
-	def __init__(self, group, stream):
-		self._group = group
-		self._stream = stream
-		self._stream.register_handler(self._handle_buddy_icon_request, "get_buddy_icon")
-
-	def _handle_buddy_icon_request(self):
-		"""XMLRPC method, return the owner's icon encoded with base64."""
-		icon = self._group.get_owner().get_icon()
-		if icon:
-			return base64.b64encode(icon)
-		return ''
-
+			
 
 class GroupChat(Chat):
 
@@ -345,8 +403,7 @@ class GroupChat(Chat):
 
 	def _start(self):
 		self._group = LocalGroup()
-		self._group.add_presence_listener(self._on_group_presence_event)
-		self._group.add_service_listener(self._on_group_service_event)
+		self._group.add_presence_listener(self._on_group_event)
 		self._group.join()
 		
 		name = self._group.get_owner().get_service_name()
@@ -355,7 +412,6 @@ class GroupChat(Chat):
 		# specific buddy chats
 		buddy_service = Service(name, CHAT_SERVICE_TYPE, CHAT_SERVICE_PORT)
 		self._buddy_stream = Stream.new_from_service(buddy_service, self._group)
-		self._buddy_icon_handler = BuddyIconRequestHandler(self._group, self._buddy_stream)
 		self._buddy_stream.set_data_listener(self._buddy_recv_message)
 		buddy_service.register(self._group)
 
@@ -363,8 +419,8 @@ class GroupChat(Chat):
 		group_service = Service(name, GROUP_CHAT_SERVICE_TYPE,
 						  GROUP_CHAT_SERVICE_PORT,
 						  GROUP_CHAT_SERVICE_ADDRESS)
-		self._group.add_service(group_service)
-
+		self._group.add_service(group_service)				  
+		
 		self._group_stream = Stream.new_from_service(group_service, self._group)
 		self._group_stream.set_data_listener(self._group_recv_message)
 		self._stream_writer = self._group_stream.new_writer()
@@ -452,6 +508,7 @@ class GroupChat(Chat):
 	def _on_buddyList_buddy_selected(self, widget, *args):
 		(model, aniter) = widget.get_selection().get_selected()
 		name = self._buddy_list_model.get(aniter, self._MODEL_COL_NICK)
+		print "Selected %s" % name
 
 	def _on_buddyList_buddy_double_clicked(self, widget, *args):
 		""" Select the chat for this buddy or group """
@@ -463,28 +520,7 @@ class GroupChat(Chat):
 			self._chats[buddy] = chat
 			chat.activity_connect_to_shell()
 
-	def _request_buddy_icon(self, buddy):
-		writer = self.new_buddy_writer(buddy.get_service_name())
-		icon = writer.custom_request("get_buddy_icon")
-		if icon and len(icon):
-			icon = base64.b64decode(icon)
-			print "Setting buddy icon for '%s' to %s" % (buddy.get_nick_name(), icon)
-			buddy.set_icon(icon)
-
-	def _on_group_service_event(self, action, service):
-		if action == Group.SERVICE_ADDED:
-			# Look for the olpc chat service
-			if service.get_type() == CHAT_SERVICE_TYPE:
-				# Find the buddy this service belongs to
-				buddy = self._group.get_buddy(service.get_name())
-				if buddy and buddy.get_address() == service.get_address():
-					# Try to get the buddy's icon
-					if buddy.get_nick_name() != self._group.get_owner().get_nick_name():
-						self._request_buddy_icon(buddy)
-		elif action == Group.SERVICE_REMOVED:
-			pass
-
-	def _on_group_presence_event(self, action, buddy):
+	def _on_group_event(self, action, buddy):
 		if buddy.get_nick_name() == self._group.get_owner().get_nick_name():
 			# Do not show ourself in the buddy list
 			pass

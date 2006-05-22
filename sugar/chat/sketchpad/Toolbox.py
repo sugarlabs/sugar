@@ -18,9 +18,6 @@ class ColorButton(gtk.RadioButton):
 		self.add(drawing_area)
 		drawing_area.show()
 
-	def color(self):
-		return self._rgb
-
 	def expose(self, widget, event):
 		rect = widget.get_allocation()
 		ctx = widget.window.cairo_create()
@@ -34,9 +31,7 @@ class ColorButton(gtk.RadioButton):
 class Toolbox(gtk.VBox):
 	__gsignals__ = {
 		'tool-selected': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-						 ([gobject.TYPE_STRING])),
-		'color-selected': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-						 ([gobject.TYPE_PYOBJECT]))
+				         ([gobject.TYPE_STRING]))
 	}
 
 	def __init__(self):
@@ -101,5 +96,4 @@ class Toolbox(gtk.VBox):
 		self.emit("tool-selected", tool_id)
 	
 	def __color_clicked_cb(self, button, rgb):
-		self.emit("color-selected", button.color())
-
+		pass
