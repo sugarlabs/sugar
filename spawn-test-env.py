@@ -12,7 +12,7 @@ def change_user(user):
 		raise Exception("Username '%s' does not exist." % user)
 	uid = pwrec[2]
 	os.setuid(uid)
-	return pwrec[6]
+	return (pwrec[6], pwrec[5])
 
 def shell_watch_cb(pid, condition, user_data=None):
 	gtk.main_quit()
@@ -29,7 +29,7 @@ def main():
 	(xephyr_pid, ign1, ign2, ign3) = gobject.spawn_async(args, flags=gobject.SPAWN_STDERR_TO_DEV_NULL | gobject.SPAWN_STDOUT_TO_DEV_NULL)
 	print "Xepyhr pid is %d" % xephyr_pid
 
-	shell = change_user(user)
+	(shell, home) = change_user(user)
 
 	args = "/bin/dbus-daemon --session --print-address".split()
 	(dbus_pid, ign1, dbus_stdout, ign3) = gobject.spawn_async(args, flags=gobject.SPAWN_STDERR_TO_DEV_NULL, standard_output=True)
@@ -41,6 +41,7 @@ def main():
 
 	os.environ["DISPLAY"] = DISPLAY
 	os.environ["DBUS_SESSION_BUS_ADDRESS"] = addr
+	os.environ["HOME"] = home
 
 	args = "/usr/bin/metacity"
 	(metacity_pid, ign1, ign2, ign3) = gobject.spawn_async([args], flags=gobject.SPAWN_STDERR_TO_DEV_NULL | gobject.SPAWN_STDOUT_TO_DEV_NULL)
