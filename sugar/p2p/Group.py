@@ -1,6 +1,7 @@
 import avahi
 
 from Buddy import Buddy
+from Buddy import get_recognized_buddy_service_types
 from Buddy import Owner
 from Buddy import PRESENCE_SERVICE_TYPE
 from Service import Service
@@ -106,8 +107,14 @@ class LocalGroup(Group):
 			self._pdiscovery.resolve_service(interface, protocol, name, stype, domain,
 											 self._on_service_resolved)
 		elif action == presence.ACTION_SERVICE_REMOVED:
-			if stype == PRESENCE_SERVICE_TYPE:
-				self._remove_buddy(name)
+			if stype in get_recognized_buddy_service_types():
+				buddy = self.get_buddy(name)
+				if buddy:
+					buddy.remove_service(stype)
+				# Removal of the presence service removes the buddy too
+				if stype == PRESENCE_SERVICE_TYPE:
+					self._remove_buddy(name)
+				self.remove_service((name, stype))
 			elif stype.startswith(_OLPC_SERVICE_TYPE_PREFIX):
 				self.remove_service((name, stype))
 						
@@ -119,9 +126,20 @@ class LocalGroup(Group):
 		for prop in avahi.txt_array_to_string_array(txt):
 			(key, value) = prop.split('=')
 			if key == 'group_address':
-				service.set_group_address(value)		
+				service.set_group_address(value)
 
-		if stype == PRESENCE_SERVICE_TYPE:
-			self._add_buddy(Buddy(service, name))
-		elif stype.startswith(_OLPC_SERVICE_TYPE_PREFIX):
+		# print "ServiceResolved: name=%s, stype=%s, port=%s, address=%s" % (name, stype, port, address)
+		if stype in get_recognized_buddy_service_types():
+			# Service recognized as Buddy services either create a new
+			# buddy if one doesn't exist yet, or get added to the existing
+			# buddy
+			buddy = self.get_buddy(name)
+			if buddy:
+				buddy.add_service(service)
+			else:
+				self._add_buddy(Buddy(service))
 			self.add_service(service)
+		elif stype.startswith(_OLPC_SERVICE_TYPE_PREFIX):
+			# These services aren't associated with buddies
+			self.add_service(service)
+

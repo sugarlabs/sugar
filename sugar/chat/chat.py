@@ -14,6 +14,7 @@ import gtk, gobject
 
 from sugar.shell import activity
 from sugar.p2p.Group import Group
+from sugar.p2p import Buddy
 from sugar.p2p.Group import LocalGroup
 from sugar.p2p.Service import Service
 from sugar.p2p.Stream import Stream
@@ -34,6 +35,7 @@ GROUP_CHAT_SERVICE_PORT = 6200
 
 class Chat(activity.Activity):
 	def __init__(self, controller):
+		Buddy.recognize_buddy_service_type(CHAT_SERVICE_TYPE)
 		self._controller = controller
 		activity.Activity.__init__(self)
 		self._stream_writer = None
@@ -389,7 +391,7 @@ class BuddyChat(Chat):
 		self.activity_set_can_close(True)
 		self.activity_set_tab_icon_name("im")
 		self.activity_show_icon(True)
-		self._stream_writer = self._controller.new_buddy_writer(self._buddy.get_service_name())
+		self._stream_writer = self._controller.new_buddy_writer(self._buddy)
 
 	def recv_message(self, sender, msg):
 		Chat.recv_message(self, self._buddy, msg)
@@ -433,17 +435,17 @@ class GroupChat(Chat):
 	def get_group(self):
 		return self._group
 
-	def new_buddy_writer(self, buddy_name):
-		service = self._group.get_service(buddy_name, CHAT_SERVICE_TYPE)
-		return self._buddy_stream.new_writer(service)
+	def new_buddy_writer(self, buddy, threaded=False):
+		service = buddy.get_service(CHAT_SERVICE_TYPE)
+		return self._buddy_stream.new_writer(service, threaded=threaded)
 
 	def _start(self):
 		self._group = LocalGroup()
 		self._group.add_presence_listener(self._on_group_presence_event)
 		self._group.add_service_listener(self._on_group_service_event)
 		self._group.join()
-		
-		name = self._group.get_owner().get_service_name()
+
+		name = self._group.get_owner().get_nick_name()
 
 		# Group controls the Stream for incoming messages for
 		# specific buddy chats
@@ -557,13 +559,17 @@ class GroupChat(Chat):
 			self._chats[buddy] = chat
 			chat.activity_connect_to_shell()
 
-	def _request_buddy_icon(self, buddy):
-		writer = self.new_buddy_writer(buddy.get_service_name())
-		icon = writer.custom_request("get_buddy_icon")
+	def _request_buddy_icon_cb(self, response, user_data):
+		icon = response
+		buddy = user_data
 		if icon and len(icon):
 			icon = base64.b64decode(icon)
-			print "Setting buddy icon for '%s' to %s" % (buddy.get_nick_name(), icon)
+			print "Buddy icon for '%s' is size %d" % (buddy.get_nick_name(), len(icon))
 			buddy.set_icon(icon)
+
+	def _request_buddy_icon(self, buddy):
+		writer = self.new_buddy_writer(buddy, threaded=True)
+		icon = writer.custom_request("get_buddy_icon", self._request_buddy_icon_cb, buddy)
 
 	def _on_group_service_event(self, action, service):
 		if action == Group.SERVICE_ADDED:
@@ -574,6 +580,7 @@ class GroupChat(Chat):
 				if buddy and buddy.get_address() == service.get_address():
 					# Try to get the buddy's icon
 					if buddy.get_nick_name() != self._group.get_owner().get_nick_name():
+						print "Requesting buddy icon from '%s'." % buddy.get_nick_name()
 						self._request_buddy_icon(buddy)
 		elif action == Group.SERVICE_REMOVED:
 			pass
@@ -651,6 +658,7 @@ if len(sys.argv) > 1 and sys.argv[1] == "--console":
 
 ChatShell.get_instance().open_group_chat()
 try:
+	gtk.threads_init()
 	gtk.main()
 except KeyboardInterrupt:
 	pass
