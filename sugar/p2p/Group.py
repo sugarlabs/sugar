@@ -69,12 +69,14 @@ class LocalGroup(Group):
 
 	def add_service(self, service):
 		sid = (service.get_name(), service.get_type())
-		self._services[sid] = service
-		self._notify_service_added(service)
+		if not self._services.has_key(sid):
+			self._services[sid] = service
+			self._notify_service_added(service)
 
 	def remove_service(self, service_id):
-		self._notify_service_removed(service_id)
-		del self._services[service_id]
+		if self._services.has_key(service_id):
+			self._notify_service_removed(service_id)
+			del self._services[service_id]
 
 	def join(self):
 		self._owner.register()
