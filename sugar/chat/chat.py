@@ -322,6 +322,7 @@ class Chat(activity.Activity):
 		buf.insert(aniter, "\n")
 
 	def _get_first_richtext_chunk(self, msg):
+		"""Scan the message for the first richtext-tagged chunk and return it."""
 		rt_last = -1
 		tag_rt_start = "<richtext>"
 		tag_rt_end = "</richtext>"
@@ -335,6 +336,7 @@ class Chat(activity.Activity):
 		return None
 
 	def _get_first_sketch_chunk(self, msg):
+		"""Scan the message for the first SVG-tagged chunk and return it."""
 		svg_last = -1
 		tag_svg_start = "<svg"
 		tag_svg_end = "</svg>"
@@ -567,6 +569,9 @@ class GroupChat(Chat):
 			icon = base64.b64decode(icon)
 			print "Buddy icon for '%s' is size %d" % (buddy.get_nick_name(), len(icon))
 			buddy.set_icon(icon)
+		else:
+			# What the heck, try again!
+			gobject.timeout_add(1000, self._request_buddy_icon, buddy)
 
 	def _request_buddy_icon(self, buddy):
 		writer = self.new_buddy_writer(buddy, threaded=True)
