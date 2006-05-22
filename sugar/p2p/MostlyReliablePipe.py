@@ -679,8 +679,8 @@ class MostlyReliablePipe(object):
 		msg_seq = self._next_msg_seq()
 
 		# Pack the data into network byte order
-		template = "! %ds" % len(data)
-		data = struct.pack(template, data)
+		template = "! %ds" % len(str(data))
+		data = struct.pack(template, str(data))
 		master_sha = _sha_data(data)
 
 		# Split up the data into segments
