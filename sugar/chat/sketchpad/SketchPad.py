@@ -22,6 +22,10 @@ class SketchPad(gtk.DrawingArea):
 		self.connect("button-release-event", self.__button_release_cb)
 		self.connect("motion-notify-event", self.__motion_notify_cb)
 		self.connect('expose_event', self.expose)
+	
+	def clear(self):
+		self._sketches = []
+		self.window.invalidate_rect(None, False)
 
 	def expose(self, widget, event):
 		"""Draw the background of the sketchpad."""

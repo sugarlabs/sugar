@@ -70,6 +70,7 @@ class Chat(activity.Activity):
 		
 	def __send_button_clicked_cb(self, button):
 		self.send_sketch(self._sketchpad.to_svg())
+		self._sketchpad.clear()
 
 	def _color_selected(self, toolbox, color):
 		self._sketchpad.set_color(color)
