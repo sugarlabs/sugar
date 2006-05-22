@@ -278,15 +278,15 @@ class Chat(activity.Activity):
 
 	def _insert_buddy(self, buf, nick):
 		buddy = self._group.get_buddy(nick)
-		print buddy.get_nick_name()
 
-		pbl = gtk.gdk.PixbufLoader()
-		pbl.write(buddy.get_icon())
-		pbl.close()
-		pbuf = pbl.get_pixbuf()
+		if buddy.get_icon():
+			pbl = gtk.gdk.PixbufLoader()
+			pbl.write(buddy.get_icon())
+			pbl.close()
+			pbuf = pbl.get_pixbuf()
 		
-		aniter = buf.get_end_iter()
-		buf.insert_pixbuf(aniter, pbuf)
+			aniter = buf.get_end_iter()
+			buf.insert_pixbuf(aniter, pbuf)
 	
 		aniter = buf.get_end_iter()
 		buf.insert(aniter, nick + ": ")
