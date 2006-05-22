@@ -134,7 +134,7 @@ class LocalGroup(Group):
 			if key == 'group_address':
 				service.set_group_address(value)
 
-		print "ServiceResolved: name=%s, stype=%s, port=%s, address=%s" % (name, stype, port, address)
+		#print "ServiceResolved: name=%s, stype=%s, port=%s, address=%s" % (name, stype, port, address)
 		if stype in get_recognized_buddy_service_types():
 			# Service recognized as Buddy services either create a new
 			# buddy if one doesn't exist yet, or get added to the existing
