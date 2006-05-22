@@ -452,7 +452,7 @@ class GroupChat(Chat):
 		buddy_service = Service(name, CHAT_SERVICE_TYPE, CHAT_SERVICE_PORT)
 		self._buddy_stream = Stream.new_from_service(buddy_service, self._group)
 		self._buddy_icon_handler = BuddyIconRequestHandler(self._group, self._buddy_stream)
-		self._buddy_stream.set_data_listener(self._buddy_recv_message)
+		self._buddy_stream.set_data_listener(getattr(self, "_buddy_recv_message"))
 		buddy_service.register(self._group)
 
 		# Group chat Stream
@@ -654,10 +654,12 @@ class ChatShell(dbus.service.Object):
 
 
 def main():
-	if len(sys.argv) > 1 and sys.argv[1] == "--console":		
+	if len(sys.argv) > 1 and sys.argv[1] == "--console":
 		sys.stdout = LogWriter("Chat")
 		sys.stderr = LogWriter("Chat")
 
+	gtk.threads_init()
+	dbus.glib.threads_init()
 	ChatShell.get_instance().open_group_chat()
 	try:
 		gtk.main()
