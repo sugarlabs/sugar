@@ -13,7 +13,7 @@ class Store:
 	
 	def get_model(self, model_id):
 		if self._local_models.has_key(model_id):
-			return self._local_models(model_id)
+			return self._local_models[model_id]
 		else:
 			service = self._group.get_service(model_id, LocalModel.SERVICE_TYPE)
 			if service:
