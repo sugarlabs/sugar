@@ -271,10 +271,15 @@ class Chat(activity.Activity):
 		self.activity_shutdown()
 
 	def activity_on_lost_focus(self):
-		print "act %d: in activity_on_lost_focus" % self.activity_get_id()
+		activity.Activity.activity_on_lost_focus()
 
 	def activity_on_got_focus(self):
-		print "act %d: in activity_on_got_focus" % self.activity_get_id()
+		activity.Activity.activity_on_got_focus()
+		self.activity_set_has_changes(False)
+
+	def _message_inserted(self):
+		if not self.get_has_focus():
+			self.activity_set_has_changes(True)
 
 	def _insert_buddy(self, buf, nick):
 		buddy = self._controller.get_group().get_buddy(nick)
@@ -286,6 +291,8 @@ class Chat(activity.Activity):
 	
 		aniter = buf.get_end_iter()
 		buf.insert(aniter, nick + ": ")
+		
+		self._message_inserted()
 
 	def _insert_rich_message(self, nick, msg):
 		msg = Emoticons.get_instance().replace(msg)
@@ -299,6 +306,8 @@ class Chat(activity.Activity):
 
 		aniter = buf.get_end_iter()
 		buf.insert(aniter, "\n")
+		
+		self._message_inserted()
 
 	def _insert_sketch(self, nick, svgdata):
 		"""Insert a sketch object into the chat buffer."""

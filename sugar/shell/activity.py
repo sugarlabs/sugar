@@ -12,7 +12,10 @@ class Activity(dbus.service.Object):
 	""" Base Sugar activity object from which all other Activities should inherit """
 
 	def __init__(self):
-		pass
+		self._has_focus = False
+		
+	def get_has_focus(self):
+		return self._has_focus
 
 	def name_owner_changed(self, service_name, old_service_name, new_service_name):
 		#print "in name_owner_changed: svc=%s oldsvc=%s newsvc=%s"%(service_name, old_service_name, new_service_name)
@@ -102,6 +105,13 @@ class Activity(dbus.service.Object):
 						 in_signature="", \
 						 out_signature="")
 						 
+	def activity_set_has_changes(self, has_changes):
+		self.__activity_object.set_has_changes(has_changes)
+
+	@dbus.service.method("com.redhat.Sugar.Activity", \
+						 in_signature="", \
+						 out_signature="")
+						 
 	def activity_set_tab_icon_name(self, icon_name):
 		icon_theme = gtk.icon_theme_get_default()
 		icon_info = icon_theme.lookup_icon(icon_name, gtk.ICON_SIZE_MENU, 0)
@@ -161,6 +171,12 @@ class Activity(dbus.service.Object):
 	def activity_shutdown(self):
 		self.__activity_object.shutdown(reply_handler = self.__shutdown_reply_cb, error_handler = self.__shutdown_error_cb)
 
+	def activity_on_lost_focus(self):
+		self._has_focus = False;
+
+	def activity_on_got_focus(self):
+		self._has_focus = True
+
 	# pure virtual methods
 
 	def activity_on_connected_to_shell(self):
@@ -171,9 +187,3 @@ class Activity(dbus.service.Object):
  
 	def activity_on_close_from_user(self):
 		print "act %d: you need to override activity_on_close_from_user" % self.activity_get_id()
-
-	def activity_on_lost_focus(self):
-		print "act %d: you need to override activity_on_lost_focus" % self.activity_get_id()
-
-	def activity_on_got_focus(self):
-		print "act %d: you need to override activity_on_got_focus" % self.activity_get_id()

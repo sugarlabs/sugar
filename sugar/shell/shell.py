@@ -131,6 +131,18 @@ class ActivityHost(dbus.service.Object):
 			self.tab_activity_image.hide()
 
 	@dbus.service.method("com.redhat.Sugar.Shell.ActivityHost", \
+			 in_signature="b", \
+			 out_signature="")
+	def set_has_changes(self, has_changes):
+		if has_changes:
+			attrs = pango.AttrList()
+			attrs.insert(pango.AttrForeground(65535, 0, 0, 0, -1))
+			attrs.insert(pango.AttrWeight(pango.WEIGHT_BOLD, 0, -1))
+			self.tab_label.set_attributes(attrs)
+		else:
+			self.tab_label.set_attributes(pango.AttrList())
+
+	@dbus.service.method("com.redhat.Sugar.Shell.ActivityHost", \
 			 in_signature="s", \
 			 out_signature="")
 	def set_tab_text(self, text):
