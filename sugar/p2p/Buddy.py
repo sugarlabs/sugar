@@ -23,6 +23,7 @@ class Buddy(object):
 		self._services[service.get_type()] = service
 		self._nick_name = service.get_name()
 		self._address = service.get_address()
+		self._icon = None
 
 	def get_icon(self):
 		"""Return the buddies icon, if any."""
@@ -70,10 +71,17 @@ class Owner(Buddy):
 		self._presence_service = Service(nick, PRESENCE_SERVICE_TYPE, PRESENCE_SERVICE_PORT)
 		Buddy.__init__(self, self._presence_service)
 
-		for fname in os.listdir(env.get_user_dir()):
+		user_dir = env.get_user_dir()
+		if not os.path.exists(user_dir):
+			try:
+				os.makedirs(user_dir)
+			except OSError:
+				pass
+
+		for fname in os.listdir(user_dir):
 			if not fname.startswith("buddy-icon."):
 				continue
-			fd = open(os.path.join(env.get_user_dir(), fname), "r")
+			fd = open(os.path.join(user_dir, fname), "r")
 			self._icon = fd.read()
 			fd.close()
 			break
