@@ -249,8 +249,9 @@ class ActivityContainer(dbus.service.Object):
 		if self.current_activity != None:
 			if self.has_activity(self.current_activity):
 				self.current_activity.peer_service.lost_focus(reply_handler = self.__focus_reply_cb, error_handler = self.__focus_error_cb)
-				
-				self.current_activity = new_activity
+		
+		if self.has_activity(new_activity):
+			self.current_activity = new_activity
 
 		if self.current_activity != None:
 			if self.has_activity(self.current_activity):
