@@ -581,7 +581,7 @@ class GroupChat(Chat):
 					# Try to get the buddy's icon
 					if buddy.get_nick_name() != self._group.get_owner().get_nick_name():
 						print "Requesting buddy icon from '%s'." % buddy.get_nick_name()
-						self._request_buddy_icon(buddy)
+						gobject.idle_add(self._request_buddy_icon, buddy)
 		elif action == Group.SERVICE_REMOVED:
 			pass
 
@@ -660,7 +660,6 @@ def main():
 
 	ChatShell.get_instance().open_group_chat()
 	try:
-		gtk.threads_init()
 		gtk.main()
 	except KeyboardInterrupt:
 		pass
