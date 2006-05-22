@@ -322,6 +322,8 @@ class BrowserShell(dbus.service.Object):
 	get_instance = staticmethod(get_instance)
 
 	def __init__(self):
+		geckoembed.set_profile_path(sugar.env.get_user_dir())
+
 		session_bus = dbus.SessionBus()
 		bus_name = dbus.service.BusName('com.redhat.Sugar.Browser', bus=session_bus)
 		object_path = '/com/redhat/Sugar/Browser'
