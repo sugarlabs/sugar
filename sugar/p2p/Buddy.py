@@ -1,6 +1,10 @@
 import pwd
 import os
 
+import pygtk
+pygtk.require('2.0')
+import gtk
+
 from Service import Service
 from sugar import env
 
@@ -24,6 +28,15 @@ class Buddy(object):
 		self._nick_name = service.get_name()
 		self._address = service.get_address()
 		self._icon = None
+
+	def get_icon_pixbuf(self):
+		if self._icon:
+			pbl = gtk.gdk.PixbufLoader()
+			pbl.write(self._icon)
+			pbl.close()
+			return pbl.get_pixbuf()
+		else:
+			return None
 
 	def get_icon(self):
 		"""Return the buddies icon, if any."""

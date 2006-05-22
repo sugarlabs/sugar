@@ -275,19 +275,14 @@ class Chat(activity.Activity):
 
 	def activity_on_got_focus(self):
 		print "act %d: in activity_on_got_focus" % self.activity_get_id()
-		# FIXME self._controller.notify_activate(self)
 
 	def _insert_buddy(self, buf, nick):
 		buddy = self._controller.get_group().get_buddy(nick)
 
-		if buddy.get_icon():
-			pbl = gtk.gdk.PixbufLoader()
-			pbl.write(buddy.get_icon())
-			pbl.close()
-			pbuf = pbl.get_pixbuf()
-		
+		icon = buddy.get_icon_pixbuf()
+		if icon:
 			aniter = buf.get_end_iter()
-			buf.insert_pixbuf(aniter, pbuf)
+			buf.insert_pixbuf(aniter, icon)
 	
 		aniter = buf.get_end_iter()
 		buf.insert(aniter, nick + ": ")
@@ -539,9 +534,6 @@ class GroupChat(Chat):
 		self.activity_set_tab_icon_name("stock_help-chat")
 		self.activity_show_icon(True)
 
-		aniter = self._buddy_list_model.append(None)
-		self._buddy_list_model.set(aniter, self._MODEL_COL_NICK, "Group",
-				self._MODEL_COL_ICON, self._pixbuf_active_chat, self._MODEL_COL_BUDDY, None)
 		self._start()
 
 	def activity_on_disconnected_from_shell(self):
@@ -597,8 +589,10 @@ class GroupChat(Chat):
 			pass
 		elif action == Group.BUDDY_JOIN:
 			aniter = self._buddy_list_model.append(None)
-			self._buddy_list_model.set(aniter, self._MODEL_COL_NICK, buddy.get_nick_name(),
-					self._MODEL_COL_ICON, None, self._MODEL_COL_BUDDY, buddy)
+			self._buddy_list_model.set(aniter,
+									   self._MODEL_COL_NICK, buddy.get_nick_name(),
+									   self._MODEL_COL_ICON, buddy.get_icon_pixbuf(),
+									   self._MODEL_COL_BUDDY, buddy)
 		elif action == Group.BUDDY_LEAVE:
 			aniter = self._get_iter_for_buddy(buddy)
 			if aniter:
@@ -612,17 +606,8 @@ class GroupChat(Chat):
 				return aniter
 			aniter = self._buddy_list_model.iter_next(aniter)
 
-	def notify_new_message(self, chat, buddy):
-		aniter = self._get_iter_for_buddy(buddy)
-		self._buddy_list_model.set(aniter, self._MODEL_COL_ICON, self._pixbuf_new_message)
-
-	def notify_activate(self, chat, buddy):
-		aniter = self._get_iter_for_buddy(buddy)
-		self._buddy_list_model.set(aniter, self._MODEL_COL_ICON, self._pixbuf_active_chat)
-
 	def _group_recv_message(self, buddy, msg):
 		self.recv_message(buddy, msg)
-		self._controller.notify_new_message(self, None)
 
 	def _buddy_recv_message(self, buddy, msg):
 		if not self._chats.has_key(buddy):
