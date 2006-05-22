@@ -35,10 +35,12 @@ class Service(object):
 	def is_multicast(self):
 		return self._group_address != None
 	
-	def register(self, group):	
+	def register(self, group):
 		pannounce = presence.PresenceAnnounce()
 		if self._group_address:
 			pannounce.register_service(self._name, self._port, self._stype,
 									   group_address = self._group_address)
 		else:
 			pannounce.register_service(self._name, self._port, self._stype)
+		# Notify the group that we're registering a new service
+		group.notify_service_registered(self)

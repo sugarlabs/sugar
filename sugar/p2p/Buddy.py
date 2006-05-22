@@ -111,3 +111,13 @@ class Owner(Buddy):
 		
 	def register(self):
 		self._presence_service.register(self._group)
+
+	def notify_service_registered(self, service):
+		"""New services registered in our group are automatically owned
+		by us."""
+		self._services[service.get_type()] = service
+
+	def add_service(self, service):
+		"""Do nothing here, since all services we need to know about
+		are registered with us by our group."""
+		pass
