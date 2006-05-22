@@ -3,11 +3,11 @@ emoticons_table = [						\
 [ 'stock_smiley-19', None ],			\
 [ 'stock_smiley-2', None ],				\
 [ 'stock_smiley-11', None ],			\
-[ 'stock_smiley-1', ':)' ],				\
+[ 'stock_smiley-1', [ ':)' ] ],			\
 [ 'stock_smiley-3', None ],				\
 [ 'stock_smiley-12', None ],			\
 [ 'stock_smiley-20', None ],			\
-[ 'stock_smiley-4', ':(' ],				\
+[ 'stock_smiley-4', [ ':(' ] ],			\
 [ 'stock_smiley-13', None ],			\
 [ 'stock_smiley-21', None ],			\
 [ 'stock_smiley-5', None ],				\
