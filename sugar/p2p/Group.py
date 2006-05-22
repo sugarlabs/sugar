@@ -7,6 +7,8 @@ from Service import Service
 from sugar.p2p.model.Store import Store
 import presence
 
+_OLPC_SERVICE_TYPE_PREFIX = "_olpc"
+
 class Group:
 	SERVICE_ADDED = "service_added"
 	SERVICE_REMOVED = "service_removed"
@@ -78,11 +80,12 @@ class LocalGroup(Group):
 	def get_service(self, name, stype):
 		if self._services.has_key((name, stype)):
 			return self._services[(name, stype)]
-		else:
-			return None
+		return None
 
 	def get_buddy(self, name):
-		return self._buddies[name]
+		if self._buddies.has_key(name):
+			return self._buddies[name]
+		return None
 	
 	def _add_buddy(self, buddy):
 		bid = buddy.get_nick_name()
@@ -104,7 +107,7 @@ class LocalGroup(Group):
 		elif action == presence.ACTION_SERVICE_REMOVED:
 			if stype == PRESENCE_SERVICE_TYPE:
 				self._remove_buddy(name)
-			elif stype.startswith("_olpc"):
+			elif stype.startswith(_OLPC_SERVICE_TYPE_PREFIX):
 				self.remove_service((name, stype))
 						
 	def _on_service_resolved(self, interface, protocol, name, stype, domain,
@@ -119,5 +122,5 @@ class LocalGroup(Group):
 
 		if stype == PRESENCE_SERVICE_TYPE:
 			self._add_buddy(Buddy(service, name))
-		elif stype.startswith("_olpc"):
+		elif stype.startswith(_OLPC_SERVICE_TYPE_PREFIX):
 			self.add_service(service)

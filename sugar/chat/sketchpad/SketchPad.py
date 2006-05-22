@@ -13,6 +13,7 @@ class SketchPad(gtk.DrawingArea):
 		gtk.DrawingArea.__init__(self)
 
 		self._active_sketch = None
+		self._rgb = (0.0, 0.0, 0.0)
 		self._sketches = []
 
 		self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
@@ -23,6 +24,7 @@ class SketchPad(gtk.DrawingArea):
 		self.connect('expose_event', self.expose)
 
 	def expose(self, widget, event):
+		"""Draw the background of the sketchpad."""
 		rect = self.get_allocation()
 		ctx = widget.window.cairo_create()
 		
@@ -38,6 +40,11 @@ class SketchPad(gtk.DrawingArea):
 		
 		return False
 
+	def set_color(self, color):
+		"""Sets the current drawing color of the sketchpad.
+		color agument should be 3-item tuple of rgb values between 0 and 1."""
+		self._rgb = color
+
 	def add_sketch(self, sketch):
 		self._sketches.append(sketch)
 	
@@ -47,7 +54,7 @@ class SketchPad(gtk.DrawingArea):
 		self.window.invalidate_rect(None, False)
 	
 	def __button_press_cb(self, widget, event):
-		self._active_sketch = Sketch()
+		self._active_sketch = Sketch(self._rgb)
 		self.add_sketch(self._active_sketch)
 		self.add_point(event)
 	
@@ -59,6 +66,7 @@ class SketchPad(gtk.DrawingArea):
 		self.add_point(event)
 	
 	def to_svg(self):
+		"""Return a string containing an SVG representation of this sketch."""
 		d = drawing()
 		s = svg()
 		for sketch in self._sketches:
