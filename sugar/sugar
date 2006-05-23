@@ -3,7 +3,9 @@
 import sys
 import os
 
-curdir = os.path.dirname(__file__)
+import pygtk
+pygtk.require('2.0')
+import gobject
 
 def append_to_python_path(path):
 	if os.environ.has_key('PYTHONPATH'):
@@ -11,6 +13,40 @@ def append_to_python_path(path):
 	else:
 		os.environ['PYTHONPATH'] = path
 
+def start_dbus():
+	curdir = os.path.dirname(__file__)
+	args = "/bin/dbus-daemon --session --print-address".split()
+	(dbus_pid, ign1, dbus_stdout, ign3) = gobject.spawn_async(args, flags=gobject.SPAWN_STDERR_TO_DEV_NULL, standard_output=True)
+	dbus_file = os.fdopen(dbus_stdout)
+	addr = dbus_file.readline()
+	addr = addr.strip()
+	print "dbus-daemon pid is %d, session bus address is %s" % (dbus_pid, addr)	
+	dbus_file.close()
+
+	os.environ["DBUS_SESSION_BUS_ADDRESS"] = addr
+
+	return dbus_pid
+
+def stop_dbus(dbus_pid):
+	try:
+		print 'Closing dbus-daemon, pid %d' % (dbus_pid)
+		os.kill(dbus_pid, 9)
+	except OSError:
+		pass
+
+i = 0
+dbus_daemon_pid = None
+for arg in sys.argv:
+	if arg == '--test-user':
+		user = sys.argv[i + 1]
+		user_dir = os.path.expanduser('~/.sugar-' + user)
+		os.environ['SUGAR_NICK_NAME'] = user
+		os.environ['SUGAR_USER_DIR'] = user_dir
+		dbus_daemon_pid = start_dbus()
+		started_dbus = True
+	i += 1
+
+curdir = os.path.dirname(__file__)
 if curdir == '.':
 	basedir = os.path.dirname(os.getcwd())
 else:
@@ -37,3 +73,6 @@ if console:
 from sugar.session import session
 
 session.start(console)
+
+if dbus_daemon_pid:
+	stop_dbus(dbus_daemon_pid)
