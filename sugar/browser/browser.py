@@ -279,7 +279,7 @@ class WebActivity(activity.Activity):
 		activity.Activity.__init__(self)
 	
 	def activity_on_connected_to_shell(self):
-		self.activity_set_tab_text("Web Browser")
+		self.activity_set_tab_text("Web")
 		self.activity_set_tab_icon_name("web-browser")
 		self.activity_show_icon(True)
 
@@ -356,8 +356,8 @@ class BrowserShell(dbus.service.Object):
 		browser.activity_connect_to_shell()
 
 if len(sys.argv) > 1 and sys.argv[1] == "--console":
-	sys.stdout = LogWriter("Web Browser")
-	sys.stderr = LogWriter("Web Browser")
+	sys.stdout = LogWriter("Web")
+	sys.stderr = LogWriter("Web")
 
 gtk.rc_parse(sugar.env.get_data_file('browser.rc'))
 
