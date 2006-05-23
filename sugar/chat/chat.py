@@ -19,6 +19,7 @@ from sugar.p2p import Buddy
 from sugar.p2p.Group import LocalGroup
 from sugar.p2p.Service import Service
 from sugar.p2p.Stream import Stream
+from sugar.p2p import network
 from sugar.session.LogWriter import LogWriter
 from sugar.chat.sketchpad.Toolbox import Toolbox
 from sugar.chat.sketchpad.SketchPad import SketchPad
@@ -281,15 +282,15 @@ class Chat(activity.Activity):
 		print "act %d: in activity_on_close_from_user" % self.activity_get_id()
 		self.activity_shutdown()
 
-    def _scroll_chat_view_to_bottom(self):
-        # Only scroll to bottom if the view is already close to the bottom
-        vadj = self._chat_sw.get_vadjustment()
-        if vadj.value + vadj.page_size > vadj.upper * 0.8:
-            vadj.value = vadj.upper - vadj.page_size
-            self._chat_sw.set_vadjustment(vadj)
+	def _scroll_chat_view_to_bottom(self):
+		# Only scroll to bottom if the view is already close to the bottom
+		vadj = self._chat_sw.get_vadjustment()
+		if vadj.value + vadj.page_size > vadj.upper * 0.8:
+			vadj.value = vadj.upper - vadj.page_size
+			self._chat_sw.set_vadjustment(vadj)
 
 	def _message_inserted(self):
-        gobject.idle_add(self._scroll_chat_view_to_bottom)
+		gobject.idle_add(self._scroll_chat_view_to_bottom)
 		self.activity_set_has_changes(True)
 
 	def _insert_buddy(self, buf, nick):
@@ -400,6 +401,9 @@ class Chat(activity.Activity):
 
 	def recv_message(self, buddy, msg):
 		"""Insert a remote chat message into the chat buffer."""
+		if not buddy:
+			return
+
 		chunk = self._get_first_richtext_chunk(msg)
 		if chunk:
 			self._insert_rich_message(buddy.get_nick_name(), chunk)
@@ -598,14 +602,16 @@ class GroupChat(Chat):
 			self._chats[buddy] = chat
 			chat.activity_connect_to_shell()
 
-	def _request_buddy_icon_cb(self, response, user_data):
+	def _request_buddy_icon_cb(self, result_status, response, user_data):
 		icon = response
 		buddy = user_data
-		if icon and len(icon):
-			icon = base64.b64decode(icon)
-			print "Buddy icon for '%s' is size %d" % (buddy.get_nick_name(), len(icon))
-			buddy.set_icon(icon)
-		else:
+		if result_status == network.RESULT_SUCCESS:
+			if icon and len(icon):
+				icon = base64.b64decode(icon)
+				print "Buddy icon for '%s' is size %d" % (buddy.get_nick_name(), len(icon))
+				buddy.set_icon(icon)
+
+		if result_status == network.RESULT_FAILED or not icon:
 			# What the heck, try again!
 			gobject.timeout_add(1000, self._request_buddy_icon, buddy)
 
