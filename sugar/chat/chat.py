@@ -271,10 +271,10 @@ class Chat(activity.Activity):
 		self.activity_shutdown()
 
 	def activity_on_lost_focus(self):
-		activity.Activity.activity_on_lost_focus()
+		activity.Activity.activity_on_lost_focus(self)
 
 	def activity_on_got_focus(self):
-		activity.Activity.activity_on_got_focus()
+		activity.Activity.activity_on_got_focus(self)
 		self.activity_set_has_changes(False)
 
 	def _message_inserted(self):
@@ -292,8 +292,6 @@ class Chat(activity.Activity):
 		aniter = buf.get_end_iter()
 		buf.insert(aniter, nick + ": ")
 		
-		self._message_inserted()
-
 	def _insert_rich_message(self, nick, msg):
 		msg = Emoticons.get_instance().replace(msg)
 	
@@ -324,6 +322,8 @@ class Chat(activity.Activity):
 		buf.insert_pixbuf(aniter, pbuf)
 		aniter = buf.get_end_iter()
 		buf.insert(aniter, "\n")
+
+		self._message_inserted()
 
 	def _get_first_richtext_chunk(self, msg):
 		"""Scan the message for the first richtext-tagged chunk and return it."""

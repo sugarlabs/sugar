@@ -12,7 +12,7 @@ class Activity(dbus.service.Object):
 	""" Base Sugar activity object from which all other Activities should inherit """
 
 	def __init__(self):
-		self._has_focus = False
+		self._has_focus = True
 		
 	def get_has_focus(self):
 		return self._has_focus
@@ -132,7 +132,6 @@ class Activity(dbus.service.Object):
 						 out_signature="")
 	def got_focus(self):
 		self.activity_on_got_focus()
-
 
 	@dbus.service.method("com.redhat.Sugar.Activity", \
 						 in_signature="", \
