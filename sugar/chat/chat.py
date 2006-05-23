@@ -3,6 +3,7 @@
 
 import sys
 import base64
+import sha
 
 import dbus
 import dbus.service
@@ -10,7 +11,7 @@ import dbus.glib
 
 import pygtk
 pygtk.require('2.0')
-import gtk, gobject
+import gtk, gobject, pango
 
 from sugar.shell import activity
 from sugar.p2p.Group import Group
@@ -116,6 +117,8 @@ class Chat(activity.Activity):
 		self._chat_view.connect("link-clicked", self.__link_clicked_cb)
 		self._chat_view.set_editable(False)
 		self._chat_view.set_cursor_visible(False)
+		self._chat_view.set_pixels_above_lines(7)
+		self._chat_view.set_left_margin(5)
 		sw.add(self._chat_view)
 		self._chat_view.show()
 		chat_vbox.pack_start(sw)
@@ -285,11 +288,31 @@ class Chat(activity.Activity):
 		buddy = self._controller.get_group().get_buddy(nick)
 		icon = buddy.get_icon_pixbuf()
 		if icon:
+			rise = int(icon.get_height() / 4) * -1
+			PANGO_SCALE=1024 # Where is this defined?
+
+			chat_service = buddy.get_service(CHAT_SERVICE_TYPE)
+		    hash_string = "%s-%s" % (nick, chat_service.get_address())
+		    sha_hash = sha.new()
+		    sha_hash.update(hash_string)
+		    tagname = "buddyicon-%s" % sha_hash.hexdigest()
+
+			if not buf.get_tag_table().lookup(tagname):
+				buf.create_tag(tagname, rise=(rise * PANGO_SCALE))
+
 			aniter = buf.get_end_iter()
 			buf.insert_pixbuf(aniter, icon)
+			aniter.backward_char()	
+			enditer = buf.get_end_iter()
+			buf.apply_tag_by_name(tagname, aniter, enditer)
 
+		if not buf.get_tag_table().lookup("nickname"):
+			buf.create_tag("nickname", weight=pango.WEIGHT_BOLD)
 		aniter = buf.get_end_iter()
-		buf.insert(aniter, nick + ": ")
+		offset = aniter.get_offset()
+		buf.insert(aniter, " " + nick + ": ")
+		enditer = buf.get_iter_at_offset(offset)
+		buf.apply_tag_by_name("nickname", aniter, enditer)
 		
 	def _insert_rich_message(self, nick, msg):
 		msg = Emoticons.get_instance().replace(msg)
