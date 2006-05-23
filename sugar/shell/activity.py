@@ -12,7 +12,7 @@ class Activity(dbus.service.Object):
 	""" Base Sugar activity object from which all other Activities should inherit """
 
 	def __init__(self):
-		self._has_focus = True
+		self._has_focus = False
 		
 	def get_has_focus(self):
 		return self._has_focus
