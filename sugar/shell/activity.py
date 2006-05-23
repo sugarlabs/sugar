@@ -149,20 +149,16 @@ class Activity(dbus.service.Object):
 		self.__plug.destroy()
 		self.__plug = None
 
-		self.__bus = None
 		self.__activity_container_object = None
 		self.__activity_container = None
 		self.__activity_object = None
 		self.__service = None
 
 		self.__bus.remove_signal_receiver(self.name_owner_changed, dbus_interface = "org.freedesktop.DBus", signal_name = "NameOwnerChanged")
-
 		self.activity_on_disconnected_from_shell()
-
+		self.__bus = None
 
 		del self
-
-
 
 	def __shutdown_error_cb(self, error):
 		print "in __error_cb"
