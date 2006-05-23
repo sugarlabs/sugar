@@ -27,6 +27,8 @@ import sugar.env
 
 import richtext
 
+PANGO_SCALE=1024 # Where is this defined?
+
 CHAT_SERVICE_TYPE = "_olpc_chat._tcp"
 CHAT_SERVICE_PORT = 6100
 
@@ -156,10 +158,11 @@ class Chat(activity.Activity):
 	def __key_press_event_cb(self, text_view, event):
 		if event.keyval == gtk.keysyms.Return:
 			buf = text_view.get_buffer()
-			
-			serializer = richtext.RichTextSerializer()
-			text = serializer.serialize(buf)
-			self.send_text_message(text)
+			text = buf.get_text(buf.get_start_iter(), buf.get_end_iter())
+			if len(text.strip()) > 0:
+				serializer = richtext.RichTextSerializer()
+				text = serializer.serialize(buf)
+				self.send_text_message(text)
 
 			buf.set_text("")
 			buf.place_cursor(buf.get_start_iter())
@@ -284,28 +287,53 @@ class Chat(activity.Activity):
 		if not self.get_has_focus():
 			self.activity_set_has_changes(True)
 
+		# Scroll to the last message in the window
+		buf = self._chat_view.get_buffer()
+
+		# HACK: see _insert_buddy() for the second part of this hack.
+		# Since I can't seem to get GtkTextView to scroll so that the
+		# entire last line is visbile, insert a second newline after
+		# every chat message.  Remove that newline in _insert_buddy()
+		aniter = buf.get_end_iter()
+		buf.insert(aniter, "\n")
+
+		lines = buf.get_line_count()
+		aniter = buf.get_iter_at_line_offset(lines - 1, 0)
+		self._chat_view.scroll_to_iter(aniter, 0.0, use_align=True, xalign=0.0, yalign=0.0)
+
 	def _insert_buddy(self, buf, nick):
+		# HACK: see _message_inserted() for the first part of this hack.
+		# Since I can't seem to get GtkTextView to scroll so that the
+		# entire last line is visbile, _message_inserted() puts a second
+		# newline after every chat message.  Remove that newline here.
+		aniter = buf.get_end_iter()
+		aniter.backward_char()
+		enditer = buf.get_end_iter()
+		if buf.get_text(aniter, enditer) == '\n':
+			buf.delete(aniter, enditer)
+
+		# Stuff in the buddy icon, if we have one for this buddy
 		buddy = self._controller.get_group().get_buddy(nick)
 		icon = buddy.get_icon_pixbuf()
 		if icon:
 			rise = int(icon.get_height() / 4) * -1
-			PANGO_SCALE=1024 # Where is this defined?
 
 			chat_service = buddy.get_service(CHAT_SERVICE_TYPE)
-		    hash_string = "%s-%s" % (nick, chat_service.get_address())
-		    sha_hash = sha.new()
-		    sha_hash.update(hash_string)
-		    tagname = "buddyicon-%s" % sha_hash.hexdigest()
+			hash_string = "%s-%s" % (nick, chat_service.get_address())
+			sha_hash = sha.new()
+			sha_hash.update(hash_string)
+			tagname = "buddyicon-%s" % sha_hash.hexdigest()
 
 			if not buf.get_tag_table().lookup(tagname):
 				buf.create_tag(tagname, rise=(rise * PANGO_SCALE))
 
 			aniter = buf.get_end_iter()
 			buf.insert_pixbuf(aniter, icon)
-			aniter.backward_char()	
+			aniter.backward_char()
 			enditer = buf.get_end_iter()
 			buf.apply_tag_by_name(tagname, aniter, enditer)
 
+		# Stick in the buddy's nickname
 		if not buf.get_tag_table().lookup("nickname"):
 			buf.create_tag("nickname", weight=pango.WEIGHT_BOLD)
 		aniter = buf.get_end_iter()
@@ -338,8 +366,18 @@ class Chat(activity.Activity):
 
 		self._insert_buddy(buf, nick)
 		
+		rise = int(pbuf.get_height() / 3) * -1
+		sha_hash = sha.new()
+		sha_hash.update(svgdata)
+		tagname = "sketch-%s" % sha_hash.hexdigest()
+		if not buf.get_tag_table().lookup(tagname):
+			buf.create_tag(tagname, rise=(rise * PANGO_SCALE))
+
 		aniter = buf.get_end_iter()
 		buf.insert_pixbuf(aniter, pbuf)
+		aniter.backward_char()
+		enditer = buf.get_end_iter()
+		buf.apply_tag_by_name(tagname, aniter, enditer)
 		aniter = buf.get_end_iter()
 		buf.insert(aniter, "\n")
 
