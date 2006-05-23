@@ -82,8 +82,10 @@ class Owner(Buddy):
 	"""Class representing the owner of this machine/instance."""
 	def __init__(self, group):
 		self._group = group
-	
-		nick = pwd.getpwuid(os.getuid())[0]
+
+		nick = env.get_nick_name()
+		if not nick:
+			nick = pwd.getpwuid(os.getuid())[0]
 		if not nick or not len(nick):
 			nick = "n00b"
 
