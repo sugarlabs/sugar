@@ -68,11 +68,12 @@ else:
 append_to_python_path(os.path.expanduser('~/.sugar/activities'))
 
 if console:
+	os.environ['SUGAR_USE_CONSOLE'] = 'yes'
 	print 'Redirecting output to the console, press ctrl+d to open it.'
 	
 from sugar.session import session
 
-session.start(console)
+session.start()
 
 if dbus_daemon_pid:
 	stop_dbus(dbus_daemon_pid)

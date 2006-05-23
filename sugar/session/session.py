@@ -9,7 +9,7 @@ import gtk
 from sugar.shell import shell
 from sugar import env
 
-def start(console):
+def start():
 	shell.main()
 
 	activities = []
@@ -34,8 +34,6 @@ def start(console):
 
 	for activity in activities:
 		args = [ 'python', '-m', activity ]
-		if console:
-			args.append('--console')
 		os.spawnvp(os.P_NOWAIT, 'python', args)
 
 	try:

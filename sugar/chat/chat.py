@@ -696,17 +696,11 @@ class ChatShell(dbus.service.Object):
 	def send_text_message(self, message):
 		self._group_chat.send_text_message(message)
 
+log_writer = LogWriter("Chat")
+log_writer.start()
 
-def main():
-	if len(sys.argv) > 1 and sys.argv[1] == "--console":
-		sys.stdout = LogWriter("Chat")
-		sys.stderr = LogWriter("Chat")
-
-	ChatShell.get_instance().open_group_chat()
-	try:
-		gtk.main()
-	except KeyboardInterrupt:
-		pass
-
-if __name__ == "__main__":
-	main()
+ChatShell.get_instance().open_group_chat()
+try:
+	gtk.main()
+except KeyboardInterrupt:
+	pass

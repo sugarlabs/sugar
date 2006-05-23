@@ -355,9 +355,8 @@ class BrowserShell(dbus.service.Object):
 		self.__browsers.append(browser)
 		browser.activity_connect_to_shell()
 
-if len(sys.argv) > 1 and sys.argv[1] == "--console":
-	sys.stdout = LogWriter("Web")
-	sys.stderr = LogWriter("Web")
+log_writer = LogWriter("Web")
+log_writer.start()
 
 gtk.rc_parse(sugar.env.get_data_file('browser.rc'))
 
