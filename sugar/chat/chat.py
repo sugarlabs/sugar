@@ -445,7 +445,6 @@ class BuddyChat(Chat):
 
 	def recv_message(self, sender, msg):
 		Chat.recv_message(self, self._buddy, msg)
-		self._controller.notify_new_message(self, self._buddy)
 
 	def activity_on_close_from_user(self):
 		Chat.activity_on_close_from_user(self)
