@@ -283,25 +283,22 @@ class Chat(activity.Activity):
 
 	def _insert_buddy(self, buf, nick):
 		buddy = self._controller.get_group().get_buddy(nick)
-
 		icon = buddy.get_icon_pixbuf()
 		if icon:
 			aniter = buf.get_end_iter()
 			buf.insert_pixbuf(aniter, icon)
-	
+
 		aniter = buf.get_end_iter()
 		buf.insert(aniter, nick + ": ")
 		
 	def _insert_rich_message(self, nick, msg):
 		msg = Emoticons.get_instance().replace(msg)
-	
-		buf = self._chat_view.get_buffer()
 
+		buf = self._chat_view.get_buffer()
 		self._insert_buddy(buf, nick)
 		
 		serializer = richtext.RichTextSerializer()
 		serializer.deserialize(msg, buf)
-
 		aniter = buf.get_end_iter()
 		buf.insert(aniter, "\n")
 		
@@ -442,9 +439,9 @@ class GroupChat(Chat):
 	def get_group(self):
 		return self._group
 
-	def new_buddy_writer(self, buddy, threaded=False):
+	def new_buddy_writer(self, buddy):
 		service = buddy.get_service(CHAT_SERVICE_TYPE)
-		return self._buddy_stream.new_writer(service, threaded=threaded)
+		return self._buddy_stream.new_writer(service)
 
 	def _start(self):
 		self._group = LocalGroup()
@@ -575,7 +572,7 @@ class GroupChat(Chat):
 			gobject.timeout_add(1000, self._request_buddy_icon, buddy)
 
 	def _request_buddy_icon(self, buddy):
-		writer = self.new_buddy_writer(buddy, threaded=True)
+		writer = self.new_buddy_writer(buddy)
 		icon = writer.custom_request("get_buddy_icon", self._request_buddy_icon_cb, buddy)
 
 	def _on_group_service_event(self, action, service):
