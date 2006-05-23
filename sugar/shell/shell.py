@@ -136,7 +136,7 @@ class ActivityHost(dbus.service.Object):
 	def set_has_changes(self, has_changes):
 		if has_changes:
 			attrs = pango.AttrList()
-			attrs.insert(pango.AttrForeground(65535, 0, 0, 0, -1))
+			attrs.insert(pango.AttrForeground(50000, 0, 0, 0, -1))
 			attrs.insert(pango.AttrWeight(pango.WEIGHT_BOLD, 0, -1))
 			self.tab_label.set_attributes(attrs)
 		else:
