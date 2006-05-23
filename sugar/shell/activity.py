@@ -106,7 +106,10 @@ class Activity(dbus.service.Object):
 						 out_signature="")
 						 
 	def activity_set_has_changes(self, has_changes):
-		self.__activity_object.set_has_changes(has_changes)
+		if not self.get_has_focus() and has_changes:
+			self.__activity_object.set_has_changes(True)
+		else:
+			self.__activity_object.set_has_changes(False)
 
 	@dbus.service.method("com.redhat.Sugar.Activity", \
 						 in_signature="", \
@@ -170,7 +173,9 @@ class Activity(dbus.service.Object):
 		self._has_focus = False;
 
 	def activity_on_got_focus(self):
+		print 'got focus'
 		self._has_focus = True
+		self.activity_set_has_changes(False)
 
 	# pure virtual methods
 

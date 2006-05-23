@@ -258,6 +258,7 @@ class BrowserActivity(activity.Activity):
 		self.activity_set_tab_text(embed.get_title())
 
 	def __shared_location_changed_cb(self, model, key):
+		self.activity_set_has_changes(True)
 		self._notify_shared_location_change()
 
 	def _notify_shared_location_change(self):
