@@ -10,9 +10,6 @@ import SimpleXMLRPCServer
 import SocketServer
 
 
-RESULT_FAILED = 0
-RESULT_SUCCESS = 1
-
 __authinfos = {}
 
 def _add_authinfo(authinfo):
@@ -179,7 +176,7 @@ class GlibXMLRPCTransport(xmlrpclib.Transport):
 		if request_cb:
 			if len(response) == 1:
 				response = response[0]
-			gobject.idle_add(request_cb, RESULT_SUCCESS, response, user_data)
+			gobject.idle_add(request_cb, response, user_data)
 
 class _Method:
 	"""Right, so python people thought it would be funny to make this
@@ -212,7 +209,7 @@ class GlibServerProxy(xmlrpclib.ServerProxy):
 	Here, 'xmlrpc_test_cb' is the callback function, which has the following
 	signature:
 	
-	def xmlrpc_test_cb(result_status, response, user_data=None):
+	def xmlrpc_test_cb(response, user_data=None):
 		...
 	"""
 	def __init__(self, uri, encoding=None, verbose=0, allow_none=0):
@@ -239,17 +236,14 @@ class GlibServerProxy(xmlrpclib.ServerProxy):
 		request = xmlrpclib.dumps(params, methodname, encoding=self._encoding,
 						allow_none=self._allow_none)
 
-		try:
-			response = self._transport.start_request(
-				self._host,
-				self._handler,
-				request,
-				verbose=self._verbose,
-				request_cb=request_cb,
-				user_data=user_data
-				)
-		except socket.error, exc:
-			gobject.idle_add(request_cb, RESULT_FAILED, None, user_data)
+		response = self._transport.start_request(
+			self._host,
+			self._handler,
+			request,
+			verbose=self._verbose,
+			request_cb=request_cb,
+			user_data=user_data
+			)
 
 	def __getattr__(self, name):
 		# magic method dispatcher
