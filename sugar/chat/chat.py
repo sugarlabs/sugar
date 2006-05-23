@@ -45,6 +45,10 @@ class Chat(activity.Activity):
 		
 		self._emt_popup = None
 
+		bus = dbus.SessionBus()
+		proxy_obj = bus.get_object('com.redhat.Sugar.Browser', '/com/redhat/Sugar/Browser')
+		self._browser_shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.BrowserShell')
+
 	def activity_on_connected_to_shell(self):
 		self.activity_set_tab_text(self._act_name)
 		self._plug = self.activity_get_gtk_plug()
@@ -491,10 +495,6 @@ class GroupChat(Chat):
 		self._act_name = "Chat"
 		self._chats = {}
 		
-		bus = dbus.SessionBus()
-		proxy_obj = bus.get_object('com.redhat.Sugar.Browser', '/com/redhat/Sugar/Browser')
-		self._browser_shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.BrowserShell')
-
 		Chat.__init__(self, self)
 
 	def get_group(self):
