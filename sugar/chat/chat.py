@@ -116,19 +116,19 @@ class Chat(activity.Activity):
 		chat_vbox = gtk.VBox()
 		chat_vbox.set_spacing(6)
 
-		sw = gtk.ScrolledWindow()
-		sw.set_shadow_type(gtk.SHADOW_IN)
-		sw.set_policy(gtk.POLICY_NEVER, gtk.POLICY_ALWAYS)
+		self._chat_sw = gtk.ScrolledWindow()
+		self._chat_sw.set_shadow_type(gtk.SHADOW_IN)
+		self._chat_sw.set_policy(gtk.POLICY_NEVER, gtk.POLICY_ALWAYS)
 		self._chat_view = richtext.RichTextView()
 		self._chat_view.connect("link-clicked", self.__link_clicked_cb)
 		self._chat_view.set_editable(False)
 		self._chat_view.set_cursor_visible(False)
 		self._chat_view.set_pixels_above_lines(7)
 		self._chat_view.set_left_margin(5)
-		sw.add(self._chat_view)
+		self._chat_sw.add(self._chat_view)
 		self._chat_view.show()
-		chat_vbox.pack_start(sw)
-		sw.show()
+		chat_vbox.pack_start(self._chat_sw)
+		self._chat_sw.show()
 
 		self._editor_nb = self._create_chat_editor()
 		chat_vbox.pack_start(self._editor_nb, False)
@@ -280,34 +280,18 @@ class Chat(activity.Activity):
 		print "act %d: in activity_on_close_from_user" % self.activity_get_id()
 		self.activity_shutdown()
 
+    def _scroll_chat_view_to_bottom(self):
+        # Only scroll to bottom if the view is already close to the bottom
+        vadj = self._chat_sw.get_vadjustment()
+        if vadj.value + vadj.page_size > vadj.upper * 0.8:
+            vadj.value = vadj.upper - vadj.page_size
+            self._chat_sw.set_vadjustment(vadj)
+
 	def _message_inserted(self):
+        gobject.idle_add(self._scroll_chat_view_to_bottom)
 		self.activity_set_has_changes(True)
 
-		# Scroll to the last message in the window
-		buf = self._chat_view.get_buffer()
-
-		# HACK: see _insert_buddy() for the second part of this hack.
-		# Since I can't seem to get GtkTextView to scroll so that the
-		# entire last line is visbile, insert a second newline after
-		# every chat message.  Remove that newline in _insert_buddy()
-		aniter = buf.get_end_iter()
-		buf.insert(aniter, "\n")
-
-		lines = buf.get_line_count()
-		aniter = buf.get_iter_at_line_offset(lines - 1, 0)
-		self._chat_view.scroll_to_iter(aniter, 0.0, use_align=True, xalign=0.0, yalign=0.0)
-
 	def _insert_buddy(self, buf, nick):
-		# HACK: see _message_inserted() for the first part of this hack.
-		# Since I can't seem to get GtkTextView to scroll so that the
-		# entire last line is visbile, _message_inserted() puts a second
-		# newline after every chat message.  Remove that newline here.
-		aniter = buf.get_end_iter()
-		aniter.backward_char()
-		enditer = buf.get_end_iter()
-		if buf.get_text(aniter, enditer) == '\n':
-			buf.delete(aniter, enditer)
-
 		# Stuff in the buddy icon, if we have one for this buddy
 		buddy = self._controller.get_group().get_buddy(nick)
 		icon = buddy.get_icon_pixbuf()
