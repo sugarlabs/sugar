@@ -1,3 +1,5 @@
+# pylint: disable-msg = W0221
+
 import socket
 import threading
 import traceback
@@ -132,6 +134,9 @@ class GlibXMLRPCTransport(xmlrpclib.Transport):
 	# @param host Target host.
 	# @return A connection handle.
 
+	def __init__(self):
+		pass
+
 	def make_connection(self, host):
 		"""Use our own connection object so we can get its socket."""
 		# create a HTTP connection object from a host descriptor
@@ -224,8 +229,8 @@ class GlibServerProxy(xmlrpclib.ServerProxy):
 
 		# get the url
 		import urllib
-		type, uri = urllib.splittype(uri)
-		if type not in ("http", "https"):
+		urltype, uri = urllib.splittype(uri)
+		if urltype not in ("http", "https"):
 			raise IOError, "unsupported XML-RPC protocol"
 		self._host, self._handler = urllib.splithost(uri)
 		if not self._handler:
@@ -330,7 +335,7 @@ def xmlrpc_test():
 
 
 def main():
-	import gtk, gobject
+	import gtk
 	server = GlibXMLRPCServer(("", 8888))
 	inst = Test()
 	server.register_instance(inst)
@@ -340,7 +345,7 @@ def main():
 	try:
 		gtk.main()
 	except KeyboardInterrupt:
-		pass
+		print 'Ctrl+C pressed, exiting...'
 	print "Done."
 
 if __name__ == "__main__":

@@ -1,3 +1,7 @@
+# FIXME tests use initialized variables, any better
+# what to shut up pylint for those?
+# pylint: disable-msg = W0612
+
 import socket
 import time
 import sha
@@ -11,9 +15,9 @@ pygtk.require('2.0')
 import gtk, gobject
 
 
-def _stringify_sha(sha):
+def _stringify_sha(sha_hash):
 	print_sha = ""
-	for char in sha:
+	for char in sha_hash:
 		print_sha = print_sha + binascii.b2a_hex(char)
 	return print_sha
 
@@ -1089,7 +1093,7 @@ franker, more natural, as it were -- she really must exclude me from privileges 
 	try:
 		gtk.main()
 	except KeyboardInterrupt:
-		pass
+		print 'Ctrl+C pressed, exiting...'
 
 
 if __name__ == "__main__":

@@ -11,7 +11,9 @@ TODO="C0301,W0201,R0201"
 #
 # W0613 Unused argument (glib signals)
 # W0511 - FIXME/TODO/XXX
-DISABLE="W0613,W0511"
+# W0302 - Too many lines in module
+# I0011 - Locally disabled messages
+DISABLE="W0613,W0511,W0612,W0302,I0011"
 
 MSGS="$TODO,$DISABLE"
 ARG="sugar"

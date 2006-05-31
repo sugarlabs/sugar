@@ -2,11 +2,6 @@ import xmlrpclib
 import socket
 import traceback
 
-import pygtk
-pygtk.require('2.0')
-import gobject
-
-
 import network
 from MostlyReliablePipe import MostlyReliablePipe
 

@@ -1,7 +1,5 @@
-#!/usr/bin/python -t
-# -*- tab-width: 4; indent-tabs-mode: t -*- 
+#!/usr/bin/env python
 
-import sys
 import base64
 import sha
 
@@ -28,7 +26,7 @@ import sugar.env
 
 import richtext
 
-PANGO_SCALE=1024 # Where is this defined?
+PANGO_SCALE = 1024 # Where is this defined?
 
 CHAT_SERVICE_TYPE = "_olpc_chat._tcp"
 CHAT_SERVICE_PORT = 6100
@@ -700,7 +698,5 @@ log_writer = LogWriter("Chat")
 log_writer.start()
 
 ChatShell.get_instance().open_group_chat()
-try:
-	gtk.main()
-except KeyboardInterrupt:
-	pass
+
+gtk.main()

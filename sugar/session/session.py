@@ -1,5 +1,4 @@
 import os
-import sys
 from ConfigParser import ConfigParser
 
 import pygtk
@@ -39,4 +38,4 @@ def start():
 	try:
 		gtk.main()
 	except KeyboardInterrupt:
-		pass
+		print 'Ctrl+C pressed, exiting...'

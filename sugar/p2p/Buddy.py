@@ -97,7 +97,7 @@ class Owner(Buddy):
 			try:
 				os.makedirs(user_dir)
 			except OSError:
-				pass
+				print 'Could not create user directory.'
 
 		for fname in os.listdir(user_dir):
 			if not fname.startswith("buddy-icon."):

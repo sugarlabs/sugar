@@ -1,6 +1,5 @@
 import os
 import sys
-
 import dbus
 
 class LogWriter:
@@ -16,7 +15,4 @@ class LogWriter:
 			sys.stderr = self
 
 	def write(self, s):
-		try:
-			self._logger.log(self._application, s)
-		except:
-			pass
+		self._logger.log(self._application, s)			

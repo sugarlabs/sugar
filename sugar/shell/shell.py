@@ -1,8 +1,3 @@
-#!/usr/bin/python
-# -*- tab-width: 4; indent-tabs-mode: t -*- 
-
-import sys
-
 import dbus
 import dbus.service
 import dbus.glib
@@ -10,8 +5,6 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import pango
-
-from sugar.session.LogWriter import LogWriter
 
 activity_counter = 0
 
@@ -329,10 +322,10 @@ class ConsoleLogger(dbus.service.Object):
 	def __key_press_event_cb(self, window, event):
 		if event.keyval == gtk.keysyms.d and \
 		   event.state & gtk.gdk.CONTROL_MASK:
-		   	if self._window.get_property('visible'):
-		   		self._window.hide()
-		   	else:
-		   		self._window.show()
+			if self._window.get_property('visible'):
+				self._window.hide()
+			else:
+				self._window.show()
 
 	@dbus.service.method('com.redhat.Sugar.Logger')
 	def log(self, application, message):

@@ -1,7 +1,6 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-import cairo
 
 from Sketch import Sketch
 
@@ -78,8 +77,8 @@ class SketchPad(gtk.DrawingArea):
 		d.setSVG(s)
 		return d.toXml()
 
-def test_quit(w, sketchpad):
-	print sketchpad.to_svg()
+def test_quit(w, skpad):
+	print skpad.to_svg()
 	gtk.main_quit()
 
 if __name__ == "__main__":
