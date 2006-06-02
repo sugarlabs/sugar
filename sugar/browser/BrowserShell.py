@@ -1,5 +1,6 @@
 import dbus
 import geckoembed
+import threading
 
 import sugar.env
 
@@ -9,12 +10,14 @@ from sugar.browser.BrowserActivity import BrowserActivity
 
 class BrowserShell(dbus.service.Object):
 	instance = None
+	_lock = threading.Lock()
 
 	def get_instance():
+		BrowserShell._lock.acquire()
 		if not BrowserShell.instance:
 			BrowserShell.instance = BrowserShell()
+		BrowserShell._lock.release()
 		return BrowserShell.instance
-		
 	get_instance = staticmethod(get_instance)
 
 	def __init__(self):
@@ -31,7 +34,7 @@ class BrowserShell(dbus.service.Object):
 
 	def open_web_activity(self):
 		web_activity = WebActivity(self)
-		web_activity.activity_connect_to_shell()
+		web_activity.connect_to_shell()
 
 	@dbus.service.method('com.redhat.Sugar.BrowserShell')
 	def get_links(self):
@@ -48,4 +51,4 @@ class BrowserShell(dbus.service.Object):
 	def open_browser(self, uri):
 		browser = BrowserActivity(self._group, uri)
 		self.__browsers.append(browser)
-		browser.activity_connect_to_shell()
+		browser.connect_to_shell()

@@ -6,6 +6,7 @@ import sha
 import dbus
 import dbus.service
 import dbus.glib
+import threading
 
 import pygtk
 pygtk.require('2.0')
@@ -48,9 +49,10 @@ class Chat(activity.Activity):
 		proxy_obj = bus.get_object('com.redhat.Sugar.Browser', '/com/redhat/Sugar/Browser')
 		self._browser_shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.BrowserShell')
 
-	def activity_on_connected_to_shell(self):
-		self.activity_set_tab_text(self._act_name)
-		self._plug = self.activity_get_gtk_plug()
+	def on_connected_to_shell(self):
+		activity.Activity.on_connected_to_shell(self)
+
+		self.set_tab_text(self._act_name)
 		self._ui_setup(self._plug)
 		self._plug.show_all()
 	
@@ -276,10 +278,6 @@ class Chat(activity.Activity):
 		
 		button.set_menu(menu)
 		
-	def activity_on_close_from_user(self):
-		print "act %d: in activity_on_close_from_user" % self.activity_get_id()
-		self.activity_shutdown()
-
 	def _scroll_chat_view_to_bottom(self):
 		# Only scroll to bottom if the view is already close to the bottom
 		vadj = self._chat_sw.get_vadjustment()
@@ -434,18 +432,18 @@ class BuddyChat(Chat):
 		self._act_name = "Chat: %s" % buddy.get_nick_name()
 		Chat.__init__(self, controller)
 
-	def activity_on_connected_to_shell(self):
-		Chat.activity_on_connected_to_shell(self)
-		self.activity_set_can_close(True)
-		self.activity_set_tab_icon_name("im")
-		self.activity_show_icon(True)
+	def on_connected_to_shell(self):
+		Chat.on_connected_to_shell(self)
+		self.set_can_close(True)
+		self.set_tab_icon(icon_name="im")
+		self.set_show_tab_icon(True)
 		self._stream_writer = self._controller.new_buddy_writer(self._buddy)
 
 	def recv_message(self, sender, msg):
 		Chat.recv_message(self, self._buddy, msg)
 
-	def activity_on_close_from_user(self):
-		Chat.activity_on_close_from_user(self)
+	def on_close_from_user(self):
+		Chat.on_close_from_user(self)
 		del self._chats[self._buddy]
 
 
@@ -573,16 +571,16 @@ class GroupChat(Chat):
 		
 		self._plug.show_all()
 
-	def activity_on_connected_to_shell(self):
-		Chat.activity_on_connected_to_shell(self)
+	def on_connected_to_shell(self):
+		Chat.on_connected_to_shell(self)
 		
-		self.activity_set_tab_icon_name("stock_help-chat")
-		self.activity_show_icon(True)
+		self.set_tab_icon(name="stock_help-chat")
+		self.set_show_tab_icon(True)
 
 		self._start()
 
-	def activity_on_disconnected_from_shell(self):
-		Chat.activity_on_disconnected_from_shell(self)
+	def on_disconnected_from_shell(self):
+		Chat.on_disconnected_from_shell(self)
 		gtk.main_quit()
 
 	def _on_buddyList_buddy_selected(self, widget, *args):
@@ -669,30 +667,37 @@ class GroupChat(Chat):
 			chat = self._chats[buddy]
 		chat.recv_message(buddy, msg)
 
-class ChatShell(dbus.service.Object):
-	instance = None
 
-	def get_instance():
-		if not ChatShell.instance:
-			ChatShell.instance = ChatShell()
-		return ChatShell.instance
-		
-	get_instance = staticmethod(get_instance)
-
-	def __init__(self):
+class ChatShellDbusService(dbus.service.Object):
+	def __init__(self, parent):
+		self._parent = parent
 		session_bus = dbus.SessionBus()
 		bus_name = dbus.service.BusName('com.redhat.Sugar.Chat', bus=session_bus)
 		object_path = '/com/redhat/Sugar/Chat'
-
 		dbus.service.Object.__init__(self, bus_name, object_path)
-
-	def open_group_chat(self):
-		self._group_chat = GroupChat()
-		self._group_chat.activity_connect_to_shell()
 
 	@dbus.service.method('com.redhat.Sugar.ChatShell')
 	def send_text_message(self, message):
-		self._group_chat.send_text_message(message)
+		self._parent.send_text_message(message)
+
+class ChatShell(object):
+	instance = None
+	_lock = threading.Lock()
+
+	def get_instance():
+		ChatShell._lock.acquire()
+		if not ChatShell.instance:
+			ChatShell.instance = ChatShell()
+		ChatShell._lock.release()
+		return ChatShell.instance		
+	get_instance = staticmethod(get_instance)
+
+	def open_group_chat(self):
+		self._group_chat = GroupChat()
+		self._group_chat.connect_to_shell()
+
+	def send_text_message(self, message):
+		self._group_chat.send_text_message(message)	
 
 log_writer = LogWriter("Chat")
 log_writer.start()

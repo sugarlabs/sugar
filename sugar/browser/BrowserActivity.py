@@ -52,16 +52,18 @@ class BrowserActivity(activity.Activity):
 			self.set_mode(BrowserActivity.FOLLOWING)
 			self._model.add_listener(self.__shared_location_changed_cb)
 	
-	def activity_on_connected_to_shell(self):
-		self.activity_set_ellipsize_tab(True)
-		self.activity_set_can_close(True)
-		self.activity_set_tab_text("Web Page")
-		self.activity_set_tab_icon_name("web-browser")
-		self.activity_show_icon(True)
+	def on_connected_to_shell(self):
+		activity.Activity.on_connected_to_shell(self)
+
+		self.set_ellipsize_tab(True)
+		self.set_can_close(True)
+		self.set_tab_text("Web Page")
+		self.set_tab_icon(name="web-browser")
+		self.set_show_tab_icon(True)
 
 		vbox = gtk.VBox()
 
-		self._notif_bar = NotificationBar()
+		self._notif_bar = NotificationBar.NotificationBar()
 		vbox.pack_start(self._notif_bar, False)
 		self._notif_bar.connect('action', self.__notif_bar_action_cb)
 
@@ -72,11 +74,11 @@ class BrowserActivity(activity.Activity):
 		self.embed.show()
 		self.embed.load_address(self.uri)
 		
-		nav_toolbar = NavigationToolbar(self)
+		nav_toolbar = NavigationToolbar.NavigationToolbar(self)
 		vbox.pack_start(nav_toolbar, False)
 		nav_toolbar.show()
 
-		plug = self.activity_get_gtk_plug()		
+		plug = self.gtk_plug()		
 		plug.add(vbox)
 		plug.show()
 
@@ -104,10 +106,10 @@ class BrowserActivity(activity.Activity):
 								'">' + escaped_title + '</link></richtext>')
 	
 	def __title_cb(self, embed):
-		self.activity_set_tab_text(embed.get_title())
+		self.set_tab_text(embed.get_title())
 
 	def __shared_location_changed_cb(self, model, key):
-		self.activity_set_has_changes(True)
+		self.set_has_changes(True)
 		self._notify_shared_location_change()
 
 	def _notify_shared_location_change(self):
@@ -119,6 +121,3 @@ class BrowserActivity(activity.Activity):
 		self._notif_bar.set_action('goto_shared_location', 'Go There')
 		self._notif_bar.set_icon('stock_right')
 		self._notif_bar.show()
-
-	def activity_on_close_from_user(self):
-		self.activity_shutdown()

@@ -24,10 +24,12 @@ class WebActivity(activity.Activity):
 		activity.Activity.__init__(self)
 		self._shell = shell
 	
-	def activity_on_connected_to_shell(self):
-		self.activity_set_tab_text("Web")
-		self.activity_set_tab_icon_name("web-browser")
-		self.activity_show_icon(True)
+	def on_connected_to_shell(self):
+		activity.Activity.on_connected_to_shell(self)
+
+		self.set_tab_text("Web")
+		self.set_tab_icon(name="web-browser")
+		self.set_show_tab_icon(True)
 
 		vbox = gtk.VBox()
 			
@@ -40,7 +42,7 @@ class WebActivity(activity.Activity):
 		vbox.pack_start(address_toolbar, False)
 		address_toolbar.show()
 		
-		plug = self.activity_get_gtk_plug()		
+		plug = self.gtk_plug()		
 		plug.add(vbox)
 		plug.show()
 
@@ -55,5 +57,6 @@ class WebActivity(activity.Activity):
 			self._shell.open_browser(uri)
 			return True
 
-	def activity_on_disconnected_from_shell(self):
+	def on_disconnected_from_shell(self):
+		activity.Activity.on_disconnected_from_shell(self)
 		gtk.main_quit()
