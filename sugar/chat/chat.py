@@ -287,7 +287,7 @@ class Chat(activity.Activity):
 
 	def _message_inserted(self):
 		gobject.idle_add(self._scroll_chat_view_to_bottom)
-		self.activity_set_has_changes(True)
+		self.set_has_changes(True)
 
 	def _insert_buddy(self, buf, nick):
 		# Stuff in the buddy icon, if we have one for this buddy
@@ -595,7 +595,7 @@ class GroupChat(Chat):
 		if buddy and not self._chats.has_key(buddy):
 			chat = BuddyChat(self, buddy)
 			self._chats[buddy] = chat
-			chat.activity_connect_to_shell()
+			chat.connect_to_shell()
 
 	def _request_buddy_icon_cb(self, result_status, response, user_data):
 		icon = response
@@ -662,7 +662,7 @@ class GroupChat(Chat):
 		if not self._chats.has_key(buddy):
 			chat = BuddyChat(self, buddy)
 			self._chats[buddy] = chat
-			chat.activity_connect_to_shell()
+			chat.connect_to_shell()
 		else:
 			chat = self._chats[buddy]
 		chat.recv_message(buddy, msg)
