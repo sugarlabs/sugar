@@ -12,14 +12,16 @@ class GMailActivity(activity.Activity):
 	def __init__(self):
 		activity.Activity.__init__(self)
 	
-	def activity_on_connected_to_shell(self):
+	def on_connected_to_shell(self):
+		activity.Activity.on_connected_to_shell(self)
+
 		profile_path = os.path.join(sugar.env.get_user_dir(), 'gmail')
 		geckoembed.set_profile_path(profile_path)
-		self.activity_set_tab_text("Mail")
-		self.activity_set_tab_icon_name("stock_mail")
-		self.activity_show_icon(True)
+		self.set_tab_text("Mail")
+		self.set_tab_icon(name="stock_mail")
+		self.set_show_icon(True)
 
-		plug = self.activity_get_gtk_plug()		
+		plug = self.gtk_plug()		
 
 		embed = geckoembed.Embed()
 		plug.add(embed)
@@ -29,10 +31,11 @@ class GMailActivity(activity.Activity):
 		
 		embed.load_address("http://www.gmail.com")
 		
-	def activity_on_disconnected_from_shell(self):
+	def on_disconnected_from_shell(self):
+		activity.Activity.on_disconnected_from_shell()
 		gtk.main_quit()
 		
 activity = GMailActivity()
-activity.activity_connect_to_shell()
+activity.connect_to_shell()
 
 gtk.main()
