@@ -185,6 +185,7 @@ class GlibXMLRPCTransport(xmlrpclib.Transport):
 			if len(response) == 1:
 				response = response[0]
 			gobject.idle_add(request_cb, RESULT_SUCCESS, response, user_data)
+		return False
 
 class _Method:
 	"""Right, so python people thought it would be funny to make this
