@@ -470,6 +470,7 @@ class GroupChat(Chat):
 	def __init__(self):
 		self._act_name = "Chat"
 		self._chats = {}
+		self._buddy_icon_tries = 0
 		
 		Chat.__init__(self, self)
 
@@ -606,9 +607,12 @@ class GroupChat(Chat):
 				print "Buddy icon for '%s' is size %d" % (buddy.get_nick_name(), len(icon))
 				buddy.set_icon(icon)
 
-		if result_status == network.RESULT_FAILED or not icon:
-			# What the heck, try again!
+		if (result_status == network.RESULT_FAILED or not icon) and self._buddy_icon_tries < 3:
+			self._buddy_icon_tries = self._buddy_icon_tries + 1
+			print "Failed to retrieve buddy icon for '%s' on try %d of %d" % (buddy.get_nick_name(), \
+					self._buddy_icon_tries, 3)
 			gobject.timeout_add(1000, self._request_buddy_icon, buddy)
+		return False
 
 	def _request_buddy_icon(self, buddy):
 		writer = self.new_buddy_writer(buddy)
