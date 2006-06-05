@@ -25,8 +25,6 @@ class WebActivity(activity.Activity):
 		self._shell = shell
 	
 	def on_connected_to_shell(self):
-		activity.Activity.on_connected_to_shell(self)
-
 		self.set_tab_text("Web")
 		self.set_tab_icon(name="web-browser")
 		self.set_show_tab_icon(True)
@@ -58,5 +56,4 @@ class WebActivity(activity.Activity):
 			return True
 
 	def on_disconnected_from_shell(self):
-		activity.Activity.on_disconnected_from_shell(self)
 		gtk.main_quit()

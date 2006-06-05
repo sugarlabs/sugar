@@ -13,8 +13,6 @@ class GMailActivity(activity.Activity):
 		activity.Activity.__init__(self)
 	
 	def on_connected_to_shell(self):
-		activity.Activity.on_connected_to_shell(self)
-
 		profile_path = os.path.join(sugar.env.get_user_dir(), 'gmail')
 		geckoembed.set_profile_path(profile_path)
 		self.set_tab_text("Mail")
@@ -32,7 +30,6 @@ class GMailActivity(activity.Activity):
 		embed.load_address("http://www.gmail.com")
 		
 	def on_disconnected_from_shell(self):
-		activity.Activity.on_disconnected_from_shell()
 		gtk.main_quit()
 		
 activity = GMailActivity()

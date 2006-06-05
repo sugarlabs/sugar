@@ -50,8 +50,6 @@ class Chat(activity.Activity):
 		self._browser_shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.BrowserShell')
 
 	def on_connected_to_shell(self):
-		activity.Activity.on_connected_to_shell(self)
-
 		self.set_tab_text(self._act_name)
 		self._ui_setup(self._plug)
 		self._plug.show_all()

@@ -13,11 +13,22 @@ SHELL_SERVICE_PATH = "/com/redhat/Sugar/Shell"
 ACTIVITY_SERVICE_NAME = "com.redhat.Sugar.Activity"
 ACTIVITY_SERVICE_PATH = "/com/redhat/Sugar/Activity"
 
+ON_CONNECTED_TO_SHELL_CB = "connected_to_shell"
+ON_DISCONNECTED_FROM_SHELL_CB = "disconnected_from_shell"
+ON_RECONNECTED_TO_SHELL_CB = "reconnected_to_shell"
+ON_CLOSE_FROM_USER_CB = "close_from_user"
+ON_LOST_FOCUS_CB = "lost_focus"
+ON_GOT_FOCUS_CB = "got_focus"
+
 class ActivityDbusService(dbus.service.Object):
 	"""Base dbus service object that each Activity uses to export dbus methods.
 	
 	The dbus service is separate from the actual Activity object so that we can
 	tightly control what stuff passes through the dbus python bindings."""
+
+	_ALLOWED_CALLBACKS = [ON_CONNECTED_TO_SHELL_CB, ON_DISCONNECTED_FROM_SHELL_CB, \
+			ON_RECONNECTED_TO_SHELL_CB, ON_CLOSE_FROM_USER_CB, ON_LOST_FOCUS_CB, \
+			ON_GOT_FOCUS_CB]
 
 	def __init__(self, activity):
 		self._activity = activity
@@ -26,6 +37,9 @@ class ActivityDbusService(dbus.service.Object):
 		self._service = None
 		self._bus = dbus.SessionBus()
 		self._bus.add_signal_receiver(self.name_owner_changed, dbus_interface = "org.freedesktop.DBus", signal_name = "NameOwnerChanged")
+		self._callbacks = {}
+		for cb in self._ALLOWED_CALLBACKS:
+			self._callbacks[cb] = None
 
 	def __del__(self):
 		if self._activity_id:
@@ -35,6 +49,16 @@ class ActivityDbusService(dbus.service.Object):
 			del self._activity_object
 		self._bus.remove_signal_receiver(self.name_owner_changed, dbus_interface="org.freedesktop.DBus", signal_name="NameOwnerChanged")
 		del self._bus
+
+	def register_callback(self, name, callback):
+		if name not in self._ALLOWED_CALLBACKS:
+			print "ActivityDbusService: bad callback registration request for '%s'" % name
+			return
+		self._callbacks[name] = callback
+
+	def _call_callback(self, name, *args):
+		if name in self._ALLOWED_CALLBACKS and self._callbacks[name]:
+			self._callbacks[name](*args)
 
 	def connect_to_shell(self):
 		"""Register with the shell via dbus, getting an activity ID and
@@ -59,11 +83,12 @@ class ActivityDbusService(dbus.service.Object):
 		dbus.service.Object.__init__(self, self._service, self._peer_object_path)
 
 		self._activity_object.set_peer_service_name(self._peer_service_name, self._peer_object_path)
-		return (self._activity_object, self._activity_id)
+
+		self._call_callback(ON_CONNECTED_TO_SHELL_CB, self._activity_object, self._activity_id)
 
 	def _shutdown_reply_cb(self):
 		"""Shutdown was successful, tell the Activity that we're disconnected."""
-		self._activity.on_disconnected_from_shell()
+		self._call_callback(ON_DISCONNECTED_FROM_SHELL_CB)
 
 	def _shutdown_error_cb(self, error):
 		print "ActivityDbusService: error during shutdown - '%s'" % error
@@ -79,24 +104,24 @@ class ActivityDbusService(dbus.service.Object):
 			return
 
 		if service_name == SHELL_SERVICE_NAME and not len(new_service_name):
-			self._activity.on_disconnected_from_shell()
+			self._call_callback(ON_DISCONNECTED_FROM_SHELL_CB)
 		elif service_name == SHELL_SERVICE_NAME and not len(old_service_name):
-			self._activity.on_reconnected_to_shell()
+			self._call_callback(ON_RECONNECTED_TO_SHELL_CB)
 
 	@dbus.service.method(ACTIVITY_SERVICE_NAME)
 	def lost_focus(self):
 		"""Called by the shell to notify us that we've lost focus."""
-		self._activity.on_lost_focus()
+		self._call_callback(ON_LOST_FOCUS_CB)
 
 	@dbus.service.method(ACTIVITY_SERVICE_NAME)
 	def got_focus(self):
 		"""Called by the shell to notify us that the user gave us focus."""
-		self._activity.on_got_focus()
+		self._call_callback(ON_GOT_FOCUS_CB)
 
 	@dbus.service.method(ACTIVITY_SERVICE_NAME)
 	def close_from_user(self):
 		"""Called by the shell to notify us that the user closed us."""
-		self._activity.on_close_from_user()
+		self._call_callback(ON_CLOSE_FROM_USER_CB)
 
 
 class Activity(object):
@@ -104,6 +129,12 @@ class Activity(object):
 
 	def __init__(self):
 		self._dbus_service = self._get_new_dbus_service()
+		self._dbus_service.register_callback(ON_CONNECTED_TO_SHELL_CB, self._internal_on_connected_to_shell_cb)
+		self._dbus_service.register_callback(ON_DISCONNECTED_FROM_SHELL_CB, self._internal_on_disconnected_from_shell_cb)
+		self._dbus_service.register_callback(ON_RECONNECTED_TO_SHELL_CB, self._internal_on_reconnected_to_shell_cb)
+		self._dbus_service.register_callback(ON_CLOSE_FROM_USER_CB, self._internal_on_close_from_user_cb)
+		self._dbus_service.register_callback(ON_LOST_FOCUS_CB, self._internal_on_lost_focus_cb)
+		self._dbus_service.register_callback(ON_GOT_FOCUS_CB, self._internal_on_got_focus_cb)
 		self._has_focus = False
 		self._plug = None
 		self._activity_object = None
@@ -131,8 +162,41 @@ class Activity(object):
 	def connect_to_shell(self):
 		"""Called by our controller to tell us to initialize and connect
 		to the shell."""
-		(self._activity_object, self._activity_id) = self._dbus_service.connect_to_shell()
+		self._dbus_service.connect_to_shell()
+
+	def _internal_on_connected_to_shell_cb(self, activity_object, activity_id):
+		"""Callback when the dbus service object has connected to the shell."""
+		self._activity_object = activity_object
+		self._activity_id = activity_id
+		self._window_id = self._activity_object.get_host_xembed_id()
+		print "Activity: XEMBED window ID is %d" % self._window_id
+		self._plug = gtk.Plug(self._window_id)
 		self.on_connected_to_shell()
+
+	def _internal_on_disconnected_from_shell_cb(self):
+		"""Callback when the dbus service object has disconnected from the shell."""
+		self._cleanup()
+		self.on_disconnected_from_shell()
+
+	def _internal_on_reconnected_to_shell_cb(self):
+		"""Callback when the dbus service object has reconnected to the shell."""
+		self.on_reconnected_to_shell()
+
+	def _internal_on_close_from_user_cb(self):
+		"""Callback when the dbus service object tells us the user has closed our activity."""
+		self.shutdown()
+		self.on_close_from_user()
+
+	def _internal_on_lost_focus_cb(self):
+		"""Callback when the dbus service object tells us we have lost focus."""
+		self._has_focus = False
+		self.on_lost_focus()
+
+	def _internal_on_got_focus_cb(self):
+		"""Callback when the dbus service object tells us we have gotten focus."""
+		self._has_focus = True
+		self.set_has_changes(False)
+		self.on_got_focus()
 
 	def gtk_plug(self):
 		"""Return our GtkPlug widget."""
@@ -194,18 +258,21 @@ class Activity(object):
 		"""Disconnect from the shell and clean up."""
 		self._dbus_service.shutdown()
 
+	#############################################################
+	# Pure Virtual methods that subclasses may/may not implement
+	#############################################################
+
 	def on_lost_focus(self):
 		"""Triggered when this Activity loses focus."""
-		self._has_focus = False;
+		pass
 
 	def on_got_focus(self):
 		"""Triggered when this Activity gets focus."""
-		self._has_focus = True
-		self.set_has_changes(False)
+		pass
 
 	def on_disconnected_from_shell(self):
 		"""Triggered when we disconnect from the shell."""
-		self._cleanup()
+		pass
 
 	def on_reconnected_to_shell(self):
 		"""Triggered when the shell's service comes back."""
@@ -213,10 +280,8 @@ class Activity(object):
  
 	def on_connected_to_shell(self):
 		"""Triggered when this Activity has successfully connected to the shell."""
-		self._window_id = self._activity_object.get_host_xembed_id()
-		print "Activity: XEMBED window ID is %d" % self._window_id
-		self._plug = gtk.Plug(self._window_id)
+		pass
 
 	def on_close_from_user(self):
 		"""Triggered when this Activity is closed by the user."""
-		self.shutdown()
+		pass

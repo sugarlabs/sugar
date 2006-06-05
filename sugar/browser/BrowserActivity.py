@@ -53,8 +53,6 @@ class BrowserActivity(activity.Activity):
 			self._model.add_listener(self.__shared_location_changed_cb)
 	
 	def on_connected_to_shell(self):
-		activity.Activity.on_connected_to_shell(self)
-
 		self.set_ellipsize_tab(True)
 		self.set_can_close(True)
 		self.set_tab_text("Web Page")
