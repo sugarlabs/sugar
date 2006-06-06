@@ -11,16 +11,28 @@ import presence
 _OLPC_SERVICE_TYPE_PREFIX = "_olpc"
 
 class Group:
+	_groups = {}
+
 	SERVICE_ADDED = "service_added"
 	SERVICE_REMOVED = "service_removed"
 
 	BUDDY_JOIN = "buddy_join"
 	BUDDY_LEAVE = "buddy_leave"
+	
+	def get_from_id(group_id):
+		if group_id == 'local' and not Group._groups.has_key(group_id):
+			return LocalGroup()
+		else:
+			group = Group._groups[group_id]
+	get_from_id = staticmethod(get_from_id)
 
-	def __init__(self):
+	def __init__(self, group_id):
+		self._group_id = group_id
 		self._service_listeners = []
 		self._presence_listeners = []
 		self._store = Store(self)
+		
+		Group._groups[group_id] = self
 	
 	def get_store(self):
 		return self._store
@@ -52,7 +64,7 @@ class Group:
 
 class LocalGroup(Group):
 	def __init__(self):
-		Group.__init__(self)
+		Group.__init__(self, 'local')
 
 		self._services = {}
 		self._buddies = {}

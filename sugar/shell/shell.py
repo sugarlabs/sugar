@@ -1,10 +1,13 @@
 import dbus
 import dbus.service
 import dbus.glib
+
 import pygtk
 pygtk.require('2.0')
 import gtk
 import pango
+
+from sugar.shell.PresenceWindow import PresenceWindow
 
 activity_counter = 0
 
@@ -346,10 +349,13 @@ def main():
 	session_bus = dbus.SessionBus()
 	service = dbus.service.BusName("com.redhat.Sugar.Shell", bus=session_bus)
 
-	activityContainer = ActivityContainer(service, session_bus)
-	activityContainer.show()
+	activity_container = ActivityContainer(service, session_bus)
+	activity_container.show()
 	
-	console.set_parent_window(activityContainer.window)
+	presence_window = PresenceWindow()
+	presence_window.show()
+	
+	console.set_parent_window(activity_container.window)
 	
 if __name__ == "__main__":
 	main()
