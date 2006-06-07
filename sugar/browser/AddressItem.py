@@ -31,14 +31,14 @@ class AddressEntry(gtk.HBox):
 	def _update_folded_state(self):
 		if self.folded:
 			image = gtk.Image()
-			image.set_from_file(sugar.env.get_data_file('unfold.png'))
+			image.set_from_icon_name('expand', gtk.ICON_SIZE_SMALL_TOOLBAR)
 			self.button.set_image(image)
 			image.show()
 
 			self.entry.hide()
 		else:
 			image = gtk.Image()
-			image.set_from_file(sugar.env.get_data_file('fold.png'))
+			image.set_from_icon_name('unexpand', gtk.ICON_SIZE_SMALL_TOOLBAR)
 			self.button.set_image(image)
 			image.show()
 

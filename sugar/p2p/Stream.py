@@ -83,6 +83,8 @@ class UnicastStream(Stream):
 			except(socket.error):
 				port = port + 1
 				tries = tries - 1
+		if self._reader is None:
+			print 'Could not start xmlrpc server.'
 		self._service.set_port(port)
 
 	def _message(self, nick_name, message):
