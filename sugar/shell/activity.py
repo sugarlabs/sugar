@@ -246,7 +246,7 @@ class Activity(object):
 		"""Marks this Activity as having changes.  This usually means
 		that this Activity's tab turns a red color or something else
 		to notify the user that this Activity needs attention."""
-		if not self.get_has_focus() and has_changes:
+		if not self.has_focus() and has_changes:
 			self._activity_object.set_has_changes(True)
 		else:
 			self._activity_object.set_has_changes(False)
