@@ -1,6 +1,6 @@
 # -*- tab-width: 4; indent-tabs-mode: t -*- 
 
-import avahi, dbus, dbus.glib, dbus.dbus_bindings
+import avahi, dbus, dbus.glib, dbus_bindings
 
 ACTION_SERVICE_NEW = 'new'
 ACTION_SERVICE_REMOVED = 'removed'
@@ -97,7 +97,7 @@ class PresenceAnnounce(object):
 					"", "", # domain, host (let the system figure it out)
 					dbus.UInt16(rs_port), info,)
 			g.Commit()
-		except dbus.dbus_bindings.DBusException, exc:
+		except dbus_bindings.DBusException, exc:
 			# FIXME: ignore local name collisions, since that means
 			# the zeroconf service is already registered.  Ideally we
 			# should un-register it an re-register with the correct info
