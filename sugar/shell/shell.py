@@ -8,6 +8,7 @@ import gtk
 import pango
 
 from sugar.shell.PresenceWindow import PresenceWindow
+from sugar.shell.Owner import ShellOwner
 
 activity_counter = 0
 
@@ -240,6 +241,9 @@ class ActivityContainer(dbus.service.Object):
 		
 		self.current_activity = None
 
+		# Create our owner service
+		self._owner = ShellOwner()
+
 	def show(self):
 		self.window.show()
 
@@ -359,7 +363,10 @@ def main():
 	presence_window.show()
 	
 	console.set_parent_window(activity_container.window)
-	
+	try:
+		gtk.main()
+	except KeyboardInterrupt:
+		pass
+
 if __name__ == "__main__":
 	main()
-	gtk.main()

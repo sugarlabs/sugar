@@ -445,27 +445,12 @@ class BuddyChat(Chat):
 		del self._chats[self._buddy]
 
 
-class BuddyIconRequestHandler(object):
-	def __init__(self, group, stream):
-		self._group = group
-		self._stream = stream
-		self._stream.register_handler(self._handle_buddy_icon_request, "get_buddy_icon")
-
-	def _handle_buddy_icon_request(self):
-		"""XMLRPC method, return the owner's icon encoded with base64."""
-		icon = self._group.get_owner().get_icon()
-		if icon:
-			return base64.b64encode(icon)
-		return ''
-
-
 class GroupChat(Chat):
 	def __init__(self):
 		self._group = Group.get_from_id('local')
 		self._act_name = "Chat"
 		self._chats = {}
-		self._buddy_icon_tries = 0
-		
+
 		Chat.__init__(self, self)
 
 	def get_group(self):
@@ -482,7 +467,6 @@ class GroupChat(Chat):
 		# specific buddy chats
 		buddy_service = Service(name, CHAT_SERVICE_TYPE, CHAT_SERVICE_PORT)
 		self._buddy_stream = Stream.new_from_service(buddy_service, self._group)
-		self._buddy_icon_handler = BuddyIconRequestHandler(self._group, self._buddy_stream)
 		self._buddy_stream.set_data_listener(getattr(self, "_buddy_recv_message"))
 		buddy_service.register(self._group)
 

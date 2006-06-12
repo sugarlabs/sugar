@@ -1,4 +1,5 @@
 import avahi
+import Group
 
 def _txt_to_dict(txt):
 	"""Convert an avahi-returned TXT record formatted
@@ -17,6 +18,18 @@ def _txt_to_dict(txt):
 		prop_dict[key] = value
 	return prop_dict
 
+def _is_multicast_address(address):
+	"""Simple numerical check for whether an IP4 address
+	is in the range for multicast addresses or not."""
+	if not address:
+		return False
+	if address[3] != '.':
+		return False
+	first = int(address[:3])
+	if first >= 224 and first <= 239:
+		return True
+	return False
+
 class Service(object):
 	"""Encapsulates information about a specific ZeroConf/mDNS
 	service as advertised on the network."""
@@ -30,11 +43,15 @@ class Service(object):
 		if not stype.endswith("._tcp") and not stype.endswith("._udp"):
 			raise ValueError("must specify a TCP or UDP service type.")
 
-		if not domain or (type(domain) != type("") and type(domain) != type(u"")):
+		if type(domain) != type("") and type(domain) != type(u""):
 			raise ValueError("must specify a domain.")
-		if domain != "local" and domain != u"local":
+		if len(domain) and domain != "local" and domain != u"local":
 			raise ValueError("must use the 'local' domain (for now).")
 
+		# Group services must have multicast addresses
+		if Group.is_group_service_type(stype) and address and not _is_multicast_address(address):
+			raise ValueError("group service type specified, but address was not multicast.")
+		
 		self._name = name
 		self._stype = stype
 		self._domain = domain
@@ -46,17 +63,38 @@ class Service(object):
 		self.set_properties(properties)
 
 	def get_name(self):
+		"""Return the service's name, usually that of the
+		buddy who provides it."""
 		return self._name
 
+	def is_multicast_service(self):
+		"""Return True if the service's address is a multicast address,
+		False if it is not."""
+		return _is_multicast_address(self._address)
+
+	def is_group_service(self):
+		"""Return True if the service represents a Group,
+		False if it does not."""
+		return Group.is_group_service_type(self._stype)
+
 	def get_one_property(self, key):
+		"""Return one property of the service, or None
+		if the property was not found.  Cannot distinguish
+		between lack of a property, and a property value that
+		actually is None."""
 		if key in self._properties.keys():
 			return self._properties[key]
 		return None
 
 	def get_properties(self):
+		"""Return a python dictionary of all the service's
+		properties."""
 		return self._properties
 
 	def set_properties(self, properties):
+		"""Set the service's properties from either an Avahi
+		TXT record (a list of lists of integers), or a
+		python dictionary."""
 		self._properties = {}
 		if type(properties) == type([]):
 			self._properties = _txt_to_dict(properties)
@@ -64,6 +102,7 @@ class Service(object):
 			self._properties = properties
 
 	def get_type(self):
+		"""Return the service's service type."""
 		return self._stype
 
 	def get_port(self):
@@ -83,15 +122,13 @@ class Service(object):
 				raise ValueError("must specify a valid address.")
 			if not len(address):
 				raise ValueError("must specify a valid address.")
+			if Group.is_group_service_type(self._stype) and not _is_multicast_address(address):
+				raise ValueError("group service type specified, but address was not multicast.")
 		self._address = address
 
 	def get_domain(self):
+		"""Return the ZeroConf/mDNS domain the service was found in."""
 		return self._domain
-
-	def is_olpc_service(self):
-		if self._stype.endswith("._olpc._udp") or self._stype.endswith(".olpc._tcp"):
-			return True
-		return False
 
 
 #################################################################
@@ -138,6 +175,10 @@ class ServiceTestCase(unittest.TestCase):
 		# Only accept local for now
 		self._test_init_fail(self._DEF_NAME, self._DEF_STYPE, "foobar", self._DEF_ADDRESS,
 				self._DEF_PORT, self._DEF_PROPS, "invalid domain")
+		# Make sure "" works
+		service = Service(self._DEF_NAME, self._DEF_STYPE, "", self._DEF_ADDRESS,
+				self._DEF_PORT, self._DEF_PROPS)
+		assert service, "Empty domain was not accepted!"
 
 	def testAddress(self):
 		self._test_init_fail(self._DEF_NAME, self._DEF_STYPE, self._DEF_DOMAIN, [],
@@ -186,6 +227,30 @@ class ServiceTestCase(unittest.TestCase):
 		value = service.get_one_property(key)
 		assert value is not None and value == expected_value, "service properties weren't correct after init."
 
+	def testGroupService(self):
+		# Valid group service type, non-multicast address
+		group_stype = "_af5e5a7c998e89b9a_group_olpc._udp"
+		self._test_init_fail(self._DEF_NAME, group_stype, self._DEF_DOMAIN, self._DEF_ADDRESS,
+				self._DEF_PORT, self._DEF_PROPS, "group service type, but non-multicast address")
+
+		# Valid group service type, None address
+		service = Service(self._DEF_NAME, group_stype, self._DEF_DOMAIN, None,
+				self._DEF_PORT, self._DEF_PROPS)
+		assert service.get_address() == None, "address was not None as expected!"
+		# Set address to invalid multicast address
+		try:
+			service.set_address(self._DEF_ADDRESS)
+		except ValueError, exc:
+			pass
+		else:
+			self.fail("expected a ValueError for invalid address.")
+
+		# Valid group service type and multicast address, ensure it works
+		mc_addr = "224.0.0.34"
+		service = Service(self._DEF_NAME, group_stype, self._DEF_DOMAIN, mc_addr,
+				self._DEF_PORT, self._DEF_PROPS)
+		assert service.get_address() == mc_addr, "address was not expected address!"
+
 	def addToSuite(suite):
 		suite.addTest(ServiceTestCase("testName"))
 		suite.addTest(ServiceTestCase("testType"))
@@ -195,6 +260,7 @@ class ServiceTestCase(unittest.TestCase):
 		suite.addTest(ServiceTestCase("testGoodInit"))
 		suite.addTest(ServiceTestCase("testAvahiProperties"))
 		suite.addTest(ServiceTestCase("testBoolProperty"))
+		suite.addTest(ServiceTestCase("testGroupService"))
 	addToSuite = staticmethod(addToSuite)
 
 

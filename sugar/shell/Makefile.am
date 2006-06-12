@@ -3,4 +3,5 @@ sugar_PYTHON =		\
 	__init__.py	\
 	activity.py	\
 	shell.py        \
-	PresenceWindow.py
+	PresenceWindow.py \
+	Owner.py

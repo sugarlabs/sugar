@@ -26,4 +26,5 @@ sugar/p2p/Makefile
 sugar/p2p/model/Makefile
 sugar/shell/Makefile
 sugar/session/Makefile
+sugar/presence/Makefile
 ])
