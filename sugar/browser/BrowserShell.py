@@ -4,7 +4,6 @@ import threading
 
 import sugar.env
 
-from sugar.p2p.Group import LocalGroup
 from sugar.browser.WebActivity import WebActivity
 from sugar.browser.BrowserActivity import BrowserActivity
 
@@ -30,7 +29,6 @@ class BrowserShell(dbus.service.Object):
 		dbus.service.Object.__init__(self, bus_name, object_path)
 
 		self.__browsers = []
-		self._group = LocalGroup()
 
 	def open_web_activity(self):
 		web_activity = WebActivity(self)
@@ -49,6 +47,6 @@ class BrowserShell(dbus.service.Object):
 
 	@dbus.service.method('com.redhat.Sugar.BrowserShell')
 	def open_browser(self, uri):
-		browser = BrowserActivity(self._group, uri)
+		browser = BrowserActivity(None, uri)
 		self.__browsers.append(browser)
 		browser.connect_to_shell()
