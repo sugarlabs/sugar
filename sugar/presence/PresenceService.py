@@ -244,21 +244,27 @@ class PresenceService(gobject.GObject):
 
 	def _service_disappeared_cb(self, interface, protocol, name, stype, domain, flags):
 		self._log("service '%s' of type '%s' in domain '%s' on %i.%i disappeared." % (name, stype, domain, interface, protocol))
-		try:
-			# Remove the service from the buddy
-			buddy = self._buddies[name]
-			# FIXME: need to be more careful about how we remove services
-			# from buddies; this could be spoofed
-			service = buddy.get_service_of_type(stype)
-			buddy.remove_service(service)
-			if not buddy.is_valid():
-				self.emit("buddy-disappeared", buddy)
-				del self._buddies[name]
-		except KeyError:
-			pass
-
+		# If it's an unresolved service, remove it from our unresolved list
+		found = self._find_service(self._unresolved_services, name=name,
+				stype=stype, domain=domain)
 		for service in found:
 			self._unresolved_services.remove(service)
+
+		# Unresolved services by definition aren't assigned to a buddy
+		if not len(found):
+			try:
+				# Remove the service from the buddy
+				buddy = self._buddies[name]
+				# FIXME: need to be more careful about how we remove services
+				# from buddies; this could be spoofed
+				service = buddy.get_service_of_type(stype)
+				buddy.remove_service(service)
+				if not buddy.is_valid():
+					self.emit("buddy-disappeared", buddy)
+					del self._buddies[name]
+			except KeyError:
+				pass
+
 		return False
 
 	def _service_disappeared_cb_glue(self, interface, protocol, name, stype, domain, flags):
