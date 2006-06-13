@@ -363,10 +363,10 @@ def main():
 	presence_window.show()
 	
 	console.set_parent_window(activity_container.window)
+
+if __name__ == "__main__":
+	main()
 	try:
 		gtk.main()
 	except KeyboardInterrupt:
 		pass
-
-if __name__ == "__main__":
-	main()
