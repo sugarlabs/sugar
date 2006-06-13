@@ -7,26 +7,21 @@ pygtk.require('2.0')
 import gtk
 import pango
 
+import sugar.util
 from sugar.shell.PresenceWindow import PresenceWindow
 from sugar.shell.Owner import ShellOwner
-
-activity_counter = 0
 
 class ActivityHost(dbus.service.Object):
 
 	def __init__(self, activity_container, activity_name):
-		global activity_counter
-
 		self.activity_name = activity_name
 		self.ellipsize_tab = False
 
 		self.activity_container = activity_container
 		
-		self.activity_id = activity_counter
-		activity_counter += 1
+		self.activity_id = sugar.util.unique_id()
 		
-		self.dbus_object_name = "/com/redhat/Sugar/Shell/Activities/%d" % self.activity_id
-		#print "object name = %s"%self.dbus_object_name
+		self.dbus_object_name = "/com/redhat/Sugar/Shell/Activities/%s" % self.activity_id
 		
 		dbus.service.Object.__init__(self, activity_container.service, self.dbus_object_name)
 		self.socket = gtk.Socket()
@@ -290,7 +285,7 @@ class ActivityContainer(dbus.service.Object):
 
 	@dbus.service.method("com.redhat.Sugar.Shell.ActivityContainer", \
 			 in_signature="s", \
-			 out_signature="i", \
+			 out_signature="s", \
 			 sender_keyword="sender")
 	def add_activity(self, activity_name, sender):
 		#print "hello world, activity_name = '%s', sender = '%s'"%(activity_name, sender)

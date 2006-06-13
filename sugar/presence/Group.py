@@ -1,8 +1,6 @@
 import Service
-import sha
-import binascii
-import time
 
+import sugar.util
 
 def is_group_service_type(stype):
 	"""Return True if the service type matches a group
@@ -10,21 +8,6 @@ def is_group_service_type(stype):
 	if stype.endswith("_group_olpc._tcp") or stype.endswith("_group_olpc._udp"):
 		return True
 	return False
-
-
-def _stringify_sha(sha_hash):
-	"""Convert binary sha1 hash data into printable characters."""
-	print_sha = ""
-	for char in sha_hash:
-		print_sha = print_sha + binascii.b2a_hex(char)
-	return print_sha
-
-def _sha_data(data):
-	"""sha1 hash some bytes."""
-	sha_hash = sha.new()
-	sha_hash.update(data)
-	return sha_hash.digest()
-
 
 __GROUP_NAME_TAG = "Name"
 __GROUP_RESOURCE_TAG = "Resource"
@@ -37,10 +20,8 @@ def new_group_service(group_name, resource):
 		raise ValueError("group resource must be a valid string.")
 
 	# Create a randomized service type
-	data_string = "%s%s%s%s" % (time.time(), random.randint(10000, 100000), \
-			group_name, resource)
-	hash_string = _stringify_sha(_sha_data(data_string))
-	stype = "_%s_group_olpc._udp" % hash_string
+	data = "%s%s" % (group_name, resource)
+	stype = "_%s_group_olpc._udp" % sugar.util.unique_id(data)
 
 	properties = {__GROUP_NAME_TAG: group_name, __GROUP_RESOURCE_TAG: resource }
 	owner_nick = ""

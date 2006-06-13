@@ -69,7 +69,7 @@ class ActivityDbusService(dbus.service.Object):
 												   SHELL_SERVICE_NAME + ".ActivityContainer")
 
 		self._activity_id = self._activity_container.add_activity("")
-		self._object_path = SHELL_SERVICE_PATH + "/Activities/%d" % self._activity_id
+		self._object_path = SHELL_SERVICE_PATH + "/Activities/%s" % self._activity_id
 
 		print "ActivityDbusService: object path is '%s'" % self._object_path
 
@@ -77,8 +77,8 @@ class ActivityDbusService(dbus.service.Object):
 											  SHELL_SERVICE_NAME + ".ActivityHost")
 
 		# Now let us register a peer service so the Shell can poke it
-		self._peer_service_name = ACTIVITY_SERVICE_NAME + "%d" % self._activity_id
-		self._peer_object_path = ACTIVITY_SERVICE_PATH + "/%d" % self._activity_id
+		self._peer_service_name = ACTIVITY_SERVICE_NAME + "%s" % self._activity_id
+		self._peer_object_path = ACTIVITY_SERVICE_PATH + "/%s" % self._activity_id
 		self._service = dbus.service.BusName(self._peer_service_name, bus=self._bus)
 		dbus.service.Object.__init__(self, self._service, self._peer_object_path)
 
@@ -169,7 +169,7 @@ class Activity(object):
 		self._activity_object = activity_object
 		self._activity_id = activity_id
 		self._window_id = self._activity_object.get_host_xembed_id()
-		print "Activity: XEMBED window ID is %d" % self._window_id
+		print "Activity: XEMBED window ID is %s" % self._window_id
 		self._plug = gtk.Plug(self._window_id)
 		self.on_connected_to_shell()
 
