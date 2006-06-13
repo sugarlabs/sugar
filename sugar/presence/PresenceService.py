@@ -126,6 +126,8 @@ class PresenceService(gobject.GObject):
 		self._started = True
 		self._lock.release()
 
+		if activity_uid and (not type(activity_uid) == type("") or not len(activity_uid)):
+			raise ValueError("activity uid must be a string.")
 		self._activity_uid = activity_uid
 
 		# Always browse .local
