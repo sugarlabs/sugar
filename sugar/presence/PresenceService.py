@@ -25,6 +25,39 @@ def _get_local_ip_address(ifname):
 	return addr
 
 
+class ServiceAdv(object):
+	"""Wrapper class for service attributes that Avahi passes back."""
+	def __init__(self, interface, protocol, name, stype, domain):
+		self._interface = interface
+		self._protocol = protocol
+		self._name = name
+		self._stype = stype
+		self._domain = domain
+		self._service = None
+		self._resolved = False
+
+	def interface(self):
+		return self._interface
+	def protocol(self):
+		return self._protocol
+	def name(self):
+		return self._name
+	def stype(self):
+		return self._stype
+	def domain(self):
+		return self._domain
+	def service(self):
+		return self._service
+	def set_service(self, service):
+		if not isinstance(service, Service.Service):
+			raise ValueError("must be a valid service.")
+		self._service = service
+	def resolved(self):
+		return self._resolved
+	def set_resolved(self, resolved):
+		self._resolved = resolved
+
+
 class PresenceService(gobject.GObject):
 	"""Object providing information about the presence of Buddies
 	and what activities they make available to others."""
@@ -74,11 +107,8 @@ class PresenceService(gobject.GObject):
 		self._service_type_browsers = {}
 		self._service_browsers = {}
 
-		# We only resolve services that our clients are interested in;
-		# but we store unresolved services so that when a client does
-		# become interested in a new service type, we can quickly
-		# resolve it
-		self._unresolved_services = []
+		# Resolved service list
+		self._service_advs = []
 
 		self._bus = dbus.SystemBus()
 		self._server = dbus.Interface(self._bus.get_object(avahi.DBUS_NAME,
@@ -116,22 +146,24 @@ class PresenceService(gobject.GObject):
 	def _resolve_service_error_handler(self, err):
 		self._log("error resolving service: %s" % err)
 
-	def _find_service(self, slist, name=None, stype=None, domain=None, address=None, port=None):
-		"""Search a list of services for ones matching certain criteria."""
-		found = []
-		for service in slist:
-			if name and service.get_name() != name:
+	def _find_service_adv(self, interface=None, protocol=None, name=None, stype=None, domain=None):
+		"""Search a list of service advertisements for ones matching certain criteria."""
+		adv_list = []
+		for adv in self._service_advs:
+			if interface and adv.interface() != interface:
 				continue
-			if stype and service.get_type() != stype:
+			if protocol and adv.protocol() != protocol:
 				continue
-			if domain and service.get_domain() != domain:
+			if name and adv.name() != name:
 				continue
-			if address and service.get_address() != address:
+			if stype and adv.stype() != stype:
 				continue
-			if port and service.get_port() != port:
+			if domain and adv.domain() != domain:
 				continue
-			found.append(service)
-		return found
+			adv_list.append(adv)
+		if not len(adv_list):
+			return None
+		return adv_list
 
 	def _is_special_service_type(self, stype):
 		"""Return True if the service type is a special, internal service
@@ -146,13 +178,13 @@ class PresenceService(gobject.GObject):
 		"""Deal with a new discovered service object."""
 		# Once a service is resolved, we match it up to an existing buddy,
 		# or create a new Buddy if this is the first service known about the buddy
-		added = was_valid = False
+		buddy_was_valid = False
 		name = service.get_name()
 		buddy = None
 		try:
 			buddy = self._buddies[name]
-			was_valid = buddy.is_valid()
-			added = buddy.add_service(service)
+			buddy_was_valid = buddy.is_valid()
+			buddy.add_service(service)
 		except KeyError:
 			# Should this service mark the owner?
 			if service.get_address() in self._local_addrs.values():
@@ -161,20 +193,16 @@ class PresenceService(gobject.GObject):
 			else:
 				buddy = Buddy.Buddy(service)
 			self._buddies[name] = buddy
-			added = True
-		if not was_valid and buddy.is_valid():
+		if not buddy_was_valid and buddy.is_valid():
 			self.emit("buddy-appeared", buddy)
 		return buddy
 
 	def _handle_new_service_for_group(self, service, buddy):
 		# If the serivce is a group service, merge it into our groups list
-		if not buddy:
-			return
 		group = None
 		if not self._groups.has_key(service.get_type()):
 			group = Group.Group(service)
-		else:
-			group = self._groups[service.get_type()]
+			self._groups[service.get_type()] = group
 
 	def _resolve_service_reply_cb(self, interface, protocol, name, stype, domain, host, aprotocol, address, port, txt, flags):
 		"""When the service discovery finally gets here, we've got enough information about the
@@ -183,22 +211,20 @@ class PresenceService(gobject.GObject):
 
 		# If this service was previously unresolved, remove it from the
 		# unresolved list
-		found = self._find_service(self._unresolved_services, name=name,
+		adv_list = self._find_service_adv(interface=interface, protocol=protocol, name=name,
 				stype=stype, domain=domain)
-		if not len(found):
+		if not adv_list:
 			return False
-		for service in found:
-			self._unresolved_services.remove(service)
+		adv = adv_list[0]
+		adv.set_resolved(True)
 
 		# Update the service now that it's been resolved
-		service = found[0]
-		service.set_address(address)
-		service.set_port(port)
-		service.set_properties(txt)
+		service = Service.Service(name, stype, domain, address, port, txt)
+		adv.set_service(service)
 
 		# Merge the service into our buddy and group lists, if needed
 		buddy = self._handle_new_service_for_buddy(service)
-		if service.is_group_service():
+		if buddy and service.is_group_service():
 			self._handle_new_service_for_group(service, buddy)
 
 		return False
@@ -220,11 +246,12 @@ class PresenceService(gobject.GObject):
 		self._log("found service '%s' (%d) of type '%s' in domain '%s' on %i.%i." % (name, flags, stype, domain, interface, protocol))
 
 		# Add the service to our unresolved services list
-		found = self._find_service(self._unresolved_services, name=name,
-				stype=stype, domain=domain)
-		if not len(found):
-			service = Service.Service(name, stype, domain)
-			self._unresolved_services.append(service)
+		adv_list = self._find_service_adv(interface=interface, protocol=protocol,
+				name=name, stype=stype, domain=domain)
+		if not adv_list:
+			adv = ServiceAdv(interface=interface, protocol=protocol, name=name,
+					stype=stype, domain=domain)
+			self._service_advs.append(adv)
 
 		# Find out the IP address of this interface, if we haven't already
 		if interface not in self._local_addrs.keys():
@@ -245,25 +272,25 @@ class PresenceService(gobject.GObject):
 	def _service_disappeared_cb(self, interface, protocol, name, stype, domain, flags):
 		self._log("service '%s' of type '%s' in domain '%s' on %i.%i disappeared." % (name, stype, domain, interface, protocol))
 		# If it's an unresolved service, remove it from our unresolved list
-		found = self._find_service(self._unresolved_services, name=name,
-				stype=stype, domain=domain)
-		for service in found:
-			self._unresolved_services.remove(service)
+		adv_list = self._find_service_adv(interface=interface, protocol=protocol,
+				name=name, stype=stype, domain=domain)
+		if not adv_list:
+			return False
 
 		# Unresolved services by definition aren't assigned to a buddy
-		if not len(found):
-			try:
-				# Remove the service from the buddy
-				buddy = self._buddies[name]
-				# FIXME: need to be more careful about how we remove services
-				# from buddies; this could be spoofed
-				service = buddy.get_service_of_type(stype)
-				buddy.remove_service(service)
-				if not buddy.is_valid():
-					self.emit("buddy-disappeared", buddy)
-					del self._buddies[name]
-			except KeyError:
-				pass
+		try:
+			# Remove the service from the buddy
+			buddy = self._buddies[name]
+			# FIXME: need to be more careful about how we remove services
+			# from buddies; this could be spoofed
+			adv = adv_list[0]
+			service = adv.get_service()
+			buddy.remove_service(service)
+			if not buddy.is_valid():
+				self.emit("buddy-disappeared", buddy)
+				del self._buddies[name]
+		except KeyError:
+			pass
 
 		return False
 
@@ -334,9 +361,10 @@ class PresenceService(gobject.GObject):
 
 		# Find unresolved services that match the service type
 		# we're now interested in, and resolve them
-		found = self._find_service(self._unresolved_services, stype=stype)
-		for service in found:
-			gobject.idle_add(self._resolve_service, interface, protocol, name, stype, domain, flags)
+		adv_list = self._find_service_adv(stype=stype)
+		for adv in adv_list:
+			gobject.idle_add(self._resolve_service, adv.interface(),
+					adv.protocol(), adv.name(), adv.stype(), adv.domain(), 0)
 
 	def untrack_service_type(self, stype):
 		"""Stop tracking a certain mDNS service."""
@@ -347,6 +375,14 @@ class PresenceService(gobject.GObject):
 		if name in self._allowed_service_types:
 			self._allowed_service_types.remove(stype)
 
+	def join_group(self, group):
+		"""Convenience function to join a group and notify other buddies
+		that you are a member of it."""
+		if not isinstance(group, Group.Group):
+			raise ValueError("group was not a valid group.")
+		gservice = group.get_service()
+		self.register_service(service)
+
 	def register_service(self, service):
 		"""Register a new service, advertising it to other Buddies on the network."""
 		if not self._started:
@@ -355,7 +391,7 @@ class PresenceService(gobject.GObject):
 		rs_name = service.get_name()
 		rs_stype = service.get_type()
 		rs_port = service.get_port()
-		if type(rs_port) != type(1) and rs_port <= 1024:
+		if type(rs_port) != type(1) and (rs_port <= 1024 or rs_port > 65536):
 			raise ValueError("invalid service port.")
 		rs_props = service.get_properties()
 		rs_domain = service.get_domain()

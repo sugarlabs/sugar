@@ -18,7 +18,7 @@ def _txt_to_dict(txt):
 		prop_dict[key] = value
 	return prop_dict
 
-def _is_multicast_address(address):
+def is_multicast_address(address):
 	"""Simple numerical check for whether an IP4 address
 	is in the range for multicast addresses or not."""
 	if not address:
@@ -30,10 +30,13 @@ def _is_multicast_address(address):
 		return True
 	return False
 
+
+__GROUP_UID_TAG = "GroupUID"
+
 class Service(object):
 	"""Encapsulates information about a specific ZeroConf/mDNS
 	service as advertised on the network."""
-	def __init__(self, name, stype, domain, address=None, port=-1, properties=None):
+	def __init__(self, name, stype, domain, address=None, port=-1, properties=None, group=None):
 		# Validate immutable options
 		if not name or (type(name) != type("") and type(name) != type(u"")) or not len(name):
 			raise ValueError("must specify a valid service name.")
@@ -49,8 +52,11 @@ class Service(object):
 			raise ValueError("must use the 'local' domain (for now).")
 
 		# Group services must have multicast addresses
-		if Group.is_group_service_type(stype) and address and not _is_multicast_address(address):
+		if Group.is_group_service_type(stype) and address and not is_multicast_address(address):
 			raise ValueError("group service type specified, but address was not multicast.")
+
+		if group and not isinstance(group, Group.Group):
+			raise ValueError("group was not a valid group object.")
 		
 		self._name = name
 		self._stype = stype
@@ -61,6 +67,9 @@ class Service(object):
 		self.set_port(port)
 		self._properties = {}
 		self.set_properties(properties)
+		self._group = group
+		if group:
+			self._properties[__GROUP_UID_TAG] = group.get_uid()
 
 	def get_name(self):
 		"""Return the service's name, usually that of the
@@ -70,7 +79,7 @@ class Service(object):
 	def is_multicast_service(self):
 		"""Return True if the service's address is a multicast address,
 		False if it is not."""
-		return _is_multicast_address(self._address)
+		return is_multicast_address(self._address)
 
 	def is_group_service(self):
 		"""Return True if the service represents a Group,
@@ -122,13 +131,17 @@ class Service(object):
 				raise ValueError("must specify a valid address.")
 			if not len(address):
 				raise ValueError("must specify a valid address.")
-			if Group.is_group_service_type(self._stype) and not _is_multicast_address(address):
+			if Group.is_group_service_type(self._stype) and not is_multicast_address(address):
 				raise ValueError("group service type specified, but address was not multicast.")
 		self._address = address
 
 	def get_domain(self):
 		"""Return the ZeroConf/mDNS domain the service was found in."""
 		return self._domain
+
+	def get_group(self):
+		"""Return the group this service is associated with, if any."""
+		return self._group
 
 
 #################################################################
