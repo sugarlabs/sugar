@@ -110,11 +110,14 @@ class PresenceService(gobject.GObject):
 		# Resolved service list
 		self._service_advs = []
 
+		# Main activity UID to filter on
+		self._activity_uid = None
+
 		self._bus = dbus.SystemBus()
 		self._server = dbus.Interface(self._bus.get_object(avahi.DBUS_NAME,
 				avahi.DBUS_PATH_SERVER), avahi.DBUS_INTERFACE_SERVER)
 
-	def start(self):
+	def start(self, activity_uid=None):
 		"""Start the presence service by kicking off service discovery."""
 		self._lock.acquire()
 		if self._started:
@@ -122,6 +125,8 @@ class PresenceService(gobject.GObject):
 			return
 		self._started = True
 		self._lock.release()
+
+		self._activity_uid = activity_uid
 
 		# Always browse .local
 		self._new_domain_cb(avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, "local")
