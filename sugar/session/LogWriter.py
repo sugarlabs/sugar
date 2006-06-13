@@ -1,6 +1,7 @@
 import os
 import sys
 import dbus
+import gobject
 
 class LogWriter:
 	def __init__(self, application):
@@ -15,4 +16,8 @@ class LogWriter:
 			sys.stderr = self
 
 	def write(self, s):
-		self._logger.log(self._application, s)			
+		gobject.idle_add(self._write, s)			
+
+	def _write(self, s):
+		self._logger.log(self._application, s)
+		return False
