@@ -84,6 +84,9 @@ class BrowserActivity(activity.Activity):
 		
 		self._setup_shared(self.uri)
 	
+	def publish(self):
+		print 'Publish %s' % self.activity_get_id() 
+	
 	def get_embed(self):
 		return self.embed
 	

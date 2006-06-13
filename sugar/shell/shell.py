@@ -73,7 +73,10 @@ class ActivityHost(dbus.service.Object):
 
 	def __close_button_clicked_error_cb(self, error):
 		pass
-		
+	
+	def publish(self):
+		self.peer_service.publish()
+	
 	def tab_close_button_clicked(self, button):
 		self.peer_service.close_from_user(reply_handler = self.__close_button_clicked_reply_cb, \
 										  error_handler = self.__close_button_clicked_error_cb)
@@ -292,6 +295,8 @@ class ActivityContainer(dbus.service.Object):
 		activity = ActivityHost(self, activity_name)
 		self.activities.append((sender, activity))
 
+		self.current_activity = activity
+
 		#self.__print_activities()
 		return activity.get_host_activity_id()
 
@@ -368,7 +373,7 @@ def main():
 	activity_container = ActivityContainer(service, session_bus)
 	activity_container.show()
 	
-	presence_window = PresenceWindow()
+	presence_window = PresenceWindow(activity_container)
 	presence_window.show()
 	
 	console.set_parent_window(activity_container.window)

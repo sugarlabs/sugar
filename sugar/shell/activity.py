@@ -19,6 +19,7 @@ ON_RECONNECTED_TO_SHELL_CB = "reconnected_to_shell"
 ON_CLOSE_FROM_USER_CB = "close_from_user"
 ON_LOST_FOCUS_CB = "lost_focus"
 ON_GOT_FOCUS_CB = "got_focus"
+ON_PUBLISH_CB = "publish"
 
 class ActivityDbusService(dbus.service.Object):
 	"""Base dbus service object that each Activity uses to export dbus methods.
@@ -28,7 +29,7 @@ class ActivityDbusService(dbus.service.Object):
 
 	_ALLOWED_CALLBACKS = [ON_CONNECTED_TO_SHELL_CB, ON_DISCONNECTED_FROM_SHELL_CB, \
 			ON_RECONNECTED_TO_SHELL_CB, ON_CLOSE_FROM_USER_CB, ON_LOST_FOCUS_CB, \
-			ON_GOT_FOCUS_CB]
+			ON_GOT_FOCUS_CB, ON_PUBLISH_CB]
 
 	def __init__(self, activity):
 		self._activity = activity
@@ -123,6 +124,10 @@ class ActivityDbusService(dbus.service.Object):
 		"""Called by the shell to notify us that the user closed us."""
 		self._call_callback(ON_CLOSE_FROM_USER_CB)
 
+	@dbus.service.method(ACTIVITY_SERVICE_NAME)
+	def publish(self):
+		"""Called by the shell to request the activity to publish itself on the network."""
+		self._call_callback(ON_PUBLISH_CB)
 
 class Activity(object):
 	"""Base Activity class that all other Activities derive from."""
@@ -133,6 +138,7 @@ class Activity(object):
 		self._dbus_service.register_callback(ON_DISCONNECTED_FROM_SHELL_CB, self._internal_on_disconnected_from_shell_cb)
 		self._dbus_service.register_callback(ON_RECONNECTED_TO_SHELL_CB, self._internal_on_reconnected_to_shell_cb)
 		self._dbus_service.register_callback(ON_CLOSE_FROM_USER_CB, self._internal_on_close_from_user_cb)
+		self._dbus_service.register_callback(ON_PUBLISH_CB, self._internal_on_publish_cb)
 		self._dbus_service.register_callback(ON_LOST_FOCUS_CB, self._internal_on_lost_focus_cb)
 		self._dbus_service.register_callback(ON_GOT_FOCUS_CB, self._internal_on_got_focus_cb)
 		self._has_focus = False
@@ -186,6 +192,10 @@ class Activity(object):
 		"""Callback when the dbus service object tells us the user has closed our activity."""
 		self.shutdown()
 		self.on_close_from_user()
+
+	def _internal_on_publish_cb(self):
+		"""Callback when the dbus service object tells us the user has closed our activity."""
+		self.publish()
 
 	def _internal_on_lost_focus_cb(self):
 		"""Callback when the dbus service object tells us we have lost focus."""
@@ -261,6 +271,10 @@ class Activity(object):
 	#############################################################
 	# Pure Virtual methods that subclasses may/may not implement
 	#############################################################
+
+	def publish(self):
+		"""Called to request the activity to publish itself on the network."""
+		pass
 
 	def on_lost_focus(self):
 		"""Triggered when this Activity loses focus."""
