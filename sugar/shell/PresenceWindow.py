@@ -14,6 +14,9 @@ class PresenceWindow(gtk.Window):
 	def __init__(self, activity_container):
 		gtk.Window.__init__(self)
 		
+		self.set_decorated(False)
+		self.set_skip_taskbar_hint(True)
+		
 		self._activity_container = activity_container
 
 		self._pservice = PresenceService.get_instance()

@@ -375,17 +375,19 @@ def main():
 	
 	presence_window = PresenceWindow(activity_container)
 
-	wm = WindowManager(presence_window)
-	wm.set_width(0.15, WindowManager.SCREEN_RELATIVE)
-	wm.set_height(1.0, WindowManager.SCREEN_RELATIVE)
-	wm.set_position(WindowManager.LEFT)
-	wm.show_window()
-
 	wm = WindowManager(activity_container.window)
 	wm.set_width(640, WindowManager.ABSOLUTE)
 	wm.set_height(480, WindowManager.ABSOLUTE)
 	wm.set_position(WindowManager.CENTER)
-	wm.show_window()
+	wm.show()
+	wm.manage()
+
+	wm = WindowManager(presence_window)
+	
+	wm.set_width(0.15, WindowManager.SCREEN_RELATIVE)
+	wm.set_height(1.0, WindowManager.SCREEN_RELATIVE)
+	wm.set_position(WindowManager.LEFT)
+	wm.manage()
 	
 	console.set_parent_window(activity_container.window)
 
