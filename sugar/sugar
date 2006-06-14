@@ -7,7 +7,8 @@ import pygtk
 pygtk.require('2.0')
 import gobject
 
-def append_to_python_path(path):
+def add_to_python_path(path):
+	sys.path.insert(0, path)
 	if os.environ.has_key('PYTHONPATH'):
 		os.environ['PYTHONPATH'] += ':' + path
 	else:
@@ -59,13 +60,13 @@ if os.path.isfile(os.path.join(curdir, '__uninstalled__.py')):
 		print 'Running sugar from current directory...'
 	else:
 		print 'Running sugar from ' + basedir + ' ...'
-	sys.path.insert(0, basedir)
-	append_to_python_path(basedir)
+	add_to_python_path(basedir)
+	add_to_python_path(os.path.join(basedir, 'cut-n-paste'))
 	console = True
 else:
 	print 'Running the installed sugar...'
 	
-append_to_python_path(os.path.expanduser('~/.sugar/activities'))
+add_to_python_path(os.path.expanduser('~/.sugar/activities'))
 
 if console:
 	os.environ['SUGAR_USE_CONSOLE'] = 'yes'

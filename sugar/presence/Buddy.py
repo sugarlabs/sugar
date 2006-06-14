@@ -79,6 +79,7 @@ class Buddy(gobject.GObject):
 			# A buddy isn't valid until its official presence
 			# service has been found and resolved
 			self._valid = True
+			print 'Requesting buddy icon %s' % self._nick_name
 			self._request_buddy_icon(service)
 		return True
 

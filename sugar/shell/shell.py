@@ -10,6 +10,7 @@ import pango
 import sugar.util
 from sugar.shell.PresenceWindow import PresenceWindow
 from sugar.shell.Owner import ShellOwner
+from sugar.shell.StartPage import StartPage
 
 class ActivityHost(dbus.service.Object):
 
@@ -226,10 +227,10 @@ class ActivityContainer(dbus.service.Object):
 		self.window.set_geometry_hints(min_width = 640, max_width = 640, min_height = 480, max_height = 480)
 		self.notebook = gtk.Notebook()
 
-		#tab_label = gtk.Label("My Laptop")
-		#empty_label = gtk.Label("This activity could launch other activities / be a help page")
-		#empty_label.show()
-		#self.notebook.append_page(empty_label, tab_label)
+		tab_label = gtk.Label("Everyone")
+		tab_page = StartPage()
+		self.notebook.append_page(tab_page, tab_label)
+		tab_page.show()
 
 		self.notebook.show()
 		self.notebook.connect("switch-page", self.notebook_tab_changed)
