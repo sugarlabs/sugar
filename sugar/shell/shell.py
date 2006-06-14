@@ -11,6 +11,7 @@ import sugar.util
 from sugar.shell.PresenceWindow import PresenceWindow
 from sugar.shell.Owner import ShellOwner
 from sugar.shell.StartPage import StartPage
+from sugar.shell.WindowManager import WindowManager
 
 class ActivityHost(dbus.service.Object):
 
@@ -223,8 +224,6 @@ class ActivityContainer(dbus.service.Object):
 
 		self.window = gtk.Window()
 		self.window.set_title("OLPC Sugar")
-		self.window.resize(640, 480)
-		self.window.set_geometry_hints(min_width = 640, max_width = 640, min_height = 480, max_height = 480)
 		self.notebook = gtk.Notebook()
 
 		tab_label = gtk.Label("Everyone")
@@ -375,7 +374,18 @@ def main():
 	activity_container.show()
 	
 	presence_window = PresenceWindow(activity_container)
-	presence_window.show()
+
+	wm = WindowManager(presence_window)
+	wm.set_width(0.15, WindowManager.SCREEN_RELATIVE)
+	wm.set_height(1.0, WindowManager.SCREEN_RELATIVE)
+	wm.set_position(WindowManager.LEFT)
+	wm.show_window()
+
+	wm = WindowManager(activity_container.window)
+	wm.set_width(640, WindowManager.ABSOLUTE)
+	wm.set_height(480, WindowManager.ABSOLUTE)
+	wm.set_position(WindowManager.CENTER)
+	wm.show_window()
 	
 	console.set_parent_window(activity_container.window)
 
