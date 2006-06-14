@@ -1,5 +1,28 @@
 import avahi
-import Group
+from sugar import util
+import string
+
+def new_group_service(group_name, resource):
+	"""Create a new service suitable for defining a new group."""
+	if type(group_name) != type("") or not len(group_name):
+		raise ValueError("group name must be a valid string.")
+	if type(resource) != type("") or not len(resource):
+		raise ValueError("group resource must be a valid string.")
+
+	# Create a randomized service type
+	data = "%s%s" % (group_name, resource)
+	stype = "_%s_group_olpc._udp" % sugar.util.unique_id(data)
+
+	properties = {__GROUP_NAME_TAG: group_name, __GROUP_RESOURCE_TAG: resource }
+	owner_nick = ""
+	port = random.randint(5000, 65000)
+	# Use random currently unassigned multicast address
+	address = "232.%d.%d.%d" % (random.randint(0, 254), random.randint(1, 254),
+			random.randint(1, 254))
+	service = Service.Service(owner_nick, stype, "local", address=address,
+			port=port, properties=properties)
+	return service
+
 
 def _txt_to_dict(txt):
 	"""Convert an avahi-returned TXT record formatted
@@ -18,6 +41,21 @@ def _txt_to_dict(txt):
 		prop_dict[key] = value
 	return prop_dict
 
+def _decompose_service_type(stype):
+	"""Break a service type into the UID and real service type, if we can."""
+	if len(stype) < util.ACTIVITY_UID_LEN + 5:
+		return (None, stype)
+	if stype[0] != "_":
+		return (None, stype)
+	start = 1
+	end = start + util.ACTIVITY_UID_LEN
+	if stype[end] != "_":
+		return (None, stype)
+	uid = stype[start:end]
+	if not util.validate_activity_uid(uid):
+		return (None, stype)
+	return (uid, stype[end:])
+
 def is_multicast_address(address):
 	"""Simple numerical check for whether an IP4 address
 	is in the range for multicast addresses or not."""
@@ -31,12 +69,10 @@ def is_multicast_address(address):
 	return False
 
 
-__GROUP_UID_TAG = "GroupUID"
-
 class Service(object):
 	"""Encapsulates information about a specific ZeroConf/mDNS
 	service as advertised on the network."""
-	def __init__(self, name, stype, domain, address=None, port=-1, properties=None, group=None):
+	def __init__(self, name, stype, domain, address=None, port=-1, properties=None):
 		# Validate immutable options
 		if not name or (type(name) != type("") and type(name) != type(u"")) or not len(name):
 			raise ValueError("must specify a valid service name.")
@@ -51,15 +87,13 @@ class Service(object):
 		if len(domain) and domain != "local" and domain != u"local":
 			raise ValueError("must use the 'local' domain (for now).")
 
-		# Group services must have multicast addresses
-		if Group.is_group_service_type(stype) and address and not is_multicast_address(address):
-			raise ValueError("group service type specified, but address was not multicast.")
-
-		if group and not isinstance(group, Group.Group):
-			raise ValueError("group was not a valid group object.")
+		(uid, real_stype) = _decompose_service_type(stype)
+		if uid and not util.validate_activity_uid(activity_uid):
+			raise ValueError("activity_uid not a valid activity UID.")
 		
 		self._name = name
 		self._stype = stype
+		self._real_stype = real_stype
 		self._domain = domain
 		self._address = None
 		self.set_address(address)
@@ -67,9 +101,7 @@ class Service(object):
 		self.set_port(port)
 		self._properties = {}
 		self.set_properties(properties)
-		self._group = group
-		if group:
-			self._properties[__GROUP_UID_TAG] = group.get_uid()
+		self._activity_uid = uid
 
 	def get_name(self):
 		"""Return the service's name, usually that of the
@@ -80,11 +112,6 @@ class Service(object):
 		"""Return True if the service's address is a multicast address,
 		False if it is not."""
 		return is_multicast_address(self._address)
-
-	def is_group_service(self):
-		"""Return True if the service represents a Group,
-		False if it does not."""
-		return Group.is_group_service_type(self._stype)
 
 	def get_one_property(self, key):
 		"""Return one property of the service, or None
@@ -131,17 +158,15 @@ class Service(object):
 				raise ValueError("must specify a valid address.")
 			if not len(address):
 				raise ValueError("must specify a valid address.")
-			if Group.is_group_service_type(self._stype) and not is_multicast_address(address):
-				raise ValueError("group service type specified, but address was not multicast.")
 		self._address = address
 
 	def get_domain(self):
 		"""Return the ZeroConf/mDNS domain the service was found in."""
 		return self._domain
 
-	def get_group(self):
-		"""Return the group this service is associated with, if any."""
-		return self._group
+	def get_activity_uid(self):
+		"""Return the activity UID this service is associated with, if any."""
+		return self._activity_uid
 
 
 #################################################################

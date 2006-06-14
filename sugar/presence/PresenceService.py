@@ -2,9 +2,9 @@ import threading
 import avahi, dbus, dbus.glib, dbus.dbus_bindings, gobject
 import Buddy
 import Service
-import Group
 import os
-
+import string
+from sugar import util
 
 def _get_local_ip_address(ifname):
 	"""Call Linux specific bits to retrieve our own IP address."""
@@ -97,8 +97,8 @@ class PresenceService(gobject.GObject):
 		# Our owner object
 		self._owner = None
 
-		# group UID -> Group: groups we've found
-		self._groups = {}
+		# activity UID -> Service: services grouped by activity UID
+		self._activity_services = {}
 
 		# All the mdns service types we care about
 		self._allowed_service_types = []
@@ -110,7 +110,7 @@ class PresenceService(gobject.GObject):
 		# Resolved service list
 		self._service_advs = []
 
-		# Main activity UID to filter on
+		# Main activity UID to filter services on
 		self._activity_uid = None
 
 		self._bus = dbus.SystemBus()
@@ -126,8 +126,8 @@ class PresenceService(gobject.GObject):
 		self._started = True
 		self._lock.release()
 
-		if activity_uid and (not type(activity_uid) == type("") or not len(activity_uid)):
-			raise ValueError("activity uid must be a string.")
+		if activity_uid and not util.validate_activity_uid(activity_uid):
+			raise ValueError("activity uid must be a valid UID string.")
 		self._activity_uid = activity_uid
 
 		# Always browse .local
@@ -177,8 +177,6 @@ class PresenceService(gobject.GObject):
 		type, and False if it's not."""
 		if stype == Buddy.PRESENCE_SERVICE_TYPE:
 			return True
-		if Group.is_group_service_type(stype):
-			return True
 		return False
 
 	def _handle_new_service_for_buddy(self, service):
@@ -204,12 +202,24 @@ class PresenceService(gobject.GObject):
 			self.emit("buddy-appeared", buddy)
 		return buddy
 
-	def _handle_new_service_for_group(self, service, buddy):
+	def _handle_new_service_for_activity(self, service, buddy):
 		# If the serivce is a group service, merge it into our groups list
-		group = None
-		if not self._groups.has_key(service.get_type()):
-			group = Group.Group(service)
-			self._groups[service.get_type()] = group
+		uid = service.get_activity_uid()
+		if not uid:
+			uid = "*"
+		if not self._activity_services.has_key(uid):
+			self._activity_services[uid] = []
+		self._activity_services[uid].append((buddy, service))
+
+	def _handle_remove_service_for_activity(self, service, buddy):
+		uid = service.get_activity_uid()
+		if not uid:
+			uid = "*"
+		if self._activity_services.has_key(uid):
+			try:
+				self._activity_services.remove((buddy, service))
+			except:
+				pass
 
 	def _resolve_service_reply_cb(self, interface, protocol, name, stype, domain, host, aprotocol, address, port, txt, flags):
 		"""When the service discovery finally gets here, we've got enough information about the
@@ -226,13 +236,14 @@ class PresenceService(gobject.GObject):
 		adv.set_resolved(True)
 
 		# Update the service now that it's been resolved
-		service = Service.Service(name, stype, domain, address, port, txt)
+		service = Service.Service(name=name, stype=stype, domain=domain,
+				address=address, port=port, properties=txt)
 		adv.set_service(service)
 
 		# Merge the service into our buddy and group lists, if needed
 		buddy = self._handle_new_service_for_buddy(service)
-		if buddy and service.is_group_service():
-			self._handle_new_service_for_group(service, buddy)
+		if buddy and service.get_activity_uid():
+			self._handle_new_service_for_activity(service, buddy)
 
 		return False
 
@@ -268,8 +279,19 @@ class PresenceService(gobject.GObject):
 				if addr:
 					self._local_addrs[interface] = addr
 
+		# Decompose service type if we can
+		(uid, stype) = Service._decompose_service_type(stype)
+
 		# If we care about the service right now, resolve it
-		if stype in self._allowed_service_types or self._is_special_service_type(stype):
+		resolve = False
+		if self._activity_uid and self._activity_uid == uid:
+			if stype in self._allowed_service_types:
+				resolve = True
+		elif not self._activity_uid:
+			resolve = True
+		if self._is_special_service_type(stype):
+			resolve = True
+		if resolve:
 			gobject.idle_add(self._resolve_service, interface, protocol, name, stype, domain, flags)
 		return False
 
@@ -284,20 +306,23 @@ class PresenceService(gobject.GObject):
 		if not adv_list:
 			return False
 
-		# Unresolved services by definition aren't assigned to a buddy
+		# Get the service object; if none, we have nothing left to do
+		adv = adv_list[0]
+		service = adv.service()
+		if not service:
+			return False
+
+		# Remove the service from the buddy
 		try:
-			# Remove the service from the buddy
 			buddy = self._buddies[name]
-			# FIXME: need to be more careful about how we remove services
-			# from buddies; this could be spoofed
-			adv = adv_list[0]
-			service = adv.get_service()
+		except KeyError:
+			pass
+		else:
 			buddy.remove_service(service)
 			if not buddy.is_valid():
 				self.emit("buddy-disappeared", buddy)
 				del self._buddies[name]
-		except KeyError:
-			pass
+			self._handle_remove_service_for_activity(service, buddy)
 
 		return False
 
