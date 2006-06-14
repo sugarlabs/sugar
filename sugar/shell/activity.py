@@ -5,7 +5,7 @@ import dbus.service
 import dbus.glib
 import pygtk
 pygtk.require('2.0')
-import gtk
+import gtk, gobject
 
 SHELL_SERVICE_NAME = "com.redhat.Sugar.Shell"
 SHELL_SERVICE_PATH = "/com/redhat/Sugar/Shell"
@@ -57,9 +57,16 @@ class ActivityDbusService(dbus.service.Object):
 			return
 		self._callbacks[name] = callback
 
+	def _call_callback_cb(self, func, *args):
+		gobject.idle_add(func, *args)
+		return False
+
 	def _call_callback(self, name, *args):
+		"""Call our activity object back, but from an idle handler
+		to minimize the possibility of stupid activities deadlocking
+		in dbus callbacks."""
 		if name in self._ALLOWED_CALLBACKS and self._callbacks[name]:
-			self._callbacks[name](*args)
+			gobject.idle_add(self._call_callback_cb, self._callbacks[name], *args)
 
 	def connect_to_shell(self):
 		"""Register with the shell via dbus, getting an activity ID and
