@@ -1,6 +1,7 @@
 import dbus
 import geckoembed
 import threading
+import gobject
 
 import sugar.env
 

@@ -16,8 +16,4 @@ class LogWriter:
 			sys.stderr = self
 
 	def write(self, s):
-		gobject.idle_add(self._write, s)			
-
-	def _write(self, s):
-		self._logger.log(self._application, s)
-		return False
+		self._logger.log(self._application, s, ignore_reply=True)

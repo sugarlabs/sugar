@@ -34,7 +34,7 @@ class ActivitiesView(gtk.TreeView):
 
 		model = self.get_model() 
 		address = model.get_value(model.get_iter(path), 1)
-		browser_shell.open_browser(address)
+		browser_shell.open_browser(address, ignore_reply=True)
 
 class StartPage(gtk.HBox):
 	def __init__(self):
