@@ -29,7 +29,7 @@ def is_hex(s):
 
 def validate_activity_uid(uid):
 	"""Validate an activity UID."""
-	if type(uid) != type(""):
+	if type(uid) != type("") and type(uid) != type(u""):
 		return False
 	if len(uid) != ACTIVITY_UID_LEN:
 		return False
