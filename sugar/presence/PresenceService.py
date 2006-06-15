@@ -65,9 +65,13 @@ class PresenceService(gobject.GObject):
 
 	__gsignals__ = {
 		'buddy-appeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-						 ([gobject.TYPE_PYOBJECT])),
+						([gobject.TYPE_PYOBJECT])),
 		'buddy-disappeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-						 ([gobject.TYPE_PYOBJECT]))
+						([gobject.TYPE_PYOBJECT])),
+		'activity-announced': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+						([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
+		'new-service-adv': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+						([gobject.TYPE_STRING, gobject.TYPE_STRING]))
 	}
 
 	__lock = threading.Lock()
@@ -206,6 +210,7 @@ class PresenceService(gobject.GObject):
 		if not self._activity_services.has_key(uid):
 			self._activity_services[uid] = []
 		self._activity_services[uid].append((buddy, service))
+		self.emit('activity-announced', service, buddy)
 
 	def _handle_remove_service_for_activity(self, service, buddy):
 		(uid, ignore) = service.get_activity_uid()
@@ -278,6 +283,9 @@ class PresenceService(gobject.GObject):
 
 		# Decompose service type if we can
 		(uid, stype) = Service._decompose_service_type(stype)
+
+		# FIXME: find a better way of letting StartPage get all activity advertisements
+		self.emit('new-service-adv', uid, stype)
 
 		# If we care about the service right now, resolve it
 		resolve = False
@@ -377,7 +385,6 @@ class PresenceService(gobject.GObject):
 		a certain mDNS service types."""
 		if not self._started:
 			raise RuntimeError("presence service must be started first.")
-		print "about to track type %s" % stype
 		if type(stype) != type("") and type(stype) != type(u""):
 			raise ValueError("service type must be a string.")
 		if type(stype) == type(u""):
