@@ -13,7 +13,6 @@ pygtk.require('2.0')
 import gtk, gobject, pango
 
 from sugar.shell import activity
-from sugar.presence.Group import Group
 from sugar.presence import Buddy
 from sugar.presence.Service import Service
 from sugar.p2p.Stream import Stream

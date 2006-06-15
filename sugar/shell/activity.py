@@ -268,7 +268,7 @@ class Activity(object):
 		else:
 			self._activity_object.set_has_changes(False)
 
-	def activity_get_id(self):
+	def get_id(self):
 		return self._activity_id
 
 	def shutdown(self):
