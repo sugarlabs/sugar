@@ -29,6 +29,7 @@ class PresenceWindow(gtk.Window):
 
 	def _setup_ui(self):
 		vbox = gtk.VBox(False, 6)
+		vbox.set_border_width(12)
 		
 		label = gtk.Label("Who's around:")
 		label.set_alignment(0.0, 0.5)
@@ -48,7 +49,6 @@ class PresenceWindow(gtk.Window):
 		self._buddy_list_view.connect("cursor-changed", self._on_buddyList_buddy_selected)
 		self._buddy_list_view.connect("row-activated", self._on_buddyList_buddy_double_clicked)
 
-		sw.set_size_request(120, -1)
 		sw.add(self._buddy_list_view)
 		self._buddy_list_view.show()
 
@@ -68,10 +68,15 @@ class PresenceWindow(gtk.Window):
 		vbox.pack_start(sw)
 		sw.show()
 
+		button_box = gtk.HButtonBox()
+
 		share_button = gtk.Button('Share')
 		share_button.connect('clicked', self._share_button_clicked_cb)
-		vbox.pack_start(share_button)
+		button_box.pack_start(share_button)
 		share_button.show()
+
+		vbox.pack_start(button_box, False)
+		button_box.show()
 
 		self.add(vbox)
 		vbox.show()
