@@ -9,7 +9,8 @@ class WindowManager:
 	CENTER = 0
 	LEFT = 1
 	RIGHT = 2
-	BOTTOM = 3
+	TOP = 3
+	BOTTOM = 4
 	
 	ABSOLUTE = 0
 	SCREEN_RELATIVE = 1
@@ -31,25 +32,24 @@ class WindowManager:
 	def has_focus(self):
 		return self._window.has_toplevel_focus()
 
-	def _update_visibility(self):
-		show_slided_in = False
-	
-		for manager in WindowManager.__managers_list:
-			if manager.has_focus():
-					show_slided_in = True
-					
-		if manager._visibility is WindowManager.VISIBLE:
-			manager._window.show()
-		elif manager._visibility is WindowManager.HIDDEN:
-			manager._window.hide()
-		elif manager._visibility is WindowManager.SLIDED_IN:
-			if show_slided_in:
-				manager._window.show()
-			else:
-				manager._window.hide()
+	def _update_visibility(self):		
+		visible = False
+		
+		if self._visibility is WindowManager.VISIBLE:
+			visible = True
+		elif self._visibility is WindowManager.HIDDEN:
+			visible = False
+		elif self._visibility is WindowManager.SLIDED_IN:
+			for manager in WindowManager.__managers_list:
+				if manager.has_focus():
+					visible = True
+		
+		if self._window.get_property('visible') != visible:
+			self._window.set_property('visible', visible)
 
 	def __focus_change_idle(self):
-		self._update_visibility()
+		for manager in WindowManager.__managers_list:
+			manager._update_visibility()
 		return False
 
 	def __focus_in_event_cb(self, window, event):
@@ -65,6 +65,12 @@ class WindowManager:
 		   event.state & gtk.gdk.CONTROL_MASK:
 			for wm in WindowManager.__managers_list:
 				if wm._position == WindowManager.LEFT:
+					manager = wm
+
+		if event.keyval == gtk.keysyms.Up and \
+		   event.state & gtk.gdk.CONTROL_MASK:
+			for wm in WindowManager.__managers_list:
+				if wm._position == WindowManager.TOP:
 					manager = wm
 
 		if manager and manager._window.get_property('visible'):
@@ -103,6 +109,9 @@ class WindowManager:
 		elif self._position is WindowManager.LEFT:
 			x = 0
 			y = int((screen_height - height) / 2)
+		elif self._position is WindowManager.TOP:
+			x = int((screen_width - width) / 2)
+			y = 0
 			
 		self._window.move(x, y)
 		self._window.resize(width, height)

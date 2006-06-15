@@ -12,6 +12,7 @@ from sugar.shell.PresenceWindow import PresenceWindow
 from sugar.shell.Owner import ShellOwner
 from sugar.shell.StartPage import StartPage
 from sugar.shell.WindowManager import WindowManager
+from sugar.chat.GroupChat import GroupChat
 
 class ActivityHost(dbus.service.Object):
 
@@ -372,8 +373,6 @@ def main():
 
 	activity_container = ActivityContainer(service, session_bus)
 	activity_container.show()
-	
-	presence_window = PresenceWindow(activity_container)
 
 	wm = WindowManager(activity_container.window)
 	wm.set_width(640, WindowManager.ABSOLUTE)
@@ -382,11 +381,24 @@ def main():
 	wm.show()
 	wm.manage()
 
+	presence_window = PresenceWindow(activity_container)
+
 	wm = WindowManager(presence_window)
 	
 	wm.set_width(0.15, WindowManager.SCREEN_RELATIVE)
 	wm.set_height(1.0, WindowManager.SCREEN_RELATIVE)
 	wm.set_position(WindowManager.LEFT)
+	wm.manage()
+	
+	group_chat = GroupChat()
+	group_chat.set_decorated(False)
+	group_chat.set_skip_taskbar_hint(True)
+
+	wm = WindowManager(group_chat)
+	
+	wm.set_width(0.5, WindowManager.SCREEN_RELATIVE)
+	wm.set_height(0.5, WindowManager.SCREEN_RELATIVE)
+	wm.set_position(WindowManager.TOP)
 	wm.manage()
 	
 	console.set_parent_window(activity_container.window)
