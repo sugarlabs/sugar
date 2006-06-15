@@ -11,10 +11,7 @@ class PresenceWindow(gtk.Window):
 	_MODEL_COL_BUDDY = 2
 	
 	def __init__(self, activity_container):
-		gtk.Window.__init__(self)
-		
-		self.set_decorated(False)
-		self.set_skip_taskbar_hint(True)
+		gtk.Window.__init__(self, gtk.WINDOW_POPUP)
 		
 		self._activity_container = activity_container
 

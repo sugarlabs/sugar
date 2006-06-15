@@ -215,7 +215,6 @@ class ActivityHost(dbus.service.Object):
 class ActivityContainer(dbus.service.Object):
 
 	def __init__(self, service, bus):
-
 		self.activities = []
 
 		self.bus = bus
@@ -225,7 +224,11 @@ class ActivityContainer(dbus.service.Object):
 		bus.add_signal_receiver(self.name_owner_changed, dbus_interface = "org.freedesktop.DBus", signal_name = "NameOwnerChanged")
 
 		self.window = gtk.Window()
+		self.window.connect("key-press-event", self.__key_press_event_cb)
 		self.window.set_title("OLPC Sugar")
+
+		self._fullscreen = False
+
 		self.notebook = gtk.Notebook()
 
 		tab_label = gtk.Label("Everyone")
@@ -308,6 +311,15 @@ class ActivityContainer(dbus.service.Object):
 		for owner, activity in self.activities:
 			print "  %d: owner=%s activity_object_name=%s" % (i, owner, activity.dbus_object_name)
 			i += 1
+	
+	def __key_press_event_cb(self, window, event):
+		if event.keyval == gtk.keysyms.F11:
+			if self._fullscreen:
+				window.unfullscreen()
+				self._fullscreen = False
+			else:
+				window.fullscreen()
+				self._fullscreen = True			
 
 class ConsoleLogger(dbus.service.Object):
 	def __init__(self):
@@ -383,6 +395,7 @@ def main():
 	wm.manage()
 
 	presence_window = PresenceWindow(activity_container)
+	presence_window.set_transient_for(activity_container.window)
 
 	wm = WindowManager(presence_window)
 	
@@ -392,6 +405,7 @@ def main():
 	wm.manage()
 	
 	group_chat = GroupChat()
+	group_chat.set_transient_for(activity_container.window)
 	group_chat.set_decorated(False)
 	group_chat.set_skip_taskbar_hint(True)
 
