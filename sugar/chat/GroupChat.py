@@ -8,7 +8,7 @@ GROUP_CHAT_SERVICE_PORT = 6200
 
 class GroupChat(Chat):
 	def __init__(self):
-		Chat.__init__(self, self)
+		Chat.__init__(self)
 		self._chats = {}
 
 	def get_group(self):

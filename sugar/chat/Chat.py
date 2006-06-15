@@ -10,16 +10,9 @@ import pygtk
 pygtk.require('2.0')
 import gtk, gobject, pango
 
-from sugar.shell import activity
-from sugar.presence import Buddy
-from sugar.presence.Service import Service
-from sugar.p2p.Stream import Stream
-from sugar.p2p import network
-from sugar.session.LogWriter import LogWriter
-from sugar.chat.sketchpad.Toolbox import Toolbox
-from sugar.chat.sketchpad.SketchPad import SketchPad
 from sugar.chat.Emoticons import Emoticons
-
+from sugar.chat.ChatToolbar import ChatToolbar
+from sugar.chat.ChatEditor import ChatEditor
 import richtext
 
 PANGO_SCALE = 1024 # Where is this defined?
@@ -28,92 +21,14 @@ class Chat(gtk.Window):
 	SERVICE_TYPE = "_olpc_chat._tcp"
 	SERVICE_PORT = 6100
 
-	def __init__(self, controller):
+	def __init__(self):
 		gtk.Window.__init__(self)
 	
-		#Buddy.recognize_buddy_service_type(Chat.SERVICE_TYPE)
-		self._controller = controller
 		self._stream_writer = None		
-		self._emt_popup = None
 
 		vbox = gtk.VBox(False, 6)
+		vbox.set_border_width(12)
 
-		self._hbox = gtk.HBox(False, 12)
-		self._hbox.set_border_width(12)
-
-		[chat_vbox, buf] = self._create_chat()
-		self._hbox.pack_start(chat_vbox)
-		chat_vbox.show()
-		
-		vbox.pack_start(self._hbox)
-		self._hbox.show()
-
-		toolbar = self._create_toolbar(buf)
-		vbox.pack_start(toolbar, False)
-		toolbar.show()
-
-		self.add(vbox)
-		vbox.show()
-
-	def _create_toolbox(self):
-		vbox = gtk.VBox(False, 12)
-		
-		toolbox = Toolbox()
-		toolbox.connect('tool-selected', self._tool_selected)
-		toolbox.connect('color-selected', self._color_selected)
-		vbox.pack_start(toolbox, False)
-		toolbox.show()
-		
-		button_box = gtk.HButtonBox()
-
-		send_button = gtk.Button('Send')
-		button_box.pack_start(send_button, False)
-		send_button.connect('clicked', self.__send_button_clicked_cb)
-
-		vbox.pack_start(button_box, False)
-		button_box.show()
-	
-		return vbox
-		
-	def __send_button_clicked_cb(self, button):
-		self.send_sketch(self._sketchpad.to_svg())
-		self._sketchpad.clear()
-
-	def _color_selected(self, toolbox, color):
-		self._sketchpad.set_color(color)
-	
-	def _tool_selected(self, toolbox, tool_id):
-		if tool_id == 'text':
-			self._editor_nb.set_current_page(0)
-		else:
-			self._editor_nb.set_current_page(1)
-	
-	def _create_chat_editor(self):
-		nb = gtk.Notebook()
-		nb.set_show_tabs(False)
-		nb.set_show_border(False)
-		nb.set_size_request(-1, 70)
-	
-		chat_view_sw = gtk.ScrolledWindow()
-		chat_view_sw.set_shadow_type(gtk.SHADOW_IN)
-		chat_view_sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-		self._editor = richtext.RichTextView()
-		self._editor.connect("key-press-event", self.__key_press_event_cb)
-		chat_view_sw.add(self._editor)
-		self._editor.show()
-		
-		nb.append_page(chat_view_sw)
-		chat_view_sw.show()
-		
-		self._sketchpad = SketchPad()
-		nb.append_page(self._sketchpad)
-		self._sketchpad.show()
-		
-		nb.set_current_page(0)
-		
-		return nb
-	
-	def _create_chat(self):
 		chat_vbox = gtk.VBox()
 		chat_vbox.set_spacing(6)
 
@@ -130,12 +45,21 @@ class Chat(gtk.Window):
 		self._chat_view.show()
 		chat_vbox.pack_start(self._chat_sw)
 		self._chat_sw.show()
-
-		self._editor_nb = self._create_chat_editor()
-		chat_vbox.pack_start(self._editor_nb, False)
-		self._editor_nb.show()
 		
-		return chat_vbox, self._editor.get_buffer()
+		vbox.pack_start(chat_vbox)
+		chat_vbox.show()
+
+		self._editor = ChatEditor()
+
+		toolbar = ChatToolbar(self._editor.get_buffer())
+		vbox.pack_start(toolbar, False)
+		toolbar.show()
+
+		vbox.pack_start(self._editor, False)
+		self._editor.show()
+
+		self.add(vbox)
+		vbox.show()
 
 	def __get_browser_shell(self):
 		bus = dbus.SessionBus()
@@ -145,123 +69,6 @@ class Chat(gtk.Window):
 	def __link_clicked_cb(self, view, address):
 		self.__get_browser_shell().open_browser(address)
 
-	def __key_press_event_cb(self, text_view, event):
-		if event.keyval == gtk.keysyms.Return:
-			buf = text_view.get_buffer()
-			text = buf.get_text(buf.get_start_iter(), buf.get_end_iter())
-			if len(text.strip()) > 0:
-				serializer = richtext.RichTextSerializer()
-				text = serializer.serialize(buf)
-				self.send_text_message(text)
-
-			buf.set_text("")
-			buf.place_cursor(buf.get_start_iter())
-
-			return True
-
-	def _create_emoticons_popup(self):
-		model = gtk.ListStore(gtk.gdk.Pixbuf, str)
-		
-		for name in Emoticons.get_instance().get_all():
-			icon_theme = gtk.icon_theme_get_default()
-			pixbuf = icon_theme.load_icon(name, 16, 0)
-			model.append([pixbuf, name])
-		
-		icon_view = gtk.IconView(model)
-		icon_view.connect('selection-changed', self.__emoticon_selection_changed_cb)
-		icon_view.set_pixbuf_column(0)
-		icon_view.set_selection_mode(gtk.SELECTION_SINGLE)
-		
-		frame = gtk.Frame()
-		frame.set_shadow_type(gtk.SHADOW_ETCHED_IN)
-		frame.add(icon_view)
-		icon_view.show()		
-		
-		window = gtk.Window(gtk.WINDOW_POPUP)
-		window.add(frame)
-		frame.show()
-		
-		return window
-		
-	def __emoticon_selection_changed_cb(self, icon_view):
-		items = icon_view.get_selected_items()
-		if items:
-			model = icon_view.get_model()
-			icon_name = model[items[0]][1]
-			self._editor.get_buffer().append_icon(icon_name)
-		self._emt_popup.hide()
-
-	def _create_toolbar(self, rich_buf):
-		toolbar = richtext.RichTextToolbar(rich_buf)
-
-		item = gtk.ToolButton()
-
-		hbox = gtk.HBox(False, 6)
-
-		e_image = gtk.Image()
-		e_image.set_from_icon_name('stock_smiley-1', gtk.ICON_SIZE_SMALL_TOOLBAR)
-		hbox.pack_start(e_image)
-		e_image.show()
-		
-		arrow = gtk.Arrow(gtk.ARROW_DOWN, gtk.SHADOW_NONE)
-		hbox.pack_start(arrow)
-		arrow.show()
-
-		item.set_icon_widget(hbox)
-		item.set_homogeneous(False)
-		item.connect("clicked", self.__emoticons_button_clicked_cb)
-		toolbar.insert(item, -1)
-		item.show()
-		
-		separator = gtk.SeparatorToolItem()
-		toolbar.insert(separator, -1)
-		separator.show()
-
-		item = gtk.MenuToolButton(None, "Links")
-		item.set_menu(gtk.Menu())
-		item.connect("show-menu", self.__show_link_menu_cb)
-		toolbar.insert(item, -1)
-		item.show()
-		
-		return toolbar
-		
-	def __emoticons_button_clicked_cb(self, button):
-		# FIXME grabs...
-		if not self._emt_popup:
-			self._emt_popup = self._create_emoticons_popup()
-
-		if self._emt_popup.get_property('visible'):
-			self._emt_popup.hide()
-		else:
-			width = 180
-			height = 130
-		
-			self._emt_popup.set_default_size(width, height)
-		
-			[x, y] = button.window.get_origin()
-			x += button.allocation.x
-			y += button.allocation.y - height
-			self._emt_popup.move(x, y)
-		
-			self._emt_popup.show()
-
-	def __link_activate_cb(self, item, link):
-		buf = self._editor.get_buffer()
-		buf.append_link(link['title'], link['address'])
-
-	def __show_link_menu_cb(self, button):
-		menu = gtk.Menu()
-		
-		links = self.__get_browser_shell().get_links()
-
-		for link in links:
-			item = gtk.MenuItem(link['title'], False)
-			item.connect("activate", self.__link_activate_cb, link)
-			menu.append(item)
-			item.show()
-		
-		button.set_menu(menu)
-		
 	def _scroll_chat_view_to_bottom(self):
 		# Only scroll to bottom if the view is already close to the bottom
 		vadj = self._chat_sw.get_vadjustment()
