@@ -10,6 +10,12 @@ import pygtk
 pygtk.require('2.0')
 import gtk, gobject, pango
 
+from sugar.shell import activity
+from sugar.presence import Buddy
+from sugar.presence.Service import Service
+from sugar.p2p.Stream import Stream
+from sugar.p2p import network
+from sugar.session.LogWriter import LogWriter
 from sugar.chat.sketchpad.Toolbox import Toolbox
 from sugar.chat.sketchpad.SketchPad import SketchPad
 from sugar.chat.Emoticons import Emoticons

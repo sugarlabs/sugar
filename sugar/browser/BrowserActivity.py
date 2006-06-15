@@ -1,25 +1,24 @@
-from xml.sax import saxutils
-
 import dbus
 import pygtk
 pygtk.require('2.0')
 import gtk
 import geckoembed
+import urllib
 
 from sugar.shell import activity
 from sugar.browser import NotificationBar
 from sugar.browser import NavigationToolbar
+
+_BROWSER_ACTIVITY_TYPE = "_web_browser_olpc._udp"
 
 class BrowserActivity(activity.Activity):
 	SOLO = 1
 	FOLLOWING = 2
 	LEADING = 3
 
-	def __init__(self, group, uri):
+	def __init__(self, uri):
 		activity.Activity.__init__(self)
-
 		self.uri = uri
-		self._group = group
 		self._mode = BrowserActivity.SOLO
 
 	def _update_shared_location(self):
@@ -85,14 +84,14 @@ class BrowserActivity(activity.Activity):
 		self._setup_shared(self.uri)
 	
 	def publish(self):
-		print 'Publish %s' % self.activity_get_id() 
+		print 'Publish %s' % self.get_id() 
 	
 	def get_embed(self):
 		return self.embed
 	
 	def share(self):
-		address = self.embed.get_address()
-		self._model = self._group.get_store().create_model(address)
+		url = self.embed.get_address()
+		self._model = self._group.get_store().create_model(url)
 		self._model.set_value('owner', self._group.get_owner().get_nick_name())
 		self._update_shared_location()
 		self.set_mode(BrowserActivity.LEADING)
@@ -101,8 +100,8 @@ class BrowserActivity(activity.Activity):
 		proxy_obj = bus.get_object('com.redhat.Sugar.Chat', '/com/redhat/Sugar/Chat')
 		chat_shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.ChatShell')
 		
-		escaped_title = saxutils.escape(self.embed.get_title())
-		escaped_address = saxutils.escape(address)
+		escaped_title = urllib.quote(self.embed.get_title())
+		escaped_url = urllib.quote(url)
 		chat_shell.send_text_message('<richtext><link href="' + escaped_address +
 								'">' + escaped_title + '</link></richtext>')
 	
