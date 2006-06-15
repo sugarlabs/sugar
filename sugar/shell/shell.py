@@ -158,7 +158,7 @@ class ActivityHost(dbus.service.Object):
 			# are not correctly marshalled
 			if c < 0:
 				c += 256
-				pixstr += chr(c)
+			pixstr += chr(c)
 
 		pixbuf = gtk.gdk.pixbuf_new_from_data(pixstr, colorspace, has_alpha, bits_per_sample, width, height, rowstride)
 		#print pixbuf
