@@ -6,6 +6,9 @@ import dbus
 import cgi
 
 import google
+from sugar.presence.PresenceService import PresenceService
+from sugar.presence import Service
+from sugar.browser import BrowserActivity
 
 class ActivitiesModel(gtk.ListStore):
 	def __init__(self):
@@ -52,6 +55,12 @@ class StartPage(gtk.HBox):
 	def __init__(self):
 		gtk.HBox.__init__(self)
 
+		self._pservice = PresenceService.get_instance()
+		self._pservice.connect("activity-announced", self._on_activity_announced_cb)
+		self._pservice.connect("new-service-adv", self._on_new_service_adv_cb)
+		self._pservice.start()
+		self._pservice.track_service_type(BrowserActivity._BROWSER_ACTIVITY_TYPE)
+
 		vbox = gtk.VBox()
 
 		search_box = gtk.HBox(False, 6)
@@ -84,9 +93,18 @@ class StartPage(gtk.HBox):
 		self._activities = ActivitiesView()
 		sw.add(self._activities)
 		self._activities.show()
-		
-		self.pack_start(sw)		
+
+		self.pack_start(sw)	
 		sw.show()
+
+	def _on_new_service_adv_cb(self, pservice, uid, stype):
+		if uid is not None:
+			real_stype = Service.compose_service_type(stype, uid)
+			self._pservice.track_service_type(real_stype)
+
+	def _on_activity_announced_cb(self, pservice, service, buddy):
+		(activity_uid, activity_stype) = service.get_activity_uid()
+		print "::: %s announced activity UID %s of type %s" % (buddy.get_nick_name(), activity_uid, activity_stype)
 
 	def _search_entry_activate_cb(self, entry):
 		self._search()
