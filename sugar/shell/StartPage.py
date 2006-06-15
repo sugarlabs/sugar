@@ -3,6 +3,7 @@ pygtk.require('2.0')
 import gtk
 import pango
 import dbus
+import cgi
 
 import google
 
@@ -33,6 +34,7 @@ class ActivitiesView(gtk.TreeView):
 		address = model.get_value(it, 1)
 		
 		markup = '<big><b>' + title + '</b></big>' + '\n' + address
+		markup = cgi.escape(markup)  # escape the markup
 		
 		cell.set_property('markup', markup)
 		cell.set_property('ellipsize', pango.ELLIPSIZE_END)
