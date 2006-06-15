@@ -41,6 +41,9 @@ def _txt_to_dict(txt):
 		prop_dict[key] = value
 	return prop_dict
 
+def compose_service_type(stype, activity_uid):
+	return "_%s_%s" % (activity_uid, stype)
+
 def _decompose_service_type(stype):
 	"""Break a service type into the UID and real service type, if we can."""
 	if len(stype) < util.ACTIVITY_UID_LEN + 5:
@@ -54,7 +57,7 @@ def _decompose_service_type(stype):
 	uid = stype[start:end]
 	if not util.validate_activity_uid(uid):
 		return (None, stype)
-	return (uid, stype[end:])
+	return (uid, stype[end+1:])
 
 def is_multicast_address(address):
 	"""Simple numerical check for whether an IP4 address
@@ -89,13 +92,19 @@ class Service(object):
 		if len(domain) and domain != "local" and domain != u"local":
 			raise ValueError("must use the 'local' domain (for now).")
 
+		if type(stype) == type(u""):
+			stype = stype.encode()
 		(uid, real_stype) = _decompose_service_type(stype)
-		if uid and not util.validate_activity_uid(activity_uid):
-			raise ValueError("activity_uid not a valid activity UID.")
-		
+		if uid and not util.validate_activity_uid(uid):
+			raise ValueError("service type activity uid not a valid activity UID.")
+
+		if type(name) == type(u""):
+			name = name.encode()
 		self._name = name
 		self._stype = stype
-		self._real_stype = real_stype
+		self._activity_stype = real_stype
+		if type(domain) == type(u""):
+			domain = domain.encode()
 		self._domain = domain
 		self._address = None
 		self.set_address(address)
@@ -147,14 +156,13 @@ class Service(object):
 			self._properties = _txt_to_dict(properties)
 		elif type(properties) == type({}):
 			self._properties = properties
+			for key, value in self._properties.items():
+				if type(self._properties[key]) == type(u""):
+					self._properties[key] = self._properties[key].encode()
 
 	def get_type(self):
 		"""Return the service's service type."""
 		return self._stype
-
-	def get_network_type(self):
-		"""Return the full service type, including activity UID."""
-		return self._real_stype
 
 	def get_port(self):
 		return self._port
@@ -173,6 +181,8 @@ class Service(object):
 				raise ValueError("must specify a valid address.")
 			if not len(address):
 				raise ValueError("must specify a valid address.")
+		if address and type(address) == type(u""):
+			address = address.encode()
 		self._address = address
 
 	def get_domain(self):
@@ -181,7 +191,7 @@ class Service(object):
 
 	def get_activity_uid(self):
 		"""Return the activity UID this service is associated with, if any."""
-		return self._activity_uid
+		return (self._activity_uid, self._activity_stype)
 
 
 #################################################################

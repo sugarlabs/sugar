@@ -8,8 +8,12 @@ import urllib
 from sugar.shell import activity
 from sugar.browser import NotificationBar
 from sugar.browser import NavigationToolbar
+from sugar.presence.PresenceService import PresenceService
+
 
 _BROWSER_ACTIVITY_TYPE = "_web_browser_olpc._udp"
+_SERVICE_URI_TAG = "URI"
+_SERVICE_TITLE_TAG = "Title"
 
 class BrowserActivity(activity.Activity):
 	SOLO = 1
@@ -20,6 +24,11 @@ class BrowserActivity(activity.Activity):
 		activity.Activity.__init__(self)
 		self.uri = uri
 		self._mode = BrowserActivity.SOLO
+		self._pservice = PresenceService.get_instance()
+		self._pservice.start()
+		self._pservice.track_service_type(_BROWSER_ACTIVITY_TYPE)
+		self._share_service = None
+		self._model = None
 
 	def _update_shared_location(self):
 		address = self.embed.get_address()
@@ -46,10 +55,11 @@ class BrowserActivity(activity.Activity):
 			self._notif_bar.show()
 
 	def _setup_shared(self, uri):
-		self._model = self._group.get_store().get_model(uri)
-		if self._model:
-			self.set_mode(BrowserActivity.FOLLOWING)
-			self._model.add_listener(self.__shared_location_changed_cb)
+		if False:
+			self._model = self._group.get_store().get_model(uri)
+			if self._model:
+				self.set_mode(BrowserActivity.FOLLOWING)
+				self._model.add_listener(self.__shared_location_changed_cb)
 	
 	def on_connected_to_shell(self):
 		self.set_ellipsize_tab(True)
@@ -90,20 +100,27 @@ class BrowserActivity(activity.Activity):
 		return self.embed
 	
 	def share(self):
-		url = self.embed.get_address()
-		self._model = self._group.get_store().create_model(url)
-		self._model.set_value('owner', self._group.get_owner().get_nick_name())
-		self._update_shared_location()
-		self.set_mode(BrowserActivity.LEADING)
-	
-		bus = dbus.SessionBus()
-		proxy_obj = bus.get_object('com.redhat.Sugar.Chat', '/com/redhat/Sugar/Chat')
-		chat_shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.ChatShell')
-		
 		escaped_title = urllib.quote(self.embed.get_title())
-		escaped_url = urllib.quote(url)
-		chat_shell.send_text_message('<richtext><link href="' + escaped_address +
-								'">' + escaped_title + '</link></richtext>')
+		escaped_url = urllib.quote(self.embed.get_address())
+
+		# Publish ourselves on the network
+		properties = {_SERVICE_URI_TAG: escaped_url, _SERVICE_TITLE_TAG: escaped_title}
+		self._share_service = self._pservice.share_activity(self,
+				stype=_BROWSER_ACTIVITY_TYPE, properties=properties)
+
+		if False:
+			# Create our activity-specific browser sharing service
+			self._model = self._group.get_store().create_model(url)
+			self._model.set_value('owner', self._pservice.get_owner().get_nick_name())
+			self._update_shared_location()
+			self.set_mode(BrowserActivity.LEADING)
+	
+			bus = dbus.SessionBus()
+			proxy_obj = bus.get_object('com.redhat.Sugar.Chat', '/com/redhat/Sugar/Chat')
+			chat_shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.ChatShell')
+			
+			chat_shell.send_text_message('<richtext><link href="' + escaped_address +
+									'">' + escaped_title + '</link></richtext>')
 	
 	def __title_cb(self, embed):
 		self.set_tab_text(embed.get_title())

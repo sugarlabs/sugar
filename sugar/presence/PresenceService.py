@@ -4,6 +4,7 @@ import Buddy
 import Service
 import os
 import string
+import random
 from sugar import util
 
 def _get_local_ip_address(ifname):
@@ -164,8 +165,6 @@ class PresenceService(gobject.GObject):
 			if domain and adv.domain() != domain:
 				continue
 			adv_list.append(adv)
-		if not len(adv_list):
-			return None
 		return adv_list
 
 	def _is_special_service_type(self, stype):
@@ -191,6 +190,7 @@ class PresenceService(gobject.GObject):
 			if service.get_address() in self._local_addrs.values():
 				buddy = Buddy.Owner(service)
 				self._owner = buddy
+				print "Set owner to %s" % name
 			else:
 				buddy = Buddy.Buddy(service)
 			self._buddies[name] = buddy
@@ -200,7 +200,7 @@ class PresenceService(gobject.GObject):
 
 	def _handle_new_service_for_activity(self, service, buddy):
 		# If the serivce is a group service, merge it into our groups list
-		uid = service.get_activity_uid()
+		(uid, ignore) = service.get_activity_uid()
 		if not uid:
 			uid = "*"
 		if not self._activity_services.has_key(uid):
@@ -208,7 +208,7 @@ class PresenceService(gobject.GObject):
 		self._activity_services[uid].append((buddy, service))
 
 	def _handle_remove_service_for_activity(self, service, buddy):
-		uid = service.get_activity_uid()
+		(uid, ignore) = service.get_activity_uid()
 		if not uid:
 			uid = "*"
 		if self._activity_services.has_key(uid):
@@ -238,7 +238,8 @@ class PresenceService(gobject.GObject):
 
 		# Merge the service into our buddy and group lists, if needed
 		buddy = self._handle_new_service_for_buddy(service)
-		if buddy and service.get_activity_uid():
+		(uid, ignore) = service.get_activity_uid()
+		if buddy and uid:
 			self._handle_new_service_for_activity(service, buddy)
 
 		return False
@@ -376,8 +377,11 @@ class PresenceService(gobject.GObject):
 		a certain mDNS service types."""
 		if not self._started:
 			raise RuntimeError("presence service must be started first.")
-		if not type(stype) == type(""):
+		print "about to track type %s" % stype
+		if type(stype) != type("") and type(stype) != type(u""):
 			raise ValueError("service type must be a string.")
+		if type(stype) == type(u""):
+			stype = stype.encode()
 		if self._is_special_service_type(stype):
 			return
 		if stype in self._allowed_service_types:
@@ -423,7 +427,7 @@ class PresenceService(gobject.GObject):
 		"""Convenience function to share an activity with other buddies."""
 		uid = activity.get_id()
 		owner_nick = self._owner.get_nick_name()
-		real_stype = "_%s_%s" % (uid, stype)
+		real_stype = Service.compose_service_type(stype, uid)
 		if address and type(address) != type(""):
 			raise ValueError("address must be a valid string.")
 		if not address:
@@ -449,7 +453,7 @@ class PresenceService(gobject.GObject):
 			raise RuntimeError("presence service must be started first.")
 
 		rs_name = service.get_name()
-		rs_stype = service.get_network_type()
+		rs_stype = service.get_type()
 		rs_port = service.get_port()
 		if type(rs_port) != type(1) and (rs_port <= 1024 or rs_port > 65536):
 			raise ValueError("invalid service port.")
@@ -472,7 +476,8 @@ class PresenceService(gobject.GObject):
 			# should un-register it an re-register with the correct info
 			if str(exc) == "Local name collision":
 				pass
-		self.track_service_type(service.get_network_type())
+		(uid, activity_stype) = service.get_activity_uid()
+		self.track_service_type(activity_stype)
 		return group
 
 	def get_buddy_by_nick_name(self, nick_name):
