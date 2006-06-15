@@ -2,6 +2,7 @@ import time
 import sha
 import random
 import binascii
+import string
 
 def _stringify_sha(sha_hash):
 	"""Convert binary sha1 hash data into printable characters."""

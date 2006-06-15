@@ -1,5 +1,3 @@
-import pwd
-import os
 import base64
 
 import pygtk
@@ -8,7 +6,6 @@ import gtk, gobject
 
 from sugar.p2p import Stream
 from sugar.p2p import network
-
 
 PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
 

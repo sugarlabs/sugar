@@ -156,8 +156,9 @@ class ActivityHost(dbus.service.Object):
 		for c in data:
 			# Work around for a bug in dbus < 0.61 where integers
 			# are not correctly marshalled
-			if c < 0: c += 256
-			pixstr += chr(c)
+			if c < 0:
+				c += 256
+				pixstr += chr(c)
 
 		pixbuf = gtk.gdk.pixbuf_new_from_data(pixstr, colorspace, has_alpha, bits_per_sample, width, height, rowstride)
 		#print pixbuf
@@ -408,4 +409,5 @@ if __name__ == "__main__":
 	try:
 		gtk.main()
 	except KeyboardInterrupt:
+		print 'Ctrl+c pressed, exiting...'
 		pass

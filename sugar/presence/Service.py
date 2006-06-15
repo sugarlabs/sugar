@@ -69,8 +69,6 @@ def is_multicast_address(address):
 	return False
 
 
-_ACTIVITY_UID_TAG = "ActivityUID"
-
 class Service(object):
 	"""Encapsulates information about a specific ZeroConf/mDNS
 	service as advertised on the network."""
@@ -103,16 +101,7 @@ class Service(object):
 		self.set_port(port)
 		self._properties = {}
 		self.set_properties(properties)
-
-		# Ensure that an ActivityUID tag, if given, matches
-		# what we expect from the service type
-		if self._properties.has_key(_ACTIVITY_UID_TAG):
-			prop_uid = self._properties[_ACTIVITY_UID_TAG]
-			if (prop_uid and not uid) or (prop_uid != uid):
-				raise ValueError("ActivityUID property specified, but the service type's activity UID didn't match it.")
 		self._activity_uid = uid
-		if uid and not self._properties.has_key(_ACTIVITY_UID_TAG):
-			self._properties[_ACTIVITY_UID_TAG] = uid
 
 	def get_name(self):
 		"""Return the service's name, usually that of the
@@ -151,10 +140,6 @@ class Service(object):
 	def get_type(self):
 		"""Return the service's service type."""
 		return self._stype
-
-	def get_network_type(self):
-		"""Return the full service type, including activity UID."""
-		return self._real_stype
 
 	def get_port(self):
 		return self._port

@@ -1,6 +1,6 @@
 import socket
 
-from sugar.p2p.Service import Service
+from sugar.presence.Service import Service
 from sugar.p2p.Notifier import Notifier
 from sugar.p2p.model.AbstractModel import AbstractModel
 from sugar.p2p import network

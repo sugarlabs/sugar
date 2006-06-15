@@ -1,5 +1,5 @@
 from sugar.p2p import network
-from sugar.p2p.Service import Service
+from sugar.presence.Service import Service
 
 class Notifier:
 	TYPE = "_olpc_model_notification._udp"

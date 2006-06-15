@@ -111,13 +111,13 @@ class PresenceService(gobject.GObject):
 		self._service_advs = []
 
 		# Main activity UID to filter services on
-		self._activity_uids = []
+		self._activity_uid = None
 
 		self._bus = dbus.SystemBus()
 		self._server = dbus.Interface(self._bus.get_object(avahi.DBUS_NAME,
 				avahi.DBUS_PATH_SERVER), avahi.DBUS_INTERFACE_SERVER)
 
-	def start(self):
+	def start(self, activity_uid=None):
 		"""Start the presence service by kicking off service discovery."""
 		self._lock.acquire()
 		if self._started:
@@ -125,6 +125,10 @@ class PresenceService(gobject.GObject):
 			return
 		self._started = True
 		self._lock.release()
+
+		if activity_uid and not util.validate_activity_uid(activity_uid):
+			raise ValueError("activity uid must be a valid UID string.")
+		self._activity_uid = activity_uid
 
 		# Always browse .local
 		self._new_domain_cb(avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, "local")
@@ -280,9 +284,11 @@ class PresenceService(gobject.GObject):
 
 		# If we care about the service right now, resolve it
 		resolve = False
-		if uid in self._activity_uids:
+		if self._activity_uid and self._activity_uid == uid:
 			if stype in self._allowed_service_types:
 				resolve = True
+		elif not self._activity_uid:
+			resolve = True
 		if self._is_special_service_type(stype):
 			resolve = True
 		if resolve:
@@ -383,11 +389,6 @@ class PresenceService(gobject.GObject):
 		if stype in self._allowed_service_types:
 			return
 
-		# Decompose service type if we can
-		(uid, stype) = Service._decompose_service_type(stype)
-		if uid and util.validate_activity_uid(uid):
-			if uid not in self._activity_uids:
-				self._activity_uids.append(uid)
 		self._allowed_service_types.append(stype)
 
 		# Find unresolved services that match the service type
@@ -403,45 +404,16 @@ class PresenceService(gobject.GObject):
 			raise RuntimeError("presence service must be started first.")
 		if not type(stype) == type(""):
 			raise ValueError("service type must be a string.")
-
-		# Decompose service type if we can
-		(uid, stype) = Service._decompose_service_type(stype)
-		if uid and util.validate_activity_uid(uid):
-			if uid in self._activity_uids:
-				self._activity_uids.remove(uid)
-		if stype in self._allowed_service_types:
+		if name in self._allowed_service_types:
 			self._allowed_service_types.remove(stype)
 
-	def join_shared_activity(self, service):
+	def join_group(self, group):
 		"""Convenience function to join a group and notify other buddies
 		that you are a member of it."""
-		if not isinstance(service, Service.Service):
-			raise ValueError("service was not a valid service object.")
+		if not isinstance(group, Group.Group):
+			raise ValueError("group was not a valid group.")
+		gservice = group.get_service()
 		self.register_service(service)
-
-	def share_activity(self, activity, stype, properties={}, address=None, port=None):
-		"""Convenience function to share an activity with other buddies."""
-		uid = activity.get_id()
-		owner_nick = self._owner.get_nick_name()
-		real_stype = "_%s_%s" % (uid, stype)
-		if address and type(address) != type(""):
-			raise ValueError("address must be a valid string.")
-		if not address:
-			# Use random currently unassigned multicast address
-			address = "232.%d.%d.%d" % (random.randint(0, 254), random.randint(1, 254),
-					random.randint(1, 254))
-
-		if port and (type(port) != type(1) or port <= 1024 or port >= 65535):
-			raise ValueError("port must be a number between 1024 and 65535")
-		if not port:
-			# random port #
-			port = random.randint(5000, 65535)
-
-		service = Service.Service(name=owner_nick, stype=real_stype, domain="local",
-				address=address, port=port, properties=properties)
-		# Publish it to the world
-		self.register_service(service)
-		return service
 
 	def register_service(self, service):
 		"""Register a new service, advertising it to other Buddies on the network."""
@@ -449,7 +421,7 @@ class PresenceService(gobject.GObject):
 			raise RuntimeError("presence service must be started first.")
 
 		rs_name = service.get_name()
-		rs_stype = service.get_network_type()
+		rs_stype = service.get_type()
 		rs_port = service.get_port()
 		if type(rs_port) != type(1) and (rs_port <= 1024 or rs_port > 65536):
 			raise ValueError("invalid service port.")
@@ -472,7 +444,7 @@ class PresenceService(gobject.GObject):
 			# should un-register it an re-register with the correct info
 			if str(exc) == "Local name collision":
 				pass
-		self.track_service_type(service.get_network_type())
+		self.track_service_type(rs_stype)
 		return group
 
 	def get_buddy_by_nick_name(self, nick_name):

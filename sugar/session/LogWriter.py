@@ -1,7 +1,6 @@
 import os
 import sys
 import dbus
-import gobject
 
 class LogWriter:
 	def __init__(self, application):

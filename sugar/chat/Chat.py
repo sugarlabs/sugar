@@ -1,44 +1,31 @@
 #!/usr/bin/env python
 
-import base64
 import sha
 
 import dbus
 import dbus.service
 import dbus.glib
-import threading
 
 import pygtk
 pygtk.require('2.0')
 import gtk, gobject, pango
 
-from sugar.shell import activity
-from sugar.presence import Buddy
-from sugar.presence.Service import Service
-from sugar.p2p.Stream import Stream
-from sugar.p2p import network
-from sugar.session.LogWriter import LogWriter
 from sugar.chat.sketchpad.Toolbox import Toolbox
 from sugar.chat.sketchpad.SketchPad import SketchPad
 from sugar.chat.Emoticons import Emoticons
-import sugar.env
 
 import richtext
 
 PANGO_SCALE = 1024 # Where is this defined?
 
-CHAT_SERVICE_TYPE = "_olpc_chat._tcp"
-CHAT_SERVICE_PORT = 6100
-
-GROUP_CHAT_SERVICE_TYPE = "_olpc_group_chat._udp"
-GROUP_CHAT_SERVICE_ADDRESS = "224.0.0.221"
-GROUP_CHAT_SERVICE_PORT = 6200
-
 class Chat(gtk.Window):
+	SERVICE_TYPE = "_olpc_chat._tcp"
+	SERVICE_PORT = 6100
+
 	def __init__(self, controller):
 		gtk.Window.__init__(self)
 	
-		#Buddy.recognize_buddy_service_type(CHAT_SERVICE_TYPE)
+		#Buddy.recognize_buddy_service_type(Chat.SERVICE_TYPE)
 		self._controller = controller
 		self._stream_writer = None		
 		self._emt_popup = None
@@ -144,7 +131,7 @@ class Chat(gtk.Window):
 		
 		return chat_vbox, self._editor.get_buffer()
 
-	def __get_browser_shell():
+	def __get_browser_shell(self):
 		bus = dbus.SessionBus()
 		proxy_obj = bus.get_object('com.redhat.Sugar.Browser', '/com/redhat/Sugar/Browser')
 		self._browser_shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.BrowserShell')
@@ -287,7 +274,7 @@ class Chat(gtk.Window):
 		if icon:
 			rise = int(icon.get_height() / 4) * -1
 
-			chat_service = buddy.get_service(CHAT_SERVICE_TYPE)
+			chat_service = buddy.get_service(Chat.SERVICE_TYPE)
 			hash_string = "%s-%s" % (nick, chat_service.get_address())
 			sha_hash = sha.new()
 			sha_hash.update(hash_string)

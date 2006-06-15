@@ -3,7 +3,6 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
-from sugar.p2p.Stream import Stream
 from sugar.presence.PresenceService import PresenceService
 
 class PresenceWindow(gtk.Window):
@@ -94,9 +93,10 @@ class PresenceWindow(gtk.Window):
 		chat = None
 		buddy = self._buddy_list_model.get_value(aniter, self._MODEL_COL_BUDDY)
 		if buddy and not self._chats.has_key(buddy):
-			chat = BuddyChat(self, buddy)
-			self._chats[buddy] = chat
-			chat.connect_to_shell()
+			#chat = BuddyChat(self, buddy)
+			#self._chats[buddy] = chat
+			#chat.connect_to_shell()
+			pass
 
 	def __buddy_icon_changed_cb(self, buddy):
 		it = self._get_iter_for_buddy(buddy)

@@ -2,8 +2,6 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-import sugar.env
-
 class AddressEntry(gtk.HBox):
 	def __init__(self, callback):
 		gtk.HBox.__init__(self)
