@@ -4,7 +4,6 @@ sugar_PYTHON =			\
 	browser.py		\
 	NotificationBar.py	\
 	BrowserShell.py         \
-	WebActivity.py          \
 	AddressItem.py          \
 	BrowserActivity.py      \
 	NavigationToolbar.py

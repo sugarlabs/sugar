@@ -3,18 +3,10 @@ SUBDIRS = sketchpad
 sugardir = $(pythondir)/sugar/chat
 sugar_PYTHON =		\
 	__init__.py	\
-	chat.py		\
-	richtext.py	\
-	Emoticons.py
-
-icondir = $(pkgdatadir)
-icon_DATA =			\
-	bubble.png		\
-	bubbleOutline.png
-
-activitydir = $(pkgdatadir)/activities
-activity_DATA = chat.activity
+	Chat.py		\
+	Emoticons.py	\
+	GroupChat.py	\
+	richtext.py
 
 EXTRA_DIST = \
-	$(icon_DATA)		\
-	$(activity_DATA)
+	$(icon_DATA)

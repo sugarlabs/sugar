@@ -17,6 +17,7 @@ AC_SUBST(PYGTK_LIBS)
 
 AC_OUTPUT([
 Makefile
+cut-n-paste/Makefile
 sugar/Makefile
 sugar/__installed__.py
 sugar/browser/Makefile

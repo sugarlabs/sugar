@@ -6,6 +6,7 @@ sugardir = $(pythondir)/sugar
 sugar_PYTHON =			\
 	__init__.py		\
 	__installed__.py	\
-	env.py
+	env.py			\
+	util.py
 
 EXTRA_DIST = sugar __uninstalled__.py
