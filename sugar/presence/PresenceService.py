@@ -256,6 +256,7 @@ class PresenceService(gobject.GObject):
 	def _resolve_service(self, interface, protocol, name, stype, domain, flags):
 		"""Resolve and lookup a ZeroConf service to obtain its address and TXT records."""
 		# Ask avahi to resolve this particular service
+		print 'Resolving service ' + name + ' ' + stype
 		self._server.ResolveService(int(interface), int(protocol), name,
 				stype, domain, avahi.PROTO_UNSPEC, dbus.UInt32(0), # use flags here maybe?
 				reply_handler=self._resolve_service_reply_cb_glue,
@@ -395,11 +396,11 @@ class PresenceService(gobject.GObject):
 			return
 
 		# Decompose service type if we can
-		(uid, stype) = Service._decompose_service_type(stype)
+		(uid, dec_stype) = Service._decompose_service_type(stype)
 		if uid and util.validate_activity_uid(uid):
 			if uid not in self._activity_uids:
 				self._activity_uids.append(uid)
-		self._allowed_service_types.append(stype)
+		self._allowed_service_types.append(dec_stype)
 
 		# Find unresolved services that match the service type
 		# we're now interested in, and resolve them

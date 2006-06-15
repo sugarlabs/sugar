@@ -100,7 +100,6 @@ class StartPage(gtk.HBox):
 	def _on_new_service_adv_cb(self, pservice, uid, stype):
 		if uid is not None:
 			real_stype = Service.compose_service_type(stype, uid)
-			print "Will ask to track uid=%s, stype=%s" % (uid, stype)
 			self._pservice.track_service_type(real_stype)
 
 	def _on_activity_announced_cb(self, pservice, service, buddy):
