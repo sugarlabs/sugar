@@ -11,7 +11,7 @@ from sugar.browser import NavigationToolbar
 from sugar.presence.PresenceService import PresenceService
 
 
-_BROWSER_ACTIVITY_TYPE = "_web_browser_olpc._udp"
+_BROWSER_ACTIVITY_TYPE = "_web_olpc._udp"
 _SERVICE_URI_TAG = "URI"
 _SERVICE_TITLE_TAG = "Title"
 
