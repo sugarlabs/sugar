@@ -1,6 +1,7 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
+import pango
 import dbus
 
 import google
@@ -13,8 +14,8 @@ class ActivitiesModel(gtk.ListStore):
 		self.append([ title, address ])
 
 class ActivitiesView(gtk.TreeView):
-	def __init__(self, model):
-		gtk.TreeView.__init__(self, model)
+	def __init__(self):
+		gtk.TreeView.__init__(self)
 		
 		self.set_headers_visible(False)
 		
@@ -23,10 +24,19 @@ class ActivitiesView(gtk.TreeView):
 
 		cell = gtk.CellRendererText()
 		column.pack_start(cell, True)
-		column.add_attribute(cell, 'text', 0)
+		column.set_cell_data_func(cell, self._cell_data_func)
 		
 		self.connect('row-activated', self._row_activated_cb)
 	
+	def _cell_data_func(self, column, cell, model, it):
+		title = model.get_value(it, 0)
+		address = model.get_value(it, 1)
+		
+		markup = '<big><b>' + title + '</b></big>' + '\n' + address
+		
+		cell.set_property('markup', markup)
+		cell.set_property('ellipsize', pango.ELLIPSIZE_END)
+			
 	def _row_activated_cb(self, treeview, path, column):
 		bus = dbus.SessionBus()
 		proxy_obj = bus.get_object('com.redhat.Sugar.Browser', '/com/redhat/Sugar/Browser')
@@ -46,6 +56,7 @@ class StartPage(gtk.HBox):
 		search_box.set_border_width(24)
 		
 		self._search_entry = gtk.Entry()
+		self._search_entry.connect('activate', self._search_entry_activate_cb)
 		search_box.pack_start(self._search_entry)
 		self._search_entry.show()
 		
@@ -64,17 +75,31 @@ class StartPage(gtk.HBox):
 		self.pack_start(vbox)
 		vbox.show()
 
-		self._activities_model = ActivitiesModel()
+		sw = gtk.ScrolledWindow()
+		sw.set_size_request(320, -1)
+		sw.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
 
-		activities = ActivitiesView(self._activities_model)
-		self.pack_start(activities)
-		activities.show()
+		self._activities = ActivitiesView()
+		sw.add(self._activities)
+		self._activities.show()
+		
+		self.pack_start(sw)		
+		sw.show()
+
+	def _search_entry_activate_cb(self, entry):
+		self._search()
 		
 	def _search_button_clicked_cb(self, button):
-		self.search(self._search_entry.get_text())
+		self._search()
 	
-	def search(self, text):
+	def _search(self):
+		text = self._search_entry.get_text()
+		self._search_entry.set_text('')
+	
 		google.LICENSE_KEY = '1As9KaJQFHIJ1L0W5EZPl6vBOFvh/Vaf'
 		data = google.doGoogleSearch(text)
+		
+		model = ActivitiesModel()
 		for result in data.results:
-			self._activities_model.add_web_page(result.title, result.URL)
+			model.add_web_page(result.title, result.URL)
+		self._activities.set_model(model)
