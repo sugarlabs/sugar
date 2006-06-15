@@ -123,6 +123,9 @@ class GlibXMLRPCServer(GlibTCPServer, SimpleXMLRPCServer.SimpleXMLRPCDispatcher)
 
 class GlibHTTP(httplib.HTTP):
 	"""Subclass HTTP so we can return it's connection class' socket."""
+	def connect(self, host=None, port=None):
+		httplib.HTTP.connect(self, host, port)
+		self._conn.sock.setblocking(0)
 	def get_sock(self):
 		return self._conn.sock
 
