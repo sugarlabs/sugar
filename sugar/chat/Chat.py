@@ -22,7 +22,7 @@ class Chat(gtk.Window):
 	SERVICE_PORT = 6100
 
 	def __init__(self):
-		gtk.Window.__init__(self, gtk.WINDOW_POPUP)
+		gtk.Window.__init__(self)
 	
 		self._stream_writer = None		
 

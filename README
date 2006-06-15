@@ -35,11 +35,3 @@ For example:
 sugar/sugar --test my_nick_name1
 sugar/sugar --test my_nick_name2
 ...
-
-
-Key bindings
-============
-
-ctrl+Up 	Toggle chat window visibility
-ctrl+Left 	Toggle presence window visibility
-F11			Toggle activities window fullscreen

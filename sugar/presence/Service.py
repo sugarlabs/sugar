@@ -42,6 +42,10 @@ def _txt_to_dict(txt):
 	return prop_dict
 
 def compose_service_type(stype, activity_uid):
+	if not activity_uid:
+		return stype
+	if not stype or (type(stype) != type("") and type(stype) != type(u"")):
+		raise ValueError("stype must be a valid string.")
 	return "_%s_%s" % (activity_uid, stype)
 
 def _decompose_service_type(stype):
