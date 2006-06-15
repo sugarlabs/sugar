@@ -3,6 +3,7 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
+import dbus
 
 import sugar.env
 
@@ -14,6 +15,7 @@ log_writer.start()
 
 gtk.rc_parse(sugar.env.get_data_file('browser.rc'))
 
-BrowserShell.get_instance().open_web_activity()
-
-gtk.main()
+session_bus = dbus.SessionBus()
+bus_name = dbus.service.BusName('com.redhat.Sugar.Browser', bus=session_bus)
+shell = BrowserShell(bus_name)
+shell.start()
