@@ -15,11 +15,48 @@ class WindowManager:
 	ABSOLUTE = 0
 	SCREEN_RELATIVE = 1
 	
+	VISIBLE = 0
+	SLIDED_IN = 1
+	HIDDEN = 2
+
 	def __init__(self, window):
 		self._window = window
-		window.connect("key-press-event", self.__key_press_event_cb)
-		
+		self._visibility = WindowManager.HIDDEN
+
 		WindowManager.__managers_list.append(self)
+		
+		window.connect("key-press-event", self.__key_press_event_cb)
+		window.connect("focus-in-event", self.__focus_in_event_cb)
+		window.connect_after("focus-out-event", self.__focus_out_event_cb)
+
+	def has_focus(self):
+		return self._window.has_toplevel_focus()
+
+	def _update_visibility(self):		
+		visible = False
+		
+		if self._visibility is WindowManager.VISIBLE:
+			visible = True
+		elif self._visibility is WindowManager.HIDDEN:
+			visible = False
+		elif self._visibility is WindowManager.SLIDED_IN:
+			for manager in WindowManager.__managers_list:
+				if manager.has_focus():
+					visible = True
+		
+		if self._window.get_property('visible') != visible:
+			self._window.set_property('visible', visible)
+
+	def __focus_change_idle(self):
+		for manager in WindowManager.__managers_list:
+			manager._update_visibility()
+		return False
+
+	def __focus_in_event_cb(self, window, event):
+		gobject.idle_add(self.__focus_change_idle)
+				
+	def __focus_out_event_cb(self, window, event):
+		gobject.idle_add(self.__focus_change_idle)
 		
 	def __key_press_event_cb(self, window, event):
 		manager = None
@@ -80,13 +117,16 @@ class WindowManager:
 		self._window.resize(width, height)
 
 	def slide_window_in(self):
-		self._window.show()
+		self._visibility = WindowManager.SLIDED_IN
+		self._update_visibility()
 	
 	def slide_window_out(self):
-		self._window.hide()
+		self._visibility = WindowManager.HIDDEN
+		self._update_visibility()
 	
 	def show(self):
-		self._window.show()
+		self._visibility = WindowManager.VISIBLE
 	
 	def manage(self):
 		self._update_size_and_position()
+		self._update_visibility()
