@@ -2,28 +2,6 @@ import avahi
 from sugar import util
 import string
 
-def new_group_service(group_name, resource):
-	"""Create a new service suitable for defining a new group."""
-	if type(group_name) != type("") or not len(group_name):
-		raise ValueError("group name must be a valid string.")
-	if type(resource) != type("") or not len(resource):
-		raise ValueError("group resource must be a valid string.")
-
-	# Create a randomized service type
-	data = "%s%s" % (group_name, resource)
-	stype = "_%s_group_olpc._udp" % sugar.util.unique_id(data)
-
-	properties = {__GROUP_NAME_TAG: group_name, __GROUP_RESOURCE_TAG: resource }
-	owner_nick = ""
-	port = random.randint(5000, 65000)
-	# Use random currently unassigned multicast address
-	address = "232.%d.%d.%d" % (random.randint(0, 254), random.randint(1, 254),
-			random.randint(1, 254))
-	service = Service.Service(owner_nick, stype, "local", address=address,
-			port=port, properties=properties)
-	return service
-
-
 def _txt_to_dict(txt):
 	"""Convert an avahi-returned TXT record formatted
 	as nested arrays of integers (from dbus) into a dict
