@@ -80,7 +80,7 @@ class ActivityHost(dbus.service.Object):
 	def _create_chat(self):
 		self._group_chat = GroupChat()
 
-	def get_group_chat(self):
+	def get_chat(self):
 		return self._group_chat
 
 	def __close_button_clicked_reply_cb(self):
@@ -314,12 +314,17 @@ class ActivityContainer(dbus.service.Object):
 		pass
 
 	def set_current_activity(self, activity):
+		print 'current activity'
+	
 		self.current_activity = activity
 		self._presence_window.set_activity(activity)
-		self._chat_window.get_child().unparent()
+
+		host_chat = self._chat_window.get_child()
+		if host_chat:
+			host_chat.unparent()
 
 		host_chat = activity.get_chat()
-		self._chat_window.add()
+		self._chat_window.add(host_chat)
 		host_chat.show()
 
 	def notebook_tab_changed(self, notebook, page, page_number):
