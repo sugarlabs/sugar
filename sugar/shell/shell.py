@@ -78,7 +78,6 @@ class ActivityHost(dbus.service.Object):
 		
 	def _create_chat(self):
 		self._group_chat = GroupChat()
-		self._group_chat.ref()
 
 	def get_group_chat(self):
 		return self._group_chat
@@ -293,7 +292,7 @@ class ActivityContainer(dbus.service.Object):
 	def set_current_activity(self, activity):
 		self.current_activity = activity
 		self._presence_window.set_activity(activity)
-		self._chat_window.remove(self._chat_window.get_child())
+		self._chat_window.get_child().unparent()
 
 		host_chat = activity.get_chat()
 		self._chat_window.add()
