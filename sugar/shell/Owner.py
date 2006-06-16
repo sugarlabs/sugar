@@ -9,6 +9,7 @@ import random
 import base64
 
 
+
 class ShellOwner(object):
 	"""Class representing the owner of this machine/instance.  This class
 	runs in the shell and serves up the buddy icon and other stuff.  It's the
