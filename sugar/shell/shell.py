@@ -73,6 +73,21 @@ class ActivityHost(dbus.service.Object):
 		notebook = self.activity_container.notebook
 		index = notebook.append_page(self.socket, hbox)
 		notebook.set_current_page(index)
+		
+		self._create_chat()
+		
+	def _create_chat():
+		group_chat = GroupChat()
+		group_chat.set_transient_for(self.activity_container.window)
+		group_chat.set_decorated(False)
+		group_chat.set_skip_taskbar_hint(True)
+
+		wm = WindowManager(group_chat)
+		
+		wm.set_width(0.5, WindowManager.SCREEN_RELATIVE)
+		wm.set_height(0.5, WindowManager.SCREEN_RELATIVE)
+		wm.set_position(WindowManager.TOP)
+		wm.manage()
 
 	def __close_button_clicked_reply_cb(self):
 		pass
@@ -416,18 +431,6 @@ def main():
 	wm.set_height(480, WindowManager.ABSOLUTE)
 	wm.set_position(WindowManager.CENTER)
 	wm.show()
-	wm.manage()
-
-	group_chat = GroupChat()
-	group_chat.set_transient_for(activity_container.window)
-	group_chat.set_decorated(False)
-	group_chat.set_skip_taskbar_hint(True)
-
-	wm = WindowManager(group_chat)
-	
-	wm.set_width(0.5, WindowManager.SCREEN_RELATIVE)
-	wm.set_height(0.5, WindowManager.SCREEN_RELATIVE)
-	wm.set_position(WindowManager.TOP)
 	wm.manage()
 	
 	console.set_parent_window(activity_container.window)

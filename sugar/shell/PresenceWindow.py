@@ -15,6 +15,7 @@ class PresenceWindow(gtk.Window):
 		gtk.Window.__init__(self, gtk.WINDOW_POPUP)
 		
 		self._activity_container = activity_container
+		self._activity = None
 
 		self._pservice = PresenceService.get_instance()
 		self._pservice.connect("buddy-appeared", self._on_buddy_appeared_cb)
@@ -25,8 +26,12 @@ class PresenceWindow(gtk.Window):
 		self._setup_ui()
 
 	def _is_buddy_visible(self, buddy):
-		activity_type = self._activity.get_default_type()
-		buddy.get_service_of_type(activity, activity_type)
+		if self._activity:
+			activity_type = self._activity.get_default_type()
+			service = buddy.get_service_of_type(activity, activity_type)
+			return service is not None
+		else:
+			return True
 
 	def _update_buddies_visibility(self):
 		for row in self._buddy_store:
