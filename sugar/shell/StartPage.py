@@ -21,7 +21,7 @@ class ActivitiesModel(gtk.ListStore):
 	
 	def add_activity(self, buddy, service):
 		(uid, stype) = service.get_activity_uid()
-		title = service.get_one_property('Title')
+		title = urllib.unquote(service.get_one_property('Title'))
 		address = urllib.unquote(service.get_one_property('URI'))
 		subtitle = 'Shared by %s' % buddy.get_nick_name()
 		self.append([ title, address, subtitle, uid ])
