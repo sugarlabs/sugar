@@ -22,9 +22,12 @@ def _txt_to_dict(txt):
 def compose_service_type(stype, activity_uid):
 	if not activity_uid:
 		return stype
-	if not stype or (type(stype) != type("") and type(stype) != type(u"")):
+	if type(stype) == type(u""):
+		raise ValueError("stype must not be in unicode.")
+	if not stype or type(stype) != type(""):
 		raise ValueError("stype must be a valid string.")
-	return "_%s_%s" % (activity_uid, stype)
+	composed = "_%s_%s" % (activity_uid, stype)
+	return composed.encode()
 
 def _decompose_service_type(stype):
 	"""Break a service type into the UID and real service type, if we can."""
@@ -60,33 +63,35 @@ class Service(object):
 	"""Encapsulates information about a specific ZeroConf/mDNS
 	service as advertised on the network."""
 	def __init__(self, name, stype, domain, address=None, port=-1, properties=None):
+		full_stype = stype
 		# Validate immutable options
-		if not name or (type(name) != type("") and type(name) != type(u"")) or not len(name):
+		if name and type(name) == type(u""):
+			raise ValueError("name must not be in unicode.")
+		if not name or type(name) != type("") or not len(name):
 			raise ValueError("must specify a valid service name.")
 
-		if not stype or (type(stype) != type("") and type(stype) != type(u"")) or not len(stype):
+		print "Service:: type of full_stype is %s" % type(full_stype)
+		if full_stype and type(full_stype) == type(u""):
+			raise ValueError("service type must not be in unicode.")
+		if not full_stype or type(full_stype) != type("") or not len(full_stype):
 			raise ValueError("must specify a service type.")
 		if not stype.endswith("._tcp") and not stype.endswith("._udp"):
 			raise ValueError("must specify a TCP or UDP service type.")
 
-		if type(domain) != type("") and type(domain) != type(u""):
+		if domain and type(domain) == type(u""):
+			raise ValueError("domain must not be in unicode.")
+		if type(domain) != type(""):
 			raise ValueError("must specify a domain.")
-		if len(domain) and domain != "local" and domain != u"local":
+		if len(domain) and domain != "local":
 			raise ValueError("must use the 'local' domain (for now).")
 
-		if type(stype) == type(u""):
-			stype = stype.encode()
-		(uid, real_stype) = _decompose_service_type(stype)
+		(uid, short_stype) = _decompose_service_type(full_stype)
 		if uid and not util.validate_activity_uid(uid):
 			raise ValueError("service type activity uid not a valid activity UID.")
 
-		if type(name) == type(u""):
-			name = name.encode()
 		self._name = name
-		self._stype = stype
-		self._activity_stype = real_stype
-		if type(domain) == type(u""):
-			domain = domain.encode()
+		self._full_stype = full_stype
+		self._activity_stype = short_stype
 		self._domain = domain
 		self._address = None
 		self.set_address(address)
@@ -143,8 +148,16 @@ class Service(object):
 					self._properties[key] = self._properties[key].encode()
 
 	def get_type(self):
-		"""Return the service's service type."""
-		return self._stype
+		"""Return the service's service type without any activity identifiers."""
+		return self._activity_stype
+
+	def get_full_type(self):
+		"""Return the service's full service type as seen over the network."""
+		return self._full_stype
+
+	def get_activity_uid(self):
+		"""Return the activity UID this service is associated with, if any."""
+		return self._activity_uid
 
 	def get_port(self):
 		return self._port
@@ -170,10 +183,6 @@ class Service(object):
 	def get_domain(self):
 		"""Return the ZeroConf/mDNS domain the service was found in."""
 		return self._domain
-
-	def get_activity_uid(self):
-		"""Return the activity UID this service is associated with, if any."""
-		return (self._activity_uid, self._activity_stype)
 
 
 #################################################################
