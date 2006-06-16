@@ -54,14 +54,14 @@ class PresenceWindow(gtk.Window):
 					 	 		  		  gtk.gdk.Pixbuf,
 					  			  		  gobject.TYPE_PYOBJECT,
 					  			  		  bool)
-		self._buddy_list_model = self._buddy_store.filter_new()
-		self._buddy_list_model.set_visible_column(self._MODEL_COL_VISIBLE)
+		buddy_list_model = self._buddy_store.filter_new()
+		buddy_list_model.set_visible_column(self._MODEL_COL_VISIBLE)
 
 		sw = gtk.ScrolledWindow()
 		sw.set_shadow_type(gtk.SHADOW_IN)
 		sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 
-		self._buddy_list_view = gtk.TreeView(self._buddy_list_model)
+		self._buddy_list_view = gtk.TreeView(buddy_list_model)
 		self._buddy_list_view.set_headers_visible(False)
 		self._buddy_list_view.connect("cursor-changed", self._on_buddyList_buddy_selected)
 		self._buddy_list_view.connect("row-activated", self._on_buddyList_buddy_double_clicked)
@@ -101,15 +101,15 @@ class PresenceWindow(gtk.Window):
 	def _share_button_clicked_cb(self, button):
 		self._activity_container.current_activity.publish()
 	
-	def _on_buddyList_buddy_selected(self, widget, *args):
-		(model, aniter) = widget.get_selection().get_selected()
-		name = self._buddy_list_model.get(aniter, self._MODEL_COL_NICK)
+	def _on_buddyList_buddy_selected(self, view, *args):
+		(model, aniter) = view.get_selection().get_selected()
+		name = model.get(aniter, self._MODEL_COL_NICK)
 
-	def _on_buddyList_buddy_double_clicked(self, widget, *args):
+	def _on_buddyList_buddy_double_clicked(self, view, *args):
 		""" Select the chat for this buddy or group """
 		(model, aniter) = widget.get_selection().get_selected()
 		chat = None
-		buddy = self._buddy_list_model.get_value(aniter, self._MODEL_COL_BUDDY)
+		buddy = view.get_model().get_value(aniter, self._MODEL_COL_BUDDY)
 		if buddy and not self._chats.has_key(buddy):
 			#chat = BuddyChat(self, buddy)
 			#self._chats[buddy] = chat
@@ -118,7 +118,7 @@ class PresenceWindow(gtk.Window):
 
 	def __buddy_icon_changed_cb(self, buddy):
 		it = self._get_iter_for_buddy(buddy)
-		self._buddy_list_model.set(it, self._MODEL_COL_ICON, buddy.get_icon_pixbuf())
+		self._buddy_store.set(it, self._MODEL_COL_ICON, buddy.get_icon_pixbuf())
 
 	def _on_buddy_appeared_cb(self, pservice, buddy):
 		if buddy.is_owner():
@@ -146,9 +146,9 @@ class PresenceWindow(gtk.Window):
 			self._buddy_store.remove(aniter)
 
 	def _get_iter_for_buddy(self, buddy):
-		aniter = self._buddy_list_model.get_iter_first()
+		aniter = self._buddy_store.get_iter_first()
 		while aniter:
-			list_buddy = self._buddy_list_model.get_value(aniter, self._MODEL_COL_BUDDY)
+			list_buddy = self._buddy_store.get_value(aniter, self._MODEL_COL_BUDDY)
 			if buddy == list_buddy:
 				return aniter
-			aniter = self._buddy_list_model.iter_next(aniter)
+			aniter = self._buddy_store.iter_next(aniter)
