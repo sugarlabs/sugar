@@ -395,6 +395,25 @@ class PresenceService(gobject.GObject):
 	def _new_domain_cb_glue(self, interface, protocol, domain, flags=0):
 		gobject.idle_add(self._new_domain_cb, interface, protocol, domain, flags)
 
+	def track_activity(self, activity_uid):
+		"""INTERNAL ONLY; register an activity's UID to recognize service
+		events for that specific activity."""
+		if not activity_uid or not util.validate_activity_uid(uid):
+			raise ValueError("activity uid must be a valid activity uid string.")
+		if activity_uid in self._allowed_activities:
+			return
+		self._allowed_activities.append(activity_uid)
+		self._check_and_resolve_service_advs(dec_stype)
+
+	def untrack_activity(self, activity_uid):
+		"""INTERNAL ONLY; unregister an activity's UID to stop service
+		events for that specific activity."""
+		if not activity_uid or not util.validate_activity_uid(uid):
+			raise ValueError("activity uid must be a valid activity uid string.")
+		if activity_uid not in self._allowed_activities:
+			return
+		self._allowed_activities.remove(activity_uid)
+
 	def track_service_type(self, short_stype):
 		"""Requests that the Presence service look for and recognize
 		a certain mDNS service types."""
@@ -414,17 +433,24 @@ class PresenceService(gobject.GObject):
 		if uid:
 			raise RuntimeError("Can only track plain service types!")
 		self._allowed_service_types.append(dec_stype)
+		self._check_and_resolve_service_advs(dec_stype)
 
+	def _check_and_resolve_service_advs(self, specific_stype=None):
 		# Find unresolved services that match the service type
 		# we're now interested in, and resolve them
 		resolv_list = []
 		# Find all services first by their activity
+		search_types = self._allowed_service_types
+		if specific_stype:
+			search_types = [specific_stype]
 		for uid in self._allowed_activities:
-			full_stype = Service.compose_service_type(dec_stype, uid)
-			adv_list = self._find_service_adv(stype=full_stype)
-			resolv_list = resolv_list + adv_list
+			for short_stype in search_stypes:
+				full_stype = Service.compose_service_type(short_stype, uid)
+				adv_list = self._find_service_adv(stype=full_stype)
+				resolv_list = resolv_list + adv_list
 		# Then, find services by just the plain service type
-		resolv_list = resolv_list + self._find_service_adv(stype=dec_stype)
+		if specific_stype is not None:
+			resolv_list = resolv_list + self._find_service_adv(stype=specific_stype)
 
 		# Request resolution for them
 		for adv in resolv_list:
