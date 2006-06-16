@@ -5,6 +5,7 @@ import pango
 import dbus
 import cgi
 import urllib
+import re
 
 import google
 from sugar.presence.PresenceService import PresenceService
@@ -46,8 +47,8 @@ class ActivitiesView(gtk.TreeView):
 		if subtitle is None:
 			subtitle = model.get_value(it, 1)
 				
-		markup = '<big><b>' + title + '</b></big>' + '\n' + subtitle
-		markup = cgi.escape(markup)  # escape the markup
+		markup = '<big><b>' + cgi.escape(title) + '</b></big>' 
+		markup += '\n' + cgi.escape(subtitle)
 		
 		cell.set_property('markup', markup)
 		cell.set_property('ellipsize', pango.ELLIPSIZE_END)
@@ -138,5 +139,16 @@ class StartPage(gtk.HBox):
 		
 		model = ActivitiesModel()
 		for result in data.results:
-			model.add_web_page(result.title, result.URL)
+			title = result.title
+			
+			# FIXME what tags should we actually strip?
+			title = title.replace('<b>', '') 
+			title = title.replace('</b>', '')
+
+			# FIXME I'm sure there is a better way to
+			# unescape these.
+			title = title.replace('&quot;', '"')
+			title = title.replace('&amp;', '&')
+
+			model.add_web_page(title, result.URL)
 		self._activities.set_model(model)
