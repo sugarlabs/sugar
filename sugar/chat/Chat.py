@@ -17,17 +17,15 @@ import richtext
 
 PANGO_SCALE = 1024 # Where is this defined?
 
-class Chat(gtk.Window):
+class Chat(gtk.VBox):
 	SERVICE_TYPE = "_olpc_chat._tcp"
 	SERVICE_PORT = 6100
 
 	def __init__(self):
-		gtk.Window.__init__(self, gtk.WINDOW_POPUP)
-	
-		self._stream_writer = None		
+		gtk.VBox.__init__(self, False, 6)
 
-		vbox = gtk.VBox(False, 6)
-		vbox.set_border_width(12)
+		self._stream_writer = None
+		self.set_border_width(12)
 
 		chat_vbox = gtk.VBox()
 		chat_vbox.set_spacing(6)
@@ -46,20 +44,17 @@ class Chat(gtk.Window):
 		chat_vbox.pack_start(self._chat_sw)
 		self._chat_sw.show()
 		
-		vbox.pack_start(chat_vbox)
+		self.pack_start(chat_vbox)
 		chat_vbox.show()
 
 		self._editor = ChatEditor()
 
 		toolbar = ChatToolbar(self._editor.get_buffer())
-		vbox.pack_start(toolbar, False)
+		self.pack_start(toolbar, False)
 		toolbar.show()
 
-		vbox.pack_start(self._editor, False)
+		self.pack_start(self._editor, False)
 		self._editor.show()
-
-		self.add(vbox)
-		vbox.show()
 
 	def __get_browser_shell(self):
 		bus = dbus.SessionBus()

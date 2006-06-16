@@ -76,18 +76,12 @@ class ActivityHost(dbus.service.Object):
 		
 		self._create_chat()
 		
-	def _create_chat():
-		group_chat = GroupChat()
-		group_chat.set_transient_for(self.activity_container.window)
-		group_chat.set_decorated(False)
-		group_chat.set_skip_taskbar_hint(True)
+	def _create_chat(self):
+		self._group_chat = GroupChat()
+		self._group_chat.ref()
 
-		wm = WindowManager(group_chat)
-		
-		wm.set_width(0.5, WindowManager.SCREEN_RELATIVE)
-		wm.set_height(0.5, WindowManager.SCREEN_RELATIVE)
-		wm.set_position(WindowManager.TOP)
-		wm.manage()
+	def get_group_chat(self):
+		return self._group_chat
 
 	def __close_button_clicked_reply_cb(self):
 		pass
@@ -274,6 +268,18 @@ class ActivityContainer(dbus.service.Object):
 		wm.set_height(1.0, WindowManager.SCREEN_RELATIVE)
 		wm.set_position(WindowManager.LEFT)
 		wm.manage()
+		
+		self._chat_window = gtk.Window(gtk.WINDOW_POPUP)
+		self._chat_window.set_transient_for(self.window)
+		self._chat_window.set_decorated(False)
+		self._chat_window.set_skip_taskbar_hint(True)
+
+		wm = WindowManager(self._chat_window)
+		
+		wm.set_width(0.5, WindowManager.SCREEN_RELATIVE)
+		wm.set_height(0.5, WindowManager.SCREEN_RELATIVE)
+		wm.set_position(WindowManager.TOP)
+		wm.manage()
 
 	def show(self):
 		self.window.show()
@@ -287,6 +293,11 @@ class ActivityContainer(dbus.service.Object):
 	def set_current_activity(self, activity):
 		self.current_activity = activity
 		self._presence_window.set_activity(activity)
+		self._chat_window.remove(self._chat_window.get_child())
+
+		host_chat = activity.get_chat()
+		self._chat_window.add()
+		host_chat.show()
 
 	def notebook_tab_changed(self, notebook, page, page_number):
 		#print "in notebook_tab_changed"
