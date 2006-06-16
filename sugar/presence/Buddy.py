@@ -69,10 +69,10 @@ class Buddy(gobject.GObject):
 			return False
 		if service.get_type() in self._services.keys():
 			return False
-		self._services[service.get_type()] = service
+		self._services[service.get_full_type()] = service
 		if self._valid:
 			self.emit("service-added", service)
-		if service.get_type() == PRESENCE_SERVICE_TYPE:
+		if service.get_full_type() == PRESENCE_SERVICE_TYPE:
 			# A buddy isn't valid until its official presence
 			# service has been found and resolved
 			self._valid = True
@@ -87,18 +87,28 @@ class Buddy(gobject.GObject):
 			return
 		if service.get_name() != self._nick_name:
 			return
-		if self._services.has_key(service.get_type()):
+		if self._services.has_key(service.get_full_type()):
 			if self._valid:
 				self.emit("service-removed", service)
-			del self._services[service.get_type()]
-		if service.get_type() == PRESENCE_SERVICE_TYPE:
+			del self._services[service.get_full_type()]
+		if service.get_full_type() == PRESENCE_SERVICE_TYPE:
 			self._valid = False
 
-	def get_service_of_type(self, stype):
+	def get_service_of_type(self, stype=None, activity=None):
 		"""Return a service of a certain type, or None if the buddy
 		doesn't provide that service."""
-		if self._services.has_key(stype):
-			return self._services[stype]
+		short_stype = stype
+		if not short_stype:
+			raise RuntimeError("Need to specify a service type.")
+		uid = None
+		if activity:
+			uid = activity.get_id()
+		if self._services.has_key(short_stype):
+			return self._services[short_stype]
+		elif uid:
+			for service in self._services.values():
+				if service.get_type() == short_stype and service.get_activity_uid() == uid:
+					return service
 		return None
 
 	def is_valid(self):
