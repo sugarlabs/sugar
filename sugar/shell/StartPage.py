@@ -70,8 +70,14 @@ class ActivitiesView(gtk.TreeView):
 			browser_shell.open_browser_with_id(address, activity_id)
 			
 class StartPage(gtk.HBox):
-	def __init__(self):
+	def __init__(self, ac_signal_object):
 		gtk.HBox.__init__(self)
+
+		self._ac_signal_object = ac_signal_object
+		self._ac_signal_object.connect("local-activity-started",
+				self._on_local_activity_started_cb)
+		self._ac_signal_object.connect("local-activity-ended",
+				self._on_local_activity_ended_cb)
 
 		self._pservice = PresenceService.get_instance()
 		self._pservice.connect("activity-announced", self._on_activity_announced_cb)
@@ -113,6 +119,13 @@ class StartPage(gtk.HBox):
 
 		self.pack_start(sw)	
 		sw.show()
+
+	def _on_local_activity_started_cb(self, helper, activity_container, activity_id):
+		self._pservice.track_activity(activity_id)
+		print "new local activity %s" % activity_id
+
+	def _on_local_activity_ended_cb(self, helper, activity_container, activity_id):
+		self._pservice.untrack_activity(activity_id)
 
 	def _on_activity_announced_cb(self, pservice, service, buddy):
 		self._activities.get_model().add_activity(buddy, service)
