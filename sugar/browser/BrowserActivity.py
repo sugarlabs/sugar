@@ -29,7 +29,7 @@ class BrowserActivity(activity.Activity):
 		self._pservice.track_service_type(_BROWSER_ACTIVITY_TYPE)
 		self._share_service = None
 		self._model = None
-
+	
 	def _update_shared_location(self):
 		address = self.embed.get_address()
 		self._model.set_value('address', address)
@@ -93,13 +93,10 @@ class BrowserActivity(activity.Activity):
 		
 		self._setup_shared(self.uri)
 	
-	def publish(self):
-		print 'Publish %s' % self.get_id() 
-	
 	def get_embed(self):
 		return self.embed
 	
-	def share(self):
+	def publish(self):
 		escaped_title = urllib.quote(self.embed.get_title())
 		escaped_url = urllib.quote(self.embed.get_address())
 

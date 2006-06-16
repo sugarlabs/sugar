@@ -16,13 +16,16 @@ from sugar.chat.GroupChat import GroupChat
 
 class ActivityHost(dbus.service.Object):
 
-	def __init__(self, activity_container, activity_name):
+	def __init__(self, activity_container, activity_name, activity_id = None):
 		self.activity_name = activity_name
 		self.ellipsize_tab = False
 
 		self.activity_container = activity_container
 		
-		self.activity_id = sugar.util.unique_id()
+		if activity_id is None:
+			self.activity_id = sugar.util.unique_id()
+		else:
+			self.activity_id = activity_id
 		
 		self.dbus_object_name = "/com/redhat/Sugar/Shell/Activities/%s" % self.activity_id
 		
@@ -304,6 +307,15 @@ class ActivityContainer(dbus.service.Object):
 
 		#self.__print_activities()
 		return activity.get_host_activity_id()
+
+	@dbus.service.method("com.redhat.Sugar.Shell.ActivityContainer", \
+			 in_signature="ss", \
+			 out_signature="s", \
+			 sender_keyword="sender")
+	def add_activity_with_id(self, activity_name, activity_id, sender):
+		activity = ActivityHost(self, activity_name, activity_id)
+		self.activities.append((sender, activity))
+		self.current_activity = activity
 
 	def __print_activities(self):
 		print "__print_activities: %d activities registered" % len(self.activities)

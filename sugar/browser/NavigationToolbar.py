@@ -33,17 +33,6 @@ class NavigationToolbar(gtk.Toolbar):
 		separator = gtk.SeparatorToolItem()
 		self.insert(separator, -1)
 		separator.show()
-
-		share = gtk.ToolButton(None, "Share")
-		share.set_icon_name('stock_shared-by-me')
-		share.set_is_important(True)
-		share.connect("clicked", self.__share_cb)
-		self.insert(share, -1)
-		share.show()
-
-		separator = gtk.SeparatorToolItem()
-		self.insert(separator, -1)
-		separator.show()
 		
 		address_item = AddressItem(self.__open_address_cb)		
 		self.insert(address_item, -1)
@@ -65,9 +54,6 @@ class NavigationToolbar(gtk.Toolbar):
 		
 	def __reload_cb(self, button):
 		self._embed.reload()
-
-	def __share_cb(self, button):
-		self._browser.share()
 
 	def __location_changed(self, embed):
 		self._update_sensitivity()

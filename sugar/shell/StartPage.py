@@ -4,6 +4,7 @@ import gtk
 import pango
 import dbus
 import cgi
+import urllib
 
 import google
 from sugar.presence.PresenceService import PresenceService
@@ -12,14 +13,21 @@ from sugar.browser import BrowserActivity
 
 class ActivitiesModel(gtk.ListStore):
 	def __init__(self):
-		gtk.ListStore.__init__(self, str, str)
+		gtk.ListStore.__init__(self, str, str, str, str)
 
 	def add_web_page(self, title, address):
-		self.append([ title, address ])
+		self.append([ title, address, None, None ])
+	
+	def add_activity(self, buddy, service):
+		(uid, stype) = service.get_activity_uid()
+		title = service.get_one_property('Title')
+		address = urllib.unquote(service.get_one_property('URI'))
+		subtitle = 'Shared by %s' % buddy.get_nick_name()
+		self.append([ title, address, subtitle, uid ])
 
 class ActivitiesView(gtk.TreeView):
 	def __init__(self):
-		gtk.TreeView.__init__(self)
+		gtk.TreeView.__init__(self, model = ActivitiesModel())
 		
 		self.set_headers_visible(False)
 		
@@ -34,23 +42,32 @@ class ActivitiesView(gtk.TreeView):
 	
 	def _cell_data_func(self, column, cell, model, it):
 		title = model.get_value(it, 0)
-		address = model.get_value(it, 1)
-		
-		markup = '<big><b>' + title + '</b></big>' + '\n' + address
+		subtitle = model.get_value(it, 2)
+		if subtitle is None:
+			subtitle = model.get_value(it, 1)
+				
+		markup = '<big><b>' + title + '</b></big>' + '\n' + subtitle
 		markup = cgi.escape(markup)  # escape the markup
 		
 		cell.set_property('markup', markup)
 		cell.set_property('ellipsize', pango.ELLIPSIZE_END)
 			
-	def _row_activated_cb(self, treeview, path, column):
+	def _row_activated_cb(self, treeview, path, column):	
 		bus = dbus.SessionBus()
 		proxy_obj = bus.get_object('com.redhat.Sugar.Browser', '/com/redhat/Sugar/Browser')
 		browser_shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.BrowserShell')
 
 		model = self.get_model() 
 		address = model.get_value(model.get_iter(path), 1)
-		browser_shell.open_browser(address, ignore_reply=True)
+		activity_id = model.get_value(model.get_iter(path), 3)
 
+		print 'Activated row %s %s' % (address, activity_id)
+
+		if activity_id is None:
+			browser_shell.open_browser(address, ignore_reply=True)
+		else:
+			browser_shell.open_browser_with_id(address, activity_id, ignore_reply=True)
+			
 class StartPage(gtk.HBox):
 	def __init__(self):
 		gtk.HBox.__init__(self)
@@ -104,8 +121,7 @@ class StartPage(gtk.HBox):
 			self._pservice.track_service_type(real_stype)
 
 	def _on_activity_announced_cb(self, pservice, service, buddy):
-		(activity_uid, activity_stype) = service.get_activity_uid()
-		print "::: %s announced activity UID %s of type %s" % (buddy.get_nick_name(), activity_uid, activity_stype)
+		self._activities.get_model().add_activity(buddy, service)
 
 	def _search_entry_activate_cb(self, entry):
 		self._search()

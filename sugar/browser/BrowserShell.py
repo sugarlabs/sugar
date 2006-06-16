@@ -34,3 +34,9 @@ class BrowserShell(dbus.service.Object):
 		browser = BrowserActivity(uri)
 		self.__browsers.append(browser)
 		browser.connect_to_shell()
+
+	@dbus.service.method('com.redhat.Sugar.BrowserShell')
+	def open_browser_with_id(self, uri, activity_id):
+		browser = BrowserActivity(uri)
+		self.__browsers.append(browser)
+		browser.connect_to_shell(activity_id)

@@ -68,7 +68,7 @@ class ActivityDbusService(dbus.service.Object):
 		if name in self._ALLOWED_CALLBACKS and self._callbacks[name]:
 			gobject.idle_add(self._call_callback_cb, self._callbacks[name], *args)
 
-	def connect_to_shell(self):
+	def connect_to_shell(self, activity_id = None):
 		"""Register with the shell via dbus, getting an activity ID and
 		and XEMBED window ID in which to display the Activity."""
 		self._activity_container_object = self._bus.get_object(SHELL_SERVICE_NAME, \
@@ -76,7 +76,12 @@ class ActivityDbusService(dbus.service.Object):
 		self._activity_container = dbus.Interface(self._activity_container_object, \
 												   SHELL_SERVICE_NAME + ".ActivityContainer")
 
-		self._activity_id = self._activity_container.add_activity("")
+		if activity_id is None:
+			self._activity_id = self._activity_container.add_activity("")
+		else:
+			self._activity_id = activity_id
+			self._activity_container.add_activity_with_id("", activity_id)
+			
 		self._object_path = SHELL_SERVICE_PATH + "/Activities/%s" % self._activity_id
 
 		print "ActivityDbusService: object path is '%s'" % self._object_path
@@ -172,10 +177,10 @@ class Activity(object):
 		"""Return whether or not this Activity is visible to the user."""
 		return self._has_focus
 
-	def connect_to_shell(self):
+	def connect_to_shell(self, activity_id = None):
 		"""Called by our controller to tell us to initialize and connect
 		to the shell."""
-		self._dbus_service.connect_to_shell()
+		self._dbus_service.connect_to_shell(activity_id)
 
 	def _internal_on_connected_to_shell_cb(self, activity_object, activity_id):
 		"""Callback when the dbus service object has connected to the shell."""
