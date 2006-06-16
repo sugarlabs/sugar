@@ -65,9 +65,9 @@ class ActivitiesView(gtk.TreeView):
 		print 'Activated row %s %s' % (address, activity_id)
 
 		if activity_id is None:
-			browser_shell.open_browser(address, ignore_reply=True)
+			browser_shell.open_browser(address)
 		else:
-			browser_shell.open_browser_with_id(address, activity_id, ignore_reply=True)
+			browser_shell.open_browser_with_id(address, activity_id)
 			
 class StartPage(gtk.HBox):
 	def __init__(self):

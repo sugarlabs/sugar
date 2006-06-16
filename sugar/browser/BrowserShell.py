@@ -3,6 +3,7 @@ import geckoembed
 import pygtk
 pygtk.require('2.0')
 import gtk
+import gobject
 
 import sugar.env
 
@@ -29,11 +30,14 @@ class BrowserShell(dbus.service.Object):
 			links.append(link)
 		return links
 
+	def _start_browser_cb(self, browser):
+		browser.connect_to_shell()
+
 	@dbus.service.method('com.redhat.Sugar.BrowserShell')
 	def open_browser(self, uri):
 		browser = BrowserActivity(uri)
 		self.__browsers.append(browser)
-		browser.connect_to_shell()
+		gobject.idle_add(self._start_browser_cb, browser)
 
 	@dbus.service.method('com.redhat.Sugar.BrowserShell')
 	def open_browser_with_id(self, uri, activity_id):
