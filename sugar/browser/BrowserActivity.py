@@ -9,7 +9,7 @@ from sugar.shell import activity
 from sugar.browser import NotificationBar
 from sugar.browser import NavigationToolbar
 from sugar.presence.PresenceService import PresenceService
-
+from sugar.p2p.model.LocalModel import LocalModel
 
 _BROWSER_ACTIVITY_TYPE = "_web_olpc._udp"
 _SERVICE_URI_TAG = "URI"
