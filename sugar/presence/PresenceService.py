@@ -119,7 +119,7 @@ class PresenceService(gobject.GObject):
 		self._server = dbus.Interface(self._bus.get_object(avahi.DBUS_NAME,
 				avahi.DBUS_PATH_SERVER), avahi.DBUS_INTERFACE_SERVER)
 
-	def get_activity_service(activity, stype):
+	def get_activity_service(self, activity, stype):
 		uid = activity.get_id()
 		if self._activity_services.has_key(uid):
 			services = self._activity_services[uid]
@@ -398,17 +398,17 @@ class PresenceService(gobject.GObject):
 	def track_activity(self, activity_uid):
 		"""INTERNAL ONLY; register an activity's UID to recognize service
 		events for that specific activity."""
-		if not activity_uid or not util.validate_activity_uid(uid):
+		if not activity_uid or not util.validate_activity_uid(activity_uid):
 			raise ValueError("activity uid must be a valid activity uid string.")
 		if activity_uid in self._allowed_activities:
 			return
 		self._allowed_activities.append(activity_uid)
-		self._check_and_resolve_service_advs(dec_stype)
+		self._check_and_resolve_service_advs()
 
 	def untrack_activity(self, activity_uid):
 		"""INTERNAL ONLY; unregister an activity's UID to stop service
 		events for that specific activity."""
-		if not activity_uid or not util.validate_activity_uid(uid):
+		if not activity_uid or not util.validate_activity_uid(activity_uid):
 			raise ValueError("activity uid must be a valid activity uid string.")
 		if activity_uid not in self._allowed_activities:
 			return
@@ -444,7 +444,7 @@ class PresenceService(gobject.GObject):
 		if specific_stype:
 			search_types = [specific_stype]
 		for uid in self._allowed_activities:
-			for short_stype in search_stypes:
+			for short_stype in search_types:
 				full_stype = Service.compose_service_type(short_stype, uid)
 				adv_list = self._find_service_adv(stype=full_stype)
 				resolv_list = resolv_list + adv_list
@@ -536,6 +536,8 @@ class PresenceService(gobject.GObject):
 				pass
 		uid = service.get_activity_uid()
 		activity_stype = service.get_type()
+		if uid:
+			self.track_activity(uid)
 		self.track_service_type(activity_stype)
 		return group
 
