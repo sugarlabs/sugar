@@ -455,13 +455,9 @@ class PresenceService(gobject.GObject):
 
 	def share_activity(self, activity, stype, properties={}, address=None, port=None):
 		"""Convenience function to share an activity with other buddies."""
-		print "type stype == %s" % type(stype)
-		print "Type of a string is %s" % type("")
-
 		uid = activity.get_id()
 		owner_nick = self._owner.get_nick_name()
 		real_stype = Service.compose_service_type(stype, uid)
-		print "PS: type of real_stype is %s" % type(real_stype)
 		if address and type(address) != type(""):
 			raise ValueError("address must be a valid string.")
 		if not address:
