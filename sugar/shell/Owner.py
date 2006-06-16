@@ -3,7 +3,6 @@ from sugar.presence import Service
 from sugar.presence import Buddy
 from sugar.presence import PresenceService
 from sugar.p2p import Stream
-import pwd
 import os
 import random
 import base64
@@ -16,11 +15,6 @@ class ShellOwner(object):
 	server portion of the Owner, paired with the client portion in Buddy.py."""
 	def __init__(self):
 		nick = env.get_nick_name()
-		if not nick:
-			nick = pwd.getpwuid(os.getuid())[0]
-		if not nick or not len(nick):
-			nick = "Guest"
-
 		user_dir = env.get_user_dir()
 		if not os.path.exists(user_dir):
 			try:

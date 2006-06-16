@@ -6,6 +6,7 @@ import os
 import string
 import random
 from sugar import util
+from sugar import env
 
 def _get_local_ip_address(ifname):
 	"""Call Linux specific bits to retrieve our own IP address."""
@@ -196,7 +197,8 @@ class PresenceService(gobject.GObject):
 			buddy.add_service(service)
 		except KeyError:
 			# Should this service mark the owner?
-			if service.get_address() in self._local_addrs.values():
+			owner_nick = env.get_nick_name()
+			if name == owner_nick and service.get_address() in self._local_addrs.values():
 				buddy = Buddy.Owner(service)
 				self._owner = buddy
 				print "Set owner to %s" % name

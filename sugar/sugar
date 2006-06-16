@@ -2,6 +2,8 @@
 
 import sys
 import os
+import pwd
+import random
 
 import pygtk
 pygtk.require('2.0')
@@ -46,6 +48,13 @@ for arg in sys.argv:
 		dbus_daemon_pid = start_dbus()
 		started_dbus = True
 	i += 1
+
+if not os.environ.has_key("SUGAR_NICK_NAME"):
+	nick = pwd.getpwuid(os.getuid())[0]
+	if not nick or not len(nick):
+		nick = "Guest %d" % random.randint(1, 10000)
+	os.environ['SUGAR_NICK_NAME'] = nick
+	os.environ['SUGAR_USER_DIR'] = os.path.expanduser('~/.sugar')
 
 curdir = os.path.dirname(__file__)
 if curdir == '.':
