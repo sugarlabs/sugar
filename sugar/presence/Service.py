@@ -70,7 +70,6 @@ class Service(object):
 		if not name or type(name) != type("") or not len(name):
 			raise ValueError("must specify a valid service name.")
 
-		print "Service:: type of full_stype is %s" % type(full_stype)
 		if full_stype and type(full_stype) == type(u""):
 			raise ValueError("service type must not be in unicode.")
 		if not full_stype or type(full_stype) != type("") or not len(full_stype):
