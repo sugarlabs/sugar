@@ -122,6 +122,15 @@ class PresenceService(gobject.GObject):
 		self._server = dbus.Interface(self._bus.get_object(avahi.DBUS_NAME,
 				avahi.DBUS_PATH_SERVER), avahi.DBUS_INTERFACE_SERVER)
 
+	def get_activity_service(activity, stype):
+		uid = activity.get_id()
+		if self._activity_services.has_key(uid):
+			services = self._activity_services[uid]
+			for service in services:
+				if group.get_stype() == stype:
+					return service
+		return None
+
 	def start(self):
 		"""Start the presence service by kicking off service discovery."""
 		self._lock.acquire()

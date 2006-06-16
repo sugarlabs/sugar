@@ -10,6 +10,7 @@ from sugar.browser import NotificationBar
 from sugar.browser import NavigationToolbar
 from sugar.presence.PresenceService import PresenceService
 from sugar.p2p.model.LocalModel import LocalModel
+from sugar.p2p.model.RemoteModel import RemoteModel
 
 _BROWSER_ACTIVITY_TYPE = "_web_olpc._udp"
 _SERVICE_URI_TAG = "URI"
@@ -46,20 +47,16 @@ class BrowserActivity(activity.Activity):
 			self.embed.load_address(address)
 			self._notif_bar.hide()
 
-	#def set_mode(self, mode):
-	#	self._mode = mode
-	#	if mode == BrowserActivity.LEADING:
-	#		self._notif_bar.set_text('Share this page with the group.')
-	#		self._notif_bar.set_action('set_shared_location', 'Share')
-	#		self._notif_bar.set_icon('stock_shared-by-me')
-	#		self._notif_bar.show()
+	def set_mode(self, mode):
+		self._mode = mode
+		if mode == BrowserActivity.LEADING:
+			self._notif_bar.set_text('Share this page with the group.')
+			self._notif_bar.set_action('set_shared_location', 'Share')
+			self._notif_bar.set_icon('stock_shared-by-me')
+			self._notif_bar.show()
 
-	def _setup_shared(self, uri):
-		pass
-		#self._model = self._group.get_store().get_model(uri)
-		#if self._model:
-		#	self.set_mode(BrowserActivity.FOLLOWING)
-		#	self._model.add_listener(self.__shared_location_changed_cb)
+	def _setup_shared(self, service, no):
+		self._model = RemoteModel(service, notification_service)
 	
 	def on_connected_to_shell(self):
 		self.set_ellipsize_tab(True)
@@ -106,9 +103,10 @@ class BrowserActivity(activity.Activity):
 				stype=_BROWSER_ACTIVITY_TYPE, properties=properties)
 
 		# Create our activity-specific browser sharing service
-		self._model = LocalModel(stype)
+		self._model = LocalModel(self, self._pservice, self._share_service)
 		self._model.set_value('owner', self._pservice.get_owner().get_nick_name())
 		self._update_shared_location()
+		
 		self.set_mode(BrowserActivity.LEADING)
 
 	def __title_cb(self, embed):

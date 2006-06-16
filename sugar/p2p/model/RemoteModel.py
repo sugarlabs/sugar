@@ -4,11 +4,11 @@ from sugar.p2p.NotificationListener import NotificationListener
 from sugar.p2p.model.AbstractModel import AbstractModel
 
 class RemoteModel(AbstractModel):
-	def __init__(self, group, service):
+	def __init__(self, service, notification_service):
 		AbstractModel.__init__(self)
 		
 		self._service = service
-		self._group = group
+		self._notification_service = notification_service
 		
 		addr = "http://%s:%d" % (service.get_address(), service.get_port())
 		self._client = xmlrpclib.ServerProxy(addr)
@@ -23,5 +23,5 @@ class RemoteModel(AbstractModel):
 	
 	def _setup_notification_listener(self):
 		name = self._service.get_name()
-		self._notification = NotificationListener(self._group, name)
+		self._notification = NotificationListener(self._notification_service)
 		self._notification.add_listener(self._notify_model_change)

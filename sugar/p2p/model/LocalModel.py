@@ -19,14 +19,15 @@ class LocalModel(AbstractModel):
 	SERVICE_TYPE = "_olpc_model._tcp"
 	SERVICE_PORT = 6300
 
-	def __init__(self, pservice, model_id):
+	def __init__(self, activity, pservice, service):
 		AbstractModel.__init__(self)
 		self._pservice = pservice
-		self._model_id = model_id
+		self._activity = activity
+		self._service = service
 		self._values = {}
 		
 		self._setup_service()
-		self._notifier = Notifier(group, model_id)
+		self._notifier = Notifier(service)
 	
 	def get_value(self, key):
 		return self._values[key]
@@ -37,10 +38,9 @@ class LocalModel(AbstractModel):
 		self._notifier.notify(key)
 
 	def _setup_service(self):
-		self._service = self._pservice.share_activity(self,
-				stype=LocalModel.SERVICE_TYPE,
-				'', port=LocalModel.PORT_TYPE
-				properties=properties)
+		service = self._pservice.share_activity(self._activity,
+				stype = LocalModel.SERVICE_TYPE,
+				address = '', port = LocalModel.SERVICE_PORT)
 		self._setup_server(service)
 	
 	# FIXME this is duplicated with StreamReader
