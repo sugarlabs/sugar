@@ -310,13 +310,12 @@ class ActivityContainer(dbus.service.Object):
 
 	@dbus.service.method("com.redhat.Sugar.Shell.ActivityContainer", \
 			 in_signature="ss", \
-			 out_signature="s", \
 			 sender_keyword="sender")
 	def add_activity_with_id(self, activity_name, activity_id, sender):
 		activity = ActivityHost(self, activity_name, activity_id)
 		self.activities.append((sender, activity))
 		self.current_activity = activity
-
+		
 	def __print_activities(self):
 		print "__print_activities: %d activities registered" % len(self.activities)
 		i = 0
