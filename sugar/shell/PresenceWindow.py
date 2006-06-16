@@ -126,7 +126,15 @@ class PresenceWindow(gtk.Window):
 								   self._MODEL_COL_BUDDY, buddy,
 								   self._MODEL_COL_VISIBLE, self._is_buddy_visible(buddy))
 		buddy.connect('icon-changed', self.__buddy_icon_changed_cb)
+		buddy.connect('service-added', self.__buddy_service_added_cb)
+		buddy.connect('service-removed', self.__buddy_service_removed_cb)
 
+	def __buddy_service_added_cb(self, buddy, service):
+		self._update_buddies_visibility()
+
+	def __buddy_service_remove_cb(self, buddy, service):
+		self._update_buddies_visibility()
+		
 	def _on_buddy_disappeared_cb(self, pservice, buddy):
 		aniter = self._get_iter_for_buddy(buddy)
 		if aniter:

@@ -9,7 +9,6 @@ from sugar.p2p import network
 
 PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
 
-
 class Buddy(gobject.GObject):
 	"""Represents another person on the network and keeps track of the
 	activities and resources they make available for sharing."""
