@@ -58,8 +58,9 @@ class BrowserActivity(activity.Activity):
 			self._notif_bar.set_icon('stock_shared-by-me')
 			self._notif_bar.show()
 
-	def _setup_shared(self, service, no):
-		self._model = RemoteModel(service, notification_service)
+	def _setup_shared(self, service):
+#		self._model = RemoteModel(service, notification_service)
+		pass
 	
 	def on_connected_to_shell(self):
 		self.set_ellipsize_tab(True)
