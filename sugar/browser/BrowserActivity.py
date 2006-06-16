@@ -106,18 +106,11 @@ class BrowserActivity(activity.Activity):
 				stype=_BROWSER_ACTIVITY_TYPE, properties=properties)
 
 		# Create our activity-specific browser sharing service
-		#self._model = self._group.get_store().create_model(url)
-		#self._model.set_value('owner', self._pservice.get_owner().get_nick_name())
-		#self._update_shared_location()
-		#self.set_mode(BrowserActivity.LEADING)
+		self._model = LocalModel(stype)
+		self._model.set_value('owner', self._pservice.get_owner().get_nick_name())
+		self._update_shared_location()
+		self.set_mode(BrowserActivity.LEADING)
 
-		#bus = dbus.SessionBus()
-		#proxy_obj = bus.get_object('com.redhat.Sugar.Chat', '/com/redhat/Sugar/Chat')
-		#chat_shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.ChatShell')
-		
-		#chat_shell.send_text_message('<richtext><link href="' + escaped_address +
-		#						'">' + escaped_title + '</link></richtext>')
-	
 	def __title_cb(self, embed):
 		self.set_tab_text(embed.get_title())
 
