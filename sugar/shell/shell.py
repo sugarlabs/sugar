@@ -6,6 +6,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import pango
+import gobject
 
 import sugar.util
 from sugar.shell.PresenceWindow import PresenceWindow
@@ -223,6 +224,27 @@ class ActivityHost(dbus.service.Object):
 		self.tab_close_button.set_size_request (w + 5, h + 2)
 		self.update_tab_size()
 
+class ActivityContainerSignalHelper(gobject.GObject):
+	"""A gobject whose sole purpose is to distribute signals for
+	an ActivityContainer object."""
+
+	__gsignals__ = {
+		'local-activity-started': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+						([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
+		'local-activity-ended': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+						([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT]))
+	}
+
+	def __init__(self, parent):
+		gobject.GObject.__init__(self)
+		self._parent = parent
+
+	def activity_started(self, activity_id):
+		self.emit('local-activity-started', self._parent, activity_id)
+
+	def activity_ended(self, activity_id):
+		self.emit('local-activity-ended', self._parent, activity_id)
+
 class ActivityContainer(dbus.service.Object):
 
 	def __init__(self, service, bus):
@@ -230,6 +252,8 @@ class ActivityContainer(dbus.service.Object):
 
 		self.bus = bus
 		self.service = service
+
+		self._signal_helper = ActivityContainerSignalHelper(self)
 
 		dbus.service.Object.__init__(self, self.service, "/com/redhat/Sugar/Shell/ActivityContainer")
 		bus.add_signal_receiver(self.name_owner_changed, dbus_interface = "org.freedesktop.DBus", signal_name = "NameOwnerChanged")
@@ -243,9 +267,9 @@ class ActivityContainer(dbus.service.Object):
 		self.notebook = gtk.Notebook()
 
 		tab_label = gtk.Label("Everyone")
-		tab_page = StartPage()
-		self.notebook.append_page(tab_page, tab_label)
-		tab_page.show()
+		self._start_page = StartPage(self._signal_helper)
+		self.notebook.append_page(self._start_page, tab_label)
+		self._start_page.show()
 
 		self.notebook.show()
 		self.notebook.connect("switch-page", self.notebook_tab_changed)
@@ -328,6 +352,8 @@ class ActivityContainer(dbus.service.Object):
 		#print "in name_owner_changed: svc=%s oldsvc=%s newsvc=%s"%(service_name, old_service_name, new_service_name)
 		for owner, activity in self.activities[:]:
 			if owner == old_service_name:
+				activity_id = activity.get_host_activity_id()
+				self._signal_helper.activity_ended(activity_id)
 				self.activities.remove((owner, activity))
 		#self.__print_activities()
 
@@ -341,10 +367,11 @@ class ActivityContainer(dbus.service.Object):
 		activity = ActivityHost(self, activity_name)
 		self.activities.append((sender, activity))
 
-		self.current_activity = activity
+		activity_id = activity.get_host_activity_id()
+		self._signal_helper.activity_started(activity_id)
 
-		#self.__print_activities()
-		return activity.get_host_activity_id()
+		self.current_activity = activity
+		return activity_id
 
 	@dbus.service.method("com.redhat.Sugar.Shell.ActivityContainer", \
 			 in_signature="ss", \
@@ -352,6 +379,8 @@ class ActivityContainer(dbus.service.Object):
 	def add_activity_with_id(self, activity_name, activity_id, sender):
 		activity = ActivityHost(self, activity_name, activity_id)
 		self.activities.append((sender, activity))
+		activity_id = activity.get_host_activity_id()
+		self._signal_helper.activity_started(activity_id)
 		self.current_activity = activity
 		
 	def __print_activities(self):
