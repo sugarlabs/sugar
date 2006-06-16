@@ -9,6 +9,7 @@ from sugar.shell import activity
 from sugar.browser import NotificationBar
 from sugar.browser import NavigationToolbar
 from sugar.presence.PresenceService import PresenceService
+import random
 
 
 _BROWSER_ACTIVITY_TYPE = "_web_olpc._udp"
