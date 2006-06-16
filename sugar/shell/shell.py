@@ -250,6 +250,16 @@ class ActivityContainer(dbus.service.Object):
 		# Create our owner service
 		self._owner = ShellOwner()
 
+		self._presence_window = PresenceWindow(self)
+		self._presence_window.set_transient_for(self.window)
+
+		wm = WindowManager(self._presence_window)
+	
+		wm.set_width(0.15, WindowManager.SCREEN_RELATIVE)
+		wm.set_height(1.0, WindowManager.SCREEN_RELATIVE)
+		wm.set_position(WindowManager.LEFT)
+		wm.manage()
+
 	def show(self):
 		self.window.show()
 
@@ -259,6 +269,9 @@ class ActivityContainer(dbus.service.Object):
 	def __focus_error_cb(self, error):
 		pass
 
+	def set_current_activity(self, activity):
+		self.current_activity = activity
+		self._presence_window.set_activity(activity)
 
 	def notebook_tab_changed(self, notebook, page, page_number):
 		#print "in notebook_tab_changed"
@@ -272,7 +285,7 @@ class ActivityContainer(dbus.service.Object):
 				self.current_activity.peer_service.lost_focus(reply_handler = self.__focus_reply_cb, error_handler = self.__focus_error_cb)
 		
 		if self.has_activity(new_activity):
-			self.current_activity = new_activity
+			self.set_current_activity(new_activity)
 
 		if self.current_activity != None:
 			if self.has_activity(self.current_activity):
@@ -405,16 +418,6 @@ def main():
 	wm.show()
 	wm.manage()
 
-	presence_window = PresenceWindow(activity_container)
-	presence_window.set_transient_for(activity_container.window)
-
-	wm = WindowManager(presence_window)
-	
-	wm.set_width(0.15, WindowManager.SCREEN_RELATIVE)
-	wm.set_height(1.0, WindowManager.SCREEN_RELATIVE)
-	wm.set_position(WindowManager.LEFT)
-	wm.manage()
-	
 	group_chat = GroupChat()
 	group_chat.set_transient_for(activity_container.window)
 	group_chat.set_decorated(False)

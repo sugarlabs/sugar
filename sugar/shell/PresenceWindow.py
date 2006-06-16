@@ -9,7 +9,8 @@ class PresenceWindow(gtk.Window):
 	_MODEL_COL_NICK = 0
 	_MODEL_COL_ICON = 1
 	_MODEL_COL_BUDDY = 2
-	
+	_MODEL_COL_VISIBLE = 3
+		
 	def __init__(self, activity_container):
 		gtk.Window.__init__(self, gtk.WINDOW_POPUP)
 		
@@ -23,6 +24,18 @@ class PresenceWindow(gtk.Window):
 		
 		self._setup_ui()
 
+	def _is_buddy_visible(self, buddy):
+		activity_type = self._activity.get_default_type()
+		buddy.get_service_of_type(activity, activity_type)
+
+	def _update_buddies_visibility(self):
+		for row in self._buddy_store:
+			row[_MODEL_COL_VISIBLE] = self._is_buddy_visible(row[_MODEL_COL_BUDDY])
+
+	def set_activity(self, activity):
+		self._activity = activity
+		self._update_buddies_visibility()
+
 	def _setup_ui(self):
 		vbox = gtk.VBox(False, 6)
 		vbox.set_border_width(12)
@@ -32,9 +45,12 @@ class PresenceWindow(gtk.Window):
 		vbox.pack_start(label, False)
 		label.show()
 
-		self._buddy_list_model = gtk.ListStore(gobject.TYPE_STRING,
-											   gtk.gdk.Pixbuf,
-											   gobject.TYPE_PYOBJECT)
+		self._buddy_store = gtk.ListStore(gobject.TYPE_STRING,
+					 	 		  		  gtk.gdk.Pixbuf,
+					  			  		  gobject.TYPE_PYOBJECT,
+					  			  		  bool)
+		self._buddy_list_model = self._buddy_store.filter_new()
+		self._buddy_list_model.set_visible_column(self._MODEL_COL_VISIBLE)
 
 		sw = gtk.ScrolledWindow()
 		sw.set_shadow_type(gtk.SHADOW_IN)
@@ -107,9 +123,18 @@ class PresenceWindow(gtk.Window):
 		aniter = self._buddy_list_model.append(None)
 		self._buddy_list_model.set(aniter,
 								   self._MODEL_COL_NICK, buddy.get_nick_name(),
-								   self._MODEL_COL_BUDDY, buddy)
+								   self._MODEL_COL_BUDDY, buddy,
+								   self._MODEL_COL_VISIBLE, self._is_buddy_visible(buddy))
 		buddy.connect('icon-changed', self.__buddy_icon_changed_cb)
+		buddy.connect('service-added', self.__buddy_service_added_cb)
+		buddy.connect('service-removed', self.__buddy_service_removed_cb)
 
+	def __buddy_service_added_cb(self, buddy, service):
+		self._update_buddies_visibility()
+
+	def __buddy_service_remove_cb(self, buddy, service):
+		self._update_buddies_visibility()
+		
 	def _on_buddy_disappeared_cb(self, pservice, buddy):
 		aniter = self._get_iter_for_buddy(buddy)
 		if aniter:

@@ -31,6 +31,9 @@ class BrowserActivity(activity.Activity):
 		self._share_service = None
 		self._model = None
 	
+	def get_default_type(self):
+		return _BROWSER_ACTIVITY_TYPE
+	
 	def _update_shared_location(self):
 		address = self.embed.get_address()
 		self._model.set_value('address', address)
