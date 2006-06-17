@@ -17,7 +17,7 @@ from sugar.chat.GroupChat import GroupChat
 
 class ActivityHost(dbus.service.Object):
 
-	def __init__(self, activity_container, activity_name, activity_id = None):
+	def __init__(self, activity_container, activity_name, default_type, activity_id = None):
 		self.activity_name = activity_name
 		self.ellipsize_tab = False
 
@@ -27,7 +27,8 @@ class ActivityHost(dbus.service.Object):
 			self.activity_id = sugar.util.unique_id()
 		else:
 			self.activity_id = activity_id
-		
+		self._default_type = default_type	
+	
 		self.dbus_object_name = "/com/redhat/Sugar/Shell/Activities/%s" % self.activity_id
 		
 		dbus.service.Object.__init__(self, activity_container.service, self.dbus_object_name)
@@ -82,6 +83,9 @@ class ActivityHost(dbus.service.Object):
 
 	def get_chat(self):
 		return self._group_chat
+
+	def get_default_type(self):
+		return self._default_type
 
 	def __close_button_clicked_reply_cb(self):
 		pass
@@ -364,12 +368,12 @@ class ActivityContainer(dbus.service.Object):
 
 
 	@dbus.service.method("com.redhat.Sugar.Shell.ActivityContainer", \
-			 in_signature="s", \
+			 in_signature="ss", \
 			 out_signature="s", \
 			 sender_keyword="sender")
-	def add_activity(self, activity_name, sender):
+	def add_activity(self, activity_name, default_type, sender):
 		#print "hello world, activity_name = '%s', sender = '%s'"%(activity_name, sender)
-		activity = ActivityHost(self, activity_name)
+		activity = ActivityHost(self, activity_name, default_type)
 		self.activities.append((sender, activity))
 
 		activity_id = activity.get_host_activity_id()
@@ -379,10 +383,10 @@ class ActivityContainer(dbus.service.Object):
 		return activity_id
 
 	@dbus.service.method("com.redhat.Sugar.Shell.ActivityContainer", \
-			 in_signature="ss", \
+			 in_signature="sss", \
 			 sender_keyword="sender")
-	def add_activity_with_id(self, activity_name, activity_id, sender):
-		activity = ActivityHost(self, activity_name, activity_id)
+	def add_activity_with_id(self, activity_name, default_type, activity_id, sender):
+		activity = ActivityHost(self, activity_name, default_type, activity_id)
 		self.activities.append((sender, activity))
 		activity_id = activity.get_host_activity_id()
 		self._signal_helper.activity_started(activity_id)

@@ -22,7 +22,7 @@ class BrowserActivity(activity.Activity):
 	LEADING = 3
 
 	def __init__(self, uri):
-		activity.Activity.__init__(self)
+		activity.Activity.__init__(self, _BROWSER_ACTIVITY_TYPE)
 		self.uri = uri
 		self._mode = BrowserActivity.SOLO
 		self._pservice = PresenceService.get_instance()

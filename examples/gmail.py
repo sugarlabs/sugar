@@ -8,9 +8,11 @@ import geckoembed
 from sugar.shell import activity
 import sugar.env
 
+_GMAIL_ACTIVITY_TYPE = "_gmail_google._tcp"
+
 class GMailActivity(activity.Activity):
 	def __init__(self):
-		activity.Activity.__init__(self)
+		activity.Activity.__init__(self, _GMAIL_ACTIVITY_TYPE)
 	
 	def on_connected_to_shell(self):
 		profile_path = os.path.join(sugar.env.get_user_dir(), 'gmail')

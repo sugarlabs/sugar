@@ -77,10 +77,10 @@ class ActivityDbusService(dbus.service.Object):
 												   SHELL_SERVICE_NAME + ".ActivityContainer")
 
 		if activity_id is None:
-			self._activity_id = self._activity_container.add_activity("")
+			self._activity_id = self._activity_container.add_activity("", self._activity.default_type())
 		else:
 			self._activity_id = activity_id
-			self._activity_container.add_activity_with_id("", activity_id)
+			self._activity_container.add_activity_with_id("", self._activity.default_type(), activity_id)
 			
 		self._object_path = SHELL_SERVICE_PATH + "/Activities/%s" % self._activity_id
 
@@ -144,7 +144,7 @@ class ActivityDbusService(dbus.service.Object):
 class Activity(object):
 	"""Base Activity class that all other Activities derive from."""
 
-	def __init__(self):
+	def __init__(self, default_type):
 		self._dbus_service = self._get_new_dbus_service()
 		self._dbus_service.register_callback(ON_CONNECTED_TO_SHELL_CB, self._internal_on_connected_to_shell_cb)
 		self._dbus_service.register_callback(ON_DISCONNECTED_FROM_SHELL_CB, self._internal_on_disconnected_from_shell_cb)
@@ -156,6 +156,9 @@ class Activity(object):
 		self._has_focus = False
 		self._plug = None
 		self._activity_object = None
+		if type(default_type) != type("") or not len(default_type):
+			raise ValueError("Default type must be a valid string.")
+		self._default_type = default_type
 
 	def _cleanup(self):
 		if self._plug:
@@ -172,6 +175,9 @@ class Activity(object):
 		"""Create and return a new dbus service object for this Activity.
 		Allows subclasses to use their own dbus service object if they choose."""
 		return ActivityDbusService(self)
+
+	def default_type(self):
+		return self._default_type
 
 	def has_focus(self):
 		"""Return whether or not this Activity is visible to the user."""
