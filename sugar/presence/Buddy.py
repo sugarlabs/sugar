@@ -6,6 +6,7 @@ import gtk, gobject
 
 from sugar.p2p import Stream
 from sugar.p2p import network
+from sugar.presence import Service
 
 PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
 
