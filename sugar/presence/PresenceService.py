@@ -70,7 +70,9 @@ class PresenceService(gobject.GObject):
 		'buddy-disappeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
 						([gobject.TYPE_PYOBJECT])),
 		'activity-announced': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-						([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT]))
+						([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
+		'new-service-adv': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+						([gobject.TYPE_STRING, gobject.TYPE_STRING]))
 	}
 
 	__lock = threading.Lock()
@@ -297,6 +299,9 @@ class PresenceService(gobject.GObject):
 
 		# Decompose service type if we can
 		(uid, short_stype) = Service._decompose_service_type(full_stype.encode())
+
+		# FIXME: find a better way of letting the StartPage get everything
+		self.emit('new-service-adv', uid, short_stype)
 
 		# If we care about the service right now, resolve it
 		resolve = False
