@@ -21,15 +21,32 @@ class BrowserActivity(activity.Activity):
 	FOLLOWING = 2
 	LEADING = 3
 
-	def __init__(self, uri):
+	def __init__(self, uri, mode = SOLO):
 		activity.Activity.__init__(self, _BROWSER_ACTIVITY_TYPE)
 		self.uri = uri
-		self._mode = BrowserActivity.SOLO
+		self._mode = mode
 		self._pservice = PresenceService.get_instance()
 		self._pservice.start()
+		self._pservice.connect('service-appeared', self._service_appeared_cb)
 		self._pservice.track_service_type(_BROWSER_ACTIVITY_TYPE)
 		self._share_service = None
+		self._model_service = None
+		self._notif_service = None
 		self._model = None
+	
+	def _service_appeared_cb(self, pservice, buddy, service):
+		print 'Got service ' + service.get_type()
+		if service.get_type() == _BROWSER_ACTIVITY_TYPE:
+			print 'Activity service found'
+			self._notif_service = service
+		elif service.get_type() == LocalModel.SERVICE_TYPE:
+			print 'Model service found'
+			self._model_service = service
+		
+		if self._notif_service and self._model_service:
+			print 'Create remote model'
+			self._model = RemoteModel(self._model_service, self._notif_service)
+			self._model.add_listener(self.__shared_location_changed_cb)
 	
 	def get_default_type(self):
 		return _BROWSER_ACTIVITY_TYPE
@@ -58,9 +75,8 @@ class BrowserActivity(activity.Activity):
 			self._notif_bar.set_icon('stock_shared-by-me')
 			self._notif_bar.show()
 
-	def _setup_shared(self, service):
-#		self._model = RemoteModel(service, notification_service)
-		pass
+	def _follow(self, service):
+		self._pservice.track_service_type(LocalModel.SERVICE_TYPE)
 	
 	def on_connected_to_shell(self):
 		self.set_ellipsize_tab(True)
@@ -92,7 +108,8 @@ class BrowserActivity(activity.Activity):
 
 		vbox.show()
 		
-		self._setup_shared(self.uri)
+		if self._mode == BrowserActivity.FOLLOWING:
+			self._follow(self.uri)
 	
 	def get_embed(self):
 		return self.embed
