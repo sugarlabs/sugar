@@ -199,6 +199,13 @@ class ActivityHost(dbus.service.Object):
 		del self
 
 	def get_host_activity_id(self):
+		"""Real function that the shell should use for getting the
+		activity's ID."""
+		return self.activity_id
+
+	def get_id(self):
+		"""Interface-type function to match activity.Activity's
+		get_id() function."""
 		return self.activity_id
 
 	def get_object_path(self):
