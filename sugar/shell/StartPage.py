@@ -4,7 +4,7 @@ import gtk
 import pango
 import dbus
 import cgi
-import urllib
+import xml.sax.saxutils
 import re
 
 import google
@@ -21,10 +21,15 @@ class ActivitiesModel(gtk.ListStore):
 	
 	def add_activity(self, buddy, service):
 		uid = service.get_activity_uid()
-		title = urllib.unquote(service.get_one_property('Title'))
-		address = urllib.unquote(service.get_one_property('URI'))
-		subtitle = 'Shared by %s' % buddy.get_nick_name()
-		self.append([ title, address, subtitle, uid ])
+		# Web Activity check
+		if service.get_type() == BrowserActivity._BROWSER_ACTIVITY_TYPE:
+			escaped_title = service.get_one_property('Title')
+			escaped_uri = service.get_one_property('URI')
+			if escaped_title and escaped_uri:
+				title = xml.sax.saxutils.unescape(escaped_title)
+				address = xml.sax.saxutils.unescape(escaped_uri)
+				subtitle = 'Shared by %s' % buddy.get_nick_name()
+				self.append([ title, address, subtitle, uid ])
 
 class ActivitiesView(gtk.TreeView):
 	def __init__(self):
@@ -81,6 +86,7 @@ class StartPage(gtk.HBox):
 
 		self._pservice = PresenceService.get_instance()
 		self._pservice.connect("activity-announced", self._on_activity_announced_cb)
+		self._pservice.connect("new-service-adv", self._on_new_service_adv_cb)
 		self._pservice.start()
 		self._pservice.track_service_type(BrowserActivity._BROWSER_ACTIVITY_TYPE)
 
@@ -127,7 +133,13 @@ class StartPage(gtk.HBox):
 	def _on_local_activity_ended_cb(self, helper, activity_container, activity_id):
 		self._pservice.untrack_activity(activity_id)
 
+	def _on_new_service_adv_cb(self, pservice, activity_id, short_stype):
+		if activity_id:
+			self._pservice.track_activity(activity_id)
+			self._pservice.track_service_type(short_stype)
+
 	def _on_activity_announced_cb(self, pservice, service, buddy):
+		print "Found new activity with type %s" % service.get_full_type()
 		self._activities.get_model().add_activity(buddy, service)
 
 	def _search_entry_activate_cb(self, entry):
