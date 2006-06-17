@@ -99,15 +99,20 @@ class Buddy(gobject.GObject):
 		short_stype = stype
 		if not short_stype:
 			raise RuntimeError("Need to specify a service type.")
+		# Ensure we're only passed short service types
+		(dec_uid, dec_stype) = Service._decompose_service_type(short_stype)
+		if dec_uid:
+			raise RuntimeError("Use plain service types please!")
+
 		uid = None
 		if activity:
 			uid = activity.get_id()
-		if self._services.has_key(short_stype):
-			return self._services[short_stype]
-		elif uid:
+		if uid is not None:
 			for service in self._services.values():
 				if service.get_type() == short_stype and service.get_activity_uid() == uid:
 					return service
+		if self._services.has_key(short_stype):
+			return self._services[short_stype]
 		return None
 
 	def is_valid(self):
