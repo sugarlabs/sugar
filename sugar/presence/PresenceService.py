@@ -113,6 +113,7 @@ class PresenceService(gobject.GObject):
 		# Keep track of stuff we're already browsing with ZC
 		self._service_type_browsers = {}
 		self._service_browsers = {}
+		self._resolve_queue = [] # Track resolve requests
 
 		# Resolved service list
 		self._service_advs = []
@@ -250,6 +251,8 @@ class PresenceService(gobject.GObject):
 			return False
 		adv = adv_list[0]
 		adv.set_resolved(True)
+		if adv in self._resolve_queue:
+			self._resolve_queue.remove(adv)
 
 		# Update the service now that it's been resolved
 		service = Service.Service(name=name, stype=full_stype, domain=domain,
@@ -268,12 +271,12 @@ class PresenceService(gobject.GObject):
 		gobject.idle_add(self._resolve_service_reply_cb, interface, protocol,
 				name, stype, domain, host, aprotocol, address, port, txt, flags)
 
-	def _resolve_service(self, interface, protocol, name, stype, domain, flags):
+	def _resolve_service(self, adv):
 		"""Resolve and lookup a ZeroConf service to obtain its address and TXT records."""
 		# Ask avahi to resolve this particular service
-		print 'Resolving service ' + name + ' ' + stype
-		self._server.ResolveService(int(interface), int(protocol), name,
-				stype, domain, avahi.PROTO_UNSPEC, dbus.UInt32(0), # use flags here maybe?
+		self._log('resolving service %s %s' % (adv.name(), adv.stype()))
+		self._server.ResolveService(int(adv.interface()), int(adv.protocol()), adv.name(),
+				adv.stype(), adv.domain(), avahi.PROTO_UNSPEC, dbus.UInt32(0),
 				reply_handler=self._resolve_service_reply_cb_glue,
 				error_handler=self._resolve_service_error_handler)
 		return False
@@ -284,10 +287,13 @@ class PresenceService(gobject.GObject):
 		# Add the service to our unresolved services list
 		adv_list = self._find_service_adv(interface=interface, protocol=protocol,
 				name=name.encode(), stype=full_stype.encode(), domain=domain.encode())
+		adv = None
 		if not adv_list:
 			adv = ServiceAdv(interface=interface, protocol=protocol, name=name.encode(),
 					stype=full_stype.encode(), domain=domain.encode())
 			self._service_advs.append(adv)
+		else:
+			adv = adv_list[0]
 
 		# Find out the IP address of this interface, if we haven't already
 		if interface not in self._local_addrs.keys():
@@ -310,8 +316,9 @@ class PresenceService(gobject.GObject):
 				resolve = True
 		if self._is_special_service_type(short_stype):
 			resolve = True
-		if resolve:
-			gobject.idle_add(self._resolve_service, interface, protocol, name, full_stype, domain, flags)
+		if resolve and not adv in self._resolve_queue:
+			self._resolve_queue.append(adv)
+			gobject.idle_add(self._resolve_service, adv)
 		return False
 
 	def _service_appeared_cb_glue(self, interface, protocol, name, stype, domain, flags):
@@ -331,6 +338,8 @@ class PresenceService(gobject.GObject):
 
 		# Get the service object; if none, we have nothing left to do
 		adv = adv_list[0]
+		if adv in self._resolve_queue:
+			self._resolve_queue.remove(adv)
 		service = adv.service()
 		if not service:
 			return False
@@ -457,10 +466,11 @@ class PresenceService(gobject.GObject):
 		if specific_stype is not None:
 			resolv_list = resolv_list + self._find_service_adv(stype=specific_stype)
 
-		# Request resolution for them
+		# Request resolution for them if they aren't in-process already
 		for adv in resolv_list:
-			gobject.idle_add(self._resolve_service, adv.interface(),
-					adv.protocol(), adv.name(), adv.stype(), adv.domain(), 0)
+			if adv not in self._resolve_queue:
+				self._resolve_queue.append(adv)
+				gobject.idle_add(self._resolve_service, adv)
 
 	def untrack_service_type(self, short_stype):
 		"""Stop tracking a certain mDNS service."""
