@@ -28,7 +28,7 @@ class PresenceWindow(gtk.Window):
 	def _is_buddy_visible(self, buddy):
 		if self._activity:
 			activity_type = self._activity.get_default_type()
-			service = buddy.get_service_of_type(activity, activity_type)
+			service = buddy.get_service_of_type(activity_type, self._activity)
 			return service is not None
 		else:
 			return True
