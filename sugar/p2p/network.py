@@ -79,7 +79,7 @@ class GlibXMLRPCServer(GlibTCPServer, SimpleXMLRPCServer.SimpleXMLRPCDispatcher)
 	blocking on accept().
 	"""
 
-	def __init__(self, addr, requestHandler=GlibXMLRPCRequestHandler, logRequests=1):
+	def __init__(self, addr, requestHandler=GlibXMLRPCRequestHandler, logRequests=0):
 		self.logRequests = logRequests
 		SimpleXMLRPCServer.SimpleXMLRPCDispatcher.__init__(self)
 		GlibTCPServer.__init__(self, addr, requestHandler)
