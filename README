@@ -43,3 +43,12 @@ Key bindings
 ctrl+Up 	Toggle chat window visibility
 ctrl+Left 	Toggle presence window visibility
 F11			Toggle activities window fullscreen
+
+Logging
+=======
+
+The logging level by default is set to 'warning'.
+To change it to debug you can define the following environment
+variable:
+
+SUGAR_LOGGING_LEVEL=debug

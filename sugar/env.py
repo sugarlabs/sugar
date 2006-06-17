@@ -11,6 +11,12 @@ def get_user_dir():
 	else:
 		return os.path.expanduser('~/.sugar/')
 
+def get_logging_level():
+	if os.environ.has_key('SUGAR_LOGGING_LEVEL'):
+		return os.environ['SUGAR_LOGGING_LEVEL']
+	else:
+		return 'warning'
+
 def get_nick_name():
 	if os.environ.has_key('SUGAR_NICK_NAME'):
 		return os.environ['SUGAR_NICK_NAME']

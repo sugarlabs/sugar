@@ -9,6 +9,7 @@ import pango
 import gobject
 
 import sugar.util
+from sugar.session.LogWriter import LogWriter
 from sugar.shell.PresenceWindow import PresenceWindow
 from sugar.shell.Owner import ShellOwner
 from sugar.shell.StartPage import StartPage
@@ -474,6 +475,9 @@ class ConsoleLogger(dbus.service.Object):
 
 def main():
 	console = ConsoleLogger()
+
+	log_writer = LogWriter("Shell", False)
+	log_writer.start()
 
 	session_bus = dbus.SessionBus()
 	service = dbus.service.BusName("com.redhat.Sugar.Shell", bus=session_bus)

@@ -5,6 +5,7 @@ import Service
 import os
 import string
 import random
+import logging
 from sugar import util
 from sugar import env
 
@@ -155,17 +156,12 @@ class PresenceService(gobject.GObject):
 	def set_debug(self, debug):
 		self._debug = debug
 
-	def _log(self, msg):
-		"""Simple logger."""
-		if self._debug:
-			print "PresenceService(%d): %s" % (os.getpid(), msg)
-
 	def get_owner(self):
 		"""Return the owner of this machine/instance, if we've recognized them yet."""
 		return self._owner
 
 	def _resolve_service_error_handler(self, err):
-		self._log("error resolving service: %s" % err)
+		logging.error("error resolving service: %s" % err)
 
 	def _find_service_adv(self, interface=None, protocol=None, name=None, stype=None, domain=None):
 		"""Search a list of service advertisements for ones matching certain criteria."""
@@ -242,7 +238,7 @@ class PresenceService(gobject.GObject):
 	def _resolve_service_reply_cb(self, interface, protocol, name, full_stype, domain, host, aprotocol, address, port, txt, flags):
 		"""When the service discovery finally gets here, we've got enough information about the
 		service to assign it to a buddy."""
-		self._log("resolved service '%s' type '%s' domain '%s' to %s:%s" % (name, full_stype, domain, address, port))
+		logging.debug("resolved service '%s' type '%s' domain '%s' to %s:%s" % (name, full_stype, domain, address, port))
 
 		name = name.encode()
 		full_stype = full_stype.encode()
@@ -281,7 +277,7 @@ class PresenceService(gobject.GObject):
 	def _resolve_service(self, adv):
 		"""Resolve and lookup a ZeroConf service to obtain its address and TXT records."""
 		# Ask avahi to resolve this particular service
-		self._log('resolving service %s %s' % (adv.name(), adv.stype()))
+		logging.debug('resolving service %s %s' % (adv.name(), adv.stype()))
 		self._server.ResolveService(int(adv.interface()), int(adv.protocol()), adv.name(),
 				adv.stype(), adv.domain(), avahi.PROTO_UNSPEC, dbus.UInt32(0),
 				reply_handler=self._resolve_service_reply_cb_glue,
@@ -289,7 +285,7 @@ class PresenceService(gobject.GObject):
 		return False
 
 	def _service_appeared_cb(self, interface, protocol, name, full_stype, domain, flags):
-		self._log("found service '%s' (%d) of type '%s' in domain '%s' on %i.%i." % (name, flags, full_stype, domain, interface, protocol))
+		logging.debug("found service '%s' (%d) of type '%s' in domain '%s' on %i.%i." % (name, flags, full_stype, domain, interface, protocol))
 
 		# Add the service to our unresolved services list
 		adv_list = self._find_service_adv(interface=interface, protocol=protocol,
@@ -332,7 +328,7 @@ class PresenceService(gobject.GObject):
 		gobject.idle_add(self._service_appeared_cb, interface, protocol, name, stype, domain, flags)
 
 	def _service_disappeared_cb(self, interface, protocol, name, full_stype, domain, flags):
-		self._log("service '%s' of type '%s' in domain '%s' on %i.%i disappeared." % (name, full_stype, domain, interface, protocol))
+		logging.debug("service '%s' of type '%s' in domain '%s' on %i.%i disappeared." % (name, full_stype, domain, interface, protocol))
 		name = name.encode()
 		full_stype = full_stype.encode()
 		domain = domain.encode()
@@ -377,7 +373,7 @@ class PresenceService(gobject.GObject):
 		# Start browsing for all services of this type in this domain
 		s_browser = self._server.ServiceBrowserNew(interface, protocol, stype, domain, dbus.UInt32(0))
 		browser_obj = dbus.Interface(self._bus.get_object(avahi.DBUS_NAME, s_browser), avahi.DBUS_INTERFACE_SERVICE_BROWSER)
-		self._log("now browsing for services of type '%s' in domain '%s' on %i.%i ..." % (stype, domain, interface, protocol))
+		logging.debug("now browsing for services of type '%s' in domain '%s' on %i.%i ..." % (stype, domain, interface, protocol))
 		browser_obj.connect_to_signal('ItemNew', self._service_appeared_cb_glue)
 		browser_obj.connect_to_signal('ItemRemove', self._service_disappeared_cb_glue)
 
@@ -403,13 +399,13 @@ class PresenceService(gobject.GObject):
 			st_browser = self._server.ServiceTypeBrowserNew(interface, protocol, domain, dbus.UInt32(0))
 			browser_obj = dbus.Interface(self._bus.get_object(avahi.DBUS_NAME, st_browser), avahi.DBUS_INTERFACE_SERVICE_TYPE_BROWSER)
 		except dbus.DBusException, exc:
-			self._log("got exception %s while attempting to browse domain %s on %i.%i" % (domain, interface, protocol))
+			logging.error("got exception %s while attempting to browse domain %s on %i.%i" % (domain, interface, protocol))
 			str_exc = str(exc)
 			if str_exc.find("The name org.freedesktop.Avahi was not provided by any .service files") >= 0:
 				raise Exception("Avahi does not appear to be running.  '%s'" % str_exc)
 			else:
 				raise exc
-		self._log("now browsing domain '%s' on %i.%i ..." % (domain, interface, protocol))
+		logging.debug("now browsing domain '%s' on %i.%i ..." % (domain, interface, protocol))
 		browser_obj.connect_to_signal('ItemNew', self._new_service_type_cb_glue)
 		self._service_type_browsers[(interface, protocol, domain)] = browser_obj
 		return False
@@ -542,7 +538,7 @@ class PresenceService(gobject.GObject):
 		rs_domain = service.get_domain()
 		if not rs_domain or not len(rs_domain):
 			rs_domain = ""
-		self._log("registered service name '%s' type '%s' on port %d with args %s" % (rs_name, rs_stype, rs_port, rs_props))
+		logging.debug("registered service name '%s' type '%s' on port %d with args %s" % (rs_name, rs_stype, rs_port, rs_props))
 
 		try:
 			group = dbus.Interface(self._bus.get_object(avahi.DBUS_NAME, self._server.EntryGroupNew()), avahi.DBUS_INTERFACE_ENTRY_GROUP)
