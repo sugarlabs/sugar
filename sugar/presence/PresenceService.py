@@ -69,6 +69,10 @@ class PresenceService(gobject.GObject):
 						([gobject.TYPE_PYOBJECT])),
 		'buddy-disappeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
 						([gobject.TYPE_PYOBJECT])),
+		'service-appeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+						([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
+		'service-disappeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+						([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
 		'activity-announced': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
 						([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
 		'new-service-adv': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
@@ -197,7 +201,9 @@ class PresenceService(gobject.GObject):
 		try:
 			buddy = self._buddies[name]
 			buddy_was_valid = buddy.is_valid()
-			buddy.add_service(service)
+			service_added = buddy.add_service(service)
+			if service_added:
+				self.emit('service-appeared', buddy, service)
 		except KeyError:
 			# Should this service mark the owner?
 			owner_nick = env.get_nick_name()
@@ -208,6 +214,7 @@ class PresenceService(gobject.GObject):
 			else:
 				buddy = Buddy.Buddy(service)
 			self._buddies[name] = buddy
+			self.emit('service-appeared', buddy, service)
 		if not buddy_was_valid and buddy.is_valid():
 			self.emit("buddy-appeared", buddy)
 		return buddy
@@ -351,6 +358,7 @@ class PresenceService(gobject.GObject):
 			pass
 		else:
 			buddy.remove_service(service)
+			self.emit('service-disappeared', buddy, service)
 			if not buddy.is_valid():
 				self.emit("buddy-disappeared", buddy)
 				del self._buddies[name]
