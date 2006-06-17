@@ -3,7 +3,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import geckoembed
-import urllib
+import xml.sax.saxutils
 
 from sugar.shell import activity
 from sugar.browser import NotificationBar
@@ -98,8 +98,8 @@ class BrowserActivity(activity.Activity):
 		return self.embed
 	
 	def publish(self):
-		escaped_title = urllib.quote(self.embed.get_title())
-		escaped_url = urllib.quote(self.embed.get_address())
+		escaped_title = xml.sax.saxutils.escape(self.embed.get_title())
+		escaped_url = xml.sax.saxutils.escape(self.embed.get_address())
 
 		# Publish ourselves on the network
 		properties = {_SERVICE_URI_TAG: escaped_url, _SERVICE_TITLE_TAG: escaped_title}
