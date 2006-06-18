@@ -1,4 +1,5 @@
 import xmlrpclib
+import logging
 
 from sugar.p2p.NotificationListener import NotificationListener
 from sugar.p2p.model.AbstractModel import AbstractModel
@@ -11,6 +12,7 @@ class RemoteModel(AbstractModel):
 		self._notification_service = notification_service
 		
 		addr = "http://%s:%d" % (service.get_address(), service.get_port())
+		logging.debug('Setup remote model ' + addr)
 		self._client = xmlrpclib.ServerProxy(addr)
 		
 		self._setup_notification_listener()

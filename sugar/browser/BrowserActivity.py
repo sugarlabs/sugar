@@ -1,9 +1,11 @@
+import logging
+import xml.sax.saxutils
+
 import dbus
 import pygtk
 pygtk.require('2.0')
 import gtk
 import geckoembed
-import xml.sax.saxutils
 
 from sugar.shell import activity
 from sugar.browser import NotificationBar
@@ -25,26 +27,30 @@ class BrowserActivity(activity.Activity):
 		activity.Activity.__init__(self, _BROWSER_ACTIVITY_TYPE)
 		self.uri = uri
 		self._mode = mode
+		
+		logging.debug('Start presence service')
 		self._pservice = PresenceService.get_instance()
 		self._pservice.start()
+		
+		logging.debug('Track browser activities')
 		self._pservice.connect('service-appeared', self._service_appeared_cb)
 		self._pservice.track_service_type(_BROWSER_ACTIVITY_TYPE)
+		self._pservice.track_service_type(LocalModel.SERVICE_TYPE)
+		
 		self._share_service = None
 		self._model_service = None
 		self._notif_service = None
 		self._model = None
 	
 	def _service_appeared_cb(self, pservice, buddy, service):
-		print 'Got service ' + service.get_type()
+		print 'appeared ' + service.get_type()
 		if service.get_type() == _BROWSER_ACTIVITY_TYPE:
-			print 'Activity service found'
 			self._notif_service = service
 		elif service.get_type() == LocalModel.SERVICE_TYPE:
-			print 'Model service found'
-			self._model_service = service
+			if self._mode != BrowserActivity.LEADING:
+				self._model_service = service
 		
 		if self._notif_service and self._model_service:
-			print 'Create remote model'
 			self._model = RemoteModel(self._model_service, self._notif_service)
 			self._model.add_listener(self.__shared_location_changed_cb)
 	
@@ -75,9 +81,6 @@ class BrowserActivity(activity.Activity):
 			self._notif_bar.set_icon('stock_shared-by-me')
 			self._notif_bar.show()
 
-	def _follow(self, service):
-		self._pservice.track_service_type(LocalModel.SERVICE_TYPE)
-	
 	def on_connected_to_shell(self):
 		self.set_ellipsize_tab(True)
 		self.set_can_close(True)
@@ -107,10 +110,10 @@ class BrowserActivity(activity.Activity):
 		plug.show()
 
 		vbox.show()
-		
-		if self._mode == BrowserActivity.FOLLOWING:
-			self._follow(self.uri)
-	
+
+		# FIXME remove, when we join the activity this will happen automatically
+		self._pservice.track_activity(self.get_id())
+			
 	def get_embed(self):
 		return self.embed
 	

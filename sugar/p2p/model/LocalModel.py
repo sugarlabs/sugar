@@ -1,4 +1,5 @@
 import socket
+import logging
 
 from sugar.presence.Service import Service
 from sugar.p2p.Notifier import Notifier
@@ -50,6 +51,7 @@ class LocalModel(AbstractModel):
 		port = service.get_port()
 		while not started and tries > 0:
 			try:
+				logging.debug('Start model server on port %d' % (port))
 				p2p_server = network.GlibXMLRPCServer(("", port))
 				p2p_server.register_instance(ModelRequestHandler(self))
 				started = True
