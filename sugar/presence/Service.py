@@ -1,6 +1,7 @@
 import avahi
 from sugar import util
 import string
+import dbus
 
 def _txt_to_dict(txt):
 	"""Convert an avahi-returned TXT record formatted
@@ -55,6 +56,25 @@ def is_multicast_address(address):
 	if first >= 224 and first <= 239:
 		return True
 	return False
+
+def deserialize(sdict):
+	try:
+		name = sdict['name']
+		full_stype = sdict['full_stype']
+		activity_stype = sdict['activity_stype']
+		domain = sdict['domain']
+		port = sdict['port']
+		properties = sdict['properties']
+	except KeyError, exc:
+		raise ValueError("Serialized service object was not valid.")
+
+	address = None
+	try:
+		address = sdict['address']
+	except KeyError:
+		pass
+	return Service(name, full_stype, domain, address=address,
+		port=port, properties=properties)
 
 
 _ACTIVITY_UID_TAG = "ActivityUID"
@@ -112,6 +132,18 @@ class Service(object):
 		self._activity_uid = uid
 		if uid and not self._properties.has_key(_ACTIVITY_UID_TAG):
 			self._properties[_ACTIVITY_UID_TAG] = uid
+
+	def serialize(self):
+		sdict = {}
+		sdict['name'] = dbus.Variant(self._name)
+		sdict['full_stype'] = dbus.Variant(self._full_stype)
+		sdict['activity_stype'] = dbus.Variant(self._activity_stype)
+		sdict['domain'] = dbus.Variant(self._domain)
+		if self._address:
+			sdict['address'] = dbus.Variant(self._address)
+		sdict['port'] = dbus.Variant(self._port)
+		sdict['properties'] = dbus.Variant(self._properties)
+		return sdict
 
 	def get_name(self):
 		"""Return the service's name, usually that of the
