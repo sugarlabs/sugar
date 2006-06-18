@@ -80,7 +80,7 @@ class ActivityHost(dbus.service.Object):
 		self._create_chat()
 		
 	def _create_chat(self):
-		self._group_chat = GroupChat()
+		self._group_chat = GroupChat(self)
 
 	def get_chat(self):
 		return self._group_chat
@@ -95,6 +95,7 @@ class ActivityHost(dbus.service.Object):
 		pass
 	
 	def publish(self):
+		self._group_chat.publish()
 		self.peer_service.publish()
 	
 	def tab_close_button_clicked(self, button):
