@@ -184,6 +184,11 @@ class Chat(gtk.VBox):
 		if not buddy:
 			return
 
+		# FIXME a better way to compare buddies?			
+		owner = PresenceService.get_instance().get_owner()
+		if buddy.get_nick_name() == owner.get_nick_name():
+			return
+
 		chunk = self._get_first_richtext_chunk(msg)
 		if chunk:
 			self._insert_rich_message(buddy, chunk)
@@ -205,6 +210,13 @@ class Chat(gtk.VBox):
 		"""Send a chat message and insert it into the local buffer."""
 		if len(text) <= 0:
 			return
-		self._stream_writer.write(text)
+		self._stream_writer.write(self.serialize_message(text))
 		owner = PresenceService.get_instance().get_owner()
 		self._insert_rich_message(owner, text)
+
+	def serialize_message(self, message):
+		owner = PresenceService.get_instance().get_owner()
+		return owner.get_nick_name() + '||' + message
+		
+	def deserialize_message(self, message):
+		return message.split('||', 1)

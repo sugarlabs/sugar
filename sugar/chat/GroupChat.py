@@ -39,8 +39,9 @@ class GroupChat(Chat):
 
 	def _group_recv_message(self, address, msg):
 		pservice = PresenceService.get_instance()
-		buddy = pservice.get_buddy_by_address(address)
+		[nick, msg] = self.deserialize_message(msg)
+		buddy = pservice.get_buddy_by_nick_name(nick)
 		if buddy:
 			self.recv_message(buddy, msg)
 		else:
-			logging.error('Cannot map %s to a buddy.' % (address))
+			logging.error('The buddy %s is not present.' % (nick))
