@@ -54,7 +54,7 @@ class Chat(gtk.VBox):
 		self._mode = Chat.TEXT_MODE
 		self._editor = ChatEditor(self, ChatEditor.TEXT_MODE)
 
-		toolbar = ChatToolbar(self._editor.get_buffer())
+		toolbar = ChatToolbar(self._editor)
 		self.pack_start(toolbar, False)
 		toolbar.show()
 

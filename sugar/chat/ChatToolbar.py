@@ -3,19 +3,22 @@ pygtk.require('2.0')
 import gtk
 
 from sugar.chat.Emoticons import Emoticons
+from sugar.chat.sketchpad.Toolbox import Toolbox
 import richtext
 
 class ChatToolbar(gtk.HBox):
-	def __init__(self, rich_buf):
+	def __init__(self, editor):
 		gtk.HBox.__init__(self)
 
+		self._editor = editor
 		self._emt_popup = None
 
-		spring = gtk.Label('')
-		self.pack_start(spring, True)
-		spring.show()
+#		spring = gtk.Label('')
+#		self.pack_start(spring, True)
+#		spring.show()
 
-		toolbar = richtext.RichTextToolbar(rich_buf)
+		toolbar = richtext.RichTextToolbar(editor.get_buffer())
+		toolbar.set_show_arrow(False)
 
 		item = gtk.ToolButton()
 
@@ -36,22 +39,30 @@ class ChatToolbar(gtk.HBox):
 		toolbar.insert(item, -1)
 		item.show()
 		
-		separator = gtk.SeparatorToolItem()
-		toolbar.insert(separator, -1)
-		separator.show()
+#		separator = gtk.SeparatorToolItem()
+#		toolbar.insert(separator, -1)
+#		separator.show()
 
-		item = gtk.MenuToolButton(None, "Links")
-		item.set_menu(gtk.Menu())
-		item.connect("show-menu", self.__show_link_menu_cb)
-		toolbar.insert(item, -1)
-		item.show()
+#		item = gtk.MenuToolButton(None, "Links")
+#		item.set_menu(gtk.Menu())
+#		item.connect("show-menu", self.__show_link_menu_cb)
+#		toolbar.insert(item, -1)
+#		item.show()
 
 		self.pack_start(toolbar)
 		toolbar.show()
 
-		spring = gtk.Label('')
-		self.pack_start(spring, True)
-		spring.show()
+		toolbox = Toolbox()
+		toolbox.connect('color-selected', self._color_selected)
+		self.pack_start(toolbox, False)
+		toolbox.show()
+
+#		spring = gtk.Label('')
+#		self.pack_start(spring, True)
+#		spring.show()
+
+	def _color_selected(self, toolbox, color):
+		self._editor.set_color(color)
 
 	def __link_activate_cb(self, item, link):
 		buf = self._editor.get_buffer()
@@ -68,8 +79,7 @@ class ChatToolbar(gtk.HBox):
 			menu.append(item)
 			item.show()
 		
-		button.set_menu(menu)
-		
+		button.set_menu(menu)		
 
 	def _create_emoticons_popup(self):
 		model = gtk.ListStore(gtk.gdk.Pixbuf, str)

@@ -45,6 +45,9 @@ class ChatEditor(gtk.HBox):
 		
 		self.set_mode(mode)
 
+	def set_color(self, color):
+		self._sketchpad.set_color(color)
+		
 	def get_buffer(self):
 		return self._text_view.get_buffer()
 
