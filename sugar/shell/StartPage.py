@@ -18,6 +18,11 @@ _COLUMN_ADDRESS = 1
 _COLUMN_SUBTITLE = 2
 _COLUMN_SERVICE = 3
 
+class SearchHelper(object):
+	def __init__(self, activity_uid):
+		self.search_uid = activity_uid
+		self.found = False
+
 class ActivitiesModel(gtk.ListStore):
 	def __init__(self):
 		gtk.ListStore.__init__(self, gobject.TYPE_STRING, gobject.TYPE_STRING,
@@ -25,9 +30,31 @@ class ActivitiesModel(gtk.ListStore):
 
 	def add_web_page(self, title, address):
 		self.append([ title, address, None, None ])
+
+	def _filter_dupe_activities(self, model, path, it, user_data):
+		"""Search the list of list rows for an existing service that
+		has the activity ID we're looking for."""
+		helper = user_data
+		(service, ) = model.get(it, _COLUMN_SERVICE)
+		if not service:
+			return False
+		if service.get_activity_uid() == helper.search_uid:
+			helper.found = True
+			return True
+		return False
 	
 	def add_activity(self, buddy, service):
 		# Web Activity check
+		activity_uid = service.get_activity_uid()
+		if activity_uid is None:
+			return
+		# Don't show dupes
+		helper = SearchHelper(activity_uid)
+		self.foreach(self._filter_dupe_activities, helper)
+		if helper.found == True:
+			return
+
+		# Only accept browser activities for now
 		if service.get_type() == BrowserActivity._BROWSER_ACTIVITY_TYPE:
 			escaped_title = service.get_one_property('Title')
 			escaped_uri = service.get_one_property('URI')
