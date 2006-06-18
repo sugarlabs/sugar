@@ -43,7 +43,6 @@ class BrowserActivity(activity.Activity):
 		self._model = None
 	
 	def _service_appeared_cb(self, pservice, buddy, service):
-		print 'appeared ' + service.get_type()
 		if service.get_type() == _BROWSER_ACTIVITY_TYPE:
 			self._notif_service = service
 		elif service.get_type() == LocalModel.SERVICE_TYPE:
@@ -112,6 +111,7 @@ class BrowserActivity(activity.Activity):
 		vbox.show()
 
 		# FIXME remove, when we join the activity this will happen automatically
+		# (Once we have a global presence service)
 		self._pservice.track_activity(self.get_id())
 			
 	def get_embed(self):

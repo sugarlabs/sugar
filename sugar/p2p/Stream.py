@@ -126,13 +126,14 @@ class UnicastStream(Stream):
 class MulticastStream(Stream):
 	def __init__(self, service):
 		Stream.__init__(self, service)
+		self._service = service
 		self._internal_start_reader()
 
 	def start_reader(self):
 		return self._reader_port
 
 	def _internal_start_reader(self):
-		if not service.get_address():
+		if not self._service.get_address():
 			raise ValueError("service must have a valid address.")
 		self._pipe = MostlyReliablePipe('', self._address, self._reader_port,
 				self._recv_data_cb)

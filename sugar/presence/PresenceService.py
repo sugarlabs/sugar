@@ -506,6 +506,7 @@ class PresenceService(gobject.GObject):
 	def share_activity(self, activity, stype, properties={}, address=None, port=None):
 		"""Convenience function to share an activity with other buddies."""
 		uid = activity.get_id()
+		logging.debug('Sharing activity uid %s, stype %s' % (uid, stype))
 		owner_nick = self._owner.get_nick_name()
 		real_stype = Service.compose_service_type(stype, uid)
 		if address and type(address) != type(""):
