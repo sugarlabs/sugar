@@ -6,21 +6,27 @@ import dbus
 import cgi
 import xml.sax.saxutils
 import re
+import gobject
 
 import google
 from sugar.presence.PresenceService import PresenceService
 from sugar.presence import Service
 from sugar.browser import BrowserActivity
 
+_COLUMN_TITLE = 0
+_COLUMN_ADDRESS = 1
+_COLUMN_SUBTITLE = 2
+_COLUMN_SERVICE = 3
+
 class ActivitiesModel(gtk.ListStore):
 	def __init__(self):
-		gtk.ListStore.__init__(self, str, str, str, str)
+		gtk.ListStore.__init__(self, gobject.TYPE_STRING, gobject.TYPE_STRING,
+				gobject.TYPE_STRING, gobject.TYPE_PYOBJECT)
 
 	def add_web_page(self, title, address):
 		self.append([ title, address, None, None ])
 	
 	def add_activity(self, buddy, service):
-		uid = service.get_activity_uid()
 		# Web Activity check
 		if service.get_type() == BrowserActivity._BROWSER_ACTIVITY_TYPE:
 			escaped_title = service.get_one_property('Title')
@@ -29,7 +35,7 @@ class ActivitiesModel(gtk.ListStore):
 				title = xml.sax.saxutils.unescape(escaped_title)
 				address = xml.sax.saxutils.unescape(escaped_uri)
 				subtitle = 'Shared by %s' % buddy.get_nick_name()
-				self.append([ title, address, subtitle, uid ])
+				self.append([ title, address, subtitle, service ])
 
 class ActivitiesView(gtk.TreeView):
 	def __init__(self):
@@ -47,11 +53,11 @@ class ActivitiesView(gtk.TreeView):
 		self.connect('row-activated', self._row_activated_cb)
 	
 	def _cell_data_func(self, column, cell, model, it):
-		title = model.get_value(it, 0)
-		subtitle = model.get_value(it, 2)
+		title = model.get_value(it, _COLUMN_TITLE)
+		subtitle = model.get_value(it, _COLUMN_SUBTITLE)
 		if subtitle is None:
-			subtitle = model.get_value(it, 1)
-				
+			subtitle = model.get_value(it, _COLUMN_ADDRESS)
+
 		markup = '<big><b>' + cgi.escape(title) + '</b></big>' 
 		markup += '\n' + cgi.escape(subtitle)
 		
@@ -64,15 +70,16 @@ class ActivitiesView(gtk.TreeView):
 		browser_shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.BrowserShell')
 
 		model = self.get_model() 
-		address = model.get_value(model.get_iter(path), 1)
-		activity_id = model.get_value(model.get_iter(path), 3)
+		address = model.get_value(model.get_iter(path), _COLUMN_ADDRESS)
+		service = model.get_value(model.get_iter(path), _COLUMN_SERVICE)
 
-		print 'Activated row %s %s' % (address, activity_id)
+		print 'Activated row %s' % address
 
-		if activity_id is None:
+		if service is None:
 			browser_shell.open_browser(address)
 		else:
-			browser_shell.open_browser_with_id(address, activity_id)
+			serialized_service = service.serialize()
+			browser_shell.open_browser(address, serialized_service)
 			
 class StartPage(gtk.HBox):
 	def __init__(self, ac_signal_object):

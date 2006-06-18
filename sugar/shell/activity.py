@@ -68,7 +68,7 @@ class ActivityDbusService(dbus.service.Object):
 		if name in self._ALLOWED_CALLBACKS and self._callbacks[name]:
 			gobject.idle_add(self._call_callback_cb, self._callbacks[name], *args)
 
-	def connect_to_shell(self, activity_id = None):
+	def connect_to_shell(self, service=None):
 		"""Register with the shell via dbus, getting an activity ID and
 		and XEMBED window ID in which to display the Activity."""
 		self._activity_container_object = self._bus.get_object(SHELL_SERVICE_NAME, \
@@ -76,10 +76,10 @@ class ActivityDbusService(dbus.service.Object):
 		self._activity_container = dbus.Interface(self._activity_container_object, \
 												   SHELL_SERVICE_NAME + ".ActivityContainer")
 
-		if activity_id is None:
+		if service is None:
 			self._activity_id = self._activity_container.add_activity("", self._activity.default_type())
 		else:
-			self._activity_id = activity_id
+			self._activity_id = serivce.get_activity_uid()
 			self._activity_container.add_activity_with_id("", self._activity.default_type(), activity_id)
 			
 		self._object_path = SHELL_SERVICE_PATH + "/Activities/%s" % self._activity_id
@@ -97,7 +97,7 @@ class ActivityDbusService(dbus.service.Object):
 
 		self._activity_object.set_peer_service_name(self._peer_service_name, self._peer_object_path)
 
-		self._call_callback(ON_CONNECTED_TO_SHELL_CB, self._activity_object, self._activity_id)
+		self._call_callback(ON_CONNECTED_TO_SHELL_CB, self._activity_object, self._activity_id, service)
 
 	def _shutdown_reply_cb(self):
 		"""Shutdown was successful, tell the Activity that we're disconnected."""
@@ -155,6 +155,7 @@ class Activity(object):
 		self._dbus_service.register_callback(ON_GOT_FOCUS_CB, self._internal_on_got_focus_cb)
 		self._has_focus = False
 		self._plug = None
+		self._initial_service = None
 		self._activity_object = None
 		if type(default_type) != type("") or not len(default_type):
 			raise ValueError("Default type must be a valid string.")
@@ -183,18 +184,19 @@ class Activity(object):
 		"""Return whether or not this Activity is visible to the user."""
 		return self._has_focus
 
-	def connect_to_shell(self, activity_id = None):
+	def connect_to_shell(self, service = None):
 		"""Called by our controller to tell us to initialize and connect
 		to the shell."""
-		self._dbus_service.connect_to_shell(activity_id)
+		self._dbus_service.connect_to_shell(service)
 
-	def _internal_on_connected_to_shell_cb(self, activity_object, activity_id):
+	def _internal_on_connected_to_shell_cb(self, activity_object, activity_id, service=None):
 		"""Callback when the dbus service object has connected to the shell."""
 		self._activity_object = activity_object
 		self._activity_id = activity_id
 		self._window_id = self._activity_object.get_host_xembed_id()
 		print "Activity: XEMBED window ID is %s" % self._window_id
 		self._plug = gtk.Plug(self._window_id)
+		self._initial_service = service
 		self.on_connected_to_shell()
 
 	def _internal_on_disconnected_from_shell_cb(self):

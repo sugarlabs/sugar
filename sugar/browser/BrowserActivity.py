@@ -111,9 +111,10 @@ class BrowserActivity(activity.Activity):
 
 		vbox.show()
 
-		# FIXME remove, when we join the activity this will happen automatically
-		self._pservice.track_activity(self.get_id())
-			
+		# Join the shared activity if we were started from one
+		if self._initial_service:
+			self._pservice.join_shared_activity(self._initial_service)
+
 	def get_embed(self):
 		return self.embed
 	

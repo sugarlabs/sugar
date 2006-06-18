@@ -8,6 +8,7 @@ import gobject
 import sugar.env
 
 from sugar.browser.BrowserActivity import BrowserActivity
+from sugar.presence import Service
 
 class BrowserShell(dbus.service.Object):
 	def __init__(self, bus_name, object_path = '/com/redhat/Sugar/Browser'):
@@ -30,20 +31,21 @@ class BrowserShell(dbus.service.Object):
 			links.append(link)
 		return links
 
-	def _start_browser_cb(self, browser, activity_id):
-		if activity_id:
-			browser.connect_to_shell(activity_id)
-		else:
-			browser.connect_to_shell()
+	def _start_browser_cb(self, browser, service):
+		browser.connect_to_shell(service)
 
 	@dbus.service.method('com.redhat.Sugar.BrowserShell')
-	def open_browser(self, uri):
+	def open_browser(self, uri, serialized_service=None):
+		service = None
+		if serialized_service is not None:
+			serivce = Service.deserialize(serialized_service)
 		browser = BrowserActivity(uri)
 		self.__browsers.append(browser)
-		gobject.idle_add(self._start_browser_cb, browser, None)
+		gobject.idle_add(self._start_browser_cb, browser, service)
 
 	@dbus.service.method('com.redhat.Sugar.BrowserShell')
-	def open_browser_with_id(self, uri, activity_id):
+	def open_browser_from_service_foobar(self, uri, serialized_service):
+		serivce = Service.deserialize(serialized_service)
 		browser = BrowserActivity(uri)
 		self.__browsers.append(browser)
-		gobject.idle_add(self._start_browser_cb, browser, activity_id)
+		gobject.idle_add(self._start_browser_cb, browser, service)
