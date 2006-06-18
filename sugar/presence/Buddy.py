@@ -1,4 +1,5 @@
 import base64
+import logging
 
 import pygtk
 pygtk.require('2.0')
@@ -65,7 +66,8 @@ class Buddy(gobject.GObject):
 		True if the service was successfully added, and False if it was not."""
 		if service.get_name() != self._nick_name:
 			return False
-		if service.get_address() != self._address:
+		if service.get_publisher_address() != self._address:
+			logging.error('Service publisher and buddy address doesnt match: %s %s' % (service.get_publisher_address(), self._address))
 			return False
 		if service.get_type() in self._services.keys():
 			return False

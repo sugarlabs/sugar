@@ -322,6 +322,9 @@ class PresenceService(gobject.GObject):
 		if resolve and not adv in self._resolve_queue:
 			self._resolve_queue.append(adv)
 			gobject.idle_add(self._resolve_service, adv)
+		else:
+			logging.debug("Do not resolve service '%s' of type '%s', we don't care about it." % (name, full_stype))
+			
 		return False
 
 	def _service_appeared_cb_glue(self, interface, protocol, name, stype, domain, flags):
@@ -507,17 +510,17 @@ class PresenceService(gobject.GObject):
 		real_stype = Service.compose_service_type(stype, uid)
 		if address and type(address) != type(""):
 			raise ValueError("address must be a valid string.")
-		if not address:
+		if address == None:
 			# Use random currently unassigned multicast address
 			address = "232.%d.%d.%d" % (random.randint(0, 254), random.randint(1, 254),
 					random.randint(1, 254))
-
 		if port and (type(port) != type(1) or port <= 1024 or port >= 65535):
 			raise ValueError("port must be a number between 1024 and 65535")
 		if not port:
 			# random port #
 			port = random.randint(5000, 65535)
 
+		logging.debug('Share activity %s, address %s, port %d' % (stype, address, port))
 		service = Service.Service(name=owner_nick, stype=real_stype, domain="local",
 				address=address, port=port, properties=properties)
 		# Publish it to the world
@@ -536,6 +539,7 @@ class PresenceService(gobject.GObject):
 			raise ValueError("invalid service port.")
 		rs_props = service.get_properties()
 		rs_domain = service.get_domain()
+		rs_address = service.get_address()
 		if not rs_domain or not len(rs_domain):
 			rs_domain = ""
 		logging.debug("registered service name '%s' type '%s' on port %d with args %s" % (rs_name, rs_stype, rs_port, rs_props))
@@ -543,6 +547,8 @@ class PresenceService(gobject.GObject):
 		try:
 			group = dbus.Interface(self._bus.get_object(avahi.DBUS_NAME, self._server.EntryGroupNew()), avahi.DBUS_INTERFACE_ENTRY_GROUP)
 			info = ["%s=%s" % (k, v) for k, v in rs_props.items()]
+			if rs_address and len(rs_address):
+				info.append("address=%s" % (rs_address))
 			group.AddService(avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, 0, rs_name, rs_stype,
 					rs_domain, "", # let Avahi figure the 'host' out
 					dbus.UInt16(rs_port), info,)

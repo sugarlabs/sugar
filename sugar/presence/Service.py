@@ -92,12 +92,16 @@ class Service(object):
 		self._full_stype = full_stype
 		self._activity_stype = short_stype
 		self._domain = domain
-		self._address = None
-		self.set_address(address)
 		self._port = -1
 		self.set_port(port)
 		self._properties = {}
 		self.set_properties(properties)
+		self._publisher_address = address
+		self._address = None
+		if self._properties.has_key('address'):
+			self.set_address(self._properties['address'])
+		else:
+			self.set_address(address)
 
 		# Ensure that an ActivityUID tag, if given, matches
 		# what we expect from the service type
@@ -166,14 +170,15 @@ class Service(object):
 			raise ValueError("must specify a valid port number.")
 		self._port = port
 
+	def get_publisher_address(self):
+		return self._publisher_address
+
 	def get_address(self):
 		return self._address
 
 	def set_address(self, address):
 		if address is not None:
 			if type(address) != type("") and type(address) != type(u""):
-				raise ValueError("must specify a valid address.")
-			if not len(address):
 				raise ValueError("must specify a valid address.")
 		if address and type(address) == type(u""):
 			address = address.encode()
