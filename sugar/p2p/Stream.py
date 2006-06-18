@@ -2,6 +2,7 @@ import xmlrpclib
 import socket
 import traceback
 import random
+import logging
 
 import network
 from MostlyReliablePipe import MostlyReliablePipe
@@ -33,7 +34,7 @@ class Stream(object):
 
 	def _recv(self, address, data):
 		if self._callback:
-			self._callback(data)
+			self._callback(address, data)
 
 
 class UnicastStreamWriter(object):
@@ -133,6 +134,7 @@ class MulticastStream(Stream):
 		return self._reader_port
 
 	def _internal_start_reader(self):
+		logging.debug('Start multicast stream, address %s, port %d' % (self._address, self._reader_port))
 		if not self._service.get_address():
 			raise ValueError("service must have a valid address.")
 		self._pipe = MostlyReliablePipe('', self._address, self._reader_port,
@@ -143,7 +145,7 @@ class MulticastStream(Stream):
 		self._pipe.send(data)
 
 	def _recv_data_cb(self, address, data, user_data=None):
-		self._recv(address, data)
+		self._recv(address[0], data)
 
 	def new_writer(self, service=None):
 		return self

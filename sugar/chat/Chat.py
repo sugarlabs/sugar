@@ -13,6 +13,7 @@ import gtk, gobject, pango
 from sugar.chat.Emoticons import Emoticons
 from sugar.chat.ChatToolbar import ChatToolbar
 from sugar.chat.ChatEditor import ChatEditor
+from sugar.presence.PresenceService import PresenceService
 import richtext
 
 PANGO_SCALE = 1024 # Where is this defined?
@@ -47,7 +48,7 @@ class Chat(gtk.VBox):
 		self.pack_start(chat_vbox)
 		chat_vbox.show()
 
-		self._editor = ChatEditor()
+		self._editor = ChatEditor(self)
 
 		toolbar = ChatToolbar(self._editor.get_buffer())
 		self.pack_start(toolbar, False)
@@ -73,17 +74,14 @@ class Chat(gtk.VBox):
 
 	def _message_inserted(self):
 		gobject.idle_add(self._scroll_chat_view_to_bottom)
-		self.set_has_changes(True)
 
-	def _insert_buddy(self, buf, nick):
+	def _insert_buddy(self, buf, buddy):
 		# Stuff in the buddy icon, if we have one for this buddy
-		buddy = self._controller.get_group().get_buddy(nick)
 		icon = buddy.get_icon_pixbuf()
 		if icon:
 			rise = int(icon.get_height() / 4) * -1
 
-			chat_service = buddy.get_service(Chat.SERVICE_TYPE)
-			hash_string = "%s-%s" % (nick, chat_service.get_address())
+			hash_string = "%s-%s" % (buddy.get_nick_name(), buddy.get_address())
 			sha_hash = sha.new()
 			sha_hash.update(hash_string)
 			tagname = "buddyicon-%s" % sha_hash.hexdigest()
@@ -102,15 +100,15 @@ class Chat(gtk.VBox):
 			buf.create_tag("nickname", weight=pango.WEIGHT_BOLD)
 		aniter = buf.get_end_iter()
 		offset = aniter.get_offset()
-		buf.insert(aniter, " " + nick + ": ")
+		buf.insert(aniter, " " + buddy.get_nick_name() + ": ")
 		enditer = buf.get_iter_at_offset(offset)
 		buf.apply_tag_by_name("nickname", aniter, enditer)
 		
-	def _insert_rich_message(self, nick, msg):
+	def _insert_rich_message(self, buddy, msg):
 		msg = Emoticons.get_instance().replace(msg)
 
 		buf = self._chat_view.get_buffer()
-		self._insert_buddy(buf, nick)
+		self._insert_buddy(buf, buddy)
 		
 		serializer = richtext.RichTextSerializer()
 		serializer.deserialize(msg, buf)
@@ -188,19 +186,19 @@ class Chat(gtk.VBox):
 
 		chunk = self._get_first_richtext_chunk(msg)
 		if chunk:
-			self._insert_rich_message(buddy.get_nick_name(), chunk)
+			self._insert_rich_message(buddy, chunk)
 			return
 
 		chunk = self._get_first_sketch_chunk(msg)
 		if chunk:
-			self._insert_sketch(buddy.get_nick_name(), chunk)
+			self._insert_sketch(buddy, chunk)
 			return
 
 	def send_sketch(self, svgdata):
 		if not svgdata or not len(svgdata):
 			return
 		self._stream_writer.write(svgdata)
-		owner = self._controller.get_group().get_owner()
+		owner = PresenceService.get_instance().get_owner()
 		self._insert_sketch(owner.get_nick_name(), svgdata)
 
 	def send_text_message(self, text):
@@ -208,5 +206,5 @@ class Chat(gtk.VBox):
 		if len(text) <= 0:
 			return
 		self._stream_writer.write(text)
-		owner = self._controller.get_group().get_owner()
-		self._insert_rich_message(owner.get_nick_name(), text)
+		owner = PresenceService.get_instance().get_owner()
+		self._insert_rich_message(owner, text)

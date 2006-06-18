@@ -37,5 +37,10 @@ class GroupChat(Chat):
 		self._group_stream.set_data_listener(self._group_recv_message)
 		self._stream_writer = self._group_stream.new_writer()
 
-	def _group_recv_message(self, buddy, msg):
-		self.recv_message(buddy, msg)
+	def _group_recv_message(self, address, msg):
+		pservice = PresenceService.get_instance()
+		buddy = pservice.get_buddy_by_address(address)
+		if buddy:
+			self.recv_message(buddy, msg)
+		else:
+			logging.error('Cannot map %s to a buddy.' % (address))

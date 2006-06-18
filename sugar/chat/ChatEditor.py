@@ -6,8 +6,10 @@ from sugar.chat.sketchpad.SketchPad import SketchPad
 import richtext
 
 class ChatEditor(gtk.Notebook):
-	def __init__(self):
+	def __init__(self, chat):
 		gtk.Notebook.__init__(self)
+
+		self._chat = chat
 	
 		self.set_show_tabs(False)
 		self.set_show_border(False)
@@ -40,7 +42,7 @@ class ChatEditor(gtk.Notebook):
 			if len(text.strip()) > 0:
 				serializer = richtext.RichTextSerializer()
 				text = serializer.serialize(buf)
-				self.send_text_message(text)
+				self._chat.send_text_message(text)
 
 			buf.set_text("")
 			buf.place_cursor(buf.get_start_iter())

@@ -575,7 +575,7 @@ class PresenceService(gobject.GObject):
 
 	def get_buddy_by_address(self, address):
 		for buddy in self._buddies.values():
-			if buddy.get_address == address:
+			if buddy.get_address() == address:
 				return buddy
 		return None
 
