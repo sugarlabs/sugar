@@ -131,7 +131,7 @@ class Chat(gtk.VBox):
 		
 		self._message_inserted()
 
-	def _insert_sketch(self, nick, svgdata):
+	def _insert_sketch(self, buddy, svgdata):
 		"""Insert a sketch object into the chat buffer."""
 		pbl = gtk.gdk.PixbufLoader("svg")
 		pbl.write(svgdata)
@@ -140,7 +140,7 @@ class Chat(gtk.VBox):
 		
 		buf = self._chat_view.get_buffer()
 
-		self._insert_buddy(buf, nick)
+		self._insert_buddy(buf, buddy)
 		
 		rise = int(pbuf.get_height() / 3) * -1
 		sha_hash = sha.new()
@@ -218,7 +218,7 @@ class Chat(gtk.VBox):
 			return
 		self._stream_writer.write(self.serialize_message(svgdata))
 		owner = PresenceService.get_instance().get_owner()
-		self._insert_sketch(owner.get_nick_name(), svgdata)
+		self._insert_sketch(owner, svgdata)
 
 	def send_text_message(self, text):
 		"""Send a chat message and insert it into the local buffer."""
