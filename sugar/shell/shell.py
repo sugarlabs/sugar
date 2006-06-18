@@ -72,12 +72,12 @@ class ActivityHost(dbus.service.Object):
 		self.label_hbox.show()
 		
 		hbox.show()
-		
+
+		self._create_chat()
+				
 		notebook = self.activity_container.notebook
 		index = notebook.append_page(self.socket, hbox)
 		notebook.set_current_page(index)
-		
-		self._create_chat()
 		
 	def _create_chat(self):
 		self._group_chat = GroupChat(self)
@@ -297,6 +297,8 @@ class ActivityContainer(dbus.service.Object):
 
 		self._presence_window = PresenceWindow(self)
 		self._presence_window.set_transient_for(self.window)
+		self._presence_window.set_decorated(False)
+		self._presence_window.set_skip_taskbar_hint(True)
 
 		wm = WindowManager(self._presence_window)
 	
@@ -305,17 +307,17 @@ class ActivityContainer(dbus.service.Object):
 		wm.set_position(WindowManager.LEFT)
 		wm.manage()
 		
-		self._chat_window = gtk.Window(gtk.WINDOW_POPUP)
+		self._chat_window = gtk.Window()
 		self._chat_window.set_transient_for(self.window)
 		self._chat_window.set_decorated(False)
 		self._chat_window.set_skip_taskbar_hint(True)
 
-		wm = WindowManager(self._chat_window)
+		self._chat_wm = WindowManager(self._chat_window)
 		
-		wm.set_width(0.5, WindowManager.SCREEN_RELATIVE)
-		wm.set_height(0.5, WindowManager.SCREEN_RELATIVE)
-		wm.set_position(WindowManager.TOP)
-		wm.manage()
+		self._chat_wm.set_width(0.5, WindowManager.SCREEN_RELATIVE)
+		self._chat_wm.set_height(0.5, WindowManager.SCREEN_RELATIVE)
+		self._chat_wm.set_position(WindowManager.TOP)
+		self._chat_wm.manage()
 
 	def show(self):
 		self.window.show()
@@ -327,32 +329,30 @@ class ActivityContainer(dbus.service.Object):
 		pass
 
 	def set_current_activity(self, activity):
-		print 'current activity'
-	
 		self.current_activity = activity
 		self._presence_window.set_activity(activity)
 
 		host_chat = self._chat_window.get_child()
 		if host_chat:
-			host_chat.unparent()
+			self._chat_window.remove(host_chat)
 
-		host_chat = activity.get_chat()
-		self._chat_window.add(host_chat)
-		host_chat.show()
+		if activity:
+			host_chat = activity.get_chat()
+			self._chat_window.add(host_chat)
+			host_chat.show()
+
+		# For some reason the substitution screw up window position
+		self._chat_wm.update()
 
 	def notebook_tab_changed(self, notebook, page, page_number):
-		#print "in notebook_tab_changed"
-		#print notebook.get_nth_page(page_number)
 		new_activity = notebook.get_nth_page(page_number).get_data("sugar-activity")
-		#print " Current activity: ", self.current_activity
-		#print " New activity:	 ", new_activity
 
 		if self.current_activity != None:
 			if self.has_activity(self.current_activity):
 				self.current_activity.peer_service.lost_focus(reply_handler = self.__focus_reply_cb, error_handler = self.__focus_error_cb)
 		
-		if self.has_activity(new_activity):
-			self.set_current_activity(new_activity)
+		#if self.has_activity(new_activity):
+		self.set_current_activity(new_activity)
 
 		if self.current_activity != None:
 			if self.has_activity(self.current_activity):

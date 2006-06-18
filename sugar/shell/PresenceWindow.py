@@ -12,7 +12,7 @@ class PresenceWindow(gtk.Window):
 	_MODEL_COL_VISIBLE = 3
 		
 	def __init__(self, activity_container):
-		gtk.Window.__init__(self, gtk.WINDOW_POPUP)
+		gtk.Window.__init__(self)
 		
 		self._activity_container = activity_container
 		self._activity = None
