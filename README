@@ -42,7 +42,8 @@ Key bindings
 
 ctrl+Up 	Toggle chat window visibility
 ctrl+Left 	Toggle presence window visibility
-F11			Toggle activities window fullscreen
+F11		Toggle activities window fullscreen
+ctrl+S		Switch between sketch and text mode
 
 Logging
 =======

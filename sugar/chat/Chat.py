@@ -22,6 +22,9 @@ class Chat(gtk.VBox):
 	SERVICE_TYPE = "_olpc_chat._tcp"
 	SERVICE_PORT = 6100
 
+	TEXT_MODE = 0
+	SKETCH_MODE = 1
+
 	def __init__(self):
 		gtk.VBox.__init__(self, False, 6)
 
@@ -48,7 +51,8 @@ class Chat(gtk.VBox):
 		self.pack_start(chat_vbox)
 		chat_vbox.show()
 
-		self._editor = ChatEditor(self)
+		self._mode = Chat.TEXT_MODE
+		self._editor = ChatEditor(self, ChatEditor.TEXT_MODE)
 
 		toolbar = ChatToolbar(self._editor.get_buffer())
 		self.pack_start(toolbar, False)
@@ -56,6 +60,16 @@ class Chat(gtk.VBox):
 
 		self.pack_start(self._editor, False)
 		self._editor.show()
+
+	def get_mode(self):
+		return self._mode
+
+	def set_mode(self, mode):
+		self._mode = mode
+		if self._mode == Chat.TEXT_MODE:
+			self._editor.set_mode(ChatEditor.TEXT_MODE)
+		elif self._mode == Chat.SKETCH_MODE:
+			self._editor.set_mode(ChatEditor.SKETCH_MODE)
 
 	def __get_browser_shell(self):
 		bus = dbus.SessionBus()
@@ -202,7 +216,7 @@ class Chat(gtk.VBox):
 	def send_sketch(self, svgdata):
 		if not svgdata or not len(svgdata):
 			return
-		self._stream_writer.write(svgdata)
+		self._stream_writer.write(self.serialize_message(svgdata))
 		owner = PresenceService.get_instance().get_owner()
 		self._insert_sketch(owner.get_nick_name(), svgdata)
 

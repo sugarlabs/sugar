@@ -11,6 +11,7 @@ import gobject
 import sugar.util
 from sugar.session.LogWriter import LogWriter
 from sugar.shell.PresenceWindow import PresenceWindow
+from sugar.chat.ChatWindow import ChatWindow
 from sugar.shell.Owner import ShellOwner
 from sugar.shell.StartPage import StartPage
 from sugar.shell.WindowManager import WindowManager
@@ -307,7 +308,7 @@ class ActivityContainer(dbus.service.Object):
 		wm.set_position(WindowManager.LEFT)
 		wm.manage()
 		
-		self._chat_window = gtk.Window()
+		self._chat_window = ChatWindow()
 		self._chat_window.set_transient_for(self.window)
 		self._chat_window.set_decorated(False)
 		self._chat_window.set_skip_taskbar_hint(True)
@@ -332,14 +333,9 @@ class ActivityContainer(dbus.service.Object):
 		self.current_activity = activity
 		self._presence_window.set_activity(activity)
 
-		host_chat = self._chat_window.get_child()
-		if host_chat:
-			self._chat_window.remove(host_chat)
-
 		if activity:
 			host_chat = activity.get_chat()
-			self._chat_window.add(host_chat)
-			host_chat.show()
+			self._chat_window.set_chat(host_chat)
 
 		# For some reason the substitution screw up window position
 		self._chat_wm.update()

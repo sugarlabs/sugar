@@ -6,11 +6,14 @@ from sugar.chat.sketchpad.SketchPad import SketchPad
 import richtext
 
 class ChatEditor(gtk.Notebook):
-	def __init__(self, chat):
+	TEXT_MODE = 0
+	SKETCH_MODE = 1
+
+	def __init__(self, chat, mode):
 		gtk.Notebook.__init__(self)
 
 		self._chat = chat
-	
+
 		self.set_show_tabs(False)
 		self.set_show_border(False)
 		self.set_size_request(-1, 70)
@@ -30,8 +33,15 @@ class ChatEditor(gtk.Notebook):
 		self.append_page(self._sketchpad)
 		self._sketchpad.show()
 		
-		self.set_current_page(0)
+		self.set_mode(mode)
 
+	def set_mode(self, mode):
+		self._mode = mode
+		if self._mode == ChatEditor.SKETCH_MODE:
+			self.set_current_page(1)
+		elif self._mode == ChatEditor.TEXT_MODE:
+			self.set_current_page(0)
+			
 	def get_buffer(self):
 		return self._text_view.get_buffer()
 
