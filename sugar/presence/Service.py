@@ -184,13 +184,23 @@ class Service(object):
 		TXT record (a list of lists of integers), or a
 		python dictionary."""
 		self._properties = {}
+		props = {}
 		if type(properties) == type([]):
-			self._properties = _txt_to_dict(properties)
+			props = _txt_to_dict(properties)
 		elif type(properties) == type({}):
-			self._properties = properties
-			for key, value in self._properties.items():
-				if type(self._properties[key]) == type(u""):
-					self._properties[key] = self._properties[key].encode()
+			props = properties
+
+		# Set key/value pairs on internal property list, 
+		# also convert everything to local encoding (for now)
+		# to ensure consistency
+		for key, value in props.items():
+			tmp_key = key
+			tmp_val = value
+			if type(tmp_key) == type(u""):
+				tmp_key = tmp_key.encode()
+			if type(tmp_val) == type(u""):
+				tmp_val = tmp_val.encode()
+			self._properties[tmp_key] = tmp_val
 
 	def get_type(self):
 		"""Return the service's service type without any activity identifiers."""
