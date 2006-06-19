@@ -19,12 +19,8 @@ class GroupChat(Chat):
 		self._pservice.connect('service-appeared', self._service_appeared_cb)
 		self._pservice.track_service_type(GroupChat.SERVICE_TYPE)
 
-		# FIXME remove, when we join the activity this will happen automatically
-		# (Once we have a global presence service)
-		self._pservice.track_activity(activity.get_id())
-
 	def _service_appeared_cb(self, pservice, buddy, service):
-		if service.get_type() == GroupChat.SERVICE_TYPE:
+		if service.get_full_type() == GroupChat.SERVICE_TYPE:
 			logging.debug('Group chat service appeared, setup the stream.')
 			self._setup_stream(service)
 

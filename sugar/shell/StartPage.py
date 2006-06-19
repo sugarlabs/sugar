@@ -236,15 +236,13 @@ class StartPage(gtk.HBox):
 		self._search(None)
 
 	def _on_local_activity_started_cb(self, helper, activity_container, activity_id):
-		self._pservice.track_activity(activity_id)
 		print "new local activity %s" % activity_id
 
 	def _on_local_activity_ended_cb(self, helper, activity_container, activity_id):
-		self._pservice.untrack_activity(activity_id)
+		print "local activity %s disappeared" % activity_id
 
 	def _on_new_service_adv_cb(self, pservice, activity_id, short_stype):
 		if activity_id:
-			self._pservice.track_activity(activity_id)
 			self._pservice.track_service_type(short_stype)
 
 	def _on_activity_announced_cb(self, pservice, service, buddy):

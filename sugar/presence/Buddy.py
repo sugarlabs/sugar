@@ -20,7 +20,11 @@ class Buddy(gobject.GObject):
 		'service-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
 						 ([gobject.TYPE_PYOBJECT])),
 		'service-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-						 ([gobject.TYPE_PYOBJECT]))
+						 ([gobject.TYPE_PYOBJECT])),
+		'joined-activity': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+						 ([gobject.TYPE_STRING])),
+		'left-activity': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+						 ([gobject.TYPE_STRING]))
 	}
 
 	def __init__(self, service):
@@ -69,12 +73,27 @@ class Buddy(gobject.GObject):
 		if service.get_publisher_address() != self._address:
 			logging.error('Service publisher and buddy address doesnt match: %s %s' % (service.get_publisher_address(), self._address))
 			return False
-		if service.get_type() in self._services.keys():
+		full_type = service.get_full_type()
+		if full_type in self._services.keys():
 			return False
-		self._services[service.get_full_type()] = service
+		self._services[full_type] = service
 		if self._valid:
 			self.emit("service-added", service)
-		if service.get_full_type() == PRESENCE_SERVICE_TYPE:
+
+		# If this is the first service we've seen that's owned  by
+		# a particular activity, send out the 'joined-activity' signal
+		(uid, short_stype) = Service._decompose_service_type(full_type)
+		if uid is not None:
+			found = False
+			for serv in self._services.values():
+				if serv.get_activity_uid() == uid and serv.get_full_type() != full_type:
+					found = True
+					break
+			if not found:
+				print "Buddy (%s) joined activity %s." % (self._nick_name, service.get_activity_uid())
+				self.emit("joined-activity", service)
+
+		if full_type == PRESENCE_SERVICE_TYPE:
 			# A buddy isn't valid until its official presence
 			# service has been found and resolved
 			self._valid = True
@@ -89,11 +108,26 @@ class Buddy(gobject.GObject):
 			return
 		if service.get_name() != self._nick_name:
 			return
-		if self._services.has_key(service.get_full_type()):
+		full_type = service.get_full_type()
+		if self._services.has_key(full_type):
 			if self._valid:
 				self.emit("service-removed", service)
-			del self._services[service.get_full_type()]
-		if service.get_full_type() == PRESENCE_SERVICE_TYPE:
+			del self._services[full_type]
+
+		# If this is the lase service owned  by a particular activity,
+		# and it's just been removed, send out the 'left-actvity' signal
+		(uid, short_stype) = Service._decompose_service_type(full_type)
+		if uid is not None:
+			found = False
+			for serv in self._services.values():
+				if serv.get_activity_uid() == uid:
+					found = True
+					break
+			if not found:
+				print "Buddy (%s) left activity %s." % (self._nick_name, service.get_activity_uid())
+				self.emit("left-activity", service)
+
+		if full_type == PRESENCE_SERVICE_TYPE:
 			self._valid = False
 
 	def get_service_of_type(self, stype=None, activity=None):

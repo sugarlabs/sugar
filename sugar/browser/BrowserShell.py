@@ -37,8 +37,8 @@ class BrowserShell(dbus.service.Object):
 	@dbus.service.method('com.redhat.Sugar.BrowserShell')
 	def open_browser(self, uri, serialized_service=None):
 		service = None
-#		if serialized_service is not None:
-#			service = Service.deserialize(serialized_service)
+		if serialized_service is not None:
+			service = Service.deserialize(serialized_service)
 		browser = BrowserActivity(uri)
 		self.__browsers.append(browser)
 		gobject.idle_add(self._start_browser_cb, browser, service)
