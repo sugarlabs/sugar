@@ -60,9 +60,17 @@ def is_multicast_address(address):
 def deserialize(sdict):
 	try:
 		name = sdict['name']
+		if type(name) == type(u""):
+			name = name.encode()
 		full_stype = sdict['full_stype']
+		if type(full_stype) == type(u""):
+			full_stype = full_stype.encode()
 		activity_stype = sdict['activity_stype']
+		if type(activity_stype) == type(u""):
+			activity_stype = activity_stype.encode()
 		domain = sdict['domain']
+		if type(domain) == type(u""):
+			domain = domain.encode()
 		port = sdict['port']
 		properties = sdict['properties']
 	except KeyError, exc:
@@ -71,6 +79,8 @@ def deserialize(sdict):
 	address = None
 	try:
 		address = sdict['address']
+		if type(address) == type(u""):
+			address = address.encode()
 	except KeyError:
 		pass
 	return Service(name, full_stype, domain, address=address,
@@ -198,8 +208,8 @@ class Service(object):
 		return self._port
 
 	def set_port(self, port):
-		if type(port) != type(1):
-			raise ValueError("must specify a valid port number.")
+		if type(port) != type(1) or (port <= 1024 and port > 65536):
+			raise ValueError("must specify a valid port number between 1024 and 65536.")
 		self._port = port
 
 	def get_publisher_address(self):
