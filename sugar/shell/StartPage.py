@@ -23,13 +23,38 @@ class SearchHelper(object):
 		self.search_uid = activity_uid
 		self.found = False
 
+class SearchModel(gtk.ListStore):
+	def __init__(self, activities_model, search_text):
+		gtk.ListStore.__init__(self, gobject.TYPE_STRING, gobject.TYPE_STRING,
+				gobject.TYPE_STRING, gobject.TYPE_PYOBJECT)
+
+		for row in activities_model:
+			title = row[_COLUMN_TITLE]
+			address = row[_COLUMN_ADDRESS]
+			if title.find(search_text) >= 0 or address.find(search_text) >= 0:
+				self.append([ title, address, row[_COLUMN_SUBTITLE], row[_COLUMN_SERVICE] ])
+
+		google.LICENSE_KEY = '1As9KaJQFHIJ1L0W5EZPl6vBOFvh/Vaf'
+		data = google.doGoogleSearch(search_text)
+		
+		for result in data.results:
+			title = result.title
+			
+			# FIXME what tags should we actually strip?
+			title = title.replace('<b>', '') 
+			title = title.replace('</b>', '')
+
+			# FIXME I'm sure there is a better way to
+			# unescape these.
+			title = title.replace('&quot;', '"')
+			title = title.replace('&amp;', '&')
+			
+			self.append([ title, result.URL, None, None ])
+
 class ActivitiesModel(gtk.ListStore):
 	def __init__(self):
 		gtk.ListStore.__init__(self, gobject.TYPE_STRING, gobject.TYPE_STRING,
 				gobject.TYPE_STRING, gobject.TYPE_PYOBJECT)
-
-	def add_web_page(self, title, address):
-		self.append([ title, address, None, None ])
 
 	def _filter_dupe_activities(self, model, path, it, user_data):
 		"""Search the list of list rows for an existing service that
@@ -65,19 +90,34 @@ class ActivitiesModel(gtk.ListStore):
 				self.append([ title, address, subtitle, service ])
 
 class ActivitiesView(gtk.TreeView):
-	def __init__(self):
-		gtk.TreeView.__init__(self, model = ActivitiesModel())
+	def __init__(self, model):
+		gtk.TreeView.__init__(self, model)
 		
 		self.set_headers_visible(False)
 		
+		theme = gtk.icon_theme_get_default()
+		size = 48
+		self._web_pixbuf = theme.load_icon('emblem-web', size, 0)
+		self._share_pixbuf = theme.load_icon('emblem-people', size, 0)
+
 		column = gtk.TreeViewColumn('')
 		self.append_column(column)
 
+		cell = gtk.CellRendererPixbuf()
+		column.pack_start(cell, False)
+		column.set_cell_data_func(cell, self._icon_cell_data_func)
+
 		cell = gtk.CellRendererText()
-		column.pack_start(cell, True)
+		column.pack_start(cell)
 		column.set_cell_data_func(cell, self._cell_data_func)
 		
 		self.connect('row-activated', self._row_activated_cb)
+		
+	def _icon_cell_data_func(self, column, cell, model, it):
+		if model.get_value(it, _COLUMN_SERVICE) == None:
+			cell.set_property('pixbuf', self._web_pixbuf)
+		else:
+			cell.set_property('pixbuf', self._share_pixbuf)
 	
 	def _cell_data_func(self, column, cell, model, it):
 		title = model.get_value(it, _COLUMN_TITLE)
@@ -149,16 +189,51 @@ class StartPage(gtk.HBox):
 		self.pack_start(vbox)
 		vbox.show()
 
+		vbox = gtk.VBox()
+
+		self._search_close_box = gtk.HBox()
+		
+		self._search_close_label = gtk.Label()
+		self._search_close_label.set_alignment(0.0, 0.5)
+		self._search_close_box.pack_start(self._search_close_label)
+		self._search_close_label.show()
+
+		close_image = gtk.Image()
+		close_image.set_from_stock (gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
+		close_image.show()
+
+		search_close_button = gtk.Button()
+		rcstyle = gtk.RcStyle();
+		rcstyle.xthickness = rcstyle.ythickness = 0;
+		search_close_button.modify_style (rcstyle);
+		search_close_button.add(close_image)
+		search_close_button.set_relief(gtk.RELIEF_NONE)
+		search_close_button.set_focus_on_click(False)
+		search_close_button.connect("clicked", self.__search_close_button_clicked_cb)
+
+		self._search_close_box.pack_start(search_close_button, False)
+		search_close_button.show()
+		
+		vbox.pack_start(self._search_close_box, False)
+
 		sw = gtk.ScrolledWindow()
 		sw.set_size_request(320, -1)
 		sw.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
 
-		self._activities = ActivitiesView()
+		self._activities_model = ActivitiesModel()
+
+		self._activities = ActivitiesView(self._activities_model)
 		sw.add(self._activities)
 		self._activities.show()
 
-		self.pack_start(sw)	
+		vbox.pack_start(sw)
 		sw.show()
+		
+		self.pack_start(vbox)
+		vbox.show()
+		
+	def __search_close_button_clicked_cb(self, button):
+		self._search(None)
 
 	def _on_local_activity_started_cb(self, helper, activity_container, activity_id):
 		self._pservice.track_activity(activity_id)
@@ -174,33 +249,30 @@ class StartPage(gtk.HBox):
 
 	def _on_activity_announced_cb(self, pservice, service, buddy):
 		print "Found new activity with type %s" % service.get_full_type()
-		self._activities.get_model().add_activity(buddy, service)
+		self._activities_model.add_activity(buddy, service)
+		if self._activities.get_model() != self._activities_model:
+			self._search(self._last_search)
 
 	def _search_entry_activate_cb(self, entry):
 		self._search()
+		self._search_entry.set_text('')
 		
 	def _search_button_clicked_cb(self, button):
 		self._search()
-	
-	def _search(self):
-		text = self._search_entry.get_text()
 		self._search_entry.set_text('')
-	
-		google.LICENSE_KEY = '1As9KaJQFHIJ1L0W5EZPl6vBOFvh/Vaf'
-		data = google.doGoogleSearch(text)
-		
-		model = ActivitiesModel()
-		for result in data.results:
-			title = result.title
-			
-			# FIXME what tags should we actually strip?
-			title = title.replace('<b>', '') 
-			title = title.replace('</b>', '')
 
-			# FIXME I'm sure there is a better way to
-			# unescape these.
-			title = title.replace('&quot;', '"')
-			title = title.replace('&amp;', '&')
+	def _search(self, text = None):
+		if text == None:
+			text = self._search_entry.get_text()
 
-			model.add_web_page(title, result.URL)
-		self._activities.set_model(model)
+		if text == None or len(text) == 0:
+			self._activities.set_model(self._activities_model)
+			self._search_close_box.hide()
+		else:
+			search_model = SearchModel(self._activities_model, text)
+			self._activities.set_model(search_model)
+
+			self._search_close_label.set_text('Search for %s' % (text))
+			self._search_close_box.show()
+
+		self._last_search = text
