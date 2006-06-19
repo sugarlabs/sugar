@@ -17,6 +17,7 @@ class WindowManager:
 	
 	def __init__(self, window):
 		self._window = window
+		self._sliding_pos = 0
 
 		WindowManager.__managers_list.append(self)
 		
@@ -71,20 +72,53 @@ class WindowManager:
 			x = int((screen_width - width) / 2)
 			y = int((screen_height - height) / 2)
 		elif self._position is WindowManager.LEFT:
-			x = 0
+			x = - int((1.0 - self._sliding_pos) * width)
 			y = int((screen_height - height) / 2)
 		elif self._position is WindowManager.TOP:
 			x = int((screen_width - width) / 2)
-			y = 0
+			y = - int((1.0 - self._sliding_pos) * height)
 			
 		self._window.move(x, y)
 		self._window.resize(width, height)
 
-	def slide_window_in(self):
+	def __slide_in_timeout_cb(self):
 		self._window.show()
+
+		self._sliding_pos += 0.05
+
+		if self._sliding_pos > 1.0:
+			self._sliding_pos = 1.0
+
+		self._update_size_and_position()
+
+		if self._sliding_pos == 1.0:
+			return False
+		else:
+			return True
+
+	def __slide_out_timeout_cb(self):
+		self._window.show()
+
+		self._sliding_pos -= 0.05
+
+		if self._sliding_pos < 0:
+			self._sliding_pos = 0
+
+		self._update_size_and_position()
+
+		if self._sliding_pos == 0:
+			self._window.hide()
+			return False
+		else:
+			return True
+
+	def slide_window_in(self):
+		self._sliding_pos = 0
+		gobject.timeout_add(5, self.__slide_in_timeout_cb)
 		
 	def slide_window_out(self):
-		self._window.hide()
+		self._sliding_pos = 1.0
+		gobject.timeout_add(5, self.__slide_out_timeout_cb)
 			
 	def show(self):
 		self._window.show()
