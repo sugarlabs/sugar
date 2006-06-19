@@ -514,6 +514,8 @@ class PresenceService(gobject.GObject):
 			raise RuntimeError("presence service must be started first.")
 
 		rs_name = service.get_name()
+		if self.get_owner() and rs_name != self.get_owner().get_nick_name():
+			raise RuntimeError("Tried to register a service that didn't have Owner nick as the service name!")
 		rs_stype = service.get_full_type()
 		rs_port = service.get_port()
 		rs_props = service.get_properties()
