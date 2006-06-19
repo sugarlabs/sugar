@@ -525,9 +525,22 @@ class PresenceService(gobject.GObject):
 
 		try:
 			group = dbus.Interface(self._bus.get_object(avahi.DBUS_NAME, self._server.EntryGroupNew()), avahi.DBUS_INTERFACE_ENTRY_GROUP)
-			info = ["%s=%s" % (k, v) for k, v in rs_props.items()]
+
+			# Add properties; ensure they are converted to ByteArray types
+			# because python sometimes can't figure that out
+			info = []
+			for k, v in rs_props.items():
+				tmp_item = "%s=%s" % (k, v)
+				# Convert to local encoding for consistency (for now)
+				if type(tmp_item) == type(u""):
+					tmp_item = tmp_item.encode()
+				info.append(dbus.types.ByteArray(tmp_item))
+
 			if rs_address and len(rs_address):
 				info.append("address=%s" % (rs_address))
+			logging.debug("PS: about to call AddService for Avahi with rs_name='%s' (%s), rs_stype='%s' (%s)," \
+					" rs_domain='%s' (%s), rs_port=%d (%s), info='%s' (%s)" % (rs_name, type(rs_name), rs_stype,
+					type(rs_stype), rs_domain, type(rs_domain), rs_port, type(rs_port), info, type(info)))
 			group.AddService(avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, 0, rs_name, rs_stype,
 					rs_domain, "", # let Avahi figure the 'host' out
 					dbus.UInt16(rs_port), info,)
