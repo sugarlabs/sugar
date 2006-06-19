@@ -482,7 +482,7 @@ class PresenceService(gobject.GObject):
 			raise ValueError("service was not a valid service object.")
 		self.register_service(service)
 
-	def share_activity(self, activity, stype, properties={}, address=None, port=None):
+	def share_activity(self, activity, stype, properties=None, address=None, port=None):
 		"""Convenience function to share an activity with other buddies."""
 		if not self._started:
 			raise RuntimeError("presence service must be started first.")
