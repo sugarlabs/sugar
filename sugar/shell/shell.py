@@ -299,6 +299,7 @@ class ActivityContainer(dbus.service.Object):
 		self._presence_window = PresenceWindow(self)
 		self._presence_window.set_transient_for(self.window)
 		self._presence_window.set_decorated(False)
+		self._presence_window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DOCK)
 		self._presence_window.set_skip_taskbar_hint(True)
 
 		wm = WindowManager(self._presence_window)
@@ -310,6 +311,7 @@ class ActivityContainer(dbus.service.Object):
 		
 		self._chat_window = ChatWindow()
 		self._chat_window.set_transient_for(self.window)
+		self._presence_window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DOCK)
 		self._chat_window.set_decorated(False)
 		self._chat_window.set_skip_taskbar_hint(True)
 
