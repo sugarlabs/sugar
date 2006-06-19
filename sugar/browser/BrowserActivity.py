@@ -28,21 +28,16 @@ class BrowserActivity(activity.Activity):
 		self.uri = uri
 		self._mode = mode
 		
-		logging.debug('Start presence service')
-		self._pservice = PresenceService.get_instance()
-		self._pservice.start()
-		
-		logging.debug('Track browser activities')
-		self._pservice.connect('service-appeared', self._service_appeared_cb)
-		self._pservice.track_service_type(_BROWSER_ACTIVITY_TYPE)
-		self._pservice.track_service_type(LocalModel.SERVICE_TYPE)
-		
 		self._share_service = None
 		self._model_service = None
 		self._notif_service = None
 		self._model = None
 	
 	def _service_appeared_cb(self, pservice, buddy, service):
+		# Make sure the service is for our activity
+		if service.get_activity_uid() != self._activity_id:
+			return
+
 		if service.get_type() == _BROWSER_ACTIVITY_TYPE:
 			self._notif_service = service
 		elif service.get_type() == LocalModel.SERVICE_TYPE:
@@ -110,8 +105,18 @@ class BrowserActivity(activity.Activity):
 
 		vbox.show()
 
+		logging.debug('Start presence service')
+		self._pservice = PresenceService.get_instance()
+		self._pservice.start()
+		
+		logging.debug('Track browser activities')
+		self._pservice.connect('service-appeared', self._service_appeared_cb)
+		self._pservice.track_service_type(_BROWSER_ACTIVITY_TYPE)
+		self._pservice.track_service_type(LocalModel.SERVICE_TYPE)
+
 		# Join the shared activity if we were started from one
 		if self._initial_service:
+			logging.debug("BrowserActivity joining shared activity %s" % self._initial_service.get_activity_uid())
 			self._pservice.join_shared_activity(self._initial_service)
 
 	def get_embed(self):
