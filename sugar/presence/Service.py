@@ -143,9 +143,12 @@ class Service(object):
 		if uid and not self._properties.has_key(_ACTIVITY_UID_TAG):
 			self._properties[_ACTIVITY_UID_TAG] = uid
 
-	def serialize(self):
+	def serialize(self, owner=None):
 		sdict = {}
-		sdict['name'] = dbus.Variant(self._name)
+		if owner is not None:
+			sdict['name'] = dbus.Variant(owner.get_nick_name())
+		else:
+			sdict['name'] = dbus.Variant(self._name)
 		sdict['full_stype'] = dbus.Variant(self._full_stype)
 		sdict['activity_stype'] = dbus.Variant(self._activity_stype)
 		sdict['domain'] = dbus.Variant(self._domain)
