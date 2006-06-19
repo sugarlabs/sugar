@@ -138,7 +138,7 @@ class Service(object):
 		if self._properties.has_key(_ACTIVITY_UID_TAG):
 			prop_uid = self._properties[_ACTIVITY_UID_TAG]
 			if (prop_uid and not uid) or (prop_uid != uid):
-				raise ValueError("ActivityUID property specified, but the service type's activity UID didn't match it.")
+				raise ValueError("ActivityUID property specified, but the service type's activity UID didn't match it: %s, %s" % (prop_uid, uid))
 		self._activity_uid = uid
 		if uid and not self._properties.has_key(_ACTIVITY_UID_TAG):
 			self._properties[_ACTIVITY_UID_TAG] = uid

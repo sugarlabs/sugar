@@ -486,9 +486,7 @@ class PresenceService(gobject.GObject):
 		"""Convenience function to share an activity with other buddies."""
 		if not self._started:
 			raise RuntimeError("presence service must be started first.")
-
 		uid = activity.get_id()
-		logging.debug('Sharing activity uid %s, stype %s' % (uid, stype))
 		owner_nick = self._owner.get_nick_name()
 		real_stype = Service.compose_service_type(stype, uid)
 		if address and type(address) != type(""):
@@ -503,7 +501,7 @@ class PresenceService(gobject.GObject):
 			# random port #
 			port = random.randint(5000, 65535)
 
-		logging.debug('Share activity %s, address %s, port %d' % (stype, address, port))
+		logging.debug('Share activity %s, type %s, address %s, port %d, properties %s' % (uid, stype, address, port, properties))
 		service = Service.Service(name=owner_nick, stype=real_stype, domain="local",
 				address=address, port=port, properties=properties)
 		# Publish it to the world
