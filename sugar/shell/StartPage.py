@@ -92,6 +92,8 @@ class ActivitiesModel(gtk.ListStore):
 class ActivitiesView(gtk.TreeView):
 	def __init__(self, model):
 		gtk.TreeView.__init__(self, model)
+
+		self._owner = None
 		
 		self.set_headers_visible(False)
 		
@@ -130,7 +132,10 @@ class ActivitiesView(gtk.TreeView):
 		
 		cell.set_property('markup', markup)
 		cell.set_property('ellipsize', pango.ELLIPSIZE_END)
-			
+
+	def set_owner(self, owner):
+		self._owner = owner
+
 	def _row_activated_cb(self, treeview, path, column):	
 		bus = dbus.SessionBus()
 		proxy_obj = bus.get_object('com.redhat.Sugar.Browser', '/com/redhat/Sugar/Browser')
@@ -145,7 +150,9 @@ class ActivitiesView(gtk.TreeView):
 		if service is None:
 			browser_shell.open_browser(address)
 		else:
-			serialized_service = service.serialize()
+			if not self._owner:
+				raise RuntimeError("We don't have an owner yet!")
+			serialized_service = service.serialize(self._owner)
 			browser_shell.open_browser(address, serialized_service)
 			
 class StartPage(gtk.HBox):
@@ -161,6 +168,8 @@ class StartPage(gtk.HBox):
 		self._pservice = PresenceService.get_instance()
 		self._pservice.connect("activity-announced", self._on_activity_announced_cb)
 		self._pservice.connect("new-service-adv", self._on_new_service_adv_cb)
+		self._pservice.connect("buddy-appeared", self._on_buddy_appeared_cb)
+		self._pservice.connect("buddy-disappeared", self._on_buddy_disappeared_cb)
 		self._pservice.start()
 		self._pservice.track_service_type(BrowserActivity._BROWSER_ACTIVITY_TYPE)
 
@@ -222,6 +231,7 @@ class StartPage(gtk.HBox):
 
 		self._activities_model = ActivitiesModel()
 
+		owner = self._pservice.get_owner()
 		self._activities = ActivitiesView(self._activities_model)
 		sw.add(self._activities)
 		self._activities.show()
@@ -244,6 +254,14 @@ class StartPage(gtk.HBox):
 	def _on_new_service_adv_cb(self, pservice, activity_id, short_stype):
 		if activity_id:
 			self._pservice.track_service_type(short_stype)
+
+	def _on_buddy_appeared_cb(self, pservice, buddy):
+		if buddy.is_owner():
+			self._activities.set_owner(buddy)
+
+	def _on_buddy_disappeared_cb(self, pservice, buddy):	
+		if buddy.is_owner() and self._owner == buddy:
+			self._activities.set_owner(None)
 
 	def _on_activity_announced_cb(self, pservice, service, buddy):
 		print "Found new activity with type %s" % service.get_full_type()
