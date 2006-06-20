@@ -81,8 +81,9 @@ if console:
 	os.environ['SUGAR_USE_CONSOLE'] = 'yes'
 	print 'Redirecting output to the console, press ctrl+d to open it.'
 	
-from sugar.session import session
+from sugar.session.session import Session
 
+session = Session()
 session.start()
 
 if dbus_daemon_pid:
