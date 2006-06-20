@@ -136,7 +136,7 @@ class PresenceService(gobject.GObject):
 		uid = activity.get_id()
 		if self._activity_services.has_key(uid):
 			services = self._activity_services[uid]
-			for service in services:
+			for (buddy, service) in services:
 				if service.get_type() == short_stype:
 					return service
 		return None

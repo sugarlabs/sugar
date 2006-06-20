@@ -20,7 +20,7 @@ class GroupChat(Chat):
 		self._pservice.track_service_type(GroupChat.SERVICE_TYPE)
 		service = self._pservice.get_activity_service(activity, GroupChat.SERVICE_TYPE)
 		if service is not None:
-			self._service_appeared(self._pservice, None, service)
+			self._service_appeared_cb(self._pservice, None, service)
 
 	def _service_appeared_cb(self, pservice, buddy, service):
 		if service.get_activity_uid() == self._activity.get_id():
