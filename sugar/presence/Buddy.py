@@ -31,7 +31,7 @@ class Buddy(gobject.GObject):
 		gobject.GObject.__init__(self)
 		self._services = {}
 		self._nick_name = service.get_name()
-		self._address = service.get_address()
+		self._address = service.get_publisher_address()
 		self._valid = False
 		self._icon = None
 		self._icon_tries = 0
@@ -70,8 +70,9 @@ class Buddy(gobject.GObject):
 		True if the service was successfully added, and False if it was not."""
 		if service.get_name() != self._nick_name:
 			return False
-		if service.get_publisher_address() != self._address:
-			logging.error('Service publisher and buddy address doesnt match: %s %s' % (service.get_publisher_address(), self._address))
+		publisher_addr = service.get_publisher_address()
+		if publisher_addr != self._address:
+			logging.error('Service publisher and buddy address doesnt match: %s %s' % (publisher_addr, self._address))
 			return False
 		full_type = service.get_full_type()
 		if full_type in self._services.keys():
@@ -104,7 +105,7 @@ class Buddy(gobject.GObject):
 	def remove_service(self, service):
 		"""Remove a service from a buddy; ie, the activity was closed
 		or the buddy went away."""
-		if service.get_address() != self._address:
+		if service.get_publisher_address() != self._address:
 			return
 		if service.get_name() != self._nick_name:
 			return
