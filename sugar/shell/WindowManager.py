@@ -3,6 +3,16 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
+SM_SPACE_PROPORTIONAL = 0
+SM_STEP = 1
+
+SLIDING_TIMEOUT = 50
+SLIDING_MODE = SM_SPACE_PROPORTIONAL
+
+#SLIDING_TIMEOUT = 10
+#SLIDING_MODE = SM_STEP
+#SLIDING_STEP = 0.05
+
 class WindowManager:
 	__managers_list = []
 
@@ -94,8 +104,11 @@ class WindowManager:
 		if self._sliding_pos == 0:
 			self._window.show()
 
-		space_to_go = 1.0 - self._sliding_pos
-		self._sliding_pos += (space_to_go / 2)
+		if SLIDING_MODE == SM_SPACE_PROPORTIONAL:
+			space_to_go = 1.0 - self._sliding_pos
+			self._sliding_pos += (space_to_go / 2)
+		else:
+			self._sliding_pos += SLIDING_STEP
 
 		if self._sliding_pos > .999:
 			self._sliding_pos = 1.0
@@ -110,8 +123,11 @@ class WindowManager:
 	def __slide_out_timeout_cb(self):
 		self._window.show()
 
-		space_to_go = self._sliding_pos
-		self._sliding_pos -= (space_to_go / 2)
+		if SLIDING_MODE == SM_SPACE_PROPORTIONAL:
+			space_to_go = self._sliding_pos
+			self._sliding_pos -= (space_to_go / 2)
+		else:
+			self._sliding_pos -= SLIDING_STEP
 
 		if self._sliding_pos < .001:
 			self._sliding_pos = 0
@@ -126,11 +142,11 @@ class WindowManager:
 
 	def slide_window_in(self):
 		self._sliding_pos = 0
-		gobject.timeout_add(50, self.__slide_in_timeout_cb)
+		gobject.timeout_add(SLIDING_TIMEOUT, self.__slide_in_timeout_cb)
 		
 	def slide_window_out(self):
 		self._sliding_pos = 1.0
-		gobject.timeout_add(50, self.__slide_out_timeout_cb)
+		gobject.timeout_add(SLIDING_TIMEOUT, self.__slide_out_timeout_cb)
 			
 	def show(self):
 		self._window.show()
