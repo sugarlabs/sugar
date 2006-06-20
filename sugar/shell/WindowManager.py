@@ -94,8 +94,8 @@ class WindowManager:
 		if self._sliding_pos == 0:
 			self._window.show()
 
-		left = 1.0 - self._sliding_pos
-		self._sliding_pos += (left / 2)
+		space_to_go = 1.0 - self._sliding_pos
+		self._sliding_pos += (space_to_go / 2)
 
 		if self._sliding_pos > .999:
 			self._sliding_pos = 1.0
@@ -110,8 +110,8 @@ class WindowManager:
 	def __slide_out_timeout_cb(self):
 		self._window.show()
 
-		left = self._sliding_pos
-		self._sliding_pos -= (left / 2)
+		space_to_go = self._sliding_pos
+		self._sliding_pos -= (space_to_go / 2)
 
 		if self._sliding_pos < .001:
 			self._sliding_pos = 0
