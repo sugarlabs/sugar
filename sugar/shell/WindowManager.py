@@ -126,11 +126,11 @@ class WindowManager:
 
 	def slide_window_in(self):
 		self._sliding_pos = 0
-		gobject.timeout_add(5, self.__slide_in_timeout_cb)
+		gobject.timeout_add(50, self.__slide_in_timeout_cb)
 		
 	def slide_window_out(self):
 		self._sliding_pos = 1.0
-		gobject.timeout_add(5, self.__slide_out_timeout_cb)
+		gobject.timeout_add(50, self.__slide_out_timeout_cb)
 			
 	def show(self):
 		self._window.show()
