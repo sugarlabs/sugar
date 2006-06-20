@@ -1,13 +1,12 @@
+import os
+import random
+import base64
+
 from sugar import env
 from sugar.presence import Service
 from sugar.presence import Buddy
 from sugar.presence import PresenceService
 from sugar.p2p import Stream
-import os
-import random
-import base64
-
-
 
 class ShellOwner(object):
 	"""Class representing the owner of this machine/instance.  This class
