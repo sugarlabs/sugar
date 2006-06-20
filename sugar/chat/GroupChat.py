@@ -18,11 +18,15 @@ class GroupChat(Chat):
 		self._pservice.start()		
 		self._pservice.connect('service-appeared', self._service_appeared_cb)
 		self._pservice.track_service_type(GroupChat.SERVICE_TYPE)
+		service = self._pservice.get_activity_service(activity, GroupChat.SERVICE_TYPE)
+		if service is not None:
+			self._service_appeared(self._pservice, None, service)
 
 	def _service_appeared_cb(self, pservice, buddy, service):
-		if service.get_full_type() == GroupChat.SERVICE_TYPE:
-			logging.debug('Group chat service appeared, setup the stream.')
-			self._setup_stream(service)
+		if service.get_activity_uid() == self._activity.get_id():
+			if service.get_type() == GroupChat.SERVICE_TYPE:
+				logging.debug('Group chat service appeared, setup the stream.')
+				self._setup_stream(service)
 
 	def publish(self):
 		service = self._pservice.share_activity(self._activity,
