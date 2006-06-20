@@ -126,12 +126,18 @@ class PresenceService(gobject.GObject):
 		self._server = dbus.Interface(self._bus.get_object(avahi.DBUS_NAME,
 				avahi.DBUS_PATH_SERVER), avahi.DBUS_INTERFACE_SERVER)
 
-	def get_activity_service(self, activity, stype):
+	def get_activity_service(self, activity, short_stype):
+		"""Find a particular service by activity and service type."""
+		# Decompose service type if we can
+		(uid, dec_stype) = Service._decompose_service_type(short_stype)
+		if uid:
+			raise RuntimeError("Can only track plain service types!")
+
 		uid = activity.get_id()
 		if self._activity_services.has_key(uid):
 			services = self._activity_services[uid]
 			for service in services:
-				if group.get_stype() == stype:
+				if service.get_type() == short_stype:
 					return service
 		return None
 
@@ -207,10 +213,11 @@ class PresenceService(gobject.GObject):
 		except KeyError:
 			# Should this service mark the owner?
 			owner_nick = env.get_nick_name()
-			if name == owner_nick and service.get_address() in self._local_addrs.values():
+			publisher_addr = service.get_publisher_address()
+			if name == owner_nick and publisher_addr in self._local_addrs.values():
 				buddy = Buddy.Owner(service)
 				self._owner = buddy
-				print "Set owner to %s" % name
+				logging.debug("Owner is '%s'." % name)
 			else:
 				buddy = Buddy.Buddy(service)
 			self._buddies[name] = buddy
