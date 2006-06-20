@@ -260,7 +260,7 @@ class StartPage(gtk.HBox):
 			self._activities.set_owner(buddy)
 
 	def _on_buddy_disappeared_cb(self, pservice, buddy):	
-		if buddy.is_owner() and self._owner == buddy:
+		if buddy.is_owner():
 			self._activities.set_owner(None)
 
 	def _on_activity_announced_cb(self, pservice, service, buddy):
