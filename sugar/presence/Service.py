@@ -126,7 +126,9 @@ class Service(object):
 		self.set_port(port)
 		self._properties = {}
 		self.set_properties(properties)
+		# Publisher address is the unicast source IP
 		self._publisher_address = address
+		# Address is the published address, could be multicast or unicast
 		self._address = None
 		if self._properties.has_key('address'):
 			self.set_address(self._properties['address'])
