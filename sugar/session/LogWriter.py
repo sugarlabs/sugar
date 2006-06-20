@@ -16,7 +16,7 @@ class LogWriter:
 		self._logger = dbus.Interface(proxy_obj, 'com.redhat.Sugar.Logger')
 			
 	def start(self):
-		if os.environ.has_key('SUGAR_USE_CONSOLE') and self._use_console:
+		if self._use_console:
 			sys.stdout = self
 			sys.stderr = self
 

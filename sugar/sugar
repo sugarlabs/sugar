@@ -62,8 +62,6 @@ if curdir == '.':
 else:
 	basedir = os.path.dirname(curdir)
 
-console = False
-
 if os.path.isfile(os.path.join(curdir, '__uninstalled__.py')):
 	if basedir == '':
 		print 'Running sugar from current directory...'
@@ -71,15 +69,12 @@ if os.path.isfile(os.path.join(curdir, '__uninstalled__.py')):
 		print 'Running sugar from ' + basedir + ' ...'
 	add_to_python_path(basedir)
 	add_to_python_path(os.path.join(basedir, 'cut-n-paste'))
-	console = True
 else:
 	print 'Running the installed sugar...'
 	
 add_to_python_path(os.path.expanduser('~/.sugar/activities'))
 
-if console:
-	os.environ['SUGAR_USE_CONSOLE'] = 'yes'
-	print 'Redirecting output to the console, press ctrl+d to open it.'
+print 'Redirecting output to the console, press ctrl+d to open it.'
 	
 from sugar.session.session import Session
 
