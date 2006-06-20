@@ -172,6 +172,8 @@ class StartPage(gtk.HBox):
 		self._pservice.connect("buddy-disappeared", self._on_buddy_disappeared_cb)
 		self._pservice.start()
 		self._pservice.track_service_type(BrowserActivity._BROWSER_ACTIVITY_TYPE)
+		if self._pservice.get_owner():
+			self._on_buddy_appeared_cb(pservice, self._pservice.get_owner())
 
 		vbox = gtk.VBox()
 
