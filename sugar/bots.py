@@ -1,8 +1,6 @@
-import os
 import random
 import base64
 
-from sugar import env
 from sugar.presence import Service
 from sugar.presence import Buddy
 from sugar.presence import PresenceService

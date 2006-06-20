@@ -22,7 +22,7 @@ class ChatWindow(gtk.Window):
 		if event.keyval == gtk.keysyms.s and \
 		   event.state & gtk.gdk.CONTROL_MASK:
 			if self._chat.get_mode() == Chat.SKETCH_MODE:
-			   self._chat.set_mode(Chat.TEXT_MODE)
+				self._chat.set_mode(Chat.TEXT_MODE)
 			elif self._chat.get_mode() == Chat.TEXT_MODE:
-			   self._chat.set_mode(Chat.SKETCH_MODE)			
+				self._chat.set_mode(Chat.SKETCH_MODE)			
 

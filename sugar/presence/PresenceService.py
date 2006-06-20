@@ -2,11 +2,8 @@ import threading
 import avahi, dbus, dbus.glib, dbus.dbus_bindings, gobject
 import Buddy
 import Service
-import os
-import string
 import random
 import logging
-from sugar import util
 from sugar import env
 
 def _get_local_ip_address(ifname):

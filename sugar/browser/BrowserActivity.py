@@ -1,7 +1,6 @@
 import logging
 import xml.sax.saxutils
 
-import dbus
 import pygtk
 pygtk.require('2.0')
 import gtk

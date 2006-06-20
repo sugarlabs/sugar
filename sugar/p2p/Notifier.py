@@ -1,5 +1,4 @@
 from sugar.p2p import network
-from sugar.presence.Service import Service
 
 class Notifier:
 	def __init__(self, service):

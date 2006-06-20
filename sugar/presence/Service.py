@@ -1,6 +1,5 @@
 import avahi
 from sugar import util
-import string
 import dbus
 
 def _txt_to_dict(txt):

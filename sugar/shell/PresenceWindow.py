@@ -107,7 +107,7 @@ class PresenceWindow(gtk.Window):
 
 	def _on_buddyList_buddy_double_clicked(self, view, *args):
 		""" Select the chat for this buddy or group """
-		(model, aniter) = widget.get_selection().get_selected()
+		(model, aniter) = view.get_selection().get_selected()
 		chat = None
 		buddy = view.get_model().get_value(aniter, self._MODEL_COL_BUDDY)
 		if buddy and not self._chats.has_key(buddy):

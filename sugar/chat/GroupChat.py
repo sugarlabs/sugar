@@ -1,7 +1,6 @@
 import logging
 
 from sugar.chat.Chat import Chat
-from sugar.presence.Service import Service
 from sugar.p2p.Stream import Stream
 from sugar.presence.PresenceService import PresenceService 
 

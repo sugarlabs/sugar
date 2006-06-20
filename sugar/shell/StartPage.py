@@ -5,12 +5,10 @@ import pango
 import dbus
 import cgi
 import xml.sax.saxutils
-import re
 import gobject
 
 import google
 from sugar.presence.PresenceService import PresenceService
-from sugar.presence import Service
 from sugar.browser import BrowserActivity
 
 _COLUMN_TITLE = 0
@@ -173,7 +171,7 @@ class StartPage(gtk.HBox):
 		self._pservice.start()
 		self._pservice.track_service_type(BrowserActivity._BROWSER_ACTIVITY_TYPE)
 		if self._pservice.get_owner():
-			self._on_buddy_appeared_cb(pservice, self._pservice.get_owner())
+			self._on_buddy_appeared_cb(self._pservice, self._pservice.get_owner())
 
 		vbox = gtk.VBox()
 
