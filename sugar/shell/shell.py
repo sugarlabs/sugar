@@ -472,31 +472,44 @@ class ConsoleLogger(dbus.service.Object):
 		buf = console.get_buffer() 
 		buf.insert(buf.get_end_iter(), message)
 
-def main():
-	console = ConsoleLogger()
+class Shell(gobject.GObject):
+	__gsignals__ = {
+		'close': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+				 ([])),
+	}
 
-	log_writer = LogWriter("Shell", False)
-	log_writer.start()
+	def __init__(self):
+		gobject.GObject.__init__(self)
 
-	session_bus = dbus.SessionBus()
-	service = dbus.service.BusName("com.redhat.Sugar.Shell", bus=session_bus)
+	def start(self):
+		console = ConsoleLogger()
 
-	activity_container = ActivityContainer(service, session_bus)
-	activity_container.show()
+		log_writer = LogWriter("Shell", False)
+		log_writer.start()
 
-	wm = WindowManager(activity_container.window)
-	wm.set_width(640, WindowManager.ABSOLUTE)
-	wm.set_height(480, WindowManager.ABSOLUTE)
-	wm.set_position(WindowManager.CENTER)
-	wm.show()
-	wm.manage()
-	
-	console.set_parent_window(activity_container.window)
+		session_bus = dbus.SessionBus()
+		service = dbus.service.BusName("com.redhat.Sugar.Shell", bus=session_bus)
+
+		activity_container = ActivityContainer(service, session_bus)
+		activity_container.window.connect('destroy', self.__activity_container_destroy_cb)
+		activity_container.show()
+
+		wm = WindowManager(activity_container.window)
+		wm.set_width(640, WindowManager.ABSOLUTE)
+		wm.set_height(480, WindowManager.ABSOLUTE)
+		wm.set_position(WindowManager.CENTER)
+		wm.show()
+		wm.manage()
+		
+		console.set_parent_window(activity_container.window)
+
+	def __activity_container_destroy_cb(self, activity_container):
+		self.emit('close')
 
 if __name__ == "__main__":
-	main()
+	shell = Shell()
+	shell.start()
 	try:
 		gtk.main()
 	except KeyboardInterrupt:
 		print 'Ctrl+c pressed, exiting...'
-		pass

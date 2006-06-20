@@ -54,7 +54,7 @@ class WindowManager:
 	def set_position(self, position):
 		self._position = position
 
-	def _update_size_and_position(self):
+	def _calc_size_and_position(self):
 		screen_width = self._window.get_screen().get_width()
 		screen_height = self._window.get_screen().get_height()
 		
@@ -69,20 +69,30 @@ class WindowManager:
 			height = int(screen_height * self._height)
 			
 		if self._position is WindowManager.CENTER:
-			x = int((screen_width - width) / 2)
-			y = int((screen_height - height) / 2)
+			self._x = int((screen_width - width) / 2)
+			self._y = int((screen_height - height) / 2)
 		elif self._position is WindowManager.LEFT:
-			x = - int((1.0 - self._sliding_pos) * width)
-			y = int((screen_height - height) / 2)
+			self._x = - int((1.0 - self._sliding_pos) * width)
+			self._y = int((screen_height - height) / 2)
 		elif self._position is WindowManager.TOP:
-			x = int((screen_width - width) / 2)
-			y = - int((1.0 - self._sliding_pos) * height)
-			
-		self._window.move(x, y)
-		self._window.resize(width, height)
+			self._x = int((screen_width - width) / 2)
+			self._y = - int((1.0 - self._sliding_pos) * height)
+		
+		self._real_width = width
+		self._real_height = height
+	
+	def _update_size_and_position(self):
+		self._calc_size_and_position()
+		self._window.move(self._x, self._y)
+		self._window.resize(self._real_width, self._real_height)
+
+	def _update_position(self):
+		self._calc_size_and_position()
+		self._window.move(self._x, self._y)
 
 	def __slide_in_timeout_cb(self):
-		self._window.show()
+		if self._sliding_pos == 0:
+			self._window.show()
 
 		left = 1.0 - self._sliding_pos
 		self._sliding_pos += (left / 2)
@@ -90,7 +100,7 @@ class WindowManager:
 		if self._sliding_pos > .999:
 			self._sliding_pos = 1.0
 
-		self._update_size_and_position()
+		self._update_position()
 
 		if self._sliding_pos == 1.0:
 			return False
@@ -106,7 +116,7 @@ class WindowManager:
 		if self._sliding_pos < .001:
 			self._sliding_pos = 0
 
-		self._update_size_and_position()
+		self._update_position()
 
 		if self._sliding_pos == 0:
 			self._window.hide()
