@@ -10,3 +10,5 @@ sugar_PYTHON =			\
 	PresenceWindow.py 	\
 	StartPage.py		\
 	WindowManager.py
+
+EXTRA_DIST = sugar

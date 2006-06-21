@@ -9,4 +9,4 @@ sugar_PYTHON =			\
 	util.py			\
 	LogWriter.py
 
-EXTRA_DIST = sugar __uninstalled__.py
+EXTRA_DIST = __uninstalled__.py

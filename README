@@ -24,7 +24,7 @@ Once installed you can run sugar with
 
 To run the python sources from your source tree run
 
- $ sugar/sugar
+ $ shell/sugar
 
 Running multiple instances on the same machine
 ==============================================
