@@ -1,8 +1,12 @@
-sugardir = $(pythondir)/sugar/shell
+SUBDIRS = google session
+
+bin_SCRIPTS = sugar
+
+sugardir = $(pkgdatadir)/shell
 sugar_PYTHON =			\
 	__init__.py		\
-	activity.py		\
 	shell.py        	\
 	Owner.py		\
 	PresenceWindow.py 	\
-	StartPage.py
+	StartPage.py		\
+	WindowManager.py

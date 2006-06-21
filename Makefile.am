@@ -1,1 +1,1 @@
-SUBDIRS = sugar cut-n-paste
+SUBDIRS = activities shell sugar

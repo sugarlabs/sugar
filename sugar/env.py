@@ -1,9 +1,17 @@
 import os
+import sys
 
 try:
 	from sugar.__uninstalled__ import *
 except ImportError:
 	from sugar.__installed__ import *
+
+def add_to_python_path(path):
+	sys.path.insert(0, path)
+	if os.environ.has_key('PYTHONPATH'):
+		os.environ['PYTHONPATH'] += ':' + path
+	else:
+		os.environ['PYTHONPATH'] = path
 
 def get_user_dir():
 	if os.environ.has_key('SUGAR_USER_DIR'):
@@ -22,20 +30,9 @@ def get_nick_name():
 		return os.environ['SUGAR_NICK_NAME']
 	else:
 		return None
-		
-def get_data_file(filename):
-	for data_dir in get_data_dirs():
-		path = os.path.join(data_dir, filename)
-		if os.path.isfile(path):
-			return path
-	return None
 
-def get_data_dirs():
-	dirs = []
-	for data_dir in data_dirs:
-		path = os.path.join(data_basedir, data_dir)
-		dirs.append(path)
-	return dirs
-	
+def get_data_dir():
+	return sugar_data_dir
+		
 def get_activities_dir():
-	return activities_dir
+	return sugar_activities_dir

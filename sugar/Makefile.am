@@ -1,12 +1,12 @@
-SUBDIRS = chat browser p2p shell session presence
-
-bin_SCRIPTS = sugar
+SUBDIRS = activity chat p2p presence
 
 sugardir = $(pythondir)/sugar
 sugar_PYTHON =			\
 	__init__.py		\
 	__installed__.py	\
+	bots.py			\
 	env.py			\
-	util.py
+	util.py			\
+	LogWriter.py
 
 EXTRA_DIST = sugar __uninstalled__.py

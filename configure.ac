@@ -17,12 +17,14 @@ AC_SUBST(PYGTK_LIBS)
 
 AC_OUTPUT([
 Makefile
+activities/Makefile
 activities/browser/Makefile
-cut-n-paste/Makefile
 shell/Makefile
+shell/google/Makefile
 shell/session/Makefile
 sugar/Makefile
 sugar/__installed__.py
+sugar/activity/Makefile
 sugar/chat/Makefile
 sugar/chat/sketchpad/Makefile
 sugar/p2p/Makefile

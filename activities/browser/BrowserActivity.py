@@ -6,7 +6,7 @@ pygtk.require('2.0')
 import gtk
 import geckoembed
 
-from sugar.activity import activity
+from sugar.activity.Activity import Activity
 from sugar.presence.PresenceService import PresenceService
 from sugar.p2p.model.LocalModel import LocalModel
 from sugar.p2p.model.RemoteModel import RemoteModel
@@ -18,13 +18,13 @@ _BROWSER_ACTIVITY_TYPE = "_web_olpc._udp"
 _SERVICE_URI_TAG = "URI"
 _SERVICE_TITLE_TAG = "Title"
 
-class BrowserActivity(activity.Activity):
+class BrowserActivity(Activity):
 	SOLO = 1
 	FOLLOWING = 2
 	LEADING = 3
 
 	def __init__(self, uri, mode = SOLO):
-		activity.Activity.__init__(self, _BROWSER_ACTIVITY_TYPE)
+		Activity.__init__(self, _BROWSER_ACTIVITY_TYPE)
 		self.uri = uri
 		self._mode = mode
 		

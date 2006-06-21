@@ -1,5 +1,4 @@
-sugardir = $(pythondir)/sugar/session
+sugardir = $(pkgdatadir)/shell/session
 sugar_PYTHON =		\
 	__init__.py	\
-	session.py	\
-	LogWriter.py
+	session.py

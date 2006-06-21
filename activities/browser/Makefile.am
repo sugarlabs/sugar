@@ -1,4 +1,4 @@
-sugardir = $(pythondir)/sugar/browser
+sugardir = $(pkgdatadir)/activities/browser
 sugar_PYTHON =			\
 	__init__.py		\
 	browser.py		\
@@ -8,18 +8,7 @@ sugar_PYTHON =			\
 	BrowserActivity.py      \
 	NavigationToolbar.py
 
-icondir = $(pkgdatadir)
-icon_DATA =		\
-	fold.png	\
-	unfold.png
-
-rcdir = $(pkgdatadir)
-rc_DATA = browser.rc
-
-activitydir = $(pkgdatadir)/activities
+activitydir = $(pkgdatadir)/activities/browser
 activity_DATA = browser.activity
 
-EXTRA_DIST =			\
-	$(rc_DATA)		\
-	$(activity_DATA)	\
-	$(icon_DATA)
+EXTRA_DIST = $(activity_DATA)

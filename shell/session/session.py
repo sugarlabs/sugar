@@ -17,25 +17,33 @@ class Session:
 		shell = Shell()
 		shell.connect('close', self._shell_close_cb)
 		shell.start()
+		
+		self._run_activities()
+
+	def _run_activities(self):
+		base_dirs = []
+		
+		base_dirs.append(env.get_activities_dir())
+		base_dirs.append(os.path.join(env.get_user_dir(), 'activities'))
+
+		for base_dir in base_dirs:
+			if os.path.isdir(base_dir):
+				for filename in os.listdir(base_dir):
+					activity_dir = os.path.join(base_dir, filename)
+					if os.path.isdir(activity_dir):
+						self._run_activity(os.path.abspath(activity_dir))
+
+	def _run_activity(self, activity_dir):
+		env.add_to_python_path(activity_dir)
 
 		activities = []
-		activities_dirs = []
-		
-		for data_dir in env.get_data_dirs():
-			act_dir = os.path.join(data_dir, env.get_activities_dir())
-			activities_dirs.append(act_dir)
-
-		activities_dirs.append(os.path.join(env.get_user_dir(), 'activities'))
-		
-		for activities_dir in activities_dirs:
-			if os.path.isdir(activities_dir):
-				for filename in os.listdir(activities_dir):
-					if filename.endswith(".activity"):
-						path = os.path.join(activities_dir, filename)
-						cp = ConfigParser()
-						cp.read([path])
-						python_class = cp.get('Activity', "python_class")
-						activities.append(python_class)
+		for filename in os.listdir(activity_dir):
+			if filename.endswith(".activity"):
+				path = os.path.join(activity_dir, filename)
+				cp = ConfigParser()
+				cp.read([path])
+				python_class = cp.get('Activity', "python_class")
+				activities.append(python_class)
 
 		for activity in activities:
 			args = [ 'python', '-m', activity ]

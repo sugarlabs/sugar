@@ -11,7 +11,7 @@ import gobject
 import sugar.util
 from sugar.chat.ChatWindow import ChatWindow
 from sugar.chat.GroupChat import GroupChat
-from sugar.session.LogWriter import LogWriter
+from sugar.LogWriter import LogWriter
 
 from Owner import ShellOwner
 from StartPage import StartPage

@@ -9,13 +9,6 @@ import pygtk
 pygtk.require('2.0')
 import gobject
 
-def add_to_python_path(path):
-	sys.path.insert(0, path)
-	if os.environ.has_key('PYTHONPATH'):
-		os.environ['PYTHONPATH'] += ':' + path
-	else:
-		os.environ['PYTHONPATH'] = path
-
 def start_dbus():
 	curdir = os.path.dirname(__file__)
 	args = "/bin/dbus-daemon --session --print-address".split()
@@ -60,16 +53,16 @@ if not os.environ.has_key("SUGAR_NICK_NAME"):
 curdir = os.path.abspath(os.path.dirname(__file__))
 basedir = os.path.dirname(curdir)
 
+import sugar.env
+
 if os.path.isfile(os.path.join(basedir, 'sugar/__uninstalled__.py')):
 	print 'Running sugar from ' + basedir + ' ...'
-	add_to_python_path(basedir)
-	add_to_python_path(os.path.join(basedir, 'shell'))
-	add_to_python_path(os.path.join(basedir, 'activities/browser'))
+	sugar.env.add_to_python_path(basedir)
+	sugar.env.add_to_python_path(os.path.join(basedir, 'shell'))
 else:
+	sugar.env.add_to_python_path(os.path.join(sugar.env.get_data_dir(), 'shell'))
 	print 'Running the installed sugar...'
 	
-add_to_python_path(os.path.expanduser('~/.sugar/activities'))
-
 print 'Redirecting output to the console, press ctrl+d to open it.'
 	
 from session.session import Session
