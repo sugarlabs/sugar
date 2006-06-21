@@ -19,6 +19,7 @@ class GMailActivity(Activity):
 		geckoembed.set_profile_path(profile_path)
 		self.set_tab_text("Mail")
 		self.set_tab_icon(name="stock_mail")
+		self.set_show_tab_icon(True)
 
 		plug = self.gtk_plug()		
 
