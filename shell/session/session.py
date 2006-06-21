@@ -20,6 +20,12 @@ class Session:
 		
 		self._run_activities()
 
+		try:
+			gtk.main()
+		except KeyboardInterrupt:
+			print 'Ctrl+C pressed, exiting...'
+			self.shutdown()
+
 	def _run_activities(self):
 		base_dirs = []
 		
@@ -49,12 +55,6 @@ class Session:
 			args = [ 'python', '-m', activity ]
 			pid = os.spawnvp(os.P_NOWAIT, 'python', args)
 			self._activity_processes[activity] = pid
-
-		try:
-			gtk.main()
-		except KeyboardInterrupt:
-			print 'Ctrl+C pressed, exiting...'
-			self.shutdown()
 			
 	def _shell_close_cb(self, shell):
 		self.shutdown()
