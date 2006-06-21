@@ -1,4 +1,4 @@
-AC_INIT([Sugar],[0.9],[],[sugar])
+AC_INIT([Sugar],[0.10],[],[sugar])
 
 AC_PREREQ([2.59])
 
@@ -17,15 +17,15 @@ AC_SUBST(PYGTK_LIBS)
 
 AC_OUTPUT([
 Makefile
+activities/browser/Makefile
 cut-n-paste/Makefile
+shell/Makefile
+shell/session/Makefile
 sugar/Makefile
 sugar/__installed__.py
-sugar/browser/Makefile
 sugar/chat/Makefile
 sugar/chat/sketchpad/Makefile
 sugar/p2p/Makefile
 sugar/p2p/model/Makefile
-sugar/shell/Makefile
-sugar/session/Makefile
 sugar/presence/Makefile
 ])

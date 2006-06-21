@@ -6,12 +6,13 @@ pygtk.require('2.0')
 import gtk
 import geckoembed
 
-from sugar.shell import activity
-from sugar.browser import NotificationBar
-from sugar.browser import NavigationToolbar
+from sugar.activity import activity
 from sugar.presence.PresenceService import PresenceService
 from sugar.p2p.model.LocalModel import LocalModel
 from sugar.p2p.model.RemoteModel import RemoteModel
+
+from NotificationBar import NotificationBar
+from NavigationToolbar import NavigationToolbar
 
 _BROWSER_ACTIVITY_TYPE = "_web_olpc._udp"
 _SERVICE_URI_TAG = "URI"
@@ -83,7 +84,7 @@ class BrowserActivity(activity.Activity):
 
 		vbox = gtk.VBox()
 
-		self._notif_bar = NotificationBar.NotificationBar()
+		self._notif_bar = NotificationBar()
 		vbox.pack_start(self._notif_bar, False)
 		self._notif_bar.connect('action', self.__notif_bar_action_cb)
 
@@ -94,7 +95,7 @@ class BrowserActivity(activity.Activity):
 		self.embed.show()
 		self.embed.load_address(self.uri)
 		
-		nav_toolbar = NavigationToolbar.NavigationToolbar(self)
+		nav_toolbar = NavigationToolbar(self)
 		vbox.pack_start(nav_toolbar, False)
 		nav_toolbar.show()
 

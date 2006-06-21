@@ -7,9 +7,10 @@ import cgi
 import xml.sax.saxutils
 import gobject
 
-import google
+from google import google
 from sugar.presence.PresenceService import PresenceService
-from sugar.browser import BrowserActivity
+
+_BROWSER_ACTIVITY_TYPE = "_web_olpc._udp"
 
 _COLUMN_TITLE = 0
 _COLUMN_ADDRESS = 1
@@ -78,7 +79,7 @@ class ActivitiesModel(gtk.ListStore):
 			return
 
 		# Only accept browser activities for now
-		if service.get_type() == BrowserActivity._BROWSER_ACTIVITY_TYPE:
+		if service.get_type() == _BROWSER_ACTIVITY_TYPE:
 			escaped_title = service.get_one_property('Title')
 			escaped_uri = service.get_one_property('URI')
 			if escaped_title and escaped_uri:
@@ -169,7 +170,7 @@ class StartPage(gtk.HBox):
 		self._pservice.connect("buddy-appeared", self._on_buddy_appeared_cb)
 		self._pservice.connect("buddy-disappeared", self._on_buddy_disappeared_cb)
 		self._pservice.start()
-		self._pservice.track_service_type(BrowserActivity._BROWSER_ACTIVITY_TYPE)
+		self._pservice.track_service_type(_BROWSER_ACTIVITY_TYPE)
 		if self._pservice.get_owner():
 			self._on_buddy_appeared_cb(self._pservice, self._pservice.get_owner())
 

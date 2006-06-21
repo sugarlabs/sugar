@@ -56,19 +56,15 @@ if not os.environ.has_key("SUGAR_NICK_NAME"):
 	os.environ['SUGAR_NICK_NAME'] = nick
 	os.environ['SUGAR_USER_DIR'] = os.path.expanduser('~/.sugar')
 
-curdir = os.path.dirname(__file__)
-if curdir == '.':
-	basedir = os.path.dirname(os.getcwd())
-else:
-	basedir = os.path.dirname(curdir)
 
-if os.path.isfile(os.path.join(curdir, '__uninstalled__.py')):
-	if basedir == '':
-		print 'Running sugar from current directory...'
-	else:
-		print 'Running sugar from ' + basedir + ' ...'
+curdir = os.path.abspath(os.path.dirname(__file__))
+basedir = os.path.dirname(curdir)
+
+if os.path.isfile(os.path.join(basedir, 'sugar/__uninstalled__.py')):
+	print 'Running sugar from ' + basedir + ' ...'
 	add_to_python_path(basedir)
-	add_to_python_path(os.path.join(basedir, 'cut-n-paste'))
+	add_to_python_path(os.path.join(basedir, 'shell'))
+	add_to_python_path(os.path.join(basedir, 'activities/browser'))
 else:
 	print 'Running the installed sugar...'
 	
@@ -76,7 +72,7 @@ add_to_python_path(os.path.expanduser('~/.sugar/activities'))
 
 print 'Redirecting output to the console, press ctrl+d to open it.'
 	
-from sugar.session.session import Session
+from session.session import Session
 
 session = Session()
 session.start()

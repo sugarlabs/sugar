@@ -6,7 +6,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-from sugar.shell.shell import Shell
+from shell import Shell
 from sugar import env
 
 class Session:

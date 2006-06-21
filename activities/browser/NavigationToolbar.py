@@ -2,7 +2,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-from sugar.browser.AddressItem import AddressItem
+from AddressItem import AddressItem
 
 class NavigationToolbar(gtk.Toolbar):
 	def __init__(self, browser):

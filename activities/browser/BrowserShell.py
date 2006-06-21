@@ -6,9 +6,9 @@ import gtk
 import gobject
 
 import sugar.env
-
-from sugar.browser.BrowserActivity import BrowserActivity
 from sugar.presence import Service
+
+from BrowserActivity import BrowserActivity
 
 class BrowserShell(dbus.service.Object):
 	def __init__(self, bus_name, object_path = '/com/redhat/Sugar/Browser'):

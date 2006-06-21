@@ -9,13 +9,14 @@ import pango
 import gobject
 
 import sugar.util
-from sugar.session.LogWriter import LogWriter
-from sugar.shell.PresenceWindow import PresenceWindow
 from sugar.chat.ChatWindow import ChatWindow
-from sugar.shell.Owner import ShellOwner
-from sugar.shell.StartPage import StartPage
-from sugar.shell.WindowManager import WindowManager
 from sugar.chat.GroupChat import GroupChat
+from sugar.session.LogWriter import LogWriter
+
+from Owner import ShellOwner
+from StartPage import StartPage
+from WindowManager import WindowManager
+from PresenceWindow import PresenceWindow
 
 class ActivityHost(dbus.service.Object):
 

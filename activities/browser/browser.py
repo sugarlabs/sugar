@@ -6,9 +6,9 @@ import gtk
 import dbus
 
 import sugar.env
-
 from sugar.session.LogWriter import LogWriter
-from sugar.browser.BrowserShell import BrowserShell
+
+from BrowserShell import BrowserShell
 
 log_writer = LogWriter("Web")
 log_writer.start()
