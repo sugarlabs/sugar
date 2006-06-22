@@ -277,7 +277,7 @@ class StartPage(gtk.HBox):
 			self._activities.set_owner(None)
 
 	def _on_activity_announced_cb(self, pservice, service, buddy):
-		print "Found new activity with type %s" % service.get_type()
+		print "Found new activity service (activity %s of type %s)" % (service.get_activity_id(), service.get_type())
 		self._activities_model.add_activity(buddy, service)
 		if self._activities.get_model() != self._activities_model:
 			self._search(self._last_search)
