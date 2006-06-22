@@ -142,8 +142,8 @@ class Buddy(gobject.GObject):
 			for service in self._services.values():
 				if service.get_type() == stype and service.get_activity_id() == actid:
 					return service
-		if self._services.has_key(short_stype):
-			return self._services[short_stype]
+		if self._services.has_key(stype):
+			return self._services[stype]
 		return None
 
 	def is_valid(self):

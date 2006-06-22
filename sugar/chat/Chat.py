@@ -28,6 +28,9 @@ class Chat(gtk.VBox):
 	def __init__(self):
 		gtk.VBox.__init__(self, False, 6)
 
+		self._pservice = PresenceService.get_instance()
+		self._pservice.start()
+
 		self._stream_writer = None
 		self.set_border_width(12)
 
@@ -193,13 +196,16 @@ class Chat(gtk.VBox):
 			return msg[desc_start:svg_last + len(tag_svg_end)]
 		return None
 
-	def recv_message(self, buddy, msg):
+	def recv_message(self, message):
 		"""Insert a remote chat message into the chat buffer."""
+		[nick, msg] = Chat.deserialize_message(message)
+		buddy = self._pservice.get_buddy_by_nick_name(nick)
 		if not buddy:
+			logging.error('The buddy %s is not present.' % (nick))
 			return
 
 		# FIXME a better way to compare buddies?			
-		owner = PresenceService.get_instance().get_owner()
+		owner = self._pservice.get_owner()
 		if buddy.get_nick_name() == owner.get_nick_name():
 			return
 
@@ -236,5 +242,7 @@ class Chat(gtk.VBox):
 		owner = PresenceService.get_instance().get_owner()
 		return owner.get_nick_name() + '||' + message
 		
-	def deserialize_message(self, message):
+	def deserialize_message(message):
 		return message.split('||', 1)
+
+	deserialize_message = staticmethod(deserialize_message)
