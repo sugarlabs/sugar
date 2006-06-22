@@ -8,22 +8,23 @@ import richtext
 
 class ChatToolbar(gtk.HBox):
 	def __init__(self, editor):
-		gtk.HBox.__init__(self)
-
+		gtk.HBox.__init__(self, False, 24)
+		
 		self._editor = editor
 		self._emt_popup = None
 
-#		spring = gtk.Label('')
-#		self.pack_start(spring, True)
-#		spring.show()
+		spring = gtk.Label('')
+		self.pack_start(spring, True)
+		spring.show()
 
-		toolbar = richtext.RichTextToolbar(editor.get_buffer())
-		toolbar.set_show_arrow(False)
-
-		item = gtk.ToolButton()
+		toolbox = richtext.RichTextToolbox(editor.get_buffer())
+		self.pack_start(toolbox, False)
+		toolbox.show()
+		
+		item = gtk.Button()
 
 		e_hbox = gtk.HBox(False, 6)
-
+		
 		e_image = gtk.Image()
 		e_image.set_from_icon_name('stock_smiley-1', gtk.ICON_SIZE_SMALL_TOOLBAR)
 		e_hbox.pack_start(e_image)
@@ -33,10 +34,9 @@ class ChatToolbar(gtk.HBox):
 		e_hbox.pack_start(arrow)
 		arrow.show()
 
-		item.set_icon_widget(e_hbox)
-		item.set_homogeneous(False)
+		item.set_image(e_hbox)
 		item.connect("clicked", self.__emoticons_button_clicked_cb)
-		toolbar.insert(item, -1)
+		toolbox.pack_start(item, False)
 		item.show()
 		
 #		separator = gtk.SeparatorToolItem()
@@ -49,17 +49,14 @@ class ChatToolbar(gtk.HBox):
 #		toolbar.insert(item, -1)
 #		item.show()
 
-		self.pack_start(toolbar)
-		toolbar.show()
-
 		toolbox = Toolbox()
 		toolbox.connect('color-selected', self._color_selected)
 		self.pack_start(toolbox, False)
 		toolbox.show()
 
-#		spring = gtk.Label('')
-#		self.pack_start(spring, True)
-#		spring.show()
+		spring = gtk.Label('')
+		self.pack_start(spring, True)
+		spring.show()
 
 	def _color_selected(self, toolbox, color):
 		self._editor.set_color(color)

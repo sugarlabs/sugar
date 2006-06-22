@@ -13,7 +13,7 @@ class ColorButton(gtk.RadioButton):
 		self.set_relief(gtk.RELIEF_NONE)
 		
 		drawing_area = gtk.DrawingArea()
-		drawing_area.set_size_request(16, 16)
+		drawing_area.set_size_request(24, 24)
 		drawing_area.connect('expose_event', self.expose)
 		self.add(drawing_area)
 		drawing_area.show()

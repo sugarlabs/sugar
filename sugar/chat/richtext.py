@@ -149,38 +149,58 @@ class RichTextBuffer(gtk.TextBuffer):
 			pos_end.backward_chars(length)
 			self.apply_tag_by_name(tag, pos, pos_end)
 		
-class RichTextToolbar(gtk.Toolbar):
+class RichTextToolbox(gtk.HBox):
 	def __init__(self, buf):
-		gtk.Toolbar.__init__(self)
+		gtk.HBox.__init__(self, False, 6)
 		
 		self.buf = buf
-		
-		self.set_style(gtk.TOOLBAR_ICONS)
 		
 		self._font_size = "normal"
 		self._font_scales = [ "xx-small", "x-small", "small",	\
 							  "normal",							\
 							  "large", "x-large", "xx-large" ]
 		
-		item = gtk.ToggleToolButton(gtk.STOCK_BOLD)
+		image = gtk.Image()
+		image.set_from_stock(gtk.STOCK_BOLD, gtk.ICON_SIZE_SMALL_TOOLBAR)
+
+		item = gtk.ToggleButton()
+		item.set_image(image)
 		item.connect("toggled", self.__toggle_style_cb, "bold")
-		self.insert(item, -1)
+		self.pack_start(item, False)
 		item.show()
 
-		item = gtk.ToggleToolButton(gtk.STOCK_ITALIC)
+		image.show()
+
+		image = gtk.Image()
+		image.set_from_stock(gtk.STOCK_ITALIC, gtk.ICON_SIZE_SMALL_TOOLBAR)
+
+		item = gtk.ToggleButton()
+		item.set_image(image)
 		item.connect("toggled", self.__toggle_style_cb, "italic")
-		self.insert(item, -1)
+		self.pack_start(item, False)
 		item.show()
 
-		self._font_size_up = gtk.ToolButton(gtk.STOCK_GO_UP)
-		self._font_size_up.connect("clicked", self.__font_size_up_cb)
-		self.insert(self._font_size_up, -1)
-		self._font_size_up.show()
+		image = gtk.Image()
+		image.set_from_stock(gtk.STOCK_GO_UP, gtk.ICON_SIZE_SMALL_TOOLBAR)
 
-		self._font_size_down = gtk.ToolButton(gtk.STOCK_GO_DOWN)
+		self._font_size_up = gtk.Button()
+		self._font_size_up.set_image(image)
+		self._font_size_up.connect("clicked", self.__font_size_up_cb)
+		self.pack_start(self._font_size_up, False)
+		self._font_size_up.show()
+		
+		image.show()
+
+		image = gtk.Image()
+		image.set_from_stock(gtk.STOCK_GO_DOWN, gtk.ICON_SIZE_SMALL_TOOLBAR)
+
+		self._font_size_down = gtk.Button()
+		self._font_size_down.set_image(image)
 		self._font_size_down.connect("clicked", self.__font_size_down_cb)
-		self.insert(self._font_size_down, -1)
+		self.pack_start(self._font_size_down, False)
 		self._font_size_down.show()
+		
+		image.show()
 	
 	def _get_font_size_index(self):
 		return self._font_scales.index(self._font_size);
