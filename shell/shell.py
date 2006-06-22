@@ -10,7 +10,8 @@ import gobject
 
 import sugar.util
 from sugar.chat.ChatWindow import ChatWindow
-from sugar.chat.GroupChat import GroupChat
+from sugar.chat.ActivityChat import ActivityChat
+from sugar.chat.MeshChat import MeshChat
 from sugar.LogWriter import LogWriter
 
 from Owner import ShellOwner
@@ -82,7 +83,7 @@ class ActivityHost(dbus.service.Object):
 		notebook.set_current_page(index)
 		
 	def _create_chat(self):
-		self._group_chat = GroupChat(self)
+		self._group_chat = ActivityChat(self)
 
 	def get_chat(self):
 		return self._group_chat
@@ -322,6 +323,8 @@ class ActivityContainer(dbus.service.Object):
 		self._chat_wm.set_height(0.5, WindowManager.SCREEN_RELATIVE)
 		self._chat_wm.set_position(WindowManager.TOP)
 		self._chat_wm.manage()
+		
+		self._mesh_chat = MeshChat()
 
 	def show(self):
 		self.window.show()
@@ -339,6 +342,8 @@ class ActivityContainer(dbus.service.Object):
 		if activity:
 			host_chat = activity.get_chat()
 			self._chat_window.set_chat(host_chat)
+		else:
+			self._chat_window.set_chat(self._mesh_chat)
 
 		# For some reason the substitution screw up window position
 		self._chat_wm.update()

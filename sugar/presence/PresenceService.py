@@ -123,6 +123,14 @@ class PresenceService(gobject.GObject):
 		self._server = dbus.Interface(self._bus.get_object(avahi.DBUS_NAME,
 				avahi.DBUS_PATH_SERVER), avahi.DBUS_INTERFACE_SERVER)
 
+	def get_service(self, full_stype):
+		"""Find a particular service by full service type."""
+		services = self._find_service_adv(stype = full_stype)
+		if len(services) > 0:
+			return services[0]
+		else:
+			return None
+
 	def get_activity_service(self, activity, short_stype):
 		"""Find a particular service by activity and service type."""
 		# Decompose service type if we can
