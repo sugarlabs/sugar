@@ -105,7 +105,7 @@ class PresenceService(gobject.GObject):
 		# Our owner object
 		self._owner = None
 
-		# activity UID -> Service: services grouped by activity UID
+		# activity ID -> Service: services grouped by activity ID
 		self._activity_services = {}
 
 		# All the mdns service types we care about
@@ -123,26 +123,21 @@ class PresenceService(gobject.GObject):
 		self._server = dbus.Interface(self._bus.get_object(avahi.DBUS_NAME,
 				avahi.DBUS_PATH_SERVER), avahi.DBUS_INTERFACE_SERVER)
 
-	def get_service(self, full_stype):
+	def get_service(self, stype):
 		"""Find a particular service by full service type."""
-		services = self._find_service_adv(stype = full_stype)
+		services = self._find_service_adv(stype=stype)
 		if len(services) > 0:
 			return services[0]
 		else:
 			return None
 
-	def get_activity_service(self, activity, short_stype):
+	def get_activity_service(self, activity, stype):
 		"""Find a particular service by activity and service type."""
-		# Decompose service type if we can
-		(uid, dec_stype) = Service._decompose_service_type(short_stype)
-		if uid:
-			raise RuntimeError("Can only track plain service types!")
-
-		uid = activity.get_id()
-		if self._activity_services.has_key(uid):
-			services = self._activity_services[uid]
+		actid = activity.get_id()
+		if self._activity_services.has_key(actid):
+			services = self._activity_services[actid]
 			for (buddy, service) in services:
-				if service.get_type() == short_stype:
+				if service.get_type() == stype:
 					return service
 		return None
 
@@ -173,7 +168,7 @@ class PresenceService(gobject.GObject):
 	def _resolve_service_error_handler(self, err):
 		logging.error("error resolving service: %s" % err)
 
-	def _find_service_adv(self, interface=None, protocol=None, name=None, stype=None, domain=None, is_short_stype=False):
+	def _find_service_adv(self, interface=None, protocol=None, name=None, stype=None, domain=None):
 		"""Search a list of service advertisements for ones matching certain criteria."""
 		adv_list = []
 		for adv in self._service_advs:
@@ -183,13 +178,8 @@ class PresenceService(gobject.GObject):
 				continue
 			if name and adv.name() != name:
 				continue
-			if is_short_stype:
-				(uid, dec_stype) = Service._decompose_service_type(adv.stype())
-				if uid is None or stype != dec_stype:
-					continue
-			else:
-				if stype and adv.stype() != stype:
-					continue
+			if stype and adv.stype() != stype:
+				continue
 			if domain and adv.domain() != domain:
 				continue
 			adv_list.append(adv)
@@ -233,31 +223,31 @@ class PresenceService(gobject.GObject):
 
 	def _handle_new_service_for_activity(self, service, buddy):
 		# If the serivce is a group service, merge it into our groups list
-		uid = service.get_activity_uid()
-		if not uid:
-			uid = "*"
-		if not self._activity_services.has_key(uid):
-			self._activity_services[uid] = []
-		self._activity_services[uid].append((buddy, service))
+		actid = service.get_activity_id()
+		if not actid:
+			actid = "*"
+		if not self._activity_services.has_key(actid):
+			self._activity_services[actid] = []
+		self._activity_services[actid].append((buddy, service))
 		self.emit('activity-announced', service, buddy)
 
 	def _handle_remove_service_for_activity(self, service, buddy):
-		uid = service.get_activity_uid()
-		if not uid:
-			uid = "*"
-		if self._activity_services.has_key(uid):
+		actid = service.get_activity_id()
+		if not actid:
+			actid = "*"
+		if self._activity_services.has_key(actid):
 			try:
 				self._activity_services.remove((buddy, service))
 			except:
 				pass
 
-	def _resolve_service_reply_cb(self, interface, protocol, name, full_stype, domain, host, aprotocol, address, port, txt, flags):
+	def _resolve_service_reply_cb(self, interface, protocol, full_name, stype, domain, host, aprotocol, address, port, txt, flags):
 		"""When the service discovery finally gets here, we've got enough information about the
 		service to assign it to a buddy."""
-		logging.debug("resolved service '%s' type '%s' domain '%s' to %s:%s" % (name, full_stype, domain, address, port))
+		logging.debug("resolved service '%s' type '%s' domain '%s' to %s:%s" % (full_name, stype, domain, address, port))
 
-		name = name.encode()
-		full_stype = full_stype.encode()
+		full_name = full_name.encode()
+		stype = stype.encode()
 		domain = domain.encode()
 		host = host.encode()
 		address = address.encode()
@@ -265,7 +255,7 @@ class PresenceService(gobject.GObject):
 		# If this service was previously unresolved, remove it from the
 		# unresolved list
 		adv_list = self._find_service_adv(interface=interface, protocol=protocol,
-				name=name, stype=full_stype, domain=domain)
+				name=full_name, stype=stype, domain=domain)
 		if not adv_list:
 			return False
 		adv = adv_list[0]
@@ -274,14 +264,13 @@ class PresenceService(gobject.GObject):
 			self._resolve_queue.remove(adv)
 
 		# Update the service now that it's been resolved
-		service = Service.Service(name=name, stype=full_stype, domain=domain,
+		service = Service.Service(name=full_name, stype=stype, domain=domain,
 				address=address, port=port, properties=txt)
 		adv.set_service(service)
 
 		# Merge the service into our buddy and group lists, if needed
 		buddy = self._handle_new_service_for_buddy(service)
-		uid = service.get_activity_uid()
-		if buddy and uid:
+		if buddy and service.get_activity_id():
 			self._handle_new_service_for_activity(service, buddy)
 
 		return False
@@ -300,16 +289,16 @@ class PresenceService(gobject.GObject):
 				error_handler=self._resolve_service_error_handler)
 		return False
 
-	def _service_appeared_cb(self, interface, protocol, name, full_stype, domain, flags):
-		logging.debug("found service '%s' (%d) of type '%s' in domain '%s' on %i.%i." % (name, flags, full_stype, domain, interface, protocol))
+	def _service_appeared_cb(self, interface, protocol, full_name, stype, domain, flags):
+		logging.debug("found service '%s' (%d) of type '%s' in domain '%s' on %i.%i." % (full_name, flags, stype, domain, interface, protocol))
 
 		# Add the service to our unresolved services list
 		adv_list = self._find_service_adv(interface=interface, protocol=protocol,
-				name=name.encode(), stype=full_stype.encode(), domain=domain.encode())
+				name=full_name.encode(), stype=stype.encode(), domain=domain.encode())
 		adv = None
 		if not adv_list:
-			adv = ServiceAdv(interface=interface, protocol=protocol, name=name.encode(),
-					stype=full_stype.encode(), domain=domain.encode())
+			adv = ServiceAdv(interface=interface, protocol=protocol, name=full_name.encode(),
+					stype=stype.encode(), domain=domain.encode())
 			self._service_advs.append(adv)
 		else:
 			adv = adv_list[0]
@@ -323,37 +312,37 @@ class PresenceService(gobject.GObject):
 					self._local_addrs[interface] = addr
 
 		# Decompose service type if we can
-		(uid, short_stype) = Service._decompose_service_type(full_stype.encode())
+		(actid, buddy_name) = Service._decompose_service_name(full_name.encode())
 
 		# FIXME: find a better way of letting the StartPage get everything
-		self.emit('new-service-adv', uid, short_stype)
+		self.emit('new-service-adv', actid, stype)
 
 		# If we care about the service right now, resolve it
 		resolve = False
-		if uid is not None or short_stype in self._allowed_service_types:
+		if actid is not None or stype in self._allowed_service_types:
 			resolve = True
-		if self._is_special_service_type(short_stype):
+		if self._is_special_service_type(stype):
 			resolve = True
 		if resolve and not adv in self._resolve_queue:
 			self._resolve_queue.append(adv)
 			gobject.idle_add(self._resolve_service, adv)
 		else:
-			logging.debug("Do not resolve service '%s' of type '%s', we don't care about it." % (name, full_stype))
+			logging.debug("Do not resolve service '%s' of type '%s', we don't care about it." % (full_name, stype))
 			
 		return False
 
 	def _service_appeared_cb_glue(self, interface, protocol, name, stype, domain, flags):
 		gobject.idle_add(self._service_appeared_cb, interface, protocol, name, stype, domain, flags)
 
-	def _service_disappeared_cb(self, interface, protocol, name, full_stype, domain, flags):
-		logging.debug("service '%s' of type '%s' in domain '%s' on %i.%i disappeared." % (name, full_stype, domain, interface, protocol))
-		name = name.encode()
-		full_stype = full_stype.encode()
+	def _service_disappeared_cb(self, interface, protocol, full_name, stype, domain, flags):
+		logging.debug("service '%s' of type '%s' in domain '%s' on %i.%i disappeared." % (full_name, stype, domain, interface, protocol))
+		full_name = full_name.encode()
+		stype = stype.encode()
 		domain = domain.encode()
 
 		# If it's an unresolved service, remove it from our unresolved list
 		adv_list = self._find_service_adv(interface=interface, protocol=protocol,
-				name=name, stype=full_stype, domain=domain)
+				name=full_name, stype=stype, domain=domain)
 		if not adv_list:
 			return False
 
@@ -365,9 +354,12 @@ class PresenceService(gobject.GObject):
 		if not service:
 			return False
 
+		# Decompose service type if we can
+		(actid, buddy_name) = Service._decompose_service_name(full_name)
+
 		# Remove the service from the buddy
 		try:
-			buddy = self._buddies[name]
+			buddy = self._buddies[buddy_name]
 		except KeyError:
 			pass
 		else:
@@ -375,7 +367,7 @@ class PresenceService(gobject.GObject):
 			self.emit('service-disappeared', buddy, service)
 			if not buddy.is_valid():
 				self.emit("buddy-disappeared", buddy)
-				del self._buddies[name]
+				del self._buddies[buddy_name]
 			self._handle_remove_service_for_activity(service, buddy)
 
 		return False
@@ -431,61 +423,48 @@ class PresenceService(gobject.GObject):
 	def _new_domain_cb_glue(self, interface, protocol, domain, flags=0):
 		gobject.idle_add(self._new_domain_cb, interface, protocol, domain, flags)
 
-	def track_service_type(self, short_stype):
+	def track_service_type(self, stype):
 		"""Requests that the Presence service look for and recognize
 		a certain mDNS service types."""
 		if not self._started:
 			raise RuntimeError("presence service must be started first.")
-		if type(short_stype) == type(u""):
+		if type(stype) == type(u""):
 			raise ValueError("service type should not be unicode.")
-		if type(short_stype) != type(""):
+		if type(stype) != type(""):
 			raise ValueError("service type must be a string.")
-		if self._is_special_service_type(short_stype):
+		if self._is_special_service_type(stype):
 			return
-		if short_stype in self._allowed_service_types:
+		if stype in self._allowed_service_types:
 			return
 
 		# Decompose service type if we can
-		(uid, dec_stype) = Service._decompose_service_type(short_stype)
-		if uid:
-			raise RuntimeError("Can only track plain service types!")
-		self._allowed_service_types.append(dec_stype)
-		self._check_and_resolve_service_advs(dec_stype)
+		self._allowed_service_types.append(stype)
+		self._check_and_resolve_service_advs(stype)
 
-	def _check_and_resolve_service_advs(self, short_stype):
-		"""We should only get called with short service types (ie, not
-		service types that can be decomposed into a UID and a type)."""
+	def _check_and_resolve_service_advs(self, stype):
 		# Find unresolved services that match the service type
 		# we're now interested in, and resolve them
 		resolv_list = []
 
-		# Find services of this type belonging to specific activities
-		resolv_list = self._find_service_adv(stype=short_stype, is_short_stype=True)
-		# And also just plain ones of this type
-		resolv_list = resolv_list + self._find_service_adv(stype=short_stype)
-
+		# Find services of this type
+		resolv_list = self._find_service_adv(stype=stype)
 		# Request resolution for them if they aren't in-process already
 		for adv in resolv_list:
 			if adv not in self._resolve_queue:
 				self._resolve_queue.append(adv)
 				gobject.idle_add(self._resolve_service, adv)
 
-	def untrack_service_type(self, short_stype):
+	def untrack_service_type(self, stype):
 		"""Stop tracking a certain mDNS service."""
 		if not self._started:
 			raise RuntimeError("presence service must be started first.")
-		if type(short_stype) == type(u""):
+		if type(stype) == type(u""):
 			raise ValueError("service type should not be unicode.")
-		if not type(short_stype) == type(""):
+		if not type(stype) == type(""):
 			raise ValueError("service type must be a string.")
 
-		# Decompose service type if we can
-		(uid, dec_stype) = Service._decompose_service_type(short_stype)
-		if uid:
-			raise RuntimeError("Can only untrack plain service types!")
-
-		if dec_stype in self._allowed_service_types:
-			self._allowed_service_types.remove(dec_stype)
+		if stype in self._allowed_service_types:
+			self._allowed_service_types.remove(stype)
 
 	def join_shared_activity(self, service):
 		"""Convenience function to join a group and notify other buddies
@@ -498,9 +477,9 @@ class PresenceService(gobject.GObject):
 		"""Convenience function to share an activity with other buddies."""
 		if not self._started:
 			raise RuntimeError("presence service must be started first.")
-		uid = activity.get_id()
+		actid = activity.get_id()
 		owner_nick = self._owner.get_nick_name()
-		real_stype = Service.compose_service_type(stype, uid)
+		real_name = Service.compose_service_name(owner_nick, actid)
 		if address and type(address) != type(""):
 			raise ValueError("address must be a valid string.")
 		if address == None:
@@ -513,8 +492,8 @@ class PresenceService(gobject.GObject):
 			# random port #
 			port = random.randint(5000, 65535)
 
-		logging.debug('Share activity %s, type %s, address %s, port %d, properties %s' % (uid, stype, address, port, properties))
-		service = Service.Service(name=owner_nick, stype=real_stype, domain="local",
+		logging.debug('Share activity %s, type %s, address %s, port %d, properties %s' % (actid, stype, address, port, properties))
+		service = Service.Service(name=real_name, stype=stype, domain="local",
 				address=address, port=port, properties=properties)
 		# Publish it to the world
 		self.register_service(service)
@@ -528,7 +507,10 @@ class PresenceService(gobject.GObject):
 		rs_name = service.get_name()
 		if self.get_owner() and rs_name != self.get_owner().get_nick_name():
 			raise RuntimeError("Tried to register a service that didn't have Owner nick as the service name!")
-		rs_stype = service.get_full_type()
+		actid = service.get_activity_id()
+		if actid:
+			rs_name = Service.compose_service_name(rs_name, actid)
+		rs_stype = service.get_type()
 		rs_port = service.get_port()
 		rs_props = service.get_properties()
 		rs_domain = service.get_domain()

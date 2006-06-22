@@ -19,30 +19,35 @@ def _txt_to_dict(txt):
 		prop_dict[key] = value
 	return prop_dict
 
-def compose_service_type(stype, activity_uid):
-	if not activity_uid:
-		return stype
-	if type(stype) == type(u""):
-		raise ValueError("stype must not be in unicode.")
-	if not stype or type(stype) != type(""):
-		raise ValueError("stype must be a valid string.")
-	composed = "_%s_%s" % (activity_uid, stype)
+def compose_service_name(name, activity_id):
+	if not activity_id:
+		return name
+	if type(name) == type(u""):
+		raise ValueError("name must not be in unicode.")
+	if not name or type(name) != type(""):
+		raise ValueError("name must be a valid string.")
+	composed = "%s [%s]" % (name, activity_id)
 	return composed.encode()
 
-def _decompose_service_type(stype):
-	"""Break a service type into the UID and real service type, if we can."""
-	if len(stype) < util.ACTIVITY_UID_LEN + 5:
-		return (None, stype)
-	if stype[0] != "_":
-		return (None, stype)
-	start = 1
-	end = start + util.ACTIVITY_UID_LEN
-	if stype[end] != "_":
-		return (None, stype)
-	uid = stype[start:end]
-	if not util.validate_activity_uid(uid):
-		return (None, stype)
-	return (uid, stype[end+1:])
+def _decompose_service_name(name):
+	"""Break a service name into the name and activity ID, if we can."""
+	if type(name) != type(""):
+		raise ValueError("name must be a valid string.")
+	name_len = len(name)
+	if name_len < util.ACTIVITY_ID_LEN + 5:
+		return (None, name)
+	# check for activity id end marker
+	if name[name_len - 1] != "]":
+		return (None, name)
+	start = name_len - 1 - util.ACTIVITY_ID_LEN
+	end = name_len - 1
+	# check for activity id start marker
+	if name[start - 1] != "[" or name[start - 2] != " ":
+		return (None, name)
+	activity_id = name[start:end]
+	if not util.validate_activity_id(activity_id):
+		return (None, name)
+	return (activity_id, name[:start - 2])
 
 def is_multicast_address(address):
 	"""Simple numerical check for whether an IP4 address
@@ -61,12 +66,12 @@ def deserialize(sdict):
 		name = sdict['name']
 		if type(name) == type(u""):
 			name = name.encode()
-		full_stype = sdict['full_stype']
-		if type(full_stype) == type(u""):
-			full_stype = full_stype.encode()
-		activity_stype = sdict['activity_stype']
-		if type(activity_stype) == type(u""):
-			activity_stype = activity_stype.encode()
+		stype = sdict['stype']
+		if type(stype) == type(u""):
+			stype = stype.encode()
+		activity_id = sdict['activity_id']
+		if type(activity_id) == type(u""):
+			activity_id = activity_id.encode()
 		domain = sdict['domain']
 		if type(domain) == type(u""):
 			domain = domain.encode()
@@ -82,26 +87,26 @@ def deserialize(sdict):
 			address = address.encode()
 	except KeyError:
 		pass
-	return Service(name, full_stype, domain, address=address,
+	name = compose_service_name(name, activity_id)
+	return Service(name, stype, domain, address=address,
 		port=port, properties=properties)
 
 
-_ACTIVITY_UID_TAG = "ActivityUID"
+_ACTIVITY_ID_TAG = "ActivityID"
 
 class Service(object):
 	"""Encapsulates information about a specific ZeroConf/mDNS
 	service as advertised on the network."""
 	def __init__(self, name, stype, domain, address=None, port=-1, properties=None):
-		full_stype = stype
 		# Validate immutable options
 		if name and type(name) == type(u""):
 			raise ValueError("name must not be in unicode.")
 		if not name or type(name) != type("") or not len(name):
 			raise ValueError("must specify a valid service name.")
 
-		if full_stype and type(full_stype) == type(u""):
+		if stype and type(stype) == type(u""):
 			raise ValueError("service type must not be in unicode.")
-		if not full_stype or type(full_stype) != type("") or not len(full_stype):
+		if not stype or type(stype) != type("") or not len(stype):
 			raise ValueError("must specify a service type.")
 		if not stype.endswith("._tcp") and not stype.endswith("._udp"):
 			raise ValueError("must specify a TCP or UDP service type.")
@@ -113,13 +118,9 @@ class Service(object):
 		if len(domain) and domain != "local":
 			raise ValueError("must use the 'local' domain (for now).")
 
-		(uid, short_stype) = _decompose_service_type(full_stype)
-		if uid and not util.validate_activity_uid(uid):
-			raise ValueError("service type activity uid not a valid activity UID.")
-
-		self._name = name
-		self._full_stype = full_stype
-		self._activity_stype = short_stype
+		(actid, real_name) = _decompose_service_name(name)
+		self._name = real_name
+		self._stype = stype
 		self._domain = domain
 		self._port = -1
 		self.set_port(port)
@@ -134,15 +135,15 @@ class Service(object):
 		else:
 			self.set_address(address)
 
-		# Ensure that an ActivityUID tag, if given, matches
+		# Ensure that an ActivityID tag, if given, matches
 		# what we expect from the service type
-		if self._properties.has_key(_ACTIVITY_UID_TAG):
-			prop_uid = self._properties[_ACTIVITY_UID_TAG]
-			if (prop_uid and not uid) or (prop_uid != uid):
-				raise ValueError("ActivityUID property specified, but the service type's activity UID didn't match it: %s, %s" % (prop_uid, uid))
-		self._activity_uid = uid
-		if uid and not self._properties.has_key(_ACTIVITY_UID_TAG):
-			self._properties[_ACTIVITY_UID_TAG] = uid
+		if self._properties.has_key(_ACTIVITY_ID_TAG):
+			prop_actid = self._properties[_ACTIVITY_ID_TAG]
+			if (prop_actid and not actid) or (prop_actid != actid):
+				raise ValueError("ActivityID property specified, but the service names's activity ID didn't match it: %s, %s" % (prop_actid, actid))
+		self._activity_id = actid
+		if actid and not self._properties.has_key(_ACTIVITY_ID_TAG):
+			self._properties[_ACTIVITY_ID_TAG] = actid
 
 	def serialize(self, owner=None):
 		sdict = {}
@@ -150,8 +151,8 @@ class Service(object):
 			sdict['name'] = dbus.Variant(owner.get_nick_name())
 		else:
 			sdict['name'] = dbus.Variant(self._name)
-		sdict['full_stype'] = dbus.Variant(self._full_stype)
-		sdict['activity_stype'] = dbus.Variant(self._activity_stype)
+		sdict['stype'] = dbus.Variant(self._stype)
+		sdict['activity_id'] = dbus.Variant(self._activity_id)
 		sdict['domain'] = dbus.Variant(self._domain)
 		if self._address:
 			sdict['address'] = dbus.Variant(self._address)
@@ -207,16 +208,12 @@ class Service(object):
 			self._properties[tmp_key] = tmp_val
 
 	def get_type(self):
-		"""Return the service's service type without any activity identifiers."""
-		return self._activity_stype
+		"""Return the service's service type."""
+		return self._stype
 
-	def get_full_type(self):
-		"""Return the service's full service type as seen over the network."""
-		return self._full_stype
-
-	def get_activity_uid(self):
-		"""Return the activity UID this service is associated with, if any."""
-		return self._activity_uid
+	def get_activity_id(self):
+		"""Return the activity ID this service is associated with, if any."""
+		return self._activity_id
 
 	def get_port(self):
 		return self._port

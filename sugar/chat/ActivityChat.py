@@ -16,7 +16,7 @@ class ActivityChat(GroupChat):
 			self._service_appeared_cb(self._pservice, None, service)
 
 	def _service_appeared_cb(self, pservice, buddy, service):
-		if service.get_activity_uid() == self._activity.get_id():
+		if service.get_activity_id() == self._activity.get_id():
 			if service.get_type() == ActivityChat.SERVICE_TYPE:
 				logging.debug('Group chat service appeared, setup the stream.')
 				self._setup_stream(service)

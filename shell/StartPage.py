@@ -19,8 +19,8 @@ _COLUMN_SUBTITLE = 2
 _COLUMN_SERVICE = 3
 
 class SearchHelper(object):
-	def __init__(self, activity_uid):
-		self.search_uid = activity_uid
+	def __init__(self, activity_id):
+		self.search_id = activity_id
 		self.found = False
 
 class SearchModel(gtk.ListStore):
@@ -74,18 +74,18 @@ class ActivitiesModel(gtk.ListStore):
 		(service, ) = model.get(it, _COLUMN_SERVICE)
 		if not service:
 			return False
-		if service.get_activity_uid() == helper.search_uid:
+		if service.get_activity_id() == helper.search_id:
 			helper.found = True
 			return True
 		return False
 	
 	def add_activity(self, buddy, service):
 		# Web Activity check
-		activity_uid = service.get_activity_uid()
-		if activity_uid is None:
+		activity_id = service.get_activity_id()
+		if activity_id is None:
 			return
 		# Don't show dupes
-		helper = SearchHelper(activity_uid)
+		helper = SearchHelper(activity_id)
 		self.foreach(self._filter_dupe_activities, helper)
 		if helper.found == True:
 			return
@@ -277,7 +277,7 @@ class StartPage(gtk.HBox):
 			self._activities.set_owner(None)
 
 	def _on_activity_announced_cb(self, pservice, service, buddy):
-		print "Found new activity with type %s" % service.get_full_type()
+		print "Found new activity with type %s" % service.get_type()
 		self._activities_model.add_activity(buddy, service)
 		if self._activities.get_model() != self._activities_model:
 			self._search(self._last_search)

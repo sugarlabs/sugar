@@ -35,7 +35,7 @@ class BrowserActivity(Activity):
 	
 	def _service_appeared_cb(self, pservice, buddy, service):
 		# Make sure the service is for our activity
-		if service.get_activity_uid() != self._activity_id:
+		if service.get_activity_id() != self._activity_id:
 			return
 
 		if service.get_type() == _BROWSER_ACTIVITY_TYPE:
@@ -116,7 +116,7 @@ class BrowserActivity(Activity):
 
 		# Join the shared activity if we were started from one
 		if self._initial_service:
-			logging.debug("BrowserActivity joining shared activity %s" % self._initial_service.get_activity_uid())
+			logging.debug("BrowserActivity joining shared activity %s" % self._initial_service.get_activity_id())
 			self._pservice.join_shared_activity(self._initial_service)
 
 	def get_embed(self):

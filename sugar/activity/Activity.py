@@ -79,7 +79,7 @@ class ActivityDbusService(dbus.service.Object):
 		if service is None:
 			self._activity_id = self._activity_container.add_activity("", self._activity.default_type())
 		else:
-			self._activity_id = service.get_activity_uid()
+			self._activity_id = service.get_activity_id()
 			self._activity_container.add_activity_with_id("", self._activity.default_type(), self._activity_id)
 			
 		self._object_path = SHELL_SERVICE_PATH + "/Activities/%s" % self._activity_id
