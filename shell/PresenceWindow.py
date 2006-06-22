@@ -4,6 +4,7 @@ import gtk
 import gobject
 
 from sugar.presence.PresenceService import PresenceService
+from sugar.chat.BuddyChat import BuddyChat
 
 class PresenceWindow(gtk.Window):
 	_MODEL_COL_NICK = 0
@@ -20,7 +21,6 @@ class PresenceWindow(gtk.Window):
 		self._pservice = PresenceService.get_instance()
 		self._pservice.connect("buddy-appeared", self._on_buddy_appeared_cb)
 		self._pservice.connect("buddy-disappeared", self._on_buddy_disappeared_cb)
-		self._pservice.set_debug(True)
 		self._pservice.start()
 		
 		self._setup_ui()
@@ -110,11 +110,16 @@ class PresenceWindow(gtk.Window):
 		(model, aniter) = view.get_selection().get_selected()
 		chat = None
 		buddy = view.get_model().get_value(aniter, self._MODEL_COL_BUDDY)
-		if buddy and not self._chats.has_key(buddy):
-			#chat = BuddyChat(self, buddy)
-			#self._chats[buddy] = chat
-			#chat.connect_to_shell()
-			pass
+		if buddy:
+			chat_service = buddy.get_service_of_type(BuddyChat.SERVICE_TYPE)
+			if chat_service:
+				bus = dbus.SessionBus()
+				proxy_obj = bus.get_object('com.redhat.Sugar.Chat', '/com/redhat/Sugar/Chat')
+				chat_shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.ChatShell')
+				serialized_service = Service.serialize(chat_service)
+				chat_shell.open_chat(serialized_service)
+			else:
+				print 'Could not find buddy chat'
 
 	def __buddy_icon_changed_cb(self, buddy):
 		it = self._get_iter_for_buddy(buddy)
