@@ -216,17 +216,21 @@ class Chat(gtk.VBox):
 	def send_sketch(self, svgdata):
 		if not svgdata or not len(svgdata):
 			return
-		self._stream_writer.write(self.serialize_message(svgdata))
+		if self._stream_writer:
+			self._stream_writer.write(self.serialize_message(svgdata))
 		owner = PresenceService.get_instance().get_owner()
-		self._insert_sketch(owner, svgdata)
+		if owner:
+			self._insert_sketch(owner, svgdata)
 
 	def send_text_message(self, text):
 		"""Send a chat message and insert it into the local buffer."""
 		if len(text) <= 0:
 			return
-		self._stream_writer.write(self.serialize_message(text))
+		if self._stream_writer:
+			self._stream_writer.write(self.serialize_message(text))
 		owner = PresenceService.get_instance().get_owner()
-		self._insert_rich_message(owner, text)
+		if owner:
+			self._insert_rich_message(owner, text)
 
 	def serialize_message(self, message):
 		owner = PresenceService.get_instance().get_owner()

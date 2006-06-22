@@ -22,18 +22,18 @@ def unique_id(data = ''):
 	return _stringify_sha(_sha_data(data_string))
 
 
-ACTIVITY_UID_LEN = 40
+ACTIVITY_ID_LEN = 40
 
 def is_hex(s):
 	return s.strip(string.hexdigits) == ''	
 
-def validate_activity_uid(uid):
-	"""Validate an activity UID."""
-	if type(uid) != type("") and type(uid) != type(u""):
+def validate_activity_id(actid):
+	"""Validate an activity ID."""
+	if type(actid) != type("") and type(actid) != type(u""):
 		return False
-	if len(uid) != ACTIVITY_UID_LEN:
+	if len(actid) != ACTIVITY_ID_LEN:
 		return False
-	if not is_hex(uid):
+	if not is_hex(actid):
 		return False
 	return True
 

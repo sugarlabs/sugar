@@ -83,10 +83,10 @@ class ActivityHost(dbus.service.Object):
 		notebook.set_current_page(index)
 		
 	def _create_chat(self):
-		self._group_chat = ActivityChat(self)
+		self._activity_chat = ActivityChat(self)
 
 	def get_chat(self):
-		return self._group_chat
+		return self._activity_chat
 
 	def get_default_type(self):
 		return self._default_type
@@ -98,7 +98,7 @@ class ActivityHost(dbus.service.Object):
 		pass
 	
 	def publish(self):
-		self._group_chat.publish()
+		self._activity_chat.publish()
 		self.peer_service.publish()
 	
 	def tab_close_button_clicked(self, button):

@@ -74,27 +74,27 @@ class Buddy(gobject.GObject):
 		if publisher_addr != self._address:
 			logging.error('Service publisher and buddy address doesnt match: %s %s' % (publisher_addr, self._address))
 			return False
-		full_type = service.get_full_type()
-		if full_type in self._services.keys():
+		stype = service.get_type()
+		if stype in self._services.keys():
 			return False
-		self._services[full_type] = service
+		self._services[stype] = service
 		if self._valid:
 			self.emit("service-added", service)
 
 		# If this is the first service we've seen that's owned  by
 		# a particular activity, send out the 'joined-activity' signal
-		(uid, short_stype) = Service._decompose_service_type(full_type)
-		if uid is not None:
+		actid = service.get_activity_id()
+		if actid is not None:
 			found = False
 			for serv in self._services.values():
-				if serv.get_activity_uid() == uid and serv.get_full_type() != full_type:
+				if serv.get_activity_id() == actid and serv.get_type() != stype:
 					found = True
 					break
 			if not found:
-				print "Buddy (%s) joined activity %s." % (self._nick_name, service.get_activity_uid())
+				print "Buddy (%s) joined activity %s." % (self._nick_name, actid)
 				self.emit("joined-activity", service)
 
-		if full_type == PRESENCE_SERVICE_TYPE:
+		if stype == PRESENCE_SERVICE_TYPE:
 			# A buddy isn't valid until its official presence
 			# service has been found and resolved
 			self._valid = True
@@ -109,47 +109,39 @@ class Buddy(gobject.GObject):
 			return
 		if service.get_name() != self._nick_name:
 			return
-		full_type = service.get_full_type()
-		if self._services.has_key(full_type):
+		stype = service.get_type()
+		if self._services.has_key(stype):
 			if self._valid:
 				self.emit("service-removed", service)
-			del self._services[full_type]
+			del self._services[stype]
 
 		# If this is the lase service owned  by a particular activity,
 		# and it's just been removed, send out the 'left-actvity' signal
-		(uid, short_stype) = Service._decompose_service_type(full_type)
-		if uid is not None:
+		actid = service.get_activity_id()
+		if actid is not None:
 			found = False
 			for serv in self._services.values():
-				if serv.get_activity_uid() == uid:
+				if serv.get_activity_id() == actid:
 					found = True
 					break
 			if not found:
-				print "Buddy (%s) left activity %s." % (self._nick_name, service.get_activity_uid())
+				print "Buddy (%s) left activity %s." % (self._nick_name, actid)
 				self.emit("left-activity", service)
 
-		if full_type == PRESENCE_SERVICE_TYPE:
+		if stype == PRESENCE_SERVICE_TYPE:
 			self._valid = False
 
 	def get_service_of_type(self, stype=None, activity=None):
 		"""Return a service of a certain type, or None if the buddy
 		doesn't provide that service."""
-		short_stype = stype
-		if not short_stype:
+		if not stype:
 			raise RuntimeError("Need to specify a service type.")
-		# Ensure we're only passed short service types
-		(dec_uid, dec_stype) = Service._decompose_service_type(short_stype)
-		if dec_uid:
-			raise RuntimeError("Use plain service types please!")
 
-		uid = None
 		if activity:
-			uid = activity.get_id()
-		if uid is not None:
+			actid = activity.get_id()
 			for service in self._services.values():
-				if service.get_type() == short_stype and service.get_activity_uid() == uid:
+				if service.get_type() == stype and service.get_activity_id() == actid:
 					return service
-		print self._services.keys()
 		if self._services.has_key(short_stype):
 			return self._services[short_stype]
 		return None
