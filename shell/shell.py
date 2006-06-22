@@ -306,7 +306,7 @@ class ActivityContainer(dbus.service.Object):
 
 		wm = WindowManager(self._presence_window)
 	
-		wm.set_width(0.15, WindowManager.SCREEN_RELATIVE)
+		wm.set_width(0.18, WindowManager.SCREEN_RELATIVE)
 		wm.set_height(1.0, WindowManager.SCREEN_RELATIVE)
 		wm.set_position(WindowManager.LEFT)
 		wm.manage()
