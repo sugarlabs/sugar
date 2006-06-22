@@ -6,6 +6,7 @@ import dbus
 import cgi
 import xml.sax.saxutils
 import gobject
+import socket
 
 from google import google
 from sugar.presence.PresenceService import PresenceService
@@ -26,6 +27,7 @@ class SearchModel(gtk.ListStore):
 	def __init__(self, activities_model, search_text):
 		gtk.ListStore.__init__(self, gobject.TYPE_STRING, gobject.TYPE_STRING,
 				gobject.TYPE_STRING, gobject.TYPE_PYOBJECT)
+		success = False
 
 		for row in activities_model:
 			title = row[_COLUMN_TITLE]
@@ -34,21 +36,31 @@ class SearchModel(gtk.ListStore):
 				self.append([ title, address, row[_COLUMN_SUBTITLE], row[_COLUMN_SERVICE] ])
 
 		google.LICENSE_KEY = '1As9KaJQFHIJ1L0W5EZPl6vBOFvh/Vaf'
-		data = google.doGoogleSearch(search_text)
-		
-		for result in data.results:
-			title = result.title
-			
-			# FIXME what tags should we actually strip?
-			title = title.replace('<b>', '') 
-			title = title.replace('</b>', '')
+		try:
+			data = google.doGoogleSearch(search_text)
+			success = True
+		except socket.gaierror, exc:
+			if exc[0] == -3:	# Temporary failure in name resolution
+				errdlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO,
+					gtk.BUTTONS_OK, "There appears to be no network connection.")
+				errdlg.connect("response", lambda d, e: d.destroy())
+				errdlg.connect("close", lambda d, e: d.destroy())
+				errdlg.show()
 
-			# FIXME I'm sure there is a better way to
-			# unescape these.
-			title = title.replace('&quot;', '"')
-			title = title.replace('&amp;', '&')
-			
-			self.append([ title, result.URL, None, None ])
+		if success == True:
+			for result in data.results:
+				title = result.title
+				
+				# FIXME what tags should we actually strip?
+				title = title.replace('<b>', '') 
+				title = title.replace('</b>', '')
+
+				# FIXME I'm sure there is a better way to
+				# unescape these.
+				title = title.replace('&quot;', '"')
+				title = title.replace('&amp;', '&')
+				
+				self.append([ title, result.URL, None, None ])
 
 class ActivitiesModel(gtk.ListStore):
 	def __init__(self):
