@@ -90,10 +90,9 @@ class PresenceService(gobject.GObject):
 		return PresenceService.__instance
 	get_instance = staticmethod(get_instance)
 
-	def __init__(self, debug=True):
+	def __init__(self):
 		gobject.GObject.__init__(self)
 
-		self._debug = debug
 		self._lock = threading.Lock()
 		self._started = False
 
@@ -157,9 +156,6 @@ class PresenceService(gobject.GObject):
 		domain_browser = self._server.DomainBrowserNew(avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, "", avahi.DOMAIN_BROWSER_BROWSE, dbus.UInt32(0))
 		db = dbus.Interface(self._bus.get_object(avahi.DBUS_NAME, domain_browser), avahi.DBUS_INTERFACE_DOMAIN_BROWSER)
 		db.connect_to_signal('ItemNew', self._new_domain_cb_glue)
-
-	def set_debug(self, debug):
-		self._debug = debug
 
 	def get_owner(self):
 		"""Return the owner of this machine/instance, if we've recognized them yet."""
@@ -634,7 +630,6 @@ def main():
 	import pygtk, gtk
 	global ps
 	ps = PresenceService.get_instance()
-	ps.set_debug(True)
 	ps.start()
 	gobject.timeout_add(4000, runTests)
 	gtk.main()

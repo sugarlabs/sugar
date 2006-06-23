@@ -8,8 +8,6 @@ import sugar.env
 class GroupChat(Chat):
 	def __init__(self):
 		Chat.__init__(self)
-		self._pservice = PresenceService.get_instance()
-		self._pservice.start()
 		self._group_stream = None
 
 	def _setup_stream(self, service):
@@ -18,10 +16,4 @@ class GroupChat(Chat):
 		self._stream_writer = self._group_stream.new_writer()
 
 	def _group_recv_message(self, address, msg):
-		pservice = PresenceService.get_instance()
-		[nick, msg] = self.deserialize_message(msg)
-		buddy = pservice.get_buddy_by_nick_name(nick)
-		if buddy:
-			self.recv_message(buddy, msg)
-		else:
-			logging.error('The buddy %s is not present.' % (nick))
+		self.recv_message(msg)

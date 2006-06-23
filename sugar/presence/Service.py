@@ -69,9 +69,6 @@ def deserialize(sdict):
 		stype = sdict['stype']
 		if type(stype) == type(u""):
 			stype = stype.encode()
-		activity_id = sdict['activity_id']
-		if type(activity_id) == type(u""):
-			activity_id = activity_id.encode()
 		domain = sdict['domain']
 		if type(domain) == type(u""):
 			domain = domain.encode()
@@ -87,7 +84,18 @@ def deserialize(sdict):
 			address = address.encode()
 	except KeyError:
 		pass
-	name = compose_service_name(name, activity_id)
+	
+	activity_id = None
+	try:
+		activity_id = sdict['activity_id']
+		if type(activity_id) == type(u""):
+			activity_id = activity_id.encode()
+	except KeyError:
+		pass
+
+	if activity_id is not None:
+		name = compose_service_name(name, activity_id)
+
 	return Service(name, stype, domain, address=address,
 		port=port, properties=properties)
 
@@ -152,7 +160,8 @@ class Service(object):
 		else:
 			sdict['name'] = dbus.Variant(self._name)
 		sdict['stype'] = dbus.Variant(self._stype)
-		sdict['activity_id'] = dbus.Variant(self._activity_id)
+		if self._activity_id:
+			sdict['activity_id'] = dbus.Variant(self._activity_id)
 		sdict['domain'] = dbus.Variant(self._domain)
 		if self._address:
 			sdict['address'] = dbus.Variant(self._address)
