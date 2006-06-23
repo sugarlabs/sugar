@@ -2,6 +2,7 @@ import os
 
 import gtk
 import vte
+import pango
 
 from sugar.activity.Activity import Activity
 
@@ -69,4 +70,7 @@ class TerminalActivity(Activity):
 activity = TerminalActivity()
 activity.connect_to_shell()
 
-gtk.main()
+try:
+	gtk.main()
+except KeyboardInterrupt:
+	pass
