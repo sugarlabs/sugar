@@ -326,6 +326,7 @@ class ActivityContainer(dbus.service.Object):
 		self._fullscreen = False
 
 		self.notebook = gtk.Notebook()
+		self.notebook.set_scrollable(True)
 
 		tab_label = gtk.Label("Everyone")
 		self._start_page = StartPage(self._signal_helper)

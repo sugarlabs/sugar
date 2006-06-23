@@ -62,7 +62,7 @@ class WindowManager:
 	def set_width(self, width, width_type):
 		self._width = width
 		self._width_type = width_type
-				
+
 	def set_height(self, height, height_type):
 		self._height = height
 		self._height_type = height_type
@@ -70,7 +70,7 @@ class WindowManager:
 	def set_position(self, position):
 		self._position = position
 
-	def _calc_size_and_position(self):
+	def _update_size(self):
 		screen_width = self._window.get_screen().get_width()
 		screen_height = self._window.get_screen().get_height()
 		
@@ -84,6 +84,19 @@ class WindowManager:
 		elif self._height_type is WindowManager.SCREEN_RELATIVE:
 			height = int(screen_height * self._height)
 			
+		self._real_width = width
+		self._real_height = height
+
+		self._window.set_size_request(self._real_width,
+									  self._real_height)
+
+	def _update_position(self):
+		screen_width = self._window.get_screen().get_width()
+		screen_height = self._window.get_screen().get_height()
+		
+		width = self._real_width
+		height = self._real_height
+		
 		if self._position is WindowManager.CENTER:
 			self._x = int((screen_width - width) / 2)
 			self._y = int((screen_height - height) / 2)
@@ -96,17 +109,7 @@ class WindowManager:
 		elif self._position is WindowManager.BOTTOM:
 			self._x = int((screen_width - width) / 2)
 			self._y = screen_height - int(self._sliding_pos * height)
-		
-		self._real_width = width
-		self._real_height = height
 	
-	def _update_size_and_position(self):
-		self._calc_size_and_position()
-		self._window.move(self._x, self._y)
-		self._window.resize(self._real_width, self._real_height)
-
-	def _update_position(self):
-		self._calc_size_and_position()
 		self._window.move(self._x, self._y)
 
 	def __slide_in_timeout_cb(self):
@@ -161,7 +164,8 @@ class WindowManager:
 		self._window.show()
 
 	def update(self):
-		self._update_size_and_position()
+		self._update_position()
 	
 	def manage(self):
-		self._update_size_and_position()
+		self._update_size()
+		self._update_position()
