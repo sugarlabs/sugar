@@ -50,6 +50,8 @@ class PresenceWindow(gtk.Window):
 			else:
 				self._share_button.set_sensitive(True)
 			self._activity.connect('shared', lambda w: self._share_button.set_sensitive(False))
+		else:
+			self._share_button.set_sensitive(False)
 
 	def _setup_ui(self):
 		vbox = gtk.VBox(False, 6)
