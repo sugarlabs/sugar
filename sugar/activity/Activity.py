@@ -143,7 +143,6 @@ class ActivityDbusService(dbus.service.Object):
 
     @dbus.service.signal(ACTIVITY_SERVICE_NAME)
 	def ActivityShared(self):
-		print "sent signal"
 		pass
 
 class Activity(object):
@@ -213,7 +212,7 @@ class Activity(object):
 		self._plug = gtk.Plug(self._window_id)
 		self._initial_service = service
 		if service:
-			self.set_shared(True)
+			self.set_shared()
 		self.on_connected_to_shell()
 
 	def _internal_on_disconnected_from_shell_cb(self):
