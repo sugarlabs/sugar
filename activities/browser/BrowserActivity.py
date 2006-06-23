@@ -44,7 +44,7 @@ class BrowserActivity(Activity):
 			if self._mode != BrowserActivity.LEADING:
 				self._model_service = service
 		
-		if self._notif_service and self._model_service:
+		if not self._model and self._notif_service and self._model_service:
 			self._model = RemoteModel(self._model_service, self._notif_service)
 			self._model.add_listener(self.__shared_location_changed_cb)
 	
@@ -58,7 +58,6 @@ class BrowserActivity(Activity):
 		self._model.set_value('title', title)
 		
 	def __notif_bar_action_cb(self, bar, action_id):
-		print action_id
 		if action_id == 'set_shared_location':
 			self._update_shared_location()
 		elif action_id == 'goto_shared_location':

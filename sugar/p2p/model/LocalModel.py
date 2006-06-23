@@ -17,7 +17,6 @@ class ModelRequestHandler(object):
 
 class LocalModel(AbstractModel):
 	SERVICE_TYPE = "_olpc_model._tcp"
-	SERVICE_PORT = 6300
 
 	def __init__(self, activity, pservice, service):
 		AbstractModel.__init__(self)
@@ -40,7 +39,7 @@ class LocalModel(AbstractModel):
 	def _setup_service(self):
 		service = self._pservice.share_activity(self._activity,
 				stype = LocalModel.SERVICE_TYPE,
-				address = '', port = LocalModel.SERVICE_PORT)
+				address = '')
 		self._setup_server(service)
 	
 	# FIXME this is duplicated with StreamReader

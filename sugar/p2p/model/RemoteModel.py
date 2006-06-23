@@ -24,6 +24,5 @@ class RemoteModel(AbstractModel):
 		self._client.set_value(key, value)
 	
 	def _setup_notification_listener(self):
-		name = self._service.get_name()
 		self._notification = NotificationListener(self._notification_service)
 		self._notification.add_listener(self._notify_model_change)
