@@ -48,6 +48,12 @@ class WindowManager:
 				if wm._position == WindowManager.TOP:
 					manager = wm
 
+		if event.keyval == gtk.keysyms.Down and \
+		   event.state & gtk.gdk.CONTROL_MASK:
+			for wm in WindowManager.__managers_list:
+				if wm._position == WindowManager.BOTTOM:
+					manager = wm
+
 		if manager and manager._window.get_property('visible'):
 			manager.slide_window_out()
 		elif manager:
@@ -87,6 +93,9 @@ class WindowManager:
 		elif self._position is WindowManager.TOP:
 			self._x = int((screen_width - width) / 2)
 			self._y = - int((1.0 - self._sliding_pos) * height)
+		elif self._position is WindowManager.BOTTOM:
+			self._x = int((screen_width - width) / 2)
+			self._y = screen_height - int(self._sliding_pos * height)
 		
 		self._real_width = width
 		self._real_height = height
