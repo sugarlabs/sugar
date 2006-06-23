@@ -133,8 +133,6 @@ class WindowManager:
 			return True
 
 	def __slide_out_timeout_cb(self):
-		self._window.show()
-
 		if SLIDING_MODE == SM_SPACE_PROPORTIONAL:
 			space_to_go = self._sliding_pos
 			self._sliding_pos -= (space_to_go / 2)
