@@ -69,7 +69,7 @@ else:
 	add_to_python_path(os.path.join(sugar.env.get_data_dir(), 'shell'))
 	print 'Running the installed sugar...'
 	
-print 'Redirecting output to the console, press ctrl+d to open it.'
+print 'Redirecting output to the console, press Ctrl+Down to open it.'
 	
 from session.session import Session
 

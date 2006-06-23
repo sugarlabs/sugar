@@ -33,6 +33,8 @@ class ActivityHostSignalHelper(gobject.GObject):
 
 class ActivityHost(dbus.service.Object):
 	def __init__(self, activity_container, activity_name, default_type, activity_id = None):
+		self.peer_service = None
+
 		self.activity_name = activity_name
 		self.ellipsize_tab = False
 		self._shared = False
@@ -98,6 +100,13 @@ class ActivityHost(dbus.service.Object):
 		
 	def _create_chat(self):
 		self._activity_chat = ActivityChat(self)
+
+	def got_focus(self):
+		if self.peer_service != None:
+			self.peer_service.got_focus()
+	
+	def lost_focus(self):
+		self.peer_service.lost_focus()
 
 	def get_chat(self):
 		return self._activity_chat
@@ -365,12 +374,6 @@ class ActivityContainer(dbus.service.Object):
 	def show(self):
 		self.window.show()
 
-	def __focus_reply_cb(self):
-		pass
-
-	def __focus_error_cb(self, error):
-		pass
-
 	def set_current_activity(self, activity):
 		self.current_activity = activity
 		self._presence_window.set_activity(activity)
@@ -388,23 +391,12 @@ class ActivityContainer(dbus.service.Object):
 		new_activity = notebook.get_nth_page(page_number).get_data("sugar-activity")
 
 		if self.current_activity != None:
-			if self.has_activity(self.current_activity):
-				self.current_activity.peer_service.lost_focus(reply_handler = self.__focus_reply_cb, error_handler = self.__focus_error_cb)
+			self.current_activity.lost_focus()
 		
-		#if self.has_activity(new_activity):
 		self.set_current_activity(new_activity)
 
 		if self.current_activity != None:
-			if self.has_activity(self.current_activity):
-				self.current_activity.peer_service.got_focus(reply_handler = self.__focus_reply_cb, error_handler = self.__focus_error_cb)
-
-
-	def has_activity(self, activity_to_check_for):
-		for owner, activity in self.activities[:]:
-			if activity_to_check_for == activity:
-				return True
-		return False
-	
+			self.current_activity.got_focus()
 
 	def name_owner_changed(self, service_name, old_service_name, new_service_name):
 		#print "in name_owner_changed: svc=%s oldsvc=%s newsvc=%s"%(service_name, old_service_name, new_service_name)
@@ -466,26 +458,23 @@ class ConsoleLogger(dbus.service.Object):
 
 		self._window = gtk.Window()
 		self._window.set_title("Console")
-		self._window.set_default_size(640, 480)
+		self._window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DOCK)
+		self._window.set_decorated(False)
+		self._window.set_skip_taskbar_hint(True)
 		self._window.connect("delete_event", lambda w, e: w.hide_on_delete())
-		
+
 		self._nb = gtk.Notebook()
 		self._window.add(self._nb)
 		self._nb.show()
 				
 		self._consoles = {}
 
-	def set_parent_window(self, window):
-		window.connect("key-press-event", self.__key_press_event_cb)
-		self._window.connect("key-press-event", self.__key_press_event_cb)
+		console_wm = WindowManager(self._window)
 		
-	def __key_press_event_cb(self, window, event):
-		if event.keyval == gtk.keysyms.d and \
-		   event.state & gtk.gdk.CONTROL_MASK:
-			if self._window.get_property('visible'):
-				self._window.hide()
-			else:
-				self._window.show()
+		console_wm.set_width(0.7, WindowManager.SCREEN_RELATIVE)
+		console_wm.set_height(0.9, WindowManager.SCREEN_RELATIVE)
+		console_wm.set_position(WindowManager.BOTTOM)
+		console_wm.manage()
 
 	def _create_console(self, application):
 		sw = gtk.ScrolledWindow()
@@ -543,8 +532,6 @@ class Shell(gobject.GObject):
 		wm.show()
 		wm.manage()
 		
-		console.set_parent_window(activity_container.window)
-
 	def __activity_container_destroy_cb(self, activity_container):
 		self.emit('close')
 

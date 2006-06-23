@@ -6,12 +6,12 @@ import gobject
 SM_SPACE_PROPORTIONAL = 0
 SM_STEP = 1
 
-SLIDING_TIMEOUT = 50
-SLIDING_MODE = SM_SPACE_PROPORTIONAL
+#SLIDING_TIMEOUT = 50
+#SLIDING_MODE = SM_SPACE_PROPORTIONAL
 
-#SLIDING_TIMEOUT = 10
-#SLIDING_MODE = SM_STEP
-#SLIDING_STEP = 0.05
+SLIDING_TIMEOUT = 10
+SLIDING_MODE = SM_STEP
+SLIDING_STEP = 0.05
 
 class WindowManager:
 	__managers_list = []
@@ -46,6 +46,12 @@ class WindowManager:
 		   event.state & gtk.gdk.CONTROL_MASK:
 			for wm in WindowManager.__managers_list:
 				if wm._position == WindowManager.TOP:
+					manager = wm
+
+		if event.keyval == gtk.keysyms.Down and \
+		   event.state & gtk.gdk.CONTROL_MASK:
+			for wm in WindowManager.__managers_list:
+				if wm._position == WindowManager.BOTTOM:
 					manager = wm
 
 		if manager and manager._window.get_property('visible'):
@@ -87,6 +93,9 @@ class WindowManager:
 		elif self._position is WindowManager.TOP:
 			self._x = int((screen_width - width) / 2)
 			self._y = - int((1.0 - self._sliding_pos) * height)
+		elif self._position is WindowManager.BOTTOM:
+			self._x = int((screen_width - width) / 2)
+			self._y = screen_height - int(self._sliding_pos * height)
 		
 		self._real_width = width
 		self._real_height = height
