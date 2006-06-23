@@ -39,7 +39,7 @@ class ChatEditor(gtk.HBox):
 		self._notebook.show()
 		
 		send_button = gtk.Button("Send")
-		send_button.set_border_width(6)
+		send_button.set_size_request(60, -1)
 		send_button.connect('clicked', self.__send_button_clicked_cb)
 		self.pack_start(send_button, False, True)
 		send_button.show()
