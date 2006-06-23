@@ -143,7 +143,6 @@ class ActivityDbusService(dbus.service.Object):
 
     @dbus.service.signal(ACTIVITY_SERVICE_NAME)
 	def ActivityShared(self):
-		print "sent signal"
 		pass
 
 class Activity(object):
