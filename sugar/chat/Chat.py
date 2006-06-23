@@ -64,6 +64,16 @@ class Chat(gtk.VBox):
 		self.pack_start(self._editor, False)
 		self._editor.show()
 
+		self.connect("key-press-event", self.__key_press_event_cb)
+
+	def __key_press_event_cb(self, window, event):
+		if event.keyval == gtk.keysyms.s and \
+		   event.state & gtk.gdk.CONTROL_MASK:
+			if self.get_mode() == Chat.SKETCH_MODE:
+				self.set_mode(Chat.TEXT_MODE)
+			elif self.get_mode() == Chat.TEXT_MODE:
+				self.set_mode(Chat.SKETCH_MODE)
+
 	def get_mode(self):
 		return self._mode
 
