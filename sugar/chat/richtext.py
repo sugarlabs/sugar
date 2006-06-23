@@ -90,8 +90,11 @@ class RichTextBuffer(gtk.TextBuffer):
 
 		self.insert_with_tags_by_name(it, name, "icon", "object-id")
 		icon_theme = gtk.icon_theme_get_default()
-		pixbuf = icon_theme.load_icon(name, 16, 0)
-		self.insert_pixbuf(it, pixbuf)
+		try:
+			pixbuf = icon_theme.load_icon(name, 16, 0)
+			self.insert_pixbuf(it, pixbuf)
+		except gobject.GError:
+			pass
 
 	def apply_tag(self, tag_name):
 		self.active_tags.append(tag_name)
