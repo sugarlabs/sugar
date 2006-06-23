@@ -40,6 +40,12 @@ class PresenceWindow(gtk.Window):
 	def set_activity(self, activity):
 		self._activity = activity
 		self._update_buddies_visibility()
+		if activity:
+			if self._activity.get_shared():
+				self._share_button.set_sensitive(False)
+			else:
+				self._share_button.set_sensitive(True)
+			self._activity.connect('shared', lambda w: self._share_button.set_sensitive(False))
 
 	def _setup_ui(self):
 		vbox = gtk.VBox(False, 6)
@@ -87,10 +93,10 @@ class PresenceWindow(gtk.Window):
 
 		button_box = gtk.HButtonBox()
 
-		share_button = gtk.Button('Share')
-		share_button.connect('clicked', self._share_button_clicked_cb)
-		button_box.pack_start(share_button)
-		share_button.show()
+		self._share_button = gtk.Button('Share')
+		self._share_button.connect('clicked', self._share_button_clicked_cb)
+		button_box.pack_start(self._share_button)
+		self._share_button.show()
 
 		vbox.pack_start(button_box, False)
 		button_box.show()

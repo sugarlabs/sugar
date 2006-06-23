@@ -141,6 +141,11 @@ class ActivityDbusService(dbus.service.Object):
 		"""Called by the shell to request the activity to publish itself on the network."""
 		self._call_callback(ON_PUBLISH_CB)
 
+    @dbus.service.signal(ACTIVITY_SERVICE_NAME)
+	def ActivityShared(self):
+		print "sent signal"
+		pass
+
 class Activity(object):
 	"""Base Activity class that all other Activities derive from."""
 
@@ -157,6 +162,7 @@ class Activity(object):
 		self._plug = None
 		self._initial_service = None
 		self._activity_object = None
+		self._shared = False
 		if type(default_type) != type("") or not len(default_type):
 			raise ValueError("Default type must be a valid string.")
 		self._default_type = default_type
@@ -180,6 +186,15 @@ class Activity(object):
 	def default_type(self):
 		return self._default_type
 
+	def set_shared(self):
+		"""Mark the activity as 'shared'."""
+		if not self._shared:
+			self._shared = True
+			self._dbus_service.ActivityShared()
+
+	def shared(self):
+		return self._shared
+
 	def has_focus(self):
 		"""Return whether or not this Activity is visible to the user."""
 		return self._has_focus
@@ -197,6 +212,8 @@ class Activity(object):
 		print "Activity: XEMBED window ID is %s" % self._window_id
 		self._plug = gtk.Plug(self._window_id)
 		self._initial_service = service
+		if service:
+			self.set_shared(True)
 		self.on_connected_to_shell()
 
 	def _internal_on_disconnected_from_shell_cb(self):

@@ -19,11 +19,25 @@ from StartPage import StartPage
 from WindowManager import WindowManager
 from PresenceWindow import PresenceWindow
 
-class ActivityHost(dbus.service.Object):
+class ActivityHostSignalHelper(gobject.GObject):
+	__gsignals__ = {
+		'shared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
+	}
 
+	def __init__(self, parent):
+		gobject.GObject.__init__(self)
+		self._parent = parent
+
+	def emit_shared(self):
+		self.emit('shared')
+
+class ActivityHost(dbus.service.Object):
 	def __init__(self, activity_container, activity_name, default_type, activity_id = None):
 		self.activity_name = activity_name
 		self.ellipsize_tab = False
+		self._shared = False
+
+		self._signal_helper = ActivityHostSignalHelper(self)
 
 		self.activity_container = activity_container
 		
@@ -113,6 +127,18 @@ class ActivityHost(dbus.service.Object):
 		#print "window_id = %d"%window_id
 		return window_id
 
+	def connect(self, signal, func):
+		self._signal_helper.connect(signal, func)
+
+	def get_shared(self):
+		"""Return True if this activity is shared, False if
+		it has not been shared yet."""
+		return self._shared
+
+	def _shared_signal(self):
+		self._shared = True
+		self._signal_helper.emit_shared()
+
 	@dbus.service.method("com.redhat.Sugar.Shell.ActivityHost", \
 			 in_signature="ss", \
 			 out_signature="")
@@ -123,6 +149,11 @@ class ActivityHost(dbus.service.Object):
 		self.peer_service = dbus.Interface(self.activity_container.bus.get_object( \
 				self.__peer_service_name, self.__peer_object_name), \
 										   "com.redhat.Sugar.Activity")
+		self.activity_container.bus.add_signal_receiver(self._shared_signal,
+				signal_name="ActivityShared",
+				dbus_interface="com.redhat.Sugar.Activity",
+				named_service=self.__peer_service_name,
+				path=self.__peer_object_name)
 
 	@dbus.service.method("com.redhat.Sugar.Shell.ActivityHost", \
 			 in_signature="b", \
@@ -212,6 +243,11 @@ class ActivityHost(dbus.service.Object):
 		"""Interface-type function to match activity.Activity's
 		get_id() function."""
 		return self.activity_id
+
+	def default_type(self):
+		"""Interface-type function to match activity.Activity's
+		default_type() function."""
+		return self._default_type
 
 	def get_object_path(self):
 		return self.dbus_object_name
