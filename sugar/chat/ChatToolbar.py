@@ -22,6 +22,7 @@ class ChatToolbar(gtk.HBox):
 		toolbox.show()
 		
 		item = gtk.Button()
+		item.unset_flags(gtk.CAN_FOCUS)
 
 		e_hbox = gtk.HBox(False, 6)
 		

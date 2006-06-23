@@ -14,7 +14,7 @@ class ColorButton(gtk.RadioButton):
 		
 		drawing_area = gtk.DrawingArea()
 		drawing_area.set_size_request(24, 24)
-		drawing_area.connect('expose_event', self.expose)
+		drawing_area.connect_after('expose_event', self.expose)
 		self.add(drawing_area)
 		drawing_area.show()
 
@@ -26,7 +26,7 @@ class ColorButton(gtk.RadioButton):
 		ctx = widget.window.cairo_create()
 
 		ctx.set_source_rgb(self._rgb[0], self._rgb[1] , self._rgb[2])
-		ctx.rectangle(0, 0, rect.width, rect.height)
+		ctx.rectangle(4, 4, rect.width - 8, rect.height - 8)
 		ctx.fill()
 		
 		return False
@@ -49,6 +49,7 @@ class Toolbox(gtk.HBox):
 				
 	def _add_color(self, rgb):
 		color = ColorButton(self._colors_group, rgb)
+		color.unset_flags(gtk.CAN_FOCUS)
 		color.connect('clicked', self.__color_clicked_cb, rgb)
 		self.pack_start(color, False)
 

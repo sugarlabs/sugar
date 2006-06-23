@@ -166,6 +166,7 @@ class RichTextToolbox(gtk.HBox):
 		item = gtk.ToggleButton()
 		item.set_image(image)
 		item.connect("toggled", self.__toggle_style_cb, "bold")
+		item.unset_flags(gtk.CAN_FOCUS)
 		self.pack_start(item, False)
 		item.show()
 
@@ -176,6 +177,7 @@ class RichTextToolbox(gtk.HBox):
 
 		item = gtk.ToggleButton()
 		item.set_image(image)
+		item.unset_flags(gtk.CAN_FOCUS)
 		item.connect("toggled", self.__toggle_style_cb, "italic")
 		self.pack_start(item, False)
 		item.show()
@@ -185,6 +187,7 @@ class RichTextToolbox(gtk.HBox):
 
 		self._font_size_up = gtk.Button()
 		self._font_size_up.set_image(image)
+		self._font_size_up.unset_flags(gtk.CAN_FOCUS)
 		self._font_size_up.connect("clicked", self.__font_size_up_cb)
 		self.pack_start(self._font_size_up, False)
 		self._font_size_up.show()
@@ -196,6 +199,7 @@ class RichTextToolbox(gtk.HBox):
 
 		self._font_size_down = gtk.Button()
 		self._font_size_down.set_image(image)
+		self._font_size_down.unset_flags(gtk.CAN_FOCUS)
 		self._font_size_down.connect("clicked", self.__font_size_down_cb)
 		self.pack_start(self._font_size_down, False)
 		self._font_size_down.show()
