@@ -1,4 +1,4 @@
-AC_INIT([Sugar],[0.12],[],[sugar])
+AC_INIT([Sugar],[0.13],[],[sugar])
 
 AC_PREREQ([2.59])
 
@@ -10,10 +10,6 @@ AM_INIT_AUTOMAKE([1.9 foreign dist-bzip2 no-dist-gzip])
 AM_MAINTAINER_MODE
 
 AM_PATH_PYTHON
-
-PKG_CHECK_MODULES(PYGTK, pygtk-2.0 >= 2.6)
-AC_SUBST(PYGTK_CFLAGS)
-AC_SUBST(PYGTK_LIBS)
 
 AC_OUTPUT([
 Makefile
