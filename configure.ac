@@ -1,4 +1,4 @@
-AC_INIT([Sugar],[0.13],[],[sugar])
+AC_INIT([Sugar],[0.14],[],[sugar])
 
 AC_PREREQ([2.59])
 
@@ -15,6 +15,7 @@ AC_OUTPUT([
 Makefile
 activities/Makefile
 activities/browser/Makefile
+activities/chat/Makefile
 shell/Makefile
 shell/google/Makefile
 shell/session/Makefile
