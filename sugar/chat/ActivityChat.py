@@ -23,8 +23,6 @@ class ActivityChat(GroupChat):
 			return
 		if service.get_type() != ActivityChat.SERVICE_TYPE:
 			return
-		if buddy and buddy.is_owner():
-			return
 		if self._chat_service:
 			return
 
@@ -42,3 +40,4 @@ class ActivityChat(GroupChat):
 		"""Only called when we publish the activity this chat is tied to."""
 		self._chat_service = self._pservice.share_activity(self._activity,
 				stype=ActivityChat.SERVICE_TYPE)
+		self._setup_stream(self._chat_service)
