@@ -1055,7 +1055,7 @@ class SHAUtilsTestCase(unittest.TestCase):
 
 
 
-def foobar():
+def unit_test():
 	suite = unittest.TestSuite()
 	SegmentBaseInitTestCase.addToSuite(suite)
 	DataSegmentTestCase.addToSuite(suite)
@@ -1073,7 +1073,7 @@ def got_data(addr, data, user_data=None):
 	fl.write(data)
 	fl.close()	
 
-def main():
+def simple_test():
 	import sys
 	pipe = MostlyReliablePipe('', '224.0.0.222', 2293, got_data, sys.argv[2])
 #	pipe.set_drop_probability(4)
@@ -1095,6 +1095,51 @@ franker, more natural, as it were -- she really must exclude me from privileges 
 	except KeyboardInterrupt:
 		print 'Ctrl+C pressed, exiting...'
 
+
+
+def net_test_got_data(addr, data, user_data=None):
+	# Don't report data if we are a sender
+	if user_data:
+		return
+	print "%s (%s)" % (data, addr)
+
+idstamp = 0
+def transmit_data(pipe):
+	global idstamp
+	msg = "Message #%d" % idstamp
+	print "Sending '%s'" % msg
+	pipe.send(msg)
+	idstamp = idstamp + 1
+	return True
+
+def network_test():
+	import sys, os
+	send = False
+	if len(sys.argv) != 2:
+		print "Need one arg, either 'send' or 'recv'"
+		os._exit(1)
+	if sys.argv[1] == "send":
+		send = True
+	elif sys.argv[1] == "recv":
+		send = False
+	else:
+		print "Arg should be either 'send' or 'recv'"
+		os._exit(1)
+
+	pipe = MostlyReliablePipe('', '224.0.0.222', 2293, net_test_got_data, send)
+	pipe.start()
+	if send:
+		gobject.timeout_add(1000, transmit_data, pipe)
+	try:
+		gtk.main()
+	except KeyboardInterrupt:
+		print 'Ctrl+C pressed, exiting...'
+
+
+def main():
+#	unit_test()
+#	simple_test()
+	network_test()
 
 if __name__ == "__main__":
 	main()
