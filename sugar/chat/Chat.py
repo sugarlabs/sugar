@@ -244,6 +244,8 @@ class Chat(gtk.VBox):
 			return
 		if self._stream_writer:
 			self._stream_writer.write(self.serialize_message(text))
+		else:
+			print 'Cannot send message, there is no stream writer'
 		owner = PresenceService.get_instance().get_owner()
 		if owner:
 			self._insert_rich_message(owner, text)

@@ -16,4 +16,5 @@ class GroupChat(Chat):
 		self._stream_writer = self._group_stream.new_writer()
 
 	def _group_recv_message(self, address, msg):
+		logging.debug('Group chat received from %s message %s' % (address, msg))
 		self.recv_message(msg)
