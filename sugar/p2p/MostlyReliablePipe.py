@@ -161,7 +161,7 @@ class SegmentBase(object):
 			segment = DataSegment(segno, total_segs, msg_seq_num, master_sha)
 		elif seg_type == SegmentBase._SEGMENT_TYPE_RETRANSMIT:
 			segment = RetransmitSegment(segno, total_segs, msg_seq_num, master_sha)
-		elif set_type == SegmentBase._SEGMENT_TYPE_ACK:
+		elif seg_type == SegmentBase._SEGMENT_TYPE_ACK:
 			segment = AckSegment(segno, total_segs, msg_seq_num, master_sha)
 		else:
 			raise ValueError("Segment has invalid type.")
@@ -333,7 +333,7 @@ class AckSegment(SegmentBase):
 	#  2: acked message sequence number
 	# 20: acked message total data sha1
 	#  4: acked message source IP address
-	_ACK_DATA_TEMPLATE = "! H20sI"
+	_ACK_DATA_TEMPLATE = "! H20s4s"
 	_ACK_DATA_LEN = struct.calcsize(_ACK_DATA_TEMPLATE)
 
 	def data_template():
@@ -357,7 +357,7 @@ class AckSegment(SegmentBase):
 		if not ack_master_sha or type(ack_master_sha) != type("") or len(ack_master_sha) != 20:
 			raise ValueError("Ack message SHA1 checksum invalid.")
 		if type(ack_addr) != type(""):
-			raise ValueError("Ack message invalid address.")
+			raise ValueError("Ack message invalid address type.")
 		try:
 			foo = socket.inet_aton(ack_addr)
 		except socket.error:
@@ -744,7 +744,6 @@ class MostlyReliablePipe(object):
 			self._incoming[msg_key] = Message((addr[0], self._port), msg_seq_num, msg_sha, nsegs)
 			# Acknowledge the message if it didn't come from us
 			if addr[0] not in self._local_ips:
-				print "Sending ack for msg (%s %s) from %s)" % (msg_seq_num, msg_sha, addr[0])
 				ack_key = (msg_seq_num, msg_sha, addr[0])
 				if not self._acks.has_key(ack_key):
 					self._send_ack_for_message(msg_seq_num, msg_sha, addr[0])
@@ -839,7 +838,8 @@ class MostlyReliablePipe(object):
 	def _send_ack_for_message(self, ack_msg_seq_num, ack_msg_sha, ack_addr):
 		"""Send an ack segment for a message."""
 		msg_seq_num = self._next_msg_seq()
-		ack = AckSegment.new_from_parts(self._remote_addr, msg_seq_num,
+		full_remote_addr = (self._remote_addr, self._port)
+		ack = AckSegment.new_from_parts(full_remote_addr, msg_seq_num,
 			ack_msg_seq_num, ack_msg_sha, ack_addr)
 		self._outgoing.append(ack)
 		self._schedule_send_worker()
@@ -859,7 +859,6 @@ class MostlyReliablePipe(object):
 				return
 		ack_key = (ack_msg_seq_num, ack_master_sha, ack_addr)
 		if not self._acks.has_key(ack_key):
-			print "Got ack for msg (%s %s) originally from %s" % (ack_msg_seq_num, ack_master_sha, ack_addr)
 			self._acks[ack_key] = time.time()
 
 	def set_drop_probability(self, prob=4):
