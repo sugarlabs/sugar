@@ -7,6 +7,7 @@ import sugar.env
 
 class MeshChat(GroupChat):
 	SERVICE_TYPE = "_olpc_mesh_chat._udp"
+	SERVICE_ADDRESS = "232.5.5.5"
 	SERVICE_PORT = 6301
 
 	def __init__(self):
@@ -28,9 +29,6 @@ class MeshChat(GroupChat):
 				self._setup_stream(service)
 
 	def _publish(self):
-		# Use random currently unassigned multicast address
-		address = "232.%d.%d.%d" % (random.randint(0, 254), random.randint(1, 254),
-				  					random.randint(1, 254))
 		service = Service(sugar.env.get_nick_name(), MeshChat.SERVICE_TYPE,
-						  'local', address, MeshChat.SERVICE_PORT)
+						  'local', MeshChat.SERVICE_ADDRESS, MeshChat.SERVICE_PORT)
 		self._pservice.register_service(service)
