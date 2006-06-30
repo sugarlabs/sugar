@@ -6,12 +6,12 @@ import gobject
 SM_SPACE_PROPORTIONAL = 0
 SM_STEP = 1
 
-#SLIDING_TIMEOUT = 50
-#SLIDING_MODE = SM_SPACE_PROPORTIONAL
+SLIDING_TIMEOUT = 50
+SLIDING_MODE = SM_SPACE_PROPORTIONAL
 
-SLIDING_TIMEOUT = 10
-SLIDING_MODE = SM_STEP
-SLIDING_STEP = 0.05
+#SLIDING_TIMEOUT = 10
+#SLIDING_MODE = SM_STEP
+#SLIDING_STEP = 0.05
 
 class WindowManager:
 	__managers_list = []
@@ -104,7 +104,7 @@ class WindowManager:
 			self._x = - int((1.0 - self._sliding_pos) * width)
 			self._y = int((screen_height - height) / 2)
 		elif self._position is WindowManager.TOP:
-			self._x = int((screen_width - width) / 2)
+			self._x = int(screen_width - width - 10)
 			self._y = - int((1.0 - self._sliding_pos) * height)
 		elif self._position is WindowManager.BOTTOM:
 			self._x = int((screen_width - width) / 2)

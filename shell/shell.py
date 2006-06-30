@@ -352,7 +352,7 @@ class ActivityContainer(dbus.service.Object):
 
 		wm = WindowManager(self._presence_window)
 	
-		wm.set_width(0.18, WindowManager.SCREEN_RELATIVE)
+		wm.set_width(170, WindowManager.ABSOLUTE)
 		wm.set_height(1.0, WindowManager.SCREEN_RELATIVE)
 		wm.set_position(WindowManager.LEFT)
 		wm.manage()
@@ -365,8 +365,8 @@ class ActivityContainer(dbus.service.Object):
 
 		self._chat_wm = WindowManager(self._chat_window)
 		
-		self._chat_wm.set_width(0.5, WindowManager.SCREEN_RELATIVE)
-		self._chat_wm.set_height(0.5, WindowManager.SCREEN_RELATIVE)
+		self._chat_wm.set_width(420, WindowManager.ABSOLUTE)
+		self._chat_wm.set_height(380, WindowManager.ABSOLUTE)
 		self._chat_wm.set_position(WindowManager.TOP)
 		self._chat_wm.manage()
 		
