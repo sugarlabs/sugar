@@ -11,6 +11,8 @@ import socket
 from google import google
 from sugar.presence.PresenceService import PresenceService
 
+from gettext import gettext as _
+
 _BROWSER_ACTIVITY_TYPE = "_web_olpc._udp"
 
 _COLUMN_TITLE = 0
@@ -196,7 +198,7 @@ class StartPage(gtk.HBox):
 		search_box.pack_start(self._search_entry)
 		self._search_entry.show()
 		
-		search_button = gtk.Button("Search")
+		search_button = gtk.Button(_("Search"))
 		search_button.connect('clicked', self._search_button_clicked_cb)
 		search_box.pack_start(search_button, False)
 		search_button.show()

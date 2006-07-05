@@ -19,4 +19,16 @@ missing
 py-compile
 stamp-h1
 
+intltool-extract
+intltool-extract.in
+intltool-merge
+intltool-merge.in
+intltool-update
+intltool-update.in
+mkinstalldirs
+po/Makefile.in.in
+po/POTFILES
+po/stamp-it
+po/sugar.pot
+
 sugar/__installed__.py

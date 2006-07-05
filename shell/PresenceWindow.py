@@ -8,6 +8,8 @@ from sugar.presence.PresenceService import PresenceService
 from sugar.presence.Service import Service
 from sugar.chat.BuddyChat import BuddyChat
 
+from gettext import gettext as _
+
 class PresenceWindow(gtk.Window):
 	_MODEL_COL_NICK = 0
 	_MODEL_COL_ICON = 1
@@ -57,7 +59,7 @@ class PresenceWindow(gtk.Window):
 		vbox = gtk.VBox(False, 6)
 		vbox.set_border_width(12)
 		
-		label = gtk.Label("Who's around:")
+		label = gtk.Label(_("Who's around:"))
 		label.set_alignment(0.0, 0.5)
 		vbox.pack_start(label, False)
 		label.show()
@@ -99,7 +101,7 @@ class PresenceWindow(gtk.Window):
 
 		button_box = gtk.HButtonBox()
 
-		self._share_button = gtk.Button('Share')
+		self._share_button = gtk.Button(_('Share'))
 		self._share_button.connect('clicked', self._share_button_clicked_cb)
 		button_box.pack_start(self._share_button)
 		self._share_button.show()
