@@ -50,15 +50,7 @@ class ChatShellDbusService(dbus.service.Object):
 	def open_chat(self, serialized_service):
 		self._parent.open_chat(Service.deserialize(serialized_service))
 
-class ChatShell:
-	instance = None
-
-	def get_instance():
-		if not ChatShell.instance:
-			ChatShell.instance = ChatShell()
-		return ChatShell.instance		
-	get_instance = staticmethod(get_instance)
-
+class ChatListener:
 	def __init__(self):
 		ChatShellDbusService(self)
 
@@ -104,7 +96,6 @@ class ChatShell:
 		chat.connect_to_shell()
 		return False
 
-chat_shell = ChatShell.get_instance()
-chat_shell.start()
-
-gtk.main()
+def start():
+	chat_listener = ChatListener()
+	chat_listener.start()

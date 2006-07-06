@@ -42,6 +42,15 @@ class ActivityFactory(dbus.service.Object):
 		
 		(fp, pathname, description) = imp.find_module(module_name)
 		module = imp.load_module(module_name, fp, pathname, description)
+		
+		try:
+			start = getattr(module, 'start')
+		except:
+			start = None
+
+		if start:
+			start()
+		
 		self._class = getattr(module, class_name)
 	
 		bus = dbus.SessionBus()
