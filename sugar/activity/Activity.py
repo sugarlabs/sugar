@@ -8,6 +8,8 @@ import pygtk
 pygtk.require('2.0')
 import gtk, gobject
 
+from sugar.LogWriter import LogWriter
+
 SHELL_SERVICE_NAME = "com.redhat.Sugar.Shell"
 SHELL_SERVICE_PATH = "/com/redhat/Sugar/Shell"
 
@@ -81,7 +83,11 @@ def create(activity_name, service = None, args = None):
 
 def main(activity_name, activity_class):
 	"""Starts the activity main loop."""
+	log_writer = LogWriter(activity_name)
+	log_writer.start()
+
 	factory = ActivityFactory(activity_name, activity_class)
+
 	gtk.main()
 
 class ActivityDbusService(dbus.service.Object):

@@ -8,7 +8,6 @@ import gtk
 import gobject
 
 from sugar.activity.Activity import Activity
-from sugar.LogWriter import LogWriter
 from sugar.presence import Service
 from sugar.chat.Chat import Chat
 from sugar.chat.BuddyChat import BuddyChat
@@ -104,9 +103,6 @@ class ChatShell:
 	def _connect_chat(self, chat):
 		chat.connect_to_shell()
 		return False
-
-log_writer = LogWriter("Chat")
-log_writer.start()
 
 chat_shell = ChatShell.get_instance()
 chat_shell.start()
