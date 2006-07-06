@@ -2,7 +2,6 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import pango
-import dbus
 import cgi
 import xml.sax.saxutils
 import gobject
@@ -10,6 +9,7 @@ import socket
 
 from google import google
 from sugar.presence.PresenceService import PresenceService
+from sugar.activity import Activity
 
 from gettext import gettext as _
 
@@ -150,24 +150,12 @@ class ActivitiesView(gtk.TreeView):
 		self._owner = owner
 
 	def _row_activated_cb(self, treeview, path, column):	
-		bus = dbus.SessionBus()
-		proxy_obj = bus.get_object('com.redhat.Sugar.Browser', '/com/redhat/Sugar/Browser')
-		browser_shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.BrowserShell')
-
 		model = self.get_model() 
 		address = model.get_value(model.get_iter(path), _COLUMN_ADDRESS)
 		service = model.get_value(model.get_iter(path), _COLUMN_SERVICE)
 
-		print 'Activated row %s' % address
-
-		if service is None:
-			browser_shell.open_browser(address)
-		else:
-			if not self._owner:
-				raise RuntimeError("We don't have an owner yet!")
-			serialized_service = service.serialize(self._owner)
-			browser_shell.open_browser(address, serialized_service)
-			
+		Activity.create('com.redhat.Sugar.BrowserActivity', service, [ address ])
+				
 class StartPage(gtk.HBox):
 	def __init__(self, ac_signal_object):
 		gtk.HBox.__init__(self)

@@ -1,2 +1,3 @@
 [Activity]
-python_class = browser
+name = com.redhat.Sugar.BrowserActivity
+class = BrowserActivity.BrowserActivity

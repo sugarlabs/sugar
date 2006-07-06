@@ -8,6 +8,7 @@ import gtk
 
 from shell import Shell
 from sugar import env
+from sugar.activity import Activity
 
 class Session:
 	def __init__(self):
@@ -42,20 +43,21 @@ class Session:
 	def _run_activity(self, activity_dir):
 		env.add_to_python_path(activity_dir)
 
-		activities = []
 		for filename in os.listdir(activity_dir):
 			if filename.endswith(".activity"):
 				path = os.path.join(activity_dir, filename)
 				cp = ConfigParser()
 				cp.read([path])
-				python_class = cp.get('Activity', "python_class")
-				activities.append(python_class)
 
-		for activity in activities:
-			args = [ 'python', '-m', activity ]
-			pid = os.spawnvp(os.P_NOWAIT, 'python', args)
-			self._activity_processes[activity] = pid
-			
+				activity_name = cp.get('Activity', "name")
+				activity_class = cp.get('Activity', "class")
+
+				args = [ 'python', '-m', 'sugar/activity/Activity' ]
+				args.append(activity_name)
+				args.append(activity_class)
+				pid = os.spawnvp(os.P_NOWAIT, 'python', args)
+				self._activity_processes[activity_name] = pid
+
 	def _shell_close_cb(self, shell):
 		self.shutdown()
 	
