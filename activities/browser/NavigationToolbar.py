@@ -2,6 +2,8 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
+from gettext import gettext as _
+
 from AddressItem import AddressItem
 
 class NavigationToolbar(gtk.Toolbar):
@@ -12,19 +14,19 @@ class NavigationToolbar(gtk.Toolbar):
 		
 		self.set_style(gtk.TOOLBAR_BOTH_HORIZ)
 		
-		self.back = gtk.ToolButton(None, 'Back')
+		self.back = gtk.ToolButton(None, _('Back'))
 		self.back.set_icon_name('back')
 		self.back.connect("clicked", self.__go_back_cb)
 		self.insert(self.back, -1)
 		self.back.show()
 
-		self.forward = gtk.ToolButton(None, 'Forward')
+		self.forward = gtk.ToolButton(None, _('Forward'))
 		self.forward.set_icon_name('forward')
 		self.forward.connect("clicked", self.__go_forward_cb)
 		self.insert(self.forward, -1)
 		self.forward.show()
 
-		self.reload = gtk.ToolButton(None, 'Reload')
+		self.reload = gtk.ToolButton(None, _('Reload'))
 		self.reload.set_icon_name('reload')
 		self.reload.connect("clicked", self.__reload_cb)
 		self.insert(self.reload, -1)
