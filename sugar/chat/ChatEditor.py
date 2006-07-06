@@ -1,7 +1,6 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-
 from gettext import gettext as _
 
 from sugar.chat.sketchpad.SketchPad import SketchPad
