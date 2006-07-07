@@ -29,11 +29,7 @@ class Shell(gobject.GObject):
 		activity_container.show()
 
 		wm = WindowManager(activity_container.window)
-		wm.set_width(640, WindowManager.ABSOLUTE)
-		wm.set_height(480, WindowManager.ABSOLUTE)
-		wm.set_position(WindowManager.CENTER)
 		wm.show()
-		wm.manage()
 		
 	def __activity_container_destroy_cb(self, activity_container):
 		self.emit('close')

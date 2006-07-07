@@ -72,30 +72,22 @@ class ActivityContainer(dbus.service.Object):
 
 		self._presence_window = PresenceWindow(self)
 		self._presence_window.set_transient_for(self.window)
-		self._presence_window.set_decorated(False)
-		self._presence_window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DOCK)
-		self._presence_window.set_skip_taskbar_hint(True)
 
 		wm = WindowManager(self._presence_window)
-	
-		wm.set_width(170, WindowManager.ABSOLUTE)
-		wm.set_height(1.0, WindowManager.SCREEN_RELATIVE)
-		wm.set_position(WindowManager.LEFT)
-		wm.manage()
+		wm.set_type(WindowManager.TYPE_POPUP)
+		wm.set_animation(WindowManager.ANIMATION_SLIDE_IN)
+		wm.set_geometry(0.02, 0.1, 0.25, 0.9)
+		wm.set_key(gtk.keysyms.F1)
 		
 		self._chat_window = ChatWindow()
 		self._chat_window.set_transient_for(self.window)
-		self._chat_window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DOCK)
-		self._chat_window.set_decorated(False)
-		self._chat_window.set_skip_taskbar_hint(True)
 
 		self._chat_wm = WindowManager(self._chat_window)
-		
-		self._chat_wm.set_width(420, WindowManager.ABSOLUTE)
-		self._chat_wm.set_height(380, WindowManager.ABSOLUTE)
-		self._chat_wm.set_position(WindowManager.TOP)
-		self._chat_wm.manage()
-		
+		self._chat_wm.set_animation(WindowManager.ANIMATION_SLIDE_IN)
+		self._chat_wm.set_type(WindowManager.TYPE_POPUP)
+		self._chat_wm.set_geometry(0.28, 0.1, 0.5, 0.9)
+		self._chat_wm.set_key(gtk.keysyms.F1)
+				
 		self._mesh_chat = MeshChat()
 
 	def show(self):
@@ -110,9 +102,6 @@ class ActivityContainer(dbus.service.Object):
 			self._chat_window.set_chat(host_chat)
 		else:
 			self._chat_window.set_chat(self._mesh_chat)
-
-		# For some reason the substitution screw up window position
-		self._chat_wm.update()
 
 	def notebook_tab_changed(self, notebook, page, page_number):
 		new_activity = notebook.get_nth_page(page_number).get_data("sugar-activity")

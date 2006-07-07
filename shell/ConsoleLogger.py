@@ -13,9 +13,6 @@ class ConsoleLogger(dbus.service.Object):
 
 		self._window = gtk.Window()
 		self._window.set_title("Console")
-		self._window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DOCK)
-		self._window.set_decorated(False)
-		self._window.set_skip_taskbar_hint(True)
 		self._window.connect("delete_event", lambda w, e: w.hide_on_delete())
 
 		self._nb = gtk.Notebook()
@@ -24,12 +21,9 @@ class ConsoleLogger(dbus.service.Object):
 				
 		self._consoles = {}
 
-		console_wm = WindowManager(self._window)
-		
-		console_wm.set_width(0.7, WindowManager.SCREEN_RELATIVE)
-		console_wm.set_height(0.9, WindowManager.SCREEN_RELATIVE)
-		console_wm.set_position(WindowManager.BOTTOM)
-		console_wm.manage()
+		console_wm = WindowManager(self._window)		
+		console_wm.set_type(WindowManager.TYPE_POPUP)
+		console_wm.set_geometry(0.1, 0.1, 0.8, 0.8)
 
 	def _create_console(self, application):
 		sw = gtk.ScrolledWindow()
