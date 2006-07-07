@@ -173,7 +173,6 @@ class ActivitiesView(gtk.TreeView):
 
 		Activity.create('com.redhat.Sugar.BrowserActivity', service, [ address ])
 				
->>>>>>> 63c93e4f2da2a5f8935835da876d118bdc99c495/shell/StartPage.py
 class StartPage(gtk.HBox):
 	def __init__(self, activity_controller, ac_signal_object):
 		gtk.HBox.__init__(self)
