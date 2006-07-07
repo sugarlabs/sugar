@@ -106,7 +106,8 @@ class ActivityHost(dbus.service.Object):
 			self.peer_service.got_focus()
 	
 	def lost_focus(self):
-		self.peer_service.lost_focus()
+		if self.peer_service != None:
+			self.peer_service.lost_focus()
 
 	def get_chat(self):
 		return self._activity_chat
@@ -211,7 +212,7 @@ class ActivityHost(dbus.service.Object):
 			 in_signature="ayibiiii", \
 			 out_signature="")
 	def set_tab_icon(self, data, colorspace, has_alpha, bits_per_sample, width, height, rowstride):
-	    #print "width=%d, height=%d"%(width, height)
+		#print "width=%d, height=%d"%(width, height)
 		#print "  data = ", data
 		pixstr = ""
 		for c in data:
@@ -329,7 +330,7 @@ class ActivityContainer(dbus.service.Object):
 		self.notebook.set_scrollable(True)
 
 		tab_label = gtk.Label("Everyone")
-		self._start_page = StartPage(self._signal_helper)
+		self._start_page = StartPage(self, self._signal_helper)
 		self.notebook.append_page(self._start_page, tab_label)
 		self._start_page.show()
 
@@ -376,6 +377,9 @@ class ActivityContainer(dbus.service.Object):
 		self.window.show()
 
 	def set_current_activity(self, activity):
+		if self.current_activity != None:
+			self.current_activity.lost_focus()
+		
 		self.current_activity = activity
 		self._presence_window.set_activity(activity)
 
@@ -388,16 +392,35 @@ class ActivityContainer(dbus.service.Object):
 		# For some reason the substitution screw up window position
 		self._chat_wm.update()
 
-	def notebook_tab_changed(self, notebook, page, page_number):
-		new_activity = notebook.get_nth_page(page_number).get_data("sugar-activity")
-
-		if self.current_activity != None:
-			self.current_activity.lost_focus()
-		
-		self.set_current_activity(new_activity)
-
 		if self.current_activity != None:
 			self.current_activity.got_focus()
+
+	def notebook_tab_changed(self, notebook, page, page_number):
+		new_activity = notebook.get_nth_page(page_number).get_data("sugar-activity")
+		self.set_current_activity(new_activity)
+
+	def switch_to_activity(self, activity_id):
+		found = False
+		for owner, activity in self.activities:
+			if activity.get_host_activity_id() == activity_id:
+				found = True
+				break
+		if not found:
+			return
+
+		# Find the activity in the notebook
+		activity_page = None
+		npages = self.notebook.get_n_pages()
+		for pageno in range(1, npages):
+			activity = self.notebook.get_nth_page(pageno).get_data("sugar-activity")
+			if activity and activity.get_host_activity_id() == activity_id:
+				activity_page = pageno
+				break
+		if not activity_page:
+			return
+
+		print "switching to activity page %d" % activity_page
+		self.notebook.set_current_page(activity_page)
 
 	def name_owner_changed(self, service_name, old_service_name, new_service_name):
 		#print "in name_owner_changed: svc=%s oldsvc=%s newsvc=%s"%(service_name, old_service_name, new_service_name)
@@ -408,6 +431,12 @@ class ActivityContainer(dbus.service.Object):
 				self.activities.remove((owner, activity))
 		#self.__print_activities()
 
+	def have_activity(self, activity_id):
+		for owner, activity in self.activities:
+			list_activity_id = activity.get_host_activity_id()
+			if activity_id == list_activity_id:
+				return True
+		return False
 
 	@dbus.service.method("com.redhat.Sugar.Shell.ActivityContainer", \
 			 in_signature="ss", \

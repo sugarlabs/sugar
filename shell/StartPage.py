@@ -8,6 +8,7 @@ import xml.sax.saxutils
 import gobject
 import socket
 
+import dbus_bindings
 from google import google
 from sugar.presence.PresenceService import PresenceService
 
@@ -101,11 +102,12 @@ class ActivitiesModel(gtk.ListStore):
 				self.append([ title, address, subtitle, service ])
 
 class ActivitiesView(gtk.TreeView):
-	def __init__(self, model):
+	def __init__(self, activity_controller, model):
 		gtk.TreeView.__init__(self, model)
 
 		self._owner = None
-		
+		self._activity_controller = activity_controller
+
 		self.set_headers_visible(False)
 		
 		theme = gtk.icon_theme_get_default()
@@ -160,14 +162,26 @@ class ActivitiesView(gtk.TreeView):
 
 		if service is None:
 			browser_shell.open_browser(address)
-		else:
-			if not self._owner:
-				raise RuntimeError("We don't have an owner yet!")
-			serialized_service = service.serialize(self._owner)
+			return
+
+		if not self._owner:
+			raise RuntimeError("We don't have an owner yet!")
+			
+		# If the activity is already started, switch to it
+		service_act_id = service.get_activity_id()
+		if service_act_id and self._activity_controller.have_activity(service_act_id):
+			self._activity_controller.switch_to_activity(service_act_id)
+			return
+
+		# Start a new activity
+		serialized_service = service.serialize(self._owner)
+		try:
 			browser_shell.open_browser(address, serialized_service)
+		except dbus_bindings.DBusException, exc:
+			pass
 			
 class StartPage(gtk.HBox):
-	def __init__(self, ac_signal_object):
+	def __init__(self, activity_controller, ac_signal_object):
 		gtk.HBox.__init__(self)
 
 		self._ac_signal_object = ac_signal_object
@@ -245,7 +259,7 @@ class StartPage(gtk.HBox):
 		self._activities_model = ActivitiesModel()
 
 		owner = self._pservice.get_owner()
-		self._activities = ActivitiesView(self._activities_model)
+		self._activities = ActivitiesView(activity_controller, self._activities_model)
 		sw.add(self._activities)
 		self._activities.show()
 
