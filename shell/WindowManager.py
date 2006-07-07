@@ -47,7 +47,9 @@ class SlidingHelper:
 		self._cur_time = time.time()
 		remaining = self._target_time - self._cur_time
 
-		if remaining <= 0:
+		if remaining <= 0 or \
+		   (y > self._target_y and self._direction == SlidingHelper.IN) or \
+		   (y < self._target_y and self._direction == SlidingHelper.OUT):
 			self._end = True
 			y = self._orig_y
 		else:
