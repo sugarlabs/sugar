@@ -1,169 +1,204 @@
-import pygtk
-pygtk.require('2.0')
+import time
+import logging
+
 import gtk
 import gobject
 
-SM_SPACE_PROPORTIONAL = 0
-SM_STEP = 1
+DEFAULT_WIDTH = 640
+DEFAULT_HEIGHT = 480
 
-SLIDING_TIMEOUT = 50
-SLIDING_MODE = SM_SPACE_PROPORTIONAL
+SLIDING_TIME = 0.8
 
-#SLIDING_TIMEOUT = 10
-#SLIDING_MODE = SM_STEP
-#SLIDING_STEP = 0.05
+class SlidingHelper:
+	IN = 0
+	OUT = 1
+
+	def __init__(self, manager, direction):
+		self._direction = direction
+		self._cur_time = time.time()
+		self._target_time = self._cur_time + SLIDING_TIME
+		self._manager = manager
+		self._start = True
+		self._end = False
+
+		(x, y, width, height) = manager.get_geometry()
+		self._orig_y = y
+		if direction == SlidingHelper.IN:
+			self._target_y = y
+			manager.set_geometry(x, y - height, width, height)
+		else:
+			self._target_y = y - height
+
+	def get_direction(self):
+		return self._direction
+
+	def is_start(self):
+		return self._start
+
+	def is_end(self):
+		return self._end
+
+	def get_next_y(self):
+		self._start = False
+	
+		(x, y, width, height) = self._manager.get_geometry()
+
+		old_time = self._cur_time
+		self._cur_time = time.time()
+		remaining = self._target_time - self._cur_time
+
+		if remaining <= 0:
+			self._end = True
+			y = self._orig_y
+		else:
+			approx_time_step = float(self._cur_time - old_time)
+			approx_n_steps = remaining / approx_time_step
+			step = (self._target_y - y) / approx_n_steps
+			y += step
+		
+		return y
 
 class WindowManager:
 	__managers_list = []
 
-	CENTER = 0
-	LEFT = 1
-	RIGHT = 2
-	TOP = 3
-	BOTTOM = 4
-	
-	ABSOLUTE = 0
-	SCREEN_RELATIVE = 1
-	
+	TYPE_ACTIVITY = 0
+	TYPE_POPUP    = 1 
+
+	ANIMATION_NONE     = 0
+	ANIMATION_SLIDE_IN = 1
+
 	def __init__(self, window):
 		self._window = window
-		self._sliding_pos = 0
+		self._window_type = WindowManager.TYPE_ACTIVITY
+		self._animation = WindowManager.ANIMATION_NONE
+		self._key = 0
+		self._animating = False
 
-		WindowManager.__managers_list.append(self)
-		
 		window.connect("key-press-event", self.__key_press_event_cb)
 
+		WindowManager.__managers_list.append(self)
+
 	def __key_press_event_cb(self, window, event):
-		manager = None
-
-		if event.keyval == gtk.keysyms.Left and \
-		   event.state & gtk.gdk.CONTROL_MASK:
-			for wm in WindowManager.__managers_list:
-				if wm._position == WindowManager.LEFT:
-					manager = wm
-
-		if event.keyval == gtk.keysyms.Up and \
-		   event.state & gtk.gdk.CONTROL_MASK:
-			for wm in WindowManager.__managers_list:
-				if wm._position == WindowManager.TOP:
-					manager = wm
-
-		if event.keyval == gtk.keysyms.Down and \
-		   event.state & gtk.gdk.CONTROL_MASK:
-			for wm in WindowManager.__managers_list:
-				if wm._position == WindowManager.BOTTOM:
-					manager = wm
-
-		if manager and manager._window.get_property('visible'):
-			manager.slide_window_out()
-		elif manager:
-			manager.slide_window_in()
+		# FIXME we should fix this to work also while animating
+		if self._animating:
+			return False
 	
-	def set_width(self, width, width_type):
+		for manager in WindowManager.__managers_list:
+			if event.keyval == manager._key:
+				if manager._window.get_property('visible'):
+					manager.hide()
+				else:
+					manager.show()
+
+	def get_geometry(self):
+		return (self._x, self._y, self._width, self._height)
+
+	def set_geometry(self, x, y, width, height):
+		if self._window_type == WindowManager.TYPE_ACTIVITY:
+			logging.error('The geometry will be ignored for activity windows')
+	
+		self._x = x
+		self._y = y
 		self._width = width
-		self._width_type = width_type
-
-	def set_height(self, height, height_type):
 		self._height = height
-		self._height_type = height_type
+
+	def set_animation(self, animation):
+		self._animation = animation
 	
-	def set_position(self, position):
-		self._position = position
+	def set_type(self, window_type):
+		self._window_type = window_type	
+
+	def set_key(self, key):
+		self._key = key
+
+	def show(self):
+		self._update_hints()
+		self._update_size()
+
+		if self._animation == WindowManager.ANIMATION_SLIDE_IN:
+			self._slide_in()
+		else:
+			self._update_position()
+			self._window.show()
+	
+	def hide(self):
+		if self._animation == WindowManager.ANIMATION_SLIDE_IN:
+			self._slide_out()
+		else:
+			self._window.hide()
+
+	def _get_screen_dimensions(self):
+		screen_width = DEFAULT_WIDTH
+		screen_height = DEFAULT_HEIGHT
+		
+		for manager in WindowManager.__managers_list:
+			if manager._window_type == WindowManager.TYPE_ACTIVITY:
+				screen_width = manager._window.allocation.width
+				screen_height = manager._window.allocation.height
+		
+		return (screen_width, screen_height)
+
+	def _get_screen_position(self):
+		result = (0, 0)		
+		for manager in WindowManager.__managers_list:
+			if manager._window_type == WindowManager.TYPE_ACTIVITY:
+				result = manager._window.get_position()
+		
+		return result
+
+	def _transform_position(self):
+		(screen_width, screen_height) = self._get_screen_dimensions()
+		(screen_x, screen_y) = self._get_screen_position()
+		
+		x = int(screen_width * self._x) + screen_x
+		y = int(screen_height * self._y) + screen_y
+		
+		return (x, y)
+
+	def _transform_dimensions(self):
+		(screen_width, screen_height) = self._get_screen_dimensions()
+	
+		width = int(screen_width * self._width)
+		height = int(screen_height * self._height)
+		
+		return (width, height)
+
+	def _update_hints(self):
+		if self._window_type == WindowManager.TYPE_POPUP:
+			self._window.set_decorated(False)
+			self._window.set_skip_taskbar_hint(True)
 
 	def _update_size(self):
-		screen_width = self._window.get_screen().get_width()
-		screen_height = self._window.get_screen().get_height()
-		
-		if self._width_type is WindowManager.ABSOLUTE:
-			width = self._width			
-		elif self._width_type is WindowManager.SCREEN_RELATIVE:
-			width = int(screen_width * self._width)
-
-		if self._height_type is WindowManager.ABSOLUTE:
-			height = self._height			
-		elif self._height_type is WindowManager.SCREEN_RELATIVE:
-			height = int(screen_height * self._height)
-			
-		self._real_width = width
-		self._real_height = height
-
-		self._window.set_size_request(self._real_width,
-									  self._real_height)
+		if self._window_type == WindowManager.TYPE_ACTIVITY:
+			self._window.resize(DEFAULT_WIDTH, DEFAULT_HEIGHT)
+		else:
+			(width, height) = self._transform_dimensions()
+			self._window.resize(width, height)
 
 	def _update_position(self):
-		screen_width = self._window.get_screen().get_width()
-		screen_height = self._window.get_screen().get_height()
-		
-		width = self._real_width
-		height = self._real_height
-		
-		if self._position is WindowManager.CENTER:
-			self._x = int((screen_width - width) / 2)
-			self._y = int((screen_height - height) / 2)
-		elif self._position is WindowManager.LEFT:
-			self._x = - int((1.0 - self._sliding_pos) * width)
-			self._y = int((screen_height - height) / 2)
-		elif self._position is WindowManager.TOP:
-			self._x = int(screen_width - width - 10)
-			self._y = - int((1.0 - self._sliding_pos) * height)
-		elif self._position is WindowManager.BOTTOM:
-			self._x = int((screen_width - width) / 2)
-			self._y = screen_height - int(self._sliding_pos * height)
-	
-		self._window.move(self._x, self._y)
+		if self._window_type == WindowManager.TYPE_POPUP:
+			(x, y) = self._transform_position()
+			self._window.move(x, y)
 
-	def __slide_in_timeout_cb(self):
-		if self._sliding_pos == 0:
+	def __slide_timeout_cb(self, helper):
+		start = helper.is_start()
+
+		self._y = helper.get_next_y()
+		self._update_position()
+		
+		if start and helper.get_direction() == SlidingHelper.IN:
 			self._window.show()
-
-		if SLIDING_MODE == SM_SPACE_PROPORTIONAL:
-			space_to_go = 1.0 - self._sliding_pos
-			self._sliding_pos += (space_to_go / 2)
-		else:
-			self._sliding_pos += SLIDING_STEP
-
-		if self._sliding_pos > .999:
-			self._sliding_pos = 1.0
-
-		self._update_position()
-
-		if self._sliding_pos == 1.0:
-			return False
-		else:
-			return True
-
-	def __slide_out_timeout_cb(self):
-		if SLIDING_MODE == SM_SPACE_PROPORTIONAL:
-			space_to_go = self._sliding_pos
-			self._sliding_pos -= (space_to_go / 2)
-		else:
-			self._sliding_pos -= SLIDING_STEP
-
-		if self._sliding_pos < .001:
-			self._sliding_pos = 0
-
-		self._update_position()
-
-		if self._sliding_pos == 0:
+		elif helper.is_end() and helper.get_direction() == SlidingHelper.OUT:
 			self._window.hide()
-			return False
-		else:
-			return True
 
-	def slide_window_in(self):
-		self._sliding_pos = 0
-		gobject.timeout_add(SLIDING_TIMEOUT, self.__slide_in_timeout_cb)
+		self._animating = not helper.is_end()
+				
+		return not helper.is_end()
+
+	def _slide_in(self):
+		helper = SlidingHelper(self, SlidingHelper.IN)
+		gobject.idle_add(self.__slide_timeout_cb, helper)
 		
-	def slide_window_out(self):
-		self._sliding_pos = 1.0
-		gobject.timeout_add(SLIDING_TIMEOUT, self.__slide_out_timeout_cb)
-			
-	def show(self):
-		self._window.show()
-
-	def update(self):
-		self._update_position()
-	
-	def manage(self):
-		self._update_size()
-		self._update_position()
+	def _slide_out(self):
+		helper = SlidingHelper(self, SlidingHelper.OUT)
+		gobject.idle_add(self.__slide_timeout_cb, helper)

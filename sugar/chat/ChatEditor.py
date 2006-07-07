@@ -1,6 +1,7 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
+from gettext import gettext as _
 
 from sugar.chat.sketchpad.SketchPad import SketchPad
 import richtext
@@ -24,7 +25,6 @@ class ChatEditor(gtk.HBox):
 		chat_view_sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 		self._text_view = richtext.RichTextView()
 		self._text_view.connect("key-press-event", self.__key_press_event_cb)
-		self._text_view.connect("button-press-event", self.__button_press_event_cb)
 		chat_view_sw.add(self._text_view)
 		self._text_view.show()
 		
@@ -38,7 +38,7 @@ class ChatEditor(gtk.HBox):
 		self.pack_start(self._notebook)
 		self._notebook.show()
 		
-		send_button = gtk.Button("Send")
+		send_button = gtk.Button(_("Send"))
 		send_button.set_size_request(60, -1)
 		send_button.connect('clicked', self.__send_button_clicked_cb)
 		self.pack_start(send_button, False, True)
@@ -87,9 +87,3 @@ class ChatEditor(gtk.HBox):
 		if event.keyval == gtk.keysyms.Return:
 			self._send()
 			return True
-
-	def __button_press_event_cb(self, text_view, event):
-		# Need to explicitly get keyboard focus in the window
-		# because docks doesn't take it by default.
-		toplevel = text_view.get_toplevel()
-		toplevel.window.focus()

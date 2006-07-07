@@ -2,7 +2,6 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import pango
-import dbus
 import cgi
 import xml.sax.saxutils
 import gobject
@@ -11,6 +10,9 @@ import socket
 import dbus_bindings
 from google import google
 from sugar.presence.PresenceService import PresenceService
+from sugar.activity import Activity
+
+from gettext import gettext as _
 
 _BROWSER_ACTIVITY_TYPE = "_web_olpc._udp"
 
@@ -150,10 +152,6 @@ class ActivitiesView(gtk.TreeView):
 		self._owner = owner
 
 	def _row_activated_cb(self, treeview, path, column):	
-		bus = dbus.SessionBus()
-		proxy_obj = bus.get_object('com.redhat.Sugar.Browser', '/com/redhat/Sugar/Browser')
-		browser_shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.BrowserShell')
-
 		model = self.get_model() 
 		address = model.get_value(model.get_iter(path), _COLUMN_ADDRESS)
 		service = model.get_value(model.get_iter(path), _COLUMN_SERVICE)
@@ -173,13 +171,9 @@ class ActivitiesView(gtk.TreeView):
 			self._activity_controller.switch_to_activity(service_act_id)
 			return
 
-		# Start a new activity
-		serialized_service = service.serialize(self._owner)
-		try:
-			browser_shell.open_browser(address, serialized_service)
-		except dbus_bindings.DBusException, exc:
-			pass
-			
+		Activity.create('com.redhat.Sugar.BrowserActivity', service, [ address ])
+				
+>>>>>>> 63c93e4f2da2a5f8935835da876d118bdc99c495/shell/StartPage.py
 class StartPage(gtk.HBox):
 	def __init__(self, activity_controller, ac_signal_object):
 		gtk.HBox.__init__(self)
@@ -210,7 +204,7 @@ class StartPage(gtk.HBox):
 		search_box.pack_start(self._search_entry)
 		self._search_entry.show()
 		
-		search_button = gtk.Button("Search")
+		search_button = gtk.Button(_("Search"))
 		search_button.connect('clicked', self._search_button_clicked_cb)
 		search_box.pack_start(search_button, False)
 		search_button.show()

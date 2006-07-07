@@ -1,0 +1,5 @@
+shell/PresenceWindow.py
+shell/StartPage.py
+activities/browser/NavigationToolbar.py
+shell/shell.py
+sugar/chat/ChatEditor.py

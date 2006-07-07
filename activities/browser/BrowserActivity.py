@@ -23,11 +23,12 @@ class BrowserActivity(Activity):
 	FOLLOWING = 2
 	LEADING = 3
 
-	def __init__(self, uri, mode = SOLO):
+	def __init__(self, args):
 		Activity.__init__(self, _BROWSER_ACTIVITY_TYPE)
-		self.uri = uri
-		self._mode = mode
+
+		self.uri = args[0]
 		
+		self._mode = BrowserActivity.SOLO
 		self._share_service = None
 		self._model_service = None
 		self._notif_service = None

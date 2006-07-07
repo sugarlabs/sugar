@@ -1,4 +1,5 @@
-# -*- tab-width: 4; indent-tabs-mode: t -*- 
+import sys
+import imp
 
 import dbus
 import dbus.service
@@ -6,6 +7,8 @@ import dbus.glib
 import pygtk
 pygtk.require('2.0')
 import gtk, gobject
+
+from sugar.LogWriter import LogWriter
 
 SHELL_SERVICE_NAME = "com.redhat.Sugar.Shell"
 SHELL_SERVICE_PATH = "/com/redhat/Sugar/Shell"
@@ -20,6 +23,81 @@ ON_CLOSE_FROM_USER_CB = "close_from_user"
 ON_LOST_FOCUS_CB = "lost_focus"
 ON_GOT_FOCUS_CB = "got_focus"
 ON_PUBLISH_CB = "publish"
+
+def get_path(activity_name):
+	"""Returns the activity path"""
+	return '/' + activity_name.replace('.', '/')
+
+def get_factory(activity_name):
+	"""Returns the activity factory"""
+	return activity_name + '.Factory'
+
+class ActivityFactory(dbus.service.Object):
+	"""Dbus service that takes care of creating new instances of an activity"""
+
+	def __init__(self, activity_name, activity_class):
+		splitted_module = activity_class.rsplit('.', 1)
+		module_name = splitted_module[0]
+		class_name = splitted_module[1]
+		
+		(fp, pathname, description) = imp.find_module(module_name)
+		module = imp.load_module(module_name, fp, pathname, description)
+		
+		try:
+			start = getattr(module, 'start')
+		except:
+			start = None
+
+		if start:
+			start()
+		
+		self._class = getattr(module, class_name)
+	
+		bus = dbus.SessionBus()
+		factory = get_factory(activity_name)
+		bus_name = dbus.service.BusName(factory, bus = bus) 
+		dbus.service.Object.__init__(self, bus_name, get_path(factory))
+
+	@dbus.service.method("com.redhat.Sugar.ActivityFactory")
+	def create_with_service(self, serialized_service, args):
+		service = None
+		if serialized_service is not None:
+			service = Service.deserialize(serialized_service)
+
+		activity = self._class(args)
+		gobject.idle_add(self._start_activity_cb, activity, service)
+
+	@dbus.service.method("com.redhat.Sugar.ActivityFactory")
+	def create(self, args):
+		self.create_with_service(None, args)
+
+	def _start_activity_cb(self, activity, service):
+		activity.connect_to_shell(service)
+
+def create(activity_name, service = None, args = None):
+	"""Create a new activity from his name."""
+	bus = dbus.SessionBus()
+
+	factory_name = get_factory(activity_name)
+	factory_path = get_path(factory_name) 
+
+	proxy_obj = bus.get_object(factory_name, factory_path)
+	factory = dbus.Interface(proxy_obj, "com.redhat.Sugar.ActivityFactory")
+
+	if service:
+		serialized_service = service.serialize(service)
+		factory.create_with_service(serialized_service, args)
+	else:
+		factory.create(args)		
+
+def main(activity_name, activity_class):
+	"""Starts the activity main loop."""
+	log_writer = LogWriter(activity_name)
+	log_writer.start()
+
+	factory = ActivityFactory(activity_name, activity_class)
+
+	gtk.main()
 
 class ActivityDbusService(dbus.service.Object):
 	"""Base dbus service object that each Activity uses to export dbus methods.
@@ -141,7 +219,7 @@ class ActivityDbusService(dbus.service.Object):
 		"""Called by the shell to request the activity to publish itself on the network."""
 		self._call_callback(ON_PUBLISH_CB)
 
-    @dbus.service.signal(ACTIVITY_SERVICE_NAME)
+	@dbus.service.signal(ACTIVITY_SERVICE_NAME)
 	def ActivityShared(self):
 		pass
 
@@ -335,3 +413,6 @@ class Activity(object):
 	def on_close_from_user(self):
 		"""Triggered when this Activity is closed by the user."""
 		pass
+
+if __name__ == "__main__":
+	main(sys.argv[1], sys.argv[2])

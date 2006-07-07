@@ -1,2 +1,3 @@
 [Activity]
-python_class = ChatActivity
+name = com.redhat.Sugar.ChatActivity
+class = ChatActivity.ChatActivity
