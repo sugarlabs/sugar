@@ -55,7 +55,7 @@ class ActivityContainer(dbus.service.Object):
 		self.notebook.set_scrollable(True)
 
 		tab_label = gtk.Label(_("Everyone"))
-		self._start_page = StartPage(self._signal_helper)
+		self._start_page = StartPage(self, self._signal_helper)
 		self.notebook.append_page(self._start_page, tab_label)
 		self._start_page.show()
 
