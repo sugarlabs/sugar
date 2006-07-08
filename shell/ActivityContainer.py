@@ -7,7 +7,6 @@ from sugar.chat.ChatWindow import ChatWindow
 from sugar.chat.MeshChat import MeshChat
 from ActivityHost import ActivityHost
 from PresenceWindow import PresenceWindow
-from HomeWindow import HomeWindow
 from WindowManager import WindowManager
 from StartPage import StartPage
 from Owner import ShellOwner
@@ -66,16 +65,6 @@ class ActivityContainer(dbus.service.Object):
 				
 		self._mesh_chat = MeshChat()
 
-		home_window = HomeWindow()
-		wm = WindowManager(home_window)
-		wm.set_type(WindowManager.TYPE_POPUP)
-		wm.set_animation(WindowManager.ANIMATION_SLIDE_IN)
-		wm.set_geometry(0.1, 0.1, 0.9, 0.9)
-		wm.set_key(gtk.keysyms.F2)
-
-	def show(self):
-		self.window.show()
-
 	def set_current_activity(self, activity):
 		self.current_activity = activity
 		self._presence_window.set_activity(activity)
@@ -93,26 +82,21 @@ class ActivityContainer(dbus.service.Object):
 				self._signal_helper.activity_ended(activity_id)
 				self._activities.remove((owner, activity))
 
-	@dbus.service.method("com.redhat.Sugar.Shell.ActivityContainer", \
-			 in_signature="ss", \
-			 out_signature="s", \
-			 sender_keyword="sender")
-	def add_activity(self, activity_name, default_type, sender):
-		activity = ActivityHost(self, activity_name, default_type)
-		self._activities.append((sender, activity))
+	@dbus.service.method("com.redhat.Sugar.Shell.ActivityContainer")
+	def add_activity(self, default_type):
+		activity = ActivityHost(self._service, default_type)
+		self._activities.append(activity)
 
-		activity_id = activity.get_host_activity_id()
+		activity_id = activity.get_id()
 		self._signal_helper.activity_started(activity_id)
 
-		self.current_activity = activity
+		self.set_current_activity(activity)
 		return activity_id
 
-	@dbus.service.method("com.redhat.Sugar.Shell.ActivityContainer", \
-			 in_signature="sss", \
-			 sender_keyword="sender")
-	def add_activity_with_id(self, activity_name, default_type, activity_id, sender):
-		activity = ActivityHost(self, activity_name, default_type, activity_id)
-		self._activities.append((sender, activity))
+	@dbus.service.method("com.redhat.Sugar.Shell.ActivityContainer")
+	def add_activity_with_id(self, default_type, activity_id):
+		activity = ActivityHost(self._service, default_type, activity_id)
+		self._activities.append(activity)
 		activity_id = activity.get_host_activity_id()
 		self._signal_helper.activity_started(activity_id)
 		self.current_activity = activity

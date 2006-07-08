@@ -68,8 +68,8 @@ class ActivityFactory(dbus.service.Object):
 		gobject.idle_add(self._start_activity_cb, activity, service)
 
 	@dbus.service.method("com.redhat.Sugar.ActivityFactory")
-	def create(self, args):
-		self.create_with_service(None, args)
+	def create(self):
+		self.create_with_service(None, [])
 
 	def _start_activity_cb(self, activity, service):
 		activity.connect_to_shell(service)
@@ -84,17 +84,17 @@ def create(activity_name, service = None, args = None):
 	proxy_obj = bus.get_object(factory_name, factory_path)
 	factory = dbus.Interface(proxy_obj, "com.redhat.Sugar.ActivityFactory")
 
-	if service:
+	if service and args:
 		serialized_service = service.serialize(service)
 		factory.create_with_service(serialized_service, args)
 	else:
-		factory.create(args)		
+		factory.create()		
 
 def _get_registry():
 	bus = dbus.SessionBus()
 	proxy_obj = bus.get_object("com.redhat.Sugar.ActivityRegistry",
 							   "/com/redhat/Sugar/ActivityRegistry")
-	registry = dbus.Interface(proxy_obj, "com.redhat.Sugar.ActivityRegistry")
+	return dbus.Interface(proxy_obj, "com.redhat.Sugar.ActivityRegistry")
 
 def list_activities():
 	registry = _get_registry()
@@ -168,10 +168,10 @@ class ActivityDbusService(dbus.service.Object):
 												   SHELL_SERVICE_NAME + ".ActivityContainer")
 
 		if service is None:
-			self._activity_id = self._activity_container.add_activity("", self._activity.default_type())
+			self._activity_id = self._activity_container.add_activity(self._activity.default_type())
 		else:
 			self._activity_id = service.get_activity_id()
-			self._activity_container.add_activity_with_id("", self._activity.default_type(), self._activity_id)
+			self._activity_container.add_activity_with_id(self._activity.default_type(), self._activity_id)
 			
 		self._object_path = SHELL_SERVICE_PATH + "/Activities/%s" % self._activity_id
 
@@ -236,10 +236,12 @@ class ActivityDbusService(dbus.service.Object):
 	def ActivityShared(self):
 		pass
 
-class Activity(object):
+class Activity(gtk.Window):
 	"""Base Activity class that all other Activities derive from."""
 
 	def __init__(self, default_type):
+		gtk.Window.__init__(self)
+
 		self._dbus_service = self._get_new_dbus_service()
 		self._dbus_service.register_callback(ON_CONNECTED_TO_SHELL_CB, self._internal_on_connected_to_shell_cb)
 		self._dbus_service.register_callback(ON_DISCONNECTED_FROM_SHELL_CB, self._internal_on_disconnected_from_shell_cb)
@@ -249,7 +251,6 @@ class Activity(object):
 		self._dbus_service.register_callback(ON_LOST_FOCUS_CB, self._internal_on_lost_focus_cb)
 		self._dbus_service.register_callback(ON_GOT_FOCUS_CB, self._internal_on_got_focus_cb)
 		self._has_focus = False
-		self._plug = None
 		self._initial_service = None
 		self._activity_object = None
 		self._shared = False
@@ -258,9 +259,6 @@ class Activity(object):
 		self._default_type = default_type
 
 	def _cleanup(self):
-		if self._plug:
-			self._plug.destroy()
-			self._plug = None
 		if self._dbus_service:
 			del self._dbus_service
 			self._dbus_service = None
@@ -292,15 +290,13 @@ class Activity(object):
 	def connect_to_shell(self, service = None):
 		"""Called by our controller to tell us to initialize and connect
 		to the shell."""
+		self.show()
 		self._dbus_service.connect_to_shell(service)
 
 	def _internal_on_connected_to_shell_cb(self, activity_object, activity_id, service=None):
 		"""Callback when the dbus service object has connected to the shell."""
 		self._activity_object = activity_object
 		self._activity_id = activity_id
-		self._window_id = self._activity_object.get_host_xembed_id()
-		print "Activity: XEMBED window ID is %s" % self._window_id
-		self._plug = gtk.Plug(self._window_id)
 		self._initial_service = service
 		if service:
 			self.set_shared()
@@ -334,10 +330,6 @@ class Activity(object):
 		self._has_focus = True
 		self.set_has_changes(False)
 		self.on_got_focus()
-
-	def gtk_plug(self):
-		"""Return our GtkPlug widget."""
-		return self._plug
 
 	def set_ellipsize_tab(self, ellipsize):
 		"""Sets this Activity's tab text to be ellipsized or not."""

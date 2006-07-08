@@ -25,6 +25,5 @@ class ActivityRegistry(dbus.service.Object):
 	def add(self, name, title):
 		self._activities.append(ActivityInfo(name, title))	
 
-	@dbus.service.method("com.redhat.Sugar.ActivityRegistry")		
 	def list_activities(self):
 		return self._activities

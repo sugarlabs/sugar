@@ -24,6 +24,7 @@ class ConsoleLogger(dbus.service.Object):
 		console_wm = WindowManager(self._window)		
 		console_wm.set_type(WindowManager.TYPE_POPUP)
 		console_wm.set_geometry(0.1, 0.1, 0.8, 0.8)
+		console_wm.set_key(gtk.keysyms.F3)
 
 	def _create_console(self, application):
 		sw = gtk.ScrolledWindow()
