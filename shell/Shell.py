@@ -5,6 +5,7 @@ from sugar.LogWriter import LogWriter
 from WindowManager import WindowManager
 from ConsoleLogger import ConsoleLogger
 from ActivityContainer import ActivityContainer
+from ActivityRegistry import ActivityRegistry
 
 class Shell(gobject.GObject):
 	__gsignals__ = {
@@ -21,18 +22,12 @@ class Shell(gobject.GObject):
 		log_writer = LogWriter("Shell", False)
 		log_writer.start()
 
+		registry = ActivityRegistry()
+		
 		session_bus = dbus.SessionBus()
 		service = dbus.service.BusName("com.redhat.Sugar.Shell", bus=session_bus)
 
 		activity_container = ActivityContainer(service, session_bus)
-		activity_container.window.connect('destroy', self.__activity_container_destroy_cb)
-		activity_container.show()
-
-		wm = WindowManager(activity_container.window)
-		wm.show()
-		
-	def __activity_container_destroy_cb(self, activity_container):
-		self.emit('close')
 
 if __name__ == "__main__":
 	shell = Shell()

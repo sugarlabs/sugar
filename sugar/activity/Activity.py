@@ -90,12 +90,25 @@ def create(activity_name, service = None, args = None):
 	else:
 		factory.create(args)		
 
+def _get_registry():
+	bus = dbus.SessionBus()
+	proxy_obj = bus.get_object("com.redhat.Sugar.ActivityRegistry",
+							   "/com/redhat/Sugar/ActivityRegistry")
+	registry = dbus.Interface(proxy_obj, "com.redhat.Sugar.ActivityRegistry")
+
+def list_activities():
+	registry = _get_registry()
+	return registry.list_activities()
+
 def main(activity_name, activity_class):
 	"""Starts the activity main loop."""
 	log_writer = LogWriter(activity_name)
 	log_writer.start()
 
 	factory = ActivityFactory(activity_name, activity_class)
+
+	registry = _get_registry()
+	registry.add(activity_name, activity_name)
 
 	gtk.main()
 
