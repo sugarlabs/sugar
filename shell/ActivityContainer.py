@@ -33,23 +33,46 @@ class ActivityContainerSignalHelper(gobject.GObject):
 		self.emit('local-activity-ended', self._parent, activity_id)
 
 class ActivityContainer(dbus.service.Object):
-	def __init__(self, service, bus):
-		self._activities = []
-		self._bus = bus
-		self._service = service
-		self._signal_helper = ActivityContainerSignalHelper(self)
-		self._current_activity = None
 
-		dbus.service.Object.__init__(self, self._service,
-									 "/com/redhat/Sugar/Shell/ActivityContainer")
-		bus.add_signal_receiver(self.name_owner_changed,
-								dbus_interface = "org.freedesktop.DBus",
-								signal_name = "NameOwnerChanged")
+	def __init__(self, service, bus):
+		self.activities = []
+
+		self.bus = bus
+		self.service = service
+
+		self._signal_helper = ActivityContainerSignalHelper(self)
+
+		dbus.service.Object.__init__(self, self.service, "/com/redhat/Sugar/Shell/ActivityContainer")
+		bus.add_signal_receiver(self.name_owner_changed, dbus_interface = "org.freedesktop.DBus", signal_name = "NameOwnerChanged")
+
+		self.window = gtk.Window()
+		self.window.connect("key-press-event", self.__key_press_event_cb)
+		self.window.set_title("OLPC Sugar")
+
+		self._fullscreen = False
+
+		self.notebook = gtk.Notebook()
+		self.notebook.set_scrollable(True)
+
+		tab_label = gtk.Label(_("Everyone"))
+		self._start_page = StartPage(self, self._signal_helper)
+		self.notebook.append_page(self._start_page, tab_label)
+		self._start_page.show()
+
+		self.notebook.show()
+		self.notebook.connect("switch-page", self.notebook_tab_changed)
+		self.window.add(self.notebook)
+		
+		self.window.connect("destroy", lambda w: gtk.main_quit())
+		
+		self.current_activity = None
 
 		# Create our owner service
 		self._owner = ShellOwner()
 
 		self._presence_window = PresenceWindow(self)
+		self._presence_window.set_transient_for(self.window)
+
 		wm = WindowManager(self._presence_window)
 		wm.set_type(WindowManager.TYPE_POPUP)
 		wm.set_animation(WindowManager.ANIMATION_SLIDE_IN)
@@ -57,13 +80,18 @@ class ActivityContainer(dbus.service.Object):
 		wm.set_key(gtk.keysyms.F1)
 		
 		self._chat_window = ChatWindow()
-		chat_wm = WindowManager(self._chat_window)
-		chat_wm.set_animation(WindowManager.ANIMATION_SLIDE_IN)
-		chat_wm.set_type(WindowManager.TYPE_POPUP)
-		chat_wm.set_geometry(0.28, 0.1, 0.5, 0.9)
-		chat_wm.set_key(gtk.keysyms.F1)
+		self._chat_window.set_transient_for(self.window)
+
+		self._chat_wm = WindowManager(self._chat_window)
+		self._chat_wm.set_animation(WindowManager.ANIMATION_SLIDE_IN)
+		self._chat_wm.set_type(WindowManager.TYPE_POPUP)
+		self._chat_wm.set_geometry(0.28, 0.1, 0.5, 0.9)
+		self._chat_wm.set_key(gtk.keysyms.F1)
 				
 		self._mesh_chat = MeshChat()
+
+	def show(self):
+		self.window.show()
 
 	def set_current_activity(self, activity):
 		self.current_activity = activity
@@ -75,28 +103,65 @@ class ActivityContainer(dbus.service.Object):
 		else:
 			self._chat_window.set_chat(self._mesh_chat)
 
+	def notebook_tab_changed(self, notebook, page, page_number):
+		new_activity = notebook.get_nth_page(page_number).get_data("sugar-activity")
+
+		if self.current_activity != None:
+			self.current_activity.lost_focus()
+		
+		self.set_current_activity(new_activity)
+
+		if self.current_activity != None:
+			self.current_activity.got_focus()
+
 	def name_owner_changed(self, service_name, old_service_name, new_service_name):
-		for owner, activity in self._activities[:]:
+		#print "in name_owner_changed: svc=%s oldsvc=%s newsvc=%s"%(service_name, old_service_name, new_service_name)
+		for owner, activity in self.activities[:]:
 			if owner == old_service_name:
 				activity_id = activity.get_host_activity_id()
 				self._signal_helper.activity_ended(activity_id)
-				self._activities.remove((owner, activity))
+				self.activities.remove((owner, activity))
+		#self.__print_activities()
 
-	@dbus.service.method("com.redhat.Sugar.Shell.ActivityContainer")
-	def add_activity(self, default_type):
-		activity = ActivityHost(self._service, default_type)
-		self._activities.append(activity)
 
-		activity_id = activity.get_id()
+	@dbus.service.method("com.redhat.Sugar.Shell.ActivityContainer", \
+			 in_signature="ss", \
+			 out_signature="s", \
+			 sender_keyword="sender")
+	def add_activity(self, activity_name, default_type, sender):
+		#print "hello world, activity_name = '%s', sender = '%s'"%(activity_name, sender)
+		activity = ActivityHost(self, activity_name, default_type)
+		self.activities.append((sender, activity))
+
+		activity_id = activity.get_host_activity_id()
 		self._signal_helper.activity_started(activity_id)
 
-		self.set_current_activity(activity)
+		self.current_activity = activity
 		return activity_id
 
-	@dbus.service.method("com.redhat.Sugar.Shell.ActivityContainer")
-	def add_activity_with_id(self, default_type, activity_id):
-		activity = ActivityHost(self._service, default_type, activity_id)
-		self._activities.append(activity)
+	@dbus.service.method("com.redhat.Sugar.Shell.ActivityContainer", \
+			 in_signature="sss", \
+			 sender_keyword="sender")
+	def add_activity_with_id(self, activity_name, default_type, activity_id, sender):
+		activity = ActivityHost(self, activity_name, default_type, activity_id)
+		self.activities.append((sender, activity))
 		activity_id = activity.get_host_activity_id()
 		self._signal_helper.activity_started(activity_id)
 		self.current_activity = activity
+		
+	def __print_activities(self):
+		print "__print_activities: %d activities registered" % len(self.activities)
+		i = 0
+		for owner, activity in self.activities:
+			print "  %d: owner=%s activity_object_name=%s" % (i, owner, activity.dbus_object_name)
+			i += 1
+	
+	def __key_press_event_cb(self, window, event):
+		if event.keyval == gtk.keysyms.F11:
+			if self._fullscreen:
+				window.unfullscreen()
+				self._fullscreen = False
+			else:
+				window.fullscreen()
+				self._fullscreen = True			
+

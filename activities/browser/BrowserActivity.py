@@ -26,10 +26,7 @@ class BrowserActivity(Activity):
 	def __init__(self, args):
 		Activity.__init__(self, _BROWSER_ACTIVITY_TYPE)
 
-		if len(args) > 0:
-			self.uri = args[0]
-		else:
-			self.uri = 'http://www.google.com'
+		self.uri = args[0]
 		
 		self._mode = BrowserActivity.SOLO
 		self._share_service = None
@@ -79,7 +76,11 @@ class BrowserActivity(Activity):
 			self._notif_bar.show()
 
 	def on_connected_to_shell(self):
-		self.set_title("Web Page")
+		self.set_ellipsize_tab(True)
+		self.set_can_close(True)
+		self.set_tab_text("Web Page")
+		self.set_tab_icon(name="web-browser")
+		self.set_show_tab_icon(True)
 
 		vbox = gtk.VBox()
 
@@ -98,7 +99,10 @@ class BrowserActivity(Activity):
 		vbox.pack_start(nav_toolbar, False)
 		nav_toolbar.show()
 
-		self.add(vbox)
+		plug = self.gtk_plug()		
+		plug.add(vbox)
+		plug.show()
+
 		vbox.show()
 
 		logging.debug('Start presence service')

@@ -63,9 +63,8 @@ class SlidingHelper:
 class WindowManager:
 	__managers_list = []
 
-	TYPE_ROOT     = 0
-	TYPE_ACTIVITY = 1
-	TYPE_POPUP    = 2
+	TYPE_ACTIVITY = 0
+	TYPE_POPUP    = 1 
 
 	ANIMATION_NONE     = 0
 	ANIMATION_SLIDE_IN = 1
@@ -135,7 +134,7 @@ class WindowManager:
 		screen_height = DEFAULT_HEIGHT
 		
 		for manager in WindowManager.__managers_list:
-			if manager._window_type == WindowManager.TYPE_ROOT:
+			if manager._window_type == WindowManager.TYPE_ACTIVITY:
 				screen_width = manager._window.allocation.width
 				screen_height = manager._window.allocation.height
 		
@@ -144,7 +143,7 @@ class WindowManager:
 	def _get_screen_position(self):
 		result = (0, 0)		
 		for manager in WindowManager.__managers_list:
-			if manager._window_type == WindowManager.TYPE_ROOT:
+			if manager._window_type == WindowManager.TYPE_ACTIVITY:
 				result = manager._window.get_position()
 		
 		return result
@@ -172,8 +171,7 @@ class WindowManager:
 			self._window.set_skip_taskbar_hint(True)
 
 	def _update_size(self):
-		if (self._window_type == WindowManager.TYPE_ACTIVITY) or \
-		   (self._window_type == WindowManager.TYPE_ROOT):
+		if self._window_type == WindowManager.TYPE_ACTIVITY:
 			self._window.resize(DEFAULT_WIDTH, DEFAULT_HEIGHT)
 		else:
 			(width, height) = self._transform_dimensions()
