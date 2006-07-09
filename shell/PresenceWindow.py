@@ -16,11 +16,11 @@ class PresenceWindow(gtk.Window):
 	_MODEL_COL_BUDDY = 2
 	_MODEL_COL_VISIBLE = 3
 		
-	def __init__(self, activity_container):
+	def __init__(self, shell):
 		gtk.Window.__init__(self)
 		
-		self._activity_container = activity_container
 		self._activity = None
+		self._shell = shell
 
 		self._pservice = PresenceService.get_instance()
 		self._pservice.connect("buddy-appeared", self._on_buddy_appeared_cb)
@@ -113,7 +113,7 @@ class PresenceWindow(gtk.Window):
 		vbox.show()
 	
 	def _share_button_clicked_cb(self, button):
-		self._activity_container.current_activity.publish()
+		self._shell.get_current_activity().publish()
 	
 	def _on_buddyList_buddy_selected(self, view, *args):
 		(model, aniter) = view.get_selection().get_selected()

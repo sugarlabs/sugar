@@ -36,6 +36,43 @@ class BrowserActivity(Activity):
 		self._model_service = None
 		self._notif_service = None
 		self._model = None
+
+		self.set_title("Web Page")
+
+		vbox = gtk.VBox()
+
+		self._notif_bar = NotificationBar()
+		vbox.pack_start(self._notif_bar, False)
+		self._notif_bar.connect('action', self.__notif_bar_action_cb)
+
+		self.embed = geckoembed.Embed()
+		self.embed.connect("title", self.__title_cb)
+		vbox.pack_start(self.embed)
+		
+		self.embed.show()
+		self.embed.load_address(self.uri)
+		
+		nav_toolbar = NavigationToolbar(self)
+		vbox.pack_start(nav_toolbar, False)
+		nav_toolbar.show()
+
+		self.add(vbox)
+		vbox.show()
+
+		logging.debug('Start presence service')
+		self._pservice = PresenceService.get_instance()
+		self._pservice.start()
+		
+		logging.debug('Track browser activities')
+		self._pservice.connect('service-appeared', self._service_appeared_cb)
+		self._pservice.track_service_type(_BROWSER_ACTIVITY_TYPE)
+		self._pservice.track_service_type(LocalModel.SERVICE_TYPE)
+
+		# Join the shared activity if we were started from one
+		if self._initial_service:
+			logging.debug("BrowserActivity joining shared activity %s" %
+						  self._initial_service.get_activity_id())
+			self._pservice.join_shared_activity(self._initial_service)
 	
 	def _service_appeared_cb(self, pservice, buddy, service):
 		# Make sure the service is for our activity
@@ -77,43 +114,6 @@ class BrowserActivity(Activity):
 			self._notif_bar.set_action('set_shared_location', 'Share')
 			self._notif_bar.set_icon('stock_shared-by-me')
 			self._notif_bar.show()
-
-	def on_connected_to_shell(self):
-		self.set_title("Web Page")
-
-		vbox = gtk.VBox()
-
-		self._notif_bar = NotificationBar()
-		vbox.pack_start(self._notif_bar, False)
-		self._notif_bar.connect('action', self.__notif_bar_action_cb)
-
-		self.embed = geckoembed.Embed()
-		self.embed.connect("title", self.__title_cb)
-		vbox.pack_start(self.embed)
-		
-		self.embed.show()
-		self.embed.load_address(self.uri)
-		
-		nav_toolbar = NavigationToolbar(self)
-		vbox.pack_start(nav_toolbar, False)
-		nav_toolbar.show()
-
-		self.add(vbox)
-		vbox.show()
-
-		logging.debug('Start presence service')
-		self._pservice = PresenceService.get_instance()
-		self._pservice.start()
-		
-		logging.debug('Track browser activities')
-		self._pservice.connect('service-appeared', self._service_appeared_cb)
-		self._pservice.track_service_type(_BROWSER_ACTIVITY_TYPE)
-		self._pservice.track_service_type(LocalModel.SERVICE_TYPE)
-
-		# Join the shared activity if we were started from one
-		if self._initial_service:
-			logging.debug("BrowserActivity joining shared activity %s" % self._initial_service.get_activity_id())
-			self._pservice.join_shared_activity(self._initial_service)
 
 	def get_embed(self):
 		return self.embed
