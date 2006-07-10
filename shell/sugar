@@ -9,6 +9,9 @@ import pygtk
 pygtk.require('2.0')
 import gobject
 
+# FIXME How to pick a good display number
+XEPHYR_DISPLAY = 100
+
 def add_to_python_path(path):
 	sys.path.insert(0, path)
 	if os.environ.has_key('PYTHONPATH'):
@@ -23,7 +26,6 @@ def start_dbus():
 	dbus_file = os.fdopen(dbus_stdout)
 	addr = dbus_file.readline()
 	addr = addr.strip()
-	print "dbus-daemon pid is %d, session bus address is %s" % (dbus_pid, addr)	
 	dbus_file.close()
 
 	os.environ["DBUS_SESSION_BUS_ADDRESS"] = addr
@@ -37,6 +39,20 @@ def stop_dbus(dbus_pid):
 	except OSError:
 		pass
 
+def start_xephyr():
+	command = 'Xephyr :%d -ac -screen 640x480' % (XEPHYR_DISPLAY)
+	xephyr_pid = os.spawnvp(os.P_NOWAIT, 'Xephyr', command.split())
+
+def stop_xephyr():
+	os.kill(xephyr_pid)
+
+def start_matchbox():
+	command = 'matchbox-window-manager -use_titlebar no'
+	xephyr_pid = os.spawnvp(os.P_NOWAIT, 'matchbox-window-manager', command.split())
+
+def stop_matchbox():
+	os.kill(xephyr_pid)
+	
 i = 0
 dbus_daemon_pid = None
 for arg in sys.argv:
@@ -56,7 +72,6 @@ if not os.environ.has_key("SUGAR_NICK_NAME"):
 	os.environ['SUGAR_NICK_NAME'] = nick
 	os.environ['SUGAR_USER_DIR'] = os.path.expanduser('~/.sugar')
 
-
 curdir = os.path.abspath(os.path.dirname(__file__))
 basedir = os.path.dirname(curdir)
 
@@ -68,6 +83,10 @@ else:
 	import sugar.env
 	add_to_python_path(os.path.join(sugar.env.get_data_dir(), 'shell'))
 	print 'Running the installed sugar...'
+
+start_xephyr()
+os.environ['DISPLAY'] = ":%d" % (XEPHYR_DISPLAY)
+start_matchbox()
 	
 print 'Redirecting output to the console, press Ctrl+Down to open it.'
 	
@@ -78,3 +97,6 @@ session.start()
 
 if dbus_daemon_pid:
 	stop_dbus(dbus_daemon_pid)
+
+stop_matchbox()
+stop_xephyr()

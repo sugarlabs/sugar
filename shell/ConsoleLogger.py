@@ -1,9 +1,6 @@
 import gtk
 import dbus
 
-from WindowManager import WindowManager
-from ActivityContainer import ActivityContainer
-
 class ConsoleLogger(dbus.service.Object):
 	def __init__(self):
 		session_bus = dbus.SessionBus()
@@ -21,9 +18,8 @@ class ConsoleLogger(dbus.service.Object):
 				
 		self._consoles = {}
 
-		console_wm = WindowManager(self._window)		
-		console_wm.set_type(WindowManager.TYPE_POPUP)
-		console_wm.set_geometry(0.1, 0.1, 0.8, 0.8)
+	def get_window(self):
+		return self._window
 
 	def _create_console(self, application):
 		sw = gtk.ScrolledWindow()
@@ -51,4 +47,3 @@ class ConsoleLogger(dbus.service.Object):
 	
 		buf = console.get_buffer() 
 		buf.insert(buf.get_end_iter(), message)
-
