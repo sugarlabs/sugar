@@ -8,7 +8,6 @@ sugar_PYTHON =		\
 	Chat.py		\
 	ChatEditor.py	\
 	ChatToolbar.py	\
-	ChatWindow.py	\
 	Emoticons.py	\
 	GroupChat.py	\
 	MeshChat.py	\

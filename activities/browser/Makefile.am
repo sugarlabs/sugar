@@ -1,9 +1,7 @@
 sugardir = $(pkgdatadir)/activities/browser
 sugar_PYTHON =			\
 	__init__.py		\
-	browser.py		\
 	NotificationBar.py	\
-	BrowserShell.py         \
 	AddressItem.py          \
 	BrowserActivity.py      \
 	NavigationToolbar.py

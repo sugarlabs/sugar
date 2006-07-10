@@ -27,7 +27,6 @@ activities/Makefile
 activities/browser/Makefile
 activities/chat/Makefile
 shell/Makefile
-shell/google/Makefile
 shell/session/Makefile
 sugar/Makefile
 sugar/__installed__.py

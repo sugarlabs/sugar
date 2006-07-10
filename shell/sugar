@@ -5,8 +5,6 @@ import os
 import pwd
 import random
 
-import pygtk
-pygtk.require('2.0')
 import gobject
 
 # FIXME How to pick a good display number
@@ -15,7 +13,8 @@ XEPHYR_DISPLAY = 100
 def add_to_python_path(path):
 	sys.path.insert(0, path)
 	if os.environ.has_key('PYTHONPATH'):
-		os.environ['PYTHONPATH'] += ':' + path
+		old_path = os.environ['PYTHONPATH']
+		os.environ['PYTHONPATH'] = path + ':' + old_path
 	else:
 		os.environ['PYTHONPATH'] = path
 
@@ -52,6 +51,10 @@ def start_matchbox():
 
 def stop_matchbox():
 	os.kill(xephyr_pid)
+
+start_xephyr()
+os.environ['DISPLAY'] = ":%d" % (XEPHYR_DISPLAY)
+start_matchbox()
 	
 i = 0
 dbus_daemon_pid = None
@@ -83,10 +86,6 @@ else:
 	import sugar.env
 	add_to_python_path(os.path.join(sugar.env.get_data_dir(), 'shell'))
 	print 'Running the installed sugar...'
-
-start_xephyr()
-os.environ['DISPLAY'] = ":%d" % (XEPHYR_DISPLAY)
-start_matchbox()
 	
 print 'Redirecting output to the console, press Ctrl+Down to open it.'
 	
