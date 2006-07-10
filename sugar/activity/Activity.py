@@ -179,7 +179,7 @@ class Activity(gtk.Window):
 
 		self.connect('realize', self.__realize)
 		
-		self.show()
+		self.present()
 	
 	def __realize(self, window):
 		if not self._dbus_service:

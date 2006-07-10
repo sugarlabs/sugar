@@ -135,7 +135,7 @@ class BrowserActivity(Activity):
 		self.set_mode(BrowserActivity.LEADING)
 
 	def __title_cb(self, embed):
-		self.set_tab_text(embed.get_title())
+		self.set_title(embed.get_title())
 
 	def __shared_location_changed_cb(self, model, key):
 		self.set_has_changes(True)

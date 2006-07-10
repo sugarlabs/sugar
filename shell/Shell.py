@@ -11,6 +11,7 @@ from sugar import keybindings
 from sugar.activity import Activity
 from PresenceWindow import PresenceWindow
 from sugar.chat.ActivityChat import ActivityChat
+from Owner import ShellOwner
 
 class ShellDbusService(dbus.service.Object):
 	def __init__(self, shell, bus_name):
@@ -41,6 +42,8 @@ class Shell(gobject.GObject):
 	def __init__(self):
 		gobject.GObject.__init__(self)
 
+		self._screen = wnck.screen_get_default()
+
 	def start(self):
 		self._console = ConsoleLogger()
 		keybindings.setup_global_keys(self._console.get_window(), self)
@@ -52,6 +55,8 @@ class Shell(gobject.GObject):
 		bus_name = dbus.service.BusName('com.redhat.Sugar.Shell', bus=session_bus)
 		ShellDbusService(self, bus_name)
 
+		self._owner = ShellOwner()
+
 		self._registry = ActivityRegistry()
 		
 		self._home_window = HomeWindow(self)
@@ -59,7 +64,9 @@ class Shell(gobject.GObject):
 		self._home_window.show()
 
 		self._presence_window = PresenceWindow(self)
+		self._presence_window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self._presence_window.set_skip_taskbar_hint(True)
+		self._presence_window.set_decorated(False)
 		keybindings.setup_global_keys(self._presence_window, self)
 
 		self._chat_windows = {}
@@ -73,15 +80,22 @@ class Shell(gobject.GObject):
 	def toggle_home(self):
 		self._toggle_window_visibility(self._home_window)
 
+	def get_activity_from_xid(self, xid):
+		bus = dbus.SessionBus()
+		service = Activity.ACTIVITY_SERVICE_NAME + "%s" % xid
+		path = Activity.ACTIVITY_SERVICE_PATH + "/%s" % xid
+		proxy_obj = bus.get_object(service, path)
+
+		return dbus.Interface(proxy_obj, 'com.redhat.Sugar.Activity')
+
 	def get_current_activity(self):
-		window = wnck.screen_get_default().get_active_window()
+		window = self._screen.get_active_window()
+
+		if window and window.is_skip_tasklist():
+			window = self._screen.get_previously_active_window()
+
 		if window and not window.is_skip_tasklist():
-			bus = dbus.SessionBus()
-			xid = window.get_xid()
-			service = Activity.ACTIVITY_SERVICE_NAME + "%s" % xid
-			path = Activity.ACTIVITY_SERVICE_PATH + "/%s" % xid
-			proxy_obj = bus.get_object(service, path)
-			return dbus.Interface(proxy_obj, 'com.redhat.Sugar.Activity')
+			return self.get_activity_from_xid(window.get_xid())
 		else:
 			return None
 
@@ -93,20 +107,25 @@ class Shell(gobject.GObject):
 
 			if not self._chat_windows.has_key(activity_id):
 				window = gtk.Window()
+				window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 				window.set_skip_taskbar_hint(True)
+				window.set_decorated(False)
 				keybindings.setup_global_keys(window, self)
 				chat = ActivityChat(activity)
 				window.add(chat)
 				chat.show()
 				self._chat_windows[activity_id] = window
-			self._toggle_window_visibility(self._chat_windows[activity_id])
+			else:
+				window = self._chat_windows[activity_id]
 
+			window.move(210, 10)
+			window.resize(380, 440)
+			self._toggle_window_visibility(window)
+
+			self._presence_window.move(10, 10)
+			self._presence_window.resize(180, 440)
 			self._presence_window.set_activity(activity)
 			self._toggle_window_visibility(self._presence_window)
-		else:
-			self._presence_window.hide()
-			for window in self._chat_windows.values():
-				window.hide()
 
 	def toggle_console(self):
 		self._toggle_window_visibility(self._console.get_window())

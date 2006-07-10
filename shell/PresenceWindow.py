@@ -51,7 +51,6 @@ class PresenceWindow(gtk.Window):
 				self._share_button.set_sensitive(False)
 			else:
 				self._share_button.set_sensitive(True)
-			self._activity.connect('shared', lambda w: self._share_button.set_sensitive(False))
 		else:
 			self._share_button.set_sensitive(False)
 
