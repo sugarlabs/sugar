@@ -1,0 +1,51 @@
+# translation of sugar.po to Yoruba
+# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
+# Fajuyitan, Sunday <ayo@wazobialinux.com>, 2006.
+# Fajuyitan, Sunday Ayo <ayo@wazobialinux.com>, 2006.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: sugar\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-07-06 19:36+0100\n"
+"PO-Revision-Date: 2006-07-07 09:48+0100\n"
+"Last-Translator: Fajuyitan, Sunday Ayo <ayo@wazobialinux.com>\n"
+"Language-Team: Yoruba\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.10\n"
+
+#: ../shell/PresenceWindow.py:62
+msgid "Who's around:"
+msgstr "Ta ló wà níbẹ̀ o o:"
+
+#: ../shell/PresenceWindow.py:104
+msgid "Share"
+msgstr "Ìpín"
+
+#: ../shell/StartPage.py:189
+msgid "Search"
+msgstr "Wádìí"
+
+#: ../activities/browser/NavigationToolbar.py:17
+msgid "Back"
+msgstr "Padà Sẹ́yìn"
+
+#: ../activities/browser/NavigationToolbar.py:23
+msgid "Forward"
+msgstr "Lọ síwájú"
+
+#: ../activities/browser/NavigationToolbar.py:29
+msgid "Reload"
+msgstr "Tun kì"
+
+#: ../shell/shell.py:333
+msgid "Everyone"
+msgstr "Gbogbo èèyàn"
+
+#: ../sugar/chat/ChatEditor.py:43
+msgid "Send"
+msgstr "Fi ránṣẹ́"
+

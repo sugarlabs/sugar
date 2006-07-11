@@ -1,0 +1,50 @@
+# translation of sugar.po to hausa
+# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
+# saudat mohammed <saudat@wazobialinux>, 2006.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: sugar\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-07-06 19:36+0100\n"
+"PO-Revision-Date: 2006-07-10 16:37+0100\n"
+"Last-Translator: saudat mohammed <saudat@wazobialinux>\n"
+"Language-Team: hausa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.10\n"
+
+#: ../shell/PresenceWindow.py:62
+msgid "Who's around:"
+msgstr "Wa ke nan:"
+
+#: ../shell/PresenceWindow.py:104
+msgid "Share"
+msgstr "Raba"
+
+#: ../shell/StartPage.py:189
+msgid "Search"
+msgstr "Yi Bincike"
+
+#: ../activities/browser/NavigationToolbar.py:17
+msgid "Back"
+msgstr "Baya"
+
+#: ../activities/browser/NavigationToolbar.py:23
+msgid "Forward"
+msgstr "Tura"
+
+#: ../activities/browser/NavigationToolbar.py:29
+msgid "Reload"
+msgstr "Sake Lodi"
+
+#: ../shell/shell.py:333
+msgid "Everyone"
+msgstr "Kowa"
+
+#: ../sugar/chat/ChatEditor.py:43
+msgid "Send"
+msgstr "Aika"
+

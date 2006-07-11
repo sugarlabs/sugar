@@ -30,5 +30,6 @@ po/Makefile.in.in
 po/POTFILES
 po/stamp-it
 po/sugar.pot
+po/*.gmo
 
 sugar/__installed__.py

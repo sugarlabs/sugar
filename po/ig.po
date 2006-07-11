@@ -1,0 +1,51 @@
+# translation of sugar.po to Igbo
+# translation of sugar.po to
+# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER, 2006.
+# Onye, Sylvester <sylvester@wazobialinux.com>, 2006.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: sugar\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-07-06 19:36+0100\n"
+"PO-Revision-Date: 2006-07-07 10:23+0100\n"
+"Last-Translator: Onye, Sylvester <sylvester@wazobialinux.com>\n"
+"Language-Team: Igbo\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.10.2\n"
+
+#: ../shell/PresenceWindow.py:62
+msgid "Who's around:"
+msgstr "Onye nọ ya:"
+
+#: ../shell/PresenceWindow.py:104
+msgid "Share"
+msgstr "Òkè"
+
+#: ../shell/StartPage.py:189
+msgid "Search"
+msgstr "Chọ̀ọ́"
+
+#: ../activities/browser/NavigationToolbar.py:17
+msgid "Back"
+msgstr "Àzụ́"
+
+#: ../activities/browser/NavigationToolbar.py:23
+msgid "Forward"
+msgstr "Íhú"
+
+#: ../activities/browser/NavigationToolbar.py:29
+msgid "Reload"
+msgstr "Bubatagharịa"
+
+#: ../shell/shell.py:333
+msgid "Everyone"
+msgstr "Onyeọbụla"
+
+#: ../sugar/chat/ChatEditor.py:43
+msgid "Send"
+msgstr "Ziga"
+
