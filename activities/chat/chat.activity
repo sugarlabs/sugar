@@ -1,3 +1,4 @@
 [Activity]
-name = com.redhat.Sugar.ChatActivity
-class = ChatActivity.ChatActivity
+name = Chat
+id = com.redhat.Sugar.ChatActivity
+python_module = ChatActivity.ChatActivity

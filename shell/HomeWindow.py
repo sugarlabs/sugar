@@ -17,17 +17,17 @@ class NewActivityButton(gtk.MenuToolButton):
 	def __show_menu_cb(self, button):
 		menu = gtk.Menu()
 		
-		for activity_info in self._home.list_activities():
-			item = gtk.MenuItem(activity_info.get_title(), False)
-			name = activity_info.get_name()
-			item.connect('activate', self.__menu_item_activate_cb, name)
+		for module in self._home.list_activities():
+			item = gtk.MenuItem(module.get_name(), False)
+			activity_id = module.get_id()
+			item.connect('activate', self.__menu_item_activate_cb, activity_id)
 			menu.append(item)
 			item.show()
 		
 		self.set_menu(menu)
 		
-	def __menu_item_activate_cb(self, item, name):
-		self._home.create(name)
+	def __menu_item_activate_cb(self, item, activity_id):
+		self._home.create(activity_id)
 
 class Toolbar(gtk.Toolbar):
 	def __init__(self, shell):

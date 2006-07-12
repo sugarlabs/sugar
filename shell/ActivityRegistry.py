@@ -1,4 +1,9 @@
 import logging
+import os
+from ConfigParser import ConfigParser
+from ConfigParser import NoOptionError
+
+from sugar import env
 
 class ActivityModule:
 	"""Info about an activity module. Wraps a .activity file."""
@@ -17,9 +22,9 @@ class ActivityModule:
 		"""Get the activity identifier"""
 		return self._id
 
-	def get_class(self):
+	def get_exec(self):
 		"""Get the activity executable"""
-		return self._class
+		return self._exec
 
 	def get_directory(self):
 		"""Get the path to activity directory."""
@@ -33,9 +38,9 @@ class ActivityRegistry:
 	
 	def scan_directory(self, path):
 		"""Scan a directory for activities and add them to the registry.""" 
-		if os.path.isdir(base_dir):
-			for filename in os.listdir(base_dir):
-				activity_dir = os.path.join(base_dir, filename)
+		if os.path.isdir(path):
+			for filename in os.listdir(path):
+				activity_dir = os.path.join(path, filename)
 				if os.path.isdir(activity_dir):
 					for filename in os.listdir(activity_dir):
 						if filename.endswith(".activity"):
@@ -50,18 +55,26 @@ class ActivityRegistry:
 
 		try:
 			activity_id = cp.get('Activity', 'id')
+		except NoOptionError:
+			logging.error('%s miss the required id option' % (path))
+			return False
+
+		try:
 			name = cp.get('Activity', 'name')
 		except NoOptionError:
-			logging.error('%s miss a required option' % (path))
+			logging.error('%s miss the required name option' % (path))
+			return False
 
 		if cp.has_option('Activity', 'exec'):
 			activity_exec = cp.get('Activity', 'exec')
 		elif cp.has_option('Activity', 'python_module'):
 			python_module = cp.get('Activity', 'python_module')
 			activity_exec = 'python -m sugar/activity/Activity %s %s' \
-							% (name, python_module)
+							% (activity_id, python_module)
+			env.add_to_python_path(directory)
 		else:
 			logging.error('%s must specifiy exec or python_module' % (path))
+			return False
 
 		module = ActivityModule(name, activity_id, activity_exec, directory)
 		self._activities.append(module)

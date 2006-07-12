@@ -1,3 +1,5 @@
+import os
+
 import dbus
 import gtk
 import wnck
@@ -7,6 +9,7 @@ from ConsoleLogger import ConsoleLogger
 from ActivityRegistry import ActivityRegistry
 from HomeWindow import HomeWindow
 from sugar import keybindings
+from sugar import env
 from sugar.activity import Activity
 from PresenceWindow import PresenceWindow
 from sugar.chat.ActivityChat import ActivityChat
@@ -50,7 +53,9 @@ class Shell:
 		self._owner = ShellOwner()
 
 		self._registry = ActivityRegistry()
-		
+		self._registry.scan_directory(env.get_activities_dir())
+		self._registry.scan_directory(os.path.join(env.get_user_dir(), 'activities'))
+
 		self._home_window = HomeWindow(self)
 		keybindings.setup_global_keys(self._home_window, self)
 		self._home_window.show()

@@ -86,14 +86,11 @@ def create(activity_name, service = None, args = None):
 def main(activity_name, activity_class):
 	"""Starts the activity main loop."""
 	sugar.theme.setup()
-
+	
 	log_writer = LogWriter(activity_name)
 	log_writer.start()
-
+	
 	factory = ActivityFactory(activity_name, activity_class)
-
-	registry = _get_registry()
-	registry.add(activity_name, activity_name)
 
 	gtk.main()
 
@@ -101,7 +98,8 @@ class ActivityDbusService(dbus.service.Object):
 	"""Base dbus service object that each Activity uses to export dbus methods.
 	
 	The dbus service is separate from the actual Activity object so that we can
-	tightly control what stuff passes through the dbus python bindings."""
+	tightly control what stuff passes through	print aaaa
+ the dbus python bindings."""
 
 	_ALLOWED_CALLBACKS = [ON_PUBLISH_CB]
 
