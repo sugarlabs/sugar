@@ -1,2 +1,4 @@
 [Activity]
-python_class = terminal
+name = Terminal
+id = org.sugar.Terminal
+python_module = terminal.TerminalActivity

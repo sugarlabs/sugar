@@ -1,2 +1,4 @@
 [Activity]
-python_class = gmail
+name = GMail
+id = org.sugar.GMail
+python_module = gmail.GMailActivity

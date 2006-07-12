@@ -1,5 +1,3 @@
-import os
-
 import gtk
 import vte
 import pango
@@ -26,7 +24,7 @@ class Terminal(gtk.HBox):
 		self._vte.connect("child-exited", lambda term: term.fork_command())
 
 		self._vte.fork_command()
-	
+
 	def _configure_vte(self):
 		self._vte.set_font(pango.FontDescription('Monospace 10'))
 		self._vte.set_colors(gtk.gdk.color_parse ('#AAAAAA'),
@@ -53,24 +51,11 @@ class Terminal(gtk.HBox):
 		pass
 
 class TerminalActivity(Activity):
-	def __init__(self):
+	def __init__(self, args):
 		Activity.__init__(self, _TERMINAL_ACTIVITY_TYPE)
 	
-	def on_connected_to_shell(self):
-		self.set_tab_text("Terminal")
-
-		plug = self.gtk_plug()		
+		self.set_title("Terminal")
 
 		terminal = Terminal()
-		plug.add(terminal)
+		self.add(terminal)
 		terminal.show()
-
-		plug.show()
-		
-activity = TerminalActivity()
-activity.connect_to_shell()
-
-try:
-	gtk.main()
-except KeyboardInterrupt:
-	pass
