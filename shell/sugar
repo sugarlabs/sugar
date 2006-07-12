@@ -5,6 +5,8 @@ import os
 import pwd
 import random
 
+from Emulator import Emulator
+
 def add_to_python_path(path):
 	sys.path.insert(0, path)
 	if os.environ.has_key('PYTHONPATH'):
@@ -12,6 +14,10 @@ def add_to_python_path(path):
 		os.environ['PYTHONPATH'] = path + ':' + old_path
 	else:
 		os.environ['PYTHONPATH'] = path
+
+# FIXE Don't run the emulator on the OLPC
+emulator = Emulator()
+emulator.start()
 
 i = 0
 for arg in sys.argv:

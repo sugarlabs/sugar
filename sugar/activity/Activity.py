@@ -11,6 +11,7 @@ import gtk, gobject
 from sugar.LogWriter import LogWriter
 from sugar import keybindings
 import sugar.util
+import sugar.theme
 
 SHELL_SERVICE_NAME = "caom.redhat.Sugar.Shell"
 SHELL_SERVICE_PATH = "/com/redhat/Sugar/Shell"
@@ -82,18 +83,10 @@ def create(activity_name, service = None, args = None):
 	else:
 		factory.create()		
 
-def _get_registry():
-	bus = dbus.SessionBus()
-	proxy_obj = bus.get_object("com.redhat.Sugar.ActivityRegistry",
-							   "/com/redhat/Sugar/ActivityRegistry")
-	return dbus.Interface(proxy_obj, "com.redhat.Sugar.ActivityRegistry")
-
-def list_activities():
-	registry = _get_registry()
-	return registry.list_activities()
-
 def main(activity_name, activity_class):
 	"""Starts the activity main loop."""
+	sugar.theme.setup()
+
 	log_writer = LogWriter(activity_name)
 	log_writer.start()
 

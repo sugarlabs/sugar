@@ -7,6 +7,7 @@ sugar_PYTHON =			\
 	bots.py				\
 	env.py				\
 	keybindings.py		\
+	theme.py			\
 	util.py				\
 	LogWriter.py
 

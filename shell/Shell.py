@@ -1,6 +1,5 @@
 import dbus
 import gtk
-import gobject
 import wnck
 
 from sugar.LogWriter import LogWriter
@@ -33,15 +32,8 @@ class ShellDbusService(dbus.service.Object):
 	def toggle_console(self):
 		self._shell.toggle_console()	
 
-class Shell(gobject.GObject):
-	__gsignals__ = {
-		'close': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-				 ([])),
-	}
-
+class Shell:
 	def __init__(self):
-		gobject.GObject.__init__(self)
-
 		self._screen = wnck.screen_get_default()
 
 	def start(self):
@@ -132,11 +124,3 @@ class Shell(gobject.GObject):
 
 	def get_registry(self):
 		return self._registry
-
-if __name__ == "__main__":
-	shell = Shell()
-	shell.start()
-	try:
-		gtk.main()
-	except KeyboardInterrupt:
-		print 'Ctrl+c pressed, exiting...'
