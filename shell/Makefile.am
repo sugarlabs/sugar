@@ -1,5 +1,3 @@
-SUBDIRS = session
-
 bin_SCRIPTS = sugar
 
 sugardir = $(pkgdatadir)/shell
@@ -10,6 +8,7 @@ sugar_PYTHON =				\
 	Owner.py				\
 	HomeWindow.py			\
 	PresenceWindow.py		\
+	Session.py			\
 	Shell.py
 
 EXTRA_DIST = sugar

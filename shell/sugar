@@ -5,11 +5,6 @@ import os
 import pwd
 import random
 
-import gobject
-
-# FIXME How to pick a good display number
-XEPHYR_DISPLAY = 100
-
 def add_to_python_path(path):
 	sys.path.insert(0, path)
 	if os.environ.has_key('PYTHONPATH'):
@@ -18,54 +13,13 @@ def add_to_python_path(path):
 	else:
 		os.environ['PYTHONPATH'] = path
 
-def start_dbus():
-	curdir = os.path.dirname(__file__)
-	args = "/bin/dbus-daemon --session --print-address".split()
-	(dbus_pid, ign1, dbus_stdout, ign3) = gobject.spawn_async(args, flags=gobject.SPAWN_STDERR_TO_DEV_NULL, standard_output=True)
-	dbus_file = os.fdopen(dbus_stdout)
-	addr = dbus_file.readline()
-	addr = addr.strip()
-	dbus_file.close()
-
-	os.environ["DBUS_SESSION_BUS_ADDRESS"] = addr
-
-	return dbus_pid
-
-def stop_dbus(dbus_pid):
-	try:
-		print 'Closing dbus-daemon, pid %d' % (dbus_pid)
-		os.kill(dbus_pid, 9)
-	except OSError:
-		pass
-
-def start_xephyr():
-	command = 'Xephyr :%d -ac -screen 640x480' % (XEPHYR_DISPLAY)
-	xephyr_pid = os.spawnvp(os.P_NOWAIT, 'Xephyr', command.split())
-
-def stop_xephyr():
-	os.kill(xephyr_pid)
-
-def start_matchbox():
-	command = 'matchbox-window-manager -use_titlebar no'
-	xephyr_pid = os.spawnvp(os.P_NOWAIT, 'matchbox-window-manager', command.split())
-
-def stop_matchbox():
-	os.kill(xephyr_pid)
-
-start_xephyr()
-os.environ['DISPLAY'] = ":%d" % (XEPHYR_DISPLAY)
-start_matchbox()
-	
 i = 0
-dbus_daemon_pid = None
 for arg in sys.argv:
 	if arg == '--test-user':
 		user = sys.argv[i + 1]
 		user_dir = os.path.expanduser('~/.sugar-' + user)
 		os.environ['SUGAR_NICK_NAME'] = user
 		os.environ['SUGAR_USER_DIR'] = user_dir
-		dbus_daemon_pid = start_dbus()
-		started_dbus = True
 	i += 1
 
 if not os.environ.has_key("SUGAR_NICK_NAME"):
@@ -89,13 +43,7 @@ else:
 	
 print 'Redirecting output to the console, press Ctrl+Down to open it.'
 	
-from session.session import Session
+from Session import Session
 
 session = Session()
 session.start()
-
-if dbus_daemon_pid:
-	stop_dbus(dbus_daemon_pid)
-
-stop_matchbox()
-stop_xephyr()

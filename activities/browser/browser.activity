@@ -1,3 +1,4 @@
 [Activity]
-name = com.redhat.Sugar.BrowserActivity
-class = BrowserActivity.BrowserActivity
+name = Web
+id = com.redhat.Sugar.BrowserActivity
+python_module = BrowserActivity.BrowserActivity

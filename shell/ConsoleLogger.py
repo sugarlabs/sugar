@@ -1,5 +1,5 @@
 import gtk
-import dbus
+import dbus.service
 
 class ConsoleLogger(dbus.service.Object):
 	def __init__(self):

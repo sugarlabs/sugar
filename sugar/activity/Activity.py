@@ -12,7 +12,7 @@ from sugar.LogWriter import LogWriter
 from sugar import keybindings
 import sugar.util
 
-SHELL_SERVICE_NAME = "com.redhat.Sugar.Shell"
+SHELL_SERVICE_NAME = "caom.redhat.Sugar.Shell"
 SHELL_SERVICE_PATH = "/com/redhat/Sugar/Shell"
 
 ACTIVITY_SERVICE_NAME = "com.redhat.Sugar.Activity"
