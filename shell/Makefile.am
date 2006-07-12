@@ -1,4 +1,4 @@
-bin_SCRIPTS = sugar
+bin_SCRIPTS = sugar sugar-activity
 
 sugardir = $(pkgdatadir)/shell
 sugar_PYTHON =				\

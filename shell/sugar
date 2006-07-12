@@ -5,8 +5,6 @@ import os
 import pwd
 import random
 
-from Emulator import Emulator
-
 def add_to_python_path(path):
 	sys.path.insert(0, path)
 	if os.environ.has_key('PYTHONPATH'):
@@ -14,10 +12,6 @@ def add_to_python_path(path):
 		os.environ['PYTHONPATH'] = path + ':' + old_path
 	else:
 		os.environ['PYTHONPATH'] = path
-
-# FIXE Don't run the emulator on the OLPC
-emulator = Emulator()
-emulator.start()
 
 i = 0
 for arg in sys.argv:
@@ -46,8 +40,14 @@ else:
 	import sugar.env
 	add_to_python_path(os.path.join(sugar.env.get_data_dir(), 'shell'))
 	print 'Running the installed sugar...'
+
+from Emulator import Emulator
+
+# FIXE Don't run the emulator on the OLPC
+emulator = Emulator()
+emulator.start()
 	
-print 'Redirecting output to the console, press Ctrl+Down to open it.'
+print 'Redirecting output to the console, press F3 to open it.'
 	
 from Session import Session
 

@@ -1,9 +1,10 @@
 import os
 import gtk
-import sugar.theme
+import gobject
 
 from Shell import Shell
 from Process import Process
+import sugar.theme
 
 class ActivityProcess(Process):
 	def __init__(self, module):
@@ -21,8 +22,12 @@ class DbusProcess(Process):
 		return 'Dbus'
 
 	def start(self):
-		Process.start(self)
-		
+		args = self._command.split()
+		flags = gobject.SPAWN_SEARCH_PATH
+		result = gobject.spawn_async(args, flags=flags, standard_output=True,
+									 standard_error=True)
+		self._stdout = result[2]
+
 		dbus_file = os.fdopen(self._stdout)
 		addr = dbus_file.readline()
 		addr = addr.strip()
@@ -42,9 +47,6 @@ class Session:
 	def __init__(self):
 		sugar.theme.setup()
 		
-		self._shell = Shell()
-		self._shell.start()
-
 	def start(self):
 		"""Start the session"""
 		process = DbusProcess()
@@ -52,8 +54,11 @@ class Session:
 
 		process = MatchboxProcess()
 		process.start()
+		
+		shell = Shell()
+		shell.start()
 
-		registry = self._shell.get_registry()
+		registry = shell.get_registry()
 		for activity_module in registry.list_activities():
 			process = ActivityProcess(activity_module)
 			process.start()

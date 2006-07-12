@@ -69,8 +69,8 @@ class ActivityRegistry:
 			activity_exec = cp.get('Activity', 'exec')
 		elif cp.has_option('Activity', 'python_module'):
 			python_module = cp.get('Activity', 'python_module')
-			activity_exec = 'python -m sugar/activity/Activity %s %s' \
-							% (activity_id, python_module)
+			activity_exec = '%s %s %s' % (env.get_activity_runner(),
+							   			  activity_id, python_module)
 			env.add_to_python_path(directory)
 		else:
 			logging.error('%s must specifiy exec or python_module' % (path))

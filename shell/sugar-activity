@@ -1,0 +1,16 @@
+#!/usr/bin/python
+
+import sys
+
+import gobject
+
+from sugar.activity import Activity
+from sugar.LogWriter import LogWriter
+from sugar import theme
+
+theme.setup()
+
+lw = LogWriter(sys.argv[1])
+lw.start()
+
+Activity.register_factory(sys.argv[1], sys.argv[2])

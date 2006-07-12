@@ -11,7 +11,6 @@ import gtk, gobject
 from sugar.LogWriter import LogWriter
 from sugar import keybindings
 import sugar.util
-import sugar.theme
 
 SHELL_SERVICE_NAME = "caom.redhat.Sugar.Shell"
 SHELL_SERVICE_PATH = "/com/redhat/Sugar/Shell"
@@ -83,13 +82,8 @@ def create(activity_name, service = None, args = None):
 	else:
 		factory.create()		
 
-def main(activity_name, activity_class):
-	"""Starts the activity main loop."""
-	sugar.theme.setup()
-	
-	log_writer = LogWriter(activity_name)
-	log_writer.start()
-	
+def register_factory(activity_name, activity_class):
+	"""Register the activity factory."""
 	factory = ActivityFactory(activity_name, activity_class)
 
 	gtk.main()
@@ -98,8 +92,7 @@ class ActivityDbusService(dbus.service.Object):
 	"""Base dbus service object that each Activity uses to export dbus methods.
 	
 	The dbus service is separate from the actual Activity object so that we can
-	tightly control what stuff passes through	print aaaa
- the dbus python bindings."""
+	tightly control what stuff passes through the dbus python bindings."""
 
 	_ALLOWED_CALLBACKS = [ON_PUBLISH_CB]
 
@@ -223,6 +216,3 @@ class Activity(gtk.Window):
 	def publish(self):
 		"""Called to request the activity to publish itself on the network."""
 		pass
-
-if __name__ == "__main__":
-	main(sys.argv[1], sys.argv[2])

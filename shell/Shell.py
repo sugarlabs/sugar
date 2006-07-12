@@ -3,6 +3,7 @@ import os
 import dbus
 import gtk
 import wnck
+import gobject
 
 from sugar.LogWriter import LogWriter
 from ConsoleLogger import ConsoleLogger
