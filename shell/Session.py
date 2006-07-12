@@ -22,12 +22,7 @@ class DbusProcess(Process):
 		return 'Dbus'
 
 	def start(self):
-		args = self._command.split()
-		flags = gobject.SPAWN_SEARCH_PATH
-		result = gobject.spawn_async(args, flags=flags, standard_output=True,
-									 standard_error=True)
-		self._stdout = result[2]
-
+		Process.start(self, True)
 		dbus_file = os.fdopen(self._stdout)
 		addr = dbus_file.readline()
 		addr = addr.strip()

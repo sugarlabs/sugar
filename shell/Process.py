@@ -11,7 +11,9 @@ class Process:
 	def get_name(self):
 		return self._command
 	
-	def start(self):
+	def start(self, standard_output=False):
 		args = self._command.split()
 		flags = gobject.SPAWN_SEARCH_PATH
-		result = gobject.spawn_async(args, flags=flags)
+		result = gobject.spawn_async(args, flags=flags,
+									 standard_output=standard_output)
+		self._stdout = result[2]
