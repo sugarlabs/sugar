@@ -8,7 +8,8 @@ sugar_PYTHON =				\
 	Emulator.py			\
 	Owner.py			\
 	HomeWindow.py			\
-	PresenceWindow.py		\
+	PeopleWindow.py			\
+	PresenceView.py			\
 	Process.py			\
 	Session.py			\
 	Shell.py

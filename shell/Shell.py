@@ -12,8 +12,7 @@ from HomeWindow import HomeWindow
 from sugar import keybindings
 from sugar import env
 from sugar.activity import Activity
-from PresenceWindow import PresenceWindow
-from sugar.chat.ActivityChat import ActivityChat
+from PeopleWindow import PeopleWindow
 from Owner import ShellOwner
 
 class ShellDbusService(dbus.service.Object):
@@ -61,13 +60,7 @@ class Shell:
 		keybindings.setup_global_keys(self._home_window, self)
 		self._home_window.show()
 
-		self._presence_window = PresenceWindow(self)
-		self._presence_window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
-		self._presence_window.set_skip_taskbar_hint(True)
-		self._presence_window.set_decorated(False)
-		keybindings.setup_global_keys(self._presence_window, self)
-
-		self._chat_windows = {}
+		self._people_windows = {}
 
 	def _toggle_window_visibility(self, window):
 		if window.get_property('visible'):
@@ -103,27 +96,14 @@ class Shell:
 		if activity:
 			activity_id = activity.get_id()
 
-			if not self._chat_windows.has_key(activity_id):
-				window = gtk.Window()
-				window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
-				window.set_skip_taskbar_hint(True)
-				window.set_decorated(False)
+			if not self._people_windows.has_key(activity_id):
+				window = PeopleWindow(self, activity)
 				keybindings.setup_global_keys(window, self)
-				chat = ActivityChat(activity)
-				window.add(chat)
-				chat.show()
-				self._chat_windows[activity_id] = window
+				self._people_windows[activity_id] = window
 			else:
-				window = self._chat_windows[activity_id]
+				window = self._people_windows[activity_id]
 
-			window.move(210, 10)
-			window.resize(380, 440)
 			self._toggle_window_visibility(window)
-
-			self._presence_window.move(10, 10)
-			self._presence_window.resize(180, 440)
-			self._presence_window.set_activity(activity)
-			self._toggle_window_visibility(self._presence_window)
 
 	def toggle_console(self):
 		self._toggle_window_visibility(self._console.get_window())

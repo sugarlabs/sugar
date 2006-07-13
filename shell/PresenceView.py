@@ -10,14 +10,14 @@ from sugar.chat.BuddyChat import BuddyChat
 
 from gettext import gettext as _
 
-class PresenceWindow(gtk.Window):
+class PresenceView(gtk.VBox):
 	_MODEL_COL_NICK = 0
 	_MODEL_COL_ICON = 1
 	_MODEL_COL_BUDDY = 2
 	_MODEL_COL_VISIBLE = 3
 		
 	def __init__(self, shell):
-		gtk.Window.__init__(self)
+		gtk.VBox.__init__(self, False, 6)
 		
 		self._activity = None
 		self._shell = shell
@@ -55,12 +55,11 @@ class PresenceWindow(gtk.Window):
 			self._share_button.set_sensitive(False)
 
 	def _setup_ui(self):
-		vbox = gtk.VBox(False, 6)
-		vbox.set_border_width(12)
-		
+		self.set_size_request(120, -1)
+
 		label = gtk.Label(_("Who's around:"))
 		label.set_alignment(0.0, 0.5)
-		vbox.pack_start(label, False)
+		self.pack_start(label, False)
 		label.show()
 
 		self._buddy_store = gtk.ListStore(gobject.TYPE_STRING,
@@ -95,7 +94,7 @@ class PresenceWindow(gtk.Window):
 		column.set_expand(True);
 		self._buddy_list_view.append_column(column)
 
-		vbox.pack_start(sw)
+		self.pack_start(sw)
 		sw.show()
 
 		button_box = gtk.HButtonBox()
@@ -105,11 +104,8 @@ class PresenceWindow(gtk.Window):
 		button_box.pack_start(self._share_button)
 		self._share_button.show()
 
-		vbox.pack_start(button_box, False)
+		self.pack_start(button_box, False)
 		button_box.show()
-
-		self.add(vbox)
-		vbox.show()
 	
 	def _share_button_clicked_cb(self, button):
 		self._shell.get_current_activity().publish()
