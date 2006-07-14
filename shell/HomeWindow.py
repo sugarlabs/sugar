@@ -37,7 +37,39 @@ class Toolbar(gtk.Toolbar):
 		self.insert(new_activity_button, -1)
 		new_activity_button.show()
 
-class ActivityGrid(gtk.VBox):
+class ActivitiesGrid(gtk.VBox):
+	def __init__(self, model):
+		gtk.VBox.__init__(self)
+		
+		self._buttons = {}
+
+		for activity in model:
+			self._add(activity)
+		screen.connect('activity-added', self.__activity_added_cb)
+		screen.connect('activity-removed', self.__activity_removed_cb)
+
+	def __activity_added_cb(self, model, activity):
+		self._add(activity)
+
+	def __activity_closed_cb(self, model, activity):
+		self._remove(window)
+	
+	def _remove(self, activity):
+		button = self._buttons[activity.get_id()]
+		self.remove(button)
+
+	def _add(self, activity):
+		button = gtk.Button(window.get_title())
+		button.connect('clicked', self.__button_clicked_cb, window)
+		self.pack_start(button, False)
+		button.show()
+
+		self._buttons[activity.get_id()] = button
+	
+	def __button_clicked_cb(self, button, window):
+		self._home.activate(window)
+
+class TasksGrid(gtk.VBox):
 	def __init__(self, home):
 		gtk.VBox.__init__(self)
 		
@@ -94,14 +126,19 @@ class HomeWindow(gtk.Window):
 		vbox.pack_start(label, False)
 		label.show()
 		
-		self._grid = ActivityGrid(self)
-		vbox.pack_start(self._grid)
-		self._grid.show()
+		grid = TasksGrid(self)
+		vbox.pack_start(grid)
+		grid.show()
 
 		label = gtk.Label('Shared activities:')
 		label.set_alignment(0.0, 0.5)
 		vbox.pack_start(label, False)
 		label.show()
+
+		model = ActivitiesModel()
+		grid = ActivitiesGrid(model)
+		vbox.pack_start(grid)
+		grid.show()
 
 		self.add(vbox)
 		vbox.show()
