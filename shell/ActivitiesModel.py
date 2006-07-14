@@ -1,5 +1,7 @@
 import gobject
 
+from sugar.presence.PresenceService import PresenceService
+
 class ActivityInfo:
 	def __init__(self, service):
 		self._service = service
@@ -15,10 +17,12 @@ class ActivitiesModel(gobject.GObject):
 	__gsignals__ = {
 		'activity-added':   (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
 						    ([gobject.TYPE_PYOBJECT])),
+		'activity-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+						    ([gobject.TYPE_PYOBJECT]))
 	}
 
 	def __init__(self):
-		gobject.GObject(self)
+		gobject.GObject.__init__(self)
 		
 		self._activities = []
 		
@@ -33,7 +37,7 @@ class ActivitiesModel(gobject.GObject):
 		self.emit('activity-added', activity_info)
 
 	def __iter__(self):
-		return activities.__iter__()
+		return self._activities.__iter__()
 
 	def _on_new_service_adv_cb(self, pservice, activity_id, short_stype):
 		if activity_id:

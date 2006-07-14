@@ -2,3 +2,4 @@
 name = Web
 id = com.redhat.Sugar.BrowserActivity
 python_module = BrowserActivity.BrowserActivity
+default_type = _web_olpc._udp

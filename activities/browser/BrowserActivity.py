@@ -14,7 +14,6 @@ from sugar.p2p.model.RemoteModel import RemoteModel
 from NotificationBar import NotificationBar
 from NavigationToolbar import NavigationToolbar
 
-_BROWSER_ACTIVITY_TYPE = "_web_olpc._udp"
 _SERVICE_URI_TAG = "URI"
 _SERVICE_TITLE_TAG = "Title"
 
@@ -23,8 +22,8 @@ class BrowserActivity(Activity):
 	FOLLOWING = 2
 	LEADING = 3
 
-	def __init__(self, args):
-		Activity.__init__(self, _BROWSER_ACTIVITY_TYPE)
+	def __init__(self, service, args):
+		Activity.__init__(self, service)
 
 		if len(args) > 0:
 			self.uri = args[0]
@@ -65,7 +64,6 @@ class BrowserActivity(Activity):
 		
 		logging.debug('Track browser activities')
 		self._pservice.connect('service-appeared', self._service_appeared_cb)
-		self._pservice.track_service_type(_BROWSER_ACTIVITY_TYPE)
 		self._pservice.track_service_type(LocalModel.SERVICE_TYPE)
 
 		# Join the shared activity if we were started from one
@@ -89,8 +87,9 @@ class BrowserActivity(Activity):
 			self._model = RemoteModel(self._model_service, self._notif_service)
 			self._model.add_listener(self.__shared_location_changed_cb)
 	
-	def get_default_type(self):
-		return _BROWSER_ACTIVITY_TYPE
+	def set_default_type(self, default_type):
+		Activity.set_default_type(self, default_type)
+		self._pservice.track_service_type(default_type)
 	
 	def _update_shared_location(self):
 		address = self.embed.get_address()
@@ -125,7 +124,7 @@ class BrowserActivity(Activity):
 		# Publish ourselves on the network
 		properties = {_SERVICE_URI_TAG: escaped_url, _SERVICE_TITLE_TAG: escaped_title}
 		self._share_service = self._pservice.share_activity(self,
-				stype=_BROWSER_ACTIVITY_TYPE, properties=properties)
+				stype=self._default_type, properties=properties)
 
 		# Create our activity-specific browser sharing service
 		self._model = LocalModel(self, self._pservice, self._share_service)

@@ -29,6 +29,14 @@ class ActivityModule:
 	def get_directory(self):
 		"""Get the path to activity directory."""
 		return self._directory
+		
+	def get_default_type(self):
+		"""Get the the type of the default activity service."""
+		return self._default_type
+
+	def set_default_type(self, default_type):
+		"""Set the the type of the default activity service."""
+		self._default_type = default_type
 
 class ActivityRegistry:
 	"""Service that tracks the available activities"""
@@ -65,12 +73,20 @@ class ActivityRegistry:
 			logging.error('%s miss the required name option' % (path))
 			return False
 
+		if cp.has_option('Activity', 'default_type'):
+			default_type = cp.get('Activity', 'default_type')
+		else:
+			default_type = None
+
 		if cp.has_option('Activity', 'exec'):
 			activity_exec = cp.get('Activity', 'exec')
 		elif cp.has_option('Activity', 'python_module'):
 			python_module = cp.get('Activity', 'python_module')
+			python_module = cp.get('Activity', 'python_module')
 			activity_exec = '%s %s %s' % (env.get_activity_runner(),
 							   			  activity_id, python_module)
+			if default_type:
+				activity_exec += ' ' + default_type
 			env.add_to_python_path(directory)
 		else:
 			logging.error('%s must specifiy exec or python_module' % (path))
@@ -78,6 +94,8 @@ class ActivityRegistry:
 
 		module = ActivityModule(name, activity_id, activity_exec, directory)
 		self._activities.append(module)
+
+		module.set_default_type(default_type)
 
 		return True
 

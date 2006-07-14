@@ -4,6 +4,7 @@ import gtk
 import wnck
 
 from sugar.activity import Activity
+from ActivitiesModel import ActivitiesModel
 
 class NewActivityButton(gtk.MenuToolButton):
 	def __init__(self, home):
@@ -45,13 +46,13 @@ class ActivitiesGrid(gtk.VBox):
 
 		for activity in model:
 			self._add(activity)
-		screen.connect('activity-added', self.__activity_added_cb)
-		screen.connect('activity-removed', self.__activity_removed_cb)
+		model.connect('activity-added', self.__activity_added_cb)
+		model.connect('activity-removed', self.__activity_removed_cb)
 
 	def __activity_added_cb(self, model, activity):
 		self._add(activity)
 
-	def __activity_closed_cb(self, model, activity):
+	def __activity_removed_cb(self, model, activity):
 		self._remove(window)
 	
 	def _remove(self, activity):

@@ -13,4 +13,7 @@ theme.setup()
 lw = LogWriter(sys.argv[1])
 lw.start()
 
-Activity.register_factory(sys.argv[1], sys.argv[2])
+if len(sys.argv) == 4:
+	Activity.register_factory(sys.argv[1], sys.argv[2], sys.argv[3])
+else:
+	Activity.register_factory(sys.argv[1], sys.argv[2])

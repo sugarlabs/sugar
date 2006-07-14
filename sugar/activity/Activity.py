@@ -31,7 +31,8 @@ def get_factory(activity_name):
 class ActivityFactory(dbus.service.Object):
 	"""Dbus service that takes care of creating new instances of an activity"""
 
-	def __init__(self, activity_name, activity_class):
+	def __init__(self, name, activity_class, default_type):
+		self._default_type = default_type
 		splitted_module = activity_class.rsplit('.', 1)
 		module_name = splitted_module[0]
 		class_name = splitted_module[1]
@@ -50,21 +51,19 @@ class ActivityFactory(dbus.service.Object):
 		self._class = getattr(module, class_name)
 	
 		bus = dbus.SessionBus()
-		factory = get_factory(activity_name)
+		factory = get_factory(name)
 		bus_name = dbus.service.BusName(factory, bus = bus) 
 		dbus.service.Object.__init__(self, bus_name, get_path(factory))
 
 	@dbus.service.method("com.redhat.Sugar.ActivityFactory")
 	def create_with_service(self, serialized_service, args):
-		service = None
-		if serialized_service is not None:
-			service = Service.deserialize(serialized_service)
-
-		activity = self._class(args)
+		service = Service.deserialize(serialized_service)
+		activity = self._class(service, args)
 
 	@dbus.service.method("com.redhat.Sugar.ActivityFactory")
 	def create(self):
-		self.create_with_service(None, [])
+		activity = self._class(None, [])
+		activity.set_default_type(self._default_type)
 
 def create(activity_name, service = None, args = None):
 	"""Create a new activity from his name."""
@@ -82,9 +81,9 @@ def create(activity_name, service = None, args = None):
 	else:
 		factory.create()		
 
-def register_factory(activity_name, activity_class):
+def register_factory(name, activity_class, default_type=None):
 	"""Register the activity factory."""
-	factory = ActivityFactory(activity_name, activity_class)
+	factory = ActivityFactory(name, activity_class, default_type)
 
 	gtk.main()
 
@@ -143,21 +142,20 @@ class ActivityDbusService(dbus.service.Object):
 class Activity(gtk.Window):
 	"""Base Activity class that all other Activities derive from."""
 
-	def __init__(self, default_type, activity_id = None):
+	def __init__(self, service = None):
 		gtk.Window.__init__(self)
 
-		if activity_id is None:
-			self._activity_id = sugar.util.unique_id()
+		if service and service.has_key('activity_id'):
+			self._activity_id = service['activity_id']
+			self._shared = True
 		else:
-			self._activity_id = activity_id
+			self._activity_id = sugar.util.unique_id()
+			self._shared = False
 
 		self._dbus_service = None
 		self._initial_service = None
 		self._activity_object = None
-		self._shared = False
-		if type(default_type) != type("") or not len(default_type):
-			raise ValueError("Default type must be a valid string.")
-		self._default_type = default_type
+		self._default_type = None
 
 		keybindings.setup_global_keys(self)
 
@@ -186,7 +184,10 @@ class Activity(gtk.Window):
 		Allows subclasses to use their own dbus service object if they choose."""
 		return ActivityDbusService(self.window.xid, self)
 
-	def default_type(self):
+	def set_default_type(self, default_type):
+		self._default_type = default_type
+
+	def get_default_type(self):
 		return self._default_type
 
 	def set_shared(self):
