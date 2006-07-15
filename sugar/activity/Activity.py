@@ -4,16 +4,12 @@ import imp
 import dbus
 import dbus.service
 import dbus.glib
-import pygtk
-pygtk.require('2.0')
-import gtk, gobject
+import gtk
+import gobject
 
 from sugar.LogWriter import LogWriter
 from sugar import keybindings
 import sugar.util
-
-SHELL_SERVICE_NAME = "caom.redhat.Sugar.Shell"
-SHELL_SERVICE_PATH = "/com/redhat/Sugar/Shell"
 
 ACTIVITY_SERVICE_NAME = "com.redhat.Sugar.Activity"
 ACTIVITY_SERVICE_PATH = "/com/redhat/Sugar/Activity"
@@ -84,7 +80,6 @@ def create(activity_name, service = None, args = None):
 def register_factory(name, activity_class, default_type=None):
 	"""Register the activity factory."""
 	factory = ActivityFactory(name, activity_class, default_type)
-
 	gtk.main()
 
 class ActivityDbusService(dbus.service.Object):
@@ -186,6 +181,7 @@ class Activity(gtk.Window):
 
 	def set_default_type(self, default_type):
 		self._default_type = default_type
+		print self._default_type
 
 	def get_default_type(self):
 		return self._default_type
@@ -194,7 +190,6 @@ class Activity(gtk.Window):
 		"""Mark the activity as 'shared'."""
 		if not self._shared:
 			self._shared = True
-			self._dbus_service.ActivityShared()
 
 	def get_shared(self):
 		return self._shared

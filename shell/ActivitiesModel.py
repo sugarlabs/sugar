@@ -1,3 +1,5 @@
+import xml.sax.saxutils
+
 import gobject
 
 from sugar.presence.PresenceService import PresenceService
@@ -7,11 +9,18 @@ class ActivityInfo:
 		self._service = service
 	
 	def get_id(self):
-		activity_id = service.get_one_property('activity_id')
+		activity_id = self._service.get_one_property('activity_id')
+		
+	def get_type(self):
+		return self._service.get_type()
 	
 	def get_title(self):
-		escaped_title = service.get_one_property('Title')
+		escaped_title = self._service.get_one_property('Title')
 		title = xml.sax.saxutils.unescape(escaped_title)
+		return title
+	
+	def get_service(self):
+		return self._service
 
 class ActivitiesModel(gobject.GObject):
 	__gsignals__ = {
@@ -44,4 +53,6 @@ class ActivitiesModel(gobject.GObject):
 			self._pservice.track_service_type(short_stype)
 
 	def _on_activity_announced_cb(self, pservice, service, buddy):
-		self.add_activity(buddy, service)
+		# FIXME We should not hard code activity types here
+		if service.get_type() == "_web_olpc._udp":
+			self.add_activity(service)

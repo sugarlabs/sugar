@@ -77,7 +77,7 @@ class BrowserActivity(Activity):
 		if service.get_activity_id() != self._activity_id:
 			return
 
-		if service.get_type() == _BROWSER_ACTIVITY_TYPE:
+		if service.get_type() == self._default_type:
 			self._notif_service = service
 		elif service.get_type() == LocalModel.SERVICE_TYPE:
 			if self._mode != BrowserActivity.LEADING:
@@ -102,7 +102,6 @@ class BrowserActivity(Activity):
 			self._update_shared_location()
 		elif action_id == 'goto_shared_location':
 			address = self._model.get_value("address")
-			print address
 			self.embed.load_address(address)
 			self._notif_bar.hide()
 

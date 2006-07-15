@@ -489,7 +489,7 @@ class PresenceService(gobject.GObject):
 			port = random.randint(5000, 65535)
 
 		# Mark the activity as shared
-		if stype == activity.default_type():
+		if stype == activity.get_default_type():
 			activity.set_shared()
 
 		logging.debug('Share activity %s, type %s, address %s, port %d, properties %s' % (actid, stype, address, port, properties))

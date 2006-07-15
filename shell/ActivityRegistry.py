@@ -44,6 +44,13 @@ class ActivityRegistry:
 	def __init__(self):
 		self._activities = []
 	
+	def get_activity(self, default_type):
+		"""Returns an activity given his default type"""
+		for activity in self._activities:
+			if activity.get_default_type() == default_type:
+				return activity
+		return None
+	
 	def scan_directory(self, path):
 		"""Scan a directory for activities and add them to the registry.""" 
 		if os.path.isdir(path):

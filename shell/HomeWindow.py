@@ -39,9 +39,10 @@ class Toolbar(gtk.Toolbar):
 		new_activity_button.show()
 
 class ActivitiesGrid(gtk.VBox):
-	def __init__(self, model):
-		gtk.VBox.__init__(self)
+	def __init__(self, shell, model):
+		gtk.VBox.__init__(self, shell)
 		
+		self._shell = shell
 		self._buttons = {}
 
 		for activity in model:
@@ -60,15 +61,16 @@ class ActivitiesGrid(gtk.VBox):
 		self.remove(button)
 
 	def _add(self, activity):
-		button = gtk.Button(window.get_title())
-		button.connect('clicked', self.__button_clicked_cb, window)
+		button = gtk.Button(activity.get_title())
+		button.connect('clicked', self.__button_clicked_cb, activity)
 		self.pack_start(button, False)
 		button.show()
 
 		self._buttons[activity.get_id()] = button
 	
-	def __button_clicked_cb(self, button, window):
-		self._home.activate(window)
+	def __button_clicked_cb(self, button, info):
+		activity = self._shell.get_registry().get_activity(info.get_type())
+		Activity.create(activity.get_id(), info.get_service())
 
 class TasksGrid(gtk.VBox):
 	def __init__(self, home):
@@ -137,7 +139,7 @@ class HomeWindow(gtk.Window):
 		label.show()
 
 		model = ActivitiesModel()
-		grid = ActivitiesGrid(model)
+		grid = ActivitiesGrid(shell, model)
 		vbox.pack_start(grid)
 		grid.show()
 
