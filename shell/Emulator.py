@@ -11,7 +11,7 @@ class XephyrProcess(Process):
 		Process.__init__(self, cmd)
 
 	def get_display_number(self):
-		"""Find a free display number trying to connect to 6000+ sockets"""
+		"""Find a free display number trying to connect to 6000+ ports"""
 		retries = 20
 		display_number = 1
 		display_is_free = False
