@@ -21,6 +21,7 @@ class XephyrProcess(Process):
 			try:
 				s.connect(('127.0.0.1', 6000 + display_number))
 				logging.info('Display %d is already in use. Trying next.' % (display_number))
+				s.close()
 
 				display_number += 1
 				retries -= 1
