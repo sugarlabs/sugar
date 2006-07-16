@@ -3,6 +3,7 @@ bin_SCRIPTS = sugar sugar-activity
 sugardir = $(pkgdatadir)/shell
 sugar_PYTHON =				\
 	__init__.py			\
+	ActivitiesModel.py		\
 	ActivityRegistry.py		\
 	ConsoleLogger.py		\
 	Emulator.py			\
