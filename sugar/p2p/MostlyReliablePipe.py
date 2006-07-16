@@ -10,9 +10,8 @@ import StringIO
 import binascii
 import random
 
-import pygtk
-pygtk.require('2.0')
-import gtk, gobject
+import gtk
+import gobject
 
 
 def _stringify_sha(sha_hash):

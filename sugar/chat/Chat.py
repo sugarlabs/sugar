@@ -6,9 +6,9 @@ import dbus
 import dbus.service
 import dbus.glib
 
-import pygtk
-pygtk.require('2.0')
-import gtk, gobject, pango
+import gtk
+import gobject
+import pango
 
 from sugar.chat.Emoticons import Emoticons
 from sugar.chat.ChatToolbar import ChatToolbar

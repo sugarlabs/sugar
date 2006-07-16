@@ -2,8 +2,6 @@ import dbus
 import random
 import logging
 
-import pygtk
-pygtk.require('2.0')
 import gtk
 import gobject
 

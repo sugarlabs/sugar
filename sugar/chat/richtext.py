@@ -1,8 +1,4 @@
-#!/usr/bin/env python
-
-import pygtk
 import gobject
-pygtk.require('2.0')
 import gtk
 import pango
 import xml.sax

@@ -627,7 +627,7 @@ def runTests():
 	runner.run(suite)
 
 def main():
-	import pygtk, gtk
+	import gtk
 	global ps
 	ps = PresenceService.get_instance()
 	ps.start()

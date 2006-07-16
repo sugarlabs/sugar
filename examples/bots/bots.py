@@ -1,7 +1,5 @@
 import os
 
-import pygtk
-pygtk.require('2.0')
 import gtk
 
 from sugar.bots import Bot

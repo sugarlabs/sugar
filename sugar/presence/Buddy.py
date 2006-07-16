@@ -1,9 +1,8 @@
 import base64
 import logging
 
-import pygtk
-pygtk.require('2.0')
-import gtk, gobject
+import gtk
+import gobject
 
 from sugar.p2p import Stream
 from sugar.p2p import network

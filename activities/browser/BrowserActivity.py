@@ -1,8 +1,6 @@
 import logging
 import xml.sax.saxutils
 
-import pygtk
-pygtk.require('2.0')
 import gtk
 import geckoembed
 
