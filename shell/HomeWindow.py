@@ -115,7 +115,7 @@ class HomeWindow(gtk.Window):
 		
 		self._shell = shell
 
-		self.set_skip_taskbar_hint(True)
+		self.connect('realize', self.__realize_cb)
 				
 		vbox = gtk.VBox(False, 6)
 		vbox.set_border_width(24)
@@ -145,6 +145,9 @@ class HomeWindow(gtk.Window):
 
 		self.add(vbox)
 		vbox.show()
+
+	def __realize_cb(self, window):
+		self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
 
 	def list_activities(self):
 		return self._shell.get_registry().list_activities()
