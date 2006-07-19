@@ -5,6 +5,7 @@ import gobject
 from Shell import Shell
 from Process import Process
 import sugar.theme
+import sugar.env
 
 class ActivityProcess(Process):
 	def __init__(self, module):
@@ -31,7 +32,14 @@ class DbusProcess(Process):
 
 class MatchboxProcess(Process):
 	def __init__(self):
-		Process.__init__(self, 'matchbox-window-manager -use_titlebar no')
+		options = '-use_titlebar no'
+
+		kbd_config = os.path.join(sugar.env.get_data_dir(), 'kbdconfig')
+		options += ' -kbdconfig %s' % kbd_config
+
+		command = 'matchbox-window-manager %s' % options
+		print command
+		Process.__init__(self, command)
 	
 	def get_name(self):
 		return 'Matchbox'
