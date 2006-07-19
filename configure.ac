@@ -28,6 +28,7 @@ activities/browser/Makefile
 activities/chat/Makefile
 shell/Makefile
 shell/data/Makefile
+shell/PresenceService/Makefile
 sugar/Makefile
 sugar/__installed__.py
 sugar/activity/Makefile
