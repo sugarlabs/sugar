@@ -85,6 +85,10 @@ class Shell:
 		else:
 			return None
 
+	def __people_window_delete_cb(self, window, event):
+		window.hide()
+		return True
+
 	def show_people(self):
 		activity = self.get_current_activity()
 
@@ -93,6 +97,7 @@ class Shell:
 
 			if not self._people_windows.has_key(activity_id):
 				window = PeopleWindow(self, activity)
+				window.connect('delete-event', self.__people_window_delete_cb)
 				keybindings.setup_global_keys(window, self)
 				self._people_windows[activity_id] = window
 			else:
