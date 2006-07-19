@@ -127,7 +127,7 @@ class ActivityDbusService(dbus.service.Object):
 	@dbus.service.method(ACTIVITY_SERVICE_NAME)
 	def get_id(self):
 		"""Get the activity identifier"""
-		self._activity.get_id()
+		return self._activity.get_id()
 
 	@dbus.service.method(ACTIVITY_SERVICE_NAME)
 	def get_shared(self):
