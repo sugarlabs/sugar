@@ -63,44 +63,6 @@ def is_multicast_address(address):
 		return True
 	return False
 
-def deserialize(sdict):
-	try:
-		name = sdict['name']
-		if type(name) != type(u""):
-			raise ValueError("name must be unicode.")
-		stype = sdict['stype']
-		if type(stype) != type(u""):
-			raise ValueError("type must be unicode.")
-		domain = sdict['domain']
-		if type(domain) != type(u""):
-			raise ValueError("domain must be unicode.")
-		port = sdict['port']
-		properties = sdict['properties']
-	except KeyError, exc:
-		raise ValueError("Serialized service object was not valid.")
-
-	address = None
-	try:
-		address = sdict['address']
-		if type(address) != type(u""):
-			raise ValueError("address must be unicode.")
-	except KeyError:
-		pass
-	
-	activity_id = None
-	try:
-		activity_id = sdict['activity_id']
-		if type(activity_id) != type(u""):
-			raise ValueError("activity id must be unicode.")
-	except KeyError:
-		pass
-
-	if activity_id is not None:
-		name = compose_service_name(name, activity_id)
-
-	return Service(name, stype, domain, address=address,
-		port=port, properties=properties)
-
 
 _ACTIVITY_ID_TAG = "ActivityID"
 SERVICE_DBUS_INTERFACE = "org.laptop.Presence.Service"
@@ -197,29 +159,23 @@ class Service(object):
 		if actid and not self._properties.has_key(_ACTIVITY_ID_TAG):
 			self._properties[_ACTIVITY_ID_TAG] = actid
 
+		self._owner = None
+
 		# register ourselves with dbus
 		self._object_id = object_id
 		self._object_path = "/org/laptop/Presence/Services/%d" % self._object_id
 		self._dbus_helper = ServiceDBusHelper(self, bus_name, self._object_path)
 
 	def object_path(self):
-		return self._object_path
+		return dbus.ObjectPath(self._object_path)
 
-	def serialize(self, owner=None):
-		sdict = {}
-		if owner is not None:
-			sdict['name'] = dbus.Variant(owner.get_nick_name())
-		else:
-			sdict['name'] = dbus.Variant(self._name)
-		sdict['stype'] = dbus.Variant(self._stype)
-		if self._activity_id:
-			sdict['activity_id'] = dbus.Variant(self._activity_id)
-		sdict['domain'] = dbus.Variant(self._domain)
-		if self._address:
-			sdict['address'] = dbus.Variant(self._address)
-		sdict['port'] = dbus.Variant(self._port)
-		sdict['properties'] = dbus.Variant(self._properties)
-		return sdict
+	def get_owner(self):
+		return self._owner
+
+	def set_owner(self, owner):
+		if self._owner is not None:
+			raise RuntimeError("Can only set a service's owner once")
+		self._owner = owner
 
 	def get_name(self):
 		"""Return the service's name, usually that of the
@@ -256,9 +212,7 @@ class Service(object):
 		elif type(properties) == type({}):
 			props = properties
 
-		# Set key/value pairs on internal property list, 
-		# also convert everything to local encoding (for now)
-		# to ensure consistency
+		# Set key/value pairs on internal property list
 		for key, value in props.items():
 			tmp_key = key
 			tmp_val = value
