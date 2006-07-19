@@ -1,3 +1,5 @@
+SUBDIRS = data
+
 bin_SCRIPTS = sugar sugar-activity
 
 sugardir = $(pkgdatadir)/shell

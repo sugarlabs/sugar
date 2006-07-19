@@ -1,0 +1,9 @@
+# This is the sugar keyboard configuration for matchbox
+
+### Window operation short cuts 
+
+<Alt>n=next
+<Alt>p=prev
+<Alt>c=close
+f1=desktop
+f2=!sugar-people
