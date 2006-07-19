@@ -20,26 +20,27 @@ class BuddyDBusHelper(dbus.service.Object):
 		dbus.service.Object.__init__(self, bus_name, self._object_path)
 
 	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
-						out_signature="o")
+						signature="o")
 	def ServiceAppeared(self, object_path):
 		pass
 
 	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
-						out_signature="o")
+						signature="o")
 	def ServiceDisappeared(self, object_path):
 		pass
 
-	@dbus.service.signal(BUDDY_DBUS_INTERFACE)
+	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
+						signature="")
 	def IconChanged(self):
 		pass
 
 	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
-						out_signature="o")
+						signature="o")
 	def JoinedActivity(self, object_path):
 		pass
 
 	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
-						out_signature="o")
+						signature="o")
 	def LeftActivity(self, object_path):
 		pass
 

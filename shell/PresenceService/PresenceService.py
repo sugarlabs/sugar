@@ -75,32 +75,32 @@ class PresenceServiceDBusHelper(dbus.service.Object):
 		dbus.service.Object.__init__(self, bus_name, _PRESENCE_OBJECT_PATH)
 
 	@dbus.service.signal(_PRESENCE_DBUS_INTERFACE,
-						out_signature="o")
+						signature="o")
 	def BuddyAppeared(self, object_path):
 		pass
 
 	@dbus.service.signal(_PRESENCE_DBUS_INTERFACE,
-						out_signature="o")
+						signature="o")
 	def BuddyDisappeared(self, object_path):
 		pass
 
 	@dbus.service.signal(_PRESENCE_DBUS_INTERFACE,
-						out_signature="o")
+						signature="o")
 	def ServiceAppeared(self, object_path):
 		pass
 
 	@dbus.service.signal(_PRESENCE_DBUS_INTERFACE,
-						out_signature="o")
+						signature="o")
 	def ServiceDisappeared(self, object_path):
 		pass
 
 	@dbus.service.signal(_PRESENCE_DBUS_INTERFACE,
-						out_signature="o")
+						signature="o")
 	def ActivityAppeared(self, object_path):
 		pass
 
 	@dbus.service.signal(_PRESENCE_DBUS_INTERFACE,
-						out_signature="o")
+						signature="o")
 	def ActivityDisappeared(self, object_path):
 		pass
 
@@ -137,7 +137,7 @@ class PresenceService(object):
 
 		# Connect to Avahi for mDNS stuff
 		self._system_bus = dbus.SystemBus()
-		self._mdns_service = dbus.Interface(self._bus.get_object(avahi.DBUS_NAME,
+		self._mdns_service = dbus.Interface(self._system_bus.get_object(avahi.DBUS_NAME,
 				avahi.DBUS_PATH_SERVER), avahi.DBUS_INTERFACE_SERVER)
 
 		# Always browse .local
@@ -269,7 +269,7 @@ class PresenceService(object):
 		"""Resolve and lookup a ZeroConf service to obtain its address and TXT records."""
 		# Ask avahi to resolve this particular service
 		logging.debug('resolving service %s %s' % (adv.name(), adv.stype()))
-		self._server.ResolveService(int(adv.interface()), int(adv.protocol()), adv.name(),
+		self._mdns_service.ResolveService(int(adv.interface()), int(adv.protocol()), adv.name(),
 				adv.stype(), adv.domain(), avahi.PROTO_UNSPEC, dbus.UInt32(0),
 				reply_handler=self._resolve_service_reply_cb_glue,
 				error_handler=self._resolve_service_error_handler)
@@ -291,7 +291,7 @@ class PresenceService(object):
 
 		# Find out the IP address of this interface, if we haven't already
 		if interface not in self._local_addrs.keys():
-			ifname = self._server.GetNetworkInterfaceNameByIndex(interface)
+			ifname = self._mdns_service.GetNetworkInterfaceNameByIndex(interface)
 			if ifname:
 				addr = _get_local_ip_address(ifname)
 				if addr:

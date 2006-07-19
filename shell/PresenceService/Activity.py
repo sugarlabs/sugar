@@ -49,22 +49,22 @@ class ActivityDBusHelper(dbus.service.Object):
 		return ret
 	
 	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
-						out_signature="o")
+						signature="o")
 	def ServiceAppeared(self, object_path):
 		pass
 
 	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
-						out_signature="o")
+						signature="o")
 	def ServiceDisappeared(self, object_path):
 		pass
 
 	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
-						out_signature="o")
+						signature="o")
 	def BuddyJoined(self, object_path):
 		pass
 
 	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
-						out_signature="o")
+						signature="o")
 	def BuddyLeft(self, object_path):
 		pass
 
