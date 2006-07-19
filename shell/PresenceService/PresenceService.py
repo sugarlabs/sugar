@@ -64,12 +64,53 @@ class ServiceAdv(object):
 		self._resolved = resolved
 
 
-_PRESENCE_INTERFACE = "org.laptop.Presence"
+_PRESENCE_SERVICE = "org.laptop.Presence"
+_PRESENCE_DBUS_INTERFACE = "org.laptop.Presence"
+_PRESENCE_OBJECT_PATH = "/org/laptop/Presence"
 
-class PresenceService(dbus.service.Object):
+class PresenceServiceDBusHelper(dbus.service.Object):
+	def __init__(self, parent, bus_name):
+		self._parent = parent
+		self._bus_name = bus_name
+		dbus.service.Object.__init__(self, bus_name, _PRESENCE_OBJECT_PATH)
+
+	@dbus.service.signal(_PRESENCE_DBUS_INTERFACE,
+						signature="o")
+	def BuddyAppeared(self, object_path):
+		pass
+
+	@dbus.service.signal(_PRESENCE_DBUS_INTERFACE,
+						signature="o")
+	def BuddyDisappeared(self, object_path):
+		pass
+
+	@dbus.service.signal(_PRESENCE_DBUS_INTERFACE,
+						signature="o")
+	def ServiceAppeared(self, object_path):
+		pass
+
+	@dbus.service.signal(_PRESENCE_DBUS_INTERFACE,
+						signature="o")
+	def ServiceDisappeared(self, object_path):
+		pass
+
+	@dbus.service.signal(_PRESENCE_DBUS_INTERFACE,
+						signature="o")
+	def ActivityAppeared(self, object_path):
+		pass
+
+	@dbus.service.signal(_PRESENCE_DBUS_INTERFACE,
+						signature="o")
+	def ActivityDisappeared(self, object_path):
+		pass
+
+
+class PresenceService(object):
 	def __init__(self):
 		# interface -> IP address: interfaces we've gotten events on so far
 		self._local_addrs = {}
+
+		self._next_object_id = 0
 
 		# Our owner object
 		self._owner = None
@@ -86,19 +127,19 @@ class PresenceService(dbus.service.Object):
 		# Resolved service list
 		self._service_advs = []
 
+		# Service types we care about resolving
+		self._registered_service_types = []
+
 		# Set up the dbus service we provide
 		session_bus = dbus.SessionBus()
-		bus_name = dbus.service.BusName('org.laptop.Presence', bus=session_bus)		
-		dbus.service.Object.__init__(self, bus_name, '/org/laptop/Presence')
+		self._bus_name = dbus.service.BusName(_PRESENCE_SERVICE, bus=session_bus)		
+		self._dbus_helper = PresenceServiceDBusHelper(self, self._bus_name)
 
 		# Connect to Avahi for mDNS stuff
 		self._system_bus = dbus.SystemBus()
-		self._mdns_service = dbus.Interface(self._bus.get_object(avahi.DBUS_NAME,
+		self._mdns_service = dbus.Interface(self._system_bus.get_object(avahi.DBUS_NAME,
 				avahi.DBUS_PATH_SERVER), avahi.DBUS_INTERFACE_SERVER)
-		# Start browsing the local mDNS domain
-		self._start()
 
-	def _start(self):
 		# Always browse .local
 		self._new_domain_cb(avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, "local")
 
@@ -107,6 +148,11 @@ class PresenceService(dbus.service.Object):
 						"", avahi.DOMAIN_BROWSER_BROWSE, dbus.UInt32(0))
 		db = dbus.Interface(self._system_bus.get_object(avahi.DBUS_NAME, domain_browser), avahi.DBUS_INTERFACE_DOMAIN_BROWSER)
 		db.connect_to_signal('ItemNew', self._new_domain_cb_glue)
+
+	def _get_next_object_id(self):
+		"""Increment and return the object ID counter."""
+		self._next_object_id = self._next_object_id + 1
+		return self._next_object_id
 
 	def _find_service_adv(self, interface=None, protocol=None, name=None, stype=None, domain=None):
 		"""Search a list of service advertisements for ones matching certain criteria."""
@@ -125,6 +171,110 @@ class PresenceService(dbus.service.Object):
 			adv_list.append(adv)
 		return adv_list
 
+	def _handle_new_service_for_buddy(self, service):
+		"""Deal with a new discovered service object."""
+		# Once a service is resolved, we match it up to an existing buddy,
+		# or create a new Buddy if this is the first service known about the buddy
+		buddy_was_valid = False
+		name = service.get_name()
+		buddy = None
+		try:
+			buddy = self._buddies[name]
+			buddy_was_valid = buddy.is_valid()
+			service_added = buddy.add_service(service)
+			if service_added:
+				self._dbus_helper.ServiceAppeared(service.object_path())
+		except KeyError:
+			# Should this service mark the owner?
+			owner_nick = env.get_nick_name()
+			publisher_addr = service.get_publisher_address()
+			objid = self._get_next_object_id()
+			if name == owner_nick and publisher_addr in self._local_addrs.values():
+				buddy = Buddy.Owner(self._bus_name, objid, service)
+				self._owner = buddy
+				logging.debug("Owner is '%s'." % name)
+			else:
+				buddy = Buddy.Buddy(self._bus_name, objid, service)
+			self._buddies[name] = buddy
+			self._dbus_helper.ServiceAppeared(service.object_path())
+		if not buddy_was_valid and buddy.is_valid():
+			self._dbus_helper.BuddyAppeared(buddy.object_path())
+		return buddy
+
+	def _handle_new_activity_service(self, service):
+		# If the serivce is an activity service, merge it into our activities list
+		actid = service.get_activity_id()
+		if not actid:
+			return
+		activity = None
+		if not self._activities.has_key(actid):
+			objid = self._get_next_object_id()
+			activity = Activity.Activity(self._bus_name, objid, service)
+			self._activities[actid] = activity
+			self._dbus_helper.ActivityAppeared(activity.object_path())
+		else:
+			activity = self._activities[actid]
+
+		if activity:
+			activity.add_service(service)
+
+	def _handle_remove_activity_service(self, service):
+		actid = service.get_activity_id()
+		if not actid:
+			return
+		if not self._activities.has_key(actid):
+			return
+		activity = self._activities[actid]
+		activity.remove_service(service)
+		if len(activity.get_services()) == 0:
+			# Kill the activity
+			self._dbus_helper.ActivityDisappeared(activity.object_path())
+			del self._activities[actid]
+
+	def _resolve_service_reply_cb(self, interface, protocol, full_name, stype, domain, host, aprotocol, address, port, txt, flags):
+		"""When the service discovery finally gets here, we've got enough information about the
+		service to assign it to a buddy."""
+		logging.debug("resolved service '%s' type '%s' domain '%s' to %s:%s" % (full_name, stype, domain, address, port))
+
+		# If this service was previously unresolved, remove it from the
+		# unresolved list
+		adv_list = self._find_service_adv(interface=interface, protocol=protocol,
+				name=full_name, stype=stype, domain=domain)
+		if not adv_list:
+			return False
+		adv = adv_list[0]
+		adv.set_resolved(True)
+		if adv in self._resolve_queue:
+			self._resolve_queue.remove(adv)
+
+		# Update the service now that it's been resolved
+		objid = self._get_next_object_id()
+		service = Service.Service(self._bus_name, objid, name=full_name,
+				stype=stype, domain=domain, address=address, port=port,
+				properties=txt)
+		adv.set_service(service)
+
+		# Merge the service into our buddy and activity lists, if needed
+		buddy = self._handle_new_service_for_buddy(service)
+		if buddy and service.get_activity_id():
+			self._handle_new_activity_service(service)
+
+		return False
+
+	def _resolve_service_reply_cb_glue(self, interface, protocol, name, stype, domain, host, aprotocol, address, port, txt, flags):
+		gobject.idle_add(self._resolve_service_reply_cb, interface, protocol,
+				name, stype, domain, host, aprotocol, address, port, txt, flags)
+
+	def _resolve_service(self, adv):
+		"""Resolve and lookup a ZeroConf service to obtain its address and TXT records."""
+		# Ask avahi to resolve this particular service
+		logging.debug('resolving service %s %s' % (adv.name(), adv.stype()))
+		self._mdns_service.ResolveService(int(adv.interface()), int(adv.protocol()), adv.name(),
+				adv.stype(), adv.domain(), avahi.PROTO_UNSPEC, dbus.UInt32(0),
+				reply_handler=self._resolve_service_reply_cb_glue,
+				error_handler=self._resolve_service_error_handler)
+		return False
+
 	def _service_appeared_cb(self, interface, protocol, full_name, stype, domain, flags):
 		logging.debug("found service '%s' (%d) of type '%s' in domain '%s' on %i.%i." % (full_name, flags, stype, domain, interface, protocol))
 
@@ -141,7 +291,7 @@ class PresenceService(dbus.service.Object):
 
 		# Find out the IP address of this interface, if we haven't already
 		if interface not in self._local_addrs.keys():
-			ifname = self._server.GetNetworkInterfaceNameByIndex(interface)
+			ifname = self._mdns_service.GetNetworkInterfaceNameByIndex(interface)
 			if ifname:
 				addr = _get_local_ip_address(ifname)
 				if addr:
@@ -150,14 +300,9 @@ class PresenceService(dbus.service.Object):
 		# Decompose service name if we can
 		(actid, buddy_name) = Service._decompose_service_name(full_name)
 
-		# FIXME: find a better way of letting the StartPage get everything
-		self.emit('new-service-adv', actid, stype)
-
 		# If we care about the service right now, resolve it
 		resolve = False
-		if actid is not None or stype in self._allowed_service_types:
-			resolve = True
-		if self._is_special_service_type(stype):
+		if actid is not None or stype in self._registered_service_types:
 			resolve = True
 		if resolve and not adv in self._resolve_queue:
 			self._resolve_queue.append(adv)
@@ -197,11 +342,11 @@ class PresenceService(dbus.service.Object):
 			pass
 		else:
 			buddy.remove_service(service)
-			self.emit('service-disappeared', buddy, service)
+			self._dbus_helper.ServiceDisappeared(service.object_path())
+			self._handle_remove_activity_service(service)
 			if not buddy.is_valid():
-				self.emit("buddy-disappeared", buddy)
+				self._dbus_helper.BuddyDisappeared(buddy.object_path())
 				del self._buddies[buddy_name]
-			self._handle_remove_service_for_activity(service, buddy)
 
 		return False
 
@@ -257,3 +402,13 @@ class PresenceService(dbus.service.Object):
 
 	def _new_domain_cb_glue(self, interface, protocol, domain, flags=0):
 		gobject.idle_add(self._new_domain_cb, interface, protocol, domain, flags)
+
+
+
+def main():
+	import gtk
+	ps = PresenceService()
+	gtk.main()
+
+if __name__ == "__main__":
+	main()

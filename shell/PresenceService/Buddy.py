@@ -3,10 +3,8 @@ import logging
 
 import gtk
 import gobject
+import dbus, dbus.service
 
-from sugar.p2p import Stream
-from sugar.p2p import network
-from sugar.presence import Service
 
 PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
 BUDDY_DBUS_INTERFACE = "org.laptop.Presence.Buddy"
@@ -21,23 +19,28 @@ class BuddyDBusHelper(dbus.service.Object):
 		self._object_path = object_path
 		dbus.service.Object.__init__(self, bus_name, self._object_path)
 
-	@dbus.service.signal(BUDDY_DBUS_INTERFACE)
+	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
+						signature="o")
 	def ServiceAppeared(self, object_path):
 		pass
 
-	@dbus.service.signal(BUDDY_DBUS_INTERFACE)
+	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
+						signature="o")
 	def ServiceDisappeared(self, object_path):
 		pass
 
-	@dbus.service.signal(BUDDY_DBUS_INTERFACE)
+	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
+						signature="")
 	def IconChanged(self):
 		pass
 
-	@dbus.service.signal(BUDDY_DBUS_INTERFACE)
+	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
+						signature="o")
 	def JoinedActivity(self, object_path):
 		pass
 
-	@dbus.service.signal(BUDDY_DBUS_INTERFACE)
+	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
+						signature="o")
 	def LeftActivity(self, object_path):
 		pass
 
@@ -77,7 +80,7 @@ class Buddy(object):
 	"""Represents another person on the network and keeps track of the
 	activities and resources they make available for sharing."""
 
-	def __init__(self, bus_name, object_id, service):
+	def __init__(self, bus_name, object_id, service, owner=False):
 		if not bus_name:
 			raise ValueError("DBus bus name must be valid")
 		if not object_id or type(object_id) != type(1):
@@ -91,18 +94,20 @@ class Buddy(object):
 		self._valid = False
 		self._icon = None
 		self._icon_tries = 0
-		self._owner = False
-		self.add_service(service)
+		self._owner = owner
 
 		self._object_id = object_id
 		self._object_path = "/org/laptop/Presence/Buddies/%d" % self._object_id
 		self._dbus_helper = BuddyDBusHelper(self, bus_name, self._object_path)
 
+		self.add_service(service)
+
 	def object_path(self):
-		return self._object_path
+		return dbus.ObjectPath(self._object_path)
 
 	def _request_buddy_icon_cb(self, result_status, response, user_data):
 		"""Callback when icon request has completed."""
+		from sugar.p2p import network
 		icon = response
 		service = user_data
 		if result_status == network.RESULT_SUCCESS:
@@ -120,6 +125,7 @@ class Buddy(object):
 
 	def _request_buddy_icon(self, service):
 		"""Contact the buddy to retrieve the buddy icon."""
+		from sugar.p2p import Stream
 		buddy_stream = Stream.Stream.new_from_service(service, start_reader=False)
 		writer = buddy_stream.new_writer(service)
 		success = writer.custom_request("get_buddy_icon", self._request_buddy_icon_cb, service)
@@ -141,21 +147,7 @@ class Buddy(object):
 		if stype in self._services.keys():
 			return False
 		self._services[stype] = service
-		if self._valid:
-			self._dbus_helper.ServiceAppeared(dbus.ObjectPath(service.object_path()))
-
-		# If this is the first service we've seen that's owned  by
-		# a particular activity, send out the 'joined-activity' signal
-		actid = service.get_activity_id()
-		if actid is not None:
-			found = False
-			for serv in self._services.values():
-				if serv.get_activity_id() == actid and serv.get_type() != stype:
-					found = True
-					break
-			if not found:
-				print "Buddy (%s) joined activity %s." % (self._nick_name, actid)
-				self._dbus_helper.JoinedActivity(dbus.ObjectPath(activity.object_path()))
+		service.set_owner(self)
 
 		if stype == PRESENCE_SERVICE_TYPE:
 			# A buddy isn't valid until its official presence
@@ -163,7 +155,25 @@ class Buddy(object):
 			self._valid = True
 			print 'Requesting buddy icon %s' % self._nick_name
 			self._request_buddy_icon(service)
+
+		if self._valid:
+			self._dbus_helper.ServiceAppeared(service.object_path())
 		return True
+
+	def add_activity(self, activity):
+		actid = activity.get_id()
+		if activity in self._activities.values():
+			raise RuntimeError("Tried to add activity twice")
+		found = False
+		for serv in self._services.values():
+			if serv.get_activity_id() == activity.get_id():
+				found = True
+				break
+		if not found:
+			raise RuntimeError("Tried to add activity for which we had no service")
+		self._activities[actid] = activity
+		print "Buddy (%s) joined activity %s." % (self._nick_name, actid)
+		self._dbus_helper.JoinedActivity(activity.object_path())
 
 	def remove_service(self, service):
 		"""Remove a service from a buddy; ie, the activity was closed
@@ -175,24 +185,19 @@ class Buddy(object):
 		stype = service.get_type()
 		if self._services.has_key(stype):
 			if self._valid:
-				self._dbus_helper.ServiceDisappeared(dbus.ObjectPath(service.object_path()))
+				self._dbus_helper.ServiceDisappeared(service.object_path())
 			del self._services[stype]
-
-		# If this is the lase service owned  by a particular activity,
-		# and it's just been removed, send out the 'left-actvity' signal
-		actid = service.get_activity_id()
-		if actid is not None:
-			found = False
-			for serv in self._services.values():
-				if serv.get_activity_id() == actid:
-					found = True
-					break
-			if not found:
-				print "Buddy (%s) left activity %s." % (self._nick_name, actid)
-				self._dbus_helper.LeftActivity(dbus.ObjectPath(activity.object_path()))
 
 		if stype == PRESENCE_SERVICE_TYPE:
 			self._valid = False
+
+	def remove_activity(self, activity):
+		actid = activity.get_id()
+		if not self._activities.has_key(actid):
+			return
+		del self._activities[actid]
+		print "Buddy (%s) left activity %s." % (self._nick_name, actid)
+		self._dbus_helper.LeftActivity(activity.object_path())
 
 	def get_service_of_type(self, stype=None, activity=None):
 		"""Return a service of a certain type, or None if the buddy
@@ -248,6 +253,5 @@ class Buddy(object):
 class Owner(Buddy):
 	"""Class representing the owner of the machine.  This is the client
 	portion of the Owner, paired with the server portion in Owner.py."""
-	def __init__(self, service):
-		Buddy.__init__(self, service)
-		self._owner = True
+	def __init__(self, bus_name, object_id, service):
+		Buddy.__init__(self, bus_name, object_id, service, owner=True)

@@ -1,5 +1,7 @@
 import dbus
 
+class NotFoundError(Exception):
+	pass
 
 class ActivityDBusHelper(dbus.service.Object):
 	def __init__(self, parent, bus_name, object_path):
@@ -8,22 +10,129 @@ class ActivityDBusHelper(dbus.service.Object):
 		self._object_path = object_path
 		dbus.service.Object.__init__(self, bus_name, self._object_path)
 
+	@dbus.service.method(BUDDY_DBUS_INTERFACE,
+						in_signature="s", out_signature="ao")
+	def getServicesOfType(self, stype):
+		services = self._parent.get_services_of_type(stype)
+		if not services:
+			raise NotFoundError("Not found")
+		ret = []
+		for serv in services:
+			ret.append(serv.object_path())
+		return ret
+
+	@dbus.service.method(BUDDY_DBUS_INTERFACE,
+						in_signature="", out_signature="ao")
+	def getServices(self):
+		services = self._parent.get_services()
+		if not services:
+			raise NotFoundError("Not found")
+		ret = []
+		for serv in services:
+			ret.append(serv.object_path())
+		return ret
+
+	@dbus.service.method(BUDDY_DBUS_INTERFACE,
+						in_signature="", out_signature="s")
+	def getId(self):
+		return self._parent.get_id()
+
+	@dbus.service.method(BUDDY_DBUS_INTERFACE,
+						in_signature="", out_signature="ao")
+	def getJoinedBuddies(self):
+		buddies = self._parent.get_joined_buddies()
+		if not buddies:
+			raise NotFoundError("Not found")
+		ret = []
+		for buddy in buddies:
+			ret.append(buddy.object_path())
+		return ret
+	
+	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
+						signature="o")
+	def ServiceAppeared(self, object_path):
+		pass
+
+	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
+						signature="o")
+	def ServiceDisappeared(self, object_path):
+		pass
+
+	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
+						signature="o")
+	def BuddyJoined(self, object_path):
+		pass
+
+	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
+						signature="o")
+	def BuddyLeft(self, object_path):
+		pass
+
 
 class Activity(object):
 	def __init__(self, bus_name, object_id, activity_id):
+		if not activity_id:
+			raise ValueError("Service must have a valid Activity ID")
 		self._activity_id = activity_id
 
 		self._buddies = []
-		self._services = {}	# service type -> Service
+		self._services = {}	# service type -> list of Services
+		self._services[service.get_type()] = []
 
 		self._object_id = object_id
 		self._object_path = "/org/laptop/Presence/Activities/%d" % self._object_id
 		self._dbus_helper = ActivityDBusHelper(self, bus_name, self._object_path)
 
+	def object_path(self):
+		return dbus.ObjectPath(self._object_path)
+
 	def get_id(self):
 		return self._activity_id
 
-	def get_service_of_type(self, stype):
+	def get_services(self):
+		return self._services.values()
+
+	def get_services_of_type(self, stype):
 		if self._services.has_key(stype):
 			return self._services[stype]
 		return None
+
+	def get_joined_buddies(self):
+		buddies = []
+		for serv in self._services.values():
+			buddies.append(serv.get_owner())
+		return buddies
+
+	def add_service(self, service):
+		stype = service.get_type()
+		if not self._services.has_key(stype):
+			self._services[stype] = []
+
+		# Send out the BuddyJoined signal if this is the first
+		# service from the buddy that we've seen
+		buddies = self.get_joined_buddies()
+		serv_owner = service.get_owner()
+		if serv_owner and serv_owner not in buddies:
+			self._dbus_helper.BuddyJoined(serv_owner.object_path())
+			serv_owner.add_activity(self)
+
+		if not service in self._services[stype]:
+			self._services[stype].append(service)
+			self._dbus_helper.ServiceAppeared(service.object_path())
+
+	def remove_service(self, service):
+		stype = service.get_type()
+		if not self._services.has_key(stype):
+			return
+		self._services[stype].remove(service)
+		self._dbus_helper.ServiceDisappeared(service.object_path())
+		if len(self._services[stype]) == 0:
+			del self._services[stype]
+
+		# Send out the BuddyLeft signal if this is the last
+		# service from the buddy
+		buddies = self.get_joined_buddies()
+		serv_owner = service.get_owner()
+		if serv_owner and serv_owner not in buddies:
+			serv_owner.remove_activity(self)
+			self._dbus_helper.BuddyLeft(serv_owner.object_path())
