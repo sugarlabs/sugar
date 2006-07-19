@@ -98,8 +98,12 @@ class TasksGrid(gtk.VBox):
 		button = self._buttons[window.get_xid()]
 		self.remove(button)
 
+	def __window_name_changed_cb(self, window, button):
+		button.set_label(window.get_name())
+
 	def _add(self, window):
 		button = gtk.Button(window.get_name())
+		window.connect('name-changed', self.__window_name_changed_cb, button)
 		button.connect('clicked', self.__button_clicked_cb, window)
 		self.pack_start(button, False)
 		button.show()
