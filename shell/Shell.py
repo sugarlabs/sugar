@@ -74,25 +74,18 @@ class Shell:
 
 		return dbus.Interface(proxy_obj, 'com.redhat.Sugar.Activity')
 
-	def get_current_activity(self):
-		window = self._screen.get_active_window()
-
-		if window and window.is_skip_tasklist():
-			window = self._screen.get_previously_active_window()
-
-		if window and not window.is_skip_tasklist():
-			return self.get_activity_from_xid(window.get_xid())
-		else:
-			return None
+	def get_activity_window(self):
+		return self._screen.get_active_window()
 
 	def __people_window_delete_cb(self, window, event):
 		window.hide()
 		return True
 
 	def show_people(self):
-		activity = self.get_current_activity()
-
-		if activity:
+		activity_window = self.get_activity_window()
+		if activity_window:
+			xid = activity_window.get_xid()
+			activity = self.get_activity_from_xid(xid)
 			activity_id = activity.get_id()
 
 			if not self._people_windows.has_key(activity_id):
@@ -103,7 +96,10 @@ class Shell:
 			else:
 				window = self._people_windows[activity_id]
 
-			self._toggle_window_visibility(window)
+			window.show()
+
+			foreign_activity_win = gtk.gdk.window_foreign_new(xid)
+			window.window.set_transient_for(foreign_activity_win)		
 
 	def toggle_console(self):
 		self._toggle_window_visibility(self._console.get_window())
