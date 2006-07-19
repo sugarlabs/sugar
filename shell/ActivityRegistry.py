@@ -90,7 +90,7 @@ class ActivityRegistry:
 		elif cp.has_option('Activity', 'python_module'):
 			python_module = cp.get('Activity', 'python_module')
 			python_module = cp.get('Activity', 'python_module')
-			activity_exec = '%s %s %s' % (env.get_activity_runner(),
+			activity_exec = '%s %s %s' % ('sugar-activity',
 							   			  activity_id, python_module)
 			if default_type:
 				activity_exec += ' ' + default_type

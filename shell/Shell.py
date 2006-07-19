@@ -20,16 +20,12 @@ class ShellDbusService(dbus.service.Object):
 		dbus.service.Object.__init__(self, bus_name, '/com/redhat/Sugar/Shell')
 		self._shell = shell
 
-	def __toggle_people_idle(self):
-		self._shell.toggle_people()		
+	def __show_people_idle(self):
+		self._shell.show_people()		
 
 	@dbus.service.method('com.redhat.Sugar.Shell')
-	def toggle_people(self):
-		gobject.idle_add(self.__toggle_people_idle)
-
-	@dbus.service.method('com.redhat.Sugar.Shell')
-	def toggle_home(self):
-		self._shell.toggle_home()	
+	def show_people(self):
+		gobject.idle_add(self.__show_people_idle)
 
 	@dbus.service.method('com.redhat.Sugar.Shell')
 	def toggle_console(self):
@@ -68,9 +64,6 @@ class Shell:
 		else:
 			window.show()
 
-	def toggle_home(self):
-		self._toggle_window_visibility(self._home_window)
-
 	def get_activity_from_xid(self, xid):
 		bus = dbus.SessionBus()
 		service = Activity.ACTIVITY_SERVICE_NAME + "%s" % xid
@@ -90,7 +83,7 @@ class Shell:
 		else:
 			return None
 
-	def toggle_people(self):
+	def show_people(self):
 		activity = self.get_current_activity()
 
 		if activity:

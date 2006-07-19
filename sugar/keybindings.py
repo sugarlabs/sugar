@@ -13,9 +13,5 @@ def setup_global_keys(window, shell = None):
 	window.connect("key-press-event", __key_press_event_cb, shell)
 
 def __key_press_event_cb(window, event, shell):
-	if event.keyval == gtk.keysyms.F1:
-		shell.toggle_home()
-	if event.keyval == gtk.keysyms.F2:
-		shell.toggle_people()
 	if event.keyval == gtk.keysyms.F3:
 		shell.toggle_console()

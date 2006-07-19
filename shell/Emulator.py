@@ -70,5 +70,6 @@ class Emulator:
 				process = XnestProcess()
 				process.start()
 			except:
-				logging.error('Cannot run the emulator. You need to install Xephyr or Xnest.')				
+				logging.error('Cannot run the emulator. You need to install \
+							   Xephyr or Xnest.')				
 				sys.exit(0)

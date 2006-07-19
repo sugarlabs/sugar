@@ -154,8 +154,6 @@ class HomeWindow(gtk.Window):
 
 	def create(self, activity_name):
 		Activity.create(activity_name)
-		self.hide()
 
 	def activate(self, activity_window):
 		activity_window.activate(gtk.get_current_event_time())
-		self.hide()

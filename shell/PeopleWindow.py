@@ -8,8 +8,6 @@ class PeopleWindow(gtk.Window):
 		gtk.Window.__init__(self)
 
 		self.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
-		self.set_skip_taskbar_hint(True)
-		self.set_decorated(False)
 		self.set_default_size(620, 460)
 
 		hbox = gtk.HBox(False, 12)

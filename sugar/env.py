@@ -36,6 +36,3 @@ def get_data_dir():
 		
 def get_activities_dir():
 	return sugar_activities_dir
-
-def get_activity_runner():
-	return sugar_activity_runner
