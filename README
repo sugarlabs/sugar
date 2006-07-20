@@ -40,10 +40,10 @@ sugar/sugar --test my_nick_name2
 Key bindings
 ============
 
-ctrl+Up 	Toggle chat window visibility
-ctrl+Left 	Toggle presence window visibility
-F11		Toggle activities window fullscreen
-ctrl+S		Switch between sketch and text mode
+F1 Show the home page
+F2 Show the people page
+F3 Show the console
+F4 Open a terminal activity
 
 Logging
 =======
