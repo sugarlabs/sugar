@@ -162,6 +162,10 @@ class Activity(gtk.Window):
 		self.present()
 	
 	def __realize(self, window):
+		group = gtk.Window()
+		group.realize()
+		self.window.set_group(group.window)
+
 		if not self._dbus_service:
 			self._register_service()
 	
