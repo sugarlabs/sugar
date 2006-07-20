@@ -56,13 +56,8 @@ class BrowserActivity(Activity):
 		self.add(vbox)
 		vbox.show()
 
-		logging.debug('Start presence service')
-		self._pservice = PresenceService.get_instance()
-		self._pservice.start()
-		
-		logging.debug('Track browser activities')
-		self._pservice.connect('service-appeared', self._service_appeared_cb)
-		self._pservice.track_service_type(LocalModel.SERVICE_TYPE)
+		self._pservice = PresenceService()
+		self._pservice.connect('ServiceAppeared', self._service_appeared_cb)
 
 		# Join the shared activity if we were started from one
 		if self._initial_service:
@@ -84,10 +79,6 @@ class BrowserActivity(Activity):
 		if not self._model and self._notif_service and self._model_service:
 			self._model = RemoteModel(self._model_service, self._notif_service)
 			self._model.add_listener(self.__shared_location_changed_cb)
-	
-	def set_default_type(self, default_type):
-		Activity.set_default_type(self, default_type)
-		self._pservice.track_service_type(default_type)
 	
 	def _update_shared_location(self):
 		address = self.embed.get_address()
