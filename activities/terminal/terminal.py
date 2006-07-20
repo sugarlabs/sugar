@@ -51,8 +51,8 @@ class Terminal(gtk.HBox):
 		pass
 
 class TerminalActivity(Activity):
-	def __init__(self, args):
-		Activity.__init__(self, _TERMINAL_ACTIVITY_TYPE)
+	def __init__(self, service, args):
+		Activity.__init__(self, service)
 	
 		self.set_title("Terminal")
 

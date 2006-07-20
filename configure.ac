@@ -26,6 +26,7 @@ Makefile
 activities/Makefile
 activities/browser/Makefile
 activities/chat/Makefile
+activities/terminal/Makefile
 shell/Makefile
 shell/data/Makefile
 shell/PresenceService/Makefile
