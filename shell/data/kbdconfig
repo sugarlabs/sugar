@@ -7,3 +7,4 @@
 <Alt>c=close
 f1=desktop
 f2=!sugar-people
+f4=!sugar-activity org.sugar.Terminal

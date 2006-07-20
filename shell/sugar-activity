@@ -1,0 +1,7 @@
+#!/usr/bin/python
+
+import sys
+
+from sugar.activity import Activity
+
+Activity.create(sys.argv[1])

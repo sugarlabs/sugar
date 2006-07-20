@@ -1,6 +1,10 @@
 SUBDIRS = data
 
-bin_SCRIPTS = sugar sugar-activity
+bin_SCRIPTS = 				\
+	sugar					\
+	sugar-activity			\
+	sugar-activity-factory	\
+	sugar-people
 
 sugardir = $(pkgdatadir)/shell
 sugar_PYTHON =				\
