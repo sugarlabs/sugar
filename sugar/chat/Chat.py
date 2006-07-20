@@ -28,8 +28,7 @@ class Chat(gtk.VBox):
 	def __init__(self):
 		gtk.VBox.__init__(self, False, 6)
 
-		self._pservice = PresenceService.get_instance()
-		self._pservice.start()
+		self._pservice = PresenceService()
 
 		self._stream_writer = None
 		self.set_border_width(12)

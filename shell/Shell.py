@@ -11,10 +11,10 @@ from ActivityRegistry import ActivityRegistry
 from HomeWindow import HomeWindow
 from sugar import keybindings
 from sugar import env
-from sugar.activity import Activity
 from PeopleWindow import PeopleWindow
 from Owner import ShellOwner
 from PresenceService import PresenceService
+from ActivityHost import ActivityHost
 
 class ShellDbusService(dbus.service.Object):
 	def __init__(self, shell, bus_name):
@@ -66,40 +66,29 @@ class Shell:
 		else:
 			window.show()
 
-	def get_activity_from_xid(self, xid):
-		bus = dbus.SessionBus()
-		service = Activity.ACTIVITY_SERVICE_NAME + "%s" % xid
-		path = Activity.ACTIVITY_SERVICE_PATH + "/%s" % xid
-		proxy_obj = bus.get_object(service, path)
+	def get_current_activity(self):
+		window = self._screen.get_active_window()
+		if window and window.get_window_type() == wnck.WINDOW_NORMAL:
+			return ActivityHost(window.get_xid())
+		else:
+			return None
 
-		return dbus.Interface(proxy_obj, 'com.redhat.Sugar.Activity')
-
-	def get_activity_window(self):
-		return self._screen.get_active_window()
-
-	def __people_window_delete_cb(self, window, event):
+	def __people_dialog_delete_cb(self, window, event):
 		window.hide()
 		return True
 
 	def show_people(self):
-		activity_window = self.get_activity_window()
-		if activity_window:
-			xid = activity_window.get_xid()
-			activity = self.get_activity_from_xid(xid)
-			activity_id = activity.get_id()
-
-			if not self._people_windows.has_key(activity_id):
-				window = PeopleWindow(self, activity)
-				window.connect('delete-event', self.__people_window_delete_cb)
-				keybindings.setup_global_keys(window, self)
-				self._people_windows[activity_id] = window
+		activity = self.get_current_activity()
+		if activity:
+			if not self._people_windows.has_key(activity.get_id()):
+				dialog = PeopleWindow(self, activity)
+				dialog.connect('delete-event', self.__people_dialog_delete_cb)
+				keybindings.setup_global_keys(dialog, self)
+				self._people_windows[activity.get_id()] = dialog
 			else:
-				window = self._people_windows[activity_id]
+				dialog = self._people_windows[activity.get_id()]
 
-			window.show()
-
-			foreign_activity_win = gtk.gdk.window_foreign_new(xid)
-			window.window.set_transient_for(foreign_activity_win)		
+			activity.show_dialog(dialog)
 
 	def toggle_console(self):
 		self._toggle_window_visibility(self._console.get_window())
