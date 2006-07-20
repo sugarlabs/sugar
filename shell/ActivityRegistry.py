@@ -13,7 +13,8 @@ class ActivityModule:
 		self._id = activity_id
 		self._directory = directory
 		self._exec = activity_exec
-	
+		self._show_launcher = False	
+
 	def get_name(self):
 		"""Get the activity user visible name."""
 		return self._name
@@ -37,6 +38,14 @@ class ActivityModule:
 	def set_default_type(self, default_type):
 		"""Set the the type of the default activity service."""
 		self._default_type = default_type
+
+	def get_show_launcher(self):
+		"""Get whether there should be a visible launcher for the activity"""
+		return self._show_launcher
+
+	def set_show_launcher(self, show_launcher):
+		"""Set whether there should be a visible launcher for the activity"""
+		self._show_launcher = show_launcher
 
 class ActivityRegistry:
 	"""Service that tracks the available activities"""
@@ -101,6 +110,9 @@ class ActivityRegistry:
 
 		module = ActivityModule(name, activity_id, activity_exec, directory)
 		self._activities.append(module)
+
+		if cp.has_option('Activity', 'show_launcher'):
+			module.set_show_launcher(True)
 
 		module.set_default_type(default_type)
 

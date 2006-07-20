@@ -19,11 +19,13 @@ class NewActivityButton(gtk.MenuToolButton):
 		menu = gtk.Menu()
 		
 		for module in self._home.list_activities():
-			item = gtk.MenuItem(module.get_name(), False)
-			activity_id = module.get_id()
-			item.connect('activate', self.__menu_item_activate_cb, activity_id)
-			menu.append(item)
-			item.show()
+			if module.get_show_launcher():
+				item = gtk.MenuItem(module.get_name(), False)
+				activity_id = module.get_id()
+				item.connect('activate',
+							 self.__menu_item_activate_cb, activity_id)
+				menu.append(item)
+				item.show()
 		
 		self.set_menu(menu)
 		
