@@ -11,7 +11,7 @@ sugar_PYTHON =				\
 	__init__.py			\
 	ActivitiesModel.py		\
 	ActivityRegistry.py		\
-	ConsoleLogger.py		\
+	ConsoleWindow.py		\
 	Emulator.py			\
 	Owner.py			\
 	HomeWindow.py			\

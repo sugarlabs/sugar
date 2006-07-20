@@ -1,6 +1,8 @@
 import os
 
 import dbus
+import pygtk
+pygtk.require('2.0')
 import gtk
 import wnck
 import gobject
@@ -69,10 +71,14 @@ class Shell:
 
 	def get_current_activity(self):
 		window = self._screen.get_active_window()
-		if window and window.get_window_type() == wnck.WINDOW_NORMAL:
-			return ActivityHost(window.get_xid())
-		else:
-			return None
+		if window:
+			if window.get_window_type() == wnck.WINDOW_NORMAL:
+				return ActivityHost(window.get_xid())
+			elif window.get_window_type() == wnck.WINDOW_DIALOG:
+				parent = window.get_transient()
+				if not parent is None:
+					return ActivityHost(parent.get_xid())
+		return None
 
 	def show_people(self):
 		activity = self.get_current_activity()
