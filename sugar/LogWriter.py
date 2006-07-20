@@ -11,8 +11,8 @@ class LogWriter:
 		self._use_console = use_console
 		
 		bus = dbus.SessionBus()
-		proxy_obj = bus.get_object('com.redhat.Sugar.Logger', '/com/redhat/Sugar/Logger')
-		self._logger = dbus.Interface(proxy_obj, 'com.redhat.Sugar.Logger')
+		proxy_obj = bus.get_object('com.redhat.Sugar.Shell', '/com/redhat/Sugar/Shell')
+		self._logger = dbus.Interface(proxy_obj, 'com.redhat.Sugar.Shell')
 			
 	def start(self):
 		if self._use_console:

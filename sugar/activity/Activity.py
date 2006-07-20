@@ -8,7 +8,6 @@ import gtk
 import gobject
 
 from sugar.LogWriter import LogWriter
-from sugar import keybindings
 import sugar.util
 
 ACTIVITY_SERVICE_NAME = "com.redhat.Sugar.Activity"
@@ -129,6 +128,12 @@ class ActivityDbusService(dbus.service.Object):
 		"""Get the activity identifier"""
 		return self._activity.get_id()
 
+
+	@dbus.service.method(ACTIVITY_SERVICE_NAME)
+	def get_default_type(self):
+		"""Get the activity default type"""
+		return self._activity.get_default_type()
+
 	@dbus.service.method(ACTIVITY_SERVICE_NAME)
 	def get_shared(self):
 		"""Get the activity identifier"""
@@ -151,8 +156,6 @@ class Activity(gtk.Window):
 		self._initial_service = None
 		self._activity_object = None
 		self._default_type = None
-
-		keybindings.setup_global_keys(self)
 
 		self.connect('realize', self.__realize)
 		

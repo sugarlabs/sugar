@@ -5,4 +5,4 @@ import dbus
 bus = dbus.SessionBus()
 proxy_obj = bus.get_object('com.redhat.Sugar.Shell', '/com/redhat/Sugar/Shell')
 shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.Shell')
-shell.show_people()
+shell.show_console()

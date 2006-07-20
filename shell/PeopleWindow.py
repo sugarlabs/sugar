@@ -9,6 +9,7 @@ class PeopleWindow(gtk.Window):
 
 		self.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.set_default_size(620, 440)
+		self.connect("delete_event", lambda w, e: w.hide_on_delete())
 
 		hbox = gtk.HBox(False, 12)
 		hbox.set_border_width(12)

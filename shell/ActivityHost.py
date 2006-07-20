@@ -14,6 +14,7 @@ class ActivityHost:
 
 		self._activity = dbus.Interface(proxy_obj, 'com.redhat.Sugar.Activity')
 		self._id = self._activity.get_id()
+		self._default_type = self._activity.get_default_type()
 		self._window = gtk.gdk.window_foreign_new(xid)
 
 	def get_id(self):
@@ -24,6 +25,9 @@ class ActivityHost:
 
 	def get_shared(self):
 		return self._activity.get_shared()
+
+	def get_default_type(self):
+		return self._default_type
 
 	def show_dialog(self, dialog):
 		dialog.show()

@@ -9,9 +9,9 @@ from sugar.LogWriter import LogWriter
 from ConsoleLogger import ConsoleLogger
 from ActivityRegistry import ActivityRegistry
 from HomeWindow import HomeWindow
-from sugar import keybindings
 from sugar import env
 from PeopleWindow import PeopleWindow
+from ConsoleWindow import ConsoleWindow
 from Owner import ShellOwner
 from PresenceService import PresenceService
 from ActivityHost import ActivityHost
@@ -24,22 +24,29 @@ class ShellDbusService(dbus.service.Object):
 	def __show_people_idle(self):
 		self._shell.show_people()		
 
+	def __show_console_idle(self):
+		self._shell.show_console()
+
+	def __log_idle(self, (module_id, message)):
+		self._shell.log(module_id, message)
+
 	@dbus.service.method('com.redhat.Sugar.Shell')
 	def show_people(self):
 		gobject.idle_add(self.__show_people_idle)
 
 	@dbus.service.method('com.redhat.Sugar.Shell')
-	def toggle_console(self):
-		self._shell.toggle_console()	
+	def show_console(self):
+		gobject.idle_add(self.__show_console_idle)
+
+	@dbus.service.method('com.redhat.Sugar.Shell')
+	def log(self, module_id, message):
+		gobject.idle_add(self.__log_idle, (module_id, message))
 
 class Shell:
 	def __init__(self):
 		self._screen = wnck.screen_get_default()
 
 	def start(self):
-		self._console = ConsoleLogger()
-		keybindings.setup_global_keys(self._console.get_window(), self)
-
 		log_writer = LogWriter("Shell", False)
 		log_writer.start()
 
@@ -55,16 +62,10 @@ class Shell:
 		self._registry.scan_directory(os.path.join(env.get_user_dir(), 'activities'))
 
 		self._home_window = HomeWindow(self)
-		keybindings.setup_global_keys(self._home_window, self)
 		self._home_window.show()
 
 		self._people_windows = {}
-
-	def _toggle_window_visibility(self, window):
-		if window.get_property('visible'):
-			window.hide()
-		else:
-			window.show()
+		self._console_windows = {}
 
 	def get_current_activity(self):
 		window = self._screen.get_active_window()
@@ -73,25 +74,34 @@ class Shell:
 		else:
 			return None
 
-	def __people_dialog_delete_cb(self, window, event):
-		window.hide()
-		return True
-
 	def show_people(self):
 		activity = self.get_current_activity()
 		if activity:
 			if not self._people_windows.has_key(activity.get_id()):
 				dialog = PeopleWindow(self, activity)
-				dialog.connect('delete-event', self.__people_dialog_delete_cb)
-				keybindings.setup_global_keys(dialog, self)
 				self._people_windows[activity.get_id()] = dialog
 			else:
 				dialog = self._people_windows[activity.get_id()]
-
 			activity.show_dialog(dialog)
 
-	def toggle_console(self):
-		self._toggle_window_visibility(self._console.get_window())
+	def get_console(self, module_id):
+		if not self._console_windows.has_key(module_id):
+			dialog = ConsoleWindow()
+			self._console_windows[module_id] = dialog
+		else:
+			dialog = self._console_windows[module_id]
+		return dialog
+
+	def show_console(self):
+		activity = self.get_current_activity()
+		if activity:
+			module = self._registry.get_activity(activity.get_default_type())
+			console = self.get_console(module.get_id())
+			activity.show_dialog(console)
+	
+	def log(self, module_id, message):
+		console = self.get_console(module_id)
+		console.log(message)
 
 	def get_registry(self):
 		return self._registry
