@@ -7,6 +7,7 @@ import gtk
 from sugar.scene.Stage import Stage
 from sugar.scene.Group import Group
 from sugar.scene.PixbufActor import PixbufActor
+from sugar.scene.CircleLayout import CircleLayout
 
 def drawing_area_expose_cb(widget, event, stage):
 	stage.render(widget.window)
@@ -23,6 +24,9 @@ while i <= 5:
 	pixbuf = gtk.gdk.pixbuf_new_from_file('activity%d.png' % i)
 	icons_group.add(PixbufActor(pixbuf))
 	i += 1
+
+layout = CircleLayout(100)
+icons_group.set_layout_manager(layout)
 
 stage.add(icons_group)
 
