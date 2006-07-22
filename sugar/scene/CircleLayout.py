@@ -7,13 +7,17 @@ class CircleLayout(LayoutManager):
 		LayoutManager.__init__(self)
 
 		self._radium = radium
+		self._angle = 0
+
+	def set_angle(self, angle):
+		self._angle = angle
 
 	def layout_group(self, group):
 		step = 2 * math.pi / len(group.get_actors())
-		angle = 2 * math.pi
+		angle = self._angle
 		for actor in group.get_actors():
 			self._update_position(actor, angle)
-			angle -= step
+			angle += step
 
 	def _update_position(self, actor, angle):
 		x = math.cos(angle) * self._radium + self._radium
