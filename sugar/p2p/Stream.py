@@ -10,8 +10,6 @@ from sugar.presence import Service
 
 class Stream(object):
 	def __init__(self, service):
-		if not isinstance(service, Service.Service):
-			raise ValueError("service must be valid.")
 		if not service.get_port():
 			raise ValueError("service must have an address.")
 		self._service = service
@@ -21,8 +19,6 @@ class Stream(object):
 		self._callback = None
 
 	def new_from_service(service, start_reader=True):
-		if not isinstance(service, Service.Service):
-			raise ValueError("service must be valid.")
 		if service.is_multicast_service():
 			return MulticastStream(service)
 		else:
@@ -40,8 +36,6 @@ class Stream(object):
 class UnicastStreamWriter(object):
 	def __init__(self, stream, service):
 		# set up the writer
-		if not isinstance(service, Service.Service):
-			raise ValueError("service must be valid")
 		self._service = service
 		if not service.get_address():
 			raise ValueError("service must have a valid address.")

@@ -22,6 +22,8 @@ def _txt_to_dict(txt):
 	return prop_dict
 
 def compose_service_name(name, activity_id):
+	if type(name) == type(""):
+		name = unicode(name)
 	if not name:
 		raise ValueError("name must be a valid string.")
 	if not activity_id:
@@ -29,7 +31,7 @@ def compose_service_name(name, activity_id):
 	if type(name) != type(u""):
 		raise ValueError("name must be in unicode.")
 	composed = "%s [%s]" % (name, activity_id)
-	return composed.encode()
+	return composed
 
 def _decompose_service_name(name):
 	"""Break a service name into the name and activity ID, if we can."""
@@ -58,7 +60,7 @@ def is_multicast_address(address):
 		return False
 	if address[3] != '.':
 		return False
-	first = int(address[:3])
+	first = int(float(address[:3]))
 	if first >= 224 and first <= 239:
 		return True
 	return False
@@ -66,6 +68,7 @@ def is_multicast_address(address):
 
 _ACTIVITY_ID_TAG = "ActivityID"
 SERVICE_DBUS_INTERFACE = "org.laptop.Presence.Service"
+SERVICE_DBUS_OBJECT_PATH = "/org/laptop/Presence/Services/"
 
 class ServiceDBusHelper(dbus.service.Object):
 	"""Handle dbus requests and signals for Service objects"""
@@ -105,10 +108,11 @@ class ServiceDBusHelper(dbus.service.Object):
 			value = str(value)
 		return value
 
+
 class Service(object):
 	"""Encapsulates information about a specific ZeroConf/mDNS
 	service as advertised on the network."""
-	def __init__(self, bus_name, object_id, name, stype, domain, address=None, port=-1, properties=None):
+	def __init__(self, bus_name, object_id, name, stype, domain=u"local", address=None, port=-1, properties=None):
 		if not bus_name:
 			raise ValueError("DBus bus name must be valid")
 		if not object_id or type(object_id) != type(1):
@@ -127,13 +131,14 @@ class Service(object):
 		if not stype.endswith("._tcp") and not stype.endswith("._udp"):
 			raise ValueError("must specify a TCP or UDP service type.")
 
-		if domain and type(domain) != type(u""):
+		if type(domain) != type(u""):
 			raise ValueError("domain must be in unicode.")
-		if len(domain) and domain != "local":
+		if domain and domain != "local":
 			raise ValueError("must use the 'local' domain (for now).")
 
 		(actid, real_name) = _decompose_service_name(name)
 		self._name = real_name
+		self._full_name = name
 		self._stype = stype
 		self._domain = domain
 		self._port = -1
@@ -163,7 +168,7 @@ class Service(object):
 
 		# register ourselves with dbus
 		self._object_id = object_id
-		self._object_path = "/org/laptop/Presence/Services/%d" % self._object_id
+		self._object_path = SERVICE_DBUS_OBJECT_PATH + str(self._object_id)
 		self._dbus_helper = ServiceDBusHelper(self, bus_name, self._object_path)
 
 	def object_path(self):
@@ -181,6 +186,9 @@ class Service(object):
 		"""Return the service's name, usually that of the
 		buddy who provides it."""
 		return self._name
+
+	def get_full_name(self):
+		return self._full_name
 
 	def is_multicast_service(self):
 		"""Return True if the service's address is a multicast address,
@@ -261,6 +269,13 @@ class Service(object):
 
 import unittest
 
+__objid_seq = 0
+def _next_objid():
+	global __objid_seq
+	__objid_seq = __objid_seq + 1
+	return __objid_seq
+
+
 class ServiceTestCase(unittest.TestCase):
 	_DEF_NAME = u"foobar"
 	_DEF_STYPE = u"_foo._bar._tcp"
@@ -268,13 +283,23 @@ class ServiceTestCase(unittest.TestCase):
 	_DEF_ADDRESS = u"1.1.1.1"
 	_DEF_PORT = 1234
 	_DEF_PROPS = {'foobar': 'baz'}
-	
 	_STR_TEST_ARGS = [None, 0, [], {}]
+
+	def __init__(self, name):
+		self._bus = dbus.SessionBus()
+		self._bus_name = dbus.service.BusName('org.laptop.Presence', bus=self._bus)		
+		unittest.TestCase.__init__(self, name)
+
+	def __del__(self):
+		del self._bus_name
+		del self._bus
 
 	def _test_init_fail(self, name, stype, domain, address, port, properties, fail_msg):
 		"""Test something we expect to fail."""
 		try:
-			service = Service(name, stype, domain, address, port, properties)
+			objid = _next_objid()
+			service = Service(self._bus_name, objid, name, stype, domain, address,
+					port, properties)
 		except ValueError, exc:
 			pass
 		else:
@@ -289,7 +314,7 @@ class ServiceTestCase(unittest.TestCase):
 		for item in self._STR_TEST_ARGS:
 			self._test_init_fail(self._DEF_NAME, item, self._DEF_DOMAIN, self._DEF_ADDRESS,
 					self._DEF_PORT, self._DEF_PROPS, "invalid service type")
-		self._test_init_fail(self._DEF_NAME, "_bork._foobar", self._DEF_DOMAIN, self._DEF_ADDRESS,
+		self._test_init_fail(self._DEF_NAME, u"_bork._foobar", self._DEF_DOMAIN, self._DEF_ADDRESS,
 				self._DEF_PORT, self._DEF_PROPS, "invalid service type")
 
 	def testDomain(self):
@@ -297,14 +322,12 @@ class ServiceTestCase(unittest.TestCase):
 			self._test_init_fail(self._DEF_NAME, self._DEF_STYPE, item, self._DEF_ADDRESS,
 					self._DEF_PORT, self._DEF_PROPS, "invalid domain")
 		# Only accept local for now
-		self._test_init_fail(self._DEF_NAME, self._DEF_STYPE, "foobar", self._DEF_ADDRESS,
+		self._test_init_fail(self._DEF_NAME, self._DEF_STYPE, u"foobar", self._DEF_ADDRESS,
 				self._DEF_PORT, self._DEF_PROPS, "invalid domain")
 		# Make sure "" works
-		session_bus = dbus.SessionBus()
-		bus_name = dbus.service.BusName('org.laptop.Presence', bus=session_bus)		
-		service = Service(bus_name, 1, self._DEF_NAME, self._DEF_STYPE, "", self._DEF_ADDRESS,
-				self._DEF_PORT, self._DEF_PROPS)
-		del bus_name, session_bus
+		objid = _next_objid()
+		service = Service(self._bus_name, objid, self._DEF_NAME, self._DEF_STYPE, u"",
+				self._DEF_ADDRESS, self._DEF_PORT, self._DEF_PROPS)
 		assert service, "Empty domain was not accepted!"
 
 	def testAddress(self):
@@ -324,16 +347,15 @@ class ServiceTestCase(unittest.TestCase):
 				"adf", self._DEF_PROPS, "invalid port")
 
 	def testGoodInit(self):
-		session_bus = dbus.SessionBus()
-		bus_name = dbus.service.BusName('org.laptop.Presence', bus=session_bus)		
-		service = Service(bus_name, 1, self._DEF_NAME, self._DEF_STYPE, self._DEF_DOMAIN, self._DEF_ADDRESS,
-				self._DEF_PORT, self._DEF_PROPS)
-		del bus_name, session_bus
+		objid = _next_objid()
+		service = Service(self._bus_name, objid, self._DEF_NAME, self._DEF_STYPE, self._DEF_DOMAIN,
+				self._DEF_ADDRESS, self._DEF_PORT, self._DEF_PROPS)
 		assert service.get_name() == self._DEF_NAME, "service name wasn't correct after init."
 		assert service.get_type() == self._DEF_STYPE, "service type wasn't correct after init."
 		assert service.get_domain() == "local", "service domain wasn't correct after init."
 		assert service.get_address() == self._DEF_ADDRESS, "service address wasn't correct after init."
 		assert service.get_port() == self._DEF_PORT, "service port wasn't correct after init."
+		assert service.object_path() == SERVICE_DBUS_OBJECT_PATH + str(objid)
 		value = service.get_one_property('foobar')
 		assert value and value == 'baz', "service property wasn't correct after init."
 
@@ -341,11 +363,9 @@ class ServiceTestCase(unittest.TestCase):
 		props = [[111, 114, 103, 46, 102, 114, 101, 101, 100, 101, 115, 107, 116, 111, 112, 46, 65, 118, 97, 104, 105, 46, 99, 111, 111, 107, 105, 101, 61, 50, 54, 48, 49, 53, 52, 51, 57, 53, 50]]
 		key = "org.freedesktop.Avahi.cookie"
 		expected_value = "2601543952"
-		session_bus = dbus.SessionBus()
-		bus_name = dbus.service.BusName('org.laptop.Presence', bus=session_bus)		
-		service = Service(bus_name, 1, self._DEF_NAME, self._DEF_STYPE, self._DEF_DOMAIN, self._DEF_ADDRESS,
-				self._DEF_PORT, props)
-		del bus_name, session_bus
+		objid = _next_objid()
+		service = Service(self._bus_name, objid, self._DEF_NAME, self._DEF_STYPE, self._DEF_DOMAIN,
+				self._DEF_ADDRESS, self._DEF_PORT, props)
 		value = service.get_one_property(key)
 		assert value and value == expected_value, "service properties weren't correct after init."
 		value = service.get_one_property('bork')
@@ -355,32 +375,29 @@ class ServiceTestCase(unittest.TestCase):
 		props = [[111, 114, 103, 46, 102, 114, 101, 101, 100, 101, 115, 107, 116, 111, 112, 46, 65, 118, 97, 104, 105, 46, 99, 111, 111, 107, 105, 101]]
 		key = "org.freedesktop.Avahi.cookie"
 		expected_value = True
-		session_bus = dbus.SessionBus()
-		bus_name = dbus.service.BusName('org.laptop.Presence', bus=session_bus)		
-		service = Service(bus_name, 1, self._DEF_NAME, self._DEF_STYPE, self._DEF_DOMAIN, self._DEF_ADDRESS,
+		objid = _next_objid()
+		service = Service(self._bus_name, objid, self._DEF_NAME, self._DEF_STYPE, self._DEF_DOMAIN, self._DEF_ADDRESS,
 				self._DEF_PORT, props)
 		value = service.get_one_property(key)
-		del bus_name, session_bus
 		assert value is not None and value == expected_value, "service properties weren't correct after init."
 
-	def testGroupService(self):
+	def testActivityService(self):
 		# Valid group service type, non-multicast address
-		group_stype = u"_af5e5a7c998e89b9a_group_olpc._udp"
-		self._test_init_fail(self._DEF_NAME, group_stype, self._DEF_DOMAIN, self._DEF_ADDRESS,
-				self._DEF_PORT, self._DEF_PROPS, "group service type, but non-multicast address")
+		actid = "4569a71b80805aa96a847f7ac1c407327b3ec2b4"
+		name = compose_service_name("Tommy", actid)
 
-		# Valid group service type, None address
-		session_bus = dbus.SessionBus()
-		bus_name = dbus.service.BusName('org.laptop.Presence', bus=session_bus)		
-		service = Service(bus_name, 1, self._DEF_NAME, group_stype, self._DEF_DOMAIN, None,
+		# Valid activity service name, None address
+		objid = _next_objid()
+		service = Service(self._bus_name, objid, name, self._DEF_STYPE, self._DEF_DOMAIN, None,
 				self._DEF_PORT, self._DEF_PROPS)
 		assert service.get_address() == None, "address was not None as expected!"
+		assert service.get_activity_id() == actid, "activity id was different than expected!"
 
-		# Valid group service type and multicast address, ensure it works
+		# Valid activity service name and multicast address, ensure it works
 		mc_addr = u"224.0.0.34"
-		service = Service(bus_name, 1, self._DEF_NAME, group_stype, self._DEF_DOMAIN, mc_addr,
+		objid = _next_objid()
+		service = Service(self._bus_name, objid, name, self._DEF_STYPE, self._DEF_DOMAIN, mc_addr,
 				self._DEF_PORT, self._DEF_PROPS)
-		del bus_name, session_bus
 		assert service.get_address() == mc_addr, "address was not expected address!"
 
 	def addToSuite(suite):
@@ -392,7 +409,7 @@ class ServiceTestCase(unittest.TestCase):
 		suite.addTest(ServiceTestCase("testGoodInit"))
 		suite.addTest(ServiceTestCase("testAvahiProperties"))
 		suite.addTest(ServiceTestCase("testBoolProperty"))
-		suite.addTest(ServiceTestCase("testGroupService"))
+		suite.addTest(ServiceTestCase("testActivityService"))
 	addToSuite = staticmethod(addToSuite)
 
 

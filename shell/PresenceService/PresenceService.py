@@ -68,6 +68,9 @@ _PRESENCE_SERVICE = "org.laptop.Presence"
 _PRESENCE_DBUS_INTERFACE = "org.laptop.Presence"
 _PRESENCE_OBJECT_PATH = "/org/laptop/Presence"
 
+class NotFoundError(Exception):
+	pass
+
 class PresenceServiceDBusHelper(dbus.service.Object):
 	def __init__(self, parent, bus_name):
 		self._parent = parent
@@ -103,6 +106,74 @@ class PresenceServiceDBusHelper(dbus.service.Object):
 						signature="o")
 	def ActivityDisappeared(self, object_path):
 		pass
+
+	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
+						in_signature="", out_signature="ao")
+	def getServices(self):
+		services = self._parent.get_services()
+		ret = []
+		for serv in services:
+			ret.append(serv.object_path())
+		return ret
+
+	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
+						in_signature="s", out_signature="ao")
+	def getServicesOfType(self, stype):
+		services = self._parent.get_services_of_type(stype)
+		ret = []
+		for serv in services:
+			ret.append(serv.object_path())
+		return ret
+
+	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
+						in_signature="", out_signature="ao")
+	def getActivities(self):
+		activities = self._parent.get_activities()
+		ret = []
+		for act in activities:
+			ret.append(act.object_path())
+		return ret
+
+	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
+						in_signature="s", out_signature="o")
+	def getActivity(self, actid):
+		act = self._parent.get_activity(actid)
+		if not act:
+			raise NotFoundError("Not found")
+		return act.object_path()
+
+	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
+						in_signature="", out_signature="ao")
+	def getBuddies(self):
+		buddies = self._parent.get_buddies()
+		ret = []
+		for buddy in buddies:
+			ret.append(buddy.object_path())
+		return ret
+
+	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
+						in_signature="s", out_signature="o")
+	def getBuddyByName(self, name):
+		buddy = self._parent.get_buddy_by_name(name)
+		if not buddy:
+			raise NotFoundError("Not found")
+		return buddy.object_path()
+
+	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
+						in_signature="s", out_signature="o")
+	def getBuddyByAddress(self, addr):
+		buddy = self._parent.get_buddy_by_address(addr)
+		if not buddy:
+			raise NotFoundError("Not found")
+		return buddy.object_path()
+
+	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
+						in_signature="", out_signature="o")
+	def getOwner(self):
+		owner = self._parent.get_owner()
+		if not owner:
+			raise NotFoundError("Not found")
+		return owner.object_path()
 
 
 class PresenceService(object):
@@ -153,6 +224,41 @@ class PresenceService(object):
 		"""Increment and return the object ID counter."""
 		self._next_object_id = self._next_object_id + 1
 		return self._next_object_id
+
+	def get_services(self):
+		return self._services.values()
+
+	def get_services_of_type(self, stype):
+		ret = []
+		for serv in self._services.values():
+			if serv.get_type() == stype:
+				ret.append(serv)
+		return ret
+
+	def get_activities(self):
+		return self._activities.values()
+
+	def get_activity(self, actid):
+		if self._activities.has_key(actid):
+			return self._activities[actid]
+		return None
+
+	def get_buddies(self):
+		return self._buddies.values()
+
+	def get_buddy_by_name(self, name):
+		if self._buddies.has_key(name):
+			return self._buddies[name]
+		return None
+
+	def get_buddy_by_address(self, address):
+		for buddy in self._buddies.values():
+			if buddy.get_address() == address:
+				return buddy
+		return None
+
+	def get_owner(self):
+		return self._owner
 
 	def _find_service_adv(self, interface=None, protocol=None, name=None, stype=None, domain=None):
 		"""Search a list of service advertisements for ones matching certain criteria."""
@@ -247,11 +353,16 @@ class PresenceService(object):
 		if adv in self._resolve_queue:
 			self._resolve_queue.remove(adv)
 
-		# Update the service now that it's been resolved
-		objid = self._get_next_object_id()
-		service = Service.Service(self._bus_name, objid, name=full_name,
-				stype=stype, domain=domain, address=address, port=port,
-				properties=txt)
+		# See if we know about this service already
+		key = (full_name, stype)
+		if not self._services.has_key(key):
+			objid = self._get_next_object_id()
+			service = Service.Service(self._bus_name, objid, name=full_name,
+					stype=stype, domain=domain, address=address, port=port,
+					properties=txt)
+			self._services[key] = service
+		else:
+			service = self._services[key]
 		adv.set_service(service)
 
 		# Merge the service into our buddy and activity lists, if needed
@@ -347,7 +458,8 @@ class PresenceService(object):
 			if not buddy.is_valid():
 				self._dbus_helper.BuddyDisappeared(buddy.object_path())
 				del self._buddies[buddy_name]
-
+		key = (service.get_full_name(), service.get_type())
+		del self._services[key]
 		return False
 
 	def _service_disappeared_cb_glue(self, interface, protocol, name, stype, domain, flags):
@@ -402,6 +514,84 @@ class PresenceService(object):
 
 	def _new_domain_cb_glue(self, interface, protocol, domain, flags=0):
 		gobject.idle_add(self._new_domain_cb, interface, protocol, domain, flags)
+
+	def register_service(self, name, stype, properties, address, port, domain):
+		"""Register a new service, advertising it to other Buddies on the network."""
+		objid = self._get_next_object_id()
+		service = Service.Service(self._bus_name, objid, name=name,
+				stype=stype, domain=domain, address=address, port=port,
+				properties=properties)
+		self._services[key] = service
+
+		if self.get_owner() and name != self.get_owner().get_nick_name():
+			raise RuntimeError("Tried to register a service that didn't have Owner nick as the service name!")
+		actid = service.get_activity_id()
+		if actid:
+			rs_name = Service.compose_service_name(rs_name, actid)
+		rs_stype = service.get_type()
+		rs_port = service.get_port()
+		rs_props = service.get_properties()
+		rs_domain = service.get_domain()
+		rs_address = service.get_address()
+		if not rs_domain or not len(rs_domain):
+			rs_domain = ""
+		logging.debug("registered service name '%s' type '%s' on port %d with args %s" % (rs_name, rs_stype, rs_port, rs_props))
+
+		try:
+			group = dbus.Interface(self._bus.get_object(avahi.DBUS_NAME, self._server.EntryGroupNew()), avahi.DBUS_INTERFACE_ENTRY_GROUP)
+
+			# Add properties; ensure they are converted to ByteArray types
+			# because python sometimes can't figure that out
+			info = []
+			for k, v in rs_props.items():
+				tmp_item = "%s=%s" % (k, v)
+				info.append(dbus.types.ByteArray(tmp_item))
+
+			if rs_address and len(rs_address):
+				info.append("address=%s" % (rs_address))
+			logging.debug("PS: about to call AddService for Avahi with rs_name='%s' (%s), rs_stype='%s' (%s)," \
+					" rs_domain='%s' (%s), rs_port=%d (%s), info='%s' (%s)" % (rs_name, type(rs_name), rs_stype,
+					type(rs_stype), rs_domain, type(rs_domain), rs_port, type(rs_port), info, type(info)))
+			group.AddService(avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, 0, rs_name, rs_stype,
+					rs_domain, "", # let Avahi figure the 'host' out
+					dbus.UInt16(rs_port), info,)
+			group.Commit()
+		except dbus.dbus_bindings.DBusException, exc:
+			# FIXME: ignore local name collisions, since that means
+			# the zeroconf service is already registered.  Ideally we
+			# should un-register it an re-register with the correct info
+			if str(exc) == "Local name collision":
+				pass
+		activity_stype = service.get_type()
+		self.register_service_type(activity_stype)
+
+	def register_service_type(self, stype):
+		"""Requests that the Presence service look for and recognize
+		a certain mDNS service types."""
+		if type(stype) != type(u""):
+			raise ValueError("service type must be a unicode string.")
+		if stype in self._registered_service_types:
+			return
+		self._registered_service_types.append(stype)
+
+		# Find unresolved services that match the service type
+		# we're now interested in, and resolve them
+		resolv_list = []
+
+		# Find services of this type
+		resolv_list = self._find_service_adv(stype=stype)
+		# Request resolution for them if they aren't in-process already
+		for adv in resolv_list:
+			if adv not in self._resolve_queue:
+				self._resolve_queue.append(adv)
+				gobject.idle_add(self._resolve_service, adv)
+
+	def unregister_service_type(self, stype):
+		"""Stop tracking a certain mDNS service."""
+		if type(stype) != type(u""):
+			raise ValueError("service type must be a unicode string.")
+		if stype in self._registered_service_types:
+			self._registered_service_types.remove(stype)
 
 
 
