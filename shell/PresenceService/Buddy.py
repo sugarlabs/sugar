@@ -7,6 +7,7 @@ import dbus, dbus.service
 
 
 PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
+BUDDY_DBUS_OBJECT_PATH = "/org/laptop/Presence/Buddies/"
 BUDDY_DBUS_INTERFACE = "org.laptop.Presence.Buddy"
 
 class NotFoundError(Exception):
@@ -85,6 +86,8 @@ class Buddy(object):
 			raise ValueError("DBus bus name must be valid")
 		if not object_id or type(object_id) != type(1):
 			raise ValueError("object id must be a valid number")
+		if not isinstance(service, Service.Service):
+			raise ValueError("service must be a valid service object")
 
 		self._services = {}
 		self._activities = {}
@@ -97,7 +100,7 @@ class Buddy(object):
 		self._owner = owner
 
 		self._object_id = object_id
-		self._object_path = "/org/laptop/Presence/Buddies/%d" % self._object_id
+		self._object_path = BUDDY_DBUS_OBJECT_PATH + str(self._object_id)
 		self._dbus_helper = BuddyDBusHelper(self, bus_name, self._object_path)
 
 		self.add_service(service)
@@ -255,3 +258,73 @@ class Owner(Buddy):
 	portion of the Owner, paired with the server portion in Owner.py."""
 	def __init__(self, bus_name, object_id, service):
 		Buddy.__init__(self, bus_name, object_id, service, owner=True)
+
+
+#################################################################
+# Tests
+#################################################################
+
+import unittest
+import Service
+
+__objid_seq = 0
+def _next_objid():
+	global __objid_seq
+	__objid_seq = __objid_seq + 1
+	return __objid_seq
+
+
+class BuddyTestCase(unittest.TestCase):
+	_DEF_NAME = u"Tommy"
+	_DEF_STYPE = unicode(PRESENCE_SERVICE_TYPE)
+	_DEF_DOMAIN = u"local"
+	_DEF_ADDRESS = u"1.1.1.1"
+	_DEF_PORT = 1234
+
+	def __init__(self, name):
+		self._bus = dbus.SessionBus()
+		self._bus_name = dbus.service.BusName('org.laptop.Presence', bus=self._bus)		
+		unittest.TestCase.__init__(self, name)
+
+	def __del__(self):
+		del self._bus_name
+		del self._bus
+
+	def _test_init_fail(self, service, fail_msg):
+		"""Test something we expect to fail."""
+		try:
+			objid = _next_objid()
+			buddy = Buddy(self._bus_name, objid, service, owner=False)
+		except ValueError, exc:
+			pass
+		else:
+			self.fail("expected a ValueError for %s." % fail_msg)
+
+	def testService(self):
+		service = None
+		self._test_init_fail(service, "invalid service")
+
+	def testGoodInit(self):
+		objid = _next_objid()
+		service = Service.Service(self._bus_name, objid, self._DEF_NAME, self._DEF_STYPE, self._DEF_DOMAIN,
+				self._DEF_ADDRESS, self._DEF_PORT)
+		objid = _next_objid()
+		buddy = Buddy(self._bus_name, objid, service)
+		assert buddy.get_nick_name() == self._DEF_NAME, "buddy name wasn't correct after init."
+		assert buddy.get_address() == self._DEF_ADDRESS, "buddy address wasn't correct after init."
+		assert buddy.object_path() == BUDDY_DBUS_OBJECT_PATH + str(objid)
+
+	def addToSuite(suite):
+		suite.addTest(BuddyTestCase("testService"))
+		suite.addTest(BuddyTestCase("testGoodInit"))
+	addToSuite = staticmethod(addToSuite)
+
+
+def main():
+	suite = unittest.TestSuite()
+	BuddyTestCase.addToSuite(suite)
+	runner = unittest.TextTestRunner()
+	runner.run(suite)
+
+if __name__ == "__main__":
+	main()
