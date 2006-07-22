@@ -3,10 +3,10 @@ import math
 from sugar.scene.LayoutManager import LayoutManager
 
 class CircleLayout(LayoutManager):
-	def __init__(self, radium):
+	def __init__(self, radius):
 		LayoutManager.__init__(self)
 
-		self._radium = radium
+		self._radius = radius
 		self._angle = 0
 
 	def set_angle(self, angle):
@@ -20,6 +20,6 @@ class CircleLayout(LayoutManager):
 			angle += step
 
 	def _update_position(self, actor, angle):
-		x = math.cos(angle) * self._radium + self._radium
-		y = math.sin(angle) * self._radium + self._radium
-		actor.set_position(int(x), int(y))
+		x = math.cos(angle) * self._radius + self._radius
+		y = math.sin(angle) * self._radius + self._radius
+		actor.set_position(int(x + 0.5), int(y + 0.5))

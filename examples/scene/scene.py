@@ -15,7 +15,7 @@ def __drawing_area_expose_cb(widget, event, stage):
 	stage.render(widget.window)
 
 def __next_frame_cb(timeline, frame_num, group):
-	angle = math.pi * 2 / timeline.get_n_frames() * frame_num
+	angle = math.pi * 2 * frame_num / timeline.get_n_frames()
 	group.get_layout().set_angle(angle)
 	group.do_layout()
 
@@ -55,7 +55,7 @@ drawing_area.show()
 
 window.show()
 
-timeline = Timeline(stage, 100)
+timeline = Timeline(stage, 300)
 timeline.connect('next-frame', __next_frame_cb, icons_group)
 timeline.connect('completed', __completed_cb, icons_group)
 timeline.start()
