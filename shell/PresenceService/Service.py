@@ -247,6 +247,8 @@ class Service(object):
 			if type(address) != type(u""):
 				raise ValueError("address must be unicode")
 		self._address = address
+		if not self._publisher_address:
+			self._publisher_address = address
 
 	def get_domain(self):
 		"""Return the ZeroConf/mDNS domain the service was found in."""

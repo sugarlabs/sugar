@@ -53,7 +53,7 @@ class PresenceServiceProcess(Process):
 		return "PresenceService"
 
 	def start(self):
-		Process.start(self, True)
+		Process.start(self)
 		time.sleep(3)
 
 class Session:
