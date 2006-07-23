@@ -54,17 +54,14 @@ class ChatListener:
 
 		self._chats = {}
 	
-		self._pservice = PresenceService.get_instance()
-		self._pservice.start()
-		self._pservice.track_service_type(BuddyChat.SERVICE_TYPE)
+		self._pservice = PresenceService()
+		self._pservice.register_service_type(BuddyChat.SERVICE_TYPE)
 
 	def start(self):
-		port = random.randint(5000, 65535)
-		service = Service.Service(sugar.env.get_nick_name(), BuddyChat.SERVICE_TYPE,
-						  		  'local', '', port)
-		self._buddy_stream = Stream.new_from_service(service)
+		self._service = self._pservice.register_service(sugar.env.get_nick_name(),
+				BuddyChat.SERVICE_TYPE)
+		self._buddy_stream = Stream.new_from_service(self._service)
 		self._buddy_stream.set_data_listener(self._recv_message)
-		self._pservice.register_service(service)
 
 	def _recv_message(self, address, message):
 		[nick, msg] = Chat.deserialize_message(message)

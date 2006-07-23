@@ -57,7 +57,7 @@ class BrowserActivity(Activity):
 		vbox.show()
 
 		self._pservice = PresenceService()
-		self._pservice.connect('ServiceAppeared', self._service_appeared_cb)
+		self._pservice.connect('service-appeared', self._service_appeared_cb)
 
 		# Join the shared activity if we were started from one
 		if self._initial_service:

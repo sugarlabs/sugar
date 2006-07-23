@@ -10,7 +10,7 @@ class ActivityChat(GroupChat):
 		self._chat_service = None
 
 		self._activity = activity
-		self._pservice.connect('ServiceAppeared', self._service_appeared_cb)
+		self._pservice.connect('service-appeared', self._service_appeared_cb)
 
 		# Find an existing activity chat to latch onto
 		#activity_ps = self._pservice.getActivity(activity.get_id())

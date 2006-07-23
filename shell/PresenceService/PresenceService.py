@@ -182,6 +182,17 @@ class PresenceServiceDBusHelper(dbus.service.Object):
 				port, domain)
 		return service.object_path()
 
+	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
+						in_signature="s", out_signature="")
+	def registerServiceType(self, stype):
+		self._parent.register_service_type(stype)
+
+	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
+						in_signature="s", out_signature="")
+	def unregisterServiceType(self, stype):
+		self._parent.unregister_service_type(stype)
+
+
 class PresenceService(object):
 	def __init__(self):
 		# interface -> IP address: interfaces we've gotten events on so far

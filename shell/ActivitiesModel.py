@@ -36,7 +36,7 @@ class ActivitiesModel(gobject.GObject):
 		self._activities = []
 		
 		self._pservice = PresenceService()
-		self._pservice.connect("ActivityAppeared", self._on_activity_announced_cb)
+		self._pservice.connect("activity-appeared", self._on_activity_announced_cb)
 
 	def add_activity(self, service):
 		activity_info = ActivityInfo(service)

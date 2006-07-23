@@ -32,7 +32,7 @@ class ShellOwner(object):
 
 		# Create and announce our presence
 		self._pservice = PresenceService.PresenceService()
-		self._service = self._pservice.registerService(nick, PRESENCE_SERVICE_TYPE)
+		self._service = self._pservice.register_service(nick, PRESENCE_SERVICE_TYPE)
 		print "Owner '%s' using port %d" % (nick, self._service.get_port())
 		self._icon_stream = Stream.Stream.new_from_service(self._service)
 		self._icon_stream.register_reader_handler(self._handle_buddy_icon_request, "get_buddy_icon")

@@ -14,15 +14,16 @@ class Service(gobject.GObject):
 		self._ps_del_object = del_obj_cb
 		sobj = bus.get_object(self._PRESENCE_SERVICE, object_path)
 		self._service = dbus.Interface(sobj, self._SERVICE_DBUS_INTERFACE)
+		self._service.connect_to_signal('PropertyChanged', self._property_changed_cb)
 		self._props = self._service.getProperties()
 
 	def object_path(self):
 		return self._object_path
 
-	def getProperties(self):
-		return self._props
+	def _property_changed_cb(self, prop_list):
+		self._props = self._service.getProperties()
 
-	def getPublishedValue(self, key):
+	def get_published_value(self, key):
 		value = self._service.getPublishedValue(key)
 
 	def get_name(self):
