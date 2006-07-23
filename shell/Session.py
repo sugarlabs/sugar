@@ -1,6 +1,7 @@
 import os
 import gtk
 import gobject
+import time
 
 from Shell import Shell
 from Process import Process
@@ -44,6 +45,17 @@ class MatchboxProcess(Process):
 	def get_name(self):
 		return 'Matchbox'
 
+class PresenceServiceProcess(Process):
+	def __init__(self):
+		Process.__init__(self, "python shell/PresenceService/PresenceService.py",)
+
+	def get_name(self):
+		return "PresenceService"
+
+	def start(self):
+		Process.start(self, True)
+		time.sleep(3)
+
 class Session:
 	"""Takes care of running the shell and all the sugar processes"""
 
@@ -57,7 +69,10 @@ class Session:
 
 		process = MatchboxProcess()
 		process.start()
-		
+
+		process = PresenceServiceProcess()
+		process.start()
+
 		shell = Shell()
 		shell.start()
 

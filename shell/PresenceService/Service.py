@@ -3,6 +3,7 @@ import sys, os
 sys.path.insert(0, os.path.abspath("../../"))
 from sugar import util
 import dbus, dbus.service
+import random
 
 def _txt_to_dict(txt):
 	"""Convert an avahi-returned TXT record formatted
@@ -53,18 +54,6 @@ def _decompose_service_name(name):
 		return (None, name)
 	return (activity_id, name[:start - 2])
 
-def is_multicast_address(address):
-	"""Simple numerical check for whether an IP4 address
-	is in the range for multicast addresses or not."""
-	if not address:
-		return False
-	if address[3] != '.':
-		return False
-	first = int(float(address[:3]))
-	if first >= 224 and first <= 239:
-		return True
-	return False
-
 
 _ACTIVITY_ID_TAG = "ActivityID"
 SERVICE_DBUS_INTERFACE = "org.laptop.Presence.Service"
@@ -86,7 +75,9 @@ class ServiceDBusHelper(dbus.service.Object):
 		pary['name'] = self._parent.get_name()
 		pary['type'] = self._parent.get_type()
 		pary['domain'] = self._parent.get_domain()
-		pary['activityId'] = self._parent.get_activity_id()
+		actid = self._parent.get_activity_id()
+		if actid:
+			pary['activityId'] = actid
 		port = self._parent.get_port()
 		if port:
 			pary['port'] = self._parent.get_port()
@@ -190,11 +181,6 @@ class Service(object):
 	def get_full_name(self):
 		return self._full_name
 
-	def is_multicast_service(self):
-		"""Return True if the service's address is a multicast address,
-		False if it is not."""
-		return is_multicast_address(self._address)
-
 	def get_one_property(self, key):
 		"""Return one property of the service, or None
 		if the property was not found.  Cannot distinguish
@@ -222,12 +208,14 @@ class Service(object):
 
 		# Set key/value pairs on internal property list
 		for key, value in props.items():
+			if len(key) == 0:
+				continue
 			tmp_key = key
 			tmp_val = value
-			if type(tmp_key) == type(u""):
-				tmp_key = tmp_key.encode()
-			if type(tmp_val) == type(u""):
-				tmp_val = tmp_val.encode()
+			if type(tmp_key) != type(u""):
+				tmp_key = unicode(tmp_key)
+			if type(tmp_val) != type(u""):
+				tmp_val = unicode(tmp_val)
 			self._properties[tmp_key] = tmp_val
 
 	def get_type(self):
@@ -242,6 +230,8 @@ class Service(object):
 		return self._port
 
 	def set_port(self, port):
+		if port == -1:
+			port = random.randint(4000, 65000)
 		if type(port) != type(1) or (port <= 1024 and port > 65536):
 			raise ValueError("must specify a valid port number between 1024 and 65536.")
 		self._port = port

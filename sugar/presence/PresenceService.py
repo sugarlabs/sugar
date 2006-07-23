@@ -48,7 +48,7 @@ class PresenceService(gobject.GObject):
 
 	def __init__(self):
 		gobject.GObject.__init__(self)
-		self._obcache = ObjectCache()
+		self._objcache = ObjectCache()
 		self._bus = dbus.SessionBus()
 		self._ps = dbus.Interface(self._bus.get_object(self._PRESENCE_SERVICE,
 				self._PRESENCE_OBJECT_PATH), self._PRESENCE_DBUS_INTERFACE)
@@ -173,4 +173,8 @@ class PresenceService(gobject.GObject):
 		except dbus_bindings.DBusException:
 			return None
 		return self._new_object(buddy_op)
+
+	def registerService(self, name, stype, properties={"":""}, address="", port=-1, domain=u"local"):
+		serv_op = self._ps.registerService(name, stype, properties, address, port, domain)
+		return self._new_object(serv_op)
 

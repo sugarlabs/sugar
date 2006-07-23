@@ -4,6 +4,9 @@ import base64
 
 from sugar import env
 from sugar.p2p import Stream
+from sugar.presence import PresenceService
+
+PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
 
 class ShellOwner(object):
 	"""Class representing the owner of this machine/instance.  This class
@@ -27,21 +30,12 @@ class ShellOwner(object):
 			fd.close()
 			break
 
-		# Our presence service
-		port = random.randint(40000, 65000)
-		properties = {}
-
-#		self._service = Service.Service(nick, Buddy.PRESENCE_SERVICE_TYPE,
-#			domain="", address=None, port=port, properties=properties)
-#		print "Owner '%s' using port %d" % (nick, port)
-
-#		self._icon_stream = Stream.Stream.new_from_service(self._service)
-#		self._icon_stream.register_reader_handler(self._handle_buddy_icon_request, "get_buddy_icon")
-
-		# Announce ourselves to the world
-#		self._pservice = PresenceService.PresenceService.get_instance()
-#		self._pservice.start()
-#		self._pservice.register_service(self._service)
+		# Create and announce our presence
+		self._pservice = PresenceService.PresenceService()
+		self._service = self._pservice.registerService(nick, PRESENCE_SERVICE_TYPE)
+		print "Owner '%s' using port %d" % (nick, service.get_port())
+		self._icon_stream = Stream.Stream.new_from_service(self._service)
+		self._icon_stream.register_reader_handler(self._handle_buddy_icon_request, "get_buddy_icon")
 
 	def _handle_buddy_icon_request(self):
 		"""XMLRPC method, return the owner's icon encoded with base64."""

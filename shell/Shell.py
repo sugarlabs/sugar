@@ -56,7 +56,6 @@ class Shell:
 		bus_name = dbus.service.BusName('com.redhat.Sugar.Shell', bus=session_bus)
 		ShellDbusService(self, bus_name)
 
-		self._ps = PresenceService.PresenceService()
 		self._owner = ShellOwner()
 
 		self._registry = ActivityRegistry()

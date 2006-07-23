@@ -175,6 +175,12 @@ class PresenceServiceDBusHelper(dbus.service.Object):
 			raise NotFoundError("Not found")
 		return owner.object_path()
 
+	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
+						in_signature="ssa{ss}sis", out_signature="o")
+	def registerService(self, name, stype, properties, address, port, domain):
+		service = self._parent.register_service(name, stype, properties, address,
+				port, domain)
+		return service.object_path()
 
 class PresenceService(object):
 	def __init__(self):
@@ -202,8 +208,8 @@ class PresenceService(object):
 		self._registered_service_types = []
 
 		# Set up the dbus service we provide
-		session_bus = dbus.SessionBus()
-		self._bus_name = dbus.service.BusName(_PRESENCE_SERVICE, bus=session_bus)		
+		self._session_bus = dbus.SessionBus()
+		self._bus_name = dbus.service.BusName(_PRESENCE_SERVICE, bus=self._session_bus)		
 		self._dbus_helper = PresenceServiceDBusHelper(self, self._bus_name)
 
 		# Connect to Avahi for mDNS stuff
@@ -515,17 +521,19 @@ class PresenceService(object):
 	def _new_domain_cb_glue(self, interface, protocol, domain, flags=0):
 		gobject.idle_add(self._new_domain_cb, interface, protocol, domain, flags)
 
-	def register_service(self, name, stype, properties, address, port, domain):
+	def register_service(self, name, stype, properties={}, address=None, port=None, domain=u"local"):
 		"""Register a new service, advertising it to other Buddies on the network."""
 		objid = self._get_next_object_id()
 		service = Service.Service(self._bus_name, objid, name=name,
 				stype=stype, domain=domain, address=address, port=port,
 				properties=properties)
+		key = (name, stype)
 		self._services[key] = service
 
 		if self.get_owner() and name != self.get_owner().get_nick_name():
 			raise RuntimeError("Tried to register a service that didn't have Owner nick as the service name!")
 		actid = service.get_activity_id()
+		rs_name = name
 		if actid:
 			rs_name = Service.compose_service_name(rs_name, actid)
 		rs_stype = service.get_type()
@@ -538,11 +546,12 @@ class PresenceService(object):
 		logging.debug("registered service name '%s' type '%s' on port %d with args %s" % (rs_name, rs_stype, rs_port, rs_props))
 
 		try:
-			group = dbus.Interface(self._bus.get_object(avahi.DBUS_NAME, self._server.EntryGroupNew()), avahi.DBUS_INTERFACE_ENTRY_GROUP)
+			obj = self._session_bus.get_object(avahi.DBUS_NAME, self._mdns_service.EntryGroupNew())
+			group = dbus.Interface(obj, avahi.DBUS_INTERFACE_ENTRY_GROUP)
 
 			# Add properties; ensure they are converted to ByteArray types
 			# because python sometimes can't figure that out
-			info = []
+			info = [""]
 			for k, v in rs_props.items():
 				tmp_item = "%s=%s" % (k, v)
 				info.append(dbus.types.ByteArray(tmp_item))
@@ -564,6 +573,7 @@ class PresenceService(object):
 				pass
 		activity_stype = service.get_type()
 		self.register_service_type(activity_stype)
+		return service
 
 	def register_service_type(self, stype):
 		"""Requests that the Presence service look for and recognize
