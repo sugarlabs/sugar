@@ -1,4 +1,4 @@
-sugardir = $(pkgdatadir)/shell
+sugardir = $(pkgdatadir)/shell/PresenceService
 sugar_PYTHON =				\
 	__init__.py			\
 	Activity.py			\

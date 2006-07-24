@@ -47,13 +47,14 @@ class MatchboxProcess(Process):
 
 class PresenceServiceProcess(Process):
 	def __init__(self):
-		Process.__init__(self, "python shell/PresenceService/PresenceService.py",)
+		Process.__init__(self, "sugar-presence-service",)
 
 	def get_name(self):
 		return "PresenceService"
 
 	def start(self):
 		Process.start(self)
+		# FIXME we really need something better
 		time.sleep(3)
 
 class Session:

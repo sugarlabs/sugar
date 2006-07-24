@@ -1,10 +1,11 @@
 SUBDIRS = PresenceService data
 
 bin_SCRIPTS = 				\
-	sugar					\
+	sugar				\
 	sugar-activity			\
-	sugar-activity-factory	\
-	sugar-people
+	sugar-activity-factory		\
+	sugar-people			\
+	sugar-presence-service
 
 sugardir = $(pkgdatadir)/shell
 sugar_PYTHON =				\
