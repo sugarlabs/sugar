@@ -2,7 +2,7 @@ import gtk
 
 from sugar.scene.Stage import Stage
 
-class View(gtk.DrawingArea):
+class SceneView(gtk.DrawingArea):
 	def __init__(self, stage):
 		gtk.DrawingArea.__init__(self)
 
