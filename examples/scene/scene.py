@@ -33,6 +33,7 @@ pixbuf = gtk.gdk.pixbuf_new_from_file('background.png')
 stage.add(PixbufActor(pixbuf))
 
 icons_group = Group()
+icons_group.set_position(100, 100)
 
 i = 1
 while i <= 5:
@@ -55,7 +56,7 @@ drawing_area.show()
 
 window.show()
 
-timeline = Timeline(stage, 300)
+timeline = Timeline(stage, 200)
 timeline.connect('next-frame', __next_frame_cb, icons_group)
 timeline.connect('completed', __completed_cb, icons_group)
 timeline.start()

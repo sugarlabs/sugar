@@ -8,6 +8,7 @@ class PixbufActor(Actor):
 
 		self._pixbuf = pixbuf
 
-	def render(self, drawable):
+	def render(self, drawable, transf):
+		(x, y) = transf.get_position(self._x, self._y)
 		gc = gtk.gdk.GC(drawable)
-		drawable.draw_pixbuf(gc, self._pixbuf, 0, 0, self._x, self._y)
+		drawable.draw_pixbuf(gc, self._pixbuf, 0, 0, x, y)

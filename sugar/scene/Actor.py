@@ -13,5 +13,5 @@ class Actor:
 		self._width = width
 		self._height = height
 
-	def render(self, window):
+	def render(self, window, transf):
 		pass
