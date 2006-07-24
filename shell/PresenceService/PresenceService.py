@@ -4,6 +4,7 @@ import Service
 import random
 import logging
 from sugar import env
+from sugar import util
 
 
 def _get_local_ip_address(ifname):
@@ -179,6 +180,11 @@ class PresenceServiceDBusHelper(dbus.service.Object):
 						in_signature="ssa{ss}sis", out_signature="o")
 	def registerService(self, name, stype, properties, address, port, domain):
 		service = self._parent.register_service(name, stype, properties, address,
+				port, domain)
+		return service.object_path()
+
+	def shareActivity(self, activity_id, stype, properties, address, port, domain):
+		service = self._parent.share_activity(name, stype, properties, address,
 				port, domain)
 		return service.object_path()
 
@@ -539,6 +545,31 @@ class PresenceService(object):
 
 	def _new_domain_cb_glue(self, interface, protocol, domain, flags=0):
 		gobject.idle_add(self._new_domain_cb, interface, protocol, domain, flags)
+
+	def share_activity(self, activity_id, stype, properties=None, address=None, port=None, domain=u"local"):
+		"""Convenience function to share an activity with other buddies."""
+		if not util.validate_activity_id(activity_id):
+			raise ValueError("invalid activity id")
+		owner_nick = self._owner.get_nick_name()
+		real_name = Service.compose_service_name(owner_nick, actid)
+		if address and type(address) != type(u""):
+			raise ValueError("address must be a unicode string.")
+		if address == None:
+			# Use random currently unassigned multicast address
+			address = "232.%d.%d.%d" % (random.randint(0, 254), random.randint(1, 254),
+					random.randint(1, 254))
+		if port and (type(port) != type(1) or port <= 1024 or port >= 65535):
+			raise ValueError("port must be a number between 1024 and 65535")
+		if not port:
+			# random port #
+			port = random.randint(5000, 65535)
+
+		# Mark the activity as shared
+		if stype == activity.get_default_type():
+			activity.set_shared()
+
+		logging.debug('Share activity %s, type %s, address %s, port %d, properties %s' % (activity_id, stype, address, port, properties))
+		return self.register_service(real_name, stype, properties, address, port, domain)
 
 	def register_service(self, name, stype, properties={}, address=None, port=None, domain=u"local"):
 		"""Register a new service, advertising it to other Buddies on the network."""
