@@ -643,9 +643,9 @@ class PresenceService(object):
 
 
 def main():
-	import gtk
+	loop = gobject.MainLoop()
 	ps = PresenceService()
-	gtk.main()
+	loop.run()
 
 if __name__ == "__main__":
 	main()
