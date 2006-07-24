@@ -21,8 +21,8 @@ class PresenceView(gtk.VBox):
 		self._shell = shell
 
 		self._pservice = PresenceService()
-		self._pservice.connect("BuddyAppeared", self._on_buddy_appeared_cb)
-		self._pservice.connect("BuddyDisappeared", self._on_buddy_disappeared_cb)
+		self._pservice.connect("buddy-appeared", self._on_buddy_appeared_cb)
+		self._pservice.connect("buddy-disappeared", self._on_buddy_disappeared_cb)
 		
 		self._setup_ui()
 

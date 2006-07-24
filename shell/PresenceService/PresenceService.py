@@ -175,6 +175,23 @@ class PresenceServiceDBusHelper(dbus.service.Object):
 			raise NotFoundError("Not found")
 		return owner.object_path()
 
+	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
+						in_signature="ssa{ss}sis", out_signature="o")
+	def registerService(self, name, stype, properties, address, port, domain):
+		service = self._parent.register_service(name, stype, properties, address,
+				port, domain)
+		return service.object_path()
+
+	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
+						in_signature="s", out_signature="")
+	def registerServiceType(self, stype):
+		self._parent.register_service_type(stype)
+
+	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
+						in_signature="s", out_signature="")
+	def unregisterServiceType(self, stype):
+		self._parent.unregister_service_type(stype)
+
 
 class PresenceService(object):
 	def __init__(self):
@@ -202,8 +219,8 @@ class PresenceService(object):
 		self._registered_service_types = []
 
 		# Set up the dbus service we provide
-		session_bus = dbus.SessionBus()
-		self._bus_name = dbus.service.BusName(_PRESENCE_SERVICE, bus=session_bus)		
+		self._session_bus = dbus.SessionBus()
+		self._bus_name = dbus.service.BusName(_PRESENCE_SERVICE, bus=self._session_bus)		
 		self._dbus_helper = PresenceServiceDBusHelper(self, self._bus_name)
 
 		# Connect to Avahi for mDNS stuff
@@ -363,6 +380,11 @@ class PresenceService(object):
 			self._services[key] = service
 		else:
 			service = self._services[key]
+			if not service.get_address():
+				set_addr = service.get_one_property('address')
+				if not set_addr:
+					set_addr = address
+				service.set_address(set_addr)
 		adv.set_service(service)
 
 		# Merge the service into our buddy and activity lists, if needed
@@ -375,6 +397,9 @@ class PresenceService(object):
 	def _resolve_service_reply_cb_glue(self, interface, protocol, name, stype, domain, host, aprotocol, address, port, txt, flags):
 		gobject.idle_add(self._resolve_service_reply_cb, interface, protocol,
 				name, stype, domain, host, aprotocol, address, port, txt, flags)
+
+	def _resolve_service_error_handler(self, err):
+		logging.error("error resolving service: %s" % err)
 
 	def _resolve_service(self, adv):
 		"""Resolve and lookup a ZeroConf service to obtain its address and TXT records."""
@@ -515,46 +540,37 @@ class PresenceService(object):
 	def _new_domain_cb_glue(self, interface, protocol, domain, flags=0):
 		gobject.idle_add(self._new_domain_cb, interface, protocol, domain, flags)
 
-	def register_service(self, name, stype, properties, address, port, domain):
+	def register_service(self, name, stype, properties={}, address=None, port=None, domain=u"local"):
 		"""Register a new service, advertising it to other Buddies on the network."""
-		objid = self._get_next_object_id()
-		service = Service.Service(self._bus_name, objid, name=name,
-				stype=stype, domain=domain, address=address, port=port,
-				properties=properties)
-		self._services[key] = service
-
 		if self.get_owner() and name != self.get_owner().get_nick_name():
 			raise RuntimeError("Tried to register a service that didn't have Owner nick as the service name!")
-		actid = service.get_activity_id()
-		if actid:
-			rs_name = Service.compose_service_name(rs_name, actid)
-		rs_stype = service.get_type()
-		rs_port = service.get_port()
-		rs_props = service.get_properties()
-		rs_domain = service.get_domain()
-		rs_address = service.get_address()
-		if not rs_domain or not len(rs_domain):
-			rs_domain = ""
-		logging.debug("registered service name '%s' type '%s' on port %d with args %s" % (rs_name, rs_stype, rs_port, rs_props))
+		if not domain or not len(domain):
+			domain = u"local"
 
 		try:
-			group = dbus.Interface(self._bus.get_object(avahi.DBUS_NAME, self._server.EntryGroupNew()), avahi.DBUS_INTERFACE_ENTRY_GROUP)
+			obj = self._system_bus.get_object(avahi.DBUS_NAME, self._mdns_service.EntryGroupNew())
+			group = dbus.Interface(obj, avahi.DBUS_INTERFACE_ENTRY_GROUP)
 
 			# Add properties; ensure they are converted to ByteArray types
 			# because python sometimes can't figure that out
 			info = []
-			for k, v in rs_props.items():
-				tmp_item = "%s=%s" % (k, v)
-				info.append(dbus.types.ByteArray(tmp_item))
+			for k, v in properties.items():
+				info.append(dbus.types.ByteArray("%s=%s" % (k, v)))
 
-			if rs_address and len(rs_address):
-				info.append("address=%s" % (rs_address))
-			logging.debug("PS: about to call AddService for Avahi with rs_name='%s' (%s), rs_stype='%s' (%s)," \
-					" rs_domain='%s' (%s), rs_port=%d (%s), info='%s' (%s)" % (rs_name, type(rs_name), rs_stype,
-					type(rs_stype), rs_domain, type(rs_domain), rs_port, type(rs_port), info, type(info)))
-			group.AddService(avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, 0, rs_name, rs_stype,
-					rs_domain, "", # let Avahi figure the 'host' out
-					dbus.UInt16(rs_port), info,)
+			objid = self._get_next_object_id()
+			service = Service.Service(self._bus_name, objid, name=name,
+					stype=stype, domain=domain, address=address, port=port,
+					properties=properties)
+			self._services[(name, stype)] = service
+			port = service.get_port()
+
+			if address and len(address):
+				info.append("address=%s" % (address))
+			logging.debug("PS: Will register service with name='%s', stype='%s'," \
+					" domain='%s', port=%d, info='%s'" % (name, stype, domain, port, info))
+			group.AddService(avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, 0, name, stype,
+					domain, "", # let Avahi figure the 'host' out
+					dbus.UInt16(port), info,)
 			group.Commit()
 		except dbus.dbus_bindings.DBusException, exc:
 			# FIXME: ignore local name collisions, since that means
@@ -562,8 +578,8 @@ class PresenceService(object):
 			# should un-register it an re-register with the correct info
 			if str(exc) == "Local name collision":
 				pass
-		activity_stype = service.get_type()
-		self.register_service_type(activity_stype)
+		self.register_service_type(stype)
+		return service
 
 	def register_service_type(self, stype):
 		"""Requests that the Presence service look for and recognize

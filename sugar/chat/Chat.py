@@ -9,6 +9,7 @@ import dbus.glib
 import gtk
 import gobject
 import pango
+import logging
 
 from sugar.chat.Emoticons import Emoticons
 from sugar.chat.ChatToolbar import ChatToolbar
@@ -233,7 +234,7 @@ class Chat(gtk.VBox):
 			return
 		if self._stream_writer:
 			self._stream_writer.write(self.serialize_message(svgdata))
-		owner = PresenceService.get_instance().get_owner()
+		owner = self._pservice.get_owner()
 		if owner:
 			self._insert_sketch(owner, svgdata)
 
@@ -245,12 +246,12 @@ class Chat(gtk.VBox):
 			self._stream_writer.write(self.serialize_message(text))
 		else:
 			print 'Cannot send message, there is no stream writer'
-		owner = PresenceService.get_instance().get_owner()
+		owner = self._pservice.get_owner()
 		if owner:
 			self._insert_rich_message(owner, text)
 
 	def serialize_message(self, message):
-		owner = PresenceService.get_instance().get_owner()
+		owner = self._pservice.get_owner()
 		return owner.get_nick_name() + '||' + message
 		
 	def deserialize_message(message):

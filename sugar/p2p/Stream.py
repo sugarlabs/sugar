@@ -8,6 +8,18 @@ import network
 from MostlyReliablePipe import MostlyReliablePipe
 from sugar.presence import Service
 
+def is_multicast_address(address):
+	"""Simple numerical check for whether an IP4 address
+	is in the range for multicast addresses or not."""
+	if not address:
+		return False
+	if address[3] != '.':
+		return False
+	first = int(float(address[:3]))
+	if first >= 224 and first <= 239:
+		return True
+	return False
+
 class Stream(object):
 	def __init__(self, service):
 		if not service.get_port():
@@ -19,7 +31,7 @@ class Stream(object):
 		self._callback = None
 
 	def new_from_service(service, start_reader=True):
-		if service.is_multicast_service():
+		if is_multicast_address(service.get_address()):
 			return MulticastStream(service)
 		else:
 			return UnicastStream(service, start_reader)
@@ -75,28 +87,14 @@ class UnicastStream(Stream):
 		if start_reader:
 			self.start_reader()
 
-	def start_reader(self, update_service_port=True):
+	def start_reader(self):
 		"""Start the stream's reader, which for UnicastStream objects is
 		and XMLRPC server.  If there's a port conflict with some other
 		service, the reader will try to find another port to use instead.
 		Returns the port number used for the reader."""
 		# Set up the reader
-		started = False
-		tries = 10
-		self._reader = None
-		while not started and tries > 0:
-			try:
-				self._reader = network.GlibXMLRPCServer(("", self._reader_port))
-				self._reader.register_function(self._message, "message")
-				if update_service_port:
-					self._service.set_port(self._reader_port)  # Update the service's port
-				started = True
-			except(socket.error):
-				self._reader_port = random.randint(self._reader_port + 1, 65500)
-				tries = tries - 1
-		if self._reader is None:
-			print 'Could not start stream reader.'
-		return self._reader_port
+		self._reader = network.GlibXMLRPCServer(("", self._reader_port))
+		self._reader.register_function(self._message, "message")
 
 	def _message(self, message):
 		"""Called by the XMLRPC server when network data arrives."""
