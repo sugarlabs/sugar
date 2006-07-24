@@ -108,7 +108,7 @@ class Chat(gtk.VBox):
 		if icon:
 			rise = int(icon.get_height() / 4) * -1
 
-			hash_string = "%s-%s" % (buddy.get_nick_name(), buddy.get_address())
+			hash_string = "%s-%s" % (buddy.get_name(), buddy.get_ip4_address())
 			sha_hash = sha.new()
 			sha_hash.update(hash_string)
 			tagname = "buddyicon-%s" % sha_hash.hexdigest()
@@ -127,7 +127,7 @@ class Chat(gtk.VBox):
 			buf.create_tag("nickname", weight=pango.WEIGHT_BOLD)
 		aniter = buf.get_end_iter()
 		offset = aniter.get_offset()
-		buf.insert(aniter, " " + buddy.get_nick_name() + ": ")
+		buf.insert(aniter, " " + buddy.get_name() + ": ")
 		enditer = buf.get_iter_at_offset(offset)
 		buf.apply_tag_by_name("nickname", aniter, enditer)
 		
@@ -216,7 +216,7 @@ class Chat(gtk.VBox):
 
 		# FIXME a better way to compare buddies?			
 		owner = self._pservice.get_owner()
-		if buddy.get_nick_name() == owner.get_nick_name():
+		if buddy.get_name() == owner.get_name():
 			return
 
 		chunk = self._get_first_richtext_chunk(msg)
@@ -245,14 +245,14 @@ class Chat(gtk.VBox):
 		if self._stream_writer:
 			self._stream_writer.write(self.serialize_message(text))
 		else:
-			print 'Cannot send message, there is no stream writer'
+			logging.warning("Cannot send message, there is no stream writer")
 		owner = self._pservice.get_owner()
 		if owner:
 			self._insert_rich_message(owner, text)
 
 	def serialize_message(self, message):
 		owner = self._pservice.get_owner()
-		return owner.get_nick_name() + '||' + message
+		return owner.get_name() + '||' + message
 		
 	def deserialize_message(message):
 		return message.split('||', 1)

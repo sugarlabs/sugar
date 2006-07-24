@@ -136,7 +136,7 @@ class PresenceView(gtk.VBox):
 
 		aniter = self._buddy_store.append(None)
 		self._buddy_store.set(aniter,
-						  self._MODEL_COL_NICK, buddy.get_nick_name(),
+						  self._MODEL_COL_NICK, buddy.get_name(),
 						  self._MODEL_COL_BUDDY, buddy,
 						  self._MODEL_COL_VISIBLE, self._is_buddy_visible(buddy))
 		buddy.connect('icon-changed', self.__buddy_icon_changed_cb)

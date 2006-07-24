@@ -116,7 +116,7 @@ class BrowserActivity(Activity):
 
 		# Create our activity-specific browser sharing service
 		self._model = LocalModel(self, self._pservice, self._share_service)
-		self._model.set_value('owner', self._pservice.get_owner().get_nick_name())
+		self._model.set_value('owner', self._pservice.get_owner().get_name())
 		self._update_shared_location()
 		
 		self.set_mode(BrowserActivity.LEADING)
