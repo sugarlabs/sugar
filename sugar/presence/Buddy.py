@@ -94,9 +94,14 @@ class Buddy(gobject.GObject):
 
 	def get_icon_pixbuf(self):
 		icon = self._buddy.getIcon()
-		if icon:
+		if icon and len(icon):
 			pbl = gtk.gdk.PixbufLoader()
-			pbl.write(icon)
+			icon_data = ""
+			for item in icon:
+				if item < 0:
+					item = item + 128
+				icon_data = icon_data + chr(item)
+			pbl.write(icon_data)
 			pbl.close()
 			return pbl.get_pixbuf()
 		else:
