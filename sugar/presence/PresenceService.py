@@ -21,6 +21,12 @@ class ObjectCache(object):
 		if self._cache.has_key(object_path):
 			del self._cache[object_path]
 
+
+DBUS_SERVICE = "org.laptop.Presence"
+DBUS_INTERFACE = "org.laptop.Presence"
+DBUS_PATH = "/org/laptop/Presence"
+
+
 class PresenceService(gobject.GObject):
 
 	__gsignals__ = {
@@ -38,20 +44,17 @@ class PresenceService(gobject.GObject):
 						([gobject.TYPE_PYOBJECT]))
 	}
 
-	_PRESENCE_SERVICE = "org.laptop.Presence"
-	_PRESENCE_DBUS_INTERFACE = "org.laptop.Presence"
-	_PRESENCE_OBJECT_PATH = "/org/laptop/Presence"
-	_PS_BUDDY_OP = _PRESENCE_OBJECT_PATH + "/Buddies/"
-	_PS_SERVICE_OP = _PRESENCE_OBJECT_PATH + "/Services/"
-	_PS_ACTIVITY_OP = _PRESENCE_OBJECT_PATH + "/Activities/"
+	_PS_BUDDY_OP = DBUS_PATH + "/Buddies/"
+	_PS_SERVICE_OP = DBUS_PATH + "/Services/"
+	_PS_ACTIVITY_OP = DBUS_PATH + "/Activities/"
 	
 
 	def __init__(self):
 		gobject.GObject.__init__(self)
 		self._objcache = ObjectCache()
 		self._bus = dbus.SessionBus()
-		self._ps = dbus.Interface(self._bus.get_object(self._PRESENCE_SERVICE,
-				self._PRESENCE_OBJECT_PATH), self._PRESENCE_DBUS_INTERFACE)
+		self._ps = dbus.Interface(self._bus.get_object(DBUS_SERVICE,
+				DBUS_PATH), DBUS_INTERFACE)
 		self._ps.connect_to_signal('BuddyAppeared', self._buddy_appeared_cb)
 		self._ps.connect_to_signal('BuddyDisappeared', self._buddy_disappeared_cb)
 		self._ps.connect_to_signal('ServiceAppeared', self._service_appeared_cb)
