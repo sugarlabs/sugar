@@ -9,6 +9,7 @@ import dbus.glib
 import gtk
 import gobject
 import pango
+import logging
 
 from sugar.chat.Emoticons import Emoticons
 from sugar.chat.ChatToolbar import ChatToolbar
