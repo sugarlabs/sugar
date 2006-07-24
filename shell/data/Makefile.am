@@ -1,7 +1,7 @@
 confdir = $(datadir)
 conf_DATA = kbdconfig
 
-imagesdir = $(imagesdir)
+imagesdir = $(datadir)
 images_DATA =			\
 	home-background.png
 
