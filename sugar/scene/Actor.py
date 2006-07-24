@@ -20,6 +20,7 @@ class Actor(gobject.GObject):
 	def set_position(self, x, y):
 		self._x = x
 		self._y = y
+		self.notify_changed()
 
 	def _get_parents(self):
 		parents = []
@@ -39,9 +40,16 @@ class Actor(gobject.GObject):
 				transf = actor._transf
 		return transf.get_position(x, y)
 
+	def notify_changed(self):
+		if self._parent:
+			self._parent.notify_changed()
+		else:
+			self.emit('changed')
+
 	def set_size(self, width, height):
 		self._width = width
 		self._height = height
+		self.notify_changed()
 
 	def render(self, drawable):
 		pass

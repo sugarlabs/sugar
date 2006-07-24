@@ -7,25 +7,19 @@ import gtk
 
 from sugar.scene.Stage import Stage
 from sugar.scene.Group import Group
+from sugar.scene.View import View
 from sugar.scene.PixbufActor import PixbufActor
 from sugar.scene.CircleLayout import CircleLayout
 from sugar.scene.Timeline import Timeline
-
-def __drawing_area_expose_cb(widget, event, stage):
-	stage.render(widget.window)
 
 def __next_frame_cb(timeline, frame_num, group):
 	angle = math.pi * 2 * frame_num / timeline.get_n_frames()
 	group.get_layout().set_angle(angle)
 	group.do_layout()
 
-	drawing_area.window.invalidate_rect(None, False)
-
 def __completed_cb(timeline, group):
 	group.get_layout().set_angle(0)
 	group.do_layout()
-
-	drawing_area.window.invalidate_rect(None, False)
 
 stage = Stage()
 
@@ -49,10 +43,9 @@ stage.add(icons_group)
 window = gtk.Window()
 window.set_default_size(640, 480)
 
-drawing_area = gtk.DrawingArea()
-drawing_area.connect('expose_event', __drawing_area_expose_cb, stage)
-window.add(drawing_area)
-drawing_area.show()
+view = View(stage)
+window.add(view)
+view.show()
 
 window.show()
 
