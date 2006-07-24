@@ -2,9 +2,10 @@ import gtk
 
 from sugar.scene.Stage import Stage
 
-class SceneView(gtk.DrawingArea):
+class StageView(gtk.Fixed):
 	def __init__(self, stage):
-		gtk.DrawingArea.__init__(self)
+		gtk.Fixed.__init__(self)
+		self.set_has_window(True)
 
 		self._stage = stage
 		self._stage.connect('changed', self.__stage_changed_cb)

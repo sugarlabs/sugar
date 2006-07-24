@@ -8,7 +8,6 @@ import wnck
 import gobject
 
 from sugar.LogWriter import LogWriter
-from ConsoleLogger import ConsoleLogger
 from ActivityRegistry import ActivityRegistry
 from HomeWindow import HomeWindow
 from sugar import env
@@ -56,7 +55,7 @@ class Shell:
 		bus_name = dbus.service.BusName('com.redhat.Sugar.Shell', bus=session_bus)
 		ShellDbusService(self, bus_name)
 
-		self._owner = ShellOwner()
+		#self._owner = ShellOwner()
 
 		self._registry = ActivityRegistry()
 		self._registry.scan_directory(env.get_activities_dir())

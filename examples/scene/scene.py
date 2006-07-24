@@ -7,7 +7,7 @@ import gtk
 
 from sugar.scene.Stage import Stage
 from sugar.scene.Group import Group
-from sugar.scene.View import View
+from sugar.scene.SceneView import SceneView
 from sugar.scene.PixbufActor import PixbufActor
 from sugar.scene.CircleLayout import CircleLayout
 from sugar.scene.Timeline import Timeline
@@ -43,9 +43,13 @@ stage.add(icons_group)
 window = gtk.Window()
 window.set_default_size(640, 480)
 
-view = View(stage)
+view = SceneView(stage)
 window.add(view)
 view.show()
+
+button = gtk.Button('Hello')
+view.put(button, 10, 10)
+button.show()
 
 window.show()
 

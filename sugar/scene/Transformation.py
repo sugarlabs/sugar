@@ -15,7 +15,7 @@ class Transformation:
 		return (translated_x, translated_y)
 
 	def compose(self, transf):
-		composed = copy.copy(transf)
+		composed = copy.copy(self)
 		composed._translation_x += transf._translation_x
 		composed._translation_y += transf._translation_y
 		return composed

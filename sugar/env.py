@@ -33,6 +33,9 @@ def get_nick_name():
 
 def get_data_dir():
 	return sugar_data_dir
+
+def get_data_file(filename):
+	return os.path.join(get_data_dir(), filename)
 		
 def get_activities_dir():
 	return sugar_activities_dir
