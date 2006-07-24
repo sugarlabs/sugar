@@ -2,6 +2,9 @@ import os
 import gtk
 import gobject
 import time
+import dbus
+import dbus.dbus_bindings
+from sugar.presence import PresenceService
 
 from Shell import Shell
 from Process import Process
@@ -47,15 +50,19 @@ class MatchboxProcess(Process):
 
 class PresenceServiceProcess(Process):
 	def __init__(self):
-		Process.__init__(self, "sugar-presence-service",)
+		Process.__init__(self, "sugar-presence-service")
 
 	def get_name(self):
 		return "PresenceService"
 
 	def start(self):
 		Process.start(self)
-		# FIXME we really need something better
-		time.sleep(3)
+		bus = dbus.Bus()
+		ret = False
+		# Wait for the presence service to start up
+		while not ret:
+			ret = dbus.dbus_bindings.bus_name_has_owner(bus._connection, PresenceService.DBUS_SERVICE)
+			time.sleep(0.2)
 
 class Session:
 	"""Takes care of running the shell and all the sugar processes"""
