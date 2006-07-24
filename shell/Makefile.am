@@ -1,4 +1,4 @@
-SUBDIRS = data
+SUBDIRS = PresenceService data
 
 bin_SCRIPTS = 				\
 	sugar					\
@@ -10,6 +10,7 @@ sugardir = $(pkgdatadir)/shell
 sugar_PYTHON =				\
 	__init__.py			\
 	ActivitiesModel.py		\
+	ActivityHost.py			\
 	ActivityRegistry.py		\
 	ConsoleWindow.py		\
 	Emulator.py			\
