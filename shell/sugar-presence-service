@@ -1,5 +1,12 @@
 #!/usr/bin/python
 
+import logging
+import sugar.env
 from PresenceService import PresenceService
+
+level = sugar.env.get_logging_level()
+if level == 'debug':
+	logging.basicConfig(level=logging.DEBUG,
+						format='%(levelname)s %(message)s')
 
 PresenceService.main()
