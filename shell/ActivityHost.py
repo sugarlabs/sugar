@@ -20,8 +20,8 @@ class ActivityHost:
 	def get_id(self):
 		return self._id
 
-	def publish(self):
-		self._activity.publish()
+	def share(self):
+		self._activity.share()
 
 	def get_shared(self):
 		return self._activity.get_shared()

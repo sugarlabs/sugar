@@ -13,7 +13,7 @@ import sugar.util
 ACTIVITY_SERVICE_NAME = "com.redhat.Sugar.Activity"
 ACTIVITY_SERVICE_PATH = "/com/redhat/Sugar/Activity"
 
-ON_PUBLISH_CB = "publish"
+ON_SHARE_CB = "share"
 
 def get_path(activity_name):
 	"""Returns the activity path"""
@@ -87,7 +87,7 @@ class ActivityDbusService(dbus.service.Object):
 	The dbus service is separate from the actual Activity object so that we can
 	tightly control what stuff passes through the dbus python bindings."""
 
-	_ALLOWED_CALLBACKS = [ON_PUBLISH_CB]
+	_ALLOWED_CALLBACKS = [ON_SHARE_CB]
 
 	def __init__(self, xid, activity):
 		self._activity = activity
@@ -119,9 +119,9 @@ class ActivityDbusService(dbus.service.Object):
 			gobject.idle_add(self._call_callback_cb, self._callbacks[name], *args)
 
 	@dbus.service.method(ACTIVITY_SERVICE_NAME)
-	def publish(self):
-		"""Called by the shell to request the activity to publish itself on the network."""
-		self._call_callback(ON_PUBLISH_CB)
+	def share(self):
+		"""Called by the shell to request the activity to share itself on the network."""
+		self._call_callback(ON_SHARE_CB)
 
 	@dbus.service.method(ACTIVITY_SERVICE_NAME)
 	def get_id(self):
@@ -170,7 +170,7 @@ class Activity(gtk.Window):
 	
 	def _register_service(self):
 		self._dbus_service = self._get_new_dbus_service()
-		self._dbus_service.register_callback(ON_PUBLISH_CB, self._internal_on_publish_cb)
+		self._dbus_service.register_callback(ON_SHARE_CB, self._internal_on_share_cb)
 
 	def _cleanup(self):
 		if self._dbus_service:
@@ -204,9 +204,9 @@ class Activity(gtk.Window):
 		"""Return whether or not this Activity is visible to the user."""
 		return self._has_focus
 
-	def _internal_on_publish_cb(self):
-		"""Callback when the dbus service object tells us the user has closed our activity."""
-		self.publish()
+	def _internal_on_share_cb(self):
+		"""Callback when the dbus service object tells us the user has shared our activity."""
+		self.share()
 
 	def get_id(self):
 		return self._activity_id
@@ -215,6 +215,6 @@ class Activity(gtk.Window):
 	# Pure Virtual methods that subclasses may/may not implement
 	#############################################################
 
-	def publish(self):
-		"""Called to request the activity to publish itself on the network."""
+	def share(self):
+		"""Called to request the activity to share itself on the network."""
 		pass

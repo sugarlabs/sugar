@@ -105,11 +105,11 @@ class BrowserActivity(Activity):
 	def get_embed(self):
 		return self.embed
 	
-	def publish(self):
+	def share(self):
 		escaped_title = xml.sax.saxutils.escape(self.embed.get_title())
 		escaped_url = xml.sax.saxutils.escape(self.embed.get_address())
 
-		# Publish ourselves on the network
+		# Share this activity with others
 		properties = {_SERVICE_URI_TAG: escaped_url, _SERVICE_TITLE_TAG: escaped_title}
 		self._share_service = self._pservice.share_activity(self,
 				stype=self._default_type, properties=properties)

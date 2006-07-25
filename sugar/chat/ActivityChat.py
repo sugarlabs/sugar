@@ -38,8 +38,8 @@ class ActivityChat(GroupChat):
 				address=addr, port=port)
 		self._setup_stream(self._chat_service)
 
-	def publish(self):
-		"""Only called when we publish the activity this chat is tied to."""
+	def share(self):
+		"""Only called when we share the activity this chat is tied to."""
 		self._chat_service = self._pservice.share_activity(self._activity,
 				stype=ActivityChat.SERVICE_TYPE)
 		self._setup_stream(self._chat_service)
