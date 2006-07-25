@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import dbus
+import dbus.glib
 
 bus = dbus.SessionBus()
 proxy_obj = bus.get_object('com.redhat.Sugar.Shell', '/com/redhat/Sugar/Shell')
