@@ -1,5 +1,5 @@
 import gobject
-import dbus, dbus_bindings
+import dbus
 
 
 class Service(gobject.GObject):

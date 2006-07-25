@@ -1,4 +1,4 @@
-import avahi, dbus, dbus.glib, dbus.dbus_bindings, gobject
+import avahi, dbus, dbus.glib, gobject
 import Buddy
 import Service
 import random
@@ -603,7 +603,7 @@ class PresenceService(object):
 					domain, "", # let Avahi figure the 'host' out
 					dbus.UInt16(port), info,)
 			group.Commit()
-		except dbus.dbus_bindings.DBusException, exc:
+		except dbus.exceptions.DBusException, exc:
 			# FIXME: ignore local name collisions, since that means
 			# the zeroconf service is already registered.  Ideally we
 			# should un-register it an re-register with the correct info

@@ -1,4 +1,4 @@
-import dbus, dbus.glib, dbus.dbus_bindings, gobject
+import dbus, dbus.glib, gobject
 
 import Buddy, Service, Activity
 
@@ -149,7 +149,7 @@ class PresenceService(gobject.GObject):
 	def get_activity(self, activity_id):
 		try:
 			act_op = self._ps.getActivity(activity_id)
-		except dbus.dbus_bindings.DBusException:
+		except dbus.exceptions.DBusException:
 			return None
 		return self._new_object(act_op)
 
@@ -163,21 +163,21 @@ class PresenceService(gobject.GObject):
 	def get_buddy_by_name(self, name):
 		try:
 			buddy_op = self._ps.getBuddyByName(name)
-		except dbus.dbus_bindings.DBusException:
+		except dbus.exceptions.DBusException:
 			return None
 		return self._new_object(buddy_op)
 
 	def get_buddy_by_address(self, addr):
 		try:
 			buddy_op = self._ps.getBuddyByAddress(addr)
-		except dbus.dbus_bindings.DBusException:
+		except dbus.exceptions.DBusException:
 			return None
 		return self._new_object(buddy_op)
 
 	def get_owner(self):
 		try:
 			owner_op = self._ps.getOwner()
-		except dbus.dbus_bindings.DBusException:
+		except dbus.exceptions.DBusException:
 			return None
 		return self._new_object(owner_op)
 
