@@ -4,6 +4,7 @@ bin_SCRIPTS = 				\
 	sugar				\
 	sugar-activity			\
 	sugar-activity-factory		\
+	sugar-console			\
 	sugar-people			\
 	sugar-presence-service
 
