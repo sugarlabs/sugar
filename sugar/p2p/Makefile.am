@@ -7,5 +7,4 @@ sugar_PYTHON =			\
 	Notifier.py		\
 	Stream.py		\
 	MostlyReliablePipe.py	\
-	network.py		\
-	presence.py
+	network.py
