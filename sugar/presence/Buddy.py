@@ -1,6 +1,6 @@
 import gobject
 import gtk
-import dbus, dbus_bindings
+import dbus
 
 class Buddy(gobject.GObject):
 
@@ -110,14 +110,14 @@ class Buddy(gobject.GObject):
 	def get_service_of_type(self, stype):
 		try:
 			object_path = self._buddy.getServiceOfType(stype)
-		except dbus_bindings.DBusException:
+		except dbus.exceptions.DBusException:
 			return None
 		return self._ps_new_object(object_path)
 
 	def get_joined_activities(self):
 		try:
 			resp = self._buddy.getJoinedActivities()
-		except dbus_bindings.DBusException:
+		except dbus.exceptions.DBusException:
 			return []
 		acts = []
 		for item in resp:
