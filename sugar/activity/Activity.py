@@ -7,6 +7,10 @@ import dbus.glib
 import gtk
 import gobject
 
+# Work around for dbus mutex locking issue
+gtk.gdk.threads_init()
+dbus.glib.threads_init()
+
 from sugar.LogWriter import LogWriter
 import sugar.util
 
