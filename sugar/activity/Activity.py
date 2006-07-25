@@ -128,7 +128,6 @@ class ActivityDbusService(dbus.service.Object):
 		"""Get the activity identifier"""
 		return self._activity.get_id()
 
-
 	@dbus.service.method(ACTIVITY_SERVICE_NAME)
 	def get_default_type(self):
 		"""Get the activity default type"""
