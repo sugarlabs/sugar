@@ -178,8 +178,23 @@ class PresenceServiceDBusHelper(dbus.service.Object):
 		return owner.object_path()
 
 	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
+						in_signature="os", out_signature="o")
+	def joinActivity(self, activity_op, stype):
+		found_activity = None
+		acts = self._parent.get_activities()
+		for act in acts:
+			if act.object_path() == activity_op:
+				found_activity = act
+				break
+		if not found_activity:
+			raise NotFoundError("The activity %s was not found." % activity_op)
+		return self._parent.join_activity(found_activity, stype)
+
+	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
 						in_signature="ssa{ss}sis", out_signature="o")
 	def shareActivity(self, activity_id, stype, properties, address, port, domain):
+		if not len(address):
+			address = None
 		service = self._parent.share_activity(activity_id, stype, properties, address,
 				port, domain)
 		return service.object_path()
@@ -187,6 +202,8 @@ class PresenceServiceDBusHelper(dbus.service.Object):
 	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
 						in_signature="ssa{ss}sis", out_signature="o")
 	def registerService(self, name, stype, properties, address, port, domain):
+		if not len(address):
+			address = None
 		service = self._parent.register_service(name, stype, properties, address,
 				port, domain)
 		return service.object_path()
@@ -319,9 +336,9 @@ class PresenceService(object):
 		except KeyError:
 			# Should this service mark the owner?
 			owner_nick = env.get_nick_name()
-			publisher_addr = service.get_publisher_address()
+			source_addr = service.get_source_address()
 			objid = self._get_next_object_id()
-			if name == owner_nick and publisher_addr in self._local_addrs.values():
+			if name == owner_nick and source_addr in self._local_addrs.values():
 				buddy = Buddy.Owner(self._bus_name, objid, service)
 				self._owner = buddy
 				logging.debug("Owner is '%s'." % name)
@@ -385,15 +402,17 @@ class PresenceService(object):
 			objid = self._get_next_object_id()
 			service = Service.Service(self._bus_name, objid, name=full_name,
 					stype=stype, domain=domain, address=address, port=port,
-					properties=txt)
+					properties=txt, source_address=address)
 			self._services[key] = service
 		else:
+			# Already tracking this service; likely we were the one that shared it
+			# in the first place, and therefore the source address would have been
+			# set yet
 			service = self._services[key]
+			if not service.get_source_address():
+				service.set_source_address(address)
 			if not service.get_address():
-				set_addr = service.get_one_property('address')
-				if not set_addr:
-					set_addr = address
-				service.set_address(set_addr)
+				service.set_address(address)
 		adv.set_service(service)
 
 		# Merge the service into our buddy and activity lists, if needed
@@ -549,6 +568,14 @@ class PresenceService(object):
 	def _new_domain_cb_glue(self, interface, protocol, domain, flags=0):
 		gobject.idle_add(self._new_domain_cb, interface, protocol, domain, flags)
 
+	def join_activity(self, activity, stype):
+		services = activity.get_services_of_type(stype)
+		if not len(services):
+			raise NotFoundError("The service type %s was not present within the activity %s" % (stype, activity.object_path()))
+		act_service = services[0]
+		return self._share_activity(activity.get_id(), stype, act_service.get_properties(),
+				act_service.get_address(), act_service.get_port(), act_service.get_domain())
+
 	def share_activity(self, activity_id, stype, properties=None, address=None, port=-1, domain=u"local"):
 		"""Convenience function to share an activity with other buddies."""
 		if not util.validate_activity_id(activity_id):
@@ -557,9 +584,9 @@ class PresenceService(object):
 		real_name = Service.compose_service_name(owner_nick, activity_id)
 		if address and type(address) != type(u""):
 			raise ValueError("address must be a unicode string.")
-		if address == None:
+		if address == None or not len(address):
 			# Use random currently unassigned multicast address
-			address = "232.%d.%d.%d" % (random.randint(0, 254), random.randint(1, 254),
+			address = u"232.%d.%d.%d" % (random.randint(0, 254), random.randint(1, 254),
 					random.randint(1, 254))
 		if port and port != -1 and (type(port) != type(1) or port <= 1024 or port >= 65535):
 			raise ValueError("port must be a number between 1024 and 65535")
@@ -574,6 +601,8 @@ class PresenceService(object):
 			raise RuntimeError("Tried to register a service that didn't have Owner nick as the service name!")
 		if not domain or not len(domain):
 			domain = u"local"
+		if not port or port == -1:
+			port = random.randint(4000, 65000)
 
 		try:
 			obj = self._system_bus.get_object(avahi.DBUS_NAME, self._mdns_service.EntryGroupNew())
@@ -581,24 +610,22 @@ class PresenceService(object):
 
 			# Add properties; ensure they are converted to ByteArray types
 			# because python sometimes can't figure that out
-			info = []
+			info = dbus.Array([])
 			for k, v in properties.items():
 				info.append(dbus.types.ByteArray("%s=%s" % (k, v)))
 
 			objid = self._get_next_object_id()
 			service = Service.Service(self._bus_name, objid, name=name,
 					stype=stype, domain=domain, address=address, port=port,
-					properties=properties)
+					properties=properties, source_address=None)
 			self._services[(name, stype)] = service
 			port = service.get_port()
 
-			if address and len(address):
-				info.append("address=%s" % (address))
 			logging.debug("PS: Will register service with name='%s', stype='%s'," \
-					" domain='%s', port=%d, info='%s'" % (name, stype, domain, port, info))
-			group.AddService(avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, 0, name, stype,
-					domain, "", # let Avahi figure the 'host' out
-					dbus.UInt16(port), info,)
+					" domain='%s', address='%s', port=%d, info='%s'" % (name, stype, domain, address, port, info))
+			group.AddService(avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, 0, dbus.String(name),
+					dbus.String(stype), dbus.String(domain), dbus.String(""), # let Avahi figure the 'host' out
+					dbus.UInt16(port), info)
 			group.Commit()
 		except dbus.exceptions.DBusException, exc:
 			# FIXME: ignore local name collisions, since that means

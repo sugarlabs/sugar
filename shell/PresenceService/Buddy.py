@@ -93,7 +93,7 @@ class Buddy(object):
 		self._activities = {}
 
 		self._nick_name = service.get_name()
-		self._address = service.get_publisher_address()
+		self._address = service.get_source_address()
 		self._valid = False
 		self._icon = None
 		self._icon_tries = 0
@@ -142,9 +142,9 @@ class Buddy(object):
 		True if the service was successfully added, and False if it was not."""
 		if service.get_name() != self._nick_name:
 			return False
-		publisher_addr = service.get_publisher_address()
-		if publisher_addr != self._address:
-			logging.error('Service publisher and buddy address doesnt match: %s %s' % (publisher_addr, self._address))
+		source_addr = service.get_source_address()
+		if source_addr != self._address:
+			logging.error("Service source and buddy address doesn't match: %s %s" % (source_addr, self._address))
 			return False
 		stype = service.get_type()
 		if stype in self._services.keys():
@@ -169,7 +169,6 @@ class Buddy(object):
 		if activity in self._activities.values():
 			raise RuntimeError("Tried to add activity twice")
 		found = False
-		logging.debug("Buddy %s looking for actid %s" % (self._nick_name, activity.get_id()))
 		for serv in self._services.values():
 			if serv.get_activity_id() == activity.get_id():
 				found = True
@@ -177,13 +176,12 @@ class Buddy(object):
 		if not found:
 			raise RuntimeError("Tried to add activity for which we had no service")
 		self._activities[actid] = activity
-		print "Buddy (%s) joined activity %s." % (self._nick_name, actid)
 		self._dbus_helper.JoinedActivity(activity.object_path())
 
 	def remove_service(self, service):
 		"""Remove a service from a buddy; ie, the activity was closed
 		or the buddy went away."""
-		if service.get_publisher_address() != self._address:
+		if service.get_source_address() != self._address:
 			return
 		if service.get_name() != self._nick_name:
 			return

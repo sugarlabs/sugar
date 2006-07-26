@@ -84,7 +84,7 @@ class ServiceDBusHelper(dbus.service.Object):
 		addr = self._parent.get_address()
 		if addr:
 			pary['address'] = addr
-		source_addr = self._parent.get_publisher_address()
+		source_addr = self._parent.get_source_address()
 		if source_addr:
 			pary['sourceAddress'] = source_addr
 		return pary
@@ -103,7 +103,8 @@ class ServiceDBusHelper(dbus.service.Object):
 class Service(object):
 	"""Encapsulates information about a specific ZeroConf/mDNS
 	service as advertised on the network."""
-	def __init__(self, bus_name, object_id, name, stype, domain=u"local", address=None, port=-1, properties=None):
+	def __init__(self, bus_name, object_id, name, stype, domain=u"local",
+				address=None, port=-1, properties=None, source_address=None):
 		if not bus_name:
 			raise ValueError("DBus bus name must be valid")
 		if not object_id or type(object_id) != type(1):
@@ -136,14 +137,19 @@ class Service(object):
 		self.set_port(port)
 		self._properties = {}
 		self.set_properties(properties)
-		# Publisher address is the unicast source IP
-		self._publisher_address = address
+
+		# Source address is the unicast source IP
+		self._source_address = None
+		if source_address is not None:
+			self.set_source_address(source_address)
+
 		# Address is the published address, could be multicast or unicast
 		self._address = None
 		if self._properties.has_key('address'):
 			self.set_address(self._properties['address'])
-		else:
+		elif address is not None:
 			self.set_address(address)
+			self._properties['address'] = address
 
 		# Ensure that an ActivityID tag, if given, matches
 		# what we expect from the service type
@@ -230,25 +236,27 @@ class Service(object):
 		return self._port
 
 	def set_port(self, port):
-		if port == -1:
-			port = random.randint(4000, 65000)
 		if type(port) != type(1) or (port <= 1024 and port > 65536):
 			raise ValueError("must specify a valid port number between 1024 and 65536.")
 		self._port = port
 
-	def get_publisher_address(self):
-		return self._publisher_address
+	def get_source_address(self):
+		return self._source_address
+
+	def set_source_address(self, address):
+		if not address or type(address) != type(u""):
+			raise ValueError("address must be unicode")
+		self._source_address = address
 
 	def get_address(self):
 		return self._address
 
 	def set_address(self, address):
-		if address is not None:
-			if type(address) != type(u""):
-				raise ValueError("address must be unicode")
+		if not address or type(address) != type(u""):
+			raise ValueError("address must be a unicode string")
 		self._address = address
-		if not self._publisher_address:
-			self._publisher_address = address
+		self._properties['address'] = address
+
 
 	def get_domain(self):
 		"""Return the ZeroConf/mDNS domain the service was found in."""
