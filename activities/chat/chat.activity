@@ -2,4 +2,4 @@
 name = Chat
 id = com.redhat.Sugar.ChatActivity
 python_module = ChatActivity.ChatActivity
-default_type = _web_olpc._udp
+default_type = _chat_activity._tcp

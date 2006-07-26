@@ -14,7 +14,7 @@ from sugar.p2p.Stream import Stream
 from sugar.presence.PresenceService import PresenceService
 import sugar.env
 
-_CHAT_ACTIVITY_TYPE = "_chat_activity_type._tcp"
+_CHAT_ACTIVITY_TYPE = "_chat_activity._tcp"
 
 class ChatActivity(Activity):
 	def __init__(self, service):
@@ -78,12 +78,7 @@ class ChatListener:
 		service = self._pservice._new_object(service_path)
 		chat = ChatActivity(service)
 		self._chats[service.get_name()] = chat
-		gobject.idle_add(self._connect_chat, chat)
 		return chat
-
-	def _connect_chat(self, chat):
-		chat.connect_to_shell()
-		return False
 
 def start():
 	chat_listener = ChatListener()
