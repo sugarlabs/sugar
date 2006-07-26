@@ -4,6 +4,7 @@ import logging
 import sugar.env
 from PresenceService import PresenceService
 
+# FIXME this looks like duplicated
 level = sugar.env.get_logging_level()
 if level == 'debug':
 	logging.basicConfig(level=logging.DEBUG,
