@@ -34,8 +34,7 @@ class ActivityChat(GroupChat):
 		addr = service.get_address()
 		port = service.get_port()
 		self._chat_service = self._pservice.share_activity(self._activity,
-				stype=ActivityChat.SERVICE_TYPE, properties=None,
-				address=addr, port=port)
+				stype=ActivityChat.SERVICE_TYPE, address=addr, port=port)
 		self._setup_stream(self._chat_service)
 
 	def share(self):

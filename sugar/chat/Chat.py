@@ -209,7 +209,7 @@ class Chat(gtk.VBox):
 	def recv_message(self, message):
 		"""Insert a remote chat message into the chat buffer."""
 		[nick, msg] = Chat.deserialize_message(message)
-		buddy = self._pservice.get_buddy_by_nick_name(nick)
+		buddy = self._pservice.get_buddy_by_name(nick)
 		if not buddy:
 			logging.error('The buddy %s is not present.' % (nick))
 			return
