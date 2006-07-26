@@ -110,12 +110,12 @@ class PresenceView(gtk.VBox):
 		buddy = view.get_model().get_value(aniter, self._MODEL_COL_BUDDY)
 		if buddy:
 			chat_service = buddy.get_service_of_type(BuddyChat.SERVICE_TYPE)
+			print chat_service
 			if chat_service:
 				bus = dbus.SessionBus()
 				proxy_obj = bus.get_object('com.redhat.Sugar.Chat', '/com/redhat/Sugar/Chat')
 				chat_shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.ChatShell')
-				serialized_service = Service.serialize(chat_service)
-				chat_shell.open_chat(serialized_service)
+				chat_shell.open_chat(chat_service.object_path())
 			else:
 				print 'Could not find buddy chat'
 

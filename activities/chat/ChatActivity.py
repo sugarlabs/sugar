@@ -4,6 +4,7 @@ import logging
 
 import gtk
 import gobject
+from gettext import gettext as _
 
 from sugar.activity.Activity import Activity
 from sugar.presence import Service
@@ -17,22 +18,14 @@ _CHAT_ACTIVITY_TYPE = "_chat_activity_type._tcp"
 
 class ChatActivity(Activity):
 	def __init__(self, service):
-		Activity.__init__(self, _CHAT_ACTIVITY_TYPE)
+		Activity.__init__(self)
+		self.set_title(_('Private chat'))
+
 		self._service = service
 		self._chat = BuddyChat(self._service)
-	
-	def on_connected_to_shell(self):
-		self.set_tab_text(self._service.get_name())
-		self.set_can_close(True)
-		self.set_tab_icon(name = "im")
-		self.set_show_tab_icon(True)
+		self.add(self._chat)
+		self._chat.show()		
 
-		plug = self.gtk_plug()		
-		plug.add(self._chat)
-		self._chat.show()
-
-		plug.show()
-	
 	def recv_message(self, message):
 		self._chat.recv_message(message)
 
@@ -45,8 +38,8 @@ class ChatShellDbusService(dbus.service.Object):
 		dbus.service.Object.__init__(self, bus_name, object_path)
 
 	@dbus.service.method('com.redhat.Sugar.ChatShell')
-	def open_chat(self, serialized_service):
-		self._parent.open_chat(Service.deserialize(serialized_service))
+	def open_chat(self, service_path):
+		self._parent.open_chat(service_path)
 
 class ChatListener:
 	def __init__(self):
@@ -81,7 +74,8 @@ class ChatListener:
 			logging.error('The buddy %s is not present.' % (nick))
 			return
 		
-	def open_chat(self, service):
+	def open_chat(self, service_path):
+		service = self._pservice._new_object(service_path)
 		chat = ChatActivity(service)
 		self._chats[service.get_name()] = chat
 		gobject.idle_add(self._connect_chat, chat)

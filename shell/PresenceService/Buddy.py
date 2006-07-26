@@ -54,12 +54,12 @@ class BuddyDBusHelper(dbus.service.Object):
 		return icon
 
 	@dbus.service.method(BUDDY_DBUS_INTERFACE,
-						in_signature="", out_signature="o")
+						in_signature="s", out_signature="o")
 	def getServiceOfType(self, stype):
 		service = self._parent.get_service_of_type(stype)
 		if not service:
 			raise NotFoundError("Not found")
-		return service
+		return service.object_path()
 
 	@dbus.service.method(BUDDY_DBUS_INTERFACE,
 						in_signature="", out_signature="ao")
@@ -213,6 +213,7 @@ class Buddy(object):
 			for service in self._services.values():
 				if service.get_type() == stype and service.get_activity_id() == actid:
 					return service
+
 		if self._services.has_key(stype):
 			return self._services[stype]
 		return None
