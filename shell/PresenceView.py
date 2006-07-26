@@ -104,7 +104,8 @@ class PresenceView(gtk.VBox):
 	
 	def _share_button_clicked_cb(self, button):
 		self._activity.share()
-	
+		self._share_button.set_sensitive(False)
+
 	def _on_buddyList_buddy_selected(self, view, *args):
 		(model, aniter) = view.get_selection().get_selected()
 		name = model.get(aniter, self._MODEL_COL_NICK)
