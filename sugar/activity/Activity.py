@@ -192,11 +192,6 @@ class Activity(gtk.Window):
 	def get_default_type(self):
 		return self._default_type
 
-	def set_shared(self):
-		"""Mark the activity as 'shared'."""
-		if not self._shared:
-			self._shared = True
-
 	def get_shared(self):
 		return self._shared
 
@@ -205,7 +200,9 @@ class Activity(gtk.Window):
 		return self._has_focus
 
 	def _internal_on_share_cb(self):
-		"""Callback when the dbus service object tells us the user has shared our activity."""
+		"""Callback when the dbus service object tells us the user wishes to share our activity."""
+		if not self._shared:
+			self._shared = True
 		self.share()
 
 	def get_id(self):

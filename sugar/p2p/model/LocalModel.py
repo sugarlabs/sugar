@@ -44,16 +44,7 @@ class LocalModel(AbstractModel):
 	
 	# FIXME this is duplicated with StreamReader
 	def _setup_server(self, service):
-		started = False
-		tries = 10
 		port = service.get_port()
-		while not started and tries > 0:
-			try:
-				logging.debug('Start model server on port %d' % (port))
-				p2p_server = network.GlibXMLRPCServer(("", port))
-				p2p_server.register_instance(ModelRequestHandler(self))
-				started = True
-			except(socket.error):
-				port = port + 1
-				tries = tries - 1
-		service.set_port(port)
+		logging.debug('Start model server on port %d' % (port))
+		p2p_server = network.GlibXMLRPCServer(("", port))
+		p2p_server.register_instance(ModelRequestHandler(self))

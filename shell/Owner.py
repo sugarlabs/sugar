@@ -13,13 +13,14 @@ class ShellOwner(object):
 	runs in the shell and serves up the buddy icon and other stuff.  It's the
 	server portion of the Owner, paired with the client portion in Buddy.py."""
 	def __init__(self):
-		nick = env.get_nick_name()
+		self._nick = env.get_nick_name()
 		user_dir = env.get_user_dir()
-		if not os.path.exists(user_dir):
-			try:
-				os.makedirs(user_dir)
-			except OSError:
-				print "Could not create user directory."
+
+		try:
+			os.makedirs(user_dir)
+		except OSError, exc:
+			if exc[0] != 17:  # file exists
+				print "Could not create user directory %s: (%d) %s" % (user_dir, exc[0], exc[1])
 
 		self._icon = None
 		for fname in os.listdir(user_dir):
@@ -30,10 +31,12 @@ class ShellOwner(object):
 			fd.close()
 			break
 
-		# Create and announce our presence
 		self._pservice = PresenceService.PresenceService()
-		self._service = self._pservice.register_service(nick, PRESENCE_SERVICE_TYPE)
-		print "Owner '%s' using port %d" % (nick, self._service.get_port())
+
+	def announce(self):
+		# Create and announce our presence
+		self._service = self._pservice.register_service(self._nick, PRESENCE_SERVICE_TYPE)
+		print "Owner '%s' using port %d" % (self._nick, self._service.get_port())
 		self._icon_stream = Stream.Stream.new_from_service(self._service)
 		self._icon_stream.register_reader_handler(self._handle_buddy_icon_request, "get_buddy_icon")
 

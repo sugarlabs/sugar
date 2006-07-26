@@ -181,7 +181,16 @@ class PresenceService(gobject.GObject):
 			return None
 		return self._new_object(owner_op)
 
-	def register_service(self, name, stype, properties={"":""}, address="", port=-1, domain=u"local"):
+	def share_activity(self, activity, stype, properties={}, address=None, port=-1, domain=u"local"):
+		actid = activity.get_id()
+		if address == None:
+			address = u""
+		serv_op = self._ps.shareActivity(actid, stype, properties, address, port, domain)
+		return self._new_object(serv_op)
+
+	def register_service(self, name, stype, properties={}, address=None, port=-1, domain=u"local"):
+		if address == None:
+			address = u""
 		serv_op = self._ps.registerService(name, stype, properties, address, port, domain)
 		return self._new_object(serv_op)
 

@@ -34,7 +34,7 @@ def compose_service_name(name, activity_id):
 	composed = "%s [%s]" % (name, activity_id)
 	return composed
 
-def _decompose_service_name(name):
+def decompose_service_name(name):
 	"""Break a service name into the name and activity ID, if we can."""
 	if type(name) != type(u""):
 		raise ValueError("name must be a valid unicode string.")
@@ -127,7 +127,7 @@ class Service(object):
 		if domain and domain != "local":
 			raise ValueError("must use the 'local' domain (for now).")
 
-		(actid, real_name) = _decompose_service_name(name)
+		(actid, real_name) = decompose_service_name(name)
 		self._name = real_name
 		self._full_name = name
 		self._stype = stype

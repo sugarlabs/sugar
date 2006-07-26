@@ -65,7 +65,7 @@ class BrowserActivity(Activity):
 						  self._initial_service.get_activity_id())
 			self._pservice.join_shared_activity(self._initial_service)
 	
-	def _service_appeared_cb(self, pservice, buddy, service):
+	def _service_appeared_cb(self, pservice, service):
 		# Make sure the service is for our activity
 		if service.get_activity_id() != self._activity_id:
 			return

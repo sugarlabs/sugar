@@ -1,5 +1,9 @@
 import dbus
 
+PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
+ACTIVITY_DBUS_OBJECT_PATH = "/org/laptop/Presence/Activities/"
+ACTIVITY_DBUS_INTERFACE = "org.laptop.Presence.Activity"
+
 class NotFoundError(Exception):
 	pass
 
@@ -10,7 +14,7 @@ class ActivityDBusHelper(dbus.service.Object):
 		self._object_path = object_path
 		dbus.service.Object.__init__(self, bus_name, self._object_path)
 
-	@dbus.service.method(BUDDY_DBUS_INTERFACE,
+	@dbus.service.method(ACTIVITY_DBUS_INTERFACE,
 						in_signature="s", out_signature="ao")
 	def getServicesOfType(self, stype):
 		services = self._parent.get_services_of_type(stype)
@@ -21,7 +25,7 @@ class ActivityDBusHelper(dbus.service.Object):
 			ret.append(serv.object_path())
 		return ret
 
-	@dbus.service.method(BUDDY_DBUS_INTERFACE,
+	@dbus.service.method(ACTIVITY_DBUS_INTERFACE,
 						in_signature="", out_signature="ao")
 	def getServices(self):
 		services = self._parent.get_services()
@@ -32,12 +36,12 @@ class ActivityDBusHelper(dbus.service.Object):
 			ret.append(serv.object_path())
 		return ret
 
-	@dbus.service.method(BUDDY_DBUS_INTERFACE,
+	@dbus.service.method(ACTIVITY_DBUS_INTERFACE,
 						in_signature="", out_signature="s")
 	def getId(self):
 		return self._parent.get_id()
 
-	@dbus.service.method(BUDDY_DBUS_INTERFACE,
+	@dbus.service.method(ACTIVITY_DBUS_INTERFACE,
 						in_signature="", out_signature="ao")
 	def getJoinedBuddies(self):
 		buddies = self._parent.get_joined_buddies()
@@ -48,40 +52,41 @@ class ActivityDBusHelper(dbus.service.Object):
 			ret.append(buddy.object_path())
 		return ret
 	
-	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
+	@dbus.service.signal(ACTIVITY_DBUS_INTERFACE,
 						signature="o")
 	def ServiceAppeared(self, object_path):
 		pass
 
-	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
+	@dbus.service.signal(ACTIVITY_DBUS_INTERFACE,
 						signature="o")
 	def ServiceDisappeared(self, object_path):
 		pass
 
-	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
+	@dbus.service.signal(ACTIVITY_DBUS_INTERFACE,
 						signature="o")
 	def BuddyJoined(self, object_path):
 		pass
 
-	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
+	@dbus.service.signal(ACTIVITY_DBUS_INTERFACE,
 						signature="o")
 	def BuddyLeft(self, object_path):
 		pass
 
 
 class Activity(object):
-	def __init__(self, bus_name, object_id, activity_id):
-		if not activity_id:
+	def __init__(self, bus_name, object_id, initial_service):
+		if not initial_service.get_activity_id():
 			raise ValueError("Service must have a valid Activity ID")
-		self._activity_id = activity_id
+		self._activity_id = initial_service.get_activity_id()
 
 		self._buddies = []
 		self._services = {}	# service type -> list of Services
-		self._services[service.get_type()] = []
 
 		self._object_id = object_id
 		self._object_path = "/org/laptop/Presence/Activities/%d" % self._object_id
 		self._dbus_helper = ActivityDBusHelper(self, bus_name, self._object_path)
+		
+		self.add_service(initial_service)
 
 	def object_path(self):
 		return dbus.ObjectPath(self._object_path)
@@ -99,8 +104,11 @@ class Activity(object):
 
 	def get_joined_buddies(self):
 		buddies = []
-		for serv in self._services.values():
-			buddies.append(serv.get_owner())
+		for serv_list in self._services.values():
+			for serv in serv_list:
+				owner = serv.get_owner()
+				if not owner in buddies:
+					buddies.append(owner)
 		return buddies
 
 	def add_service(self, service):

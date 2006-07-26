@@ -71,7 +71,7 @@ class BuddyDBusHelper(dbus.service.Object):
 						in_signature="", out_signature="a{sv}")
 	def getProperties(self):
 		props = {}
-		props['name'] = self._parent.get_nick_name()
+		props['name'] = self._parent.get_name()
 		props['ip4_address'] = self._parent.get_address()
 		props['owner'] = self._parent.is_owner()
 		return props
@@ -149,6 +149,7 @@ class Buddy(object):
 		stype = service.get_type()
 		if stype in self._services.keys():
 			return False
+		logging.debug("Buddy %s added service type %s id %s" % (self._nick_name, service.get_type(), service.get_activity_id()))
 		self._services[stype] = service
 		service.set_owner(self)
 
@@ -168,6 +169,7 @@ class Buddy(object):
 		if activity in self._activities.values():
 			raise RuntimeError("Tried to add activity twice")
 		found = False
+		logging.debug("Buddy %s looking for actid %s" % (self._nick_name, activity.get_id()))
 		for serv in self._services.values():
 			if serv.get_activity_id() == activity.get_id():
 				found = True
@@ -239,7 +241,7 @@ class Buddy(object):
 	def get_address(self):
 		return self._address
 
-	def get_nick_name(self):
+	def get_name(self):
 		return self._nick_name
 
 	def _set_icon(self, icon):
@@ -310,7 +312,7 @@ class BuddyTestCase(unittest.TestCase):
 				self._DEF_ADDRESS, self._DEF_PORT)
 		objid = _next_objid()
 		buddy = Buddy(self._bus_name, objid, service)
-		assert buddy.get_nick_name() == self._DEF_NAME, "buddy name wasn't correct after init."
+		assert buddy.get_name() == self._DEF_NAME, "buddy name wasn't correct after init."
 		assert buddy.get_address() == self._DEF_ADDRESS, "buddy address wasn't correct after init."
 		assert buddy.object_path() == BUDDY_DBUS_OBJECT_PATH + str(objid)
 

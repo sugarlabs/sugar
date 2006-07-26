@@ -9,13 +9,13 @@ class ActivityInfo:
 		self._service = service
 	
 	def get_id(self):
-		activity_id = self._service.get_one_property('activity_id')
+		activity_id = self._service.get_activity_id()
 		
 	def get_type(self):
 		return self._service.get_type()
 	
 	def get_title(self):
-		escaped_title = self._service.get_one_property('Title')
+		escaped_title = self._service.get_published_value('Title')
 		title = xml.sax.saxutils.unescape(escaped_title)
 		return title
 	
@@ -46,7 +46,8 @@ class ActivitiesModel(gobject.GObject):
 	def __iter__(self):
 		return self._activities.__iter__()
 
-	def _on_activity_announced_cb(self, pservice, service, buddy):
+	def _on_activity_announced_cb(self, pservice, activity):
 		# FIXME We should not hard code activity types here
-		if service.get_type() == "_web_olpc._udp":
-			self.add_activity(service)
+		services = activity.get_services_of_type("_web_olpc._udp")
+		if len(services) > 0:
+			self.add_activity(services[0])

@@ -18,9 +18,9 @@ class ActivityChat(GroupChat):
 		if ps_activity is not None:
 			service = ps_activity.get_service_of_type(ActivityChat.SERVICE_TYPE)
 			if service is not None:
-				self._service_appeared_cb(self._pservice, None, service)
+				self._service_appeared_cb(self._pservice, service)
 
-	def _service_appeared_cb(self, pservice, buddy, service):
+	def _service_appeared_cb(self, pservice, service):
 		if service.get_activity_id() != self._activity.get_id():
 			return
 		if service.get_type() != ActivityChat.SERVICE_TYPE:
