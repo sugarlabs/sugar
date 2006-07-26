@@ -39,7 +39,7 @@ class ChatShellDbusService(dbus.service.Object):
 
 	@dbus.service.method('com.redhat.Sugar.ChatShell')
 	def open_chat(self, service_path):
-		self._parent.open_chat(service_path)
+		self._parent.open_chat_from_path(service_path)
 
 class ChatListener:
 	def __init__(self):
@@ -58,7 +58,7 @@ class ChatListener:
 
 	def _recv_message(self, address, message):
 		[nick, msg] = Chat.deserialize_message(message)
-		buddy = self._pservice.get_buddy_by_nick_name(nick)
+		buddy = self._pservice.get_buddy_by_name(nick)
 		if buddy:
 			if buddy == self._pservice.get_owner():
 				return		
@@ -73,9 +73,12 @@ class ChatListener:
 		else:
 			logging.error('The buddy %s is not present.' % (nick))
 			return
-		
-	def open_chat(self, service_path):
+
+	def open_chat_from_path(self, service_path):
 		service = self._pservice._new_object(service_path)
+		self.open_chat(service)
+		
+	def open_chat(self, service):
 		chat = ChatActivity(service)
 		self._chats[service.get_name()] = chat
 		return chat
