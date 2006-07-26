@@ -7,6 +7,8 @@ import dbus.glib
 import gtk
 import gobject
 
+from sugar.presence.PresenceService import PresenceService
+
 # Work around for dbus mutex locking issue
 gtk.gdk.threads_init()
 dbus.glib.threads_init()
@@ -55,9 +57,10 @@ class ActivityFactory(dbus.service.Object):
 		dbus.service.Object.__init__(self, bus_name, get_path(factory))
 
 	@dbus.service.method("com.redhat.Sugar.ActivityFactory")
-	def create_with_service(self, serialized_service, args):
-		service = Service.deserialize(serialized_service)
-		activity = self._class(service, args)
+	def create_with_service(self, service_path):
+		pservice = PresenceService()
+		service = pservice._new_object(service_path)
+		activity = self._class(service, [])
 
 	@dbus.service.method("com.redhat.Sugar.ActivityFactory")
 	def create(self):
@@ -74,9 +77,9 @@ def create(activity_name, service = None, args = None):
 	proxy_obj = bus.get_object(factory_name, factory_path)
 	factory = dbus.Interface(proxy_obj, "com.redhat.Sugar.ActivityFactory")
 
-	if service and args:
-		serialized_service = service.serialize(service)
-		factory.create_with_service(serialized_service, args)
+	if service:
+		print service.object_path()
+		factory.create_with_service(service.object_path())
 	else:
 		factory.create()		
 
@@ -148,8 +151,8 @@ class Activity(gtk.Window):
 	def __init__(self, service = None):
 		gtk.Window.__init__(self)
 
-		if service and service.has_key('activity_id'):
-			self._activity_id = service['activity_id']
+		if service:
+			self._activity_id = service.get_id()
 			self._shared = True
 		else:
 			self._activity_id = sugar.util.unique_id()

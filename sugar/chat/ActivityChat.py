@@ -16,9 +16,9 @@ class ActivityChat(GroupChat):
 		# Find an existing activity chat to latch onto
 		ps_activity = self._pservice.get_activity(activity.get_id())
 		if ps_activity is not None:
-			service = ps_activity.get_service_of_type(ActivityChat.SERVICE_TYPE)
-			if service is not None:
-				self._service_appeared_cb(self._pservice, service)
+			services = ps_activity.get_services_of_type(ActivityChat.SERVICE_TYPE)
+			if len(services) > 0:
+				self._service_appeared_cb(self._pservice, services[0])
 
 	def _service_appeared_cb(self, pservice, service):
 		if service.get_activity_id() != self._activity.get_id():

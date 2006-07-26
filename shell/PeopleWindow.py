@@ -18,9 +18,12 @@ class PeopleWindow(gtk.Window):
 		hbox.pack_start(presence_view, False)
 		presence_view.show()
 
-		chat = ActivityChat(activity)
-		hbox.pack_start(chat)
-		chat.show()
+		self._chat = ActivityChat(activity)
+		hbox.pack_start(self._chat)
+		self._chat.show()
 
 		self.add(hbox)
 		hbox.show()
+
+	def share(self):
+		self._chat.share()

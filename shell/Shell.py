@@ -12,7 +12,6 @@ from sugar.LogWriter import LogWriter
 from ActivityRegistry import ActivityRegistry
 from HomeWindow import HomeWindow
 from sugar import env
-from PeopleWindow import PeopleWindow
 from ConsoleWindow import ConsoleWindow
 from Owner import ShellOwner
 from PresenceService import PresenceService
@@ -66,29 +65,33 @@ class Shell:
 		self._home_window = HomeWindow(self)
 		self._home_window.show()
 
-		self._people_windows = {}
+		self._hosts = {}
 		self._console_windows = {}
 
 	def get_current_activity(self):
 		window = self._screen.get_active_window()
 		if window:
+			xid = None
+
 			if window.get_window_type() == wnck.WINDOW_NORMAL:
-				return ActivityHost(window.get_xid())
+				xid = window.get_xid()
 			elif window.get_window_type() == wnck.WINDOW_DIALOG:
 				parent = window.get_transient()
 				if not parent is None:
-					return ActivityHost(parent.get_xid())
+					xid = parent.get_xid()
+
+			if xid != None:
+				if self._hosts.has_key(xid):
+					return self._hosts[xid]
+				else:
+					self._hosts[xid] = ActivityHost(self, xid)
+					return self._hosts[xid]
+
 		return None
 
 	def show_people(self):
 		activity = self.get_current_activity()
-		if activity:
-			if not self._people_windows.has_key(activity.get_id()):
-				dialog = PeopleWindow(self, activity)
-				self._people_windows[activity.get_id()] = dialog
-			else:
-				dialog = self._people_windows[activity.get_id()]
-			activity.show_dialog(dialog)
+		activity.show_people()
 
 	def get_console(self, module_id):
 		if not self._console_windows.has_key(module_id):

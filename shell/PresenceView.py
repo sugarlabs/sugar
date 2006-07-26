@@ -133,9 +133,9 @@ class PresenceView(gtk.VBox):
 		self._add_buddy(buddy)
 
 	def _add_buddy(self, buddy):
-		#if buddy.is_owner():
+		if buddy.is_owner():
 			# Do not show ourself in the buddy list
-			#return
+			return
 
 		aniter = self._buddy_store.append(None)
 		self._buddy_store.set(aniter,
