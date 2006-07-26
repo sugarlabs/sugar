@@ -338,7 +338,8 @@ class PresenceService(object):
 			owner_nick = env.get_nick_name()
 			source_addr = service.get_source_address()
 			objid = self._get_next_object_id()
-			if name == owner_nick and source_addr in self._local_addrs.values():
+			# FIXME put this back: source_addr in self._local_addrs.values()
+			if name == owner_nick:
 				buddy = Buddy.Owner(self._bus_name, objid, service)
 				self._owner = buddy
 				logging.debug("Owner is '%s'." % name)

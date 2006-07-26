@@ -81,7 +81,7 @@ class Activity(gobject.GObject):
 		return servs
 
 	def get_joined_buddies(self):
-		resp = self._activity.getJoinedBuddies(stype)
+		resp = self._activity.getJoinedBuddies()
 		buddies = []
 		for item in resp:
 			buddies.append(self._ps_new_object(item))

@@ -14,8 +14,7 @@ class PeopleWindow(gtk.Window):
 		hbox = gtk.HBox(False, 12)
 		hbox.set_border_width(12)
 
-		presence_view = PresenceView(shell)
-		presence_view.set_activity(activity)
+		presence_view = PresenceView(shell, activity)
 		hbox.pack_start(presence_view, False)
 		presence_view.show()
 

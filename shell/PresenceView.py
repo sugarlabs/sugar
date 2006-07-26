@@ -12,35 +12,23 @@ class PresenceView(gtk.VBox):
 	_MODEL_COL_NICK = 0
 	_MODEL_COL_ICON = 1
 	_MODEL_COL_BUDDY = 2
-	_MODEL_COL_VISIBLE = 3
 		
-	def __init__(self, shell):
+	def __init__(self, shell, activity):
 		gtk.VBox.__init__(self, False, 6)
 		
-		self._activity = None
+		self._activity = activity
+		self._activity_ps = None
 		self._shell = shell
 
 		self._pservice = PresenceService()
-		self._pservice.connect("buddy-appeared", self._on_buddy_appeared_cb)
-		self._pservice.connect("buddy-disappeared", self._on_buddy_disappeared_cb)
+		self._pservice.connect("activity-appeared", self._activity_appeared_cb)
 		
 		self._setup_ui()
 
-	def _is_buddy_visible(self, buddy):
-		if self._activity:
-			activity_type = self._activity.get_default_type()
-			service = buddy.get_service_of_type(activity_type, self._activity)
-			return service is not None
-		else:
-			return True
+		activity_ps = self._pservice.get_activity(activity.get_id())
+		if activity_ps:
+			self._set_activity_ps(activity_ps)
 
-	def _update_buddies_visibility(self):
-		for row in self._buddy_store:
-			row[self._MODEL_COL_VISIBLE] = self._is_buddy_visible(row[self._MODEL_COL_BUDDY])
-
-	def set_activity(self, activity):
-		self._activity = activity
-		self._update_buddies_visibility()
 		if activity:
 			if self._activity.get_shared():
 				self._share_button.set_sensitive(False)
@@ -48,6 +36,13 @@ class PresenceView(gtk.VBox):
 				self._share_button.set_sensitive(True)
 		else:
 			self._share_button.set_sensitive(False)
+
+	def _set_activity_ps(self, activity_ps):
+		self._activity_ps = activity_ps
+		self._activity_ps.connect('buddy-joined', self._buddy_joined_cb)
+		self._activity_ps.connect('buddy-left', self._buddy_left_cb)
+		for buddy in activity_ps.get_joined_buddies():
+			self._add_buddy(buddy)
 
 	def _setup_ui(self):
 		self.set_size_request(120, -1)
@@ -61,14 +56,12 @@ class PresenceView(gtk.VBox):
 					 	 		  		  gtk.gdk.Pixbuf,
 					  			  		  gobject.TYPE_PYOBJECT,
 					  			  		  bool)
-		buddy_list_model = self._buddy_store.filter_new()
-		buddy_list_model.set_visible_column(self._MODEL_COL_VISIBLE)
 
 		sw = gtk.ScrolledWindow()
 		sw.set_shadow_type(gtk.SHADOW_IN)
 		sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 
-		self._buddy_list_view = gtk.TreeView(buddy_list_model)
+		self._buddy_list_view = gtk.TreeView(self._buddy_store)
 		self._buddy_list_view.set_headers_visible(False)
 		self._buddy_list_view.connect("cursor-changed", self._on_buddyList_buddy_selected)
 		self._buddy_list_view.connect("row-activated", self._on_buddyList_buddy_double_clicked)
@@ -130,27 +123,27 @@ class PresenceView(gtk.VBox):
 		it = self._get_iter_for_buddy(buddy)
 		self._buddy_store.set(it, self._MODEL_COL_ICON, buddy.get_icon_pixbuf())
 
-	def _on_buddy_appeared_cb(self, pservice, buddy):
-		if buddy.is_owner():
-			# Do not show ourself in the buddy list
+	def _activity_appeared_cb(self, pservice, activity):
+		if self._activity_ps:
 			return
+		if activity.get_id() == self._activity.get_id():
+			self._set_activity_ps(activity)
+
+	def _buddy_joined_cb(self, pservice, buddy):
+		self._add_buddy(buddy)
+
+	def _add_buddy(self, buddy):
+		#if buddy.is_owner():
+			# Do not show ourself in the buddy list
+			#return
 
 		aniter = self._buddy_store.append(None)
 		self._buddy_store.set(aniter,
 						  self._MODEL_COL_NICK, buddy.get_name(),
-						  self._MODEL_COL_BUDDY, buddy,
-						  self._MODEL_COL_VISIBLE, self._is_buddy_visible(buddy))
+						  self._MODEL_COL_BUDDY, buddy)
 		buddy.connect('icon-changed', self.__buddy_icon_changed_cb)
-		buddy.connect('service-added', self.__buddy_service_added_cb)
-		buddy.connect('service-removed', self.__buddy_service_removed_cb)
 
-	def __buddy_service_added_cb(self, buddy, service):
-		self._update_buddies_visibility()
-
-	def __buddy_service_removed_cb(self, buddy, service):
-		self._update_buddies_visibility()
-		
-	def _on_buddy_disappeared_cb(self, pservice, buddy):
+	def _buddy_left_cb(self, pservice, buddy):
 		aniter = self._get_iter_for_buddy(buddy)
 		if aniter:
 			self._buddy_store.remove(aniter)
