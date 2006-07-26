@@ -589,6 +589,8 @@ class PresenceService(object):
 			# Use random currently unassigned multicast address
 			address = u"232.%d.%d.%d" % (random.randint(0, 254), random.randint(1, 254),
 					random.randint(1, 254))
+			properties['address'] = address
+			properties['port'] = port
 		if port and port != -1 and (type(port) != type(1) or port <= 1024 or port >= 65535):
 			raise ValueError("port must be a number between 1024 and 65535")
 
