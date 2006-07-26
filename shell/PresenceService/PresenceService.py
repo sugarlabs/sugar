@@ -584,7 +584,7 @@ class PresenceService(object):
 		real_name = Service.compose_service_name(owner_nick, activity_id)
 		if address and type(address) != type(u""):
 			raise ValueError("address must be a unicode string.")
-		if address == None or not len(address):
+		if address == None and stype.endswith('_udp'):
 			# Use random currently unassigned multicast address
 			address = u"232.%d.%d.%d" % (random.randint(0, 254), random.randint(1, 254),
 					random.randint(1, 254))

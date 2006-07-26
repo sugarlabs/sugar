@@ -38,8 +38,7 @@ class LocalModel(AbstractModel):
 
 	def _setup_service(self):
 		service = self._pservice.share_activity(self._activity,
-				stype = LocalModel.SERVICE_TYPE,
-				address = '')
+				stype = LocalModel.SERVICE_TYPE)
 		self._setup_server(service)
 	
 	# FIXME this is duplicated with StreamReader
