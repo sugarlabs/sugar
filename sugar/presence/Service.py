@@ -24,7 +24,7 @@ class Service(gobject.GObject):
 		self._props = self._service.getProperties()
 
 	def get_published_value(self, key):
-		value = self._service.getPublishedValue(key)
+		return self._service.getPublishedValue(key)
 
 	def get_name(self):
 		return self._props['name']
