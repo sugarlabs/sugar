@@ -23,6 +23,7 @@ AM_GLIB_GNU_GETTEXT
 
 AC_OUTPUT([
 Makefile
+dbus-installed.conf
 activities/Makefile
 activities/browser/Makefile
 activities/chat/Makefile

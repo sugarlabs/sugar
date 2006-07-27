@@ -1,6 +1,6 @@
 [Activity]
 name = Web
 id = com.redhat.Sugar.BrowserActivity
-python_module = BrowserActivity.BrowserActivity
+python_module = browser.BrowserActivity.BrowserActivity
 default_type = _web_olpc._udp
 show_launcher = yes

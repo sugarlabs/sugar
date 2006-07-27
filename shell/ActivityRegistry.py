@@ -3,16 +3,13 @@ import os
 from ConfigParser import ConfigParser
 from ConfigParser import NoOptionError
 
-from sugar import env
-
 class ActivityModule:
 	"""Info about an activity module. Wraps a .activity file."""
 	
-	def __init__(self, name, activity_id, activity_exec, directory):
+	def __init__(self, name, activity_id, directory):
 		self._name = name
 		self._id = activity_id
 		self._directory = directory
-		self._exec = activity_exec
 		self._show_launcher = False	
 
 	def get_name(self):
@@ -22,10 +19,6 @@ class ActivityModule:
 	def get_id(self):
 		"""Get the activity identifier"""
 		return self._id
-
-	def get_exec(self):
-		"""Get the activity executable"""
-		return self._exec
 
 	def get_directory(self):
 		"""Get the path to activity directory."""
@@ -63,12 +56,9 @@ class ActivityRegistry:
 	def scan_directory(self, path):
 		"""Scan a directory for activities and add them to the registry.""" 
 		if os.path.isdir(path):
-			for filename in os.listdir(path):
-				activity_dir = os.path.join(path, filename)
-				if os.path.isdir(activity_dir):
-					for filename in os.listdir(activity_dir):
-						if filename.endswith(".activity"):
-							self.add(os.path.join(activity_dir, filename))
+			for f in os.listdir(path):
+				if f.endswith(".activity"):
+					self.add(os.path.join(path, f))
 
 	def add(self, path):
 		"""Add an activity to the registry. The path points to a .activity file."""
@@ -94,21 +84,7 @@ class ActivityRegistry:
 		else:
 			default_type = None
 
-		if cp.has_option('Activity', 'exec'):
-			activity_exec = cp.get('Activity', 'exec')
-		elif cp.has_option('Activity', 'python_module'):
-			python_module = cp.get('Activity', 'python_module')
-			python_module = cp.get('Activity', 'python_module')
-			activity_exec = '%s %s %s' % ('sugar-activity-factory',
-							   			  activity_id, python_module)
-			if default_type:
-				activity_exec += ' ' + default_type
-			env.add_to_python_path(directory)
-		else:
-			logging.error('%s must specifiy exec or python_module' % (path))
-			return False
-
-		module = ActivityModule(name, activity_id, activity_exec, directory)
+		module = ActivityModule(name, activity_id, directory)
 		self._activities.append(module)
 
 		if cp.has_option('Activity', 'show_launcher'):

@@ -34,6 +34,9 @@ def get_nick_name():
 def get_data_dir():
 	return sugar_data_dir
 
+def get_dbus_config():
+	return sugar_dbus_config
+
 def get_data_file(filename):
 	return os.path.join(get_data_dir(), filename)
 		

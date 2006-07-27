@@ -18,6 +18,7 @@ install-sh
 missing
 py-compile
 stamp-h1
+dbus-installed.conf
 
 intltool-extract
 intltool-extract.in

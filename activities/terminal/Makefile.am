@@ -1,9 +1,6 @@
-sugardir = $(pkgdatadir)/activities/browser
+sugardir = $(pkgdatadir)/activities/terminal
 sugar_PYTHON =			\
 	__init__.py		\
-	terminal.py
+	TerminalActivity.py
 
-activitydir = $(pkgdatadir)/activities/browser
-activity_DATA = terminal.activity
-
-EXTRA_DIST = $(activity_DATA)
+EXTRA_DIST = terminal.activity

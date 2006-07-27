@@ -42,8 +42,9 @@ class ShellDbusService(dbus.service.Object):
 		gobject.idle_add(self.__log_idle, (module_id, message))
 
 class Shell:
-	def __init__(self):
+	def __init__(self, registry):
 		self._screen = wnck.screen_get_default()
+		self._registry = registry
 
 	def start(self):
 		log_writer = LogWriter("Shell", False)
@@ -55,10 +56,6 @@ class Shell:
 
 		self._owner = ShellOwner()
 		self._owner.announce()
-
-		self._registry = ActivityRegistry()
-		self._registry.scan_directory(env.get_activities_dir())
-		self._registry.scan_directory(os.path.join(env.get_user_dir(), 'activities'))
 
 		self._home_window = HomeWindow(self)
 		self._home_window.show()

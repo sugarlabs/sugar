@@ -11,17 +11,12 @@ from Process import Process
 import sugar.theme
 import sugar.env
 
-class ActivityProcess(Process):
-	def __init__(self, module):
-		Process.__init__(self, module.get_exec())
-		self._module = module
-	
-	def get_name(self):
-		return self._module.get_name()
-
 class DbusProcess(Process):
 	def __init__(self):
-		Process.__init__(self, "dbus-daemon --session --print-address")
+		config = sugar.env.get_dbus_config()
+		cmd = "dbus-daemon --print-address --config-file %s" % config
+		print cmd
+		Process.__init__(self, cmd)
 
 	def get_name(self):
 		return 'Dbus'
@@ -66,9 +61,9 @@ class PresenceServiceProcess(Process):
 
 class Session:
 	"""Takes care of running the shell and all the sugar processes"""
-
-	def __init__(self):
+	def __init__(self, registry):
 		sugar.theme.setup()
+		self._registry = registry
 		
 	def start(self):
 		"""Start the session"""
@@ -81,14 +76,9 @@ class Session:
 		process = PresenceServiceProcess()
 		process.start()
 
-		shell = Shell()
+		shell = Shell(self._registry)
 		shell.start()
 
-		registry = shell.get_registry()
-		for activity_module in registry.list_activities():
-			process = ActivityProcess(activity_module)
-			process.start()
-		
 		try:
 			gtk.main()
 		except KeyboardInterrupt:

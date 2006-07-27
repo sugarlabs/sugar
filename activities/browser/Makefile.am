@@ -6,7 +6,4 @@ sugar_PYTHON =			\
 	BrowserActivity.py      \
 	NavigationToolbar.py
 
-activitydir = $(pkgdatadir)/activities/browser
-activity_DATA = browser.activity
-
-EXTRA_DIST = $(activity_DATA)
+EXTRA_DIST = browser.activity

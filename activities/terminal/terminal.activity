@@ -1,4 +1,4 @@
 [Activity]
 name = Terminal
 id = org.sugar.Terminal
-python_module = terminal.TerminalActivity
+python_module = terminal.TerminalActivity.TerminalActivity

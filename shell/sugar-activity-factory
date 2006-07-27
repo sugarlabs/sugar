@@ -15,8 +15,8 @@ logging.info('Starting activity factory %s' % sys.argv[1])
 
 theme.setup()
 
-lw = LogWriter(sys.argv[1])
-lw.start()
+#lw = LogWriter(sys.argv[1])
+#lw.start()
 
 if len(sys.argv) == 4:
 	Activity.register_factory(sys.argv[1], sys.argv[2], sys.argv[3])

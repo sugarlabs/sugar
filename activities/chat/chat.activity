@@ -1,5 +1,5 @@
 [Activity]
 name = Chat
 id = com.redhat.Sugar.ChatActivity
-python_module = ChatActivity.ChatActivity
+python_module = chat.ChatActivity.ChatActivity
 default_type = _chat_activity._tcp

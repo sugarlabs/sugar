@@ -1,11 +1,12 @@
 SUBDIRS = activity chat p2p presence
 
 sugardir = $(pythondir)/sugar
-sugar_PYTHON =			\
+sugar_PYTHON =				\
 	__init__.py			\
-	__installed__.py	\
+	__installed__.py		\
 	bots.py				\
 	env.py				\
+	setup.py			\
 	theme.py			\
 	util.py				\
 	LogWriter.py

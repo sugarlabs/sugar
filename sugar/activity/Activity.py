@@ -1,5 +1,4 @@
 import sys
-import imp
 
 import dbus
 import dbus.service
@@ -34,20 +33,14 @@ class ActivityFactory(dbus.service.Object):
 
 	def __init__(self, name, activity_class, default_type):
 		self._default_type = default_type
+
 		splitted_module = activity_class.rsplit('.', 1)
 		module_name = splitted_module[0]
 		class_name = splitted_module[1]
-		
-		(fp, pathname, description) = imp.find_module(module_name)
-		module = imp.load_module(module_name, fp, pathname, description)
-		
-		try:
-			start = getattr(module, 'start')
-		except:
-			start = None
 
-		if start:
-			start()
+		module = __import__(module_name)		
+		for comp in module_name.split('.')[1:]:
+			module = getattr(module, comp)
 		
 		self._class = getattr(module, class_name)
 	

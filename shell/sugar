@@ -4,6 +4,7 @@ import sys
 import os
 import pwd
 import random
+import tempfile
 
 import pygtk
 pygtk.require('2.0')
@@ -47,10 +48,33 @@ if os.path.isfile(os.path.join(basedir, 'sugar/__uninstalled__.py')):
 	add_to_bin_path(os.path.join(basedir, 'shell'))
 	add_to_python_path(basedir)
 	add_to_python_path(os.path.join(basedir, 'shell'))
+	add_to_python_path(os.path.join(basedir, 'activities'))
+
+	from sugar import env
+	from sugar import setup
+
+	activities_dest = os.path.join(tempfile.gettempdir(), 'sugar')
+
+	if not os.path.isdir(activities_dest):
+		os.mkdir(activities_dest)
+	else:
+		# FIXME delete the whole directory
+		pass
+
+	setup.install_activities(env.get_activities_dir(), activities_dest,
+							 os.path.join(basedir, 'shell/sugar-activity-factory'))
 else:
-	import sugar.env
-	add_to_python_path(os.path.join(sugar.env.get_data_dir(), 'shell'))
 	print 'Running the installed sugar...'
+	from sugar import env
+	add_to_python_path(os.path.join(env.get_data_dir(), 'shell'))
+	add_to_python_path(os.path.join(env.get_data_dir(), 'activities'))
+	activities_dest = env.get_activities_dir()
+
+from ActivityRegistry import ActivityRegistry
+
+registry = ActivityRegistry()
+registry.scan_directory(activities_dest)
+#registry.scan_directory(os.path.join(env.get_user_dir(), 'activities'))
 
 from Emulator import Emulator
 
@@ -62,5 +86,5 @@ print 'Redirecting output to the console, press F3 to open it.'
 	
 from Session import Session
 
-session = Session()
+session = Session(registry)
 session.start()
