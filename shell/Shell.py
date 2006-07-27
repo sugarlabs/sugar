@@ -2,11 +2,9 @@ import os
 
 import dbus
 import dbus.glib
-import pygtk
-pygtk.require('2.0')
 import gtk
-import wnck
 import gobject
+import wnck
 
 from sugar.LogWriter import LogWriter
 from ActivityRegistry import ActivityRegistry

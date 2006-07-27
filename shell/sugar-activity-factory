@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import sys
+import logging
 
 import pygtk
 pygtk.require('2.0')
@@ -10,10 +11,12 @@ from sugar.activity import Activity
 from sugar.LogWriter import LogWriter
 from sugar import theme
 
+logging.info('Starting activity factory %s' % sys.argv[1])
+
 theme.setup()
 
-#lw = LogWriter(sys.argv[1])
-#lw.start()
+lw = LogWriter(sys.argv[1])
+lw.start()
 
 if len(sys.argv) == 4:
 	Activity.register_factory(sys.argv[1], sys.argv[2], sys.argv[3])

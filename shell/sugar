@@ -5,6 +5,9 @@ import os
 import pwd
 import random
 
+import pygtk
+pygtk.require('2.0')
+
 def add_to_bin_path(path):
 	if os.environ.has_key('PATH'):
 		old_path = os.environ['PATH']

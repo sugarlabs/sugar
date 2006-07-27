@@ -10,4 +10,6 @@ if level == 'debug':
 	logging.basicConfig(level=logging.DEBUG,
 						format='%(levelname)s %(message)s')
 
+logging.info('Starting presence service')
+
 PresenceService.main()
