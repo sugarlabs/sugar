@@ -612,7 +612,7 @@ class PresenceService(object):
 
 			# Add properties; ensure they are converted to ByteArray types
 			# because python sometimes can't figure that out
-			info = dbus.Array([])
+			info = dbus.Array([], signature="ab")
 			for k, v in properties.items():
 				info.append(dbus.types.ByteArray("%s=%s" % (k, v)))
 
