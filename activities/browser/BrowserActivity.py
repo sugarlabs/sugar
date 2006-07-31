@@ -42,7 +42,7 @@ class BrowserActivity(Activity):
 		vbox.pack_start(self._notif_bar, False)
 		self._notif_bar.connect('action', self.__notif_bar_action_cb)
 
-		self.embed = geckoembed.Embed()
+		self.embed = geckoembed.Browser()
 		self.embed.connect("title", self.__title_cb)
 		vbox.pack_start(self.embed)
 		
