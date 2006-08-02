@@ -137,6 +137,7 @@ class Service(object):
 		self.set_port(port)
 		self._properties = {}
 		self.set_properties(properties)
+		self._avahi_entry_group = None
 
 		# Source address is the unicast source IP
 		self._source_address = None
@@ -257,11 +258,15 @@ class Service(object):
 		self._address = address
 		self._properties['address'] = address
 
-
 	def get_domain(self):
 		"""Return the ZeroConf/mDNS domain the service was found in."""
 		return self._domain
 
+	def set_avahi_entry_group(self, group):
+		self._avahi_entry_group = group
+
+	def get_avahi_entry_group(self):
+		return self._avahi_entry_group
 
 #################################################################
 # Tests

@@ -209,6 +209,19 @@ class PresenceServiceDBusHelper(dbus.service.Object):
 		return service.object_path()
 
 	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
+						in_signature="o", out_signature="")
+	def unregisterService(self, service_op):
+		found_serv = None
+		serv = self._parent.get_services()
+		for serv in services:
+			if serv.object_path() == service_op:
+				found_serv = serv
+				break
+		if not found_serv:
+			raise NotFoundError("The activity %s was not found." % service_op)
+		return self._parent.unregister_service(found_serv)
+
+	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
 						in_signature="s", out_signature="")
 	def registerServiceType(self, stype):
 		self._parent.register_service_type(stype)
@@ -628,6 +641,7 @@ class PresenceService(object):
 			group.AddService(avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, 0, dbus.String(name),
 					dbus.String(stype), dbus.String(domain), dbus.String(""), # let Avahi figure the 'host' out
 					dbus.UInt16(port), info)
+			service.set_avahi_entry_group(group)
 			group.Commit()
 		except dbus.exceptions.DBusException, exc:
 			# FIXME: ignore local name collisions, since that means
@@ -637,6 +651,14 @@ class PresenceService(object):
 				pass
 		self.register_service_type(stype)
 		return service
+
+	def unregister_service(self, service):
+		group = service.get_avahi_entry_group()
+		if not group:
+			raise ValueError("Service was not a local service provided by this laptop!")
+		group.Free()
+		key = (service.get_full_name(), service.get_type())
+		del self._services[key]
 
 	def register_service_type(self, stype):
 		"""Requests that the Presence service look for and recognize

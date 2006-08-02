@@ -194,6 +194,9 @@ class PresenceService(gobject.GObject):
 		serv_op = self._ps.registerService(name, stype, properties, address, port, domain)
 		return self._new_object(serv_op)
 
+	def unregister_service(self, service):
+		self._ps.unregisterService(service.object_path())
+
 	def register_service_type(self, stype):
 		self._ps.registerServiceType(stype)
 
