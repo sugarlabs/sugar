@@ -1,4 +1,4 @@
-SUBDIRS = activities shell sugar
+SUBDIRS = activities shell sugar tools
 
 dbusconfdir = $(pkgdatadir)
 dbusconf_DATA = dbus-installed.conf

@@ -1,0 +1,10 @@
+#!/usr/bin/python
+import sys
+
+from sugar import setup
+
+setup.setup_activity(sys.argv[1],
+		     '@prefix@/share/sugar/activities',
+		     '@prefix@/bin/sugar-activity-factory')
+
+print '%s installed.' % sys.argv[1]

@@ -11,8 +11,9 @@ class ServiceParser(ConfigParser):
 	def optionxform(self, option):
 		return option
 
-def _install_activity(activity_dir, filename, dest_path, bin):
-	source = os.path.join(activity_dir, filename)
+def setup_activity(source, dest_path, bin):
+	"""Copy an activity to the destination path and setup it"""
+	filename = os.path.basename(source)
 	dest = os.path.join(dest_path, filename)
 	print 'Install ' + filename + ' ...'
 	shutil.copyfile(source, dest)
@@ -53,7 +54,7 @@ def _install_activity(activity_dir, filename, dest_path, bin):
 	service_cp.write(fileobject)
 	fileobject.close()
 
-def install_activities(source_path, dest_path, bin):
+def setup_activities(source_path, dest_path, bin):
 	"""Scan a directory for activities and install them.""" 
 	if os.path.isdir(source_path):
 		for filename in os.listdir(source_path):
@@ -61,7 +62,8 @@ def install_activities(source_path, dest_path, bin):
 			if os.path.isdir(activity_dir):
 				for filename in os.listdir(activity_dir):
 					if filename.endswith(".activity"):
-						_install_activity(activity_dir, filename, dest_path, bin)
+						source = os.path.join(activity_dir, filename)
+						setup_activity(source, dest_path, bin)
 
 if __name__=='__main__':
-	install_activities(sys.argv[1], sys.argv[2], sys.argv[3])
+	setup_activities(sys.argv[1], sys.argv[2], sys.argv[3])

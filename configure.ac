@@ -40,4 +40,6 @@ sugar/p2p/Makefile
 sugar/p2p/model/Makefile
 sugar/presence/Makefile
 po/Makefile.in
+tools/Makefile
+tools/sugar-setup-activity
 ])
