@@ -209,10 +209,6 @@ class Activity(gtk.Window):
 	def get_id(self):
 		return self._activity_id
 
-	#############################################################
-	# Pure Virtual methods that subclasses may/may not implement
-	#############################################################
-
 	def share(self):
 		"""Called to request the activity to share itself on the network."""
-		pass
+		self._service = self._pservice.share_activity(self, self._default_type)

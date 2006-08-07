@@ -1,6 +1,3 @@
-import logging
-import xml.sax.saxutils
-
 import gtk
 import geckoembed
 
@@ -109,16 +106,9 @@ class BrowserActivity(Activity):
 		return self.embed
 	
 	def share(self):
-		escaped_title = xml.sax.saxutils.escape(self.embed.get_title())
-		escaped_url = xml.sax.saxutils.escape(self.embed.get_address())
+		Activity.share(self)
 
-		# Share this activity with others
-		properties = {_SERVICE_URI_TAG: escaped_url, _SERVICE_TITLE_TAG: escaped_title}
-		self._share_service = self._pservice.share_activity(self,
-				stype=self._default_type, properties=properties)
-
-		# Create our activity-specific browser sharing service
-		self._model = LocalModel(self, self._pservice, self._share_service)
+		self._model = LocalModel(self, self._pservice, self._service)
 		self._model.set_value('owner', self._pservice.get_owner().get_name())
 		self._update_shared_location()
 		
