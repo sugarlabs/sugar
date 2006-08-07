@@ -49,10 +49,11 @@ class ActivityFactory(dbus.service.Object):
 		bus_name = dbus.service.BusName(factory, bus = bus) 
 		dbus.service.Object.__init__(self, bus_name, get_path(factory))
 
-	@dbus.service.method("com.redhat.Sugar.ActivityFactory")
+	@dbus.service.method("com.redhat.Sugar.ActivityFactory",
+						 in_signature="o", out_signature="")
 	def create_with_service(self, service_path):
 		pservice = PresenceService()
-		service = pservice._new_object(service_path)
+		service = pservice.get(service_path)
 		activity = self._class(service, [])
 
 	@dbus.service.method("com.redhat.Sugar.ActivityFactory")

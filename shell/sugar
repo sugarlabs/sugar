@@ -61,8 +61,8 @@ if os.path.isfile(os.path.join(basedir, 'sugar/__uninstalled__.py')):
 		# FIXME delete the whole directory
 		pass
 
-	setup.install_activities(env.get_activities_dir(), activities_dest,
-							 os.path.join(basedir, 'shell/sugar-activity-factory'))
+	setup.setup_activities(env.get_activities_dir(), activities_dest,
+						   os.path.join(basedir, 'shell/sugar-activity-factory'))
 else:
 	print 'Running the installed sugar...'
 	from sugar import env

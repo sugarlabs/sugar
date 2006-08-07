@@ -125,6 +125,9 @@ class PresenceService(gobject.GObject):
 	def _activity_disappeared_cb(self, object_path):
 		gobject.idle_add(self._emit_activity_disappeared_signal, object_path)
 
+	def get(self, object_path):
+		return self._new_object(object_path)
+
 	def get_services(self):
 		resp = self._ps.getServices()
 		servs = []

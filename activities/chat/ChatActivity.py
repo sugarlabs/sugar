@@ -37,7 +37,8 @@ class ChatShellDbusService(dbus.service.Object):
 		object_path = '/com/redhat/Sugar/Chat'
 		dbus.service.Object.__init__(self, bus_name, object_path)
 
-	@dbus.service.method('com.redhat.Sugar.ChatShell')
+	@dbus.service.method('com.redhat.Sugar.ChatShell',
+						 in_signature="o", out_signature="")
 	def open_chat(self, service_path):
 		self._parent.open_chat_from_path(service_path)
 
@@ -75,7 +76,7 @@ class ChatListener:
 			return
 
 	def open_chat_from_path(self, service_path):
-		service = self._pservice._new_object(service_path)
+		service = self._pservice.get(service_path)
 		self.open_chat(service)
 		
 	def open_chat(self, service):
