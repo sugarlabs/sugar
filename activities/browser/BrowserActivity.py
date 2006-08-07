@@ -20,14 +20,9 @@ class BrowserActivity(Activity):
 	FOLLOWING = 2
 	LEADING = 3
 
-	def __init__(self, service, args):
+	def __init__(self, service):
 		Activity.__init__(self, service)
 
-		if len(args) > 0:
-			self.uri = args[0]
-		else:
-			self.uri = 'http://www.google.com'
-		
 		self._mode = BrowserActivity.SOLO
 		self._share_service = None
 		self._model_service = None
@@ -44,10 +39,8 @@ class BrowserActivity(Activity):
 
 		self.embed = geckoembed.Browser()
 		self.embed.connect("title", self.__title_cb)
-		vbox.pack_start(self.embed)
-		
+		vbox.pack_start(self.embed)		
 		self.embed.show()
-		self.embed.load_address(self.uri)
 		
 		nav_toolbar = NavigationToolbar(self)
 		vbox.pack_start(nav_toolbar, False)

@@ -54,14 +54,14 @@ class ActivityFactory(dbus.service.Object):
 	def create_with_service(self, service_path):
 		pservice = PresenceService()
 		service = pservice.get(service_path)
-		activity = self._class(service, [])
+		activity = self._class(service)
 
 	@dbus.service.method("com.redhat.Sugar.ActivityFactory")
 	def create(self):
-		activity = self._class(None, [])
+		activity = self._class(None)
 		activity.set_default_type(self._default_type)
 
-def create(activity_name, service = None, args = None):
+def create(activity_name, service = None):
 	"""Create a new activity from his name."""
 	bus = dbus.SessionBus()
 
