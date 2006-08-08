@@ -30,20 +30,31 @@ class ActivitiesModel(gobject.GObject):
 	def __init__(self, registry):
 		gobject.GObject.__init__(self)
 		
-		self._activities = []
+		self._activities = {}
 		self._registry = registry
 		
 		self._pservice = PresenceService()
 		self._pservice.connect("service-appeared", self.__service_appeared_cb)
 
+		for service in self._pservice.get_services():
+			self.__check_service(service)
+
+	def has_activity(self, activity_id):
+		return self._activities.has_key(activity_id)
+
 	def add_activity(self, service):
 		activity_info = ActivityInfo(service)
-		self._activities.append(activity_info)
+		self._activities[activity_info.get_id()] = (activity_info)
 		self.emit('activity-added', activity_info)
 
 	def __iter__(self):
-		return self._activities.__iter__()
+		activities = self._activities.values()
+		return activities.__iter__()
 
 	def __service_appeared_cb(self, pservice, service):
+		self.__check_service(service)
+
+	def __check_service(self, service):
 		if self._registry.get_activity(service.get_type()) != None:
-			self.add_activity(service)
+			if not self.has_activity(service.get_activity_id()):
+				self.add_activity(service)

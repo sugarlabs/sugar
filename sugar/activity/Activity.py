@@ -1,4 +1,5 @@
 import sys
+import logging
 
 import dbus
 import dbus.service
@@ -116,7 +117,7 @@ class ActivityDbusService(dbus.service.Object):
 
 	@dbus.service.method(ACTIVITY_SERVICE_NAME)
 	def get_shared(self):
-		"""Get the activity identifier"""
+		"""Returns True if the activity is shared on the mesh."""
 		return self._activity.get_shared()
 
 class Activity(gtk.Window):
@@ -165,9 +166,22 @@ class Activity(gtk.Window):
 		return self._activity_id
 
 	def join(self, activity_ps):
-		"""Join an activity shared on the network"""
+		"""Join an activity shared on the network."""
 		self._shared = True
 		self._activity_id = activity_ps.get_id()
+
+		# Publish the default service, it's a copy of
+		# one of those we found on the network.
+		services = activity_ps.get_services_of_type(self._default_type)
+		if len(services) > 0:
+			service = services[0]
+			addr = service.get_address()
+			port = service.get_port()
+			properties = { 'title' : service.get_published_value('title') }
+			self._service = self._pservice.share_activity(self,
+								self._default_type, properties, addr, port)
+		else:
+			logging.error('Cannot join the activity')
 
 	def share(self):
 		"""Share the activity on the network."""
