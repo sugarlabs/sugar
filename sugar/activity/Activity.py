@@ -212,4 +212,6 @@ class Activity(gtk.Window):
 
 	def share(self):
 		"""Called to request the activity to share itself on the network."""
-		self._service = self._pservice.share_activity(self, self._default_type)
+		properties = { 'title' : self.get_title() }
+		self._service = self._pservice.share_activity(self, self._default_type,
+													  properties)

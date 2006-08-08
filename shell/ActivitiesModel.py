@@ -16,7 +16,7 @@ class ActivityInfo:
 		return self._service.get_type()
 	
 	def get_title(self):
-		return "FIXME Title"
+		return self._service.get_published_value('title')
 	
 	def get_service(self):
 		return self._service
