@@ -52,12 +52,16 @@ class ActivityFactory(dbus.service.Object):
 	def create_with_service(self, service_path):
 		pservice = PresenceService()
 		service = pservice.get(service_path)
-		activity = self._class(service)
+
+		activity = self._class()
+		activity.set_default_type(self._default_type)
+		activity.join(service)
 
 	@dbus.service.method("com.redhat.Sugar.ActivityFactory")
 	def create(self):
-		activity = self._class(None)
+		activity = self._class()
 		activity.set_default_type(self._default_type)
+		
 
 def create(activity_name, service = None):
 	"""Create a new activity from his name."""
@@ -121,13 +125,8 @@ class Activity(gtk.Window):
 	def __init__(self, service = None):
 		gtk.Window.__init__(self)
 
-		if service:
-			self._activity_id = service.get_activity_id()
-			self._shared = True
-		else:
-			self._activity_id = sugar.util.unique_id()
-			self._shared = False
-
+		self._shared = False
+		self._activity_id = None
 		self._default_type = None
 		self._pservice = PresenceService()
 
@@ -161,10 +160,17 @@ class Activity(gtk.Window):
 
 	def get_id(self):
 		"""Get the unique activity identifier."""
+		if self._activity_id == None:
+			self._activity_id = sugar.util.unique_id()
 		return self._activity_id
 
+	def join(self, activity_ps):
+		"""Join an activity shared on the network"""
+		self._shared = True
+		self._activity_id = activity_ps.get_id()
+
 	def share(self):
-		"""Called to request the activity to share itself on the network."""
+		"""Share the activity on the network."""
 		properties = { 'title' : self.get_title() }
 		self._service = self._pservice.share_activity(self,
 													  self._default_type,

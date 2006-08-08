@@ -1,5 +1,3 @@
-import xml.sax.saxutils
-
 import gobject
 
 from sugar.presence.PresenceService import PresenceService

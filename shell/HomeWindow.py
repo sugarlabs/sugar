@@ -5,6 +5,7 @@ import wnck
 
 from sugar.activity import Activity
 from ActivitiesModel import ActivitiesModel
+from sugar.presence.PresenceService import PresenceService
 
 class NewActivityButton(gtk.MenuToolButton):
 	def __init__(self, home):
@@ -72,7 +73,15 @@ class ActivitiesGrid(gtk.VBox):
 	
 	def __button_clicked_cb(self, button, info):
 		activity = self._shell.get_registry().get_activity(info.get_type())
-		Activity.create(activity.get_id(), info.get_service())
+		
+		activity_id = info.get_service().get_activity_id()
+		pservice = PresenceService()
+		activity_ps = pservice.get_activity(activity_id)
+
+		if activity_ps:
+			Activity.create(activity.get_id(), activity_ps)
+		else:
+			print 'Cannot start activity.'
 
 class TasksGrid(gtk.VBox):
 	def __init__(self, home):

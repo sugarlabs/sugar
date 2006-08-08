@@ -9,18 +9,10 @@ from sugar.p2p.model.RemoteModel import RemoteModel
 from NotificationBar import NotificationBar
 from NavigationToolbar import NavigationToolbar
 
-_SERVICE_URI_TAG = "URI"
-_SERVICE_TITLE_TAG = "Title"
-
 class BrowserActivity(Activity):
-	SOLO = 1
-	FOLLOWING = 2
-	LEADING = 3
+	def __init__(self):
+		Activity.__init__(self)
 
-	def __init__(self, service):
-		Activity.__init__(self, service)
-
-		self._mode = BrowserActivity.SOLO
 		self._share_service = None
 		self._model_service = None
 		self._notif_service = None
@@ -46,16 +38,19 @@ class BrowserActivity(Activity):
 		self.add(vbox)
 		vbox.show()
 
-		if service:
-			service.connect('service-appeared', self._service_appeared_cb)
+	def join(self, activity_ps):
+		Activity.join(self, activity_ps)
 
-			services = service.get_services_of_type('_web_olpc._udp')
-			if len(services) > 0:
-				self._notif_service = services[0]
+		activity_ps.connect('service-appeared', self._service_appeared_cb)
 
-			services = service.get_services_of_type(LocalModel.SERVICE_TYPE)
-			if len(services) > 0:
-				self._model_service = services[0]
+		default_type = self.get_default_type()
+		services = activity_ps.get_services_of_type(default_type)
+		if len(services) > 0:
+			self._notif_service = services[0]
+
+		services = activity_ps.get_services_of_type(LocalModel.SERVICE_TYPE)
+		if len(services) > 0:
+			self._model_service = services[0]
 
 		if self._notif_service and self._model_service:
 			self._listen_to_model()
@@ -64,8 +59,7 @@ class BrowserActivity(Activity):
 		if service.get_type() == self._default_type:
 			self._notif_service = service
 		elif service.get_type() == LocalModel.SERVICE_TYPE:
-			if self._mode != BrowserActivity.LEADING:
-				self._model_service = service
+			self._model_service = service
 		
 		if not self._model and self._notif_service and self._model_service:
 			self._listen_to_model()
@@ -92,14 +86,6 @@ class BrowserActivity(Activity):
 		self.embed.load_address(address)
 		self._notif_bar.hide()
 
-	def set_mode(self, mode):
-		self._mode = mode
-		if mode == BrowserActivity.LEADING:
-			self._notif_bar.set_text('Share this page with the group.')
-			self._notif_bar.set_action('set_shared_location', 'Share')
-			self._notif_bar.set_icon('stock_shared-by-me')
-			self._notif_bar.show()
-
 	def get_embed(self):
 		return self.embed
 	
@@ -110,7 +96,10 @@ class BrowserActivity(Activity):
 		self._model.set_value('owner', self._pservice.get_owner().get_name())
 		self._update_shared_location()
 		
-		self.set_mode(BrowserActivity.LEADING)
+		self._notif_bar.set_text('Share this page with the group.')
+		self._notif_bar.set_action('set_shared_location', 'Share')
+		self._notif_bar.set_icon('stock_shared-by-me')
+		self._notif_bar.show()
 
 	def __title_cb(self, embed):
 		self.set_title(embed.get_title())
