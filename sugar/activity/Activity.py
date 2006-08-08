@@ -18,8 +18,6 @@ import sugar.util
 ACTIVITY_SERVICE_NAME = "com.redhat.Sugar.Activity"
 ACTIVITY_SERVICE_PATH = "/com/redhat/Sugar/Activity"
 
-ON_SHARE_CB = "share"
-
 def get_path(activity_name):
 	"""Returns the activity path"""
 	return '/' + activity_name.replace('.', '/')
@@ -88,13 +86,8 @@ class ActivityDbusService(dbus.service.Object):
 	The dbus service is separate from the actual Activity object so that we can
 	tightly control what stuff passes through the dbus python bindings."""
 
-	_ALLOWED_CALLBACKS = [ON_SHARE_CB]
-
 	def __init__(self, xid, activity):
 		self._activity = activity
-		self._callbacks = {}
-		for cb in self._ALLOWED_CALLBACKS:
-			self._callbacks[cb] = None
 		
 		bus = dbus.SessionBus()
 		service_name = ACTIVITY_SERVICE_NAME + "%s" % xid
@@ -102,27 +95,10 @@ class ActivityDbusService(dbus.service.Object):
 		service = dbus.service.BusName(service_name, bus=bus)
 		dbus.service.Object.__init__(self, service, object_path)
 
-	def register_callback(self, name, callback):
-		if name not in self._ALLOWED_CALLBACKS:
-			print "ActivityDbusService: bad callback registration request for '%s'" % name
-			return
-		self._callbacks[name] = callback
-
-	def _call_callback_cb(self, func, *args):
-		gobject.idle_add(func, *args)
-		return False
-
-	def _call_callback(self, name, *args):
-		"""Call our activity object back, but from an idle handler
-		to minimize the possibility of stupid activities deadlocking
-		in dbus callbacks."""
-		if name in self._ALLOWED_CALLBACKS and self._callbacks[name]:
-			gobject.idle_add(self._call_callback_cb, self._callbacks[name], *args)
-
 	@dbus.service.method(ACTIVITY_SERVICE_NAME)
 	def share(self):
 		"""Called by the shell to request the activity to share itself on the network."""
-		self._call_callback(ON_SHARE_CB)
+		self._activity.share()
 
 	@dbus.service.method(ACTIVITY_SERVICE_NAME)
 	def get_id(self):
@@ -152,66 +128,45 @@ class Activity(gtk.Window):
 			self._activity_id = sugar.util.unique_id()
 			self._shared = False
 
-		self._dbus_service = None
-		self._initial_service = None
-		self._activity_object = None
 		self._default_type = None
 		self._pservice = PresenceService()
 
-		self.connect('realize', self.__realize)
-		
 		self.present()
 	
-	def __realize(self, window):
 		group = gtk.Window()
 		group.realize()
 		self.window.set_group(group.window)
 
-		if not self._dbus_service:
-			self._register_service()
-	
-	def _register_service(self):
-		self._dbus_service = self._get_new_dbus_service()
-		self._dbus_service.register_callback(ON_SHARE_CB, self._internal_on_share_cb)
+		self._dbus_service = ActivityDbusService(self.window.xid, self)
 
-	def _cleanup(self):
+	def __del__(self):
 		if self._dbus_service:
 			del self._dbus_service
 			self._dbus_service = None
 
-	def __del__(self):
-		self._cleanup()
-
-	def _get_new_dbus_service(self):
-		"""Create and return a new dbus service object for this Activity.
-		Allows subclasses to use their own dbus service object if they choose."""
-		return ActivityDbusService(self.window.xid, self)
-
 	def set_default_type(self, default_type):
+		"""Set the activity default type.
+
+		It's the type of the main network service which tracks presence
+		and provides info about the activity, for example the title."""
 		self._default_type = default_type
-		print self._default_type
 
 	def get_default_type(self):
+		"""Get the activity default type."""
 		return self._default_type
 
 	def get_shared(self):
+		"""Returns TRUE if the activity is shared on the mesh."""
 		return self._shared
 
-	def has_focus(self):
-		"""Return whether or not this Activity is visible to the user."""
-		return self._has_focus
-
-	def _internal_on_share_cb(self):
-		"""Callback when the dbus service object tells us the user wishes to share our activity."""
-		if not self._shared:
-			self._shared = True
-		self.share()
-
 	def get_id(self):
+		"""Get the unique activity identifier."""
 		return self._activity_id
 
 	def share(self):
 		"""Called to request the activity to share itself on the network."""
 		properties = { 'title' : self.get_title() }
-		self._service = self._pservice.share_activity(self, self._default_type,
+		self._service = self._pservice.share_activity(self,
+													  self._default_type,
 													  properties)
+		self._shared = True
