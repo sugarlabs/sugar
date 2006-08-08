@@ -3,17 +3,17 @@ import xml.sax.saxutils
 import gobject
 
 from sugar.presence.PresenceService import PresenceService
+from ActivityRegistry import ActivityRegistry
 
 class ActivityInfo:
 	def __init__(self, service):
 		self._service = service
 	
 	def get_id(self):
-		activity_id = self._service.get_id()
+		return self._service.get_activity_id()
 		
 	def get_type(self):
-		# FIXME
-		return "_web_olpc._udp"
+		return self._service.get_type()
 	
 	def get_title(self):
 		return "FIXME Title"
@@ -29,13 +29,14 @@ class ActivitiesModel(gobject.GObject):
 						    ([gobject.TYPE_PYOBJECT]))
 	}
 
-	def __init__(self):
+	def __init__(self, registry):
 		gobject.GObject.__init__(self)
 		
 		self._activities = []
+		self._registry = registry
 		
 		self._pservice = PresenceService()
-		self._pservice.connect("activity-appeared", self._on_activity_announced_cb)
+		self._pservice.connect("service-appeared", self.__service_appeared_cb)
 
 	def add_activity(self, service):
 		activity_info = ActivityInfo(service)
@@ -45,5 +46,6 @@ class ActivitiesModel(gobject.GObject):
 	def __iter__(self):
 		return self._activities.__iter__()
 
-	def _on_activity_announced_cb(self, pservice, activity):
-		self.add_activity(activity)
+	def __service_appeared_cb(self, pservice, service):
+		if self._registry.get_activity(service.get_type()) != None:
+			self.add_activity(service)

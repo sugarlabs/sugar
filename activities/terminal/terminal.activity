@@ -1,4 +1,5 @@
 [Activity]
 name = Terminal
 id = org.sugar.Terminal
+default_type = _terminal_olpc._udp
 python_module = terminal.TerminalActivity.TerminalActivity

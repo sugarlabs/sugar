@@ -146,7 +146,7 @@ class Activity(gtk.Window):
 		gtk.Window.__init__(self)
 
 		if service:
-			self._activity_id = service.get_id()
+			self._activity_id = service.get_activity_id()
 			self._shared = True
 		else:
 			self._activity_id = sugar.util.unique_id()
@@ -156,6 +156,7 @@ class Activity(gtk.Window):
 		self._initial_service = None
 		self._activity_object = None
 		self._default_type = None
+		self._pservice = PresenceService()
 
 		self.connect('realize', self.__realize)
 		

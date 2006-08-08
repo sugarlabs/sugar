@@ -46,8 +46,6 @@ class BrowserActivity(Activity):
 		self.add(vbox)
 		vbox.show()
 
-		self._pservice = PresenceService()
-
 		if service:
 			service.connect('service-appeared', self._service_appeared_cb)
 

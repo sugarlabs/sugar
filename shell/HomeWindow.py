@@ -144,7 +144,7 @@ class HomeWindow(gtk.Window):
 		vbox.pack_start(label, False)
 		label.show()
 
-		model = ActivitiesModel()
+		model = ActivitiesModel(shell.get_registry())
 		grid = ActivitiesGrid(shell, model)
 		vbox.pack_start(grid)
 		grid.show()
