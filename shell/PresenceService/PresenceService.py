@@ -567,8 +567,8 @@ class PresenceService(object):
 			browser_obj = dbus.Interface(self._system_bus.get_object(avahi.DBUS_NAME, st_browser),
 							avahi.DBUS_INTERFACE_SERVICE_TYPE_BROWSER)
 		except dbus.DBusException, exc:
-			logging.error("got exception %s while attempting to browse domain %s on %i.%i" % (domain, interface, protocol))
 			str_exc = str(exc)
+			logging.error("got exception %s while attempting to browse domain %s on %i.%i" % (str_exc, domain, interface, protocol))
 			if str_exc.find("The name org.freedesktop.Avahi was not provided by any .service files") >= 0:
 				raise Exception("Avahi does not appear to be running.  '%s'" % str_exc)
 			else:
