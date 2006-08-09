@@ -26,11 +26,13 @@ class BrowserActivity(Activity):
 		vbox.pack_start(self._notif_bar, False)
 		self._notif_bar.connect('action', self.__notif_bar_action_cb)
 
-		self.embed = geckoembed.Browser()
-		self.embed.connect("title", self.__title_cb)
-		vbox.pack_start(self.embed)		
-		self.embed.show()
-		
+		self._embed = geckoembed.Browser()
+		self._embed.connect("title", self.__title_cb)
+		vbox.pack_start(self._embed)		
+		self._embed.show()
+
+		self._embed.load_address('http://www.google.com')		
+
 		nav_toolbar = NavigationToolbar(self)
 		vbox.pack_start(nav_toolbar, False)
 		nav_toolbar.show()
@@ -70,9 +72,9 @@ class BrowserActivity(Activity):
 		self._go_to_shared_location()
 	
 	def _update_shared_location(self):
-		address = self.embed.get_address()
+		address = self._embed.get_address()
 		self._model.set_value('address', address)
-		title = self.embed.get_title()
+		title = self._embed.get_title()
 		self._model.set_value('title', title)
 		
 	def __notif_bar_action_cb(self, bar, action_id):
@@ -83,11 +85,11 @@ class BrowserActivity(Activity):
 
 	def _go_to_shared_location(self):
 		address = self._model.get_value("address")
-		self.embed.load_address(address)
+		self._embed.load_address(address)
 		self._notif_bar.hide()
 
 	def get_embed(self):
-		return self.embed
+		return self._embed
 	
 	def share(self):
 		Activity.share(self)
