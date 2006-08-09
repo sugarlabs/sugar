@@ -24,5 +24,5 @@ class ChatActivity(Activity):
 		if command == 'connect':
 			self.cmd_connect(args)
 		elif command == 'message':
-			self.cmd_mesage(args)
+			self.cmd_message(args)
 		

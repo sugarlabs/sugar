@@ -61,7 +61,7 @@ class ActivityDbusService(dbus.service.Object):
 		return self._activity.get_shared()
 
 	@dbus.service.method(ACTIVITY_INTERFACE,
-						 in_signature="sao", out_signature="")
+						 in_signature="sas", out_signature="")
 	def execute(self, command, args):
 		self._activity.execute(command, args)
 

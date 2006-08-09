@@ -45,8 +45,14 @@ class ShellDbusService(dbus.service.Object):
 	def log(self, module_id, message):
 		gobject.idle_add(self.__log_idle, (module_id, message))
 
-class Shell:
+class Shell(gobject.GObject):
+	__gsignals__ = {
+		'activity-closed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([str]))
+	}
+
 	def __init__(self, registry):
+		gobject.GObject.__init__(self)
+
 		self._screen = wnck.screen_get_default()
 		self._registry = registry
 		self._hosts = {}
@@ -63,8 +69,8 @@ class Shell:
 		self._owner = ShellOwner()
 		self._owner.announce()
 
-		chat_controller = ChatController(self)
-		chat_controller.listen()
+		self._chat_controller = ChatController(self)
+		self._chat_controller.listen()
 
 		self._home_window = HomeWindow(self)
 		self._home_window.show()
@@ -79,7 +85,11 @@ class Shell:
 	def __window_closed_cb(self, screen, window):
 		if window.get_window_type() == wnck.WINDOW_NORMAL:
 			xid = window.get_xid()
-			self._hosts[xid] = None
+
+			activity = self._hosts[xid]
+			self.emit('activity-closed', activity.get_id())
+
+			del self._hosts[xid]
 
 	def get_activity(self, activity_id):
 		for host in self._hosts:
@@ -156,3 +166,6 @@ class Shell:
 
 	def get_registry(self):
 		return self._registry
+
+	def get_chat_controller(self):
+		return self._chat_controller
