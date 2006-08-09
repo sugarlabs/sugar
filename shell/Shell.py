@@ -14,6 +14,7 @@ from ConsoleWindow import ConsoleWindow
 from Owner import ShellOwner
 from PresenceService import PresenceService
 from ActivityHost import ActivityHost
+from ChatListener import ChatListener
 
 class ShellDbusService(dbus.service.Object):
 	def __init__(self, shell, bus_name):
@@ -56,6 +57,9 @@ class Shell:
 
 		self._owner = ShellOwner()
 		self._owner.announce()
+
+		chat_listener = ChatListener()
+		chat_listener.start()
 
 		self._home_window = HomeWindow(self)
 		self._home_window.show()
