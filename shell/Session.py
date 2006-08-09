@@ -15,7 +15,6 @@ class DbusProcess(Process):
 	def __init__(self):
 		config = sugar.env.get_dbus_config()
 		cmd = "dbus-daemon --print-address --config-file %s" % config
-		print cmd
 		Process.__init__(self, cmd)
 
 	def get_name(self):
