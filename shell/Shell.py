@@ -15,7 +15,7 @@ from ConsoleWindow import ConsoleWindow
 from Owner import ShellOwner
 from sugar.presence.PresenceService import PresenceService
 from ActivityHost import ActivityHost
-from ChatListener import ChatListener
+from ChatController import ChatController
 from sugar.activity import ActivityFactory
 
 class ShellDbusService(dbus.service.Object):
@@ -62,8 +62,8 @@ class Shell:
 		self._owner = ShellOwner()
 		self._owner.announce()
 
-		chat_listener = ChatListener()
-		chat_listener.start()
+		chat_controller = ChatController(self)
+		chat_controller.listen()
 
 		self._home_window = HomeWindow(self)
 		self._home_window.show()
@@ -80,6 +80,12 @@ class Shell:
 		if window.get_window_type() == wnck.WINDOW_NORMAL:
 			xid = window.get_xid()
 			self._hosts[xid] = None
+
+	def get_activity(self, activity_id):
+		for host in self._hosts:
+			if host.get_id() == activity_id:
+				return host
+		return None
 
 	def get_current_activity(self):
 		window = self._screen.get_active_window()
@@ -135,7 +141,10 @@ class Shell:
 		activity = ActivityFactory.create(activity_name)
 		info = self._registry.get_activity_from_id(activity_name)
 		if info:
-			activity.set_default_type(info.get_default_type())
+			default_type = info.get_default_type()
+			if default_type != None:
+				activity.set_default_type(default_type)
+				activity.execute('test', [])
 			return activity
 		else:
 			logging.error('No such activity in the directory')

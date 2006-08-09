@@ -60,6 +60,11 @@ class ActivityDbusService(dbus.service.Object):
 		"""Returns True if the activity is shared on the mesh."""
 		return self._activity.get_shared()
 
+	@dbus.service.method(ACTIVITY_INTERFACE,
+						 in_signature="sao", out_signature="")
+	def execute(self, command, args):
+		self._activity.execute(command, args)
+
 class Activity(gtk.Window):
 	"""Base Activity class that all other Activities derive from."""
 
@@ -133,3 +138,7 @@ class Activity(gtk.Window):
 		self._service = self._pservice.share_activity(self,
 										self._default_type, properties)
 		self._shared = True
+
+	def execute(self, command, args):
+		"""Execute the given command with args"""
+		pass
