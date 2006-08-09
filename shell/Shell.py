@@ -48,10 +48,12 @@ class Shell:
 	def __init__(self, registry):
 		self._screen = wnck.screen_get_default()
 		self._registry = registry
+		self._hosts = {}
+		self._console_windows = {}
 
 	def start(self):
-		log_writer = LogWriter("Shell", False)
-		log_writer.start()
+		#log_writer = LogWriter("Shell", False)
+		#log_writer.start()
 
 		session_bus = dbus.SessionBus()
 		bus_name = dbus.service.BusName('com.redhat.Sugar.Shell', bus=session_bus)
@@ -66,8 +68,18 @@ class Shell:
 		self._home_window = HomeWindow(self)
 		self._home_window.show()
 
-		self._hosts = {}
-		self._console_windows = {}
+		self._screen.connect('window-opened', self.__window_opened_cb)
+		self._screen.connect('window-closed', self.__window_closed_cb)
+
+	def __window_opened_cb(self, screen, window):
+		if window.get_window_type() == wnck.WINDOW_NORMAL:
+			xid = window.get_xid()
+			self._hosts[xid] = ActivityHost(self, xid)
+
+	def __window_closed_cb(self, screen, window):
+		if window.get_window_type() == wnck.WINDOW_NORMAL:
+			xid = window.get_xid()
+			self._hosts[xid] = None
 
 	def get_current_activity(self):
 		window = self._screen.get_active_window()
@@ -82,11 +94,7 @@ class Shell:
 					xid = parent.get_xid()
 
 			if xid != None:
-				if self._hosts.has_key(xid):
-					return self._hosts[xid]
-				else:
-					self._hosts[xid] = ActivityHost(self, xid)
-					return self._hosts[xid]
+				return self._hosts[xid]
 
 		return None
 
