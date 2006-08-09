@@ -7,6 +7,11 @@ import pygtk
 pygtk.require('2.0')
 import gobject
 import gtk
+import dbus.glib
+
+# Work around for dbus mutex locking issue
+gtk.gdk.threads_init()
+dbus.glib.threads_init()
 
 from sugar.activity import ActivityFactory
 from sugar.LogWriter import LogWriter

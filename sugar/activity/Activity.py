@@ -1,15 +1,9 @@
 import dbus
 import dbus.service
-import dbus.glib
 import gtk
 import gobject
 
 from sugar.presence.PresenceService import PresenceService
-
-# Work around for dbus mutex locking issue
-gtk.gdk.threads_init()
-dbus.glib.threads_init()
-
 import sugar.util
 
 ACTIVITY_SERVICE_NAME = "com.redhat.Sugar.Activity"
