@@ -38,7 +38,7 @@ class ActivityFactory(dbus.service.Object):
 	@dbus.service.method("com.redhat.Sugar.ActivityFactory")
 	def create(self):
 		activity = self._class()
-		return activity.get_object_path()	
+		return activity.window.xid
 
 def create(activity_name):
 	"""Create a new activity from his name."""
@@ -50,10 +50,11 @@ def create(activity_name):
 	proxy_obj = bus.get_object(factory_name, factory_path)
 	factory = dbus.Interface(proxy_obj, "com.redhat.Sugar.ActivityFactory")
 
-	activity_path = factory.create()
+	xid = factory.create()
 
 	bus = dbus.SessionBus()
-	proxy_obj = bus.get_object(Activity.ACTIVITY_SERVICE_NAME, activity_path)
+	proxy_obj = bus.get_object(Activity.get_service_name(xid),
+							   Activity.get_object_path(xid))
 	activity = dbus.Interface(proxy_obj, Activity.ACTIVITY_INTERFACE)
 
 	return activity

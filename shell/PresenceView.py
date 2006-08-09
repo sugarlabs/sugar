@@ -111,7 +111,7 @@ class PresenceView(gtk.VBox):
 		if buddy:
 			chat_service = buddy.get_service_of_type(BuddyChat.SERVICE_TYPE)
 			activity = self._shell.start_activity('com.redhat.Sugar.ChatActivity')
-			#activity.execute('start', [chat_service.object_path()])
+			activity.execute('start', [chat_service.object_path()])
 
 	def __buddy_icon_changed_cb(self, buddy):
 		it = self._get_iter_for_buddy(buddy)

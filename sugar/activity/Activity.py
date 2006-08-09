@@ -1,3 +1,5 @@
+import os
+
 import dbus
 import dbus.service
 import gtk
@@ -10,24 +12,22 @@ ACTIVITY_SERVICE_NAME = "org.laptop.Activity"
 ACTIVITY_SERVICE_PATH = "/org/laptop/Activity"
 ACTIVITY_INTERFACE = "org.laptop.Activity"
 
+def get_service_name(xid):
+	return ACTIVITY_SERVICE_NAME + '%d' % xid
+
+def get_object_path(xid):
+	return ACTIVITY_SERVICE_PATH + "/%s" % xid 
+
+
 class ActivityDbusService(dbus.service.Object):
 	"""Base dbus service object that each Activity uses to export dbus methods.
 	
 	The dbus service is separate from the actual Activity object so that we can
 	tightly control what stuff passes through the dbus python bindings."""
 
-	def __init__(self, pservice, xid, activity):
+	def start(self, pservice, activity):
 		self._activity = activity
 		self._pservice = pservice		
-
-		bus = dbus.SessionBus()
-		service_name = ACTIVITY_SERVICE_NAME
-		self._object_path = ACTIVITY_SERVICE_PATH + "/%s" % xid
-		service = dbus.service.BusName(service_name, bus=bus)
-		dbus.service.Object.__init__(self, service, self._object_path)
-
-	def get_object_path(self):
-		return self._object_path
 
 	@dbus.service.method(ACTIVITY_INTERFACE)
 	def share(self):
@@ -68,7 +68,7 @@ class ActivityDbusService(dbus.service.Object):
 class Activity(gtk.Window):
 	"""Base Activity class that all other Activities derive from."""
 
-	def __init__(self, service = None):
+	def __init__(self):
 		gtk.Window.__init__(self)
 
 		self._shared = False
@@ -82,16 +82,16 @@ class Activity(gtk.Window):
 		group.realize()
 		self.window.set_group(group.window)
 
-		self._bus = ActivityDbusService(self._pservice, self.window.xid, self)
+		bus = dbus.SessionBus()
+		xid = self.window.xid
+		bus_name = dbus.service.BusName(get_service_name(xid), bus=bus)
+		self._bus = ActivityDbusService(bus_name, get_object_path(xid))
+		self._bus.start(self._pservice, self)
 
 	def __del__(self):
 		if self._bus:
 			del self._bus
 			self._bus = None
-
-	def get_object_path(self):
-		"""Returns the path of the activity dbus service"""
-		return self._bus.get_object_path()
 
 	def set_default_type(self, default_type):
 		"""Set the activity default type.

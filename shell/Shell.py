@@ -17,6 +17,7 @@ from sugar.presence.PresenceService import PresenceService
 from ActivityHost import ActivityHost
 from ChatController import ChatController
 from sugar.activity import ActivityFactory
+from sugar.activity import Activity
 
 class ShellDbusService(dbus.service.Object):
 	def __init__(self, shell, bus_name):
@@ -73,8 +74,7 @@ class Shell:
 
 	def __window_opened_cb(self, screen, window):
 		if window.get_window_type() == wnck.WINDOW_NORMAL:
-			xid = window.get_xid()
-			self._hosts[xid] = ActivityHost(self, xid)
+			self._hosts[window.get_xid()] = ActivityHost(self, window)
 
 	def __window_closed_cb(self, screen, window):
 		if window.get_window_type() == wnck.WINDOW_NORMAL:
