@@ -72,16 +72,7 @@ class ActivitiesGrid(gtk.VBox):
 		self._buttons[activity.get_id()] = button
 	
 	def __button_clicked_cb(self, button, info):
-		activity = self._shell.get_registry().get_activity(info.get_type())
-		
-		activity_id = info.get_service().get_activity_id()
-		pservice = PresenceService()
-		activity_ps = pservice.get_activity(activity_id)
-
-		if activity_ps:
-			ActivityFactory.create(activity.get_id(), activity_ps)
-		else:
-			print 'Cannot start activity.'
+		self._shell.join_activity(info.get_service())
 
 class TasksGrid(gtk.VBox):
 	def __init__(self, home):
@@ -168,7 +159,7 @@ class HomeWindow(gtk.Window):
 		return self._shell.get_registry().list_activities()
 
 	def create(self, activity_name):
-		ActivityFactory.create(activity_name)
+		self._shell.start_activity(activity_name)
 
 	def activate(self, activity_window):
 		activity_window.activate(gtk.get_current_event_time())

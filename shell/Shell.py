@@ -1,4 +1,5 @@
 import os
+import logging
 
 import dbus
 import dbus.glib
@@ -12,9 +13,10 @@ from HomeWindow import HomeWindow
 from sugar import env
 from ConsoleWindow import ConsoleWindow
 from Owner import ShellOwner
-from PresenceService import PresenceService
+from sugar.presence.PresenceService import PresenceService
 from ActivityHost import ActivityHost
 from ChatListener import ChatListener
+from sugar.activity import ActivityFactory
 
 class ShellDbusService(dbus.service.Object):
 	def __init__(self, shell, bus_name):
@@ -106,6 +108,30 @@ class Shell:
 			module = self._registry.get_activity(activity.get_default_type())
 			console = self.get_console(module.get_id())
 			activity.show_dialog(console)
+
+	def join_activity(self, service):
+		info = self._registry.get_activity(service.get_type())
+		
+		activity_id = service.get_activity_id()
+		pservice = PresenceService()
+		activity_ps = pservice.get_activity(activity_id)
+
+		if activity_ps:
+			activity = ActivityFactory.create(info.get_id())
+			activity.set_default_type(service.get_type())
+			activity.join(activity_ps.object_path())
+		else:
+			logging.error('Cannot start activity.')
+
+	def start_activity(self, activity_name):
+		activity = ActivityFactory.create(activity_name)
+		info = self._registry.get_activity_from_id(activity_name)
+		if info:
+			activity.set_default_type(info.get_default_type())
+			return activity
+		else:
+			logging.error('No such activity in the directory')
+			return None
 	
 	def log(self, module_id, message):
 		console = self.get_console(module_id)

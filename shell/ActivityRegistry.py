@@ -45,6 +45,13 @@ class ActivityRegistry:
 
 	def __init__(self):
 		self._activities = []
+
+	def get_activity_from_id(self, activity_id):
+		"""Returns an activity given his identifier"""
+		for activity in self._activities:
+			if activity.get_id() == activity_id:
+				return activity
+		return None
 	
 	def get_activity(self, default_type):
 		"""Returns an activity given his default type"""

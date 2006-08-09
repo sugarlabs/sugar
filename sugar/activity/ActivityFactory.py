@@ -6,9 +6,7 @@ import dbus.service
 import gobject
 
 from sugar.presence.PresenceService import PresenceService
-
-ACTIVITY_SERVICE_NAME = "com.redhat.Sugar.Activity"
-ACTIVITY_SERVICE_PATH = "/com/redhat/Sugar/Activity"
+from sugar.activity import Activity
 
 def get_path(activity_name):
 	"""Returns the activity path"""
@@ -39,23 +37,13 @@ class ActivityFactory(dbus.service.Object):
 		bus_name = dbus.service.BusName(factory, bus = bus) 
 		dbus.service.Object.__init__(self, bus_name, get_path(factory))
 
-	@dbus.service.method("com.redhat.Sugar.ActivityFactory",
-						 in_signature="o", out_signature="")
-	def create_with_service(self, service_path):
-		pservice = PresenceService()
-		service = pservice.get(service_path)
-
-		activity = self._class()
-		activity.set_default_type(self._default_type)
-		activity.join(service)
-
 	@dbus.service.method("com.redhat.Sugar.ActivityFactory")
 	def create(self):
 		activity = self._class()
 		activity.set_default_type(self._default_type)
-		
+		return activity.get_object_path()	
 
-def create(activity_name, service = None):
+def create(activity_name):
 	"""Create a new activity from his name."""
 	bus = dbus.SessionBus()
 
@@ -65,11 +53,13 @@ def create(activity_name, service = None):
 	proxy_obj = bus.get_object(factory_name, factory_path)
 	factory = dbus.Interface(proxy_obj, "com.redhat.Sugar.ActivityFactory")
 
-	if service:
-		print service.object_path()
-		factory.create_with_service(service.object_path())
-	else:
-		factory.create()		
+	activity_path = factory.create()
+
+	bus = dbus.SessionBus()
+	proxy_obj = bus.get_object(Activity.ACTIVITY_SERVICE_NAME, activity_path)
+	activity = dbus.Interface(proxy_obj, Activity.ACTIVITY_INTERFACE)
+
+	return activity
 
 def register_factory(name, activity_class, default_type=None):
 	"""Register the activity factory."""

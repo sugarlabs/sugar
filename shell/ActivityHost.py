@@ -10,11 +10,10 @@ class ActivityHost:
 		self._xid = xid
 		
 		bus = dbus.SessionBus()
-		service = Activity.ACTIVITY_SERVICE_NAME + "%s" % xid
 		path = Activity.ACTIVITY_SERVICE_PATH + "/%s" % xid
-		proxy_obj = bus.get_object(service, path)
+		proxy_obj = bus.get_object(Activity.ACTIVITY_SERVICE_NAME, path)
 
-		self._activity = dbus.Interface(proxy_obj, 'com.redhat.Sugar.Activity')
+		self._activity = dbus.Interface(proxy_obj, Activity.ACTIVITY_INTERFACE)
 		self._id = self._activity.get_id()
 		self._default_type = self._activity.get_default_type()
 		self._window = gtk.gdk.window_foreign_new(xid)
