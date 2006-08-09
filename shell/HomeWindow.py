@@ -3,7 +3,7 @@ from gettext import gettext as _
 import gtk
 import wnck
 
-from sugar.activity import Activity
+from sugar.activity import ActivityFactory
 from ActivitiesModel import ActivitiesModel
 from sugar.presence.PresenceService import PresenceService
 
@@ -79,7 +79,7 @@ class ActivitiesGrid(gtk.VBox):
 		activity_ps = pservice.get_activity(activity_id)
 
 		if activity_ps:
-			Activity.create(activity.get_id(), activity_ps)
+			ActivityFactory.create(activity.get_id(), activity_ps)
 		else:
 			print 'Cannot start activity.'
 
@@ -168,7 +168,7 @@ class HomeWindow(gtk.Window):
 		return self._shell.get_registry().list_activities()
 
 	def create(self, activity_name):
-		Activity.create(activity_name)
+		ActivityFactory.create(activity_name)
 
 	def activate(self, activity_window):
 		activity_window.activate(gtk.get_current_event_time())

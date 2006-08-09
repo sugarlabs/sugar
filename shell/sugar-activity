@@ -2,6 +2,6 @@
 
 import sys
 
-from sugar.activity import Activity
+from sugar.activity import ActivityFactory
 
-Activity.create(sys.argv[1])
+ActivityFactory.create(sys.argv[1])

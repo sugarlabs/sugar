@@ -6,8 +6,9 @@ import logging
 import pygtk
 pygtk.require('2.0')
 import gobject
+import gtk
 
-from sugar.activity import Activity
+from sugar.activity import ActivityFactory
 from sugar.LogWriter import LogWriter
 from sugar import theme
 
@@ -19,6 +20,8 @@ theme.setup()
 #lw.start()
 
 if len(sys.argv) == 4:
-	Activity.register_factory(sys.argv[1], sys.argv[2], sys.argv[3])
+	ActivityFactory.register_factory(sys.argv[1], sys.argv[2], sys.argv[3])
 else:
-	Activity.register_factory(sys.argv[1], sys.argv[2])
+	ActivityFactory.register_factory(sys.argv[1], sys.argv[2])
+
+gtk.main()
