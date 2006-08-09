@@ -14,6 +14,7 @@ sugar_PYTHON =				\
 	ActivitiesModel.py		\
 	ActivityHost.py			\
 	ActivityRegistry.py		\
+	ChatController.py	\
 	ConsoleWindow.py		\
 	Emulator.py			\
 	Owner.py			\
