@@ -27,19 +27,12 @@ def setup_activity(source, dest_path, bin):
 		logging.error('%s miss the required id option' % (path))
 		return False
 	
-	if cp.has_option('Activity', 'default_type'):
-		default_type = cp.get('Activity', 'default_type')
-	else:
-		default_type = None
-
 	if cp.has_option('Activity', 'exec'):
 		activity_exec = cp.get('Activity', 'exec')
 	elif cp.has_option('Activity', 'python_module'):
 		python_module = cp.get('Activity', 'python_module')
 		python_module = cp.get('Activity', 'python_module')
 		activity_exec = '%s %s %s' % (bin, activity_id, python_module)
-		if default_type:
-			activity_exec += ' ' + default_type
 	else:
 		logging.error('%s must specifiy exec or python_module' % (source))
 		return False
