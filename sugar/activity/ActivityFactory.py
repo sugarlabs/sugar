@@ -19,9 +19,7 @@ def _get_factory(activity_name):
 class ActivityFactory(dbus.service.Object):
 	"""Dbus service that takes care of creating new instances of an activity"""
 
-	def __init__(self, name, activity_class, default_type):
-		self._default_type = default_type
-
+	def __init__(self, name, activity_class):
 		splitted_module = activity_class.rsplit('.', 1)
 		module_name = splitted_module[0]
 		class_name = splitted_module[1]
@@ -40,7 +38,6 @@ class ActivityFactory(dbus.service.Object):
 	@dbus.service.method("com.redhat.Sugar.ActivityFactory")
 	def create(self):
 		activity = self._class()
-		activity.set_default_type(self._default_type)
 		return activity.get_object_path()	
 
 def create(activity_name):
@@ -61,6 +58,6 @@ def create(activity_name):
 
 	return activity
 
-def register_factory(name, activity_class, default_type=None):
+def register_factory(name, activity_class):
 	"""Register the activity factory."""
-	factory = ActivityFactory(name, activity_class, default_type)
+	factory = ActivityFactory(name, activity_class)

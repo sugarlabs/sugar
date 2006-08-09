@@ -24,9 +24,6 @@ theme.setup()
 #lw = LogWriter(sys.argv[1])
 #lw.start()
 
-if len(sys.argv) == 4:
-	ActivityFactory.register_factory(sys.argv[1], sys.argv[2], sys.argv[3])
-else:
-	ActivityFactory.register_factory(sys.argv[1], sys.argv[2])
+ActivityFactory.register_factory(sys.argv[1], sys.argv[2])
 
 gtk.main()
