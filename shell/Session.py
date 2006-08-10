@@ -4,11 +4,10 @@ import gobject
 import time
 import dbus
 import dbus.dbus_bindings
-from sugar.presence import PresenceService
 
+from sugar.presence import PresenceService
 from Shell import Shell
 from Process import Process
-import sugar.theme
 import sugar.env
 
 class DbusProcess(Process):
@@ -61,7 +60,6 @@ class PresenceServiceProcess(Process):
 class Session:
 	"""Takes care of running the shell and all the sugar processes"""
 	def __init__(self, registry):
-		sugar.theme.setup()
 		self._registry = registry
 		
 	def start(self):
