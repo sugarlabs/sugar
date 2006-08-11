@@ -31,9 +31,6 @@ class ShellDbusService(dbus.service.Object):
 	def __show_console_idle(self):
 		self._shell.show_console()
 
-	def __log_idle(self, (module_id, message)):
-		self._shell.log(module_id, message)
-
 	@dbus.service.method('com.redhat.Sugar.Shell')
 	def show_people(self):
 		gobject.idle_add(self.__show_people_idle)
@@ -44,7 +41,7 @@ class ShellDbusService(dbus.service.Object):
 
 	@dbus.service.method('com.redhat.Sugar.Shell')
 	def log(self, module_id, message):
-		gobject.idle_add(self.__log_idle, (module_id, message))
+		self._shell.log(module_id, message)
 
 class Shell(gobject.GObject):
 	__gsignals__ = {
@@ -57,12 +54,13 @@ class Shell(gobject.GObject):
 		self._screen = wnck.screen_get_default()
 		self._registry = registry
 		self._hosts = {}
-		self._console_windows = {}
 
 	def start(self):
 		session_bus = dbus.SessionBus()
 		bus_name = dbus.service.BusName('com.redhat.Sugar.Shell', bus=session_bus)
 		ShellDbusService(self, bus_name)
+
+		self._console = ConsoleWindow()
 
 		sugar.logger.start('Shell', self)
 
@@ -118,23 +116,13 @@ class Shell(gobject.GObject):
 		activity = self.get_current_activity()
 		activity.show_people()
 
-	def get_console(self, module_id):
-		if not self._console_windows.has_key(module_id):
-			dialog = ConsoleWindow()
-			self._console_windows[module_id] = dialog
-		else:
-			dialog = self._console_windows[module_id]
-		return dialog
-
 	def show_console(self):
+		self._console.show()
+
 		activity = self.get_current_activity()
 		if activity:
 			module = self._registry.get_activity(activity.get_default_type())
-			console = self.get_console(module.get_id())
-			activity.show_dialog(console)
-		else:
-			console = self.get_console('Shell')
-			console.show()
+			self._console.set_page(module.get_id())
 
 	def join_activity(self, service):
 		info = self._registry.get_activity(service.get_type())
@@ -164,8 +152,7 @@ class Shell(gobject.GObject):
 			return None
 	
 	def log(self, module_id, message):
-		console = self.get_console(module_id)
-		console.log(message)
+		self._console.log(module_id, message)
 
 	def get_registry(self):
 		return self._registry
