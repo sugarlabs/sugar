@@ -1,4 +1,4 @@
-SUBDIRS = PresenceService data
+SUBDIRS = data session PresenceService
 
 bin_SCRIPTS = 				\
 	sugar				\
@@ -14,15 +14,12 @@ sugar_PYTHON =				\
 	ActivitiesModel.py		\
 	ActivityHost.py			\
 	ActivityRegistry.py		\
-	ChatController.py	\
+	ChatController.py		\
 	ConsoleWindow.py		\
-	Emulator.py			\
 	Owner.py			\
 	HomeWindow.py			\
 	PeopleWindow.py			\
 	PresenceView.py			\
-	Process.py			\
-	Session.py			\
 	Shell.py
 
 EXTRA_DIST = sugar

@@ -3,7 +3,7 @@ import os
 import socket
 import sys
 
-from Process import Process
+from session.Process import Process
 
 def get_display_number():
 	"""Find a free display number trying to connect to 6000+ ports"""

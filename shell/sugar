@@ -76,7 +76,7 @@ registry = ActivityRegistry()
 registry.scan_directory(activities_dest)
 #registry.scan_directory(os.path.join(env.get_user_dir(), 'activities'))
 
-from Emulator import Emulator
+from session.Emulator import Emulator
 
 # FIXE Don't run the emulator on the OLPC
 emulator = Emulator()
@@ -84,7 +84,7 @@ emulator.start()
 	
 print 'Redirecting output to the console, press F3 to open it.'
 	
-from Session import Session
+from session.Session import Session
 
 session = Session(registry)
 session.start()

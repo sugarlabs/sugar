@@ -7,7 +7,7 @@ import dbus.dbus_bindings
 
 from sugar.presence import PresenceService
 from Shell import Shell
-from Process import Process
+from session.Process import Process
 import sugar.env
 
 class DbusProcess(Process):
