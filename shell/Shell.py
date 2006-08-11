@@ -40,8 +40,8 @@ class ShellDbusService(dbus.service.Object):
 		gobject.idle_add(self.__show_console_idle)
 
 	@dbus.service.method('com.redhat.Sugar.Shell')
-	def log(self, module_id, message):
-		self._shell.log(module_id, message)
+	def log(self, level, module_id, message):
+		self._shell.log(level, module_id, message)
 
 class Shell(gobject.GObject):
 	__gsignals__ = {
@@ -151,8 +151,8 @@ class Shell(gobject.GObject):
 			logging.error('No such activity in the directory')
 			return None
 	
-	def log(self, module_id, message):
-		self._console.log(module_id, message)
+	def log(self, level, module_id, message):
+		self._console.log(level, module_id, message)
 
 	def get_registry(self):
 		return self._registry

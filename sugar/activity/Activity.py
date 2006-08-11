@@ -1,4 +1,5 @@
 import os
+import logging
 
 import dbus
 import dbus.service
@@ -134,6 +135,8 @@ class Activity(gtk.Window):
 
 	def share(self):
 		"""Share the activity on the network."""
+		logging.debug('Share activity %s on the network.' % self.get_id())
+
 		properties = { 'title' : self.get_title() }
 		self._service = self._pservice.share_activity(self,
 										self._default_type, properties)

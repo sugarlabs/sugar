@@ -15,24 +15,24 @@ class Handler(logging.Handler):
 
 		self._console_id = console_id
 		self._shell = shell
-		self._messages = []
+		self._records = []
 
 	def _log(self):
-		for message in self._messages:
-			self._shell.log(self._console_id, message)
-		self._messages = []
+		for record in self._records:
+			self._shell.log(record.levelno, self._console_id, record.msg)
+		self._records = []
 		return False
 
 	def emit(self, record):
-		self._messages.append(record.msg)
-		if len(self._messages) == 1:
+		self._records.append(record)
+		if len(self._records) == 1:
 			gobject.idle_add(self._log)
 
 def __exception_handler(typ, exc, tb):
 	trace = StringIO()
 	traceback.print_exception(typ, exc, tb, None, trace)
 
-	__sugar_shell.log(__console_id, trace.getvalue())
+	__sugar_shell.log(logging.ERROR, __console_id, trace.getvalue())
 
 def start(console_id, shell = None):
 	root_logger = logging.getLogger('')
@@ -50,4 +50,4 @@ def start(console_id, shell = None):
 
 	__sugar_shell = shell
 	__console_id = console_id
-	sys.excepthook = __exception_handler
+	#sys.excepthook = __exception_handler
