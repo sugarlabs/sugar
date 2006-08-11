@@ -12,6 +12,9 @@ gtk.gdk.threads_init()
 dbus.glib.threads_init()
 
 from sugar.activity import ActivityFactory
+import sugar.logger
+
+sugar.logger.start(sys.argv[1])
 
 logging.info('Starting activity factory %s' % sys.argv[1])
 

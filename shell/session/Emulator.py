@@ -1,4 +1,3 @@
-import logging
 import os
 import socket
 import sys
@@ -9,8 +8,8 @@ def get_display_number():
 	"""Find a free display number trying to connect to 6000+ ports"""
 	retries = 20
 	display_number = 1
-	display_is_free = False
-	
+	display_is_free = False	
+
 	while not display_is_free and retries > 0:
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		try:
@@ -57,10 +56,6 @@ class XnestProcess(Process):
 
 class Emulator:
 	"""The OLPC emulator"""
-
-	def __init__(self):
-		pass
-	
 	def start(self):
 		try:
 			process = XephyrProcess()
@@ -70,6 +65,6 @@ class Emulator:
 				process = XnestProcess()
 				process.start()
 			except:
-				logging.error('Cannot run the emulator. You need to install \
-							   Xephyr or Xnest.')				
+				print('Cannot run the emulator. You need to install\
+					   Xephyr or Xnest.')				
 				sys.exit(0)

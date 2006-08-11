@@ -18,6 +18,7 @@ from ActivityHost import ActivityHost
 from ChatController import ChatController
 from sugar.activity import ActivityFactory
 from sugar.activity import Activity
+import sugar.logger
 
 class ShellDbusService(dbus.service.Object):
 	def __init__(self, shell, bus_name):
@@ -59,12 +60,11 @@ class Shell(gobject.GObject):
 		self._console_windows = {}
 
 	def start(self):
-		#log_writer = LogWriter("Shell", False)
-		#log_writer.start()
-
 		session_bus = dbus.SessionBus()
 		bus_name = dbus.service.BusName('com.redhat.Sugar.Shell', bus=session_bus)
 		ShellDbusService(self, bus_name)
+
+		sugar.logger.start('Shell', self)
 
 		self._owner = ShellOwner()
 		self._owner.announce()
@@ -132,6 +132,9 @@ class Shell(gobject.GObject):
 			module = self._registry.get_activity(activity.get_default_type())
 			console = self.get_console(module.get_id())
 			activity.show_dialog(console)
+		else:
+			console = self.get_console('Shell')
+			console.show()
 
 	def join_activity(self, service):
 		info = self._registry.get_activity(service.get_type())
