@@ -72,6 +72,8 @@ class Activity(gtk.Window):
 	def __init__(self):
 		gtk.Window.__init__(self)
 
+		self.connect('destroy', self.__destroy_cb)
+
 		self._shared = False
 		self._activity_id = None
 		self._default_type = None
@@ -88,11 +90,6 @@ class Activity(gtk.Window):
 		bus_name = dbus.service.BusName(get_service_name(xid), bus=bus)
 		self._bus = ActivityDbusService(bus_name, get_object_path(xid))
 		self._bus.start(self._pservice, self)
-
-	def __del__(self):
-		if self._bus:
-			del self._bus
-			self._bus = None
 
 	def set_default_type(self, default_type):
 		"""Set the activity default type.
@@ -145,3 +142,10 @@ class Activity(gtk.Window):
 	def execute(self, command, args):
 		"""Execute the given command with args"""
 		pass
+
+	def __destroy_cb(self, window):
+		if self._bus:
+			del self._bus
+			self._bus = None
+		if self._service:
+			self._pservice.unregister_service(self._service)

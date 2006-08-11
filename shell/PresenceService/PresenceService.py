@@ -212,7 +212,7 @@ class PresenceServiceDBusHelper(dbus.service.Object):
 						in_signature="o", out_signature="")
 	def unregisterService(self, service_op):
 		found_serv = None
-		serv = self._parent.get_services()
+		services = self._parent.get_services()
 		for serv in services:
 			if serv.object_path() == service_op:
 				found_serv = serv
@@ -688,12 +688,13 @@ class PresenceService(object):
 		if stype in self._registered_service_types:
 			self._registered_service_types.remove(stype)
 
-
-
 def main():
 	loop = gobject.MainLoop()
 	ps = PresenceService()
-	loop.run()
+	try:
+		loop.run()
+	except KeyboardInterrupt:
+		print 'Ctrl+C pressed, exiting...'
 
 if __name__ == "__main__":
 	main()
