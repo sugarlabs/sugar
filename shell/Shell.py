@@ -90,7 +90,7 @@ class Shell(gobject.GObject):
 			del self._hosts[xid]
 
 	def get_activity(self, activity_id):
-		for host in self._hosts:
+		for host in self._hosts.values():
 			if host.get_id() == activity_id:
 				return host
 		return None
@@ -128,15 +128,20 @@ class Shell(gobject.GObject):
 		info = self._registry.get_activity(service.get_type())
 		
 		activity_id = service.get_activity_id()
-		pservice = PresenceService()
-		activity_ps = pservice.get_activity(activity_id)
 
-		if activity_ps:
-			activity = ActivityFactory.create(info.get_id())
-			activity.set_default_type(service.get_type())
-			activity.join(activity_ps.object_path())
+		activity = self.get_activity(activity_id)
+		if activity:
+			activity.present()
 		else:
-			logging.error('Cannot start activity.')
+			pservice = PresenceService()
+			activity_ps = pservice.get_activity(activity_id)
+
+			if activity_ps:
+				activity = ActivityFactory.create(info.get_id())
+				activity.set_default_type(service.get_type())
+				activity.join(activity_ps.object_path())
+			else:
+				logging.error('Cannot start activity.')
 
 	def start_activity(self, activity_name):
 		activity = ActivityFactory.create(activity_name)

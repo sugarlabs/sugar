@@ -7,17 +7,17 @@ from PeopleWindow import PeopleWindow
 class ActivityHost:
 	def __init__(self, shell, window):
 		self._shell = shell
-
-		xid = window.get_xid()
+		self._window = window
+		self._xid = window.get_xid()
 
 		bus = dbus.SessionBus()
-		proxy_obj = bus.get_object(Activity.get_service_name(xid),
-								   Activity.get_object_path(xid))
+		proxy_obj = bus.get_object(Activity.get_service_name(self._xid),
+								   Activity.get_object_path(self._xid))
 
 		self._activity = dbus.Interface(proxy_obj, Activity.ACTIVITY_INTERFACE)
 		self._id = self._activity.get_id()
 		self._default_type = self._activity.get_default_type()
-		self._window = gtk.gdk.window_foreign_new(window.get_xid())
+		self._gdk_window = gtk.gdk.window_foreign_new(self._xid)
 		self._people_window = PeopleWindow(shell, self)
 
 	def get_id(self):
@@ -36,6 +36,9 @@ class ActivityHost:
 	def show_people(self):
 		self.show_dialog(self._people_window)
 
+	def present(self):
+		self._window.activate(gtk.get_current_event_time())
+
 	def show_dialog(self, dialog):
 		dialog.show()
-		dialog.window.set_transient_for(self._window)
+		dialog.window.set_transient_for(self._gdk_window)
