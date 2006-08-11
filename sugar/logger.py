@@ -50,4 +50,4 @@ def start(console_id, shell = None):
 
 	__sugar_shell = shell
 	__console_id = console_id
-	#sys.excepthook = __exception_handler
+	sys.excepthook = __exception_handler
