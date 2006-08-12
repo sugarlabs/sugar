@@ -71,7 +71,7 @@ class Session:
 		process.start()
 
 		console = ConsoleWindow()
-		sugar.logger.start('Shell', console)
+		#sugar.logger.start('Shell', console)
 
 		process = MatchboxProcess()
 		process.start()

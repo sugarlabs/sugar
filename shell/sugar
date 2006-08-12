@@ -24,22 +24,6 @@ def add_to_python_path(path):
 	else:
 		os.environ['PYTHONPATH'] = path
 
-i = 0
-for arg in sys.argv:
-	if arg == '--test-user':
-		user = sys.argv[i + 1]
-		user_dir = os.path.expanduser('~/.sugar-' + user)
-		os.environ['SUGAR_NICK_NAME'] = user
-		os.environ['SUGAR_USER_DIR'] = user_dir
-	i += 1
-
-if not os.environ.has_key("SUGAR_NICK_NAME"):
-	nick = pwd.getpwuid(os.getuid())[0]
-	if not nick or not len(nick):
-		nick = "Guest %d" % random.randint(1, 10000)
-	os.environ['SUGAR_NICK_NAME'] = nick
-	os.environ['SUGAR_USER_DIR'] = os.path.expanduser('~/.sugar')
-
 curdir = os.path.abspath(os.path.dirname(__file__))
 basedir = os.path.dirname(curdir)
 

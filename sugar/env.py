@@ -1,5 +1,6 @@
 import os
 import sys
+import pwd
 
 try:
 	from sugar.__uninstalled__ import *
@@ -14,22 +15,17 @@ def add_to_python_path(path):
 		os.environ['PYTHONPATH'] = path
 
 def get_user_dir():
-	if os.environ.has_key('SUGAR_USER_DIR'):
-		return os.environ['SUGAR_USER_DIR']
+	if os.environ.has_key('SUGAR_NICK_NAME'):
+		nick = get_nick_name()
+		return os.path.expanduser('~/.sugar-%s/' % nick)
 	else:
-		return os.path.expanduser('~/.sugar/')
-
-def get_logging_level():
-	if os.environ.has_key('SUGAR_LOGGING_LEVEL'):
-		return os.environ['SUGAR_LOGGING_LEVEL']
-	else:
-		return 'warning'
+		return os.path.expanduser('~/.sugar')
 
 def get_nick_name():
 	if os.environ.has_key('SUGAR_NICK_NAME'):
 		return os.environ['SUGAR_NICK_NAME']
 	else:
-		return None
+		return pwd.getpwuid(os.getuid())[0]
 
 def get_data_dir():
 	return sugar_data_dir
