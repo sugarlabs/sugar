@@ -34,3 +34,4 @@ po/sugar.pot
 po/*.gmo
 sugar/__installed__.py
 tools/sugar-setup-activity
+shell/PresenceService/org.laptop.Presence.service

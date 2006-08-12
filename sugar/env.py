@@ -34,6 +34,10 @@ def setup():
 		source = os.path.join(sugar_source_dir, 'activities')
 		runner = os.path.join(sugar_source_dir, 'shell/sugar-activity-factory')
 		sugar.setup.setup_activities(source, get_activities_dir(), runner)
+		
+		bin = os.path.join(sugar_source_dir, 'shell/sugar-presence-service')
+		sugar.setup.write_service('org.laptop.Presence', bin,
+								  get_services_dir())
 
 def get_user_dir():
 	if os.environ.has_key('SUGAR_NICK_NAME'):
@@ -58,4 +62,7 @@ def get_data_file(filename):
 	return os.path.join(get_data_dir(), filename)
 		
 def get_activities_dir():
+	return sugar_activities_dir
+
+def get_services_dir():
 	return sugar_activities_dir

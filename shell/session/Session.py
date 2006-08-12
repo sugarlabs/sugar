@@ -44,22 +44,6 @@ class MatchboxProcess(Process):
 	def get_name(self):
 		return 'Matchbox'
 
-class PresenceServiceProcess(Process):
-	def __init__(self):
-		Process.__init__(self, "sugar-presence-service")
-
-	def get_name(self):
-		return "PresenceService"
-
-	def start(self):
-		Process.start(self)
-		bus = dbus.Bus()
-		ret = False
-		# Wait for the presence service to start up
-		while not ret:
-			ret = dbus.dbus_bindings.bus_name_has_owner(bus._connection, PresenceService.DBUS_SERVICE)
-			time.sleep(0.2)
-
 class Session:
 	"""Takes care of running the shell and all the sugar processes"""
 	def __init__(self, registry):
@@ -74,9 +58,6 @@ class Session:
 		#sugar.logger.start('Shell', console)
 
 		process = MatchboxProcess()
-		process.start()
-
-		process = PresenceServiceProcess()
 		process.start()
 
 		shell = Shell(self._registry)
