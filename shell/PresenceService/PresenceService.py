@@ -231,6 +231,9 @@ class PresenceServiceDBusHelper(dbus.service.Object):
 	def unregisterServiceType(self, stype):
 		self._parent.unregister_service_type(stype)
 
+	@dbus.service.method(_PRESENCE_DBUS_INTERFACE)
+	def start(self):
+		self._parent.start()
 
 class PresenceService(object):
 	def __init__(self):
@@ -262,6 +265,7 @@ class PresenceService(object):
 		self._bus_name = dbus.service.BusName(_PRESENCE_SERVICE, bus=self._session_bus)		
 		self._dbus_helper = PresenceServiceDBusHelper(self, self._bus_name)
 
+	def start(self):
 		# Connect to Avahi for mDNS stuff
 		self._system_bus = dbus.SystemBus()
 		self._mdns_service = dbus.Interface(self._system_bus.get_object(avahi.DBUS_NAME,
