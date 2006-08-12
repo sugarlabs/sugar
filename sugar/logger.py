@@ -16,11 +16,27 @@ class Handler(logging.Handler):
 		self._console_id = console_id
 		self._console = console
 		self._records = []
+		self._console_started = False
+
+		bus = dbus.SessionBus()
+		bus.add_signal_receiver(self.__name_owner_changed,
+								dbus_interface = "org.freedesktop.DBus",
+								signal_name = "NameOwnerChanged")
+
+	def __name_owner_changed(self, service_name, old_name, new_name):
+		if new_name != None:
+			self._console_started = True
+		else:
+			self._console_started = False
 
 	def _log(self):
+		if not self._console_started:
+			return True
+
 		for record in self._records:
 			self._console.log(record.levelno, self._console_id, record.msg)
 		self._records = []
+
 		return False
 
 	def emit(self, record):

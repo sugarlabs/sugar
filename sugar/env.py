@@ -12,7 +12,8 @@ import sugar.setup
 def add_to_python_path(path):
 	sys.path.insert(0, path)
 	if os.environ.has_key('PYTHONPATH'):
-		os.environ['PYTHONPATH'] += ':' + path
+		old_path = os.environ['PYTHONPATH']
+		os.environ['PYTHONPATH'] = path + ':' + old_path 
 	else:
 		os.environ['PYTHONPATH'] = path
 
