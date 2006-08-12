@@ -11,6 +11,18 @@ class ServiceParser(ConfigParser):
 	def optionxform(self, option):
 		return option
 
+def write_service(name, bin, path):
+	service_cp = ServiceParser()
+	section = 'D-BUS Service'	
+	service_cp.add_section(section)
+	service_cp.set(section, 'Name', name)
+	service_cp.set(section, 'Exec', bin)
+
+	dest_filename = os.path.join(path, name + '.service')
+	fileobject = open(dest_filename, 'w')
+	service_cp.write(fileobject)
+	fileobject.close()
+
 def setup_activity(source, dest_path, bin):
 	"""Copy an activity to the destination path and setup it"""
 	filename = os.path.basename(source)
@@ -36,16 +48,8 @@ def setup_activity(source, dest_path, bin):
 	else:
 		logging.error('%s must specifiy exec or python_module' % (source))
 		return False
-	
-	service_cp = ServiceParser()
-	section = 'D-BUS Service'	
-	service_cp.add_section(section)
-	service_cp.set(section, 'Name', activity_id + '.Factory')
-	service_cp.set(section, 'Exec', activity_exec)
 
-	fileobject = open(os.path.join(dest_path, activity_id + '.service'), 'w')
-	service_cp.write(fileobject)
-	fileobject.close()
+	write_service(activity_id + '.Factory', activity_exec, dest_path)
 
 def setup_activities(source_path, dest_path, bin):
 	"""Scan a directory for activities and install them."""
