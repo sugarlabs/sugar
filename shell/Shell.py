@@ -7,11 +7,9 @@ import gtk
 import gobject
 import wnck
 
-from sugar.LogWriter import LogWriter
 from ActivityRegistry import ActivityRegistry
 from HomeWindow import HomeWindow
 from sugar import env
-from ConsoleWindow import ConsoleWindow
 from Owner import ShellOwner
 from sugar.presence.PresenceService import PresenceService
 from ActivityHost import ActivityHost
@@ -39,10 +37,6 @@ class ShellDbusService(dbus.service.Object):
 	def show_console(self):
 		gobject.idle_add(self.__show_console_idle)
 
-	@dbus.service.method('com.redhat.Sugar.Shell')
-	def log(self, level, module_id, message):
-		self._shell.log(level, module_id, message)
-
 class Shell(gobject.GObject):
 	__gsignals__ = {
 		'activity-closed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([str]))
@@ -60,10 +54,6 @@ class Shell(gobject.GObject):
 		bus_name = dbus.service.BusName('com.redhat.Sugar.Shell', bus=session_bus)
 		ShellDbusService(self, bus_name)
 
-		self._console = ConsoleWindow()
-
-		sugar.logger.start('Shell', self)
-
 		self._owner = ShellOwner()
 		self._owner.announce()
 
@@ -75,6 +65,9 @@ class Shell(gobject.GObject):
 
 		self._screen.connect('window-opened', self.__window_opened_cb)
 		self._screen.connect('window-closed', self.__window_closed_cb)
+
+	def set_console(self, console):
+		self._console = console
 
 	def __window_opened_cb(self, screen, window):
 		if window.get_window_type() == wnck.WINDOW_NORMAL:
@@ -155,9 +148,6 @@ class Shell(gobject.GObject):
 		else:
 			logging.error('No such activity in the directory')
 			return None
-	
-	def log(self, level, module_id, message):
-		self._console.log(level, module_id, message)
 
 	def get_registry(self):
 		return self._registry

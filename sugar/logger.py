@@ -6,20 +6,20 @@ from cStringIO import StringIO
 import dbus
 import gobject
 
-__sugar_shell = None
+__console = None
 __console_id = None
 
 class Handler(logging.Handler):
-	def __init__(self, shell, console_id):
+	def __init__(self, console, console_id):
 		logging.Handler.__init__(self)
 
 		self._console_id = console_id
-		self._shell = shell
+		self._console = console
 		self._records = []
 
 	def _log(self):
 		for record in self._records:
-			self._shell.log(record.levelno, self._console_id, record.msg)
+			self._console.log(record.levelno, self._console_id, record.msg)
 		self._records = []
 		return False
 
@@ -32,22 +32,23 @@ def __exception_handler(typ, exc, tb):
 	trace = StringIO()
 	traceback.print_exception(typ, exc, tb, None, trace)
 
-	__sugar_shell.log(logging.ERROR, __console_id, trace.getvalue())
+	__console.log(logging.ERROR, __console_id, trace.getvalue())
 
-def start(console_id, shell = None):
+def start(console_id, console = None):
 	root_logger = logging.getLogger('')
 	root_logger.setLevel(logging.DEBUG)
 	
-	if shell == None:
+	if console == None:
 		bus = dbus.SessionBus()
-		proxy_obj = bus.get_object('com.redhat.Sugar.Shell', '/com/redhat/Sugar/Shell')
-		shell = dbus.Interface(proxy_obj, 'com.redhat.Sugar.Shell')
+		proxy_obj = bus.get_object('org.laptop.Sugar.Console',
+								   '/org/laptop/Sugar/Console')
+		console = dbus.Interface(proxy_obj, 'org.laptop.Sugar.Console')
 
-	root_logger.addHandler(Handler(shell, console_id))
+	root_logger.addHandler(Handler(console, console_id))
 
-	global __sugar_shell
+	global __console
 	global __console_id
 
-	__sugar_shell = shell
+	__console = console
 	__console_id = console_id
 	sys.excepthook = __exception_handler

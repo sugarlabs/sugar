@@ -1,6 +1,8 @@
 import logging
 
 import gtk
+import dbus
+import dbus.service
 
 class Console(gtk.ScrolledWindow):
 	def __init__(self):
@@ -36,7 +38,16 @@ class Console(gtk.ScrolledWindow):
 			buf.insert_with_tags(it, msg, self._debug_tag)
 		else:
 			buf.insert(it, msg)
-		
+
+class ConsoleDbusService(dbus.service.Object):
+	def __init__(self, console, bus_name):
+		dbus.service.Object.__init__(self, bus_name, '/org/laptop/Sugar/Console')
+		self._console = console
+
+	@dbus.service.method('org.laptop.Sugar.Console')
+	def log(self, level, module_id, message):
+		self._console.log(level, module_id, message)
+
 class ConsoleWindow(gtk.Window):
 	def __init__(self):
 		gtk.Window.__init__(self)
@@ -68,6 +79,10 @@ class ConsoleWindow(gtk.Window):
 		vbox.show()
 
 		self._consoles = {}
+
+		session_bus = dbus.SessionBus()
+		bus_name = dbus.service.BusName('org.laptop.Sugar.Console', bus=session_bus)
+		ConsoleDbusService(self, bus_name)
 
 	def _add_console(self, page_id):
 		console = Console()

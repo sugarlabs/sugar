@@ -9,6 +9,7 @@ import dbus.dbus_bindings
 
 from sugar.presence import PresenceService
 from Shell import Shell
+from ConsoleWindow import ConsoleWindow
 from session.Process import Process
 import sugar.env
 
@@ -69,6 +70,9 @@ class Session:
 		process = DbusProcess()
 		process.start()
 
+		console = ConsoleWindow()
+		sugar.logger.start('Shell', console)
+
 		process = MatchboxProcess()
 		process.start()
 
@@ -76,6 +80,7 @@ class Session:
 		process.start()
 
 		shell = Shell(self._registry)
+		shell.set_console(console)
 		shell.start()
 
 		try:
