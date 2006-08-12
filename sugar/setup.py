@@ -48,7 +48,13 @@ def setup_activity(source, dest_path, bin):
 	fileobject.close()
 
 def setup_activities(source_path, dest_path, bin):
-	"""Scan a directory for activities and install them.""" 
+	"""Scan a directory for activities and install them."""
+	if not os.path.isdir(dest_path):
+		os.mkdir(dest_path)
+	else:
+		# FIXME delete the whole directory
+		pass
+
 	if os.path.isdir(source_path):
 		for filename in os.listdir(source_path):
 			activity_dir = os.path.join(source_path, filename)

@@ -2,62 +2,27 @@
 
 import sys
 import os
-import pwd
-import random
-import tempfile
 
 import pygtk
 pygtk.require('2.0')
 
-def add_to_bin_path(path):
-	if os.environ.has_key('PATH'):
-		old_path = os.environ['PATH']
-		os.environ['PATH'] = path + ':' + old_path
-	else:
-		os.environ['PATH'] = path
-
-def add_to_python_path(path):
-	sys.path.insert(0, path)
-	if os.environ.has_key('PYTHONPATH'):
-		old_path = os.environ['PYTHONPATH']
-		os.environ['PYTHONPATH'] = path + ':' + old_path
-	else:
-		os.environ['PYTHONPATH'] = path
-
 curdir = os.path.abspath(os.path.dirname(__file__))
-basedir = os.path.dirname(curdir)
+sourcedir = os.path.dirname(curdir)
 
-if os.path.isfile(os.path.join(basedir, 'sugar/__uninstalled__.py')):
-	print 'Running sugar from ' + basedir + ' ...'
-	add_to_bin_path(os.path.join(basedir, 'shell'))
-	add_to_python_path(basedir)
-	add_to_python_path(os.path.join(basedir, 'shell'))
-	add_to_python_path(os.path.join(basedir, 'activities'))
-
-	from sugar import env
-	from sugar import setup
-
-	activities_dest = os.path.join(tempfile.gettempdir(), 'sugar')
-
-	if not os.path.isdir(activities_dest):
-		os.mkdir(activities_dest)
-	else:
-		# FIXME delete the whole directory
-		pass
-
-	setup.setup_activities(env.get_activities_dir(), activities_dest,
-						   os.path.join(basedir, 'shell/sugar-activity-factory'))
+if os.path.isfile(os.path.join(sourcedir, 'sugar/__uninstalled__.py')):
+	print 'Running sugar from ' + sourcedir + ' ...'
+	sys.path.insert(0, sourcedir)
 else:
 	print 'Running the installed sugar...'
-	from sugar import env
-	add_to_python_path(os.path.join(env.get_data_dir(), 'shell'))
-	add_to_python_path(os.path.join(env.get_data_dir(), 'activities'))
-	activities_dest = env.get_activities_dir()
+
+from sugar import env
+
+env.setup()
 
 from ActivityRegistry import ActivityRegistry
 
 registry = ActivityRegistry()
-registry.scan_directory(activities_dest)
+registry.scan_directory(env.get_activities_dir())
 
 from session.Emulator import Emulator
 

@@ -7,7 +7,6 @@ sugar_PYTHON =				\
 	bots.py				\
 	env.py				\
 	setup.py			\
-	util.py				\
-	LogWriter.py
+	util.py
 
 EXTRA_DIST = __uninstalled__.py
