@@ -6,6 +6,7 @@ sugar_PYTHON =				\
 	__installed__.py		\
 	bots.py				\
 	env.py				\
+	logger.py			\
 	setup.py			\
 	util.py
 

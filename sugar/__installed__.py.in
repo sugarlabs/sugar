@@ -4,5 +4,5 @@ sugar_activities_dir = '@prefix@/share/sugar/activities'
 sugar_dbus_config = '@prefix@/share/sugar/dbus-installed.conf'
 
 sugar_python_path = ['@prefix@/share/sugar/shell',
-					 '@prefix@/share/sugar/activities]
+					 '@prefix@/share/sugar/activities']
 sugar_bin_path = []
