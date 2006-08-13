@@ -11,6 +11,7 @@
   <listen>unix:tmpdir=/tmp</listen>
 
   <servicedir>@prefix@/share/sugar/activities</servicedir>
+  <servicedir>@prefix@/share/sugar/services</servicedir>
 
   <policy context="default">
     <!-- Allow everything to be sent -->
