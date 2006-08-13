@@ -67,6 +67,8 @@ class ConsoleWindow(gtk.Window):
 		toolbar.insert(self._debug_toggle, -1)
 		self._debug_toggle.show()
 
+		self._ignore_toggle = False
+
 		vbox.pack_start(toolbar, False)
 		toolbar.show()
 
@@ -101,12 +103,16 @@ class ConsoleWindow(gtk.Window):
 		return console
 
 	def __debug_toggled_cb(self, button):
-		console = self._nb.get_nth_page(self._nb.get_current_page())
-		console.set_show_debug(button.get_active())
+		if not self._ignore_toggle:
+			console = self._nb.get_nth_page(self._nb.get_current_page())
+			console.set_show_debug(button.get_active())
 
 	def __page_changed_cb(self, notebook, page, page_num):
 		console = self._nb.get_nth_page(page_num)
+
+		self._ignore_toggle = True
 		self._debug_toggle.set_active(console.get_show_debug())
+		self._ignore_toggle = False
 
 	def set_page(self, page_id):
 		page = self._nb.page_num(self._consoles[page_id])

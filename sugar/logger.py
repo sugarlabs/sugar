@@ -4,6 +4,7 @@ import traceback
 from cStringIO import StringIO
 
 import dbus
+import dbus.dbus_bindings
 import gobject
 
 __console = None
@@ -16,33 +17,35 @@ class Handler(logging.Handler):
 		self._console_id = console_id
 		self._console = console
 		self._records = []
-		self._console_started = False
+		self._idle_id = 0
 
 		bus = dbus.SessionBus()
+		self._console_started = dbus.dbus_bindings.bus_name_has_owner(
+								bus._connection, 'org.laptop.Sugar.Console')
 		bus.add_signal_receiver(self.__name_owner_changed,
 								dbus_interface = "org.freedesktop.DBus",
 								signal_name = "NameOwnerChanged")
 
 	def __name_owner_changed(self, service_name, old_name, new_name):
-		if new_name != None:
-			self._console_started = True
-		else:
-			self._console_started = False
+		if service_name == 'org.laptop.Sugar.Console':
+			if new_name != None:
+				self._console_started = True
+				self._idle_id = gobject.idle_add(self._log)
+			else:
+				self._console_started = False
 
 	def _log(self):
-		if not self._console_started:
-			return True
-
 		for record in self._records:
 			self._console.log(record.levelno, self._console_id, record.msg)
 		self._records = []
+		self._idle_id = 0
 
 		return False
 
 	def emit(self, record):
 		self._records.append(record)
-		if len(self._records) == 1:
-			gobject.idle_add(self._log)
+		if self._console_started and self._idle_id == 0:
+			self._idle_id = gobject.idle_add(self._log)
 
 def __exception_handler(typ, exc, tb):
 	trace = StringIO()

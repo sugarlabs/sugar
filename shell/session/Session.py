@@ -16,7 +16,7 @@ import sugar.env
 class DbusProcess(Process):
 	def __init__(self):
 		config = sugar.env.get_dbus_config()
-		cmd = "dbus-launch --exit-with-session --config-file %s" % config
+		cmd = "dbus-daemon --print-address --config-file %s" % config
 		Process.__init__(self, cmd)
 
 	def get_name(self):
@@ -25,8 +25,7 @@ class DbusProcess(Process):
 	def start(self):
 		Process.start(self, True)
 		dbus_file = os.fdopen(self._stdout)
-		regexp = re.compile('DBUS_SESSION_BUS_ADDRESS=\'(.*)\'\;')
-		addr = regexp.match(dbus_file.readline()).group(1)
+		addr = dbus_file.readline().strip()
 		dbus_file.close()
 		os.environ["DBUS_SESSION_BUS_ADDRESS"] = addr
 
@@ -54,13 +53,13 @@ class Session:
 		process = DbusProcess()
 		process.start()
 
-		console = ConsoleWindow()
-		sugar.logger.start('Shell', console)
-
 		PresenceService.start()
 
 		process = MatchboxProcess()
 		process.start()
+
+		console = ConsoleWindow()
+		sugar.logger.start('Shell', console)
 
 		shell = Shell(self._registry)
 		shell.set_console(console)

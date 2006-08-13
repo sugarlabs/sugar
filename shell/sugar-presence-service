@@ -4,7 +4,7 @@ import logging
 from PresenceService import PresenceService
 import sugar.logger
 
-#sugar.logger.start('PresenceService')
+sugar.logger.start('PresenceService')
 
 logging.info('Starting presence service')
 
