@@ -44,9 +44,13 @@ class ConsoleDbusService(dbus.service.Object):
 		dbus.service.Object.__init__(self, bus_name, '/org/laptop/Sugar/Console')
 		self._console = console
 
-	@dbus.service.method('org.laptop.Sugar.Console')
-	def log(self, level, module_id, message):
-		self._console.log(level, module_id, message)
+	@dbus.service.method('org.laptop.Sugar.Console',
+						 in_signature="saias", out_signature="")
+	def log(self, module_id, levels, messages):
+		i = 0
+		while i < len(levels):
+			self._console.log(levels[i], module_id, messages[i])
+			i += 1
 
 class ConsoleWindow(gtk.Window):
 	def __init__(self):

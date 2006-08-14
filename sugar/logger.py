@@ -7,67 +7,89 @@ import dbus
 import dbus.dbus_bindings
 import gobject
 
-__console = None
-__console_id = None
+__queue = None
 
-class Handler(logging.Handler):
+CONSOLE_BUS_NAME = 'org.laptop.Sugar.Console'
+CONSOLE_OBJECT_PATH = '/org/laptop/Sugar/Console'
+CONSOLE_IFACE = 'org.laptop.Sugar.Console'
+
+class MessageQueue:
 	def __init__(self, console, console_id):
-		logging.Handler.__init__(self)
-
-		self._console_id = console_id
-		self._console = console
-		self._records = []
 		self._idle_id = 0
+		self._console = console
+		self._console_id = console_id
+		self._levels = []
+		self._messages = []
 
+		if self._console == None:
+			bus = dbus.SessionBus()
+			con = bus._connection
+			if dbus.dbus_bindings.bus_name_has_owner(con, CONSOLE_BUS_NAME):
+				self.setup_console()
+			bus.add_signal_receiver(self.__name_owner_changed,
+									dbus_interface = "org.freedesktop.DBus",
+									signal_name = "NameOwnerChanged")
+
+	def setup_console(self):
 		bus = dbus.SessionBus()
-		self._console_started = dbus.dbus_bindings.bus_name_has_owner(
-								bus._connection, 'org.laptop.Sugar.Console')
-		bus.add_signal_receiver(self.__name_owner_changed,
-								dbus_interface = "org.freedesktop.DBus",
-								signal_name = "NameOwnerChanged")
+		proxy_obj = bus.get_object(CONSOLE_BUS_NAME, CONSOLE_OBJECT_PATH)
+		self._console = dbus.Interface(proxy_obj, CONSOLE_IFACE)
+		self._queue_log()
 
 	def __name_owner_changed(self, service_name, old_name, new_name):
-		if service_name == 'org.laptop.Sugar.Console':
+		if service_name == CONSOLE_BUS_NAME:
 			if new_name != None:
-				self._console_started = True
-				self._idle_id = gobject.idle_add(self._log)
+				self.setup_console()
 			else:
-				self._console_started = False
+				self._console = None
+
+	def _queue_log(self):
+		if self._idle_id == 0:
+			self._idle_id = gobject.idle_add(self._log)
 
 	def _log(self):
-		for record in self._records:
-			self._console.log(record.levelno, self._console_id, record.msg)
-		self._records = []
+		if self._console == None or len(self._messages) == 0:
+			return False
+
+		self._console.log(self._console_id, self._levels,
+						  self._messages, timeout = 1000)
+		
+		self._levels = []
+		self._messages = []
 		self._idle_id = 0
 
 		return False
 
+	def append_record(self, record):
+		self.append(record.levelno, record.msg)
+
+	def append(self, level, message):
+		self._levels.append(level)
+		self._messages.append(message)
+		self._queue_log()
+
+class Handler(logging.Handler):
+	def __init__(self, queue):
+		logging.Handler.__init__(self)
+
+		self._queue = queue
+
 	def emit(self, record):
-		self._records.append(record)
-		if self._console_started and self._idle_id == 0:
-			self._idle_id = gobject.idle_add(self._log)
+		self._queue.append_record(record)
 
 def __exception_handler(typ, exc, tb):
 	trace = StringIO()
 	traceback.print_exception(typ, exc, tb, None, trace)
 
-	__console.log(logging.ERROR, __console_id, trace.getvalue())
+	__queue.append(logging.ERROR, trace.getvalue())
 
 def start(console_id, console = None):
+	queue = MessageQueue(console, console_id)
+
 	root_logger = logging.getLogger('')
 	root_logger.setLevel(logging.DEBUG)
-	
-	if console == None:
-		bus = dbus.SessionBus()
-		proxy_obj = bus.get_object('org.laptop.Sugar.Console',
-								   '/org/laptop/Sugar/Console')
-		console = dbus.Interface(proxy_obj, 'org.laptop.Sugar.Console')
+	root_logger.addHandler(Handler(queue))
 
-	root_logger.addHandler(Handler(console, console_id))
-
-	global __console
-	global __console_id
-
-	__console = console
-	__console_id = console_id
+	global __queue
+	__queue = queue
 	sys.excepthook = __exception_handler
