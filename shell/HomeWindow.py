@@ -16,6 +16,8 @@ class HomeWindow(gtk.Window):
 	def __init__(self, shell):
 		gtk.Window.__init__(self)
 
+		self._shell = shell
+
 		self.connect('realize', self.__realize_cb)
 
 		canvas = goocanvas.CanvasView()
