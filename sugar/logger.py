@@ -80,6 +80,7 @@ class Handler(logging.Handler):
 def __exception_handler(typ, exc, tb):
 	trace = StringIO()
 	traceback.print_exception(typ, exc, tb, None, trace)
+	print >> sys.stderr, trace.getvalue()
 
 	__queue.append(logging.ERROR, trace.getvalue())
 
