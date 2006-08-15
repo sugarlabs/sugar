@@ -43,7 +43,7 @@ class XephyrProcess(Process):
 class XnestProcess(Process):
 	def __init__(self):
 		self._display = get_display_number()
-		cmd = 'Xnest :%d -ac -geometry 640x480' % (self._display) 
+		cmd = 'Xnest :%d -ac -geometry 693x520' % (self._display) 
 		Process.__init__(self, cmd)
 		
 	def get_name(self):
