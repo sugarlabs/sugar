@@ -25,10 +25,12 @@ class MessageQueue:
 			bus = dbus.SessionBus()
 			con = bus._connection
 			if dbus.dbus_bindings.bus_name_has_owner(con, CONSOLE_BUS_NAME):
+				print >> sys.stderr, 'Setup now'
 				self.setup_console()
-			bus.add_signal_receiver(self.__name_owner_changed,
-									dbus_interface = "org.freedesktop.DBus",
-									signal_name = "NameOwnerChanged")
+			else:
+				bus.add_signal_receiver(self.__name_owner_changed,
+										dbus_interface = "org.freedesktop.DBus",
+										signal_name = "NameOwnerChanged")
 
 	def setup_console(self):
 		bus = dbus.SessionBus()
@@ -51,8 +53,12 @@ class MessageQueue:
 		if self._console == None or len(self._messages) == 0:
 			return False
 
-		self._console.log(self._console_id, self._levels,
-						  self._messages, timeout = 1000)
+		if isinstance(self._console, dbus.Interface):
+			self._console.log(self._console_id, self._levels,
+							  self._messages, timeout = 1000)
+		else:
+			self._console.log(self._console_id, self._levels,
+							  self._messages)
 		
 		self._levels = []
 		self._messages = []
