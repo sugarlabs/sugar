@@ -1,6 +1,8 @@
 import gtk
 import goocanvas
 
+from sugar.canvas.IconItem import IconItem
+
 class Model(goocanvas.CanvasModelSimple):
 	def __init__(self):
 		goocanvas.CanvasModelSimple.__init__(self)
@@ -9,7 +11,10 @@ class Model(goocanvas.CanvasModelSimple):
 
 		item = goocanvas.Rect(x=0, y=0, width=693, height=520,
 							  fill_color="red")
+		root.add_child(item)
 
+		item = IconItem('buddy')
+		#item.set_color('blue')
 		root.add_child(item)
 
 class HomeWindow(gtk.Window):
