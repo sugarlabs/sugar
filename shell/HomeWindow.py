@@ -9,12 +9,12 @@ class Model(goocanvas.CanvasModelSimple):
 
 		root = self.get_root_item()
 
-		item = goocanvas.Rect(x=0, y=0, width=693, height=520,
+		item = goocanvas.Rect(x=0, y=0, width=1200, height=900,
 							  fill_color="red")
 		root.add_child(item)
 
 		item = IconItem('buddy')
-		#item.set_color('blue')
+		item.set_color('blue')
 		root.add_child(item)
 
 class HomeWindow(gtk.Window):
@@ -27,12 +27,13 @@ class HomeWindow(gtk.Window):
 
 		canvas = goocanvas.CanvasView()
 		canvas_model = Model()
-		canvas.set_bounds(0, 0, 693, 520)
+		canvas.set_bounds(0, 0, 1200, 900)
+		canvas.set_scale(float(800) / float(1200))
+		canvas.set_size_request(800, 600)
 		self.add(canvas)
 		canvas.show()
 
 		canvas.set_model(canvas_model)
-		canvas.set_size_request(693, 520)
 
 	def __realize_cb(self, window):
 		self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
