@@ -3,19 +3,32 @@ import goocanvas
 
 from sugar.canvas.IconItem import IconItem
 
+class Background(goocanvas.Group):
+	def __init__(self):
+		goocanvas.Group.__init__(self)
+
+		item = goocanvas.Rect(width=1200, height=900,
+							  fill_color="#4f4f4f")
+		self.add_child(item)
+
+		item = goocanvas.Rect(x=50, y=50, width=1100, height=800,
+							  line_width=0, fill_color="#d8d8d8",
+							  radius_x=30, radius_y=30)
+		self.add_child(item)
+
+		item = goocanvas.Text(text="My Activities",
+							  x=60, y=10, fill_color="white",
+                              font="Sans 21")
+		self.add_child(item)
+
 class Model(goocanvas.CanvasModelSimple):
 	def __init__(self):
 		goocanvas.CanvasModelSimple.__init__(self)
 
 		root = self.get_root_item()
 
-		item = goocanvas.Rect(x=0, y=0, width=1200, height=900,
-							  fill_color="red")
-		root.add_child(item)
-
-		item = IconItem('buddy')
-		item.set_color('blue')
-		root.add_child(item)
+		background = Background()
+		root.add_child(background)
 
 class HomeWindow(gtk.Window):
 	def __init__(self, shell):
