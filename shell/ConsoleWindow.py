@@ -47,10 +47,7 @@ class ConsoleDbusService(dbus.service.Object):
 	@dbus.service.method('org.laptop.Sugar.Console',
 						 in_signature="saias", out_signature="")
 	def log(self, module_id, levels, messages):
-		i = 0
-		while i < len(levels):
-			self._console.log(levels[i], module_id, messages[i])
-			i += 1
+		self._console.log(module_id, levels, messages)
 
 class ConsoleWindow(gtk.Window):
 	def __init__(self):
@@ -122,6 +119,9 @@ class ConsoleWindow(gtk.Window):
 		page = self._nb.page_num(self._consoles[page_id])
 		self._nb.set_current_page(page)
 
-	def log(self, level, page_id, message):
+	def log(self, page_id, levels, messages):
 		console = self._get_console(page_id)
-		console.log(level, message)
+		i = 0
+		while i < len(levels):
+			console.log(levels[i], messages[i])
+			i += 1

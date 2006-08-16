@@ -265,7 +265,13 @@ class PresenceService(object):
 		self._bus_name = dbus.service.BusName(_PRESENCE_SERVICE, bus=self._session_bus)		
 		self._dbus_helper = PresenceServiceDBusHelper(self, self._bus_name)
 
+		self._started = False
+
 	def start(self):
+		if self._started:
+			return
+		self._started = True
+
 		# Connect to Avahi for mDNS stuff
 		self._system_bus = dbus.SystemBus()
 		self._mdns_service = dbus.Interface(self._system_bus.get_object(avahi.DBUS_NAME,
@@ -661,8 +667,6 @@ class PresenceService(object):
 		if not group:
 			raise ValueError("Service was not a local service provided by this laptop!")
 		group.Free()
-		key = (service.get_full_name(), service.get_type())
-		del self._services[key]
 
 	def register_service_type(self, stype):
 		"""Requests that the Presence service look for and recognize
