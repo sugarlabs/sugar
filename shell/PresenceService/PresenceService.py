@@ -661,8 +661,6 @@ class PresenceService(object):
 		if not group:
 			raise ValueError("Service was not a local service provided by this laptop!")
 		group.Free()
-		key = (service.get_full_name(), service.get_type())
-		del self._services[key]
 
 	def register_service_type(self, stype):
 		"""Requests that the Presence service look for and recognize
