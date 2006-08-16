@@ -8,6 +8,7 @@ class ActivityModule:
 	
 	def __init__(self, name, activity_id, directory):
 		self._name = name
+		self._icon = None
 		self._id = activity_id
 		self._directory = directory
 		self._show_launcher = False	
@@ -19,6 +20,14 @@ class ActivityModule:
 	def get_id(self):
 		"""Get the activity identifier"""
 		return self._id
+
+	def get_icon(self):
+		"""Get the activity icon name"""
+		return self._icon
+
+	def set_icon(self, icon):
+		"""Set the activity icon name"""
+		self._icon = icon
 
 	def get_directory(self):
 		"""Get the path to activity directory."""
@@ -96,6 +105,9 @@ class ActivityRegistry:
 
 		if cp.has_option('Activity', 'show_launcher'):
 			module.set_show_launcher(True)
+
+		if cp.has_option('Activity', 'icon'):
+			module.set_icon(cp.get('Activity', 'icon'))
 
 		module.set_default_type(default_type)
 

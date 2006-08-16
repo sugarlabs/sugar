@@ -3,6 +3,19 @@ import goocanvas
 
 from sugar.canvas.IconItem import IconItem
 
+class ActivityBar(goocanvas.Group):
+	def __init__(self, registry):
+		goocanvas.Group.__init__(self)
+
+		for activity in registry.list_activities():
+			if activity.get_show_launcher():
+				self.add_activity(activity)
+
+	def add_activity(self, activity):
+		item = IconItem(icon_name=activity.get_icon(),
+						color='white', width=42, height=42)
+		self.add_child(item)
+
 class Background(goocanvas.Group):
 	def __init__(self):
 		goocanvas.Group.__init__(self)
@@ -22,13 +35,16 @@ class Background(goocanvas.Group):
 		self.add_child(item)
 
 class Model(goocanvas.CanvasModelSimple):
-	def __init__(self):
+	def __init__(self, shell):
 		goocanvas.CanvasModelSimple.__init__(self)
 
 		root = self.get_root_item()
 
 		background = Background()
 		root.add_child(background)
+
+		activity_bar = ActivityBar(shell.get_registry())
+		root.add_child(activity_bar)
 
 class HomeWindow(gtk.Window):
 	def __init__(self, shell):
@@ -39,7 +55,7 @@ class HomeWindow(gtk.Window):
 		self.connect('realize', self.__realize_cb)
 
 		canvas = goocanvas.CanvasView()
-		canvas_model = Model()
+		canvas_model = Model(shell)
 		canvas.set_bounds(0, 0, 1200, 900)
 		canvas.set_scale(float(800) / float(1200))
 		canvas.set_size_request(800, 600)

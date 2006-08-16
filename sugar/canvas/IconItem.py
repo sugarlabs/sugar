@@ -1,28 +1,44 @@
 import re
 
+import gobject
 import gtk
 import goocanvas
+import rsvg
+
+class IconView(goocanvas.ItemViewSimple):
+	def __init__(self, handle, canvas_view, parent_view):
+		goocanvas.SimpleItemView.__init__(self, canvas_view, parent_view)
+		self._handle = handle
+
+	def do_paint(self, cr, bounds, scale):
+		self._handle.render_cairo(cr)
+		return self.bounds
 
 class IconItem(goocanvas.Image):
-	def __init__(self, icon_name):
-		goocanvas.Image.__init__(self)
+	__gproperties__ = {
+		'icon-name': (str, None, None, None, gobject.PARAM_READWRITE),
+		'color': (str, None, None, None, gobject.PARAM_READWRITE)
+	}
 
-		self._icon_name = icon_name
-		self._color = None
+	def __init__(self, **kwargs):
+		goocanvas.Image.__init__(self, **kwargs)
 
-		# FIXME changing the icon color will cause
-		# the svg to be read in memory and rendered
-		# two times.
-		self._update_pixbuf()
+	def do_set_property(self, pspec, value):
+		if pspec.name == 'icon-name':
+			self._icon_name = value
+		elif pspec.name == 'color':
+			self._color = value
+		else:
+			raise AttributeError, 'unknown property %s' % pspec.name
 
-	def set_parent(self, parent):
-		goocanvas.Image.set_parent(self, parent)
+	def do_get_property(self, pspec):
+		if pspec.name == 'icon-name':
+			return self._icon_name
+		if pspec.name == 'color':
+			return self._color
 
-	def set_color(self, color):
-		self._color = color
-		self._update_pixbuf()
-
-	def _update_pixbuf(self):
+	def create_view(self, canvas_view, parent_view):
+		print 'Create view'
 		theme = gtk.icon_theme_get_default()
 		info = theme.lookup_icon(self._icon_name, 48, 0)
 		icon_file = open(info.get_filename(), 'r')
@@ -33,8 +49,6 @@ class IconItem(goocanvas.Image):
 			style = '.icon-color {fill: %s;}' % self._color
 			data = re.sub('\.icon-color \{.*\}', style, data)
 
-		loader = gtk.gdk.pixbuf_loader_new_with_mime_type('image/svg+xml')
-		loader.write(data)
-		loader.close()
+		handle = rsvg.Handle(data=data)
 
-		self.set_property('pixbuf', loader.get_pixbuf())
+		return IconView(handle, canvas_view, parent_view)
