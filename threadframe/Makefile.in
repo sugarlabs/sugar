@@ -6,6 +6,9 @@ all:
 install:
 	python setup.py install --prefix=${prefix}
 
+uninstall:
+	rm -f ${prefix}/lib/python2.4/site-packages/threadframe.so
+
 clean:
 	python setup.py clean
 	-rm -rf build
