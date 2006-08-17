@@ -4,6 +4,20 @@ import random
 import binascii
 import string
 
+import gobject
+
+class GObjectSingletonMeta(gobject.GObjectMeta):
+    """GObject Singleton Metaclass"""
+
+    def __init__(klass, name, bases, dict):
+        gobject.GObjectMeta.__init__(klass, name, bases, dict)
+        klass.__instance = None
+
+    def __call__(klass, *args, **kwargs):
+        if klass.__instance is None:
+            klass.__instance = gobject.GObjectMeta.__call__(klass, *args, **kwargs)
+        return klass.__instance
+
 def _stringify_sha(sha_hash):
 	"""Convert binary sha1 hash data into printable characters."""
 	print_sha = ""
