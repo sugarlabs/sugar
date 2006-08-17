@@ -87,7 +87,7 @@ class DonutItem(goocanvas.Group):
 	def add_piece(self, perc, icon_name, color):
 		# FIXME can't override set_parent on the
 		# PieceItem and there is no signal. So we
-		# call a construct item on the childs for now.
+		# call a construct method on the childs for now.
 
 		angle_end = self._angle_start + perc * 2 * math.pi / 100
 		piece_item = PieceItem(self._angle_start, angle_end)
