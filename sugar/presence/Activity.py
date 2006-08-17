@@ -28,6 +28,8 @@ class Activity(gobject.GObject):
 		self._activity.connect_to_signal('BuddyLeft', self._buddy_left_cb)
 		self._activity.connect_to_signal('ServiceAppeared', self._service_appeared_cb)
 		self._activity.connect_to_signal('ServiceDisappeared', self._service_disappeared_cb)
+		
+		self._id = None
 
 	def object_path(self):
 		return self._object_path
@@ -61,7 +63,10 @@ class Activity(gobject.GObject):
 		gobject.idle_add(self._emit_service_disappeared_signal, object_path)
 
 	def get_id(self):
-		return self._activity.getId()
+		# Cache activity ID, which should never change anyway
+		if not self._id:
+			self._id = self._activity.getId()
+		return self._id
 
 	def get_icon(self):
 		return self._buddy.getIcon()
