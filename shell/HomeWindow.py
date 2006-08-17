@@ -1,5 +1,6 @@
 import gtk
 import goocanvas
+import wnck
 
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.DonutItem import DonutItem
@@ -7,10 +8,32 @@ from sugar.canvas.DonutItem import DonutItem
 class TasksItem(DonutItem):
 	def __init__(self):
 		DonutItem.__init__(self, 200)
-		self.add_piece(30)
-		self.add_piece(30)
-		self.add_piece(30)
-		self.add_piece(10)
+
+		self._items = {}
+
+		screen = wnck.screen_get_default()
+		for window in screen.get_windows():
+			if not window.is_skip_tasklist():
+				self._add(window)
+		screen.connect('window_opened', self.__window_opened_cb)
+		screen.connect('window_closed', self.__window_closed_cb)
+
+	def __window_opened_cb(self, screen, window):
+		if not window.is_skip_tasklist():
+			self._add(window)
+
+	def __window_closed_cb(self, screen, window):
+		if not window.is_skip_tasklist():
+			self._remove(window)
+	
+	def _remove(self, window):
+		item = self._items[window.get_xid()]
+		self.remove_child(item)
+		del self._items[window.get_xid()]
+
+	def _add(self, window):
+		item = self.add_piece(100 / 8)
+		self._items[window.get_xid()] = item
 
 class ActivityItem(IconItem):
 	def __init__(self, activity):

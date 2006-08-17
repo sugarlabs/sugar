@@ -25,8 +25,6 @@ class PieceItem(goocanvas.Path):
 
 		data += 'z'
 
-		print data
-
 		self.set_property('data', data)
 
 class DonutItem(goocanvas.Group):
@@ -44,6 +42,12 @@ class DonutItem(goocanvas.Group):
 		# PieceItem and there is no signal.
 		self.add_child(piece_item)
 		piece_item.construct()
+
+		return piece_item
+
+	def remove_piece(self, piece_item):
+		index = self.find(piece_item)
+		self.remove_child(index)
 
 	def get_radius(self):
 		return self._radius
