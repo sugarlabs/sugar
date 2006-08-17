@@ -1,4 +1,4 @@
-import sys
+import sys, os
 import logging
 import traceback
 from cStringIO import StringIO
@@ -50,17 +50,27 @@ class MessageQueue:
 			self._idle_id = gobject.idle_add(self._log)
 
 	def _log(self):
-		if self._console == None or len(self._messages) == 0:
-			self._idle_id = 0
-			return False
+		# Use stderr for now until dbus issues get sorted out
+		use_dbus = False
 
-		if isinstance(self._console, dbus.Interface):
-			self._console.log(self._console_id, self._levels,
-							  self._messages, timeout = 1000)
+		if use_dbus:
+			if self._console == None or len(self._messages) == 0:
+				self._idle_id = 0
+				return False
+
+			if isinstance(self._console, dbus.Interface):
+				self._console.log(self._console_id, self._levels,
+								  self._messages, timeout = 1000)
+			else:
+				self._console.log(self._console_id, self._levels,
+								  self._messages)
 		else:
-			self._console.log(self._console_id, self._levels,
-							  self._messages)
-		
+			for x in range(0, len(self._messages)):
+				level = self._levels[x]
+				msg = self._messages[x]
+				prog = os.path.basename(sys.argv[0])
+				sys.stderr.write("%s (%s): Level %s - %s\n" % (prog, os.getpid(), level, msg))
+
 		self._levels = []
 		self._messages = []
 		self._idle_id = 0
