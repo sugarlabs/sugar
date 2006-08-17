@@ -51,6 +51,7 @@ class MessageQueue:
 
 	def _log(self):
 		if self._console == None or len(self._messages) == 0:
+			self._idle_id = 0
 			return False
 
 		if isinstance(self._console, dbus.Interface):
