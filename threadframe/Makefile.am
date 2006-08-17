@@ -1,5 +1,3 @@
-prefix = @prefix@
-
 all:
 	python setup.py build
 
