@@ -35,6 +35,14 @@ class PieceItem(goocanvas.Path):
 		self.set_property('stroke-color', '#d8d8d8')
 		self.set_property('line-width', 4)
 
+	def get_icon(self):
+		return self._icon
+
+	def set_icon(self, icon_name, color):
+		self._icon = PieceIcon(self, icon_name, color)
+		self.get_parent().add_child(self._icon)
+		self._icon.construct()
+
 	def get_angle_start(self):
 		return self._angle_start
 
@@ -87,15 +95,16 @@ class DonutItem(goocanvas.Group):
 
 		self.add_child(piece_item, 1)
 		piece_item.construct()
-
-		icon = PieceIcon(piece_item, icon_name, color)
-		self.add_child(icon)
-		icon.construct()
+		piece_item.set_icon(icon_name, color)
 
 		return piece_item
 
 	def remove_piece(self, piece_item):
-		index = self.find(piece_item)
+		index = self.find_child(piece_item)
+		self.remove_child(index)
+
+		icon = piece_item.get_icon()
+		index = self.find_child(icon)
 		self.remove_child(index)
 
 	def get_radius(self):

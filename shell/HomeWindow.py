@@ -5,6 +5,7 @@ import wnck
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.DonutItem import DonutItem
 from sugar.canvas.DonutItem import PieceItem
+from sugar.canvas.DonutItem import PieceIcon
 
 class TasksItem(DonutItem):
 	def __init__(self, shell):
@@ -23,13 +24,17 @@ class TasksItem(DonutItem):
 	
 	def _remove(self, activity):
 		item = self._items[activity.get_id()]
-		self.remove_child(item)
+		self.remove_piece(item)
 		del self._items[activity.get_id()]
 
 	def _add(self, activity):
 		icon_name = activity.get_icon_name()
 		item = self.add_piece(100 / 8, icon_name, 'blue')
+
+		# FIXME This really sucks. Fix goocanvas event handling.
 		item.set_data('activity', activity)
+		item.get_icon().set_data('activity', activity)
+
 		self._items[activity.get_id()] = item
 
 class ActivityItem(IconItem):
@@ -117,7 +122,8 @@ class HomeWindow(gtk.Window):
 			item_view.connect("button_press_event",
 							  self.__activity_button_press_cb,
 							  item.get_activity_id())
-		elif isinstance(item, PieceItem):
+		elif isinstance(item, PieceItem) or \
+			 isinstance(item, PieceIcon):
 			item_view.connect("button_press_event",
 							  self.__task_button_press_cb)
 
