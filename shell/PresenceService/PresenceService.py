@@ -696,13 +696,19 @@ class PresenceService(object):
 		if stype in self._registered_service_types:
 			self._registered_service_types.remove(stype)
 
+
 def main():
+	from sugar import TracebackUtils
 	loop = gobject.MainLoop()
 	ps = PresenceService()
+	tbh = TracebackUtils.TracebackHelper()
 	try:
 		loop.run()
 	except KeyboardInterrupt:
 		print 'Ctrl+C pressed, exiting...'
+
+	del tbh
+
 
 if __name__ == "__main__":
 	main()
