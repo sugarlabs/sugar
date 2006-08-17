@@ -95,7 +95,12 @@ class Activity(object):
 		return self._activity_id
 
 	def get_services(self):
-		return self._services.values()
+		ret = []
+		for serv_list in self._services.values():
+			for service in serv_list:
+				if service not in ret:
+					ret.append(service)
+		return ret
 
 	def get_services_of_type(self, stype):
 		if self._services.has_key(stype):
