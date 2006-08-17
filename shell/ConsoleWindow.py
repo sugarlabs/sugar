@@ -106,7 +106,8 @@ class ConsoleWindow(gtk.Window):
 	def __debug_toggled_cb(self, button):
 		if not self._ignore_toggle:
 			console = self._nb.get_nth_page(self._nb.get_current_page())
-			console.set_show_debug(button.get_active())
+			if console:
+				console.set_show_debug(button.get_active())
 
 	def __page_changed_cb(self, notebook, page, page_num):
 		console = self._nb.get_nth_page(page_num)
