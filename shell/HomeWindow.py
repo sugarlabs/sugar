@@ -4,10 +4,11 @@ import wnck
 
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.DonutItem import DonutItem
+from sugar.canvas.DonutItem import PieceItem
 
 class TasksItem(DonutItem):
 	def __init__(self):
-		DonutItem.__init__(self, 200)
+		DonutItem.__init__(self, 250)
 
 		self._items = {}
 
@@ -33,6 +34,7 @@ class TasksItem(DonutItem):
 
 	def _add(self, window):
 		item = self.add_piece(100 / 8)
+		item.set_data('window', window)
 		self._items[window.get_xid()] = item
 
 class ActivityItem(IconItem):
@@ -120,9 +122,16 @@ class HomeWindow(gtk.Window):
 			item_view.connect("button_press_event",
 							  self.__activity_button_press_cb,
 							  item.get_activity_id())
+		elif isinstance(item, PieceItem):
+			item_view.connect("button_press_event",
+							  self.__task_button_press_cb)
 
 	def __activity_button_press_cb(self, view, target, event, activity_id):
 		self._shell.start_activity(activity_id)
+
+	def __task_button_press_cb(self, view, target, event):
+		window = view.get_item().get_data('window')
+		window.activate(gtk.get_current_event_time())
 
 	def __realize_cb(self, window):
 		self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
