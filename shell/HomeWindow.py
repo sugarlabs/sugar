@@ -2,6 +2,15 @@ import gtk
 import goocanvas
 
 from sugar.canvas.IconItem import IconItem
+from sugar.canvas.DonutItem import DonutItem
+
+class TasksItem(DonutItem):
+	def __init__(self):
+		DonutItem.__init__(self, 200)
+		self.add_piece(30)
+		self.add_piece(30)
+		self.add_piece(30)
+		self.add_piece(10)
 
 class ActivityItem(IconItem):
 	def __init__(self, activity):
@@ -56,6 +65,10 @@ class Model(goocanvas.CanvasModelSimple):
 		activity_bar = ActivityBar(shell)
 		activity_bar.translate(50, 860)
 		root.add_child(activity_bar)
+
+		tasks = TasksItem()
+		tasks.translate(600, 450)
+		root.add_child(tasks)
 
 class HomeWindow(gtk.Window):
 	def __init__(self, shell):
