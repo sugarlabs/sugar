@@ -13,7 +13,8 @@ class ChatController:
 
 		self._shell.connect('activity-closed', self.__activity_closed_cb)
 
-	def __activity_closed_cb(self, shell, activity_id):
+	def __activity_closed_cb(self, shell, activity):
+		activity_id = activity.get_id()
 		if self._id_to_name.has_key(activity_id):
 			name = self._id_to_name[activity_id]
 			del self._name_to_chat[name]

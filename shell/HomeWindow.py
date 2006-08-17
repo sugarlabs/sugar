@@ -7,35 +7,30 @@ from sugar.canvas.DonutItem import DonutItem
 from sugar.canvas.DonutItem import PieceItem
 
 class TasksItem(DonutItem):
-	def __init__(self):
+	def __init__(self, shell):
 		DonutItem.__init__(self, 250)
 
 		self._items = {}
 
-		screen = wnck.screen_get_default()
-		for window in screen.get_windows():
-			if not window.is_skip_tasklist():
-				self._add(window)
-		screen.connect('window_opened', self.__window_opened_cb)
-		screen.connect('window_closed', self.__window_closed_cb)
+		shell.connect('activity_opened', self.__activity_opened_cb)
+		shell.connect('activity_closed', self.__activity_closed_cb)
 
-	def __window_opened_cb(self, screen, window):
-		if not window.is_skip_tasklist():
-			self._add(window)
+	def __activity_opened_cb(self, shell, activity):
+		self._add(activity)
 
-	def __window_closed_cb(self, screen, window):
-		if not window.is_skip_tasklist():
-			self._remove(window)
+	def __activity_closed_cb(self, shell, activity):
+		self._remove(activity)
 	
-	def _remove(self, window):
-		item = self._items[window.get_xid()]
+	def _remove(self, activity):
+		item = self._items[activity.get_id()]
 		self.remove_child(item)
-		del self._items[window.get_xid()]
+		del self._items[activity.get_id()]
 
-	def _add(self, window):
-		item = self.add_piece(100 / 8)
-		item.set_data('window', window)
-		self._items[window.get_xid()] = item
+	def _add(self, activity):
+		icon_name = activity.get_icon_name()
+		item = self.add_piece(100 / 8, icon_name, 'blue')
+		item.set_data('activity', activity)
+		self._items[activity.get_id()] = item
 
 class ActivityItem(IconItem):
 	def __init__(self, activity):
@@ -91,7 +86,7 @@ class Model(goocanvas.CanvasModelSimple):
 		activity_bar.translate(50, 860)
 		root.add_child(activity_bar)
 
-		tasks = TasksItem()
+		tasks = TasksItem(shell)
 		tasks.translate(600, 450)
 		root.add_child(tasks)
 
@@ -130,8 +125,8 @@ class HomeWindow(gtk.Window):
 		self._shell.start_activity(activity_id)
 
 	def __task_button_press_cb(self, view, target, event):
-		window = view.get_item().get_data('window')
-		window.activate(gtk.get_current_event_time())
+		activity = view.get_item().get_data('activity')
+		activity.present()
 
 	def __realize_cb(self, window):
 		self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)

@@ -39,7 +39,10 @@ class ShellDbusService(dbus.service.Object):
 
 class Shell(gobject.GObject):
 	__gsignals__ = {
-		'activity-closed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([str]))
+		'activity-opened': (gobject.SIGNAL_RUN_FIRST,
+							gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
+		'activity-closed': (gobject.SIGNAL_RUN_FIRST,
+							gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT]))
 	}
 
 	def __init__(self, registry):
@@ -71,14 +74,16 @@ class Shell(gobject.GObject):
 
 	def __window_opened_cb(self, screen, window):
 		if window.get_window_type() == wnck.WINDOW_NORMAL:
-			self._hosts[window.get_xid()] = ActivityHost(self, window)
+			host = ActivityHost(self, window)
+			self._hosts[window.get_xid()] = host
+			self.emit('activity-opened', host)
 
 	def __window_closed_cb(self, screen, window):
 		if window.get_window_type() == wnck.WINDOW_NORMAL:
 			xid = window.get_xid()
 
-			activity = self._hosts[xid]
-			self.emit('activity-closed', activity.get_id())
+			host = self._hosts[xid]
+			self.emit('activity-closed', host)
 
 			del self._hosts[xid]
 
