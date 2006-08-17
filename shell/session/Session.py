@@ -71,7 +71,10 @@ class Session:
 		shell.set_console(console)
 		shell.start()
 
+		from sugar import TracebackUtils
+		tbh = TracebackUtils.TracebackHelper()
 		try:
 			gtk.main()
 		except KeyboardInterrupt:
 			print 'Ctrl+C pressed, exiting...'
+		del tbh
