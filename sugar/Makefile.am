@@ -8,6 +8,7 @@ sugar_PYTHON =				\
 	env.py				\
 	logger.py			\
 	setup.py			\
+	TracebackUtils.py	\
 	util.py
 
 EXTRA_DIST = __uninstalled__.py

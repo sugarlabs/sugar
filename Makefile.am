@@ -1,4 +1,4 @@
-SUBDIRS = activities shell sugar tools
+SUBDIRS = activities shell sugar tools threadframe
 
 dbusconfdir = $(pkgdatadir)
 dbusconf_DATA = dbus-installed.conf

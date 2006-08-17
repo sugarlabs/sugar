@@ -43,4 +43,5 @@ sugar/presence/Makefile
 po/Makefile.in
 tools/Makefile
 tools/sugar-setup-activity
+threadframe/Makefile
 ])
