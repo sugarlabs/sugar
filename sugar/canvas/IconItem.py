@@ -21,8 +21,8 @@ class IconCache(gobject.GObject):
 		icon_file.close()
 
 		if color != None:
-			style = '.icon-color {fill: %s;}' % color
-			data = re.sub('\.icon-color \{.*\}', style, data)
+			style = '.fill-color {fill: %s;}' % color
+			data = re.sub('\.fill-color \{.*\}', style, data)
 
 		loader = gtk.gdk.pixbuf_loader_new_with_mime_type('image/svg-xml')
 		loader.set_size(size, size)
