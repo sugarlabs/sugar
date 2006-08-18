@@ -54,12 +54,6 @@ class Session:
 		process.start()
 
 		PresenceService.start()
-		bus = dbus.Bus()
-		ret = False
-		# Wait for the presence service to start up before continuing
-		while not ret:
-			ret = dbus.dbus_bindings.bus_name_has_owner(bus._connection, PresenceService.DBUS_SERVICE)
-			time.sleep(0.2)
 
 		process = MatchboxProcess()
 		process.start()
