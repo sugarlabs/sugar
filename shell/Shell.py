@@ -8,7 +8,7 @@ import gobject
 import wnck
 
 from ActivityRegistry import ActivityRegistry
-from HomeWindow import HomeWindow
+from home.HomeWindow import HomeWindow
 from sugar import env
 from Owner import ShellOwner
 from sugar.presence.PresenceService import PresenceService

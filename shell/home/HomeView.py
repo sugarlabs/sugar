@@ -95,27 +95,15 @@ class Model(goocanvas.CanvasModelSimple):
 		tasks.translate(600, 450)
 		root.add_child(tasks)
 
-class HomeWindow(gtk.Window):
+class HomeView(goocanvas.CanvasView):
 	def __init__(self, shell):
-		gtk.Window.__init__(self)
-
+		goocanvas.CanvasView.__init__(self)
 		self._shell = shell
 
-		self.connect('realize', self.__realize_cb)
-
-		canvas = goocanvas.CanvasView()
+		self.connect("item_view_created", self.__item_view_created_cb)
 
 		canvas_model = Model(shell)
-		canvas.set_bounds(0, 0, 1200, 900)
-		canvas.set_scale(float(800) / float(1200))
-		canvas.set_size_request(800, 600)
-
-		canvas.connect("item_view_created", self.__item_view_created_cb)
-
-		self.add(canvas)
-		canvas.show()
-
-		canvas.set_model(canvas_model)
+		self.set_model(canvas_model)
 
 	def __item_view_created_cb(self, view, item_view, item):
 		if isinstance(item, ActivityItem):
@@ -133,6 +121,3 @@ class HomeWindow(gtk.Window):
 	def __task_button_press_cb(self, view, target, event):
 		activity = view.get_item().get_data('activity')
 		activity.present()
-
-	def __realize_cb(self, window):
-		self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)

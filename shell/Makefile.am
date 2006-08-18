@@ -1,4 +1,4 @@
-SUBDIRS = data session PresenceService
+SUBDIRS = data session home PresenceService
 
 bin_SCRIPTS = 				\
 	sugar				\
@@ -11,13 +11,11 @@ bin_SCRIPTS = 				\
 sugardir = $(pkgdatadir)/shell
 sugar_PYTHON =				\
 	__init__.py			\
-	ActivitiesModel.py		\
 	ActivityHost.py			\
 	ActivityRegistry.py		\
 	ChatController.py		\
 	ConsoleWindow.py		\
 	Owner.py			\
-	HomeWindow.py			\
 	PeopleWindow.py			\
 	PresenceView.py			\
 	Shell.py

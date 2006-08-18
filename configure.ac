@@ -30,6 +30,7 @@ activities/chat/Makefile
 activities/terminal/Makefile
 shell/Makefile
 shell/data/Makefile
+shell/home/Makefile
 shell/session/Makefile
 shell/PresenceService/Makefile
 sugar/Makefile
