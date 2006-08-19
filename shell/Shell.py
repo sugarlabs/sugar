@@ -84,9 +84,15 @@ class Shell(gobject.GObject):
 
 		self._screen.connect('window-opened', self.__window_opened_cb)
 		self._screen.connect('window-closed', self.__window_closed_cb)
+		self._screen.connect("showing_desktop_changed",
+							 self.__showing_desktop_changed_cb)
 
 	def set_console(self, console):
 		self._console = console
+
+	def __showing_desktop_changed_cb(self, screen):
+		if not screen.get_showing_desktop():
+			self._zoom_level = Shell.ZOOM_ACTIVITY
 
 	def __window_opened_cb(self, screen, window):
 		if window.get_window_type() == wnck.WINDOW_NORMAL:
