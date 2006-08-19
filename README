@@ -40,9 +40,9 @@ sugar/sugar --test my_nick_name2
 Key bindings
 ============
 
-F1 Show the home page
-F2 Show the people page
-F3 Show the console
+F1 Zoom in
+F2 Zoom out
+F3 Show the people page
 F4 Open a terminal activity
 
 Logging
