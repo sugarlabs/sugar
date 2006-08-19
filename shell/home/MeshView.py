@@ -3,13 +3,14 @@ import random
 import goocanvas
 
 from sugar.canvas.IconItem import IconItem
+from sugar.canvas.IconItem import IconColor
 
 class ActivityItem(IconItem):
 	def __init__(self, activity, registry):
 		info = registry.get_activity(activity.get_type())
 		icon_name = info.get_icon()
 
-		IconItem.__init__(self, icon_name, 'green', 48)
+		IconItem.__init__(self, icon_name, IconColor(), 48)
 
 		self._activity = activity
 

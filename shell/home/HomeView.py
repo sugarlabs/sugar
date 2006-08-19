@@ -3,6 +3,7 @@ import goocanvas
 import wnck
 
 from sugar.canvas.IconItem import IconItem
+from sugar.canvas.IconItem import IconColor
 from sugar.canvas.DonutItem import DonutItem
 from sugar.canvas.DonutItem import PieceItem
 from sugar.canvas.DonutItem import PieceIcon
@@ -29,7 +30,7 @@ class TasksItem(DonutItem):
 
 	def _add(self, activity):
 		icon_name = activity.get_icon_name()
-		item = self.add_piece(100 / 8, icon_name, 'blue')
+		item = self.add_piece(100 / 8, icon_name, IconColor())
 
 		# FIXME This really sucks. Fix goocanvas event handling.
 		item.set_data('activity', activity)
@@ -41,7 +42,8 @@ class ActivityItem(IconItem):
 	ICON_SIZE = 30
 
 	def __init__(self, activity):
-		IconItem.__init__(self, activity.get_icon(), 'white',
+		IconItem.__init__(self, activity.get_icon(),
+						  IconColor('white'),
 						  ActivityItem.ICON_SIZE)
 		self._activity = activity
 
@@ -100,7 +102,7 @@ class Model(goocanvas.CanvasModelSimple):
 		tasks.translate(600, 450)
 		root.add_child(tasks)
 
-		me = IconItem('stock-buddy', 'green', 150)
+		me = IconItem('stock-buddy', IconColor(), 150)
 		me.translate(600 - (me.get_property('width') / 2),
 					 450 - (me.get_property('height') / 2))
 		root.add_child(me)

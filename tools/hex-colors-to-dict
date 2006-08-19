@@ -1,0 +1,19 @@
+#!/usr/bin/python
+
+import sys
+
+result = 'colors_dict = {\n'
+result += '\'white\'   : \'black\'  , \\\n'
+
+hex_file = open(sys.argv[1], 'r')
+
+for line in hex_file.readlines():
+	[ stroke, fill ] = line.split()
+	result += '\'#%s\' : \'#%s\', \\\n' % (fill, stroke)
+
+result += '}'
+
+hex_file.close()
+
+print result
+
