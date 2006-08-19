@@ -27,6 +27,7 @@ dbus-installed.conf
 activities/Makefile
 activities/browser/Makefile
 activities/chat/Makefile
+activities/groupchat/Makefile
 activities/terminal/Makefile
 shell/Makefile
 shell/data/Makefile

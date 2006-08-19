@@ -38,8 +38,11 @@ class TasksItem(DonutItem):
 		self._items[activity.get_id()] = item
 
 class ActivityItem(IconItem):
+	ICON_SIZE = 30
+
 	def __init__(self, activity):
-		IconItem.__init__(self, activity.get_icon(), 'white', 30)
+		IconItem.__init__(self, activity.get_icon(), 'white',
+						  ActivityItem.ICON_SIZE)
 		self._activity = activity
 
 	def get_activity_id(self):
@@ -58,6 +61,8 @@ class ActivityBar(goocanvas.Group):
 
 	def add_activity(self, activity):
 		item = ActivityItem(activity)
+		x = (ActivityItem.ICON_SIZE + 6) * self.get_n_children()
+		item.set_property('x', x)
 		self.add_child(item)
 
 class Background(goocanvas.Group):
