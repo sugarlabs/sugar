@@ -2,8 +2,13 @@ import gtk
 
 from home.MeshView import MeshView
 from home.HomeView import HomeView
+from home.FriendsView import FriendsView
 
 class HomeWindow(gtk.Window):
+	HOME_VIEW = 0
+	FRIENDS_VIEW = 1
+	MESH_VIEW = 2
+
 	def __init__(self, shell):
 		gtk.Window.__init__(self)
 
@@ -17,6 +22,11 @@ class HomeWindow(gtk.Window):
 		self._nb.append_page(home_view)
 		self._setup_canvas(home_view)
 		home_view.show()
+
+		friends_view = FriendsView(shell)
+		self._nb.append_page(friends_view)
+		self._setup_canvas(friends_view)
+		friends_view.show()
 		
 		mesh_view = MeshView(shell)
 		self._setup_canvas(mesh_view)
@@ -25,6 +35,9 @@ class HomeWindow(gtk.Window):
 
 		self.add(self._nb)
 		self._nb.show()
+
+	def set_view(self, view):
+		self._nb.set_current_page(view)
 
 	def _setup_canvas(self, canvas):
 		canvas.set_bounds(0, 0, 1200, 900)

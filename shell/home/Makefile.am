@@ -1,6 +1,7 @@
 sugardir = $(pkgdatadir)/shell
 sugar_PYTHON =				\
 	__init__.py			\
+	FriendsView.py			\
 	MeshView.py			\
 	HomeView.py			\
-	Window.py
+	HomeWindow.py
