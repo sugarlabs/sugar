@@ -100,6 +100,11 @@ class Model(goocanvas.CanvasModelSimple):
 		tasks.translate(600, 450)
 		root.add_child(tasks)
 
+		me = IconItem('stock-buddy', 'green', 150)
+		me.translate(600 - (me.get_property('width') / 2),
+					 450 - (me.get_property('height') / 2))
+		root.add_child(me)
+
 class HomeView(goocanvas.CanvasView):
 	def __init__(self, shell):
 		goocanvas.CanvasView.__init__(self)
