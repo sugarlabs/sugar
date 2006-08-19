@@ -9,7 +9,7 @@ class HomeWindow(gtk.Window):
 	FRIENDS_VIEW = 1
 	MESH_VIEW = 2
 
-	def __init__(self, shell):
+	def __init__(self, shell, model):
 		gtk.Window.__init__(self)
 
 		self.connect('realize', self.__realize_cb)
@@ -23,12 +23,12 @@ class HomeWindow(gtk.Window):
 		self._setup_canvas(home_view)
 		home_view.show()
 
-		friends_view = FriendsView(shell)
+		friends_view = FriendsView(shell, model.get_friends())
 		self._nb.append_page(friends_view)
 		self._setup_canvas(friends_view)
 		friends_view.show()
 		
-		mesh_view = MeshView(shell)
+		mesh_view = MeshView(shell, model.get_mesh())
 		self._setup_canvas(mesh_view)
 		self._nb.append_page(mesh_view)
 		mesh_view.show()

@@ -19,7 +19,7 @@ class ActivityInfo:
 	def get_service(self):
 		return self._service
 
-class ActivitiesModel(gobject.GObject):
+class MeshModel(gobject.GObject):
 	__gsignals__ = {
 		'activity-added':   (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
 						    ([gobject.TYPE_PYOBJECT])),

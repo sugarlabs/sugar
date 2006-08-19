@@ -9,6 +9,7 @@ import wnck
 
 from ActivityRegistry import ActivityRegistry
 from home.HomeWindow import HomeWindow
+from home.HomeModel import HomeModel
 from sugar import env
 from Owner import ShellOwner
 from sugar.presence.PresenceService import PresenceService
@@ -77,7 +78,8 @@ class Shell(gobject.GObject):
 		self._chat_controller = ChatController(self)
 		self._chat_controller.listen()
 
-		self._home_window = HomeWindow(self)
+		home_model = HomeModel(self._registry)
+		self._home_window = HomeWindow(self, home_model)
 		self._home_window.show()
 
 		self._screen.connect('window-opened', self.__window_opened_cb)
