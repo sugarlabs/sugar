@@ -27,14 +27,17 @@ dbus-installed.conf
 activities/Makefile
 activities/browser/Makefile
 activities/chat/Makefile
+activities/groupchat/Makefile
 activities/terminal/Makefile
 shell/Makefile
 shell/data/Makefile
+shell/home/Makefile
 shell/session/Makefile
 shell/PresenceService/Makefile
 sugar/Makefile
 sugar/__installed__.py
 sugar/activity/Makefile
+sugar/canvas/Makefile
 sugar/chat/Makefile
 sugar/chat/sketchpad/Makefile
 sugar/p2p/Makefile

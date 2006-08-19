@@ -20,8 +20,14 @@ class ActivityHost:
 		self._gdk_window = gtk.gdk.window_foreign_new(self._xid)
 		self._people_window = PeopleWindow(shell, self)
 
+		info = self._shell.get_registry().get_activity(self._default_type)
+		self._icon_name = info.get_icon()
+
 	def get_id(self):
 		return self._id
+
+	def get_icon_name(self):
+		return self._icon_name
 
 	def share(self):
 		self._people_window.share()
