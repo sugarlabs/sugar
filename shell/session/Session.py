@@ -31,13 +31,12 @@ class DbusProcess(Process):
 
 class MatchboxProcess(Process):
 	def __init__(self):
-		options = '-use_titlebar no'
-
 		kbd_config = os.path.join(sugar.env.get_data_dir(), 'kbdconfig')
-		options += ' -kbdconfig %s' % kbd_config
+		options = '-kbdconfig %s ' % kbd_config
 
-		command = 'matchbox-window-manager %s' % options
-		print command
+		options += '-theme olpc '
+
+		command = 'matchbox-window-manager %s ' % options
 		Process.__init__(self, command)
 	
 	def get_name(self):
