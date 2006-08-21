@@ -1,6 +1,8 @@
-AC_INIT([Sugar],[0.19],[],[sugar])
+AC_INIT([Sugar],[0.20],[],[sugar])
 
 AC_PREREQ([2.59])
+
+GNOME_COMMON_INIT
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS([config.h])
