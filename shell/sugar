@@ -26,9 +26,10 @@ registry.scan_directory(env.get_activities_dir())
 
 from session.Emulator import Emulator
 
-# FIXE Don't run the emulator on the OLPC
-emulator = Emulator()
-emulator.start()
+if os.environ.has_key('SUGAR_EMULATOR') and \
+   os.environ['SUGAR_EMULATOR'] == 'yes':
+	emulator = Emulator()
+	emulator.start()
 	
 from session.Session import Session
 
