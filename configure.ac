@@ -1,7 +1,8 @@
-AC_INIT([Sugar],[0.18],[],[sugar])
+AC_INIT([Sugar],[0.19],[],[sugar])
 
 AC_PREREQ([2.59])
 
+AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([configure.ac])
 
@@ -9,7 +10,11 @@ AM_INIT_AUTOMAKE([1.9 foreign dist-bzip2 no-dist-gzip])
 
 AM_MAINTAINER_MODE
 
+AC_DISABLE_STATIC
+AC_PROG_LIBTOOL
+
 AM_PATH_PYTHON
+AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
 
 #
 # Setup GETTEXT

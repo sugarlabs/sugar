@@ -1,13 +1,6 @@
-all:
-	python setup.py build
+INCLUDES = $(PYTHON_INCLUDES)
 
-install:
-	python setup.py install --prefix=${prefix}
-
-uninstall:
-	rm -f ${prefix}/lib/python2.4/site-packages/threadframe.so
-
-clean:
-	python setup.py clean
-	-rm -rf build
-	-rm -f core *~ *.so *.o *.pyd *.a python*.def
+threadframedir = $(pyexecdir)
+threadframe_la_LDFLAGS = -module -avoid-version
+threadframe_LTLIBRARIES = threadframe.la
+threadframe_la_SOURCES = threadframemodule.c

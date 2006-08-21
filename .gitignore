@@ -4,6 +4,7 @@
 *~
 Makefile
 Makefile.in
+*.deps
 
 # Absolute
 
@@ -19,7 +20,6 @@ missing
 py-compile
 stamp-h1
 dbus-installed.conf
-
 intltool-extract
 intltool-extract.in
 intltool-merge
@@ -35,4 +35,10 @@ po/*.gmo
 sugar/__installed__.py
 tools/sugar-setup-activity
 shell/PresenceService/org.laptop.Presence.service
-threadframe/build
+threadframe
+config.guess
+config.sub
+depcomp
+libtool
+ltmain.sh
+po/ChangeLog

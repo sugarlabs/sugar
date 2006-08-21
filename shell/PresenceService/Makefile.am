@@ -12,3 +12,7 @@ sugar_PYTHON =				\
 	Buddy.py			\
 	PresenceService.py		\
 	Service.py
+
+DISTCLEANFILES = $(service_DATA)
+
+EXTRA_DIST = $(service_in_files)

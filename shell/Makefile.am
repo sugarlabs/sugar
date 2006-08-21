@@ -21,4 +21,4 @@ sugar_PYTHON =				\
 	PresenceView.py			\
 	Shell.py
 
-EXTRA_DIST = sugar
+EXTRA_DIST = $(bin_SCRIPTS)

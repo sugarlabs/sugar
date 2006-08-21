@@ -1,7 +1,24 @@
-SUBDIRS = activities shell sugar tools threadframe
+SUBDIRS = activities po shell sugar tools threadframe
 
 dbusconfdir = $(pkgdatadir)
 dbusconf_DATA = dbus-installed.conf
 
 install-data-local:
-	sugar/setup.py $(top_srcdir)/activities $(pkgdatadir)/activities $(bindir)/sugar-activity-factory
+	$(top_srcdir)/sugar/setup.py \
+		$(top_srcdir)/activities \
+		$(DESTDIR)$(pkgdatadir)/activities \
+		$(bindir)/sugar-activity-factory
+
+uninstall-local:
+	rm -rf $(DESTDIR)$(pkgdatadir)/activities/*.activity
+	rm -rf $(DESTDIR)$(pkgdatadir)/activities/*.service
+
+DISTCLEANFILES =		\
+	intltool-extract	\
+	intltool-merge		\
+	intltool-update
+
+EXTRA_DIST =                    \
+	intltool-merge.in       \
+	intltool-update.in      \
+	intltool-extract.in
