@@ -9,8 +9,9 @@ class HomeWindow(gtk.Window):
 	FRIENDS_VIEW = 1
 	MESH_VIEW = 2
 
-	def __init__(self, shell, model):
+	def __init__(self, shell):
 		gtk.Window.__init__(self)
+		self._shell = shell
 
 		self.connect('realize', self.__realize_cb)
 
@@ -18,23 +19,24 @@ class HomeWindow(gtk.Window):
 		self._nb.set_show_tabs(False)
 		self._nb.set_show_border(False)
 
-		home_view = HomeView(shell)
+		self.add(self._nb)
+		self._nb.show()
+
+	def set_model(self, model):
+		home_view = HomeView(self._shell)
 		self._nb.append_page(home_view)
 		self._setup_canvas(home_view)
 		home_view.show()
 
-		friends_view = FriendsView(shell, model.get_friends())
+		friends_view = FriendsView(self._shell, model.get_friends())
 		self._nb.append_page(friends_view)
 		self._setup_canvas(friends_view)
 		friends_view.show()
 		
-		mesh_view = MeshView(shell, model.get_mesh())
+		mesh_view = MeshView(self._shell, model.get_mesh())
 		self._setup_canvas(mesh_view)
 		self._nb.append_page(mesh_view)
 		mesh_view.show()
-
-		self.add(self._nb)
-		self._nb.show()
 
 	def set_view(self, view):
 		self._nb.set_current_page(view)

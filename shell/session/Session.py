@@ -4,7 +4,6 @@ import gobject
 import time
 import re
 
-from sugar.presence import PresenceService
 from Shell import Shell
 from ConsoleWindow import ConsoleWindow
 from session.Process import Process
@@ -27,9 +26,6 @@ class Session:
 	"""Takes care of running the shell and all the sugar processes"""
 	def start(self):
 		"""Start the session"""
-
-		PresenceService.start()
-
 		process = MatchboxProcess()
 		process.start()
 
@@ -38,7 +34,6 @@ class Session:
 
 		shell = Shell()
 		shell.set_console(console)
-		shell.start()
 
 		from sugar import TracebackUtils
 		tbh = TracebackUtils.TracebackHelper()

@@ -16,12 +16,6 @@ class ShellOwner(object):
 		self._nick = env.get_nick_name()
 		user_dir = env.get_user_dir()
 
-		try:
-			os.makedirs(user_dir)
-		except OSError, exc:
-			if exc[0] != 17:  # file exists
-				print "Could not create user directory %s: (%d) %s" % (user_dir, exc[0], exc[1])
-
 		self._icon = None
 		for fname in os.listdir(user_dir):
 			if not fname.startswith("buddy-icon."):

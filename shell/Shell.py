@@ -11,11 +11,12 @@ from home.HomeWindow import HomeWindow
 from home.HomeModel import HomeModel
 from sugar import env
 from Owner import ShellOwner
-from sugar.presence.PresenceService import PresenceService
+from sugar.presence import PresenceService
 from ActivityHost import ActivityHost
 from ChatController import ChatController
 from sugar.activity import ActivityFactory
 from sugar.activity import Activity
+from FirstTimeDialog import FirstTimeDialog
 from sugar import conf
 import sugar.logger
 
@@ -64,12 +65,32 @@ class Shell(gobject.GObject):
 
 		self._screen = wnck.screen_get_default()
 		self._hosts = {}
-		self._zoom_level = Shell.ZOOM_HOME
+
+		self._home_window = HomeWindow(self)
+		self._home_window.show()
+
+		self._screen.connect('window-opened', self.__window_opened_cb)
+		self._screen.connect('window-closed', self.__window_closed_cb)
+		self._screen.connect("showing_desktop_changed",
+							 self.__showing_desktop_changed_cb)
+
+		if env.get_nick_name() == None:
+			dialog = FirstTimeDialog()
+			dialog.connect('destroy', self.__first_time_dialog_destroy_cb)
+			dialog.set_transient_for(self._home_window)
+			dialog.show()
+		else:
+			self.start()
+
+	def __first_time_dialog_destroy_cb(self, dialog):
+		self.start()
 
 	def start(self):
 		session_bus = dbus.SessionBus()
 		bus_name = dbus.service.BusName('com.redhat.Sugar.Shell', bus=session_bus)
 		ShellDbusService(self, bus_name)
+
+		PresenceService.start()
 
 		self._owner = ShellOwner()
 		self._owner.announce()
@@ -78,13 +99,8 @@ class Shell(gobject.GObject):
 		self._chat_controller.listen()
 
 		home_model = HomeModel()
-		self._home_window = HomeWindow(self, home_model)
-		self._home_window.show()
-
-		self._screen.connect('window-opened', self.__window_opened_cb)
-		self._screen.connect('window-closed', self.__window_closed_cb)
-		self._screen.connect("showing_desktop_changed",
-							 self.__showing_desktop_changed_cb)
+		self._home_window.set_model(home_model)
+		self._set_zoom_level(Shell.ZOOM_HOME)
 
 	def set_console(self, console):
 		self._console = console
@@ -102,11 +118,11 @@ class Shell(gobject.GObject):
 	def __window_closed_cb(self, screen, window):
 		if window.get_window_type() == wnck.WINDOW_NORMAL:
 			xid = window.get_xid()
+			if self._hosts.has_key(xid):
+				host = self._hosts[xid]
+				self.emit('activity-closed', host)
 
-			host = self._hosts[xid]
-			self.emit('activity-closed', host)
-
-			del self._hosts[xid]
+				del self._hosts[xid]
 
 	def get_activity(self, activity_id):
 		for host in self._hosts.values():
@@ -154,7 +170,7 @@ class Shell(gobject.GObject):
 		if activity:
 			activity.present()
 		else:
-			pservice = PresenceService()
+			pservice = PresenceService.PresenceService()
 			activity_ps = pservice.get_activity(activity_id)
 
 			if activity_ps:

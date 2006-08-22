@@ -44,18 +44,19 @@ def setup():
 	registry = sugar.conf.get_activity_registry()
 	registry.scan_directory(get_activities_dir())
 
-def get_user_dir():
-	if os.environ.has_key('SUGAR_NICK_NAME'):
-		nick = get_nick_name()
-		return os.path.expanduser('~/.sugar-%s/' % nick)
+	profile = sugar.conf.get_profile()
+	if os.environ.has_key('SUGAR_PROFILE'):
+		profile.read(os.environ['SUGAR_PROFILE'])
 	else:
-		return os.path.expanduser('~/.sugar')
+		profile.read('default')
+
+def get_user_dir():
+	profile = sugar.conf.get_profile()
+	return profile.get_path()
 
 def get_nick_name():
-	if os.environ.has_key('SUGAR_NICK_NAME'):
-		return os.environ['SUGAR_NICK_NAME']
-	else:
-		return pwd.getpwuid(os.getuid())[0]
+	profile = sugar.conf.get_profile()
+	return profile.get_nick_name()
 
 def get_data_dir():
 	return sugar_data_dir
