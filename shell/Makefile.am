@@ -15,6 +15,7 @@ sugar_PYTHON =				\
 	ActivityHost.py			\
 	ChatController.py		\
 	ConsoleWindow.py		\
+	FirstTimeDialog.py		\
 	Owner.py			\
 	PeopleWindow.py			\
 	PresenceView.py			\
