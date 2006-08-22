@@ -7,6 +7,7 @@ from sugar.canvas.IconItem import IconColor
 from sugar.canvas.DonutItem import DonutItem
 from sugar.canvas.DonutItem import PieceItem
 from sugar.canvas.DonutItem import PieceIcon
+from sugar import conf
 
 class TasksItem(DonutItem):
 	def __init__(self, shell):
@@ -56,7 +57,7 @@ class ActivityBar(goocanvas.Group):
 
 		self._shell = shell
 
-		registry = shell.get_registry()
+		registry = conf.get_activity_registry()
 		for activity in registry.list_activities():
 			if activity.get_show_launcher():
 				self.add_activity(activity)

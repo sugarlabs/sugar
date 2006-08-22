@@ -42,3 +42,4 @@ depcomp
 libtool
 ltmain.sh
 po/ChangeLog
+m4/intltool.m4

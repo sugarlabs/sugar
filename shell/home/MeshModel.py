@@ -1,7 +1,7 @@
 import gobject
 
 from sugar.presence.PresenceService import PresenceService
-from ActivityRegistry import ActivityRegistry
+from sugar import conf
 
 class ActivityInfo:
 	def __init__(self, service):
@@ -27,11 +27,10 @@ class MeshModel(gobject.GObject):
 						    ([gobject.TYPE_PYOBJECT]))
 	}
 
-	def __init__(self, registry):
+	def __init__(self):
 		gobject.GObject.__init__(self)
 		
 		self._activities = {}
-		self._registry = registry
 		
 		self._pservice = PresenceService()
 		self._pservice.connect("service-appeared", self.__service_appeared_cb)
@@ -55,6 +54,7 @@ class MeshModel(gobject.GObject):
 		self.__check_service(service)
 
 	def __check_service(self, service):
-		if self._registry.get_activity(service.get_type()) != None:
+		registry = conf.get_activity_registry()
+		if registry.get_activity(service.get_type()) != None:
 			if not self.has_activity(service.get_activity_id()):
 				self.add_activity(service)

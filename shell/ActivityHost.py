@@ -1,6 +1,7 @@
 import gtk
 import dbus
 
+from sugar import conf
 from sugar.activity import Activity
 from PeopleWindow import PeopleWindow
 
@@ -20,7 +21,8 @@ class ActivityHost:
 		self._gdk_window = gtk.gdk.window_foreign_new(self._xid)
 		self._people_window = PeopleWindow(shell, self)
 
-		info = self._shell.get_registry().get_activity(self._default_type)
+		registry = conf.get_activity_registry()
+		info = registry.get_activity(self._default_type)
 		self._icon_name = info.get_icon()
 
 	def get_id(self):

@@ -25,11 +25,9 @@ class MatchboxProcess(Process):
 
 class Session:
 	"""Takes care of running the shell and all the sugar processes"""
-	def __init__(self, registry):
-		self._registry = registry
-		
 	def start(self):
 		"""Start the session"""
+
 		PresenceService.start()
 
 		process = MatchboxProcess()
@@ -38,7 +36,7 @@ class Session:
 		console = ConsoleWindow()
 		sugar.logger.start('Shell', console)
 
-		shell = Shell(self._registry)
+		shell = Shell()
 		shell.set_console(console)
 		shell.start()
 

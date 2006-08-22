@@ -4,9 +4,11 @@ import goocanvas
 
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.IconItem import IconColor
+from sugar import conf
 
 class ActivityItem(IconItem):
-	def __init__(self, activity, registry):
+	def __init__(self, activity):
+		registry = conf.get_activity_registry()
 		info = registry.get_activity(activity.get_type())
 		icon_name = info.get_icon()
 
@@ -18,9 +20,8 @@ class ActivityItem(IconItem):
 		return self._activity.get_service()
 
 class Model(goocanvas.CanvasModelSimple):
-	def __init__(self, data_model, registry):
+	def __init__(self, data_model):
 		goocanvas.CanvasModelSimple.__init__(self)
-		self._registry = registry
 
 		root = self.get_root_item()
 
@@ -51,7 +52,7 @@ class MeshView(goocanvas.CanvasView):
 
 		self.connect("item_view_created", self.__item_view_created_cb)
 
-		canvas_model = Model(data_model, shell.get_registry())
+		canvas_model = Model(data_model)
 		self.set_model(canvas_model)
 
 	def __activity_button_press_cb(self, view, target, event, service):

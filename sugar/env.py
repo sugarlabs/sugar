@@ -8,6 +8,7 @@ except ImportError:
 	from sugar.__installed__ import *
 
 import sugar.setup
+import sugar.conf
 
 def add_to_python_path(path):
 	sys.path.insert(0, path)
@@ -39,6 +40,9 @@ def setup():
 		bin = os.path.join(sugar_source_dir, 'shell/sugar-presence-service')
 		sugar.setup.write_service('org.laptop.Presence', bin,
 								  get_services_dir())
+
+	registry = sugar.conf.get_activity_registry()
+	registry.scan_directory(get_activities_dir())
 
 def get_user_dir():
 	if os.environ.has_key('SUGAR_NICK_NAME'):

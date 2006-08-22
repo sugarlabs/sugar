@@ -47,6 +47,7 @@ sugar/activity/Makefile
 sugar/canvas/Makefile
 sugar/chat/Makefile
 sugar/chat/sketchpad/Makefile
+sugar/conf/Makefile
 sugar/p2p/Makefile
 sugar/p2p/model/Makefile
 sugar/presence/Makefile

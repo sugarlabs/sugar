@@ -7,7 +7,6 @@ import gtk
 import gobject
 import wnck
 
-from ActivityRegistry import ActivityRegistry
 from home.HomeWindow import HomeWindow
 from home.HomeModel import HomeModel
 from sugar import env
@@ -17,6 +16,7 @@ from ActivityHost import ActivityHost
 from ChatController import ChatController
 from sugar.activity import ActivityFactory
 from sugar.activity import Activity
+from sugar import conf
 import sugar.logger
 
 class ShellDbusService(dbus.service.Object):
@@ -59,11 +59,10 @@ class Shell(gobject.GObject):
 							gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT]))
 	}
 
-	def __init__(self, registry):
+	def __init__(self):
 		gobject.GObject.__init__(self)
 
 		self._screen = wnck.screen_get_default()
-		self._registry = registry
 		self._hosts = {}
 		self._zoom_level = Shell.ZOOM_HOME
 
@@ -78,7 +77,7 @@ class Shell(gobject.GObject):
 		self._chat_controller = ChatController(self)
 		self._chat_controller.listen()
 
-		home_model = HomeModel(self._registry)
+		home_model = HomeModel()
 		self._home_window = HomeWindow(self, home_model)
 		self._home_window.show()
 
@@ -141,11 +140,13 @@ class Shell(gobject.GObject):
 
 		activity = self.get_current_activity()
 		if activity:
-			module = self._registry.get_activity(activity.get_default_type())
+			registry = conf.get_activity_registry()
+			module = registry.get_activity(activity.get_default_type())
 			self._console.set_page(module.get_id())
 
 	def join_activity(self, service):
-		info = self._registry.get_activity(service.get_type())
+		registry = conf.get_activity_registry()
+		info = registry.get_activity(service.get_type())
 		
 		activity_id = service.get_activity_id()
 
@@ -165,7 +166,8 @@ class Shell(gobject.GObject):
 
 	def start_activity(self, activity_name):
 		activity = ActivityFactory.create(activity_name)
-		info = self._registry.get_activity_from_id(activity_name)
+		registry = conf.get_activity_registry()
+		info = registry.get_activity_from_id(activity_name)
 		if info:
 			default_type = info.get_default_type()
 			if default_type != None:
@@ -175,9 +177,6 @@ class Shell(gobject.GObject):
 		else:
 			logging.error('No such activity in the directory')
 			return None
-
-	def get_registry(self):
-		return self._registry
 
 	def get_chat_controller(self):
 		return self._chat_controller

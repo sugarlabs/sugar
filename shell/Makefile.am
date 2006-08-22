@@ -13,7 +13,6 @@ sugardir = $(pkgdatadir)/shell
 sugar_PYTHON =				\
 	__init__.py			\
 	ActivityHost.py			\
-	ActivityRegistry.py		\
 	ChatController.py		\
 	ConsoleWindow.py		\
 	Owner.py			\

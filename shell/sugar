@@ -19,11 +19,6 @@ from sugar import env
 
 env.setup()
 
-from ActivityRegistry import ActivityRegistry
-
-registry = ActivityRegistry()
-registry.scan_directory(env.get_activities_dir())
-
 from session.Emulator import Emulator
 
 if os.environ.has_key('SUGAR_EMULATOR') and \
@@ -33,5 +28,5 @@ if os.environ.has_key('SUGAR_EMULATOR') and \
 	
 from session.Session import Session
 
-session = Session(registry)
+session = Session()
 session.start()
