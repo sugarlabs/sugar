@@ -7,7 +7,6 @@ from sugar.canvas.IconItem import IconColor
 from sugar.canvas.DonutItem import DonutItem
 from sugar.canvas.DonutItem import PieceItem
 from sugar.canvas.DonutItem import PieceIcon
-from sugar import conf
 
 class TasksItem(DonutItem):
 	def __init__(self, shell):
@@ -39,50 +38,16 @@ class TasksItem(DonutItem):
 
 		self._items[activity.get_id()] = item
 
-class ActivityItem(IconItem):
-	ICON_SIZE = 30
-
-	def __init__(self, activity):
-		IconItem.__init__(self, activity.get_icon(),
-						  IconColor('white'),
-						  ActivityItem.ICON_SIZE)
-		self._activity = activity
-
-	def get_activity_id(self):
-		return self._activity.get_id()
-
-class ActivityBar(goocanvas.Group):
-	def __init__(self, shell):
-		goocanvas.Group.__init__(self)
-
-		self._shell = shell
-
-		registry = conf.get_activity_registry()
-		for activity in registry.list_activities():
-			if activity.get_show_launcher():
-				self.add_activity(activity)
-
-	def add_activity(self, activity):
-		item = ActivityItem(activity)
-		x = (ActivityItem.ICON_SIZE + 6) * self.get_n_children()
-		item.set_property('x', x)
-		self.add_child(item)
-
 class Background(goocanvas.Group):
 	def __init__(self):
 		goocanvas.Group.__init__(self)
 
 		item = goocanvas.Rect(width=1200, height=900,
-							  fill_color="#4f4f4f")
-		self.add_child(item)
-
-		item = goocanvas.Rect(x=50, y=50, width=1100, height=800,
-							  line_width=0, fill_color="#d8d8d8",
-							  radius_x=30, radius_y=30)
+							  fill_color="#d8d8d8")
 		self.add_child(item)
 
 		item = goocanvas.Text(text="My Activities",
-							  x=60, y=10, fill_color="white",
+							  x=12, y=12, fill_color="black",
                               font="Sans 21")
 		self.add_child(item)
 
@@ -94,10 +59,6 @@ class Model(goocanvas.CanvasModelSimple):
 
 		background = Background()
 		root.add_child(background)
-
-		activity_bar = ActivityBar(shell)
-		activity_bar.translate(50, 860)
-		root.add_child(activity_bar)
 
 		tasks = TasksItem(shell)
 		tasks.translate(600, 450)
@@ -119,12 +80,8 @@ class HomeView(goocanvas.CanvasView):
 		self.set_model(canvas_model)
 
 	def __item_view_created_cb(self, view, item_view, item):
-		if isinstance(item, ActivityItem):
-			item_view.connect("button_press_event",
-							  self.__activity_button_press_cb,
-							  item.get_activity_id())
-		elif isinstance(item, PieceItem) or \
-			 isinstance(item, PieceIcon):
+		if isinstance(item, PieceItem) or \
+		   isinstance(item, PieceIcon):
 			item_view.connect("button_press_event",
 							  self.__task_button_press_cb)
 

@@ -54,22 +54,6 @@ class XnestProcess(Process):
 		Process.start(self)
 		os.environ['DISPLAY'] = ":%d" % (self._display)
 
-class DbusProcess(Process):
-	def __init__(self):
-		config = sugar.env.get_dbus_config()
-		cmd = "dbus-daemon --print-address --config-file %s" % config
-		Process.__init__(self, cmd)
-
-	def get_name(self):
-		return 'Dbus'
-
-	def start(self):
-		Process.start(self, True)
-		dbus_file = os.fdopen(self._stdout)
-		addr = dbus_file.readline().strip()
-		dbus_file.close()
-		os.environ["DBUS_SESSION_BUS_ADDRESS"] = addr
-
 class Emulator:
 	"""The OLPC emulator"""
 	def start(self):
@@ -84,6 +68,3 @@ class Emulator:
 				print 'Cannot run the emulator. You need to install \
 					   Xephyr or Xnest.'
 				sys.exit(0)
-
-		process = DbusProcess()
-		process.start()

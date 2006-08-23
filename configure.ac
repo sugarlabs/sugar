@@ -1,4 +1,4 @@
-AC_INIT([Sugar],[0.20],[],[sugar])
+AC_INIT([Sugar],[0.22],[],[sugar])
 
 AC_PREREQ([2.59])
 
@@ -39,6 +39,7 @@ activities/terminal/Makefile
 shell/Makefile
 shell/data/Makefile
 shell/home/Makefile
+shell/panel/Makefile
 shell/session/Makefile
 shell/PresenceService/Makefile
 sugar/Makefile

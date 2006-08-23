@@ -17,6 +17,7 @@ from ChatController import ChatController
 from sugar.activity import ActivityFactory
 from sugar.activity import Activity
 from FirstTimeDialog import FirstTimeDialog
+from panel.PanelManager import PanelManager
 from sugar import conf
 import sugar.logger
 
@@ -101,6 +102,8 @@ class Shell(gobject.GObject):
 		home_model = HomeModel()
 		self._home_window.set_model(home_model)
 		self._set_zoom_level(Shell.ZOOM_HOME)
+
+		self._panel_manager = PanelManager(self)
 
 	def set_console(self, console):
 		self._console = console
