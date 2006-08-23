@@ -1,45 +1,17 @@
-Dependencies
-============
-
-xulrunner
-gecko-embed
-
-http://gnome.org/~marco/olpc
-
 Building
 ========
 
-You will need gnome-common.
-
-./autogen.sh --prefix=/usr --sysconfdir=/etc --localstatedir=/var
-make
-make install # make require root privileges
-
-Running
-=======
-
-Once installed you can run sugar with
-
- $ sugar
-
-To run the python sources from your source tree run
-
- $ shell/sugar
-
-NOTE: if you are not running on an actual OLPC, you'll want to set:
-
-SUGAR_EMULATOR=yes
-
-before running sugar.
+See:
+http://wiki.laptop.org/go/Sugar_with_sugar-jhbuild
 
 Running multiple instances on the same machine
 ==============================================
 
-You can use the --test command line options.
+You can use the SUGAR_PROFILE command line options.
 For example:
 
-sugar/sugar --test my_nick_name1
-sugar/sugar --test my_nick_name2
+SUGAR_PROFILE=profile-1 sugar
+SUGAR_PROFILE=profile-2 sugar
 ...
 
 
@@ -50,12 +22,3 @@ F1 Zoom in
 F2 Zoom out
 F3 Show the people page
 F4 Open a terminal activity
-
-Logging
-=======
-
-The logging level by default is set to 'warning'.
-To change it to debug you can define the following environment
-variable:
-
-SUGAR_LOGGING_LEVEL=debug
