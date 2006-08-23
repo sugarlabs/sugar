@@ -5,20 +5,45 @@ import goocanvas
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.IconItem import IconColor
 
+from Theme import Theme
+
 class Model(goocanvas.CanvasModelSimple):
 	def __init__(self, data_model):
 		goocanvas.CanvasModelSimple.__init__(self)
+		self._theme = Theme()
+		self._theme.connect("theme-changed", self.__theme_changed_cb)
 
 		root = self.get_root_item()
 
-		item = goocanvas.Rect(width=1200, height=900,
-							  fill_color="#d8d8d8")
-		root.add_child(item)
+		color = self._theme.get_home_colors()[2]
+		self._mesh_rect = goocanvas.Rect(width=1200, height=900,
+										 fill_color=color)
+		root.add_child(self._mesh_rect)
+
+		color = self._theme.get_home_colors()[1]
+		self._friends_rect = goocanvas.Rect(x=100, y=100, width=1000, height=700,
+											line_width=0, fill_color=color,
+											radius_x=30, radius_y=30)
+		root.add_child(self._friends_rect)
+
+		color = self._theme.get_home_colors()[0]
+		self._home_rect = goocanvas.Rect(x=400, y=300, width=400, height=300,
+										 line_width=0, fill_color=color,
+										 radius_x=30, radius_y=30)
+		root.add_child(self._home_rect)
 
 		for friend in data_model:
 			self.add_friend(friend)
 
 		data_model.connect('friend-added', self.__friend_added_cb)
+
+	def __theme_changed_cb(self, theme, colors):
+		color = self._theme.get_home_colors()[0]
+		self._home_rect.set_property("fill-color", color)
+		color = self._theme.get_home_colors()[1]
+		self._friends_rect.set_property("fill-color", color)
+		color = self._theme.get_home_colors()[2]
+		self._mesh_rect.set_property("fill-color", color)
 
 	def add_friend(self, friend):
 		root = self.get_root_item()

@@ -47,15 +47,15 @@ class Background(goocanvas.Group):
 		self._theme.connect("theme-changed", self.__theme_changed_cb)
 
 		color = self._theme.get_home_colors()[1]
-		self._outer_rect = goocanvas.Rect(width=1200, height=900,
+		self._friends_rect = goocanvas.Rect(width=1200, height=900,
 										  fill_color=color)
-		self.add_child(self._outer_rect)
+		self.add_child(self._friends_rect)
 
 		color = self._theme.get_home_colors()[0]
-		self._inner_rect = goocanvas.Rect(x=100, y=100, width=1000, height=700,
+		self._home_rect = goocanvas.Rect(x=100, y=100, width=1000, height=700,
 										  line_width=0, fill_color=color,
 										  radius_x=30, radius_y=30)
-		self.add_child(self._inner_rect)
+		self.add_child(self._home_rect)
 
 		item = goocanvas.Text(text="My Activities",
 							  x=12, y=12, fill_color="black",
@@ -64,9 +64,9 @@ class Background(goocanvas.Group):
 
 	def __theme_changed_cb(self, theme, colors):
 		color = self._theme.get_home_colors()[0]
-		self._inner_rect.set_property("fill-color", color)
+		self._home_rect.set_property("fill-color", color)
 		color = self._theme.get_home_colors()[1]
-		self._outer_rect.set_property("fill-color", color)
+		self._friends_rect.set_property("fill-color", color)
 
 class Model(goocanvas.CanvasModelSimple):
 	def __init__(self, shell):
