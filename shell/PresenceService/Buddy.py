@@ -74,6 +74,7 @@ class BuddyDBusHelper(dbus.service.Object):
 		props['name'] = self._parent.get_name()
 		props['ip4_address'] = self._parent.get_address()
 		props['owner'] = self._parent.is_owner()
+		props['color'] = self._parent.get_color()
 		return props
 
 
@@ -94,6 +95,7 @@ class Buddy(object):
 
 		self._nick_name = service.get_name()
 		self._address = service.get_source_address()
+		self._color = None
 		self._valid = False
 		self._icon = None
 		self._icon_tries = 0
@@ -159,6 +161,7 @@ class Buddy(object):
 			self._valid = True
 			print 'Requesting buddy icon %s' % self._nick_name
 			self._request_buddy_icon(service)
+			self._color = service.get_one_property('color')
 
 		if self._valid:
 			self._dbus_helper.ServiceAppeared(service.object_path())
@@ -242,6 +245,9 @@ class Buddy(object):
 
 	def get_name(self):
 		return self._nick_name
+
+	def get_color(self):
+		return self._color
 
 	def _set_icon(self, icon):
 		"""Can only set icon for other buddies.  The Owner

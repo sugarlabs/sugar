@@ -29,7 +29,9 @@ class ShellOwner(object):
 
 	def announce(self):
 		# Create and announce our presence
-		self._service = self._pservice.register_service(self._nick, PRESENCE_SERVICE_TYPE)
+		props = { 'color': "#deadbe" }
+		self._service = self._pservice.register_service(self._nick,
+				PRESENCE_SERVICE_TYPE, properties=props)
 		print "Owner '%s' using port %d" % (self._nick, self._service.get_port())
 		self._icon_stream = Stream.Stream.new_from_service(self._service)
 		self._icon_stream.register_reader_handler(self._handle_buddy_icon_request, "get_buddy_icon")
@@ -39,8 +41,3 @@ class ShellOwner(object):
 		if self._icon:
 			return base64.b64encode(self._icon)
 		return ""
-
-	def set_icon(self, icon):
-		"""Can only set icon in constructor for now."""
-		pass
-

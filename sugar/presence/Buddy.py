@@ -89,6 +89,9 @@ class Buddy(gobject.GObject):
 	def is_owner(self):
 		return self._properties['owner']
 
+	def get_color(self):
+		return self._properties['color']
+
 	def get_icon(self):
 		return self._buddy.getIcon()
 
