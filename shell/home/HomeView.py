@@ -8,7 +8,7 @@ from sugar.canvas.DonutItem import DonutItem
 from sugar.canvas.DonutItem import PieceItem
 from sugar.canvas.DonutItem import PieceIcon
 
-from Theme import Theme
+import Theme
 
 class TasksItem(DonutItem):
 	def __init__(self, shell):
@@ -43,7 +43,7 @@ class TasksItem(DonutItem):
 class Background(goocanvas.Group):
 	def __init__(self):
 		goocanvas.Group.__init__(self)
-		self._theme = Theme()
+		self._theme = Theme.get_instance()
 		self._theme.connect("theme-changed", self.__theme_changed_cb)
 
 		color = self._theme.get_home_colors()[1]

@@ -39,3 +39,12 @@ class Theme(gobject.GObject):
 
 	def get_home_colors(self):
 		return self.__colors[self._cur_theme]
+
+
+# Use this accessor, don't create more than one theme object
+_theme = None
+def get_instance():
+	global _theme
+	if not _theme:
+		_theme = Theme()
+	return _theme

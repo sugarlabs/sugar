@@ -5,12 +5,12 @@ import goocanvas
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.IconItem import IconColor
 
-from Theme import Theme
+import Theme
 
 class Model(goocanvas.CanvasModelSimple):
 	def __init__(self, data_model):
 		goocanvas.CanvasModelSimple.__init__(self)
-		self._theme = Theme()
+		self._theme = Theme.get_instance()
 		self._theme.connect("theme-changed", self.__theme_changed_cb)
 
 		root = self.get_root_item()
