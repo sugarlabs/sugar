@@ -26,6 +26,12 @@ To run the python sources from your source tree run
 
  $ shell/sugar
 
+NOTE: if you are not running on an actual OLPC, you'll want to set:
+
+SUGAR_EMULATOR=yes
+
+before running sugar.
+
 Running multiple instances on the same machine
 ==============================================
 
