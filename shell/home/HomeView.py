@@ -3,7 +3,7 @@ import goocanvas
 import wnck
 
 from sugar.canvas.IconItem import IconItem
-from sugar.canvas.IconItem import IconColor
+from sugar.canvas.IconColor import IconColor
 from sugar.canvas.DonutItem import DonutItem
 from sugar.canvas.DonutItem import PieceItem
 from sugar.canvas.DonutItem import PieceIcon

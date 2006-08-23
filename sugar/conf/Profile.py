@@ -1,5 +1,6 @@
 import os
 from ConfigParser import ConfigParser
+from sugar.canvas.IconColor import IconColor
 
 class Profile:
 	def __init__(self):
@@ -11,6 +12,13 @@ class Profile:
 		except OSError, exc:
 			if exc[0] != 17:  # file exists
 				print "Could not create user directory."
+
+	def get_color(self):
+		return self._color
+
+	def set_color(self, color):
+		self._color = color
+		self.save()
 
 	def get_nick_name(self):
 		return self._nick_name
@@ -27,6 +35,7 @@ class Profile:
 
 		base_path = os.path.expanduser('~/.sugar')
 		self._path = os.path.join(base_path, profile_id)
+		self._color = None
 		self._ensure_dirs()		
 
 		cp = ConfigParser()
@@ -34,6 +43,11 @@ class Profile:
 
 		if cp.has_option('Buddy', 'NickName'):
 			self._nick_name = cp.get('Buddy', 'NickName')
+		if cp.has_option('Buddy', 'Color'):
+			self._color = IconColor(cp.get('Buddy', 'Color'))
+
+		if self._color == None:
+			self.set_color(IconColor())
 
 	def save(self):
 		cp = ConfigParser()
@@ -41,6 +55,7 @@ class Profile:
 		section = 'Buddy'	
 		cp.add_section(section)
 		cp.set(section, 'NickName', self._nick_name)
+		cp.set(section, 'Color', self._color.get_fill_color())
 
 		fileobject = open(self._get_config_path(), 'w')
 		cp.write(fileobject)

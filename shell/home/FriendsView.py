@@ -3,7 +3,7 @@ import random
 import goocanvas
 
 from sugar.canvas.IconItem import IconItem
-from sugar.canvas.IconItem import IconColor
+from sugar.canvas.IconColor import IconColor
 
 import Theme
 

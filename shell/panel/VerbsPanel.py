@@ -2,7 +2,7 @@ import gtk
 import goocanvas
 
 from sugar.canvas.IconItem import IconItem
-from sugar.canvas.IconItem import IconColor
+from sugar.canvas.IconColor import IconColor
 from sugar import conf
 from panel.Panel import Panel
 
