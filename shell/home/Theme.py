@@ -1,5 +1,7 @@
 import gobject
 
+
+
 class Theme(gobject.GObject):
 	__gsignals__ = {
 		'theme-changed':   (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
@@ -37,9 +39,14 @@ class Theme(gobject.GObject):
 		if updated:
 			self.emit('theme-changed')
 
-	def get_home_colors(self):
-		return self.__colors[self._cur_theme]
+	def get_home_activities_color(self):
+		return self.__colors[self._cur_theme][0]
 
+	def get_home_friends_color(self):
+		return self.__colors[self._cur_theme][1]
+
+	def get_home_mesh_color(self):
+		return self.__colors[self._cur_theme][2]
 
 # Use this accessor, don't create more than one theme object
 _theme = None
