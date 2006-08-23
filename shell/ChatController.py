@@ -1,7 +1,7 @@
 from sugar import env
 from sugar.chat.BuddyChat import BuddyChat
 from sugar.activity import ActivityFactory
-from sugar.presence.PresenceService import PresenceService
+from sugar.presence import PresenceService
 from sugar.p2p.Stream import Stream
 from sugar.chat.Chat import Chat
 
@@ -21,7 +21,7 @@ class ChatController:
 			del self._id_to_name[activity_id]
 
 	def listen(self):
-		self._pservice = PresenceService()
+		self._pservice = PresenceService.get_instance()
 
 		self._pservice.register_service_type(BuddyChat.SERVICE_TYPE)
 		self._service = self._pservice.register_service(env.get_nick_name(),

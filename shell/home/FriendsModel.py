@@ -1,6 +1,6 @@
 import gobject
 
-from sugar.presence.PresenceService import PresenceService
+from sugar.presence import PresenceService
 
 class Friend:
 	def __init__(self, buddy):
@@ -22,7 +22,7 @@ class FriendsModel(gobject.GObject):
 		
 		self._friends = []
 		
-		self._pservice = PresenceService()
+		self._pservice = PresenceService.get_instance()
 		self._pservice.connect("buddy-appeared", self.__buddy_appeared_cb)
 
 		for buddy in self._pservice.get_buddies():

@@ -173,7 +173,7 @@ class Shell(gobject.GObject):
 		if activity:
 			activity.present()
 		else:
-			pservice = PresenceService.PresenceService()
+			pservice = PresenceService.get_instance()
 			activity_ps = pservice.get_activity(activity_id)
 
 			if activity_ps:

@@ -25,7 +25,7 @@ class ShellOwner(object):
 			fd.close()
 			break
 
-		self._pservice = PresenceService.PresenceService()
+		self._pservice = PresenceService.get_instance()
 
 	def announce(self):
 		# Create and announce our presence

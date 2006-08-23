@@ -1,6 +1,6 @@
 import gobject
 
-from sugar.presence.PresenceService import PresenceService
+from sugar.presence import PresenceService
 from sugar import conf
 
 class ActivityInfo:
@@ -32,7 +32,7 @@ class MeshModel(gobject.GObject):
 		
 		self._activities = {}
 		
-		self._pservice = PresenceService()
+		self._pservice = PresenceService.get_instance()
 		self._pservice.connect("service-appeared", self.__service_appeared_cb)
 
 		for service in self._pservice.get_services():

@@ -2,7 +2,7 @@ import gtk
 import gobject
 import dbus
 
-from sugar.presence.PresenceService import PresenceService
+from sugar.presence import PresenceService
 from sugar.presence.Service import Service
 from sugar.chat.BuddyChat import BuddyChat
 
@@ -20,7 +20,7 @@ class PresenceView(gtk.VBox):
 		self._activity_ps = None
 		self._shell = shell
 
-		self._pservice = PresenceService()
+		self._pservice = PresenceService.get_instance()
 		self._pservice.connect("activity-appeared", self._activity_appeared_cb)
 		
 		self._setup_ui()

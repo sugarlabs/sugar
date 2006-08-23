@@ -206,6 +206,14 @@ class PresenceService(gobject.GObject):
 	def unregister_service_type(self, stype):
 		self._ps.unregisterServiceType(stype)
 
+_ps = None
+def get_instance():
+	global _ps
+	if not _ps:
+		_ps = PresenceService()
+	return _ps
+
+
 def start():
 	bus = dbus.SessionBus()
 	ps = dbus.Interface(bus.get_object(DBUS_SERVICE, DBUS_PATH), DBUS_INTERFACE)
