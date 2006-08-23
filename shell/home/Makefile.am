@@ -7,4 +7,5 @@ sugar_PYTHON =				\
 	MeshView.py			\
 	HomeView.py			\
 	HomeWindow.py			\
-	HomeModel.py
+	HomeModel.py		\
+	Theme.py
