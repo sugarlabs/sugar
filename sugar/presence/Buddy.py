@@ -35,6 +35,8 @@ class Buddy(gobject.GObject):
 		self._buddy.connect_to_signal('LeftActivity', self._left_activity_cb)
 		self._buddy.connect_to_signal('PropertyChanged', self._property_changed_cb)
 		self._properties = self._buddy.getProperties()
+		if not self._properties.has_key('color'):
+			self._properties['color'] = "#deadbe"
 
 	def object_path(self):
 		return self._object_path

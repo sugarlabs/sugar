@@ -74,7 +74,9 @@ class BuddyDBusHelper(dbus.service.Object):
 		props['name'] = self._parent.get_name()
 		props['ip4_address'] = self._parent.get_address()
 		props['owner'] = self._parent.is_owner()
-		props['color'] = self._parent.get_color()
+		color = self._parent.get_color()
+		if color:
+			props['color'] = self._parent.get_color()
 		return props
 
 
