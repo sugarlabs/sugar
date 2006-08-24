@@ -77,6 +77,7 @@ class Activity(gtk.Window):
 		self._shared = False
 		self._activity_id = None
 		self._default_type = None
+		self._service = None
 		self._pservice = PresenceService()
 
 		self.present()
