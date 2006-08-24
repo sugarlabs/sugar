@@ -7,6 +7,7 @@ from sugar.canvas.IconColor import IconColor
 from sugar.canvas.DonutItem import DonutItem
 from sugar.canvas.DonutItem import PieceItem
 from sugar.canvas.DonutItem import PieceIcon
+import sugar.conf
 
 import Theme
 
@@ -81,7 +82,8 @@ class Model(goocanvas.CanvasModelSimple):
 		tasks.translate(600, 450)
 		root.add_child(tasks)
 
-		me = IconItem('stock-buddy', IconColor(), 150)
+		profile = sugar.conf.get_profile()
+		me = IconItem('stock-buddy', profile.get_color(), 150)
 		me.translate(600 - (me.get_property('width') / 2),
 					 450 - (me.get_property('height') / 2))
 		root.add_child(me)

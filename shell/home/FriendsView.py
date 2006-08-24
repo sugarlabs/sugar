@@ -3,7 +3,6 @@ import random
 import goocanvas
 
 from sugar.canvas.IconItem import IconItem
-from sugar.canvas.IconColor import IconColor
 
 import Theme
 
@@ -48,7 +47,7 @@ class Model(goocanvas.CanvasModelSimple):
 	def add_friend(self, friend):
 		root = self.get_root_item()
 
-		icon = IconItem('stock-buddy', IconColor(), 48)
+		icon = IconItem('stock-buddy', friend.get_color(), 48)
 		icon.set_property('x', random.random() * 1100)
 		icon.set_property('y', random.random() * 800)
 

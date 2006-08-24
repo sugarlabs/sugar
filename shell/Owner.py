@@ -5,6 +5,7 @@ import base64
 from sugar import env
 from sugar.p2p import Stream
 from sugar.presence import PresenceService
+from sugar import conf
 
 PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
 
@@ -29,7 +30,8 @@ class ShellOwner(object):
 
 	def announce(self):
 		# Create and announce our presence
-		props = { 'color': "#deadbe" }
+		color = conf.get_profile().get_color()
+		props = { 'color':  color.get_fill_color() }
 		self._service = self._pservice.register_service(self._nick,
 				PRESENCE_SERVICE_TYPE, properties=props)
 		print "Owner '%s' using port %d" % (self._nick, self._service.get_port())

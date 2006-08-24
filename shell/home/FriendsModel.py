@@ -1,6 +1,7 @@
 import gobject
 
 from sugar.presence import PresenceService
+from sugar.canvas.IconColor import IconColor
 
 class Friend:
 	def __init__(self, buddy):
@@ -8,6 +9,10 @@ class Friend:
 	
 	def get_name(self):
 		return self._buddy.get_name()
+
+	def get_color(self):
+		color = self._buddy.get_color() 
+		return IconColor(color)
 
 class FriendsModel(gobject.GObject):
 	__gsignals__ = {
