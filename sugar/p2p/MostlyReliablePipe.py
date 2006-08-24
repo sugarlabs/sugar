@@ -636,9 +636,10 @@ class MostlyReliablePipe(object):
 		# Set some more multicast options
 		self._listen_sock.bind((self._local_addr, self._port))
 		self._listen_sock.settimeout(2)
-		intf = socket.gethostbyname(socket.gethostname())
-		self._listen_sock.setsockopt(socket.SOL_IP, socket.IP_MULTICAST_IF,
-				socket.inet_aton(intf) + socket.inet_aton('0.0.0.0'))
+# Disable for now to try to fix "cannot assign requested address" errors
+#		intf = socket.gethostbyname(socket.gethostname())
+#		self._listen_sock.setsockopt(socket.SOL_IP, socket.IP_MULTICAST_IF,
+#				socket.inet_aton(intf) + socket.inet_aton('0.0.0.0'))
 		self._listen_sock.setsockopt(socket.SOL_IP, socket.IP_ADD_MEMBERSHIP,
 				socket.inet_aton(self._remote_addr) + socket.inet_aton('0.0.0.0'))
 
