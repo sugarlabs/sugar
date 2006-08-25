@@ -2,6 +2,7 @@ import gobject
 
 from sugar.presence import PresenceService
 from sugar.canvas.IconColor import IconColor
+import logging
 
 class Friend:
 	def __init__(self, buddy):
@@ -11,8 +12,13 @@ class Friend:
 		return self._buddy.get_name()
 
 	def get_color(self):
-		color = self._buddy.get_color() 
-		return IconColor(color)
+		color = self._buddy.get_color()
+		try:
+			icolor = IconColor(color)
+		except RuntimeError:
+			icolor = IconColor()
+			logging.info("Buddy %s doesn't have an allowed color; using a random color instead." % self.get_name())
+		return icolor
 
 class FriendsModel(gobject.GObject):
 	__gsignals__ = {

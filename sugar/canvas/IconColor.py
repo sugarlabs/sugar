@@ -109,7 +109,13 @@ class IconColor:
 		if fill_color == None:
 			n = int(random.random() * (len(self.__colors_dict) - 1))
 			fill_color = self.__colors_dict.keys()[n]
-
+		else:
+			if fill_color[0] == '#':
+				fill_color = fill_color.upper()
+			else:
+				fill_color = fill_color.lower()
+			if not self.__colors_dict.has_key(fill_color):
+				raise RuntimeError("Specified fill color %s is not allowed." % fill_color)
 		self._fill_color = fill_color
 
 	def get_stroke_color(self):
