@@ -65,6 +65,8 @@ class BuddyDBusHelper(dbus.service.Object):
 						in_signature="", out_signature="ao")
 	def getJoinedActivities(self):
 		acts = []
+		for act in self._parent.get_joined_activities():
+			acts.append(act.object_path())
 		return acts
 
 	@dbus.service.method(BUDDY_DBUS_INTERFACE,
@@ -181,7 +183,8 @@ class Buddy(object):
 		if not found:
 			raise RuntimeError("Tried to add activity for which we had no service")
 		self._activities[actid] = activity
-		self._dbus_helper.JoinedActivity(activity.object_path())
+		if activity.is_valid():
+			self._dbus_helper.JoinedActivity(activity.object_path())
 
 	def remove_service(self, service):
 		"""Remove a service from a buddy; ie, the activity was closed
@@ -204,14 +207,24 @@ class Buddy(object):
 		if not self._activities.has_key(actid):
 			return
 		del self._activities[actid]
-		print "Buddy (%s) left activity %s." % (self._nick_name, actid)
-		self._dbus_helper.LeftActivity(activity.object_path())
+		if activity.is_valid():
+			self._dbus_helper.LeftActivity(activity.object_path())
+
+	def get_joined_activities(self):
+		acts = []
+		for act in self._activities.values():
+			if act.is_valid():
+				acts.append(act)
+		return acts
 
 	def get_service_of_type(self, stype=None, activity=None):
 		"""Return a service of a certain type, or None if the buddy
 		doesn't provide that service."""
 		if not stype:
 			raise RuntimeError("Need to specify a service type.")
+
+		if activity and not activity.is_valid():
+			raise RuntimeError("Activity is not yet valid.")
 
 		if activity:
 			actid = activity.get_id()

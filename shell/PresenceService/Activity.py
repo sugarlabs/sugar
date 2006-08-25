@@ -42,6 +42,11 @@ class ActivityDBusHelper(dbus.service.Object):
 		return self._parent.get_id()
 
 	@dbus.service.method(ACTIVITY_DBUS_INTERFACE,
+						in_signature="", out_signature="s")
+	def getColor(self):
+		return self._parent.get_color()
+
+	@dbus.service.method(ACTIVITY_DBUS_INTERFACE,
 						in_signature="", out_signature="ao")
 	def getJoinedBuddies(self):
 		buddies = self._parent.get_joined_buddies()
@@ -81,6 +86,8 @@ class Activity(object):
 
 		self._buddies = []
 		self._services = {}	# service type -> list of Services
+		self._color = None
+		self._valid = False
 
 		self._object_id = object_id
 		self._object_path = "/org/laptop/Presence/Activities/%d" % self._object_id
@@ -91,8 +98,15 @@ class Activity(object):
 	def object_path(self):
 		return dbus.ObjectPath(self._object_path)
 
+	def is_valid(self):
+		"""An activity is only valid when it's color is available."""
+		return self._valid
+
 	def get_id(self):
 		return self._activity_id
+
+	def get_color(self):
+		return self._color
 
 	def get_services(self):
 		ret = []
@@ -112,7 +126,7 @@ class Activity(object):
 		for serv_list in self._services.values():
 			for serv in serv_list:
 				owner = serv.get_owner()
-				if not owner in buddies:
+				if not owner in buddies and owner.is_valid():
 					buddies.append(owner)
 		return buddies
 
@@ -121,11 +135,17 @@ class Activity(object):
 		if not self._services.has_key(stype):
 			self._services[stype] = []
 
+		if not self._color:
+			color = service.get_one_property('color')
+			if color:
+				self._color = color
+				self._valid = True
+
 		# Send out the BuddyJoined signal if this is the first
 		# service from the buddy that we've seen
 		buddies = self.get_joined_buddies()
 		serv_owner = service.get_owner()
-		if serv_owner and serv_owner not in buddies:
+		if serv_owner and serv_owner not in buddies and serv_owner.is_valid():
 			self._dbus_helper.BuddyJoined(serv_owner.object_path())
 			serv_owner.add_activity(self)
 
@@ -146,6 +166,6 @@ class Activity(object):
 		# service from the buddy
 		buddies = self.get_joined_buddies()
 		serv_owner = service.get_owner()
-		if serv_owner and serv_owner not in buddies:
+		if serv_owner and serv_owner not in buddies and serv_owner.is_valid():
 			serv_owner.remove_activity(self)
 			self._dbus_helper.BuddyLeft(serv_owner.object_path())

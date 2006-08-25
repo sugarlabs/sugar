@@ -302,24 +302,36 @@ class PresenceService(object):
 		return ret
 
 	def get_activities(self):
-		return self._activities.values()
+		# Only return valid activities
+		ret = []
+		for act in self._activities.values():
+			if act.is_valid():
+				ret.append(act)
+		return ret
 
 	def get_activity(self, actid):
 		if self._activities.has_key(actid):
-			return self._activities[actid]
+			act = self._activities[actid]
+			if act.is_valid():
+				return act
 		return None
 
 	def get_buddies(self):
-		return self._buddies.values()
+		buddies = []
+		for buddy in self._buddies.values():
+			if buddy.is_valid():
+				buddies.append(buddy)
+		return buddies
 
 	def get_buddy_by_name(self, name):
 		if self._buddies.has_key(name):
-			return self._buddies[name]
+			if self._buddies[name].is_valid():
+				return self._buddies[name]
 		return None
 
 	def get_buddy_by_address(self, address):
 		for buddy in self._buddies.values():
-			if buddy.get_address() == address:
+			if buddy.get_address() == address and buddy.is_valid():
 				return buddy
 		return None
 
@@ -379,16 +391,20 @@ class PresenceService(object):
 		if not actid:
 			return
 		activity = None
+		was_valid = False
 		if not self._activities.has_key(actid):
 			objid = self._get_next_object_id()
 			activity = Activity.Activity(self._bus_name, objid, service)
 			self._activities[actid] = activity
-			self._dbus_helper.ActivityAppeared(activity.object_path())
 		else:
 			activity = self._activities[actid]
+			was_valid = activity.is_valid()
 
 		if activity:
 			activity.add_service(service)
+
+		if not was_valid and activity.is_valid():
+			self._dbus_helper.ActivityAppeared(activity.object_path())
 
 	def _handle_remove_activity_service(self, service):
 		actid = service.get_activity_id()
@@ -596,7 +612,11 @@ class PresenceService(object):
 		if not len(services):
 			raise NotFoundError("The service type %s was not present within the activity %s" % (stype, activity.object_path()))
 		act_service = services[0]
-		return self._share_activity(activity.get_id(), stype, act_service.get_properties(),
+		props = act_service.get_properties()
+		color = activity.get_color()
+		if color:
+			props['color'] = color
+		return self._share_activity(activity.get_id(), stype, properties,
 				act_service.get_address(), act_service.get_port(), act_service.get_domain())
 
 	def share_activity(self, activity_id, stype, properties=None, address=None, port=-1, domain=u"local"):
@@ -615,6 +635,10 @@ class PresenceService(object):
 			properties['port'] = port
 		if port and port != -1 and (type(port) != type(1) or port <= 1024 or port >= 65535):
 			raise ValueError("port must be a number between 1024 and 65535")
+		
+		color = self._owner.get_color()
+		if color:
+			properties['color'] = color
 
 		logging.debug('Share activity %s, type %s, address %s, port %d, properties %s' % (activity_id, stype, address, port, properties))
 		return self.register_service(real_name, stype, properties, address, port, domain)
@@ -699,6 +723,7 @@ class PresenceService(object):
 
 def main():
 	from sugar import TracebackUtils
+	env.read_profile()
 	loop = gobject.MainLoop()
 	ps = PresenceService()
 	tbh = TracebackUtils.TracebackHelper()

@@ -30,6 +30,7 @@ class Activity(gobject.GObject):
 		self._activity.connect_to_signal('ServiceDisappeared', self._service_disappeared_cb)
 		
 		self._id = None
+		self._color = None
 
 	def object_path(self):
 		return self._object_path
@@ -68,8 +69,10 @@ class Activity(gobject.GObject):
 			self._id = self._activity.getId()
 		return self._id
 
-	def get_icon(self):
-		return self._buddy.getIcon()
+	def get_color(self):
+		if not self._color:
+			self._color = self._activity.getColor()
+		return self._color
 
 	def get_services(self):
 		resp = self._activity.getServices()
