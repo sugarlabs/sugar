@@ -94,6 +94,7 @@ class Shell(gobject.GObject):
 			self.set_zoom_level(Shell.ZOOM_MESH)
 
 	def __first_time_dialog_destroy_cb(self, dialog):
+		conf.get_profile().save()
 		self.start()
 
 	def start(self):

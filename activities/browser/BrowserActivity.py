@@ -1,3 +1,5 @@
+import os
+
 import gtk
 import geckoembed
 
@@ -8,10 +10,14 @@ from sugar.p2p.model.RemoteModel import RemoteModel
 
 from NotificationBar import NotificationBar
 from NavigationToolbar import NavigationToolbar
+from sugar import env
 
 class BrowserActivity(Activity):
 	def __init__(self):
 		Activity.__init__(self)
+
+		path = os.path.join(env.get_profile_path(), 'gecko')
+		geckoembed.set_profile_path(path)
 
 		self._share_service = None
 		self._model_service = None

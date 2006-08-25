@@ -3,7 +3,8 @@ from ConfigParser import ConfigParser
 from sugar.canvas.IconColor import IconColor
 
 class Profile:
-	def __init__(self):
+	def __init__(self,):
+		self._path = None
 		self._nick_name = None
 
 	def _ensure_dirs(self):
@@ -18,23 +19,20 @@ class Profile:
 
 	def set_color(self, color):
 		self._color = color
-		self.save()
 
 	def get_nick_name(self):
 		return self._nick_name
 
 	def set_nick_name(self, nick_name):
 		self._nick_name = nick_name
-		self.save()
 
 	def get_path(self):
 		return self._path
 
-	def read(self, profile_id):
-		self._profile_id = profile_id
+	def set_path(self, path):
+		self._path = path
 
-		base_path = os.path.expanduser('~/.sugar')
-		self._path = os.path.join(base_path, profile_id)
+	def read(self):
 		self._color = None
 		self._ensure_dirs()		
 
