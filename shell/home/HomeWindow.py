@@ -43,8 +43,8 @@ class HomeWindow(gtk.Window):
 
 	def _setup_canvas(self, canvas):
 		canvas.set_bounds(0, 0, 1200, 900)
-		canvas.set_scale(float(800) / float(1200))
-		canvas.set_size_request(800, 600)
+		canvas.set_scale(float(gtk.gdk.screen_width()) / float(1200))
+		canvas.set_size_request(gtk.gdk.screen_width(), gtk.gdk.screen_height())
 
 	def __realize_cb(self, window):
 		self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
