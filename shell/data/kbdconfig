@@ -5,7 +5,5 @@
 <Alt>n=next
 <Alt>p=prev
 <Alt>c=close
-f1=!sugar-zoom out
-f2=!sugar-zoom in
-f3=!sugar-people
-f4=!sugar-activity org.sugar.Terminal
+f5=!sugar-people
+f6=!sugar-activity org.sugar.Terminal

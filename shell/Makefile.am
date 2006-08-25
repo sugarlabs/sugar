@@ -6,7 +6,6 @@ bin_SCRIPTS = 				\
 	sugar-activity-factory		\
 	sugar-console			\
 	sugar-people			\
-	sugar-zoom			\
 	sugar-presence-service
 
 sugardir = $(pkgdatadir)/shell

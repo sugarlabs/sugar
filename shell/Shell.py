@@ -41,14 +41,6 @@ class ShellDbusService(dbus.service.Object):
 	def show_console(self):
 		gobject.idle_add(self.__show_console_idle)
 
-	@dbus.service.method('com.redhat.Sugar.Shell')
-	def zoom_in(self):
-		self._shell.zoom_in()
-
-	@dbus.service.method('com.redhat.Sugar.Shell')
-	def zoom_out(self):
-		self._shell.zoom_out()
-
 class Shell(gobject.GObject):
 	ZOOM_MESH = 0
 	ZOOM_FRIENDS = 1
@@ -66,7 +58,11 @@ class Shell(gobject.GObject):
 		gobject.GObject.__init__(self)
 
 		key_grabber = KeyGrabber()
-		key_grabber.grab('F8')
+		key_grabber.connect('key-pressed', self.__global_key_pressed_cb)
+		key_grabber.grab('F1')
+		key_grabber.grab('F2')
+		key_grabber.grab('F3')
+		key_grabber.grab('F4')
 
 		self._screen = wnck.screen_get_default()
 		self._hosts = {}
@@ -87,6 +83,16 @@ class Shell(gobject.GObject):
 		else:
 			self.start()
 
+	def __global_key_pressed_cb(self, grabber, key):
+		if key == 'F1':
+			self.set_zoom_level(Shell.ZOOM_ACTIVITY)
+		elif key == 'F2':
+			self.set_zoom_level(Shell.ZOOM_HOME)
+		elif key == 'F3':
+			self.set_zoom_level(Shell.ZOOM_FRIENDS)
+		elif key == 'F4':
+			self.set_zoom_level(Shell.ZOOM_MESH)
+
 	def __first_time_dialog_destroy_cb(self, dialog):
 		self.start()
 
@@ -105,7 +111,7 @@ class Shell(gobject.GObject):
 
 		home_model = HomeModel()
 		self._home_window.set_model(home_model)
-		self._set_zoom_level(Shell.ZOOM_HOME)
+		self.set_zoom_level(Shell.ZOOM_HOME)
 
 		self._panel_manager = PanelManager(self)
 
@@ -204,7 +210,7 @@ class Shell(gobject.GObject):
 	def get_chat_controller(self):
 		return self._chat_controller
 
-	def _set_zoom_level(self, level):
+	def set_zoom_level(self, level):
 		self._zoom_level = level
 
 		if level == Shell.ZOOM_ACTIVITY:
@@ -218,13 +224,3 @@ class Shell(gobject.GObject):
 			self._home_window.set_view(HomeWindow.FRIENDS_VIEW)
 		elif level == Shell.ZOOM_MESH:
 			self._home_window.set_view(HomeWindow.MESH_VIEW)
-
-	def zoom_in(self):
-		level = self._zoom_level + 1
-		if level <= Shell.ZOOM_ACTIVITY:
-			self._set_zoom_level(level)
-
-	def zoom_out(self):
-		level = self._zoom_level - 1
-		if level >= Shell.ZOOM_MESH:
-			self._set_zoom_level(level)
