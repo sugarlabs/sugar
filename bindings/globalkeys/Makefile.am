@@ -4,7 +4,7 @@ INCLUDES =			\
 	$(PYGTK_CFLAGS)		\
 	$(GLOBALKEYS_CFLAGS)
 
-globalkeysdir = $(pythondir)/sugar_bindings
+globalkeysdir = $(pkgdatadir)/bindings
 pkgpyexecdir = $(globalkeysdir)
 
 pkgpyexec_LTLIBRARIES = globalkeys.la

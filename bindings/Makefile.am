@@ -1,4 +1,4 @@
 SUBDIRS = globalkeys threadframe
 
-bindingsdir = $(pythondir)/sugar_bindings
+bindingsdir = $(pkgdatadir)/bindings
 bindings_PYTHON = __init__.py

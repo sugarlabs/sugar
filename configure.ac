@@ -53,6 +53,7 @@ shell/session/Makefile
 shell/PresenceService/Makefile
 sugar/Makefile
 sugar/__installed__.py
+sugar/__uninstalled__.py
 sugar/activity/Makefile
 sugar/canvas/Makefile
 sugar/chat/Makefile

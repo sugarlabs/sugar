@@ -36,6 +36,7 @@ po/stamp-it
 po/sugar.pot
 po/*.gmo
 sugar/__installed__.py
+sugar/__uninstalled__.py
 tools/sugar-setup-activity
 shell/PresenceService/org.laptop.Presence.service
 threadframe

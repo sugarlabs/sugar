@@ -18,7 +18,7 @@ from sugar.activity import ActivityFactory
 from sugar.activity import Activity
 from FirstTimeDialog import FirstTimeDialog
 from panel.PanelManager import PanelManager
-from sugar_bindings.globalkeys import KeyGrabber
+from globalkeys import KeyGrabber
 from sugar import conf
 import sugar.logger
 
