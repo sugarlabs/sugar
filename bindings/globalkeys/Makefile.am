@@ -3,10 +3,8 @@ INCLUDES =			\
 	$(PYGTK_CFLAGS)		\
 	$(GLOBALKEYS_CFLAGS)
 
-pkgpythondir = $(pyexecdir)/sugar
-
-globalkeysdir = $(pkgpythondir)
-globalkeys_PYTHON = __init__.py
+globalkeysdir = $(pythondir)/sugar_bindings
+pkgpyexecdir = $(globalkeysdir)
 
 pkgpyexec_LTLIBRARIES = globalkeys.la
 
@@ -14,6 +12,8 @@ globalkeys_la_LDFLAGS = -module -avoid-version
 globalkeys_la_LIBADD = $(GLOBALKEYS_LIBS)
 
 globalkeys_la_SOURCES = 	\
+	eggaccelerators.c	\
+	eggaccelerators.h	\
 	globalkeysmodule.c	\
 	sugar-key-grabber.h	\
 	sugar-key-grabber.c

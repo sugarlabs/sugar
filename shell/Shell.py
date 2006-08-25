@@ -18,6 +18,7 @@ from sugar.activity import ActivityFactory
 from sugar.activity import Activity
 from FirstTimeDialog import FirstTimeDialog
 from panel.PanelManager import PanelManager
+from sugar_bindings.globalkeys import KeyGrabber
 from sugar import conf
 import sugar.logger
 
@@ -63,6 +64,9 @@ class Shell(gobject.GObject):
 
 	def __init__(self):
 		gobject.GObject.__init__(self)
+
+		key_grabber = KeyGrabber()
+		key_grabber.grab('F8')
 
 		self._screen = wnck.screen_get_default()
 		self._hosts = {}

@@ -15,3 +15,12 @@
   (is-constructor-of "SugarKeyGrabber")
   (return-type "GObject*")
 )
+
+(define-method grab
+  (of-object "SugarKeyGrabber")
+  (c-name "sugar_key_grabber_grab")
+  (return-type "none")
+  (parameters
+    '("const-char*" "address")
+  )
+)

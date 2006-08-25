@@ -36,6 +36,8 @@ typedef struct _SugarKeyGrabberPrivate SugarKeyGrabberPrivate;
 
 GType	 sugar_key_grabber_get_type	(void);
 GObject	*sugar_key_grabber_new		(void);
+void     sugar_key_grabber_grab		(SugarKeyGrabber *grabber,
+									 const char	     *key);
 
 G_END_DECLS
 
