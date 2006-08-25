@@ -36,6 +36,8 @@ activities/browser/Makefile
 activities/chat/Makefile
 activities/groupchat/Makefile
 activities/terminal/Makefile
+bindings/Makefile
+bindings/threadframe/Makefile
 shell/Makefile
 shell/data/Makefile
 shell/home/Makefile
@@ -55,5 +57,4 @@ sugar/presence/Makefile
 po/Makefile.in
 tools/Makefile
 tools/sugar-setup-activity
-threadframe/Makefile
 ])

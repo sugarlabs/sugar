@@ -1,4 +1,6 @@
-SUBDIRS = activities po shell sugar tools threadframe
+SUBDIRS = activities bindings po shell sugar tools
+
+ACLOCAL_AMFLAGS = -I m4
 
 dbusconfdir = $(pkgdatadir)
 dbusconf_DATA = dbus-installed.conf
