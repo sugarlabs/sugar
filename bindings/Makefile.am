@@ -1,1 +1,1 @@
-SUBDIRS = threadframe
+SUBDIRS = globalkeys threadframe

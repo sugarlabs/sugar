@@ -1,0 +1,17 @@
+(define-object KeyGrabber
+  (in-module "globalkeys")
+  (parent "GObject")
+  (c-name "SugarKeyGrabber")
+  (gtype-id "SUGAR_TYPE_KEY_GRABBER")
+)
+
+(define-function sugar_key_grabber_get_type
+  (c-name "sugar_key_grabber_get_type")
+  (return-type "GType")
+)
+
+(define-function sugar_key_grabber_new
+  (c-name "sugar_key_grabber_new")
+  (is-constructor-of "SugarKeyGrabber")
+  (return-type "GObject*")
+)

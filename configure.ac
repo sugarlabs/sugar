@@ -18,6 +18,11 @@ AC_PROG_LIBTOOL
 AM_PATH_PYTHON
 AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
 
+AC_PATH_PROG(PYGTK_CODEGEN, pygtk-codegen-2.0, no)
+
+PKG_CHECK_MODULES(PYGTK, pygtk-2.0)
+PKG_CHECK_MODULES(GLOBALKEYS, gdk-2.0)
+
 #
 # Setup GETTEXT
 #
@@ -37,6 +42,7 @@ activities/chat/Makefile
 activities/groupchat/Makefile
 activities/terminal/Makefile
 bindings/Makefile
+bindings/globalkeys/Makefile
 bindings/threadframe/Makefile
 shell/Makefile
 shell/data/Makefile
