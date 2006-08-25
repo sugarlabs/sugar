@@ -57,12 +57,12 @@ class Shell(gobject.GObject):
 	def __init__(self):
 		gobject.GObject.__init__(self)
 
-		key_grabber = KeyGrabber()
-		key_grabber.connect('key-pressed', self.__global_key_pressed_cb)
-		key_grabber.grab('F1')
-		key_grabber.grab('F2')
-		key_grabber.grab('F3')
-		key_grabber.grab('F4')
+		self._key_grabber = KeyGrabber()
+		self._key_grabber.connect('key-pressed', self.__global_key_pressed_cb)
+		self._key_grabber.grab('F1')
+		self._key_grabber.grab('F2')
+		self._key_grabber.grab('F3')
+		self._key_grabber.grab('F4')
 
 		self._screen = wnck.screen_get_default()
 		self._hosts = {}
