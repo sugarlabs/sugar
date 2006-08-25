@@ -18,7 +18,9 @@ SUGAR_PROFILE=profile-2 sugar
 Key bindings
 ============
 
-F1 Zoom in
-F2 Zoom out
-F3 Show the people page
-F4 Open a terminal activity
+F1 Activity zoom level
+F2 Home zoom level
+F3 Friends zoom level
+F4 Mesh zoom level
+F5 Show the people page
+F6 Open a terminal activity
