@@ -1,7 +1,6 @@
 import base64
 import logging
 
-import gtk
 import gobject
 import dbus, dbus.service
 
@@ -122,13 +121,13 @@ class Buddy(object):
 		if result_status == network.RESULT_SUCCESS:
 			if icon and len(icon):
 				icon = base64.b64decode(icon)
-				print "Buddy icon for '%s' is size %d" % (self._nick_name, len(icon))
+				logging.debug("Buddy icon for '%s' is size %d" % (self._nick_name, len(icon)))
 				self._set_icon(icon)
 
 		if (result_status == network.RESULT_FAILED or not icon) and self._icon_tries < 3:
 			self._icon_tries = self._icon_tries + 1
-			print "Failed to retrieve buddy icon for '%s' on try %d of %d" % (self._nick_name, \
-					self._icon_tries, 3)
+			logging.debug("Failed to retrieve buddy icon for '%s' on try %d of %d" % (self._nick_name, \
+					self._icon_tries, 3))
 			gobject.timeout_add(1000, self._request_buddy_icon, service)
 		return False
 
@@ -241,15 +240,6 @@ class Buddy(object):
 		not valid until its official presence service has been found
 		and successfully resolved."""
 		return self._valid
-
-	def get_icon_pixbuf(self):
-		if self._icon:
-			pbl = gtk.gdk.PixbufLoader()
-			pbl.write(self._icon)
-			pbl.close()
-			return pbl.get_pixbuf()
-		else:
-			return None
 
 	def get_icon(self):
 		"""Return the buddies icon, if any."""
