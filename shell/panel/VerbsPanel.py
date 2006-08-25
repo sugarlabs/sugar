@@ -5,10 +5,15 @@ from sugar.canvas.IconItem import IconItem
 from sugar.canvas.IconColor import IconColor
 from sugar import conf
 from panel.Panel import Panel
+import logging
 
 class ActivityItem(IconItem):
 	def __init__(self, activity, size):
-		IconItem.__init__(self, activity.get_icon(),
+		icon_name = activity.get_icon()
+		if not icon_name:
+			act_type = activity.get_default_type()
+			raise RuntimeError("Actvity %s did not have an icon!" % act_type)
+		IconItem.__init__(self, icon_name,
 						  IconColor('white'), size)
 		self._activity = activity
 
@@ -28,6 +33,12 @@ class ActivityBar(goocanvas.Group):
 				self.add_activity(activity)
 
 	def add_activity(self, activity):
+		# Need an icon to show up on the bar
+		if not activity.get_icon():
+			name = activity.get_name()
+			logging.info("Activity %s did not have an icon.  Won't show it." % name)
+			return
+
 		item = ActivityItem(activity, self._height)
 
 		icon_size = self._height
