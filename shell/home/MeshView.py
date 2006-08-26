@@ -14,7 +14,7 @@ class ActivityItem(IconItem):
 		info = registry.get_activity(activity.get_type())
 		icon_name = info.get_icon()
 
-		IconItem.__init__(self, icon_name, IconColor(), 48)
+		IconItem.__init__(self, icon_name, activity.get_color(), 48)
 
 		self._activity = activity
 
@@ -57,7 +57,7 @@ class Model(goocanvas.CanvasModelSimple):
 	def add_activity(self, activity):
 		root = self.get_root_item()
 
-		item = ActivityItem(activity, self._registry)
+		item = ActivityItem(activity)
 		item.set_property('x', random.random() * 1100)
 		item.set_property('y', random.random() * 800)
 		root.add_child(item)

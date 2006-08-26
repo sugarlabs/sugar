@@ -1,6 +1,7 @@
 import gobject
 
 from sugar.presence import PresenceService
+from sugar.canvas.IconColor import IconColor
 from sugar import conf
 
 class ActivityInfo:
@@ -15,6 +16,11 @@ class ActivityInfo:
 	
 	def get_title(self):
 		return self._service.get_published_value('title')
+
+	def get_color(self):
+		pservice = PresenceService.get_instance()
+		activity = pservice.get_activity(self.get_id())
+		return IconColor(activity.get_color())
 	
 	def get_service(self):
 		return self._service

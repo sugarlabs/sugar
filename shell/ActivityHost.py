@@ -3,6 +3,8 @@ import dbus
 
 from sugar import conf
 from sugar.activity import Activity
+from sugar.presence import PresenceService
+from sugar.canvas.IconColor import IconColor
 from PeopleWindow import PeopleWindow
 
 class ActivityHost:
@@ -30,6 +32,14 @@ class ActivityHost:
 
 	def get_icon_name(self):
 		return self._icon_name
+
+	def get_icon_color(self):
+		pservice = PresenceService.get_instance()
+		activity = pservice.get_activity(self._id)
+		if activity != None:
+			return IconColor(activity.get_color())
+		else:
+			return conf.get_profile().get_color()
 
 	def share(self):
 		self._people_window.share()

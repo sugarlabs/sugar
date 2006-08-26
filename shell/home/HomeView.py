@@ -33,7 +33,8 @@ class TasksItem(DonutItem):
 
 	def _add(self, activity):
 		icon_name = activity.get_icon_name()
-		item = self.add_piece(100 / 8, icon_name, IconColor())
+		icon_color = activity.get_icon_color()
+		item = self.add_piece(100 / 8, icon_name, icon_color)
 
 		# FIXME This really sucks. Fix goocanvas event handling.
 		item.set_data('activity', activity)
