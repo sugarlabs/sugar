@@ -17,7 +17,8 @@ class Friend:
 			icolor = IconColor(color)
 		except RuntimeError:
 			icolor = IconColor()
-			logging.info("Buddy %s doesn't have an allowed color; using a random color instead." % self.get_name())
+			logging.info("Buddy %s doesn't have an allowed color; \
+						  using a random color instead." % self.get_name())
 		return icolor
 
 class FriendsModel(gobject.GObject):
@@ -31,21 +32,29 @@ class FriendsModel(gobject.GObject):
 	def __init__(self):
 		gobject.GObject.__init__(self)
 		
-		self._friends = []
+		self._friends = {}
 		
 		self._pservice = PresenceService.get_instance()
 		self._pservice.connect("buddy-appeared", self.__buddy_appeared_cb)
+		self._pservice.connect("buddy-disappeared", self.__buddy_disappeared_cb)
 
 		for buddy in self._pservice.get_buddies():
 			self.add_friend(buddy)
 
 	def add_friend(self, buddy):
 		friend = Friend(buddy)
-		self._friends.append(friend)
+		self._friends[buddy.get_name()] = friend
 		self.emit('friend-added', friend)
 
+	def remove_friend(self, buddy):
+		self.emit('friend-removed', self._friends[buddy.get_name()])
+		del self._friends[buddy.get_name()]
+
 	def __iter__(self):
-		return self._friends.__iter__()
+		return self._friends.values().__iter__()
 
 	def __buddy_appeared_cb(self, pservice, buddy):
 		self.add_friend(buddy)
+
+	def __buddy_disappeared_cb(self, pservice, buddy):
+		self.remove_friend(buddy)
