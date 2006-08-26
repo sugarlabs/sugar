@@ -6,7 +6,7 @@ import random
 import logging
 from sugar import env
 from sugar import util
-
+from sugar import conf
 
 def _get_local_ip_address(ifname):
 	"""Call Linux specific bits to retrieve our own IP address."""
@@ -370,7 +370,7 @@ class PresenceService(object):
 				self._dbus_helper.ServiceAppeared(service.object_path())
 		except KeyError:
 			# Should this service mark the owner?
-			owner_nick = env.get_nick_name()
+			owner_nick = conf.get_profile().get_nick_name()
 			source_addr = service.get_source_address()
 			objid = self._get_next_object_id()
 			if name == owner_nick and source_addr in self._local_addrs.values():

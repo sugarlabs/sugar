@@ -60,10 +60,6 @@ def get_profile_path():
 
 	return os.path.join(path, profile_id)
 
-def get_nick_name():
-	profile = sugar.conf.get_profile()
-	return profile.get_nick_name()
-
 def get_data_dir():
 	return sugar_data_dir
 

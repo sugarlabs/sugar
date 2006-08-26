@@ -14,8 +14,10 @@ class ShellOwner(object):
 	runs in the shell and serves up the buddy icon and other stuff.  It's the
 	server portion of the Owner, paired with the client portion in Buddy.py."""
 	def __init__(self):
-		self._nick = env.get_nick_name()
-		user_dir = env.get_profile_path()
+		profile = conf.get_profile()
+
+		self._nick = profile.get_nick_name()
+		user_dir = profile.get_path()
 
 		self._icon = None
 		for fname in os.listdir(user_dir):

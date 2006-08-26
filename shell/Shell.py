@@ -75,7 +75,8 @@ class Shell(gobject.GObject):
 		self._screen.connect("showing_desktop_changed",
 							 self.__showing_desktop_changed_cb)
 
-		if env.get_nick_name() == None:
+		profile = conf.get_profile()
+		if profile.get_nick_name() == None:
 			dialog = FirstTimeDialog()
 			dialog.connect('destroy', self.__first_time_dialog_destroy_cb)
 			dialog.set_transient_for(self._home_window)
