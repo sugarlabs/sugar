@@ -723,7 +723,6 @@ class PresenceService(object):
 
 def main():
 	from sugar import TracebackUtils
-	env.read_profile()
 	loop = gobject.MainLoop()
 	ps = PresenceService()
 	tbh = TracebackUtils.TracebackHelper()

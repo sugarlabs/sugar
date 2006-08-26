@@ -3,6 +3,8 @@ import os
 from ConfigParser import ConfigParser
 from ConfigParser import NoOptionError
 
+from sugar import env
+
 class ActivityModule:
 	"""Info about an activity module. Wraps a .activity file."""
 	
@@ -54,6 +56,7 @@ class ActivityRegistry:
 
 	def __init__(self):
 		self._activities = []
+		self.scan_directory(env.get_activities_dir())
 
 	def get_activity_from_id(self, activity_id):
 		"""Returns an activity given his identifier"""
