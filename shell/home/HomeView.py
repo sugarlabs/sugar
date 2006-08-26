@@ -4,9 +4,9 @@ import wnck
 
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.IconColor import IconColor
-from sugar.canvas.DonutItem import DonutItem
-from sugar.canvas.DonutItem import PieceItem
-from sugar.canvas.DonutItem import PieceIcon
+from home.DonutItem import DonutItem
+from home.DonutItem import PieceItem
+from home.DonutItem import PieceIcon
 import sugar.conf
 
 import Theme
