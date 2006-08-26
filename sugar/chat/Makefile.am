@@ -10,7 +10,6 @@ sugar_PYTHON =		\
 	ChatToolbar.py	\
 	Emoticons.py	\
 	GroupChat.py	\
-	MeshChat.py	\
 	richtext.py
 
 EXTRA_DIST = \
