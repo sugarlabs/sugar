@@ -28,15 +28,8 @@ class ShellDbusService(dbus.service.Object):
 		dbus.service.Object.__init__(self, bus_name, '/com/redhat/Sugar/Shell')
 		self._shell = shell
 
-	def __show_people_idle(self):
-		self._shell.show_people()		
-
 	def __show_console_idle(self):
 		self._shell.show_console()
-
-	@dbus.service.method('com.redhat.Sugar.Shell')
-	def show_people(self):
-		gobject.idle_add(self.__show_people_idle)
 
 	@dbus.service.method('com.redhat.Sugar.Shell')
 	def show_console(self):
@@ -59,6 +52,7 @@ class Shell(gobject.GObject):
 		self._key_grabber.grab('F2')
 		self._key_grabber.grab('F3')
 		self._key_grabber.grab('F4')
+		self._key_grabber.grab('F5')
 
 		self._screen = wnck.screen_get_default()
 		self._hosts = {}
@@ -89,6 +83,8 @@ class Shell(gobject.GObject):
 			self.set_zoom_level(sugar.ZOOM_FRIENDS)
 		elif key == 'F4':
 			self.set_zoom_level(sugar.ZOOM_MESH)
+		elif key == 'F5':
+			self._panel_manager.toggle_visibility()
 
 	def __first_time_dialog_destroy_cb(self, dialog):
 		conf.get_profile().save()
@@ -112,6 +108,10 @@ class Shell(gobject.GObject):
 		self.set_zoom_level(sugar.ZOOM_HOME)
 
 		self._panel_manager = PanelManager(self)
+		self._panel_manager.show()
+
+	def get_panel_manager(self):
+		return self._panel_manager
 
 	def set_console(self, console):
 		self._console = console
@@ -157,10 +157,6 @@ class Shell(gobject.GObject):
 				return self._hosts[xid]
 
 		return None
-
-	def show_people(self):
-		activity = self.get_current_activity()
-		activity.show_people()
 
 	def show_console(self):
 		self._console.show()

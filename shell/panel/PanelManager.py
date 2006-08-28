@@ -10,21 +10,38 @@ class PanelManager:
 		size = 30
 
 		self._verbs_panel = VerbsPanel(shell)
-		self._verbs_panel.move(0, gtk.gdk.screen_height() - size)
-		self._verbs_panel.resize(gtk.gdk.screen_width(), size)
-		self._verbs_panel.show()
+		self._verbs_panel.set_position(size, 0)
+		self._verbs_panel.move(1, gtk.gdk.screen_height() - size + 1)
+		self._verbs_panel.resize(gtk.gdk.screen_width() - 1, size - 1)
 
 		self._friends_panel = FriendsPanel(shell)
-		self._friends_panel.move(gtk.gdk.screen_width() - size, 0)
-		self._friends_panel.resize(size, gtk.gdk.screen_height())
-		self._friends_panel.show()
+		self._friends_panel.move(gtk.gdk.screen_width() - size, size)
+		self._friends_panel.resize(size, gtk.gdk.screen_height() - size * 2 + 1)
 
 		self._top_panel = TopPanel(shell)
-		self._top_panel.move(0, 0)
-		self._top_panel.resize(gtk.gdk.screen_width(), size)
-		self._top_panel.show()
+		self._top_panel.set_position(size, 0)
+		# FIXME bug in matchbox, can't use 0,0
+		self._top_panel.move(0, 1)
+		self._top_panel.resize(gtk.gdk.screen_width() - 1, size - 1)
 
-		panel = Panel()
-		panel.move(0, 0)
-		panel.resize(size, gtk.gdk.screen_height())
-		panel.show()
+		self._left_panel = Panel()
+		self._left_panel.move(0, size)
+		self._left_panel.resize(size, gtk.gdk.screen_height() - size * 2 + 1)
+
+	def show(self):
+		self._verbs_panel.show()
+		self._friends_panel.show()
+		self._top_panel.show()
+		self._left_panel.show()
+
+	def hide(self):
+		self._verbs_panel.hide()
+		self._friends_panel.hide()
+		self._top_panel.hide()
+		self._left_panel.hide()
+
+	def toggle_visibility(self):
+		if self._verbs_panel.props.visible:
+			self.hide()
+		else:
+			self.show()

@@ -5,7 +5,6 @@ from sugar import conf
 from sugar.activity import Activity
 from sugar.presence import PresenceService
 from sugar.canvas.IconColor import IconColor
-from PeopleWindow import PeopleWindow
 
 class ActivityHost:
 	def __init__(self, shell, window):
@@ -21,7 +20,6 @@ class ActivityHost:
 		self._id = self._activity.get_id()
 		self._default_type = self._activity.get_default_type()
 		self._gdk_window = gtk.gdk.window_foreign_new(self._xid)
-		self._people_window = PeopleWindow(shell, self)
 
 		registry = conf.get_activity_registry()
 		info = registry.get_activity(self._default_type)
@@ -49,9 +47,6 @@ class ActivityHost:
 
 	def get_default_type(self):
 		return self._default_type
-
-	def show_people(self):
-		self.show_dialog(self._people_window)
 
 	def present(self):
 		self._window.activate(gtk.get_current_event_time())

@@ -59,10 +59,9 @@ class VerbsPanel(Panel):
 	def construct(self):
 		Panel.construct(self)
 
-		root = self.get_model().get_root_item()
+		root = self.get_root()
 
 		activity_bar = ActivityBar(self._shell, self.get_height())
-		activity_bar.translate(self.get_border(), self.get_border())
 		root.add_child(activity_bar)
 
 	def __item_view_created_cb(self, view, item_view, item):
@@ -73,3 +72,4 @@ class VerbsPanel(Panel):
 
 	def __activity_button_press_cb(self, view, target, event, activity_id):
 		self._shell.start_activity(activity_id)
+		self._shell.get_panel_manager().hide()

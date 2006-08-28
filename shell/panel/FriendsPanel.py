@@ -24,8 +24,8 @@ class ActionsBar(goocanvas.Group):
 		self.add_icon(icon)
 
 	def add_icon(self, icon):
-		self._y += (self._width + 6)
 		icon.set_property('y', self._y)
+		self._y += (self._width + 6)
 		self.add_child(icon)		
 
 	def __share_clicked_cb(self, item):
@@ -48,5 +48,4 @@ class FriendsPanel(Panel):
 		Panel.construct(self)
 
 		actions_bar = ActionsBar(self._shell, self.get_width())
-		actions_bar.translate(self.get_border(), self.get_border())
 		self.get_root().add_child(actions_bar)

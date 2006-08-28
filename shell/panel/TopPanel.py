@@ -37,5 +37,4 @@ class TopPanel(Panel):
 		Panel.construct(self)
 
 		zoom_bar = ZoomBar(self._shell, self.get_height())
-		zoom_bar.translate(self.get_border(), self.get_border())
 		self.get_root().add_child(zoom_bar)
