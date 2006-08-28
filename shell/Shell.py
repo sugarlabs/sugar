@@ -48,6 +48,10 @@ class Shell(gobject.GObject):
 	def __init__(self):
 		gobject.GObject.__init__(self)
 
+		self._screen = wnck.screen_get_default()
+		self._hosts = {}
+		self._current_window = None
+
 		self._key_grabber = KeyGrabber()
 		self._key_grabber.connect('key-pressed', self.__global_key_pressed_cb)
 		self._key_grabber.grab('F1')
@@ -55,9 +59,6 @@ class Shell(gobject.GObject):
 		self._key_grabber.grab('F3')
 		self._key_grabber.grab('F4')
 		self._key_grabber.grab('F5')
-
-		self._screen = wnck.screen_get_default()
-		self._hosts = {}
 
 		self._home_window = HomeWindow(self)
 		self._home_window.show()
@@ -133,7 +134,9 @@ class Shell(gobject.GObject):
 	def __active_window_changed_cb(self, screen):
 		window = screen.get_active_window()
 		if window and window.get_window_type() == wnck.WINDOW_NORMAL:
-			self.emit('activity-changed', self.get_current_activity())
+			if self._current_window != window:
+				self._current_window = window
+				self.emit('activity-changed', self.get_current_activity())
 
 	def __window_closed_cb(self, screen, window):
 		if window.get_window_type() == wnck.WINDOW_NORMAL:
@@ -151,21 +154,11 @@ class Shell(gobject.GObject):
 		return None
 
 	def get_current_activity(self):
-		window = self._screen.get_active_window()
-		if window:
-			xid = None
-
-			if window.get_window_type() == wnck.WINDOW_NORMAL:
-				xid = window.get_xid()
-			elif window.get_window_type() == wnck.WINDOW_DIALOG:
-				parent = window.get_transient()
-				if not parent is None:
-					xid = parent.get_xid()
-
-			if xid != None:
-				return self._hosts[xid]
-
-		return None
+		if self._current_window != None:
+			xid = self._current_window.get_xid()
+			return self._hosts[xid]
+		else:
+			return None
 
 	def show_console(self):
 		self._console.show()

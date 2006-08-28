@@ -10,8 +10,15 @@ class FriendsGroup(goocanvas.Group):
 
 	def __init__(self, shell, width):
 		goocanvas.Group.__init__(self)
-		self._pservice = PresenceService.get_instance()
+		self._shell = shell
 		self._width = width
+		self._activity_ps = None
+		self._joined_hid = -1
+		self._left_hid = -1
+
+		self._pservice = PresenceService.get_instance()
+		self._pservice.connect('activity-appeared',
+							   self.__activity_appeared_cb)
 
 		self._buddies = []
 		i = 0
@@ -26,7 +33,7 @@ class FriendsGroup(goocanvas.Group):
 		i = 0
 		while i < FriendsGroup.N_BUDDIES:
 			if self._buddies[i] == None:
-				self._add_buddy(i)
+				self._add_buddy(buddy, i)
 				break
 			i += 1
 
@@ -34,14 +41,15 @@ class FriendsGroup(goocanvas.Group):
 		i = 0
 		while i < FriendsGroup.N_BUDDIES:
 			if self._buddies[i] == buddy.get_name():
-				self._remove_buddy(i)
+				self._remove_buddy(buddy, i)
 				break
 			i += 1
 
 	def clear(self):
 		i = 0
 		while i < FriendsGroup.N_BUDDIES:
-			self._remove_buddy(i)
+			if self._buddies[i] != None:
+				self._remove_buddy(i)
 			i += 1
 
 	def _get_y(self, i):
@@ -49,11 +57,11 @@ class FriendsGroup(goocanvas.Group):
 
 	def _add_buddy(self, buddy, i):
 		self.remove_child(i)
-		icon = IconItem(icon_name='stock-buddy', y=self._get_y(i),
-				        color=buddy.get_color(), size=self._width)
+		icon = IconItem(icon_name='stock-buddy',
+				        color=IconColor(buddy.get_color()),
+						size=self._width, y=self._get_y(i))
 		self.add_child(icon, i)
 		self._buddies[i] = buddy.get_name()
-
 
 	def _create_placeholder(self, i):
 		icon = IconItem(icon_name='stock-buddy', color=IconColor('white'),
@@ -65,14 +73,38 @@ class FriendsGroup(goocanvas.Group):
 		self.add_child(self._create_placeholder(i), i)
 		self._buddies[i] = None
 
-	def __activity_changed_cb(self, group, activity):
+	def __activity_appeared_cb(self, pservice, activity_ps):
+		activity = self._shell.get_current_activity()
+		if activity_ps.get_id() == activity.get_id():
+			self._set_activity_ps(activity_ps)
+
+	def _set_activity_ps(self, activity_ps):
+		if self._activity_ps == activity_ps:
+			return
+
+		self._activity_ps = activity_ps
+
 		self.clear()
-		activity_ps = self._pservice.get_activity(activity.get_id())
-		if activity_ps:
+
+		if self._joined_hid > 0:
+			self.disconnect(self._joined_hid)
+			self._joined_hid = -1
+		if self._left_hid > 0:
+			self.disconnect(self._left_hid)
+			self._left_hid = -1
+
+		if activity_ps != None:
 			for buddy in activity_ps.get_joined_buddies():
 				self.add(buddy)
-			activity_ps.connect('buddy-joined', self.__buddy_joined_cb)
-			activity_ps.connect('buddy-left', self.__buddy_left_cb)
+
+			self._joined_hid = activity_ps.connect(
+							'buddy-joined', self.__buddy_joined_cb)
+			self._left_hid = activity_ps.connect(
+							'buddy-left', self.__buddy_left_cb)
+
+	def __activity_changed_cb(self, group, activity):
+		activity_ps = self._pservice.get_activity(activity.get_id())
+		self._set_activity_ps(activity_ps)				
 
 	def __buddy_joined_cb(self, activity, buddy):
 		self.add(buddy)
