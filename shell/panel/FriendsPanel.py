@@ -29,7 +29,9 @@ class ActionsBar(goocanvas.Group):
 		self.add_child(icon)		
 
 	def __share_clicked_cb(self, item):
-		pass
+		activity = self._shell.get_current_activity()
+		if activity != None:
+			activity.share()
 
 	def __invite_clicked_cb(self, item):
 		pass

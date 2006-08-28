@@ -5,8 +5,8 @@ import goocanvas
 from sugar.canvas.IconItem import IconItem
 
 class PieceIcon(IconItem):
-	def __init__(self, piece_item, icon_name, color, **kwargs):
-		IconItem.__init__(self, icon_name, color, 48, **kwargs)
+	def __init__(self, piece_item, **kwargs):
+		IconItem.__init__(self, size=48, **kwargs)
 		self._piece_item = piece_item
 
 	def construct(self):
@@ -39,7 +39,7 @@ class PieceItem(goocanvas.Path):
 		return self._icon
 
 	def set_icon(self, icon_name, color):
-		self._icon = PieceIcon(self, icon_name, color)
+		self._icon = PieceIcon(self, icon_name=icon_name, color=color)
 		self.get_parent().add_child(self._icon)
 		self._icon.construct()
 

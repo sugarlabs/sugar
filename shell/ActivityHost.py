@@ -42,7 +42,6 @@ class ActivityHost:
 			return conf.get_profile().get_color()
 
 	def share(self):
-		self._people_window.share()
 		self._activity.share()
 
 	def get_shared(self):
