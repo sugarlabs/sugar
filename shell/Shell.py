@@ -19,6 +19,7 @@ from sugar.activity import Activity
 from FirstTimeDialog import FirstTimeDialog
 from panel.PanelManager import PanelManager
 from globalkeys import KeyGrabber
+import sugar
 from sugar import conf
 import sugar.logger
 
@@ -42,11 +43,6 @@ class ShellDbusService(dbus.service.Object):
 		gobject.idle_add(self.__show_console_idle)
 
 class Shell(gobject.GObject):
-	ZOOM_MESH = 0
-	ZOOM_FRIENDS = 1
-	ZOOM_HOME = 2
-	ZOOM_ACTIVITY = 3
-
 	__gsignals__ = {
 		'activity-opened': (gobject.SIGNAL_RUN_FIRST,
 							gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
@@ -86,13 +82,13 @@ class Shell(gobject.GObject):
 
 	def __global_key_pressed_cb(self, grabber, key):
 		if key == 'F1':
-			self.set_zoom_level(Shell.ZOOM_ACTIVITY)
+			self.set_zoom_level(sugar.ZOOM_ACTIVITY)
 		elif key == 'F2':
-			self.set_zoom_level(Shell.ZOOM_HOME)
+			self.set_zoom_level(sugar.ZOOM_HOME)
 		elif key == 'F3':
-			self.set_zoom_level(Shell.ZOOM_FRIENDS)
+			self.set_zoom_level(sugar.ZOOM_FRIENDS)
 		elif key == 'F4':
-			self.set_zoom_level(Shell.ZOOM_MESH)
+			self.set_zoom_level(sugar.ZOOM_MESH)
 
 	def __first_time_dialog_destroy_cb(self, dialog):
 		conf.get_profile().save()
@@ -113,7 +109,7 @@ class Shell(gobject.GObject):
 
 		home_model = HomeModel()
 		self._home_window.set_model(home_model)
-		self.set_zoom_level(Shell.ZOOM_HOME)
+		self.set_zoom_level(sugar.ZOOM_HOME)
 
 		self._panel_manager = PanelManager(self)
 
@@ -122,7 +118,7 @@ class Shell(gobject.GObject):
 
 	def __showing_desktop_changed_cb(self, screen):
 		if not screen.get_showing_desktop():
-			self._zoom_level = Shell.ZOOM_ACTIVITY
+			self._zoom_level = sugar.ZOOM_ACTIVITY
 
 	def __window_opened_cb(self, screen, window):
 		if window.get_window_type() == wnck.WINDOW_NORMAL:
@@ -215,14 +211,14 @@ class Shell(gobject.GObject):
 	def set_zoom_level(self, level):
 		self._zoom_level = level
 
-		if level == Shell.ZOOM_ACTIVITY:
+		if level == sugar.ZOOM_ACTIVITY:
 			self._screen.toggle_showing_desktop(False)
 		else:
 			self._screen.toggle_showing_desktop(True)
 
-		if level == Shell.ZOOM_HOME:
+		if level == sugar.ZOOM_HOME:
 			self._home_window.set_view(HomeWindow.HOME_VIEW)
-		elif level == Shell.ZOOM_FRIENDS:
+		elif level == sugar.ZOOM_FRIENDS:
 			self._home_window.set_view(HomeWindow.FRIENDS_VIEW)
-		elif level == Shell.ZOOM_MESH:
+		elif level == sugar.ZOOM_MESH:
 			self._home_window.set_view(HomeWindow.MESH_VIEW)

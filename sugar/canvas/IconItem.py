@@ -50,7 +50,12 @@ class IconCache(gobject.GObject):
 			self._icons[key] = icon
 			return icon
 
-class IconItem(goocanvas.Image):
+class IconItem(goocanvas.Image, goocanvas.Item):
+	__gsignals__ = {
+		'clicked': (gobject.SIGNAL_RUN_FIRST,
+					gobject.TYPE_NONE, ([])),
+	}
+
 	__gproperties__ = {
 		'icon-name': (str, None, None, None,
 					  gobject.PARAM_CONSTRUCT_ONLY |
@@ -64,14 +69,6 @@ class IconItem(goocanvas.Image):
 					  gobject.PARAM_READWRITE)
 	}
 
-	def do_set_property(self, pspec, value):
-		if pspec.name == 'icon-name':
-			self._icon_name = value
-		elif pspec.name == 'color':
-			self._color = value
-		elif pspec.name == 'size':
-			self._size = value
-
 	def __init__(self, **kwargs):
 		goocanvas.Image.__init__(self, **kwargs)
 
@@ -83,3 +80,19 @@ class IconItem(goocanvas.Image):
 			theme = gtk.icon_theme_get_default()
 			pixbuf = theme.load_icon(self._icon_name, self._size, 0)
 			self.props.pixbuf = pixbuf
+
+	def do_set_property(self, pspec, value):
+		if pspec.name == 'icon-name':
+			self._icon_name = value
+		elif pspec.name == 'color':
+			self._color = value
+		elif pspec.name == 'size':
+			self._size = value
+
+	def do_create_view(self, canvas, parent_view):
+		view = goocanvas.Image.do_create_view(self, canvas, parent_view)
+		view.connect('button-press-event', self.__button_press_cb)
+		return view
+
+	def __button_press_cb(self, view, target, event):
+		self.emit('clicked')
