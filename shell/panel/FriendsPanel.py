@@ -5,27 +5,80 @@ from sugar.canvas.IconItem import IconItem
 from sugar.canvas.IconColor import IconColor
 from sugar.presence import PresenceService
 
-class BuddyIcon(IconItem):
-	def __init__(self, buddy, **kwargs):
-		IconItem.__init__(self, icon_name='stock-buddy',
-						  color=buddy.get_color(), **kwargs)
-
 class FriendsGroup(goocanvas.Group):
+	N_BUDDIES = 10
+
 	def __init__(self, shell, width):
 		goocanvas.Group.__init__(self)
+		self._pservice = PresenceService.get_instance()
+		self._width = width
 
+		self._buddies = []
 		i = 0
-		while i < 10:
-			icon = IconItem(icon_name='stock-buddy',
-							color=IconColor('white'),
-							y=i * (width + 6), size=width)
-			self.add_child(icon)
+		while i < FriendsGroup.N_BUDDIES:
+			self.add_child(self._create_placeholder(i))
+			self._buddies.append(None)
 			i += 1
 
 		shell.connect('activity-changed', self.__activity_changed_cb)
 
+	def add(self, buddy):
+		i = 0
+		while i < FriendsGroup.N_BUDDIES:
+			if self._buddies[i] == None:
+				self._add_buddy(i)
+				break
+			i += 1
+
+	def remove(self, buddy):
+		i = 0
+		while i < FriendsGroup.N_BUDDIES:
+			if self._buddies[i] == buddy.get_name():
+				self._remove_buddy(i)
+				break
+			i += 1
+
+	def clear(self):
+		i = 0
+		while i < FriendsGroup.N_BUDDIES:
+			self._remove_buddy(i)
+			i += 1
+
+	def _get_y(self, i):
+		return i * (self._width + 6)
+
+	def _add_buddy(self, buddy, i):
+		self.remove_child(i)
+		icon = IconItem(icon_name='stock-buddy', y=self._get_y(i),
+				        color=buddy.get_color(), size=self._width)
+		self.add_child(icon, i)
+		self._buddies[i] = buddy.get_name()
+
+
+	def _create_placeholder(self, i):
+		icon = IconItem(icon_name='stock-buddy', color=IconColor('white'),
+						y=self._get_y(i), size=self._width)
+		return icon
+
+	def _remove_buddy(self, i):
+		self.remove_child(i)
+		self.add_child(self._create_placeholder(i), i)
+		self._buddies[i] = None
+
 	def __activity_changed_cb(self, group, activity):
-		print 'Changed'
+		self.clear()
+		activity_ps = self._pservice.get_activity(activity.get_id())
+		if activity_ps:
+			for buddy in activity_ps.get_joined_buddies():
+				self.add(buddy)
+			activity_ps.connect('buddy-joined', self.__buddy_joined_cb)
+			activity_ps.connect('buddy-left', self.__buddy_left_cb)
+
+	def __buddy_joined_cb(self, activity, buddy):
+		self.add(buddy)
+
+	def __buddy_left_cb(self, activity, buddy):
+		self.remove(buddy)
 
 class ActionsBar(goocanvas.Group):
 	def __init__(self, shell, width):
