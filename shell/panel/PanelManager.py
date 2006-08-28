@@ -2,6 +2,7 @@ import gtk
 
 from panel.VerbsPanel import VerbsPanel
 from panel.FriendsPanel import FriendsPanel
+from panel.TopPanel import TopPanel
 from panel.Panel import Panel
 
 class PanelManager:
@@ -18,10 +19,10 @@ class PanelManager:
 		self._friends_panel.resize(size, gtk.gdk.screen_height())
 		self._friends_panel.show()
 
-		panel = Panel()
-		panel.move(0, 0)
-		panel.resize(gtk.gdk.screen_width(), size)
-		panel.show()
+		self._top_panel = TopPanel(shell)
+		self._top_panel.move(0, 0)
+		self._top_panel.resize(gtk.gdk.screen_width(), size)
+		self._top_panel.show()
 
 		panel = Panel()
 		panel.move(0, 0)

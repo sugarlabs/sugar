@@ -35,6 +35,9 @@ class Panel(gtk.Window):
 	def get_model(self):
 		return self._view.get_model()
 
+	def get_root(self):
+		return self.get_model().get_root_item()
+
 	def get_border(self):
 		return PanelModel.BORDER
 
