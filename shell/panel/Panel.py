@@ -28,6 +28,7 @@ class Panel(gtk.Window):
 		gtk.Window.__init__(self)
 		self._x = 0
 		self._y = 0
+		self._constructed = False
 
 		self._view = PanelView()
 		self.add(self._view)
@@ -61,7 +62,10 @@ class Panel(gtk.Window):
 
 	def construct(self):
 		self._view.construct(self._x, self._y)
+		self._constructed = True
 
 	def show(self):
 		gtk.Window.show(self)
-		self.construct()
+
+		if not self._constructed:
+			self.construct()
