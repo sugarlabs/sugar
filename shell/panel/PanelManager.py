@@ -11,22 +11,21 @@ class PanelManager:
 
 		self._verbs_panel = VerbsPanel(shell)
 		self._verbs_panel.set_position(size, 0)
-		self._verbs_panel.move(1, gtk.gdk.screen_height() - size + 1)
-		self._verbs_panel.resize(gtk.gdk.screen_width() - 1, size - 1)
+		self._verbs_panel.move(0, gtk.gdk.screen_height() - size)
+		self._verbs_panel.resize(gtk.gdk.screen_width(), size)
 
 		self._friends_panel = FriendsPanel(shell)
 		self._friends_panel.move(gtk.gdk.screen_width() - size, size)
-		self._friends_panel.resize(size, gtk.gdk.screen_height() - size * 2 + 1)
+		self._friends_panel.resize(size, gtk.gdk.screen_height() - size * 2)
 
 		self._top_panel = TopPanel(shell)
 		self._top_panel.set_position(size, 0)
-		# FIXME bug in matchbox, can't use 0,0
-		self._top_panel.move(0, 1)
-		self._top_panel.resize(gtk.gdk.screen_width() - 1, size - 1)
+		self._top_panel.move(0, 0)
+		self._top_panel.resize(gtk.gdk.screen_width(), size)
 
 		self._left_panel = Panel()
 		self._left_panel.move(0, size)
-		self._left_panel.resize(size, gtk.gdk.screen_height() - size * 2 + 1)
+		self._left_panel.resize(size, gtk.gdk.screen_height() - size * 2)
 
 	def show(self):
 		self._verbs_panel.show()
