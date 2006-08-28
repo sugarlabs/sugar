@@ -45,6 +45,10 @@ class Panel(gtk.Window):
 		height = self._view.get_allocation().height
 		return height - self.get_border() * 2
 
+	def get_width(self):
+		width = self._view.get_allocation().width
+		return width - self.get_border() * 2
+
 	def __realize_cb(self, window):
 		self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DOCK)
 
