@@ -5,5 +5,4 @@
 <Alt>n=next
 <Alt>p=prev
 <Alt>c=close
-f5=!sugar-people
 f6=!sugar-activity org.sugar.Terminal

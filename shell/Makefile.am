@@ -5,7 +5,6 @@ bin_SCRIPTS = 				\
 	sugar-activity			\
 	sugar-activity-factory		\
 	sugar-console			\
-	sugar-people			\
 	sugar-presence-service
 
 sugardir = $(pkgdatadir)/shell
@@ -16,8 +15,6 @@ sugar_PYTHON =				\
 	ConsoleWindow.py		\
 	FirstTimeDialog.py		\
 	Owner.py			\
-	PeopleWindow.py			\
-	PresenceView.py			\
 	Shell.py
 
 EXTRA_DIST = $(bin_SCRIPTS)

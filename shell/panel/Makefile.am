@@ -4,4 +4,5 @@ sugar_PYTHON =				\
 	FriendsPanel.py			\
 	Panel.py			\
 	PanelManager.py			\
+	TopPanel.py			\
 	VerbsPanel.py
