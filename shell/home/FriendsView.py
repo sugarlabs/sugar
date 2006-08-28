@@ -7,12 +7,11 @@ import Theme
 
 class FriendIcon(IconItem):
 	def __init__(self, friend):
-		IconItem.__init__(self, 'stock-buddy', friend.get_color(), 48)
-
+		IconItem.__init__(self, icon_name='stock-buddy',
+						  color=friend.get_color(), size=48,
+						  x=random.random() * 1100,
+						  y=random.random() * 800)
 		self._friend = friend
-
-		self.set_property('x', random.random() * 1100)
-		self.set_property('y', random.random() * 800)
 
 	def get_friend(self):
 		return self._friend

@@ -84,7 +84,8 @@ class Model(goocanvas.CanvasModelSimple):
 		root.add_child(tasks)
 
 		profile = sugar.conf.get_profile()
-		me = IconItem('stock-buddy', profile.get_color(), 150)
+		me = IconItem(icon_name = 'stock-buddy',
+					  color = profile.get_color(), size = 150)
 		me.translate(600 - (me.get_property('width') / 2),
 					 450 - (me.get_property('height') / 2))
 		root.add_child(me)

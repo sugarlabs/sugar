@@ -51,9 +51,35 @@ class IconCache(gobject.GObject):
 			return icon
 
 class IconItem(goocanvas.Image):
-	def __init__(self, icon_name, color, size, **kwargs):
+	__gproperties__ = {
+		'icon-name': (str, None, None, None,
+					  gobject.PARAM_CONSTRUCT_ONLY |
+					  gobject.PARAM_READWRITE),
+		'color'    : (object, None, None,
+					  gobject.PARAM_CONSTRUCT_ONLY |
+					  gobject.PARAM_READWRITE),
+		'size'     : (int, None, None,
+					  0, 1024, 24,
+					  gobject.PARAM_CONSTRUCT_ONLY |
+					  gobject.PARAM_READWRITE)
+	}
+
+	def do_set_property(self, pspec, value):
+		if pspec.name == 'icon-name':
+			self._icon_name = value
+		elif pspec.name == 'color':
+			self._color = value
+		elif pspec.name == 'size':
+			self._size = value
+
+	def __init__(self, **kwargs):
 		goocanvas.Image.__init__(self, **kwargs)
 
-		icon_cache = IconCache()
-		pixbuf = icon_cache.get_icon(icon_name, color, size)
-		self.set_property('pixbuf', pixbuf)
+		if self._color:
+			cache = IconCache()
+			pixbuf = cache.get_icon(self._icon_name, self._color, self._size)
+			self.props.pixbuf = pixbuf
+		else:
+			theme = gtk.icon_theme_get_default()
+			pixbuf = theme.load_icon(self._icon_name, self._size, 0)
+			self.props.pixbuf = pixbuf

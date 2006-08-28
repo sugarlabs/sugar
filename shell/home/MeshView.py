@@ -14,7 +14,8 @@ class ActivityItem(IconItem):
 		info = registry.get_activity(activity.get_type())
 		icon_name = info.get_icon()
 
-		IconItem.__init__(self, icon_name, activity.get_color(), 48)
+		IconItem.__init__(self, icon_name=icon_name,
+						  color=activity.get_color(), size=48)
 
 		self._activity = activity
 
