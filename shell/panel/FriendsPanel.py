@@ -2,6 +2,30 @@ import goocanvas
 
 from panel.Panel import Panel
 from sugar.canvas.IconItem import IconItem
+from sugar.canvas.IconColor import IconColor
+from sugar.presence import PresenceService
+
+class BuddyIcon(IconItem):
+	def __init__(self, buddy, **kwargs):
+		IconItem.__init__(self, icon_name='stock-buddy',
+						  color=buddy.get_color(), **kwargs)
+
+class FriendsGroup(goocanvas.Group):
+	def __init__(self, shell, width):
+		goocanvas.Group.__init__(self)
+
+		i = 0
+		while i < 10:
+			icon = IconItem(icon_name='stock-buddy',
+							color=IconColor('white'),
+							y=i * (width + 6), size=width)
+			self.add_child(icon)
+			i += 1
+
+		shell.connect('activity-changed', self.__activity_changed_cb)
+
+	def __activity_changed_cb(self, group, activity):
+		print 'Changed'
 
 class ActionsBar(goocanvas.Group):
 	def __init__(self, shell, width):
@@ -47,5 +71,11 @@ class FriendsPanel(Panel):
 	def construct(self):
 		Panel.construct(self)
 
+		root = self.get_root()
+
 		actions_bar = ActionsBar(self._shell, self.get_width())
-		self.get_root().add_child(actions_bar)
+		root.add_child(actions_bar)
+
+		friends_group = FriendsGroup(self._shell, self.get_width())
+		friends_group.translate(0, 150)
+		root.add_child(friends_group)		

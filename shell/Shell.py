@@ -37,10 +37,12 @@ class ShellDbusService(dbus.service.Object):
 
 class Shell(gobject.GObject):
 	__gsignals__ = {
-		'activity-opened': (gobject.SIGNAL_RUN_FIRST,
-							gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
-		'activity-closed': (gobject.SIGNAL_RUN_FIRST,
-							gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT]))
+		'activity-opened':  (gobject.SIGNAL_RUN_FIRST,
+							 gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
+		'activity-changed': (gobject.SIGNAL_RUN_FIRST,
+							 gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
+		'activity-closed':  (gobject.SIGNAL_RUN_FIRST,
+							 gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT]))
 	}
 
 	def __init__(self):
@@ -62,6 +64,8 @@ class Shell(gobject.GObject):
 
 		self._screen.connect('window-opened', self.__window_opened_cb)
 		self._screen.connect('window-closed', self.__window_closed_cb)
+		self._screen.connect('active-window-changed',
+							 self.__active_window_changed_cb)
 		self._screen.connect("showing_desktop_changed",
 							 self.__showing_desktop_changed_cb)
 
@@ -125,6 +129,11 @@ class Shell(gobject.GObject):
 			host = ActivityHost(self, window)
 			self._hosts[window.get_xid()] = host
 			self.emit('activity-opened', host)
+
+	def __active_window_changed_cb(self, screen):
+		window = screen.get_active_window()
+		if window and window.get_window_type() == wnck.WINDOW_NORMAL:
+			self.emit('activity-changed', self.get_current_activity())
 
 	def __window_closed_cb(self, screen, window):
 		if window.get_window_type() == wnck.WINDOW_NORMAL:
