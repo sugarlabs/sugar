@@ -113,10 +113,7 @@ class Shell(gobject.GObject):
 		self.set_zoom_level(sugar.ZOOM_HOME)
 
 		self._panel_manager = PanelManager(self)
-		self._panel_manager.show()
-
-	def get_panel_manager(self):
-		return self._panel_manager
+		self._panel_manager.show_and_hide(10)
 
 	def set_console(self, console):
 		self._console = console

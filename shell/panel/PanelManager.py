@@ -1,4 +1,5 @@
 import gtk
+import gobject
 
 from panel.VerbsPanel import VerbsPanel
 from panel.FriendsPanel import FriendsPanel
@@ -26,6 +27,14 @@ class PanelManager:
 		self._left_panel = Panel()
 		self._left_panel.move(0, size)
 		self._left_panel.resize(size, gtk.gdk.screen_height() - size * 2)
+
+	def __hide_timeout_cb(self):
+		self.hide()
+		return False
+
+	def show_and_hide(self, seconds):
+		self.show()
+		gobject.timeout_add(seconds * 1000, self.__hide_timeout_cb)
 
 	def show(self):
 		self._verbs_panel.show()

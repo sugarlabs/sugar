@@ -72,4 +72,3 @@ class VerbsPanel(Panel):
 
 	def __activity_button_press_cb(self, view, target, event, activity_id):
 		self._shell.start_activity(activity_id)
-		self._shell.get_panel_manager().hide()
