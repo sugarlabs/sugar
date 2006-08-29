@@ -72,12 +72,6 @@ class HomeGroup(goocanvas.Group):
 					 450 - (me.get_property('height') / 2))
 		self.add_child(me)
 
-	def get_width(self):
-		return 1200.0 * 1.8
-
-	def get_height(self):
-		return 900.0 * 1.8
-
 	def __theme_changed_cb(self, theme):
 		color = self._theme.get_home_activities_color()
 		self._home_rect.set_property("fill-color", color)
