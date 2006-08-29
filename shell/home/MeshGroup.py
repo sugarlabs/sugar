@@ -26,9 +26,9 @@ class MeshGroup(goocanvas.Group):
 	WIDTH = 1200.0 * 3.5
 	HEIGHT = 900.0 * 3.5
 
-	def __init__(self, icon_layout, data_model):
+	def __init__(self, shell, icon_layout, data_model):
 		goocanvas.Group.__init__(self)
-
+		self._shell = shell
 		self._icon_layout = icon_layout
 
 		self._theme = Theme.get_instance()
@@ -50,17 +50,12 @@ class MeshGroup(goocanvas.Group):
 
 	def add_activity(self, activity):
 		item = ActivityItem(activity)
+		item.connect('clicked', self.__activity_clicked_cb)
 		self._icon_layout.add_icon(item)
 		self.add_child(item)
 
 	def __activity_added_cb(self, data_model, activity):
 		self.add_activity(activity)	
 
-#	def __activity_button_press_cb(self, view, target, event, service):
-#		self._shell.join_activity(service)
-#
-#	def __item_view_created_cb(self, view, item_view, item):
-#		if isinstance(item, ActivityItem):
-#			item_view.connect("button_press_event",
-#							  self.__activity_button_press_cb,
-#							  item.get_service())
+	def __activity_clicked_cb(self, item):
+		self._shell.join_activity(item.get_service())

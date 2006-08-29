@@ -30,7 +30,7 @@ class HomeWindow(gtk.Window):
 		icon_layout.set_bounds(x1, y1, x2, y2)
 
 		data_model = model.get_mesh()
-		self._mesh_group = MeshGroup(icon_layout, data_model)
+		self._mesh_group = MeshGroup(self._shell, icon_layout, data_model)
 		root.add_child(self._mesh_group)
 
 		icon_layout = IconLayout(FriendsGroup.WIDTH, FriendsGroup.HEIGHT)
