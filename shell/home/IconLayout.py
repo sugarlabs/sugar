@@ -19,10 +19,12 @@ class IconLayout:
 	def remove_icon(self, icon):
 		self._icons.remove(icon)
 
-	def _is_valid_position(self, x, y):
-		if x < self._x1 or x > self._x2:
+	def _is_valid_position(self, icon, x, y):
+		h_border = icon.props.width + 4
+		v_border = icon.props.height + 4
+		if x < self._x1 - h_border or x > self._x2 + h_border:
 			return True
-		if y < self._y1 or y > self._y2:
+		if y < self._y1 - v_border or y > self._y2 + v_border:
 			return True
 		return False
 
@@ -30,7 +32,7 @@ class IconLayout:
 		while True:
 			x = random.random() * self._width
 			y = random.random() * self._height
-			if self._is_valid_position(x, y):
+			if self._is_valid_position(icon, x, y):
 				break
 
 		icon.props.x = x
