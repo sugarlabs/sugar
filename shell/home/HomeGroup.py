@@ -50,65 +50,48 @@ class Background(goocanvas.Group):
 
 		color = self._theme.get_home_friends_color()
 		self._friends_rect = goocanvas.Rect(width=1200, height=900,
-										  fill_color=color)
+										    line_width=0, fill_color=color)
 		self.add_child(self._friends_rect)
 
 		color = self._theme.get_home_activities_color()
-		self._home_rect = goocanvas.Rect(x=100, y=100, width=1000, height=700,
-										  line_width=0, fill_color=color,
-										  radius_x=30, radius_y=30)
+		self._home_rect = goocanvas.Rect(x=50, y=50, width=1100, height=800,
+										 line_width=0, fill_color=color,
+										 radius_x=30, radius_y=30)
 		self.add_child(self._home_rect)
-
-		item = goocanvas.Text(text="My Activities",
-							  x=12, y=12, fill_color="black",
-                              font="Sans 21")
-		self.add_child(item)
 
 	def __theme_changed_cb(self, theme):
 		color = self._theme.get_home_activities_color()
 		self._home_rect.set_property("fill-color", color)
-		color = self._theme.get_friends_colors()
+		color = self._theme.get_home_friends_color()
 		self._friends_rect.set_property("fill-color", color)
 
-class Model(goocanvas.CanvasModelSimple):
+class HomeGroup(goocanvas.Group):
 	def __init__(self, shell):
-		goocanvas.CanvasModelSimple.__init__(self)
-
-		root = self.get_root_item()
+		goocanvas.Group.__init__(self)
 
 		background = Background()
-		root.add_child(background)
+		self.add_child(background)
 
 		tasks = TasksItem(shell)
 		tasks.translate(600, 450)
-		root.add_child(tasks)
+		self.add_child(tasks)
 
 		profile = sugar.conf.get_profile()
 		me = IconItem(icon_name = 'stock-buddy',
 					  color = profile.get_color(), size = 150)
 		me.translate(600 - (me.get_property('width') / 2),
 					 450 - (me.get_property('height') / 2))
-		root.add_child(me)
+		self.add_child(me)
 
-class HomeView(goocanvas.CanvasView):
-	def __init__(self, shell):
-		goocanvas.CanvasView.__init__(self)
-		self._shell = shell
-
-		self.connect("item_view_created", self.__item_view_created_cb)
-
-		canvas_model = Model(shell)
-		self.set_model(canvas_model)
-
-	def __item_view_created_cb(self, view, item_view, item):
-		if isinstance(item, PieceItem) or \
-		   isinstance(item, PieceIcon):
-			item_view.connect("button_press_event",
-							  self.__task_button_press_cb)
-
-	def __activity_button_press_cb(self, view, target, event, activity_id):
-		self._shell.start_activity(activity_id)
-
-	def __task_button_press_cb(self, view, target, event):
-		activity = view.get_item().get_data('activity')
-		activity.present()
+#	def __item_view_created_cb(self, view, item_view, item):
+#		if isinstance(item, PieceItem) or \
+#		   isinstance(item, PieceIcon):
+#			item_view.connect("button_press_event",
+#							  self.__task_button_press_cb)
+#
+#	def __activity_button_press_cb(self, view, target, event, activity_id):
+#		self._shell.start_activity(activity_id)
+#
+#	def __task_button_press_cb(self, view, target, event):
+#		activity = view.get_item().get_data('activity')
+#		activity.present()

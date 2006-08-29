@@ -210,10 +210,4 @@ class Shell(gobject.GObject):
 			self._screen.toggle_showing_desktop(False)
 		else:
 			self._screen.toggle_showing_desktop(True)
-
-		if level == sugar.ZOOM_HOME:
-			self._home_window.set_view(HomeWindow.HOME_VIEW)
-		elif level == sugar.ZOOM_FRIENDS:
-			self._home_window.set_view(HomeWindow.FRIENDS_VIEW)
-		elif level == sugar.ZOOM_MESH:
-			self._home_window.set_view(HomeWindow.MESH_VIEW)
+			self._home_window.set_zoom_level(level)

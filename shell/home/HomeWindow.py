@@ -1,50 +1,66 @@
 import gtk
+import goocanvas
+import cairo
 
-from home.MeshView import MeshView
-from home.HomeView import HomeView
-from home.FriendsView import FriendsView
+from home.MeshGroup import MeshGroup
+from home.HomeGroup import HomeGroup
+from home.FriendsGroup import FriendsGroup
+import sugar
 
 class HomeWindow(gtk.Window):
-	HOME_VIEW = 0
-	FRIENDS_VIEW = 1
-	MESH_VIEW = 2
-
+	CANVAS_WIDTH = 1200
+	CANVAS_HEIGHT = 900
 	def __init__(self, shell):
 		gtk.Window.__init__(self)
 		self._shell = shell
 
-		self.connect('realize', self.__realize_cb)
-
-		self._nb = gtk.Notebook()
-		self._nb.set_show_tabs(False)
-		self._nb.set_show_border(False)
-
-		self.add(self._nb)
-		self._nb.show()
+		self.realize()
+		self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
 
 	def set_model(self, model):
-		home_view = HomeView(self._shell)
-		self._nb.append_page(home_view)
-		self._setup_canvas(home_view)
-		home_view.show()
+		self._model = goocanvas.CanvasModelSimple()
+		root = self._model.get_root_item()
 
-		friends_view = FriendsView(self._shell, model.get_friends())
-		self._nb.append_page(friends_view)
-		self._setup_canvas(friends_view)
-		friends_view.show()
-		
-		mesh_view = MeshView(self._shell, model.get_mesh())
-		self._setup_canvas(mesh_view)
-		self._nb.append_page(mesh_view)
-		mesh_view.show()
+		data_model = model.get_mesh()
+		self._mesh_group = MeshGroup(data_model)
+		root.add_child(self._mesh_group)
 
-	def set_view(self, view):
-		self._nb.set_current_page(view)
+		data_model = model.get_friends()
+		self._friends_group = FriendsGroup(data_model)
+		root.add_child(self._friends_group)
 
-	def _setup_canvas(self, canvas):
-		canvas.set_bounds(0, 0, 1200, 900)
-		canvas.set_scale(float(gtk.gdk.screen_width()) / float(1200))
-		canvas.set_size_request(gtk.gdk.screen_width(), gtk.gdk.screen_height())
+		self._home_group = HomeGroup(self._shell)
+		root.add_child(self._home_group)
 
-	def __realize_cb(self, window):
-		self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
+		canvas = goocanvas.CanvasView()
+		canvas.set_bounds(0, 0, HomeWindow.CANVAS_WIDTH,
+						  HomeWindow.CANVAS_HEIGHT)
+		canvas.set_scale(float(gtk.gdk.screen_width()) /
+						 float(HomeWindow.CANVAS_WIDTH))
+		canvas.set_size_request(gtk.gdk.screen_width(),
+								gtk.gdk.screen_height())
+		canvas.set_model(self._model)
+
+		self.add(canvas)
+		canvas.show()
+
+	def _set_group_scale(self, group, d):
+		x = HomeWindow.CANVAS_WIDTH  * (1 - d) / 2
+		y = HomeWindow.CANVAS_HEIGHT * (1 - d) / 2
+
+		matrix = cairo.Matrix(1, 0, 0, 1, 0, 0)
+		matrix.translate(x, y)
+		matrix.scale(d, d)
+
+		group.set_transform(matrix)
+
+	def set_zoom_level(self, level):
+		if level == sugar.ZOOM_HOME:
+			self._set_group_scale(self._home_group, 1.0)
+		elif level == sugar.ZOOM_FRIENDS:
+			self._set_group_scale(self._home_group, 0.5)
+			self._set_group_scale(self._friends_group, 1.0)
+		elif level == sugar.ZOOM_MESH:
+			self._set_group_scale(self._home_group, 0.2)
+			self._set_group_scale(self._friends_group, 0.4)
+			self._set_group_scale(self._mesh_group, 1.0)
