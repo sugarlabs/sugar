@@ -31,7 +31,7 @@ class FriendsGroup(goocanvas.Group):
 		self._friends_rect = goocanvas.Rect(width=FriendsGroup.WIDTH,
 											height=FriendsGroup.HEIGHT,
 											line_width=0, fill_color=color,
-											radius_x=30, radius_y=30)
+											radius_x=60, radius_y=60)
 		self.add_child(self._friends_rect)
 
 		for friend in data_model:
