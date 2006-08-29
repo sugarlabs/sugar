@@ -69,7 +69,9 @@ class MessageQueue:
 				level = self._levels[x]
 				msg = self._messages[x]
 				prog = os.path.basename(sys.argv[0])
-				sys.stderr.write("%s (%s): Level %s - %s\n" % (prog, os.getpid(), level, msg))
+				fmt = "%s (%s): Level %s - %s\n" % (prog, os.getpid(), level, msg)
+				fmt = fmt.encode("utf8")
+				sys.stderr.write(fmt)
 
 		self._levels = []
 		self._messages = []
