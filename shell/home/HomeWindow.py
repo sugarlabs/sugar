@@ -5,6 +5,7 @@ import cairo
 from home.MeshGroup import MeshGroup
 from home.HomeGroup import HomeGroup
 from home.FriendsGroup import FriendsGroup
+from home.IconLayout import IconLayout
 import sugar
 
 class HomeWindow(gtk.Window):
@@ -21,12 +22,26 @@ class HomeWindow(gtk.Window):
 		self._model = goocanvas.CanvasModelSimple()
 		root = self._model.get_root_item()
 
+		icon_layout = IconLayout(MeshGroup.WIDTH, MeshGroup.HEIGHT)
+		x1 = (self._width - FriendsGroup.WIDTH) / 2
+		y1 = (self._height - FriendsGroup.HEIGHT) / 2
+		x2 = x1 + FriendsGroup.WIDTH
+		y2 = y1 + FriendsGroup.HEIGHT
+		icon_layout.set_bounds(x1, y1, x2, y2)
+
 		data_model = model.get_mesh()
-		self._mesh_group = MeshGroup(data_model)
+		self._mesh_group = MeshGroup(icon_layout, data_model)
 		root.add_child(self._mesh_group)
 
+		icon_layout = IconLayout(FriendsGroup.WIDTH, FriendsGroup.HEIGHT)
+		x1 = (self._width - HomeGroup.WIDTH) / 2
+		y1 = (self._height - HomeGroup.HEIGHT) / 2
+		x2 = x1 + HomeGroup.WIDTH
+		y2 = y1 + HomeGroup.HEIGHT
+		icon_layout.set_bounds(x1, y1, x2, y2)
+
 		data_model = model.get_friends()
-		self._friends_group = FriendsGroup(data_model)
+		self._friends_group = FriendsGroup(icon_layout, data_model)
 		self._friends_group.translate((self._width - FriendsGroup.WIDTH) / 2,
 									  (self._height - FriendsGroup.HEIGHT) / 2)
 		root.add_child(self._friends_group)

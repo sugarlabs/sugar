@@ -8,9 +8,7 @@ import Theme
 class FriendIcon(IconItem):
 	def __init__(self, friend):
 		IconItem.__init__(self, icon_name='stock-buddy',
-						  color=friend.get_color(), size=96,
-						  x=random.random() * 2400,
-						  y=random.random() * 1800)
+						  color=friend.get_color(), size=96)
 		self._friend = friend
 
 	def get_friend(self):
@@ -20,9 +18,11 @@ class FriendsGroup(goocanvas.Group):
 	WIDTH = 1200.0 * 1.9
 	HEIGHT = 900.0 * 1.9
 
-	def __init__(self, data_model):
+	def __init__(self, icon_layout, data_model):
 		goocanvas.Group.__init__(self)
 		self._friend_to_child = {}
+
+		self._icon_layout = icon_layout
 
 		self._theme = Theme.get_instance()
 		self._theme.connect("theme-changed", self.__theme_changed_cb)
@@ -48,10 +48,12 @@ class FriendsGroup(goocanvas.Group):
 		icon = FriendIcon(friend)
 		self.add_child(icon)
 		self._friend_to_child[friend] = icon
+		self._icon_layout.add_icon(icon)
 
 	def remove_friend(self, friend):
 		icon = self._friend_to_child[friend]
-		self.remove_child(self._root.find_child(icon))
+		self._icon_layout.remove_icon(icon)
+		self.remove_child(self.find_child(icon))
 		del self._friend_to_child[friend]
 
 	def __friend_added_cb(self, data_model, friend):

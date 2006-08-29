@@ -26,8 +26,11 @@ class MeshGroup(goocanvas.Group):
 	WIDTH = 1200.0 * 3.5
 	HEIGHT = 900.0 * 3.5
 
-	def __init__(self, data_model):
+	def __init__(self, icon_layout, data_model):
 		goocanvas.Group.__init__(self)
+
+		self._icon_layout = icon_layout
+
 		self._theme = Theme.get_instance()
 		self._theme.connect("theme-changed", self.__theme_changed_cb)
 
@@ -47,8 +50,7 @@ class MeshGroup(goocanvas.Group):
 
 	def add_activity(self, activity):
 		item = ActivityItem(activity)
-		item.set_property('x', random.random() * 1100)
-		item.set_property('y', random.random() * 800)
+		self._icon_layout.add_icon(item)
 		self.add_child(item)
 
 	def __activity_added_cb(self, data_model, activity):
