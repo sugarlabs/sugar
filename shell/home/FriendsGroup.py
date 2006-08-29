@@ -8,15 +8,18 @@ import Theme
 class FriendIcon(IconItem):
 	def __init__(self, friend):
 		IconItem.__init__(self, icon_name='stock-buddy',
-						  color=friend.get_color(), size=48,
-						  x=random.random() * 1100,
-						  y=random.random() * 800)
+						  color=friend.get_color(), size=96,
+						  x=random.random() * 2400,
+						  y=random.random() * 1800)
 		self._friend = friend
 
 	def get_friend(self):
 		return self._friend
 
 class FriendsGroup(goocanvas.Group):
+	WIDTH = 1200.0 * 1.9
+	HEIGHT = 900.0 * 1.9
+
 	def __init__(self, data_model):
 		goocanvas.Group.__init__(self)
 		self._friend_to_child = {}
@@ -24,13 +27,9 @@ class FriendsGroup(goocanvas.Group):
 		self._theme = Theme.get_instance()
 		self._theme.connect("theme-changed", self.__theme_changed_cb)
 
-		color = self._theme.get_home_mesh_color()
-		self._mesh_rect = goocanvas.Rect(width=1200, height=900,
-									     line_width=0, fill_color=color)
-		self.add_child(self._mesh_rect)
-
 		color = self._theme.get_home_friends_color()
-		self._friends_rect = goocanvas.Rect(x=50, y=50, width=1100, height=800,
+		self._friends_rect = goocanvas.Rect(width=FriendsGroup.WIDTH,
+											height=FriendsGroup.HEIGHT,
 											line_width=0, fill_color=color,
 											radius_x=30, radius_y=30)
 		self.add_child(self._friends_rect)
@@ -44,8 +43,6 @@ class FriendsGroup(goocanvas.Group):
 	def __theme_changed_cb(self, theme):
 		color = self._theme.get_home_friends_color()
 		self._friends_rect.set_property("fill-color", color)
-		color = self._theme.get_home_mesh_color()
-		self._mesh_rect.set_property("fill-color", color)
 
 	def add_friend(self, friend):
 		icon = FriendIcon(friend)

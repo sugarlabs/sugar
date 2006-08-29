@@ -15,7 +15,7 @@ class ActivityItem(IconItem):
 		icon_name = info.get_icon()
 
 		IconItem.__init__(self, icon_name=icon_name,
-						  color=activity.get_color(), size=48)
+						  color=activity.get_color(), size=144)
 
 		self._activity = activity
 
@@ -23,13 +23,17 @@ class ActivityItem(IconItem):
 		return self._activity.get_service()
 
 class MeshGroup(goocanvas.Group):
+	WIDTH = 1200.0 * 3.5
+	HEIGHT = 900.0 * 3.5
+
 	def __init__(self, data_model):
 		goocanvas.Group.__init__(self)
 		self._theme = Theme.get_instance()
 		self._theme.connect("theme-changed", self.__theme_changed_cb)
 
 		color = self._theme.get_home_mesh_color()
-		self._mesh_rect = goocanvas.Rect(width=1200, height=900,
+		self._mesh_rect = goocanvas.Rect(width=MeshGroup.WIDTH,
+										 height=MeshGroup.HEIGHT,
 										 fill_color=color)
 		self.add_child(self._mesh_rect)
 

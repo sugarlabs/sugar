@@ -8,11 +8,11 @@ from home.FriendsGroup import FriendsGroup
 import sugar
 
 class HomeWindow(gtk.Window):
-	CANVAS_WIDTH = 1200
-	CANVAS_HEIGHT = 900
 	def __init__(self, shell):
 		gtk.Window.__init__(self)
 		self._shell = shell
+		self._width = MeshGroup.WIDTH
+		self._height = MeshGroup.HEIGHT
 
 		self.realize()
 		self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
@@ -27,40 +27,35 @@ class HomeWindow(gtk.Window):
 
 		data_model = model.get_friends()
 		self._friends_group = FriendsGroup(data_model)
+		self._friends_group.translate((self._width - FriendsGroup.WIDTH) / 2,
+									  (self._height - FriendsGroup.HEIGHT) / 2)
 		root.add_child(self._friends_group)
 
 		self._home_group = HomeGroup(self._shell)
+		self._home_group.translate((self._width - HomeGroup.WIDTH) / 2,
+								   (self._height - HomeGroup.HEIGHT) / 2)
 		root.add_child(self._home_group)
 
-		canvas = goocanvas.CanvasView()
-		canvas.set_bounds(0, 0, HomeWindow.CANVAS_WIDTH,
-						  HomeWindow.CANVAS_HEIGHT)
-		canvas.set_scale(float(gtk.gdk.screen_width()) /
-						 float(HomeWindow.CANVAS_WIDTH))
-		canvas.set_size_request(gtk.gdk.screen_width(),
-								gtk.gdk.screen_height())
-		canvas.set_model(self._model)
+		self._canvas = goocanvas.CanvasView()
+		self._canvas.set_size_request(gtk.gdk.screen_width(),
+									  gtk.gdk.screen_height())
+		self._canvas.set_model(self._model)
 
-		self.add(canvas)
-		canvas.show()
-
-	def _set_group_scale(self, group, d):
-		x = HomeWindow.CANVAS_WIDTH  * (1 - d) / 2
-		y = HomeWindow.CANVAS_HEIGHT * (1 - d) / 2
-
-		matrix = cairo.Matrix(1, 0, 0, 1, 0, 0)
-		matrix.translate(x, y)
-		matrix.scale(d, d)
-
-		group.set_transform(matrix)
+		self.add(self._canvas)
+		self._canvas.show()
 
 	def set_zoom_level(self, level):
 		if level == sugar.ZOOM_HOME:
-			self._set_group_scale(self._home_group, 1.0)
+			width = HomeGroup.WIDTH * 1.1
+			height = HomeGroup.HEIGHT * 1.1
 		elif level == sugar.ZOOM_FRIENDS:
-			self._set_group_scale(self._home_group, 0.5)
-			self._set_group_scale(self._friends_group, 1.0)
+			width = FriendsGroup.WIDTH * 1.1
+			height = FriendsGroup.HEIGHT * 1.1
 		elif level == sugar.ZOOM_MESH:
-			self._set_group_scale(self._home_group, 0.2)
-			self._set_group_scale(self._friends_group, 0.4)
-			self._set_group_scale(self._mesh_group, 1.0)
+			width = MeshGroup.WIDTH
+			height = MeshGroup.HEIGHT
+
+		self._canvas.set_bounds((self._width - width) / 2,
+								(self._height - height) / 2,
+								width, height)
+		self._canvas.set_scale(gtk.gdk.screen_width() / width)
