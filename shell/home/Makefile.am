@@ -3,10 +3,11 @@ sugar_PYTHON =				\
 	__init__.py			\
 	DonutItem.py			\
 	FriendsModel.py			\
-	FriendsView.py			\
+	FriendsGroup.py			\
+	IconLayout.py			\
 	MeshModel.py			\
-	MeshView.py			\
-	HomeView.py			\
+	MeshGroup.py			\
+	HomeGroup.py			\
 	HomeWindow.py			\
-	HomeModel.py		\
+	HomeModel.py			\
 	Theme.py
