@@ -8,8 +8,6 @@ import gobject
 import wnck
 
 from home.HomeWindow import HomeWindow
-from home.HomeModel import HomeModel
-from sugar import env
 from Owner import ShellOwner
 from sugar.presence import PresenceService
 from ActivityHost import ActivityHost
@@ -19,8 +17,9 @@ from sugar.activity import Activity
 from FirstTimeDialog import FirstTimeDialog
 from panel.PanelManager import PanelManager
 from globalkeys import KeyGrabber
-import sugar
 from sugar import conf
+from sugar import env
+import sugar
 import sugar.logger
 
 class ShellDbusService(dbus.service.Object):
@@ -105,16 +104,16 @@ class Shell(gobject.GObject):
 		self._owner = ShellOwner()
 		self._owner.announce()
 
+		self._pservice = PresenceService.get_instance()
+		self._home_window.set_presence_service(self._pservice)
+
 		self._chat_controller = ChatController(self)
 		self._chat_controller.listen()
 
-		self.set_zoom_level(sugar.ZOOM_HOME)
-
-		home_model = HomeModel()
-		self._home_window.set_model(home_model)
-
 		self._panel_manager = PanelManager(self)
 		self._panel_manager.show_and_hide(10)
+
+		self.set_zoom_level(sugar.ZOOM_HOME)
 
 	def set_console(self, console):
 		self._console = console
@@ -177,8 +176,7 @@ class Shell(gobject.GObject):
 		if activity:
 			activity.present()
 		else:
-			pservice = PresenceService.get_instance()
-			activity_ps = pservice.get_activity(activity_id)
+			activity_ps = self._pservice.get_activity(activity_id)
 
 			if activity_ps:
 				activity = ActivityFactory.create(info.get_id())

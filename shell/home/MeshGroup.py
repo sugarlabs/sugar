@@ -30,14 +30,11 @@ class ActivityItem(IconItem):
 		activity = pservice.get_activity(self.get_id())
 		return IconColor(activity.get_color())
 
-	def get_service(self):
-		return self._service
-
 class MeshGroup(goocanvas.Group):
 	WIDTH = 1200.0 * 3.5
 	HEIGHT = 900.0 * 3.5
 
-	def __init__(self, shell, icon_layout):
+	def __init__(self, shell, icon_layout, pservice):
 		goocanvas.Group.__init__(self)
 		self._shell = shell
 		self._icon_layout = icon_layout
@@ -51,10 +48,9 @@ class MeshGroup(goocanvas.Group):
 										 fill_color=color)
 		self.add_child(self._mesh_rect)
 
-		self._pservice = PresenceService.get_instance()
-		self._pservice.connect("service-appeared", self.__service_appeared_cb)
+		pservice.connect("service-appeared", self.__service_appeared_cb)
 
-		for service in self._pservice.get_services():
+		for service in pservice.get_services():
 			self.__check_service(service)
 
 	def __service_appeared_cb(self, pservice, service):

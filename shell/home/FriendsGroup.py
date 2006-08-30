@@ -18,7 +18,7 @@ class FriendsGroup(goocanvas.Group):
 	WIDTH = 1200.0 * 1.9
 	HEIGHT = 900.0 * 1.9
 
-	def __init__(self, icon_layout, data_model):
+	def __init__(self, icon_layout):
 		goocanvas.Group.__init__(self)
 		self._friend_to_child = {}
 
@@ -34,11 +34,11 @@ class FriendsGroup(goocanvas.Group):
 											radius_x=60, radius_y=60)
 		self.add_child(self._friends_rect)
 
-		for friend in data_model:
-			self.add_friend(friend)
+#		for friend in data_model:
+#			self.add_friend(friend)
 
-		data_model.connect('friend-added', self.__friend_added_cb)
-		data_model.connect('friend-removed', self.__friend_removed_cb)
+#		data_model.connect('friend-added', self.__friend_added_cb)
+#		data_model.connect('friend-removed', self.__friend_removed_cb)
 
 	def __theme_changed_cb(self, theme):
 		color = self._theme.get_home_friends_color()
