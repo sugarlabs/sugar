@@ -1,6 +1,10 @@
+import os
+from ConfigParser import ConfigParser
+
 import gobject
 
 from sugar.canvas.IconColor import IconColor
+from sugar import env
 
 class Friend:
 	def __init__(self, name, color):
@@ -25,6 +29,9 @@ class Friends(gobject.GObject):
 		gobject.GObject.__init__(self)
 
 		self._list = []
+		self._path = os.path.join(env.get_profile_path(), 'friends')
+
+		self.load()
 
 	def has_buddy(self, buddy):
 		for friend in self:
@@ -32,11 +39,35 @@ class Friends(gobject.GObject):
 				return True
 		return False
 
+	def add_friend(self, name, color):
+		friend = Friend(name, color)
+		self._list.append(friend)
+
+		self.emit('friend-added', friend)
+
 	def add_buddy(self, buddy):
 		if not self.has_buddy(buddy):	
-			friend = Friend(buddy.get_name(), buddy.get_color())
-			self._list.append(friend)
-			self.emit('friend-added', friend)
+			self.add_friend(buddy.get_name(), buddy.get_color())
+			self.save()
 
 	def __iter__(self):
 		return self._list.__iter__()
+
+	def load(self):
+		cp = ConfigParser()
+
+		if cp.read([self._path]):
+			for name in cp.sections():
+				self.add_friend(name, cp.get(name, 'color'))
+
+	def save(self):
+		cp = ConfigParser()
+
+		for friend in self:
+			section = friend.get_name()
+			cp.add_section(section)
+			cp.set(section, 'color', friend.get_color().get_fill_color())
+
+		fileobject = open(self._path, 'w')
+		cp.write(fileobject)
+		fileobject.close()
