@@ -34,7 +34,7 @@ class MeshGroup(goocanvas.Group):
 	WIDTH = 1200.0 * 3.5
 	HEIGHT = 900.0 * 3.5
 
-	def __init__(self, shell, icon_layout, pservice):
+	def __init__(self, shell, owner, icon_layout):
 		goocanvas.Group.__init__(self)
 		self._shell = shell
 		self._icon_layout = icon_layout
@@ -48,6 +48,7 @@ class MeshGroup(goocanvas.Group):
 										 fill_color=color)
 		self.add_child(self._mesh_rect)
 
+		pservice = PresenceService.get_instance()
 		pservice.connect("service-appeared", self.__service_appeared_cb)
 
 		for service in pservice.get_services():

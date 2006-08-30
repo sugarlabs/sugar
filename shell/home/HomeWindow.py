@@ -28,7 +28,7 @@ class HomeWindow(gtk.Window):
 		self.realize()
 		self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
 
-	def set_presence_service(self, pservice):
+	def set_owner(self, owner):
 		root = self._view.get_model().get_root_item()
 
 		icon_layout = IconLayout(MeshGroup.WIDTH, MeshGroup.HEIGHT)
@@ -38,7 +38,7 @@ class HomeWindow(gtk.Window):
 		y2 = y1 + FriendsGroup.HEIGHT
 		icon_layout.set_bounds(x1, y1, x2, y2)
 
-		self._mesh_group = MeshGroup(self._shell, icon_layout, pservice)
+		self._mesh_group = MeshGroup(self._shell, owner, icon_layout)
 		root.add_child(self._mesh_group)
 
 		icon_layout = IconLayout(FriendsGroup.WIDTH, FriendsGroup.HEIGHT)
@@ -48,7 +48,7 @@ class HomeWindow(gtk.Window):
 		y2 = y1 + HomeGroup.HEIGHT
 		icon_layout.set_bounds(x1, y1, x2, y2)
 
-		self._friends_group = FriendsGroup(icon_layout)
+		self._friends_group = FriendsGroup(owner, icon_layout)
 		self._friends_group.translate((self._width - FriendsGroup.WIDTH) / 2,
 									  (self._height - FriendsGroup.HEIGHT) / 2)
 		root.add_child(self._friends_group)

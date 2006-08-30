@@ -18,11 +18,11 @@ class FriendsGroup(goocanvas.Group):
 	WIDTH = 1200.0 * 1.9
 	HEIGHT = 900.0 * 1.9
 
-	def __init__(self, icon_layout):
+	def __init__(self, friends, icon_layout):
 		goocanvas.Group.__init__(self)
-		self._friend_to_child = {}
 
 		self._icon_layout = icon_layout
+		self._friends = friends
 
 		self._theme = Theme.get_instance()
 		self._theme.connect("theme-changed", self.__theme_changed_cb)
