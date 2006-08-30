@@ -30,6 +30,9 @@ class ActivityItem(IconItem):
 		activity = pservice.get_activity(self.get_id())
 		return IconColor(activity.get_color())
 
+	def get_service(self):
+		return self._service
+
 class MeshGroup(goocanvas.Group):
 	WIDTH = 1200.0 * 3.5
 	HEIGHT = 900.0 * 3.5
