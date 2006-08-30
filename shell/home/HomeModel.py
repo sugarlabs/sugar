@@ -8,6 +8,3 @@ class HomeModel:
 
 	def get_friends(self):
 		return self._friends
-
-	def get_mesh(self):
-		return self._mesh
