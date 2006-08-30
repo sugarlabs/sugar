@@ -8,9 +8,10 @@ from sugar.presence import PresenceService
 class FriendsGroup(goocanvas.Group):
 	N_BUDDIES = 10
 
-	def __init__(self, shell, width):
+	def __init__(self, shell, friends, width):
 		goocanvas.Group.__init__(self)
 		self._shell = shell
+		self._friends = friends
 		self._width = width
 		self._activity_ps = None
 		self._joined_hid = -1
@@ -60,6 +61,7 @@ class FriendsGroup(goocanvas.Group):
 		icon = IconItem(icon_name='stock-buddy',
 				        color=IconColor(buddy.get_color()),
 						size=self._width, y=self._get_y(i))
+		icon.connect('clicked', self.__buddy_clicked_cb, buddy)
 		self.add_child(icon, i)
 		self._buddies[i] = buddy.get_name()
 
@@ -112,6 +114,9 @@ class FriendsGroup(goocanvas.Group):
 	def __buddy_left_cb(self, activity, buddy):
 		self.remove(buddy)
 
+	def __buddy_clicked_cb(self, icon, buddy):
+		self._friends.add_buddy(buddy)
+
 class ActionsBar(goocanvas.Group):
 	def __init__(self, shell, width):
 		goocanvas.Group.__init__(self)
@@ -149,9 +154,10 @@ class ActionsBar(goocanvas.Group):
 		pass
 
 class FriendsPanel(Panel):
-	def __init__(self, shell):
+	def __init__(self, shell, friends):
 		Panel.__init__(self)
 		self._shell = shell
+		self._friends = friends
 
 	def construct(self):
 		Panel.construct(self)
@@ -161,6 +167,7 @@ class FriendsPanel(Panel):
 		actions_bar = ActionsBar(self._shell, self.get_width())
 		root.add_child(actions_bar)
 
-		friends_group = FriendsGroup(self._shell, self.get_width())
+		friends_group = FriendsGroup(self._shell, self._friends,
+									 self.get_width())
 		friends_group.translate(0, 150)
 		root.add_child(friends_group)		

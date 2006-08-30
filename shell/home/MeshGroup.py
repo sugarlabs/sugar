@@ -34,7 +34,7 @@ class MeshGroup(goocanvas.Group):
 	WIDTH = 1200.0 * 3.5
 	HEIGHT = 900.0 * 3.5
 
-	def __init__(self, shell, owner, icon_layout):
+	def __init__(self, shell, icon_layout):
 		goocanvas.Group.__init__(self)
 		self._shell = shell
 		self._icon_layout = icon_layout

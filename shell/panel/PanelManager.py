@@ -7,7 +7,7 @@ from panel.TopPanel import TopPanel
 from panel.Panel import Panel
 
 class PanelManager:
-	def __init__(self, shell):
+	def __init__(self, shell, owner):
 		size = 30
 
 		self._verbs_panel = VerbsPanel(shell)
@@ -15,7 +15,7 @@ class PanelManager:
 		self._verbs_panel.move(0, gtk.gdk.screen_height() - size)
 		self._verbs_panel.resize(gtk.gdk.screen_width(), size)
 
-		self._friends_panel = FriendsPanel(shell)
+		self._friends_panel = FriendsPanel(shell, owner.get_friends())
 		self._friends_panel.move(gtk.gdk.screen_width() - size, size)
 		self._friends_panel.resize(size, gtk.gdk.screen_height() - size * 2)
 

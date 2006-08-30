@@ -38,7 +38,7 @@ class HomeWindow(gtk.Window):
 		y2 = y1 + FriendsGroup.HEIGHT
 		icon_layout.set_bounds(x1, y1, x2, y2)
 
-		self._mesh_group = MeshGroup(self._shell, owner, icon_layout)
+		self._mesh_group = MeshGroup(self._shell, icon_layout)
 		root.add_child(self._mesh_group)
 
 		icon_layout = IconLayout(FriendsGroup.WIDTH, FriendsGroup.HEIGHT)
@@ -48,7 +48,7 @@ class HomeWindow(gtk.Window):
 		y2 = y1 + HomeGroup.HEIGHT
 		icon_layout.set_bounds(x1, y1, x2, y2)
 
-		self._friends_group = FriendsGroup(owner, icon_layout)
+		self._friends_group = FriendsGroup(owner.get_friends(), icon_layout)
 		self._friends_group.translate((self._width - FriendsGroup.WIDTH) / 2,
 									  (self._height - FriendsGroup.HEIGHT) / 2)
 		root.add_child(self._friends_group)

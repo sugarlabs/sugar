@@ -110,7 +110,7 @@ class Shell(gobject.GObject):
 		self._chat_controller = ChatController(self)
 		self._chat_controller.listen()
 
-		self._panel_manager = PanelManager(self)
+		self._panel_manager = PanelManager(self, self._owner)
 		self._panel_manager.show_and_hide(10)
 
 		self.set_zoom_level(sugar.ZOOM_HOME)
