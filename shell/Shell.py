@@ -66,8 +66,6 @@ class Shell(gobject.GObject):
 		self._screen.connect('window-closed', self.__window_closed_cb)
 		self._screen.connect('active-window-changed',
 							 self.__active_window_changed_cb)
-		self._screen.connect("showing_desktop_changed",
-							 self.__showing_desktop_changed_cb)
 
 		profile = conf.get_profile()
 		if profile.get_nick_name() == None:
@@ -113,14 +111,8 @@ class Shell(gobject.GObject):
 		self._panel_manager = PanelManager(self, self._owner)
 		self._panel_manager.show_and_hide(10)
 
-		self.set_zoom_level(sugar.ZOOM_HOME)
-
 	def set_console(self, console):
 		self._console = console
-
-	def __showing_desktop_changed_cb(self, screen):
-		if not screen.get_showing_desktop():
-			self._zoom_level = sugar.ZOOM_ACTIVITY
 
 	def __window_opened_cb(self, screen, window):
 		if window.get_window_type() == wnck.WINDOW_NORMAL:
@@ -203,8 +195,6 @@ class Shell(gobject.GObject):
 		return self._chat_controller
 
 	def set_zoom_level(self, level):
-		self._zoom_level = level
-
 		if level == sugar.ZOOM_ACTIVITY:
 			self._screen.toggle_showing_desktop(False)
 		else:

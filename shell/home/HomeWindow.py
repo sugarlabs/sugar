@@ -18,7 +18,7 @@ class HomeWindow(gtk.Window):
 		self._view = goocanvas.CanvasView()
 		self._view.set_size_request(gtk.gdk.screen_width(),
 									gtk.gdk.screen_height())
-
+		self.set_zoom_level(sugar.ZOOM_HOME)
 		model = goocanvas.CanvasModelSimple()
 		self._view.set_model(model)
 
