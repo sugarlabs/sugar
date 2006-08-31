@@ -68,8 +68,8 @@ class HomeGroup(goocanvas.Group):
 		profile = sugar.conf.get_profile()
 		me = IconItem(icon_name = 'stock-buddy',
 					  color = profile.get_color(), size = 150)
-		me.translate(600 - (me.get_property('width') / 2),
-					 450 - (me.get_property('height') / 2))
+		me.translate(600 - (me.get_property('size') / 2),
+					 450 - (me.get_property('size') / 2))
 		self.add_child(me)
 
 	def __theme_changed_cb(self, theme):

@@ -20,8 +20,8 @@ class PieceIcon(IconItem):
 		x = icon_radius * math.cos(icon_angle)
 		y = - icon_radius * math.sin(icon_angle)
 
-		icon_width = self.get_property('width')
-		icon_height = self.get_property('height')
+		icon_width = self.get_property('size')
+		icon_height = self.get_property('size')
 		self.set_property('x', x - icon_width / 2)
 		self.set_property('y', y - icon_height / 2)
 
