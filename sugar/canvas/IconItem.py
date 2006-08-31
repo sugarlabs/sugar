@@ -158,12 +158,12 @@ class IconItem(goocanvas.ItemSimple, goocanvas.Item):
 	}
 
 	def __init__(self, **kwargs):
-		goocanvas.ItemSimple.__init__(self, **kwargs)
-
 		self.x = 0.0
 		self.y = 0.0
 		self.width = 0.0
 		self.height = 0.0
+
+		goocanvas.ItemSimple.__init__(self, **kwargs)
 
 	def do_set_property(self, pspec, value):
 		if pspec.name == 'icon-name':
