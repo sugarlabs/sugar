@@ -84,16 +84,16 @@ class FriendsGroup(goocanvas.Group):
 		if self._activity_ps == activity_ps:
 			return
 
+		if self._joined_hid > 0:
+			self._activity_ps.disconnect(self._joined_hid)
+			self._joined_hid = -1
+		if self._left_hid > 0:
+			self._activity_ps.disconnect(self._left_hid)
+			self._left_hid = -1
+
 		self._activity_ps = activity_ps
 
 		self.clear()
-
-		if self._joined_hid > 0:
-			self.disconnect(self._joined_hid)
-			self._joined_hid = -1
-		if self._left_hid > 0:
-			self.disconnect(self._left_hid)
-			self._left_hid = -1
 
 		if activity_ps != None:
 			for buddy in activity_ps.get_joined_buddies():
