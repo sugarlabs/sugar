@@ -20,13 +20,18 @@ class IconLayout:
 		self._icons.remove(icon)
 
 	def _is_valid_position(self, icon, x, y):
-		h_border = icon.props.size + 4
-		v_border = icon.props.size + 4
-		if x < self._x1 - h_border or x > self._x2 + h_border:
-			return True
-		if y < self._y1 - v_border or y > self._y2 + v_border:
-			return True
-		return False
+		icon_size = icon.props.size
+		border = 20
+
+		if not (border < x < self._width - icon_size - border and \
+		        border < y < self._height - icon_size - border):
+			return False
+		
+		if self._x1 - icon_size - border < x < self._x2 + border and \
+		   self._y1 - icon_size - border < y < self._y2 + border:
+				return False
+
+		return True
 
 	def _layout_icon(self, icon):
 		while True:
