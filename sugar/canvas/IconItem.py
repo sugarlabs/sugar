@@ -8,18 +8,15 @@ import rsvg
 from sugar.util import GObjectSingletonMeta
 from sugar.canvas.IconColor import IconColor
 
-class _Icon:
-	def __init__(self, data, size):
-		self.data = data
-		self.size = size
+_ICON_SIZE = 48
 
 class _IconCache:
 	def __init__(self):
 		self._icons = {}
 
-	def _create_icon(self, name, color, size):
+	def _create_icon(self, name, color):
 		theme = gtk.icon_theme_get_default()
-		info = theme.lookup_icon(name, size, 0)
+		info = theme.lookup_icon(name, _ICON_SIZE, 0)
 		icon_file = open(info.get_filename(), 'r')
 		data = icon_file.read()
 		icon_file.close()
@@ -37,14 +34,14 @@ class _IconCache:
 			style = '.shape-and-fill {fill:%s; stroke:%s;}' % (fill, stroke)
 			data = re.sub('\.shape-and-fill \{.*\}', style, data)
 
-		return _Icon(data, info.get_base_size())
+		return data
 
-	def get_icon(self, name, color, size):
-		key = (name, color.get_fill_color(), size)
+	def get_icon(self, name, color):
+		key = (name, color.get_fill_color())
 		if self._icons.has_key(key):
 			icon = self._icons[key]
 		else:
-			icon = self._create_icon(name, color, size)
+			icon = self._create_icon(name, color)
 			self._icons[key] = icon
 		return icon
 
@@ -64,10 +61,10 @@ class IconView(goocanvas.ItemViewSimple, goocanvas.ItemView):
 
 		cr.save()
 
-		#if self.item.transform != None:
-		#	cr.transform(self.item.transform)
-		#if self.transform != None:
-		#	cr.transform(self.transform)
+#		if self.item.transform != None:
+#			cr.transform(self.item.transform)
+#		if self.transform != None:
+#			cr.transform(self.transform)
 
 		[user_x, user_y] = cr.device_to_user(x, y)
 		if user_x < self.item.x or \
@@ -86,10 +83,10 @@ class IconView(goocanvas.ItemViewSimple, goocanvas.ItemView):
 
 			cr.save()
 
-			#if self.item.transform != None:
-			#	cr.transform(self.item.transform)
-			#if self.transform != None:
-			#	cr.transform(self.transform)
+#			if self.item.transform != None:
+#				cr.transform(self.item.transform)
+#			if self.transform != None:
+#				cr.transform(self.transform)
 
 			bounds = goocanvas.Bounds()
 			bounds.x1 = self.item.x
@@ -108,24 +105,20 @@ class IconView(goocanvas.ItemViewSimple, goocanvas.ItemView):
 			theme = gtk.icon_theme_get_default()
 			info = theme.lookup_icon(self.item.icon_name, self.item.size, 0)
 			handle = rsvg.Handle(file=info.get_filename())
-			icon_size = info.get_base_size()
 		else:
 			icon = IconView._icon_cache.get_icon(self.item.icon_name,
-												 self.item.color,
-												 self.item.size)
-			handle = rsvg.Handle(data=icon.data)
-			icon_size = icon.size
-			
+												 self.item.color)
+			handle = rsvg.Handle(data=icon)			
 
 		cr.save()
 
-		#if self.item.transform != None:
-		#	cr.transform(self.item.transform)
-		#if self.transform != None:
-		#	cr.transform(self.transform)
+#		if self.item.transform != None:
+#			cr.transform(self.item.transform)
+#		if self.transform != None:
+#			cr.transform(self.transform)
 
 		cr.translate(self.item.x, self.item.y)
-		scale_factor = float(self.item.size) / float(icon_size)
+		scale_factor = float(self.item.size) / float(_ICON_SIZE)
 		cr.scale(scale_factor, scale_factor)
 		
 		handle.render_cairo(cr)
@@ -160,8 +153,6 @@ class IconItem(goocanvas.ItemSimple, goocanvas.Item):
 	def __init__(self, **kwargs):
 		self.x = 0.0
 		self.y = 0.0
-		self.width = 0.0
-		self.height = 0.0
 
 		goocanvas.ItemSimple.__init__(self, **kwargs)
 
