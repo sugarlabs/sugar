@@ -1,6 +1,6 @@
 import goocanvas
 
-from panel.Panel import Panel
+from frame.Panel import Panel
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.IconColor import IconColor
 from sugar.presence import PresenceService
@@ -153,7 +153,7 @@ class ActionsBar(goocanvas.Group):
 	def __chat_clicked_cb(self, item):
 		pass
 
-class FriendsPanel(Panel):
+class RightPanel(Panel):
 	def __init__(self, shell, friends):
 		Panel.__init__(self)
 		self._shell = shell

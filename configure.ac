@@ -48,7 +48,7 @@ bindings/threadframe/Makefile
 shell/Makefile
 shell/data/Makefile
 shell/home/Makefile
-shell/panel/Makefile
+shell/frame/Makefile
 shell/session/Makefile
 shell/PresenceService/Makefile
 sugar/Makefile

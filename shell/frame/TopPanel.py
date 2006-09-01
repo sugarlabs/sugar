@@ -1,6 +1,6 @@
 import goocanvas
 
-from panel.Panel import Panel
+from frame.Panel import Panel
 from sugar.canvas.IconItem import IconItem
 import sugar
 

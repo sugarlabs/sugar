@@ -1,21 +1,21 @@
 import gtk
 import gobject
 
-from panel.VerbsPanel import VerbsPanel
-from panel.FriendsPanel import FriendsPanel
-from panel.TopPanel import TopPanel
-from panel.Panel import Panel
+from frame.BottomPanel import BottomPanel
+from frame.RightPanel import RightPanel
+from frame.TopPanel import TopPanel
+from frame.Panel import Panel
 
-class PanelManager:
+class Frame:
 	def __init__(self, shell, owner):
 		size = 30
 
-		self._verbs_panel = VerbsPanel(shell)
+		self._verbs_panel = BottomPanel(shell)
 		self._verbs_panel.set_position(size, 0)
 		self._verbs_panel.move(0, gtk.gdk.screen_height() - size)
 		self._verbs_panel.resize(gtk.gdk.screen_width(), size)
 
-		self._friends_panel = FriendsPanel(shell, owner.get_friends())
+		self._friends_panel = RightPanel(shell, owner.get_friends())
 		self._friends_panel.move(gtk.gdk.screen_width() - size, size)
 		self._friends_panel.resize(size, gtk.gdk.screen_height() - size * 2)
 

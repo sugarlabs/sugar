@@ -15,7 +15,7 @@ from ChatController import ChatController
 from sugar.activity import ActivityFactory
 from sugar.activity import Activity
 from FirstTimeDialog import FirstTimeDialog
-from panel.PanelManager import PanelManager
+from frame.Frame import Frame
 from globalkeys import KeyGrabber
 from sugar import conf
 from sugar import env
@@ -86,7 +86,7 @@ class Shell(gobject.GObject):
 		elif key == 'F4':
 			self.set_zoom_level(sugar.ZOOM_MESH)
 		elif key == 'F5':
-			self._panel_manager.toggle_visibility()
+			self._frame.toggle_visibility()
 
 	def __first_time_dialog_destroy_cb(self, dialog):
 		conf.get_profile().save()
@@ -108,8 +108,8 @@ class Shell(gobject.GObject):
 		self._chat_controller = ChatController(self)
 		self._chat_controller.listen()
 
-		self._panel_manager = PanelManager(self, self._owner)
-		self._panel_manager.show_and_hide(10)
+		self._frame = Frame(self, self._owner)
+		self._frame.show_and_hide(10)
 
 	def set_console(self, console):
 		self._console = console

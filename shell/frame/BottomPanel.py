@@ -4,7 +4,7 @@ import goocanvas
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.IconColor import IconColor
 from sugar import conf
-from panel.Panel import Panel
+from frame.Panel import Panel
 import logging
 
 class ActivityItem(IconItem):
@@ -47,7 +47,7 @@ class ActivityBar(goocanvas.Group):
 
 		self.add_child(item)
 
-class VerbsPanel(Panel):
+class BottomPanel(Panel):
 	def __init__(self, shell):
 		Panel.__init__(self)
 

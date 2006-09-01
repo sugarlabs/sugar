@@ -1,8 +1,8 @@
 sugardir = $(pkgdatadir)/shell/panel
 sugar_PYTHON =				\
 	__init__.py			\
-	FriendsPanel.py			\
+	RightPanel.py			\
 	Panel.py			\
-	PanelManager.py			\
+	Frame.py			\
 	TopPanel.py			\
-	VerbsPanel.py
+	BottomPanel.py
