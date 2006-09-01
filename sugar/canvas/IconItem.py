@@ -61,10 +61,10 @@ class IconView(goocanvas.ItemViewSimple, goocanvas.ItemView):
 
 		cr.save()
 
-#		if self.item.transform != None:
-#			cr.transform(self.item.transform)
-#		if self.transform != None:
-#			cr.transform(self.transform)
+		if self.item.transform != None:
+			cr.transform(self.item.transform)
+		if self.transform != None:
+			cr.transform(self.transform)
 
 		[user_x, user_y] = cr.device_to_user(x, y)
 		if user_x < self.item.x or \
@@ -83,10 +83,10 @@ class IconView(goocanvas.ItemViewSimple, goocanvas.ItemView):
 
 			cr.save()
 
-#			if self.item.transform != None:
-#				cr.transform(self.item.transform)
-#			if self.transform != None:
-#				cr.transform(self.transform)
+			if self.item.transform != None:
+				cr.transform(self.item.transform)
+			if self.transform != None:
+				cr.transform(self.transform)
 
 			bounds = goocanvas.Bounds()
 			bounds.x1 = self.item.x
@@ -112,10 +112,10 @@ class IconView(goocanvas.ItemViewSimple, goocanvas.ItemView):
 
 		cr.save()
 
-#		if self.item.transform != None:
-#			cr.transform(self.item.transform)
-#		if self.transform != None:
-#			cr.transform(self.transform)
+		if self.item.transform != None:
+			cr.transform(self.item.transform)
+		if self.transform != None:
+			cr.transform(self.transform)
 
 		cr.translate(self.item.x, self.item.y)
 		scale_factor = float(self.item.size) / float(_ICON_SIZE)
