@@ -53,11 +53,6 @@ class ActivityDbusService(dbus.service.Object):
 		return self._activity.get_type()
 
 	@dbus.service.method(ACTIVITY_INTERFACE)
-	def set_type(self, activity_type):
-		"""Set the activity type"""
-		self._activity.set_type(activity_type)
-
-	@dbus.service.method(ACTIVITY_INTERFACE)
 	def get_shared(self):
 		"""Returns True if the activity is shared on the mesh."""
 		return self._activity.get_shared()
