@@ -11,7 +11,7 @@ class ActivityItem(IconItem):
 	def __init__(self, activity, size):
 		icon_name = activity.get_icon()
 		if not icon_name:
-			act_type = activity.get_default_type()
+			act_type = activity.get_type()
 			raise RuntimeError("Activity %s did not have an icon!" % act_type)
 		IconItem.__init__(self, icon_name=icon_name,
 						  color=IconColor('white'), size=size)

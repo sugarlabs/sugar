@@ -21,7 +21,7 @@ class ActivityItem(IconItem):
 		
 	def get_icon_name(self):
 		registry = conf.get_activity_registry()
-		info = registry.get_activity(self._service.get_type())
+		info = registry.get_activity_from_type(self._service.get_type())
 
 		return info.get_icon()
 	
@@ -62,7 +62,7 @@ class MeshGroup(goocanvas.Group):
 
 	def __check_service(self, service):
 		registry = conf.get_activity_registry()
-		if registry.get_activity(service.get_type()) != None:
+		if registry.get_activity_from_type(service.get_type()) != None:
 			if not self.has_activity(service.get_activity_id()):
 				self.add_activity(service)
 

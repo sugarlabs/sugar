@@ -155,12 +155,12 @@ class Shell(gobject.GObject):
 		activity = self.get_current_activity()
 		if activity:
 			registry = conf.get_activity_registry()
-			module = registry.get_activity(activity.get_default_type())
+			module = registry.get_activity(activity.get_type())
 			self._console.set_page(module.get_id())
 
 	def join_activity(self, service):
 		registry = conf.get_activity_registry()
-		info = registry.get_activity(service.get_type())
+		info = registry.get_activity_from_type(service.get_type())
 		
 		activity_id = service.get_activity_id()
 
@@ -172,24 +172,14 @@ class Shell(gobject.GObject):
 
 			if activity_ps:
 				activity = ActivityFactory.create(info.get_id())
-				activity.set_default_type(service.get_type())
 				activity.join(activity_ps.object_path())
 			else:
 				logging.error('Cannot start activity.')
 
-	def start_activity(self, activity_name):
-		activity = ActivityFactory.create(activity_name)
-		registry = conf.get_activity_registry()
-		info = registry.get_activity_from_id(activity_name)
-		if info:
-			default_type = info.get_default_type()
-			if default_type != None:
-				activity.set_default_type(default_type)
-				activity.execute('test', [])
-			return activity
-		else:
-			logging.error('No such activity in the directory')
-			return None
+	def start_activity(self, activity_type):
+		activity = ActivityFactory.create(activity_type)
+		activity.execute('test', [])
+		return activity
 
 	def get_chat_controller(self):
 		return self._chat_controller

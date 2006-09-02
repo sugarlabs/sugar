@@ -18,11 +18,11 @@ class ActivityHost:
 
 		self._activity = dbus.Interface(proxy_obj, Activity.ACTIVITY_INTERFACE)
 		self._id = self._activity.get_id()
-		self._default_type = self._activity.get_default_type()
+		self._type = self._activity.get_type()
 		self._gdk_window = gtk.gdk.window_foreign_new(self._xid)
 
 		registry = conf.get_activity_registry()
-		info = registry.get_activity(self._default_type)
+		info = registry.get_activity(self._type)
 		self._icon_name = info.get_icon()
 
 	def get_id(self):
@@ -45,8 +45,8 @@ class ActivityHost:
 	def get_shared(self):
 		return self._activity.get_shared()
 
-	def get_default_type(self):
-		return self._default_type
+	def get_type(self):
+		return self._type
 
 	def present(self):
 		self._window.activate(gtk.get_current_event_time())

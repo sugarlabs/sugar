@@ -5,6 +5,15 @@ from ConfigParser import NoOptionError
 
 from sugar import env
 
+def get_default_type(activity_type):
+	"""Get the activity default type.
+
+	   It's the type of the main network service which tracks presence
+       and provides info about the activity, for example the title."""
+	splitted_id = activity_type.split('.')
+	splitted_id.reverse()
+	return '_' + '_'.join(splitted_id) + '._udp'
+
 class ActivityModule:
 	"""Info about an activity module. Wraps a .activity file."""
 	
@@ -37,7 +46,7 @@ class ActivityModule:
 		
 	def get_default_type(self):
 		"""Get the the type of the default activity service."""
-		return self._default_type
+		return get_default_type(self._id)
 
 	def set_default_type(self, default_type):
 		"""Set the the type of the default activity service."""
@@ -51,21 +60,21 @@ class ActivityModule:
 		"""Set whether there should be a visible launcher for the activity"""
 		self._show_launcher = show_launcher
 
-class ActivityRegistry:
+class _ActivityRegistry:
 	"""Service that tracks the available activities"""
 
 	def __init__(self):
 		self._activities = []
 		self.scan_directory(env.get_activities_dir())
 
-	def get_activity_from_id(self, activity_id):
+	def get_activity(self, activity_id):
 		"""Returns an activity given his identifier"""
 		for activity in self._activities:
 			if activity.get_id() == activity_id:
 				return activity
 		return None
 	
-	def get_activity(self, default_type):
+	def get_activity_from_type(self, default_type):
 		"""Returns an activity given his default type"""
 		for activity in self._activities:
 			if activity.get_default_type() == default_type:
@@ -98,11 +107,6 @@ class ActivityRegistry:
 			logging.error('%s miss the required name option' % (path))
 			return False
 
-		if cp.has_option('Activity', 'default_type'):
-			default_type = cp.get('Activity', 'default_type')
-		else:
-			default_type = None
-
 		module = ActivityModule(name, activity_id, directory)
 		self._activities.append(module)
 
@@ -111,8 +115,6 @@ class ActivityRegistry:
 
 		if cp.has_option('Activity', 'icon'):
 			module.set_icon(cp.get('Activity', 'icon'))
-
-		module.set_default_type(default_type)
 
 		return True
 

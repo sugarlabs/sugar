@@ -51,8 +51,7 @@ class BrowserActivity(Activity):
 
 		activity_ps.connect('service-appeared', self._service_appeared_cb)
 
-		default_type = self.get_default_type()
-		services = activity_ps.get_services_of_type(default_type)
+		services = activity_ps.get_services_of_type(self._default_type)
 		if len(services) > 0:
 			self._notif_service = services[0]
 

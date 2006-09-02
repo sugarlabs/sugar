@@ -7,6 +7,7 @@ import gtk
 import gobject
 
 from sugar.presence.PresenceService import PresenceService
+from sugar.conf import ActivityRegistry
 import sugar.util
 
 ACTIVITY_SERVICE_NAME = "org.laptop.Activity"
@@ -47,14 +48,14 @@ class ActivityDbusService(dbus.service.Object):
 		return self._activity.get_id()
 
 	@dbus.service.method(ACTIVITY_INTERFACE)
-	def get_default_type(self):
-		"""Get the activity default type"""
-		return self._activity.get_default_type()
+	def get_type(self):
+		"""Get the activity type"""
+		return self._activity.get_type()
 
 	@dbus.service.method(ACTIVITY_INTERFACE)
-	def set_default_type(self, default_type):
-		"""Set the activity default type"""
-		self._activity.set_default_type(default_type)
+	def set_type(self, activity_type):
+		"""Set the activity type"""
+		self._activity.set_type(activity_type)
 
 	@dbus.service.method(ACTIVITY_INTERFACE)
 	def get_shared(self):
@@ -92,16 +93,14 @@ class Activity(gtk.Window):
 		self._bus = ActivityDbusService(bus_name, get_object_path(xid))
 		self._bus.start(self._pservice, self)
 
-	def set_default_type(self, default_type):
-		"""Set the activity default type.
+	def set_type(self, activity_type):
+		"""Sets the activity type."""
+		self._activity_type = activity_type
+		self._default_type = ActivityRegistry.get_default_type(activity_type)
 
-		It's the type of the main network service which tracks presence
-		and provides info about the activity, for example the title."""
-		self._default_type = default_type
-
-	def get_default_type(self):
-		"""Get the activity default type."""
-		return self._default_type
+	def get_type(self):
+		"""Gets the activity type."""
+		return self._activity_type
 
 	def get_shared(self):
 		"""Returns TRUE if the activity is shared on the mesh."""
