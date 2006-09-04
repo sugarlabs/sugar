@@ -1,4 +1,5 @@
 [Activity]
 name = Terminal
+icon = activity-terminal
 id = org.sugar.Terminal
 python_module = terminal.TerminalActivity.TerminalActivity
