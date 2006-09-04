@@ -2,10 +2,10 @@ import os
 import random
 import base64
 
+import conf
 from sugar import env
 from sugar.p2p import Stream
 from sugar.presence import PresenceService
-from sugar import conf
 from Friends import Friends
 from Invites import Invites
 

@@ -1,4 +1,4 @@
-from sugar import conf
+import conf
 from sugar.chat.BuddyChat import BuddyChat
 from sugar.activity import ActivityFactory
 from sugar.presence import PresenceService

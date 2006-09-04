@@ -1,12 +1,12 @@
 import gtk
 import goocanvas
+import logging
 
+import conf
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.IconColor import IconColor
 from sugar.presence import PresenceService
-from sugar import conf
 from frame.Panel import Panel
-import logging
 
 class ActivityItem(IconItem):
 	def __init__(self, activity, size):

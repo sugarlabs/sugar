@@ -1,8 +1,8 @@
-from sugar.conf.ActivityRegistry import _ActivityRegistry
-from sugar.conf.Profile import Profile
+from conf.ActivityRegistry import _ActivityRegistry
+from conf.Profile import _Profile
 
 __registry = _ActivityRegistry()
-__profile = Profile()
+__profile = _Profile()
 
 def get_activity_registry():
 	return __registry

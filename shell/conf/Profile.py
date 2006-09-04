@@ -4,7 +4,7 @@ from ConfigParser import ConfigParser
 from sugar.canvas.IconColor import IconColor
 from sugar import env
 
-class Profile:
+class _Profile:
 	def __init__(self,):
 		self._path = env.get_profile_path()
 		self._nick_name = None

@@ -7,7 +7,7 @@ import gtk
 import gobject
 
 from sugar.presence.PresenceService import PresenceService
-from sugar.conf import ActivityRegistry
+from sugar import activity
 import sugar.util
 
 ACTIVITY_SERVICE_NAME = "org.laptop.Activity"
@@ -19,7 +19,6 @@ def get_service_name(xid):
 
 def get_object_path(xid):
 	return ACTIVITY_SERVICE_PATH + "/%s" % xid 
-
 
 class ActivityDbusService(dbus.service.Object):
 	"""Base dbus service object that each Activity uses to export dbus methods.
@@ -91,7 +90,7 @@ class Activity(gtk.Window):
 	def set_type(self, activity_type):
 		"""Sets the activity type."""
 		self._activity_type = activity_type
-		self._default_type = ActivityRegistry.get_default_type(activity_type)
+		self._default_type = activity.get_default_type(activity_type)
 
 	def get_type(self):
 		"""Gets the activity type."""

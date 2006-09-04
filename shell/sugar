@@ -17,7 +17,7 @@ else:
 
 from sugar import env
 
-env.setup()
+env.setup_system()
 
 from session.Emulator import Emulator
 
@@ -25,6 +25,17 @@ if os.environ.has_key('SUGAR_EMULATOR') and \
    os.environ['SUGAR_EMULATOR'] == 'yes':
 	emulator = Emulator()
 	emulator.start()
+
+from FirstTimeDialog import FirstTimeDialog
+import conf
+
+profile = conf.get_profile()
+if profile.get_nick_name() == None:
+	dialog = FirstTimeDialog()
+	dialog.run()
+	profile.save()
+
+env.setup_user(profile)
 
 from session.Session import Session
 

@@ -1,4 +1,4 @@
-SUBDIRS = data session frame home PresenceService
+SUBDIRS = conf data session frame home PresenceService
 
 bin_SCRIPTS = 				\
 	sugar				\

@@ -14,10 +14,9 @@ from ActivityHost import ActivityHost
 from ChatController import ChatController
 from sugar.activity import ActivityFactory
 from sugar.activity import Activity
-from FirstTimeDialog import FirstTimeDialog
 from frame.Frame import Frame
 from globalkeys import KeyGrabber
-from sugar import conf
+import conf
 from sugar import env
 import sugar
 import sugar.logger
@@ -67,32 +66,6 @@ class Shell(gobject.GObject):
 		self._screen.connect('active-window-changed',
 							 self.__active_window_changed_cb)
 
-		profile = conf.get_profile()
-		if profile.get_nick_name() == None:
-			dialog = FirstTimeDialog()
-			dialog.connect('destroy', self.__first_time_dialog_destroy_cb)
-			dialog.set_transient_for(self._home_window)
-			dialog.show()
-		else:
-			self.start()
-
-	def __global_key_pressed_cb(self, grabber, key):
-		if key == 'F1':
-			self.set_zoom_level(sugar.ZOOM_ACTIVITY)
-		elif key == 'F2':
-			self.set_zoom_level(sugar.ZOOM_HOME)
-		elif key == 'F3':
-			self.set_zoom_level(sugar.ZOOM_FRIENDS)
-		elif key == 'F4':
-			self.set_zoom_level(sugar.ZOOM_MESH)
-		elif key == 'F5':
-			self._frame.toggle_visibility()
-
-	def __first_time_dialog_destroy_cb(self, dialog):
-		conf.get_profile().save()
-		self.start()
-
-	def start(self):
 		session_bus = dbus.SessionBus()
 		bus_name = dbus.service.BusName('com.redhat.Sugar.Shell', bus=session_bus)
 		ShellDbusService(self, bus_name)
@@ -110,6 +83,18 @@ class Shell(gobject.GObject):
 
 		self._frame = Frame(self, self._owner)
 		self._frame.show_and_hide(10)
+
+	def __global_key_pressed_cb(self, grabber, key):
+		if key == 'F1':
+			self.set_zoom_level(sugar.ZOOM_ACTIVITY)
+		elif key == 'F2':
+			self.set_zoom_level(sugar.ZOOM_HOME)
+		elif key == 'F3':
+			self.set_zoom_level(sugar.ZOOM_FRIENDS)
+		elif key == 'F4':
+			self.set_zoom_level(sugar.ZOOM_MESH)
+		elif key == 'F5':
+			self._frame.toggle_visibility()
 
 	def set_console(self, console):
 		self._console = console

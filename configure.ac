@@ -46,6 +46,7 @@ bindings/Makefile
 bindings/globalkeys/Makefile
 bindings/threadframe/Makefile
 shell/Makefile
+shell/conf/Makefile
 shell/data/Makefile
 shell/home/Makefile
 shell/frame/Makefile
@@ -58,7 +59,6 @@ sugar/activity/Makefile
 sugar/canvas/Makefile
 sugar/chat/Makefile
 sugar/chat/sketchpad/Makefile
-sugar/conf/Makefile
 sugar/p2p/Makefile
 sugar/p2p/model/Makefile
 sugar/presence/Makefile

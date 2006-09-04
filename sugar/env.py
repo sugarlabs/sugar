@@ -9,7 +9,13 @@ except ImportError:
 
 import sugar.setup
 
-def setup():
+def setup_user(profile):
+	os.environ['SUGAR_NICK_NAME'] = profile.get_nick_name()
+
+def get_nick_name():
+	return os.environ['SUGAR_NICK_NAME']
+
+def setup_system():
 	for path in sugar_python_path:
 		sys.path.insert(0, path)
 		if os.environ.has_key('PYTHONPATH'):

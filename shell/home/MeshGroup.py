@@ -2,10 +2,10 @@ import random
 
 import goocanvas
 
+import conf
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.IconItem import IconColor
 from sugar.presence import PresenceService
-from sugar import conf
 
 import Theme
 

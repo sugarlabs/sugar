@@ -1,7 +1,7 @@
 import gtk
 import dbus
 
-from sugar import conf
+import conf
 from sugar.activity import Activity
 from sugar.presence import PresenceService
 from sugar.canvas.IconColor import IconColor

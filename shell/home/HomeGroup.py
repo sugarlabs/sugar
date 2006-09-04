@@ -2,11 +2,10 @@ import gtk
 import goocanvas
 import wnck
 
+import conf
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.IconColor import IconColor
 from home.DonutItem import DonutItem
-import sugar.conf
-
 import Theme
 
 class TasksItem(DonutItem):
@@ -65,7 +64,7 @@ class HomeGroup(goocanvas.Group):
 		tasks.translate(600, 450)
 		self.add_child(tasks)
 
-		profile = sugar.conf.get_profile()
+		profile = conf.get_profile()
 		me = IconItem(icon_name = 'stock-buddy',
 					  color = profile.get_color(), size = 150)
 		me.translate(600 - (me.get_property('size') / 2),
