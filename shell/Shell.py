@@ -57,6 +57,7 @@ class Shell(gobject.GObject):
 		self._key_grabber.grab('F3')
 		self._key_grabber.grab('F4')
 		self._key_grabber.grab('F5')
+		self._key_grabber.grab('F6')
 
 		self._home_window = HomeWindow(self)
 		self._home_window.show()
@@ -95,6 +96,8 @@ class Shell(gobject.GObject):
 			self.set_zoom_level(sugar.ZOOM_MESH)
 		elif key == 'F5':
 			self._frame.toggle_visibility()
+		elif key == 'F6':
+			ActivityFactory.create('org.sugar.Terminal')
 
 	def set_console(self, console):
 		self._console = console
