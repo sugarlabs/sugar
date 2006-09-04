@@ -3,6 +3,7 @@ import goocanvas
 
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.IconColor import IconColor
+from sugar.presence import PresenceService
 from sugar import conf
 from frame.Panel import Panel
 import logging
@@ -17,11 +18,23 @@ class ActivityItem(IconItem):
 						  color=IconColor('white'), size=size)
 		self._activity = activity
 
-	def get_activity_id(self):
+	def get_bundle_id(self):
 		return self._activity.get_id()
 
+class InviteItem(IconItem):
+	def __init__(self, invite, size):
+		IconItem.__init__(self, icon_name=invite.get_icon(),
+						  color=invite.get_color(), size=size)
+		self._invite = invite
+
+	def get_activity_id(self):
+		return self._invite.get_activity_id()
+
+	def get_bundle_id(self):
+		return self._invite.get_bundle_id()
+
 class ActivityBar(goocanvas.Group):
-	def __init__(self, shell, height):
+	def __init__(self, shell, invites, height):
 		goocanvas.Group.__init__(self)
 
 		self._shell = shell
@@ -32,6 +45,20 @@ class ActivityBar(goocanvas.Group):
 			if activity.get_show_launcher():
 				self.add_activity(activity)
 
+		for invite in invites:
+			self.add_invite(invite)
+		invites.connect('invite-added', self.__invite_added_cb)
+
+	def __activity_clicked_cb(self, icon):
+		self._shell.start_activity(icon.get_bundle_id())
+
+	def __invite_clicked_cb(self, icon):
+		self._shell.join_activity(icon.get_bundle_id(),
+								  icon.get_activity_id())
+	
+	def __invite_added_cb(self, invites, invite):
+		self.add_invite(invite)
+
 	def add_activity(self, activity):
 		# Need an icon to show up on the bar
 		if not activity.get_icon():
@@ -40,6 +67,17 @@ class ActivityBar(goocanvas.Group):
 			return
 
 		item = ActivityItem(activity, self._height)
+		item.connect('clicked', self.__activity_clicked_cb)
+
+		icon_size = self._height
+		x = (icon_size + 6) * self.get_n_children()
+		item.set_property('x', x)
+
+		self.add_child(item)
+
+	def add_invite(self, invite):
+		item = InviteItem(invite, self._height)
+		item.connect('clicked', self.__invite_clicked_cb)
 
 		icon_size = self._height
 		x = (icon_size + 6) * self.get_n_children()
@@ -48,27 +86,17 @@ class ActivityBar(goocanvas.Group):
 		self.add_child(item)
 
 class BottomPanel(Panel):
-	def __init__(self, shell):
+	def __init__(self, shell, invites):
 		Panel.__init__(self)
 
 		self._shell = shell
-
-		view = self.get_view()
-		view.connect("item_view_created", self.__item_view_created_cb)
+		self._invites = invites
 
 	def construct(self):
 		Panel.construct(self)
 
 		root = self.get_root()
 
-		activity_bar = ActivityBar(self._shell, self.get_height())
+		activity_bar = ActivityBar(self._shell, self._invites,
+								   self.get_height())
 		root.add_child(activity_bar)
-
-	def __item_view_created_cb(self, view, item_view, item):
-		if isinstance(item, ActivityItem):
-			item_view.connect("button_press_event",
-							  self.__activity_button_press_cb,
-							  item.get_activity_id())
-
-	def __activity_button_press_cb(self, view, target, event, activity_id):
-		self._shell.start_activity(activity_id)

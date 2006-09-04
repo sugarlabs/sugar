@@ -12,7 +12,7 @@ class Frame:
 
 		self._panels = []
 
-		panel = BottomPanel(shell)
+		panel = BottomPanel(shell, owner.get_invites())
 		panel.set_position(size, 0)
 		panel.move(0, gtk.gdk.screen_height() - size)
 		panel.resize(gtk.gdk.screen_width(), size)

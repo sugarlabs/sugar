@@ -7,6 +7,7 @@ from sugar.p2p import Stream
 from sugar.presence import PresenceService
 from sugar import conf
 from Friends import Friends
+from Invites import Invites
 
 PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
 
@@ -31,9 +32,13 @@ class ShellOwner(object):
 
 		self._pservice = PresenceService.get_instance()
 		self._friends = Friends()
+		self._invites = Invites()
 
 	def get_friends(self):
 		return self._friends
+
+	def get_invites(self):
+		return self._invites
 
 	def announce(self):
 		# Create and announce our presence
@@ -52,7 +57,7 @@ class ShellOwner(object):
 			return base64.b64encode(self._icon)
 		return ""
 
-	def _handle_invite(self, activity_id):
+	def _handle_invite(self, issuer, bundle_id, activity_id):
 		"""XMLRPC method, called when the owner is invited to an activity."""
-		print '---------- invited to ' + activity_id
-		return ""
+		self._invites.add_invite(issuer, bundle_id, activity_id)
+		return ''

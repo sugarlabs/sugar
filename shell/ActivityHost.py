@@ -13,6 +13,7 @@ class ActivityHost:
 		self._shell = shell
 		self._window = window
 		self._xid = window.get_xid()
+		self._pservice = PresenceService.get_instance()
 
 		bus = dbus.SessionBus()
 		proxy_obj = bus.get_object(Activity.get_service_name(self._xid),
@@ -34,8 +35,7 @@ class ActivityHost:
 		return self._icon_name
 
 	def get_icon_color(self):
-		pservice = PresenceService.get_instance()
-		activity = pservice.get_activity(self._id)
+		activity = self._pservice.get_activity(self._id)
 		if activity != None:
 			return IconColor(activity.get_color())
 		else:
@@ -45,10 +45,15 @@ class ActivityHost:
 		self._activity.share()
 
 	def invite(self, buddy):
+		if not self.get_shared():
+			self.share()
+
+		issuer = self._pservice.get_owner().get_name()
 		service = buddy.get_service_of_type("_presence_olpc._tcp")
 		stream = Stream.Stream.new_from_service(service, start_reader=False)
 		writer = stream.new_writer(service)
-		writer.custom_request("invite", None, None, self._id)
+		writer.custom_request("invite", None, None, issuer,
+							  self._type, self._id)
 
 	def get_shared(self):
 		return self._activity.get_shared()

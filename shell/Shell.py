@@ -158,12 +158,7 @@ class Shell(gobject.GObject):
 			module = registry.get_activity(activity.get_type())
 			self._console.set_page(module.get_id())
 
-	def join_activity(self, service):
-		registry = conf.get_activity_registry()
-		info = registry.get_activity_from_type(service.get_type())
-		
-		activity_id = service.get_activity_id()
-
+	def join_activity(self, bundle_id, activity_id):
 		activity = self.get_activity(activity_id)
 		if activity:
 			activity.present()
@@ -171,7 +166,7 @@ class Shell(gobject.GObject):
 			activity_ps = self._pservice.get_activity(activity_id)
 
 			if activity_ps:
-				activity = ActivityFactory.create(info.get_id())
+				activity = ActivityFactory.create(bundle_id)
 				activity.join(activity_ps.object_path())
 			else:
 				logging.error('Cannot start activity.')

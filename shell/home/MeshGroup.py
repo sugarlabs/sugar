@@ -79,4 +79,10 @@ class MeshGroup(goocanvas.Group):
 		self._activities[item.get_id()] = item
 
 	def __activity_clicked_cb(self, item):
-		self._shell.join_activity(item.get_service())
+		default_type = item.get_service().get_type()
+		registry = conf.get_activity_registry()
+
+		bundle_id = registry.get_activity_from_type().get_id()
+		activity_id = service.get_activity_id()
+
+		self._shell.join_activity(bundle_id, activity_id)
