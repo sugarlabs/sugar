@@ -15,6 +15,7 @@ sugar_PYTHON =				\
 	ConsoleWindow.py		\
 	FirstTimeDialog.py		\
 	Friends.py			\
+	Invites.py			\
 	Owner.py			\
 	Shell.py
 
