@@ -5,6 +5,8 @@ from sugar import conf
 from sugar.activity import Activity
 from sugar.presence import PresenceService
 from sugar.canvas.IconColor import IconColor
+from sugar.p2p import Stream
+from sugar.p2p import network
 
 class ActivityHost:
 	def __init__(self, shell, window):
@@ -41,6 +43,12 @@ class ActivityHost:
 
 	def share(self):
 		self._activity.share()
+
+	def invite(self, buddy):
+		service = buddy.get_service_of_type("_presence_olpc._tcp")
+		stream = Stream.Stream.new_from_service(service, start_reader=False)
+		writer = stream.new_writer(service)
+		writer.custom_request("invite", None, None, self._id)
 
 	def get_shared(self):
 		return self._activity.get_shared()

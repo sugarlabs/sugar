@@ -229,13 +229,11 @@ class Buddy(object):
 			raise RuntimeError("Activity is not yet valid.")
 
 		if activity:
-			actid = activity.get_id()
-			for service in self._services.values():
-				if service.get_type() == stype and service.get_activity_id() == actid:
-					return service
-
-		if self._services.has_key(stype):
-			return self._services[stype]
+			key = (stype, activity.get_id())
+		else:
+			key = (stype, None)
+		if self._services.has_key(key):
+			return self._services[key]
 		return None
 
 	def is_valid(self):

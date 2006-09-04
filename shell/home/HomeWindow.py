@@ -48,7 +48,8 @@ class HomeWindow(gtk.Window):
 		y2 = y1 + HomeGroup.HEIGHT
 		icon_layout.set_bounds(x1, y1, x2, y2)
 
-		self._friends_group = FriendsGroup(owner.get_friends(), icon_layout)
+		self._friends_group = FriendsGroup(self._shell, owner.get_friends(),
+										   icon_layout)
 		self._friends_group.translate((self._width - FriendsGroup.WIDTH) / 2,
 									  (self._height - FriendsGroup.HEIGHT) / 2)
 		root.add_child(self._friends_group)

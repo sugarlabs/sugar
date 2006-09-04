@@ -4,6 +4,7 @@ from ConfigParser import ConfigParser
 import gobject
 
 from sugar.canvas.IconColor import IconColor
+from sugar.presence import PresenceService
 from sugar import env
 
 class Friend:
@@ -16,6 +17,10 @@ class Friend:
 
 	def get_color(self):
 		return IconColor(self._color)
+
+	def get_buddy(self):
+		pservice = PresenceService.get_instance()
+		return pservice.get_buddy_by_name(self._name)
 
 class Friends(gobject.GObject):
 	__gsignals__ = {

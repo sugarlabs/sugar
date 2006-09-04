@@ -18,9 +18,10 @@ class FriendsGroup(goocanvas.Group):
 	WIDTH = 1200.0 * 1.9
 	HEIGHT = 900.0 * 1.9
 
-	def __init__(self, friends, icon_layout):
+	def __init__(self, shell, friends, icon_layout):
 		goocanvas.Group.__init__(self)
 
+		self._shell = shell
 		self._icon_layout = icon_layout
 		self._friends = friends
 
@@ -43,8 +44,15 @@ class FriendsGroup(goocanvas.Group):
 		color = self._theme.get_home_friends_color()
 		self._friends_rect.set_property("fill-color", color)
 
+	def __friend_clicked_cb(self, icon):
+		activity = self._shell.get_current_activity()
+		buddy = icon.get_friend().get_buddy()
+		if buddy != None:
+			activity.invite(buddy)
+
 	def add_friend(self, friend):
 		icon = FriendIcon(friend)
+		icon.connect('clicked', self.__friend_clicked_cb)
 		self.add_child(icon)
 		self._icon_layout.add_icon(icon)
 

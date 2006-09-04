@@ -44,9 +44,15 @@ class ShellOwner(object):
 		print "Owner '%s' using port %d" % (self._nick, self._service.get_port())
 		self._icon_stream = Stream.Stream.new_from_service(self._service)
 		self._icon_stream.register_reader_handler(self._handle_buddy_icon_request, "get_buddy_icon")
+		self._icon_stream.register_reader_handler(self._handle_invite, "invite")
 
 	def _handle_buddy_icon_request(self):
 		"""XMLRPC method, return the owner's icon encoded with base64."""
 		if self._icon:
 			return base64.b64encode(self._icon)
+		return ""
+
+	def _handle_invite(self, activity_id):
+		"""XMLRPC method, called when the owner is invited to an activity."""
+		print '---------- invited to ' + activity_id
 		return ""
