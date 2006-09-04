@@ -7,11 +7,14 @@ import re
 from Shell import Shell
 from ConsoleWindow import ConsoleWindow
 from session.Process import Process
-import sugar.env
+from FirstTimeDialog import FirstTimeDialog
+from sugar import env
+from sugar import logger
+import conf
 
 class DbusProcess(Process):
 	def __init__(self):
-		config = sugar.env.get_dbus_config()
+		config = env.get_dbus_config()
 		cmd = "dbus-daemon --print-address --config-file %s" % config
 		Process.__init__(self, cmd)
 
@@ -27,7 +30,7 @@ class DbusProcess(Process):
 
 class MatchboxProcess(Process):
 	def __init__(self):
-		kbd_config = os.path.join(sugar.env.get_data_dir(), 'kbdconfig')
+		kbd_config = os.path.join(env.get_data_dir(), 'kbdconfig')
 		options = '-kbdconfig %s ' % kbd_config
 
 		options += '-theme olpc '
@@ -40,16 +43,29 @@ class MatchboxProcess(Process):
 
 class Session:
 	"""Takes care of running the shell and all the sugar processes"""
+
+	def _check_profile(self):
+		profile = conf.get_profile()
+
+		if profile.get_nick_name() == None:
+			dialog = FirstTimeDialog()
+			dialog.run()
+			profile.save()
+
+		env.setup_user(profile)
+
 	def start(self):
 		"""Start the session"""
-		process = DbusProcess()
-		process.start()
-
 		process = MatchboxProcess()
 		process.start()
 
+		self._check_profile()
+
+		process = DbusProcess()
+		process.start()
+
 		console = ConsoleWindow()
-		sugar.logger.start('Shell', console)
+		logger.start('Shell', console)
 
 		shell = Shell()
 		shell.set_console(console)
