@@ -142,6 +142,9 @@ class Buddy(object):
 			gobject.timeout_add(1000, self._request_buddy_icon, service)
 		return False
 
+	def _get_service_key(self, service):
+		return (service.get_type(), service.get_activity_id())
+
 	def add_service(self, service):
 		"""Adds a new service to this buddy's service list, returning
 		True if the service was successfully added, and False if it was not."""
@@ -151,14 +154,14 @@ class Buddy(object):
 		if source_addr != self._address:
 			logging.error("Service source and buddy address doesn't match: %s %s" % (source_addr, self._address))
 			return False
-		stype = service.get_type()
-		if stype in self._services.keys():
+		service_key = self._get_service_key(service)
+		if service_key in self._services.keys():
 			return False
 		logging.debug("Buddy %s added service type %s id %s" % (self._nick_name, service.get_type(), service.get_activity_id()))
-		self._services[stype] = service
+		self._services[service_key] = service
 		service.set_owner(self)
 
-		if stype == PRESENCE_SERVICE_TYPE:
+		if service.get_type() == PRESENCE_SERVICE_TYPE:
 			# A buddy isn't valid until its official presence
 			# service has been found and resolved
 			self._valid = True
@@ -192,13 +195,13 @@ class Buddy(object):
 			return
 		if service.get_name() != self._nick_name:
 			return
-		stype = service.get_type()
-		if self._services.has_key(stype):
+		service_key = self._get_service_key(service)
+		if self._services.has_key(service_key):
 			if self._valid:
 				self._dbus_helper.ServiceDisappeared(service.object_path())
-			del self._services[stype]
+			del self._services[service_key]
 
-		if stype == PRESENCE_SERVICE_TYPE:
+		if service.get_type() == PRESENCE_SERVICE_TYPE:
 			self._valid = False
 
 	def remove_activity(self, activity):
