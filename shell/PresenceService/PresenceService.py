@@ -7,6 +7,7 @@ import logging
 from sugar import env
 from sugar import util
 
+
 def _get_local_ip_address(ifname):
 	"""Call Linux specific bits to retrieve our own IP address."""
 	import socket
@@ -241,9 +242,6 @@ class PresenceService(object):
 
 		self._next_object_id = 0
 
-		# Our owner object
-		self._owner = None
-
 		self._buddies = {} 		# nick -> Buddy
 		self._services = {}		# (name, type) -> Service
 		self._activities = {}	# activity id -> Activity
@@ -263,6 +261,11 @@ class PresenceService(object):
 		self._session_bus = dbus.SessionBus()
 		self._bus_name = dbus.service.BusName(_PRESENCE_SERVICE, bus=self._session_bus)		
 		self._dbus_helper = PresenceServiceDBusHelper(self, self._bus_name)
+
+		# Our owner object
+		owner_nick = env.get_nick_name()
+		objid = self._get_next_object_id()
+		self._owner = Buddy.Owner(self, self._bus_name, objid, owner_nick)
 
 		self._started = False
 
@@ -337,6 +340,11 @@ class PresenceService(object):
 	def get_owner(self):
 		return self._owner
 
+	def is_local_ip_address(self, address):
+		if address in self._local_addrs.values():
+			return True
+		return False
+
 	def _find_service_adv(self, interface=None, protocol=None, name=None, stype=None, domain=None):
 		"""Search a list of service advertisements for ones matching certain criteria."""
 		adv_list = []
@@ -368,16 +376,9 @@ class PresenceService(object):
 			if service_added:
 				self._dbus_helper.ServiceAppeared(service.object_path())
 		except KeyError:
-			# Should this service mark the owner?
-			owner_nick = env.get_nick_name()
 			source_addr = service.get_source_address()
 			objid = self._get_next_object_id()
-			if name == owner_nick and source_addr in self._local_addrs.values():
-				buddy = Buddy.Owner(self._bus_name, objid, service)
-				self._owner = buddy
-				logging.debug("Owner is '%s'." % name)
-			else:
-				buddy = Buddy.Buddy(self._bus_name, objid, service)
+			buddy = Buddy.Buddy(self._bus_name, objid, service)
 			self._buddies[name] = buddy
 			self._dbus_helper.ServiceAppeared(service.object_path())
 		if not buddy_was_valid and buddy.is_valid():

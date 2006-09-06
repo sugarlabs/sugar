@@ -85,30 +85,36 @@ class Buddy(object):
 	"""Represents another person on the network and keeps track of the
 	activities and resources they make available for sharing."""
 
-	def __init__(self, bus_name, object_id, service, owner=False):
+	def __init__(self, bus_name, object_id, service):
 		if not bus_name:
 			raise ValueError("DBus bus name must be valid")
 		if not object_id or type(object_id) != type(1):
 			raise ValueError("object id must be a valid number")
-		if not isinstance(service, Service.Service):
-			raise ValueError("service must be a valid service object")
+		# Normal Buddy objects must be created with a valid service,
+		# owner objects do not
+		if not isinstance(self, Owner):
+			if not isinstance(service, Service.Service):
+				raise ValueError("service must be a valid service object")
 
 		self._services = {}
 		self._activities = {}
 
-		self._nick_name = service.get_name()
-		self._address = service.get_source_address()
+		self._nick_name = None
+		self._address = None
+		if service is not None:
+			self._nick_name = service.get_name()
+			self._address = service.get_source_address()
 		self._color = None
 		self._valid = False
 		self._icon = None
 		self._icon_tries = 0
-		self._owner = owner
 
 		self._object_id = object_id
 		self._object_path = BUDDY_DBUS_OBJECT_PATH + str(self._object_id)
 		self._dbus_helper = BuddyDBusHelper(self, bus_name, self._object_path)
 
-		self.add_service(service)
+		if service is not None:
+			self.add_service(service)
 
 	def object_path(self):
 		return dbus.ObjectPath(self._object_path)
@@ -263,14 +269,33 @@ class Buddy(object):
 			self._dbus_helper.IconChanged()
 
 	def is_owner(self):
-		return self._owner
+		return False
 
 
 class Owner(Buddy):
 	"""Class representing the owner of the machine.  This is the client
 	portion of the Owner, paired with the server portion in Owner.py."""
-	def __init__(self, bus_name, object_id, service):
-		Buddy.__init__(self, bus_name, object_id, service, owner=True)
+	def __init__(self, ps, bus_name, object_id, nick):
+		Buddy.__init__(self, bus_name, object_id, None)
+		self._nick_name = nick
+		self._ps = ps
+
+	def add_service(self, service):
+		"""Adds a new service to this buddy's service list, returning
+		True if the service was successfully added, and False if it was not."""
+		if service.get_name() != self._nick_name:
+			return False
+
+		# The Owner initially doesn't have an address, so the first
+		# service added to the Owner determines the owner's address
+		source_addr = service.get_source_address()
+		if self._address is None:
+			if source_addr in self._ps.is_local_ip_address(source_addr):
+				self._address = source_addr
+		return Buddy.add_service(self, service)
+
+	def is_owner(self):
+		return True
 
 
 #################################################################
