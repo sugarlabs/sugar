@@ -125,30 +125,3 @@ class ActionsBar(goocanvas.Group):
 
 		self._y = 0
 
-		icon = IconItem(icon_name='stock-share', size=self._width)
-		icon.connect('clicked', self.__share_clicked_cb)
-		self.add_icon(icon)
-
-		icon = IconItem(icon_name='stock-invite', size=self._width)
-		icon.connect('clicked', self.__invite_clicked_cb)
-		self.add_icon(icon)
-
-		icon = IconItem(icon_name='stock-chat', size=self._width)
-		icon.connect('clicked', self.__chat_clicked_cb)
-		self.add_icon(icon)
-
-	def add_icon(self, icon):
-		icon.set_property('y', self._y)
-		self._y += (self._width + 6)
-		self.add_child(icon)		
-
-	def __share_clicked_cb(self, item):
-		activity = self._shell.get_current_activity()
-		if activity != None:
-			activity.share()
-
-	def __invite_clicked_cb(self, item):
-		pass
-
-	def __chat_clicked_cb(self, item):
-		pass

@@ -152,6 +152,7 @@ class IconItem(goocanvas.ItemSimple, goocanvas.Item):
 		self.x = 0.0
 		self.y = 0.0
 		self.size = 24
+		self.color = None
 
 		goocanvas.ItemSimple.__init__(self, **kwargs)
 

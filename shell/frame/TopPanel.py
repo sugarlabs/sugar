@@ -1,40 +1,57 @@
 import goocanvas
 
-from frame.Panel import Panel
+from sugar.canvas.GridLayout import GridGroup
+from sugar.canvas.GridLayout import GridConstraints
 from sugar.canvas.IconItem import IconItem
 import sugar
 
-class ZoomBar(goocanvas.Group):
-	def __init__(self, shell, height):
-		goocanvas.Group.__init__(self)
-		self._height = height
+class TopPanel(GridGroup):
+	def __init__(self, shell):
+		GridGroup.__init__(self)
 		self._shell = shell
 
-		self.add_zoom_level(sugar.ZOOM_ACTIVITY, 'stock-zoom-activity')
-		self.add_zoom_level(sugar.ZOOM_HOME, 'stock-zoom-home')
-		self.add_zoom_level(sugar.ZOOM_FRIENDS, 'stock-zoom-friends')
-		self.add_zoom_level(sugar.ZOOM_MESH, 'stock-zoom-mesh')
+		self.add_zoom_level(sugar.ZOOM_ACTIVITY, 'stock-zoom-activity', 1)
+		self.add_zoom_level(sugar.ZOOM_HOME, 'stock-zoom-home', 2)
+		self.add_zoom_level(sugar.ZOOM_FRIENDS, 'stock-zoom-friends', 3)
+		self.add_zoom_level(sugar.ZOOM_MESH, 'stock-zoom-mesh', 4)
 
-	def add_zoom_level(self, level, icon_name):
+		icon = IconItem(icon_name='stock-share', size=self._width)
+		icon.connect('clicked', self.__share_clicked_cb)
+		self.add_icon(icon, 12)
+
+		icon = IconItem(icon_name='stock-invite', size=self._width)
+		icon.connect('clicked', self.__invite_clicked_cb)
+		self.add_icon(icon, 13)
+
+		icon = IconItem(icon_name='stock-chat', size=self._width)
+		icon.connect('clicked', self.__chat_clicked_cb)
+		self.add_icon(icon, 14)
+
+	def add_zoom_level(self, level, icon_name, pos):
 		icon = IconItem(icon_name=icon_name, size=self._height)
 		icon.connect('clicked', self.__level_clicked_cb, level)
 
-		icon_size = self._height
-		x = (icon_size + 6) * self.get_n_children()
-		icon.set_property('x', x)
+		constraints = GridConstraints(pos, 0, 1, 1)
+		constraints.padding = 6
+		self._layout.set_constraints(icon, constraints)
+		self.add_child(icon)
 
+	def add_icon(self, icon, pos):
+		constraints = GridConstraints(pos, 0, 1, 1)
+		constraints.padding = 6
+		self._layout.set_constraints(icon, constraints)
 		self.add_child(icon)
 
 	def __level_clicked_cb(self, item, level):
 		self._shell.set_zoom_level(level)
 
-class TopPanel(Panel):
-	def __init__(self, shell):
-		Panel.__init__(self)
-		self._shell = shell
+	def __share_clicked_cb(self, item):
+		activity = self._shell.get_current_activity()
+		if activity != None:
+			activity.share()
 
-	def construct(self):
-		Panel.construct(self)
+	def __invite_clicked_cb(self, item):
+		pass
 
-		zoom_bar = ZoomBar(self._shell, self.get_height())
-		self.get_root().add_child(zoom_bar)
+	def __chat_clicked_cb(self, item):
+		pass

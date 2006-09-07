@@ -4,7 +4,7 @@ import goocanvas
 
 from frame.BottomPanel import BottomPanel
 #from frame.RightPanel import RightPanel
-#from frame.TopPanel import TopPanel
+from frame.TopPanel import TopPanel
 from frame.PanelWindow import PanelWindow
 
 from sugar.canvas.ScreenContainer import ScreenContainer
@@ -23,16 +23,19 @@ class Frame:
 		self._screen_layout = GridLayout()
 		self._screen_container = ScreenContainer(self._windows)
 
+		constraints = GridConstraints(0, 0, 16, 1)
+		self._create_window(constraints)
+
+		panel = TopPanel(shell)
+		layout.set_constraints(panel, constraints)
+		self._model.add(panel)
+
 		constraints = GridConstraints(0, 11, 16, 1)
 		self._create_window(constraints)
 
 		panel = BottomPanel(shell, owner.get_invites())
 		layout.set_constraints(panel, constraints)
 		self._model.add(panel)
-
-		# Top
-		constraints = GridConstraints(0, 0, 16, 1)
-		self._create_window(constraints)
 
 		# Left
 		constraints = GridConstraints(0, 1, 1, 10)
