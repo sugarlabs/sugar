@@ -10,7 +10,7 @@ class GridConstraints:
 		self.padding = 0
 
 class GridLayout:
-	def __init__(self, rows=16, cols=12):
+	def __init__(self, cols=16, rows=12):
 		self._rows = rows
 		self._cols = cols
 
@@ -31,11 +31,11 @@ class GridLayout:
 		h = container.props.height
 		padding = constraints.padding
 
-		x = constraints.x * w / self._rows + padding
-		y = constraints.y * h / self._cols + padding
+		x = constraints.x * w / self._cols + padding
+		y = constraints.y * h / self._rows + padding
 
-		width = constraints.width * w / self._rows - padding * 2
-		height = constraints.height * h / self._cols + padding * 2
+		width = constraints.width * w / self._cols - padding * 2
+		height = constraints.height * h / self._rows + padding * 2
 
 		return [x, y, width, height]
 
@@ -103,7 +103,7 @@ class GridGroup(goocanvas.Group):
 		elif pspec.name == 'x':
 			return self._x
 
-	def __init__(self, rows=-1, cols=-1):
+	def __init__(self, cols=-1, rows=-1):
 		self._x = 0
 		self._y = 0
 		self._width = 0
@@ -114,7 +114,7 @@ class GridGroup(goocanvas.Group):
 		if rows < 0 and cols < 0:
 			self._layout = GridLayout()
 		else:
-			self._layout = GridLayout(rows, cols)
+			self._layout = GridLayout(cols, rows)
 
 		self.connect('child-added', self.__child_added_cb)
 
