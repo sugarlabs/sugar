@@ -119,9 +119,10 @@ class IconView(goocanvas.ItemViewSimple, goocanvas.ItemView):
 
 		cr.translate(self.item.x, self.item.y)
 		scale_factor = float(self.item.size) / float(_ICON_SIZE)
-		cr.scale(scale_factor, scale_factor)
-		
-		handle.render_cairo(cr)
+
+		if scale_factor != 0.0:
+			cr.scale(scale_factor, scale_factor)		
+			handle.render_cairo(cr)
 
 		cr.restore()
 
@@ -139,20 +140,18 @@ class IconItem(goocanvas.ItemSimple, goocanvas.Item):
 		'y'        : (float, None, None, -10e6, 10e6, 0,
 					  gobject.PARAM_READWRITE),
 		'icon-name': (str, None, None, None,
-					  gobject.PARAM_CONSTRUCT_ONLY |
 					  gobject.PARAM_READWRITE),
 		'color'    : (object, None, None,
-					  gobject.PARAM_CONSTRUCT_ONLY |
 					  gobject.PARAM_READWRITE),
 		'size'     : (int, None, None,
 					  0, 1024, 24,
-					  gobject.PARAM_CONSTRUCT_ONLY |
 					  gobject.PARAM_READWRITE)
 	}
 
 	def __init__(self, **kwargs):
 		self.x = 0.0
 		self.y = 0.0
+		self.size = 24
 
 		goocanvas.ItemSimple.__init__(self, **kwargs)
 
