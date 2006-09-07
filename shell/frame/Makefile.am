@@ -2,7 +2,7 @@ sugardir = $(pkgdatadir)/shell/frame
 sugar_PYTHON =				\
 	__init__.py			\
 	RightPanel.py			\
-	Panel.py			\
+	PanelWindow.py			\
 	Frame.py			\
 	TopPanel.py			\
 	BottomPanel.py

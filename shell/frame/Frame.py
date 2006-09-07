@@ -3,8 +3,8 @@ import gobject
 import goocanvas
 
 from frame.BottomPanel import BottomPanel
-from frame.RightPanel import RightPanel
-from frame.TopPanel import TopPanel
+#from frame.RightPanel import RightPanel
+#from frame.TopPanel import TopPanel
 from frame.PanelWindow import PanelWindow
 
 from sugar.canvas.ScreenContainer import ScreenContainer
@@ -45,15 +45,13 @@ class Frame:
 		self._screen_container.set_layout(self._screen_layout)
 
 	def _create_window(self, constraints):
-		layout = self._screen_layout
-
 		window = PanelWindow(self._model)
-		layout.set_constraints(window, constraints)
+		self._screen_layout.set_constraints(window, constraints)
 		self._windows.append(window)
 
-		bounds = layout.get_bounds(self._screen_container, constraints)
-		window.get_view().set_bounds(bounds[0], bounds[1],
-									 bounds[2], bounds[3])
+		bounds = self._model.get_layout().get_bounds(self._model._root, constraints)
+		window.scale_to_screen()
+		window.set_bounds(constraints)
 
 	def __hide_timeout_cb(self):
 		self.hide()

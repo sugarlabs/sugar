@@ -26,5 +26,11 @@ class GridModel:
 	def get(self):
 		return self._model
 
+	def get_width(self):
+		return self._width
+
+	def get_bounds(self, constraints):
+		return self.get_layout().get_bounds(self._root, constraints)
+
 	def get_layout(self):
 		return self._root.get_layout()

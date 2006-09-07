@@ -1,10 +1,10 @@
 import gtk
 
-from sugar.canvas.CanvasWindow import CanvasWindow
+from sugar.canvas.GridWindow import GridWindow
 
-class PanelWindow(CanvasWindow):
+class PanelWindow(GridWindow):
 	def __init__(self, model):
-		CanvasWindow.__init__(self, model)
+		GridWindow.__init__(self, model)
 
 		self.set_decorated(False)
 
