@@ -3,7 +3,7 @@ import gobject
 import goocanvas
 
 from frame.BottomPanel import BottomPanel
-#from frame.RightPanel import RightPanel
+from frame.RightPanel import RightPanel
 from frame.TopPanel import TopPanel
 from frame.PanelWindow import PanelWindow
 
@@ -30,6 +30,13 @@ class Frame:
 		layout.set_constraints(panel, constraints)
 		self._model.add(panel)
 
+		constraints = GridConstraints(15, 1, 1, 10)
+		self._create_window(constraints)
+
+		panel = RightPanel(shell, owner.get_friends())
+		layout.set_constraints(panel, constraints)
+		self._model.add(panel)
+
 		constraints = GridConstraints(0, 11, 16, 1)
 		self._create_window(constraints)
 
@@ -39,10 +46,6 @@ class Frame:
 
 		# Left
 		constraints = GridConstraints(0, 1, 1, 10)
-		self._create_window(constraints)
-
-		# Right
-		constraints = GridConstraints(15, 1, 1, 10)
 		self._create_window(constraints)
 
 		self._screen_container.set_layout(self._screen_layout)

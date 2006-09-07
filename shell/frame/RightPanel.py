@@ -3,16 +3,14 @@ import goocanvas
 from frame.PanelWindow import PanelWindow
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.IconColor import IconColor
+from sugar.canvas.GridLayout import GridGroup
 from sugar.presence import PresenceService
 
-class FriendsGroup(goocanvas.Group):
-	N_BUDDIES = 10
-
-	def __init__(self, shell, friends, width):
-		goocanvas.Group.__init__(self)
+class RightPanel(GridGroup):
+	def __init__(self, shell, friends):
+		GridGroup.__init__(self)
 		self._shell = shell
 		self._friends = friends
-		self._width = width
 		self._activity_ps = None
 		self._joined_hid = -1
 		self._left_hid = -1
@@ -21,59 +19,24 @@ class FriendsGroup(goocanvas.Group):
 		self._pservice.connect('activity-appeared',
 							   self.__activity_appeared_cb)
 
-		self._buddies = []
-		i = 0
-		while i < FriendsGroup.N_BUDDIES:
-			self.add_child(self._create_placeholder(i))
-			self._buddies.append(None)
-			i += 1
-
 		shell.connect('activity-changed', self.__activity_changed_cb)
 
 	def add(self, buddy):
-		i = 0
-		while i < FriendsGroup.N_BUDDIES:
-			if self._buddies[i] == None:
-				self._add_buddy(buddy, i)
-				break
-			i += 1
+		icon = IconItem(icon_name='stock-buddy',
+				        color=IconColor(buddy.get_color()))
+		icon.connect('clicked', self.__buddy_clicked_cb, buddy)
+
+		constraints = GridConstraints(0, self.get_n_children() + 2, 1, 1)
+		constraints.padding = 6
+		self._layout.set_constraints(item, constraints)
+
+		self.add_child(icon, i)
 
 	def remove(self, buddy):
-		i = 0
-		while i < FriendsGroup.N_BUDDIES:
-			if self._buddies[i] == buddy.get_name():
-				self._remove_buddy(buddy, i)
-				break
-			i += 1
+		pass
 
 	def clear(self):
-		i = 0
-		while i < FriendsGroup.N_BUDDIES:
-			if self._buddies[i] != None:
-				self._remove_buddy(i)
-			i += 1
-
-	def _get_y(self, i):
-		return i * (self._width + 6)
-
-	def _add_buddy(self, buddy, i):
-		self.remove_child(i)
-		icon = IconItem(icon_name='stock-buddy',
-				        color=IconColor(buddy.get_color()),
-						size=self._width, y=self._get_y(i))
-		icon.connect('clicked', self.__buddy_clicked_cb, buddy)
-		self.add_child(icon, i)
-		self._buddies[i] = buddy.get_name()
-
-	def _create_placeholder(self, i):
-		icon = IconItem(icon_name='stock-buddy', color=IconColor('white'),
-						y=self._get_y(i), size=self._width)
-		return icon
-
-	def _remove_buddy(self, i):
-		self.remove_child(i)
-		self.add_child(self._create_placeholder(i), i)
-		self._buddies[i] = None
+		pass
 
 	def __activity_appeared_cb(self, pservice, activity_ps):
 		activity = self._shell.get_current_activity()
@@ -116,12 +79,3 @@ class FriendsGroup(goocanvas.Group):
 
 	def __buddy_clicked_cb(self, icon, buddy):
 		self._friends.add_buddy(buddy)
-
-class ActionsBar(goocanvas.Group):
-	def __init__(self, shell, width):
-		goocanvas.Group.__init__(self)
-		self._width = width
-		self._shell = shell
-
-		self._y = 0
-
