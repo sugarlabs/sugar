@@ -46,10 +46,6 @@ class GridLayout:
 
 			[x, y, width, height] = self._get_geometry(group, item)
 
-			print item
-			print [x, y, width, height]
-			print group.props.width
-
 			item.props.x = x
 			item.props.y = y
 
