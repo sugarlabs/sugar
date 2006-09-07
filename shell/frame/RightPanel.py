@@ -4,6 +4,7 @@ from frame.PanelWindow import PanelWindow
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.IconColor import IconColor
 from sugar.canvas.GridLayout import GridGroup
+from sugar.canvas.GridLayout import GridConstraints
 from sugar.presence import PresenceService
 
 class RightPanel(GridGroup):
@@ -28,9 +29,9 @@ class RightPanel(GridGroup):
 
 		constraints = GridConstraints(0, self.get_n_children() + 2, 1, 1)
 		constraints.padding = 6
-		self._layout.set_constraints(item, constraints)
+		self._layout.set_constraints(icon, constraints)
 
-		self.add_child(icon, i)
+		self.add_child(icon)
 
 	def remove(self, buddy):
 		pass

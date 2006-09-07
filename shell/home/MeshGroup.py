@@ -82,7 +82,7 @@ class MeshGroup(goocanvas.Group):
 		default_type = item.get_service().get_type()
 		registry = conf.get_activity_registry()
 
-		bundle_id = registry.get_activity_from_type().get_id()
-		activity_id = service.get_activity_id()
+		bundle_id = registry.get_activity_from_type(default_type).get_id()
+		activity_id = item.get_service().get_activity_id()
 
 		self._shell.join_activity(bundle_id, activity_id)
