@@ -6,7 +6,7 @@ class CanvasWindow(gtk.Window):
 		gtk.Window.__init__(self)
 
 		self._view = goocanvas.CanvasView()
-		self._view.set_model(model)
+		self._view.set_model(model.get())
 		self.add(self._view)
 		self._view.show()
 

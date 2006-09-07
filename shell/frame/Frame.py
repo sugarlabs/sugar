@@ -11,30 +11,24 @@ from sugar.canvas.ScreenContainer import ScreenContainer
 from sugar.canvas.GridLayout import GridLayout
 from sugar.canvas.GridLayout import GridConstraints
 from sugar.canvas.GridLayout import GridGroup
+from sugar.canvas.GridModel import GridModel
 
 class Frame:
 	def __init__(self, shell, owner):
 		self._windows = []
 
-		self._model = goocanvas.CanvasModelSimple()
-		item = goocanvas.Rect(x=0, y=0, width=800, height=600,
-							  line_width=0, fill_color="#4f4f4f")
-		self._model.get_root_item().add_child(item)
+		self._model = GridModel("#4f4f4f")
+		layout = self._model.get_layout()
 
 		self._screen_layout = GridLayout()
 		self._screen_container = ScreenContainer(self._windows)
-
-		group = GridGroup()
-		group.props.width = 800
-		group.props.height = 600
-		layout = group.get_layout()
 
 		constraints = GridConstraints(0, 11, 16, 1)
 		self._create_window(constraints)
 
 		panel = BottomPanel(shell, owner.get_invites())
 		layout.set_constraints(panel, constraints)
-		group.add_child(panel)
+		self._model.add(panel)
 
 		# Top
 		constraints = GridConstraints(0, 0, 16, 1)
@@ -48,7 +42,6 @@ class Frame:
 		constraints = GridConstraints(15, 1, 1, 10)
 		self._create_window(constraints)
 
-		self._model.get_root_item().add_child(group)
 		self._screen_container.set_layout(self._screen_layout)
 
 	def _create_window(self, constraints):
