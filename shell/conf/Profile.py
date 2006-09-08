@@ -1,14 +1,14 @@
 import os
 from ConfigParser import ConfigParser
 
-from sugar.canvas.IconColor import IconColor
+from sugar.canvas import IconColor
 from sugar import env
 
 class _Profile:
 	def __init__(self,):
 		self._path = env.get_profile_path()
 		self._nick_name = None
-		self._color = None
+		self._color = IconColor.IconColor()
 
 		self._ensure_dirs()		
 
@@ -18,10 +18,9 @@ class _Profile:
 		if cp.has_option('Buddy', 'NickName'):
 			self._nick_name = cp.get('Buddy', 'NickName')
 		if cp.has_option('Buddy', 'Color'):
-			self._color = IconColor(cp.get('Buddy', 'Color'))
-
-		if self._color == None:
-			self.set_color(IconColor())
+			fill_color = cp.get('Buddy', 'Color')
+			if IconColor.is_valid(fill_color):			
+				self._color = IconColor.IconColor(fill_color)
 
 	def _ensure_dirs(self):
 		try:

@@ -2,7 +2,7 @@
 
 import sys
 
-result = 'colors_dict = {\n'
+result = 'table = {\n'
 result += '\'white\'   : \'black\'  , \\\n'
 
 hex_file = open(sys.argv[1], 'r')
