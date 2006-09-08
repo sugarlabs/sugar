@@ -63,8 +63,8 @@ class GridLayout:
 	def layout_screen(self, screen):
 		for window in screen.get_windows():
 			[x, y, width, height] = self._get_geometry(screen, window)
-			window.move(x, y)
-			window.resize(width, height)
+			window.move(int(x), int(y))
+			window.resize(int(width), int(height))
 
 class GridGroup(goocanvas.Group):
 	__gproperties__ = {

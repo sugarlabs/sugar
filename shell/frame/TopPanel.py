@@ -7,7 +7,7 @@ import sugar
 
 class TopPanel(GridGroup):
 	def __init__(self, shell):
-		GridGroup.__init__(self)
+		GridGroup.__init__(self, 16, 1)
 		self._shell = shell
 
 		self.add_zoom_level(sugar.ZOOM_ACTIVITY, 'stock-zoom-activity', 1)
