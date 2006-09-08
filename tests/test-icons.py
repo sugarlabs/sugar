@@ -9,15 +9,13 @@ import goocanvas
 
 from sugar.canvas import IconColor
 from sugar.canvas.IconItem import IconItem
+from sugar.canvas.CanvasView import CanvasView
 
 window = gtk.Window()
 window.connect("destroy", lambda w: gtk.main_quit())
-window.set_default_size(800, 600)
 window.show()
 
-canvas = goocanvas.CanvasView()
-canvas.set_size_request(800, 600)
-canvas.set_bounds(0, 0, 800, 600)
+canvas = CanvasView()
 canvas.show()
 window.add(canvas)
 
