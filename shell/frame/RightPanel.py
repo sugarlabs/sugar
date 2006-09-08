@@ -15,6 +15,7 @@ class RightPanel(GridGroup):
 		self._activity_ps = None
 		self._joined_hid = -1
 		self._left_hid = -1
+		self._buddies = {}
 
 		self._pservice = PresenceService.get_instance()
 		self._pservice.connect('activity-appeared',
@@ -33,12 +34,16 @@ class RightPanel(GridGroup):
 
 		self.add_child(icon)
 
+		self._buddies[buddy.get_name()] = icon
+
 	def remove(self, buddy):
-		pass
+		i = self.find_child(self._buddies[buddy.get_name()])
+		self.remove_child(i)
 
 	def clear(self):
 		while (self.get_n_children() > 0):
 			self.remove_child(0)
+		self._buddies = {}
 
 	def __activity_appeared_cb(self, pservice, activity_ps):
 		activity = self._shell.get_current_activity()
