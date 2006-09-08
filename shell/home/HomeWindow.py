@@ -31,32 +31,32 @@ class HomeWindow(gtk.Window):
 	def set_owner(self, owner):
 		root = self._view.get_model().get_root_item()
 
-		icon_layout = IconLayout(MeshGroup.WIDTH, MeshGroup.HEIGHT)
-		x1 = (self._width - FriendsGroup.WIDTH) / 2
-		y1 = (self._height - FriendsGroup.HEIGHT) / 2
-		x2 = x1 + FriendsGroup.WIDTH
-		y2 = y1 + FriendsGroup.HEIGHT
-		icon_layout.set_bounds(x1, y1, x2, y2)
+		friends_x = (self._width - FriendsGroup.WIDTH) / 2
+		friends_y = (self._height - FriendsGroup.HEIGHT) / 2
 
-		self._mesh_group = MeshGroup(self._shell, icon_layout)
+		home_x = (self._width - HomeGroup.WIDTH) / 2
+		home_y = (self._height - HomeGroup.HEIGHT) / 2
+
+		layout = IconLayout(MeshGroup.WIDTH, MeshGroup.HEIGHT)
+		layout.set_internal_bounds(friends_x, friends_y,
+								   friends_x + FriendsGroup.WIDTH,
+								   friends_y + FriendsGroup.HEIGHT)
+
+		self._mesh_group = MeshGroup(self._shell, layout)
 		root.add_child(self._mesh_group)
 
-		icon_layout = IconLayout(FriendsGroup.WIDTH, FriendsGroup.HEIGHT)
-		x1 = (self._width - HomeGroup.WIDTH) / 2
-		y1 = (self._height - HomeGroup.HEIGHT) / 2
-		x2 = x1 + HomeGroup.WIDTH
-		y2 = y1 + HomeGroup.HEIGHT
-		icon_layout.set_bounds(x1, y1, x2, y2)
+		layout = IconLayout(FriendsGroup.WIDTH, FriendsGroup.HEIGHT)
+		layout.set_internal_bounds(home_x - friends_x, home_y - friends_y,
+								   home_x - friends_x + HomeGroup.WIDTH,
+								   home_y - friends_y + HomeGroup.HEIGHT)
 
-		self._friends_group = FriendsGroup(self._shell, owner.get_friends(),
-										   icon_layout)
-		self._friends_group.translate((self._width - FriendsGroup.WIDTH) / 2,
-									  (self._height - FriendsGroup.HEIGHT) / 2)
+		friends = owner.get_friends()
+		self._friends_group = FriendsGroup(self._shell, friends, layout)
+		self._friends_group.translate(friends_x, friends_y)
 		root.add_child(self._friends_group)
 
 		self._home_group = HomeGroup(self._shell)
-		self._home_group.translate((self._width - HomeGroup.WIDTH) / 2,
-								   (self._height - HomeGroup.HEIGHT) / 2)
+		self._home_group.translate(home_x, home_y)
 		root.add_child(self._home_group)
 
 	def set_zoom_level(self, level):

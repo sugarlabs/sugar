@@ -6,7 +6,7 @@ class IconLayout:
 		self._width = width
 		self._height = height
 
-	def set_bounds(self, x1, y1, x2, y2):
+	def set_internal_bounds(self, x1, y1, x2, y2):
 		self._x1 = x1
 		self._y1 = y1
 		self._x2 = x2
