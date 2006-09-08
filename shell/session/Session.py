@@ -41,6 +41,13 @@ class MatchboxProcess(Process):
 	def get_name(self):
 		return 'Matchbox'
 
+class DBusMonitorProcess(Process):
+	def __init__(self):
+		Process.__init__(self, "dbus-monitor --session")
+	
+	def get_name(self):
+		return 'dbus-monitor'
+
 class Session:
 	"""Takes care of running the shell and all the sugar processes"""
 
@@ -63,6 +70,10 @@ class Session:
 
 		process = DbusProcess()
 		process.start()
+
+		if 0:
+			dbm = DBusMonitorProcess()
+			dbm.start()
 
 		console = ConsoleWindow()
 		logger.start('Shell', console)

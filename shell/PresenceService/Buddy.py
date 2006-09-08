@@ -44,6 +44,11 @@ class BuddyDBusHelper(dbus.service.Object):
 	def LeftActivity(self, object_path):
 		pass
 
+	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
+						signature="as")
+	def PropertyChanged(self, prop_list):
+		pass
+
 	@dbus.service.method(BUDDY_DBUS_INTERFACE,
 						in_signature="", out_signature="ay")
 	def getIcon(self):
@@ -73,7 +78,9 @@ class BuddyDBusHelper(dbus.service.Object):
 	def getProperties(self):
 		props = {}
 		props['name'] = self._parent.get_name()
-		props['ip4_address'] = self._parent.get_address()
+		addr = self._parent.get_address()
+		if addr:
+			props['ip4_address'] = addr
 		props['owner'] = self._parent.is_owner()
 		color = self._parent.get_color()
 		if color:
@@ -174,6 +181,8 @@ class Buddy(object):
 			print 'Requesting buddy icon %s' % self._nick_name
 			self._request_buddy_icon(service)
 			self._color = service.get_one_property('color')
+			if self._color:
+				self._dbus_helper.PropertyChanged(['color'])
 
 		if self._valid:
 			self._dbus_helper.ServiceAppeared(service.object_path())
@@ -290,8 +299,9 @@ class Owner(Buddy):
 		# service added to the Owner determines the owner's address
 		source_addr = service.get_source_address()
 		if self._address is None:
-			if source_addr in self._ps.is_local_ip_address(source_addr):
+			if self._ps.is_local_ip_address(source_addr):
 				self._address = source_addr
+				self._dbus_helper.PropertyChanged(['ip4_address'])
 		return Buddy.add_service(self, service)
 
 	def is_owner(self):
