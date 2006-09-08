@@ -6,5 +6,4 @@ sugar_PYTHON =				\
 	IconLayout.py			\
 	MeshGroup.py			\
 	HomeGroup.py			\
-	HomeWindow.py			\
-	Theme.py
+	HomeWindow.py
