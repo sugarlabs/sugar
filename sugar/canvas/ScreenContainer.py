@@ -3,9 +3,9 @@ import gtk
 
 class ScreenContainer(gobject.GObject):
 	__gproperties__ = {
-		'width'    : (int, None, None, 0, 1600, 800,
+		'width'    : (float, None, None, 0, 10e6, 800.0,
 					  gobject.PARAM_READABLE),
-		'height'   : (int, None, None, 0, 1200, 600,
+		'height'   : (float, None, None, 0, 10e6, 600.0,
 					  gobject.PARAM_READABLE)
 	}
 

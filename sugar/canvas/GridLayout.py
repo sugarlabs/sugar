@@ -68,13 +68,13 @@ class GridLayout:
 
 class GridGroup(goocanvas.Group):
 	__gproperties__ = {
-		'x'    	   : (int, None, None, 0, 1600, 800,
+		'x'    	   : (float, None, None, -10e6, 10e6, 800.0,
 					  gobject.PARAM_READWRITE),
-		'y'        : (int, None, None, 0, 1200, 600,
+		'y'        : (float, None, None, -10e6, 10e6, 600.0,
 					  gobject.PARAM_READWRITE),
-		'width'    : (int, None, None, 0, 1600, 800,
+		'width'    : (float, None, None, 0, 10e6, 800.0,
 					  gobject.PARAM_READWRITE),
-		'height'   : (int, None, None, 0, 1200, 600,
+		'height'   : (float, None, None, 0, 10e6, 600.0,
 					  gobject.PARAM_READWRITE)
 	}
 
