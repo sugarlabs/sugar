@@ -6,7 +6,6 @@ import conf
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.IconColor import IconColor
 from home.DonutItem import DonutItem
-import Theme
 
 class TasksItem(DonutItem):
 	def __init__(self, shell):
@@ -44,21 +43,8 @@ class TasksItem(DonutItem):
 		activity.present()
 
 class HomeGroup(goocanvas.Group):
-	WIDTH = 1200.0
-	HEIGHT = 900.0
-
 	def __init__(self, shell):
 		goocanvas.Group.__init__(self)
-
-		self._theme = Theme.get_instance()
-		self._theme.connect("theme-changed", self.__theme_changed_cb)
-
-		color = self._theme.get_home_activities_color()
-		self._home_rect = goocanvas.Rect(width=HomeGroup.WIDTH,
-										 height=HomeGroup.HEIGHT,
-										 line_width=0, fill_color=color,
-										 radius_x=30, radius_y=30)
-		self.add_child(self._home_rect)
 
 		tasks = TasksItem(shell)
 		tasks.translate(600, 450)
@@ -70,7 +56,3 @@ class HomeGroup(goocanvas.Group):
 		me.translate(600 - (me.get_property('size') / 2),
 					 450 - (me.get_property('size') / 2))
 		self.add_child(me)
-
-	def __theme_changed_cb(self, theme):
-		color = self._theme.get_home_activities_color()
-		self._home_rect.set_property("fill-color", color)

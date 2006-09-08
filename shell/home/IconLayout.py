@@ -6,12 +6,6 @@ class IconLayout:
 		self._width = width
 		self._height = height
 
-	def set_internal_bounds(self, x1, y1, x2, y2):
-		self._x1 = x1
-		self._y1 = y1
-		self._x2 = x2
-		self._y2 = y2
-
 	def add_icon(self, icon):
 		self._icons.append(icon)
 		self._layout_icon(icon)
@@ -27,10 +21,6 @@ class IconLayout:
 		        border < y < self._height - icon_size - border):
 			return False
 		
-		if self._x1 - icon_size - border < x < self._x2 + border and \
-		   self._y1 - icon_size - border < y < self._y2 + border:
-				return False
-
 		return True
 
 	def _layout_icon(self, icon):
