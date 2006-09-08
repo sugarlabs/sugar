@@ -266,6 +266,7 @@ class PresenceService(object):
 		owner_nick = env.get_nick_name()
 		objid = self._get_next_object_id()
 		self._owner = Buddy.Owner(self, self._bus_name, objid, owner_nick)
+		self._buddies[owner_nick] = self._owner
 
 		self._started = False
 
