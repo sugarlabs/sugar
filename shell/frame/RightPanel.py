@@ -27,8 +27,8 @@ class RightPanel(GridGroup):
 				        color=IconColor(buddy.get_color()))
 		icon.connect('clicked', self.__buddy_clicked_cb, buddy)
 
-		constraints = GridConstraints(0, self.get_n_children() + 2, 1, 1)
-		constraints.padding = 6
+		row = self.get_n_children() + 2
+		constraints = GridConstraints(0, row , 1, 1, 6)
 		self._layout.set_constraints(icon, constraints)
 
 		self.add_child(icon)

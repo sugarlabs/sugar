@@ -2,12 +2,12 @@ import gobject
 import goocanvas
 
 class GridConstraints:
-	def __init__(self, x, y, width, height):
+	def __init__(self, x, y, width, height, padding=0):
 		self.x = x
 		self.y = y
 		self.width = width
 		self.height = height
-		self.padding = 0
+		self.padding = padding
 
 class GridLayout:
 	def __init__(self, cols=16, rows=12):

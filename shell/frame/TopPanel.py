@@ -31,14 +31,12 @@ class TopPanel(GridGroup):
 		icon = IconItem(icon_name=icon_name, size=self._height)
 		icon.connect('clicked', self.__level_clicked_cb, level)
 
-		constraints = GridConstraints(pos, 0, 1, 1)
-		constraints.padding = 6
+		constraints = GridConstraints(pos, 0, 1, 1, 6)
 		self._layout.set_constraints(icon, constraints)
 		self.add_child(icon)
 
 	def add_icon(self, icon, pos):
-		constraints = GridConstraints(pos, 0, 1, 1)
-		constraints.padding = 6
+		constraints = GridConstraints(pos, 0, 1, 1, 6)
 		self._layout.set_constraints(icon, constraints)
 		self.add_child(icon)
 
