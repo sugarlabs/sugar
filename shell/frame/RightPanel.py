@@ -37,7 +37,8 @@ class RightPanel(GridGroup):
 		pass
 
 	def clear(self):
-		pass
+		while (self.get_n_children() > 0):
+			self.remove_child(0)
 
 	def __activity_appeared_cb(self, pservice, activity_ps):
 		activity = self._shell.get_current_activity()
