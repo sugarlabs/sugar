@@ -9,7 +9,7 @@ from sugar.presence import PresenceService
 
 class RightPanel(GridGroup):
 	def __init__(self, shell, friends):
-		GridGroup.__init__(self)
+		GridGroup.__init__(self, 1, 14)
 		self._shell = shell
 		self._friends = friends
 		self._activity_ps = None
