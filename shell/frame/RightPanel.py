@@ -47,7 +47,7 @@ class RightPanel(GridGroup):
 
 	def __activity_appeared_cb(self, pservice, activity_ps):
 		activity = self._shell.get_current_activity()
-		if activity_ps.get_id() == activity.get_id():
+		if activity and activity_ps.get_id() == activity.get_id():
 			self._set_activity_ps(activity_ps)
 
 	def _set_activity_ps(self, activity_ps):
