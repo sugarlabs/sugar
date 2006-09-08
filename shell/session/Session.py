@@ -71,7 +71,7 @@ class Session:
 		process = DbusProcess()
 		process.start()
 
-		if 0:
+		if os.environ['SUGAR_DBUS_MONITOR']:
 			dbm = DBusMonitorProcess()
 			dbm.start()
 
