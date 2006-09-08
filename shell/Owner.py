@@ -43,7 +43,7 @@ class ShellOwner(object):
 	def announce(self):
 		# Create and announce our presence
 		color = conf.get_profile().get_color()
-		props = { 'color':  color.get_fill_color() }
+		props = { 'color':  color.to_string() }
 		self._service = self._pservice.register_service(self._nick,
 				PRESENCE_SERVICE_TYPE, properties=props)
 		print "Owner '%s' using port %d" % (self._nick, self._service.get_port())

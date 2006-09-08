@@ -18,9 +18,9 @@ class _Profile:
 		if cp.has_option('Buddy', 'NickName'):
 			self._nick_name = cp.get('Buddy', 'NickName')
 		if cp.has_option('Buddy', 'Color'):
-			fill_color = cp.get('Buddy', 'Color')
-			if IconColor.is_valid(fill_color):			
-				self._color = IconColor.IconColor(fill_color)
+			color = cp.get('Buddy', 'Color')
+			if IconColor.is_valid(color):			
+				self._color = IconColor.IconColor(color)
 
 	def _ensure_dirs(self):
 		try:
@@ -50,7 +50,7 @@ class _Profile:
 		section = 'Buddy'	
 		cp.add_section(section)
 		cp.set(section, 'NickName', self._nick_name)
-		cp.set(section, 'Color', self._color.get_fill_color())
+		cp.set(section, 'Color', self._color.to_string())
 
 		fileobject = open(self._get_config_path(), 'w')
 		cp.write(fileobject)

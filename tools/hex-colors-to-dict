@@ -2,16 +2,15 @@
 
 import sys
 
-result = 'table = {\n'
-result += '\'white\'   : \'black\'  , \\\n'
+result = 'colors = [\n'
 
 hex_file = open(sys.argv[1], 'r')
 
 for line in hex_file.readlines():
 	[ stroke, fill ] = line.split()
-	result += '\'#%s\' : \'#%s\', \\\n' % (fill, stroke)
+	result += '[\'#%s\', \'#%s\'], \\\n' % (fill, stroke)
 
-result += '}'
+result += ']'
 
 hex_file.close()
 
