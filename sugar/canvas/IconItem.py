@@ -96,6 +96,8 @@ class IconView(goocanvas.ItemViewSimple, goocanvas.ItemView):
 			self.item.user_bounds_to_device(cr, bounds)
 			self.bounds = bounds
 
+			self.get_canvas_view().request_redraw(self.bounds)
+
 			cr.restore()
 
 		return self.bounds
