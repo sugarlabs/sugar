@@ -37,6 +37,9 @@ class GridLayout:
 		width = constraints.width * w / self._cols - padding * 2
 		height = constraints.height * h / self._rows + padding * 2
 
+		width = max(0, width)
+		height = max(0, height)
+
 		return [x, y, width, height]
 
 	def layout_canvas_group(self, group):
