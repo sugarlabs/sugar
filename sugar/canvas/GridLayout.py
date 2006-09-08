@@ -1,3 +1,4 @@
+import cairo
 import gobject
 import goocanvas
 
@@ -80,7 +81,9 @@ class GridGroup(goocanvas.Group):
 
 	def _update_position(self):
 		if self._x != 0 or self._y != 0:
-			self.translate(self._x, self._y)
+			matrix = cairo.Matrix(1, 0, 0, 1, 0, 0)
+			matrix.translate(self._x, self._y)
+			self.set_transform(matrix)
 
 	def do_set_property(self, pspec, value):
 		if pspec.name == 'width':
