@@ -14,6 +14,8 @@ class Buddy(gobject.GObject):
 		'joined-activity': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
 						 ([gobject.TYPE_PYOBJECT])),
 		'left-activity': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+						 ([gobject.TYPE_PYOBJECT])),
+		'property-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
 						 ([gobject.TYPE_PYOBJECT]))
 	}
 
@@ -34,9 +36,7 @@ class Buddy(gobject.GObject):
 		self._buddy.connect_to_signal('JoinedActivity', self._joined_activity_cb)
 		self._buddy.connect_to_signal('LeftActivity', self._left_activity_cb)
 		self._buddy.connect_to_signal('PropertyChanged', self._property_changed_cb)
-		self._properties = self._buddy.getProperties()
-		if not self._properties.has_key('color'):
-			self._properties['color'] = "#deadbe"
+		self._property_changed_cb([])
 
 	def object_path(self):
 		return self._object_path
@@ -78,6 +78,8 @@ class Buddy(gobject.GObject):
 
 	def _handle_property_changed_signal(self, prop_list):
 		self._properties = self._buddy.getProperties()
+		self.emit('property-changed', prop_list)
+		return False
 
 	def _property_changed_cb(self, prop_list):
 		gobject.idle_add(self._handle_property_changed_signal, prop_list)
