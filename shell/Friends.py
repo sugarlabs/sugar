@@ -71,7 +71,7 @@ class Friends(gobject.GObject):
 		for friend in self:
 			section = friend.get_name()
 			cp.add_section(section)
-			cp.set(section, 'color', friend.get_color().get_fill_color())
+			cp.set(section, 'color', friend.get_color().to_string())
 
 		fileobject = open(self._path, 'w')
 		cp.write(fileobject)

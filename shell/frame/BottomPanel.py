@@ -77,4 +77,9 @@ class BottomPanel(GridGroup):
 	def add_invite(self, invite):
 		item = InviteItem(invite)
 		item.connect('clicked', self.__invite_clicked_cb)
+
+		col = self.get_n_children() + 1
+		constraints = GridConstraints(col, 0, 1, 1, 6)
+		self._layout.set_constraints(item, constraints)
+
 		self.add_child(item)
