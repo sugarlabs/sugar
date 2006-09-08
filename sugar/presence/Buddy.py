@@ -36,7 +36,7 @@ class Buddy(gobject.GObject):
 		self._buddy.connect_to_signal('JoinedActivity', self._joined_activity_cb)
 		self._buddy.connect_to_signal('LeftActivity', self._left_activity_cb)
 		self._buddy.connect_to_signal('PropertyChanged', self._property_changed_cb)
-		self._property_changed_cb([])
+		self._properties = self._buddy.getProperties()
 
 	def object_path(self):
 		return self._object_path
