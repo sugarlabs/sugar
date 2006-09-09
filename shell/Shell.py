@@ -17,9 +17,7 @@ from sugar.activity import Activity
 from frame.Frame import Frame
 from globalkeys import KeyGrabber
 import conf
-from sugar import env
 import sugar
-import sugar.logger
 
 class ShellDbusService(dbus.service.Object):
 	def __init__(self, shell, bus_name):
