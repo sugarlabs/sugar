@@ -16,37 +16,36 @@ class HomeWindow(gtk.Window):
 		self.realize()
 		self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
 
+		self._nb = gtk.Notebook()
+		self._nb.set_show_border(False)
+		self._nb.set_show_tabs(False)
+
+		self.add(self._nb)
+		self._nb.show()
+
+	def _add_page(self, group):
 		view = CanvasView()
-		self.add(view)
+		self._nb.append_page(view)
 		view.show()
 
 		model = goocanvas.CanvasModelSimple()
-		self._root = model.get_root_item()
+		root = model.get_root_item()
 		view.set_model(model)
 
 		bg = goocanvas.Rect(width=1900, height=1200,
 							line_width=0, fill_color='#e2e2e2')
-		self._root.add_child(bg)
-
-		self._home_group = HomeGroup(self._shell)
-		self._root.add_child(self._home_group)
-		self._current_group = self._home_group
+		root.add_child(bg)
+		root.add_child(group)
 
 	def set_owner(self, owner):
-		friends = owner.get_friends()
-		self._friends_group = FriendsGroup(self._shell, friends)
-
-		self._mesh_group = MeshGroup(self._shell)
-
-	def _set_group(self, group):
-		self._root.remove_child(self._current_group)
-		self._root.add_child(group)
-		self._current_group = group
+		self._add_page(HomeGroup(self._shell))
+		self._add_page(FriendsGroup(self._shell, owner.get_friends()))
+		self._add_page(MeshGroup(self._shell))
 
 	def set_zoom_level(self, level):
 		if level == sugar.ZOOM_HOME:
-			self._set_group(self._home_group)
+			self._nb.set_current_page(0)
 		elif level == sugar.ZOOM_FRIENDS:
-			self._set_group(self._friends_group)
+			self._nb.set_current_page(1)
 		elif level == sugar.ZOOM_MESH:
-			self._set_group(self._mesh_group)
+			self._nb.set_current_page(2)

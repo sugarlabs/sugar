@@ -59,6 +59,7 @@ class Shell(gobject.GObject):
 
 		self._home_window = HomeWindow(self)
 		self._home_window.show()
+		self.set_zoom_level(sugar.ZOOM_HOME)
 
 		self._screen.connect('window-opened', self.__window_opened_cb)
 		self._screen.connect('window-closed', self.__window_closed_cb)
