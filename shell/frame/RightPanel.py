@@ -4,12 +4,12 @@ from frame.PanelWindow import PanelWindow
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.IconColor import IconColor
 from sugar.canvas.GridLayout import GridGroup
-from sugar.canvas.GridLayout import GridConstraints
+from sugar.canvas.GridBox import GridBox
 from sugar.presence import PresenceService
 
-class RightPanel(GridGroup):
+class RightPanel(GridBox):
 	def __init__(self, shell, friends):
-		GridGroup.__init__(self, 1, 10)
+		GridBox.__init__(self, GridBox.VERTICAL, 10, 6)
 		self._shell = shell
 		self._friends = friends
 		self._activity_ps = None
@@ -27,11 +27,6 @@ class RightPanel(GridGroup):
 		icon = IconItem(icon_name='stock-buddy',
 				        color=IconColor(buddy.get_color()))
 		icon.connect('clicked', self.__buddy_clicked_cb, buddy)
-
-		row = self.get_n_children()
-		constraints = GridConstraints(0, row , 1, 1, 6)
-		self._layout.set_constraints(icon, constraints)
-
 		self.add_child(icon)
 
 		self._buddies[buddy.get_name()] = icon

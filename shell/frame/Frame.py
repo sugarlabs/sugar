@@ -37,11 +37,10 @@ class Frame:
 		layout.set_constraints(panel, constraints)
 		self._model.add(panel)
 
-		constraints = GridConstraints(0, 11, 16, 1)
-		self._create_window(constraints)
+		self._create_window(GridConstraints(0, 11, 16, 1))
 
 		panel = BottomPanel(shell, owner.get_invites())
-		layout.set_constraints(panel, constraints)
+		layout.set_constraints(panel, GridConstraints(1, 11, 14, 1))
 		self._model.add(panel)
 
 		# Left
