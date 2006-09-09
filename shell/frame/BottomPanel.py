@@ -63,4 +63,4 @@ class BottomPanel(GridBox):
 	def add_invite(self, invite):
 		item = InviteItem(invite)
 		item.connect('clicked', self.__invite_clicked_cb)
-		self.add_child(item)
+		self.add_child(item, 0)

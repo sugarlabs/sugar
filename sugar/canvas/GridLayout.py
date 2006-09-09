@@ -19,6 +19,8 @@ class GridLayout:
 
 	def set_constraints(self, component, constraints):
 		self._constraints[component] = constraints
+		if isinstance(component, goocanvas.Item):
+			self.layout_canvas_item(component)
 
 	def _get_geometry(self, container, component):
 		constraints = self._constraints[component]
@@ -45,6 +47,9 @@ class GridLayout:
 
 	def layout_canvas_item(self, item):
 		group = item.get_parent()
+		if group == None:
+			return
+
 		[x, y, width, height] = self._get_geometry(group, item)
 
 		item.props.x = x

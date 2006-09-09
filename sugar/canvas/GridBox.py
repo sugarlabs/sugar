@@ -16,10 +16,7 @@ class GridBox(GridGroup, goocanvas.Item):
 		self._direction = direction
 		self._padding = padding
 
-	def add_child(self, item, position=-1):
-		if position == -1:
-			position = self.get_n_children()
-		
+	def _update_constraints(self, item, position):
 		if self._direction == GridBox.HORIZONTAL:
 			col = position
 			row = 0
@@ -29,5 +26,16 @@ class GridBox(GridGroup, goocanvas.Item):
 
 		constraints = GridConstraints(col, row, 1, 1, self._padding)
 		self._layout.set_constraints(item, constraints)
+
+	def add_child(self, item, position=-1):
+		if position == -1:
+			position = self.get_n_children()
+
+		self._update_constraints(item, position)
+		
+		i = position
+		while i < self.get_n_children():
+			self._update_constraints(self.get_child(i), i + 1)
+			i += 1
 
 		GridGroup.add_child(self, item, position)
