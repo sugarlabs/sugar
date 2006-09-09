@@ -4,6 +4,7 @@ sugar_PYTHON =				\
 	DonutItem.py			\
 	FriendsGroup.py			\
 	IconLayout.py			\
-	MeshGroup.py			\
 	HomeGroup.py			\
-	HomeWindow.py
+	HomeWindow.py			\
+	MeshGroup.py			\
+	MyIcon.py

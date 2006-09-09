@@ -6,7 +6,6 @@ from sugar.canvas.CanvasView import CanvasView
 from home.MeshGroup import MeshGroup
 from home.HomeGroup import HomeGroup
 from home.FriendsGroup import FriendsGroup
-from home.IconLayout import IconLayout
 import sugar
 
 class HomeWindow(gtk.Window):
@@ -34,12 +33,10 @@ class HomeWindow(gtk.Window):
 		self._current_group = self._home_group
 
 	def set_owner(self, owner):
-		layout = IconLayout(1200, 900)
 		friends = owner.get_friends()
-		self._friends_group = FriendsGroup(self._shell, friends, layout)
+		self._friends_group = FriendsGroup(self._shell, friends)
 
-		layout = IconLayout(1200, 900)
-		self._mesh_group = MeshGroup(self._shell, layout)
+		self._mesh_group = MeshGroup(self._shell)
 
 	def _set_group(self, group):
 		self._root.remove_child(self._current_group)
