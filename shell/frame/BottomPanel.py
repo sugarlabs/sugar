@@ -12,9 +12,6 @@ from sugar.canvas.GridBox import GridBox
 class ActivityItem(IconItem):
 	def __init__(self, activity):
 		icon_name = activity.get_icon()
-		if not icon_name:
-			act_type = activity.get_type()
-			raise RuntimeError("Activity %s did not have an icon!" % act_type)
 		IconItem.__init__(self, icon_name=icon_name, color=IconColor('white'))
 		self._activity = activity
 
@@ -59,12 +56,6 @@ class BottomPanel(GridBox):
 		self.add_invite(invite)
 
 	def add_activity(self, activity):
-		# Need an icon to show up on the bar
-		if not activity.get_icon():
-			name = activity.get_name()
-			logging.info("Activity %s did not have an icon.  Won't show it." % name)
-			return
-
 		item = ActivityItem(activity)
 		item.connect('clicked', self.__activity_clicked_cb)
 		self.add_child(item)

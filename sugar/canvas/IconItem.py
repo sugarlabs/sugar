@@ -103,13 +103,16 @@ class IconView(goocanvas.ItemViewSimple, goocanvas.ItemView):
 		return self.bounds
 
 	def do_paint(self, cr, bounds, scale):
+		icon_name = self.item.icon_name
+		if icon_name == None:
+			icon_name = 'stock-missing'
+
 		if self.item.color == None:
 			theme = gtk.icon_theme_get_default()
-			info = theme.lookup_icon(self.item.icon_name, self.item.size, 0)
+			info = theme.lookup_icon(icon_name, self.item.size, 0)
 			handle = rsvg.Handle(file=info.get_filename())
 		else:
-			icon = IconView._icon_cache.get_icon(self.item.icon_name,
-												 self.item.color)
+			icon = IconView._icon_cache.get_icon(icon_name, self.item.color)
 			handle = rsvg.Handle(data=icon)			
 
 		cr.save()
@@ -155,6 +158,7 @@ class IconItem(goocanvas.ItemSimple, goocanvas.Item):
 		self.y = 0.0
 		self.size = 24
 		self.color = None
+		self.icon_name = None
 
 		goocanvas.ItemSimple.__init__(self, **kwargs)
 
