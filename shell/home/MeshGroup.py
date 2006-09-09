@@ -12,7 +12,7 @@ class ActivityItem(IconItem):
 		self._service = service
 
 		IconItem.__init__(self, icon_name=self.get_icon_name(),
-						  color=self.get_color(), size=144)
+						  color=self.get_color(), size=96)
 
 	def get_id(self):
 		return self._service.get_activity_id()

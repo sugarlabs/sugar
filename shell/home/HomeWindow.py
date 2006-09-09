@@ -34,11 +34,11 @@ class HomeWindow(gtk.Window):
 		self._current_group = self._home_group
 
 	def set_owner(self, owner):
-		layout = IconLayout(1900, 1200)
+		layout = IconLayout(1200, 900)
 		friends = owner.get_friends()
 		self._friends_group = FriendsGroup(self._shell, friends, layout)
 
-		layout = IconLayout(1900, 1200)
+		layout = IconLayout(1200, 900)
 		self._mesh_group = MeshGroup(self._shell, layout)
 
 	def _set_group(self, group):
