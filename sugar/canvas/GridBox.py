@@ -1,0 +1,33 @@
+import goocanvas
+
+from sugar.canvas.GridLayout import GridGroup
+from sugar.canvas.GridLayout import GridConstraints
+
+class GridBox(GridGroup, goocanvas.Item):
+	VERTICAL = 0
+	HORIZONTAL = 1
+
+	def __init__(self, direction, size, padding):
+		if direction == GridBox.VERTICAL:
+			GridGroup.__init__(self, 1, size)
+		else:
+			GridGroup.__init__(self, size, 1)
+
+		self._direction = direction
+		self._padding = padding
+
+	def add_child(self, item, position=-1):
+		if position == -1:
+			position = self.get_n_children()
+		
+		if self._direction == GridBox.HORIZONTAL:
+			col = position
+			row = 0
+		else:
+			col = 0
+			row = position
+
+		constraints = GridConstraints(col, row, 1, 1, self._padding)
+		self._layout.set_constraints(item, constraints)
+
+		GridGroup.add_child(self, item, position)

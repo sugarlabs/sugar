@@ -43,23 +43,18 @@ class GridLayout:
 
 		return [x, y, width, height]
 
-	def layout_canvas_group(self, group):
-		i = 0
-		while i < group.get_n_children():
-			item = group.get_child(i)
+	def layout_canvas_item(self, item):
+		group = item.get_parent()
+		[x, y, width, height] = self._get_geometry(group, item)
 
-			[x, y, width, height] = self._get_geometry(group, item)
+		item.props.x = x
+		item.props.y = y
 
-			item.props.x = x
-			item.props.y = y
-
-			try:
-				item.props.width = width
-				item.props.height = height
-			except:
-				item.props.size = width
-
-			i += 1
+		try:
+			item.props.width = width
+			item.props.height = height
+		except:
+			item.props.size = width
 
 	def layout_screen(self, screen):
 		for window in screen.get_windows():
@@ -85,13 +80,19 @@ class GridGroup(goocanvas.Group):
 			matrix.translate(self._x, self._y)
 			self.set_transform(matrix)
 
+	def _update_layout(self):
+		i = 0
+		while i < self.get_n_children():
+			self._layout.layout_canvas_item(self.get_child(i))
+			i += 1
+
 	def do_set_property(self, pspec, value):
 		if pspec.name == 'width':
 			self._width = value
-			self._layout.layout_canvas_group(self)
+			self._update_layout()
 		elif pspec.name == 'height':
 			self._height = value
-			self._layout.layout_canvas_group(self)
+			self._update_layout()
 		elif pspec.name == 'x':
 			self._x = value
 			self._update_position()
@@ -127,5 +128,6 @@ class GridGroup(goocanvas.Group):
 	def get_layout(self):
 		return self._layout
 
-	def __child_added_cb(self, child, position):
-		self._layout.layout_canvas_group(self)
+	def __child_added_cb(self, group, position):
+		item = group.get_child(position)
+		self._layout.layout_canvas_item(item)
