@@ -3,6 +3,7 @@ sugar_PYTHON =			\
 	__init__.py		\
 	CanvasView.py		\
 	Colors.py		\
+	GridBox.py		\
 	GridLayout.py		\
 	GridModel.py		\
 	GridWindow.py		\
