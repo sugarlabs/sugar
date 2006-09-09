@@ -30,11 +30,16 @@ class InviteItem(IconItem):
 	def get_bundle_id(self):
 		return self._invite.get_bundle_id()
 
+	def get_invite(self):
+		return self._invite
+
 class BottomPanel(GridBox):
 	def __init__(self, shell, invites):
 		GridBox.__init__(self, GridBox.HORIZONTAL, 14, 6)
 
 		self._shell = shell
+		self._invite_to_item = {}
+		self._invites = invites
 
 		registry = conf.get_activity_registry()
 		for activity in registry.list_activities():
@@ -44,16 +49,21 @@ class BottomPanel(GridBox):
 		for invite in invites:
 			self.add_invite(invite)
 		invites.connect('invite-added', self.__invite_added_cb)
+		invites.connect('invite-removed', self.__invite_removed_cb)
 
 	def __activity_clicked_cb(self, icon):
 		self._shell.start_activity(icon.get_bundle_id())
 
 	def __invite_clicked_cb(self, icon):
+		self._invites.remove_invite(icon.get_invite())
 		self._shell.join_activity(icon.get_bundle_id(),
 								  icon.get_activity_id())
 	
 	def __invite_added_cb(self, invites, invite):
 		self.add_invite(invite)
+
+	def __invite_removed_cb(self, invites, invite):
+		self.remove_invite(invite)
 
 	def add_activity(self, activity):
 		item = ActivityItem(activity)
@@ -64,3 +74,9 @@ class BottomPanel(GridBox):
 		item = InviteItem(invite)
 		item.connect('clicked', self.__invite_clicked_cb)
 		self.add_child(item, 0)
+
+		self._invite_to_item[invite] = item
+
+	def remove_invite(self, invite):
+		self.remove_child(self._invite_to_item[invite])
+		del self._invite_to_item[invite]

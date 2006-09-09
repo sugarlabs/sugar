@@ -4,6 +4,8 @@ from sugar.canvas.GridLayout import GridGroup
 from sugar.canvas.GridLayout import GridConstraints
 
 class GridBox(GridGroup, goocanvas.Item):
+	__gtype_name__ = 'GridBox'
+
 	VERTICAL = 0
 	HORIZONTAL = 1
 
@@ -27,7 +29,7 @@ class GridBox(GridGroup, goocanvas.Item):
 		constraints = GridConstraints(col, row, 1, 1, self._padding)
 		self._layout.set_constraints(item, constraints)
 
-	def add_child(self, item, position=-1):
+	def do_add_child(self, item, position=-1):
 		if position == -1:
 			position = self.get_n_children()
 
@@ -38,4 +40,12 @@ class GridBox(GridGroup, goocanvas.Item):
 			self._update_constraints(self.get_child(i), i + 1)
 			i += 1
 
-		GridGroup.add_child(self, item, position)
+		GridGroup.do_add_child(self, item, position)
+
+	def do_remove_child(self, position):
+		GridGroup.do_remove_child(self, position)
+
+		i = position
+		while i < self.get_n_children():
+			self._update_constraints(self.get_child(i), i)
+			i += 1

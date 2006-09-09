@@ -46,5 +46,9 @@ class Invites(gobject.GObject):
 		self._list.append(invite)
 		self.emit('invite-added', invite)
 
+	def remove_invite(self, invite):
+		self._list.remove(invite)
+		self.emit('invite-removed', invite)
+
 	def __iter__(self):
 		return self._list.__iter__()
