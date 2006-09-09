@@ -31,8 +31,8 @@ class PieceItem(goocanvas.Path):
 		self._angle_start = angle_start
 		self._angle_end = angle_end
 
-		self.set_property('fill-color', '#e8e8e8')
-		self.set_property('stroke-color', '#d8d8d8')
+		self.set_property('fill-color', '#ffffff')
+		self.set_property('stroke-color', '#e2e2e2')
 		self.set_property('line-width', 4)
 
 	def get_icon(self):
@@ -75,13 +75,13 @@ class DonutItem(goocanvas.Group):
 		self._angle_start = 0
 
 		bg = goocanvas.Ellipse(radius_x=radius, radius_y=radius,
-							   fill_color='#c2c3c5', line_width=0)
+							   fill_color='#f1f1f1', line_width=0)
 		self.add_child(bg)
 
 		self._inner_radius = radius / 2
 		fg = goocanvas.Ellipse(radius_x=self._inner_radius,
 							   radius_y=self._inner_radius,
-							   fill_color='#d8d8d8', line_width=0)
+							   fill_color='#e2e2e2', line_width=0)
 		self.add_child(fg)
 
 	def add_piece(self, perc, icon_name, color):
