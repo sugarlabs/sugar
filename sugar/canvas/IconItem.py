@@ -14,14 +14,17 @@ class _IconCache:
 	def __init__(self):
 		self._icons = {}
 
-	def _create_icon(self, name, color):
+	def _read_icon(self, name, color):
 		theme = gtk.icon_theme_get_default()
 		info = theme.lookup_icon(name, _ICON_SIZE, 0)
 		icon_file = open(info.get_filename(), 'r')
-		data = icon_file.read()
-		icon_file.close()
 
-		if color != None:
+		if color == None:
+			return rsvg.Handle(file=info.get_filename())
+		else:
+			data = icon_file.read()
+			icon_file.close()
+
 			fill = color.get_fill_color()
 			stroke = color.get_stroke_color()
 
@@ -34,21 +37,25 @@ class _IconCache:
 			style = '.shape-and-fill {fill:%s; stroke:%s;}' % (fill, stroke)
 			data = re.sub('\.shape-and-fill \{.*\}', style, data)
 
-		return data
+			return rsvg.Handle(data=data)
 
-	def get_icon(self, name, color):
-		key = (name, color.get_fill_color())
+	def get_handle(self, name, color):
+		if color:
+			key = (name, color.to_string())
+		else:
+			key = name
+
 		if self._icons.has_key(key):
 			icon = self._icons[key]
 		else:
-			icon = self._create_icon(name, color)
+			icon = self._read_icon(name, color)
 			self._icons[key] = icon
 		return icon
 
 class IconView(goocanvas.ItemViewSimple, goocanvas.ItemView):
 	__gtype_name__ = 'IconView'
 
-	_icon_cache = _IconCache()
+	_cache = _IconCache()
 
 	def __init__(self, canvas_view, parent_view, item):
 		goocanvas.ItemViewSimple.__init__(self)
@@ -112,13 +119,7 @@ class IconView(goocanvas.ItemViewSimple, goocanvas.ItemView):
 		if icon_name == None:
 			icon_name = 'stock-missing'
 
-		if self.item.color == None:
-			theme = gtk.icon_theme_get_default()
-			info = theme.lookup_icon(icon_name, self.item.size, 0)
-			handle = rsvg.Handle(file=info.get_filename())
-		else:
-			icon = IconView._icon_cache.get_icon(icon_name, self.item.color)
-			handle = rsvg.Handle(data=icon)			
+		handle = IconView._cache.get_handle(icon_name, self.item.color)
 
 		cr.save()
 
