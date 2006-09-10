@@ -5,4 +5,5 @@ sugar_PYTHON =			\
 	Emulator.py		\
 	MatchboxProcess.py	\
 	Process.py		\
+	TestSession.py		\
 	UITestSession.py
