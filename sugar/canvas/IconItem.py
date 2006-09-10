@@ -91,6 +91,8 @@ class IconView(goocanvas.ItemViewSimple, goocanvas.ItemView):
 			if self.transform != None:
 				cr.transform(self.transform)
 
+			self.get_canvas_view().request_redraw(self.bounds)
+
 			bounds = goocanvas.Bounds()
 			bounds.x1 = self.item.x
 			bounds.y1 = self.item.y
