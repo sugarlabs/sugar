@@ -37,10 +37,35 @@ class _ShellOwner(object):
 	def _handle_invite(self, issuer, bundle_id, activity_id):
 		return ''
 
+class _Timeline:
+	def __init__(self, time_factor):
+		self._time_factor = time_factor
+
+	def add(self, action, minutes):
+		gobject.timeout_add(int(1000 * 60 * minutes * self._time_factor),
+							self._execute_action_cb, action)
+
+	def _execute_action_cb(self, action):
+		action.execute()
+		return False
+
+class ShareActivityAction:
+	def __init__(self, title, activity_type):
+		self._title = title
+		self._type = activity_type
+
+	def execute(self):
+		activity = _SimulatedActivity()
+		properties = { 'title' : self._title }
+		
+		pservice = PresenceService.get_instance()
+		pservice.share_activity(activity, self._type, properties)		
+
 class Bot:
 	def __init__(self, nick, color):
 		self._nick = nick
 		self._color = color
+		self._timeline = _Timeline(0.01)
 
 		os.environ['SUGAR_NICK_NAME'] = self._nick
 
@@ -57,15 +82,13 @@ class Bot:
 
 		gtk.main()
 
+	def add_action(self, action, minutes):
+		self._timeline.add(action, minutes)
+
 	def _real_start(self):
 		pservice = PresenceService.get_instance()
 
 		if not pservice.get_owner().get_color():
 			return True
-
-		activity = _SimulatedActivity()
-		properties = { 'title' : 'OLPC' }
-		activity_type = '_GroupChatActivity_Sugar_redhat_com._udp'
-		service = pservice.share_activity(activity, activity_type, properties)
 
 		return False
