@@ -2,6 +2,7 @@
 import os
 
 import gtk
+import gobject
 
 from sugar.session.TestSession import TestSession
 from sugar.presence import PresenceService
@@ -38,6 +39,20 @@ class ShellOwner(object):
 	def _handle_invite(self, issuer, bundle_id, activity_id):
 		return ''
 
+def start():
+	pservice = PresenceService.get_instance()
+
+	if not pservice.get_owner().get_color():
+		print 'Color not found'
+		return True
+
+	activity = SimulatedActivity()
+	properties = { 'title' : 'OLPC' }
+	activity_type = '_GroupChatActivity_Sugar_redhat_com._udp'
+	service = pservice.share_activity(activity, activity_type, properties)
+
+	return False
+
 os.environ['SUGAR_NICK_NAME'] = 'kiu'
 
 session = TestSession()
@@ -48,11 +63,6 @@ PresenceService.start()
 owner = ShellOwner()
 owner.announce()
 
-pservice = PresenceService.get_instance()
-
-activity = SimulatedActivity()
-properties = { 'title' : 'OLPC' }
-activity_type = '_GroupChatActivity_Sugar_redhat_com._udp'
-service = pservice.share_activity(activity, activity_type, properties)
+gobject.timeout_add(1000, start)
 
 gtk.main()
