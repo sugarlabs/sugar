@@ -2,4 +2,4 @@ activities/browser/NavigationToolbar.py
 sugar/chat/ChatEditor.py
 activities/chat/ChatActivity.py
 activities/groupchat/GroupChatActivity.py
-shell/PresenceView.py
+shell/FirstTimeDialog.py
