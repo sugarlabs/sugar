@@ -50,7 +50,6 @@ shell/conf/Makefile
 shell/data/Makefile
 shell/home/Makefile
 shell/frame/Makefile
-shell/session/Makefile
 shell/PresenceService/Makefile
 sugar/Makefile
 sugar/__installed__.py
@@ -62,6 +61,7 @@ sugar/chat/sketchpad/Makefile
 sugar/p2p/Makefile
 sugar/p2p/model/Makefile
 sugar/presence/Makefile
+sugar/session/Makefile
 po/Makefile.in
 tools/Makefile
 tools/sugar-setup-activity

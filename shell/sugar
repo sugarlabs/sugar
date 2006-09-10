@@ -19,14 +19,14 @@ from sugar import env
 
 env.setup_system()
 
-from session.Emulator import Emulator
+from sugar.session.Emulator import Emulator
 
 if os.environ.has_key('SUGAR_EMULATOR') and \
    os.environ['SUGAR_EMULATOR'] == 'yes':
 	emulator = Emulator()
 	emulator.start()
 
-from session.Session import Session
+from Session import Session
 
 session = Session()
 session.start()

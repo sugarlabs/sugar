@@ -1,4 +1,4 @@
-SUBDIRS = conf data session frame home PresenceService
+SUBDIRS = conf data frame home PresenceService
 
 bin_SCRIPTS = 				\
 	sugar				\
@@ -17,6 +17,7 @@ sugar_PYTHON =				\
 	Friends.py			\
 	Invites.py			\
 	Owner.py			\
-	Shell.py
+	Shell.py			\
+	Session.py
 
 EXTRA_DIST = $(bin_SCRIPTS)

@@ -2,7 +2,7 @@ import os
 import socket
 import sys
 
-from session.Process import Process
+from sugar.session.Process import Process
 import sugar.env
 
 def get_display_number():
