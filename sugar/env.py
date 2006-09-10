@@ -15,7 +15,7 @@ def setup_user(profile):
 def get_nick_name():
 	return os.environ['SUGAR_NICK_NAME']
 
-def setup_system():
+def setup_python_path():
 	for path in sugar_python_path:
 		sys.path.insert(0, path)
 		if os.environ.has_key('PYTHONPATH'):
@@ -23,6 +23,9 @@ def setup_system():
 			os.environ['PYTHONPATH'] = path + ':' + old_path 
 		else:
 			os.environ['PYTHONPATH'] = path
+
+def setup_system():
+	setup_python_path()
 
 	for path in sugar_bin_path:
 		if os.environ.has_key('PATH'):
