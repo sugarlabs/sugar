@@ -52,9 +52,12 @@ class IconView(goocanvas.ItemViewSimple, goocanvas.ItemView):
 
 	def __init__(self, canvas_view, parent_view, item):
 		goocanvas.ItemViewSimple.__init__(self)
+
 		self.parent_view = parent_view
 		self.canvas_view = canvas_view
 		self.item = item
+
+		item.connect('changed', goocanvas.item_view_simple_item_changed, self)
 
 	def do_get_item_view_at(self, x, y, cr, is_pointer_event, parent_is_visible):
 		result = self
@@ -163,16 +166,23 @@ class IconItem(goocanvas.ItemSimple, goocanvas.Item):
 		goocanvas.ItemSimple.__init__(self, **kwargs)
 
 	def do_set_property(self, pspec, value):
+		recompute_bounds = False
+
 		if pspec.name == 'icon-name':
 			self.icon_name = value
 		elif pspec.name == 'color':
 			self.color = value
 		elif pspec.name == 'size':
 			self.size = value
+			recompute_bounds = True
 		elif pspec.name == 'x':
 			self.x = value
+			recompute_bounds = True
 		elif pspec.name == 'y':
 			self.y = value
+			recompute_bounds = True
+
+		self.emit('changed', recompute_bounds)
 
 	def do_get_property(self, pspec):
 		if pspec.name == 'x':

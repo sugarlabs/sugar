@@ -8,8 +8,8 @@ class GridModel:
 	def __init__(self, bg_color):
 		self._model = goocanvas.CanvasModelSimple()
 
-		self._width = 800
-		self._height = 600
+		self._width = 1200
+		self._height = 900
 
 		item = goocanvas.Rect(width=self._width, height=self._height,
 							  line_width=0, fill_color=bg_color)
