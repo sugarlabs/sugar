@@ -163,6 +163,7 @@ class Buddy(object):
 		"""Adds a new service to this buddy's service list, returning
 		True if the service was successfully added, and False if it was not."""
 		if service.get_name() != self._nick_name:
+			logging.error("Service and buddy nick names doesn't match: %s %s" % (service.get_name(), self._nick_name))
 			return False
 		source_addr = service.get_source_address()
 		if source_addr != self._address:
@@ -170,6 +171,7 @@ class Buddy(object):
 			return False
 		service_key = self._get_service_key(service)
 		if service_key in self._services.keys():
+			logging.error("Service already known: %s %s" % (service_key[0], service_key[1]))
 			return False
 		logging.debug("Buddy %s added service type %s id %s" % (self._nick_name, service.get_type(), service.get_activity_id()))
 		self._services[service_key] = service
