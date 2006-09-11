@@ -124,7 +124,7 @@ class IconView(goocanvas.ItemViewSimple, goocanvas.ItemView):
 			self._buffer = None
 
 		if self._buffer == None:
-			size = _ICON_SIZE * scale
+			size = int(_ICON_SIZE * scale)
 			surface = cr.get_target().create_similar(
 							cairo.CONTENT_COLOR_ALPHA, size, size)
 
