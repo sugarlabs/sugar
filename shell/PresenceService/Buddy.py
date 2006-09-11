@@ -3,6 +3,7 @@ import logging
 
 import gobject
 import dbus, dbus.service
+from sugar import env
 
 
 PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
@@ -287,6 +288,7 @@ class Owner(Buddy):
 	def __init__(self, ps, bus_name, object_id, nick):
 		Buddy.__init__(self, bus_name, object_id, None)
 		self._nick_name = nick
+		self._color = env.get_color()
 		self._ps = ps
 
 	def add_service(self, service):

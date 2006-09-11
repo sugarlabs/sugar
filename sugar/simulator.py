@@ -67,7 +67,8 @@ class Bot:
 		self._color = color
 		self._timeline = _Timeline(0.01)
 
-		os.environ['SUGAR_NICK_NAME'] = self._nick
+		os.environ['SUGAR_NICK_NAME'] = nick
+		os.environ['SUGAR_COLOR'] = color.to_string()
 
 	def start(self):
 		session = TestSession()
@@ -78,17 +79,9 @@ class Bot:
 		owner = _ShellOwner(self._nick, self._color)
 		owner.announce()
 
-		gobject.timeout_add(1000, self._real_start)
+		pservice = PresenceService.get_instance()
 
 		gtk.main()
 
 	def add_action(self, action, minutes):
 		self._timeline.add(action, minutes)
-
-	def _real_start(self):
-		pservice = PresenceService.get_instance()
-
-		if not pservice.get_owner().get_color():
-			return True
-
-		return False

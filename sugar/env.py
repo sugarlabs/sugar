@@ -11,9 +11,13 @@ import sugar.setup
 
 def setup_user(profile):
 	os.environ['SUGAR_NICK_NAME'] = profile.get_nick_name()
+	os.environ['SUGAR_COLOR'] = profile.get_color().to_string()
 
 def get_nick_name():
 	return os.environ['SUGAR_NICK_NAME']
+
+def get_color():
+	return os.environ['SUGAR_COLOR']
 
 def setup_python_path():
 	for path in sugar_python_path:
