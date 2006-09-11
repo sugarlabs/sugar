@@ -4,6 +4,7 @@ import gobject
 import gtk
 import goocanvas
 import rsvg
+import cairo
 
 from sugar.util import GObjectSingletonMeta
 from sugar.canvas.IconColor import IconColor
@@ -64,6 +65,9 @@ class IconView(goocanvas.ItemViewSimple, goocanvas.ItemView):
 		self.canvas_view = canvas_view
 		self.item = item
 
+		self._buffer = None
+		self._buffer_scale = 0.0
+
 		item.connect('changed', goocanvas.item_view_simple_item_changed, self)
 
 	def do_get_item_view_at(self, x, y, cr, is_pointer_event, parent_is_visible):
@@ -114,12 +118,37 @@ class IconView(goocanvas.ItemViewSimple, goocanvas.ItemView):
 
 		return self.bounds
 
+	def _get_buffer(self, cr, handle, scale):
+		if self._buffer and self._buffer_scale != scale:
+			del self._buffer
+			self._buffer = None
+
+		if self._buffer == None:
+			size = _ICON_SIZE * scale
+			surface = cr.get_target().create_similar(
+							cairo.CONTENT_COLOR_ALPHA, size, size)
+
+			ctx = cairo.Context(surface)
+			ctx.scale(scale, scale)
+			handle.render_cairo(ctx)
+			del ctx
+
+			self._buffer = surface
+			self._buffer_scale = scale
+
+		return self._buffer
+
 	def do_paint(self, cr, bounds, scale):
+		scale_factor = float(self.item.size) / float(_ICON_SIZE)
+		if scale_factor == 0.0:
+			return
+
 		icon_name = self.item.icon_name
 		if icon_name == None:
 			icon_name = 'stock-missing'
 
 		handle = IconView._cache.get_handle(icon_name, self.item.color)
+		buf = self._get_buffer(cr, handle, scale_factor)
 
 		cr.save()
 
@@ -129,11 +158,8 @@ class IconView(goocanvas.ItemViewSimple, goocanvas.ItemView):
 			cr.transform(self.transform)
 
 		cr.translate(self.item.x, self.item.y)
-		scale_factor = float(self.item.size) / float(_ICON_SIZE)
-
-		if scale_factor != 0.0:
-			cr.scale(scale_factor, scale_factor)		
-			handle.render_cairo(cr)
+		cr.set_source_surface(buf, 0.0, 0.0)
+		cr.paint()
 
 		cr.restore()
 
