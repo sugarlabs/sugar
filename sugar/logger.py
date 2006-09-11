@@ -109,6 +109,9 @@ def start(console_id, console = None):
 	root_logger = logging.getLogger('')
 	root_logger.setLevel(logging.DEBUG)
 	root_logger.addHandler(Handler(queue))
+	fileh = logging.FileHandler('/tmp/sugar.log')
+	fileh.setFormatter(logging.Formatter("""[%(asctime)s] %(message)s"""))
+	root_logger.addHandler(fileh)
 
 	global __queue
 	__queue = queue
