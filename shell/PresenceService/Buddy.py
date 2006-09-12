@@ -163,17 +163,26 @@ class Buddy(object):
 		"""Adds a new service to this buddy's service list, returning
 		True if the service was successfully added, and False if it was not."""
 		if service.get_name() != self._nick_name:
-			logging.error("Service and buddy nick names doesn't match: %s %s" % (service.get_name(), self._nick_name))
+			logging.error("Service and buddy nick names doesn't match: " \
+					"%s %s" % (service.get_name(), self._nick_name))
 			return False
+
 		source_addr = service.get_source_address()
 		if source_addr != self._address:
-			logging.error("Service source and buddy address doesn't match: %s %s" % (source_addr, self._address))
-			return False
+			logging.error("Service source and buddy address doesn't " \
+					"match: %s %s" % (source_addr, self._address))
+			return False		
+		return self._internal_add_service(service)
+
+	def _internal_add_service(self, service):
 		service_key = self._get_service_key(service)
 		if service_key in self._services.keys():
-			logging.error("Service already known: %s %s" % (service_key[0], service_key[1]))
+			logging.error("Service already known: %s %s" % (service_key[0],
+					service_key[1]))
 			return False
-		logging.debug("Buddy %s added service type %s id %s" % (self._nick_name, service.get_type(), service.get_activity_id()))
+
+		logging.debug("Buddy %s added service type %s id %s" % (self._nick_name,
+				service.get_type(), service.get_activity_id()))
 		self._services[service_key] = service
 		service.set_owner(self)
 
@@ -297,20 +306,27 @@ class Owner(Buddy):
 		"""Adds a new service to this buddy's service list, returning
 		True if the service was successfully added, and False if it was not."""
 		if service.get_name() != self._nick_name:
+			logging.error("Service and buddy nick names doesn't match: " \
+					"%s %s" % (service.get_name(), self._nick_name))
 			return False
 
 		# The Owner initially doesn't have an address, so the first
 		# service added to the Owner determines the owner's address
 		source_addr = service.get_source_address()
-		if self._address is None:
-			if service.is_local():
-				self._address = source_addr
-				self._dbus_helper.PropertyChanged(['ip4_address'])
+		if self._address is None and service.is_local():
+			self._address = source_addr
+			self._dbus_helper.PropertyChanged(['ip4_address'])
+
+		# The owner bypasses address checks and only cares if
+		# avahi says the service is a local service
+		if not service.is_local():
+			logging.error("Cannot add remote service to owner object.")
+			return False
 
 		logging.debug("Adding owner service %s.%s at %s:%d." % (service.get_name(),
 				service.get_type(), service.get_source_address(),
 				service.get_port()))
-		return Buddy.add_service(self, service)
+		return self._internal_add_service(service)
 
 	def is_owner(self):
 		return True
