@@ -287,9 +287,9 @@ class Buddy(object):
 class Owner(Buddy):
 	"""Class representing the owner of the machine.  This is the client
 	portion of the Owner, paired with the server portion in Owner.py."""
-	def __init__(self, ps, bus_name, object_id, nick):
+	def __init__(self, ps, bus_name, object_id):
 		Buddy.__init__(self, bus_name, object_id, None)
-		self._nick_name = nick
+		self._nick_name = env.get_nick_name()
 		self._color = env.get_color()
 		self._ps = ps
 
@@ -303,9 +303,12 @@ class Owner(Buddy):
 		# service added to the Owner determines the owner's address
 		source_addr = service.get_source_address()
 		if self._address is None:
-			if self._ps.is_local_ip_address(source_addr):
+			if service.is_local():
 				self._address = source_addr
 				self._dbus_helper.PropertyChanged(['ip4_address'])
+		logging.debug("Adding owner service %s.%s at %s:%d." % (service.get_name(),
+				service.get_type(), service.get_source_address(),
+				service.get_port()))
 		return Buddy.add_service(self, service)
 
 	def is_owner(self):

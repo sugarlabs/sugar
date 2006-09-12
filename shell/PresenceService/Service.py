@@ -104,7 +104,8 @@ class Service(object):
 	"""Encapsulates information about a specific ZeroConf/mDNS
 	service as advertised on the network."""
 	def __init__(self, bus_name, object_id, name, stype, domain=u"local",
-				address=None, port=-1, properties=None, source_address=None):
+				address=None, port=-1, properties=None, source_address=None,
+				local=False):
 		if not bus_name:
 			raise ValueError("DBus bus name must be valid")
 		if not object_id or type(object_id) != type(1):
@@ -138,6 +139,7 @@ class Service(object):
 		self._properties = {}
 		self.set_properties(properties)
 		self._avahi_entry_group = None
+		self._local = local
 
 		# Source address is the unicast source IP
 		self._source_address = None
@@ -179,6 +181,9 @@ class Service(object):
 		if self._owner is not None:
 			raise RuntimeError("Can only set a service's owner once")
 		self._owner = owner
+
+	def is_local(self):
+		return self._local
 
 	def get_name(self):
 		"""Return the service's name, usually that of the
