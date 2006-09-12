@@ -536,6 +536,9 @@ class PresenceService(object):
 		if not service:
 			return False
 
+		self._dbus_helper.ServiceDisappeared(service.object_path())
+		self._handle_remove_activity_service(service)
+
 		# Decompose service name if we can
 		(actid, buddy_name) = Service.decompose_service_name(full_name)
 
@@ -545,10 +548,8 @@ class PresenceService(object):
 		except KeyError:
 			pass
 		else:
-			buddy.remove_service(service)
-			self._dbus_helper.ServiceDisappeared(service.object_path())
-			self._handle_remove_activity_service(service)
 			if not buddy.is_valid():
+				buddy.remove_service(service)
 				self._dbus_helper.BuddyDisappeared(buddy.object_path())
 				del self._buddies[buddy_name]
 		key = (service.get_full_name(), service.get_type())

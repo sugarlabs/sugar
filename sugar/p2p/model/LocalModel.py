@@ -37,13 +37,16 @@ class LocalModel(AbstractModel):
 		self._notifier.notify(key)
 
 	def _setup_service(self):
-		service = self._pservice.share_activity(self._activity,
-				stype = LocalModel.SERVICE_TYPE)
-		self._setup_server(service)
-	
+		self._service = self._pservice.share_activity(
+						self._activity, stype = LocalModel.SERVICE_TYPE)
+		self._setup_server(self._service)	
+
 	# FIXME this is duplicated with StreamReader
 	def _setup_server(self, service):
 		port = service.get_port()
 		logging.debug('Start model server on port %d' % (port))
 		p2p_server = network.GlibXMLRPCServer(("", port))
 		p2p_server.register_instance(ModelRequestHandler(self))
+
+	def shutdown(self):
+		self._pservice.unregister_service(self._service)

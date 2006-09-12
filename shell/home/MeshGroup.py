@@ -68,8 +68,7 @@ class MeshGroup(goocanvas.Group):
 
 		self._activities[item.get_id()] = item
 
-	def _activity_disappeared_cb(self, activity):
-		print 'remove'
+	def _activity_disappeared_cb(self, pservice, activity):
 		if self._activities.has_key(activity.get_id()):
 			self.remove_child(self._activities[activity.get_id()])
 			del self._activities[activity.get_id()]
