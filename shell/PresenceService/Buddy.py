@@ -306,6 +306,7 @@ class Owner(Buddy):
 			if service.is_local():
 				self._address = source_addr
 				self._dbus_helper.PropertyChanged(['ip4_address'])
+
 		logging.debug("Adding owner service %s.%s at %s:%d." % (service.get_name(),
 				service.get_type(), service.get_source_address(),
 				service.get_port()))
