@@ -513,7 +513,7 @@ class PresenceService(object):
 		if not service:
 			return False
 
-		logging.debug("Service %s.%s on %i.%i disappeared." % (full_name,
+		logging.debug("Service %s.%s in domain %s on %i.%i disappeared." % (full_name,
 				stype, domain, interface, protocol))
 
 		self._dbus_helper.ServiceDisappeared(service.object_path())
