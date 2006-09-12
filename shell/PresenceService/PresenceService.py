@@ -690,8 +690,8 @@ class PresenceService(object):
 		resolv_list = self._find_service_adv(stype=stype)
 		# Request resolution for them if they aren't in-process already
 		for adv in resolv_list:
-			if adv not in self._resolve_queue:
-				self._resolve_queue.append(adv)
+			if adv.state() == _SA_UNRESOLVED:
+				adv.set_state(_SA_RESOLVE_PENDING)
 				gobject.idle_add(self._resolve_service, adv)
 
 	def unregister_service_type(self, stype):
