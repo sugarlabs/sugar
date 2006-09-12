@@ -26,3 +26,6 @@ class RemoteModel(AbstractModel):
 	def _setup_notification_listener(self):
 		self._notification = NotificationListener(self._notification_service)
 		self._notification.add_listener(self._notify_model_change)
+
+	def shutdown(self):
+		pass

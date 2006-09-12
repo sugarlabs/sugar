@@ -9,14 +9,15 @@ from sugar.presence import PresenceService
 from home.IconLayout import IconLayout
 
 class ActivityItem(IconItem):
-	def __init__(self, service):
+	def __init__(self, activity, service):
 		self._service = service
+		self._activity = activity
 
 		IconItem.__init__(self, icon_name=self.get_icon_name(),
 						  color=self.get_color(), size=96)
 
 	def get_id(self):
-		return self._service.get_activity_id()
+		return self._activity.get_id()
 		
 	def get_icon_name(self):
 		registry = conf.get_activity_registry()
@@ -25,9 +26,7 @@ class ActivityItem(IconItem):
 		return info.get_icon()
 	
 	def get_color(self):
-		pservice = PresenceService.get_instance()
-		activity = pservice.get_activity(self.get_id())
-		return IconColor(activity.get_color())
+		return IconColor(self._activity.get_color())
 
 	def get_service(self):
 		return self._service
@@ -39,38 +38,46 @@ class MeshGroup(goocanvas.Group):
 		self._icon_layout = IconLayout(1200, 900)
 		self._activities = {}
 
-		pservice = PresenceService.get_instance()
-		pservice.connect("service-appeared", self.__service_appeared_cb)
+		self._pservice = PresenceService.get_instance()
+		self._pservice.connect("service-appeared", self._service_appeared_cb)
+		self._pservice.connect('activity-disappeared', self._activity_disappeared_cb)
 
-		for service in pservice.get_services():
-			self.__check_service(service)
+		for service in self._pservice.get_services():
+			self._check_service(service)
 
-	def __service_appeared_cb(self, pservice, service):
-		self.__check_service(service)
+	def _service_appeared_cb(self, pservice, service):
+		self._check_service(service)
 
-	def __check_service(self, service):
+	def _check_service(self, service):
 		registry = conf.get_activity_registry()
 		if registry.get_activity_from_type(service.get_type()) != None:
-			if not self.has_activity(service.get_activity_id()):
-				self.add_activity(service)
+			activity_id = service.get_activity_id()
+			if not self.has_activity(activity_id):
+				activity = self._pservice.get_activity(activity_id)
+				if activity != None:
+					self.add_activity(activity, service)
 
 	def has_activity(self, activity_id):
 		return self._activities.has_key(activity_id)
 
-	def add_activity(self, service):
-		item = ActivityItem(service)
-		item.connect('clicked', self.__activity_clicked_cb)
-
+	def add_activity(self, activity, service):
+		item = ActivityItem(activity, service)
+		item.connect('clicked', self._activity_clicked_cb)
 		self._icon_layout.add_icon(item)
 		self.add_child(item)
 
 		self._activities[item.get_id()] = item
 
-	def __activity_clicked_cb(self, item):
+	def _activity_disappeared_cb(self, pservice, activity):
+		if self._activities.has_key(activity.get_id()):
+			self.remove_child(self._activities[activity.get_id()])
+			del self._activities[activity.get_id()]
+
+	def _activity_clicked_cb(self, item):
 		default_type = item.get_service().get_type()
 		registry = conf.get_activity_registry()
 
 		bundle_id = registry.get_activity_from_type(default_type).get_id()
-		activity_id = item.get_service().get_activity_id()
+		activity_id = item.get_id()
 
 		self._shell.join_activity(bundle_id, activity_id)

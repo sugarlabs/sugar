@@ -25,6 +25,7 @@ class BrowserActivity(Activity):
 		self._model = None
 
 		self.set_title("Web Page")
+		self.connect('destroy', self._destroy_cb)
 
 		vbox = gtk.VBox()
 
@@ -123,3 +124,7 @@ class BrowserActivity(Activity):
 		self._notif_bar.set_action('goto_shared_location', 'Go There')
 		self._notif_bar.set_icon('stock_right')
 		self._notif_bar.show()
+
+	def _destroy_cb(self, window):
+		if self._model:
+			self._model.shutdown()
