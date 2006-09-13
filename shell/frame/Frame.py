@@ -6,8 +6,6 @@ from frame.BottomPanel import BottomPanel
 from frame.RightPanel import RightPanel
 from frame.TopPanel import TopPanel
 from frame.PanelWindow import PanelWindow
-
-from sugar.canvas.ScreenContainer import ScreenContainer
 from sugar.canvas.Grid import Grid
 
 class Frame:

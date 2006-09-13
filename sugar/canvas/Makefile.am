@@ -5,10 +5,5 @@ sugar_PYTHON =			\
 	CanvasBox.py		\
 	Colors.py		\
 	Grid.py			\
-	GridBox.py		\
-	GridLayout.py		\
-	GridModel.py		\
-	GridWindow.py		\
 	IconItem.py		\
-	IconColor.py		\
-	ScreenContainer.py
+	IconColor.py
