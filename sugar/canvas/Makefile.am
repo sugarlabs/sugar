@@ -2,7 +2,9 @@ sugardir = $(pythondir)/sugar/canvas
 sugar_PYTHON =			\
 	__init__.py		\
 	CanvasView.py		\
+	CanvasBox.py		\
 	Colors.py		\
+	Grid.py			\
 	GridBox.py		\
 	GridLayout.py		\
 	GridModel.py		\

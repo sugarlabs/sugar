@@ -1,10 +1,13 @@
 import gtk
+import goocanvas
 
-from sugar.canvas.GridWindow import GridWindow
+from sugar.canvas.CanvasView import CanvasView
 
-class PanelWindow(GridWindow):
-	def __init__(self, model):
-		GridWindow.__init__(self, model)
+class PanelWindow(gtk.Window):
+	def __init__(self, grid, model, x, y, width, height):
+		gtk.Window.__init__(self)
+
+		self._grid = grid
 
 		self.set_decorated(False)
 
@@ -14,3 +17,11 @@ class PanelWindow(GridWindow):
 
 		screen = gtk.gdk.screen_get_default()
 		self.window.set_transient_for(screen.get_root_window())
+
+		view = CanvasView()
+		view.show()
+		self.add(view)
+		view.set_model(model)
+
+		self._grid.set_constraints(self, x, y, width, height)
+		self._grid.set_constraints(view, x, y, width, height)

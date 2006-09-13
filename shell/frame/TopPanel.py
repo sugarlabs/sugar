@@ -1,44 +1,58 @@
 import goocanvas
 
-from sugar.canvas.GridLayout import GridGroup
-from sugar.canvas.GridLayout import GridConstraints
+from sugar.canvas.CanvasBox import CanvasBox
 from sugar.canvas.IconItem import IconItem
 import sugar
 
-class TopPanel(GridGroup):
-	def __init__(self, shell):
-		GridGroup.__init__(self, 16, 1)
+class TopPanel(goocanvas.Group):
+	def __init__(self, grid, shell):
+		goocanvas.Group.__init__(self)
+
+		self._grid = grid
 		self._shell = shell
 
-		self.add_zoom_level(sugar.ZOOM_ACTIVITY, 'stock-zoom-activity', 1)
-		self.add_zoom_level(sugar.ZOOM_HOME, 'stock-zoom-home', 2)
-		self.add_zoom_level(sugar.ZOOM_FRIENDS, 'stock-zoom-friends', 3)
-		self.add_zoom_level(sugar.ZOOM_MESH, 'stock-zoom-mesh', 4)
+		box = CanvasBox(grid, CanvasBox.HORIZONTAL, 1)
+		self._grid.set_constraints(box, 5, 0)
+		self.add_child(box)
 
-		icon = IconItem(icon_name='stock-share', size=self._width)
+		icon = IconItem(icon_name='stock-zoom-activity')
+		icon.connect('clicked', self.__level_clicked_cb, sugar.ZOOM_ACTIVITY)
+		box.set_constraints(icon, 3, 3)
+		box.add_child(icon)
+
+		icon = IconItem(icon_name='stock-zoom-home')
+		icon.connect('clicked', self.__level_clicked_cb, sugar.ZOOM_HOME)
+		box.set_constraints(icon, 3, 3)
+		box.add_child(icon)
+
+		icon = IconItem(icon_name='stock-zoom-friends')
+		icon.connect('clicked', self.__level_clicked_cb, sugar.ZOOM_FRIENDS)
+		box.set_constraints(icon, 3, 3)
+		box.add_child(icon)
+
+		icon = IconItem(icon_name='stock-zoom-mesh')
+		icon.connect('clicked', self.__level_clicked_cb, sugar.ZOOM_MESH)
+		box.set_constraints(icon, 3, 3)
+		box.add_child(icon)
+
+		box = CanvasBox(grid, CanvasBox.HORIZONTAL, 1)
+		self._grid.set_constraints(box, 60, 0)
+		self.add_child(box)
+
+		icon = IconItem(icon_name='stock-share')
 		icon.connect('clicked', self.__share_clicked_cb)
-		self.add_icon(icon, 12)
+		box.set_constraints(icon, 3, 3)
+		box.add_child(icon)
 
-		icon = IconItem(icon_name='stock-invite', size=self._width)
+		icon = IconItem(icon_name='stock-invite')
 		icon.connect('clicked', self.__invite_clicked_cb)
-		self.add_icon(icon, 13)
+		box.set_constraints(icon, 3, 3)
+		box.add_child(icon)
 
-		icon = IconItem(icon_name='stock-chat', size=self._width)
+		icon = IconItem(icon_name='stock-chat')
 		icon.connect('clicked', self.__chat_clicked_cb)
-		self.add_icon(icon, 14)
-
-	def add_zoom_level(self, level, icon_name, pos):
-		icon = IconItem(icon_name=icon_name, size=self._height)
-		icon.connect('clicked', self.__level_clicked_cb, level)
-
-		constraints = GridConstraints(pos, 0, 1, 1, 6)
-		self._layout.set_constraints(icon, constraints)
-		self.add_child(icon)
-
-	def add_icon(self, icon, pos):
-		constraints = GridConstraints(pos, 0, 1, 1, 6)
-		self._layout.set_constraints(icon, constraints)
-		self.add_child(icon)
+		box.set_constraints(icon, 3, 3)
+		box.add_child(icon)
 
 	def __level_clicked_cb(self, item, level):
 		self._shell.set_zoom_level(level)

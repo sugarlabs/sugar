@@ -6,8 +6,7 @@ import conf
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.IconColor import IconColor
 from sugar.presence import PresenceService
-from sugar.canvas.GridLayout import GridGroup
-from sugar.canvas.GridBox import GridBox
+from sugar.canvas.CanvasBox import CanvasBox
 
 class ActivityItem(IconItem):
 	def __init__(self, activity):
@@ -33,9 +32,9 @@ class InviteItem(IconItem):
 	def get_invite(self):
 		return self._invite
 
-class BottomPanel(GridBox):
-	def __init__(self, shell, invites):
-		GridBox.__init__(self, GridBox.HORIZONTAL, 14, 6)
+class BottomPanel(CanvasBox):
+	def __init__(self, grid, shell, invites):
+		CanvasBox.__init__(self, grid, CanvasBox.HORIZONTAL, 1)
 
 		self._shell = shell
 		self._invite_to_item = {}
@@ -68,11 +67,13 @@ class BottomPanel(GridBox):
 	def add_activity(self, activity):
 		item = ActivityItem(activity)
 		item.connect('clicked', self.__activity_clicked_cb)
+		self.set_constraints(item, 3, 3)
 		self.add_child(item)
 
 	def add_invite(self, invite):
 		item = InviteItem(invite)
 		item.connect('clicked', self.__invite_clicked_cb)
+		self.set_constraints(item, 3, 3)
 		self.add_child(item, 0)
 
 		self._invite_to_item[invite] = item

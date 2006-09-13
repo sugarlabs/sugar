@@ -1,15 +1,13 @@
 import goocanvas
 
-from frame.PanelWindow import PanelWindow
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.IconColor import IconColor
-from sugar.canvas.GridLayout import GridGroup
-from sugar.canvas.GridBox import GridBox
+from sugar.canvas.CanvasBox import CanvasBox
 from sugar.presence import PresenceService
 
-class RightPanel(GridBox):
-	def __init__(self, shell, friends):
-		GridBox.__init__(self, GridBox.VERTICAL, 10, 6)
+class RightPanel(CanvasBox):
+	def __init__(self, grid, shell, friends):
+		CanvasBox.__init__(self, grid, CanvasBox.VERTICAL, 1)
 		self._shell = shell
 		self._friends = friends
 		self._activity_ps = None
@@ -26,7 +24,9 @@ class RightPanel(GridBox):
 	def add(self, buddy):
 		icon = IconItem(icon_name='stock-buddy',
 				        color=IconColor(buddy.get_color()))
+		self.set_constraints(icon, 3, 3)
 		icon.connect('clicked', self.__buddy_clicked_cb, buddy)
+		
 		self.add_child(icon)
 
 		self._buddies[buddy.get_name()] = icon
