@@ -22,6 +22,7 @@ def _new_icon_clicked_cb(icon):
 def _icon_clicked_cb(icon):
 	icon = IconItem(color=IconColor(), icon_name='activity-groupchat')
 	icon.connect('clicked', _new_icon_clicked_cb)
+	box.set_constraints(icon, 3, 3)
 	box.add_child(icon, 0)
 
 model = goocanvas.CanvasModelSimple()
@@ -30,20 +31,20 @@ root = model.get_root_item()
 grid = Grid()
 
 box = CanvasBox(grid, CanvasBox.HORIZONTAL, 1)
-grid.set_constraints(box, 5, 5)
+grid.set_constraints(box, 3, 3)
 root.add_child(box)
 
 rect = goocanvas.Rect(fill_color='red')
-box.set_constraints(rect, 5, 5)
+box.set_constraints(rect, 3, 3)
 box.add_child(rect)
 
 icon = IconItem(color=IconColor(), icon_name='activity-web')
 icon.connect('clicked', _icon_clicked_cb)
-box.set_constraints(icon, 5, 5)
+box.set_constraints(icon, 3, 3)
 box.add_child(icon)
 
 icon = IconItem(color=IconColor(), icon_name='activity-groupchat')
-box.set_constraints(icon, 5, 5)
+box.set_constraints(icon, 3, 3)
 box.add_child(icon)
 
 window = gtk.Window()
