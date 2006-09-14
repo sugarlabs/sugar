@@ -11,6 +11,8 @@ class FriendIcon(IconItem):
 		self._friend = friend
 		self._popup = None
 		self._popup_distance = 0
+		self._hover_popup = False
+		self._popdown_on_leave = False
 
 		self.connect('popup', self._popup_cb)
 		self.connect('popdown', self._popdown_cb)
@@ -21,11 +23,21 @@ class FriendIcon(IconItem):
 	def get_friend(self):
 		return self._friend
 
-	def _popup_cb(self, icon, x1, y1, x2, y2):
-		grid = Grid()
+	def _popdown(self):
+		if self._popup:
+			self._popup.destroy()
+			self._popup = None
 
-		if not self._popup:
-			self._popup = FriendPopup(self._shell, grid, icon.get_friend())
+	def _popup_cb(self, icon, x1, y1, x2, y2):
+		self._popdown()
+
+		grid = Grid()
+		self._popup = FriendPopup(self._shell, grid, icon.get_friend())
+
+		self._popup.connect('enter-notify-event',
+							self._popup_enter_notify_event_cb)
+		self._popup.connect('leave-notify-event',
+							self._popup_leave_notify_event_cb)
 
 		distance = self._popup_distance
 
@@ -49,11 +61,14 @@ class FriendIcon(IconItem):
 
 		self._popup.show()
 
-	def _popup_destroy_cb(self, popup):
-		self._popup = None
-
 	def _popdown_cb(self, friend):
-		if self._popup:
-			self._popup.connect('destroy', self._popup_destroy_cb)
-			self._popup.popdown()
+		if not self._hover_popup:
+			self._popdown()
 
+	def _popup_enter_notify_event_cb(self, widget, event):
+		self._hover_popup = True
+
+	def _popup_leave_notify_event_cb(self, widget, event):
+		self._hover_popup = False
+		if self._popdown_on_leave:
+			self._popdown()

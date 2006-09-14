@@ -63,34 +63,17 @@ class FriendPopup(gtk.Window):
 
 		canvas.set_model(model)
 
-		self.connect('enter-notify-event', self._enter_notify_event_cb)
-		self.connect('leave-notify-event', self._leave_notify_event_cb)
-
 	def _invite_clicked_cb(self, icon):
 		activity = self._shell.get_current_activity()
 		buddy = self._friend.get_buddy()
 		if buddy != None:
 			activity.invite(buddy)
-		else:
-			print 'Friend not online'
 
 	def _make_friend_clicked_cb(self, icon):
 		friends = self._shell.get_owner().get_friends()
-		friends.add_buddy(buddy)
-
-	def _enter_notify_event_cb(self, widget, event):
-		self._hover = True
-
-	def _leave_notify_event_cb(self, widget, event):
-		self._hover = False
-		if self._popdown_on_leave:
-			self.popdown()
-
-	def popdown(self):
-		if not self._hover:
-			self.destroy()
-		else:
-			self._popdown_on_leave = True
+		buddy = self._friend.get_buddy()
+		if buddy != None:
+			friends.add_buddy(buddy)
 
 	def get_width(self):
 		return self._width
