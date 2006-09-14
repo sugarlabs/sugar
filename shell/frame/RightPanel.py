@@ -26,6 +26,7 @@ class RightPanel(CanvasBox):
 	def add(self, buddy):
 		friend = Friend(buddy.get_name(), buddy.get_color())
 		icon = FriendIcon(self._shell, friend)
+		icon.set_popup_distance(1)
 		self.set_constraints(icon, 3, 3)
 		self.add_child(icon)
 
