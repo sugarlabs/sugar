@@ -2,7 +2,18 @@ from sugar.canvas.IconItem import IconItem
 from FriendPopup import FriendPopup
 from sugar.canvas.Grid import Grid
 
+class _PopupShell:
+	def __init__(self):
+		self._popup_controller = None
+
+	def set_active(self, controller):
+		if self._popup_controller:
+			self._popup_controller._popdown()
+		self._popup_controller = controller
+
 class FriendIcon(IconItem):
+	_popup_shell = _PopupShell()
+
 	def __init__(self, shell, friend):
 		IconItem.__init__(self, icon_name='stock-buddy',
 						  color=friend.get_color(), size=96)
@@ -31,9 +42,10 @@ class FriendIcon(IconItem):
 	def _popup_cb(self, icon, x1, y1, x2, y2):
 		self._popdown()
 
+		FriendIcon._popup_shell.set_active(None)
+
 		grid = Grid()
 		self._popup = FriendPopup(self._shell, grid, icon.get_friend())
-
 		self._popup.connect('enter-notify-event',
 							self._popup_enter_notify_event_cb)
 		self._popup.connect('leave-notify-event',
@@ -60,6 +72,8 @@ class FriendIcon(IconItem):
 							 self._popup.get_width(), self._popup.get_height())
 
 		self._popup.show()
+
+		FriendIcon._popup_shell.set_active(self)
 
 	def _popdown_cb(self, friend):
 		if not self._hover_popup:
