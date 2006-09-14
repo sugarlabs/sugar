@@ -5,7 +5,7 @@ import goocanvas
 from sugar.canvas.IconItem import IconItem
 from home.IconLayout import IconLayout
 from home.MyIcon import MyIcon
-from BuddyPopup import BuddyPopup
+from FriendPopup import FriendPopup
 from sugar.canvas.Grid import Grid
 
 class FriendIcon(IconItem):
@@ -27,7 +27,7 @@ class FriendIcon(IconItem):
 		grid = Grid()
 
 		if not self._popup:
-			self._popup = BuddyPopup(self._shell, grid, icon.get_friend())
+			self._popup = FriendPopup(self._shell, grid, icon.get_friend())
 
 		[grid_x1, grid_y1] = grid.convert_from_screen(x1, y1)
 		[grid_x2, grid_y2] = grid.convert_from_screen(x2, y2)

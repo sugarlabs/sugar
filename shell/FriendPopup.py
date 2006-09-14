@@ -5,7 +5,7 @@ from sugar.canvas.CanvasView import CanvasView
 from sugar.canvas.CanvasBox import CanvasBox
 from sugar.canvas.IconItem import IconItem
 
-class BuddyPopup(gtk.Window):
+class FriendPopup(gtk.Window):
 	def __init__(self, shell, grid, friend):
 		gtk.Window.__init__(self, gtk.WINDOW_POPUP)
 
