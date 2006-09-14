@@ -9,46 +9,21 @@ from BuddyPopup import BuddyPopup
 from sugar.canvas.Grid import Grid
 
 class FriendIcon(IconItem):
-	def __init__(self, friend):
+	def __init__(self, shell, friend):
 		IconItem.__init__(self, icon_name='stock-buddy',
 						  color=friend.get_color(), size=96)
+
+		self._shell = shell
 		self._friend = friend
+		self._popup = None
+
+		self.connect('popup', self._popup_cb)
+		self.connect('popdown', self._popdown_cb)
 
 	def get_friend(self):
 		return self._friend
 
-class FriendsGroup(goocanvas.Group):
-	def __init__(self, shell, friends):
-		goocanvas.Group.__init__(self)
-
-		self._popup = None
-		self._shell = shell
-		self._icon_layout = IconLayout(1200, 900)
-		self._friends = friends
-
-		me = MyIcon(100)
-		me.translate(600 - (me.get_property('size') / 2),
-					 450 - (me.get_property('size') / 2))
-		self.add_child(me)
-
-		for friend in self._friends:
-			self.add_friend(friend)
-
-		friends.connect('friend-added', self._friend_added_cb)
-
-	def add_friend(self, friend):
-		icon = FriendIcon(friend)
-
-		icon.connect('popup', self._friend_popup_cb)
-		icon.connect('popdown', self._friend_popdown_cb)
-
-		self.add_child(icon)
-		self._icon_layout.add_icon(icon)
-
-	def _friend_added_cb(self, data_model, friend):
-		self.add_friend(friend)
-
-	def _friend_popup_cb(self, icon, x1, y1, x2, y2):
+	def _popup_cb(self, icon, x1, y1, x2, y2):
 		grid = Grid()
 
 		if not self._popup:
@@ -77,7 +52,33 @@ class FriendsGroup(goocanvas.Group):
 	def _popup_destroy_cb(self, popup):
 		self._popup = None
 
-	def _friend_popdown_cb(self, friend):
+	def _popdown_cb(self, friend):
 		if self._popup:
 			self._popup.connect('destroy', self._popup_destroy_cb)
 			self._popup.popdown()
+
+class FriendsGroup(goocanvas.Group):
+	def __init__(self, shell, friends):
+		goocanvas.Group.__init__(self)
+
+		self._shell = shell
+		self._icon_layout = IconLayout(1200, 900)
+		self._friends = friends
+
+		me = MyIcon(100)
+		me.translate(600 - (me.get_property('size') / 2),
+					 450 - (me.get_property('size') / 2))
+		self.add_child(me)
+
+		for friend in self._friends:
+			self.add_friend(friend)
+
+		friends.connect('friend-added', self._friend_added_cb)
+
+	def add_friend(self, friend):
+		icon = FriendIcon(self._shell, friend)
+		self.add_child(icon)
+		self._icon_layout.add_icon(icon)
+
+	def _friend_added_cb(self, data_model, friend):
+		self.add_friend(friend)
