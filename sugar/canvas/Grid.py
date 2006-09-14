@@ -2,6 +2,8 @@ import gtk
 import goocanvas
 import cairo
 
+from sugar.canvas.IconItem import IconItem
+
 class Grid:
 	COLS = 80.0
 	ROWS = 60.0
@@ -27,20 +29,28 @@ class Grid:
 	def _layout_item(self, item, x, y, width, height):
 		scale = 1200 / Grid.COLS
 
-		matrix = cairo.Matrix(1, 0, 0, 1, 0, 0)
-		matrix.translate(x * scale, y * scale)
-		item.set_transform(matrix)
-
-		# FIXME This is really hacky
+		self._allocate_item_position(item, x * scale, y * scale)
 		if width > 0 and height > 0:
-			try:
-				item.props.width = width * scale
-				item.props.height = height * scale
-			except:
-				try:
-					item.props.size = width * scale
-				except:
-					pass
+			self._allocate_item_size(item, width * scale, height * scale)
+
+	# FIXME We really need layout support in goocanvas
+	def _allocate_item_size(self, item, width, height):
+		if isinstance(item, goocanvas.Rect):
+			item.props.width = width - item.props.line_width * 2
+			item.props.height = height - item.props.line_width * 2
+		elif isinstance(item, goocanvas.Text):
+			item.props.width = width
+		elif isinstance(item, IconItem):
+			item.props.size = width
+
+	def _allocate_item_position(self, item, x, y):
+		if isinstance(item, goocanvas.Rect):
+			x = x + item.props.line_width
+			y = y + item.props.line_width
+
+		matrix = cairo.Matrix(1, 0, 0, 1, 0, 0)
+		matrix.translate(x, y)
+		item.set_transform(matrix)
 
 	def _layout_canvas(self, canvas, x, y, width, height):
 		scale = 1200 / Grid.COLS

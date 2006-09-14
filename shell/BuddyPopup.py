@@ -1,6 +1,7 @@
 import gtk
 import goocanvas
 
+from sugar.canvas.CanvasView import CanvasView
 from sugar.canvas.CanvasBox import CanvasBox
 from sugar.canvas.IconItem import IconItem
 
@@ -12,10 +13,10 @@ class BuddyPopup(gtk.Window):
 		self._friend = friend
 		self._hover = False
 		self._popdown_on_leave = False
-		self._width = 20
-		self._height = 12
+		self._width = 13
+		self._height = 10
 
-		canvas = goocanvas.CanvasView()
+		canvas = CanvasView()
 		self.add(canvas)
 		canvas.show()
 
@@ -31,18 +32,18 @@ class BuddyPopup(gtk.Window):
 		grid.set_constraints(rect, 0, 0, self._width, self._height)
 		root.add_child(rect)
 
-		text = goocanvas.Text(text=friend.get_name(), font="Sans bold 14",
-							  fill_color='black', anchor = gtk.ANCHOR_SW)
-		grid.set_constraints(text, 1, 2, self._width, self._height)
+		text = goocanvas.Text(text=friend.get_name(), font="Sans bold 18",
+							  fill_color='black', anchor=gtk.ANCHOR_SW)
+		grid.set_constraints(text, 1, 3, self._width, self._height)
 		root.add_child(text)
 
 		separator = goocanvas.Path(data='M 15 0 L 185 0', line_width=3,
 								   fill_color='black')
-		grid.set_constraints(separator, 0, 3)
+		grid.set_constraints(separator, 0, 4)
 		root.add_child(separator)
 
 		box = CanvasBox(grid, CanvasBox.HORIZONTAL, 1)
-		grid.set_constraints(box, 0, 3)
+		grid.set_constraints(box, 0, 5)
 
 		icon = IconItem(icon_name='stock-make-friend')
 		icon.connect('clicked', self._make_friend_clicked_cb)

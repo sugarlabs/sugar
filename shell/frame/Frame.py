@@ -17,7 +17,7 @@ class Frame:
 
 		grid = Grid()
 
-		bg = goocanvas.Rect(fill_color="#4f4f4f")
+		bg = goocanvas.Rect(fill_color="#4f4f4f", line_width=0)
 		grid.set_constraints(bg, 0, 0, 80, 60)
 		root.add_child(bg)
 
