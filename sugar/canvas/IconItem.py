@@ -257,6 +257,13 @@ class IconItem(goocanvas.ItemSimple, goocanvas.Item):
 		[x2, y2] = canvas.convert_to_pixels(view.get_bounds().x2,
 								 		    view.get_bounds().y2)
 
+		[window_x, window_y] = canvas.window.get_origin()
+
+		x1 += window_x
+		y1 += window_y
+		x2 += window_x
+		y2 += window_y
+
 		self.emit('popup', int(x1), int(y1), int(x2), int(y2))
 
 	def _popdown(self):
