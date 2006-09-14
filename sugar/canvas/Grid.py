@@ -4,6 +4,11 @@ import cairo
 
 class Grid:
 	COLS = 80.0
+	ROWS = 60.0
+
+	def convert_from_screen(self, x, y):
+		factor = Grid.COLS / gtk.gdk.screen_width()
+		return [int(x * factor), int(y * factor)]
 
 	def set_constraints(self, component, x, y, width=-1, height=-1):
 		if isinstance(component, gtk.Window):
@@ -26,12 +31,16 @@ class Grid:
 		matrix.translate(x * scale, y * scale)
 		item.set_transform(matrix)
 
+		# FIXME This is really hacky
 		if width > 0 and height > 0:
 			try:
 				item.props.width = width * scale
 				item.props.height = height * scale
 			except:
-				item.props.size = width * scale
+				try:
+					item.props.size = width * scale
+				except:
+					pass
 
 	def _layout_canvas(self, canvas, x, y, width, height):
 		scale = 1200 / Grid.COLS

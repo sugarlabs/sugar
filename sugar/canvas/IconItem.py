@@ -169,6 +169,10 @@ class IconItem(goocanvas.ItemSimple, goocanvas.Item):
 	__gsignals__ = {
 		'clicked': (gobject.SIGNAL_RUN_FIRST,
 					gobject.TYPE_NONE, ([])),
+		'popup':   (gobject.SIGNAL_RUN_FIRST,
+					gobject.TYPE_NONE, ([int, int, int, int])),
+		'popdown': (gobject.SIGNAL_RUN_FIRST,
+					gobject.TYPE_NONE, ([])),
 	}
 
 	__gproperties__ = {
@@ -227,8 +231,23 @@ class IconItem(goocanvas.ItemSimple, goocanvas.Item):
 
 	def do_create_view(self, canvas, parent_view):
 		view = IconView(canvas, parent_view, self)
-		view.connect('button-press-event', self.__button_press_cb)
+		view.connect('button-press-event', self._button_press_cb)
+		view.connect('enter-notify-event', self._enter_notify_event_cb, canvas)
+		view.connect('leave-notify-event', self._leave_notify_event_cb)
 		return view
 
-	def __button_press_cb(self, view, target, event):
+	def _button_press_cb(self, view, target, event):
 		self.emit('clicked')
+
+	def _enter_notify_event_cb(self, view, target, event, canvas):
+		[x1, y1] = canvas.convert_to_pixels(view.get_bounds().x1,
+								 		    view.get_bounds().y1)
+		[x2, y2] = canvas.convert_to_pixels(view.get_bounds().x2,
+								 		    view.get_bounds().y2)
+		self.emit('popup', int(x1), int(y1), int(x2), int(y2))
+
+	def _popdown(self):
+		self.emit('popdown')
+
+	def _leave_notify_event_cb(self, view, target, event):
+		gobject.timeout_add(1000, self._popdown)
