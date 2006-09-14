@@ -84,6 +84,9 @@ class Shell(gobject.GObject):
 		self._frame = Frame(self, self._owner)
 		self._frame.show_and_hide(10)
 
+	def get_owner(self):
+		return self._owner
+
 	def __global_key_pressed_cb(self, grabber, key):
 		if key == 'F1':
 			self.set_zoom_level(sugar.ZOOM_ACTIVITY)

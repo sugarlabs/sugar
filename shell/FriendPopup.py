@@ -75,7 +75,8 @@ class FriendPopup(gtk.Window):
 			print 'Friend not online'
 
 	def _make_friend_clicked_cb(self, icon):
-		pass
+		friends = self._shell.get_owner().get_friends()
+		friends.add_buddy(buddy)
 
 	def _enter_notify_event_cb(self, widget, event):
 		self._hover = True

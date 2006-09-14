@@ -4,6 +4,8 @@ from sugar.canvas.IconItem import IconItem
 from sugar.canvas.IconColor import IconColor
 from sugar.canvas.CanvasBox import CanvasBox
 from sugar.presence import PresenceService
+from FriendIcon import FriendIcon
+from Friends import Friend
 
 class RightPanel(CanvasBox):
 	def __init__(self, grid, shell, friends):
@@ -22,11 +24,9 @@ class RightPanel(CanvasBox):
 		shell.connect('activity-changed', self.__activity_changed_cb)
 
 	def add(self, buddy):
-		icon = IconItem(icon_name='stock-buddy',
-				        color=IconColor(buddy.get_color()))
+		friend = Friend(buddy.get_name(), buddy.get_color())
+		icon = FriendIcon(self._shell, friend)
 		self.set_constraints(icon, 3, 3)
-		icon.connect('clicked', self.__buddy_clicked_cb, buddy)
-		
 		self.add_child(icon)
 
 		self._buddies[buddy.get_name()] = icon
@@ -78,6 +78,3 @@ class RightPanel(CanvasBox):
 
 	def __buddy_left_cb(self, activity, buddy):
 		self.remove(buddy)
-
-	def __buddy_clicked_cb(self, icon, buddy):
-		self._friends.add_buddy(buddy)
