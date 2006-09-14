@@ -240,17 +240,17 @@ class IconItem(goocanvas.ItemSimple, goocanvas.Item):
 	def _button_press_cb(self, view, target, event):
 		self.emit('clicked')
 
-	def _start_popup_timeout(self):
-		self._stop_popup_timeout()
+	def _start_popdown_timeout(self):
+		self._stop_popdown_timeout()
 		self._popdown_timeout = gobject.timeout_add(1000, self._popdown)
 
-	def _stop_popup_timeout(self):
+	def _stop_popdown_timeout(self):
 		if self._popdown_timeout > 0:
 			gobject.source_remove(self._popdown_timeout)
 			self._popdown_timeout = 0
 
 	def _enter_notify_event_cb(self, view, target, event, canvas):
-		self._stop_popup_timeout()
+		self._stop_popdown_timeout()
 
 		[x1, y1] = canvas.convert_to_pixels(view.get_bounds().x1,
 								 		    view.get_bounds().y1)
@@ -272,4 +272,4 @@ class IconItem(goocanvas.ItemSimple, goocanvas.Item):
 		return False
 
 	def _leave_notify_event_cb(self, view, target, event):
-		self._start_popup_timeout()
+		self._start_popdown_timeout()
