@@ -14,6 +14,7 @@ sugar_PYTHON =				\
 	ChatController.py		\
 	ConsoleWindow.py		\
 	FirstTimeDialog.py		\
+	FriendIcon.py			\
 	FriendPopup.py			\
 	Friends.py			\
 	Invites.py			\
