@@ -21,6 +21,7 @@ class FriendsGroup(goocanvas.Group):
 	def __init__(self, shell, friends):
 		goocanvas.Group.__init__(self)
 
+		self._popup = None
 		self._shell = shell
 		self._icon_layout = IconLayout(1200, 900)
 		self._friends = friends
@@ -50,7 +51,8 @@ class FriendsGroup(goocanvas.Group):
 	def _friend_popup_cb(self, icon, x1, y1, x2, y2):
 		grid = Grid()
 
-		self._popup = BuddyPopup(self._shell, grid, icon.get_friend())
+		if not self._popup:
+			self._popup = BuddyPopup(self._shell, grid, icon.get_friend())
 
 		[grid_x1, grid_y1] = grid.convert_from_screen(x1, y1)
 		[grid_x2, grid_y2] = grid.convert_from_screen(x2, y2)
@@ -72,6 +74,10 @@ class FriendsGroup(goocanvas.Group):
 
 		self._popup.show()
 
-	def _friend_popdown_cb(self, friend):
-		self._popup.popdown()
+	def _popup_destroy_cb(self, popup):
 		self._popup = None
+
+	def _friend_popdown_cb(self, friend):
+		if self._popup:
+			self._popup.connect('destroy', self._popup_destroy_cb)
+			self._popup.popdown()
