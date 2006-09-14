@@ -56,10 +56,9 @@ class FriendIcon(IconItem):
 		[grid_x1, grid_y1] = grid.convert_from_screen(x1, y1)
 		[grid_x2, grid_y2] = grid.convert_from_screen(x2, y2)
 
-		if grid_x2 + self._popup.get_width() + distance > Grid.ROWS:
+		grid_x = grid_x2 + distance
+		if grid_x + self._popup.get_width() > Grid.ROWS:
 			grid_x = grid_x1 - self._popup.get_width() - distance
-		else:
-			grid_x = grid_x2 + distance
 
 		grid_y = grid_y1
 
