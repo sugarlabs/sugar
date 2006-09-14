@@ -10,7 +10,11 @@ class Grid:
 
 	def convert_from_screen(self, x, y):
 		factor = Grid.COLS / gtk.gdk.screen_width()
-		return [int(x * factor), int(y * factor)]
+
+		grid_x = round(x * factor) - 1
+		grid_y = round(y * factor) - 1
+
+		return [grid_x, grid_y]
 
 	def set_constraints(self, component, x, y, width=-1, height=-1):
 		if isinstance(component, gtk.Window):

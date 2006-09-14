@@ -58,7 +58,7 @@ class FriendIcon(IconItem):
 
 		grid_x = grid_x2 + distance
 		if grid_x + self._popup.get_width() > Grid.ROWS:
-			grid_x = grid_x1 - self._popup.get_width() - distance
+			grid_x = grid_x1 - self._popup.get_width() + 1 - distance
 
 		grid_y = grid_y1
 
