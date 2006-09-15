@@ -389,6 +389,12 @@ class PresenceService(object):
 			adv_list.append(adv)
 		return adv_list
 
+	def _find_registered_service_type(self, stype):
+		for item in self._registered_service_types:
+			if item.get_type() == stype:
+				return item
+		return None
+
 	def _handle_new_service_for_buddy(self, service, local):
 		"""Deal with a new discovered service object."""
 		# Once a service is resolved, we match it up to an existing buddy,
@@ -522,7 +528,8 @@ class PresenceService(object):
 
 		# If we care about the service right now, resolve it
 		resolve = False
-		if actid is not None or stype in self._registered_service_types:
+		item = self._find_registered_service_type(stype)
+		if actid is not None or item is not None:
 			resolve = True
 		if resolve and adv.state() == _SA_UNRESOLVED:
 			logging.debug("Found '%s' (%d) of type '%s' in domain" \
@@ -699,7 +706,7 @@ class PresenceService(object):
 			self._services[(name, stype)] = service
 			port = service.get_port()
 
-			logging.debug("PS: Will register service with name='%s', stype='%s'," \
+			logging.debug("Will register service with name='%s', stype='%s'," \
 					" domain='%s', address='%s', port=%d, info='%s'" % (name, stype,
 					domain, address, port, info))
 			group.AddService(avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, 0, dbus.String(name),
@@ -719,7 +726,7 @@ class PresenceService(object):
 	def unregister_service(self, service, sender=None):
 		local_publisher = service.get_local_publisher()
 		if sender is not None and local_publisher != sender:
-			raise ValueError("Service was not not registered by requesting process!")
+			raise ValueError("Service was not registered by requesting process!")
 		group = service.get_avahi_entry_group()
 		if not group:
 			raise ValueError("Service was not a local service provided by this laptop!")
@@ -732,10 +739,10 @@ class PresenceService(object):
 			raise ValueError("service type must be a unicode string.")
 
 		# If we've already registered it as a service type, ref it and return
-		for item in self._registered_service_types:
-			if item.get_type() == stype:
-				item.ref()
-				return
+		item = self._find_registered_service_type(stype)
+		if item is not None:
+			item.ref()
+			return
 
 		# Otherwise track this type now
 		obj = RegisteredServiceType(stype)
@@ -757,15 +764,14 @@ class PresenceService(object):
 		"""Stop tracking a certain mDNS service."""
 		if type(stype) != type(u""):
 			raise ValueError("service type must be a unicode string.")
-		item = None
-		for item in self._registered_service_types:
-			if item.get_type() == stype:
-				break
+
 		# if it was found, unref it and possibly remove it
-		if item is not None:
-			if item.unref() <= 0:
-				self._registered_service_types.remove(item)
-				del item
+		item = self._find_registered_service_type(stype)
+		if not item:
+			return
+		if item.unref() <= 0:
+			self._registered_service_types.remove(item)
+			del item
 
 
 def main():
