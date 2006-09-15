@@ -56,6 +56,38 @@ class ServiceAdv(object):
 				raise ValueError("Can't reset to resolve pending from resolved.")
 		self._state = state
 
+class RegisteredServiceType(object):
+	def __init__(self, stype):
+		self._stype = stype
+		self._refcount = 1
+
+	def get_type(self):
+		return self._stype
+
+	def ref(self):
+		self._refcount += 1
+
+	def unref(self):
+		self._refcount -= 1
+		return self._refcount
+
+def _txt_to_dict(txt):
+	"""Convert an avahi-returned TXT record formatted
+	as nested arrays of integers (from dbus) into a dict
+	of key/value string pairs."""
+	prop_dict = {}
+	props = avahi.txt_array_to_string_array(txt)
+	for item in props:
+		key = value = None
+		if '=' not in item:
+			# No = means a boolean value of true
+			key = item
+			value = True
+		else:
+			(key, value) = item.split('=')
+		prop_dict[key] = value
+	return prop_dict
+
 
 _PRESENCE_SERVICE = "org.laptop.Presence"
 _PRESENCE_DBUS_INTERFACE = "org.laptop.Presence"
@@ -169,8 +201,9 @@ class PresenceServiceDBusHelper(dbus.service.Object):
 		return owner.object_path()
 
 	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
-						in_signature="os", out_signature="o")
-	def joinActivity(self, activity_op, stype):
+						in_signature="os", out_signature="o",
+						sender_keyword="sender")
+	def joinActivity(self, activity_op, stype, sender):
 		found_activity = None
 		acts = self._parent.get_activities()
 		for act in acts:
@@ -179,29 +212,34 @@ class PresenceServiceDBusHelper(dbus.service.Object):
 				break
 		if not found_activity:
 			raise NotFoundError("The activity %s was not found." % activity_op)
-		return self._parent.join_activity(found_activity, stype)
+		return self._parent.join_activity(found_activity, stype, sender)
 
 	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
-						in_signature="ssa{ss}sis", out_signature="o")
-	def shareActivity(self, activity_id, stype, properties, address, port, domain):
+						in_signature="ssa{ss}sis", out_signature="o",
+						sender_keyword="sender")
+	def shareActivity(self, activity_id, stype, properties, address, port,
+			domain, sender=None):
 		if not len(address):
 			address = None
 		service = self._parent.share_activity(activity_id, stype, properties, address,
-				port, domain)
+				port, domain, sender)
 		return service.object_path()
 
 	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
-						in_signature="ssa{ss}sis", out_signature="o")
-	def registerService(self, name, stype, properties, address, port, domain):
+						in_signature="ssa{ss}sis", out_signature="o",
+						sender_keyword="sender")
+	def registerService(self, name, stype, properties, address, port, domain,
+			sender=None):
 		if not len(address):
 			address = None
 		service = self._parent.register_service(name, stype, properties, address,
-				port, domain)
+				port, domain, sender)
 		return service.object_path()
 
 	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
-						in_signature="o", out_signature="")
-	def unregisterService(self, service_op):
+						in_signature="o", out_signature="",
+						sender_keyword="sender")
+	def unregisterService(self, service_op, sender):
 		found_serv = None
 		services = self._parent.get_services()
 		for serv in services:
@@ -210,7 +248,7 @@ class PresenceServiceDBusHelper(dbus.service.Object):
 				break
 		if not found_serv:
 			raise NotFoundError("The activity %s was not found." % service_op)
-		return self._parent.unregister_service(found_serv)
+		return self._parent.unregister_service(found_serv, sender)
 
 	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
 						in_signature="s", out_signature="")
@@ -424,9 +462,10 @@ class PresenceService(object):
 		key = (full_name, stype)
 		if not self._services.has_key(key):
 			objid = self._get_next_object_id()
+			props = _txt_to_dict(txt)
 			service = Service.Service(self._bus_name, objid, name=full_name,
 					stype=stype, domain=domain, address=address, port=port,
-					properties=txt, source_address=address, local=adv.is_local())
+					properties=props, source_address=address, local=adv.is_local())
 			self._services[key] = service
 		else:
 			# Already tracking this service; likely we were the one that shared it
@@ -588,19 +627,22 @@ class PresenceService(object):
 	def _new_domain_cb_glue(self, interface, protocol, domain, flags=0):
 		gobject.idle_add(self._new_domain_cb, interface, protocol, domain, flags)
 
-	def join_activity(self, activity, stype):
+	def join_activity(self, activity, stype, sender):
 		services = activity.get_services_of_type(stype)
 		if not len(services):
-			raise NotFoundError("The service type %s was not present within the activity %s" % (stype, activity.object_path()))
+			raise NotFoundError("The service type %s was not present within " \
+					"the activity %s" % (stype, activity.object_path()))
 		act_service = services[0]
 		props = act_service.get_properties()
 		color = activity.get_color()
 		if color:
 			props['color'] = color
 		return self._share_activity(activity.get_id(), stype, properties,
-				act_service.get_address(), act_service.get_port(), act_service.get_domain())
+				act_service.get_address(), act_service.get_port(),
+				act_service.get_domain(), sender)
 
-	def share_activity(self, activity_id, stype, properties=None, address=None, port=-1, domain=u"local"):
+	def share_activity(self, activity_id, stype, properties=None, address=None,
+			port=-1, domain=u"local", sender=None):
 		"""Convenience function to share an activity with other buddies."""
 		if not util.validate_activity_id(activity_id):
 			raise ValueError("invalid activity id")
@@ -621,14 +663,19 @@ class PresenceService(object):
 		if color:
 			properties['color'] = color
 
-		logging.debug('Share activity %s, type %s, address %s, port %d, properties %s' % (activity_id, stype, address, port, properties))
-		return self.register_service(real_name, stype, properties, address, port, domain)
+		logging.debug('Share activity %s, type %s, address %s, port %d, " \
+				"properties %s' % (activity_id, stype, address, port,
+				properties))
+		return self.register_service(real_name, stype, properties, address,
+				port, domain, sender)
 
-	def register_service(self, name, stype, properties={}, address=None, port=-1, domain=u"local"):
+	def register_service(self, name, stype, properties={}, address=None,
+			port=-1, domain=u"local", sender=None):
 		"""Register a new service, advertising it to other Buddies on the network."""
 		(actid, person_name) = Service.decompose_service_name(name)
 		if self.get_owner() and person_name != self.get_owner().get_name():
-			raise RuntimeError("Tried to register a service that didn't have Owner nick as the service name!")
+			raise RuntimeError("Tried to register a service that didn't have" \
+					" Owner nick as the service name!")
 		if not domain or not len(domain):
 			domain = u"local"
 		if not port or port == -1:
@@ -647,12 +694,14 @@ class PresenceService(object):
 			objid = self._get_next_object_id()
 			service = Service.Service(self._bus_name, objid, name=name,
 					stype=stype, domain=domain, address=address, port=port,
-					properties=properties, source_address=None, local=True)
+					properties=properties, source_address=None, local=True,
+					local_publisher=sender)
 			self._services[(name, stype)] = service
 			port = service.get_port()
 
 			logging.debug("PS: Will register service with name='%s', stype='%s'," \
-					" domain='%s', address='%s', port=%d, info='%s'" % (name, stype, domain, address, port, info))
+					" domain='%s', address='%s', port=%d, info='%s'" % (name, stype,
+					domain, address, port, info))
 			group.AddService(avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, 0, dbus.String(name),
 					dbus.String(stype), dbus.String(domain), dbus.String(""), # let Avahi figure the 'host' out
 					dbus.UInt16(port), info)
@@ -667,7 +716,10 @@ class PresenceService(object):
 		self.register_service_type(stype)
 		return service
 
-	def unregister_service(self, service):
+	def unregister_service(self, service, sender=None):
+		local_publisher = service.get_local_publisher()
+		if sender is not None and local_publisher != sender:
+			raise ValueError("Service was not not registered by requesting process!")
 		group = service.get_avahi_entry_group()
 		if not group:
 			raise ValueError("Service was not a local service provided by this laptop!")
@@ -678,9 +730,16 @@ class PresenceService(object):
 		a certain mDNS service types."""
 		if type(stype) != type(u""):
 			raise ValueError("service type must be a unicode string.")
-		if stype in self._registered_service_types:
-			return
-		self._registered_service_types.append(stype)
+
+		# If we've already registered it as a service type, ref it and return
+		for item in self._registered_service_types:
+			if item.get_type() == stype:
+				item.ref()
+				return
+
+		# Otherwise track this type now
+		obj = RegisteredServiceType(stype)
+		self._registered_service_types.append(obj)
 
 		# Find unresolved services that match the service type
 		# we're now interested in, and resolve them
@@ -698,8 +757,15 @@ class PresenceService(object):
 		"""Stop tracking a certain mDNS service."""
 		if type(stype) != type(u""):
 			raise ValueError("service type must be a unicode string.")
-		if stype in self._registered_service_types:
-			self._registered_service_types.remove(stype)
+		item = None
+		for item in self._registered_service_types:
+			if item.get_type() == stype:
+				break
+		# if it was found, unref it and possibly remove it
+		if item is not None:
+			if item.unref() <= 0:
+				self._registered_service_types.remove(item)
+				del item
 
 
 def main():

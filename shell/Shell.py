@@ -73,7 +73,7 @@ class Shell(gobject.GObject):
 		PresenceService.start()
 		self._pservice = PresenceService.get_instance()
 
-		self._owner = ShellOwner()
+		self._owner = ShellOwner(self)
 		self._owner.announce()
 
 		self._home_window.set_owner(self._owner)

@@ -5,23 +5,6 @@ from sugar import util
 import dbus, dbus.service
 import random
 
-def _txt_to_dict(txt):
-	"""Convert an avahi-returned TXT record formatted
-	as nested arrays of integers (from dbus) into a dict
-	of key/value string pairs."""
-	prop_dict = {}
-	props = avahi.txt_array_to_string_array(txt)
-	for item in props:
-		key = value = None
-		if '=' not in item:
-			# No = means a boolean value of true
-			key = item
-			value = True
-		else:
-			(key, value) = item.split('=')
-		prop_dict[key] = value
-	return prop_dict
-
 def compose_service_name(name, activity_id):
 	if type(name) == type(""):
 		name = unicode(name)
@@ -67,6 +50,11 @@ class ServiceDBusHelper(dbus.service.Object):
 		self._object_path = object_path
 		dbus.service.Object.__init__(self, bus_name, self._object_path)
 
+	@dbus.service.signal(SERVICE_DBUS_INTERFACE,
+						signature="as")
+	def PublishedValueChanged(self, keylist):
+		pass
+
 	@dbus.service.method(SERVICE_DBUS_INTERFACE,
 						in_signature="", out_signature="a{sv}")
 	def getProperties(self):
@@ -90,14 +78,33 @@ class ServiceDBusHelper(dbus.service.Object):
 		return pary
 
 	@dbus.service.method(SERVICE_DBUS_INTERFACE,
-						in_signature="s", out_signature="s")
+						in_signature="s")
 	def getPublishedValue(self, key):
 		"""Return the value belonging to the requested key from the
 		service's TXT records."""
-		value = self._parent.get_one_property(key)
-		if type(value) == type(True):
-			value = str(value)
-		return value
+		val = self._parent.get_one_property(key)
+		if not val:
+			raise KeyError("Value was not found.")
+		return val
+
+	@dbus.service.method(SERVICE_DBUS_INTERFACE,
+						in_signature="", out_signature="a{sv}")
+	def getPublishedValues(self):
+		pary = {}
+		props = self._parent.get_properties()
+		for key, value in props.items():
+			pary[key] = str(value)
+		return dbus.Dictionary(pary)
+
+	@dbus.service.method(SERVICE_DBUS_INTERFACE,
+						sender_keyword="sender")
+	def setPublishedValue(self, key, value, sender):
+		self._parent.set_property(key, value, sender)
+
+	@dbus.service.method(SERVICE_DBUS_INTERFACE,
+						in_signature="a{sv}", sender_keyword="sender")
+	def setPublishedValues(self, values, sender):
+		self._parent.set_properties(values, sender)
 
 
 class Service(object):
@@ -105,7 +112,7 @@ class Service(object):
 	service as advertised on the network."""
 	def __init__(self, bus_name, object_id, name, stype, domain=u"local",
 				address=None, port=-1, properties=None, source_address=None,
-				local=False):
+				local=False, local_publisher=None):
 		if not bus_name:
 			raise ValueError("DBus bus name must be valid")
 		if not object_id or type(object_id) != type(1):
@@ -137,7 +144,7 @@ class Service(object):
 		self._port = -1
 		self.set_port(port)
 		self._properties = {}
-		self.set_properties(properties)
+		self._internal_set_properties(properties, first_time=True)
 		self._avahi_entry_group = None
 		self._local = local
 
@@ -159,12 +166,18 @@ class Service(object):
 		if self._properties.has_key(_ACTIVITY_ID_TAG):
 			prop_actid = self._properties[_ACTIVITY_ID_TAG]
 			if (prop_actid and not actid) or (prop_actid != actid):
-				raise ValueError("ActivityID property specified, but the service names's activity ID didn't match it: %s, %s" % (prop_actid, actid))
+				raise ValueError("ActivityID property specified, but the " \
+						"service names's activity ID didn't match it: %s," \
+						" %s" % (prop_actid, actid))
 		self._activity_id = actid
 		if actid and not self._properties.has_key(_ACTIVITY_ID_TAG):
 			self._properties[_ACTIVITY_ID_TAG] = actid
 
 		self._owner = None
+
+		# ID of the D-Bus connection that published this service, if any.
+		# We only let the local publisher modify the service.
+		self._local_publisher = local_publisher
 
 		# register ourselves with dbus
 		self._object_id = object_id
@@ -181,6 +194,9 @@ class Service(object):
 		if self._owner is not None:
 			raise RuntimeError("Can only set a service's owner once")
 		self._owner = owner
+
+	def get_local_publisher(self):
+		return self._local_publisher
 
 	def is_local(self):
 		return self._local
@@ -207,19 +223,55 @@ class Service(object):
 		properties."""
 		return self._properties
 
-	def set_properties(self, properties):
+	def set_property(self, key, value, sender=None):
+		"""Set one service property"""
+		if sender is not None and self._local_publisher != sender:
+			raise ValueError("Service was not not registered by requesting process!")
+
+		if type(key) != type(u""):
+			raise ValueError("Key must be a unicode string.")
+		if type(value) != type(u"") or type(value) != type(True):
+			raise ValueError("Key must be a unicode string or a boolean.")
+
+		# Ignore setting the key to it's current value
+		if self._properties.has_key(key):
+			if self._properties[key] == value:
+				return
+
+		# Blank value means remove key
+		remove = False
+		if type(value) == type(u"") and len(value) == 0:
+			remove = True
+		if type(value) == type(False) and value == False:
+			remove = True
+
+		if remove:
+			# If the key wasn't present, return without error
+			if self._properties.has_key(key):
+				del self._properties[key]
+		else:
+			# Otherwise set it
+			if type(value) == type(True):
+				value = ""
+			self._properties[key] = value
+		self._dbus_helper.PublishedValueChanged(key)
+
+	def set_properties(self, properties, sender=None):
+		"""Set all service properties in one call"""
+		if sender is not None and self._local_publisher != sender:
+			raise ValueError("Service was not not registered by requesting process!")
+		self._internal_set_properties(properties)
+
+	def _internal_set_properties(self, properties, first_time=False):
 		"""Set the service's properties from either an Avahi
 		TXT record (a list of lists of integers), or a
 		python dictionary."""
+		if type(properties) != type({}):
+			raise ValueError("Properties must be a dictionary.")
 		self._properties = {}
-		props = {}
-		if type(properties) == type([]):
-			props = _txt_to_dict(properties)
-		elif type(properties) == type({}):
-			props = properties
 
 		# Set key/value pairs on internal property list
-		for key, value in props.items():
+		for key, value in properties.items():
 			if len(key) == 0:
 				continue
 			tmp_key = key
@@ -229,6 +281,9 @@ class Service(object):
 			if type(tmp_val) != type(u""):
 				tmp_val = unicode(tmp_val)
 			self._properties[tmp_key] = tmp_val
+
+		if not first_time:
+			self._dbus_helper.PublishedValueChanged(self._properties.keys())
 
 	def get_type(self):
 		"""Return the service's service type."""
