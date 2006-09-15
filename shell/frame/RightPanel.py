@@ -5,7 +5,7 @@ from sugar.canvas.IconColor import IconColor
 from sugar.canvas.CanvasBox import CanvasBox
 from sugar.presence import PresenceService
 from FriendIcon import FriendIcon
-from Friends import Friend
+from model.Friends import Friend
 
 class RightPanel(CanvasBox):
 	def __init__(self, grid, shell_model):

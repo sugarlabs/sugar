@@ -27,7 +27,6 @@ class TasksItem(DonutItem):
 	def _add(self, activity):
 		icon_name = activity.get_icon_name()
 		icon_color = activity.get_icon_color()
-		print 'Add activity %s' % icon_color.to_string()
 
 		item = self.add_piece(100 / 8, icon_name, icon_color)
 		item.get_icon().connect('clicked',

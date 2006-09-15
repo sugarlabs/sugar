@@ -1,4 +1,4 @@
-SUBDIRS = conf data frame home PresenceService
+SUBDIRS = conf data frame home model PresenceService
 
 bin_SCRIPTS = 				\
 	sugar				\
@@ -15,9 +15,6 @@ sugar_PYTHON =				\
 	FirstTimeDialog.py		\
 	FriendIcon.py			\
 	FriendPopup.py			\
-	Friends.py			\
-	Invites.py			\
-	Owner.py			\
 	Shell.py			\
 	Session.py
 

@@ -50,6 +50,7 @@ shell/conf/Makefile
 shell/data/Makefile
 shell/home/Makefile
 shell/frame/Makefile
+shell/model/Makefile
 shell/PresenceService/Makefile
 sugar/Makefile
 sugar/__installed__.py

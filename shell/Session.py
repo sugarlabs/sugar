@@ -2,7 +2,7 @@ import os
 import gtk
 
 from Shell import Shell
-from ShellModel import ShellModel
+from model.ShellModel import ShellModel
 from ConsoleWindow import ConsoleWindow
 from sugar import env
 from sugar import logger

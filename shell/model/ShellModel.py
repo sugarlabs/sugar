@@ -1,11 +1,11 @@
 import gobject
 
-from Owner import ShellOwner
 from sugar.presence import PresenceService
 from sugar.activity import ActivityFactory
 from sugar.activity import Activity
-from Friends import Friends
-from Invites import Invites
+from model.Friends import Friends
+from model.Invites import Invites
+from model.Owner import ShellOwner
 
 class ShellModel(gobject.GObject):
 	__gsignals__ = {
