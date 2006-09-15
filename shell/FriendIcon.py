@@ -45,7 +45,8 @@ class FriendIcon(IconItem):
 		FriendIcon._popup_shell.set_active(None)
 
 		grid = Grid()
-		self._popup = FriendPopup(self._shell, grid, icon.get_friend())
+		self._popup = FriendPopup(grid, icon.get_friend())
+		self._popup.connect('action', self._popup_action_cb)
 		self._popup.connect('enter-notify-event',
 							self._popup_enter_notify_event_cb)
 		self._popup.connect('leave-notify-event',
@@ -74,9 +75,25 @@ class FriendIcon(IconItem):
 
 		FriendIcon._popup_shell.set_active(self)
 
+	def _popup_action_cb(self, popup, action):
+		self._popdown()
+
+		buddy = self._friend.get_buddy()
+		if buddy == None:
+			return
+
+		if action == FriendPopup.ACTION_INVITE:
+			activity = self._shell.get_current_activity()
+			activity.invite(buddy)
+		elif action == FriendPopup.ACTION_MAKE_FRIEND:
+			friends = self._shell.get_owner().get_friends()
+			friends.add_buddy(buddy)
+	
 	def _popdown_cb(self, friend):
 		if not self._hover_popup:
 			self._popdown()
+		else:
+			self._popdown_on_leave = True
 
 	def _popup_enter_notify_event_cb(self, widget, event):
 		self._hover_popup = True

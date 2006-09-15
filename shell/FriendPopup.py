@@ -1,15 +1,23 @@
 import gtk
 import goocanvas
+import gobject
 
 from sugar.canvas.CanvasView import CanvasView
 from sugar.canvas.CanvasBox import CanvasBox
 from sugar.canvas.IconItem import IconItem
 
 class FriendPopup(gtk.Window):
-	def __init__(self, shell, grid, friend):
+	ACTION_MAKE_FRIEND = 0
+	ACTION_INVITE = 0
+
+	__gsignals__ = {
+		'action': (gobject.SIGNAL_RUN_FIRST,
+				   gobject.TYPE_NONE, ([int])),
+	}
+
+	def __init__(self, grid, friend):
 		gtk.Window.__init__(self, gtk.WINDOW_POPUP)
 
-		self._shell = shell
 		self._friend = friend
 		self._hover = False
 		self._popdown_on_leave = False
@@ -46,7 +54,8 @@ class FriendPopup(gtk.Window):
 		grid.set_constraints(box, 0, 5)
 
 		icon = IconItem(icon_name='stock-make-friend')
-		icon.connect('clicked', self._make_friend_clicked_cb)
+		icon.connect('clicked', self._action_clicked_cb,
+					 FriendPopup.ACTION_MAKE_FRIEND)
 		box.set_constraints(icon, 3, 3)
 		box.add_child(icon)
 
@@ -55,7 +64,8 @@ class FriendPopup(gtk.Window):
 		box.add_child(icon)
 
 		icon = IconItem(icon_name='stock-invite')
-		icon.connect('clicked', self._invite_clicked_cb)
+		icon.connect('clicked', self._action_clicked_cb,
+					 FriendPopup.ACTION_INVITE)
 		box.set_constraints(icon, 3, 3)
 		box.add_child(icon)
 
@@ -63,17 +73,8 @@ class FriendPopup(gtk.Window):
 
 		canvas.set_model(model)
 
-	def _invite_clicked_cb(self, icon):
-		activity = self._shell.get_current_activity()
-		buddy = self._friend.get_buddy()
-		if buddy != None:
-			activity.invite(buddy)
-
-	def _make_friend_clicked_cb(self, icon):
-		friends = self._shell.get_owner().get_friends()
-		buddy = self._friend.get_buddy()
-		if buddy != None:
-			friends.add_buddy(buddy)
+	def _action_clicked_cb(self, icon, action):
+		self.emit('action', action)
 
 	def get_width(self):
 		return self._width

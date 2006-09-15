@@ -195,7 +195,7 @@ class IconItem(goocanvas.ItemSimple, goocanvas.Item):
 		self.size = 24
 		self.color = None
 		self.icon_name = None
-		self._popdown_timeout = 0
+		self._popdown_sid = 0
 
 		goocanvas.ItemSimple.__init__(self, **kwargs)
 
@@ -242,12 +242,12 @@ class IconItem(goocanvas.ItemSimple, goocanvas.Item):
 
 	def _start_popdown_timeout(self):
 		self._stop_popdown_timeout()
-		self._popdown_timeout = gobject.timeout_add(1000, self._popdown)
+		self._popdown_sid = gobject.timeout_add(1000, self._popdown_timeout_cb)
 
 	def _stop_popdown_timeout(self):
-		if self._popdown_timeout > 0:
-			gobject.source_remove(self._popdown_timeout)
-			self._popdown_timeout = 0
+		if self._popdown_sid > 0:
+			gobject.source_remove(self._popdown_sid)
+			self._popdown_sid = 0
 
 	def _enter_notify_event_cb(self, view, target, event, canvas):
 		self._stop_popdown_timeout()
@@ -266,8 +266,8 @@ class IconItem(goocanvas.ItemSimple, goocanvas.Item):
 
 		self.emit('popup', int(x1), int(y1), int(x2), int(y2))
 
-	def _popdown(self):
-		self._popdown_timeout = 0
+	def _popdown_timeout_cb(self):
+		self._popdown_sid = 0
 		self.emit('popdown')
 		return False
 
