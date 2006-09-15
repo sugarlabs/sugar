@@ -1,8 +1,6 @@
 import gobject
 
 from sugar.presence import PresenceService
-from sugar.activity import ActivityFactory
-from sugar.activity import Activity
 from model.Friends import Friends
 from model.Invites import Invites
 from model.Owner import ShellOwner
@@ -66,21 +64,3 @@ class ShellModel(gobject.GObject):
 
 	def get_current_activity(self):
 		return self._current_activity
-
-	def join_activity(self, bundle_id, activity_id):
-		activity = self.get_activity(activity_id)
-		if activity:
-			activity.present()
-		else:
-			activity_ps = self._pservice.get_activity(activity_id)
-
-			if activity_ps:
-				activity = ActivityFactory.create(bundle_id)
-				activity.join(activity_ps.object_path())
-			else:
-				logging.error('Cannot start activity.')
-
-	def start_activity(self, activity_type):
-		activity = ActivityFactory.create(activity_type)
-		activity.execute('test', [])
-		return activity

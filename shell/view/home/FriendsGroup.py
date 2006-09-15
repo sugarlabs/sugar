@@ -12,6 +12,7 @@ class FriendsGroup(goocanvas.Group):
 
 		self._shell = shell
 		self._icon_layout = IconLayout(1200, 900)
+		self._friends = {}
 
 		me = MyIcon(100)
 		me.translate(600 - (me.get_property('size') / 2),
@@ -24,11 +25,18 @@ class FriendsGroup(goocanvas.Group):
 			self.add_friend(friend)
 
 		friends.connect('friend-added', self._friend_added_cb)
+		friends.connect('friend-removed', self._friend_removed_cb)
 
-	def add_friend(self, friend):
-		icon = BuddyIcon(self._shell, friend)
+	def add_friend(self, buddy_info):
+		icon = BuddyIcon(self._shell, buddy_info)
 		self.add_child(icon)
 		self._icon_layout.add_icon(icon)
 
-	def _friend_added_cb(self, data_model, friend):
-		self.add_friend(friend)
+		self._friends[buddy_info.get_name()] = icon
+
+	def _friend_added_cb(self, data_model, buddy_info):
+		self.add_friend(buddy_info)
+
+	def _friend_removed_cb(self, data_model, name):
+		self.remove_child(self._friends[name])
+		del self._friends[name]

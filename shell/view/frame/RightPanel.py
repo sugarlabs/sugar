@@ -5,7 +5,7 @@ from sugar.canvas.IconColor import IconColor
 from sugar.canvas.CanvasBox import CanvasBox
 from sugar.presence import PresenceService
 from view.BuddyIcon import BuddyIcon
-from model.Friends import Friend
+from model.BuddyInfo import BuddyInfo
 
 class RightPanel(CanvasBox):
 	def __init__(self, shell):
@@ -24,8 +24,7 @@ class RightPanel(CanvasBox):
 								  self.__activity_changed_cb)
 
 	def add(self, buddy):
-		friend = Friend(buddy.get_name(), buddy.get_color())
-		icon = BuddyIcon(self._shell, friend)
+		icon = BuddyIcon(self._shell, BuddyInfo(buddy))
 		icon.set_popup_distance(1)
 		self.set_constraints(icon, 3, 3)
 		self.add_child(icon)

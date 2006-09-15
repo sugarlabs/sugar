@@ -4,7 +4,10 @@ import wnck
 
 from sugar.canvas.Grid import Grid
 from view.home.HomeWindow import HomeWindow
+from sugar.presence import PresenceService
 from view.ActivityHost import ActivityHost
+from sugar.activity import ActivityFactory
+from sugar.activity import Activity
 from view.frame.Frame import Frame
 from globalkeys import KeyGrabber
 import sugar
@@ -70,6 +73,26 @@ class Shell(gobject.GObject):
 
 	def get_grid(self):
 		return self._grid
+
+	def join_activity(self, bundle_id, activity_id):
+		pservice = PresenceService.get_instance()
+
+		activity = self._model.get_activity(activity_id)
+		if activity:
+			activity.present()
+		else:
+			activity_ps = pservice.get_activity(activity_id)
+
+			if activity_ps:
+				activity = ActivityFactory.create(bundle_id)
+				activity.join(activity_ps.object_path())
+			else:
+				logging.error('Cannot start activity.')
+
+	def start_activity(self, activity_type):
+		activity = ActivityFactory.create(activity_type)
+		activity.execute('test', [])
+		return activity
 
 	def set_zoom_level(self, level):
 		if level == sugar.ZOOM_ACTIVITY:

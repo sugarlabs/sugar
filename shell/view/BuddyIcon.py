@@ -88,7 +88,10 @@ class BuddyIcon(IconItem):
 			activity.invite(buddy)
 		elif action == BuddyPopup.ACTION_MAKE_FRIEND:
 			friends = model.get_friends()
-			friends.add_buddy(buddy)
+			friends.make_friend(buddy)
+		elif action == BuddyPopup.ACTION_REMOVE_FRIEND:
+			friends = model.get_friends()
+			friends.remove(buddy)
 	
 	def _popdown_cb(self, friend):
 		if not self._hover_popup:
