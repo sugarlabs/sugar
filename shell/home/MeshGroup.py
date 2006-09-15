@@ -32,9 +32,8 @@ class ActivityItem(IconItem):
 		return self._service
 
 class MeshGroup(goocanvas.Group):
-	def __init__(self, shell):
+	def __init__(self):
 		goocanvas.Group.__init__(self)
-		self._shell = shell
 		self._icon_layout = IconLayout(1200, 900)
 		self._activities = {}
 

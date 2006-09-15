@@ -2,6 +2,7 @@ import os
 import gtk
 
 from Shell import Shell
+from ShellModel import ShellModel
 from ConsoleWindow import ConsoleWindow
 from sugar import env
 from sugar import logger
@@ -47,11 +48,8 @@ class Session:
 			dbm = DBusMonitorProcess()
 			dbm.start()
 
-		console = ConsoleWindow()
-		logger.start('Shell', console)
-
-		shell = Shell()
-		shell.set_console(console)
+		model = ShellModel()
+		shell = Shell(model)
 
 		from sugar import TracebackUtils
 		tbh = TracebackUtils.TracebackHelper()

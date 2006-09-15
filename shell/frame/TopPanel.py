@@ -58,7 +58,8 @@ class TopPanel(goocanvas.Group):
 		self._shell.set_zoom_level(level)
 
 	def __share_clicked_cb(self, item):
-		activity = self._shell.get_current_activity()
+		shell_model = self._shell.get_model()
+		activity = shell_model.get_current_activity()
 		if activity != None:
 			activity.share()
 

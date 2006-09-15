@@ -4,19 +4,19 @@ from home.DonutItem import DonutItem
 from home.MyIcon import MyIcon
 
 class TasksItem(DonutItem):
-	def __init__(self, shell):
+	def __init__(self, shell_model):
 		DonutItem.__init__(self, 250)
 
 		self._items = {}
 
-		self._shell = shell
-		self._shell.connect('activity_opened', self.__activity_opened_cb)
-		self._shell.connect('activity_closed', self.__activity_closed_cb)
+		self._shell_model = shell_model
+		self._shell_model.connect('activity_opened', self.__activity_opened_cb)
+		self._shell_model.connect('activity_closed', self.__activity_closed_cb)
 
-	def __activity_opened_cb(self, shell, activity):
+	def __activity_opened_cb(self, model, activity):
 		self._add(activity)
 
-	def __activity_closed_cb(self, shell, activity):
+	def __activity_closed_cb(self, model, activity):
 		self._remove(activity)
 	
 	def _remove(self, activity):
@@ -27,6 +27,7 @@ class TasksItem(DonutItem):
 	def _add(self, activity):
 		icon_name = activity.get_icon_name()
 		icon_color = activity.get_icon_color()
+		print 'Add activity %s' % icon_color.to_string()
 
 		item = self.add_piece(100 / 8, icon_name, icon_color)
 		item.get_icon().connect('clicked',
@@ -39,10 +40,10 @@ class TasksItem(DonutItem):
 		activity.present()
 
 class HomeGroup(goocanvas.Group):
-	def __init__(self, shell):
+	def __init__(self, shell_model):
 		goocanvas.Group.__init__(self)
 
-		tasks = TasksItem(shell)
+		tasks = TasksItem(shell_model)
 		tasks.translate(600, 450)
 		self.add_child(tasks)
 

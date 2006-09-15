@@ -9,9 +9,9 @@ from home.FriendsGroup import FriendsGroup
 import sugar
 
 class HomeWindow(gtk.Window):
-	def __init__(self, shell):
+	def __init__(self, shell_model):
 		gtk.Window.__init__(self)
-		self._shell = shell
+		self._shell_model = shell_model
 
 		self.realize()
 		self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
@@ -22,6 +22,10 @@ class HomeWindow(gtk.Window):
 
 		self.add(self._nb)
 		self._nb.show()
+
+		self._add_page(HomeGroup(shell_model))
+		self._add_page(FriendsGroup(shell_model))
+		self._add_page(MeshGroup())
 
 	def _add_page(self, group):
 		view = CanvasView()
@@ -36,11 +40,6 @@ class HomeWindow(gtk.Window):
 							line_width=0, fill_color='#e2e2e2')
 		root.add_child(bg)
 		root.add_child(group)
-
-	def set_owner(self, owner):
-		self._add_page(HomeGroup(self._shell))
-		self._add_page(FriendsGroup(self._shell, owner.get_friends()))
-		self._add_page(MeshGroup(self._shell))
 
 	def set_zoom_level(self, level):
 		if level == sugar.ZOOM_HOME:

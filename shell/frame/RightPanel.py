@@ -8,10 +8,10 @@ from FriendIcon import FriendIcon
 from Friends import Friend
 
 class RightPanel(CanvasBox):
-	def __init__(self, grid, shell, friends):
+	def __init__(self, grid, shell_model):
 		CanvasBox.__init__(self, grid, CanvasBox.VERTICAL, 1)
-		self._shell = shell
-		self._friends = friends
+		self._shell_model = shell_model
+		self._friends = shell_model.get_friends()
 		self._activity_ps = None
 		self._joined_hid = -1
 		self._left_hid = -1
@@ -21,11 +21,11 @@ class RightPanel(CanvasBox):
 		self._pservice.connect('activity-appeared',
 							   self.__activity_appeared_cb)
 
-		shell.connect('activity-changed', self.__activity_changed_cb)
+		shell_model.connect('activity-changed', self.__activity_changed_cb)
 
 	def add(self, buddy):
 		friend = Friend(buddy.get_name(), buddy.get_color())
-		icon = FriendIcon(self._shell, friend)
+		icon = FriendIcon(self._shell_model, friend)
 		icon.set_popup_distance(1)
 		self.set_constraints(icon, 3, 3)
 		self.add_child(icon)
@@ -42,7 +42,7 @@ class RightPanel(CanvasBox):
 		self._buddies = {}
 
 	def __activity_appeared_cb(self, pservice, activity_ps):
-		activity = self._shell.get_current_activity()
+		activity = self._shell_model.get_current_activity()
 		if activity and activity_ps.get_id() == activity.get_id():
 			self._set_activity_ps(activity_ps)
 
