@@ -11,7 +11,6 @@ sugardir = $(pkgdatadir)/shell
 sugar_PYTHON =				\
 	__init__.py			\
 	ActivityHost.py			\
-	ChatController.py		\
 	ConsoleWindow.py		\
 	FirstTimeDialog.py		\
 	FriendIcon.py			\

@@ -11,7 +11,6 @@ from home.HomeWindow import HomeWindow
 from Owner import ShellOwner
 from sugar.presence import PresenceService
 from ActivityHost import ActivityHost
-from ChatController import ChatController
 from sugar.activity import ActivityFactory
 from sugar.activity import Activity
 from frame.Frame import Frame
@@ -77,9 +76,6 @@ class Shell(gobject.GObject):
 		self._owner.announce()
 
 		self._home_window.set_owner(self._owner)
-
-		self._chat_controller = ChatController(self)
-		self._chat_controller.listen()
 
 		self._frame = Frame(self, self._owner)
 		self._frame.show_and_hide(10)
@@ -165,9 +161,6 @@ class Shell(gobject.GObject):
 		activity = ActivityFactory.create(activity_type)
 		activity.execute('test', [])
 		return activity
-
-	def get_chat_controller(self):
-		return self._chat_controller
 
 	def set_zoom_level(self, level):
 		if level == sugar.ZOOM_ACTIVITY:
