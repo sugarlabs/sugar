@@ -1,7 +1,7 @@
 import goocanvas
 
-from home.DonutItem import DonutItem
-from home.MyIcon import MyIcon
+from view.home.DonutItem import DonutItem
+from view.home.MyIcon import MyIcon
 
 class TasksItem(DonutItem):
 	def __init__(self, shell_model):

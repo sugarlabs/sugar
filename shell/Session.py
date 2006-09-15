@@ -1,9 +1,8 @@
 import os
 import gtk
 
-from Shell import Shell
+from view.Shell import Shell
 from model.ShellModel import ShellModel
-from ConsoleWindow import ConsoleWindow
 from sugar import env
 from sugar import logger
 
@@ -11,7 +10,7 @@ from sugar.session.Process import Process
 from sugar.session.DbusProcess import DbusProcess
 from sugar.session.MatchboxProcess import MatchboxProcess
 
-from FirstTimeDialog import FirstTimeDialog
+from view.FirstTimeDialog import FirstTimeDialog
 import conf
 
 class DBusMonitorProcess(Process):

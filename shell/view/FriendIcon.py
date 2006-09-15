@@ -1,6 +1,6 @@
 from sugar.canvas.IconItem import IconItem
-from FriendPopup import FriendPopup
 from sugar.canvas.Grid import Grid
+from view.FriendPopup import FriendPopup
 
 class _PopupShell:
 	def __init__(self):

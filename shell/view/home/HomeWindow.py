@@ -3,9 +3,9 @@ import goocanvas
 import cairo
 
 from sugar.canvas.CanvasView import CanvasView
-from home.MeshGroup import MeshGroup
-from home.HomeGroup import HomeGroup
-from home.FriendsGroup import FriendsGroup
+from view.home.MeshGroup import MeshGroup
+from view.home.HomeGroup import HomeGroup
+from view.home.FriendsGroup import FriendsGroup
 import sugar
 
 class HomeWindow(gtk.Window):

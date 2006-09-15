@@ -48,8 +48,9 @@ bindings/threadframe/Makefile
 shell/Makefile
 shell/conf/Makefile
 shell/data/Makefile
-shell/home/Makefile
-shell/frame/Makefile
+shell/view/Makefile
+shell/view/home/Makefile
+shell/view/frame/Makefile
 shell/model/Makefile
 shell/PresenceService/Makefile
 sugar/Makefile

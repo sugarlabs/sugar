@@ -2,9 +2,9 @@ import random
 
 import goocanvas
 
-from home.IconLayout import IconLayout
-from home.MyIcon import MyIcon
-from FriendIcon import FriendIcon
+from view.home.IconLayout import IconLayout
+from view.home.MyIcon import MyIcon
+from view.FriendIcon import FriendIcon
 
 class FriendsGroup(goocanvas.Group):
 	def __init__(self, shell_model):

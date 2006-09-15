@@ -2,10 +2,10 @@ import gtk
 import gobject
 import goocanvas
 
-from frame.BottomPanel import BottomPanel
-from frame.RightPanel import RightPanel
-from frame.TopPanel import TopPanel
-from frame.PanelWindow import PanelWindow
+from view.frame.BottomPanel import BottomPanel
+from view.frame.RightPanel import RightPanel
+from view.frame.TopPanel import TopPanel
+from view.frame.PanelWindow import PanelWindow
 from sugar.canvas.Grid import Grid
 
 class Frame:

@@ -2,9 +2,9 @@ import gtk
 import gobject
 import wnck
 
-from home.HomeWindow import HomeWindow
-from ActivityHost import ActivityHost
-from frame.Frame import Frame
+from view.home.HomeWindow import HomeWindow
+from view.ActivityHost import ActivityHost
+from view.frame.Frame import Frame
 from globalkeys import KeyGrabber
 import sugar
 
