@@ -36,9 +36,9 @@ class BottomPanel(CanvasBox):
 	def __init__(self, shell):
 		CanvasBox.__init__(self, shell.get_grid(), CanvasBox.HORIZONTAL, 1)
 
-		self._shell_model = shell.get_model()
+		self._shell = shell
 		self._invite_to_item = {}
-		self._invites = self._shell_model.get_invites()
+		self._invites = self._shell.get_model().get_invites()
 
 		registry = conf.get_activity_registry()
 		for activity in registry.list_activities():
@@ -51,12 +51,12 @@ class BottomPanel(CanvasBox):
 		self._invites.connect('invite-removed', self.__invite_removed_cb)
 
 	def __activity_clicked_cb(self, icon):
-		self._shell_model.start_activity(icon.get_bundle_id())
+		self._shell.start_activity(icon.get_bundle_id())
 
 	def __invite_clicked_cb(self, icon):
 		self._invites.remove_invite(icon.get_invite())
-		self._shell_model.join_activity(icon.get_bundle_id(),
-								  		icon.get_activity_id())
+		self._shell.join_activity(icon.get_bundle_id(),
+								  icon.get_activity_id())
 	
 	def __invite_added_cb(self, invites, invite):
 		self.add_invite(invite)
