@@ -2,6 +2,7 @@ import gtk
 import gobject
 import wnck
 
+from sugar.canvas.Grid import Grid
 from view.home.HomeWindow import HomeWindow
 from view.ActivityHost import ActivityHost
 from view.frame.Frame import Frame
@@ -14,6 +15,7 @@ class Shell(gobject.GObject):
 
 		self._model = model
 		self._screen = wnck.screen_get_default()
+		self._grid = Grid()
 
 		self._key_grabber = KeyGrabber()
 		self._key_grabber.connect('key-pressed', self.__global_key_pressed_cb)
@@ -24,7 +26,7 @@ class Shell(gobject.GObject):
 		self._key_grabber.grab('F5')
 		self._key_grabber.grab('F6')
 
-		self._home_window = HomeWindow(self.get_model())
+		self._home_window = HomeWindow(self)
 		self._home_window.show()
 		self.set_zoom_level(sugar.ZOOM_HOME)
 
@@ -65,6 +67,9 @@ class Shell(gobject.GObject):
 
 	def get_model(self):
 		return self._model
+
+	def get_grid(self):
+		return self._grid
 
 	def set_zoom_level(self, level):
 		if level == sugar.ZOOM_ACTIVITY:

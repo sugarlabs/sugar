@@ -15,7 +15,7 @@ class FriendPopup(gtk.Window):
 				   gobject.TYPE_NONE, ([int])),
 	}
 
-	def __init__(self, grid, friend):
+	def __init__(self, shell, friend):
 		gtk.Window.__init__(self, gtk.WINDOW_POPUP)
 
 		self._friend = friend
@@ -23,6 +23,8 @@ class FriendPopup(gtk.Window):
 		self._popdown_on_leave = False
 		self._width = 13
 		self._height = 10
+
+		grid = shell.get_grid()
 
 		canvas = CanvasView()
 		self.add(canvas)

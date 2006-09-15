@@ -9,9 +9,9 @@ from view.home.FriendsGroup import FriendsGroup
 import sugar
 
 class HomeWindow(gtk.Window):
-	def __init__(self, shell_model):
+	def __init__(self, shell):
 		gtk.Window.__init__(self)
-		self._shell_model = shell_model
+		self._shell = shell
 
 		self.realize()
 		self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
@@ -23,8 +23,8 @@ class HomeWindow(gtk.Window):
 		self.add(self._nb)
 		self._nb.show()
 
-		self._add_page(HomeGroup(shell_model))
-		self._add_page(FriendsGroup(shell_model))
+		self._add_page(HomeGroup(shell))
+		self._add_page(FriendsGroup(shell))
 		self._add_page(MeshGroup())
 
 	def _add_page(self, group):

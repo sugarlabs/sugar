@@ -12,31 +12,29 @@ class Frame:
 	def __init__(self, shell):
 		self._windows = []
 
-		shell_model = shell.get_model()
-
 		model = goocanvas.CanvasModelSimple()
 		root = model.get_root_item()
 
-		grid = Grid()
+		grid = shell.get_grid()
 
 		bg = goocanvas.Rect(fill_color="#4f4f4f", line_width=0)
 		grid.set_constraints(bg, 0, 0, 80, 60)
 		root.add_child(bg)
 
-		panel = BottomPanel(grid, shell_model)
+		panel = BottomPanel(shell)
 		grid.set_constraints(panel, 5, 55)
 		root.add_child(panel)
 
 		panel_window = PanelWindow(grid, model, 0, 55, 80, 5)
 		self._windows.append(panel_window)
 
-		panel = TopPanel(grid, shell)
+		panel = TopPanel(shell)
 		root.add_child(panel)
 
 		panel_window = PanelWindow(grid, model, 0, 0, 80, 5)
 		self._windows.append(panel_window)
 		
-		panel = RightPanel(grid, shell_model)
+		panel = RightPanel(shell)
 		grid.set_constraints(panel, 75, 5)
 		root.add_child(panel)
 

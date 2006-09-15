@@ -14,11 +14,11 @@ class _PopupShell:
 class FriendIcon(IconItem):
 	_popup_shell = _PopupShell()
 
-	def __init__(self, shell_model, friend):
+	def __init__(self, shell, friend):
 		IconItem.__init__(self, icon_name='stock-buddy',
 						  color=friend.get_color(), size=96)
 
-		self._shell_model = shell_model
+		self._shell = shell
 		self._friend = friend
 		self._popup = None
 		self._popup_distance = 0
@@ -44,8 +44,8 @@ class FriendIcon(IconItem):
 
 		FriendIcon._popup_shell.set_active(None)
 
-		grid = Grid()
-		self._popup = FriendPopup(grid, icon.get_friend())
+		grid = self._shell.get_grid()
+		self._popup = FriendPopup(self._shell, icon.get_friend())
 		self._popup.connect('action', self._popup_action_cb)
 		self._popup.connect('enter-notify-event',
 							self._popup_enter_notify_event_cb)
@@ -82,11 +82,12 @@ class FriendIcon(IconItem):
 		if buddy == None:
 			return
 
+		model = self._shell.get_model()
 		if action == FriendPopup.ACTION_INVITE:
-			activity = self._shell_model.get_current_activity()
+			activity = model.get_current_activity()
 			activity.invite(buddy)
 		elif action == FriendPopup.ACTION_MAKE_FRIEND:
-			friends = self._shell_model.get_friends()
+			friends = model.get_friends()
 			friends.add_buddy(buddy)
 	
 	def _popdown_cb(self, friend):

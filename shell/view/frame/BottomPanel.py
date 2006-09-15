@@ -33,12 +33,12 @@ class InviteItem(IconItem):
 		return self._invite
 
 class BottomPanel(CanvasBox):
-	def __init__(self, grid, shell_model):
-		CanvasBox.__init__(self, grid, CanvasBox.HORIZONTAL, 1)
+	def __init__(self, shell):
+		CanvasBox.__init__(self, shell.get_grid(), CanvasBox.HORIZONTAL, 1)
 
-		self._shell_model = shell_model
+		self._shell_model = shell.get_model()
 		self._invite_to_item = {}
-		self._invites = shell_model.get_invites()
+		self._invites = self._shell_model.get_invites()
 
 		registry = conf.get_activity_registry()
 		for activity in registry.list_activities():
