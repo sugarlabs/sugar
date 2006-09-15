@@ -1,6 +1,6 @@
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.Grid import Grid
-from view.FriendPopup import FriendPopup
+from view.BuddyPopup import BuddyPopup
 
 class _PopupShell:
 	def __init__(self):
@@ -11,7 +11,7 @@ class _PopupShell:
 			self._popup_controller._popdown()
 		self._popup_controller = controller
 
-class FriendIcon(IconItem):
+class BuddyIcon(IconItem):
 	_popup_shell = _PopupShell()
 
 	def __init__(self, shell, friend):
@@ -42,10 +42,10 @@ class FriendIcon(IconItem):
 	def _popup_cb(self, icon, x1, y1, x2, y2):
 		self._popdown()
 
-		FriendIcon._popup_shell.set_active(None)
+		BuddyIcon._popup_shell.set_active(None)
 
 		grid = self._shell.get_grid()
-		self._popup = FriendPopup(self._shell, icon.get_friend())
+		self._popup = BuddyPopup(self._shell, icon.get_friend())
 		self._popup.connect('action', self._popup_action_cb)
 		self._popup.connect('enter-notify-event',
 							self._popup_enter_notify_event_cb)
@@ -73,7 +73,7 @@ class FriendIcon(IconItem):
 
 		self._popup.show()
 
-		FriendIcon._popup_shell.set_active(self)
+		BuddyIcon._popup_shell.set_active(self)
 
 	def _popup_action_cb(self, popup, action):
 		self._popdown()
@@ -83,10 +83,10 @@ class FriendIcon(IconItem):
 			return
 
 		model = self._shell.get_model()
-		if action == FriendPopup.ACTION_INVITE:
+		if action == BuddyPopup.ACTION_INVITE:
 			activity = model.get_current_activity()
 			activity.invite(buddy)
-		elif action == FriendPopup.ACTION_MAKE_FRIEND:
+		elif action == BuddyPopup.ACTION_MAKE_FRIEND:
 			friends = model.get_friends()
 			friends.add_buddy(buddy)
 	

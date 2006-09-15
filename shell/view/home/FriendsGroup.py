@@ -4,7 +4,7 @@ import goocanvas
 
 from view.home.IconLayout import IconLayout
 from view.home.MyIcon import MyIcon
-from view.FriendIcon import FriendIcon
+from view.BuddyIcon import BuddyIcon
 
 class FriendsGroup(goocanvas.Group):
 	def __init__(self, shell):
@@ -26,7 +26,7 @@ class FriendsGroup(goocanvas.Group):
 		friends.connect('friend-added', self._friend_added_cb)
 
 	def add_friend(self, friend):
-		icon = FriendIcon(self._shell, friend)
+		icon = BuddyIcon(self._shell, friend)
 		self.add_child(icon)
 		self._icon_layout.add_icon(icon)
 

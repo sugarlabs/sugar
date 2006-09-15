@@ -6,7 +6,7 @@ from sugar.canvas.CanvasView import CanvasView
 from sugar.canvas.CanvasBox import CanvasBox
 from sugar.canvas.IconItem import IconItem
 
-class FriendPopup(gtk.Window):
+class BuddyPopup(gtk.Window):
 	ACTION_MAKE_FRIEND = 0
 	ACTION_INVITE = 1
 
@@ -57,7 +57,7 @@ class FriendPopup(gtk.Window):
 
 		icon = IconItem(icon_name='stock-make-friend')
 		icon.connect('clicked', self._action_clicked_cb,
-					 FriendPopup.ACTION_MAKE_FRIEND)
+					 BuddyPopup.ACTION_MAKE_FRIEND)
 		box.set_constraints(icon, 3, 3)
 		box.add_child(icon)
 
@@ -67,7 +67,7 @@ class FriendPopup(gtk.Window):
 
 		icon = IconItem(icon_name='stock-invite')
 		icon.connect('clicked', self._action_clicked_cb,
-					 FriendPopup.ACTION_INVITE)
+					 BuddyPopup.ACTION_INVITE)
 		box.set_constraints(icon, 3, 3)
 		box.add_child(icon)
 
