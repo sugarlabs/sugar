@@ -46,6 +46,7 @@ bindings/Makefile
 bindings/globalkeys/Makefile
 bindings/threadframe/Makefile
 services/Makefile
+services/presence/Makefile
 shell/Makefile
 shell/conf/Makefile
 shell/data/Makefile
