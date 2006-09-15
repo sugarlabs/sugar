@@ -6,6 +6,6 @@ sugar_PYTHON =				\
 	ActivityHost.py			\
 	ConsoleWindow.py		\
 	FirstTimeDialog.py		\
-	FriendIcon.py			\
-	FriendPopup.py			\
+	BuddyIcon.py			\
+	BuddyPopup.py			\
 	Shell.py
