@@ -6,6 +6,7 @@ import conf
 from sugar import env
 from sugar.p2p import Stream
 from sugar.presence import PresenceService
+from model.Friends import Friends
 
 PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
 
@@ -29,6 +30,11 @@ class ShellOwner(object):
 			break
 
 		self._pservice = PresenceService.get_instance()
+
+		self._friends = Friends()
+
+	def get_friends(self):
+		return self._friends
 
 	def announce(self):
 		# Create and announce our presence

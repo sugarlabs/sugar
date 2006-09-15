@@ -1,7 +1,6 @@
 import gobject
 
 from sugar.presence import PresenceService
-from model.Friends import Friends
 from model.Invites import Invites
 from model.Owner import ShellOwner
 
@@ -26,11 +25,10 @@ class ShellModel(gobject.GObject):
 
 		self._owner = ShellOwner()
 		self._owner.announce()
-		self._friends = Friends()
 		self._invites = Invites()
 
 	def get_friends(self):
-		return self._friends
+		return self._owner.get_friends()
 
 	def get_invites(self):
 		return self._invites
