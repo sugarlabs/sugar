@@ -8,7 +8,7 @@ from sugar.canvas.IconItem import IconItem
 
 class FriendPopup(gtk.Window):
 	ACTION_MAKE_FRIEND = 0
-	ACTION_INVITE = 0
+	ACTION_INVITE = 1
 
 	__gsignals__ = {
 		'action': (gobject.SIGNAL_RUN_FIRST,
