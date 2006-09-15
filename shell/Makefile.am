@@ -1,11 +1,10 @@
-SUBDIRS = conf data model view PresenceService
+SUBDIRS = conf data model view
 
 bin_SCRIPTS = 				\
 	sugar				\
 	sugar-activity			\
 	sugar-activity-factory		\
-	sugar-console			\
-	sugar-presence-service
+	sugar-console
 
 sugardir = $(pkgdatadir)/shell
 sugar_PYTHON =				\

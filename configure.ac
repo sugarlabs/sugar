@@ -45,6 +45,7 @@ activities/terminal/Makefile
 bindings/Makefile
 bindings/globalkeys/Makefile
 bindings/threadframe/Makefile
+services/Makefile
 shell/Makefile
 shell/conf/Makefile
 shell/data/Makefile
@@ -52,7 +53,6 @@ shell/view/Makefile
 shell/view/home/Makefile
 shell/view/frame/Makefile
 shell/model/Makefile
-shell/PresenceService/Makefile
 sugar/Makefile
 sugar/__installed__.py
 sugar/__uninstalled__.py

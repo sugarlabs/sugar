@@ -38,7 +38,7 @@ po/*.gmo
 sugar/__installed__.py
 sugar/__uninstalled__.py
 tools/sugar-setup-activity
-shell/PresenceService/org.laptop.Presence.service
+services/presence/org.laptop.Presence.service
 threadframe
 config.guess
 config.sub
