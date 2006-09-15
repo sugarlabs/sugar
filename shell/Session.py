@@ -1,8 +1,8 @@
 import os
 import gtk
 
-from Shell import Shell
-from ConsoleWindow import ConsoleWindow
+from view.Shell import Shell
+from model.ShellModel import ShellModel
 from sugar import env
 from sugar import logger
 
@@ -10,7 +10,7 @@ from sugar.session.Process import Process
 from sugar.session.DbusProcess import DbusProcess
 from sugar.session.MatchboxProcess import MatchboxProcess
 
-from FirstTimeDialog import FirstTimeDialog
+from view.FirstTimeDialog import FirstTimeDialog
 import conf
 
 class DBusMonitorProcess(Process):
@@ -47,11 +47,8 @@ class Session:
 			dbm = DBusMonitorProcess()
 			dbm.start()
 
-		console = ConsoleWindow()
-		logger.start('Shell', console)
-
-		shell = Shell()
-		shell.set_console(console)
+		model = ShellModel()
+		shell = Shell(model)
 
 		from sugar import TracebackUtils
 		tbh = TracebackUtils.TracebackHelper()

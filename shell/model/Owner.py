@@ -8,8 +8,7 @@ from sugar import env
 import logging
 from sugar.p2p import Stream
 from sugar.presence import PresenceService
-from Friends import Friends
-from Invites import Invites
+from model.Invites import Invites
 
 PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
 
@@ -33,7 +32,7 @@ class ShellOwner(object):
 			break
 
 		self._pservice = PresenceService.get_instance()
-		self._friends = Friends()
+
 		self._invites = Invites()
 
 		self._shell = shell
@@ -41,9 +40,6 @@ class ShellOwner(object):
 		self._last_activity_update = time.time()
 		self._pending_activity_update_timer = None
 		self._pending_activity_update = None
-
-	def get_friends(self):
-		return self._friends
 
 	def get_invites(self):
 		return self._invites

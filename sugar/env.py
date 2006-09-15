@@ -43,7 +43,8 @@ def setup_system():
 		runner = os.path.join(sugar_source_dir, 'shell/sugar-activity-factory')
 		sugar.setup.setup_activities(source, sugar_activities_dir, runner)
 		
-		bin = os.path.join(sugar_source_dir, 'shell/sugar-presence-service')
+		bin = os.path.join(sugar_source_dir,
+						  'services/presence/sugar-presence-service')
 		sugar.setup.write_service('org.laptop.Presence', bin,
 								  sugar_activities_dir)
 

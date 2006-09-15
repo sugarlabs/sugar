@@ -1,4 +1,4 @@
-SUBDIRS = activities bindings po shell sugar tools
+SUBDIRS = activities bindings po shell sugar services tools
 
 ACLOCAL_AMFLAGS = -I m4
 

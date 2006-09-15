@@ -5,14 +5,15 @@ from sugar.canvas.IconItem import IconItem
 import sugar
 
 class TopPanel(goocanvas.Group):
-	def __init__(self, grid, shell):
+	def __init__(self, shell):
 		goocanvas.Group.__init__(self)
 
-		self._grid = grid
 		self._shell = shell
 
+		grid = shell.get_grid()
+
 		box = CanvasBox(grid, CanvasBox.HORIZONTAL, 1)
-		self._grid.set_constraints(box, 5, 0)
+		grid.set_constraints(box, 5, 0)
 		self.add_child(box)
 
 		icon = IconItem(icon_name='stock-zoom-activity')
@@ -36,7 +37,7 @@ class TopPanel(goocanvas.Group):
 		box.add_child(icon)
 
 		box = CanvasBox(grid, CanvasBox.HORIZONTAL, 1)
-		self._grid.set_constraints(box, 60, 0)
+		grid.set_constraints(box, 60, 0)
 		self.add_child(box)
 
 		icon = IconItem(icon_name='stock-share')
@@ -58,7 +59,8 @@ class TopPanel(goocanvas.Group):
 		self._shell.set_zoom_level(level)
 
 	def __share_clicked_cb(self, item):
-		activity = self._shell.get_current_activity()
+		shell_model = self._shell.get_model()
+		activity = shell_model.get_current_activity()
 		if activity != None:
 			activity.share()
 

@@ -6,7 +6,7 @@ import conf
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.IconItem import IconColor
 from sugar.presence import PresenceService
-from home.IconLayout import IconLayout
+from view.home.IconLayout import IconLayout
 
 class ActivityItem(IconItem):
 	def __init__(self, activity, service):
@@ -34,7 +34,9 @@ class ActivityItem(IconItem):
 class MeshGroup(goocanvas.Group):
 	def __init__(self, shell):
 		goocanvas.Group.__init__(self)
+
 		self._shell = shell
+
 		self._icon_layout = IconLayout(1200, 900)
 		self._activities = {}
 

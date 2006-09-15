@@ -1,4 +1,4 @@
-sugardir = $(pkgdatadir)/shell/frame
+sugardir = $(pkgdatadir)/shell/view/frame
 sugar_PYTHON =				\
 	__init__.py			\
 	RightPanel.py			\

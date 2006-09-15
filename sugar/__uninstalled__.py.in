@@ -14,6 +14,8 @@ sugar_python_path = ['@prefix@/share/sugar/bindings']
 sugar_python_path.append(sugar_source_dir)
 sugar_python_path.append(os.path.join(sugar_source_dir, 'shell'))
 sugar_python_path.append(os.path.join(sugar_source_dir, 'activities'))
+sugar_python_path.append(os.path.join(sugar_source_dir, 'services'))
 
 sugar_bin_path = []
 sugar_bin_path.append(os.path.join(sugar_source_dir, 'shell'))
+sugar_bin_path.append(os.path.join(sugar_source_dir, 'services/presence'))

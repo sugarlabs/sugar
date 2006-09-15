@@ -1,24 +1,14 @@
-SUBDIRS = conf data frame home PresenceService
+SUBDIRS = conf data model view
 
 bin_SCRIPTS = 				\
 	sugar				\
 	sugar-activity			\
 	sugar-activity-factory		\
-	sugar-console			\
-	sugar-presence-service
+	sugar-console
 
 sugardir = $(pkgdatadir)/shell
 sugar_PYTHON =				\
 	__init__.py			\
-	ActivityHost.py			\
-	ChatController.py		\
-	ConsoleWindow.py		\
-	FirstTimeDialog.py		\
-	FriendPopup.py			\
-	Friends.py			\
-	Invites.py			\
-	Owner.py			\
-	Shell.py			\
 	Session.py
 
 EXTRA_DIST = $(bin_SCRIPTS)

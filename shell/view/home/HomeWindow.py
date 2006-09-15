@@ -3,9 +3,9 @@ import goocanvas
 import cairo
 
 from sugar.canvas.CanvasView import CanvasView
-from home.MeshGroup import MeshGroup
-from home.HomeGroup import HomeGroup
-from home.FriendsGroup import FriendsGroup
+from view.home.MeshGroup import MeshGroup
+from view.home.HomeGroup import HomeGroup
+from view.home.FriendsGroup import FriendsGroup
 import sugar
 
 class HomeWindow(gtk.Window):
@@ -23,6 +23,10 @@ class HomeWindow(gtk.Window):
 		self.add(self._nb)
 		self._nb.show()
 
+		self._add_page(HomeGroup(shell))
+		self._add_page(FriendsGroup(shell))
+		self._add_page(MeshGroup(shell))
+
 	def _add_page(self, group):
 		view = CanvasView()
 		self._nb.append_page(view)
@@ -36,11 +40,6 @@ class HomeWindow(gtk.Window):
 							line_width=0, fill_color='#e2e2e2')
 		root.add_child(bg)
 		root.add_child(group)
-
-	def set_owner(self, owner):
-		self._add_page(HomeGroup(self._shell))
-		self._add_page(FriendsGroup(self._shell, owner.get_friends()))
-		self._add_page(MeshGroup(self._shell))
 
 	def set_zoom_level(self, level):
 		if level == sugar.ZOOM_HOME:

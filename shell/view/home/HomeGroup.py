@@ -1,7 +1,7 @@
 import goocanvas
 
-from home.DonutItem import DonutItem
-from home.MyIcon import MyIcon
+from view.home.DonutItem import DonutItem
+from view.home.MyIcon import MyIcon
 
 class TasksItem(DonutItem):
 	def __init__(self, shell):
@@ -9,14 +9,14 @@ class TasksItem(DonutItem):
 
 		self._items = {}
 
-		self._shell = shell
-		self._shell.connect('activity_opened', self.__activity_opened_cb)
-		self._shell.connect('activity_closed', self.__activity_closed_cb)
+		shell_model = shell.get_model()
+		shell_model.connect('activity_opened', self.__activity_opened_cb)
+		shell_model.connect('activity_closed', self.__activity_closed_cb)
 
-	def __activity_opened_cb(self, shell, activity):
+	def __activity_opened_cb(self, model, activity):
 		self._add(activity)
 
-	def __activity_closed_cb(self, shell, activity):
+	def __activity_closed_cb(self, model, activity):
 		self._remove(activity)
 	
 	def _remove(self, activity):

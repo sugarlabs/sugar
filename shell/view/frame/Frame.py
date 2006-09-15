@@ -2,39 +2,39 @@ import gtk
 import gobject
 import goocanvas
 
-from frame.BottomPanel import BottomPanel
-from frame.RightPanel import RightPanel
-from frame.TopPanel import TopPanel
-from frame.PanelWindow import PanelWindow
+from view.frame.BottomPanel import BottomPanel
+from view.frame.RightPanel import RightPanel
+from view.frame.TopPanel import TopPanel
+from view.frame.PanelWindow import PanelWindow
 from sugar.canvas.Grid import Grid
 
 class Frame:
-	def __init__(self, shell, owner):
+	def __init__(self, shell):
 		self._windows = []
 
 		model = goocanvas.CanvasModelSimple()
 		root = model.get_root_item()
 
-		grid = Grid()
+		grid = shell.get_grid()
 
 		bg = goocanvas.Rect(fill_color="#4f4f4f", line_width=0)
 		grid.set_constraints(bg, 0, 0, 80, 60)
 		root.add_child(bg)
 
-		panel = BottomPanel(grid, shell, owner.get_invites())
+		panel = BottomPanel(shell)
 		grid.set_constraints(panel, 5, 55)
 		root.add_child(panel)
 
 		panel_window = PanelWindow(grid, model, 0, 55, 80, 5)
 		self._windows.append(panel_window)
 
-		panel = TopPanel(grid, shell)
+		panel = TopPanel(shell)
 		root.add_child(panel)
 
 		panel_window = PanelWindow(grid, model, 0, 0, 80, 5)
 		self._windows.append(panel_window)
 		
-		panel = RightPanel(grid, shell, owner.get_friends())
+		panel = RightPanel(shell)
 		grid.set_constraints(panel, 75, 5)
 		root.add_child(panel)
 

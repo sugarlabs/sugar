@@ -31,6 +31,9 @@ class ActivityHost:
 	def get_id(self):
 		return self._id
 
+	def get_xid(self):
+		return self._xid
+
 	def get_icon_name(self):
 		return self._icon_name
 

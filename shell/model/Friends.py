@@ -3,67 +3,54 @@ from ConfigParser import ConfigParser
 
 import gobject
 
-from sugar.canvas.IconColor import IconColor
-from sugar.presence import PresenceService
+from model.BuddyInfo import BuddyInfo
 from sugar import env
-
-class Friend:
-	def __init__(self, name, color):
-		self._name = name
-		self._color = color
-
-	def get_name(self):
-		return self._name
-
-	def get_color(self):
-		return IconColor(self._color)
-
-	def get_buddy(self):
-		pservice = PresenceService.get_instance()
-		return pservice.get_buddy_by_name(self._name)
 
 class Friends(gobject.GObject):
 	__gsignals__ = {
 		'friend-added':   (gobject.SIGNAL_RUN_FIRST,
 						   gobject.TYPE_NONE, ([object])),
 		'friend-removed': (gobject.SIGNAL_RUN_FIRST,
-						   gobject.TYPE_NONE, ([object])),
+						   gobject.TYPE_NONE, ([str])),
 	}
 
 	def __init__(self):
 		gobject.GObject.__init__(self)
 
-		self._list = []
+		self._friends = {}
 		self._path = os.path.join(env.get_profile_path(), 'friends')
 
 		self.load()
 
 	def has_buddy(self, buddy):
-		for friend in self:
-			if friend.get_name() == buddy.get_name():
-				return True
-		return False
+		return self._friends.has_key(buddy.get_name())
 
-	def add_friend(self, name, color):
-		friend = Friend(name, color)
-		self._list.append(friend)
+	def add_friend(self, buddy_info):
+		self._friends[buddy_info.get_name()] = buddy_info
+		self.emit('friend-added', buddy_info)
 
-		self.emit('friend-added', friend)
-
-	def add_buddy(self, buddy):
+	def make_friend(self, buddy):
 		if not self.has_buddy(buddy):	
-			self.add_friend(buddy.get_name(), buddy.get_color())
+			self.add_friend(BuddyInfo(buddy))
 			self.save()
 
+	def remove(self, buddy_info):
+		del self._friends[buddy_info.get_name()]
+		self.save()
+		self.emit('friend-removed', buddy_info.get_name())
+
 	def __iter__(self):
-		return self._list.__iter__()
+		return self._friends.values().__iter__()
 
 	def load(self):
 		cp = ConfigParser()
 
 		if cp.read([self._path]):
 			for name in cp.sections():
-				self.add_friend(name, cp.get(name, 'color'))
+				buddy = BuddyInfo()
+				buddy.set_name(name)
+				buddy.set_color(cp.get(name, 'color'))
+				self.add_friend(buddy)
 
 	def save(self):
 		cp = ConfigParser()

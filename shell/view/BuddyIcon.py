@@ -1,0 +1,108 @@
+from sugar.canvas.IconItem import IconItem
+from sugar.canvas.Grid import Grid
+from view.BuddyPopup import BuddyPopup
+
+class _PopupShell:
+	def __init__(self):
+		self._popup_controller = None
+
+	def set_active(self, controller):
+		if self._popup_controller:
+			self._popup_controller._popdown()
+		self._popup_controller = controller
+
+class BuddyIcon(IconItem):
+	_popup_shell = _PopupShell()
+
+	def __init__(self, shell, friend):
+		IconItem.__init__(self, icon_name='stock-buddy',
+						  color=friend.get_color(), size=96)
+
+		self._shell = shell
+		self._friend = friend
+		self._popup = None
+		self._popup_distance = 0
+		self._hover_popup = False
+		self._popdown_on_leave = False
+
+		self.connect('popup', self._popup_cb)
+		self.connect('popdown', self._popdown_cb)
+
+	def set_popup_distance(self, distance):
+		self._popup_distance = distance
+
+	def get_friend(self):
+		return self._friend
+
+	def _popdown(self):
+		if self._popup:
+			self._popup.destroy()
+			self._popup = None
+
+	def _popup_cb(self, icon, x1, y1, x2, y2):
+		self._popdown()
+
+		BuddyIcon._popup_shell.set_active(None)
+
+		grid = self._shell.get_grid()
+		self._popup = BuddyPopup(self._shell, icon.get_friend())
+		self._popup.connect('action', self._popup_action_cb)
+		self._popup.connect('enter-notify-event',
+							self._popup_enter_notify_event_cb)
+		self._popup.connect('leave-notify-event',
+							self._popup_leave_notify_event_cb)
+
+		distance = self._popup_distance
+
+		[grid_x1, grid_y1] = grid.convert_from_screen(x1, y1)
+		[grid_x2, grid_y2] = grid.convert_from_screen(x2, y2)
+
+		grid_x = grid_x2 + distance
+		if grid_x + self._popup.get_width() > Grid.ROWS:
+			grid_x = grid_x1 - self._popup.get_width() + 1 - distance
+
+		grid_y = grid_y1
+
+		if grid_y < 0:
+			grid_y = 0
+		if grid_y + self._popup.get_width() > Grid.ROWS:
+			grid_y = Grid.ROWS - self._popup.get_width()
+
+		grid.set_constraints(self._popup, grid_x, grid_y,
+							 self._popup.get_width(), self._popup.get_height())
+
+		self._popup.show()
+
+		BuddyIcon._popup_shell.set_active(self)
+
+	def _popup_action_cb(self, popup, action):
+		self._popdown()
+
+		buddy = self._friend.get_buddy()
+		if buddy == None:
+			return
+
+		model = self._shell.get_model()
+		if action == BuddyPopup.ACTION_INVITE:
+			activity = model.get_current_activity()
+			activity.invite(buddy)
+		elif action == BuddyPopup.ACTION_MAKE_FRIEND:
+			friends = model.get_friends()
+			friends.make_friend(buddy)
+		elif action == BuddyPopup.ACTION_REMOVE_FRIEND:
+			friends = model.get_friends()
+			friends.remove(buddy)
+	
+	def _popdown_cb(self, friend):
+		if not self._hover_popup:
+			self._popdown()
+		else:
+			self._popdown_on_leave = True
+
+	def _popup_enter_notify_event_cb(self, widget, event):
+		self._hover_popup = True
+
+	def _popup_leave_notify_event_cb(self, widget, event):
+		self._hover_popup = False
+		if self._popdown_on_leave:
+			self._popdown()

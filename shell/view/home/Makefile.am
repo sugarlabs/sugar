@@ -1,4 +1,4 @@
-sugardir = $(pkgdatadir)/shell/home
+sugardir = $(pkgdatadir)/shell/view/home
 sugar_PYTHON =				\
 	__init__.py			\
 	DonutItem.py			\
