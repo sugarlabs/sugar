@@ -19,7 +19,7 @@ class BuddyIcon(MenuIcon):
 		return menu
 
 	def _popup_action_cb(self, popup, action):
-		self._popdown()
+		self.popdown()
 
 		model = self._shell.get_model()
 		if action == BuddyPopup.ACTION_REMOVE_FRIEND:
