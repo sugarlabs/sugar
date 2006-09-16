@@ -44,6 +44,9 @@ class ShellOwner(object):
 	def get_invites(self):
 		return self._invites
 
+	def get_name(self):
+		return self._nick
+
 	def announce(self):
 		# Create and announce our presence
 		color = conf.get_profile().get_color()

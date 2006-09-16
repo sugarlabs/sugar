@@ -23,7 +23,8 @@ class BuddyPopup(gtk.Window):
 		self._hover = False
 		self._popdown_on_leave = False
 		self._width = 13
-		self._height = 10
+		self._shell = shell
+		self._buddy = buddy
 
 		grid = shell.get_grid()
 
@@ -31,23 +32,32 @@ class BuddyPopup(gtk.Window):
 		self.add(canvas)
 		canvas.show()
 
-		grid.set_constraints(canvas, 0, 0, self._width, self._height)				
-
 		model = goocanvas.CanvasModelSimple()
 		root = model.get_root_item()
 
-		color = buddy.get_color()
+		color = self._buddy.get_color()
 		rect = goocanvas.Rect(fill_color=color.get_fill_color(),
 							  stroke_color=color.get_stroke_color(),
 							  line_width=3)
-		grid.set_constraints(rect, 0, 0, self._width, self._height)
 		root.add_child(rect)
 
-		text = goocanvas.Text(text=buddy.get_name(), font="Sans bold 18",
+		text = goocanvas.Text(text=self._buddy.get_name(), font="Sans bold 18",
 							  fill_color='black', anchor=gtk.ANCHOR_SW)
-		grid.set_constraints(text, 1, 3, self._width, self._height)
+		grid.set_constraints(text, 1, 3, self._width, 2)
 		root.add_child(text)
 
+		self._height = 4
+
+		owner = shell.get_model().get_owner()
+		if buddy.get_name() != owner.get_name():
+			self._add_actions(grid, root)
+
+		grid.set_constraints(canvas, 0, 0, self._width, self._height)				
+		grid.set_constraints(rect, 0, 0, self._width, self._height)
+
+		canvas.set_model(model)
+
+	def _add_actions(self, grid, root):
 		separator = goocanvas.Path(data='M 15 0 L 185 0', line_width=3,
 								   fill_color='black')
 		grid.set_constraints(separator, 0, 4)
@@ -56,8 +66,8 @@ class BuddyPopup(gtk.Window):
 		box = CanvasBox(grid, CanvasBox.HORIZONTAL, 1)
 		grid.set_constraints(box, 0, 5)
 
-		friends = shell.get_model().get_friends()
-		if friends.has_buddy(buddy):
+		friends = self._shell.get_model().get_friends()
+		if friends.has_buddy(self._buddy):
 			icon = IconItem(icon_name='stock-remove-friend')
 			icon.connect('clicked', self._action_clicked_cb,
 						 BuddyPopup.ACTION_REMOVE_FRIEND)
@@ -81,7 +91,7 @@ class BuddyPopup(gtk.Window):
 
 		root.add_child(box)
 
-		canvas.set_model(model)
+		self._height = 10
 
 	def _action_clicked_cb(self, icon, action):
 		self.emit('action', action)
