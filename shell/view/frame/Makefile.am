@@ -5,4 +5,5 @@ sugar_PYTHON =				\
 	PanelWindow.py			\
 	Frame.py			\
 	TopPanel.py			\
-	BottomPanel.py
+	BottomPanel.py			\
+	MenuStrategy.py

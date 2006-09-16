@@ -6,4 +6,5 @@ sugar_PYTHON =			\
 	Colors.py		\
 	Grid.py			\
 	IconItem.py		\
-	IconColor.py
+	IconColor.py		\
+	MenuIcon.py

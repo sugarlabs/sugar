@@ -6,6 +6,7 @@ from sugar.canvas.CanvasBox import CanvasBox
 from sugar.presence import PresenceService
 from view.BuddyIcon import BuddyIcon
 from model.BuddyInfo import BuddyInfo
+from view.frame.MenuStrategy import MenuStrategy
 
 class RightPanel(CanvasBox):
 	def __init__(self, shell):
@@ -25,7 +26,7 @@ class RightPanel(CanvasBox):
 
 	def add(self, buddy):
 		icon = BuddyIcon(self._shell, BuddyInfo(buddy))
-		icon.set_menu_distance(1)
+		icon.set_menu_strategy(MenuStrategy())
 		self.set_constraints(icon, 3, 3)
 		self.add_child(icon)
 

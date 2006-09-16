@@ -61,6 +61,9 @@ class Menu(gtk.Window):
 
 		return box
 
+	def get_grid(self):
+		return self._grid
+
 	def add_action(self, icon, action_id):
 		if self._action_box == None:
 			self._action_box = self._create_action_box()

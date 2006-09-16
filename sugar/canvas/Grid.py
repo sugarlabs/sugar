@@ -7,7 +7,22 @@ from sugar.canvas.IconItem import IconItem
 class Grid:
 	COLS = 80.0
 	ROWS = 60.0
+	MACRO_CELL_FACTOR = 5.0
 
+	def get_macro_rows(self):
+		return Grid.ROWS / Grid.MACRO_CELL_FACTOR
+
+	def get_macro_cols(self):
+		return Grid.COLS / Grid.MACRO_CELL_FACTOR
+
+	def macro_to_micro(self, x, y):
+		return [round(x * Grid.MACRO_CELL_FACTOR),
+				round(y * Grid.MACRO_CELL_FACTOR)]
+
+	def micro_to_macro(self, x, y):
+		return [round(x / Grid.MACRO_CELL_FACTOR),
+				round(y / Grid.MACRO_CELL_FACTOR)]
+	
 	def convert_from_screen(self, x, y):
 		factor = Grid.COLS / gtk.gdk.screen_width()
 

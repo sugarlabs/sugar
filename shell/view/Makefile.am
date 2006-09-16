@@ -7,5 +7,5 @@ sugar_PYTHON =				\
 	ConsoleWindow.py		\
 	FirstTimeDialog.py		\
 	BuddyIcon.py			\
-	BuddyPopup.py			\
+	BuddyMenu.py			\
 	Shell.py

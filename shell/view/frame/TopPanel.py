@@ -4,6 +4,7 @@ from sugar.canvas.CanvasBox import CanvasBox
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.MenuIcon import MenuIcon
 from sugar.canvas.Menu import Menu
+from view.frame.MenuStrategy import MenuStrategy
 import sugar
 
 class ActivityMenu(Menu):
@@ -26,6 +27,8 @@ class ActivityIcon(MenuIcon):
 
 		MenuIcon.__init__(self, shell.get_grid(), icon_name=icon_name,
 						  color=icon_color)
+
+		self.set_menu_strategy(MenuStrategy())
 
 	def create_menu(self):
 		menu = ActivityMenu(self._shell.get_grid(), self._activity_host)
