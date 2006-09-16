@@ -51,7 +51,7 @@ class MenuIcon(IconItem):
 		[grid_x2, grid_y2] = grid.convert_from_screen(x2, y2)
 
 		grid_x = grid_x2 + distance
-		if grid_x + self._menu.get_width() > Grid.ROWS:
+		if grid_x + self._menu.get_width() > Grid.COLS:
 			grid_x = grid_x1 - self._menu.get_width() + 1 - distance
 
 		grid_y = grid_y1
