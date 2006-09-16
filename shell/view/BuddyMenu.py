@@ -1,12 +1,8 @@
-import gtk
-import goocanvas
-import gobject
-
 from sugar.canvas.Menu import Menu
 from sugar.canvas.IconItem import IconItem
 from sugar.presence import PresenceService
 
-class BuddyPopup(Menu):
+class BuddyMenu(Menu):
 	ACTION_MAKE_FRIEND = 0
 	ACTION_INVITE = 1
 	ACTION_REMOVE_FRIEND = 2
@@ -30,10 +26,10 @@ class BuddyPopup(Menu):
 		friends = shell_model.get_friends()
 		if friends.has_buddy(self._buddy):
 			icon = IconItem(icon_name='stock-remove-friend')
-			self.add_action(icon, BuddyPopup.ACTION_REMOVE_FRIEND) 
+			self.add_action(icon, BuddyMenu.ACTION_REMOVE_FRIEND) 
 		else:
 			icon = IconItem(icon_name='stock-make-friend')
-			self.add_action(icon, BuddyPopup.ACTION_MAKE_FRIEND)
+			self.add_action(icon, BuddyMenu.ACTION_MAKE_FRIEND)
 
 		icon = IconItem(icon_name='stock-chat')
 		self.add_action(icon, -1)
@@ -45,4 +41,4 @@ class BuddyPopup(Menu):
 			# FIXME check that the buddy is not in the activity already
 
 			icon = IconItem(icon_name='stock-invite')
-			self.add_action(icon, BuddyPopup.ACTION_INVITE)
+			self.add_action(icon, BuddyMenu.ACTION_INVITE)

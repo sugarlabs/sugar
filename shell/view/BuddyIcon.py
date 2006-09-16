@@ -1,5 +1,5 @@
 from sugar.canvas.MenuIcon import MenuIcon
-from view.BuddyPopup import BuddyPopup
+from view.BuddyMenu import BuddyMenu
 
 class BuddyIcon(MenuIcon):
 	def __init__(self, shell, friend):
@@ -14,7 +14,7 @@ class BuddyIcon(MenuIcon):
 		self._popup_distance = distance
 
 	def create_menu(self):
-		menu = BuddyPopup(self._shell, self._friend)
+		menu = BuddyMenu(self._shell, self._friend)
 		menu.connect('action', self._popup_action_cb)
 		return menu
 
@@ -22,7 +22,7 @@ class BuddyIcon(MenuIcon):
 		self.popdown()
 
 		model = self._shell.get_model()
-		if action == BuddyPopup.ACTION_REMOVE_FRIEND:
+		if action == BuddyMenu.ACTION_REMOVE_FRIEND:
 			friends = model.get_friends()
 			friends.remove(buddy)
 
@@ -30,9 +30,9 @@ class BuddyIcon(MenuIcon):
 		if buddy == None:
 			return
 
-		if action == BuddyPopup.ACTION_INVITE:
+		if action == BuddyMenu.ACTION_INVITE:
 			activity = model.get_current_activity()
 			activity.invite(buddy)
-		elif action == BuddyPopup.ACTION_MAKE_FRIEND:
+		elif action == BuddyMenu.ACTION_MAKE_FRIEND:
 			friends = model.get_friends()
 			friends.make_friend(buddy)
