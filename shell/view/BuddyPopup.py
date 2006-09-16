@@ -5,6 +5,7 @@ import gobject
 from sugar.canvas.CanvasView import CanvasView
 from sugar.canvas.CanvasBox import CanvasBox
 from sugar.canvas.IconItem import IconItem
+from sugar.presence import PresenceService
 
 class BuddyPopup(gtk.Window):
 	ACTION_MAKE_FRIEND = 0
@@ -58,6 +59,9 @@ class BuddyPopup(gtk.Window):
 		canvas.set_model(model)
 
 	def _add_actions(self, grid, root):
+		shell_model = self._shell.get_model()
+		pservice = PresenceService.get_instance()
+
 		separator = goocanvas.Path(data='M 15 0 L 185 0', line_width=3,
 								   fill_color='black')
 		grid.set_constraints(separator, 0, 4)
@@ -66,7 +70,7 @@ class BuddyPopup(gtk.Window):
 		box = CanvasBox(grid, CanvasBox.HORIZONTAL, 1)
 		grid.set_constraints(box, 0, 5)
 
-		friends = self._shell.get_model().get_friends()
+		friends = shell_model.get_friends()
 		if friends.has_buddy(self._buddy):
 			icon = IconItem(icon_name='stock-remove-friend')
 			icon.connect('clicked', self._action_clicked_cb,
@@ -83,11 +87,17 @@ class BuddyPopup(gtk.Window):
 		box.set_constraints(icon, 3, 3)
 		box.add_child(icon)
 
-		icon = IconItem(icon_name='stock-invite')
-		icon.connect('clicked', self._action_clicked_cb,
-					 BuddyPopup.ACTION_INVITE)
-		box.set_constraints(icon, 3, 3)
-		box.add_child(icon)
+		activity = shell_model.get_current_activity()
+		if activity != None:
+			activity_ps = pservice.get_activity(activity.get_id())
+
+			# FIXME check that the buddy is not in the activity already
+
+			icon = IconItem(icon_name='stock-invite')
+			icon.connect('clicked', self._action_clicked_cb,
+						 BuddyPopup.ACTION_INVITE)
+			box.set_constraints(icon, 3, 3)
+			box.add_child(icon)
 
 		root.add_child(box)
 
