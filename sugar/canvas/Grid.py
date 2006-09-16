@@ -26,8 +26,8 @@ class Grid:
 	def convert_from_screen(self, x, y):
 		factor = Grid.COLS / gtk.gdk.screen_width()
 
-		grid_x = round(x * factor) - 1
-		grid_y = round(y * factor) - 1
+		grid_x = round(x * factor)
+		grid_y = round(y * factor)
 
 		return [grid_x, grid_y]
 
