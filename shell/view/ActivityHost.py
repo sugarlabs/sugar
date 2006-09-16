@@ -31,6 +31,9 @@ class ActivityHost:
 	def get_id(self):
 		return self._id
 
+	def get_title(self):
+		return self._window.get_name()
+
 	def get_xid(self):
 		return self._xid
 

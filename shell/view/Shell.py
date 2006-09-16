@@ -53,7 +53,7 @@ class Shell(gobject.GObject):
 		elif key == 'F5':
 			self._frame.toggle_visibility()
 		elif key == 'F6':
-			self._model.start_activity('org.sugar.Terminal')
+			self.start_activity('org.sugar.Terminal')
 
 	def __window_opened_cb(self, screen, window):
 		if window.get_window_type() == wnck.WINDOW_NORMAL:

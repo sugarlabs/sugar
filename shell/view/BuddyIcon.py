@@ -3,8 +3,7 @@ from view.BuddyMenu import BuddyMenu
 
 class BuddyIcon(MenuIcon):
 	def __init__(self, shell, friend):
-		MenuIcon.__init__(self, shell.get_grid(),
-						  icon_name='stock-buddy',
+		MenuIcon.__init__(self, shell.get_grid(), icon_name='stock-buddy',
 						  color=friend.get_color(), size=96)
 
 		self._shell = shell
