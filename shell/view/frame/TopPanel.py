@@ -11,7 +11,7 @@ class ActivityMenu(Menu):
 
 	def __init__(self, grid, activity_host):
 		title = activity_host.get_title()
-		Menu.__init__(self, grid, title, 'black', 'black')
+		Menu.__init__(self, grid, title)
 
 		icon = IconItem(icon_name='stock-share')
 		self.add_action(icon, ActivityMenu.ACTION_SHARE) 

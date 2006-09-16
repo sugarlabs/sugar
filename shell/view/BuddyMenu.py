@@ -1,4 +1,5 @@
 from sugar.canvas.Menu import Menu
+from sugar.canvas.Menu import MenuColorScheme
 from sugar.canvas.IconItem import IconItem
 from sugar.presence import PresenceService
 
@@ -9,8 +10,14 @@ class BuddyMenu(Menu):
 
 	def __init__(self, shell, buddy):
 		color = buddy.get_color()
-		Menu.__init__(self, shell.get_grid(), buddy.get_name(),
-					  color.get_fill_color(), color.get_stroke_color())
+
+		color_scheme = MenuColorScheme()
+		color_scheme.text = 'black'
+		color_scheme.border = color.get_stroke_color()
+		color_scheme.background = color.get_fill_color()
+		color_scheme.separator = 'black'
+
+		Menu.__init__(self, shell.get_grid(), buddy.get_name(), color_scheme)
 
 		self._buddy = buddy
 		self._shell = shell
