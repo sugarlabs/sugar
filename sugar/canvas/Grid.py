@@ -40,8 +40,8 @@ class Grid:
 	# FIXME We really need layout support in goocanvas
 	def _allocate_item_size(self, item, width, height):
 		if isinstance(item, goocanvas.Rect):
-			item.props.width = width - item.props.line_width * 2
-			item.props.height = height - item.props.line_width * 2
+			item.props.width = width - (item.props.line_width - 1) * 2
+			item.props.height = height - (item.props.line_width - 1) * 2
 		elif isinstance(item, goocanvas.Text):
 			item.props.width = width
 		elif isinstance(item, IconItem):
@@ -49,8 +49,8 @@ class Grid:
 
 	def _allocate_item_position(self, item, x, y):
 		if isinstance(item, goocanvas.Rect):
-			x = x + item.props.line_width
-			y = y + item.props.line_width
+			x = x + (item.props.line_width - 1)
+			y = y + (item.props.line_width - 1)
 
 		matrix = cairo.Matrix(1, 0, 0, 1, 0, 0)
 		matrix.translate(x, y)
@@ -58,5 +58,4 @@ class Grid:
 
 	def _layout_canvas(self, canvas, x, y, width, height):
 		scale = 1200 / Grid.COLS
-
 		canvas.set_bounds(x * scale, y * scale, width * scale, height * scale)
