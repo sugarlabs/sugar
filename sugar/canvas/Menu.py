@@ -22,7 +22,7 @@ class Menu(gtk.Window):
 	def __init__(self, grid, title, color_scheme=MenuColorScheme()):
 		gtk.Window.__init__(self, gtk.WINDOW_POPUP)
 
-		self._width = 13
+		self._width = 15
 		self._grid = grid
 		self._action_box = None
 		self._color_scheme = color_scheme
@@ -51,7 +51,7 @@ class Menu(gtk.Window):
 		self._canvas.set_model(model)
 
 	def _create_action_box(self):
-		separator = goocanvas.Path(data='M 15 0 L 185 0', line_width=3,
+		separator = goocanvas.Path(data='M 15 0 L 215 0', line_width=3,
 								   stroke_color=self._color_scheme.separator)
 		self._grid.set_constraints(separator, 0, 4)
 		self._root.add_child(separator)

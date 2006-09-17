@@ -18,26 +18,34 @@ class CanvasBox(goocanvas.Group):
 	def set_constraints(self, item, width, height):
 		self._constraints[item] = [width, height]
 
-	def _layout(self):
-		x = self._padding
-		y = self._padding
+	def _layout(self, start_item):
+		if start_item == -1:
+			start_item = self.get_n_children() - 1
 
+		pos = 0
 		i = 0
 		while i < self.get_n_children():
 			item = self.get_child(i)
 			[width, height] = self._constraints[item]
 
-			self._grid.set_constraints(item, x, y, width, height)
+			pos += self._padding
 
 			if self._orientation == CanvasBox.VERTICAL:
-				y += height + self._padding
+				x = self._padding
+				y = pos
+				pos += height + self._padding
 			else:
-				x += width + self._padding
+				x = pos
+				y = self._padding
+				pos += width + self._padding
+
+			if i >= start_item:
+				self._grid.set_constraints(item, x, y, width, height)
 
 			i += 1
 
 	def _child_added_cb(self, item, position):
-		self._layout()
+		self._layout(position)
 
 	def _child_removed_cb(self, item, position):
-		self._layout()
+		self._layout(position)
