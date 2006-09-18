@@ -9,9 +9,8 @@ class TasksItem(DonutItem):
 
 		self._items = {}
 
-		shell_model = shell.get_model()
-		shell_model.connect('activity_opened', self.__activity_opened_cb)
-		shell_model.connect('activity_closed', self.__activity_closed_cb)
+		shell.connect('activity_opened', self.__activity_opened_cb)
+		shell.connect('activity_closed', self.__activity_closed_cb)
 
 	def __activity_opened_cb(self, model, activity):
 		self._add(activity)

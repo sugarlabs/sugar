@@ -21,8 +21,7 @@ class RightPanel(CanvasBox):
 		self._pservice.connect('activity-appeared',
 							   self.__activity_appeared_cb)
 
-		shell.get_model().connect('activity-changed',
-								  self.__activity_changed_cb)
+		shell.connect('activity-changed', self.__activity_changed_cb)
 
 	def add(self, buddy):
 		icon = BuddyIcon(self._shell, BuddyInfo(buddy))
@@ -42,7 +41,7 @@ class RightPanel(CanvasBox):
 		self._buddies = {}
 
 	def __activity_appeared_cb(self, pservice, activity_ps):
-		activity = self._shell.get_model().get_current_activity()
+		activity = self._shell.get_current_activity()
 		if activity and activity_ps.get_id() == activity.get_id():
 			self._set_activity_ps(activity_ps)
 

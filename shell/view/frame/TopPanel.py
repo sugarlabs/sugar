@@ -37,8 +37,7 @@ class ActivityIcon(MenuIcon):
 
 	def _action_cb(self, menu, action):
 		if action == ActivityMenu.ACTION_SHARE:
-			shell_model = self._shell.get_model()
-			activity = shell_model.get_current_activity()
+			activity = shell.get_current_activity()
 			if activity != None:
 				activity.share()
 
@@ -77,9 +76,8 @@ class TopPanel(goocanvas.Group):
 
 		self._box = box
 
-		shell_model = shell.get_model()
-		shell_model.connect('activity-changed', self._activity_changed_cb)
-		self._set_current_activity(shell_model.get_current_activity())
+		shell.connect('activity-changed', self._activity_changed_cb)
+		self._set_current_activity(shell.get_current_activity())
 
 	def _set_current_activity(self, activity):
 		if self._activity_icon:

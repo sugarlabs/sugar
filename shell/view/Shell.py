@@ -13,10 +13,20 @@ from globalkeys import KeyGrabber
 import sugar
 
 class Shell(gobject.GObject):
+	__gsignals__ = {
+		'activity-opened':  (gobject.SIGNAL_RUN_FIRST,
+							 gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
+		'activity-changed': (gobject.SIGNAL_RUN_FIRST,
+							 gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
+		'activity-closed':  (gobject.SIGNAL_RUN_FIRST,
+							 gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT]))
+	}
+
 	def __init__(self, model):
 		gobject.GObject.__init__(self)
 
 		self._model = model
+		self._hosts = {}
 		self._screen = wnck.screen_get_default()
 		self._grid = Grid()
 
@@ -57,16 +67,33 @@ class Shell(gobject.GObject):
 
 	def __window_opened_cb(self, screen, window):
 		if window.get_window_type() == wnck.WINDOW_NORMAL:
-			self._model.add_activity(ActivityHost(self, window))
+			activity_host = ActivityHost(self, window)
+			self._hosts[activity_host.get_xid()] = activity_host
+			self.emit('activity-opened', activity_host)
 
 	def __active_window_changed_cb(self, screen):
 		window = screen.get_active_window()
-		if window and window.get_window_type() == wnck.WINDOW_NORMAL:
-			self._model.set_current_activity(window.get_xid())
+
+		if window == None:
+			self._model.set_current_activity(None)
+			self.emit('activity-changed', None)
+
+		if window.get_window_type() == wnck.WINDOW_NORMAL:
+			activity_host = self._hosts[window.get_xid()]
+
+			current = self._model.get_current_activity()
+			if activity_host.get_id() == current:
+				return
+
+			self._model.set_current_activity(activity_host.get_id())
+			self.emit('activity-changed', activity_host)
 
 	def __window_closed_cb(self, screen, window):
 		if window.get_window_type() == wnck.WINDOW_NORMAL:
-			self._model.remove_activity(window.get_xid())
+			if self._hosts.has_key(window.get_xid()):
+				host = self._hosts[window.get_xid()]
+				self.emit('activity-closed', host)
+				del self._hosts[window.get_xid()]
 
 	def get_model(self):
 		return self._model
@@ -100,3 +127,16 @@ class Shell(gobject.GObject):
 		else:
 			self._screen.toggle_showing_desktop(True)
 			self._home_window.set_zoom_level(level)
+
+	def get_current_activity(self):
+		activity_id = self._model.get_current_activity()
+		if activity_id:
+			return self._get_activity(activity_id)
+		else:
+			return None
+
+	def _get_activity(self, activity_id):
+		for host in self._hosts.values():
+			if host.get_id() == activity_id:
+				return host
+		return None
