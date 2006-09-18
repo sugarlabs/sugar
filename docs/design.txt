@@ -1,0 +1,26 @@
+-- Frame --
+
+eliason marcopg:  First, you can immediately access the frame by hitting any corner pixel.
+dcbw marcopg: I think that's the issue, yes
+eliason Second, you can activate it from any edge, but there is a half second delay.  In addition to the delay, the timer on the delay only ticks when the mouse is on an edge pixel and also below some threshold velocity, so if the mouse is moving it will not show up.
+eliason marcopg: Third, there will be a frame key.  Pressing and holding this key will invoke the frame until the key is released.  Pressing this key momentarily, however, will toggle the frame and keep it in view until the key is pressed again.
+eliason marcopg:  All of these things are implemented in Flash (The frame key is 8, I think...), with the exception of the mouse velocity threshold on the edges.
+eliason marcopg:  The only other minor usability issue I could see is adding a hit area in the corners.  That is, once the frame is out, have an invisible triangle in each corner that is still considered part of the frame, so that rolling out of the frame to get from one edge to another doesn't hide the frame, by accident.  In fact, doing this would make the delay on hide unnecessary.
+eliason marcopg:  Oh, and other important edges case to think about on the frame:  1)  When someone is dragginan object (XO, file, image, etc) the frame should come out prematurely and without delay (maybe once within a large grid cell of the edge) and highlight to indicate where the object could be dropped.  2)  When the search field is active, the frame should remain out even if the mouse isn't over it.  Only when the search is cleared should it hide again.
+eliason marcopg:  The rollover states are as follows:  1)  Immediate rollover is a black square in the frame cell itself.  2)  Very shortly thereafter (about 1/4 sec) Is the Primary information label and 3) a bit longer after that (about 1/2 sec) the extended panel appears with additional info.
+
+-- Menu --
+
+eliason marcopg:  Deactivation is instantaneous at the moment, but again, based on testing with the software we may want to add a very short delay.  Also, we may want again to have a invisible triangles between the grid cell in the frame and the extended panel.
+eliason Delay between mouse rollover and showing black square:  0
+eliason Delay before primary info animation begins: 1/10 sec
+eliason Duration of primary info extension animation:  1/5 sec
+eliason Delay from end of primary info animation until secondary info:  1/2 sec
+Duration of secondary info animation: 1/5 sec
+
+-- Text layout --
+
+eliason marcopg:  Well, first of all, in the latest screens which we haven't sent out yet, the primary info rollover is designed to fit the text to the nearest microgrid, regardless of the size of the secondary info panel.  The second animation segment will both extend the width and height to fit.
+eliason marcopg:  As far as cutoff goes, I think that's a reasonable solution.  We should allow the primary info text to be as long as the secondary info panel, and beyond that an ellipsis would be a good way to go, though hopefully designers are strongly encouraged NOT to let that happen.
+eliason marcopg:  However, there may be cases when we don't want that to happen. I can think of one, which you haven't seen yet:  "Invite with X X X X X."  The new activity/invite rollover might have the XOs who you are implicitly inviting to start an activity with listed, and we couldn't cut that off (Though we CANget around it and list, say, a max of three people and then indicate that there are 5 more not shown, etc.)
+eliason marcopg:  Right.  I think that, in most cases, there should be some template for it.  If the designer is creating a GUI for an application and making toolsets (such as the color chooser), then we know how big all of those are.  Things like "just text" will mostly show up in OS applications like the clippings and such, so we can just pick a preferred size that shows enough text to be meaningful without compromising too much of the screen.
