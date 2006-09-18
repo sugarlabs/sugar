@@ -49,7 +49,7 @@ class Shell(gobject.GObject):
 							 self.__active_window_changed_cb)
 
 		self._frame = Frame(self)
-		self._frame.show_and_hide(10)
+		self._frame.show_and_hide(3)
 
 	def __global_key_pressed_cb(self, grabber, key):
 		if key == 'F1':
