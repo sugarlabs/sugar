@@ -70,6 +70,9 @@ class ActivityHost:
 	def present(self):
 		self._window.activate(gtk.get_current_event_time())
 
+	def close(self):
+		self._window.close(gtk.get_current_event_time())
+
 	def show_dialog(self, dialog):
 		dialog.show()
 		dialog.window.set_transient_for(self._gdk_window)

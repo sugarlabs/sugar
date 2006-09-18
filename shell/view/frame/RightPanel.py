@@ -70,8 +70,11 @@ class RightPanel(CanvasBox):
 							'buddy-left', self.__buddy_left_cb)
 
 	def __activity_changed_cb(self, group, activity):
-		activity_ps = self._pservice.get_activity(activity.get_id())
-		self._set_activity_ps(activity_ps)				
+		if activity:
+			ps = self._pservice.get_activity(activity.get_id())
+			self._set_activity_ps(ps)
+		else:
+			self._set_activity_ps(None)
 
 	def __buddy_joined_cb(self, activity, buddy):
 		self.add(buddy)

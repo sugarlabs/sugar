@@ -77,8 +77,7 @@ class Shell(gobject.GObject):
 		if window == None:
 			self._model.set_current_activity(None)
 			self.emit('activity-changed', None)
-
-		if window.get_window_type() == wnck.WINDOW_NORMAL:
+		elif window.get_window_type() == wnck.WINDOW_NORMAL:
 			activity_host = self._hosts[window.get_xid()]
 
 			current = self._model.get_current_activity()

@@ -9,6 +9,7 @@ import sugar
 
 class ActivityMenu(Menu):
 	ACTION_SHARE = 1
+	ACTION_CLOSE = 2
 
 	def __init__(self, grid, activity_host):
 		title = activity_host.get_title()
@@ -16,6 +17,9 @@ class ActivityMenu(Menu):
 
 		icon = IconItem(icon_name='stock-share')
 		self.add_action(icon, ActivityMenu.ACTION_SHARE) 
+
+		icon = IconItem(icon_name='stock-close-activity')
+		self.add_action(icon, ActivityMenu.ACTION_CLOSE) 
 
 class ActivityIcon(MenuIcon):
 	def __init__(self, shell, activity_host):
@@ -36,10 +40,16 @@ class ActivityIcon(MenuIcon):
 		return menu
 
 	def _action_cb(self, menu, action):
+		self.popdown()
+
+		activity = self._shell.get_current_activity()
+		if activity == None:
+			return
+
 		if action == ActivityMenu.ACTION_SHARE:
-			activity = shell.get_current_activity()
-			if activity != None:
-				activity.share()
+			activity.share()
+		if action == ActivityMenu.ACTION_CLOSE:
+			activity.close()
 
 class TopPanel(goocanvas.Group):
 	def __init__(self, shell):
