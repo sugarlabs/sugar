@@ -8,7 +8,7 @@ class MatchboxProcess(Process):
 		kbd_config = os.path.join(env.get_data_dir(), 'kbdconfig')
 		options = '-kbdconfig %s ' % kbd_config
 
-		options += '-theme olpc '
+		options += '-use_titlebar no '
 
 		command = 'matchbox-window-manager %s ' % options
 		Process.__init__(self, command)
