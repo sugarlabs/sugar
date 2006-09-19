@@ -8,6 +8,7 @@ from view.frame.RightPanel import RightPanel
 from view.frame.TopPanel import TopPanel
 from view.frame.PanelWindow import PanelWindow
 from sugar.canvas.Grid import Grid
+from sugar.canvas.MenuShell import MenuShell
 
 class EventFrame(gobject.GObject):
 	__gsignals__ = {
@@ -74,6 +75,7 @@ class Frame:
 		root = model.get_root_item()
 
 		grid = shell.get_grid()
+		menu_shell = MenuShell(grid)
 
 		bg = goocanvas.Rect(fill_color="#4f4f4f", line_width=0)
 		grid.set_constraints(bg, 0, 0, 80, 60)
@@ -85,12 +87,12 @@ class Frame:
 
 		self._add_panel(model, 0, 55, 80, 5)
 
-		panel = TopPanel(shell)
+		panel = TopPanel(shell, menu_shell)
 		root.add_child(panel)
 
 		self._add_panel(model, 0, 0, 80, 5)
 		
-		panel = RightPanel(shell)
+		panel = RightPanel(shell, menu_shell)
 		grid.set_constraints(panel, 75, 5)
 		root.add_child(panel)
 

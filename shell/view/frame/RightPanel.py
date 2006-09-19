@@ -9,9 +9,10 @@ from model.BuddyInfo import BuddyInfo
 from view.frame.MenuStrategy import MenuStrategy
 
 class RightPanel(CanvasBox):
-	def __init__(self, shell):
+	def __init__(self, shell, menu_shell):
 		CanvasBox.__init__(self, shell.get_grid(), CanvasBox.VERTICAL, 1)
 		self._shell = shell
+		self._menu_shell = menu_shell
 		self._activity_ps = None
 		self._joined_hid = -1
 		self._left_hid = -1
@@ -24,7 +25,7 @@ class RightPanel(CanvasBox):
 		shell.connect('activity-changed', self.__activity_changed_cb)
 
 	def add(self, buddy):
-		icon = BuddyIcon(self._shell, BuddyInfo(buddy))
+		icon = BuddyIcon(self._shell, self._menu_shell, BuddyInfo(buddy))
 		icon.set_menu_strategy(MenuStrategy())
 		self.set_constraints(icon, 3, 3)
 		self.add_child(icon)

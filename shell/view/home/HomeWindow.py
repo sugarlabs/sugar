@@ -3,6 +3,7 @@ import goocanvas
 import cairo
 
 from sugar.canvas.CanvasView import CanvasView
+from sugar.canvas.MenuShell import MenuShell
 from view.home.MeshGroup import MeshGroup
 from view.home.HomeGroup import HomeGroup
 from view.home.FriendsGroup import FriendsGroup
@@ -23,8 +24,10 @@ class HomeWindow(gtk.Window):
 		self.add(self._nb)
 		self._nb.show()
 
+		menu_shell = MenuShell(shell.get_grid())
+
 		self._add_page(HomeGroup(shell))
-		self._add_page(FriendsGroup(shell))
+		self._add_page(FriendsGroup(shell, menu_shell))
 		self._add_page(MeshGroup(shell))
 
 	def _add_page(self, group):

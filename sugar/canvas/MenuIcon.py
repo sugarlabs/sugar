@@ -4,15 +4,6 @@ import gobject
 from sugar.canvas.IconItem import IconItem
 from sugar.canvas.Grid import Grid
 
-class _MenuShell:
-	def __init__(self):
-		self._menu_controller = None
-
-	def set_active(self, controller):
-		if self._menu_controller:
-			self._menu_controller.popdown()
-		self._menu_controller = controller
-
 class _MenuStrategy:
 	def get_menu_position(self, menu, grid_x1, grid_y1, grid_x2, grid_y2):
 		grid_x = grid_x2
@@ -29,12 +20,11 @@ class _MenuStrategy:
 		return [grid_x, grid_y]
 
 class MenuIcon(IconItem, goocanvas.Item):
-	_menu_shell = _MenuShell()
-
-	def __init__(self, grid, **kwargs):
+	def __init__(self, menu_shell, **kwargs):
 		IconItem.__init__(self, **kwargs)
 
-		self._grid = grid
+		self._menu_shell = menu_shell
+		self._grid = menu_shell.get_grid()
 		self._menu = None
 		self._hover_menu = False
 		self._popdown_on_leave = False
@@ -45,6 +35,7 @@ class MenuIcon(IconItem, goocanvas.Item):
 		if self._menu:
 			self._menu.destroy()
 			self._menu = None
+			self._menu_shell.set_active(None)
 
 	def set_menu_strategy(self, strategy):
 		self._menu_strategy = strategy
@@ -52,7 +43,7 @@ class MenuIcon(IconItem, goocanvas.Item):
 	def _popup(self, x1, y1, x2, y2):
 		self.popdown()
 
-		MenuIcon._menu_shell.set_active(None)
+		self._menu_shell.set_active(None)
 
 		grid = self._shell.get_grid()
 		self._menu = self.create_menu()
@@ -74,7 +65,7 @@ class MenuIcon(IconItem, goocanvas.Item):
 
 		self._menu.show()
 
-		MenuIcon._menu_shell.set_active(self)
+		self._menu_shell.set_active(self)
 
 	def _menu_enter_notify_event_cb(self, widget, event):
 		self._hover_menu = True

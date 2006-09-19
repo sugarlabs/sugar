@@ -22,14 +22,14 @@ class ActivityMenu(Menu):
 		self.add_action(icon, ActivityMenu.ACTION_CLOSE) 
 
 class ActivityIcon(MenuIcon):
-	def __init__(self, shell, activity_host):
+	def __init__(self, shell, menu_shell, activity_host):
 		self._shell = shell
 		self._activity_host = activity_host
 
 		icon_name = activity_host.get_icon_name()
 		icon_color = activity_host.get_icon_color()
 
-		MenuIcon.__init__(self, shell.get_grid(), icon_name=icon_name,
+		MenuIcon.__init__(self, menu_shell, icon_name=icon_name,
 						  color=icon_color)
 
 		self.set_menu_strategy(MenuStrategy())
@@ -52,10 +52,11 @@ class ActivityIcon(MenuIcon):
 			activity.close()
 
 class TopPanel(goocanvas.Group):
-	def __init__(self, shell):
+	def __init__(self, shell, menu_shell):
 		goocanvas.Group.__init__(self)
 
 		self._shell = shell
+		self._menu_shell = menu_shell
 		self._activity_icon = None
 
 		grid = shell.get_grid()
@@ -94,7 +95,7 @@ class TopPanel(goocanvas.Group):
 			self._box.remove_child(self._activity_icon)
 
 		if activity:
-			icon = ActivityIcon(self._shell, activity)
+			icon = ActivityIcon(self._shell, self._menu_shell, activity)
 			self._box.set_constraints(icon, 3, 3)
 			self._box.add_child(icon)
 			self._activity_icon = icon
