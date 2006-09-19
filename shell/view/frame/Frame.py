@@ -75,7 +75,9 @@ class Frame:
 		root = model.get_root_item()
 
 		grid = shell.get_grid()
-		menu_shell = MenuShell(grid)
+		self._menu_shell = MenuShell(grid)
+		self._menu_shell.connect('activated', self._menu_shell_activated_cb)
+		self._menu_shell.connect('deactivated', self._menu_shell_deactivated_cb)
 
 		bg = goocanvas.Rect(fill_color="#4f4f4f", line_width=0)
 		grid.set_constraints(bg, 0, 0, 80, 60)
@@ -87,12 +89,12 @@ class Frame:
 
 		self._add_panel(model, 0, 55, 80, 5)
 
-		panel = TopPanel(shell, menu_shell)
+		panel = TopPanel(shell, self._menu_shell)
 		root.add_child(panel)
 
 		self._add_panel(model, 0, 0, 80, 5)
 		
-		panel = RightPanel(shell, menu_shell)
+		panel = RightPanel(shell, self._menu_shell)
 		grid.set_constraints(panel, 75, 5)
 		root.add_child(panel)
 
@@ -113,6 +115,12 @@ class Frame:
 
 		self._windows.append(panel_window)
 
+	def _menu_shell_activated_cb(self, menu_shell):
+		self._cancel_hide()
+
+	def _menu_shell_deactivated_cb(self, menu_shell):
+		self._hide_after(500)
+
 	def _enter_notify_cb(self, window, event):
 		self._cancel_hide()
 
@@ -121,7 +129,8 @@ class Frame:
 		if event.state == gtk.gdk.BUTTON1_MASK:
 			return
 
-		self._hide_after(500)
+		if not self._menu_shell.is_active():
+			self._hide_after(500)
 
 	def _event_frame_hover_cb(self, event_frame):
 		self.show()
