@@ -1,4 +1,15 @@
--- Frame --
+= Frame =
+
+== Activation and deactivation ==
+
+* Immediately access the frame by hitting any corner pixel (the exact corner point)
+* Hitting any of the screen edges activate the frame after 0.5s delay
+* Pressing and holding the frame key activate the frame until the key is released.
+* Pressing the frame key momentarily toggle the frame. To deactivate it another key press is necessary.
+
+= IRC logs =
+
+Frame
 
 eliason marcopg:  First, you can immediately access the frame by hitting any corner pixel.
 dcbw marcopg: I think that's the issue, yes
@@ -9,7 +20,7 @@ eliason marcopg:  The only other minor usability issue I could see is adding a h
 eliason marcopg:  Oh, and other important edges case to think about on the frame:  1)  When someone is dragginan object (XO, file, image, etc) the frame should come out prematurely and without delay (maybe once within a large grid cell of the edge) and highlight to indicate where the object could be dropped.  2)  When the search field is active, the frame should remain out even if the mouse isn't over it.  Only when the search is cleared should it hide again.
 eliason marcopg:  The rollover states are as follows:  1)  Immediate rollover is a black square in the frame cell itself.  2)  Very shortly thereafter (about 1/4 sec) Is the Primary information label and 3) a bit longer after that (about 1/2 sec) the extended panel appears with additional info.
 
--- Menu --
+Menu
 
 eliason marcopg:  Deactivation is instantaneous at the moment, but again, based on testing with the software we may want to add a very short delay.  Also, we may want again to have a invisible triangles between the grid cell in the frame and the extended panel.
 eliason Delay between mouse rollover and showing black square:  0
@@ -18,7 +29,7 @@ eliason Duration of primary info extension animation:  1/5 sec
 eliason Delay from end of primary info animation until secondary info:  1/2 sec
 Duration of secondary info animation: 1/5 sec
 
--- Text layout --
+Text layout
 
 eliason marcopg:  Well, first of all, in the latest screens which we haven't sent out yet, the primary info rollover is designed to fit the text to the nearest microgrid, regardless of the size of the secondary info panel.  The second animation segment will both extend the width and height to fit.
 eliason marcopg:  As far as cutoff goes, I think that's a reasonable solution.  We should allow the primary info text to be as long as the secondary info panel, and beyond that an ellipsis would be a good way to go, though hopefully designers are strongly encouraged NOT to let that happen.
