@@ -29,6 +29,11 @@ class ServiceAdv(object):
 			raise ValueError("local must be a boolean.")
 		self._local = local
 		self._state = _SA_UNRESOLVED
+		self._resolver = None
+
+	def __del__(self):
+		if self._resolver:
+			del self._resolver
 
 	def interface(self):
 		return self._interface
@@ -47,7 +52,14 @@ class ServiceAdv(object):
 	def set_service(self, service):
 		if not isinstance(service, Service.Service):
 			raise ValueError("must be a valid service.")
-		self._service = service
+		if service != self._service:
+			self._service = service
+	def resolver(self):
+		return self._resolver
+	def set_resolver(self, resolver):
+		if not isinstance(resolver, dbus.Interface):
+			raise ValueError("must be a valid dbus object")
+		self._resolver = resolver
 	def state(self):
 		return self._state
 	def set_state(self, state):
@@ -452,12 +464,16 @@ class PresenceService(object):
 			self._dbus_helper.ActivityDisappeared(activity.object_path())
 			del self._activities[actid]
 
-	def _resolve_service_reply_cb(self, adv, interface, protocol, full_name,
-			stype, domain, host, aprotocol, address, port, txt, flags):
+	def _service_resolved_cb(self, adv, interface, protocol, full_name,
+			stype, domain, host, aprotocol, address, port, txt, flags,
+			updated):
 		"""When the service discovery finally gets here, we've got enough
 		information about the service to assign it to a buddy."""
-		logging.debug("Resolved service '%s' type '%s' domain '%s' to " \
-				" %s:%s" % (full_name, stype, domain, address, port))
+		tag = "Resolved"
+		if updated:
+			tag = "Updated"
+		logging.debug("%s service '%s' type '%s' domain '%s' to " \
+				" %s:%s" % (tag, full_name, stype, domain, address, port))
 
 		if not adv in self._service_advs:
 			return False
@@ -465,24 +481,32 @@ class PresenceService(object):
 			return False
 
 		# See if we know about this service already
+		service = None
 		key = (full_name, stype)
+		props = _txt_to_dict(txt)
 		if not self._services.has_key(key):
 			objid = self._get_next_object_id()
-			props = _txt_to_dict(txt)
 			service = Service.Service(self._bus_name, objid, name=full_name,
 					stype=stype, domain=domain, address=address, port=port,
-					properties=props, source_address=address, local=adv.is_local())
+					properties=props, source_address=address)
 			self._services[key] = service
 		else:
-			# Already tracking this service; likely we were the one that shared it
-			# in the first place, and therefore the source address would not have
-			# been set yet
+			# Already tracking this service; either:
+			# a) we were the one that shared it in the first place,
+			#     and therefore the source address would not have
+			#     been set yet
+			# b) the service has been updated
 			service = self._services[key]
 			if not service.get_source_address():
 				service.set_source_address(address)
 			if not service.get_address():
 				service.set_address(address)
+
 		adv.set_service(service)
+
+		if service and updated:
+			service.set_properties(props, from_network=True)
+			return False
 
 		# Merge the service into our buddy and activity lists, if needed
 		buddy = self._handle_new_service_for_buddy(service, adv.is_local())
@@ -491,24 +515,34 @@ class PresenceService(object):
 
 		return False
 
-	def _resolve_service_reply_cb_glue(self, adv, interface, protocol, name,
+	def _service_resolved_cb_glue(self, adv, interface, protocol, name,
 			stype, domain, host, aprotocol, address, port, txt, flags):
-		adv.set_state(_SA_RESOLVED)
-		gobject.idle_add(self._resolve_service_reply_cb, adv, interface,
-				protocol, name, stype, domain, host, aprotocol, address,
-				port, txt, flags)
+		# Avahi doesn't flag updates to existing services, so we have
+		# to determine that here
+		updated = False
+		if adv.state() == _SA_RESOLVED:
+			updated = True
 
-	def _resolve_service_error_handler(self, adv, err):
+		adv.set_state(_SA_RESOLVED)
+		gobject.idle_add(self._service_resolved_cb, adv, interface,
+				protocol, name, stype, domain, host, aprotocol, address,
+				port, txt, flags, updated)
+
+	def _service_resolved_failure_cb(self, adv, err):
 		adv.set_state(_SA_UNRESOLVED)
 		logging.error("Error resolving service %s.%s: %s" % (adv.name(), adv.stype(), err))
 
 	def _resolve_service(self, adv):
 		"""Resolve and lookup a ZeroConf service to obtain its address and TXT records."""
 		# Ask avahi to resolve this particular service
-		self._mdns_service.ResolveService(int(adv.interface()), int(adv.protocol()), adv.name(),
-				adv.stype(), adv.domain(), avahi.PROTO_UNSPEC, dbus.UInt32(0),
-				reply_handler=lambda *args: self._resolve_service_reply_cb_glue(adv, *args),
-				error_handler=lambda *args: self._resolve_service_error_handler(adv, *args))
+		path = self._mdns_service.ServiceResolverNew(dbus.Int32(adv.interface()),
+				dbus.Int32(adv.protocol()), adv.name(), adv.stype(), adv.domain(),
+				avahi.PROTO_UNSPEC, dbus.UInt32(0))
+		resolver = dbus.Interface(self._system_bus.get_object(avahi.DBUS_NAME, path),
+							avahi.DBUS_INTERFACE_SERVICE_RESOLVER)
+		resolver.connect_to_signal('Found', lambda *args: self._service_resolved_cb_glue(adv, *args))
+		resolver.connect_to_signal('Failure', lambda *args: self._service_resolved_failure_cb(adv, *args))
+		adv.set_resolver(resolver)
 		return False
 
 	def _service_appeared_cb(self, interface, protocol, full_name, stype, domain, flags):
@@ -679,6 +713,11 @@ class PresenceService(object):
 	def register_service(self, name, stype, properties={}, address=None,
 			port=-1, domain=u"local", sender=None):
 		"""Register a new service, advertising it to other Buddies on the network."""
+		# Refuse to register if we can't get the dbus connection this request
+		# came from for some reason
+		if not sender:
+			raise RuntimeError("Service registration request must have a sender.")
+
 		(actid, person_name) = Service.decompose_service_name(name)
 		if self.get_owner() and person_name != self.get_owner().get_name():
 			raise RuntimeError("Tried to register a service that didn't have" \
@@ -688,49 +727,18 @@ class PresenceService(object):
 		if not port or port == -1:
 			port = random.randint(4000, 65000)
 
-		try:
-			obj = self._system_bus.get_object(avahi.DBUS_NAME, self._mdns_service.EntryGroupNew())
-			group = dbus.Interface(obj, avahi.DBUS_INTERFACE_ENTRY_GROUP)
-
-			# Add properties; ensure they are converted to ByteArray types
-			# because python sometimes can't figure that out
-			info = dbus.Array([], signature="aay")
-			for k, v in properties.items():
-				info.append(dbus.types.ByteArray("%s=%s" % (k, v)))
-
-			objid = self._get_next_object_id()
-			service = Service.Service(self._bus_name, objid, name=name,
-					stype=stype, domain=domain, address=address, port=port,
-					properties=properties, source_address=None, local=True,
-					local_publisher=sender)
-			self._services[(name, stype)] = service
-			port = service.get_port()
-
-			logging.debug("Will register service with name='%s', stype='%s'," \
-					" domain='%s', address='%s', port=%d, info='%s'" % (name, stype,
-					domain, address, port, info))
-			group.AddService(avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, 0, dbus.String(name),
-					dbus.String(stype), dbus.String(domain), dbus.String(""), # let Avahi figure the 'host' out
-					dbus.UInt16(port), info)
-			service.set_avahi_entry_group(group)
-			group.Commit()
-		except dbus.exceptions.DBusException, exc:
-			# FIXME: ignore local name collisions, since that means
-			# the zeroconf service is already registered.  Ideally we
-			# should un-register it an re-register with the correct info
-			if str(exc) == "Local name collision":
-				pass
+		objid = self._get_next_object_id()
+		service = Service.Service(self._bus_name, objid, name=name,
+				stype=stype, domain=domain, address=address, port=port,
+				properties=properties, source_address=None,
+				local_publisher=sender)
+		self._services[(name, stype)] = service
 		self.register_service_type(stype)
+		service.register(self._system_bus, self._mdns_service)		
 		return service
 
 	def unregister_service(self, service, sender=None):
-		local_publisher = service.get_local_publisher()
-		if sender is not None and local_publisher != sender:
-			raise ValueError("Service was not registered by requesting process!")
-		group = service.get_avahi_entry_group()
-		if not group:
-			raise ValueError("Service was not a local service provided by this laptop!")
-		group.Free()
+		service.unregister(sender)
 
 	def register_service_type(self, stype):
 		"""Requests that the Presence service look for and recognize

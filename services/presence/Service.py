@@ -4,6 +4,7 @@ sys.path.insert(0, os.path.abspath("../../"))
 from sugar import util
 import dbus, dbus.service
 import random
+import logging
 
 def compose_service_name(name, activity_id):
 	if type(name) == type(""):
@@ -36,6 +37,31 @@ def decompose_service_name(name):
 	if not util.validate_activity_id(activity_id):
 		return (None, name)
 	return (activity_id, name[:start - 2])
+
+def _one_dict_differs(dict1, dict2):
+	diff_keys = []
+	for key, value in dict1.items():
+		if not dict2.has_key(key) or dict2[key] != value:
+			diff_keys.append(key)
+	return diff_keys
+
+def _dicts_differ(dict1, dict2):
+	diff_keys = []
+	diff1 = _one_dict_differs(dict1, dict2)
+	diff2 = _one_dict_differs(dict2, dict1)
+	for key in diff2:
+		if key not in diff1:
+			diff_keys.append(key)
+	diff_keys += diff1
+	return diff_keys
+
+def _convert_properties_to_dbus_byte_array(props):
+	# Ensure properties are converted to ByteArray types
+	# because python sometimes can't figure that out
+	info = dbus.Array([], signature="aay")
+	for k, v in props.items():
+		info.append(dbus.types.ByteArray("%s=%s" % (k, v)))
+	return info
 
 
 _ACTIVITY_ID_TAG = "ActivityID"
@@ -104,15 +130,18 @@ class ServiceDBusHelper(dbus.service.Object):
 	@dbus.service.method(SERVICE_DBUS_INTERFACE,
 						in_signature="a{sv}", sender_keyword="sender")
 	def setPublishedValues(self, values, sender):
+		if not self._parent.is_local():
+			raise ValueError("Service was not not registered by requesting process!")		
 		self._parent.set_properties(values, sender)
 
 
 class Service(object):
 	"""Encapsulates information about a specific ZeroConf/mDNS
 	service as advertised on the network."""
+
 	def __init__(self, bus_name, object_id, name, stype, domain=u"local",
 				address=None, port=-1, properties=None, source_address=None,
-				local=False, local_publisher=None):
+				local_publisher=None):
 		if not bus_name:
 			raise ValueError("DBus bus name must be valid")
 		if not object_id or type(object_id) != type(1):
@@ -136,6 +165,12 @@ class Service(object):
 		if domain and domain != "local":
 			raise ValueError("must use the 'local' domain (for now).")
 
+		# ID of the D-Bus connection that published this service, if any.
+		# We only let the local publisher modify the service.
+		self._local_publisher = local_publisher
+
+		self._avahi_entry_group = None
+
 		(actid, real_name) = decompose_service_name(name)
 		self._name = real_name
 		self._full_name = name
@@ -143,10 +178,9 @@ class Service(object):
 		self._domain = domain
 		self._port = -1
 		self.set_port(port)
-		self._properties = {}
-		self._internal_set_properties(properties, first_time=True)
-		self._avahi_entry_group = None
-		self._local = local
+		self._properties = None
+		self._dbus_helper = None
+		self._internal_set_properties(properties)
 
 		# Source address is the unicast source IP
 		self._source_address = None
@@ -175,10 +209,6 @@ class Service(object):
 
 		self._owner = None
 
-		# ID of the D-Bus connection that published this service, if any.
-		# We only let the local publisher modify the service.
-		self._local_publisher = local_publisher
-
 		# register ourselves with dbus
 		self._object_id = object_id
 		self._object_path = SERVICE_DBUS_OBJECT_PATH + str(self._object_id)
@@ -195,11 +225,10 @@ class Service(object):
 			raise RuntimeError("Can only set a service's owner once")
 		self._owner = owner
 
-	def get_local_publisher(self):
-		return self._local_publisher
-
 	def is_local(self):
-		return self._local
+		if self._local_publisher is not None:
+			return True
+		return False
 
 	def get_name(self):
 		"""Return the service's name, usually that of the
@@ -225,12 +254,14 @@ class Service(object):
 
 	def set_property(self, key, value, sender=None):
 		"""Set one service property"""
+		if not self._local_publisher:
+			raise ValueError("Service was not not registered by requesting process!")		
 		if sender is not None and self._local_publisher != sender:
 			raise ValueError("Service was not not registered by requesting process!")
 
 		if type(key) != type(u""):
 			raise ValueError("Key must be a unicode string.")
-		if type(value) != type(u"") or type(value) != type(True):
+		if type(value) != type(u"") and type(value) != type(True):
 			raise ValueError("Key must be a unicode string or a boolean.")
 
 		# Ignore setting the key to it's current value
@@ -254,21 +285,33 @@ class Service(object):
 			if type(value) == type(True):
 				value = ""
 			self._properties[key] = value
-		self._dbus_helper.PublishedValueChanged(key)
 
-	def set_properties(self, properties, sender=None):
+		# if the service is locally published already, update the TXT records
+		if self._local_publisher and self._avahi_entry_group:
+			self.__internal_update_avahi_properties()
+
+		if self._dbus_helper:
+			self._dbus_helper.PublishedValueChanged([key])
+
+	def set_properties(self, properties, sender=None, from_network=False):
 		"""Set all service properties in one call"""
 		if sender is not None and self._local_publisher != sender:
 			raise ValueError("Service was not not registered by requesting process!")
-		self._internal_set_properties(properties)
 
-	def _internal_set_properties(self, properties, first_time=False):
+		self._internal_set_properties(properties, from_network)
+
+	def _internal_set_properties(self, properties, from_network=False):
 		"""Set the service's properties from either an Avahi
 		TXT record (a list of lists of integers), or a
 		python dictionary."""
 		if type(properties) != type({}):
 			raise ValueError("Properties must be a dictionary.")
 		self._properties = {}
+
+		# Make sure the properties are actually different
+		diff_keys = _dicts_differ(self._properties, properties)
+		if len(diff_keys) == 0:
+			return
 
 		# Set key/value pairs on internal property list
 		for key, value in properties.items():
@@ -282,8 +325,19 @@ class Service(object):
 				tmp_val = unicode(tmp_val)
 			self._properties[tmp_key] = tmp_val
 
-		if not first_time:
-			self._dbus_helper.PublishedValueChanged(self._properties.keys())
+		# if the service is locally published already, update the TXT records
+		if self._local_publisher and self._avahi_entry_group and not from_network:
+			self.__internal_update_avahi_properties()
+
+		if self._dbus_helper:
+			self._dbus_helper.PublishedValueChanged(diff_keys)
+
+	def __internal_update_avahi_properties(self):
+		info = _convert_properties_to_dbus_byte_array(self._properties)
+		self._avahi_entry_group.UpdateServiceTxt(avahi.IF_UNSPEC,
+				avahi.PROTO_UNSPEC, 0,
+				dbus.String(self._full_name), dbus.String(self._stype),
+				dbus.String(self._domain), info)
 
 	def get_type(self):
 		"""Return the service's service type."""
@@ -322,11 +376,42 @@ class Service(object):
 		"""Return the ZeroConf/mDNS domain the service was found in."""
 		return self._domain
 
-	def set_avahi_entry_group(self, group):
-		self._avahi_entry_group = group
+	def register(self, system_bus, avahi_service):
+		if self._avahi_entry_group is not None:
+			raise RuntimeError("Service already registered!")
 
-	def get_avahi_entry_group(self):
-		return self._avahi_entry_group
+		obj = system_bus.get_object(avahi.DBUS_NAME, avahi_service.EntryGroupNew())
+		self._avahi_entry_group = dbus.Interface(obj, avahi.DBUS_INTERFACE_ENTRY_GROUP)
+
+		info = _convert_properties_to_dbus_byte_array(self._properties)
+		logging.debug("Will register service with name='%s', stype='%s'," \
+				" domain='%s', address='%s', port=%d, info='%s'" % (self._full_name,
+				self._stype, self._domain, self._address, self._port, info))
+		self._avahi_entry_group.AddService(avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, 0,
+				dbus.String(self._full_name), dbus.String(self._stype),
+				dbus.String(self._domain), dbus.String(""), # let Avahi figure the 'host' out
+				dbus.UInt16(self._port), info)
+		self._avahi_entry_group.connect_to_signal('StateChanged', self.__entry_group_changed_cb)
+		self._avahi_entry_group.Commit()
+
+	def __entry_group_changed_cb(self, state, error):
+		logging.debug("** %s.%s Entry group changed: state %s, error %s" % (self._full_name, self._stype, state, error))
+
+	def unregister(self, sender):
+		# Refuse to unregister if we can't get the dbus connection this request
+		# came from for some reason
+		if not sender:
+			raise RuntimeError("Service registration request must have a sender.")
+		if not self._local_publisher:
+			raise ValueError("Service was not a local service provided by this laptop!")
+		if sender is not None and self._local_publisher != sender:
+			raise ValueError("Service was not registered by requesting process!")
+		if not self._avahi_entry_group:
+			raise ValueError("Service was not registered by requesting process!")
+ 		self._avahi_entry_group.Free()
+		del self._avahi_entry_group
+		self._avahi_entry_group = None
+
 
 #################################################################
 # Tests

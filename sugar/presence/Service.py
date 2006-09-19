@@ -2,18 +2,22 @@ import gobject
 import dbus
 
 
-def __one_dict_differs(dict1, dict2):
+def _one_dict_differs(dict1, dict2):
+	diff_keys = []
 	for key, value in dict1.items():
 		if not dict2.has_key(key) or dict2[key] != value:
-			return True
-	return False
+			diff_keys.append(key)
+	return diff_keys
 
-def __dicts_differ(dict1, dict2):
-	if __one_dict_differs(dict1, dict2):
-		return True
-	if __one_dict_differs(dict2, dict1):
-		return True
-	return False
+def _dicts_differ(dict1, dict2):
+	diff_keys = []
+	diff1 = _one_dict_differs(dict1, dict2)
+	diff2 = _one_dict_differs(dict2, dict1)
+	for key in diff2:
+		if key not in diff1:
+			diff_keys.append(key)
+	diff_keys += diff1
+	return diff_keys
 
 class Service(gobject.GObject):
 
@@ -64,8 +68,9 @@ class Service(gobject.GObject):
 	def __published_value_changed_cb(self, keys):
 		oldvals = self._pubvals
 		self.get_published_values()
-		if __dicts_differ(oldvals, self._pubvals):
-			self.emit('published-value-changed', keys)
+		diff_keys = _dicts_differ(oldvals, self._pubvals)
+		if len(diff_keys) > 0:
+			self.emit('published-value-changed', diff_keys)
 
 	def get_name(self):
 		return self._props['name']

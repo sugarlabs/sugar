@@ -9,6 +9,7 @@ import logging
 from sugar.p2p import Stream
 from sugar.presence import PresenceService
 from model.Invites import Invites
+import dbus
 
 PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
 
@@ -70,7 +71,9 @@ class ShellOwner(object):
 	def __update_advertised_current_activity_cb(self):
 		self._last_activity_update = time.time()
 		self._pending_activity_update_timer = None
-		logging.debug("*** Updating current activity to %s" % self._pending_activity_update)
+		if self._pending_activity_update:
+			logging.debug("*** Updating current activity to %s" % self._pending_activity_update)
+			self._service.set_published_value('curact', dbus.String(self._pending_activity_update))
 		return False
 
 	def set_current_activity(self, activity_id):
