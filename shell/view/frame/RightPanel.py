@@ -5,7 +5,7 @@ from sugar.canvas.IconColor import IconColor
 from sugar.canvas.CanvasBox import CanvasBox
 from sugar.presence import PresenceService
 from view.BuddyIcon import BuddyIcon
-from model.BuddyInfo import BuddyInfo
+from model.BuddyModel import BuddyModel
 from view.frame.MenuStrategy import MenuStrategy
 
 class RightPanel(CanvasBox):
@@ -25,7 +25,7 @@ class RightPanel(CanvasBox):
 		shell.connect('activity-changed', self.__activity_changed_cb)
 
 	def add(self, buddy):
-		icon = BuddyIcon(self._shell, self._menu_shell, BuddyInfo(buddy))
+		icon = BuddyIcon(self._shell, self._menu_shell, BuddyModel(buddy))
 		icon.set_menu_strategy(MenuStrategy())
 		self.set_constraints(icon, 3, 3)
 		self.add_child(icon)

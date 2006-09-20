@@ -1,7 +1,7 @@
 from sugar.presence import PresenceService
 from sugar.canvas.IconColor import IconColor
 
-class BuddyInfo:
+class BuddyModel:
 	def __init__(self, buddy=None):
 		if buddy:
 			self.set_name(buddy.get_name())

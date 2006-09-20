@@ -3,7 +3,7 @@ from ConfigParser import ConfigParser
 
 import gobject
 
-from model.BuddyInfo import BuddyInfo
+from model.BuddyModel import BuddyModel
 from sugar import env
 
 class Friends(gobject.GObject):
@@ -31,7 +31,7 @@ class Friends(gobject.GObject):
 
 	def make_friend(self, buddy):
 		if not self.has_buddy(buddy):	
-			self.add_friend(BuddyInfo(buddy))
+			self.add_friend(BuddyModel(buddy))
 			self.save()
 
 	def remove(self, buddy_info):
@@ -47,7 +47,7 @@ class Friends(gobject.GObject):
 
 		if cp.read([self._path]):
 			for name in cp.sections():
-				buddy = BuddyInfo()
+				buddy = BuddyModel()
 				buddy.set_name(name)
 				buddy.set_color(cp.get(name, 'color'))
 				self.add_friend(buddy)
