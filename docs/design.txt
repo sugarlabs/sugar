@@ -35,3 +35,9 @@ eliason marcopg:  Well, first of all, in the latest screens which we haven't sen
 eliason marcopg:  As far as cutoff goes, I think that's a reasonable solution.  We should allow the primary info text to be as long as the secondary info panel, and beyond that an ellipsis would be a good way to go, though hopefully designers are strongly encouraged NOT to let that happen.
 eliason marcopg:  However, there may be cases when we don't want that to happen. I can think of one, which you haven't seen yet:  "Invite with X X X X X."  The new activity/invite rollover might have the XOs who you are implicitly inviting to start an activity with listed, and we couldn't cut that off (Though we CANget around it and list, say, a max of three people and then indicate that there are 5 more not shown, etc.)
 eliason marcopg:  Right.  I think that, in most cases, there should be some template for it.  If the designer is creating a GUI for an application and making toolsets (such as the color chooser), then we know how big all of those are.  Things like "just text" will mostly show up in OS applications like the clippings and such, so we can just pick a preferred size that shows enough text to be meaningful without compromising too much of the screen.
+
+Mesh view
+
+eliason marcopg:  also important regarding the results:  the fill color should be the background color, so they look like outlines, and the line color should be near enough to the background to make them less contrasty.  Also, all XOs in the result set should be z-sorted to the front of their groups.  That's key.
+eliason marcopg:  The activity icons and XOs are treated separately, so it may be the case that several XOs in a group match the search but the activity their in doesn't, and they would be grayed out independently.
+eliason marcopg:  yes, only the color change.  Colored stuff is the result.  We don't want to actually make things disappear.
