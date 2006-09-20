@@ -24,12 +24,6 @@ class NavigationToolbar(gtk.Toolbar):
 		self.insert(self.forward, -1)
 		self.forward.show()
 
-		self.reload = gtk.ToolButton(None, _('Reload'))
-		self.reload.set_icon_name('reload')
-		self.reload.connect("clicked", self.__reload_cb)
-		self.insert(self.reload, -1)
-		self.reload.show()
-
 		separator = gtk.SeparatorToolItem()
 		self.insert(separator, -1)
 		separator.show()
@@ -52,11 +46,8 @@ class NavigationToolbar(gtk.Toolbar):
 	def __go_forward_cb(self, button):
 		self._embed.go_forward()
 		
-	def __reload_cb(self, button):
-		self._embed.reload()
-
 	def __location_changed(self, embed):
 		self._update_sensitivity()
 
 	def __open_address_cb(self, address):
-		self._embed.load_address(address)
+		self._embed.load_url(address)

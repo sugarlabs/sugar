@@ -1,7 +1,7 @@
 import os
 
 import gtk
-import geckoembed
+import gtkmozembed
 
 from sugar.activity.Activity import Activity
 from sugar.presence.PresenceService import PresenceService
@@ -16,8 +16,7 @@ class BrowserActivity(Activity):
 	def __init__(self):
 		Activity.__init__(self)
 
-		path = os.path.join(env.get_profile_path(), 'gecko')
-		geckoembed.set_profile_path(path)
+		gtkmozembed.set_profile_path(env.get_profile_path(), 'gecko')
 
 		self._share_service = None
 		self._model_service = None
@@ -33,12 +32,12 @@ class BrowserActivity(Activity):
 		vbox.pack_start(self._notif_bar, False)
 		self._notif_bar.connect('action', self.__notif_bar_action_cb)
 
-		self._embed = geckoembed.Browser()
+		self._embed = gtkmozembed.MozEmbed()
 		self._embed.connect("title", self.__title_cb)
 		vbox.pack_start(self._embed)		
 		self._embed.show()
 
-		self._embed.load_address('http://www.google.com')		
+		self._embed.load_url('http://www.google.com')		
 
 		nav_toolbar = NavigationToolbar(self)
 		vbox.pack_start(nav_toolbar, False)
@@ -78,7 +77,7 @@ class BrowserActivity(Activity):
 		self._go_to_shared_location()
 	
 	def _update_shared_location(self):
-		address = self._embed.get_address()
+		address = self._embed.get_location()
 		self._model.set_value('address', address)
 		title = self._embed.get_title()
 		self._model.set_value('title', title)
@@ -91,7 +90,7 @@ class BrowserActivity(Activity):
 
 	def _go_to_shared_location(self):
 		address = self._model.get_value("address")
-		self._embed.load_address(address)
+		self._embed.load_url(address)
 		self._notif_bar.hide()
 
 	def get_embed(self):
