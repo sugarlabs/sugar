@@ -7,5 +7,6 @@ sugar_PYTHON =			\
 	Grid.py			\
 	IconItem.py		\
 	IconColor.py		\
+	Menu.py			\
 	MenuIcon.py		\
-	Menu.py
+	MenuShell.py
