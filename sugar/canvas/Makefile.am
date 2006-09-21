@@ -9,4 +9,5 @@ sugar_PYTHON =			\
 	IconColor.py		\
 	Menu.py			\
 	MenuIcon.py		\
-	MenuShell.py
+	MenuShell.py		\
+	Timeline.py

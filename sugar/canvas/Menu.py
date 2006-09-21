@@ -6,26 +6,18 @@ from sugar.canvas.CanvasView import CanvasView
 from sugar.canvas.CanvasBox import CanvasBox
 from sugar.canvas.IconItem import IconItem
 
-class MenuColorScheme:
-	def __init__(self):
-		self.text = 'white'
-		self.background = 'black'
-		self.border = 'black'
-		self.separator = '#a1a1a1'
-
 class Menu(gtk.Window):
 	__gsignals__ = {
 		'action': (gobject.SIGNAL_RUN_FIRST,
 				   gobject.TYPE_NONE, ([int])),
 	}
 
-	def __init__(self, grid, title, color_scheme=MenuColorScheme()):
+	def __init__(self, grid, title):
 		gtk.Window.__init__(self, gtk.WINDOW_POPUP)
 
 		self._width = 15
 		self._grid = grid
 		self._action_box = None
-		self._color_scheme = color_scheme
 
 		self._canvas = CanvasView()
 		self.add(self._canvas)
@@ -34,14 +26,11 @@ class Menu(gtk.Window):
 		model = goocanvas.CanvasModelSimple()
 		self._root = model.get_root_item()
 
-		self._rect = goocanvas.Rect(fill_color=color_scheme.background,
-									stroke_color=color_scheme.border,
-							  		line_width=3)
+		self._rect = goocanvas.Rect(fill_color='black', line_width=0)
 		self._root.add_child(self._rect)
 
 		text = goocanvas.Text(text=title, font="Sans bold 18",
-							  fill_color=color_scheme.text,
-							  anchor=gtk.ANCHOR_SW)
+							  fill_color='white', anchor=gtk.ANCHOR_SW)
 		self._grid.set_constraints(text, 1, 3, self._width, 2)
 		self._root.add_child(text)
 
@@ -52,7 +41,7 @@ class Menu(gtk.Window):
 
 	def _create_action_box(self):
 		separator = goocanvas.Path(data='M 15 0 L 215 0', line_width=3,
-								   stroke_color=self._color_scheme.separator)
+								   stroke_color='#a1a1a1')
 		self._grid.set_constraints(separator, 0, 4)
 		self._root.add_child(separator)
 

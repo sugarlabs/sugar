@@ -1,5 +1,4 @@
 from sugar.canvas.Menu import Menu
-from sugar.canvas.Menu import MenuColorScheme
 from sugar.canvas.IconItem import IconItem
 from sugar.presence import PresenceService
 
@@ -9,15 +8,7 @@ class BuddyMenu(Menu):
 	ACTION_REMOVE_FRIEND = 2
 
 	def __init__(self, shell, buddy):
-		color = buddy.get_color()
-
-		color_scheme = MenuColorScheme()
-		color_scheme.text = 'black'
-		color_scheme.border = color.get_stroke_color()
-		color_scheme.background = color.get_fill_color()
-		color_scheme.separator = 'black'
-
-		Menu.__init__(self, shell.get_grid(), buddy.get_name(), color_scheme)
+		Menu.__init__(self, shell.get_grid(), buddy.get_name())
 
 		self._buddy = buddy
 		self._shell = shell
