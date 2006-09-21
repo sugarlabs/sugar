@@ -40,6 +40,17 @@ class Timeline:
 		n_frames = tag.start_frame - tag.end_frame
 		self._observer.next_frame(tag.name, frame, n_frames)
 
+	def goto(self, tag_name, end_frame=False):
+		self.stop()
+
+		tag = self._name_to_tag[tag_name]
+		if end_frame:
+			self._current_frame = tag.end_frame
+		else:
+			self._current_frame = tag.start_frame
+
+		self._next_frame(tag, self._current_frame)
+
 	def on_tag(self, name):
 		tag = self._name_to_tag[name]
 		return (tag.start_frame <= self._current_frame and \
@@ -67,7 +78,7 @@ class Timeline:
 		self.stop()
 
 		if start_tag == None:
-			start = self._tags[0].start_frame
+			start = 0
 		else:
 			start = self._name_to_tag[start_tag].start_frame
 

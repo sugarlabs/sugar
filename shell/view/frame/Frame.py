@@ -13,8 +13,10 @@ from sugar.canvas.MenuShell import MenuShell
 
 class EventFrame(gobject.GObject):
 	__gsignals__ = {
-		'hover':  (gobject.SIGNAL_RUN_FIRST,
-				   gobject.TYPE_NONE, ([])),
+		'hover-edge':    (gobject.SIGNAL_RUN_FIRST,
+				          gobject.TYPE_NONE, ([])),
+		'hover-corner':  (gobject.SIGNAL_RUN_FIRST,
+				          gobject.TYPE_NONE, ([]))
 	}
 	def __init__(self):
 		gobject.GObject.__init__(self)
@@ -52,7 +54,16 @@ class EventFrame(gobject.GObject):
 		return invisible
 
 	def _enter_notify_cb(self, widget, event):
-		self.emit('hover')
+		screen_w = gtk.gdk.screen_width()
+		screen_h = gtk.gdk.screen_height()
+
+		if (event.x == 0 and event.y == 0) or \
+		   (event.x == 0 and event.y == screen_h - 1) or \
+		   (event.x == screen_w - 1 and event.y == 0) or \
+		   (event.x == screen_w - 1 and event.y == screen_h - 1):
+			self.emit('hover-corner')
+		else:
+			self.emit('hover-edge')
 
 	def show(self):
 		for window in self._windows:
@@ -73,7 +84,6 @@ class Frame:
 		self._sticky = False
 
 		self._timeline = Timeline(self)
-		self._timeline.add_tag('start', 0, 0)
 		self._timeline.add_tag('slide_in', 6, 12)
 		self._timeline.add_tag('before_slide_out', 36, 36)
 		self._timeline.add_tag('slide_out', 37, 42)
@@ -110,7 +120,8 @@ class Frame:
 		self._add_panel(model, 0, 5, 5, 50)
 
 		self._event_frame = EventFrame()
-		self._event_frame.connect('hover', self._event_frame_hover_cb)
+		self._event_frame.connect('hover-edge', self._hover_edge_cb)
+		self._event_frame.connect('hover-corner', self._hover_corner_cb)
 		self._event_frame.show()
 
 	def _add_panel(self, model, x, y, width, height):
@@ -123,19 +134,23 @@ class Frame:
 		self._windows.append(panel_window)
 
 	def _menu_shell_activated_cb(self, menu_shell):
-		pass
+		self._timeline.goto('slide_in', True)
 
 	def _menu_shell_deactivated_cb(self, menu_shell):
-		pass
+		self._timeline.play('before_slide_out', 'slide_out')
 
 	def _enter_notify_cb(self, window, event):
-		pass
+		self._timeline.goto('slide_in', True)
 
 	def _leave_notify_cb(self, window, event):
-		pass
+		if not self._menu_shell.is_active():
+			self._timeline.play('before_slide_out', 'slide_out')
 
-	def _event_frame_hover_cb(self, event_frame):
-		pass
+	def _hover_edge_cb(self, event_frame):
+		self._timeline.play(None, 'slide_in')
+
+	def _hover_corner_cb(self, event_frame):
+		self._timeline.play('slide_in', 'slide_in')
 
 	def show_and_hide(self, seconds):
 		self._timeline.play()
@@ -154,13 +169,13 @@ class Frame:
 			self._timeline.play('before_slide_out', 'slide_out')
 
 	def do_slide_in(self, current, n_frames):
-		if current == 0:
+		if not self._windows[0].props.visible:
 			for panel in self._windows:
 				panel.show()
 			self._event_frame.hide()
 
 	def do_slide_out(self, current, n_frames):
-		if current == 0:
+		if self._windows[0].props.visible:
 			for panel in self._windows:
 				panel.hide()
 			self._event_frame.show()
