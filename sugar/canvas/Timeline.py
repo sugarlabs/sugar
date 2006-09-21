@@ -41,7 +41,7 @@ class Timeline:
 		self._observer.next_frame(tag.name, frame, n_frames)
 
 	def goto(self, tag_name, end_frame=False):
-		self.stop()
+		self.pause()
 
 		tag = self._name_to_tag[tag_name]
 		if end_frame:
@@ -75,7 +75,7 @@ class Timeline:
 			return False
 
 	def play(self, start_tag=None, stop_tag=None):
-		self.stop()
+		self.pause()
 
 		if start_tag == None:
 			start = 0
@@ -93,6 +93,6 @@ class Timeline:
 		self._timeout_sid = gobject.timeout_add(
 						interval, self._timeout_cb, end)
 
-	def stop(self):
+	def pause(self):
 		if self._timeout_sid > 0:
 			gobject.source_remove(self._timeout_sid)

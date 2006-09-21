@@ -13,15 +13,24 @@ from sugar.canvas.MenuShell import MenuShell
 
 class EventFrame(gobject.GObject):
 	__gsignals__ = {
-		'hover-edge':    (gobject.SIGNAL_RUN_FIRST,
+		'enter-edge':    (gobject.SIGNAL_RUN_FIRST,
 				          gobject.TYPE_NONE, ([])),
-		'hover-corner':  (gobject.SIGNAL_RUN_FIRST,
+		'enter-corner':  (gobject.SIGNAL_RUN_FIRST,
+				          gobject.TYPE_NONE, ([])),
+		'leave':		 (gobject.SIGNAL_RUN_FIRST,
 				          gobject.TYPE_NONE, ([]))
 	}
+
+	HOVER_NONE = 0
+	HOVER_CORNER = 1
+	HOVER_EDGE = 2
+
 	def __init__(self):
 		gobject.GObject.__init__(self)
 
 		self._windows = []
+		self._hover = EventFrame.HOVER_NONE
+		self._active = False
 
 		invisible = self._create_invisible(0, 0, gtk.gdk.screen_width(), 1)
 		self._windows.append(invisible)
@@ -45,15 +54,17 @@ class EventFrame(gobject.GObject):
 
 	def _create_invisible(self, x, y, width, height):
 		invisible = gtk.Invisible()
-		invisible.connect('enter-notify-event', self._enter_notify_cb)
+		invisible.connect('motion-notify-event', self._motion_notify_cb)
+		invisible.connect('leave-notify-event', self._leave_notify_cb)
 
 		invisible.realize()
-		invisible.window.set_events(gtk.gdk.ENTER_NOTIFY_MASK)
+		invisible.window.set_events(gtk.gdk.POINTER_MOTION_MASK |
+									gtk.gdk.LEAVE_NOTIFY_MASK)
 		invisible.window.move_resize(x, y, width, height)
 
 		return invisible
 
-	def _enter_notify_cb(self, widget, event):
+	def _motion_notify_cb(self, widget, event):
 		screen_w = gtk.gdk.screen_width()
 		screen_h = gtk.gdk.screen_height()
 
@@ -61,15 +72,26 @@ class EventFrame(gobject.GObject):
 		   (event.x == 0 and event.y == screen_h - 1) or \
 		   (event.x == screen_w - 1 and event.y == 0) or \
 		   (event.x == screen_w - 1 and event.y == screen_h - 1):
-			self.emit('hover-corner')
+			if self._hover != EventFrame.HOVER_CORNER:
+				self._hover = EventFrame.HOVER_CORNER
+				self.emit('enter-corner')
 		else:
-			self.emit('hover-edge')
+			if self._hover != EventFrame.HOVER_EDGE:
+				self._hover = EventFrame.HOVER_EDGE
+				self.emit('enter-edge')
+
+	def _leave_notify_cb(self, widget, event):
+		self._hover = EventFrame.HOVER_NONE
+		if self._active:
+			self.emit('leave')
 
 	def show(self):
+		self._active = True
 		for window in self._windows:
 			window.show()
 
 	def hide(self):
+		self._active = False
 		for window in self._windows:
 			window.hide()
 
@@ -120,8 +142,9 @@ class Frame:
 		self._add_panel(model, 0, 5, 5, 50)
 
 		self._event_frame = EventFrame()
-		self._event_frame.connect('hover-edge', self._hover_edge_cb)
-		self._event_frame.connect('hover-corner', self._hover_corner_cb)
+		self._event_frame.connect('enter-edge', self._enter_edge_cb)
+		self._event_frame.connect('enter-corner', self._enter_corner_cb)
+		self._event_frame.connect('leave', self._event_frame_leave_cb)
 		self._event_frame.show()
 
 	def _add_panel(self, model, x, y, width, height):
@@ -146,11 +169,14 @@ class Frame:
 		if not self._menu_shell.is_active():
 			self._timeline.play('before_slide_out', 'slide_out')
 
-	def _hover_edge_cb(self, event_frame):
+	def _enter_edge_cb(self, event_frame):
 		self._timeline.play(None, 'slide_in')
 
-	def _hover_corner_cb(self, event_frame):
+	def _enter_corner_cb(self, event_frame):
 		self._timeline.play('slide_in', 'slide_in')
+
+	def _event_frame_leave_cb(self, event_frame):
+		self._timeline.goto('slide_out', True)
 
 	def show_and_hide(self, seconds):
 		self._timeline.play()
