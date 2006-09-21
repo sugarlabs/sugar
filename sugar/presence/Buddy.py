@@ -99,6 +99,11 @@ class Buddy(gobject.GObject):
 	def get_icon(self):
 		return self._buddy.getIcon()
 
+	def get_current_activity(self):
+		if self._properties.has_key('curact'):
+			return self._properties['curact']
+		return None
+
 	def get_icon_pixbuf(self):
 		icon = self._buddy.getIcon()
 		if icon and len(icon):
