@@ -41,7 +41,7 @@ class KiuBot(Bot):
 	def _schedule_activity_switch_timeout(self):
 		if self._activity_switch_timeout:
 			return
-		interval = random.randint(1000, 20000)
+		interval = random.randint(10000, 20000)
 		self._activity_switch_timeout = gobject.timeout_add(interval,
 				self.__activity_switch_cb)
 
