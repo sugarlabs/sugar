@@ -2,6 +2,8 @@ import os
 
 import gtk
 import gobject
+import base64
+import dbus
 
 from sugar.session.TestSession import TestSession
 from sugar.presence import PresenceService
@@ -17,11 +19,17 @@ class _SimulatedActivity:
 	def get_id(self):
 		return self._id
 
-class _ShellOwner(object):
-	def __init__(self, nick, color):
+class _SimulatedShellOwner(object):
+	def __init__(self, nick, color, icon_file=None):
 		self._pservice = PresenceService.get_instance()
 		self._color = color
 		self._nick = nick
+
+		self._icon = None
+		if icon_file:
+			fd = open(icon_file, "r")
+			self._icon = fd.read()
+			fd.close()
 
 	def announce(self):
 		props = { 'color':  self._color.to_string() }
@@ -32,10 +40,15 @@ class _ShellOwner(object):
 		self._stream.register_reader_handler(self._handle_invite, "invite")
 
 	def _handle_buddy_icon_request(self):
+		if self._icon:
+			return base64.b64encode(self._icon)
 		return ''
 
 	def _handle_invite(self, issuer, bundle_id, activity_id):
 		return ''
+
+	def set_current_activity(self, activity_id):
+		self._service.set_published_value('curact', dbus.String(activity_id))
 
 class _Timeline:
 	def __init__(self, time_factor):
@@ -50,22 +63,27 @@ class _Timeline:
 		return False
 
 class ShareActivityAction:
-	def __init__(self, title, activity_type):
+	def __init__(self, title, activity_type, callback=None):
 		self._title = title
 		self._type = activity_type
+		self._callback = callback
 
 	def execute(self):
 		activity = _SimulatedActivity()
 		properties = { 'title' : self._title }
 		
 		pservice = PresenceService.get_instance()
-		pservice.share_activity(activity, self._type, properties)		
+		act_service = pservice.share_activity(activity, self._type, properties)		
+		if self._callback is not None:
+			self._callback(activity, act_service)
 
 class Bot:
 	def __init__(self, nick, color):
 		self._nick = nick
 		self._color = color
 		self._timeline = _Timeline(0.01)
+		self._owner = None
+		self._icon_file = None
 
 		os.environ['SUGAR_NICK_NAME'] = nick
 		os.environ['SUGAR_COLOR'] = color.to_string()
@@ -76,10 +94,10 @@ class Bot:
 
 		PresenceService.start()
 
-		owner = _ShellOwner(self._nick, self._color)
-		owner.announce()
+		self._owner = _SimulatedShellOwner(self._nick, self._color, self._icon_file)
+		self._owner.announce()
 
-		pservice = PresenceService.get_instance()
+		self._pservice = PresenceService.get_instance()
 
 		gtk.main()
 
