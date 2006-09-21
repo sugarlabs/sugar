@@ -179,7 +179,15 @@ class GlibXMLRPCTransport(xmlrpclib.Transport):
 		if not (condition & gobject.IO_IN):
 			return True
 
-		errcode, errmsg, headers = h.getreply()
+		try:
+			errcode, errmsg, headers = h.getreply()
+		except socket.error, err:
+			if err[0] != 104:
+				raise socket.error(err)
+			else:
+				gobject.idle_add(request_cb, RESULT_FAILED, None, user_data)
+				return False
+				
 		if errcode != 200:
 			raise xmlrpclib.ProtocolError(host + handler, errcode, errmsg, headers)
 		self.verbose = verbose		
