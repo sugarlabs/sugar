@@ -28,6 +28,10 @@ class BrowserActivity(Activity):
 
 		vbox = gtk.VBox()
 
+		nav_toolbar = NavigationToolbar()
+		vbox.pack_start(nav_toolbar, False)
+		nav_toolbar.show()
+
 		self._notif_bar = NotificationBar()
 		vbox.pack_start(self._notif_bar, False)
 		self._notif_bar.connect('action', self.__notif_bar_action_cb)
@@ -37,11 +41,8 @@ class BrowserActivity(Activity):
 		vbox.pack_start(self._embed)		
 		self._embed.show()
 
+		nav_toolbar.set_embed(self._embed)
 		self._embed.load_url('http://www.google.com')		
-
-		nav_toolbar = NavigationToolbar(self)
-		vbox.pack_start(nav_toolbar, False)
-		nav_toolbar.show()
 
 		self.add(vbox)
 		vbox.show()
