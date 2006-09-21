@@ -31,7 +31,10 @@ class Shell(gobject.GObject):
 		self._grid = Grid()
 
 		self._key_grabber = KeyGrabber()
-		self._key_grabber.connect('key-pressed', self.__global_key_pressed_cb)
+		self._key_grabber.connect('key-pressed',
+								  self.__global_key_pressed_cb)
+		self._key_grabber.connect('key-released',
+								  self.__global_key_released_cb)
 		self._key_grabber.grab('F1')
 		self._key_grabber.grab('F2')
 		self._key_grabber.grab('F3')
@@ -61,9 +64,13 @@ class Shell(gobject.GObject):
 		elif key == 'F4':
 			self.set_zoom_level(sugar.ZOOM_MESH)
 		elif key == 'F5':
-			self._frame.toggle_visibility()
+			self._frame.notify_key_press()
 		elif key == 'F6':
 			self.start_activity('org.sugar.Terminal')
+
+	def __global_key_released_cb(self, grabber, key):
+		if key == 'F5':
+			self._frame.notify_key_release()
 
 	def __window_opened_cb(self, screen, window):
 		if window.get_window_type() == wnck.WINDOW_NORMAL:

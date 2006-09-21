@@ -43,12 +43,15 @@ struct _SugarKeyGrabber {
 struct _SugarKeyGrabberClass {
 	GObjectClass base_class;
 
-	void (* key_pressed) (SugarKeyGrabber *grabber,
-						  const char      *key);
+	void (* key_pressed)  (SugarKeyGrabber *grabber,
+						   const char      *key);
+	void (* key_released) (SugarKeyGrabber *grabber,
+						   const char      *key);
 };
 
 enum {
 	KEY_PRESSED,
+	KEY_RELEASED,
 	N_SIGNALS
 };
 
@@ -97,6 +100,34 @@ sugar_key_grabber_class_init(SugarKeyGrabberClass *grabber_class)
                          g_cclosure_marshal_VOID__STRING,
                          G_TYPE_NONE, 1,
                          G_TYPE_STRING);
+	signals[KEY_RELEASED] = g_signal_new ("key-released",
+                         G_TYPE_FROM_CLASS (grabber_class),
+                         G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                         G_STRUCT_OFFSET (SugarKeyGrabberClass, key_released),
+                         NULL, NULL,
+                         g_cclosure_marshal_VOID__STRING,
+                         G_TYPE_NONE, 1,
+                         G_TYPE_STRING);
+}
+
+static char *
+get_key_from_event(SugarKeyGrabber *grabber, XEvent *xev)
+{
+	GList *l;
+	guint keycode, state;
+
+	keycode = xev->xkey.keycode;
+	state = xev->xkey.state;
+
+	for (l = grabber->keys; l != NULL; l = l->next) {
+		Key *keyinfo = (Key *)l->data;
+		if (keyinfo->keycode == keycode &&
+		    (state & USED_MODS) == keyinfo->state) {
+			return g_strdup(keyinfo->key);
+		}
+	}
+
+	return NULL;
 }
 
 static GdkFilterReturn
@@ -105,22 +136,33 @@ filter_events(GdkXEvent *xevent, GdkEvent *event, gpointer data)
 	SugarKeyGrabber *grabber = (SugarKeyGrabber *)data;
 	XEvent *xev = (XEvent *)xevent;
 
-	if (xev->type == KeyPress) {
-		GList *l;
-		guint keycode, state;
+	if (xev->type == KeyRelease) {
+			char *key;
 
-		keycode = xev->xkey.keycode;
-		state = xev->xkey.state;
+			key = get_key_from_event(grabber, xevent);
+			if (key) {
+				g_signal_emit (grabber, signals[KEY_RELEASED], 0, key);
+				g_free(key);
 
-		for (l = grabber->keys; l != NULL; l = l->next) {
-			Key *keyinfo = (Key *)l->data;
-			if (keyinfo->keycode == keycode &&
-			    (state & USED_MODS) == keyinfo->state) {
-				g_signal_emit (grabber, signals[KEY_PRESSED],
-							   0, keyinfo->key);
 				return GDK_FILTER_REMOVE;
 			}
-		}
+	}
+
+	if (xev->type == KeyPress) {
+			char *key;
+
+			key = get_key_from_event(grabber, xevent);
+			if (key) {
+				g_signal_emit (grabber, signals[KEY_PRESSED], 0, key);
+				g_free(key);
+
+				XGrabKeyboard (GDK_WINDOW_XDISPLAY (grabber->root),
+							   GDK_WINDOW_XID (grabber->root),
+							   0, GrabModeAsync, GrabModeAsync, 0L);
+
+
+				return GDK_FILTER_REMOVE;
+			}
 	}
 
 	return GDK_FILTER_CONTINUE;

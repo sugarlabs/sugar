@@ -8,6 +8,7 @@ from view.frame.RightPanel import RightPanel
 from view.frame.TopPanel import TopPanel
 from view.frame.PanelWindow import PanelWindow
 from sugar.canvas.Grid import Grid
+from sugar.canvas.Timeline import Timeline
 from sugar.canvas.MenuShell import MenuShell
 
 class EventFrame(gobject.GObject):
@@ -69,7 +70,13 @@ class Frame:
 	def __init__(self, shell):
 		self._windows = []
 		self._shell = shell
-		self._hide_timeout = 0
+		self._sticky = False
+
+		self._timeline = Timeline(self)
+		self._timeline.add_tag('start', 0, 0)
+		self._timeline.add_tag('slide_in', 6, 12)
+		self._timeline.add_tag('before_slide_out', 36, 36)
+		self._timeline.add_tag('slide_out', 37, 42)
 
 		model = goocanvas.CanvasModelSimple()
 		root = model.get_root_item()
@@ -116,53 +123,44 @@ class Frame:
 		self._windows.append(panel_window)
 
 	def _menu_shell_activated_cb(self, menu_shell):
-		self._cancel_hide()
+		pass
 
 	def _menu_shell_deactivated_cb(self, menu_shell):
-		self._hide_after(500)
+		pass
 
 	def _enter_notify_cb(self, window, event):
-		self._cancel_hide()
+		pass
 
 	def _leave_notify_cb(self, window, event):
-		# FIXME for some reason every click cause also a leave-notify
-		if event.state == gtk.gdk.BUTTON1_MASK:
-			return
-
-		if not self._menu_shell.is_active():
-			self._hide_after(500)
+		pass
 
 	def _event_frame_hover_cb(self, event_frame):
-		self.show()
-
-	def _hide_timeout_cb(self):
-		self.hide()
-		return False
-
-	def _cancel_hide(self):
-		if self._hide_timeout > 0:
-			gobject.source_remove(self._hide_timeout)
-
-	def _hide_after(self, ms):
-		self._cancel_hide()
-		self._hide_timeout = gobject.timeout_add(ms, self._hide_timeout_cb)
+		pass
 
 	def show_and_hide(self, seconds):
-		self.show()
-		self._hide_after(seconds * 1000)
+		self._timeline.play()
 
-	def show(self):
-		for panel in self._windows:
-			panel.show()
-		self._event_frame.hide()
-
-	def hide(self):
-		for panel in self._windows:
-			panel.hide()
-		self._event_frame.show()
-
-	def toggle_visibility(self):
-		if self._windows[0].props.visible:
-			self.hide()
+	def notify_key_press(self):
+		if self._timeline.on_tag('slide_in'):
+			self._timeline.play('before_slide_out', 'slide_out')
+		elif self._timeline.on_tag('before_slide_out'):
+			self._sticky = True
 		else:
-			self.show()
+			self._sticky = False
+			self._timeline.play('slide_in', 'slide_in')
+
+	def notify_key_release(self):
+		if self._sticky:
+			self._timeline.play('before_slide_out', 'slide_out')
+
+	def do_slide_in(self, current, n_frames):
+		if current == 0:
+			for panel in self._windows:
+				panel.show()
+			self._event_frame.hide()
+
+	def do_slide_out(self, current, n_frames):
+		if current == 0:
+			for panel in self._windows:
+				panel.hide()
+			self._event_frame.show()
