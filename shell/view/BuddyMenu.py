@@ -32,9 +32,9 @@ class BuddyMenu(Menu):
 		icon = IconItem(icon_name='stock-chat')
 		self.add_action(icon, -1)
 
-		activity = shell_model.get_current_activity()
-		if activity != None:
-			activity_ps = pservice.get_activity(activity.get_id())
+		activity_id = shell_model.get_current_activity()
+		if activity_id != None:
+			activity_ps = pservice.get_activity(activity_id)
 
 			# FIXME check that the buddy is not in the activity already
 
