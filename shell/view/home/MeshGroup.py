@@ -14,7 +14,7 @@ class ActivityItem(IconItem):
 		self._activity = activity
 
 		IconItem.__init__(self, icon_name=self.get_icon_name(),
-						  color=self.get_color(), size=96)
+						  color=self.get_color(), size=112)
 
 	def get_id(self):
 		return self._activity.get_id()

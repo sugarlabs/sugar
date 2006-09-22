@@ -15,7 +15,7 @@ class FriendsGroup(goocanvas.Group):
 		self._icon_layout = IconLayout(1200, 900)
 		self._friends = {}
 
-		me = MyIcon(100)
+		me = MyIcon(112)
 		me.translate(600 - (me.get_property('size') / 2),
 					 450 - (me.get_property('size') / 2))
 		self.add_child(me)
