@@ -7,7 +7,11 @@ _NOT_PRESENT_COLOR = "#888888,#BBBBBB"
 class BuddyModel(gobject.GObject):
 	__gsignals__ = {
 		'appeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
-		'disappeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
+		'disappeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+		'color-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+						 ([gobject.TYPE_PYOBJECT])),
+		'current-activity-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+									([gobject.TYPE_PYOBJECT]))
 	}
 
 	def __init__(self, name=None, buddy=None):
@@ -81,9 +85,17 @@ class BuddyModel(gobject.GObject):
 		self.emit('appeared')
 
 	def __buddy_property_changed_cb(self, buddy, keys):
+		if not self._buddy:
+			return
+
 		# all we care about right now is current activity
-		curact = self._buddy.get_current_activity()
-		self._cur_activity = self._pservice.get_activity(curact)
+		if 'curact' in keys:
+			curact = self._buddy.get_current_activity()
+			self._cur_activity = self._pservice.get_activity(curact)
+			self.emit('current-activity-changed', self._cur_activity)
+		if 'color' in keys:
+			self.__set_color_from_string(self._buddy.get_color())
+			self.emit('color-changed', self.get_color())
 
 	def __buddy_disappeared_cb(self, buddy):
 		if buddy != self._buddy:
@@ -91,5 +103,7 @@ class BuddyModel(gobject.GObject):
 		self._buddy.disconnect(self._pc_handler)
 		self._buddy.disconnect(self._dis_handler)
 		self.__set_color_from_string(_NOT_PRESENT_COLOR)
+		self._cur_activity = None
+		self.emit('current-activity-changed', self._cur_activity)
 		self.emit('disappeared')
 		self._buddy = None
