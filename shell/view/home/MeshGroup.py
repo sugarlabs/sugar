@@ -41,8 +41,10 @@ class MeshGroup(goocanvas.Group):
 		self._activities = {}
 
 		self._pservice = PresenceService.get_instance()
-		self._pservice.connect("service-appeared", self._service_appeared_cb)
-		self._pservice.connect('activity-disappeared', self._activity_disappeared_cb)
+		self._pservice.connect("service-appeared",
+							   self._service_appeared_cb)
+		self._pservice.connect('activity-disappeared',
+							   self._activity_disappeared_cb)
 
 		for service in self._pservice.get_services():
 			self._check_service(service)

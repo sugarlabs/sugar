@@ -20,10 +20,8 @@ class BuddyIcon(MenuIcon):
 	def _popup_action_cb(self, popup, action):
 		self.popdown()
 
-		model = self._shell.get_model()
-
+		friends = self._shell.get_model().get_friends()
 		if action == BuddyMenu.ACTION_REMOVE_FRIEND:
-			friends = model.get_friends()
 			friends.remove(self._friend)
 
 		buddy = self._friend.get_buddy()
@@ -31,8 +29,7 @@ class BuddyIcon(MenuIcon):
 			return
 
 		if action == BuddyMenu.ACTION_INVITE:
-			activity = model.get_current_activity()
+			activity = self._shell.get_current_activity()
 			activity.invite(buddy)
 		elif action == BuddyMenu.ACTION_MAKE_FRIEND:
-			friends = model.get_friends()
 			friends.make_friend(buddy)
