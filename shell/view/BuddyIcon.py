@@ -10,8 +10,9 @@ class BuddyIcon(MenuIcon):
 		self._buddy = buddy
 		self._buddy.connect('appeared', self.__buddy_presence_change_cb)
 		self._buddy.connect('disappeared', self.__buddy_presence_change_cb)
+		self._buddy.connect('color-changed', self.__buddy_presence_change_cb)
 
-	def __buddy_presence_change_cb(self, buddy):
+	def __buddy_presence_change_cb(self, buddy, color=None):
 		# Update the icon's color when the buddy comes and goes
 		self.set_property('color', buddy.get_color())
 
