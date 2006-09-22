@@ -5,6 +5,7 @@ import gobject
 
 from model.BuddyModel import BuddyModel
 from sugar import env
+import logging
 
 class Friends(gobject.GObject):
 	__gsignals__ = {
@@ -45,12 +46,16 @@ class Friends(gobject.GObject):
 	def load(self):
 		cp = ConfigParser()
 
-		if cp.read([self._path]):
-			for name in cp.sections():
-				buddy = BuddyModel()
-				buddy.set_name(name)
-				buddy.set_color(cp.get(name, 'color'))
-				self.add_friend(buddy)
+		try:
+			success = cp.read([self._path])
+			if success:
+				for name in cp.sections():
+					buddy = BuddyModel()
+					buddy.set_name(name)
+					buddy.set_color(cp.get(name, 'color'))
+					self.add_friend(buddy)
+		except Exception, exc:
+			logging.error("Error parsing friends file: %s" % exc)
 
 	def save(self):
 		cp = ConfigParser()

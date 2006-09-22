@@ -99,7 +99,10 @@ class Bot:
 
 		self._pservice = PresenceService.get_instance()
 
-		gtk.main()
+		try:
+			gtk.main()
+		except KeyboardInterrupt:
+			pass
 
 	def add_action(self, action, minutes):
 		self._timeline.add(action, minutes)
