@@ -10,6 +10,9 @@ PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
 BUDDY_DBUS_OBJECT_PATH = "/org/laptop/Presence/Buddies/"
 BUDDY_DBUS_INTERFACE = "org.laptop.Presence.Buddy"
 
+_BUDDY_KEY_COLOR = 'color'
+_BUDDY_KEY_CURACT = 'curact'
+
 class NotFoundError(Exception):
 	pass
 
@@ -85,7 +88,10 @@ class BuddyDBusHelper(dbus.service.Object):
 		props['owner'] = self._parent.is_owner()
 		color = self._parent.get_color()
 		if color:
-			props['color'] = self._parent.get_color()
+			props[_BUDDY_KEY_COLOR] = self._parent.get_color()
+		curact = self._parent.get_current_activity()
+		if curact:
+			props[_BUDDY_KEY_CURACT] = self._parent.get_current_activity()
 		return props
 
 
@@ -113,6 +119,7 @@ class Buddy(object):
 			self._nick_name = service.get_name()
 			self._address = service.get_source_address()
 		self._color = None
+		self._current_activity = None
 		self._valid = False
 		self._icon = None
 		self._icon_tries = 0
@@ -121,6 +128,7 @@ class Buddy(object):
 		self._object_path = BUDDY_DBUS_OBJECT_PATH + str(self._object_id)
 		self._dbus_helper = BuddyDBusHelper(self, bus_name, self._object_path)
 
+		self._buddy_presence_service = None
 		if service is not None:
 			self.add_service(service)
 
@@ -181,24 +189,47 @@ class Buddy(object):
 					service_key[1]))
 			return False
 
+		if service.get_type() == PRESENCE_SERVICE_TYPE and self._buddy_presence_service:
+			# already have a presence service for this buddy
+			logging.debug("!!! Tried to add a buddy presence service when " \
+					"one already existed.")
+			return False
+
 		logging.debug("Buddy %s added service type %s id %s" % (self._nick_name,
 				service.get_type(), service.get_activity_id()))
 		self._services[service_key] = service
 		service.set_owner(self)
 
 		if service.get_type() == PRESENCE_SERVICE_TYPE:
+			self._buddy_presence_service = service
 			# A buddy isn't valid until its official presence
 			# service has been found and resolved
 			self._valid = True
-			print 'Requesting buddy icon %s' % self._nick_name
+			logging.debug('Requesting buddy icon %s' % self._nick_name)
 			self._request_buddy_icon(service)
-			self._color = service.get_one_property('color')
+			self._color = service.get_one_property(_BUDDY_KEY_COLOR)
 			if self._color:
-				self._dbus_helper.PropertyChanged(['color'])
+				self._dbus_helper.PropertyChanged([_BUDDY_KEY_COLOR])
+			# Monitor further buddy property changes, like current activity
+			# and color
+			service.connect('property-changed',
+					self.__buddy_presence_service_property_changed_cb)
 
 		if self._valid:
 			self._dbus_helper.ServiceAppeared(service.object_path())
 		return True
+
+	def __buddy_presence_service_property_changed_cb(self, service, keys):
+		if _BUDDY_KEY_COLOR in keys:
+			new_color = service.get_one_property(_BUDDY_KEY_COLOR)
+			if new_color and self._color != new_color:
+				self._color = new_color
+				self._dbus_helper.PropertyChanged([_BUDDY_KEY_COLOR])
+		if _BUDDY_KEY_CURACT in keys:
+			new_curact = service.get_one_property(_BUDDY_KEY_CURACT)
+			if new_curact and self._current_activity != new_curact:
+				self._current_activity = new_curact
+				self._dbus_helper.PropertyChanged([_BUDDY_KEY_CURACT])
 
 	def add_activity(self, activity):
 		actid = activity.get_id()
@@ -222,6 +253,13 @@ class Buddy(object):
 			return
 		if service.get_name() != self._nick_name:
 			return
+
+		if service.get_type() == PRESENCE_SERVICE_TYPE \
+				and self._buddy_presence_service \
+				and service != self._buddy_presence_service:
+			logging.debug("!!! Tried to remove a spurious buddy presence service.")
+			return
+
 		service_key = self._get_service_key(service)
 		if self._services.has_key(service_key):
 			if self._valid:
@@ -281,6 +319,9 @@ class Buddy(object):
 
 	def get_color(self):
 		return self._color
+
+	def get_current_activity(self):
+		return self._current_activity
 
 	def _set_icon(self, icon):
 		"""Can only set icon for other buddies.  The Owner
