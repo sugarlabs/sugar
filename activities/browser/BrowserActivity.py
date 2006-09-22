@@ -16,6 +16,7 @@ class BrowserActivity(Activity):
 	def __init__(self):
 		Activity.__init__(self)
 
+		gtkmozembed.push_startup()
 		gtkmozembed.set_profile_path(env.get_profile_path(), 'gecko')
 
 		self._share_service = None
