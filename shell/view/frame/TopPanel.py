@@ -96,7 +96,7 @@ class TopPanel(goocanvas.Group):
 
 		if activity:
 			icon = ActivityIcon(self._shell, self._menu_shell, activity)
-			self._box.set_constraints(icon, 3, 3)
+			self._box.set_constraints(icon, 5, 5)
 			self._box.add_child(icon)
 			self._activity_icon = icon
 		else:

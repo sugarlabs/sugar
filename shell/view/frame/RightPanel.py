@@ -10,7 +10,7 @@ from view.frame.MenuStrategy import MenuStrategy
 
 class RightPanel(CanvasBox):
 	def __init__(self, shell, menu_shell):
-		CanvasBox.__init__(self, shell.get_grid(), CanvasBox.VERTICAL, 1)
+		CanvasBox.__init__(self, shell.get_grid(), CanvasBox.VERTICAL)
 		self._shell = shell
 		self._menu_shell = menu_shell
 		self._activity_ps = None
@@ -27,7 +27,7 @@ class RightPanel(CanvasBox):
 	def add(self, buddy):
 		icon = BuddyIcon(self._shell, self._menu_shell, BuddyModel(buddy))
 		icon.set_menu_strategy(MenuStrategy())
-		self.set_constraints(icon, 3, 3)
+		self.set_constraints(icon, 5, 5)
 		self.add_child(icon)
 
 		self._buddies[buddy.get_name()] = icon

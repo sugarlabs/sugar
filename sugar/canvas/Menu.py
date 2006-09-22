@@ -45,7 +45,7 @@ class Menu(gtk.Window):
 		self._grid.set_constraints(separator, 0, 4)
 		self._root.add_child(separator)
 
-		box = CanvasBox(self._grid, CanvasBox.HORIZONTAL, 1)
+		box = CanvasBox(self._grid, CanvasBox.HORIZONTAL)
 		self._grid.set_constraints(box, 0, 5)
 
 		return box
@@ -62,7 +62,7 @@ class Menu(gtk.Window):
 			self._update_constraints()
 
 		icon.connect('clicked', self._action_clicked_cb, action_id)
-		self._action_box.set_constraints(icon, 3, 3)
+		self._action_box.set_constraints(icon, 5, 5)
 		self._action_box.add_child(icon)
 
 	def _action_clicked_cb(self, icon, action):

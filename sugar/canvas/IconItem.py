@@ -25,15 +25,12 @@ class _IconCache:
 
 			fill = color.get_fill_color()
 			stroke = color.get_stroke_color()
+	
+			entity = '<!ENTITY fill_color "%s">' % fill
+			data = re.sub('<!ENTITY fill_color .*>', entity, data)
 
-			style = '.fill {fill:%s;stroke:%s;}' % (fill, fill)
-			data = re.sub('\.fill \{.*\}', style, data)
-
-			style = '.shape {stroke:%s;fill:%s;}' % (stroke, stroke)
-			data = re.sub('\.shape \{.*\}', style, data)
-
-			style = '.shape-and-fill {fill:%s; stroke:%s;}' % (fill, stroke)
-			data = re.sub('\.shape-and-fill \{.*\}', style, data)
+			entity = '<!ENTITY stroke_color "%s">' % stroke
+			data = re.sub('<!ENTITY stroke_color .*>', entity, data)
 
 			return rsvg.Handle(data=data)
 

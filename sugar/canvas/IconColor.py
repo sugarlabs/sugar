@@ -4,7 +4,7 @@ from sugar.canvas import Colors
 
 def _parse_string(color_string):
 	if color_string == 'white':
-		return ['white', '#4f4f4f']
+		return ['#ffffff', '#4f4f4f']
 
 	splitted = color_string.split(',')
 	if len(splitted) == 2:

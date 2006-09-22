@@ -34,7 +34,7 @@ class InviteItem(IconItem):
 
 class BottomPanel(CanvasBox):
 	def __init__(self, shell):
-		CanvasBox.__init__(self, shell.get_grid(), CanvasBox.HORIZONTAL, 1)
+		CanvasBox.__init__(self, shell.get_grid(), CanvasBox.HORIZONTAL)
 
 		self._shell = shell
 		self._invite_to_item = {}
@@ -67,13 +67,13 @@ class BottomPanel(CanvasBox):
 	def add_activity(self, activity):
 		item = ActivityItem(activity)
 		item.connect('clicked', self.__activity_clicked_cb)
-		self.set_constraints(item, 3, 3)
+		self.set_constraints(item, 5, 5)
 		self.add_child(item)
 
 	def add_invite(self, invite):
 		item = InviteItem(invite)
 		item.connect('clicked', self.__invite_clicked_cb)
-		self.set_constraints(item, 3, 3)
+		self.set_constraints(item, 5, 5)
 		self.add_child(item, 0)
 
 		self._invite_to_item[invite] = item
