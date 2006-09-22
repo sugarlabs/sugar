@@ -111,7 +111,7 @@ class Shell(gobject.GObject):
 	def join_activity(self, bundle_id, activity_id):
 		pservice = PresenceService.get_instance()
 
-		activity = self._model.get_activity(activity_id)
+		activity = self._get_activity(activity_id)
 		if activity:
 			activity.present()
 		else:
