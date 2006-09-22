@@ -45,7 +45,7 @@ class HomeGroup(goocanvas.Group):
 		tasks.translate(600, 450)
 		self.add_child(tasks)
 
-		me = MyIcon(150)
+		me = MyIcon(180)
 		me.translate(600 - (me.get_property('size') / 2),
 					 450 - (me.get_property('size') / 2))
 		self.add_child(me)

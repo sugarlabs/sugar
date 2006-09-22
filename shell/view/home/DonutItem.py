@@ -6,7 +6,7 @@ from sugar.canvas.IconItem import IconItem
 
 class PieceIcon(IconItem):
 	def __init__(self, piece_item, **kwargs):
-		IconItem.__init__(self, size=48, **kwargs)
+		IconItem.__init__(self, size=96, **kwargs)
 		self._piece_item = piece_item
 
 	def construct(self):
