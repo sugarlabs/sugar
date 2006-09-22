@@ -36,7 +36,13 @@ class Buddy(gobject.GObject):
 		self._buddy.connect_to_signal('JoinedActivity', self._joined_activity_cb)
 		self._buddy.connect_to_signal('LeftActivity', self._left_activity_cb)
 		self._buddy.connect_to_signal('PropertyChanged', self._property_changed_cb)
-		self._properties = self._buddy.getProperties()
+		self._properties = self._get_properties_helper()
+
+	def _get_properties_helper(self):
+		props = self._buddy.getProperties()
+		if not props:
+			return {}
+		return props
 
 	def object_path(self):
 		return self._object_path
@@ -77,7 +83,7 @@ class Buddy(gobject.GObject):
 		gobject.idle_add(self._emit_left_activity_signal, object_path)
 
 	def _handle_property_changed_signal(self, prop_list):
-		self._properties = self._buddy.getProperties()
+		self._properties = self._get_properties_helper()
 		self.emit('property-changed', prop_list)
 		return False
 
