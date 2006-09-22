@@ -35,6 +35,11 @@ class BuddyDBusHelper(dbus.service.Object):
 
 	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
 						signature="")
+	def Disappeared(self):
+		pass
+
+	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
+						signature="")
 	def IconChanged(self):
 		pass
 
@@ -268,6 +273,7 @@ class Buddy(object):
 
 		if service.get_type() == PRESENCE_SERVICE_TYPE:
 			self._valid = False
+			self._dbus_helper.Disappeared()
 
 	def remove_activity(self, activity):
 		actid = activity.get_id()

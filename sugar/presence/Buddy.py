@@ -7,6 +7,8 @@ class Buddy(gobject.GObject):
 	__gsignals__ = {
 		'icon-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
 						 ([])),
+		'disappeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+						 ([])),
 		'service-appeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
 						 ([gobject.TYPE_PYOBJECT])),
 		'service-disappeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
@@ -33,6 +35,7 @@ class Buddy(gobject.GObject):
 		self._buddy.connect_to_signal('IconChanged', self._icon_changed_cb)
 		self._buddy.connect_to_signal('ServiceAppeared', self._service_appeared_cb)
 		self._buddy.connect_to_signal('ServiceDisappeared', self._service_disappeared_cb)
+		self._buddy.connect_to_signal('Disappeared', self._disappeared_cb)
 		self._buddy.connect_to_signal('JoinedActivity', self._joined_activity_cb)
 		self._buddy.connect_to_signal('LeftActivity', self._left_activity_cb)
 		self._buddy.connect_to_signal('PropertyChanged', self._property_changed_cb)
@@ -53,6 +56,12 @@ class Buddy(gobject.GObject):
 
 	def _icon_changed_cb(self):
 		gobject.idle_add(self._emit_icon_changed_signal)
+
+	def _emit_disappeared_signal(self):
+		self.emit('disappeared')
+
+	def _disappeared_cb(self):
+		gobject.idle_add(self._emit_disappeared_signal)
 
 	def _emit_service_appeared_signal(self, object_path):
 		self.emit('service-appeared', self._ps_new_object(object_path))
