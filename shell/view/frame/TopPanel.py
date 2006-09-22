@@ -61,28 +61,28 @@ class TopPanel(goocanvas.Group):
 
 		grid = shell.get_grid()
 
-		box = CanvasBox(grid, CanvasBox.HORIZONTAL, 1)
+		box = CanvasBox(grid, CanvasBox.HORIZONTAL)
 		grid.set_constraints(box, 5, 0)
 		self.add_child(box)
 
-		icon = IconItem(icon_name='stock-zoom-activity')
-		icon.connect('clicked', self._level_clicked_cb, sugar.ZOOM_ACTIVITY)
-		box.set_constraints(icon, 3, 3)
-		box.add_child(icon)
-
-		icon = IconItem(icon_name='stock-zoom-home')
-		icon.connect('clicked', self._level_clicked_cb, sugar.ZOOM_HOME)
-		box.set_constraints(icon, 3, 3)
+		icon = IconItem(icon_name='stock-zoom-mesh')
+		icon.connect('clicked', self._level_clicked_cb, sugar.ZOOM_MESH)
+		box.set_constraints(icon, 5, 5)
 		box.add_child(icon)
 
 		icon = IconItem(icon_name='stock-zoom-friends')
 		icon.connect('clicked', self._level_clicked_cb, sugar.ZOOM_FRIENDS)
-		box.set_constraints(icon, 3, 3)
+		box.set_constraints(icon, 5, 5)
 		box.add_child(icon)
 
-		icon = IconItem(icon_name='stock-zoom-mesh')
-		icon.connect('clicked', self._level_clicked_cb, sugar.ZOOM_MESH)
-		box.set_constraints(icon, 3, 3)
+		icon = IconItem(icon_name='stock-zoom-home')
+		icon.connect('clicked', self._level_clicked_cb, sugar.ZOOM_HOME)
+		box.set_constraints(icon, 5, 5)
+		box.add_child(icon)
+
+		icon = IconItem(icon_name='stock-zoom-activity')
+		icon.connect('clicked', self._level_clicked_cb, sugar.ZOOM_ACTIVITY)
+		box.set_constraints(icon, 5, 5)
 		box.add_child(icon)
 
 		self._box = box

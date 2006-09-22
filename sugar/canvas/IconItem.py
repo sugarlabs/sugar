@@ -9,19 +9,16 @@ import cairo
 from sugar.util import GObjectSingletonMeta
 from sugar.canvas.IconColor import IconColor
 
-_ICON_SIZE = 48
-
 class _IconCache:
 	def __init__(self):
 		self._icons = {}
+		self._theme = gtk.icon_theme_get_default()
 
-	def _read_icon(self, name, color):
-		theme = gtk.icon_theme_get_default()
-		info = theme.lookup_icon(name, _ICON_SIZE, 0)
-		icon_file = open(info.get_filename(), 'r')
+	def _read_icon(self, filename, color):
+		icon_file = open(filename, 'r')
 
 		if color == None:
-			return rsvg.Handle(file=info.get_filename())
+			return rsvg.Handle(file=filename)
 		else:
 			data = icon_file.read()
 			icon_file.close()
@@ -40,16 +37,18 @@ class _IconCache:
 
 			return rsvg.Handle(data=data)
 
-	def get_handle(self, name, color):
+	def get_handle(self, name, color, size):
+		info = self._theme.lookup_icon(name, size, 0)
+
 		if color:
-			key = (name, color.to_string())
+			key = (info.get_filename(), color.to_string())
 		else:
-			key = name
+			key = info.get_filename()
 
 		if self._icons.has_key(key):
 			icon = self._icons[key]
 		else:
-			icon = self._read_icon(name, color)
+			icon = self._read_icon(info.get_filename(), color)
 			self._icons[key] = icon
 		return icon
 
@@ -66,7 +65,7 @@ class IconView(goocanvas.ItemViewSimple, goocanvas.ItemView):
 		self.item = item
 
 		self._buffer = None
-		self._buffer_scale = 0.0
+		self._buffer_size = 0.0
 
 		item.connect('changed', goocanvas.item_view_simple_item_changed, self)
 
@@ -118,15 +117,17 @@ class IconView(goocanvas.ItemViewSimple, goocanvas.ItemView):
 
 		return self.bounds
 
-	def _get_buffer(self, cr, handle, scale):
-		if self._buffer and self._buffer_scale != scale:
+	def _get_buffer(self, cr, handle, size):
+		if self._buffer and self._buffer_size != size:
 			del self._buffer
 			self._buffer = None
 
 		if self._buffer == None:
-			size = int(_ICON_SIZE * scale)
 			surface = cr.get_target().create_similar(
 							cairo.CONTENT_COLOR_ALPHA, size, size)
+
+			dimensions = handle.get_dimension_data()
+			scale = size / dimensions[0]
 
 			ctx = cairo.Context(surface)
 			ctx.scale(scale, scale)
@@ -139,16 +140,13 @@ class IconView(goocanvas.ItemViewSimple, goocanvas.ItemView):
 		return self._buffer
 
 	def do_paint(self, cr, bounds, scale):
-		scale_factor = float(self.item.size) / float(_ICON_SIZE)
-		if scale_factor == 0.0:
-			return
-
 		icon_name = self.item.icon_name
 		if icon_name == None:
 			icon_name = 'stock-missing'
 
-		handle = IconView._cache.get_handle(icon_name, self.item.color)
-		buf = self._get_buffer(cr, handle, scale_factor)
+		handle = IconView._cache.get_handle(
+				icon_name, self.item.color, self.item.size)
+		buf = self._get_buffer(cr, handle, self.item.size)
 
 		cr.save()
 
@@ -184,7 +182,7 @@ class IconItem(goocanvas.ItemSimple, goocanvas.Item):
 					  gobject.PARAM_READWRITE),
 		'color'    : (object, None, None,
 					  gobject.PARAM_READWRITE),
-		'size'     : (int, None, None,
+		'size'     : (float, None, None,
 					  0, 1024, 24,
 					  gobject.PARAM_READWRITE)
 	}
