@@ -144,6 +144,8 @@ filter_events(GdkXEvent *xevent, GdkEvent *event, gpointer data)
 				g_signal_emit (grabber, signals[KEY_RELEASED], 0, key);
 				g_free(key);
 
+				XUngrabKeyboard (GDK_WINDOW_XDISPLAY (grabber->root), 0L);
+
 				return GDK_FILTER_REMOVE;
 			}
 	}
@@ -159,7 +161,6 @@ filter_events(GdkXEvent *xevent, GdkEvent *event, gpointer data)
 				XGrabKeyboard (GDK_WINDOW_XDISPLAY (grabber->root),
 							   GDK_WINDOW_XID (grabber->root),
 							   0, GrabModeAsync, GrabModeAsync, 0L);
-
 
 				return GDK_FILTER_REMOVE;
 			}

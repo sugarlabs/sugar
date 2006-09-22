@@ -13,13 +13,13 @@ class NavigationToolbar(gtk.Toolbar):
 		self._insert_spring()
 
 		self.back = gtk.ToolButton(None, _('Back'))
-		self.back.set_icon_name('back')
+		self.back.set_icon_name('stock-back')
 		self.back.connect("clicked", self.__go_back_cb)
 		self.insert(self.back, -1)
 		self.back.show()
 
 		self.forward = gtk.ToolButton(None, _('Forward'))
-		self.forward.set_icon_name('forward')
+		self.forward.set_icon_name('stock-forward')
 		self.forward.connect("clicked", self.__go_forward_cb)
 		self.insert(self.forward, -1)
 		self.forward.show()
