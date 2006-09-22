@@ -38,7 +38,7 @@ class _IconCache:
 			return rsvg.Handle(data=data)
 
 	def get_handle(self, name, color, size):
-		info = self._theme.lookup_icon(name, size, 0)
+		info = self._theme.lookup_icon(name, int(size), 0)
 
 		if color:
 			key = (info.get_filename(), color.to_string())
@@ -123,8 +123,9 @@ class IconView(goocanvas.ItemViewSimple, goocanvas.ItemView):
 			self._buffer = None
 
 		if self._buffer == None:
-			surface = cr.get_target().create_similar(
-							cairo.CONTENT_COLOR_ALPHA, size, size)
+			target = cr.get_target()
+			surface = target.create_similar(cairo.CONTENT_COLOR_ALPHA,
+						 			        int(size) + 1, int(size) + 1)
 
 			dimensions = handle.get_dimension_data()
 			scale = size / dimensions[0]
