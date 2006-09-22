@@ -41,7 +41,7 @@ class Menu(gtk.Window):
 
 	def _create_action_box(self):
 		separator = goocanvas.Path(data='M 15 0 L 215 0', line_width=3,
-								   stroke_color='#a1a1a1')
+								   stroke_color='white')
 		self._grid.set_constraints(separator, 0, 4)
 		self._root.add_child(separator)
 
