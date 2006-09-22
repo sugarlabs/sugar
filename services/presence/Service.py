@@ -5,6 +5,7 @@ from sugar import util
 import dbus, dbus.service
 import random
 import logging
+import gobject
 
 def compose_service_name(name, activity_id):
 	if type(name) == type(""):
@@ -135,13 +136,19 @@ class ServiceDBusHelper(dbus.service.Object):
 		self._parent.set_properties(values, sender)
 
 
-class Service(object):
+class Service(gobject.GObject):
 	"""Encapsulates information about a specific ZeroConf/mDNS
 	service as advertised on the network."""
+
+	__gsignals__ = {
+		'property-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+						 ([gobject.TYPE_PYOBJECT]))
+	}
 
 	def __init__(self, bus_name, object_id, name, stype, domain=u"local",
 				address=None, port=-1, properties=None, source_address=None,
 				local_publisher=None):
+		gobject.GObject.__init__(self)
 		if not bus_name:
 			raise ValueError("DBus bus name must be valid")
 		if not object_id or type(object_id) != type(1):
@@ -178,7 +185,7 @@ class Service(object):
 		self._domain = domain
 		self._port = -1
 		self.set_port(port)
-		self._properties = None
+		self._properties = {}
 		self._dbus_helper = None
 		self._internal_set_properties(properties)
 
@@ -252,6 +259,11 @@ class Service(object):
 		properties."""
 		return self._properties
 
+	def __emit_properties_changed_signal(self, keys):
+		if self._dbus_helper:
+			self._dbus_helper.PublishedValueChanged(keys)
+		self.emit('property-changed', keys)
+
 	def set_property(self, key, value, sender=None):
 		"""Set one service property"""
 		if not self._local_publisher:
@@ -290,8 +302,7 @@ class Service(object):
 		if self._local_publisher and self._avahi_entry_group:
 			self.__internal_update_avahi_properties()
 
-		if self._dbus_helper:
-			self._dbus_helper.PublishedValueChanged([key])
+		self.__emit_properties_changed_signal([key])
 
 	def set_properties(self, properties, sender=None, from_network=False):
 		"""Set all service properties in one call"""
@@ -306,13 +317,13 @@ class Service(object):
 		python dictionary."""
 		if type(properties) != type({}):
 			raise ValueError("Properties must be a dictionary.")
-		self._properties = {}
 
 		# Make sure the properties are actually different
 		diff_keys = _dicts_differ(self._properties, properties)
 		if len(diff_keys) == 0:
 			return
 
+		self._properties = {}
 		# Set key/value pairs on internal property list
 		for key, value in properties.items():
 			if len(key) == 0:
@@ -329,8 +340,7 @@ class Service(object):
 		if self._local_publisher and self._avahi_entry_group and not from_network:
 			self.__internal_update_avahi_properties()
 
-		if self._dbus_helper:
-			self._dbus_helper.PublishedValueChanged(diff_keys)
+		self.__emit_properties_changed_signal(diff_keys)
 
 	def __internal_update_avahi_properties(self):
 		info = _convert_properties_to_dbus_byte_array(self._properties)
