@@ -37,7 +37,7 @@ class MeshGroup(goocanvas.Group):
 
 		self._shell = shell
 
-		self._icon_layout = IconLayout(1200, 900)
+		self._icon_layout = IconLayout(shell.get_grid())
 		self._activities = {}
 
 		self._pservice = PresenceService.get_instance()
