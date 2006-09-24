@@ -50,9 +50,7 @@ class Friends(gobject.GObject):
 			success = cp.read([self._path])
 			if success:
 				for name in cp.sections():
-					buddy = BuddyModel()
-					buddy.set_name(name)
-					buddy.set_color(cp.get(name, 'color'))
+					buddy = BuddyModel(name)
 					self.add_friend(buddy)
 		except Exception, exc:
 			logging.error("Error parsing friends file: %s" % exc)
