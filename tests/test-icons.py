@@ -35,13 +35,13 @@ root.add_child(item)
 icon_names = [ 'stock-buddy', 'activity-groupchat', 'activity-web']
 
 k = 0
-while k < 17:
+while k < 12:
 	i = 0
-	while i < 23:
+	while i < 16:
 		color = IconColor.IconColor()
 		icon_name_n = int(random.random() * len(icon_names))
-		icon = IconItem(x=i * 50 + 20, y=k * 50 + 10,
-						size=46, color=color,
+		icon = IconItem(x=i * 75, y=k * 75,
+						size=75, color=color,
 						icon_name=icon_names[icon_name_n])
 		root.add_child(icon)
 		i += 1
