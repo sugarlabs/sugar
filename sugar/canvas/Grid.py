@@ -63,6 +63,9 @@ class Grid:
 			item.props.height = height - (item.props.line_width - 1) * 2
 		elif isinstance(item, goocanvas.Text):
 			item.props.width = width
+		elif isinstance(item, goocanvas.Image):
+			item.props.width = width
+			item.props.height = height
 		elif isinstance(item, IconItem):
 			item.props.size = width
 
