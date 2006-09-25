@@ -59,6 +59,9 @@ class BuddyModel(gobject.GObject):
 	def get_buddy(self):
 		return self._buddy
 
+	def get_current_activity(self):
+		return self._cur_activity
+
 	def __update_buddy(self, buddy):
 		if not buddy:
 			raise ValueError("Buddy cannot be None.")
