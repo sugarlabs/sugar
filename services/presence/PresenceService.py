@@ -5,6 +5,7 @@ import Activity
 import random
 import logging
 from sugar import util
+import BuddyIconCache
 
 
 _SA_UNRESOLVED = 0
@@ -302,9 +303,11 @@ class PresenceService(object):
 		self._bus_name = dbus.service.BusName(_PRESENCE_SERVICE, bus=self._session_bus)		
 		self._dbus_helper = PresenceServiceDBusHelper(self, self._bus_name)
 
+		self._icon_cache = BuddyIconCache.BuddyIconCache()
+
 		# Our owner object
 		objid = self._get_next_object_id()
-		self._owner = Buddy.Owner(self, self._bus_name, objid)
+		self._owner = Buddy.Owner(self, self._bus_name, objid, self._icon_cache)
 		self._buddies[self._owner.get_name()] = self._owner
 
 		self._started = False
@@ -423,7 +426,7 @@ class PresenceService(object):
 		except KeyError:
 			source_addr = service.get_source_address()
 			objid = self._get_next_object_id()
-			buddy = Buddy.Buddy(self._bus_name, objid, service)
+			buddy = Buddy.Buddy(self._bus_name, objid, service, self._icon_cache)
 			self._buddies[name] = buddy
 			self._dbus_helper.ServiceAppeared(service.object_path())
 		if not buddy_was_valid and buddy.is_valid():

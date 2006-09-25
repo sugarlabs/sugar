@@ -8,6 +8,7 @@ from sugar import env
 import logging
 from sugar.p2p import Stream
 from sugar.presence import PresenceService
+from sugar import util
 from model.Invites import Invites
 import dbus
 
@@ -24,11 +25,17 @@ class ShellOwner(object):
 		user_dir = profile.get_path()
 
 		self._icon = None
+		self._icon_hash = ""
 		for fname in os.listdir(user_dir):
 			if not fname.startswith("buddy-icon."):
 				continue
 			fd = open(os.path.join(user_dir, fname), "r")
 			self._icon = fd.read()
+			if self._icon:
+				# Get the icon's hash
+				import md5, binascii
+				digest = md5.new(self._icon).digest()
+				self._icon_hash = util.printable_hash(digest)
 			fd.close()
 			break
 
@@ -49,7 +56,7 @@ class ShellOwner(object):
 	def announce(self):
 		# Create and announce our presence
 		color = conf.get_profile().get_color()
-		props = {'color':color.to_string()}
+		props = {'color': color.to_string(), 'icon-hash': self._icon_hash}
 		self._service = self._pservice.register_service(self._nick,
 				PRESENCE_SERVICE_TYPE, properties=props)
 		logging.debug("Owner '%s' using port %d" % (self._nick, self._service.get_port()))
