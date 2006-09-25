@@ -17,8 +17,13 @@ class BuddyActivityView(goocanvas.Group):
 		self._buddy = buddy
 		self._buddy_icon = BuddyIcon.BuddyIcon(shell, menu_shell, buddy)
 		self.add_child(self._buddy_icon)
-		self._activity_icon = IconItem(y=50, size=48)
+
+		buddy_size = self._buddy_icon.props.size
+		offset_y = buddy_size
+		offset_x = (buddy_size - 48) / 2
+		self._activity_icon = IconItem(x=offset_x, y=offset_y, size=48)
 		self._activity_icon_visible = False
+
 		curact = self._buddy.get_current_activity()
 		if curact:
 			self.__buddy_activity_changed_cb(self._buddy, activity=curact)
