@@ -16,7 +16,7 @@ class Menu(gtk.Window):
 		gtk.Window.__init__(self, gtk.WINDOW_POPUP)
 
 		self._width = 15
-		self._height = 0
+		self._height = 3
 		self._grid = grid
 		self._action_box = None
 
@@ -32,7 +32,7 @@ class Menu(gtk.Window):
 
 		text = goocanvas.Text(text=title, font="Sans bold 18",
 							  fill_color='white', anchor=gtk.ANCHOR_SW)
-		self._grid.set_constraints(text, 1, 3, self._width, self._height)
+		self._grid.set_constraints(text, 1, self._height, self._width, 2)
 		self._root.add_child(text)
 		self._height += 1
 
