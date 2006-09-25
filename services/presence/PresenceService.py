@@ -469,11 +469,9 @@ class PresenceService(object):
 			updated):
 		"""When the service discovery finally gets here, we've got enough
 		information about the service to assign it to a buddy."""
-		tag = "Resolved"
-		if updated:
-			tag = "Updated"
-		logging.debug("%s service '%s' type '%s' domain '%s' to " \
-				" %s:%s" % (tag, full_name, stype, domain, address, port))
+		if updated == False:
+			logging.debug("Resolved service '%s' type '%s' domain '%s' to " \
+					" %s:%s" % (full_name, stype, domain, address, port))
 
 		if not adv in self._service_advs:
 			return False
