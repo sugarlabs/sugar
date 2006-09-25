@@ -10,6 +10,8 @@ class BuddyModel(gobject.GObject):
 		'disappeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
 		'color-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
 						 ([gobject.TYPE_PYOBJECT])),
+		'icon-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+						 ([])),
 		'current-activity-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
 									([gobject.TYPE_PYOBJECT]))
 	}
@@ -23,6 +25,7 @@ class BuddyModel(gobject.GObject):
 		self._ba_handler = None
 		self._pc_handler = None
 		self._dis_handler = None
+		self._bic_handler = None
 
 		self._cur_activity = None
 		self._pservice = PresenceService.get_instance()
@@ -72,6 +75,7 @@ class BuddyModel(gobject.GObject):
 
 		self._pc_handler = self._buddy.connect('property-changed', self.__buddy_property_changed_cb)
 		self._dis_handler = self._buddy.connect('disappeared', self.__buddy_disappeared_cb)
+		self._bic_handler = self._buddy.connect('icon-changed', self.__buddy_icon_changed_cb)
 
 	def __buddy_appeared_cb(self, pservice, buddy):
 		# FIXME: use public key rather than buddy name
@@ -105,8 +109,12 @@ class BuddyModel(gobject.GObject):
 			return
 		self._buddy.disconnect(self._pc_handler)
 		self._buddy.disconnect(self._dis_handler)
+		self._buddy.disconnect(self._bic_handler)
 		self.__set_color_from_string(_NOT_PRESENT_COLOR)
 		self._cur_activity = None
 		self.emit('current-activity-changed', self._cur_activity)
 		self.emit('disappeared')
 		self._buddy = None
+
+	def __buddy_icon_changed_cb(self, buddy):
+		self.emit('icon-changed')
