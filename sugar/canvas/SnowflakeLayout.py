@@ -28,7 +28,7 @@ class SnowflakeLayout:
 		[width, height] = self._root.get_size_request()
 
 		matrix = cairo.Matrix(1, 0, 0, 1, 0, 0)
-		matrix.translate(self._cx - (width / 2), self._cy - (height / 2))
+		matrix.translate(self._cx, self._cy)
 		self._root.set_transform(matrix)
 
 	def _layout_child(self, child, index):

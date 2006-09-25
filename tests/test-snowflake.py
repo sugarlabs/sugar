@@ -60,6 +60,11 @@ group.translate(500, 500)
 _create_snowflake(group, 8)
 root.add_child(group)
 
+layout = SnowflakeLayout()
+group = goocanvas.Group()
+group.translate(20, 500)
+_create_snowflake(group, 2)
+root.add_child(group)
 
 canvas.set_model(canvas_model)
 
