@@ -155,9 +155,9 @@ class Buddy(object):
 
 		if (result_status == network.RESULT_FAILED or not icon) and self._icon_tries < 3:
 			self._icon_tries = self._icon_tries + 1
-			logging.debug("Failed to retrieve buddy icon for '%s' on try %d of %d" % (self._nick_name, \
-					self._icon_tries, 3))
-			gobject.timeout_add(1000, self._get_buddy_icon, service)
+			if self._icon_tries >= 3:
+				logging.debug("Failed to retrieve buddy icon for '%s'." % self._nick_name)
+			gobject.timeout_add(1000, self._get_buddy_icon, service, True)
 		return False
 
 	def _get_buddy_icon(self, service, retry=False):
@@ -172,8 +172,8 @@ class Buddy(object):
 					logging.debug("%s: icon cache hit for %s." % (self._nick_name, icon_hash))
 					self._set_icon(icon)
 					return False
+			logging.debug("%s: icon cache miss, fetching icon from buddy..." % self._nick_name)
 
-		logging.debug("%s: icon cache miss, adding icon to cache." % self._nick_name)
 		from sugar.p2p import Stream
 		buddy_stream = Stream.Stream.new_from_service(service, start_reader=False)
 		writer = buddy_stream.new_writer(service)
