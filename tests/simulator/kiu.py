@@ -23,7 +23,8 @@ class KiuBot(Bot):
 							 self.__share_web_activity_cb)
 		self.add_action(action, 20)
 
-		self._icon_file = os.path.abspath("kiu.jpg")
+		curdir = os.path.abspath(os.path.dirname(__file__))
+		self._icon_file = os.path.join(curdir, 'kiu.jpg')
 
 	def __activity_switch_cb(self):
 		self._activity_switch_timeout = None

@@ -230,5 +230,8 @@ class IconItem(goocanvas.ItemSimple, goocanvas.Item):
 		view.connect('button-press-event', self._button_press_cb)
 		return view
 
+	def get_size_request(self):
+		return [self.props.size, self.props.size]
+
 	def _button_press_cb(self, view, target, event):
 		self.emit('clicked')
