@@ -405,7 +405,8 @@ class Service(gobject.GObject):
 		self._avahi_entry_group.Commit()
 
 	def __entry_group_changed_cb(self, state, error):
-		logging.debug("** %s.%s Entry group changed: state %s, error %s" % (self._full_name, self._stype, state, error))
+		pass
+#		logging.debug("** %s.%s Entry group changed: state %s, error %s" % (self._full_name, self._stype, state, error))
 
 	def unregister(self, sender):
 		# Refuse to unregister if we can't get the dbus connection this request
