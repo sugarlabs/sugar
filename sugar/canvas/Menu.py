@@ -66,7 +66,7 @@ class Menu(gtk.Window):
 
 		self._grid.set_constraints(image_item, x=5, y=self._height, width=width, height=height)
 		self._root.add_child(image_item)
-		self._height += height
+		self._height += height + 1
 		self._update_constraints()
 
 	def add_action(self, icon, action_id):

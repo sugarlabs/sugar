@@ -4,7 +4,7 @@ from sugar.presence import PresenceService
 import gtk
 import goocanvas
 
-_ICON_SIZE = 72
+_ICON_SIZE = 75
 
 class BuddyMenu(Menu):
 	ACTION_MAKE_FRIEND = 0
@@ -49,7 +49,7 @@ class BuddyMenu(Menu):
 			del pixbuf
 			self._buddy_icon_item = goocanvas.Image()
 			self._buddy_icon_item.set_property('pixbuf', scaled_pixbuf)
-			self.add_image(self._buddy_icon_item, 3, 3)
+			self.add_image(self._buddy_icon_item, 5, 5)
 
 		friends = shell_model.get_friends()
 		if friends.has_buddy(self._buddy):
