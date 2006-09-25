@@ -10,4 +10,5 @@ sugar_PYTHON =			\
 	Menu.py			\
 	MenuIcon.py		\
 	MenuShell.py		\
+	SnowflakeLayout.py	\
 	Timeline.py
