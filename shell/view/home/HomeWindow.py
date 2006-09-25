@@ -28,7 +28,7 @@ class HomeWindow(gtk.Window):
 
 		self._add_page(HomeGroup(shell))
 		self._add_page(FriendsGroup(shell, menu_shell))
-		self._add_page(MeshGroup(shell))
+		self._add_page(MeshGroup(shell, menu_shell))
 
 	def _add_page(self, group):
 		view = CanvasView()

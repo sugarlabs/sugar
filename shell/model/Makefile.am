@@ -5,4 +5,5 @@ sugar_PYTHON =			\
 	Friends.py		\
 	Invites.py		\
 	Owner.py		\
+	MeshModel.py		\
 	ShellModel.py

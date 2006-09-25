@@ -1,5 +1,6 @@
 from sugar.presence import PresenceService
 from model.Friends import Friends
+from model.MeshModel import MeshModel
 from model.Owner import ShellOwner
 
 class ShellModel:
@@ -12,6 +13,10 @@ class ShellModel:
 		self._owner = ShellOwner()
 		self._owner.announce()
 		self._friends = Friends()
+		self._mesh = MeshModel()
+
+	def get_mesh(self):
+		return self._mesh
 
 	def get_friends(self):
 		return self._friends
