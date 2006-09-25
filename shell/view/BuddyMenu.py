@@ -45,11 +45,10 @@ class BuddyMenu(Menu):
 
 		pixbuf = self._get_buddy_icon_pixbuf()
 		if pixbuf:
-			pixbuf.scale_simple(_ICON_SIZE, _ICON_SIZE, gtk.gdk.INTERP_BILINEAR)
+			scaled_pixbuf = pixbuf.scale_simple(_ICON_SIZE, _ICON_SIZE, gtk.gdk.INTERP_BILINEAR)
+			del pixbuf
 			self._buddy_icon_item = goocanvas.Image()
-			self._buddy_icon_item.set_property('pixbuf', pixbuf)
-			self._buddy_icon_item.set_property('width', _ICON_SIZE)
-			self._buddy_icon_item.set_property('height', _ICON_SIZE)
+			self._buddy_icon_item.set_property('pixbuf', scaled_pixbuf)
 			self.add_image(self._buddy_icon_item, 3, 3)
 
 		friends = shell_model.get_friends()
