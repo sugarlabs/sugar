@@ -67,8 +67,12 @@ class MeshModel(gobject.GObject):
 
 	def _buddy_activity_changed_cb(self, buddy, cur_activity):
 		buddy_model = self._buddies[buddy.get_name()]
-		activity_model = self._activities[cur_activity.get_id()]
-		self.emit('buddy-moved', buddy_model, activity_model)
+
+		if cur_activity == None:
+			self.emit('buddy-moved', buddy_model, None)
+		else:
+			activity_model = self._activities[cur_activity.get_id()]
+			self.emit('buddy-moved', buddy_model, activity_model)
 
 	def _buddy_appeared_cb(self, pservice, buddy):
 		model = BuddyModel(buddy=buddy)

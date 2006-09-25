@@ -117,7 +117,7 @@ class MeshGroup(goocanvas.Group):
 		self._remove_buddy(buddy_model)
 
 		if activity_model == None:
-			self.add_buddy(buddy_model)
+			self._add_alone_buddy(buddy_model)
 		else:
 			activity = self._activities[activity_model.get_id()]
 
