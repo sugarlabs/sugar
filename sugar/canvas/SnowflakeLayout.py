@@ -11,6 +11,7 @@ class SnowflakeLayout:
 	def __init__(self):
 		self._root = None
 		self._children = []
+		self._size = 0
 
 	def set_root(self, icon):
 		self._root = icon
@@ -27,7 +28,7 @@ class SnowflakeLayout:
 		[width, height] = self._root.get_size_request()
 
 		matrix = cairo.Matrix(1, 0, 0, 1, 0, 0)
-		matrix.translate(self._cx, self._cy)
+		matrix.translate(self._cx - (width / 2), self._cy - (height / 2))
 		self._root.set_transform(matrix)
 
 	def _layout_child(self, child, index):
@@ -44,15 +45,17 @@ class SnowflakeLayout:
 		matrix.translate(x, y)
 		child.set_transform(matrix)
 
+	def get_size(self):
+		return self._size
+
 	def _layout(self):
 		self._r = SnowflakeLayout._BASE_RADIUS + \
 				  SnowflakeLayout._CHILDREN_FACTOR * len(self._children)
+		self._size = self._r * 2 + SnowflakeLayout._BORDER + \
+					 SnowflakeLayout._FLAKE_DISTANCE * 2 
 
-		c = self._r + SnowflakeLayout._BORDER + \
-			SnowflakeLayout._FLAKE_DISTANCE * 2 
-
-		self._cx = c
-		self._cy = c
+		self._cx = self._size / 2
+		self._cy = self._size / 2
 
 		self._layout_root()
 
