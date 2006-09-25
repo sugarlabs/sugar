@@ -73,7 +73,7 @@ class IconLayout:
 			self._constraints[icon1] = [new_x, new_y]
 
 			matrix = cairo.Matrix(1, 0, 0, 1, 0, 0)
-			matrix.translate(new_x, new_y)
+			matrix.translate(new_x - (width / 2), new_y - (height / 2))
 			icon1.set_transform(matrix)
 
 	def update(self):
