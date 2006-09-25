@@ -110,6 +110,7 @@ class MeshGroup(goocanvas.Group):
 			for activity in self._activities.values():
 				if activity.has_buddy_icon(name):
 					activity.remove_buddy_icon(name)
+					self._layout.update()
 
 	def _move_buddy(self, buddy_model, activity_model):
 		name = buddy_model.get_name()
@@ -124,6 +125,8 @@ class MeshGroup(goocanvas.Group):
 			icon = BuddyIcon(self._shell, self._menu_shell, buddy_model)
 			icon.props.size = 60
 			activity.add_buddy_icon(buddy_model.get_name(), icon)
+
+			self._layout.update()
 
 	def _add_activity(self, activity_model):
 		icon = ActivityView(self._shell, self._menu_shell, activity_model)

@@ -17,10 +17,12 @@ class IconLayout:
 	def add_icon(self, icon):
 		self._icons.append(icon)
 		self._layout_icon(icon)
+		self.update()
 
 	def remove_icon(self, icon):
 		self._icons.remove(icon)
 		del self._constraints[icon]
+		self.update()
 
 	def _get_distance(self, icon1, icon2):
 		[icon1_x, icon1_y] = self._constraints[icon1]
@@ -74,15 +76,16 @@ class IconLayout:
 			matrix.translate(new_x, new_y)
 			icon1.set_transform(matrix)
 
+	def update(self):
+		tries = 10
+		self._spread_icons()
+		while not self._stable and tries > 0:
+			self._spread_icons()
+			tries -= 1
+
 	def _layout_icon(self, icon):
 		[width, height] = icon.get_size_request()
 		x = random.random() * (self._x2 - self._x1 - width) 
 		y = random.random() * (self._y2 - self._y1 - height)
 
 		self._constraints[icon] = [x, y]
-
-		tries = 10
-		self._spread_icons()
-		while not self._stable and tries > 0:
-			self._spread_icons()
-			tries -= 1
