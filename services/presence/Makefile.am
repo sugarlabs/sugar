@@ -6,11 +6,12 @@ $(service_DATA): $(service_in_files) Makefile
 	@sed -e "s|\@bindir\@|$(bindir)|" $< > $@
 
 sugardir = $(pkgdatadir)/services/presence
-sugar_PYTHON =				\
+sugar_PYTHON =			\
 	__init__.py			\
 	Activity.py			\
 	Buddy.py			\
-	PresenceService.py		\
+	BuddyIconCache.py	\
+	PresenceService.py	\
 	Service.py
 
 bin_SCRIPTS = sugar-presence-service
