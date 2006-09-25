@@ -74,7 +74,7 @@ class MeshGroup(goocanvas.Group):
 		self._model.connect('activity-removed', self._activity_removed_cb)
 
 	def _buddy_added_cb(self, model, buddy_model):
-		self._add_buddy(buddy_model)
+		self._add_alone_buddy(buddy_model)
 
 	def _buddy_removed_cb(self, model, buddy_model):
 		self._remove_buddy(buddy_model) 
@@ -88,7 +88,7 @@ class MeshGroup(goocanvas.Group):
 	def _activity_removed_cb(self, model, activity_model):
 		self._remove_activity(activity_model) 
 
-	def _add_buddy(self, buddy_model):
+	def _add_alone_buddy(self, buddy_model):
 		icon = BuddyIcon(self._shell, self._menu_shell, buddy_model)
 		icon.props.size = 80
 		self.add_child(icon)
@@ -96,21 +96,25 @@ class MeshGroup(goocanvas.Group):
 		self._buddies[buddy_model.get_name()] = icon
 		self._layout.add_icon(icon)
 
-	def _remove_buddy(self, buddy_model):
+	def _remove_alone_buddy(self, buddy_model):
 		icon = self._buddies[buddy_model.get_name()]
 		self.remove_child(icon)
 		self._layout.remove_icon(icon)
 		del self._buddies[buddy_model.get_name()]
 
+	def _remove_buddy(self, buddy_model):
+		name = buddy_model.get_name()
+		if self._buddies.has_key(name):
+			self._remove_alone_buddy(buddy_model)
+		else:
+			for activity in self._activities.values():
+				if activity.has_buddy_icon(name):
+					activity.remove_buddy_icon(name)
+
 	def _move_buddy(self, buddy_model, activity_model):
 		name = buddy_model.get_name()
 
-		if self._buddies.has_key(name):
-			self._remove_buddy(buddy_model)
-		
-		for activity in self._activities.values():
-			if activity.has_buddy_icon(name):
-				activity.remove_buddy_icon(name)
+		self._remove_buddy(buddy_model)
 
 		if activity_model == None:
 			self.add_buddy(buddy_model)
