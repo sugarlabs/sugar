@@ -1,6 +1,10 @@
 from sugar.canvas.Menu import Menu
 from sugar.canvas.IconItem import IconItem
 from sugar.presence import PresenceService
+import gtk
+import goocanvas
+
+_ICON_SIZE = 72
 
 class BuddyMenu(Menu):
 	ACTION_MAKE_FRIEND = 0
@@ -11,15 +15,42 @@ class BuddyMenu(Menu):
 		Menu.__init__(self, shell.get_grid(), buddy.get_name())
 
 		self._buddy = buddy
+		self._buddy.connect('icon-changed', self.__buddy_icon_changed_cb)
 		self._shell = shell
 
 		owner = shell.get_model().get_owner()
 		if buddy.get_name() != owner.get_name():
 			self._add_actions()
 
+	def _get_buddy_icon_pixbuf(self):
+		buddy_object = self._buddy.get_buddy()
+		if not buddy_object:
+			return None
+		icon_data = buddy_object.get_icon()
+		icon_data_string = ""
+		for item in icon_data:
+			if item < 0:
+				item = item + 128
+			icon_data_string = icon_data_string + chr(item)
+		pbl = gtk.gdk.PixbufLoader()
+		pbl.write(icon_data_string)
+		pbl.close()
+		pixbuf = pbl.get_pixbuf()
+		del pbl
+		return pixbuf
+
 	def _add_actions(self):
 		shell_model = self._shell.get_model()
 		pservice = PresenceService.get_instance()
+
+		pixbuf = self._get_buddy_icon_pixbuf()
+		if pixbuf:
+			pixbuf.scale_simple(_ICON_SIZE, _ICON_SIZE, gtk.gdk.INTERP_BILINEAR)
+			self._buddy_icon_item = goocanvas.Image()
+			self._buddy_icon_item.set_property('pixbuf', pixbuf)
+			self._buddy_icon_item.set_property('width', _ICON_SIZE)
+			self._buddy_icon_item.set_property('height', _ICON_SIZE)
+			self.add_image(self._buddy_icon_item, 3, 3)
 
 		friends = shell_model.get_friends()
 		if friends.has_buddy(self._buddy):
@@ -40,3 +71,7 @@ class BuddyMenu(Menu):
 
 			icon = IconItem(icon_name='stock-invite')
 			self.add_action(icon, BuddyMenu.ACTION_INVITE)
+
+	def __buddy_icon_changed_cb(self, buddy):
+		pass
+
