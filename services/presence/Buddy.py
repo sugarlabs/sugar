@@ -157,7 +157,7 @@ class Buddy(object):
 			self._icon_tries = self._icon_tries + 1
 			logging.debug("Failed to retrieve buddy icon for '%s' on try %d of %d" % (self._nick_name, \
 					self._icon_tries, 3))
-			gobject.timeout_add(1000, self._request_buddy_icon, service)
+			gobject.timeout_add(1000, self._get_buddy_icon, service)
 		return False
 
 	def _get_buddy_icon(self, service, retry=False):
