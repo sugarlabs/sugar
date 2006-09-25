@@ -11,6 +11,7 @@ class KiuBot(Bot):
 		self._olpc_channel_service = None
 		self._sugar_channel_service = None
 		self._activity_switch_timeout = None
+		self._curact = None
 
 		action = ShareActivityAction('OLPC channel',
 							 '_GroupChatActivity_Sugar_redhat_com._udp',
@@ -33,9 +34,11 @@ class KiuBot(Bot):
 			actid = self._sugar_channel_activity.get_id()
 		else:
 			raise RuntimeError("WTF? unexpected value")
-		print "KIU: now setting current activity to %s" % actid
-		self._owner.set_current_activity(actid)
-		self._schedule_activity_switch_timeout()
+		if actid != self._curact:
+			print "KIU: now setting current activity to %s" % actid
+			self._owner.set_current_activity(actid)
+			self._schedule_activity_switch_timeout()
+			self._curact = actid
 		return False
 
 	def _schedule_activity_switch_timeout(self):
