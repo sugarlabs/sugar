@@ -151,14 +151,13 @@ class Buddy(object):
 			if icon and len(icon):
 				icon = base64.b64decode(icon)
 				self._set_icon(icon)
-				logging.debug("%s: adding retrieved icon to cache." % self._nick_name)
 				self._icon_cache.add_icon(icon)
 
 		if (result_status == network.RESULT_FAILED or not icon) and self._icon_tries < 3:
 			self._icon_tries = self._icon_tries + 1
-			logging.debug("Failed to retrieve buddy icon for '%s' on try %d of %d" % (self._nick_name, \
-					self._icon_tries, 3))
-			gobject.timeout_add(1000, self._get_buddy_icon, service)
+			if self._icon_tries >= 3:
+				logging.debug("Failed to retrieve buddy icon for '%s'." % self._nick_name)
+			gobject.timeout_add(1000, self._get_buddy_icon, service, True)
 		return False
 
 	def _get_buddy_icon(self, service, retry=False):
