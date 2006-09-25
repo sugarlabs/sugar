@@ -18,12 +18,12 @@ class GObjectSingletonMeta(gobject.GObjectMeta):
             klass.__instance = gobject.GObjectMeta.__call__(klass, *args, **kwargs)
         return klass.__instance
 
-def _stringify_sha(sha_hash):
-	"""Convert binary sha1 hash data into printable characters."""
-	print_sha = ""
-	for char in sha_hash:
-		print_sha = print_sha + binascii.b2a_hex(char)
-	return print_sha
+def printable_hash(in_hash):
+	"""Convert binary hash data into printable characters."""
+	printable = ""
+	for char in in_hash:
+		printable = printable + binascii.b2a_hex(char)
+	return printable
 
 def _sha_data(data):
 	"""sha1 hash some bytes."""
@@ -33,7 +33,7 @@ def _sha_data(data):
 
 def unique_id(data = ''):
 	data_string = "%s%s%s" % (time.time(), random.randint(10000, 100000), data)
-	return _stringify_sha(_sha_data(data_string))
+	return printable_hash(_sha_data(data_string))
 
 
 ACTIVITY_ID_LEN = 40
