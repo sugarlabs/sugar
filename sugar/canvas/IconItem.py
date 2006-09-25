@@ -125,7 +125,7 @@ class IconView(goocanvas.ItemViewSimple, goocanvas.ItemView):
 						 			        int(size) + 1, int(size) + 1)
 
 			dimensions = handle.get_dimension_data()
-			scale = size / dimensions[0]
+			scale = float(size) / float(dimensions[0])
 
 			ctx = cairo.Context(surface)
 			ctx.scale(scale, scale)
