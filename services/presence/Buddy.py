@@ -104,7 +104,7 @@ class Buddy(object):
 	"""Represents another person on the network and keeps track of the
 	activities and resources they make available for sharing."""
 
-	def __init__(self, bus_name, object_id, service):
+	def __init__(self, bus_name, object_id, service, icon_cache):
 		if not bus_name:
 			raise ValueError("DBus bus name must be valid")
 		if not object_id or type(object_id) != type(1):
@@ -137,6 +137,8 @@ class Buddy(object):
 		if service is not None:
 			self.add_service(service)
 
+		self._icon_cache = icon_cache
+
 	def object_path(self):
 		return dbus.ObjectPath(self._object_path)
 
@@ -148,8 +150,8 @@ class Buddy(object):
 		if result_status == network.RESULT_SUCCESS:
 			if icon and len(icon):
 				icon = base64.b64decode(icon)
-				logging.debug("Buddy icon for '%s' is size %d" % (self._nick_name, len(icon)))
 				self._set_icon(icon)
+				self._icon_cache.add_icon(icon)
 
 		if (result_status == network.RESULT_FAILED or not icon) and self._icon_tries < 3:
 			self._icon_tries = self._icon_tries + 1
@@ -158,15 +160,27 @@ class Buddy(object):
 			gobject.timeout_add(1000, self._request_buddy_icon, service)
 		return False
 
-	def _request_buddy_icon(self, service):
-		"""Contact the buddy to retrieve the buddy icon."""
+	def _get_buddy_icon(self, service, retry=False):
+		"""Get the buddy's icon.  Check the cache first, if its
+		not there get the icon from the buddy over the network."""
+		if retry != True:
+			# Only hit the cache once
+			icon_hash = service.get_one_property('icon-hash')
+			if icon_hash is not None:
+				icon = self._icon_cache.get_icon(icon_hash)
+				if icon:
+					logging.debug("%s: icon cache hit for %s." % (self._nick_name, icon_hash))
+					self._set_icon(icon)
+					return False
+
+		logging.debug("%s: icon cache miss, adding icon to cache." % self._nick_name)
 		from sugar.p2p import Stream
 		buddy_stream = Stream.Stream.new_from_service(service, start_reader=False)
 		writer = buddy_stream.new_writer(service)
 		success = writer.custom_request("get_buddy_icon", self._request_buddy_icon_cb, service)
 		if not success:
 			del writer, buddy_stream
-			gobject.timeout_add(1000, self._request_buddy_icon, service)
+			gobject.timeout_add(1000, self._get_buddy_icon, service, True)
 		return False
 
 	def _get_service_key(self, service):
@@ -210,8 +224,7 @@ class Buddy(object):
 			# A buddy isn't valid until its official presence
 			# service has been found and resolved
 			self._valid = True
-			logging.debug('Requesting buddy icon %s' % self._nick_name)
-			self._request_buddy_icon(service)
+			self._get_buddy_icon(service)
 			self._color = service.get_one_property(_BUDDY_KEY_COLOR)
 			if self._color:
 				self._dbus_helper.PropertyChanged([_BUDDY_KEY_COLOR])
@@ -343,8 +356,8 @@ class Buddy(object):
 class Owner(Buddy):
 	"""Class representing the owner of the machine.  This is the client
 	portion of the Owner, paired with the server portion in Owner.py."""
-	def __init__(self, ps, bus_name, object_id):
-		Buddy.__init__(self, bus_name, object_id, None)
+	def __init__(self, ps, bus_name, object_id, icon_cache):
+		Buddy.__init__(self, bus_name, object_id, None, icon_cache)
 		self._nick_name = env.get_nick_name()
 		self._color = env.get_color()
 		self._ps = ps
