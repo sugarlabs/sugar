@@ -22,7 +22,7 @@ from sugar.canvas.Grid import Grid
 
 def _create_snowflake(group, children):
 	color = IconColor.IconColor()
-	icon = IconItem(size=60, color=color,
+	icon = IconItem(size=40, color=color,
 					icon_name='activity-groupchat')
 	group.add_child(icon)
 	layout.set_root(icon)
