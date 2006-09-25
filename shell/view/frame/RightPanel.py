@@ -25,7 +25,8 @@ class RightPanel(CanvasBox):
 		shell.connect('activity-changed', self.__activity_changed_cb)
 
 	def add(self, buddy):
-		icon = BuddyIcon(self._shell, self._menu_shell, BuddyModel(buddy))
+		model = BuddyModel(buddy=buddy)
+		icon = BuddyIcon(self._shell, self._menu_shell, model)
 		icon.set_menu_strategy(MenuStrategy())
 		self.set_constraints(icon, 5, 5)
 		self.add_child(icon)
