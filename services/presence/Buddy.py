@@ -118,6 +118,8 @@ class Buddy(object):
 		self._services = {}
 		self._activities = {}
 
+		self._icon_cache = icon_cache
+
 		self._nick_name = None
 		self._address = None
 		if service is not None:
@@ -136,8 +138,6 @@ class Buddy(object):
 		self._buddy_presence_service = None
 		if service is not None:
 			self.add_service(service)
-
-		self._icon_cache = icon_cache
 
 	def object_path(self):
 		return dbus.ObjectPath(self._object_path)
