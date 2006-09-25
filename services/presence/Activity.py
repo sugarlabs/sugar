@@ -126,7 +126,7 @@ class Activity(object):
 		for serv_list in self._services.values():
 			for serv in serv_list:
 				owner = serv.get_owner()
-				if not owner in buddies and owner.is_valid():
+				if owner and not owner in buddies and owner.is_valid():
 					buddies.append(owner)
 		return buddies
 
