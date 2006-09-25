@@ -38,8 +38,8 @@ class KiuBot(Bot):
 		if actid != self._curact:
 			print "KIU: now setting current activity to %s" % actid
 			self._owner.set_current_activity(actid)
-			self._schedule_activity_switch_timeout()
 			self._curact = actid
+		self._schedule_activity_switch_timeout()
 		return False
 
 	def _schedule_activity_switch_timeout(self):
