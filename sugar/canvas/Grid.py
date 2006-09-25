@@ -31,6 +31,10 @@ class Grid:
 
 		return [grid_x, grid_y]
 
+	def convert_to_canvas(self, grid_x, grid_y):
+		scale = 1200 / Grid.COLS
+		return [grid_x * scale, grid_y * scale]
+
 	def set_constraints(self, component, x, y, width=-1, height=-1):
 		if isinstance(component, gtk.Window):
 			self._layout_window(component, x, y, width, height)

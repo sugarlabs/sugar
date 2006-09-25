@@ -12,7 +12,7 @@ class FriendsGroup(goocanvas.Group):
 
 		self._shell = shell
 		self._menu_shell = menu_shell
-		self._icon_layout = IconLayout(1200, 900)
+		self._icon_layout = IconLayout(shell.get_grid())
 		self._friends = {}
 
 		me = MyIcon(112)
