@@ -1,0 +1,13 @@
+;; -*- scheme -*-
+; object definitions ...
+;; Enumerations and flags ...
+
+
+;; From sugar-browser.h
+
+(define-function startup
+  (c-name "gecko_startup")
+  (return-type "none")
+)
+
+

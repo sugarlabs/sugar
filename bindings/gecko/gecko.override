@@ -1,0 +1,7 @@
+/* -*- Mode: C; c-basic-offset: 4 -*- */
+%%
+headers
+#include <Python.h>
+
+#include "gecko-browser.h"
+%%

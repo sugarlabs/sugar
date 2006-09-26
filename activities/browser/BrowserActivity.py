@@ -7,6 +7,7 @@ from sugar.activity.Activity import Activity
 from sugar.presence.PresenceService import PresenceService
 from sugar.p2p.model.LocalModel import LocalModel
 from sugar.p2p.model.RemoteModel import RemoteModel
+import gecko
 
 from NotificationBar import NotificationBar
 from NavigationToolbar import NavigationToolbar
@@ -18,6 +19,8 @@ class BrowserActivity(Activity):
 
 		gtkmozembed.push_startup()
 		gtkmozembed.set_profile_path(env.get_profile_path(), 'gecko')
+
+		gecko.startup()
 
 		self._share_service = None
 		self._model_service = None

@@ -48,3 +48,4 @@ ltmain.sh
 po/ChangeLog
 m4/intltool.m4
 bindings/globalkeys/globalkeys.c
+bindings/gecko/gecko.c
