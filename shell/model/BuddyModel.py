@@ -26,8 +26,8 @@ class BuddyModel(gobject.GObject):
 		self._pc_handler = None
 		self._dis_handler = None
 		self._bic_handler = None
+		self._cac_handler = None
 
-		self._cur_activity = None
 		self._pservice = PresenceService.get_instance()
 
 		self._buddy = None
@@ -62,8 +62,15 @@ class BuddyModel(gobject.GObject):
 	def get_buddy(self):
 		return self._buddy
 
+	def is_present(self):
+		if self._buddy:
+			return True
+		return False
+
 	def get_current_activity(self):
-		return self._cur_activity
+		if self._buddy:
+			return self._buddy.get_current_activity()
+		return None
 
 	def __update_buddy(self, buddy):
 		if not buddy:
@@ -76,6 +83,7 @@ class BuddyModel(gobject.GObject):
 		self._pc_handler = self._buddy.connect('property-changed', self.__buddy_property_changed_cb)
 		self._dis_handler = self._buddy.connect('disappeared', self.__buddy_disappeared_cb)
 		self._bic_handler = self._buddy.connect('icon-changed', self.__buddy_icon_changed_cb)
+		self._cac_handler = self._buddy.connect('current-activity-changed', self.__buddy_current_activity_changed_cb)
 
 	def __buddy_appeared_cb(self, pservice, buddy):
 		# FIXME: use public key rather than buddy name
@@ -94,12 +102,6 @@ class BuddyModel(gobject.GObject):
 	def __buddy_property_changed_cb(self, buddy, keys):
 		if not self._buddy:
 			return
-
-		# all we care about right now is current activity
-		if 'curact' in keys:
-			curact = self._buddy.get_current_activity()
-			self._cur_activity = self._pservice.get_activity(curact)
-			self.emit('current-activity-changed', self._cur_activity)
 		if 'color' in keys:
 			self.__set_color_from_string(self._buddy.get_color())
 			self.emit('color-changed', self.get_color())
@@ -110,11 +112,18 @@ class BuddyModel(gobject.GObject):
 		self._buddy.disconnect(self._pc_handler)
 		self._buddy.disconnect(self._dis_handler)
 		self._buddy.disconnect(self._bic_handler)
+		self._buddy.disconnect(self._cac_handler)
 		self.__set_color_from_string(_NOT_PRESENT_COLOR)
-		self._cur_activity = None
-		self.emit('current-activity-changed', self._cur_activity)
 		self.emit('disappeared')
 		self._buddy = None
 
 	def __buddy_icon_changed_cb(self, buddy):
 		self.emit('icon-changed')
+
+	def __buddy_current_activity_changed_cb(self, buddy, activity=None):
+		if not self._buddy:
+			return
+		if activity:
+			self.emit('current-activity-changed', activity)
+		else:
+			self.emit('current-activity-changed')
