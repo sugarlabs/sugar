@@ -29,7 +29,9 @@ class ActivityFactory(dbus.service.Object):
 		module = __import__(module_name)		
 		for comp in module_name.split('.')[1:]:
 			module = getattr(module, comp)
-		
+		if hasattr(module, 'start'):
+			module.start()
+
 		self._class = getattr(module, class_name)
 	
 		bus = dbus.SessionBus()

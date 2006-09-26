@@ -17,11 +17,6 @@ class BrowserActivity(Activity):
 	def __init__(self):
 		Activity.__init__(self)
 
-		gtkmozembed.push_startup()
-		gtkmozembed.set_profile_path(env.get_profile_path(), 'gecko')
-
-		gecko.startup()
-
 		self._share_service = None
 		self._model_service = None
 		self._notif_service = None
@@ -132,3 +127,8 @@ class BrowserActivity(Activity):
 	def _destroy_cb(self, window):
 		if self._model:
 			self._model.shutdown()
+
+def start():
+	gtkmozembed.set_profile_path(env.get_profile_path(), 'gecko')
+	gtkmozembed.push_startup()
+	gecko.startup()
