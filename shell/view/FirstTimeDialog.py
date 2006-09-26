@@ -14,13 +14,19 @@ class FirstTimeDialog(gtk.Dialog):
 		label.show()
 
 		self._entry = gtk.Entry()
+		self._entry.connect('changed', self._entry_changed_cb)
 		self.vbox.pack_start(self._entry)
 		self._entry.show()
 
-		button = gtk.Button(None, gtk.STOCK_OK)
-		self.vbox.pack_start(button)
-		button.connect('clicked', self.__ok_button_clicked_cb)
-		button.show()
+		self._ok = gtk.Button(None, gtk.STOCK_OK)
+		self._ok.set_sensitive(False)
+		self.vbox.pack_start(self._ok)
+		self._ok.connect('clicked', self.__ok_button_clicked_cb)
+		self._ok.show()
+
+	def _entry_changed_cb(self, entry):
+		valid = (len(entry.get_text()) > 0)
+		self._ok.set_sensitive(valid)
 
 	def __ok_button_clicked_cb(self, button):
 		profile = conf.get_profile()

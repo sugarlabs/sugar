@@ -26,7 +26,8 @@ class Session:
 	def _check_profile(self):
 		profile = conf.get_profile()
 
-		if profile.get_nick_name() == None:
+		name = profile.get_nick_name() 
+		if not name or not len(name):
 			dialog = FirstTimeDialog()
 			dialog.run()
 			profile.save()
