@@ -15,10 +15,10 @@ class ActivityMenu(Menu):
 		title = activity_host.get_title()
 		Menu.__init__(self, grid, title)
 
-		icon = IconItem(icon_name='stock-share')
+		icon = IconItem(icon_name='stock-share-mesh')
 		self.add_action(icon, ActivityMenu.ACTION_SHARE) 
 
-		icon = IconItem(icon_name='stock-close-activity')
+		icon = IconItem(icon_name='stock-close')
 		self.add_action(icon, ActivityMenu.ACTION_CLOSE) 
 
 class ActivityIcon(MenuIcon):
