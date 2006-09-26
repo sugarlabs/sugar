@@ -24,14 +24,13 @@ class BuddyActivityView(goocanvas.Group):
 		self._activity_icon = IconItem(x=offset_x, y=offset_y, size=48)
 		self._activity_icon_visible = False
 
-		curact = self._buddy.get_current_activity()
-		if curact:
-			self.__buddy_activity_changed_cb(self._buddy, activity=curact)
+		if self._buddy.is_present():
+			self.__buddy_appeared_cb(buddy)
 
 		self._buddy.connect('current-activity-changed', self.__buddy_activity_changed_cb)
-		self._buddy.connect('appeared', self.__buddy_presence_change_cb)
-		self._buddy.connect('disappeared', self.__buddy_presence_change_cb)
-		self._buddy.connect('color-changed', self.__buddy_presence_change_cb)
+		self._buddy.connect('appeared', self.__buddy_appeared_cb)
+		self._buddy.connect('disappeared', self.__buddy_disappeared_cb)
+		self._buddy.connect('color-changed', self.__buddy_color_changed_cb)
 
 	def get_size_request(self):
 		bi_size = self._buddy_icon.props.size
@@ -52,19 +51,34 @@ class BuddyActivityView(goocanvas.Group):
 				return act.get_icon()
 		return None
 
-	def __buddy_activity_changed_cb(self, buddy, activity=None):
-		if not activity:
+	def __remove_activity_icon(self):
+		if self._activity_icon_visible:
 			self.remove_child(self._activity_icon)
 			self._activity_icon_visible = False
+
+	def __buddy_activity_changed_cb(self, buddy, activity=None):
+		if not activity:
+			self.__remove_activity_icon()
 			return
 
+		# FIXME: use some sort of "unknown activity" icon rather
+		# than hiding the icon?
 		name = self._get_new_icon_name(activity)
 		if name:
 			self._activity_icon.props.icon_name = name
-			self._activity_icon.props.color = self._buddy_icon.props.color
-		if not self._activity_icon_visible:
-			self.add_child(self._activity_icon)
-			self._activity_icon_visible = True
+			self._activity_icon.props.color = buddy.get_color()
+			if not self._activity_icon_visible:
+				self.add_child(self._activity_icon)
+				self._activity_icon_visible = True
+		else:
+			self.__remove_activity_icon()
 
-	def __buddy_presence_change_cb(self, buddy, color=None):		
+	def __buddy_appeared_cb(self, buddy):
+		activity = self._buddy.get_current_activity()
+		self.__buddy_activity_changed_cb(buddy, activity)
+
+	def __buddy_disappeared_cb(self, buddy):
+		self.__buddy_activity_changed_cb(buddy, None)
+
+	def __buddy_color_changed_cb(self, buddy, color):
 		self._activity_icon.props.color = buddy.get_color()
