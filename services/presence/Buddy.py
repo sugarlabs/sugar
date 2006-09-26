@@ -39,6 +39,11 @@ class BuddyDBusHelper(dbus.service.Object):
 		pass
 
 	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
+						signature="ao")
+	def CurrentActivityChanged(self, activities):
+		pass
+
+	@dbus.service.signal(BUDDY_DBUS_INTERFACE,
 						signature="")
 	def IconChanged(self):
 		pass
@@ -94,11 +99,15 @@ class BuddyDBusHelper(dbus.service.Object):
 		color = self._parent.get_color()
 		if color:
 			props[_BUDDY_KEY_COLOR] = self._parent.get_color()
-		curact = self._parent.get_current_activity()
-		if curact:
-			props[_BUDDY_KEY_CURACT] = self._parent.get_current_activity()
 		return props
 
+	@dbus.service.method(BUDDY_DBUS_INTERFACE,
+						in_signature="", out_signature="o")
+	def getCurrentActivity(self):
+		activity = self._parent.get_current_activity()
+		if not activity:
+			raise NotFoundError()
+		return activity.object_path()
 
 class Buddy(object):
 	"""Represents another person on the network and keeps track of the
@@ -226,8 +235,7 @@ class Buddy(object):
 			self._valid = True
 			self._get_buddy_icon(service)
 			self._color = service.get_one_property(_BUDDY_KEY_COLOR)
-			if self._color:
-				self._dbus_helper.PropertyChanged([_BUDDY_KEY_COLOR])
+			self._current_activity = service.get_one_property(_BUDDY_KEY_CURACT)
 			# Monitor further buddy property changes, like current activity
 			# and color
 			service.connect('property-changed',
@@ -244,25 +252,49 @@ class Buddy(object):
 				self._color = new_color
 				self._dbus_helper.PropertyChanged([_BUDDY_KEY_COLOR])
 		if _BUDDY_KEY_CURACT in keys:
+			# Three cases here:
+			# 1) Buddy didn't publish a 'curact' key at all; we do nothing
+			# 2) Buddy published a blank/zero-length 'curact' key; we send
+			#        a current-activity-changed signal for no activity
+			# 3) Buddy published a non-zero-length 'curact' key; we send
+			#        a current-activity-changed signal if we know about the
+			#        activity already, if not we postpone until the activity
+			#        is found on the network and added to the buddy
 			new_curact = service.get_one_property(_BUDDY_KEY_CURACT)
 			if new_curact and self._current_activity != new_curact:
+				if not len(new_curact):
+					new_curact = None
 				self._current_activity = new_curact
-				self._dbus_helper.PropertyChanged([_BUDDY_KEY_CURACT])
+				if self._activities.has_key(self._current_activity):
+					# Case (3) above, valid activity id
+					activity = self._activities[self._current_activity]
+					if activity.is_valid():
+						self._dbus_helper.CurrentActivityChanged([activity.object_path()])
+				elif not self._current_activity:
+					# Case (2) above, no current activity
+					self._dbus_helper.CurrentActivityChanged([])
+
+	def __find_service_by_activity_id(self, actid):
+		for serv in self._services.values():
+			if serv.get_activity_id() == actid:
+				return serv
+		return None
 
 	def add_activity(self, activity):
-		actid = activity.get_id()
 		if activity in self._activities.values():
 			raise RuntimeError("Tried to add activity twice")
-		found = False
-		for serv in self._services.values():
-			if serv.get_activity_id() == activity.get_id():
-				found = True
-				break
-		if not found:
+		actid = activity.get_id()
+		if not self.__find_service_by_activity_id(actid):
 			raise RuntimeError("Tried to add activity for which we had no service")
 		self._activities[actid] = activity
 		if activity.is_valid():
 			self._dbus_helper.JoinedActivity(activity.object_path())
+
+			# If when we received a current activity update from the buddy,
+			# but didn't know about that activity yet, and now we do know about
+			# it, we need to send out the changed activity signal
+			if actid == self._current_activity:
+				self._dbus_helper.CurrentActivityChanged([activity.object_path()])
 
 	def remove_service(self, service):
 		"""Remove a service from a buddy; ie, the activity was closed
@@ -295,6 +327,12 @@ class Buddy(object):
 		del self._activities[actid]
 		if activity.is_valid():
 			self._dbus_helper.LeftActivity(activity.object_path())
+
+		# If we just removed the buddy's current activity,
+		# send out a signal
+		if actid == self._current_activity:
+			self._current_activity = None
+			self._dbus_helper.CurrentActivityChanged([])
 
 	def get_joined_activities(self):
 		acts = []
@@ -340,7 +378,11 @@ class Buddy(object):
 		return self._color
 
 	def get_current_activity(self):
-		return self._current_activity
+		if not self._current_activity:
+			return None
+		if not self._activities.has_key(self._current_activity):
+			return None
+		return self._activities[self._current_activity]
 
 	def _set_icon(self, icon):
 		"""Can only set icon for other buddies.  The Owner
