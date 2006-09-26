@@ -18,6 +18,8 @@ class Buddy(gobject.GObject):
 		'left-activity': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
 						 ([gobject.TYPE_PYOBJECT])),
 		'property-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+						 ([gobject.TYPE_PYOBJECT])),
+		'current-activity-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
 						 ([gobject.TYPE_PYOBJECT]))
 	}
 
@@ -39,7 +41,14 @@ class Buddy(gobject.GObject):
 		self._buddy.connect_to_signal('JoinedActivity', self._joined_activity_cb)
 		self._buddy.connect_to_signal('LeftActivity', self._left_activity_cb)
 		self._buddy.connect_to_signal('PropertyChanged', self._property_changed_cb)
+		self._buddy.connect_to_signal('CurrentActivityChanged', self._current_activity_changed_cb)
 		self._properties = self._get_properties_helper()
+
+		self._current_activity = None
+		try:
+			self._current_activity = self._buddy.getCurrentActivity()
+		except Exception, e:
+			pass
 
 	def _get_properties_helper(self):
 		props = self._buddy.getProperties()
@@ -99,6 +108,18 @@ class Buddy(gobject.GObject):
 	def _property_changed_cb(self, prop_list):
 		gobject.idle_add(self._handle_property_changed_signal, prop_list)
 
+	def _handle_current_activity_changed_signal(self, act_list):
+		if len(act_list) == 0:
+			self._current_activity = None
+			self.emit('current-activity-changed')
+		else:
+			self._current_activity = act_list[0]
+			self.emit('current-activity-changed', self._ps_new_object(act_list[0]))
+		return False
+
+	def _current_activity_changed_cb(self, act_list):
+		gobject.idle_add(self._handle_current_activity_changed_signal, act_list)
+
 	def get_name(self):
 		return self._properties['name']
 
@@ -115,9 +136,9 @@ class Buddy(gobject.GObject):
 		return self._buddy.getIcon()
 
 	def get_current_activity(self):
-		if self._properties.has_key('curact'):
-			return self._properties['curact']
-		return None
+		if not self._current_activity:
+			return None
+		return self._ps_new_object(self._current_activity)
 
 	def get_icon_pixbuf(self):
 		icon = self._buddy.getIcon()
