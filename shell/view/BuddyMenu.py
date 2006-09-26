@@ -53,10 +53,10 @@ class BuddyMenu(Menu):
 
 		friends = shell_model.get_friends()
 		if friends.has_buddy(self._buddy):
-			icon = IconItem(icon_name='stock-add')
+			icon = IconItem(icon_name='stock-remove')
 			self.add_action(icon, BuddyMenu.ACTION_REMOVE_FRIEND) 
 		else:
-			icon = IconItem(icon_name='stock-remove')
+			icon = IconItem(icon_name='stock-add')
 			self.add_action(icon, BuddyMenu.ACTION_MAKE_FRIEND)
 
 		activity_id = shell_model.get_current_activity()

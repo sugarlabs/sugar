@@ -32,7 +32,7 @@ class Friends(gobject.GObject):
 
 	def make_friend(self, buddy):
 		if not self.has_buddy(buddy):	
-			self.add_friend(BuddyModel(buddy))
+			self.add_friend(BuddyModel(buddy=buddy))
 			self.save()
 
 	def remove(self, buddy_info):
