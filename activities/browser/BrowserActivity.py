@@ -14,20 +14,74 @@ from NotificationBar import NotificationBar
 from NavigationToolbar import NavigationToolbar
 from sugar import env
 
+class PopupCreator(gobject.GObject):
+	__gsignals__ = {
+		'popup-created':  (gobject.SIGNAL_RUN_FIRST,
+						   gobject.TYPE_NONE, ([])),
+	}
+
+	def __init__(self):
+		gobject.GObject.__init__(self)
+
+		self._sized_popup = False
+
+		self._dialog = gtk.Window()
+		self._dialog.set_resizable(True)
+
+		self._dialog.realize()
+		self._dialog.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
+
+		self._embed = Browser()
+		self._size_to_sid = self._embed.connect('size_to', self._size_to_cb)
+		self._vis_sid = self._embed.connect('visibility', self._visibility_cb)
+
+		self._dialog.add(self._embed)
+
+	def _size_to_cb(self, embed, width, height):
+		self._sized_popup = True
+		self._dialog.resize(width, height)
+
+	def _visibility_cb(self, embed, visible):
+		if visible:
+			if self._sized_popup:
+				self._embed.show()
+				self._dialog.show()
+			else:
+				self._dialog.remove(self._embed)
+
+				activity = BrowserActivity(self._embed)
+				activity.set_type('com.redhat.Sugar.BrowserActivity')
+
+			self._embed.disconnect(self._size_to_sid)
+			self._embed.disconnect(self._vis_sid)
+
+			self.emit('popup-created')
+
+	def get_embed(self):
+		return self._embed
+
 class Browser(gecko.Browser):
 	__gtype_name__ = "SugarBrowser"
 	def __init__(self):
 		gecko.Browser.__init__(self)
+		self._popup_creators = []
 
 	def do_create_window(self):
-		activity = BrowserActivity()
-		activity.set_type('com.redhat.Sugar.BrowserActivity')
-		return activity.get_embed()
+		popup_creator = PopupCreator()
+		popup_creator.connect('popup-created', self._popup_created_cb)
+
+		self._popup_creators.append(popup_creator)
+
+		return popup_creator.get_embed()
+
+	def _popup_created_cb(self, creator):
+		self._popup_creators.remove(creator)
 
 class BrowserActivity(Activity):
-	def __init__(self):
+	def __init__(self, embed=None):
 		Activity.__init__(self)
 
+		self._embed = embed
 		self._share_service = None
 		self._model_service = None
 		self._notif_service = None
@@ -46,13 +100,14 @@ class BrowserActivity(Activity):
 		vbox.pack_start(self._notif_bar, False)
 		self._notif_bar.connect('action', self.__notif_bar_action_cb)
 
-		self._embed = Browser()
+		if not self._embed:
+			self._embed = Browser()
 		self._embed.connect("title", self.__title_cb)
 		vbox.pack_start(self._embed)		
 		self._embed.show()
 
 		nav_toolbar.set_embed(self._embed)
-		self._embed.load_url('http://www.google.com')		
+		self._embed.load_url('file:///home/marco/test.html')#'http://www.google.com')		
 
 		self.add(vbox)
 		vbox.show()
