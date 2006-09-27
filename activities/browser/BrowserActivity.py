@@ -20,10 +20,11 @@ class PopupCreator(gobject.GObject):
 						   gobject.TYPE_NONE, ([])),
 	}
 
-	def __init__(self):
+	def __init__(self, parent_window):
 		gobject.GObject.__init__(self)
 
 		self._sized_popup = False
+		self._parent_window = parent_window
 
 		self._dialog = gtk.Window()
 		self._dialog.set_resizable(True)
@@ -45,6 +46,7 @@ class PopupCreator(gobject.GObject):
 		if visible:
 			if self._sized_popup:
 				self._embed.show()
+				self._dialog.set_transient_for(self._parent_window)
 				self._dialog.show()
 			else:
 				self._dialog.remove(self._embed)
@@ -67,7 +69,7 @@ class Browser(gecko.Browser):
 		self._popup_creators = []
 
 	def do_create_window(self):
-		popup_creator = PopupCreator()
+		popup_creator = PopupCreator(self.get_toplevel())
 		popup_creator.connect('popup-created', self._popup_created_cb)
 
 		self._popup_creators.append(popup_creator)
