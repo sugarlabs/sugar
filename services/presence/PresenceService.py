@@ -644,17 +644,23 @@ class PresenceService(object):
 			return
 
 		# Start browsing for all services of this type in this domain
-		s_browser = self._mdns_service.ServiceBrowserNew(interface, protocol, stype, domain, dbus.UInt32(0))
-		browser_obj = dbus.Interface(self._system_bus.get_object(avahi.DBUS_NAME, s_browser),
-						avahi.DBUS_INTERFACE_SERVICE_BROWSER)
-		browser_obj.connect_to_signal('ItemNew', self._service_appeared_cb_glue)
-		browser_obj.connect_to_signal('ItemRemove', self._service_disappeared_cb_glue)
+		try:
+			s_browser = self._mdns_service.ServiceBrowserNew(interface,
+					protocol, stype, domain, dbus.UInt32(0))
+			browser_obj = dbus.Interface(self._system_bus.get_object(avahi.DBUS_NAME, s_browser),
+							avahi.DBUS_INTERFACE_SERVICE_BROWSER)
+			browser_obj.connect_to_signal('ItemNew', self._service_appeared_cb_glue)
+			browser_obj.connect_to_signal('ItemRemove', self._service_disappeared_cb_glue)
 
-		self._service_browsers[(interface, protocol, stype, domain)] = browser_obj
+			self._service_browsers[(interface, protocol, stype, domain)] = browser_obj
+		except dbus.DBusException:
+			logging.debug("Error browsing service type '%s'" % stype)
 		return False
 
 	def _new_service_type_cb_glue(self, interface, protocol, stype, domain, flags):
-		gobject.idle_add(self._new_service_type_cb, interface, protocol, stype, domain, flags)
+		if len(stype) > 0:
+			gobject.idle_add(self._new_service_type_cb, interface, protocol,
+					stype, domain, flags)
 
 	def _new_domain_cb(self, interface, protocol, domain, flags=0):
 		"""Callback from Avahi when a new domain has been found.  Start
