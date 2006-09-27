@@ -282,7 +282,7 @@ class Buddy(object):
 
 	def add_activity(self, activity):
 		if activity in self._activities.values():
-			raise RuntimeError("Tried to add activity twice")
+			return
 		actid = activity.get_id()
 		if not self.__find_service_by_activity_id(actid):
 			raise RuntimeError("Tried to add activity for which we had no service")
