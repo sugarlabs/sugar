@@ -111,7 +111,7 @@ class Buddy(gobject.GObject):
 	def _handle_current_activity_changed_signal(self, act_list):
 		if len(act_list) == 0:
 			self._current_activity = None
-			self.emit('current-activity-changed')
+			self.emit('current-activity-changed', None)
 		else:
 			self._current_activity = act_list[0]
 			self.emit('current-activity-changed', self._ps_new_object(act_list[0]))
