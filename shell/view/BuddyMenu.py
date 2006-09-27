@@ -26,16 +26,21 @@ class BuddyMenu(Menu):
 		buddy_object = self._buddy.get_buddy()
 		if not buddy_object:
 			return None
+
+		pixbuf = None
 		icon_data = buddy_object.get_icon()
 		icon_data_string = ""
 		for item in icon_data:
 			if item < 0:
 				item = item + 128
-			icon_data_string = icon_data_string + chr(item)
+			icon_data_string += chr(item)
 		pbl = gtk.gdk.PixbufLoader()
 		pbl.write(icon_data_string)
-		pbl.close()
-		pixbuf = pbl.get_pixbuf()
+		try:
+			pbl.close()
+			pixbuf = pbl.get_pixbuf()
+		except gobject.GError:
+			pass
 		del pbl
 		return pixbuf
 
