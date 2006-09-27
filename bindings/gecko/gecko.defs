@@ -1,13 +1,40 @@
 ;; -*- scheme -*-
 ; object definitions ...
+(define-object Browser
+  (in-module "Gecko")
+  (parent "GtkMozEmbed")
+  (c-name "GeckoBrowser")
+  (gtype-id "GECKO_TYPE_BROWSER")
+)
+
 ;; Enumerations and flags ...
 
 
-;; From sugar-browser.h
+;; From gecko-browser.h
+
+(define-function get_type
+  (c-name "gecko_browser_get_type")
+  (return-type "GType")
+)
 
 (define-function startup
-  (c-name "gecko_startup")
+  (c-name "gecko_browser_startup")
   (return-type "none")
 )
 
+(define-function new
+  (c-name "gecko_browser_new")
+  (is-constructor-of "GeckoBrowser")
+  (return-type "GeckoBrowser*")
+)
 
+(define-method create_window
+  (of-object "GeckoBrowser")
+  (c-name "gecko_browser_create_window")
+  (return-type "GeckoBrowser*")
+)
+
+(define-virtual create_window
+  (of-object "GeckoBrowser")
+  (return-type "GeckoBrowser*")
+)

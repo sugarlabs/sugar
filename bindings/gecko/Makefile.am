@@ -26,6 +26,7 @@ EXTRA_DIST = gecko.override gecko.defs
 .defs.c:
 	(cd $(srcdir)\
 	 && $(PYGTK_CODEGEN) \
+	    --register $(GNOMEPYTHONEXTRAS_DEFSDIR)/gtkmozembed.defs \
 	    --override $*.override \
 	    --prefix py$* $*.defs) > gen-$*.c \
 	&& cp gen-$*.c $*.c \

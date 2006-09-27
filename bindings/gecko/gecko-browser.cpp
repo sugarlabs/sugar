@@ -23,7 +23,7 @@
 #include <nsServiceManagerUtils.h>
 
 void
-gecko_startup(void)
+gecko_browser_startup(void)
 {
 	nsCOMPtr<nsIPrefService> prefService;
 
@@ -36,3 +36,43 @@ gecko_startup(void)
 
 	pref->SetBoolPref ("dom.disable_open_during_load", TRUE);
 } 
+
+G_DEFINE_TYPE(GeckoBrowser, gecko_browser, GTK_TYPE_MOZ_EMBED)
+
+//static guint signals[N_SIGNALS];
+
+GeckoBrowser *
+gecko_browser_new(void)
+{
+	return GECKO_BROWSER(g_object_new(GECKO_TYPE_BROWSER, NULL));
+}
+
+static void
+gecko_browser_class_init(GeckoBrowserClass *browser_class)
+{
+}
+
+GeckoBrowser *
+gecko_browser_create_window(GeckoBrowser *browser)
+{
+	return GECKO_BROWSER_GET_CLASS(browser)->create_window(browser);
+}
+
+static void
+gecko_browser_new_window_cb(GtkMozEmbed  *embed,
+							GtkMozEmbed **newEmbed,
+                            guint         chromemask)
+{
+	GeckoBrowser *browser;
+
+	browser = gecko_browser_create_window(GECKO_BROWSER(embed));
+
+	*newEmbed = GTK_MOZ_EMBED(browser);
+}
+
+static void
+gecko_browser_init(GeckoBrowser *browser)
+{
+	g_signal_connect(G_OBJECT(browser), "new-window",
+					 G_CALLBACK(gecko_browser_new_window_cb), NULL);
+}

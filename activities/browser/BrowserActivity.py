@@ -2,6 +2,7 @@ import os
 
 import gtk
 import gtkmozembed
+import gobject
 
 from sugar.activity.Activity import Activity
 from sugar.presence.PresenceService import PresenceService
@@ -12,6 +13,16 @@ import gecko
 from NotificationBar import NotificationBar
 from NavigationToolbar import NavigationToolbar
 from sugar import env
+
+class Browser(gecko.Browser):
+	__gtype_name__ = "SugarBrowser"
+	def __init__(self):
+		gecko.Browser.__init__(self)
+
+	def do_create_window(self):
+		activity = BrowserActivity()
+		activity.set_type('com.redhat.Sugar.BrowserActivity')
+		return activity.get_embed()
 
 class BrowserActivity(Activity):
 	def __init__(self):
@@ -35,7 +46,7 @@ class BrowserActivity(Activity):
 		vbox.pack_start(self._notif_bar, False)
 		self._notif_bar.connect('action', self.__notif_bar_action_cb)
 
-		self._embed = gtkmozembed.MozEmbed()
+		self._embed = Browser()
 		self._embed.connect("title", self.__title_cb)
 		vbox.pack_start(self._embed)		
 		self._embed.show()

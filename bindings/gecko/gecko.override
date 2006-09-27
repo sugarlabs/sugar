@@ -3,5 +3,16 @@
 headers
 #include <Python.h>
 
+#include "pygobject.h"
 #include "gecko-browser.h"
+
+%%
+modulename gecko
+%%
+import gobject.GObject as PyGObject_Type
+import gtkmozembed.MozEmbed as PyGtkMozEmbed_Type
+%%
+ignore-glob
+  *_get_type
+  _*
 %%

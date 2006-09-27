@@ -19,11 +19,35 @@
 #ifndef __GECKO_BROWSER_H__
 #define __GECKO_BROWSER_H__
 
-#include <glib.h>
+#include <gtkmozembed.h>
 
 G_BEGIN_DECLS
 
-void gecko_startup (void);
+typedef struct _GeckoBrowser GeckoBrowser;
+typedef struct _GeckoBrowserClass GeckoBrowserClass;
+typedef struct _GeckoBrowserPrivate GeckoBrowserPrivate;
+
+#define GECKO_TYPE_BROWSER				(gecko_browser_get_type())
+#define GECKO_BROWSER(object)	    	(G_TYPE_CHECK_INSTANCE_CAST((object), GECKO_TYPE_BROWSER, GeckoBrowser))
+#define GECKO_BROWSER_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST((klass), GECKO_TYPE_BROWSER, GeckoBrowserClass))
+#define GECKO_IS_BROWSER(object)		(G_TYPE_CHECK_INSTANCE_TYPE((object), GECKO_TYPE_BROWSER))
+#define GECKO_IS_BROWSER_CLASS(klass)	(G_TYPE_CHECK_CLASS_TYPE((klass), GECKO_TYPE_BROWSER))
+#define GECKO_BROWSER_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), GECKO_TYPE_BROWSER, GeckoBrowserClass))
+
+struct _GeckoBrowser {
+	GtkMozEmbed base_instance;
+};
+
+struct _GeckoBrowserClass {
+	GtkMozEmbedClass base_class;
+
+	GeckoBrowser * (* create_window) (GeckoBrowser *browser);
+};
+
+GType			gecko_browser_get_type		(void);
+void			gecko_browser_startup		(void);
+GeckoBrowser   *gecko_browser_new 			(void);
+GeckoBrowser   *gecko_browser_create_window	(GeckoBrowser *browser);
 
 G_END_DECLS
 
