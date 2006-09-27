@@ -107,7 +107,7 @@ class BrowserActivity(Activity):
 		self._embed.show()
 
 		nav_toolbar.set_embed(self._embed)
-		self._embed.load_url('file:///home/marco/test.html')#'http://www.google.com')		
+		self._embed.load_url('http://www.google.com')		
 
 		self.add(vbox)
 		vbox.show()
