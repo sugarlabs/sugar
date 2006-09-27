@@ -2,7 +2,6 @@ import os
 import random
 import base64
 import time
-import gobject
 
 import conf
 from sugar import env
@@ -19,11 +18,8 @@ class ShellOwner(object):
 	"""Class representing the owner of this machine/instance.  This class
 	runs in the shell and serves up the buddy icon and other stuff.  It's the
 	server portion of the Owner, paired with the client portion in Buddy.py."""
-	def __init__(self, shell_model):
+	def __init__(self):
 		profile = conf.get_profile()
-
-		self._shell_model = shell_model
-		self._shell_model.connect('activity-changed', self.__activity_changed_cb)
 
 		self._nick = profile.get_nick_name()
 		user_dir = profile.get_path()
@@ -82,33 +78,29 @@ class ShellOwner(object):
 	def __update_advertised_current_activity_cb(self):
 		self._last_activity_update = time.time()
 		self._pending_activity_update_timer = None
-		actid = self._pending_activity_update
-		if not actid:
-			actid = ""
-		self._service.set_published_value('curact', dbus.String(actid))
+		if self._pending_activity_update:
+			logging.debug("*** Updating current activity to %s" % self._pending_activity_update)
+			self._service.set_published_value('curact', dbus.String(self._pending_activity_update))
 		return False
 
-	def __activity_changed_cb(self, shell_model, activity_id):
+	def set_current_activity(self, activity_id):
 		"""Update our presence service with the latest activity, but no
 		more frequently than every 30 seconds"""
-		if activity_id == self._pending_activity_update:
-			return
 		self._pending_activity_update = activity_id
+		# If there's no pending update, we must not have updated it in the
+		# last 30 seconds (except for the initial update, hence we also check
+		# for the last update)
+		if not self._pending_activity_update_timer or time.time() - self._last_activity_update > 30:
+			self.__update_advertised_current_activity_cb()
+			return
 
 		# If we have a pending update already, we have nothing left to do
 		if self._pending_activity_update_timer:
 			return
 
-		# If there's no pending update, we must not have updated it in the
-		# last 30 seconds (except for the initial update, hence we also check
-		# for the last update)
-		if time.time() - self._last_activity_update > 30:
-			self.__update_advertised_current_activity_cb()
-			return
-
 		# Otherwise, we start a timer to update the activity at the next
 		# interval, which should be 30 seconds from the last update, or if that
 		# is in the past already, then now
-		next = int(30 - max(0, time.time() - self._last_activity_update))
+		next = 30 - max(30, time.time() - self._last_activity_update)
 		self._pending_activity_update_timer = gobject.timeout_add(next * 1000,
 				self.__update_advertised_current_activity_cb)
