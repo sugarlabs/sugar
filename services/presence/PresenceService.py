@@ -451,15 +451,13 @@ class PresenceService(object):
 		if activity:
 			activity.add_service(service)
 
-		# Add the activity to its buddy
-		# FIXME: use something other than name to attribute to buddy
-		name = service.get_name()
-		buddy = None
-		try:
-			buddy = self._buddies[name]
-			buddy.add_activity(activity)
-		except KeyError:
-			pass		
+			# Add the activity to its buddy
+			# FIXME: use something other than name to attribute to buddy
+			try:
+				buddy = self._buddies[service.get_name()]
+				buddy.add_activity(activity)
+			except KeyError:
+				pass		
 
 		if not was_valid and activity.is_valid():
 			self._dbus_helper.ActivityAppeared(activity.object_path())
@@ -473,18 +471,16 @@ class PresenceService(object):
 
 		activity = self._activities[actid]
 
-		# Remove the activity from its buddy
-		# FIXME: use something other than name to attribute to buddy
-		name = service.get_name()
-		buddy = None
-		try:
-			buddy = self._buddies[name]
-			buddy.remove_activity(activity)
-		except KeyError:
-			pass		
-
 		activity.remove_service(service)
 		if len(activity.get_services()) == 0:
+			# Remove the activity from its buddy
+			# FIXME: use something other than name to attribute to buddy
+			try:
+				buddy = self._buddies[service.get_name()]
+				buddy.remove_activity(activity)
+			except KeyError:
+				pass		
+
 			# Kill the activity
 			self._dbus_helper.ActivityDisappeared(activity.object_path())
 			del self._activities[actid]
