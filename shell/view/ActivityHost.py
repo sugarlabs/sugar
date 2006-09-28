@@ -7,10 +7,26 @@ from sugar.presence import PresenceService
 from sugar.canvas.IconColor import IconColor
 from sugar.p2p import Stream
 from sugar.p2p import network
+from sugar.chat import ActivityChat
+
+class ActivityChatWindow(gtk.Window):
+	def __init__(self, gdk_window, chat_widget):
+		gtk.Window.__init__(self)
+
+		self.set_decorated(False)
+		self.realize()
+		self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
+		self.window.set_accept_focus(True)		
+		self.window.set_transient_for(gdk_window)
+
+		self.add(chat_widget)
 
 class ActivityHost:
 	def __init__(self, shell, window):
 		self._shell = shell
+		self._shell.connect('activity-changed', self._activity_changed_cb)
+		self._shell.connect('activity-closed', self._activity_closed_cb)
+
 		self._window = window
 		self._xid = window.get_xid()
 		self._pservice = PresenceService.get_instance()
@@ -27,6 +43,9 @@ class ActivityHost:
 		registry = conf.get_activity_registry()
 		info = registry.get_activity(self._type)
 		self._icon_name = info.get_icon()
+
+		self._chat_widget = ActivityChat.ActivityChat(self)
+		self._chat_window = ActivityChatWindow(self._gdk_window, self._chat_widget)
 
 	def get_id(self):
 		return self._id
@@ -76,3 +95,21 @@ class ActivityHost:
 	def show_dialog(self, dialog):
 		dialog.show()
 		dialog.window.set_transient_for(self._gdk_window)
+
+	def chat_show(self):
+		self._chat_window.show_all()
+
+	def chat_hide(self):
+		self._chat_window.hide()
+
+	def is_chat_visible(self):
+		return self._chat_window.get_property('visible')
+
+	def _activity_changed_cb(self, shell, activity):
+		if activity != self:
+			self.chat_hide()
+
+	def _activity_closed_cb(self, shell, activity):
+		if activity == self:
+			self.chat_hide()
+

@@ -41,6 +41,7 @@ class Shell(gobject.GObject):
 		self._key_grabber.grab('F4')
 		self._key_grabber.grab('F5')
 		self._key_grabber.grab('F6')
+		self._key_grabber.grab('F9')
 
 		self._home_window = HomeWindow(self)
 		self._home_window.show()
@@ -67,6 +68,8 @@ class Shell(gobject.GObject):
 			self._frame.notify_key_press()
 		elif key == 'F6':
 			self.start_activity('org.sugar.Terminal')
+		elif key == 'F9':
+			self._show_hide_activity_chat()
 
 	def __global_key_released_cb(self, grabber, key):
 		if key == 'F5':
@@ -147,3 +150,11 @@ class Shell(gobject.GObject):
 			if host.get_id() == activity_id:
 				return host
 		return None
+
+	def _show_hide_activity_chat(self):
+		act = self.get_current_activity()
+		if act:
+			if act.is_chat_visible():
+				act.chat_hide()
+			else:
+				act.chat_show()
