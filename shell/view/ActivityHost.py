@@ -71,6 +71,7 @@ class ActivityHost:
 
 	def share(self):
 		self._activity.share()
+		self._chat_widget.share()
 
 	def invite(self, buddy):
 		if not self.get_shared():
