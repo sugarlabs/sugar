@@ -1,4 +1,5 @@
 import os
+import logging
 
 import gtk
 import gtkmozembed
@@ -23,6 +24,8 @@ class PopupCreator(gobject.GObject):
 	def __init__(self, parent_window):
 		gobject.GObject.__init__(self)
 
+		logging.debug('Creating the popup widget')
+
 		self._sized_popup = False
 		self._parent_window = parent_window
 
@@ -39,16 +42,19 @@ class PopupCreator(gobject.GObject):
 		self._dialog.add(self._embed)
 
 	def _size_to_cb(self, embed, width, height):
+		logging.debug('Resize the popup to %d %d' % (width, height))
 		self._sized_popup = True
 		self._dialog.resize(width, height)
 
 	def _visibility_cb(self, embed, visible):
 		if visible:
 			if self._sized_popup:
+				logging.debug('Show the popup')
 				self._embed.show()
 				self._dialog.set_transient_for(self._parent_window)
 				self._dialog.show()
 			else:
+				logging.debug('Open a new activity for the popup')
 				self._dialog.remove(self._embed)
 
 				activity = BrowserActivity(self._embed)
