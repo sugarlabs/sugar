@@ -18,6 +18,7 @@ class ActivityChatWindow(gtk.Window):
 		self.window.set_accept_focus(True)		
 		self.window.set_transient_for(gdk_window)
 		self.set_position(gtk.WIN_POS_CENTER_ALWAYS)
+		self.set_default_size(600, 450)
 
 		self.add(chat_widget)
 
