@@ -14,7 +14,7 @@ import logging
 from sugar.chat.Emoticons import Emoticons
 from sugar.chat.ChatToolbar import ChatToolbar
 from sugar.chat.ChatEditor import ChatEditor
-from sugar.presence.PresenceService import PresenceService
+from sugar.presence import PresenceService
 import richtext
 
 PANGO_SCALE = 1024 # Where is this defined?
@@ -29,7 +29,7 @@ class Chat(gtk.VBox):
 	def __init__(self):
 		gtk.VBox.__init__(self, False, 6)
 
-		self._pservice = PresenceService()
+		self._pservice = PresenceService.get_instance()
 
 		self._stream_writer = None
 		self.set_border_width(12)

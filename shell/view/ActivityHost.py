@@ -7,10 +7,25 @@ from sugar.presence import PresenceService
 from sugar.canvas.IconColor import IconColor
 from sugar.p2p import Stream
 from sugar.p2p import network
+from sugar.chat import ActivityChat
+
+class ActivityChatWindow(gtk.Window):
+	def __init__(self, gdk_window, chat_widget):
+		gtk.Window.__init__(self)
+
+		self.realize()
+		self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
+		self.window.set_accept_focus(True)		
+		self.window.set_transient_for(gdk_window)
+		self.set_position(gtk.WIN_POS_CENTER_ALWAYS)
+		self.set_default_size(600, 450)
+
+		self.add(chat_widget)
 
 class ActivityHost:
 	def __init__(self, shell, window):
 		self._shell = shell
+
 		self._window = window
 		self._xid = window.get_xid()
 		self._pservice = PresenceService.get_instance()
@@ -27,6 +42,13 @@ class ActivityHost:
 		registry = conf.get_activity_registry()
 		info = registry.get_activity(self._type)
 		self._icon_name = info.get_icon()
+
+		self._chat_widget = ActivityChat.ActivityChat(self)
+		self._chat_window = ActivityChatWindow(self._gdk_window, self._chat_widget)
+
+		self._frame_was_visible = False
+		self._shell.connect('activity-changed', self._activity_changed_cb)
+		self._shell.connect('activity-closed', self._activity_closed_cb)
 
 	def get_id(self):
 		return self._id
@@ -49,6 +71,7 @@ class ActivityHost:
 
 	def share(self):
 		self._activity.share()
+		self._chat_widget.share()
 
 	def invite(self, buddy):
 		if not self.get_shared():
@@ -76,3 +99,27 @@ class ActivityHost:
 	def show_dialog(self, dialog):
 		dialog.show()
 		dialog.window.set_transient_for(self._gdk_window)
+
+	def chat_show(self, frame_was_visible):
+		self._chat_window.show_all()
+		self._frame_was_visible = frame_was_visible
+
+	def chat_hide(self):
+		self._chat_window.hide()
+		wasvis = self._frame_was_visible
+		self._frame_was_visible = False
+		return wasvis
+
+	def is_chat_visible(self):
+		return self._chat_window.get_property('visible')
+
+	def _activity_changed_cb(self, shell, activity):
+		if activity != self:
+			self.chat_hide()
+			self._frame_was_visible = False
+
+	def _activity_closed_cb(self, shell, activity):
+		if activity == self:
+			self.chat_hide()
+			self._frame_was_visible = False
+
