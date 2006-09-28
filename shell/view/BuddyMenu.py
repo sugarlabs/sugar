@@ -1,7 +1,7 @@
 from sugar.canvas.Menu import Menu
 from sugar.canvas.IconItem import IconItem
 from sugar.presence import PresenceService
-import gtk
+import gtk, gobject
 import goocanvas
 
 _ICON_SIZE = 75

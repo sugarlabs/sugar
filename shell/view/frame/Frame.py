@@ -210,14 +210,19 @@ class Frame:
 		if self._mode == Frame.TEMPORARY:
 			self._timeline.play('before_slide_out', 'slide_out')
 
-	def do_slide_in(self, current, n_frames):
+	def do_slide_in(self, current=0, n_frames=0):
 		if not self._windows[0].props.visible:
 			for panel in self._windows:
 				panel.show()
 			self._event_frame.hide()
 
-	def do_slide_out(self, current, n_frames):
+	def do_slide_out(self, current=0, n_frames=0):
 		if self._windows[0].props.visible:
 			for panel in self._windows:
 				panel.hide()
 			self._event_frame.show()
+
+	def is_visible(self):
+		if self._windows[0].props.visible:
+			return True
+		return False

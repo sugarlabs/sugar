@@ -1,4 +1,4 @@
-import gtk
+import gtk, gobject
 
 from sugar.chat.Emoticons import Emoticons
 from sugar.chat.sketchpad.Toolbox import Toolbox
@@ -82,9 +82,12 @@ class ChatToolbar(gtk.HBox):
 		
 		for name in Emoticons.get_instance().get_all():
 			icon_theme = gtk.icon_theme_get_default()
-			pixbuf = icon_theme.load_icon(name, 16, 0)
-			model.append([pixbuf, name])
-		
+			try:
+				pixbuf = icon_theme.load_icon(name, 16, 0)
+				model.append([pixbuf, name])
+			except gobject.GError:
+				pass
+
 		icon_view = gtk.IconView(model)
 		icon_view.connect('selection-changed', self.__emoticon_selection_changed_cb)
 		icon_view.set_pixbuf_column(0)
