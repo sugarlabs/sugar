@@ -153,8 +153,14 @@ class Shell(gobject.GObject):
 
 	def _show_hide_activity_chat(self):
 		act = self.get_current_activity()
-		if act:
-			if act.is_chat_visible():
-				act.chat_hide()
-			else:
-				act.chat_show()
+		if not act:
+			return
+		is_visible = self._frame.is_visible()
+		if act.is_chat_visible():
+			frame_was_visible = act.chat_hide()
+			if not frame_was_visible:
+				self._frame.do_slide_out()
+		else:
+			if not is_visible:
+				self._frame.do_slide_in()
+			act.chat_show(is_visible)

@@ -96,11 +96,15 @@ class ActivityHost:
 		dialog.show()
 		dialog.window.set_transient_for(self._gdk_window)
 
-	def chat_show(self):
+	def chat_show(self, frame_was_visible):
 		self._chat_window.show_all()
+		self._frame_was_visible = frame_was_visible
 
 	def chat_hide(self):
 		self._chat_window.hide()
+		wasvis = self._frame_was_visible
+		self._frame_was_visible = False
+		return wasvis
 
 	def is_chat_visible(self):
 		return self._chat_window.get_property('visible')
@@ -108,8 +112,10 @@ class ActivityHost:
 	def _activity_changed_cb(self, shell, activity):
 		if activity != self:
 			self.chat_hide()
+			self._frame_was_visible = False
 
 	def _activity_closed_cb(self, shell, activity):
 		if activity == self:
 			self.chat_hide()
+			self._frame_was_visible = False
 
