@@ -13,11 +13,11 @@ class ActivityChatWindow(gtk.Window):
 	def __init__(self, gdk_window, chat_widget):
 		gtk.Window.__init__(self)
 
-		self.set_decorated(False)
 		self.realize()
 		self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.window.set_accept_focus(True)		
 		self.window.set_transient_for(gdk_window)
+		self.set_position(gtk.WIN_POS_CENTER_ALWAYS)
 
 		self.add(chat_widget)
 
