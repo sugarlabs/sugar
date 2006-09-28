@@ -24,8 +24,6 @@ class ActivityChatWindow(gtk.Window):
 class ActivityHost:
 	def __init__(self, shell, window):
 		self._shell = shell
-		self._shell.connect('activity-changed', self._activity_changed_cb)
-		self._shell.connect('activity-closed', self._activity_closed_cb)
 
 		self._window = window
 		self._xid = window.get_xid()
@@ -46,6 +44,10 @@ class ActivityHost:
 
 		self._chat_widget = ActivityChat.ActivityChat(self)
 		self._chat_window = ActivityChatWindow(self._gdk_window, self._chat_widget)
+
+		self._frame_was_visible = False
+		self._shell.connect('activity-changed', self._activity_changed_cb)
+		self._shell.connect('activity-closed', self._activity_closed_cb)
 
 	def get_id(self):
 		return self._id
