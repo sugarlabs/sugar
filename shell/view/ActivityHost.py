@@ -8,12 +8,14 @@ from sugar.canvas.IconColor import IconColor
 from sugar.p2p import Stream
 from sugar.p2p import network
 from sugar.chat import ActivityChat
+import OverlayWindow
 
 class ActivityChatWindow(gtk.Window):
 	def __init__(self, gdk_window, chat_widget):
 		gtk.Window.__init__(self)
 
 		self.realize()
+		self.set_decorated(False)
 		self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.window.set_accept_focus(True)		
 		self.window.set_transient_for(gdk_window)
@@ -43,8 +45,15 @@ class ActivityHost:
 		info = registry.get_activity(self._type)
 		self._icon_name = info.get_icon()
 
+		try:
+			self._overlay_window = OverlayWindow.OverlayWindow(self._gdk_window)
+			win = self._overlay_window.window
+		except RuntimeError:
+			self._overlay_window = None
+			win = self._gdk_window
+
 		self._chat_widget = ActivityChat.ActivityChat(self)
-		self._chat_window = ActivityChatWindow(self._gdk_window, self._chat_widget)
+		self._chat_window = ActivityChatWindow(win, self._chat_widget)
 
 		self._frame_was_visible = False
 		self._shell.connect('activity-changed', self._activity_changed_cb)
@@ -101,11 +110,15 @@ class ActivityHost:
 		dialog.window.set_transient_for(self._gdk_window)
 
 	def chat_show(self, frame_was_visible):
+		if self._overlay_window:
+			self._overlay_window.show_all()
 		self._chat_window.show_all()
 		self._frame_was_visible = frame_was_visible
 
 	def chat_hide(self):
 		self._chat_window.hide()
+		if self._overlay_window:
+			self._overlay_window.hide()
 		wasvis = self._frame_was_visible
 		self._frame_was_visible = False
 		return wasvis
