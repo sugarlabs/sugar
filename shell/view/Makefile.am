@@ -9,4 +9,5 @@ sugar_PYTHON =				\
 	FirstTimeDialog.py		\
 	BuddyIcon.py			\
 	BuddyMenu.py			\
+	OverlayWindow.py		\
 	Shell.py
