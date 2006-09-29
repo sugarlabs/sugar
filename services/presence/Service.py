@@ -397,10 +397,14 @@ class Service(gobject.GObject):
 		logging.debug("Will register service with name='%s', stype='%s'," \
 				" domain='%s', address='%s', port=%d, info='%s'" % (self._full_name,
 				self._stype, self._domain, self._address, self._port, info))
-		self._avahi_entry_group.AddService(avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, 0,
-				dbus.String(self._full_name), dbus.String(self._stype),
-				dbus.String(self._domain), dbus.String(""), # let Avahi figure the 'host' out
-				dbus.UInt16(self._port), info)
+		try:
+			self._avahi_entry_group.AddService(avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, 0,
+					dbus.String(self._full_name), dbus.String(self._stype),
+					dbus.String(self._domain), dbus.String(""), # let Avahi figure the 'host' out
+					dbus.UInt16(self._port), info)
+		except dbus.DBusException, exc:
+			# Local name collision and stuff
+			pass
 		self._avahi_entry_group.connect_to_signal('StateChanged', self.__entry_group_changed_cb)
 		self._avahi_entry_group.Commit()
 
