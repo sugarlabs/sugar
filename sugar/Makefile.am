@@ -1,4 +1,4 @@
-SUBDIRS = activity canvas chat p2p presence session
+SUBDIRS = activity canvas chat graphics p2p presence session
 
 sugardir = $(pythondir)/sugar
 sugar_PYTHON =				\

@@ -73,6 +73,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
 		self._buffer = None
 		self._buffer_size = 0.0
 
+		self.connect('button-press-event', self._button_press_event_cb)
+
 	def do_set_property(self, pspec, value):
 		if pspec.name == 'icon-name':
 			self._icon_name = value
@@ -132,3 +134,6 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
 
 	def do_get_height_request(self, for_width):
 		return self._size
+
+	def _button_press_event_cb(self, item, event):
+		item.emit_activated()

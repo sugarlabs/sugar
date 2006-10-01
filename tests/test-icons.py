@@ -11,42 +11,35 @@ import sys
 import random
 
 import gtk
-import goocanvas
+import hippo
 
 from sugar.canvas import IconColor
-from sugar.canvas.IconItem import IconItem
+from sugar.canvas.CanvasIcon import CanvasIcon
 from sugar.canvas.CanvasView import CanvasView
 
 window = gtk.Window()
 window.connect("destroy", lambda w: gtk.main_quit())
 window.show()
 
-canvas = CanvasView()
+canvas = hippo.Canvas()
 canvas.show()
 window.add(canvas)
 
-canvas_model = goocanvas.CanvasModelSimple()
-root = canvas_model.get_root_item()
-
-item = goocanvas.Rect(x=0, y=0, width=1200, height=900,
-                      line_width=0.0, fill_color="#4f4f4f")
-root.add_child(item)
+box = hippo.CanvasBox(background_color=0x4f4f4fff)
+canvas.set_root(box)
 
 icon_names = [ 'stock-buddy', 'activity-groupchat', 'activity-web']
 
 k = 0
-while k < 12:
+while k < 1:
 	i = 0
-	while i < 16:
+	while i < 10:
 		color = IconColor.IconColor()
 		icon_name_n = int(random.random() * len(icon_names))
-		icon = IconItem(x=i * 75, y=k * 75,
-						size=75, color=color,
-						icon_name=icon_names[icon_name_n])
-		root.add_child(icon)
+		icon = CanvasIcon(icon_name=icon_names[icon_name_n],
+						  size=75, color=color)
+		box.append(icon, 0)
 		i += 1
 	k += 1
-
-canvas.set_model(canvas_model)
 
 gtk.main()

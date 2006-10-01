@@ -1,9 +1,11 @@
 import goocanvas
+import hippo
 
-from sugar.canvas.CanvasBox import CanvasBox
-from sugar.canvas.IconItem import IconItem
-from sugar.canvas.MenuIcon import MenuIcon
+from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics.menuicon import MenuIcon
+from sugar.graphics import style
 from sugar.canvas.Menu import Menu
+from sugar.canvas.IconItem import IconItem
 from view.frame.MenuStrategy import MenuStrategy
 import sugar
 
@@ -51,53 +53,45 @@ class ActivityIcon(MenuIcon):
 		if action == ActivityMenu.ACTION_CLOSE:
 			activity.close()
 
-class TopPanel(goocanvas.Group):
+class ZoomBox(hippo.CanvasBox):
 	def __init__(self, shell, menu_shell):
-		goocanvas.Group.__init__(self)
+		hippo.CanvasBox.__init__(self, orientation=hippo.ORIENTATION_HORIZONTAL)
 
 		self._shell = shell
 		self._menu_shell = menu_shell
 		self._activity_icon = None
 
-		grid = shell.get_grid()
+		icon = CanvasIcon(icon_name='stock-zoom-mesh')
+		style.apply_stylesheet(icon, 'frame-zoom-icon')
+		icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_MESH)
+		self.append(icon, 0)
 
-		box = CanvasBox(grid, CanvasBox.HORIZONTAL)
-		grid.set_constraints(box, 5, 0)
-		self.add_child(box)
+		icon = CanvasIcon(icon_name='stock-zoom-friends')
+		style.apply_stylesheet(icon, 'frame-zoom-icon')
+		icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_FRIENDS)
+		self.append(icon, 0)
 
-		icon = IconItem(icon_name='stock-zoom-mesh')
-		icon.connect('clicked', self._level_clicked_cb, sugar.ZOOM_MESH)
-		box.set_constraints(icon, 5, 5)
-		box.add_child(icon)
+		icon = CanvasIcon(icon_name='stock-zoom-home')
+		style.apply_stylesheet(icon, 'frame-zoom-icon')
+		icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_HOME)
+		self.append(icon, 0)
 
-		icon = IconItem(icon_name='stock-zoom-friends')
-		icon.connect('clicked', self._level_clicked_cb, sugar.ZOOM_FRIENDS)
-		box.set_constraints(icon, 5, 5)
-		box.add_child(icon)
-
-		icon = IconItem(icon_name='stock-zoom-home')
-		icon.connect('clicked', self._level_clicked_cb, sugar.ZOOM_HOME)
-		box.set_constraints(icon, 5, 5)
-		box.add_child(icon)
-
-		icon = IconItem(icon_name='stock-zoom-activity')
-		icon.connect('clicked', self._level_clicked_cb, sugar.ZOOM_ACTIVITY)
-		box.set_constraints(icon, 5, 5)
-		box.add_child(icon)
-
-		self._box = box
+		icon = CanvasIcon(icon_name='stock-zoom-activity')
+		style.apply_stylesheet(icon, 'frame-zoom-icon')
+		icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_ACTIVITY)
+		self.append(icon, 0)
 
 		shell.connect('activity-changed', self._activity_changed_cb)
 		self._set_current_activity(shell.get_current_activity())
 
 	def _set_current_activity(self, activity):
 		if self._activity_icon:
-			self._box.remove_child(self._activity_icon)
+			self.remove(self._activity_icon)
 
 		if activity:
 			icon = ActivityIcon(self._shell, self._menu_shell, activity)
-			self._box.set_constraints(icon, 5, 5)
-			self._box.add_child(icon)
+			style.apply_stylesheet(icon, 'frame-zoom-icon')
+			self.append(icon, 0)
 			self._activity_icon = icon
 		else:
 			self._activity_icon = None

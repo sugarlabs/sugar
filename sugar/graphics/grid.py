@@ -7,7 +7,7 @@ class Grid(object):
 	def __init__(self):
 		self._factor = gtk.gdk.screen_width() / COLS
 
-	def position(self, x, y):
+	def point(self, x, y):
 		return [x * self._factor, y * self._factor]
 
 	def rectangle(self, x, y, width, height):
