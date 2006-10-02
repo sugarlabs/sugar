@@ -3,9 +3,8 @@ import hippo
 
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics.menuicon import MenuIcon
+from sugar.graphics.menu import Menu
 from sugar.graphics import style
-from sugar.canvas.Menu import Menu
-from sugar.canvas.IconItem import IconItem
 from view.frame.MenuStrategy import MenuStrategy
 import sugar
 
@@ -14,13 +13,14 @@ class ActivityMenu(Menu):
 	ACTION_CLOSE = 2
 
 	def __init__(self, grid, activity_host):
-		title = activity_host.get_title()
-		Menu.__init__(self, grid, title)
+		Menu.__init__(self, activity_host.get_title())
 
-		icon = IconItem(icon_name='stock-share-mesh')
+		icon = CanvasIcon(icon_name='stock-share-mesh')
+		style.apply_stylesheet(icon, 'menu-action-icon')
 		self.add_action(icon, ActivityMenu.ACTION_SHARE) 
 
-		icon = IconItem(icon_name='stock-close')
+		icon = CanvasIcon(icon_name='stock-close')
+		style.apply_stylesheet(icon, 'menu-action-icon')
 		self.add_action(icon, ActivityMenu.ACTION_CLOSE) 
 
 class ActivityIcon(MenuIcon):
@@ -64,22 +64,22 @@ class ZoomBox(hippo.CanvasBox):
 		icon = CanvasIcon(icon_name='stock-zoom-mesh')
 		style.apply_stylesheet(icon, 'frame-zoom-icon')
 		icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_MESH)
-		self.append(icon, 0)
+		self.append(icon)
 
 		icon = CanvasIcon(icon_name='stock-zoom-friends')
 		style.apply_stylesheet(icon, 'frame-zoom-icon')
 		icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_FRIENDS)
-		self.append(icon, 0)
+		self.append(icon)
 
 		icon = CanvasIcon(icon_name='stock-zoom-home')
 		style.apply_stylesheet(icon, 'frame-zoom-icon')
 		icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_HOME)
-		self.append(icon, 0)
+		self.append(icon)
 
 		icon = CanvasIcon(icon_name='stock-zoom-activity')
 		style.apply_stylesheet(icon, 'frame-zoom-icon')
 		icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_ACTIVITY)
-		self.append(icon, 0)
+		self.append(icon)
 
 		shell.connect('activity-changed', self._activity_changed_cb)
 		self._set_current_activity(shell.get_current_activity())

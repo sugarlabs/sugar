@@ -18,3 +18,8 @@ _stylesheet = {
 	'size'  : _medium_icon_size
 }
 style.register_stylesheet('frame-zoom-icon', _stylesheet)
+
+_stylesheet = {
+	'size'  : _medium_icon_size
+}
+style.register_stylesheet('menu-action-icon', _stylesheet)
