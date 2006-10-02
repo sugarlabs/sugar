@@ -1,16 +1,15 @@
-import goocanvas
+import hippo
 
-from sugar.canvas.IconItem import IconItem
+from sugar.graphics.CanvasIcon import CanvasIcon
 from sugar.canvas.IconColor import IconColor
-from sugar.canvas.CanvasBox import CanvasBox
 from sugar.presence import PresenceService
 from view.BuddyIcon import BuddyIcon
 from model.BuddyModel import BuddyModel
 from view.frame.MenuStrategy import MenuStrategy
 
-class RightPanel(CanvasBox):
+class RightPanel(hippo.CanvasBox):
 	def __init__(self, shell, menu_shell):
-		CanvasBox.__init__(self, shell.get_grid(), CanvasBox.VERTICAL)
+		CanvasBox.__init__(self)
 		self._shell = shell
 		self._menu_shell = menu_shell
 		self._activity_ps = None
@@ -28,8 +27,7 @@ class RightPanel(CanvasBox):
 		model = BuddyModel(buddy=buddy)
 		icon = BuddyIcon(self._shell, self._menu_shell, model)
 		icon.set_menu_strategy(MenuStrategy())
-		self.set_constraints(icon, 5, 5)
-		self.add_child(icon)
+		self.append(icon, 0)
 
 		self._buddies[buddy.get_name()] = icon
 

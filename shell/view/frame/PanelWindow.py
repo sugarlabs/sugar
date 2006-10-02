@@ -1,27 +1,24 @@
 import gtk
-import goocanvas
-
-from sugar.canvas.CanvasView import CanvasView
+import hippo
 
 class PanelWindow(gtk.Window):
-	def __init__(self, grid, model, x, y, width, height):
+	def __init__(self):
 		gtk.Window.__init__(self)
 
-		self._grid = grid
-
 		self.set_decorated(False)
+		self.connect('realize', self._realize_cb)
 
-		self.realize()
+		canvas = hippo.Canvas()
+
+		self._bg = hippo.CanvasBox(background_color=0x4f4f4fff)
+		canvas.set_root(self._bg)
+
+		self.add(canvas)
+		canvas.show()
+
+	def get_root(self):
+		return self._bg
+
+	def _realize_cb(self, widget):
 		self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 		self.window.set_accept_focus(False)
-
-		screen = gtk.gdk.screen_get_default()
-		self.window.set_transient_for(screen.get_root_window())
-
-		view = CanvasView()
-		view.show()
-		self.add(view)
-		view.set_model(model)
-
-		self._grid.set_constraints(self, x, y, width, height)
-		self._grid.set_constraints(view, x, y, width, height)

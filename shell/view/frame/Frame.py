@@ -1,15 +1,14 @@
 import gtk
 import gobject
-import goocanvas
+import hippo
 import wnck
 
-from view.frame.BottomPanel import BottomPanel
-from view.frame.RightPanel import RightPanel
-from view.frame.TopPanel import TopPanel
+from view.frame.ActivitiesBox import ActivitiesBox
+from view.frame.ZoomBox import ZoomBox
 from view.frame.PanelWindow import PanelWindow
-from sugar.canvas.Grid import Grid
 from sugar.canvas.Timeline import Timeline
 from sugar.canvas.MenuShell import MenuShell
+from sugar.graphics.grid import Grid
 
 class EventFrame(gobject.GObject):
 	__gsignals__ = {
@@ -116,51 +115,52 @@ class Frame:
 		self._timeline.add_tag('before_slide_out', 36, 36)
 		self._timeline.add_tag('slide_out', 37, 42)
 
-		model = goocanvas.CanvasModelSimple()
-		root = model.get_root_item()
-
-		grid = shell.get_grid()
-		self._menu_shell = MenuShell(grid)
-		self._menu_shell.connect('activated', self._menu_shell_activated_cb)
-		self._menu_shell.connect('deactivated', self._menu_shell_deactivated_cb)
-
-		bg = goocanvas.Rect(fill_color="#4f4f4f", line_width=0)
-		grid.set_constraints(bg, 0, 0, 80, 60)
-		root.add_child(bg)
-
-		panel = BottomPanel(shell)
-		grid.set_constraints(panel, 5, 55)
-		root.add_child(panel)
-
-		self._add_panel(model, 0, 55, 80, 5)
-
-		panel = TopPanel(shell, self._menu_shell)
-		root.add_child(panel)
-
-		self._add_panel(model, 0, 0, 80, 5)
-		
-		panel = RightPanel(shell, self._menu_shell)
-		grid.set_constraints(panel, 75, 5)
-		root.add_child(panel)
-
-		self._add_panel(model, 75, 5, 5, 50)
-
-		self._add_panel(model, 0, 5, 5, 50)
-
 		self._event_frame = EventFrame()
 		self._event_frame.connect('enter-edge', self._enter_edge_cb)
 		self._event_frame.connect('enter-corner', self._enter_corner_cb)
 		self._event_frame.connect('leave', self._event_frame_leave_cb)
 		self._event_frame.show()
 
-	def _add_panel(self, model, x, y, width, height):
-		grid = self._shell.get_grid()
+		grid = Grid()
 
-		panel_window = PanelWindow(grid, model, x, y, width, height)
-		panel_window.connect('enter-notify-event', self._enter_notify_cb)
-		panel_window.connect('leave-notify-event', self._leave_notify_cb)
+		self._menu_shell = MenuShell(grid)
+		self._menu_shell.connect('activated', self._menu_shell_activated_cb)
+		self._menu_shell.connect('deactivated', self._menu_shell_deactivated_cb)
 
-		self._windows.append(panel_window)
+		top_panel = self._create_panel(grid, 0, 0, 16, 1)
+
+		box = ZoomBox(self._shell, self._menu_shell)
+		top_panel.append(box, hippo.PACK_FIXED)
+
+		[x, y] = grid.point(1, 0)
+		top_panel.move(box, x, y)
+
+		bottom_panel = self._create_panel(grid, 0, 11, 16, 1)
+
+		box = ActivitiesBox(self._shell)
+		bottom_panel.append(box, hippo.PACK_FIXED)
+
+		[x, y] = grid.point(1, 0)
+		bottom_panel.move(box, x, y)
+
+		left_panel = self._create_panel(grid, 0, 1, 1, 10)
+
+		right_panel = self._create_panel(grid, 15, 1, 1, 10)
+
+	def _create_panel(self, grid, x, y, width, height):
+		panel = PanelWindow()
+
+		panel.connect('enter-notify-event', self._enter_notify_cb)
+		panel.connect('leave-notify-event', self._leave_notify_cb)
+
+		[x, y, width, height] = grid.rectangle(x, y, width, height)
+
+		panel.move(x, y)
+		panel.resize(width, height)
+
+		self._windows.append(panel)
+
+		return panel.get_root()
 
 	def _menu_shell_activated_cb(self, menu_shell):
 		self._timeline.goto('slide_in', True)
