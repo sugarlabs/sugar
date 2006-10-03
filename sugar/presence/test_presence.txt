@@ -2,9 +2,9 @@ This is a test of presence.
 
 To test this service we will start up a mock dbus library:
 
-    >>> from sugar import mock_dbus
+    >>> from sugar.testing import mockdbus
     >>> import dbus
-    >>> pres_service = mock_dbus.MockService(
+    >>> pres_service = mockdbus.MockService(
     ...     'org.laptop.Presence', '/org/laptop/Presence', name='pres')
     >>> pres_service.install()
     >>> pres_interface = dbus.Interface(pres_service, 'org.laptop.Presence')

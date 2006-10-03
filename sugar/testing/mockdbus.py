@@ -1,9 +1,55 @@
+"""
+Module to mock out portions of the dbus library for testing purposes.
+
+This is intended to be used with doctest, something like::
+    
+    >>> from sugar.testing import mockdbus
+    >>> mock_service = mockdbus.MockService(
+    ...     'service.name', '/service/path', name='printed_name')
+
+This doesn't actually change anything, yes; you must install the mock
+service to get it to run.  This actually modifies the dbus module in
+place, and should only be used in a process dedicated to testing (you
+shouldn't use this in normal code).  Next we install the service and
+get the interface::
+    
+    >>> mock_service.install()
+    >>> import dbus
+    >>> mock_interface = dbus.Interface(mock_service, 'interface.name')
+
+Before you trigger code that uses this mock service, you have to tell
+the service how to respond, like::
+
+    >>> mock_interface.make_response('methodName', 'response')
+
+Next time mock_interface.methodName(any arguments) is called, it will
+return 'response'.  Also, when that method is called it will print
+out the call plus the arguments.  This works well with doctest, like::
+
+    >>> mock_interface.methodName(1, 2)
+    Called printed_name.interface.name:methodName(1, 2)
+    'response'
+
+(Note: the first line is printed, the second line is the return value)
+
+It is an error if a method is called that has no response setup,
+unless that method is called asynchronously (with reply_handler).
+Then the reply_handler will be called as soon as the response has been
+created with service.make_response().  By delaying the response you
+can force response handlers to run out of order.
+
+"""
+
 import dbus
 
 _installed = False
 fake_get_object = None
 
 def _install():
+    """
+    Installs the monkeypatch to dbus.  Called automatically when
+    necessary.
+    """
     global _installed, fake_get_object
     if _installed:
         return
@@ -12,16 +58,27 @@ def _install():
     fake_get_object = FakeGetObject(old_get_object)
     bus.get_object = fake_get_object
     _installed = True
-    # @@: Do we need to override bus.add_signal_receiver?
+    # XXX: Do we need to override bus.add_signal_receiver?
 
 class FakeGetObject(object):
+
+    """
+    The replacement dbus.get_object() function/callable.  This
+    delegates to the real get_object callable, except when a
+    MockService has been registered.
+    """
 
     def __init__(self, real_get_object):
         self._real_get_object = real_get_object
         self._overrides = {}
 
-    def register(self, service, service_name, path):
-        self._overrides[(service_name, path)] = service
+    def register(self, mock_service, service_name, path):
+        """
+        Registers a MockService instance to the service_name and path.
+        Calls to dbus.get_object(service_name, path) will now return
+        this mock_service object.
+        """
+        self._overrides[(service_name, path)] = mock_service
 
     def __call__(self, service_name, path):
         override = self._overrides.get((service_name, path), None)
@@ -31,6 +88,13 @@ class FakeGetObject(object):
             return override
 
 class MockService(object):
+
+    """
+    A mock service object.  You should first instantiate then install
+    this object.  Once installed, calls to
+    dbus.get_object(service_name, path) will return this object
+    instead of a real dbus service object.
+    """
 
     def __init__(self, service_name, path, name=None):
         self.service_name = service_name
@@ -54,6 +118,9 @@ class MockService(object):
                 self.service_name, self.path)
 
     def install(self):
+        """
+        Installs this object.
+        """
         _install()
         fake_get_object.register(
             self, self.service_name, self.path)
@@ -82,7 +149,7 @@ class MockService(object):
                 raise ValueError(
                     "Duplicate requests not yet handled for %s:%s" % (dbus_interface, meth_name))
             self._pending_requests[key] = (reply_handler, error_handler)
-            self.call_responses()
+            self.call_reply_handlers()
             return
         assert error_handler is None, (
             "error_handler %s without reply_handler" % error_handler)
@@ -102,7 +169,13 @@ class MockService(object):
         else:
             return response
 
-    def make_response(self, meth_name, response, error=False, dbus_interface=None):
+    def make_response(self, meth_name, response, error=False,
+                      dbus_interface=None):
+        """
+        This is used to generate a response to a method call.  If
+        error is true, then the response object is an exception that
+        will be raised (or passed to error_handler).
+        """
         key = (meth_name, dbus_interface)
         if key in self._pending_responses:
             raise ValueError(
@@ -117,7 +190,14 @@ class MockService(object):
             result.append('%s:%s()=%r' % (dbus_interface, meth_name, value))
         return ', '.join(result)
 
-    def call_responses(self):
+    def call_reply_handlers(self):
+        """
+        This calls any reply_handlers that now have responses (or
+        errors) ready for them.  This can be called when a response is
+        added after an asynchronous method is called, to trigger the
+        response actually being called.
+        """
+        # XXX: Should make_response automatically call this?
         for key in sorted(self._pending_responses.keys()):
             if key in self._pending_requests:
                 error, response = self._pending_responses[key]
@@ -136,12 +216,17 @@ class MockService(object):
             handler_function)
 
     def send_signal(self, signal, dbus_interface=None):
+        # XXX: This isn't really done
         for listener in self._connections.get((signal, dbus_interface), []):
-            # @@: Argument?
+            # XXX: Argument?
             listener()
 
     @property
     def empty(self):
+        """
+        This can be called to at the end of the test to make sure
+        there's no responses or requests left over.
+        """
         return (
             not self._pending_responses
             and not self._pending_requests)
