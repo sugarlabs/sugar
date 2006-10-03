@@ -12,7 +12,7 @@ class ActivityMenu(Menu):
 	ACTION_SHARE = 1
 	ACTION_CLOSE = 2
 
-	def __init__(self, grid, activity_host):
+	def __init__(self, activity_host):
 		Menu.__init__(self, activity_host.get_title())
 
 		icon = CanvasIcon(icon_name='stock-share-mesh')
@@ -37,7 +37,7 @@ class ActivityIcon(MenuIcon):
 		self.set_menu_strategy(MenuStrategy())
 
 	def create_menu(self):
-		menu = ActivityMenu(self._shell.get_grid(), self._activity_host)
+		menu = ActivityMenu(self._activity_host)
 		menu.connect('action', self._action_cb)
 		return menu
 

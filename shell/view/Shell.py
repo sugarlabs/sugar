@@ -2,7 +2,6 @@ import gtk
 import gobject
 import wnck
 
-from sugar.canvas.Grid import Grid
 from view.home.HomeWindow import HomeWindow
 from sugar.presence import PresenceService
 from view.ActivityHost import ActivityHost
@@ -28,7 +27,6 @@ class Shell(gobject.GObject):
 		self._model = model
 		self._hosts = {}
 		self._screen = wnck.screen_get_default()
-		self._grid = Grid()
 
 		self._key_grabber = KeyGrabber()
 		self._key_grabber.connect('key-pressed',
@@ -107,9 +105,6 @@ class Shell(gobject.GObject):
 
 	def get_model(self):
 		return self._model
-
-	def get_grid(self):
-		return self._grid
 
 	def join_activity(self, bundle_id, activity_id):
 		pservice = PresenceService.get_instance()

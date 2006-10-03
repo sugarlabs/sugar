@@ -8,10 +8,9 @@ class MenuShell(gobject.GObject):
 				        gobject.TYPE_NONE, ([])),
 	}
 
-	def __init__(self, grid):
+	def __init__(self):
 		gobject.GObject.__init__(self)
 		self._menu_controller = None
-		self._grid = grid
 
 	def is_active(self):
 		return (self._menu_controller != None)
@@ -25,6 +24,3 @@ class MenuShell(gobject.GObject):
 		if self._menu_controller:
 			self._menu_controller.popdown()
 		self._menu_controller = controller
-
-	def get_grid(self):
-		return self._grid

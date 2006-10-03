@@ -25,7 +25,7 @@ class HomeWindow(gtk.Window):
 		self.add(self._nb)
 		self._nb.show()
 
-		menu_shell = MenuShell(shell.get_grid())
+		menu_shell = MenuShell()
 
 		self._add_page(HomeGroup(shell))
 

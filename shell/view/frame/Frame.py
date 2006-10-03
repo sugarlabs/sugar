@@ -123,7 +123,7 @@ class Frame:
 
 		grid = Grid()
 
-		self._menu_shell = MenuShell(grid)
+		self._menu_shell = MenuShell()
 		self._menu_shell.connect('activated', self._menu_shell_activated_cb)
 		self._menu_shell.connect('deactivated', self._menu_shell_deactivated_cb)
 
