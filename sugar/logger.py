@@ -4,7 +4,12 @@ import traceback
 from cStringIO import StringIO
 
 import dbus
-import dbus.dbus_bindings
+
+#internals of D-Bus Python are changing
+#try not to use it in the future
+if dbus.version < (0, 70, 0):
+	import dbus.dbus_bindings
+
 import gobject
 
 __queue = None
@@ -24,7 +29,14 @@ class MessageQueue:
 		
 		if self._console == None:
 			con = self._bus._connection
-			if dbus.dbus_bindings.bus_name_has_owner(con, CONSOLE_BUS_NAME):
+			name_has_owner = False
+			
+			try:
+				name_has_owner = dbus.dbus_bindings.bus_name_has_owner(con, CONSOLE_BUS_NAME)
+			except:
+				name_has_owner = con.name_has_owner(CONSOLE_BUS_NAME)
+
+			if name_has_owner:
 				self.setup_console()
 			else:
 				self._bus.add_signal_receiver(
