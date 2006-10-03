@@ -2,7 +2,7 @@
 
 from sugar.simulator import Bot
 from sugar.simulator import ShareActivityAction
-from sugar.canvas.IconColor import IconColor
+from sugar.graphics.iconcolor import IconColor
 import os, random, gobject
 
 class KiuBot(Bot):

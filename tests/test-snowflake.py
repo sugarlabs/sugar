@@ -14,11 +14,11 @@ import random
 import gtk
 import goocanvas
 
-from sugar.canvas.SnowflakeLayout import SnowflakeLayout
-from sugar.canvas import IconColor
-from sugar.canvas.IconItem import IconItem
-from sugar.canvas.CanvasView import CanvasView
-from sugar.canvas.Grid import Grid
+from sugar.graphics.snowflakelayout import SnowflakeLayout
+from sugar.graphics import IconColor
+from sugar.graphics.IconItem import IconItem
+from sugar.graphics.CanvasView import CanvasView
+from sugar.graphics.Grid import Grid
 
 def _create_snowflake(group, children):
 	color = IconColor.IconColor()

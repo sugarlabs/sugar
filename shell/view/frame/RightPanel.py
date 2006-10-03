@@ -1,7 +1,7 @@
 import hippo
 
 from sugar.graphics.CanvasIcon import CanvasIcon
-from sugar.canvas.IconColor import IconColor
+from sugar.graphics.iconcolor import IconColor
 from sugar.presence import PresenceService
 from view.BuddyIcon import BuddyIcon
 from model.BuddyModel import BuddyModel

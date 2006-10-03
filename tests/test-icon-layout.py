@@ -15,10 +15,10 @@ import gtk
 import goocanvas
 
 from view.home.IconLayout import IconLayout
-from sugar.canvas import IconColor
-from sugar.canvas.IconItem import IconItem
-from sugar.canvas.CanvasView import CanvasView
-from sugar.canvas.Grid import Grid
+from sugar.graphics import IconColor
+from sugar.graphics.IconItem import IconItem
+from sugar.graphics.CanvasView import CanvasView
+from sugar.graphics.Grid import Grid
 
 def _create_icon():
 	color = IconColor.IconColor()

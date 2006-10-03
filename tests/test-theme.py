@@ -10,9 +10,9 @@ session.start()
 import gtk
 import goocanvas
 
-from sugar.canvas import IconColor
-from sugar.canvas.IconItem import IconItem
-from sugar.canvas.CanvasView import CanvasView
+from sugar.graphics import IconColor
+from sugar.graphics.IconItem import IconItem
+from sugar.graphics.CanvasView import CanvasView
 
 # Main window
 window = gtk.Window()

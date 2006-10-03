@@ -13,9 +13,9 @@ import random
 import gtk
 import hippo
 
-from sugar.canvas import IconColor
-from sugar.canvas.CanvasIcon import CanvasIcon
-from sugar.canvas.CanvasView import CanvasView
+from sugar.graphics import IconColor
+from sugar.graphics.CanvasIcon import CanvasIcon
+from sugar.graphics.CanvasView import CanvasView
 
 window = gtk.Window()
 window.connect("destroy", lambda w: gtk.main_quit())

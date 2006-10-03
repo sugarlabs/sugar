@@ -1,5 +1,5 @@
 from sugar.presence import PresenceService
-from sugar.canvas.IconColor import IconColor
+from sugar.graphics.iconcolor import IconColor
 import gobject
 
 _NOT_PRESENT_COLOR = "#888888,#BBBBBB"

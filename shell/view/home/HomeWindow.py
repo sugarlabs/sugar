@@ -4,7 +4,7 @@ import hippo
 import cairo
 
 from sugar.canvas.CanvasView import CanvasView
-from sugar.canvas.MenuShell import MenuShell
+from sugar.graphics.menushell import MenuShell
 from view.home.MeshBox import MeshBox
 from view.home.HomeGroup import HomeGroup
 from view.home.FriendsBox import FriendsBox

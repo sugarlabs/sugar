@@ -5,7 +5,7 @@ import hippo
 from sugar.graphics.spreadlayout import SpreadLayout
 from sugar.graphics.canvasicon import CanvasIcon
 from view.BuddyIcon import BuddyIcon
-from sugar.canvas.SnowflakeLayout import SnowflakeLayout
+from sugar.graphics.snowflakelayout import SnowflakeLayout
 import conf
 
 class ActivityView(hippo.CanvasBox):

@@ -1,7 +1,7 @@
 import gobject
 
 import conf
-from sugar.canvas.IconItem import IconColor
+from sugar.graphics.iconcolor import IconColor
 from sugar.presence import PresenceService
 from model.BuddyModel import BuddyModel
 

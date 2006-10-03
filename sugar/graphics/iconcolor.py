@@ -1,6 +1,6 @@
 import random
 
-from sugar.canvas import Colors
+from sugar.graphics.colors import colors
 
 def _parse_string(color_string):
 	if color_string == 'white':
@@ -18,8 +18,8 @@ def is_valid(color_string):
 class IconColor:
 	def __init__(self, color_string=None):
 		if color_string == None or not is_valid(color_string):
-			n = int(random.random() * (len(Colors.colors) - 1))
-			[self._stroke, self._fill] = Colors.colors[n]
+			n = int(random.random() * (len(colors) - 1))
+			[self._stroke, self._fill] = colors[n]
 		else:
 			[self._stroke, self._fill] = _parse_string(color_string)
 

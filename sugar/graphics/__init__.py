@@ -1,7 +1,7 @@
 import gtk
 
 from sugar.graphics import style
-from sugar.canvas.IconColor import IconColor
+from sugar.graphics.iconcolor import IconColor
 
 if gtk.gdk.screen_width() == 1200:
 	_medium_icon_size = 75

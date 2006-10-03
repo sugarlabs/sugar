@@ -4,7 +4,7 @@ import dbus
 import conf
 from sugar.activity import Activity
 from sugar.presence import PresenceService
-from sugar.canvas.IconColor import IconColor
+from sugar.graphics.iconcolor import IconColor
 from sugar.p2p import Stream
 from sugar.p2p import network
 from sugar.chat import ActivityChat

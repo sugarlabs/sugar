@@ -2,7 +2,7 @@ import gobject
 
 import conf
 from sugar.presence import PresenceService
-from sugar.canvas.IconColor import IconColor
+from sugar.graphics.iconcolor import IconColor
 
 class Invite:
 	def __init__(self, issuer, bundle_id, activity_id):

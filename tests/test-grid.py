@@ -10,11 +10,11 @@ session.start()
 import gtk
 import goocanvas
 
-from sugar.canvas.IconColor import IconColor
-from sugar.canvas.IconItem import IconItem
-from sugar.canvas.CanvasView import CanvasView
-from sugar.canvas.CanvasBox import CanvasBox
-from sugar.canvas.Grid import Grid
+from sugar.graphics.iconcolor import IconColor
+from sugar.graphics.IconItem import IconItem
+from sugar.graphics.CanvasView import CanvasView
+from sugar.graphics.CanvasBox import CanvasBox
+from sugar.graphics.Grid import Grid
 
 def _new_icon_clicked_cb(icon):
 	box.remove_child(icon)

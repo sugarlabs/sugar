@@ -1,6 +1,6 @@
 import conf
 from sugar.canvas.IconItem import IconItem
-from sugar.canvas.IconColor import IconColor
+from sugar.graphics.iconcolor import IconColor
 
 class MyIcon(IconItem):
 	def __init__(self, size):

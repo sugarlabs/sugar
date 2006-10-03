@@ -6,8 +6,8 @@ import wnck
 from view.frame.ActivitiesBox import ActivitiesBox
 from view.frame.ZoomBox import ZoomBox
 from view.frame.PanelWindow import PanelWindow
-from sugar.canvas.Timeline import Timeline
-from sugar.canvas.MenuShell import MenuShell
+from sugar.graphics.timeline import Timeline
+from sugar.graphics.menushell import MenuShell
 from sugar.graphics.grid import Grid
 
 class EventFrame(gobject.GObject):

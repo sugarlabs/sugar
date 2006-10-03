@@ -7,7 +7,7 @@ import rsvg
 import cairo
 
 from sugar.util import GObjectSingletonMeta
-from sugar.canvas.IconColor import IconColor
+from sugar.graphics.iconcolor import IconColor
 
 class _IconCache:
 	def __init__(self):
