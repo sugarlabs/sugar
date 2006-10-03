@@ -1,8 +1,10 @@
-from sugar.canvas.Menu import Menu
-from sugar.canvas.IconItem import IconItem
-from sugar.presence import PresenceService
-import gtk, gobject
+import gtk
+import gobject
 import goocanvas
+
+from sugar.graphics.menu import Menu
+from sugar.graphics.canvasicon import CanvasIcon
+from sugar.presence import PresenceService
 
 _ICON_SIZE = 75
 
@@ -12,11 +14,20 @@ class BuddyMenu(Menu):
 	ACTION_REMOVE_FRIEND = 2
 
 	def __init__(self, shell, buddy):
-		Menu.__init__(self, shell.get_grid(), buddy.get_name())
-
 		self._buddy = buddy
-		self._buddy.connect('icon-changed', self.__buddy_icon_changed_cb)
 		self._shell = shell
+
+		icon_item = None
+		pixbuf = self._get_buddy_icon_pixbuf()
+		if pixbuf:
+			scaled_pixbuf = pixbuf.scale_simple(_ICON_SIZE, _ICON_SIZE,
+												gtk.gdk.INTERP_BILINEAR)
+			del pixbuf
+			icon_item = hippo.Image(pixbuf=scaled_pixbuf)
+
+		Menu.__init__(self, buddy.get_name(), icon_item)
+
+		self._buddy.connect('icon-changed', self.__buddy_icon_changed_cb)
 
 		owner = shell.get_model().get_owner()
 		if buddy.get_name() != owner.get_name():
@@ -48,20 +59,12 @@ class BuddyMenu(Menu):
 		shell_model = self._shell.get_model()
 		pservice = PresenceService.get_instance()
 
-		pixbuf = self._get_buddy_icon_pixbuf()
-		if pixbuf:
-			scaled_pixbuf = pixbuf.scale_simple(_ICON_SIZE, _ICON_SIZE, gtk.gdk.INTERP_BILINEAR)
-			del pixbuf
-			self._buddy_icon_item = goocanvas.Image()
-			self._buddy_icon_item.set_property('pixbuf', scaled_pixbuf)
-			self.add_image(self._buddy_icon_item, 5, 5)
-
 		friends = shell_model.get_friends()
 		if friends.has_buddy(self._buddy):
-			icon = IconItem(icon_name='stock-remove')
+			icon = CanvasIcon(icon_name='stock-remove')
 			self.add_action(icon, BuddyMenu.ACTION_REMOVE_FRIEND) 
 		else:
-			icon = IconItem(icon_name='stock-add')
+			icon = CanvasIcon(icon_name='stock-add')
 			self.add_action(icon, BuddyMenu.ACTION_MAKE_FRIEND)
 
 		activity_id = shell_model.get_current_activity()

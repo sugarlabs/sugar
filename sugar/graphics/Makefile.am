@@ -5,4 +5,5 @@ sugar_PYTHON =			\
 	grid.py			\
 	menuicon.py		\
 	menu.py			\
+	spreadlayout.py		\
 	style.py

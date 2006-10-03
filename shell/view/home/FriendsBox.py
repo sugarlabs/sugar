@@ -1,24 +1,25 @@
 import random
 
-import goocanvas
+import hippo
 
-from view.home.IconLayout import IconLayout
+from sugar.graphics.spreadlayout import SpreadLayout
 from view.home.MyIcon import MyIcon
 from view.BuddyActivityView import BuddyActivityView
 
-class FriendsGroup(goocanvas.Group):
+class FriendsBox(hippo.CanvasBox, hippo.CanvasItem):
+	__gtype_name__ = 'SugarFriendsBox'
 	def __init__(self, shell, menu_shell):
-		goocanvas.Group.__init__(self)
+		hippo.CanvasBox.__init__(self, background_color=0xe2e2e2ff)
 
 		self._shell = shell
 		self._menu_shell = menu_shell
-		self._icon_layout = IconLayout(shell.get_grid())
+		self._layout = SpreadLayout()
 		self._friends = {}
 
-		me = MyIcon(112)
-		me.translate(600 - (me.get_property('size') / 2),
-					 450 - (me.get_property('size') / 2))
-		self.add_child(me)
+		#me = MyIcon(112)
+		#me.translate(600 - (me.get_property('size') / 2),
+		#			 450 - (me.get_property('size') / 2))
+		#self.add_child(me)
 
 		friends = self._shell.get_model().get_friends()
 
@@ -30,8 +31,7 @@ class FriendsGroup(goocanvas.Group):
 
 	def add_friend(self, buddy_info):
 		icon = BuddyActivityView(self._shell, self._menu_shell, buddy_info)
-		self.add_child(icon)
-		self._icon_layout.add_icon(icon)
+		self.append(icon, hippo.PACK_FIXED)
 
 		self._friends[buddy_info.get_name()] = icon
 
@@ -39,5 +39,9 @@ class FriendsGroup(goocanvas.Group):
 		self.add_friend(buddy_info)
 
 	def _friend_removed_cb(self, data_model, name):
-		self.remove_child(self._friends[name])
+		self.remove(self._friends[name])
 		del self._friends[name]
+
+	def do_allocate(self, width, height):
+		hippo.CanvasBox.do_allocate(self, width, height)
+		self._layout.layout(self)

@@ -1,26 +1,26 @@
 import random
 
-import goocanvas
+import hippo
 
-import conf
-from sugar.canvas.IconItem import IconItem
-from view.home.IconLayout import IconLayout
+from sugar.graphics.spreadlayout import SpreadLayout
+from sugar.graphics.canvasicon import CanvasIcon
 from view.BuddyIcon import BuddyIcon
 from sugar.canvas.SnowflakeLayout import SnowflakeLayout
+import conf
 
-class ActivityView(goocanvas.Group):
+class ActivityView(hippo.CanvasBox):
 	def __init__(self, shell, menu_shell, model):
-		goocanvas.Group.__init__(self)
+		hippo.CanvasBox.__init__(self)
 
 		self._shell = shell
 		self._model = model
 		self._layout = SnowflakeLayout()
 		self._icons = {}
 
-		icon = IconItem(icon_name=model.get_icon_name(),
-						color=model.get_color(), size=80)
-		icon.connect('clicked', self._clicked_cb)
-		self.add_child(icon)
+		icon = CanvasIcon(icon_name=model.get_icon_name(),
+						  color=model.get_color(), size=80)
+		icon.connect('activated', self._clicked_cb)
+		self.append(icon, hippo.PACK_FIXED)
 		self._layout.set_root(icon)
 
 	def has_buddy_icon(self, name):
@@ -28,13 +28,11 @@ class ActivityView(goocanvas.Group):
 
 	def add_buddy_icon(self, name, icon):
 		self._icons[name] = icon
-		self.add_child(icon)
-		self._layout.add_child(icon)
+		self.append(icon, hippo.PACK_FIXED)
 
 	def remove_buddy_icon(self, name):
 		icon = self._icons[name]
-		self._layout.remove_child(icon)
-		self.remove_child(icon)
+		self.remove(icon)
 		del self._icons[name]
 
 	def get_size_request(self):
@@ -47,15 +45,15 @@ class ActivityView(goocanvas.Group):
 		bundle = registry.get_activity_from_type(default_type)
 		self._shell.join_activity(bundle.get_id(), self._model.get_id())
 
-
-class MeshGroup(goocanvas.Group):
+class MeshBox(hippo.CanvasBox, hippo.CanvasItem):
+	__gtype_name__ = 'SugarMeshBox'
 	def __init__(self, shell, menu_shell):
-		goocanvas.Group.__init__(self)
+		hippo.CanvasBox.__init__(self, background_color=0xe2e2e2ff)
 
 		self._shell = shell
 		self._menu_shell = menu_shell
 		self._model = shell.get_model().get_mesh()
-		self._layout = IconLayout(shell.get_grid())
+		self._layout = SpreadLayout()
 		self._buddies = {}
 		self._activities = {}
 		self._buddy_to_activity = {}
@@ -91,15 +89,13 @@ class MeshGroup(goocanvas.Group):
 	def _add_alone_buddy(self, buddy_model):
 		icon = BuddyIcon(self._shell, self._menu_shell, buddy_model)
 		icon.props.size = 80
-		self.add_child(icon)
+		self.append(icon, hippo.PACK_FIXED)
 
 		self._buddies[buddy_model.get_name()] = icon
-		self._layout.add_icon(icon)
 
 	def _remove_alone_buddy(self, buddy_model):
 		icon = self._buddies[buddy_model.get_name()]
-		self.remove_child(icon)
-		self._layout.remove_icon(icon)
+		self.remove(icon)
 		del self._buddies[buddy_model.get_name()]
 
 	def _remove_buddy(self, buddy_model):
@@ -110,7 +106,6 @@ class MeshGroup(goocanvas.Group):
 			for activity in self._activities.values():
 				if activity.has_buddy_icon(name):
 					activity.remove_buddy_icon(name)
-					self._layout.update()
 
 	def _move_buddy(self, buddy_model, activity_model):
 		name = buddy_model.get_name()
@@ -126,17 +121,17 @@ class MeshGroup(goocanvas.Group):
 			icon.props.size = 60
 			activity.add_buddy_icon(buddy_model.get_name(), icon)
 
-			self._layout.update()
-
 	def _add_activity(self, activity_model):
 		icon = ActivityView(self._shell, self._menu_shell, activity_model)
-		self.add_child(icon)
+		self.append(icon, hippo.PACK_FIXED)
 
 		self._activities[activity_model.get_id()] = icon
-		self._layout.add_icon(icon)
 
 	def _remove_activity(self, activity_model):
 		icon = self._activities[activity_model.get_id()]
-		self.remove_child(icon)
-		self._layout.remove_icon(icon)
+		self.remove(icon)
 		del self._activities[activity_model.get_id()]
+
+	def do_allocate(self, width, height):
+		hippo.CanvasBox.do_allocate(self, width, height)
+		self._layout.layout(self)

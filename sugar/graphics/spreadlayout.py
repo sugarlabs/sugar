@@ -3,26 +3,11 @@ import math
 
 import cairo
 
-class IconLayout:
+class SpreadLayout:
 	DISTANCE_THRESHOLD = 120.0
 
-	def __init__(self, grid):
-		self._icons = []
-		self._constraints = {}
-		self._grid = grid
-
-		[self._x1, self._y1] = self._grid.convert_to_canvas(1, 1)
-		[self._x2, self._y2] = self._grid.convert_to_canvas(78, 59)
-
-	def add_icon(self, icon):
-		self._icons.append(icon)
-		self._layout_icon(icon)
-		self.update()
-
-	def remove_icon(self, icon):
-		self._icons.remove(icon)
-		del self._constraints[icon]
-		self.update()
+	def __init__(self):
+		pass
 
 	def _get_distance(self, icon1, icon2):
 		[icon1_x, icon1_y] = self._constraints[icon1]
@@ -83,9 +68,9 @@ class IconLayout:
 			self._spread_icons()
 			tries -= 1
 
-	def _layout_icon(self, icon):
-		[width, height] = icon.get_size_request()
-		x = random.random() * (self._x2 - self._x1 - width) 
-		y = random.random() * (self._y2 - self._y1 - height)
-
-		self._constraints[icon] = [x, y]
+	def layout(self, box):
+		[width, height] = box.get_allocation()
+		for item in box.get_children():
+			x = int(random.random() * width)
+			y = int(random.random() * height)
+			box.move(item, x, y)
