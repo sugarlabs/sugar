@@ -2,9 +2,8 @@ sugardir = $(pkgdatadir)/shell/view/home
 sugar_PYTHON =				\
 	__init__.py			\
 	DonutItem.py			\
-	FriendsGroup.py			\
-	IconLayout.py			\
+	FriendsBox.py			\
 	HomeGroup.py			\
 	HomeWindow.py			\
-	MeshGroup.py			\
+	MeshBox.py			\
 	MyIcon.py
