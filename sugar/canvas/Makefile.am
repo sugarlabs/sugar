@@ -8,7 +8,6 @@ sugar_PYTHON =			\
 	IconItem.py		\
 	IconColor.py		\
 	Menu.py			\
-	MenuIcon.py		\
 	MenuShell.py		\
 	SnowflakeLayout.py	\
 	Timeline.py
