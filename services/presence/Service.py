@@ -315,7 +315,7 @@ class Service(gobject.GObject):
 		"""Set the service's properties from either an Avahi
 		TXT record (a list of lists of integers), or a
 		python dictionary."""
-		if type(properties) != type({}):
+		if not isinstance (properties, dict):
 			raise ValueError("Properties must be a dictionary.")
 
 		# Make sure the properties are actually different
