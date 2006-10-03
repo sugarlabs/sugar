@@ -16,18 +16,18 @@ class ServiceAdv(object):
 	def __init__(self, interface, protocol, name, stype, domain, local):
 		self._interface = interface
 		self._protocol = protocol
-		if type(name) != type(u""):
+		if not isinstance(name, unicode):
 			raise ValueError("service advertisement name must be unicode.")
 		self._name = name
-		if type(stype) != type(u""):
+		if not isinstance(stype, unicode):
 			raise ValueError("service advertisement type must be unicode.")
 		self._stype = stype
-		if type(domain) != type(u""):
+		if not isinstance(domain, unicode):
 			raise ValueError("service advertisement domain must be unicode.")
 		self._domain = domain
 		self._service = None
-		if type(local) != type(False):
-			raise ValueError("local must be a boolean.")
+		if not isinstance(local, bool):
+			raise ValueError("local must be a bool.")
 		self._local = local
 		self._state = _SA_UNRESOLVED
 		self._resolver = None
@@ -714,7 +714,7 @@ class PresenceService(object):
 			raise ValueError("invalid activity id")
 		owner_nick = self._owner.get_name()
 		real_name = Service.compose_service_name(owner_nick, activity_id)
-		if address and type(address) != type(u""):
+		if address and isinstance(address, unicode):
 			raise ValueError("address must be a unicode string.")
 		if address == None and stype.endswith('_udp'):
 			# Use random currently unassigned multicast address
@@ -722,7 +722,7 @@ class PresenceService(object):
 					random.randint(1, 254))
 			properties['address'] = address
 			properties['port'] = port
-		if port and port != -1 and (type(port) != type(1) or port <= 1024 or port >= 65535):
+		if port and port != -1 and (not isinstance(port, int) or port <= 1024 or port >= 65535):
 			raise ValueError("port must be a number between 1024 and 65535")
 		
 		color = self._owner.get_color()
@@ -768,7 +768,7 @@ class PresenceService(object):
 	def register_service_type(self, stype):
 		"""Requests that the Presence service look for and recognize
 		a certain mDNS service types."""
-		if type(stype) != type(u""):
+		if not isinstance(stype, unicode):
 			raise ValueError("service type must be a unicode string.")
 
 		# If we've already registered it as a service type, ref it and return
@@ -795,7 +795,7 @@ class PresenceService(object):
 
 	def unregister_service_type(self, stype):
 		"""Stop tracking a certain mDNS service."""
-		if type(stype) != type(u""):
+		if not isinstance(stype, unicode):
 			raise ValueError("service type must be a unicode string.")
 
 		# if it was found, unref it and possibly remove it

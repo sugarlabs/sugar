@@ -43,7 +43,7 @@ def is_hex(s):
 
 def validate_activity_id(actid):
 	"""Validate an activity ID."""
-	if type(actid) != type("") and type(actid) != type(u""):
+	if not isinstance(actid, str) and not isinstance(actid, unicode):
 		return False
 	if len(actid) != ACTIVITY_ID_LEN:
 		return False

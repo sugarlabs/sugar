@@ -86,21 +86,21 @@ class SegmentBase(object):
 		self._addr = None
 
 		# Sanity checks on the message attributes
-		if not segno or type(segno) != type(1):
+		if not segno or not isinstance(segno, int):
 			raise ValueError("Segment number must be in integer.")
 		if segno < 1 or segno > 65535:
 			raise ValueError("Segment number must be between 1 and 65535 inclusive.")
-		if not total_segs or type(total_segs) != type(1):
+		if not total_segs or not isinstance(total_segs, int):
 			raise ValueError("Message segment total must be an integer.")
 		if total_segs < 1 or total_segs > 65535:
 			raise ValueError("Message must have between 1 and 65535 segments inclusive.")
 		if segno > total_segs:
 			raise ValueError("Segment number cannot be larger than message segment total.")
-		if not msg_seq_num or type(msg_seq_num) != type(1):
+		if not msg_seq_num or not isinstance(msg_seq_num, int):
 			raise ValueError("Message sequnce number must be an integer.")
 		if msg_seq_num < 1 or msg_seq_num > 65535:
 			raise ValueError("Message sequence number must be between 1 and 65535 inclusive.")
-		if not master_sha or type(master_sha) != type("") or len(master_sha) != 20:
+		if not master_sha or not isinstance(master_sha, str) or len(master_sha) != 20:
 			raise ValueError("Message SHA1 checksum invalid.")
 
 		self._segno = segno
@@ -109,9 +109,9 @@ class SegmentBase(object):
 		self._master_sha = master_sha
 
 	def _validate_address(addr):
-		if not addr or type(addr) != type(()):
+		if not addr or not isinstance(addr, tuple):
 			raise ValueError("Address must be a tuple.")
-		if len(addr) != 2 or type(addr[0]) != type("") or type(addr[1]) != type(1):
+		if len(addr) != 2 or not isinstance(addr[0], str) or not isinstance(addr[1], int):
 			raise ValueError("Address format was invalid.")
 		if addr[1] < 1 or addr[1] > 65535:
 			raise ValueError("Address port was invalid.")
@@ -265,15 +265,15 @@ class RetransmitSegment(SegmentBase):
 
 	def _verify_data(rt_msg_seq_num, rt_master_sha, rt_segment_number):
 		# Sanity checks on the message attributes
-		if not rt_segment_number or type(rt_segment_number) != type(1):
+		if not rt_segment_number or not isinstance(rt_segment_number, int):
 			raise ValueError("RT Segment number must be in integer.")
 		if rt_segment_number < 1 or rt_segment_number > 65535:
 			raise ValueError("RT Segment number must be between 1 and 65535 inclusive.")
-		if not rt_msg_seq_num or type(rt_msg_seq_num) != type(1):
+		if not rt_msg_seq_num or not isinstance(rt_msg_seq_num, int):
 			raise ValueError("RT Message sequnce number must be an integer.")
 		if rt_msg_seq_num < 1 or rt_msg_seq_num > 65535:
 			raise ValueError("RT Message sequence number must be between 1 and 65535 inclusive.")
-		if not rt_master_sha or type(rt_master_sha) != type("") or len(rt_master_sha) != 20:
+		if not rt_master_sha or not isinstance(rt_master_sha, str) or len(rt_master_sha) != 20:
 			raise ValueError("RT Message SHA1 checksum invalid.")
 	_verify_data = staticmethod(_verify_data)
 
@@ -349,13 +349,13 @@ class AckSegment(SegmentBase):
 
 	def _verify_data(ack_msg_seq_num, ack_master_sha, ack_addr):
 		# Sanity checks on the message attributes
-		if not ack_msg_seq_num or type(ack_msg_seq_num) != type(1):
+		if not ack_msg_seq_num or not isinstance(ack_msg_seq_num, int):
 			raise ValueError("Ack message sequnce number must be an integer.")
 		if ack_msg_seq_num < 1 or ack_msg_seq_num > 65535:
 			raise ValueError("Ack message sequence number must be between 1 and 65535 inclusive.")
-		if not ack_master_sha or type(ack_master_sha) != type("") or len(ack_master_sha) != 20:
+		if not ack_master_sha or not isinstance(ack_master_sha, str) or len(ack_master_sha) != 20:
 			raise ValueError("Ack message SHA1 checksum invalid.")
-		if type(ack_addr) != type(""):
+		if not isinstance(ack_addr, str):
 			raise ValueError("Ack message invalid address type.")
 		try:
 			foo = socket.inet_aton(ack_addr)
@@ -865,7 +865,7 @@ class MostlyReliablePipe(object):
 		"""Debugging function to randomly drop incoming packets.
 		The prob argument should be an integer between 1 and 10 to drop,
 		or 0 to drop none.  Higher numbers drop more packets."""
-		if type(prob) != type(1):
+		if not isinstance(prob, int):
 			raise ValueError("Drop probability must be an integer.")
 		if prob < 1 or prob > 10:
 			raise ValueError("Drop probability must be between 1 and 10 inclusive.")

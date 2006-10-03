@@ -8,20 +8,20 @@ import logging
 import gobject
 
 def compose_service_name(name, activity_id):
-	if type(name) == type(""):
+	if isinstance(name, str):
 		name = unicode(name)
 	if not name:
 		raise ValueError("name must be a valid string.")
 	if not activity_id:
 		return name
-	if type(name) != type(u""):
+	if not isinstance(name, unicode):
 		raise ValueError("name must be in unicode.")
 	composed = "%s [%s]" % (name, activity_id)
 	return composed
 
 def decompose_service_name(name):
 	"""Break a service name into the name and activity ID, if we can."""
-	if type(name) != type(u""):
+	if not isinstance(name, unicode):
 		raise ValueError("name must be a valid unicode string.")
 	name_len = len(name)
 	if name_len < util.ACTIVITY_ID_LEN + 5:
@@ -151,23 +151,23 @@ class Service(gobject.GObject):
 		gobject.GObject.__init__(self)
 		if not bus_name:
 			raise ValueError("DBus bus name must be valid")
-		if not object_id or type(object_id) != type(1):
+		if not object_id or not isinstance(object_id, int):
 			raise ValueError("object id must be a valid number")
 
 		# Validate immutable options
-		if name and type(name) != type(u""):
+		if name and not isinstance(name, unicode):
 			raise ValueError("name must be unicode.")
 		if not name or not len(name):
 			raise ValueError("must specify a valid service name.")
 
-		if stype and type(stype) != type(u""):
+		if stype and not isinstance(stype, unicode):
 			raise ValueError("service type must be in unicode.")
 		if not stype or not len(stype):
 			raise ValueError("must specify a valid service type.")
 		if not stype.endswith("._tcp") and not stype.endswith("._udp"):
 			raise ValueError("must specify a TCP or UDP service type.")
 
-		if type(domain) != type(u""):
+		if not isinstance(domain, unicode):
 			raise ValueError("domain must be in unicode.")
 		if domain and domain != "local":
 			raise ValueError("must use the 'local' domain (for now).")
@@ -271,9 +271,9 @@ class Service(gobject.GObject):
 		if sender is not None and self._local_publisher != sender:
 			raise ValueError("Service was not not registered by requesting process!")
 
-		if type(key) != type(u""):
+		if not isinstance(key, unicode):
 			raise ValueError("Key must be a unicode string.")
-		if type(value) != type(u"") and type(value) != type(True):
+		if not isinstance(value, unicode) and not isinstance(value, bool):
 			raise ValueError("Key must be a unicode string or a boolean.")
 
 		# Ignore setting the key to it's current value
@@ -283,9 +283,9 @@ class Service(gobject.GObject):
 
 		# Blank value means remove key
 		remove = False
-		if type(value) == type(u"") and len(value) == 0:
+		if isinstance(value, unicode) and len(value) == 0:
 			remove = True
-		if type(value) == type(False) and value == False:
+		if isinstance(value, bool) and value == False:
 			remove = True
 
 		if remove:
@@ -294,7 +294,7 @@ class Service(gobject.GObject):
 				del self._properties[key]
 		else:
 			# Otherwise set it
-			if type(value) == type(True):
+			if isinstance(value, bool):
 				value = ""
 			self._properties[key] = value
 
@@ -330,9 +330,9 @@ class Service(gobject.GObject):
 				continue
 			tmp_key = key
 			tmp_val = value
-			if type(tmp_key) != type(u""):
+			if not isinstance(tmp_key, unicode):
 				tmp_key = unicode(tmp_key)
-			if type(tmp_val) != type(u""):
+			if not isinstance(tmp_val, unicode):
 				tmp_val = unicode(tmp_val)
 			self._properties[tmp_key] = tmp_val
 
@@ -361,7 +361,7 @@ class Service(gobject.GObject):
 		return self._port
 
 	def set_port(self, port):
-		if type(port) != type(1) or (port <= 1024 and port > 65536):
+		if not isinstance(port, int) or (port <= 1024 and port > 65536):
 			raise ValueError("must specify a valid port number between 1024 and 65536.")
 		self._port = port
 
@@ -369,7 +369,7 @@ class Service(gobject.GObject):
 		return self._source_address
 
 	def set_source_address(self, address):
-		if not address or type(address) != type(u""):
+		if not address or not isinstance(address, unicode):
 			raise ValueError("address must be unicode")
 		self._source_address = address
 
@@ -377,7 +377,7 @@ class Service(gobject.GObject):
 		return self._address
 
 	def set_address(self, address):
-		if not address or type(address) != type(u""):
+		if not address or not isinstance(address, unicode):
 			raise ValueError("address must be a unicode string")
 		self._address = address
 		self._properties['address'] = address

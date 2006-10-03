@@ -374,7 +374,7 @@ class SVGelement:
                f.write('\n'+'\t'*(level+2)+line)
             f.write('\n'+'\t'*(level+1)+']]>\n')
         if self.text:
-            if type(self.text)==type(''): #If the text is only text
+            if isinstance(self.text, str): #If the text is only text
                 f.write(_escape(str(self.text)))
             else:                         #If the text is a spannedtext class
                 f.write(str(self.text))

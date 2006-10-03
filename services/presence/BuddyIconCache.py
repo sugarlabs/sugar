@@ -31,7 +31,7 @@ class BuddyIconCache(object):
 		return data
 
 	def get_icon(self, printable_hash):
-		if type(printable_hash) != type(u""):
+		if not isinstance(printable_hash, unicode):
 			raise RuntimeError("printable_hash must be a unicode string.")
 		try:
 			fname = self._cache[printable_hash]

@@ -116,7 +116,7 @@ class Buddy(object):
 	def __init__(self, bus_name, object_id, service, icon_cache):
 		if not bus_name:
 			raise ValueError("DBus bus name must be valid")
-		if not object_id or type(object_id) != type(1):
+		if not object_id or not isinstance(object_id, int):
 			raise ValueError("object id must be a valid number")
 		# Normal Buddy objects must be created with a valid service,
 		# owner objects do not
