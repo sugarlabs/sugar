@@ -63,7 +63,6 @@ sugar/Makefile
 sugar/__installed__.py
 sugar/__uninstalled__.py
 sugar/activity/Makefile
-sugar/canvas/Makefile
 sugar/chat/Makefile
 sugar/chat/sketchpad/Makefile
 sugar/graphics/Makefile
