@@ -1,12 +1,10 @@
 import gtk
-import goocanvas
 import hippo
 import cairo
 
-from sugar.canvas.CanvasView import CanvasView
 from sugar.graphics.menushell import MenuShell
 from view.home.MeshBox import MeshBox
-from view.home.HomeGroup import HomeGroup
+from view.home.HomeBox import HomeBox
 from view.home.FriendsBox import FriendsBox
 import sugar
 
@@ -27,7 +25,11 @@ class HomeWindow(gtk.Window):
 
 		menu_shell = MenuShell()
 
-		self._add_page(HomeGroup(shell))
+		canvas = hippo.Canvas()
+		box = HomeBox(shell)
+		canvas.set_root(box)
+		self._nb.append_page(canvas)
+		canvas.show()
 
 		canvas = hippo.Canvas()
 		box = FriendsBox(shell, menu_shell)
@@ -40,20 +42,6 @@ class HomeWindow(gtk.Window):
 		canvas.set_root(box)
 		self._nb.append_page(canvas)
 		canvas.show()
-
-	def _add_page(self, group):
-		view = CanvasView()
-		self._nb.append_page(view)
-		view.show()
-
-		model = goocanvas.CanvasModelSimple()
-		root = model.get_root_item()
-		view.set_model(model)
-
-		bg = goocanvas.Rect(width=1900, height=1200,
-							line_width=0, fill_color='#e2e2e2')
-		root.add_child(bg)
-		root.add_child(group)
 
 	def set_zoom_level(self, level):
 		if level == sugar.ZOOM_HOME:
