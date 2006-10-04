@@ -1,6 +1,5 @@
 import gtk
 import gobject
-import goocanvas
 
 from sugar.graphics.menu import Menu
 from sugar.graphics.canvasicon import CanvasIcon
@@ -73,7 +72,7 @@ class BuddyMenu(Menu):
 
 			# FIXME check that the buddy is not in the activity already
 
-			icon = IconItem(icon_name='stock-invite')
+			icon = CanvasIcon(icon_name='stock-invite')
 			self.add_action(icon, BuddyMenu.ACTION_INVITE)
 
 	def __buddy_icon_changed_cb(self, buddy):

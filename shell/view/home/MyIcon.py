@@ -1,10 +1,10 @@
-import conf
-from sugar.canvas.IconItem import IconItem
+from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics.iconcolor import IconColor
+import conf
 
-class MyIcon(IconItem):
+class MyIcon(CanvasIcon):
 	def __init__(self, size):
 		profile = conf.get_profile()
 
-		IconItem.__init__(self, icon_name='stock-buddy',
-					  	  color=profile.get_color(), size=size)
+		CanvasIcon.__init__(self, icon_name='stock-buddy',
+					  	    color=profile.get_color(), size=size)

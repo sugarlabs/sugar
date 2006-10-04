@@ -1,4 +1,3 @@
-import goocanvas
 import hippo
 
 from sugar.graphics.canvasicon import CanvasIcon

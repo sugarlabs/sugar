@@ -16,10 +16,8 @@ class FriendsBox(hippo.CanvasBox, hippo.CanvasItem):
 		self._layout = SpreadLayout()
 		self._friends = {}
 
-		#me = MyIcon(112)
-		#me.translate(600 - (me.get_property('size') / 2),
-		#			 450 - (me.get_property('size') / 2))
-		#self.add_child(me)
+		self._my_icon = MyIcon(112)
+		self.append(self._my_icon, hippo.PACK_FIXED)
 
 		friends = self._shell.get_model().get_friends()
 
@@ -44,4 +42,9 @@ class FriendsBox(hippo.CanvasBox, hippo.CanvasItem):
 
 	def do_allocate(self, width, height):
 		hippo.CanvasBox.do_allocate(self, width, height)
+
 		self._layout.layout(self)
+
+		[icon_width, icon_height] = self._my_icon.get_allocation()
+		self.move(self._my_icon, (width - icon_width) / 2,
+				  (height - icon_height) / 2)
