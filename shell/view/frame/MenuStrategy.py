@@ -1,7 +1,21 @@
+import hippo
+
 from sugar.graphics.grid import Grid
 
 class MenuStrategy:
-	def get_menu_position(self, menu, x, y, width, height):
+	def get_menu_position(self, menu, item):
+		[x, y] = item.get_context().translate_to_widget(item)
+
+		canvas = item
+		while (not isinstance(canvas, hippo.Canvas)):
+			canvas = canvas.get_context()
+
+		[origin_x, origin_y] = canvas.window.get_origin()
+		x += origin_x
+		y += origin_y
+
+		[width, height] = item.get_allocation()
+
 		grid = Grid()
 
 		[grid_x1, grid_y1] = grid.fit_point(x, y)

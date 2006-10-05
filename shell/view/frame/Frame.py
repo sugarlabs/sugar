@@ -5,6 +5,7 @@ import wnck
 
 from view.frame.ActivitiesBox import ActivitiesBox
 from view.frame.ZoomBox import ZoomBox
+from view.frame.FriendsBox import FriendsBox
 from view.frame.PanelWindow import PanelWindow
 from sugar.graphics.timeline import Timeline
 from sugar.graphics.menushell import MenuShell
@@ -143,9 +144,12 @@ class Frame:
 		[x, y] = grid.point(1, 0)
 		bottom_panel.move(box, x, y)
 
-		left_panel = self._create_panel(grid, 0, 1, 1, 10)
-
 		right_panel = self._create_panel(grid, 15, 1, 1, 10)
+
+		box = FriendsBox(self._shell, self._menu_shell)
+		right_panel.append(box)
+
+		left_panel = self._create_panel(grid, 0, 1, 1, 10)
 
 	def _create_panel(self, grid, x, y, width, height):
 		panel = PanelWindow()

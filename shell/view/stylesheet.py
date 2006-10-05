@@ -23,11 +23,11 @@ frame_ActivityIcon = {
 	'size'  : _standard_icon_size
 }
 
-ring_ActivityIcon = {
-	'size'  : _medium_icon_size
+frame_ZoomIcon = {
+	'size' : _standard_icon_size
 }
 
-frame_ZoomIcon = {
+frame_BuddyIcon = {
 	'size' : _standard_icon_size
 }
 
@@ -53,6 +53,10 @@ menu_ActionIcon = {
 
 home_MyIcon = {
 	'size' : _xlarge_icon_size
+}
+
+ring_ActivityIcon = {
+	'size'  : _medium_icon_size
 }
 
 friends_MyIcon = {

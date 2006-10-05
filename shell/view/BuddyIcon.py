@@ -4,7 +4,7 @@ from view.BuddyMenu import BuddyMenu
 class BuddyIcon(MenuIcon):
 	def __init__(self, shell, menu_shell, buddy):
 		MenuIcon.__init__(self, menu_shell, icon_name='stock-buddy',
-						  color=buddy.get_color(), size=112)
+						  color=buddy.get_color())
 
 		self._shell = shell
 		self._buddy = buddy
