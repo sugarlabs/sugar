@@ -9,7 +9,6 @@ class MatchboxProcess(Process):
 		options = '-kbdconfig %s ' % kbd_config
 
 		options += '-use_titlebar no '
-		options += '-theme olpc '
 
 		command = 'matchbox-window-manager %s ' % options
 		Process.__init__(self, command)
