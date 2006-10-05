@@ -34,3 +34,11 @@ home_MyIcon = {
 friends_MyIcon = {
 	'size' : _large_icon_size
 }
+
+friends_FriendIcon = {
+	'size' : _large_icon_size
+}
+
+friends_ActivityIcon = {
+	'size' : _standard_icon_size
+}

@@ -5,7 +5,7 @@ import hippo
 from sugar.graphics.spreadlayout import SpreadLayout
 from sugar.graphics import style
 from view.home.MyIcon import MyIcon
-from view.BuddyActivityView import BuddyActivityView
+from view.home.FriendView import FriendView
 
 class FriendsBox(hippo.CanvasBox, hippo.CanvasItem):
 	__gtype_name__ = 'SugarFriendsBox'
@@ -30,7 +30,7 @@ class FriendsBox(hippo.CanvasBox, hippo.CanvasItem):
 		friends.connect('friend-removed', self._friend_removed_cb)
 
 	def add_friend(self, buddy_info):
-		icon = BuddyActivityView(self._shell, self._menu_shell, buddy_info)
+		icon = FriendView(self._shell, self._menu_shell, buddy_info)
 		self.append(icon, hippo.PACK_FIXED)
 
 		self._friends[buddy_info.get_name()] = icon

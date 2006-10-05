@@ -3,6 +3,7 @@ import hippo
 import gobject
 
 from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics import style
 
 class Menu(gtk.Window):
 	__gsignals__ = {
@@ -43,6 +44,7 @@ class Menu(gtk.Window):
 		return separator
 
 	def add_action(self, icon, action_id):
+		style.apply_stylesheet(icon, 'menu.ActionIcon')
 		icon.connect('activated', self._action_clicked_cb, action_id)
 		self._action_box.append(icon)
 

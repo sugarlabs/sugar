@@ -15,11 +15,9 @@ class ActivityMenu(Menu):
 		Menu.__init__(self, activity_host.get_title())
 
 		icon = CanvasIcon(icon_name='stock-share-mesh')
-		style.apply_stylesheet(icon, 'menu.ActionIcon')
 		self.add_action(icon, ActivityMenu.ACTION_SHARE) 
 
 		icon = CanvasIcon(icon_name='stock-close')
-		style.apply_stylesheet(icon, 'menu.ActionIcon')
 		self.add_action(icon, ActivityMenu.ACTION_CLOSE) 
 
 class ActivityIcon(MenuIcon):
