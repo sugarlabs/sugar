@@ -5,7 +5,7 @@ from sugar.graphics.canvasicon import CanvasIcon
 
 class _MenuStrategy:
 	def get_menu_position(self, menu, item):
-		return item.get_context().translate_to_widget(self)
+		return item.get_context().translate_to_widget(item)
 
 class MenuIcon(CanvasIcon):
 	def __init__(self, menu_shell, **kwargs):
