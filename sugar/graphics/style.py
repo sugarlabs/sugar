@@ -1,5 +1,12 @@
 _styles = {}
 
+def load_stylesheet(module):
+	for objname in dir(module):
+		if not objname.startswith('_'):
+			obj = getattr(module, objname)	
+			if isinstance(obj, dict):
+				register_stylesheet(objname.replace('_', '.'), obj)
+
 def register_stylesheet(name, style):
 	_styles[name] = style
 

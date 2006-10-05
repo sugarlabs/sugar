@@ -2,6 +2,8 @@ import gtk
 import gobject
 import wnck
 
+import view.stylesheet
+from sugar.graphics import style
 from view.home.HomeWindow import HomeWindow
 from sugar.presence import PresenceService
 from view.ActivityHost import ActivityHost
@@ -27,6 +29,8 @@ class Shell(gobject.GObject):
 		self._model = model
 		self._hosts = {}
 		self._screen = wnck.screen_get_default()
+
+		style.load_stylesheet(view.stylesheet)
 
 		self._key_grabber = KeyGrabber()
 		self._key_grabber.connect('key-pressed',

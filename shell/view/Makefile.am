@@ -4,10 +4,11 @@ sugardir = $(pkgdatadir)/shell/view
 sugar_PYTHON =				\
 	__init__.py			\
 	ActivityHost.py			\
-	BuddyActivityView.py	\
+	BuddyActivityView.py		\
 	ConsoleWindow.py		\
 	FirstTimeDialog.py		\
 	BuddyIcon.py			\
 	BuddyMenu.py			\
 	OverlayWindow.py		\
-	Shell.py
+	Shell.py			\
+	stylesheet.py
