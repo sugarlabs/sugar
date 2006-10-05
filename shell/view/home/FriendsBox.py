@@ -3,6 +3,7 @@ import random
 import hippo
 
 from sugar.graphics.spreadlayout import SpreadLayout
+from sugar.graphics import style
 from view.home.MyIcon import MyIcon
 from view.BuddyActivityView import BuddyActivityView
 
@@ -16,7 +17,8 @@ class FriendsBox(hippo.CanvasBox, hippo.CanvasItem):
 		self._layout = SpreadLayout()
 		self._friends = {}
 
-		self._my_icon = MyIcon(112)
+		self._my_icon = MyIcon()
+		style.apply_stylesheet(self._my_icon, 'friends.MyIcon')
 		self.append(self._my_icon, hippo.PACK_FIXED)
 
 		friends = self._shell.get_model().get_friends()

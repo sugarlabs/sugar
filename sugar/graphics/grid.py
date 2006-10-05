@@ -14,6 +14,9 @@ class Grid(object):
 		return [grid_x * self._factor, grid_y * self._factor,
 				grid_w * self._factor, grid_h * self._factor]
 
+	def dimension(self, grid_dimension):
+		return grid_dimension * self._factor
+
 	def fit_point(self, x, y):
 		return [int(x / self._factor), int(y / self._factor)]
 	

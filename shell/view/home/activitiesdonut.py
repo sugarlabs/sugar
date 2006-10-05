@@ -2,6 +2,7 @@ import hippo
 import math
 
 from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics import style
 
 class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
 	__gtype_name__ = 'SugarActivitiesDonut'
@@ -28,7 +29,8 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
 		icon_name = activity.get_icon_name()
 		icon_color = activity.get_icon_color()
 
-		icon = CanvasIcon(icon_name=icon_name, color=icon_color, size=75)
+		icon = CanvasIcon(icon_name=icon_name, color=icon_color)
+		style.apply_stylesheet(icon, 'ring.ActivityIcon')
 		icon.connect('activated', self.__activity_icon_clicked_cb, activity)
 		self.append(icon, hippo.PACK_FIXED)
 
