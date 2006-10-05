@@ -18,11 +18,12 @@ class Menu(gtk.Window):
 		self.add(canvas)
 		canvas.show()
 
-		self._root = hippo.CanvasBox(background_color=0x000000FF,
-									 spacing=6)
+		self._root = hippo.CanvasBox()
+		style.apply_stylesheet(self._root, 'menu')
 		canvas.set_root(self._root)
 
-		text = hippo.CanvasText(text=title, color=0xFFFFFFFF)
+		text = hippo.CanvasText(text=title)
+		style.apply_stylesheet(text, 'menu.Title')
 		self._root.append(text)
 
 		if content_box:
@@ -30,6 +31,14 @@ class Menu(gtk.Window):
 			self._root.append(separator)
 			self._root.append(content_box)
 
+		self._action_box = None
+
+	def _create_separator(self):
+		separator = hippo.CanvasBox()
+		style.apply_stylesheet(separator, 'menu.Separator')
+		return separator
+
+	def _create_action_box(self):
 		separator = self._create_separator()
 		self._root.append(separator)
 
@@ -37,13 +46,10 @@ class Menu(gtk.Window):
 						orientation=hippo.ORIENTATION_HORIZONTAL)
 		self._root.append(self._action_box)
 
-	def _create_separator(self):
-		separator = hippo.CanvasBox(background_color=0xFFFFFFFF,
-									border_left=6, border_right=6,
-								    box_height=2)
-		return separator
-
 	def add_action(self, icon, action_id):
+		if not self._action_box:
+			self._create_action_box()
+
 		style.apply_stylesheet(icon, 'menu.ActionIcon')
 		icon.connect('activated', self._action_clicked_cb, action_id)
 		self._action_box.append(icon)
