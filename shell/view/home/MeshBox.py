@@ -8,7 +8,8 @@ from view.BuddyIcon import BuddyIcon
 from sugar.graphics.snowflakelayout import SnowflakeLayout
 import conf
 
-class ActivityView(hippo.CanvasBox):
+class ActivityView(hippo.CanvasBox, hippo.CanvasItem):
+	__gtype_name__ = 'SugarActivityView'
 	def __init__(self, shell, menu_shell, model):
 		hippo.CanvasBox.__init__(self)
 
@@ -35,15 +36,15 @@ class ActivityView(hippo.CanvasBox):
 		self.remove(icon)
 		del self._icons[name]
 
-	def get_size_request(self):
-		size = self._layout.get_size()
-		return [size, size]
-
 	def _clicked_cb(self, item):
 		registry = conf.get_activity_registry()
 		default_type = self._model.get_service().get_type()
 		bundle = registry.get_activity_from_type(default_type)
 		self._shell.join_activity(bundle.get_id(), self._model.get_id())
+
+	def do_allocate(self, width, height):
+		hippo.CanvasBox.do_allocate(self, width, height)
+		self._layout.layout(self)
 
 class MeshBox(hippo.CanvasBox, hippo.CanvasItem):
 	__gtype_name__ = 'SugarMeshBox'

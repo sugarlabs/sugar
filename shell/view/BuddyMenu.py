@@ -1,5 +1,6 @@
 import gtk
 import gobject
+import hippo
 
 from sugar.graphics.menu import Menu
 from sugar.graphics.canvasicon import CanvasIcon
@@ -22,7 +23,7 @@ class BuddyMenu(Menu):
 			scaled_pixbuf = pixbuf.scale_simple(_ICON_SIZE, _ICON_SIZE,
 												gtk.gdk.INTERP_BILINEAR)
 			del pixbuf
-			icon_item = hippo.Image(pixbuf=scaled_pixbuf)
+			icon_item = hippo.CanvasImage(pixbuf=scaled_pixbuf)
 
 		Menu.__init__(self, buddy.get_name(), icon_item)
 
