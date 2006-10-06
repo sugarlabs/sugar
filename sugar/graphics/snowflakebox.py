@@ -44,7 +44,8 @@ class SnowflakeBox(hippo.CanvasBox, hippo.CanvasItem):
 
 		max_child_size = 0
 		for child in self.get_children():
-			[width, height] = child.get_allocation()
+			width = child.get_width_request()
+			height = child.get_height_request(width)
 			max_child_size = max (max_child_size, width)
 			max_child_size = max (max_child_size, height)
 
@@ -52,20 +53,19 @@ class SnowflakeBox(hippo.CanvasBox, hippo.CanvasItem):
 
 	def do_get_height_request(self, width):
 		hippo.CanvasBox.do_get_height_request(self, width)
-
 		return width
 
 	def do_allocate(self, width, height):
-		self._r = _BASE_RADIUS + _CHILDREN_FACTOR * len(self.get_children())
-
 		hippo.CanvasBox.do_allocate(self, width, height)
 
 		self._cx = width / 2
 		self._cy = height / 2
+		self._r = _BASE_RADIUS + _CHILDREN_FACTOR * len(self.get_children())
 
 		self._layout_root()
 
 		index = 0
 		for child in self.get_children():
-			self._layout_child(child, index)
-			index += 1
+			if child != self._root:
+				self._layout_child(child, index)
+				index += 1
