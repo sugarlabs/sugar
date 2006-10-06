@@ -4,8 +4,6 @@ PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
 ACTIVITY_DBUS_OBJECT_PATH = "/org/laptop/Presence/Activities/"
 ACTIVITY_DBUS_INTERFACE = "org.laptop.Presence.Activity"
 
-class NotFoundError(Exception):
-	pass
 
 class ActivityDBusHelper(dbus.service.Object):
 	def __init__(self, parent, bus_name, object_path):
@@ -17,22 +15,16 @@ class ActivityDBusHelper(dbus.service.Object):
 	@dbus.service.method(ACTIVITY_DBUS_INTERFACE,
 						in_signature="s", out_signature="ao")
 	def getServicesOfType(self, stype):
-		services = self._parent.get_services_of_type(stype)
-		if not services:
-			raise NotFoundError("Not found")
 		ret = []
-		for serv in services:
+		for serv in self._parent.get_services_of_type(stype):
 			ret.append(serv.object_path())
 		return ret
 
 	@dbus.service.method(ACTIVITY_DBUS_INTERFACE,
 						in_signature="", out_signature="ao")
 	def getServices(self):
-		services = self._parent.get_services()
-		if not services:
-			raise NotFoundError("Not found")
 		ret = []
-		for serv in services:
+		for serv in self._parent.get_services():
 			ret.append(serv.object_path())
 		return ret
 
@@ -49,11 +41,8 @@ class ActivityDBusHelper(dbus.service.Object):
 	@dbus.service.method(ACTIVITY_DBUS_INTERFACE,
 						in_signature="", out_signature="ao")
 	def getJoinedBuddies(self):
-		buddies = self._parent.get_joined_buddies()
-		if not buddies:
-			raise NotFoundError("Not found")
 		ret = []
-		for buddy in buddies:
+		for buddy in self._parent.get_joined_buddies():
 			ret.append(buddy.object_path())
 		return ret
 	
@@ -119,7 +108,7 @@ class Activity(object):
 	def get_services_of_type(self, stype):
 		if self._services.has_key(stype):
 			return self._services[stype]
-		return None
+		return []
 
 	def get_joined_buddies(self):
 		buddies = []

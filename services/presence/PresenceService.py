@@ -148,27 +148,24 @@ class PresenceServiceDBusHelper(dbus.service.Object):
 	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
 						in_signature="", out_signature="ao")
 	def getServices(self):
-		services = self._parent.get_services()
 		ret = []
-		for serv in services:
+		for serv in self._parent.get_services():
 			ret.append(serv.object_path())
 		return ret
 
 	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
 						in_signature="s", out_signature="ao")
 	def getServicesOfType(self, stype):
-		services = self._parent.get_services_of_type(stype)
 		ret = []
-		for serv in services:
+		for serv in self._parent.get_services_of_type(stype):
 			ret.append(serv.object_path())
 		return ret
 
 	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
 						in_signature="", out_signature="ao")
 	def getActivities(self):
-		activities = self._parent.get_activities()
 		ret = []
-		for act in activities:
+		for act in self._parent.get_activities():
 			ret.append(act.object_path())
 		return ret
 
@@ -183,9 +180,8 @@ class PresenceServiceDBusHelper(dbus.service.Object):
 	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
 						in_signature="", out_signature="ao")
 	def getBuddies(self):
-		buddies = self._parent.get_buddies()
 		ret = []
-		for buddy in buddies:
+		for buddy in self._parent.get_buddies():
 			ret.append(buddy.object_path())
 		return ret
 
@@ -260,7 +256,7 @@ class PresenceServiceDBusHelper(dbus.service.Object):
 				found_serv = serv
 				break
 		if not found_serv:
-			raise NotFoundError("The activity %s was not found." % service_op)
+			raise NotFoundError("The service %s was not found." % service_op)
 		return self._parent.unregister_service(found_serv, sender)
 
 	@dbus.service.method(_PRESENCE_DBUS_INTERFACE,
