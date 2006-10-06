@@ -714,7 +714,7 @@ class PresenceService(object):
 			raise ValueError("invalid activity id")
 		owner_nick = self._owner.get_name()
 		real_name = Service.compose_service_name(owner_nick, activity_id)
-		if address and isinstance(address, unicode):
+		if address and not isinstance(address, unicode):
 			raise ValueError("address must be a unicode string.")
 		if address == None and stype.endswith('_udp'):
 			# Use random currently unassigned multicast address
