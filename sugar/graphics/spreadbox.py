@@ -14,6 +14,7 @@ class SpreadBox(hippo.CanvasBox, hippo.CanvasItem):
 
 		self._items_to_position = []
 		self._spread_on_add = False
+		self._stable = False
 
 	def add(self, item):
 		self._items_to_position.append(item)
@@ -56,7 +57,8 @@ class SpreadBox(hippo.CanvasBox, hippo.CanvasItem):
 		x = max(0, x)
 		y = max(0, y)
 
-		[item_w, item_h] = icon.get_allocation()
+		item_w = icon.get_width_request()
+		item_h = icon.get_height_request(item_w)
 		[box_w, box_h] = self.get_allocation()
 
 		x = min(box_w - item_w, x)
@@ -65,37 +67,35 @@ class SpreadBox(hippo.CanvasBox, hippo.CanvasItem):
 		return [x, y]
 
 	def _spread_icons(self):
-		stable = True
+		self._stable = True
 
 		for icon1 in self.get_children():
 			vx = 0
 			vy = 0
 
-			[x, y] = self.get_position(icon1)
-
 			for icon2 in self.get_children():
 				if icon1 != icon2:
 					distance = self._get_distance(icon1, icon2)
 					if distance <= _DISTANCE_THRESHOLD:
-						stable = False
+						self._stable = False
 						[f_x, f_y] = self._get_repulsion(icon1, icon2)
 						vx += f_x
 						vy += f_y
 
-			new_x = x + vx
-			new_y = y + vy
+			if vx != 0 or vy != 0:
+				[x, y] = self.get_position(icon1)
+				new_x = x + vx
+				new_y = y + vy
 
-			[new_x, new_y] = self._clamp_position(icon1, new_x, new_y)
+				[new_x, new_y] = self._clamp_position(icon1, new_x, new_y)
 
-			self.move(icon1, new_x, new_y)
-
-			return stable
+				self.move(icon1, new_x, new_y)
 
 	def do_allocate(self, width, height):
 		hippo.CanvasBox.do_allocate(self, width, height)
 
 		tries = 10
-		stable = self._spread_icons()
-		while not stable and tries > 0:
-			stable = self._spread_icons()
+		self._spread_icons()
+		while not self._stable and tries > 0:
+			self._spread_icons()
 			tries -= 1
