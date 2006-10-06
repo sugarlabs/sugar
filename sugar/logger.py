@@ -12,6 +12,8 @@ if dbus.version < (0, 70, 0):
 
 import gobject
 
+from sugar import env
+
 __queue = None
 
 CONSOLE_BUS_NAME = 'org.laptop.Sugar.Console'
@@ -121,7 +123,9 @@ def start(console_id, console = None):
 	root_logger = logging.getLogger('')
 	root_logger.setLevel(logging.DEBUG)
 	root_logger.addHandler(Handler(queue))
-	fileh = logging.FileHandler('/tmp/sugar.log')
+
+	log_file = os.path.join(env.get_profile_path(), 'sugar.log')
+	fileh = logging.FileHandler(log_file)
 	fileh.setFormatter(logging.Formatter("""[%(asctime)s] %(message)s"""))
 	root_logger.addHandler(fileh)
 

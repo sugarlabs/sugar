@@ -1,15 +1,16 @@
 import hippo
 
-from sugar.graphics.CanvasIcon import CanvasIcon
+from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics.iconcolor import IconColor
+from sugar.graphics import style
 from sugar.presence import PresenceService
 from view.BuddyIcon import BuddyIcon
 from model.BuddyModel import BuddyModel
 from view.frame.MenuStrategy import MenuStrategy
 
-class RightPanel(hippo.CanvasBox):
+class FriendsBox(hippo.CanvasBox):
 	def __init__(self, shell, menu_shell):
-		CanvasBox.__init__(self)
+		hippo.CanvasBox.__init__(self)
 		self._shell = shell
 		self._menu_shell = menu_shell
 		self._activity_ps = None
@@ -26,18 +27,18 @@ class RightPanel(hippo.CanvasBox):
 	def add(self, buddy):
 		model = BuddyModel(buddy=buddy)
 		icon = BuddyIcon(self._shell, self._menu_shell, model)
+		style.apply_stylesheet(icon, 'frame.BuddyIcon')
 		icon.set_menu_strategy(MenuStrategy())
-		self.append(icon, 0)
+		self.append(icon)
 
 		self._buddies[buddy.get_name()] = icon
 
 	def remove(self, buddy):
-		i = self.find_child(self._buddies[buddy.get_name()])
-		self.remove_child(i)
+		self.remove(self._buddies[buddy.get_name()])
 
 	def clear(self):
-		while (self.get_n_children() > 0):
-			self.remove_child(0)
+		for item in self.get_children():
+			self.remove(item)
 		self._buddies = {}
 
 	def __activity_appeared_cb(self, pservice, activity_ps):

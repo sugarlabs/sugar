@@ -1,22 +1,24 @@
 import random
 
 import hippo
+import gobject
 
-from sugar.graphics.spreadlayout import SpreadLayout
+from sugar.graphics.spreadbox import SpreadBox
+from sugar.graphics import style
 from view.home.MyIcon import MyIcon
-from view.BuddyActivityView import BuddyActivityView
+from view.home.FriendView import FriendView
 
-class FriendsBox(hippo.CanvasBox, hippo.CanvasItem):
+class FriendsBox(SpreadBox, hippo.CanvasItem):
 	__gtype_name__ = 'SugarFriendsBox'
 	def __init__(self, shell, menu_shell):
-		hippo.CanvasBox.__init__(self, background_color=0xe2e2e2ff)
+		SpreadBox.__init__(self, background_color=0xe2e2e2ff)
 
 		self._shell = shell
 		self._menu_shell = menu_shell
-		self._layout = SpreadLayout()
 		self._friends = {}
 
-		self._my_icon = MyIcon(112)
+		self._my_icon = MyIcon()
+		style.apply_stylesheet(self._my_icon, 'friends.MyIcon')
 		self.append(self._my_icon, hippo.PACK_FIXED)
 
 		friends = self._shell.get_model().get_friends()
@@ -27,9 +29,11 @@ class FriendsBox(hippo.CanvasBox, hippo.CanvasItem):
 		friends.connect('friend-added', self._friend_added_cb)
 		friends.connect('friend-removed', self._friend_removed_cb)
 
+		gobject.idle_add(self.spread)
+
 	def add_friend(self, buddy_info):
-		icon = BuddyActivityView(self._shell, self._menu_shell, buddy_info)
-		self.append(icon, hippo.PACK_FIXED)
+		icon = FriendView(self._shell, self._menu_shell, buddy_info)
+		self.add(icon)
 
 		self._friends[buddy_info.get_name()] = icon
 
@@ -41,9 +45,7 @@ class FriendsBox(hippo.CanvasBox, hippo.CanvasItem):
 		del self._friends[name]
 
 	def do_allocate(self, width, height):
-		hippo.CanvasBox.do_allocate(self, width, height)
-
-		self._layout.layout(self)
+		SpreadBox.do_allocate(self, width, height)
 
 		[icon_width, icon_height] = self._my_icon.get_allocation()
 		self.move(self._my_icon, (width - icon_width) / 2,

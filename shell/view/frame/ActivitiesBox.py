@@ -10,7 +10,7 @@ class ActivityItem(CanvasIcon):
 	def __init__(self, activity):
 		icon_name = activity.get_icon()
 		CanvasIcon.__init__(self, icon_name=icon_name)
-		style.apply_stylesheet(self, 'frame-activity-icon')
+		style.apply_stylesheet(self, 'frame.ActivityIcon')
 		self._activity = activity
 
 	def get_bundle_id(self):

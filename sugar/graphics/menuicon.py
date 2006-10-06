@@ -4,8 +4,8 @@ import gobject
 from sugar.graphics.canvasicon import CanvasIcon
 
 class _MenuStrategy:
-	def get_menu_position(self, menu, x1, y1, x2, y2):
-		return [x1, y1]
+	def get_menu_position(self, menu, item):
+		return item.get_context().translate_to_widget(item)
 
 class MenuIcon(CanvasIcon):
 	def __init__(self, menu_shell, **kwargs):
@@ -29,7 +29,7 @@ class MenuIcon(CanvasIcon):
 	def set_menu_strategy(self, strategy):
 		self._menu_strategy = strategy
 
-	def _popup(self, x1, y1, x2, y2):
+	def _popup(self):
 		self.popdown()
 
 		self._menu_shell.set_active(None)
@@ -41,7 +41,7 @@ class MenuIcon(CanvasIcon):
 						   self._menu_leave_notify_event_cb)
 
 		strategy = self._menu_strategy
-		[x, y] = strategy.get_menu_position(self._menu, x1, y1, x2, y2)
+		[x, y] = strategy.get_menu_position(self._menu, self)
 
 		self._menu.move(x, y)
 		self._menu.show()
@@ -73,11 +73,7 @@ class MenuIcon(CanvasIcon):
 
 	def _motion_notify_enter(self):
 		self._stop_popdown_timeout()
-
-		[x, y] = self.get_context().translate_to_widget(self)
-		[width, height] = self.get_allocation()
-
-		self._popup(x, y, width, height)
+		self._popup()
 
 	def _motion_notify_leave(self):
 		self._start_popdown_timeout()

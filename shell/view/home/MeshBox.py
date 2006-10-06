@@ -1,27 +1,27 @@
 import random
 
 import hippo
+import gobject
 
-from sugar.graphics.spreadlayout import SpreadLayout
+from sugar.graphics.spreadbox import SpreadBox
+from sugar.graphics.snowflakebox import SnowflakeBox
 from sugar.graphics.canvasicon import CanvasIcon
 from view.BuddyIcon import BuddyIcon
-from sugar.graphics.snowflakelayout import SnowflakeLayout
 import conf
 
-class ActivityView(hippo.CanvasBox):
+class ActivityView(SnowflakeBox):
 	def __init__(self, shell, menu_shell, model):
-		hippo.CanvasBox.__init__(self)
+		SnowflakeBox.__init__(self)
 
 		self._shell = shell
 		self._model = model
-		self._layout = SnowflakeLayout()
 		self._icons = {}
 
 		icon = CanvasIcon(icon_name=model.get_icon_name(),
 						  color=model.get_color(), size=80)
 		icon.connect('activated', self._clicked_cb)
 		self.append(icon, hippo.PACK_FIXED)
-		self._layout.set_root(icon)
+		self.set_root(icon)
 
 	def has_buddy_icon(self, name):
 		return self._icons.has_key(name)
@@ -35,25 +35,19 @@ class ActivityView(hippo.CanvasBox):
 		self.remove(icon)
 		del self._icons[name]
 
-	def get_size_request(self):
-		size = self._layout.get_size()
-		return [size, size]
-
 	def _clicked_cb(self, item):
 		registry = conf.get_activity_registry()
 		default_type = self._model.get_service().get_type()
 		bundle = registry.get_activity_from_type(default_type)
 		self._shell.join_activity(bundle.get_id(), self._model.get_id())
 
-class MeshBox(hippo.CanvasBox, hippo.CanvasItem):
-	__gtype_name__ = 'SugarMeshBox'
+class MeshBox(SpreadBox):
 	def __init__(self, shell, menu_shell):
-		hippo.CanvasBox.__init__(self, background_color=0xe2e2e2ff)
+		SpreadBox.__init__(self, background_color=0xe2e2e2ff)
 
 		self._shell = shell
 		self._menu_shell = menu_shell
 		self._model = shell.get_model().get_mesh()
-		self._layout = SpreadLayout()
 		self._buddies = {}
 		self._activities = {}
 		self._buddy_to_activity = {}
@@ -70,6 +64,8 @@ class MeshBox(hippo.CanvasBox, hippo.CanvasItem):
 
 		self._model.connect('activity-added', self._activity_added_cb)
 		self._model.connect('activity-removed', self._activity_removed_cb)
+
+		gobject.idle_add(self.spread)
 
 	def _buddy_added_cb(self, model, buddy_model):
 		self._add_alone_buddy(buddy_model)
@@ -89,7 +85,7 @@ class MeshBox(hippo.CanvasBox, hippo.CanvasItem):
 	def _add_alone_buddy(self, buddy_model):
 		icon = BuddyIcon(self._shell, self._menu_shell, buddy_model)
 		icon.props.size = 80
-		self.append(icon, hippo.PACK_FIXED)
+		self.add(icon)
 
 		self._buddies[buddy_model.get_name()] = icon
 
@@ -123,7 +119,7 @@ class MeshBox(hippo.CanvasBox, hippo.CanvasItem):
 
 	def _add_activity(self, activity_model):
 		icon = ActivityView(self._shell, self._menu_shell, activity_model)
-		self.append(icon, hippo.PACK_FIXED)
+		self.add(icon)
 
 		self._activities[activity_model.get_id()] = icon
 
@@ -131,7 +127,3 @@ class MeshBox(hippo.CanvasBox, hippo.CanvasItem):
 		icon = self._activities[activity_model.get_id()]
 		self.remove(icon)
 		del self._activities[activity_model.get_id()]
-
-	def do_allocate(self, width, height):
-		hippo.CanvasBox.do_allocate(self, width, height)
-		self._layout.layout(self)

@@ -1,13 +1,14 @@
 import hippo
 import gobject
 
-import BuddyIcon
+from view.BuddyIcon import BuddyIcon
 from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics import style
 from sugar.presence import PresenceService
 import conf
 
 
-class BuddyActivityView(hippo.CanvasBox):
+class FriendView(hippo.CanvasBox):
 	def __init__(self, shell, menu_shell, buddy, **kwargs):
 		hippo.CanvasBox.__init__(self, **kwargs)
 
@@ -15,10 +16,12 @@ class BuddyActivityView(hippo.CanvasBox):
 		self._activity_registry = conf.get_activity_registry()
 
 		self._buddy = buddy
-		self._buddy_icon = BuddyIcon.BuddyIcon(shell, menu_shell, buddy)
+		self._buddy_icon = BuddyIcon(shell, menu_shell, buddy)
+		style.apply_stylesheet(self._buddy_icon, 'friends.FriendIcon')
 		self.append(self._buddy_icon)
 
-		self._activity_icon = CanvasIcon(size=48)
+		self._activity_icon = CanvasIcon()
+		style.apply_stylesheet(self._activity_icon, 'friends.ActivityIcon')
 		self._activity_icon_visible = False
 
 		if self._buddy.is_present():

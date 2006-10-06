@@ -8,7 +8,7 @@ sugar_PYTHON =			\
 	menu.py			\
 	menuicon.py		\
 	menushell.py		\
-	snowflakelayout.py	\
-	spreadlayout.py		\
+	snowflakebox.py		\
+	spreadbox.py		\
 	style.py		\
 	timeline.py
