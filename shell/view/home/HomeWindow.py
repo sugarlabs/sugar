@@ -13,6 +13,9 @@ class HomeWindow(gtk.Window):
 		gtk.Window.__init__(self)
 		self._shell = shell
 
+		self.set_default_size(gtk.gdk.screen_width(),
+							  gtk.gdk.screen_height())
+
 		self.realize()
 		self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
 

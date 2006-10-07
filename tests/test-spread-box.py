@@ -25,7 +25,7 @@ def _create_icon():
 					  icon_name='stock-buddy')
 	box.add(icon)
 
-	return (len(box.get_children()) < 20)
+	return (len(box.get_children()) < 15)
 
 window = gtk.Window()
 window.connect("destroy", lambda w: gtk.main_quit())
@@ -35,10 +35,9 @@ canvas = hippo.Canvas()
 
 box = SpreadBox(background_color=0xe2e2e2ff)
 canvas.set_root(box)
-box.spread()
 
-canvas.show()
 window.add(canvas)
+canvas.show()
 
 gobject.timeout_add(500, _create_icon)
 

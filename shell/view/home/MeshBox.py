@@ -65,8 +65,6 @@ class MeshBox(SpreadBox):
 		self._model.connect('activity-added', self._activity_added_cb)
 		self._model.connect('activity-removed', self._activity_removed_cb)
 
-		gobject.idle_add(self.spread)
-
 	def _buddy_added_cb(self, model, buddy_model):
 		self._add_alone_buddy(buddy_model)
 

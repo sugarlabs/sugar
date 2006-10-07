@@ -29,8 +29,6 @@ class FriendsBox(SpreadBox, hippo.CanvasItem):
 		friends.connect('friend-added', self._friend_added_cb)
 		friends.connect('friend-removed', self._friend_removed_cb)
 
-		gobject.idle_add(self.spread)
-
 	def add_friend(self, buddy_info):
 		icon = FriendView(self._shell, self._menu_shell, buddy_info)
 		self.add(icon)
