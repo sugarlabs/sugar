@@ -58,6 +58,14 @@ class _ShareChatAction(object):
 		pservice = PresenceService.get_instance()
 		pservice.register_service(name, stype, properties, address)
 
+class _WaitAction(object):
+	def __init__(self, bot, seconds):
+		self._bot = bot
+		self._seconds = seconds
+	
+	def execute(self):
+		self._bot._pause_queue(self._seconds)
+
 class Bot(object):
 	def __init__(self):
 		self.name = util.unique_id()
@@ -65,6 +73,10 @@ class Bot(object):
 		self.icon = None
 
 		self._queue = []
+
+	def wait(self, seconds):
+		action = _WaitAction(self, seconds)
+		self._queue.append(action)
 
 	def share_chat(self, title):
 		action = _ShareChatAction(self, title)
@@ -74,11 +86,22 @@ class Bot(object):
 		self._service = _BotService(self)
 		self._service.announce()
 
-		gobject.idle_add(self._idle_cb)
+		self._start_queue()
 
 	def _idle_cb(self):
 		self._next_action()
 		return True
+
+	def _pause_done_cb(self):
+		self._start_queue()
+		return False
+
+	def _start_queue(self):
+		self._queue_sid = gobject.idle_add(self._idle_cb)
+
+	def _pause_queue(self, seconds):
+		gobject.source_remove(self._queue_sid)
+		gobject.timeout_add(int(seconds * 1000), self._pause_done_cb)
 
 	def _next_action(self):
 		if len(self._queue) > 0:
