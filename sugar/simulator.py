@@ -6,10 +6,13 @@ import dbus
 from sugar.presence import PresenceService
 from sugar.graphics.iconcolor import IconColor
 from sugar.p2p import Stream
+from sugar import util
 
 _PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
 
 _nick_names = ['Aba', 'Abebe', 'Abebi', 'Abena', 'Abeni', 'Abeo', 'Abiba', 'Ada', 'Adah', 'Adana', 'Adanna', 'Adanya', 'Aissa', 'Akili', 'Alika', 'Ama', 'Amadi', 'Ameena', 'Ameenah', 'Ami', 'Amina', 'Aminah', 'Arziki', 'Asha', 'Ashia', 'Aziza', 'Baako', 'Binah', 'Binta', 'Bisa', 'Bolanle', 'Bunme', 'Caimile', 'Cataval', 'Chika', 'Chipo', 'Dalia', 'Dalila', 'Dayo', 'Deka', 'Delu', 'Denisha', 'Dore', 'Ebere', 'Fadhila', 'Faizah', 'Falala', 'Fayola', 'Feechi', 'Femi', 'Fisseha', 'Fola', 'Gamada', 'Ghalyela', 'Habika', 'Hada', 'Hadiya', 'Haiba', 'Halima', 'Hanzila', 'Hasina', 'Hija', 'Ilori', 'Iman', 'Imena', 'Iniko', 'Isabis', 'Isoke', 'Jahia', 'Jamelia', 'Jamila', 'Jamilah', 'Jamilia', 'Jamilla', 'Jamille', 'Jemila', 'Jendayi', 'Jina', 'Kabira', 'Kadija', 'Kafi', 'Kainda', 'Kali', 'Kalifa', 'Kanene', 'Kapera', 'Karimah', 'Kasinda', 'Keisha', 'Kesia', 'Lakeesha', 'Lateefah', 'Latrice', 'Latricia', 'Leal', 'Lehana', 'Limber', 'Lulu', 'Maha', 'Maizah', 'Malika', 'Mandisa', 'Mardea', 'Marjani', 'Marka', 'Nabelung', 'Nailah', 'Naima', 'Naja', 'Nakeisha', 'Narkeasha', 'Neda', 'Neema', 'Nichelle', 'Oba', 'Okoth', 'Ontibile', 'Orma', 'Pemba', 'Rabia', 'Rafiya', 'Ramla', 'Rashida', 'Raziya', 'Reta', 'Ridhaa', 'Saada', 'Sabra', 'Safara', 'Saidah', 'Salihah', 'Shasa', 'Shasmecka', 'Sibongile', 'Sika', 'Simbra', 'Sitembile', 'Siyanda', 'Sukutai', 'Tabita', 'Taifa', 'Taja', 'Takiyah', 'Tamala', 'Tamasha', 'Tanesha', 'Tanginika', 'Tanishia', 'Tapanga', 'Tarisai', 'Tayla', 'Tendai', 'Thandiwe', 'Tiesha', 'TinekaJawana', 'Tiombe', 'Wafa', 'Wangari', 'Waseme', 'Xhosa', 'Zabia', 'Zahara', 'Zahra', 'Zalika', 'Zanta', 'Zarina', 'Zina', 'Aba', 'Abebe', 'Abebi', 'Abena', 'Abeni', 'Abeo', 'Abiba', 'Ada', 'Adah', 'Adana', 'Adanna', 'Adanya', 'Aissa', 'Akili', 'Alika', 'Ama', 'Amadi', 'Ameena', 'Ameenah', 'Ami', 'Amina', 'Aminah', 'Amineh', 'Arziki', 'Asha', 'Ashia', 'Aziza', 'Baako', 'Binah', 'Binta', 'Bisa', 'Bolanle', 'Bunme', 'Caimile', 'Cataval', 'Chika', 'Chipo', 'Dalila', 'Dayo', 'Deka', 'Delu', 'Denisha', 'Dore', 'Ebere', 'Fadhila', 'Faizah', 'Falala', 'Fayola', 'Feechi', 'Femi', 'Fisseha', 'Fola', 'Gamada', 'Ghalyela', 'Habika', 'Hada', 'Hadiya', 'Haiba', 'Halima', 'Hanzila', 'Hasina', 'Hija', 'Ilori', 'Iman', 'Imena', 'Iniko', 'Isabis', 'Isoke', 'Jahia', 'Jamelia', 'Jamila', 'Jamilah', 'Jamilia', 'Jamilla', 'Jamille', 'Jemila', 'Jendayi', 'Jina', 'Kabira', 'Kadija', 'Kafi', 'Kainda', 'Kali', 'Kalifa', 'Kanene', 'Kapera', 'Karimah', 'Kasinda', 'Keisha', 'Kesia', 'Lakeesha', 'Lateefah', 'Latrice', 'Leal', 'Lehana', 'Limber', 'Lulu', 'Maha', 'Maizah', 'Malika', 'Mandisa', 'Mandisa', 'Mardea', 'Marjani', 'Marka', 'Nabelung', 'Nailah', 'Naima', 'Naja', 'Nakeisha', 'Narkeasha', 'Neda', 'Neema', 'Nichelle', 'Oba', 'Okoth', 'Ontibile', 'Orma', 'Pemba', 'Rabia', 'Rafiya', 'Ramla', 'Rashida', 'Raziya', 'Reta', 'Ridhaa', 'Saada', 'Sabra', 'Safara', 'Saidah', 'Salihah', 'Shasa', 'Shasmecka', 'Sibongile', 'Sika', 'Simbra', 'Sitembile', 'Siyanda', 'Sukutai', 'Tabita', 'Taifa', 'Taja', 'Takiyah', 'Tale', 'Tale green', 'Tamala', 'Tamasha', 'Tanesha', 'Tanginika', 'Tanishia', 'Tapanga', 'Tarisai', 'Tayla', 'Tendai', 'Thandiwe', 'Tiesha', 'TinekaJawana', 'Tiombe', 'Wafa', 'Wangari', 'Waseme', 'Xhosa', 'Zabia', 'Zahara', 'Zahra', 'Zalika', 'Zanta']
+
+_activity_refs = {}
 
 class _BotService(object):
 	def __init__(self, bot):
@@ -42,19 +45,44 @@ class _BotService(object):
 	def set_current_activity(self, activity_id):
 		self._service.set_published_value('curact', dbus.String(activity_id))
 
-class _ChangeActivityAction(object):
-	def __init__(self, bot, activity_id):
+class _JoinActivityAction(object):
+	def __init__(self, bot, named_ref):
 		self._bot = bot
-		self._activity_id = activity_id
+		self._named_ref = named_ref
 
 	def execute(self):
-		self._bot._service.set_current_activity(self._activity_id)
+		activity_id = _activity_refs[self._named_ref]
+
+		pservice = PresenceService.get_instance()
+		activity = pservice.get_activity(activity_id)
+		service = activity.get_services()[0]
+
+		name = "%s [%s]" % (self._bot.name, activity_id)
+		properties = { 'title' : service.get_published_value('title'),
+					   'color' : service.get_published_value('color') }
+
+		pservice.register_service(name, service.get_type(),
+								  properties, service.get_address(),
+								  service.get_port())
+
+		self._bot._service.set_current_activity(activity_id)
+
+class _ChangeActivityAction(object):
+	def __init__(self, bot, named_ref):
+		self._bot = bot
+		self._named_ref = named_ref
+
+	def execute(self):
+		activity_id = _activity_refs[self._named_ref]
+		self._bot._service.set_current_activity(activity_id)
 
 class _ShareChatAction(object):
-	def __init__(self, bot, activity_id, title):
+	def __init__(self, bot, named_ref, title):
 		self._bot = bot
 		self._title = title
-		self._id = activity_id 
+		self._id = util.unique_id()
+
+		_activity_refs[named_ref] = self._id 
 
 	def execute(self):
 		name = "%s [%s]" % (self._bot.name, self._id)
@@ -94,6 +122,10 @@ class Bot(object):
 
 	def change_activity(self, activity_id):
 		action = _ChangeActivityAction(self, activity_id)
+		self._queue.append(action)
+
+	def join_activity(self, activity_id):
+		action = _JoinActivityAction(self, activity_id)
 		self._queue.append(action)
 
 	def start(self):
