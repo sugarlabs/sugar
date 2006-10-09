@@ -3,7 +3,6 @@ from sugar.simulator import Bot
 bot = Bot()
 bot.name = 'penelope'
 
-bot.wait(20)
-bot.share_chat('Nekkhamma')
+bot.share_chat('nekkhamma', 'Nekkhamma')
 
 bot.start()

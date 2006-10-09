@@ -1,11 +1,11 @@
 import random
 
 import gobject
+import dbus
 
 from sugar.presence import PresenceService
 from sugar.graphics.iconcolor import IconColor
 from sugar.p2p import Stream
-from sugar import util
 
 _PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
 
@@ -42,11 +42,19 @@ class _BotService(object):
 	def set_current_activity(self, activity_id):
 		self._service.set_published_value('curact', dbus.String(activity_id))
 
+class _ChangeActivityAction(object):
+	def __init__(self, bot, activity_id):
+		self._bot = bot
+		self._activity_id = activity_id
+
+	def execute(self):
+		self._bot._service.set_current_activity(self._activity_id)
+
 class _ShareChatAction(object):
-	def __init__(self, bot, title):
+	def __init__(self, bot, activity_id, title):
 		self._bot = bot
 		self._title = title
-		self._id = util.unique_id() 
+		self._id = activity_id 
 
 	def execute(self):
 		name = "%s [%s]" % (self._bot.name, self._id)
@@ -70,7 +78,7 @@ class _WaitAction(object):
 
 class Bot(object):
 	def __init__(self):
-		self.name = _nick_names[int(len(_nick_names) * random.random())]
+		self.name = _nick_names[random.randint(0, len(_nick_names))]
 		self.color = IconColor()
 		self.icon = None
 
@@ -80,8 +88,12 @@ class Bot(object):
 		action = _WaitAction(self, seconds)
 		self._queue.append(action)
 
-	def share_chat(self, title):
-		action = _ShareChatAction(self, title)
+	def share_chat(self, activity_id, title):
+		action = _ShareChatAction(self, activity_id, title)
+		self._queue.append(action)
+
+	def change_activity(self, activity_id):
+		action = _ChangeActivityAction(self, activity_id)
 		self._queue.append(action)
 
 	def start(self):
