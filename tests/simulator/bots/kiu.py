@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-from sugar.simulator import Bot
-from sugar.simulator import ShareActivityAction
+from sugar.oldsimulator import Bot
+from sugar.oldsimulator import ShareActivityAction
 from sugar.graphics.iconcolor import IconColor
 import os, random, gobject
 
