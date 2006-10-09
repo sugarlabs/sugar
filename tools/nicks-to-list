@@ -1,0 +1,18 @@
+#!/usr/bin/python
+
+import sys
+
+result = '_nick_names = [\n'
+
+nicks_file = open(sys.argv[1], 'r')
+
+for line in nicks_file.readlines():
+	name = line.strip()
+	result += '\'%s\', ' % (name)
+
+result += ']'
+
+nicks_file.close()
+
+print result
+
