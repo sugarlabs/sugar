@@ -21,7 +21,7 @@ class SnowflakeBox(hippo.CanvasBox, hippo.CanvasItem):
 		return [width / 2, height / 2]
 
 	def _get_radius(self):
-		return _BASE_RADIUS + _CHILDREN_FACTOR * len(self.get_children())
+		return _BASE_RADIUS + _CHILDREN_FACTOR * self._get_n_children()
 
 	def _layout_root(self):
 		[width, height] = self._root.get_allocation()
@@ -32,12 +32,15 @@ class SnowflakeBox(hippo.CanvasBox, hippo.CanvasItem):
 
 		self.move(self._root, int(x), int(y))
 
+	def _get_n_children(self):
+		return len(self.get_children()) - 1
+
 	def _layout_child(self, child, index):
 		r = self._get_radius()
-		if (len(self.get_children()) > 10):
+		if (self._get_n_children() > 10):
 			r += _FLAKE_DISTANCE * (index % 3)
 
-		angle = 2 * math.pi / len(self.get_children()) * index
+		angle = 2 * math.pi * index / self._get_n_children()
 
 		[width, height] = child.get_allocation()
 		[cx, cy] = self._get_center()
