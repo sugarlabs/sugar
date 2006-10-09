@@ -8,6 +8,7 @@ sugar_PYTHON =				\
 	logger.py			\
 	setup.py			\
 	oldsimulator.py			\
+	simulator.py			\
 	TracebackUtils.py		\
 	util.py
 

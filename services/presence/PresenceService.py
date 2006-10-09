@@ -5,6 +5,7 @@ import Activity
 import random
 import logging
 from sugar import util
+from sugar import env
 import BuddyIconCache
 
 
@@ -302,9 +303,13 @@ class PresenceService(object):
 		self._icon_cache = BuddyIconCache.BuddyIconCache()
 
 		# Our owner object
-		objid = self._get_next_object_id()
-		self._owner = Buddy.Owner(self, self._bus_name, objid, self._icon_cache)
-		self._buddies[self._owner.get_name()] = self._owner
+		if env.get_nick_name():
+			objid = self._get_next_object_id()
+			self._owner = Buddy.Owner(self, self._bus_name,
+									  objid, self._icon_cache)
+			self._buddies[self._owner.get_name()] = self._owner
+		else:
+			self._owner = None
 
 		self._started = False
 

@@ -1,0 +1,22 @@
+#!/usr/bin/python
+import os
+
+import gobject
+
+from sugar.session.TestSession import TestSession
+from sugar.presence import PresenceService
+
+session = TestSession()
+session.start()
+
+PresenceService.start()
+
+base_path = os.path.abspath(os.path.dirname(__file__))
+
+bots_path = os.path.join(base_path, 'bots')
+for bot_file in os.listdir(bots_path):
+	if bot_file.endswith('.py') and bot_file != 'kiu.py':
+		execfile(os.path.join(bots_path, bot_file))
+
+mainloop = gobject.MainLoop()
+mainloop.run()
