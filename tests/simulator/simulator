@@ -15,7 +15,7 @@ base_path = os.path.abspath(os.path.dirname(__file__))
 
 stage_path = os.path.join(base_path, 'demo')
 for bot_file in os.listdir(stage_path):
-	if bot_file.endswith('.py') and bot_file != 'kiu.py':
+	if bot_file.endswith('.py'):
 		execfile(os.path.join(stage_path, bot_file))
 
 mainloop = gobject.MainLoop()
