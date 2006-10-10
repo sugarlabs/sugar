@@ -1,4 +1,5 @@
 import random
+import copy
 
 import gobject
 import dbus
@@ -8,11 +9,19 @@ from sugar.graphics.iconcolor import IconColor
 from sugar.p2p import Stream
 from sugar import util
 
-_PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
-
 _nick_names = ['Aba', 'Abebe', 'Abebi', 'Abena', 'Abeni', 'Abeo', 'Abiba', 'Ada', 'Adah', 'Adana', 'Adanna', 'Adanya', 'Aissa', 'Akili', 'Alika', 'Ama', 'Amadi', 'Ameena', 'Ameenah', 'Ami', 'Amina', 'Aminah', 'Arziki', 'Asha', 'Ashia', 'Aziza', 'Baako', 'Binah', 'Binta', 'Bisa', 'Bolanle', 'Bunme', 'Caimile', 'Cataval', 'Chika', 'Chipo', 'Dalia', 'Dalila', 'Dayo', 'Deka', 'Delu', 'Denisha', 'Dore', 'Ebere', 'Fadhila', 'Faizah', 'Falala', 'Fayola', 'Feechi', 'Femi', 'Fisseha', 'Fola', 'Gamada', 'Ghalyela', 'Habika', 'Hada', 'Hadiya', 'Haiba', 'Halima', 'Hanzila', 'Hasina', 'Hija', 'Ilori', 'Iman', 'Imena', 'Iniko', 'Isabis', 'Isoke', 'Jahia', 'Jamelia', 'Jamila', 'Jamilah', 'Jamilia', 'Jamilla', 'Jamille', 'Jemila', 'Jendayi', 'Jina', 'Kabira', 'Kadija', 'Kafi', 'Kainda', 'Kali', 'Kalifa', 'Kanene', 'Kapera', 'Karimah', 'Kasinda', 'Keisha', 'Kesia', 'Lakeesha', 'Lateefah', 'Latrice', 'Latricia', 'Leal', 'Lehana', 'Limber', 'Lulu', 'Maha', 'Maizah', 'Malika', 'Mandisa', 'Mardea', 'Marjani', 'Marka', 'Nabelung', 'Nailah', 'Naima', 'Naja', 'Nakeisha', 'Narkeasha', 'Neda', 'Neema', 'Nichelle', 'Oba', 'Okoth', 'Ontibile', 'Orma', 'Pemba', 'Rabia', 'Rafiya', 'Ramla', 'Rashida', 'Raziya', 'Reta', 'Ridhaa', 'Saada', 'Sabra', 'Safara', 'Saidah', 'Salihah', 'Shasa', 'Shasmecka', 'Sibongile', 'Sika', 'Simbra', 'Sitembile', 'Siyanda', 'Sukutai', 'Tabita', 'Taifa', 'Taja', 'Takiyah', 'Tamala', 'Tamasha', 'Tanesha', 'Tanginika', 'Tanishia', 'Tapanga', 'Tarisai', 'Tayla', 'Tendai', 'Thandiwe', 'Tiesha', 'TinekaJawana', 'Tiombe', 'Wafa', 'Wangari', 'Waseme', 'Xhosa', 'Zabia', 'Zahara', 'Zahra', 'Zalika', 'Zanta', 'Zarina', 'Zina', 'Aba', 'Abebe', 'Abebi', 'Abena', 'Abeni', 'Abeo', 'Abiba', 'Ada', 'Adah', 'Adana', 'Adanna', 'Adanya', 'Aissa', 'Akili', 'Alika', 'Ama', 'Amadi', 'Ameena', 'Ameenah', 'Ami', 'Amina', 'Aminah', 'Amineh', 'Arziki', 'Asha', 'Ashia', 'Aziza', 'Baako', 'Binah', 'Binta', 'Bisa', 'Bolanle', 'Bunme', 'Caimile', 'Cataval', 'Chika', 'Chipo', 'Dalila', 'Dayo', 'Deka', 'Delu', 'Denisha', 'Dore', 'Ebere', 'Fadhila', 'Faizah', 'Falala', 'Fayola', 'Feechi', 'Femi', 'Fisseha', 'Fola', 'Gamada', 'Ghalyela', 'Habika', 'Hada', 'Hadiya', 'Haiba', 'Halima', 'Hanzila', 'Hasina', 'Hija', 'Ilori', 'Iman', 'Imena', 'Iniko', 'Isabis', 'Isoke', 'Jahia', 'Jamelia', 'Jamila', 'Jamilah', 'Jamilia', 'Jamilla', 'Jamille', 'Jemila', 'Jendayi', 'Jina', 'Kabira', 'Kadija', 'Kafi', 'Kainda', 'Kali', 'Kalifa', 'Kanene', 'Kapera', 'Karimah', 'Kasinda', 'Keisha', 'Kesia', 'Lakeesha', 'Lateefah', 'Latrice', 'Leal', 'Lehana', 'Limber', 'Lulu', 'Maha', 'Maizah', 'Malika', 'Mandisa', 'Mandisa', 'Mardea', 'Marjani', 'Marka', 'Nabelung', 'Nailah', 'Naima', 'Naja', 'Nakeisha', 'Narkeasha', 'Neda', 'Neema', 'Nichelle', 'Oba', 'Okoth', 'Ontibile', 'Orma', 'Pemba', 'Rabia', 'Rafiya', 'Ramla', 'Rashida', 'Raziya', 'Reta', 'Ridhaa', 'Saada', 'Sabra', 'Safara', 'Saidah', 'Salihah', 'Shasa', 'Shasmecka', 'Sibongile', 'Sika', 'Simbra', 'Sitembile', 'Siyanda', 'Sukutai', 'Tabita', 'Taifa', 'Taja', 'Takiyah', 'Tale', 'Tale green', 'Tamala', 'Tamasha', 'Tanesha', 'Tanginika', 'Tanishia', 'Tapanga', 'Tarisai', 'Tayla', 'Tendai', 'Thandiwe', 'Tiesha', 'TinekaJawana', 'Tiombe', 'Wafa', 'Wangari', 'Waseme', 'Xhosa', 'Zabia', 'Zahara', 'Zahra', 'Zalika', 'Zanta']
 
+_PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
+
 _activity_refs = {}
+
+class _NameCollection(object):
+	def __init__(self):
+		self._names = copy.copy(_nick_names)
+
+	def get_name(self):
+		i = random.randint(0, len(self._names))
+		return self._names.pop(i)
 
 class _BotService(object):
 	def __init__(self, bot):
@@ -105,8 +114,10 @@ class _WaitAction(object):
 		self._bot._pause_queue(self._seconds)
 
 class Bot(object):
+	_name_collection = _NameCollection()
+
 	def __init__(self):
-		self.name = _nick_names[random.randint(0, len(_nick_names))]
+		self.name = Bot._name_collection.get_name()
 		self.color = IconColor()
 		self.icon = None
 
