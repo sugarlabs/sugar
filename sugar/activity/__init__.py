@@ -8,6 +8,8 @@ grid = Grid()
 sizes = 'gtk-large-toolbar=%d, %d' % (grid.dimension(1), grid.dimension(1))
 settings.set_string_property('gtk-icon-sizes', sizes, '')
 
+settings.set_string_property('gtk-font-name', 'Sans 14', '')
+
 def get_default_type(activity_type):
 	"""Get the activity default type.
 
