@@ -8,11 +8,6 @@ session = UITestSession()
 session.start()
 
 import gtk
-import goocanvas
-
-from sugar.graphics import IconColor
-from sugar.graphics.IconItem import IconItem
-from sugar.graphics.CanvasView import CanvasView
 
 # Main window
 window = gtk.Window()
