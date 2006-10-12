@@ -1,12 +1,5 @@
 ;; -*- scheme -*-
 ; object definitions ...
-(define-object Browser
-  (in-module "Gecko")
-  (parent "GtkMozEmbed")
-  (c-name "GeckoBrowser")
-  (gtype-id "GECKO_TYPE_BROWSER")
-)
-
 (define-object AddressEntry
   (in-module "Sugar")
   (parent "GtkEntry")
@@ -14,53 +7,57 @@
   (gtype-id "SUGAR_TYPE_ADDRESS_ENTRY")
 )
 
-;; Enumerations and flags ...
-
-
-;; From gecko-browser.h
-
-(define-function get_type
-  (c-name "gecko_browser_get_type")
-  (return-type "GType")
+(define-object Browser
+  (in-module "Sugar")
+  (parent "GtkMozEmbed")
+  (c-name "SugarBrowser")
+  (gtype-id "SUGAR_TYPE_BROWSER")
 )
 
-(define-function startup_browser
-  (c-name "gecko_browser_startup")
-  (return-type "none")
-)
-
-(define-function new
-  (c-name "gecko_browser_new")
-  (is-constructor-of "GeckoBrowser")
-  (return-type "GeckoBrowser*")
-)
-
-(define-method create_window
-  (of-object "GeckoBrowser")
-  (c-name "gecko_browser_create_window")
-  (return-type "GeckoBrowser*")
-)
-
-(define-virtual create_window
-  (of-object "GeckoBrowser")
-  (return-type "GeckoBrowser*")
-)
 (define-object KeyGrabber
-  (in-module "globalkeys")
+  (in-module "Sugar")
   (parent "GObject")
   (c-name "SugarKeyGrabber")
   (gtype-id "SUGAR_TYPE_KEY_GRABBER")
 )
 
-(define-function sugar_key_grabber_get_type
-  (c-name "sugar_key_grabber_get_type")
+;; Enumerations and flags ...
+
+
+;; From sugar-address-entry.h
+
+(define-function sugar_address_entry_get_type
+  (c-name "sugar_address_entry_get_type")
   (return-type "GType")
 )
 
-(define-function sugar_key_grabber_new
-  (c-name "sugar_key_grabber_new")
-  (is-constructor-of "SugarKeyGrabber")
-  (return-type "GObject*")
+
+
+;; From sugar-browser.h
+
+(define-function sugar_browser_get_type
+  (c-name "sugar_browser_get_type")
+  (return-type "GType")
+)
+
+(define-function startup_browser
+  (c-name "sugar_browser_startup")
+  (return-type "none")
+)
+
+(define-method create_window
+  (of-object "SugarBrowser")
+  (c-name "sugar_browser_create_window")
+  (return-type "SugarBrowser*")
+)
+
+
+
+;; From sugar-key-grabber.h
+
+(define-function sugar_key_grabber_get_type
+  (c-name "sugar_key_grabber_get_type")
+  (return-type "GType")
 )
 
 (define-method grab
@@ -68,6 +65,8 @@
   (c-name "sugar_key_grabber_grab")
   (return-type "none")
   (parameters
-    '("const-char*" "address")
+    '("const-char*" "key")
   )
 )
+
+

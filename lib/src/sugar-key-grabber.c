@@ -33,22 +33,6 @@
  * for these set */
 #define USED_MODS (GDK_SHIFT_MASK | GDK_CONTROL_MASK | GDK_MOD1_MASK)
 
-struct _SugarKeyGrabber {
-	GObject base_instance;
-
-	GdkWindow *root;
-	GList *keys;
-};
-
-struct _SugarKeyGrabberClass {
-	GObjectClass base_class;
-
-	void (* key_pressed)  (SugarKeyGrabber *grabber,
-						   const char      *key);
-	void (* key_released) (SugarKeyGrabber *grabber,
-						   const char      *key);
-};
-
 enum {
 	KEY_PRESSED,
 	KEY_RELEASED,

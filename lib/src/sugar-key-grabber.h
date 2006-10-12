@@ -34,8 +34,23 @@ typedef struct _SugarKeyGrabberPrivate SugarKeyGrabberPrivate;
 #define SUGAR_IS_KEYGRABBER_CLASS(klass)    (G_TYPE_CHECK_CLASS_TYPE((klass), SUGAR_TYPE_KEY_GRABBER))
 #define SUGAR_KEY_GRABBER_GET_CLASS(object) (G_TYPE_INSTANCE_GET_CLASS((object), SUGAR_TYPE_KEY_GRABBER, SugarKeyGrabberClass))
 
+struct _SugarKeyGrabber {
+	GObject base_instance;
+
+	GdkWindow *root;
+	GList *keys;
+};
+
+struct _SugarKeyGrabberClass {
+	GObjectClass base_class;
+
+	void (* key_pressed)  (SugarKeyGrabber *grabber,
+						   const char      *key);
+	void (* key_released) (SugarKeyGrabber *grabber,
+						   const char      *key);
+};
+
 GType	 sugar_key_grabber_get_type	(void);
-GObject	*sugar_key_grabber_new		(void);
 void     sugar_key_grabber_grab		(SugarKeyGrabber *grabber,
 									 const char	     *key);
 

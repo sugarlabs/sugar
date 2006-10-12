@@ -4,7 +4,7 @@ headers
 #include <Python.h>
 
 #include "pygobject.h"
-#include "gecko-browser.h"
+#include "sugar-browser.h"
 #include "sugar-key-grabber.h"
 #include "sugar-address-entry.h"
 
