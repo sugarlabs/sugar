@@ -7,6 +7,13 @@
   (gtype-id "GECKO_TYPE_BROWSER")
 )
 
+(define-object AddressEntry
+  (in-module "Sugar")
+  (parent "GtkEntry")
+  (c-name "SugarAddressEntry")
+  (gtype-id "SUGAR_TYPE_ADDRESS_ENTRY")
+)
+
 ;; Enumerations and flags ...
 
 

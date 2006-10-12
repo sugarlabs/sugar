@@ -6,11 +6,13 @@ headers
 #include "pygobject.h"
 #include "gecko-browser.h"
 #include "sugar-key-grabber.h"
+#include "sugar-address-entry.h"
 
 %%
 modulename gecko
 %%
 import gobject.GObject as PyGObject_Type
+import gtk.Entry as PyGtkEntry_Type
 import gtkmozembed.MozEmbed as PyGtkMozEmbed_Type
 %%
 ignore-glob

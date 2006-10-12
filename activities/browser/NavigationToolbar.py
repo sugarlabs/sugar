@@ -29,10 +29,10 @@ class NavigationToolbar(gtk.Toolbar):
 		self.insert(separator, -1)
 		separator.show()
 
-		address_item = AddressItem()
-		address_item.connect('open-address', self.__open_address_cb)
-		self.insert(address_item, -1)
-		address_item.show()
+		self._address_item = AddressItem()
+		self._address_item.connect('open-address', self.__open_address_cb)
+		self.insert(self._address_item, -1)
+		self._address_item.show()
 
 		self._insert_spring()
 
@@ -49,10 +49,15 @@ class NavigationToolbar(gtk.Toolbar):
 		self._embed.connect("location", self.__location_changed)
 		self._update_sensitivity()
 
+		self._embed.connect("notify::progress", self._progress_changed_cb)
+
 	def _update_sensitivity(self):
 		self.back.set_sensitive(self._embed.can_go_back())
 		self.forward.set_sensitive(self._embed.can_go_forward())
-		
+
+	def _progress_changed_cb(self, embed, pspec):
+		self._address_item.set_progress(embed.props.progress)
+
 	def __go_back_cb(self, button):
 		self._embed.go_back()
 	

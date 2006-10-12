@@ -25,7 +25,6 @@ G_BEGIN_DECLS
 
 typedef struct _GeckoBrowser GeckoBrowser;
 typedef struct _GeckoBrowserClass GeckoBrowserClass;
-typedef struct _GeckoBrowserPrivate GeckoBrowserPrivate;
 
 #define GECKO_TYPE_BROWSER				(gecko_browser_get_type())
 #define GECKO_BROWSER(object)	    	(G_TYPE_CHECK_INSTANCE_CAST((object), GECKO_TYPE_BROWSER, GeckoBrowser))
@@ -36,6 +35,10 @@ typedef struct _GeckoBrowserPrivate GeckoBrowserPrivate;
 
 struct _GeckoBrowser {
 	GtkMozEmbed base_instance;
+
+	int total_requests;
+	int current_requests;
+	float progress;
 };
 
 struct _GeckoBrowserClass {
