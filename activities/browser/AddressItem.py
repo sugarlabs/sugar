@@ -11,7 +11,7 @@ class AddressItem(gtk.ToolItem):
 		gtk.ToolItem.__init__(self)
 	
 		entry = gtk.Entry()
-		width = int(gtk.gdk.screen_width() / 2)
+		width = int(gtk.gdk.screen_width() / 3 * 2)
 		entry.set_size_request(width, -1)
 		entry.connect("activate", self.__activate_cb)
 		self.add(entry)
