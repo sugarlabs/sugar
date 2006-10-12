@@ -26,3 +26,6 @@ class AddressItem(gtk.ToolItem):
 
 	def set_progress(self, progress):
 		self._entry.set_property('progress', progress)
+
+	def set_address(self, address):
+		self._entry.set_text(address)

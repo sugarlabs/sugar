@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#include <math.h>
 #include <gtk/gtkentry.h>
 
 #include "sugar-address-entry.h"
@@ -454,10 +455,17 @@ sugar_address_entry_expose(GtkWidget      *widget,
 
 		if (address_entry->progress != 0.0 && address_entry->progress != 1.0) {
 			int bar_width = area_width * address_entry->progress;
+			float radius = 5.0;
 
 			cr = gdk_cairo_create(entry->text_area);
 	        cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
-	        cairo_rectangle(cr, 0, 0, bar_width, area_height);
+
+			cairo_move_to (cr, radius, 0);
+			cairo_arc (cr, bar_width - radius, radius, radius, M_PI * 1.5, M_PI * 2);
+			cairo_arc (cr, bar_width - radius, area_height - radius, radius, 0, M_PI * 0.5);
+			cairo_arc (cr, radius, area_height - radius, radius, M_PI * 0.5, M_PI);
+			cairo_arc (cr, radius, radius, radius, M_PI, M_PI * 1.5);
+
 			cairo_fill(cr);
 			cairo_destroy (cr);
 		}

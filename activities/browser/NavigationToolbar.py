@@ -65,6 +65,7 @@ class NavigationToolbar(gtk.Toolbar):
 		self._embed.go_forward()
 		
 	def __location_changed(self, embed):
+		self._address_item.set_address(embed.get_location())
 		self._update_sensitivity()
 
 	def __open_address_cb(self, item, address):
