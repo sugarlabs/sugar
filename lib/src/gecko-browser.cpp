@@ -123,6 +123,7 @@ net_state_cb(GtkMozEmbed *embed, const char *aURI, gint state, guint status)
 		if (state & GTK_MOZ_EMBED_FLAG_START) {
 			browser->total_requests = 0;
 			browser->current_requests = 0;
+			browser->progress = 0.0;
 		}
 	}
 
@@ -139,7 +140,9 @@ net_state_cb(GtkMozEmbed *embed, const char *aURI, gint state, guint status)
 
 		progress = float(browser->current_requests) /
 				   float(browser->total_requests);
-		gecko_browser_set_progress(browser, progress);
+		if (progress > browser->progress) {
+			gecko_browser_set_progress(browser, progress);
+		}
 	}
 }
 
