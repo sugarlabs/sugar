@@ -487,11 +487,14 @@ sugar_address_entry_set_property (GObject         *object,
 		                          const GValue    *value,
         		                  GParamSpec      *pspec)
 {
-	SugarAddressEntry *entry = SUGAR_ADDRESS_ENTRY(object);
+	SugarAddressEntry *address_entry = SUGAR_ADDRESS_ENTRY(object);
+	GtkEntry *entry = GTK_ENTRY(object);
 
 	switch (prop_id) {
 		case PROP_PROGRESS:
-			entry->progress = g_value_get_double (value);
+			address_entry->progress = g_value_get_double (value);
+			if (GTK_WIDGET_REALIZED (entry))
+				gdk_window_invalidate_rect (entry->text_area, NULL, FALSE);
 		break;
 
 		default:
