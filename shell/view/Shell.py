@@ -10,7 +10,7 @@ from view.ActivityHost import ActivityHost
 from sugar.activity import ActivityFactory
 from sugar.activity import Activity
 from view.frame.Frame import Frame
-from globalkeys import KeyGrabber
+from _sugar import KeyGrabber
 import sugar
 
 class Shell(gobject.GObject):

@@ -5,6 +5,7 @@ headers
 
 #include "pygobject.h"
 #include "gecko-browser.h"
+#include "sugar-key-grabber.h"
 
 %%
 modulename gecko

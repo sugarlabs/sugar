@@ -9,7 +9,7 @@ from sugar.activity.Activity import Activity
 from sugar.presence.PresenceService import PresenceService
 from sugar.p2p.model.LocalModel import LocalModel
 from sugar.p2p.model.RemoteModel import RemoteModel
-import gecko
+import _sugar
 
 from NotificationBar import NotificationBar
 from NavigationToolbar import NavigationToolbar
@@ -68,10 +68,10 @@ class PopupCreator(gobject.GObject):
 	def get_embed(self):
 		return self._embed
 
-class Browser(gecko.Browser):
+class Browser(_sugar.Browser):
 	__gtype_name__ = "SugarBrowser"
 	def __init__(self):
-		gecko.Browser.__init__(self)
+		_sugar.Browser.__init__(self)
 		self._popup_creators = []
 
 	def do_create_window(self):
@@ -205,4 +205,4 @@ class BrowserActivity(Activity):
 def start():
 	gtkmozembed.set_profile_path(env.get_profile_path(), 'gecko')
 	gtkmozembed.push_startup()
-	gecko.startup()
+	_sugar.startup_browser()

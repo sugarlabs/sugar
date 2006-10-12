@@ -17,7 +17,7 @@
   (return-type "GType")
 )
 
-(define-function startup
+(define-function startup_browser
   (c-name "gecko_browser_startup")
   (return-type "none")
 )
@@ -37,4 +37,30 @@
 (define-virtual create_window
   (of-object "GeckoBrowser")
   (return-type "GeckoBrowser*")
+)
+(define-object KeyGrabber
+  (in-module "globalkeys")
+  (parent "GObject")
+  (c-name "SugarKeyGrabber")
+  (gtype-id "SUGAR_TYPE_KEY_GRABBER")
+)
+
+(define-function sugar_key_grabber_get_type
+  (c-name "sugar_key_grabber_get_type")
+  (return-type "GType")
+)
+
+(define-function sugar_key_grabber_new
+  (c-name "sugar_key_grabber_new")
+  (is-constructor-of "SugarKeyGrabber")
+  (return-type "GObject*")
+)
+
+(define-method grab
+  (of-object "SugarKeyGrabber")
+  (c-name "sugar_key_grabber_grab")
+  (return-type "none")
+  (parameters
+    '("const-char*" "address")
+  )
 )

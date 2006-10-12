@@ -46,5 +46,4 @@ depcomp
 libtool
 ltmain.sh
 m4/intltool.m4
-bindings/globalkeys/globalkeys.c
-bindings/gecko/gecko.c
+lib/src/_sugar.c
