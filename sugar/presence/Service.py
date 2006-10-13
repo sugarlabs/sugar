@@ -53,6 +53,7 @@ class Service(gobject.GObject):
 
 	def get_published_values(self):
 		self._pubvals = self._service.getPublishedValues()
+		return self._pubvals
 
 	def set_published_value(self, key, value):
 		if self._pubvals.has_key(key):

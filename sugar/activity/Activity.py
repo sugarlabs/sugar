@@ -118,9 +118,9 @@ class Activity(gtk.Window):
 			service = services[0]
 			addr = service.get_address()
 			port = service.get_port()
-			properties = { 'title' : service.get_published_value('title') }
-			self._service = self._pservice.share_activity(self,
-								self._default_type, properties, addr, port)
+			properties = service.get_published_values()
+			self._service = self._pservice.share_activity(
+							self, self._default_type, properties, addr, port)
 		else:
 			logging.error('Cannot join the activity')
 
@@ -128,9 +128,7 @@ class Activity(gtk.Window):
 		"""Share the activity on the network."""
 		logging.debug('Share activity %s on the network.' % self.get_id())
 
-		properties = { 'title' : self.get_title() }
-		self._service = self._pservice.share_activity(self,
-										self._default_type, properties)
+		self._service = self._pservice.share_activity(self, self._default_type)
 		self._shared = True
 
 	def execute(self, command, args):
