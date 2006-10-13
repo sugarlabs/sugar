@@ -12,7 +12,8 @@ class LinksView(hippo.Canvas):
 		self._bubbles = {}
 		self._browser = browser
 
-		self._box = hippo.CanvasBox(background_color=0x414141ff)
+		self._box = hippo.CanvasBox()
+		style.apply_stylesheet(self._box, 'links.Box')
 		self.set_root(self._box)
 
 		for link in model:
@@ -25,12 +26,12 @@ class LinksView(hippo.Canvas):
 		color = IconColor(link.buddy.get_color())
 
 		bubble = Bubble(color=color)
-		style.apply_stylesheet(bubble, 'bubble.Bubble')
+		style.apply_stylesheet(bubble, 'links.Bubble')
 		self._box.append(bubble)
 
 		text = hippo.CanvasLink(text=link.title)
 		text.connect('activated', self._link_activated_cb, link)
-		style.apply_stylesheet(text, 'bubble.Text')
+		style.apply_stylesheet(text, 'links.Text')
 		bubble.append(text, hippo.PACK_EXPAND)
 
 		self._bubbles[link] = bubble
