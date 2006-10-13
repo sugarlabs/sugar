@@ -104,7 +104,8 @@ class _ActivityRegistry:
 		self._activities.append(module)
 
 		if cp.has_option('Activity', 'show_launcher'):
-			module.set_show_launcher(True)
+			if cp.get('Activity', 'show_launcher') == 'yes':
+				module.set_show_launcher(True)
 
 		if cp.has_option('Activity', 'icon'):
 			module.set_icon(cp.get('Activity', 'icon'))

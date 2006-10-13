@@ -3,4 +3,4 @@ name = Web
 id = com.redhat.Sugar.BrowserActivity
 icon = activity-web
 python_module = browser.BrowserActivity.BrowserActivity
-show_launcher = yes
+show_launcher = no

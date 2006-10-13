@@ -1,4 +1,5 @@
 import gtk
+from gettext import gettext as _
 
 from sugar.activity.Activity import Activity
 from webbrowser import WebBrowser
@@ -10,9 +11,12 @@ class WebActivity(Activity):
 	def __init__(self):
 		Activity.__init__(self)
 
+		self.set_title(_('Web Activity'))
+
 		vbox = gtk.VBox()
 
 		self._browser = WebBrowser()
+		self._browser.connect('notify::title', self._title_changed_cb)
 
 		toolbar = Toolbar(self._browser)
 		vbox.pack_start(toolbar, False)
@@ -25,3 +29,6 @@ class WebActivity(Activity):
 		vbox.show()
 
 		self._browser.load_url(_HOMEPAGE)
+
+	def _title_changed_cb(self, embed, pspec):
+		self.set_title(embed.props.title)
