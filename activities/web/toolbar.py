@@ -1,36 +1,78 @@
 import gtk
 
+from _sugar import AddressEntry
+
 class Toolbar(gtk.Toolbar):
-	def __init__(self):
+	def __init__(self, embed):
 		gtk.Toolbar.__init__(self)
 		
 		self.set_style(gtk.TOOLBAR_BOTH_HORIZ)
 
 		self._insert_spring()
 
-		self.back = gtk.ToolButton(None, _('Back'))
-		self.back.set_icon_name('stock-back')
-		self.back.connect("clicked", self.__go_back_cb)
-		self.insert(self.back, -1)
-		self.back.show()
+		self._back = gtk.ToolButton()
+		self._back.props.sensitive = False
+		self._back.set_icon_name('stock-back')
+		self._back.connect("clicked", self._go_back_cb)
+		self.insert(self._back, -1)
+		self._back.show()
 
-		self.forward = gtk.ToolButton(None, _('Forward'))
-		self.forward.set_icon_name('stock-forward')
-		self.forward.connect("clicked", self.__go_forward_cb)
-		self.insert(self.forward, -1)
-		self.forward.show()
+		self._forward = gtk.ToolButton()
+		self._forward.props.sensitive = False
+		self._forward.set_icon_name('stock-forward')
+		self._forward.connect("clicked", self._go_forward_cb)
+		self.insert(self._forward, -1)
+		self._forward.show()
 
 		separator = gtk.SeparatorToolItem()
 		separator.set_draw(False)		
 		self.insert(separator, -1)
 		separator.show()
 
-		self._address_item = AddressItem()
-		self._address_item.connect('open-address', self.__open_address_cb)
-		self.insert(self._address_item, -1)
-		self._address_item.show()
+		address_item = gtk.ToolItem()
+
+		self._entry = AddressEntry()
+		self._entry.connect("activate", self._entry_activate_cb)
+
+		width = int(gtk.gdk.screen_width() / 3 * 2)
+		self._entry.set_size_request(width, -1)
+
+		address_item.add(self._entry)
+		self._entry.show()
+
+		self.insert(address_item, -1)
+		address_item.show()
 
 		self._insert_spring()
+
+		self._embed = embed
+		self._embed.connect("notify::progress", self._progress_changed_cb)
+		self._embed.connect("notify::address", self._address_changed_cb)
+		self._embed.connect("notify::can-go-back",
+							self._can_go_back_changed_cb)
+		self._embed.connect("notify::can-go-forward",
+							self._can_go_forward_changed_cb)
+
+	def _progress_changed_cb(self, embed, spec):
+		self._entry.props.progress = embed.props.progress
+
+	def _address_changed_cb(self, embed, spec):
+		self._entry.set_text(embed.props.address)
+
+	def _can_go_back_changed_cb(self, embed, spec):
+		self._back.props.sensitive = embed.props.can_go_back
+
+	def _can_go_forward_changed_cb(self, embed, spec):
+		self._forward.props.sensitive = embed.props.can_go_forward
+
+	def _entry_activate_cb(self, entry):
+		self._embed.load_url(entry.get_text())
+
+	def _go_back_cb(self, button):
+		self._embed.go_back()
+	
+	def _go_forward_cb(self, button):
+		self._embed.go_forward()
 
 	def _insert_spring(self):
 		separator = gtk.SeparatorToolItem()

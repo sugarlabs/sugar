@@ -132,12 +132,20 @@ static void
 update_navigation_properties(SugarBrowser *browser)
 {
 	GtkMozEmbed *embed = GTK_MOZ_EMBED(browser);
+	gboolean can_go_back;
+	gboolean can_go_forward;
 
-	browser->can_go_back = gtk_moz_embed_can_go_back(embed);
-	g_object_notify (G_OBJECT(browser), "can_go_back");
+	can_go_back = gtk_moz_embed_can_go_back(embed);
+	if (can_go_back != browser->can_go_back) {
+		browser->can_go_back = can_go_back;
+		g_object_notify (G_OBJECT(browser), "can-go-back");
+	}
 
-	browser->can_go_forward = gtk_moz_embed_can_go_forward(embed);
-	g_object_notify (G_OBJECT(browser), "can_go_forward");
+	can_go_forward = gtk_moz_embed_can_go_forward(embed);
+	if (can_go_forward != browser->can_go_forward) {
+		browser->can_go_forward = can_go_forward;
+		g_object_notify (G_OBJECT(browser), "can-go-forward");
+	}
 }
 
 static void
@@ -172,8 +180,6 @@ net_state_cb(GtkMozEmbed *embed, const char *aURI, gint state, guint status)
 			browser->current_requests = 0;
 			browser->progress = 0.0;
 		}
-
-		update_navigation_properties(browser);
 	}
 
 	if (state & GTK_MOZ_EMBED_FLAG_IS_REQUEST) {
@@ -215,6 +221,8 @@ location_cb(GtkMozEmbed *embed)
 	browser->address = gtk_moz_embed_get_location(embed);
 
 	g_object_notify (G_OBJECT(browser), "address");
+
+	update_navigation_properties(browser);
 }
 
 static void
