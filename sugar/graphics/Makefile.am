@@ -1,6 +1,7 @@
 sugardir = $(pythondir)/sugar/graphics
 sugar_PYTHON =			\
 	__init__.py		\
+	bubble.py		\
 	canvasicon.py		\
 	colors.py		\
 	grid.py			\

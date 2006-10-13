@@ -1,1 +1,1 @@
-SUBDIRS = browser chat groupchat terminal
+SUBDIRS = chat groupchat terminal web
