@@ -8,5 +8,6 @@ bubble_Bubble = {
 
 bubble_Text = {
 	'color'  : 0x000000FF,
-	'font'   : '14px'
+	'font'   : '14px',
+	'padding' : 5
 }
