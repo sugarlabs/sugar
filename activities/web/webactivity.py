@@ -6,6 +6,9 @@ from sugar.activity.Activity import Activity
 from sugar import env
 from webbrowser import WebBrowser
 from toolbar import Toolbar
+from linksmodel import LinksModel
+from linksview import LinksView
+from linkscontroller import LinksController
 
 _HOMEPAGE = 'http://www.google.com'
 
@@ -20,12 +23,23 @@ class WebActivity(Activity):
 		self._browser = WebBrowser()
 		self._browser.connect('notify::title', self._title_changed_cb)
 
-		toolbar = Toolbar(self._browser)
-		vbox.pack_start(toolbar, False)
-		toolbar.show()
+		links_model = LinksModel()
+		links_view = LinksView(links_model)
 
-		vbox.pack_start(self._browser)
+		self._toolbar = Toolbar(self._browser)
+		vbox.pack_start(self._toolbar, False)
+		self._toolbar.show()
+
+		hbox = gtk.HBox()
+
+		hbox.pack_start(links_view, False)
+		links_view.show()
+		
+		hbox.pack_start(self._browser)
 		self._browser.show()
+
+		vbox.pack_start(hbox)
+		hbox.show()
 
 		self.add(vbox)
 		vbox.show()
@@ -34,6 +48,9 @@ class WebActivity(Activity):
 
 	def join(self, activity_ps):
 		Activity.join(self, activity_ps)
+
+		links_controller = LinksController(service, links_model)
+		self._toolbar.set_links_controller(links_controller)
 
 		url = self._service.get_published_value('URL')
 		if url:

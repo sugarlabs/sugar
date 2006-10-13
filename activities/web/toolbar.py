@@ -43,6 +43,18 @@ class Toolbar(gtk.Toolbar):
 		self.insert(address_item, -1)
 		address_item.show()
 
+		separator = gtk.SeparatorToolItem()
+		separator.set_draw(False)		
+		self.insert(separator, -1)
+		separator.show()
+
+		self._post = gtk.ToolButton()
+		self._post.props.sensitive = False
+		self._post.set_icon_name('stock-add')
+		self._post.connect("clicked", self._post_cb)
+		self.insert(self._post, -1)
+		self._post.show()
+
 		self._insert_spring()
 
 		self._embed = embed
@@ -52,6 +64,10 @@ class Toolbar(gtk.Toolbar):
 							self._can_go_back_changed_cb)
 		self._embed.connect("notify::can-go-forward",
 							self._can_go_forward_changed_cb)
+
+	def set_links_controller(self, links_controller):
+		self._links_controller = links_controller
+		self._post.props.sensitive = False
 
 	def _progress_changed_cb(self, embed, spec):
 		self._entry.props.progress = embed.props.progress
@@ -73,6 +89,11 @@ class Toolbar(gtk.Toolbar):
 	
 	def _go_forward_cb(self, button):
 		self._embed.go_forward()
+
+	def _post_cb(self, button):
+		title = self._embed.get_title()
+		address = self._embed.get_location()
+		self._links_controller.post_link(title, address)
 
 	def _insert_spring(self):
 		separator = gtk.SeparatorToolItem()
