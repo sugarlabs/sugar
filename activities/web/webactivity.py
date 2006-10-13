@@ -1,7 +1,9 @@
-import gtk
 from gettext import gettext as _
+import gtk
+import gtkmozembed
 
 from sugar.activity.Activity import Activity
+from sugar import env
 from webbrowser import WebBrowser
 from toolbar import Toolbar
 
@@ -32,3 +34,6 @@ class WebActivity(Activity):
 
 	def _title_changed_cb(self, embed, pspec):
 		self.set_title(embed.props.title)
+
+def start():
+	gtkmozembed.set_profile_path(env.get_profile_path(), 'gecko')

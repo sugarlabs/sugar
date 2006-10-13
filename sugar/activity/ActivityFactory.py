@@ -4,6 +4,7 @@ import logging
 import dbus
 import dbus.service
 import gobject
+import gtk
 
 from sugar.presence.PresenceService import PresenceService
 from sugar.activity import Activity
@@ -21,6 +22,7 @@ class ActivityFactory(dbus.service.Object):
 
 	def __init__(self, activity_type, activity_class):
 		self._activity_type = activity_type
+		self._activities = []
 
 		splitted_module = activity_class.rsplit('.', 1)
 		module_name = splitted_module[0]
@@ -43,7 +45,16 @@ class ActivityFactory(dbus.service.Object):
 	def create(self):
 		activity = self._class()
 		activity.set_type(self._activity_type)
+
+		self._activities.append(activity)
+		activity.connect('destroy', self._activity_destroy_cb)
+
 		return activity.window.xid
+
+	def _activity_destroy_cb(self, activity):
+		self._activities.remove(activity)
+		if len(self._activities) == 0:
+			gtk.main_quit()
 
 def create(activity_name):
 	"""Create a new activity from his name."""
