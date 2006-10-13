@@ -10,7 +10,7 @@ class PanelWindow(gtk.Window):
 
 		canvas = hippo.Canvas()
 
-		self._bg = hippo.CanvasBox(background_color=0x4f4f4fff)
+		self._bg = hippo.CanvasBox(background_color=0x414141ff)
 		canvas.set_root(self._bg)
 
 		self.add(canvas)

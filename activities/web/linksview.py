@@ -6,10 +6,11 @@ from sugar.graphics.iconcolor import IconColor
 from sugar.graphics import style
 
 class LinksView(hippo.Canvas):
-	def __init__(self, model):
+	def __init__(self, model, browser):
 		hippo.Canvas.__init__(self)
 
 		self._bubbles = {}
+		self._browser = browser
 
 		self._box = hippo.CanvasBox(background_color=0x414141ff)
 		self.set_root(self._box)
@@ -22,9 +23,15 @@ class LinksView(hippo.Canvas):
 
 	def _add_link(self, link):
 		color = IconColor(link.buddy.get_color())
+
 		bubble = Bubble(color=color)
-		style.apply_stylesheet(bubble, 'bubble.Box')
+		style.apply_stylesheet(bubble, 'bubble.Bubble')
 		self._box.append(bubble)
+
+		text = hippo.CanvasLink(text=link.title)
+		text.connect('activated', self._link_activated_cb, link)
+		style.apply_stylesheet(text, 'bubble.Text')
+		bubble.append(text, hippo.PACK_EXPAND)
 
 		self._bubbles[link] = bubble
 
@@ -39,3 +46,6 @@ class LinksView(hippo.Canvas):
 
 	def _link_removed_cb(self, model, link):
 		self._removed_link(link)
+
+	def _link_activated_cb(self, link_item, link):
+		self._browser.load_url(link.url)

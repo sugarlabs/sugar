@@ -26,7 +26,7 @@ class WebActivity(Activity):
 		self._browser.connect('notify::title', self._title_changed_cb)
 
 		self._links_model = LinksModel()
-		links_view = LinksView(self._links_model)
+		links_view = LinksView(self._links_model, self._browser)
 
 		self._toolbar = Toolbar(self._browser)
 		vbox.pack_start(self._toolbar, False)
