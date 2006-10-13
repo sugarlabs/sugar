@@ -1,6 +1,9 @@
+import gtk
 import hippo
 
 from sugar.graphics.bubble import Bubble
+from sugar.graphics.iconcolor import IconColor
+from sugar.graphics import style
 
 class LinksView(hippo.Canvas):
 	def __init__(self, model):
@@ -18,8 +21,10 @@ class LinksView(hippo.Canvas):
 		model.connect('link_removed', self._link_removed_cb)
 
 	def _add_link(self, link):
-		bubble = Bubble(color=link.buddy.get_color())
-		self._box.append(link)
+		color = IconColor(link.buddy.get_color())
+		bubble = Bubble(color=color)
+		style.apply_stylesheet(bubble, 'bubble.Box')
+		self._box.append(bubble)
 
 		self._bubbles[link] = bubble
 

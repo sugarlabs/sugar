@@ -67,7 +67,7 @@ class Toolbar(gtk.Toolbar):
 
 	def set_links_controller(self, links_controller):
 		self._links_controller = links_controller
-		self._post.props.sensitive = False
+		self._post.props.sensitive = True
 
 	def _progress_changed_cb(self, embed, spec):
 		self._entry.props.progress = embed.props.progress

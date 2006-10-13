@@ -18,13 +18,13 @@ class LinksModel(gobject.GObject):
 		gobject.GObject.__init__(self)
 		self._links = {}
 
-	def add_link(buddy, title, url):
+	def add_link(self, buddy, title, url):
 		link = Link(buddy, title, url)
 		self._links[(buddy.get_name(), url)] = link
 
 		self.emit('link-added', link)
 
-	def remove_link(buddy, url):
+	def remove_link(self, buddy, url):
 		key = (buddy.get_name(), url)
 		if self._links.haskey(key):
 			link = self._links[key]

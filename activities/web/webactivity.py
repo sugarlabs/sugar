@@ -4,6 +4,8 @@ import gtkmozembed
 
 from sugar.activity.Activity import Activity
 from sugar import env
+from sugar.graphics import style
+import web.stylesheet
 from webbrowser import WebBrowser
 from toolbar import Toolbar
 from linksmodel import LinksModel
@@ -23,8 +25,8 @@ class WebActivity(Activity):
 		self._browser = WebBrowser()
 		self._browser.connect('notify::title', self._title_changed_cb)
 
-		links_model = LinksModel()
-		links_view = LinksView(links_model)
+		self._links_model = LinksModel()
+		links_view = LinksView(self._links_model)
 
 		self._toolbar = Toolbar(self._browser)
 		vbox.pack_start(self._toolbar, False)
@@ -46,11 +48,14 @@ class WebActivity(Activity):
 
 		self._browser.load_url(_HOMEPAGE)
 
+	def _setup_links_controller(self):
+		links_controller = LinksController(self._service, self._links_model)
+		self._toolbar.set_links_controller(links_controller)
+
 	def join(self, activity_ps):
 		Activity.join(self, activity_ps)
 
-		links_controller = LinksController(service, links_model)
-		self._toolbar.set_links_controller(links_controller)
+		self._setup_links_controller()
 
 		url = self._service.get_published_value('URL')
 		if url:
@@ -58,6 +63,8 @@ class WebActivity(Activity):
 
 	def share(self):
 		Activity.share(self)
+
+		self._setup_links_controller()
 
 		url = self._browser.get_location()
 		if url:
@@ -68,3 +75,4 @@ class WebActivity(Activity):
 
 def start():
 	gtkmozembed.set_profile_path(env.get_profile_path(), 'gecko')
+	style.load_stylesheet(web.stylesheet)

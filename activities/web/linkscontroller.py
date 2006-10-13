@@ -1,3 +1,4 @@
+from sugar.p2p.Stream import Stream
 from sugar.presence import PresenceService
 
 class LinksController(object):
