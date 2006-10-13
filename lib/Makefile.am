@@ -1,1 +1,1 @@
-SUBDIRS = src python
+SUBDIRS = src python threadframe
