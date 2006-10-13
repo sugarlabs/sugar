@@ -23,6 +23,9 @@ class LinksView(hippo.Canvas):
 		model.connect('link_removed', self._link_removed_cb)
 
 	def _add_link(self, link):
+		if len(self._bubbles) == 0:
+			self.show()
+
 		color = IconColor(link.buddy.get_color())
 
 		bubble = Bubble(color=color)
@@ -41,6 +44,9 @@ class LinksView(hippo.Canvas):
 		self._box.remove(bubble)
 
 		del self._bubbles[link]
+
+		if len(self._bubbles) == 0:
+			self.hide()
 
 	def _link_added_cb(self, model, link):
 		self._add_link(link)

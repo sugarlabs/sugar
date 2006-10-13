@@ -35,8 +35,6 @@ class WebActivity(Activity):
 		hbox = gtk.HBox()
 
 		hbox.pack_start(links_view, False)
-		links_view.show()
-		
 		hbox.pack_start(self._browser)
 		self._browser.show()
 
