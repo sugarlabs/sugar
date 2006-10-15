@@ -72,7 +72,6 @@ sugar/chat/Makefile
 sugar/chat/sketchpad/Makefile
 sugar/graphics/Makefile
 sugar/p2p/Makefile
-sugar/p2p/model/Makefile
 sugar/presence/Makefile
 sugar/session/Makefile
 po/Makefile.in

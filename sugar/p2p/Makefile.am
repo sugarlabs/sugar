@@ -1,5 +1,3 @@
-SUBDIRS = model
-
 sugardir = $(pythondir)/sugar/p2p
 sugar_PYTHON =			\
 	__init__.py		\
