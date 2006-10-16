@@ -17,6 +17,7 @@
 from gettext import gettext as _
 import gtk
 import gtkmozembed
+import logging
 
 from sugar.activity.Activity import Activity
 from sugar import env
@@ -33,6 +34,8 @@ _HOMEPAGE = 'http://www.google.com'
 class WebActivity(Activity):
 	def __init__(self):
 		Activity.__init__(self)
+
+		logging.debug('Starting the web activity')
 
 		self.set_title(_('Web Activity'))
 
