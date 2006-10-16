@@ -148,19 +148,23 @@ class Frame:
 		top_panel = self._create_panel(grid, 0, 0, 16, 1)
 
 		box = ZoomBox(self._shell, self._menu_shell)
-		top_panel.append(box, hippo.PACK_FIXED)
 
 		[x, y] = grid.point(1, 0)
+		top_panel.append(box, hippo.PACK_FIXED)
 		top_panel.move(box, x, y)
 
 		tray = NotificationTray()
-		box = hippo.CanvasWidget()
-		box.props.widget = tray
+		tray_box = hippo.CanvasBox(box_width=grid.dimension(1),
+								   box_height=grid.dimension(1),
+								   xalign=hippo.ALIGNMENT_END)
 
-		top_panel.append(box, hippo.PACK_FIXED)
+		tray_widget = hippo.CanvasWidget()
+		tray_widget.props.widget = tray
+		tray_box.append(tray_widget, gtk.EXPAND)
 
-		[x, y] = grid.point(5, 0)
-		top_panel.move(box, x, y)
+		[x, y] = grid.point(14, 0)
+		top_panel.append(tray_box, hippo.PACK_FIXED)
+		top_panel.move(tray_box, x, y)
 
 		bottom_panel = self._create_panel(grid, 0, 11, 16, 1)
 

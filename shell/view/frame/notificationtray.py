@@ -8,7 +8,11 @@ class NotificationTray(gtk.HBox):
 
 		self._manager = TrayManager()
 		self._manager.connect('tray-icon-added', self._icon_added_cb)
+		self._manager.connect('tray-icon-removed', self._icon_removed_cb)
 		self._manager.manage_screen(gtk.gdk.screen_get_default())
 
 	def _icon_added_cb(self, manager, icon):
 		self.pack_start(icon, False)
+
+	def _icon_removed_cb(self, manager, icon):
+		icon.destroy()
