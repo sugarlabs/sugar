@@ -23,6 +23,8 @@ static PyTypeObject *_PyGtkEntry_Type;
 #define PyGtkEntry_Type (*_PyGtkEntry_Type)
 static PyTypeObject *_PyGtkMozEmbed_Type;
 #define PyGtkMozEmbed_Type (*_PyGtkMozEmbed_Type)
+static PyTypeObject *_PyGdkScreen_Type;
+#define PyGdkScreen_Type (*_PyGdkScreen_Type)
 
 
 /* ---------- forward type declarations ---------- */
@@ -31,7 +33,7 @@ PyTypeObject G_GNUC_INTERNAL PySugarBrowser_Type;
 PyTypeObject G_GNUC_INTERNAL PySugarKeyGrabber_Type;
 PyTypeObject G_GNUC_INTERNAL PySugarTrayManager_Type;
 
-#line 35 "_sugar.c"
+#line 37 "_sugar.c"
 
 
 
@@ -223,24 +225,20 @@ PyTypeObject G_GNUC_INTERNAL PySugarKeyGrabber_Type = {
 
 /* ----------- SugarTrayManager ----------- */
 
-static int
-_wrap_sugar_tray_manager_new(PyGObject *self, PyObject *args, PyObject *kwargs)
+static PyObject *
+_wrap_sugar_tray_manager_manage_screen(PyGObject *self, PyObject *args, PyObject *kwargs)
 {
-    static char* kwlist[] = { NULL };
+    static char *kwlist[] = { "screen", NULL };
+    PyGObject *screen;
+    int ret;
 
-    if (!PyArg_ParseTupleAndKeywords(args, kwargs,
-                                     ":gecko.TrayManager.__init__",
-                                     kwlist))
-        return -1;
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O!:SugarTrayManager.manage_screen", kwlist, &PyGdkScreen_Type, &screen))
+        return NULL;
+    
+    ret = sugar_tray_manager_manage_screen(SUGAR_TRAY_MANAGER(self->obj), GDK_SCREEN(screen->obj));
+    
+    return PyBool_FromLong(ret);
 
-    pygobject_constructv(self, 0, NULL);
-    if (!self->obj) {
-        PyErr_SetString(
-            PyExc_RuntimeError, 
-            "could not create gecko.TrayManager object");
-        return -1;
-    }
-    return 0;
 }
 
 static PyObject *
@@ -273,6 +271,8 @@ _wrap_sugar_tray_manager_get_orientation(PyGObject *self)
 }
 
 static const PyMethodDef _PySugarTrayManager_methods[] = {
+    { "manage_screen", (PyCFunction)_wrap_sugar_tray_manager_manage_screen, METH_VARARGS|METH_KEYWORDS,
+      NULL },
     { "set_orientation", (PyCFunction)_wrap_sugar_tray_manager_set_orientation, METH_VARARGS|METH_KEYWORDS,
       NULL },
     { "get_orientation", (PyCFunction)_wrap_sugar_tray_manager_get_orientation, METH_NOARGS,
@@ -318,7 +318,7 @@ PyTypeObject G_GNUC_INTERNAL PySugarTrayManager_Type = {
     (descrgetfunc)0,    /* tp_descr_get */
     (descrsetfunc)0,    /* tp_descr_set */
     offsetof(PyGObject, inst_dict),                 /* tp_dictoffset */
-    (initproc)_wrap_sugar_tray_manager_new,             /* tp_init */
+    (initproc)0,             /* tp_init */
     (allocfunc)0,           /* tp_alloc */
     (newfunc)0,               /* tp_new */
     (freefunc)0,             /* tp_free */
@@ -339,8 +339,26 @@ _wrap_sugar_browser_startup(PyObject *self)
     return Py_None;
 }
 
+static PyObject *
+_wrap_sugar_tray_manager_check_running(PyObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "screen", NULL };
+    PyGObject *screen;
+    int ret;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O!:tray_manager_check_running", kwlist, &PyGdkScreen_Type, &screen))
+        return NULL;
+    
+    ret = sugar_tray_manager_check_running(GDK_SCREEN(screen->obj));
+    
+    return PyBool_FromLong(ret);
+
+}
+
 const PyMethodDef py_sugar_functions[] = {
     { "startup_browser", (PyCFunction)_wrap_sugar_browser_startup, METH_NOARGS,
+      NULL },
+    { "tray_manager_check_running", (PyCFunction)_wrap_sugar_tray_manager_check_running, METH_VARARGS|METH_KEYWORDS,
       NULL },
     { NULL, NULL, 0, NULL }
 };
@@ -387,9 +405,21 @@ py_sugar_register_classes(PyObject *d)
             "could not import gtk");
         return ;
     }
+    if ((module = PyImport_ImportModule("gtk.gdk")) != NULL) {
+        _PyGdkScreen_Type = (PyTypeObject *)PyObject_GetAttrString(module, "Screen");
+        if (_PyGdkScreen_Type == NULL) {
+            PyErr_SetString(PyExc_ImportError,
+                "cannot import name Screen from gtk.gdk");
+            return ;
+        }
+    } else {
+        PyErr_SetString(PyExc_ImportError,
+            "could not import gtk.gdk");
+        return ;
+    }
 
 
-#line 393 "_sugar.c"
+#line 423 "_sugar.c"
     pygobject_register_class(d, "SugarAddressEntry", SUGAR_TYPE_ADDRESS_ENTRY, &PySugarAddressEntry_Type, Py_BuildValue("(O)", &PyGtkEntry_Type));
     pygobject_register_class(d, "SugarBrowser", SUGAR_TYPE_BROWSER, &PySugarBrowser_Type, Py_BuildValue("(O)", &PyGtkMozEmbed_Type));
     pygobject_register_class(d, "SugarKeyGrabber", SUGAR_TYPE_KEY_GRABBER, &PySugarKeyGrabber_Type, Py_BuildValue("(O)", &PyGObject_Type));

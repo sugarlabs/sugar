@@ -23,6 +23,7 @@ from view.frame.ActivitiesBox import ActivitiesBox
 from view.frame.ZoomBox import ZoomBox
 from view.frame.FriendsBox import FriendsBox
 from view.frame.PanelWindow import PanelWindow
+from view.frame.notificationtray import NotificationTray
 from sugar.graphics.timeline import Timeline
 from sugar.graphics.menushell import MenuShell
 from sugar.graphics.grid import Grid
@@ -150,6 +151,15 @@ class Frame:
 		top_panel.append(box, hippo.PACK_FIXED)
 
 		[x, y] = grid.point(1, 0)
+		top_panel.move(box, x, y)
+
+		tray = NotificationTray()
+		box = hippo.CanvasWidget()
+		box.props.widget = tray
+
+		top_panel.append(box, hippo.PACK_FIXED)
+
+		[x, y] = grid.point(5, 0)
 		top_panel.move(box, x, y)
 
 		bottom_panel = self._create_panel(grid, 0, 11, 16, 1)

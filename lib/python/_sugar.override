@@ -12,9 +12,13 @@ headers
 %%
 modulename gecko
 %%
+ignore
+sugar_tray_manager_new
+%%
 import gobject.GObject as PyGObject_Type
 import gtk.Entry as PyGtkEntry_Type
 import gtkmozembed.MozEmbed as PyGtkMozEmbed_Type
+import gtk.gdk.Screen as PyGdkScreen_Type
 %%
 ignore-glob
   *_get_type

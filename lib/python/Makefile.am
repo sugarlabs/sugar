@@ -26,6 +26,7 @@ EXTRA_DIST = _sugar.override _sugar.defs
 .defs.c:
 	(cd $(srcdir)\
 	 && $(PYGTK_CODEGEN) \
+	    --register $(PYGTK_DEFSDIR)/gdk-types.defs \
 	    --register $(PYGTK_DEFSDIR)/gtk-types.defs \
 	    --register $(GNOMEPYTHONEXTRAS_DEFSDIR)/gtkmozembed.defs \
 	    --override $*.override \

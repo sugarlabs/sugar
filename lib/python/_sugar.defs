@@ -21,6 +21,13 @@
   (gtype-id "SUGAR_TYPE_KEY_GRABBER")
 )
 
+(define-object TrayManager
+  (in-module "Sugar")
+  (parent "GObject")
+  (c-name "SugarTrayManager")
+  (gtype-id "SUGAR_TYPE_TRAY_MANAGER")
+)
+
 ;; Enumerations and flags ...
 
 
@@ -68,19 +75,6 @@
     '("const-char*" "key")
   )
 )
-
-
-;; -*- scheme -*-
-; object definitions ...
-(define-object TrayManager
-  (in-module "Sugar")
-  (parent "GObject")
-  (c-name "SugarTrayManager")
-  (gtype-id "SUGAR_TYPE_TRAY_MANAGER")
-)
-
-;; Enumerations and flags ...
-
 
 ;; From sugar-tray-manager.h
 
