@@ -51,7 +51,6 @@ class LogView(gtk.ScrolledWindow):
 
 		self.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 
-		log_file = os.path.join(env.get_profile_path(), 'sugar.log')
 		textview = gtk.TextView(model)
 		textview.set_wrap_mode(gtk.WRAP_WORD)
 		textview.set_editable(False)
@@ -67,6 +66,7 @@ class MultiLogView(gtk.Notebook):
 		self._pages = {}
 
 		self._update()
+
 		gobject.timeout_add(1000, self._update)
 
 	def _add_page(self, logfile):
@@ -80,11 +80,16 @@ class MultiLogView(gtk.Notebook):
 		self._pages[logfile] = model
 
 	def _update(self):
+		if not os.path.isdir(self._logs_path):
+			return True
+
 		for logfile in os.listdir(self._logs_path):
 			if self._pages.has_key(logfile):
 				self._pages[logfile].update()
 			else:
 				self._add_page(logfile)
+
+		return True
 
 window = gtk.Window()
 window.set_default_size(gtk.gdk.screen_width() * 3 / 4,
