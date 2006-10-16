@@ -1,0 +1,44 @@
+#!/usr/bin/python
+
+# Copyright (C) 2006, Red Hat, Inc.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+import os
+import sys
+
+curdir = os.path.abspath(os.path.dirname(__file__))
+sourcedir = os.path.dirname(curdir)
+
+if os.path.isfile(os.path.join(sourcedir, 'sugar/__uninstalled__.py')):
+	print 'Running sugar from ' + sourcedir + ' ...'
+	sys.path.insert(0, sourcedir)
+else:
+	print 'Running the installed sugar...'
+
+from sugar import env
+
+env.setup_system()
+
+from sugar.emulator import Emulator
+
+emulator = Emulator()
+emulator.start()
+
+program = 'sugar-session'
+if len(sys.argv) > 1:
+	program = sys.argv[1]	
+os.execlp('dbus-launch', 'dbus-launch', '--exit-with-session',
+		  '--config-file=%s' % env.get_dbus_config(), program)
