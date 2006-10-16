@@ -6,4 +6,5 @@ sugar_PYTHON =				\
 	PanelWindow.py			\
 	Frame.py			\
 	ZoomBox.py			\
-	MenuStrategy.py
+	MenuStrategy.py			\
+	notificationtray.py
