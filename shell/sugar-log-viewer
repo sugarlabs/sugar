@@ -32,9 +32,9 @@ class LogBuffer(gtk.TextBuffer):
 		self._logfile = logfile
 		self._pos = 0
 
-		gobject.timeout_add(1000, self._update)
+		self.update()
 
-	def _update(self):
+	def update(self):
 		f = open(self._logfile, 'r')
 
 		f.seek(self._pos)
@@ -45,6 +45,47 @@ class LogBuffer(gtk.TextBuffer):
 
 		return True
 
+class LogView(gtk.ScrolledWindow):
+	def __init__(self, model):
+		gtk.ScrolledWindow.__init__(self)
+
+		self.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+
+		log_file = os.path.join(env.get_profile_path(), 'sugar.log')
+		textview = gtk.TextView(model)
+		textview.set_wrap_mode(gtk.WRAP_WORD)
+		textview.set_editable(False)
+
+		self.add(textview)
+		textview.show()
+
+class MultiLogView(gtk.Notebook):
+	def __init__(self, path):
+		gtk.Notebook.__init__(self)
+
+		self._logs_path = path
+		self._pages = {}
+
+		self._update()
+		gobject.timeout_add(1000, self._update)
+
+	def _add_page(self, logfile):
+		full_log_path = os.path.join(self._logs_path, logfile)
+		model = LogBuffer(full_log_path)
+
+		view = LogView(model)
+		self.append_page(view, gtk.Label(logfile))
+		view.show()
+
+		self._pages[logfile] = model
+
+	def _update(self):
+		for logfile in os.listdir(self._logs_path):
+			if self._pages.has_key(logfile):
+				self._pages[logfile].update()
+			else:
+				self._add_page(logfile)
+
 window = gtk.Window()
 window.set_default_size(gtk.gdk.screen_width() * 3 / 4,
 						gtk.gdk.screen_height() * 3 / 4)
@@ -52,18 +93,10 @@ window.set_default_size(gtk.gdk.screen_width() * 3 / 4,
 window.realize()
 window.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 
-scrolled = gtk.ScrolledWindow()
-scrolled.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-
-log_file = os.path.join(env.get_profile_path(), 'sugar.log')
-textview = gtk.TextView(LogBuffer(log_file))
-textview.set_wrap_mode(gtk.WRAP_WORD)
-textview.set_editable(False)
-scrolled.add(textview)
-textview.show()
-
-window.add(scrolled)
-scrolled.show()
+path = os.path.join(env.get_profile_path(), 'logs')
+viewer = MultiLogView(path)
+window.add(viewer)
+viewer.show()
 
 window.show()
 
