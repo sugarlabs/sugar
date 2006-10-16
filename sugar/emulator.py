@@ -60,6 +60,7 @@ class Process:
 		flags = gobject.SPAWN_SEARCH_PATH
 		result = gobject.spawn_async(args, flags=flags,
 									 standard_output=standard_output)
+		self.pid = result[0]
 		self._stdout = result[2]
 
 class MatchboxProcess(Process):
@@ -92,6 +93,8 @@ class XephyrProcess(Process):
 	def start(self):
 		Process.start(self)
 		os.environ['DISPLAY'] = ":%d" % (self._display)
+		os.environ['SUGAR_XEPHYR_PID'] = '%d' % self.pid
+
 
 class XnestProcess(Process):
 	def __init__(self):

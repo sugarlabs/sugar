@@ -7,3 +7,4 @@
 <Alt>c=close
 
 F12=!sugar-log-viewer
+<Alt>q=!sugar-emulator-shutdown

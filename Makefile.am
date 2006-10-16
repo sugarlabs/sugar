@@ -5,8 +5,9 @@ ACLOCAL_AMFLAGS = -I m4
 dbusconfdir = $(pkgdatadir)
 dbusconf_DATA = dbus-installed.conf
 
-bin_SCRIPTS = 				\
-	sugar-emulator
+bin_SCRIPTS = 			\
+	sugar-emulator		\
+	sugar-emulator-shutdown
 
 install-data-local:
 	$(top_srcdir)/sugar/setup.py \
