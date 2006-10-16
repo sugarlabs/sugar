@@ -11,8 +11,9 @@
 #include "sugar-browser.h"
 #include "sugar-key-grabber.h"
 #include "sugar-address-entry.h"
+#include "sugar-tray-manager.h"
 
-#line 16 "_sugar.c"
+#line 17 "_sugar.c"
 
 
 /* ---------- types from other modules ---------- */
@@ -28,8 +29,9 @@ static PyTypeObject *_PyGtkMozEmbed_Type;
 PyTypeObject G_GNUC_INTERNAL PySugarAddressEntry_Type;
 PyTypeObject G_GNUC_INTERNAL PySugarBrowser_Type;
 PyTypeObject G_GNUC_INTERNAL PySugarKeyGrabber_Type;
+PyTypeObject G_GNUC_INTERNAL PySugarTrayManager_Type;
 
-#line 33 "_sugar.c"
+#line 35 "_sugar.c"
 
 
 
@@ -219,6 +221,112 @@ PyTypeObject G_GNUC_INTERNAL PySugarKeyGrabber_Type = {
 
 
 
+/* ----------- SugarTrayManager ----------- */
+
+static int
+_wrap_sugar_tray_manager_new(PyGObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char* kwlist[] = { NULL };
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,
+                                     ":gecko.TrayManager.__init__",
+                                     kwlist))
+        return -1;
+
+    pygobject_constructv(self, 0, NULL);
+    if (!self->obj) {
+        PyErr_SetString(
+            PyExc_RuntimeError, 
+            "could not create gecko.TrayManager object");
+        return -1;
+    }
+    return 0;
+}
+
+static PyObject *
+_wrap_sugar_tray_manager_set_orientation(PyGObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "orientation", NULL };
+    GtkOrientation orientation;
+    PyObject *py_orientation = NULL;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O:SugarTrayManager.set_orientation", kwlist, &py_orientation))
+        return NULL;
+    if (pyg_enum_get_value(GTK_TYPE_ORIENTATION, py_orientation, (gpointer)&orientation))
+        return NULL;
+    
+    sugar_tray_manager_set_orientation(SUGAR_TRAY_MANAGER(self->obj), orientation);
+    
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject *
+_wrap_sugar_tray_manager_get_orientation(PyGObject *self)
+{
+    gint ret;
+
+    
+    ret = sugar_tray_manager_get_orientation(SUGAR_TRAY_MANAGER(self->obj));
+    
+    return pyg_enum_from_gtype(GTK_TYPE_ORIENTATION, ret);
+}
+
+static const PyMethodDef _PySugarTrayManager_methods[] = {
+    { "set_orientation", (PyCFunction)_wrap_sugar_tray_manager_set_orientation, METH_VARARGS|METH_KEYWORDS,
+      NULL },
+    { "get_orientation", (PyCFunction)_wrap_sugar_tray_manager_get_orientation, METH_NOARGS,
+      NULL },
+    { NULL, NULL, 0, NULL }
+};
+
+PyTypeObject G_GNUC_INTERNAL PySugarTrayManager_Type = {
+    PyObject_HEAD_INIT(NULL)
+    0,                                 /* ob_size */
+    "gecko.TrayManager",                   /* tp_name */
+    sizeof(PyGObject),          /* tp_basicsize */
+    0,                                 /* tp_itemsize */
+    /* methods */
+    (destructor)0,        /* tp_dealloc */
+    (printfunc)0,                      /* tp_print */
+    (getattrfunc)0,       /* tp_getattr */
+    (setattrfunc)0,       /* tp_setattr */
+    (cmpfunc)0,           /* tp_compare */
+    (reprfunc)0,             /* tp_repr */
+    (PyNumberMethods*)0,     /* tp_as_number */
+    (PySequenceMethods*)0, /* tp_as_sequence */
+    (PyMappingMethods*)0,   /* tp_as_mapping */
+    (hashfunc)0,             /* tp_hash */
+    (ternaryfunc)0,          /* tp_call */
+    (reprfunc)0,              /* tp_str */
+    (getattrofunc)0,     /* tp_getattro */
+    (setattrofunc)0,     /* tp_setattro */
+    (PyBufferProcs*)0,  /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,                      /* tp_flags */
+    NULL,                        /* Documentation string */
+    (traverseproc)0,     /* tp_traverse */
+    (inquiry)0,             /* tp_clear */
+    (richcmpfunc)0,   /* tp_richcompare */
+    offsetof(PyGObject, weakreflist),             /* tp_weaklistoffset */
+    (getiterfunc)0,          /* tp_iter */
+    (iternextfunc)0,     /* tp_iternext */
+    (struct PyMethodDef*)_PySugarTrayManager_methods, /* tp_methods */
+    (struct PyMemberDef*)0,              /* tp_members */
+    (struct PyGetSetDef*)0,  /* tp_getset */
+    NULL,                              /* tp_base */
+    NULL,                              /* tp_dict */
+    (descrgetfunc)0,    /* tp_descr_get */
+    (descrsetfunc)0,    /* tp_descr_set */
+    offsetof(PyGObject, inst_dict),                 /* tp_dictoffset */
+    (initproc)_wrap_sugar_tray_manager_new,             /* tp_init */
+    (allocfunc)0,           /* tp_alloc */
+    (newfunc)0,               /* tp_new */
+    (freefunc)0,             /* tp_free */
+    (inquiry)0              /* tp_is_gc */
+};
+
+
+
 /* ----------- functions ----------- */
 
 static PyObject *
@@ -281,9 +389,11 @@ py_sugar_register_classes(PyObject *d)
     }
 
 
-#line 285 "_sugar.c"
+#line 393 "_sugar.c"
     pygobject_register_class(d, "SugarAddressEntry", SUGAR_TYPE_ADDRESS_ENTRY, &PySugarAddressEntry_Type, Py_BuildValue("(O)", &PyGtkEntry_Type));
     pygobject_register_class(d, "SugarBrowser", SUGAR_TYPE_BROWSER, &PySugarBrowser_Type, Py_BuildValue("(O)", &PyGtkMozEmbed_Type));
     pygobject_register_class(d, "SugarKeyGrabber", SUGAR_TYPE_KEY_GRABBER, &PySugarKeyGrabber_Type, Py_BuildValue("(O)", &PyGObject_Type));
     pyg_set_object_has_new_constructor(SUGAR_TYPE_KEY_GRABBER);
+    pygobject_register_class(d, "SugarTrayManager", SUGAR_TYPE_TRAY_MANAGER, &PySugarTrayManager_Type, Py_BuildValue("(O)", &PyGObject_Type));
+    pyg_set_object_has_new_constructor(SUGAR_TYPE_TRAY_MANAGER);
 }
