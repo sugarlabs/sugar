@@ -34,11 +34,17 @@ env.setup_system()
 
 from sugar.emulator import Emulator
 
-emulator = Emulator()
+program = 'sugar-shell'
+
+fullscreen = False
+for i in range(1, len(sys.argv)):
+	if sys.argv[i] == '-fullscreen':
+		fullscreen = True
+	else:
+		program = sys.argv[i]
+
+emulator = Emulator(fullscreen)
 emulator.start()
 
-program = 'sugar-shell'
-if len(sys.argv) > 1:
-	program = sys.argv[1]	
 os.execlp('dbus-launch', 'dbus-launch', '--exit-with-session',
 		  '--config-file=%s' % env.get_dbus_config(), program)

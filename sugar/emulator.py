@@ -77,9 +77,13 @@ class MatchboxProcess(Process):
 		return 'Matchbox'
 
 class XephyrProcess(Process):
-	def __init__(self):
+	def __init__(self, fullscreen):
 		self._display = get_display_number()
-		cmd = 'Xephyr :%d -ac -screen 800x600' % (self._display) 
+		cmd = 'Xephyr :%d -ac ' % (self._display)
+		if fullscreen:
+			cmd += '-fullscreen '
+		else:
+			cmd += '-screen 800x600 '
 		Process.__init__(self, cmd)
 		
 	def get_name(self):
@@ -102,11 +106,14 @@ class XnestProcess(Process):
 		Process.start(self)
 		os.environ['DISPLAY'] = ":%d" % (self._display)
 
-class Emulator:
+class Emulator(object):
 	"""The OLPC emulator"""
+	def __init__(self, fullscreen):
+		self._fullscreen = fullscreen
+
 	def start(self):
 		try:
-			process = XephyrProcess()
+			process = XephyrProcess(self._fullscreen)
 			process.start()
 		except:
 			try:
