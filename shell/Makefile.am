@@ -1,10 +1,10 @@
 SUBDIRS = conf data model view
 
 bin_SCRIPTS = 				\
-	sugar-shell			\
 	sugar-activity			\
 	sugar-activity-factory		\
-	sugar-console
+	sugar-log-viewer		\
+	sugar-shell
 
 sugardir = $(pkgdatadir)/shell
 sugar_PYTHON =				\
