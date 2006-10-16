@@ -43,6 +43,7 @@ class LogWriter:
 		fmt = "(%s): Level %s - %s\n" % (os.getpid(), level, msg)
 		fmt = fmt.encode("utf8")
 		self._log_file.write(fmt)
+		self._log_file.flush()
 
 class Handler(logging.Handler):
 	def __init__(self, writer):
