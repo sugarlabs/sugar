@@ -46,6 +46,12 @@ class LogBuffer(gtk.TextBuffer):
 		return True
 
 window = gtk.Window()
+window.set_default_size(gtk.gdk.screen_width() * 3 / 4,
+						gtk.gdk.screen_height() * 3 / 4)
+
+window.realize()
+window.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
+
 scrolled = gtk.ScrolledWindow()
 scrolled.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 
@@ -58,6 +64,7 @@ textview.show()
 
 window.add(scrolled)
 scrolled.show()
+
 window.show()
 
 gtk.main()

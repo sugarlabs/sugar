@@ -5,3 +5,5 @@
 <Alt>n=next
 <Alt>p=prev
 <Alt>c=close
+
+F12=!sugar-log-viewer
