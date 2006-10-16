@@ -1,9 +1,10 @@
-SUBDIRS = activity chat graphics p2p presence session
+SUBDIRS = activity chat graphics p2p presence
 
 sugardir = $(pythondir)/sugar
 sugar_PYTHON =				\
 	__init__.py			\
 	__installed__.py		\
+	emulator.py			\
 	env.py				\
 	logger.py			\
 	setup.py			\

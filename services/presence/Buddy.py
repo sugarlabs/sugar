@@ -19,7 +19,7 @@ import logging
 
 import gobject
 import dbus, dbus.service
-from sugar import env
+from sugar import profile
 
 
 PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
@@ -416,8 +416,8 @@ class Owner(Buddy):
 	portion of the Owner, paired with the server portion in Owner.py."""
 	def __init__(self, ps, bus_name, object_id, icon_cache):
 		Buddy.__init__(self, bus_name, object_id, None, icon_cache)
-		self._nick_name = env.get_nick_name()
-		self._color = env.get_color()
+		self._nick_name = profile.get_nick_name()
+		self._color = profile.get_color()
 		self._ps = ps
 
 	def add_service(self, service):

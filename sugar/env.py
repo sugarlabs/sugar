@@ -26,25 +26,8 @@ except ImportError:
 
 import sugar.setup
 
-def setup_user(profile):
-	os.environ['SUGAR_NICK_NAME'] = profile.get_nick_name()
-	os.environ['SUGAR_COLOR'] = profile.get_color().to_string()
-
-def get_nick_name():
-	if os.environ.has_key('SUGAR_NICK_NAME'):
-		return os.environ['SUGAR_NICK_NAME']
-	else:
-		return None
-
-def get_color():
-	if os.environ.has_key('SUGAR_COLOR'):
-		return os.environ['SUGAR_COLOR']
-	else:
-		return None
-
 def setup_python_path():
 	for path in sugar_python_path:
-		sys.path.insert(0, path)
 		if os.environ.has_key('PYTHONPATH'):
 			old_path = os.environ['PYTHONPATH']
 			os.environ['PYTHONPATH'] = path + ':' + old_path 
@@ -76,9 +59,15 @@ def get_profile_path():
 		profile_id = os.environ['SUGAR_PROFILE']
 	else:
 		profile_id = 'default'
-	path = os.path.expanduser('~/.sugar')
 
-	return os.path.join(path, profile_id)
+	path = os.path.join(os.path.expanduser('~/.sugar'), profile_id)
+	if not os.path.isdir(path):
+		try:
+			os.makedirs(path)
+		except OSError, exc:
+			print "Could not create user directory."
+
+	return path
 
 def get_data_dir():
 	return sugar_data_dir

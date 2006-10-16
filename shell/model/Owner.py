@@ -18,15 +18,15 @@ import os
 import random
 import base64
 import time
-
-import conf
-from sugar import env
 import logging
+import dbus
+
+from sugar import env
+from sugar import profile
 from sugar.p2p import Stream
 from sugar.presence import PresenceService
 from sugar import util
 from model.Invites import Invites
-import dbus
 
 PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
 
@@ -35,10 +35,8 @@ class ShellOwner(object):
 	runs in the shell and serves up the buddy icon and other stuff.  It's the
 	server portion of the Owner, paired with the client portion in Buddy.py."""
 	def __init__(self):
-		profile = conf.get_profile()
-
 		self._nick = profile.get_nick_name()
-		user_dir = profile.get_path()
+		user_dir = env.get_profile_path()
 
 		self._icon = None
 		self._icon_hash = ""
@@ -71,7 +69,7 @@ class ShellOwner(object):
 
 	def announce(self):
 		# Create and announce our presence
-		color = conf.get_profile().get_color()
+		color = profile.get_color()
 		props = {'color': color.to_string(), 'icon-hash': self._icon_hash}
 		self._service = self._pservice.register_service(self._nick,
 				PRESENCE_SERVICE_TYPE, properties=props)

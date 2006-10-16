@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 # Copyright (C) 2006, Red Hat, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -16,33 +14,30 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import sys
 import os
-
-import pygtk
-pygtk.require('2.0')
-
-curdir = os.path.abspath(os.path.dirname(__file__))
-sourcedir = os.path.dirname(curdir)
-
-if os.path.isfile(os.path.join(sourcedir, 'sugar/__uninstalled__.py')):
-	print 'Running sugar from ' + sourcedir + ' ...'
-	sys.path.insert(0, sourcedir)
-else:
-	print 'Running the installed sugar...'
+from ConfigParser import ConfigParser
 
 from sugar import env
+from sugar.graphics.iconcolor import IconColor
 
-env.setup_system()
+def get_nick_name():
+	return _nick_name
 
-from sugar.session.Emulator import Emulator
+def get_color():
+	return _color
 
-if os.environ.has_key('SUGAR_EMULATOR') and \
-   os.environ['SUGAR_EMULATOR'] == 'yes':
-	emulator = Emulator()
-	emulator.start()
+cp = ConfigParser()
+config_path = os.path.join(env.get_profile_path(), 'config')
+parsed = cp.read([config_path])
 
-from Session import Session
+if cp.has_option('Buddy', 'NickName'):
+	_nick_name = cp.get('Buddy', 'NickName')
+else:
+	_nick_name = None
 
-session = Session()
-session.start()
+if cp.has_option('Buddy', 'Color'):
+	_color = IconColor(cp.get('Buddy', 'Color'))
+else:
+	_color = None
+
+del cp

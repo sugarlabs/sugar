@@ -22,6 +22,7 @@ import random
 import logging
 from sugar import util
 from sugar import env
+from sugar import profile
 import BuddyIconCache
 
 
@@ -293,6 +294,7 @@ class PresenceServiceDBusHelper(dbus.service.Object):
 class PresenceService(object):
 	def __init__(self):
 		# interface -> IP address: interfaces we've gotten events on so far
+		self._started = False
 		self._local_addrs = {}
 
 		self._next_object_id = 0
@@ -319,15 +321,13 @@ class PresenceService(object):
 		self._icon_cache = BuddyIconCache.BuddyIconCache()
 
 		# Our owner object
-		if env.get_nick_name():
+		if profile.get_nick_name():
 			objid = self._get_next_object_id()
 			self._owner = Buddy.Owner(self, self._bus_name,
 									  objid, self._icon_cache)
 			self._buddies[self._owner.get_name()] = self._owner
 		else:
 			self._owner = None
-
-		self._started = False
 
 	def start(self):
 		if self._started:

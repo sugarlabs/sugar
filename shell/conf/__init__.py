@@ -1,11 +1,6 @@
 from conf.ActivityRegistry import _ActivityRegistry
-from conf.Profile import _Profile
 
-__registry = _ActivityRegistry()
-__profile = _Profile()
+_activity_registry = _ActivityRegistry()
 
 def get_activity_registry():
-	return __registry
-
-def get_profile():
-	return __profile
+	return _activity_registry

@@ -73,7 +73,6 @@ sugar/chat/sketchpad/Makefile
 sugar/graphics/Makefile
 sugar/p2p/Makefile
 sugar/presence/Makefile
-sugar/session/Makefile
 po/Makefile.in
 tools/Makefile
 tools/sugar-setup-activity

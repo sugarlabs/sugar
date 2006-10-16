@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 # Copyright (C) 2006, Red Hat, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -14,10 +16,27 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from sugar.graphics.canvasicon import CanvasIcon
-from sugar import profile
+import pygtk
+pygtk.require('2.0')
+import gtk
 
-class MyIcon(CanvasIcon):
-	def __init__(self):
-		CanvasIcon.__init__(self, icon_name='stock-buddy',
-					  	    color=profile.get_color())
+from sugar import profile
+from sugar import TracebackUtils
+from view.FirstTimeDialog import FirstTimeDialog
+from view.Shell import Shell
+from model.ShellModel import ShellModel
+
+name = profile.get_nick_name() 
+if not name or not len(name):
+	dialog = FirstTimeDialog()
+	dialog.run()
+
+model = ShellModel()
+shell = Shell(model)
+
+tbh = TracebackUtils.TracebackHelper()
+try:
+	gtk.main()
+except KeyboardInterrupt:
+	print 'Ctrl+C pressed, exiting...'
+del tbh

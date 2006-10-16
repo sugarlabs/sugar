@@ -18,6 +18,7 @@ import gtk
 import dbus
 
 import conf
+from sugar import profile
 from sugar.activity import Activity
 from sugar.presence import PresenceService
 from sugar.graphics.iconcolor import IconColor
@@ -92,7 +93,7 @@ class ActivityHost:
 		if activity != None:
 			return IconColor(activity.get_color())
 		else:
-			return conf.get_profile().get_color()
+			return profile.get_color()
 
 	def share(self):
 		self._activity.share()
