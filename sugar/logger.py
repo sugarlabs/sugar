@@ -40,7 +40,14 @@ class LogWriter:
 		self.write(record.levelno, record.msg)
 
 	def write(self, level, msg):
-		fmt = "(%s): Level %s - %s\n" % (os.getpid(), level, msg)
+		if level == logging.ERROR:
+			level_txt = 'ERROR'
+		elif level == logging.DEBUG:
+			level_txt = 'DEBUG'
+		elif level == logging.INFO:
+			level_txt = 'INFO'
+
+		fmt = "%s - %s\n" % (level_txt, msg)
 		fmt = fmt.encode("utf8")
 		self._log_file.write(fmt)
 		self._log_file.flush()
