@@ -16,12 +16,19 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import sys
+import os
+
 import pygtk
 pygtk.require('2.0')
 import gtk
 
 from sugar import profile
+from sugar import env
 from sugar import TracebackUtils
+
+sys.path.insert(0, os.path.join(env.get_data_dir(), 'shell'))
+
 from view.FirstTimeDialog import FirstTimeDialog
 from view.Shell import Shell
 from model.ShellModel import ShellModel
