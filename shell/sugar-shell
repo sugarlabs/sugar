@@ -37,6 +37,7 @@ name = profile.get_nick_name()
 if not name or not len(name):
 	dialog = FirstTimeDialog()
 	dialog.run()
+	profile.update()
 
 model = ShellModel()
 shell = Shell(model)
