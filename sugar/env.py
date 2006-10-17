@@ -24,26 +24,6 @@ try:
 except ImportError:
 	from sugar.__installed__ import *
 
-import sugar.setup
-
-def setup_system():
-	for path in sugar_bin_path:
-		if os.environ.has_key('PATH'):
-			old_path = os.environ['PATH']
-			os.environ['PATH'] = path + ':' + old_path
-		else:
-			os.environ['PATH'] = path
-
-	if sugar_source_dir:
-		source = os.path.join(sugar_source_dir, 'activities')
-		runner = os.path.join(sugar_source_dir, 'shell/sugar-activity-factory')
-		sugar.setup.setup_activities(source, get_activity_info_dir(), runner)
-		
-		bin = os.path.join(sugar_source_dir,
-						  'services/presence/sugar-presence-service')
-		sugar.setup.write_service('org.laptop.Presence', bin,
-								  get_activity_info_dir())
-
 def get_profile_path():
 	if os.environ.has_key('SUGAR_PROFILE'):
 		profile_id = os.environ['SUGAR_PROFILE']

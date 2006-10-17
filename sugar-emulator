@@ -25,10 +25,30 @@ if os.path.isfile(os.path.join(sourcedir, 'sugar/__uninstalled__.py')):
 	sys.path.insert(0, sourcedir)
 else:
 	print 'Running the installed sugar...'
+	sourcedir = None
 
 from sugar import env
+from sugar import setup
 
-env.setup_system()
+if sourcedir:
+	bin_path = sourcedir
+	bin_path += ';' + os.path.join(sourcedir, 'shell')
+	bin_path += ';' + os.path.join(sourcedir, 'services/presence')
+
+	if os.environ.has_key('PATH'):
+		old_path = os.environ['PATH']
+		os.environ['PATH'] = bin_path + ':' + old_path
+	else:
+		os.environ['PATH'] = bin_path
+
+	source = os.path.join(sourcedir, 'activities')
+	runner = os.path.join(sourcedir, 'shell/sugar-activity-factory')
+	setup.setup_activities(source, env.get_activity_info_dir(), runner)
+		
+	bin = os.path.join(sourcedir,
+					  'services/presence/sugar-presence-service')
+	setup.write_service('org.laptop.Presence', bin,
+						env.get_activity_info_dir())
 
 from sugar.emulator import Emulator
 
