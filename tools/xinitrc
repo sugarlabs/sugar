@@ -1,0 +1,7 @@
+PREFIX=/home/marco/sugar-jhbuild/build
+
+KBD_CONF=$PREFIX/share/sugar/kbdconfig 
+DBUS_CONF=$PREFIX/share/sugar/dbus-installed.conf
+
+matchbox-window-manager -kbdconfig $KBD_CONF -use_titlebar no -theme olpc &
+exec dbus-launch --exit-with-session --config-file $DBUS_CONF sugar-shell
