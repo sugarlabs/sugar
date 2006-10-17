@@ -220,7 +220,8 @@ class Frame:
 			return
 
 		if not self._menu_shell.is_active() and \
-			   self._mode == Frame.HIDE_ON_LEAVE:
+			   self._mode == Frame.HIDE_ON_LEAVE or \
+			   self._mode == Frame.AUTOMATIC:
 			self._timeline.play('before_slide_out', 'slide_out')
 
 	def _enter_edge_cb(self, event_frame):
