@@ -17,6 +17,9 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import sys
+import os
+
+sys.path.insert(0, env.get_activities_dir())
 
 from sugar.activity import ActivityFactory
 

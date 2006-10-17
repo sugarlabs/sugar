@@ -74,7 +74,7 @@ class _ActivityRegistry:
 
 	def __init__(self):
 		self._activities = []
-		self.scan_directory(env.get_activities_dir())
+		self.scan_directory(env.get_activity_info_dir())
 
 	def get_activity(self, activity_id):
 		"""Returns an activity given his identifier"""
