@@ -68,7 +68,6 @@ shell/view/frame/Makefile
 shell/model/Makefile
 sugar/Makefile
 sugar/__installed__.py
-sugar/__uninstalled__.py
 sugar/activity/Makefile
 sugar/chat/Makefile
 sugar/chat/sketchpad/Makefile
