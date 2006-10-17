@@ -1,10 +1,16 @@
 #!/usr/bin/python
-
 import logging
-from presence import PresenceService
-import sugar.logger
+import sys
+import os
 
-sugar.logger.start('presenceservice')
+from sugar import logger
+from sugar import env
+
+sys.path.insert(0, env.get_services_dir())
+
+from presence import PresenceService
+
+logger.start('presenceservice')
 
 logging.info('Starting presence service')
 

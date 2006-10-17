@@ -75,5 +75,8 @@ def get_data_dir():
 def get_activities_dir():
 	return sugar_activities_dir
 
+def get_services_dir():
+	return sugar_services_dir
+
 def get_dbus_config():
 	return sugar_dbus_config
