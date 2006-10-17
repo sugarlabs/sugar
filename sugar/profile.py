@@ -49,7 +49,6 @@ def get_color():
 	return _profile.color
 
 def update():
-	print 'Update'
 	_profile.update()
 
 _profile = _Profile()
