@@ -19,8 +19,6 @@
 import sys
 import os
 
-sys.path.insert(0, env.get_activities_dir())
-
 from sugar.activity import ActivityFactory
 
 ActivityFactory.create(sys.argv[1])

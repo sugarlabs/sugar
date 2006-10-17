@@ -18,6 +18,7 @@
 
 import sys
 import logging
+import os
 
 import pygtk
 pygtk.require('2.0')
@@ -29,10 +30,14 @@ import dbus.glib
 gobject.threads_init()
 dbus.glib.threads_init()
 
-from sugar.activity import ActivityFactory
-import sugar.logger
+from sugar import logger
+from sugar import env
 
-sugar.logger.start(sys.argv[1])
+sys.path.insert(0, env.get_activities_dir())
+
+from sugar.activity import ActivityFactory
+
+logger.start(sys.argv[1])
 
 logging.info('Starting activity factory %s' % sys.argv[1])
 
