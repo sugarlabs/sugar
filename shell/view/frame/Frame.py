@@ -72,23 +72,31 @@ class EventFrame(gobject.GObject):
 	def _create_invisible(self, x, y, width, height):
 		invisible = gtk.Invisible()
 		invisible.connect('motion-notify-event', self._motion_notify_cb)
+		invisible.connect('enter-notify-event', self._enter_notify_cb)
 		invisible.connect('leave-notify-event', self._leave_notify_cb)
 
 		invisible.realize()
 		invisible.window.set_events(gtk.gdk.POINTER_MOTION_MASK |
+									gtk.gdk.ENTER_NOTIFY_MASK |
 									gtk.gdk.LEAVE_NOTIFY_MASK)
 		invisible.window.move_resize(x, y, width, height)
 
 		return invisible
 
+	def _enter_notify_cb(self, widget, event):
+		self._notify_enter(event.x, event.y)
+
 	def _motion_notify_cb(self, widget, event):
+		self._notify_enter(event.x, event.y)
+
+	def _notify_enter(self, x, y):
 		screen_w = gtk.gdk.screen_width()
 		screen_h = gtk.gdk.screen_height()
 
-		if (event.x == 0 and event.y == 0) or \
-		   (event.x == 0 and event.y == screen_h - 1) or \
-		   (event.x == screen_w - 1 and event.y == 0) or \
-		   (event.x == screen_w - 1 and event.y == screen_h - 1):
+		if (x == 0 and y == 0) or \
+		   (x == 0 and y == screen_h - 1) or \
+		   (x == screen_w - 1 and y == 0) or \
+		   (x == screen_w - 1 and y == screen_h - 1):
 			if self._hover != EventFrame.HOVER_CORNER:
 				self._hover = EventFrame.HOVER_CORNER
 				self.emit('enter-corner')
