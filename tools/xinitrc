@@ -1,4 +1,4 @@
-PREFIX=/home/marco/sugar-jhbuild/build
+PREFIX=/usr
 
 KBD_CONF=$PREFIX/share/sugar/kbdconfig 
 DBUS_CONF=$PREFIX/share/sugar/dbus-installed.conf
