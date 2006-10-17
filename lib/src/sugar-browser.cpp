@@ -44,8 +44,12 @@ sugar_browser_startup(void)
 	prefService->GetBranch("", getter_AddRefs(pref));
 	NS_ENSURE_TRUE(pref, );
 
-	pref->SetBoolPref ("dom.disable_open_during_load", TRUE);
-} 
+	/* Block onload popups */
+	pref->SetBoolPref("dom.disable_open_during_load", TRUE);
+
+	/* Disable useless security warning */
+	pref->SetBoolPref("security.warn_submit_insecure", FALSE);
+}
 
 G_DEFINE_TYPE(SugarBrowser, sugar_browser, GTK_TYPE_MOZ_EMBED)
 
