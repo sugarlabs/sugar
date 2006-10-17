@@ -315,8 +315,13 @@ sugar_tray_manager_handle_dock_request (SugarTrayManager       *manager,
   gtk_widget_set_app_paintable (socket, TRUE);
   //FIXME: need to find a theme where this (and expose event) is needed
   gtk_widget_set_double_buffered (socket, FALSE);
+
+/* FIXME Disabled this so that I can customize the icons background in theme.
+   I couldn't find a way to set a specific color for the GtkPlug.
   g_signal_connect (socket, "realize",
                     G_CALLBACK (sugar_tray_manager_make_socket_transparent), NULL);
+*/
+
   g_signal_connect (socket, "expose_event",
                     G_CALLBACK (sugar_tray_manager_socket_exposed), NULL);
   g_signal_connect_after (socket, "style_set",
