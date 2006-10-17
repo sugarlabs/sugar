@@ -19,6 +19,7 @@ import gtk
 import gtkmozembed
 import logging
 
+import _sugar
 from sugar.activity.Activity import Activity
 from sugar import env
 from sugar.graphics import style
@@ -92,4 +93,11 @@ class WebActivity(Activity):
 
 def start():
 	gtkmozembed.set_profile_path(env.get_profile_path(), 'gecko')
+
+	gtkmozembed.push_startup()
+	_sugar.startup_browser()
+
 	style.load_stylesheet(web.stylesheet)
+
+def stop():
+	gtkmozembed.pop_startup()

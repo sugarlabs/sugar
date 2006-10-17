@@ -51,7 +51,8 @@ class ActivityFactory(dbus.service.Object):
 		if hasattr(module, 'start'):
 			module.start()
 
-		self._class = getattr(module, class_name)
+		self._module = module
+		self._constructor = getattr(module, class_name)
 	
 		bus = dbus.SessionBus()
 		factory = _get_factory(activity_type)
@@ -60,7 +61,7 @@ class ActivityFactory(dbus.service.Object):
 
 	@dbus.service.method("com.redhat.Sugar.ActivityFactory")
 	def create(self):
-		activity = self._class()
+		activity = self._constructor()
 		activity.set_type(self._activity_type)
 
 		self._activities.append(activity)
@@ -70,6 +71,10 @@ class ActivityFactory(dbus.service.Object):
 
 	def _activity_destroy_cb(self, activity):
 		self._activities.remove(activity)
+
+		if hasattr(self._module, 'stop'):
+			self._module.stop()
+
 		if len(self._activities) == 0:
 			gtk.main_quit()
 
