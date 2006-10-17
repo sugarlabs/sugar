@@ -25,6 +25,7 @@ DISTCLEANFILES =		\
 	intltool-update
 
 EXTRA_DIST =                    \
+	$(bin_SCRIPTS)		\
 	COPYING.LIB		\
 	intltool-merge.in       \
 	intltool-update.in      \

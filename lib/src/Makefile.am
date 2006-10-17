@@ -39,6 +39,8 @@ stamp-sugar-marshal.h: sugar-marshal.list
 	$(GLIB_GENMARSHAL) --prefix=sugar_marshal $(srcdir)/sugar-marshal.list --header > sugar-marshal.h \
 	&& echo timestamp > $(@F)
 
-CLEANFILES = $(stamp_files)
-DISTCLEANFILES = $(stamp_files)
-MAINTAINERCLEANFILES = $(stamp_files)
+CLEANFILES = $(stamp_files) $(BUILT_SOURCES)
+DISTCLEANFILES = $(stamp_files) $(BUILT_SOURCES)
+MAINTAINERCLEANFILES = $(stamp_files) $(BUILT_SOURCES)
+
+EXTRA_DIST = sugar-marshal.list
