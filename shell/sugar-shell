@@ -23,9 +23,12 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
+from sugar import logger
 from sugar import profile
 from sugar import env
 from sugar import TracebackUtils
+
+logger.start('shell')
 
 sys.path.insert(0, os.path.join(env.get_data_dir(), 'shell'))
 
