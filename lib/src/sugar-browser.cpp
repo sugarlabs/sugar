@@ -49,6 +49,12 @@ sugar_browser_startup(void)
 
 	/* Disable useless security warning */
 	pref->SetBoolPref("security.warn_submit_insecure", FALSE);
+
+	/* Style tweaks */
+	pref->SetCharPref("ui.buttontext", "#000000");
+	pref->SetCharPref("ui.buttonface", "#D3D3DD");
+	pref->SetCharPref("ui.-moz-field", "#FFFFFF");
+	pref->SetCharPref("ui.-moz-fieldtext", "#000000");
 }
 
 G_DEFINE_TYPE(SugarBrowser, sugar_browser, GTK_TYPE_MOZ_EMBED)
