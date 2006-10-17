@@ -10,9 +10,6 @@ sugar_activity_info_dir = __tmpdir
 
 sugar_dbus_config = os.path.join(sugar_source_dir, 'dbus-uninstalled.conf')
 
-sugar_python_path = []
-sugar_python_path.append(os.path.join(sugar_source_dir, 'activities'))
-
 sugar_bin_path = []
 sugar_bin_path.append(os.path.join(sugar_source_dir))
 sugar_bin_path.append(os.path.join(sugar_source_dir, 'shell'))

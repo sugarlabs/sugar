@@ -19,9 +19,7 @@
 import os
 import sys
 
-curdir = os.path.abspath(os.path.dirname(__file__))
-sourcedir = os.path.dirname(curdir)
-
+sourcedir = os.path.abspath(os.path.dirname(__file__))
 if os.path.isfile(os.path.join(sourcedir, 'sugar/__uninstalled__.py')):
 	print 'Running sugar from ' + sourcedir + ' ...'
 	sys.path.insert(0, sourcedir)
