@@ -8,6 +8,7 @@ headers
 #include "sugar-key-grabber.h"
 #include "sugar-address-entry.h"
 #include "sugar-tray-manager.h"
+#include "sugar-push-scroller.h"
 
 %%
 modulename gecko

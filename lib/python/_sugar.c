@@ -12,8 +12,9 @@
 #include "sugar-key-grabber.h"
 #include "sugar-address-entry.h"
 #include "sugar-tray-manager.h"
+#include "sugar-push-scroller.h"
 
-#line 17 "_sugar.c"
+#line 18 "_sugar.c"
 
 
 /* ---------- types from other modules ---------- */
@@ -32,8 +33,9 @@ PyTypeObject G_GNUC_INTERNAL PySugarAddressEntry_Type;
 PyTypeObject G_GNUC_INTERNAL PySugarBrowser_Type;
 PyTypeObject G_GNUC_INTERNAL PySugarKeyGrabber_Type;
 PyTypeObject G_GNUC_INTERNAL PySugarTrayManager_Type;
+PyTypeObject G_GNUC_INTERNAL PySugarPushScroller_Type;
 
-#line 37 "_sugar.c"
+#line 39 "_sugar.c"
 
 
 
@@ -327,6 +329,94 @@ PyTypeObject G_GNUC_INTERNAL PySugarTrayManager_Type = {
 
 
 
+/* ----------- SugarPushScroller ----------- */
+
+static PyObject *
+_wrap_sugar_push_scroller_start(PyGObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "browser", "x", "y", NULL };
+    PyGObject *browser;
+    int x, y;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O!ii:SugarPushScroller.start", kwlist, &PySugarBrowser_Type, &browser, &x, &y))
+        return NULL;
+    
+    sugar_push_scroller_start(SUGAR_PUSH_SCROLLER(self->obj), SUGAR_BROWSER(browser->obj), x, y);
+    
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject *
+_wrap_sugar_push_scroller_stop(PyGObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "timestamp", NULL };
+    unsigned long timestamp;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"k:SugarPushScroller.stop", kwlist, &timestamp))
+        return NULL;
+    
+    sugar_push_scroller_stop(SUGAR_PUSH_SCROLLER(self->obj), timestamp);
+    
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static const PyMethodDef _PySugarPushScroller_methods[] = {
+    { "start", (PyCFunction)_wrap_sugar_push_scroller_start, METH_VARARGS|METH_KEYWORDS,
+      NULL },
+    { "stop", (PyCFunction)_wrap_sugar_push_scroller_stop, METH_VARARGS|METH_KEYWORDS,
+      NULL },
+    { NULL, NULL, 0, NULL }
+};
+
+PyTypeObject G_GNUC_INTERNAL PySugarPushScroller_Type = {
+    PyObject_HEAD_INIT(NULL)
+    0,                                 /* ob_size */
+    "gecko.PushScroller",                   /* tp_name */
+    sizeof(PyGObject),          /* tp_basicsize */
+    0,                                 /* tp_itemsize */
+    /* methods */
+    (destructor)0,        /* tp_dealloc */
+    (printfunc)0,                      /* tp_print */
+    (getattrfunc)0,       /* tp_getattr */
+    (setattrfunc)0,       /* tp_setattr */
+    (cmpfunc)0,           /* tp_compare */
+    (reprfunc)0,             /* tp_repr */
+    (PyNumberMethods*)0,     /* tp_as_number */
+    (PySequenceMethods*)0, /* tp_as_sequence */
+    (PyMappingMethods*)0,   /* tp_as_mapping */
+    (hashfunc)0,             /* tp_hash */
+    (ternaryfunc)0,          /* tp_call */
+    (reprfunc)0,              /* tp_str */
+    (getattrofunc)0,     /* tp_getattro */
+    (setattrofunc)0,     /* tp_setattro */
+    (PyBufferProcs*)0,  /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,                      /* tp_flags */
+    NULL,                        /* Documentation string */
+    (traverseproc)0,     /* tp_traverse */
+    (inquiry)0,             /* tp_clear */
+    (richcmpfunc)0,   /* tp_richcompare */
+    offsetof(PyGObject, weakreflist),             /* tp_weaklistoffset */
+    (getiterfunc)0,          /* tp_iter */
+    (iternextfunc)0,     /* tp_iternext */
+    (struct PyMethodDef*)_PySugarPushScroller_methods, /* tp_methods */
+    (struct PyMemberDef*)0,              /* tp_members */
+    (struct PyGetSetDef*)0,  /* tp_getset */
+    NULL,                              /* tp_base */
+    NULL,                              /* tp_dict */
+    (descrgetfunc)0,    /* tp_descr_get */
+    (descrsetfunc)0,    /* tp_descr_set */
+    offsetof(PyGObject, inst_dict),                 /* tp_dictoffset */
+    (initproc)0,             /* tp_init */
+    (allocfunc)0,           /* tp_alloc */
+    (newfunc)0,               /* tp_new */
+    (freefunc)0,             /* tp_free */
+    (inquiry)0              /* tp_is_gc */
+};
+
+
+
 /* ----------- functions ----------- */
 
 static PyObject *
@@ -419,11 +509,13 @@ py_sugar_register_classes(PyObject *d)
     }
 
 
-#line 423 "_sugar.c"
+#line 513 "_sugar.c"
     pygobject_register_class(d, "SugarAddressEntry", SUGAR_TYPE_ADDRESS_ENTRY, &PySugarAddressEntry_Type, Py_BuildValue("(O)", &PyGtkEntry_Type));
     pygobject_register_class(d, "SugarBrowser", SUGAR_TYPE_BROWSER, &PySugarBrowser_Type, Py_BuildValue("(O)", &PyGtkMozEmbed_Type));
     pygobject_register_class(d, "SugarKeyGrabber", SUGAR_TYPE_KEY_GRABBER, &PySugarKeyGrabber_Type, Py_BuildValue("(O)", &PyGObject_Type));
     pyg_set_object_has_new_constructor(SUGAR_TYPE_KEY_GRABBER);
     pygobject_register_class(d, "SugarTrayManager", SUGAR_TYPE_TRAY_MANAGER, &PySugarTrayManager_Type, Py_BuildValue("(O)", &PyGObject_Type));
     pyg_set_object_has_new_constructor(SUGAR_TYPE_TRAY_MANAGER);
+    pygobject_register_class(d, "SugarPushScroller", SUGAR_TYPE_PUSH_SCROLLER, &PySugarPushScroller_Type, Py_BuildValue("(O)", &PyGObject_Type));
+    pyg_set_object_has_new_constructor(SUGAR_TYPE_PUSH_SCROLLER);
 }

@@ -19,9 +19,13 @@
 
 #include "sugar-browser.h"
 
+#include <gtkmozembed_internal.h>
 #include <nsCOMPtr.h>
 #include <nsIPrefService.h>
 #include <nsServiceManagerUtils.h>
+#include <nsIWebBrowser.h>
+#include <nsIWebBrowserFocus.h>
+#include <nsIDOMWindow.h>
 
 enum {
 	PROP_0,
@@ -251,4 +255,28 @@ sugar_browser_init(SugarBrowser *browser)
 					 G_CALLBACK(title_cb), NULL);
 	g_signal_connect(G_OBJECT(browser), "location",
 					 G_CALLBACK(location_cb), NULL);
+}
+
+void
+sugar_browser_scroll_pixels(SugarBrowser *browser,
+                            int           dx,
+                            int           dy)
+{
+	nsCOMPtr<nsIWebBrowser> webBrowser;
+	gtk_moz_embed_get_nsIWebBrowser (GTK_MOZ_EMBED(browser),
+									 getter_AddRefs(webBrowser));
+	NS_ENSURE_TRUE (webBrowser, );
+
+	nsCOMPtr<nsIWebBrowserFocus> webBrowserFocus;
+	webBrowserFocus = do_QueryInterface (webBrowser);
+	NS_ENSURE_TRUE (webBrowserFocus, );
+
+	nsCOMPtr<nsIDOMWindow> DOMWindow;
+	webBrowserFocus->GetFocusedWindow (getter_AddRefs(DOMWindow));
+	if (!DOMWindow) {
+		webBrowser->GetContentDOMWindow (getter_AddRefs (DOMWindow));
+	}
+	NS_ENSURE_TRUE (DOMWindow, );
+
+	DOMWindow->ScrollBy (dx, dy);
 }

@@ -39,6 +39,7 @@ class WebActivity(Activity):
 		logging.debug('Starting the web activity')
 
 		self.set_title(_('Web Activity'))
+		self.connect('key-press-event', self._key_press_event_cb)
 
 		vbox = gtk.VBox()
 
@@ -65,6 +66,10 @@ class WebActivity(Activity):
 		vbox.show()
 
 		self._browser.load_url(_HOMEPAGE)
+
+	def _key_press_event_cb(self, window, event):
+		if event.keyval == gtk.keysyms.F11:
+			self._browser.toggle_scroll()
 
 	def _setup_links_controller(self):
 		links_controller = LinksController(self._service, self._links_model)

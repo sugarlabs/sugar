@@ -15,8 +15,10 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import gobject
+import gtk
 
 from _sugar import Browser
+from _sugar import PushScroller
 
 class _PopupCreator(gobject.GObject):
 	__gsignals__ = {
@@ -76,6 +78,17 @@ class WebBrowser(Browser):
 
 	def __init__(self):
 		Browser.__init__(self)
+
+		self._push_scroller = PushScroller()
+		self._scrolling = False
+
+	def toggle_scroll(self):
+		if self._scrolling:
+			self._push_scroller.stop(gtk.get_current_event_time())
+			self._scrolling = False
+		else:
+			self._push_scroller.start(self, 0, 0)
+			self._scrolling = True
 
 	def do_create_window(self):
 		popup_creator = _PopupCreator(self.get_toplevel())
