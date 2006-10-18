@@ -92,10 +92,10 @@ class MenuShell(gobject.GObject):
 			if x + menu_w > gtk.gdk.screen_width():
 				[x, y] = [left_x, left_y]
 
-		x = min(x, gtk.gdk.screen_width())
+		x = min(x, gtk.gdk.screen_width() - menu_w)
 		x = max(0, x)
 
-		y = min(y, gtk.gdk.screen_height())
+		y = min(y, gtk.gdk.screen_height() - menu_h)
 		y = max(0, y)
 
 		return [x, y]
