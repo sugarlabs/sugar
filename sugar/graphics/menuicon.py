@@ -69,6 +69,9 @@ class MenuIcon(CanvasIcon):
 			self._menu = None
 			self._menu_shell.set_active(None)
 
+	def popdown(self):
+		self._timeline.play('popdown', 'popdown')
+
 	def _motion_notify_event_cb(self, item, event):
 		if event.detail == hippo.MOTION_DETAIL_ENTER:
 			self._timeline.play(None, 'popup')

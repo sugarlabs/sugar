@@ -22,8 +22,6 @@ import gobject
 
 from sugar.presence import PresenceService
 
-os.environ['SUGAR_PROFILE'] = 'simulator'
-
 PresenceService.start()
 
 base_path = os.path.abspath(os.path.dirname(__file__))
