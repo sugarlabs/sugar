@@ -26,6 +26,7 @@ from view.frame.PanelWindow import PanelWindow
 from view.frame.notificationtray import NotificationTray
 from sugar.graphics.timeline import Timeline
 from sugar.graphics.grid import Grid
+from sugar.graphics.menushell import MenuShell
 
 class EventFrame(gobject.GObject):
 	__gsignals__ = {
@@ -151,6 +152,7 @@ class Frame:
 
 		# Top panel
 		[menu_shell, root] = self._create_panel(grid, 0, 0, 16, 1)
+		menu_shell.set_position(MenuShell.BOTTOM)
 
 		box = ZoomBox(self._shell, menu_shell)
 
@@ -173,6 +175,7 @@ class Frame:
 
 		# Bottom panel
 		[menu_shell, root] = self._create_panel(grid, 0, 11, 16, 1)
+		menu_shell.set_position(MenuShell.TOP)
 
 		box = ActivitiesBox(self._shell)
 		root.append(box, hippo.PACK_FIXED)
@@ -182,6 +185,7 @@ class Frame:
 
 		# Right panel
 		[menu_shell, root] = self._create_panel(grid, 15, 1, 1, 10)
+		menu_shell.set_position(MenuShell.LEFT)
 
 		box = FriendsBox(self._shell, menu_shell)
 		root.append(box)
