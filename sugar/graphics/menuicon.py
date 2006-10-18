@@ -19,6 +19,7 @@ import hippo
 import gobject
 
 from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics.timeline import Timeline
 
 class _MenuStrategy:
 	def get_menu_position(self, menu, item):
@@ -31,27 +32,24 @@ class MenuIcon(CanvasIcon):
 		self._menu_shell = menu_shell
 		self._menu = None
 		self._hover_menu = False
-		self._popdown_on_leave = False
-		self._popdown_sid = 0
 		self._menu_strategy = _MenuStrategy()
 
-		self.connect('motion-notify-event', self._motion_notify_event_cb)
+		self._timeline = Timeline(self)
+		self._timeline.add_tag('popup', 6, 6)
+		self._timeline.add_tag('before_popdown', 7, 7)
+		self._timeline.add_tag('popdown', 8, 8)
 
-	def popdown(self):
-		if self._menu:
-			self._menu.destroy()
-			self._menu = None
-			self._menu_shell.set_active(None)
+		self.connect('motion-notify-event', self._motion_notify_event_cb)
 
 	def set_menu_strategy(self, strategy):
 		self._menu_strategy = strategy
 
-	def _popup(self):
-		self.popdown()
-
-		self._menu_shell.set_active(None)
+	def do_popup(self, current, n_frames):
+		if self._menu:
+			return
 
 		self._menu = self.create_menu()
+
 		self._menu.connect('enter-notify-event',
 						   self._menu_enter_notify_event_cb)
 		self._menu.connect('leave-notify-event',
@@ -65,42 +63,23 @@ class MenuIcon(CanvasIcon):
 
 		self._menu_shell.set_active(self)
 
-	def _menu_enter_notify_event_cb(self, widget, event):
-		self._hover_menu = True
-
-	def _menu_leave_notify_event_cb(self, widget, event):
-		self._hover_menu = False
-		if self._popdown_on_leave:
-			self.popdown()
-
-	def _start_popdown_timeout(self):
-		self._stop_popdown_timeout()
-		self._popdown_sid = gobject.timeout_add(1000, self._popdown_timeout_cb)
-
-	def _stop_popdown_timeout(self):
-		if self._popdown_sid > 0:
-			gobject.source_remove(self._popdown_sid)
-			self._popdown_sid = 0
+	def do_popdown(self, current, frame):
+		if self._menu:
+			self._menu.destroy()
+			self._menu = None
+			self._menu_shell.set_active(None)
 
 	def _motion_notify_event_cb(self, item, event):
 		if event.detail == hippo.MOTION_DETAIL_ENTER:
-			self._motion_notify_enter()
+			self._timeline.play(None, 'popup')
 		elif event.detail == hippo.MOTION_DETAIL_LEAVE:
-			self._motion_notify_leave()
+			if not self._hover_menu:
+				self._timeline.play('before_popdown', 'popdown')
 
-	def _motion_notify_enter(self):
-		self._stop_popdown_timeout()
-		self._popup()
+	def _menu_enter_notify_event_cb(self, widget, event):
+		self._hover_menu = True
+		self._timeline.play('popup', 'popup')
 
-	def _motion_notify_leave(self):
-		self._start_popdown_timeout()
-
-	def _popdown_timeout_cb(self):
-		self._popdown_sid = 0
-
-		if not self._hover_menu:
-			self.popdown()
-		else:
-			self._popdown_on_leave = True
-
-		return False
+	def _menu_leave_notify_event_cb(self, widget, event):
+		self._hover_menu = False
+		self._timeline.play('popdown', 'popdown')
