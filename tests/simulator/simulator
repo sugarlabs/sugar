@@ -20,11 +20,9 @@ import os
 
 import gobject
 
-from sugar.session.TestSession import TestSession
 from sugar.presence import PresenceService
 
-session = TestSession()
-session.start()
+os.environ['SUGAR_PROFILE'] = 'simulator'
 
 PresenceService.start()
 
