@@ -23,11 +23,12 @@ from SVGdraw import drawing
 from SVGdraw import svg
 
 class SketchPad(gtk.DrawingArea):
-	def __init__(self):
+	def __init__(self, bgcolor=(0.6, 1, 0.4)):
 		gtk.DrawingArea.__init__(self)
 
 		self._active_sketch = None
 		self._rgb = (0.0, 0.0, 0.0)
+		self._bgcolor = bgcolor
 		self._sketches = []
 
 		self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
@@ -46,7 +47,7 @@ class SketchPad(gtk.DrawingArea):
 		rect = self.get_allocation()
 		ctx = widget.window.cairo_create()
 		
-		ctx.set_source_rgb(0.6, 1, 0.4)
+		ctx.set_source_rgb(self._bgcolor[0], self._bgcolor[1], self._bgcolor[2])
 		ctx.rectangle(0, 0, rect.width, rect.height)
 		ctx.fill_preserve()
 		
