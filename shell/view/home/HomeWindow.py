@@ -19,10 +19,10 @@ import hippo
 import cairo
 
 from sugar.graphics.menushell import MenuShell
+import sugar
 from view.home.MeshBox import MeshBox
 from view.home.HomeBox import HomeBox
 from view.home.FriendsBox import FriendsBox
-import sugar
 
 class HomeWindow(gtk.Window):
 	def __init__(self, shell):
@@ -42,8 +42,6 @@ class HomeWindow(gtk.Window):
 		self.add(self._nb)
 		self._nb.show()
 
-		menu_shell = MenuShell()
-
 		canvas = hippo.Canvas()
 		box = HomeBox(shell)
 		canvas.set_root(box)
@@ -51,13 +49,13 @@ class HomeWindow(gtk.Window):
 		canvas.show()
 
 		canvas = hippo.Canvas()
-		box = FriendsBox(shell, menu_shell)
+		box = FriendsBox(shell, MenuShell(canvas))
 		canvas.set_root(box)
 		self._nb.append_page(canvas)
 		canvas.show()
 
 		canvas = hippo.Canvas()
-		box = MeshBox(shell, menu_shell)
+		box = MeshBox(shell, MenuShell(canvas))
 		canvas.set_root(box)
 		self._nb.append_page(canvas)
 		canvas.show()

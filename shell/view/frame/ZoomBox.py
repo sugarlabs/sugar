@@ -20,7 +20,6 @@ from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics.menuicon import MenuIcon
 from sugar.graphics.menu import Menu
 from sugar.graphics import style
-from view.frame.MenuStrategy import MenuStrategy
 import sugar
 
 class ActivityMenu(Menu):
@@ -46,8 +45,6 @@ class ActivityIcon(MenuIcon):
 
 		MenuIcon.__init__(self, menu_shell, icon_name=icon_name,
 						  color=icon_color)
-
-		self.set_menu_strategy(MenuStrategy())
 
 	def create_menu(self):
 		menu = ActivityMenu(self._activity_host)

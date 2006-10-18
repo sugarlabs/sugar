@@ -17,13 +17,10 @@
 
 import hippo
 import gobject
+import logging
 
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics.timeline import Timeline
-
-class _MenuStrategy:
-	def get_menu_position(self, menu, item):
-		return item.get_context().translate_to_widget(item)
 
 class MenuIcon(CanvasIcon):
 	def __init__(self, menu_shell, **kwargs):
@@ -32,7 +29,6 @@ class MenuIcon(CanvasIcon):
 		self._menu_shell = menu_shell
 		self._menu = None
 		self._hover_menu = False
-		self._menu_strategy = _MenuStrategy()
 
 		self._timeline = Timeline(self)
 		self._timeline.add_tag('popup', 6, 6)
@@ -40,9 +36,6 @@ class MenuIcon(CanvasIcon):
 		self._timeline.add_tag('popdown', 8, 8)
 
 		self.connect('motion-notify-event', self._motion_notify_event_cb)
-
-	def set_menu_strategy(self, strategy):
-		self._menu_strategy = strategy
 
 	def do_popup(self, current, n_frames):
 		if self._menu:
@@ -55,8 +48,7 @@ class MenuIcon(CanvasIcon):
 		self._menu.connect('leave-notify-event',
 						   self._menu_leave_notify_event_cb)
 
-		strategy = self._menu_strategy
-		[x, y] = strategy.get_menu_position(self._menu, self)
+		[x, y] = self._menu_shell.get_position(self._menu, self)
 
 		self._menu.move(x, y)
 		self._menu.show()

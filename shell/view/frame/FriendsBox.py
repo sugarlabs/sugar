@@ -22,7 +22,6 @@ from sugar.graphics import style
 from sugar.presence import PresenceService
 from view.BuddyIcon import BuddyIcon
 from model.BuddyModel import BuddyModel
-from view.frame.MenuStrategy import MenuStrategy
 
 class FriendsBox(hippo.CanvasBox):
 	def __init__(self, shell, menu_shell):
@@ -44,7 +43,6 @@ class FriendsBox(hippo.CanvasBox):
 		model = BuddyModel(buddy=buddy)
 		icon = BuddyIcon(self._shell, self._menu_shell, model)
 		style.apply_stylesheet(icon, 'frame.BuddyIcon')
-		icon.set_menu_strategy(MenuStrategy())
 		self.append(icon)
 
 		self._buddies[buddy.get_name()] = icon

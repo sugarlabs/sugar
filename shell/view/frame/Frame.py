@@ -25,7 +25,6 @@ from view.frame.FriendsBox import FriendsBox
 from view.frame.PanelWindow import PanelWindow
 from view.frame.notificationtray import NotificationTray
 from sugar.graphics.timeline import Timeline
-from sugar.graphics.menushell import MenuShell
 from sugar.graphics.grid import Grid
 
 class EventFrame(gobject.GObject):
@@ -133,6 +132,7 @@ class Frame:
 
 	def __init__(self, shell):
 		self._windows = []
+		self._active_menus = 0
 		self._shell = shell
 		self._mode = Frame.INACTIVE
 
@@ -149,17 +149,14 @@ class Frame:
 
 		grid = Grid()
 
-		self._menu_shell = MenuShell()
-		self._menu_shell.connect('activated', self._menu_shell_activated_cb)
-		self._menu_shell.connect('deactivated', self._menu_shell_deactivated_cb)
+		# Top panel
+		[menu_shell, root] = self._create_panel(grid, 0, 0, 16, 1)
 
-		top_panel = self._create_panel(grid, 0, 0, 16, 1)
-
-		box = ZoomBox(self._shell, self._menu_shell)
+		box = ZoomBox(self._shell, menu_shell)
 
 		[x, y] = grid.point(1, 0)
-		top_panel.append(box, hippo.PACK_FIXED)
-		top_panel.move(box, x, y)
+		root.append(box, hippo.PACK_FIXED)
+		root.move(box, x, y)
 
 		tray = NotificationTray()
 		tray_box = hippo.CanvasBox(box_width=grid.dimension(1),
@@ -171,29 +168,36 @@ class Frame:
 		tray_box.append(tray_widget, gtk.EXPAND)
 
 		[x, y] = grid.point(14, 0)
-		top_panel.append(tray_box, hippo.PACK_FIXED)
-		top_panel.move(tray_box, x, y)
+		root.append(tray_box, hippo.PACK_FIXED)
+		root.move(tray_box, x, y)
 
-		bottom_panel = self._create_panel(grid, 0, 11, 16, 1)
+		# Bottom panel
+		[menu_shell, root] = self._create_panel(grid, 0, 11, 16, 1)
 
 		box = ActivitiesBox(self._shell)
-		bottom_panel.append(box, hippo.PACK_FIXED)
+		root.append(box, hippo.PACK_FIXED)
 
 		[x, y] = grid.point(1, 0)
-		bottom_panel.move(box, x, y)
+		root.move(box, x, y)
 
-		right_panel = self._create_panel(grid, 15, 1, 1, 10)
+		# Right panel
+		[menu_shell, root] = self._create_panel(grid, 15, 1, 1, 10)
 
-		box = FriendsBox(self._shell, self._menu_shell)
-		right_panel.append(box)
+		box = FriendsBox(self._shell, menu_shell)
+		root.append(box)
 
-		left_panel = self._create_panel(grid, 0, 1, 1, 10)
+		# Left panel
+		self._create_panel(grid, 0, 1, 1, 10)
 
 	def _create_panel(self, grid, x, y, width, height):
 		panel = PanelWindow()
 
 		panel.connect('enter-notify-event', self._enter_notify_cb)
 		panel.connect('leave-notify-event', self._leave_notify_cb)
+
+		menu_shell = panel.get_menu_shell()
+		menu_shell.connect('activated', self._menu_shell_activated_cb)
+		menu_shell.connect('deactivated', self._menu_shell_deactivated_cb)
 
 		[x, y, width, height] = grid.rectangle(x, y, width, height)
 
@@ -202,12 +206,14 @@ class Frame:
 
 		self._windows.append(panel)
 
-		return panel.get_root()
+		return [panel.get_menu_shell(), panel.get_root()]
 
 	def _menu_shell_activated_cb(self, menu_shell):
+		self._active_menus += 1
 		self._timeline.goto('slide_in', True)
 
 	def _menu_shell_deactivated_cb(self, menu_shell):
+		self._active_menus -= 1
 		if self._mode != Frame.STICKY:
 			self._timeline.play('before_slide_out', 'slide_out')
 
@@ -219,9 +225,9 @@ class Frame:
 		if event.state == gtk.gdk.BUTTON1_MASK:
 			return
 
-		if not self._menu_shell.is_active() and \
-			   self._mode == Frame.HIDE_ON_LEAVE or \
-			   self._mode == Frame.AUTOMATIC:
+		if self._active_menus == 0 and \
+		   (self._mode == Frame.HIDE_ON_LEAVE or \
+		    self._mode == Frame.AUTOMATIC):
 			self._timeline.play('before_slide_out', 'slide_out')
 
 	def _enter_edge_cb(self, event_frame):

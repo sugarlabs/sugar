@@ -25,8 +25,10 @@ class MenuShell(gobject.GObject):
 				        gobject.TYPE_NONE, ([])),
 	}
 
-	def __init__(self):
+	def __init__(self, parent_canvas):
 		gobject.GObject.__init__(self)
+
+		self._parent_canvas = parent_canvas
 		self._menu_controller = None
 
 	def is_active(self):
@@ -41,3 +43,30 @@ class MenuShell(gobject.GObject):
 		if self._menu_controller:
 			self._menu_controller.popdown()
 		self._menu_controller = controller
+
+	def _get_item_origin(self, item):
+		[x, y] = item.get_context().translate_to_widget(item)
+
+		[origin_x, origin_y] = self._parent_canvas.window.get_origin()
+		x += origin_x
+		y += origin_y
+
+		return [x, y]
+
+	def get_position(self, menu, item):
+		[x, y] = self._get_item_origin(item)
+		[width, height] = item.get_allocation()
+
+		[canvas_x, canvas_y] = self._parent_canvas.window.get_origin()
+		canvas_rect = self._parent_canvas.get_allocation()
+		[menu_w, menu_h] = menu.size_request()
+
+		menu_x = x
+		menu_y = y + height
+
+		if (menu_x + menu_w > canvas_x) and \
+		   (menu_y < canvas_y + canvas_rect.height):
+			menu_x = x - menu_w
+			menu_y = y
+
+		return [menu_x, menu_y]
