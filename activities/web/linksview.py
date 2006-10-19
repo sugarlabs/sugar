@@ -17,16 +17,31 @@
 import gtk
 import hippo
 
-from sugar.graphics.bubble import Bubble
+from sugar.graphics.menu import Menu
+from sugar.graphics.menushell import MenuShell
+from sugar.graphics.menuicon import MenuIcon
 from sugar.graphics.iconcolor import IconColor
 from sugar.graphics import style
+
+class LinkIcon(MenuIcon):
+	def __init__(self, menu_shell, link):
+		color = IconColor(link.buddy.get_color())
+		MenuIcon.__init__(self, menu_shell, color=color,
+						  icon_name='activity-web')
+
+		self._link = link
+
+	def create_menu(self):
+		menu = Menu(self._link.title)
+		return menu
 
 class LinksView(hippo.Canvas):
 	def __init__(self, model, browser):
 		hippo.Canvas.__init__(self)
 
-		self._bubbles = {}
+		self._icons = {}
 		self._browser = browser
+		self._menu_shell = MenuShell(self)
 
 		self._box = hippo.CanvasBox()
 		style.apply_stylesheet(self._box, 'links.Box')
@@ -39,36 +54,30 @@ class LinksView(hippo.Canvas):
 		model.connect('link_removed', self._link_removed_cb)
 
 	def _add_link(self, link):
-		if len(self._bubbles) == 0:
+		if len(self._icons) == 0:
 			self.show()
 
-		color = IconColor(link.buddy.get_color())
+		icon = LinkIcon(self._menu_shell, link)
+		icon.connect('activated', self._link_activated_cb, link)
+		style.apply_stylesheet(icon, 'links.Icon')
+		self._box.append(icon)
 
-		bubble = Bubble(color=color)
-		style.apply_stylesheet(bubble, 'links.Bubble')
-		self._box.append(bubble)
-
-		text = hippo.CanvasLink(text=link.title)
-		text.connect('activated', self._link_activated_cb, link)
-		style.apply_stylesheet(text, 'links.Text')
-		bubble.append(text, hippo.PACK_EXPAND)
-
-		self._bubbles[link] = bubble
+		self._icons[link] = icon
 
 	def _remove_link(self, link):
-		bubble = self._bubbles[link]
-		self._box.remove(bubble)
+		icon = self._icons[link]
+		self._box.remove(icon)
 
-		del self._bubbles[link]
+		del self._icons[link]
 
-		if len(self._bubbles) == 0:
+		if len(self._icons) == 0:
 			self.hide()
 
 	def _link_added_cb(self, model, link):
 		self._add_link(link)
 
 	def _link_removed_cb(self, model, link):
-		self._removed_link(link)
+		self._remove_link(link)
 
 	def _link_activated_cb(self, link_item, link):
 		self._browser.load_url(link.url)
