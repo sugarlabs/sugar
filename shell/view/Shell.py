@@ -45,6 +45,7 @@ class Shell(gobject.GObject):
 		self._model = model
 		self._hosts = {}
 		self._screen = wnck.screen_get_default()
+		self._current_host = None
 
 		style.load_stylesheet(view.stylesheet)
 
@@ -95,7 +96,7 @@ class Shell(gobject.GObject):
 
 	def __window_opened_cb(self, screen, window):
 		if window.get_window_type() == wnck.WINDOW_NORMAL:
-			activity_host = ActivityHost(self, window)
+			activity_host = ActivityHost(window)
 			self._hosts[activity_host.get_xid()] = activity_host
 			self.emit('activity-opened', activity_host)
 
@@ -104,24 +105,39 @@ class Shell(gobject.GObject):
 
 		if window and window.get_window_type() == wnck.WINDOW_NORMAL:
 			activity_host = self._hosts[window.get_xid()]
-
 			current = self._model.get_current_activity()
 			if activity_host.get_id() == current:
 				return
 
-			self._model.set_current_activity(activity_host.get_id())
-			self.emit('activity-changed', activity_host)
+			self._set_current_activity(activity_host)
 
 	def __window_closed_cb(self, screen, window):
 		if window.get_window_type() == wnck.WINDOW_NORMAL:
 			if self._hosts.has_key(window.get_xid()):
 				host = self._hosts[window.get_xid()]
+				host.destroy()
+
 				self.emit('activity-closed', host)
 				del self._hosts[window.get_xid()]
 
 		if len(self._hosts) == 0:
+			self._set_current_activity(None)
+
+	def _set_current_activity(self, host):
+		if host:
+			self._model.set_current_activity(host.get_id())
+		else:
 			self._model.set_current_activity(None)
-			self.emit('activity-changed', None)
+
+		if self._current_host:
+			self._current_host.set_active(False)
+
+		self._current_host = host
+
+		if self._current_host:
+			self._current_host.set_active(True)
+
+		self.emit('activity-changed', host)
 
 	def get_model(self):
 		return self._model

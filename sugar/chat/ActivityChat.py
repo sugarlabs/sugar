@@ -63,4 +63,5 @@ class ActivityChat(GroupChat):
 		self._setup_stream(self._chat_service)
 
 	def _destroy_cb(self, widget):
-		self._pservice.unregister_service(self._chat_service)
+		if self._chat_service:
+			self._pservice.unregister_service(self._chat_service)
