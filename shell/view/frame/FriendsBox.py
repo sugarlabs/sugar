@@ -37,9 +37,16 @@ class FriendsBox(hippo.CanvasBox):
 		self._pservice.connect('activity-appeared',
 							   self.__activity_appeared_cb)
 
+		# Add initial activities the PS knows about
+		for activity in self._pservice.get_activities():
+			self.__activity_appeared_cb(self._pservice, activity)
+
 		shell.connect('activity-changed', self.__activity_changed_cb)
 
 	def add_buddy(self, buddy):
+		if self._buddies.has_key(buddy.get_name()):
+			return
+
 		model = BuddyModel(buddy=buddy)
 		icon = BuddyIcon(self._shell, self._menu_shell, model)
 		style.apply_stylesheet(icon, 'frame.BuddyIcon')
@@ -48,6 +55,9 @@ class FriendsBox(hippo.CanvasBox):
 		self._buddies[buddy.get_name()] = icon
 
 	def remove_buddy(self, buddy):
+		if not self._buddies.has_key(buddy.get_name()):
+			return
+
 		self.remove(self._buddies[buddy.get_name()])
 
 	def clear(self):
