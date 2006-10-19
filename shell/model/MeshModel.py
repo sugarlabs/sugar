@@ -134,7 +134,7 @@ class MeshModel(gobject.GObject):
 			name = buddy.get_name()
 			if cur_activity == activity and self._buddies.has_key(name):
 				buddy_model = self._buddies[name]
-				self.emit('buddy-moved', buddy, model)
+				self.emit('buddy-moved', buddy_model, model)
 
 	def _activity_disappeared_cb(self, pservice, activity):
 		if self._activities.has_key(activity.get_id()):

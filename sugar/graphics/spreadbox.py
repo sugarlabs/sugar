@@ -33,9 +33,14 @@ class SpreadBox(hippo.CanvasBox, hippo.CanvasItem):
 		self._spread_on_add = False
 		self._stable = False
 
-	def add(self, item):
+	def add_item(self, item):
 		self._items_to_position.append(item)
 		self.append(item, hippo.PACK_FIXED)
+
+	def remove_item(self, item):
+		if self._items_to_position.count(item) > 0:
+			self._items_to_position.remove(item)
+		self.remove(item)
 
 	def _get_distance(self, icon1, icon2):
 		[icon1_x, icon1_y] = self.get_position(icon1)

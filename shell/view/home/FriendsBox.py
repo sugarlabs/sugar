@@ -47,7 +47,7 @@ class FriendsBox(SpreadBox, hippo.CanvasItem):
 
 	def add_friend(self, buddy_info):
 		icon = FriendView(self._shell, self._menu_shell, buddy_info)
-		self.add(icon)
+		self.add_item(icon)
 
 		self._friends[buddy_info.get_name()] = icon
 
@@ -55,7 +55,7 @@ class FriendsBox(SpreadBox, hippo.CanvasItem):
 		self.add_friend(buddy_info)
 
 	def _friend_removed_cb(self, data_model, name):
-		self.remove(self._friends[name])
+		self.remove_item(self._friends[name])
 		del self._friends[name]
 
 	def do_allocate(self, width, height):
