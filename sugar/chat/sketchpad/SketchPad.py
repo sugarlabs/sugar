@@ -15,7 +15,7 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-import gtk
+import gtk, gobject
 
 from Sketch import Sketch
 
@@ -23,6 +23,11 @@ from SVGdraw import drawing
 from SVGdraw import svg
 
 class SketchPad(gtk.DrawingArea):
+	__gsignals__ = {
+		'new-user-sketch':(gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+		                  ([gobject.TYPE_PYOBJECT]))
+	}
+
 	def __init__(self, bgcolor=(0.6, 1, 0.4)):
 		gtk.DrawingArea.__init__(self)
 
@@ -32,10 +37,11 @@ class SketchPad(gtk.DrawingArea):
 		self._sketches = []
 
 		self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
+						gtk.gdk.BUTTON_RELEASE_MASK |
 						gtk.gdk.BUTTON1_MOTION_MASK)
-		self.connect("button-press-event", self.__button_press_cb)
-		self.connect("button-release-event", self.__button_release_cb)
-		self.connect("motion-notify-event", self.__motion_notify_cb)
+		self.connect("button-press-event", self._button_press_cb)
+		self.connect("button-release-event", self._button_release_cb)
+		self.connect("motion-notify-event", self._motion_notify_cb)
 		self.connect('expose_event', self.expose)
 	
 	def clear(self):
@@ -65,23 +71,27 @@ class SketchPad(gtk.DrawingArea):
 		self._rgb = color
 
 	def add_sketch(self, sketch):
+		"""Add a sketch to the the pad.  Mostly for subclasses and clients."""
 		self._sketches.append(sketch)
-	
+		self.window.invalidate_rect(None, False)
+
 	def add_point(self, event):
-		if self._active_sketch:
-			self._active_sketch.add_point(event.x, event.y)	
+		if not self._active_sketch:
+			return
+		self._active_sketch.add_point(event.x, event.y)	
 		self.window.invalidate_rect(None, False)
 	
-	def __button_press_cb(self, widget, event):
+	def _button_press_cb(self, widget, event):
 		self._active_sketch = Sketch(self._rgb)
-		self.add_sketch(self._active_sketch)
+		self._sketches.append(self._active_sketch)
 		self.add_point(event)
 	
-	def __button_release_cb(self, widget, event):
+	def _button_release_cb(self, widget, event):
 		self.add_point(event)
+		self.emit('new-user-sketch', self._active_sketch)
 		self._active_sketch = None
 	
-	def __motion_notify_cb(self, widget, event):
+	def _motion_notify_cb(self, widget, event):
 		self.add_point(event)
 	
 	def to_svg(self):
