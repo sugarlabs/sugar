@@ -46,7 +46,7 @@ depcomp
 libtool
 ltmain.sh
 m4/intltool.m4
-lib/src/_sugar.c
+lib/python/_sugar.c
 lib/src/sugar-marshal.c
 lib/src/sugar-marshal.h
 lib/src/stamp-sugar-marshal.c

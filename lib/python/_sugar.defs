@@ -65,7 +65,11 @@
   (return-type "SugarBrowser*")
 )
 
-
+(define-virtual create_window
+  (of-object "SugarBrowser")
+  (c-name "sugar_browser_create_window")
+  (return-type "SugarBrowser*")
+)
 
 ;; From sugar-key-grabber.h
 

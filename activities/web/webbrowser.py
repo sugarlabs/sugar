@@ -16,6 +16,7 @@
 
 import gobject
 import gtk
+import logging
 
 from _sugar import Browser
 from _sugar import PushScroller
@@ -78,6 +79,7 @@ class WebBrowser(Browser):
 
 	def __init__(self):
 		Browser.__init__(self)
+		self._popup_creators = []
 
 	def do_create_window(self):
 		popup_creator = _PopupCreator(self.get_toplevel())
