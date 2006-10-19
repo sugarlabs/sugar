@@ -150,6 +150,6 @@ class ActivityHost:
 
 	def _activity_closed_cb(self, shell, activity):
 		if activity == self:
-			self.chat_hide()
+			self._chat_window.destroy()
 			self._frame_was_visible = False
 

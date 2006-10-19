@@ -26,6 +26,8 @@ class ActivityChat(GroupChat):
 		GroupChat.__init__(self)
 		self._chat_service = None
 
+		self.connect('destroy', self._destroy_cb)
+
 		self._activity = activity
 		self._pservice.register_service_type(ActivityChat.SERVICE_TYPE)
 		self._pservice.connect('service-appeared', self._service_appeared_cb)
@@ -59,3 +61,6 @@ class ActivityChat(GroupChat):
 		self._chat_service = self._pservice.share_activity(self._activity,
 				stype=ActivityChat.SERVICE_TYPE)
 		self._setup_stream(self._chat_service)
+
+	def _destroy_cb(self, widget):
+		self._pservice.unregister_service(self._chat_service)
