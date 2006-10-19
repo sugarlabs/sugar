@@ -115,7 +115,7 @@ def _txt_to_dict(txt):
 			key = item
 			value = True
 		else:
-			(key, value) = item.split('=')
+			(key, value) = item.split('=', 1)
 		prop_dict[key] = value
 	return prop_dict
 
