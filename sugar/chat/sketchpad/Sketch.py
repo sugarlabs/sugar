@@ -24,6 +24,9 @@ class Sketch:
 	
 	def add_point(self, x, y):
 		self._points.append((x, y))
+
+	def get_points(self):
+		return self._points
 		
 	def draw(self, ctx):
 		start = True

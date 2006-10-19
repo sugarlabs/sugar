@@ -12,4 +12,5 @@ sugar_PYTHON =			\
 	snowflakebox.py		\
 	spreadbox.py		\
 	style.py		\
+	stylesheet.py		\
 	timeline.py
