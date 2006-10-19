@@ -29,9 +29,16 @@ class ActivityMenu(Menu):
 	def __init__(self, activity_host):
 		Menu.__init__(self, activity_host.get_title())
 
+		if not activity_host.get_shared():
+			self._add_mesh_action()
+
+		self._add_close_action()
+
+	def _add_mesh_action(self):
 		icon = CanvasIcon(icon_name='stock-share-mesh')
 		self.add_action(icon, ActivityMenu.ACTION_SHARE) 
 
+	def _add_close_action(self):
 		icon = CanvasIcon(icon_name='stock-close')
 		self.add_action(icon, ActivityMenu.ACTION_CLOSE) 
 

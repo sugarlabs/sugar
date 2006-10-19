@@ -39,7 +39,7 @@ class FriendsBox(hippo.CanvasBox):
 
 		shell.connect('activity-changed', self.__activity_changed_cb)
 
-	def add(self, buddy):
+	def add_buddy(self, buddy):
 		model = BuddyModel(buddy=buddy)
 		icon = BuddyIcon(self._shell, self._menu_shell, model)
 		style.apply_stylesheet(icon, 'frame.BuddyIcon')
@@ -47,7 +47,7 @@ class FriendsBox(hippo.CanvasBox):
 
 		self._buddies[buddy.get_name()] = icon
 
-	def remove(self, buddy):
+	def remove_buddy(self, buddy):
 		self.remove(self._buddies[buddy.get_name()])
 
 	def clear(self):
@@ -77,7 +77,7 @@ class FriendsBox(hippo.CanvasBox):
 
 		if activity_ps != None:
 			for buddy in activity_ps.get_joined_buddies():
-				self.add(buddy)
+				self.add_buddy(buddy)
 
 			self._joined_hid = activity_ps.connect(
 							'buddy-joined', self.__buddy_joined_cb)
@@ -92,7 +92,7 @@ class FriendsBox(hippo.CanvasBox):
 			self._set_activity_ps(None)
 
 	def __buddy_joined_cb(self, activity, buddy):
-		self.add(buddy)
+		self.add_buddy(buddy)
 
 	def __buddy_left_cb(self, activity, buddy):
-		self.remove(buddy)
+		self.remove_buddy(buddy)

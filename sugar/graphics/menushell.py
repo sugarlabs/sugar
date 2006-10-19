@@ -16,6 +16,7 @@
 # Boston, MA 02111-1307, USA.
 
 import gobject
+import gtk
 
 class MenuShell(gobject.GObject):
 	__gsignals__ = {
@@ -25,11 +26,21 @@ class MenuShell(gobject.GObject):
 				        gobject.TYPE_NONE, ([])),
 	}
 
+	AUTO = 0
+	LEFT = 1
+	RIGHT = 2
+	TOP = 3
+	BOTTOM = 4
+
 	def __init__(self, parent_canvas):
 		gobject.GObject.__init__(self)
 
 		self._parent_canvas = parent_canvas
 		self._menu_controller = None
+		self._position = MenuShell.AUTO
+
+	def set_position(self, position):
+		self._position = position
 
 	def is_active(self):
 		return (self._menu_controller != None)
@@ -44,29 +55,47 @@ class MenuShell(gobject.GObject):
 			self._menu_controller.popdown()
 		self._menu_controller = controller
 
-	def _get_item_origin(self, item):
+	def _get_item_rect(self, item):
 		[x, y] = item.get_context().translate_to_widget(item)
 
 		[origin_x, origin_y] = self._parent_canvas.window.get_origin()
 		x += origin_x
 		y += origin_y
 
-		return [x, y]
+		[w, h] = item.get_allocation()
+
+		return [x, y, w, h]
 
 	def get_position(self, menu, item):
-		[x, y] = self._get_item_origin(item)
-		[width, height] = item.get_allocation()
-
-		[canvas_x, canvas_y] = self._parent_canvas.window.get_origin()
-		canvas_rect = self._parent_canvas.get_allocation()
+		[item_x, item_y, item_w, item_h] = self._get_item_rect(item)
 		[menu_w, menu_h] = menu.size_request()
 
-		menu_x = x
-		menu_y = y + height
+		left_x = item_x - menu_w
+		left_y = item_y
+		right_x = item_x + item_w
+		right_y = item_y
+		top_x = item_x
+		top_y = item_y - menu_h
+		bottom_x = item_x
+		bottom_y = item_y + item_h
 
-		if (menu_x + menu_w > canvas_x) and \
-		   (menu_y < canvas_y + canvas_rect.height):
-			menu_x = x - menu_w
-			menu_y = y
+		if self._position == MenuShell.LEFT:
+			[x, y] = [left_x, left_y]
+		elif self._position == MenuShell.RIGHT:
+			[x, y] = [right_x, right_y]
+		elif self._position == MenuShell.TOP:
+			[x, y] = [top_x, top_y]
+		elif self._position == MenuShell.BOTTOM:
+			[x, y] = [bottom_x, bottom_y]
+		elif self._position == MenuShell.AUTO:
+			[x, y] = [right_x, right_y]
+			if x + menu_w > gtk.gdk.screen_width():
+				[x, y] = [left_x, left_y]
 
-		return [menu_x, menu_y]
+		x = min(x, gtk.gdk.screen_width() - menu_w)
+		x = max(0, x)
+
+		y = min(y, gtk.gdk.screen_height() - menu_h)
+		y = max(0, y)
+
+		return [x, y]

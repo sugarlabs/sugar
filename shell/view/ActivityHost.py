@@ -42,9 +42,7 @@ class ActivityChatWindow(gtk.Window):
 		self.add(chat_widget)
 
 class ActivityHost:
-	def __init__(self, shell, window):
-		self._shell = shell
-
+	def __init__(self, window):
 		self._window = window
 		self._xid = window.get_xid()
 		self._pservice = PresenceService.get_instance()
@@ -73,8 +71,6 @@ class ActivityHost:
 		self._chat_window = ActivityChatWindow(win, self._chat_widget)
 
 		self._frame_was_visible = False
-		self._shell.connect('activity-changed', self._activity_changed_cb)
-		self._shell.connect('activity-closed', self._activity_closed_cb)
 
 	def get_id(self):
 		return self._id
@@ -143,13 +139,11 @@ class ActivityHost:
 	def is_chat_visible(self):
 		return self._chat_window.get_property('visible')
 
-	def _activity_changed_cb(self, shell, activity):
-		if activity != self:
+	def set_active(self, active):
+		if not active:
 			self.chat_hide()
 			self._frame_was_visible = False
 
-	def _activity_closed_cb(self, shell, activity):
-		if activity == self:
-			self.chat_hide()
-			self._frame_was_visible = False
-
+	def destroy(self):
+		self._chat_window.destroy()
+		self._frame_was_visible = False

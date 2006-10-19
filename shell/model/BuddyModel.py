@@ -139,7 +139,4 @@ class BuddyModel(gobject.GObject):
 	def __buddy_current_activity_changed_cb(self, buddy, activity=None):
 		if not self._buddy:
 			return
-		if activity:
-			self.emit('current-activity-changed', activity)
-		else:
-			self.emit('current-activity-changed')
+		self.emit('current-activity-changed', activity)
