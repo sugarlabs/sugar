@@ -1,0 +1,6 @@
+[Activity]
+name = Sketch
+id = org.laptop.Sketch
+icon = activity-sketch
+python_module = sketch.sketchactivity.SketchActivity
+show_launcher = yes

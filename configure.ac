@@ -53,6 +53,7 @@ activities/web/Makefile
 activities/chat/Makefile
 activities/groupchat/Makefile
 activities/terminal/Makefile
+activities/sketch/Makefile
 lib/Makefile
 lib/src/Makefile
 lib/python/Makefile
