@@ -56,7 +56,7 @@ class Toolbar(gtk.Toolbar):
 		self._entry = AddressEntry()
 		self._entry.connect("activate", self._entry_activate_cb)
 
-		width = int(gtk.gdk.screen_width() / 3 * 2)
+		width = int(gtk.gdk.screen_width() / 1.8)
 		self._entry.set_size_request(width, -1)
 
 		address_item.add(self._entry)
