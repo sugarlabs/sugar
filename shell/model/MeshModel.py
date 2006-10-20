@@ -80,10 +80,10 @@ class MeshModel(gobject.GObject):
 			self._check_service(service)
 
 	def get_activities(self):
-		return self._activities
+		return self._activities.values()
 
 	def get_buddies(self):
-		return self._buddies
+		return self._buddies.values()
 
 	def _buddy_activity_changed_cb(self, buddy, cur_activity):
 		if not self._buddies.has_key(buddy.get_name()):
