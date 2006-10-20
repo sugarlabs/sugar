@@ -69,7 +69,7 @@ class MeshBox(SpreadBox):
 		self._buddy_to_activity = {}
 
 		for buddy_model in self._model.get_buddies():
-			self._add_buddy(buddy_model)
+			self._add_alone_buddy(buddy_model)
 
 		self._model.connect('buddy-added', self._buddy_added_cb)
 		self._model.connect('buddy-removed', self._buddy_removed_cb)
