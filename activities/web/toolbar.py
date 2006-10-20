@@ -40,6 +40,12 @@ class Toolbar(gtk.Toolbar):
 		self.insert(self._forward, -1)
 		self._forward.show()
 
+		self._stop_and_reload = gtk.ToolButton()
+		self._forward.props.sensitive = False
+		self._stop_and_reload.connect("clicked", self._stop_and_reload_cb)
+		self.insert(self._stop_and_reload, -1)
+		self._stop_and_reload.show()
+
 		separator = gtk.SeparatorToolItem()
 		separator.set_draw(False)		
 		self.insert(separator, -1)
@@ -75,18 +81,30 @@ class Toolbar(gtk.Toolbar):
 
 		self._embed = embed
 		self._embed.connect("notify::progress", self._progress_changed_cb)
+		self._embed.connect("notify::loading", self._loading_changed_cb)
 		self._embed.connect("notify::address", self._address_changed_cb)
 		self._embed.connect("notify::can-go-back",
 							self._can_go_back_changed_cb)
 		self._embed.connect("notify::can-go-forward",
 							self._can_go_forward_changed_cb)
 
+		self._update_stop_and_reload_icon()
+
 	def set_links_controller(self, links_controller):
 		self._links_controller = links_controller
 		self._post.props.sensitive = True
 
+	def _update_stop_and_reload_icon(self):
+		if self._embed.props.loading:
+			self._stop_and_reload.set_icon_name('stock-close')
+		else:
+			self._stop_and_reload.set_icon_name('stock-continue')
+
 	def _progress_changed_cb(self, embed, spec):
 		self._entry.props.progress = embed.props.progress
+
+	def _loading_changed_cb(self, embed, spec):
+		self._update_stop_and_reload_icon()
 
 	def _address_changed_cb(self, embed, spec):
 		self._entry.set_text(embed.props.address)
@@ -105,6 +123,12 @@ class Toolbar(gtk.Toolbar):
 	
 	def _go_forward_cb(self, button):
 		self._embed.go_forward()
+
+	def _stop_and_reload_cb(self, button):
+		if self._embed.props.loading:
+			self._embed.stop_load()
+		else:
+			self._embed.reload(0)
 
 	def _post_cb(self, button):
 		title = self._embed.get_title()

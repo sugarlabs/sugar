@@ -33,7 +33,8 @@ enum {
 	PROP_TITLE,
 	PROP_ADDRESS,
 	PROP_CAN_GO_BACK,
-	PROP_CAN_GO_FORWARD
+	PROP_CAN_GO_FORWARD,
+	PROP_LOADING
 };
 
 void
@@ -87,6 +88,9 @@ sugar_browser_get_property(GObject         *object,
 	    case PROP_CAN_GO_FORWARD:
 			g_value_set_boolean(value, browser->can_go_forward);
 		break;
+	    case PROP_LOADING:
+			g_value_set_boolean(value, browser->loading);
+		break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 		break;
@@ -133,6 +137,13 @@ sugar_browser_class_init(SugarBrowserClass *browser_class)
 									 g_param_spec_boolean ("can-go-forward",
 														   "Can go forward",
 														   "Can go forward",
+														   FALSE,
+														   G_PARAM_READABLE));
+
+	g_object_class_install_property (gobject_class, PROP_LOADING,
+									 g_param_spec_boolean ("loading",
+														   "Loading",
+														   "Loading",
 														   FALSE,
 														   G_PARAM_READABLE));
 }
@@ -185,6 +196,15 @@ sugar_browser_set_progress(SugarBrowser *browser, float progress)
 }
 
 static void
+sugar_browser_set_loading(SugarBrowser *browser, gboolean loading)
+{
+	g_return_if_fail(SUGAR_IS_BROWSER(browser));
+
+	browser->loading = loading;
+	g_object_notify (G_OBJECT(browser), "loading");
+}
+
+static void
 net_state_cb(GtkMozEmbed *embed, const char *aURI, gint state, guint status)
 {
 	SugarBrowser *browser = SUGAR_BROWSER(embed);
@@ -193,7 +213,11 @@ net_state_cb(GtkMozEmbed *embed, const char *aURI, gint state, guint status)
 		if (state & GTK_MOZ_EMBED_FLAG_START) {
 			browser->total_requests = 0;
 			browser->current_requests = 0;
-			browser->progress = 0.0;
+
+			sugar_browser_set_progress(browser, 0.0);
+			sugar_browser_set_loading(browser, TRUE);
+		} else if (state & GTK_MOZ_EMBED_FLAG_STOP) {
+			sugar_browser_set_loading(browser, FALSE);
 		}
 	}
 

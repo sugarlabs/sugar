@@ -44,6 +44,7 @@ struct _SugarBrowser {
 	char *title;
 	gboolean can_go_back;
 	gboolean can_go_forward;
+	gboolean loading;
 };
 
 struct _SugarBrowserClass {
