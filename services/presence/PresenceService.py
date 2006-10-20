@@ -49,6 +49,7 @@ class ServiceAdv(object):
 		self._local = local
 		self._state = _SA_UNRESOLVED
 		self._resolver = None
+		self._resolv_tries = 0
 
 	def __del__(self):
 		if self._resolver:
@@ -66,6 +67,10 @@ class ServiceAdv(object):
 		return self._domain
 	def is_local(self):
 		return self._local
+	def resolv_tries(self):
+		return self._resolv_tries
+	def inc_resolv_tries(self):
+		self._resolv_tries += 1
 	def service(self):
 		return self._service
 	def set_service(self, service):
@@ -76,8 +81,10 @@ class ServiceAdv(object):
 	def resolver(self):
 		return self._resolver
 	def set_resolver(self, resolver):
-		if not isinstance(resolver, dbus.Interface):
-			raise ValueError("must be a valid dbus object")
+		if resolver and not isinstance(resolver, dbus.Interface):
+			raise ValueError("'resolver' must be a valid dbus object")
+		if not resolver and self._resolver:
+			del self._resolver
 		self._resolver = resolver
 	def state(self):
 		return self._state
@@ -85,6 +92,8 @@ class ServiceAdv(object):
 		if state == _SA_RESOLVE_PENDING:
 			if self._state == _SA_RESOLVED:
 				raise ValueError("Can't reset to resolve pending from resolved.")
+		if state == _SA_UNRESOLVED:
+			self._resolv_tries = 0
 		self._state = state
 
 class RegisteredServiceType(object):
@@ -565,8 +574,21 @@ class PresenceService(object):
 				port, txt, flags, updated)
 
 	def _service_resolved_failure_cb(self, adv, err):
-		adv.set_state(_SA_UNRESOLVED)
-		logging.error("Error resolving service %s.%s: %s" % (adv.name(), adv.stype(), err))
+		retried = False
+		adv.set_resolver(None)
+		if adv.stype() == Buddy.PRESENCE_SERVICE_TYPE:
+			# Retry the presence service type a few times
+			if adv.resolv_tries() < 4:
+				adv.set_state(_SA_RESOLVE_PENDING)
+				gobject.timeout_add(250, self._resolve_service, adv)
+				retried = True
+				logging.error("Retrying resolution of service %s.%s: %s" % (adv.name(),
+					adv.stype(), err))
+
+		if not retried:
+			logging.error("Error resolving service %s.%s: %s" % (adv.name(),
+					adv.stype(), err))
+			adv.set_state(_SA_UNRESOLVED)
 
 	def _resolve_service(self, adv):
 		"""Resolve and lookup a ZeroConf service to obtain its address and TXT records."""
@@ -578,6 +600,7 @@ class PresenceService(object):
 							avahi.DBUS_INTERFACE_SERVICE_RESOLVER)
 		resolver.connect_to_signal('Found', lambda *args: self._service_resolved_cb_glue(adv, *args))
 		resolver.connect_to_signal('Failure', lambda *args: self._service_resolved_failure_cb(adv, *args))
+		adv.inc_resolv_tries()
 		adv.set_resolver(resolver)
 		return False
 
