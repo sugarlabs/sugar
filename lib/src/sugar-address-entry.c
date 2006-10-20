@@ -24,7 +24,9 @@
 
 enum {
 	PROP_0,
-	PROP_PROGRESS
+	PROP_PROGRESS,
+	PROP_ADDRESS,
+	PROP_TITLE
 };
 
 typedef enum {
@@ -491,19 +493,62 @@ sugar_address_entry_expose(GtkWidget      *widget,
 }
 
 static void
-sugar_address_entry_set_property (GObject         *object,
-                        		  guint            prop_id,
-		                          const GValue    *value,
-        		                  GParamSpec      *pspec)
+update_entry_text(SugarAddressEntry *address_entry,
+				  gboolean           has_focus)
+{
+	if (has_focus) {
+		gtk_entry_set_text(GTK_ENTRY(address_entry),
+						   address_entry->address);
+	} else {
+		gtk_entry_set_text(GTK_ENTRY(address_entry),
+						   address_entry->title);
+	}
+}
+
+static void
+sugar_address_entry_set_address(SugarAddressEntry *address_entry,
+								const char        *address)
+{
+	g_free(address_entry->address);
+	address_entry->address = g_strdup(address);
+
+	update_entry_text(address_entry,
+					  gtk_widget_is_focus(GTK_WIDGET(address_entry)));
+}
+
+static void
+sugar_address_entry_set_title(SugarAddressEntry *address_entry,
+							  const char        *title)
+{
+	g_free(address_entry->title);
+	address_entry->title = g_strdup(title);
+
+	update_entry_text(address_entry,
+					  gtk_widget_is_focus(GTK_WIDGET(address_entry)));
+}
+
+static void
+sugar_address_entry_set_property(GObject         *object,
+                        		 guint            prop_id,
+		                         const GValue    *value,
+        		                 GParamSpec      *pspec)
 {
 	SugarAddressEntry *address_entry = SUGAR_ADDRESS_ENTRY(object);
 	GtkEntry *entry = GTK_ENTRY(object);
 
 	switch (prop_id) {
 		case PROP_PROGRESS:
-			address_entry->progress = g_value_get_double (value);
-			if (GTK_WIDGET_REALIZED (entry))
-				gdk_window_invalidate_rect (entry->text_area, NULL, FALSE);
+			address_entry->progress = g_value_get_double(value);
+			if (GTK_WIDGET_REALIZED(entry))
+				gdk_window_invalidate_rect(entry->text_area, NULL, FALSE);
+		break;
+		case PROP_ADDRESS:
+			sugar_address_entry_set_address(address_entry,
+											g_value_get_string(value));
+		break;
+		case PROP_TITLE:
+			sugar_address_entry_set_title(address_entry,
+										  g_value_get_string(value));
 		break;
 
 		default:
@@ -523,6 +568,12 @@ sugar_address_entry_get_property(GObject         *object,
 	switch (prop_id) {
 	    case PROP_PROGRESS:
 			g_value_set_double(value, entry->progress);
+		break;
+	    case PROP_TITLE:
+			g_value_set_string(value, entry->title);
+		break;
+	    case PROP_ADDRESS:
+			g_value_set_string(value, entry->address);
 		break;
 
 		default:
@@ -545,16 +596,50 @@ sugar_address_entry_class_init(SugarAddressEntryClass *klass)
 	quark_inner_border = g_quark_from_static_string ("gtk-entry-inner-border");
 
 	g_object_class_install_property (gobject_class, PROP_PROGRESS,
-                                     g_param_spec_double ("progress",
-                                                          "Progress",
-                                                          "Progress",
-                                                          0.0, 1.0, 0.0,
-                                                          G_PARAM_READWRITE));
+                                     g_param_spec_double("progress",
+                                                         "Progress",
+                                                         "Progress",
+                                                         0.0, 1.0, 0.0,
+                                                         G_PARAM_READWRITE));
 
+	g_object_class_install_property (gobject_class, PROP_TITLE,
+                                     g_param_spec_string("title",
+                                                         "Title",
+                                                         "Title",
+                                                         "",
+                                                         G_PARAM_READWRITE));
+
+	g_object_class_install_property (gobject_class, PROP_ADDRESS,
+                                     g_param_spec_string("address",
+                                                         "Address",
+                                                         "Address",
+                                                         "",
+                                                         G_PARAM_READWRITE));
+}
+
+static gboolean
+focus_in_event_cb(GtkWidget *widget, GdkEventFocus *event)
+{
+	update_entry_text(SUGAR_ADDRESS_ENTRY(widget), TRUE);
+	return FALSE;
+}
+
+static gboolean
+focus_out_event_cb(GtkWidget *widget, GdkEventFocus *event)
+{
+	update_entry_text(SUGAR_ADDRESS_ENTRY(widget), FALSE);
+	return FALSE;
 }
 
 static void
 sugar_address_entry_init(SugarAddressEntry *entry)
 {
 	entry->progress = 0.0;
+	entry->address = NULL;
+	entry->title = NULL;
+
+	g_signal_connect(entry, "focus-in-event",
+					 G_CALLBACK(focus_in_event_cb), NULL);
+	g_signal_connect(entry, "focus-out-event",
+					 G_CALLBACK(focus_out_event_cb), NULL);
 }
