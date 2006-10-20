@@ -172,9 +172,12 @@ class Buddy(gobject.GObject):
 		else:
 			return None
 
-	def get_service_of_type(self, stype):
+	def get_service_of_type(self, stype, activity=None):
 		try:
-			object_path = self._buddy.getServiceOfType(stype)
+			act_op = "/"
+			if activity:
+				act_op = activity.object_path()
+			object_path = self._buddy.getServiceOfType(stype, act_op)
 		except dbus.exceptions.DBusException:
 			return None
 		return self._ps_new_object(object_path)
