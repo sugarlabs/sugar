@@ -19,11 +19,6 @@
 import pygtk
 pygtk.require('2.0')
 
-from sugar.session.UITestSession import UITestSession
-
-session = UITestSession()
-session.start()
-
 import gtk
 import _sugar
 
