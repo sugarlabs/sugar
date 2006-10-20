@@ -618,6 +618,19 @@ sugar_address_entry_class_init(SugarAddressEntryClass *klass)
 }
 
 static gboolean
+button_press_event_cb (GtkWidget *widget, GdkEventButton *event)
+{
+	if (event->button == 1 && event->type == GDK_2BUTTON_PRESS) {
+		gtk_editable_select_region(GTK_EDITABLE(widget), 0, -1);
+		gtk_widget_grab_focus(widget);
+
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+static gboolean
 focus_in_event_cb(GtkWidget *widget, GdkEventFocus *event)
 {
 	update_entry_text(SUGAR_ADDRESS_ENTRY(widget), TRUE);
@@ -642,4 +655,6 @@ sugar_address_entry_init(SugarAddressEntry *entry)
 					 G_CALLBACK(focus_in_event_cb), NULL);
 	g_signal_connect(entry, "focus-out-event",
 					 G_CALLBACK(focus_out_event_cb), NULL);
+	g_signal_connect(entry, "button-press-event",
+					 G_CALLBACK(button_press_event_cb), NULL);
 }
