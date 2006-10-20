@@ -214,9 +214,10 @@ net_state_cb(GtkMozEmbed *embed, const char *aURI, gint state, guint status)
 			browser->total_requests = 0;
 			browser->current_requests = 0;
 
-			sugar_browser_set_progress(browser, 0.0);
+			sugar_browser_set_progress(browser, 0.03);
 			sugar_browser_set_loading(browser, TRUE);
 		} else if (state & GTK_MOZ_EMBED_FLAG_STOP) {
+			sugar_browser_set_progress(browser, 100.0);
 			sugar_browser_set_loading(browser, FALSE);
 		}
 	}
