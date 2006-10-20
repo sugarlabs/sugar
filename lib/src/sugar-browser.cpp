@@ -305,3 +305,17 @@ sugar_browser_scroll_pixels(SugarBrowser *browser,
 
 	DOMWindow->ScrollBy (dx, dy);
 }
+
+void
+sugar_browser_grab_focus(SugarBrowser *browser)
+{
+	GtkWidget *child;
+
+	child = gtk_bin_get_child(GTK_BIN(browser));
+
+	if (child != NULL) {
+		gtk_widget_grab_focus (child);
+	} else {
+		g_warning ("Need to realize the embed before grabbing focus!\n");
+	}
+}

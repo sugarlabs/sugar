@@ -121,6 +121,7 @@ class Toolbar(gtk.Toolbar):
 
 	def _entry_activate_cb(self, entry):
 		self._embed.load_url(entry.get_text())
+		self._embed.grab_focus()
 
 	def _go_back_cb(self, button):
 		self._embed.go_back()
