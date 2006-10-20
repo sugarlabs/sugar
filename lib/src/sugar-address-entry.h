@@ -39,6 +39,8 @@ struct _SugarAddressEntry {
 	GtkEntry base_instance;
 
 	float progress;
+	char *title;
+	char *address;
 };
 
 struct _SugarAddressEntryClass {

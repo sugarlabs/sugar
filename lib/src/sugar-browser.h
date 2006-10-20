@@ -59,6 +59,7 @@ SugarBrowser   *sugar_browser_create_window	(SugarBrowser *browser);
 void			sugar_browser_scroll_pixels (SugarBrowser *browser,
                             				 int           dx,
                             				 int           dy);
+void			sugar_browser_grab_focus	(SugarBrowser *browser);
 
 G_END_DECLS
 

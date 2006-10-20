@@ -83,6 +83,7 @@ class Toolbar(gtk.Toolbar):
 		self._embed.connect("notify::progress", self._progress_changed_cb)
 		self._embed.connect("notify::loading", self._loading_changed_cb)
 		self._embed.connect("notify::address", self._address_changed_cb)
+		self._embed.connect("notify::title", self._title_changed_cb)
 		self._embed.connect("notify::can-go-back",
 							self._can_go_back_changed_cb)
 		self._embed.connect("notify::can-go-forward",
@@ -107,7 +108,10 @@ class Toolbar(gtk.Toolbar):
 		self._update_stop_and_reload_icon()
 
 	def _address_changed_cb(self, embed, spec):
-		self._entry.set_text(embed.props.address)
+		self._entry.props.address = embed.props.address
+
+	def _title_changed_cb(self, embed, spec):
+		self._entry.props.title = embed.props.title
 
 	def _can_go_back_changed_cb(self, embed, spec):
 		self._back.props.sensitive = embed.props.can_go_back
@@ -117,6 +121,7 @@ class Toolbar(gtk.Toolbar):
 
 	def _entry_activate_cb(self, entry):
 		self._embed.load_url(entry.get_text())
+		self._embed.grab_focus()
 
 	def _go_back_cb(self, button):
 		self._embed.go_back()
