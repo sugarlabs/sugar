@@ -113,6 +113,9 @@ class Activity(gtk.Window):
 		"""Gets the activity type."""
 		return self._activity_type
 
+	def get_default_type(self):
+		return self._default_type
+
 	def get_shared(self):
 		"""Returns TRUE if the activity is shared on the mesh."""
 		return self._shared
