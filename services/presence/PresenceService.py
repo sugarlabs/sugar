@@ -340,10 +340,10 @@ class PresenceService(object):
 				avahi.DBUS_PATH_SERVER), avahi.DBUS_INTERFACE_SERVER)
 
 		# Always browse .local
-		self._new_domain_cb(avahi.IF_UNSPEC, avahi.PROTO_UNSPEC, "local")
+		self._new_domain_cb(avahi.IF_UNSPEC, avahi.PROTO_INET, "local")
 
 		# Connect to Avahi and start looking for stuff
-		domain_browser = self._mdns_service.DomainBrowserNew(avahi.IF_UNSPEC, avahi.PROTO_UNSPEC,
+		domain_browser = self._mdns_service.DomainBrowserNew(avahi.IF_UNSPEC, avahi.PROTO_INET,
 						"", avahi.DOMAIN_BROWSER_BROWSE, dbus.UInt32(0))
 		db = dbus.Interface(self._system_bus.get_object(avahi.DBUS_NAME, domain_browser), avahi.DBUS_INTERFACE_DOMAIN_BROWSER)
 		db.connect_to_signal('ItemNew', self._new_domain_cb_glue)
@@ -573,7 +573,7 @@ class PresenceService(object):
 		# Ask avahi to resolve this particular service
 		path = self._mdns_service.ServiceResolverNew(dbus.Int32(adv.interface()),
 				dbus.Int32(adv.protocol()), adv.name(), adv.stype(), adv.domain(),
-				avahi.PROTO_UNSPEC, dbus.UInt32(0))
+				avahi.PROTO_INET, dbus.UInt32(0))
 		resolver = dbus.Interface(self._system_bus.get_object(avahi.DBUS_NAME, path),
 							avahi.DBUS_INTERFACE_SERVICE_RESOLVER)
 		resolver.connect_to_signal('Found', lambda *args: self._service_resolved_cb_glue(adv, *args))
