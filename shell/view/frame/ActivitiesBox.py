@@ -34,8 +34,11 @@ class ActivityItem(CanvasIcon):
 
 class InviteItem(CanvasIcon):
 	def __init__(self, invite):
-		CanvasIcon.__init__(self, icon_name=invite.get_icon(),
-						    color=invite.get_color())
+		CanvasIcon.__init__(self, icon_name=invite.get_icon())
+
+		style.apply_stylesheet(self, 'frame.ActivityIcon')
+		self.props.color = invite.get_color()
+
 		self._invite = invite
 
 	def get_activity_id(self):
