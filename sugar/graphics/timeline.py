@@ -31,7 +31,7 @@ class TimelineObserver:
 		try:
 			method = getattr(self._observer, 'do_' + tag)
 			method(current_frame, n_frames)
-		except:
+		except AttributeError:
 			pass
 
 class Timeline:
