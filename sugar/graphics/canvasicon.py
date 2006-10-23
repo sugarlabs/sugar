@@ -88,18 +88,20 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
 		hippo.CanvasBox.__init__(self, **kwargs)
 
 		self._buffer = None
-		self._buffer_size = 0.0
 
 		self.connect('button-press-event', self._button_press_event_cb)
 
 	def do_set_property(self, pspec, value):
 		if pspec.name == 'icon-name':
 			self._icon_name = value
+			self._buffer = None
 			self.emit_paint_needed(0, 0, -1, -1)
 		elif pspec.name == 'color':
+			self._buffer = None
 			self._color = value
 			self.emit_paint_needed(0, 0, -1, -1)
 		elif pspec.name == 'size':
+			self._buffer = None
 			self._size = value
 			self.emit_request_changed()
 
@@ -112,10 +114,6 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
 			return self._color
 
 	def _get_buffer(self, cr, handle, size):
-		if self._buffer and self._buffer_size != size:
-			del self._buffer
-			self._buffer = None
-
 		if self._buffer == None:
 			target = cr.get_target()
 			surface = target.create_similar(cairo.CONTENT_COLOR_ALPHA,
