@@ -39,6 +39,8 @@ class LogWriter:
 	def write(self, level, msg):
 		if level == logging.ERROR:
 			level_txt = 'ERROR'
+		elif level == logging.WARNING:
+			level_txt = 'WARNING'
 		elif level == logging.DEBUG:
 			level_txt = 'DEBUG'
 		elif level == logging.INFO:
