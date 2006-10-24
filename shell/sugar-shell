@@ -28,6 +28,7 @@ from sugar import profile
 from sugar import env
 from sugar import TracebackUtils
 
+logger.cleanup()
 logger.start('shell')
 
 sys.path.insert(0, os.path.join(env.get_data_dir(), 'shell'))

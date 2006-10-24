@@ -29,10 +29,7 @@ class LogWriter:
 	def __init__(self, module_id):
 		self._module_id = module_id
 
-		logs_dir = os.path.join(env.get_profile_path(), 'logs')
-		if not os.path.isdir(logs_dir):
-			os.makedirs(logs_dir)
-
+		logs_dir = _get_logs_dir()
 		log_path = os.path.join(logs_dir, module_id + '.log')
 		self._log_file = open(log_path, 'w')
 
@@ -68,6 +65,12 @@ def __exception_handler(typ, exc, tb):
 
 	_log_writer.write(logging.ERROR, trace.getvalue())
 
+def _get_logs_dir():
+	logs_dir = os.path.join(env.get_profile_path(), 'logs')
+	if not os.path.isdir(logs_dir):
+		os.makedirs(logs_dir)
+	return logs_dir
+
 def start(module_id):
 	log_writer = LogWriter(module_id)
 
@@ -78,3 +81,8 @@ def start(module_id):
 	global _log_writer
 	_log_writer = log_writer
 	sys.excepthook = __exception_handler
+
+def cleanup():
+	logs_dir = _get_logs_dir()
+	for f in os.listdir(logs_dir):
+		os.remove(os.path.join(logs_dir, f))
