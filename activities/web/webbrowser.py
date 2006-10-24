@@ -63,8 +63,12 @@ class _PopupCreator(gobject.GObject):
 				logging.debug('Open a new activity for the popup')
 				self._dialog.remove(self._embed)
 
-				activity = BrowserActivity(self._embed)
-				activity.set_type('com.redhat.Sugar.BrowserActivity')
+				# FIXME We need a better way to handle this.
+				# It seem like a pretty special case though, I doubt
+				# other activities will need something similar.
+				from web.webactivity import WebActivity
+				activity = WebActivity(self._embed)
+				activity.set_type('org.laptop.WebActivity')
 
 			self._embed.disconnect(self._size_to_sid)
 			self._embed.disconnect(self._vis_sid)

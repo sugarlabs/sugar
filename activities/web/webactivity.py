@@ -33,7 +33,7 @@ from linkscontroller import LinksController
 _HOMEPAGE = 'http://www.google.com'
 
 class WebActivity(Activity):
-	def __init__(self):
+	def __init__(self, browser=None):
 		Activity.__init__(self)
 
 		logging.debug('Starting the web activity')
@@ -42,7 +42,10 @@ class WebActivity(Activity):
 
 		vbox = gtk.VBox()
 
-		self._browser = WebBrowser()
+		if browser:
+			self._browser = browser
+		else:
+			self._browser = WebBrowser()
 		self._browser.connect('notify::title', self._title_changed_cb)
 
 		self._links_model = LinksModel()
