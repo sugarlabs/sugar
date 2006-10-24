@@ -25,6 +25,10 @@ frame_ActivityIcon = {
 	'size'  : style.standard_icon_size
 }
 
+frame_OverlayIcon = {
+	'size' : style.standard_icon_size
+}
+
 frame_ZoomIcon = {
 	'size' : style.standard_icon_size
 }

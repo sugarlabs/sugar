@@ -88,7 +88,7 @@ class Shell(gobject.GObject):
 		elif key == 'F6':
 			self.start_activity('org.sugar.Terminal')
 		elif key == 'F9':
-			self._show_hide_activity_chat()
+			self.toggle_chat_visibility()
 
 	def __global_key_released_cb(self, grabber, key):
 		if key == 'F5':
@@ -182,7 +182,7 @@ class Shell(gobject.GObject):
 				return host
 		return None
 
-	def _show_hide_activity_chat(self):
+	def toggle_chat_visibility(self):
 		act = self.get_current_activity()
 		if not act:
 			return

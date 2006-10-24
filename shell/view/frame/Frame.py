@@ -21,6 +21,7 @@ import wnck
 
 from view.frame.ActivitiesBox import ActivitiesBox
 from view.frame.ZoomBox import ZoomBox
+from view.frame.overlaybox import OverlayBox
 from view.frame.FriendsBox import FriendsBox
 from view.frame.PanelWindow import PanelWindow
 from view.frame.notificationtray import NotificationTray
@@ -169,9 +170,15 @@ class Frame:
 		tray_widget.props.widget = tray
 		tray_box.append(tray_widget, gtk.EXPAND)
 
-		[x, y] = grid.point(14, 0)
+		[x, y] = grid.point(13, 0)
 		root.append(tray_box, hippo.PACK_FIXED)
 		root.move(tray_box, x, y)
+
+		box = OverlayBox(self._shell)
+
+		[x, y] = grid.point(14, 0)
+		root.append(box, hippo.PACK_FIXED)
+		root.move(box, x, y)
 
 		# Bottom panel
 		[menu_shell, root] = self._create_panel(grid, 0, 11, 16, 1)
