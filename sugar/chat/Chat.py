@@ -246,6 +246,9 @@ class Chat(gtk.VBox):
 			self._insert_sketch(buddy, chunk)
 			return
 
+	def set_stream_writer(self, stream_writer):
+		self._stream_writer = stream_writer
+
 	def send_sketch(self, svgdata):
 		if not svgdata or not len(svgdata):
 			return
