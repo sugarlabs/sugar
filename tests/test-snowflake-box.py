@@ -16,18 +16,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import pygtk
-pygtk.require('2.0')
-import gobject
-
-from sugar.session.UITestSession import UITestSession
-
-session = UITestSession()
-session.start()
-
 import sys
 import random
 
+import pygtk
+pygtk.require('2.0')
+
+import gobject
 import gtk
 import hippo
 
