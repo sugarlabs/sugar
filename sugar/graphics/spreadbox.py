@@ -30,7 +30,6 @@ class SpreadBox(hippo.CanvasBox, hippo.CanvasItem):
 		hippo.CanvasBox.__init__(self, **kwargs)
 
 		self._items_to_position = []
-		self._spread_on_add = False
 		self._stable = False
 
 	def add_item(self, item):
