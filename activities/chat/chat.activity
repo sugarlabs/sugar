@@ -1,4 +1,0 @@
-[Activity]
-name = Chat
-id = com.redhat.Sugar.ChatActivity
-python_module = chat.ChatActivity.ChatActivity

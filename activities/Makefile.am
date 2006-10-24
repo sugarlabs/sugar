@@ -1,1 +1,1 @@
-SUBDIRS = chat groupchat terminal web sketch
+SUBDIRS = groupchat terminal web sketch
