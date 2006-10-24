@@ -29,6 +29,9 @@ PKG_CHECK_MODULES(LIB, gtk+-2.0 xulrunner-gtkmozembed)
 MOZILLA_HOME="`$PKG_CONFIG --variable=libdir xulrunner-gtkmozembed`"
 AC_SUBST(MOZILLA_HOME)
 
+MOZILLA_INCLUDE_DIR="`$PKG_CONFIG --variable=includedir xulrunner-gtkmozembed`"
+AC_SUBST(MOZILLA_INCLUDE_DIR)
+
 GNOMEPYTHONEXTRAS_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
 AC_SUBST(GNOMEPYTHONEXTRAS_DEFSDIR)
 

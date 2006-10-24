@@ -1,6 +1,7 @@
-INCLUDES =			\
-	$(WARN_CFLAGS)		\
-	$(LIB_CFLAGS)
+INCLUDES =					\
+	$(WARN_CFLAGS)				\
+	$(LIB_CFLAGS)				\
+	-I$(MOZILLA_INCLUDE_DIR)/exthandler
 
 noinst_LTLIBRARIES = libsugarprivate.la
 
