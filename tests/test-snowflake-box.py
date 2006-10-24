@@ -27,6 +27,7 @@ import gtk
 import hippo
 
 from sugar.graphics.snowflakebox import SnowflakeBox
+from sugar.graphics.spreadbox import SpreadBox
 from sugar.graphics.iconcolor import IconColor
 from sugar.graphics.canvasicon import CanvasIcon
 
@@ -49,18 +50,28 @@ window.show()
 
 canvas = hippo.Canvas()
 
-root_box = hippo.CanvasBox(background_color=0xe2e2e2ff)
+root_box = SpreadBox(background_color=0xe2e2e2ff)
 canvas.set_root(root_box)
 
-box1 = SnowflakeBox()
-snow_flake = _create_snowflake(box1, 30)
-root_box.append(box1, hippo.PACK_FIXED)
-root_box.move(box1, 0, 0)
+box = SnowflakeBox()
+snow_flake = _create_snowflake(box, 30)
+root_box.add_item(box)
 
-box2 = SnowflakeBox()
-snow_flake = _create_snowflake(box2, 10)
-root_box.append(box2, hippo.PACK_FIXED)
-root_box.move(box2, 400, 0)
+box = SnowflakeBox()
+snow_flake = _create_snowflake(box, 15)
+root_box.add_item(box)
+
+box = SnowflakeBox()
+snow_flake = _create_snowflake(box, 10)
+root_box.add_item(box)
+
+box = SnowflakeBox()
+snow_flake = _create_snowflake(box, 5)
+root_box.add_item(box)
+
+box = SnowflakeBox()
+snow_flake = _create_snowflake(box, 2)
+root_box.add_item(box)
 
 canvas.show()
 window.add(canvas)
