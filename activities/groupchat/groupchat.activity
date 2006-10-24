@@ -1,6 +1,0 @@
-[Activity]
-name = GroupChat
-icon = activity-groupchat
-id = com.redhat.Sugar.GroupChatActivity
-python_module = groupchat.GroupChatActivity.GroupChatActivity
-show_launcher = no
