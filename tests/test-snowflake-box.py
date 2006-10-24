@@ -45,6 +45,7 @@ def _create_snowflake(parent, children):
 		parent.append(icon, hippo.PACK_FIXED)
 
 window = gtk.Window()
+window.set_default_size(gtk.gdk.screen_width(), gtk.gdk.screen_height())
 window.connect("destroy", lambda w: gtk.main_quit())
 window.show()
 
