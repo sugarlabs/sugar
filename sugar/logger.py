@@ -25,6 +25,9 @@ from sugar import env
 
 _log_writer = None
 
+STDOUT_LEVEL = 1000
+STDERR_LEVEL = 2000
+
 class LogWriter:
 	def __init__(self, module_id):
 		self._module_id = module_id
@@ -45,6 +48,10 @@ class LogWriter:
 			level_txt = 'DEBUG'
 		elif level == logging.INFO:
 			level_txt = 'INFO'
+		elif level == STDERR_LEVEL:
+			level_txt = 'STDERR'
+		elif level == STDOUT_LEVEL:
+			level_txt = 'STDOUT'			
 
 		fmt = "%s - %s\n" % (level_txt, msg)
 		fmt = fmt.encode("utf8")
@@ -59,6 +66,16 @@ class Handler(logging.Handler):
 
 	def emit(self, record):
 		self._writer.write_record(record)
+
+class StdoutCatcher:
+	def write(self, txt):
+		_log_writer.write(STDOUT_LEVEL, txt)
+		sys.__stdout__.write(txt)
+
+class StderrCatcher:
+	def write(self, txt):
+		_log_writer.write(STDERR_LEVEL, txt)
+		sys.__stderr__.write(txt)
 
 def __exception_handler(typ, exc, tb):
 	trace = StringIO()
@@ -79,6 +96,9 @@ def start(module_id):
 	root_logger = logging.getLogger('')
 	root_logger.setLevel(logging.DEBUG)
 	root_logger.addHandler(Handler(log_writer))
+
+	sys.stdout = StdoutCatcher()
+	sys.stderr = StderrCatcher()
 
 	global _log_writer
 	_log_writer = log_writer
