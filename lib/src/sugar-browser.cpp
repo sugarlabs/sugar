@@ -24,6 +24,8 @@
 #include <nsCOMPtr.h>
 #include <nsIPrefService.h>
 #include <nsServiceManagerUtils.h>
+#include <nsStringAPI.h>
+#include <nsILocalFile.h>
 #include <nsIWebBrowser.h>
 #include <nsIWebBrowserFocus.h>
 #include <nsIDOMWindow.h>
@@ -56,28 +58,34 @@ static const nsModuleComponentInfo sSugarComponents[] = {
 gboolean
 sugar_browser_startup(void)
 {
-	nsCOMPtr<nsIPrefService> prefService;
 	nsresult rv;
 
+	nsCOMPtr<nsIPrefService> prefService;
 	prefService = do_GetService(NS_PREFSERVICE_CONTRACTID);
 	NS_ENSURE_TRUE(prefService, FALSE);
 
+	/* Read our predefined default prefs */
+	nsCOMPtr<nsILocalFile> file;
+	NS_NewNativeLocalFile(nsCString(SHARE_DIR"/gecko-prefs.js"),
+						  PR_TRUE, getter_AddRefs(file));
+	NS_ENSURE_TRUE(file, FALSE);
+
+	rv = prefService->ReadUserPrefs (file);                                                                              
+	if (NS_FAILED(rv)) {
+		g_warning ("failed to read default preferences, error: %x", rv);
+		return FALSE;
+	}
+
 	nsCOMPtr<nsIPrefBranch> pref;
-	prefService->GetBranch("", getter_AddRefs(pref));
+	prefService->GetBranch ("", getter_AddRefs(pref));
 	NS_ENSURE_TRUE(pref, FALSE);
 
-	/* Block onload popups */
-	pref->SetBoolPref("dom.disable_open_during_load", TRUE);
+	rv = prefService->ReadUserPrefs (nsnull);
+	if (NS_FAILED(rv)) {
+		g_warning ("failed to read user preferences, error: %x", rv);
+	}
 
-	/* Disable useless security warning */
-	pref->SetBoolPref("security.warn_submit_insecure", FALSE);
-
-	/* Style tweaks */
-	pref->SetCharPref("ui.buttontext", "#000000");
-	pref->SetCharPref("ui.buttonface", "#D3D3DD");
-	pref->SetCharPref("ui.-moz-field", "#FFFFFF");
-	pref->SetCharPref("ui.-moz-fieldtext", "#000000");
-
+	/* Register our components */
 	nsCOMPtr<nsIComponentRegistrar> componentRegistrar;
 	NS_GetComponentRegistrar(getter_AddRefs(componentRegistrar));
 	NS_ENSURE_TRUE (componentRegistrar, FALSE);

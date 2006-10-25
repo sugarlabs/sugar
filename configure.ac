@@ -57,6 +57,7 @@ activities/chat/Makefile
 activities/terminal/Makefile
 activities/sketch/Makefile
 lib/Makefile
+lib/data/Makefile
 lib/src/Makefile
 lib/python/Makefile
 lib/threadframe/Makefile

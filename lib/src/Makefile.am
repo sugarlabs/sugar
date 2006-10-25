@@ -1,28 +1,29 @@
-INCLUDES =					\
-	$(WARN_CFLAGS)				\
-	$(LIB_CFLAGS)				\
-	-I$(MOZILLA_INCLUDE_DIR)/exthandler
-
 noinst_LTLIBRARIES = libsugarprivate.la
 
 libsugarprivate_la_LIBADD = $(GECKO_LIBS)
 
-libsugarprivate_la_SOURCES = 	\
-	$(BUILT_SOURCES)	\
-	eggaccelerators.h	\
-	eggaccelerators.c	\
-	sugar-browser.h		\
-	sugar-browser.cpp	\
-	sugar-address-entry.h	\
-	sugar-address-entry.c	\
-	sugar-key-grabber.h	\
-	sugar-key-grabber.c	\
-	sugar-push-scroller.c	\
-	sugar-push-scroller.h	\
-	sugar-tray-manager.c	\
-	sugar-tray-manager.h	\
-	sugar-content-handler.h			\
-	sugar-content-handler.cpp
+libsugarprivate_la_SOURCES = 		\
+	$(BUILT_SOURCES)		\
+	eggaccelerators.h		\
+	eggaccelerators.c		\
+	sugar-browser.h			\
+	sugar-browser.cpp		\
+	sugar-content-handler.h		\
+	sugar-content-handler.cpp	\
+	sugar-address-entry.h		\
+	sugar-address-entry.c		\
+	sugar-key-grabber.h		\
+	sugar-key-grabber.c		\
+	sugar-push-scroller.c		\
+	sugar-push-scroller.h		\
+	sugar-tray-manager.c		\
+	sugar-tray-manager.h
+
+libsugarprivate_la_CPPFLAGS =			\
+	$(WARN_CFLAGS)				\
+	$(LIB_CFLAGS)				\
+	-I$(MOZILLA_INCLUDE_DIR)/exthandler	\
+	-DSHARE_DIR=\"$(pkgdatadir)\"
 
 BUILT_SOURCES = 		\
 	sugar-marshal.c		\
