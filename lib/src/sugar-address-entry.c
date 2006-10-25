@@ -649,7 +649,7 @@ sugar_address_entry_init(SugarAddressEntry *entry)
 {
 	entry->progress = 0.0;
 	entry->address = NULL;
-	entry->title = NULL;
+	entry->title = g_strdup("");
 
 	g_signal_connect(entry, "focus-in-event",
 					 G_CALLBACK(focus_in_event_cb), NULL);
