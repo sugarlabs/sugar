@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 # Copyright (C) 2006, Red Hat, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -14,18 +16,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-#!/usr/bin/python
+import sys
+import random
+
 import pygtk
 pygtk.require('2.0')
 import gobject
-
-from sugar.session.UITestSession import UITestSession
-
-session = UITestSession()
-session.start()
-
-import sys
-import random
 
 import gtk
 import hippo
@@ -39,9 +35,9 @@ def _create_icon():
 
 	icon = CanvasIcon(size=100, color=color,
 					  icon_name='stock-buddy')
-	box.add(icon)
+	box.add_item(icon)
 
-	return (len(box.get_children()) < 15)
+	return (len(box.get_children()) < 20)
 
 window = gtk.Window()
 window.connect("destroy", lambda w: gtk.main_quit())

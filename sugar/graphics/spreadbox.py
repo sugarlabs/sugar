@@ -21,7 +21,8 @@ import math
 import cairo
 import hippo
 
-_DISTANCE_THRESHOLD = 120.0
+_DISTANCE_THRESHOLD = 10.0
+_FORCE_CONSTANT = 0.1
 
 class SpreadBox(hippo.CanvasBox, hippo.CanvasItem):
 	__gtype_name__ = 'SugarSpreadBox'
@@ -41,21 +42,36 @@ class SpreadBox(hippo.CanvasBox, hippo.CanvasItem):
 			self._items_to_position.remove(item)
 		self.remove(item)
 
-	def _get_distance(self, icon1, icon2):
-		[icon1_x, icon1_y] = self.get_position(icon1)
-		[icon2_x, icon2_y] = self.get_position(icon2)
+	def _get_item_radius(self, item):
+		[width, height] = item.get_request()
+		return math.sqrt(width ** 2  + height ** 2) / 2
 
-		a = icon1_x - icon2_x
-		b = icon1_y - icon2_y
+	def _get_item_center(self, item):
+		[width, height] = item.get_request()
+		[x, y] = self.get_position(item)
 
-		return math.sqrt(a * a  + b * b)
+		c_x = int(x + float(width) / 2.0)
+		c_y = int(y + float(height) / 2.0)
+
+		return [c_x, c_y]
 
 	def _get_repulsion(self, icon1, icon2):
-		[icon1_x, icon1_y] = self.get_position(icon1)
-		[icon2_x, icon2_y] = self.get_position(icon2)
+		[c1_x, c1_y] = self._get_item_center(icon1)
+		[c2_x, c2_y] = self._get_item_center(icon2)
 
-		f_x = icon1_x - icon2_x
-		f_y = icon1_y - icon2_y
+		a = c2_x - c1_x
+		b = c2_y - c1_y
+
+		r1 = self._get_item_radius(icon1)
+		r2 = self._get_item_radius(icon2)
+		distance = math.sqrt(a ** 2  + b ** 2) - r1 - r2
+
+		if distance < _DISTANCE_THRESHOLD:
+			f_x = int(math.ceil(-_FORCE_CONSTANT * float(a)))
+			f_y = int(math.ceil(-_FORCE_CONSTANT * float(b)))
+		else:
+			f_x = 0
+			f_y = 0
 
 		return [f_x, f_y]
 
@@ -80,10 +96,9 @@ class SpreadBox(hippo.CanvasBox, hippo.CanvasItem):
 
 			for icon2 in self.get_children():
 				if icon1 != icon2:
-					distance = self._get_distance(icon1, icon2)
-					if distance <= _DISTANCE_THRESHOLD:
+					[f_x, f_y] = self._get_repulsion(icon1, icon2)
+					if f_x != 0 or f_y != 0:
 						self._stable = False
-						[f_x, f_y] = self._get_repulsion(icon1, icon2)
 						vx += f_x
 						vy += f_y
 
@@ -110,7 +125,7 @@ class SpreadBox(hippo.CanvasBox, hippo.CanvasItem):
 
 		self._items_to_position = []
 
-		tries = 10
+		tries = 20
 		self._spread_icons()
 		while not self._stable and tries > 0:
 			self._spread_icons()
