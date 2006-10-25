@@ -54,7 +54,7 @@ struct _SugarBrowserClass {
 };
 
 GType			sugar_browser_get_type		(void);
-void			sugar_browser_startup		(void);
+gboolean		sugar_browser_startup		(void);
 SugarBrowser   *sugar_browser_create_window	(SugarBrowser *browser);
 void			sugar_browser_scroll_pixels (SugarBrowser *browser,
                             				 int           dx,

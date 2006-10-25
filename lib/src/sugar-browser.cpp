@@ -18,6 +18,7 @@
  */
 
 #include "sugar-browser.h"
+#include "sugar-content-handler.h"
 
 #include <gtkmozembed_internal.h>
 #include <nsCOMPtr.h>
@@ -26,6 +27,12 @@
 #include <nsIWebBrowser.h>
 #include <nsIWebBrowserFocus.h>
 #include <nsIDOMWindow.h>
+#include <nsIGenericFactory.h>
+#include <nsIHelperAppLauncherDialog.h>
+#include <nsIComponentRegistrar.h>
+#include <nsIComponentManager.h>
+
+NS_GENERIC_FACTORY_CONSTRUCTOR(GSugarContentHandler)
 
 enum {
 	PROP_0,
@@ -37,17 +44,27 @@ enum {
 	PROP_LOADING
 };
 
-void
+static const nsModuleComponentInfo sSugarComponents[] = {
+	{
+		"Sugar Content Handler",
+		G_SUGARCONTENTHANDLER_CID,
+		NS_IHELPERAPPLAUNCHERDLG_CONTRACTID,
+		GSugarContentHandlerConstructor
+	}
+};
+
+gboolean
 sugar_browser_startup(void)
 {
 	nsCOMPtr<nsIPrefService> prefService;
+	nsresult rv;
 
 	prefService = do_GetService(NS_PREFSERVICE_CONTRACTID);
-	NS_ENSURE_TRUE(prefService, );
+	NS_ENSURE_TRUE(prefService, FALSE);
 
 	nsCOMPtr<nsIPrefBranch> pref;
 	prefService->GetBranch("", getter_AddRefs(pref));
-	NS_ENSURE_TRUE(pref, );
+	NS_ENSURE_TRUE(pref, FALSE);
 
 	/* Block onload popups */
 	pref->SetBoolPref("dom.disable_open_during_load", TRUE);
@@ -60,6 +77,43 @@ sugar_browser_startup(void)
 	pref->SetCharPref("ui.buttonface", "#D3D3DD");
 	pref->SetCharPref("ui.-moz-field", "#FFFFFF");
 	pref->SetCharPref("ui.-moz-fieldtext", "#000000");
+
+	nsCOMPtr<nsIComponentRegistrar> componentRegistrar;
+	NS_GetComponentRegistrar(getter_AddRefs(componentRegistrar));
+	NS_ENSURE_TRUE (componentRegistrar, FALSE);
+
+	nsCOMPtr<nsIComponentManager> componentManager;
+	NS_GetComponentManager (getter_AddRefs (componentManager));
+	NS_ENSURE_TRUE (componentManager, FALSE);
+	
+	nsCOMPtr<nsIGenericFactory> componentFactory;
+	rv = NS_NewGenericFactory(getter_AddRefs(componentFactory), 
+							  &(sSugarComponents[0]));
+	if (NS_FAILED(rv) || !componentFactory) {
+		g_warning ("Failed to make a factory for %s\n", sSugarComponents[0].mDescription);
+		return FALSE;
+	}
+
+	rv = componentRegistrar->RegisterFactory(sSugarComponents[0].mCID,
+					 sSugarComponents[0].mDescription,
+					 sSugarComponents[0].mContractID,
+					 componentFactory);
+	if (NS_FAILED(rv)) {
+		g_warning ("Failed to register factory for %s\n", sSugarComponents[0].mDescription);
+		return FALSE;
+	}
+
+	if (sSugarComponents[0].mRegisterSelfProc) {
+		rv = sSugarComponents[0].mRegisterSelfProc(componentManager, nsnull, 
+												   nsnull, nsnull, 
+												   &sSugarComponents[0]);
+		if (NS_FAILED(rv)) {
+			g_warning ("Failed to register-self for %s\n", sSugarComponents[0].mDescription);
+			return FALSE;
+		}
+	}
+	
+	return TRUE;
 }
 
 G_DEFINE_TYPE(SugarBrowser, sugar_browser, GTK_TYPE_MOZ_EMBED)

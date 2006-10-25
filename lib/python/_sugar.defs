@@ -56,7 +56,7 @@
 
 (define-function startup_browser
   (c-name "sugar_browser_startup")
-  (return-type "none")
+  (return-type "gboolean")
 )
 
 (define-method grab_focus

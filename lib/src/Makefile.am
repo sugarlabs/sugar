@@ -20,7 +20,9 @@ libsugarprivate_la_SOURCES = 	\
 	sugar-push-scroller.c	\
 	sugar-push-scroller.h	\
 	sugar-tray-manager.c	\
-	sugar-tray-manager.h
+	sugar-tray-manager.h	\
+	sugar-content-handler.h			\
+	sugar-content-handler.cpp
 
 BUILT_SOURCES = 		\
 	sugar-marshal.c		\

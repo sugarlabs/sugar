@@ -98,7 +98,8 @@ def start():
 	gtkmozembed.set_profile_path(env.get_profile_path(), 'gecko')
 
 	gtkmozembed.push_startup()
-	_sugar.startup_browser()
+	if not _sugar.startup_browser():
+		raise "Error when initializising the web activity."
 
 	style.load_stylesheet(web.stylesheet)
 
