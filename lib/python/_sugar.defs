@@ -35,6 +35,13 @@
   (gtype-id "SUGAR_TYPE_PUSH_SCROLLER")
 )
 
+(define-object BrowserChandler
+  (in-module "Sugar")
+  (parent "GObject")
+  (c-name "SugarBrowserChandler")
+  (gtype-id "SUGAR_TYPE_BROWSER_CHANDLER")
+)
+
 ;; Enumerations and flags ...
 
 
@@ -172,4 +179,16 @@
   (parameters
     '("guint32" "timestamp")
   )
+)
+
+;; From sugar-browser-chandler.h
+
+(define-function sugar_browser_chandler_get_type
+  (c-name "sugar_browser_chandler_get_type")
+  (return-type "GType")
+)
+
+(define-function get_browser_chandler
+  (c-name "sugar_get_browser_chandler")
+  (return-type "SugarBrowserChandler*")
 )

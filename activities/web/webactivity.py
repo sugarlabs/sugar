@@ -102,6 +102,13 @@ def start():
 		raise "Error when initializising the web activity."
 
 	style.load_stylesheet(web.stylesheet)
+	
+	chandler = _sugar.get_browser_chandler()
+	chandler.connect('handle-content', handle_content_cb)
+	logging.debug('handle-content connected.')
 
 def stop():
 	gtkmozembed.pop_startup()
+
+def handle_content_cb(chandler, url, suggestedFileName, mimeType, tmpFileName):
+	logging.debug('File ' + tmpFileName + ' with MIMEType ' + mimeType + ' downloaded from ' + url)
