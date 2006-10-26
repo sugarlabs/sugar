@@ -6,7 +6,7 @@ sugar_PYTHON =			\
 
 bin_SCRIPTS = sugar-nm-applet
 
-dbusservicedir = $(sysconfdir)
+dbusservicedir = $(sysconfdir)/dbus-1/system.d/
 dbusservice_DATA = NetworkManagerInfo.conf
 
 EXTRA_DIST = $(dbusservice_DATA) $(bin_SCRIPTS)
