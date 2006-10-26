@@ -1,1 +1,1 @@
-SUBDIRS = presence
+SUBDIRS = presence nm
