@@ -20,6 +20,7 @@ import gtkmozembed
 import logging
 
 import _sugar
+from sugar.activity import ActivityFactory
 from sugar.activity.Activity import Activity
 from sugar import env
 from sugar.graphics import style
@@ -105,10 +106,10 @@ def start():
 	
 	chandler = _sugar.get_browser_chandler()
 	chandler.connect('handle-content', handle_content_cb)
-	logging.debug('handle-content connected.')
 
 def stop():
 	gtkmozembed.pop_startup()
 
-def handle_content_cb(chandler, url, suggestedFileName, mimeType, tmpFileName):
-	logging.debug('File ' + tmpFileName + ' with MIMEType ' + mimeType + ' downloaded from ' + url)
+def handle_content_cb(chandler, url, mimeType, tmpFileName):
+	activity = ActivityFactory.create("org.laptop.sugar.Xbook")
+	activity.execute("open_document", [tmpFileName])

@@ -4,6 +4,7 @@ libsugarprivate_la_CPPFLAGS =			\
 	-I$(MOZILLA_INCLUDE_DIR)/exthandler	\
 	-I$(MOZILLA_INCLUDE_DIR)/mimetype   	\
 	-I$(MOZILLA_INCLUDE_DIR)/necko		\
+	-I$(MOZILLA_INCLUDE_DIR)/uriloader	\
 	-DSHARE_DIR=\"$(pkgdatadir)\"
 
 noinst_LTLIBRARIES = libsugarprivate.la
@@ -22,6 +23,8 @@ libsugarprivate_la_SOURCES = 	\
 	sugar-browser-chandler.c	\
 	sugar-content-handler.h		\
 	sugar-content-handler.cpp	\
+	SugarDownload.h				\
+	SugarDownload.cpp			\
 	sugar-key-grabber.h			\
 	sugar-key-grabber.c			\
 	sugar-push-scroller.c		\

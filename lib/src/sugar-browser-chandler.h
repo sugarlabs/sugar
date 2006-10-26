@@ -31,7 +31,6 @@ GType				  sugar_browser_chandler_get_type	    (void);
 SugarBrowserChandler *sugar_get_browser_chandler		    (void);
 void            	  sugar_browser_chandler_handle_content (SugarBrowserChandler *chandler,
 															 const char *url, 
-															 const char *suggested_file_name, 
 															 const char *mime_type,
 															 const char *tmp_file_name);
 

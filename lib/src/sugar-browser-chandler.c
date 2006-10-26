@@ -28,9 +28,8 @@ sugar_browser_chandler_class_init(SugarBrowserChandlerClass *browser_chandler_cl
 		  			  G_SIGNAL_RUN_LAST,
 		  			  G_STRUCT_OFFSET (SugarBrowserChandlerClass, handle_content),
 					  NULL, NULL,
-					  sugar_marshal_VOID__STRING_STRING_STRING_STRING,
-					  G_TYPE_NONE, 4,
-					  G_TYPE_STRING,
+					  sugar_marshal_VOID__STRING_STRING_STRING,
+					  G_TYPE_NONE, 3,
 					  G_TYPE_STRING,
 					  G_TYPE_STRING,
 					  G_TYPE_STRING);
@@ -48,7 +47,6 @@ sugar_get_browser_chandler()
 void
 sugar_browser_chandler_handle_content (SugarBrowserChandler *browser_chandler, 
 									   const char *url, 
-									   const char *suggested_file_name,
 									   const char *mime_type, 
 									   const char *tmp_file_name)
 {	
@@ -56,7 +54,6 @@ sugar_browser_chandler_handle_content (SugarBrowserChandler *browser_chandler,
 				  signals[HANDLE_CONTENT],
                   0 /* details */, 
                   url,
-                  suggested_file_name,
                   mime_type,
                   tmp_file_name);          
 }

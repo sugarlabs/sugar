@@ -19,6 +19,7 @@
 
 #include "sugar-browser.h"
 #include "sugar-content-handler.h"
+#include "SugarDownload.h"
 
 #include <gtkmozembed_internal.h>
 #include <nsCOMPtr.h>
@@ -35,6 +36,7 @@
 #include <nsIComponentManager.h>
 
 NS_GENERIC_FACTORY_CONSTRUCTOR(GSugarContentHandler)
+NS_GENERIC_FACTORY_CONSTRUCTOR(GSugarDownload)
 
 enum {
 	PROP_0,
@@ -52,6 +54,12 @@ static const nsModuleComponentInfo sSugarComponents[] = {
 		G_SUGARCONTENTHANDLER_CID,
 		NS_IHELPERAPPLAUNCHERDLG_CONTRACTID,
 		GSugarContentHandlerConstructor
+	},
+	{
+		"Sugar Download",
+		G_SUGARDOWNLOAD_CID,
+		NS_TRANSFER_CONTRACTID,
+		GSugarDownloadConstructor
 	}
 };
 
@@ -94,30 +102,33 @@ sugar_browser_startup(void)
 	NS_GetComponentManager (getter_AddRefs (componentManager));
 	NS_ENSURE_TRUE (componentManager, FALSE);
 	
-	nsCOMPtr<nsIGenericFactory> componentFactory;
-	rv = NS_NewGenericFactory(getter_AddRefs(componentFactory), 
-							  &(sSugarComponents[0]));
-	if (NS_FAILED(rv) || !componentFactory) {
-		g_warning ("Failed to make a factory for %s\n", sSugarComponents[0].mDescription);
-		return FALSE;
-	}
-
-	rv = componentRegistrar->RegisterFactory(sSugarComponents[0].mCID,
-					 sSugarComponents[0].mDescription,
-					 sSugarComponents[0].mContractID,
-					 componentFactory);
-	if (NS_FAILED(rv)) {
-		g_warning ("Failed to register factory for %s\n", sSugarComponents[0].mDescription);
-		return FALSE;
-	}
-
-	if (sSugarComponents[0].mRegisterSelfProc) {
-		rv = sSugarComponents[0].mRegisterSelfProc(componentManager, nsnull, 
-												   nsnull, nsnull, 
-												   &sSugarComponents[0]);
-		if (NS_FAILED(rv)) {
-			g_warning ("Failed to register-self for %s\n", sSugarComponents[0].mDescription);
+	for (guint i = 0; i < G_N_ELEMENTS(sSugarComponents); i++) {
+	
+		nsCOMPtr<nsIGenericFactory> componentFactory;
+		rv = NS_NewGenericFactory(getter_AddRefs(componentFactory), 
+								  &(sSugarComponents[i]));
+		if (NS_FAILED(rv) || !componentFactory) {
+			g_warning ("Failed to make a factory for %s\n", sSugarComponents[i].mDescription);
 			return FALSE;
+		}
+
+		rv = componentRegistrar->RegisterFactory(sSugarComponents[i].mCID,
+						 sSugarComponents[i].mDescription,
+						 sSugarComponents[i].mContractID,
+						 componentFactory);
+		if (NS_FAILED(rv)) {
+			g_warning ("Failed to register factory for %s\n", sSugarComponents[i].mDescription);
+			return FALSE;
+		}
+
+		if (sSugarComponents[i].mRegisterSelfProc) {
+			rv = sSugarComponents[i].mRegisterSelfProc(componentManager, nsnull, 
+													   nsnull, nsnull, 
+													   &sSugarComponents[i]);
+			if (NS_FAILED(rv)) {
+				g_warning ("Failed to register-self for %s\n", sSugarComponents[i].mDescription);
+				return FALSE;
+			}
 		}
 	}
 	
