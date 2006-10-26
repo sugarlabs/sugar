@@ -21,6 +21,8 @@ import dbus.glib
 import dbus.decorators
 import gobject
 import gtk
+import logging
+from gettext import gettext as _
 
 import nminfo
 
@@ -52,6 +54,11 @@ DEVICE_TYPE_UNKNOWN = 0
 DEVICE_TYPE_802_3_ETHERNET = 1
 DEVICE_TYPE_802_11_WIRELESS = 2
 
+NM_DEVICE_CAP_NONE = 0x00000000
+NM_DEVICE_CAP_NM_SUPPORTED = 0x00000001
+NM_DEVICE_CAP_CARRIER_DETECT = 0x00000002
+NM_DEVICE_CAP_WIRELESS_SCAN = 0x00000004
+
 
 sys_bus = dbus.SystemBus()
 
@@ -67,6 +74,7 @@ class Network(gobject.GObject):
 		self._ssid = None
 		self._mode = None
 		self._strength = 0
+		self._valid = False
 
 		obj = sys_bus.get_object(NM_SERVICE, self._op)
 		net = dbus.Interface(obj, NM_IFACE_DEVICES)
@@ -77,10 +85,13 @@ class Network(gobject.GObject):
 		self._ssid = props[1]
 		self._strength = props[3]
 		self._mode = props[6]
-		print "Net(%s): ssid '%s', mode %d, strength %d" % (self._op, self._ssid, self._mode, self._strength)
+		self._valid = True
+		logging.debug("Net(%s): ssid '%s', mode %d, strength %d" % (self._op,
+				self._ssid, self._mode, self._strength))
 
 	def _update_error_cb(self, err):
-		print "Net(%s): failed to update." % self._op
+		logging.debug("Net(%s): failed to update. (%s)" % (self._op, err))
+		self._valid = False
 		self.emit('init-failed')
 
 	def get_ssid(self):
@@ -95,6 +106,23 @@ class Network(gobject.GObject):
 	def set_strength(self, strength):
 		self._strength = strength
 
+	def is_valid(self):
+		return self._valid
+
+	def add_to_menu(self, menu):
+		item = gtk.CheckMenuItem()
+		strength = self._strength
+		if strength > 100:
+			strength = 100
+		elif strength < 0:
+			strength = 0
+		label_str = "%s (%d%%)" % (self._ssid, strength)
+		label = gtk.Label(label_str)
+		label.set_alignment(0.0, 0.5)
+		item.add(label)
+		item.show_all()
+		menu.add(item)
+
 
 class Device(gobject.GObject):
 	__gsignals__ = {
@@ -105,12 +133,14 @@ class Device(gobject.GObject):
 		gobject.GObject.__init__(self)
 		self._op = op
 		self._iface = None
-		self._type = 0
+		self._type = DEVICE_TYPE_UNKNOWN
 		self._udi = None
 		self._active = False
 		self._strength = 0
 		self._link = False
+		self._valid = False
 		self._networks = {}
+		self._caps = 0
 
 		obj = sys_bus.get_object(NM_SERVICE, self._op)
 		dev = dbus.Interface(obj, NM_IFACE_DEVICES)
@@ -123,10 +153,13 @@ class Device(gobject.GObject):
 		self._udi = props[3]
 		self._active = props[4]
 		self._link = props[15]
+		self._caps = props[17]
 
 		if self._type == DEVICE_TYPE_802_11_WIRELESS:
 			self._strength = props[14]
 			self._update_networks(props[20], props[19])
+
+		self._valid = True
 
 	def _update_networks(self, net_ops, active_op):
 		for op in net_ops:
@@ -137,7 +170,8 @@ class Device(gobject.GObject):
 				self._active_net = net
 
 	def _update_error_cb(self, err):
-		print "Device(%s): failed to update from dbus." % self._op
+		logging.debug("Device(%s): failed to update. (%s)" % (self._op, err))
+		self._valid = False
 		self.emit('init-failed')
 
 	def _net_init_failed(self, net):
@@ -148,6 +182,28 @@ class Device(gobject.GObject):
 		if net == self._active_net:
 			self._active_net = None
 		del self._networks[net_op]
+
+	def _add_to_menu_wired(self, menu):
+		item = gtk.CheckMenuItem()
+		label = gtk.Label(_("Wired Network"))
+		label.set_alignment(0.0, 0.5);
+		item.add(label)
+		if self._caps & NM_DEVICE_CAP_CARRIER_DETECT:
+			item.set_sensitive(self._link)
+		item.show_all()
+		menu.add(item)
+
+	def _add_to_menu_wireless(self, menu):
+		for net in self._networks.values():
+			if not net.is_valid():
+				continue
+			net.add_to_menu(menu)
+
+	def add_to_menu(self, menu):
+		if self._type == DEVICE_TYPE_802_3_ETHERNET:
+			self._add_to_menu_wired(menu)
+		elif self._type == DEVICE_TYPE_802_11_WIRELESS:
+			self._add_to_menu_wireless(menu)
 
 	def get_op(self):
 		return self._op
@@ -180,6 +236,15 @@ class Device(gobject.GObject):
 		if not self._networks.has_key(network):
 			return
 		del self._networks[network]
+
+	def get_type(self):
+		return self._type
+
+	def is_valid(self):
+		return self._valid
+
+	def set_carrier(self, on):
+		self._link = on
 
 class NMClientApp:
 	def __init__(self):
@@ -215,12 +280,23 @@ class NMClientApp:
 
 	def _construct_new_menu(self):
 		menu = gtk.Menu()
-		item = gtk.CheckMenuItem()
-		label = gtk.Label("foobar")
-		label.set_alignment(0.0, 0.5)
-		item.add(label)
-		label.show()
-		menu.add(item)
+
+		# Wired devices first
+		for dev in self._devices.values():
+			if not dev.is_valid():
+				continue
+			if dev.get_type() != DEVICE_TYPE_802_3_ETHERNET:
+				continue
+			dev.add_to_menu(menu)
+
+		# Wireless devices second
+		for dev in self._devices.values():
+			if not dev.is_valid():
+				continue
+			if dev.get_type() != DEVICE_TYPE_802_11_WIRELESS:
+				continue
+			dev.add_to_menu(menu)
+
 		return menu
 
 	def _update_devices_reply_cb(self, ops):
@@ -236,7 +312,7 @@ class NMClientApp:
 			del self._devices[op]
 
 	def _update_devices_error_cb(self, err):
-		print "Error updating devices; %s" % err
+		logging.debug("Error updating devices (%s)" % err)
 
 	def _update_devices(self):
 		for dev_name in self._devices.keys():
@@ -257,7 +333,9 @@ class NMClientApp:
 			'WirelessNetworkAppeared': self.wireless_network_appeared_sig_handler,
 			'WirelessNetworkDisappeared': self.wireless_network_disappeared_sig_handler,
 			'DeviceStrengthChanged': self.wireless_device_strength_changed_sig_handler,
-			'WirelessNetworkStrengthChanged': self.wireless_network_strength_changed_sig_handler
+			'WirelessNetworkStrengthChanged': self.wireless_network_strength_changed_sig_handler,
+			'DeviceCarrierOn': self.device_carrier_on_sig_handler,
+			'DeviceCarrierOff': self.device_carrier_off_sig_handler
 		}
 
 		self.nm_proxy = sys_bus.get_object(NM_SERVICE, NM_PATH)
@@ -292,9 +370,9 @@ class NMClientApp:
 		    mem == 'WirelessNetworkStrengthChanged'):
 			return
 
-	 	print 'Caught signal %s.%s' % (dbus_message.get_interface(), mem)
+	 	logging.debug('Caught signal %s.%s' % (dbus_message.get_interface(), mem))
 		for arg in args:
-			print '        ' + str(arg)
+			logging.debug('        ' + str(arg))
 
 	def device_activation_stage_sig_handler(self, device, stage):
 	    print 'Network Manager Device Stage "%s" for device %s'%(NM_DEVICE_STAGE_STRINGS[stage], device)
@@ -339,6 +417,16 @@ class NMClientApp:
 		net = self._devices[device].get_network(network)
 		if net:
 			net.set_strength(strength)
+
+	def device_carrier_on_sig_handler(self, device):
+		if not self._devices.has_key(device):
+			return
+		self._devices[device].set_carrier(True)
+
+	def device_carrier_off_sig_handler(self, device):
+		if not self._devices.has_key(device):
+			return
+		self._devices[device].set_carrier(False)
 
 	def run(self):
 		loop = gobject.MainLoop()
