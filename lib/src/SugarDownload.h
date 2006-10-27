@@ -8,6 +8,7 @@
 #include <nsIMIMEInfo.h>
 #include <nsIURL.h>
 #include <nsILocalFile.h>
+#include <nsStringAPI.h>
 
 #define G_SUGARDOWNLOAD_CID							 \
 { /* b1813bbe-6518-11db-967e-00e08161165f */         \
@@ -29,10 +30,10 @@ public:
 	NS_DECL_NSITRANSFER
 
 protected:
-	nsIURI *mSource;
-	nsIURI *mTarget;
-	nsIMIMEInfo *mMIMEInfo;
-	nsILocalFile *mTempFile;
+	nsIURI			*mSource;
+	nsCString		mTargetFileName;
+	nsIMIMEInfo		*mMIMEInfo;
+	nsILocalFile	*mTempFile;
 };
 
 #endif // SugarDownload_h__

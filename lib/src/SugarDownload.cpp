@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <nsStringAPI.h>
-
 #include "sugar-browser-chandler.h"
 
 #include "SugarDownload.h"
@@ -28,15 +24,11 @@ GSugarDownload::Init (nsIURI *aSource,
 		   nsILocalFile *aTempFile,
 		   nsICancelable *aCancelable)
 {
-	FILE *file = fopen("/home/tomeu/file.txt","a+");
-	fprintf(file,"%s\n","GSugarDownload::Init");
-	fclose(file);
-	
 	mSource = aSource;
-	mTarget = aTarget;
+	aTarget->GetPath(mTargetFileName);
 	mMIMEInfo = aMIMEInfo;
 	mTempFile = aTempFile;
-	
+
 	return NS_OK;
 }
 
@@ -46,7 +38,7 @@ GSugarDownload::OnStateChange (nsIWebProgress *aWebProgress, nsIRequest *aReques
 {
 	nsCString url;
 	nsCString mimeType;
-	nsCString tmpFileName;
+	nsCString targetURI;
 	
 	if ((((aStateFlags & STATE_IS_REQUEST) &&
 	     (aStateFlags & STATE_IS_NETWORK) &&
@@ -56,18 +48,12 @@ GSugarDownload::OnStateChange (nsIWebProgress *aWebProgress, nsIRequest *aReques
 	
 		mMIMEInfo->GetMIMEType(mimeType);
 		mSource->GetSpec(url);
-		mTempFile->GetNativeLeafName(tmpFileName);
-		
-		// FIXME: Hack. Mozilla adds a .part to the file name. Must exist a better/simpler way.
-		// FIXME: Also creates a nice memory leak.
-		char *tmpFileName_striped = (char*)malloc(strlen(tmpFileName.get()));
-		strncpy(tmpFileName_striped, tmpFileName.get(), strlen(tmpFileName.get()) - 5);
-	
+
 		SugarBrowserChandler *browser_chandler = sugar_get_browser_chandler();
 		sugar_browser_chandler_handle_content(browser_chandler,
 											  url.get(),
 											  mimeType.get(),
-											  tmpFileName_striped);
+											  mTargetFileName.get());
 	}
 	
 	return NS_OK; 
