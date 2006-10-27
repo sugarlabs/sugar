@@ -18,7 +18,7 @@
  */
 
 #include "sugar-browser.h"
-#include "sugar-content-handler.h"
+#include "SugarContentHandler.h"
 #include "SugarDownload.h"
 
 #include <gtkmozembed_internal.h>

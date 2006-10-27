@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <string.h>
-
 #include "sugar-marshal.h"
 #include "sugar-browser-chandler.h"
 
