@@ -294,6 +294,14 @@ NM_STATE_CONNECTING = 2
 NM_STATE_CONNECTED = 3
 NM_STATE_DISCONNECTED = 4
 
+ICON_WIRED = "stock-net-wired"
+ICON_WIRELESS_00 = "stock-net-wireless-00"
+ICON_WIRELESS_01_20 = "stock-net-wireless-01-20"
+ICON_WIRELESS_21_40 = "stock-net-wireless-21-40"
+ICON_WIRELESS_41_60 = "stock-net-wireless-41-60"
+ICON_WIRELESS_61_80 = "stock-net-wireless-61-80"
+ICON_WIRELESS_81_100 = "stock-net-wireless-81-100"
+
 class NMClientApp:
 	def __init__(self):
 		self.menu = None
@@ -302,9 +310,11 @@ class NMClientApp:
 		self._nm_state = NM_STATE_UNKNOWN
 		self._icon_theme = gtk.icon_theme_get_default()
 		self._update_timer = 0
-		self._cur_icon = None
 		self._active_device = None
 		self._devices = {}
+
+		self._icons = {}
+		self._cur_icon = None
 
 		try:
 			self.nminfo = nminfo.NMInfo()
@@ -315,7 +325,29 @@ class NMClientApp:
 			self._get_nm_state()
 			self._get_initial_devices()
 
+		try:
+			self._icons = self._load_icons()
+		except RuntimeError:
+			logging.debug("Couldn't find required icon resources, will exit.")
+			os._exit(1)
 		self._setup_trayicon()
+
+	def _get_one_icon_pixbuf(self, name):
+		info = self._icon_theme.lookup_icon(name, 25, 0)
+		if not info or not info.get_filename():
+			raise RuntimeError
+		return gtk.gdk.pixbuf_new_from_file_at_size(info.get_filename(), 25, 25)
+
+	def _load_icons(self):
+		icons = {}
+		icons[ICON_WIRED] = self._get_one_icon_pixbuf(ICON_WIRED)
+		icons[ICON_WIRELESS_00] = self._get_one_icon_pixbuf(ICON_WIRELESS_00)
+		icons[ICON_WIRELESS_01_20] = self._get_one_icon_pixbuf(ICON_WIRELESS_01_20)
+		icons[ICON_WIRELESS_21_40] = self._get_one_icon_pixbuf(ICON_WIRELESS_21_40)
+		icons[ICON_WIRELESS_41_60] = self._get_one_icon_pixbuf(ICON_WIRELESS_41_60)
+		icons[ICON_WIRELESS_61_80] = self._get_one_icon_pixbuf(ICON_WIRELESS_61_80)
+		icons[ICON_WIRELESS_81_100] = self._get_one_icon_pixbuf(ICON_WIRELESS_81_100)
+		return icons
 
 	def _get_nm_state(self):
 		# Grab NM's state
@@ -333,52 +365,41 @@ class NMClientApp:
 		logging.debug("Failed to get NetworkManager state! %s" % err)
 
 	def _get_icon(self):
-		name = None
 		act_dev = None
 		if self._active_device and self._devices.has_key(self._active_device):
 			act_dev = self._devices[self._active_device]
+
+		pixbuf = None
 		if not self._nm_present \
 				or not act_dev \
 				or self._nm_state == NM_STATE_UNKNOWN \
 				or self._nm_state == NM_STATE_ASLEEP \
 				or self._nm_state == NM_STATE_DISCONNECTED:
-			name = "stock-net-wireless-00"
+			pixbuf = self._icons[ICON_WIRELESS_00]
 		elif act_dev.get_type() == DEVICE_TYPE_802_3_ETHERNET:
-			name = "stock-net-wired"
+			pixbuf = self._icons[ICON_WIRED]
 		elif act_dev.get_type() == DEVICE_TYPE_802_11_WIRELESS:
 			strength = act_dev.get_strength()
 			if strength <= 0:
-				name = "stock-net-wireless-00"
+				pixbuf = self._icons[ICON_WIRELESS_00]
 			elif strength >= 1 and strength <= 20:
-				name = "stock-net-wireless-01-20"
+				pixbuf = self._icons[ICON_WIRELESS_01_20]
 			elif strength >= 21 and strength <= 40:
-				name = "stock-net-wireless-21-40"
+				pixbuf = self._icons[ICON_WIRELESS_21_40]
 			elif strength >= 41 and strength <= 60:
-				name = "stock-net-wireless-41-60"
+				pixbuf = self._icons[ICON_WIRELESS_41_60]
 			elif strength >= 61 and strength <= 80:
-				name = "stock-net-wireless-61-80"
+				pixbuf = self._icons[ICON_WIRELESS_61_80]
 			elif strength >= 81 and strength:
-				name = "stock-net-wireless-81-100"
+				pixbuf = self._icons[ICON_WIRELESS_81_100]
 
-		if not name:
-			name = "stock-net-wireless-00"
-
-		info = self._icon_theme.lookup_icon(name, 75, 0)
-		if not info:
-			logging.debug("Couldn't find icon for %s, falling back to stock-net-wireless-00" % name)
-			info = self._icon_theme.lookup_icon("stock-net-wireless-00", 75, 0)
-		if not info:
-			return None
-
-		return info.get_filename()
+		if not pixbuf:
+			pixbuf = self._icons[ICON_WIRELESS_00]
+		return pixbuf
 
 	def _setup_trayicon(self):
-		filename = self._get_icon()
-		if not filename:
-			logging.debug("Couldn't get icon file!!")
-			os._exit(1)
-
-		self._trayicon = gtk.status_icon_new_from_file(filename)
+		pixbuf = self._get_icon()
+		self._trayicon = gtk.status_icon_new_from_pixbuf(pixbuf)
 		self._trayicon.connect("popup_menu", self._popup)
 		self._trayicon.connect("activate", self._popup)
 		self._schedule_icon_update()
@@ -417,12 +438,10 @@ class NMClientApp:
 		return menu
 
 	def _update_icon(self):
-		filename = self._get_icon()
-		if not filename:
-			logging.debug("Couldn't get icon file!!")
-		elif self._cur_icon != filename:
-			self._trayicon.set_from_file(filename)
-			self._cur_icon = filename
+		pixbuf = self._get_icon()
+		if self._cur_icon != pixbuf:
+			self._trayicon.set_from_pixbuf(pixbuf)
+			self._cur_icon = pixbuf
 
 		blink = False
 		if self._nm_state == NM_STATE_CONNECTING:
