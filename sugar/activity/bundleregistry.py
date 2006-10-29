@@ -1,3 +1,5 @@
+import os
+
 from sugar.activity.bundle import Bundle
 
 class BundleRegistry:
@@ -14,19 +16,23 @@ class BundleRegistry:
 		else:
 			return None
 
-	def append_search_path(self, path):
-		"""Append a directory to the bundles search path"""
+	def add_search_path(self, path):
+		"""Add a directory to the bundles search path"""
 		self._search_path.append(path)
 		self._scan_directory(path)
 	
 	def __iter__(self):
-		return self._bundles.values()
+		return self._bundles.values().__iter__()
 
 	def _scan_directory(self, path):
-		for bundle_dir in os.listdir(path):
-			if os.path.isdir(bundle_dir):
-				info_path = os.path.join(bundle_dir, activity_info)
-				if os.path.isfile(info_path):
-					bundle = Bundle(info_path)
-					if bundle.is_valid():
-						self._bundles.append(bundle)
+		for f in os.listdir(path):
+			bundle_dir = os.path.join(path, f)
+			if os.path.isdir(bundle_dir) and bundle_dir.endswith('.activity'):
+				self._add_bundle(bundle_dir)
+
+	def _add_bundle(self, bundle_dir):
+		info_path = os.path.join(bundle_dir, 'activity.info')
+		if os.path.isfile(info_path):
+			bundle = Bundle(info_path)
+			if bundle.is_valid():
+				self._bundles[bundle.get_service_name()] = bundle

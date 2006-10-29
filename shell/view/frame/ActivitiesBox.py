@@ -55,13 +55,17 @@ class ActivitiesBox(hippo.CanvasBox):
 		hippo.CanvasBox.__init__(self, orientation=hippo.ORIENTATION_HORIZONTAL)
 
 		self._shell = shell
+		self._shell_model = self._shell.get_model() 
 		self._invite_to_item = {}
-		self._invites = self._shell.get_model().get_invites()
+		self._invites = self._shell_model.get_invites()
 
 		registry = conf.get_activity_registry()
 		for activity in registry.list_activities():
 			if activity.get_show_launcher():
 				self.add_activity(activity)
+
+		for bundle in self._shell_model.get_bundle_registry():
+			self.add_activity(bundle)
 
 		for invite in self._invites:
 			self.add_invite(invite)

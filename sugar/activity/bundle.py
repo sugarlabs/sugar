@@ -41,7 +41,7 @@ class Bundle:
 
 	def get_service_name(self):
 		"""Get the activity service name"""
-		return self._id
+		return self._service_name
 
 	def get_icon(self):
 		"""Get the activity icon name"""

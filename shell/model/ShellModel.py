@@ -15,6 +15,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from sugar.presence import PresenceService
+from sugar.activity.bundleregistry import BundleRegistry
+from sugar import env
 from model.Friends import Friends
 from model.MeshModel import MeshModel
 from model.Owner import ShellOwner
@@ -28,8 +30,15 @@ class ShellModel:
 
 		self._owner = ShellOwner()
 		self._owner.announce()
+
 		self._friends = Friends()
 		self._mesh = MeshModel()
+
+		self._bundle_registry = BundleRegistry()
+		self._bundle_registry.add_search_path(env.get_bundles_path())
+
+	def get_bundle_registry(self):
+		return self._bundle_registry
 
 	def get_mesh(self):
 		return self._mesh
