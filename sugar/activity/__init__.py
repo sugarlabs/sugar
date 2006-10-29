@@ -16,3 +16,10 @@ def get_default_type(activity_type):
 	splitted_id = activity_type.split('.')
 	splitted_id.reverse()
 	return '_' + '_'.join(splitted_id) + '._udp'
+
+from sugar.activity.bundleregistry import BundleRegistry
+
+_bundle_registry = BundleRegistry()
+
+def get_bundle_registry():
+	return _bundle_registry
