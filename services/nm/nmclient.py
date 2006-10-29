@@ -22,16 +22,12 @@ import dbus.decorators
 import gobject
 import gtk
 import logging
+from sugar.graphics.menu import Menu
 from gettext import gettext as _
+import os
 
 import nminfo
 
-NM_STATE_STRINGS=("Unknown",
-	"Asleep",
-	"Connecting",
-	"Connected",
-	"Disconnected"
-)
 
 NM_DEVICE_STAGE_STRINGS=("Unknown",
 	"Prepare",
@@ -126,7 +122,10 @@ class Network(gobject.GObject):
 
 class Device(gobject.GObject):
 	__gsignals__ = {
-		'init-failed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
+		'init-failed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+		'activated': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+		'strength-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+							([gobject.TYPE_PYOBJECT]))
 	}
 
 	def __init__(self, op):
@@ -140,6 +139,7 @@ class Device(gobject.GObject):
 		self._link = False
 		self._valid = False
 		self._networks = {}
+		self._active_net = None
 		self._caps = 0
 
 		obj = sys_bus.get_object(NM_SERVICE, self._op)
@@ -152,11 +152,16 @@ class Device(gobject.GObject):
 		self._type = props[2]
 		self._udi = props[3]
 		self._active = props[4]
+		if self._active:
+			self.emit('activated')
 		self._link = props[15]
 		self._caps = props[17]
 
 		if self._type == DEVICE_TYPE_802_11_WIRELESS:
+			old_strength = self._strength
 			self._strength = props[14]
+			if self._strength != old_strength:
+				self.emit('strength-changed', self._strength)
 			self._update_networks(props[20], props[19])
 
 		self._valid = True
@@ -167,7 +172,7 @@ class Device(gobject.GObject):
 			self._networks[op] = net
 			net.connect('init-failed', self._net_init_failed)
 			if op == active_op:
-				self._active_net = net
+				self._active_net = op
 
 	def _update_error_cb(self, err):
 		logging.debug("Device(%s): failed to update. (%s)" % (self._op, err))
@@ -178,8 +183,7 @@ class Device(gobject.GObject):
 		net_op = net.get_op()
 		if not self._networks.has_key(net_op):
 			return
-		net = self._networks[net_op]
-		if net == self._active_net:
+		if net_op == self._active_net:
 			self._active_net = None
 		del self._networks[net_op]
 
@@ -220,10 +224,15 @@ class Device(gobject.GObject):
 		return self._strength
 
 	def set_strength(self, strength):
+		if strength == self._strength:
+			return False
+
 		if strength >= 0 and strength <= 100:
 			self._strength = strength
 		else:
 			self._strength = 0
+
+		self.emit('strength-changed', self._strength)
 
 	def network_appeared(self, network):
 		if self._networks.has_key(network):
@@ -235,7 +244,22 @@ class Device(gobject.GObject):
 	def network_disappeared(self, network):
 		if not self._networks.has_key(network):
 			return
+		if network == self._active_net:
+			self._active_net = None
 		del self._networks[network]
+
+	def get_active(self):
+		return self._active
+
+	def set_active(self, active, ssid=None):
+		self._active = active
+		if self._type == DEVICE_TYPE_802_11_WIRELESS:
+			if not ssid:
+				self._active_net = None
+			else:
+				for (op, net) in self._networks.items():
+					if net.get_ssid() == ssid:
+						self._active_net = op
 
 	def get_type(self):
 		return self._type
@@ -246,29 +270,122 @@ class Device(gobject.GObject):
 	def set_carrier(self, on):
 		self._link = on
 
+class ActivityMenu(Menu):
+	def __init__(self, activity_host):
+		Menu.__init__(self, activity_host.get_title())
+
+		if not activity_host.get_shared():
+			self._add_mesh_action()
+
+		self._add_close_action()
+
+	def _add_mesh_action(self):
+		icon = CanvasIcon(icon_name='stock-share-mesh')
+		self.add_action(icon, ActivityMenu.ACTION_SHARE) 
+
+	def _add_close_action(self):
+		icon = CanvasIcon(icon_name='stock-close')
+		self.add_action(icon, ActivityMenu.ACTION_CLOSE) 
+
+
+NM_STATE_UNKNOWN = 0
+NM_STATE_ASLEEP = 1
+NM_STATE_CONNECTING = 2
+NM_STATE_CONNECTED = 3
+NM_STATE_DISCONNECTED = 4
+
 class NMClientApp:
 	def __init__(self):
 		self.menu = None
 		self.nminfo = None
+		self._nm_present = False
+		self._nm_state = NM_STATE_UNKNOWN
+		self._icon_theme = gtk.icon_theme_get_default()
+		self._update_timer = 0
+		self._cur_icon = None
+		self._active_device = None
+		self._devices = {}
+
 		try:
 			self.nminfo = nminfo.NMInfo()
 		except RuntimeError:
 			pass
 		self._setup_dbus()
-
-		self._devices = {}
-		self._update_devices()
+		if self._nm_present:
+			self._get_nm_state()
+			self._get_initial_devices()
 
 		self._setup_trayicon()
 
+	def _get_nm_state(self):
+		# Grab NM's state
+		nm_obj = sys_bus.get_object(NM_SERVICE, NM_PATH)
+		nm = dbus.Interface(nm_obj, NM_IFACE)
+		nm.state(reply_handler=self._get_state_reply_cb, \
+				error_handler=self._get_state_error_cb)
+
+	def _get_state_reply_cb(self, state):
+		if self._nm_state != state:
+			self._schedule_icon_update(immediate=True)
+		self._nm_state = state
+
+	def _get_state_error_cb(self, err):
+		logging.debug("Failed to get NetworkManager state! %s" % err)
+
+	def _get_icon(self):
+		name = None
+		act_dev = None
+		if self._active_device and self._devices.has_key(self._active_device):
+			act_dev = self._devices[self._active_device]
+		if not self._nm_present \
+				or not act_dev \
+				or self._nm_state == NM_STATE_UNKNOWN \
+				or self._nm_state == NM_STATE_ASLEEP \
+				or self._nm_state == NM_STATE_DISCONNECTED:
+			name = "stock-net-wireless-00"
+		elif act_dev.get_type() == DEVICE_TYPE_802_3_ETHERNET:
+			name = "stock-net-wired"
+		elif act_dev.get_type() == DEVICE_TYPE_802_11_WIRELESS:
+			strength = act_dev.get_strength()
+			if strength <= 0:
+				name = "stock-net-wireless-00"
+			elif strength >= 1 and strength <= 20:
+				name = "stock-net-wireless-01-20"
+			elif strength >= 21 and strength <= 40:
+				name = "stock-net-wireless-21-40"
+			elif strength >= 41 and strength <= 60:
+				name = "stock-net-wireless-41-60"
+			elif strength >= 61 and strength <= 80:
+				name = "stock-net-wireless-61-80"
+			elif strength >= 81 and strength:
+				name = "stock-net-wireless-81-100"
+
+		if not name:
+			name = "stock-net-wireless-00"
+
+		info = self._icon_theme.lookup_icon(name, 75, 0)
+		if not info:
+			logging.debug("Couldn't find icon for %s, falling back to stock-net-wireless-00" % name)
+			info = self._icon_theme.lookup_icon("stock-net-wireless-00", 75, 0)
+		if not info:
+			return None
+
+		return info.get_filename()
+
 	def _setup_trayicon(self):
-		self.trayicon = gtk.status_icon_new_from_file("/home/dcbw/Development/olpc/nm-python-client/icons/nm-no-connection.png")
-		self.trayicon.connect("popup_menu", self._popup)
-		self.trayicon.connect("activate", self._popup)
+		filename = self._get_icon()
+		if not filename:
+			logging.debug("Couldn't get icon file!!")
+			os._exit(1)
+
+		self._trayicon = gtk.status_icon_new_from_file(filename)
+		self._trayicon.connect("popup_menu", self._popup)
+		self._trayicon.connect("activate", self._popup)
+		self._schedule_icon_update()
 
 	def _popup(self, status, button=0, time=None):
 		def menu_pos(menu):
-			return gtk.status_icon_position_menu(menu, self.trayicon)
+			return gtk.status_icon_position_menu(menu, self._trayicon)
 
 		if time is None:
 			time = gtk.get_current_event_time()
@@ -299,43 +416,107 @@ class NMClientApp:
 
 		return menu
 
-	def _update_devices_reply_cb(self, ops):
+	def _update_icon(self):
+		filename = self._get_icon()
+		if not filename:
+			logging.debug("Couldn't get icon file!!")
+		elif self._cur_icon != filename:
+			self._trayicon.set_from_file(filename)
+			self._cur_icon = filename
+
+		blink = False
+		if self._nm_state == NM_STATE_CONNECTING:
+			blink = True
+		self._trayicon.set_blinking(blink)
+
+		self._update_timer = 0
+		return False
+
+	def _schedule_icon_update(self, immediate=False):
+		if immediate and self._update_timer:
+			gobject.source_remove(self._update_timer)
+			self._update_timer = 0
+
+		if self._update_timer != 0:
+			# There is already an update scheduled
+			return
+
+		if immediate:
+			self._update_timer = gobject.idle_add(self._update_icon)
+		else:
+			self._update_timer = gobject.timeout_add(2000, self._update_icon)
+
+	def _get_initial_devices_reply_cb(self, ops):
 		for op in ops:
-			dev = Device(op)
-			self._devices[op] = dev
-			dev.connect('init-failed', self._dev_init_failed_cb)
+			self._add_device(op)
 
 	def _dev_init_failed_cb(self, dev):
 		# Device failed to initialize, likely due to dbus errors or something
 		op = dev.get_op()
-		if self._devices.has_key(op):
-			del self._devices[op]
+		self._remove_device(op)
 
-	def _update_devices_error_cb(self, err):
+	def _get_initial_devices_error_cb(self, err):
 		logging.debug("Error updating devices (%s)" % err)
 
-	def _update_devices(self):
-		for dev_name in self._devices.keys():
-			del self._devices[dev_name]
-		self._devices = {}
-
+	def _get_initial_devices(self):
 		nm_obj = sys_bus.get_object(NM_SERVICE, NM_PATH)
 		nm = dbus.Interface(nm_obj, NM_IFACE)
-		nm.getDevices(reply_handler=self._update_devices_reply_cb, \
-				error_handler=self._update_devices_error_cb)
+		nm.getDevices(reply_handler=self._get_initial_devices_reply_cb, \
+				error_handler=self._get_initial_devices_error_cb)
+
+	def _add_device(self, dev_op):
+		if self._devices.has_key(dev_op):
+			return
+		dev = Device(dev_op)
+		self._devices[dev_op] = dev
+		dev.connect('init-failed', self._dev_init_failed_cb)
+		dev.connect('activated', self._dev_activated_cb)
+		dev.connect('strength-changed', self._dev_strength_changed_cb)
+
+	def _remove_device(self, dev_op):
+		if not self._devices.has_key(dev_op):
+			return
+		if self._active_device == dev_op:
+			self._active_device = None
+		dev = self._devices[dev_op]
+		dev.disconnect('activated')
+		dev.disconnect('init-failed')
+		dev.disconnect('strength-changed')
+		del self._devices[dev_op]
+		self._schedule_icon_update(immediate=True)
+
+	def _dev_activated_cb(self, dev):
+		op = dev.get_op()
+		if not self._devices.has_key(op):
+			return
+		if not dev.get_active():
+			return
+		self._active_device = op
+		self._schedule_icon_update(immediate=True)
+
+	def _dev_strength_changed_cb(self, dev, strength):
+		op = dev.get_op()
+		if not self._devices.has_key(op):
+			return
+		if not dev.get_active():
+			return
+		self._schedule_icon_update()
 
 	def _setup_dbus(self):
-		sig_handlers = {
-			'DeviceActivationStage': self.device_activation_stage_sig_handler,
+		self._sig_handlers = {
 			'StateChange': self.state_change_sig_handler,
+			'DeviceAdded': self.device_added_sig_handler,
+			'DeviceRemoved': self.device_removed_sig_handler,
+			'DeviceActivationStage': self.device_activation_stage_sig_handler,
 			'DeviceActivating': self.device_activating_sig_handler,
 			'DeviceNowActive': self.device_now_active_sig_handler,
+			'DeviceNoLongerActive': self.device_no_longer_active_sig_handler,
+			'DeviceCarrierOn': self.device_carrier_on_sig_handler,
+			'DeviceCarrierOff': self.device_carrier_off_sig_handler,
+			'DeviceStrengthChanged': self.wireless_device_strength_changed_sig_handler,
 			'WirelessNetworkAppeared': self.wireless_network_appeared_sig_handler,
 			'WirelessNetworkDisappeared': self.wireless_network_disappeared_sig_handler,
-			'DeviceStrengthChanged': self.wireless_device_strength_changed_sig_handler,
-			'WirelessNetworkStrengthChanged': self.wireless_network_strength_changed_sig_handler,
-			'DeviceCarrierOn': self.device_carrier_on_sig_handler,
-			'DeviceCarrierOff': self.device_carrier_off_sig_handler
+			'WirelessNetworkStrengthChanged': self.wireless_network_strength_changed_sig_handler
 		}
 
 		self.nm_proxy = sys_bus.get_object(NM_SERVICE, NM_PATH)
@@ -350,24 +531,26 @@ class NMClientApp:
 		sys_bus.add_signal_receiver(self.catchall_signal_handler,
 										 dbus_interface=NM_IFACE + 'Devices')
 
-		for (signal, handler) in sig_handlers.items():
+		for (signal, handler) in self._sig_handlers.items():
 			sys_bus.add_signal_receiver(handler, signal_name=signal, dbus_interface=NM_IFACE)
 
+		# Find out whether or not NM is running
+		try:
+			bus_object = sys_bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
+			name = bus_object.GetNameOwner("org.freedesktop.NetworkManagerInfo", \
+					dbus_interface='org.freedesktop.DBus')
+			if name:
+				self._nm_present = True
+		except dbus.DBusException:
+			pass
+
 	@dbus.decorators.explicitly_pass_message
-	def catchall_signal_handler(*args, **keywords):
+	def catchall_signal_handler(self, *args, **keywords):
 		dbus_message = keywords['dbus_message']
 		mem = dbus_message.get_member()
 		iface = dbus_message.get_interface()
 
-		if iface == NM_IFACE and \
-		   (mem == 'DeviceActivationStage' or \
-		    mem == 'StateChange' or \
-		    mem == 'DeviceActivating' or \
-		    mem == 'DeviceNowActive' or \
-		    mem == 'DeviceStrengthChanged' or \
-		    mem == 'WirelessNetworkAppeared' or \
-		    mem == 'WirelessNetworkDisappeared' or \
-		    mem == 'WirelessNetworkStrengthChanged'):
+		if iface == NM_IFACE and mem in self._sig_handlers.keys():
 			return
 
 	 	logging.debug('Caught signal %s.%s' % (dbus_message.get_interface(), mem))
@@ -378,23 +561,48 @@ class NMClientApp:
 	    print 'Network Manager Device Stage "%s" for device %s'%(NM_DEVICE_STAGE_STRINGS[stage], device)
 
 	def state_change_sig_handler(self, state):
-		print 'Network Manager State "%s"'%NM_STATE_STRINGS[state]
+		print "State: %s" % state
+		self._nm_state = state
+		self._schedule_icon_update(immediate=True)
 
 	def device_activating_sig_handler(self, device):
 		print 'Device %s activating'%device
 
-	def device_now_active_sig_handler(self, device, essid=None):
-		print 'Device %s now activated (%s)'%(device, essid)
+	def device_now_active_sig_handler(self, device, ssid=None):
+		if not self._devices.has_key(device):
+			return
+		self._devices[devices].set_active(True, ssid)
+		self._schedule_icon_update(immediate=True)
+
+	def device_no_longer_active_sig_handler(self, device):
+		if not self._devices.has_key(device):
+			return
+		self._devices[devices].set_active(False)
+		self._schedule_icon_update(immediate=True)
 
 	def name_owner_changed_sig_handler(self, name, old, new):
 		if name != NM_SERVICE:
 			return
 		if (old and len(old)) and (not new and not len(new)):
 			# NM went away
-			pass
+			self._nm_present = False
+			self._schedule_update_timer()
+			for op in self._devices.keys():
+				del self._devices[op]
+			self._devices = {}
+			self._active_device = None
+			self._nm_state = NM_STATE_UNKNOWN
 		elif (not old and not len(old)) and (new and len(new)):
 			# NM started up
-			self._update_devices()
+			self._nm_present = True
+			self._get_nm_state()
+			self._get_initial_devices()
+
+	def device_added_sig_handler(self, device):
+		self._add_device(device)
+
+	def device_removed_sig_handler(self, device):
+		self._remove_device(device)
 
 	def wireless_network_appeared_sig_handler(self, device, network):
 		if not self._devices.has_key(device):
@@ -410,7 +618,7 @@ class NMClientApp:
 		if not self._devices.has_key(device):
 			return
 		self._devices[device].set_strength(strength)
-	
+
 	def wireless_network_strength_changed_sig_handler(self, device, network, strength):
 		if not self._devices.has_key(device):
 			return

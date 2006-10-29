@@ -22,6 +22,7 @@ import os
 import pygtk
 pygtk.require('2.0')
 import gtk
+import gobject
 
 from sugar import logger
 from sugar import profile
@@ -45,6 +46,13 @@ if not name or not len(name):
 
 model = ShellModel()
 shell = Shell(model)
+
+# Start the NetworkManager applet
+# FIXME: do this somewhere else, better planned out
+args = ["sugar-nm-applet"]
+flags = gobject.SPAWN_SEARCH_PATH
+result = gobject.spawn_async(args, flags=flags, standard_output=False)
+
 
 tbh = TracebackUtils.TracebackHelper()
 try:
