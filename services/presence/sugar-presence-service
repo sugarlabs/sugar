@@ -26,9 +26,9 @@ from sugar import env
 
 sys.path.insert(0, env.get_services_dir())
 
-from presence import PresenceService
-
 logger.start('presenceservice')
+
+from presence import PresenceService
 
 logging.info('Starting presence service')
 
