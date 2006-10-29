@@ -25,10 +25,12 @@ class BundleRegistry:
 		return self._bundles.values().__iter__()
 
 	def _scan_directory(self, path):
-		for f in os.listdir(path):
-			bundle_dir = os.path.join(path, f)
-			if os.path.isdir(bundle_dir) and bundle_dir.endswith('.activity'):
-				self._add_bundle(bundle_dir)
+		if os.path.isdir(path):
+			for f in os.listdir(path):
+				bundle_dir = os.path.join(path, f)
+				if os.path.isdir(bundle_dir) and \
+				   bundle_dir.endswith('.activity'):
+					self._add_bundle(bundle_dir)
 
 	def _add_bundle(self, bundle_dir):
 		info_path = os.path.join(bundle_dir, 'activity.info')
