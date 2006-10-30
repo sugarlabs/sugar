@@ -19,3 +19,8 @@ menu_Separator = {
 menu_ActionIcon = {
 	'size' : style.standard_icon_size
 }
+
+menu_Text = {
+	'color'	: 0xFFFFFFFF,
+	'font'  : style.get_font_description('Plain', 1.2)
+}
