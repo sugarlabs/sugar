@@ -395,10 +395,10 @@ class NMClientApp:
 		self._setup_trayicon()
 
 	def _get_one_icon_pixbuf(self, name):
-		info = self._icon_theme.lookup_icon(name, 25, 0)
+		info = self._icon_theme.lookup_icon(name, 75, 0)
 		if not info or not info.get_filename():
 			raise RuntimeError
-		return gtk.gdk.pixbuf_new_from_file_at_size(info.get_filename(), 25, 25)
+		return gtk.gdk.pixbuf_new_from_file_at_size(info.get_filename(), 75, 75)
 
 	def _load_icons(self):
 		icons = {}
