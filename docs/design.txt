@@ -76,3 +76,13 @@ eliason marcopg:  The basic problem is that people are crossing an index that is
 eliason With mod 3, we basically have 3 levels of the ring.  This solution would just shift ONE of those rings couter-clockwise one XO position, leaving the other two rings intact as is.  We move many fewer XOs than before, but we minimize the movement any given XO has to make by spreading it across the ring level instead of moving the last XO all the way across the circle...eliason marcopg:  The basic problem is that people are crossing an index that is a multiple of the mod, so everyone shifts in and out.  What if, instead, we adjusted the indeces of every XO with an index of  modValue*c greater than the XO that left, and subtract modValue from each of their indices?
 eliason With mod 3, we basically have 3 levels of the ring.  This solution would just shift ONE of those rings couter-clockwise one XO position, leaving the other two rings intact as is.  We move many fewer XOs than before, but we minimize the movement any given XO has to make by spreading it across the ring level instead of moving the last XO all the way across the circle...
 eliason marcopg:  The final detail of that, beyond shifting each index down by the mod value, is to shift the very last group of people in the ring down to fill all the holes, if you get my meaning...
+
+Activity startup feedback
+
+I agree we certainly need feedback for this sort of thing.  For
+starters, the icon of the selected activity should immediately appear
+in the ring.  Perhaps we can apply some small animation to this
+activity icon to indicate that it is starting up.  Marco, could you
+use HSV for the icon color, and modulate the S(aturation) on a sin
+curve so the color pulses betwen, say, 0 and 192 until the activity
+starts, at which point it slides up to 255?
