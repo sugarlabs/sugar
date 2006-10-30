@@ -2,7 +2,8 @@ sugardir = $(pkgdatadir)/services/nm
 sugar_PYTHON =			\
 	__init__.py			\
 	nmclient.py			\
-	nminfo.py
+	nminfo.py			\
+	bubble.py
 
 bin_SCRIPTS = sugar-nm-applet
 

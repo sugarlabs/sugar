@@ -22,9 +22,15 @@ import dbus.decorators
 import gobject
 import gtk
 import logging
-from sugar.graphics.menu import Menu
-from gettext import gettext as _
 import os
+from gettext import gettext as _
+
+import hippo
+from sugar.graphics.menu import Menu
+from sugar.graphics import style
+from sugar.graphics.iconcolor import IconColor
+from sugar.graphics.timeline import Timeline
+from bubble import Bubble
 
 import nminfo
 
@@ -106,18 +112,13 @@ class Network(gobject.GObject):
 		return self._valid
 
 	def add_to_menu(self, menu):
-		item = gtk.CheckMenuItem()
 		strength = self._strength
 		if strength > 100:
 			strength = 100
 		elif strength < 0:
 			strength = 0
-		label_str = "%s (%d%%)" % (self._ssid, strength)
-		label = gtk.Label(label_str)
-		label.set_alignment(0.0, 0.5)
-		item.add(label)
-		item.show_all()
-		menu.add(item)
+		item = NetworkMenuItem(text=self._ssid, percent=strength)
+		menu.add_item(item)
 
 
 class Device(gobject.GObject):
@@ -188,14 +189,8 @@ class Device(gobject.GObject):
 		del self._networks[net_op]
 
 	def _add_to_menu_wired(self, menu):
-		item = gtk.CheckMenuItem()
-		label = gtk.Label(_("Wired Network"))
-		label.set_alignment(0.0, 0.5);
-		item.add(label)
-		if self._caps & NM_DEVICE_CAP_CARRIER_DETECT:
-			item.set_sensitive(self._link)
-		item.show_all()
-		menu.add(item)
+		item = NetworkMenuItem(_("Wired Network"))
+		menu.add_item(item)
 
 	def _add_to_menu_wireless(self, menu):
 		for net in self._networks.values():
@@ -270,22 +265,42 @@ class Device(gobject.GObject):
 	def set_carrier(self, on):
 		self._link = on
 
-class ActivityMenu(Menu):
-	def __init__(self, activity_host):
-		Menu.__init__(self, activity_host.get_title())
 
-		if not activity_host.get_shared():
-			self._add_mesh_action()
+class NetworkMenuItem(Bubble):
+	def __init__(self, text, percent=0):
+		color = IconColor("#646464,#646464")
+		Bubble.__init__(self, color=color, percent=percent)
 
-		self._add_close_action()
+		text_item = hippo.CanvasText(text=text)
+		style.apply_stylesheet(text_item, 'menu.Text')
+		self.append(text_item)
 
-	def _add_mesh_action(self):
-		icon = CanvasIcon(icon_name='stock-share-mesh')
-		self.add_action(icon, ActivityMenu.ACTION_SHARE) 
 
-	def _add_close_action(self):
-		icon = CanvasIcon(icon_name='stock-close')
-		self.add_action(icon, ActivityMenu.ACTION_CLOSE) 
+class NetworkMenu(gtk.Window):
+	__gsignals__ = {
+		'action': (gobject.SIGNAL_RUN_FIRST,
+				   gobject.TYPE_NONE, ([int])),
+	}
+
+	def __init__(self):
+		gtk.Window.__init__(self, gtk.WINDOW_POPUP)
+
+		canvas = hippo.Canvas()
+		self.add(canvas)
+		canvas.show()
+
+		self._root = hippo.CanvasBox()
+		style.apply_stylesheet(self._root, 'menu')
+		canvas.set_root(self._root)
+
+	def add_separator(self):
+		separator = hippo.CanvasBox()
+		style.apply_stylesheet(separator, 'menu.Separator')
+		self._root.append(separator)
+
+	def add_item(self, item):
+		self._root.append(item)
+
 
 
 NM_STATE_UNKNOWN = 0
@@ -304,7 +319,6 @@ ICON_WIRELESS_81_100 = "stock-net-wireless-81-100"
 
 class NMClientApp:
 	def __init__(self):
-		self.menu = None
 		self.nminfo = None
 		self._nm_present = False
 		self._nm_state = NM_STATE_UNKNOWN
@@ -312,6 +326,13 @@ class NMClientApp:
 		self._update_timer = 0
 		self._active_device = None
 		self._devices = {}
+
+		self._menu = None
+		self._hover_menu = False
+		self._timeline = Timeline(self)
+		self._timeline.add_tag('popup', 6, 6)
+		self._timeline.add_tag('before_popdown', 7, 7)
+		self._timeline.add_tag('popdown', 8, 8)
 
 		self._icons = {}
 		self._cur_icon = None
@@ -400,24 +421,61 @@ class NMClientApp:
 	def _setup_trayicon(self):
 		pixbuf = self._get_icon()
 		self._trayicon = gtk.status_icon_new_from_pixbuf(pixbuf)
-		self._trayicon.connect("popup_menu", self._popup)
-		self._trayicon.connect("activate", self._popup)
+		self._trayicon.connect("popup_menu", self._status_icon_clicked)
+		self._trayicon.connect("activate", self._status_icon_clicked)
 		self._schedule_icon_update()
 
-	def _popup(self, status, button=0, time=None):
-		def menu_pos(menu):
-			return gtk.status_icon_position_menu(menu, self._trayicon)
+	def _status_icon_clicked(self, button=0, time=None):
+		self._timeline.play(None, 'popup')
 
-		if time is None:
-			time = gtk.get_current_event_time()
-		if self.menu:
-			del self.menu
-		self.menu = self._construct_new_menu()
-		self.menu.popup(None, None, menu_pos, button, time)
-		self.menu.show_all()
+	def _get_menu_position(self, menu, item):
+		(screen, rect, orientation) = item.get_geometry()
+		[item_x, item_y, item_w, item_h] = rect
+		[menu_w, menu_h] = menu.size_request()
 
-	def _construct_new_menu(self):
-		menu = gtk.Menu()
+		x = item_x + item_w - menu_w
+		y = item_y + item_h
+
+		x = min(x, screen.get_width() - menu_w)
+		x = max(0, x)
+
+		y = min(y, screen.get_height() - menu_h)
+		y = max(0, y)
+
+		return (x, y)
+
+	def do_popup(self, current, n_frames):
+		if self._menu:
+			self._popdown()
+			return
+
+		self._menu = self._create_menu()
+		self._menu.connect('enter-notify-event',
+						   self._menu_enter_notify_event_cb)
+		self._menu.connect('leave-notify-event',
+						   self._menu_leave_notify_event_cb)
+		(x, y) = self._get_menu_position(self._menu, self._trayicon)
+		self._menu.move(x, y)
+		self._menu.show_all()
+
+	def do_popdown(self, current, frame):
+		if self._menu:
+			self._menu.destroy()
+			self._menu = None
+
+	def _popdown(self):
+		self._timeline.play('popdown', 'popdown')
+
+	def _menu_enter_notify_event_cb(self, widget, event):
+		self._hover_menu = True
+		self._timeline.play('popup', 'popup')
+
+	def _menu_leave_notify_event_cb(self, widget, event):
+		self._hover_menu = False
+		self._popdown()
+
+	def _create_menu(self):
+		menu = NetworkMenu()
 
 		# Wired devices first
 		for dev in self._devices.values():
@@ -426,6 +484,8 @@ class NMClientApp:
 			if dev.get_type() != DEVICE_TYPE_802_3_ETHERNET:
 				continue
 			dev.add_to_menu(menu)
+
+		menu.add_separator()
 
 		# Wireless devices second
 		for dev in self._devices.values():
