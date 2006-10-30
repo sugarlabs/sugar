@@ -189,7 +189,7 @@ class Device(gobject.GObject):
 		del self._networks[net_op]
 
 	def _add_to_menu_wired(self, menu):
-		item = NetworkMenuItem(_("Wired Network"))
+		item = NetworkMenuItem(_("Wired Network"), stylesheet="nm.Bubble.Wired")
 		menu.add_item(item)
 
 	def _add_to_menu_wireless(self, menu):
@@ -265,16 +265,42 @@ class Device(gobject.GObject):
 	def set_carrier(self, on):
 		self._link = on
 
+nm_bubble_wireless = {
+	'fill-color'	: 0x646464FF,
+	'stroke-color'	: 0x646464FF,
+	'progress-color': 0x333333FF,
+	'spacing'		: style.space_unit,
+	'padding'		: style.space_unit
+}
+
+nm_bubble_wired = {
+	'fill-color'	: 0x000000FF,
+	'stroke-color'	: 0x000000FF,
+	'progress-color': 0x000000FF,
+	'spacing'		: style.space_unit,
+	'padding'		: style.space_unit
+}
+
+nm_menu_item_title = {
+	'xalign': hippo.ALIGNMENT_START,
+	'padding-left': 5,
+	'color'	 : 0xFFFFFFFF,
+	'font'	 : style.get_font_description('Bold', 1.2)
+}
+
+
+style.register_stylesheet("nm.Bubble.Wireless", nm_bubble_wireless)
+style.register_stylesheet("nm.Bubble.Wired", nm_bubble_wired)
+style.register_stylesheet("nm.MenuItem.Title", nm_menu_item_title)
 
 class NetworkMenuItem(Bubble):
-	def __init__(self, text, percent=0):
-		color = IconColor("#646464,#646464")
-		Bubble.__init__(self, color=color, percent=percent)
+	def __init__(self, text, percent=0, stylesheet="nm.Bubble.Wireless"):
+		Bubble.__init__(self, percent=percent)
+		style.apply_stylesheet(self, stylesheet)
 
 		text_item = hippo.CanvasText(text=text)
-		style.apply_stylesheet(text_item, 'menu.Text')
+		style.apply_stylesheet(text_item, 'nm.MenuItem.Title')
 		self.append(text_item)
-
 
 class NetworkMenu(gtk.Window):
 	__gsignals__ = {
@@ -446,7 +472,6 @@ class NMClientApp:
 
 	def do_popup(self, current, n_frames):
 		if self._menu:
-			self._popdown()
 			return
 
 		self._menu = self._create_menu()
