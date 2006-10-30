@@ -30,9 +30,11 @@ class TimelineObserver:
 	def next_frame(self, tag, current_frame, n_frames):
 		try:
 			method = getattr(self._observer, 'do_' + tag)
-			method(current_frame, n_frames)
 		except AttributeError:
-			pass
+			method = None
+
+		if method:
+			method(current_frame, n_frames)
 
 class Timeline:
 	def __init__(self, observer):
