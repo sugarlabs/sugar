@@ -691,23 +691,25 @@ class NMClientApp:
 	    print 'Network Manager Device Stage "%s" for device %s'%(NM_DEVICE_STAGE_STRINGS[stage], device)
 
 	def state_change_sig_handler(self, state):
-		print "State: %s" % state
 		self._nm_state = state
 		self._schedule_icon_update(immediate=True)
 
 	def device_activating_sig_handler(self, device):
-		print 'Device %s activating'%device
+		self._active_device = device
 
 	def device_now_active_sig_handler(self, device, ssid=None):
 		if not self._devices.has_key(device):
 			return
-		self._devices[devices].set_active(True, ssid)
+		self._active_device = device
+		self._devices[device].set_active(True, ssid)
 		self._schedule_icon_update(immediate=True)
 
 	def device_no_longer_active_sig_handler(self, device):
 		if not self._devices.has_key(device):
 			return
-		self._devices[devices].set_active(False)
+		if self._active_device == device:
+			self._active_device = None
+		self._devices[device].set_active(False)
 		self._schedule_icon_update(immediate=True)
 
 	def name_owner_changed_sig_handler(self, name, old, new):
