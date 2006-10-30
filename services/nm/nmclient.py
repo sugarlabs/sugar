@@ -192,17 +192,29 @@ class Device(gobject.GObject):
 		item = NetworkMenuItem(_("Wired Network"), stylesheet="nm.Bubble.Wired")
 		menu.add_item(item)
 
-	def _add_to_menu_wireless(self, menu):
+	def _add_to_menu_wireless(self, menu, active_only):
+		act_net = None
+		if self._active_net and self._networks.has_key(self._active_net):
+			act_net = self._networks[self._active_net]
+
+		# Only add the active network if active_only == True
+		if active_only and act_net:
+			act_net.add_to_menu(menu)
+			return
+
+		# Otherwise, add all networks _except_ the active one
 		for net in self._networks.values():
 			if not net.is_valid():
 				continue
+			if act_net == net:
+				continue
 			net.add_to_menu(menu)
 
-	def add_to_menu(self, menu):
+	def add_to_menu(self, menu, active_only=False):
 		if self._type == DEVICE_TYPE_802_3_ETHERNET:
 			self._add_to_menu_wired(menu)
 		elif self._type == DEVICE_TYPE_802_11_WIRELESS:
-			self._add_to_menu_wireless(menu)
+			self._add_to_menu_wireless(menu, active_only)
 
 	def get_op(self):
 		return self._op
@@ -265,12 +277,15 @@ class Device(gobject.GObject):
 	def set_carrier(self, on):
 		self._link = on
 
+	def get_capabilities(self):
+		return self._caps
+
 nm_bubble_wireless = {
 	'fill-color'	: 0x646464FF,
 	'stroke-color'	: 0x646464FF,
 	'progress-color': 0x333333FF,
 	'spacing'		: style.space_unit,
-	'padding'		: style.space_unit
+	'padding'		: style.space_unit * 1.5
 }
 
 nm_bubble_wired = {
@@ -278,7 +293,7 @@ nm_bubble_wired = {
 	'stroke-color'	: 0x000000FF,
 	'progress-color': 0x000000FF,
 	'spacing'		: style.space_unit,
-	'padding'		: style.space_unit
+	'padding'		: style.space_unit * 1.5
 }
 
 nm_menu_item_title = {
@@ -502,15 +517,26 @@ class NMClientApp:
 	def _create_menu(self):
 		menu = NetworkMenu()
 
-		# Wired devices first
+		# Active device goes above the separator
+		act_dev = None
+		if self._active_device and self._devices.has_key(self._active_device):
+			act_dev = self._devices[self._active_device]
+
+		if act_dev:
+			act_dev.add_to_menu(menu, active_only=True)
+			menu.add_separator()
+			
+		# Wired devices first, if they don't support carrier detect
 		for dev in self._devices.values():
 			if not dev.is_valid():
 				continue
 			if dev.get_type() != DEVICE_TYPE_802_3_ETHERNET:
 				continue
+			if dev.get_capabilities() & NM_DEVICE_CAP_CARRIER_DETECT:
+				continue
+			if dev == act_dev:
+				continue
 			dev.add_to_menu(menu)
-
-		menu.add_separator()
 
 		# Wireless devices second
 		for dev in self._devices.values():
