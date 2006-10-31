@@ -2,4 +2,4 @@
 name = Test
 service_name = org.laptop.Test
 icon = activity-sketch
-exec = bu
+exec = sugar-activity-factory org.laptop.Test testactivity.TestActivity

@@ -41,6 +41,9 @@ logger.start(sys.argv[1])
 
 logging.info('Starting activity factory %s' % sys.argv[1])
 
+if len(sys.argv) > 3:
+	sys.path.append(sys.argv[3])
+
 ActivityFactory.register_factory(sys.argv[1], sys.argv[2])
 
 gtk.main()

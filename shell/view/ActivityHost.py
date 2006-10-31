@@ -42,7 +42,7 @@ class ActivityChatWindow(gtk.Window):
 		self.add(chat_widget)
 
 class ActivityHost:
-	def __init__(self, window):
+	def __init__(self, shell_model, window):
 		self._window = window
 		self._xid = window.get_xid()
 		self._pservice = PresenceService.get_instance()
@@ -56,8 +56,14 @@ class ActivityHost:
 		self._type = self._activity.get_type()
 		self._gdk_window = gtk.gdk.window_foreign_new(self._xid)
 
+		# FIXME Old activity registry support, cleanup
 		registry = conf.get_activity_registry()
 		info = registry.get_activity(self._type)
+
+		if not info:
+			registry = shell_model.get_bundle_registry()
+			info = registry.get_bundle(self._type)
+
 		self._icon_name = info.get_icon()
 
 		try:

@@ -2,6 +2,7 @@ import os
 from ConfigParser import ConfigParser
 
 from sugar.activity.bundle import Bundle
+from sugar import env
 
 class _ServiceParser(ConfigParser):
 	def optionxform(self, option):
@@ -21,8 +22,15 @@ class _ServiceManager(object):
 
 		section = 'D-BUS Service'
 		service_cp.add_section(section)
-		service_cp.set(section, 'Name', name)
-		service_cp.set(section, 'Exec', bundle.get_exec())
+
+		# Compatibility with the old activity registry, remove after BTest-1
+		# service_cp.set(section, 'Name', name)
+		service_cp.set(section, 'Name', name + '.Factory')
+
+		# FIXME total hack
+		full_exec = env.get_shell_bin_dir() + '/' + bundle.get_exec()
+		full_exec += ' ' + bundle.get_path()
+		service_cp.set(section, 'Exec', full_exec)
 
 		dest = os.path.join(self._path, name + '.service')
 		fileobject = open(dest, 'w')
@@ -60,10 +68,9 @@ class BundleRegistry:
 				   bundle_dir.endswith('.activity'):
 					self._add_bundle(bundle_dir)
 
-	def _add_bundle(self, bundle_dir):
-		info_path = os.path.join(bundle_dir, 'activity', 'activity.info')
-		if os.path.isfile(info_path):
-			bundle = Bundle(info_path)
-			if bundle.is_valid():
-				self._bundles[bundle.get_service_name()] = bundle
-				self._service_manager.add(bundle)
+	def _add_bundle(self, bundle_path):
+		bundle = Bundle(bundle_path)
+		print bundle
+		if bundle.is_valid():
+			self._bundles[bundle.get_service_name()] = bundle
+			self._service_manager.add(bundle)

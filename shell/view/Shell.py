@@ -96,7 +96,7 @@ class Shell(gobject.GObject):
 
 	def __window_opened_cb(self, screen, window):
 		if window.get_window_type() == wnck.WINDOW_NORMAL:
-			activity_host = ActivityHost(window)
+			activity_host = ActivityHost(self.get_model(), window)
 			self._hosts[activity_host.get_xid()] = activity_host
 			self.emit('activity-opened', activity_host)
 
