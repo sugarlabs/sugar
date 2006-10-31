@@ -14,9 +14,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import os
+
 from sugar.presence import PresenceService
 from sugar.activity.bundleregistry import BundleRegistry
-from sugar import env
 from model.Friends import Friends
 from model.MeshModel import MeshModel
 from model.Owner import ShellOwner
@@ -35,7 +36,14 @@ class ShellModel:
 		self._mesh = MeshModel()
 
 		self._bundle_registry = BundleRegistry()
-		self._bundle_registry.add_search_path(env.get_bundles_path())
+
+		path = os.path.expanduser('~/Activities')
+		self._bundle_registry.add_search_path(path)
+
+		if os.environ.has_key('XDG_DATA_DIRS'):
+			for path in os.environ['XDG_DATA_DIRS'].split(':'):
+				bundles_path = os.path.join(path, 'activities')
+				self._bundle_registry.add_search_path(bundles_path)
 
 	def get_bundle_registry(self):
 		return self._bundle_registry

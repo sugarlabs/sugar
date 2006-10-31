@@ -70,7 +70,6 @@ class BundleRegistry:
 
 	def _add_bundle(self, bundle_path):
 		bundle = Bundle(bundle_path)
-		print bundle
 		if bundle.is_valid():
 			self._bundles[bundle.get_service_name()] = bundle
 			self._service_manager.add(bundle)

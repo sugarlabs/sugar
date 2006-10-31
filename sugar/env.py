@@ -54,8 +54,5 @@ def get_services_dir():
 def get_dbus_config():
 	return sugar_dbus_config
 
-def get_bundles_path():
-	return os.path.join(get_profile_path(), 'bundles')
-
 def get_shell_bin_dir():
 	return sugar_shell_bin_dir
