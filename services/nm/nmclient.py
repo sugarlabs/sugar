@@ -398,7 +398,7 @@ class NMClientApp:
 		info = self._icon_theme.lookup_icon(name, 75, 0)
 		if not info or not info.get_filename():
 			raise RuntimeError
-		return gtk.gdk.pixbuf_new_from_file_at_size(info.get_filename(), 75, 75)
+		return gtk.gdk.pixbuf_new_from_file(info.get_filename())
 
 	def _load_icons(self):
 		icons = {}
