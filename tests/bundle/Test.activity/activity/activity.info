@@ -1,0 +1,5 @@
+[Activity]
+name = Test
+service_name = org.laptop.Test
+icon = activity-sketch
+exec = bu

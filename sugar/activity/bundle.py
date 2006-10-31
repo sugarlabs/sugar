@@ -13,24 +13,32 @@ class Bundle:
 		cp = ConfigParser()
 		cp.read([info_path])
 
-		if cp.has_option('Activity', 'service_name'):
-			self._service_name = cp.get('Activity', 'service_name')
+		section = 'Activity'
+
+		if cp.has_option(section, 'service_name'):
+			self._service_name = cp.get(section, 'service_name')
 		else:
 			self._valid = False
 			logging.error('%s must specify a service name' % info_path)
 
-		if cp.has_option('Activity', 'name'):
-			self._service_name = cp.get('Activity', 'name')
+		if cp.has_option(section, 'name'):
+			self._name = cp.get(section, 'name')
 		else:
 			self._valid = False
 			logging.error('%s must specify a name' % info_path)
 
-		if cp.has_option('Activity', 'show_launcher'):
-			if cp.get('Activity', 'show_launcher') == 'yes':
+		if cp.has_option(section, 'exec'):
+			self._exec = cp.get(section, 'exec')
+		else:
+			self._valid = False
+			logging.error('%s must specify an exec' % info_path)
+
+		if cp.has_option(section, 'show_launcher'):
+			if cp.get(section, 'show_launcher') == 'yes':
 				self._show_launcher = True
 
-		if cp.has_option('Activity', 'icon'):
-			self._icon = cp.get('Activity', 'icon')
+		if cp.has_option(section, 'icon'):
+			self._icon = cp.get(section, 'icon')
 
 	def is_valid(self):
 		return self._valid
@@ -46,6 +54,10 @@ class Bundle:
 	def get_icon(self):
 		"""Get the activity icon name"""
 		return self._icon
+
+	def get_exec(self):
+		"""Get the command to execute to launch the activity factory"""
+		return self._exec
 
 	def get_show_launcher(self):
 		"""Get whether there should be a visible launcher for the activity"""
