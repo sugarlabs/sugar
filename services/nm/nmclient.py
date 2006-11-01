@@ -118,7 +118,7 @@ class Network(gobject.GObject):
 		elif strength < 0:
 			strength = 0
 		item = NetworkMenuItem(text=self._ssid, percent=strength)
-		item.connect('activated', callback, dev, self)
+		item.connect('button-press-event', callback, (dev, self))
 		menu.add_item(item)
 
 
@@ -193,7 +193,7 @@ class Device(gobject.GObject):
 		item = NetworkMenuItem(_("Wired Network"), stylesheet="nm.Bubble.Wired",
 				hi_stylesheet="nm.Bubble.Wired.Hi",
 				act_stylesheet="nm.Bubble.Wired.Activated")
-		item.connect('activated', callback, self)
+		item.connect('button-press-event', callback, (self, None))
 		menu.add_item(item)
 
 	def _add_to_menu_wireless(self, menu, callback, active_only):
@@ -364,8 +364,8 @@ class NetworkMenuItem(Bubble):
 		self.append(text_item)
 
 		self.connect('motion-notify-event', self._motion_notify_event_cb)
-		self.connect('button-press-event', self._button_press_event_cb)
-		self.connect('activated', self._activated_cb)
+		# Disable active hilight for now...
+		#self.connect('button-press-event', self._button_press_event_cb)
 
 	def _motion_notify_event_cb(self, widget, event):
 		if event.detail == hippo.MOTION_DETAIL_ENTER:
@@ -379,17 +379,8 @@ class NetworkMenuItem(Bubble):
 		return True
 
 	def _button_press_event_cb(self, widget, event):
-		logging.debug("button press")
 		style.apply_stylesheet(self, self._act_stylesheet)
 		return False
-
-	def _activated_cb(self, widget):
-		logging.debug("activated: %s" % self._hover)
-		if self._hover:
-			style.apply_stylesheet(self, self._act_stylesheet)
-		else:
-			style.apply_stylesheet(self, self._default_stylesheet)
-
 
 class NetworkMenu(gtk.Window):
 	__gsignals__ = {
@@ -761,7 +752,8 @@ class NMClientApp:
 		for arg in args:
 			logging.debug('        ' + str(arg))
 
-	def _menu_item_clicked_cb(self, widget, device, network=None):
+	def _menu_item_clicked_cb(self, widget, event, dev_data):
+		(device, network) = dev_data
 		net_op = ""
 		if network:
 			net_op = network.get_op()
