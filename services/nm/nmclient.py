@@ -111,13 +111,14 @@ class Network(gobject.GObject):
 	def is_valid(self):
 		return self._valid
 
-	def add_to_menu(self, menu):
+	def add_to_menu(self, menu, callback, dev):
 		strength = self._strength
 		if strength > 100:
 			strength = 100
 		elif strength < 0:
 			strength = 0
 		item = NetworkMenuItem(text=self._ssid, percent=strength)
+		item.connect('activated', callback, dev, self)
 		menu.add_item(item)
 
 
@@ -188,18 +189,21 @@ class Device(gobject.GObject):
 			self._active_net = None
 		del self._networks[net_op]
 
-	def _add_to_menu_wired(self, menu):
-		item = NetworkMenuItem(_("Wired Network"), stylesheet="nm.Bubble.Wired")
+	def _add_to_menu_wired(self, menu, callback):
+		item = NetworkMenuItem(_("Wired Network"), stylesheet="nm.Bubble.Wired",
+				hi_stylesheet="nm.Bubble.Wired.Hi",
+				act_stylesheet="nm.Bubble.Wired.Activated")
+		item.connect('activated', callback, self)
 		menu.add_item(item)
 
-	def _add_to_menu_wireless(self, menu, active_only):
+	def _add_to_menu_wireless(self, menu, callback, active_only):
 		act_net = None
 		if self._active_net and self._networks.has_key(self._active_net):
 			act_net = self._networks[self._active_net]
 
 		# Only add the active network if active_only == True
 		if active_only and act_net:
-			act_net.add_to_menu(menu)
+			act_net.add_to_menu(menu, callback, self)
 			return
 
 		# Otherwise, add all networks _except_ the active one
@@ -208,13 +212,13 @@ class Device(gobject.GObject):
 				continue
 			if act_net == net:
 				continue
-			net.add_to_menu(menu)
+			net.add_to_menu(menu, callback, self)
 
-	def add_to_menu(self, menu, active_only=False):
+	def add_to_menu(self, menu, callback, active_only=False):
 		if self._type == DEVICE_TYPE_802_3_ETHERNET:
-			self._add_to_menu_wired(menu)
+			self._add_to_menu_wired(menu, callback)
 		elif self._type == DEVICE_TYPE_802_11_WIRELESS:
-			self._add_to_menu_wireless(menu, active_only)
+			self._add_to_menu_wireless(menu, callback, active_only)
 
 	def get_op(self):
 		return self._op
@@ -281,35 +285,51 @@ class Device(gobject.GObject):
 		return self._caps
 
 nm_bubble_wireless = {
-	'fill-color'	: 0x646464FF,
-	'stroke-color'	: 0x646464FF,
+	'fill-color'	 : 0x646464FF,
+	'stroke-color'	 : 0x646464FF,
 	'progress-color': 0x333333FF,
-	'spacing'		: style.space_unit,
-	'padding'		: style.space_unit * 1.5
+	'spacing'		 : style.space_unit,
+	'padding'		 : style.space_unit * 1.5
 }
 
 nm_bubble_wireless_hi = {
-	'fill-color'	: 0x979797FF,
-	'stroke-color'	: 0x979797FF,
+	'fill-color'	 : 0x979797FF,
+	'stroke-color'	 : 0x979797FF,
 	'progress-color': 0x666666FF,
-	'spacing'		: style.space_unit,
-	'padding'		: style.space_unit * 1.5
+	'spacing'		 : style.space_unit,
+	'padding'		 : style.space_unit * 1.5
+}
+
+nm_bubble_wireless_activated = {
+	'fill-color'	 : 0xA7A7A7FF,
+	'stroke-color'	 : 0xA7A7A7FF,
+	'progress-color': 0x777777FF,
+	'spacing'		 : style.space_unit,
+	'padding'		 : style.space_unit * 1.5
 }
 
 nm_bubble_wired = {
-	'fill-color'	: 0x000000FF,
-	'stroke-color'	: 0x000000FF,
+	'fill-color'	 : 0x000000FF,
+	'stroke-color'	 : 0x000000FF,
 	'progress-color': 0x000000FF,
-	'spacing'		: style.space_unit,
-	'padding'		: style.space_unit * 1.5
+	'spacing'		 : style.space_unit,
+	'padding'		 : style.space_unit * 1.5
 }
 
 nm_bubble_wired_hi = {
-	'fill-color'	: 0x333333FF,
-	'stroke-color'	: 0x3333333FF,
+	'fill-color'	 : 0x333333FF,
+	'stroke-color'	 : 0x333333FF,
 	'progress-color': 0x000000FF,
-	'spacing'		: style.space_unit,
-	'padding'		: style.space_unit * 1.5
+	'spacing'		 : style.space_unit,
+	'padding'		 : style.space_unit * 1.5
+}
+
+nm_bubble_wired_activated = {
+	'fill-color'	 : 0x444444FF,
+	'stroke-color'	 : 0x444444FF,
+	'progress-color': 0x000000FF,
+	'spacing'		 : style.space_unit,
+	'padding'		 : style.space_unit * 1.5
 }
 
 nm_menu_item_title = {
@@ -322,16 +342,21 @@ nm_menu_item_title = {
 
 style.register_stylesheet("nm.Bubble.Wireless", nm_bubble_wireless)
 style.register_stylesheet("nm.Bubble.Wireless.Hi", nm_bubble_wireless_hi)
+style.register_stylesheet("nm.Bubble.Wireless.Activated", nm_bubble_wireless_activated)
 style.register_stylesheet("nm.Bubble.Wired", nm_bubble_wired)
 style.register_stylesheet("nm.Bubble.Wired.Hi", nm_bubble_wired_hi)
+style.register_stylesheet("nm.Bubble.Wired.Activated", nm_bubble_wired_activated)
 style.register_stylesheet("nm.MenuItem.Title", nm_menu_item_title)
 
 class NetworkMenuItem(Bubble):
-	def __init__(self, text, percent=0, stylesheet="nm.Bubble.Wireless", hi_stylesheet="nm.Bubble.Wireless.Hi"):
+	def __init__(self, text, percent=0, stylesheet="nm.Bubble.Wireless",
+				hi_stylesheet="nm.Bubble.Wireless.Hi",
+				act_stylesheet="nm.Bubble.Wireless.Activated"):
 		Bubble.__init__(self, percent=percent)
 		self._hover = False
 		self._default_stylesheet = stylesheet
 		self._hi_stylesheet = hi_stylesheet
+		self._act_stylesheet = act_stylesheet
 		style.apply_stylesheet(self, stylesheet)
 
 		text_item = hippo.CanvasText(text=text)
@@ -339,8 +364,10 @@ class NetworkMenuItem(Bubble):
 		self.append(text_item)
 
 		self.connect('motion-notify-event', self._motion_notify_event_cb)
+		self.connect('button-press-event', self._button_press_event_cb)
+		self.connect('activated', self._activated_cb)
 
-	def _motion_notify_event_cb(self, widget, event, handled=False):
+	def _motion_notify_event_cb(self, widget, event):
 		if event.detail == hippo.MOTION_DETAIL_ENTER:
 			if not self._hover:
 				self._hover = True
@@ -349,6 +376,19 @@ class NetworkMenuItem(Bubble):
 			if self._hover:
 				self._hover = False
 				style.apply_stylesheet(self, self._default_stylesheet)
+		return True
+
+	def _button_press_event_cb(self, widget, event):
+		logging.debug("button press")
+		style.apply_stylesheet(self, self._act_stylesheet)
+		return False
+
+	def _activated_cb(self, widget):
+		logging.debug("activated: %s" % self._hover)
+		if self._hover:
+			style.apply_stylesheet(self, self._act_stylesheet)
+		else:
+			style.apply_stylesheet(self, self._default_stylesheet)
 
 
 class NetworkMenu(gtk.Window):
@@ -557,7 +597,7 @@ class NMClientApp:
 			act_dev = self._devices[self._active_device]
 
 		if act_dev:
-			act_dev.add_to_menu(menu, active_only=True)
+			act_dev.add_to_menu(menu, self._menu_item_clicked_cb, active_only=True)
 			menu.add_separator()
 			
 		# Wired devices first, if they don't support carrier detect
@@ -570,7 +610,7 @@ class NMClientApp:
 				continue
 			if dev == act_dev:
 				continue
-			dev.add_to_menu(menu)
+			dev.add_to_menu(menu, self._menu_item_clicked_cb)
 
 		# Wireless devices second
 		for dev in self._devices.values():
@@ -578,7 +618,7 @@ class NMClientApp:
 				continue
 			if dev.get_type() != DEVICE_TYPE_802_11_WIRELESS:
 				continue
-			dev.add_to_menu(menu)
+			dev.add_to_menu(menu, self._menu_item_clicked_cb)
 
 		return menu
 
@@ -720,6 +760,12 @@ class NMClientApp:
 	 	logging.debug('Caught signal %s.%s' % (dbus_message.get_interface(), mem))
 		for arg in args:
 			logging.debug('        ' + str(arg))
+
+	def _menu_item_clicked_cb(self, widget, device, network=None):
+		net_op = ""
+		if network:
+			net_op = network.get_op()
+		logging.debug("clicked dev %s, net %s" % (device.get_op(), net_op))
 
 	def device_activation_stage_sig_handler(self, device, stage):
 	    print 'Network Manager Device Stage "%s" for device %s'%(NM_DEVICE_STAGE_STRINGS[stage], device)
