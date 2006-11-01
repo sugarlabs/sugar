@@ -35,27 +35,39 @@ GSugarDownload::Init (nsIURI *aSource,
 NS_IMETHODIMP 
 GSugarDownload::OnStateChange (nsIWebProgress *aWebProgress, nsIRequest *aRequest,
 			    PRUint32 aStateFlags, nsresult aStatus)
-{
-	nsCString url;
-	nsCString mimeType;
-	nsCString targetURI;
-	
-	if ((((aStateFlags & STATE_IS_REQUEST) &&
+{	
+	SugarBrowserChandler *browser_chandler = sugar_get_browser_chandler();
+		
+	if (((aStateFlags & STATE_IS_REQUEST) &&
 	     (aStateFlags & STATE_IS_NETWORK) &&
-	     (aStateFlags & STATE_STOP)) ||
-	    aStateFlags == STATE_STOP) &&
-	    NS_SUCCEEDED (aStatus)) {
+	     (aStateFlags & STATE_START)) ||
+	    aStateFlags == STATE_START) {
+	
+		nsCString url;
+		nsCString mimeType;
 	
 		mMIMEInfo->GetMIMEType(mimeType);
 		mSource->GetSpec(url);
 
-		SugarBrowserChandler *browser_chandler = sugar_get_browser_chandler();
-		sugar_browser_chandler_handle_content(browser_chandler,
-											  url.get(),
-											  mimeType.get(),
-											  mTargetFileName.get());
+		sugar_browser_chandler_download_started(browser_chandler,
+												url.get(),
+												mimeType.get(),
+												mTargetFileName.get());
+
+	} else if (((aStateFlags & STATE_IS_REQUEST) &&
+	     (aStateFlags & STATE_IS_NETWORK) &&
+	     (aStateFlags & STATE_STOP)) ||
+	    aStateFlags == STATE_STOP) {
+		
+		if (NS_SUCCEEDED (aStatus)) {
+			sugar_browser_chandler_download_completed(browser_chandler,
+													  mTargetFileName.get());
+		} else {
+			sugar_browser_chandler_download_cancelled(browser_chandler,
+													  mTargetFileName.get());
+		}
 	}
-	
+
 	return NS_OK; 
 }
 
@@ -79,7 +91,15 @@ GSugarDownload::OnProgressChange64 (nsIWebProgress *aWebProgress,
 				 PRInt64 aMaxSelfProgress,
 				 PRInt64 aCurTotalProgress,
 				 PRInt64 aMaxTotalProgress)
-{
+{	
+	SugarBrowserChandler *browser_chandler = sugar_get_browser_chandler();
+	PRInt32 percentComplete =
+		(PRInt32)(((float)aCurSelfProgress / (float)aMaxSelfProgress) * 100.0);
+
+	sugar_browser_chandler_update_progress(browser_chandler,
+										   mTargetFileName.get(),
+										   percentComplete);
+
 	return NS_OK;
 }
 

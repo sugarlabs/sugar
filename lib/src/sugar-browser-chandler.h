@@ -29,10 +29,17 @@ struct _SugarBrowserChandlerClass {
 
 GType				  sugar_browser_chandler_get_type	    (void);
 SugarBrowserChandler *sugar_get_browser_chandler		    (void);
-void            	  sugar_browser_chandler_handle_content (SugarBrowserChandler *chandler,
-															 const char *url, 
-															 const char *mime_type,
-															 const char *tmp_file_name);
+void            	  sugar_browser_chandler_download_started (SugarBrowserChandler *chandler,
+															   const char *url,
+															   const char *mime_type,
+															   const char *tmp_file_name);
+void            	  sugar_browser_chandler_download_completed (SugarBrowserChandler *chandler,
+															   const char *tmp_file_name);
+void            	  sugar_browser_chandler_download_cancelled (SugarBrowserChandler *chandler,
+																 const char *tmp_file_name);
+void            	  sugar_browser_chandler_update_progress (SugarBrowserChandler *chandler,
+															  const char *tmp_file_name,
+															  const int percent);
 
 G_END_DECLS
 

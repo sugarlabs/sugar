@@ -1,1 +1,1 @@
-SUBDIRS = presence nm
+SUBDIRS = presence nm clipboard

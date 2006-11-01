@@ -18,6 +18,7 @@ from gettext import gettext as _
 import gtk
 import gtkmozembed
 import logging
+import dbus
 
 import _sugar
 from sugar.activity import ActivityFactory
@@ -105,11 +106,34 @@ def start():
 	style.load_stylesheet(web.stylesheet)
 	
 	chandler = _sugar.get_browser_chandler()
-	chandler.connect('handle-content', handle_content_cb)
+	chandler.connect('download-started', download_started_cb)
+	chandler.connect('download-completed', download_completed_cb)
+	chandler.connect('download-cancelled', download_started_cb)
+	chandler.connect('download-progress', download_progress_cb)
 
 def stop():
 	gtkmozembed.pop_startup()
 
-def handle_content_cb(chandler, url, mimeType, tmpFileName):
-	activity = ActivityFactory.create("org.laptop.sugar.Xbook")
-	activity.execute("open_document", [tmpFileName])
+def download_started_cb(chandler, url, mimeType, tmpFileName):	
+	bus = dbus.SessionBus()
+	proxy_obj = bus.get_object('org.laptop.Clipboard', '/org/laptop/Clipboard')
+	iface = dbus.Interface(proxy_obj, 'org.laptop.Clipboard')
+	iface.add_object(mimeType, tmpFileName)
+
+def download_completed_cb(chandler, tmpFileName):
+	bus = dbus.SessionBus()
+	proxy_obj = bus.get_object('org.laptop.Clipboard', '/org/laptop/Clipboard')
+	iface = dbus.Interface(proxy_obj, 'org.laptop.Clipboard')
+	iface.update_object_state(tmpFileName, 100)
+
+def download_cancelled_cb(chandler, tmpFileName):
+	bus = dbus.SessionBus()
+	proxy_obj = bus.get_object('org.laptop.Clipboard', '/org/laptop/Clipboard')
+	iface = dbus.Interface(proxy_obj, 'org.laptop.Clipboard')
+	iface.delete_object(tmpFileName, 100)
+
+def download_progress_cb(chandler, tmpFileName, progress):
+	bus = dbus.SessionBus()
+	proxy_obj = bus.get_object('org.laptop.Clipboard', '/org/laptop/Clipboard')
+	iface = dbus.Interface(proxy_obj, 'org.laptop.Clipboard')
+	iface.update_object_state(tmpFileName, progress)

@@ -78,7 +78,7 @@ sugar_browser_startup(void)
 						  PR_TRUE, getter_AddRefs(file));
 	NS_ENSURE_TRUE(file, FALSE);
 
-	rv = prefService->ReadUserPrefs (file);                                                                              
+	rv = prefService->ReadUserPrefs (file);
 	if (NS_FAILED(rv)) {
 		g_warning ("failed to read default preferences, error: %x", rv);
 		return FALSE;

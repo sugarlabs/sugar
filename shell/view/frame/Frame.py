@@ -23,6 +23,7 @@ from view.frame.ActivitiesBox import ActivitiesBox
 from view.frame.ZoomBox import ZoomBox
 from view.frame.overlaybox import OverlayBox
 from view.frame.FriendsBox import FriendsBox
+from view.frame.ClipboardBox import ClipboardBox
 from view.frame.PanelWindow import PanelWindow
 from view.frame.notificationtray import NotificationTray
 from sugar.graphics.timeline import Timeline
@@ -198,7 +199,10 @@ class Frame:
 		root.append(box)
 
 		# Left panel
-		self._create_panel(grid, 0, 1, 1, 10)
+		[menu_shell, root] = self._create_panel(grid, 0, 1, 1, 10)
+		
+		box = ClipboardBox(self._shell, menu_shell)
+		root.append(box)
 
 	def _create_panel(self, grid, x, y, width, height):
 		panel = PanelWindow()

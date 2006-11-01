@@ -64,6 +64,7 @@ lib/threadframe/Makefile
 services/Makefile
 services/presence/Makefile
 services/nm/Makefile
+services/clipboard/Makefile
 shell/Makefile
 shell/conf/Makefile
 shell/data/Makefile
