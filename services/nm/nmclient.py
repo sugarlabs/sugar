@@ -288,9 +288,25 @@ nm_bubble_wireless = {
 	'padding'		: style.space_unit * 1.5
 }
 
+nm_bubble_wireless_hi = {
+	'fill-color'	: 0x979797FF,
+	'stroke-color'	: 0x979797FF,
+	'progress-color': 0x666666FF,
+	'spacing'		: style.space_unit,
+	'padding'		: style.space_unit * 1.5
+}
+
 nm_bubble_wired = {
 	'fill-color'	: 0x000000FF,
 	'stroke-color'	: 0x000000FF,
+	'progress-color': 0x000000FF,
+	'spacing'		: style.space_unit,
+	'padding'		: style.space_unit * 1.5
+}
+
+nm_bubble_wired_hi = {
+	'fill-color'	: 0x333333FF,
+	'stroke-color'	: 0x3333333FF,
 	'progress-color': 0x000000FF,
 	'spacing'		: style.space_unit,
 	'padding'		: style.space_unit * 1.5
@@ -305,17 +321,35 @@ nm_menu_item_title = {
 
 
 style.register_stylesheet("nm.Bubble.Wireless", nm_bubble_wireless)
+style.register_stylesheet("nm.Bubble.Wireless.Hi", nm_bubble_wireless_hi)
 style.register_stylesheet("nm.Bubble.Wired", nm_bubble_wired)
+style.register_stylesheet("nm.Bubble.Wired.Hi", nm_bubble_wired_hi)
 style.register_stylesheet("nm.MenuItem.Title", nm_menu_item_title)
 
 class NetworkMenuItem(Bubble):
-	def __init__(self, text, percent=0, stylesheet="nm.Bubble.Wireless"):
+	def __init__(self, text, percent=0, stylesheet="nm.Bubble.Wireless", hi_stylesheet="nm.Bubble.Wireless.Hi"):
 		Bubble.__init__(self, percent=percent)
+		self._hover = False
+		self._default_stylesheet = stylesheet
+		self._hi_stylesheet = hi_stylesheet
 		style.apply_stylesheet(self, stylesheet)
 
 		text_item = hippo.CanvasText(text=text)
 		style.apply_stylesheet(text_item, 'nm.MenuItem.Title')
 		self.append(text_item)
+
+		self.connect('motion-notify-event', self._motion_notify_event_cb)
+
+	def _motion_notify_event_cb(self, widget, event, handled=False):
+		if event.detail == hippo.MOTION_DETAIL_ENTER:
+			if not self._hover:
+				self._hover = True
+				style.apply_stylesheet(self, self._hi_stylesheet)
+		elif event.detail == hippo.MOTION_DETAIL_LEAVE:
+			if self._hover:
+				self._hover = False
+				style.apply_stylesheet(self, self._default_stylesheet)
+
 
 class NetworkMenu(gtk.Window):
 	__gsignals__ = {
