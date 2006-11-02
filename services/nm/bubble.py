@@ -103,7 +103,8 @@ class Bubble(hippo.CanvasBox, hippo.CanvasItem):
 		cr.set_line_width(line_width)
 		cr.stroke();
 
-		self._paint_progress_bar(cr, x, y, width, height, line_width)
+		if self._percent > 0:
+			self._paint_progress_bar(cr, x, y, width, height, line_width)
 
 	def _paint_progress_bar(self, cr, x, y, width, height, line_width):
 		prog_x = x + line_width
