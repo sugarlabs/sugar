@@ -12,6 +12,7 @@ class Bundle:
 		self._show_launcher = False
 		self._valid = True
 		self._path = path
+		self._activity_version = 0
 
 		info_path = os.path.join(path, 'activity', 'activity.info')
 		if os.path.isfile(info_path):
@@ -50,6 +51,9 @@ class Bundle:
 		if cp.has_option(section, 'icon'):
 			self._icon = cp.get(section, 'icon')
 
+		if cp.has_option(section, 'activity_version'):
+			self._activity_version = int(cp.get(section, 'activity_version'))
+
 	def is_valid(self):
 		return self._valid
 
@@ -68,6 +72,10 @@ class Bundle:
 	def get_icon(self):
 		"""Get the activity icon name"""
 		return self._icon
+
+	def get_activity_version(self):
+		"""Get the activity version"""
+		return self._activity_version
 
 	def get_exec(self):
 		"""Get the command to execute to launch the activity factory"""
