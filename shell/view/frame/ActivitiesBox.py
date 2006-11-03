@@ -65,7 +65,8 @@ class ActivitiesBox(hippo.CanvasBox):
 				self.add_activity(activity)
 
 		for bundle in self._shell_model.get_bundle_registry():
-			self.add_activity(bundle)
+			if bundle.get_show_launcher():
+				self.add_activity(bundle)
 
 		for invite in self._invites:
 			self.add_invite(invite)
