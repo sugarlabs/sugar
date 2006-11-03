@@ -45,8 +45,8 @@ class Bundle:
 			logging.error('%s must specify an exec' % self._path)
 
 		if cp.has_option(section, 'show_launcher'):
-			if cp.get(section, 'show_launcher') == 'yes':
-				self._show_launcher = True
+			if cp.get(section, 'show_launcher') == 'no':
+				self._show_launcher = False
 
 		if cp.has_option(section, 'icon'):
 			self._icon = cp.get(section, 'icon')
