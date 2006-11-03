@@ -9,7 +9,7 @@ class Bundle:
 		self._name = None
 		self._icon = None
 		self._service_name = None
-		self._show_launcher = False
+		self._show_launcher = True
 		self._valid = True
 		self._path = path
 		self._activity_version = 0
