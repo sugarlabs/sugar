@@ -12,6 +12,7 @@
 
   <servicedir>@prefix@/share/sugar/activities</servicedir>
   <servicedir>@prefix@/share/sugar/services</servicedir>
+  <servicedir>/tmp/sugar-services</servicedir>
 
   <policy context="default">
     <!-- Allow everything to be sent -->
