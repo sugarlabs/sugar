@@ -3,7 +3,7 @@ SUBDIRS = activities lib po shell sugar services tools
 ACLOCAL_AMFLAGS = -I m4
 
 dbusconfdir = $(pkgdatadir)
-dbusconf_DATA = dbus-installed.conf
+dbusconf_DATA = dbus-installed.conf dbus-installed-094.conf
 
 bin_SCRIPTS = 			\
 	sugar-emulator		\

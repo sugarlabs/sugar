@@ -25,6 +25,7 @@ missing
 py-compile
 stamp-h1
 dbus-installed.conf
+dbus-installed-094.conf
 intltool-extract
 intltool-extract.in
 intltool-merge

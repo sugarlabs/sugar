@@ -1,4 +1,4 @@
-AC_INIT([Sugar],[0.46],[],[sugar])
+AC_INIT([Sugar],[0.48],[],[sugar])
 
 AC_PREREQ([2.59])
 
@@ -51,6 +51,7 @@ AM_GLIB_GNU_GETTEXT
 AC_OUTPUT([
 Makefile
 dbus-installed.conf
+dbus-installed-094.conf
 activities/Makefile
 activities/web/Makefile
 activities/chat/Makefile
