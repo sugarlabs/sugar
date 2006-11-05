@@ -60,6 +60,13 @@ def get_dbus_config_094():
 def get_shell_bin_dir():
 	return sugar_shell_bin_dir
 
+# http://standards.freedesktop.org/basedir-spec/basedir-spec-0.6.html
+def get_data_dirs():
+	if os.environ.has_key('XDG_DATA_DIRS'):
+		return os.environ['XDG_DATA_DIRS'].split(':')
+	else:
+		return [ '/usr/local/share/', '/usr/share/' ]
+
 _dbus_version = None
 def get_dbus_version():
 	global _dbus_version
