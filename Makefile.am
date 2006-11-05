@@ -12,7 +12,7 @@ bin_SCRIPTS = 			\
 install-data-local:
 	$(top_srcdir)/sugar/setup.py \
 		$(top_srcdir)/activities \
-		$(DESTDIR)$(datadir)/dbus-1/services \
+		$(DESTDIR)$(pkgdatadir)/activities \
 		$(bindir)/sugar-activity-factory
 
 uninstall-local:

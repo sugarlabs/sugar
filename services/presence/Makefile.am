@@ -1,4 +1,4 @@
-servicedir = $(datadir)/dbus-1/services
+servicedir = $(datadir)/sugar/services
 service_in_files = org.laptop.Presence.service.in
 service_DATA = $(service_in_files:.service.in=.service)
 
