@@ -1,10 +1,12 @@
 from sugar.graphics.menuicon import MenuIcon
 from view.ClipboardMenu import ClipboardMenu
 from sugar.activity import ActivityFactory
+from sugar.clipboard import ClipboardService
 
 class ClipboardIcon(MenuIcon):
+
 	def __init__(self, menu_shell, file_name):
-		MenuIcon.__init__(self, menu_shell, icon_name='stock-written-doc')
+		MenuIcon.__init__(self, menu_shell, icon_name='activity-xbook')
 		self._file_name = file_name
 		self._percent = 0
 		self.connect('activated', self._icon_activated_cb)
@@ -21,13 +23,15 @@ class ClipboardIcon(MenuIcon):
 			self._menu.set_percent(percent)
 
 	def _icon_activated_cb(self, icon):
-		activity = ActivityFactory.create("org.laptop.sugar.Xbook")
-		activity.execute("open_document", [self._file_name])
+		if self._percent == 100:
+			activity = ActivityFactory.create("org.laptop.sugar.Xbook")
+			activity.execute("open_document", [self._file_name])
 
 	def _popup_action_cb(self, popup, action):
-#		self.popdown()
-#		
-#		if action == ClipboardMenu.ACTION_DELETE:
-#			activity = self._shell.get_current_activity()
-#			activity.invite(ps_buddy)
-		pass
+		self.popdown()
+		
+		if action == ClipboardMenu.ACTION_STOP_DOWNLOAD:
+			raise "Stopping downloads still not implemented."
+		elif action == ClipboardMenu.ACTION_DELETE:
+			cb_service = ClipboardService.get_instance()
+			cb_service.delete_object(self._file_name)

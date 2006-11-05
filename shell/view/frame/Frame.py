@@ -201,7 +201,7 @@ class Frame:
 		# Left panel
 		[menu_shell, root] = self._create_panel(grid, 0, 1, 1, 10)
 		
-		box = ClipboardBox(self._shell, menu_shell)
+		box = ClipboardBox(self, menu_shell)
 		root.append(box)
 
 	def _create_panel(self, grid, x, y, width, height):

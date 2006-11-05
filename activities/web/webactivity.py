@@ -23,6 +23,7 @@ import dbus
 import _sugar
 from sugar.activity import ActivityFactory
 from sugar.activity.Activity import Activity
+from sugar.clipboard import ClipboardService
 from sugar import env
 from sugar.graphics import style
 import web.stylesheet
@@ -105,35 +106,28 @@ def start():
 
 	style.load_stylesheet(web.stylesheet)
 	
-	chandler = _sugar.get_browser_chandler()
-	chandler.connect('download-started', download_started_cb)
-	chandler.connect('download-completed', download_completed_cb)
-	chandler.connect('download-cancelled', download_started_cb)
-	chandler.connect('download-progress', download_progress_cb)
+	download_manager = _sugar.get_download_manager()
+	download_manager.connect('download-started', download_started_cb)
+	download_manager.connect('download-completed', download_completed_cb)
+	download_manager.connect('download-cancelled', download_started_cb)
+	download_manager.connect('download-progress', download_progress_cb)
 
 def stop():
 	gtkmozembed.pop_startup()
 
-def download_started_cb(chandler, url, mimeType, tmpFileName):	
-	bus = dbus.SessionBus()
-	proxy_obj = bus.get_object('org.laptop.Clipboard', '/org/laptop/Clipboard')
-	iface = dbus.Interface(proxy_obj, 'org.laptop.Clipboard')
-	iface.add_object(mimeType, tmpFileName)
+def download_started_cb(download_manager, url, mimeType, tmpFileName):
+	cbService = ClipboardService.get_instance()
+	cbService.add_object(mimeType, tmpFileName)
 
-def download_completed_cb(chandler, tmpFileName):
-	bus = dbus.SessionBus()
-	proxy_obj = bus.get_object('org.laptop.Clipboard', '/org/laptop/Clipboard')
-	iface = dbus.Interface(proxy_obj, 'org.laptop.Clipboard')
-	iface.update_object_state(tmpFileName, 100)
+def download_completed_cb(download_manager, tmpFileName):
+	cbService = ClipboardService.get_instance()
+	cbService.update_object_state(tmpFileName, 100)
 
-def download_cancelled_cb(chandler, tmpFileName):
-	bus = dbus.SessionBus()
-	proxy_obj = bus.get_object('org.laptop.Clipboard', '/org/laptop/Clipboard')
-	iface = dbus.Interface(proxy_obj, 'org.laptop.Clipboard')
-	iface.delete_object(tmpFileName, 100)
+def download_cancelled_cb(download_manager, tmpFileName):
+	cbService = ClipboardService.get_instance()
+	#FIXME: Needs to update the state of the object to 'download stopped'
+	#cbService.update_object_state(tmpFileName, 100)
 
-def download_progress_cb(chandler, tmpFileName, progress):
-	bus = dbus.SessionBus()
-	proxy_obj = bus.get_object('org.laptop.Clipboard', '/org/laptop/Clipboard')
-	iface = dbus.Interface(proxy_obj, 'org.laptop.Clipboard')
-	iface.update_object_state(tmpFileName, progress)
+def download_progress_cb(download_manager, tmpFileName, progress):
+	cbService = ClipboardService.get_instance()
+	cbService.update_object_state(tmpFileName, progress)

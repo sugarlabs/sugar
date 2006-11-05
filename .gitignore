@@ -53,3 +53,4 @@ lib/src/sugar-marshal.c
 lib/src/sugar-marshal.h
 lib/src/stamp-sugar-marshal.c
 lib/src/stamp-sugar-marshal.h
+services/clipboard/org.laptop.Clipboard.service

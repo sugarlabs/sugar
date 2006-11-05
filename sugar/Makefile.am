@@ -1,4 +1,4 @@
-SUBDIRS = activity chat graphics p2p presence
+SUBDIRS = activity chat clipboard graphics p2p presence
 
 sugardir = $(pythondir)/sugar
 sugar_PYTHON =				\

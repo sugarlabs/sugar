@@ -1,4 +1,4 @@
-#include "sugar-browser-chandler.h"
+#include "sugar-download-manager.h"
 
 #include "SugarDownload.h"
 
@@ -36,7 +36,7 @@ NS_IMETHODIMP
 GSugarDownload::OnStateChange (nsIWebProgress *aWebProgress, nsIRequest *aRequest,
 			    PRUint32 aStateFlags, nsresult aStatus)
 {	
-	SugarBrowserChandler *browser_chandler = sugar_get_browser_chandler();
+	SugarDownloadManager *download_manager = sugar_get_download_manager();
 		
 	if (((aStateFlags & STATE_IS_REQUEST) &&
 	     (aStateFlags & STATE_IS_NETWORK) &&
@@ -49,7 +49,7 @@ GSugarDownload::OnStateChange (nsIWebProgress *aWebProgress, nsIRequest *aReques
 		mMIMEInfo->GetMIMEType(mimeType);
 		mSource->GetSpec(url);
 
-		sugar_browser_chandler_download_started(browser_chandler,
+		sugar_download_manager_download_started(download_manager,
 												url.get(),
 												mimeType.get(),
 												mTargetFileName.get());
@@ -60,10 +60,10 @@ GSugarDownload::OnStateChange (nsIWebProgress *aWebProgress, nsIRequest *aReques
 	    aStateFlags == STATE_STOP) {
 		
 		if (NS_SUCCEEDED (aStatus)) {
-			sugar_browser_chandler_download_completed(browser_chandler,
+			sugar_download_manager_download_completed(download_manager,
 													  mTargetFileName.get());
 		} else {
-			sugar_browser_chandler_download_cancelled(browser_chandler,
+			sugar_download_manager_download_cancelled(download_manager,
 													  mTargetFileName.get());
 		}
 	}
@@ -92,11 +92,11 @@ GSugarDownload::OnProgressChange64 (nsIWebProgress *aWebProgress,
 				 PRInt64 aCurTotalProgress,
 				 PRInt64 aMaxTotalProgress)
 {	
-	SugarBrowserChandler *browser_chandler = sugar_get_browser_chandler();
+	SugarDownloadManager *download_manager = sugar_get_download_manager();
 	PRInt32 percentComplete =
 		(PRInt32)(((float)aCurSelfProgress / (float)aMaxSelfProgress) * 100.0);
 
-	sugar_browser_chandler_update_progress(browser_chandler,
+	sugar_download_manager_update_progress(download_manager,
 										   mTargetFileName.get(),
 										   percentComplete);
 

@@ -1,5 +1,5 @@
 #include "sugar-marshal.h"
-#include "sugar-browser-chandler.h"
+#include "sugar-download-manager.h"
 
 enum {
   DOWNLOAD_STARTED,
@@ -10,23 +10,23 @@ enum {
 };
 static guint signals[LAST_SIGNAL] = { 0 };
 
-G_DEFINE_TYPE(SugarBrowserChandler, sugar_browser_chandler, G_TYPE_OBJECT)
+G_DEFINE_TYPE(SugarDownloadManager, sugar_download_manager, G_TYPE_OBJECT)
 
-SugarBrowserChandler *browserChandler = NULL;
+SugarDownloadManager *DownloadManager = NULL;
 
 static void
-sugar_browser_chandler_init(SugarBrowserChandler *browserChandler)
+sugar_download_manager_init(SugarDownloadManager *DownloadManager)
 {
 }
 
 static void
-sugar_browser_chandler_class_init(SugarBrowserChandlerClass *browser_chandler_class)
+sugar_download_manager_class_init(SugarDownloadManagerClass *download_manager_class)
 {
 	signals[DOWNLOAD_STARTED] =
 		g_signal_new ("download-started",
-					  G_OBJECT_CLASS_TYPE (browser_chandler_class),
+					  G_OBJECT_CLASS_TYPE (download_manager_class),
 		  			  G_SIGNAL_RUN_LAST,
-		  			  G_STRUCT_OFFSET (SugarBrowserChandlerClass, handle_content),
+		  			  G_STRUCT_OFFSET (SugarDownloadManagerClass, handle_content),
 					  NULL, NULL,
 					  sugar_marshal_VOID__STRING_STRING_STRING,
 					  G_TYPE_NONE, 3,
@@ -36,9 +36,9 @@ sugar_browser_chandler_class_init(SugarBrowserChandlerClass *browser_chandler_cl
 					  
 	signals[DOWNLOAD_COMPLETED] =
 		g_signal_new ("download-completed",
-					  G_OBJECT_CLASS_TYPE (browser_chandler_class),
+					  G_OBJECT_CLASS_TYPE (download_manager_class),
 		  			  G_SIGNAL_RUN_LAST,
-		  			  G_STRUCT_OFFSET (SugarBrowserChandlerClass, handle_content),
+		  			  G_STRUCT_OFFSET (SugarDownloadManagerClass, handle_content),
 					  NULL, NULL,
 					  sugar_marshal_VOID__STRING,
 					  G_TYPE_NONE, 1,
@@ -46,9 +46,9 @@ sugar_browser_chandler_class_init(SugarBrowserChandlerClass *browser_chandler_cl
 					  
 	signals[DOWNLOAD_CANCELLED] =
 		g_signal_new ("download-cancelled",
-					  G_OBJECT_CLASS_TYPE (browser_chandler_class),
+					  G_OBJECT_CLASS_TYPE (download_manager_class),
 		  			  G_SIGNAL_RUN_LAST,
-		  			  G_STRUCT_OFFSET (SugarBrowserChandlerClass, handle_content),
+		  			  G_STRUCT_OFFSET (SugarDownloadManagerClass, handle_content),
 					  NULL, NULL,
 					  sugar_marshal_VOID__STRING,
 					  G_TYPE_NONE, 1,
@@ -56,9 +56,9 @@ sugar_browser_chandler_class_init(SugarBrowserChandlerClass *browser_chandler_cl
 					  
 	signals[DOWNLOAD_PROGRESS] =
 		g_signal_new ("download-progress",
-					  G_OBJECT_CLASS_TYPE (browser_chandler_class),
+					  G_OBJECT_CLASS_TYPE (download_manager_class),
 		  			  G_SIGNAL_RUN_LAST,
-		  			  G_STRUCT_OFFSET (SugarBrowserChandlerClass, handle_content),
+		  			  G_STRUCT_OFFSET (SugarDownloadManagerClass, handle_content),
 					  NULL, NULL,
 					  sugar_marshal_VOID__STRING_INT,
 					  G_TYPE_NONE, 2,
@@ -66,22 +66,22 @@ sugar_browser_chandler_class_init(SugarBrowserChandlerClass *browser_chandler_cl
 					  G_TYPE_INT);
 }
 
-SugarBrowserChandler *
-sugar_get_browser_chandler()
+SugarDownloadManager *
+sugar_get_download_manager()
 {  
-	if(browserChandler == NULL)
-		browserChandler = g_object_new(SUGAR_TYPE_BROWSER_CHANDLER, NULL);
+	if(DownloadManager == NULL)
+		DownloadManager = g_object_new(SUGAR_TYPE_DOWNLOAD_MANAGER, NULL);
  	
-	return browserChandler;
+	return DownloadManager;
 }
 
 void
-sugar_browser_chandler_download_started (SugarBrowserChandler *browser_chandler,
+sugar_download_manager_download_started (SugarDownloadManager *download_manager,
 										 const char *url,
 										 const char *mime_type,
 										 const char *tmp_file_name)
 {
-	g_signal_emit(browser_chandler, 
+	g_signal_emit(download_manager, 
 				  signals[DOWNLOAD_STARTED],
                   0 /* details */, 
                   url,
@@ -90,30 +90,30 @@ sugar_browser_chandler_download_started (SugarBrowserChandler *browser_chandler,
 }
 
 void
-sugar_browser_chandler_download_completed (SugarBrowserChandler *browser_chandler,
+sugar_download_manager_download_completed (SugarDownloadManager *download_manager,
 										   const char *tmp_file_name)
 {
-	g_signal_emit(browser_chandler, 
+	g_signal_emit(download_manager, 
 				  signals[DOWNLOAD_COMPLETED],
                   0 /* details */, 
                   tmp_file_name);
 }
 
-void sugar_browser_chandler_download_cancelled (SugarBrowserChandler *browser_chandler,
+void sugar_download_manager_download_cancelled (SugarDownloadManager *download_manager,
 												const char *tmp_file_name)
 {
-	g_signal_emit(browser_chandler, 
+	g_signal_emit(download_manager, 
 				  signals[DOWNLOAD_CANCELLED],
                   0 /* details */, 
                   tmp_file_name);
 }
 
 void
-sugar_browser_chandler_update_progress (SugarBrowserChandler *browser_chandler,
+sugar_download_manager_update_progress (SugarDownloadManager *download_manager,
 										const char *tmp_file_name,
 										const int percent)
 {
-	g_signal_emit(browser_chandler, 
+	g_signal_emit(download_manager, 
 				  signals[DOWNLOAD_PROGRESS],
                   0 /* details */, 
                   tmp_file_name,

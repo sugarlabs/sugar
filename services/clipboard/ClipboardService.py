@@ -22,30 +22,30 @@ import dbus
 import dbus.service
 from sugar import env
 
-_CLIPBOARD_SERVICE = "org.laptop.Clipboard"
-_CLIPBOARD_DBUS_INTERFACE = "org.laptop.Clipboard"
-_CLIPBOARD_OBJECT_PATH = "/org/laptop/Clipboard"
-
 class ClipboardDBusServiceHelper(dbus.service.Object):
+
+	_CLIPBOARD_DBUS_INTERFACE = "org.laptop.Clipboard"
+	_CLIPBOARD_OBJECT_PATH = "/org/laptop/Clipboard"
+
 	def __init__(self, parent):
 		self._parent = parent
 
 		bus = dbus.SessionBus()
-		bus_name = dbus.service.BusName(_CLIPBOARD_DBUS_INTERFACE, bus=bus)
-		dbus.service.Object.__init__(self, bus_name, _CLIPBOARD_OBJECT_PATH)
+		bus_name = dbus.service.BusName(self._CLIPBOARD_DBUS_INTERFACE, bus=bus)
+		dbus.service.Object.__init__(self, bus_name, self._CLIPBOARD_OBJECT_PATH)
 		
 	@dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
 						 in_signature="ss", out_signature="")
 	def add_object(self, mimeType, fileName):
-		logging.debug('Added object of type ' + mimeType + ' with path at ' + fileName)
 		self.object_added(mimeType, fileName)
+		logging.debug('Added object of type ' + mimeType + ' with path at ' + fileName)
 
 	@dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
 						 in_signature="s", out_signature="")
 	def delete_object(self, fileName):
-		logging.debug('Deleted object with path at ' + fileName)
 		self.object_deleted(fileName)
-
+		logging.debug('Deleted object with path at ' + fileName)
+		
 	@dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
 						 in_signature="si", out_signature="")
 	def update_object_state(self, fileName, percent):

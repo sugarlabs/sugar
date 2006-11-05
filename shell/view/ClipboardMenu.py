@@ -43,16 +43,32 @@ class ClipboardMenu(Menu):
 		self._progress_bar = ClipboardMenuItem(percent)
 		self._root.append(self._progress_bar)
 				
-		icon = CanvasIcon(icon_name='stock-share-mesh')
-		self.add_action(icon, ClipboardMenu.ACTION_SHARE)
+		#icon = CanvasIcon(icon_name='stock-share-mesh')
+		#self.add_action(icon, ClipboardMenu.ACTION_SHARE)
 		
+		self._remove_icon = None
+		self._stop_icon = None
+		
+		self._create_icons(percent)
+		
+	def _create_icons(self, percent):			
 		if percent == 100:
-			icon = CanvasIcon(icon_name='stock-remove')
-			self.add_action(icon, ClipboardMenu.ACTION_DELETE)
+			if not self._remove_icon:
+				self._remove_icon = CanvasIcon(icon_name='stock-remove')
+				self.add_action(self._remove_icon, ClipboardMenu.ACTION_DELETE)
+			
+			if self._stop_icon:
+				self.remove_action(self._stop_icon)
+				self._stop_icon = None
 		else:
-			icon = CanvasIcon(icon_name='stock-close')
-			self.add_action(icon, ClipboardMenu.ACTION_STOP_DOWNLOAD)
+			if not self._stop_icon:
+				self._stop_icon = CanvasIcon(icon_name='stock-close')
+				self.add_action(self._stop_icon, ClipboardMenu.ACTION_STOP_DOWNLOAD)
 
+			if self._remove_icon:
+				self.remove_action(self._remove_icon)
+				self._remove_icon = None
+	
 	def set_percent(self, percent):
 		self._progress_bar.set_property('percent', percent)
-		
+		self._create_icons(percent)

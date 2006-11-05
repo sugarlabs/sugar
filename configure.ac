@@ -78,6 +78,7 @@ sugar/__installed__.py
 sugar/activity/Makefile
 sugar/chat/Makefile
 sugar/chat/sketchpad/Makefile
+sugar/clipboard/Makefile
 sugar/graphics/Makefile
 sugar/p2p/Makefile
 sugar/presence/Makefile

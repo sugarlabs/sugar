@@ -49,6 +49,7 @@ class Menu(gtk.Window):
 			self._root.append(content_box)
 
 		self._action_box = None
+		self._action_box_separator = None
 
 	def _create_separator(self):
 		separator = hippo.CanvasBox()
@@ -56,8 +57,8 @@ class Menu(gtk.Window):
 		return separator
 
 	def _create_action_box(self):
-		separator = self._create_separator()
-		self._root.append(separator)
+		self._action_box_separator = self._create_separator()
+		self._root.append(self._action_box_separator)
 
 		self._action_box = hippo.CanvasBox(
 						orientation=hippo.ORIENTATION_HORIZONTAL)
@@ -71,5 +72,8 @@ class Menu(gtk.Window):
 		icon.connect('activated', self._action_clicked_cb, action_id)
 		self._action_box.append(icon)
 
+	def remove_action(self, icon):
+		self._action_box.remove(icon)
+	
 	def _action_clicked_cb(self, icon, action):
 		self.emit('action', action)
