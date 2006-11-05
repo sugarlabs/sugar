@@ -21,6 +21,7 @@ from sugar.activity.bundleregistry import BundleRegistry
 from model.Friends import Friends
 from model.MeshModel import MeshModel
 from model.Owner import ShellOwner
+from sugar import env
 
 class ShellModel:
 	def __init__(self):
@@ -40,10 +41,9 @@ class ShellModel:
 		path = os.path.expanduser('~/Activities')
 		self._bundle_registry.add_search_path(path)
 
-		if os.environ.has_key('XDG_DATA_DIRS'):
-			for path in os.environ['XDG_DATA_DIRS'].split(':'):
-				bundles_path = os.path.join(path, 'activities')
-				self._bundle_registry.add_search_path(bundles_path)
+		for path in env.get_data_dirs():
+			bundles_path = os.path.join(path, 'activities')
+			self._bundle_registry.add_search_path(bundles_path)
 
 	def get_bundle_registry(self):
 		return self._bundle_registry
