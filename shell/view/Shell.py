@@ -26,6 +26,7 @@ from view.ActivityHost import ActivityHost
 from sugar.activity import ActivityFactory
 from sugar.activity import Activity
 from view.frame.Frame import Frame
+from view.dconmanager import DCONManager
 from _sugar import KeyGrabber
 import sugar
 
@@ -49,6 +50,8 @@ class Shell(gobject.GObject):
 
 		style.load_stylesheet(view.stylesheet)
 
+		self._dcon_manager = DCONManager()
+
 		self._key_grabber = KeyGrabber()
 		self._key_grabber.connect('key-pressed',
 								  self.__global_key_pressed_cb)
@@ -60,7 +63,11 @@ class Shell(gobject.GObject):
 		self._key_grabber.grab('F4')
 		self._key_grabber.grab('F5')
 		self._key_grabber.grab('F6')
+		self._key_grabber.grab('F7')
+		self._key_grabber.grab('F8')
 		self._key_grabber.grab('F9')
+		self._key_grabber.grab('F10')
+		self._key_grabber.grab('F11')
 
 		self._home_window = HomeWindow(self)
 		self._home_window.show()
@@ -87,8 +94,16 @@ class Shell(gobject.GObject):
 			self._frame.notify_key_press()
 		elif key == 'F6':
 			self.start_activity('org.sugar.Terminal')
-		elif key == 'F9':
+		elif key == 'F7':
 			self.toggle_chat_visibility()
+		elif key == 'F8':
+			self._dcon_manager.set_mode(DCONManager.COLOR_MODE)
+		elif key == 'F9':
+			self._dcon_manager.set_mode(DCONManager.BLACK_AND_WHITE_MODE)
+		elif key == 'F10':
+			self._dcon_manager.decrease_brightness()
+		elif key == 'F11':
+			self._dcon_manager.increase_brightness()
 
 	def __global_key_released_cb(self, grabber, key):
 		if key == 'F5':
