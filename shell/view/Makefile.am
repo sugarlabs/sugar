@@ -9,4 +9,5 @@ sugar_PYTHON =				\
 	BuddyMenu.py			\
 	OverlayWindow.py		\
 	Shell.py			\
+	dconmanager.py			\
 	stylesheet.py

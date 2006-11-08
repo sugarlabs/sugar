@@ -4,7 +4,8 @@ bin_SCRIPTS = 				\
 	sugar-activity			\
 	sugar-activity-factory		\
 	sugar-log-viewer		\
-	sugar-shell
+	sugar-shell			\
+	sugar-shutdown
 
 sugardir = $(pkgdatadir)/shell
 sugar_PYTHON =				\
