@@ -378,9 +378,9 @@ gtk_entry_draw_text (GtkEntry *entry)
 }
 
 static void
-_gtk_entry_get_borders (GtkEntry *entry,
-			gint     *xborder,
-			gint     *yborder)
+sugar_address_entry_get_borders (GtkEntry *entry,
+				 gint     *xborder,
+				 gint     *yborder)
 {
   GtkWidget *widget = GTK_WIDGET (entry);
   gint focus_width;
@@ -422,7 +422,7 @@ get_text_area_size (GtkEntry *entry,
 
   gtk_widget_get_child_requisition (widget, &requisition);
 
-  _gtk_entry_get_borders (entry, &xborder, &yborder);
+  sugar_address_entry_get_borders (entry, &xborder, &yborder);
 
   if (x)
     *x = xborder;
