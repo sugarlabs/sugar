@@ -1,1 +1,1 @@
-SUBDIRS = chat terminal web sketch
+SUBDIRS = chat terminal web
