@@ -34,6 +34,7 @@ class FirstTimeDialog(gtk.Dialog):
 
 		self._entry = gtk.Entry()
 		self._entry.connect('changed', self._entry_changed_cb)
+		self._entry.connect('activate', self._entry_activated_cb)
 		self.vbox.pack_start(self._entry)
 		self._entry.show()
 
@@ -47,7 +48,13 @@ class FirstTimeDialog(gtk.Dialog):
 		valid = (len(entry.get_text()) > 0)
 		self._ok.set_sensitive(valid)
 
+	def _entry_activated_cb(self, entry):
+		self._create_buddy_section()
+		
 	def _ok_button_clicked_cb(self, button):
+		self._create_buddy_section()
+		
+	def _create_buddy_section(self):
 		cp = ConfigParser()
 
 		section = 'Buddy'	
