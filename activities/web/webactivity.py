@@ -18,12 +18,10 @@ from gettext import gettext as _
 import gtk
 import gtkmozembed
 import logging
-import dbus
 
 import _sugar
 from sugar.activity import ActivityFactory
 from sugar.activity.Activity import Activity
-from sugar.clipboard import ClipboardService
 from sugar import env
 from sugar.graphics import style
 import web.stylesheet
@@ -106,28 +104,12 @@ def start():
 
 	style.load_stylesheet(web.stylesheet)
 	
-	download_manager = _sugar.get_download_manager()
-	download_manager.connect('download-started', download_started_cb)
-	download_manager.connect('download-completed', download_completed_cb)
-	download_manager.connect('download-cancelled', download_started_cb)
-	download_manager.connect('download-progress', download_progress_cb)
+	chandler = _sugar.get_browser_chandler()
+	chandler.connect('handle-content', handle_content_cb)
 
 def stop():
 	gtkmozembed.pop_startup()
 
-def download_started_cb(download_manager, url, mimeType, tmpFileName):
-	cbService = ClipboardService.get_instance()
-	cbService.add_object(mimeType, tmpFileName)
-
-def download_completed_cb(download_manager, tmpFileName):
-	cbService = ClipboardService.get_instance()
-	cbService.update_object_state(tmpFileName, 100)
-
-def download_cancelled_cb(download_manager, tmpFileName):
-	cbService = ClipboardService.get_instance()
-	#FIXME: Needs to update the state of the object to 'download stopped'
-	#cbService.update_object_state(tmpFileName, 100)
-
-def download_progress_cb(download_manager, tmpFileName, progress):
-	cbService = ClipboardService.get_instance()
-	cbService.update_object_state(tmpFileName, progress)
+def handle_content_cb(chandler, url, mimeType, tmpFileName):
+	activity = ActivityFactory.create("org.laptop.sugar.Xbook")
+	activity.execute("open_document", [tmpFileName])

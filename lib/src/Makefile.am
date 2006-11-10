@@ -19,8 +19,8 @@ libsugarprivate_la_SOURCES = 	\
 	sugar-address-entry.c		\
 	sugar-browser.h				\
 	sugar-browser.cpp			\
-	sugar-download-manager.h	\
-	sugar-download-manager.c	\
+	sugar-browser-chandler.h	\
+	sugar-browser-chandler.c	\
 	SugarContentHandler.h		\
 	SugarContentHandler.cpp		\
 	SugarDownload.h				\

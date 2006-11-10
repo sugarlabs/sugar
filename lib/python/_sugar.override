@@ -9,7 +9,7 @@ headers
 #include "sugar-address-entry.h"
 #include "sugar-tray-manager.h"
 #include "sugar-push-scroller.h"
-#include "sugar-download-manager.h"
+#include "sugar-browser-chandler.h"
 
 %%
 modulename gecko

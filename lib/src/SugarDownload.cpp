@@ -1,4 +1,4 @@
-#include "sugar-download-manager.h"
+#include "sugar-browser-chandler.h"
 
 #include "SugarDownload.h"
 
@@ -35,39 +35,27 @@ GSugarDownload::Init (nsIURI *aSource,
 NS_IMETHODIMP 
 GSugarDownload::OnStateChange (nsIWebProgress *aWebProgress, nsIRequest *aRequest,
 			    PRUint32 aStateFlags, nsresult aStatus)
-{	
-	SugarDownloadManager *download_manager = sugar_get_download_manager();
-		
-	if (((aStateFlags & STATE_IS_REQUEST) &&
-	     (aStateFlags & STATE_IS_NETWORK) &&
-	     (aStateFlags & STATE_START)) ||
-	    aStateFlags == STATE_START) {
+{
+	nsCString url;
+	nsCString mimeType;
+	nsCString targetURI;
 	
-		nsCString url;
-		nsCString mimeType;
+	if ((((aStateFlags & STATE_IS_REQUEST) &&
+	     (aStateFlags & STATE_IS_NETWORK) &&
+	     (aStateFlags & STATE_STOP)) ||
+	    aStateFlags == STATE_STOP) &&
+	    NS_SUCCEEDED (aStatus)) {
 	
 		mMIMEInfo->GetMIMEType(mimeType);
 		mSource->GetSpec(url);
 
-		sugar_download_manager_download_started(download_manager,
-												url.get(),
-												mimeType.get(),
-												mTargetFileName.get());
-
-	} else if (((aStateFlags & STATE_IS_REQUEST) &&
-	     (aStateFlags & STATE_IS_NETWORK) &&
-	     (aStateFlags & STATE_STOP)) ||
-	    aStateFlags == STATE_STOP) {
-		
-		if (NS_SUCCEEDED (aStatus)) {
-			sugar_download_manager_download_completed(download_manager,
-													  mTargetFileName.get());
-		} else {
-			sugar_download_manager_download_cancelled(download_manager,
-													  mTargetFileName.get());
-		}
+		SugarBrowserChandler *browser_chandler = sugar_get_browser_chandler();
+		sugar_browser_chandler_handle_content(browser_chandler,
+											  url.get(),
+											  mimeType.get(),
+											  mTargetFileName.get());
 	}
-
+	
 	return NS_OK; 
 }
 
@@ -91,15 +79,7 @@ GSugarDownload::OnProgressChange64 (nsIWebProgress *aWebProgress,
 				 PRInt64 aMaxSelfProgress,
 				 PRInt64 aCurTotalProgress,
 				 PRInt64 aMaxTotalProgress)
-{	
-	SugarDownloadManager *download_manager = sugar_get_download_manager();
-	PRInt32 percentComplete =
-		(PRInt32)(((float)aCurSelfProgress / (float)aMaxSelfProgress) * 100.0);
-
-	sugar_download_manager_update_progress(download_manager,
-										   mTargetFileName.get(),
-										   percentComplete);
-
+{
 	return NS_OK;
 }
 

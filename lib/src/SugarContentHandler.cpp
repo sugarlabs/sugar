@@ -1,6 +1,9 @@
 #include <nsCExternalHandlerService.h>
 #include <nsIFile.h>
 
+#include "sugar-browser-chandler.h"
+#include "SugarDownload.h"
+
 #include "SugarContentHandler.h"
 
 GSugarContentHandler::GSugarContentHandler()

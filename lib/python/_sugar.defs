@@ -35,11 +35,11 @@
   (gtype-id "SUGAR_TYPE_PUSH_SCROLLER")
 )
 
-(define-object DownloadManager
+(define-object BrowserChandler
   (in-module "Sugar")
   (parent "GObject")
-  (c-name "SugarDownloadManager")
-  (gtype-id "SUGAR_TYPE_DOWNLOAD_MANAGER")
+  (c-name "SugarBrowserChandler")
+  (gtype-id "SUGAR_TYPE_BROWSER_CHANDLER")
 )
 
 ;; Enumerations and flags ...
@@ -181,14 +181,14 @@
   )
 )
 
-;; From sugar-download-manager.h
+;; From sugar-browser-chandler.h
 
-(define-function sugar_download_manager_get_type
-  (c-name "sugar_download_manager_get_type")
+(define-function sugar_browser_chandler_get_type
+  (c-name "sugar_browser_chandler_get_type")
   (return-type "GType")
 )
 
-(define-function get_download_manager
-  (c-name "sugar_get_download_manager")
-  (return-type "SugarDownloadManager*")
+(define-function get_browser_chandler
+  (c-name "sugar_get_browser_chandler")
+  (return-type "SugarBrowserChandler*")
 )
