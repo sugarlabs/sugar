@@ -24,5 +24,10 @@ F3     Friends zoom level
 F4     Mesh zoom level
 F5     Show the frame
 F6     Open a terminal activity
+F7	   Toggle chat visibility
+F8     Color mode (DCON)
+F9     Black and white mode (DCON)
+F10    Decrease brightness (DCON)
+F11    Increase brightness (DCON)     	   
 F12    Open the log viewer
 Ctrl+S Activate sketch mode in chat
