@@ -7,4 +7,5 @@ sugar_PYTHON =				\
 	Frame.py			\
 	ZoomBox.py			\
 	notificationtray.py		\
-	overlaybox.py
+	overlaybox.py			\
+	shutdownicon.py
