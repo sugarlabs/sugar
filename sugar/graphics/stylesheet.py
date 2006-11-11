@@ -20,6 +20,11 @@ menu_ActionIcon = {
 	'size' : style.standard_icon_size
 }
 
+menu_Item = {
+	'color'	: 0xFFFFFFFF,
+	'font'  : style.get_font_description('Plain', 1.1)
+}
+
 menu_Text = {
 	'color'	: 0xFFFFFFFF,
 	'font'  : style.get_font_description('Plain', 1.2)

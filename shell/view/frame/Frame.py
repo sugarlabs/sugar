@@ -25,6 +25,7 @@ from view.frame.overlaybox import OverlayBox
 from view.frame.FriendsBox import FriendsBox
 from view.frame.PanelWindow import PanelWindow
 from view.frame.notificationtray import NotificationTray
+from view.frame.shutdownicon import ShutdownIcon
 from sugar.graphics.timeline import Timeline
 from sugar.graphics.grid import Grid
 from sugar.graphics.menushell import MenuShell
@@ -179,6 +180,12 @@ class Frame:
 		[x, y] = grid.point(14, 0)
 		root.append(box, hippo.PACK_FIXED)
 		root.move(box, x, y)
+
+		shutdown_icon = ShutdownIcon(menu_shell)
+
+		[x, y] = grid.point(12, 0)
+		root.append(shutdown_icon, hippo.PACK_FIXED)
+		root.move(shutdown_icon, x, y)
 
 		# Bottom panel
 		[menu_shell, root] = self._create_panel(grid, 0, 11, 16, 1)

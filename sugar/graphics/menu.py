@@ -28,7 +28,7 @@ class Menu(gtk.Window):
 				   gobject.TYPE_NONE, ([int])),
 	}
 
-	def __init__(self, title, content_box=None):
+	def __init__(self, title=None, content_box=None):
 		gtk.Window.__init__(self, gtk.WINDOW_POPUP)
 
 		canvas = hippo.Canvas()
@@ -39,9 +39,12 @@ class Menu(gtk.Window):
 		style.apply_stylesheet(self._root, 'menu')
 		canvas.set_root(self._root)
 
-		text = hippo.CanvasText(text=title)
-		style.apply_stylesheet(text, 'menu.Title')
-		self._root.append(text)
+		if title:
+			self._title_item = hippo.CanvasText(text=title)
+			style.apply_stylesheet(self._title_item, 'menu.Title')
+			self._root.append(self._title_item)
+		else:
+			self._title_item = None
 
 		if content_box:
 			separator = self._create_separator()
@@ -49,11 +52,21 @@ class Menu(gtk.Window):
 			self._root.append(content_box)
 
 		self._action_box = None
+		self._item_box = None
 
 	def _create_separator(self):
 		separator = hippo.CanvasBox()
 		style.apply_stylesheet(separator, 'menu.Separator')
 		return separator
+
+	def _create_item_box(self):
+		if self._title_item:
+			separator = self._create_separator()
+			self._root.append(separator)
+
+		self._item_box = hippo.CanvasBox(
+						orientation=hippo.ORIENTATION_VERTICAL)
+		self._root.append(self._item_box)
 
 	def _create_action_box(self):
 		separator = self._create_separator()
@@ -63,6 +76,19 @@ class Menu(gtk.Window):
 						orientation=hippo.ORIENTATION_HORIZONTAL)
 		self._root.append(self._action_box)
 
+	def add_item(self, label, action_id):
+		if not self._item_box:
+			self._create_item_box()
+
+		text = hippo.CanvasText(text=label)
+		style.apply_stylesheet(text, 'menu.Item')
+
+		# FIXME need a way to make hippo items activable in python
+		text.connect('button-press-event', self._item_clicked_cb, action_id)
+		#text.connect('activated', self._action_clicked_cb, action_id)
+
+		self._item_box.append(text)
+
 	def add_action(self, icon, action_id):
 		if not self._action_box:
 			self._create_action_box()
@@ -70,6 +96,9 @@ class Menu(gtk.Window):
 		style.apply_stylesheet(icon, 'menu.ActionIcon')
 		icon.connect('activated', self._action_clicked_cb, action_id)
 		self._action_box.append(icon)
+
+	def _item_clicked_cb(self, icon, event, action):
+		self.emit('action', action)
 
 	def _action_clicked_cb(self, icon, action):
 		self.emit('action', action)
