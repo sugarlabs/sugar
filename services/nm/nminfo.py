@@ -36,6 +36,11 @@ class NoNetworks(dbus.DBusException):
 		dbus.DBusException.__init__(self)
 		self._dbus_error_name = NM_INFO_IFACE + '.NoNetworks'
 
+class CanceledKeyRequestError(dbus.DBusException):
+	def __init__(self):
+		dbus.DBusException.__init__(self)
+		self._dbus_error_name = NM_INFO_IFACE + '.CanceledError'
+
 
 class NetworkInvalidError(Exception):
 	pass
@@ -192,6 +197,12 @@ class Network:
 		args += self._security.get_properties()
 		return tuple(args)
 
+	def get_security(self):
+		return self._security.get_properties()
+
+	def set_security(self, security):
+		self._security = security
+
 	def read_from_args(self, auto, fallback, bssid, we_cipher, *args):
 		if auto == False:
 			self.timestamp = time.now()
@@ -230,6 +241,11 @@ class Network:
 			config.set(self.ssid, "bssids", opt)
 		self._security.write_to_config(self.ssid, config)
 
+
+class NotFoundError(dbus.DBusException):
+	pass
+class UnsupportedError(dbus.DBusException):
+	pass
 
 class NMInfoDBusServiceHelper(dbus.service.Object):
 	def __init__(self, parent):
@@ -270,15 +286,24 @@ class NMInfoDBusServiceHelper(dbus.service.Object):
 	def updateNetworkInfo(self, ssid, bauto, bfallback, bssid, cipher, *args):
 		self._parent.update_network_info(ssid, bauto, bfallback, bssid, cipher, args)
 
+	@dbus.service.method(NM_INFO_IFACE, async_callbacks=('async_cb', 'async_err_cb'))
+	def getKeyForNetwork(self, dev_path, net_path, ssid, attempt, new_key, async_cb, async_err_cb):
+		self._parent.get_key_for_network(dev_path, net_path, ssid,
+				attempt, new_key, async_cb, async_err_cb)
+
+	@dbus.service.method(NM_INFO_IFACE)
+	def cancelGetKeyForNetwork(self):
+		self._parent.cancel_get_key_for_network()
 
 class NMInfo(object):
-	def __init__(self):
+	def __init__(self, client):
 		try:
 			profile_path = env.get_profile_path()
 		except NameError:
 			home = os.path.expanduser("~")
 			profile_path = os.path.join(home, ".sugar", "default")
 		self._cfg_file = os.path.join(profile_path, "nm", "networks.cfg")
+		self._nmclient = client
 		self._allowed_networks = self._read_config()
 		self._dbus_helper = NMInfoDBusServiceHelper(self)
 
@@ -344,3 +369,52 @@ class NMInfo(object):
 		except InvalidNetworkError, e:
 			print "Bad network!! %s" % e
 			del net
+
+	def get_key_for_network(self, dev_op, net_op, ssid, attempt, new_key, async_cb, async_err_cb):
+		if self._networks.has_key(ssid) and not new_key:
+			# We've got the info already
+			net = self._networks[ssid]
+			async_cb(tuple(net.get_security()))
+			return
+
+		# Otherwise, ask the user for it
+		net = None
+		dev = self._nm_client.get_dev(dev_op)
+		if not dev:
+			async_err_cb(NotFoundError("Device was unknown."))
+		if dev.get_type() == DEVICE_TYPE_802_3_ETHERNET:
+			# We don't support wired 802.1x yet...
+			async_err_cb(UnsupportedError("Device type is unsupported by NMI."))
+
+		net = dev.get_network(net_op)
+		if not net:
+			async_err_cb(NotFoundError("Network was unknown."))
+
+		try:
+			(key, auth_alg) = self._nm_client.get_key_for_network()
+		except CanceledKeyRequestError, e:
+			# user canceled the key dialog; send the error back to NM
+			async_err_cb(e)
+			return
+
+		if not key or not auth_alg:
+			# no key returned, *** BUG ***; the key dialog
+			# should always return either a key + auth_alg, or a
+			#cancel error
+			raise RuntimeError("No key or auth alg given! Bug!")
+
+		we_cipher = None
+		if len(key) == 26:
+			we_cipher = IW_AUTH_CIPHER_WEP104
+		elif len(key) == 10:
+			we_cipher = IW_AUTH_CIPHER_WEP40
+		else:
+			raise RuntimeError("Invalid key length!")
+
+		# Stuff the returned key and auth algorithm into a security object
+		# and return it to NetworkManager
+		sec = Security.new_from_args(we_cipher, key, auth_alg)
+		async_cb(tuple(sec.get_properties()))
+
+	def cancel_get_key_for_network(self):
+		pass

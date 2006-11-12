@@ -34,6 +34,9 @@ from bubble import Bubble
 
 import nminfo
 
+IW_AUTH_ALG_OPEN_SYSTEM = 0x00000001
+IW_AUTH_ALG_SHARED_KEY  = 0x00000002
+
 
 NM_DEVICE_STAGE_STRINGS=("Unknown",
 	"Prepare",
@@ -428,10 +431,19 @@ class NMClientApp:
 		self.nminfo = None
 		self._nm_present = False
 		self._nm_state = NM_STATE_UNKNOWN
-		self._icon_theme = gtk.icon_theme_get_default()
 		self._update_timer = 0
 		self._active_device = None
 		self._devices = {}
+
+		self._icon_theme = gtk.icon_theme_get_default()
+		self._icons = {}
+		self._cur_icon = None
+		try:
+			self._icons = self._load_icons()
+		except RuntimeError:
+			logging.debug("Couldn't find required icon resources, will exit.")
+			os._exit(1)
+		self._setup_trayicon()
 
 		self._menu = None
 		self._hover_menu = False
@@ -440,24 +452,14 @@ class NMClientApp:
 		self._timeline.add_tag('before_popdown', 7, 7)
 		self._timeline.add_tag('popdown', 8, 8)
 
-		self._icons = {}
-		self._cur_icon = None
-
 		try:
-			self.nminfo = nminfo.NMInfo()
+			self.nminfo = nminfo.NMInfo(self)
 		except RuntimeError:
 			pass
 		self._setup_dbus()
 		if self._nm_present:
 			self._get_nm_state()
 			self._get_initial_devices()
-
-		try:
-			self._icons = self._load_icons()
-		except RuntimeError:
-			logging.debug("Couldn't find required icon resources, will exit.")
-			os._exit(1)
-		self._setup_trayicon()
 
 	def _get_one_icon_pixbuf(self, name):
 		info = self._icon_theme.lookup_icon(name, 75, 0)
@@ -478,9 +480,7 @@ class NMClientApp:
 
 	def _get_nm_state(self):
 		# Grab NM's state
-		nm_obj = sys_bus.get_object(NM_SERVICE, NM_PATH)
-		nm = dbus.Interface(nm_obj, NM_IFACE)
-		nm.state(reply_handler=self._get_state_reply_cb, \
+		self._nm_obj.state(reply_handler=self._get_state_reply_cb, \
 				error_handler=self._get_state_error_cb)
 
 	def _get_state_reply_cb(self, state):
@@ -654,9 +654,7 @@ class NMClientApp:
 		logging.debug("Error updating devices (%s)" % err)
 
 	def _get_initial_devices(self):
-		nm_obj = sys_bus.get_object(NM_SERVICE, NM_PATH)
-		nm = dbus.Interface(nm_obj, NM_IFACE)
-		nm.getDevices(reply_handler=self._get_initial_devices_reply_cb, \
+		self._nm_obj.getDevices(reply_handler=self._get_initial_devices_reply_cb, \
 				error_handler=self._get_initial_devices_error_cb)
 
 	def _add_device(self, dev_op):
@@ -697,6 +695,11 @@ class NMClientApp:
 			return
 		self._schedule_icon_update()
 
+	def get_device(self, dev_op):
+		if not self._devices.has_key(dev_op):
+			return None
+		return self._devices[dev_op]
+
 	def _setup_dbus(self):
 		self._sig_handlers = {
 			'StateChange': self.state_change_sig_handler,
@@ -714,7 +717,8 @@ class NMClientApp:
 			'WirelessNetworkStrengthChanged': self.wireless_network_strength_changed_sig_handler
 		}
 
-		self.nm_proxy = sys_bus.get_object(NM_SERVICE, NM_PATH)
+		self._nm_proxy = sys_bus.get_object(NM_SERVICE, NM_PATH)
+		self._nm_obj = dbus.Interface(self._nm_proxy, NM_IFACE)
 
 		sys_bus.add_signal_receiver(self.name_owner_changed_sig_handler,
 										 signal_name="NameOwnerChanged",
@@ -757,7 +761,30 @@ class NMClientApp:
 		net_op = ""
 		if network:
 			net_op = network.get_op()
-		logging.debug("clicked dev %s, net %s" % (device.get_op(), net_op))
+		try:
+			# NM 0.6.4 and earlier have a bug which returns an
+			# InvalidArguments error if no security information is passed
+			# for wireless networks
+			self._nm_obj.setActiveDevice(device.get_op(), network.get_ssid())
+		except dbus.DBusException, e:
+			if str(e).find("invalid arguments"):
+				pass
+			else:
+				raise dbus.DBusException(e)
+
+		self._popdown()
+
+	def get_key_for_network(self, wep_auth_alg=IW_AUTH_ALG_OPEN_SYSTEM):
+		# Throw up a dialog asking for the key here, and set
+		# the authentication algorithm to the given one, if any
+		#
+		# Key needs to be limited to _either_ 10 or 26 digits long,
+		# and contain _only_ _hex_ digits, 0-9 or a-f
+		#
+		# Auth algorithm should be a dropdown of: [Open System, Shared Key],
+		# mapping to the values [IW_AUTH_ALG_OPEN_SYSTEM, IW_AUTH_ALG_SHARED_KEY]
+		# above
+		pass
 
 	def device_activation_stage_sig_handler(self, device, stage):
 	    print 'Network Manager Device Stage "%s" for device %s'%(NM_DEVICE_STAGE_STRINGS[stage], device)
