@@ -30,6 +30,7 @@ from sugar.graphics.menu import Menu
 from sugar.graphics import style
 from sugar.graphics.iconcolor import IconColor
 from sugar.graphics.timeline import Timeline
+from wepkeydialog import WEPKeyDialog
 from bubble import Bubble
 
 import nminfo
@@ -784,6 +785,20 @@ class NMClientApp:
 		# Auth algorithm should be a dropdown of: [Open System, Shared Key],
 		# mapping to the values [IW_AUTH_ALG_OPEN_SYSTEM, IW_AUTH_ALG_SHARED_KEY]
 		# above
+
+		dialog = WEPKeyDialog()
+		response = dialog.run()
+		dialog.destroy()
+
+		if response == gtk.RESPONSE_OK:
+			key = dialog.get_key()
+			self.nminfo.get_key_for_network_cb(key, wep_auth_alg, canceled=False)
+		else:
+			self.nminfo.get_key_for_network_cb(None, None, canceled=True)
+
+	def cancel_get_key_for_network(self):
+		# Close the wireless key dialog and just have it return
+		# with the 'canceled' argument set to true
 		pass
 
 	def device_activation_stage_sig_handler(self, device, stage):

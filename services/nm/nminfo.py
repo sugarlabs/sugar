@@ -22,6 +22,8 @@ import time
 import os
 import binascii
 from ConfigParser import ConfigParser
+
+import nmclient
 try:
 	from sugar import env
 except ImportError:
@@ -371,18 +373,18 @@ class NMInfo(object):
 			del net
 
 	def get_key_for_network(self, dev_op, net_op, ssid, attempt, new_key, async_cb, async_err_cb):
-		if self._networks.has_key(ssid) and not new_key:
+		if self._allowed_networks.has_key(ssid) and not new_key:
 			# We've got the info already
-			net = self._networks[ssid]
+			net = self._allowed_networks[ssid]
 			async_cb(tuple(net.get_security()))
 			return
 
 		# Otherwise, ask the user for it
 		net = None
-		dev = self._nm_client.get_dev(dev_op)
+		dev = self._nmclient.get_device(dev_op)
 		if not dev:
 			async_err_cb(NotFoundError("Device was unknown."))
-		if dev.get_type() == DEVICE_TYPE_802_3_ETHERNET:
+		if dev.get_type() == nmclient.DEVICE_TYPE_802_3_ETHERNET:
 			# We don't support wired 802.1x yet...
 			async_err_cb(UnsupportedError("Device type is unsupported by NMI."))
 
@@ -390,10 +392,16 @@ class NMInfo(object):
 		if not net:
 			async_err_cb(NotFoundError("Network was unknown."))
 
-		try:
-			(key, auth_alg) = self._nm_client.get_key_for_network()
-		except CanceledKeyRequestError, e:
-			# user canceled the key dialog; send the error back to NM
+		self._nmclient.get_key_for_network(net)
+
+	def get_key_for_network_cb(self, key, auth_alg, canceled=False):
+		"""
+		Called by the NMClient when the Wireless Network Key dialog
+		is closed.
+		"""
+		if canceled:
+			e = CanceledKeyRequestError("Request was canceled.")
+			# key dialog dialog was canceled; send the error back to NM
 			async_err_cb(e)
 			return
 
@@ -417,4 +425,5 @@ class NMInfo(object):
 		async_cb(tuple(sec.get_properties()))
 
 	def cancel_get_key_for_network(self):
-		pass
+		# Tell the NMClient to close the key request dialog
+		self._nmclient.cancel_get_key_for_network()
