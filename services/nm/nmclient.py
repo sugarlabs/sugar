@@ -775,7 +775,7 @@ class NMClientApp:
 
 		self._popdown()
 
-	def get_key_for_network(self, wep_auth_alg=IW_AUTH_ALG_OPEN_SYSTEM):
+	def get_key_for_network(self, async_cb, async_err_cb, wep_auth_alg=IW_AUTH_ALG_OPEN_SYSTEM):
 		# Throw up a dialog asking for the key here, and set
 		# the authentication algorithm to the given one, if any
 		#
@@ -788,13 +788,15 @@ class NMClientApp:
 
 		dialog = WEPKeyDialog()
 		response = dialog.run()
+		key = dialog.get_key()
 		dialog.destroy()
 
 		if response == gtk.RESPONSE_OK:
-			key = dialog.get_key()
-			self.nminfo.get_key_for_network_cb(key, wep_auth_alg, canceled=False)
+			self.nminfo.get_key_for_network_cb(
+					key, wep_auth_alg, async_cb, async_err_cb, canceled=False)
 		else:
-			self.nminfo.get_key_for_network_cb(None, None, canceled=True)
+			self.nminfo.get_key_for_network_cb(
+					None, None, async_cb, async_err_cb, canceled=True)
 
 	def cancel_get_key_for_network(self):
 		# Close the wireless key dialog and just have it return

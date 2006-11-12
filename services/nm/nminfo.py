@@ -120,7 +120,7 @@ class Security(object):
 		return security
 	new_from_config = staticmethod(new_from_config)
 
-	def new_from_args(cfg, we_cipher, args):
+	def new_from_args(we_cipher, key, auth_alg):
 		security = None
 		try:
 			if we_cipher == IW_AUTH_CIPHER_NONE:
@@ -131,7 +131,7 @@ class Security(object):
 				# FIXME: find a way to make WPA config option matrix not
 				# make you want to throw up
 				raise ValueError("Unsupported security combo")
-			security.read_from_args(args)
+			security.read_from_args(key, auth_alg)
 		except (NoOptionError, ValueError), e:
 			del security
 			return None
@@ -146,15 +146,15 @@ class Security(object):
 
 
 class WEPSecurity(Security):
-	def read_from_args(self, *args):
-		if len(args) != 2:
-			raise ValueError("not enough arguments")
-		if not isinstance(args[0], str):
-			raise ValueError("wrong argument type for key")
-		if not isinstance(args[1], int):
-			raise ValueError("wrong argument type for auth_alg")
-		self._key = args[0]
-		self._auth_alg = args[1]
+	def read_from_args(self, key, auth_alg):
+#		if len(args) != 2:
+#			raise ValueError("not enough arguments")
+#		if not isinstance(args[0], str):
+#			raise ValueError("wrong argument type for key")
+#		if not isinstance(args[1], int):
+#			raise ValueError("wrong argument type for auth_alg")
+		self._key = key
+		self._auth_alg = auth_alg
 
 	def read_from_config(self, cfg, name):
 		# Key should be a hex encoded string
@@ -392,9 +392,9 @@ class NMInfo(object):
 		if not net:
 			async_err_cb(NotFoundError("Network was unknown."))
 
-		self._nmclient.get_key_for_network(net)
+		self._nmclient.get_key_for_network(async_cb, async_err_cb, net)
 
-	def get_key_for_network_cb(self, key, auth_alg, canceled=False):
+	def get_key_for_network_cb(self, key, auth_alg, async_cb, async_err_cb, canceled=False):
 		"""
 		Called by the NMClient when the Wireless Network Key dialog
 		is closed.
@@ -422,7 +422,8 @@ class NMInfo(object):
 		# Stuff the returned key and auth algorithm into a security object
 		# and return it to NetworkManager
 		sec = Security.new_from_args(we_cipher, key, auth_alg)
-		async_cb(tuple(sec.get_properties()))
+		props = sec.get_properties()
+		async_cb(tuple(props))
 
 	def cancel_get_key_for_network(self):
 		# Tell the NMClient to close the key request dialog
