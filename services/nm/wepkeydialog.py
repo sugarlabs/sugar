@@ -17,7 +17,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import gtk
-import logging
 
 IW_AUTH_ALG_OPEN_SYSTEM = 0x00000001
 IW_AUTH_ALG_SHARED_KEY  = 0x00000002
@@ -33,34 +32,21 @@ class WEPKeyDialog(gtk.Dialog):
 
 		self.set_has_separator(False)		
 
-		import logging
-		logging.debug("foobar1")
-		try:
-			label = gtk.Label("A wireless encryption key is required for " \
-				" the wireless network '%s'." % net.get_ssid())
-		except Exception, e:
-			logging.debug("Exc: %s" % e)
-		logging.debug("foobar2")
+		label = gtk.Label("A wireless encryption key is required for\n" \
+			" the wireless network '%s'." % net.get_ssid())
 		self.vbox.pack_start(label)
-		logging.debug("foobar3")
 
-		logging.debug("foobar4")
 		self._entry = gtk.Entry()
-		logging.debug("foobar5")
 		self._entry.props.visibility = False
 		self._entry.connect('changed', self._entry_changed_cb)
-		logging.debug("foobar6")
 		self.vbox.pack_start(self._entry)
-		logging.debug("foobar7")
 		self.vbox.show_all()
-		logging.debug("foobar8")
 
 		self.add_buttons(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
 						 gtk.STOCK_OK, gtk.RESPONSE_OK)
 
 		self.set_default_response(gtk.RESPONSE_OK)
 		self._update_response_sensitivity()
-		logging.debug("foobar9")
 
 	def get_key(self):
 		return self._entry.get_text()
