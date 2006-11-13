@@ -424,7 +424,8 @@ class NMInfo(object):
 		# and return it to NetworkManager
 		sec = Security.new_from_args(we_cipher, key, auth_alg)
 		props = sec.get_properties()
-		async_cb(tuple(props))
+		a = tuple(props)
+		async_cb(*a)
 
 	def cancel_get_key_for_network(self):
 		# Tell the NMClient to close the key request dialog
