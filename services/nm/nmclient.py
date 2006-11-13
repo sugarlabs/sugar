@@ -206,8 +206,9 @@ class Device(gobject.GObject):
 			act_net = self._networks[self._active_net]
 
 		# Only add the active network if active_only == True
-		if active_only and act_net:
-			act_net.add_to_menu(menu, callback, self)
+		if active_only:
+			if act_net:
+				act_net.add_to_menu(menu, callback, self)
 			return
 
 		# Otherwise, add all networks _except_ the active one
@@ -435,6 +436,7 @@ class NMClientApp:
 		self._update_timer = 0
 		self._active_device = None
 		self._devices = {}
+		self._key_dialog = None
 
 		self._icon_theme = gtk.icon_theme_get_default()
 		self._icons = {}
@@ -775,7 +777,7 @@ class NMClientApp:
 
 		self._popdown()
 
-	def get_key_for_network(self, net, async_cb, async_err_cb, wep_auth_alg=IW_AUTH_ALG_OPEN_SYSTEM):
+	def get_key_for_network(self, net, async_cb, async_err_cb):
 		# Throw up a dialog asking for the key here, and set
 		# the authentication algorithm to the given one, if any
 		#
@@ -786,12 +788,30 @@ class NMClientApp:
 		# mapping to the values [IW_AUTH_ALG_OPEN_SYSTEM, IW_AUTH_ALG_SHARED_KEY]
 		# above
 
-		dialog = WEPKeyDialog()
-		response = dialog.run()
-		key = dialog.get_key()
-		dialog.destroy()
+		self._key_dialog = WEPKeyDialog(net, async_cb, async_err_cb)
+		self._key_dialog.connect("response", self._key_dialog_response_cb)
+		self._key_dialog.connect("destroy", self._key_dialog_destroy_cb)
+		self._key_dialog.show_all()
 
-		if response == gtk.RESPONSE_OK:
+	def _key_dialog_destroy_cb(self, widget, foo=None):
+		if widget != self._key_dialog:
+			return
+		self._key_dialog_response_cb(widget, gtk.RESPONSE_CANCEL)
+
+	def _key_dialog_response_cb(self, widget, response_id):
+		if widget != self._key_dialog:
+			return
+		key = self._key_dialog.get_key()
+		wep_auth_alg = self._key_dialog.get_auth_alg()
+		(async_cb, async_err_cb) = self._key_dialog.get_callbacks()
+
+		# Clear self._key_dialog before we call destroy(), otherwise
+		# the destroy will trigger and we'll get called again by
+		# self._key_dialog_destroy_cb
+		self._key_dialog = None
+		widget.destroy()
+
+		if response_id == gtk.RESPONSE_OK:
 			self.nminfo.get_key_for_network_cb(
 					key, wep_auth_alg, async_cb, async_err_cb, canceled=False)
 		else:
