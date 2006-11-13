@@ -775,7 +775,7 @@ class NMClientApp:
 
 		self._popdown()
 
-	def get_key_for_network(self, async_cb, async_err_cb, wep_auth_alg=IW_AUTH_ALG_OPEN_SYSTEM):
+	def get_key_for_network(self, net, async_cb, async_err_cb, wep_auth_alg=IW_AUTH_ALG_OPEN_SYSTEM):
 		# Throw up a dialog asking for the key here, and set
 		# the authentication algorithm to the given one, if any
 		#

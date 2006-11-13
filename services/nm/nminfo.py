@@ -22,6 +22,7 @@ import time
 import os
 import binascii
 from ConfigParser import ConfigParser
+import logging
 
 import nmclient
 try:
@@ -139,7 +140,7 @@ class Security(object):
 	new_from_args = staticmethod(new_from_args)
 
 	def get_properties(self):
-		return [self._we_cipher]
+		return [dbus.Int32(self._we_cipher)]
 
 	def write_to_config(self, section, config):
 		config.set(section, "we_cipher", self._we_cipher)
@@ -176,7 +177,7 @@ class WEPSecurity(Security):
 	def get_properties(self):
 		args = Security.get_properties(self)
 		args.append(self._key)
-		args.append(self._auth_alg)
+		args.append(dbus.Int32(self._auth_alg))
 		return args
 
 	def write_to_config(self, section, config):
@@ -392,7 +393,7 @@ class NMInfo(object):
 		if not net:
 			async_err_cb(NotFoundError("Network was unknown."))
 
-		self._nmclient.get_key_for_network(async_cb, async_err_cb, net)
+		self._nmclient.get_key_for_network(net, async_cb, async_err_cb)
 
 	def get_key_for_network_cb(self, key, auth_alg, async_cb, async_err_cb, canceled=False):
 		"""
