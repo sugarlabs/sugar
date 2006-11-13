@@ -81,6 +81,10 @@ class Shell(gobject.GObject):
 		self._frame = Frame(self)
 		self._frame.show_and_hide(3)
 
+	def _open_terminal_cb(self):
+		self.start_activity('org.sugar.Terminal')
+		return False
+
 	def __global_key_pressed_cb(self, grabber, key):
 		if key == 'F1':
 			self.set_zoom_level(sugar.ZOOM_ACTIVITY)
@@ -93,7 +97,7 @@ class Shell(gobject.GObject):
 		elif key == 'F5':
 			self._frame.notify_key_press()
 		elif key == 'F6':
-			self.start_activity('org.sugar.Terminal')
+			gobject.idle_add(self._open_terminal_cb)
 		elif key == 'F7':
 			self.toggle_chat_visibility()
 		elif key == 'F8':
