@@ -54,6 +54,9 @@ class WEPKeyDialog(gtk.Dialog):
 	def get_auth_alg(self):
 		return IW_AUTH_ALG_OPEN_SYSTEM
 
+	def get_network(self):
+		return self._net
+
 	def get_callbacks(self):
 		return (self._async_cb, self._async_err_cb)
 

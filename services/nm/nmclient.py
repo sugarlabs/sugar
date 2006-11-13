@@ -803,6 +803,7 @@ class NMClientApp:
 			return
 		key = self._key_dialog.get_key()
 		wep_auth_alg = self._key_dialog.get_auth_alg()
+		net = self._key_dialog.get_network()
 		(async_cb, async_err_cb) = self._key_dialog.get_callbacks()
 
 		# Clear self._key_dialog before we call destroy(), otherwise
@@ -813,18 +814,20 @@ class NMClientApp:
 
 		if response_id == gtk.RESPONSE_OK:
 			self.nminfo.get_key_for_network_cb(
-					key, wep_auth_alg, async_cb, async_err_cb, canceled=False)
+					net, key, wep_auth_alg, async_cb, async_err_cb, canceled=False)
 		else:
 			self.nminfo.get_key_for_network_cb(
-					None, None, async_cb, async_err_cb, canceled=True)
+					net, None, None, async_cb, async_err_cb, canceled=True)
 
 	def cancel_get_key_for_network(self):
 		# Close the wireless key dialog and just have it return
 		# with the 'canceled' argument set to true
-		pass
+		if not self._key_dialog:
+			return
+		self._key_dialog_destroy_cb(self._key_dialog)
 
 	def device_activation_stage_sig_handler(self, device, stage):
-	    print 'Network Manager Device Stage "%s" for device %s'%(NM_DEVICE_STAGE_STRINGS[stage], device)
+		logging.debug('Device Activation Stage "%s" for device %s' % (NM_DEVICE_STAGE_STRINGS[stage], device))
 
 	def state_change_sig_handler(self, state):
 		self._nm_state = state
