@@ -834,7 +834,7 @@ class NMClientApp:
 		if (old and len(old)) and (not new and not len(new)):
 			# NM went away
 			self._nm_present = False
-			self._schedule_update_timer()
+			self._schedule_icon_update(immediate=True)
 			for op in self._devices.keys():
 				del self._devices[op]
 			self._devices = {}
