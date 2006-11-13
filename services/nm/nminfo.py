@@ -21,7 +21,7 @@ import dbus.service
 import time
 import os
 import binascii
-from ConfigParser import ConfigParser
+import ConfigParser
 import logging
 
 import nmclient
@@ -49,7 +49,7 @@ class NetworkInvalidError(Exception):
 	pass
 
 
-class NMConfig(ConfigParser):
+class NMConfig(ConfigParser.ConfigParser):
 	def get_bool(self, section, name):
 		opt = self.get(section, name)
 		if type(opt) == type(""):
@@ -77,6 +77,14 @@ class NMConfig(ConfigParser):
 		except Exception:
 			pass
 		raise ValueError("Invalid format for %s/%s.  Should be a valid integer." % (section, name))
+
+	def get_float(self, section, name):
+		opt = self.get(section, name)
+		try:
+			return float(opt)
+		except Exception:
+			pass
+		raise ValueError("Invalid format for %s/%s.  Should be a valid float." % (section, name))
 
 
 IW_AUTH_CIPHER_NONE   = 0x00000001
@@ -116,12 +124,12 @@ class Security(object):
 				# make you want to throw up
 				raise ValueError("Unsupported security combo")
 			security.read_from_config(cfg, name)
-		except (NoOptionError, ValueError), e:
+		except (ConfigParser.NoOptionError, ValueError), e:
 			return None
 		return security
 	new_from_config = staticmethod(new_from_config)
 
-	def new_from_args(we_cipher, key, auth_alg):
+	def new_from_args(we_cipher, args):
 		security = None
 		try:
 			if we_cipher == IW_AUTH_CIPHER_NONE:
@@ -132,8 +140,9 @@ class Security(object):
 				# FIXME: find a way to make WPA config option matrix not
 				# make you want to throw up
 				raise ValueError("Unsupported security combo")
-			security.read_from_args(key, auth_alg)
-		except (NoOptionError, ValueError), e:
+			security.read_from_args(args)
+		except ValueError, e:
+			logging.debug("Error reading security information: %s" % e)
 			del security
 			return None
 		return security
@@ -147,13 +156,17 @@ class Security(object):
 
 
 class WEPSecurity(Security):
-	def read_from_args(self, key, auth_alg):
-#		if len(args) != 2:
-#			raise ValueError("not enough arguments")
-#		if not isinstance(args[0], str):
-#			raise ValueError("wrong argument type for key")
-#		if not isinstance(args[1], int):
-#			raise ValueError("wrong argument type for auth_alg")
+	def read_from_args(self, args):
+		if len(args) != 2:
+			raise ValueError("not enough arguments")
+		key = args[0]
+		auth_alg = args[1]
+		if isinstance(key, unicode):
+			key = key.encode()
+		if not isinstance(key, str):
+			raise ValueError("wrong argument type for key")
+		if not isinstance(auth_alg, int):
+			raise ValueError("wrong argument type for auth_alg")
 		self._key = key
 		self._auth_alg = auth_alg
 
@@ -176,7 +189,7 @@ class WEPSecurity(Security):
 
 	def get_properties(self):
 		args = Security.get_properties(self)
-		args.append(self._key)
+		args.append(dbus.String(self._key))
 		args.append(dbus.Int32(self._auth_alg))
 		return args
 
@@ -187,16 +200,18 @@ class WEPSecurity(Security):
 
 
 class Network:
-	def __init__(ssid):
+	def __init__(self, ssid):
 		self.ssid = ssid
-		self.timestamp = time.now()
-		self.fallback = False
+		self.timestamp = int(time.time())
 		self.bssids = []
 		self.we_cipher = 0
 		self._security = None
 
 	def get_properties(self):
-		args = [network.ssid, network.timestamp, network.fallback, network.bssids]
+		bssid_list = dbus.Array([], signature="s")
+		for item in self.bssids:
+			bssid_list.append(dbus.String(item))
+		args = [dbus.String(self.ssid), dbus.Int32(self.timestamp), dbus.Boolean(True), bssid_list]
 		args += self._security.get_properties()
 		return tuple(args)
 
@@ -206,22 +221,20 @@ class Network:
 	def set_security(self, security):
 		self._security = security
 
-	def read_from_args(self, auto, fallback, bssid, we_cipher, *args):
+	def read_from_args(self, auto, bssid, we_cipher, args):
 		if auto == False:
-			self.timestamp = time.now()
-		self.fallback = True
-		if not self.bssids.contains(bssid):
+			self.timestamp = int(time.time())
+		if not bssid in self.bssids:
 			self.bssids.append(bssid)
 
 		self._security = Security.new_from_args(we_cipher, args)
 		if not self._security:
-			raise NetworkInvalidError(e)
+			raise NetworkInvalidError("Invalid security information")
 
 	def read_from_config(self, config):
 		try:
 			self.timestamp = config.get_int(self.ssid, "timestamp")
-			self.fallback = config.get_bool(self.ssid, "fallback")
-		except (NoOptionError, ValueError), e:
+		except (ConfigParser.NoOptionError, ValueError), e:
 			raise NetworkInvalidError(e)
 
 		self._security = Security.new_from_config(config, self.ssid)
@@ -231,18 +244,20 @@ class Network:
 		# The following don't need to be present
 		try:
 			self.bssids = config.get_list(self.ssid, "bssids")
-		except (NoOptionError, ValueError), e:
+		except (ConfigParser.NoOptionError, ValueError), e:
 			pass
 
 	def write_to_config(self, config):
-		config.add_section(self.ssid)
-		config.set(self.ssid, "timestamp", self.timestamp)
-		config.set(self.ssid, "fallback", self.fallback)
-		if len(self.bssids) > 0:
-			opt = ""
-			opt.join(self.bssids, " ")
-			config.set(self.ssid, "bssids", opt)
-		self._security.write_to_config(self.ssid, config)
+		try:
+			config.add_section(self.ssid)
+			config.set(self.ssid, "timestamp", self.timestamp)
+			if len(self.bssids) > 0:
+				opt = " "
+				opt.join(self.bssids)
+				config.set(self.ssid, "bssids", opt)
+			self._security.write_to_config(self.ssid, config)
+		except Exception, e:
+			logging.debug("Error writing '%s': %s" % (self.ssid, e))
 
 
 class NotFoundError(dbus.DBusException):
@@ -264,7 +279,7 @@ class NMInfoDBusServiceHelper(dbus.service.Object):
 		except dbus.DBusException:
 			pass
 		if name:
-			print "NMI service already owned by %s, won't claim it." % name
+			logging.debug("NMI service already owned by %s, won't claim it." % name)
 			raise RuntimeError
 
 		bus_name = dbus.service.BusName(NM_INFO_IFACE, bus=bus)
@@ -276,18 +291,15 @@ class NMInfoDBusServiceHelper(dbus.service.Object):
 		if len(ssids) > 0:
 			return dbus.Array(ssids)
 
-		raise NoNetworks
+		raise NoNetworks()
 
-	@dbus.service.method(NM_INFO_IFACE, in_signature='si', out_signature='sibbas')
-	def getNetworkProperties(self, ssid, net_type):
-		props = self._parent.get_network_properties(ssid, net_type)
-		if not props:
-			raise NoNetworks
-		return props
+	@dbus.service.method(NM_INFO_IFACE, in_signature='si', async_callbacks=('async_cb', 'async_err_cb'))
+	def getNetworkProperties(self, ssid, net_type, async_cb, async_err_cb):
+		self._parent.get_network_properties(ssid, net_type, async_cb, async_err_cb)
 
 	@dbus.service.method(NM_INFO_IFACE)
-	def updateNetworkInfo(self, ssid, bauto, bfallback, bssid, cipher, *args):
-		self._parent.update_network_info(ssid, bauto, bfallback, bssid, cipher, args)
+	def updateNetworkInfo(self, ssid, bauto, bssid, cipher, *args):
+		self._parent.update_network_info(ssid, bauto, bssid, cipher, args)
 
 	@dbus.service.method(NM_INFO_IFACE, async_callbacks=('async_cb', 'async_err_cb'))
 	def getKeyForNetwork(self, dev_path, net_path, ssid, attempt, new_key, async_cb, async_err_cb):
@@ -324,12 +336,14 @@ class NMInfo(object):
 		config.read(self._cfg_file)
 		networks = {}
 		for name in config.sections():
+			if not isinstance(name, unicode):
+				name = unicode(name)
 			net = Network(name)
 			try:
 				net.read_from_config(config)
 				networks[name] = net
 			except NetworkInvalidError, e:
-				print "Bad network!! %s" % e
+				logging.debug("Error: invalid stored network config: %s" % e)
 				del net
 		del config
 		return networks
@@ -337,7 +351,7 @@ class NMInfo(object):
 	def _write_config(self, networks):
 		fp = open(self._cfg_file, 'w')
 		config = NMConfig()
-		for net in networks:
+		for net in networks.values():
 			net.write_to_config(config)
 		config.write(fp)
 		fp.close()
@@ -347,33 +361,48 @@ class NMInfo(object):
 		if net_type != NETWORK_TYPE_ALLOWED:
 			raise ValueError("Bad network type")
 		nets = []
-		for net in self._allowed_networks:
+		for net in self._allowed_networks.values():
 			nets.append(net.ssid)
-		print "Returning networks: %s" % nets
+		logging.debug("Returning networks: %s" % nets)
 		return nets
 
-	def get_network_properties(self, ssid, net_type):
+	def get_network_properties(self, ssid, net_type, async_cb, async_err_cb):
+		if not isinstance(ssid, unicode):
+			async_err_cb(ValueError("Invalid arguments; ssid must be unicode."))
 		if net_type != NETWORK_TYPE_ALLOWED:
-			raise ValueError("Bad network type")
+			async_err_cb(ValueError("Bad network type"))
 		if not self._allowed_networks.has_key(ssid):
-			return None
+			async_err_cb(NotFoundError("Network '%s' not found." % ssid))
 		network = self._allowed_networks[ssid]
 		props = network.get_properties()
-		print "Returning props for %s: %s" % (ssid, props)
-		return props
 
-	def update_network_info(self, ssid, bauto, bfallback, bssid, we_cipher, *args):
+		# DBus workaround: the normal method return handler wraps
+		# the returned arguments in a tuple and then converts that to a
+		# struct, but NetworkManager expects a plain list of arguments.
+		# It turns out that the async callback method return code _doesn't_
+		# wrap the returned arguments in a tuple, so as a workaround use
+		# the async callback stuff here even though we're not doing it
+		# asynchronously.
+		async_cb(*props)
+
+	def update_network_info(self, ssid, auto, bssid, we_cipher, args):
+		if not isinstance(ssid, unicode):
+			raise ValueError("Invalid arguments; ssid must be unicode.")
 		if self._allowed_networks.has_key(ssid):
 			del self._allowed_networks[ssid]
 		net = Network(ssid)
 		try:
-			net.read_from_args(auto, fallback, bssid, we_cipher, args)
+			net.read_from_args(auto, bssid, we_cipher, args)
+			logging.debug("Updated network information for '%s'." % ssid)
 			self._allowed_networks[ssid] = net
-		except InvalidNetworkError, e:
-			print "Bad network!! %s" % e
+			self.save_config()
+		except NetworkInvalidError, e:
+			logging.debug("Error updating network information: %s" % e)
 			del net
 
 	def get_key_for_network(self, dev_op, net_op, ssid, attempt, new_key, async_cb, async_err_cb):
+		if not isinstance(ssid, unicode):
+			raise ValueError("Invalid arguments; ssid must be unicode.")
 		if self._allowed_networks.has_key(ssid) and not new_key:
 			# We've got the info already
 			net = self._allowed_networks[ssid]
@@ -399,7 +428,7 @@ class NMInfo(object):
 
 		self._nmclient.get_key_for_network(net, async_cb, async_err_cb)
 
-	def get_key_for_network_cb(self, key, auth_alg, async_cb, async_err_cb, canceled=False):
+	def get_key_for_network_cb(self, net, key, auth_alg, async_cb, async_err_cb, canceled=False):
 		"""
 		Called by the NMClient when the Wireless Network Key dialog
 		is closed.
@@ -426,7 +455,9 @@ class NMInfo(object):
 
 		# Stuff the returned key and auth algorithm into a security object
 		# and return it to NetworkManager
-		sec = Security.new_from_args(we_cipher, key, auth_alg)
+		sec = Security.new_from_args(we_cipher, (key, auth_alg))
+		if not sec:
+			raise RuntimeError("Invalid security arguments.")
 		props = sec.get_properties()
 		a = tuple(props)
 		async_cb(*a)
