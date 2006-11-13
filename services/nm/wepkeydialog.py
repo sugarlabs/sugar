@@ -1,25 +1,75 @@
+# vi: ts=4 ai noet
+#
+# Copyright (C) 2006, Red Hat, Inc.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
 import gtk
+import logging
+
+IW_AUTH_ALG_OPEN_SYSTEM = 0x00000001
+IW_AUTH_ALG_SHARED_KEY  = 0x00000002
 
 class WEPKeyDialog(gtk.Dialog):
-	def __init__(self):
+	def __init__(self, net, async_cb, async_err_cb):
 		gtk.Dialog.__init__(self)
+		self.set_title("Wireless Key Required")
+
+		self._net = net
+		self._async_cb = async_cb
+		self._async_err_cb = async_err_cb
 
 		self.set_has_separator(False)		
 
+		import logging
+		logging.debug("foobar1")
+		try:
+			label = gtk.Label("A wireless encryption key is required for " \
+				" the wireless network '%s'." % net.get_ssid())
+		except Exception, e:
+			logging.debug("Exc: %s" % e)
+		logging.debug("foobar2")
+		self.vbox.pack_start(label)
+		logging.debug("foobar3")
+
+		logging.debug("foobar4")
 		self._entry = gtk.Entry()
+		logging.debug("foobar5")
 		self._entry.props.visibility = False
 		self._entry.connect('changed', self._entry_changed_cb)
+		logging.debug("foobar6")
 		self.vbox.pack_start(self._entry)
-		self._entry.show()
+		logging.debug("foobar7")
+		self.vbox.show_all()
+		logging.debug("foobar8")
 
 		self.add_buttons(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
 						 gtk.STOCK_OK, gtk.RESPONSE_OK)
 
 		self.set_default_response(gtk.RESPONSE_OK)
 		self._update_response_sensitivity()
+		logging.debug("foobar9")
 
 	def get_key(self):
 		return self._entry.get_text()
+
+	def get_auth_alg(self):
+		return IW_AUTH_ALG_OPEN_SYSTEM
+
+	def get_callbacks(self):
+		return (self._async_cb, self._async_err_cb)
 
 	def _entry_changed_cb(self, entry):
 		self._update_response_sensitivity()

@@ -385,13 +385,17 @@ class NMInfo(object):
 		dev = self._nmclient.get_device(dev_op)
 		if not dev:
 			async_err_cb(NotFoundError("Device was unknown."))
+			return
+
 		if dev.get_type() == nmclient.DEVICE_TYPE_802_3_ETHERNET:
 			# We don't support wired 802.1x yet...
 			async_err_cb(UnsupportedError("Device type is unsupported by NMI."))
+			return
 
 		net = dev.get_network(net_op)
 		if not net:
 			async_err_cb(NotFoundError("Network was unknown."))
+			return
 
 		self._nmclient.get_key_for_network(net, async_cb, async_err_cb)
 
