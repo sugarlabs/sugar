@@ -66,6 +66,9 @@ class Terminal(gtk.HBox):
 	def on_vte_popup_menu(self, term):
 		pass
 
+	def grab_focus(self):
+		self._vte.grab_focus()
+
 class TerminalActivity(Activity):
 	def __init__(self):
 		Activity.__init__(self)
@@ -75,3 +78,5 @@ class TerminalActivity(Activity):
 		terminal = Terminal()
 		self.add(terminal)
 		terminal.show()
+
+		terminal.grab_focus()
