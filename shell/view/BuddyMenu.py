@@ -39,7 +39,7 @@ class BuddyMenu(Menu):
 			scaled_pixbuf = pixbuf.scale_simple(_ICON_SIZE, _ICON_SIZE,
 												gtk.gdk.INTERP_BILINEAR)
 			del pixbuf
-			icon_item = hippo.CanvasImage(pixbuf=scaled_pixbuf)
+			icon_item = hippo.CanvasImage()
 
 		Menu.__init__(self, buddy.get_name(), icon_item)
 
