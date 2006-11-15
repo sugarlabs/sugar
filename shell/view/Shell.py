@@ -87,27 +87,27 @@ class Shell(gobject.GObject):
 
 	def __global_key_pressed_cb(self, grabber, key):
 		if key == 'F1':
-			self.set_zoom_level(sugar.ZOOM_ACTIVITY)
-		elif key == 'F2':
-			self.set_zoom_level(sugar.ZOOM_HOME)
-		elif key == 'F3':
-			self.set_zoom_level(sugar.ZOOM_FRIENDS)
-		elif key == 'F4':
 			self.set_zoom_level(sugar.ZOOM_MESH)
+		elif key == 'F2':
+			self.set_zoom_level(sugar.ZOOM_FRIENDS)
+		elif key == 'F3':
+			self.set_zoom_level(sugar.ZOOM_HOME)
+		elif key == 'F4':
+			self.set_zoom_level(sugar.ZOOM_ACTIVITY)
 		elif key == 'F5':
-			self._frame.notify_key_press()
-		elif key == 'F6':
-			gobject.idle_add(self._open_terminal_cb)
-		elif key == 'F7':
-			self.toggle_chat_visibility()
-		elif key == 'F8':
-			self._dcon_manager.set_mode(DCONManager.COLOR_MODE)
-		elif key == 'F9':
-			self._dcon_manager.set_mode(DCONManager.BLACK_AND_WHITE_MODE)
-		elif key == 'F10':
 			self._dcon_manager.decrease_brightness()
-		elif key == 'F11':
+		elif key == 'F6':
 			self._dcon_manager.increase_brightness()
+		elif key == 'F7':
+			self._dcon_manager.set_mode(DCONManager.COLOR_MODE)
+		elif key == 'F8':
+			self._dcon_manager.set_mode(DCONManager.BLACK_AND_WHITE_MODE)
+		elif key == 'F9':
+			self._frame.notify_key_press()
+		elif key == 'F10':
+			self.toggle_chat_visibility()
+		elif key == 'F11':
+			gobject.idle_add(self._open_terminal_cb)
 
 	def __global_key_released_cb(self, grabber, key):
 		if key == 'F5':
