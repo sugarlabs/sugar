@@ -1,10 +1,10 @@
-#ifndef __SUGAR_CONTENT_HANDLER_H__
-#define __SUGAR_CONTENT_HANDLER_H__
+#ifndef __GECKO_CONTENT_HANDLER_H__
+#define __GECKO_CONTENT_HANDLER_H__
 
 #include <nsCOMPtr.h>
 #include <nsIHelperAppLauncherDialog.h>
 
-#define G_SUGARCONTENTHANDLER_CID			     	 \
+#define GECKOCONTENTHANDLER_CID			     	 \
 { /* 2321843e-6377-11db-967b-00e08161165f */         \
     0x2321843e,                                      \
     0x6377,                                          \
@@ -12,17 +12,17 @@
     {0x96, 0x7b, 0x0, 0xe0, 0x81, 0x61, 0x16, 0x5f}  \
 }
 
-class GSugarContentHandler : public nsIHelperAppLauncherDialog
+class GeckoContentHandler : public nsIHelperAppLauncherDialog
 {
   public:
 	NS_DECL_ISUPPORTS
 	NS_DECL_NSIHELPERAPPLAUNCHERDIALOG
 
-	GSugarContentHandler();
-	virtual ~GSugarContentHandler();
+	GeckoContentHandler();
+	virtual ~GeckoContentHandler();
 	
   private:
 
 };
 
-#endif /* __SUGAR_CONTENT_HANDLER_H */
+#endif /* __GECKO_CONTENT_HANDLER_H */

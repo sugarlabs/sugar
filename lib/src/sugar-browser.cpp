@@ -18,8 +18,8 @@
  */
 
 #include "sugar-browser.h"
-#include "SugarContentHandler.h"
-#include "SugarDownload.h"
+#include "GeckoContentHandler.h"
+#include "GeckoDownload.h"
 
 #include <gtkmozembed_internal.h>
 #include <nsCOMPtr.h>
@@ -35,8 +35,8 @@
 #include <nsIComponentRegistrar.h>
 #include <nsIComponentManager.h>
 
-NS_GENERIC_FACTORY_CONSTRUCTOR(GSugarContentHandler)
-NS_GENERIC_FACTORY_CONSTRUCTOR(GSugarDownload)
+NS_GENERIC_FACTORY_CONSTRUCTOR(GeckoContentHandler)
+NS_GENERIC_FACTORY_CONSTRUCTOR(GeckoDownload)
 
 enum {
 	PROP_0,
@@ -50,16 +50,16 @@ enum {
 
 static const nsModuleComponentInfo sSugarComponents[] = {
 	{
-		"Sugar Content Handler",
-		G_SUGARCONTENTHANDLER_CID,
+		"Gecko Content Handler",
+		GECKOCONTENTHANDLER_CID,
 		NS_IHELPERAPPLAUNCHERDLG_CONTRACTID,
-		GSugarContentHandlerConstructor
+		GeckoContentHandlerConstructor
 	},
 	{
-		"Sugar Download",
-		G_SUGARDOWNLOAD_CID,
+		"Gecko Download",
+		GECKODOWNLOAD_CID,
 		NS_TRANSFER_CONTRACTID,
-		GSugarDownloadConstructor
+		GeckoDownloadConstructor
 	}
 };
 
@@ -78,7 +78,7 @@ sugar_browser_startup(void)
 						  PR_TRUE, getter_AddRefs(file));
 	NS_ENSURE_TRUE(file, FALSE);
 
-	rv = prefService->ReadUserPrefs (file);                                                                              
+	rv = prefService->ReadUserPrefs (file);
 	if (NS_FAILED(rv)) {
 		g_warning ("failed to read default preferences, error: %x", rv);
 		return FALSE;

@@ -60,3 +60,21 @@ friends_FriendIcon = {
 friends_ActivityIcon = {
 	'size' : style.standard_icon_size
 }
+
+clipboard_bubble = {
+	'fill-color'	: 0x646464FF,
+	'stroke-color'	: 0x646464FF,
+	'progress-color': 0x333333FF,
+	'spacing'		: style.space_unit,
+	'padding'		: style.space_unit * 1.5
+}
+
+clipboard_menu_item_title = {
+	'xalign': hippo.ALIGNMENT_START,
+	'padding-left': 5,
+	'color'	 : 0xFFFFFFFF,
+	'font'	 : style.get_font_description('Bold', 1.2)
+}
+
+style.register_stylesheet("clipboard.Bubble", clipboard_bubble)
+style.register_stylesheet("clipboard.MenuItem.Title", clipboard_menu_item_title)

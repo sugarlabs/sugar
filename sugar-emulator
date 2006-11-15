@@ -40,6 +40,7 @@ if sourcedir:
 	bin_path = sourcedir
 	bin_path += ':' + os.path.join(sourcedir, 'shell')
 	bin_path += ':' + os.path.join(sourcedir, 'services/presence')
+	bin_path += ':' + os.path.join(sourcedir, 'services/clipboard')
 
 	if os.environ.has_key('PATH'):
 		old_path = os.environ['PATH']
@@ -54,6 +55,11 @@ if sourcedir:
 	bin = os.path.join(sourcedir,
 					  'services/presence/sugar-presence-service')
 	setup.write_service('org.laptop.Presence', bin,
+						env.get_activity_info_dir())	
+							
+	bin = os.path.join(sourcedir,
+					  'services/clipboard/sugar-clipboard')
+	setup.write_service('org.laptop.Clipboard', bin,
 						env.get_activity_info_dir())
 
 from sugar.emulator import Emulator

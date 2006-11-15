@@ -35,11 +35,18 @@
   (gtype-id "SUGAR_TYPE_PUSH_SCROLLER")
 )
 
-(define-object BrowserChandler
+(define-object DownloadManager
   (in-module "Sugar")
   (parent "GObject")
-  (c-name "SugarBrowserChandler")
-  (gtype-id "SUGAR_TYPE_BROWSER_CHANDLER")
+  (c-name "SugarDownloadManager")
+  (gtype-id "SUGAR_TYPE_DOWNLOAD_MANAGER")
+)
+
+(define-object Download
+  (in-module "Sugar")
+  (parent "GObject")
+  (c-name "SugarDownload")
+  (gtype-id "SUGAR_TYPE_DOWNLOAD")
 )
 
 ;; Enumerations and flags ...
@@ -181,14 +188,45 @@
   )
 )
 
-;; From sugar-browser-chandler.h
+;; From sugar-download-manager.h
 
-(define-function sugar_browser_chandler_get_type
-  (c-name "sugar_browser_chandler_get_type")
+(define-function sugar_download_manager_get_type
+  (c-name "sugar_download_manager_get_type")
   (return-type "GType")
 )
 
-(define-function get_browser_chandler
-  (c-name "sugar_get_browser_chandler")
-  (return-type "SugarBrowserChandler*")
+(define-function get_download_manager
+  (c-name "sugar_get_download_manager")
+  (return-type "SugarDownloadManager*")
+)
+
+;; From sugar-download.h
+
+(define-function sugar_download_get_type
+  (c-name "sugar_download_get_type")
+  (return-type "GType")
+)
+
+(define-method get_file_name
+  (of-object "SugarDownload")
+  (c-name "sugar_download_get_file_name")
+  (return-type "const-gchar*")
+)
+
+(define-method get_url
+  (of-object "SugarDownload")
+  (c-name "sugar_download_get_url")
+  (return-type "const-gchar*")
+)
+
+(define-method get_mime_type
+  (of-object "SugarDownload")
+  (c-name "sugar_download_get_mime_type")
+  (return-type "const-gchar*")
+)
+
+(define-method get_percent
+  (of-object "SugarDownload")
+  (c-name "sugar_download_get_percent")
+  (return-type "gint")
 )

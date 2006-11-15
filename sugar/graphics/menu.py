@@ -97,6 +97,9 @@ class Menu(gtk.Window):
 		icon.connect('activated', self._action_clicked_cb, action_id)
 		self._action_box.append(icon)
 
+	def remove_action(self, icon):
+		self._action_box.remove(icon)
+
 	def _item_clicked_cb(self, icon, event, action):
 		self.emit('action', action)
 
