@@ -1,0 +1,2 @@
+This plugin give support to get the public and shared dirty memory usage 
+by process using the /proc/PID/smaps file. 

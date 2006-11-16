@@ -1,0 +1,9 @@
+#!/usr/bin/env python
+
+# Sugar developer console launcher
+import os, sys
+from sugar import env 
+
+sys.path.insert(0, os.path.join(env.get_data_dir(), 'shell'))
+
+import console.console

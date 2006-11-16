@@ -91,18 +91,11 @@ class MultiLogView(gtk.Notebook):
 
 		return True
 
-window = gtk.Window()
-window.set_default_size(gtk.gdk.screen_width() * 3 / 4,
-						gtk.gdk.screen_height() * 3 / 4)
+class Interface:
 
-window.realize()
-window.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
-
-path = os.path.join(env.get_profile_path(), 'logs')
-viewer = MultiLogView(path)
-window.add(viewer)
-viewer.show()
-
-window.show()
-
-gtk.main()
+	def __init__(self):
+		path = os.path.join(env.get_profile_path(), 'logs')
+		viewer = MultiLogView(path)
+		viewer.show()
+		self.widget = viewer
+		

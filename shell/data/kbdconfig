@@ -6,6 +6,6 @@
 <Alt>p=prev
 <Alt>c=close
 
-F12=!sugar-log-viewer
+F12=!sugar-devel-console
 <Alt>q=!sugar-emulator-shutdown
 <Alt><Shift>Escape=!sugar-shutdown
