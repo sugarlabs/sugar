@@ -76,12 +76,7 @@ for i in range(1, len(sys.argv)):
 emulator = Emulator(fullscreen)
 emulator.start()
 
-if env.get_dbus_version() < '0.95':
-	if not os.path.isdir('/tmp/sugar-services'):
-		os.mkdir('/tmp/sugar-services')
-	dbus_config = env.get_dbus_config_094()
-else:
-	dbus_config = env.get_dbus_config()
+dbus_config = env.get_dbus_config()
 
 os.execlp('dbus-launch', 'dbus-launch', '--exit-with-session',
 		  '--config-file=%s' % dbus_config, program)
