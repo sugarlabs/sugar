@@ -100,6 +100,7 @@ class Activity(gtk.Window):
 
 		bus = dbus.SessionBus()
 		xid = self.window.xid
+
 		bus_name = dbus.service.BusName(get_service_name(xid), bus=bus)
 		self._bus = ActivityDbusService(bus_name, get_object_path(xid))
 		self._bus.start(self._pservice, self)

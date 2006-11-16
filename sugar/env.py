@@ -54,9 +54,6 @@ def get_services_dir():
 def get_dbus_config():
 	return sugar_dbus_config
 
-def get_dbus_config_094():
-	return sugar_dbus_config_094
-
 def get_shell_bin_dir():
 	return sugar_shell_bin_dir
 

@@ -51,7 +51,6 @@ AM_GLIB_GNU_GETTEXT
 AC_OUTPUT([
 Makefile
 dbus-installed.conf
-dbus-installed-094.conf
 activities/Makefile
 activities/web/Makefile
 activities/chat/Makefile
@@ -72,6 +71,13 @@ shell/view/Makefile
 shell/view/home/Makefile
 shell/view/frame/Makefile
 shell/model/Makefile
+shell/console/Makefile
+shell/console/plugins/Makefile
+shell/console/plugins/clean_size/Makefile
+shell/console/plugins/cpu/Makefile
+shell/console/plugins/dirty_size/Makefile
+shell/console/plugins/memphis_init/Makefile
+shell/console/procmem/Makefile
 sugar/Makefile
 sugar/__installed__.py
 sugar/activity/Makefile

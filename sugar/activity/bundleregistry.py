@@ -10,11 +10,7 @@ class _ServiceParser(ConfigParser):
 
 class _ServiceManager(object):
 	def __init__(self):
-		if env.get_dbus_version() < '0.95':
-			self._path = '/tmp/sugar-services'
-		else:
-			self._path = os.path.expanduser('~/.local/share/dbus-1/services')
-
+		self._path = os.path.expanduser('~/.local/share/dbus-1/services')
 		if not os.path.isdir(self._path):
 			os.makedirs(self._path)
 
