@@ -65,9 +65,14 @@ class Shell(gobject.GObject):
 		self._key_grabber.grab('F6')
 		self._key_grabber.grab('F7')
 		self._key_grabber.grab('F8')
-		self._key_grabber.grab('F9')
-		self._key_grabber.grab('F10')
-		self._key_grabber.grab('F11')
+		self._key_grabber.grab('0xDC') # Camera key
+		self._key_grabber.grab('0xE0') # Overlay key
+		self._key_grabber.grab('0x93') # Frame key
+
+		# For non-OLPC machines
+		self._key_grabber.grab('<shft><alt>F9')
+		self._key_grabber.grab('<shft><alt>F10')
+		self._key_grabber.grab('<shft><alt>F11')
 
 		self._home_window = HomeWindow(self)
 		self._home_window.show()
@@ -102,15 +107,23 @@ class Shell(gobject.GObject):
 			self._dcon_manager.set_mode(DCONManager.COLOR_MODE)
 		elif key == 'F8':
 			self._dcon_manager.set_mode(DCONManager.BLACK_AND_WHITE_MODE)
-		elif key == 'F9':
+		elif key == '<shft><alt>F9':
 			self._frame.notify_key_press()
-		elif key == 'F10':
+		elif key == '<shft><alt>F10':
 			self.toggle_chat_visibility()
-		elif key == 'F11':
+		elif key == '<shft><alt>F11':
 			gobject.idle_add(self._open_terminal_cb)
+		elif key == '0xDC': # Camera key
+			pass
+		elif key == '0xE0': # Overlay key
+			self.toggle_chat_visibility()
+		elif key == '0x93': # Frame key
+			self._frame.notify_key_press()
 
 	def __global_key_released_cb(self, grabber, key):
-		if key == 'F5':
+		if key == '<shft><alt>F9':
+			self._frame.notify_key_release()
+		elif key == '0x93':
 			self._frame.notify_key_release()
 
 	def __window_opened_cb(self, screen, window):
