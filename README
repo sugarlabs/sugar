@@ -26,8 +26,10 @@ F5     Decrease brightness (DCON)
 F6     Increase brightness (DCON)
 F7     Color mode (DCON)
 F8     Black and white mode (DCON)
-F9     Show the frame
-F10    Toggle chat visibility
-F11    Open a terminal activity
-F12    Open the log viewer
+
+Shift+Alt+F9     Show the frame
+Shift+Alt+F10    Toggle chat visibility
+Shift+Alt+F11    Open a terminal activity
+Shift+Alt+F12    Open the log viewer
+
 Ctrl+S Activate sketch mode in chat
