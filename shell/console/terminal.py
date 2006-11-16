@@ -9,7 +9,7 @@ class Terminal(gtk.HBox):
 		self._vte = vte.Terminal()
 		self._configure_vte()
 		self._vte.set_size(30, 5)
-		self._vte.set_size_request(200, 350)
+		self._vte.set_size_request(200, 450)
 		self._vte.show()
 		self.pack_start(self._vte)
 		
@@ -61,8 +61,8 @@ class Multiple:
 		self.notebook.show()
 		
 		self.main_vbox = gtk.VBox(False, 3)
-		self.main_vbox.pack_start(open_terminal, True, True, 5)
-		self.main_vbox.pack_start(self.notebook, True, True, 5)
+		self.main_vbox.pack_start(open_terminal, True, True, 2)
+		self.main_vbox.pack_start(self.notebook, True, True, 2)
 
 		self.main_vbox.show_all()
 	
