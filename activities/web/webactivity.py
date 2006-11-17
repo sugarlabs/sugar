@@ -18,12 +18,10 @@ from gettext import gettext as _
 import gtk
 import gtkmozembed
 import logging
-import dbus
 
 import _sugar
 from sugar.activity import ActivityFactory
 from sugar.activity.Activity import Activity
-from sugar.clipboard import ClipboardService
 from sugar import env
 from sugar.graphics import style
 import web.stylesheet
@@ -106,33 +104,12 @@ def start():
 
 	style.load_stylesheet(web.stylesheet)
 	
-	download_manager = _sugar.get_download_manager()
-	download_manager.connect('download-started', download_started_cb)
-	download_manager.connect('download-completed', download_completed_cb)
-	download_manager.connect('download-cancelled', download_started_cb)
-	download_manager.connect('download-progress', download_progress_cb)
+	chandler = _sugar.get_browser_chandler()
+	chandler.connect('handle-content', handle_content_cb)
 
 def stop():
 	gtkmozembed.pop_startup()
 
-def download_started_cb(download_manager, download):
-	name = download.get_url().rsplit('/', 1)[1]
-
-	cbService = ClipboardService.get_instance()
-	cbService.add_object(name,
-						 download.get_mime_type(),
-						 download.get_file_name())
-
-def download_completed_cb(download_manager, download):
-	cbService = ClipboardService.get_instance()
-	cbService.set_object_state(download.get_file_name(), 100)
-
-def download_cancelled_cb(download_manager, download):
-	#FIXME: Needs to update the state of the object to 'download stopped'.
-	#FIXME: Will do it when we complete progress on the definition of the
-	#FIXME: clipboard API.
-	raise "Cancelling downloads still not implemented."
-
-def download_progress_cb(download_manager, download):
-	cbService = ClipboardService.get_instance()
-	cbService.set_object_state(download.get_file_name(), download.get_percent())
+def handle_content_cb(chandler, url, mimeType, tmpFileName):
+	activity = ActivityFactory.create("org.laptop.sugar.Xbook")
+	activity.execute("open_document", [tmpFileName])

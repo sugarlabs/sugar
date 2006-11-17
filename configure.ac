@@ -64,7 +64,6 @@ lib/threadframe/Makefile
 services/Makefile
 services/presence/Makefile
 services/nm/Makefile
-services/clipboard/Makefile
 shell/Makefile
 shell/conf/Makefile
 shell/data/Makefile
@@ -77,7 +76,6 @@ sugar/__installed__.py
 sugar/activity/Makefile
 sugar/chat/Makefile
 sugar/chat/sketchpad/Makefile
-sugar/clipboard/Makefile
 sugar/graphics/Makefile
 sugar/p2p/Makefile
 sugar/presence/Makefile

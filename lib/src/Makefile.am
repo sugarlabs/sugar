@@ -15,18 +15,16 @@ libsugarprivate_la_SOURCES = 	\
 	$(BUILT_SOURCES)			\
 	eggaccelerators.h			\
 	eggaccelerators.c			\
-	GeckoContentHandler.h		\
-	GeckoContentHandler.cpp		\
-	GeckoDownload.h				\
-	GeckoDownload.cpp			\
 	sugar-address-entry.h		\
 	sugar-address-entry.c		\
 	sugar-browser.h				\
 	sugar-browser.cpp			\
-	sugar-download.h			\
-	sugar-download.c			\
-	sugar-download-manager.h	\
-	sugar-download-manager.c	\
+	sugar-browser-chandler.h	\
+	sugar-browser-chandler.c	\
+	SugarContentHandler.h		\
+	SugarContentHandler.cpp		\
+	SugarDownload.h				\
+	SugarDownload.cpp			\
 	sugar-key-grabber.h			\
 	sugar-key-grabber.c			\
 	sugar-push-scroller.c		\
