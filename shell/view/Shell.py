@@ -134,23 +134,30 @@ class Shell(gobject.GObject):
 
 	def __active_window_changed_cb(self, screen):
 		window = screen.get_active_window()
+		if not window or window.get_window_type() != wnck.WINDOW_NORMAL:
+			return
+		if not self._hosts.has_key(window.get_xid()):
+			return
 
-		if window and window.get_window_type() == wnck.WINDOW_NORMAL:
-			activity_host = self._hosts[window.get_xid()]
-			current = self._model.get_current_activity()
-			if activity_host.get_id() == current:
-				return
+		activity_host = self._hosts[window.get_xid()]
+		current = self._model.get_current_activity()
+		if activity_host.get_id() == current:
+			return
 
-			self._set_current_activity(activity_host)
+		self._set_current_activity(activity_host)
 
 	def __window_closed_cb(self, screen, window):
-		if window.get_window_type() == wnck.WINDOW_NORMAL:
-			if self._hosts.has_key(window.get_xid()):
-				host = self._hosts[window.get_xid()]
-				host.destroy()
+		if window.get_window_type() != wnck.WINDOW_NORMAL:
+			return
 
-				self.emit('activity-closed', host)
-				del self._hosts[window.get_xid()]
+		if not self._hosts.has_key(window.get_xid()):
+			return
+
+		host = self._hosts[window.get_xid()]
+		host.destroy()
+
+		self.emit('activity-closed', host)
+		del self._hosts[window.get_xid()]
 
 		if len(self._hosts) == 0:
 			self._set_current_activity(None)
