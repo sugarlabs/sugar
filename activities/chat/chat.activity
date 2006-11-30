@@ -1,6 +1,0 @@
-[Activity]
-name = GroupChat
-icon = activity-chat
-id = org.laptop.ChatActivity
-python_module = chat.chatactivity.ChatActivity
-show_launcher = yes

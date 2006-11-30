@@ -1,6 +1,0 @@
-[Activity]
-name = Web
-id = org.laptop.WebActivity
-icon = activity-web
-python_module = web.webactivity.WebActivity
-show_launcher = yes

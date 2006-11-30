@@ -1,1 +1,0 @@
-SUBDIRS = chat terminal web

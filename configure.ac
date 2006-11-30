@@ -51,10 +51,6 @@ AM_GLIB_GNU_GETTEXT
 AC_OUTPUT([
 Makefile
 dbus-installed.conf
-activities/Makefile
-activities/web/Makefile
-activities/chat/Makefile
-activities/terminal/Makefile
 lib/Makefile
 lib/data/Makefile
 lib/src/Makefile
