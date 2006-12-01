@@ -1,4 +1,4 @@
-SUBDIRS = conf data model view console
+SUBDIRS = data model view console
 
 bin_SCRIPTS = 				\
 	sugar-activity			\
