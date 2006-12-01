@@ -32,11 +32,11 @@ class ActivityItem(CanvasIcon):
 		return self._activity.get_service_name()
 
 class InviteItem(CanvasIcon):
-	def __init__(self, invite):
-		CanvasIcon.__init__(self, icon_name=invite.get_icon())
+	def __init__(self, activity, invite):
+		CanvasIcon.__init__(self, icon_name=activity.get_icon())
 
 		style.apply_stylesheet(self, 'frame.ActivityIcon')
-		self.props.color = invite.get_color()
+		self.props.color = activity.get_color()
 
 		self._invite = invite
 
@@ -87,11 +87,14 @@ class ActivitiesBox(hippo.CanvasBox):
 		self.append(item, 0)
 
 	def add_invite(self, invite):
-		item = InviteItem(invite)
-		item.connect('activated', self._invite_clicked_cb)
-		self.append(item, 0)
+		mesh = self._shell_model.get_mesh()
+		activity = mesh.get_activity(invite.get_activity_id())
+		if activity:
+			item = InviteItem(activity, invite)
+			item.connect('activated', self._invite_clicked_cb)
+			self.append(item, 0)
 
-		self._invite_to_item[invite] = item
+			self._invite_to_item[invite] = item
 
 	def remove_invite(self, invite):
 		self.remove(self._invite_to_item[invite])

@@ -22,7 +22,7 @@ from sugar.presence import PresenceService
 from model.BuddyModel import BuddyModel
 
 class ActivityModel:
-	def __init__(self, activity, service):
+	def __init__(self, activity, bundle, service):
 		self._service = service
 		self._activity = activity
 
@@ -30,10 +30,7 @@ class ActivityModel:
 		return self._activity.get_id()
 		
 	def get_icon_name(self):
-		registry = conf.get_activity_registry()
-		info = registry.get_activity_from_type(self._service.get_type())
-
-		return info.get_icon()
+		return bundle.get_icon()
 	
 	def get_color(self):
 		return IconColor(self._activity.get_color())
@@ -56,11 +53,12 @@ class MeshModel(gobject.GObject):
 							 gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT]))
 	}
 
-	def __init__(self):
+	def __init__(self, bundle_registry):
 		gobject.GObject.__init__(self)
 
 		self._activities = {}
 		self._buddies = {}
+		self._bundle_registry = bundle_registry
 
 		self._pservice = PresenceService.get_instance()
 		self._pservice.connect("service-appeared",
@@ -124,8 +122,7 @@ class MeshModel(gobject.GObject):
 		self._check_service(service)
 
 	def _check_service(self, service):
-		registry = conf.get_activity_registry()
-		if registry.get_activity_from_type(service.get_type()) != None:
+		if self._bundle_registry.get_bundle(service.get_type()) != None:
 			activity_id = service.get_activity_id()
 			if not self.has_activity(activity_id):
 				activity = self._pservice.get_activity(activity_id)
@@ -135,8 +132,15 @@ class MeshModel(gobject.GObject):
 	def has_activity(self, activity_id):
 		return self._activities.has_key(activity_id)
 
+	def get_activity(self, activity_id):
+		if self.has_activity(activity_id):
+			return self._activities[activity_id]
+		else:
+			return None
+
 	def add_activity(self, activity, service):
-		model = ActivityModel(activity, service)
+		bundle = self._bundle_registry.get_bundle(service.get_type())
+		model = ActivityModel(activity, bundle, service)
 		self._activities[model.get_id()] = model
 		self.emit('activity-added', model)
 

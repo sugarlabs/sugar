@@ -27,6 +27,8 @@ class ShellModel:
 	def __init__(self):
 		self._current_activity = None
 
+		self._bundle_registry = BundleRegistry()
+
 		PresenceService.start()
 		self._pservice = PresenceService.get_instance()
 
@@ -34,9 +36,7 @@ class ShellModel:
 		self._owner.announce()
 
 		self._friends = Friends()
-		self._mesh = MeshModel()
-
-		self._bundle_registry = BundleRegistry()
+		self._mesh = MeshModel(self._bundle_registry)
 
 		path = os.path.expanduser('~/Activities')
 		self._bundle_registry.add_search_path(path)
