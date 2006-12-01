@@ -56,14 +56,8 @@ class ActivityHost:
 		self._type = self._activity.get_type()
 		self._gdk_window = gtk.gdk.window_foreign_new(self._xid)
 
-		# FIXME Old activity registry support, cleanup
-		registry = conf.get_activity_registry()
-		info = registry.get_activity(self._type)
-
-		if not info:
-			registry = shell_model.get_bundle_registry()
-			info = registry.get_bundle(self._type)
-
+		registry = shell_model.get_bundle_registry()
+		info = registry.get_bundle(self._type)
 		self._icon_name = info.get_icon()
 
 		try:

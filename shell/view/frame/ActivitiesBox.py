@@ -29,7 +29,7 @@ class ActivityItem(CanvasIcon):
 		self._activity = activity
 
 	def get_bundle_id(self):
-		return self._activity.get_id()
+		return self._activity.get_service_name()
 
 class InviteItem(CanvasIcon):
 	def __init__(self, invite):
