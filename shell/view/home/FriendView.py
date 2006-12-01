@@ -29,7 +29,7 @@ class FriendView(hippo.CanvasBox):
 		hippo.CanvasBox.__init__(self, **kwargs)
 
 		self._pservice = PresenceService.get_instance()
-		self._activity_registry = conf.get_activity_registry()
+		self._activity_registry = shell.get_model().get_registry()
 
 		self._buddy = buddy
 		self._buddy_icon = BuddyIcon(shell, menu_shell, buddy)
@@ -53,9 +53,9 @@ class FriendView(hippo.CanvasBox):
 		# services like mDNS where activities default services are marked
 		# somehow.
 		for serv in activity.get_services():
-			act = self._activity_registry.get_activity_from_type(serv.get_type())
-			if act:
-				return act.get_icon()
+			bundle = self._activity_registry.get_bundle(serv.get_type())
+			if bundle:
+				return bundle.get_icon()
 		return None
 
 	def _remove_activity_icon(self):
