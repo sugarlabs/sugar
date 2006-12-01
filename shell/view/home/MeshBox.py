@@ -23,7 +23,6 @@ from sugar.graphics.spreadbox import SpreadBox
 from sugar.graphics.snowflakebox import SnowflakeBox
 from sugar.graphics.canvasicon import CanvasIcon
 from view.BuddyIcon import BuddyIcon
-import conf
 
 class ActivityView(SnowflakeBox):
 	def __init__(self, shell, menu_shell, model):
@@ -52,10 +51,8 @@ class ActivityView(SnowflakeBox):
 		del self._icons[name]
 
 	def _clicked_cb(self, item):
-		registry = conf.get_activity_registry()
-		default_type = self._model.get_service().get_type()
-		bundle = registry.get_activity_from_type(default_type)
-		self._shell.join_activity(bundle.get_id(), self._model.get_id())
+		bundle_id = self._model.get_service().get_type()
+		self._shell.join_activity(bundle_id, self._model.get_id())
 
 class MeshBox(SpreadBox):
 	def __init__(self, shell, menu_shell):

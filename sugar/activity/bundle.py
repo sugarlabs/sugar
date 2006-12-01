@@ -84,7 +84,3 @@ class Bundle:
 	def get_show_launcher(self):
 		"""Get whether there should be a visible launcher for the activity"""
 		return self._show_launcher
-
-	# Compatibility with the old activity registry, remove after BTest-1
-	def get_id(self):
-		return self._service_name
