@@ -20,20 +20,9 @@ import sha
 import random
 import binascii
 import string
-
-import gobject
-
-class GObjectSingletonMeta(gobject.GObjectMeta):
-    """GObject Singleton Metaclass"""
-
-    def __init__(klass, name, bases, dict):
-        gobject.GObjectMeta.__init__(klass, name, bases, dict)
-        klass.__instance = None
-
-    def __call__(klass, *args, **kwargs):
-        if klass.__instance is None:
-            klass.__instance = gobject.GObjectMeta.__call__(klass, *args, **kwargs)
-        return klass.__instance
+import os
+from ConfigParser import ConfigParser
+from ConfigParser import NoOptionError
 
 def printable_hash(in_hash):
 	"""Convert binary hash data into printable characters."""
@@ -68,3 +57,18 @@ def validate_activity_id(actid):
 		return False
 	return True
 
+class _ServiceParser(ConfigParser):
+	def optionxform(self, option):
+		return option
+
+def write_service(name, bin, path):
+	service_cp = _ServiceParser()
+	section = 'D-BUS Service'	
+	service_cp.add_section(section)
+	service_cp.set(section, 'Name', name)
+	service_cp.set(section, 'Exec', bin)
+
+	dest_filename = os.path.join(path, name + '.service')
+	fileobject = open(dest_filename, 'w')
+	service_cp.write(fileobject)
+	fileobject.close()

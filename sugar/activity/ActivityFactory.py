@@ -30,10 +30,6 @@ def get_path(activity_name):
 	"""Returns the activity path"""
 	return '/' + activity_name.replace('.', '/')
 
-def _get_factory(activity_name):
-	"""Returns the activity factory"""
-	return activity_name + '.Factory'
-
 class ActivityFactory(dbus.service.Object):
 	"""Dbus service that takes care of creating new instances of an activity"""
 
@@ -55,7 +51,7 @@ class ActivityFactory(dbus.service.Object):
 		self._constructor = getattr(module, class_name)
 	
 		bus = dbus.SessionBus()
-		factory = _get_factory(activity_type)
+		factory = activity_type
 		bus_name = dbus.service.BusName(factory, bus = bus) 
 		dbus.service.Object.__init__(self, bus_name, get_path(factory))
 
@@ -82,7 +78,7 @@ def create(activity_name):
 	"""Create a new activity from his name."""
 	bus = dbus.SessionBus()
 
-	factory_name = _get_factory(activity_name)
+	factory_name = activity_name
 	factory_path = get_path(factory_name) 
 
 	proxy_obj = bus.get_object(factory_name, factory_path)

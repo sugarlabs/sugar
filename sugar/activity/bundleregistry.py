@@ -3,10 +3,7 @@ from ConfigParser import ConfigParser
 
 from sugar.activity.bundle import Bundle
 from sugar import env
-
-class _ServiceParser(ConfigParser):
-	def optionxform(self, option):
-		return option
+from sugar import util
 
 class _ServiceManager(object):
 	def __init__(self):
@@ -15,24 +12,10 @@ class _ServiceManager(object):
 	def add(self, bundle):
 		name = bundle.get_service_name()
 
-		service_cp = _ServiceParser()
-
-		section = 'D-BUS Service'
-		service_cp.add_section(section)
-
-		# Compatibility with the old activity registry, remove after BTest-1
-		# service_cp.set(section, 'Name', name)
-		service_cp.set(section, 'Name', name + '.Factory')
-
-		# FIXME total hack
 		full_exec = env.get_shell_bin_dir() + '/' + bundle.get_exec()
 		full_exec += ' ' + bundle.get_path()
-		service_cp.set(section, 'Exec', full_exec)
 
-		dest = os.path.join(self._path, name + '.service')
-		fileobject = open(dest, 'w')
-		service_cp.write(fileobject)
-		fileobject.close()
+		util.write_service(name, full_exec, self._path)
 
 class BundleRegistry:
 	"""Service that tracks the available activity bundles"""

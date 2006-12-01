@@ -28,7 +28,7 @@ else:
 	sourcedir = None
 
 from sugar import env
-from sugar import setup
+from sugar import util
 
 if sourcedir:
 	if os.environ.has_key('PYTHONPATH'):
@@ -50,13 +50,13 @@ if sourcedir:
 
 	bin = os.path.join(sourcedir,
 					  'services/presence/sugar-presence-service')
-	setup.write_service('org.laptop.Presence', bin,
-						env.get_user_service_dir())	
+	util.write_service('org.laptop.Presence', bin,
+					   env.get_user_service_dir())	
 							
 	bin = os.path.join(sourcedir,
 					  'services/clipboard/sugar-clipboard')
-	setup.write_service('org.laptop.Clipboard', bin,
-						env.get_user_service_dir())
+	util.write_service('org.laptop.Clipboard', bin,
+					   env.get_user_service_dir())
 
 from sugar.emulator import Emulator
 
