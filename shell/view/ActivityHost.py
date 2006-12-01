@@ -17,7 +17,6 @@
 import gtk
 import dbus
 
-import conf
 from sugar import profile
 from sugar.activity import Activity
 from sugar.presence import PresenceService

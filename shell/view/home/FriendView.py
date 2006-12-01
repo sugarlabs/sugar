@@ -21,15 +21,12 @@ from view.BuddyIcon import BuddyIcon
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import style
 from sugar.presence import PresenceService
-import conf
-
 
 class FriendView(hippo.CanvasBox):
 	def __init__(self, shell, menu_shell, buddy, **kwargs):
 		hippo.CanvasBox.__init__(self, **kwargs)
 
 		self._pservice = PresenceService.get_instance()
-		self._activity_registry = shell.get_model().get_registry()
 
 		self._buddy = buddy
 		self._buddy_icon = BuddyIcon(shell, menu_shell, buddy)
@@ -52,8 +49,9 @@ class FriendView(hippo.CanvasBox):
 		# FIXME: do something better here; we probably need to use "flagship"
 		# services like mDNS where activities default services are marked
 		# somehow.
+		activity_registry = shell.get_model().get_bundle_registry()
 		for serv in activity.get_services():
-			bundle = self._activity_registry.get_bundle(serv.get_type())
+			bundle = activity_registry.get_bundle(serv.get_type())
 			if bundle:
 				return bundle.get_icon()
 		return None

@@ -16,7 +16,6 @@
 
 import gobject
 
-import conf
 from sugar.graphics.iconcolor import IconColor
 from sugar.presence import PresenceService
 from model.BuddyModel import BuddyModel
