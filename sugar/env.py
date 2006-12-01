@@ -63,15 +63,3 @@ def get_data_dirs():
 		return os.environ['XDG_DATA_DIRS'].split(':')
 	else:
 		return [ '/usr/local/share/', '/usr/share/' ]
-
-_dbus_version = None
-def get_dbus_version():
-	global _dbus_version
-	if _dbus_version == None:
-		f = os.popen('dbus-daemon --version')
-		version_line = f.readline()
-		if version_line:
-			splitted_line = version_line.split()
-			_dbus_version = splitted_line[len(splitted_line) - 1]
-		f.close()
-	return _dbus_version
