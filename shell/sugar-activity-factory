@@ -32,9 +32,6 @@ dbus.glib.threads_init()
 
 from sugar import logger
 from sugar import env
-
-sys.path.insert(0, env.get_activities_dir())
-
 from sugar.activity import ActivityFactory
 
 logger.start(sys.argv[1])

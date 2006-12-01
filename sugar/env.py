@@ -42,12 +42,6 @@ def get_profile_path():
 def get_data_dir():
 	return sugar_data_dir
 
-def get_activities_dir():
-	return sugar_activities_dir
-
-def get_activity_info_dir():
-	return sugar_activity_info_dir
-
 def get_services_dir():
 	return sugar_services_dir
 
