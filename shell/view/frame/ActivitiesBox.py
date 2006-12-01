@@ -17,7 +17,6 @@
 import hippo
 import logging
 
-import conf
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.presence import PresenceService
 from sugar.graphics import style
@@ -58,11 +57,6 @@ class ActivitiesBox(hippo.CanvasBox):
 		self._shell_model = self._shell.get_model() 
 		self._invite_to_item = {}
 		self._invites = self._shell_model.get_invites()
-
-		registry = conf.get_activity_registry()
-		for activity in registry.list_activities():
-			if activity.get_show_launcher():
-				self.add_activity(activity)
 
 		for bundle in self._shell_model.get_bundle_registry():
 			if bundle.get_show_launcher():
