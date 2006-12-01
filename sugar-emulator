@@ -48,19 +48,15 @@ if sourcedir:
 	else:
 		os.environ['PATH'] = bin_path
 
-	source = os.path.join(sourcedir, 'activities')
-	runner = os.path.join(sourcedir, 'shell/sugar-activity-factory')
-	setup.setup_activities(source, env.get_activity_info_dir(), runner)
-		
 	bin = os.path.join(sourcedir,
 					  'services/presence/sugar-presence-service')
 	setup.write_service('org.laptop.Presence', bin,
-						env.get_activity_info_dir())	
+						env.get_user_service_dir())	
 							
 	bin = os.path.join(sourcedir,
 					  'services/clipboard/sugar-clipboard')
 	setup.write_service('org.laptop.Clipboard', bin,
-						env.get_activity_info_dir())
+						env.get_user_service_dir())
 
 from sugar.emulator import Emulator
 
@@ -76,7 +72,4 @@ for i in range(1, len(sys.argv)):
 emulator = Emulator(fullscreen)
 emulator.start()
 
-dbus_config = env.get_dbus_config()
-
-os.execlp('dbus-launch', 'dbus-launch', '--exit-with-session',
-		  '--config-file=%s' % dbus_config, program)
+os.execlp('dbus-launch', 'dbus-launch', '--exit-with-session', program)

@@ -51,9 +51,6 @@ def get_activity_info_dir():
 def get_services_dir():
 	return sugar_services_dir
 
-def get_dbus_config():
-	return sugar_dbus_config
-
 def get_shell_bin_dir():
 	return sugar_shell_bin_dir
 
@@ -63,3 +60,9 @@ def get_data_dirs():
 		return os.environ['XDG_DATA_DIRS'].split(':')
 	else:
 		return [ '/usr/local/share/', '/usr/share/' ]
+
+def get_user_service_dir():
+	service_dir = os.path.expanduser('~/.local/share/dbus-1/services')
+	if not os.path.isdir(service_dir):
+		os.makedirs(service_dir)
+	return service_dir

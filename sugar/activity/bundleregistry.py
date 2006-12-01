@@ -10,9 +10,7 @@ class _ServiceParser(ConfigParser):
 
 class _ServiceManager(object):
 	def __init__(self):
-		self._path = os.path.expanduser('~/.local/share/dbus-1/services')
-		if not os.path.isdir(self._path):
-			os.makedirs(self._path)
+		self._path = env.get_user_service_dir()
 
 	def add(self, bundle):
 		name = bundle.get_service_name()
