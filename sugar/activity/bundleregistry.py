@@ -12,6 +12,7 @@ class _ServiceManager(object):
 	def add(self, bundle):
 		name = bundle.get_service_name()
 
+		# FIXME evil hack. Probably need to fix Exec spec
 		full_exec = env.get_shell_bin_dir() + '/' + bundle.get_exec()
 		full_exec += ' ' + bundle.get_path()
 
