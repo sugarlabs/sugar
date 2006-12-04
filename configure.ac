@@ -60,7 +60,6 @@ services/presence/Makefile
 services/nm/Makefile
 services/clipboard/Makefile
 shell/Makefile
-shell/conf/Makefile
 shell/data/Makefile
 shell/view/Makefile
 shell/view/home/Makefile
