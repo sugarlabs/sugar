@@ -41,6 +41,12 @@ class _GitFileList(list):
             if not filename.startswith('.'):
                 self.append(filename)
         f.close()
+        
+class _ManifestFileList(list):
+    def __init__(self):
+        f = open('MANIFEST-OLPC','r')
+        for line in f.readlines():
+            self.append(line[:-1])
 
 def _extract_bundle(source_file, dest_dir):
         if not os.path.exists(dest_dir):
@@ -82,6 +88,10 @@ def _get_package_name():
     bundle = Bundle(_get_source_path())
     zipname = '%s-%d.xo' % (bundle.get_name(), bundle.get_activity_version())
     return zipname
+    
+def _get_bundle_name():
+    bundle = Bundle(_get_source_path())
+    return bundle.get_name()
 
 def _delete_backups(arg, dirname, names):
     for name in names:
@@ -108,18 +118,24 @@ def cmd_dev():
             print 'ERROR - A bundle with the same name is already installed.'    
 
 def cmd_dist():
-    if os.path.isdir('.git'):
-        file_list = _GitFileList()
-    elif os.path.isdir('.svn'):
-        file_list = _SvnFileList()
-    else:
-        print 'ERROR - The command works only with git or svn repositories.'
+    try:
+        os.stat('MANIFEST-OLPC')
+        file_list = _ManifestFileList()
+    except:
+        if os.path.isdir('.git'):
+            file_list = _GitFileList()
+        elif os.path.isdir('.svn'):
+            file_list = _SvnFileList()
+        else:
+            print 'ERROR - The command works only with git or svn\
+repositories, or MANIFEST-OLPC file lists.'
+            return
 
     zipname = _get_package_name()
     bundle_zip = zipfile.ZipFile(zipname, 'w', zipfile.ZIP_DEFLATED)
     
     for filename in file_list:
-        arcname = os.path.join(_get_bundle_dir(), filename)
+        arcname = os.path.join(_get_bundle_name()+'.activity', filename)
         bundle_zip.write(filename, arcname)
 
     bundle_zip.close()
@@ -154,3 +170,6 @@ def start():
         cmd_clean()
     else:
         cmd_help()
+        
+if __name__ == '__main__':
+    start()
