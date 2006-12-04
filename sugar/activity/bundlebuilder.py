@@ -135,7 +135,7 @@ repositories, or MANIFEST-OLPC file lists.'
     bundle_zip = zipfile.ZipFile(zipname, 'w', zipfile.ZIP_DEFLATED)
     
     for filename in file_list:
-        arcname = os.path.join(_get_bundle_name()+'.activity', filename)
+        arcname = os.path.join(_get_bundle_name() + '.activity', filename)
         bundle_zip.write(filename, arcname)
 
     bundle_zip.close()
