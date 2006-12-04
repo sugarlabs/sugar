@@ -437,7 +437,7 @@ class Service(gobject.GObject):
             raise ValueError("Service was not registered by requesting process!")
         if not self._avahi_entry_group:
             raise ValueError("Service was not registered by requesting process!")
-         self._avahi_entry_group.Free()
+        self._avahi_entry_group.Free()
         del self._avahi_entry_group
         self._avahi_entry_group = None
 

@@ -72,7 +72,7 @@ class WEPKeyDialog(gtk.Dialog):
                 is_hex = False
 
         valid_len = (len(key) == 10 or len(key) == 26)
-         self.set_response_sensitive(gtk.RESPONSE_OK, is_hex and valid_len)
+        self.set_response_sensitive(gtk.RESPONSE_OK, is_hex and valid_len)
 
 if __name__ == "__main__":
     dialog = WEPKeyDialog()

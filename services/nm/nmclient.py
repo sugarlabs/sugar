@@ -755,7 +755,7 @@ class NMClientApp:
         if iface == NM_IFACE and mem in self._sig_handlers.keys():
             return
 
-         logging.debug('Caught signal %s.%s' % (dbus_message.get_interface(), mem))
+        logging.debug('Caught signal %s.%s' % (dbus_message.get_interface(), mem))
         for arg in args:
             logging.debug('        ' + str(arg))
 
