@@ -26,76 +26,76 @@ import gobject
 from sugar import env
 
 class LogBuffer(gtk.TextBuffer):
-	def __init__(self, logfile):
-		gtk.TextBuffer.__init__(self)
+    def __init__(self, logfile):
+        gtk.TextBuffer.__init__(self)
 
-		self._logfile = logfile
-		self._pos = 0
+        self._logfile = logfile
+        self._pos = 0
 
-		self.update()
+        self.update()
 
-	def update(self):
-		f = open(self._logfile, 'r')
+    def update(self):
+        f = open(self._logfile, 'r')
 
-		f.seek(self._pos)
-		self.insert(self.get_end_iter(), f.read())
-		self._pos = f.tell()
+        f.seek(self._pos)
+        self.insert(self.get_end_iter(), f.read())
+        self._pos = f.tell()
 
-		f.close()
+        f.close()
 
-		return True
+        return True
 
 class LogView(gtk.ScrolledWindow):
-	def __init__(self, model):
-		gtk.ScrolledWindow.__init__(self)
+    def __init__(self, model):
+        gtk.ScrolledWindow.__init__(self)
 
-		self.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 
-		textview = gtk.TextView(model)
-		textview.set_wrap_mode(gtk.WRAP_WORD)
-		textview.set_editable(False)
+        textview = gtk.TextView(model)
+        textview.set_wrap_mode(gtk.WRAP_WORD)
+        textview.set_editable(False)
 
-		self.add(textview)
-		textview.show()
+        self.add(textview)
+        textview.show()
 
 class MultiLogView(gtk.Notebook):
-	def __init__(self, path):
-		gtk.Notebook.__init__(self)
+    def __init__(self, path):
+        gtk.Notebook.__init__(self)
 
-		self._logs_path = path
-		self._pages = {}
+        self._logs_path = path
+        self._pages = {}
 
-		self._update()
+        self._update()
 
-		gobject.timeout_add(1000, self._update)
+        gobject.timeout_add(1000, self._update)
 
-	def _add_page(self, logfile):
-		full_log_path = os.path.join(self._logs_path, logfile)
-		model = LogBuffer(full_log_path)
+    def _add_page(self, logfile):
+        full_log_path = os.path.join(self._logs_path, logfile)
+        model = LogBuffer(full_log_path)
 
-		view = LogView(model)
-		self.append_page(view, gtk.Label(logfile))
-		view.show()
+        view = LogView(model)
+        self.append_page(view, gtk.Label(logfile))
+        view.show()
 
-		self._pages[logfile] = model
+        self._pages[logfile] = model
 
-	def _update(self):
-		if not os.path.isdir(self._logs_path):
-			return True
+    def _update(self):
+        if not os.path.isdir(self._logs_path):
+            return True
 
-		for logfile in os.listdir(self._logs_path):
-			if self._pages.has_key(logfile):
-				self._pages[logfile].update()
-			else:
-				self._add_page(logfile)
+        for logfile in os.listdir(self._logs_path):
+            if self._pages.has_key(logfile):
+                self._pages[logfile].update()
+            else:
+                self._add_page(logfile)
 
-		return True
+        return True
 
 class Interface:
 
-	def __init__(self):
-		path = os.path.join(env.get_profile_path(), 'logs')
-		viewer = MultiLogView(path)
-		viewer.show()
-		self.widget = viewer
-		
+    def __init__(self):
+        path = os.path.join(env.get_profile_path(), 'logs')
+        viewer = MultiLogView(path)
+        viewer.show()
+        self.widget = viewer
+        

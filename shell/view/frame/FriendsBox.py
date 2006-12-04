@@ -24,85 +24,85 @@ from view.BuddyIcon import BuddyIcon
 from model.BuddyModel import BuddyModel
 
 class FriendsBox(hippo.CanvasBox):
-	def __init__(self, shell, menu_shell):
-		hippo.CanvasBox.__init__(self)
-		self._shell = shell
-		self._menu_shell = menu_shell
-		self._activity_ps = None
-		self._joined_hid = -1
-		self._left_hid = -1
-		self._buddies = {}
+    def __init__(self, shell, menu_shell):
+        hippo.CanvasBox.__init__(self)
+        self._shell = shell
+        self._menu_shell = menu_shell
+        self._activity_ps = None
+        self._joined_hid = -1
+        self._left_hid = -1
+        self._buddies = {}
 
-		self._pservice = PresenceService.get_instance()
-		self._pservice.connect('activity-appeared',
-							   self.__activity_appeared_cb)
+        self._pservice = PresenceService.get_instance()
+        self._pservice.connect('activity-appeared',
+                               self.__activity_appeared_cb)
 
-		# Add initial activities the PS knows about
-		for activity in self._pservice.get_activities():
-			self.__activity_appeared_cb(self._pservice, activity)
+        # Add initial activities the PS knows about
+        for activity in self._pservice.get_activities():
+            self.__activity_appeared_cb(self._pservice, activity)
 
-		shell.connect('activity-changed', self.__activity_changed_cb)
+        shell.connect('activity-changed', self.__activity_changed_cb)
 
-	def add_buddy(self, buddy):
-		if self._buddies.has_key(buddy.get_name()):
-			return
+    def add_buddy(self, buddy):
+        if self._buddies.has_key(buddy.get_name()):
+            return
 
-		model = BuddyModel(buddy=buddy)
-		icon = BuddyIcon(self._shell, self._menu_shell, model)
-		style.apply_stylesheet(icon, 'frame.BuddyIcon')
-		self.append(icon)
+        model = BuddyModel(buddy=buddy)
+        icon = BuddyIcon(self._shell, self._menu_shell, model)
+        style.apply_stylesheet(icon, 'frame.BuddyIcon')
+        self.append(icon)
 
-		self._buddies[buddy.get_name()] = icon
+        self._buddies[buddy.get_name()] = icon
 
-	def remove_buddy(self, buddy):
-		if not self._buddies.has_key(buddy.get_name()):
-			return
+    def remove_buddy(self, buddy):
+        if not self._buddies.has_key(buddy.get_name()):
+            return
 
-		self.remove(self._buddies[buddy.get_name()])
+        self.remove(self._buddies[buddy.get_name()])
 
-	def clear(self):
-		for item in self.get_children():
-			self.remove(item)
-		self._buddies = {}
+    def clear(self):
+        for item in self.get_children():
+            self.remove(item)
+        self._buddies = {}
 
-	def __activity_appeared_cb(self, pservice, activity_ps):
-		activity = self._shell.get_current_activity()
-		if activity and activity_ps.get_id() == activity.get_id():
-			self._set_activity_ps(activity_ps)
+    def __activity_appeared_cb(self, pservice, activity_ps):
+        activity = self._shell.get_current_activity()
+        if activity and activity_ps.get_id() == activity.get_id():
+            self._set_activity_ps(activity_ps)
 
-	def _set_activity_ps(self, activity_ps):
-		if self._activity_ps == activity_ps:
-			return
+    def _set_activity_ps(self, activity_ps):
+        if self._activity_ps == activity_ps:
+            return
 
-		if self._joined_hid > 0:
-			self._activity_ps.disconnect(self._joined_hid)
-			self._joined_hid = -1
-		if self._left_hid > 0:
-			self._activity_ps.disconnect(self._left_hid)
-			self._left_hid = -1
+        if self._joined_hid > 0:
+            self._activity_ps.disconnect(self._joined_hid)
+            self._joined_hid = -1
+        if self._left_hid > 0:
+            self._activity_ps.disconnect(self._left_hid)
+            self._left_hid = -1
 
-		self._activity_ps = activity_ps
+        self._activity_ps = activity_ps
 
-		self.clear()
+        self.clear()
 
-		if activity_ps != None:
-			for buddy in activity_ps.get_joined_buddies():
-				self.add_buddy(buddy)
+        if activity_ps != None:
+            for buddy in activity_ps.get_joined_buddies():
+                self.add_buddy(buddy)
 
-			self._joined_hid = activity_ps.connect(
-							'buddy-joined', self.__buddy_joined_cb)
-			self._left_hid = activity_ps.connect(
-							'buddy-left', self.__buddy_left_cb)
+            self._joined_hid = activity_ps.connect(
+                            'buddy-joined', self.__buddy_joined_cb)
+            self._left_hid = activity_ps.connect(
+                            'buddy-left', self.__buddy_left_cb)
 
-	def __activity_changed_cb(self, group, activity):
-		if activity:
-			ps = self._pservice.get_activity(activity.get_id())
-			self._set_activity_ps(ps)
-		else:
-			self._set_activity_ps(None)
+    def __activity_changed_cb(self, group, activity):
+        if activity:
+            ps = self._pservice.get_activity(activity.get_id())
+            self._set_activity_ps(ps)
+        else:
+            self._set_activity_ps(None)
 
-	def __buddy_joined_cb(self, activity, buddy):
-		self.add_buddy(buddy)
+    def __buddy_joined_cb(self, activity, buddy):
+        self.add_buddy(buddy)
 
-	def __buddy_left_cb(self, activity, buddy):
-		self.remove_buddy(buddy)
+    def __buddy_left_cb(self, activity, buddy):
+        self.remove_buddy(buddy)

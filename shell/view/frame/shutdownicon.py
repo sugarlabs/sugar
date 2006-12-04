@@ -21,24 +21,24 @@ from sugar.graphics.menu import Menu
 from sugar.graphics import style
 
 class ShutdownIcon(MenuIcon):
-	ACTION_SHUTDOWN = 2
+    ACTION_SHUTDOWN = 2
 
-	def __init__(self, menu_shell):
-		MenuIcon.__init__(self, menu_shell, icon_name='stock-close')
-		style.apply_stylesheet(self, 'menu.ActionIcon')
+    def __init__(self, menu_shell):
+        MenuIcon.__init__(self, menu_shell, icon_name='stock-close')
+        style.apply_stylesheet(self, 'menu.ActionIcon')
 
-	def create_menu(self):
-		menu = Menu()
-		menu.add_item('Shut Down', ShutdownIcon.ACTION_SHUTDOWN)
-		menu.connect('action', self._action_cb)
-		return menu
+    def create_menu(self):
+        menu = Menu()
+        menu.add_item('Shut Down', ShutdownIcon.ACTION_SHUTDOWN)
+        menu.connect('action', self._action_cb)
+        return menu
 
-	def _action_cb(self, menu, action):
-		self.popdown()
+    def _action_cb(self, menu, action):
+        self.popdown()
 
-		if action == ShutdownIcon.ACTION_SHUTDOWN:
-			bus = dbus.SystemBus()
-			proxy = bus.get_object('org.freedesktop.Hal',
-								   '/org/freedesktop/Hal/devices/computer')
-			mgr = dbus.Interface(proxy, 'org.freedesktop.Hal.Device.SystemPowerManagement')
-			mgr.Shutdown()
+        if action == ShutdownIcon.ACTION_SHUTDOWN:
+            bus = dbus.SystemBus()
+            proxy = bus.get_object('org.freedesktop.Hal',
+                                   '/org/freedesktop/Hal/devices/computer')
+            mgr = dbus.Interface(proxy, 'org.freedesktop.Hal.Device.SystemPowerManagement')
+            mgr.Shutdown()

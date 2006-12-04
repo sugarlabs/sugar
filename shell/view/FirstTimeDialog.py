@@ -24,47 +24,47 @@ from sugar.graphics.iconcolor import IconColor
 from sugar import env
 
 class FirstTimeDialog(gtk.Dialog):
-	def __init__(self):
-		gtk.Dialog.__init__(self)
+    def __init__(self):
+        gtk.Dialog.__init__(self)
 
-		label = gtk.Label(_('Nick Name:'))
-		label.set_alignment(0.0, 0.5)
-		self.vbox.pack_start(label)
-		label.show()
+        label = gtk.Label(_('Nick Name:'))
+        label.set_alignment(0.0, 0.5)
+        self.vbox.pack_start(label)
+        label.show()
 
-		self._entry = gtk.Entry()
-		self._entry.connect('changed', self._entry_changed_cb)
-		self._entry.connect('activate', self._entry_activated_cb)
-		self.vbox.pack_start(self._entry)
-		self._entry.show()
+        self._entry = gtk.Entry()
+        self._entry.connect('changed', self._entry_changed_cb)
+        self._entry.connect('activate', self._entry_activated_cb)
+        self.vbox.pack_start(self._entry)
+        self._entry.show()
 
-		self._ok = gtk.Button(None, gtk.STOCK_OK)
-		self._ok.set_sensitive(False)
-		self.vbox.pack_start(self._ok)
-		self._ok.connect('clicked', self._ok_button_clicked_cb)
-		self._ok.show()
+        self._ok = gtk.Button(None, gtk.STOCK_OK)
+        self._ok.set_sensitive(False)
+        self.vbox.pack_start(self._ok)
+        self._ok.connect('clicked', self._ok_button_clicked_cb)
+        self._ok.show()
 
-	def _entry_changed_cb(self, entry):
-		valid = (len(entry.get_text()) > 0)
-		self._ok.set_sensitive(valid)
+    def _entry_changed_cb(self, entry):
+        valid = (len(entry.get_text()) > 0)
+        self._ok.set_sensitive(valid)
 
-	def _entry_activated_cb(self, entry):
-		self._create_buddy_section()
-		
-	def _ok_button_clicked_cb(self, button):
-		self._create_buddy_section()
-		
-	def _create_buddy_section(self):
-		cp = ConfigParser()
+    def _entry_activated_cb(self, entry):
+        self._create_buddy_section()
+        
+    def _ok_button_clicked_cb(self, button):
+        self._create_buddy_section()
+        
+    def _create_buddy_section(self):
+        cp = ConfigParser()
 
-		section = 'Buddy'	
-		cp.add_section(section)
-		cp.set(section, 'NickName', self._entry.get_text())
-		cp.set(section, 'Color', IconColor().to_string())
+        section = 'Buddy'    
+        cp.add_section(section)
+        cp.set(section, 'NickName', self._entry.get_text())
+        cp.set(section, 'Color', IconColor().to_string())
 
-		config_path = os.path.join(env.get_profile_path(), 'config')
-		fileobject = open(config_path, 'w')
-		cp.write(fileobject)
-		fileobject.close()
+        config_path = os.path.join(env.get_profile_path(), 'config')
+        fileobject = open(config_path, 'w')
+        cp.write(fileobject)
+        fileobject.close()
 
-		self.destroy()
+        self.destroy()

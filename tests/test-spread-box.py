@@ -31,13 +31,13 @@ from sugar.graphics.iconcolor import IconColor
 from sugar.graphics.canvasicon import CanvasIcon
 
 def _create_icon():
-	color = IconColor()
+    color = IconColor()
 
-	icon = CanvasIcon(size=100, color=color,
-					  icon_name='stock-buddy')
-	box.add_item(icon)
+    icon = CanvasIcon(size=100, color=color,
+                      icon_name='stock-buddy')
+    box.add_item(icon)
 
-	return (len(box.get_children()) < 20)
+    return (len(box.get_children()) < 20)
 
 window = gtk.Window()
 window.connect("destroy", lambda w: gtk.main_quit())

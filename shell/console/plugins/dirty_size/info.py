@@ -9,12 +9,12 @@
 
 def plg_on_top_data_refresh(self, ppinfo):
 
-	dirty_sizes = get_dirty(self, ppinfo['pid'])
-	
-	# memhis need an array 
-	return [dirty_sizes['private']]
+    dirty_sizes = get_dirty(self, ppinfo['pid'])
+    
+    # memhis need an array 
+    return [dirty_sizes['private']]
 
 def get_dirty(pself, pid):
-	ProcAnalysis = pself.INTERNALS['Plg'].proc_analysis(pid)
+    ProcAnalysis = pself.INTERNALS['Plg'].proc_analysis(pid)
 
-	return ProcAnalysis.DirtyRSS()
+    return ProcAnalysis.DirtyRSS()

@@ -32,17 +32,17 @@ from sugar.graphics.iconcolor import IconColor
 from sugar.graphics.canvasicon import CanvasIcon
 
 def _create_snowflake(parent, children):
-	color = IconColor()
-	icon = CanvasIcon(size=40, color=color,
-					  icon_name='activity-groupchat')
-	parent.append(icon, hippo.PACK_FIXED)
-	parent.set_root(icon)
+    color = IconColor()
+    icon = CanvasIcon(size=40, color=color,
+                      icon_name='activity-groupchat')
+    parent.append(icon, hippo.PACK_FIXED)
+    parent.set_root(icon)
 
-	for i in range(0, children):
-		color = IconColor()
-		icon = CanvasIcon(size=60, color=color,
-						  icon_name='stock-buddy')
-		parent.append(icon, hippo.PACK_FIXED)
+    for i in range(0, children):
+        color = IconColor()
+        icon = CanvasIcon(size=60, color=color,
+                          icon_name='stock-buddy')
+        parent.append(icon, hippo.PACK_FIXED)
 
 window = gtk.Window()
 window.set_default_size(gtk.gdk.screen_width(), gtk.gdk.screen_height())

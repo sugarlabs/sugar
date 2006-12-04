@@ -21,23 +21,23 @@ DCON_MANAGER_SERVICE = 'org.laptop.DCONManager'
 DCON_MANAGER_OBJECT_PATH = '/org/laptop/DCONManager'
 
 class DCONManager(object):
-	COLOR_MODE = 0
-	BLACK_AND_WHITE_MODE = 1
+    COLOR_MODE = 0
+    BLACK_AND_WHITE_MODE = 1
 
-	def __init__(self):
-		bus = dbus.SystemBus()
-		proxy = bus.get_object(DCON_MANAGER_SERVICE, DCON_MANAGER_OBJECT_PATH)
-		self._service = dbus.Interface(proxy, DCON_MANAGER_INTERFACE)
+    def __init__(self):
+        bus = dbus.SystemBus()
+        proxy = bus.get_object(DCON_MANAGER_SERVICE, DCON_MANAGER_OBJECT_PATH)
+        self._service = dbus.Interface(proxy, DCON_MANAGER_INTERFACE)
 
-	def set_mode(self, mode):
-		self._service.set_mode(mode)
+    def set_mode(self, mode):
+        self._service.set_mode(mode)
 
-	def increase_brightness(self):
-		level = self._service.get_backlight_level()
-		if level >= 0:
-			self._service.set_backlight_level(level + 1)
+    def increase_brightness(self):
+        level = self._service.get_backlight_level()
+        if level >= 0:
+            self._service.set_backlight_level(level + 1)
 
-	def decrease_brightness(self):
-		level = self._service.get_backlight_level()
-		if level >= 0:
-			self._service.set_backlight_level(level - 1)
+    def decrease_brightness(self):
+        level = self._service.get_backlight_level()
+        if level >= 0:
+            self._service.set_backlight_level(level - 1)

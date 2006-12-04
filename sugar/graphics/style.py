@@ -31,21 +31,21 @@ large_icon_size = standard_icon_size * 2.0
 xlarge_icon_size = standard_icon_size * 3.0
 
 def load_stylesheet(module):
-	for objname in dir(module):
-		if not objname.startswith('_'):
-			obj = getattr(module, objname)	
-			if isinstance(obj, dict):
-				register_stylesheet(objname.replace('_', '.'), obj)
+    for objname in dir(module):
+        if not objname.startswith('_'):
+            obj = getattr(module, objname)    
+            if isinstance(obj, dict):
+                register_stylesheet(objname.replace('_', '.'), obj)
 
 def register_stylesheet(name, style):
-	_styles[name] = style
+    _styles[name] = style
 
 def apply_stylesheet(item, stylesheet_name):
-	if _styles.has_key(stylesheet_name):
-		style_sheet = _styles[stylesheet_name]
-		for name in style_sheet.keys():
-			item.set_property(name, style_sheet[name])
+    if _styles.has_key(stylesheet_name):
+        style_sheet = _styles[stylesheet_name]
+        for name in style_sheet.keys():
+            item.set_property(name, style_sheet[name])
 
 def get_font_description(style, relative_size):
-	base_size = 18 * _screen_factor
-	return '%s %dpx' % (style, int(base_size * relative_size))
+    base_size = 18 * _screen_factor
+    return '%s %dpx' % (style, int(base_size * relative_size))

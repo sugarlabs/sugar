@@ -3,141 +3,141 @@ import vte
 import pango
 
 class Terminal(gtk.HBox):
-	def __init__(self):
-		gtk.HBox.__init__(self, False, 4)
+    def __init__(self):
+        gtk.HBox.__init__(self, False, 4)
 
-		self._vte = vte.Terminal()
-		self._configure_vte()
-		self._vte.set_size(30, 5)
-		self._vte.set_size_request(200, 450)
-		self._vte.show()
-		self.pack_start(self._vte)
-		
-		self._scrollbar = gtk.VScrollbar(self._vte.get_adjustment())
-		self._scrollbar.show()
-		self.pack_start(self._scrollbar, False, False, 0)
-		
-		self._vte.connect("child-exited", lambda term: term.fork_command())
+        self._vte = vte.Terminal()
+        self._configure_vte()
+        self._vte.set_size(30, 5)
+        self._vte.set_size_request(200, 450)
+        self._vte.show()
+        self.pack_start(self._vte)
+        
+        self._scrollbar = gtk.VScrollbar(self._vte.get_adjustment())
+        self._scrollbar.show()
+        self.pack_start(self._scrollbar, False, False, 0)
+        
+        self._vte.connect("child-exited", lambda term: term.fork_command())
 
-		self._vte.fork_command()
+        self._vte.fork_command()
 
-	def _configure_vte(self):
-		self._vte.set_font(pango.FontDescription('Monospace 10'))
-		self._vte.set_colors(gtk.gdk.color_parse ('#AAAAAA'),
-							gtk.gdk.color_parse ('#000000'),
-							[])
-		self._vte.set_cursor_blinks(False)
-		self._vte.set_audible_bell(False)
-		self._vte.set_scrollback_lines(100)
-		self._vte.set_allow_bold(True)
-		self._vte.set_scroll_on_keystroke(False)
-		self._vte.set_scroll_on_output(False)
-		self._vte.set_emulation('xterm')
-		self._vte.set_visible_bell(False)
+    def _configure_vte(self):
+        self._vte.set_font(pango.FontDescription('Monospace 10'))
+        self._vte.set_colors(gtk.gdk.color_parse ('#AAAAAA'),
+                            gtk.gdk.color_parse ('#000000'),
+                            [])
+        self._vte.set_cursor_blinks(False)
+        self._vte.set_audible_bell(False)
+        self._vte.set_scrollback_lines(100)
+        self._vte.set_allow_bold(True)
+        self._vte.set_scroll_on_keystroke(False)
+        self._vte.set_scroll_on_output(False)
+        self._vte.set_emulation('xterm')
+        self._vte.set_visible_bell(False)
 
-	def on_gconf_notification(self, client, cnxn_id, entry, what):
-		self.reconfigure_vte()
+    def on_gconf_notification(self, client, cnxn_id, entry, what):
+        self.reconfigure_vte()
 
-	def on_vte_button_press(self, term, event):
-		if event.button == 3:
-			self.do_popup(event)
-			return True
+    def on_vte_button_press(self, term, event):
+        if event.button == 3:
+            self.do_popup(event)
+            return True
 
-	def on_vte_popup_menu(self, term):
-		pass
+    def on_vte_popup_menu(self, term):
+        pass
 
 class Multiple:
-	
-	page_number = 0
-	
-	def __init__(self):
-		self.notebook = gtk.Notebook()
-		self.add_new_terminal()
-		
-		open_terminal = gtk.Button('Open a new terminal')
-		open_terminal.connect("clicked", self.add_new_terminal)
-		open_terminal.show()
-				
-		self.notebook.show()
-		
-		self.main_vbox = gtk.VBox(False, 3)
-		self.main_vbox.pack_start(open_terminal, True, True, 2)
-		self.main_vbox.pack_start(self.notebook, True, True, 2)
+    
+    page_number = 0
+    
+    def __init__(self):
+        self.notebook = gtk.Notebook()
+        self.add_new_terminal()
+        
+        open_terminal = gtk.Button('Open a new terminal')
+        open_terminal.connect("clicked", self.add_new_terminal)
+        open_terminal.show()
+                
+        self.notebook.show()
+        
+        self.main_vbox = gtk.VBox(False, 3)
+        self.main_vbox.pack_start(open_terminal, True, True, 2)
+        self.main_vbox.pack_start(self.notebook, True, True, 2)
 
-		self.main_vbox.show_all()
-	
-	# Remove a page from the notebook
-	def close_terminal(self, button, child):
-		page = self.notebook.page_num(child)
+        self.main_vbox.show_all()
+    
+    # Remove a page from the notebook
+    def close_terminal(self, button, child):
+        page = self.notebook.page_num(child)
 
-		if page != -1:
-			self.notebook.remove_page(page)
-		
-		
-		pages = self.notebook.get_n_pages()
-		if pages <= 0:
-			self.page_number = 0
-			self.add_new_terminal()
-			
-		# Need to refresh the widget --
-		# This forces the widget to redraw itself.
-		self.notebook.queue_draw_area(0, 0, -1, -1)
+        if page != -1:
+            self.notebook.remove_page(page)
+        
+        
+        pages = self.notebook.get_n_pages()
+        if pages <= 0:
+            self.page_number = 0
+            self.add_new_terminal()
+            
+        # Need to refresh the widget --
+        # This forces the widget to redraw itself.
+        self.notebook.queue_draw_area(0, 0, -1, -1)
 
-	def add_icon_to_button(self, button):
-		iconBox = gtk.HBox(False, 0)
-		image = gtk.Image()
-		image.set_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
-		gtk.Button.set_relief(button, gtk.RELIEF_NONE)
+    def add_icon_to_button(self, button):
+        iconBox = gtk.HBox(False, 0)
+        image = gtk.Image()
+        image.set_from_stock(gtk.STOCK_CLOSE, gtk.ICON_SIZE_MENU)
+        gtk.Button.set_relief(button, gtk.RELIEF_NONE)
 
-		settings = gtk.Widget.get_settings (button)
-		(w,h) = gtk.icon_size_lookup_for_settings (settings, gtk.ICON_SIZE_MENU)
-		gtk.Widget.set_size_request (button, w + 4, h + 4)
-		image.show()
-		iconBox.pack_start(image, True, False, 0)
-		button.add(iconBox)
-		iconBox.show()
+        settings = gtk.Widget.get_settings (button)
+        (w,h) = gtk.icon_size_lookup_for_settings (settings, gtk.ICON_SIZE_MENU)
+        gtk.Widget.set_size_request (button, w + 4, h + 4)
+        image.show()
+        iconBox.pack_start(image, True, False, 0)
+        button.add(iconBox)
+        iconBox.show()
 
-	def add_new_terminal(self, *arguments, **keywords):
-		self.page_number += 1
+    def add_new_terminal(self, *arguments, **keywords):
+        self.page_number += 1
 
-		terminal = Terminal()
-		terminal.show()
+        terminal = Terminal()
+        terminal.show()
 
-		eventBox = self.create_custom_tab("Term %d" % self.page_number, terminal)
-		self.notebook.append_page(terminal, eventBox)
+        eventBox = self.create_custom_tab("Term %d" % self.page_number, terminal)
+        self.notebook.append_page(terminal, eventBox)
 
-		# Set the new page
-		pages = gtk.Notebook.get_n_pages(self.notebook)
-		self.notebook.set_current_page(pages - 1)
-		return True
+        # Set the new page
+        pages = gtk.Notebook.get_n_pages(self.notebook)
+        self.notebook.set_current_page(pages - 1)
+        return True
 
-	def create_custom_tab(self, text, child):
-		eventBox = gtk.EventBox()
-		tabBox = gtk.HBox(False, 2)
-		tabLabel = gtk.Label(text)
+    def create_custom_tab(self, text, child):
+        eventBox = gtk.EventBox()
+        tabBox = gtk.HBox(False, 2)
+        tabLabel = gtk.Label(text)
 
-		tabButton = gtk.Button()
-		tabButton.connect('clicked', self.close_terminal, child)
+        tabButton = gtk.Button()
+        tabButton.connect('clicked', self.close_terminal, child)
 
-		# Add a picture on a button
-		self.add_icon_to_button(tabButton)
-		iconBox = gtk.HBox(False, 0)
+        # Add a picture on a button
+        self.add_icon_to_button(tabButton)
+        iconBox = gtk.HBox(False, 0)
 
-		eventBox.show()
-		tabButton.show()
-		tabLabel.show()
+        eventBox.show()
+        tabButton.show()
+        tabLabel.show()
 
-		tabBox.pack_start(tabLabel, False)
-		tabBox.pack_start(tabButton, False)
+        tabBox.pack_start(tabLabel, False)
+        tabBox.pack_start(tabButton, False)
 
-		tabBox.show_all()
-		eventBox.add(tabBox)
-		
-		return eventBox
+        tabBox.show_all()
+        eventBox.add(tabBox)
+        
+        return eventBox
 
 class Interface:
 
-	def __init__(self):
-		multiple = Multiple()
-		self.widget = multiple.main_vbox
-		
+    def __init__(self):
+        multiple = Multiple()
+        self.widget = multiple.main_vbox
+        

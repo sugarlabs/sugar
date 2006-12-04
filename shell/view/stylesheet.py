@@ -21,59 +21,59 @@ from sugar.graphics.iconcolor import IconColor
 from sugar.graphics import style
 
 frame_ActivityIcon = {
-	'color' : IconColor('white'),
-	'size'  : style.standard_icon_size
+    'color' : IconColor('white'),
+    'size'  : style.standard_icon_size
 }
 
 frame_ShutdownIcon = {
-	'size' : style.standard_icon_size
+    'size' : style.standard_icon_size
 }
 
 frame_OverlayIcon = {
-	'size' : style.standard_icon_size
+    'size' : style.standard_icon_size
 }
 
 frame_ZoomIcon = {
-	'size' : style.standard_icon_size
+    'size' : style.standard_icon_size
 }
 
 frame_BuddyIcon = {
-	'size' : style.standard_icon_size
+    'size' : style.standard_icon_size
 }
 
 home_MyIcon = {
-	'size' : style.xlarge_icon_size
+    'size' : style.xlarge_icon_size
 }
 
 ring_ActivityIcon = {
-	'size'  : style.medium_icon_size
+    'size'  : style.medium_icon_size
 }
 
 friends_MyIcon = {
-	'size' : style.large_icon_size
+    'size' : style.large_icon_size
 }
 
 friends_FriendIcon = {
-	'size' : style.large_icon_size
+    'size' : style.large_icon_size
 }
 
 friends_ActivityIcon = {
-	'size' : style.standard_icon_size
+    'size' : style.standard_icon_size
 }
 
 clipboard_bubble = {
-	'fill-color'	: 0x646464FF,
-	'stroke-color'	: 0x646464FF,
-	'progress-color': 0x333333FF,
-	'spacing'		: style.space_unit,
-	'padding'		: style.space_unit * 1.5
+    'fill-color'    : 0x646464FF,
+    'stroke-color'    : 0x646464FF,
+    'progress-color': 0x333333FF,
+    'spacing'        : style.space_unit,
+    'padding'        : style.space_unit * 1.5
 }
 
 clipboard_menu_item_title = {
-	'xalign': hippo.ALIGNMENT_START,
-	'padding-left': 5,
-	'color'	 : 0xFFFFFFFF,
-	'font'	 : style.get_font_description('Bold', 1.2)
+    'xalign': hippo.ALIGNMENT_START,
+    'padding-left': 5,
+    'color'     : 0xFFFFFFFF,
+    'font'     : style.get_font_description('Bold', 1.2)
 }
 
 style.register_stylesheet("clipboard.Bubble", clipboard_bubble)

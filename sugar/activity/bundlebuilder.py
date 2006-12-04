@@ -25,71 +25,71 @@ import shutil
 from sugar.activity.bundle import Bundle
 
 class _SvnFileList(list):
-	def __init__(self):
-		f = os.popen('svn list -R')
-		for line in f.readlines():
-			filename = line.strip()
-			if os.path.isfile(filename):
-				self.append(filename)
-		f.close()
+    def __init__(self):
+        f = os.popen('svn list -R')
+        for line in f.readlines():
+            filename = line.strip()
+            if os.path.isfile(filename):
+                self.append(filename)
+        f.close()
 
 class _GitFileList(list):
-	def __init__(self):
-		f = os.popen('git-ls-files')
-		for line in f.readlines():
-			filename = line.strip()
-			if not filename.startswith('.'):
-				self.append(filename)
-		f.close()
+    def __init__(self):
+        f = os.popen('git-ls-files')
+        for line in f.readlines():
+            filename = line.strip()
+            if not filename.startswith('.'):
+                self.append(filename)
+        f.close()
 
 def _extract_bundle(source_file, dest_dir):
-		if not os.path.exists(dest_dir):
-			os.mkdir(dest_dir)
+        if not os.path.exists(dest_dir):
+            os.mkdir(dest_dir)
 
-		zf = zipfile.ZipFile(source_file)
+        zf = zipfile.ZipFile(source_file)
 
-		for i, name in enumerate(zf.namelist()):
-			path = os.path.join(dest_dir, name)
-			
-			if not os.path.exists(os.path.dirname(path)):
-				os.makedirs(os.path.dirname(path))
+        for i, name in enumerate(zf.namelist()):
+            path = os.path.join(dest_dir, name)
+            
+            if not os.path.exists(os.path.dirname(path)):
+                os.makedirs(os.path.dirname(path))
 
-			outfile = open(path, 'wb')
-			outfile.write(zf.read(name))
-			outfile.flush()
-			outfile.close()
+            outfile = open(path, 'wb')
+            outfile.write(zf.read(name))
+            outfile.flush()
+            outfile.close()
 
 def _get_source_path():
-	return os.getcwd()
+    return os.getcwd()
 
 def _get_activities_path():
-	path = os.path.expanduser('~/Activities')
-	if not os.path.isdir(path):
-		os.mkdir(path)
-	return path
+    path = os.path.expanduser('~/Activities')
+    if not os.path.isdir(path):
+        os.mkdir(path)
+    return path
 
 def _get_bundle_dir():
-	bundle_name = os.path.basename(_get_source_path())
-	return bundle_name + '.activity'	
+    bundle_name = os.path.basename(_get_source_path())
+    return bundle_name + '.activity'    
 
 def _get_install_dir(prefix):
-	return os.path.join(prefix, 'share/activities')
+    return os.path.join(prefix, 'share/activities')
 
 def _get_bundle_path():
-	return os.path.join(_get_activities_path(), _get_bundle_dir())
+    return os.path.join(_get_activities_path(), _get_bundle_dir())
 
 def _get_package_name():
-	bundle = Bundle(_get_source_path())
-	zipname = '%s-%d.xo' % (bundle.get_name(), bundle.get_activity_version())
-	return zipname
+    bundle = Bundle(_get_source_path())
+    zipname = '%s-%d.xo' % (bundle.get_name(), bundle.get_activity_version())
+    return zipname
 
 def _delete_backups(arg, dirname, names):
-	for name in names:
-		if name.endswith('~') or name.endswith('pyc'):
-			os.remove(os.path.join(dirname, name))
+    for name in names:
+        if name.endswith('~') or name.endswith('pyc'):
+            os.remove(os.path.join(dirname, name))
 
 def cmd_help():
-	print 'Usage: \n\
+    print 'Usage: \n\
 setup.py dev     - setup for development \n\
 setup.py dist    - create a bundle package \n\
 setup.py install - install the bundle \n\
@@ -98,59 +98,59 @@ setup.py help    - print this message \n\
 '
 
 def cmd_dev():
-	bundle_path = get_bundle_path()
-	try:
-		os.symlink(_get_source_path(), bundle_path)
-	except OSError:
-		if os.path.islink(bundle_path):
-			print 'ERROR - The bundle has been already setup for development.'
-		else:
-			print 'ERROR - A bundle with the same name is already installed.'	
+    bundle_path = get_bundle_path()
+    try:
+        os.symlink(_get_source_path(), bundle_path)
+    except OSError:
+        if os.path.islink(bundle_path):
+            print 'ERROR - The bundle has been already setup for development.'
+        else:
+            print 'ERROR - A bundle with the same name is already installed.'    
 
 def cmd_dist():
-	if os.path.isdir('.git'):
-		file_list = _GitFileList()
-	elif os.path.isdir('.svn'):
-		file_list = _SvnFileList()
-	else:
-		print 'ERROR - The command works only with git or svn repositories.'
+    if os.path.isdir('.git'):
+        file_list = _GitFileList()
+    elif os.path.isdir('.svn'):
+        file_list = _SvnFileList()
+    else:
+        print 'ERROR - The command works only with git or svn repositories.'
 
-	zipname = _get_package_name()
-	bundle_zip = zipfile.ZipFile(zipname, 'w', zipfile.ZIP_DEFLATED)
-	
-	for filename in file_list:
-		arcname = os.path.join(_get_bundle_dir(), filename)
-		bundle_zip.write(filename, arcname)
+    zipname = _get_package_name()
+    bundle_zip = zipfile.ZipFile(zipname, 'w', zipfile.ZIP_DEFLATED)
+    
+    for filename in file_list:
+        arcname = os.path.join(_get_bundle_dir(), filename)
+        bundle_zip.write(filename, arcname)
 
-	bundle_zip.close()
+    bundle_zip.close()
 
 def cmd_install(prefix):
-	cmd_dist()
-	cmd_uninstall(prefix)
-	_extract_bundle(_get_package_name(), _get_install_dir(prefix))
+    cmd_dist()
+    cmd_uninstall(prefix)
+    _extract_bundle(_get_package_name(), _get_install_dir(prefix))
 
 def cmd_uninstall(prefix):
-	path = os.path.join(_get_install_dir(prefix), _get_bundle_dir())
-	if os.path.isdir(path):
-		shutil.rmtree(path)
+    path = os.path.join(_get_install_dir(prefix), _get_bundle_dir())
+    if os.path.isdir(path):
+        shutil.rmtree(path)
 
 def cmd_clean():
-	os.path.walk('.', delete_backups, None)
+    os.path.walk('.', delete_backups, None)
 
 def start():
-	if len(sys.argv) < 2:
-		cmd_help()
-	elif sys.argv[1] == 'build':
-		pass
-	elif sys.argv[1] == 'dev':
-		cmd_dev()
-	elif sys.argv[1] == 'dist':
-		cmd_dist()
-	elif sys.argv[1] == 'install' and len(sys.argv) == 3:
-		cmd_install(sys.argv[2])
-	elif sys.argv[1] == 'uninstall' and len(sys.argv) == 3:
-		cmd_uninstall(sys.argv[2])
-	elif sys.argv[1] == 'clean':
-		cmd_clean()
-	else:
-		cmd_help()
+    if len(sys.argv) < 2:
+        cmd_help()
+    elif sys.argv[1] == 'build':
+        pass
+    elif sys.argv[1] == 'dev':
+        cmd_dev()
+    elif sys.argv[1] == 'dist':
+        cmd_dist()
+    elif sys.argv[1] == 'install' and len(sys.argv) == 3:
+        cmd_install(sys.argv[2])
+    elif sys.argv[1] == 'uninstall' and len(sys.argv) == 3:
+        cmd_uninstall(sys.argv[2])
+    elif sys.argv[1] == 'clean':
+        cmd_clean()
+    else:
+        cmd_help()

@@ -27,72 +27,72 @@ from sugar.presence.PresenceService import PresenceService
 from sugar.activity import Activity
 
 def get_path(activity_name):
-	"""Returns the activity path"""
-	return '/' + activity_name.replace('.', '/')
+    """Returns the activity path"""
+    return '/' + activity_name.replace('.', '/')
 
 class ActivityFactory(dbus.service.Object):
-	"""Dbus service that takes care of creating new instances of an activity"""
+    """Dbus service that takes care of creating new instances of an activity"""
 
-	def __init__(self, activity_type, activity_class):
-		self._activity_type = activity_type
-		self._activities = []
+    def __init__(self, activity_type, activity_class):
+        self._activity_type = activity_type
+        self._activities = []
 
-		splitted_module = activity_class.rsplit('.', 1)
-		module_name = splitted_module[0]
-		class_name = splitted_module[1]
+        splitted_module = activity_class.rsplit('.', 1)
+        module_name = splitted_module[0]
+        class_name = splitted_module[1]
 
-		module = __import__(module_name)		
-		for comp in module_name.split('.')[1:]:
-			module = getattr(module, comp)
-		if hasattr(module, 'start'):
-			module.start()
+        module = __import__(module_name)        
+        for comp in module_name.split('.')[1:]:
+            module = getattr(module, comp)
+        if hasattr(module, 'start'):
+            module.start()
 
-		self._module = module
-		self._constructor = getattr(module, class_name)
-	
-		bus = dbus.SessionBus()
-		factory = activity_type
-		bus_name = dbus.service.BusName(factory, bus = bus) 
-		dbus.service.Object.__init__(self, bus_name, get_path(factory))
+        self._module = module
+        self._constructor = getattr(module, class_name)
+    
+        bus = dbus.SessionBus()
+        factory = activity_type
+        bus_name = dbus.service.BusName(factory, bus = bus) 
+        dbus.service.Object.__init__(self, bus_name, get_path(factory))
 
-	@dbus.service.method("com.redhat.Sugar.ActivityFactory")
-	def create(self):
-		activity = self._constructor()
-		activity.set_type(self._activity_type)
+    @dbus.service.method("com.redhat.Sugar.ActivityFactory")
+    def create(self):
+        activity = self._constructor()
+        activity.set_type(self._activity_type)
 
-		self._activities.append(activity)
-		activity.connect('destroy', self._activity_destroy_cb)
+        self._activities.append(activity)
+        activity.connect('destroy', self._activity_destroy_cb)
 
-		return activity.window.xid
+        return activity.window.xid
 
-	def _activity_destroy_cb(self, activity):
-		self._activities.remove(activity)
+    def _activity_destroy_cb(self, activity):
+        self._activities.remove(activity)
 
-		if hasattr(self._module, 'stop'):
-			self._module.stop()
+        if hasattr(self._module, 'stop'):
+            self._module.stop()
 
-		if len(self._activities) == 0:
-			gtk.main_quit()
+        if len(self._activities) == 0:
+            gtk.main_quit()
 
 def create(activity_name):
-	"""Create a new activity from his name."""
-	bus = dbus.SessionBus()
+    """Create a new activity from his name."""
+    bus = dbus.SessionBus()
 
-	factory_name = activity_name
-	factory_path = get_path(factory_name) 
+    factory_name = activity_name
+    factory_path = get_path(factory_name) 
 
-	proxy_obj = bus.get_object(factory_name, factory_path)
-	factory = dbus.Interface(proxy_obj, "com.redhat.Sugar.ActivityFactory")
+    proxy_obj = bus.get_object(factory_name, factory_path)
+    factory = dbus.Interface(proxy_obj, "com.redhat.Sugar.ActivityFactory")
 
-	xid = factory.create()
+    xid = factory.create()
 
-	bus = dbus.SessionBus()
-	proxy_obj = bus.get_object(Activity.get_service_name(xid),
-							   Activity.get_object_path(xid))
-	activity = dbus.Interface(proxy_obj, Activity.ACTIVITY_INTERFACE)
+    bus = dbus.SessionBus()
+    proxy_obj = bus.get_object(Activity.get_service_name(xid),
+                               Activity.get_object_path(xid))
+    activity = dbus.Interface(proxy_obj, Activity.ACTIVITY_INTERFACE)
 
-	return activity
+    return activity
 
 def register_factory(name, activity_class):
-	"""Register the activity factory."""
-	factory = ActivityFactory(name, activity_class)
+    """Register the activity factory."""
+    factory = ActivityFactory(name, activity_class)

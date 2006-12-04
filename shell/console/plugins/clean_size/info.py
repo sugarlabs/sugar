@@ -7,9 +7,9 @@
 ############################################################
 
 def plg_on_top_data_refresh(self, pinfo):
-		
-	# Get clean size
-	maps = self.INTERNALS['Plg'].proc_get_maps(pinfo['pid'])
+        
+    # Get clean size
+    maps = self.INTERNALS['Plg'].proc_get_maps(pinfo['pid'])
 
-	size = (maps.clean_size/1024)
-	return [size]
+    size = (maps.clean_size/1024)
+    return [size]

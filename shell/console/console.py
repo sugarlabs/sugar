@@ -27,7 +27,7 @@ logviewer_widget = logviewer.Interface().widget
 logviewer_widget.show()
 
 # Terminal interface
-terminal_widget	= terminal.Interface().widget
+terminal_widget    = terminal.Interface().widget
 terminal_widget.show()
 
 # Notebook

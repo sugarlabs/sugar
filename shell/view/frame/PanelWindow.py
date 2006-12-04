@@ -20,28 +20,28 @@ import hippo
 from sugar.graphics.menushell import MenuShell
 
 class PanelWindow(gtk.Window):
-	def __init__(self):
-		gtk.Window.__init__(self)
+    def __init__(self):
+        gtk.Window.__init__(self)
 
-		self.set_decorated(False)
-		self.connect('realize', self._realize_cb)
+        self.set_decorated(False)
+        self.connect('realize', self._realize_cb)
 
-		canvas = hippo.Canvas()
+        canvas = hippo.Canvas()
 
-		self._bg = hippo.CanvasBox(background_color=0x414141ff)
-		canvas.set_root(self._bg)
+        self._bg = hippo.CanvasBox(background_color=0x414141ff)
+        canvas.set_root(self._bg)
 
-		self.add(canvas)
-		canvas.show()
+        self.add(canvas)
+        canvas.show()
 
-		self._menu_shell = MenuShell(canvas)
+        self._menu_shell = MenuShell(canvas)
 
-	def get_menu_shell(self):
-		return self._menu_shell
+    def get_menu_shell(self):
+        return self._menu_shell
 
-	def get_root(self):
-		return self._bg
+    def get_root(self):
+        return self._bg
 
-	def _realize_cb(self, widget):
-		self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
-		self.window.set_accept_focus(False)
+    def _realize_cb(self, widget):
+        self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
+        self.window.set_accept_focus(False)

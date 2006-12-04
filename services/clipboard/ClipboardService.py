@@ -24,53 +24,53 @@ from sugar import env
 
 class ClipboardDBusServiceHelper(dbus.service.Object):
 
-	_CLIPBOARD_DBUS_INTERFACE = "org.laptop.Clipboard"
-	_CLIPBOARD_OBJECT_PATH = "/org/laptop/Clipboard"
+    _CLIPBOARD_DBUS_INTERFACE = "org.laptop.Clipboard"
+    _CLIPBOARD_OBJECT_PATH = "/org/laptop/Clipboard"
 
-	def __init__(self, parent):
-		self._parent = parent
+    def __init__(self, parent):
+        self._parent = parent
 
-		bus = dbus.SessionBus()
-		bus_name = dbus.service.BusName(self._CLIPBOARD_DBUS_INTERFACE, bus=bus)
-		dbus.service.Object.__init__(self, bus_name, self._CLIPBOARD_OBJECT_PATH)
-		
-	@dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
-						 in_signature="sss", out_signature="")
-	def add_object(self, name, mimeType, fileName):
-		self.object_added(name, mimeType, fileName)
-		logging.debug('Added object of type ' + mimeType + ' with path at ' + fileName)
+        bus = dbus.SessionBus()
+        bus_name = dbus.service.BusName(self._CLIPBOARD_DBUS_INTERFACE, bus=bus)
+        dbus.service.Object.__init__(self, bus_name, self._CLIPBOARD_OBJECT_PATH)
+        
+    @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
+                         in_signature="sss", out_signature="")
+    def add_object(self, name, mimeType, fileName):
+        self.object_added(name, mimeType, fileName)
+        logging.debug('Added object of type ' + mimeType + ' with path at ' + fileName)
 
-	@dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
-						 in_signature="s", out_signature="")
-	def delete_object(self, fileName):
-		self.object_deleted(fileName)
-		logging.debug('Deleted object with path at ' + fileName)
-		
-	@dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
-						 in_signature="si", out_signature="")
-	def set_object_state(self, fileName, percent):
-		logging.debug('Changed object with path at ' + fileName + ' with percent ' + str(percent))
-		self.object_state_changed(fileName, percent)
+    @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
+                         in_signature="s", out_signature="")
+    def delete_object(self, fileName):
+        self.object_deleted(fileName)
+        logging.debug('Deleted object with path at ' + fileName)
+        
+    @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
+                         in_signature="si", out_signature="")
+    def set_object_state(self, fileName, percent):
+        logging.debug('Changed object with path at ' + fileName + ' with percent ' + str(percent))
+        self.object_state_changed(fileName, percent)
 
-	@dbus.service.signal(_CLIPBOARD_DBUS_INTERFACE, signature="sss")
-	def object_added(self, name, mimeType, fileName):
-		pass
+    @dbus.service.signal(_CLIPBOARD_DBUS_INTERFACE, signature="sss")
+    def object_added(self, name, mimeType, fileName):
+        pass
 
-	@dbus.service.signal(_CLIPBOARD_DBUS_INTERFACE, signature="s")
-	def object_deleted(self, fileName):
-		pass
+    @dbus.service.signal(_CLIPBOARD_DBUS_INTERFACE, signature="s")
+    def object_deleted(self, fileName):
+        pass
 
-	@dbus.service.signal(_CLIPBOARD_DBUS_INTERFACE, signature="si")
-	def object_state_changed(self, fileName, percent):
-		pass
+    @dbus.service.signal(_CLIPBOARD_DBUS_INTERFACE, signature="si")
+    def object_state_changed(self, fileName, percent):
+        pass
 
 class ClipboardService(object):
-	def __init__(self):
-		self._dbus_helper = ClipboardDBusServiceHelper(self)
+    def __init__(self):
+        self._dbus_helper = ClipboardDBusServiceHelper(self)
 
-	def run(self):
-		loop = gobject.MainLoop()
-		try:
-			loop.run()
-		except KeyboardInterrupt:
-			print 'Ctrl+C pressed, exiting...'
+    def run(self):
+        loop = gobject.MainLoop()
+        try:
+            loop.run()
+        except KeyboardInterrupt:
+            print 'Ctrl+C pressed, exiting...'

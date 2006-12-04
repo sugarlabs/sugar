@@ -32,268 +32,268 @@ from sugar.graphics.grid import Grid
 from sugar.graphics.menushell import MenuShell
 
 class EventFrame(gobject.GObject):
-	__gsignals__ = {
-		'enter-edge':    (gobject.SIGNAL_RUN_FIRST,
-				          gobject.TYPE_NONE, ([])),
-		'enter-corner':  (gobject.SIGNAL_RUN_FIRST,
-				          gobject.TYPE_NONE, ([])),
-		'leave':		 (gobject.SIGNAL_RUN_FIRST,
-				          gobject.TYPE_NONE, ([]))
-	}
+    __gsignals__ = {
+        'enter-edge':    (gobject.SIGNAL_RUN_FIRST,
+                          gobject.TYPE_NONE, ([])),
+        'enter-corner':  (gobject.SIGNAL_RUN_FIRST,
+                          gobject.TYPE_NONE, ([])),
+        'leave':         (gobject.SIGNAL_RUN_FIRST,
+                          gobject.TYPE_NONE, ([]))
+    }
 
-	HOVER_NONE = 0
-	HOVER_CORNER = 1
-	HOVER_EDGE = 2
+    HOVER_NONE = 0
+    HOVER_CORNER = 1
+    HOVER_EDGE = 2
 
-	def __init__(self):
-		gobject.GObject.__init__(self)
+    def __init__(self):
+        gobject.GObject.__init__(self)
 
-		self._windows = []
-		self._hover = EventFrame.HOVER_NONE
-		self._active = False
+        self._windows = []
+        self._hover = EventFrame.HOVER_NONE
+        self._active = False
 
-		invisible = self._create_invisible(0, 0, gtk.gdk.screen_width(), 1)
-		self._windows.append(invisible)
+        invisible = self._create_invisible(0, 0, gtk.gdk.screen_width(), 1)
+        self._windows.append(invisible)
 
-		invisible = self._create_invisible(0, 0, 1, gtk.gdk.screen_height())
-		self._windows.append(invisible)
+        invisible = self._create_invisible(0, 0, 1, gtk.gdk.screen_height())
+        self._windows.append(invisible)
 
-		invisible = self._create_invisible(gtk.gdk.screen_width() - 1, 0,
-										   gtk.gdk.screen_width(),
-										   gtk.gdk.screen_height())
-		self._windows.append(invisible)
+        invisible = self._create_invisible(gtk.gdk.screen_width() - 1, 0,
+                                           gtk.gdk.screen_width(),
+                                           gtk.gdk.screen_height())
+        self._windows.append(invisible)
 
-		invisible = self._create_invisible(0, gtk.gdk.screen_height() - 1,
-										   gtk.gdk.screen_width(),
-										   gtk.gdk.screen_height())
-		self._windows.append(invisible)
+        invisible = self._create_invisible(0, gtk.gdk.screen_height() - 1,
+                                           gtk.gdk.screen_width(),
+                                           gtk.gdk.screen_height())
+        self._windows.append(invisible)
 
-		screen = wnck.screen_get_default()
-		screen.connect('active-window-changed',
-					   self._active_window_changed_cb)
+        screen = wnck.screen_get_default()
+        screen.connect('active-window-changed',
+                       self._active_window_changed_cb)
 
-	def _create_invisible(self, x, y, width, height):
-		invisible = gtk.Invisible()
-		invisible.connect('motion-notify-event', self._motion_notify_cb)
-		invisible.connect('enter-notify-event', self._enter_notify_cb)
-		invisible.connect('leave-notify-event', self._leave_notify_cb)
+    def _create_invisible(self, x, y, width, height):
+        invisible = gtk.Invisible()
+        invisible.connect('motion-notify-event', self._motion_notify_cb)
+        invisible.connect('enter-notify-event', self._enter_notify_cb)
+        invisible.connect('leave-notify-event', self._leave_notify_cb)
 
-		invisible.realize()
-		invisible.window.set_events(gtk.gdk.POINTER_MOTION_MASK |
-									gtk.gdk.ENTER_NOTIFY_MASK |
-									gtk.gdk.LEAVE_NOTIFY_MASK)
-		invisible.window.move_resize(x, y, width, height)
+        invisible.realize()
+        invisible.window.set_events(gtk.gdk.POINTER_MOTION_MASK |
+                                    gtk.gdk.ENTER_NOTIFY_MASK |
+                                    gtk.gdk.LEAVE_NOTIFY_MASK)
+        invisible.window.move_resize(x, y, width, height)
 
-		return invisible
+        return invisible
 
-	def _enter_notify_cb(self, widget, event):
-		self._notify_enter(event.x, event.y)
+    def _enter_notify_cb(self, widget, event):
+        self._notify_enter(event.x, event.y)
 
-	def _motion_notify_cb(self, widget, event):
-		self._notify_enter(event.x, event.y)
+    def _motion_notify_cb(self, widget, event):
+        self._notify_enter(event.x, event.y)
 
-	def _notify_enter(self, x, y):
-		screen_w = gtk.gdk.screen_width()
-		screen_h = gtk.gdk.screen_height()
+    def _notify_enter(self, x, y):
+        screen_w = gtk.gdk.screen_width()
+        screen_h = gtk.gdk.screen_height()
 
-		if (x == 0 and y == 0) or \
-		   (x == 0 and y == screen_h - 1) or \
-		   (x == screen_w - 1 and y == 0) or \
-		   (x == screen_w - 1 and y == screen_h - 1):
-			if self._hover != EventFrame.HOVER_CORNER:
-				self._hover = EventFrame.HOVER_CORNER
-				self.emit('enter-corner')
-		else:
-			if self._hover != EventFrame.HOVER_EDGE:
-				self._hover = EventFrame.HOVER_EDGE
-				self.emit('enter-edge')
+        if (x == 0 and y == 0) or \
+           (x == 0 and y == screen_h - 1) or \
+           (x == screen_w - 1 and y == 0) or \
+           (x == screen_w - 1 and y == screen_h - 1):
+            if self._hover != EventFrame.HOVER_CORNER:
+                self._hover = EventFrame.HOVER_CORNER
+                self.emit('enter-corner')
+        else:
+            if self._hover != EventFrame.HOVER_EDGE:
+                self._hover = EventFrame.HOVER_EDGE
+                self.emit('enter-edge')
 
-	def _leave_notify_cb(self, widget, event):
-		self._hover = EventFrame.HOVER_NONE
-		if self._active:
-			self.emit('leave')
+    def _leave_notify_cb(self, widget, event):
+        self._hover = EventFrame.HOVER_NONE
+        if self._active:
+            self.emit('leave')
 
-	def show(self):
-		self._active = True
-		for window in self._windows:
-			window.show()
+    def show(self):
+        self._active = True
+        for window in self._windows:
+            window.show()
 
-	def hide(self):
-		self._active = False
-		for window in self._windows:
-			window.hide()
+    def hide(self):
+        self._active = False
+        for window in self._windows:
+            window.hide()
 
-	def _active_window_changed_cb(self, screen):
-		for window in self._windows:
-			window.window.raise_()
+    def _active_window_changed_cb(self, screen):
+        for window in self._windows:
+            window.window.raise_()
 
 class Frame:
-	INACTIVE = 0
-	TEMPORARY = 1
-	STICKY = 2
-	HIDE_ON_LEAVE = 3
-	AUTOMATIC = 4
+    INACTIVE = 0
+    TEMPORARY = 1
+    STICKY = 2
+    HIDE_ON_LEAVE = 3
+    AUTOMATIC = 4
 
-	def __init__(self, shell):
-		self._windows = []
-		self._active_menus = 0
-		self._shell = shell
-		self._mode = Frame.INACTIVE
+    def __init__(self, shell):
+        self._windows = []
+        self._active_menus = 0
+        self._shell = shell
+        self._mode = Frame.INACTIVE
 
-		self._timeline = Timeline(self)
-		self._timeline.add_tag('slide_in', 6, 12)
-		self._timeline.add_tag('before_slide_out', 36, 36)
-		self._timeline.add_tag('slide_out', 37, 42)
+        self._timeline = Timeline(self)
+        self._timeline.add_tag('slide_in', 6, 12)
+        self._timeline.add_tag('before_slide_out', 36, 36)
+        self._timeline.add_tag('slide_out', 37, 42)
 
-		self._event_frame = EventFrame()
-		self._event_frame.connect('enter-edge', self._enter_edge_cb)
-		self._event_frame.connect('enter-corner', self._enter_corner_cb)
-		self._event_frame.connect('leave', self._event_frame_leave_cb)
-		self._event_frame.show()
+        self._event_frame = EventFrame()
+        self._event_frame.connect('enter-edge', self._enter_edge_cb)
+        self._event_frame.connect('enter-corner', self._enter_corner_cb)
+        self._event_frame.connect('leave', self._event_frame_leave_cb)
+        self._event_frame.show()
 
-		grid = Grid()
+        grid = Grid()
 
-		# Top panel
-		[menu_shell, root] = self._create_panel(grid, 0, 0, 16, 1)
-		menu_shell.set_position(MenuShell.BOTTOM)
+        # Top panel
+        [menu_shell, root] = self._create_panel(grid, 0, 0, 16, 1)
+        menu_shell.set_position(MenuShell.BOTTOM)
 
-		box = ZoomBox(self._shell, menu_shell)
+        box = ZoomBox(self._shell, menu_shell)
 
-		[x, y] = grid.point(1, 0)
-		root.append(box, hippo.PACK_FIXED)
-		root.move(box, x, y)
+        [x, y] = grid.point(1, 0)
+        root.append(box, hippo.PACK_FIXED)
+        root.move(box, x, y)
 
-		tray = NotificationTray()
-		tray_box = hippo.CanvasBox(box_width=grid.dimension(1),
-								   box_height=grid.dimension(1),
-								   xalign=hippo.ALIGNMENT_END)
+        tray = NotificationTray()
+        tray_box = hippo.CanvasBox(box_width=grid.dimension(1),
+                                   box_height=grid.dimension(1),
+                                   xalign=hippo.ALIGNMENT_END)
 
-		tray_widget = hippo.CanvasWidget()
-		tray_widget.props.widget = tray
-		tray_box.append(tray_widget, gtk.EXPAND)
+        tray_widget = hippo.CanvasWidget()
+        tray_widget.props.widget = tray
+        tray_box.append(tray_widget, gtk.EXPAND)
 
-		[x, y] = grid.point(13, 0)
-		root.append(tray_box, hippo.PACK_FIXED)
-		root.move(tray_box, x, y)
+        [x, y] = grid.point(13, 0)
+        root.append(tray_box, hippo.PACK_FIXED)
+        root.move(tray_box, x, y)
 
-		box = OverlayBox(self._shell)
+        box = OverlayBox(self._shell)
 
-		[x, y] = grid.point(14, 0)
-		root.append(box, hippo.PACK_FIXED)
-		root.move(box, x, y)
+        [x, y] = grid.point(14, 0)
+        root.append(box, hippo.PACK_FIXED)
+        root.move(box, x, y)
 
-		shutdown_icon = ShutdownIcon(menu_shell)
+        shutdown_icon = ShutdownIcon(menu_shell)
 
-		[x, y] = grid.point(12, 0)
-		root.append(shutdown_icon, hippo.PACK_FIXED)
-		root.move(shutdown_icon, x, y)
+        [x, y] = grid.point(12, 0)
+        root.append(shutdown_icon, hippo.PACK_FIXED)
+        root.move(shutdown_icon, x, y)
 
-		# Bottom panel
-		[menu_shell, root] = self._create_panel(grid, 0, 11, 16, 1)
-		menu_shell.set_position(MenuShell.TOP)
+        # Bottom panel
+        [menu_shell, root] = self._create_panel(grid, 0, 11, 16, 1)
+        menu_shell.set_position(MenuShell.TOP)
 
-		box = ActivitiesBox(self._shell)
-		root.append(box, hippo.PACK_FIXED)
+        box = ActivitiesBox(self._shell)
+        root.append(box, hippo.PACK_FIXED)
 
-		[x, y] = grid.point(1, 0)
-		root.move(box, x, y)
+        [x, y] = grid.point(1, 0)
+        root.move(box, x, y)
 
-		# Right panel
-		[menu_shell, root] = self._create_panel(grid, 15, 1, 1, 10)
-		menu_shell.set_position(MenuShell.LEFT)
+        # Right panel
+        [menu_shell, root] = self._create_panel(grid, 15, 1, 1, 10)
+        menu_shell.set_position(MenuShell.LEFT)
 
-		box = FriendsBox(self._shell, menu_shell)
-		root.append(box)
+        box = FriendsBox(self._shell, menu_shell)
+        root.append(box)
 
-		# Left panel
-		[menu_shell, root] = self._create_panel(grid, 0, 1, 1, 10)
+        # Left panel
+        [menu_shell, root] = self._create_panel(grid, 0, 1, 1, 10)
 
-		box = ClipboardBox(self, menu_shell)
-		root.append(box)
+        box = ClipboardBox(self, menu_shell)
+        root.append(box)
 
-	def _create_panel(self, grid, x, y, width, height):
-		panel = PanelWindow()
+    def _create_panel(self, grid, x, y, width, height):
+        panel = PanelWindow()
 
-		panel.connect('enter-notify-event', self._enter_notify_cb)
-		panel.connect('leave-notify-event', self._leave_notify_cb)
+        panel.connect('enter-notify-event', self._enter_notify_cb)
+        panel.connect('leave-notify-event', self._leave_notify_cb)
 
-		menu_shell = panel.get_menu_shell()
-		menu_shell.connect('activated', self._menu_shell_activated_cb)
-		menu_shell.connect('deactivated', self._menu_shell_deactivated_cb)
+        menu_shell = panel.get_menu_shell()
+        menu_shell.connect('activated', self._menu_shell_activated_cb)
+        menu_shell.connect('deactivated', self._menu_shell_deactivated_cb)
 
-		[x, y, width, height] = grid.rectangle(x, y, width, height)
+        [x, y, width, height] = grid.rectangle(x, y, width, height)
 
-		panel.move(x, y)
-		panel.resize(width, height)
+        panel.move(x, y)
+        panel.resize(width, height)
 
-		self._windows.append(panel)
+        self._windows.append(panel)
 
-		return [panel.get_menu_shell(), panel.get_root()]
+        return [panel.get_menu_shell(), panel.get_root()]
 
-	def _menu_shell_activated_cb(self, menu_shell):
-		self._active_menus += 1
-		self._timeline.goto('slide_in', True)
+    def _menu_shell_activated_cb(self, menu_shell):
+        self._active_menus += 1
+        self._timeline.goto('slide_in', True)
 
-	def _menu_shell_deactivated_cb(self, menu_shell):
-		self._active_menus -= 1
-		if self._mode != Frame.STICKY:
-			self._timeline.play('before_slide_out', 'slide_out')
+    def _menu_shell_deactivated_cb(self, menu_shell):
+        self._active_menus -= 1
+        if self._mode != Frame.STICKY:
+            self._timeline.play('before_slide_out', 'slide_out')
 
-	def _enter_notify_cb(self, window, event):
-		self._timeline.goto('slide_in', True)
+    def _enter_notify_cb(self, window, event):
+        self._timeline.goto('slide_in', True)
 
-	def _leave_notify_cb(self, window, event):
-		# FIXME for some reason every click cause also a leave-notify
-		if event.state == gtk.gdk.BUTTON1_MASK:
-			return
+    def _leave_notify_cb(self, window, event):
+        # FIXME for some reason every click cause also a leave-notify
+        if event.state == gtk.gdk.BUTTON1_MASK:
+            return
 
-		if self._active_menus == 0 and \
-		   (self._mode == Frame.HIDE_ON_LEAVE or \
-		    self._mode == Frame.AUTOMATIC):
-			self._timeline.play('before_slide_out', 'slide_out')
+        if self._active_menus == 0 and \
+           (self._mode == Frame.HIDE_ON_LEAVE or \
+            self._mode == Frame.AUTOMATIC):
+            self._timeline.play('before_slide_out', 'slide_out')
 
-	def _enter_edge_cb(self, event_frame):
-		self._mode = Frame.HIDE_ON_LEAVE
-		self._timeline.play(None, 'slide_in')
+    def _enter_edge_cb(self, event_frame):
+        self._mode = Frame.HIDE_ON_LEAVE
+        self._timeline.play(None, 'slide_in')
 
-	def _enter_corner_cb(self, event_frame):
-		self._mode = Frame.HIDE_ON_LEAVE
-		self._timeline.play('slide_in', 'slide_in')
+    def _enter_corner_cb(self, event_frame):
+        self._mode = Frame.HIDE_ON_LEAVE
+        self._timeline.play('slide_in', 'slide_in')
 
-	def _event_frame_leave_cb(self, event_frame):
-		if self._mode != Frame.STICKY:
-			self._timeline.goto('slide_out', True)
+    def _event_frame_leave_cb(self, event_frame):
+        if self._mode != Frame.STICKY:
+            self._timeline.goto('slide_out', True)
 
-	def show_and_hide(self, seconds):
-		self._mode = Frame.AUTOMATIC
-		self._timeline.play()
+    def show_and_hide(self, seconds):
+        self._mode = Frame.AUTOMATIC
+        self._timeline.play()
 
-	def notify_key_press(self):
-		if self._timeline.on_tag('slide_in'):
-			self._timeline.play('before_slide_out', 'slide_out')
-		elif self._timeline.on_tag('before_slide_out'):
-			self._mode = Frame.TEMPORARY
-		else:
-			self._mode = Frame.STICKY
-			self._timeline.play('slide_in', 'slide_in')
+    def notify_key_press(self):
+        if self._timeline.on_tag('slide_in'):
+            self._timeline.play('before_slide_out', 'slide_out')
+        elif self._timeline.on_tag('before_slide_out'):
+            self._mode = Frame.TEMPORARY
+        else:
+            self._mode = Frame.STICKY
+            self._timeline.play('slide_in', 'slide_in')
 
-	def notify_key_release(self):
-		if self._mode == Frame.TEMPORARY:
-			self._timeline.play('before_slide_out', 'slide_out')
+    def notify_key_release(self):
+        if self._mode == Frame.TEMPORARY:
+            self._timeline.play('before_slide_out', 'slide_out')
 
-	def do_slide_in(self, current=0, n_frames=0):
-		if not self._windows[0].props.visible:
-			for panel in self._windows:
-				panel.show()
-			self._event_frame.hide()
+    def do_slide_in(self, current=0, n_frames=0):
+        if not self._windows[0].props.visible:
+            for panel in self._windows:
+                panel.show()
+            self._event_frame.hide()
 
-	def do_slide_out(self, current=0, n_frames=0):
-		if self._windows[0].props.visible:
-			for panel in self._windows:
-				panel.hide()
-			self._event_frame.show()
+    def do_slide_out(self, current=0, n_frames=0):
+        if self._windows[0].props.visible:
+            for panel in self._windows:
+                panel.hide()
+            self._event_frame.show()
 
-	def is_visible(self):
-		if self._windows[0].props.visible:
-			return True
-		return False
+    def is_visible(self):
+        if self._windows[0].props.visible:
+            return True
+        return False

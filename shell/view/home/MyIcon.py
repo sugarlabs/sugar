@@ -18,6 +18,6 @@ from sugar.graphics.canvasicon import CanvasIcon
 from sugar import profile
 
 class MyIcon(CanvasIcon):
-	def __init__(self):
-		CanvasIcon.__init__(self, icon_name='stock-buddy',
-					  	    color=profile.get_color())
+    def __init__(self):
+        CanvasIcon.__init__(self, icon_name='stock-buddy',
+                              color=profile.get_color())

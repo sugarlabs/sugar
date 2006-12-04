@@ -8,6 +8,6 @@
 
 def plg_on_top_data_refresh(self, ppinfo):
 
-	data = [ppinfo['pid'], ppinfo['name'], ppinfo['state_name']]
-		
-	return data
+    data = [ppinfo['pid'], ppinfo['name'], ppinfo['state_name']]
+        
+    return data

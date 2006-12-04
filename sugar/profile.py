@@ -21,34 +21,34 @@ from sugar import env
 from sugar.graphics.iconcolor import IconColor
 
 class _Profile(object):
-	def __init__(self):
-		self.name = None
-		self.color = None
-		self._load()
+    def __init__(self):
+        self.name = None
+        self.color = None
+        self._load()
 
-	def update(self):
-		self._load()
+    def update(self):
+        self._load()
 
-	def _load(self):
-		cp = ConfigParser()
-		config_path = os.path.join(env.get_profile_path(), 'config')
-		parsed = cp.read([config_path])
+    def _load(self):
+        cp = ConfigParser()
+        config_path = os.path.join(env.get_profile_path(), 'config')
+        parsed = cp.read([config_path])
 
-		if cp.has_option('Buddy', 'NickName'):
-			self.name = cp.get('Buddy', 'NickName')
+        if cp.has_option('Buddy', 'NickName'):
+            self.name = cp.get('Buddy', 'NickName')
 
-		if cp.has_option('Buddy', 'Color'):
-			self.color = IconColor(cp.get('Buddy', 'Color'))
+        if cp.has_option('Buddy', 'Color'):
+            self.color = IconColor(cp.get('Buddy', 'Color'))
 
-		del cp
+        del cp
 
 def get_nick_name():
-	return _profile.name
+    return _profile.name
 
 def get_color():
-	return _profile.color
+    return _profile.color
 
 def update():
-	_profile.update()
+    _profile.update()
 
 _profile = _Profile()
