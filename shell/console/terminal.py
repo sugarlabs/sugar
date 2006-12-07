@@ -23,8 +23,8 @@ class Terminal(gtk.HBox):
 
     def _configure_vte(self):
         self._vte.set_font(pango.FontDescription('Monospace 10'))
-        self._vte.set_colors(gtk.gdk.color_parse ('#AAAAAA'),
-                            gtk.gdk.color_parse ('#000000'),
+        self._vte.set_colors(gtk.gdk.color_parse ('#000000'),
+                            gtk.gdk.color_parse ('#FFFFFF'),
                             [])
         self._vte.set_cursor_blinks(False)
         self._vte.set_audible_bell(False)
