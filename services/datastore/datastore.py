@@ -72,8 +72,7 @@ class DataStoreDBusHelper(dbus.service.Object):
     @dbus.service.method(_DS_DBUS_INTERFACE,
                         in_signature="x", out_signature="o")
     def get(self, uid):
-        uid = self._parent.get(uid)
-        return self._create_op(uid)
+        return _create_op(self._parent.get(uid))
 
     @dbus.service.method(_DS_DBUS_INTERFACE,
                         in_signature="aya{sv}", out_signature="o")
@@ -205,7 +204,8 @@ class DataStore(object):
 
     def create(self, data, prop_dict=None):
         curs = self._dbcx.cursor()
-        curs.execute("INSERT INTO objects (uid) VALUES (NULL);")
+        data = sqlite.encode(_get_data_as_string(data))
+        curs.execute("INSERT INTO objects (uid, data) VALUES (NULL, '%s');" % data)
         curs.execute("SELECT last_insert_rowid();")
         rows = curs.fetchall()
         self._dbcx.commit()
@@ -213,8 +213,8 @@ class DataStore(object):
         uid = last_row[0]
         for (key, value) in prop_dict.items():
             safe_key = key.replace("'", "''")
-            value = str(value)
-            curs.execute("INSERT INTO properties (objid, key, value) VALUES (%d, '%s', '%s');" % (uid, safe_key, sqlite.encode(value)))
+            value = sqlite.encode(_get_data_as_string(value))
+            curs.execute("INSERT INTO properties (objid, key, value) VALUES (%d, '%s', '%s');" % (uid, safe_key, value))
         self._dbcx.commit()
         del curs
         return uid
@@ -229,18 +229,20 @@ class DataStore(object):
         return 0
 
     def find(self, prop_dict):
-        query = "SELECT objid FROM properties WHERE ("
+        query = "SELECT objid FROM properties"
         subquery = ""
         for (key, value) in prop_dict.items():
             safe_key = key.replace("'", "''")
+            value = _get_data_as_string(value)
             if not len(value):
                 raise ValueError("Property values must not be blank.")
-            value = str(value)
-            substr = "key='%s' AND value='%s'" % (safe_key, sqlite.encode(value))
+            substr = "(key='%s' AND value='%s')" % (safe_key, sqlite.encode(value))
             if len(subquery) > 0:
-                subquery += " AND"
+                subquery += " OR "
             subquery += substr
-        query += subquery + ")"
+        if len(subquery):
+            query += " WHERE (%s)" % subquery
+        query += ";"
         curs = self._dbcx.cursor()
         curs.execute(query)
         rows = curs.fetchall()
@@ -260,8 +262,8 @@ class DataStore(object):
         if len(res) <= 0:
             del curs
             raise NotFoundError("Object %d was not found." % uid)
-        data = _get_data_as_string(data)
-        curs.execute("UPDATE objects SET data='%s' WHERE uid=%d;" % (sqlite.encode(data), uid))
+        data = sqlite.encode(_get_data_as_string(data))
+        curs.execute("UPDATE objects SET data='%s' WHERE uid=%d;" % (data, uid))
         self._dbcx.commit()
         del curs
         self._dbus_obj_helper.Updated(True, {}, False, uid=uid)
@@ -282,11 +284,12 @@ class DataStore(object):
 
         for (key, value) in prop_dict.items():
             safe_key = key.replace("'", "''")
+            value = _get_data_as_string(value)
             if not len(value):
                 # delete the property
                 curs.execute("DELETE FROM properties WHERE (objid=%d AND key='%s');" % (uid, safe_key))
             else:
-                enc_value = sqlite.encode(_get_data_as_string(value))
+                enc_value = sqlite.encode(value)
                 curs.execute("SELECT objid FROM properties WHERE (objid=%d AND key='%s');" % (uid, safe_key))
                 if len(curs.fetchall()) > 0:
                     curs.execute("UPDATE properties SET value='%s' WHERE (objid=%d AND key='%s');" % (enc_value, uid, safe_key))
@@ -301,20 +304,23 @@ class DataStore(object):
         curs.execute('SELECT uid, data FROM objects WHERE uid=%d;' % uid)
         res = curs.fetchall()
         self._dbcx.commit()
-        del curs
         if len(res) <= 0:
             raise NotFoundError("Object %d was not found." % uid)
-        return sqlite.decode(res[0]['data'])
+        data = res[0][1]
+        del curs
+        return data
 
     def get_properties(self, uid, keys):
-        query = "SELECT objid, key, value FROM properties WHERE (objid=%d AND (" % uid
+        query = "SELECT objid, key, value FROM properties WHERE (objid=%d" % uid
         subquery = ""
-        for key in keys:
-            if len(subquery) > 0:
-                subquery += " OR "
-            safe_key = key.replace("'", "''")
-            subquery += "key='%s'" % safe_key
-        query += subquery + "));"
+        if len(keys) > 0:
+            for key in keys:
+                if len(subquery) > 0:
+                    subquery += " OR "
+                safe_key = key.replace("'", "''")
+                subquery += "key='%s'" % safe_key
+            subquery += ")"
+        query += subquery + ");"
         curs = self._dbcx.cursor()
         curs.execute(query)
         rows = curs.fetchall()
@@ -322,7 +328,8 @@ class DataStore(object):
         prop_dict = {}
         for row in rows:
             conv_key = row['key'].replace("''", "'")
-            prop_dict[conv_key] = row['value']
+            prop_dict[conv_key] = sqlite.decode(row['value'])
+        prop_dict['uid'] = str(uid)
         del curs
         return prop_dict
 
