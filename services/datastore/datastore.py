@@ -233,6 +233,8 @@ class DataStore(object):
         subquery = ""
         for (key, value) in prop_dict.items():
             safe_key = key.replace("'", "''")
+            if not len(value):
+                raise ValueError("Property values must not be blank.")
             value = str(value)
             substr = "key='%s' AND value='%s'" % (safe_key, sqlite.encode(value))
             if len(subquery) > 0:
@@ -280,12 +282,16 @@ class DataStore(object):
 
         for (key, value) in prop_dict.items():
             safe_key = key.replace("'", "''")
-            enc_value = sqlite.encode(_get_data_as_string(value))
-            curs.execute("SELECT objid FROM properties WHERE (objid=%d AND key='%s');" % (uid, safe_key))
-            if len(curs.fetchall()) > 0:
-                curs.execute("UPDATE properties SET value='%s' WHERE (objid=%d AND key='%s');" % (enc_value, uid, safe_key))
+            if not len(value):
+                # delete the property
+                curs.execute("DELETE FROM properties WHERE (objid=%d AND key='%s');" % (uid, safe_key))
             else:
-                curs.execute("INSERT INTO properties (objid, key, value) VALUES (%d, '%s', '%s');" % (uid, safe_key, enc_value))
+                enc_value = sqlite.encode(_get_data_as_string(value))
+                curs.execute("SELECT objid FROM properties WHERE (objid=%d AND key='%s');" % (uid, safe_key))
+                if len(curs.fetchall()) > 0:
+                    curs.execute("UPDATE properties SET value='%s' WHERE (objid=%d AND key='%s');" % (enc_value, uid, safe_key))
+                else:
+                    curs.execute("INSERT INTO properties (objid, key, value) VALUES (%d, '%s', '%s');" % (uid, safe_key, enc_value))
         self._dbcx.commit()
         del curs
         self._dbus_obj_helper.Updated(False, {}, False, uid=uid)
