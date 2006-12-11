@@ -32,8 +32,10 @@ class ObjectCache(object):
             self._cache[op] = obj
 
     def remove(self, object_path):
-        if self._cache.has_key(object_path):
+        try:
             del self._cache[object_path]
+        except IndexError:
+            pass
 
 
 DS_DBUS_SERVICE = "org.laptop.sugar.DataStore"
@@ -55,15 +57,20 @@ class DSObject(gobject.GObject):
         self._ps_new_object = new_obj_cb
         self._ps_del_object = del_obj_cb
         bobj = bus.get_object(DS_DBUS_SERVICE, object_path)
-        self._dsobj = dbus.Interface(bobj, self.__DS_OBJECT_DBUS_INTERFACE)
+        self._dsobj = dbus.Interface(bobj, self._DS_OBJECT_DBUS_INTERFACE)
         self._dsobj.connect_to_signal('Updated', self._updated_cb)
         self._data = None
         self._data_needs_update = True
-        self._properties = self._dsobj.get_properties()
+        self._properties = None
         self._deleted = False
 
     def object_path(self):
         return self._object_path
+
+    def uid(self):
+        if not self._properties:
+            self._properties = self._dsobj.get_properties([])
+        return self._properties['uid']
 
     def _emit_updated_signal(self, data, prop_dict, deleted):
         self.emit('updated', data, prop_dict, deleted)
@@ -93,7 +100,10 @@ class DSObject(gobject.GObject):
 
     def get_data(self):
         if self._data_needs_update:
-            self._data = self._dsobj.get_data()
+            data = self._dsobj.get_data()
+            self._data = ""
+            for c in data:
+                self._data += chr(c)
         return self._data
 
     def set_data(self, data):
@@ -116,12 +126,14 @@ class DSObject(gobject.GObject):
             self._properties = old_props
             raise e
 
-    def get_properties(self, prop_dict):
+    def get_properties(self, prop_list=[]):
+        if not self._properties:
+            self._properties = self._dsobj.get_properties(prop_list)
         return self._properties
 
 class DataStore(gobject.GObject):
 
-    _DS_DBUS_OBJECT_PATH = DBUS_PATH + "/Object/"
+    _DS_DBUS_OBJECT_PATH = DS_DBUS_PATH + "/Object/"
 
     def __init__(self):
         gobject.GObject.__init__(self)
@@ -132,13 +144,15 @@ class DataStore(gobject.GObject):
 
     def _new_object(self, object_path):
         obj = self._objcache.get(object_path)
-        if not obj:
-            if object_path.startswith(self._DS_DBUS_OBJECT_PATH):
-                obj = DSObject(self._bus, self._new_object,
-                        self._del_object, object_path)
-            else:
-                raise RuntimeError("Unknown object type")
-            self._objcache.add(obj)
+        if obj:
+            return obj
+
+        if object_path.startswith(self._DS_DBUS_OBJECT_PATH):
+            obj = DSObject(self._bus, self._new_object,
+                    self._del_object, object_path)
+        else:
+            raise RuntimeError("Unknown object type")
+        self._objcache.add(obj)
         return obj
 
     def _del_object(self, object_path):
@@ -146,7 +160,7 @@ class DataStore(gobject.GObject):
         pass
 
     def get(self, uid):
-        return self._new_object(self._ds.get(uid))
+        return self._new_object(self._ds.get(int(uid)))
 
     def create(self, data, prop_dict={}):
         op = self._ds.create(dbus.ByteArray(data), dbus.Dictionary(prop_dict))

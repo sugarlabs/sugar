@@ -28,5 +28,9 @@ sys.path.insert(0, env.get_services_dir())
 logger.start('data-store')
 logging.info('Starting the data store...')
 
-from datastore import datastore
+try:
+    from datastore import datastore
+except ImportError:
+    import datastore
+
 datastore.main()
