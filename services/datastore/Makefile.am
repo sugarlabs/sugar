@@ -6,7 +6,4 @@ sugar_PYTHON =      \
 
 bin_SCRIPTS = sugar-data-store
 
-dbusservicedir = $(sysconfdir)/dbus-1/system.d/
-dbusservice_DATA = sugar-data-store.conf
-
-EXTRA_DIST = $(dbusservice_DATA) $(bin_SCRIPTS)
+EXTRA_DIST = $(bin_SCRIPTS)
