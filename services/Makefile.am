@@ -1,1 +1,1 @@
-SUBDIRS = presence nm clipboard
+SUBDIRS = presence nm clipboard datastore

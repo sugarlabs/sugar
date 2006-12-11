@@ -59,6 +59,7 @@ services/Makefile
 services/presence/Makefile
 services/nm/Makefile
 services/clipboard/Makefile
+services/datastore/Makefile
 shell/Makefile
 shell/data/Makefile
 shell/view/Makefile
@@ -81,6 +82,7 @@ sugar/clipboard/Makefile
 sugar/graphics/Makefile
 sugar/p2p/Makefile
 sugar/presence/Makefile
+sugar/datastore/Makefile
 po/Makefile.in
 tools/Makefile
 tools/sugar-setup-activity
