@@ -108,7 +108,7 @@ setup.py help    - print this message \n\
 '
 
 def cmd_dev():
-    bundle_path = get_bundle_path()
+    bundle_path = os.path.join(_get_activities_path(), _get_bundle_dir())
     try:
         os.symlink(_get_source_path(), bundle_path)
     except OSError:
