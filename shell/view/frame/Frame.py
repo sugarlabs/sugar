@@ -14,6 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
 import gtk
 import gobject
 import hippo
@@ -23,8 +24,8 @@ from view.frame.ActivitiesBox import ActivitiesBox
 from view.frame.ZoomBox import ZoomBox
 from view.frame.overlaybox import OverlayBox
 from view.frame.FriendsBox import FriendsBox
-from view.frame.ClipboardBox import ClipboardBox
 from view.frame.PanelWindow import PanelWindow
+from view.frame.clipboardpanelwindow import ClipboardPanelWindow
 from view.frame.notificationtray import NotificationTray
 from view.frame.shutdownicon import ShutdownIcon
 from sugar.graphics.timeline import Timeline
@@ -154,7 +155,10 @@ class Frame:
         grid = Grid()
 
         # Top panel
-        [menu_shell, root] = self._create_panel(grid, 0, 0, 16, 1)
+        panel = self._create_panel(grid, 0, 0, 16, 1)
+        menu_shell = panel.get_menu_shell()
+        root = panel.get_root()
+
         menu_shell.set_position(MenuShell.BOTTOM)
 
         box = ZoomBox(self._shell, menu_shell)
@@ -189,7 +193,10 @@ class Frame:
         root.move(shutdown_icon, x, y)
 
         # Bottom panel
-        [menu_shell, root] = self._create_panel(grid, 0, 11, 16, 1)
+        panel = self._create_panel(grid, 0, 11, 16, 1)
+        menu_shell = panel.get_menu_shell()
+        root = panel.get_root()
+
         menu_shell.set_position(MenuShell.TOP)
 
         box = ActivitiesBox(self._shell)
@@ -199,36 +206,41 @@ class Frame:
         root.move(box, x, y)
 
         # Right panel
-        [menu_shell, root] = self._create_panel(grid, 15, 1, 1, 10)
+        panel = self._create_panel(grid, 15, 1, 1, 10)
+        menu_shell = panel.get_menu_shell()
+        root = panel.get_root()
+
         menu_shell.set_position(MenuShell.LEFT)
 
         box = FriendsBox(self._shell, menu_shell)
         root.append(box)
 
         # Left panel
-        [menu_shell, root] = self._create_panel(grid, 0, 1, 1, 10)
+        panel = self._create_clipboard_panel(grid, 0, 1, 1, 10)
+        
+    def _create_clipboard_panel(self, grid, x, y, width, height):
+        [x, y, width, height] = grid.rectangle(x, y, width, height)
+        panel = ClipboardPanelWindow(x, y, width, height)
+        self._connect_to_panel(panel)
+        self._windows.append(panel)
 
-        box = ClipboardBox(self, menu_shell)
-        root.append(box)
+        return panel
 
     def _create_panel(self, grid, x, y, width, height):
-        panel = PanelWindow()
+        [x, y, width, height] = grid.rectangle(x, y, width, height)
+        panel = PanelWindow(x, y, width, height)
+        self._connect_to_panel(panel)
+        self._windows.append(panel)
 
+        return panel
+
+    def _connect_to_panel(self, panel):
         panel.connect('enter-notify-event', self._enter_notify_cb)
         panel.connect('leave-notify-event', self._leave_notify_cb)
 
         menu_shell = panel.get_menu_shell()
         menu_shell.connect('activated', self._menu_shell_activated_cb)
         menu_shell.connect('deactivated', self._menu_shell_deactivated_cb)
-
-        [x, y, width, height] = grid.rectangle(x, y, width, height)
-
-        panel.move(x, y)
-        panel.resize(width, height)
-
-        self._windows.append(panel)
-
-        return [panel.get_menu_shell(), panel.get_root()]
 
     def _menu_shell_activated_cb(self, menu_shell):
         self._active_menus += 1

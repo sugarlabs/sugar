@@ -2,7 +2,8 @@ sugardir = $(pkgdatadir)/shell/view/frame
 sugar_PYTHON =				\
 	__init__.py			\
 	ActivitiesBox.py		\
-	ClipboardBox.py			\
+	clipboardbox.py			\
+	clipboardpanelwindow.py	\
 	FriendsBox.py			\
 	PanelWindow.py			\
 	Frame.py			\

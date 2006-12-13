@@ -8,7 +8,9 @@ $(service_DATA): $(service_in_files) Makefile
 sugardir = $(pkgdatadir)/services/clipboard
 sugar_PYTHON =			\
 	__init__.py			\
-	ClipboardService.py
+	clipboardobject.py  \
+	clipboardservice.py
+
 
 bin_SCRIPTS = sugar-clipboard
 

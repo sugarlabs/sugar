@@ -7,8 +7,8 @@ sugar_PYTHON =				\
 	FirstTimeDialog.py		\
 	BuddyIcon.py			\
 	BuddyMenu.py			\
-	ClipboardIcon.py		\
-	ClipboardMenu.py		\
+	clipboardicon.py		\
+	clipboardmenu.py		\
 	OverlayWindow.py		\
 	Shell.py			\
 	dconmanager.py			\

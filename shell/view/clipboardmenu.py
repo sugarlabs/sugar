@@ -24,9 +24,6 @@ class ClipboardMenu(Menu):
         
         self._progress_bar = ClipboardMenuItem(percent)
         self._root.append(self._progress_bar)
-                
-        #icon = CanvasIcon(icon_name='stock-share-mesh')
-        #self.add_action(icon, ClipboardMenu.ACTION_SHARE)
         
         self._remove_icon = None
         self._stop_icon = None

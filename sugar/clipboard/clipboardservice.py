@@ -1,5 +1,8 @@
+import logging
 import dbus
 import gobject
+
+from sugar import util
 
 DBUS_SERVICE = "org.laptop.Clipboard"
 DBUS_INTERFACE = "org.laptop.Clipboard"
@@ -9,7 +12,7 @@ class ClipboardService(gobject.GObject):
 
     __gsignals__ = {
         'object-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                        ([str, str, str])),
+                        ([str, str])),
         'object-deleted': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                         ([str])),
         'object-state-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
@@ -49,24 +52,43 @@ class ClipboardService(gobject.GObject):
             # ClipboardService started up
             self._connect_clipboard_signals()
             
-    def _object_added_cb(self, name, mimeType, fileName):
-        self.emit('object-added', name, mimeType, fileName)
+    def _object_added_cb(self, object_id, name):
+        self.emit('object-added', object_id, name)
 
-    def _object_deleted_cb(self, fileName):
-        self.emit('object-deleted', fileName)
+    def _object_deleted_cb(self, object_id):
+        self.emit('object-deleted', object_id)
 
-    def _object_state_changed_cb(self, fileName, percent):
-        self.emit('object-state-changed', fileName, percent)
+    def _object_state_changed_cb(self, object_id, percent):
+        self.emit('object-state-changed', object_id, percent)
+
+    def add_object(self, object_id, name):
+        self._dbus_service.add_object(object_id, name)
+
+    def add_object_format(self, object_id, formatType, data, on_disk):
+        self._dbus_service.add_object_format(object_id,
+                formatType,
+                dbus.types.ByteArray(data),
+                on_disk)
     
-    def add_object(self, name, mimeType, fileName):
-        self._dbus_service.add_object(name, mimeType, fileName)
-
-    def delete_object(self, fileName):
-        self._dbus_service.delete_object(fileName)
+    def delete_object(self, object_id):
+        self._dbus_service.delete_object(object_id)
     
-    def set_object_state(self, fileName, percent):
-        self._dbus_service.set_object_state(fileName, percent)
+    def set_object_state(self, object_id, percent):
+        self._dbus_service.set_object_state(object_id, percent)
 
+    def get_object_format_types(self, object_id):
+        return self._dbus_service.get_object_format_types(object_id)
+
+    def get_object_data(self, object_id, formatType):
+        data = self._dbus_service.get_object_data(object_id, formatType)
+        
+        # FIXME: Take it out when using the 0.80 dbus bindings
+        s = ""
+        for i in data:
+            s += chr(i)
+            
+        return s
+        
 _clipboard_service = None
 def get_instance():
     global _clipboard_service

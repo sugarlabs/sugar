@@ -33,7 +33,7 @@ from sugar import env
 
 sys.path.insert(0, env.get_services_dir())
 
-from clipboard.ClipboardService import ClipboardService
+from clipboard.clipboardservice import ClipboardService
 
 logging.info('Starting clipboard service.')
 
