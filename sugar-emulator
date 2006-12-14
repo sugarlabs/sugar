@@ -58,6 +58,11 @@ if sourcedir:
 	util.write_service('org.laptop.Clipboard', bin,
 					   env.get_user_service_dir())
 
+	bin = os.path.join(sourcedir,
+					  'services/datastore/sugar-data-store')
+	util.write_service('org.laptop.sugar.DataStore', bin,
+					   env.get_user_service_dir())
+
 from sugar.emulator import Emulator
 
 program = 'sugar-shell'

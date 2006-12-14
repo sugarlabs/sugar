@@ -14,9 +14,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
+
 import gtk
 import gobject
 import wnck
+import dbus
 
 import view.stylesheet
 from sugar.graphics import style
@@ -125,7 +128,14 @@ class Shell(gobject.GObject):
 
     def __window_opened_cb(self, screen, window):
         if window.get_window_type() == wnck.WINDOW_NORMAL:
-            activity_host = ActivityHost(self.get_model(), window)
+            try:
+                activity_host = ActivityHost(self.get_model(), window)
+            except dbus.DBusException:
+                logging.debug('Shell.__window_opened_cb: opened unknown window ' +
+                              window.get_name() + ' with xid ' + 
+                              str(window.get_xid()))
+                return
+                        
             self._hosts[activity_host.get_xid()] = activity_host
             self.emit('activity-opened', activity_host)
 
