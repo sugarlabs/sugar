@@ -72,7 +72,6 @@ class Shell(gobject.GObject):
         # For non-OLPC machines
         self._key_grabber.grab('<shft><alt>F9')
         self._key_grabber.grab('<shft><alt>F10')
-        self._key_grabber.grab('<shft><alt>F11')
 
         self._home_window = HomeWindow(self)
         self._home_window.show()
@@ -111,8 +110,6 @@ class Shell(gobject.GObject):
             self._frame.notify_key_press()
         elif key == '<shft><alt>F10':
             self.toggle_chat_visibility()
-        elif key == '<shft><alt>F11':
-            gobject.idle_add(self._open_terminal_cb)
         elif key == '0xDC': # Camera key
             pass
         elif key == '0xE0': # Overlay key
