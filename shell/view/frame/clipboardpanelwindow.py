@@ -30,8 +30,7 @@ class ClipboardPanelWindow(PanelWindow):
         # Offering dnd drags
         self.drag_source_set(0, [], 0)
         self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
-                         gtk.gdk.POINTER_MOTION_MASK |
-                         gtk.gdk.POINTER_MOTION_HINT_MASK)
+                        gtk.gdk.POINTER_MOTION_HINT_MASK)
         self.connect("motion_notify_event", box.motion_notify_event_cb)
         self.connect("button_press_event", box.button_press_event_cb)
         self.connect("drag_end", box.drag_end_cb)

@@ -21,16 +21,19 @@ class ClipboardMenu(Menu):
     
     def __init__(self, name, percent):
         Menu.__init__(self, name)
-        
-        self._progress_bar = ClipboardMenuItem(percent)
-        self._root.append(self._progress_bar)
+
+        if percent < 100:        
+            self._progress_bar = ClipboardMenuItem(percent)
+            self._root.append(self._progress_bar)
+        else:
+            self._progress_bar = None
         
         self._remove_icon = None
         self._stop_icon = None
         
-        self._create_icons(percent)
+        self._update_icons(percent)
         
-    def _create_icons(self, percent):            
+    def _update_icons(self, percent):            
         if percent == 100:
             if not self._remove_icon:
                 self._remove_icon = CanvasIcon(icon_name='stock-remove')
@@ -49,5 +52,6 @@ class ClipboardMenu(Menu):
                 self._remove_icon = None
     
     def set_percent(self, percent):
-        self._progress_bar.set_property('percent', percent)
-        self._create_icons(percent)
+        if self._progress_bar:
+            self._progress_bar.set_property('percent', percent)
+            self._update_icons(percent)

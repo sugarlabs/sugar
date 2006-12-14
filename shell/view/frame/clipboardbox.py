@@ -139,8 +139,13 @@ class ClipboardBox(hippo.CanvasBox):
         return True;
 
     def motion_notify_event_cb(self, widget, event):
-
+       
         if not self._pressed_button:
+            return True
+        
+        # if the mouse button is not pressed, no drag should occurr
+        if not event.state & gtk.gdk.BUTTON1_MASK:
+            self._pressed_button = None
             return True
 
         logging.debug("motion_notify_event_cb")
@@ -152,10 +157,10 @@ class ClipboardBox(hippo.CanvasBox):
             y = event.y
             state = event.state
 
-        if widget.drag_check_threshold(self._press_start_x,
-                                       self._press_start_y,
-                                       x,
-                                       y):
+        if widget.drag_check_threshold(int(self._press_start_x),
+                                       int(self._press_start_y),
+                                       int(x),
+                                       int(y)):
             targets = self._get_targets_for_dnd(
                 self._last_clicked_icon.get_object_id())
 
