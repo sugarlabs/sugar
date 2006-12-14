@@ -5,7 +5,7 @@ service_DATA = $(service_in_files:.service.in=.service)
 $(service_DATA): $(service_in_files) Makefile
 	@sed -e "s|\@bindir\@|$(bindir)|" $< > $@
 
-sugardir = $(pkgdatadir)/services/data-store
+sugardir = $(pkgdatadir)/services/datastore
 sugar_PYTHON =      \
 	__init__.py     \
 	datastore.py    \
