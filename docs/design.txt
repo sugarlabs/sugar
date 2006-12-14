@@ -86,3 +86,41 @@ activity icon to indicate that it is starting up.  Marco, could you
 use HSV for the icon color, and modulate the S(aturation) on a sin
 curve so the color pulses betwen, say, 0 and 192 until the activity
 starts, at which point it slides up to 255?
+
+Clipboard
+
+<marcopg> eliason, when should the frame be automatically showed? when
+starting the drag or when hitting the corner
+<marcopg> eliason, (the first one would be tricky to implement)
+<eliason> marcopg:  Initially we wanted it to happen on drag, but after
+thinking about this more, it's a bad idea, since it would hide the toolbars,
+and some activities may have toolbars that support drag and drop also.  As
+such, we probably just keep the hot corners as is, and perhaps implement the
+"warm edges" too, but only when dragging...
+<marcopg> eliason, which reminds me... the plan is to completely drop edges at
+this point? or at least give it a try? (for the not dragging case)
+<eliason> I still think it's worth trying, but I think the general consensus
+was that we should drop it.  That's also the easier option, so for now, I
+guess it's fine.
+<marcopg> ok
+<marcopg> eliason, what should be the title of the clipboard rollover? (we are
+trying to get text objects right for now, but if you have general ideas...)
+<eliason> marcopg: Well, it would depend on what is in the clipboard.  For
+instance, if I copy some text, it should say "text clipping", or if I copy an
+image it should say "picture clipping"
+<marcopg> eliason, so [name of the object] + clipping?
+<eliason> marcopg:  If it is an activity object, it should be the name of the
+object i.e. "Eben's Shark Drawing", etc.
+<marcopg> oh ok
+<eliason> It's only a clipping if it is part of another larger context.
+<eliason> If the whole thing is an object itself, we use the object's name.
+<marcopg> eliason, I see now
+<marcopg> eliason, we want a preview of the objectm right? For text, should we
+show part of the text in the rollover?
+<eliason> marcopg: yeah, probably the first n characters of it, with an
+ellipsis at the end.
+<marcopg> eliason, on multiple lines I guess?
+<marcopg> something like, 4 lines of text on a 2 grid cells large menu, and
+ellipsize after that
+<marcopg> (the exact numbers doesn't matter, just the logic
+<eliason> marcopg:  Right.
