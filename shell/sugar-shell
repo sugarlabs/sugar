@@ -44,6 +44,15 @@ if not name or not len(name):
 	dialog.run()
 	profile.update()
 
+# Save our DBus Session Bus address somewhere it can be found
+#
+# WARNING!!! this is going away at some near future point, do not rely on it
+#
+dsba_file = os.path.join(env.get_profile_path(), "session_bus_address")
+f = open(dsba_file, "w")
+f.write(os.environ["DBUS_SESSION_BUS_ADDRESS"])
+f.close()
+
 model = ShellModel()
 shell = Shell(model)
 
@@ -53,10 +62,11 @@ args = ["sugar-nm-applet"]
 flags = gobject.SPAWN_SEARCH_PATH
 result = gobject.spawn_async(args, flags=flags, standard_output=False)
 
-
 tbh = TracebackUtils.TracebackHelper()
 try:
 	gtk.main()
 except KeyboardInterrupt:
 	print 'Ctrl+C pressed, exiting...'
 del tbh
+
+os.remove(dsba_file)
