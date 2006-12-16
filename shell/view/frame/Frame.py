@@ -78,6 +78,10 @@ class EventFrame(gobject.GObject):
         invisible.connect('motion-notify-event', self._motion_notify_cb)
         invisible.connect('enter-notify-event', self._enter_notify_cb)
         invisible.connect('leave-notify-event', self._leave_notify_cb)
+        
+        invisible.drag_dest_set(0, [], 0)
+        invisible.connect('drag_motion', self._drag_motion_cb)
+        invisible.connect('drag_leave', self._drag_leave_cb)
 
         invisible.realize()
         invisible.window.set_events(gtk.gdk.POINTER_MOTION_MASK |
@@ -89,9 +93,17 @@ class EventFrame(gobject.GObject):
 
     def _enter_notify_cb(self, widget, event):
         self._notify_enter(event.x, event.y)
+        logging.debug('EventFrame._enter_notify_cb ' + str(self._hover))
 
     def _motion_notify_cb(self, widget, event):
         self._notify_enter(event.x, event.y)
+        logging.debug('EventFrame._motion_notify_cb ' + str(self._hover))
+        
+    def _drag_motion_cb(self, widget, drag_context, x, y, timestamp):
+        drag_context.drag_status(0, timestamp);
+        self._notify_enter(x, y)
+        logging.debug('EventFrame._drag_motion_cb ' + str(self._hover))
+        return True
 
     def _notify_enter(self, x, y):
         screen_w = gtk.gdk.screen_width()
@@ -110,6 +122,15 @@ class EventFrame(gobject.GObject):
                 self.emit('enter-edge')
 
     def _leave_notify_cb(self, widget, event):
+        self._notify_leave()
+        logging.debug('EventFrame._leave_notify_cb ' + str(self._hover))
+        
+    def _drag_leave_cb(self, widget, drag_context, timestamp):
+        self._notify_leave()
+        logging.debug('EventFrame._drag_leave_cb ' + str(self._hover))
+        return True
+        
+    def _notify_leave(self):
         self._hover = EventFrame.HOVER_NONE
         if self._active:
             self.emit('leave')
@@ -220,8 +241,12 @@ class Frame:
         
     def _create_clipboard_panel(self, grid, x, y, width, height):
         [x, y, width, height] = grid.rectangle(x, y, width, height)
-        panel = ClipboardPanelWindow(x, y, width, height)
+        panel = ClipboardPanelWindow(self, x, y, width, height)
+
         self._connect_to_panel(panel)
+        panel.connect('drag-motion', self._drag_motion_cb)
+        panel.connect('drag-leave', self._drag_leave_cb)
+
         self._windows.append(panel)
 
         return panel
@@ -253,12 +278,26 @@ class Frame:
 
     def _enter_notify_cb(self, window, event):
         self._timeline.goto('slide_in', True)
-
+        logging.debug('Frame._enter_notify_cb ' + str(self._mode))
+        
+    def _drag_motion_cb(self, window, context, x, y, time):
+        self._timeline.goto('slide_in', True)
+        logging.debug('Frame._drag_motion_cb ' + str(self._mode))
+        return True
+        
+    def _drag_leave_cb(self, window, drag_context, timestamp):
+        self._leave_notify()
+        logging.debug('Frame._drag_leave_cb ' + str(self._mode))
+            
     def _leave_notify_cb(self, window, event):
         # FIXME for some reason every click cause also a leave-notify
         if event.state == gtk.gdk.BUTTON1_MASK:
             return
 
+        self._leave_notify()
+        logging.debug('Frame._leave_notify_cb ' + str(self._mode))
+                
+    def _leave_notify(self):
         if self._active_menus == 0 and \
            (self._mode == Frame.HIDE_ON_LEAVE or \
             self._mode == Frame.AUTOMATIC):
@@ -267,15 +306,18 @@ class Frame:
     def _enter_edge_cb(self, event_frame):
         self._mode = Frame.HIDE_ON_LEAVE
         self._timeline.play(None, 'slide_in')
-
+        logging.debug('Frame._enter_edge_cb ' + str(self._mode))
+        
     def _enter_corner_cb(self, event_frame):
         self._mode = Frame.HIDE_ON_LEAVE
         self._timeline.play('slide_in', 'slide_in')
-
+        logging.debug('Frame._enter_corner_cb ' + str(self._mode))
+        
     def _event_frame_leave_cb(self, event_frame):
         if self._mode != Frame.STICKY:
             self._timeline.goto('slide_out', True)
-
+        logging.debug('Frame._event_frame_leave_cb ' + str(self._mode))
+        
     def show_and_hide(self, seconds):
         self._mode = Frame.AUTOMATIC
         self._timeline.play()

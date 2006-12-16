@@ -8,8 +8,10 @@ from sugar.clipboard import clipboardservice
 from sugar import util
 
 class ClipboardPanelWindow(PanelWindow):
-    def __init__(self, x, y, width, height):
+    def __init__(self, frame, x, y, width, height):
         PanelWindow.__init__(self, x, y, width, height)
+
+        self._frame = frame
 
         # Listening for new clipboard objects
         clipboard = gtk.Clipboard()
@@ -51,6 +53,8 @@ class ClipboardPanelWindow(PanelWindow):
                 selection = clipboard.wait_for_contents(target)
                 if selection:
                     self._add_selection(key, selection)
+        
+        self._frame.show_and_hide(0)
 
     def _add_selection(self, key, selection):
         if selection.data:

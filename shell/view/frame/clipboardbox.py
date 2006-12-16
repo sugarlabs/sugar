@@ -32,6 +32,9 @@ class _ContextMap:
             self._context_map[context] = [object_id, data_types_left]
 
         return object_id
+
+    def has_context(self, context):
+        return context in self._context_map
  
 class ClipboardBox(hippo.CanvasBox):
     
@@ -91,10 +94,12 @@ class ClipboardBox(hippo.CanvasBox):
         logging.debug('ClipboardBox: ' + object_id + ' state was changed.')
 
     def drag_motion_cb(self, widget, context, x, y, time):
+        logging.debug('ClipboardBox._drag_motion_cb')
         context.drag_status(gtk.gdk.ACTION_COPY, time)
         return True
 
     def drag_drop_cb(self, widget, context, x, y, time):
+        logging.debug('ClipboardBox._drag_drop_cb')
         object_id = util.unique_id()
         self._context_map.add_context(context, object_id, len(context.targets))
         
@@ -115,7 +120,11 @@ class ClipboardBox(hippo.CanvasBox):
             object_id = self._context_map.get_object_id(context)
             self._add_selection(object_id, selection)
         else:
-            logging.warn('ClipboardBox: empty selection for target ' + selection.target)            
+            logging.warn('ClipboardBox: empty selection for target ' + selection.target)
+        
+        # If it's the last target to be processed, finish the dnd transaction
+        if not self._context_map.has_context(context):
+            context.finish(True, False, time)
 
     def drag_data_get_cb(self, widget, context, selection, targetType, eventTime):
         logging.debug("drag_data_get_cb: requested target " + selection.target)
