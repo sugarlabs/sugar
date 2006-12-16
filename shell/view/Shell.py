@@ -130,6 +130,7 @@ class Shell(gobject.GObject):
             self._frame.notify_key_release()
 
     def __window_opened_cb(self, screen, window):
+        logging.debug('Shell.__window_opened_cb')
         if window.get_window_type() == wnck.WINDOW_NORMAL:
             try:
                 activity_host = ActivityHost(self.get_model(), window)
@@ -143,6 +144,7 @@ class Shell(gobject.GObject):
             self.emit('activity-opened', activity_host)
 
     def __active_window_changed_cb(self, screen):
+        logging.debug('Shell.__active_window_changed_cb')
         window = screen.get_active_window()
         if not window or window.get_window_type() != wnck.WINDOW_NORMAL:
             return
@@ -157,6 +159,7 @@ class Shell(gobject.GObject):
         self._set_current_activity(activity_host)
 
     def __window_closed_cb(self, screen, window):
+        logging.debug('Shell.__window_closed_cb')
         if window.get_window_type() != wnck.WINDOW_NORMAL:
             return
 
@@ -207,6 +210,7 @@ class Shell(gobject.GObject):
                 logging.error('Cannot start activity.')
 
     def start_activity(self, activity_type):
+        logging.debug('Shell.start_activity')
         activity = ActivityFactory.create(activity_type)
         activity.execute('test', [])
         return activity
