@@ -13,4 +13,6 @@ sugar_PYTHON =      \
 
 bin_SCRIPTS = sugar-data-store
 
+DISTCLEANFILES = $(service_DATA)
+
 EXTRA_DIST = $(bin_SCRIPTS) org.laptop.sugar.DataStore.service.in

@@ -14,4 +14,6 @@ sugar_PYTHON =			\
 
 bin_SCRIPTS = sugar-clipboard
 
+DISTCLEANFILES = $(service_DATA)
+
 EXTRA_DIST = $(service_in_files) $(bin_SCRIPTS)

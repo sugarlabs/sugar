@@ -1,5 +1,4 @@
-activities/chat/chatactivity.py
 lib/src/sugar-tray-manager.c
-activities/web/webactivity.py
-sugar/chat/ChatEditor.py
+services/nm/nmclient.py
 shell/view/FirstTimeDialog.py
+sugar/chat/ChatEditor.py
