@@ -61,7 +61,6 @@ class ActivityFactory(dbus.service.Object):
     @dbus.service.method("com.redhat.Sugar.ActivityFactory")
     def create(self):
         activity = self._constructor()
-        activity.set_type(self._activity_type)
 
         self._activities.append(activity)
         activity.connect('destroy', self._activity_destroy_cb)

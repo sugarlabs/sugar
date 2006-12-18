@@ -88,7 +88,6 @@ class Activity(gtk.Window):
 
         self._shared = False
         self._activity_id = None
-        self._default_type = None
         self._service = None
         self._pservice = PresenceService()
 
@@ -105,17 +104,12 @@ class Activity(gtk.Window):
         self._bus = ActivityDbusService(bus_name, get_object_path(xid))
         self._bus.start(self._pservice, self)
 
-    def set_type(self, activity_type):
-        """Sets the activity type."""
-        self._activity_type = activity_type
-        self._default_type = activity.get_default_type(activity_type)
-
     def get_type(self):
         """Gets the activity type."""
-        return self._activity_type
+        return env.get_bundle_service_name()
 
     def get_default_type(self):
-        return self._default_type
+        return activity.get_default_type(self.get_type())
 
     def get_shared(self):
         """Returns TRUE if the activity is shared on the mesh."""
@@ -134,14 +128,15 @@ class Activity(gtk.Window):
 
         # Publish the default service, it's a copy of
         # one of those we found on the network.
-        services = activity_ps.get_services_of_type(self._default_type)
+        default_type = self.get_default_type()
+        services = activity_ps.get_services_of_type(default_type)
         if len(services) > 0:
             service = services[0]
             addr = service.get_address()
             port = service.get_port()
             properties = service.get_published_values()
             self._service = self._pservice.share_activity(
-                            self, self._default_type, properties, addr, port)
+                            self, default_type, properties, addr, port)
         else:
             logging.error('Cannot join the activity')
 
@@ -149,7 +144,8 @@ class Activity(gtk.Window):
         """Share the activity on the network."""
         logging.debug('Share activity %s on the network.' % self.get_id())
 
-        self._service = self._pservice.share_activity(self, self._default_type)
+        default_type = self.get_default_type()
+        self._service = self._pservice.share_activity(self, default_type)
         self._shared = True
 
     def execute(self, command, args):
