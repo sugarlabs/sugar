@@ -23,7 +23,7 @@ import dbus.service
 import gtk
 import gobject
 
-from sugar.presence.PresenceService import PresenceService
+from sugar.presence import PresenceService
 from sugar import activity
 from sugar import env
 import sugar.util
@@ -44,20 +44,30 @@ class ActivityDbusService(dbus.service.Object):
     The dbus service is separate from the actual Activity object so that we can
     tightly control what stuff passes through the dbus python bindings."""
 
-    def start(self, pservice, activity):
+    def __init__(self, activity):
+        xid = activity.window.xid
+        bus = dbus.SessionBus()
+        bus_name = dbus.service.BusName(get_service_name(xid), bus=bus)
+        dbus.service.Object.__init__(self, bus_name, get_object_path(xid))
+
         self._activity = activity
-        self._pservice = pservice        
+        self._pservice = PresenceService.get_instance()       
+
+    @dbus.service.method(ACTIVITY_INTERFACE)
+    def start(self):
+        """Start the activity."""
+        self._activity.start()
+
+    @dbus.service.method(ACTIVITY_INTERFACE)
+    def join(self, activity_ps_path):
+        """Join the activity specified by its presence service path."""
+        activity_ps = self._pservice.get(activity_ps_path)
+        return self._activity.join(activity_ps)
 
     @dbus.service.method(ACTIVITY_INTERFACE)
     def share(self):
         """Called by the shell to request the activity to share itself on the network."""
         self._activity.share()
-
-    @dbus.service.method(ACTIVITY_INTERFACE)
-    def join(self, activity_ps_path):
-        """Join the activity specified by its presence service path"""
-        activity_ps = self._pservice.get(activity_ps_path)
-        return self._activity.join(activity_ps)
 
     @dbus.service.method(ACTIVITY_INTERFACE)
     def get_id(self):
@@ -90,7 +100,7 @@ class Activity(gtk.Window):
         self._shared = False
         self._activity_id = None
         self._service = None
-        self._pservice = PresenceService()
+        self._pservice = PresenceService.get_instance()
 
         self.present()
     
@@ -98,12 +108,11 @@ class Activity(gtk.Window):
         group.realize()
         self.window.set_group(group.window)
 
-        bus = dbus.SessionBus()
-        xid = self.window.xid
+        self._bus = ActivityDbusService(self)
 
-        bus_name = dbus.service.BusName(get_service_name(xid), bus=bus)
-        self._bus = ActivityDbusService(bus_name, get_object_path(xid))
-        self._bus.start(self._pservice, self)
+    def start(self):
+        """Start the activity."""
+        self._activity_id = sugar.util.unique_id()
 
     def get_type(self):
         """Gets the activity type."""
@@ -119,8 +128,6 @@ class Activity(gtk.Window):
 
     def get_id(self):
         """Get the unique activity identifier."""
-        if self._activity_id == None:
-            self._activity_id = sugar.util.unique_id()
         return self._activity_id
 
     def join(self, activity_ps):

@@ -209,7 +209,7 @@ class Shell(gobject.GObject):
     def start_activity(self, activity_type):
         logging.debug('Shell.start_activity')
         activity = ActivityFactory.create(activity_type)
-        activity.execute('test', [])
+        activity.start()
         return activity
 
     def set_zoom_level(self, level):
