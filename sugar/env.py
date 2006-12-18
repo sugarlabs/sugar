@@ -24,6 +24,12 @@ try:
 except ImportError:
     from sugar.__installed__ import *
 
+def get_bundle_path():
+    if os.environ.has_key('SUGAR_BUNDLE_PATH'):
+        return os.environ['SUGAR_BUNDLE_PATH']
+    else:
+        return None
+
 def get_profile_path():
     if os.environ.has_key('SUGAR_PROFILE'):
         profile_id = os.environ['SUGAR_PROFILE']

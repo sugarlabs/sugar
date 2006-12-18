@@ -15,6 +15,7 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+import os
 import sys
 import logging
 
@@ -25,6 +26,8 @@ import gtk
 
 from sugar.presence.PresenceService import PresenceService
 from sugar.activity import Activity
+from sugar.activity.bundle import Bundle
+from sugar import logger
 
 def get_path(activity_name):
     """Returns the activity path"""
@@ -93,6 +96,13 @@ def create(activity_name):
 
     return activity
 
-def register_factory(name, activity_class):
-    """Register the activity factory."""
-    factory = ActivityFactory(name, activity_class)
+def start_factory(activity_class, bundle_path):
+    """Start the activity factory."""
+    bundle = Bundle(bundle_path)
+
+    logger.start(bundle.get_name())
+
+    os.environ['SUGAR_BUNDLE_PATH'] = bundle_path
+    os.environ['SUGAR_BUNDLE_SERVICE_NAME'] = bundle.get_service_name()
+
+    factory = ActivityFactory(bundle.get_service_name(), activity_class)
