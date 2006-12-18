@@ -25,6 +25,7 @@ import gobject
 
 from sugar.presence.PresenceService import PresenceService
 from sugar import activity
+from sugar import env
 import sugar.util
 
 ACTIVITY_SERVICE_NAME = "org.laptop.Activity"
@@ -109,6 +110,7 @@ class Activity(gtk.Window):
         return env.get_bundle_service_name()
 
     def get_default_type(self):
+        """Gets the type of the default activity network service"""
         return activity.get_default_type(self.get_type())
 
     def get_shared(self):
