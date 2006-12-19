@@ -20,6 +20,7 @@ import logging
 import gobject
 import dbus, dbus.service
 from sugar import profile
+from sugar.graphics import iconcolor
 
 
 PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
@@ -123,7 +124,7 @@ class BuddyDBusHelper(dbus.service.Object):
         props['owner'] = self._parent.is_owner()
         color = self._parent.get_color()
         if color:
-            props[_BUDDY_KEY_COLOR] = self._parent.get_color()
+            props[_BUDDY_KEY_COLOR] = color
         return props
 
     @dbus.service.method(BUDDY_DBUS_INTERFACE,
@@ -259,7 +260,9 @@ class Buddy(object):
             # service has been found and resolved
             self._valid = True
             self._get_buddy_icon(service)
-            self._color = service.get_one_property(_BUDDY_KEY_COLOR)
+            color = service.get_one_property(_BUDDY_KEY_COLOR)
+            if iconcolor.is_valid(color):
+                self._color = color
             self._current_activity = service.get_one_property(_BUDDY_KEY_CURACT)
             # Monitor further buddy property changes, like current activity
             # and color
@@ -273,7 +276,7 @@ class Buddy(object):
     def __buddy_presence_service_property_changed_cb(self, service, keys):
         if _BUDDY_KEY_COLOR in keys:
             new_color = service.get_one_property(_BUDDY_KEY_COLOR)
-            if new_color and self._color != new_color:
+            if new_color and self._color != new_color and iconcolor.is_valid(new_color):
                 self._color = new_color
                 self._dbus_helper.PropertyChanged([_BUDDY_KEY_COLOR])
         if _BUDDY_KEY_CURACT in keys:
@@ -426,7 +429,7 @@ class Owner(Buddy):
     def __init__(self, ps, bus_name, object_id, icon_cache):
         Buddy.__init__(self, bus_name, object_id, None, icon_cache)
         self._nick_name = profile.get_nick_name()
-        self._color = profile.get_color()
+        self._color = profile.get_color().to_string()
         self._ps = ps
 
     def add_service(self, service):
