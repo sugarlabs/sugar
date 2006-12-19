@@ -102,7 +102,7 @@ class Activity(gtk.Window):
         self._service = None
         self._pservice = PresenceService.get_instance()
 
-        self.present()
+        self.realize()
     
         group = gtk.Window()
         group.realize()
@@ -113,6 +113,7 @@ class Activity(gtk.Window):
     def start(self):
         """Start the activity."""
         self._activity_id = sugar.util.unique_id()
+        self.present()
 
     def get_type(self):
         """Gets the activity type."""
@@ -148,6 +149,8 @@ class Activity(gtk.Window):
                             self, default_type, properties, addr, port)
         else:
             logging.error('Cannot join the activity')
+
+        self.present()
 
     def share(self):
         """Share the activity on the network."""
