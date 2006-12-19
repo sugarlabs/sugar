@@ -727,12 +727,6 @@ class NMClientApp:
                                          signal_name="NameOwnerChanged",
                                          dbus_interface="org.freedesktop.DBus")
 
-        sys_bus.add_signal_receiver(self.catchall_signal_handler,
-                                         dbus_interface=NM_IFACE) 
-
-        sys_bus.add_signal_receiver(self.catchall_signal_handler,
-                                         dbus_interface=NM_IFACE + 'Devices')
-
         for (signal, handler) in self._sig_handlers.items():
             sys_bus.add_signal_receiver(handler, signal_name=signal, dbus_interface=NM_IFACE)
 
@@ -745,19 +739,6 @@ class NMClientApp:
                 self._nm_present = True
         except dbus.DBusException:
             pass
-
-    @dbus.decorators.explicitly_pass_message
-    def catchall_signal_handler(self, *args, **keywords):
-        dbus_message = keywords['dbus_message']
-        mem = dbus_message.get_member()
-        iface = dbus_message.get_interface()
-
-        if iface == NM_IFACE and mem in self._sig_handlers.keys():
-            return
-
-        logging.debug('Caught signal %s.%s' % (dbus_message.get_interface(), mem))
-        for arg in args:
-            logging.debug('        ' + str(arg))
 
     def _menu_item_clicked_cb(self, widget, event, dev_data):
         (device, network) = dev_data
