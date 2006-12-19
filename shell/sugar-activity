@@ -20,5 +20,13 @@ import sys
 import os
 
 from sugar.activity import ActivityFactory
+from sugar import env
+
+ppath = env.get_profile_path()
+bus_file = os.path.join(ppath, "session_bus_address")
+f = open(bus_file, "r")
+bus_name = f.read()
+f.close()
+os.environ['DBUS_SESSION_BUS_ADDRESS'] = bus_name
 
 ActivityFactory.create(sys.argv[1])
