@@ -29,4 +29,5 @@ bus_name = f.read()
 f.close()
 os.environ['DBUS_SESSION_BUS_ADDRESS'] = bus_name
 
-ActivityFactory.create(sys.argv[1])
+activity = ActivityFactory.create(sys.argv[1])
+activity.start()
