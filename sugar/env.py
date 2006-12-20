@@ -36,6 +36,12 @@ def get_bundle_service_name():
     else:
         return None
 
+def get_bundle_default_type():
+    if os.environ.has_key('SUGAR_BUNDLE_DEFAULT_TYPE'):
+        return os.environ['SUGAR_BUNDLE_DEFAULT_TYPE']
+    else:
+        return None
+
 def get_profile_path():
     if os.environ.has_key('SUGAR_PROFILE'):
         profile_id = os.environ['SUGAR_PROFILE']

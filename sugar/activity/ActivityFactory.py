@@ -103,5 +103,6 @@ def start_factory(activity_class, bundle_path):
 
     os.environ['SUGAR_BUNDLE_PATH'] = bundle_path
     os.environ['SUGAR_BUNDLE_SERVICE_NAME'] = bundle.get_service_name()
+    os.environ['SUGAR_BUNDLE_DEFAULT_TYPE'] = bundle.get_default_type()
 
     factory = ActivityFactory(bundle.get_service_name(), activity_class)

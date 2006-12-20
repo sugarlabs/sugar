@@ -69,6 +69,13 @@ class Bundle:
         """Get the activity service name"""
         return self._service_name
 
+    def get_default_type(self):
+        """Get the type of the main network service which tracks presence
+           and provides info about the activity, for example the title."""
+        splitted = self.get_service_name().split('.')
+        splitted.reverse()
+        return '_' + '_'.join(splitted) + '._udp'
+
     def get_icon(self):
         """Get the activity icon name"""
         return self._icon

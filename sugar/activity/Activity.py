@@ -125,7 +125,7 @@ class Activity(gtk.Window):
 
     def get_default_type(self):
         """Gets the type of the default activity network service"""
-        return activity.get_default_type(self.get_type())
+        return env.get_bundle_default_type()
 
     def get_shared(self):
         """Returns TRUE if the activity is shared on the mesh."""
