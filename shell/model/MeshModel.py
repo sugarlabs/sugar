@@ -24,12 +24,13 @@ class ActivityModel:
     def __init__(self, activity, bundle, service):
         self._service = service
         self._activity = activity
+        self._bundle = bundle
 
     def get_id(self):
         return self._activity.get_id()
         
     def get_icon_name(self):
-        return bundle.get_icon()
+        return self._bundle.get_icon()
     
     def get_color(self):
         return IconColor(self._activity.get_color())
@@ -121,12 +122,14 @@ class MeshModel(gobject.GObject):
         self._check_service(service)
 
     def _check_service(self, service):
-        if self._bundle_registry.get_bundle(service.get_type()) != None:
+        service_type = service.get_type()
+        bundle = self._bundle_registry.find_by_default_type(service_type)
+        if bundle != None:
             activity_id = service.get_activity_id()
             if not self.has_activity(activity_id):
                 activity = self._pservice.get_activity(activity_id)
                 if activity != None:
-                    self.add_activity(activity, service)
+                    self.add_activity(bundle, activity, service)
 
     def has_activity(self, activity_id):
         return self._activities.has_key(activity_id)
@@ -137,8 +140,7 @@ class MeshModel(gobject.GObject):
         else:
             return None
 
-    def add_activity(self, activity, service):
-        bundle = self._bundle_registry.get_bundle(service.get_type())
+    def add_activity(self, bundle, activity, service):
         model = ActivityModel(activity, bundle, service)
         self._activities[model.get_id()] = model
         self.emit('activity-added', model)
