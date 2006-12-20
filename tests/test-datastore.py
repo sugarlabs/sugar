@@ -17,6 +17,7 @@
 
 import unittest
 from sugar.datastore import datastore
+from sugar import util
 import dbus
 
 class NotFoundError(dbus.DBusException): pass
@@ -26,14 +27,39 @@ _ds = datastore.get_instance()
 class DataStoreTestCase(unittest.TestCase):
     _TEST_DATA = "adsfkjadsfadskjasdkjf"
     _TEST_PROPS = {'foo': 1, 'bar': 'baz'}
-    def _create_test_object(self):
-        obj = _ds.create(self._TEST_DATA, self._TEST_PROPS)
+    def _create_test_object(self, activity_id=None):
+        obj = _ds.create(self._TEST_DATA, self._TEST_PROPS, activity_id=activity_id)
         self.assert_(obj)
         return obj
 
     def testObjectCreate(self):
         obj = self._create_test_object()
         self.assert_(obj.uid())
+        _ds.delete(obj)
+
+    def testObjectCreateWithActivityId(self):
+        # Try known good create
+        act_id = util.unique_id('afdkjakjddasf')
+        obj = self._create_test_object(act_id)
+        self.assert_(obj.uid())
+        _ds.delete(obj)
+
+    def testObjectCreateWithBadActivityId(self):
+        # try malformed activity id
+        try:
+            uid = self._create_test_object("adfadf")
+        except ValueError:
+            pass
+        else:
+            self.fail("Expected ValueError")
+
+    def testObjectGetActivityObject(self):
+        # create a new object
+        act_id = util.unique_id('afdkjakjddasf')
+        obj = self._create_test_object(act_id)
+        self.assert_(obj.uid())
+        obj2 = _ds.get(activity_id=act_id)
+        self.assert_(obj2)
         _ds.delete(obj)
 
     def testObjectGet(self):
@@ -94,7 +120,10 @@ class DataStoreTestCase(unittest.TestCase):
 def main():
     dsTestSuite = unittest.TestSuite()
     dsTestSuite.addTest(DataStoreTestCase('testObjectCreate'))
+    dsTestSuite.addTest(DataStoreTestCase('testObjectCreateWithActivityId'))
+    dsTestSuite.addTest(DataStoreTestCase('testObjectCreateWithBadActivityId'))
     dsTestSuite.addTest(DataStoreTestCase('testObjectGet'))
+    dsTestSuite.addTest(DataStoreTestCase('testObjectGetActivityObject'))
     dsTestSuite.addTest(DataStoreTestCase('testObjectDelete'))
     dsTestSuite.addTest(DataStoreTestCase('testObjectFind'))
     dsTestSuite.addTest(DataStoreTestCase('testObjectGetData'))

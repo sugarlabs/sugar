@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import dbus, dbus.glib, gobject
+from sugar import util
 
 class ObjectCache(object):
     def __init__(self):
@@ -159,11 +160,27 @@ class DataStore(gobject.GObject):
         # FIXME
         pass
 
-    def get(self, uid):
-        return self._new_object(self._ds.get(int(uid)))
+    def get(self, uid=None, activity_id=None):
+        if not activity_id and not uid:
+            raise ValueError("At least one of activity_id or uid must be specified")
+        if activity_id and uid:
+            raise ValueError("Only one of activity_id or uid can be specified")
+        if activity_id:
+            if not util.validate_activity_id(activity_id):
+                raise ValueError("activity_id must be valid")
+            return self._new_object(self._ds.getActivityObject(activity_id))
+        elif uid:
+            if not len(uid):
+                raise ValueError("uid must be valid")
+            return self._new_object(self._ds.get(int(uid)))
+        raise RuntimeError("At least one of activity_id or uid must be specified")
 
-    def create(self, data, prop_dict={}):
-        op = self._ds.create(dbus.ByteArray(data), dbus.Dictionary(prop_dict))
+    def create(self, data, prop_dict={}, activity_id=None):
+        if activity_id and not util.validate_activity_id(activity_id):
+            raise ValueError("activity_id must be valid")
+        if not activity_id:
+            activity_id = ""
+        op = self._ds.create(dbus.ByteArray(data), dbus.Dictionary(prop_dict), activity_id)
         return self._new_object(op)
 
     def delete(self, obj):

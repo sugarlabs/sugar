@@ -20,6 +20,7 @@ import dbus, dbus.glib, gobject
 import logging
 import sqlite
 import dbus_helpers
+import string
 
 have_sugar = False
 try:
@@ -27,6 +28,21 @@ try:
     have_sugar = True
 except ImportError:
     pass
+
+def is_hex(s):
+    return s.strip(string.hexdigits) == ''    
+
+ACTIVITY_ID_LEN = 40
+
+def validate_activity_id(actid):
+    """Validate an activity ID."""
+    if not isinstance(actid, str) and not isinstance(actid, unicode):
+        return False
+    if len(actid) != ACTIVITY_ID_LEN:
+        return False
+    if not is_hex(actid):
+        return False
+    return True
 
 
 _DS_SERVICE = "org.laptop.sugar.DataStore"
@@ -75,9 +91,21 @@ class DataStoreDBusHelper(dbus.service.Object):
         return _create_op(self._parent.get(uid))
 
     @dbus.service.method(_DS_DBUS_INTERFACE,
-                        in_signature="aya{sv}", out_signature="o")
-    def create(self, data, prop_dict):
-        uid = self._parent.create(data, prop_dict)
+                        in_signature="s", out_signature="o")
+    def getActivityObject(self, activity_id):
+        if not validate_activity_id(activity_id):
+            raise ValueError("invalid activity id")
+        return _create_op(self._parent.get_activity_object(activity_id))
+
+    @dbus.service.method(_DS_DBUS_INTERFACE,
+                        in_signature="aya{sv}s", out_signature="o")
+    def create(self, data, prop_dict, activity_id):
+        if len(activity_id):
+            if not validate_activity_id(activity_id):
+                raise ValueError("invalid activity id")
+        else:
+            activity_id = None
+        uid = self._parent.create(data, prop_dict, activity_id)
         return _create_op(uid)
 
     @dbus.service.method(_DS_DBUS_INTERFACE,
@@ -181,6 +209,7 @@ class DataStore(object):
             self._dbcx.commit()
             curs.execute('CREATE TABLE objects (' \
                 'uid INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' \
+                'activity_id VARCHAR(50), ' \
                 'data BLOB' \
                 ');')
             curs.execute('CREATE TABLE properties (' \
@@ -202,10 +231,24 @@ class DataStore(object):
             return uid
         raise NotFoundError("Object %d was not found." % uid)
 
-    def create(self, data, prop_dict=None):
+    def get_activity_object(self, activity_id):
+        curs = self._dbcx.cursor()
+        curs.execute("SELECT uid FROM objects WHERE activity_id='%s';" % activity_id)
+        res = curs.fetchall()
+        self._dbcx.commit()
+        if len(res) > 0:
+            del curs
+            return res[0][0]
+        del curs
+        raise NotFoundError("Object for activity %s was not found." % activity_id)
+
+    def create(self, data, prop_dict=None, activity_id=None):
         curs = self._dbcx.cursor()
         data = sqlite.encode(_get_data_as_string(data))
-        curs.execute("INSERT INTO objects (uid, data) VALUES (NULL, '%s');" % data)
+        if not activity_id:
+            curs.execute("INSERT INTO objects (uid, data) VALUES (NULL, '%s');" % data)
+        else:
+            curs.execute("INSERT INTO objects (uid, data, activity_id) VALUES (NULL, '%s', '%s');" % (data, activity_id))
         curs.execute("SELECT last_insert_rowid();")
         rows = curs.fetchall()
         self._dbcx.commit()
