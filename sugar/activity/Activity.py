@@ -112,6 +112,10 @@ class Activity(gtk.Window):
 
     def start(self):
         """Start the activity."""
+        if self._activity_id != None:
+            logging.warning('The activity has been already started.')
+            return
+
         self._activity_id = sugar.util.unique_id()
         self.present()
 
@@ -133,6 +137,10 @@ class Activity(gtk.Window):
 
     def join(self, activity_ps):
         """Join an activity shared on the network."""
+        if self._activity_id != None:
+            logging.warning('The activity has been already started.')
+            return
+
         self._shared = True
         self._activity_id = activity_ps.get_id()
 
