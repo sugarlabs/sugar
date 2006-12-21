@@ -21,6 +21,7 @@ import hippo
 from sugar.graphics.menu import Menu
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.presence import PresenceService
+import _sugar
 
 _ICON_SIZE = 75
 
@@ -33,15 +34,19 @@ class BuddyMenu(Menu):
         self._buddy = buddy
         self._shell = shell
 
-        icon_item = None
         pixbuf = self._get_buddy_icon_pixbuf()
         if pixbuf:
+            icon_item = hippo.CanvasImage()
             scaled_pixbuf = pixbuf.scale_simple(_ICON_SIZE, _ICON_SIZE,
                                                 gtk.gdk.INTERP_BILINEAR)
             del pixbuf
-            icon_item = hippo.CanvasImage(pixbuf=scaled_pixbuf)
-
-        Menu.__init__(self, buddy.get_name(), icon_item)
+            Menu.__init__(self, buddy.get_name(), icon_item)
+            # FIXME: have to set the image _after_ adding the HippoCanvasImage
+            # to it's parent item, because that sets the HippoCanvasImage's context,
+            # which resets the object's 'image' property.  Grr.
+            _sugar.hippo_canvas_image_set_image_from_gdk_pixbuf(icon_item, scaled_pixbuf)
+        else:
+            Menu.__init__(self, buddy.get_name(), None)
 
         self._buddy.connect('icon-changed', self.__buddy_icon_changed_cb)
 
