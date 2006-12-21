@@ -230,3 +230,12 @@
   (c-name "sugar_download_get_percent")
   (return-type "gint")
 )
+
+(define-function hippo_canvas_image_set_image_from_gdk_pixbuf
+  (c-name "sugar_hippo_canvas_image_set_image_from_gdk_pixbuf")
+  (return-type "none")
+  (parameters
+    '("GObject*" "image")
+    '("GdkPixbuf*" "pixbuf")
+  )
+)
