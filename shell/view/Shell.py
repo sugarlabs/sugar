@@ -201,8 +201,22 @@ class Shell(gobject.GObject):
             activity_ps = pservice.get_activity(activity_id)
 
             if activity_ps:
-                activity = ActivityFactory.create(bundle_id)
-                activity.join(activity_ps.object_path())
+                # Get the service name for this activity, if
+                # we have a bundle on the system capable of handling
+                # this activity type
+                breg = self._model.get_bundle_registry()
+                bundle = breg.find_by_default_type(bundle_id)
+                if bundle:
+                    serv_name = bundle.get_service_name()
+                    try:
+                        activity = ActivityFactory.create(serv_name)
+                    except DBusException, e:
+                        logging.error("Couldn't launch activity %s:\n%s" % (serv_name, e))
+                    else:
+                        logging.debug("Joining activity type %s id %s" % (serv_name, activity_id))
+                        activity.join(activity_ps.object_path())
+                else:
+                    logging.error("Couldn't find activity for type %s" % bundle_id)
             else:
                 logging.error('Cannot start activity.')
 
