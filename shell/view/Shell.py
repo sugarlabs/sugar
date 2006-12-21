@@ -88,9 +88,12 @@ class Shell(gobject.GObject):
         self._frame = Frame(self)
         self._frame.show_and_hide(3)
 
-    def _open_terminal_cb(self):
-        self.start_activity('org.sugar.Terminal')
-        return False
+    def _handle_camera_key(self):
+        if self._current_host:
+            if self._current_host.execute('camera', []):
+                return
+
+        self.start_activity('org.laptop.CameraActivity')
 
     def __global_key_pressed_cb(self, grabber, key):
         if key == 'F1':
@@ -114,7 +117,7 @@ class Shell(gobject.GObject):
         elif key == '<shft><alt>F10':
             self.toggle_chat_visibility()
         elif key == '0xDC': # Camera key
-            pass
+            self._handle_camera_key()
         elif key == '0xE0': # Overlay key
             self.toggle_chat_visibility()
         elif key == '0x93': # Frame key

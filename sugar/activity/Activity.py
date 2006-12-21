@@ -85,9 +85,9 @@ class ActivityDbusService(dbus.service.Object):
         return self._activity.get_shared()
 
     @dbus.service.method(ACTIVITY_INTERFACE,
-                         in_signature="sas", out_signature="")
+                         in_signature="sas", out_signature="b")
     def execute(self, command, args):
-        self._activity.execute(command, args)
+        return self._activity.execute(command, args)
 
 class Activity(gtk.Window):
     """Base Activity class that all other Activities derive from."""
@@ -170,7 +170,7 @@ class Activity(gtk.Window):
 
     def execute(self, command, args):
         """Execute the given command with args"""
-        pass
+        return False
 
     def __destroy_cb(self, window):
         if self._bus:

@@ -90,6 +90,9 @@ class ActivityHost:
         else:
             return profile.get_color()
 
+    def execute(self, command, args):
+        self._activity.execute(command, args)
+
     def share(self):
         self._activity.share()
         self._chat_widget.share()
