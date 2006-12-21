@@ -151,7 +151,7 @@ def cmd_uninstall(prefix):
         shutil.rmtree(path)
 
 def cmd_clean():
-    os.path.walk('.', delete_backups, None)
+    os.path.walk('.', _delete_backups, None)
 
 def start():
     if len(sys.argv) < 2:
