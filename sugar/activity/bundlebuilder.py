@@ -100,11 +100,12 @@ def _delete_backups(arg, dirname, names):
 
 def cmd_help():
     print 'Usage: \n\
-setup.py dev     - setup for development \n\
-setup.py dist    - create a bundle package \n\
-setup.py install - install the bundle \n\
-setup.py clean   - clean the directory \n\
-setup.py help    - print this message \n\
+setup.py dev                 - setup for development \n\
+setup.py dist                - create a bundle package \n\
+setup.py install   [dirname] - install the bundle \n\
+setup.py uninstall [dirname] - uninstall the bundle \n\
+setup.py clean               - clean the directory \n\
+setup.py help                - print this message \n\
 '
 
 def cmd_dev():
