@@ -34,6 +34,7 @@ class HomeWindow(gtk.Window):
 
         self.realize()
         self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
+        self.connect("key-release-event", self._key_release_cb)
 
         self._nb = gtk.Notebook()
         self._nb.set_show_border(False)
@@ -43,8 +44,8 @@ class HomeWindow(gtk.Window):
         self._nb.show()
 
         canvas = hippo.Canvas()
-        box = HomeBox(shell)
-        canvas.set_root(box)
+        self._home_box = HomeBox(shell)
+        canvas.set_root(self._home_box)
         self._nb.append_page(canvas)
         canvas.show()
 
@@ -60,6 +61,11 @@ class HomeWindow(gtk.Window):
         self._nb.append_page(canvas)
         canvas.show()
 
+    def _key_release_cb(self, widget, event): 
+        keyname = gtk.gdk.keyval_name(event.keyval)
+        if keyname == "Alt_L":
+            self._home_box.release()
+            
     def set_zoom_level(self, level):
         if level == sugar.ZOOM_HOME:
             self._nb.set_current_page(0)
@@ -67,3 +73,6 @@ class HomeWindow(gtk.Window):
             self._nb.set_current_page(1)
         elif level == sugar.ZOOM_MESH:
             self._nb.set_current_page(2)
+        
+    def get_home_box(self):
+        return self._home_box   

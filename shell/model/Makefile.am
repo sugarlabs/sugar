@@ -6,4 +6,6 @@ sugar_PYTHON =			\
 	Invites.py		\
 	Owner.py		\
 	MeshModel.py		\
-	ShellModel.py
+	ShellModel.py		\
+	homeactivity.py		\
+	homemodel.py

@@ -56,7 +56,7 @@ class Timeline:
         del self._tags[name]
 
     def _next_frame(self, tag, frame):
-        n_frames = tag.start_frame - tag.end_frame
+        n_frames = tag.end_frame - tag.start_frame + 1
         self._observer.next_frame(tag.name, frame, n_frames)
 
     def goto(self, tag_name, end_frame=False):

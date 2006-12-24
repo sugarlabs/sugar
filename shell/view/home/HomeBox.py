@@ -25,13 +25,12 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarHomeBox'
 
     def __init__(self, shell):
-        hippo.CanvasBox.__init__(self, background_color=0xe2e2e2ff,
-                                 yalign=2)
+        hippo.CanvasBox.__init__(self, background_color=0xe2e2e2ff, yalign=2)
 
         grid = Grid()
-        donut = ActivitiesDonut(shell, box_width=grid.dimension(7),
-                                box_height=grid.dimension(7))
-        self.append(donut)
+        self._donut = ActivitiesDonut(shell, box_width=grid.dimension(7),
+                                      box_height=grid.dimension(7))
+        self.append(self._donut)
 
         self._my_icon = MyIcon()
         style.apply_stylesheet(self._my_icon, 'home.MyIcon')
@@ -43,3 +42,15 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
         [icon_width, icon_height] = self._my_icon.get_allocation()
         self.move(self._my_icon, (width - icon_width) / 2,
                   (height - icon_height) / 2)
+                  
+    def has_activities(self):
+        return self._donut.has_activities()
+
+    def grab_and_rotate(self):
+        pass
+            
+    def rotate(self):
+        pass
+
+    def release(self):
+        pass

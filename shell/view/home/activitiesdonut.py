@@ -19,6 +19,7 @@ import math
 
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import style
+from model.homemodel import HomeModel
 
 class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarActivitiesDonut'
@@ -26,14 +27,16 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
         hippo.CanvasBox.__init__(self, **kwargs)
 
         self._activities = {}
+        self._shell = shell
 
-        shell.connect('activity_opened', self.__activity_opened_cb)
-        shell.connect('activity_closed', self.__activity_closed_cb)
+        self._model = HomeModel(shell)
+        self._model.connect('activity-added', self._activity_added_cb)
+        self._model.connect('activity-removed', self._activity_removed_cb) 
 
-    def __activity_opened_cb(self, model, activity):
+    def _activity_added_cb(self, model, activity):
         self._add_activity(activity)
 
-    def __activity_closed_cb(self, model, activity):
+    def _activity_removed_cb(self, model, activity):
         self._remove_activity(activity)
     
     def _remove_activity(self, activity):
@@ -47,15 +50,17 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
 
         icon = CanvasIcon(icon_name=icon_name, color=icon_color)
         style.apply_stylesheet(icon, 'ring.ActivityIcon')
-        icon.connect('activated', self.__activity_icon_clicked_cb, activity)
+        icon.connect('activated', self._activity_icon_clicked_cb, activity)
         self.append(icon, hippo.PACK_FIXED)
 
         self._activities[activity.get_id()] = icon
 
         self.emit_paint_needed(0, 0, -1, -1)
 
-    def __activity_icon_clicked_cb(self, item, activity):
-        activity.present()
+    def _activity_icon_clicked_cb(self, item, activity):
+        activity_host = self._shell.get_activity(activity.get_id())
+        if activity_host:
+            activity_host.present()
 
     def _get_angles(self, index):
         angle = 2 * math.pi / 8

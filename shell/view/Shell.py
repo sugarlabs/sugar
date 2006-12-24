@@ -95,6 +95,7 @@ class Shell(gobject.GObject):
         self._key_grabber.grab('0xDC') # Camera key
         self._key_grabber.grab('0xE0') # Overlay key
         self._key_grabber.grab('0x93') # Frame key
+        self._key_grabber.grab('<alt>Tab')
 
         # For non-OLPC machines
         self._key_grabber.grab('<shft><alt>F9')
@@ -127,6 +128,10 @@ class Shell(gobject.GObject):
             self.toggle_chat_visibility()
         elif key == '0x93': # Frame key
             self._frame.notify_key_press()
+        elif key == '<alt>Tab':
+            self.set_zoom_level(sugar.ZOOM_HOME)
+            box = self._home_window.get_home_box()
+            box.grab_and_rotate()
 
     def _key_released_cb(self, grabber, key):
         if key == '<shft><alt>F9':
@@ -202,7 +207,7 @@ class Shell(gobject.GObject):
     def join_activity(self, bundle_id, activity_id):
         pservice = PresenceService.get_instance()
 
-        activity = self._get_activity(activity_id)
+        activity = self.get_activity(activity_id)
         if activity:
             activity.present()
         else:
@@ -244,11 +249,11 @@ class Shell(gobject.GObject):
     def get_current_activity(self):
         activity_id = self._model.get_current_activity()
         if activity_id:
-            return self._get_activity(activity_id)
+            return self.get_activity(activity_id)
         else:
             return None
 
-    def _get_activity(self, activity_id):
+    def get_activity(self, activity_id):
         for host in self._hosts.values():
             if host.get_id() == activity_id:
                 return host
