@@ -34,11 +34,6 @@ from _sugar import KeyGrabber
 import sugar
 
 class Shell(gobject.GObject):
-    __gsignals__ = {
-        'activity-changed': (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
-    }
-
     def __init__(self, model):
         gobject.GObject.__init__(self)
 
@@ -65,9 +60,8 @@ class Shell(gobject.GObject):
         home_model = self._model.get_home()
         home_model.connect('activity-added', self._activity_added_cb)
         home_model.connect('activity-removed', self._activity_removed_cb)
-
-        self._screen.connect('active-window-changed',
-                             self.__active_window_changed_cb)
+        home_model.connect('active-activity-changed',
+                           self._active_activity_changed_cb)
 
         self._frame = Frame(self)
         self._frame.show_and_hide(3)
@@ -141,37 +135,14 @@ class Shell(gobject.GObject):
         activity_host = ActivityHost(home_activity)
         self._hosts[activity_host.get_xid()] = activity_host
 
-    def __active_window_changed_cb(self, screen):
-        logging.debug('Shell.__active_window_changed_cb')
-        window = screen.get_active_window()
-        if not window or window.get_window_type() != wnck.WINDOW_NORMAL:
-            return
-        if not self._hosts.has_key(window.get_xid()):
-            return
-
-        activity_host = self._hosts[window.get_xid()]
-        current = self._model.get_current_activity()
-        if activity_host.get_id() == current:
-            return
-
-        self._set_current_activity(activity_host)
-
     def _activity_removed_cb(self, home_model, home_activity):
-        xid = home_activity.get_window().get_xid()
-        if not self._hosts.has_key(xid):
-            return
+        xid = home_activity.get_xid()
+        if self._hosts.has_key(xid):
+            self._hosts[xid].destroy()
+            del self._hosts[xid]
 
-        self._hosts[xid].destroy()
-        del self._hosts[xid]
-
-        if len(self._hosts) == 0:
-            self._set_current_activity(None)
-
-    def _set_current_activity(self, host):
-        if host:
-            self._model.set_current_activity(host.get_id())
-        else:
-            self._model.set_current_activity(None)
+    def _active_activity_changed_cb(self, home_model, home_activity):
+        host = self._hosts[home_activity.get_xid()]
 
         if self._current_host:
             self._current_host.set_active(False)
@@ -180,8 +151,6 @@ class Shell(gobject.GObject):
 
         if self._current_host:
             self._current_host.set_active(True)
-
-        self.emit('activity-changed', host)
 
     def get_model(self):
         return self._model
@@ -229,11 +198,7 @@ class Shell(gobject.GObject):
             self._home_window.set_zoom_level(level)
 
     def get_current_activity(self):
-        activity_id = self._model.get_current_activity()
-        if activity_id:
-            return self.get_activity(activity_id)
-        else:
-            return None
+        return self._current_host
 
     def get_activity(self, activity_id):
         for host in self._hosts.values():

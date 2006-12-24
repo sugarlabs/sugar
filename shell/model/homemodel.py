@@ -14,6 +14,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
+
 import gobject
 import wnck
 
@@ -22,12 +24,15 @@ from model.homeactivity import HomeActivity
 class HomeModel(gobject.GObject):
 
     __gsignals__ = {
-        'activity-added':   (gobject.SIGNAL_RUN_FIRST, 
-                             gobject.TYPE_NONE, 
-                            ([gobject.TYPE_PYOBJECT])),
-        'activity-removed': (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE,
-                            ([gobject.TYPE_PYOBJECT]))
+        'activity-added':          (gobject.SIGNAL_RUN_FIRST,
+                                    gobject.TYPE_NONE, 
+                                   ([gobject.TYPE_PYOBJECT])),
+        'activity-removed':        (gobject.SIGNAL_RUN_FIRST,
+                                    gobject.TYPE_NONE,
+                                   ([gobject.TYPE_PYOBJECT])),
+        'active-activity-changed': (gobject.SIGNAL_RUN_FIRST,
+                                    gobject.TYPE_NONE,
+                                   ([gobject.TYPE_PYOBJECT]))
     }
     
     def __init__(self, bundle_registry):
@@ -35,11 +40,17 @@ class HomeModel(gobject.GObject):
 
         self._activities = {}
         self._bundle_registry = bundle_registry
+        self._current_activity = None
 
         screen = wnck.screen_get_default()
         screen.connect('window-opened', self._window_opened_cb)
         screen.connect('window-closed', self._window_closed_cb)
-        
+        screen.connect('active-window-changed',
+                       self._active_window_changed_cb)
+
+    def get_current_activity(self):
+        return self._current_activity
+
     def __iter__(self): 
         return iter(self._activities)
         
@@ -56,6 +67,20 @@ class HomeModel(gobject.GObject):
     def _window_closed_cb(self, screen, window):
         if window.get_window_type() == wnck.WINDOW_NORMAL:
             self._remove_activity(window.get_xid())
+
+    def _active_window_changed_cb(self, screen):
+        window = screen.get_active_window()
+        if not window or window.get_window_type() != wnck.WINDOW_NORMAL:
+            return
+
+        xid = window.get_xid()
+        if self._activities.has_key(xid):
+            self._current_activity = self._activities[xid]
+        else:
+            self._current_activity = None
+            logging.error('Model for window %d does not exist.' % xid)
+
+        self.emit('active-activity-changed', self._current_activity)
         
     def _add_activity(self, window):
         activity = HomeActivity(self._bundle_registry, window)
@@ -66,3 +91,5 @@ class HomeModel(gobject.GObject):
         if self._activities.has_key(xid):
             self.emit('activity-removed', self._activities[xid])
             del self._activities[xid]
+        else:
+            logging.error('Model for window %d does not exist.' % xid)

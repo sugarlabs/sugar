@@ -64,10 +64,3 @@ class ShellModel:
 
     def get_owner(self):
         return self._owner
-
-    def set_current_activity(self, activity_id):
-        self._current_activity = activity_id
-        self._owner.set_current_activity(activity_id)
-
-    def get_current_activity(self):
-        return self._current_activity

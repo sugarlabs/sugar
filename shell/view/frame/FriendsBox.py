@@ -41,7 +41,9 @@ class FriendsBox(hippo.CanvasBox):
         for activity in self._pservice.get_activities():
             self.__activity_appeared_cb(self._pservice, activity)
 
-        shell.connect('activity-changed', self.__activity_changed_cb)
+        home_model = shell.get_model().get_home()
+        home_model.connect('active-activity-changed',
+                           self._active_activity_changed_cb)
 
     def add_buddy(self, buddy):
         if self._buddies.has_key(buddy.get_name()):
@@ -94,9 +96,10 @@ class FriendsBox(hippo.CanvasBox):
             self._left_hid = activity_ps.connect(
                             'buddy-left', self.__buddy_left_cb)
 
-    def __activity_changed_cb(self, group, activity):
-        if activity:
-            ps = self._pservice.get_activity(activity.get_id())
+    def _active_activity_changed_cb(self, home_model, home_activity):
+        if home_activity:
+            activity_id = home_activity.get_id()
+            ps = self._pservice.get_activity(activity_id)
             self._set_activity_ps(ps)
         else:
             self._set_activity_ps(None)

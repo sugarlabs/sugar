@@ -21,6 +21,7 @@ from sugar import profile
 class HomeActivity:
     def __init__(self, registry, window):
         self._window = window
+        self._xid = window.get_xid()
 
         self._service = Activity.get_service(window.get_xid())
         self._id = self._service.get_id()
@@ -44,6 +45,9 @@ class HomeActivity:
         
     def get_id(self):
         return self._id
+
+    def get_xid(self):
+        return self._xid
 
     def get_window(self):
         return self._window

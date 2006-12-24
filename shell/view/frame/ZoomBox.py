@@ -14,6 +14,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
+
 import hippo
 
 from sugar.graphics.canvasicon import CanvasIcon
@@ -43,10 +45,9 @@ class ActivityMenu(Menu):
         self.add_action(icon, ActivityMenu.ACTION_CLOSE) 
 
 class ActivityIcon(MenuIcon):
-    def __init__(self, shell, menu_shell, activity):
+    def __init__(self, shell, menu_shell, activity_model):
         self._shell = shell
-        self._activity = activity
-        self._activity_model = activity.get_model()
+        self._activity_model = activity_model
 
         icon_name = self._activity_model.get_icon_name()
         icon_color = self._activity_model.get_icon_color()
@@ -62,10 +63,15 @@ class ActivityIcon(MenuIcon):
     def _action_cb(self, menu, action):
         self.popdown()
 
+        activity = self._shell.get_current_activity()
+        if activity == None:
+            logging.error('No active activity.')
+            return
+
         if action == ActivityMenu.ACTION_SHARE:
-            self._activity.share()
+            activity.share()
         if action == ActivityMenu.ACTION_CLOSE:
-            self._activity.close()
+            activity.close()
 
 class ZoomBox(hippo.CanvasBox):
     def __init__(self, shell, menu_shell):
@@ -95,23 +101,25 @@ class ZoomBox(hippo.CanvasBox):
         icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_ACTIVITY)
         self.append(icon)
 
-        shell.connect('activity-changed', self._activity_changed_cb)
-        self._set_current_activity(shell.get_current_activity())
+        home_model = shell.get_model().get_home()
+        home_model.connect('active-activity-changed',
+                           self._activity_changed_cb)
+        self._set_current_activity(home_model.get_current_activity())
 
-    def _set_current_activity(self, activity):
+    def _set_current_activity(self, home_activity):
         if self._activity_icon:
             self.remove(self._activity_icon)
 
-        if activity:
-            icon = ActivityIcon(self._shell, self._menu_shell, activity)
+        if home_activity:
+            icon = ActivityIcon(self._shell, self._menu_shell, home_activity)
             style.apply_stylesheet(icon, 'frame.ZoomIcon')
             self.append(icon, 0)
             self._activity_icon = icon
         else:
             self._activity_icon = None
 
-    def _activity_changed_cb(self, shell_model, activity):
-        self._set_current_activity(activity)
+    def _activity_changed_cb(self, home_model, home_activity):
+        self._set_current_activity(home_activity)
 
     def _level_clicked_cb(self, item, level):
         self._shell.set_zoom_level(level)
