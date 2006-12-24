@@ -22,8 +22,10 @@ import dbus
 import dbus.service
 import gtk
 import gobject
+import datetime
 
 from sugar.presence import PresenceService
+from sugar.datastore import datastore
 from sugar import activity
 from sugar import env
 import sugar.util
@@ -95,11 +97,13 @@ class Activity(gtk.Window):
     def __init__(self):
         gtk.Window.__init__(self)
 
-        self.connect('destroy', self.__destroy_cb)
+        self.connect('destroy', self._destroy_cb)
+        self.connect('notify::title', self._title_changed_cb)
 
         self._shared = False
         self._activity_id = None
         self._service = None
+        self._journal_object = None
         self._pservice = PresenceService.get_instance()
 
         self.realize()
@@ -117,7 +121,19 @@ class Activity(gtk.Window):
             return
 
         self._activity_id = sugar.util.unique_id()
+
+        ds = datastore.get_instance()
+        self._journal_object = ds.create('', {}, self._activity_id)
+
+        date = datetime.datetime.now()
+        self._journal_jobject.set_properties({'date' : date,
+                                              'title' : self.get_title()})
+
         self.present()
+
+    def get_journal_object(self):
+        """Returns the journal object associated with the activity."""
+        return self._journal_object
 
     def get_type(self):
         """Gets the activity type."""
@@ -158,6 +174,9 @@ class Activity(gtk.Window):
         else:
             logging.error('Cannot join the activity')
 
+        ds = datastore.get_instance()
+        self._journal_object = ds.get_activity_object(self._activity_id)
+
         self.present()
 
     def share(self):
@@ -172,9 +191,14 @@ class Activity(gtk.Window):
         """Execute the given command with args"""
         return False
 
-    def __destroy_cb(self, window):
+    def _destroy_cb(self, window):
         if self._bus:
             del self._bus
             self._bus = None
         if self._service:
             self._pservice.unregister_service(self._service)
+
+    def _title_changed_cb(self, window, spec):
+        jobject = self.get_journal_object()
+        if jobject:
+            jobject.set_properties({'title' : self.props.title})

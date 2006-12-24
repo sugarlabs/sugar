@@ -57,24 +57,10 @@ class Shell(gobject.GObject):
 
         self._key_grabber = KeyGrabber()
         self._key_grabber.connect('key-pressed',
-                                  self.__global_key_pressed_cb)
+                                  self._key_pressed_cb)
         self._key_grabber.connect('key-released',
-                                  self.__global_key_released_cb)
-        self._key_grabber.grab('F1')
-        self._key_grabber.grab('F2')
-        self._key_grabber.grab('F3')
-        self._key_grabber.grab('F4')
-        self._key_grabber.grab('F5')
-        self._key_grabber.grab('F6')
-        self._key_grabber.grab('F7')
-        self._key_grabber.grab('F8')
-        self._key_grabber.grab('0xDC') # Camera key
-        self._key_grabber.grab('0xE0') # Overlay key
-        self._key_grabber.grab('0x93') # Frame key
-
-        # For non-OLPC machines
-        self._key_grabber.grab('<shft><alt>F9')
-        self._key_grabber.grab('<shft><alt>F10')
+                                  self._key_released_cb)
+        self._grab_keys()
 
         self._home_window = HomeWindow(self)
         self._home_window.show()
@@ -95,7 +81,24 @@ class Shell(gobject.GObject):
 
         self.start_activity('org.laptop.CameraActivity')
 
-    def __global_key_pressed_cb(self, grabber, key):
+    def _grab_keys(self):
+        self._key_grabber.grab('F1')
+        self._key_grabber.grab('F2')
+        self._key_grabber.grab('F3')
+        self._key_grabber.grab('F4')
+        self._key_grabber.grab('F5')
+        self._key_grabber.grab('F6')
+        self._key_grabber.grab('F7')
+        self._key_grabber.grab('F8')
+        self._key_grabber.grab('0xDC') # Camera key
+        self._key_grabber.grab('0xE0') # Overlay key
+        self._key_grabber.grab('0x93') # Frame key
+
+        # For non-OLPC machines
+        self._key_grabber.grab('<shft><alt>F9')
+        self._key_grabber.grab('<shft><alt>F10')
+
+    def _key_pressed_cb(self, grabber, key):
         if key == 'F1':
             self.set_zoom_level(sugar.ZOOM_MESH)
         elif key == 'F2':
@@ -123,7 +126,7 @@ class Shell(gobject.GObject):
         elif key == '0x93': # Frame key
             self._frame.notify_key_press()
 
-    def __global_key_released_cb(self, grabber, key):
+    def _key_released_cb(self, grabber, key):
         if key == '<shft><alt>F9':
             self._frame.notify_key_release()
         elif key == '0x93':
