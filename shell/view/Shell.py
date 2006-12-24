@@ -142,7 +142,10 @@ class Shell(gobject.GObject):
             del self._hosts[xid]
 
     def _active_activity_changed_cb(self, home_model, home_activity):
-        host = self._hosts[home_activity.get_xid()]
+        if home_activity:
+            host = self._hosts[home_activity.get_xid()]
+        else:
+            host = None
 
         if self._current_host:
             self._current_host.set_active(False)

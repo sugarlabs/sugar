@@ -70,7 +70,10 @@ class HomeModel(gobject.GObject):
 
     def _active_window_changed_cb(self, screen):
         window = screen.get_active_window()
-        if not window or window.get_window_type() != wnck.WINDOW_NORMAL:
+        if window == None:
+            self.emit('active-activity-changed', None)
+            return
+        if window.get_window_type() != wnck.WINDOW_NORMAL:
             return
 
         xid = window.get_xid()
