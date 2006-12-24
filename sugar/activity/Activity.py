@@ -40,6 +40,12 @@ def get_service_name(xid):
 def get_object_path(xid):
     return ACTIVITY_SERVICE_PATH + "/%s" % xid 
 
+def get_service(xid):
+    bus = dbus.SessionBus()
+    proxy_obj = bus.get_object(get_service_name(xid), get_object_path(xid))
+    return dbus.Interface(proxy_obj, ACTIVITY_INTERFACE)
+
+
 class ActivityDbusService(dbus.service.Object):
     """Base dbus service object that each Activity uses to export dbus methods.
     

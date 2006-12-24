@@ -14,19 +14,42 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from sugar.graphics.canvasicon import CanvasIcon
+from sugar.presence import PresenceService
+from sugar.activity import Activity
+from sugar import profile
 
 class HomeActivity:
-    def __init__(self, activity):
-        self._icon_name = activity.get_icon_name()
-        self._icon_color = activity.get_icon_color()
-        self._id = activity.get_id()
-        
+    def __init__(self, registry, window):
+        self._window = window
+
+        self._service = Activity.get_service(window.get_xid())
+        self._id = self._service.get_id()
+        self._type = self._service.get_type()
+
+        info = registry.get_bundle(self._type)
+        self._icon_name = info.get_icon()
+
+    def get_title(self):
+        return self._window.get_name()
+
     def get_icon_name(self):
         return self._icon_name
     
     def get_icon_color(self):
-        return self._icon_color
+        activity = PresenceService.get_instance().get_activity(self._id)
+        if activity != None:
+            return IconColor(activity.get_color())
+        else:
+            return profile.get_color()
         
     def get_id(self):
         return self._id
+
+    def get_window(self):
+        return self._window
+
+    def get_type(self):
+        return self._type
+
+    def get_shared(self):
+        return self._service.get_shared()

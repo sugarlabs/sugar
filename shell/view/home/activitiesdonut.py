@@ -19,7 +19,6 @@ import math
 
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import style
-from model.homemodel import HomeModel
 
 class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarActivitiesDonut'
@@ -29,7 +28,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
         self._activities = {}
         self._shell = shell
 
-        self._model = HomeModel(shell)
+        self._model = shell.get_model().get_home()
         self._model.connect('activity-added', self._activity_added_cb)
         self._model.connect('activity-removed', self._activity_removed_cb) 
 

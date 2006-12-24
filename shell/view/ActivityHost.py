@@ -17,10 +17,7 @@
 import gtk
 import dbus
 
-from sugar import profile
 from sugar.activity import Activity
-from sugar.presence import PresenceService
-from sugar.graphics.iconcolor import IconColor
 from sugar.p2p import Stream
 from sugar.p2p import network
 from sugar.chat import ActivityChat
@@ -41,23 +38,12 @@ class ActivityChatWindow(gtk.Window):
         self.add(chat_widget)
 
 class ActivityHost:
-    def __init__(self, shell_model, window):
-        self._window = window
-        self._xid = window.get_xid()
-        self._pservice = PresenceService.get_instance()
-
-        bus = dbus.SessionBus()
-        proxy_obj = bus.get_object(Activity.get_service_name(self._xid),
-                                   Activity.get_object_path(self._xid))
-
-        self._activity = dbus.Interface(proxy_obj, Activity.ACTIVITY_INTERFACE)
-        self._id = self._activity.get_id()
-        self._type = self._activity.get_type()
-        self._gdk_window = gtk.gdk.window_foreign_new(self._xid)
-
-        registry = shell_model.get_bundle_registry()
-        info = registry.get_bundle(self._type)
-        self._icon_name = info.get_icon()
+    def __init__(self, model):
+        self._model = model
+        self._id = model.get_id()
+        self._window = model.get_window()
+        self._activity = Activity.get_service(self.get_xid())
+        self._gdk_window = gtk.gdk.window_foreign_new(self.get_xid())
 
         try:
             self._overlay_window = OverlayWindow.OverlayWindow(self._gdk_window)
@@ -74,21 +60,11 @@ class ActivityHost:
     def get_id(self):
         return self._id
 
-    def get_title(self):
-        return self._window.get_name()
-
     def get_xid(self):
-        return self._xid
+        return self._window.get_xid()
 
-    def get_icon_name(self):
-        return self._icon_name
-
-    def get_icon_color(self):
-        activity = self._pservice.get_activity(self._id)
-        if activity != None:
-            return IconColor(activity.get_color())
-        else:
-            return profile.get_color()
+    def get_model(self):
+        return self._model
 
     def execute(self, command, args):
         self._activity.execute(command, args)
@@ -107,12 +83,6 @@ class ActivityHost:
         writer = stream.new_writer(service)
         writer.custom_request("invite", None, None, issuer,
                               self._type, self._id)
-
-    def get_shared(self):
-        return self._activity.get_shared()
-
-    def get_type(self):
-        return self._type
 
     def present(self):
         self._window.activate(gtk.get_current_event_time())

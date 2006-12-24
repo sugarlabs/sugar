@@ -35,12 +35,8 @@ import sugar
 
 class Shell(gobject.GObject):
     __gsignals__ = {
-        'activity-opened':  (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
         'activity-changed': (gobject.SIGNAL_RUN_FIRST,
                              gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
-        'activity-closed':  (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT]))
     }
 
     def __init__(self, model):
@@ -66,8 +62,10 @@ class Shell(gobject.GObject):
         self._home_window.show()
         self.set_zoom_level(sugar.ZOOM_HOME)
 
-        self._screen.connect('window-opened', self.__window_opened_cb)
-        self._screen.connect('window-closed', self.__window_closed_cb)
+        home_model = self._model.get_home()
+        home_model.connect('activity-added', self._activity_added_cb)
+        home_model.connect('activity-removed', self._activity_removed_cb)
+
         self._screen.connect('active-window-changed',
                              self.__active_window_changed_cb)
 
@@ -139,19 +137,9 @@ class Shell(gobject.GObject):
         elif key == '0x93':
             self._frame.notify_key_release()
 
-    def __window_opened_cb(self, screen, window):
-        logging.debug('Shell.__window_opened_cb')
-        if window.get_window_type() == wnck.WINDOW_NORMAL:
-            try:
-                activity_host = ActivityHost(self.get_model(), window)
-            except dbus.DBusException:
-                logging.debug('Shell.__window_opened_cb: opened unknown window ' +
-                              window.get_name() + ' with xid ' + 
-                              str(window.get_xid()))
-                return
-                        
-            self._hosts[activity_host.get_xid()] = activity_host
-            self.emit('activity-opened', activity_host)
+    def _activity_added_cb(self, home_model, home_activity):
+        activity_host = ActivityHost(home_activity)
+        self._hosts[activity_host.get_xid()] = activity_host
 
     def __active_window_changed_cb(self, screen):
         logging.debug('Shell.__active_window_changed_cb')
@@ -168,19 +156,13 @@ class Shell(gobject.GObject):
 
         self._set_current_activity(activity_host)
 
-    def __window_closed_cb(self, screen, window):
-        logging.debug('Shell.__window_closed_cb')
-        if window.get_window_type() != wnck.WINDOW_NORMAL:
+    def _activity_removed_cb(self, home_model, home_activity):
+        xid = home_activity.get_window().get_xid()
+        if not self._hosts.has_key(xid):
             return
 
-        if not self._hosts.has_key(window.get_xid()):
-            return
-
-        host = self._hosts[window.get_xid()]
-        host.destroy()
-
-        self.emit('activity-closed', host)
-        del self._hosts[window.get_xid()]
+        self._hosts[xid].destroy()
+        del self._hosts[xid]
 
         if len(self._hosts) == 0:
             self._set_current_activity(None)

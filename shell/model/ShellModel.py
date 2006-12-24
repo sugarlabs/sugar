@@ -20,6 +20,7 @@ from sugar.presence import PresenceService
 from sugar.activity.bundleregistry import BundleRegistry
 from model.Friends import Friends
 from model.MeshModel import MeshModel
+from model.homemodel import HomeModel
 from model.Owner import ShellOwner
 from sugar import env
 
@@ -37,6 +38,7 @@ class ShellModel:
 
         self._friends = Friends()
         self._mesh = MeshModel(self._bundle_registry)
+        self._home = HomeModel(self._bundle_registry)
 
         path = os.path.expanduser('~/Activities')
         self._bundle_registry.add_search_path(path)
@@ -56,6 +58,9 @@ class ShellModel:
 
     def get_invites(self):
         return self._owner.get_invites()
+
+    def get_home(self):
+        return self._home
 
     def get_owner(self):
         return self._owner

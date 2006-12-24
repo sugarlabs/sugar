@@ -26,10 +26,10 @@ class ActivityMenu(Menu):
     ACTION_SHARE = 1
     ACTION_CLOSE = 2
 
-    def __init__(self, activity_host):
-        Menu.__init__(self, activity_host.get_title())
+    def __init__(self, activity_model):
+        Menu.__init__(self, activity_model.get_title())
 
-        if not activity_host.get_shared():
+        if not activity_model.get_shared():
             self._add_mesh_action()
 
         self._add_close_action()
@@ -43,32 +43,29 @@ class ActivityMenu(Menu):
         self.add_action(icon, ActivityMenu.ACTION_CLOSE) 
 
 class ActivityIcon(MenuIcon):
-    def __init__(self, shell, menu_shell, activity_host):
+    def __init__(self, shell, menu_shell, activity):
         self._shell = shell
-        self._activity_host = activity_host
+        self._activity = activity
+        self._activity_model = activity.get_model()
 
-        icon_name = activity_host.get_icon_name()
-        icon_color = activity_host.get_icon_color()
+        icon_name = self._activity_model.get_icon_name()
+        icon_color = self._activity_model.get_icon_color()
 
         MenuIcon.__init__(self, menu_shell, icon_name=icon_name,
                           color=icon_color)
 
     def create_menu(self):
-        menu = ActivityMenu(self._activity_host)
+        menu = ActivityMenu(self._activity_model)
         menu.connect('action', self._action_cb)
         return menu
 
     def _action_cb(self, menu, action):
         self.popdown()
 
-        activity = self._shell.get_current_activity()
-        if activity == None:
-            return
-
         if action == ActivityMenu.ACTION_SHARE:
-            activity.share()
+            self._activity.share()
         if action == ActivityMenu.ACTION_CLOSE:
-            activity.close()
+            self._activity.close()
 
 class ZoomBox(hippo.CanvasBox):
     def __init__(self, shell, menu_shell):

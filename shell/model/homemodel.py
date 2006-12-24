@@ -15,9 +15,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import gobject
+import wnck
 
-from sugar.graphics.canvasicon import CanvasIcon
-from sugar.graphics import style
 from model.homeactivity import HomeActivity
 
 class HomeModel(gobject.GObject):
@@ -31,13 +30,15 @@ class HomeModel(gobject.GObject):
                             ([gobject.TYPE_PYOBJECT]))
     }
     
-    def __init__(self, shell):
+    def __init__(self, bundle_registry):
         gobject.GObject.__init__(self)
-        self._activities = []
-        self._shell = shell
-        
-        shell.connect('activity-opened', self.__activity_opened_cb)
-        shell.connect('activity-closed', self.__activity_closed_cb)
+
+        self._activities = {}
+        self._bundle_registry = bundle_registry
+
+        screen = wnck.screen_get_default()
+        screen.connect('window-opened', self._window_opened_cb)
+        screen.connect('window-closed', self._window_closed_cb)
         
     def __iter__(self): 
         return iter(self._activities)
@@ -47,23 +48,21 @@ class HomeModel(gobject.GObject):
         
     def __getitem__(self, i):
         return self._activities[i]
-        
-    def __activity_opened_cb(self, model, activity):
-        self._add_activity(activity)
 
-    def __activity_closed_cb(self, model, activity):
-        self._remove_activity(activity)
-        
-    def _add_activity(self, activity):
-        h_activity = HomeActivity(activity)
-        self._activities.append(h_activity)
-        self.emit('activity-added', h_activity)
+    def _window_opened_cb(self, screen, window):
+        if window.get_window_type() == wnck.WINDOW_NORMAL:
+            self._add_activity(window)
 
-    def _remove_activity(self, activity):
-        i = 0
-        for h_activity in self._activities:
-            if h_activity.get_id() == activity.get_id():
-                self.emit('activity-removed', self._activities[i])
-                del self._activities[i]
-                return
-            i += 1
+    def _window_closed_cb(self, screen, window):
+        if window.get_window_type() == wnck.WINDOW_NORMAL:
+            self._remove_activity(window.get_xid())
+        
+    def _add_activity(self, window):
+        activity = HomeActivity(self._bundle_registry, window)
+        self._activities[window.get_xid()] = activity
+        self.emit('activity-added', activity)
+
+    def _remove_activity(self, xid):
+        if self._activities.has_key(xid):
+            self.emit('activity-removed', self._activities[xid])
+            del self._activities[xid]
