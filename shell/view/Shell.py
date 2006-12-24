@@ -74,6 +74,8 @@ class Shell(gobject.GObject):
         self._frame = Frame(self)
         self._frame.show_and_hide(3)
 
+        self.start_activity('org.laptop.JournalActivity')
+
     def _handle_camera_key(self):
         if self._current_host:
             if self._current_host.execute('camera', []):

@@ -123,11 +123,11 @@ class Activity(gtk.Window):
         self._activity_id = sugar.util.unique_id()
 
         ds = datastore.get_instance()
-        self._journal_object = ds.create('', {}, self._activity_id)
-
-        date = datetime.datetime.now()
-        self._journal_jobject.set_properties({'date' : date,
-                                              'title' : self.get_title()})
+        #self._journal_object = ds.create('', {}, self._activity_id)
+        #
+        #date = datetime.datetime.now()
+        #self._journal_jobject.set_properties({'date' : date,
+        #                                      'title' : self.get_title()})
 
         self.present()
 
