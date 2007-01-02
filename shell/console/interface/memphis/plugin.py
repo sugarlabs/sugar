@@ -2,9 +2,7 @@
 # Memphis Plugin Support
 ###############################################
 
-import sys, os, time
-import gtk, gobject
-
+import sys, os
 from procmem import proc, proc_smaps, analysis
 
 class Plugin:

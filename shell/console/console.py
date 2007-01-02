@@ -17,12 +17,17 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
+import sys, os
 import gtk
 
+sys.path.append(os.path.dirname(__file__) + '/lib')
+sys.path.append(os.path.dirname(__file__) + '/interface')
+
 # Console interfaces
-import memphis
-import logviewer
-import terminal
+from xo import xo
+from memphis import memphis
+from logviewer import logviewer
+from terminal import terminal
 
 window = gtk.Window()
 window.set_title('Developer console')
@@ -35,6 +40,10 @@ window.set_default_size(width, height)
 
 window.realize()
 window.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
+
+# XO Interface 
+xo_widget = xo.Interface().widget
+xo_widget.show()
 
 # Memphis interface
 memphis_widget = memphis.Interface().widget
@@ -50,6 +59,7 @@ terminal_widget.show()
 
 # Notebook
 notebook = gtk.Notebook()
+notebook.append_page(xo_widget, gtk.Label('XO Resources'))
 notebook.append_page(memphis_widget, gtk.Label('Memphis'))
 notebook.append_page(logviewer_widget, gtk.Label('Log Viewer'))
 notebook.append_page(terminal_widget, gtk.Label('Terminal'))
