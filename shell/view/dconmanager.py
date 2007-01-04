@@ -32,12 +32,5 @@ class DCONManager(object):
     def set_mode(self, mode):
         self._service.set_mode(mode)
 
-    def increase_brightness(self):
-        level = self._service.get_backlight_level()
-        if level >= 0:
-            self._service.set_backlight_level(level + 1)
-
-    def decrease_brightness(self):
-        level = self._service.get_backlight_level()
-        if level >= 0:
-            self._service.set_backlight_level(level - 1)
+    def set_brightness(self, level):
+        self._service.set_backlight_level(level)
