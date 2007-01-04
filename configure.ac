@@ -60,6 +60,12 @@ services/presence/Makefile
 services/nm/Makefile
 services/clipboard/Makefile
 services/datastore/Makefile
+shell/Makefile
+shell/data/Makefile
+shell/view/Makefile
+shell/view/home/Makefile
+shell/view/frame/Makefile
+shell/model/Makefile
 shell/console/lib/Makefile
 shell/console/lib/procmem/Makefile
 shell/console/Makefile

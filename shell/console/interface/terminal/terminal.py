@@ -38,18 +38,18 @@ class Terminal(gtk.HBox):
         self._vte.set_size_request(200, 450)
         self._vte.show()
         self.pack_start(self._vte)
-        
+
         self._scrollbar = gtk.VScrollbar(self._vte.get_adjustment())
         self._scrollbar.show()
         self.pack_start(self._scrollbar, False, False, 0)
-        
+
         self._vte.connect("child-exited", lambda term: term.fork_command())
 
         self._vte.fork_command()
 
     def _configure_vte(self):
         conf = ConfigParser.ConfigParser()
-        
+
         conf_file = os.path.join(sugar.env.get_profile_path(), 'terminalrc')
         if os.path.isfile(conf_file):
             f = open(conf_file, 'r')
@@ -57,14 +57,14 @@ class Terminal(gtk.HBox):
             f.close()
         else:
             conf.add_section('terminal')
-            
+
         if conf.has_option('terminal', 'font'):
             font = conf.get('terminal', 'font')
         else:
             font = 'Monospace 10'
             conf.set('terminal', 'font', font)
         self._vte.set_font(pango.FontDescription(font))
-        
+
         if conf.has_option('terminal', 'fg_color'):
             fg_color = conf.get('terminal', 'fg_color')
         else:
@@ -83,9 +83,10 @@ class Terminal(gtk.HBox):
             blink = conf.getboolean('terminal', 'cursor_blink')
         else:
             blink = False
-            conf.set('terminal', 'cursor_blink', blink)                    
-        self._vte.set_cursor_blinks(blink)
+            conf.set('terminal', 'cursor_blink', blink)
         
+        self._vte.set_cursor_blinks(blink)
+
         if conf.has_option('terminal', 'bell'):
             bell = conf.getboolean('terminal', 'bell')
         else:
@@ -149,11 +150,11 @@ class Multiple:
     
     def __init__(self):
         self.notebook = gtk.Notebook()
-       	t_width = gtk.gdk.screen_width()
-	t_height = gtk.gdk.screen_height() * 83 / 100
-	self.notebook.set_size_request(t_width, t_height)
+        t_width = gtk.gdk.screen_width()
+        t_height = gtk.gdk.screen_height() * 83 / 100
+        self.notebook.set_size_request(t_width, t_height)
 
-	self.add_new_terminal()
+        self.add_new_terminal()
         
         open_terminal = gtk.Button('Open a new terminal')
         open_terminal.connect("clicked", self.add_new_terminal)
