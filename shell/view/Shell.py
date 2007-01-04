@@ -103,12 +103,22 @@ class Shell(gobject.GObject):
         elif key == 'F4':
             self.set_zoom_level(sugar.ZOOM_ACTIVITY)
         elif key == 'F5':
-            self._dcon_manager.decrease_brightness()
+            self._dcon_manager.set_brightness(0)
+        elif key == 'F16':
+            self._dcon_manager.set_brightness(3)
         elif key == 'F6':
-            self._dcon_manager.increase_brightness()
+            self._dcon_manager.set_brightness(5)
+        elif key == 'F17':
+            self._dcon_manager.set_brightness(7)
         elif key == 'F7':
-            self._dcon_manager.set_mode(DCONManager.COLOR_MODE)
+            self._dcon_manager.set_brightness(9)
+        elif key == 'F18':
+            self._dcon_manager.set_brightness(12)
         elif key == 'F8':
+            self._dcon_manager.set_brightness(15)
+        elif key == '<alt>F5':
+            self._dcon_manager.set_mode(DCONManager.COLOR_MODE)
+        elif key == '<alt>F8':
             self._dcon_manager.set_mode(DCONManager.BLACK_AND_WHITE_MODE)
         elif key == '<shft><alt>F9':
             self._frame.notify_key_press()
