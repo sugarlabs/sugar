@@ -37,9 +37,30 @@ class Interface:
     
     def __init__(self):    
         
-        # Our GtkTree (Treeview)
+	# Our GtkTree (Treeview)
         self.treeview = gtk.TreeView()
-        self.widget = self.treeview
+	self.treeview.show()
+	
+	self.button_start = gtk.Button('Start Memphis')
+	self.button_stop = gtk.Button('Stop Memphis')
+	
+	fixed = gtk.Fixed()
+	fixed.add(self.button_start)
+	fixed.add(self.button_stop)
+		
+	vbox = gtk.VBox(False)
+	vbox.set_border_width(5)
+	vbox.pack_start(fixed, True, True, 0)
+		
+	# Our GtkTree (Treeview)
+        self.treeview = gtk.TreeView()
+	t_width = gtk.gdk.screen_width()
+	t_height = gtk.gdk.screen_height() * 83 / 100
+		
+        self.treeview.set_size_request(t_width, t_height)
+	vbox.pack_start(self.treeview, True, True, 0)
+	vbox.show_all()
+	self.widget = vbox
         
         # Loading plugins
         self.plg = plugin.Plugin()
@@ -56,8 +77,12 @@ class Interface:
         # Creating a store model and loading process data to Treeview
         # self.store_data_types, ex [int, str, str, str, int,...]
         #self.store = gtk.TreeStore(*self.store_data_types)
-        self.data = Data(self.treeview, self.plg.list)
-    
+        self.data = Data(self, self.treeview, self.plg.list)
+    	
+	self.button_stop.hide()
+	self.button_start.connect('clicked', self.data._start_memphis)
+    	self.button_stop.connect('clicked', self.data._stop_memphis)
+	
 class Data:
 
     last_col_index = 0
@@ -66,8 +91,12 @@ class Data:
     store_data_types = []
     store_data_types_details = []
     
-    def __init__(self, treeview, plg_list):
+    _running_status = False
+    
+    def __init__(self, interface, treeview, plg_list):
         
+	self.interface = interface 
+	
         # Top data types
         self.plg_list = plg_list
         
@@ -101,9 +130,20 @@ class Data:
         self.store = gtk.TreeStore(*self.store_data_types)
         treeview.set_model(self.store)
 
-        # Update information every 1 second
-        gobject.timeout_add(500, self.load_data, treeview)
+    def _start_memphis(self, button):
+	
+	# Update information every 1.5 second
+        button.hide()
+	self.interface.button_stop.show()
+	self._running_status = True
+	gobject.timeout_add(1500, self.load_data, self.treeview)
 
+    def _stop_memphis(self, button):
+	
+	self._running_status = False
+	button.hide()
+	self.interface.button_start.show()
+	
     # Add a new column to the main treeview 
     def add_column(self, column_name, index):
         cell = gtk.CellRendererText()
@@ -162,7 +202,7 @@ class Data:
         treeview.set_rules_hint(True)
         treeview.expand_all()
 
-        return True
+        return self._running_status
     
     def build_row(self, store, parent_iter, proc_data, pid):
         data = []

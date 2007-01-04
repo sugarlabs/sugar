@@ -1,0 +1,1 @@
+from xo import Interface

@@ -149,7 +149,11 @@ class Multiple:
     
     def __init__(self):
         self.notebook = gtk.Notebook()
-        self.add_new_terminal()
+       	t_width = gtk.gdk.screen_width()
+	t_height = gtk.gdk.screen_height() * 83 / 100
+	self.notebook.set_size_request(t_width, t_height)
+
+	self.add_new_terminal()
         
         open_terminal = gtk.Button('Open a new terminal')
         open_terminal.connect("clicked", self.add_new_terminal)
