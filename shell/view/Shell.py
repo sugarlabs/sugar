@@ -86,6 +86,18 @@ class Shell(gobject.GObject):
         self._key_grabber.grab('F6')
         self._key_grabber.grab('F7')
         self._key_grabber.grab('F8')
+        self._key_grabber.grab('F9')
+        self._key_grabber.grab('F10')
+        self._key_grabber.grab('F11')
+        self._key_grabber.grab('F12')
+        self._key_grabber.grab('F13')
+        self._key_grabber.grab('F14')
+        self._key_grabber.grab('F15')
+        self._key_grabber.grab('F16')
+        self._key_grabber.grab('F17')
+        self._key_grabber.grab('F18')
+        self._key_grabber.grab('F19')
+        self._key_grabber.grab('F20')
         self._key_grabber.grab('0xDC') # Camera key
         self._key_grabber.grab('0xE0') # Overlay key
         self._key_grabber.grab('0x93') # Frame key

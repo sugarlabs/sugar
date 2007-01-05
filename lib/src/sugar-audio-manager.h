@@ -36,6 +36,9 @@ typedef struct _SugarAudioManagerPrivate SugarAudioManagerPrivate;
 
 struct _SugarAudioManager {
 	GObject base_instance;
+
+	/*< private >*/
+	SugarAudioManagerPrivate *priv;
 };
 
 struct _SugarAudioManagerClass {
