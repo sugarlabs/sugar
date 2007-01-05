@@ -160,11 +160,18 @@ class Shell(gobject.GObject):
         elif key == '0x93': # Frame key
             self._frame.notify_key_press()
         elif key == '0x7C': # Power key
-            self._frame.notify_key_press()
+            self._shutdown()
         elif key == '<alt>Tab':
             self.set_zoom_level(sugar.ZOOM_HOME)
             box = self._home_window.get_home_box()
             box.grab_and_rotate()
+
+    def _shutdown(self):
+        bus = dbus.SystemBus()
+        proxy = bus.get_object('org.freedesktop.Hal',
+                               '/org/freedesktop/Hal/devices/computer')
+        mgr = dbus.Interface(proxy, 'org.freedesktop.Hal.Device.SystemPowerManagement')
+        mgr.Shutdown()
 
     def _key_released_cb(self, grabber, key):
         if key == '<shft><alt>F9':
