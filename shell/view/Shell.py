@@ -90,17 +90,8 @@ class Shell(gobject.GObject):
         self._key_grabber.grab('F10')
         self._key_grabber.grab('F11')
         self._key_grabber.grab('F12')
-
-	# FIXME these seem to break the emulator and are not
-	# working on the XO keyboard anyway.
-        # self._key_grabber.grab('F13')
-        # self._key_grabber.grab('F14')
-        # self._key_grabber.grab('F15')
-        # self._key_grabber.grab('F16')
-        # self._key_grabber.grab('F17')
-        # self._key_grabber.grab('F18')
-        # self._key_grabber.grab('F19')
-        # self._key_grabber.grab('F20')
+        self._key_grabber.grab('<alt>F5')
+        self._key_grabber.grab('<alt>F8')
 
         self._key_grabber.grab('0xDC') # Camera key
         self._key_grabber.grab('0xE0') # Overlay key
@@ -123,30 +114,18 @@ class Shell(gobject.GObject):
             self.set_zoom_level(sugar.ZOOM_ACTIVITY)
         elif key == 'F5':
             self._dcon_manager.set_brightness(0)
-        elif key == 'F16':
-            self._dcon_manager.set_brightness(3)
         elif key == 'F6':
             self._dcon_manager.set_brightness(5)
-        elif key == 'F17':
-            self._dcon_manager.set_brightness(7)
         elif key == 'F7':
             self._dcon_manager.set_brightness(9)
-        elif key == 'F18':
-            self._dcon_manager.set_brightness(12)
         elif key == 'F8':
             self._dcon_manager.set_brightness(15)
         elif key == 'F9':
             self._audio_manager.set_volume(0)
-        elif key == 'F19':
-            self._audio_manager.set_volume(16)
         elif key == 'F10':
             self._audio_manager.set_volume(32)
-        elif key == 'F20':
-            self._audio_manager.set_volume(48)
         elif key == 'F11':
             self._audio_manager.set_volume(64)
-        elif key == 'F21':
-            self._audio_manager.set_volume(80)
         elif key == 'F12':
             self._audio_manager.set_volume(100)
         elif key == '<alt>F5':
