@@ -88,9 +88,10 @@ class ClipboardBox(hippo.CanvasBox):
         del self._icons[object_id]
         logging.debug('ClipboardBox: ' + object_id + ' was deleted.')
 
-    def _object_state_changed_cb(self, cb_service, object_id, percent):
+    def _object_state_changed_cb(self, cb_service, object_id, name, percent,
+                                 icon_name, preview):
         icon = self._icons[object_id]
-        icon.set_percent(percent)
+        icon.set_state(name, percent, icon_name, preview)
         logging.debug('ClipboardBox: ' + object_id + ' state was changed.')
 
     def drag_motion_cb(self, widget, context, x, y, time):
@@ -104,13 +105,13 @@ class ClipboardBox(hippo.CanvasBox):
         self._context_map.add_context(context, object_id, len(context.targets))
         
         cb_service = clipboardservice.get_instance()
-        cb_service.add_object(object_id, "name")
+        cb_service.add_object(object_id, name="")
 
         for target in context.targets:
             if str(target) not in ('TIMESTAMP', 'TARGETS', 'MULTIPLE'):
                 widget.drag_get_data(context, target, time)
 
-        cb_service.set_object_state(object_id, percent = 100)
+        cb_service.set_object_percent(object_id, percent = 100)
         
         return True
 
@@ -186,9 +187,11 @@ class ClipboardBox(hippo.CanvasBox):
 
     def _get_targets_for_dnd(self, object_id):
         cb_service = clipboardservice.get_instance()
-        format_types = cb_service.get_object_format_types(object_id)
-        targets = []
+
+        (name, percent, icon, preview, format_types) =  \
+            cb_service.get_object(object_id)
         
+        targets = []        
         for format_type in format_types:
             targets.append((format_type, 0, 0))
 

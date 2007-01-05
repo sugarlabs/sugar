@@ -9,7 +9,8 @@ sugardir = $(pkgdatadir)/services/clipboard
 sugar_PYTHON =			\
 	__init__.py			\
 	clipboardobject.py  \
-	clipboardservice.py
+	clipboardservice.py \
+	typeregistry.py
 
 
 bin_SCRIPTS = sugar-clipboard

@@ -45,7 +45,7 @@ class ClipboardPanelWindow(PanelWindow):
         
         cb_service = clipboardservice.get_instance()
         cb_service.add_object(key, "name")
-        cb_service.set_object_state(key, percent = 100)
+        cb_service.set_object_percent(key, percent = 100)
         
         targets = clipboard.wait_for_targets()
         for target in targets:

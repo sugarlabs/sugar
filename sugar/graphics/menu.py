@@ -76,7 +76,7 @@ class Menu(gtk.Window):
                         orientation=hippo.ORIENTATION_HORIZONTAL)
         self._root.append(self._action_box)
 
-    def add_item(self, label, action_id):
+    def add_item(self, label, action_id=None):
         if not self._item_box:
             self._create_item_box()
 
@@ -84,8 +84,9 @@ class Menu(gtk.Window):
         style.apply_stylesheet(text, 'menu.Item')
 
         # FIXME need a way to make hippo items activable in python
-        text.connect('button-press-event', self._item_clicked_cb, action_id)
-        #text.connect('activated', self._action_clicked_cb, action_id)
+        if action_id:
+            text.connect('button-press-event', self._item_clicked_cb, action_id)
+            #text.connect('activated', self._action_clicked_cb, action_id)
 
         self._item_box.append(text)
 
@@ -105,3 +106,6 @@ class Menu(gtk.Window):
 
     def _action_clicked_cb(self, icon, action):
         self.emit('action', action)
+
+    def set_title(self, title):
+        self._title_item.set_text(title)

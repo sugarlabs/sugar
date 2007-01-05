@@ -16,6 +16,7 @@
 # Boston, MA 02111-1307, USA.
 
 import re
+import logging
 
 import gobject
 import gtk
@@ -156,3 +157,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
 
     def _button_press_event_cb(self, item, event):
         item.emit_activated()
+
+    def set_icon_name(self, icon_name):
+        self._icon_name = icon_name
+        self._buffer = None
+        self.emit_paint_needed(0, 0, -1, -1)

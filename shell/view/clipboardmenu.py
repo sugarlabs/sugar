@@ -19,7 +19,7 @@ class ClipboardMenu(Menu):
     ACTION_SHARE = 1
     ACTION_STOP_DOWNLOAD = 2
     
-    def __init__(self, name, percent):
+    def __init__(self, name, percent, preview):
         Menu.__init__(self, name)
 
         if percent < 100:        
@@ -30,6 +30,8 @@ class ClipboardMenu(Menu):
         
         self._remove_icon = None
         self._stop_icon = None
+        
+        self.add_item(preview)
         
         self._update_icons(percent)
         
@@ -51,7 +53,8 @@ class ClipboardMenu(Menu):
                 self.remove_action(self._remove_icon)
                 self._remove_icon = None
     
-    def set_percent(self, percent):
+    def set_state(self, name, percent, preview):
+        self.set_title(name)
         if self._progress_bar:
             self._progress_bar.set_property('percent', percent)
             self._update_icons(percent)
