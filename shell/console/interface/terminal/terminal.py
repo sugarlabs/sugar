@@ -51,6 +51,7 @@ class Terminal(gtk.HBox):
         conf = ConfigParser.ConfigParser()
 
         conf_file = os.path.join(sugar.env.get_profile_path(), 'terminalrc')
+        
         if os.path.isfile(conf_file):
             f = open(conf_file, 'r')
             conf.readfp(f)
@@ -61,7 +62,7 @@ class Terminal(gtk.HBox):
         if conf.has_option('terminal', 'font'):
             font = conf.get('terminal', 'font')
         else:
-            font = 'Monospace 10'
+            font = 'Monospace 8'
             conf.set('terminal', 'font', font)
         self._vte.set_font(pango.FontDescription(font))
 
@@ -97,8 +98,9 @@ class Terminal(gtk.HBox):
         if conf.has_option('terminal', 'scrollback_lines'):
             scrollback_lines = conf.getint('terminal', 'scrollback_lines')
         else:
-            scrollback_lines = 100
+            scrollback_lines = 1000
             conf.set('terminal', 'scrollback_lines', scrollback_lines)
+            
         self._vte.set_scrollback_lines(scrollback_lines)
         
         self._vte.set_allow_bold(True)
