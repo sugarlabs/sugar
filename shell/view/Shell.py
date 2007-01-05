@@ -101,6 +101,7 @@ class Shell(gobject.GObject):
         self._key_grabber.grab('0xDC') # Camera key
         self._key_grabber.grab('0xE0') # Overlay key
         self._key_grabber.grab('0x93') # Frame key
+        self._key_grabber.grab('0x7C') # Power key
         self._key_grabber.grab('<alt>Tab')
 
         # For non-OLPC machines
@@ -157,6 +158,8 @@ class Shell(gobject.GObject):
         elif key == '0xE0': # Overlay key
             self.toggle_chat_visibility()
         elif key == '0x93': # Frame key
+            self._frame.notify_key_press()
+        elif key == '0x7C': # Power key
             self._frame.notify_key_press()
         elif key == '<alt>Tab':
             self.set_zoom_level(sugar.ZOOM_HOME)
