@@ -109,7 +109,7 @@ class Activity(gtk.Window):
         self._shared = False
         self._activity_id = None
         self._service = None
-        self._journal_object = None
+        #self._journal_object = None
         self._pservice = PresenceService.get_instance()
 
         self.realize()
@@ -128,7 +128,7 @@ class Activity(gtk.Window):
 
         self._activity_id = sugar.util.unique_id()
 
-        ds = datastore.get_instance()
+        #ds = datastore.get_instance()
         #self._journal_object = ds.create('', {}, self._activity_id)
         #
         #date = datetime.datetime.now()
@@ -137,9 +137,9 @@ class Activity(gtk.Window):
 
         self.present()
 
-    def get_journal_object(self):
-        """Returns the journal object associated with the activity."""
-        return self._journal_object
+#    def get_journal_object(self):
+#        """Returns the journal object associated with the activity."""
+#        return self._journal_object
 
     def get_type(self):
         """Gets the activity type."""
@@ -180,8 +180,8 @@ class Activity(gtk.Window):
         else:
             logging.error('Cannot join the activity')
 
-        ds = datastore.get_instance()
-        self._journal_object = ds.get_activity_object(self._activity_id)
+        #ds = datastore.get_instance()
+        #self._journal_object = ds.get_activity_object(self._activity_id)
 
         self.present()
 
@@ -205,6 +205,7 @@ class Activity(gtk.Window):
             self._pservice.unregister_service(self._service)
 
     def _title_changed_cb(self, window, spec):
-        jobject = self.get_journal_object()
-        if jobject:
-            jobject.set_properties({'title' : self.props.title})
+	pass
+#        jobject = self.get_journal_object()
+#        if jobject:
+#            jobject.set_properties({'title' : self.props.title})
