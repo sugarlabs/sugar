@@ -49,6 +49,14 @@
   (gtype-id "SUGAR_TYPE_DOWNLOAD")
 )
 
+(define-object AudioManager
+  (in-module "Sugar")
+  (parent "GObject")
+  (c-name "SugarAudioManager")
+  (gtype-id "SUGAR_TYPE_AUDIO_MANAGER")
+)
+
+
 ;; Enumerations and flags ...
 
 
@@ -239,3 +247,23 @@
     '("GdkPixbuf*" "pixbuf")
   )
 )
+;; Enumerations and flags ...
+
+
+;; From sugar-audio-manager.h
+
+(define-function audio_manager_get_type
+  (c-name "sugar_audio_manager_get_type")
+  (return-type "GType")
+)
+
+(define-method set_volume
+  (of-object "SugarAudioManager")
+  (c-name "sugar_audio_manager_set_volume")
+  (return-type "none")
+  (parameters
+    '("int" "level")
+  )
+)
+
+

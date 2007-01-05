@@ -31,6 +31,7 @@ from sugar.activity import Activity
 from view.frame.Frame import Frame
 from view.dconmanager import DCONManager
 from _sugar import KeyGrabber
+from _sugar import AudioManager
 import sugar
 
 class Shell(gobject.GObject):
@@ -45,6 +46,7 @@ class Shell(gobject.GObject):
         style.load_stylesheet(view.stylesheet)
 
         self._dcon_manager = DCONManager()
+        self._audio_manager = AudioManager()
 
         self._key_grabber = KeyGrabber()
         self._key_grabber.connect('key-pressed',
@@ -66,7 +68,7 @@ class Shell(gobject.GObject):
         self._frame = Frame(self)
         self._frame.show_and_hide(3)
 
-        self.start_activity('org.laptop.JournalActivity')
+        #self.start_activity('org.laptop.JournalActivity')
 
     def _handle_camera_key(self):
         if self._current_host:
@@ -116,6 +118,20 @@ class Shell(gobject.GObject):
             self._dcon_manager.set_brightness(12)
         elif key == 'F8':
             self._dcon_manager.set_brightness(15)
+        elif key == 'F9':
+            self._audio_manager.set_volume(0)
+        elif key == 'F19':
+            self._audio_manager.set_volume(16)
+        elif key == 'F10':
+            self._audio_manager.set_volume(32)
+        elif key == 'F20':
+            self._audio_manager.set_volume(48)
+        elif key == 'F11':
+            self._audio_manager.set_volume(64)
+        elif key == 'F21':
+            self._audio_manager.set_volume(80)
+        elif key == 'F12':
+            self._audio_manager.set_volume(100)
         elif key == '<alt>F5':
             self._dcon_manager.set_mode(DCONManager.COLOR_MODE)
         elif key == '<alt>F8':

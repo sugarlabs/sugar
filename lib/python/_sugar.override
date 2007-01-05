@@ -11,6 +11,7 @@ headers
 #include "sugar-push-scroller.h"
 #include "sugar-download-manager.h"
 #include "sugar-download.h"
+#include "sugar-audio-manager.h"
 
 #include <pygtk/pygtk.h>
 #include <glib.h>
