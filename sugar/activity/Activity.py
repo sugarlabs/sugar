@@ -104,7 +104,7 @@ class Activity(gtk.Window):
         gtk.Window.__init__(self)
 
         self.connect('destroy', self._destroy_cb)
-        self.connect('notify::title', self._title_changed_cb)
+        #self.connect('notify::title', self._title_changed_cb)
 
         self._shared = False
         self._activity_id = None
