@@ -21,6 +21,7 @@ import os
 
 from sugar.activity import ActivityFactory
 from sugar import env
+from sugar import util
 
 ppath = env.get_profile_path()
 bus_file = os.path.join(ppath, "session_bus_address")
@@ -30,4 +31,4 @@ f.close()
 os.environ['DBUS_SESSION_BUS_ADDRESS'] = bus_name
 
 activity = ActivityFactory.create(sys.argv[1])
-activity.start()
+activity.start(util.unique_id())

@@ -68,6 +68,8 @@ class Shell(gobject.GObject):
         self._frame = Frame(self)
         self._frame.show_and_hide(3)
 
+        self._pservice = PresenceService.get_instance()
+
         #self.start_activity('org.laptop.JournalActivity')
 
     def _handle_camera_key(self):
@@ -190,13 +192,11 @@ class Shell(gobject.GObject):
         return self._model
 
     def join_activity(self, bundle_id, activity_id):
-        pservice = PresenceService.get_instance()
-
         activity = self.get_activity(activity_id)
         if activity:
             activity.present()
         else:
-            activity_ps = pservice.get_activity(activity_id)
+            activity_ps = self._pservice.get_activity(activity_id)
 
             if activity_ps:
                 # Get the service name for this activity, if
@@ -218,10 +218,51 @@ class Shell(gobject.GObject):
             else:
                 logging.error('Cannot start activity.')
 
+    def _find_unique_activity_id(self):
+        # create a new unique activity ID
+        i = 0
+        act_id = None
+        while i < 10:
+            act_id = sugar.util.unique_id()
+            i += 1
+
+            # check through existing activities
+            found = False
+            for xid, act_host in self._hosts.items():
+                if act_host.get_id() == act_id:
+                    found = True
+                    break
+            if found:
+                act_id = None
+                continue
+
+            # check through network activities
+            activities = self._pservice.get_activities()
+            for act in activities:
+                if act_id == act.get_id():
+                    found = True
+                    break
+            if found:
+                act_id = None
+                continue
+
+        return act_id
+
     def start_activity(self, activity_type):
         logging.debug('Shell.start_activity')
-        activity = ActivityFactory.create(activity_type)
-        activity.start()
+        act_id = self._find_unique_activity_id()
+        if not act_id:
+            logging.error("Couldn't find available activity ID.")
+            return None
+
+        try:
+            logging.debug("Shell.start_activity will start %s:%s" % (activity_type, act_id))
+            activity = ActivityFactory.create(activity_type)
+        except dbus.DBusException, e:
+            logging.debug("Couldn't start activity '%s':\n  %s" % (activity_type, e))
+            return None
+
+        activity.start(act_id)
         return activity
 
     def set_zoom_level(self, level):

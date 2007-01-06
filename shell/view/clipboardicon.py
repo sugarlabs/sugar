@@ -4,6 +4,7 @@ from sugar.graphics.menuicon import MenuIcon
 from view.clipboardmenu import ClipboardMenu
 from sugar.activity import ActivityFactory
 from sugar.clipboard import clipboardservice
+from sugar import util
 
 class ClipboardIcon(MenuIcon):
 
@@ -53,7 +54,7 @@ class ClipboardIcon(MenuIcon):
                 
                 if activity_id:
                     activity = ActivityFactory.create(activity_id)
-                    activity.start()
+                    activity.start(util.unique_id())
                     activity.execute("open_document", [self._object_id])
                 
     def _popup_action_cb(self, popup, action):
