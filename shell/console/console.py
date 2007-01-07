@@ -16,12 +16,22 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-
-import sys, os
+import dbus
+import dbus.service
+import os
+import sys
 import gtk
+import gobject
 
 sys.path.append(os.path.dirname(__file__) + '/lib')
 sys.path.append(os.path.dirname(__file__) + '/interface')
+
+DBUS_BUS = 'org.freedesktop.DBus'
+DBUS_PATH = '/org/freedesktop/DBus'
+
+CONSOLE_BUS = 'org.laptop.Sugar.DeveloperConsole'
+CONSOLE_PATH = '/org/laptop/Sugar/DeveloperConsole'
+CONSOLE_IFACE = 'org.laptop.Sugar.DeveloperConsole'
 
 class Console:
     
@@ -95,6 +105,24 @@ class Console:
         self.mini_fixed.show_all()
         return True
     
+# We're using a DBUS-Service to avoid open devconsole more than one time
+class Init_Service(dbus.service.Object):
     
-CS = Console()
-gtk.main()
+    def __init__(self, bus, object_path=CONSOLE_PATH):
+        dbus.service.Object.__init__(self, bus, object_path)
+        CS = Console()
+    
+bus = dbus.SessionBus()
+obj = bus.get_object(DBUS_BUS, DBUS_PATH)
+
+dbus_iface = dbus.Interface(obj, DBUS_BUS)
+services = dbus_iface.ListNames()
+
+# A temporal way to check if the service is running
+if not CONSOLE_BUS in services:    
+    name = dbus.service.BusName(CONSOLE_BUS, bus)
+    obj = Init_Service(name)
+    gtk.main()
+else:
+    sys.exit(1)
+    
