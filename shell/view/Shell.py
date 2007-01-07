@@ -205,13 +205,16 @@ class Shell(gobject.GObject):
                 breg = self._model.get_bundle_registry()
                 bundle = breg.find_by_default_type(bundle_id)
                 if bundle:
-                    serv_name = bundle.get_service_name()
+                    act_type = bundle.get_service_name()
+                    home_model = self._model.get_home()
+                    home_model.notify_activity_launch(activity_id, act_type)
                     try:
-                        activity = ActivityFactory.create(serv_name)
+                        activity = ActivityFactory.create(act_type)
                     except DBusException, e:
-                        logging.error("Couldn't launch activity %s:\n%s" % (serv_name, e))
+                        logging.error("Couldn't launch activity %s:\n%s" % (act_type, e))
+                        home_mode.notify_activity_launch_failed(activity_id)
                     else:
-                        logging.debug("Joining activity type %s id %s" % (serv_name, activity_id))
+                        logging.debug("Joining activity type %s id %s" % (act_type, activity_id))
                         activity.join(activity_ps.object_path())
                 else:
                     logging.error("Couldn't find activity for type %s" % bundle_id)
@@ -255,11 +258,15 @@ class Shell(gobject.GObject):
             logging.error("Couldn't find available activity ID.")
             return None
 
+        home_model = self._model.get_home()
+        home_model.notify_activity_launch(act_id, activity_type)
+
         try:
             logging.debug("Shell.start_activity will start %s:%s" % (activity_type, act_id))
             activity = ActivityFactory.create(activity_type)
         except dbus.DBusException, e:
             logging.debug("Couldn't start activity '%s':\n  %s" % (activity_type, e))
+            home_mode.notify_activity_launch_failed(act_id)
             return None
 
         activity.start(act_id)

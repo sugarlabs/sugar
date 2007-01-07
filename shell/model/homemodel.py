@@ -20,10 +20,14 @@ import gobject
 import wnck
 
 from model.homeactivity import HomeActivity
+from sugar.activity import Activity
 
 class HomeModel(gobject.GObject):
 
     __gsignals__ = {
+        'activity-launched':       (gobject.SIGNAL_RUN_FIRST,
+                                    gobject.TYPE_NONE, 
+                                   ([gobject.TYPE_PYOBJECT])),
         'activity-added':          (gobject.SIGNAL_RUN_FIRST,
                                     gobject.TYPE_NONE, 
                                    ([gobject.TYPE_PYOBJECT])),
@@ -68,6 +72,12 @@ class HomeModel(gobject.GObject):
         if window.get_window_type() == wnck.WINDOW_NORMAL:
             self._remove_activity(window.get_xid())
 
+    def _get_activity_by_xid(self, xid):
+        for act in self._activities.values():
+            if act.get_xid() == xid:
+                return act
+        return None
+
     def _active_window_changed_cb(self, screen):
         window = screen.get_active_window()
         if window == None:
@@ -77,8 +87,13 @@ class HomeModel(gobject.GObject):
             return
 
         xid = window.get_xid()
-        if self._activities.has_key(xid):
-            self._current_activity = self._activities[xid]
+        act = self._get_activity_by_xid(window.get_xid())
+        if act:
+            if act.get_launched() == True:
+                self._current_activity = act
+            else:
+                self._current_activity = None
+                logging.error('Actiivty for window %d was not yet launched.' % xid)
         else:
             self._current_activity = None
             logging.error('Model for window %d does not exist.' % xid)
@@ -86,13 +101,57 @@ class HomeModel(gobject.GObject):
         self.emit('active-activity-changed', self._current_activity)
         
     def _add_activity(self, window):
-        activity = HomeActivity(self._bundle_registry, window)
-        self._activities[window.get_xid()] = activity
+        act_service = Activity.get_service(window.get_xid())
+        act_id = act_service.get_id()
+
+        activity = None
+        if self._activities.has_key(act_id):
+            activity = self._activities[act_id]
+        else:
+            # activity got lost, took longer to launch than we allow,
+            # or it was launched by something other than the shell
+            act_type = act_service.get_type()
+            bundle = self._bundle_registry.get_bundle(act_type)
+            if not bundle:
+                raise RuntimeError("No bundle for activity type '%s'." % act_type)
+                return
+            activity = HomeActivity(bundle, act_id)
+            self._activities[act_id] = activity
+
+        activity.set_window(window)
         self.emit('activity-added', activity)
 
+    def _internal_remove_activity(self, activity):
+        self.emit('activity-removed', activity)
+        act_id = activity.get_id()
+        del self._activities[act_id]
+        
     def _remove_activity(self, xid):
-        if self._activities.has_key(xid):
-            self.emit('activity-removed', self._activities[xid])
-            del self._activities[xid]
+        activity = self._get_activity_by_xid(window.get_xid())
+        if activity:
+            self._internal_remove_activity(activity)
         else:
             logging.error('Model for window %d does not exist.' % xid)
+
+    def _activity_launch_timeout_cb(self, activity):
+        act_id = activity.get_id()
+        if not act_id in self._activities.keys():
+            return
+        self._internal_remove_activity(activity)
+
+    def notify_activity_launch(self, activity_id, service_name):
+        bundle = self._bundle_registry.get_bundle(service_name)
+        if not bundle:
+            raise ValueError("Activity service name '%s' was not found in the bundle registry." % service_name)
+        activity = HomeActivity(bundle, activity_id)
+        activity.connect('launch-timeout', self._activity_launch_timeout_cb)
+        self._activities[activity_id] = activity
+        self.emit('activity-launched', activity)
+
+    def notify_activity_launch_failed(self, activity_id):
+        if self._activities.has_key(activity_id):
+            activity = self._activities[activity_id]
+            logging.debug("Activity %s (%s) launch failed" % (activity_id, activity.get_type()))
+            self._internal_remove_activity(activity)
+        else:
+            logging.error('Model for activity id %s does not exist.' % activity_id)
