@@ -16,9 +16,43 @@
 
 import hippo
 import math
+import gobject
 
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import style
+
+class ActivityIcon(CanvasIcon):
+    def __init__(self, activity):
+        icon_name = activity.get_icon_name()
+        icon_color = activity.get_icon_color()
+        CanvasIcon.__init__(self, icon_name=icon_name, color=icon_color)
+        style.apply_stylesheet(self, 'ring.ActivityIcon')
+
+        self._activity = activity
+        self._pulse_id = 0
+        self._launched = False
+
+        self._pulse_id = gobject.timeout_add(200, self._pulse_cb)
+
+    def __del__(self):
+        if self._pulse_id > 0:
+            gobject.source_remove(self._pulse_id)
+
+    def _pulse_cb(self):
+        pass
+
+    def set_launched(self):
+        if self._launched:
+            return
+        self._launched = True
+        gobject.source_remove(self._pulse_id)
+        self._pulse_id = 0
+
+    def get_launched(self):
+        return self._launched
+
+    def get_activity(self):
+        return self._activity
 
 class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarActivitiesDonut'
@@ -29,34 +63,46 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
         self._shell = shell
 
         self._model = shell.get_model().get_home()
+        self._model.connect('activity-launched', self._activity_launched_cb)
         self._model.connect('activity-added', self._activity_added_cb)
-        self._model.connect('activity-removed', self._activity_removed_cb) 
+        self._model.connect('activity-removed', self._activity_removed_cb)
+
+    def _activity_launched_cb(self, model, activity):
+        self._add_activity(activity)
 
     def _activity_added_cb(self, model, activity):
-        self._add_activity(activity)
+        # Mark the activity as launched
+        act_id = activity.get_id()
+        if not self._activities.has_key(act_id):
+            return
+        icon = self._activities[act_id]
+        icon.set_launched()
 
     def _activity_removed_cb(self, model, activity):
         self._remove_activity(activity)
     
     def _remove_activity(self, activity):
-        icon = self._activities[activity.get_id()]
+        act_id = activity.get_id()
+        if not self._activities.has_key(act_id):
+            return
+        icon = self._activities[act_id]
         self.remove(icon)
-        del self._activities[activity.get_id()]
+        del self._activities[act_id]
 
     def _add_activity(self, activity):
-        icon_name = activity.get_icon_name()
-        icon_color = activity.get_icon_color()
-
-        icon = CanvasIcon(icon_name=icon_name, color=icon_color)
-        style.apply_stylesheet(icon, 'ring.ActivityIcon')
-        icon.connect('activated', self._activity_icon_clicked_cb, activity)
+        icon = ActivityIcon(activity)
+        icon.connect('activated', self._activity_icon_clicked_cb)
         self.append(icon, hippo.PACK_FIXED)
 
         self._activities[activity.get_id()] = icon
 
         self.emit_paint_needed(0, 0, -1, -1)
 
-    def _activity_icon_clicked_cb(self, item, activity):
+    def _activity_icon_clicked_cb(self, icon):
+        activity = icon.get_activity()
+        if not icon.get_launched():
+            return
+
         activity_host = self._shell.get_activity(activity.get_id())
         if activity_host:
             activity_host.present()
