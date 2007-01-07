@@ -76,12 +76,14 @@ class Menu(gtk.Window):
                         orientation=hippo.ORIENTATION_HORIZONTAL)
         self._root.append(self._action_box)
 
-    def add_item(self, label, action_id=None):
+    def add_item(self, label, action_id=None, wrap=False):
         if not self._item_box:
             self._create_item_box()
 
         text = hippo.CanvasText(text=label)
         style.apply_stylesheet(text, 'menu.Item')
+        if wrap:
+            text.set_property("size-mode", "wrap-word")
 
         # FIXME need a way to make hippo items activable in python
         if action_id:

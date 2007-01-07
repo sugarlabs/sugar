@@ -31,7 +31,7 @@ class ClipboardMenu(Menu):
         self._remove_icon = None
         self._stop_icon = None
         
-        self.add_item(preview)
+        self.add_item(preview, wrap=True)
         
         self._update_icons(percent)
         

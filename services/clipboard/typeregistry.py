@@ -1,4 +1,5 @@
 import logging
+from gettext import gettext as _
 
 class FileType:
     def __init__(self, formats):
@@ -22,7 +23,7 @@ class TextFileType(FileType):
     _types = set(['text/plain', 'UTF8_STRING', 'STRING'])
 
     def get_name(self):
-        return 'Text snippet'
+        return _('Text snippet')
 
     def get_icon(self):
         return 'activity-xbook'
@@ -30,7 +31,11 @@ class TextFileType(FileType):
     def get_preview(self):
         for format, data in self._formats.iteritems():
             if format in TextFileType._types:
-                return str(data.get_data())
+                text = str(data.get_data())
+                if len(text) < 50:
+                    return text
+                else:
+                    return text[0:49] + "..."
 
         return ''
         
@@ -43,7 +48,7 @@ class ImageFileType(FileType):
     _types = set(['image/jpeg', 'image/gif', 'image/png', 'image/tiff'])
 
     def get_name(self):
-        return 'Image'
+        return _('Image')
 
     def get_icon(self):
         return 'activity-sketch'
@@ -60,7 +65,7 @@ class UriFileType(FileType):
     _types = set(['_NETSCAPE_URL'])
     
     def get_name(self):
-        return 'URL'
+        return _('Web Page')
 
     def get_icon(self):
         return 'activity-web'
@@ -83,7 +88,7 @@ class PdfFileType(FileType):
     _types = set(['application/pdf'])
     
     def get_name(self):
-        return 'PDF file'
+        return _('PDF file')
 
     def get_icon(self):
         return 'activity-xbook'
@@ -100,7 +105,7 @@ class MsWordFileType(FileType):
     _types = set(['application/msword'])
     
     def get_name(self):
-        return 'MS Word file'
+        return _('MS Word file')
 
     def get_icon(self):
         return 'activity-abiword'
@@ -117,7 +122,7 @@ class RtfFileType(FileType):
     _types = set(['application/rtf', 'text/rtf'])
     
     def get_name(self):
-        return 'RTF file'
+        return _('RTF file')
 
     def get_icon(self):
         return 'activity-abiword'
@@ -131,7 +136,7 @@ class RtfFileType(FileType):
 
 class UnknownFileType(FileType):
     def get_name(self):
-        return 'Object'
+        return _('Object')
 
     def get_icon(self):
         return 'stock-missing'
