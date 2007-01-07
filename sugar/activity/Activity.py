@@ -62,9 +62,9 @@ class ActivityDbusService(dbus.service.Object):
         self._pservice = PresenceService.get_instance()       
 
     @dbus.service.method(ACTIVITY_INTERFACE)
-    def start(self):
-        """Start the activity."""
-        self._activity.start()
+    def start(self, activity_id):
+        """Start the activity in unshared mode."""
+        self._activity.start(activity_id)
 
     @dbus.service.method(ACTIVITY_INTERFACE)
     def join(self, activity_ps_path):
@@ -120,13 +120,13 @@ class Activity(gtk.Window):
 
         self._bus = ActivityDbusService(self)
 
-    def start(self):
+    def start(self, activity_id):
         """Start the activity."""
         if self._activity_id != None:
             logging.warning('The activity has been already started.')
             return
 
-        self._activity_id = sugar.util.unique_id()
+        self._activity_id = activity_id
 
         #ds = datastore.get_instance()
         #self._journal_object = ds.create('', {}, self._activity_id)
@@ -162,9 +162,9 @@ class Activity(gtk.Window):
         if self._activity_id != None:
             logging.warning('The activity has been already started.')
             return
+        self._activity_id = activity_ps.get_id()
 
         self._shared = True
-        self._activity_id = activity_ps.get_id()
 
         # Publish the default service, it's a copy of
         # one of those we found on the network.
