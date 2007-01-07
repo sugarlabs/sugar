@@ -13,9 +13,11 @@ headers
 #include "sugar-download.h"
 #include "sugar-audio-manager.h"
 
+#include "pycairo.h"
 #include <pygtk/pygtk.h>
 #include <glib.h>
 
+extern Pycairo_CAPI_t *Pycairo_CAPI;
 
 %%
 modulename gecko
@@ -157,5 +159,25 @@ _wrap_sugar_hippo_canvas_image_set_image_from_gdk_pixbuf(PyGObject *self, PyObje
 
     Py_INCREF(Py_None);
     return Py_None;
+}
+%%
+override sugar_cairo_surface_from_gdk_pixbuf kwargs
+static PyObject*
+_wrap_sugar_cairo_surface_from_gdk_pixbuf(PyGObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "pixbuf", NULL };
+    PyGObject *child;
+    cairo_surface_t *surface;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O!:sugar.cairo_surface_from_gdk_pixbuf", kwlist, &PyGdkPixbuf_Type, &child))
+        return NULL;
+
+    surface = _cairo_surface_from_pixbuf(GDK_PIXBUF (child->obj));
+	if (surface == NULL) {
+        PyErr_SetString(PyExc_RuntimeError, "pixbuf could not be converted");
+        return NULL;
+    }
+
+    return PycairoSurface_FromSurface(surface, NULL);
 }
 %%

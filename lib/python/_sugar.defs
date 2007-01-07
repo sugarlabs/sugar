@@ -247,6 +247,15 @@
     '("GdkPixbuf*" "pixbuf")
   )
 )
+
+(define-function cairo_surface_from_gdk_pixbuf
+  (c-name "sugar_cairo_surface_from_gdk_pixbuf")
+  (return-type "cairo_surface_t*")
+  (parameters
+    '("GdkPixbuf*" "pixbuf")
+  )
+)
+
 ;; Enumerations and flags ...
 
 

@@ -5,6 +5,9 @@
 /* include this first, before NO_IMPORT_PYGOBJECT is defined */
 #include <pygobject.h>
 
+#include <pycairo.h>
+Pycairo_CAPI_t *Pycairo_CAPI;
+
 void py_sugar_register_classes (PyObject *d);
 
 extern PyMethodDef py_sugar_functions[];
@@ -15,6 +18,8 @@ init_sugar(void)
     PyObject *m, *d;
 
     init_pygobject ();
+
+    Pycairo_IMPORT;
 
     m = Py_InitModule ("_sugar", py_sugar_functions);
     d = PyModule_GetDict (m);
