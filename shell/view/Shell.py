@@ -191,35 +191,41 @@ class Shell(gobject.GObject):
     def get_model(self):
         return self._model
 
+    def _join_success_cb(self, handler, activity, activity_ps, activity_id, activity_type):
+        logging.debug("Joining activity %s (%s)" % (activity_id, activity_type))
+        activity.join(activity_ps.object_path())
+
+    def _join_error_cb(self, handler, err, home_model, activity_id, activity_type):
+        logging.error("Couldn't launch activity %s (%s):\n%s" % (activity_id, activity_type, err))
+        home_mode.notify_activity_launch_failed(activity_id)
+
     def join_activity(self, bundle_id, activity_id):
         activity = self.get_activity(activity_id)
         if activity:
             activity.present()
-        else:
-            activity_ps = self._pservice.get_activity(activity_id)
+            return
 
-            if activity_ps:
-                # Get the service name for this activity, if
-                # we have a bundle on the system capable of handling
-                # this activity type
-                breg = self._model.get_bundle_registry()
-                bundle = breg.find_by_default_type(bundle_id)
-                if bundle:
-                    act_type = bundle.get_service_name()
-                    home_model = self._model.get_home()
-                    home_model.notify_activity_launch(activity_id, act_type)
-                    try:
-                        activity = ActivityFactory.create(act_type)
-                    except DBusException, e:
-                        logging.error("Couldn't launch activity %s:\n%s" % (act_type, e))
-                        home_mode.notify_activity_launch_failed(activity_id)
-                    else:
-                        logging.debug("Joining activity type %s id %s" % (act_type, activity_id))
-                        activity.join(activity_ps.object_path())
-                else:
-                    logging.error("Couldn't find activity for type %s" % bundle_id)
-            else:
-                logging.error('Cannot start activity.')
+        activity_ps = self._pservice.get_activity(activity_id)
+        if not activity_ps:
+            logging.error("Couldn't find shared activity for %s" % activity_id)
+            return
+
+        # Get the service name for this activity, if
+        # we have a bundle on the system capable of handling
+        # this activity type
+        breg = self._model.get_bundle_registry()
+        bundle = breg.find_by_default_type(bundle_id)
+        if not bundle:
+            logging.error("Couldn't find activity for type %s" % bundle_id)
+            return
+
+        act_type = bundle.get_service_name()
+        home_model = self._model.get_home()
+        home_model.notify_activity_launch(activity_id, act_type)
+
+        handler = ActivityFactory.create(act_type)
+        handler.connect('success', self._join_success_cb, activity_ps, activity_id, act_type)
+        handler.connect('error', self._join_error_cb, home_model, activity_id, act_type)
 
     def _find_unique_activity_id(self):
         # create a new unique activity ID
@@ -251,6 +257,14 @@ class Shell(gobject.GObject):
 
         return act_id
 
+    def _start_success_cb(self, handler, activity, activity_id, activity_type):
+        logging.debug("Started activity %s (%s)" % (activity_id, activity_type))
+        activity.start(activity_id)
+
+    def _start_error_cb(self, handler, err, home_model, activity_id, activity_type):
+        logging.error("Couldn't launch activity %s (%s):\n%s" % (activity_id, activity_type, err))
+        home_mode.notify_activity_launch_failed(activity_id)
+
     def start_activity(self, activity_type):
         logging.debug('Shell.start_activity')
         act_id = self._find_unique_activity_id()
@@ -261,16 +275,10 @@ class Shell(gobject.GObject):
         home_model = self._model.get_home()
         home_model.notify_activity_launch(act_id, activity_type)
 
-        try:
-            logging.debug("Shell.start_activity will start %s:%s" % (activity_type, act_id))
-            activity = ActivityFactory.create(activity_type)
-        except dbus.DBusException, e:
-            logging.debug("Couldn't start activity '%s':\n  %s" % (activity_type, e))
-            home_mode.notify_activity_launch_failed(act_id)
-            return None
-
-        activity.start(act_id)
-        return activity
+        logging.debug("Shell.start_activity will start %s (%s)" % (act_id, activity_type))
+        handler = ActivityFactory.create(activity_type)
+        handler.connect('success', self._start_success_cb, act_id, activity_type)
+        handler.connect('error', self._start_error_cb, home_model, act_id, activity_type)
 
     def set_zoom_level(self, level):
         if level == sugar.ZOOM_ACTIVITY:

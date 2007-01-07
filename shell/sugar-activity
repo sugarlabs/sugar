@@ -18,10 +18,18 @@
 
 import sys
 import os
+import gobject
 
 from sugar.activity import ActivityFactory
 from sugar import env
 from sugar import util
+
+def _success_cb(handler, activity, loop):
+    activity.start(util.unique_id())
+    loop.quit()
+
+def _error_cb(handler, err, loop):
+    loop.quit()
 
 ppath = env.get_profile_path()
 bus_file = os.path.join(ppath, "session_bus_address")
@@ -30,5 +38,10 @@ bus_name = f.read()
 f.close()
 os.environ['DBUS_SESSION_BUS_ADDRESS'] = bus_name
 
-activity = ActivityFactory.create(sys.argv[1])
-activity.start(util.unique_id())
+loop = gobject.MainLoop()
+
+handler = ActivityFactory.create(sys.argv[1])
+handler.connect('success', _success_cb, loop)
+handler.connect('error', _error_cb, loop)
+
+loop.run()

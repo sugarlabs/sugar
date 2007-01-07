@@ -127,7 +127,7 @@ class HomeModel(gobject.GObject):
         del self._activities[act_id]
         
     def _remove_activity(self, xid):
-        activity = self._get_activity_by_xid(window.get_xid())
+        activity = self._get_activity_by_xid(xid)
         if activity:
             self._internal_remove_activity(activity)
         else:

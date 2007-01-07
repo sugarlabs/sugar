@@ -76,24 +76,43 @@ class ActivityFactory(dbus.service.Object):
         if len(self._activities) == 0:
             gtk.main_quit()
 
+class ActivityCreationHandler(gobject.GObject):
+
+    __gsignals__ = {
+        'error':       (gobject.SIGNAL_RUN_FIRST,
+                        gobject.TYPE_NONE, 
+                       ([gobject.TYPE_PYOBJECT])),
+        'success':     (gobject.SIGNAL_RUN_FIRST,
+                        gobject.TYPE_NONE, 
+                       ([gobject.TYPE_PYOBJECT]))
+    }
+
+    def __init__(self, activity_name):
+        gobject.GObject.__init__(self)
+
+        bus = dbus.SessionBus()
+        factory_name = activity_name
+        factory_path = get_path(factory_name) 
+
+        proxy_obj = bus.get_object(factory_name, factory_path)
+        factory = dbus.Interface(proxy_obj, "com.redhat.Sugar.ActivityFactory")
+
+        factory.create(reply_handler=self._reply_handler, error_handler=self._error_handler)
+
+    def _reply_handler(self, xid):
+        bus = dbus.SessionBus()
+        proxy_obj = bus.get_object(Activity.get_service_name(xid),
+                                    Activity.get_object_path(xid))
+        activity = dbus.Interface(proxy_obj, Activity.ACTIVITY_INTERFACE)
+        self.emit('success', activity)
+
+    def _error_handler(self, err):
+        logging.debug("Couldn't create activity: %s" % err)
+        self.emit('error', err)
+
 def create(activity_name):
-    """Create a new activity from his name."""
-    bus = dbus.SessionBus()
-
-    factory_name = activity_name
-    factory_path = get_path(factory_name) 
-
-    proxy_obj = bus.get_object(factory_name, factory_path)
-    factory = dbus.Interface(proxy_obj, "com.redhat.Sugar.ActivityFactory")
-
-    xid = factory.create()
-
-    bus = dbus.SessionBus()
-    proxy_obj = bus.get_object(Activity.get_service_name(xid),
-                               Activity.get_object_path(xid))
-    activity = dbus.Interface(proxy_obj, Activity.ACTIVITY_INTERFACE)
-
-    return activity
+    """Create a new activity from its name."""
+    return ActivityCreationHandler(activity_name)
 
 def start_factory(activity_class, bundle_path):
     """Start the activity factory."""
