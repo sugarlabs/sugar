@@ -82,27 +82,31 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
     _cache = _IconCache()
 
     def __init__(self, **kwargs):
+        self._buffer = None
         self._size = 24
         self._color = None
         self._icon_name = None
 
         hippo.CanvasBox.__init__(self, **kwargs)
 
-        self._buffer = None
-
         self.connect('button-press-event', self._button_press_event_cb)
+
+    def _invalidate_buffer(self, new_buffer):
+        if self._buffer:
+            del self._buffer
+        self._buffer = new_buffer
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'icon-name':
             self._icon_name = value
-            self._buffer = None
+            self._invalidate_buffer(None)
             self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'color':
-            self._buffer = None
+            self._invalidate_buffer(None)
             self._color = value
             self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'size':
-            self._buffer = None
+            self._invalidate_buffer(None)
             self._size = value
             self.emit_request_changed()
 
@@ -129,7 +133,6 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             del ctx
 
             self._buffer = surface
-            self._buffer_scale = scale
 
         return self._buffer
 
