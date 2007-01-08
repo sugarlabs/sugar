@@ -183,6 +183,8 @@ class Shell(gobject.GObject):
         self._hosts[activity_host.get_xid()] = activity_host
 
     def _activity_removed_cb(self, home_model, home_activity):
+        if not home_activity.get_launched():
+            return
         xid = home_activity.get_xid()
         if self._hosts.has_key(xid):
             self._hosts[xid].destroy()
@@ -277,7 +279,7 @@ class Shell(gobject.GObject):
 
     def _start_error_cb(self, handler, err, home_model, activity_id, activity_type):
         logging.error("Couldn't launch activity %s (%s):\n%s" % (activity_id, activity_type, err))
-        home_mode.notify_activity_launch_failed(activity_id)
+        home_model.notify_activity_launch_failed(activity_id)
 
     def start_activity(self, activity_type):
         logging.debug('Shell.start_activity')
@@ -293,6 +295,9 @@ class Shell(gobject.GObject):
         handler = ActivityFactory.create(activity_type)
         handler.connect('success', self._start_success_cb, act_id, activity_type)
         handler.connect('error', self._start_error_cb, home_model, act_id, activity_type)
+
+        # Zoom to Home for launch feedback
+        self.set_zoom_level(sugar.ZOOM_HOME)
 
     def set_zoom_level(self, level):
         if level == sugar.ZOOM_ACTIVITY:
