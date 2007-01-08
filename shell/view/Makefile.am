@@ -11,5 +11,4 @@ sugar_PYTHON =				\
 	clipboardmenu.py		\
 	OverlayWindow.py		\
 	Shell.py			\
-	dconmanager.py			\
 	stylesheet.py

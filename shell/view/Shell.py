@@ -29,7 +29,7 @@ from view.ActivityHost import ActivityHost
 from sugar.activity import ActivityFactory
 from sugar.activity import Activity
 from view.frame.Frame import Frame
-from view.dconmanager import DCONManager
+from hardwaremanager import HardwareManager
 from _sugar import KeyGrabber
 from _sugar import AudioManager
 import sugar
@@ -45,7 +45,7 @@ class Shell(gobject.GObject):
 
         style.load_stylesheet(view.stylesheet)
 
-        self._dcon_manager = DCONManager()
+        self._hw_manager = HardwareManager()
         self._audio_manager = AudioManager()
 
         self._key_grabber = KeyGrabber()
@@ -99,6 +99,7 @@ class Shell(gobject.GObject):
         self._key_grabber.grab('0xE0') # Overlay key
         self._key_grabber.grab('0x93') # Frame key
         self._key_grabber.grab('0x7C') # Power key
+        self._key_grabber.grab('0x86') # Keyboard brightness
         self._key_grabber.grab('<alt>Tab')
 
         # For non-OLPC machines
@@ -115,13 +116,13 @@ class Shell(gobject.GObject):
         elif key == 'F4':
             self.set_zoom_level(sugar.ZOOM_ACTIVITY)
         elif key == 'F5':
-            self._dcon_manager.set_brightness(0)
+            self._hw_manager.set_display_brightness(0)
         elif key == 'F6':
-            self._dcon_manager.set_brightness(5)
+            self._hw_manager.set_display_brightness(5)
         elif key == 'F7':
-            self._dcon_manager.set_brightness(9)
+            self._hw_manager.set_display_brightness(9)
         elif key == 'F8':
-            self._dcon_manager.set_brightness(15)
+            self._hw_manager.set_display_brightness(15)
         elif key == 'F9':
             self._audio_manager.set_volume(0)
         elif key == 'F10':
@@ -131,9 +132,9 @@ class Shell(gobject.GObject):
         elif key == 'F12':
             self._audio_manager.set_volume(100)
         elif key == '<alt>F5':
-            self._dcon_manager.set_mode(DCONManager.COLOR_MODE)
+            self._hw_manager.set_display_mode(HardwareManager.COLOR_MODE)
         elif key == '<alt>F8':
-            self._dcon_manager.set_mode(DCONManager.BLACK_AND_WHITE_MODE)
+            self._hw_manager.set_display_mode(HardwareManager.B_AND_W_MODE)
         elif key == '<shft><alt>F9':
             self._frame.notify_key_press()
         elif key == '<shft><alt>F10':
@@ -146,6 +147,8 @@ class Shell(gobject.GObject):
             self._frame.notify_key_press()
         elif key == '0x7C': # Power key
             self._shutdown()
+        elif key == '0x86': # Keyboard brightness
+            self._hw_manager.toggle_keyboard_brightness()
         elif key == '<alt>Tab':
             self.set_zoom_level(sugar.ZOOM_HOME)
             box = self._home_window.get_home_box()

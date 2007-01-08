@@ -16,21 +16,28 @@
 
 import dbus
 
-DCON_MANAGER_INTERFACE = 'org.laptop.DCONManager'
-DCON_MANAGER_SERVICE = 'org.laptop.DCONManager'
-DCON_MANAGER_OBJECT_PATH = '/org/laptop/DCONManager'
+HARDWARE_MANAGER_INTERFACE = 'org.laptop.HardwareManager'
+HARDWARE_MANAGER_SERVICE = 'org.laptop.HardwareManager'
+HARDWARE_MANAGER_OBJECT_PATH = '/org/laptop/HardwareManager'
 
-class DCONManager(object):
+class HardwareManager(object):
     COLOR_MODE = 0
-    BLACK_AND_WHITE_MODE = 1
+    B_AND_W_MODE = 1
 
     def __init__(self):
         bus = dbus.SystemBus()
-        proxy = bus.get_object(DCON_MANAGER_SERVICE, DCON_MANAGER_OBJECT_PATH)
-        self._service = dbus.Interface(proxy, DCON_MANAGER_INTERFACE)
+        proxy = bus.get_object(HARDWARE_MANAGER_SERVICE,
+                               HARDWARE_MANAGER_OBJECT_PATH)
+        self._service = dbus.Interface(proxy, HARDWARE_MANAGER_INTERFACE)
 
-    def set_mode(self, mode):
+    def set_display_mode(self, mode):
         self._service.set_mode(mode)
 
-    def set_brightness(self, level):
-        self._service.set_backlight_level(level)
+    def set_display_brightness(self, level):
+        self._service.set_display_brightness(level)
+
+    def toggle_keyboard_brightness(self):
+        if self._service.get_keyboard_brightness():
+            self._service.set_keyboard_brightness(False)
+        else:
+            self._service.set_keyboard_brightness(True)            
