@@ -1,5 +1,5 @@
 
-sugardir = $(pkgdatadir)/shell/console/lib/procmem
+sugardir = $(pkgdatadir)/services/console/lib/procmem
 
 sugar_PYTHON =				\
 	__init__.py			\

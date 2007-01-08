@@ -1,4 +1,4 @@
-sugardir = $(pkgdatadir)/shell/console/interface/logviewer
+sugardir = $(pkgdatadir)/services/console/interface/logviewer
 sugar_PYTHON =				\
 	__init__.py			\
 	logviewer.py			

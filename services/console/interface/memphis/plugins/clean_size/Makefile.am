@@ -1,5 +1,5 @@
 
-sugardir = $(pkgdatadir)/shell/console/interface/memphis/plugins/clean_size
+sugardir = $(pkgdatadir)/services/console/interface/memphis/plugins/clean_size
 sugar_PYTHON =				\
 	README				\
 	__init__.py			\

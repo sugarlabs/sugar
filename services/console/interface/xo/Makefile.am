@@ -1,4 +1,4 @@
-sugardir = $(pkgdatadir)/shell/console/interface/xo
+sugardir = $(pkgdatadir)/services/console/interface/xo
 sugar_PYTHON =				\
 	__init__.py			\
 	drwarea.py			\

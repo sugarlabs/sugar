@@ -7,7 +7,7 @@ service_DATA = $(service_in_files:.service.in=.service)
 $(service_DATA): $(service_in_files) Makefile
 	@sed -e "s|\@bindir\@|$(bindir)|" $< > $@
 
-sugardir = $(pkgdatadir)/shell/console
+sugardir = $(pkgdatadir)/services/console
 sugar_PYTHON =				\
 	__init__.py			\
 	console.py
