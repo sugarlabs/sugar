@@ -31,7 +31,7 @@ class HardwareManager(object):
         self._service = dbus.Interface(proxy, HARDWARE_MANAGER_INTERFACE)
 
     def set_display_mode(self, mode):
-        self._service.set_mode(mode)
+        self._service.set_display_mode(mode)
 
     def set_display_brightness(self, level):
         self._service.set_display_brightness(level)
