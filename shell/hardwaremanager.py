@@ -39,5 +39,5 @@ class HardwareManager(object):
     def toggle_keyboard_brightness(self):
         if self._service.get_keyboard_brightness():
             self._service.set_keyboard_brightness(False)
-        else
+        else:
             self._service.set_keyboard_brightness(True)            
