@@ -63,6 +63,11 @@ if sourcedir:
 	util.write_service('org.laptop.sugar.DataStore', bin,
 					   env.get_user_service_dir())
 
+	bin = os.path.join(sourcedir,
+					  'services/console/sugar-console')
+	util.write_service('org.laptop.sugar.Console', bin,
+					   env.get_user_service_dir())
+
 from sugar.emulator import Emulator
 
 program = 'sugar-shell'

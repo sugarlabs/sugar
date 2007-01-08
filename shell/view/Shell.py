@@ -94,6 +94,8 @@ class Shell(gobject.GObject):
         self._key_grabber.grab('F12')
         self._key_grabber.grab('<alt>F5')
         self._key_grabber.grab('<alt>F8')
+        self._key_grabber.grab('<alt>=')
+        self._key_grabber.grab('<alt>0')
 
         self._key_grabber.grab('0xDC') # Camera key
         self._key_grabber.grab('0xE0') # Overlay key
@@ -135,6 +137,8 @@ class Shell(gobject.GObject):
             self._hw_manager.set_display_mode(HardwareManager.COLOR_MODE)
         elif key == '<alt>F8':
             self._hw_manager.set_display_mode(HardwareManager.B_AND_W_MODE)
+        elif key == '<alt>=' or key == '<alt>0':
+            self._show_console()
         elif key == '<shft><alt>F9':
             self._frame.notify_key_press()
         elif key == '<shft><alt>F10':
@@ -153,6 +157,13 @@ class Shell(gobject.GObject):
             self.set_zoom_level(sugar.ZOOM_HOME)
             box = self._home_window.get_home_box()
             box.grab_and_rotate()
+
+    def _show_console(self):
+        bus = dbus.SessionBus()
+        proxy = bus.get_object('org.laptop.sugar.Console',
+                               '/org/laptop/sugar/Console')
+        mgr = dbus.Interface(proxy, 'org.laptop.sugar.Console')
+        mgr.show()
 
     def _shutdown(self):
         bus = dbus.SystemBus()
