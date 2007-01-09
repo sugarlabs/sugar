@@ -94,7 +94,7 @@ class Shell(gobject.GObject):
         self._key_grabber.grab('F12')
         self._key_grabber.grab('<alt>F5')
         self._key_grabber.grab('<alt>F8')
-        self._key_grabber.grab('<alt>=')
+        self._key_grabber.grab('<alt>equal')
         self._key_grabber.grab('<alt>0')
 
         self._key_grabber.grab('0xDC') # Camera key
@@ -137,7 +137,7 @@ class Shell(gobject.GObject):
             self._hw_manager.set_display_mode(HardwareManager.COLOR_MODE)
         elif key == '<alt>F8':
             self._hw_manager.set_display_mode(HardwareManager.B_AND_W_MODE)
-        elif key == '<alt>=' or key == '<alt>0':
+        elif key == '<alt>equal' or key == '<alt>0':
             gobject.idle_add(self._show_console_cb)
         elif key == '<shft><alt>F9':
             self._frame.notify_key_press()
