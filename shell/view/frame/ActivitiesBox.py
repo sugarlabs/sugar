@@ -20,6 +20,7 @@ import logging
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.presence import PresenceService
 from sugar.graphics import style
+from sugar import profile
 
 class ActivityItem(CanvasIcon):
     def __init__(self, activity):
@@ -27,6 +28,16 @@ class ActivityItem(CanvasIcon):
         CanvasIcon.__init__(self, icon_name=icon_name)
         style.apply_stylesheet(self, 'frame.ActivityIcon')
         self._activity = activity
+        self._normal_color = self.get_property('color')
+        self._prelight_color = profile.get_color() 
+
+        self.connect('motion-notify-event', self._mouse_motion_event_cb)
+        
+    def _mouse_motion_event_cb(self, item, event):
+        if event.detail == hippo.MOTION_DETAIL_ENTER:
+            self.set_property('color', self._prelight_color)
+        elif event.detail == hippo.MOTION_DETAIL_LEAVE:
+            self.set_property('color', self._normal_color)
 
     def get_bundle_id(self):
         return self._activity.get_service_name()

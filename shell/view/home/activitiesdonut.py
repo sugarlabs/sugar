@@ -26,6 +26,8 @@ from sugar.graphics import colors
 from sugar.graphics import iconcolor
 from sugar import profile
 
+# TODO: rgb_to_html and html_to_rgb are useful elsewhere 
+#       we should put this in a common module 
 def rgb_to_html(r, g, b):
     """ (r, g, b) tuple (in float format) -> #RRGGBB """
     return '#%02x%02x%02x' % (int(r * 255), int(g * 255), int(b * 255))
