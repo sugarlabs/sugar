@@ -138,7 +138,7 @@ class Shell(gobject.GObject):
         elif key == '<alt>F8':
             self._hw_manager.set_display_mode(HardwareManager.B_AND_W_MODE)
         elif key == '<alt>=' or key == '<alt>0':
-            self._show_console()
+            gobject.idle_add(self._show_console_cb)
         elif key == '<shft><alt>F9':
             self._frame.notify_key_press()
         elif key == '<shft><alt>F10':
@@ -158,7 +158,7 @@ class Shell(gobject.GObject):
             box = self._home_window.get_home_box()
             box.grab_and_rotate()
 
-    def _show_console(self):
+    def _show_console_cb(self):
         bus = dbus.SessionBus()
         proxy = bus.get_object('org.laptop.sugar.Console',
                                '/org/laptop/sugar/Console')
