@@ -105,8 +105,8 @@ class Shell(gobject.GObject):
         self._key_grabber.grab('<alt>Tab')
 
         # For non-OLPC machines
-        self._key_grabber.grab('<shft><alt>F9')
-        self._key_grabber.grab('<shft><alt>F10')
+        self._key_grabber.grab('<alt>f')
+        self._key_grabber.grab('<alt>o')
 
     def _key_pressed_cb(self, grabber, key):
         if key == 'F1':
@@ -139,9 +139,9 @@ class Shell(gobject.GObject):
             self._hw_manager.set_display_mode(HardwareManager.B_AND_W_MODE)
         elif key == '<alt>equal' or key == '<alt>0':
             gobject.idle_add(self._show_console_cb)
-        elif key == '<shft><alt>F9':
+        elif key == '<alt>f':
             self._frame.notify_key_press()
-        elif key == '<shft><alt>F10':
+        elif key == '<alt>o':
             self.toggle_chat_visibility()
         elif key == '0xDC': # Camera key
             self._handle_camera_key()

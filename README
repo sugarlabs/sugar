@@ -15,17 +15,17 @@ SUGAR_PROFILE=profile-2 sugar
 ...
 
 
-Key bindings
-============
+Emulator key bindings
+=====================
 
 F1     Mesh zoom level
 F2     Friends zoom level
 F3     Home zoom level
 F4     Activity zoom level
 
-Shift+Alt+F9     Show the frame
-Shift+Alt+F10    Toggle chat visibility
-Shift+Alt+F11    Open a terminal activity
-Shift+Alt+F12    Open the log viewer
+Alt+f  Show the frame
+Alt+o  Toggle overlay visibility
+Alt+=  Open the developer console
+Alt+0  Open the developer console
 
 Ctrl+S Activate sketch mode in chat
