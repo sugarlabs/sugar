@@ -71,6 +71,8 @@ class HomeModel(gobject.GObject):
     def _window_closed_cb(self, screen, window):
         if window.get_window_type() == wnck.WINDOW_NORMAL:
             self._remove_activity(window.get_xid())
+        if not self._activities:
+            self.emit('active-activity-changed', None)
 
     def _get_activity_by_xid(self, xid):
         for act in self._activities.values():
