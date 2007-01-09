@@ -17,36 +17,94 @@
 import hippo
 import math
 import gobject
+import colorsys
+import logging
 
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import style
+from sugar.graphics import colors
+from sugar.graphics import iconcolor
+from sugar import profile
+
+def rgb_to_html(r, g, b):
+    """ (r, g, b) tuple (in float format) -> #RRGGBB """
+    return '#%02x%02x%02x' % (int(r * 255), int(g * 255), int(b * 255))
+
+def html_to_rgb(html_color):
+    """ #RRGGBB -> (r, g, b) tuple (in float format) """
+    html_color = html_color.strip()
+    if html_color[0] == '#':
+        html_color = html_color[1:]
+    if len(html_color) != 6:
+        raise ValueError, "input #%s is not in #RRGGBB format" % html_color
+    r, g, b = html_color[:2], html_color[2:4], html_color[4:]
+    r, g, b = [int(n, 16) for n in (r, g, b)]
+    r, g, b = (r / 255.0, g / 255.0, b / 255.0)
+    return (r, g, b)
 
 class ActivityIcon(CanvasIcon):
+    _LEVEL_MAX = 1.6
+    _LEVEL_MIN = 0.0
+    _INTERVAL = 100
+
     def __init__(self, activity):
         icon_name = activity.get_icon_name()
-        icon_color = activity.get_icon_color()
-        CanvasIcon.__init__(self, icon_name=icon_name, color=icon_color)
+        self._orig_color = profile.get_color()
+        
+        self._direction = 0
+        self._level = self._LEVEL_MAX
+        color = self._get_icon_color_for_level()
+
+        CanvasIcon.__init__(self, icon_name=icon_name, color=color)
         style.apply_stylesheet(self, 'ring.ActivityIcon')
 
         self._activity = activity
-        self._pulse_id = 0
         self._launched = False
-
-        self._pulse_id = gobject.timeout_add(200, self._pulse_cb)
+        self._pulse_id = gobject.timeout_add(self._INTERVAL, self._pulse_cb)
 
     def __del__(self):
+        self.cleanup()
+
+    def cleanup(self):
+        logging.debug("removing source %s" % self._pulse_id)
         if self._pulse_id > 0:
             gobject.source_remove(self._pulse_id)
+        self._pulse_id = 0
+
+    def _get_icon_color_for_level(self):
+        factor = math.sin(self._level)
+        h, s, v = colorsys.rgb_to_hsv(*html_to_rgb(self._orig_color.get_fill_color()))
+        new_fill = rgb_to_html(*colorsys.hsv_to_rgb(h, s * factor, v))
+        h, s, v = colorsys.rgb_to_hsv(*html_to_rgb(self._orig_color.get_stroke_color()))
+        new_stroke = rgb_to_html(*colorsys.hsv_to_rgb(h, s * factor, v))
+        return iconcolor.IconColor("%s,%s" % (new_fill, new_stroke))
 
     def _pulse_cb(self):
-        pass
+        if self._direction == 1:
+            self._level += 0.1
+            if self._level >= self._LEVEL_MAX:
+                self._direction = 0
+                self._level = self._LEVEL_MAX
+        elif self._direction == 0:
+            self._level -= 0.1
+            if self._level <= self._LEVEL_MIN:
+                self._direction = 1
+                self._level = self._LEVEL_MIN
+
+        logging.debug("self._level is %f" % self._level)
+
+        self.props.color = self._get_icon_color_for_level()
+        self.emit_paint_needed(0, 0, -1, -1)
+        return True
 
     def set_launched(self):
         if self._launched:
             return
         self._launched = True
-        gobject.source_remove(self._pulse_id)
-        self._pulse_id = 0
+        self.cleanup()
+        self._level = 100.0
+        self.props.color = self._orig_color
+        self.emit_paint_needed(0, 0, -1, -1)
 
     def get_launched(self):
         return self._launched
@@ -74,7 +132,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
         # Mark the activity as launched
         act_id = activity.get_id()
         if not self._activities.has_key(act_id):
-            return
+            self._add_activity(activity)
         icon = self._activities[act_id]
         icon.set_launched()
 
@@ -87,6 +145,8 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
             return
         icon = self._activities[act_id]
         self.remove(icon)
+        act = self._activities[act_id]
+        act.cleanup()
         del self._activities[act_id]
 
     def _add_activity(self, activity):
