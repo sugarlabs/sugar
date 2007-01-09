@@ -40,7 +40,7 @@ class HomeActivity(gobject.GObject):
 
         self._launch_time = time.time()
         self._launched = False
-        self._launch_timeout_id = gobject.timeout_add(10000, self._launch_timeout_cb)
+        self._launch_timeout_id = gobject.timeout_add(20000, self._launch_timeout_cb)
 
         logging.debug("Activity %s (%s) launching..." % (self._id, self._type))
 
