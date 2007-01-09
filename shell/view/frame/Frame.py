@@ -157,7 +157,7 @@ class Frame:
 
     def __init__(self, shell):
         self._windows = []
-        self._active_menus = 0
+        self._hover_frame = False
         self._shell = shell
         self._mode = Frame.INACTIVE
 
@@ -256,25 +256,25 @@ class Frame:
         panel.connect('enter-notify-event', self._enter_notify_cb)
         panel.connect('leave-notify-event', self._leave_notify_cb)
 
-        menu_shell = panel.get_menu_shell()
-        menu_shell.connect('activated', self._menu_shell_activated_cb)
-        menu_shell.connect('deactivated', self._menu_shell_deactivated_cb)
+        self._menu_shell = panel.get_menu_shell()
+        self._menu_shell.connect('activated',
+                                 self._menu_shell_activated_cb)
+        self._menu_shell.connect('deactivated',
+                                 self._menu_shell_deactivated_cb)
 
     def _menu_shell_activated_cb(self, menu_shell):
-        self._active_menus += 1
         self._timeline.goto('slide_in', True)
 
     def _menu_shell_deactivated_cb(self, menu_shell):
-        self._active_menus -= 1
-        if self._mode != Frame.STICKY:
+        if self._mode != Frame.STICKY and not self._hover_frame:
             self._timeline.play('before_slide_out', 'slide_out')
 
     def _enter_notify_cb(self, window, event):
-        self._timeline.goto('slide_in', True)
+        self._enter_notify()
         logging.debug('Frame._enter_notify_cb ' + str(self._mode))
         
     def _drag_motion_cb(self, window, context, x, y, time):
-        self._timeline.goto('slide_in', True)
+        self._enter_notify()
         logging.debug('Frame._drag_motion_cb ' + str(self._mode))
         return True
         
@@ -289,9 +289,14 @@ class Frame:
 
         self._leave_notify()
         logging.debug('Frame._leave_notify_cb ' + str(self._mode))
-                
+
+    def _enter_notify(self):
+        self._hover_frame = True
+        self._timeline.goto('slide_in', True) 
+               
     def _leave_notify(self):
-        if self._active_menus == 0 and \
+        self._hover_frame = False
+        if not self._menu_shell.is_active() and \
            (self._mode == Frame.HIDE_ON_LEAVE or \
             self._mode == Frame.AUTOMATIC):
             self._timeline.play('before_slide_out', 'slide_out')
