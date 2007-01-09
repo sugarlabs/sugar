@@ -101,7 +101,7 @@ class Shell(gobject.GObject):
         self._key_grabber.grab('0xE0') # Overlay key
         self._key_grabber.grab('0x93') # Frame key
         self._key_grabber.grab('0x7C') # Power key
-        self._key_grabber.grab('0x86') # Keyboard brightness
+        self._key_grabber.grab('0xEC') # Keyboard brightness
         self._key_grabber.grab('<alt>Tab')
 
         # For non-OLPC machines
@@ -151,7 +151,7 @@ class Shell(gobject.GObject):
             self._frame.notify_key_press()
         elif key == '0x7C': # Power key
             self._shutdown()
-        elif key == '0x86': # Keyboard brightness
+        elif key == '0xEC': # Keyboard brightness
             self._hw_manager.toggle_keyboard_brightness()
         elif key == '<alt>Tab':
             self.set_zoom_level(sugar.ZOOM_HOME)
