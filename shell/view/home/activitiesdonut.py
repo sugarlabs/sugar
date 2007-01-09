@@ -91,8 +91,6 @@ class ActivityIcon(CanvasIcon):
                 self._direction = 1
                 self._level = self._LEVEL_MIN
 
-        logging.debug("self._level is %f" % self._level)
-
         self.props.color = self._get_icon_color_for_level()
         self.emit_paint_needed(0, 0, -1, -1)
         return True
