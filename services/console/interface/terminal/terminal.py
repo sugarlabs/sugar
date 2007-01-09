@@ -46,7 +46,7 @@ class Terminal(gtk.HBox):
         self._vte.connect("child-exited", lambda term: term.fork_command())
 
         self._vte.fork_command()
-
+                
     def _configure_vte(self):
         conf = ConfigParser.ConfigParser()
 
@@ -134,7 +134,7 @@ class Terminal(gtk.HBox):
         self._vte.set_visible_bell(visible_bell)
         
         conf.write(open(conf_file, 'w'))
-
+        
     def on_gconf_notification(self, client, cnxn_id, entry, what):
         self.reconfigure_vte()
 

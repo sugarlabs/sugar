@@ -17,7 +17,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
-import gtk, gobject
+import gtk
+import gobject
 import gtk.gdk
 import cairo
 import string
@@ -87,17 +88,18 @@ class Interface:
         self.drw_width = gtk.gdk.screen_width() * 90 / 100
         self.drw_height = gtk.gdk.screen_height() * 20 / 100
         self.y_cpu = self.drw_height - self.graph_offset
-        self.drw_buffer = []
-                        
-        drawingarea = gtk.DrawingArea()
-        drawingarea.set_size_request(self.drw_width, self.drw_height)
-        drawingarea.connect("expose-event", self.do_expose)
+        self._cpu = 0
+        self._cpu_buffer = []
 
-        self.dat = drwarea.Drawing_Area_Tools(drawingarea)
+        self._drawingarea = gtk.DrawingArea()
+        self._drawingarea.set_size_request(self.drw_width, self.drw_height)
+        self._drawingarea.connect("expose-event", self.do_expose)
+
+        self.dat = drwarea.Drawing_Area_Tools(self._drawingarea)
         
         fixed = gtk.Fixed();
         fixed.set_border_width(10)
-        fixed.add(drawingarea)
+        fixed.add(self._drawingarea)
         
         self.frame = gtk.Frame('System CPU Usage: 0%')
         self.frame.set_border_width(10)
@@ -110,39 +112,20 @@ class Interface:
         DRW_CPU = CPU_Usage()
         DRW_CPU.frequency = 1000 # 1 Second
         
-        gobject.timeout_add(DRW_CPU.frequency, self._draw_cpu_usage, DRW_CPU, drawingarea)
+        gobject.timeout_add(DRW_CPU.frequency, self._update_cpu_usage, DRW_CPU)
         
-    def _draw_cpu_usage(self, DRW_CPU, drwarea):
-        # End of the graph ?
+    def _update_cpu_usage(self, DRW_CPU):
+        
         if ((self.frequency_timer + 1)*self.graph_offset) >= (self.drw_width - self.graph_offset):
             self.frequency_timer = 1
-            self.drw_buffer = []
-            self.do_expose(drwarea, None)
-            
-        context = drwarea.window.cairo_create()
-        
-        from_x = self.frequency_timer * self.graph_offset
-        from_y = self.y_cpu
+            self._cpu_buffer = []
 
+        self._cpu = DRW_CPU._get_CPU_usage()
+        self._cpu_buffer.append(self._cpu)
+
+        self._drawingarea.queue_draw()
         self.frequency_timer += 1
         
-        pcpu = DRW_CPU._get_CPU_usage()
-        
-        self.drw_buffer.append(pcpu)
-                
-        to_x = self.frequency_timer * self.graph_offset
-        self.y_cpu = to_y = self._get_y_cpu(pcpu)
-            
-        # Context properties
-        context.set_line_width(2)
-        context.set_source_rgb(0,1,0)
-            
-        cpu_label = str(round(pcpu, 4))
-        self.frame.set_label('System CPU Usage: ' + cpu_label + ' %')
-    
-        self.dat.draw_line(context, from_x, from_y, to_x, to_y)
-        context.stroke()
-            
         return True
     
     def _get_y_cpu(self, pcpu):
@@ -155,32 +138,36 @@ class Interface:
         return int(y_value) 
     
     def do_expose(self, widget, event):
+        context = widget.window.cairo_create()
         
-        self.context = widget.window.cairo_create()
-        self.context.rectangle(0, 0, self.dat.width - 1, self.dat.height - 1)
+        context.rectangle(0, 0, self.dat.width - 1, self.dat.height - 1)
+        #context.clip()
 
-        self.context.set_source_rgb (0,0,0)
-        self.context.fill_preserve()
+        context.set_source_rgb (0,0,0)
+        context.fill_preserve()
 
         # Drawing horizontal and vertical border lines
-        self.dat.draw_border_lines(self.context)
+        self.dat.draw_border_lines(context)
         
         # Drawing grid
         line_margin = self.dat.margin
-        self.context.set_source_rgb(1, 1, 1)
-        self.context.set_line_width(1)
-        self.dat.draw_grid(self.context, line_margin + 1, line_margin + 1, self.dat.width - line_margin - 2, self.dat.height - line_margin - 2)
-        self.context.stroke()
+        context.set_source_rgb(1, 1, 1)
+        context.set_line_width(1)
+        self.dat.draw_grid(context, line_margin + 1, line_margin + 1, self.dat.width - line_margin - 2, self.dat.height - line_margin - 2)
+        context.stroke()
 
-        self._draw_buffer(widget)
+        self._draw_buffer(widget, context)
+        
+        cpu_label = str(round(self._cpu, 4))
+        self.frame.set_label('System CPU Usage: ' + cpu_label + ' %')
+
         return False
 
-    def _draw_buffer(self, drwarea):
+    def _draw_buffer(self, drwarea, context):
         freq = 1 # Frequency timer
         last_y = self.drw_height - self.graph_offset
-        
-        context = drwarea.window.cairo_create()		
-        for pcpu in self.drw_buffer:
+
+        for pcpu in self._cpu_buffer:
             
             from_x = freq * self.graph_offset
             from_y = last_y
@@ -196,4 +183,3 @@ class Interface:
                 
             self.dat.draw_line(context, from_x, from_y, to_x, to_y)
             context.stroke()
-            
