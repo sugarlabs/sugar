@@ -138,7 +138,7 @@ class Shell(gobject.GObject):
         elif key == '<alt>F8':
             self._hw_manager.set_display_mode(HardwareManager.B_AND_W_MODE)
         elif key == '<alt>equal' or key == '<alt>0':
-            gobject.idle_add(self._show_console_cb)
+            gobject.idle_add(self._toggle_console_visibility_cb)
         elif key == '<alt>f':
             self._frame.notify_key_press()
         elif key == '<alt>o':
@@ -158,12 +158,12 @@ class Shell(gobject.GObject):
             box = self._home_window.get_home_box()
             box.grab_and_rotate()
 
-    def _show_console_cb(self):
+    def _toggle_console_visibility_cb(self):
         bus = dbus.SessionBus()
         proxy = bus.get_object('org.laptop.sugar.Console',
                                '/org/laptop/sugar/Console')
-        mgr = dbus.Interface(proxy, 'org.laptop.sugar.Console')
-        mgr.show()
+        console = dbus.Interface(proxy, 'org.laptop.sugar.Console')
+        console.toggle_visibility()
 
     def _shutdown(self):
         bus = dbus.SystemBus()
