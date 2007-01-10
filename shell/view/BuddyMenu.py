@@ -88,9 +88,9 @@ class BuddyMenu(Menu):
             icon = CanvasIcon(icon_name='stock-add')
             self.add_action(icon, BuddyMenu.ACTION_MAKE_FRIEND)
 
-        activity_id = shell_model.get_current_activity()
-        if activity_id != None:
-            activity_ps = pservice.get_activity(activity_id)
+        activity = shell_model.get_home().get_current_activity()
+        if activity != None:
+            activity_ps = pservice.get_activity(activity.get_id())
 
             # FIXME check that the buddy is not in the activity already
 
