@@ -18,25 +18,36 @@
 
 import os
 import gtk
-import gobject
-import gtk.gdk
-import cairo
-import string
-import drwarea
 
-from cpu import XO_CPU
-from system import XO_System
-
-class Interface:
-        
+class XO_System(gtk.Fixed):
+    
     def __init__(self):
+        gtk.Fixed.__init__(self)
+        self.set_border_width(10)
         
-        self.widget = self.vbox = gtk.VBox(False, 3)
-        
-        xo_system = XO_System()
-        self.vbox.pack_start(xo_system, False, False, 0)
+        build = self._get_system_build()
+        label_build = gtk.Label('OLPC Build: ' + str(build))
 
-        xo_cpu = XO_CPU()
-        self.vbox.pack_start(xo_cpu, False, False, 0)
+        hbox = gtk.HBox(False, 0)
+        hbox.pack_start(label_build, False, False, 5)
         
-        self.vbox.show_all()
+        fixed_border = gtk.Fixed()
+        fixed_border.set_border_width(8)
+        fixed_border.add(hbox)
+        
+        frame = gtk.Frame('System Information')
+        frame.add(fixed_border)
+        
+        self.add(frame)
+        self.show_all()
+
+    def _get_system_build(self):
+        build_file_path = '/boot/olpc_build'
+        
+        try:
+            f = open(build_file_path, 'r')
+            build = f.read()
+            f.close()
+            return build
+        except:
+            return "None"
