@@ -18,6 +18,7 @@ import time
 import gobject
 import logging
 
+from sugar.graphics.iconcolor import IconColor
 from sugar.presence import PresenceService
 from sugar.activity import Activity
 from sugar import profile
