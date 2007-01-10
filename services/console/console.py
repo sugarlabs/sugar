@@ -80,8 +80,12 @@ class Service(dbus.service.Object):
         self._console = Console()
  
     @dbus.service.method(CONSOLE_IFACE)
-    def show(self):
-        self._console.window.present()
+    def toggle_visibility(self):
+        window = self._console.window
+        if not window.props.visible:
+            window.present()
+        else:
+            window.hide()
 
 bus = dbus.SessionBus()
 name = dbus.service.BusName(CONSOLE_BUS, bus)
