@@ -18,8 +18,10 @@ import hippo
 
 from view.home.activitiesdonut import ActivitiesDonut
 from view.home.MyIcon import MyIcon
+from model.ShellModel import ShellModel
 from sugar.graphics.grid import Grid
 from sugar.graphics import style
+from sugar.graphics.iconcolor import IconColor
 
 class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarHomeBox'
@@ -35,6 +37,17 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
         self._my_icon = MyIcon()
         style.apply_stylesheet(self._my_icon, 'home.MyIcon')
         self.append(self._my_icon, hippo.PACK_FIXED)
+
+        shell.get_model().connect('notify::state',
+                                  self._shell_state_changed_cb)
+
+    def _shell_state_changed_cb(self, model, pspec):
+        # FIXME handle all possible mode switches
+        if model.props.state == ShellModel.STATE_SHUTDOWN:
+            if self._donut:
+                self.remove(self._donut)
+                self._donut = None
+                self._my_icon.props.color = IconColor('insensitive')
 
     def do_allocate(self, width, height):
         hippo.CanvasBox.do_allocate(self, width, height)

@@ -29,9 +29,11 @@ from view.ActivityHost import ActivityHost
 from sugar.activity import ActivityFactory
 from sugar.activity import Activity
 from view.frame.Frame import Frame
+from model.ShellModel import ShellModel
 from hardwaremanager import HardwareManager
 from _sugar import KeyGrabber
 from _sugar import AudioManager
+from sugar import env
 import sugar
 
 class Shell(gobject.GObject):
@@ -107,6 +109,7 @@ class Shell(gobject.GObject):
         # For non-OLPC machines
         self._key_grabber.grab('<alt>f')
         self._key_grabber.grab('<alt>o')
+        self._key_grabber.grab('<alt><shift>s')
 
     def _key_pressed_cb(self, grabber, key):
         if key == 'F1':
@@ -149,7 +152,7 @@ class Shell(gobject.GObject):
             self.toggle_chat_visibility()
         elif key == '0x93': # Frame key
             self._frame.notify_key_press()
-        elif key == '0x7C': # Power key
+        elif key == '0x7C' or key == '<alt><shift>s': # Power key
             self._shutdown()
         elif key == '0xEC': # Keyboard brightness
             self._hw_manager.toggle_keyboard_brightness()
@@ -166,6 +169,11 @@ class Shell(gobject.GObject):
         console.toggle_visibility()
 
     def _shutdown(self):
+        self._model.props.state = ShellModel.STATE_SHUTDOWN
+        if not env.is_emulator():
+            self._shutdown_system()
+
+    def _shutdown_system(self):
         bus = dbus.SystemBus()
         proxy = bus.get_object('org.freedesktop.Hal',
                                '/org/freedesktop/Hal/devices/computer')

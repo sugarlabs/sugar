@@ -16,6 +16,8 @@
 
 import os
 
+import gobject
+
 from sugar.presence import PresenceService
 from sugar.activity.bundleregistry import BundleRegistry
 from model.Friends import Friends
@@ -24,9 +26,22 @@ from model.homemodel import HomeModel
 from model.Owner import ShellOwner
 from sugar import env
 
-class ShellModel:
+class ShellModel(gobject.GObject):
+    STATE_STARTUP = 0
+    STATE_RUNNING = 1
+    STATE_SHUTDOWN = 2
+
+    __gproperties__ = {
+        'state'     : (int, None, None,
+                      0, 2, STATE_RUNNING,
+                      gobject.PARAM_READWRITE)
+    }
+
     def __init__(self):
+        gobject.GObject.__init__(self)
+
         self._current_activity = None
+        self._state = self.STATE_RUNNING
 
         self._bundle_registry = BundleRegistry()
 
@@ -46,6 +61,14 @@ class ShellModel:
         for path in env.get_data_dirs():
             bundles_path = os.path.join(path, 'activities')
             self._bundle_registry.add_search_path(bundles_path)
+
+    def do_set_property(self, pspec, value):
+        if pspec.name == 'state':
+            self._state = value
+
+    def do_get_property(self, pspec):
+        if pspec.name == 'state':
+            return self._state
 
     def get_bundle_registry(self):
         return self._bundle_registry

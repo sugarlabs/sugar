@@ -19,6 +19,8 @@
 import os
 import sys
 
+os.environ['SUGAR_EMULATOR'] = 'yes'
+
 sourcedir = os.path.abspath(os.path.dirname(__file__))
 if os.path.isfile(os.path.join(sourcedir, 'sugar/__uninstalled__.py')):
 	print 'Running sugar from ' + sourcedir + ' ...'

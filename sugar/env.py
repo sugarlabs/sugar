@@ -30,6 +30,12 @@ def get_bundle_path():
     else:
         return None
 
+def is_emulator():
+    if os.environ.has_key('SUGAR_EMULATOR'):
+        if os.environ['SUGAR_EMULATOR'] == 'yes':
+            return True
+    return False
+
 def get_bundle_service_name():
     if os.environ.has_key('SUGAR_BUNDLE_SERVICE_NAME'):
         return os.environ['SUGAR_BUNDLE_SERVICE_NAME']

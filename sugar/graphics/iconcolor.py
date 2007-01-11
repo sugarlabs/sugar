@@ -22,6 +22,8 @@ from sugar.graphics.colors import colors
 def _parse_string(color_string):
     if color_string == 'white':
         return ['#ffffff', '#414141']
+    elif color_string == 'insensitive':
+        return ['#ffffff', '#e2e2e2']
 
     splitted = color_string.split(',')
     if len(splitted) == 2:
