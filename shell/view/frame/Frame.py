@@ -27,6 +27,7 @@ from view.frame.FriendsBox import FriendsBox
 from view.frame.PanelWindow import PanelWindow
 from view.frame.clipboardpanelwindow import ClipboardPanelWindow
 from view.frame.notificationtray import NotificationTray
+from model.ShellModel import ShellModel
 from sugar.graphics.timeline import Timeline
 from sugar.graphics.grid import Grid
 from sugar.graphics.menushell import MenuShell
@@ -231,6 +232,13 @@ class Frame:
 
         # Left panel
         panel = self._create_clipboard_panel(grid, 0, 1, 1, 10)
+
+        shell.get_model().connect('notify::state',
+                                  self._shell_state_changed_cb)
+
+    def _shell_state_changed_cb(self, model, pspec):
+        if model.props.state == ShellModel.STATE_SHUTDOWN:
+            self._timeline.goto('slide_out', True)
         
     def _create_clipboard_panel(self, grid, x, y, width, height):
         [x, y, width, height] = grid.rectangle(x, y, width, height)
