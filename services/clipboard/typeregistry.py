@@ -13,6 +13,9 @@ class FileType:
 
     def get_preview(self):
         raise NotImplementedError
+
+    def get_activity(self):
+        raise NotImplementedError
         
     def matches_mime_type(cls, mime_type):
         raise NotImplementedError
@@ -38,6 +41,9 @@ class TextFileType(FileType):
                     return text[0:49] + "..."
 
         return ''
+
+    def get_activity(self):
+        return ''
         
     def matches_mime_type(cls, mime_type):
         return mime_type in cls._types
@@ -54,6 +60,9 @@ class ImageFileType(FileType):
         return 'activity-sketch'
 
     def get_preview(self):
+        return ''
+
+    def get_activity(self):
         return ''
         
     def matches_mime_type(cls, mime_type):
@@ -78,7 +87,10 @@ class UriFileType(FileType):
                 return title
         
         return ''
-        
+
+    def get_activity(self):
+        return ''
+
     def matches_mime_type(cls, mime_type):
         return mime_type in cls._types
     matches_mime_type = classmethod(matches_mime_type)
@@ -95,6 +107,9 @@ class PdfFileType(FileType):
 
     def get_preview(self):
         return ''
+
+    def get_activity(self):
+        return 'org.laptop.sugar.Xbook'
         
     def matches_mime_type(cls, mime_type):
         return mime_type in cls._types
@@ -112,6 +127,9 @@ class MsWordFileType(FileType):
 
     def get_preview(self):
         return ''
+
+    def get_activity(self):
+        return 'org.laptop.AbiWordActivity'
         
     def matches_mime_type(cls, mime_type):
         return mime_type in cls._types
@@ -129,6 +147,29 @@ class RtfFileType(FileType):
 
     def get_preview(self):
         return ''
+
+    def get_activity(self):
+        return 'org.laptop.AbiWordActivity'
+        
+    def matches_mime_type(cls, mime_type):
+        return mime_type in cls._types
+    matches_mime_type = classmethod(matches_mime_type)
+
+class OOTextFileType(FileType):
+    
+    _types = set(['application/vnd.oasis.opendocument.text'])
+    
+    def get_name(self):
+        return _('OpenOffice text file')
+
+    def get_icon(self):
+        return 'activity-abiword'
+
+    def get_preview(self):
+        return ''
+
+    def get_activity(self):
+        return 'org.laptop.AbiWordActivity'
         
     def matches_mime_type(cls, mime_type):
         return mime_type in cls._types
@@ -143,6 +184,9 @@ class UnknownFileType(FileType):
 
     def get_preview(self):
         return ''
+
+    def get_activity(self):
+        return ''
         
     def matches_mime_type(cls, mime_type):
         return true
@@ -154,6 +198,7 @@ class TypeRegistry:
         self._types.append(PdfFileType)
         self._types.append(MsWordFileType)
         self._types.append(RtfFileType)
+        self._types.append(OOTextFileType)
         self._types.append(UriFileType)
         self._types.append(ImageFileType)
         self._types.append(TextFileType)

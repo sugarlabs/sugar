@@ -110,4 +110,4 @@ class Menu(gtk.Window):
         self.emit('action', action)
 
     def set_title(self, title):
-        self._title_item.set_text(title)
+        self._title_item.set_property('text', title)

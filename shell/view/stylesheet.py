@@ -70,7 +70,7 @@ clipboard_bubble = {
 }
 
 clipboard_menu_item_title = {
-    'xalign': hippo.ALIGNMENT_START,
+    'xalign': hippo.ALIGNMENT_CENTER,
     'padding-left': 5,
     'color'     : 0xFFFFFFFF,
     'font'     : style.get_font_description('Bold', 1.2)

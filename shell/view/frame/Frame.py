@@ -53,18 +53,18 @@ class EventFrame(gobject.GObject):
         self._hover = EventFrame.HOVER_NONE
         self._active = False
 
-        invisible = self._create_invisible(0, 0, gtk.gdk.screen_width(), 1)
+        invisible = self._create_invisible(0, 0, gtk.gdk.screen_width(), 6)
         self._windows.append(invisible)
 
-        invisible = self._create_invisible(0, 0, 1, gtk.gdk.screen_height())
+        invisible = self._create_invisible(0, 0, 6, gtk.gdk.screen_height())
         self._windows.append(invisible)
 
-        invisible = self._create_invisible(gtk.gdk.screen_width() - 1, 0,
+        invisible = self._create_invisible(gtk.gdk.screen_width() - 6, 0,
                                            gtk.gdk.screen_width(),
                                            gtk.gdk.screen_height())
         self._windows.append(invisible)
 
-        invisible = self._create_invisible(0, gtk.gdk.screen_height() - 1,
+        invisible = self._create_invisible(0, gtk.gdk.screen_height() - 6,
                                            gtk.gdk.screen_width(),
                                            gtk.gdk.screen_height())
         self._windows.append(invisible)

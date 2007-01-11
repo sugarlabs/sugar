@@ -86,14 +86,27 @@ class ClipboardBubble(hippo.CanvasBox, hippo.CanvasItem):
         width -= line_width * 2
         height -= line_width * 2
 
-        self._paint_ellipse(cr, x, y, width, height, self._fill_color)
+        cr.move_to(x + self._radius, y);
+        cr.arc(x + width - self._radius, y + self._radius,
+               self._radius, math.pi * 1.5, math.pi * 2);
+        cr.arc(x + width - self._radius, x + height - self._radius,
+               self._radius, 0, math.pi * 0.5);
+        cr.arc(x + self._radius, y + height - self._radius,
+               self._radius, math.pi * 0.5, math.pi);
+        cr.arc(x + self._radius, y + self._radius, self._radius,
+               math.pi, math.pi * 1.5);
+
+        color = self._int_to_rgb(self._fill_color)
+        cr.set_source_rgb(*color)
+        cr.fill_preserve();
 
         color = self._int_to_rgb(self._stroke_color)
         cr.set_source_rgb(*color)
         cr.set_line_width(line_width)
         cr.stroke();
 
-        self._paint_progress_bar(cr, x, y, width, height, line_width)
+        if self._percent > 0:
+            self._paint_progress_bar(cr, x, y, width, height, line_width)
 
     def _paint_progress_bar(self, cr, x, y, width, height, line_width):
         prog_x = x + line_width
@@ -101,31 +114,21 @@ class ClipboardBubble(hippo.CanvasBox, hippo.CanvasItem):
         prog_width = (width - (line_width * 2)) * (self._percent / 100.0)
         prog_height = (height - (line_width * 2))
 
-        self._paint_ellipse(cr, prog_x, prog_y, width, height, self._progress_color)
+        x = prog_x
+        y = prog_y
+        width = prog_width
+        height = prog_height
 
-    def _paint_ellipse(self, cr, x, y, width, height, fill_color):
-        cr.move_to(x + self._radius, y)
-        cr.arc(x + width - self._radius,
-               y + self._radius,
-               self._radius,
-               math.pi * 1.5,
-               math.pi * 2)
-        cr.arc(x + width - self._radius,
-               x + height - self._radius,
-               self._radius,
-               0,
-               math.pi * 0.5)
-        cr.arc(x + self._radius,
-               y + height - self._radius,
-               self._radius,
-               math.pi * 0.5,
-               math.pi)
-        cr.arc(x + self._radius,
-               y + self._radius,
-               self._radius,
-               math.pi,
-               math.pi * 1.5);
+        cr.move_to(x + self._radius, y);
+        cr.arc(x + width - self._radius, y + self._radius,
+               self._radius, math.pi * 1.5, math.pi * 2);
+        cr.arc(x + width - self._radius, x + height - self._radius,
+               self._radius, 0, math.pi * 0.5);
+        cr.arc(x + self._radius, y + height - self._radius,
+               self._radius, math.pi * 0.5, math.pi);
+        cr.arc(x + self._radius, y + self._radius, self._radius,
+               math.pi, math.pi * 1.5);
 
-        color = self._int_to_rgb(fill_color)
+        color = self._int_to_rgb(self._progress_color)
         cr.set_source_rgb(*color)
         cr.fill_preserve();

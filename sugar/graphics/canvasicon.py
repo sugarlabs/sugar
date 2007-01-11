@@ -54,6 +54,9 @@ class _IconCache:
     def get_handle(self, name, color, size):
         info = self._theme.lookup_icon(name, int(size), 0)
 
+        if not info:
+            raise "Icon '" + name + "' not found."
+
         if color:
             key = (info.get_filename(), color.to_string())
         else:
@@ -160,8 +163,3 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
 
     def _button_press_event_cb(self, item, event):
         item.emit_activated()
-
-    def set_icon_name(self, icon_name):
-        self._icon_name = icon_name
-        self._buffer = None
-        self.emit_paint_needed(0, 0, -1, -1)

@@ -26,6 +26,7 @@ NAME_KEY = 'NAME'
 PERCENT_KEY = 'PERCENT'
 ICON_KEY = 'ICON'
 PREVIEW_KEY = 'PREVIEW'
+ACTIVITY_KEY = 'ACTIVITY'
 FORMATS_KEY = 'FORMATS'
 
 class ClipboardDBusServiceHelper(dbus.service.Object):
@@ -63,7 +64,8 @@ class ClipboardDBusServiceHelper(dbus.service.Object):
         self.object_state_changed(object_id, {NAME_KEY: cb_object.get_name(),
                                   PERCENT_KEY: cb_object.get_percent(),
                                   ICON_KEY: cb_object.get_icon(),
-                                  PREVIEW_KEY: cb_object.get_preview()})
+                                  PREVIEW_KEY: cb_object.get_preview(),
+                                  ACTIVITY_KEY: cb_object.get_activity()})
 
     @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
                          in_signature="s", out_signature="")
@@ -80,7 +82,8 @@ class ClipboardDBusServiceHelper(dbus.service.Object):
         self.object_state_changed(object_id, {NAME_KEY: cb_object.get_name(),
                                   PERCENT_KEY: percent,
                                   ICON_KEY: cb_object.get_icon(),
-                                  PREVIEW_KEY: cb_object.get_preview()})
+                                  PREVIEW_KEY: cb_object.get_preview(),
+                                  ACTIVITY_KEY: cb_object.get_activity()})
 
         logging.debug('Changed object with object_id ' + object_id +
                 ' with percent ' + str(percent))
@@ -99,6 +102,7 @@ class ClipboardDBusServiceHelper(dbus.service.Object):
                 PERCENT_KEY: cb_object.get_percent(),
                 ICON_KEY: cb_object.get_icon(),
                 PREVIEW_KEY: cb_object.get_preview(),
+                ACTIVITY_KEY: cb_object.get_activity(),
                 FORMATS_KEY: format_types}
         return result_dict
 
