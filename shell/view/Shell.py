@@ -131,9 +131,9 @@ class Shell(gobject.GObject):
         elif key == 'F9':
             self._audio_manager.set_volume(0)
         elif key == 'F10':
-            self._audio_manager.set_volume(32)
+            self._audio_manager.set_volume(40)
         elif key == 'F11':
-            self._audio_manager.set_volume(64)
+            self._audio_manager.set_volume(75)
         elif key == 'F12':
             self._audio_manager.set_volume(100)
         elif key == '<alt>F5':
