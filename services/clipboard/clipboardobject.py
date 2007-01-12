@@ -26,6 +26,9 @@ class ClipboardObject:
 
     def get_preview(self):
         return self._get_type_info().get_preview()
+
+    def get_activity(self):
+        return self._get_type_info().get_activity()
         
     def get_percent(self):
         return self._percent

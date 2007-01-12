@@ -6,6 +6,7 @@ NAME_KEY = 'NAME'
 PERCENT_KEY = 'PERCENT'
 ICON_KEY = 'ICON'
 PREVIEW_KEY = 'PREVIEW'
+ACTIVITY_KEY = 'ACTIVITY'
 FORMATS_KEY = 'FORMATS'
 
 DBUS_SERVICE = "org.laptop.Clipboard"
@@ -20,7 +21,7 @@ class ClipboardService(gobject.GObject):
         'object-deleted': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                         ([str])),
         'object-state-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                        ([str, str, int, str, str])),
+                        ([str, str, int, str, str, str])),
     }
     
     def __init__(self):
@@ -64,7 +65,8 @@ class ClipboardService(gobject.GObject):
 
     def _object_state_changed_cb(self, object_id, values):
         self.emit('object-state-changed', object_id, values[NAME_KEY],
-                  values[PERCENT_KEY], values[ICON_KEY], values[PREVIEW_KEY])
+                  values[PERCENT_KEY], values[ICON_KEY], values[PREVIEW_KEY],
+                  values[ACTIVITY_KEY])
 
     def add_object(self, object_id, name):
         self._dbus_service.add_object(object_id, name)
@@ -86,7 +88,7 @@ class ClipboardService(gobject.GObject):
         
         return (result_dict[NAME_KEY], result_dict[PERCENT_KEY],
                 result_dict[ICON_KEY], result_dict[PREVIEW_KEY],
-                result_dict[FORMATS_KEY])
+                result_dict[ACTIVITY_KEY], result_dict[FORMATS_KEY])
 
     def get_object_data(self, object_id, formatType):    
         return self._dbus_service.get_object_data(object_id, formatType,
