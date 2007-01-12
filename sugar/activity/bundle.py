@@ -23,8 +23,6 @@ class Bundle:
             self._valid = False
 
     def _parse_info(self, info_path):
-        base_path = os.path.dirname(info_path)
-
         cp = ConfigParser()
         cp.read([info_path])
 
@@ -55,9 +53,10 @@ class Bundle:
         if cp.has_option(section, 'icon'):
             icon = cp.get(section, 'icon')
             if gtk.icon_theme_get_default().has_icon(icon):
-                 self._icon = 'theme:' + icon
+                self._icon = 'theme:' + icon
             else:
-                 self._icon = os.path.join(base_path, icon + ".svg")
+                activity_path = os.path.join(self._path, 'activity')
+                self._icon = os.path.join(activity_path, icon + ".svg")
 
         if cp.has_option(section, 'activity_version'):
             self._activity_version = int(cp.get(section, 'activity_version'))
