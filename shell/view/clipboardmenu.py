@@ -53,7 +53,7 @@ class ClipboardMenu(Menu):
 
         if percent == 100 and activity:
             if not self._remove_icon:
-                self._remove_icon = CanvasIcon(icon_name='stock-remove')
+                self._remove_icon = CanvasIcon(icon_name='theme:stock-remove')
                 self.add_action(self._remove_icon, ClipboardMenu.ACTION_DELETE)
                             
             if not self._open_icon:
@@ -77,7 +77,7 @@ class ClipboardMenu(Menu):
                 self._stop_icon = None        
         else:
             if not self._stop_icon:
-                self._stop_icon = CanvasIcon(icon_name='stock-close')
+                self._stop_icon = CanvasIcon(icon_name='theme:stock-close')
                 self.add_action(self._stop_icon, ClipboardMenu.ACTION_STOP_DOWNLOAD)
 
             if self._remove_icon:

@@ -19,7 +19,7 @@ from view.BuddyMenu import BuddyMenu
 
 class BuddyIcon(MenuIcon):
     def __init__(self, shell, menu_shell, buddy):
-        MenuIcon.__init__(self, menu_shell, icon_name='stock-buddy',
+        MenuIcon.__init__(self, menu_shell, icon_name='theme:stock-buddy',
                           color=buddy.get_color())
 
         self._shell = shell

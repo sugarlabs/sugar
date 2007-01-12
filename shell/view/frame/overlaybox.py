@@ -9,7 +9,7 @@ class OverlayBox(hippo.CanvasBox):
 
         self._shell = shell
 
-        icon = CanvasIcon(icon_name='stock-chat')
+        icon = CanvasIcon(icon_name='theme:stock-chat')
         style.apply_stylesheet(icon, 'frame.OverlayIcon')
         icon.connect('activated', self._overlay_clicked_cb)
         self.append(icon)

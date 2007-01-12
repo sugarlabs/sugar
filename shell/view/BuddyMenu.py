@@ -82,10 +82,10 @@ class BuddyMenu(Menu):
 
         friends = shell_model.get_friends()
         if friends.has_buddy(self._buddy):
-            icon = CanvasIcon(icon_name='stock-remove')
+            icon = CanvasIcon(icon_name='theme:stock-remove')
             self.add_action(icon, BuddyMenu.ACTION_REMOVE_FRIEND) 
         else:
-            icon = CanvasIcon(icon_name='stock-add')
+            icon = CanvasIcon(icon_name='theme:stock-add')
             self.add_action(icon, BuddyMenu.ACTION_MAKE_FRIEND)
 
         activity = shell_model.get_home().get_current_activity()
@@ -94,7 +94,7 @@ class BuddyMenu(Menu):
 
             # FIXME check that the buddy is not in the activity already
 
-            icon = CanvasIcon(icon_name='stock-invite')
+            icon = CanvasIcon(icon_name='theme:stock-invite')
             self.add_action(icon, BuddyMenu.ACTION_INVITE)
 
     def __buddy_icon_changed_cb(self, buddy):

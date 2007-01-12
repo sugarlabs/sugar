@@ -37,11 +37,11 @@ class ActivityMenu(Menu):
         self._add_close_action()
 
     def _add_mesh_action(self):
-        icon = CanvasIcon(icon_name='stock-share-mesh')
+        icon = CanvasIcon(icon_name='theme:stock-share-mesh')
         self.add_action(icon, ActivityMenu.ACTION_SHARE) 
 
     def _add_close_action(self):
-        icon = CanvasIcon(icon_name='stock-close')
+        icon = CanvasIcon(icon_name='theme:stock-close')
         self.add_action(icon, ActivityMenu.ACTION_CLOSE) 
 
 class ActivityIcon(MenuIcon):
@@ -81,22 +81,22 @@ class ZoomBox(hippo.CanvasBox):
         self._menu_shell = menu_shell
         self._activity_icon = None
 
-        icon = CanvasIcon(icon_name='stock-zoom-mesh')
+        icon = CanvasIcon(icon_name='theme:stock-zoom-mesh')
         style.apply_stylesheet(icon, 'frame.ZoomIcon')
         icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_MESH)
         self.append(icon)
 
-        icon = CanvasIcon(icon_name='stock-zoom-friends')
+        icon = CanvasIcon(icon_name='theme:stock-zoom-friends')
         style.apply_stylesheet(icon, 'frame.ZoomIcon')
         icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_FRIENDS)
         self.append(icon)
 
-        icon = CanvasIcon(icon_name='stock-zoom-home')
+        icon = CanvasIcon(icon_name='theme:stock-zoom-home')
         style.apply_stylesheet(icon, 'frame.ZoomIcon')
         icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_HOME)
         self.append(icon)
 
-        icon = CanvasIcon(icon_name='stock-zoom-activity')
+        icon = CanvasIcon(icon_name='theme:stock-zoom-activity')
         style.apply_stylesheet(icon, 'frame.ZoomIcon')
         icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_ACTIVITY)
         self.append(icon)

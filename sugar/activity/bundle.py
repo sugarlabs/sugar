@@ -3,6 +3,8 @@ import os
 
 from ConfigParser import ConfigParser
 
+import gtk
+
 class Bundle:
     """Info about an activity bundle. Wraps the activity.info file."""
     def __init__(self, path):
@@ -21,6 +23,8 @@ class Bundle:
             self._valid = False
 
     def _parse_info(self, info_path):
+        base_path = os.path.dirname(info_path)
+
         cp = ConfigParser()
         cp.read([info_path])
 
@@ -49,7 +53,11 @@ class Bundle:
                 self._show_launcher = False
 
         if cp.has_option(section, 'icon'):
-            self._icon = cp.get(section, 'icon')
+            icon = cp.get(section, 'icon')
+            if gtk.icon_theme_get_default().has_icon(icon):
+                 self._icon = 'theme:' + icon
+            else:
+                 self._icon = os.path.join(base_path, icon + ".svg")
 
         if cp.has_option(section, 'activity_version'):
             self._activity_version = int(cp.get(section, 'activity_version'))

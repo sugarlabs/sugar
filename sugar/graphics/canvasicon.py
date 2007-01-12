@@ -52,7 +52,14 @@ class _IconCache:
             return rsvg.Handle(data=data)
 
     def get_handle(self, name, color, size):
-        info = self._theme.lookup_icon(name, int(size), 0)
+        if name[0:6] == "theme:": 
+            icon = self._read_icon_from_name(name[6:], color, size)
+        else:
+            icon = self._read_icon(name, color)
+        return icon
+
+    def _read_icon_from_name(self, name, color, size):
+        info = self._theme.lookup_icon(name, size, 0)
 
         if not info:
             raise "Icon '" + name + "' not found."
