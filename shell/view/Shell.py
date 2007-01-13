@@ -44,6 +44,7 @@ class Shell(gobject.GObject):
         self._hosts = {}
         self._screen = wnck.screen_get_default()
         self._current_host = None
+        self._screen_rotation = 0
 
         style.load_stylesheet(view.stylesheet)
 
@@ -103,12 +104,14 @@ class Shell(gobject.GObject):
         self._key_grabber.grab('0xE0') # Overlay key
         self._key_grabber.grab('0x93') # Frame key
         self._key_grabber.grab('0x7C') # Power key
+        self._key_grabber.grab('0xEB') # Rotate key
         self._key_grabber.grab('0xEC') # Keyboard brightness
         self._key_grabber.grab('<alt>Tab')
 
         # For non-OLPC machines
         self._key_grabber.grab('<alt>f')
         self._key_grabber.grab('<alt>o')
+        self._key_grabber.grab('<alt>r')
         self._key_grabber.grab('<alt><shift>s')
 
     def _key_pressed_cb(self, grabber, key):
@@ -156,6 +159,8 @@ class Shell(gobject.GObject):
             self._frame.notify_key_press()
         elif key == '0x7C' or key == '<alt><shift>s': # Power key
             self._shutdown()
+        elif key == '0xEB' or key == '<alt>r': # Rotate key
+            self._rotate_screen()
         elif key == '0xEC': # Keyboard brightness
             self._hw_manager.toggle_keyboard_brightness()
         elif key == '<alt>Tab':
@@ -169,6 +174,16 @@ class Shell(gobject.GObject):
                                '/org/laptop/sugar/Console')
         console = dbus.Interface(proxy, 'org.laptop.sugar.Console')
         console.toggle_visibility()
+
+    def _rotate_screen(self):
+        states = [ 'normal', 'left', 'inverted', 'right']
+
+        self._screen_rotation += 1
+        if self._screen_rotation == len(states):
+            self._screen_rotation = 0
+
+        gobject.spawn_async(['xrandr', '-o', states[self._screen_rotation]],
+                            flags=gobject.SPAWN_SEARCH_PATH)
 
     def _shutdown(self):
         self._model.props.state = ShellModel.STATE_SHUTDOWN
