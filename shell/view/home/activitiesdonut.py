@@ -18,7 +18,6 @@ import hippo
 import math
 import gobject
 import colorsys
-import logging
 
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import style
@@ -50,15 +49,14 @@ class ActivityIcon(CanvasIcon):
     def __init__(self, activity):
         icon_name = activity.get_icon_name()
         self._orig_color = profile.get_color()
-
         self._icon_colors = self._compute_icon_colors()
-        
+
         self._direction = 0
         self._level_max = len(self._icon_colors) - 1
         self._level = self._level_max
         color = self._icon_colors[self._level]
 
-        CanvasIcon.__init__(self, icon_name=icon_name, color=color)
+        CanvasIcon.__init__(self, icon_name=icon_name, color=color, cache=True)
         style.apply_stylesheet(self, 'ring.ActivityIcon')
 
         self._activity = activity
@@ -72,6 +70,8 @@ class ActivityIcon(CanvasIcon):
         if self._pulse_id > 0:
             gobject.source_remove(self._pulse_id)
         self._pulse_id = 0
+        # dispose of all rendered icons from launch feedback
+        self._clear_buffers()
 
     def _compute_icon_colors(self):
         _LEVEL_MAX = 1.6
