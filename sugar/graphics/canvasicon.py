@@ -16,65 +16,113 @@
 # Boston, MA 02111-1307, USA.
 
 import re
-import logging
 
 import gobject
 import gtk
 import hippo
 import rsvg
 import cairo
+import time
 
 from sugar.graphics.iconcolor import IconColor
 
-class _IconCache:
-    def __init__(self):
-        self._icons = {}
-        self._theme = gtk.icon_theme_get_default()
+class _IconCacheIcon:
+    def __init__(self, name, color, now):
+        self.data_size = None
+        self.handle = self._read_icon_data(name, color)
+        self.last_used = now
+        self.usage_count = 1
 
-    def _read_icon(self, filename, color):
+    def _read_icon_data(self, filename, color):
         icon_file = open(filename, 'r')
+        data = icon_file.read()
+        icon_file.close()
 
-        if color == None:
-            return rsvg.Handle(file=filename)
-        else:
-            data = icon_file.read()
-            icon_file.close()
-
+        if color:
             fill = color.get_fill_color()
             stroke = color.get_stroke_color()
-    
+
             entity = '<!ENTITY fill_color "%s">' % fill
             data = re.sub('<!ENTITY fill_color .*>', entity, data)
 
             entity = '<!ENTITY stroke_color "%s">' % stroke
             data = re.sub('<!ENTITY stroke_color .*>', entity, data)
 
-            return rsvg.Handle(data=data)
+        self.data_size = len(data)
+        return rsvg.Handle(data=data)
+
+class _IconCache:
+    _CACHE_MAX = 50000   # in bytes
+
+    def __init__(self):
+        self._icons = {}
+        self._theme = gtk.icon_theme_get_default()
+        self._cache_size = 0
+
+    def _get_real_name_from_theme(self, name, size):
+        info = self._theme.lookup_icon(name, size, 0)
+        if not info:
+            raise ValueError("Icon '" + name + "' not found.")
+        fname = info.get_filename()
+        del info
+        return fname
+
+    def _cache_cleanup(self, key, now):
+        while self._cache_size > self._CACHE_MAX:
+            evict_key = None
+            oldest_key = None
+            oldest_time = now
+            for icon_key, icon in self._icons.items():
+                # Don't evict the icon we are about to use if it's in the cache
+                if icon_key == key:
+                    continue
+
+                # evict large icons first
+                if icon.data_size > self._CACHE_MAX:
+                    evict_key = icon_key
+                    break
+                # evict older icons next; those used over 2 minutes ago
+                if icon.last_used < now - 120:
+                    evict_key = icon_key
+                    break
+                # otherwise, evict the oldest
+                if oldest_time > icon.last_used:
+                    oldest_time = icon.last_used
+                    oldest_key = icon_key
+
+            # If there's nothing specific to evict, try evicting
+            # the oldest thing
+            if not evict_key:
+                if not oldest_key:
+                    break
+                evict_key = oldest_key
+
+            self._cache_size -= self._icons[evict_key].data_size
+            del self._icons[evict_key]
 
     def get_handle(self, name, color, size):
         if name[0:6] == "theme:": 
-            icon = self._read_icon_from_name(name[6:], color, size)
-        else:
-            icon = self._read_icon(name, color)
-        return icon
-
-    def _read_icon_from_name(self, name, color, size):
-        info = self._theme.lookup_icon(name, size, 0)
-
-        if not info:
-            raise "Icon '" + name + "' not found."
+            name = self._get_real_name_from_theme(name[6:], size)
 
         if color:
-            key = (info.get_filename(), color.to_string())
+            key = (name, color.to_string())
         else:
-            key = info.get_filename()
+            key = name
+
+        # If we're over the cache limit, evict something from the cache
+        now = time.time()
+        self._cache_cleanup(key, now)
 
         if self._icons.has_key(key):
             icon = self._icons[key]
+            icon.usage_count += 1
+            icon.last_used = now
         else:
-            icon = self._read_icon(info.get_filename(), color)
+            icon = _IconCacheIcon(name, color, now)
             self._icons[key] = icon
-        return icon
+            self._cache_size += icon.data_size
+        return icon.handle
+
 
 class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'CanvasIcon'
