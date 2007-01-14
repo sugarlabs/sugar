@@ -197,7 +197,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
     def do_paint_below_children(self, cr, damaged_box):
         icon_name = self._icon_name
         if icon_name == None:
-            icon_name = 'stock-missing'
+            icon_name = 'theme:stock-missing'
 
         handle = CanvasIcon._cache.get_handle(
                     icon_name, self._color, self._size)
