@@ -134,39 +134,48 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
                       gobject.PARAM_READWRITE),
         'size'     : (int, None, None,
                       0, 1024, 24,
+                      gobject.PARAM_READWRITE),
+        'cache'    : (bool, None, None, False,
                       gobject.PARAM_READWRITE)
     }
 
     _cache = _IconCache()
 
     def __init__(self, **kwargs):
-        self._buffer = None
+        self._buffers = {}
+        self._cur_buffer = None
         self._size = 24
         self._color = None
         self._icon_name = None
+        self._cache = False
 
         hippo.CanvasBox.__init__(self, **kwargs)
 
         self.connect('button-press-event', self._button_press_event_cb)
 
-    def _invalidate_buffer(self, new_buffer):
-        if self._buffer:
-            del self._buffer
-        self._buffer = new_buffer
+    def _clear_buffers(self):
+        for key in self._buffers.keys():
+            del self._buffers[key]
+        self._buffers = {}
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'icon-name':
+            if self._icon_name != value and not self._cache:
+                self._clear_buffers()
             self._icon_name = value
-            self._invalidate_buffer(None)
             self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'color':
-            self._invalidate_buffer(None)
+            if self._color != value and not self._cache:
+                self._clear_buffers()
             self._color = value
             self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'size':
-            self._invalidate_buffer(None)
+            if self._size != value and not self._cache:
+                self._clear_buffers()
             self._size = value
             self.emit_request_changed()
+        elif pspec.name == 'cache':
+            self._cache = value
 
     def do_get_property(self, pspec):
         if pspec.name == 'size':
@@ -175,24 +184,30 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             return self._icon_name
         elif pspec.name == 'color':
             return self._color
+        elif pspec.name == 'cache':
+            return self._cache
 
-    def _get_buffer(self, cr, handle, size):
-        if self._buffer == None:
+    def _get_buffer(self, cr, handle):
+        key = (self._icon_name, self._color, self._size)
+
+        buf = None
+        if self._buffers.has_key(key):
+            buf = self._buffers[key]
+        else:
             target = cr.get_target()
-            surface = target.create_similar(cairo.CONTENT_COLOR_ALPHA,
-                                             int(size) + 1, int(size) + 1)
+            size = int(self._size) + 1
+            buf = target.create_similar(cairo.CONTENT_COLOR_ALPHA, size, size)
 
             dimensions = handle.get_dimension_data()
             scale = float(size) / float(dimensions[0])
 
-            ctx = cairo.Context(surface)
+            ctx = cairo.Context(buf)
             ctx.scale(scale, scale)
             handle.render_cairo(ctx)
             del ctx
+            self._buffers[key] = buf
 
-            self._buffer = surface
-
-        return self._buffer
+        return buf
 
     def do_paint_below_children(self, cr, damaged_box):
         icon_name = self._icon_name
@@ -201,7 +216,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
 
         handle = CanvasIcon._cache.get_handle(
                     icon_name, self._color, self._size)
-        buf = self._get_buffer(cr, handle, self._size)
+        buf = self._get_buffer(cr, handle)
 
         [width, height] = self.get_allocation()
         x = (width - self._size) / 2
