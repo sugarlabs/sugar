@@ -149,7 +149,14 @@ class EventFrame(gobject.GObject):
         for window in self._windows:
             window.window.raise_()
 
-class Frame:
+class Frame(gobject.GObject):
+    __gsignals__ = {
+        'activated':    (gobject.SIGNAL_RUN_FIRST,
+                          gobject.TYPE_NONE, ([])),
+        'deactivated':  (gobject.SIGNAL_RUN_FIRST,
+                          gobject.TYPE_NONE, ([]))
+    }
+
     INACTIVE = 0
     TEMPORARY = 1
     STICKY = 2
@@ -157,6 +164,7 @@ class Frame:
     AUTOMATIC = 4
 
     def __init__(self, shell):
+        gobject.GObject.__init__(self)
         self._windows = []
         self._hover_frame = False
         self._shell = shell
@@ -238,7 +246,7 @@ class Frame:
 
     def _shell_state_changed_cb(self, model, pspec):
         if model.props.state == ShellModel.STATE_SHUTDOWN:
-            self._timeline.goto('slide_out', True)
+            self._frame_goto('slide_out')
         
     def _create_clipboard_panel(self, grid, x, y, width, height):
         [x, y, width, height] = grid.rectangle(x, y, width, height)
@@ -271,11 +279,11 @@ class Frame:
                                  self._menu_shell_deactivated_cb)
 
     def _menu_shell_activated_cb(self, menu_shell):
-        self._timeline.goto('slide_in', True)
+        self._frame_goto('slide_in')
 
     def _menu_shell_deactivated_cb(self, menu_shell):
         if self._mode != Frame.STICKY and not self._hover_frame:
-            self._timeline.play('before_slide_out', 'slide_out')
+            self._frame_play('before_slide_out', 'slide_out')
 
     def _enter_notify_cb(self, window, event):
         self._enter_notify()
@@ -300,28 +308,28 @@ class Frame:
 
     def _enter_notify(self):
         self._hover_frame = True
-        self._timeline.goto('slide_in', True) 
+        self._frame_goto('slide_in')
                
     def _leave_notify(self):
         self._hover_frame = False
         if not self._menu_shell.is_active() and \
            (self._mode == Frame.HIDE_ON_LEAVE or \
             self._mode == Frame.AUTOMATIC):
-            self._timeline.play('before_slide_out', 'slide_out')
+            self._frame_play('before_slide_out', 'slide_out')
 
     def _enter_edge_cb(self, event_frame):
         self._mode = Frame.HIDE_ON_LEAVE
-        self._timeline.play(None, 'slide_in')
+        self._frame_play(None, 'slide_in')
         logging.debug('Frame._enter_edge_cb ' + str(self._mode))
         
     def _enter_corner_cb(self, event_frame):
         self._mode = Frame.HIDE_ON_LEAVE
-        self._timeline.play('slide_in', 'slide_in')
+        self._frame_play('slide_in', 'slide_in')
         logging.debug('Frame._enter_corner_cb ' + str(self._mode))
         
     def _event_frame_leave_cb(self, event_frame):
         if self._mode != Frame.STICKY:
-            self._timeline.goto('slide_out', True)
+            self._frame_goto('slide_out')
         logging.debug('Frame._event_frame_leave_cb ' + str(self._mode))
         
     def show_and_hide(self, seconds):
@@ -330,16 +338,16 @@ class Frame:
 
     def notify_key_press(self):
         if self._timeline.on_tag('slide_in'):
-            self._timeline.play('before_slide_out', 'slide_out')
+            self._frame_play('before_slide_out', 'slide_out')
         elif self._timeline.on_tag('before_slide_out'):
             self._mode = Frame.TEMPORARY
         else:
             self._mode = Frame.STICKY
-            self._timeline.play('slide_in', 'slide_in')
+            self._frame_play('slide_in', 'slide_in')
 
     def notify_key_release(self):
         if self._mode == Frame.TEMPORARY:
-            self._timeline.play('before_slide_out', 'slide_out')
+            self._frame_play('before_slide_out', 'slide_out')
 
     def do_slide_in(self, current=0, n_frames=0):
         if not self._windows[0].props.visible:
@@ -357,3 +365,17 @@ class Frame:
         if self._windows[0].props.visible:
             return True
         return False
+
+    def _frame_play(self, start, end):
+        if end == 'slide_out':
+            self.emit('deactivated')
+        elif end == 'slide_in':
+            self.emit('activated')
+        self._timeline.play(start, end)
+
+    def _frame_goto(self, target):
+        if target == 'slide_out':
+            self.emit('deactivated')
+        elif target == 'slide_in':
+            self.emit('activated')
+        self._timeline.goto(target, True)

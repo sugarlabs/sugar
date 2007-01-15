@@ -36,6 +36,22 @@ from _sugar import AudioManager
 from sugar import env
 import sugar
 
+
+_SHELL_SERVICE = "org.laptop.sugar.Shell"
+_SHELL_PATH = "/org/laptop/sugar/Shell"
+_SHELL_INTERFACE = "org.laptop.sugar.Shell"
+
+class FrameNotifier(dbus.service.Object):
+    def __init__(self):
+        self._session_bus = dbus.SessionBus()
+        self._bus_name = dbus.service.BusName(_SHELL_SERVICE, bus=self._session_bus)        
+        dbus.service.Object.__init__(self, self._bus_name, _SHELL_PATH)
+
+    @dbus.service.signal(_SHELL_INTERFACE, signature="")
+    def FrameDeactivated(self):
+        pass
+
+
 class Shell(gobject.GObject):
     def __init__(self, model):
         gobject.GObject.__init__(self)
@@ -70,8 +86,11 @@ class Shell(gobject.GObject):
 
         self._frame = Frame(self)
         self._frame.show_and_hide(3)
+        self._frame.connect('deactivated', self._frame_deactivated_cb)
 
         self._pservice = PresenceService.get_instance()
+
+        self._dbus_helper = FrameNotifier()
 
         #self.start_activity('org.laptop.JournalActivity')
 
@@ -353,3 +372,6 @@ class Shell(gobject.GObject):
             if not is_visible:
                 self._frame.do_slide_in()
             act.chat_show(is_visible)
+
+    def _frame_deactivated_cb(self, frame):
+        self._dbus_helper.FrameDeactivated()

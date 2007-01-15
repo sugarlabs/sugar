@@ -65,6 +65,10 @@ NM_DEVICE_CAP_NM_SUPPORTED = 0x00000001
 NM_DEVICE_CAP_CARRIER_DETECT = 0x00000002
 NM_DEVICE_CAP_WIRELESS_SCAN = 0x00000004
 
+SHELL_SERVICE = "org.laptop.sugar.Shell"
+SHELL_PATH = "/org/laptop/sugar/Shell"
+SHELL_INTERFACE = "org.laptop.sugar.Shell"
+
 
 sys_bus = dbus.SystemBus()
 
@@ -740,6 +744,11 @@ class NMClientApp:
         except dbus.DBusException:
             pass
 
+        ses_bus = dbus.SessionBus()
+        ses_bus.add_signal_receiver(self._shell_frame_disappeared_cb,
+                                    signal_name="FrameDeactivated",
+                                    dbus_interface=SHELL_INTERFACE)
+
     def _menu_item_clicked_cb(self, widget, event, dev_data):
         (device, network) = dev_data
         net_op = ""
@@ -832,9 +841,7 @@ class NMClientApp:
         self._devices[device].set_active(False)
         self._schedule_icon_update(immediate=True)
 
-    def name_owner_changed_sig_handler(self, name, old, new):
-        if name != NM_SERVICE:
-            return
+    def _nm_name_owner_changed(self, old, new):
         if (old and len(old)) and (not new and not len(new)):
             # NM went away
             self._nm_present = False
@@ -849,6 +856,18 @@ class NMClientApp:
             self._nm_present = True
             self._get_nm_state()
             self._get_initial_devices()
+
+    def _shell_name_owner_changed(self, old, new):
+        if (old and len(old)) and (not new and not len(new)):
+            self._shell_present = False
+        elif (not old and not len(old)) and (new and len(new)):
+            self._shell_present = True
+
+    def name_owner_changed_sig_handler(self, name, old, new):
+        if name == NM_SERVICE:
+            self._nm_name_owner_changed()
+        elif name == SHELL_SERVICE:
+            self._shell_name_owner_changed()
 
     def device_added_sig_handler(self, device):
         self._add_device(device)
@@ -887,6 +906,9 @@ class NMClientApp:
         if not self._devices.has_key(device):
             return
         self._devices[device].set_carrier(False)
+
+    def _shell_frame_disappeared_cb(self):
+        self._popdown()
 
     def run(self):
         loop = gobject.MainLoop()
