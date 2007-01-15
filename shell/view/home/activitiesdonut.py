@@ -18,7 +18,6 @@ import hippo
 import math
 import gobject
 import colorsys
-import logging
 
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import style
@@ -45,19 +44,19 @@ def html_to_rgb(html_color):
     return (r, g, b)
 
 class ActivityIcon(CanvasIcon):
-    _LEVEL_MAX = 1.6
-    _LEVEL_MIN = 0.0
-    _INTERVAL = 100
+    _INTERVAL = 150
 
     def __init__(self, activity):
         icon_name = activity.get_icon_name()
         self._orig_color = profile.get_color()
-        
-        self._direction = 0
-        self._level = self._LEVEL_MAX
-        color = self._get_icon_color_for_level()
+        self._icon_colors = self._compute_icon_colors()
 
-        CanvasIcon.__init__(self, icon_name=icon_name, color=color)
+        self._direction = 0
+        self._level_max = len(self._icon_colors) - 1
+        self._level = self._level_max
+        color = self._icon_colors[self._level]
+
+        CanvasIcon.__init__(self, icon_name=icon_name, color=color, cache=True)
         style.apply_stylesheet(self, 'ring.ActivityIcon')
 
         self._activity = activity
@@ -68,32 +67,44 @@ class ActivityIcon(CanvasIcon):
         self.cleanup()
 
     def cleanup(self):
-        logging.debug("removing source %s" % self._pulse_id)
         if self._pulse_id > 0:
             gobject.source_remove(self._pulse_id)
         self._pulse_id = 0
+        # dispose of all rendered icons from launch feedback
+        self._clear_buffers()
 
-    def _get_icon_color_for_level(self):
-        factor = math.sin(self._level)
+    def _compute_icon_colors(self):
+        _LEVEL_MAX = 1.6
+        _LEVEL_STEP = 0.16
+        _LEVEL_MIN = 0.0
+        icon_colors = {}
+        level = _LEVEL_MIN
+        for i in range(0, int(_LEVEL_MAX / _LEVEL_STEP)):
+            icon_colors[i] = self._get_icon_color_for_level(level)
+            level += _LEVEL_STEP
+        return icon_colors
+
+    def _get_icon_color_for_level(self, level):
+        factor = math.sin(level)
         h, s, v = colorsys.rgb_to_hsv(*html_to_rgb(self._orig_color.get_fill_color()))
         new_fill = rgb_to_html(*colorsys.hsv_to_rgb(h, s * factor, v))
         h, s, v = colorsys.rgb_to_hsv(*html_to_rgb(self._orig_color.get_stroke_color()))
         new_stroke = rgb_to_html(*colorsys.hsv_to_rgb(h, s * factor, v))
-        return iconcolor.IconColor("%s,%s" % (new_fill, new_stroke))
+        return iconcolor.IconColor("%s,%s" % (new_stroke, new_fill))
 
     def _pulse_cb(self):
         if self._direction == 1:
-            self._level += 0.1
-            if self._level >= self._LEVEL_MAX:
+            self._level += 1
+            if self._level > self._level_max:
                 self._direction = 0
-                self._level = self._LEVEL_MAX
+                self._level = self._level_max
         elif self._direction == 0:
-            self._level -= 0.1
-            if self._level <= self._LEVEL_MIN:
+            self._level -= 1
+            if self._level <= 0:
                 self._direction = 1
-                self._level = self._LEVEL_MIN
+                self._level = 0
 
-        self.props.color = self._get_icon_color_for_level()
+        self.props.color = self._icon_colors[self._level]
         self.emit_paint_needed(0, 0, -1, -1)
         return True
 
