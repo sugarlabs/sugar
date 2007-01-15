@@ -90,7 +90,7 @@ class XephyrProcess(Process):
     def get_name(self):
         return 'Xephyr'
 
-    def start(self):
+    def start(self, standard_output=False):
         Process.start(self)
         os.environ['DISPLAY'] = ":%d" % (self._display)
         os.environ['SUGAR_XEPHYR_PID'] = '%d' % self.pid
@@ -105,7 +105,7 @@ class XnestProcess(Process):
     def get_name(self):
         return 'Xnest'
 
-    def start(self):
+    def start(self, standard_output=False):
         Process.start(self)
         os.environ['DISPLAY'] = ":%d" % (self._display)
 
