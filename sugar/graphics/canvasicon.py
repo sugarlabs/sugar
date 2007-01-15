@@ -154,8 +154,10 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         self.connect('button-press-event', self._button_press_event_cb)
 
     def _clear_buffers(self):
+        cur_buf_key = self._get_current_buffer_key()
         for key in self._buffers.keys():
-            del self._buffers[key]
+            if key != cur_buf_key:
+                del self._buffers[key]
         self._buffers = {}
 
     def do_set_property(self, pspec, value):
@@ -177,6 +179,9 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         elif pspec.name == 'cache':
             self._cache = value
 
+    def _get_current_buffer_key(self):
+        return (self._icon_name, self._color, self._size)
+
     def do_get_property(self, pspec):
         if pspec.name == 'size':
             return self._size
@@ -188,8 +193,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             return self._cache
 
     def _get_buffer(self, cr, handle):
-        key = (self._icon_name, self._color, self._size)
-
+        key = self._get_current_buffer_key()
         buf = None
         if self._buffers.has_key(key):
             buf = self._buffers[key]
