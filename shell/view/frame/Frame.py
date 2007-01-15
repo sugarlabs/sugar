@@ -163,9 +163,9 @@ class Frame:
         self._mode = Frame.INACTIVE
 
         self._timeline = Timeline(self)
-        self._timeline.add_tag('slide_in', 18, 24)
-        self._timeline.add_tag('before_slide_out', 48, 48)
-        self._timeline.add_tag('slide_out', 49, 54)
+        self._timeline.add_tag('slide_in', 6, 12)
+        self._timeline.add_tag('before_slide_out', 36, 36)
+        self._timeline.add_tag('slide_out', 37, 42)
 
         self._event_frame = EventFrame()
         self._event_frame.connect('enter-edge', self._enter_edge_cb)
