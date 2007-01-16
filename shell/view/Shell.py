@@ -41,9 +41,10 @@ _SHELL_SERVICE = "org.laptop.sugar.Shell"
 _SHELL_PATH = "/org/laptop/sugar/Shell"
 _SHELL_INTERFACE = "org.laptop.sugar.Shell"
 
-_NM_INFO_SERVICE='org.freedesktop.NetworkManagerInfo'
-_NM_INFO_PATH='/org/freedesktop/NetworkManagerInfo'
-_NM_INFO_IFACE='org.freedesktop.NetworkManagerInfo'
+
+_NMC_SERVICE = "org.laptop.sugar.NMClient"
+_NMC_PATH = "/org/laptop/sugar/NMClient"
+_NMC_INTERFACE = "org.laptop.sugar.NMClient"
 
 
 class FrameNotifier(dbus.service.Object):
@@ -97,15 +98,15 @@ class Shell(gobject.GObject):
 
         self._dbus_helper = FrameNotifier()
 
-        sys_bus = dbus.SystemBus()
-        self._nmi_proxy = sys_bus.get_object(_NM_INFO_SERVICE, _NM_INFO_PATH)
-        self._nmi_obj = dbus.Interface(self._nmi_proxy, _NM_INFO_IFACE)
-        sys_bus.add_signal_receiver(self._nmc_menu_activated_cb,
+        ses_bus = dbus.SessionBus()
+        self._nmc_proxy = ses_bus.get_object(_NMC_SERVICE, _NMC_PATH)
+        self._nmc_obj = dbus.Interface(self._nmc_proxy, _NMC_INTERFACE)
+        ses_bus.add_signal_receiver(self._nmc_menu_activated_cb,
                                     signal_name="MenuActivated",
-                                    dbus_interface=_NM_INFO_IFACE)
-        sys_bus.add_signal_receiver(self._nmc_menu_deactivated_cb,
+                                    dbus_interface=_NMC_INTERFACE)
+        ses_bus.add_signal_receiver(self._nmc_menu_deactivated_cb,
                                     signal_name="MenuDeactivated",
-                                    dbus_interface=_NM_INFO_IFACE)
+                                    dbus_interface=_NMC_INTERFACE)
 
         #self.start_activity('org.laptop.JournalActivity')
 
@@ -392,7 +393,7 @@ class Shell(gobject.GObject):
         self._dbus_helper.FrameDeactivated()
 
     def _nmc_menu_activated_cb(self):
-        logging.debug("nmc menu activated")
+        self._frame.suppress_frame_slideout(True)
 
     def _nmc_menu_deactivated_cb(self):
-        logging.debug("nmc menu deactivated")
+        self._frame.suppress_frame_slideout(False)

@@ -454,6 +454,30 @@ ICON_WIRELESS_41_60 = "stock-net-wireless-41-60"
 ICON_WIRELESS_61_80 = "stock-net-wireless-61-80"
 ICON_WIRELESS_81_100 = "stock-net-wireless-81-100"
 
+
+
+NMC_SERVICE = "org.laptop.sugar.NMClient"
+NMC_PATH = "/org/laptop/sugar/NMClient"
+NMC_IFACE = "org.laptop.sugar.NMClient"
+
+# This helper exists only to tell the shell when the menu
+# is activated or deactivate.  It will go away when proper network
+# support is integrated into the shell
+class MenuNotifier(dbus.service.Object):
+    def __init__(self):
+        self._session_bus = dbus.SessionBus()
+        self._bus_name = dbus.service.BusName(NMC_SERVICE, bus=self._session_bus)        
+        dbus.service.Object.__init__(self, self._bus_name, NMC_PATH)
+
+    @dbus.service.signal(NMC_IFACE, signature="")
+    def MenuActivated(self):
+        pass
+
+    @dbus.service.signal(NMC_IFACE, signature="")
+    def MenuDeactivated(self):
+        pass
+
+
 class NMClientApp:
     def __init__(self):
         self.nminfo = None
@@ -463,6 +487,8 @@ class NMClientApp:
         self._active_device = None
         self._devices = {}
         self._key_dialog = None
+
+        self._dbus_helper = MenuNotifier()
 
         self._icon_theme = gtk.icon_theme_get_default()
         self._icons = {}
@@ -475,7 +501,6 @@ class NMClientApp:
         self._setup_trayicon()
 
         self._menu = None
-        self._hover_menu = False
         self._timeline = Timeline(self)
         self._timeline.add_tag('popup', 6, 6)
         self._timeline.add_tag('before_popdown', 7, 7)
@@ -561,9 +586,7 @@ class NMClientApp:
         self._schedule_icon_update()
 
     def _status_icon_clicked(self, button=0, time=None):
-        if self.nminfo:
-            self.nminfo.notify_menu_popup()
-        self._timeline.play(None, 'popup')
+        self._popup(start=None)
 
     def _get_menu_position(self, menu, item):
         (screen, rect, orientation) = item.get_geometry()
@@ -595,23 +618,27 @@ class NMClientApp:
         self._menu.show_all()
 
     def do_popdown(self, current, frame):
+        if not self._menu:
+            return
+        self._menu.destroy()
+        self._menu = None
+        self._dbus_helper.MenuDeactivated()
+
+    def _popup(self, start='popup'):
         if self._menu:
-            self._menu.destroy()
-            self._menu = None
+            return
+        self._dbus_helper.MenuActivated()
+        self._timeline.play(start, 'popup')
 
     def _popdown(self):
-        if self.nminfo:
-            self.nminfo.notify_menu_popdown()
+        if not self._menu:
+            return
         self._timeline.play('popdown', 'popdown')
 
     def _menu_enter_notify_event_cb(self, widget, event):
-        if self.nminfo:
-            self.nminfo.notify_menu_popup()
-        self._hover_menu = True
-        self._timeline.play('popup', 'popup')
+        self._popup()
 
     def _menu_leave_notify_event_cb(self, widget, event):
-        self._hover_menu = False
         self._popdown()
 
     def _create_menu(self):

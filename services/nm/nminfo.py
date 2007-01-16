@@ -285,14 +285,6 @@ class NMInfoDBusServiceHelper(dbus.service.Object):
         bus_name = dbus.service.BusName(NM_INFO_IFACE, bus=bus)
         dbus.service.Object.__init__(self, bus_name, NM_INFO_PATH)
 
-    @dbus.service.signal(NM_INFO_IFACE, signature="")
-    def MenuActivated(self):
-        pass
-
-    @dbus.service.signal(NM_INFO_IFACE, signature="")
-    def MenuDeactivated(self):
-        pass
-
     @dbus.service.method(NM_INFO_IFACE, in_signature='i', out_signature='as')
     def getNetworks(self, net_type):
         ssids = self._parent.get_networks(net_type)
@@ -473,9 +465,3 @@ class NMInfo(object):
     def cancel_get_key_for_network(self):
         # Tell the NMClient to close the key request dialog
         self._nmclient.cancel_get_key_for_network()
-
-    def notify_menu_popdown(self):
-        self._dbus_helper.MenuDeactivated()
-
-    def notify_menu_popup(self):
-        self._dbus_helper.MenuActivated()

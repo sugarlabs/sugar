@@ -169,6 +169,7 @@ class Frame(gobject.GObject):
         self._hover_frame = False
         self._shell = shell
         self._mode = Frame.INACTIVE
+        self._suppress = False
 
         self._timeline = Timeline(self)
         self._timeline.add_tag('slide_in', 18, 24)
@@ -313,6 +314,7 @@ class Frame(gobject.GObject):
     def _leave_notify(self):
         self._hover_frame = False
         if not self._menu_shell.is_active() and \
+           not self._suppress and \
            (self._mode == Frame.HIDE_ON_LEAVE or \
             self._mode == Frame.AUTOMATIC):
             self._frame_play('before_slide_out', 'slide_out')
@@ -379,3 +381,8 @@ class Frame(gobject.GObject):
         elif target == 'slide_in':
             self.emit('activated')
         self._timeline.goto(target, True)
+
+    def suppress_frame_slideout(self, suppress):
+        self._suppress = suppress
+        if self._suppress == False and self.is_visible():
+            self._leave_notify()
