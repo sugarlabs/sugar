@@ -84,7 +84,7 @@ class XephyrProcess(Process):
         if fullscreen:
             cmd += '-fullscreen '
         else:
-            cmd += '-screen 800x600 '
+            cmd += '-screen 1200x900'
         Process.__init__(self, cmd)
         
     def get_name(self):

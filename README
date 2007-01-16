@@ -28,5 +28,6 @@ Alt+r  Rotate the screen
 Alt+o  Toggle overlay visibility
 Alt+=  Open the developer console
 Alt+0  Open the developer console
+Alt+q  Quit the emulator
 
-Ctrl+S Activate sketch mode in chat
+Ctrl+s Activate sketch mode in chat
