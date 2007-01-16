@@ -41,6 +41,11 @@ _SHELL_SERVICE = "org.laptop.sugar.Shell"
 _SHELL_PATH = "/org/laptop/sugar/Shell"
 _SHELL_INTERFACE = "org.laptop.sugar.Shell"
 
+_NM_INFO_SERVICE='org.freedesktop.NetworkManagerInfo'
+_NM_INFO_PATH='/org/freedesktop/NetworkManagerInfo'
+_NM_INFO_IFACE='org.freedesktop.NetworkManagerInfo'
+
+
 class FrameNotifier(dbus.service.Object):
     def __init__(self):
         self._session_bus = dbus.SessionBus()
@@ -91,6 +96,16 @@ class Shell(gobject.GObject):
         self._pservice = PresenceService.get_instance()
 
         self._dbus_helper = FrameNotifier()
+
+        sys_bus = dbus.SystemBus()
+        self._nmi_proxy = sys_bus.get_object(_NM_INFO_SERVICE, _NM_INFO_PATH)
+        self._nmi_obj = dbus.Interface(self._nmi_proxy, _NM_INFO_IFACE)
+        sys_bus.add_signal_receiver(self._nmc_menu_activated_cb,
+                                    signal_name="MenuActivated",
+                                    dbus_interface=_NM_INFO_IFACE)
+        sys_bus.add_signal_receiver(self._nmc_menu_deactivated_cb,
+                                    signal_name="MenuDeactivated",
+                                    dbus_interface=_NM_INFO_IFACE)
 
         #self.start_activity('org.laptop.JournalActivity')
 
@@ -375,3 +390,9 @@ class Shell(gobject.GObject):
 
     def _frame_deactivated_cb(self, frame):
         self._dbus_helper.FrameDeactivated()
+
+    def _nmc_menu_activated_cb(self):
+        logging.debug("nmc menu activated")
+
+    def _nmc_menu_deactivated_cb(self):
+        logging.debug("nmc menu deactivated")

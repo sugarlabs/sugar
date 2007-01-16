@@ -95,6 +95,7 @@ class Network(gobject.GObject):
         self._ssid = props[1]
         self._strength = props[3]
         self._mode = props[6]
+        self._caps = props[7]
         self._valid = True
         logging.debug("Net(%s): ssid '%s', mode %d, strength %d" % (self._op,
                 self._ssid, self._mode, self._strength))
@@ -539,6 +540,8 @@ class NMClientApp:
         self._schedule_icon_update()
 
     def _status_icon_clicked(self, button=0, time=None):
+        if self.nminfo:
+            self.nminfo.notify_menu_popup()
         self._timeline.play(None, 'popup')
 
     def _get_menu_position(self, menu, item):
@@ -576,9 +579,13 @@ class NMClientApp:
             self._menu = None
 
     def _popdown(self):
+        if self.nminfo:
+            self.nminfo.notify_menu_popdown()
         self._timeline.play('popdown', 'popdown')
 
     def _menu_enter_notify_event_cb(self, widget, event):
+        if self.nminfo:
+            self.nminfo.notify_menu_popup()
         self._hover_menu = True
         self._timeline.play('popup', 'popup')
 
