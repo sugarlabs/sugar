@@ -273,11 +273,11 @@ class Frame(gobject.GObject):
         panel.connect('enter-notify-event', self._enter_notify_cb)
         panel.connect('leave-notify-event', self._leave_notify_cb)
 
-        self._menu_shell = panel.get_menu_shell()
-        self._menu_shell.connect('activated',
-                                 self._menu_shell_activated_cb)
-        self._menu_shell.connect('deactivated',
-                                 self._menu_shell_deactivated_cb)
+        menu_shell = panel.get_menu_shell()
+        menu_shell.connect('activated',
+                           self._menu_shell_activated_cb)
+        menu_shell.connect('deactivated',
+                           self._menu_shell_deactivated_cb)
 
     def _menu_shell_activated_cb(self, menu_shell):
         self._frame_goto('slide_in')
@@ -296,7 +296,7 @@ class Frame(gobject.GObject):
         return True
         
     def _drag_leave_cb(self, window, drag_context, timestamp):
-        self._leave_notify()
+        self._leave_notify(window)
         logging.debug('Frame._drag_leave_cb ' + str(self._mode))
             
     def _leave_notify_cb(self, window, event):
@@ -304,16 +304,16 @@ class Frame(gobject.GObject):
         if event.state == gtk.gdk.BUTTON1_MASK:
             return
 
-        self._leave_notify()
+        self._leave_notify(window)
         logging.debug('Frame._leave_notify_cb ' + str(self._mode))
 
     def _enter_notify(self):
         self._hover_frame = True
         self._frame_goto('slide_in')
                
-    def _leave_notify(self):
+    def _leave_notify(self, panel):
         self._hover_frame = False
-        if not self._menu_shell.is_active() and \
+        if not panel.get_menu_shell().is_active() and \
            not self._suppress and \
            (self._mode == Frame.HIDE_ON_LEAVE or \
             self._mode == Frame.AUTOMATIC):
