@@ -44,7 +44,7 @@ def html_to_rgb(html_color):
     return (r, g, b)
 
 class ActivityIcon(CanvasIcon):
-    _INTERVAL = 150
+    _INTERVAL = 250
 
     def __init__(self, activity):
         icon_name = activity.get_icon_name()
