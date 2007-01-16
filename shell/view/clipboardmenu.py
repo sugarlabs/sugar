@@ -1,6 +1,3 @@
-import logging
-import gtk
-import gobject
 import hippo
 
 from sugar.graphics.menu import Menu

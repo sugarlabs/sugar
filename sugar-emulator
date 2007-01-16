@@ -19,6 +19,8 @@
 import os
 import sys
 
+import gtk
+
 os.environ['SUGAR_EMULATOR'] = 'yes'
 
 sourcedir = os.path.abspath(os.path.dirname(__file__))
@@ -31,6 +33,7 @@ else:
 
 from sugar import env
 from sugar import util
+from sugar.emulator import Emulator
 
 if sourcedir:
 	if os.environ.has_key('PYTHONPATH'):
@@ -70,16 +73,13 @@ if sourcedir:
 	util.write_service('org.laptop.sugar.Console', bin,
 					   env.get_user_service_dir())
 
-from sugar.emulator import Emulator
+if len(sys.argv) == 1:
+    program = 'sugar-shell'
+else:
+    program = sys.argv[1]
 
-program = 'sugar-shell'
-
-fullscreen = False
-for i in range(1, len(sys.argv)):
-	if sys.argv[i] == '-fullscreen':
-		fullscreen = True
-	else:
-		program = sys.argv[i]
+fullscreen = (gtk.gdk.screen_width() <= 1200 and
+              gtk.gdk.screen_height() <= 900)
 
 emulator = Emulator(fullscreen)
 emulator.start()
