@@ -69,6 +69,19 @@ NM_DEVICE_CAP_WIRELESS_SCAN = 0x00000004
 sys_bus = dbus.SystemBus()
 
 
+NM_802_11_CAP_NONE            = 0x00000000
+NM_802_11_CAP_PROTO_NONE      = 0x00000001
+NM_802_11_CAP_PROTO_WEP       = 0x00000002
+NM_802_11_CAP_PROTO_WPA       = 0x00000004
+NM_802_11_CAP_PROTO_WPA2      = 0x00000008
+NM_802_11_CAP_KEY_MGMT_PSK    = 0x00000040
+NM_802_11_CAP_KEY_MGMT_802_1X = 0x00000080
+NM_802_11_CAP_CIPHER_WEP40    = 0x00001000
+NM_802_11_CAP_CIPHER_WEP104   = 0x00002000
+NM_802_11_CAP_CIPHER_TKIP     = 0x00004000
+NM_802_11_CAP_CIPHER_CCMP     = 0x00008000
+
+
 class Network(gobject.GObject):
     __gsignals__ = {
         'init-failed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
@@ -91,9 +104,18 @@ class Network(gobject.GObject):
         self._ssid = props[1]
         self._strength = props[3]
         self._mode = props[6]
-        self._valid = True
-        logging.debug("Net(%s): ssid '%s', mode %d, strength %d" % (self._op,
-                self._ssid, self._mode, self._strength))
+        caps = props[7]
+        if caps & NM_802_11_CAP_PROTO_WPA or caps & NM_802_11_CAP_PROTO_WPA2:
+            # We do not support WPA at this time, so don't show
+            # WPA-enabled access points in the menu
+            logging.debug("Net(%s): ssid '%s' dropping because WPA[2] unsupported" % (self._op,
+                    self._ssid))
+            self._valid = False
+            self.emit('init-failed')
+        else:
+            self._valid = True
+            logging.debug("Net(%s): ssid '%s', mode %d, strength %d" % (self._op,
+                    self._ssid, self._mode, self._strength))
 
     def _update_error_cb(self, err):
         logging.debug("Net(%s): failed to update. (%s)" % (self._op, err))
