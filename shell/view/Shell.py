@@ -185,9 +185,7 @@ class Shell(gobject.GObject):
         elif key == '<alt>o':
             self.toggle_chat_visibility()
         elif key == '0xDC': # Camera key
-            # Disable until key autorepeat is fixed on the olpc
-            #self._handle_camera_key()
-            pass
+            self._handle_camera_key()
         elif key == '0xE0': # Overlay key
             self.toggle_chat_visibility()
         elif key == '0x93': # Frame key
