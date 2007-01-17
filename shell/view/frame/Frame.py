@@ -385,4 +385,8 @@ class Frame(gobject.GObject):
     def suppress_frame_slideout(self, suppress):
         self._suppress = suppress
         if self._suppress == False and self.is_visible():
-            self._leave_notify()
+            # FIXME:  if you call self._leave_notify() here WITHOUT
+            # any arguments, a segfault occurs.  So instead, slide out
+            # the frame manually
+            if self._mode == Frame.HIDE_ON_LEAVE or self._mode == Frame.AUTOMATIC:
+                self._frame_play('before_slide_out', 'slide_out')
