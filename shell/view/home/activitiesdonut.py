@@ -156,8 +156,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
             return
         icon = self._activities[act_id]
         self.remove(icon)
-        act = self._activities[act_id]
-        act.cleanup()
+        icon.cleanup()
         del self._activities[act_id]
 
     def _add_activity(self, activity):
