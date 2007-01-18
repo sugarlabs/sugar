@@ -9,6 +9,7 @@ sugar_PYTHON =				\
 	BuddyMenu.py			\
 	clipboardicon.py		\
 	clipboardmenu.py		\
+	keyhandler.py			\
 	OverlayWindow.py		\
 	Shell.py			\
 	stylesheet.py
