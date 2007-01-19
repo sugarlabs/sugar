@@ -12,4 +12,5 @@ sugar_PYTHON =				\
 	keyhandler.py			\
 	OverlayWindow.py		\
 	Shell.py			\
-	stylesheet.py
+	stylesheet.py			\
+	hardwaremanager.py
