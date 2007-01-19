@@ -186,7 +186,7 @@ class Frame:
 
         [x, y] = grid.point(1, 0)
         root.append(box, hippo.PACK_FIXED)
-        root.move(box, x, y)
+        root.set_position(box, x, y)
 
         tray = NotificationTray()
         tray_box = hippo.CanvasBox(box_width=grid.dimension(1),
@@ -199,13 +199,13 @@ class Frame:
 
         [x, y] = grid.point(13, 0)
         root.append(tray_box, hippo.PACK_FIXED)
-        root.move(tray_box, x, y)
+        root.set_position(tray_box, x, y)
 
         box = OverlayBox(self._shell)
 
         [x, y] = grid.point(14, 0)
         root.append(box, hippo.PACK_FIXED)
-        root.move(box, x, y)
+        root.set_position(box, x, y)
 
         # Bottom panel
         panel = self._create_panel(grid, 0, 11, 16, 1)
@@ -218,7 +218,7 @@ class Frame:
         root.append(box, hippo.PACK_FIXED)
 
         [x, y] = grid.point(1, 0)
-        root.move(box, x, y)
+        root.set_position(box, x, y)
 
         # Right panel
         panel = self._create_panel(grid, 15, 1, 1, 10)

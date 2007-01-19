@@ -49,12 +49,12 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
                 self._donut = None
                 self._my_icon.props.color = IconColor('insensitive')
 
-    def do_allocate(self, width, height):
-        hippo.CanvasBox.do_allocate(self, width, height)
+    def do_allocate(self, width, height, origin_changed):
+        hippo.CanvasBox.do_allocate(self, width, height, origin_changed)
 
         [icon_width, icon_height] = self._my_icon.get_allocation()
-        self.move(self._my_icon, (width - icon_width) / 2,
-                  (height - icon_height) / 2)
+        self.set_position(self._my_icon, (width - icon_width) / 2,
+                          (height - icon_height) / 2)
                   
     def has_activities(self):
         return self._donut.has_activities()

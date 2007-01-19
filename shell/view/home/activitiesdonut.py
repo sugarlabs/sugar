@@ -221,8 +221,8 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
         cr.arc(0, 0, self._get_inner_radius(), 0, 2 * math.pi)
         cr.fill()
 
-    def do_allocate(self, width, height):
-        hippo.CanvasBox.do_allocate(self, width, height)
+    def do_allocate(self, width, height, origin_changed):
+        hippo.CanvasBox.do_allocate(self, width, height, origin_changed)
 
         radius = (self._get_inner_radius() + self._get_radius()) / 2
 
@@ -235,6 +235,6 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
 
             x = int(radius * math.cos(angle)) - icon_width / 2
             y = int(radius * math.sin(angle)) - icon_height / 2
-            self.move(icon, x + width / 2, y + height / 2)
+            self.set_position(icon, x + width / 2, y + height / 2)
 
             i += 1

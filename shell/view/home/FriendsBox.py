@@ -58,9 +58,9 @@ class FriendsBox(SpreadBox, hippo.CanvasItem):
         self.remove_item(self._friends[name])
         del self._friends[name]
 
-    def do_allocate(self, width, height):
-        SpreadBox.do_allocate(self, width, height)
+    def do_allocate(self, width, height, origin_changed):
+        SpreadBox.do_allocate(self, width, height, origin_changed)
 
         [icon_width, icon_height] = self._my_icon.get_allocation()
-        self.move(self._my_icon, (width - icon_width) / 2,
-                  (height - icon_height) / 2)
+        self.set_position(self._my_icon, (width - icon_width) / 2,
+                          (height - icon_height) / 2)

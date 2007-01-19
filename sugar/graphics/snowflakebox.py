@@ -47,7 +47,7 @@ class SnowflakeBox(hippo.CanvasBox, hippo.CanvasItem):
         x = cx - (width / 2)
         y = cy - (height / 2)
 
-        self.move(self._root, int(x), int(y))
+        self.set_position(self._root, int(x), int(y))
 
     def _get_n_children(self):
         return len(self.get_children()) - 1
@@ -65,7 +65,7 @@ class SnowflakeBox(hippo.CanvasBox, hippo.CanvasItem):
         x = cx + math.cos(angle) * r - (width / 2)
         y = cy + math.sin(angle) * r - (height / 2)
 
-        self.move(child, int(x), int(y))
+        self.set_position(child, int(x), int(y))
 
     def do_get_width_request(self):
         hippo.CanvasBox.do_get_width_request(self)
@@ -84,7 +84,7 @@ class SnowflakeBox(hippo.CanvasBox, hippo.CanvasItem):
         hippo.CanvasBox.do_get_height_request(self, width)
         return width
 
-    def do_allocate(self, width, height):
+    def do_allocate(self, width, height, origin_changed):
         hippo.CanvasBox.do_allocate(self, width, height)
 
         self._layout_root()

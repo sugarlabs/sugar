@@ -109,10 +109,10 @@ class SpreadBox(hippo.CanvasBox, hippo.CanvasItem):
 
                 [new_x, new_y] = self._clamp_position(icon1, new_x, new_y)
 
-                self.move(icon1, new_x, new_y)
+                self.set_position(icon1, new_x, new_y)
 
-    def do_allocate(self, width, height):
-        hippo.CanvasBox.do_allocate(self, width, height)
+    def do_allocate(self, width, height, origin_changed):
+        hippo.CanvasBox.do_allocate(self, width, height, origin_changed)
 
         for item in self._items_to_position:
             [item_w, item_h] = item.get_request()
@@ -121,7 +121,7 @@ class SpreadBox(hippo.CanvasBox, hippo.CanvasItem):
             y = int(random.random() * height - item_h)
 
             [x, y] = self._clamp_position(item, x, y)
-            self.move(item, x, y)
+            self.set_position(item, x, y)
 
         self._items_to_position = []
 
