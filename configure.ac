@@ -24,13 +24,7 @@ AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
 AC_PATH_PROG(PYGTK_CODEGEN, pygtk-codegen-2.0, no)
 
 PKG_CHECK_MODULES(PYGTK, pygtk-2.0)
-PKG_CHECK_MODULES(LIB, gtk+-2.0 xulrunner-gtkmozembed gstreamer-0.10 gstreamer-plugins-base-0.10)
-
-MOZILLA_HOME="`$PKG_CONFIG --variable=libdir xulrunner-gtkmozembed`"
-AC_SUBST(MOZILLA_HOME)
-
-MOZILLA_INCLUDE_DIR="`$PKG_CONFIG --variable=includedir xulrunner-gtkmozembed`"
-AC_SUBST(MOZILLA_INCLUDE_DIR)
+PKG_CHECK_MODULES(LIB, gtk+-2.0 gstreamer-0.10 gstreamer-plugins-base-0.10)
 
 GNOMEPYTHONEXTRAS_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
 AC_SUBST(GNOMEPYTHONEXTRAS_DEFSDIR)
@@ -39,6 +33,37 @@ PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
 AC_SUBST(PYGTK_DEFSDIR)
 
 PKG_CHECK_MODULES(PYCAIRO, pycairo)
+
+# *******
+# Mozilla
+# *******
+
+GECKO_INIT([MOZILLA])
+
+AC_SUBST([MOZILLA])
+AC_SUBST([MOZILLA_FLAVOUR])
+AC_SUBST([MOZILLA_INCLUDE_ROOT])
+AC_SUBST([MOZILLA_HOME])
+AC_SUBST([MOZILLA_PREFIX])
+AC_SUBST([MOZILLA_EXTRA_LIBS])
+
+if test "$gecko_cv_gecko_version_int" -lt "1008000"; then
+	AC_MSG_ERROR([Gecko version $gecko_cv_gecko_version is not supported!])
+fi
+
+if test "$gecko_cv_gecko_flavour" != "toolkit"; then
+	AC_MSG_ERROR(["$gecko_cv_gecko_flavour" flavoured geckos aren't tasty enough!])
+fi
+
+case "$gecko_cv_gecko" in
+xulrunner) min_version=1.8 ;;
+*firefox) min_version=1.5 ;;
+*) AC_MSG_ERROR([Unsupported gecko "$gecko_cv_gecko"]) ;;
+esac
+
+PKG_CHECK_MODULES([GECKO],[${gecko_cv_gecko}-xpcom >= $min_version $gecko_cv_extra_pkg_dependencies])
+AC_SUBST([GECKO_CFLAGS])
+AC_SUBST([GECKO_LIBS])
 
 #
 # Setup GETTEXT

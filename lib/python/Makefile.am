@@ -1,8 +1,10 @@
-INCLUDES =				\
-	$(PYTHON_INCLUDES)		\
-	$(PYGTK_CFLAGS)			\
+INCLUDES =					\
+	$(PYTHON_INCLUDES)			\
+	$(PYGTK_CFLAGS)				\
 	$(PYCAIRO_CFLAGS)			\
-	$(LIB_CFLAGS)			\
+	$(LIB_CFLAGS)				\
+	$(GECKO_CFLAGS)				\
+	-I$(MOZILLA_INCLUDE_ROOT)/gtkembedmoz   \
 	-I $(top_srcdir)/lib/src
 
 pkgpyexecdir = $(pythondir)
