@@ -1,15 +1,10 @@
 libsugarprivate_la_CPPFLAGS =			\
 	$(WARN_CFLAGS)				\
 	$(LIB_CFLAGS)				\
-	$(GECKO_CFLAGS)				\
-	-I$(MOZILLA_INCLUDE_ROOT)/exthandler	\
-	-I$(MOZILLA_INCLUDE_ROOT)/dom		\
-	-I$(MOZILLA_INCLUDE_ROOT)/gtkembedmoz   \
-	-I$(MOZILLA_INCLUDE_ROOT)/mimetype   	\
-	-I$(MOZILLA_INCLUDE_ROOT)/necko		\
-	-I$(MOZILLA_INCLUDE_ROOT)/pref		\
-	-I$(MOZILLA_INCLUDE_ROOT)/uriloader	\
-	-I$(MOZILLA_INCLUDE_ROOT)/webbrwsr	\
+	-I$(MOZILLA_INCLUDE_DIR)/exthandler	\
+	-I$(MOZILLA_INCLUDE_DIR)/mimetype   	\
+	-I$(MOZILLA_INCLUDE_DIR)/necko		\
+	-I$(MOZILLA_INCLUDE_DIR)/uriloader	\
 	-DSHARE_DIR=\"$(pkgdatadir)\"
 
 noinst_LTLIBRARIES = libsugarprivate.la
