@@ -12,7 +12,6 @@ pkgpyexec_LTLIBRARIES = _sugar.la
 _sugar_la_LDFLAGS = -module -avoid-version -R$(MOZILLA_HOME)
 _sugar_la_LIBADD =					\
 	$(LIB_LIBS)					\
-	$(GECKO_LIBS)					\
 	$(PYCAIRO_LIBS)					\
 	$(top_builddir)/lib/src/libsugarprivate.la
 

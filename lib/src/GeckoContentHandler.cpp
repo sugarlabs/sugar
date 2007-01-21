@@ -1,5 +1,3 @@
-#include "mozilla-config.h"
-
 #include <nsCExternalHandlerService.h>
 #include <nsIFile.h>
 

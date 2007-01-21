@@ -10,7 +10,6 @@ libsugarprivate_la_CPPFLAGS =			\
 noinst_LTLIBRARIES = libsugarprivate.la
 
 libsugarprivate_la_LIBADD = $(LIB_LIBS) 		\
-			    $(GECKO_LIBS)		\
 			    -lgstinterfaces-0.10	\
 			    -lgstaudio-0.10
 
