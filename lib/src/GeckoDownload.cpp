@@ -1,3 +1,5 @@
+#include "mozilla-config.h"
+
 #include "sugar-download-manager.h"
 
 #include "GeckoDownload.h"

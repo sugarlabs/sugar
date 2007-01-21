@@ -17,6 +17,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include "mozilla-config.h"
+
 #include "sugar-browser.h"
 #include "GeckoContentHandler.h"
 #include "GeckoDownload.h"
