@@ -1,10 +1,13 @@
 libsugarprivate_la_CPPFLAGS =			\
 	$(WARN_CFLAGS)				\
 	$(LIB_CFLAGS)				\
+	-I$(MOZILLA_INCLUDE_DIR)/dom		\
 	-I$(MOZILLA_INCLUDE_DIR)/exthandler	\
 	-I$(MOZILLA_INCLUDE_DIR)/mimetype   	\
 	-I$(MOZILLA_INCLUDE_DIR)/necko		\
+	-I$(MOZILLA_INCLUDE_DIR)/pref		\
 	-I$(MOZILLA_INCLUDE_DIR)/uriloader	\
+	-I$(MOZILLA_INCLUDE_DIR)/webbrwsr	\
 	-DSHARE_DIR=\"$(pkgdatadir)\"
 
 noinst_LTLIBRARIES = libsugarprivate.la
