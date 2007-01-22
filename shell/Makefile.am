@@ -7,7 +7,6 @@ bin_SCRIPTS = 				\
 
 sugardir = $(pkgdatadir)/shell
 sugar_PYTHON =				\
-	__init__.py			\
-	hardwaremanager.py
+	__init__.py			
 
 EXTRA_DIST = $(bin_SCRIPTS)
