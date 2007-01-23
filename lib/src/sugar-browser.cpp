@@ -17,6 +17,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
+
 #include "sugar-browser.h"
 #include "GeckoContentHandler.h"
 #include "GeckoDownload.h"
@@ -35,9 +37,6 @@
 #include <nsIComponentRegistrar.h>
 #include <nsIComponentManager.h>
 
-NS_GENERIC_FACTORY_CONSTRUCTOR(GeckoContentHandler)
-NS_GENERIC_FACTORY_CONSTRUCTOR(GeckoDownload)
-
 enum {
 	PROP_0,
 	PROP_PROGRESS,
@@ -47,6 +46,11 @@ enum {
 	PROP_CAN_GO_FORWARD,
 	PROP_LOADING
 };
+
+#ifndef HAVE_GECKO_1_9
+
+NS_GENERIC_FACTORY_CONSTRUCTOR(GeckoContentHandler)
+NS_GENERIC_FACTORY_CONSTRUCTOR(GeckoDownload)
 
 static const nsModuleComponentInfo sSugarComponents[] = {
 	{
@@ -62,6 +66,8 @@ static const nsModuleComponentInfo sSugarComponents[] = {
 		GeckoDownloadConstructor
 	}
 };
+
+#endif
 
 gboolean
 sugar_browser_startup(const char *profile_path, const char *profile_name)
@@ -96,6 +102,8 @@ sugar_browser_startup(const char *profile_path, const char *profile_name)
 	if (NS_FAILED(rv)) {
 		g_warning ("failed to read user preferences, error: %x", rv);
 	}
+
+#ifndef HAVE_GECKO_1_9
 
 	/* Register our components */
 	nsCOMPtr<nsIComponentRegistrar> componentRegistrar;
@@ -135,6 +143,8 @@ sugar_browser_startup(const char *profile_path, const char *profile_name)
 			}
 		}
 	}
+
+#endif
 	
 	return TRUE;
 }
@@ -370,6 +380,7 @@ sugar_browser_scroll_pixels(SugarBrowser *browser,
                             int           dx,
                             int           dy)
 {
+#ifndef HAVE_GECKO_1_9
 	nsCOMPtr<nsIWebBrowser> webBrowser;
 	gtk_moz_embed_get_nsIWebBrowser (GTK_MOZ_EMBED(browser),
 									 getter_AddRefs(webBrowser));
@@ -387,6 +398,7 @@ sugar_browser_scroll_pixels(SugarBrowser *browser,
 	NS_ENSURE_TRUE (DOMWindow, );
 
 	DOMWindow->ScrollBy (dx, dy);
+#endif
 }
 
 void

@@ -20,7 +20,9 @@ _sugar_la_LIBADD =					\
 	$(top_builddir)/lib/src/libsugarprivate.la
 
 _sugar_la_SOURCES = 		\
-	_sugarmodule.c
+	_sugarmodule.c		\
+	xulrunner.cpp		\
+	xulrunner.h
 
 nodist__sugar_la_SOURCES = _sugar.c
 

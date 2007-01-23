@@ -2,6 +2,8 @@
 #include "config.h"
 #endif
 
+#include "xulrunner.h"
+
 /* include this first, before NO_IMPORT_PYGOBJECT is defined */
 #include <pygobject.h>
 
@@ -16,6 +18,8 @@ DL_EXPORT(void)
 init_sugar(void)
 {
     PyObject *m, *d;
+
+    xulrunner_startup();
 
     init_pygobject ();
 

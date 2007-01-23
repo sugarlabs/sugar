@@ -43,7 +43,7 @@ if test "x$with_libxul_sdk" != x ; then
 
 # xulrunner 1.9
 
-GECKO_CFLAGS="-I$with_libxul_sdk/sdk/include"
+GECKO_CFLAGS="-I$with_libxul_sdk/sdk/include -DXPCOM_GLUE"
 XPCOMGLUE_LIBS="-L$with_libxul_sdk/sdk/lib -lxpcomglue"
 MOZILLA_INCLUDE_DIR="$with_libxul_sdk/include"
 
