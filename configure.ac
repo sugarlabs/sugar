@@ -39,8 +39,8 @@ if test "x$have_gecko" = xfalse; then
   AC_MSG_ERROR([Could not find xulrunner, mozilla or firefox $mozilla_required_version])
 fi
 
-MOZILLA_HOME="`$PKG_CONFIG --variable=libdir $mozpackage-gtkmozembed`"
-AC_SUBST(MOZILLA_HOME)
+GECKO_LDFLAGS="-R`$PKG_CONFIG --variable=libdir $mozpackage-gtkmozembed`"
+AC_SUBST(GECKO_LDFLAGS)
 
 MOZILLA_INCLUDE_DIR="`$PKG_CONFIG --variable=includedir $mozpackage-gtkmozembed`"
 AC_SUBST(MOZILLA_INCLUDE_DIR)
