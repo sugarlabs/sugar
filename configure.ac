@@ -25,10 +25,12 @@ AC_PATH_PROG(PYGTK_CODEGEN, pygtk-codegen-2.0, no)
 
 PKG_CHECK_MODULES(PYGTK, pygtk-2.0)
 
-PKG_CHECK_MODULES(GTKMOZEMBED, [xulrunner-gtkmozembed >= 1.8],
+PKG_CHECK_MODULES(LIB, gtk+-2.0 gstreamer-0.10 gstreamer-plugins-base-0.10)
+
+PKG_CHECK_MODULES(GECKO, [xulrunner-gtkmozembed >= 1.8],
   [have_gecko=true; mozpackage=xulrunner],
   [
-PKG_CHECK_MODULES(GTKMOZEMBED, [firefox-gtkmozembed >= 1.5],
+PKG_CHECK_MODULES(GECKO, [firefox-gtkmozembed >= 1.5],
   [have_gecko=true; mozpackage=firefox],
   have_gecko=false)
   ])
@@ -36,8 +38,6 @@ PKG_CHECK_MODULES(GTKMOZEMBED, [firefox-gtkmozembed >= 1.5],
 if test "x$have_gecko" = xfalse; then
   AC_MSG_ERROR([Could not find xulrunner, mozilla or firefox $mozilla_required_version])
 fi
-
-PKG_CHECK_MODULES(LIB, gtk+-2.0 $mozpackage-gtkmozembed gstreamer-0.10 gstreamer-plugins-base-0.10)
 
 MOZILLA_HOME="`$PKG_CONFIG --variable=libdir $mozpackage-gtkmozembed`"
 AC_SUBST(MOZILLA_HOME)

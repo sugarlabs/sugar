@@ -1,6 +1,7 @@
 libsugarprivate_la_CPPFLAGS =			\
 	$(WARN_CFLAGS)				\
 	$(LIB_CFLAGS)				\
+	$(GECKO_CFLAGS)				\
 	-I$(MOZILLA_INCLUDE_DIR)/dom		\
 	-I$(MOZILLA_INCLUDE_DIR)/exthandler	\
 	-I$(MOZILLA_INCLUDE_DIR)/mimetype   	\
@@ -12,9 +13,11 @@ libsugarprivate_la_CPPFLAGS =			\
 
 noinst_LTLIBRARIES = libsugarprivate.la
 
-libsugarprivate_la_LIBADD = $(LIB_LIBS) 		\
-			    -lgstinterfaces-0.10	\
-			    -lgstaudio-0.10
+libsugarprivate_la_LIBADD = \
+	$(LIB_LIBS) 		\
+	$(GECKO_LIBS) 		\
+	-lgstinterfaces-0.10	\
+	-lgstaudio-0.10
 
 libsugarprivate_la_SOURCES =		\
 	$(BUILT_SOURCES)		\

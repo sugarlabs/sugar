@@ -1,8 +1,9 @@
 INCLUDES =				\
 	$(PYTHON_INCLUDES)		\
 	$(PYGTK_CFLAGS)			\
-	$(PYCAIRO_CFLAGS)			\
+	$(PYCAIRO_CFLAGS)		\
 	$(LIB_CFLAGS)			\
+	$(GECKO_CFLAGS)			\
 	-I $(top_srcdir)/lib/src
 
 pkgpyexecdir = $(pythondir)
@@ -13,6 +14,7 @@ _sugar_la_LDFLAGS = -module -avoid-version -R$(MOZILLA_HOME)
 _sugar_la_LIBADD =					\
 	$(LIB_LIBS)					\
 	$(PYCAIRO_LIBS)					\
+	$(GECKO_LIBS)					\
 	$(top_builddir)/lib/src/libsugarprivate.la
 
 _sugar_la_SOURCES = 		\
