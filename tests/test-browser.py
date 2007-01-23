@@ -16,17 +16,19 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import os
+
 import pygtk
 pygtk.require('2.0')
-
 import gtk
+
 import _sugar
 
 # Main window
 window = gtk.Window()
 window.connect("destroy", lambda w: gtk.main_quit())
 
-_sugar.startup_browser()
+_sugar.browser_startup(os.path.expanduser('~/.sugar-browser-test'), 'test')
 
 browser = _sugar.Browser()
 window.add(browser)

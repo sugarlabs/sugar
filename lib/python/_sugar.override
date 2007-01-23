@@ -27,7 +27,6 @@ sugar_tray_manager_new
 %%
 import gobject.GObject as PyGObject_Type
 import gtk.Entry as PyGtkEntry_Type
-import gtkmozembed.MozEmbed as PyGtkMozEmbed_Type
 import gtk.gdk.Screen as PyGdkScreen_Type
 import gtk.gdk.Pixbuf as PyGdkPixbuf_Type
 import hippo.CanvasImage as HippoCanvasImage_Type
@@ -35,6 +34,9 @@ import hippo.CanvasImage as HippoCanvasImage_Type
 ignore-glob
   *_get_type
   _*
+%%
+include
+  gtkmozembed.override
 %%
 override sugar_hippo_canvas_image_set_image_from_gdk_pixbuf kwargs
 static cairo_surface_t *

@@ -76,9 +76,18 @@
   (return-type "GType")
 )
 
-(define-function startup_browser
+(define-function browser_startup
   (c-name "sugar_browser_startup")
+  (parameters
+    '("const-char*" "profile_path")
+    '("const-char*" "profile_name")
+  )
   (return-type "gboolean")
+)
+
+(define-function browser_shutdown
+  (c-name "sugar_browser_shutdown")
+  (return-type "none")
 )
 
 (define-method grab_focus
@@ -275,4 +284,4 @@
   )
 )
 
-
+(include "gtkmozembed.defs")

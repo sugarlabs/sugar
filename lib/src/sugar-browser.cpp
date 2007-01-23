@@ -64,9 +64,13 @@ static const nsModuleComponentInfo sSugarComponents[] = {
 };
 
 gboolean
-sugar_browser_startup(void)
+sugar_browser_startup(const char *profile_path, const char *profile_name)
 {
 	nsresult rv;
+
+	gtk_moz_embed_set_profile_path(profile_path, profile_name);
+
+    gtk_moz_embed_push_startup();
 
 	nsCOMPtr<nsIPrefService> prefService;
 	prefService = do_GetService(NS_PREFSERVICE_CONTRACTID);
@@ -133,6 +137,12 @@ sugar_browser_startup(void)
 	}
 	
 	return TRUE;
+}
+
+void
+sugar_browser_shutdown(void)
+{
+    gtk_moz_embed_pop_startup();
 }
 
 G_DEFINE_TYPE(SugarBrowser, sugar_browser, GTK_TYPE_MOZ_EMBED)

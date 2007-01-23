@@ -20,17 +20,16 @@ _sugar_la_SOURCES = 		\
 
 nodist__sugar_la_SOURCES = _sugar.c
 
-_sugar.c: _sugar.defs _sugar.override
+_sugar.c: _sugar.defs gtkmozembed.defs _sugar.override gtkmozembed.override
 
 CLEANFILES = _sugar.c
-EXTRA_DIST = _sugar.override _sugar.defs
+EXTRA_DIST = _sugar.override _sugar.defs gtkmozembed.defs gtkmozembed.override
 
 .defs.c:
 	(cd $(srcdir)\
 	 && $(PYGTK_CODEGEN) \
 	    --register $(PYGTK_DEFSDIR)/gdk-types.defs \
 	    --register $(PYGTK_DEFSDIR)/gtk-types.defs \
-	    --register $(GNOMEPYTHONEXTRAS_DEFSDIR)/gtkmozembed.defs \
 	    --override $*.override \
 	    --prefix py$* $*.defs) > gen-$*.c \
 	&& cp gen-$*.c $*.c \
