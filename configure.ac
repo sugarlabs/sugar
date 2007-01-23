@@ -25,7 +25,36 @@ AC_PATH_PROG(PYGTK_CODEGEN, pygtk-codegen-2.0, no)
 
 PKG_CHECK_MODULES(PYGTK, pygtk-2.0)
 
+PKG_CHECK_MODULES(PYCAIRO, pycairo)
+
 PKG_CHECK_MODULES(LIB, gtk+-2.0 gstreamer-0.10 gstreamer-plugins-base-0.10)
+
+PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
+AC_SUBST(PYGTK_DEFSDIR)
+
+#
+# Mozilla
+#
+
+AC_ARG_WITH(libxul_sdk,
+	AC_HELP_STRING([--with-libxul-sdk=DIR], [Path to libxul SDK]))
+
+if test "x$with_libxul_sdk" != x ; then
+
+# xulrunner 1.9
+
+GECKO_CFLAGS="-I$with_libxul_sdk/sdk/include"
+XPCOMGLUE_LIBS="-L$with_libxul_sdk/sdk/lib -lxpcomglue"
+MOZILLA_INCLUDE_DIR="$with_libxul_sdk/include"
+
+AC_SUBST(XPCOMGLUE_LIBS)
+AC_SUBST(GECKO_CFLAGS)
+
+AC_DEFINE([HAVE_GECKO_1_9],[1],[Define if we have gecko 1.9])
+
+else
+
+# xulrunner 1.8
 
 PKG_CHECK_MODULES(GECKO, [xulrunner-gtkmozembed >= 1.8],
   [have_gecko=true; mozpackage=xulrunner],
@@ -45,10 +74,7 @@ AC_SUBST(GECKO_LDFLAGS)
 MOZILLA_INCLUDE_DIR="`$PKG_CONFIG --variable=includedir $mozpackage-gtkmozembed`"
 AC_SUBST(MOZILLA_INCLUDE_DIR)
 
-PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
-AC_SUBST(PYGTK_DEFSDIR)
-
-PKG_CHECK_MODULES(PYCAIRO, pycairo)
+fi
 
 #
 # Setup GETTEXT
