@@ -17,6 +17,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
+
 #include <string.h>
 
 #ifdef HAVE_GECKO_1_9
