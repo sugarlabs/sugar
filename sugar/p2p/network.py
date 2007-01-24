@@ -96,9 +96,13 @@ class GlibXMLRPCServer(GlibTCPServer, SimpleXMLRPCServer.SimpleXMLRPCDispatcher)
     blocking on accept().
     """
 
-    def __init__(self, addr, requestHandler=GlibXMLRPCRequestHandler, logRequests=0):
+    def __init__(self, addr, requestHandler=GlibXMLRPCRequestHandler,
+                 logRequests=0, allow_none=False):
         self.logRequests = logRequests
-        SimpleXMLRPCServer.SimpleXMLRPCDispatcher.__init__(self)
+        if sys.version_info[:3] >= (2, 5, 0):
+            SimpleXMLRPCServer.SimpleXMLRPCDispatcher.__init__(self, allow_none, encoding="utf-8")
+        else:
+            SimpleXMLRPCServer.SimpleXMLRPCDispatcher.__init__(self)
         GlibTCPServer.__init__(self, addr, requestHandler)
 
     def _marshaled_dispatch(self, data, dispatch_method = None):
