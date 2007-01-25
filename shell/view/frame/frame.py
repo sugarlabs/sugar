@@ -40,10 +40,15 @@ class Frame:
     AUTOMATIC = 4
 
     def __init__(self, shell):
-        self._windows = []
+        self._left_panel = None
+        self._right_panel = None
+        self._top_panel = None
+        self._bottom_panel = None
+
         self._hover_frame = False
         self._shell = shell
         self._mode = Frame.INACTIVE
+        self._grid = Grid()
 
         self._timeline = Timeline(self)
         self._timeline.add_tag('slide_in', 18, 24)
@@ -56,90 +61,85 @@ class Frame:
         self._event_frame.connect('leave', self._event_frame_leave_cb)
         self._event_frame.show()
 
-        grid = Grid()
+        self._create_top_panel()
+        self._create_bottom_panel()
+        self._create_left_panel()
+        self._create_right_panel()
 
-        # Top panel
-        panel = self._create_panel(grid, 0, 0, 16, 1)
-        menu_shell = panel.get_menu_shell()
-        root = panel.get_root()
+        shell.get_model().connect('notify::state',
+                                  self._shell_state_changed_cb)
+
+    def _create_top_panel(self):
+        self._top_panel = self._create_panel(0, 0, 16, 1)
+        menu_shell = self._top_panel.get_menu_shell()
+        root = self._top_panel.get_root()
 
         menu_shell.set_position(MenuShell.BOTTOM)
 
         box = ZoomBox(self._shell, menu_shell)
 
-        [x, y] = grid.point(1, 0)
+        [x, y] = self._grid.point(1, 0)
         root.append(box, hippo.PACK_FIXED)
         root.set_position(box, x, y)
 
         tray = NotificationTray()
-        tray_box = hippo.CanvasBox(box_width=grid.dimension(1),
-                                   box_height=grid.dimension(1),
+        tray_box = hippo.CanvasBox(box_width=self._grid.dimension(1),
+                                   box_height=self._grid.dimension(1),
                                    xalign=hippo.ALIGNMENT_END)
 
         tray_widget = hippo.CanvasWidget()
         tray_widget.props.widget = tray
         tray_box.append(tray_widget, gtk.EXPAND)
 
-        [x, y] = grid.point(13, 0)
+        [x, y] = self._grid.point(13, 0)
         root.append(tray_box, hippo.PACK_FIXED)
         root.set_position(tray_box, x, y)
 
         box = OverlayBox(self._shell)
 
-        [x, y] = grid.point(14, 0)
+        [x, y] = self._grid.point(14, 0)
         root.append(box, hippo.PACK_FIXED)
         root.set_position(box, x, y)
 
-        # Bottom panel
-        panel = self._create_panel(grid, 0, 11, 16, 1)
-        menu_shell = panel.get_menu_shell()
-        root = panel.get_root()
+    def _create_bottom_panel(self):
+        self._bottom_panel = self._create_panel(0, 11, 16, 1)
+        menu_shell = self._bottom_panel.get_menu_shell()
+        root = self._bottom_panel.get_root()
 
         menu_shell.set_position(MenuShell.TOP)
 
         box = ActivitiesBox(self._shell)
         root.append(box, hippo.PACK_FIXED)
 
-        [x, y] = grid.point(1, 0)
+        [x, y] = self._grid.point(1, 0)
         root.set_position(box, x, y)
 
-        # Right panel
-        panel = self._create_panel(grid, 15, 1, 1, 10)
-        menu_shell = panel.get_menu_shell()
-        root = panel.get_root()
+    def _create_right_panel(self):
+        self._right_panel = self._create_panel(15, 1, 1, 10)
+        menu_shell = self._right_panel.get_menu_shell()
+        root = self._right_panel.get_root()
 
         menu_shell.set_position(MenuShell.LEFT)
 
         box = FriendsBox(self._shell, menu_shell)
         root.append(box)
 
-        # Left panel
-        panel = self._create_clipboard_panel(grid, 0, 1, 1, 10)
+    def _create_left_panel(self):
+        [x, y, width, height] = self._grid.rectangle(0, 1, 1, 10)
+        self._left_panel = ClipboardPanelWindow(self, x, y, width, height)
 
-        shell.get_model().connect('notify::state',
-                                  self._shell_state_changed_cb)
+        self._connect_to_panel(self._left_panel)
+        self._left_panel.connect('drag-motion', self._drag_motion_cb)
+        self._left_panel.connect('drag-leave', self._drag_leave_cb)
 
     def _shell_state_changed_cb(self, model, pspec):
         if model.props.state == ShellModel.STATE_SHUTDOWN:
             self._timeline.goto('slide_out', True)
         
-    def _create_clipboard_panel(self, grid, x, y, width, height):
-        [x, y, width, height] = grid.rectangle(x, y, width, height)
-        panel = ClipboardPanelWindow(self, x, y, width, height)
-
-        self._connect_to_panel(panel)
-        panel.connect('drag-motion', self._drag_motion_cb)
-        panel.connect('drag-leave', self._drag_leave_cb)
-
-        self._windows.append(panel)
-
-        return panel
-
-    def _create_panel(self, grid, x, y, width, height):
-        [x, y, width, height] = grid.rectangle(x, y, width, height)
+    def _create_panel(self, x, y, width, height):
+        [x, y, width, height] = self._grid.rectangle(x, y, width, height)
         panel = PanelWindow(x, y, width, height)
         self._connect_to_panel(panel)
-        self._windows.append(panel)
 
         return panel
 
@@ -225,18 +225,24 @@ class Frame:
             self._timeline.play('before_slide_out', 'slide_out')
 
     def do_slide_in(self, current=0, n_frames=0):
-        if not self._windows[0].props.visible:
-            for panel in self._windows:
-                panel.show()
+        if not self._top_panel.props.visible:
+            self._left_panel.show()
+            self._right_panel.show()
+            self._top_panel.show()
+            self._bottom_panel.show()
+
             self._event_frame.hide()
 
     def do_slide_out(self, current=0, n_frames=0):
-        if self._windows[0].props.visible:
-            for panel in self._windows:
-                panel.hide()
+        if self._top_panel.props.visible:
+            self._left_panel.hide()
+            self._right_panel.hide()
+            self._top_panel.hide()
+            self._bottom_panel.hide()
+
             self._event_frame.show()
 
     def is_visible(self):
-        if self._windows[0].props.visible:
+        if self._top_panel.props.visible:
             return True
         return False
