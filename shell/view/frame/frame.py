@@ -32,7 +32,7 @@ from sugar.graphics.timeline import Timeline
 from sugar.graphics.grid import Grid
 from sugar.graphics.menushell import MenuShell
 
-_ANIMATION = True
+_ANIMATION = False
 
 class Frame:
     INACTIVE = 0
