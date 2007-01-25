@@ -32,6 +32,8 @@ from sugar.graphics.timeline import Timeline
 from sugar.graphics.grid import Grid
 from sugar.graphics.menushell import MenuShell
 
+_ANIMATION = True
+
 class Frame:
     INACTIVE = 0
     TEMPORARY = 1
@@ -70,7 +72,7 @@ class Frame:
                                   self._shell_state_changed_cb)
 
     def _create_top_panel(self):
-        self._top_panel = self._create_panel(0, 0, 16, 1)
+        self._top_panel = self._create_panel(16, 1)
         menu_shell = self._top_panel.get_menu_shell()
         root = self._top_panel.get_root()
 
@@ -102,7 +104,7 @@ class Frame:
         root.set_position(box, x, y)
 
     def _create_bottom_panel(self):
-        self._bottom_panel = self._create_panel(0, 11, 16, 1)
+        self._bottom_panel = self._create_panel(16, 1)
         menu_shell = self._bottom_panel.get_menu_shell()
         root = self._bottom_panel.get_root()
 
@@ -115,7 +117,7 @@ class Frame:
         root.set_position(box, x, y)
 
     def _create_right_panel(self):
-        self._right_panel = self._create_panel(15, 1, 1, 10)
+        self._right_panel = self._create_panel(1, 10)
         menu_shell = self._right_panel.get_menu_shell()
         root = self._right_panel.get_root()
 
@@ -125,8 +127,8 @@ class Frame:
         root.append(box)
 
     def _create_left_panel(self):
-        [x, y, width, height] = self._grid.rectangle(0, 1, 1, 10)
-        self._left_panel = ClipboardPanelWindow(self, x, y, width, height)
+        self._left_panel = ClipboardPanelWindow(
+            self, self._grid.dimension(1), self._grid.dimension(10))
 
         self._connect_to_panel(self._left_panel)
         self._left_panel.connect('drag-motion', self._drag_motion_cb)
@@ -136,12 +138,25 @@ class Frame:
         if model.props.state == ShellModel.STATE_SHUTDOWN:
             self._timeline.goto('slide_out', True)
         
-    def _create_panel(self, x, y, width, height):
-        [x, y, width, height] = self._grid.rectangle(x, y, width, height)
-        panel = PanelWindow(x, y, width, height)
+    def _create_panel(self, width, height):
+        panel = PanelWindow(self._grid.dimension(width),
+                            self._grid.dimension(height))
         self._connect_to_panel(panel)
 
         return panel
+
+    def _move_panel(self, panel, x1, y1, x2, y2, pos):
+        [screen_x1, screen_y1] = self._grid.point(x1, y1)
+        [screen_x2, screen_y2] = self._grid.point(x2, y2)
+
+        screen_x = (screen_x2 - screen_x1) * pos + screen_x1
+        screen_y = (screen_y2 - screen_y1) * pos + screen_y1
+
+        panel.move(int(screen_x), int(screen_y))
+
+        # FIXME we should hide and show as necessary to free memory
+        if not panel.props.visible:
+            panel.show()
 
     def _connect_to_panel(self, panel):
         panel.connect('enter-notify-event', self._enter_notify_cb)
@@ -224,25 +239,27 @@ class Frame:
         if self._mode == Frame.TEMPORARY:
             self._timeline.play('before_slide_out', 'slide_out')
 
-    def do_slide_in(self, current=0, n_frames=0):
-        if not self._top_panel.props.visible:
-            self._left_panel.show()
-            self._right_panel.show()
-            self._top_panel.show()
-            self._bottom_panel.show()
+    def _move(self, pos):
+        self._move_panel(self._top_panel, 0, -1, 0, 0, pos)
+        self._move_panel(self._bottom_panel, 0, 12, 0, 11, pos)
+        self._move_panel(self._left_panel, -1, 1, 0, 1, pos)
+        self._move_panel(self._right_panel, 16, 1, 15, 1, pos)
 
+    def do_slide_in(self, current=0, n_frames=0):
+        if _ANIMATION:
+            self._move(float(current + 1) / float(n_frames))
+        elif current == 0:
+            self._move(1)
+        if self._event_frame.is_visible():
             self._event_frame.hide()
 
     def do_slide_out(self, current=0, n_frames=0):
-        if self._top_panel.props.visible:
-            self._left_panel.hide()
-            self._right_panel.hide()
-            self._top_panel.hide()
-            self._bottom_panel.hide()
-
+        if _ANIMATION:
+            self._move(1 - (float(current + 1) / float(n_frames)))
+        elif current == 0:
+            self._move(0)
+        if not self._event_frame.is_visible():
             self._event_frame.show()
 
     def is_visible(self):
-        if self._top_panel.props.visible:
-            return True
-        return False
+        return self._top_panel.props.visible

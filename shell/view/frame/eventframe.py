@@ -136,3 +136,6 @@ class EventFrame(gobject.GObject):
     def _active_window_changed_cb(self, screen):
         for window in self._windows:
             window.window.raise_()
+
+    def is_visible(self):
+        return self._windows[0].props.visible
