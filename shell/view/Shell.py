@@ -25,7 +25,7 @@ from view.home.HomeWindow import HomeWindow
 from sugar.presence import PresenceService
 from view.ActivityHost import ActivityHost
 from sugar.activity import ActivityFactory
-from view.frame.Frame import Frame
+from view.frame.frame import Frame
 from view.keyhandler import KeyHandler
 from view.hardwaremanager import HardwareManager
 from _sugar import AudioManager
