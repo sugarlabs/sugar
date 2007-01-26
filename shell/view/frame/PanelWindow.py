@@ -20,7 +20,7 @@ import hippo
 from sugar.graphics.menushell import MenuShell
 
 class PanelWindow(gtk.Window):
-    def __init__(self, x, y, width, height):
+    def __init__(self, width, height):
         gtk.Window.__init__(self)
 
         self.set_decorated(False)
@@ -36,7 +36,6 @@ class PanelWindow(gtk.Window):
 
         self._menu_shell = MenuShell(canvas)
 
-        self.move(x, y)
         self.resize(width, height)
 
     def get_menu_shell(self):

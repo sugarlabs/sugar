@@ -80,10 +80,10 @@ class KeyHandler(object):
         self._audio_manager.set_volume(0)
 
     def handle_volume_2(self):
-        self._audio_manager.set_volume(40)
+        self._audio_manager.set_volume(50)
 
     def handle_volume_3(self):
-        self._audio_manager.set_volume(75)
+        self._audio_manager.set_volume(80)
 
     def handle_volume_4(self):
         self._audio_manager.set_volume(100)
