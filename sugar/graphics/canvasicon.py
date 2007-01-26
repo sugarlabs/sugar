@@ -144,12 +144,16 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
     def __init__(self, **kwargs):
         self._buffers = {}
         self._cur_buffer = None
-        self._size = 24
+        self._size = None
         self._color = None
         self._icon_name = None
         self._cache = False
 
         hippo.CanvasBox.__init__(self, **kwargs)
+
+        # If no size was given, set a default here
+        if not self._size:
+            self.props.size = 24
 
         self.connect('button-press-event', self._button_press_event_cb)
 
@@ -175,6 +179,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             if self._size != value and not self._cache:
                 self._clear_buffers()
             self._size = value
+            self.props.box_width = value
+            self.props.box_height = value
             self.emit_request_changed()
         elif pspec.name == 'cache':
             self._cache = value
@@ -228,12 +234,6 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         
         cr.set_source_surface(buf, x, y)
         cr.paint()
-
-    def do_get_width_request(self):
-        return self._size
-
-    def do_get_height_request(self, for_width):
-        return self._size
 
     def _button_press_event_cb(self, item, event):
         item.emit_activated()
