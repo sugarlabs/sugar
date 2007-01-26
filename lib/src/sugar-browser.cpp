@@ -69,10 +69,27 @@ static const nsModuleComponentInfo sSugarComponents[] = {
 
 #endif
 
+static void
+setup_plugin_path ()
+{
+    const char *user_path;
+    char *new_path;
+
+    user_path = g_getenv ("MOZ_PLUGIN_PATH");
+    new_path = g_strconcat (user_path ? user_path : "",
+                            user_path ? ":" : "",
+                            PLUGIN_DIR,
+                            (char *) NULL);
+    g_setenv ("MOZ_PLUGIN_PATH", new_path, TRUE);
+    g_free (new_path);
+}
+
 gboolean
 sugar_browser_startup(const char *profile_path, const char *profile_name)
 {
 	nsresult rv;
+
+    setup_plugin_path();
 
 	gtk_moz_embed_set_profile_path(profile_path, profile_name);
 

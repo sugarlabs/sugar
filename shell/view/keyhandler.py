@@ -127,6 +127,10 @@ class KeyHandler(object):
     def handle_keyboard_brightness(self):
         self._hw_manager.toggle_keyboard_brightness()
 
+    def handle_home(self):
+        # FIXME: finish alt+tab support
+        pass
+
     def _key_pressed_cb(self, grabber, key):
         action = _actions_table[key]
         method = getattr(self, 'handle_' + action)
