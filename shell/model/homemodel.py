@@ -56,14 +56,25 @@ class HomeModel(gobject.GObject):
         return self._current_activity
 
     def __iter__(self): 
-        return iter(self._activities)
+        ordered_acts = self._get_ordered_activities()
+        return iter(ordered_acts)
         
     def __len__(self):
         return len(self._activities)
         
     def __getitem__(self, i):
-        return self._activities[i]
-
+        ordered_acts = self._get_ordered_activities()
+        return ordered_acts[i]
+        
+    def index(self, obj):
+        ordered_acts = self._get_ordered_activities()
+        return ordered_acts.index(obj)
+        
+    def _get_ordered_activities(self):
+        ordered_acts = self._activities.values()
+        ordered_acts.sort(key=lambda a: a.get_launch_time())
+        return ordered_acts
+    
     def _window_opened_cb(self, screen, window):
         if window.get_window_type() == wnck.WINDOW_NORMAL:
             self._add_activity(window)
