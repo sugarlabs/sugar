@@ -37,6 +37,7 @@ sys.path.insert(0, os.path.join(env.get_data_dir(), 'shell'))
 from view.FirstTimeDialog import FirstTimeDialog
 from view.Shell import Shell
 from model.ShellModel import ShellModel
+from shellservice import ShellService
 
 name = profile.get_nick_name() 
 if not name or not len(name):
@@ -54,6 +55,7 @@ f.write(os.environ["DBUS_SESSION_BUS_ADDRESS"])
 f.close()
 
 model = ShellModel()
+service = ShellService(model)
 shell = Shell(model)
 
 # Start the NetworkManager applet

@@ -1,5 +1,6 @@
 import os
 from ConfigParser import ConfigParser
+import gobject
 
 from sugar.activity.bundle import Bundle
 from sugar import env
@@ -18,10 +19,17 @@ class _ServiceManager(object):
 
         util.write_service(name, full_exec, self._path)
 
-class BundleRegistry:
+class BundleRegistry(gobject.GObject):
     """Service that tracks the available activity bundles"""
 
+    __gsignals__ = {
+        'bundle-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                        ([gobject.TYPE_PYOBJECT]))
+    }
+
     def __init__(self):
+        gobject.GObject.__init__(self)
+        
         self._bundles = {}
         self._search_path = []
         self._service_manager = _ServiceManager()
@@ -54,10 +62,14 @@ class BundleRegistry:
                 bundle_dir = os.path.join(path, f)
                 if os.path.isdir(bundle_dir) and \
                    bundle_dir.endswith('.activity'):
-                    self._add_bundle(bundle_dir)
+                    self.add_bundle(bundle_dir)
 
-    def _add_bundle(self, bundle_path):
+    def add_bundle(self, bundle_path):
         bundle = Bundle(bundle_path)
         if bundle.is_valid():
             self._bundles[bundle.get_service_name()] = bundle
             self._service_manager.add(bundle)
+            self.emit('bundle-added', bundle)
+            return True
+        else:
+            return False
