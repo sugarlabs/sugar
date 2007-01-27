@@ -95,7 +95,6 @@ class MeshBox(SpreadBox):
 
     def _add_alone_buddy(self, buddy_model):
         icon = BuddyIcon(self._shell, self._menu_shell, buddy_model)
-        icon.props.size = 80
         self.add_item(icon)
 
         self._buddies[buddy_model.get_name()] = icon
@@ -125,7 +124,6 @@ class MeshBox(SpreadBox):
             activity = self._activities[activity_model.get_id()]
 
             icon = BuddyIcon(self._shell, self._menu_shell, buddy_model)
-            icon.props.size = 60
             activity.add_buddy_icon(buddy_model.get_name(), icon)
 
     def _add_activity(self, activity_model):
