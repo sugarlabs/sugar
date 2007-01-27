@@ -17,15 +17,15 @@ menu_Separator = {
 }
 
 menu_ActionIcon = {
-    'size' : style.standard_icon_size
+    'scale' : style.standard_icon_scale
 }
 
 menu_Item = {
-    'color'    : 0xFFFFFFFF,
+    'color' : 0xFFFFFFFF,
     'font'  : style.get_font_description('Plain', 1.1)
 }
 
 menu_Text = {
-    'color'    : 0xFFFFFFFF,
+    'color' : 0xFFFFFFFF,
     'font'  : style.get_font_description('Plain', 1.2)
 }

@@ -24,11 +24,11 @@ _screen_factor = gtk.gdk.screen_width() / 1200.0
 space_unit = 9 * _screen_factor
 separator_thickness = 3 * _screen_factor
 
-standard_icon_size = int(75.0 * _screen_factor)
-small_icon_size = standard_icon_size * 0.5
-medium_icon_size = standard_icon_size * 1.5
-large_icon_size = standard_icon_size * 2.0
-xlarge_icon_size = standard_icon_size * 3.0
+standard_icon_scale = 1.0
+small_icon_scale    = 0.5
+medium_icon_scale   = 1.5
+large_icon_scale    = 2.0
+xlarge_icon_scale   = 3.0
 
 def load_stylesheet(module):
     for objname in dir(module):
