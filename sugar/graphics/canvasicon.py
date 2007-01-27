@@ -247,7 +247,6 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         [icon_width, icon_height] = self._get_icon_size()
         x = (width - icon_width) / 2
         y = (height - icon_height) / 2
-        print x, y, width, icon_width
         
         cr.set_source_surface(buf, x, y)
         cr.paint()
