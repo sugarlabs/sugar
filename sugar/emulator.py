@@ -95,20 +95,6 @@ class XephyrProcess(Process):
         os.environ['DISPLAY'] = ":%d" % (self._display)
         os.environ['SUGAR_XEPHYR_PID'] = '%d' % self.pid
 
-
-class XnestProcess(Process):
-    def __init__(self):
-        self._display = get_display_number()
-        cmd = 'Xnest :%d -ac -geometry 800x600' % (self._display) 
-        Process.__init__(self, cmd)
-        
-    def get_name(self):
-        return 'Xnest'
-
-    def start(self, standard_output=False):
-        Process.start(self)
-        os.environ['DISPLAY'] = ":%d" % (self._display)
-
 class Emulator(object):
     """The OLPC emulator"""
     def __init__(self, fullscreen):
@@ -119,13 +105,8 @@ class Emulator(object):
             process = XephyrProcess(self._fullscreen)
             process.start()
         except:
-            try:
-                process = XnestProcess()
-                process.start()
-            except:
-                print 'Cannot run the emulator. You need to install \
-                       Xephyr or Xnest.'
-                sys.exit(0)
+            print 'Cannot run the emulator. You need to install Xephyr'
+            sys.exit(0)
 
         process = MatchboxProcess()
         process.start()
