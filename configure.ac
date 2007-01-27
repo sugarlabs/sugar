@@ -39,7 +39,7 @@ AC_SUBST(PYGTK_DEFSDIR)
 AC_ARG_WITH(libxul_sdk,
 	AC_HELP_STRING([--with-libxul-sdk=DIR], [Path to libxul SDK]))
 
-if test "x$with_libxul_sdk" != x ; then
+if test -d "$with_libxul_sdk"; then
 
 # xulrunner 1.9
 
