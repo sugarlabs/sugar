@@ -69,9 +69,12 @@ class ActivitiesBox(hippo.CanvasBox):
         self._invite_to_item = {}
         self._invites = self._shell_model.get_invites()
 
-        for bundle in self._shell_model.get_bundle_registry():
+        bundle_registry = self._shell_model.get_bundle_registry()
+        for bundle in bundle_registry:
             if bundle.get_show_launcher():
                 self.add_activity(bundle)
+
+        bundle_registry.connect('bundle-added', self._bundle_added_cb)
 
         for invite in self._invites:
             self.add_invite(invite)
@@ -91,6 +94,9 @@ class ActivitiesBox(hippo.CanvasBox):
 
     def _invite_removed_cb(self, invites, invite):
         self.remove_invite(invite)
+
+    def _bundle_added_cb(self, bundle_registry, bundle):
+        self.add_activity(bundle)
 
     def add_activity(self, activity):
         item = ActivityItem(activity)

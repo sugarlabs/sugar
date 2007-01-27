@@ -68,12 +68,6 @@ def _extract_bundle(source_file, dest_dir):
 def _get_source_path():
     return os.getcwd()
 
-def _get_activities_path():
-    path = os.path.expanduser('~/Activities')
-    if not os.path.isdir(path):
-        os.mkdir(path)
-    return path
-
 def _get_bundle_dir():
     bundle_name = os.path.basename(_get_source_path())
     return bundle_name + '.activity'    
@@ -82,7 +76,7 @@ def _get_install_dir(prefix):
     return os.path.join(prefix, 'share/activities')
 
 def _get_bundle_path():
-    return os.path.join(_get_activities_path(), _get_bundle_dir())
+    return os.path.join(env.get_user_activities_dir(), _get_bundle_dir())
 
 def _get_package_name():
     bundle = Bundle(_get_source_path())

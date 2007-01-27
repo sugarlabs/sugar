@@ -84,3 +84,10 @@ def get_user_service_dir():
     if not os.path.isdir(service_dir):
         os.makedirs(service_dir)
     return service_dir
+
+def get_user_activities_dir():
+    path = os.path.expanduser('~/Activities')
+    if not os.path.isdir(path):
+        os.mkdir(path)
+    return path
+

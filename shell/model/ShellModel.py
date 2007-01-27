@@ -55,8 +55,7 @@ class ShellModel(gobject.GObject):
         self._mesh = MeshModel(self._bundle_registry)
         self._home = HomeModel(self._bundle_registry)
 
-        path = os.path.expanduser('~/Activities')
-        self._bundle_registry.add_search_path(path)
+        self._bundle_registry.add_search_path(env.get_user_activities_dir())
 
         for path in env.get_data_dirs():
             bundles_path = os.path.join(path, 'activities')
