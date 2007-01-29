@@ -18,22 +18,8 @@
 	{0x96, 0x7e, 0x0, 0xe0, 0x81, 0x61, 0x16, 0x5f} \
 }
 
-class GeckoDownload : public nsITransfer
-{
-public:
-    GeckoDownload();
-	virtual ~GeckoDownload();
-    
-	NS_DECL_ISUPPORTS
-	NS_DECL_NSIWEBPROGRESSLISTENER
-	NS_DECL_NSIWEBPROGRESSLISTENER2
-	NS_DECL_NSITRANSFER
+class nsIFactory;
 
-protected:
-	nsIURI			*mSource;
-	nsCString		mTargetFileName;
-	nsIMIMEInfo		*mMIMEInfo;
-	nsILocalFile	*mTempFile;
-};
+extern "C" NS_EXPORT nsresult NS_NewGeckoDownloadFactory(nsIFactory** aFactory);
 
 #endif // __GECKO_DOWNLOAD_H__

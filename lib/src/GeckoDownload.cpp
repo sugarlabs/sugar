@@ -1,6 +1,26 @@
+#include <nsIFactory.h>
+
 #include "sugar-download-manager.h"
 
 #include "GeckoDownload.h"
+
+class GeckoDownload : public nsITransfer
+{
+public:
+    GeckoDownload();
+	virtual ~GeckoDownload();
+
+	NS_DECL_ISUPPORTS
+	NS_DECL_NSIWEBPROGRESSLISTENER
+	NS_DECL_NSIWEBPROGRESSLISTENER2
+	NS_DECL_NSITRANSFER
+
+protected:
+	nsIURI			*mSource;
+	nsCString		mTargetFileName;
+	nsIMIMEInfo		*mMIMEInfo;
+	nsILocalFile	*mTempFile;
+};
 
 GeckoDownload::GeckoDownload ()
 {
@@ -126,4 +146,66 @@ GeckoDownload::OnSecurityChange (nsIWebProgress *aWebProgress,
 								 PRUint32 state)
 {
 	return NS_OK;
+}
+//*****************************************************************************
+// GeckoDownloadFactory
+//*****************************************************************************
+
+class GeckoDownloadFactory : public nsIFactory {
+public:
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSIFACTORY
+
+  GeckoDownloadFactory();
+  virtual ~GeckoDownloadFactory();
+};
+
+//*****************************************************************************
+
+NS_IMPL_ISUPPORTS1(GeckoDownloadFactory, nsIFactory)
+
+GeckoDownloadFactory::GeckoDownloadFactory() {
+}
+
+GeckoDownloadFactory::~GeckoDownloadFactory() {
+}
+
+NS_IMETHODIMP GeckoDownloadFactory::CreateInstance(nsISupports *aOuter, const nsIID & aIID, void **aResult)
+{
+  NS_ENSURE_ARG_POINTER(aResult);
+
+  *aResult = NULL;
+  GeckoDownload *inst = new GeckoDownload;
+  if (!inst)
+    return NS_ERROR_OUT_OF_MEMORY;
+
+  nsresult rv = inst->QueryInterface(aIID, aResult);
+  if (rv != NS_OK) {
+    // We didn't get the right interface, so clean up
+    delete inst;
+  }
+
+  return rv;
+}
+
+NS_IMETHODIMP GeckoDownloadFactory::LockFactory(PRBool lock)
+{
+  return NS_OK;
+}
+
+//*****************************************************************************
+
+nsresult NS_NewGeckoDownloadFactory(nsIFactory** aFactory)
+{
+  NS_ENSURE_ARG_POINTER(aFactory);
+  *aFactory = nsnull;
+
+  GeckoDownloadFactory *result = new GeckoDownloadFactory;
+  if (!result)
+    return NS_ERROR_OUT_OF_MEMORY;
+
+  NS_ADDREF(result);
+  *aFactory = result;
+
+  return NS_OK;
 }
