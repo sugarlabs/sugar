@@ -12,17 +12,8 @@
     {0x96, 0x7b, 0x0, 0xe0, 0x81, 0x61, 0x16, 0x5f}  \
 }
 
-class GeckoContentHandler : public nsIHelperAppLauncherDialog
-{
-  public:
-	NS_DECL_ISUPPORTS
-	NS_DECL_NSIHELPERAPPLAUNCHERDIALOG
+class nsIFactory;
 
-	GeckoContentHandler();
-	virtual ~GeckoContentHandler();
-	
-  private:
-
-};
+extern "C" NS_EXPORT nsresult NS_NewGeckoContentHandlerFactory(nsIFactory** aFactory);
 
 #endif /* __GECKO_CONTENT_HANDLER_H */

@@ -35,7 +35,6 @@
 #include <nsIGenericFactory.h>
 #include <nsIHelperAppLauncherDialog.h>
 #include <nsIComponentRegistrar.h>
-#include <nsIComponentManager.h>
 
 enum {
 	PROP_0,
@@ -47,27 +46,20 @@ enum {
 	PROP_LOADING
 };
 
-#ifndef HAVE_GECKO_1_9
-
-NS_GENERIC_FACTORY_CONSTRUCTOR(GeckoContentHandler)
-NS_GENERIC_FACTORY_CONSTRUCTOR(GeckoDownload)
-
 static const nsModuleComponentInfo sSugarComponents[] = {
 	{
 		"Gecko Content Handler",
 		GECKOCONTENTHANDLER_CID,
 		NS_IHELPERAPPLAUNCHERDLG_CONTRACTID,
-		GeckoContentHandlerConstructor
+		NULL
 	},
 	{
 		"Gecko Download",
 		GECKODOWNLOAD_CID,
 		NS_TRANSFER_CONTRACTID,
-		GeckoDownloadConstructor
+		NULL
 	}
 };
-
-#endif
 
 static void
 setup_plugin_path ()
@@ -120,49 +112,32 @@ sugar_browser_startup(const char *profile_path, const char *profile_name)
 		g_warning ("failed to read user preferences, error: %x", rv);
 	}
 
-#ifndef HAVE_GECKO_1_9
-
-	/* Register our components */
 	nsCOMPtr<nsIComponentRegistrar> componentRegistrar;
 	NS_GetComponentRegistrar(getter_AddRefs(componentRegistrar));
 	NS_ENSURE_TRUE (componentRegistrar, FALSE);
 
-	nsCOMPtr<nsIComponentManager> componentManager;
-	NS_GetComponentManager (getter_AddRefs (componentManager));
-	NS_ENSURE_TRUE (componentManager, FALSE);
-	
-	for (guint i = 0; i < G_N_ELEMENTS(sSugarComponents); i++) {
-	
-		nsCOMPtr<nsIGenericFactory> componentFactory;
-		rv = NS_NewGenericFactory(getter_AddRefs(componentFactory), 
-								  &(sSugarComponents[i]));
-		if (NS_FAILED(rv) || !componentFactory) {
-			g_warning ("Failed to make a factory for %s\n", sSugarComponents[i].mDescription);
-			return FALSE;
-		}
-
-		rv = componentRegistrar->RegisterFactory(sSugarComponents[i].mCID,
-						 sSugarComponents[i].mDescription,
-						 sSugarComponents[i].mContractID,
-						 componentFactory);
-		if (NS_FAILED(rv)) {
-			g_warning ("Failed to register factory for %s\n", sSugarComponents[i].mDescription);
-			return FALSE;
-		}
-
-		if (sSugarComponents[i].mRegisterSelfProc) {
-			rv = sSugarComponents[i].mRegisterSelfProc(componentManager, nsnull, 
-													   nsnull, nsnull, 
-													   &sSugarComponents[i]);
-			if (NS_FAILED(rv)) {
-				g_warning ("Failed to register-self for %s\n", sSugarComponents[i].mDescription);
-				return FALSE;
-			}
-		}
+  nsCOMPtr<nsIFactory> contentHandlerFactory;
+  rv = NS_NewGeckoContentHandlerFactory(getter_AddRefs(contentHandlerFactory));
+  rv = componentRegistrar->RegisterFactory(sSugarComponents[0].mCID,
+						                               sSugarComponents[0].mDescription,
+						                               sSugarComponents[0].mContractID,
+                                           contentHandlerFactory);
+	if (NS_FAILED(rv)) {
+		g_warning ("Failed to register factory for %s\n", sSugarComponents[0].mDescription);
+		return FALSE;
 	}
 
-#endif
-	
+  nsCOMPtr<nsIFactory> downloadFactory;
+  rv = NS_NewGeckoDownloadFactory(getter_AddRefs(downloadFactory));
+  rv = componentRegistrar->RegisterFactory(sSugarComponents[1].mCID,
+						                               sSugarComponents[1].mDescription,
+						                               sSugarComponents[1].mContractID,
+                                           downloadFactory);
+	if (NS_FAILED(rv)) {
+		g_warning ("Failed to register factory for %s\n", sSugarComponents[1].mDescription);
+		return FALSE;
+	}
+
 	return TRUE;
 }
 
