@@ -372,6 +372,7 @@ sugar_browser_scroll_pixels(SugarBrowser *browser,
                             int           dx,
                             int           dy)
 {
+#ifndef HAVE_GECKO_1_9
 	nsCOMPtr<nsIWebBrowser> webBrowser;
 	gtk_moz_embed_get_nsIWebBrowser (GTK_MOZ_EMBED(browser),
 									 getter_AddRefs(webBrowser));
@@ -389,6 +390,7 @@ sugar_browser_scroll_pixels(SugarBrowser *browser,
 	NS_ENSURE_TRUE (DOMWindow, );
 
 	DOMWindow->ScrollBy (dx, dy);
+#endif
 }
 
 void
