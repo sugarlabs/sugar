@@ -116,23 +116,23 @@ sugar_browser_startup(const char *profile_path, const char *profile_name)
 	NS_GetComponentRegistrar(getter_AddRefs(componentRegistrar));
 	NS_ENSURE_TRUE (componentRegistrar, FALSE);
 
-  nsCOMPtr<nsIFactory> contentHandlerFactory;
-  rv = NS_NewGeckoContentHandlerFactory(getter_AddRefs(contentHandlerFactory));
-  rv = componentRegistrar->RegisterFactory(sSugarComponents[0].mCID,
-						                               sSugarComponents[0].mDescription,
-						                               sSugarComponents[0].mContractID,
-                                           contentHandlerFactory);
+    nsCOMPtr<nsIFactory> contentHandlerFactory;
+    rv = NS_NewGeckoContentHandlerFactory(getter_AddRefs(contentHandlerFactory));
+    rv = componentRegistrar->RegisterFactory(sSugarComponents[0].mCID,
+                                             sSugarComponents[0].mDescription,
+                                             sSugarComponents[0].mContractID,
+                                             contentHandlerFactory);
 	if (NS_FAILED(rv)) {
 		g_warning ("Failed to register factory for %s\n", sSugarComponents[0].mDescription);
 		return FALSE;
 	}
 
-  nsCOMPtr<nsIFactory> downloadFactory;
-  rv = NS_NewGeckoDownloadFactory(getter_AddRefs(downloadFactory));
-  rv = componentRegistrar->RegisterFactory(sSugarComponents[1].mCID,
-						                               sSugarComponents[1].mDescription,
-						                               sSugarComponents[1].mContractID,
-                                           downloadFactory);
+    nsCOMPtr<nsIFactory> downloadFactory;
+    rv = NS_NewGeckoDownloadFactory(getter_AddRefs(downloadFactory));
+    rv = componentRegistrar->RegisterFactory(sSugarComponents[1].mCID,
+                                             sSugarComponents[1].mDescription,
+                                             sSugarComponents[1].mContractID,
+                                             downloadFactory);
 	if (NS_FAILED(rv)) {
 		g_warning ("Failed to register factory for %s\n", sSugarComponents[1].mDescription);
 		return FALSE;
@@ -372,7 +372,6 @@ sugar_browser_scroll_pixels(SugarBrowser *browser,
                             int           dx,
                             int           dy)
 {
-#ifndef HAVE_GECKO_1_9
 	nsCOMPtr<nsIWebBrowser> webBrowser;
 	gtk_moz_embed_get_nsIWebBrowser (GTK_MOZ_EMBED(browser),
 									 getter_AddRefs(webBrowser));
@@ -390,7 +389,6 @@ sugar_browser_scroll_pixels(SugarBrowser *browser,
 	NS_ENSURE_TRUE (DOMWindow, );
 
 	DOMWindow->ScrollBy (dx, dy);
-#endif
 }
 
 void

@@ -6,15 +6,12 @@
 
 class GeckoContentHandler : public nsIHelperAppLauncherDialog
 {
-  public:
-	NS_DECL_ISUPPORTS
-	NS_DECL_NSIHELPERAPPLAUNCHERDIALOG
+public:
+    NS_DECL_ISUPPORTS
+    NS_DECL_NSIHELPERAPPLAUNCHERDIALOG
 
-	GeckoContentHandler();
-	virtual ~GeckoContentHandler();
-
-  private:
-
+    GeckoContentHandler();
+    virtual ~GeckoContentHandler();
 };
 
 GeckoContentHandler::GeckoContentHandler()
@@ -75,42 +72,47 @@ GeckoContentHandlerFactory::GeckoContentHandlerFactory() {
 GeckoContentHandlerFactory::~GeckoContentHandlerFactory() {
 }
 
-NS_IMETHODIMP GeckoContentHandlerFactory::CreateInstance(nsISupports *aOuter, const nsIID & aIID, void **aResult)
+NS_IMETHODIMP
+GeckoContentHandlerFactory::CreateInstance(nsISupports *aOuter,
+                                           const nsIID & aIID,
+                                           void **aResult)
 {
-  NS_ENSURE_ARG_POINTER(aResult);
+    NS_ENSURE_ARG_POINTER(aResult);
 
-  *aResult = NULL;
-  GeckoContentHandler *inst = new GeckoContentHandler;
-  if (!inst)
-    return NS_ERROR_OUT_OF_MEMORY;
+    *aResult = NULL;
+    GeckoContentHandler *inst = new GeckoContentHandler;
+    if (!inst)
+        return NS_ERROR_OUT_OF_MEMORY;
 
-  nsresult rv = inst->QueryInterface(aIID, aResult);
-  if (rv != NS_OK) {
-    // We didn't get the right interface, so clean up
-    delete inst;
-  }
+    nsresult rv = inst->QueryInterface(aIID, aResult);
+    if (rv != NS_OK) {
+        // We didn't get the right interface, so clean up
+        delete inst;
+    }
 
-  return rv;
+    return rv;
 }
 
-NS_IMETHODIMP GeckoContentHandlerFactory::LockFactory(PRBool lock)
+NS_IMETHODIMP
+GeckoContentHandlerFactory::LockFactory(PRBool lock)
 {
-  return NS_OK;
+    return NS_OK;
 }
 
 //*****************************************************************************
 
-nsresult NS_NewGeckoContentHandlerFactory(nsIFactory** aFactory)
+nsresult
+NS_NewGeckoContentHandlerFactory(nsIFactory** aFactory)
 {
-  NS_ENSURE_ARG_POINTER(aFactory);
-  *aFactory = nsnull;
+    NS_ENSURE_ARG_POINTER(aFactory);
+    *aFactory = nsnull;
 
-  GeckoContentHandlerFactory *result = new GeckoContentHandlerFactory;
-  if (!result)
-    return NS_ERROR_OUT_OF_MEMORY;
+    GeckoContentHandlerFactory *result = new GeckoContentHandlerFactory;
+    if (!result)
+        return NS_ERROR_OUT_OF_MEMORY;
 
-  NS_ADDREF(result);
-  *aFactory = result;
+    NS_ADDREF(result);
+    *aFactory = result;
 
-  return NS_OK;
+    return NS_OK;
 }

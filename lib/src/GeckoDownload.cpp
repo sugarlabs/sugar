@@ -153,11 +153,11 @@ GeckoDownload::OnSecurityChange (nsIWebProgress *aWebProgress,
 
 class GeckoDownloadFactory : public nsIFactory {
 public:
-  NS_DECL_ISUPPORTS
-  NS_DECL_NSIFACTORY
+    NS_DECL_ISUPPORTS
+    NS_DECL_NSIFACTORY
 
-  GeckoDownloadFactory();
-  virtual ~GeckoDownloadFactory();
+    GeckoDownloadFactory();
+    virtual ~GeckoDownloadFactory();
 };
 
 //*****************************************************************************
@@ -170,42 +170,45 @@ GeckoDownloadFactory::GeckoDownloadFactory() {
 GeckoDownloadFactory::~GeckoDownloadFactory() {
 }
 
-NS_IMETHODIMP GeckoDownloadFactory::CreateInstance(nsISupports *aOuter, const nsIID & aIID, void **aResult)
+NS_IMETHODIMP
+GeckoDownloadFactory::CreateInstance(nsISupports *aOuter, const nsIID & aIID, void **aResult)
 {
-  NS_ENSURE_ARG_POINTER(aResult);
+    NS_ENSURE_ARG_POINTER(aResult);
 
-  *aResult = NULL;
-  GeckoDownload *inst = new GeckoDownload;
-  if (!inst)
-    return NS_ERROR_OUT_OF_MEMORY;
+    *aResult = NULL;
+    GeckoDownload *inst = new GeckoDownload;
+    if (!inst)
+        return NS_ERROR_OUT_OF_MEMORY;
 
-  nsresult rv = inst->QueryInterface(aIID, aResult);
-  if (rv != NS_OK) {
-    // We didn't get the right interface, so clean up
-    delete inst;
-  }
+    nsresult rv = inst->QueryInterface(aIID, aResult);
+    if (rv != NS_OK) {
+        // We didn't get the right interface, so clean up
+        delete inst;
+    }
 
-  return rv;
+    return rv;
 }
 
-NS_IMETHODIMP GeckoDownloadFactory::LockFactory(PRBool lock)
+NS_IMETHODIMP
+GeckoDownloadFactory::LockFactory(PRBool lock)
 {
-  return NS_OK;
+    return NS_OK;
 }
 
 //*****************************************************************************
 
-nsresult NS_NewGeckoDownloadFactory(nsIFactory** aFactory)
+nsresult
+NS_NewGeckoDownloadFactory(nsIFactory** aFactory)
 {
-  NS_ENSURE_ARG_POINTER(aFactory);
-  *aFactory = nsnull;
+    NS_ENSURE_ARG_POINTER(aFactory);
+    *aFactory = nsnull;
 
-  GeckoDownloadFactory *result = new GeckoDownloadFactory;
-  if (!result)
-    return NS_ERROR_OUT_OF_MEMORY;
+    GeckoDownloadFactory *result = new GeckoDownloadFactory;
+    if (!result)
+        return NS_ERROR_OUT_OF_MEMORY;
 
-  NS_ADDREF(result);
-  *aFactory = result;
+    NS_ADDREF(result);
+    *aFactory = result;
 
-  return NS_OK;
+    return NS_OK;
 }
