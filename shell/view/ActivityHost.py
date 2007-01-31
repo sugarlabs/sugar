@@ -96,14 +96,14 @@ class ActivityHost:
 
     def chat_show(self, frame_was_visible):
         if self._overlay_window:
-            self._overlay_window.show_all()
+            self._overlay_window.appear()
         self._chat_window.show_all()
         self._frame_was_visible = frame_was_visible
 
     def chat_hide(self):
         self._chat_window.hide()
         if self._overlay_window:
-            self._overlay_window.hide()
+            self._overlay_window.disappear()
         wasvis = self._frame_was_visible
         self._frame_was_visible = False
         return wasvis
