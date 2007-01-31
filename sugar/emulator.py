@@ -78,13 +78,16 @@ class MatchboxProcess(Process):
         return 'Matchbox'
 
 class XephyrProcess(Process):
-    def __init__(self, fullscreen):
+    def __init__(self, width, height, fullscreen):
         self._display = get_display_number()
         cmd = 'Xephyr :%d -ac ' % (self._display)
+
         if fullscreen:
-            cmd += '-fullscreen '
-        else:
-            cmd += '-screen 1200x900'
+            cmd += ' -fullscreen '
+        
+        if width > 0 and height > 0:
+            cmd += ' -screen %dx%d' % (width, height)
+
         Process.__init__(self, cmd)
         
     def get_name(self):
@@ -97,12 +100,15 @@ class XephyrProcess(Process):
 
 class Emulator(object):
     """The OLPC emulator"""
-    def __init__(self, fullscreen):
+    def __init__(self, width, height, fullscreen):
         self._fullscreen = fullscreen
+        self._width = width
+        self._height = height
 
     def start(self):
         try:
-            process = XephyrProcess(self._fullscreen)
+            process = XephyrProcess(self._width, self._height,
+                                    self._fullscreen)
             process.start()
         except:
             print 'Cannot run the emulator. You need to install Xephyr'
