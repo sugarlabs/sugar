@@ -79,7 +79,9 @@ else:
     program = sys.argv[1]
 
 fullscreen = (gtk.gdk.screen_width() <= 1200 or
-              gtk.gdk.screen_height() <= 900)
+              gtk.gdk.screen_height() <= 900) and \
+             (gtk.gdk.screen_width() / 4 * 3 ==
+              gtk.gdk.screen_height())
 
 emulator = Emulator(fullscreen)
 emulator.start()
