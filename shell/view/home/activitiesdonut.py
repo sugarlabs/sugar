@@ -135,6 +135,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
         self._model.connect('activity-launched', self._activity_launched_cb)
         self._model.connect('activity-added', self._activity_added_cb)
         self._model.connect('activity-removed', self._activity_removed_cb)
+        self._model.connect('active-activity-changed', self._activity_changed_cb)
 
     def _activity_launched_cb(self, model, activity):
         self._add_activity(activity)
@@ -150,6 +151,9 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
     def _activity_removed_cb(self, model, activity):
         self._remove_activity(activity)
     
+    def _activity_changed_cb(self, model, activity):
+        self.emit_paint_needed(0, 0, -1, -1)
+
     def _remove_activity(self, activity):
         act_id = activity.get_id()
         if not self._activities.has_key(act_id):
@@ -179,7 +183,9 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
 
     def _get_angles(self, index):
         angle = 2 * math.pi / 8
-        return [index * angle, (index + 1) * angle]
+        bottom_align = (math.pi - angle) / 2
+        return [index * angle + bottom_align, 
+                (index + 1) * angle + bottom_align]
 
     def _get_radius(self):
         [width, height] = self.get_allocation()
@@ -195,30 +201,47 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
 
         radius = self._get_radius()
 
+        # Outer Ring
         cr.set_source_rgb(0xf1 / 255.0, 0xf1 / 255.0, 0xf1 / 255.0)
         cr.arc(0, 0, radius, 0, 2 * math.pi)
         cr.fill()
 
-        angle_end = 0
-        for i in range(0, len(self._activities)):
-            [angle_start, angle_end] = self._get_angles(i)
-
-            cr.new_path()
+        # Selected Wedge
+        current_activity = self._model.get_current_activity()
+        if current_activity is not None:
+            selected_index = self._model.index(current_activity)    
+            [angle_start, angle_end] = self._get_angles(selected_index)
+        
+            cr.new_path()   
             cr.move_to(0, 0)
             cr.line_to(radius * math.cos(angle_start),
                        radius * math.sin(angle_start))
             cr.arc(0, 0, radius, angle_start, angle_end)
             cr.line_to(0, 0)
+            cr.set_source_rgb(1, 1, 1)
+            cr.fill()        
 
+        # Edges
+        if len(self._model):   
+            n_edges = len(self._model) + 1
+        else:
+            n_edges = 0
+            
+        for i in range(0, n_edges):
+            cr.new_path()
+            cr.move_to(0, 0)
+            [angle, unused_angle] = self._get_angles(i)
+            cr.line_to(radius * math.cos(angle),
+                        radius * math.sin(angle))
+            
             cr.set_source_rgb(0xe2 / 255.0, 0xe2 / 255.0, 0xe2 / 255.0)
             cr.set_line_width(4)
             cr.stroke_preserve()
-
-            cr.set_source_rgb(1, 1, 1)
-            cr.fill()
-
-        cr.set_source_rgb(0xe2 / 255.0, 0xe2 / 255.0, 0xe2 / 255.0)
+             
+        # Inner Ring    
+        cr.new_path()
         cr.arc(0, 0, self._get_inner_radius(), 0, 2 * math.pi)
+        cr.set_source_rgb(0xe2 / 255.0, 0xe2 / 255.0, 0xe2 / 255.0)
         cr.fill()
 
     def do_allocate(self, width, height, origin_changed):
@@ -227,7 +250,8 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
         radius = (self._get_inner_radius() + self._get_radius()) / 2
 
         i = 0
-        for icon in self._activities.values():
+        for h_activity in self._model:
+            icon = self._activities[h_activity.get_id()]
             [angle_start, angle_end] = self._get_angles(i)
             angle = angle_start + (angle_end - angle_start) / 2
 

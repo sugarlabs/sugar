@@ -135,6 +135,9 @@ class HomeModel(gobject.GObject):
         self.emit('activity-added', activity)
 
     def _internal_remove_activity(self, activity):
+        if activity == self._current_activity:
+            self._current_activity = None
+
         self.emit('activity-removed', activity)
         act_id = activity.get_id()
         del self._activities[act_id]
