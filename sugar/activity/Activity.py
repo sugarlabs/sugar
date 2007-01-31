@@ -34,6 +34,14 @@ ACTIVITY_SERVICE_NAME = "org.laptop.Activity"
 ACTIVITY_SERVICE_PATH = "/org/laptop/Activity"
 ACTIVITY_INTERFACE = "org.laptop.Activity"
 
+from sugar.graphics.grid import Grid
+
+settings = gtk.settings_get_default()
+
+grid = Grid()
+sizes = 'gtk-large-toolbar=%d, %d' % (grid.dimension(1), grid.dimension(1))
+settings.set_string_property('gtk-icon-sizes', sizes, '')
+
 def get_service_name(xid):
     return ACTIVITY_SERVICE_NAME + '%d' % xid
 
