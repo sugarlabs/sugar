@@ -26,37 +26,43 @@ class ClipboardService(gobject.GObject):
     
     def __init__(self):
         gobject.GObject.__init__(self)
-        
+
         self._dbus_service = None
+
         bus = dbus.SessionBus()
-        bus.add_signal_receiver(self._name_owner_changed_cb,
-                                signal_name="NameOwnerChanged",
-                                dbus_interface="org.freedesktop.DBus")
+        self._nameOwnerChangedHandler = bus.add_signal_receiver(
+                self._name_owner_changed_cb,
+                signal_name="NameOwnerChanged",
+                dbus_interface="org.freedesktop.DBus",
+                arg0=DBUS_SERVICE)
+
+        self._connected = False
         # Try to register to ClipboardService, if we fail, we'll try later.
         try:
             self._connect_clipboard_signals()
         except dbus.DBusException, exception:
-            pass
-        
+            logging.debug(exception)
+
     def _connect_clipboard_signals(self):
         bus = dbus.SessionBus()
-        proxy_obj = bus.get_object(DBUS_SERVICE, DBUS_PATH)
-        self._dbus_service = dbus.Interface(proxy_obj, DBUS_SERVICE)
-        self._dbus_service.connect_to_signal('object_added',
-                                             self._object_added_cb)    
-        self._dbus_service.connect_to_signal('object_deleted',
-                                             self._object_deleted_cb)
-        self._dbus_service.connect_to_signal('object_state_changed',
-                                             self._object_state_changed_cb)    
+        if not self._connected:
+            proxy_obj = bus.get_object(DBUS_SERVICE, DBUS_PATH)
+            self._dbus_service = dbus.Interface(proxy_obj, DBUS_SERVICE)
+            self._dbus_service.connect_to_signal('object_added',
+                                                 self._object_added_cb)
+            self._dbus_service.connect_to_signal('object_deleted',
+                                                 self._object_deleted_cb)
+            self._dbus_service.connect_to_signal('object_state_changed',
+                                                 self._object_state_changed_cb)
+            self._connected = True
+
+        bus.remove_signal_receiver(self._nameOwnerChangedHandler)
 
     def _name_owner_changed_cb(self, name, old, new):
-        if name != DBUS_SERVICE:
-            return
-        
-        if (not old and not len(old)) and (new and len(new)):
+        if not old and new:
             # ClipboardService started up
             self._connect_clipboard_signals()
-            
+
     def _object_added_cb(self, object_id, name):
         self.emit('object-added', object_id, name)
 
