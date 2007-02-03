@@ -31,7 +31,7 @@ dbus.glib.threads_init()
 
 from sugar.activity import ActivityFactory
 
-sys.path.append(sys.argv[2])
+sys.path.insert(0, sys.argv[2])
 
 ActivityFactory.start_factory(sys.argv[1], sys.argv[2])
 
