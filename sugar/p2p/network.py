@@ -158,7 +158,7 @@ class GlibXMLRPCTransport(xmlrpclib.Transport):
     # @param host Target host.
     # @return A connection handle.
 
-    def __init__(self):
+    def __init__(self, use_datetime=0):
         if sys.version_info[:3] >= (2, 5, 0):
             xmlrpclib.Transport.__init__(self, use_datetime)
 
