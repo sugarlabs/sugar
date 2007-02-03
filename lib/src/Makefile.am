@@ -2,6 +2,7 @@ libsugarprivate_la_CPPFLAGS =				\
 	$(WARN_CFLAGS)					\
 	$(LIB_CFLAGS)					\
 	$(GECKO_CFLAGS)					\
+	$(NSPR_CFLAGS)					\
 	-I$(MOZILLA_INCLUDE_DIR)/dom			\
 	-I$(MOZILLA_INCLUDE_DIR)/exthandler		\
 	-I$(MOZILLA_INCLUDE_DIR)/gtkembedmoz		\
@@ -18,6 +19,7 @@ noinst_LTLIBRARIES = libsugarprivate.la
 libsugarprivate_la_LIBADD = \
 	$(LIB_LIBS) 		\
 	$(GECKO_LIBS) 		\
+	$(NSPR_LIBS) 		\
 	-lgstinterfaces-0.10	\
 	-lgstaudio-0.10
 

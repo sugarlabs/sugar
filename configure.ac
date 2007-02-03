@@ -56,6 +56,8 @@ else
 
 # xulrunner 1.8
 
+PKG_CHECK_MODULES(NSPR, nspr)
+
 PKG_CHECK_MODULES(GECKO, [xulrunner-gtkmozembed >= 1.8],
   [have_gecko=true; mozpackage=xulrunner],
   [

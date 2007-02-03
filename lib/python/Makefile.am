@@ -4,6 +4,7 @@ INCLUDES =					\
 	$(PYCAIRO_CFLAGS)			\
 	$(LIB_CFLAGS)				\
 	$(GECKO_CFLAGS)				\
+	$(NSPR_CFLAGS)				\
 	-I$(MOZILLA_INCLUDE_DIR)/gtkembedmoz	\
 	-I$(top_srcdir)/lib/src
 
@@ -16,6 +17,7 @@ _sugar_la_LIBADD =					\
 	$(LIB_LIBS)					\
 	$(PYCAIRO_LIBS)					\
 	$(GECKO_LIBS)					\
+	$(NSPR_LIBS)					\
 	$(XPCOMGLUE_LIBS)				\
 	$(top_builddir)/lib/src/libsugarprivate.la
 
