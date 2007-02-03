@@ -22,6 +22,7 @@ import os
 import zipfile
 import shutil
 
+from sugar import env
 from sugar.activity.bundle import Bundle
 
 class _SvnFileList(list):
@@ -103,7 +104,7 @@ setup.py help                - print this message \n\
 '
 
 def cmd_dev():
-    bundle_path = os.path.join(_get_activities_path(), _get_bundle_dir())
+    bundle_path = os.path.join(env.get_user_activities_dir(), _get_bundle_dir())
     try:
         os.symlink(_get_source_path(), bundle_path)
     except OSError:
