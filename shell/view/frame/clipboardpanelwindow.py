@@ -34,7 +34,7 @@ class ClipboardPanelWindow(PanelWindow):
         self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
                         gtk.gdk.POINTER_MOTION_HINT_MASK)
         self.connect("motion_notify_event", box.motion_notify_event_cb)
-        self.connect("button_press_event", box.button_press_event_cb)
+        self.get_canvas().connect("button_press_event", box.button_press_event_cb)
         self.connect("drag_end", box.drag_end_cb)
         self.connect("drag_data_get", box.drag_data_get_cb)
 

@@ -26,15 +26,15 @@ class PanelWindow(gtk.Window):
         self.set_decorated(False)
         self.connect('realize', self._realize_cb)
 
-        canvas = hippo.Canvas()
+        self._canvas = hippo.Canvas()
 
         self._bg = hippo.CanvasBox(background_color=0x414141ff)
-        canvas.set_root(self._bg)
+        self._canvas.set_root(self._bg)
 
-        self.add(canvas)
-        canvas.show()
+        self.add(self._canvas)
+        self._canvas.show()
 
-        self._menu_shell = MenuShell(canvas)
+        self._menu_shell = MenuShell(self._canvas)
 
         self.resize(width, height)
 
@@ -43,6 +43,9 @@ class PanelWindow(gtk.Window):
 
     def get_root(self):
         return self._bg
+
+    def get_canvas(self):
+        return self._canvas
 
     def _realize_cb(self, widget):
         self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
