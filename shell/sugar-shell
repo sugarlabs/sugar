@@ -19,6 +19,9 @@
 import sys
 import os
 
+if len(sys.argv) == 2:
+    sys.path.insert(0, sys.argv[1])
+
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -32,7 +35,8 @@ from sugar import TracebackUtils
 logger.cleanup()
 logger.start('shell')
 
-sys.path.insert(0, os.path.join(env.get_data_dir(), 'shell'))
+if len(sys.argv) == 1:
+    sys.path.insert(0, os.path.join(env.get_data_dir(), 'shell'))
 
 from view.FirstTimeDialog import FirstTimeDialog
 from view.Shell import Shell
