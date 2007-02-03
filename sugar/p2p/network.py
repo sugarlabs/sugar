@@ -159,7 +159,8 @@ class GlibXMLRPCTransport(xmlrpclib.Transport):
     # @return A connection handle.
 
     def __init__(self):
-        pass
+        if sys.version_info[:3] >= (2, 5, 0):
+            xmlrpclib.Transport.__init__(self, use_datetime)
 
     def make_connection(self, host):
         """Use our own connection object so we can get its socket."""
