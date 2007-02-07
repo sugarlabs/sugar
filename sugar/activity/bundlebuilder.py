@@ -42,12 +42,26 @@ class _GitFileList(list):
             if not filename.startswith('.'):
                 self.append(filename)
         f.close()
-        
+
+class _DefaultFileList(list):
+    def __init__(self):
+        for name in os.listdir('activity'):
+            if name.endswith('.svg'):
+				self.append(os.path.join('activity', name))
+
+        self.append('activity/activity.info')
+        self.append('setup.py')
+
 class _ManifestFileList(list):
     def __init__(self):
-        f = open('MANIFEST-OLPC','r')
+        f = open('MANIFEST','r')
         for line in f.readlines():
             self.append(line[:-1])
+        f.close()
+
+        defaults = _DefaultFileList()
+        for path in defaults:
+            self.append(path)
 
 def _extract_bundle(source_file, dest_dir):
         if not os.path.exists(dest_dir):
@@ -114,18 +128,14 @@ def cmd_dev():
             print 'ERROR - A bundle with the same name is already installed.'    
 
 def cmd_dist():
-    try:
-        os.stat('MANIFEST-OLPC')
+    if os.path.isfile('MANIFEST'):
         file_list = _ManifestFileList()
-    except:
-        if os.path.isdir('.git'):
-            file_list = _GitFileList()
-        elif os.path.isdir('.svn'):
-            file_list = _SvnFileList()
-        else:
-            print 'ERROR - The command works only with git or svn\
-repositories, or MANIFEST-OLPC file lists.'
-            return
+    elif os.path.isdir('.git'):
+        file_list = _GitFileList()
+    elif os.path.isdir('.svn'):
+        file_list = _SvnFileList()
+    else:
+        file_list = _DefaultFileList()
 
     zipname = _get_package_name()
     bundle_zip = zipfile.ZipFile(zipname, 'w', zipfile.ZIP_DEFLATED)
