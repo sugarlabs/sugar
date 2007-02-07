@@ -21,7 +21,6 @@ import colorsys
 
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import style
-from sugar.graphics import colors
 from sugar.graphics import iconcolor
 from sugar import profile
 

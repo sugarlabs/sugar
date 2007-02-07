@@ -54,6 +54,8 @@ class _DefaultFileList(list):
 
 class _ManifestFileList(list):
     def __init__(self):
+        self.append('MANIFEST')
+
         f = open('MANIFEST','r')
         for line in f.readlines():
             self.append(line[:-1])

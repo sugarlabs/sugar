@@ -3,7 +3,6 @@ sugar_PYTHON =			\
 	__init__.py		\
 	bubble.py		\
 	canvasicon.py		\
-	colors.py		\
 	ClipboardBubble.py	\
 	grid.py			\
 	iconcolor.py		\
