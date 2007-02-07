@@ -21,6 +21,7 @@ import hippo
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics.menuicon import MenuIcon
 from sugar.graphics.menu import Menu
+from sugar.graphics.iconcolor import IconColor
 from sugar.graphics import style
 import sugar
 
@@ -37,11 +38,13 @@ class ActivityMenu(Menu):
         self._add_close_action()
 
     def _add_mesh_action(self):
-        icon = CanvasIcon(icon_name='theme:stock-share-mesh')
+        icon = CanvasIcon(icon_name='theme:stock-share-mesh',
+                          color=IconColor('#ffffff,#000000'))
         self.add_action(icon, ActivityMenu.ACTION_SHARE) 
 
     def _add_close_action(self):
-        icon = CanvasIcon(icon_name='theme:stock-close')
+        icon = CanvasIcon(icon_name='theme:stock-close',
+                          color=IconColor('#ffffff,#000000'))
         self.add_action(icon, ActivityMenu.ACTION_CLOSE) 
 
 class ActivityIcon(MenuIcon):

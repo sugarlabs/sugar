@@ -14,6 +14,7 @@
 # License along with this library; if not, write to the
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
+import logging
 
 import gtk
 
@@ -45,6 +46,8 @@ def apply_stylesheet(item, stylesheet_name):
         style_sheet = _styles[stylesheet_name]
         for name in style_sheet.keys():
             item.set_property(name, style_sheet[name])
+    else:
+        logging.debug('Stylesheet %s not found.' % stylesheet_name)
 
 def get_font_description(style, relative_size):
     base_size = 18 * _screen_factor
