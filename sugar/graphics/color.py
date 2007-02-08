@@ -1,5 +1,6 @@
 _system_colors = {
-    'toolbar-background' : '#414141'
+    'toolbar-background' : '#414141',
+    'frame-border'       : '#D1D1D2'
 }
 
 def _html_to_rgb(html_color):
@@ -17,22 +18,33 @@ def _html_to_rgb(html_color):
 
     return (r, g, b)
 
-class Color(object):
-    RED   = Color(1.0, 0.0, 0.0)
-    GREEN = Color(0.0, 1.0, 0.0)
-    BLUE  = Color(0.0, 0.0, 1.0)
+def _rgba_to_int(r, g, b, a):
+    color = int(a * 255) + (int(b * 255) << 8) + \
+            (int(g * 255) << 16) + (int(r * 255) << 24)
+    return color
 
+class RGBColor(object):
     def __init__(self, r, g, b, a=1.0):
         self._r = r
         self._g = g
         self._b = b
+        self._a = a
 
-    def to_rgb(self):
-        return (self._r, self._g, self._b)
+    def get_rgba(self):
+        return (self._r, self._g, self._b, self._a)
 
-class SystemColor(Color):
-    TOOLBAR_BACKGROUND = SystemColor('toolbar-background')
+    def get_int(self):
+        return _rgba_to_int(self._r, self._g, self._b, self._a)
 
+class SystemColor(RGBColor):
     def __init__(self, color_id):
         rgb = _html_to_rgb(_system_colors[color_id])
-        Color.__init__(*rgb)
+        RGBColor.__init__(self, *rgb)
+
+class Color(object):
+    RED                = RGBColor(1.0, 0.0, 0.0)
+    GREEN              = RGBColor(0.0, 1.0, 0.0)
+    BLUE               = RGBColor(0.0, 0.0, 1.0)
+
+    TOOLBAR_BACKGROUND = SystemColor('toolbar-background')
+    FRAME_BORDER       = SystemColor('frame-border')

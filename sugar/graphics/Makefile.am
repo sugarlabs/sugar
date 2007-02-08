@@ -2,9 +2,11 @@ sugardir = $(pythondir)/sugar/graphics
 sugar_PYTHON =			\
 	__init__.py		\
 	bubble.py		\
-	button.py           \
+	button.py           	\
 	canvasicon.py		\
+        color.py		\
 	ClipboardBubble.py	\
+	frame.py		\
 	grid.py			\
 	iconcolor.py		\
 	menu.py			\
@@ -14,5 +16,5 @@ sugar_PYTHON =			\
 	spreadbox.py		\
 	style.py		\
 	stylesheet.py		\
-	timeline.py         \
+	timeline.py         	\
 	toolbar.py
