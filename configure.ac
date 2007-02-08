@@ -52,6 +52,18 @@ AC_SUBST(GECKO_CFLAGS)
 
 AC_DEFINE([HAVE_GECKO_1_9],[1],[Define if we have gecko 1.9])
 
+PKG_CHECK_MODULES(NSPR, [nspr],
+  [have_nspr=true],
+  [
+PKG_CHECK_MODULES(NSPR, [mozilla-nspr],
+  [have_nspr=true],
+  have_nspr=false)
+  ])
+
+if test "x$have_nspr" = xfalse; then
+  AC_MSG_ERROR([Could not find nspr])
+fi
+
 else
 
 # xulrunner 1.8

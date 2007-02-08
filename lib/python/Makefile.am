@@ -4,6 +4,7 @@ INCLUDES =					\
 	$(PYCAIRO_CFLAGS)			\
 	$(LIB_CFLAGS)				\
 	$(GECKO_CFLAGS)				\
+	$(NSPR_CFLAGS)				\
 	-I$(MOZILLA_INCLUDE_DIR)/gtkembedmoz	\
 	-I$(top_srcdir)/lib/src
 

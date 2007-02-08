@@ -2,6 +2,7 @@ libsugarprivate_la_CPPFLAGS =				\
 	$(WARN_CFLAGS)					\
 	$(LIB_CFLAGS)					\
 	$(GECKO_CFLAGS)					\
+	$(NSPR_CFLAGS)					\
 	-I$(MOZILLA_INCLUDE_DIR)/dom			\
 	-I$(MOZILLA_INCLUDE_DIR)/exthandler		\
 	-I$(MOZILLA_INCLUDE_DIR)/gtkembedmoz		\
