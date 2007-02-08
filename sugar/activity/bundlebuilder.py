@@ -47,16 +47,16 @@ class _DefaultFileList(list):
     def __init__(self):
         for name in os.listdir('activity'):
             if name.endswith('.svg'):
-				self.append(os.path.join('activity', name))
+                self.append(os.path.join('activity', name))
 
         self.append('activity/activity.info')
         self.append('setup.py')
 
 class _ManifestFileList(list):
-    def __init__(self):
-        self.append('MANIFEST')
+    def __init__(self, manifest=None):
+        self.append(manifest)
 
-        f = open('MANIFEST','r')
+        f = open(manifest,'r')
         for line in f.readlines():
             self.append(line[:-1])
         f.close()
@@ -129,9 +129,9 @@ def cmd_dev():
         else:
             print 'ERROR - A bundle with the same name is already installed.'    
 
-def cmd_dist():
-    if os.path.isfile('MANIFEST'):
-        file_list = _ManifestFileList()
+def cmd_dist(manifest):
+    if os.path.isfile(manifest):
+        file_list = _ManifestFileList(manifest)
     elif os.path.isdir('.git'):
         file_list = _GitFileList()
     elif os.path.isdir('.svn'):
@@ -148,8 +148,8 @@ def cmd_dist():
 
     bundle_zip.close()
 
-def cmd_install(prefix):
-    cmd_dist()
+def cmd_install(prefix, manifest=None):
+    cmd_dist(manifest)
     cmd_uninstall(prefix)
     _extract_bundle(_get_package_name(), _get_install_dir(prefix))
 
@@ -161,7 +161,7 @@ def cmd_uninstall(prefix):
 def cmd_clean():
     os.path.walk('.', _delete_backups, None)
 
-def start():
+def start(manifest='MANIFEST'):
     if len(sys.argv) < 2:
         cmd_help()
     elif sys.argv[1] == 'build':
@@ -169,9 +169,9 @@ def start():
     elif sys.argv[1] == 'dev':
         cmd_dev()
     elif sys.argv[1] == 'dist':
-        cmd_dist()
+        cmd_dist(manifest)
     elif sys.argv[1] == 'install' and len(sys.argv) == 3:
-        cmd_install(sys.argv[2])
+        cmd_install(sys.argv[2], manifest)
     elif sys.argv[1] == 'uninstall' and len(sys.argv) == 3:
         cmd_uninstall(sys.argv[2])
     elif sys.argv[1] == 'clean':
