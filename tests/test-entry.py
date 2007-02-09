@@ -44,9 +44,11 @@ button = Button('theme:stock-close')
 frame.append(button)
 
 entry = Entry()
+entry.props.text = 'mec mac'
 toolbar.append(entry, hippo.PACK_EXPAND)
 
 entry2 = Entry()
+entry2.props.text = 'moc muc'
 toolbar.append(entry2, hippo.PACK_EXPAND)
 
 gtk.main()
