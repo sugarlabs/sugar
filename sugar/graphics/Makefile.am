@@ -6,6 +6,7 @@ sugar_PYTHON =			\
 	canvasicon.py		\
         color.py		\
 	ClipboardBubble.py	\
+	entry.py                \
 	frame.py		\
 	grid.py			\
 	iconcolor.py		\

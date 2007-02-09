@@ -1,6 +1,10 @@
+import gtk
+
 _system_colors = {
-    'toolbar-background' : '#414141',
-    'frame-border'       : '#D1D1D2'
+    'toolbar-background'            : '#414141',
+    'frame-border'                  : '#D1D1D2',
+    'entry-background-focused'      : '#FFFFFF',
+    'entry-background-unfocused'    : '#D1D1D2'
 }
 
 def _html_to_rgb(html_color):
@@ -36,6 +40,10 @@ class RGBColor(object):
     def get_int(self):
         return _rgba_to_int(self._r, self._g, self._b, self._a)
 
+    def get_gdk_color(self):
+        return gtk.gdk.Color(int(self._r * 65535), int(self._g * 65535),
+                             int(self._b * 65535))
+
 class SystemColor(RGBColor):
     def __init__(self, color_id):
         rgb = _html_to_rgb(_system_colors[color_id])
@@ -46,5 +54,7 @@ class Color(object):
     GREEN              = RGBColor(0.0, 1.0, 0.0)
     BLUE               = RGBColor(0.0, 0.0, 1.0)
 
-    TOOLBAR_BACKGROUND = SystemColor('toolbar-background')
-    FRAME_BORDER       = SystemColor('frame-border')
+    TOOLBAR_BACKGROUND          = SystemColor('toolbar-background')
+    FRAME_BORDER                = SystemColor('frame-border')
+    ENTRY_BACKGROUND_FOCUSED    = SystemColor('entry-background-focused')
+    ENTRY_BACKGROUND_UNFOCUSED  = SystemColor('entry-background-unfocused')
