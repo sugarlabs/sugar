@@ -37,11 +37,8 @@ canvas.set_root(vbox)
 toolbar = Toolbar()
 vbox.append(toolbar)
 
-frame = Frame()
-toolbar.append(frame)
-
 button = Button('theme:stock-close')
-frame.append(button)
+toolbar.append(button)
 
 entry = Entry()
 entry.props.text = 'mec mac'
@@ -50,5 +47,13 @@ toolbar.append(entry, hippo.PACK_EXPAND)
 entry2 = Entry()
 entry2.props.text = 'moc muc'
 toolbar.append(entry2, hippo.PACK_EXPAND)
+
+gtk_entry = gtk.Entry()
+gtk_entry.props.has_frame = False
+#gtk_entry.connect("activate", self._entry_activate_cb)
+
+gtk_entry_widget = hippo.CanvasWidget()
+gtk_entry_widget.props.widget = gtk_entry
+toolbar.append(gtk_entry_widget, hippo.PACK_EXPAND)
 
 gtk.main()

@@ -4,9 +4,12 @@ _system_colors = {
     'toolbar-background'            : '#414141',
     'frame-border'                  : '#D1D1D2',
     'entry-background-focused'      : '#FFFFFF',
-    'entry-background-unfocused'    : '#D1D1D2',
+    'entry-background-unfocused'    : '#414141',
     'entry-selection-focused'       : '#D1D1D2',
-    'entry-selection-unfocused'     : '#00FF00'
+    'entry-selection-unfocused'     : '#00FF00',
+    'entry-text-focused'            : '#000000',
+    'entry-text-unfocused'          : '#FFFFFF',
+    'entry-border'                  : '#D1D1D2'
 }
 
 def _html_to_rgb(html_color):
@@ -64,3 +67,6 @@ class Color(object):
     ENTRY_BACKGROUND_UNFOCUSED  = SystemColor('entry-background-unfocused')
     ENTRY_SELECTION_FOCUSED     = SystemColor('entry-selection-focused')
     ENTRY_SELECTION_UNFOCUSED   = SystemColor('entry-selection-unfocused')
+    ENTRY_TEXT_FOCUSED          = SystemColor('entry-text-focused')
+    ENTRY_TEXT_UNFOCUSED        = SystemColor('entry-text-unfocused')
+    ENTRY_BORDER                = SystemColor('entry-border')

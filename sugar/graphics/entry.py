@@ -31,6 +31,8 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
         'text'    : (str, None, None, None,
                       gobject.PARAM_READWRITE)
     }
+
+    _BORDER_WIDTH = 3
     
     def __init__(self):
         hippo.CanvasBox.__init__(self)
@@ -59,35 +61,39 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
 
     def do_paint_below_children(self, cr, damaged_box):
         [width, height] = self._canvas_widget.get_allocation()
+        
+        x = self.props.padding_left
+        y = self.props.padding_top - self._BORDER_WIDTH / 2
 
-        x = 0
-        y = 0
-
-        cr.move_to(self._radius, 0);
-        cr.arc(width - self._radius, self._radius,
-               self._radius, math.pi * 1.5, math.pi * 2);
-        cr.arc(width - self._radius, height - self._radius,
-               self._radius, 0, math.pi * 0.5);
-        cr.arc(self._radius, height - self._radius,
-               self._radius, math.pi * 0.5, math.pi);
-        cr.arc(self._radius, self._radius, self._radius,
-               math.pi, math.pi * 1.5);
+        cr.move_to(x, y - self._BORDER_WIDTH / 2);
+        cr.arc(x + width + self._BORDER_WIDTH / 2, y - self._BORDER_WIDTH / 2 + self._radius,
+               self._radius, math.pi * 1.5, math.pi * 0.5)
+        cr.arc(x, y + self._radius - self._BORDER_WIDTH / 2, self._radius,
+               math.pi * 0.5, math.pi * 1.5)
 
         cr.set_source_rgba(*self._background_color.get_rgba())
-        cr.fill();
+        cr.fill_preserve();
+
+        cr.set_line_width(self._BORDER_WIDTH)        
+        cr.set_source_rgba(*Color.ENTRY_BORDER.get_rgba())
+        cr.stroke()
 
     def do_allocate(self, width, height, origin_changed):
         hippo.CanvasBox.do_allocate(self, width, height, origin_changed)
 
-        [width, height] = self._canvas_widget.get_request()
-        radius = min(width, height) / 2
+        [w_width, w_height] = self._canvas_widget.get_request()
+        radius = min(w_width, w_height) / 2 + self._BORDER_WIDTH
         if radius != self._radius:
             self._radius = radius
-            self._canvas_widget.props.padding_left = self._radius - 2
-            self._canvas_widget.props.padding_right = self._radius - 2
-
-        self._canvas_widget.do_allocate(self._canvas_widget, width, height,
-                                       origin_changed)
+            self.props.padding_top = height / 2 - w_height / 2 - self._BORDER_WIDTH / 2
+            self.props.padding_left = self._radius + self._BORDER_WIDTH / 2
+            self.props.padding_right = self._radius + self._BORDER_WIDTH / 2
+        
+        # Make the entry expand horizontally
+        w_width = width - (self.props.padding_left + self.props.padding_right)
+        
+        self._canvas_widget.do_allocate(self._canvas_widget, w_width, w_height,
+                                        origin_changed)
 
     def _entry_focus_in_event_cb(self, widget, event):
         self._update_colors(focused=True)
@@ -105,6 +111,8 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
                                     Color.ENTRY_BACKGROUND_FOCUSED.get_gdk_color())
             self._entry.modify_base(gtk.STATE_SELECTED,
                                     Color.ENTRY_SELECTION_FOCUSED.get_gdk_color())
+            self._entry.modify_text(gtk.STATE_NORMAL,
+                                    Color.ENTRY_TEXT_FOCUSED.get_gdk_color())
         else:
             self._background_color = Color.ENTRY_BACKGROUND_UNFOCUSED
         
@@ -112,3 +120,5 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
                                     Color.ENTRY_BACKGROUND_UNFOCUSED.get_gdk_color())
             self._entry.modify_base(gtk.STATE_SELECTED,
                                     Color.ENTRY_SELECTION_UNFOCUSED.get_gdk_color())
+            self._entry.modify_text(gtk.STATE_NORMAL,
+                                    Color.ENTRY_TEXT_UNFOCUSED.get_gdk_color())
