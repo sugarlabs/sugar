@@ -10,9 +10,11 @@ sugar_PYTHON =			\
 	frame.py		\
 	grid.py			\
 	iconcolor.py		\
+	label.py		\
 	menu.py			\
 	menuicon.py		\
 	menushell.py		\
+        roundbox.py		\
 	snowflakebox.py		\
 	spreadbox.py		\
 	style.py		\

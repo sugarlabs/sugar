@@ -20,16 +20,18 @@ import gtk
 
 _styles = {}
 
-_screen_factor = gtk.gdk.screen_width() / 1200.0
+screen_factor = gtk.gdk.screen_width() / 1200.0
 
-space_unit = 9 * _screen_factor
-separator_thickness = 3 * _screen_factor
+space_unit = 9 * screen_factor
+separator_thickness = 3 * screen_factor
 
-standard_icon_scale = 1.0 * _screen_factor
-small_icon_scale    = 0.5 * _screen_factor
-medium_icon_scale   = 1.5 * _screen_factor
-large_icon_scale    = 2.0 * _screen_factor
-xlarge_icon_scale   = 3.0 * _screen_factor
+standard_icon_scale = 1.0 * screen_factor
+small_icon_scale    = 0.5 * screen_factor
+medium_icon_scale   = 1.5 * screen_factor
+large_icon_scale    = 2.0 * screen_factor
+xlarge_icon_scale   = 3.0 * screen_factor
+
+default_font_size   = 9.0 * screen_factor
 
 def load_stylesheet(module):
     for objname in dir(module):
@@ -50,5 +52,5 @@ def apply_stylesheet(item, stylesheet_name):
         logging.debug('Stylesheet %s not found.' % stylesheet_name)
 
 def get_font_description(style, relative_size):
-    base_size = 18 * _screen_factor
+    base_size = 18 * screen_factor
     return '%s %dpx' % (style, int(base_size * relative_size))

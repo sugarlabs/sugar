@@ -20,9 +20,12 @@ import logging
 import gobject
 import gtk
 import hippo
+import pango
 
-from sugar.graphics.frame import Frame
+from sugar.graphics import style
 from sugar.graphics.color import Color
+from sugar.graphics.button import Button
+from sugar.graphics.roundbox import RoundBox
 
 class Entry(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarEntry'
@@ -32,12 +35,19 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
                       gobject.PARAM_READWRITE)
     }
 
-    _BORDER_WIDTH = 3
+    __gsignals__ = {
+        'button-activated': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([int]))
+    }
     
     def __init__(self):
-        hippo.CanvasBox.__init__(self)
+        hippo.CanvasBox.__init__(self, orientation=hippo.ORIENTATION_HORIZONTAL)
+        self.props.yalign = hippo.ALIGNMENT_CENTER
 
-        self._radius = -1
+        self._buttons = {}
+
+        self._round_box = RoundBox()
+        self._round_box.props.border_color = Color.FRAME_BORDER.get_int()
+        self.append(self._round_box, hippo.PACK_EXPAND)
 
         self._entry = gtk.Entry()
         self._entry.props.has_frame = False
@@ -46,10 +56,27 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
                                 Color.BLACK.get_gdk_color())
         self._entry.connect('focus-in-event', self._entry_focus_in_event_cb)
         self._entry.connect('focus-out-event', self._entry_focus_out_event_cb)
+        self._entry.connect('activate', self._entry_activate_cb)
+        
+        fd = pango.FontDescription()
+        fd.set_size(int(round(style.default_font_size * pango.SCALE)))
+        self._entry.modify_font(fd)
                 
         self._canvas_widget = hippo.CanvasWidget()
         self._canvas_widget.props.widget = self._entry
-        self.append(self._canvas_widget, hippo.PACK_EXPAND)
+        self._round_box.append(self._canvas_widget, hippo.PACK_EXPAND)
+
+    def add_button(self, icon_name, action_id):
+        button = Button(icon_name=icon_name)
+
+        button.props.scale = style.small_icon_scale
+        
+        button.props.yalign = hippo.ALIGNMENT_CENTER
+        button.props.xalign = hippo.ALIGNMENT_START
+        
+        button.connect('activated', self._button_activated_cb)
+        self._round_box.append(button)
+        self._buttons[button] = action_id
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'text':
@@ -59,42 +86,6 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
         if pspec.name == 'text':
             return self._entry.get_text()
 
-    def do_paint_below_children(self, cr, damaged_box):
-        [width, height] = self._canvas_widget.get_allocation()
-        
-        x = self.props.padding_left
-        y = self.props.padding_top - self._BORDER_WIDTH / 2
-
-        cr.move_to(x, y - self._BORDER_WIDTH / 2);
-        cr.arc(x + width + self._BORDER_WIDTH / 2, y - self._BORDER_WIDTH / 2 + self._radius,
-               self._radius, math.pi * 1.5, math.pi * 0.5)
-        cr.arc(x, y + self._radius - self._BORDER_WIDTH / 2, self._radius,
-               math.pi * 0.5, math.pi * 1.5)
-
-        cr.set_source_rgba(*self._background_color.get_rgba())
-        cr.fill_preserve();
-
-        cr.set_line_width(self._BORDER_WIDTH)        
-        cr.set_source_rgba(*Color.ENTRY_BORDER.get_rgba())
-        cr.stroke()
-
-    def do_allocate(self, width, height, origin_changed):
-        hippo.CanvasBox.do_allocate(self, width, height, origin_changed)
-
-        [w_width, w_height] = self._canvas_widget.get_request()
-        radius = min(w_width, w_height) / 2 + self._BORDER_WIDTH
-        if radius != self._radius:
-            self._radius = radius
-            self.props.padding_top = height / 2 - w_height / 2 - self._BORDER_WIDTH / 2
-            self.props.padding_left = self._radius + self._BORDER_WIDTH / 2
-            self.props.padding_right = self._radius + self._BORDER_WIDTH / 2
-        
-        # Make the entry expand horizontally
-        w_width = width - (self.props.padding_left + self.props.padding_right)
-        
-        self._canvas_widget.do_allocate(self._canvas_widget, w_width, w_height,
-                                        origin_changed)
-
     def _entry_focus_in_event_cb(self, widget, event):
         self._update_colors(focused=True)
         self.emit_paint_needed(0, 0, -1, -1)
@@ -103,9 +94,16 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
         self._update_colors(focused=False)
         self.emit_paint_needed(0, 0, -1, -1)
 
+    def _entry_activate_cb(self, entry):
+        self.emit_activated()
+
+    def _button_activated_cb(self, button):
+        self.emit('button-activated', self._buttons[button])
+
     def _update_colors(self, focused):
         if focused:
-            self._background_color = Color.ENTRY_BACKGROUND_FOCUSED
+            self._round_box.props.background_color = \
+                    Color.ENTRY_BACKGROUND_FOCUSED.get_int()
 
             self._entry.modify_base(gtk.STATE_NORMAL,
                                     Color.ENTRY_BACKGROUND_FOCUSED.get_gdk_color())
@@ -114,7 +112,8 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
             self._entry.modify_text(gtk.STATE_NORMAL,
                                     Color.ENTRY_TEXT_FOCUSED.get_gdk_color())
         else:
-            self._background_color = Color.ENTRY_BACKGROUND_UNFOCUSED
+            self._round_box.props.background_color = \
+                    Color.ENTRY_BACKGROUND_UNFOCUSED.get_int()
         
             self._entry.modify_base(gtk.STATE_NORMAL,
                                     Color.ENTRY_BACKGROUND_UNFOCUSED.get_gdk_color())
