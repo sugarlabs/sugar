@@ -49,7 +49,7 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
         self._round_box.props.border_color = Color.FRAME_BORDER.get_int()
         self.append(self._round_box, hippo.PACK_EXPAND)
 
-        self._entry = gtk.Entry()
+        self._entry = self.create_entry()
         self._entry.props.has_frame = False
         self._update_colors(focused=False)
         self._entry.modify_text(gtk.STATE_SELECTED,
@@ -66,6 +66,13 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
         self._canvas_widget.props.widget = self._entry
         self._round_box.append(self._canvas_widget, hippo.PACK_EXPAND)
 
+    def create_entry():
+        """
+        Subclasses can override this method in order to provide a different
+        entry widget.
+        """
+        return gtk.Entry()
+
     def add_button(self, icon_name, action_id):
         button = Button(icon_name=icon_name)
 
@@ -79,12 +86,10 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
         self._buttons[button] = action_id
 
     def do_set_property(self, pspec, value):
-        if pspec.name == 'text':
-            self._entry.set_text(value)
+        self._entry.set_property(pspec.name, value)
 
-    def do_get_property(self, pspec, value):
-        if pspec.name == 'text':
-            return self._entry.get_text()
+    def do_get_property(self, pspec):
+        return self._entry.get_property(pspec.name)
 
     def _entry_focus_in_event_cb(self, widget, event):
         self._update_colors(focused=True)
