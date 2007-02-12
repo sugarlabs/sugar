@@ -147,6 +147,16 @@ GeckoDownload::OnSecurityChange (nsIWebProgress *aWebProgress,
 {
 	return NS_OK;
 }
+
+NS_IMETHODIMP
+GeckoDownload::OnRefreshAttempted (nsIWebProgress *aWebProgress,
+                                   nsIURI *aRefreshURI,
+                                   PRInt32 aMillis,
+                                   PRBool aSameURI,
+                                   PRBool *_retval)
+{
+	return NS_OK;
+}
 //*****************************************************************************
 // GeckoDownloadFactory
 //*****************************************************************************
