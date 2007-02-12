@@ -148,6 +148,8 @@ GeckoDownload::OnSecurityChange (nsIWebProgress *aWebProgress,
 	return NS_OK;
 }
 
+#ifdef HAVE_MOZILLA_1_9
+
 NS_IMETHODIMP
 GeckoDownload::OnRefreshAttempted (nsIWebProgress *aWebProgress,
                                    nsIURI *aRefreshURI,
@@ -157,6 +159,9 @@ GeckoDownload::OnRefreshAttempted (nsIWebProgress *aWebProgress,
 {
 	return NS_OK;
 }
+
+#endif
+
 //*****************************************************************************
 // GeckoDownloadFactory
 //*****************************************************************************
