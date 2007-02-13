@@ -1,3 +1,5 @@
+#include "config.h"
+
 #include <nsIFactory.h>
 
 #include "sugar-download-manager.h"
@@ -148,7 +150,7 @@ GeckoDownload::OnSecurityChange (nsIWebProgress *aWebProgress,
 	return NS_OK;
 }
 
-#ifdef HAVE_MOZILLA_1_9
+#ifdef HAVE_GECKO_1_9
 
 NS_IMETHODIMP
 GeckoDownload::OnRefreshAttempted (nsIWebProgress *aWebProgress,
