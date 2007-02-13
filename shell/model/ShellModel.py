@@ -55,11 +55,11 @@ class ShellModel(gobject.GObject):
         self._mesh = MeshModel(self._bundle_registry)
         self._home = HomeModel(self._bundle_registry)
 
-        self._bundle_registry.add_search_path(env.get_user_activities_dir())
-
         for path in env.get_data_dirs():
             bundles_path = os.path.join(path, 'activities')
             self._bundle_registry.add_search_path(bundles_path)
+
+        self._bundle_registry.add_search_path(env.get_user_activities_dir())
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'state':
