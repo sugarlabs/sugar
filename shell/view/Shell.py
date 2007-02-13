@@ -63,7 +63,7 @@ class Shell(gobject.GObject):
 
         self._pservice = PresenceService.get_instance()
 
-        #self.start_activity('org.laptop.JournalActivity')
+        self.start_activity('org.laptop.JournalActivity')
 
     def _activity_added_cb(self, home_model, home_activity):
         activity_host = ActivityHost(home_activity)

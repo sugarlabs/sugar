@@ -10,7 +10,8 @@ _system_colors = {
     'entry-text-focused'            : '#000000',
     'entry-text-unfocused'          : '#FFFFFF',
     'entry-border'                  : '#D1D1D2',
-    'label-text'                    : '#FFFFFF'
+    'label-text'                    : '#FFFFFF',
+    'desktop-background'            : '#E2E2E3'
 }
 
 def _html_to_rgb(html_color):
@@ -72,3 +73,4 @@ class Color(object):
     ENTRY_TEXT_UNFOCUSED        = SystemColor('entry-text-unfocused')
     ENTRY_BORDER                = SystemColor('entry-border')
     LABEL_TEXT                  = SystemColor('label-text')
+    DESKTOP_BACKGROUND          = SystemColor('desktop-background')
