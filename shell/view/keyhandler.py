@@ -42,6 +42,7 @@ class KeyHandler(object):
         self._shell = shell
         self._hw_manager = shell.get_hardware_manager()
         self._audio_manager = shell.get_audio_manager()
+        self._screen_rotation = 0
 
         self._key_grabber = KeyGrabber()
         self._key_grabber.connect('key-pressed',
@@ -126,6 +127,16 @@ class KeyHandler(object):
 
     def handle_keyboard_brightness(self):
         self._hw_manager.toggle_keyboard_brightness()
+
+    def handle_rotate(self):
+        states = [ 'normal', 'left', 'inverted', 'right']
+
+        self._screen_rotation += 1
+        if self._screen_rotation == len(states):
+            self._screen_rotation = 0
+
+        gobject.spawn_async(['xrandr', '-o', states[self._screen_rotation]],
+                            flags=gobject.SPAWN_SEARCH_PATH)
 
     def handle_home(self):
         # FIXME: finish alt+tab support
