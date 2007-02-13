@@ -66,7 +66,7 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
         self._canvas_widget.props.widget = self._entry
         self._round_box.append(self._canvas_widget, hippo.PACK_EXPAND)
 
-    def create_entry():
+    def create_entry(self):
         """
         Subclasses can override this method in order to provide a different
         entry widget.
