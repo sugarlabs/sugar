@@ -34,16 +34,11 @@ class Label(hippo.CanvasBox, hippo.CanvasItem):
         'text'    : (str, None, None, None,
                       gobject.PARAM_READWRITE)
     }
-
-    __gsignals__ = {
-        'button-activated': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([int]))
-    }
     
-    def __init__(self, text):
+    def __init__(self, text=None):
         hippo.CanvasBox.__init__(self, orientation=hippo.ORIENTATION_HORIZONTAL)
         self.props.yalign = hippo.ALIGNMENT_CENTER
 
-        self._buttons = {}
         self._text = text
 
         self._round_box = RoundBox()
@@ -60,17 +55,8 @@ class Label(hippo.CanvasBox, hippo.CanvasItem):
 
         self._round_box.append(self._canvas_text, hippo.PACK_EXPAND)
 
-    def add_button(self, icon_name, action_id):
-        button = Button(icon_name=icon_name)
+    def do_set_property(self, pspec, value):
+        self._canvas_text.set_property(pspec.name, value)
 
-        button.props.scale = style.small_icon_scale
-        
-        button.props.yalign = hippo.ALIGNMENT_CENTER
-        button.props.xalign = hippo.ALIGNMENT_START
-        
-        button.connect('activated', self._button_activated_cb)
-        self._round_box.append(button)
-        self._buttons[button] = action_id
-
-    def _button_activated_cb(self, button):
-        self.emit('button-activated', self._buttons[button])
+    def do_get_property(self, pspec):
+        return self._canvas_text.get_property(pspec.name)
