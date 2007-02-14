@@ -45,8 +45,8 @@ toolbar.append(button)
 label = Label('mec moc')
 toolbar.append(label)
 
-label = Label('mac mic')
-label.add_button('theme:stock-close', BUTTON_DELETE)
+label = Label()
+label.props.text = 'mac mic'
 toolbar.append(label)
 
 gtk.main()
