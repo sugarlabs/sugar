@@ -21,7 +21,7 @@ import hippo
 from sugar.graphics.toolbar import Toolbar
 from sugar.graphics.label import Label
 from sugar.graphics.button import Button
-from sugar.graphics.color import Color
+from sugar.graphics.style import Color
 
 BUTTON_DELETE = 1
     

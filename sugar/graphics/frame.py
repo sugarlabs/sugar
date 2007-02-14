@@ -15,7 +15,7 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-from sugar.graphics.color import Color
+from sugar.graphics.style import Color
 from sugar.graphics.roundbox import RoundBox
 
 class Frame(RoundBox):

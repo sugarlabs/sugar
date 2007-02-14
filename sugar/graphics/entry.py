@@ -23,7 +23,7 @@ import hippo
 import pango
 
 from sugar.graphics import style
-from sugar.graphics.color import Color
+from sugar.graphics.style import Color
 from sugar.graphics.button import Button
 from sugar.graphics.roundbox import RoundBox
 

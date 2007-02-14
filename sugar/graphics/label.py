@@ -25,7 +25,7 @@ import pango
 from sugar.graphics import style
 from sugar.graphics.roundbox import RoundBox
 from sugar.graphics.button import Button
-from sugar.graphics.color import Color
+from sugar.graphics.style import Color
 
 class Label(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarLabel'
