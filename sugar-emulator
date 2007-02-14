@@ -48,7 +48,7 @@ if gtk.gdk.screen_width() / 4 * 3 == gtk.gdk.screen_height():
                   gtk.gdk.screen_height() <= 900)
 else:
     fullscreen = False
-    height = gtk.gdk.screen_height() - 50
+    height = min(1200, gtk.gdk.screen_height() - 50)
     width = height * 4 / 3
 
 emulator = Emulator(width, height, fullscreen)
