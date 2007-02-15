@@ -20,10 +20,10 @@ import logging
 import gobject
 import gtk
 import hippo
-import pango
 
 from sugar.graphics import style
 from sugar.graphics.style import Color
+from sugar.graphics.style import Font
 from sugar.graphics.button import Button
 from sugar.graphics.roundbox import RoundBox
 
@@ -57,10 +57,7 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
         self._entry.connect('focus-in-event', self._entry_focus_in_event_cb)
         self._entry.connect('focus-out-event', self._entry_focus_out_event_cb)
         self._entry.connect('activate', self._entry_activate_cb)
-        
-        fd = pango.FontDescription()
-        fd.set_size(int(round(style.default_font_size * pango.SCALE)))
-        self._entry.modify_font(fd)
+        self._entry.modify_font(Font.DEFAULT.get_pango_desc())
                 
         self._canvas_widget = hippo.CanvasWidget()
         self._canvas_widget.props.widget = self._entry

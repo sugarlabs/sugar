@@ -20,12 +20,12 @@ import logging
 import gobject
 import gtk
 import hippo
-import pango
 
 from sugar.graphics import style
 from sugar.graphics.roundbox import RoundBox
 from sugar.graphics.button import Button
 from sugar.graphics.style import Color
+from sugar.graphics.font import Font
 
 class Label(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarLabel'
@@ -48,11 +48,7 @@ class Label(hippo.CanvasBox, hippo.CanvasItem):
         self._canvas_text = hippo.CanvasText()
         self._canvas_text.props.text = self._text
         self._canvas_text.props.color = Color.LABEL_TEXT.get_int()
-        
-        fd = pango.FontDescription()
-        fd.set_size(int(round(style.default_font_size * pango.SCALE)))        
-        self._canvas_text.props.font_desc = fd
-
+        self._canvas_text.props.font_desc = Font.DEFAULT.get_pango_desc()
         self._round_box.append(self._canvas_text, hippo.PACK_EXPAND)
 
     def do_set_property(self, pspec, value):

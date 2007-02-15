@@ -13,7 +13,8 @@ sugar_PYTHON =			\
 	menu.py			\
 	menuicon.py		\
 	menushell.py		\
-        roundbox.py		\
+	optionmenu.py		\
+	roundbox.py		\
 	snowflakebox.py		\
 	spreadbox.py		\
 	style.py		\

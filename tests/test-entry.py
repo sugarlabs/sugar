@@ -31,6 +31,10 @@ def _entry_button_activated_cb(entry, action_id):
     print "_entry_button_activated_cb: " + str(action_id)
     entry.props.text = ''
 
+import os
+theme = gtk.icon_theme_get_default()
+theme.prepend_search_path(os.path.join(os.path.dirname(__file__), 'data'))
+
 window = gtk.Window()
 window.connect("destroy", lambda w: gtk.main_quit())
 window.show()

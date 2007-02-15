@@ -15,20 +15,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+import sys
+sys.path.insert(0, '/home/tomeu/sugar-jhbuild/source/sugar')
+from gettext import gettext as _
+
 import gtk
 import hippo
 
 from sugar.graphics.toolbar import Toolbar
-from sugar.graphics.label import Label
-from sugar.graphics.button import Button
+from sugar.graphics.optionmenu import OptionMenu
 from sugar.graphics.style import Color
+from sugar.graphics.button import Button
+
+def _option_menu_changed_cb(option_menu):
+    print '_option_menu_activated_cb: %i' % option_menu.props.value
 
 import os
 theme = gtk.icon_theme_get_default()
 theme.prepend_search_path(os.path.join(os.path.dirname(__file__), 'data'))
 
-BUTTON_DELETE = 1
-    
 window = gtk.Window()
 window.connect("destroy", lambda w: gtk.main_quit())
 window.show()
@@ -46,11 +51,18 @@ vbox.append(toolbar)
 button = Button('theme:stock-close')
 toolbar.append(button)
 
-label = Label('mec moc')
-toolbar.append(label)
+OPTION_ANYTHING = 1
+OPTION_DRAW = 2
+OPTION_WRITE = 3
+OPTION_CHAT = 4
 
-label = Label()
-label.props.text = 'mac mic'
-toolbar.append(label)
+option_menu = OptionMenu()
+option_menu.add_option(OPTION_ANYTHING, _('Anything'))
+option_menu.add_separator()
+option_menu.add_option(OPTION_DRAW, _('Draw'), 'theme:stock-close')
+option_menu.add_option(OPTION_WRITE, _('Write'))
+option_menu.add_option(OPTION_CHAT, _('Chat'))
+option_menu.connect('changed', _option_menu_changed_cb)
+toolbar.append(option_menu)
 
 gtk.main()

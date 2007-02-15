@@ -39,7 +39,10 @@ _system_colors = {
     'entry-text-unfocused'          : '#FFFFFF',
     'entry-border'                  : '#D1D1D2',
     'label-text'                    : '#FFFFFF',
-    'desktop-background'            : '#E2E2E3'
+    'desktop-background'            : '#E2E2E3',
+    'menu-background'               : '#414141',
+    'menu-separator'                : '#D1D1D2',
+    'menu-border'                   : '#D1D1D2'
 }
 
 def _html_to_rgb(html_color):
@@ -102,6 +105,9 @@ class Color(object):
     ENTRY_BORDER                = SystemColor('entry-border')
     LABEL_TEXT                  = SystemColor('label-text')
     DESKTOP_BACKGROUND          = SystemColor('desktop-background')
+    MENU_BACKGROUND             = SystemColor('menu-background')
+    MENU_SEPARATOR              = SystemColor('menu-separator')
+    MENU_BORDER                 = SystemColor('menu-border')
 
 _system_fonts = {
     'default' : 'Bitstream Vera Sans %d' % _default_font_size
