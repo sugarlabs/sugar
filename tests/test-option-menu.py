@@ -24,7 +24,6 @@ import hippo
 
 from sugar.graphics.toolbar import Toolbar
 from sugar.graphics.optionmenu import OptionMenu
-from sugar.graphics.style import Color
 from sugar.graphics.button import Button
 
 def _option_menu_changed_cb(option_menu):

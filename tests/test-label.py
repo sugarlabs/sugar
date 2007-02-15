@@ -21,7 +21,6 @@ import hippo
 from sugar.graphics.toolbar import Toolbar
 from sugar.graphics.label import Label
 from sugar.graphics.button import Button
-from sugar.graphics.style import Color
 
 import os
 theme = gtk.icon_theme_get_default()

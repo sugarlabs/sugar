@@ -22,8 +22,8 @@ import gtk
 import hippo
 
 from sugar.graphics import style
-from sugar.graphics.style import Color
-from sugar.graphics.style import Font
+from sugar.graphics import color
+from sugar.graphics import font
 from sugar.graphics.button import Button
 from sugar.graphics.roundbox import RoundBox
 
@@ -57,7 +57,7 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
         self._entry.connect('focus-in-event', self._entry_focus_in_event_cb)
         self._entry.connect('focus-out-event', self._entry_focus_out_event_cb)
         self._entry.connect('activate', self._entry_activate_cb)
-        self._entry.modify_font(Font.DEFAULT.get_pango_desc())
+        self._entry.modify_font(font.DEFAULT.get_pango_desc())
                 
         self._canvas_widget = hippo.CanvasWidget()
         self._canvas_widget.props.widget = self._entry
@@ -105,21 +105,21 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
     def _update_colors(self, focused):
         if focused:
             self._round_box.props.background_color = \
-                    Color.ENTRY_BACKGROUND_FOCUSED.get_int()
+                    color.ENTRY_BACKGROUND_FOCUSED.get_int()
 
             self._entry.modify_base(gtk.STATE_NORMAL,
-                                    Color.ENTRY_BACKGROUND_FOCUSED.get_gdk_color())
+                                    color.ENTRY_BACKGROUND_FOCUSED.get_gdk_color())
             self._entry.modify_base(gtk.STATE_SELECTED,
-                                    Color.ENTRY_SELECTION_FOCUSED.get_gdk_color())
+                                    color.ENTRY_SELECTION_FOCUSED.get_gdk_color())
             self._entry.modify_text(gtk.STATE_NORMAL,
-                                    Color.ENTRY_TEXT_FOCUSED.get_gdk_color())
+                                    color.ENTRY_TEXT_FOCUSED.get_gdk_color())
         else:
             self._round_box.props.background_color = \
-                    Color.ENTRY_BACKGROUND_UNFOCUSED.get_int()
+                    color.ENTRY_BACKGROUND_UNFOCUSED.get_int()
         
             self._entry.modify_base(gtk.STATE_NORMAL,
-                                    Color.ENTRY_BACKGROUND_UNFOCUSED.get_gdk_color())
+                                    color.ENTRY_BACKGROUND_UNFOCUSED.get_gdk_color())
             self._entry.modify_base(gtk.STATE_SELECTED,
-                                    Color.ENTRY_SELECTION_UNFOCUSED.get_gdk_color())
+                                    color.ENTRY_SELECTION_UNFOCUSED.get_gdk_color())
             self._entry.modify_text(gtk.STATE_NORMAL,
-                                    Color.ENTRY_TEXT_UNFOCUSED.get_gdk_color())
+                                    color.ENTRY_TEXT_UNFOCUSED.get_gdk_color())

@@ -15,7 +15,7 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-from sugar.graphics.style import Color
+from sugar.graphics import color
 from sugar.graphics.roundbox import RoundBox
 
 class Frame(RoundBox):
@@ -23,4 +23,4 @@ class Frame(RoundBox):
 
     def __init__(self, **kwargs):
         RoundBox.__init__(self, **kwargs)
-        self.props.border_color = Color.FRAME_BORDER.get_int()
+        self.props.border_color = color.FRAME_BORDER.get_int()

@@ -25,8 +25,8 @@ import hippo
 from sugar.graphics import style
 from sugar.graphics.roundbox import RoundBox
 from sugar.graphics.button import Button
-from sugar.graphics.style import Color
-from sugar.graphics.style import Font
+from sugar.graphics import color
+from sugar.graphics import font
 from sugar.graphics.canvasicon import CanvasIcon
 
 class Menu(hippo.CanvasBox, hippo.CanvasItem):
@@ -38,8 +38,8 @@ class Menu(hippo.CanvasBox, hippo.CanvasItem):
 
     def __init__(self):
         hippo.CanvasBox.__init__(self)
-        self.props.background_color = Color.MENU_BACKGROUND.get_int()
-        self.props.border_color = Color.MENU_BORDER.get_int()
+        self.props.background_color = color.MENU_BACKGROUND.get_int()
+        self.props.border_color = color.MENU_BORDER.get_int()
         #TODO: how we should specify the border thickness?
         self.props.border = style.separator_thickness
         self._window = None
@@ -56,8 +56,8 @@ class Menu(hippo.CanvasBox, hippo.CanvasItem):
 
         canvas_text = hippo.CanvasText()
         canvas_text.props.text = label
-        canvas_text.props.color = Color.LABEL_TEXT.get_int()
-        canvas_text.props.font_desc = Font.DEFAULT.get_pango_desc()
+        canvas_text.props.color = color.LABEL_TEXT.get_int()
+        canvas_text.props.font_desc = font.DEFAULT.get_pango_desc()
         box.append(canvas_text)
 
         box.connect('button-press-event', self._button_press_event_cb, action_id)
@@ -65,7 +65,7 @@ class Menu(hippo.CanvasBox, hippo.CanvasItem):
     
     def add_separator(self):
         box = hippo.CanvasBox()
-        box.props.background_color = Color.MENU_SEPARATOR.get_int()
+        box.props.background_color = color.MENU_SEPARATOR.get_int()
         box.props.box_height = style.separator_thickness
         self.append(box)
 
@@ -105,13 +105,13 @@ class OptionMenu(hippo.CanvasBox, hippo.CanvasItem):
         self._value = None
                     
         self._round_box = RoundBox()
-        self._round_box.props.border_color = Color.FRAME_BORDER.get_int()
+        self._round_box.props.border_color = color.FRAME_BORDER.get_int()
         self.append(self._round_box, hippo.PACK_EXPAND)
 
         self._canvas_text = hippo.CanvasText()
         self._canvas_text.props.text = _('No options')
-        self._canvas_text.props.color = Color.LABEL_TEXT.get_int()
-        self._canvas_text.props.font_desc = Font.DEFAULT.get_pango_desc()
+        self._canvas_text.props.color = color.LABEL_TEXT.get_int()
+        self._canvas_text.props.font_desc = font.DEFAULT.get_pango_desc()
         self._round_box.append(self._canvas_text, hippo.PACK_EXPAND)
 
         # TODO: Substitute for the right icon.

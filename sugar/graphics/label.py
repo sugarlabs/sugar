@@ -24,8 +24,8 @@ import hippo
 from sugar.graphics import style
 from sugar.graphics.roundbox import RoundBox
 from sugar.graphics.button import Button
-from sugar.graphics.style import Color
-from sugar.graphics.font import Font
+from sugar.graphics import color
+from sugar.graphics import font
 
 class Label(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarLabel'
@@ -42,13 +42,13 @@ class Label(hippo.CanvasBox, hippo.CanvasItem):
         self._text = text
 
         self._round_box = RoundBox()
-        self._round_box.props.border_color = Color.FRAME_BORDER.get_int()
+        self._round_box.props.border_color = color.FRAME_BORDER.get_int()
         self.append(self._round_box, hippo.PACK_EXPAND)
 
         self._canvas_text = hippo.CanvasText()
         self._canvas_text.props.text = self._text
-        self._canvas_text.props.color = Color.LABEL_TEXT.get_int()
-        self._canvas_text.props.font_desc = Font.DEFAULT.get_pango_desc()
+        self._canvas_text.props.color = color.LABEL_TEXT.get_int()
+        self._canvas_text.props.font_desc = font.DEFAULT.get_pango_desc()
         self._round_box.append(self._canvas_text, hippo.PACK_EXPAND)
 
     def do_set_property(self, pspec, value):

@@ -22,7 +22,6 @@ from sugar.graphics.toolbar import Toolbar
 from sugar.graphics.frame import Frame
 from sugar.graphics.button import Button
 from sugar.graphics.entry import Entry
-from sugar.graphics.style import Color
 
 def _entry_activated_cb(entry):
     print "_entry_activated_cb"

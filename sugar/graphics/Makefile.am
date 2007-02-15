@@ -4,8 +4,10 @@ sugar_PYTHON =			\
 	bubble.py		\
 	button.py           	\
 	canvasicon.py		\
+	color.py		\
 	ClipboardBubble.py	\
 	entry.py                \
+	font.py			\
 	frame.py		\
 	grid.py			\
 	iconcolor.py		\
@@ -20,4 +22,5 @@ sugar_PYTHON =			\
 	style.py		\
 	stylesheet.py		\
 	timeline.py         	\
-	toolbar.py
+	toolbar.py		\
+	units.py
