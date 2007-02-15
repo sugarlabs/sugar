@@ -150,7 +150,8 @@ class OptionMenu(hippo.CanvasBox, hippo.CanvasItem):
             self._menu.hide()
         else:
             context = self._round_box.get_context()
-            [x, y] = context.translate_to_screen(self._round_box)
+            #[x, y] = context.translate_to_screen(self._round_box)
+            [x, y] = context.translate_to_widget(self._round_box)
             [width, height] = self._round_box.get_allocation()
             self._menu.props.box_width = self.get_width_request()
             self._menu.show(x, y + height)
