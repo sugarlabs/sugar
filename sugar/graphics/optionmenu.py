@@ -33,7 +33,7 @@ class Menu(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarMenu'
 
     __gsignals__ = {
-        'action': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([int]))
+        'action': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([object]))
     }
 
     def __init__(self):
@@ -60,7 +60,8 @@ class Menu(hippo.CanvasBox, hippo.CanvasItem):
         canvas_text.props.font_desc = font.DEFAULT.get_pango_desc()
         box.append(canvas_text)
 
-        box.connect('button-press-event', self._button_press_event_cb, action_id)
+        box.connect('button-press-event', self._button_press_event_cb,
+                    [action_id, label])
         self.append(box)
     
     def add_separator(self):
@@ -81,8 +82,8 @@ class Menu(hippo.CanvasBox, hippo.CanvasItem):
             self._window.destroy()
             self._window = None
 
-    def _button_press_event_cb(self, item, event, option_id):
-        self.emit('action', option_id)
+    def _button_press_event_cb(self, item, event, data):
+        self.emit('action', data)
         self.hide()
     
     def is_visible(self):
@@ -119,11 +120,12 @@ class OptionMenu(hippo.CanvasBox, hippo.CanvasItem):
         button.props.scale = style.small_icon_scale
         button.props.yalign = hippo.ALIGNMENT_CENTER
         button.props.xalign = hippo.ALIGNMENT_START
-        button.connect('activated', self._button_activated_cb)
         self._round_box.append(button)
 
         self._menu = Menu()
         self._menu.connect('action', self._menu_action_cb)
+
+        self.connect('button-press-event', self._button_press_event_cb)
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'value':
@@ -134,12 +136,16 @@ class OptionMenu(hippo.CanvasBox, hippo.CanvasItem):
             return self._value
 
     def add_option(self, action_id, label, icon_name=None, icon_color=None):
+        if not self._value:
+            self._value = action_id
+            self._canvas_text.props.text = label
+
         self._menu.add_item(action_id, label, icon_name, icon_color)
 
     def add_separator(self):
         self._menu.add_separator()
 
-    def _button_activated_cb(self, button):
+    def _button_press_event_cb(self, box, event):
         if self._menu.is_visible():
             self._menu.hide()
         else:
@@ -149,7 +155,9 @@ class OptionMenu(hippo.CanvasBox, hippo.CanvasItem):
             self._menu.props.box_width = self.get_width_request()
             self._menu.show(x, y + height)
 
-    def _menu_action_cb(self, menu, option_id):
-        if option_id != self._value:
-            self._value = option_id
+    def _menu_action_cb(self, menu, data):
+        [action_id, label] = data
+        if action_id != self._value:
+            self._value = action_id
+            self._canvas_text.props.text = label
             self.emit('changed')

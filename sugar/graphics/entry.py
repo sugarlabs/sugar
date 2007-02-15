@@ -46,14 +46,14 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
         self._buttons = {}
 
         self._round_box = RoundBox()
-        self._round_box.props.border_color = Color.FRAME_BORDER.get_int()
+        self._round_box.props.border_color = color.FRAME_BORDER.get_int()
         self.append(self._round_box, hippo.PACK_EXPAND)
 
         self._entry = self.create_entry()
         self._entry.props.has_frame = False
         self._update_colors(focused=False)
         self._entry.modify_text(gtk.STATE_SELECTED,
-                                Color.BLACK.get_gdk_color())
+                                color.BLACK.get_gdk_color())
         self._entry.connect('focus-in-event', self._entry_focus_in_event_cb)
         self._entry.connect('focus-out-event', self._entry_focus_out_event_cb)
         self._entry.connect('activate', self._entry_activate_cb)
