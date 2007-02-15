@@ -16,8 +16,17 @@
 # Boston, MA 02111-1307, USA.
 
 import logging
+import math
 
 import gtk
+import pango
+
+import _sugar
+
+_screen_factor = gtk.gdk.screen_width() / 1200.0
+_dpi_factor = _sugar.get_screen_dpi() / 201.0
+_default_font_size = math.ceil(9 / _dpi_factor * _screen_factor)
+print _default_font_size
 
 _system_colors = {
     'toolbar-background'            : '#414141',
@@ -93,6 +102,27 @@ class Color(object):
     ENTRY_BORDER                = SystemColor('entry-border')
     LABEL_TEXT                  = SystemColor('label-text')
     DESKTOP_BACKGROUND          = SystemColor('desktop-background')
+
+_system_fonts = {
+    'default' : 'Bitstream Vera Sans %d' % _default_font_size
+}
+
+class BaseFont(object):
+    def __init__(self, desc):
+        self._desc = desc
+
+    def get_desc(self):
+        return self._desc
+
+    def get_pango_desc(self):
+        return pango.FontDescription(self._desc)
+
+class SystemFont(BaseFont):
+    def __init__(self, font_id):
+        BaseFont.__init__(self, _system_fonts[font_id])
+
+class Font(object):
+    DEFAULT = SystemFont('default')
 
 ### Deprecated: we should drop this once we removed stylesheets ###
 
