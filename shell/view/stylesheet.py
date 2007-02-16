@@ -29,12 +29,6 @@ frame_ActivityIcon = {
     'scale'      : style.standard_icon_scale
 }
 
-frame_ZoomIcon = {
-    'box-width'  : grid.dimension(1),
-    'box-height' : grid.dimension(1),
-    'scale'      : style.standard_icon_scale
-}
-
 frame_BuddyIcon = {
     'box-width'  : grid.dimension(1),
     'box-height' : grid.dimension(1),
