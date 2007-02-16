@@ -42,6 +42,8 @@ if len(sys.argv) == 1:
 else:
     program = sys.argv[1]
 
+# Various things in sugar currently depend on the screen size being in
+# a width:height porportion of 4:3.
 width = height = -1
 if gtk.gdk.screen_width() / 4 * 3 == gtk.gdk.screen_height():
     fullscreen = (gtk.gdk.screen_width() <= 1200 or
