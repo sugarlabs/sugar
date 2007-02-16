@@ -111,7 +111,6 @@ class ZoomBox(hippo.CanvasBox):
 
         if home_activity:
             icon = ActivityIcon(self._shell, self._menu_shell, home_activity)
-            style.apply_stylesheet(icon, 'frame.ZoomIcon')
             self.append(icon)
             self._activity_icon = icon
         else:
