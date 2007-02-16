@@ -6,5 +6,4 @@ class Toolbar(hippo.CanvasBox):
 
     def __init__(self, orientation=hippo.ORIENTATION_HORIZONTAL):
         hippo.CanvasBox.__init__(self, orientation=orientation,
-                                 background_color=0x414141ff,
-                                 spacing=15)
+                                 background_color=0x414141ff)

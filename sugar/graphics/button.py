@@ -14,21 +14,31 @@
 # License along with this library; if not, write to the
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
+
+import sys
+
 import gobject
 import hippo
 
 from canvasicon import CanvasIcon
 from iconcolor import IconColor
+from sugar.graphics import units
 from sugar import profile
             
+STANDARD_SIZE = 0
+SMALL_SIZE    = 1
+
 class Button(hippo.CanvasBox):
-    __gtype_name__ = 'Button'
+    __gtype_name__ = 'Button'    
 
     __gproperties__ = {
-        'icon-name' : (str, None, None, None, gobject.PARAM_READWRITE),
-        'scale'     : (float, None, None, 0.0, 1024.0, 1.0,
+        'icon-name' : (str, None, None, None,
                        gobject.PARAM_READWRITE),
-        'active'    : (bool, None, None, True, gobject.PARAM_READWRITE)
+        'size'      : (int, None, None,
+                       0, sys.maxint, STANDARD_SIZE,
+                       gobject.PARAM_READWRITE),
+        'active'    : (bool, None, None, True,
+                       gobject.PARAM_READWRITE)
     }
 
     def __init__(self, icon_name):
@@ -43,13 +53,27 @@ class Button(hippo.CanvasBox):
 
         hippo.CanvasBox.__init__(self)
 
+        self._set_size(STANDARD_SIZE)
+
         self.append(self._icon, hippo.PACK_EXPAND)
+
+    def _set_size(self, size):
+        if size == SMALL_SIZE:
+            self.props.box_width = -1
+            self.props.box_height = -1
+            self._icon.props.scale = units.SMALL_ICON_SCALE
+        else:
+            self.props.box_width = units.grid_to_pixels(1)
+            self.props.box_height = units.grid_to_pixels(1)
+            self._icon.props.scale = units.STANDARD_ICON_SCALE
+
+        self._size = size
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'icon-name':
             self._icon.props.icon_name = value
-        elif pspec.name == 'scale':
-            self._icon.props.scale = value
+        elif pspec.name == 'size':
+            self._set_size(value)
         elif pspec.name == 'active':
             self._active = value
             if self._active:
@@ -62,8 +86,8 @@ class Button(hippo.CanvasBox):
     def do_get_property(self, pspec):
         if pspec.name == 'icon-name':
             return self._icon.props.icon_name
-        elif pspec.name == 'scale':
-            return self._icon.props.scale
+        elif pspec.name == 'size':
+            return self._icon.props.size
         elif pspec.name == 'active':
             return self._active
         else:

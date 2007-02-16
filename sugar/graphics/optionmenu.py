@@ -24,7 +24,7 @@ import hippo
 
 from sugar.graphics import style
 from sugar.graphics.roundbox import RoundBox
-from sugar.graphics.button import Button
+from sugar.graphics import button
 from sugar.graphics import color
 from sugar.graphics import font
 from sugar.graphics.canvasicon import CanvasIcon
@@ -116,11 +116,11 @@ class OptionMenu(hippo.CanvasBox, hippo.CanvasItem):
         self._round_box.append(self._canvas_text, hippo.PACK_EXPAND)
 
         # TODO: Substitute for the right icon.
-        button = Button(icon_name='theme:stock-close')
-        button.props.scale = style.small_icon_scale
-        button.props.yalign = hippo.ALIGNMENT_CENTER
-        button.props.xalign = hippo.ALIGNMENT_START
-        self._round_box.append(button)
+        arrow = button.Button(icon_name='theme:stock-close')
+        arrow.props.size = button.SMALL_SIZE
+        arrow.props.yalign = hippo.ALIGNMENT_CENTER
+        arrow.props.xalign = hippo.ALIGNMENT_START
+        self._round_box.append(arrow)
 
         self._menu = Menu()
         self._menu.connect('action', self._menu_action_cb)
