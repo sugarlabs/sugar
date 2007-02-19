@@ -35,16 +35,8 @@ frame_BuddyIcon = {
     'scale'      : style.standard_icon_scale
 }
 
-home_MyIcon = {
-    'scale' : style.xlarge_icon_scale
-}
-
 ring_ActivityIcon = {
     'scale' : style.medium_icon_scale
-}
-
-friends_MyIcon = {
-    'scale' : style.large_icon_scale
 }
 
 friends_FriendIcon = {

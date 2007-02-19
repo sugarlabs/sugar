@@ -20,7 +20,7 @@ import hippo
 import gobject
 
 from sugar.graphics.spreadbox import SpreadBox
-from sugar.graphics import style
+from sugar.graphics import units
 from view.home.MyIcon import MyIcon
 from view.home.FriendView import FriendView
 
@@ -33,8 +33,7 @@ class FriendsBox(SpreadBox, hippo.CanvasItem):
         self._menu_shell = menu_shell
         self._friends = {}
 
-        self._my_icon = MyIcon()
-        style.apply_stylesheet(self._my_icon, 'friends.MyIcon')
+        self._my_icon = MyIcon(units.LARGE_ICON_SCALE)
         self.append(self._my_icon, hippo.PACK_FIXED)
 
         friends = self._shell.get_model().get_friends()
