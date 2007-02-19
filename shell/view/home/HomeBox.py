@@ -19,8 +19,8 @@ import hippo
 from view.home.activitiesdonut import ActivitiesDonut
 from view.home.MyIcon import MyIcon
 from model.ShellModel import ShellModel
-from sugar.graphics.grid import Grid
 from sugar.graphics import style
+from sugar.graphics import units
 from sugar.graphics.iconcolor import IconColor
 
 class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
@@ -29,9 +29,9 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
     def __init__(self, shell):
         hippo.CanvasBox.__init__(self, background_color=0xe2e2e2ff, yalign=2)
 
-        grid = Grid()
-        self._donut = ActivitiesDonut(shell, box_width=grid.dimension(7),
-                                      box_height=grid.dimension(7))
+        self._donut = ActivitiesDonut(shell,
+                                      box_width=units.grid_to_pixels(7),
+                                      box_height=units.grid_to_pixels(7))
         self.append(self._donut)
 
         self._my_icon = MyIcon()
