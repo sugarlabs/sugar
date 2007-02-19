@@ -57,7 +57,11 @@ PKG_CHECK_MODULES(NSPR, [nspr],
   [
 PKG_CHECK_MODULES(NSPR, [mozilla-nspr],
   [have_nspr=true],
+  [
+PKG_CHECK_MODULES(NSPR, [xulrunner-nspr],
+  [have_nspr=true],
   have_nspr=false)
+  ])
   ])
 
 if test "x$have_nspr" = xfalse; then
