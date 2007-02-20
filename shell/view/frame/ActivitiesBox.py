@@ -17,16 +17,20 @@
 import hippo
 import logging
 
+from sugar.graphics import units
+from sugar.graphics.iconcolor import IconColor
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.presence import PresenceService
-from sugar.graphics import style
 from sugar import profile
 
 class ActivityItem(CanvasIcon):
     def __init__(self, activity):
         icon_name = activity.get_icon()
-        CanvasIcon.__init__(self, icon_name=icon_name)
-        style.apply_stylesheet(self, 'frame.ActivityIcon')
+        CanvasIcon.__init__(self, icon_name=icon_name,
+                            box_width=units.grid_to_pixels(1),
+                            box_height=units.grid_to_pixels(1),
+                            color=IconColor('white'))
+
         self._activity = activity
         self._normal_color = self.get_property('color')
         self._prelight_color = profile.get_color() 
@@ -44,9 +48,10 @@ class ActivityItem(CanvasIcon):
 
 class InviteItem(CanvasIcon):
     def __init__(self, activity, invite):
-        CanvasIcon.__init__(self, icon_name=activity.get_icon())
+        CanvasIcon.__init__(self, icon_name=activity.get_icon(),
+                            box_width=units.grid_to_pixels(1),
+                            box_height=units.grid_to_pixels(1))
 
-        style.apply_stylesheet(self, 'frame.ActivityIcon')
         self.props.color = activity.get_color()
 
         self._invite = invite

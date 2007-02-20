@@ -20,7 +20,7 @@ import gobject
 import colorsys
 
 from sugar.graphics.canvasicon import CanvasIcon
-from sugar.graphics import style
+from sugar.graphics import units
 from sugar.graphics import iconcolor
 from sugar import profile
 
@@ -55,8 +55,8 @@ class ActivityIcon(CanvasIcon):
         self._level = self._level_max
         color = self._icon_colors[self._level]
 
-        CanvasIcon.__init__(self, icon_name=icon_name, color=color, cache=True)
-        style.apply_stylesheet(self, 'ring.ActivityIcon')
+        CanvasIcon.__init__(self, icon_name=icon_name, color=color,
+                            scale=units.MEDIUM_ICON_SCALE, cache=True)
 
         self._activity = activity
         self._launched = False

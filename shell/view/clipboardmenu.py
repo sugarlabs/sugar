@@ -3,17 +3,14 @@ import hippo
 from sugar.graphics.menu import Menu
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics.ClipboardBubble import ClipboardBubble
-from sugar.graphics import style
 
 class ClipboardMenuItem(ClipboardBubble):
 
-    def __init__(self, percent = 0, stylesheet="clipboard.Bubble"):
+    def __init__(self, percent = 0):
         self._text_item = None
         ClipboardBubble.__init__(self, percent=percent)
-        style.apply_stylesheet(self, stylesheet)
                 
         self._text_item = hippo.CanvasText(text=str(percent) + ' %')
-        style.apply_stylesheet(self._text_item, 'clipboard.MenuItem.Title')
         self.append(self._text_item)
         
     def do_set_property(self, pspec, value):

@@ -19,8 +19,6 @@ import logging
 import gobject
 import wnck
 
-import view.stylesheet
-from sugar.graphics import style
 from view.home.HomeWindow import HomeWindow
 from sugar.presence import PresenceService
 from view.ActivityHost import ActivityHost
@@ -40,8 +38,6 @@ class Shell(gobject.GObject):
         self._screen = wnck.screen_get_default()
         self._current_host = None
         self._screen_rotation = 0
-
-        style.load_stylesheet(view.stylesheet)
 
         self._hw_manager = HardwareManager()
         self._audio_manager = AudioManager()

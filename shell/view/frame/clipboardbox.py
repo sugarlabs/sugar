@@ -3,7 +3,6 @@ import hippo
 import gtk
  
 from sugar import util
-from sugar.graphics import style
 from view.clipboardicon import ClipboardIcon
 from sugar.clipboard import clipboardservice
 
@@ -76,7 +75,6 @@ class ClipboardBox(hippo.CanvasBox):
     
     def _object_added_cb(self, cb_service, object_id, name):
         icon = ClipboardIcon(self._menu_shell, object_id, name)
-        style.apply_stylesheet(icon, 'frame.BuddyIcon')
         self.append(icon)
         self._icons[object_id] = icon
         

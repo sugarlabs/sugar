@@ -19,7 +19,7 @@ import gobject
 
 from view.BuddyIcon import BuddyIcon
 from sugar.graphics.canvasicon import CanvasIcon
-from sugar.graphics import style
+from sugar.graphics import units
 from sugar.presence import PresenceService
 
 class FriendView(hippo.CanvasBox):
@@ -30,11 +30,10 @@ class FriendView(hippo.CanvasBox):
 
         self._buddy = buddy
         self._buddy_icon = BuddyIcon(shell, menu_shell, buddy)
-        style.apply_stylesheet(self._buddy_icon, 'friends.FriendIcon')
+        self._buddy_icon.props.scale = units.LARGE_ICON_SCALE
         self.append(self._buddy_icon)
 
-        self._activity_icon = CanvasIcon()
-        style.apply_stylesheet(self._activity_icon, 'friends.ActivityIcon')
+        self._activity_icon = CanvasIcon(scale=units.LARGE_ICON_SCALE)
         self._activity_icon_visible = False
 
         if self._buddy.is_present():

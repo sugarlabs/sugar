@@ -18,7 +18,6 @@ import hippo
 
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics.iconcolor import IconColor
-from sugar.graphics import style
 from sugar.presence import PresenceService
 from view.BuddyIcon import BuddyIcon
 from model.BuddyModel import BuddyModel
@@ -51,7 +50,6 @@ class FriendsBox(hippo.CanvasBox):
 
         model = BuddyModel(buddy=buddy)
         icon = BuddyIcon(self._shell, self._menu_shell, model)
-        style.apply_stylesheet(icon, 'frame.BuddyIcon')
         self.append(icon)
 
         self._buddies[buddy.get_name()] = icon
