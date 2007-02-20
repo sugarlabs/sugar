@@ -16,6 +16,8 @@ sugar_PYTHON =			\
 	menushell.py		\
 	optionmenu.py		\
 	roundbox.py		\
+	rollover.py		\
+	rollovercontext.py	\
 	snowflakebox.py		\
 	spreadbox.py		\
 	timeline.py         	\
