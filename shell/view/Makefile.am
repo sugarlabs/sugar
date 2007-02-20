@@ -1,6 +1,6 @@
 SUBDIRS = devices frame home
 
-sugardir = $(pkgdatadir)/shell/view/devices
+sugardir = $(pkgdatadir)/shell/view
 sugar_PYTHON =				\
 	__init__.py			\
 	ActivityHost.py			\
