@@ -1,3 +1,5 @@
+SUBDIRS = devices
+
 sugardir = $(pkgdatadir)/shell/model
 sugar_PYTHON =			\
 	__init__.py		\

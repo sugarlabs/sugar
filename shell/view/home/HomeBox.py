@@ -16,11 +16,13 @@
 
 import hippo
 
-from view.home.activitiesdonut import ActivitiesDonut
-from view.home.MyIcon import MyIcon
-from model.ShellModel import ShellModel
 from sugar.graphics import units
 from sugar.graphics.iconcolor import IconColor
+
+from view.home.activitiesdonut import ActivitiesDonut
+from view.devices import deviceview
+from view.home.MyIcon import MyIcon
+from model.ShellModel import ShellModel
 
 class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarHomeBox'
@@ -36,8 +38,16 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
         self._my_icon = MyIcon(units.XLARGE_ICON_SCALE)
         self.append(self._my_icon, hippo.PACK_FIXED)
 
-        shell.get_model().connect('notify::state',
-                                  self._shell_state_changed_cb)
+        shell_model = shell.get_model()
+        shell_model.connect('notify::state',
+                            self._shell_state_changed_cb)
+
+        for device in shell_model.get_devices():
+            self._add_device(device)
+
+    def _add_device(self, device):
+        view = deviceview.create(device)
+        self.append(view, hippo.PACK_FIXED)
 
     def _shell_state_changed_cb(self, model, pspec):
         # FIXME handle all possible mode switches

@@ -24,6 +24,7 @@ from model.Friends import Friends
 from model.MeshModel import MeshModel
 from model.homemodel import HomeModel
 from model.Owner import ShellOwner
+from model.devices.devicesmodel import DevicesModel
 from sugar import env
 
 class ShellModel(gobject.GObject):
@@ -54,6 +55,7 @@ class ShellModel(gobject.GObject):
         self._friends = Friends()
         self._mesh = MeshModel(self._bundle_registry)
         self._home = HomeModel(self._bundle_registry)
+        self._devices = DevicesModel()
 
         for path in env.get_data_dirs():
             bundles_path = os.path.join(path, 'activities')
@@ -86,3 +88,6 @@ class ShellModel(gobject.GObject):
 
     def get_owner(self):
         return self._owner
+
+    def get_devices(self):
+        return self._devices
