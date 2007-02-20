@@ -8,8 +8,8 @@ from sugar.clipboard import clipboardservice
 from sugar import util
 
 class ClipboardPanelWindow(PanelWindow):
-    def __init__(self, frame, width, height):
-        PanelWindow.__init__(self, width, height)
+    def __init__(self, frame, width, height, orientation):
+        PanelWindow.__init__(self, width, height, orientation)
 
         self._frame = frame
 

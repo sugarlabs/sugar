@@ -9,7 +9,6 @@ sugar_PYTHON =			\
 	entry.py                \
 	font.py			\
 	frame.py		\
-	grid.py			\
 	iconcolor.py		\
 	label.py		\
 	menu.py			\

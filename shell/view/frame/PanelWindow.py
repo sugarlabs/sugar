@@ -18,9 +18,10 @@ import gtk
 import hippo
 
 from sugar.graphics.menushell import MenuShell
+from sugar.graphics import units
 
 class PanelWindow(gtk.Window):
-    def __init__(self, width, height):
+    def __init__(self, width, height, orientation):
         gtk.Window.__init__(self)
 
         self.set_decorated(False)
@@ -28,7 +29,17 @@ class PanelWindow(gtk.Window):
 
         self._canvas = hippo.Canvas()
 
-        self._bg = hippo.CanvasBox(background_color=0x414141ff)
+        self._bg = hippo.CanvasBox(background_color=0x414141ff,
+                                   orientation=orientation)
+
+        padding = units.grid_to_pixels(1)
+        if orientation == hippo.ORIENTATION_HORIZONTAL:
+            self._bg.props.padding_left = padding
+            self._bg.props.padding_right = padding
+        else:
+            self._bg.props.padding_top = padding
+            self._bg.props.padding_bottom = padding
+
         self._canvas.set_root(self._bg)
 
         self.add(self._canvas)

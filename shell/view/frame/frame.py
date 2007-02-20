@@ -29,8 +29,8 @@ from view.frame.clipboardpanelwindow import ClipboardPanelWindow
 from view.frame.notificationtray import NotificationTray
 from model.ShellModel import ShellModel
 from sugar.graphics.timeline import Timeline
-from sugar.graphics.grid import Grid
 from sugar.graphics.menushell import MenuShell
+from sugar.graphics import units
 
 _ANIMATION = False
 
@@ -50,7 +50,6 @@ class Frame:
         self._hover_frame = False
         self._shell = shell
         self._mode = Frame.INACTIVE
-        self._grid = Grid()
 
         self._timeline = Timeline(self)
         self._timeline.add_tag('slide_in', 18, 24)
@@ -63,96 +62,95 @@ class Frame:
         self._event_frame.connect('leave', self._event_frame_leave_cb)
         self._event_frame.show()
 
-        self._create_top_panel()
-        self._create_bottom_panel()
-        self._create_left_panel()
-        self._create_right_panel()
+        self._top_panel = self._create_top_panel()
+        self._bottom_panel = self._create_bottom_panel()
+        self._left_panel = self._create_left_panel()
+        self._right_panel = self._create_right_panel()
 
         shell.get_model().connect('notify::state',
                                   self._shell_state_changed_cb)
 
     def _create_top_panel(self):
-        self._top_panel = self._create_panel(16, 1)
-        menu_shell = self._top_panel.get_menu_shell()
-        root = self._top_panel.get_root()
+        top_panel = self._create_panel(gtk.gdk.screen_width(),
+                                       units.grid_to_pixels(1),
+                                       hippo.ORIENTATION_HORIZONTAL)
+        menu_shell = top_panel.get_menu_shell()
+        root = top_panel.get_root()
 
         menu_shell.set_position(MenuShell.BOTTOM)
 
         box = ZoomBox(self._shell, menu_shell)
-
-        [x, y] = self._grid.point(1, 0)
-        root.append(box, hippo.PACK_FIXED)
-        root.set_position(box, x, y)
+        root.append(box)
 
         tray = NotificationTray()
-        tray_box = hippo.CanvasBox(box_width=self._grid.dimension(1),
-                                   box_height=self._grid.dimension(1),
+        tray_box = hippo.CanvasBox(box_width=units.grid_to_pixels(1),
+                                   box_height=units.grid_to_pixels(1),
                                    xalign=hippo.ALIGNMENT_END)
 
         tray_widget = hippo.CanvasWidget()
         tray_widget.props.widget = tray
         tray_box.append(tray_widget, gtk.EXPAND)
-
-        [x, y] = self._grid.point(13, 0)
-        root.append(tray_box, hippo.PACK_FIXED)
-        root.set_position(tray_box, x, y)
+        root.append(tray_box)
 
         box = OverlayBox(self._shell)
-
-        [x, y] = self._grid.point(14, 0)
         root.append(box, hippo.PACK_FIXED)
-        root.set_position(box, x, y)
+
+        return top_panel
 
     def _create_bottom_panel(self):
-        self._bottom_panel = self._create_panel(16, 1)
-        menu_shell = self._bottom_panel.get_menu_shell()
-        root = self._bottom_panel.get_root()
+        bottom_panel = self._create_panel(gtk.gdk.screen_width(),
+                                          units.grid_to_pixels(1),
+                                          hippo.ORIENTATION_HORIZONTAL)
+        menu_shell = bottom_panel.get_menu_shell()
+        root = bottom_panel.get_root()
 
         menu_shell.set_position(MenuShell.TOP)
 
         box = ActivitiesBox(self._shell)
-        root.append(box, hippo.PACK_FIXED)
+        root.append(box)
 
-        [x, y] = self._grid.point(1, 0)
-        root.set_position(box, x, y)
+        return bottom_panel
 
     def _create_right_panel(self):
-        self._right_panel = self._create_panel(1, 10)
-        menu_shell = self._right_panel.get_menu_shell()
-        root = self._right_panel.get_root()
+        right_panel = self._create_panel(units.grid_to_pixels(1),
+                                         gtk.gdk.screen_height(),
+                                         hippo.ORIENTATION_VERTICAL)
+        menu_shell = right_panel.get_menu_shell()
+        root = right_panel.get_root()
 
         menu_shell.set_position(MenuShell.LEFT)
 
         box = FriendsBox(self._shell, menu_shell)
         root.append(box)
 
-    def _create_left_panel(self):
-        self._left_panel = ClipboardPanelWindow(
-            self, self._grid.dimension(1), self._grid.dimension(10))
+        return right_panel
 
-        self._connect_to_panel(self._left_panel)
-        self._left_panel.connect('drag-motion', self._drag_motion_cb)
-        self._left_panel.connect('drag-leave', self._drag_leave_cb)
+    def _create_left_panel(self):
+        left_panel = ClipboardPanelWindow(self, units.grid_to_pixels(1),
+                                          gtk.gdk.screen_height(),
+                                          hippo.ORIENTATION_VERTICAL)
+
+        self._connect_to_panel(left_panel)
+        left_panel.connect('drag-motion', self._drag_motion_cb)
+        left_panel.connect('drag-leave', self._drag_leave_cb)
+
+        return left_panel
 
     def _shell_state_changed_cb(self, model, pspec):
         if model.props.state == ShellModel.STATE_SHUTDOWN:
             self._timeline.goto('slide_out', True)
         
-    def _create_panel(self, width, height):
-        panel = PanelWindow(self._grid.dimension(width),
-                            self._grid.dimension(height))
+    def _create_panel(self, width, height, orientation):
+        panel = PanelWindow(width, height, orientation)
         self._connect_to_panel(panel)
 
         return panel
 
-    def _move_panel(self, panel, x1, y1, x2, y2, pos):
-        [screen_x1, screen_y1] = self._grid.point(x1, y1)
-        [screen_x2, screen_y2] = self._grid.point(x2, y2)
+    def _move_panel(self, panel, pos, x1, y1, x2, y2):
+        x = (x2 - x1) * pos + x1
+        y = (y2 - y1) * pos + y1
 
-        screen_x = (screen_x2 - screen_x1) * pos + screen_x1
-        screen_y = (screen_y2 - screen_y1) * pos + screen_y1
-
-        panel.move(int(screen_x), int(screen_y))
+        panel.move(x, y)
 
         # FIXME we should hide and show as necessary to free memory
         if not panel.props.visible:
@@ -240,10 +238,25 @@ class Frame:
             self._timeline.play('before_slide_out', 'slide_out')
 
     def _move(self, pos):
-        self._move_panel(self._top_panel, 0, -1, 0, 0, pos)
-        self._move_panel(self._bottom_panel, 0, 12, 0, 11, pos)
-        self._move_panel(self._left_panel, -1, 1, 0, 1, pos)
-        self._move_panel(self._right_panel, 16, 1, 15, 1, pos)
+        screen_h = gtk.gdk.screen_height()
+        screen_w = gtk.gdk.screen_width()
+
+        self._move_panel(self._top_panel, pos,
+                         0, units.grid_to_pixels(-1),
+                         0, 0)
+
+        self._move_panel(self._bottom_panel, pos,
+                         0, screen_h,
+                         0, screen_h - units.grid_to_pixels(1))
+
+        self._move_panel(self._left_panel, pos,
+                         units.grid_to_pixels(-1), 0,
+                         0, 0)
+
+        self._move_panel(self._right_panel, pos,
+                         screen_w, 0,
+                         screen_w - units.grid_to_pixels(1),
+                         0)
 
     def do_slide_in(self, current=0, n_frames=0):
         if _ANIMATION:
