@@ -71,11 +71,9 @@ class Frame:
                                   self._shell_state_changed_cb)
 
     def _create_top_panel(self):
-        top_panel = self._create_panel(gtk.gdk.screen_width(),
-                                       units.grid_to_pixels(1),
-                                       hippo.ORIENTATION_HORIZONTAL)
-        menu_shell = top_panel.get_menu_shell()
-        root = top_panel.get_root()
+        panel = self._create_panel(hippo.ORIENTATION_HORIZONTAL)
+        menu_shell = panel.get_menu_shell()
+        root = panel.get_root()
 
         menu_shell.set_position(MenuShell.BOTTOM)
 
@@ -95,53 +93,47 @@ class Frame:
         box = OverlayBox(self._shell)
         root.append(box, hippo.PACK_FIXED)
 
-        return top_panel
+        return panel
 
     def _create_bottom_panel(self):
-        bottom_panel = self._create_panel(gtk.gdk.screen_width(),
-                                          units.grid_to_pixels(1),
-                                          hippo.ORIENTATION_HORIZONTAL)
-        menu_shell = bottom_panel.get_menu_shell()
-        root = bottom_panel.get_root()
+        panel = self._create_panel(hippo.ORIENTATION_HORIZONTAL)
+        menu_shell = panel.get_menu_shell()
+        root = panel.get_root()
 
         menu_shell.set_position(MenuShell.TOP)
 
         box = ActivitiesBox(self._shell)
         root.append(box)
 
-        return bottom_panel
+        return panel
 
     def _create_right_panel(self):
-        right_panel = self._create_panel(units.grid_to_pixels(1),
-                                         gtk.gdk.screen_height(),
-                                         hippo.ORIENTATION_VERTICAL)
-        menu_shell = right_panel.get_menu_shell()
-        root = right_panel.get_root()
+        panel = self._create_panel(hippo.ORIENTATION_VERTICAL)
+        menu_shell = panel.get_menu_shell()
+        root = panel.get_root()
 
         menu_shell.set_position(MenuShell.LEFT)
 
         box = FriendsBox(self._shell, menu_shell)
         root.append(box)
 
-        return right_panel
+        return panel
 
     def _create_left_panel(self):
-        left_panel = ClipboardPanelWindow(self, units.grid_to_pixels(1),
-                                          gtk.gdk.screen_height(),
-                                          hippo.ORIENTATION_VERTICAL)
+        panel = ClipboardPanelWindow(self, hippo.ORIENTATION_VERTICAL)
 
-        self._connect_to_panel(left_panel)
-        left_panel.connect('drag-motion', self._drag_motion_cb)
-        left_panel.connect('drag-leave', self._drag_leave_cb)
+        self._connect_to_panel(panel)
+        panel.connect('drag-motion', self._drag_motion_cb)
+        panel.connect('drag-leave', self._drag_leave_cb)
 
-        return left_panel
+        return panel
 
     def _shell_state_changed_cb(self, model, pspec):
         if model.props.state == ShellModel.STATE_SHUTDOWN:
             self._timeline.goto('slide_out', True)
         
-    def _create_panel(self, width, height, orientation):
-        panel = PanelWindow(width, height, orientation)
+    def _create_panel(self, orientation):
+        panel = PanelWindow(orientation)
         self._connect_to_panel(panel)
 
         return panel
@@ -255,8 +247,7 @@ class Frame:
 
         self._move_panel(self._right_panel, pos,
                          screen_w, 0,
-                         screen_w - units.grid_to_pixels(1),
-                         0)
+                         screen_w - units.grid_to_pixels(1), 0)
 
     def do_slide_in(self, current=0, n_frames=0):
         if _ANIMATION:

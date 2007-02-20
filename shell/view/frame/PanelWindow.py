@@ -21,7 +21,7 @@ from sugar.graphics.menushell import MenuShell
 from sugar.graphics import units
 
 class PanelWindow(gtk.Window):
-    def __init__(self, width, height, orientation):
+    def __init__(self, orientation):
         gtk.Window.__init__(self)
 
         self.set_decorated(False)
@@ -36,9 +36,15 @@ class PanelWindow(gtk.Window):
         if orientation == hippo.ORIENTATION_HORIZONTAL:
             self._bg.props.padding_left = padding
             self._bg.props.padding_right = padding
+
+            width = gtk.gdk.screen_width()
+            height = units.grid_to_pixels(1)
         else:
             self._bg.props.padding_top = padding
             self._bg.props.padding_bottom = padding
+
+            width = units.grid_to_pixels(1)
+            height = gtk.gdk.screen_height()
 
         self._canvas.set_root(self._bg)
 
