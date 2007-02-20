@@ -19,7 +19,7 @@ import math
 
 import hippo
 
-from sugar.graphics import style
+from sugar.graphics import units
 from sugar.graphics import color
 
 class RoundBox(hippo.CanvasBox, hippo.CanvasItem):
@@ -31,7 +31,7 @@ class RoundBox(hippo.CanvasBox, hippo.CanvasItem):
         hippo.CanvasBox.__init__(self, **kwargs)
 
         # TODO: we should calculate this value depending on the height of the box.
-        self._radius = 10 * style.screen_factor
+        self._radius = units.points_to_pixels(10)
         
         self.props.orientation = hippo.ORIENTATION_HORIZONTAL
         self.props.border_top = self._BORDER_DEFAULT

@@ -21,7 +21,7 @@ import gobject
 import gtk
 import hippo
 
-from sugar.graphics import style
+from sugar.graphics import units
 from sugar.graphics import color
 from sugar.graphics import font
 from sugar.graphics.button import Button
@@ -73,7 +73,7 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
     def add_button(self, icon_name, action_id):
         button = Button(icon_name=icon_name)
 
-        button.props.scale = style.small_icon_scale
+        button.props.scale = units.SMALL_ICON_SCALE
         
         button.props.yalign = hippo.ALIGNMENT_CENTER
         button.props.xalign = hippo.ALIGNMENT_START
