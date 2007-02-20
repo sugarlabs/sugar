@@ -4,6 +4,7 @@ sugar_PYTHON =			\
 	nmclient.py			\
 	nminfo.py			\
 	bubble.py			\
+	style.py			\
 	wepkeydialog.py
 
 bin_SCRIPTS = sugar-nm-applet

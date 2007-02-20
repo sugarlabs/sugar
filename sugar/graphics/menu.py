@@ -20,7 +20,6 @@ import hippo
 import gobject
 
 from sugar.graphics.canvasicon import CanvasIcon
-from sugar.graphics import style
 
 class Menu(gtk.Window):
     __gsignals__ = {
@@ -36,12 +35,10 @@ class Menu(gtk.Window):
         canvas.show()
 
         self._root = hippo.CanvasBox()
-        style.apply_stylesheet(self._root, 'menu')
         canvas.set_root(self._root)
 
         if title:
             self._title_item = hippo.CanvasText(text=title)
-            style.apply_stylesheet(self._title_item, 'menu.Title')
             self._root.append(self._title_item)
         else:
             self._title_item = None
@@ -56,7 +53,6 @@ class Menu(gtk.Window):
 
     def _create_separator(self):
         separator = hippo.CanvasBox()
-        style.apply_stylesheet(separator, 'menu.Separator')
         return separator
 
     def _create_item_box(self):
@@ -81,7 +77,6 @@ class Menu(gtk.Window):
             self._create_item_box()
 
         text = hippo.CanvasText(text=label)
-        style.apply_stylesheet(text, 'menu.Item')
         if wrap:
             text.set_property("size-mode", "wrap-word")
 
@@ -96,7 +91,6 @@ class Menu(gtk.Window):
         if not self._action_box:
             self._create_action_box()
 
-        style.apply_stylesheet(icon, 'menu.ActionIcon')
         icon.connect('activated', self._action_clicked_cb, action_id)
         self._action_box.append(icon)
 

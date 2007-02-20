@@ -19,8 +19,6 @@ sugar_PYTHON =			\
 	roundbox.py		\
 	snowflakebox.py		\
 	spreadbox.py		\
-	style.py		\
-	stylesheet.py		\
 	timeline.py         	\
 	toolbar.py		\
 	units.py

@@ -26,8 +26,7 @@ import os
 from gettext import gettext as _
 
 import hippo
-from sugar.graphics.menu import Menu
-from sugar.graphics import style
+import style
 from sugar.graphics.iconcolor import IconColor
 from sugar.graphics.timeline import Timeline
 from wepkeydialog import WEPKeyDialog
