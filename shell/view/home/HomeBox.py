@@ -14,6 +14,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import math
+
 import hippo
 
 from sugar.graphics import units
@@ -42,12 +44,14 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
         shell_model.connect('notify::state',
                             self._shell_state_changed_cb)
 
+        self._device_icons = []
         for device in shell_model.get_devices():
             self._add_device(device)
 
     def _add_device(self, device):
         view = deviceview.create(device)
         self.append(view, hippo.PACK_FIXED)
+        self._device_icons.append(view)
 
     def _shell_state_changed_cb(self, model, pspec):
         # FIXME handle all possible mode switches
@@ -63,6 +67,19 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
         [icon_width, icon_height] = self._my_icon.get_allocation()
         self.set_position(self._my_icon, (width - icon_width) / 2,
                           (height - icon_height) / 2)
+
+        i = 0
+        for icon in self._device_icons:
+            angle = 2 * math.pi / len(self._device_icons) * i + math.pi / 2
+            radius = units.grid_to_pixels(5)
+
+            [icon_width, icon_height] = icon.get_allocation()
+
+            x = int(radius * math.cos(angle)) - icon_width / 2
+            y = int(radius * math.sin(angle)) - icon_height / 2
+            self.set_position(icon, x + width / 2, y + height / 2)            
+
+            i += 1
                   
     def has_activities(self):
         return self._donut.has_activities()
