@@ -21,7 +21,7 @@ import gobject
 import gtk
 import hippo
 
-from sugar.graphics import style
+from sugar.graphics import units
 from sugar.graphics.roundbox import RoundBox
 from sugar.graphics import button
 from sugar.graphics import color
@@ -39,8 +39,7 @@ class Rollover(hippo.CanvasBox, hippo.CanvasItem):
         hippo.CanvasBox.__init__(self)
         self.props.background_color = color.MENU_BACKGROUND.get_int()
         self.props.border_color = color.MENU_BORDER.get_int()
-        #TODO: how we should specify the border thickness?
-        self.props.border = style.separator_thickness
+        self.props.border = units.points_to_pixels(1) 
         self._window = None
 
     def add_item(self, action_id, label, icon_name=None, icon_color=None):
@@ -48,7 +47,8 @@ class Rollover(hippo.CanvasBox, hippo.CanvasItem):
         box.props.padding = 5
         box.props.spacing = 5
         if icon_name:
-            icon = CanvasIcon(icon_name=icon_name, scale=style.small_icon_scale)
+            icon = CanvasIcon(icon_name=icon_name,
+                              scale=units.SMALL_ICON_SCALE)
             if icon_color:
                 icon.props.color = icon_color
             box.append(icon)
@@ -65,7 +65,7 @@ class Rollover(hippo.CanvasBox, hippo.CanvasItem):
     def add_separator(self):
         box = hippo.CanvasBox()
         box.props.background_color = color.MENU_SEPARATOR.get_int()
-        box.props.box_height = style.separator_thickness
+        box.props.box_height = units.points_to_pixels(1)
         self.append(box)
 
     def popup(self, x, y):
