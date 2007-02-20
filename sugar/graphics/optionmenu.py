@@ -60,7 +60,7 @@ class Menu(hippo.CanvasBox, hippo.CanvasItem):
         canvas_text.props.font_desc = font.DEFAULT.get_pango_desc()
         box.append(canvas_text)
 
-        box.connect('button-press-event', self._button_press_event_cb,
+        box.connect('button-press-event', self._item_button_press_event_cb,
                     [action_id, label])
         self.append(box)
     
@@ -82,7 +82,7 @@ class Menu(hippo.CanvasBox, hippo.CanvasItem):
             self._window.destroy()
             self._window = None
 
-    def _button_press_event_cb(self, item, event, data):
+    def _item_button_press_event_cb(self, item, event, data):
         self.emit('action', data)
         self.hide()
     
@@ -152,8 +152,11 @@ class OptionMenu(hippo.CanvasBox, hippo.CanvasItem):
             context = self._round_box.get_context()
             #[x, y] = context.translate_to_screen(self._round_box)
             [x, y] = context.translate_to_widget(self._round_box)
-            [width, height] = self._round_box.get_allocation()
+            
+            # TODO: Any better place to do this?
             self._menu.props.box_width = self.get_width_request()
+
+            [width, height] = self._round_box.get_allocation()            
             self._menu.show(x, y + height)
 
     def _menu_action_cb(self, menu, data):

@@ -15,65 +15,62 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
+from gettext import gettext as _
 
 import hippo
 
-from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics.rollover import Rollover
 from sugar.graphics.menuicon import MenuIcon
 from sugar.graphics.menu import Menu
 from sugar.graphics.iconcolor import IconColor
 from sugar.graphics.button import Button
 import sugar
 
-class ActivityMenu(Menu):
+class ActivityRollover(Rollover):
     ACTION_SHARE = 1
     ACTION_CLOSE = 2
 
     def __init__(self, activity_model):
-        Menu.__init__(self, activity_model.get_title())
+        Rollover.__init__(self, activity_model.get_title())
 
         if not activity_model.get_shared():
-            self._add_mesh_action()
+            self.add_item(ActivityRollover.ACTION_SHARE, _('Share'),
+                          'theme:stock-share-mesh')
 
-        self._add_close_action()
+        self.add_item(ActivityRollover.ACTION_CLOSE, _('Close'),
+                      'theme:stock-close')
 
-    def _add_mesh_action(self):
-        icon = CanvasIcon(icon_name='theme:stock-share-mesh',
-                          color=IconColor('#ffffff,#000000'))
-        self.add_action(icon, ActivityMenu.ACTION_SHARE) 
-
-    def _add_close_action(self):
-        icon = CanvasIcon(icon_name='theme:stock-close',
-                          color=IconColor('#ffffff,#000000'))
-        self.add_action(icon, ActivityMenu.ACTION_CLOSE) 
-
-class ActivityIcon(MenuIcon):
-    def __init__(self, shell, menu_shell, activity_model):
+class ActivityButton(Button):
+    def __init__(self, shell, activity_model):
         self._shell = shell
         self._activity_model = activity_model
 
         icon_name = self._activity_model.get_icon_name()
         icon_color = self._activity_model.get_icon_color()
 
-        MenuIcon.__init__(self, menu_shell, icon_name=icon_name,
-                          color=icon_color)
+        Button.__init__(self, icon_name=icon_name, color=icon_color)
 
-    def create_menu(self):
-        menu = ActivityMenu(self._activity_model)
-        menu.connect('action', self._action_cb)
-        return menu
+    def get_rollover(self):
+        rollover = ActivityRollover(self._activity_model)
+        #rollover.connect('action', self._action_cb)
+        return rollover
+    
+    def get_rollover_context(self):
+        return self._shell.get_rollover_context()
+    
+    def _action_cb(self, menu, data):
+        [action_id, label] = data
 
-    def _action_cb(self, menu, action):
-        self.popdown()
-
+        # TODO: Wouldn't be better to share/close the activity associated with
+        # this button instead of asking for the current activity?
         activity = self._shell.get_current_activity()
         if activity == None:
             logging.error('No active activity.')
             return
 
-        if action == ActivityMenu.ACTION_SHARE:
+        if action_id == ActivityRollover.ACTION_SHARE:
             activity.share()
-        if action == ActivityMenu.ACTION_CLOSE:
+        elif action_id == ActivityRollover.ACTION_CLOSE:
             activity.close()
 
 class ZoomBox(hippo.CanvasBox):
@@ -110,7 +107,7 @@ class ZoomBox(hippo.CanvasBox):
             self.remove(self._activity_icon)
 
         if home_activity:
-            icon = ActivityIcon(self._shell, self._menu_shell, home_activity)
+            icon = ActivityButton(self._shell, home_activity)
             self.append(icon)
             self._activity_icon = icon
         else:

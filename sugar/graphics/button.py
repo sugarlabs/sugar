@@ -23,6 +23,7 @@ import hippo
 from canvasicon import CanvasIcon
 from iconcolor import IconColor
 from sugar.graphics import units
+from sugar.graphics.timeline import Timeline
 from sugar import profile
             
 STANDARD_SIZE = 0
@@ -41,21 +42,101 @@ class Button(hippo.CanvasBox):
                        gobject.PARAM_READWRITE)
     }
 
-    def __init__(self, icon_name):
-        self._normal_color = IconColor('white')
+    def __init__(self, icon_name, color=None):
+        if color:
+            self._normal_color = color
+        else:
+            self._normal_color = IconColor('white')
+
         self._prelight_color = profile.get_color()
         self._inactive_color = IconColor('#808080,#424242')
         self._active = True
+        self._rollover = None
+        self._hover_rollover = False
 
         self._icon = CanvasIcon(icon_name=icon_name, cache=True,
                                 color=self._normal_color)
-        self._connect_signals(self._icon)
 
         hippo.CanvasBox.__init__(self)
 
         self._set_size(STANDARD_SIZE)
 
         self.append(self._icon, hippo.PACK_EXPAND)
+
+        self._timeline = Timeline(self)
+        self._timeline.add_tag('popup', 6, 6)
+        self._timeline.add_tag('before_popdown', 7, 7)
+        self._timeline.add_tag('popdown', 8, 8)
+
+        self.connect('motion-notify-event', self._motion_notify_event_cb)
+        self.connect('button-press-event', self._button_press_event_cb)
+
+    def get_rollover(self):
+        return self._rollover
+
+    def get_rollover_context(self):
+        return None
+
+    def do_popup(self, current, n_frames):
+        if self._rollover:
+            return
+
+        rollover = self.get_rollover()
+        if not rollover:
+            return
+
+        rollover_context = self.get_rollover_context()
+        if rollover_context:
+            rollover_context.popped_up(rollover)
+
+        rollover.connect('motion-notify-event',
+                         self._rollover_motion_notify_event_cb)
+        rollover.connect('action-completed',
+                         self._rollover_action_completed_cb)
+
+        context = self._icon.get_context()
+        #[x, y] = context.translate_to_screen(self._icon)
+        [x, y] = context.translate_to_widget(self._icon)
+        
+        # TODO: Any better place to do this?
+        rollover.props.box_width = max(rollover.props.box_width,
+                                       self.get_width_request())
+
+        [width, height] = self._icon.get_allocation()            
+        rollover.popup(x, y + height)
+        
+        self._rollover = rollover
+
+    def do_popdown(self, current, frame):
+        if self._rollover:
+            self._rollover.popdown()
+
+            rollover_context = self.get_rollover_context()
+            if rollover_context:
+                rollover_context.popped_down(self._rollover)
+
+            self._rollover = None
+
+    def popdown(self):
+        self._timeline.play('popdown', 'popdown')
+
+    def _motion_notify_event_cb(self, button, event):
+        if event.detail == hippo.MOTION_DETAIL_ENTER:
+            self._timeline.play(None, 'popup')
+        elif event.detail == hippo.MOTION_DETAIL_LEAVE:
+            if not self._hover_rollover:
+                self._timeline.play('before_popdown', 'popdown')
+
+    def _rollover_motion_notify_event_cb(self, rollover, event):
+        if event.detail == hippo.MOTION_DETAIL_ENTER:
+            self._hover_rollover = True
+            self._timeline.play('popup', 'popup')
+        elif event.detail == hippo.MOTION_DETAIL_LEAVE:
+            self._hover_rollover = False
+            self._timeline.play('popdown', 'popdown')
+
+    def _rollover_action_completed_cb(self, rollover):
+        self.popdown()
 
     def _set_size(self, size):
         if size == SMALL_SIZE:
@@ -93,17 +174,6 @@ class Button(hippo.CanvasBox):
         else:
             return hippo.CanvasBox.get_property(self, pspec)
 
-    def _connect_signals(self, item):
-        item.connect('button-release-event', self._button_release_event_cb)
-        # TODO: Prelighting is disabled by now. Need to figure how we want it to behave.
-        #item.connect('motion-notify-event', self._motion_notify_event_cb)
-
-    def _button_release_event_cb(self, widget, event):
+    def _button_press_event_cb(self, widget, event):
         if self._active:
             self.emit_activated()
-
-    def _motion_notify_event_cb(self, widget, event):
-        if self._active and event.detail == hippo.MOTION_DETAIL_ENTER:
-            self._icon.props.color = self._prelight_color
-        elif self._active and event.detail == hippo.MOTION_DETAIL_LEAVE:
-            self._icon.props.color = self._normal_color

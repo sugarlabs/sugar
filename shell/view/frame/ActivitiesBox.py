@@ -19,24 +19,16 @@ import logging
 
 from sugar.graphics import units
 from sugar.graphics.iconcolor import IconColor
-from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics.button import Button
 from sugar.presence import PresenceService
 from sugar import profile
 
-class ActivityItem(CanvasIcon):
+class ActivityButton(Button):
     def __init__(self, activity):
-        icon_name = activity.get_icon()
-        CanvasIcon.__init__(self, icon_name=icon_name,
-                            box_width=units.grid_to_pixels(1),
-                            box_height=units.grid_to_pixels(1),
-                            color=IconColor('white'))
+        Button.__init__(self, icon_name=activity.get_icon())
 
         self._activity = activity
-        self._normal_color = self.get_property('color')
-        self._prelight_color = profile.get_color() 
 
-        self.connect('motion-notify-event', self._mouse_motion_event_cb)
-        
     def _mouse_motion_event_cb(self, item, event):
         if event.detail == hippo.MOTION_DETAIL_ENTER:
             self.set_property('color', self._prelight_color)
@@ -46,14 +38,11 @@ class ActivityItem(CanvasIcon):
     def get_bundle_id(self):
         return self._activity.get_service_name()
 
-class InviteItem(CanvasIcon):
+class InviteButton(Button):
     def __init__(self, activity, invite):
-        CanvasIcon.__init__(self, icon_name=activity.get_icon(),
-                            box_width=units.grid_to_pixels(1),
-                            box_height=units.grid_to_pixels(1))
+        Button.__init__(self, icon_name=activity.get_icon())
 
         self.props.color = activity.get_color()
-
         self._invite = invite
 
     def get_activity_id(self):
@@ -104,7 +93,7 @@ class ActivitiesBox(hippo.CanvasBox):
         self.add_activity(bundle)
 
     def add_activity(self, activity):
-        item = ActivityItem(activity)
+        item = ActivityButton(activity)
         item.connect('activated', self._activity_clicked_cb)
         self.append(item, 0)
 
@@ -112,7 +101,7 @@ class ActivitiesBox(hippo.CanvasBox):
         mesh = self._shell_model.get_mesh()
         activity = mesh.get_activity(invite.get_activity_id())
         if activity:
-            item = InviteItem(activity, invite)
+            item = InviteButton(activity, invite)
             item.connect('activated', self._invite_clicked_cb)
             self.append(item, 0)
 

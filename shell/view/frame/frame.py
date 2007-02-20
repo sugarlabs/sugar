@@ -70,6 +70,12 @@ class Frame:
         shell.get_model().connect('notify::state',
                                   self._shell_state_changed_cb)
 
+        rollover_context = shell.get_rollover_context()
+        rollover_context.connect('activated',
+                                 self._rollover_context_activated_cb)
+        rollover_context.connect('deactivated',
+                                 self._rollover_context_deactivated_cb)
+
     def _create_top_panel(self):
         panel = self._create_panel(hippo.ORIENTATION_HORIZONTAL)
         menu_shell = panel.get_menu_shell()
@@ -165,6 +171,13 @@ class Frame:
         if self._mode != Frame.STICKY and not self._hover_frame:
             self._timeline.play('before_slide_out', 'slide_out')
 
+    def _rollover_context_activated_cb(self, rollover_context):
+        self._timeline.goto('slide_in', True)
+
+    def _rollover_context_deactivated_cb(self, rollover_context):
+        if self._mode != Frame.STICKY and not self._hover_frame:
+            self._timeline.play('before_slide_out', 'slide_out')
+
     def _enter_notify_cb(self, window, event):
         self._enter_notify()
         logging.debug('Frame._enter_notify_cb ' + str(self._mode))
@@ -193,6 +206,7 @@ class Frame:
     def _leave_notify(self, panel):
         self._hover_frame = False
         if not panel.get_menu_shell().is_active() and \
+           not self._shell.get_rollover_context().is_active() and \
            (self._mode == Frame.HIDE_ON_LEAVE or \
             self._mode == Frame.AUTOMATIC):
             self._timeline.play('before_slide_out', 'slide_out')
