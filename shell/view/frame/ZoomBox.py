@@ -19,26 +19,27 @@ from gettext import gettext as _
 
 import hippo
 
-from sugar.graphics.popup import Popup
 from sugar.graphics.menuicon import MenuIcon
-from sugar.graphics.menu import Menu
+from sugar.graphics.menu import Menu, MenuItem
 from sugar.graphics.iconcolor import IconColor
 from sugar.graphics.iconbutton import IconButton
 import sugar
 
-class ActivityPopup(Popup):
+class ActivityMenu(Menu):
     ACTION_SHARE = 1
     ACTION_CLOSE = 2
 
     def __init__(self, activity_model):
-        Popup.__init__(self, activity_model.get_title())
+        Menu.__init__(self, activity_model.get_title())
 
         if not activity_model.get_shared():
-            self.add_item(ActivityPopup.ACTION_SHARE, _('Share'),
-                          'theme:stock-share-mesh')
+            self.add_item(MenuItem(ActivityMenu.ACTION_SHARE,
+                                   _('Share'),
+                                  'theme:stock-share-mesh'))
 
-        self.add_item(ActivityPopup.ACTION_CLOSE, _('Close'),
-                      'theme:stock-close')
+        self.add_item(MenuItem(ActivityMenu.ACTION_CLOSE,
+                               _('Close'),
+                              'theme:stock-close'))
 
 class ActivityButton(IconButton):
     def __init__(self, shell, activity_model):
@@ -51,16 +52,14 @@ class ActivityButton(IconButton):
         IconButton.__init__(self, icon_name=icon_name, color=icon_color)
 
     def get_popup(self):
-        popup = ActivityPopup(self._activity_model)
-        #popup.connect('action', self._action_cb)
-        return popup
+        menu = ActivityMenu(self._activity_model)
+        menu.connect('action', self._action_cb)
+        return menu
     
     def get_popup_context(self):
         return self._shell.get_popup_context()
     
-    def _action_cb(self, menu, data):
-        [action_id, label] = data
-
+    def _action_cb(self, menu, menu_item):
         # TODO: Wouldn't be better to share/close the activity associated with
         # this button instead of asking for the current activity?
         activity = self._shell.get_current_activity()
@@ -68,9 +67,9 @@ class ActivityButton(IconButton):
             logging.error('No active activity.')
             return
 
-        if action_id == ActivityPopup.ACTION_SHARE:
+        if menu_item.props.action_id == ActivityMenu.ACTION_SHARE:
             activity.share()
-        elif action_id == ActivityPopup.ACTION_CLOSE:
+        elif menu_item.props.action_id == ActivityMenu.ACTION_CLOSE:
             activity.close()
 
 class ZoomBox(hippo.CanvasBox):
