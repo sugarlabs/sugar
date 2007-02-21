@@ -23,7 +23,6 @@ import hippo
 from canvasicon import CanvasIcon
 from iconcolor import IconColor
 from sugar.graphics import units
-from sugar.graphics.timeline import Timeline
 from sugar import profile
             
 STANDARD_SIZE = 0
@@ -87,7 +86,7 @@ class IconButton(CanvasIcon):
         elif pspec.name == 'active':
             return self._active
         else:
-            return CanvasIcon.get_property(self, pspec)
+            return CanvasIcon.do_get_property(self, pspec)
 
     def _button_press_event_cb(self, widget, event):
         if self._active:
