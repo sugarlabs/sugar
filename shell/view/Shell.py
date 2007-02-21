@@ -23,7 +23,7 @@ from view.home.HomeWindow import HomeWindow
 from sugar.presence import PresenceService
 from sugar.graphics.popupcontext import PopupContext
 from view.ActivityHost import ActivityHost
-from sugar.activity import ActivityFactory
+from sugar.activity import activityfactory
 from view.frame.frame import Frame
 from view.keyhandler import KeyHandler
 from view.hardwaremanager import HardwareManager
@@ -137,7 +137,7 @@ class Shell(gobject.GObject):
         home_model = self._model.get_home()
         home_model.notify_activity_launch(activity_id, act_type)
 
-        handler = ActivityFactory.create(act_type)
+        handler = activityfactory.create(act_type)
         handler.connect('success', self._join_success_cb, activity_ps, activity_id, act_type)
         handler.connect('error', self._join_error_cb, home_model, activity_id, act_type)
 
@@ -190,7 +190,7 @@ class Shell(gobject.GObject):
         home_model.notify_activity_launch(act_id, activity_type)
 
         logging.debug("Shell.start_activity will start %s (%s)" % (act_id, activity_type))
-        handler = ActivityFactory.create(activity_type)
+        handler = activityfactory.create(activity_type)
         handler.connect('success', self._start_success_cb, act_id, activity_type)
         handler.connect('error', self._start_error_cb, home_model, act_id, activity_type)
 

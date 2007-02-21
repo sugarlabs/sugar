@@ -3,7 +3,7 @@ import logging
 from sugar.graphics.menuicon import MenuIcon
 from view.clipboardmenu import ClipboardMenu
 from sugar.graphics.iconcolor import IconColor
-from sugar.activity import ActivityFactory
+from sugar.activity import activityfactory
 from sugar.clipboard import clipboardservice
 from sugar import util
 
@@ -53,7 +53,7 @@ class ClipboardIcon(MenuIcon):
         logging.debug("_icon_activated_cb: " + self._object_id)
 
         # Launch the activity to handle this item
-        handler = ActivityFactory.create(self._activity)
+        handler = activityfactory.create(self._activity)
         handler.connect('success', self._activity_create_success_cb)
         handler.connect('error', self._activity_create_error_cb)
 
