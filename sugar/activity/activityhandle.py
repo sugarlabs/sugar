@@ -21,14 +21,29 @@ class ActivityHandle(object):
     def __init__(self, activity_id):
         self.activity_id = activity_id
         self.pservice_id = None
+        self.uri = None
 
-    def __str__(self):
-        return self.activity_id
+    def get_presence_service(self):
+        if self.pservice_id:
+            pservice = PresenceService.get_instance()
+            return pservice.get_activity(self.pservice_id)
+        else:
+            return None
 
-    def get_presence_service():
-        pservice = PresenceService.get_instance()
-        return pservice.get_activity(self._pservice_id)
+    def get_dict(self):
+        result = { 'activity_id' : self.activity_id }
+        if self.pservice_id:
+            result['pservice_id'] = self.pservice_id
+        if self.uri:
+            result['uri'] = self.uri
 
-def create_from_string(handle):
-    activity_handle = ActivityHandle(handle)
-    activity_handle.pservice_id = handle
+        return result
+
+def create_from_dict(handle_dict):
+    result = ActivityHandle(handle_dict['activity_id'])
+    if handle_dict.has_key('pservice_id'):
+        result.pservice_id = handle_dict['pservice_id']
+    if handle_dict.has_key('uri'):
+        result.uri = handle_dict['uri']
+
+    return result

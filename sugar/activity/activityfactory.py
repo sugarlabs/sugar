@@ -60,7 +60,7 @@ class ActivityCreationHandler(gobject.GObject):
         proxy_obj = bus.get_object(service_name, bundle.get_object_path())
         factory = dbus.Interface(proxy_obj, "com.redhat.Sugar.ActivityFactory")
 
-        factory.create(str(self._activity_handle),
+        factory.create(self._activity_handle.get_dict(),
                        reply_handler=self._reply_handler,
                        error_handler=self._error_handler)
 

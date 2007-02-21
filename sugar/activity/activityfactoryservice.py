@@ -48,9 +48,9 @@ class ActivityFactoryService(dbus.service.Object):
         object_path = '/' + service_name.replace('.', '/')
         dbus.service.Object.__init__(self, bus_name, object_path)
 
-    @dbus.service.method("com.redhat.Sugar.ActivityFactory")
+    @dbus.service.method("com.redhat.Sugar.ActivityFactory", in_signature="a{ss}")
     def create(self, handle):
-        activity_handle = activityhandle.create_from_string(handle)
+        activity_handle = activityhandle.create_from_dict(handle)
         activity = self._constructor(activity_handle)
 
         self._activities.append(activity)
