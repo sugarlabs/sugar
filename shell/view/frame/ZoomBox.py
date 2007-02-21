@@ -23,7 +23,7 @@ from sugar.graphics.popup import Popup
 from sugar.graphics.menuicon import MenuIcon
 from sugar.graphics.menu import Menu
 from sugar.graphics.iconcolor import IconColor
-from sugar.graphics.button import Button
+from sugar.graphics.iconbutton import IconButton
 import sugar
 
 class ActivityPopup(Popup):
@@ -40,7 +40,7 @@ class ActivityPopup(Popup):
         self.add_item(ActivityPopup.ACTION_CLOSE, _('Close'),
                       'theme:stock-close')
 
-class ActivityButton(Button):
+class ActivityButton(IconButton):
     def __init__(self, shell, activity_model):
         self._shell = shell
         self._activity_model = activity_model
@@ -48,7 +48,7 @@ class ActivityButton(Button):
         icon_name = self._activity_model.get_icon_name()
         icon_color = self._activity_model.get_icon_color()
 
-        Button.__init__(self, icon_name=icon_name, color=icon_color)
+        IconButton.__init__(self, icon_name=icon_name, color=icon_color)
 
     def get_popup(self):
         popup = ActivityPopup(self._activity_model)
@@ -81,19 +81,19 @@ class ZoomBox(hippo.CanvasBox):
         self._menu_shell = menu_shell
         self._activity_icon = None
 
-        icon = Button(icon_name='theme:stock-zoom-mesh')
+        icon = IconButton(icon_name='theme:stock-zoom-mesh')
         icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_MESH)
         self.append(icon)
 
-        icon = Button(icon_name='theme:stock-zoom-friends')
+        icon = IconButton(icon_name='theme:stock-zoom-friends')
         icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_FRIENDS)
         self.append(icon)
 
-        icon = Button(icon_name='theme:stock-zoom-home')
+        icon = IconButton(icon_name='theme:stock-zoom-home')
         icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_HOME)
         self.append(icon)
 
-        icon = Button(icon_name='theme:stock-zoom-activity')
+        icon = IconButton(icon_name='theme:stock-zoom-activity')
         icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_ACTIVITY)
         self.append(icon)
 

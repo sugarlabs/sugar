@@ -20,7 +20,7 @@ import hippo
 
 from sugar.graphics.toolbar import Toolbar
 from sugar.graphics.frame import Frame
-from sugar.graphics.button import Button
+from sugar.graphics.iconbutton import IconButton
 from sugar.graphics.entry import Entry
 
 def _entry_activated_cb(entry):
@@ -49,7 +49,7 @@ for i in [1, 2]:
     toolbar = Toolbar()
     vbox.append(toolbar)
 
-    button = Button('theme:stock-close')
+    button = IconButton('theme:stock-close')
     toolbar.append(button)
 
     BUTTON_DELETE = 1

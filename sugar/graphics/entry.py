@@ -24,7 +24,7 @@ import hippo
 from sugar.graphics import units
 from sugar.graphics import color
 from sugar.graphics import font
-from sugar.graphics.button import Button
+from sugar.graphics.iconbutton import IconButton
 from sugar.graphics.roundbox import RoundBox
 
 class Entry(hippo.CanvasBox, hippo.CanvasItem):
@@ -71,7 +71,7 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
         return gtk.Entry()
 
     def add_button(self, icon_name, action_id):
-        button = Button(icon_name=icon_name)
+        button = IconButton(icon_name=icon_name)
 
         button.props.scale = units.SMALL_ICON_SCALE
         

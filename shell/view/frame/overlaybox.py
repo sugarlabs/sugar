@@ -1,6 +1,6 @@
 import hippo
 
-from sugar.graphics.button import Button
+from sugar.graphics.iconbutton import IconButton
 
 class OverlayBox(hippo.CanvasBox):
     def __init__(self, shell):
@@ -8,7 +8,7 @@ class OverlayBox(hippo.CanvasBox):
 
         self._shell = shell
 
-        icon = Button(icon_name='theme:stock-chat')
+        icon = IconButton(icon_name='theme:stock-chat')
         icon.connect('activated', self._overlay_clicked_cb)
         self.append(icon)
 
