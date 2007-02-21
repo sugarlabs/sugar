@@ -25,6 +25,7 @@ import gobject
 import gtk
 
 from sugar.presence.PresenceService import PresenceService
+from sugar.activity import bundleregistry
 from sugar.activity.bundle import Bundle
 from sugar import logger
 
@@ -90,14 +91,14 @@ class ActivityCreationHandler(gobject.GObject):
                        ([gobject.TYPE_PYOBJECT]))
     }
 
-    def __init__(self, activity_name):
+    def __init__(self, service_name):
         gobject.GObject.__init__(self)
 
-        bus = dbus.SessionBus()
-        factory_name = activity_name
-        factory_path = get_path(factory_name) 
+        registry = bundleregistry.get_registry()
+        bundle = registry.get_bundle(service_name)
 
-        proxy_obj = bus.get_object(factory_name, factory_path)
+        bus = dbus.SessionBus()
+        proxy_obj = bus.get_object(service_name, bundle.get_object_path())
         factory = dbus.Interface(proxy_obj, "com.redhat.Sugar.ActivityFactory")
 
         factory.create(reply_handler=self._reply_handler, error_handler=self._error_handler)
@@ -113,9 +114,9 @@ class ActivityCreationHandler(gobject.GObject):
         logging.debug("Couldn't create activity: %s" % err)
         self.emit('error', err)
 
-def create(activity_name):
+def create(service_name):
     """Create a new activity from its name."""
-    return ActivityCreationHandler(activity_name)
+    return ActivityCreationHandler(service_name)
 
 def start_factory(activity_class, bundle_path):
     """Start the activity factory."""

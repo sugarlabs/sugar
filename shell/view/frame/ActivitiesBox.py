@@ -21,6 +21,7 @@ from sugar.graphics import units
 from sugar.graphics.iconcolor import IconColor
 from sugar.graphics.iconbutton import IconButton
 from sugar.presence import PresenceService
+from sugar.activity import bundleregistry
 from sugar import profile
 
 class ActivityButton(IconButton):
@@ -63,7 +64,7 @@ class ActivitiesBox(hippo.CanvasBox):
         self._invite_to_item = {}
         self._invites = self._shell_model.get_invites()
 
-        bundle_registry = self._shell_model.get_bundle_registry()
+        bundle_registry = bundleregistry.get_registry()
         for bundle in bundle_registry:
             if bundle.get_show_launcher():
                 self.add_activity(bundle)

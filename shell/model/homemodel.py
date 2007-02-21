@@ -21,7 +21,7 @@ import wnck
 import dbus
 
 from model.homeactivity import HomeActivity
-from sugar.activity import Activity
+from sugar.activity import bundleregistry
 
 _ACTIVITY_SERVICE_NAME = "org.laptop.Activity"
 _ACTIVITY_SERVICE_PATH = "/org/laptop/Activity"
@@ -43,11 +43,11 @@ class HomeModel(gobject.GObject):
                                    ([gobject.TYPE_PYOBJECT]))
     }
     
-    def __init__(self, bundle_registry):
+    def __init__(self):
         gobject.GObject.__init__(self)
 
         self._activities = {}
-        self._bundle_registry = bundle_registry
+        self._bundle_registry = bundleregistry.get_registry()
         self._current_activity = None
 
         screen = wnck.screen_get_default()

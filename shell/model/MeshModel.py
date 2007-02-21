@@ -18,6 +18,7 @@ import gobject
 
 from sugar.graphics.iconcolor import IconColor
 from sugar.presence import PresenceService
+from sugar.activity import bundleregistry
 from model.BuddyModel import BuddyModel
 
 class ActivityModel:
@@ -53,12 +54,12 @@ class MeshModel(gobject.GObject):
                              gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT]))
     }
 
-    def __init__(self, bundle_registry):
+    def __init__(self):
         gobject.GObject.__init__(self)
 
         self._activities = {}
         self._buddies = {}
-        self._bundle_registry = bundle_registry
+        self._bundle_registry = bundleregistry.get_registry()
 
         self._pservice = PresenceService.get_instance()
         self._pservice.connect("service-appeared",

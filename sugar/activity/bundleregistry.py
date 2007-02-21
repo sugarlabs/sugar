@@ -73,3 +73,14 @@ class BundleRegistry(gobject.GObject):
             return True
         else:
             return False
+
+def get_registry():
+    return _bundle_registry
+
+_bundle_registry = BundleRegistry()
+
+for path in env.get_data_dirs():
+    bundles_path = os.path.join(path, 'activities')
+    _bundle_registry.add_search_path(bundles_path)
+
+_bundle_registry.add_search_path(env.get_user_activities_dir())
