@@ -296,8 +296,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
 
         if [x, y] == [None, None]:
             context = self.get_context()
-            #[x, y] = context.translate_to_screen(self)
-            [x, y] = context.translate_to_widget(self)
+            [x, y] = context.translate_to_screen(self)
         
             # TODO: Any better place to do this?
             popup.props.box_width = max(popup.props.box_width,
