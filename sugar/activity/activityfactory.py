@@ -21,8 +21,9 @@ import dbus
 import gobject
 import gtk
 
-from sugar.presence.PresenceService import PresenceService
+from sugar.presence import PresenceService
 from sugar.activity import bundleregistry
+from sugar import util
 
 _ACTIVITY_SERVICE_NAME = "org.laptop.Activity"
 _ACTIVITY_SERVICE_PATH = "/org/laptop/Activity"
@@ -42,6 +43,10 @@ class ActivityCreationHandler(gobject.GObject):
     def __init__(self, service_name):
         gobject.GObject.__init__(self)
 
+        self._activity_id = self._find_unique_activity_id()
+        if not self._activity_id:
+            raise RuntimeError("Cannot generate activity id.")
+
         registry = bundleregistry.get_registry()
         bundle = registry.get_bundle(service_name)
 
@@ -50,6 +55,32 @@ class ActivityCreationHandler(gobject.GObject):
         factory = dbus.Interface(proxy_obj, "com.redhat.Sugar.ActivityFactory")
 
         factory.create(reply_handler=self._reply_handler, error_handler=self._error_handler)
+
+    def get_activity_id(self):
+        return self._activity_id
+
+    def _find_unique_activity_id(self):
+        pservice = PresenceService.get_instance()
+
+        # create a new unique activity ID
+        i = 0
+        act_id = None
+        while i < 10:
+            act_id = util.unique_id()
+            i += 1
+
+            # check through network activities
+            found = False
+            activities = pservice.get_activities()
+            for act in activities:
+                if act_id == act.get_id():
+                    found = True
+                    break
+            if found:
+                act_id = None
+                continue
+
+        return act_id
 
     def _reply_handler(self, xid):
         bus = dbus.SessionBus()
