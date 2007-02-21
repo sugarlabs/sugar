@@ -13,17 +13,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+from gettext import gettext as _
 
 import gtk
 import gobject
 import hippo
 
-from sugar.graphics.menu import Menu
+from sugar.graphics.menu import Menu, MenuItem
 from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics import units
 from sugar.presence import PresenceService
 import _sugar
-
-_ICON_SIZE = 75
 
 class BuddyMenu(Menu):
     ACTION_MAKE_FRIEND = 0
@@ -34,25 +34,26 @@ class BuddyMenu(Menu):
         self._buddy = buddy
         self._shell = shell
 
+        Menu.__init__(self, buddy.get_name())
         pixbuf = self._get_buddy_icon_pixbuf()
         if pixbuf:
             icon_item = hippo.CanvasImage()
-            scaled_pixbuf = pixbuf.scale_simple(_ICON_SIZE, _ICON_SIZE,
+            scaled_pixbuf = pixbuf.scale_simple(units.grid_to_pixels(1),
+                                                units.grid_to_pixels(1),
                                                 gtk.gdk.INTERP_BILINEAR)
             del pixbuf
-            Menu.__init__(self, buddy.get_name(), icon_item)
+            self.add_separator()
+            self.append(icon_item)
             # FIXME: have to set the image _after_ adding the HippoCanvasImage
             # to it's parent item, because that sets the HippoCanvasImage's context,
             # which resets the object's 'image' property.  Grr.
             _sugar.hippo_canvas_image_set_image_from_gdk_pixbuf(icon_item, scaled_pixbuf)
-        else:
-            Menu.__init__(self, buddy.get_name(), None)
 
         self._buddy.connect('icon-changed', self.__buddy_icon_changed_cb)
 
         owner = shell.get_model().get_owner()
         if buddy.get_name() != owner.get_name():
-            self._add_actions()
+            self._add_items()
 
     def _get_buddy_icon_pixbuf(self):
         buddy_object = self._buddy.get_buddy()
@@ -76,17 +77,19 @@ class BuddyMenu(Menu):
         del pbl
         return pixbuf
 
-    def _add_actions(self):
+    def _add_items(self):
         shell_model = self._shell.get_model()
         pservice = PresenceService.get_instance()
 
         friends = shell_model.get_friends()
         if friends.has_buddy(self._buddy):
-            icon = CanvasIcon(icon_name='theme:stock-remove')
-            self.add_action(icon, BuddyMenu.ACTION_REMOVE_FRIEND) 
+            self.add_item(MenuItem(BuddyMenu.ACTION_REMOVE_FRIEND,
+                                   _('Remove friend'),
+                                   'theme:stock-remove'))
         else:
-            icon = CanvasIcon(icon_name='theme:stock-add')
-            self.add_action(icon, BuddyMenu.ACTION_MAKE_FRIEND)
+            self.add_item(MenuItem(BuddyMenu.ACTION_MAKE_FRIEND,
+                                   _('Make friend'),
+                                   'theme:stock-add'))
 
         activity = shell_model.get_home().get_current_activity()
         if activity != None:
@@ -94,9 +97,9 @@ class BuddyMenu(Menu):
 
             # FIXME check that the buddy is not in the activity already
 
-            icon = CanvasIcon(icon_name='theme:stock-invite')
-            self.add_action(icon, BuddyMenu.ACTION_INVITE)
+            self.add_item(MenuItem(BuddyMenu.ACTION_INVITE,
+                                   _('Invite'),
+                                   'theme:stock-invite'))
 
     def __buddy_icon_changed_cb(self, buddy):
         pass
-

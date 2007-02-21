@@ -52,8 +52,7 @@ class MenuItem(hippo.CanvasBox):
                 icon.props.color = icon_color
             self.append(icon)
 
-        self._canvas_text = hippo.CanvasText()
-        self._canvas_text.props.text = label
+        self._canvas_text = hippo.CanvasText(text=label)
         self._canvas_text.props.color = color.LABEL_TEXT.get_int()
         self._canvas_text.props.font_desc = font.DEFAULT.get_pango_desc()
         self.append(self._canvas_text)
@@ -89,7 +88,11 @@ class Menu(Popup):
         self.props.border = units.points_to_pixels(1) 
 
         if title:
-            pass
+            title_item = hippo.CanvasText(text=title)
+            title_item.props.color = color.LABEL_TEXT.get_int()
+            title_item.props.font_desc = font.DEFAULT.get_pango_desc()
+            self.append(title_item)
+            self.add_separator()
 
     def add_item(self, item):
         item.connect('button-press-event', self._item_button_press_event_cb)
