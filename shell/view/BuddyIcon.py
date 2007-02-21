@@ -14,13 +14,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from sugar.graphics.menuicon import MenuIcon
+from sugar.graphics.canvasicon import CanvasIcon
 from view.BuddyMenu import BuddyMenu
 
-class BuddyIcon(MenuIcon):
+class BuddyIcon(CanvasIcon):
     def __init__(self, shell, menu_shell, buddy):
-        MenuIcon.__init__(self, menu_shell, icon_name='theme:stock-buddy',
-                          color=buddy.get_color())
+        CanvasIcon.__init__(self, icon_name='theme:stock-buddy',
+                            color=buddy.get_color())
 
         self._shell = shell
         self._buddy = buddy
@@ -35,13 +35,16 @@ class BuddyIcon(MenuIcon):
     def set_popup_distance(self, distance):
         self._popup_distance = distance
 
-    def create_menu(self):
+    def get_popup(self):
         menu = BuddyMenu(self._shell, self._buddy)
         menu.connect('action', self._popup_action_cb)
         return menu
 
-    def _popup_action_cb(self, popup, action):
-        self.popdown()
+    def get_popup_context(self):
+        return self._shell.get_popup_context()
+    
+    def _popup_action_cb(self, popup, menu_item):
+        action = menu_item.props.action_id
 
         friends = self._shell.get_model().get_friends()
         if action == BuddyMenu.ACTION_REMOVE_FRIEND:
