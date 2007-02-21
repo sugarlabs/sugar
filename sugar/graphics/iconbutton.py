@@ -29,12 +29,10 @@ from sugar import profile
 STANDARD_SIZE = 0
 SMALL_SIZE    = 1
 
-class IconButton(hippo.CanvasBox):
+class IconButton(CanvasIcon):
     __gtype_name__ = 'SugarIconButton'    
 
     __gproperties__ = {
-        'icon-name' : (str, None, None, None,
-                       gobject.PARAM_READWRITE),
         'size'      : (int, None, None,
                        0, sys.maxint, STANDARD_SIZE,
                        gobject.PARAM_READWRITE),
@@ -54,14 +52,10 @@ class IconButton(hippo.CanvasBox):
         self._popup = None
         self._hover_popup = False
 
-        self._icon = CanvasIcon(icon_name=icon_name, cache=True,
-                                color=self._normal_color)
-
-        hippo.CanvasBox.__init__(self)
+        CanvasIcon.__init__(self, icon_name=icon_name, cache=True,
+                            color=self._normal_color)
 
         self._set_size(STANDARD_SIZE)
-
-        self.append(self._icon, hippo.PACK_EXPAND)
 
         self._timeline = Timeline(self)
         self._timeline.add_tag('popup', 6, 6)
@@ -90,20 +84,20 @@ class IconButton(hippo.CanvasBox):
         [x, y] = [None, None]
         if popup_context:
             try:
-                [x, y] = popup_context.get_position(self._icon, popup)
+                [x, y] = popup_context.get_position(self, popup)
             except NotImplementedError:
                 pass
 
         if [x, y] == [None, None]:
-            context = self._icon.get_context()
-            #[x, y] = context.translate_to_screen(self._icon)
-            [x, y] = context.translate_to_widget(self._icon)
+            context = self.get_context()
+            #[x, y] = context.translate_to_screen(self)
+            [x, y] = context.translate_to_widget(self)
         
             # TODO: Any better place to do this?
             popup.props.box_width = max(popup.props.box_width,
                                         self.get_width_request())
 
-            [width, height] = self._icon.get_allocation()
+            [width, height] = self.get_allocation()
             y += height
             position = [x, y]
 
@@ -153,37 +147,33 @@ class IconButton(hippo.CanvasBox):
         if size == SMALL_SIZE:
             self.props.box_width = -1
             self.props.box_height = -1
-            self._icon.props.scale = units.SMALL_ICON_SCALE
+            self.props.scale = units.SMALL_ICON_SCALE
         else:
             self.props.box_width = units.grid_to_pixels(1)
             self.props.box_height = units.grid_to_pixels(1)
-            self._icon.props.scale = units.STANDARD_ICON_SCALE
+            self.props.scale = units.STANDARD_ICON_SCALE
 
         self._size = size
 
     def do_set_property(self, pspec, value):
-        if pspec.name == 'icon-name':
-            self._icon.props.icon_name = value
-        elif pspec.name == 'size':
+        if pspec.name == 'size':
             self._set_size(value)
         elif pspec.name == 'active':
             self._active = value
             if self._active:
-                self._icon.props.color = self._normal_color
+                self.props.color = self._normal_color
             else:
-                self._icon.props.color = self._inactive_color            
+                self.props.color = self._inactive_color            
         else:
-            hippo.CanvasBox.do_set_property(self, pspec, value)
+            CanvasIcon.do_set_property(self, pspec, value)
 
     def do_get_property(self, pspec):
-        if pspec.name == 'icon-name':
-            return self._icon.props.icon_name
-        elif pspec.name == 'size':
-            return self._icon.props.size
+        if pspec.name == 'size':
+            return self._size
         elif pspec.name == 'active':
             return self._active
         else:
-            return hippo.CanvasBox.get_property(self, pspec)
+            return CanvasIcon.get_property(self, pspec)
 
     def _button_press_event_cb(self, widget, event):
         if self._active:
