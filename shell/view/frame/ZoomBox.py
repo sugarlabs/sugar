@@ -19,25 +19,25 @@ from gettext import gettext as _
 
 import hippo
 
-from sugar.graphics.rollover import Rollover
+from sugar.graphics.popup import Popup
 from sugar.graphics.menuicon import MenuIcon
 from sugar.graphics.menu import Menu
 from sugar.graphics.iconcolor import IconColor
 from sugar.graphics.button import Button
 import sugar
 
-class ActivityRollover(Rollover):
+class ActivityPopup(Popup):
     ACTION_SHARE = 1
     ACTION_CLOSE = 2
 
     def __init__(self, activity_model):
-        Rollover.__init__(self, activity_model.get_title())
+        Popup.__init__(self, activity_model.get_title())
 
         if not activity_model.get_shared():
-            self.add_item(ActivityRollover.ACTION_SHARE, _('Share'),
+            self.add_item(ActivityPopup.ACTION_SHARE, _('Share'),
                           'theme:stock-share-mesh')
 
-        self.add_item(ActivityRollover.ACTION_CLOSE, _('Close'),
+        self.add_item(ActivityPopup.ACTION_CLOSE, _('Close'),
                       'theme:stock-close')
 
 class ActivityButton(Button):
@@ -50,13 +50,13 @@ class ActivityButton(Button):
 
         Button.__init__(self, icon_name=icon_name, color=icon_color)
 
-    def get_rollover(self):
-        rollover = ActivityRollover(self._activity_model)
-        #rollover.connect('action', self._action_cb)
-        return rollover
+    def get_popup(self):
+        popup = ActivityPopup(self._activity_model)
+        #popup.connect('action', self._action_cb)
+        return popup
     
-    def get_rollover_context(self):
-        return self._shell.get_rollover_context()
+    def get_popup_context(self):
+        return self._shell.get_popup_context()
     
     def _action_cb(self, menu, data):
         [action_id, label] = data
@@ -68,9 +68,9 @@ class ActivityButton(Button):
             logging.error('No active activity.')
             return
 
-        if action_id == ActivityRollover.ACTION_SHARE:
+        if action_id == ActivityPopup.ACTION_SHARE:
             activity.share()
-        elif action_id == ActivityRollover.ACTION_CLOSE:
+        elif action_id == ActivityPopup.ACTION_CLOSE:
             activity.close()
 
 class ZoomBox(hippo.CanvasBox):

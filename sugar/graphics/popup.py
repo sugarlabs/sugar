@@ -28,8 +28,8 @@ from sugar.graphics import color
 from sugar.graphics import font
 from sugar.graphics.canvasicon import CanvasIcon
 
-class Rollover(hippo.CanvasBox, hippo.CanvasItem):
-    __gtype_name__ = 'SugarRollover'
+class Popup(hippo.CanvasBox, hippo.CanvasItem):
+    __gtype_name__ = 'SugarPopup'
 
     __gsignals__ = {
         'action-completed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))

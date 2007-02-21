@@ -21,7 +21,7 @@ import wnck
 
 from view.home.HomeWindow import HomeWindow
 from sugar.presence import PresenceService
-from sugar.graphics.rollovercontext import RolloverContext
+from sugar.graphics.popupcontext import PopupContext
 from view.ActivityHost import ActivityHost
 from sugar.activity import ActivityFactory
 from view.frame.frame import Frame
@@ -55,7 +55,7 @@ class Shell(gobject.GObject):
         home_model.connect('active-activity-changed',
                            self._active_activity_changed_cb)
 
-        self._rollover_context = RolloverContext()
+        self._popup_context = PopupContext()
 
         self._frame = Frame(self)
         self._frame.show_and_hide(3)
@@ -102,8 +102,8 @@ class Shell(gobject.GObject):
     def get_frame(self):
         return self._frame
 
-    def get_rollover_context(self):
-        return self._rollover_context
+    def get_popup_context(self):
+        return self._popup_context
 
     def _join_success_cb(self, handler, activity, activity_ps, activity_id, activity_type):
         logging.debug("Joining activity %s (%s)" % (activity_id, activity_type))

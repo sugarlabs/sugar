@@ -17,8 +17,8 @@
 import gobject
 import hippo
 
-class RolloverContext(gobject.GObject):
-    __gtype_name__ = 'SugarRolloverContext'
+class PopupContext(gobject.GObject):
+    __gtype_name__ = 'SugarPopupContext'
 
     __gsignals__ = {
         'activated':   (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
