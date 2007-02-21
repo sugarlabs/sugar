@@ -57,7 +57,7 @@ class PresenceService(dbus.service.Object):
 
     @dbus.service.method(_PRESENCE_INTERFACE, in_signature="s", out_signature="o")
     def GetActivityById(self, actid):
-        return NotFoundError("The activity was not found.")
+        raise NotFoundError("The activity was not found.")
 
     @dbus.service.method(_PRESENCE_INTERFACE, out_signature="ao")
     def GetBuddies(self):
@@ -65,15 +65,15 @@ class PresenceService(dbus.service.Object):
 
     @dbus.service.method(_PRESENCE_INTERFACE, in_signature="ay", out_signature="o")
     def GetBuddyByPublicKey(self, key):
-        return NotFoundError("The buddy was not found.")
+        raise NotFoundError("The buddy was not found.")
 
     @dbus.service.method(_PRESENCE_INTERFACE, out_signature="o")
     def GetOwner(self):
-        return NotFoundError("The owner was not found.")
+        raise NotFoundError("The owner was not found.")
 
     @dbus.service.method(_PRESENCE_INTERFACE, in_signature="sssa{sv}", out_signature="o")
     def ShareActivity(self, actid, atype, name, properties):
-        return NotImplemented("not implemented yet")
+        raise NotImplementedError("not implemented yet")
 
 
 def main():
