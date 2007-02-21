@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-# vi: ts=4 ai noet 
-#
-# Copyright (C) 2006, Red Hat, Inc.
+# Copyright (C) 2007, Red Hat, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,19 +14,22 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import logging
-import sys
-import os
+import dbus, dbus.service
+import gobject
 
-from sugar import logger
-from sugar import env
 
-sys.path.insert(0, env.get_services_dir())
+class PresenceService(dbus.service.Object):
+	pass
 
-logger.start('presenceservice')
 
-from presence2 import presenceservice
 
-logging.info('Starting presence service')
+def main():
+    loop = gobject.MainLoop()
+    ps = PresenceService()
+    try:
+        loop.run()
+    except KeyboardInterrupt:
+        print 'Ctrl+C pressed, exiting...'
 
-PresenceService.main()
+if __name__ == "__main__":
+    main()
