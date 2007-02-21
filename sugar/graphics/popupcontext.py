@@ -42,3 +42,6 @@ class PopupContext(gobject.GObject):
 
     def is_active(self):
         return self._active_control != None
+
+    def get_position(self, control, popup):
+        return [None, None]

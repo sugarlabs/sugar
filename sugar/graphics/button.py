@@ -86,24 +86,32 @@ class Button(hippo.CanvasBox):
             return
 
         popup_context = self.get_popup_context()
+        
+        [x, y] = [None, None]
         if popup_context:
-            popup_context.popped_up(popup)
+            [x, y] = popup_context.get_position(self._icon, popup)
 
+        if (not x) or (not y):
+            context = self._icon.get_context()
+            #[x, y] = context.translate_to_screen(self._icon)
+            [x, y] = context.translate_to_widget(self._icon)
+        
+            # TODO: Any better place to do this?
+            popup.props.box_width = max(popup.props.box_width,
+                                        self.get_width_request())
+
+            [width, height] = self._icon.get_allocation()
+            y += height
+            position = [x, y]
+
+        popup.popup(x, y)
         popup.connect('motion-notify-event',
                       self._popup_motion_notify_event_cb)
         popup.connect('action-completed',
                       self._popup_action_completed_cb)
 
-        context = self._icon.get_context()
-        #[x, y] = context.translate_to_screen(self._icon)
-        [x, y] = context.translate_to_widget(self._icon)
-        
-        # TODO: Any better place to do this?
-        popup.props.box_width = max(popup.props.box_width,
-                                    self.get_width_request())
-
-        [width, height] = self._icon.get_allocation()            
-        popup.popup(x, y + height)
+        if popup_context:
+            popup_context.popped_up(popup)
         
         self._popup = popup
 
