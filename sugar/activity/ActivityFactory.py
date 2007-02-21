@@ -25,9 +25,12 @@ import gobject
 import gtk
 
 from sugar.presence.PresenceService import PresenceService
-from sugar.activity import Activity
 from sugar.activity.bundle import Bundle
 from sugar import logger
+
+_ACTIVITY_SERVICE_NAME = "org.laptop.Activity"
+_ACTIVITY_SERVICE_PATH = "/org/laptop/Activity"
+_ACTIVITY_INTERFACE = "org.laptop.Activity"
 
 def get_path(activity_name):
     """Returns the activity path"""
@@ -101,9 +104,9 @@ class ActivityCreationHandler(gobject.GObject):
 
     def _reply_handler(self, xid):
         bus = dbus.SessionBus()
-        proxy_obj = bus.get_object(Activity.get_service_name(xid),
-                                    Activity.get_object_path(xid))
-        activity = dbus.Interface(proxy_obj, Activity.ACTIVITY_INTERFACE)
+        proxy_obj = bus.get_object(_ACTIVITY_SERVICE_NAME + '%d' % xid,
+                                   _ACTIVITY_SERVICE_PATH + "/%s" % xid)
+        activity = dbus.Interface(proxy_obj, _ACTIVITY_INTERFACE)
         self.emit('success', activity)
 
     def _error_handler(self, err):

@@ -15,13 +15,17 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import time
-import gobject
 import logging
+
+import gobject
+import dbus
 
 from sugar.graphics.iconcolor import IconColor
 from sugar.presence import PresenceService
-from sugar.activity import Activity
 from sugar import profile
+
+_ACTIVITY_SERVICE_NAME = "org.laptop.Activity"
+_ACTIVITY_SERVICE_PATH = "/org/laptop/Activity"
 
 class HomeActivity(gobject.GObject):
     __gsignals__ = {
@@ -69,7 +73,10 @@ class HomeActivity(gobject.GObject):
 
         self._window = window
         self._xid = window.get_xid()
-        self._service = Activity.get_service(window.get_xid())
+
+        bus = dbus.SessionBus()
+        self._service = bus.get_object(_ACTIVITY_SERVICE_NAME + '%d' % self._xid,
+                                       _ACTIVITY_SERVICE_PATH + "/%s" % self._xid)
 
         # verify id and type details
         act_id = self._service.get_id()
@@ -78,6 +85,9 @@ class HomeActivity(gobject.GObject):
         act_type = self._service.get_type()
         if act_type != self._type:
             raise RuntimeError("Activity's real type (%s) didn't match expected (%s)." % (act_type, self._type))
+
+    def get_service(self):
+        return self._service
 
     def get_title(self):
         if not self._launched:

@@ -30,21 +30,9 @@ from sugar import activity
 from sugar import env
 import sugar.util
 
-ACTIVITY_SERVICE_NAME = "org.laptop.Activity"
-ACTIVITY_SERVICE_PATH = "/org/laptop/Activity"
-ACTIVITY_INTERFACE = "org.laptop.Activity"
-
-def get_service_name(xid):
-    return ACTIVITY_SERVICE_NAME + '%d' % xid
-
-def get_object_path(xid):
-    return ACTIVITY_SERVICE_PATH + "/%s" % xid 
-
-def get_service(xid):
-    bus = dbus.SessionBus()
-    proxy_obj = bus.get_object(get_service_name(xid), get_object_path(xid))
-    return dbus.Interface(proxy_obj, ACTIVITY_INTERFACE)
-
+_ACTIVITY_SERVICE_NAME = "org.laptop.Activity"
+_ACTIVITY_SERVICE_PATH = "/org/laptop/Activity"
+_ACTIVITY_INTERFACE = "org.laptop.Activity"
 
 class ActivityDbusService(dbus.service.Object):
     """Base dbus service object that each Activity uses to export dbus methods.
@@ -53,46 +41,48 @@ class ActivityDbusService(dbus.service.Object):
     tightly control what stuff passes through the dbus python bindings."""
 
     def __init__(self, activity):
-        xid = activity.window.xid
+        service_name = _ACTIVITY_SERVICE_NAME + '%d' % activity.window.xid
+        object_path = _ACTIVITY_SERVICE_PATH + "/%s" % activity.window.xid
+
         bus = dbus.SessionBus()
-        bus_name = dbus.service.BusName(get_service_name(xid), bus=bus)
-        dbus.service.Object.__init__(self, bus_name, get_object_path(xid))
+        bus_name = dbus.service.BusName(service_name, bus=bus)
+        dbus.service.Object.__init__(self, bus_name, object_path)
 
         self._activity = activity
         self._pservice = PresenceService.get_instance()       
 
-    @dbus.service.method(ACTIVITY_INTERFACE)
+    @dbus.service.method(_ACTIVITY_INTERFACE)
     def start(self, activity_id):
         """Start the activity in unshared mode."""
         self._activity.start(activity_id)
 
-    @dbus.service.method(ACTIVITY_INTERFACE)
+    @dbus.service.method(_ACTIVITY_INTERFACE)
     def join(self, activity_ps_path):
         """Join the activity specified by its presence service path."""
         activity_ps = self._pservice.get(activity_ps_path)
         return self._activity.join(activity_ps)
 
-    @dbus.service.method(ACTIVITY_INTERFACE)
+    @dbus.service.method(_ACTIVITY_INTERFACE)
     def share(self):
         """Called by the shell to request the activity to share itself on the network."""
         self._activity.share()
 
-    @dbus.service.method(ACTIVITY_INTERFACE)
+    @dbus.service.method(_ACTIVITY_INTERFACE)
     def get_id(self):
         """Get the activity identifier"""
         return self._activity.get_id()
 
-    @dbus.service.method(ACTIVITY_INTERFACE)
+    @dbus.service.method(_ACTIVITY_INTERFACE)
     def get_type(self):
         """Get the activity type"""
         return self._activity.get_type()
 
-    @dbus.service.method(ACTIVITY_INTERFACE)
+    @dbus.service.method(_ACTIVITY_INTERFACE)
     def get_shared(self):
         """Returns True if the activity is shared on the mesh."""
         return self._activity.get_shared()
 
-    @dbus.service.method(ACTIVITY_INTERFACE,
+    @dbus.service.method(_ACTIVITY_INTERFACE,
                          in_signature="sas", out_signature="b")
     def execute(self, command, args):
         return self._activity.execute(command, args)

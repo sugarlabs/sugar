@@ -18,9 +18,13 @@ import logging
 
 import gobject
 import wnck
+import dbus
 
 from model.homeactivity import HomeActivity
 from sugar.activity import Activity
+
+_ACTIVITY_SERVICE_NAME = "org.laptop.Activity"
+_ACTIVITY_SERVICE_PATH = "/org/laptop/Activity"
 
 class HomeModel(gobject.GObject):
 
@@ -114,7 +118,10 @@ class HomeModel(gobject.GObject):
         self.emit('active-activity-changed', self._current_activity)
         
     def _add_activity(self, window):
-        act_service = Activity.get_service(window.get_xid())
+        bus = dbus.SessionBus()
+        xid = window.get_xid()
+        act_service = bus.get_object(_ACTIVITY_SERVICE_NAME + '%d' % xid,
+                                     _ACTIVITY_SERVICE_PATH + "/%s" % xid)
         act_id = act_service.get_id()
 
         activity = None
@@ -128,7 +135,7 @@ class HomeModel(gobject.GObject):
             if not bundle:
                 raise RuntimeError("No bundle for activity type '%s'." % act_type)
                 return
-            activity = HomeActivity(bundle, act_id)
+            activity = HomeActivity(act_service, bundle)
             self._activities[act_id] = activity
 
         activity.set_window(window)
