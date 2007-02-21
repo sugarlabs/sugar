@@ -23,7 +23,7 @@ import dbus.service
 from sugar.activity.bundle import Bundle
 from sugar import logger
 
-class ActivityFactory(dbus.service.Object):
+class ActivityFactoryService(dbus.service.Object):
     """Dbus service that takes care of creating new instances of an activity"""
 
     def __init__(self, service_name, activity_class):
@@ -75,4 +75,5 @@ def start(activity_class, bundle_path):
     os.environ['SUGAR_BUNDLE_SERVICE_NAME'] = bundle.get_service_name()
     os.environ['SUGAR_BUNDLE_DEFAULT_TYPE'] = bundle.get_default_type()
 
-    factory = ActivityFactory(bundle.get_service_name(), activity_class)
+    factory = ActivityFactoryService(bundle.get_service_name(),
+                                     activity_class)
