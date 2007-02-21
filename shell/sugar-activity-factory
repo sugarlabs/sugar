@@ -29,10 +29,10 @@ import dbus.glib
 gobject.threads_init()
 dbus.glib.threads_init()
 
-from sugar.activity import ActivityFactory
+from sugar.activity import activityfactoryservice
 
 sys.path.insert(0, sys.argv[2])
 
-ActivityFactory.start_factory(sys.argv[1], sys.argv[2])
+activityfactoryservice.start(sys.argv[1], sys.argv[2])
 
 gtk.main()
