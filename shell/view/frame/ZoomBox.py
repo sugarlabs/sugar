@@ -19,7 +19,6 @@ from gettext import gettext as _
 
 import hippo
 
-from sugar.graphics.menuicon import MenuIcon
 from sugar.graphics.menu import Menu, MenuItem
 from sugar.graphics.iconcolor import IconColor
 from sugar.graphics.iconbutton import IconButton

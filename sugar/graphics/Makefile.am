@@ -12,7 +12,6 @@ sugar_PYTHON =			\
 	iconcolor.py		\
 	label.py		\
 	menu.py			\
-	menuicon.py		\
 	menushell.py		\
 	optionmenu.py		\
 	roundbox.py		\
