@@ -44,4 +44,4 @@ class PopupContext(gobject.GObject):
         return self._active_control != None
 
     def get_position(self, control, popup):
-        return [None, None]
+        raise NotImplementedError

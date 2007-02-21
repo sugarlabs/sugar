@@ -89,9 +89,12 @@ class Button(hippo.CanvasBox):
         
         [x, y] = [None, None]
         if popup_context:
-            [x, y] = popup_context.get_position(self._icon, popup)
+            try:
+                [x, y] = popup_context.get_position(self._icon, popup)
+            except NotImplementedError:
+                pass
 
-        if (not x) or (not y):
+        if [x, y] == [None, None]:
             context = self._icon.get_context()
             #[x, y] = context.translate_to_screen(self._icon)
             [x, y] = context.translate_to_widget(self._icon)
