@@ -42,9 +42,10 @@ class ActivityMenu(Menu):
                               'theme:stock-close'))
 
 class ActivityButton(IconButton):
-    def __init__(self, shell, activity_model):
+    def __init__(self, shell, activity_model, popup_context):
         self._shell = shell
         self._activity_model = activity_model
+        self._popup_context = popup_context
 
         icon_name = self._activity_model.get_icon_name()
         icon_color = self._activity_model.get_icon_color()
@@ -57,7 +58,7 @@ class ActivityButton(IconButton):
         return menu
     
     def get_popup_context(self):
-        return self._shell.get_popup_context()
+        return self._popup_context
     
     def _action_cb(self, menu, menu_item):
         # TODO: Wouldn't be better to share/close the activity associated with
@@ -73,11 +74,11 @@ class ActivityButton(IconButton):
             activity.close()
 
 class ZoomBox(hippo.CanvasBox):
-    def __init__(self, shell, menu_shell):
+    def __init__(self, shell, popup_context):
         hippo.CanvasBox.__init__(self, orientation=hippo.ORIENTATION_HORIZONTAL)
 
         self._shell = shell
-        self._menu_shell = menu_shell
+        self._popup_context = popup_context
         self._activity_icon = None
 
         icon = IconButton(icon_name='theme:stock-zoom-mesh')
@@ -106,7 +107,7 @@ class ZoomBox(hippo.CanvasBox):
             self.remove(self._activity_icon)
 
         if home_activity:
-            icon = ActivityButton(self._shell, home_activity)
+            icon = ActivityButton(self._shell, home_activity, self._popup_context)
             self.append(icon)
             self._activity_icon = icon
         else:

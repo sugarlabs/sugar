@@ -10,4 +10,5 @@ sugar_PYTHON =				\
 	ZoomBox.py			\
 	notificationtray.py		\
 	overlaybox.py			\
-	PanelWindow.py
+	PanelWindow.py			\
+	framepopupcontext.py

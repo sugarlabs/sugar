@@ -17,10 +17,9 @@ class ClipboardPanelWindow(PanelWindow):
         clipboard = gtk.Clipboard()
         clipboard.connect("owner-change", self._owner_change_cb)
 
-        menu_shell = self.get_menu_shell()
         root = self.get_root()
 
-        box = ClipboardBox(menu_shell)
+        box = ClipboardBox(frame.get_popup_context())
         root.append(box)
 
         # Receiving dnd drops

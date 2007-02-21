@@ -98,6 +98,9 @@ class Menu(Popup):
         item.connect('button-press-event', self._item_button_press_event_cb)
         self.append(item)
 
+    def remove_item(self, item):
+        self.remove(item)
+
     def add_separator(self):
         box = hippo.CanvasBox()
         box.props.background_color = color.MENU_SEPARATOR.get_int()
