@@ -23,7 +23,6 @@ import hippo
 
 from sugar.graphics import units
 from sugar.graphics.roundbox import RoundBox
-from sugar.graphics import button
 from sugar.graphics import color
 from sugar.graphics import font
 from sugar.graphics.canvasicon import CanvasIcon
