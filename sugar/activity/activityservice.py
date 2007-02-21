@@ -40,18 +40,6 @@ class ActivityService(dbus.service.Object):
         dbus.service.Object.__init__(self, bus_name, object_path)
 
         self._activity = activity
-        self._pservice = PresenceService.get_instance()       
-
-    @dbus.service.method(_ACTIVITY_INTERFACE)
-    def start(self, activity_id):
-        """Start the activity in unshared mode."""
-        self._activity.start(activity_id)
-
-    @dbus.service.method(_ACTIVITY_INTERFACE)
-    def join(self, activity_ps_path):
-        """Join the activity specified by its presence service path."""
-        activity_ps = self._pservice.get(activity_ps_path)
-        return self._activity.join(activity_ps)
 
     @dbus.service.method(_ACTIVITY_INTERFACE)
     def share(self):
@@ -72,8 +60,3 @@ class ActivityService(dbus.service.Object):
     def get_shared(self):
         """Returns True if the activity is shared on the mesh."""
         return self._activity.get_shared()
-
-    @dbus.service.method(_ACTIVITY_INTERFACE,
-                         in_signature="sas", out_signature="b")
-    def execute(self, command, args):
-        return self._activity.execute(command, args)

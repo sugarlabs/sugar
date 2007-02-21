@@ -36,13 +36,12 @@ class ActivityCreationHandler(gobject.GObject):
         'error':       (gobject.SIGNAL_RUN_FIRST,
                         gobject.TYPE_NONE, 
                        ([gobject.TYPE_PYOBJECT])),
-        'success':     (gobject.SIGNAL_RUN_FIRST,
-                        gobject.TYPE_NONE, 
-                       ([gobject.TYPE_PYOBJECT]))
     }
 
     def __init__(self, service_name, activity_handle):
         gobject.GObject.__init__(self)
+
+        self._service_name = service_name
 
         if activity_handle:
             self._activity_handle = activity_handle
@@ -91,14 +90,12 @@ class ActivityCreationHandler(gobject.GObject):
         return act_id
 
     def _reply_handler(self, xid):
-        bus = dbus.SessionBus()
-        proxy_obj = bus.get_object(_ACTIVITY_SERVICE_NAME + '%d' % xid,
-                                   _ACTIVITY_SERVICE_PATH + "/%s" % xid)
-        activity = dbus.Interface(proxy_obj, _ACTIVITY_INTERFACE)
-        self.emit('success', activity)
+        logging.debug("Activity created %s (%s)." % 
+            (self._activity_handle.activity_id, self._service_name))
 
     def _error_handler(self, err):
-        logging.debug("Couldn't create activity: %s" % err)
+        logging.debug("Couldn't create activity %s (%s): %s" %
+            (self._activity_handle.activity_id, self._service_name, err))
         self.emit('error', err)
 
 def create(service_name, activity_handle=None):

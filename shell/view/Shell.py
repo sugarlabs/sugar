@@ -103,9 +103,6 @@ class Shell(gobject.GObject):
     def get_popup_context(self):
         return self._popup_context
 
-    def _join_success_cb(self, handler, activity, activity_ps):
-        activity.join(activity_ps.object_path())
-
     def _join_error_cb(self, handler, err, home_model):
         home_mode.notify_activity_launch_failed(handler.get_activity_id())
 
@@ -132,13 +129,9 @@ class Shell(gobject.GObject):
         handle.pservice_id = activity_id
 
         handler = activityfactory.create(act_type, handle)
-        handler.connect('success', self._join_success_cb, activity_ps)
         handler.connect('error', self._join_error_cb, home_model)
 
-    def _start_success_cb(self, handler, activity):
-        activity.start(handler.get_activity_id())
-
-    def _start_error_cb(self, handler, err, home_model, activity_id, activity_type):
+    def _start_error_cb(self, handler, err, home_model):
         home_model.notify_activity_launch_failed(handler.get_activity_id())
 
     def start_activity(self, activity_type):
@@ -150,7 +143,6 @@ class Shell(gobject.GObject):
         home_model.notify_activity_launch(handler.get_activity_id(),
                                           activity_type)
 
-        handler.connect('success', self._start_success_cb)
         handler.connect('error', self._start_error_cb, home_model)
 
         # Zoom to Home for launch feedback

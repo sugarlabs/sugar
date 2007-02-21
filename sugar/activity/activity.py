@@ -26,15 +26,18 @@ from sugar import env
 class Activity(gtk.Window):
     """Base Activity class that all other Activities derive from."""
 
-    def __init__(self, activity_handle):
+    def __init__(self, handle):
         gtk.Window.__init__(self)
 
         self.connect('destroy', self._destroy_cb)
 
         self._shared = False
-        self._activity_id = None
-        self._service = None
+        self._activity_id = handle.activity_id
         self._pservice = PresenceService.get_instance()
+
+        service = handle.get_presence_service()
+        if service:
+            self._join(service)
 
         self.realize()
     
@@ -43,14 +46,6 @@ class Activity(gtk.Window):
         self.window.set_group(group.window)
 
         self._bus = ActivityService(self)
-
-    def start(self, activity_id):
-        """Start the activity."""
-        if self._activity_id != None:
-            logging.warning('The activity has been already started.')
-            return
-
-        self._activity_id = activity_id
 
         self.present()
 
@@ -70,13 +65,8 @@ class Activity(gtk.Window):
         """Get the unique activity identifier."""
         return self._activity_id
 
-    def join(self, activity_ps):
-        """Join an activity shared on the network."""
-        if self._activity_id != None:
-            logging.warning('The activity has been already started.')
-            return
-        self._activity_id = activity_ps.get_id()
-
+    def _join(self, service):
+        self._service = service
         self._shared = True
 
         # Publish the default service, it's a copy of
@@ -102,10 +92,6 @@ class Activity(gtk.Window):
         default_type = self.get_default_type()
         self._service = self._pservice.share_activity(self, default_type)
         self._shared = True
-
-    def execute(self, command, args):
-        """Execute the given command with args"""
-        return False
 
     def _destroy_cb(self, window):
         if self._bus:
