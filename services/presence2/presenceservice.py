@@ -32,6 +32,8 @@ class NotFoundError(dbus.DBusException):
 
 class PresenceService(dbus.service.Object):
     def __init__(self):
+        self._next_object_id = 0
+
         self._buddies = {}      # key -> Buddy
         self._activities = {}   # activity id -> Activity
 
@@ -39,7 +41,22 @@ class PresenceService(dbus.service.Object):
 
         bus = dbus.SessionBus()
         self._bus_name = dbus.service.BusName(_PRESENCE_SERVICE, bus=bus)        
+
+        # Our owner object
+        if profile.get_nick_name():
+            objid = self._get_next_object_id()
+            self._owner = buddy.Owner(self, self._bus_name,
+                                      objid, self._icon_cache)
+            self._buddies[self._owner.get_key()] = self._owner
+        else:
+            self._owner = None
+
         dbus.service.Object.__init__(self, self._bus_name, _PRESENCE_PATH)
+
+    def _get_next_object_id(self):
+        """Increment and return the object ID counter."""
+        self._next_object_id = self._next_object_id + 1
+        return self._next_object_id
 
     @dbus.service.signal(_PRESENCE_INTERFACE, signature="o")
     def ActivityAppeared(self, activity):
@@ -59,23 +76,36 @@ class PresenceService(dbus.service.Object):
 
     @dbus.service.method(_PRESENCE_INTERFACE, out_signature="ao")
     def GetActivities(self):
-        return []
+        ret = []
+        for act in self._activities.values():
+            ret.append(act.object_path())
+        return ret
 
     @dbus.service.method(_PRESENCE_INTERFACE, in_signature="s", out_signature="o")
     def GetActivityById(self, actid):
+        if self._activities.has_key(actid):
+            return self._activities[actid].object_path()
         raise NotFoundError("The activity was not found.")
 
     @dbus.service.method(_PRESENCE_INTERFACE, out_signature="ao")
     def GetBuddies(self):
-        return []
+        ret = []
+        for buddy in self._buddies.values():
+            ret.append(buddy.object_path())
+        return ret
 
     @dbus.service.method(_PRESENCE_INTERFACE, in_signature="ay", out_signature="o")
     def GetBuddyByPublicKey(self, key):
+        if self._buddies.has_key(key):
+            return self._buddies[key].object_path()
         raise NotFoundError("The buddy was not found.")
 
     @dbus.service.method(_PRESENCE_INTERFACE, out_signature="o")
     def GetOwner(self):
-        raise NotFoundError("The owner was not found.")
+        if not self._owner:
+            raise NotFoundError("The owner was not found.")
+        else:
+            return self._owner.get_object_path()
 
     @dbus.service.method(_PRESENCE_INTERFACE, in_signature="sssa{sv}", out_signature="o")
     def ShareActivity(self, actid, atype, name, properties):
