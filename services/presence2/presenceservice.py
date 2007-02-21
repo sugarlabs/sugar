@@ -16,6 +16,7 @@
 
 import gobject
 import dbus, dbus.service, dbus.glib
+import buddyiconcache
 
 
 _PRESENCE_SERVICE = "org.laptop.Sugar.Presence"
@@ -31,6 +32,11 @@ class NotFoundError(dbus.DBusException):
 
 class PresenceService(dbus.service.Object):
     def __init__(self):
+        self._buddies = {}      # key -> Buddy
+        self._activities = {}   # activity id -> Activity
+
+        self._icon_cache = buddyiconcache.BuddyIconCache()
+
         bus = dbus.SessionBus()
         self._bus_name = dbus.service.BusName(_PRESENCE_SERVICE, bus=bus)        
         dbus.service.Object.__init__(self, self._bus_name, _PRESENCE_PATH)
