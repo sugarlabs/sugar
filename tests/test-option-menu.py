@@ -24,7 +24,7 @@ import hippo
 
 from sugar.graphics.toolbar import Toolbar
 from sugar.graphics.optionmenu import OptionMenu
-from sugar.graphics.button import Button
+from sugar.graphics.iconbutton import IconButton
 
 def _option_menu_changed_cb(option_menu):
     print '_option_menu_activated_cb: %i' % option_menu.props.value
@@ -47,7 +47,7 @@ canvas.set_root(vbox)
 toolbar = Toolbar()
 vbox.append(toolbar)
 
-button = Button('theme:stock-close')
+button = IconButton('theme:stock-close')
 toolbar.append(button)
 
 OPTION_ANYTHING = 1

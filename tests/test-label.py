@@ -20,7 +20,7 @@ import hippo
 
 from sugar.graphics.toolbar import Toolbar
 from sugar.graphics.label import Label
-from sugar.graphics.button import Button
+from sugar.graphics.iconbutton import IconButton
 
 import os
 theme = gtk.icon_theme_get_default()
@@ -42,7 +42,7 @@ canvas.set_root(vbox)
 toolbar = Toolbar()
 vbox.append(toolbar)
 
-button = Button('theme:stock-close')
+button = IconButton('theme:stock-close')
 toolbar.append(button)
 
 label = Label('mec moc')

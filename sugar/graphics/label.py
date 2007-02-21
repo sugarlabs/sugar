@@ -22,7 +22,6 @@ import gtk
 import hippo
 
 from sugar.graphics.roundbox import RoundBox
-from sugar.graphics.button import Button
 from sugar.graphics import color
 from sugar.graphics import font
 

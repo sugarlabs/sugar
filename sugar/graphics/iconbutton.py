@@ -29,8 +29,8 @@ from sugar import profile
 STANDARD_SIZE = 0
 SMALL_SIZE    = 1
 
-class Button(hippo.CanvasBox):
-    __gtype_name__ = 'Button'    
+class IconButton(hippo.CanvasBox):
+    __gtype_name__ = 'SugarIconButton'    
 
     __gproperties__ = {
         'icon-name' : (str, None, None, None,

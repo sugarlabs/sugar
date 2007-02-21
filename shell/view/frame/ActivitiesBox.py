@@ -19,13 +19,13 @@ import logging
 
 from sugar.graphics import units
 from sugar.graphics.iconcolor import IconColor
-from sugar.graphics.button import Button
+from sugar.graphics.iconbutton import IconButton
 from sugar.presence import PresenceService
 from sugar import profile
 
-class ActivityButton(Button):
+class ActivityButton(IconButton):
     def __init__(self, activity):
-        Button.__init__(self, icon_name=activity.get_icon())
+        IconButton.__init__(self, icon_name=activity.get_icon())
 
         self._activity = activity
 
@@ -38,9 +38,9 @@ class ActivityButton(Button):
     def get_bundle_id(self):
         return self._activity.get_service_name()
 
-class InviteButton(Button):
+class InviteButton(IconButton):
     def __init__(self, activity, invite):
-        Button.__init__(self, icon_name=activity.get_icon())
+        IconButton.__init__(self, icon_name=activity.get_icon())
 
         self.props.color = activity.get_color()
         self._invite = invite
