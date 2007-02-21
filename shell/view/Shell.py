@@ -20,7 +20,7 @@ import gobject
 import wnck
 
 from view.home.HomeWindow import HomeWindow
-from sugar.presence import PresenceService
+from sugar.activity.activityhandle import ActivityHandle
 from sugar.graphics.popupcontext import PopupContext
 from view.ActivityHost import ActivityHost
 from sugar.activity import activityfactory
@@ -59,8 +59,6 @@ class Shell(gobject.GObject):
 
         self._frame = Frame(self)
         self._frame.show_and_hide(3)
-
-        self._pservice = PresenceService.get_instance()
 
         self.start_activity('org.laptop.JournalActivity')
 
@@ -117,11 +115,6 @@ class Shell(gobject.GObject):
             activity.present()
             return
 
-        activity_ps = self._pservice.get_activity(activity_id)
-        if not activity_ps:
-            logging.error("Couldn't find shared activity for %s" % activity_id)
-            return
-
         # Get the service name for this activity, if
         # we have a bundle on the system capable of handling
         # this activity type
@@ -135,7 +128,10 @@ class Shell(gobject.GObject):
         home_model = self._model.get_home()
         home_model.notify_activity_launch(activity_id, act_type)
 
-        handler = activityfactory.create(act_type)
+        handle = ActivityHandle(activity_id)
+        handle.pservice_id = activity_id
+
+        handler = activityfactory.create(act_type, handle)
         handler.connect('success', self._join_success_cb, activity_ps)
         handler.connect('error', self._join_error_cb, home_model)
 

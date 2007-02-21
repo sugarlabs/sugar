@@ -23,6 +23,7 @@ import gtk
 
 from sugar.presence import PresenceService
 from sugar.activity import bundleregistry
+from sugar.activity.activityhandle import ActivityHandle
 from sugar import util
 
 _ACTIVITY_SERVICE_NAME = "org.laptop.Activity"
@@ -40,12 +41,17 @@ class ActivityCreationHandler(gobject.GObject):
                        ([gobject.TYPE_PYOBJECT]))
     }
 
-    def __init__(self, service_name):
+    def __init__(self, service_name, activity_handle):
         gobject.GObject.__init__(self)
 
-        self._activity_id = self._find_unique_activity_id()
-        if not self._activity_id:
-            raise RuntimeError("Cannot generate activity id.")
+        if activity_handle:
+            self._activity_handle = activity_handle
+        else:
+            activity_id = self._find_unique_activity_id()
+            if activity_id:
+                self._activity_handle = ActivityHandle(activity_id)
+            else:
+                raise RuntimeError("Cannot generate activity id.")
 
         registry = bundleregistry.get_registry()
         bundle = registry.get_bundle(service_name)
@@ -54,10 +60,12 @@ class ActivityCreationHandler(gobject.GObject):
         proxy_obj = bus.get_object(service_name, bundle.get_object_path())
         factory = dbus.Interface(proxy_obj, "com.redhat.Sugar.ActivityFactory")
 
-        factory.create(reply_handler=self._reply_handler, error_handler=self._error_handler)
+        factory.create(str(self._activity_handle),
+                       reply_handler=self._reply_handler,
+                       error_handler=self._error_handler)
 
     def get_activity_id(self):
-        return self._activity_id
+        return self._activity_handle.activity_id
 
     def _find_unique_activity_id(self):
         pservice = PresenceService.get_instance()
@@ -93,6 +101,6 @@ class ActivityCreationHandler(gobject.GObject):
         logging.debug("Couldn't create activity: %s" % err)
         self.emit('error', err)
 
-def create(service_name):
+def create(service_name, activity_handle=None):
     """Create a new activity from its name."""
-    return ActivityCreationHandler(service_name)
+    return ActivityCreationHandler(service_name, activity_handle)

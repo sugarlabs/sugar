@@ -4,6 +4,7 @@ sugar_PYTHON =				\
 	Activity.py			\
 	activityfactory.py		\
 	activityfactoryservice.py	\
+	activityhandle.py		\
 	activityservice.py		\
 	bundle.py			\
 	bundlebuilder.py		\

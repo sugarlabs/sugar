@@ -26,7 +26,7 @@ from sugar import env
 class Activity(gtk.Window):
     """Base Activity class that all other Activities derive from."""
 
-    def __init__(self):
+    def __init__(self, activity_handle):
         gtk.Window.__init__(self)
 
         self.connect('destroy', self._destroy_cb)

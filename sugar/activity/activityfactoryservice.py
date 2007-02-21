@@ -21,6 +21,7 @@ import dbus
 import dbus.service
 
 from sugar.activity.bundle import Bundle
+from sugar.activity import activityhandle
 from sugar import logger
 
 class ActivityFactoryService(dbus.service.Object):
@@ -48,8 +49,9 @@ class ActivityFactoryService(dbus.service.Object):
         dbus.service.Object.__init__(self, bus_name, object_path)
 
     @dbus.service.method("com.redhat.Sugar.ActivityFactory")
-    def create(self):
-        activity = self._constructor()
+    def create(self, handle):
+        activity_handle = activityhandle.create_from_string(handle)
+        activity = self._constructor(activity_handle)
 
         self._activities.append(activity)
         activity.connect('destroy', self._activity_destroy_cb)
