@@ -16,6 +16,7 @@
 # Boston, MA 02111-1307, USA.
 
 import logging
+import os
 
 import gtk
 

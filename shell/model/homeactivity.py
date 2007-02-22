@@ -82,7 +82,7 @@ class HomeActivity(gobject.GObject):
         act_id = self._service.get_id()
         if act_id != self._id:
             raise RuntimeError("Activity's real ID (%s) didn't match expected (%s)." % (act_id, self._id))
-        act_type = self._service.get_type()
+        act_type = self._service.get_service_name()
         if act_type != self._type:
             raise RuntimeError("Activity's real type (%s) didn't match expected (%s)." % (act_type, self._type))
 
