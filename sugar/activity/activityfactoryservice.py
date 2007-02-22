@@ -16,16 +16,24 @@
 # Boston, MA 02111-1307, USA.
 
 import os
+import sys
 
+import gobject
+import gtk
 import dbus
 import dbus.service
+import dbus.glib
 
 from sugar.activity.bundle import Bundle
 from sugar.activity import activityhandle
 from sugar import logger
 
+# Work around for dbus mutex locking issue
+gobject.threads_init()
+dbus.glib.threads_init()
+
 class ActivityFactoryService(dbus.service.Object):
-    """Dbus service that takes care of creating new instances of an activity"""
+    """D-Bus service that creates new instances of an activity"""
 
     def __init__(self, service_name, activity_class):
         self._activities = []
@@ -67,15 +75,17 @@ class ActivityFactoryService(dbus.service.Object):
         if len(self._activities) == 0:
             gtk.main_quit()
 
-def start(activity_class, bundle_path):
+def run(args):
     """Start the activity factory."""
-    bundle = Bundle(bundle_path)
+    sys.path.insert(0, args[2])
+
+    bundle = Bundle(args[2])
 
     logger.start(bundle.get_name())
 
-    os.environ['SUGAR_BUNDLE_PATH'] = bundle_path
+    os.environ['SUGAR_BUNDLE_PATH'] = args[2]
     os.environ['SUGAR_BUNDLE_SERVICE_NAME'] = bundle.get_service_name()
     os.environ['SUGAR_BUNDLE_DEFAULT_TYPE'] = bundle.get_default_type()
 
-    factory = ActivityFactoryService(bundle.get_service_name(),
-                                     activity_class)
+    factory = ActivityFactoryService(bundle.get_service_name(), args[1])
+    gtk.main()
