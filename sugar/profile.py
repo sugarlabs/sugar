@@ -24,6 +24,7 @@ class _Profile(object):
     def __init__(self):
         self.name = None
         self.color = None
+        self.pubkey = None
         self._load()
 
     def update(self):
@@ -40,6 +41,9 @@ class _Profile(object):
         if cp.has_option('Buddy', 'Color'):
             self.color = IconColor(cp.get('Buddy', 'Color'))
 
+        if cp.has_option('Buddy', 'PublicKey'):
+            self.pubkey = cp.get('Buddy', 'PublicKey')
+
         del cp
 
 def get_nick_name():
@@ -47,6 +51,9 @@ def get_nick_name():
 
 def get_color():
     return _profile.color
+
+def get_pubkey():
+    return _profile.pubkey
 
 def update():
     _profile.update()
