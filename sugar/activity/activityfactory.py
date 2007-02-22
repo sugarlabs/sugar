@@ -30,6 +30,28 @@ _ACTIVITY_SERVICE_NAME = "org.laptop.Activity"
 _ACTIVITY_SERVICE_PATH = "/org/laptop/Activity"
 _ACTIVITY_INTERFACE = "org.laptop.Activity"
 
+def _find_activity_id():
+    pservice = PresenceService.get_instance()
+
+    # create a new unique activity ID
+    i = 0
+    act_id = None
+    while i < 10:
+        act_id = util.unique_id()
+        i += 1
+
+        # check through network activities
+        found = False
+        activities = pservice.get_activities()
+        for act in activities:
+            if act_id == act.get_id():
+                found = True
+                break
+        if found:
+            raise RuntimeError("Cannot generate unique activity id.")
+
+    return act_id
+
 class ActivityCreationHandler(gobject.GObject):
 
     __gsignals__ = {
@@ -42,15 +64,7 @@ class ActivityCreationHandler(gobject.GObject):
         gobject.GObject.__init__(self)
 
         self._service_name = service_name
-
-        if activity_handle:
-            self._activity_handle = activity_handle
-        else:
-            activity_id = self._find_unique_activity_id()
-            if activity_id:
-                self._activity_handle = ActivityHandle(activity_id)
-            else:
-                raise RuntimeError("Cannot generate activity id.")
+        self._activity_handle = activity_handle
 
         registry = bundleregistry.get_registry()
         bundle = registry.get_bundle(service_name)
@@ -66,29 +80,6 @@ class ActivityCreationHandler(gobject.GObject):
     def get_activity_id(self):
         return self._activity_handle.activity_id
 
-    def _find_unique_activity_id(self):
-        pservice = PresenceService.get_instance()
-
-        # create a new unique activity ID
-        i = 0
-        act_id = None
-        while i < 10:
-            act_id = util.unique_id()
-            i += 1
-
-            # check through network activities
-            found = False
-            activities = pservice.get_activities()
-            for act in activities:
-                if act_id == act.get_id():
-                    found = True
-                    break
-            if found:
-                act_id = None
-                continue
-
-        return act_id
-
     def _reply_handler(self, xid):
         logging.debug("Activity created %s (%s)." % 
             (self._activity_handle.activity_id, self._service_name))
@@ -100,4 +91,12 @@ class ActivityCreationHandler(gobject.GObject):
 
 def create(service_name, activity_handle=None):
     """Create a new activity from its name."""
+    if not activity_handle:
+        activity_handle = ActivityHandle(_find_activity_id())
     return ActivityCreationHandler(service_name, activity_handle)
+
+def create_with_uri(service_name, uri):
+    """Create a new activity and pass the uri as handle."""
+    activity_handle = ActivityHandle(_find_activity_id())
+    activity_handle.uri = uri
+    return ActivityCreationHandler(service_name, handle)

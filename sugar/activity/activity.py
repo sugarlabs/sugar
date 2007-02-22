@@ -93,6 +93,10 @@ class Activity(gtk.Window):
         self._service = self._pservice.share_activity(self, default_type)
         self._shared = True
 
+    def execute(self, command, args):
+        """Execute the given command with args"""
+        return False
+
     def _destroy_cb(self, window):
         if self._bus:
             del self._bus

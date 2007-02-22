@@ -60,3 +60,9 @@ class ActivityService(dbus.service.Object):
     def get_shared(self):
         """Returns True if the activity is shared on the mesh."""
         return self._activity.get_shared()
+
+    @dbus.service.method(_ACTIVITY_INTERFACE,
+                         in_signature="sas", out_signature="b")
+    def execute(self, command, args):
+        return self._activity.execute(command, args)
+
