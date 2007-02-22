@@ -30,20 +30,21 @@ class Popup(hippo.CanvasBox, hippo.CanvasItem):
 
     def __init__(self):
         hippo.CanvasBox.__init__(self)
-        self._window = None
+        self._visible = False
+        self._window = hippo.CanvasWindow(gtk.WINDOW_POPUP)
+        self._window.set_root(self)
         self.connect('button-press-event', self._button_press_event_cb)
 
     def popup(self, x, y):
-        if not self._window:
-            self._window = hippo.CanvasWindow(gtk.WINDOW_POPUP)
+        if not self._visible:
             self._window.move(x, y)
-            self._window.set_root(self)
             self._window.show()
+            self._visible = True
 
     def popdown(self):
-        if self._window:
-            self._window.destroy()
-            self._window = None
+        if self._visible:
+            self._window.hide()
+            self._visible = False
 
     def _button_press_event_cb(self, menu, event):
         self.emit('action-completed')

@@ -102,7 +102,7 @@ class Frame:
         panel = self._create_panel(hippo.ORIENTATION_HORIZONTAL)
         root = panel.get_root()
 
-        box = ActivitiesBox(self._shell)
+        box = ActivitiesBox(self._shell, self._popup_context)
         root.append(box)
 
         return panel

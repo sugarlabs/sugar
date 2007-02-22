@@ -39,19 +39,19 @@ class IconButton(CanvasIcon):
                        gobject.PARAM_READWRITE)
     }
 
-    def __init__(self, icon_name, color=None):
-        if color:
-            self._normal_color = color
+    def __init__(self, **kwargs):
+        self._active = True
+
+        CanvasIcon.__init__(self, cache=True, **kwargs)
+
+        if self.props.color:
+            self._normal_color = self.props.color
         else:
             self._normal_color = IconColor('white')
+            self.props.color = self._normal_color
 
         self._prelight_color = profile.get_color()
         self._inactive_color = IconColor('#808080,#424242')
-        self._active = True
-
-        CanvasIcon.__init__(self, icon_name=icon_name, cache=True,
-                            color=self._normal_color)
-
         self._set_size(STANDARD_SIZE)
 
         self.connect('button-press-event', self._button_press_event_cb)

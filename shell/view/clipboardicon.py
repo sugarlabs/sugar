@@ -3,6 +3,7 @@ import logging
 from sugar.graphics.canvasicon import CanvasIcon
 from view.clipboardmenu import ClipboardMenu
 from sugar.graphics.iconcolor import IconColor
+from sugar.graphics import units
 from sugar.activity import activityfactory
 from sugar.clipboard import clipboardservice
 from sugar import util
@@ -17,6 +18,9 @@ class ClipboardIcon(CanvasIcon):
         self._percent = 0
         self._preview = None
         self._activity = None
+        self.props.box_width = units.grid_to_pixels(1)
+        self.props.box_height = units.grid_to_pixels(1)
+        self.props.scale = units.STANDARD_ICON_SCALE
         self.connect('activated', self._icon_activated_cb)
         self._menu = None
         

@@ -25,10 +25,11 @@ from sugar.activity import bundleregistry
 from sugar import profile
 
 class ActivityButton(IconButton):
-    def __init__(self, activity):
-        IconButton.__init__(self, icon_name=activity.get_icon())
-
+    def __init__(self, activity, popup_context):
+        IconButton.__init__(self, icon_name=activity.get_icon(),
+                                  tooltip=activity.get_name())
         self._activity = activity
+        self._popup_context = popup_context
 
     def _mouse_motion_event_cb(self, item, event):
         if event.detail == hippo.MOTION_DETAIL_ENTER:
@@ -38,6 +39,9 @@ class ActivityButton(IconButton):
 
     def get_bundle_id(self):
         return self._activity.get_service_name()
+    
+    def get_popup_context(self):
+        return self._popup_context
 
 class InviteButton(IconButton):
     def __init__(self, activity, invite):
@@ -56,13 +60,14 @@ class InviteButton(IconButton):
         return self._invite
 
 class ActivitiesBox(hippo.CanvasBox):
-    def __init__(self, shell):
+    def __init__(self, shell, popup_context):
         hippo.CanvasBox.__init__(self, orientation=hippo.ORIENTATION_HORIZONTAL)
 
         self._shell = shell
         self._shell_model = self._shell.get_model() 
         self._invite_to_item = {}
         self._invites = self._shell_model.get_invites()
+        self._popup_context = popup_context
 
         bundle_registry = bundleregistry.get_registry()
         for bundle in bundle_registry:
@@ -94,7 +99,7 @@ class ActivitiesBox(hippo.CanvasBox):
         self.add_activity(bundle)
 
     def add_activity(self, activity):
-        item = ActivityButton(activity)
+        item = ActivityButton(activity, self._popup_context)
         item.connect('activated', self._activity_clicked_cb)
         self.append(item, 0)
 

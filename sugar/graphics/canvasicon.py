@@ -26,6 +26,10 @@ import time
 
 from sugar.graphics.iconcolor import IconColor
 from sugar.graphics.timeline import Timeline
+from sugar.graphics.popup import Popup
+from sugar.graphics import color
+from sugar.graphics import font
+from sugar.graphics import units
 
 class _IconCacheIcon:
     def __init__(self, name, color, now):
@@ -140,6 +144,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
                       0.0, 1024.0, 1.0,
                       gobject.PARAM_READWRITE),
         'cache'    : (bool, None, None, False,
+                      gobject.PARAM_READWRITE),
+        'tooltip'  : (str, None, None, None,
                       gobject.PARAM_READWRITE)
     }
 
@@ -155,7 +161,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         self._handle = None
         self._popup = None
         self._hover_popup = False
-
+        self._tooltip = False
+        
         self._timeline = Timeline(self)
         self._timeline.add_tag('popup', 6, 6)
         self._timeline.add_tag('before_popdown', 7, 7)
@@ -193,6 +200,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             self.emit_request_changed()
         elif pspec.name == 'cache':
             self._cache = value
+        elif pspec.name == 'tooltip':
+            self._tooltip = value
 
     def _get_handle(self):
         if not self._handle:
@@ -212,6 +221,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             return self._color
         elif pspec.name == 'cache':
             return self._cache
+        elif pspec.name == 'tooltip':
+            return self._tooltip
 
     def _get_icon_size(self):
         handle = self._get_handle()
@@ -272,7 +283,19 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         item.emit_activated()
 
     def get_popup(self):
-        return self._popup
+        if self._tooltip:
+            tooltip_popup = Popup()
+            canvas_text = hippo.CanvasText(text=self._tooltip)
+            canvas_text.props.background_color = color.MENU_BACKGROUND.get_int()
+            canvas_text.props.border_color = color.MENU_BORDER.get_int()
+            canvas_text.props.border = units.points_to_pixels(1) 
+            canvas_text.props.color = color.LABEL_TEXT.get_int()
+            canvas_text.props.font_desc = font.DEFAULT.get_pango_desc()
+            tooltip_popup.append(canvas_text)
+            
+            return tooltip_popup
+        else:
+            return None
 
     def get_popup_context(self):
         return None
