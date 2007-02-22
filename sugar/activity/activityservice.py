@@ -52,9 +52,9 @@ class ActivityService(dbus.service.Object):
         return self._activity.get_id()
 
     @dbus.service.method(_ACTIVITY_INTERFACE)
-    def get_type(self):
-        """Get the activity type"""
-        return self._activity.get_type()
+    def get_service_name(self):
+        """Get the activity service name"""
+        return self._activity.get_service_name()
 
     @dbus.service.method(_ACTIVITY_INTERFACE)
     def get_shared(self):

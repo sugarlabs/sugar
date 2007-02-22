@@ -24,29 +24,11 @@ try:
 except ImportError:
     from sugar.__installed__ import *
 
-def get_bundle_path():
-    if os.environ.has_key('SUGAR_BUNDLE_PATH'):
-        return os.environ['SUGAR_BUNDLE_PATH']
-    else:
-        return None
-
 def is_emulator():
     if os.environ.has_key('SUGAR_EMULATOR'):
         if os.environ['SUGAR_EMULATOR'] == 'yes':
             return True
     return False
-
-def get_bundle_service_name():
-    if os.environ.has_key('SUGAR_BUNDLE_SERVICE_NAME'):
-        return os.environ['SUGAR_BUNDLE_SERVICE_NAME']
-    else:
-        return None
-
-def get_bundle_default_type():
-    if os.environ.has_key('SUGAR_BUNDLE_DEFAULT_TYPE'):
-        return os.environ['SUGAR_BUNDLE_DEFAULT_TYPE']
-    else:
-        return None
 
 def get_profile_path():
     if os.environ.has_key('SUGAR_PROFILE'):

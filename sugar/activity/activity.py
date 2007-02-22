@@ -21,7 +21,6 @@ import gtk
 
 from sugar.presence import PresenceService
 from sugar.activity.activityservice import ActivityService
-from sugar import env
 
 class Activity(gtk.Window):
     """Base Activity class that all other Activities derive from."""
@@ -49,13 +48,13 @@ class Activity(gtk.Window):
 
         self.present()
 
-    def get_type(self):
-        """Gets the activity type."""
-        return env.get_bundle_service_name()
+    def get_service_name(self):
+        """Gets the activity service name."""
+        return os.environ['SUGAR_BUNDLE_SERVICE_NAME']
 
     def get_default_type(self):
         """Gets the type of the default activity network service"""
-        return env.get_bundle_default_type()
+        return os.environ['SUGAR_BUNDLE_DEFAULT_TYPE']
 
     def get_shared(self):
         """Returns TRUE if the activity is shared on the mesh."""
@@ -103,3 +102,6 @@ class Activity(gtk.Window):
             self._bus = None
         if self._service:
             self._pservice.unregister_service(self._service)
+
+def get_bundle_path():
+    return os.environ['SUGAR_BUNDLE_BUNDLE_PATH']
