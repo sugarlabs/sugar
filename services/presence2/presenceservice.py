@@ -16,7 +16,14 @@
 
 import gobject
 import dbus, dbus.service, dbus.glib
+from telepathy.client import ManagerRegistry, Connection
+from telepathy.interfaces import CONN_MGR_INTERFACE
+ 
+import telepathyclient
+import buddy
+import activity
 import buddyiconcache
+from sugar import profile
 
 
 _PRESENCE_SERVICE = "org.laptop.Sugar.Presence"
@@ -42,14 +49,19 @@ class PresenceService(dbus.service.Object):
         bus = dbus.SessionBus()
         self._bus_name = dbus.service.BusName(_PRESENCE_SERVICE, bus=bus)        
 
-        # Our owner object
-        if profile.get_nick_name():
-            objid = self._get_next_object_id()
-            self._owner = buddy.Owner(self, self._bus_name,
-                                      objid, self._icon_cache)
-            self._buddies[self._owner.get_key()] = self._owner
-        else:
-            self._owner = None
+        # Create the Owner object
+        objid = self._get_next_object_id()
+        self._owner = buddy.Owner(self, self._bus_name, objid, self._icon_cache)
+        self._buddies[self._owner.get_key()] = self._owner
+
+        self._registry = ManagerRegistry()
+        self._registry.LoadManagers()
+        # Telepathy connection to the server
+        self._server_client = None
+        # Telepathy link local connection
+        self._ll_client = None
+
+        self._connect_server ()
 
         dbus.service.Object.__init__(self, self._bus_name, _PRESENCE_PATH)
 
@@ -57,6 +69,19 @@ class PresenceService(dbus.service.Object):
         """Increment and return the object ID counter."""
         self._next_object_id = self._next_object_id + 1
         return self._next_object_id
+
+    def _connect_server (self):
+        mgr = self._registry.GetManager('gabble')
+        protocol = 'jabber'
+        account = {
+            'account': 'olpc@collabora.co.uk',
+            'password': 'learn',
+            'server': 'light.bluelinux.co.uk'
+        }
+        conn_bus_name, conn_object_path = \
+        mgr[CONN_MGR_INTERFACE].RequestConnection(protocol, account)
+        conn = Connection(conn_bus_name, conn_object_path)
+        self._server_client = telepathyclient.TelepathyClient(conn)
 
     @dbus.service.signal(_PRESENCE_INTERFACE, signature="o")
     def ActivityAppeared(self, activity):

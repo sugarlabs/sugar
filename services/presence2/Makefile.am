@@ -1,6 +1,8 @@
 sugardir = $(pkgdatadir)/services/presence2
 sugar_PYTHON = \
 	__init__.py \
+	activity.py \
+	buddy.py \
 	buddyiconcache.py \
 	presenceservice.py
 
