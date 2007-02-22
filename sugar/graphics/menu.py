@@ -80,7 +80,7 @@ class Menu(Popup):
         'action': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([object]))
     }
 
-    def __init__(self, title):
+    def __init__(self, title=None):
         Popup.__init__(self)
 
         self.props.background_color = color.MENU_BACKGROUND.get_int()
