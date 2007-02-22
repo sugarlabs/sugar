@@ -135,7 +135,7 @@ class HomeModel(gobject.GObject):
             if not bundle:
                 raise RuntimeError("No bundle for activity type '%s'." % act_type)
                 return
-            activity = HomeActivity(act_service, bundle)
+            activity = HomeActivity(bundle, act_id)
             self._activities[act_id] = activity
 
         activity.set_window(window)
