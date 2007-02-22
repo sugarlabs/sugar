@@ -18,9 +18,13 @@ import logging
 
 import gobject
 import wnck
+import dbus
 
 from model.homeactivity import HomeActivity
-from sugar.activity import Activity
+from sugar.activity import bundleregistry
+
+_ACTIVITY_SERVICE_NAME = "org.laptop.Activity"
+_ACTIVITY_SERVICE_PATH = "/org/laptop/Activity"
 
 class HomeModel(gobject.GObject):
 
@@ -39,11 +43,11 @@ class HomeModel(gobject.GObject):
                                    ([gobject.TYPE_PYOBJECT]))
     }
     
-    def __init__(self, bundle_registry):
+    def __init__(self):
         gobject.GObject.__init__(self)
 
         self._activities = {}
-        self._bundle_registry = bundle_registry
+        self._bundle_registry = bundleregistry.get_registry()
         self._current_activity = None
 
         screen = wnck.screen_get_default()
@@ -114,7 +118,10 @@ class HomeModel(gobject.GObject):
         self.emit('active-activity-changed', self._current_activity)
         
     def _add_activity(self, window):
-        act_service = Activity.get_service(window.get_xid())
+        bus = dbus.SessionBus()
+        xid = window.get_xid()
+        act_service = bus.get_object(_ACTIVITY_SERVICE_NAME + '%d' % xid,
+                                     _ACTIVITY_SERVICE_PATH + "/%s" % xid)
         act_id = act_service.get_id()
 
         activity = None
@@ -123,7 +130,7 @@ class HomeModel(gobject.GObject):
         else:
             # activity got lost, took longer to launch than we allow,
             # or it was launched by something other than the shell
-            act_type = act_service.get_type()
+            act_type = act_service.get_service_name()
             bundle = self._bundle_registry.get_bundle(act_type)
             if not bundle:
                 raise RuntimeError("No bundle for activity type '%s'." % act_type)

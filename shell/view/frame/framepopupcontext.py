@@ -14,36 +14,13 @@
 # License along with this library; if not, write to the
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
-import sys
-import logging
-
 import gobject
-import gtk
 import hippo
 
-class Popup(hippo.CanvasBox, hippo.CanvasItem):
-    __gtype_name__ = 'SugarPopup'
+from sugar.graphics.popupcontext import PopupContext
 
-    __gsignals__ = {
-        'action-completed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
-    }
-
+class FramePopupContext(PopupContext):
+    __gtype_name__ = 'SugarFramePopupContext'
+    
     def __init__(self):
-        hippo.CanvasBox.__init__(self)
-        self._window = None
-        self.connect('button-press-event', self._button_press_event_cb)
-
-    def popup(self, x, y):
-        if not self._window:
-            self._window = hippo.CanvasWindow(gtk.WINDOW_POPUP)
-            self._window.move(x, y)
-            self._window.set_root(self)
-            self._window.show()
-
-    def popdown(self):
-        if self._window:
-            self._window.destroy()
-            self._window = None
-
-    def _button_press_event_cb(self, menu, event):
-        self.emit('action-completed')
+        PopupContext.__init__(self)

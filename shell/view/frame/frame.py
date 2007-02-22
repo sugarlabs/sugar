@@ -27,9 +27,9 @@ from view.frame.FriendsBox import FriendsBox
 from view.frame.PanelWindow import PanelWindow
 from view.frame.clipboardpanelwindow import ClipboardPanelWindow
 from view.frame.notificationtray import NotificationTray
+from view.frame.framepopupcontext import FramePopupContext
 from model.ShellModel import ShellModel
 from sugar.graphics.timeline import Timeline
-from sugar.graphics.menushell import MenuShell
 from sugar.graphics import units
 
 _ANIMATION = False
@@ -62,6 +62,12 @@ class Frame:
         self._event_frame.connect('leave', self._event_frame_leave_cb)
         self._event_frame.show()
 
+        self._popup_context = FramePopupContext()
+        self._popup_context.connect('activated',
+                                    self._popup_context_activated_cb)
+        self._popup_context.connect('deactivated',
+                                    self._popup_context_deactivated_cb)
+
         self._top_panel = self._create_top_panel()
         self._bottom_panel = self._create_bottom_panel()
         self._left_panel = self._create_left_panel()
@@ -70,20 +76,11 @@ class Frame:
         shell.get_model().connect('notify::state',
                                   self._shell_state_changed_cb)
 
-        popup_context = shell.get_popup_context()
-        popup_context.connect('activated',
-                                 self._popup_context_activated_cb)
-        popup_context.connect('deactivated',
-                                 self._popup_context_deactivated_cb)
-
     def _create_top_panel(self):
         panel = self._create_panel(hippo.ORIENTATION_HORIZONTAL)
-        menu_shell = panel.get_menu_shell()
         root = panel.get_root()
 
-        menu_shell.set_position(MenuShell.BOTTOM)
-
-        box = ZoomBox(self._shell, menu_shell)
+        box = ZoomBox(self._shell, self._popup_context)
         root.append(box)
 
         tray = NotificationTray()
@@ -103,10 +100,7 @@ class Frame:
 
     def _create_bottom_panel(self):
         panel = self._create_panel(hippo.ORIENTATION_HORIZONTAL)
-        menu_shell = panel.get_menu_shell()
         root = panel.get_root()
-
-        menu_shell.set_position(MenuShell.TOP)
 
         box = ActivitiesBox(self._shell)
         root.append(box)
@@ -115,12 +109,9 @@ class Frame:
 
     def _create_right_panel(self):
         panel = self._create_panel(hippo.ORIENTATION_VERTICAL)
-        menu_shell = panel.get_menu_shell()
         root = panel.get_root()
 
-        menu_shell.set_position(MenuShell.LEFT)
-
-        box = FriendsBox(self._shell, menu_shell)
+        box = FriendsBox(self._shell, self._popup_context)
         root.append(box)
 
         return panel
@@ -158,19 +149,6 @@ class Frame:
         panel.connect('enter-notify-event', self._enter_notify_cb)
         panel.connect('leave-notify-event', self._leave_notify_cb)
 
-        menu_shell = panel.get_menu_shell()
-        menu_shell.connect('activated',
-                           self._menu_shell_activated_cb)
-        menu_shell.connect('deactivated',
-                           self._menu_shell_deactivated_cb)
-
-    def _menu_shell_activated_cb(self, menu_shell):
-        self._timeline.goto('slide_in', True)
-
-    def _menu_shell_deactivated_cb(self, menu_shell):
-        if self._mode != Frame.STICKY and not self._hover_frame:
-            self._timeline.play('before_slide_out', 'slide_out')
-
     def _popup_context_activated_cb(self, popup_context):
         self._timeline.goto('slide_in', True)
 
@@ -205,8 +183,7 @@ class Frame:
                
     def _leave_notify(self, panel):
         self._hover_frame = False
-        if not panel.get_menu_shell().is_active() and \
-           not self._shell.get_popup_context().is_active() and \
+        if not self._popup_context.is_active() and \
            (self._mode == Frame.HIDE_ON_LEAVE or \
             self._mode == Frame.AUTOMATIC):
             self._timeline.play('before_slide_out', 'slide_out')
@@ -281,3 +258,6 @@ class Frame:
 
     def is_visible(self):
         return self._top_panel.props.visible
+
+    def get_popup_context(self):
+        return self._popup_context

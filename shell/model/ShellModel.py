@@ -44,8 +44,6 @@ class ShellModel(gobject.GObject):
         self._current_activity = None
         self._state = self.STATE_RUNNING
 
-        self._bundle_registry = BundleRegistry()
-
         PresenceService.start()
         self._pservice = PresenceService.get_instance()
 
@@ -53,15 +51,9 @@ class ShellModel(gobject.GObject):
         self._owner.announce()
 
         self._friends = Friends()
-        self._mesh = MeshModel(self._bundle_registry)
-        self._home = HomeModel(self._bundle_registry)
+        self._mesh = MeshModel()
+        self._home = HomeModel()
         self._devices = DevicesModel()
-
-        for path in env.get_data_dirs():
-            bundles_path = os.path.join(path, 'activities')
-            self._bundle_registry.add_search_path(bundles_path)
-
-        self._bundle_registry.add_search_path(env.get_user_activities_dir())
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'state':
@@ -70,9 +62,6 @@ class ShellModel(gobject.GObject):
     def do_get_property(self, pspec):
         if pspec.name == 'state':
             return self._state
-
-    def get_bundle_registry(self):
-        return self._bundle_registry
 
     def get_mesh(self):
         return self._mesh

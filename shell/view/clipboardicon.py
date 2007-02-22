@@ -1,16 +1,17 @@
 import logging
 
-from sugar.graphics.menuicon import MenuIcon
+from sugar.graphics.canvasicon import CanvasIcon
 from view.clipboardmenu import ClipboardMenu
 from sugar.graphics.iconcolor import IconColor
-from sugar.activity import ActivityFactory
+from sugar.activity import activityfactory
 from sugar.clipboard import clipboardservice
 from sugar import util
 
-class ClipboardIcon(MenuIcon):
+class ClipboardIcon(CanvasIcon):
 
-    def __init__(self, menu_shell, object_id, name):
-        MenuIcon.__init__(self, menu_shell)
+    def __init__(self, popup_context, object_id, name):
+        CanvasIcon.__init__(self)
+        self._popup_context = popup_context
         self._object_id = object_id
         self._name = name
         self._percent = 0
@@ -19,11 +20,14 @@ class ClipboardIcon(MenuIcon):
         self.connect('activated', self._icon_activated_cb)
         self._menu = None
         
-    def create_menu(self):
+    def get_popup(self):
         self._menu = ClipboardMenu(self._name, self._percent, self._preview,
                                    self._activity)
         self._menu.connect('action', self._popup_action_cb)
         return self._menu
+
+    def get_popup_context(self):
+        return self._popup_context
 
     def set_state(self, name, percent, icon_name, preview, activity):
         self._name = name
@@ -53,15 +57,15 @@ class ClipboardIcon(MenuIcon):
         logging.debug("_icon_activated_cb: " + self._object_id)
 
         # Launch the activity to handle this item
-        handler = ActivityFactory.create(self._activity)
+        handler = activityfactory.create(self._activity)
         handler.connect('success', self._activity_create_success_cb)
         handler.connect('error', self._activity_create_error_cb)
 
     def _icon_activated_cb(self, icon):
         self._open_file()
                         
-    def _popup_action_cb(self, popup, action):
-        self.popdown()
+    def _popup_action_cb(self, popup, menu_item):
+        action = menu_item.props.action_id
         
         if action == ClipboardMenu.ACTION_STOP_DOWNLOAD:
             raise "Stopping downloads still not implemented."

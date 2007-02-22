@@ -20,7 +20,7 @@ import sys
 import os
 import gobject
 
-from sugar.activity import ActivityFactory
+from sugar.activity import activityfactory
 from sugar import env
 from sugar import util
 
@@ -40,7 +40,7 @@ os.environ['DBUS_SESSION_BUS_ADDRESS'] = bus_name
 
 loop = gobject.MainLoop()
 
-handler = ActivityFactory.create(sys.argv[1])
+handler = activityfactory.create(sys.argv[1])
 handler.connect('success', _success_cb, loop)
 handler.connect('error', _error_cb, loop)
 

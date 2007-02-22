@@ -17,7 +17,6 @@
 import gtk
 import dbus
 
-from sugar.activity import Activity
 from sugar.p2p import Stream
 from sugar.p2p import network
 from sugar.chat import ActivityChat
@@ -42,7 +41,7 @@ class ActivityHost:
         self._model = model
         self._id = model.get_id()
         self._window = model.get_window()
-        self._activity = Activity.get_service(self.get_xid())
+        self._activity = model.get_service()
         self._gdk_window = gtk.gdk.window_foreign_new(self.get_xid())
 
         try:

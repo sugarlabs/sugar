@@ -24,70 +24,27 @@ import hippo
 
 from sugar.graphics import units
 from sugar.graphics.roundbox import RoundBox
+from sugar.graphics.menu import Menu, MenuItem
 from sugar.graphics import iconbutton
 from sugar.graphics import color
 from sugar.graphics import font
 from sugar.graphics.canvasicon import CanvasIcon
 
-class Menu(hippo.CanvasBox, hippo.CanvasItem):
-    __gtype_name__ = 'SugarMenu'
-
-    __gsignals__ = {
-        'action': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([object]))
-    }
-
+class _Menu(Menu):
     def __init__(self):
-        hippo.CanvasBox.__init__(self)
-        self.props.background_color = color.MENU_BACKGROUND.get_int()
-        self.props.border_color = color.MENU_BORDER.get_int()
-        self.props.border = units.points_to_pixels(1)
-        self._window = None
-
-    def add_item(self, action_id, label, icon_name=None, icon_color=None):
-        box = hippo.CanvasBox(orientation=hippo.ORIENTATION_HORIZONTAL)
-        box.props.padding = 5
-        box.props.spacing = 5
-        if icon_name:
-            icon = CanvasIcon(icon_name=icon_name,
-                              scale=units.SMALL_ICON_SCALE)
-            if icon_color:
-                icon.props.color = icon_color
-            box.append(icon)
-
-        canvas_text = hippo.CanvasText()
-        canvas_text.props.text = label
-        canvas_text.props.color = color.LABEL_TEXT.get_int()
-        canvas_text.props.font_desc = font.DEFAULT.get_pango_desc()
-        box.append(canvas_text)
-
-        box.connect('button-press-event', self._item_button_press_event_cb,
-                    [action_id, label])
-        self.append(box)
-    
-    def add_separator(self):
-        box = hippo.CanvasBox()
-        box.props.background_color = color.MENU_SEPARATOR.get_int()
-        box.props.box_height = units.points_to_pixels(1)
-        self.append(box)
-
-    def show(self, x, y):
-        if not self._window:
-            self._window = hippo.CanvasWindow(gtk.WINDOW_POPUP)
-            self._window.move(x, y)
-            self._window.set_root(self)
-            self._window.show()
-
-    def hide(self):
-        if self._window:
-            self._window.destroy()
-            self._window = None
-
-    def _item_button_press_event_cb(self, item, event, data):
-        self.emit('action', data)
-        self.hide()
+        Menu.__init__(self)
+        self._is_visible = False
     
     def is_visible(self):
-        return self._window != None
+        return self._is_visible
+    
+    def popup(self, x, y):
+        Menu.popup(self, x, y)
+        self._is_visible = True
+    
+    def popdown(self):
+        Menu.popdown(self)
+        self._is_visible = False
 
 class OptionMenu(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarOptionMenu'
@@ -122,8 +79,9 @@ class OptionMenu(hippo.CanvasBox, hippo.CanvasItem):
         arrow.props.xalign = hippo.ALIGNMENT_START
         self._round_box.append(arrow)
 
-        self._menu = Menu()
+        self._menu = _Menu()
         self._menu.connect('action', self._menu_action_cb)
+        self._menu.connect('action-completed', self._menu_action_completed_cb)
 
         self.connect('button-press-event', self._button_press_event_cb)
 
@@ -135,33 +93,37 @@ class OptionMenu(hippo.CanvasBox, hippo.CanvasItem):
         if pspec.name == 'value':
             return self._value
 
-    def add_option(self, action_id, label, icon_name=None, icon_color=None):
+    def add_item(self, menu_item):
         if not self._value:
-            self._value = action_id
-            self._canvas_text.props.text = label
+            self._value = menu_item.props.action_id
+            self._canvas_text.props.text = menu_item.props.label
 
-        self._menu.add_item(action_id, label, icon_name, icon_color)
+        self._menu.add_item(menu_item)
 
     def add_separator(self):
         self._menu.add_separator()
 
     def _button_press_event_cb(self, box, event):
         if self._menu.is_visible():
-            self._menu.hide()
+            self._menu.popdown()
         else:
             context = self._round_box.get_context()
-            #[x, y] = context.translate_to_screen(self._round_box)
-            [x, y] = context.translate_to_widget(self._round_box)
+            [x, y] = context.translate_to_screen(self._round_box)
             
             # TODO: Any better place to do this?
             self._menu.props.box_width = self.get_width_request()
 
             [width, height] = self._round_box.get_allocation()            
-            self._menu.show(x, y + height)
+            self._menu.popup(x, y + height)
 
-    def _menu_action_cb(self, menu, data):
-        [action_id, label] = data
+    def _menu_action_cb(self, menu, menu_item):
+        action_id = menu_item.props.action_id
+        label = menu_item.props.label
+        
         if action_id != self._value:
             self._value = action_id
             self._canvas_text.props.text = label
             self.emit('changed')
+
+    def _menu_action_completed_cb(self, menu):
+        self._menu.popdown()

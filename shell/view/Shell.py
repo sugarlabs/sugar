@@ -20,10 +20,10 @@ import gobject
 import wnck
 
 from view.home.HomeWindow import HomeWindow
-from sugar.presence import PresenceService
+from sugar.activity.activityhandle import ActivityHandle
 from sugar.graphics.popupcontext import PopupContext
 from view.ActivityHost import ActivityHost
-from sugar.activity import ActivityFactory
+from sugar.activity import activityfactory
 from view.frame.frame import Frame
 from view.keyhandler import KeyHandler
 from view.hardwaremanager import HardwareManager
@@ -59,8 +59,6 @@ class Shell(gobject.GObject):
 
         self._frame = Frame(self)
         self._frame.show_and_hide(3)
-
-        self._pservice = PresenceService.get_instance()
 
         self.start_activity('org.laptop.JournalActivity')
 
@@ -105,23 +103,13 @@ class Shell(gobject.GObject):
     def get_popup_context(self):
         return self._popup_context
 
-    def _join_success_cb(self, handler, activity, activity_ps, activity_id, activity_type):
-        logging.debug("Joining activity %s (%s)" % (activity_id, activity_type))
-        activity.join(activity_ps.object_path())
-
-    def _join_error_cb(self, handler, err, home_model, activity_id, activity_type):
-        logging.error("Couldn't launch activity %s (%s):\n%s" % (activity_id, activity_type, err))
-        home_mode.notify_activity_launch_failed(activity_id)
+    def _join_error_cb(self, handler, err, home_model):
+        home_mode.notify_activity_launch_failed(handler.get_activity_id())
 
     def join_activity(self, bundle_id, activity_id):
         activity = self.get_activity(activity_id)
         if activity:
             activity.present()
-            return
-
-        activity_ps = self._pservice.get_activity(activity_id)
-        if not activity_ps:
-            logging.error("Couldn't find shared activity for %s" % activity_id)
             return
 
         # Get the service name for this activity, if
@@ -137,62 +125,25 @@ class Shell(gobject.GObject):
         home_model = self._model.get_home()
         home_model.notify_activity_launch(activity_id, act_type)
 
-        handler = ActivityFactory.create(act_type)
-        handler.connect('success', self._join_success_cb, activity_ps, activity_id, act_type)
-        handler.connect('error', self._join_error_cb, home_model, activity_id, act_type)
+        handle = ActivityHandle(activity_id)
+        handle.pservice_id = activity_id
 
-    def _find_unique_activity_id(self):
-        # create a new unique activity ID
-        i = 0
-        act_id = None
-        while i < 10:
-            act_id = sugar.util.unique_id()
-            i += 1
+        handler = activityfactory.create(act_type, handle)
+        handler.connect('error', self._join_error_cb, home_model)
 
-            # check through existing activities
-            found = False
-            for xid, act_host in self._hosts.items():
-                if act_host.get_id() == act_id:
-                    found = True
-                    break
-            if found:
-                act_id = None
-                continue
-
-            # check through network activities
-            activities = self._pservice.get_activities()
-            for act in activities:
-                if act_id == act.get_id():
-                    found = True
-                    break
-            if found:
-                act_id = None
-                continue
-
-        return act_id
-
-    def _start_success_cb(self, handler, activity, activity_id, activity_type):
-        logging.debug("Started activity %s (%s)" % (activity_id, activity_type))
-        activity.start(activity_id)
-
-    def _start_error_cb(self, handler, err, home_model, activity_id, activity_type):
-        logging.error("Couldn't launch activity %s (%s):\n%s" % (activity_id, activity_type, err))
-        home_model.notify_activity_launch_failed(activity_id)
+    def _start_error_cb(self, handler, err, home_model):
+        home_model.notify_activity_launch_failed(handler.get_activity_id())
 
     def start_activity(self, activity_type):
         logging.debug('Shell.start_activity')
-        act_id = self._find_unique_activity_id()
-        if not act_id:
-            logging.error("Couldn't find available activity ID.")
-            return None
+
+        handler = activityfactory.create(activity_type)
 
         home_model = self._model.get_home()
-        home_model.notify_activity_launch(act_id, activity_type)
+        home_model.notify_activity_launch(handler.get_activity_id(),
+                                          activity_type)
 
-        logging.debug("Shell.start_activity will start %s (%s)" % (act_id, activity_type))
-        handler = ActivityFactory.create(activity_type)
-        handler.connect('success', self._start_success_cb, act_id, activity_type)
-        handler.connect('error', self._start_error_cb, home_model, act_id, activity_type)
+        handler.connect('error', self._start_error_cb, home_model)
 
         # Zoom to Home for launch feedback
         self.set_zoom_level(sugar.ZOOM_HOME)

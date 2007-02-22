@@ -29,7 +29,7 @@ class TextFileType(FileType):
         return _('Text snippet')
 
     def get_icon(self):
-        return 'theme:activity-xbook'
+        return 'theme:object-text'
 
     def get_preview(self):
         for format, data in self._formats.iteritems():
@@ -57,7 +57,7 @@ class ImageFileType(FileType):
         return _('Image')
 
     def get_icon(self):
-        return 'theme:activity-sketch'
+        return 'theme:object-image'
 
     def get_preview(self):
         return ''
@@ -77,7 +77,7 @@ class UriFileType(FileType):
         return _('Web Page')
 
     def get_icon(self):
-        return 'theme:activity-web'
+        return 'theme:object-link'
 
     def get_preview(self):
         for format, data in self._formats.iteritems():
@@ -103,7 +103,7 @@ class PdfFileType(FileType):
         return _('PDF file')
 
     def get_icon(self):
-        return 'theme:activity-xbook'
+        return 'theme:object-text'
 
     def get_preview(self):
         return ''
@@ -123,7 +123,7 @@ class MsWordFileType(FileType):
         return _('MS Word file')
 
     def get_icon(self):
-        return 'theme:activity-abiword'
+        return 'theme:object-text'
 
     def get_preview(self):
         return ''
@@ -143,7 +143,7 @@ class RtfFileType(FileType):
         return _('RTF file')
 
     def get_icon(self):
-        return 'theme:activity-abiword'
+        return 'theme:object-text'
 
     def get_preview(self):
         return ''
@@ -163,7 +163,7 @@ class OOTextFileType(FileType):
         return _('OpenOffice text file')
 
     def get_icon(self):
-        return 'theme:activity-abiword'
+        return 'theme:object-text'
 
     def get_preview(self):
         return ''

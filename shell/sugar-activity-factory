@@ -18,21 +18,6 @@
 
 import sys
 
-import pygtk
-pygtk.require('2.0')
-import gobject
-import gtk
+from sugar.activity import activityfactoryservice
 
-import dbus.glib
-
-# Work around for dbus mutex locking issue
-gobject.threads_init()
-dbus.glib.threads_init()
-
-from sugar.activity import ActivityFactory
-
-sys.path.insert(0, sys.argv[2])
-
-ActivityFactory.start_factory(sys.argv[1], sys.argv[2])
-
-gtk.main()
+activityfactoryservice.run(sys.argv)
