@@ -32,4 +32,4 @@ from presence2 import presenceservice
 
 logging.info('Starting presence service')
 
-PresenceService.main()
+presenceservice.main()
