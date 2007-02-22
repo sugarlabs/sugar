@@ -17,8 +17,10 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <math.h>
+#include <stdlib.h>
 #include <gdk/gdkx.h>
+
+#include "sugar-utils.h"
 
 gint
 sugar_get_screen_dpi(void)
@@ -27,8 +29,8 @@ sugar_get_screen_dpi(void)
     if (val) {
         char *e;
         double d = strtod(val, &e);
-        if (e != val)
-            return round(d);
+        if (d > 0.0)
+            return (int)(d+0.5);
     }
 
     return 96;
