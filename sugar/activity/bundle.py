@@ -1,7 +1,10 @@
 import logging
 import os
-
 from ConfigParser import ConfigParser
+
+from sugar import env
+
+_PYTHON_FACTORY='sugar-activity-factory'
 
 class Bundle:
     """Info about an activity bundle. Wraps the activity.info file."""
@@ -38,11 +41,18 @@ class Bundle:
             self._valid = False
             logging.error('%s must specify a name' % self._path)
 
-        if cp.has_option(section, 'exec'):
+        if cp.has_option(section, 'class'):
+            self._class = cp.get(section, 'class')
+            self._exec = '%s %s --bundle-path=%s' % (
+                 os.path.join(env.get_shell_bin_dir(), _PYTHON_FACTORY),
+                 self._class, self.get_path())
+        elif cp.has_option(section, 'exec'):
+            self._class = None
             self._exec = cp.get(section, 'exec')
         else:
+            self._exec = None
             self._valid = False
-            logging.error('%s must specify an exec' % self._path)
+            logging.error('%s must specify exec or class' % self._path)
 
         if cp.has_option(section, 'show_launcher'):
             if cp.get(section, 'show_launcher') == 'no':
@@ -92,6 +102,10 @@ class Bundle:
 
     def get_exec(self):
         """Get the command to execute to launch the activity factory"""
+        return self._exec
+
+    def get_class(self):
+        """Get the main Activity class"""
         return self._exec
 
     def get_show_launcher(self):

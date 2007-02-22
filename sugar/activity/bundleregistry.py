@@ -11,13 +11,8 @@ class _ServiceManager(object):
         self._path = env.get_user_service_dir()
 
     def add(self, bundle):
-        name = bundle.get_service_name()
-
-        # FIXME evil hack. Probably need to fix Exec spec
-        full_exec = env.get_shell_bin_dir() + '/' + bundle.get_exec()
-        full_exec += ' ' + bundle.get_path()
-
-        util.write_service(name, full_exec, self._path)
+        util.write_service(bundle.get_service_name(),
+                           bundle.get_exec(), self._path)
 
 class BundleRegistry(gobject.GObject):
     """Service that tracks the available activity bundles"""

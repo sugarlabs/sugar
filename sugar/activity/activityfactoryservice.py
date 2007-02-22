@@ -17,6 +17,7 @@
 
 import os
 import sys
+from optparse import OptionParser
 
 import gobject
 import gtk
@@ -77,15 +78,20 @@ class ActivityFactoryService(dbus.service.Object):
 
 def run(args):
     """Start the activity factory."""
-    sys.path.insert(0, args[2])
+    parser = OptionParser()
+    parser.add_option("-p", "--bundle-path", dest="bundle_path",
+                      help="path to the activity bundle")
+    (options, args) = parser.parse_args()
 
-    bundle = Bundle(args[2])
+    sys.path.insert(0, options.bundle_path)
+
+    bundle = Bundle(options.bundle_path)
 
     logger.start(bundle.get_name())
 
-    os.environ['SUGAR_BUNDLE_PATH'] = args[2]
+    os.environ['SUGAR_BUNDLE_PATH'] = options.bundle_path
     os.environ['SUGAR_BUNDLE_SERVICE_NAME'] = bundle.get_service_name()
     os.environ['SUGAR_BUNDLE_DEFAULT_TYPE'] = bundle.get_default_type()
 
-    factory = ActivityFactoryService(bundle.get_service_name(), args[1])
+    factory = ActivityFactoryService(bundle.get_service_name(), args[0])
     gtk.main()
