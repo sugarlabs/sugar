@@ -20,8 +20,8 @@ from telepathy.client import ManagerRegistry, Connection
 from telepathy.interfaces import CONN_MGR_INTERFACE
  
 import telepathyclient
-import buddy
-import activity
+from buddy import Buddy, Owner
+from activity import Activity
 import buddyiconcache
 from sugar import profile
 
@@ -42,7 +42,7 @@ class PresenceService(dbus.service.Object):
         self._next_object_id = 0
 
         self._buddies = {}      # key -> Buddy
-        self._buddies_handle = {} # tp handle -> Buddy
+        self._handles = {}      # tp client -> (handle -> Buddy)
         self._activities = {}   # activity id -> Activity
 
         self._icon_cache = buddyiconcache.BuddyIconCache()
@@ -52,7 +52,7 @@ class PresenceService(dbus.service.Object):
 
         # Create the Owner object
         objid = self._get_next_object_id()
-        self._owner = buddy.Owner(self, self._bus_name, objid, self._icon_cache)
+        self._owner = Owner(self, self._bus_name, objid, self._icon_cache)
         self._buddies[self._owner.get_key()] = self._owner
 
         self._registry = ManagerRegistry()
@@ -71,26 +71,42 @@ class PresenceService(dbus.service.Object):
         conn = Connection(conn_bus_name, conn_object_path)
         self._server_client = telepathyclient.TelepathyClient(conn)
 
+        self._handles[self._server_client] = {}
+
         # Telepathy link local connection
         self._ll_client = None
 
-        self._server_client.connect('contact-appeared', self._contact_appeared)
+        self._server_client.connect('contact-online', self._contact_online)
+        self._server_client.connect('contact-offline', self._contact_offline)
         self._server_client.run()
 
         dbus.service.Object.__init__(self, self._bus_name, _PRESENCE_PATH)
 
-    def _contact_appeared(self, tp, handle, key):
-        if self._buddies.has_key(key):
-            # We already know this buddy
-            return
+    def _contact_online(self, tp, handle, key):
+        buddy = self._buddies.get(key)
 
-        objid = self._get_next_object_id()
-        new_buddy = buddy.Buddy(self._bus_name, objid, self._icon_cache)
-        self._buddies[key] = new_buddy
-        self._buddies_handle[handle] = new_buddy
+        if not buddy:
+            # we don't know yet this buddy
+            objid = self._get_next_object_id()
+            buddy = Buddy(self._bus_name, objid, self._icon_cache)
+            buddy.set_key(key)
+            print "create buddy"
+            self._buddies[key] = buddy
 
-        self.BuddyAppeared(new_buddy.object_path())
+        buddies = self._handles[tp]
+        buddies[handle] = buddy
+
+        self.BuddyAppeared(buddy.object_path())
         
+    def _contact_offline(self, tp, handle):
+        buddy = self._handles[tp].pop(handle)
+        key = buddy.get_key()
+
+        # TODO: check if we don't see this buddy using the other CM
+        self._buddies.pop(key)
+        print "remove buddy"
+
+        self.BuddyDisappeared(buddy.object_path())
 
     def _get_next_object_id(self):
         """Increment and return the object ID counter."""

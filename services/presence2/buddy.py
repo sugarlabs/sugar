@@ -170,6 +170,9 @@ class Buddy(dbus.service.Object):
     def is_owner(self):
         return False
 
+    def set_key(self, key):
+        self._key = key
+
     def get_key(self):
         return self._key
 
