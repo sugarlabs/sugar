@@ -20,7 +20,7 @@ import logging
 import gobject
 import dbus, dbus.service
 from sugar import profile
-from sugar.graphics import iconcolor
+from sugar.graphics import xocolor
 
 
 PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
@@ -261,7 +261,7 @@ class Buddy(object):
             self._valid = True
             self._get_buddy_icon(service)
             color = service.get_one_property(_BUDDY_KEY_COLOR)
-            if iconcolor.is_valid(color):
+            if xocolor.is_valid(color):
                 self._color = color
             self._current_activity = service.get_one_property(_BUDDY_KEY_CURACT)
             # Monitor further buddy property changes, like current activity
@@ -276,7 +276,7 @@ class Buddy(object):
     def __buddy_presence_service_property_changed_cb(self, service, keys):
         if _BUDDY_KEY_COLOR in keys:
             new_color = service.get_one_property(_BUDDY_KEY_COLOR)
-            if new_color and self._color != new_color and iconcolor.is_valid(new_color):
+            if new_color and self._color != new_color and xocolor.is_valid(new_color):
                 self._color = new_color
                 self._dbus_helper.PropertyChanged([_BUDDY_KEY_COLOR])
         if _BUDDY_KEY_CURACT in keys:

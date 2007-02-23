@@ -14,7 +14,13 @@ _system_colors = {
     'desktop-background'            : '#E2E2E3',
     'menu-background'               : '#414141',
     'menu-separator'                : '#D1D1D2',
-    'menu-border'                   : '#D1D1D2'
+    'menu-border'                   : '#D1D1D2',
+    'button-normal'                 : '#FFFFFF',
+    'button-background-normal'      : '#424242',
+    'button-hover'                  : '#808080',
+    'button-background-hover'       : '#000000',
+    'button-inactive'               : '#808080',
+    'button-background-inactive'    : '#424242'
 }
 
 def _html_to_rgb(html_color):
@@ -79,3 +85,9 @@ DESKTOP_BACKGROUND          = SystemColor('desktop-background')
 MENU_BACKGROUND             = SystemColor('menu-background')
 MENU_SEPARATOR              = SystemColor('menu-separator')
 MENU_BORDER                 = SystemColor('menu-border')
+BUTTON_NORMAL               = SystemColor('button-normal')
+BUTTON_BACKGROUND_NORMAL    = SystemColor('button-background-normal')
+BUTTON_HOVER                = SystemColor('button-hover')
+BUTTON_BACKGROUND_HOVER     = SystemColor('button-background-hover')
+BUTTON_INACTIVE             = SystemColor('button-inactive')
+BUTTON_BACKGROUND_INACTIVE  = SystemColor('button-background-inactive')

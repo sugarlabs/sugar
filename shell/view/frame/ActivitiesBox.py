@@ -18,7 +18,7 @@ import hippo
 import logging
 
 from sugar.graphics import units
-from sugar.graphics.iconcolor import IconColor
+from sugar.graphics.xocolor import XoColor
 from sugar.graphics.iconbutton import IconButton
 from sugar.presence import PresenceService
 from sugar.activity import bundleregistry

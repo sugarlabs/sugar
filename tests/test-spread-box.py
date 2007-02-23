@@ -27,11 +27,11 @@ import gtk
 import hippo
 
 from sugar.graphics.spreadbox import SpreadBox
-from sugar.graphics.iconcolor import IconColor
+from sugar.graphics.xocolor import XoColor
 from sugar.graphics.canvasicon import CanvasIcon
 
 def _create_icon():
-    color = IconColor()
+    color = XoColor()
 
     icon = CanvasIcon(size=100, color=color,
                       icon_name='stock-buddy')

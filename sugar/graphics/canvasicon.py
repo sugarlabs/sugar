@@ -24,7 +24,6 @@ import rsvg
 import cairo
 import time
 
-from sugar.graphics.iconcolor import IconColor
 from sugar.graphics.timeline import Timeline
 from sugar.graphics.popup import Popup
 from sugar.graphics import color

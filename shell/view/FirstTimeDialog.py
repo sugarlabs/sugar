@@ -20,7 +20,7 @@ from ConfigParser import ConfigParser
 import gtk
 from gettext import gettext as _
 
-from sugar.graphics.iconcolor import IconColor
+from sugar.graphics.xocolor import XoColor
 from sugar import env
 
 class FirstTimeDialog(gtk.Dialog):
@@ -60,7 +60,7 @@ class FirstTimeDialog(gtk.Dialog):
         section = 'Buddy'    
         cp.add_section(section)
         cp.set(section, 'NickName', self._entry.get_text())
-        cp.set(section, 'Color', IconColor().to_string())
+        cp.set(section, 'Color', XoColor().to_string())
 
         config_path = os.path.join(env.get_profile_path(), 'config')
         fileobject = open(config_path, 'w')

@@ -21,7 +21,7 @@ import gobject
 import hippo
 
 from canvasicon import CanvasIcon
-from iconcolor import IconColor
+from xocolor import XoColor
 from sugar.graphics import units
 from sugar import profile
             
@@ -47,11 +47,11 @@ class IconButton(CanvasIcon):
         if self.props.color:
             self._normal_color = self.props.color
         else:
-            self._normal_color = IconColor('white')
+            self._normal_color = XoColor('white')
             self.props.color = self._normal_color
 
         self._prelight_color = profile.get_color()
-        self._inactive_color = IconColor('#808080,#424242')
+        self._inactive_color = XoColor('#808080,#424242')
         self._set_size(STANDARD_SIZE)
 
         self.connect('button-press-event', self._button_press_event_cb)

@@ -28,18 +28,18 @@ import hippo
 
 from sugar.graphics.snowflakebox import SnowflakeBox
 from sugar.graphics.spreadbox import SpreadBox
-from sugar.graphics.iconcolor import IconColor
+from sugar.graphics.xocolor import XoColor
 from sugar.graphics.canvasicon import CanvasIcon
 
 def _create_snowflake(parent, children):
-    color = IconColor()
+    color = XoColor()
     icon = CanvasIcon(size=40, color=color,
                       icon_name='activity-groupchat')
     parent.append(icon, hippo.PACK_FIXED)
     parent.set_root(icon)
 
     for i in range(0, children):
-        color = IconColor()
+        color = XoColor()
         icon = CanvasIcon(size=60, color=color,
                           icon_name='stock-buddy')
         parent.append(icon, hippo.PACK_FIXED)

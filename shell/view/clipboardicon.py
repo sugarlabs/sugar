@@ -2,7 +2,7 @@ import logging
 
 from sugar.graphics.canvasicon import CanvasIcon
 from view.clipboardmenu import ClipboardMenu
-from sugar.graphics.iconcolor import IconColor
+from sugar.graphics.xocolor import XoColor
 from sugar.graphics import units
 from sugar.activity import activityfactory
 from sugar.clipboard import clipboardservice
@@ -43,9 +43,9 @@ class ClipboardIcon(CanvasIcon):
             self._menu.set_state(name, percent, preview, activity)
 
         if activity and percent < 100:
-            self.set_property('color', IconColor("#000000,#424242"))
+            self.set_property('color', XoColor("#000000,#424242"))
         else:
-            self.set_property('color', IconColor("#000000,#FFFFFF"))
+            self.set_property('color', XoColor("#000000,#FFFFFF"))
     
     def _activity_create_success_cb(self, handler, activity):
         activity.start(util.unique_id())

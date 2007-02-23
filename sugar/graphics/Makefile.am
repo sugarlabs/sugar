@@ -9,7 +9,6 @@ sugar_PYTHON =			\
 	entry.py                \
 	font.py			\
 	frame.py		\
-	iconcolor.py		\
 	label.py		\
 	menu.py			\
 	menushell.py		\
@@ -21,4 +20,5 @@ sugar_PYTHON =			\
 	spreadbox.py		\
 	timeline.py         	\
 	toolbar.py		\
-	units.py
+	units.py		\
+	xocolor.py
