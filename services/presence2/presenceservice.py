@@ -98,6 +98,7 @@ class PresenceService(dbus.service.Object):
             conn = item
 
         if not conn:
+            # Create a new connection
             conn_bus_name, conn_object_path = \
                     mgr[CONN_MGR_INTERFACE].RequestConnection(protocol, account)
             conn = Connection(conn_bus_name, conn_object_path)
