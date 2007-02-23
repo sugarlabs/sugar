@@ -75,7 +75,7 @@ class PresenceService(dbus.service.Object):
     def _connect_to_server(self):
         protocol = 'jabber'
         account = {
-            'account': 'olpc@collabora.co.uk',
+            'account': 'blah@collabora.co.uk',
             'password': 'learn',
             'server': 'light.bluelinux.co.uk'
         }
