@@ -12,7 +12,7 @@ _system_colors = {
     'entry-border'                  : '#D1D1D2',
     'label-text'                    : '#FFFFFF',
     'desktop-background'            : '#E2E2E3',
-    'menu-background'               : '#414141',
+    'menu-background'               : '#000000',
     'menu-separator'                : '#D1D1D2',
     'menu-border'                   : '#D1D1D2',
     'button-normal'                 : '#FFFFFF',
