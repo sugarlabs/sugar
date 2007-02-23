@@ -60,7 +60,12 @@ class PresenceService(dbus.service.Object):
         self._registry = ManagerRegistry()
         self._registry.LoadManagers()
 
-        self._server_client = self._connect_to_server()
+        account = {
+            'account': 'olpc@collabora.co.uk',
+            'password': 'learn',
+            'server': 'light.bluelinux.co.uk'
+        }
+        self._server_client = self._connect_to_connection_manager("jabber", account)
         self._handles[self._server_client] = {}
 
         # Telepathy link local connection
@@ -72,15 +77,13 @@ class PresenceService(dbus.service.Object):
 
         dbus.service.Object.__init__(self, self._bus_name, _PRESENCE_PATH)
 
-    def _connect_to_server(self):
-        protocol = 'jabber'
-        account = {
-            'account': 'olpc@collabora.co.uk',
-            'password': 'learn',
-            'server': 'light.bluelinux.co.uk'
-        }
+    def _connect_to_connection_manager(self, protocol, account):
+        if protocol == "jabber":
+            cm = "gabble"
+        else:
+            return
 
-        mgr = self._registry.GetManager('gabble')
+        mgr = self._registry.GetManager(cm)
         conn = None
 
         # Search existing connections, if any, that we might be able to use
@@ -88,7 +91,7 @@ class PresenceService(dbus.service.Object):
         for item in connections:
             if item[CONN_INTERFACE].GetProtocol() != protocol:
                 continue
-            if not item.object_path.startswith("/org/freedesktop/Telepathy/Connection/gabble/jabber/"):
+            if not item.object_path.startswith("/org/freedesktop/Telepathy/Connection/%s/%s/" % (cm, protocol)):
                 continue
             if item[CONN_INTERFACE].GetStatus() == CONNECTION_STATUS_CONNECTED:
                 self_name = account['account']
