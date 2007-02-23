@@ -48,7 +48,7 @@ class ActivityButton(IconButton):
         icon_name = self._activity_model.get_icon_name()
         icon_color = self._activity_model.get_icon_color()
 
-        IconButton.__init__(self, icon_name=icon_name, color=icon_color)
+        IconButton.__init__(self, icon_name=icon_name, xo_color=icon_color)
 
     def get_popup(self):
         menu = ActivityMenu(self._activity_model)

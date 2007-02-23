@@ -31,12 +31,6 @@ class ActivityButton(IconButton):
         self._activity = activity
         self._popup_context = popup_context
 
-    def _mouse_motion_event_cb(self, item, event):
-        if event.detail == hippo.MOTION_DETAIL_ENTER:
-            self.set_property('color', self._prelight_color)
-        elif event.detail == hippo.MOTION_DETAIL_LEAVE:
-            self.set_property('color', self._normal_color)
-
     def get_bundle_id(self):
         return self._activity.get_service_name()
     
@@ -47,7 +41,7 @@ class InviteButton(IconButton):
     def __init__(self, activity, invite):
         IconButton.__init__(self, icon_name=activity.get_icon())
 
-        self.props.color = activity.get_color()
+        self.props.xo_color = activity.get_color()
         self._invite = invite
 
     def get_activity_id(self):

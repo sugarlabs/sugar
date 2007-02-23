@@ -49,7 +49,7 @@ class MenuItem(hippo.CanvasBox):
             icon = CanvasIcon(icon_name=icon_name,
                               scale=units.SMALL_ICON_SCALE)
             if icon_color:
-                icon.props.color = icon_color
+                icon.props.xo_color = icon_color
             self.append(icon)
 
         self._canvas_text = hippo.CanvasText(text=label)

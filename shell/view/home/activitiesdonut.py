@@ -55,7 +55,7 @@ class ActivityIcon(CanvasIcon):
         self._level = self._level_max
         color = self._icon_colors[self._level]
 
-        CanvasIcon.__init__(self, icon_name=icon_name, color=color,
+        CanvasIcon.__init__(self, icon_name=icon_name, xo_color=color,
                             scale=units.MEDIUM_ICON_SCALE, cache=True)
 
         self._activity = activity
@@ -103,7 +103,7 @@ class ActivityIcon(CanvasIcon):
                 self._direction = 1
                 self._level = 0
 
-        self.props.color = self._icon_colors[self._level]
+        self.props.xo_color = self._icon_colors[self._level]
         self.emit_paint_needed(0, 0, -1, -1)
         return True
 
@@ -113,7 +113,7 @@ class ActivityIcon(CanvasIcon):
         self._launched = True
         self.cleanup()
         self._level = 100.0
-        self.props.color = self._orig_color
+        self.props.xo_color = self._orig_color
         self.emit_paint_needed(0, 0, -1, -1)
 
     def get_launched(self):

@@ -44,14 +44,13 @@ class IconButton(CanvasIcon):
 
         CanvasIcon.__init__(self, cache=True, **kwargs)
 
-        if self.props.color:
-            self._normal_color = self.props.color
-        else:
-            self._normal_color = XoColor('white')
-            self.props.color = self._normal_color
-
         self._prelight_color = profile.get_color()
         self._inactive_color = XoColor('#808080,#424242')
+        self._normal_color = XoColor('white')
+
+        if not self.props.xo_color:
+            self.props.xo_color = self._normal_color
+
         self._set_size(STANDARD_SIZE)
 
         self.connect('button-press-event', self._button_press_event_cb)
@@ -74,9 +73,9 @@ class IconButton(CanvasIcon):
         elif pspec.name == 'active':
             self._active = value
             if self._active:
-                self.props.color = self._normal_color
+                self.props.xo_color = self._normal_color
             else:
-                self.props.color = self._inactive_color            
+                self.props.xo_color = self._inactive_color            
         else:
             CanvasIcon.do_set_property(self, pspec, value)
 

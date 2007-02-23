@@ -33,14 +33,14 @@ from sugar.graphics.canvasicon import CanvasIcon
 
 def _create_snowflake(parent, children):
     color = XoColor()
-    icon = CanvasIcon(size=40, color=color,
+    icon = CanvasIcon(size=40, xo_color=color,
                       icon_name='activity-groupchat')
     parent.append(icon, hippo.PACK_FIXED)
     parent.set_root(icon)
 
     for i in range(0, children):
         color = XoColor()
-        icon = CanvasIcon(size=60, color=color,
+        icon = CanvasIcon(size=60, xo_color=color,
                           icon_name='stock-buddy')
         parent.append(icon, hippo.PACK_FIXED)
 
