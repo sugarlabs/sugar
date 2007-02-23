@@ -116,7 +116,17 @@ class TelepathyClient(gobject.GObject):
             loop.quit()
 
     def run(self):
-        self.conn[CONN_INTERFACE].Connect()
+        # If the connection is already connected query initial contacts
+        conn_status = self.conn[CONN_INTERFACE].GetStatus()
+        if conn_status == CONNECTION_STATUS_CONNECTED:
+            self._connected_cb()
+            subscribe = self._request_list_channel('subscribe')
+            subscribe_handles = subscribe[CHANNEL_INTERFACE_GROUP].GetMembers()
+            self.conn[CONN_INTERFACE_PRESENCE].RequestPresence(subscribe_handles)
+        elif conn_status == CONNECTION_STATUS_CONNECTING:
+            pass
+        else:
+            self.conn[CONN_INTERFACE].Connect()
 
     def disconnect(self):
         self.conn[CONN_INTERFACE].Disconnect()
