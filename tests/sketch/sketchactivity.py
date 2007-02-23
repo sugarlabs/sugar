@@ -26,7 +26,7 @@ from sugar.presence import PresenceService
 from sugar.activity.Activity import Activity
 from sugar.chat.sketchpad import SketchPad
 from sugar.chat.sketchpad import Sketch
-from sugar.graphics.iconcolor import IconColor
+from sugar.graphics.xocolor import XoColor
 from sugar import profile
 
 class NetworkController(gobject.GObject):
@@ -150,7 +150,7 @@ class SharedSketchPad(SketchPad.SketchPad):
         str_color = buddy.get_color()
         if not str_color:
             str_color = "#348798"  # FIXME
-        color = IconColor(str_color)
+        color = XoColor(str_color)
         stroke_color = _html_to_rgb_color(color.get_stroke_color())
         sketch = Sketch.Sketch(stroke_color)
         for item in path:

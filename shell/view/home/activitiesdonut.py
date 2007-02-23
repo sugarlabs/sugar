@@ -21,7 +21,7 @@ import colorsys
 
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import units
-from sugar.graphics import iconcolor
+from sugar.graphics import xocolor
 from sugar import profile
 
 # TODO: rgb_to_html and html_to_rgb are useful elsewhere 
@@ -89,7 +89,7 @@ class ActivityIcon(CanvasIcon):
         new_fill = rgb_to_html(*colorsys.hsv_to_rgb(h, s * factor, v))
         h, s, v = colorsys.rgb_to_hsv(*html_to_rgb(self._orig_color.get_stroke_color()))
         new_stroke = rgb_to_html(*colorsys.hsv_to_rgb(h, s * factor, v))
-        return iconcolor.IconColor("%s,%s" % (new_stroke, new_fill))
+        return xocolor.XoColor("%s,%s" % (new_stroke, new_fill))
 
     def _pulse_cb(self):
         if self._direction == 1:

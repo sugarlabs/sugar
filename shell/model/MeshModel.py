@@ -16,7 +16,7 @@
 
 import gobject
 
-from sugar.graphics.iconcolor import IconColor
+from sugar.graphics.xocolor import XoColor
 from sugar.presence import PresenceService
 from sugar.activity import bundleregistry
 from model.BuddyModel import BuddyModel
@@ -34,7 +34,7 @@ class ActivityModel:
         return self._bundle.get_icon()
     
     def get_color(self):
-        return IconColor(self._activity.get_color())
+        return XoColor(self._activity.get_color())
 
     def get_service(self):
         return self._service

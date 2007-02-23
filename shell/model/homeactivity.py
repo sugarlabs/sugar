@@ -20,7 +20,7 @@ import logging
 import gobject
 import dbus
 
-from sugar.graphics.iconcolor import IconColor
+from sugar.graphics.xocolor import XoColor
 from sugar.presence import PresenceService
 from sugar import profile
 
@@ -100,7 +100,7 @@ class HomeActivity(gobject.GObject):
     def get_icon_color(self):
         activity = PresenceService.get_instance().get_activity(self._id)
         if activity != None:
-            return IconColor(activity.get_color())
+            return XoColor(activity.get_color())
         else:
             return profile.get_color()
         

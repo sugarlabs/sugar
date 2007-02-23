@@ -17,7 +17,6 @@
 import hippo
 
 from sugar.graphics.canvasicon import CanvasIcon
-from sugar.graphics.iconcolor import IconColor
 from sugar.presence import PresenceService
 from view.BuddyIcon import BuddyIcon
 from model.BuddyModel import BuddyModel

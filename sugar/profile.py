@@ -18,7 +18,7 @@ import os
 from ConfigParser import ConfigParser
 
 from sugar import env
-from sugar.graphics.iconcolor import IconColor
+from sugar.graphics.xocolor import XoColor
 
 class _Profile(object):
     def __init__(self):
@@ -39,7 +39,7 @@ class _Profile(object):
             self.name = cp.get('Buddy', 'NickName')
 
         if cp.has_option('Buddy', 'Color'):
-            self.color = IconColor(cp.get('Buddy', 'Color'))
+            self.color = XoColor(cp.get('Buddy', 'Color'))
 
         if cp.has_option('Buddy', 'PublicKey'):
             self.pubkey = cp.get('Buddy', 'PublicKey')

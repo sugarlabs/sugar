@@ -15,7 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from sugar.presence import PresenceService
-from sugar.graphics.iconcolor import IconColor
+from sugar.graphics.xocolor import XoColor
 import gobject
 
 _NOT_PRESENT_COLOR = "#888888,#BBBBBB"
@@ -67,7 +67,7 @@ class BuddyModel(gobject.GObject):
             self.__set_color_from_string(_NOT_PRESENT_COLOR)
 
     def __set_color_from_string(self, color_string):
-        self._color = IconColor(color_string)
+        self._color = XoColor(color_string)
 
     def get_name(self):
         return self._name

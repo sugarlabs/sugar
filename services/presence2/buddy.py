@@ -18,7 +18,6 @@
 import gobject
 import dbus, dbus.service
 from sugar import profile
-from sugar.graphics import iconcolor
 
 _BUDDY_PATH = "/org/laptop/Sugar/Presence/Buddies/"
 _BUDDY_INTERFACE = "org.laptop.Sugar.Presence.Buddy"

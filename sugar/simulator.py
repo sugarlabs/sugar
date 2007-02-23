@@ -22,7 +22,7 @@ import gobject
 import dbus
 
 from sugar.presence import PresenceService
-from sugar.graphics.iconcolor import IconColor
+from sugar.graphics.xocolor import XoColor
 from sugar.p2p import Stream
 from sugar import util
 
@@ -135,7 +135,7 @@ class Bot(object):
 
     def __init__(self):
         self.name = Bot._name_collection.get_name()
-        self.color = IconColor()
+        self.color = XoColor()
         self.icon = None
 
         self._queue = []

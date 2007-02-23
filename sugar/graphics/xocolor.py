@@ -595,7 +595,7 @@ def _parse_string(color_string):
 def is_valid(color_string):
     return (_parse_string(color_string) != None)
 
-class IconColor:
+class XoColor:
     def __init__(self, color_string=None):
         if color_string == None or not is_valid(color_string):
             n = int(random.random() * (len(_colors) - 1))
