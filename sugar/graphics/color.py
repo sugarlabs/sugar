@@ -60,10 +60,17 @@ class RGBColor(object):
         return gtk.gdk.Color(int(self._r * 65535), int(self._g * 65535),
                              int(self._b * 65535))
 
-class SystemColor(RGBColor):
-    def __init__(self, color_id):
-        rgb = _html_to_rgb(_system_colors[color_id])
+    def get_html(self):
+        return '#%x%x%x' % (self._r * 255, self._g * 255, self._b * 255)
+
+class HTMLColor(RGBColor):
+    def __init__(self, html_color):
+        rgb = _html_to_rgb(html_color)
         RGBColor.__init__(self, *rgb)
+
+class SystemColor(HTMLColor):
+    def __init__(self, color_id):
+        HTMLColor.__init__(self, _system_colors[color_id])
 
 RED   = RGBColor(1.0, 0.0, 0.0)
 GREEN = RGBColor(0.0, 1.0, 0.0)

@@ -33,7 +33,7 @@ from sugar.graphics.canvasicon import CanvasIcon
 def _create_icon():
     color = XoColor()
 
-    icon = CanvasIcon(size=100, color=color,
+    icon = CanvasIcon(size=100, xo_color=color,
                       icon_name='stock-buddy')
     box.add_item(icon)
 

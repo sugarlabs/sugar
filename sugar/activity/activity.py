@@ -105,4 +105,4 @@ class Activity(gtk.Window):
             self._pservice.unregister_service(self._service)
 
 def get_bundle_path():
-    return os.environ['SUGAR_BUNDLE_BUNDLE_PATH']
+    return os.environ['SUGAR_BUNDLE_PATH']

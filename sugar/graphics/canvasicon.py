@@ -27,29 +27,28 @@ import time
 from sugar.graphics.timeline import Timeline
 from sugar.graphics.popup import Popup
 from sugar.graphics import color
+from sugar.graphics.xocolor import XoColor
 from sugar.graphics import font
 from sugar.graphics import units
 
 class _IconCacheIcon:
-    def __init__(self, name, color, now):
+    def __init__(self, name, fill_color, stroke_color, now):
         self.data_size = None
-        self.handle = self._read_icon_data(name, color)
+        self.handle = self._read_icon_data(name, fill_color, stroke_color)
         self.last_used = now
         self.usage_count = 1
 
-    def _read_icon_data(self, filename, color):
+    def _read_icon_data(self, filename, fill_color, stroke_color):
         icon_file = open(filename, 'r')
         data = icon_file.read()
         icon_file.close()
 
-        if color:
-            fill = color.get_fill_color()
-            stroke = color.get_stroke_color()
-
-            entity = '<!ENTITY fill_color "%s">' % fill
+        if fill_color:
+            entity = '<!ENTITY fill_color "%s">' % fill_color
             data = re.sub('<!ENTITY fill_color .*>', entity, data)
 
-            entity = '<!ENTITY stroke_color "%s">' % stroke
+        if stroke_color:
+            entity = '<!ENTITY stroke_color "%s">' % stroke_color
             data = re.sub('<!ENTITY stroke_color .*>', entity, data)
 
         self.data_size = len(data)
@@ -104,15 +103,15 @@ class _IconCache:
             self._cache_size -= self._icons[evict_key].data_size
             del self._icons[evict_key]
 
-    def get_handle(self, name, color):
+    def get_handle(self, name, fill_color, stroke_color):
         if name == None:
             return None
 
         if name[0:6] == "theme:": 
             name = self._get_real_name_from_theme(name[6:])
 
-        if color:
-            key = (name, color.to_string())
+        if fill_color or stroke_color:
+            key = (name, fill_color, stroke_color)
         else:
             key = name
 
@@ -125,7 +124,7 @@ class _IconCache:
             icon.usage_count += 1
             icon.last_used = now
         else:
-            icon = _IconCacheIcon(name, color, now)
+            icon = _IconCacheIcon(name, fill_color, stroke_color, now)
             self._icons[key] = icon
             self._cache_size += icon.data_size
         return icon.handle
@@ -135,17 +134,21 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'CanvasIcon'
 
     __gproperties__ = {
-        'icon-name': (str, None, None, None,
-                      gobject.PARAM_READWRITE),
-        'color'    : (object, None, None,
-                      gobject.PARAM_READWRITE),
-        'scale'    : (float, None, None,
-                      0.0, 1024.0, 1.0,
-                      gobject.PARAM_READWRITE),
-        'cache'    : (bool, None, None, False,
-                      gobject.PARAM_READWRITE),
-        'tooltip'  : (str, None, None, None,
-                      gobject.PARAM_READWRITE)
+        'icon-name'     : (str, None, None, None,
+                           gobject.PARAM_READWRITE),
+        'xo-color'      : (object, None, None,
+                           gobject.PARAM_READWRITE),
+        'fill-color'    : (object, None, None,
+                           gobject.PARAM_READWRITE),
+        'stroke-color'  : (object, None, None,
+                           gobject.PARAM_READWRITE),
+        'scale'         : (float, None, None,
+                           0.0, 1024.0, 1.0,
+                           gobject.PARAM_READWRITE),
+        'cache'         : (bool, None, None, False,
+                           gobject.PARAM_READWRITE),
+        'tooltip'       : (str, None, None, None,
+                           gobject.PARAM_READWRITE)
     }
 
     _cache = _IconCache()
@@ -154,7 +157,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         self._buffers = {}
         self._cur_buffer = None
         self._scale = 1.0
-        self._color = None
+        self._fill_color = None
+        self._stroke_color = None
         self._icon_name = None
         self._cache = False
         self._handle = None
@@ -186,12 +190,23 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             self._icon_name = value
             self._handle = None
             self.emit_paint_needed(0, 0, -1, -1)
-        elif pspec.name == 'color':
-            if self._color != value and not self._cache:
-                self._clear_buffers()
-            self._color = value
-            self._handle = None
-            self.emit_paint_needed(0, 0, -1, -1)
+        elif pspec.name == 'xo-color':
+            self.props.fill_color = color.HTMLColor(value.get_fill_color())
+            self.props.stroke_color = color.HTMLColor(value.get_stroke_color())
+        elif pspec.name == 'fill-color':
+            if self._fill_color != value:
+                if not self._cache:
+                    self._clear_buffers()
+                self._fill_color = value
+                self._handle = None
+                self.emit_paint_needed(0, 0, -1, -1)
+        elif pspec.name == 'stroke-color':
+            if self._stroke_color != value:
+                if not self._cache:
+                    self._clear_buffers()
+                self._stroke_color = value
+                self._handle = None
+                self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'scale':
             if self._scale != value and not self._cache:
                 self._clear_buffers()
@@ -205,19 +220,38 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
     def _get_handle(self):
         if not self._handle:
             cache = CanvasIcon._cache
-            self._handle = cache.get_handle(self._icon_name, self._color)
+
+            fill_color = None
+            if self._fill_color:
+                fill_color = self._fill_color.get_html()
+
+            stroke_color = None
+            if self._stroke_color:
+                stroke_color = self._stroke_color.get_html()
+                
+            self._handle = cache.get_handle(self._icon_name, fill_color,
+                                            stroke_color)
         return self._handle
 
     def _get_current_buffer_key(self):
-        return (self._icon_name, self._color, self._scale)
+        return (self._icon_name, self._fill_color, self._stroke_color, self._scale)
 
     def do_get_property(self, pspec):
         if pspec.name == 'scale':
             return self._scale
         elif pspec.name == 'icon-name':
             return self._icon_name
-        elif pspec.name == 'color':
-            return self._color
+        elif pspec.name == 'xo-color':
+            if self._stroke_color and self._fill_color:
+                xo_color = XoColor('%s,%s' % (self._stroke_color.get_html(), 
+                                              self._fill_color.get_html()))
+                return xo_color
+            else:
+                return None
+        elif pspec.name == 'fill-color':
+            return self._fill_color
+        elif pspec.name == 'stroke-color':
+            return self._stroke_color
         elif pspec.name == 'cache':
             return self._cache
         elif pspec.name == 'tooltip':

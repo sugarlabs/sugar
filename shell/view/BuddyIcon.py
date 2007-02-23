@@ -20,7 +20,7 @@ from view.BuddyMenu import BuddyMenu
 class BuddyIcon(CanvasIcon):
     def __init__(self, shell, menu_shell, buddy):
         CanvasIcon.__init__(self, icon_name='theme:stock-buddy',
-                            color=buddy.get_color())
+                            xo_color=buddy.get_color())
 
         self._shell = shell
         self._buddy = buddy
@@ -30,7 +30,7 @@ class BuddyIcon(CanvasIcon):
 
     def _buddy_presence_change_cb(self, buddy, color=None):
         # Update the icon's color when the buddy comes and goes
-        self.set_property('color', buddy.get_color())
+        self.props.xo_color = buddy.get_color()
 
     def set_popup_distance(self, distance):
         self._popup_distance = distance

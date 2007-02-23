@@ -70,7 +70,7 @@ class FriendView(hippo.CanvasBox):
         name = self._get_new_icon_name(activity)
         if name:
             self._activity_icon.props.icon_name = name
-            self._activity_icon.props.color = buddy.get_color()
+            self._activity_icon.props.xo_color = buddy.get_color()
             if not self._activity_icon_visible:
                 self.append(self._activity_icon, hippo.PACK_EXPAND)
                 self._activity_icon_visible = True
@@ -85,4 +85,4 @@ class FriendView(hippo.CanvasBox):
         self._buddy_activity_changed_cb(buddy, None)
 
     def _buddy_color_changed_cb(self, buddy, color):
-        self._activity_icon.props.color = buddy.get_color()
+        self._activity_icon.props.xo_color = buddy.get_color()

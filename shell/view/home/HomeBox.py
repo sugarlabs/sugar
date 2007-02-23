@@ -19,6 +19,7 @@ import math
 import hippo
 
 from sugar.graphics import units
+from sugar.graphics import color
 from sugar.graphics.xocolor import XoColor
 
 from view.home.activitiesdonut import ActivitiesDonut
@@ -59,7 +60,11 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
             if self._donut:
                 self.remove(self._donut)
                 self._donut = None
-                self._my_icon.props.color = XoColor('insensitive')
+                self._my_icon.props.stroke_color = color.BUTTON_INACTIVE
+                self._my_icon.props.fill_color = \
+                        color.BUTTON_INACTIVE_BACKGROUND
+                self._my_icon.props.background_color = \
+                        color.BUTTON_INACTIVE_BACKGROUND
 
     def do_allocate(self, width, height, origin_changed):
         hippo.CanvasBox.do_allocate(self, width, height, origin_changed)

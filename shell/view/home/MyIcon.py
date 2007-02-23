@@ -21,4 +21,4 @@ class MyIcon(CanvasIcon):
     def __init__(self, scale):
         CanvasIcon.__init__(self, scale=scale,
                             icon_name='theme:stock-buddy',
-                            color=profile.get_color())
+                            xo_color=profile.get_color())

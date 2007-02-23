@@ -33,7 +33,7 @@ class ActivityView(SnowflakeBox):
         self._icons = {}
 
         icon = CanvasIcon(icon_name=model.get_icon_name(),
-                          color=model.get_color(), box_width=80)
+                          xo_color=model.get_color(), box_width=80)
         icon.connect('activated', self._clicked_cb)
         self.append(icon, hippo.PACK_FIXED)
         self.set_root(icon)
