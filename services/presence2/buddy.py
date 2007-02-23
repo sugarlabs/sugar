@@ -155,6 +155,19 @@ class Buddy(dbus.service.Object):
             self._icon = icon
             self.IconChanged(icon)
 
+    def _set_name(self, name):
+        self._nick_name = name
+
+    def _set_color(self, color):
+        self._color = color
+
+    def set_properties(self, prop):
+        if "name" in properties.keys():
+            self._set_name(properties["name"])
+        if "color" in properties.keys():
+            self._set_color(properties["color"])
+        self.PropertyChanged(properties)
+
     def is_owner(self):
         return False
 
@@ -180,12 +193,8 @@ class Owner(Buddy):
 
     @dbus.service.method(_OWNER_INTERFACE,
                         in_signature="a{sv}", out_signature="")
-    def SetProperties(self, properties):
-        if "name" in properties.keys():
-            self.set_name(properties["name"])
-        if "color" in properties.keys():
-            self.set_color(properties["color"])
-        self.PropertyChanged(properties)
+    def SetProperties(self, prop):
+        self.set_properties(self, prop)
 
     # methods
     def is_owner(self):
@@ -194,8 +203,3 @@ class Owner(Buddy):
     def set_icon(self, icon):
         self._icon = icon
 
-    def set_name(self, name):
-        self._nick_name = name
-
-    def set_color(self, color):
-        self._color = color

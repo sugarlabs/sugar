@@ -42,6 +42,7 @@ class PresenceService(dbus.service.Object):
         self._next_object_id = 0
 
         self._buddies = {}      # key -> Buddy
+        self._buddies_handle = {} # tp handle -> Buddy
         self._activities = {}   # activity id -> Activity
 
         self._icon_cache = buddyiconcache.BuddyIconCache()
@@ -56,21 +57,8 @@ class PresenceService(dbus.service.Object):
 
         self._registry = ManagerRegistry()
         self._registry.LoadManagers()
+
         # Telepathy connection to the server
-        self._server_client = None
-        # Telepathy link local connection
-        self._ll_client = None
-
-        self._connect_server ()
-
-        dbus.service.Object.__init__(self, self._bus_name, _PRESENCE_PATH)
-
-    def _get_next_object_id(self):
-        """Increment and return the object ID counter."""
-        self._next_object_id = self._next_object_id + 1
-        return self._next_object_id
-
-    def _connect_server (self):
         mgr = self._registry.GetManager('gabble')
         protocol = 'jabber'
         account = {
@@ -82,6 +70,32 @@ class PresenceService(dbus.service.Object):
         mgr[CONN_MGR_INTERFACE].RequestConnection(protocol, account)
         conn = Connection(conn_bus_name, conn_object_path)
         self._server_client = telepathyclient.TelepathyClient(conn)
+
+        # Telepathy link local connection
+        self._ll_client = None
+
+        self._server_client.connect('contact-appeared', self._contact_appeared)
+        self._server_client.run()
+
+        dbus.service.Object.__init__(self, self._bus_name, _PRESENCE_PATH)
+
+    def _contact_appeared(self, tp, handle, key):
+        if self._buddies.has_key(key):
+            # We already know this buddy
+            return
+
+        objid = self._get_next_object_id()
+        new_buddy = buddy.Buddy(self._bus_name, objid, self._icon_cache)
+        self._buddies[key] = new_buddy
+        self._buddies_handle[handle] = new_buddy
+
+        self.BuddyAppeared(new_buddy.object_path())
+        
+
+    def _get_next_object_id(self):
+        """Increment and return the object ID counter."""
+        self._next_object_id = self._next_object_id + 1
+        return self._next_object_id
 
     @dbus.service.signal(_PRESENCE_INTERFACE, signature="o")
     def ActivityAppeared(self, activity):

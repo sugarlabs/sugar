@@ -15,14 +15,19 @@ loop = None
 
 import buddy
 
-class TelepathyClient:
+class TelepathyClient(gobject.GObject):
+    __gsignals__ = {
+        'contact-appeared':(gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                   ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
+    }
+    
     def __init__(self, conn):
+        gobject.GObject.__init__(self)
+
         conn[CONN_INTERFACE].connect_to_signal('StatusChanged',
             self._status_changed_cb)
-        conn[CONN_INTERFACE].Connect()
 
         self.conn = conn
-        self.buddies = {}
 
     def _request_list_channel(self, name):
         handle = self.conn[CONN_INTERFACE].RequestHandles(
@@ -59,8 +64,8 @@ class TelepathyClient:
         # hack
         self.conn._valid_interfaces.add(CONN_INTERFACE_ALIASING)
 
-        #for handle in subscribe_handles:
-        #    self.buddies[handle] = buddy.Buddy()
+        for handle in subscribe_handles:
+            self._contact_appeared(handle);
 
         if CONN_INTERFACE_ALIASING in self.conn:
             aliases = self.conn[CONN_INTERFACE_ALIASING].RequestAliases(subscribe_handles)
@@ -104,8 +109,15 @@ class TelepathyClient:
             print 'disconnected'
             loop.quit()
 
+    def run(self):
+        self.conn[CONN_INTERFACE].Connect()
+
     def disconnect(self):
         self.conn[CONN_INTERFACE].Disconnect()
+
+    def _contact_appeared(self, handle):
+        key = "1111111"
+        self.emit("contact-appeared", handle, key)
 
 if __name__ == '__main__':
     import logging
