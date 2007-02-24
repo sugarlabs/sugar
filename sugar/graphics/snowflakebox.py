@@ -85,7 +85,7 @@ class SnowflakeBox(hippo.CanvasBox, hippo.CanvasItem):
         return width
 
     def do_allocate(self, width, height, origin_changed):
-        hippo.CanvasBox.do_allocate(self, width, height)
+        hippo.CanvasBox.do_allocate(self, width, height, origin_changed)
 
         self._layout_root()
 

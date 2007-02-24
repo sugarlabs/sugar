@@ -35,6 +35,8 @@ class BuddyMenu(Menu):
         self._shell = shell
 
         Menu.__init__(self, buddy.get_name())
+        self.props.border = 0
+        self.props.padding = units.points_to_pixels(5)
         pixbuf = self._get_buddy_icon_pixbuf()
         if pixbuf:
             icon_item = hippo.CanvasImage()

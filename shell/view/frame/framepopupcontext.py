@@ -36,7 +36,7 @@ class FramePopupContext(PopupContext):
 
         left_x = item_x + item_w
         left_y = item_y
-        right_x = item_x + item_w
+        right_x = item_x - popup_w
         right_y = item_y
         top_x = item_x
         top_y = item_y + item_h
