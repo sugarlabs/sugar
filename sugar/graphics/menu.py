@@ -56,6 +56,14 @@ class MenuItem(hippo.CanvasBox):
         self._canvas_text.props.color = color.LABEL_TEXT.get_int()
         self._canvas_text.props.font_desc = font.DEFAULT.get_pango_desc()
         self.append(self._canvas_text)
+        
+        self.connect('motion-notify-event', self._motion_notify_event_cb)
+        
+    def _motion_notify_event_cb(self, menu_item, event):
+        if event.detail == hippo.MOTION_DETAIL_ENTER:
+            self.props.background_color = color.MENU_BACKGROUND_HOVER.get_int()
+        elif event.detail == hippo.MOTION_DETAIL_LEAVE:
+            self.props.background_color = color.MENU_BACKGROUND.get_int()
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'action-id':

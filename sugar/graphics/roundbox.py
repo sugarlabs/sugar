@@ -31,7 +31,7 @@ class RoundBox(hippo.CanvasBox, hippo.CanvasItem):
         hippo.CanvasBox.__init__(self, **kwargs)
 
         # TODO: we should calculate this value depending on the height of the box.
-        self._radius = units.points_to_pixels(10)
+        self._radius = units.points_to_pixels(7)
         
         self.props.orientation = hippo.ORIENTATION_HORIZONTAL
         self.props.border_top = self._BORDER_DEFAULT
