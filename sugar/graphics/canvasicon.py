@@ -143,7 +143,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         'stroke-color'  : (object, None, None,
                            gobject.PARAM_READWRITE),
         'scale'         : (float, None, None,
-                           0.0, 1024.0, 1.0,
+                           0.0, 1024.0, units.STANDARD_ICON_SCALE,
                            gobject.PARAM_READWRITE),
         'cache'         : (bool, None, None, False,
                            gobject.PARAM_READWRITE),
@@ -156,7 +156,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
     def __init__(self, **kwargs):
         self._buffers = {}
         self._cur_buffer = None
-        self._scale = 1.0
+        self._scale = units.STANDARD_ICON_SCALE
         self._fill_color = None
         self._stroke_color = None
         self._icon_name = None
