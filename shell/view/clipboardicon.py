@@ -4,6 +4,7 @@ from sugar.graphics.canvasicon import CanvasIcon
 from view.clipboardmenu import ClipboardMenu
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics import units
+from sugar.graphics import color
 from sugar.activity import activityfactory
 from sugar.clipboard import clipboardservice
 from sugar import util
@@ -81,3 +82,9 @@ class ClipboardIcon(CanvasIcon):
         
     def get_object_id(self):
         return self._object_id
+
+    def prelight(self, enter):
+        if enter:
+            self.props.background_color = color.BLACK.get_int()
+        else:
+            self.props.background_color = color.TOOLBAR_BACKGROUND.get_int()
