@@ -64,6 +64,8 @@ class OptionMenu(hippo.CanvasBox, hippo.CanvasItem):
                     
         self._round_box = RoundBox()
         self._round_box.props.border_color = color.FRAME_BORDER.get_int()
+        self._round_box.props.spacing = units.points_to_pixels(3)
+        self._round_box.props.padding = units.points_to_pixels(1)
         self.append(self._round_box, hippo.PACK_EXPAND)
 
         self._canvas_text = hippo.CanvasText()
@@ -111,10 +113,14 @@ class OptionMenu(hippo.CanvasBox, hippo.CanvasItem):
             [x, y] = context.translate_to_screen(self._round_box)
             
             # TODO: Any better place to do this?
-            self._menu.props.box_width = self.get_width_request()
+            self._menu.props.box_width = max(self.get_width_request(),
+                                             self._menu.get_width_request())
 
             [width, height] = self._round_box.get_allocation()            
             self._menu.popup(x, y + height)
+            
+            # Grab the pointer so the menu will popdown on mouse click.
+            self._menu.grab_pointer()
 
     def _menu_action_cb(self, menu, menu_item):
         action_id = menu_item.props.action_id

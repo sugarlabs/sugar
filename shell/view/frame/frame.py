@@ -50,6 +50,7 @@ class Frame:
         self._hover_frame = False
         self._shell = shell
         self._mode = Frame.INACTIVE
+        self._current_position = 0
 
         self._timeline = Timeline(self)
         self._timeline.add_tag('slide_in', 18, 24)
@@ -75,6 +76,9 @@ class Frame:
 
         shell.get_model().connect('notify::state',
                                   self._shell_state_changed_cb)
+                                  
+        screen = gtk.gdk.screen_get_default()
+        screen.connect('size-changed', self._size_changed_cb)
 
     def _create_top_panel(self):
         panel = self._create_panel(hippo.ORIENTATION_HORIZONTAL)
@@ -219,24 +223,28 @@ class Frame:
     def notify_key_release(self):
         if self._mode == Frame.TEMPORARY:
             self._timeline.play('before_slide_out', 'slide_out')
-
+            
     def _move(self, pos):
+        self._current_position = pos
+        self._update_position()
+
+    def _update_position(self):
         screen_h = gtk.gdk.screen_height()
         screen_w = gtk.gdk.screen_width()
 
-        self._move_panel(self._top_panel, pos,
+        self._move_panel(self._top_panel, self._current_position,
                          0, units.grid_to_pixels(-1),
                          0, 0)
 
-        self._move_panel(self._bottom_panel, pos,
+        self._move_panel(self._bottom_panel, self._current_position,
                          0, screen_h,
                          0, screen_h - units.grid_to_pixels(1))
 
-        self._move_panel(self._left_panel, pos,
+        self._move_panel(self._left_panel, self._current_position,
                          units.grid_to_pixels(-1), 0,
                          0, 0)
 
-        self._move_panel(self._right_panel, pos,
+        self._move_panel(self._right_panel, self._current_position,
                          screen_w, 0,
                          screen_w - units.grid_to_pixels(1), 0)
 
@@ -255,7 +263,10 @@ class Frame:
             self._move(0)
         if not self._event_frame.is_visible():
             self._event_frame.show()
-
+            
+    def _size_changed_cb(self, screen):
+       self._update_position()
+               
     def is_visible(self):
         return self._top_panel.props.visible
 
