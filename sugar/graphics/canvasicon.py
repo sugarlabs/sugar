@@ -355,7 +355,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             [x, y] = context.translate_to_screen(self)
         
             # TODO: Any better place to do this?
-            popup.props.box_width = max(popup.props.box_width,
+            popup.props.box_width = max(popup.get_width_request(),
                                         self.get_width_request())
 
             [width, height] = self.get_allocation()
