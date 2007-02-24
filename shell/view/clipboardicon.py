@@ -43,9 +43,9 @@ class ClipboardIcon(CanvasIcon):
             self._menu.set_state(name, percent, preview, activity)
 
         if activity and percent < 100:
-            self.set_property('color', XoColor("#000000,#424242"))
+            self.props.xo_color = XoColor("#000000,#424242")
         else:
-            self.set_property('color', XoColor("#000000,#FFFFFF"))
+            self.props.xo_color = XoColor("#000000,#FFFFFF")
     
     def _activity_create_success_cb(self, handler, activity):
         activity.start(util.unique_id())
