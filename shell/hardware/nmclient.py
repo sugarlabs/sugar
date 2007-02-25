@@ -130,6 +130,8 @@ class Device(gobject.GObject):
                                 gobject.TYPE_NONE, ([])),
         'activated':           (gobject.SIGNAL_RUN_FIRST,
                                 gobject.TYPE_NONE, ([])),
+        'deactivated':         (gobject.SIGNAL_RUN_FIRST,
+                                gobject.TYPE_NONE, ([])),
         'strength-changed':    (gobject.SIGNAL_RUN_FIRST,
                                 gobject.TYPE_NONE,
                                ([gobject.TYPE_PYOBJECT])),
@@ -179,6 +181,8 @@ class Device(gobject.GObject):
 
         if self._active:
             self.emit('activated')
+        else:
+            self.emit('deactivated')
 
     def _update_networks(self, net_ops, active_op):
         for op in net_ops:

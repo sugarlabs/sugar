@@ -45,7 +45,7 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
         shell_model.connect('notify::state',
                             self._shell_state_changed_cb)
 
-        self._device_icons = []
+        self._device_icons = {}
 
         devices_model = shell_model.get_devices()
         for device in devices_model:
@@ -59,13 +59,17 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
     def _add_device(self, device):
         view = deviceview.create(device)
         self.append(view, hippo.PACK_FIXED)
-        self._device_icons.append(view)
+        self._device_icons[device.get_id()] = view
+
+    def _remove_device(self, device):
+        self.remove(self._device_icons[device.get_id()])
+        del self._device_icons[device.get_id()]
 
     def _device_appeared_cb(self, model, device):
         self._add_device(device)
 
     def _device_disappeared_cb(self, model, device):
-        pass
+        self._remove_device(device)
 
     def _shell_state_changed_cb(self, model, pspec):
         # FIXME handle all possible mode switches
@@ -87,7 +91,7 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
                           (height - icon_height) / 2)
 
         i = 0
-        for icon in self._device_icons:
+        for icon in self._device_icons.values():
             angle = 2 * math.pi / len(self._device_icons) * i + math.pi / 2
             radius = units.grid_to_pixels(5)
 
