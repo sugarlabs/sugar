@@ -27,17 +27,22 @@ from view.BuddyIcon import BuddyIcon
 
 class AccessPointView(CanvasIcon):
     def __init__(self, model):
-        CanvasIcon.__init__(self, tooltip=model.get_name())
+        CanvasIcon.__init__(self)
         self._model = model
 
         self.connect('activated', self._activate_cb)
 
         model.connect('notify::strength', self._strength_changed_cb)
+        model.connect('notify::name', self._name_changed_cb)
 
         self._update_icon()
+        self._update_name()
 
     def _strength_changed_cb(self, model, pspec):
         self._update_icon()
+
+    def _name_changed_cb(self, model, pspec):
+        self._update_name()
 
     def _activate_cb(self, icon):
         network_manager = hardwaremanager.get_network_manager()
@@ -46,6 +51,9 @@ class AccessPointView(CanvasIcon):
         network = self._model.get_nm_network()
 
         network_manager.set_active_device(device, network)
+
+    def _update_name(self):
+        self.props.tooltip = self._model.props.name
 
     def _update_icon(self):
         strength = self._model.props.strength

@@ -24,6 +24,8 @@ from hardware import hardwaremanager
 
 class AccessPointModel(gobject.GObject):
     __gproperties__ = {
+        'name'     : (str, None, None, None,
+                      gobject.PARAM_READABLE),
         'strength' : (int, None, None, 0, 100, 0,
                       gobject.PARAM_READABLE)
     }
@@ -35,15 +37,17 @@ class AccessPointModel(gobject.GObject):
 
         self._nm_network.connect('strength-changed',
                                  self._strength_changed_cb)
+        self._nm_network.connect('essid-changed',
+                                 self._essid_changed_cb)
 
     def _strength_changed_cb(self, nm_network):
         self.notify('strength')
 
+    def _essid_changed_cb(self, nm_network):
+        self.notify('name')
+
     def get_id(self):
         return self._nm_network.get_op()
-
-    def get_name(self):
-        return self._nm_network.get_ssid()
 
     def get_nm_device(self):
         return self._nm_device
@@ -54,6 +58,8 @@ class AccessPointModel(gobject.GObject):
     def do_get_property(self, pspec):
         if pspec.name == 'strength':
             return self._nm_network.get_strength()
+        elif pspec.name == 'name':
+            return self._nm_network.get_ssid()
 
 class ActivityModel:
     def __init__(self, activity, bundle, service):

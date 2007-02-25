@@ -4,6 +4,8 @@ from model.devices import device
 
 class Device(device.Device):
     __gproperties__ = {
+        'name'     : (str, None, None, None,
+                      gobject.PARAM_READABLE),
         'strength' : (int, None, None, 0, 100, 0,
                       gobject.PARAM_READABLE)
     }
@@ -14,23 +16,27 @@ class Device(device.Device):
 
         self._nm_device.connect('strength-changed',
                                 self._strength_changed_cb)
+        self._nm_device.connect('essid-changed',
+                                self._essid_changed_cb)
 
     def _strength_changed_cb(self, nm_device, strength):
         self.notify('strength')
 
+    def _essid_changed_cb(self, nm_device):
+        self.notify('name')
+
     def do_get_property(self, pspec):
         if pspec.name == 'strength':
             return self._nm_device.get_strength()
+        elif pspec.name == 'name':
+            active_net = self._nm_device.get_active_network()
+            if active_net:
+                return active_net.get_ssid()
+            else:
+                return None
 
     def get_type(self):
         return 'wirelessnetwork'
 
     def get_id(self):
         return self._nm_device.get_op()
-
-    def get_name(self):
-        active_net = self._nm_device.get_active_network()
-        if active_net:
-            return active_net.get_ssid()
-        else:
-            return None
