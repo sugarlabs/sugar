@@ -156,8 +156,6 @@ class Device(gobject.GObject):
         self._type = props[2]
         self._udi = props[3]
         self._active = props[4]
-        if self._active:
-            self.emit('activated')
         self._link = props[15]
         self._caps = props[17]
 
@@ -169,6 +167,9 @@ class Device(gobject.GObject):
             self._update_networks(props[20], props[19])
 
         self._valid = True
+
+        if self._active:
+            self.emit('activated')
 
     def _update_networks(self, net_ops, active_op):
         for op in net_ops:
@@ -261,8 +262,19 @@ NM_STATE_CONNECTING = 2
 NM_STATE_CONNECTED = 3
 NM_STATE_DISCONNECTED = 4
 
-class NMClient(object):
+class NMClient(gobject.GObject):
+    __gsignals__ = {
+        'device-activated' : (gobject.SIGNAL_RUN_FIRST,
+                              gobject.TYPE_NONE, 
+                             ([gobject.TYPE_PYOBJECT])),
+        'device-removed'   : (gobject.SIGNAL_RUN_FIRST,
+                              gobject.TYPE_NONE, 
+                             ([gobject.TYPE_PYOBJECT]))
+    }
+
     def __init__(self):
+        gobject.GObject.__init__(self)
+
         self.nminfo = None
         self._nm_present = False
         self._nm_state = NM_STATE_UNKNOWN
@@ -329,6 +341,8 @@ class NMClient(object):
         dev.disconnect('strength-changed')
         del self._devices[dev_op]
 
+        self.emit('device-removed', dev)
+
     def _dev_activated_cb(self, dev):
         op = dev.get_op()
         if not self._devices.has_key(op):
@@ -336,6 +350,8 @@ class NMClient(object):
         if not dev.get_active():
             return
         self._active_device = op
+
+        self.emit('device-activated', dev)
 
     def _dev_strength_changed_cb(self, dev, strength):
         op = dev.get_op()

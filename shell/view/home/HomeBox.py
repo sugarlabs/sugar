@@ -46,13 +46,26 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
                             self._shell_state_changed_cb)
 
         self._device_icons = []
-        for device in shell_model.get_devices():
+
+        devices_model = shell_model.get_devices()
+        for device in devices_model:
             self._add_device(device)
+
+        devices_model.connect('device-appeared',
+                              self._device_appeared_cb)
+        devices_model.connect('device-disappeared',
+                              self._device_disappeared_cb)
 
     def _add_device(self, device):
         view = deviceview.create(device)
         self.append(view, hippo.PACK_FIXED)
         self._device_icons.append(view)
+
+    def _device_appeared_cb(self, model, device):
+        self._add_device(device)
+
+    def _device_disappeared_cb(self, model, device):
+        pass
 
     def _shell_state_changed_cb(self, model, pspec):
         # FIXME handle all possible mode switches
