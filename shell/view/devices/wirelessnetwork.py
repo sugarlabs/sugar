@@ -5,8 +5,10 @@ class DeviceView(deviceview.DeviceView):
         deviceview.DeviceView.__init__(self, model)
         self._model = model
 
-        self._update_icon()
         model.connect('notify::strength', self._strength_changed_cb)
+
+        self.props.tooltip = model.get_name()
+        self._update_icon()
 
     def _strength_changed_cb(self, model, pspec):
         self._update_icon()

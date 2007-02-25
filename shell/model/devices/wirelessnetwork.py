@@ -27,3 +27,10 @@ class Device(device.Device):
 
     def get_id(self):
         return self._nm_device.get_op()
+
+    def get_name(self):
+        active_net = self._nm_device.get_active_network()
+        if active_net:
+            return active_net.get_ssid()
+        else:
+            return None

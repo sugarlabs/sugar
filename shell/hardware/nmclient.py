@@ -218,6 +218,9 @@ class Device(gobject.GObject):
     def get_networks(self):
         return self._networks.values()
 
+    def get_active_network(self):
+        return self.get_network(self._active_net)
+    
     def get_network(self, op):
         if self._networks.has_key(op):
             return self._networks[op]
