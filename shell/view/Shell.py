@@ -26,8 +26,6 @@ from view.ActivityHost import ActivityHost
 from sugar.activity import activityfactory
 from view.frame.frame import Frame
 from view.keyhandler import KeyHandler
-from view.hardwaremanager import HardwareManager
-from _sugar import AudioManager
 import sugar
 
 class Shell(gobject.GObject):
@@ -39,9 +37,6 @@ class Shell(gobject.GObject):
         self._screen = wnck.screen_get_default()
         self._current_host = None
         self._screen_rotation = 0
-
-        self._hw_manager = HardwareManager()
-        self._audio_manager = AudioManager()
 
         self._home_window = HomeWindow(self)
         self._home_window.show()
@@ -87,12 +82,6 @@ class Shell(gobject.GObject):
 
         if self._current_host:
             self._current_host.set_active(True)
-
-    def get_hardware_manager(self):
-        return self._hw_manager
-
-    def get_audio_manager(self):
-        return self._audio_manager
 
     def get_model(self):
         return self._model

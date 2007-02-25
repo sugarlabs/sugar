@@ -117,6 +117,7 @@ services/clipboard/Makefile
 services/datastore/Makefile
 shell/Makefile
 shell/data/Makefile
+shell/hardware/Makefile
 shell/view/Makefile
 shell/view/devices/Makefile
 shell/view/frame/Makefile
