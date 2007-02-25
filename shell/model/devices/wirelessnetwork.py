@@ -16,8 +16,6 @@ class Device(device.Device):
 
         self._nm_device.connect('strength-changed',
                                 self._strength_changed_cb)
-        self._nm_device.connect('essid-changed',
-                                self._essid_changed_cb)
 
     def _strength_changed_cb(self, nm_device, strength):
         self.notify('strength')
@@ -29,11 +27,8 @@ class Device(device.Device):
         if pspec.name == 'strength':
             return self._nm_device.get_strength()
         elif pspec.name == 'name':
-            active_net = self._nm_device.get_active_network()
-            if active_net:
-                return active_net.get_ssid()
-            else:
-                return None
+            # FIXME
+            return None
 
     def get_type(self):
         return 'wirelessnetwork'

@@ -145,8 +145,6 @@ class Device(gobject.GObject):
         'strength-changed':    (gobject.SIGNAL_RUN_FIRST,
                                 gobject.TYPE_NONE,
                                ([gobject.TYPE_PYOBJECT])),
-        'essid-changed':       (gobject.SIGNAL_RUN_FIRST,
-                                gobject.TYPE_NONE, ([])),
         'network-appeared':    (gobject.SIGNAL_RUN_FIRST,
                                 gobject.TYPE_NONE,
                                ([gobject.TYPE_PYOBJECT])),
@@ -278,7 +276,6 @@ class Device(gobject.GObject):
                 for (op, net) in self._networks.items():
                     if net.get_ssid() == ssid:
                         self._active_net = op
-                        self.emit('essid-changed')
 
     def get_type(self):
         return self._type
