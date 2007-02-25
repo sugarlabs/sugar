@@ -42,7 +42,17 @@ class AccessPointView(CanvasIcon):
         network_manager.set_active_device(device, network)
 
     def _update_icon(self):
-        self.props.icon_name = 'theme:stock-net-wireless-00'
+        strength = self._model.props.strength
+        if strength < 21:
+            self.props.icon_name = 'theme:stock-net-wireless-00'
+        elif strength < 41:
+            self.props.icon_name = 'theme:stock-net-wireless-21-40'
+        elif strength < 61:
+            self.props.icon_name = 'theme:stock-net-wireless-41-60'
+        elif strength < 81:
+            self.props.icon_name = 'theme:stock-net-wireless-61-80'
+        else:
+            self.props.icon_name = 'theme:stock-net-wireless-81-100'
 
 class ActivityView(SnowflakeBox):
     def __init__(self, shell, menu_shell, model):

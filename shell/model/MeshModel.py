@@ -22,10 +22,22 @@ from sugar.activity import bundleregistry
 from model.BuddyModel import BuddyModel
 from hardware import hardwaremanager
 
-class AccessPointModel:
+class AccessPointModel(gobject.GObject):
+    __gproperties__ = {
+        'strength' : (int, None, None, 0, 100, 0,
+                      gobject.PARAM_READABLE)
+    }
+
     def __init__(self, nm_device, nm_network):
+        gobject.GObject.__init__(self)
         self._nm_network = nm_network
         self._nm_device = nm_device
+
+        self._nm_network.connect('strength-changed',
+                                 self._strength_changed_cb)
+
+    def _strength_changed_cb(self, nm_network):
+        self.notity('strength')
 
     def get_id(self):
         return self._nm_network.get_op()
@@ -38,6 +50,10 @@ class AccessPointModel:
 
     def get_nm_network(self):
         return self._nm_network
+
+    def do_get_property(self, pspec):
+        if pspec.name == 'strength':
+            return self._nm_network.get_strength()
 
 class ActivityModel:
     def __init__(self, activity, bundle, service):

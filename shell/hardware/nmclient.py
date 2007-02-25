@@ -70,10 +70,12 @@ NM_802_11_CAP_CIPHER_WEP104   = 0x00002000
 NM_802_11_CAP_CIPHER_TKIP     = 0x00004000
 NM_802_11_CAP_CIPHER_CCMP     = 0x00008000
 
-
 class Network(gobject.GObject):
     __gsignals__ = {
-        'init-failed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
+        'init-failed'     : (gobject.SIGNAL_RUN_FIRST,
+                             gobject.TYPE_NONE, ([])),
+        'strength-changed': (gobject.SIGNAL_RUN_FIRST,
+                             gobject.TYPE_NONE, ([]))
     }
 
     def __init__(self, op):
@@ -122,6 +124,7 @@ class Network(gobject.GObject):
 
     def set_strength(self, strength):
         self._strength = strength
+        self.emit('strength-changed')
 
     def is_valid(self):
         return self._valid
