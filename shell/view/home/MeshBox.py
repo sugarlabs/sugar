@@ -22,12 +22,24 @@ import gobject
 from sugar.graphics.spreadbox import SpreadBox
 from sugar.graphics.snowflakebox import SnowflakeBox
 from sugar.graphics.canvasicon import CanvasIcon
+from hardware import hardwaremanager
 from view.BuddyIcon import BuddyIcon
 
 class AccessPointView(CanvasIcon):
     def __init__(self, model):
         CanvasIcon.__init__(self, tooltip=model.get_name())
+        self._model = model
+
+        self.connect('activated', self._activate_cb)
         self._update_icon()
+
+    def _activate_cb(self, icon):
+        network_manager = hardwaremanager.get_network_manager()
+
+        device = self._model.get_nm_device()
+        network = self._model.get_nm_network()
+
+        network_manager.set_active_device(device, network)
 
     def _update_icon(self):
         self.props.icon_name = 'theme:stock-net-wireless-00'

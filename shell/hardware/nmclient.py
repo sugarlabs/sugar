@@ -418,6 +418,21 @@ class NMClient(gobject.GObject):
         except dbus.DBusException:
             pass
 
+    def set_active_device(self, device, network):
+        net_op = ""
+        if network:
+            net_op = network.get_op()
+        try:
+            # NM 0.6.4 and earlier have a bug which returns an
+            # InvalidArguments error if no security information is passed
+            # for wireless networks
+            self._nm_obj.setActiveDevice(device.get_op(), network.get_ssid())
+        except dbus.DBusException, e:
+            if str(e).find("invalid arguments"):
+                pass
+            else:
+                raise dbus.DBusException(e)
+
     def get_key_for_network(self, net, async_cb, async_err_cb):
 		pass
 

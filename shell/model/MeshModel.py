@@ -23,14 +23,21 @@ from model.BuddyModel import BuddyModel
 from hardware import hardwaremanager
 
 class AccessPointModel:
-    def __init__(self, nm_network):
+    def __init__(self, nm_device, nm_network):
         self._nm_network = nm_network
+        self._nm_device = nm_device
 
     def get_id(self):
         return self._nm_network.get_op()
 
     def get_name(self):
         return self._nm_network.get_ssid()
+
+    def get_nm_device(self):
+        return self._nm_device
+
+    def get_nm_network(self):
+        return self._nm_network
 
 class ActivityModel:
     def __init__(self, activity, bundle, service):
@@ -104,22 +111,22 @@ class MeshModel(gobject.GObject):
     def _nm_device_activated_cb(self, manager, nm_device):
         self._add_network_device(nm_device)
 
-    def _nm_network_appeared_cb(self, manager, nm_network):
-        self._add_access_point(nm_network)
+    def _nm_network_appeared_cb(self, nm_device, nm_network):
+        self._add_access_point(nm_device, nm_network)
 
-    def _nm_network_disappeared_cb(self, manager, nm_network):
-        self._remove_access_point(nm_network)
+    def _nm_network_disappeared_cb(self, nm_device, nm_network):
+        self._remove_access_point(nm_device, nm_network)
 
     def _add_network_device(self, nm_device):
-        for network in nm_device.get_networks():
-            self._add_access_point(network)
+        for nm_network in nm_device.get_networks():
+            self._add_access_point(nm_device, nm_network)
         nm_device.connect('network-appeared',
                           self._nm_network_appeared_cb)
         nm_device.connect('network-disappeared',
                           self._nm_network_disappeared_cb)
 
-    def _add_access_point(self, nm_network):
-        model = AccessPointModel(nm_network)
+    def _add_access_point(self, nm_device, nm_network):
+        model = AccessPointModel(nm_device, nm_network)
         self._access_points[nm_network.get_op()] = model
         self.emit('access-point-added', model)
 
