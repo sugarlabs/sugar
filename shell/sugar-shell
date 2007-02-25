@@ -62,12 +62,6 @@ model = ShellModel()
 service = ShellService(model)
 shell = Shell(model)
 
-# Start the NetworkManager applet
-# FIXME: do this somewhere else, better planned out
-args = ["sugar-nm-applet"]
-flags = gobject.SPAWN_SEARCH_PATH
-result = gobject.spawn_async(args, flags=flags, standard_output=False)
-
 tbh = TracebackUtils.TracebackHelper()
 try:
 	gtk.main()

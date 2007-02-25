@@ -26,7 +26,6 @@ from view.frame.overlaybox import OverlayBox
 from view.frame.FriendsBox import FriendsBox
 from view.frame.PanelWindow import PanelWindow
 from view.frame.clipboardpanelwindow import ClipboardPanelWindow
-from view.frame.notificationtray import NotificationTray
 from view.frame.framepopupcontext import FramePopupContext
 from model.ShellModel import ShellModel
 from sugar.graphics.timeline import Timeline
@@ -86,16 +85,6 @@ class Frame:
 
         box = ZoomBox(self._shell, self._popup_context)
         root.append(box)
-
-        tray = NotificationTray()
-        tray_box = hippo.CanvasBox(box_width=units.grid_to_pixels(1),
-                                   box_height=units.grid_to_pixels(1),
-                                   xalign=hippo.ALIGNMENT_END)
-
-        tray_widget = hippo.CanvasWidget()
-        tray_widget.props.widget = tray
-        tray_box.append(tray_widget, gtk.EXPAND)
-        root.append(tray_box)
 
         box = OverlayBox(self._shell)
         root.append(box, hippo.PACK_FIXED)

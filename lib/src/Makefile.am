@@ -44,8 +44,6 @@ libsugarprivate_la_SOURCES =		\
 	sugar-key-grabber.c		\
 	sugar-push-scroller.c		\
 	sugar-push-scroller.h		\
-	sugar-tray-manager.c		\
-	sugar-tray-manager.h		\
 	sugar-utils.c			\
 	sugar-utils.h
 
