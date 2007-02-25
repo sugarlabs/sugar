@@ -37,7 +37,7 @@ class AccessPointModel(gobject.GObject):
                                  self._strength_changed_cb)
 
     def _strength_changed_cb(self, nm_network):
-        self.notity('strength')
+        self.notify('strength')
 
     def get_id(self):
         return self._nm_network.get_op()

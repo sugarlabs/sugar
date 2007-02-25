@@ -31,6 +31,12 @@ class AccessPointView(CanvasIcon):
         self._model = model
 
         self.connect('activated', self._activate_cb)
+
+        model.connect('notify::strength', self._strength_changed_cb)
+
+        self._update_icon()
+
+    def _strength_changed_cb(self, model, pspec):
         self._update_icon()
 
     def _activate_cb(self, icon):

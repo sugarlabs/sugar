@@ -108,6 +108,8 @@ class Network(gobject.GObject):
             logging.debug("Net(%s): ssid '%s', mode %d, strength %d" % (self._op,
                     self._ssid, self._mode, self._strength))
 
+        self.emit('strength-changed')
+
     def _update_error_cb(self, err):
         logging.debug("Net(%s): failed to update. (%s)" % (self._op, err))
         self._valid = False

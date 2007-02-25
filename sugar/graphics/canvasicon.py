@@ -319,12 +319,12 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
     def get_popup(self):
         if self._tooltip:
             tooltip_popup = Popup()
-            canvas_text = hippo.CanvasText(text=self._tooltip)
-            canvas_text.props.background_color = color.MENU_BACKGROUND.get_int()
-            canvas_text.props.color = color.LABEL_TEXT.get_int()
-            canvas_text.props.font_desc = font.DEFAULT.get_pango_desc()
-            canvas_text.props.padding = units.points_to_pixels(5)
-            tooltip_popup.append(canvas_text)
+            text = hippo.CanvasText(text=self._tooltip)
+            text.props.background_color = color.MENU_BACKGROUND.get_int()
+            text.props.color = color.LABEL_TEXT.get_int()
+            text.props.font_desc = font.DEFAULT.get_pango_desc()
+            text.props.padding = units.points_to_pixels(5)
+            tooltip_popup.append(text)
             
             return tooltip_popup
         else:

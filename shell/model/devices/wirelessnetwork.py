@@ -15,8 +15,8 @@ class Device(device.Device):
         self._nm_device.connect('strength-changed',
                                 self._strength_changed_cb)
 
-    def _strength_changed_cb(self, nm_device):
-        self.notity('strength')
+    def _strength_changed_cb(self, nm_device, strength):
+        self.notify('strength')
 
     def do_get_property(self, pspec):
         if pspec.name == 'strength':
