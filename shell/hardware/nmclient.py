@@ -22,7 +22,9 @@ import dbus
 import dbus.glib
 import dbus.decorators
 import gobject
+import gtk
 
+from hardware.wepkeydialog import WEPKeyDialog
 from hardware import nminfo
 
 IW_AUTH_ALG_OPEN_SYSTEM = 0x00000001
@@ -438,7 +440,53 @@ class NMClient(gobject.GObject):
                 raise dbus.DBusException(e)
 
     def get_key_for_network(self, net, async_cb, async_err_cb):
-		pass
+        # Throw up a dialog asking for the key here, and set
+        # the authentication algorithm to the given one, if any
+        #
+        # Key needs to be limited to _either_ 10 or 26 digits long,
+        # and contain _only_ _hex_ digits, 0-9 or a-f
+        #
+        # Auth algorithm should be a dropdown of: [Open System, Shared Key],
+        # mapping to the values [IW_AUTH_ALG_OPEN_SYSTEM, IW_AUTH_ALG_SHARED_KEY]
+        # above
+
+        self._key_dialog = WEPKeyDialog(net, async_cb, async_err_cb)
+        self._key_dialog.connect("response", self._key_dialog_response_cb)
+        self._key_dialog.connect("destroy", self._key_dialog_destroy_cb)
+        self._key_dialog.show_all()
+
+    def _key_dialog_destroy_cb(self, widget, foo=None):
+        if widget != self._key_dialog:
+            return
+        self._key_dialog_response_cb(widget, gtk.RESPONSE_CANCEL)
+
+    def _key_dialog_response_cb(self, widget, response_id):
+        if widget != self._key_dialog:
+            return
+        key = self._key_dialog.get_key()
+        wep_auth_alg = self._key_dialog.get_auth_alg()
+        net = self._key_dialog.get_network()
+        (async_cb, async_err_cb) = self._key_dialog.get_callbacks()
+
+        # Clear self._key_dialog before we call destroy(), otherwise
+        # the destroy will trigger and we'll get called again by
+        # self._key_dialog_destroy_cb
+        self._key_dialog = None
+        widget.destroy()
+
+        if response_id == gtk.RESPONSE_OK:
+            self.nminfo.get_key_for_network_cb(
+                    net, key, wep_auth_alg, async_cb, async_err_cb, canceled=False)
+        else:
+            self.nminfo.get_key_for_network_cb(
+                    net, None, None, async_cb, async_err_cb, canceled=True)
+
+    def cancel_get_key_for_network(self):
+        # Close the wireless key dialog and just have it return
+        # with the 'canceled' argument set to true
+        if not self._key_dialog:
+            return
+        self._key_dialog_destroy_cb(self._key_dialog)
 
     def device_activation_stage_sig_handler(self, device, stage):
         logging.debug('Device Activation Stage "%s" for device %s' % (NM_DEVICE_STAGE_STRINGS[stage], device))
