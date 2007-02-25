@@ -3,4 +3,5 @@ sugar_PYTHON =				\
 	__init__.py			\
 	battery.py			\
 	deviceview.py			\
-	network.py
+	wirednetwork.py			\
+	wirelessnetwork.py

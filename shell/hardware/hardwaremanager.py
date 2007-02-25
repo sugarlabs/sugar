@@ -18,6 +18,7 @@ import logging
 
 import dbus
 
+from hardware.nmclient import NMClient
 from _sugar import AudioManager
 
 _HARDWARE_MANAGER_INTERFACE = 'org.laptop.HardwareManager'
@@ -65,5 +66,9 @@ def get_hardware_manager():
 def get_audio_manager():
     return _audio_manager
 
+def get_network_manager():
+    return _network_manager
+
 _hardware_manager = HardwareManager()
 _audio_manager = AudioManager()
+_network_manager = NMClient()
