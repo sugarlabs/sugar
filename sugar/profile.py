@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
+import logging
 from ConfigParser import ConfigParser
 
 from sugar import env
@@ -41,10 +42,32 @@ class _Profile(object):
         if cp.has_option('Buddy', 'Color'):
             self.color = XoColor(cp.get('Buddy', 'Color'))
 
-        if cp.has_option('Buddy', 'PublicKey'):
-            self.pubkey = cp.get('Buddy', 'PublicKey')
-
         del cp
+
+        self._load_pubkey()
+
+    def _load_pubkey(self):
+        self.pubkey = None
+
+        key_path = os.path.join(env.get_profile_path(), 'owner.key.pub')
+        try:
+            f = open(key_path, "r")
+            lines = f.readlines()
+            f.close()
+        except IOError, e:
+            logging.error("Error reading public key: %s" % e)
+            return
+
+        magic = "ssh-dss "
+        for l in lines:
+            l = l.strip()
+            if not l.startswith(magic):
+                continue
+            self.pubkey = l[len(magic):]
+            break
+        if not self.pubkey:
+            logging.error("Error parsing public key.")
+
 
 def get_nick_name():
     return _profile.name

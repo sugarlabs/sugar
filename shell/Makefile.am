@@ -1,4 +1,4 @@
-SUBDIRS = data model view
+SUBDIRS = data model view intro
 
 bin_SCRIPTS = 				\
 	sugar-activity			\
