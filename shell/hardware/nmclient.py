@@ -76,7 +76,7 @@ class Network(gobject.GObject):
                              gobject.TYPE_NONE, ([])),
         'strength-changed': (gobject.SIGNAL_RUN_FIRST,
                              gobject.TYPE_NONE, ([])),
-        'essid-changed'   : (gobject.SIGNAL_RUN_FIRST,
+        'ssid-changed'    : (gobject.SIGNAL_RUN_FIRST,
                              gobject.TYPE_NONE, ([]))
     }
 
@@ -111,7 +111,7 @@ class Network(gobject.GObject):
                     self._ssid, self._mode, self._strength))
 
         self.emit('strength-changed')
-        self.emit('essid-changed')
+        self.emit('ssid-changed')
 
     def _update_error_cb(self, err):
         logging.debug("Net(%s): failed to update. (%s)" % (self._op, err))

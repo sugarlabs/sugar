@@ -37,7 +37,7 @@ class AccessPointModel(gobject.GObject):
 
         self._nm_network.connect('strength-changed',
                                  self._strength_changed_cb)
-        self._nm_network.connect('essid-changed',
+        self._nm_network.connect('ssid-changed',
                                  self._essid_changed_cb)
 
     def _strength_changed_cb(self, nm_network):
