@@ -26,7 +26,7 @@ from view.BuddyIcon import BuddyIcon
 
 class AccessPointView(CanvasIcon):
     def __init__(self, model):
-        CanvasIcon.__init__(self)
+        CanvasIcon.__init__(self, tooltip=model.get_name())
         self._update_icon()
 
     def _update_icon(self):
