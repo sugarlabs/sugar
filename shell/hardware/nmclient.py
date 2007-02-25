@@ -126,10 +126,19 @@ class Network(gobject.GObject):
 
 class Device(gobject.GObject):
     __gsignals__ = {
-        'init-failed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
-        'activated': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
-        'strength-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                            ([gobject.TYPE_PYOBJECT]))
+        'init-failed':         (gobject.SIGNAL_RUN_FIRST,
+                                gobject.TYPE_NONE, ([])),
+        'activated':           (gobject.SIGNAL_RUN_FIRST,
+                                gobject.TYPE_NONE, ([])),
+        'strength-changed':    (gobject.SIGNAL_RUN_FIRST,
+                                gobject.TYPE_NONE,
+                               ([gobject.TYPE_PYOBJECT])),
+        'network-appeared':    (gobject.SIGNAL_RUN_FIRST,
+                                gobject.TYPE_NONE,
+                               ([gobject.TYPE_PYOBJECT])),
+        'network-disappeared': (gobject.SIGNAL_RUN_FIRST,
+                                gobject.TYPE_NONE,
+                               ([gobject.TYPE_PYOBJECT]))
     }
 
     def __init__(self, op):
@@ -195,6 +204,9 @@ class Device(gobject.GObject):
     def get_op(self):
         return self._op
 
+    def get_networks(self):
+        return self._networks.values()
+
     def get_network(self, op):
         if self._networks.has_key(op):
             return self._networks[op]
@@ -223,12 +235,16 @@ class Device(gobject.GObject):
         net = Network(network)
         self._networks[network] = net
         net.connect('init-failed', self._net_init_failed)
+        self.emit('network-appeared', net)
 
     def network_disappeared(self, network):
         if not self._networks.has_key(network):
             return
         if network == self._active_net:
             self._active_net = None
+
+        self.emit('network-disappeared', self._networks[network])
+
         del self._networks[network]
 
     def get_active(self):

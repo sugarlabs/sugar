@@ -24,6 +24,14 @@ from sugar.graphics.snowflakebox import SnowflakeBox
 from sugar.graphics.canvasicon import CanvasIcon
 from view.BuddyIcon import BuddyIcon
 
+class AccessPointView(CanvasIcon):
+    def __init__(self, model):
+        CanvasIcon.__init__(self)
+        self._update_icon()
+
+    def _update_icon(self):
+        self.props.icon_name = 'theme:stock-net-wireless-00'
+
 class ActivityView(SnowflakeBox):
     def __init__(self, shell, menu_shell, model):
         SnowflakeBox.__init__(self)
@@ -63,6 +71,7 @@ class MeshBox(SpreadBox):
         self._model = shell.get_model().get_mesh()
         self._buddies = {}
         self._activities = {}
+        self._access_points = {}
         self._buddy_to_activity = {}
 
         for buddy_model in self._model.get_buddies():
@@ -78,6 +87,14 @@ class MeshBox(SpreadBox):
         self._model.connect('activity-added', self._activity_added_cb)
         self._model.connect('activity-removed', self._activity_removed_cb)
 
+        for ap_model in self._model.get_access_points():
+            self._add_access_point(ap_model)
+
+        self._model.connect('access-point-added',
+                            self._access_point_added_cb)
+        self._model.connect('access-point-removed',
+                            self._access_point_removed_cb)
+
     def _buddy_added_cb(self, model, buddy_model):
         self._add_alone_buddy(buddy_model)
 
@@ -92,6 +109,12 @@ class MeshBox(SpreadBox):
 
     def _activity_removed_cb(self, model, activity_model):
         self._remove_activity(activity_model) 
+
+    def _access_point_added_cb(self, model, ap_model):
+        self._add_access_point(ap_model)
+
+    def _access_point_removed_cb(self, model, ap_model):
+        self._add_access_point(ap_model) 
 
     def _add_alone_buddy(self, buddy_model):
         icon = BuddyIcon(self._shell, self._menu_shell, buddy_model)
@@ -136,3 +159,14 @@ class MeshBox(SpreadBox):
         icon = self._activities[activity_model.get_id()]
         self.remove_item(icon)
         del self._activities[activity_model.get_id()]
+
+    def _add_access_point(self, ap_model):
+        icon = AccessPointView(ap_model)
+        self.add_item(icon)
+
+        self._access_points[ap_model.get_id()] = icon
+
+    def _remove_access_point(self, ap_model):
+        icon = self._access_points[ap_model.get_id()]
+        self.remove_item(icon)
+        del self._access_points[ap_model.get_id()]
