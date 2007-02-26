@@ -54,7 +54,6 @@ class ServerPlugin(gobject.GObject):
         self._online_contacts = set() # handles of online contacts
         self._account = self._get_account_info()
 
-        self._ever_connected = False
         self._conn = self._init_connection()
 
     def _get_account_info(self):
@@ -85,12 +84,11 @@ class ServerPlugin(gobject.GObject):
             return item
         return None
 
-    def _init_connection(self, register=False):
+    def _init_connection(self):
         conn = self._find_existing_connection()
         if not conn:
             acct = self._account.copy()
-            if register:
-                acct['register'] = True
+            acct['register'] = True
 
             # Create a new connection
             print acct
@@ -119,8 +117,6 @@ class ServerPlugin(gobject.GObject):
         return channel
 
     def _connected_cb(self):
-        self._ever_connected = True
-
         # the group of contacts who may receive your presence
         publish = self._request_list_channel('publish')
         publish_handles, local_pending, remote_pending = publish[CHANNEL_INTERFACE_GROUP].GetAllMembers()
@@ -190,13 +186,9 @@ class ServerPlugin(gobject.GObject):
         elif state == CONNECTION_STATUS_DISCONNECTED:
             print 'disconnected: %r' % reason
             self.emit('status', state, int(reason))
-            if reason == CONNECTION_STATUS_REASON_AUTHENTICATION_FAILED and \
-                    not self._ever_connected:
-                # Hmm; probably aren't registered on the server, try reconnecting
-                # and registering
-                del self._conn
-                self._conn = self._init_connection(register=True)
-                self.start()
+            if reason == CONNECTION_STATUS_REASON_AUTHENTICATION_FAILED:
+                # FIXME: handle connection failure; retry later?
+                pass
         return False
 
     def start(self):
