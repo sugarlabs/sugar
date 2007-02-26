@@ -4,7 +4,9 @@ sugar_PYTHON = \
 	activity.py \
 	buddy.py \
 	buddyiconcache.py \
-	presenceservice.py
+	linklocal_plugin.py \
+	presenceservice.py \
+	server_plugin.py
 
 bin_SCRIPTS = sugar-presence-service2
 

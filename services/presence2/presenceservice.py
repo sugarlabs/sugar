@@ -21,11 +21,12 @@ from telepathy.interfaces import (CONN_MGR_INTERFACE, CONN_INTERFACE)
 from telepathy.constants import (CONNECTION_STATUS_CONNECTING, CONNECTION_STATUS_CONNECTED,
     CONNECTION_STATUS_DISCONNECTED, CONNECTION_HANDLE_TYPE_CONTACT)
  
-import telepathyclient
+from server_plugin import ServerPlugin
+from linklocal_plugin import LinkLocalPlugin
+
 from buddy import Buddy, Owner
 from activity import Activity
 import buddyiconcache
-from sugar import profile
 
 
 _PRESENCE_SERVICE = "org.laptop.Sugar.Presence"
@@ -60,50 +61,23 @@ class PresenceService(dbus.service.Object):
         self._registry = ManagerRegistry()
         self._registry.LoadManagers()
 
-        self._server_client = self._connect_to_server()
-        self._handles[self._server_client] = {}
+        # Set up the server connection
+        self._server_plugin = ServerPlugin(self._registry)
+        self._handles[self._server_plugin] = {}
 
-        # Telepathy link local connection
-        self._ll_client = None
+        self._server_plugin.connect('status', self._server_status_cb)
+        self._server_plugin.connect('contact-online', self._contact_online)
+        self._server_plugin.connect('contact-offline', self._contact_offline)
+        self._server_plugin.start()
 
-        self._server_client.connect('contact-online', self._contact_online)
-        self._server_client.connect('contact-offline', self._contact_offline)
-        self._server_client.run()
+        # Set up the link local connection
+        self._ll_plugin = LinkLocalPlugin(self._registry)
+        self._handles[self._ll_plugin] = {}
 
         dbus.service.Object.__init__(self, self._bus_name, _PRESENCE_PATH)
 
-    def _connect_to_server(self):
-        protocol = 'jabber'
-        account = {
-            'account': 'blah@collabora.co.uk',
-            'password': 'learn',
-            'server': 'light.bluelinux.co.uk'
-        }
-
-        mgr = self._registry.GetManager('gabble')
-        conn = None
-
-        # Search existing connections, if any, that we might be able to use
-        connections = Connection.get_connections()
-        for item in connections:
-            if item[CONN_INTERFACE].GetProtocol() != protocol:
-                continue
-            if not item.object_path.startswith("/org/freedesktop/Telepathy/Connection/gabble/jabber/"):
-                continue
-            if item[CONN_INTERFACE].GetStatus() == CONNECTION_STATUS_CONNECTED:
-                self_name = account['account']
-                test_handle = item[CONN_INTERFACE].RequestHandles(CONNECTION_HANDLE_TYPE_CONTACT, [self_name])[0]
-                if item[CONN_INTERFACE].GetSelfHandle() != test_handle:
-                    continue
-            conn = item
-
-        if not conn:
-            # Create a new connection
-            conn_bus_name, conn_object_path = \
-                    mgr[CONN_MGR_INTERFACE].RequestConnection(protocol, account)
-            conn = Connection(conn_bus_name, conn_object_path)
-
-        return telepathyclient.TelepathyClient(conn)
+    def _server_status_cb(self, plugin, status):
+        pass
 
     def _contact_online(self, tp, handle, key):
         buddy = self._buddies.get(key)
@@ -111,7 +85,7 @@ class PresenceService(dbus.service.Object):
         if not buddy:
             # we don't know yet this buddy
             objid = self._get_next_object_id()
-            buddy = Buddy(self._bus_name, objid, self._icon_cache)
+            buddy = Buddy(self._bus_name, objid, self._icon_cache, handle=handle)
             buddy.set_key(key)
             print "create buddy"
             self._buddies[key] = buddy

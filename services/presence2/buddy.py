@@ -32,7 +32,7 @@ class Buddy(dbus.service.Object):
     """Represents another person on the network and keeps track of the
     activities and resources they make available for sharing."""
 
-    def __init__(self, bus_name, object_id, icon_cache):
+    def __init__(self, bus_name, object_id, icon_cache, handle=None):
         if not bus_name:
             raise ValueError("DBus bus name must be valid")
         if not object_id or not isinstance(object_id, int):
@@ -47,6 +47,8 @@ class Buddy(dbus.service.Object):
         self._activities = {}   # Activity ID -> Activity
 
         self._icon_cache = icon_cache
+
+        self._handle = handle
 
         self._nick_name = None
         self._color = None
