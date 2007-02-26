@@ -31,6 +31,7 @@ from telepathy.constants import (
     CONNECTION_HANDLE_TYPE_LIST, CONNECTION_HANDLE_TYPE_CONTACT,
     CONNECTION_STATUS_REASON_AUTHENTICATION_FAILED)
 
+_PROTOCOL = "jabber"
 
 class ServerPlugin(gobject.GObject):
     __gsignals__ = {
@@ -49,7 +50,7 @@ class ServerPlugin(gobject.GObject):
 
         self._icon_cache = BuddyIconCache()
 
-        self._registry = registry
+        self._gabble_mgr = registry.GetManager('gabble')
         self._online_contacts = set() # handles of online contacts
         self._account = self._get_account_info()
 
@@ -66,10 +67,8 @@ class ServerPlugin(gobject.GObject):
         account_info['password'] = profile.get_private_key_hash()
         return account_info
 
-    def _init_connection(self, register=False):
-        protocol = 'jabber'
-
-        mgr = self._registry.GetManager('gabble')
+    def _find_existing_connection(self):
+        our_name = self._account['account']
 
         # Search existing connections, if any, that we might be able to use
         connections = Connection.get_connections()
@@ -77,19 +76,17 @@ class ServerPlugin(gobject.GObject):
         for item in connections:
             if not item.object_path.startswith("/org/freedesktop/Telepathy/Connection/gabble/jabber/"):
                 continue
-            if item[CONN_INTERFACE].GetStatus() == CONNECTION_STATUS_DISCONNECTED:
-                item[CONN_INTERFACE].Disconnect()
-                continue
-            if item[CONN_INTERFACE].GetProtocol() != protocol:
+            if item[CONN_INTERFACE].GetProtocol() != _PROTOCOL:
                 continue
             if item[CONN_INTERFACE].GetStatus() == CONNECTION_STATUS_CONNECTED:
-                self_name = self._account['account']
-                test_handle = item[CONN_INTERFACE].RequestHandles(CONNECTION_HANDLE_TYPE_CONTACT, [self_name])[0]
+                test_handle = item[CONN_INTERFACE].RequestHandles(CONNECTION_HANDLE_TYPE_CONTACT, [our_name])[0]
                 if item[CONN_INTERFACE].GetSelfHandle() != test_handle:
                     continue
-            conn = item
-            break
+            return item
+        return None
 
+    def _init_connection(self, register=False):
+        conn = self._find_existing_connection()
         if not conn:
             acct = self._account.copy()
             if register:
@@ -97,8 +94,9 @@ class ServerPlugin(gobject.GObject):
 
             # Create a new connection
             print acct
-            name, path = mgr[CONN_MGR_INTERFACE].RequestConnection(protocol, acct)
+            name, path = self._gabble_mgr[CONN_MGR_INTERFACE].RequestConnection(_PROTOCOL, acct)
             conn = Connection(name, path)
+            del acct
 
         conn[CONN_INTERFACE].connect_to_signal('StatusChanged', self._status_changed_cb)
 
