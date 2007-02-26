@@ -190,7 +190,6 @@ class ServerPlugin(gobject.GObject):
                     not self._ever_connected:
                 # Hmm; probably aren't registered on the server, try reconnecting
                 # and registering
-                self.disconnect()
                 del self._conn
                 self._conn = self._init_connection(register=True)
                 self.start()

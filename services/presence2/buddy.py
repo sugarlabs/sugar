@@ -48,7 +48,7 @@ class Buddy(dbus.service.Object):
 
         self._icon_cache = icon_cache
 
-        self._handle = handle
+        self.handles = {} # tp client -> handle
 
         self._nick_name = None
         self._color = None
