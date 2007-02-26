@@ -283,6 +283,7 @@ class Device(gobject.GObject):
 
     def _active_network_ssid_changed_cb(self, active_network):
         self._ssid = active_network.get_ssid()
+        self.emit('ssid-changed')
 
     def set_active_network(self, network):
         if self._active_network:
