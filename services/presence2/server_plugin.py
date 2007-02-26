@@ -18,6 +18,7 @@
 import gobject
 from sugar import profile
 from sugar import util
+from buddyiconcache import BuddyIconCache
 import logging
 
 from telepathy.client import ConnectionManager, ManagerRegistry, Connection, Channel
@@ -38,14 +39,18 @@ class ServerPlugin(gobject.GObject):
         'contact-offline': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                              ([gobject.TYPE_PYOBJECT])),
         'status':          (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                             ([gobject.TYPE_INT, gobject.TYPE_INT]))
+                             ([gobject.TYPE_INT, gobject.TYPE_INT])),
+        'avatar-updated':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                             ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT]))
     }
     
     def __init__(self, registry):
         gobject.GObject.__init__(self)
 
+        self._icon_cache = BuddyIconCache()
+
         self._registry = registry
-        self._online_contacts = set()
+        self._online_contacts = set() # handles of online contacts
         self._account = self._get_account_info()
 
         self._ever_connected = False
@@ -154,8 +159,9 @@ class ServerPlugin(gobject.GObject):
         # hack
         self._conn._valid_interfaces.add(CONN_INTERFACE_AVATARS)
 
+        self._conn[CONN_INTERFACE_AVATARS].connect_to_signal('AvatarUpdated', self._avatar_updated_cb)
         #if CONN_INTERFACE_AVATARS in self._conn:
-        #    #tokens = self._conn[CONN_INTERFACE_AVATARS].RequestAvatarTokens(subscribe_handles)
+        #    tokens = self._conn[CONN_INTERFACE_AVATARS].RequestAvatarTokens(subscribe_handles)
 
         #    #for handle, token in zip(subscribe_handles, tokens):
         #    for handle in subscribe_handles:
@@ -212,15 +218,15 @@ class ServerPlugin(gobject.GObject):
         self._conn[CONN_INTERFACE].Disconnect()
 
     def _contact_go_offline(self, handle):
-        name = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
-        print name, "offline"
+        jid = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
+        print jid, "offline"
 
         self._online_contacts.remove(handle)
         self.emit("contact-offline", handle)
 
     def _contact_go_online(self, handle):
-        name = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
-        print name, "online"
+        jid = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
+        print jid, "online"
 
         # TODO: use the OLPC interface to get the key
         key = handle
@@ -241,3 +247,15 @@ class ServerPlugin(gobject.GObject):
                 elif online and status in ["offline", "invisible"]:
                     self._contact_go_offline(handle)
 
+    def _avatar_updated_cb(self, handle, new_avatar_token):
+        jid = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
+
+        icon = self._icon_cache.get_icon(jid, new_avatar_token)
+
+        if not icon:
+            # cache miss
+            avatar, mime_type = self._conn[CONN_INTERFACE_AVATARS].RequestAvatar(handle)
+            icon = ''.join(map(chr, avatar))
+            self._icon_cache.store_icon(jid, new_avatar_token, icon)
+
+        self.emit("avatar-updated", handle, icon)

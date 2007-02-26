@@ -32,7 +32,7 @@ class Buddy(dbus.service.Object):
     """Represents another person on the network and keeps track of the
     activities and resources they make available for sharing."""
 
-    def __init__(self, bus_name, object_id, icon_cache, handle=None):
+    def __init__(self, bus_name, object_id, handle=None):
         if not bus_name:
             raise ValueError("DBus bus name must be valid")
         if not object_id or not isinstance(object_id, int):
@@ -46,10 +46,9 @@ class Buddy(dbus.service.Object):
 
         self._activities = {}   # Activity ID -> Activity
 
-        self._icon_cache = icon_cache
-
         self.handles = {} # tp client -> handle
 
+        self._icon = None
         self._nick_name = None
         self._color = None
         self._key = None
@@ -149,7 +148,7 @@ class Buddy(dbus.service.Object):
             return None
         return self._activities[self._current_activity]
 
-    def _set_icon(self, icon):
+    def set_icon(self, icon):
         """Can only set icon for other buddies.  The Owner
         takes care of setting it's own icon."""
         if icon != self._icon:
@@ -181,8 +180,8 @@ class Buddy(dbus.service.Object):
 class Owner(Buddy):
     """Class representing the owner of the machine.  This is the client
     portion of the Owner, paired with the server portion in Owner.py."""
-    def __init__(self, ps, bus_name, object_id, icon_cache):
-        Buddy.__init__(self, bus_name, object_id, icon_cache)
+    def __init__(self, ps, bus_name, object_id):
+        Buddy.__init__(self, bus_name, object_id)
 
         self._ps = ps
         self._nick_name = profile.get_nick_name()

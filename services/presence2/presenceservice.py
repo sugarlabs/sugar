@@ -26,8 +26,6 @@ from linklocal_plugin import LinkLocalPlugin
 
 from buddy import Buddy, Owner
 from activity import Activity
-import buddyiconcache
-
 
 _PRESENCE_SERVICE = "org.laptop.Sugar.Presence"
 _PRESENCE_INTERFACE = "org.laptop.Sugar.Presence"
@@ -48,14 +46,12 @@ class PresenceService(dbus.service.Object):
         self._handles = {}      # tp client -> (handle -> Buddy)
         self._activities = {}   # activity id -> Activity
 
-        self._icon_cache = buddyiconcache.BuddyIconCache()
-
         bus = dbus.SessionBus()
         self._bus_name = dbus.service.BusName(_PRESENCE_SERVICE, bus=bus)        
 
         # Create the Owner object
         objid = self._get_next_object_id()
-        self._owner = Owner(self, self._bus_name, objid, self._icon_cache)
+        self._owner = Owner(self, self._bus_name, objid)
         self._buddies[self._owner.get_key()] = self._owner
 
         self._registry = ManagerRegistry()
@@ -68,6 +64,7 @@ class PresenceService(dbus.service.Object):
         self._server_plugin.connect('status', self._server_status_cb)
         self._server_plugin.connect('contact-online', self._contact_online)
         self._server_plugin.connect('contact-offline', self._contact_offline)
+        self._server_plugin.connect('avatar-updated', self._avatar_updated)
         self._server_plugin.start()
 
         # Set up the link local connection
@@ -86,9 +83,9 @@ class PresenceService(dbus.service.Object):
         if not buddy:
             # we don't know yet this buddy
             objid = self._get_next_object_id()
-            buddy = Buddy(self._bus_name, objid, self._icon_cache, handle=handle)
+            buddy = Buddy(self._bus_name, objid, handle=handle)
             buddy.set_key(key)
-            print "create buddy"
+            print "create buddy", key
             self._buddies[key] = buddy
             new_buddy = True
 
@@ -119,6 +116,12 @@ class PresenceService(dbus.service.Object):
         """Increment and return the object ID counter."""
         self._next_object_id = self._next_object_id + 1
         return self._next_object_id
+
+    def _avatar_updated(self, tp, handle, avatar):
+        buddy = self._handles[tp].get(handle)
+
+        if buddy:
+            buddy.set_icon(avatar)
 
     @dbus.service.signal(_PRESENCE_INTERFACE, signature="o")
     def ActivityAppeared(self, activity):

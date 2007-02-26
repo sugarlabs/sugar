@@ -1,4 +1,5 @@
 # Copyright (C) 2007, Red Hat, Inc.
+# Copyright (C) 2007, Collabora Ltd.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,64 +15,64 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import os, time, md5
 from sugar import env
 from sugar import util
 
+import os.path
+import cPickle
+
 class BuddyIconCache(object):
-    """Caches icons on disk and finds them based on md5 hash."""
+    """Caches icons on disk and finds them based on the jid of their owners."""
     def __init__(self):
         ppath = env.get_profile_path()
-        self._cachepath = os.path.join(ppath, "cache", "buddy-icons")
+        self._cachepath = os.path.join(ppath, "cache", "buddy-icons", "cache")
+
         if not os.path.exists(self._cachepath):
-            os.makedirs(self._cachepath)
+            self._cache = {}
+        else:
+            self._load_cache()
 
-        self._cache = {}
-
-        # Read all cached icons and their sums
-        for fname in os.listdir(self._cachepath):
-            m = md5.new()
-            data = self._get_icon_data(fname)
-            if len(data) == 0:
-                continue
-            m.update(data)
-            printable_hash = util.printable_hash(m.digest())
-            self._cache[printable_hash] = fname
-            del m
-
-    def _get_icon_data(self, fname):
-        fd = open(os.path.join(self._cachepath, fname), "r")
-        data = fd.read()
-        fd.close()
-        del fd
-        return data
-
-    def get_icon(self, printable_hash):
-        if not isinstance(printable_hash, unicode):
-            raise RuntimeError("printable_hash must be a unicode string.")
+    def _load_cache(self):
         try:
-            fname = self._cache[printable_hash]
-            return self._get_icon_data(fname)
-        except KeyError:
-            pass
+            self._cache = cPickle.load(open(self._cachepath, "r"))
+        except:
+            self._cache = {}
+
+
+    def _save_cache(self):
+        out = open(self._cachepath, "w")
+        cPickle.dump(self._cache, out, protocol=2)
+
+    def get_icon(self, jid, token):
+        hit = self._cache.get(jid)
+
+        if hit:
+            t, icon = hit[0], hit[1]
+            if t == token:
+                return icon
+
         return None
 
-    def add_icon(self, icon_data):
-        if len(icon_data) == 0:
-            return
+    def store_icon(self, jid, token, data):
+        self._cache[jid] = (token, data)
+        self._save_cache()
 
-        m = md5.new()
-        m.update(icon_data)
-        printable_hash = util.printable_hash(m.digest())
-        if self._cache.has_key(printable_hash):
-            del m
-            return
+if __name__ == "__main__":
+    my_cache = BuddyIconCache()
+    
+    # look for the icon in the cache
+    icon = my_cache.get_icon("test@olpc.collabora.co.uk", "aaaa")
+    print icon
 
-        # Write the icon to disk and add an entry to our cache for it
-        m.update(time.asctime())
-        fname = util.printable_hash(m.digest())
-        fd = open(os.path.join(self._cachepath, fname), "w")
-        fd.write(icon_data)
-        fd.close()
-        self._cache[printable_hash] = fname
-        del m
+    my_cache.store_icon("test@olpc.collabora.co.uk", "aaaa", "icon1")
+
+    # now we're sure that the icon is in the cache
+    icon = my_cache.get_icon("test@olpc.collabora.co.uk", "aaaa")
+    print icon
+
+    # new icon
+    my_cache.store_icon("test@olpc.collabora.co.uk", "bbbb", "icon2")
+
+    # the icon in the cache is not valid now
+    icon = my_cache.get_icon("test@olpc.collabora.co.uk", "aaaa")
+    print icon
