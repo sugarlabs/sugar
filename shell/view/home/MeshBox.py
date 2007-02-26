@@ -43,6 +43,7 @@ class AccessPointView(CanvasIcon):
 
         model.connect('notify::strength', self._strength_changed_cb)
         model.connect('notify::name', self._name_changed_cb)
+        model.connect('notify::state', self._state_changed_cb)
 
         self._update_icon()
         self._update_name()

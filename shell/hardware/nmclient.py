@@ -224,6 +224,7 @@ class Device(gobject.GObject):
             if op == active_op:
                 self.set_active_network(net)
 
+            self.emit('network-appeared', net)
 
     def _update_error_cb(self, err):
         logging.debug("Device(%s): failed to update. (%s)" % (self._op, err))

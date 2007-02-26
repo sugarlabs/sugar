@@ -90,9 +90,9 @@ class MeshModel(gobject.GObject):
         for nm_device in network_manager.get_devices():
             self._add_network_device(nm_device)
         network_manager.connect('device-added',
-                                self._nm_device_activated_cb)
+                                self._nm_device_added_cb)
 
-    def _nm_device_activated_cb(self, manager, nm_device):
+    def _nm_device_added_cb(self, manager, nm_device):
         self._add_network_device(nm_device)
 
     def _nm_network_appeared_cb(self, nm_device, nm_network):
@@ -104,6 +104,7 @@ class MeshModel(gobject.GObject):
     def _add_network_device(self, nm_device):
         for nm_network in nm_device.get_networks():
             self._add_access_point(nm_device, nm_network)
+
         nm_device.connect('network-appeared',
                           self._nm_network_appeared_cb)
         nm_device.connect('network-disappeared',
