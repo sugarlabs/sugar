@@ -70,6 +70,14 @@ NM_802_11_CAP_CIPHER_WEP104   = 0x00002000
 NM_802_11_CAP_CIPHER_TKIP     = 0x00004000
 NM_802_11_CAP_CIPHER_CCMP     = 0x00008000
 
+NETWORK_STATE_CONNECTING   = 0
+NETWORK_STATE_CONNECTED    = 1
+NETWORK_STATE_NOTCONNECTED = 2
+
+DEVICE_STATE_ACTIVATING = 0
+DEVICE_STATE_ACTIVATED  = 1
+DEVICE_STATE_INACTIVE   = 2
+
 class Network(gobject.GObject):
     __gsignals__ = {
         'init-failed'     : (gobject.SIGNAL_RUN_FIRST,
@@ -77,6 +85,8 @@ class Network(gobject.GObject):
         'strength-changed': (gobject.SIGNAL_RUN_FIRST,
                              gobject.TYPE_NONE, ([])),
         'ssid-changed'    : (gobject.SIGNAL_RUN_FIRST,
+                             gobject.TYPE_NONE, ([])),
+        'state-changed'   : (gobject.SIGNAL_RUN_FIRST,
                              gobject.TYPE_NONE, ([]))
     }
 
@@ -87,6 +97,7 @@ class Network(gobject.GObject):
         self._mode = None
         self._strength = 0
         self._valid = False
+        self._state = NETWORK_STATE_NOTCONNECTED
 
         obj = sys_bus.get_object(NM_SERVICE, self._op)
         net = dbus.Interface(obj, NM_IFACE_DEVICES)
@@ -121,6 +132,13 @@ class Network(gobject.GObject):
     def get_ssid(self):
         return self._ssid
 
+    def get_state(self):
+        return self._state
+
+    def set_state(self, state):
+        self._state = state
+        self.emit('state-changed')
+
     def get_op(self):
         return self._op
 
@@ -138,13 +156,15 @@ class Device(gobject.GObject):
     __gsignals__ = {
         'init-failed':         (gobject.SIGNAL_RUN_FIRST,
                                 gobject.TYPE_NONE, ([])),
-        'activated':           (gobject.SIGNAL_RUN_FIRST,
-                                gobject.TYPE_NONE, ([])),
-        'deactivated':         (gobject.SIGNAL_RUN_FIRST,
-                                gobject.TYPE_NONE, ([])),
         'strength-changed':    (gobject.SIGNAL_RUN_FIRST,
                                 gobject.TYPE_NONE,
                                ([gobject.TYPE_PYOBJECT])),
+        'strength-changed':    (gobject.SIGNAL_RUN_FIRST,
+                                gobject.TYPE_NONE, ([])),
+        'ssid-changed':        (gobject.SIGNAL_RUN_FIRST,
+                                gobject.TYPE_NONE, ([])),
+        'state-changed':       (gobject.SIGNAL_RUN_FIRST,
+                                gobject.TYPE_NONE, ([])),
         'network-appeared':    (gobject.SIGNAL_RUN_FIRST,
                                 gobject.TYPE_NONE,
                                ([gobject.TYPE_PYOBJECT])),
@@ -164,8 +184,10 @@ class Device(gobject.GObject):
         self._link = False
         self._valid = False
         self._networks = {}
-        self._active_net = None
         self._caps = 0
+        self._state = DEVICE_STATE_INACTIVE
+        self._ssid = None
+        self._active_network = None
 
         obj = sys_bus.get_object(NM_SERVICE, self._op)
         dev = dbus.Interface(obj, NM_IFACE_DEVICES)
@@ -184,15 +206,15 @@ class Device(gobject.GObject):
             old_strength = self._strength
             self._strength = props[14]
             if self._strength != old_strength:
-                self.emit('strength-changed', self._strength)
+                self.emit('strength-changed')
             self._update_networks(props[20], props[19])
 
         self._valid = True
 
         if self._active:
-            self.emit('activated')
+            self.set_state(DEVICE_STATE_ACTIVATED)
         else:
-            self.emit('deactivated')
+            self.set_state(DEVICE_STATE_INACTIVE)
 
     def _update_networks(self, net_ops, active_op):
         for op in net_ops:
@@ -200,7 +222,8 @@ class Device(gobject.GObject):
             self._networks[op] = net
             net.connect('init-failed', self._net_init_failed)
             if op == active_op:
-                self._active_net = op
+                self.set_active_network(net)
+
 
     def _update_error_cb(self, err):
         logging.debug("Device(%s): failed to update. (%s)" % (self._op, err))
@@ -211,8 +234,6 @@ class Device(gobject.GObject):
         net_op = net.get_op()
         if not self._networks.has_key(net_op):
             return
-        if net_op == self._active_net:
-            self._active_net = None
         del self._networks[net_op]
 
     def get_op(self):
@@ -221,9 +242,6 @@ class Device(gobject.GObject):
     def get_networks(self):
         return self._networks.values()
 
-    def get_active_network(self):
-        return self.get_network(self._active_net)
-    
     def get_network(self, op):
         if self._networks.has_key(op):
             return self._networks[op]
@@ -244,7 +262,7 @@ class Device(gobject.GObject):
         else:
             self._strength = 0
 
-        self.emit('strength-changed', self._strength)
+        self.emit('strength-changed')
 
     def network_appeared(self, network):
         if self._networks.has_key(network):
@@ -257,25 +275,51 @@ class Device(gobject.GObject):
     def network_disappeared(self, network):
         if not self._networks.has_key(network):
             return
-        if network == self._active_net:
-            self._active_net = None
 
         self.emit('network-disappeared', self._networks[network])
 
         del self._networks[network]
 
-    def get_active(self):
-        return self._active
+    def _active_network_ssid_changed_cb(self, active_network):
+        self._ssid = active_network.get_ssid()
 
-    def set_active(self, active, ssid=None):
-        self._active = active
-        if self._type == DEVICE_TYPE_802_11_WIRELESS:
-            if not ssid:
-                self._active_net = None
-            else:
-                for (op, net) in self._networks.items():
-                    if net.get_ssid() == ssid:
-                        self._active_net = op
+    def set_active_network(self, network):
+        if self._active_network:
+            self._active_network.disconnect(self._ssid_sid)
+
+        self._active_network = network
+
+        if self._active_network:
+            self._ssid_sid = network.connect(
+                'ssid-changed', self._active_network_ssid_changed_cb)
+
+    def get_state(self):
+        return self._state
+
+    def set_state(self, state):
+        self._state = state
+
+        if state == DEVICE_STATE_ACTIVATING:
+            obj = sys_bus.get_object(NM_SERVICE, self._op)
+            dev = dbus.Interface(obj, NM_IFACE_DEVICES)
+
+            network = dev.getActiveNetwork()
+            self.set_active_network(self._networks[network])
+
+        _device_to_network_state = {
+            DEVICE_STATE_ACTIVATING : NETWORK_STATE_CONNECTING,
+            DEVICE_STATE_ACTIVATED  : NETWORK_STATE_CONNECTED,
+            DEVICE_STATE_INACTIVE   : NETWORK_STATE_NOTCONNECTED
+        }
+
+        if self._active_network:
+            network_state = _device_to_network_state[state]
+            self._active_network.set_state(network_state)
+
+        self.emit('state-changed')
+
+    def get_ssid(self):
+        return self._ssid
 
     def get_type(self):
         return self._type
@@ -288,12 +332,6 @@ class Device(gobject.GObject):
 
     def get_capabilities(self):
         return self._caps
-
-NM_STATE_UNKNOWN = 0
-NM_STATE_ASLEEP = 1
-NM_STATE_CONNECTING = 2
-NM_STATE_CONNECTED = 3
-NM_STATE_DISCONNECTED = 4
 
 class NMClient(gobject.GObject):
     __gsignals__ = {
@@ -310,9 +348,7 @@ class NMClient(gobject.GObject):
 
         self.nminfo = None
         self._nm_present = False
-        self._nm_state = NM_STATE_UNKNOWN
         self._update_timer = 0
-        self._active_device = None
         self._devices = {}
 
         try:
@@ -321,22 +357,10 @@ class NMClient(gobject.GObject):
             pass
         self._setup_dbus()
         if self._nm_present:
-            self._get_nm_state()
             self._get_initial_devices()
 
     def get_devices(self):
         return self._devices
-
-    def _get_nm_state(self):
-        # Grab NM's state
-        self._nm_obj.state(reply_handler=self._get_state_reply_cb, \
-                error_handler=self._get_state_error_cb)
-
-    def _get_state_reply_cb(self, state):
-        self._nm_state = state
-
-    def _get_state_error_cb(self, err):
-        logging.debug("Failed to get NetworkManager state! %s" % err)
 
     def _get_initial_devices_reply_cb(self, ops):
         for op in ops:
@@ -360,38 +384,24 @@ class NMClient(gobject.GObject):
         dev = Device(dev_op)
         self._devices[dev_op] = dev
         dev.connect('init-failed', self._dev_init_failed_cb)
-        dev.connect('activated', self._dev_activated_cb)
-        dev.connect('strength-changed', self._dev_strength_changed_cb)
+        dev.connect('state-changed', self._dev_state_changed_cb)
 
     def _remove_device(self, dev_op):
         if not self._devices.has_key(dev_op):
             return
-        if self._active_device == dev_op:
-            self._active_device = None
         dev = self._devices[dev_op]
-        dev.disconnect('activated')
+        dev.disconnect('state-changed')
         dev.disconnect('init-failed')
-        dev.disconnect('strength-changed')
         del self._devices[dev_op]
 
         self.emit('device-removed', dev)
 
-    def _dev_activated_cb(self, dev):
+    def _dev_state_changed_cb(self, dev):
         op = dev.get_op()
         if not self._devices.has_key(op):
             return
-        if not dev.get_active():
-            return
-        self._active_device = op
-
-        self.emit('device-activated', dev)
-
-    def _dev_strength_changed_cb(self, dev, strength):
-        op = dev.get_op()
-        if not self._devices.has_key(op):
-            return
-        if not dev.get_active():
-            return
+        if dev.get_state() != DEVICE_STATE_INACTIVE :
+            self.emit('device-activated', dev)
 
     def get_device(self, dev_op):
         if not self._devices.has_key(dev_op):
@@ -400,7 +410,6 @@ class NMClient(gobject.GObject):
 
     def _setup_dbus(self):
         self._sig_handlers = {
-            'StateChange': self.state_change_sig_handler,
             'DeviceAdded': self.device_added_sig_handler,
             'DeviceRemoved': self.device_removed_sig_handler,
             'DeviceActivationStage': self.device_activation_stage_sig_handler,
@@ -502,24 +511,18 @@ class NMClient(gobject.GObject):
     def device_activation_stage_sig_handler(self, device, stage):
         logging.debug('Device Activation Stage "%s" for device %s' % (NM_DEVICE_STAGE_STRINGS[stage], device))
 
-    def state_change_sig_handler(self, state):
-        self._nm_state = state
-
     def device_activating_sig_handler(self, device):
-        self._active_device = device
+        self._devices[device].set_state(DEVICE_STATE_ACTIVATING)
 
     def device_now_active_sig_handler(self, device, ssid=None):
         if not self._devices.has_key(device):
             return
-        self._active_device = device
-        self._devices[device].set_active(True, ssid)
+        self._devices[device].set_state(DEVICE_STATE_ACTIVATED)
 
     def device_no_longer_active_sig_handler(self, device):
         if not self._devices.has_key(device):
             return
-        if self._active_device == device:
-            self._active_device = None
-        self._devices[device].set_active(False)
+        self._devices[device].set_state(DEVICE_STATE_INACTIVE)
 
     def name_owner_changed_sig_handler(self, name, old, new):
         if name != NM_SERVICE:
@@ -530,12 +533,9 @@ class NMClient(gobject.GObject):
             for op in self._devices.keys():
                 del self._devices[op]
             self._devices = {}
-            self._active_device = None
-            self._nm_state = NM_STATE_UNKNOWN
         elif (not old and not len(old)) and (new and len(new)):
             # NM started up
             self._nm_present = True
-            self._get_nm_state()
             self._get_initial_devices()
 
     def device_added_sig_handler(self, device):

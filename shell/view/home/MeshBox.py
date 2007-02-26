@@ -22,8 +22,17 @@ import gobject
 from sugar.graphics.spreadbox import SpreadBox
 from sugar.graphics.snowflakebox import SnowflakeBox
 from sugar.graphics.canvasicon import CanvasIcon
+from model import accesspointmodel
 from hardware import hardwaremanager
 from view.BuddyIcon import BuddyIcon
+
+_strength_to_icon = {
+    (0,   20) : 'stock-net-wireless-00',
+    (21,  40) : 'stock-net-wireless-21-40',
+    (41,  60) : 'stock-net-wireless-41-60',
+    (61,  80) : 'stock-net-wireless-61-80',
+    (81, 100) : 'stock-net-wireless-81-100'
+}
 
 class AccessPointView(CanvasIcon):
     def __init__(self, model):
@@ -37,12 +46,16 @@ class AccessPointView(CanvasIcon):
 
         self._update_icon()
         self._update_name()
+        self._update_state()
 
     def _strength_changed_cb(self, model, pspec):
         self._update_icon()
 
     def _name_changed_cb(self, model, pspec):
         self._update_name()
+
+    def _state_changed_cb(self, model, pspec):
+        self._update_state()
 
     def _activate_cb(self, icon):
         network_manager = hardwaremanager.get_network_manager()
@@ -57,16 +70,19 @@ class AccessPointView(CanvasIcon):
 
     def _update_icon(self):
         strength = self._model.props.strength
-        if strength < 21:
-            self.props.icon_name = 'theme:stock-net-wireless-00'
-        elif strength < 41:
-            self.props.icon_name = 'theme:stock-net-wireless-21-40'
-        elif strength < 61:
-            self.props.icon_name = 'theme:stock-net-wireless-41-60'
-        elif strength < 81:
-            self.props.icon_name = 'theme:stock-net-wireless-61-80'
-        else:
-            self.props.icon_name = 'theme:stock-net-wireless-81-100'
+        for interval in _strength_to_icon.keys():
+            if strength >= interval[0] and strength <= interval[1]:
+                stock_name = _strength_to_icon[interval]
+                self.props.icon_name = 'theme:' + stock_name
+
+    def _update_state(self):
+        # FIXME Change icon colors once we have real icons
+        if self._model.props.state == accesspointmodel.STATE_CONNECTING:
+            self.props.background_color = 0xFF0000FF
+        elif self._model.props.state == accesspointmodel.STATE_CONNECTED:
+            self.props.background_color = 0x00FF00FF
+        elif self._model.props.state == accesspointmodel.STATE_NOTCONNECTED:
+            self.props.background_color = 0x00000000
 
 class ActivityView(SnowflakeBox):
     def __init__(self, shell, menu_shell, model):
