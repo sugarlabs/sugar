@@ -1,4 +1,4 @@
-SUBDIRS = data hardware model view
+SUBDIRS = data hardware model view intro
 
 bin_SCRIPTS = 				\
 	sugar-activity			\

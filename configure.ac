@@ -115,6 +115,7 @@ services/presence2/Makefile
 services/clipboard/Makefile
 services/datastore/Makefile
 shell/Makefile
+shell/intro/Makefile
 shell/data/Makefile
 shell/hardware/Makefile
 shell/view/Makefile

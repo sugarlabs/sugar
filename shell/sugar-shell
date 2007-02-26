@@ -38,15 +38,17 @@ logger.start('shell')
 if len(sys.argv) == 1:
     sys.path.insert(0, os.path.join(env.get_data_dir(), 'shell'))
 
-from view.FirstTimeDialog import FirstTimeDialog
 from view.Shell import Shell
 from model.ShellModel import ShellModel
 from shellservice import ShellService
+from intro import intro
 
-name = profile.get_nick_name() 
-if not name or not len(name):
-	dialog = FirstTimeDialog()
-	dialog.run()
+# Do initial setup if needed
+key = profile.get_pubkey() 
+if not key or not len(key):
+	win = intro.IntroWindow()
+	win.show_all()
+	gtk.main()
 	profile.update()
 
 # Save our DBus Session Bus address somewhere it can be found
