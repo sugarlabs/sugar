@@ -1,4 +1,2 @@
-lib/src/sugar-tray-manager.c
 services/nm/nmclient.py
-shell/view/FirstTimeDialog.py
 sugar/chat/ChatEditor.py
