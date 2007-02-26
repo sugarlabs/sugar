@@ -89,7 +89,7 @@ class MeshModel(gobject.GObject):
         network_manager = hardwaremanager.get_network_manager()
         for nm_device in network_manager.get_devices():
             self._add_network_device(nm_device)
-        network_manager.connect('device-activated',
+        network_manager.connect('device-added',
                                 self._nm_device_activated_cb)
 
     def _nm_device_activated_cb(self, manager, nm_device):

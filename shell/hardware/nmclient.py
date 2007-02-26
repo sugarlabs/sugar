@@ -335,6 +335,9 @@ class Device(gobject.GObject):
 
 class NMClient(gobject.GObject):
     __gsignals__ = {
+        'device-added'     : (gobject.SIGNAL_RUN_FIRST,
+                              gobject.TYPE_NONE, 
+                             ([gobject.TYPE_PYOBJECT])),
         'device-activated' : (gobject.SIGNAL_RUN_FIRST,
                               gobject.TYPE_NONE, 
                              ([gobject.TYPE_PYOBJECT])),
@@ -385,6 +388,8 @@ class NMClient(gobject.GObject):
         self._devices[dev_op] = dev
         dev.connect('init-failed', self._dev_init_failed_cb)
         dev.connect('state-changed', self._dev_state_changed_cb)
+
+        self.emit('device-added', dev)
 
     def _remove_device(self, dev_op):
         if not self._devices.has_key(dev_op):
