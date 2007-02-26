@@ -325,7 +325,7 @@ class NMClient(gobject.GObject):
             self._get_initial_devices()
 
     def get_devices(self):
-        return self._devices
+        return self._devices.values()
 
     def _get_nm_state(self):
         # Grab NM's state
