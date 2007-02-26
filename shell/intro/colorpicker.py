@@ -113,7 +113,6 @@ class ColorPicker(hippo.CanvasBox, hippo.CanvasItem):
         self._slider_values = 9
 
         self._xo = CanvasIcon(scale=units.XLARGE_ICON_SCALE,
-#                            icon_name='stock-buddy.svg',
                             icon_name='theme:stock-buddy',
                             stroke_color=color.HTMLColor(self._fg_hex),
                             fill_color=color.HTMLColor(self._bg_hex))

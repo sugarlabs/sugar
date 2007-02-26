@@ -97,7 +97,6 @@ class VideoBox(hippo.CanvasBox, hippo.CanvasItem):
         self.append(self._video_widget)
 
     def _new_pixbuf_cb(self, widget, pixbuf):
-        print "got new pixbuf"
         if self._pixbuf:
             del self._pixbuf
         self._pixbuf = pixbuf
@@ -172,7 +171,6 @@ class IntroBox(hippo.CanvasBox, hippo.CanvasItem):
         self.append(self._color_box)
 
         self._ok = iconbutton.IconButton(icon_name="theme:stock-forward",
-#        self._ok = iconbutton.IconButton(icon_name="stock-forward.svg",
                                    padding_bottom=units.grid_to_pixels(0.5))
         self._ok.connect('activated', self._ok_activated)
         self.append(self._ok)
@@ -183,7 +181,6 @@ class IntroBox(hippo.CanvasBox, hippo.CanvasItem):
         color = self._color_box.get_color()
 
         if not pixbuf or not name or not color:
-            print "pixbuf: %r, name %r, color %r" % (pixbuf, name, color)
             return
 
         self._create_profile(pixbuf, name, color)
