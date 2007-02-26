@@ -76,7 +76,7 @@ class PresenceService(dbus.service.Object):
 
         dbus.service.Object.__init__(self, self._bus_name, _PRESENCE_PATH)
 
-    def _server_status_cb(self, plugin, status):
+    def _server_status_cb(self, plugin, status, reason):
         pass
 
     def _contact_online(self, tp, handle, key):

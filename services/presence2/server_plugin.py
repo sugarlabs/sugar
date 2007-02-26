@@ -27,7 +27,8 @@ from telepathy.interfaces import (
 from telepathy.constants import (
     CONNECTION_HANDLE_TYPE_NONE, CONNECTION_HANDLE_TYPE_CONTACT,
     CONNECTION_STATUS_CONNECTED, CONNECTION_STATUS_DISCONNECTED, CONNECTION_STATUS_CONNECTING,
-    CONNECTION_HANDLE_TYPE_LIST, CONNECTION_HANDLE_TYPE_CONTACT)
+    CONNECTION_HANDLE_TYPE_LIST, CONNECTION_HANDLE_TYPE_CONTACT,
+    CONNECTION_STATUS_REASON_AUTHENTICATION_FAILED)
 
 
 class ServerPlugin(gobject.GObject):
@@ -37,7 +38,7 @@ class ServerPlugin(gobject.GObject):
         'contact-offline': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                              ([gobject.TYPE_PYOBJECT])),
         'status':          (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                             ([gobject.TYPE_INT]))
+                             ([gobject.TYPE_INT, gobject.TYPE_INT]))
     }
     
     def __init__(self, registry):
@@ -47,6 +48,7 @@ class ServerPlugin(gobject.GObject):
         self._online_contacts = set()
         self._account = self._get_account_info()
 
+        self._ever_connected = False
         self._conn = self._init_connection()
 
     def _get_account_info(self):
@@ -59,7 +61,7 @@ class ServerPlugin(gobject.GObject):
         account_info['password'] = profile.get_private_key_hash()
         return account_info
 
-    def _get_connection(self):
+    def _init_connection(self, register=False):
         protocol = 'jabber'
 
         mgr = self._registry.GetManager('gabble')
@@ -84,11 +86,14 @@ class ServerPlugin(gobject.GObject):
             break
 
         if not conn:
+            acct = self._account.copy()
+            if register:
+                acct['register'] = True
+
             # Create a new connection
-            conn_bus_name, conn_object_path = \
-                    mgr[CONN_MGR_INTERFACE].RequestConnection(protocol,
-                        self._account)
-            conn = Connection(conn_bus_name, conn_object_path)
+            print acct
+            name, path = mgr[CONN_MGR_INTERFACE].RequestConnection(protocol, acct)
+            conn = Connection(name, path)
 
         conn[CONN_INTERFACE].connect_to_signal('StatusChanged', self._status_changed_cb)
 
@@ -111,6 +116,8 @@ class ServerPlugin(gobject.GObject):
         return channel
 
     def _connected_cb(self):
+        self._ever_connected = True
+
         # the group of contacts who may receive your presence
         publish = self._request_list_channel('publish')
         publish_handles, local_pending, remote_pending = publish[CHANNEL_INTERFACE_GROUP].GetAllMembers()
@@ -167,15 +174,27 @@ class ServerPlugin(gobject.GObject):
         #        window.show_all()
 
     def _status_changed_cb(self, state, reason):
+        gobject.idle_add(self._status_changed_cb2, state, reason)
+
+    def _status_changed_cb2(self, state, reason):
         if state == CONNECTION_STATUS_CONNECTING:
             print 'connecting: %r' % reason
         elif state == CONNECTION_STATUS_CONNECTED:
             print 'connected: %r' % reason
-            self.emit('status', state)
+            self.emit('status', state, int(reason))
             self._connected_cb()
         elif state == CONNECTION_STATUS_DISCONNECTED:
             print 'disconnected: %r' % reason
             self.emit('status', state, int(reason))
+            if reason == CONNECTION_STATUS_REASON_AUTHENTICATION_FAILED and \
+                    not self._ever_connected:
+                # Hmm; probably aren't registered on the server, try reconnecting
+                # and registering
+                self.disconnect()
+                del self._conn
+                self._conn = self._init_connection(register=True)
+                self.start()
+        return False
 
     def start(self):
         # If the connection is already connected query initial contacts
