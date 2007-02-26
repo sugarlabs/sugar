@@ -22,6 +22,7 @@ class Glive(gobject.GObject):
     }
 
     def __init__(self, parent, width, height):
+        gobject.GObject.__init__(self)
         self._parent = parent
 
         #check out the halfpipe, d00d.
@@ -150,7 +151,7 @@ class LiveVideoSlot(gtk.EventBox):
         self.unset_flags(gtk.DOUBLE_BUFFERED)
         self.connect('focus-in-event', self.focus_in)
         self.connect('focus-out-event', self.focus_out)
-        self.connect("button-press-event", self.button_press)
+        self.connect("button-press-event", self._button_press_event_cb)
 
         self.playa = Glive(self, width, height)
         self.playa.connect('new-picture', self._new_picture_cb)
@@ -159,13 +160,16 @@ class LiveVideoSlot(gtk.EventBox):
     def _new_picture_cb(self, playa, pixbuf):
         self.emit('pixbuf', pixbuf)
 
-    def _new_sink_sb(self, playa, sink):
+    def _new_sink_cb(self, playa, sink):
         if (self.imagesink != None):
             assert self.window.xid
             self.imagesink = None
             del self.imagesink
         self.imagesink = sink
         self.imagesink.set_xwindow_id(self.window.xid)
+
+    def _button_press_event_cb(self, widget, event):
+        self.takeSnapshot()
 
     def focus_in(self, widget, event, args=None):
         self.play()

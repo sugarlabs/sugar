@@ -36,6 +36,21 @@ _VIDEO_WIDTH = 320
 _VIDEO_HEIGHT = 240
 
 
+class IntroImage(gtk.EventBox):
+    __gtype_name__ = "IntroImage"
+
+    def __init__(self, **kwargs):
+        gtk.EventBox.__init__(self, **kwargs)
+        self._image = gtk.Image()
+        self.add(self._image)
+
+    def set_pixbuf(self, pixbuf):
+        if pixbuf:
+            self._image.set_from_pixbuf(pixbuf)
+        else:
+            self._image.clear()
+
+
 class IntroFallbackVideo(gtk.EventBox):
     __gtype_name__ = "IntroFallbackVideo"
 
@@ -48,9 +63,15 @@ class IntroFallbackVideo(gtk.EventBox):
         self._image = gtk.Image()
         self._image.set_from_stock(gtk.STOCK_OPEN, -1)
         self.add(self._image)
-        self.connect('button-press-event', self._button_press_cb)
+        self.connect('button-press-event', self._button_press_event_cb)
 
-    def _button_press_cb(self, widget, event):
+    def play(self):
+        pass
+
+    def stop(self):
+        pass
+
+    def _button_press_event_cb(self, widget, event):
         filt = gtk.FileFilter()
         filt.add_pixbuf_formats()
         chooser = gtk.FileChooserDialog(_("Pick a buddy picture"), \
@@ -60,9 +81,6 @@ class IntroFallbackVideo(gtk.EventBox):
         if resp == gtk.RESPONSE_ACCEPT:
             fname = chooser.get_filename()
             pixbuf = gtk.gdk.pixbuf_new_from_file(fname)
-            (w, h) = self.get_size_request()
-            img_pixbuf = pixbuf.scale_simple(w, h, gtk.gdk.INTERP_BILINEAR)
-            self._image.set_from_pixbuf(img_pixbuf)
             self.emit('pixbuf', pixbuf)
         chooser.hide()
         chooser.destroy()
@@ -95,11 +113,34 @@ class VideoBox(hippo.CanvasBox, hippo.CanvasItem):
         self._video_widget = hippo.CanvasWidget()
         self._video_widget.props.widget = self._video
         self.append(self._video_widget)
+        self._video.play()
+
+        self._img = IntroImage()
+        self._img.set_size_request(_VIDEO_WIDTH, _VIDEO_HEIGHT)
+        self._img.connect('button-press-event', self._clear_image_cb)
+        self._img_widget = hippo.CanvasWidget()
+        self._img_widget.props.widget = self._img
+
+    def _clear_image_cb(self, widget, event):
+        del self._pixbuf
+        self._pixbuf = None
+        self.remove(self._img_widget)
+        self._img.set_pixbuf(None)
+
+        self.append(self._video_widget)
+        self._video.play()
 
     def _new_pixbuf_cb(self, widget, pixbuf):
         if self._pixbuf:
             del self._pixbuf
         self._pixbuf = pixbuf
+        self._video.stop()
+        self.remove(self._video_widget)
+
+        scaled = pixbuf.scale_simple(_VIDEO_WIDTH, _VIDEO_HEIGHT, gtk.gdk.INTERP_BILINEAR)
+        self._img.set_pixbuf(scaled)
+        self._img.show_all()
+        self.append(self._img_widget)
 
     def get_pixbuf(self):
         return self._pixbuf
