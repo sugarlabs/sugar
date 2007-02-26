@@ -1,4 +1,3 @@
-#
 # Copyright (C) 2006, Red Hat, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -17,60 +16,63 @@
 
 import gobject
 
-from model.devices import device
 from hardware import nmclient
 
-STATE_ACTIVATING = 0
-STATE_ACTIVATED  = 1
-STATE_INACTIVE   = 2
+STATE_CONNECTING   = 0
+STATE_CONNECTED    = 1
+STATE_NOTCONNECTED = 2
 
 _nm_state_to_state = {
-    nmclient.DEVICE_STATE_ACTIVATING : STATE_ACTIVATING,
-    nmclient.DEVICE_STATE_ACTIVATED  : STATE_ACTIVATED,
-    nmclient.DEVICE_STATE_INACTIVE   : STATE_INACTIVE
+    nmclient.NETWORK_STATE_CONNECTED    : STATE_CONNECTED,
+    nmclient.NETWORK_STATE_CONNECTING   : STATE_CONNECTING,
+    nmclient.NETWORK_STATE_NOTCONNECTED : STATE_NOTCONNECTED
 }
 
-class Device(device.Device):
+class AccessPointModel(gobject.GObject):
     __gproperties__ = {
         'name'     : (str, None, None, None,
                       gobject.PARAM_READABLE),
         'strength' : (int, None, None, 0, 100, 0,
                       gobject.PARAM_READABLE),
-        'state'    : (int, None, None, STATE_ACTIVATING,
-                      STATE_INACTIVE, 0, gobject.PARAM_READABLE)
+        'state'    : (int, None, None, STATE_CONNECTING,
+                      STATE_NOTCONNECTED, 0, gobject.PARAM_READABLE)
     }
 
-    def __init__(self, nm_device):
-        device.Device.__init__(self)
+    def __init__(self, nm_device, nm_network):
+        gobject.GObject.__init__(self)
+        self._nm_network = nm_network
         self._nm_device = nm_device
 
-        self._nm_device.connect('strength-changed',
-                                self._strength_changed_cb)
-        self._nm_device.connect('ssid-changed',
-                                self._ssid_changed_cb)
-        self._nm_device.connect('state-changed',
-                                self._state_changed_cb)
+        self._nm_network.connect('strength-changed',
+                                 self._strength_changed_cb)
+        self._nm_network.connect('ssid-changed',
+                                 self._ssid_changed_cb)
+        self._nm_network.connect('state-changed',
+                                 self._state_changed_cb)
 
-    def _strength_changed_cb(self, nm_device):
+    def _strength_changed_cb(self, nm_network):
         self.notify('strength')
 
-    def _ssid_changed_cb(self, nm_device):
+    def _ssid_changed_cb(self, nm_network):
         self.notify('name')
 
-    def _state_changed_cb(self, nm_device):
+    def _state_changed_cb(self, nm_network):
         self.notify('state')
+
+    def get_id(self):
+        return self._nm_network.get_op()
+
+    def get_nm_device(self):
+        return self._nm_device
+
+    def get_nm_network(self):
+        return self._nm_network
 
     def do_get_property(self, pspec):
         if pspec.name == 'strength':
-            return self._nm_device.get_strength()
+            return self._nm_network.get_strength()
         elif pspec.name == 'name':
-            return self._nm_device.get_ssid()
+            return self._nm_network.get_ssid()
         elif pspec.name == 'state':
             nm_state = self._nm_device.get_state()
             return _nm_state_to_state[nm_state]
-
-    def get_type(self):
-        return 'wirelessnetwork'
-
-    def get_id(self):
-        return self._nm_device.get_op()

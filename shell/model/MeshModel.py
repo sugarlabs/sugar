@@ -20,46 +20,8 @@ from sugar.graphics.xocolor import XoColor
 from sugar.presence import PresenceService
 from sugar.activity import bundleregistry
 from model.BuddyModel import BuddyModel
+from model.accesspointmodel import AccessPointModel
 from hardware import hardwaremanager
-
-class AccessPointModel(gobject.GObject):
-    __gproperties__ = {
-        'name'     : (str, None, None, None,
-                      gobject.PARAM_READABLE),
-        'strength' : (int, None, None, 0, 100, 0,
-                      gobject.PARAM_READABLE)
-    }
-
-    def __init__(self, nm_device, nm_network):
-        gobject.GObject.__init__(self)
-        self._nm_network = nm_network
-        self._nm_device = nm_device
-
-        self._nm_network.connect('strength-changed',
-                                 self._strength_changed_cb)
-        self._nm_network.connect('ssid-changed',
-                                 self._essid_changed_cb)
-
-    def _strength_changed_cb(self, nm_network):
-        self.notify('strength')
-
-    def _essid_changed_cb(self, nm_network):
-        self.notify('name')
-
-    def get_id(self):
-        return self._nm_network.get_op()
-
-    def get_nm_device(self):
-        return self._nm_device
-
-    def get_nm_network(self):
-        return self._nm_network
-
-    def do_get_property(self, pspec):
-        if pspec.name == 'strength':
-            return self._nm_network.get_strength()
-        elif pspec.name == 'name':
-            return self._nm_network.get_ssid()
 
 class ActivityModel:
     def __init__(self, activity, bundle, service):
@@ -127,7 +89,7 @@ class MeshModel(gobject.GObject):
         network_manager = hardwaremanager.get_network_manager()
         for nm_device in network_manager.get_devices():
             self._add_network_device(nm_device)
-        network_manager.connect('device-activated',
+        network_manager.connect('device-added',
                                 self._nm_device_activated_cb)
 
     def _nm_device_activated_cb(self, manager, nm_device):

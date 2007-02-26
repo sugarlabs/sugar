@@ -42,8 +42,9 @@ class DevicesModel(gobject.GObject):
     def _network_device_removed_cb(self, nm_device):
         self._remove_network_device(nm_device)
 
-    def _network_device_deactivated_cb(self, nm_device):
-        self._remove_network_device(nm_device)
+    def _network_device_state_changed_cb(self, nm_device):
+        if nm_device.get_state == nmclient.DEVICE_STATE_INACTIVE:
+            self._remove_network_device(nm_device)
 
     def _check_network_device(self, nm_device):
         if not nm_device.is_valid():
@@ -57,8 +58,8 @@ class DevicesModel(gobject.GObject):
 
     def _add_network_device(self, nm_device):
         self.add_device(wirelessnetwork.Device(nm_device))
-        nm_device.connect('deactivated',
-                            self._network_device_deactivated_cb)
+        nm_device.connect('state-changed',
+                          self._network_device_state_changed_cb)
 
     def _remove_network_device(self, nm_device):
         self.remove_device(self._get_network_device(nm_device))
