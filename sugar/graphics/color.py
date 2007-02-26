@@ -62,7 +62,7 @@ class RGBColor(object):
                              int(self._b * 65535))
 
     def get_html(self):
-        return '#%x%x%x' % (self._r * 255, self._g * 255, self._b * 255)
+        return '#%02x%02x%02x' % (self._r * 255, self._g * 255, self._b * 255)
 
 class HTMLColor(RGBColor):
     def __init__(self, html_color):
