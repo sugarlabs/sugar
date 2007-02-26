@@ -40,7 +40,6 @@ _actions_table = {
 class KeyHandler(object):
     def __init__(self, shell):
         self._shell = shell
-        self._hw_manager = hardwaremanager.get_hardware_manager()
         self._audio_manager = hardwaremanager.get_audio_manager()
         self._screen_rotation = 0
 
@@ -52,6 +51,16 @@ class KeyHandler(object):
 
         for key in _actions_table.keys():
             self._key_grabber.grab(key)            
+
+    def _set_display_brightness(self, level):
+        hw_manager = hardwaremanager.get_hardware_manager()
+        if hw_manager:
+            hw_manager.set_display_brightness(level)
+
+    def _set_display_mode(self, mode):
+        hw_manager = hardwaremanager.get_hardware_manager()
+        if hw_manager:
+            hw_manager.set_display_mode(mode)
 
     def handle_zoom_mesh(self):
         self._shell.set_zoom_level(sugar.ZOOM_MESH)
@@ -66,16 +75,16 @@ class KeyHandler(object):
         self._shell.set_zoom_level(sugar.ZOOM_ACTIVITY)
 
     def handle_brightness_1(self):
-        self._hw_manager.set_display_brightness(0)
+        self._set_display_brightness(0)
 
     def handle_brightness_2(self):
-        self._hw_manager.set_display_brightness(5)
+        self._set_display_brightness(5)
 
     def handle_brightness_3(self):
-        self._hw_manager.set_display_brightness(9)
+        self._set_display_brightness(9)
 
     def handle_brightness_4(self):
-        self._hw_manager.set_display_brightness(15)
+        self._set_display_brightness(15)
 
     def handle_volume_1(self):
         self._audio_manager.set_volume(0)
@@ -90,10 +99,10 @@ class KeyHandler(object):
         self._audio_manager.set_volume(100)
 
     def handle_color_mode(self):
-        self._hw_manager.set_display_mode(hardwaremanager.COLOR_MODE)
+        self._set_display_mode(hardwaremanager.COLOR_MODE)
 
     def handle_b_and_w_mode(self):
-        self._hw_manager.set_display_mode(hardwaremanager.B_AND_W_MODE)
+        self._set_display_mode(hardwaremanager.B_AND_W_MODE)
 
     def handle_console(self):
         gobject.idle_add(self._toggle_console_visibility_cb)
@@ -126,7 +135,9 @@ class KeyHandler(object):
         mgr.Shutdown()
 
     def handle_keyboard_brightness(self):
-        self._hw_manager.toggle_keyboard_brightness()
+        hw_manager = hardwaremanager.get_hardware_manager()
+        if hw_manager:
+            hw_manager.toggle_keyboard_brightness()
 
     def handle_rotate(self):
         states = [ 'normal', 'left', 'inverted', 'right']

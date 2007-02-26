@@ -27,6 +27,8 @@ class DevicesModel(gobject.GObject):
 
     def _observe_network_manager(self):
         network_manager = hardwaremanager.get_network_manager()
+        if not network_manager:
+            return
 
         for device in network_manager.get_devices():
             self._check_network_device(device)

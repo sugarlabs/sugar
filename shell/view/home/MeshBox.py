@@ -60,11 +60,10 @@ class AccessPointView(CanvasIcon):
 
     def _activate_cb(self, icon):
         network_manager = hardwaremanager.get_network_manager()
-
-        device = self._model.get_nm_device()
-        network = self._model.get_nm_network()
-
-        network_manager.set_active_device(device, network)
+        if network_manager:
+            device = self._model.get_nm_device()
+            network = self._model.get_nm_network()
+            network_manager.set_active_device(device, network)
 
     def _update_name(self):
         self.props.tooltip = self._model.props.name

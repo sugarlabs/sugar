@@ -87,10 +87,11 @@ class MeshModel(gobject.GObject):
             self._check_service(service)
 
         network_manager = hardwaremanager.get_network_manager()
-        for nm_device in network_manager.get_devices():
-            self._add_network_device(nm_device)
-        network_manager.connect('device-added',
-                                self._nm_device_added_cb)
+        if network_manager:
+            for nm_device in network_manager.get_devices():
+                self._add_network_device(nm_device)
+            network_manager.connect('device-added',
+                                    self._nm_device_added_cb)
 
     def _nm_device_added_cb(self, manager, nm_device):
         self._add_network_device(nm_device)
