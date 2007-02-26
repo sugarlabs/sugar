@@ -7,7 +7,6 @@ headers
 #include "sugar-browser.h"
 #include "sugar-key-grabber.h"
 #include "sugar-address-entry.h"
-#include "sugar-tray-manager.h"
 #include "sugar-push-scroller.h"
 #include "sugar-download-manager.h"
 #include "sugar-download.h"
@@ -21,9 +20,6 @@ extern Pycairo_CAPI_t *Pycairo_CAPI;
 
 %%
 modulename gecko
-%%
-ignore
-sugar_tray_manager_new
 %%
 import gobject.GObject as PyGObject_Type
 import gtk.Entry as PyGtkEntry_Type

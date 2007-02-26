@@ -8,7 +8,6 @@ sugar_PYTHON =				\
 	eventframe.py			\
 	frame.py			\
 	ZoomBox.py			\
-	notificationtray.py		\
 	overlaybox.py			\
 	PanelWindow.py			\
 	framepopupcontext.py

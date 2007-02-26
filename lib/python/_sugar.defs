@@ -21,13 +21,6 @@
   (gtype-id "SUGAR_TYPE_KEY_GRABBER")
 )
 
-(define-object TrayManager
-  (in-module "Sugar")
-  (parent "GObject")
-  (c-name "SugarTrayManager")
-  (gtype-id "SUGAR_TYPE_TRAY_MANAGER")
-)
-
 (define-object PushScroller
   (in-module "Sugar")
   (parent "GObject")
@@ -122,60 +115,6 @@
   (parameters
     '("const-char*" "key")
   )
-)
-
-;; From sugar-tray-manager.h
-
-(define-function tray_manager_get_type
-  (c-name "sugar_tray_manager_get_type")
-  (return-type "GType")
-)
-
-(define-function tray_manager_check_running
-  (c-name "sugar_tray_manager_check_running")
-  (return-type "gboolean")
-  (parameters
-    '("GdkScreen*" "screen")
-  )
-)
-
-(define-function tray_manager_new
-  (c-name "sugar_tray_manager_new")
-  (is-constructor-of "SugarTrayManager")
-  (return-type "SugarTrayManager*")
-)
-
-(define-method manage_screen
-  (of-object "SugarTrayManager")
-  (c-name "sugar_tray_manager_manage_screen")
-  (return-type "gboolean")
-  (parameters
-    '("GdkScreen*" "screen")
-  )
-)
-
-(define-method get_child_title
-  (of-object "SugarTrayManager")
-  (c-name "sugar_tray_manager_get_child_title")
-  (return-type "char*")
-  (parameters
-    '("SugarTrayManagerChild*" "child")
-  )
-)
-
-(define-method set_orientation
-  (of-object "SugarTrayManager")
-  (c-name "sugar_tray_manager_set_orientation")
-  (return-type "none")
-  (parameters
-    '("GtkOrientation" "orientation")
-  )
-)
-
-(define-method get_orientation
-  (of-object "SugarTrayManager")
-  (c-name "sugar_tray_manager_get_orientation")
-  (return-type "GtkOrientation")
 )
 
 ;; From sugar-push-scroller.h

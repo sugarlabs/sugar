@@ -46,5 +46,13 @@ class Popup(hippo.CanvasBox, hippo.CanvasItem):
             self._window.hide()
             self._visible = False
 
+    def grab_pointer(self):
+        gtk.gdk.pointer_grab(self._window.window, owner_events=False,
+                             event_mask=gtk.gdk.BUTTON_PRESS_MASK |
+                                        gtk.gdk.BUTTON_RELEASE_MASK |
+			                gtk.gdk.ENTER_NOTIFY_MASK |
+			                gtk.gdk.LEAVE_NOTIFY_MASK |
+			                gtk.gdk.POINTER_MOTION_MASK)
+
     def _button_press_event_cb(self, menu, event):
         self.emit('action-completed')

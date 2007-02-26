@@ -112,12 +112,12 @@ lib/threadframe/Makefile
 services/Makefile
 services/presence/Makefile
 services/presence2/Makefile
-services/nm/Makefile
 services/clipboard/Makefile
 services/datastore/Makefile
 shell/Makefile
 shell/intro/Makefile
 shell/data/Makefile
+shell/hardware/Makefile
 shell/view/Makefile
 shell/view/devices/Makefile
 shell/view/frame/Makefile

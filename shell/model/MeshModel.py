@@ -20,6 +20,46 @@ from sugar.graphics.xocolor import XoColor
 from sugar.presence import PresenceService
 from sugar.activity import bundleregistry
 from model.BuddyModel import BuddyModel
+from hardware import hardwaremanager
+
+class AccessPointModel(gobject.GObject):
+    __gproperties__ = {
+        'name'     : (str, None, None, None,
+                      gobject.PARAM_READABLE),
+        'strength' : (int, None, None, 0, 100, 0,
+                      gobject.PARAM_READABLE)
+    }
+
+    def __init__(self, nm_device, nm_network):
+        gobject.GObject.__init__(self)
+        self._nm_network = nm_network
+        self._nm_device = nm_device
+
+        self._nm_network.connect('strength-changed',
+                                 self._strength_changed_cb)
+        self._nm_network.connect('ssid-changed',
+                                 self._essid_changed_cb)
+
+    def _strength_changed_cb(self, nm_network):
+        self.notify('strength')
+
+    def _essid_changed_cb(self, nm_network):
+        self.notify('name')
+
+    def get_id(self):
+        return self._nm_network.get_op()
+
+    def get_nm_device(self):
+        return self._nm_device
+
+    def get_nm_network(self):
+        return self._nm_network
+
+    def do_get_property(self, pspec):
+        if pspec.name == 'strength':
+            return self._nm_network.get_strength()
+        elif pspec.name == 'name':
+            return self._nm_network.get_ssid()
 
 class ActivityModel:
     def __init__(self, activity, bundle, service):
@@ -41,17 +81,22 @@ class ActivityModel:
 
 class MeshModel(gobject.GObject):
     __gsignals__ = {
-        'activity-added':   (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
-        'activity-removed': (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
-        'buddy-added':      (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
-        'buddy-moved':      (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT,
-                                                  gobject.TYPE_PYOBJECT])),
-        'buddy-removed':    (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT]))
+        'activity-added':       (gobject.SIGNAL_RUN_FIRST,
+                                 gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
+        'activity-removed':     (gobject.SIGNAL_RUN_FIRST,
+                                 gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
+        'buddy-added':          (gobject.SIGNAL_RUN_FIRST,
+                                 gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
+        'buddy-moved':          (gobject.SIGNAL_RUN_FIRST,
+                                 gobject.TYPE_NONE,
+                                ([gobject.TYPE_PYOBJECT,
+                                  gobject.TYPE_PYOBJECT])),
+        'buddy-removed':        (gobject.SIGNAL_RUN_FIRST,
+                                 gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
+        'access-point-added':   (gobject.SIGNAL_RUN_FIRST,
+                                 gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
+        'access-point-removed': (gobject.SIGNAL_RUN_FIRST,
+                                 gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT]))
     }
 
     def __init__(self):
@@ -59,6 +104,7 @@ class MeshModel(gobject.GObject):
 
         self._activities = {}
         self._buddies = {}
+        self._access_points = {}
         self._bundle_registry = bundleregistry.get_registry()
 
         self._pservice = PresenceService.get_instance()
@@ -77,6 +123,42 @@ class MeshModel(gobject.GObject):
 
         for service in self._pservice.get_services():
             self._check_service(service)
+
+        network_manager = hardwaremanager.get_network_manager()
+        for nm_device in network_manager.get_devices():
+            self._add_network_device(nm_device)
+        network_manager.connect('device-activated',
+                                self._nm_device_activated_cb)
+
+    def _nm_device_activated_cb(self, manager, nm_device):
+        self._add_network_device(nm_device)
+
+    def _nm_network_appeared_cb(self, nm_device, nm_network):
+        self._add_access_point(nm_device, nm_network)
+
+    def _nm_network_disappeared_cb(self, nm_device, nm_network):
+        self._remove_access_point(nm_device, nm_network)
+
+    def _add_network_device(self, nm_device):
+        for nm_network in nm_device.get_networks():
+            self._add_access_point(nm_device, nm_network)
+        nm_device.connect('network-appeared',
+                          self._nm_network_appeared_cb)
+        nm_device.connect('network-disappeared',
+                          self._nm_network_disappeared_cb)
+
+    def _add_access_point(self, nm_device, nm_network):
+        model = AccessPointModel(nm_device, nm_network)
+        self._access_points[nm_network.get_op()] = model
+        self.emit('access-point-added', model)
+
+    def _remove_access_point(self, nm_network):
+        self.emit('access-point-removed',
+                  self._access_points[nm_network.get_op()])
+        del self._access_points[nm_network.get_op()]
+
+    def get_access_points(self):
+        return self._access_points.values()
 
     def get_activities(self):
         return self._activities.values()

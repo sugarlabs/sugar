@@ -22,6 +22,7 @@ from sugar.graphics import units
 class PanelWindow(gtk.Window):
     def __init__(self, orientation):
         gtk.Window.__init__(self)
+        self._orientation = orientation
 
         self.set_decorated(False)
         self.connect('realize', self._realize_cb)
@@ -29,35 +30,46 @@ class PanelWindow(gtk.Window):
         self._canvas = hippo.Canvas()
 
         self._bg = hippo.CanvasBox(background_color=0x414141ff,
-                                   orientation=orientation)
+                                   orientation=self._orientation)
 
-        padding = units.grid_to_pixels(1)
-        if orientation == hippo.ORIENTATION_HORIZONTAL:
-            self._bg.props.padding_left = padding
-            self._bg.props.padding_right = padding
-
-            width = gtk.gdk.screen_width()
-            height = units.grid_to_pixels(1)
-        else:
-            self._bg.props.padding_top = padding
-            self._bg.props.padding_bottom = padding
-
-            width = units.grid_to_pixels(1)
-            height = gtk.gdk.screen_height()
-
+        self._update_size()
         self._canvas.set_root(self._bg)
 
         self.add(self._canvas)
         self._canvas.show()
-
-        self.resize(width, height)
+                
+        screen = gtk.gdk.screen_get_default()
+        screen.connect('size-changed', self._size_changed_cb)
 
     def get_root(self):
         return self._bg
 
     def get_canvas(self):
         return self._canvas
+        
+    def _update_size(self):
+        padding = units.grid_to_pixels(1)
+        if self._orientation == hippo.ORIENTATION_HORIZONTAL:
+            self._bg.props.padding_left = padding
+            self._bg.props.padding_right = padding
+            self._bg.props.padding_top = 0
+            self._bg.props.padding_bottom = 0
+
+            width = gtk.gdk.screen_width()
+            height = units.grid_to_pixels(1)
+        else:
+            self._bg.props.padding_left = 0
+            self._bg.props.padding_right = 0
+            self._bg.props.padding_top = padding
+            self._bg.props.padding_bottom = padding
+
+            width = units.grid_to_pixels(1)
+            height = gtk.gdk.screen_height()
+        self.resize(width, height)
 
     def _realize_cb(self, widget):
         self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
         self.window.set_accept_focus(False)
+        
+    def _size_changed_cb(self, screen):
+        self._update_size()

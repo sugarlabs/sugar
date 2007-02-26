@@ -14,7 +14,7 @@ def get_bundle_root_dir(file_names):
     bundle_root_dir = None
     for file_name in file_names:
         if not bundle_root_dir:
-            bundle_root_dir = file_name.partition('/')[0]
+            bundle_root_dir = file_name.split('/')[0]
             if not bundle_root_dir.endswith('.activity'):
                 raise 'Incorrect bundle.'
         else:

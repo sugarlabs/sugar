@@ -5,7 +5,7 @@ class Device(device.Device):
         device.Device.__init__(self)
 
     def get_type(self):
-        return 'network'
+        return 'battery'
 
     def get_level(self):
         return 0

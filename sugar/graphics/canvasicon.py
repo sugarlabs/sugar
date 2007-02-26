@@ -143,7 +143,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         'stroke-color'  : (object, None, None,
                            gobject.PARAM_READWRITE),
         'scale'         : (float, None, None,
-                           0.0, 1024.0, 1.0,
+                           0.0, 1024.0, units.STANDARD_ICON_SCALE,
                            gobject.PARAM_READWRITE),
         'cache'         : (bool, None, None, False,
                            gobject.PARAM_READWRITE),
@@ -156,7 +156,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
     def __init__(self, **kwargs):
         self._buffers = {}
         self._cur_buffer = None
-        self._scale = 1.0
+        self._scale = units.STANDARD_ICON_SCALE
         self._fill_color = None
         self._stroke_color = None
         self._icon_name = None
@@ -173,8 +173,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
 
         hippo.CanvasBox.__init__(self, **kwargs)
 
-        self.connect('motion-notify-event', self._motion_notify_event_cb)
-        self.connect('button-press-event', self._button_press_event_cb)
+        self.connect_after('button-press-event', self._button_press_event_cb)
+        self.connect_after('motion-notify-event', self._motion_notify_event_cb)
 
     def _clear_buffers(self):
         cur_buf_key = self._get_current_buffer_key()
@@ -314,17 +314,17 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
 
     def _button_press_event_cb(self, item, event):
         item.emit_activated()
+        return False
 
     def get_popup(self):
         if self._tooltip:
             tooltip_popup = Popup()
-            canvas_text = hippo.CanvasText(text=self._tooltip)
-            canvas_text.props.background_color = color.MENU_BACKGROUND.get_int()
-            canvas_text.props.border_color = color.MENU_BORDER.get_int()
-            canvas_text.props.border = units.points_to_pixels(1) 
-            canvas_text.props.color = color.LABEL_TEXT.get_int()
-            canvas_text.props.font_desc = font.DEFAULT.get_pango_desc()
-            tooltip_popup.append(canvas_text)
+            text = hippo.CanvasText(text=self._tooltip)
+            text.props.background_color = color.MENU_BACKGROUND.get_int()
+            text.props.color = color.LABEL_TEXT.get_int()
+            text.props.font_desc = font.DEFAULT.get_pango_desc()
+            text.props.padding = units.points_to_pixels(5)
+            tooltip_popup.append(text)
             
             return tooltip_popup
         else:
@@ -355,7 +355,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             [x, y] = context.translate_to_screen(self)
         
             # TODO: Any better place to do this?
-            popup.props.box_width = max(popup.props.box_width,
+            popup.props.box_width = max(popup.get_width_request(),
                                         self.get_width_request())
 
             [width, height] = self.get_allocation()
@@ -364,7 +364,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
 
         popup.popup(x, y)
         popup.connect('motion-notify-event',
-                      self._popup_motion_notify_event_cb)
+                      self.popup_motion_notify_event_cb)
         popup.connect('action-completed',
                       self._popup_action_completed_cb)
 
@@ -389,17 +389,29 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
     def _motion_notify_event_cb(self, button, event):
         if event.detail == hippo.MOTION_DETAIL_ENTER:
             self._timeline.play(None, 'popup')
+            self.prelight(enter=True)
         elif event.detail == hippo.MOTION_DETAIL_LEAVE:
             if not self._hover_popup:
                 self._timeline.play('before_popdown', 'popdown')
+            self.prelight(enter=False)
+        return False
 
-    def _popup_motion_notify_event_cb(self, popup, event):
+    def popup_motion_notify_event_cb(self, popup, event):
         if event.detail == hippo.MOTION_DETAIL_ENTER:
             self._hover_popup = True
             self._timeline.play('popup', 'popup')
+            self.prelight(enter=True)
         elif event.detail == hippo.MOTION_DETAIL_LEAVE:
             self._hover_popup = False
             self._timeline.play('popdown', 'popdown')
+            self.prelight(enter=False)
+        return False
 
     def _popup_action_completed_cb(self, popup):
         self.popdown()
+
+    def prelight(self, enter):
+        """
+        Override this method for adding prelighting behavior.
+        """
+        pass

@@ -48,7 +48,7 @@ canvas.set_root(vbox)
 toolbar = Toolbar()
 vbox.append(toolbar)
 
-button = IconButton('theme:stock-close')
+button = IconButton(icon_name='theme:stock-close')
 toolbar.append(button)
 
 OPTION_ANYTHING = 1

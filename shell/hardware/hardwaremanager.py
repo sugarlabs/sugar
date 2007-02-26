@@ -18,20 +18,23 @@ import logging
 
 import dbus
 
-HARDWARE_MANAGER_INTERFACE = 'org.laptop.HardwareManager'
-HARDWARE_MANAGER_SERVICE = 'org.laptop.HardwareManager'
-HARDWARE_MANAGER_OBJECT_PATH = '/org/laptop/HardwareManager'
+from hardware.nmclient import NMClient
+from _sugar import AudioManager
+
+_HARDWARE_MANAGER_INTERFACE = 'org.laptop.HardwareManager'
+_HARDWARE_MANAGER_SERVICE = 'org.laptop.HardwareManager'
+_HARDWARE_MANAGER_OBJECT_PATH = '/org/laptop/HardwareManager'
+
+COLOR_MODE = 0
+B_AND_W_MODE = 1
 
 class HardwareManager(object):
-    COLOR_MODE = 0
-    B_AND_W_MODE = 1
-
     def __init__(self):
         try:
             bus = dbus.SystemBus()
-            proxy = bus.get_object(HARDWARE_MANAGER_SERVICE,
-                                   HARDWARE_MANAGER_OBJECT_PATH)
-            self._service = dbus.Interface(proxy, HARDWARE_MANAGER_INTERFACE)
+            proxy = bus.get_object(_HARDWARE_MANAGER_SERVICE,
+                                   _HARDWARE_MANAGER_OBJECT_PATH)
+            self._service = dbus.Interface(proxy, _HARDWARE_MANAGER_INTERFACE)
         except dbus.DBusException:
             self._service = None
             logging.error('Hardware manager service not found.')
@@ -56,3 +59,16 @@ class HardwareManager(object):
             self._service.set_keyboard_brightness(False)
         else:
             self._service.set_keyboard_brightness(True)            
+
+def get_hardware_manager():
+    return _hardware_manager
+
+def get_audio_manager():
+    return _audio_manager
+
+def get_network_manager():
+    return _network_manager
+
+_hardware_manager = HardwareManager()
+_audio_manager = AudioManager()
+_network_manager = NMClient()

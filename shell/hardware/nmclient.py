@@ -1,4 +1,3 @@
-# vi: ts=4 ai noet 
 #
 # Copyright (C) 2006, Red Hat, Inc.
 #
@@ -16,26 +15,20 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
+import os
+
 import dbus
 import dbus.glib
 import dbus.decorators
 import gobject
 import gtk
-import logging
-import os
-from gettext import gettext as _
 
-import hippo
-import style
-from sugar.graphics.timeline import Timeline
-from wepkeydialog import WEPKeyDialog
-from bubble import Bubble
-
-import nminfo
+from hardware.wepkeydialog import WEPKeyDialog
+from hardware import nminfo
 
 IW_AUTH_ALG_OPEN_SYSTEM = 0x00000001
 IW_AUTH_ALG_SHARED_KEY  = 0x00000002
-
 
 NM_DEVICE_STAGE_STRINGS=("Unknown",
     "Prepare",
@@ -63,9 +56,7 @@ NM_DEVICE_CAP_NM_SUPPORTED = 0x00000001
 NM_DEVICE_CAP_CARRIER_DETECT = 0x00000002
 NM_DEVICE_CAP_WIRELESS_SCAN = 0x00000004
 
-
 sys_bus = dbus.SystemBus()
-
 
 NM_802_11_CAP_NONE            = 0x00000000
 NM_802_11_CAP_PROTO_NONE      = 0x00000001
@@ -79,10 +70,14 @@ NM_802_11_CAP_CIPHER_WEP104   = 0x00002000
 NM_802_11_CAP_CIPHER_TKIP     = 0x00004000
 NM_802_11_CAP_CIPHER_CCMP     = 0x00008000
 
-
 class Network(gobject.GObject):
     __gsignals__ = {
-        'init-failed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
+        'init-failed'     : (gobject.SIGNAL_RUN_FIRST,
+                             gobject.TYPE_NONE, ([])),
+        'strength-changed': (gobject.SIGNAL_RUN_FIRST,
+                             gobject.TYPE_NONE, ([])),
+        'ssid-changed'    : (gobject.SIGNAL_RUN_FIRST,
+                             gobject.TYPE_NONE, ([]))
     }
 
     def __init__(self, op):
@@ -115,6 +110,9 @@ class Network(gobject.GObject):
             logging.debug("Net(%s): ssid '%s', mode %d, strength %d" % (self._op,
                     self._ssid, self._mode, self._strength))
 
+        self.emit('strength-changed')
+        self.emit('ssid-changed')
+
     def _update_error_cb(self, err):
         logging.debug("Net(%s): failed to update. (%s)" % (self._op, err))
         self._valid = False
@@ -131,27 +129,28 @@ class Network(gobject.GObject):
 
     def set_strength(self, strength):
         self._strength = strength
+        self.emit('strength-changed')
 
     def is_valid(self):
         return self._valid
 
-    def add_to_menu(self, menu, callback, dev):
-        strength = self._strength
-        if strength > 100:
-            strength = 100
-        elif strength < 0:
-            strength = 0
-        item = NetworkMenuItem(text=self._ssid, percent=strength)
-        item.connect('button-press-event', callback, (dev, self))
-        menu.add_item(item)
-
-
 class Device(gobject.GObject):
     __gsignals__ = {
-        'init-failed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
-        'activated': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
-        'strength-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                            ([gobject.TYPE_PYOBJECT]))
+        'init-failed':         (gobject.SIGNAL_RUN_FIRST,
+                                gobject.TYPE_NONE, ([])),
+        'activated':           (gobject.SIGNAL_RUN_FIRST,
+                                gobject.TYPE_NONE, ([])),
+        'deactivated':         (gobject.SIGNAL_RUN_FIRST,
+                                gobject.TYPE_NONE, ([])),
+        'strength-changed':    (gobject.SIGNAL_RUN_FIRST,
+                                gobject.TYPE_NONE,
+                               ([gobject.TYPE_PYOBJECT])),
+        'network-appeared':    (gobject.SIGNAL_RUN_FIRST,
+                                gobject.TYPE_NONE,
+                               ([gobject.TYPE_PYOBJECT])),
+        'network-disappeared': (gobject.SIGNAL_RUN_FIRST,
+                                gobject.TYPE_NONE,
+                               ([gobject.TYPE_PYOBJECT]))
     }
 
     def __init__(self, op):
@@ -178,8 +177,6 @@ class Device(gobject.GObject):
         self._type = props[2]
         self._udi = props[3]
         self._active = props[4]
-        if self._active:
-            self.emit('activated')
         self._link = props[15]
         self._caps = props[17]
 
@@ -191,6 +188,11 @@ class Device(gobject.GObject):
             self._update_networks(props[20], props[19])
 
         self._valid = True
+
+        if self._active:
+            self.emit('activated')
+        else:
+            self.emit('deactivated')
 
     def _update_networks(self, net_ops, active_op):
         for op in net_ops:
@@ -213,41 +215,15 @@ class Device(gobject.GObject):
             self._active_net = None
         del self._networks[net_op]
 
-    def _add_to_menu_wired(self, menu, callback):
-        item = NetworkMenuItem(_("Wired Network"), stylesheet="nm.Bubble.Wired",
-                hi_stylesheet="nm.Bubble.Wired.Hi",
-                act_stylesheet="nm.Bubble.Wired.Activated")
-        item.connect('button-press-event', callback, (self, None))
-        menu.add_item(item)
-
-    def _add_to_menu_wireless(self, menu, callback, active_only):
-        act_net = None
-        if self._active_net and self._networks.has_key(self._active_net):
-            act_net = self._networks[self._active_net]
-
-        # Only add the active network if active_only == True
-        if active_only:
-            if act_net:
-                act_net.add_to_menu(menu, callback, self)
-            return
-
-        # Otherwise, add all networks _except_ the active one
-        for net in self._networks.values():
-            if not net.is_valid():
-                continue
-            if act_net == net:
-                continue
-            net.add_to_menu(menu, callback, self)
-
-    def add_to_menu(self, menu, callback, active_only=False):
-        if self._type == DEVICE_TYPE_802_3_ETHERNET:
-            self._add_to_menu_wired(menu, callback)
-        elif self._type == DEVICE_TYPE_802_11_WIRELESS:
-            self._add_to_menu_wireless(menu, callback, active_only)
-
     def get_op(self):
         return self._op
 
+    def get_networks(self):
+        return self._networks.values()
+
+    def get_active_network(self):
+        return self.get_network(self._active_net)
+    
     def get_network(self, op):
         if self._networks.has_key(op):
             return self._networks[op]
@@ -276,12 +252,16 @@ class Device(gobject.GObject):
         net = Network(network)
         self._networks[network] = net
         net.connect('init-failed', self._net_init_failed)
+        self.emit('network-appeared', net)
 
     def network_disappeared(self, network):
         if not self._networks.has_key(network):
             return
         if network == self._active_net:
             self._active_net = None
+
+        self.emit('network-disappeared', self._networks[network])
+
         del self._networks[network]
 
     def get_active(self):
@@ -309,171 +289,31 @@ class Device(gobject.GObject):
     def get_capabilities(self):
         return self._caps
 
-nm_bubble_wireless = {
-    'fill-color'     : 0x646464FF,
-    'stroke-color'     : 0x646464FF,
-    'progress-color': 0x333333FF,
-    'spacing'         : style.space_unit,
-    'padding'         : style.space_unit * 1.5
-}
-
-nm_bubble_wireless_hi = {
-    'fill-color'     : 0x979797FF,
-    'stroke-color'     : 0x979797FF,
-    'progress-color': 0x666666FF,
-    'spacing'         : style.space_unit,
-    'padding'         : style.space_unit * 1.5
-}
-
-nm_bubble_wireless_activated = {
-    'fill-color'     : 0xA7A7A7FF,
-    'stroke-color'     : 0xA7A7A7FF,
-    'progress-color': 0x777777FF,
-    'spacing'         : style.space_unit,
-    'padding'         : style.space_unit * 1.5
-}
-
-nm_bubble_wired = {
-    'fill-color'     : 0x000000FF,
-    'stroke-color'     : 0x000000FF,
-    'progress-color': 0x000000FF,
-    'spacing'         : style.space_unit,
-    'padding'         : style.space_unit * 1.5
-}
-
-nm_bubble_wired_hi = {
-    'fill-color'     : 0x333333FF,
-    'stroke-color'     : 0x333333FF,
-    'progress-color': 0x000000FF,
-    'spacing'         : style.space_unit,
-    'padding'         : style.space_unit * 1.5
-}
-
-nm_bubble_wired_activated = {
-    'fill-color'     : 0x444444FF,
-    'stroke-color'     : 0x444444FF,
-    'progress-color': 0x000000FF,
-    'spacing'         : style.space_unit,
-    'padding'         : style.space_unit * 1.5
-}
-
-nm_menu_item_title = {
-    'xalign': hippo.ALIGNMENT_START,
-    'padding-left': 5,
-    'color'     : 0xFFFFFFFF,
-    'font'     : style.get_font_description('Bold', 1.2)
-}
-
-
-style.register_stylesheet("nm.Bubble.Wireless", nm_bubble_wireless)
-style.register_stylesheet("nm.Bubble.Wireless.Hi", nm_bubble_wireless_hi)
-style.register_stylesheet("nm.Bubble.Wireless.Activated", nm_bubble_wireless_activated)
-style.register_stylesheet("nm.Bubble.Wired", nm_bubble_wired)
-style.register_stylesheet("nm.Bubble.Wired.Hi", nm_bubble_wired_hi)
-style.register_stylesheet("nm.Bubble.Wired.Activated", nm_bubble_wired_activated)
-style.register_stylesheet("nm.MenuItem.Title", nm_menu_item_title)
-
-class NetworkMenuItem(Bubble):
-    def __init__(self, text, percent=0, stylesheet="nm.Bubble.Wireless",
-                hi_stylesheet="nm.Bubble.Wireless.Hi",
-                act_stylesheet="nm.Bubble.Wireless.Activated"):
-        Bubble.__init__(self, percent=percent)
-        self._hover = False
-        self._default_stylesheet = stylesheet
-        self._hi_stylesheet = hi_stylesheet
-        self._act_stylesheet = act_stylesheet
-        style.apply_stylesheet(self, stylesheet)
-
-        text_item = hippo.CanvasText(text=text)
-        style.apply_stylesheet(text_item, 'nm.MenuItem.Title')
-        self.append(text_item)
-
-        self.connect('motion-notify-event', self._motion_notify_event_cb)
-        # Disable active hilight for now...
-        #self.connect('button-press-event', self._button_press_event_cb)
-
-    def _motion_notify_event_cb(self, widget, event):
-        if event.detail == hippo.MOTION_DETAIL_ENTER:
-            if not self._hover:
-                self._hover = True
-                style.apply_stylesheet(self, self._hi_stylesheet)
-        elif event.detail == hippo.MOTION_DETAIL_LEAVE:
-            if self._hover:
-                self._hover = False
-                style.apply_stylesheet(self, self._default_stylesheet)
-        return True
-
-    def _button_press_event_cb(self, widget, event):
-        style.apply_stylesheet(self, self._act_stylesheet)
-        return False
-
-class NetworkMenu(gtk.Window):
-    __gsignals__ = {
-        'action': (gobject.SIGNAL_RUN_FIRST,
-                   gobject.TYPE_NONE, ([int])),
-    }
-
-    def __init__(self):
-        gtk.Window.__init__(self, gtk.WINDOW_POPUP)
-
-        canvas = hippo.Canvas()
-        self.add(canvas)
-        canvas.show()
-
-        self._root = hippo.CanvasBox()
-        style.apply_stylesheet(self._root, 'menu')
-        canvas.set_root(self._root)
-
-    def add_separator(self):
-        separator = hippo.CanvasBox()
-        style.apply_stylesheet(separator, 'menu.Separator')
-        self._root.append(separator)
-
-    def add_item(self, item):
-        self._root.append(item)
-
-
-
 NM_STATE_UNKNOWN = 0
 NM_STATE_ASLEEP = 1
 NM_STATE_CONNECTING = 2
 NM_STATE_CONNECTED = 3
 NM_STATE_DISCONNECTED = 4
 
-ICON_WIRED = "stock-net-wired"
-ICON_WIRELESS_00 = "stock-net-wireless-00"
-ICON_WIRELESS_01_20 = "stock-net-wireless-01-20"
-ICON_WIRELESS_21_40 = "stock-net-wireless-21-40"
-ICON_WIRELESS_41_60 = "stock-net-wireless-41-60"
-ICON_WIRELESS_61_80 = "stock-net-wireless-61-80"
-ICON_WIRELESS_81_100 = "stock-net-wireless-81-100"
+class NMClient(gobject.GObject):
+    __gsignals__ = {
+        'device-activated' : (gobject.SIGNAL_RUN_FIRST,
+                              gobject.TYPE_NONE, 
+                             ([gobject.TYPE_PYOBJECT])),
+        'device-removed'   : (gobject.SIGNAL_RUN_FIRST,
+                              gobject.TYPE_NONE, 
+                             ([gobject.TYPE_PYOBJECT]))
+    }
 
-class NMClientApp:
     def __init__(self):
+        gobject.GObject.__init__(self)
+
         self.nminfo = None
         self._nm_present = False
         self._nm_state = NM_STATE_UNKNOWN
         self._update_timer = 0
         self._active_device = None
         self._devices = {}
-        self._key_dialog = None
-
-        self._icon_theme = gtk.icon_theme_get_default()
-        self._icons = {}
-        self._cur_icon = None
-        try:
-            self._icons = self._load_icons()
-        except RuntimeError:
-            logging.debug("Couldn't find required icon resources, will exit.")
-            os._exit(1)
-        self._setup_trayicon()
-
-        self._menu = None
-        self._hover_menu = False
-        self._timeline = Timeline(self)
-        self._timeline.add_tag('popup', 6, 6)
-        self._timeline.add_tag('before_popdown', 7, 7)
-        self._timeline.add_tag('popdown', 8, 8)
 
         try:
             self.nminfo = nminfo.NMInfo(self)
@@ -484,22 +324,8 @@ class NMClientApp:
             self._get_nm_state()
             self._get_initial_devices()
 
-    def _get_one_icon_pixbuf(self, name):
-        info = self._icon_theme.lookup_icon(name, 75, 0)
-        if not info or not info.get_filename():
-            raise RuntimeError
-        return gtk.gdk.pixbuf_new_from_file(info.get_filename())
-
-    def _load_icons(self):
-        icons = {}
-        icons[ICON_WIRED] = self._get_one_icon_pixbuf(ICON_WIRED)
-        icons[ICON_WIRELESS_00] = self._get_one_icon_pixbuf(ICON_WIRELESS_00)
-        icons[ICON_WIRELESS_01_20] = self._get_one_icon_pixbuf(ICON_WIRELESS_01_20)
-        icons[ICON_WIRELESS_21_40] = self._get_one_icon_pixbuf(ICON_WIRELESS_21_40)
-        icons[ICON_WIRELESS_41_60] = self._get_one_icon_pixbuf(ICON_WIRELESS_41_60)
-        icons[ICON_WIRELESS_61_80] = self._get_one_icon_pixbuf(ICON_WIRELESS_61_80)
-        icons[ICON_WIRELESS_81_100] = self._get_one_icon_pixbuf(ICON_WIRELESS_81_100)
-        return icons
+    def get_devices(self):
+        return self._devices
 
     def _get_nm_state(self):
         # Grab NM's state
@@ -507,162 +333,10 @@ class NMClientApp:
                 error_handler=self._get_state_error_cb)
 
     def _get_state_reply_cb(self, state):
-        if self._nm_state != state:
-            self._schedule_icon_update(immediate=True)
         self._nm_state = state
 
     def _get_state_error_cb(self, err):
         logging.debug("Failed to get NetworkManager state! %s" % err)
-
-    def _get_icon(self):
-        act_dev = None
-        if self._active_device and self._devices.has_key(self._active_device):
-            act_dev = self._devices[self._active_device]
-
-        pixbuf = None
-        if not self._nm_present \
-                or not act_dev \
-                or self._nm_state == NM_STATE_UNKNOWN \
-                or self._nm_state == NM_STATE_ASLEEP \
-                or self._nm_state == NM_STATE_DISCONNECTED:
-            pixbuf = self._icons[ICON_WIRELESS_00]
-        elif act_dev.get_type() == DEVICE_TYPE_802_3_ETHERNET:
-            pixbuf = self._icons[ICON_WIRED]
-        elif act_dev.get_type() == DEVICE_TYPE_802_11_WIRELESS:
-            strength = act_dev.get_strength()
-            if strength <= 0:
-                pixbuf = self._icons[ICON_WIRELESS_00]
-            elif strength >= 1 and strength <= 20:
-                pixbuf = self._icons[ICON_WIRELESS_01_20]
-            elif strength >= 21 and strength <= 40:
-                pixbuf = self._icons[ICON_WIRELESS_21_40]
-            elif strength >= 41 and strength <= 60:
-                pixbuf = self._icons[ICON_WIRELESS_41_60]
-            elif strength >= 61 and strength <= 80:
-                pixbuf = self._icons[ICON_WIRELESS_61_80]
-            elif strength >= 81 and strength:
-                pixbuf = self._icons[ICON_WIRELESS_81_100]
-
-        if not pixbuf:
-            pixbuf = self._icons[ICON_WIRELESS_00]
-        return pixbuf
-
-    def _setup_trayicon(self):
-        pixbuf = self._get_icon()
-        self._trayicon = gtk.status_icon_new_from_pixbuf(pixbuf)
-        self._trayicon.connect("popup_menu", self._status_icon_clicked)
-        self._trayicon.connect("activate", self._status_icon_clicked)
-        self._schedule_icon_update()
-
-    def _status_icon_clicked(self, button=0, time=None):
-        self._timeline.play(None, 'popup')
-
-    def _get_menu_position(self, menu, item):
-        (screen, rect, orientation) = item.get_geometry()
-        [item_x, item_y, item_w, item_h] = rect
-        [menu_w, menu_h] = menu.size_request()
-
-        x = item_x + item_w - menu_w
-        y = item_y + item_h
-
-        x = min(x, screen.get_width() - menu_w)
-        x = max(0, x)
-
-        y = min(y, screen.get_height() - menu_h)
-        y = max(0, y)
-
-        return (x, y)
-
-    def do_popup(self, current, n_frames):
-        if self._menu:
-            return
-
-        self._menu = self._create_menu()
-        self._menu.connect('enter-notify-event',
-                           self._menu_enter_notify_event_cb)
-        self._menu.connect('leave-notify-event',
-                           self._menu_leave_notify_event_cb)
-        (x, y) = self._get_menu_position(self._menu, self._trayicon)
-        self._menu.move(x, y)
-        self._menu.show_all()
-
-    def do_popdown(self, current, frame):
-        if self._menu:
-            self._menu.destroy()
-            self._menu = None
-
-    def _popdown(self):
-        self._timeline.play('popdown', 'popdown')
-
-    def _menu_enter_notify_event_cb(self, widget, event):
-        self._hover_menu = True
-        self._timeline.play('popup', 'popup')
-
-    def _menu_leave_notify_event_cb(self, widget, event):
-        self._hover_menu = False
-        self._popdown()
-
-    def _create_menu(self):
-        menu = NetworkMenu()
-
-        # Active device goes above the separator
-        act_dev = None
-        if self._active_device and self._devices.has_key(self._active_device):
-            act_dev = self._devices[self._active_device]
-
-        if act_dev:
-            act_dev.add_to_menu(menu, self._menu_item_clicked_cb, active_only=True)
-            menu.add_separator()
-            
-        # Wired devices first, if they don't support carrier detect
-        for dev in self._devices.values():
-            if not dev.is_valid():
-                continue
-            if dev.get_type() != DEVICE_TYPE_802_3_ETHERNET:
-                continue
-            if dev.get_capabilities() & NM_DEVICE_CAP_CARRIER_DETECT:
-                continue
-            if dev == act_dev:
-                continue
-            dev.add_to_menu(menu, self._menu_item_clicked_cb)
-
-        # Wireless devices second
-        for dev in self._devices.values():
-            if not dev.is_valid():
-                continue
-            if dev.get_type() != DEVICE_TYPE_802_11_WIRELESS:
-                continue
-            dev.add_to_menu(menu, self._menu_item_clicked_cb)
-
-        return menu
-
-    def _update_icon(self):
-        pixbuf = self._get_icon()
-        if self._cur_icon != pixbuf:
-            self._trayicon.set_from_pixbuf(pixbuf)
-            self._cur_icon = pixbuf
-
-        blink = False
-        if self._nm_state == NM_STATE_CONNECTING:
-            blink = True
-        self._trayicon.set_blinking(blink)
-
-        self._update_timer = 0
-        return False
-
-    def _schedule_icon_update(self, immediate=False):
-        if immediate and self._update_timer:
-            gobject.source_remove(self._update_timer)
-            self._update_timer = 0
-
-        if self._update_timer != 0:
-            # There is already an update scheduled
-            return
-
-        if immediate:
-            self._update_timer = gobject.idle_add(self._update_icon)
-        else:
-            self._update_timer = gobject.timeout_add(2000, self._update_icon)
 
     def _get_initial_devices_reply_cb(self, ops):
         for op in ops:
@@ -699,7 +373,8 @@ class NMClientApp:
         dev.disconnect('init-failed')
         dev.disconnect('strength-changed')
         del self._devices[dev_op]
-        self._schedule_icon_update(immediate=True)
+
+        self.emit('device-removed', dev)
 
     def _dev_activated_cb(self, dev):
         op = dev.get_op()
@@ -708,7 +383,8 @@ class NMClientApp:
         if not dev.get_active():
             return
         self._active_device = op
-        self._schedule_icon_update(immediate=True)
+
+        self.emit('device-activated', dev)
 
     def _dev_strength_changed_cb(self, dev, strength):
         op = dev.get_op()
@@ -716,7 +392,6 @@ class NMClientApp:
             return
         if not dev.get_active():
             return
-        self._schedule_icon_update()
 
     def get_device(self, dev_op):
         if not self._devices.has_key(dev_op):
@@ -760,8 +435,7 @@ class NMClientApp:
         except dbus.DBusException:
             pass
 
-    def _menu_item_clicked_cb(self, widget, event, dev_data):
-        (device, network) = dev_data
+    def set_active_device(self, device, network):
         net_op = ""
         if network:
             net_op = network.get_op()
@@ -775,8 +449,6 @@ class NMClientApp:
                 pass
             else:
                 raise dbus.DBusException(e)
-
-        self._popdown()
 
     def get_key_for_network(self, net, async_cb, async_err_cb):
         # Throw up a dialog asking for the key here, and set
@@ -832,7 +504,6 @@ class NMClientApp:
 
     def state_change_sig_handler(self, state):
         self._nm_state = state
-        self._schedule_icon_update(immediate=True)
 
     def device_activating_sig_handler(self, device):
         self._active_device = device
@@ -842,7 +513,6 @@ class NMClientApp:
             return
         self._active_device = device
         self._devices[device].set_active(True, ssid)
-        self._schedule_icon_update(immediate=True)
 
     def device_no_longer_active_sig_handler(self, device):
         if not self._devices.has_key(device):
@@ -850,7 +520,6 @@ class NMClientApp:
         if self._active_device == device:
             self._active_device = None
         self._devices[device].set_active(False)
-        self._schedule_icon_update(immediate=True)
 
     def name_owner_changed_sig_handler(self, name, old, new):
         if name != NM_SERVICE:
@@ -858,7 +527,6 @@ class NMClientApp:
         if (old and len(old)) and (not new and not len(new)):
             # NM went away
             self._nm_present = False
-            self._schedule_icon_update(immediate=True)
             for op in self._devices.keys():
                 del self._devices[op]
             self._devices = {}
@@ -907,11 +575,3 @@ class NMClientApp:
         if not self._devices.has_key(device):
             return
         self._devices[device].set_carrier(False)
-
-    def run(self):
-        loop = gobject.MainLoop()
-        try:
-            loop.run()
-        except KeyboardInterrupt:
-            pass
-

@@ -2,7 +2,7 @@ import dbus
 import gobject
 
 from sugar import env
-from view.hardwaremanager import HardwareManager
+from hardware import hardwaremanager
 from model.ShellModel import ShellModel
 from _sugar import KeyGrabber
 import sugar
@@ -40,8 +40,8 @@ _actions_table = {
 class KeyHandler(object):
     def __init__(self, shell):
         self._shell = shell
-        self._hw_manager = shell.get_hardware_manager()
-        self._audio_manager = shell.get_audio_manager()
+        self._hw_manager = hardwaremanager.get_hardware_manager()
+        self._audio_manager = hardwaremanager.get_audio_manager()
         self._screen_rotation = 0
 
         self._key_grabber = KeyGrabber()
@@ -90,10 +90,10 @@ class KeyHandler(object):
         self._audio_manager.set_volume(100)
 
     def handle_color_mode(self):
-        self._hw_manager.set_display_mode(HardwareManager.COLOR_MODE)
+        self._hw_manager.set_display_mode(hardwaremanager.COLOR_MODE)
 
     def handle_b_and_w_mode(self):
-        self._hw_manager.set_display_mode(HardwareManager.B_AND_W_MODE)
+        self._hw_manager.set_display_mode(hardwaremanager.B_AND_W_MODE)
 
     def handle_console(self):
         gobject.idle_add(self._toggle_console_visibility_cb)

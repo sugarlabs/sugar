@@ -64,12 +64,14 @@ class OptionMenu(hippo.CanvasBox, hippo.CanvasItem):
                     
         self._round_box = RoundBox()
         self._round_box.props.border_color = color.FRAME_BORDER.get_int()
+        self._round_box.props.spacing = units.points_to_pixels(3)
+        self._round_box.props.padding = units.points_to_pixels(1)
         self.append(self._round_box, hippo.PACK_EXPAND)
 
-        self._canvas_text = hippo.CanvasText()
-        self._canvas_text.props.text = _('No options')
-        self._canvas_text.props.color = color.LABEL_TEXT.get_int()
-        self._canvas_text.props.font_desc = font.DEFAULT.get_pango_desc()
+        self._canvas_text = hippo.CanvasText(text=_('No options'),
+            color=color.LABEL_TEXT.get_int(),
+            font_desc=font.DEFAULT.get_pango_desc(),
+            xalign=hippo.ALIGNMENT_START)
         self._round_box.append(self._canvas_text, hippo.PACK_EXPAND)
 
         # TODO: Substitute for the right icon.
@@ -100,6 +102,16 @@ class OptionMenu(hippo.CanvasBox, hippo.CanvasItem):
 
         self._menu.add_item(menu_item)
 
+    def do_get_width_request(self):
+        max_width = max(self._canvas_text.do_get_content_width_request(self._canvas_text),
+                        self._menu.do_get_content_width_request(self._menu))
+
+        self._canvas_text.props.box_width = max_width
+        
+        current_width = hippo.CanvasBox.do_get_width_request(self)
+        self._menu.props.box_width = current_width
+        return current_width
+
     def add_separator(self):
         self._menu.add_separator()
 
@@ -110,11 +122,11 @@ class OptionMenu(hippo.CanvasBox, hippo.CanvasItem):
             context = self._round_box.get_context()
             [x, y] = context.translate_to_screen(self._round_box)
             
-            # TODO: Any better place to do this?
-            self._menu.props.box_width = self.get_width_request()
-
             [width, height] = self._round_box.get_allocation()            
             self._menu.popup(x, y + height)
+            
+            # Grab the pointer so the menu will popdown on mouse click.
+            self._menu.grab_pointer()
 
     def _menu_action_cb(self, menu, menu_item):
         action_id = menu_item.props.action_id

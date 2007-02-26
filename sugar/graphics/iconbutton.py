@@ -21,8 +21,8 @@ import gobject
 import hippo
 
 from canvasicon import CanvasIcon
-from xocolor import XoColor
 from sugar.graphics import units
+from sugar.graphics import color
 from sugar import profile
             
 STANDARD_SIZE = 0
@@ -44,16 +44,20 @@ class IconButton(CanvasIcon):
 
         CanvasIcon.__init__(self, cache=True, **kwargs)
 
-        self._prelight_color = profile.get_color()
-        self._inactive_color = XoColor('#808080,#424242')
-        self._normal_color = XoColor('white')
+        if not self.props.fill_color:
+            self.props.fill_color = color.BUTTON_BACKGROUND_NORMAL
+        if not self.props.stroke_color:
+            self.props.stroke_color = color.BUTTON_NORMAL
+        self.props.background_color = color.BUTTON_BACKGROUND_NORMAL.get_int()
 
-        if not self.props.xo_color:
-            self.props.xo_color = self._normal_color
-
+        self._normal_fill_color = self.props.fill_color
+        self._normal_stroke_color = self.props.stroke_color
+        self._normal_background_color = self.props.background_color
+        
         self._set_size(STANDARD_SIZE)
 
-        self.connect('button-press-event', self._button_press_event_cb)
+        self.connect('button-press-event',
+                     self._icon_button_button_press_event_cb)
 
     def _set_size(self, size):
         if size == SMALL_SIZE:
@@ -73,9 +77,13 @@ class IconButton(CanvasIcon):
         elif pspec.name == 'active':
             self._active = value
             if self._active:
-                self.props.xo_color = self._normal_color
+                self.props.fill_color = self._normal_fill_color
+                self.props.stroke_color = self._normal_stroke_color
+                self.props.background_color = self._normal_background_color
             else:
-                self.props.xo_color = self._inactive_color            
+                self.props.fill_color = color.BUTTON_BACKGROUND_INACTIVE
+                self.props.stroke_color = color.BUTTON_INACTIVE
+                self.props.background_color = color.BUTTON_BACKGROUND_INACTIVE.get_int()
         else:
             CanvasIcon.do_set_property(self, pspec, value)
 
@@ -87,7 +95,17 @@ class IconButton(CanvasIcon):
         else:
             return CanvasIcon.do_get_property(self, pspec)
 
-    def _button_press_event_cb(self, widget, event):
+    def _icon_button_button_press_event_cb(self, widget, event):
         if self._active:
             self.emit_activated()
         return True
+
+    def prelight(self, enter):
+        if enter:
+            if self._active:
+                self.props.fill_color = color.BLACK
+                self.props.background_color = color.BLACK.get_int()
+        else:
+            if self._active:
+                self.props.fill_color = self._normal_fill_color
+                self.props.background_color = self._normal_background_color

@@ -47,8 +47,6 @@ class Activity(gtk.Window):
 
         self._bus = ActivityService(self)
 
-        self.present()
-
     def get_service_name(self):
         """Gets the activity service name."""
         return os.environ['SUGAR_BUNDLE_SERVICE_NAME']

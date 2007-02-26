@@ -13,7 +13,7 @@ class ClipboardProgressBar(ClipboardBubble):
     def __init__(self, percent = 0):
         self._text_item = None
         ClipboardBubble.__init__(self, percent=percent)
-                
+
         self._text_item = hippo.CanvasText(text=str(percent) + ' %')
         self._text_item.props.color = color.LABEL_TEXT.get_int()
         self._text_item.props.font_desc = font.DEFAULT.get_pango_desc()
@@ -35,6 +35,7 @@ class ClipboardMenu(Menu):
     
     def __init__(self, name, percent, preview, activity):
         Menu.__init__(self, name)
+        self.props.border = 0
 
         if percent < 100:        
             self._progress_bar = ClipboardProgressBar(percent)

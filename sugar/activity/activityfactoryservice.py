@@ -61,6 +61,7 @@ class ActivityFactoryService(dbus.service.Object):
     def create(self, handle):
         activity_handle = activityhandle.create_from_dict(handle)
         activity = self._constructor(activity_handle)
+        activity.present()
 
         self._activities.append(activity)
         activity.connect('destroy', self._activity_destroy_cb)

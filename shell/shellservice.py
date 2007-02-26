@@ -1,5 +1,7 @@
 import dbus
 
+from sugar.activity import bundleregistry
+
 _DBUS_SERVICE = "org.laptop.Shell"
 _DBUS_INTERFACE = "org.laptop.Shell"
 _DBUS_PATH = "/org/laptop/Shell"
@@ -15,5 +17,5 @@ class ShellService(dbus.service.Object):
         
     @dbus.service.method(_DBUS_INTERFACE, in_signature="s", out_signature="b")
     def add_bundle(self, bundle_path):
-        registry = self._shellModel.get_bundle_registry()
+        registry = bundleregistry.get_registry()
         return registry.add_bundle(bundle_path)
