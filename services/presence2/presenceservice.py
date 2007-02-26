@@ -80,6 +80,7 @@ class PresenceService(dbus.service.Object):
         pass
 
     def _contact_online(self, tp, handle, key):
+        new_buddy = False
         buddy = self._buddies.get(key)
 
         if not buddy:
@@ -89,21 +90,30 @@ class PresenceService(dbus.service.Object):
             buddy.set_key(key)
             print "create buddy"
             self._buddies[key] = buddy
+            new_buddy = True
 
         buddies = self._handles[tp]
         buddies[handle] = buddy
 
-        self.BuddyAppeared(buddy.object_path())
+        # store the handle of the buddy for this CM
+        buddy.handles[tp] = handle
+
+        if new_buddy:
+            self.BuddyAppeared(buddy.object_path())
         
     def _contact_offline(self, tp, handle):
         buddy = self._handles[tp].pop(handle)
         key = buddy.get_key()
 
-        # TODO: check if we don't see this buddy using the other CM
-        self._buddies.pop(key)
-        print "remove buddy"
+        # the handle of the buddy for this CM is not valid anymore
+        buddy.handles.pop(tp)
 
-        self.BuddyDisappeared(buddy.object_path())
+        if not buddy.handles:
+            # we remove the last handle of the buddy, so we don't see
+            # it anymore.
+            self._buddies.pop(key)
+            print "remove buddy"
+            self.BuddyDisappeared(buddy.object_path())
 
     def _get_next_object_id(self):
         """Increment and return the object ID counter."""

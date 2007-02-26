@@ -39,7 +39,7 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
         'button-activated': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([int]))
     }
     
-    def __init__(self):
+    def __init__(self, text=''):
         hippo.CanvasBox.__init__(self, orientation=hippo.ORIENTATION_HORIZONTAL)
         self.props.yalign = hippo.ALIGNMENT_CENTER
 
@@ -51,6 +51,7 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
 
         self._entry = self.create_entry()
         self._entry.props.has_frame = False
+        self._entry.props.text = text
         self._update_colors(focused=False)
         self._entry.modify_text(gtk.STATE_SELECTED,
                                 color.BLACK.get_gdk_color())
