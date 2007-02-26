@@ -34,8 +34,7 @@ class RoundBox(hippo.CanvasBox, hippo.CanvasItem):
         self._radius = units.points_to_pixels(7)
         
         self.props.orientation = hippo.ORIENTATION_HORIZONTAL
-        self.props.border_top = self._BORDER_DEFAULT
-        self.props.border_bottom = self._BORDER_DEFAULT
+        self.props.border = self._BORDER_DEFAULT
         self.props.border_left = self._radius
         self.props.border_right = self._radius
         self.props.border_color = color.BLACK.get_int()
@@ -61,6 +60,8 @@ class RoundBox(hippo.CanvasBox, hippo.CanvasItem):
         hippo.cairo_set_source_rgba32(cr, self.props.background_color)
         cr.fill_preserve();
 
-        hippo.cairo_set_source_rgba32(cr, self.props.border_color)
-        cr.set_line_width(self._BORDER_DEFAULT)
-        cr.stroke()
+        # TODO: we should be more consistent here with the border properties.
+        if self.props.border_color:
+            hippo.cairo_set_source_rgba32(cr, self.props.border_color)
+            cr.set_line_width(self.props.border_top)
+            cr.stroke()

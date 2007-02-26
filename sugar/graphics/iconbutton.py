@@ -20,10 +20,9 @@ import sys
 import gobject
 import hippo
 
-from canvasicon import CanvasIcon
+from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import units
 from sugar.graphics import color
-from sugar import profile
             
 STANDARD_SIZE = 0
 SMALL_SIZE    = 1
