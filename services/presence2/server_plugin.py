@@ -57,9 +57,19 @@ class ServerPlugin(gobject.GObject):
         self._conn = self._init_connection()
 
     def _get_account_info(self):
-        account_info = {'server': 'olpc.collabora.co.uk'}
-
+        account_info = {}
+                        
         pubkey = profile.get_pubkey()
+
+        server = profile.get_server()
+        if not server:
+            account_info['server'] = 'olpc.collabora.co.uk'
+        else:
+            account_info['server'] = server
+
+        registered = profile.get_server_registered()
+        account_info['register'] = not registered
+
         khash = util.printable_hash(util._sha_data(pubkey))
         account_info['account'] = "%s@%s" % (khash, account_info['server'])
 
@@ -88,7 +98,6 @@ class ServerPlugin(gobject.GObject):
         conn = self._find_existing_connection()
         if not conn:
             acct = self._account.copy()
-            acct['register'] = True
 
             # Create a new connection
             print acct
@@ -117,6 +126,10 @@ class ServerPlugin(gobject.GObject):
         return channel
 
     def _connected_cb(self):
+        if self._account['register']:
+            # we successfully register this account
+            profile.set_server_registered()
+
         # the group of contacts who may receive your presence
         publish = self._request_list_channel('publish')
         publish_handles, local_pending, remote_pending = publish[CHANNEL_INTERFACE_GROUP].GetAllMembers()

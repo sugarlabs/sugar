@@ -28,6 +28,8 @@ class _Profile(object):
         self.color = None
         self.pubkey = None
         self.privkey_hash = None
+        self.server = None
+        self.server_registered = False
         self._load()
 
     def update(self):
@@ -43,6 +45,12 @@ class _Profile(object):
 
         if cp.has_option('Buddy', 'Color'):
             self.color = XoColor(cp.get('Buddy', 'Color'))
+
+        if cp.has_option('Server', 'Server'):
+            self.server = cp.get('Server', 'Server')
+
+        if cp.has_option('Server', 'Registered'):
+            self.server_registered = cp.get('Server', 'Registered')
 
         del cp
 
@@ -109,6 +117,25 @@ def get_pubkey():
 
 def get_private_key_hash():
     return _profile.privkey_hash
+
+def get_server():
+    return _profile.server
+
+def get_server_registered():
+    return _profile.server_registered
+
+def set_server_registered():
+    _profile.server_registered = True
+
+    cp = ConfigParser()
+
+    config_path = os.path.join(env.get_profile_path(), 'config')
+    cp.read([config_path])
+
+    if not cp.has_section('Server'):
+        cp.add_section('Server')
+    cp.set('Server', 'Registered', True)
+    cp.write(open(config_path, 'w'))
 
 def update():
     _profile.update()
