@@ -20,6 +20,7 @@ from gettext import gettext as _
 import hippo
 
 from sugar.graphics.menu import Menu, MenuItem
+from sugar.graphics import color
 from sugar.graphics.iconbutton import IconButton
 import sugar
 
@@ -79,19 +80,27 @@ class ZoomBox(hippo.CanvasBox):
         self._popup_context = popup_context
         self._activity_icon = None
 
-        icon = IconButton(icon_name='theme:stock-zoom-mesh')
+        icon = IconButton(icon_name='theme:stock-zoom-mesh',
+                          stroke_color=color.BLACK,
+                          fill_color=color.WHITE)
         icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_MESH)
         self.append(icon)
 
-        icon = IconButton(icon_name='theme:stock-zoom-friends')
+        icon = IconButton(icon_name='theme:stock-zoom-friends',
+                          stroke_color=color.BLACK,
+                          fill_color=color.WHITE)
         icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_FRIENDS)
         self.append(icon)
 
-        icon = IconButton(icon_name='theme:stock-zoom-home')
+        icon = IconButton(icon_name='theme:stock-zoom-home',
+                          stroke_color=color.BLACK,
+                          fill_color=color.WHITE)
         icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_HOME)
         self.append(icon)
 
-        icon = IconButton(icon_name='theme:stock-zoom-activity')
+        icon = IconButton(icon_name='theme:stock-zoom-activity',
+                          stroke_color=color.BLACK,
+                          fill_color=color.WHITE)
         icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_ACTIVITY)
         self.append(icon)
 
