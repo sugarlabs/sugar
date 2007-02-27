@@ -43,8 +43,10 @@ class Button(hippo.CanvasBox, hippo.CanvasItem):
         self._icon = None
 
         self._round_box = RoundBox()
-        self._round_box.props.border_color = 0
+        self._round_box.props.border_color = color.BLACK.get_int()
         self._round_box.props.background_color = color.BLACK.get_int()
+        self._round_box.props.padding_top = units.points_to_pixels(1)
+        self._round_box.props.padding_bottom = units.points_to_pixels(1)
         
         self._text_box = hippo.CanvasText()
         self._text_box.props.font_desc = font.DEFAULT.get_pango_desc()
