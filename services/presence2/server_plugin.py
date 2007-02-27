@@ -187,9 +187,6 @@ class ServerPlugin(gobject.GObject):
         #        window.show_all()
 
     def _status_changed_cb(self, state, reason):
-        gobject.idle_add(self._status_changed_cb2, state, reason)
-
-    def _status_changed_cb2(self, state, reason):
         if state == CONNECTION_STATUS_CONNECTING:
             print 'connecting: %r' % reason
         elif state == CONNECTION_STATUS_CONNECTED:
