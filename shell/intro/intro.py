@@ -235,12 +235,14 @@ class IntroBox(hippo.CanvasBox, hippo.CanvasItem):
 
         cp = ConfigParser()
         section = 'Buddy'
-        cp.add_section(section)
+        if not cp.has_section(section):
+            cp.add_section(section)
         cp.set(section, 'NickName', name)
         cp.set(section, 'Color', color.to_string())
 
         secion = 'Server'
-        cp.add_section(section)
+        if not cp.has_section(section):
+            cp.add_section(section)
         cp.set(section, 'Server', 'olpc.collabora.co.uk')
         cp.set(Section, 'Registered', 'False')
 
