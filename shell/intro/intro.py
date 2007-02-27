@@ -185,6 +185,8 @@ class ColorBox(hippo.CanvasBox, hippo.CanvasItem):
         self._cp.connect('color', self._new_color_cb)
         self.append(self._cp)
 
+        self._color = self._cp.get_color()
+
     def _new_color_cb(self, widget, color):
         self._color = color
 
@@ -193,6 +195,11 @@ class ColorBox(hippo.CanvasBox, hippo.CanvasItem):
 
 class IntroBox(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarIntroBox'
+
+    __gsignals__ = {
+        'ok': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+              ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT]))
+    }
 
     def __init__(self, **kwargs):
         hippo.CanvasBox.__init__(self, **kwargs)
@@ -222,10 +229,34 @@ class IntroBox(hippo.CanvasBox, hippo.CanvasItem):
         color = self._color_box.get_color()
 
         if not pixbuf or not name or not color:
+            print "not one of pixbuf(%r), name(%r), or color(%r)"
             return
 
-        self._create_profile(pixbuf, name, color)
-        gtk.main_quit()
+        self.emit('ok', pixbuf, name, color)
+
+
+class IntroWindow(gtk.Window):
+    def __init__(self):
+        gtk.Window.__init__(self)
+        self.set_default_size(gtk.gdk.screen_width(),
+                              gtk.gdk.screen_height())
+        self.realize()
+        self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
+
+        self._canvas = hippo.Canvas()
+        self._intro_box = IntroBox(background_color=0x000000ff,
+                                   yalign=hippo.ALIGNMENT_START,
+                                   padding_top=units.grid_to_pixels(2),
+                                   padding_left=units.grid_to_pixels(3),
+                                   padding_right=units.grid_to_pixels(3))
+        self._intro_box.connect('ok', self._ok_cb)
+        self._canvas.set_root(self._intro_box)
+        self.add(self._canvas)
+        self._canvas.show()
+
+    def _ok_cb(self, widget, pixbuf, name, color):
+        self.hide()
+        gobject.idle_add(self._create_profile, pixbuf, name, color)
 
     def _create_profile(self, pixbuf, name, color):
         # Save the buddy icon
@@ -244,7 +275,7 @@ class IntroBox(hippo.CanvasBox, hippo.CanvasItem):
         if not cp.has_section(section):
             cp.add_section(section)
         cp.set(section, 'Server', 'olpc.collabora.co.uk')
-        cp.set(Section, 'Registered', 'False')
+        cp.set(section, 'Registered', 'False')
 
         config_path = os.path.join(env.get_profile_path(), 'config')
         f = open(config_path, 'w')
@@ -259,24 +290,8 @@ class IntroBox(hippo.CanvasBox, hippo.CanvasItem):
         if s != 0:
             logging.error("Could not generate key pair: %d" % s)
 
-
-class IntroWindow(gtk.Window):
-    def __init__(self):
-        gtk.Window.__init__(self)
-        self.set_default_size(gtk.gdk.screen_width(),
-                              gtk.gdk.screen_height())
-        self.realize()
-        self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
-
-        self._canvas = hippo.Canvas()
-        self._intro_box = IntroBox(background_color=0x000000ff,
-                                   yalign=hippo.ALIGNMENT_START,
-                                   padding_top=units.grid_to_pixels(2),
-                                   padding_left=units.grid_to_pixels(3),
-                                   padding_right=units.grid_to_pixels(3))
-        self._canvas.set_root(self._intro_box)
-        self.add(self._canvas)
-        self._canvas.show()
+        gtk.main_quit()
+        return False
 
 
 if __name__ == "__main__":
