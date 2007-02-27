@@ -185,6 +185,8 @@ class ColorBox(hippo.CanvasBox, hippo.CanvasItem):
         self._cp.connect('color', self._new_color_cb)
         self.append(self._cp)
 
+        self._color = self._cp.get_color()
+
     def _new_color_cb(self, widget, color):
         self._color = color
 
@@ -193,6 +195,11 @@ class ColorBox(hippo.CanvasBox, hippo.CanvasItem):
 
 class IntroBox(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarIntroBox'
+
+    __gsignals__ = {
+        'ok': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+              ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT]))
+    }
 
     def __init__(self, **kwargs):
         hippo.CanvasBox.__init__(self, **kwargs)
@@ -222,40 +229,10 @@ class IntroBox(hippo.CanvasBox, hippo.CanvasItem):
         color = self._color_box.get_color()
 
         if not pixbuf or not name or not color:
+            print "not one of pixbuf(%r), name(%r), or color(%r)"
             return
 
-        self._create_profile(pixbuf, name, color)
-        gtk.main_quit()
-
-    def _create_profile(self, pixbuf, name, color):
-        # Save the buddy icon
-        icon_path = os.path.join(env.get_profile_path(), "buddy-icon.jpg")
-        scaled = pixbuf.scale_simple(200, 200, gtk.gdk.INTERP_BILINEAR)
-        pixbuf.save(icon_path, "jpeg", {"quality":"85"})
-
-        cp = ConfigParser()
-        section = 'Buddy'
-        cp.add_section(section)
-        cp.set(section, 'NickName', name)
-        cp.set(section, 'Color', color.to_string())
-
-        secion = 'Server'
-        cp.add_section(section)
-        cp.set(section, 'Server', 'olpc.collabora.co.uk')
-        cp.set(Section, 'Registered', 'False')
-
-        config_path = os.path.join(env.get_profile_path(), 'config')
-        f = open(config_path, 'w')
-        cp.write(f)
-        f.close()
-
-        # Generate keypair
-        import commands
-        keypath = os.path.join(env.get_profile_path(), "owner.key")
-        cmd = "ssh-keygen -q -t dsa -f %s -C '' -N ''" % keypath
-        (s, o) = commands.getstatusoutput(cmd)
-        if s != 0:
-            logging.error("Could not generate key pair: %d" % s)
+        self.emit('ok', pixbuf, name, color)
 
 
 class IntroWindow(gtk.Window):
@@ -272,9 +249,49 @@ class IntroWindow(gtk.Window):
                                    padding_top=units.grid_to_pixels(2),
                                    padding_left=units.grid_to_pixels(3),
                                    padding_right=units.grid_to_pixels(3))
+        self._intro_box.connect('ok', self._ok_cb)
         self._canvas.set_root(self._intro_box)
         self.add(self._canvas)
         self._canvas.show()
+
+    def _ok_cb(self, widget, pixbuf, name, color):
+        self.hide()
+        gobject.idle_add(self._create_profile, pixbuf, name, color)
+
+    def _create_profile(self, pixbuf, name, color):
+        # Save the buddy icon
+        icon_path = os.path.join(env.get_profile_path(), "buddy-icon.jpg")
+        scaled = pixbuf.scale_simple(200, 200, gtk.gdk.INTERP_BILINEAR)
+        pixbuf.save(icon_path, "jpeg", {"quality":"85"})
+
+        cp = ConfigParser()
+        section = 'Buddy'
+        if not cp.has_section(section):
+            cp.add_section(section)
+        cp.set(section, 'NickName', name)
+        cp.set(section, 'Color', color.to_string())
+
+        secion = 'Server'
+        if not cp.has_section(section):
+            cp.add_section(section)
+        cp.set(section, 'Server', 'olpc.collabora.co.uk')
+        cp.set(section, 'Registered', 'False')
+
+        config_path = os.path.join(env.get_profile_path(), 'config')
+        f = open(config_path, 'w')
+        cp.write(f)
+        f.close()
+
+        # Generate keypair
+        import commands
+        keypath = os.path.join(env.get_profile_path(), "owner.key")
+        cmd = "ssh-keygen -q -t dsa -f %s -C '' -N ''" % keypath
+        (s, o) = commands.getstatusoutput(cmd)
+        if s != 0:
+            logging.error("Could not generate key pair: %d" % s)
+
+        gtk.main_quit()
+        return False
 
 
 if __name__ == "__main__":

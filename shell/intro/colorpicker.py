@@ -117,18 +117,18 @@ class ColorPicker(hippo.CanvasBox, hippo.CanvasItem):
                             stroke_color=color.HTMLColor(self._fg_hex),
                             fill_color=color.HTMLColor(self._bg_hex))
         self._set_random_colors()
-        self._emit_color()
         self._xo.connect('activated', self._xo_activated_cb)
         self.append(self._xo)
 
     def _xo_activated_cb(self, item):
         self._set_random_colors()
-        self._emit_color()
-
-    def _emit_color(self):
         xo_color = XoColor('%s,%s' % (self._xo.props.stroke_color.get_html(), 
                                         self._xo.props.fill_color.get_html()))
         self.emit('color', xo_color)
+
+    def get_color(self):
+        return XoColor('%s,%s' % (self._xo.props.stroke_color.get_html(), 
+                                  self._xo.props.fill_color.get_html()))
 
     def _update_xo_hex(self, fg=None, bg=None):
         """set the colors of the XO man"""

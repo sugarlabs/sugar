@@ -99,4 +99,4 @@ def create_with_uri(service_name, uri):
     """Create a new activity and pass the uri as handle."""
     activity_handle = ActivityHandle(_find_activity_id())
     activity_handle.uri = uri
-    return ActivityCreationHandler(service_name, handle)
+    return ActivityCreationHandler(service_name, activity_handle)

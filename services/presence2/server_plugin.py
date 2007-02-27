@@ -183,9 +183,6 @@ class ServerPlugin(gobject.GObject):
         self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('ActivitiesChanged', self._activities_changed_cb)
 
     def _status_changed_cb(self, state, reason):
-        gobject.idle_add(self._status_changed_cb2, state, reason)
-
-    def _status_changed_cb2(self, state, reason):
         if state == CONNECTION_STATUS_CONNECTING:
             print 'connecting: %r' % reason
         elif state == CONNECTION_STATUS_CONNECTED:
