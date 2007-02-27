@@ -175,6 +175,8 @@ class ServerPlugin(gobject.GObject):
 
         self._conn[CONN_INTERFACE_AVATARS].connect_to_signal('AvatarUpdated', self._avatar_updated_cb)
 
+        # hack
+        self._conn._valid_interfaces.add(CONN_INTERFACE_BUDDY_INFO)
         if CONN_INTERFACE_BUDDY_INFO not in self._conn.get_valid_interfaces():
             print 'OLPC information not available'
             self.disconnect()

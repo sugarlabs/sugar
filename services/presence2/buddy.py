@@ -49,7 +49,7 @@ class Buddy(dbus.service.Object):
         self.handles = {} # tp client -> handle
 
         self._icon = None
-        self._nick_name = None
+        self._name = None
         self._color = None
         self._key = None
         self._current_activity = None
@@ -136,7 +136,7 @@ class Buddy(dbus.service.Object):
         return self._icon
         
     def get_name(self):
-        return self._nick_name
+        return self._name
 
     def get_color(self):
         return self._color
@@ -156,7 +156,7 @@ class Buddy(dbus.service.Object):
             self.IconChanged(icon)
 
     def _set_name(self, name):
-        self._nick_name = name
+        self._name = name
 
     def _set_color(self, color):
         self._color = color
@@ -184,7 +184,7 @@ class Owner(Buddy):
         Buddy.__init__(self, bus_name, object_id)
 
         self._ps = ps
-        self._nick_name = profile.get_nick_name()
+        self._name = profile.get_nick_name()
         self._color = profile.get_color().to_string()
         self._key = profile.get_pubkey()
 
