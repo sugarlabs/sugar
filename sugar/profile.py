@@ -50,7 +50,9 @@ class _Profile(object):
             self.server = cp.get('Server', 'Server')
 
         if cp.has_option('Server', 'Registered'):
-            self.server_registered = cp.get('Server', 'Registered')
+            registered = cp.get('Server', 'Registered')
+            if registered.lower() == "true":
+                self.server_registered = True
 
         del cp
 
