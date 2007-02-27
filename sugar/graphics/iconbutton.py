@@ -102,9 +102,7 @@ class IconButton(CanvasIcon):
     def prelight(self, enter):
         if enter:
             if self._active:
-                self.props.fill_color = color.BLACK
                 self.props.background_color = color.BLACK.get_int()
         else:
             if self._active:
-                self.props.fill_color = self._normal_fill_color
                 self.props.background_color = self._normal_background_color
