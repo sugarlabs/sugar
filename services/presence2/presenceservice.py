@@ -65,6 +65,8 @@ class PresenceService(dbus.service.Object):
         self._server_plugin.connect('contact-online', self._contact_online)
         self._server_plugin.connect('contact-offline', self._contact_offline)
         self._server_plugin.connect('avatar-updated', self._avatar_updated)
+        self._server_plugin.connect('properties-changed', self._properties_changed)
+        self._server_plugin.connect('activities-changed', self._activities_changed)
         self._server_plugin.start()
 
         # Set up the link local connection
@@ -122,6 +124,15 @@ class PresenceService(dbus.service.Object):
 
         if buddy:
             buddy.set_icon(avatar)
+
+    def _properties_changed(self, tp, handle, prop):
+        buddy = self._handles[tp].get(handle)
+
+        if buddy:
+            buddy.set_properties(prop)
+
+    def _activities_changed(self, tp, handle, prop):
+        pass
 
     @dbus.service.signal(_PRESENCE_INTERFACE, signature="o")
     def ActivityAppeared(self, activity):

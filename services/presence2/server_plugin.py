@@ -16,6 +16,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import gobject
+import dbus
 from sugar import profile
 from sugar import util
 from buddyiconcache import BuddyIconCache
@@ -31,6 +32,8 @@ from telepathy.constants import (
     CONNECTION_HANDLE_TYPE_LIST, CONNECTION_HANDLE_TYPE_CONTACT,
     CONNECTION_STATUS_REASON_AUTHENTICATION_FAILED)
 
+CONN_INTERFACE_BUDDY_INFO = 'org.laptop.Telepathy.BuddyInfo'
+
 _PROTOCOL = "jabber"
 
 class ServerPlugin(gobject.GObject):
@@ -42,6 +45,10 @@ class ServerPlugin(gobject.GObject):
         'status':          (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                              ([gobject.TYPE_INT, gobject.TYPE_INT])),
         'avatar-updated':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                             ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
+        'properties-changed':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                             ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
+        'activities-changed':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                              ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT]))
     }
     
@@ -167,24 +174,13 @@ class ServerPlugin(gobject.GObject):
         self._conn._valid_interfaces.add(CONN_INTERFACE_AVATARS)
 
         self._conn[CONN_INTERFACE_AVATARS].connect_to_signal('AvatarUpdated', self._avatar_updated_cb)
-        #if CONN_INTERFACE_AVATARS in self._conn:
-        #    tokens = self._conn[CONN_INTERFACE_AVATARS].RequestAvatarTokens(subscribe_handles)
 
-        #    #for handle, token in zip(subscribe_handles, tokens):
-        #    for handle in subscribe_handles:
-        #        avatar, mime_type = self._conn[CONN_INTERFACE_AVATARS].RequestAvatar(handle)
-        #        self.buddies[handle].avatar = ''.join(map(chr, avatar))
+        if CONN_INTERFACE_BUDDY_INFO not in self._conn.get_valid_interfaces():
+            print 'OLPC information not available'
+            self.disconnect()
 
-        #        import gtk
-        #        window = gtk.Window()
-        #        window.set_title(self.buddies[handle].alias)
-        #        loader = gtk.gdk.PixbufLoader()
-        #        loader.write(self.buddies[handle].avatar)
-        #        loader.close()
-        #        image = gtk.Image()
-        #        image.set_from_pixbuf(loader.get_pixbuf())
-        #        window.add(image)
-        #        window.show_all()
+        self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('PropertiesChanged', self._properties_changed_cb)
+        self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('ActivitiesChanged', self._activities_changed_cb)
 
     def _status_changed_cb(self, state, reason):
         gobject.idle_add(self._status_changed_cb2, state, reason)
@@ -262,3 +258,12 @@ class ServerPlugin(gobject.GObject):
             self._icon_cache.store_icon(jid, new_avatar_token, icon)
 
         self.emit("avatar-updated", handle, icon)
+
+    def set_properties(self, properties):
+        self._conn[CONN_INTERFACE_BUDDY_INFO].SetProperties(properties)
+
+    def _properties_changed_cb(self, contact, properties):
+        self.emit("properties-changed", contact, properties)
+
+    def _activities_changed_cb(self, contact, activities):
+        self.emit("activities-changed", contact, activities)
