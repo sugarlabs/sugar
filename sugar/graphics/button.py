@@ -47,7 +47,8 @@ class Button(hippo.CanvasBox, hippo.CanvasItem):
         self._round_box.props.background_color = color.BLACK.get_int()
         self._round_box.props.padding_top = units.points_to_pixels(1)
         self._round_box.props.padding_bottom = units.points_to_pixels(1)
-        
+        self._round_box.props.spacing = units.points_to_pixels(3)
+                
         self._text_box = hippo.CanvasText()
         self._text_box.props.font_desc = font.DEFAULT.get_pango_desc()
         self._text_box.props.color = color.BUTTON_NORMAL.get_int()
@@ -87,8 +88,8 @@ class Button(hippo.CanvasBox, hippo.CanvasItem):
                 else:
                     self._icon = CanvasIcon(icon_name=value,
                                             scale=units.SMALL_ICON_SCALE,
-                                            fill_color=color.WHITE,
-                                            stroke_color=color.BLACK)
+                                            fill_color=color.BLACK,
+                                            stroke_color=color.WHITE)
                     # Insert icon on the label's left
                     self._round_box.remove_all()
                     self._round_box.append(self._icon)
