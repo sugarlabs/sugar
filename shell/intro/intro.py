@@ -239,6 +239,11 @@ class IntroBox(hippo.CanvasBox, hippo.CanvasItem):
         cp.set(section, 'NickName', name)
         cp.set(section, 'Color', color.to_string())
 
+        secion = 'Server'
+        cp.add_section(section)
+        cp.set(section, 'Server', 'olpc.collabora.co.uk')
+        cp.set(Section, 'Registered', 'False')
+
         config_path = os.path.join(env.get_profile_path(), 'config')
         f = open(config_path, 'w')
         cp.write(f)
