@@ -68,7 +68,7 @@ class Timeline:
         else:
             self._current_frame = tag.start_frame
 
-        self._next_frame(tag, self._current_frame)
+        self._next_frame(tag, self._current_frame - tag.start_frame)
 
     def on_tag(self, name):
         tag = self._name_to_tag[name]

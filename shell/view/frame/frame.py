@@ -31,7 +31,7 @@ from model.ShellModel import ShellModel
 from sugar.graphics.timeline import Timeline
 from sugar.graphics import units
 
-_ANIMATION = False
+_ANIMATION = True
 
 class Frame:
     INACTIVE = 0
@@ -132,7 +132,7 @@ class Frame:
         x = (x2 - x1) * pos + x1
         y = (y2 - y1) * pos + y1
 
-        panel.move(x, y)
+        panel.move(int(x), int(y))
 
         # FIXME we should hide and show as necessary to free memory
         if not panel.props.visible:
@@ -172,7 +172,8 @@ class Frame:
 
     def _enter_notify(self):
         self._hover_frame = True
-        self._timeline.goto('slide_in', True) 
+        if not self._timeline.on_tag('slide_in'):
+            self._timeline.goto('slide_in', True) 
                
     def _leave_notify(self, panel):
         self._hover_frame = False
