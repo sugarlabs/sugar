@@ -22,4 +22,5 @@ sugar_PYTHON =			\
 	timeline.py         	\
 	toolbar.py		\
 	units.py		\
+	window.py		\
 	xocolor.py

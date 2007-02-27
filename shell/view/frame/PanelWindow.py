@@ -18,34 +18,27 @@ import gtk
 import hippo
 
 from sugar.graphics import units
+from sugar.graphics.window import Window
 
-class PanelWindow(gtk.Window):
+class PanelWindow(Window):
     def __init__(self, orientation):
-        gtk.Window.__init__(self)
+        Window.__init__(self)
         self._orientation = orientation
 
         self.set_decorated(False)
         self.connect('realize', self._realize_cb)
 
-        self._canvas = hippo.Canvas()
-
         self._bg = hippo.CanvasBox(background_color=0x414141ff,
                                    orientation=self._orientation)
+        self.set_root(self._bg)
 
         self._update_size()
-        self._canvas.set_root(self._bg)
-
-        self.add(self._canvas)
-        self._canvas.show()
-                
+    
         screen = gtk.gdk.screen_get_default()
         screen.connect('size-changed', self._size_changed_cb)
 
     def get_root(self):
         return self._bg
-
-    def get_canvas(self):
-        return self._canvas
         
     def _update_size(self):
         padding = units.grid_to_pixels(1)
