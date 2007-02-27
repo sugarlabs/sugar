@@ -19,15 +19,17 @@ import logging
 import os
 
 import gtk
+import hippo
 
 from sugar.presence import PresenceService
 from sugar.activity.activityservice import ActivityService
+from sugar.graphics.window import Window
 
-class Activity(gtk.Window):
+class Activity(Window, gtk.Container):
     """Base Activity class that all other Activities derive from."""
-
+    __gtype_name__ = 'SugarActivity'
     def __init__(self, handle):
-        gtk.Window.__init__(self)
+        Window.__init__(self)
 
         self.connect('destroy', self._destroy_cb)
 
@@ -46,6 +48,12 @@ class Activity(gtk.Window):
         self.window.set_group(group.window)
 
         self._bus = ActivityService(self)
+
+    # DEPRECATED It will be removed after 3-6-2007 stable image
+    def do_add(self, widget):
+        if self.child:
+            self.remove(self.child)
+        gtk.Window.do_add(self, widget)
 
     def get_service_name(self):
         """Gets the activity service name."""
