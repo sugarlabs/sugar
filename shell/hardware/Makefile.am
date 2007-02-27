@@ -8,3 +8,5 @@ sugar_PYTHON =				\
 
 dbusservicedir = $(sysconfdir)/dbus-1/system.d/
 dbusservice_DATA = NetworkManagerInfo.conf
+
+EXTRA_DIST = $(dbusservice_DATA)
