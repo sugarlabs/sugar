@@ -39,30 +39,32 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
         'button-activated': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([int]))
     }
     
-    def __init__(self, text=''):
-        hippo.CanvasBox.__init__(self, orientation=hippo.ORIENTATION_HORIZONTAL)
-        self.props.yalign = hippo.ALIGNMENT_CENTER
-
-        self._buttons = {}
-
-        self._round_box = RoundBox()
-        self._round_box.props.border_color = color.FRAME_BORDER.get_int()
-        self.append(self._round_box, hippo.PACK_EXPAND)
-
+    def __init__(self, **kwargs):
         self._entry = self.create_entry()
+        self._entry.props.text = ''
         self._entry.props.has_frame = False
-        self._entry.props.text = text
-        self._update_colors(focused=False)
         self._entry.modify_text(gtk.STATE_SELECTED,
                                 color.BLACK.get_gdk_color())
         self._entry.connect('focus-in-event', self._entry_focus_in_event_cb)
         self._entry.connect('focus-out-event', self._entry_focus_out_event_cb)
         self._entry.connect('activate', self._entry_activate_cb)
         self._entry.modify_font(font.DEFAULT.get_pango_desc())
-                
+
+        hippo.CanvasBox.__init__(self, **kwargs)
+        self.props.orientation = hippo.ORIENTATION_HORIZONTAL
+        self.props.yalign = hippo.ALIGNMENT_CENTER
+        
+        self._buttons = {}
+
+        self._round_box = RoundBox()
+        self._round_box.props.border_color = color.FRAME_BORDER.get_int()
+        self.append(self._round_box, hippo.PACK_EXPAND)
+
         self._canvas_widget = hippo.CanvasWidget()
         self._canvas_widget.props.widget = self._entry
         self._round_box.append(self._canvas_widget, hippo.PACK_EXPAND)
+
+        self._update_colors(focused=False)
 
     def create_entry(self):
         """
@@ -84,10 +86,16 @@ class Entry(hippo.CanvasBox, hippo.CanvasItem):
         self._buttons[button] = action_id
 
     def do_set_property(self, pspec, value):
-        self._entry.set_property(pspec.name, value)
+        if pspec.name in [param.name for param in self._entry.props]:
+            self._entry.set_property(pspec.name, value)
+        else:
+            hippo.CanvasBox.set_property(self, pspec.name, value)
 
     def do_get_property(self, pspec):
-        return self._entry.get_property(pspec.name)
+        if pspec.name in [param.name for param in self._entry.props]:
+            return self._entry.get_property(pspec.name)
+        else:
+            return hippo.CanvasBox.get_property(self, pspec.name)
 
     def _entry_focus_in_event_cb(self, widget, event):
         self._update_colors(focused=True)
