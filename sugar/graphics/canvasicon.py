@@ -14,7 +14,7 @@
 # License along with this library; if not, write to the
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
-
+import logging
 import re
 
 import gobject
@@ -137,7 +137,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         'icon-name'     : (str, None, None, None,
                            gobject.PARAM_READWRITE),
         'xo-color'      : (object, None, None,
-                           gobject.PARAM_READWRITE),
+                           gobject.PARAM_WRITABLE),
         'fill-color'    : (object, None, None,
                            gobject.PARAM_READWRITE),
         'stroke-color'  : (object, None, None,
@@ -148,6 +148,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         'cache'         : (bool, None, None, False,
                            gobject.PARAM_READWRITE),
         'tooltip'       : (str, None, None, None,
+                           gobject.PARAM_READWRITE),
+        'active'        : (bool, None, None, True,
                            gobject.PARAM_READWRITE)
     }
 
@@ -165,6 +167,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         self._popup = None
         self._hover_popup = False
         self._tooltip = False
+        self._active = True
         
         self._timeline = Timeline(self)
         self._timeline.add_tag('popup', 6, 6)
@@ -216,38 +219,47 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             self._cache = value
         elif pspec.name == 'tooltip':
             self._tooltip = value
+        elif pspec.name == 'active':
+            if self._active != value:
+                if not self._cache:
+                    self._clear_buffers()
+                self._active = value
+                self._handle = None
+                self.emit_paint_needed(0, 0, -1, -1)
+
+    def _choose_colors(self):
+        fill_color = None
+        stroke_color = None
+        if self._active:
+            if self._fill_color:
+                fill_color = self._fill_color.get_html()
+            if self._stroke_color:
+                stroke_color = self._stroke_color.get_html()
+        else:
+            stroke_color = color.ICON_STROKE_INACTIVE.get_html()
+            if self._fill_color:
+                fill_color = self._fill_color.get_html()
+        return [fill_color, stroke_color]
 
     def _get_handle(self):
         if not self._handle:
             cache = CanvasIcon._cache
 
-            fill_color = None
-            if self._fill_color:
-                fill_color = self._fill_color.get_html()
+            [fill_color, stroke_color] = self._choose_colors()
 
-            stroke_color = None
-            if self._stroke_color:
-                stroke_color = self._stroke_color.get_html()
-                
             self._handle = cache.get_handle(self._icon_name, fill_color,
                                             stroke_color)
         return self._handle
 
     def _get_current_buffer_key(self):
-        return (self._icon_name, self._fill_color, self._stroke_color, self._scale)
+        [fill_color, stroke_color] = self._choose_colors()
+        return (self._icon_name, fill_color, stroke_color, self._scale)
 
     def do_get_property(self, pspec):
         if pspec.name == 'scale':
             return self._scale
         elif pspec.name == 'icon-name':
             return self._icon_name
-        elif pspec.name == 'xo-color':
-            if self._stroke_color and self._fill_color:
-                xo_color = XoColor('%s,%s' % (self._stroke_color.get_html(), 
-                                              self._fill_color.get_html()))
-                return xo_color
-            else:
-                return None
         elif pspec.name == 'fill-color':
             return self._fill_color
         elif pspec.name == 'stroke-color':
@@ -256,6 +268,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             return self._cache
         elif pspec.name == 'tooltip':
             return self._tooltip
+        elif pspec.name == 'active':
+            return self._active
 
     def _get_icon_size(self):
         handle = self._get_handle()

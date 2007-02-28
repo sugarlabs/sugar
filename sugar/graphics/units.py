@@ -64,7 +64,7 @@ import gtk
 import _sugar
 
 _MAX_ZOOM_FACTOR = 1.5
-_ZOOM_CONSTANT   = 600.0
+_ZOOM_CONSTANT   = 800.0
 
 def _compute_zoom_factor():
     screen_width = gtk.gdk.screen_width()
@@ -73,7 +73,8 @@ def _compute_zoom_factor():
     else:
         return min(_MAX_ZOOM_FACTOR, screen_width / _ZOOM_CONSTANT)
 
-_dpi_factor  = float(_sugar.get_screen_dpi()) / 201.0
+_screen_dpi = float(_sugar.get_screen_dpi())
+_dpi_factor  = _screen_dpi / 201.0
 _zoom_factor = _compute_zoom_factor()
 
 STANDARD_ICON_SCALE = 1.0 * _dpi_factor * _zoom_factor
@@ -82,8 +83,11 @@ MEDIUM_ICON_SCALE   = 1.5 * _dpi_factor * _zoom_factor
 LARGE_ICON_SCALE    = 2.0 * _dpi_factor * _zoom_factor
 XLARGE_ICON_SCALE   = 3.0 * _dpi_factor * _zoom_factor
 
-def points_to_pixels(points):
+def points_to_device(points):
     return int(points * _zoom_factor)
+
+def points_to_pixels(points):
+    return int(points * _screen_dpi / 72.0 * _zoom_factor)
 
 def grid_to_pixels(units):
     return int(units * 75.0 * _dpi_factor * _zoom_factor)
