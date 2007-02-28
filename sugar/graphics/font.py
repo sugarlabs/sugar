@@ -3,8 +3,8 @@ import pango
 from sugar.graphics import units
 
 _system_fonts = {
-    'default'       : 'Bitstream Vera Sans %d' % units.points_to_pixels(9),
-    'default-bold'  : 'Bitstream Vera Sans bold %d' % units.points_to_pixels(9)
+    'default'       : 'Bitstream Vera Sans %dpx' % units.points_to_pixels(9),
+    'default-bold'  : 'Bitstream Vera Sans bold %dpx' % units.points_to_pixels(9)
 }
 
 class Font(object):
