@@ -33,26 +33,15 @@ class IconButton(CanvasIcon):
     __gproperties__ = {
         'size'      : (int, None, None,
                        0, sys.maxint, STANDARD_SIZE,
-                       gobject.PARAM_READWRITE),
-        'active'    : (bool, None, None, True,
                        gobject.PARAM_READWRITE)
     }
 
     def __init__(self, **kwargs):
-        self._active = True
-
         CanvasIcon.__init__(self, cache=True, **kwargs)
 
-        if self._active:
+        if not self.props.fill_color and not self.props.stroke_color:
             self.props.fill_color = color.BUTTON_BACKGROUND_NORMAL
             self.props.stroke_color = color.BUTTON_NORMAL
-            self.props.background_color = \
-                color.BUTTON_BACKGROUND_NORMAL.get_int()
-        else:
-            self.props.fill_color = color.BUTTON_BACKGROUND_INACTIVE
-            self.props.stroke_color = color.BUTTON_INACTIVE
-            self.props.background_color = \
-                color.BUTTON_BACKGROUND_INACTIVE.get_int()
 
         self._set_size(STANDARD_SIZE)
 
@@ -74,22 +63,12 @@ class IconButton(CanvasIcon):
     def do_set_property(self, pspec, value):
         if pspec.name == 'size':
             self._set_size(value)
-        elif pspec.name == 'active':
-            self._active = value
-            if self._active:
-                self.props.fill_color = color.BUTTON_BACKGROUND_NORMAL
-                self.props.stroke_color = color.BUTTON_NORMAL
-            else:
-                self.props.fill_color = color.BUTTON_BACKGROUND_INACTIVE
-                self.props.stroke_color = color.BUTTON_INACTIVE
         else:
             CanvasIcon.do_set_property(self, pspec, value)
 
     def do_get_property(self, pspec):
         if pspec.name == 'size':
             return self._size
-        elif pspec.name == 'active':
-            return self._active
         else:
             return CanvasIcon.do_get_property(self, pspec)
 
@@ -100,7 +79,7 @@ class IconButton(CanvasIcon):
 
     def prelight(self, enter):
         if enter:
-            if self._active:
+            if self.props.active:
                 self.props.background_color = color.BLACK.get_int()
         else:
             self.props.background_color = \
