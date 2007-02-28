@@ -160,9 +160,9 @@ class KeyHandler(object):
 
     def _key_released_cb(self, grabber, key):
         if key == '<shft><alt>F9':
-            self._frame.notify_key_release()
+            self._shell.get_frame().notify_key_release()
         elif key == '0x93':
-            self._frame.notify_key_release()
+            self._shell.get_frame().notify_key_release()
 
     def _toggle_console_visibility_cb(self):
         bus = dbus.SessionBus()
