@@ -19,8 +19,11 @@ import gobject
 import dbus
 from sugar import profile
 from sugar import util
+from sugar import env
+import gtk
 from buddyiconcache import BuddyIconCache
 import logging
+import os
 
 from telepathy.client import ConnectionManager, ManagerRegistry, Connection, Channel
 from telepathy.interfaces import (
@@ -35,6 +38,36 @@ from telepathy.constants import (
 CONN_INTERFACE_BUDDY_INFO = 'org.laptop.Telepathy.BuddyInfo'
 
 _PROTOCOL = "jabber"
+
+class InvalidBuddyError(Exception):
+    pass
+
+def _get_buddy_icon_at_size(maxw, maxh, maxsize):
+    icon = os.path.join(env.get_profile_path(), "buddy-icon.jpg")
+    pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(icon, maxw, maxh)
+
+    obj = {}
+    obj['data'] = ""
+    quality = 90
+    img_size = maxsize + 1
+    while img_size > maxsize:
+        del obj['data']
+        obj['data'] = ""
+        pixbuf.save_to_callback(_buddy_icon_save_cb, "jpeg", {"quality":"%d" % quality}, obj)
+        quality -= 10
+        img_size = len(obj['data'])
+    del pixbuf
+
+    if img_size > maxsize:
+        del obj['data']
+        raise RuntimeError("could not size image less than %d bytes" % maxsize)
+
+    return obj['data']
+        
+def _buddy_icon_save_cb(buf, obj):
+    obj['data'] += buf
+    return True
+
 
 class ServerPlugin(gobject.GObject):
     __gsignals__ = {
@@ -180,9 +213,31 @@ class ServerPlugin(gobject.GObject):
         if CONN_INTERFACE_BUDDY_INFO not in self._conn.get_valid_interfaces():
             print 'OLPC information not available'
             self.disconnect()
+            return
+
+        self._set_self_buddy_info()
 
         self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('PropertiesChanged', self._properties_changed_cb)
         self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('ActivitiesChanged', self._activities_changed_cb)
+
+    def _set_self_buddy_info(self):
+        # Set our OLPC buddy properties
+        props = {}
+        props['color'] = profile.get_color().to_string()
+        props['key'] = profile.get_pubkey()
+        props['nick'] = profile.get_nick_name()
+        self._conn[CONN_INTERFACE_BUDDY_INFO].SetProperties(props)
+
+        types, minw, minh, maxw, maxh, maxsize = self._conn[CONN_INTERFACE_AVATARS].GetAvatarRequirements()
+        if not "image/jpeg" in types:
+            print "server does not accept JPEG format avatars."
+            return
+
+        try:
+            img_data = _get_buddy_icon_at_size(min(maxw, 96), min(maxh, 96), maxsize)
+            self._conn[CONN_INTERFACE_AVATARS].SetAvatar(img_data, "image/jpeg")
+        except RuntimeError, e:
+            pass
 
     def _status_changed_cb(self, state, reason):
         if state == CONNECTION_STATUS_CONNECTING:
@@ -226,8 +281,20 @@ class ServerPlugin(gobject.GObject):
         jid = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
         print jid, "online"
 
-        # TODO: use the OLPC interface to get the key
-        key = handle
+        try:
+            props = self._conn[CONN_INTERFACE_BUDDY_INFO].GetProperties(handle)
+        except dbus.DBusException, e:
+            if str(e).startswith("org.freedesktop.DBus.Error.NoReply"):
+                raise InvalidBuddyError("couldn't get properties")
+
+        if not props.has_key('color'):
+            raise InvalidBuddyError("no color")
+        if not props.has_key('nick'):
+            raise InvalidBuddyError("no nick name")
+        if not props.has_key('key'):
+            raise InvalidBuddyError("no key")
+
+        key = props['key']
 
         self._online_contacts.add(handle)
         self.emit("contact-online", handle, key)
@@ -241,7 +308,10 @@ class ServerPlugin(gobject.GObject):
 
             for status, params in statuses.items():
                 if not online and status in ["available", "away", "brb", "busy", "dnd", "xa"]:
-                    self._contact_go_online(handle)
+                    try:
+                        self._contact_go_online(handle)
+                    except InvalidBuddyError, e:
+                        print "Not adding %s because %s" % (handle, e)
                 elif online and status in ["offline", "invisible"]:
                     self._contact_go_offline(handle)
 
@@ -257,9 +327,6 @@ class ServerPlugin(gobject.GObject):
             self._icon_cache.store_icon(jid, new_avatar_token, icon)
 
         self.emit("avatar-updated", handle, icon)
-
-    def set_properties(self, properties):
-        self._conn[CONN_INTERFACE_BUDDY_INFO].SetProperties(properties)
 
     def _properties_changed_cb(self, contact, properties):
         self.emit("properties-changed", contact, properties)
