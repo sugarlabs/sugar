@@ -78,8 +78,9 @@ class PresenceService(dbus.service.Object):
     def _server_status_cb(self, plugin, status, reason):
         pass
 
-    def _contact_online(self, tp, handle, key):
+    def _contact_online(self, tp, handle, props):
         new_buddy = False
+        key = props['key']
         buddy = self._buddies.get(key)
 
         if not buddy:
@@ -99,6 +100,7 @@ class PresenceService(dbus.service.Object):
 
         if new_buddy:
             self.BuddyAppeared(buddy.object_path())
+        buddy.set_properties(props)
         
     def _contact_offline(self, tp, handle):
         buddy = self._handles[tp].pop(handle)

@@ -161,7 +161,7 @@ class Buddy(dbus.service.Object):
     def _set_color(self, color):
         self._color = color
 
-    def set_properties(self, prop):
+    def set_properties(self, properties):
         if "name" in properties.keys():
             self._set_name(properties["name"])
         if "color" in properties.keys():
