@@ -194,10 +194,11 @@ class ServerPlugin(gobject.GObject):
         # hack
         self._conn._valid_interfaces.add(CONN_INTERFACE_ALIASING)
 
-        if CONN_INTERFACE_ALIASING in self._conn:
-            aliases = self._conn[CONN_INTERFACE_ALIASING].RequestAliases(subscribe_handles)
-        else:
-            aliases = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, subscribe_handles)
+        self._conn[CONN_INTERFACE_ALIASING].connect_to_signal('AliasesChanged', self._alias_changed_cb)
+        #if CONN_INTERFACE_ALIASING in self._conn:
+        #    aliases = self._conn[CONN_INTERFACE_ALIASING].RequestAliases(subscribe_handles)
+        #else:
+        #    aliases = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, subscribe_handles)
 
         #for handle, alias in zip(subscribe_handles, aliases):
         #    print alias
@@ -225,8 +226,11 @@ class ServerPlugin(gobject.GObject):
         props = {}
         props['color'] = profile.get_color().to_string()
         props['key'] = profile.get_pubkey()
-        props['nick'] = profile.get_nick_name()
         self._conn[CONN_INTERFACE_BUDDY_INFO].SetProperties(props)
+
+        name = profile.get_nick_name()
+        self_handle = self._conn[CONN_INTERFACE].GetSelfHandle()
+        self._conn[CONN_INTERFACE_ALIASING].SetAliases( {self_handle : name} )
 
         types, minw, minh, maxw, maxh, maxsize = self._conn[CONN_INTERFACE_AVATARS].GetAvatarRequirements()
         if not "image/jpeg" in types:
@@ -287,17 +291,17 @@ class ServerPlugin(gobject.GObject):
             if str(e).startswith("org.freedesktop.DBus.Error.NoReply"):
                 raise InvalidBuddyError("couldn't get properties")
 
+        name = self._conn[CONN_INTERFACE_ALIASING].RequestAliases([handle])[0]
+
         if not props.has_key('color'):
             raise InvalidBuddyError("no color")
-        if not props.has_key('nick'):
-            raise InvalidBuddyError("no nick name")
         if not props.has_key('key'):
             raise InvalidBuddyError("no key")
-
-        key = props['key']
+        if not name:
+            raise InvalidBuddyError("no name")
 
         self._online_contacts.add(handle)
-        self.emit("contact-online", handle, key)
+        self.emit("contact-online", handle, props)
 
     def _presence_update_cb(self, presence):
         for handle in presence:
@@ -327,6 +331,14 @@ class ServerPlugin(gobject.GObject):
             self._icon_cache.store_icon(jid, new_avatar_token, icon)
 
         self.emit("avatar-updated", handle, icon)
+
+    def _alias_changed_cb(self, aliases):
+        print "alias changed cb"
+        for handle, alias in aliases:
+            name = self._conn[CONN_INTERFACE_ALIASING].RequestAliases([handle])[0]
+            print "new alias", handle, alias, name
+            prop = {'name': name}
+            self._properties_changed_cb(handle, prop)
 
     def _properties_changed_cb(self, contact, properties):
         self.emit("properties-changed", contact, properties)
