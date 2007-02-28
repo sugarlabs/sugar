@@ -21,7 +21,9 @@ _system_colors = {
     'button-hover'                  : '#808080',
     'button-background-hover'       : '#000000',
     'button-inactive'               : '#808080',
-    'button-background-inactive'    : '#424242'
+    'button-background-inactive'    : '#424242',
+    'icon-stroke-inactive'          : '#757575',
+    'icon-fill-inactive'            : '#9D9FA1'
 }
 
 def _html_to_rgb(html_color):
@@ -100,3 +102,5 @@ BUTTON_HOVER                = SystemColor('button-hover')
 BUTTON_BACKGROUND_HOVER     = SystemColor('button-background-hover')
 BUTTON_INACTIVE             = SystemColor('button-inactive')
 BUTTON_BACKGROUND_INACTIVE  = SystemColor('button-background-inactive')
+ICON_FILL_INACTIVE          = SystemColor('icon-fill-inactive')
+ICON_STROKE_INACTIVE        = SystemColor('icon-stroke-inactive')
