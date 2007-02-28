@@ -148,14 +148,21 @@ class LiveVideoSlot(gtk.EventBox):
         gtk.EventBox.__init__(self)
 
         self.imagesink = None
+        self.playa = None
+        self._width = width
+        self._height = height
+
         self.unset_flags(gtk.DOUBLE_BUFFERED)
         self.connect('focus-in-event', self.focus_in)
         self.connect('focus-out-event', self.focus_out)
         self.connect("button-press-event", self._button_press_event_cb)
+        self.connect("expose-event", self._expose_event_cb)
 
-        self.playa = Glive(self, width, height)
-        self.playa.connect('new-picture', self._new_picture_cb)
-        self.playa.connect('sink', self._new_sink_cb)
+    def _expose_event_cb(self, widget, event):
+        if not self.playa:
+            self.playa = Glive(self, self._width, self._height)
+            self.playa.connect('new-picture', self._new_picture_cb)
+            self.playa.connect('sink', self._new_sink_cb)
 
     def _new_picture_cb(self, playa, pixbuf):
         self.emit('pixbuf', pixbuf)

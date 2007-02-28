@@ -32,8 +32,8 @@ from sugar.graphics import iconbutton
 
 import colorpicker
 
-_VIDEO_WIDTH = 320
-_VIDEO_HEIGHT = 240
+_VIDEO_WIDTH = 640
+_VIDEO_HEIGHT = 480
 
 
 class IntroImage(gtk.EventBox):
@@ -113,7 +113,7 @@ class VideoBox(hippo.CanvasBox, hippo.CanvasItem):
         self._video_widget = hippo.CanvasWidget()
         self._video_widget.props.widget = self._video
         self.append(self._video_widget)
-        self._video.play()
+        gobject.idle_add(self._video.play)
 
         self._img = IntroImage()
         self._img.set_size_request(_VIDEO_WIDTH, _VIDEO_HEIGHT)
@@ -207,15 +207,15 @@ class IntroBox(hippo.CanvasBox, hippo.CanvasItem):
 
         self._video_box = VideoBox(xalign=hippo.ALIGNMENT_CENTER,
                                    yalign=hippo.ALIGNMENT_START,
-                                   padding_bottom=units.grid_to_pixels(1))
+                                   padding_bottom=units.grid_to_pixels(0.5))
         self.append(self._video_box)
 
         self._entry_box = EntryBox(xalign=hippo.ALIGNMENT_CENTER,
-                                   padding_bottom=units.grid_to_pixels(1))
+                                   padding_bottom=units.grid_to_pixels(0.5))
         self.append(self._entry_box)
 
         self._color_box = ColorBox(xalign=hippo.ALIGNMENT_CENTER,
-                                   padding_bottom=units.grid_to_pixels(1))
+                                   padding_bottom=units.grid_to_pixels(0.5))
         self.append(self._color_box)
 
         self._ok = iconbutton.IconButton(icon_name="theme:stock-forward",
@@ -252,7 +252,7 @@ class IntroWindow(gtk.Window):
         self._intro_box.connect('ok', self._ok_cb)
         self._canvas.set_root(self._intro_box)
         self.add(self._canvas)
-        self._canvas.show()
+        self._canvas.show_all()
 
     def _ok_cb(self, widget, pixbuf, name, color):
         self.hide()
