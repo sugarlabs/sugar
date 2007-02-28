@@ -43,16 +43,17 @@ class IconButton(CanvasIcon):
 
         CanvasIcon.__init__(self, cache=True, **kwargs)
 
-        if not self.props.fill_color:
+        if self._active:
             self.props.fill_color = color.BUTTON_BACKGROUND_NORMAL
-        if not self.props.stroke_color:
             self.props.stroke_color = color.BUTTON_NORMAL
-        self.props.background_color = color.BUTTON_BACKGROUND_NORMAL.get_int()
+            self.props.background_color = \
+                color.BUTTON_BACKGROUND_NORMAL.get_int()
+        else:
+            self.props.fill_color = color.BUTTON_BACKGROUND_INACTIVE
+            self.props.stroke_color = color.BUTTON_INACTIVE
+            self.props.background_color = \
+                color.BUTTON_BACKGROUND_INACTIVE.get_int()
 
-        self._normal_fill_color = self.props.fill_color
-        self._normal_stroke_color = self.props.stroke_color
-        self._normal_background_color = self.props.background_color
-        
         self._set_size(STANDARD_SIZE)
 
         self.connect('button-press-event',
@@ -76,13 +77,11 @@ class IconButton(CanvasIcon):
         elif pspec.name == 'active':
             self._active = value
             if self._active:
-                self.props.fill_color = self._normal_fill_color
-                self.props.stroke_color = self._normal_stroke_color
-                self.props.background_color = self._normal_background_color
+                self.props.fill_color = color.BUTTON_BACKGROUND_NORMAL
+                self.props.stroke_color = color.BUTTON_NORMAL
             else:
                 self.props.fill_color = color.BUTTON_BACKGROUND_INACTIVE
                 self.props.stroke_color = color.BUTTON_INACTIVE
-                self.props.background_color = color.BUTTON_BACKGROUND_INACTIVE.get_int()
         else:
             CanvasIcon.do_set_property(self, pspec, value)
 
@@ -104,5 +103,5 @@ class IconButton(CanvasIcon):
             if self._active:
                 self.props.background_color = color.BLACK.get_int()
         else:
-            if self._active:
-                self.props.background_color = self._normal_background_color
+            self.props.background_color = \
+                color.BUTTON_BACKGROUND_NORMAL.get_int()

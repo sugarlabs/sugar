@@ -22,21 +22,18 @@ import gobject
 from sugar.graphics.spreadbox import SpreadBox
 from sugar.graphics.snowflakebox import SnowflakeBox
 from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics import color
+from sugar.graphics import canvasicon
 from model import accesspointmodel
 from hardware import hardwaremanager
 from view.BuddyIcon import BuddyIcon
+from view.pulsingicon import PulsingIcon
 
-_strength_to_icon = {
-    (0,   20) : 'stock-net-wireless-00',
-    (21,  40) : 'stock-net-wireless-21-40',
-    (41,  60) : 'stock-net-wireless-41-60',
-    (61,  80) : 'stock-net-wireless-61-80',
-    (81, 100) : 'stock-net-wireless-81-100'
-}
+_ICON_NAME = 'device-network-wireless'
 
-class AccessPointView(CanvasIcon):
+class AccessPointView(PulsingIcon):
     def __init__(self, model):
-        CanvasIcon.__init__(self)
+        PulsingIcon.__init__(self)
         self._model = model
 
         self.connect('activated', self._activate_cb)
@@ -44,6 +41,11 @@ class AccessPointView(CanvasIcon):
         model.connect('notify::strength', self._strength_changed_cb)
         model.connect('notify::name', self._name_changed_cb)
         model.connect('notify::state', self._state_changed_cb)
+
+        self.props.colors = [
+            [ None, None ],
+            [ color.ICON_FILL_INACTIVE, color.ICON_STROKE_INACTIVE ]
+        ]
 
         self._update_icon()
         self._update_name()
@@ -69,20 +71,22 @@ class AccessPointView(CanvasIcon):
         self.props.tooltip = self._model.props.name
 
     def _update_icon(self):
-        strength = self._model.props.strength
-        for interval in _strength_to_icon.keys():
-            if strength >= interval[0] and strength <= interval[1]:
-                stock_name = _strength_to_icon[interval]
-                self.props.icon_name = 'theme:' + stock_name
+        icon_name = canvasicon.get_icon_state(
+                    _ICON_NAME, self._model.props.strength)
+        if icon_name:
+            self.props.icon_name = icon_name
 
     def _update_state(self):
-        # FIXME Change icon colors once we have real icons
         if self._model.props.state == accesspointmodel.STATE_CONNECTING:
-            self.props.background_color = 0xFF0000FF
+            self.props.pulsing = True
         elif self._model.props.state == accesspointmodel.STATE_CONNECTED:
-            self.props.background_color = 0x00FF00FF
+            self.props.pulsing = False
+            self.props.fill_color = None
+            self.props.stroke_color = None
         elif self._model.props.state == accesspointmodel.STATE_NOTCONNECTED:
-            self.props.background_color = 0x00000000
+            self.props.pulsing = False
+            self.props.fill_color = color.ICON_FILL_INACTIVE
+            self.props.stroke_color = color.ICON_STROKE_INACTIVE
 
 class ActivityView(SnowflakeBox):
     def __init__(self, shell, menu_shell, model):

@@ -19,19 +19,71 @@
 
 #include <stdlib.h>
 #include <gdk/gdkx.h>
+#include <gdk/gdkscreen.h>
+#include <gtk/gtksettings.h>
 
 #include "sugar-utils.h"
+
+/* Ported from mozilla nsDeviceContextGTK.cpp */
+
+static gint
+get_gtk_settings_dpi(void)
+{
+    GtkSettings *settings = gtk_settings_get_default();
+    GParamSpec *spec;
+    gint dpi = 0;
+
+    spec = g_object_class_find_property(
+        G_OBJECT_GET_CLASS(G_OBJECT(settings)), "gtk-xft-dpi");
+
+    if (spec) {
+        g_object_get(G_OBJECT(settings),
+                     "gtk-xft-dpi", &dpi,
+                     NULL);
+    }
+
+    return (int)(dpi / 1024.0 + 0.5);
+}
+
+static gint
+get_xft_dpi(void)
+{
+    char *val = XGetDefault(GDK_DISPLAY(), "Xft", "dpi");
+    if (val) {
+        char *e;
+        double d = strtod(val, &e);
+
+        if (e != val)
+            return (int)(d + 0.5);
+    }
+
+    return 0;
+}
+
+static int
+get_dpi_from_physical_resolution(void)
+{
+    float screen_width_in;
+
+    screen_width_in = (float)(gdk_screen_width_mm()) / 25.4f;
+
+    return (int)((float)(gdk_screen_width()) / screen_width_in + 0.5);
+}
 
 gint
 sugar_get_screen_dpi(void)
 {
-    char *val = XGetDefault (GDK_DISPLAY(), "Xft", "dpi");
-    if (val) {
-        char *e;
-        double d = strtod(val, &e);
-        if (d > 0.0)
-            return (int)(d+0.5);
+    int dpi;
+
+    dpi = get_gtk_settings_dpi();
+
+    if (dpi == 0) {
+        dpi = get_xft_dpi();
     }
 
-    return 96;
+    if (dpi == 0) {
+        dpi = get_dpi_from_physical_resolution();
+    }
+
+    return dpi;
 }
