@@ -47,13 +47,6 @@ class ClipboardIcon(CanvasIcon):
             self.props.xo_color = XoColor("#000000,#424242")
         else:
             self.props.xo_color = XoColor("#000000,#FFFFFF")
-    
-    def _activity_create_success_cb(self, handler, activity):
-        activity.start(util.unique_id())
-        activity.execute("open_document", [self._object_id])
-
-    def _activity_create_error_cb(self, handler, err):
-        pass
 
     def _open_file(self):
         if self._percent < 100 or not self._activity:
@@ -61,10 +54,7 @@ class ClipboardIcon(CanvasIcon):
 
         logging.debug("_icon_activated_cb: " + self._object_id)
 
-        # Launch the activity to handle this item
-        handler = activityfactory.create(self._activity)
-        handler.connect('success', self._activity_create_success_cb)
-        handler.connect('error', self._activity_create_error_cb)
+        activityfactory.create_with_uri(self._activity, self._object_id)
 
     def _icon_activated_cb(self, icon):
         self._open_file()
