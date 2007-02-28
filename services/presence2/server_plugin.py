@@ -237,6 +237,8 @@ class ServerPlugin(gobject.GObject):
             print "server does not accept JPEG format avatars."
             return
 
+        # FIXME: check server avatar token and only upload if we know our
+        # buddy icon has changed
         try:
             img_data = _get_buddy_icon_at_size(min(maxw, 96), min(maxh, 96), maxsize)
             self._conn[CONN_INTERFACE_AVATARS].SetAvatar(img_data, "image/jpeg")
