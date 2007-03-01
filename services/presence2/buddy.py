@@ -32,11 +32,13 @@ class Buddy(dbus.service.Object):
     """Represents another person on the network and keeps track of the
     activities and resources they make available for sharing."""
 
-    def __init__(self, bus_name, object_id, handle=None):
+    def __init__(self, bus_name, object_id, key=None):
         if not bus_name:
             raise ValueError("DBus bus name must be valid")
         if not object_id or not isinstance(object_id, int):
             raise ValueError("object id must be a valid number")
+        if not key:
+            raise ValueError("key must be valid")
 
         self._bus_name = bus_name
         self._object_id = object_id
@@ -45,13 +47,12 @@ class Buddy(dbus.service.Object):
         dbus.service.Object.__init__(self, self._bus_name, self._object_path)
 
         self._activities = {}   # Activity ID -> Activity
-
         self.handles = {} # tp client -> handle
 
+        self._key = key
         self._icon = None
-        self._name = None
+        self._nick = None
         self._color = None
-        self._key = None
         self._current_activity = None
 
     # dbus signals
@@ -96,7 +97,7 @@ class Buddy(dbus.service.Object):
                         in_signature="", out_signature="a{sv}")
     def GetProperties(self):
         props = {}
-        props['name'] = self.get_name()
+        props['nick'] = self.get_nick()
         props['owner'] = self.is_owner()
         props['key'] = self.get_key()
         color = self.get_color()
@@ -135,8 +136,8 @@ class Buddy(dbus.service.Object):
         """Return the buddies icon, if any."""
         return self._icon
         
-    def get_name(self):
-        return self._name
+    def get_nick(self):
+        return self._nick
 
     def get_color(self):
         return self._color
@@ -155,15 +156,15 @@ class Buddy(dbus.service.Object):
             self._icon = icon
             self.IconChanged(icon)
 
-    def _set_name(self, name):
-        self._name = name
+    def _set_nick(self, nick):
+        self._nick = nick
 
     def _set_color(self, color):
         self._color = color
 
     def set_properties(self, properties):
-        if "name" in properties.keys():
-            self._set_name(properties["name"])
+        if "nick" in properties.keys():
+            self._set_nick(properties["nick"])
         if "color" in properties.keys():
             self._set_color(properties["color"])
         self.PropertyChanged(properties)
@@ -181,12 +182,12 @@ class Owner(Buddy):
     """Class representing the owner of the machine.  This is the client
     portion of the Owner, paired with the server portion in Owner.py."""
     def __init__(self, ps, bus_name, object_id):
-        Buddy.__init__(self, bus_name, object_id)
+        key = profile.get_pubkey()
+        Buddy.__init__(self, bus_name, object_id, key=key)
 
         self._ps = ps
         self._name = profile.get_nick_name()
         self._color = profile.get_color().to_string()
-        self._key = profile.get_pubkey()
 
     # dbus methods
     @dbus.service.method(_OWNER_INTERFACE,

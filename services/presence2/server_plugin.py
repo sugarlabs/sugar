@@ -91,7 +91,7 @@ class ServerPlugin(gobject.GObject):
         self._icon_cache = BuddyIconCache()
 
         self._gabble_mgr = registry.GetManager('gabble')
-        self._online_contacts = set() # handles of online contacts
+        self._online_contacts = {}  # handle -> jid
         self._account = self._get_account_info()
 
         self._conn = self._init_connection()
@@ -140,7 +140,6 @@ class ServerPlugin(gobject.GObject):
             acct = self._account.copy()
 
             # Create a new connection
-            print acct
             name, path = self._gabble_mgr[CONN_MGR_INTERFACE].RequestConnection(_PROTOCOL, acct)
             conn = Connection(name, path)
             del acct
@@ -150,7 +149,7 @@ class ServerPlugin(gobject.GObject):
         # hack
         conn._valid_interfaces.add(CONN_INTERFACE_PRESENCE)
         conn[CONN_INTERFACE_PRESENCE].connect_to_signal('PresenceUpdate',
-            self._presence_update_cb)        
+            self._presence_update_cb)
 
         return conn
 
@@ -185,29 +184,11 @@ class ServerPlugin(gobject.GObject):
 
         not_subscribed = list(set(publish_handles) - set(subscribe_handles))
         self_handle = self._conn[CONN_INTERFACE].GetSelfHandle()
-        self._online_contacts.add(self_handle)
+        self._online_contacts[self_handle] = self._account['account']
 
         for handle in not_subscribed:
             # request subscriptions from people subscribed to us if we're not subscribed to them
             subscribe[CHANNEL_INTERFACE_GROUP].AddMembers([self_handle], '')
-
-        # hack
-        self._conn._valid_interfaces.add(CONN_INTERFACE_ALIASING)
-
-        self._conn[CONN_INTERFACE_ALIASING].connect_to_signal('AliasesChanged', self._alias_changed_cb)
-        #if CONN_INTERFACE_ALIASING in self._conn:
-        #    aliases = self._conn[CONN_INTERFACE_ALIASING].RequestAliases(subscribe_handles)
-        #else:
-        #    aliases = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, subscribe_handles)
-
-        #for handle, alias in zip(subscribe_handles, aliases):
-        #    print alias
-        #    self.buddies[handle].alias = alias
-
-        # hack
-        self._conn._valid_interfaces.add(CONN_INTERFACE_AVATARS)
-
-        self._conn[CONN_INTERFACE_AVATARS].connect_to_signal('AvatarUpdated', self._avatar_updated_cb)
 
         # hack
         self._conn._valid_interfaces.add(CONN_INTERFACE_BUDDY_INFO)
@@ -216,10 +197,21 @@ class ServerPlugin(gobject.GObject):
             self.disconnect()
             return
 
-        self._set_self_buddy_info()
-
         self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('PropertiesChanged', self._properties_changed_cb)
         self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('ActivitiesChanged', self._activities_changed_cb)
+
+        # hack
+        self._conn._valid_interfaces.add(CONN_INTERFACE_AVATARS)
+        self._conn[CONN_INTERFACE_AVATARS].connect_to_signal('AvatarUpdated', self._avatar_updated_cb)
+
+        # hack
+        self._conn._valid_interfaces.add(CONN_INTERFACE_ALIASING)
+        self._conn[CONN_INTERFACE_ALIASING].connect_to_signal('AliasesChanged', self._alias_changed_cb)
+
+        self._set_self_buddy_info()
+
+        # Request presence for everyone on the channel
+        self._conn[CONN_INTERFACE_PRESENCE].GetPresence(subscribe_handles)
 
     def _set_self_buddy_info(self):
         # Set our OLPC buddy properties
@@ -276,56 +268,47 @@ class ServerPlugin(gobject.GObject):
     def disconnect(self):
         self._conn[CONN_INTERFACE].Disconnect()
 
-    def _contact_go_offline(self, handle):
-        jid = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
-        print jid, "offline"
-
-        self._online_contacts.remove(handle)
+    def _contact_offline(self, handle):
         self.emit("contact-offline", handle)
+        del self._online_contacts[handle]
 
-    def _contact_go_online(self, handle):
-        jid = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
-        print jid, "online"
-
+    def _contact_online(self, handle):
         try:
             props = self._conn[CONN_INTERFACE_BUDDY_INFO].GetProperties(handle)
         except dbus.DBusException, e:
             if str(e).startswith("org.freedesktop.DBus.Error.NoReply"):
                 raise InvalidBuddyError("couldn't get properties")
-
-        name = self._conn[CONN_INTERFACE_ALIASING].RequestAliases([handle])[0]
-
         if not props.has_key('color'):
             raise InvalidBuddyError("no color")
         if not props.has_key('key'):
             raise InvalidBuddyError("no key")
-        if not name:
-            raise InvalidBuddyError("no name")
 
-        self._online_contacts.add(handle)
+        jid = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
+        nick = self._conn[CONN_INTERFACE_ALIASING].RequestAliases([handle])[0]
+        if not nick:
+            raise InvalidBuddyError("no name")
+        props['nick'] = nick
+
+        self._online_contacts[handle] = jid
         self.emit("contact-online", handle, props)
 
     def _presence_update_cb(self, presence):
         for handle in presence:
             timestamp, statuses = presence[handle]
-
-            name = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
             online = handle in self._online_contacts
-
             for status, params in statuses.items():
+                print "Handle %s now online=%s with status %s" % (handle, online, status)
                 if not online and status in ["available", "away", "brb", "busy", "dnd", "xa"]:
                     try:
-                        self._contact_go_online(handle)
+                        self._contact_online(handle)
                     except InvalidBuddyError, e:
                         print "Not adding %s because %s" % (handle, e)
                 elif online and status in ["offline", "invisible"]:
-                    self._contact_go_offline(handle)
+                    self._contact_offline(handle)
 
     def _avatar_updated_cb(self, handle, new_avatar_token):
-        jid = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
-
+        jid = self._online_contacts[handle]
         icon = self._icon_cache.get_icon(jid, new_avatar_token)
-
         if not icon:
             # cache miss
             avatar, mime_type = self._conn[CONN_INTERFACE_AVATARS].RequestAvatar(handle)
@@ -335,11 +318,10 @@ class ServerPlugin(gobject.GObject):
         self.emit("avatar-updated", handle, icon)
 
     def _alias_changed_cb(self, aliases):
-        print "alias changed cb"
         for handle, alias in aliases:
-            name = self._conn[CONN_INTERFACE_ALIASING].RequestAliases([handle])[0]
-            print "new alias", handle, alias, name
-            prop = {'name': name}
+            nick = self._conn[CONN_INTERFACE_ALIASING].RequestAliases([handle])[0]
+            prop = {'nick': nick}
+            print "Buddy %s alias changed to %s" % (handle, nick)
             self._properties_changed_cb(handle, prop)
 
     def _properties_changed_cb(self, contact, properties):

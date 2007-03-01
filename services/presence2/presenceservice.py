@@ -82,13 +82,11 @@ class PresenceService(dbus.service.Object):
         new_buddy = False
         key = props['key']
         buddy = self._buddies.get(key)
-
         if not buddy:
             # we don't know yet this buddy
             objid = self._get_next_object_id()
-            buddy = Buddy(self._bus_name, objid, handle=handle)
-            buddy.set_key(key)
-            print "create buddy", key
+            buddy = Buddy(self._bus_name, objid, key=key)
+            print "New buddy %s" % key
             self._buddies[key] = buddy
             new_buddy = True
 
@@ -101,6 +99,7 @@ class PresenceService(dbus.service.Object):
         if new_buddy:
             self.BuddyAppeared(buddy.object_path())
         buddy.set_properties(props)
+        print "New buddy properties %s" % props
         
     def _contact_offline(self, tp, handle):
         buddy = self._handles[tp].pop(handle)
@@ -108,13 +107,10 @@ class PresenceService(dbus.service.Object):
 
         # the handle of the buddy for this CM is not valid anymore
         buddy.handles.pop(tp)
-
         if not buddy.handles:
-            # we remove the last handle of the buddy, so we don't see
-            # it anymore.
-            self._buddies.pop(key)
-            print "remove buddy"
             self.BuddyDisappeared(buddy.object_path())
+            print "Buddy %s gone" % buddy.get_key()
+            self._buddies.pop(key)
 
     def _get_next_object_id(self):
         """Increment and return the object ID counter."""
@@ -123,15 +119,15 @@ class PresenceService(dbus.service.Object):
 
     def _avatar_updated(self, tp, handle, avatar):
         buddy = self._handles[tp].get(handle)
-
-        if buddy:
+        if buddy and not buddy.is_owner():
+            print "Buddy %s icon updated" % buddy.get_key()
             buddy.set_icon(avatar)
 
     def _properties_changed(self, tp, handle, prop):
         buddy = self._handles[tp].get(handle)
-
         if buddy:
             buddy.set_properties(prop)
+            print "Buddy %s properties updated" % buddy.get_key()
 
     def _activities_changed(self, tp, handle, prop):
         pass
