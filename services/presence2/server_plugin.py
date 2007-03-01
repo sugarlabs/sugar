@@ -206,7 +206,9 @@ class ServerPlugin(gobject.GObject):
 
         # hack
         self._conn._valid_interfaces.add(CONN_INTERFACE_ALIASING)
-        self._conn[CONN_INTERFACE_ALIASING].connect_to_signal('AliasesChanged', self._alias_changed_cb)
+        # FIXME: we need to use PEP to store the nick. We aren't notified when
+        # vcards are changed
+        #self._conn[CONN_INTERFACE_ALIASING].connect_to_signal('AliasesChanged', self._alias_changed_cb)
 
         self._set_self_buddy_info()
 
