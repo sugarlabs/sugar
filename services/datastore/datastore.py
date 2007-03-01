@@ -373,7 +373,7 @@ class DataStore(object):
         prop_dict = {}
         for row in rows:
             conv_key = row['key'].replace("''", "'")
-            prop_dict[conv_key] = sqlite3.decode(row['value'])
+            prop_dict[conv_key] = row['value']
         prop_dict['uid'] = str(uid)
         del curs
         return prop_dict
