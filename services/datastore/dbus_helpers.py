@@ -18,11 +18,12 @@
 # Mostly taken from dbus-python's service.py
 
 import dbus
+import _dbus_bindings
 from dbus import service
 import inspect
 
-def method(dbus_interface, in_signature=None, out_signature=None, async_callbacks=None, sender_keyword=None, dbus_message_keyword=None):
-    dbus._util._validate_interface_or_name(dbus_interface)
+def method(dbus_interface, in_signature=None, out_signature=None, async_callbacks=None, sender_keyword=None, utf8_strings=False, byte_arrays=False, object_path_keyword=None):
+    _dbus_bindings.validate_interface_name(dbus_interface)
 
     def decorator(func):
         args = inspect.getargspec(func)[0]
@@ -39,18 +40,17 @@ def method(dbus_interface, in_signature=None, out_signature=None, async_callback
         if sender_keyword:
             args.remove(sender_keyword)
 
-        if dbus_message_keyword:
-            args.remove(dbus_message_keyword)
+        if object_path_keyword:
+            args.remove(object_path_keyword)
 
         if in_signature:
-            in_sig = tuple(dbus.dbus_bindings.Signature(in_signature))
+            in_sig = tuple(_dbus_bindings.Signature(in_signature))
 
             if len(in_sig) > len(args):
                 raise ValueError, 'input signature is longer than the number of arguments taken'
             elif len(in_sig) < len(args):
                 raise ValueError, 'input signature is shorter than the number of arguments taken'
 
-        func._dbus_message_keyword = dbus_message_keyword
         func._dbus_is_method = True
         func._dbus_async_callbacks = async_callbacks
         func._dbus_interface = dbus_interface
@@ -58,27 +58,28 @@ def method(dbus_interface, in_signature=None, out_signature=None, async_callback
         func._dbus_out_signature = out_signature
         func._dbus_sender_keyword = sender_keyword
         func._dbus_args = args
+        func._dbus_get_args_options = {'byte_arrays': byte_arrays,
+                                       'utf8_strings': utf8_strings}
+        func._dbus_object_path_keyword = object_path_keyword
         return func
 
     return decorator
 
+
 def fallback_signal(dbus_interface, signature=None, ignore_args=None):
-    dbus._util._validate_interface_or_name(dbus_interface)
+    _dbus_bindings.validate_interface_name(dbus_interface)
     def decorator(func):
         def emit_signal(self, *args, **keywords):
             obj_path = func(self, *args, **keywords)
-            message = dbus.dbus_bindings.Signal(obj_path, dbus_interface, func.__name__)
-            iter = message.get_iter(True)
+            message = _dbus_bindings.SignalMessage(obj_path, dbus_interface, func.__name__)
 
             if emit_signal._dbus_signature:
-                signature = tuple(dbus.dbus_bindings.Signature(emit_signal._dbus_signature))
-                for (arg, sig) in zip(args, signature):
-                    iter.append_strict(arg, sig)
+                message.append(signature=emit_signal._dbus_signature,
+                               *args)
             else:
-                for arg in args:
-                    iter.append(arg)
+                message.append(*args)
 
-            self._connection.send(message)
+            self._connection.send_message(message)
 
         temp_args = inspect.getargspec(func)[0]
         temp_args.pop(0)
@@ -89,7 +90,7 @@ def fallback_signal(dbus_interface, signature=None, ignore_args=None):
                 args.append(arg)
 
         if signature:
-            sig = tuple(dbus.dbus_bindings.Signature(signature))
+            sig = tuple(_dbus_bindings.Signature(signature))
 
             if len(sig) > len(args):
                 raise ValueError, 'signal signature is longer than the number of arguments provided'
@@ -112,14 +113,28 @@ class FallbackObject(dbus.service.Object):
     Just inherit from Object and provide a list of methods to share
     across the Bus
     """
-    def __init__(self, bus_name, fallback_object_path):
+
+    def __init__(self, conn=None, fallback_object_path=None, bus_name=None):
+        if fallback_object_path is None:
+            raise TypeError('The fallback_object_path argument is required')
+
+        if isinstance(conn, dbus.service.BusName):
+            # someone's using the old API; don't gratuitously break them
+            bus_name = conn
+            conn = bus_name.get_bus()
+        elif conn is None:
+            # someone's using the old API but naming arguments, probably
+            if bus_name is None:
+                raise TypeError('Either conn or bus_name is required')
+            conn = bus_name.get_bus()
+
         self._object_path = fallback_object_path
-        self._name = bus_name 
-        self._bus = bus_name.get_bus()
+        self._name = bus_name
+        self._bus = conn
             
         self._connection = self._bus.get_connection()
 
-        self._connection.register_fallback(fallback_object_path, self._unregister_cb, self._message_cb)
+        self._connection._register_object_path(fallback_object_path, self._message_cb, self._unregister_cb, fallback=True)
 
     def _message_cb(self, connection, message):
         try:
@@ -129,12 +144,11 @@ class FallbackObject(dbus.service.Object):
             (candidate_method, parent_method) = dbus.service._method_lookup(self, method_name, interface_name)
 
             # set up method call parameters
-            args = message.get_args_list()
+            args = message.get_args_list(**parent_method._dbus_get_args_options)
             keywords = {}
 
-            # iterate signature into list of complete types
-            if parent_method._dbus_out_signature:
-                signature = tuple(dbus.dbus_bindings.Signature(parent_method._dbus_out_signature))
+            if parent_method._dbus_out_signature is not None:
+                signature = _dbus_bindings.Signature(parent_method._dbus_out_signature)
             else:
                 signature = None
 
@@ -148,8 +162,8 @@ class FallbackObject(dbus.service.Object):
             if parent_method._dbus_sender_keyword:
                 keywords[parent_method._dbus_sender_keyword] = message.get_sender()
 
-            if parent_method._dbus_message_keyword:
-                keywords[parent_method._dbus_message_keyword] = message
+            if parent_method._dbus_object_path_keyword:
+                keywords[parent_method._dbus_object_path_keyword] = message.get_object_path()
 
             # call method
             retval = candidate_method(self, *args, **keywords)
@@ -161,17 +175,18 @@ class FallbackObject(dbus.service.Object):
             # otherwise we send the return values in a reply. if we have a
             # signature, use it to turn the return value into a tuple as
             # appropriate
-            if parent_method._dbus_out_signature:
+            if signature is not None:
+                signature_tuple = tuple(signature)
                 # if we have zero or one return values we want make a tuple
                 # for the _method_reply_return function, otherwise we need
                 # to check we're passing it a sequence
-                if len(signature) == 0:
+                if len(signature_tuple) == 0:
                     if retval == None:
                         retval = ()
                     else:
                         raise TypeError('%s has an empty output signature but did not return None' %
                             method_name)
-                elif len(signature) == 1:
+                elif len(signature_tuple) == 1:
                     retval = (retval,)
                 else:
                     if operator.isSequenceType(retval):
@@ -183,7 +198,6 @@ class FallbackObject(dbus.service.Object):
 
             # no signature, so just turn the return into a tuple and send it as normal
             else:
-                signature = None
                 if retval == None:
                     retval = ()
                 else:
@@ -194,11 +208,10 @@ class FallbackObject(dbus.service.Object):
             # send error reply
             dbus.service._method_reply_error(connection, message, exception)
 
-    @method('org.freedesktop.DBus.Introspectable', in_signature='', out_signature='s', dbus_message_keyword="dbus_message")
-    def Introspect(self, dbus_message=None):
+    @method('org.freedesktop.DBus.Introspectable', in_signature='', out_signature='s', object_path_keyword="dbus_object_path")
+    def Introspect(self, dbus_object_path=None):
         reflection_data = '<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">\n'
-        op = dbus_message.get_path()
-        reflection_data += '<node name="%s">\n' % (op)
+        reflection_data += '<node name="%s">\n' % (dbus_object_path)
 
         interfaces = self._dbus_class_table[self.__class__.__module__ + '.' + self.__class__.__name__]
         for (name, funcs) in interfaces.iteritems():
@@ -217,6 +230,6 @@ class FallbackObject(dbus.service.Object):
         return reflection_data
 
     def __repr__(self):
-        return '<dbus_helpers.FallbackObject %s on %r at %#x>' % (self._fallback_object_path, self._name, id(self))
+        return '<dbus.service.FallbackObject %s on %r at %#x>' % (self._object_path, self._name, id(self))
     __str__ = __repr__
 

@@ -18,7 +18,7 @@
 import os
 import dbus, dbus.glib, gobject
 import logging
-import sqlite
+import sqlite3
 import dbus_helpers
 import string
 
@@ -131,36 +131,36 @@ class ObjectDBusHelper(dbus_helpers.FallbackObject):
         dbus_helpers.FallbackObject.__init__(self, bus_name, _DS_OBJECT_OBJECT_PATH)
 
     @dbus_helpers.method(_DS_OBJECT_DBUS_INTERFACE,
-                         in_signature="", out_signature="ay", dbus_message_keyword="dbus_message")
-    def get_data(self, dbus_message=None):
-        if not dbus_message:
-            raise RuntimeError("Need the dbus message.")
-        uid = _get_uid_from_op(dbus_message.get_path())
+                         in_signature="", out_signature="ay", object_path_keyword="dbus_object_path")
+    def get_data(self, dbus_object_path=None):
+        if not dbus_object_path:
+            raise RuntimeError("Need the dbus object path.")
+        uid = _get_uid_from_op(dbus_object_path)
         return self._parent.get_data(uid)
 
     @dbus_helpers.method(_DS_OBJECT_DBUS_INTERFACE,
-                         in_signature="ay", out_signature="i", dbus_message_keyword="dbus_message")
-    def set_data(self, data, dbus_message=None):
-        if not dbus_message:
-            raise RuntimeError("Need the dbus message.")
-        uid = _get_uid_from_op(dbus_message.get_path())
+                         in_signature="ay", out_signature="i", object_path_keyword="dbus_object_path")
+    def set_data(self, data, dbus_object_path=None):
+        if not dbus_object_path:
+            raise RuntimeError("Need the dbus object path.")
+        uid = _get_uid_from_op(dbus_object_path)
         self._parent.set_data(uid, data)
         return 0
 
     @dbus_helpers.method(_DS_OBJECT_DBUS_INTERFACE,
-                         in_signature="as", out_signature="a{sv}", dbus_message_keyword="dbus_message")
-    def get_properties(self, keys, dbus_message=None):
-        if not dbus_message:
-            raise RuntimeError("Need the dbus message.")
-        uid = _get_uid_from_op(dbus_message.get_path())
+                         in_signature="as", out_signature="a{sv}", object_path_keyword="dbus_object_path")
+    def get_properties(self, keys, dbus_object_path=None):
+        if not dbus_object_path:
+            raise RuntimeError("Need the dbus object path.")
+        uid = _get_uid_from_op(dbus_object_path)
         return self._parent.get_properties(uid, keys)
 
     @dbus_helpers.method(_DS_OBJECT_DBUS_INTERFACE,
-                         in_signature="a{sv}", out_signature="i", dbus_message_keyword="dbus_message")
-    def set_properties(self, prop_dict, dbus_message=None):
-        if not dbus_message:
-            raise RuntimeError("Need the dbus message.")
-        uid = _get_uid_from_op(dbus_message.get_path())
+                         in_signature="a{sv}", out_signature="i", object_path_keyword="dbus_object_path")
+    def set_properties(self, prop_dict, dbus_object_path=None):
+        if not dbus_object_path:
+            raise RuntimeError("Need the dbus object path.")
+        uid = _get_uid_from_op(dbus_object_path)
         self._parent.set_properties(uid, prop_dict)
         return 0
 
@@ -188,7 +188,7 @@ class DataStore(object):
         if not os.path.exists(os.path.dirname(self._dbfile)):
             os.makedirs(os.path.dirname(self._dbfile), 0755)
 
-        self._dbcx = sqlite.connect(self._dbfile, encoding="utf-8", timeout=3)
+        self._dbcx = sqlite3.connect(self._dbfile, timeout=3)
         try:
             self._ensure_table()
         except StandardError, e:
@@ -244,7 +244,7 @@ class DataStore(object):
 
     def create(self, data, prop_dict=None, activity_id=None):
         curs = self._dbcx.cursor()
-        data = sqlite.encode(_get_data_as_string(data))
+        data = sqlite3.encode(_get_data_as_string(data))
         if not activity_id:
             curs.execute("INSERT INTO objects (uid, data) VALUES (NULL, '%s');" % data)
         else:
@@ -256,7 +256,7 @@ class DataStore(object):
         uid = last_row[0]
         for (key, value) in prop_dict.items():
             safe_key = key.replace("'", "''")
-            value = sqlite.encode(_get_data_as_string(value))
+            value = sqlite3.encode(_get_data_as_string(value))
             curs.execute("INSERT INTO properties (objid, key, value) VALUES (%d, '%s', '%s');" % (uid, safe_key, value))
         self._dbcx.commit()
         del curs
@@ -279,7 +279,7 @@ class DataStore(object):
             value = _get_data_as_string(value)
             if not len(value):
                 raise ValueError("Property values must not be blank.")
-            substr = "(key='%s' AND value='%s')" % (safe_key, sqlite.encode(value))
+            substr = "(key='%s' AND value='%s')" % (safe_key, sqlite3.encode(value))
             if len(subquery) > 0:
                 subquery += " OR "
             subquery += substr
@@ -305,7 +305,7 @@ class DataStore(object):
         if len(res) <= 0:
             del curs
             raise NotFoundError("Object %d was not found." % uid)
-        data = sqlite.encode(_get_data_as_string(data))
+        data = sqlite3.encode(_get_data_as_string(data))
         curs.execute("UPDATE objects SET data='%s' WHERE uid=%d;" % (data, uid))
         self._dbcx.commit()
         del curs
@@ -332,7 +332,7 @@ class DataStore(object):
                 # delete the property
                 curs.execute("DELETE FROM properties WHERE (objid=%d AND key='%s');" % (uid, safe_key))
             else:
-                enc_value = sqlite.encode(value)
+                enc_value = sqlite3.encode(value)
                 curs.execute("SELECT objid FROM properties WHERE (objid=%d AND key='%s');" % (uid, safe_key))
                 if len(curs.fetchall()) > 0:
                     curs.execute("UPDATE properties SET value='%s' WHERE (objid=%d AND key='%s');" % (enc_value, uid, safe_key))
@@ -371,7 +371,7 @@ class DataStore(object):
         prop_dict = {}
         for row in rows:
             conv_key = row['key'].replace("''", "'")
-            prop_dict[conv_key] = sqlite.decode(row['value'])
+            prop_dict[conv_key] = sqlite3.decode(row['value'])
         prop_dict['uid'] = str(uid)
         del curs
         return prop_dict
