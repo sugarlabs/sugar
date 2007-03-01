@@ -136,7 +136,7 @@ class ObjectDBusHelper(dbus_helpers.FallbackObject):
         if not dbus_object_path:
             raise RuntimeError("Need the dbus object path.")
         uid = _get_uid_from_op(dbus_object_path)
-        return self._parent.get_data(uid)
+        return dbus.ByteArray(self._parent.get_data(uid))
 
     @dbus_helpers.method(_DS_OBJECT_DBUS_INTERFACE,
                          in_signature="ay", out_signature="i", object_path_keyword="dbus_object_path")
