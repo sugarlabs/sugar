@@ -194,6 +194,7 @@ class DataStore(object):
         except StandardError, e:
             logging.info("Could not access the data store.  Reason: '%s'.  Exiting..." % e)
             os._exit(1)
+        self._dbcx.row_factory = sqlite3.Row
 
     def __del__(self):
         self._dbcx.close()
