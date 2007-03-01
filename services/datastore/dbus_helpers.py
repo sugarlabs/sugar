@@ -163,7 +163,7 @@ class FallbackObject(dbus.service.Object):
                 keywords[parent_method._dbus_sender_keyword] = message.get_sender()
 
             if parent_method._dbus_object_path_keyword:
-                keywords[parent_method._dbus_object_path_keyword] = message.get_object_path()
+                keywords[parent_method._dbus_object_path_keyword] = message.get_path()
 
             # call method
             retval = candidate_method(self, *args, **keywords)
