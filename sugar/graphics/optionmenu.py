@@ -74,7 +74,6 @@ class OptionMenu(hippo.CanvasBox, hippo.CanvasItem):
             xalign=hippo.ALIGNMENT_START)
         self._round_box.append(self._canvas_text, hippo.PACK_EXPAND)
 
-        # TODO: Substitute for the right icon.
         arrow = iconbutton.IconButton(icon_name='theme:control-popup-arrow')
         arrow.props.size = iconbutton.SMALL_SIZE
         arrow.props.scale = units.STANDARD_ICON_SCALE
