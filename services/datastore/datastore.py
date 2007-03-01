@@ -223,7 +223,7 @@ class DataStore(object):
 
     def get(self, uid):
         curs = self._dbcx.cursor()
-        curs.execute('SELECT uid FROM objects WHERE uid=%d;' % uid)
+        curs.execute('SELECT uid FROM objects WHERE uid=?;', (uid,))
         res = curs.fetchall()
         self._dbcx.commit()
         del curs
@@ -233,7 +233,7 @@ class DataStore(object):
 
     def get_activity_object(self, activity_id):
         curs = self._dbcx.cursor()
-        curs.execute("SELECT uid FROM objects WHERE activity_id='%s';" % activity_id)
+        curs.execute("SELECT uid FROM objects WHERE activity_id=?;", (activity_id,))
         res = curs.fetchall()
         self._dbcx.commit()
         if len(res) > 0:
@@ -244,11 +244,13 @@ class DataStore(object):
 
     def create(self, data, prop_dict=None, activity_id=None):
         curs = self._dbcx.cursor()
-        data = sqlite3.encode(_get_data_as_string(data))
+        data = _get_data_as_string(data)
+        logging.debug(type(data))
+        logging.debug(data)
         if not activity_id:
-            curs.execute("INSERT INTO objects (uid, data) VALUES (NULL, '%s');" % data)
+            curs.execute("INSERT INTO objects (uid, data) VALUES (NULL, ?);", (data,))
         else:
-            curs.execute("INSERT INTO objects (uid, data, activity_id) VALUES (NULL, '%s', '%s');" % (data, activity_id))
+            curs.execute("INSERT INTO objects (uid, data, activity_id) VALUES (NULL, ?, ?);", (data, activity_id))
         curs.execute("SELECT last_insert_rowid();")
         rows = curs.fetchall()
         self._dbcx.commit()
@@ -256,16 +258,16 @@ class DataStore(object):
         uid = last_row[0]
         for (key, value) in prop_dict.items():
             safe_key = key.replace("'", "''")
-            value = sqlite3.encode(_get_data_as_string(value))
-            curs.execute("INSERT INTO properties (objid, key, value) VALUES (%d, '%s', '%s');" % (uid, safe_key, value))
+            value = _get_data_as_string(value)
+            curs.execute("INSERT INTO properties (objid, key, value) VALUES (?, ?, ?);", (uid, safe_key, value))
         self._dbcx.commit()
         del curs
         return uid
 
     def delete(self, uid):
         curs = self._dbcx.cursor()
-        curs.execute("DELETE FROM objects WHERE (uid=%d);" % uid)
-        curs.execute("DELETE FROM properties WHERE (objid=%d);" % uid)
+        curs.execute("DELETE FROM objects WHERE (uid=?);", (uid,))
+        curs.execute("DELETE FROM properties WHERE (objid=?);", (uid,))
         self._dbcx.commit()
         del curs
         self._dbus_obj_helper.Updated(False, {}, True, uid=uid)
@@ -279,7 +281,7 @@ class DataStore(object):
             value = _get_data_as_string(value)
             if not len(value):
                 raise ValueError("Property values must not be blank.")
-            substr = "(key='%s' AND value='%s')" % (safe_key, sqlite3.encode(value))
+            substr = "(key='%s' AND value='%s')" % (safe_key, value)
             if len(subquery) > 0:
                 subquery += " OR "
             subquery += substr
@@ -299,14 +301,14 @@ class DataStore(object):
 
     def set_data(self, uid, data):
         curs = self._dbcx.cursor()
-        curs.execute('SELECT uid FROM objects WHERE uid=%d;' % uid)
+        curs.execute('SELECT uid FROM objects WHERE uid=?;', (uid,))
         res = curs.fetchall()
         self._dbcx.commit()
         if len(res) <= 0:
             del curs
             raise NotFoundError("Object %d was not found." % uid)
-        data = sqlite3.encode(_get_data_as_string(data))
-        curs.execute("UPDATE objects SET data='%s' WHERE uid=%d;" % (data, uid))
+        data = _get_data_as_string(data)
+        curs.execute("UPDATE objects SET data=? WHERE uid=?;", (data, uid))
         self._dbcx.commit()
         del curs
         self._dbus_obj_helper.Updated(True, {}, False, uid=uid)
@@ -314,7 +316,7 @@ class DataStore(object):
     _reserved_keys = ["uid", "objid", "data", "created", "modified"]
     def set_properties(self, uid, prop_dict):
         curs = self._dbcx.cursor()
-        curs.execute('SELECT uid FROM objects WHERE uid=%d;' % uid)
+        curs.execute('SELECT uid FROM objects WHERE uid=?;', (uid,))
         res = curs.fetchall()
         self._dbcx.commit()
         if len(res) <= 0:
@@ -330,21 +332,20 @@ class DataStore(object):
             value = _get_data_as_string(value)
             if not len(value):
                 # delete the property
-                curs.execute("DELETE FROM properties WHERE (objid=%d AND key='%s');" % (uid, safe_key))
+                curs.execute("DELETE FROM properties WHERE (objid=? AND key=?);", (uid, safe_key))
             else:
-                enc_value = sqlite3.encode(value)
-                curs.execute("SELECT objid FROM properties WHERE (objid=%d AND key='%s');" % (uid, safe_key))
+                curs.execute("SELECT objid FROM properties WHERE (objid=? AND key=?);", (uid, safe_key))
                 if len(curs.fetchall()) > 0:
-                    curs.execute("UPDATE properties SET value='%s' WHERE (objid=%d AND key='%s');" % (enc_value, uid, safe_key))
+                    curs.execute("UPDATE properties SET value=? WHERE (objid=? AND key=?);", (value, uid, safe_key))
                 else:
-                    curs.execute("INSERT INTO properties (objid, key, value) VALUES (%d, '%s', '%s');" % (uid, safe_key, enc_value))
+                    curs.execute("INSERT INTO properties (objid, key, value) VALUES (?, ?, ?);", (uid, safe_key, value))
         self._dbcx.commit()
         del curs
         self._dbus_obj_helper.Updated(False, {}, False, uid=uid)
 
     def get_data(self, uid):
         curs = self._dbcx.cursor()
-        curs.execute('SELECT uid, data FROM objects WHERE uid=%d;' % uid)
+        curs.execute('SELECT uid, data FROM objects WHERE uid=?;', (uid,))
         res = curs.fetchall()
         self._dbcx.commit()
         if len(res) <= 0:
