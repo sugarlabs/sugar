@@ -63,8 +63,8 @@ import gtk
 
 import _sugar
 
-_MAX_ZOOM_FACTOR = 1.5
-_ZOOM_CONSTANT   = 800.0
+_MAX_ZOOM_FACTOR = 2.0
+_ZOOM_CONSTANT   = 650.0
 
 def _compute_zoom_factor():
     screen_width = gtk.gdk.screen_width()
