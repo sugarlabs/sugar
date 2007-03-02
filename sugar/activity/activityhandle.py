@@ -21,6 +21,7 @@ class ActivityHandle(object):
     def __init__(self, activity_id):
         self.activity_id = activity_id
         self.pservice_id = None
+        self.object_id = None
         self.uri = None
 
     def get_presence_service(self):
@@ -34,6 +35,8 @@ class ActivityHandle(object):
         result = { 'activity_id' : self.activity_id }
         if self.pservice_id:
             result['pservice_id'] = self.pservice_id
+        if self.object_id:
+            result['object_id'] = self.object_id
         if self.uri:
             result['uri'] = self.uri
 
@@ -43,6 +46,8 @@ def create_from_dict(handle_dict):
     result = ActivityHandle(handle_dict['activity_id'])
     if handle_dict.has_key('pservice_id'):
         result.pservice_id = handle_dict['pservice_id']
+    if handle_dict.has_key('object_id'):
+        result.uri = handle_dict['object_id']
     if handle_dict.has_key('uri'):
         result.uri = handle_dict['uri']
 
