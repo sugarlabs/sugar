@@ -14,8 +14,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import logging
-
 import gtk
 import gobject
 import wnck
@@ -81,16 +79,13 @@ class EventFrame(gobject.GObject):
 
     def _enter_notify_cb(self, widget, event):
         self._notify_enter(event.x, event.y)
-        logging.debug('EventFrame._enter_notify_cb ' + str(self._hover))
 
     def _motion_notify_cb(self, widget, event):
         self._notify_enter(event.x, event.y)
-        logging.debug('EventFrame._motion_notify_cb ' + str(self._hover))
         
     def _drag_motion_cb(self, widget, drag_context, x, y, timestamp):
         drag_context.drag_status(0, timestamp);
         self._notify_enter(x, y)
-        logging.debug('EventFrame._drag_motion_cb ' + str(self._hover))
         return True
 
     def _notify_enter(self, x, y):
@@ -111,11 +106,9 @@ class EventFrame(gobject.GObject):
 
     def _leave_notify_cb(self, widget, event):
         self._notify_leave()
-        logging.debug('EventFrame._leave_notify_cb ' + str(self._hover))
         
     def _drag_leave_cb(self, widget, drag_context, timestamp):
         self._notify_leave()
-        logging.debug('EventFrame._drag_leave_cb ' + str(self._hover))
         return True
         
     def _notify_leave(self):

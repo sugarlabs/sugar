@@ -14,7 +14,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import logging
 import gtk
 import gobject
 import hippo
@@ -151,16 +150,13 @@ class Frame:
 
     def _enter_notify_cb(self, window, event):
         self._enter_notify()
-        logging.debug('Frame._enter_notify_cb ' + str(self._mode))
         
     def _drag_motion_cb(self, window, context, x, y, time):
         self._enter_notify()
-        logging.debug('Frame._drag_motion_cb ' + str(self._mode))
         return True
         
     def _drag_leave_cb(self, window, drag_context, timestamp):
         self._leave_notify(window)
-        logging.debug('Frame._drag_leave_cb ' + str(self._mode))
             
     def _leave_notify_cb(self, window, event):
         # FIXME for some reason every click cause also a leave-notify
@@ -168,7 +164,6 @@ class Frame:
             return
 
         self._leave_notify(window)
-        logging.debug('Frame._leave_notify_cb ' + str(self._mode))
 
     def _enter_notify(self):
         self._hover_frame = True
@@ -185,17 +180,14 @@ class Frame:
     def _enter_edge_cb(self, event_frame):
         self._mode = Frame.HIDE_ON_LEAVE
         self._timeline.play(None, 'slide_in')
-        logging.debug('Frame._enter_edge_cb ' + str(self._mode))
         
     def _enter_corner_cb(self, event_frame):
         self._mode = Frame.HIDE_ON_LEAVE
         self._timeline.play('slide_in', 'slide_in')
-        logging.debug('Frame._enter_corner_cb ' + str(self._mode))
         
     def _event_frame_leave_cb(self, event_frame):
         if self._mode != Frame.STICKY:
             self._timeline.goto('slide_out', True)
-        logging.debug('Frame._event_frame_leave_cb ' + str(self._mode))
         
     def show_and_hide(self, seconds):
         self._mode = Frame.AUTOMATIC

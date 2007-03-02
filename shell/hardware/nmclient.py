@@ -519,15 +519,23 @@ class NMClient(gobject.GObject):
         logging.debug('Device Activation Stage "%s" for device %s' % (NM_DEVICE_STAGE_STRINGS[stage], device))
 
     def device_activating_sig_handler(self, device):
+        logging.debug('DeviceActivating for %s' % (device))
+        if not self._devices.has_key(device):
+            logging.debug('DeviceActivating, device %s does not exist' % (device))
+            return
         self._devices[device].set_state(DEVICE_STATE_ACTIVATING)
 
     def device_now_active_sig_handler(self, device, ssid=None):
+        logging.debug('DeviceNowActive for %s' % (device))
         if not self._devices.has_key(device):
+            logging.debug('DeviceNowActive, device %s does not exist' % (device))
             return
         self._devices[device].set_state(DEVICE_STATE_ACTIVATED)
 
     def device_no_longer_active_sig_handler(self, device):
+        logging.debug('DeviceNoLongerActive for %s' % (device))
         if not self._devices.has_key(device):
+            logging.debug('DeviceNoLongerActive, device %s does not exist' % (device))
             return
         self._devices[device].set_state(DEVICE_STATE_INACTIVE)
 
@@ -546,9 +554,11 @@ class NMClient(gobject.GObject):
             self._get_initial_devices()
 
     def device_added_sig_handler(self, device):
+        logging.debug('DeviceAdded for %s' % (device))
         self._add_device(device)
 
     def device_removed_sig_handler(self, device):
+        logging.debug('DeviceRemoved for %s' % (device))
         self._remove_device(device)
 
     def wireless_network_appeared_sig_handler(self, device, network):
