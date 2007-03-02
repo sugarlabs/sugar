@@ -21,3 +21,6 @@ class LinkLocalPlugin(gobject.GObject):
     def __init__(self, registry):
         gobject.GObject.__init__(self)
         self._registry = registry
+
+    def cleanup(self):
+        pass

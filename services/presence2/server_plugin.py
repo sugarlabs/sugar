@@ -194,7 +194,7 @@ class ServerPlugin(gobject.GObject):
         self._conn._valid_interfaces.add(CONN_INTERFACE_BUDDY_INFO)
         if CONN_INTERFACE_BUDDY_INFO not in self._conn.get_valid_interfaces():
             print 'OLPC information not available'
-            self.disconnect()
+            self.cleanup()
             return
 
         self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('PropertiesChanged', self._properties_changed_cb)
@@ -267,7 +267,7 @@ class ServerPlugin(gobject.GObject):
         else:
             self._conn[CONN_INTERFACE].Connect()
 
-    def disconnect(self):
+    def cleanup(self):
         self._conn[CONN_INTERFACE].Disconnect()
 
     def _contact_offline(self, handle):

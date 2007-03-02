@@ -51,8 +51,8 @@ class PresenceService(dbus.service.Object):
 
         # Create the Owner object
         objid = self._get_next_object_id()
-        self._owner = Owner(self, self._bus_name, objid)
-        self._buddies[self._owner.get_key()] = self._owner
+        self._owner = Owner(self._bus_name, objid)
+        self._buddies[self._owner.props.key] = self._owner
 
         self._registry = ManagerRegistry()
         self._registry.LoadManagers()
@@ -86,30 +86,34 @@ class PresenceService(dbus.service.Object):
             # we don't know yet this buddy
             objid = self._get_next_object_id()
             buddy = Buddy(self._bus_name, objid, key=key)
-            print "New buddy %s" % key
+            buddy.connect("validity-changed", self._buddy_validity_changed_cb)
             self._buddies[key] = buddy
-            new_buddy = True
 
         buddies = self._handles[tp]
         buddies[handle] = buddy
-
         # store the handle of the buddy for this CM
         buddy.handles[tp] = handle
 
-        if new_buddy:
-            self.BuddyAppeared(buddy.object_path())
         buddy.set_properties(props)
-        print "New buddy properties %s" % props
-        
+
+    def _buddy_validity_changed_cb(self, buddy, valid):
+        if valid:
+            self.BuddyAppeared(buddy.object_path())
+            print "New Buddy: %s (%s)" % (buddy.props.nick, buddy.props.color)
+        else:
+            self.BuddyDisappeared(buddy.object_path())
+            print "Buddy left: %s (%s)" % (buddy.props.nick, buddy.props.color)
+            
     def _contact_offline(self, tp, handle):
         buddy = self._handles[tp].pop(handle)
-        key = buddy.get_key()
+        key = buddy.props.key
 
         # the handle of the buddy for this CM is not valid anymore
         buddy.handles.pop(tp)
         if not buddy.handles:
-            self.BuddyDisappeared(buddy.object_path())
-            print "Buddy %s gone" % buddy.get_key()
+            if buddy.props.valid:
+                self.BuddyDisappeared(buddy.object_path())
+                print "Buddy left: %s (%s)" % (buddy.props.nick, buddy.props.color)
             self._buddies.pop(key)
 
     def _get_next_object_id(self):
@@ -119,15 +123,15 @@ class PresenceService(dbus.service.Object):
 
     def _avatar_updated(self, tp, handle, avatar):
         buddy = self._handles[tp].get(handle)
-        if buddy and not buddy.is_owner():
-            print "Buddy %s icon updated" % buddy.get_key()
-            buddy.set_icon(avatar)
+        if buddy and not buddy.props.owner:
+            print "Buddy %s icon updated" % buddy.props.key
+            buddy.props.icon = avatar
 
     def _properties_changed(self, tp, handle, prop):
         buddy = self._handles[tp].get(handle)
         if buddy:
             buddy.set_properties(prop)
-            print "Buddy %s properties updated" % buddy.get_key()
+            print "Buddy %s properties updated" % buddy.props.key
 
     def _activities_changed(self, tp, handle, prop):
         pass
@@ -185,6 +189,9 @@ class PresenceService(dbus.service.Object):
     def ShareActivity(self, actid, atype, name, properties):
         raise NotImplementedError("not implemented yet")
 
+    def cleanup(self):
+        for tp in self._handles:
+            tp.cleanup()
 
 def main():
     loop = gobject.MainLoop()
@@ -192,6 +199,7 @@ def main():
     try:
         loop.run()
     except KeyboardInterrupt:
+        ps.cleanup()
         print 'Ctrl+C pressed, exiting...'
 
 if __name__ == "__main__":
