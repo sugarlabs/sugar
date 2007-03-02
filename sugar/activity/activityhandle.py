@@ -47,7 +47,7 @@ def create_from_dict(handle_dict):
     if handle_dict.has_key('pservice_id'):
         result.pservice_id = handle_dict['pservice_id']
     if handle_dict.has_key('object_id'):
-        result.uri = handle_dict['object_id']
+        result.object_id = handle_dict['object_id']
     if handle_dict.has_key('uri'):
         result.uri = handle_dict['uri']
 
