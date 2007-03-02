@@ -9,7 +9,8 @@ sugardir = $(pkgdatadir)/services/datastore
 sugar_PYTHON =      \
 	__init__.py     \
 	datastore.py    \
-	dbus_helpers.py
+	dbus_helpers.py	\
+	demodata.py
 
 bin_SCRIPTS = sugar-data-store
 
