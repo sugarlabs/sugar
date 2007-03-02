@@ -286,6 +286,8 @@ class Device(gobject.GObject):
         self.emit('ssid-changed')
 
     def set_active_network(self, network):
+        if self._active_network == network:
+            return
         if self._active_network:
             self._active_network.disconnect(self._ssid_sid)
 
@@ -301,12 +303,15 @@ class Device(gobject.GObject):
     def set_state(self, state):
         self._state = state
 
-        if state == DEVICE_STATE_ACTIVATING:
-            obj = sys_bus.get_object(NM_SERVICE, self._op)
-            dev = dbus.Interface(obj, NM_IFACE_DEVICES)
+        obj = sys_bus.get_object(NM_SERVICE, self._op)
+        dev = dbus.Interface(obj, NM_IFACE_DEVICES)
 
+        if self._type == DEVICE_TYPE_802_11_WIRELESS:
             network = dev.getActiveNetwork()
-            self.set_active_network(self._networks[network])
+            if self._networks.has_key(network):
+                self.set_active_network(self._networks[network])
+            else:
+                self.set_active_network(None)
 
         _device_to_network_state = {
             DEVICE_STATE_ACTIVATING : NETWORK_STATE_CONNECTING,
