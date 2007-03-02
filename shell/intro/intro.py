@@ -32,12 +32,8 @@ from sugar.graphics import iconbutton
 
 import colorpicker
 
-if env.is_emulator():
-    _VIDEO_WIDTH = units.points_to_pixels(120)
-    _VIDEO_HEIGHT = units.points_to_pixels(120)
-else:
-    _VIDEO_WIDTH = 640
-    _VIDEO_HEIGHT = 480
+_VIDEO_WIDTH = units.points_to_pixels(160)
+_VIDEO_HEIGHT = units.points_to_pixels(120)
 
 class IntroImage(gtk.EventBox):
     __gtype_name__ = "IntroImage"
