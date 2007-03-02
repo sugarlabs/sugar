@@ -303,11 +303,14 @@ class Device(gobject.GObject):
     def set_state(self, state):
         self._state = state
 
-        obj = sys_bus.get_object(NM_SERVICE, self._op)
-        dev = dbus.Interface(obj, NM_IFACE_DEVICES)
-
         if self._type == DEVICE_TYPE_802_11_WIRELESS:
-            network = dev.getActiveNetwork()
+            try:
+                obj = sys_bus.get_object(NM_SERVICE, self._op)
+                dev = dbus.Interface(obj, NM_IFACE_DEVICES)
+                network = dev.getActiveNetwork()
+            except dbus.DBusException:
+                network = None
+
             if self._networks.has_key(network):
                 self.set_active_network(self._networks[network])
             else:
@@ -428,6 +431,7 @@ class NMClient(gobject.GObject):
             'DeviceActivating': self.device_activating_sig_handler,
             'DeviceNowActive': self.device_now_active_sig_handler,
             'DeviceNoLongerActive': self.device_no_longer_active_sig_handler,
+            'DeviceActivationFailed': self.device_activation_failed_sig_handler,
             'DeviceCarrierOn': self.device_carrier_on_sig_handler,
             'DeviceCarrierOff': self.device_carrier_off_sig_handler,
             'DeviceStrengthChanged': self.wireless_device_strength_changed_sig_handler,
@@ -541,6 +545,13 @@ class NMClient(gobject.GObject):
         logging.debug('DeviceNoLongerActive for %s' % (device))
         if not self._devices.has_key(device):
             logging.debug('DeviceNoLongerActive, device %s does not exist' % (device))
+            return
+        self._devices[device].set_state(DEVICE_STATE_INACTIVE)
+
+    def device_activation_failed_sig_handler(self, device):
+        logging.debug('DeviceActivationFailed for %s' % (device))
+        if not self._devices.has_key(device):
+            logging.debug('DeviceActivationFailed, device %s does not exist' % (device))
             return
         self._devices[device].set_state(DEVICE_STATE_INACTIVE)
 
