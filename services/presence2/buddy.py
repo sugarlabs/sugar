@@ -158,9 +158,7 @@ class Buddy(DBusGObject):
         props['nick'] = self.props.nick
         props['owner'] = self.props.owner
         props['key'] = self.props.key
-        color = self.props.color
-        if color:
-            props['color'] = color
+        props['color'] = self.props.color
         return props
 
     # methods
