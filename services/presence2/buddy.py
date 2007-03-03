@@ -141,7 +141,7 @@ class Buddy(DBusGObject):
     def GetIcon(self):
         if not self.props.icon:
             return ""
-        return self.props.icon
+        return dbus.ByteArray(self.props.icon)
 
     @dbus.service.method(_BUDDY_INTERFACE,
                         in_signature="", out_signature="ao")
