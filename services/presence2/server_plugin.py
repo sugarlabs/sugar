@@ -96,6 +96,8 @@ class ServerPlugin(gobject.GObject):
 
         self._conn = self._init_connection()
 
+        self._reconnect_id = 0
+
     def _get_account_info(self):
         account_info = {}
                         
@@ -210,7 +212,12 @@ class ServerPlugin(gobject.GObject):
         # vcards are changed
         #self._conn[CONN_INTERFACE_ALIASING].connect_to_signal('AliasesChanged', self._alias_changed_cb)
 
-        self._set_self_buddy_info()
+        try:
+            self._set_self_buddy_info()
+        except RuntimeError, e:
+            print e
+            self.cleanup()
+            return
 
         # Request presence for everyone on the channel
         self._conn[CONN_INTERFACE_PRESENCE].GetPresence(subscribe_handles)
@@ -220,7 +227,11 @@ class ServerPlugin(gobject.GObject):
         props = {}
         props['color'] = profile.get_color().to_string()
         props['key'] = profile.get_pubkey()
-        self._conn[CONN_INTERFACE_BUDDY_INFO].SetProperties(props)
+        try:
+            self._conn[CONN_INTERFACE_BUDDY_INFO].SetProperties(props)
+        except dbus.DBusException, e:
+            if str(e).find("Server does not support PEP") >= 0:
+                raise RuntimeError("Server does not support PEP")
 
         name = profile.get_nick_name()
         self_handle = self._conn[CONN_INTERFACE].GetSelfHandle()
@@ -255,6 +266,7 @@ class ServerPlugin(gobject.GObject):
         return False
 
     def start(self):
+        print "Trying to connect..."
         # If the connection is already connected query initial contacts
         conn_status = self._conn[CONN_INTERFACE].GetStatus()
         if conn_status == CONNECTION_STATUS_CONNECTED:
@@ -265,7 +277,22 @@ class ServerPlugin(gobject.GObject):
         elif conn_status == CONNECTION_STATUS_CONNECTING:
             pass
         else:
-            self._conn[CONN_INTERFACE].Connect()
+            self._conn[CONN_INTERFACE].Connect(reply_handler=self._connect_reply_cb,
+                    error_handler=self._connect_error_cb)
+
+    def _connect_reply_cb(self):
+        if self._reconnect_id > 0:
+            gobject.source_remove(self._reconnect_id)
+
+    def _reconnect(self):
+        self._reconnect_id = 0
+        self.start()
+        return False
+
+    def _connect_error_cb(self, exception):
+        print "Connect error: %s" % exception
+        if not self._reconnect_id:
+            self._reconnect_id = gobject.timeout_add(10000, self._reconnect)
 
     def cleanup(self):
         self._conn[CONN_INTERFACE].Disconnect()
@@ -280,6 +307,10 @@ class ServerPlugin(gobject.GObject):
         except dbus.DBusException, e:
             if str(e).startswith("org.freedesktop.DBus.Error.NoReply"):
                 raise InvalidBuddyError("couldn't get properties")
+        except KeyError, e:
+            if str(e) == "'%s'" % CONN_INTERFACE_BUDDY_INFO:
+                raise InvalidBuddyError("server doesn't support BuddyInfo interface")
+
         if not props.has_key('color'):
             raise InvalidBuddyError("no color")
         if not props.has_key('key'):
