@@ -96,7 +96,8 @@ class OptionMenu(hippo.CanvasBox, hippo.CanvasItem):
             return self._value
 
     def add_item(self, menu_item):
-        if not self._value:
+        if self._value == None:
+            logging.debug('Setting default value to: ' + menu_item.props.label)
             self._value = menu_item.props.action_id
             self._canvas_text.props.text = menu_item.props.label
 

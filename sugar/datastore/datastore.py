@@ -13,9 +13,100 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+import logging
 
-import dbus, dbus.glib, gobject
+import dbus
+import dbus.glib
+import gobject
+
 from sugar import util
+
+DS_DBUS_SERVICE = "org.laptop.sugar.DataStore"
+DS_DBUS_INTERFACE = "org.laptop.sugar.DataStore"
+DS_DBUS_PATH = "/org/laptop/sugar/DataStore"
+
+_bus = dbus.SessionBus()
+_data_store = dbus.Interface(_bus.get_object(DS_DBUS_SERVICE, DS_DBUS_PATH),
+                             DS_DBUS_INTERFACE)
+
+class DataStoreObject:
+    def __init__(self, metadata, file_path=None, handle=None):
+        self._metadata = metadata
+        self._file_path = file_path
+        self._handle = handle
+
+    def get_metadata(self):
+        return self._metadata
+
+    def get_file_path(self):
+        return self._file_path
+
+    def set_file_path(self, file_path):
+        self._file_path = file_path
+
+    def get_handle(self):
+        return self._handle
+
+    def get_object_type(self):
+        raise NotImplementedError()
+
+class Text(DataStoreObject):
+    def get_object_type(self):
+        return 'text'
+
+class Picture(DataStoreObject):
+    def get_object_type(self):
+        return 'picture'
+
+class Link(DataStoreObject):
+    def get_object_type(self):
+        return 'link'
+
+def _read_from_object_path(object_path):
+    dbus_object = _bus.get_object(DS_DBUS_SERVICE, object_path)
+    metadata = dbus_object.get_properties(dbus.Dictionary({}, signature='sv'))
+
+    object_type = metadata['object-type']
+    file_path = metadata['file-path']
+    handle = metadata['handle']
+
+    del metadata['object-type']    
+    del metadata['file-path']    
+    del metadata['handle']
+
+    if object_type == 'text':
+        return Text(metadata, file_path, handle)
+    elif object_type == 'picture':
+        return Picture(metadata, file_path, handle)
+    elif object_type == 'link':
+        return Link(metadata, file_path, handle)
+    else:
+        raise NotImplementedError('Unknown object type.')
+
+def read(handle):
+    object_path = _data_store.get(handle)
+    return _read_from_object_path(object_path)
+
+def write(obj):
+    metadata = obj.get_metadata().copy()
+    metadata['file-path'] = obj.get_file_path()
+    metadata['object-type'] = obj.get_object_type()
+    logging.debug(str(metadata))
+    object_path = _data_store.create(dbus.Dictionary(metadata))
+    dbus_object = _bus.get_object(DS_DBUS_SERVICE, object_path)
+    return dbus_object.get_properties(['handle'])['handle']
+
+def find(query):
+    object_paths = _data_store.find(query)
+    objects = []
+    for object_path in object_paths:
+        objects.append(_read_from_object_path(object_path))
+    return objects
+
+def delete(handle):
+    pass
+
+################################################################################
 
 class ObjectCache(object):
     def __init__(self):
@@ -39,9 +130,6 @@ class ObjectCache(object):
             pass
 
 
-DS_DBUS_SERVICE = "org.laptop.sugar.DataStore"
-DS_DBUS_INTERFACE = "org.laptop.sugar.DataStore"
-DS_DBUS_PATH = "/org/laptop/sugar/DataStore"
 
 class DSObject(gobject.GObject):
 

@@ -18,9 +18,15 @@
 import os
 import dbus, dbus.glib, gobject
 import logging
-import sqlite3
+
+try:
+    from sqlite3 import dbapi2 as sqlite
+except ImportError:
+    from pysqlite2 import dbapi2 as sqlite
+
 import dbus_helpers
 import string
+import demodata
 
 have_sugar = False
 try:
@@ -72,12 +78,14 @@ def _get_data_as_string(data):
         return data_str
     elif isinstance(data, int):
         return str(data)
+    elif isinstance(data, float):
+        return str(data)
     elif isinstance(data, str):
         return data
     elif isinstance(data, unicode):
         return str(data)
     else:
-        raise ValueError("Unsupported data type")
+        raise ValueError("Unsupported data type: %s" % type(data))
 
 class DataStoreDBusHelper(dbus.service.Object):
     def __init__(self, parent, bus_name):
@@ -98,14 +106,9 @@ class DataStoreDBusHelper(dbus.service.Object):
         return _create_op(self._parent.get_activity_object(activity_id))
 
     @dbus.service.method(_DS_DBUS_INTERFACE,
-                        in_signature="aya{sv}s", out_signature="o")
-    def create(self, data, prop_dict, activity_id):
-        if len(activity_id):
-            if not validate_activity_id(activity_id):
-                raise ValueError("invalid activity id")
-        else:
-            activity_id = None
-        uid = self._parent.create(data, prop_dict, activity_id)
+                        in_signature="a{sv}", out_signature="o")
+    def create(self, prop_dict):
+        uid = self._parent.create(prop_dict)
         return _create_op(uid)
 
     @dbus.service.method(_DS_DBUS_INTERFACE,
@@ -116,9 +119,9 @@ class DataStoreDBusHelper(dbus.service.Object):
         return 0
 
     @dbus.service.method(_DS_DBUS_INTERFACE,
-                        in_signature="a{sv}", out_signature="ao")
-    def find(self, prop_dict):
-        uids = self._parent.find(prop_dict)
+                        in_signature="s", out_signature="ao")
+    def find(self, query):
+        uids = self._parent.find(query)
         ops = []
         for uid in uids:
             ops.append(_create_op(uid))
@@ -188,13 +191,13 @@ class DataStore(object):
         if not os.path.exists(os.path.dirname(self._dbfile)):
             os.makedirs(os.path.dirname(self._dbfile), 0755)
 
-        self._dbcx = sqlite3.connect(self._dbfile, timeout=3)
+        self._dbcx = sqlite.connect(self._dbfile, timeout=3)
+        self._dbcx.row_factory = sqlite.Row
         try:
             self._ensure_table()
         except StandardError, e:
             logging.info("Could not access the data store.  Reason: '%s'.  Exiting..." % e)
             os._exit(1)
-        self._dbcx.row_factory = sqlite3.Row
 
     def __del__(self):
         self._dbcx.close()
@@ -209,10 +212,7 @@ class DataStore(object):
             # If table wasn't created, try to create it
             self._dbcx.commit()
             curs.execute('CREATE TABLE objects (' \
-                'uid INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, ' \
-                'activity_id VARCHAR(50), ' \
-                'data BLOB' \
-                ');')
+                'uid INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT);')
             curs.execute('CREATE TABLE properties (' \
                 'objid INTEGER NOT NULL, '           \
                 'key VARCHAR(100),'                  \
@@ -220,6 +220,7 @@ class DataStore(object):
                 ');')
             curs.execute('CREATE INDEX objid_idx ON properties(objid);')
             self._dbcx.commit()
+            demodata.insert_demo_data(self)
         del curs
 
     def get(self, uid):
@@ -243,24 +244,17 @@ class DataStore(object):
         del curs
         raise NotFoundError("Object for activity %s was not found." % activity_id)
 
-    def create(self, data, prop_dict=None, activity_id=None):
+    def create(self, prop_dict):
         curs = self._dbcx.cursor()
-        data = _get_data_as_string(data)
-        logging.debug(type(data))
-        logging.debug(data)
-        if not activity_id:
-            curs.execute("INSERT INTO objects (uid, data) VALUES (NULL, ?);", (data,))
-        else:
-            curs.execute("INSERT INTO objects (uid, data, activity_id) VALUES (NULL, ?, ?);", (data, activity_id))
+        curs.execute("INSERT INTO objects (uid) VALUES (NULL);")
         curs.execute("SELECT last_insert_rowid();")
         rows = curs.fetchall()
         self._dbcx.commit()
         last_row = rows[0]
         uid = last_row[0]
         for (key, value) in prop_dict.items():
-            safe_key = key.replace("'", "''")
             value = _get_data_as_string(value)
-            curs.execute("INSERT INTO properties (objid, key, value) VALUES (?, ?, ?);", (uid, safe_key, value))
+            curs.execute("INSERT INTO properties (objid, key, value) VALUES (?, ?, ?);", (uid, key, value))
         self._dbcx.commit()
         del curs
         return uid
@@ -274,23 +268,14 @@ class DataStore(object):
         self._dbus_obj_helper.Updated(False, {}, True, uid=uid)
         return 0
 
-    def find(self, prop_dict):
-        query = "SELECT objid FROM properties"
-        subquery = ""
-        for (key, value) in prop_dict.items():
-            safe_key = key.replace("'", "''")
-            value = _get_data_as_string(value)
-            if not len(value):
-                raise ValueError("Property values must not be blank.")
-            substr = "(key='%s' AND value='%s')" % (safe_key, value)
-            if len(subquery) > 0:
-                subquery += " OR "
-            subquery += substr
-        if len(subquery):
-            query += " WHERE (%s)" % subquery
-        query += ";"
+    def find(self, query):
+        sql_query = "SELECT DISTINCT(objid) FROM properties"
+        if query:
+            # TODO: parse the query for avoiding sql injection attacks.
+            sql_query += " WHERE (%s)" % query
+        sql_query += ";"
         curs = self._dbcx.cursor()
-        curs.execute(query)
+        curs.execute(sql_query)
         rows = curs.fetchall()
         self._dbcx.commit()
         # FIXME: ensure that each properties.objid has a match in objects.uid
@@ -314,7 +299,8 @@ class DataStore(object):
         del curs
         self._dbus_obj_helper.Updated(True, {}, False, uid=uid)
 
-    _reserved_keys = ["uid", "objid", "data", "created", "modified"]
+    _reserved_keys = ["handle", "objid", "data", "created", "modified",
+                      "object-type", "file-path"]
     def set_properties(self, uid, prop_dict):
         curs = self._dbcx.cursor()
         curs.execute('SELECT uid FROM objects WHERE uid=?;', (uid,))
@@ -329,17 +315,16 @@ class DataStore(object):
                 raise ValueError("key %s is a reserved key." % key)
 
         for (key, value) in prop_dict.items():
-            safe_key = key.replace("'", "''")
             value = _get_data_as_string(value)
             if not len(value):
                 # delete the property
-                curs.execute("DELETE FROM properties WHERE (objid=? AND key=?);", (uid, safe_key))
+                curs.execute("DELETE FROM properties WHERE (objid=? AND key=?);", (uid, key))
             else:
-                curs.execute("SELECT objid FROM properties WHERE (objid=? AND key=?);", (uid, safe_key))
+                curs.execute("SELECT objid FROM properties WHERE (objid=? AND key=?);", (uid, key))
                 if len(curs.fetchall()) > 0:
-                    curs.execute("UPDATE properties SET value=? WHERE (objid=? AND key=?);", (value, uid, safe_key))
+                    curs.execute("UPDATE properties SET value=? WHERE (objid=? AND key=?);", (value, uid, key))
                 else:
-                    curs.execute("INSERT INTO properties (objid, key, value) VALUES (?, ?, ?);", (uid, safe_key, value))
+                    curs.execute("INSERT INTO properties (objid, key, value) VALUES (?, ?, ?);", (uid, key, value))
         self._dbcx.commit()
         del curs
         self._dbus_obj_helper.Updated(False, {}, False, uid=uid)
@@ -360,10 +345,11 @@ class DataStore(object):
         subquery = ""
         if len(keys) > 0:
             for key in keys:
-                if len(subquery) > 0:
+                if not subquery:
+                    subquery += " AND ("
+                else:
                     subquery += " OR "
-                safe_key = key.replace("'", "''")
-                subquery += "key='%s'" % safe_key
+                subquery += "key='%s'" % key
             subquery += ")"
         query += subquery + ");"
         curs = self._dbcx.cursor()
@@ -374,7 +360,7 @@ class DataStore(object):
         for row in rows:
             conv_key = row['key'].replace("''", "'")
             prop_dict[conv_key] = row['value']
-        prop_dict['uid'] = str(uid)
+        prop_dict['handle'] = str(uid)
         del curs
         return prop_dict
 
