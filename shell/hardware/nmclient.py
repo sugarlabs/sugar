@@ -548,7 +548,7 @@ class NMClient(gobject.GObject):
             return
         self._devices[device].set_state(DEVICE_STATE_INACTIVE)
 
-    def device_activation_failed_sig_handler(self, device):
+    def device_activation_failed_sig_handler(self, device, ssid=None):
         logging.debug('DeviceActivationFailed for %s' % (device))
         if not self._devices.has_key(device):
             logging.debug('DeviceActivationFailed, device %s does not exist' % (device))
