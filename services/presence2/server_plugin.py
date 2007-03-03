@@ -260,6 +260,7 @@ class ServerPlugin(gobject.GObject):
         elif state == CONNECTION_STATUS_DISCONNECTED:
             print 'disconnected: %r' % reason
             self.emit('status', state, int(reason))
+            self._conn = None
             if reason == CONNECTION_STATUS_REASON_AUTHENTICATION_FAILED:
                 # FIXME: handle connection failure; retry later?
                 pass
@@ -295,6 +296,8 @@ class ServerPlugin(gobject.GObject):
             self._reconnect_id = gobject.timeout_add(10000, self._reconnect)
 
     def cleanup(self):
+        if not self._conn:
+            return
         self._conn[CONN_INTERFACE].Disconnect()
 
     def _contact_offline(self, handle):
