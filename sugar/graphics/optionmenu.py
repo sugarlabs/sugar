@@ -50,7 +50,8 @@ class OptionMenu(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarOptionMenu'
 
     __gproperties__ = {
-        'value'    : (int, None, None, 0, sys.maxint, 1, gobject.PARAM_READWRITE)
+        'value'    : (object, None, None,
+                      gobject.PARAM_READWRITE)
     }
 
     __gsignals__ = {

@@ -31,8 +31,7 @@ class MenuItem(hippo.CanvasBox):
     __gtype_name__ = 'SugarMenuItem'
 
     __gproperties__ = {
-        'action-id': (int, None, None,
-                      0, sys.maxint, 0,
+        'action-id': (object, None, None,
                       gobject.PARAM_READWRITE),
         'label'    : (str, None, None, None,
                       gobject.PARAM_READWRITE)
