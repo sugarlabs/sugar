@@ -141,7 +141,7 @@ class Buddy(DBusGObject):
     def GetIcon(self):
         if not self.props.icon:
             return ""
-        return self.props.icon
+        return dbus.ByteArray(self.props.icon)
 
     @dbus.service.method(_BUDDY_INTERFACE,
                         in_signature="", out_signature="ao")
@@ -158,9 +158,7 @@ class Buddy(DBusGObject):
         props['nick'] = self.props.nick
         props['owner'] = self.props.owner
         props['key'] = self.props.key
-        color = self.props.color
-        if color:
-            props['color'] = color
+        props['color'] = self.props.color
         return props
 
     # methods
