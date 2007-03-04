@@ -91,10 +91,14 @@ def write(obj):
     metadata = obj.get_metadata().copy()
     metadata['file-path'] = obj.get_file_path()
     metadata['object-type'] = obj.get_object_type()
-    logging.debug(str(metadata))
-    object_path = _data_store.create(dbus.Dictionary(metadata))
-    dbus_object = _bus.get_object(DS_DBUS_SERVICE, object_path)
-    return dbus_object.get_properties(['handle'])['handle']
+
+    if obj.get_handle():
+        _data_store.update(int(obj.get_handle()), dbus.Dictionary(metadata))
+        return obj.get_handle()
+    else:
+        object_path = _data_store.create(dbus.Dictionary(metadata))
+        dbus_object = _bus.get_object(DS_DBUS_SERVICE, object_path)
+        return dbus_object.get_properties(['handle'])['handle']
 
 def find(query):
     object_paths = _data_store.find(query)

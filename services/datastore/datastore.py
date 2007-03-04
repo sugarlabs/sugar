@@ -112,6 +112,12 @@ class DataStoreDBusHelper(dbus.service.Object):
         return _create_op(uid)
 
     @dbus.service.method(_DS_DBUS_INTERFACE,
+                        in_signature="ia{sv}", out_signature="o")
+    def update(self, uid, prop_dict):
+        self._parent.update(uid, prop_dict)
+        return _create_op(uid)
+
+    @dbus.service.method(_DS_DBUS_INTERFACE,
                         in_signature="o", out_signature="i")
     def delete(self, op):
         uid = _get_uid_from_op(op)
@@ -285,7 +291,7 @@ class DataStore(object):
         del curs
         return uids
 
-    def set_data(self, uid, data):
+    def update(self, uid, prop_dict):
         curs = self._dbcx.cursor()
         curs.execute('SELECT uid FROM objects WHERE uid=?;', (uid,))
         res = curs.fetchall()
@@ -293,26 +299,6 @@ class DataStore(object):
         if len(res) <= 0:
             del curs
             raise NotFoundError("Object %d was not found." % uid)
-        data = _get_data_as_string(data)
-        curs.execute("UPDATE objects SET data=? WHERE uid=?;", (data, uid))
-        self._dbcx.commit()
-        del curs
-        self._dbus_obj_helper.Updated(True, {}, False, uid=uid)
-
-    _reserved_keys = ["handle", "objid", "data", "created", "modified",
-                      "object-type", "file-path"]
-    def set_properties(self, uid, prop_dict):
-        curs = self._dbcx.cursor()
-        curs.execute('SELECT uid FROM objects WHERE uid=?;', (uid,))
-        res = curs.fetchall()
-        self._dbcx.commit()
-        if len(res) <= 0:
-            del curs
-            raise NotFoundError("Object %d was not found." % uid)
-
-        for key in prop_dict.keys():
-            if key in self._reserved_keys:
-                raise ValueError("key %s is a reserved key." % key)
 
         for (key, value) in prop_dict.items():
             value = _get_data_as_string(value)
@@ -328,17 +314,6 @@ class DataStore(object):
         self._dbcx.commit()
         del curs
         self._dbus_obj_helper.Updated(False, {}, False, uid=uid)
-
-    def get_data(self, uid):
-        curs = self._dbcx.cursor()
-        curs.execute('SELECT uid, data FROM objects WHERE uid=?;', (uid,))
-        res = curs.fetchall()
-        self._dbcx.commit()
-        if len(res) <= 0:
-            raise NotFoundError("Object %d was not found." % uid)
-        data = res[0][1]
-        del curs
-        return data
 
     def get_properties(self, uid, keys):
         query = "SELECT objid, key, value FROM properties WHERE (objid=%d" % uid
