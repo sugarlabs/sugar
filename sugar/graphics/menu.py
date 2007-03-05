@@ -42,11 +42,11 @@ class MenuItem(hippo.CanvasBox):
         
         self._action_id = action_id
         self.props.padding = 5
-        self.props.spacing = 5
 
         if icon_name:
             icon = CanvasIcon(icon_name=icon_name,
-                              scale=units.SMALL_ICON_SCALE)
+                              scale=units.SMALL_ICON_SCALE,
+                              box_width=units.microgrid_to_pixels(3))
             if icon_color:
                 icon.props.xo_color = icon_color
             self.append(icon)
