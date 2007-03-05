@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import gtk, gobject
+import dbus
 import hippo
 import logging
 from gettext import gettext as _
@@ -100,11 +101,28 @@ class VideoBox(hippo.CanvasBox, hippo.CanvasItem):
         self._label.props.font_desc = font.DEFAULT.get_pango_desc()
         self.append(self._label)
 
+        # check for camera and if not generate a .jpg
+        has_webcam = False
         try:
-            import glive
-            self._video = glive.LiveVideoSlot(_VIDEO_WIDTH, _VIDEO_HEIGHT)
-        except ImportError:
-            self._video = IntroFallbackVideo()
+            sys_bus = dbus.SystemBus()
+            hal_obj = sys_bus.get_object ('org.freedesktop.Hal', '/org/freedesktop/Hal/Manager')
+            hal = dbus.Interface (hal_obj, 'org.freedesktop.Hal.Manager')
+
+            udis = hal.FindDeviceByCapability ('video4linux')
+
+            # check for the olpc specific camera
+            if not udis:
+                udis = hal.FindDeviceStringMatch('info.linux.driver','cafe1000-ccic')
+
+            if udis:
+                has_webcam = True
+                 
+        finally:
+            if has_webcam:
+                import glive
+                self._video = glive.LiveVideoSlot(_VIDEO_WIDTH, _VIDEO_HEIGHT)
+            else:
+                self._video = IntroFallbackVideo()
 
         self._video.set_size_request(_VIDEO_WIDTH, _VIDEO_HEIGHT)
         self._video.connect('pixbuf', self._new_pixbuf_cb)
