@@ -66,7 +66,7 @@ class OptionMenu(hippo.CanvasBox, hippo.CanvasItem):
         self._round_box = RoundBox()
         self._round_box.props.border_color = color.FRAME_BORDER.get_int()
         self._round_box.props.spacing = units.points_to_pixels(3)
-        self._round_box.props.padding = units.points_to_pixels(1)
+        self._round_box.props.padding = units.points_to_pixels(3)
         self.append(self._round_box, hippo.PACK_EXPAND)
 
         self._canvas_text = hippo.CanvasText(text=_('No options'),

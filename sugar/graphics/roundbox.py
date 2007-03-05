@@ -25,7 +25,7 @@ from sugar.graphics import color
 class RoundBox(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarRoundBox'
 
-    _BORDER_DEFAULT = 2.0
+    _BORDER_DEFAULT = units.points_to_pixels(1.0)
 
     def __init__(self, **kwargs):
         hippo.CanvasBox.__init__(self, **kwargs)
