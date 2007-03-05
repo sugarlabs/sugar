@@ -29,19 +29,21 @@ class BuddyIconCache(object):
 
         if not os.path.exists(self._cachepath):
             self._cache = {}
+            # md5 and server token of the last avatar uploaded
+            self._md5 = ''
+            self._token = ''
         else:
             self._load_cache()
 
     def _load_cache(self):
         try:
-            self._cache = cPickle.load(open(self._cachepath, "r"))
+            self._cache, self._md5, self._token = cPickle.load(open(self._cachepath, "r"))
         except:
-            self._cache = {}
-
+            self._cache, self._md5, self._token = {}, '', ''
 
     def _save_cache(self):
         out = open(self._cachepath, "w")
-        cPickle.dump(self._cache, out, protocol=2)
+        cPickle.dump((self._cache, self._md5, self._token), out, protocol=2)
 
     def get_icon(self, jid, token):
         hit = self._cache.get(jid)
@@ -55,6 +57,14 @@ class BuddyIconCache(object):
 
     def store_icon(self, jid, token, data):
         self._cache[jid] = (token, data)
+        self._save_cache()
+
+    def check_avatar(self, md5, token):
+        return self._md5 == md5 and self._token == token
+
+    def set_avatar(self, md5, token):
+        self._md5 = md5
+        self._token = token
         self._save_cache()
 
 if __name__ == "__main__":
@@ -76,3 +86,17 @@ if __name__ == "__main__":
     # the icon in the cache is not valid now
     icon = my_cache.get_icon("test@olpc.collabora.co.uk", "aaaa")
     print icon
+
+
+    my_avatar_md5 = "111"
+    my_avatar_token = "222"
+
+    if not my_cache.check_avatar(my_avatar_md5, my_avatar_token):
+        # upload of the new avatar
+        print "upload of the new avatar"
+        my_cache.set_avatar(my_avatar_md5, my_avatar_token)
+    else:
+        print "No need to upload the new avatar"
+
+    if my_cache.check_avatar(my_avatar_md5, my_avatar_token):
+        print "No need to upload the new avatar"
