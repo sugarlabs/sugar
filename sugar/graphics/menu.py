@@ -41,12 +41,12 @@ class MenuItem(hippo.CanvasBox):
         hippo.CanvasBox.__init__(self, orientation=hippo.ORIENTATION_HORIZONTAL)
         
         self._action_id = action_id
-        self.props.padding = 5
+        self.props.spacing = units.points_to_pixels(2)
 
         if icon_name:
             icon = CanvasIcon(icon_name=icon_name,
                               scale=units.SMALL_ICON_SCALE,
-                              box_width=units.microgrid_to_pixels(3))
+                              box_width=units.microgrid_to_pixels(2))
             if icon_color:
                 icon.props.xo_color = icon_color
             self.append(icon)
@@ -93,6 +93,8 @@ class Menu(Popup):
         self.props.background_color = color.MENU_BACKGROUND.get_int()
         self.props.border_color = color.MENU_BORDER.get_int()
         self.props.border = units.points_to_pixels(1) 
+        self.props.padding = units.points_to_pixels(3)
+        self.props.spacing = units.points_to_pixels(3)
 
         if title:
             title_item = hippo.CanvasText(text=title)
