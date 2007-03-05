@@ -21,11 +21,11 @@ _ACTIVITY_PATH = "/org/laptop/Sugar/Presence/Activities/"
 _ACTIVITY_INTERFACE = "org.laptop.Sugar.Presence.Activity"
 
 class Activity(dbus.service.Object):
-    def __init__(self, bus_name, object_id):
+    def __init__(self, bus_name, object_id, activity_id):
         self._buddies = []
         self._color = None
         self._valid = False
-        self._activity_id = None
+        self._activity_id = activity_id
 
         self._object_id = object_id
         self._object_path = "/org/laptop/Presence/Activities/%d" % self._object_id
@@ -90,3 +90,16 @@ class Activity(dbus.service.Object):
 
     def get_color(self):
         return self._color
+
+    def get_joined_buddies(self):
+        return self._buddies
+
+    def buddy_joined(self, buddy):
+        if buddy not in self._buddies:
+            self._buddies.append(buddy)
+            self.BuddyJoined(buddy.object_path())
+
+    def buddy_left(self, buddy):
+        if buddy in self._buddies:
+            self._buddies.remove(buddy)
+            self.BuddyLeft(buddy.object_path())

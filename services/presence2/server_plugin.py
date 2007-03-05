@@ -33,7 +33,7 @@ from telepathy.interfaces import (
 from telepathy.constants import (
     CONNECTION_HANDLE_TYPE_NONE, CONNECTION_HANDLE_TYPE_CONTACT,
     CONNECTION_STATUS_CONNECTED, CONNECTION_STATUS_DISCONNECTED, CONNECTION_STATUS_CONNECTING,
-    CONNECTION_HANDLE_TYPE_LIST, CONNECTION_HANDLE_TYPE_CONTACT,
+    CONNECTION_HANDLE_TYPE_LIST, CONNECTION_HANDLE_TYPE_CONTACT,CONNECTION_HANDLE_TYPE_ROOM,
     CONNECTION_STATUS_REASON_AUTHENTICATION_FAILED)
 
 CONN_INTERFACE_BUDDY_INFO = 'org.laptop.Telepathy.BuddyInfo'
@@ -82,7 +82,7 @@ class ServerPlugin(gobject.GObject):
                              ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
         'properties-changed':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                              ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
-        'activities-changed':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'contact-activities-changed':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                              ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT]))
     }
     
@@ -93,6 +93,7 @@ class ServerPlugin(gobject.GObject):
 
         self._gabble_mgr = registry.GetManager('gabble')
         self._online_contacts = {}  # handle -> jid
+        self._activities = {} # activity id -> handle
         self._account = self._get_account_info()
 
         self._conn = self._init_connection()
@@ -263,6 +264,8 @@ class ServerPlugin(gobject.GObject):
         self_handle = self._conn[CONN_INTERFACE].GetSelfHandle()
         self._conn[CONN_INTERFACE_ALIASING].SetAliases( {self_handle : name} )
 
+        self._conn[CONN_INTERFACE_BUDDY_INFO].SetActivities([])
+
         self._upload_avatar()
 
     def _status_changed_cb(self, state, reason):
@@ -343,6 +346,9 @@ class ServerPlugin(gobject.GObject):
         self._online_contacts[handle] = jid
         self.emit("contact-online", handle, props)
 
+        activities = self._conn[CONN_INTERFACE_BUDDY_INFO].GetActivities(handle)
+        self._activities_changed_cb(handle, activities)
+
     def _presence_update_cb(self, presence):
         for handle in presence:
             timestamp, statuses = presence[handle]
@@ -379,4 +385,7 @@ class ServerPlugin(gobject.GObject):
         self.emit("properties-changed", contact, properties)
 
     def _activities_changed_cb(self, contact, activities):
-        self.emit("activities-changed", contact, activities)
+        for act_id, act_handle in activities:
+            self._activities[act_id] = act_handle
+        activities_id = map(lambda x: x[0], activities)
+        self.emit("contact-activities-changed", contact, activities_id)

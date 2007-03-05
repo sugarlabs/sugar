@@ -43,7 +43,7 @@ class PresenceService(dbus.service.Object):
         self._next_object_id = 0
 
         self._buddies = {}      # key -> Buddy
-        self._handles = {}      # tp client -> (handle -> Buddy)
+        self._handles_buddies = {}      # tp client -> (handle -> Buddy)
         self._activities = {}   # activity id -> Activity
 
         bus = dbus.SessionBus()
@@ -59,19 +59,19 @@ class PresenceService(dbus.service.Object):
 
         # Set up the server connection
         self._server_plugin = ServerPlugin(self._registry)
-        self._handles[self._server_plugin] = {}
+        self._handles_buddies[self._server_plugin] = {}
 
         self._server_plugin.connect('status', self._server_status_cb)
         self._server_plugin.connect('contact-online', self._contact_online)
         self._server_plugin.connect('contact-offline', self._contact_offline)
         self._server_plugin.connect('avatar-updated', self._avatar_updated)
         self._server_plugin.connect('properties-changed', self._properties_changed)
-        self._server_plugin.connect('activities-changed', self._activities_changed)
+        self._server_plugin.connect('contact-activities-changed', self._contact_activities_changed)
         self._server_plugin.start()
 
         # Set up the link local connection
         self._ll_plugin = LinkLocalPlugin(self._registry)
-        self._handles[self._ll_plugin] = {}
+        self._handles_buddies[self._ll_plugin] = {}
 
         dbus.service.Object.__init__(self, self._bus_name, _PRESENCE_PATH)
 
@@ -89,7 +89,7 @@ class PresenceService(dbus.service.Object):
             buddy.connect("validity-changed", self._buddy_validity_changed_cb)
             self._buddies[key] = buddy
 
-        buddies = self._handles[tp]
+        buddies = self._handles_buddies[tp]
         buddies[handle] = buddy
         # store the handle of the buddy for this CM
         buddy.handles[tp] = handle
@@ -105,7 +105,7 @@ class PresenceService(dbus.service.Object):
             print "Buddy left: %s (%s)" % (buddy.props.nick, buddy.props.color)
             
     def _contact_offline(self, tp, handle):
-        buddy = self._handles[tp].pop(handle)
+        buddy = self._handles_buddies[tp].pop(handle)
         key = buddy.props.key
 
         # the handle of the buddy for this CM is not valid anymore
@@ -122,19 +122,80 @@ class PresenceService(dbus.service.Object):
         return self._next_object_id
 
     def _avatar_updated(self, tp, handle, avatar):
-        buddy = self._handles[tp].get(handle)
+        buddy = self._handles_buddies[tp].get(handle)
         if buddy and not buddy.props.owner:
             print "Buddy %s icon updated" % buddy.props.key
             buddy.props.icon = avatar
 
     def _properties_changed(self, tp, handle, prop):
-        buddy = self._handles[tp].get(handle)
+        buddy = self._handles_buddies[tp].get(handle)
         if buddy:
             buddy.set_properties(prop)
             print "Buddy %s properties updated" % buddy.props.key
 
-    def _activities_changed(self, tp, handle, prop):
-        pass
+    def _new_activity(self, activity_id):
+        objid = self._get_next_object_id()
+        activity = Activity(self._bus_name, objid, activity_id)
+        # FIXME : don't do that shit !
+        activity._valid = True
+        self._activities[activity_id] = activity
+
+        print "new activity", activity_id
+        self.ActivityAppeared(activity.object_path())
+
+        return activity
+
+    def _remove_activity(self, activity):
+        print "remove activity", activity.get_id()
+
+        self.ActivityDisappeared(activity.object_path())
+        del self._activities[activity.get_id()]
+    
+    def _contact_activities_changed(self, tp, contact_handle, activities):
+        print "------------activities changed-------------"
+        buddies = self._handles_buddies[tp]
+        buddy = buddies.get(contact_handle)
+
+        if not buddy:
+            # We don't know this buddy
+            # FIXME: What should we do here? 
+            # FIXME: Do we need to check if the buddy is valid or something?
+            print "contact_activities_changed: buddy unknow"
+            return
+
+        old_activities = set()
+        for activity in buddy.get_joined_activities():
+            old_activities.add(activity.get_id())
+
+        new_activities = set(activities)
+
+        activities_joined = new_activities - old_activities
+        for act in activities_joined:
+            print "buddy", contact_handle, "joined", act
+            activity = self._activities.get(act)
+            if not activity:
+                # new activity
+                activity = self._new_activity(act)
+
+            activity.buddy_joined(buddy)
+            buddy.add_activity(activity)
+        
+        activities_left = old_activities - new_activities
+        for act in activities_left:
+            print "buddy", contact_handle, "left", act
+            activity = self._activities.get(act)
+            if not activity:
+                continue
+            
+            activity.buddy_left(buddy)
+            buddy.remove_activity(activity)
+
+            if not activity.get_joined_buddies():
+                self._remove_activity(activity)
+
+        # current activity
+        if len(activities) > 0:
+            buddy.set_properties({'current-activity':activities[0]})
 
     @dbus.service.signal(_PRESENCE_INTERFACE, signature="o")
     def ActivityAppeared(self, activity):
@@ -190,7 +251,7 @@ class PresenceService(dbus.service.Object):
         raise NotImplementedError("not implemented yet")
 
     def cleanup(self):
-        for tp in self._handles:
+        for tp in self._handles_buddies:
             tp.cleanup()
 
 def main():
