@@ -24,6 +24,7 @@ import gtk
 from buddyiconcache import BuddyIconCache
 import logging
 import os
+import hashlib
 
 from telepathy.client import ConnectionManager, ManagerRegistry, Connection, Channel
 from telepathy.interfaces import (
@@ -222,6 +223,31 @@ class ServerPlugin(gobject.GObject):
         # Request presence for everyone on the channel
         self._conn[CONN_INTERFACE_PRESENCE].GetPresence(subscribe_handles)
 
+    def _upload_avatar(self):
+        icon = os.path.join(env.get_profile_path(), "buddy-icon.jpg")
+        md5 = hashlib.md5()
+        md5.update(open(icon).read())
+        hash = md5.hexdigest()
+
+        self_handle = self._conn[CONN_INTERFACE].GetSelfHandle()
+        token = self._conn[CONN_INTERFACE_AVATARS].GetAvatarTokens([self_handle])[0]
+
+        if self._icon_cache.check_avatar(hash, token):
+            # avatar is up to date
+            return
+
+        types, minw, minh, maxw, maxh, maxsize = self._conn[CONN_INTERFACE_AVATARS].GetAvatarRequirements()
+        if not "image/jpeg" in types:
+            print "server does not accept JPEG format avatars."
+            return
+
+        try:
+            img_data = _get_buddy_icon_at_size(min(maxw, 96), min(maxh, 96), maxsize)
+            token = self._conn[CONN_INTERFACE_AVATARS].SetAvatar(img_data, "image/jpeg")
+            self._icon_cache.set_avatar(hash, token)
+        except RuntimeError, e:
+            pass
+
     def _set_self_buddy_info(self):
         # Set our OLPC buddy properties
         props = {}
@@ -237,18 +263,7 @@ class ServerPlugin(gobject.GObject):
         self_handle = self._conn[CONN_INTERFACE].GetSelfHandle()
         self._conn[CONN_INTERFACE_ALIASING].SetAliases( {self_handle : name} )
 
-        types, minw, minh, maxw, maxh, maxsize = self._conn[CONN_INTERFACE_AVATARS].GetAvatarRequirements()
-        if not "image/jpeg" in types:
-            print "server does not accept JPEG format avatars."
-            return
-
-        # FIXME: check server avatar token and only upload if we know our
-        # buddy icon has changed
-        try:
-            img_data = _get_buddy_icon_at_size(min(maxw, 96), min(maxh, 96), maxsize)
-            self._conn[CONN_INTERFACE_AVATARS].SetAvatar(img_data, "image/jpeg")
-        except RuntimeError, e:
-            pass
+        self._upload_avatar()
 
     def _status_changed_cb(self, state, reason):
         if state == CONNECTION_STATUS_CONNECTING:
