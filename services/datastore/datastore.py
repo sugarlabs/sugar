@@ -275,12 +275,25 @@ class DataStore(object):
         return 0
 
     def find(self, query):
-        sql_query = "SELECT DISTINCT(objid) FROM properties"
+        sql_query = "SELECT props1.objid objid," \
+                    "       props1.value date," \
+                    "       props2.value object_type," \
+                    "       props3.value buddies " \
+                    "FROM properties props1," \
+                    "     properties props2," \
+                    "     properties props3 " \
+                    "WHERE props1.objid = props2.objid AND" \
+                    "      props2.objid = props3.objid AND" \
+                    "      props1.key = 'date' AND" \
+                    "      props2.key = 'object-type' AND" \
+                    "      props3.key = 'buddies' " \
+                    "ORDER BY date DESC"
         if query:
             # TODO: parse the query for avoiding sql injection attacks.
-            sql_query += " WHERE (%s)" % query
+            sql_query = "SELECT objid FROM (%s) WHERE (%s)" % (sql_query, query)
         sql_query += ";"
         curs = self._dbcx.cursor()
+        logging.debug(sql_query)
         curs.execute(sql_query)
         rows = curs.fetchall()
         self._dbcx.commit()
