@@ -81,7 +81,7 @@ class Activity(dbus.service.Object):
     @dbus.service.method(_ACTIVITY_INTERFACE,
                         in_signature="", out_signature="soao")
     def GetChannels(self):
-        raise NotImplementedError("not implemented yet")
+        return self.get_channels()
 
     # methods
     def object_path(self):
@@ -114,3 +114,8 @@ class Activity(dbus.service.Object):
         if not self._joined:
             self._activity_text_channel = self._tp.join_activity(self._activity_id)
             self._joined = True
+
+    def get_channels(self):
+        conn = self._tp.get_connection()
+        # FIXME add tubes and others channels
+        return str(conn.service_name), conn.object_path, [self._activity_text_channel.object_path]
