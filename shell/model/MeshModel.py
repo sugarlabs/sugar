@@ -100,7 +100,7 @@ class MeshModel(gobject.GObject):
         self._add_access_point(nm_device, nm_network)
 
     def _nm_network_disappeared_cb(self, nm_device, nm_network):
-        self._remove_access_point(nm_device, nm_network)
+        self._remove_access_point(nm_network)
 
     def _add_network_device(self, nm_device):
         for nm_network in nm_device.get_networks():

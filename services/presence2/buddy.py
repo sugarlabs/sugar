@@ -71,7 +71,6 @@ class Buddy(DBusGObject):
         self._valid = False
         self._owner = False
         self._key = None
-        self._icon = ''
 
         gobject.GObject.__init__(self, **kwargs)
         if not self._key:
