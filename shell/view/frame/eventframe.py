@@ -1,4 +1,4 @@
-# Copyright (C) 2006, Red Hat, Inc.
+# Copyright (C) 2007, Red Hat, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,6 +31,8 @@ class EventFrame(gobject.GObject):
     HOVER_NONE = 0
     HOVER_CORNER = 1
     HOVER_EDGE = 2
+    
+    _THICKNESS = 6
 
     def __init__(self):
         gobject.GObject.__init__(self)
@@ -39,18 +41,24 @@ class EventFrame(gobject.GObject):
         self._hover = EventFrame.HOVER_NONE
         self._active = False
 
-        invisible = self._create_invisible(0, 0, gtk.gdk.screen_width(), 6)
+        invisible = self._create_invisible(0, 0, 
+                                           gtk.gdk.screen_width(), 
+                                           EventFrame._THICKNESS)
         self._windows.append(invisible)
 
-        invisible = self._create_invisible(0, 0, 6, gtk.gdk.screen_height())
+        invisible = self._create_invisible(0, 0, 
+                                           EventFrame._THICKNESS, 
+                                           gtk.gdk.screen_height())
         self._windows.append(invisible)
 
-        invisible = self._create_invisible(gtk.gdk.screen_width() - 6, 0,
+        invisible = self._create_invisible(gtk.gdk.screen_width() - \
+                                           EventFrame._THICKNESS, 0,
                                            gtk.gdk.screen_width(),
                                            gtk.gdk.screen_height())
         self._windows.append(invisible)
 
-        invisible = self._create_invisible(0, gtk.gdk.screen_height() - 6,
+        invisible = self._create_invisible(0, gtk.gdk.screen_height() - \
+                                           EventFrame._THICKNESS,
                                            gtk.gdk.screen_width(),
                                            gtk.gdk.screen_height())
         self._windows.append(invisible)
@@ -78,28 +86,35 @@ class EventFrame(gobject.GObject):
         return invisible
 
     def _enter_notify_cb(self, widget, event):
-        self._notify_enter(event.x, event.y)
+        self._check_position(widget, event.x, event.y)
 
     def _motion_notify_cb(self, widget, event):
-        self._notify_enter(event.x, event.y)
+        self._check_position(widget, event.x, event.y)
         
     def _drag_motion_cb(self, widget, drag_context, x, y, timestamp):
         drag_context.drag_status(0, timestamp);
-        self._notify_enter(x, y)
+        self._check_position(widget, x, y)
         return True
 
-    def _notify_enter(self, x, y):
+    def _check_position(self, widget, x, y):
         screen_w = gtk.gdk.screen_width()
         screen_h = gtk.gdk.screen_height()
+        
+        [screen_x, screen_y] = widget.window.get_origin()
+        screen_x += x
+        screen_y += y
 
-        if (x == 0 and y == 0) or \
-           (x == 0 and y == screen_h - 1) or \
-           (x == screen_w - 1 and y == 0) or \
-           (x == screen_w - 1 and y == screen_h - 1):
+        if (screen_x == 0 and screen_y == 0) or \
+           (screen_x == 0 and screen_y == screen_h - 1) or \
+           (screen_x == screen_w - 1 and screen_y == 0) or \
+           (screen_x == screen_w - 1 and screen_y == screen_h - 1):
             if self._hover != EventFrame.HOVER_CORNER:
                 self._hover = EventFrame.HOVER_CORNER
                 self.emit('enter-corner')
-        else:
+        elif screen_x == 0 or \
+             screen_y == 0 or \
+             screen_x == screen_w - 1 or \
+             screen_y == screen_h - 1:
             if self._hover != EventFrame.HOVER_EDGE:
                 self._hover = EventFrame.HOVER_EDGE
                 self.emit('enter-edge')
