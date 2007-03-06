@@ -43,7 +43,7 @@ class Bundle:
 
         if cp.has_option(section, 'class'):
             self._class = cp.get(section, 'class')
-            self._exec = '%s %s --bundle-path=%s' % (
+            self._exec = '%s %s --bundle-path="%s"' % (
                  os.path.join(env.get_shell_bin_dir(), _PYTHON_FACTORY),
                  self._class, self.get_path())
         elif cp.has_option(section, 'exec'):
