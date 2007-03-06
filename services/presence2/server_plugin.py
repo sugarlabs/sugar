@@ -157,6 +157,10 @@ class ServerPlugin(gobject.GObject):
 
         # hack
         conn._valid_interfaces.add(CONN_INTERFACE_PRESENCE)
+        conn._valid_interfaces.add(CONN_INTERFACE_BUDDY_INFO)
+        conn._valid_interfaces.add(CONN_INTERFACE_AVATARS)
+        conn._valid_interfaces.add(CONN_INTERFACE_ALIASING)
+
         conn[CONN_INTERFACE_PRESENCE].connect_to_signal('PresenceUpdate',
             self._presence_update_cb)
 
@@ -199,8 +203,6 @@ class ServerPlugin(gobject.GObject):
             # request subscriptions from people subscribed to us if we're not subscribed to them
             subscribe[CHANNEL_INTERFACE_GROUP].AddMembers([self_handle], '')
 
-        # hack
-        self._conn._valid_interfaces.add(CONN_INTERFACE_BUDDY_INFO)
         if CONN_INTERFACE_BUDDY_INFO not in self._conn.get_valid_interfaces():
             print 'OLPC information not available'
             self.cleanup()
@@ -209,12 +211,8 @@ class ServerPlugin(gobject.GObject):
         self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('PropertiesChanged', self._properties_changed_cb)
         self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('ActivitiesChanged', self._activities_changed_cb)
 
-        # hack
-        self._conn._valid_interfaces.add(CONN_INTERFACE_AVATARS)
         self._conn[CONN_INTERFACE_AVATARS].connect_to_signal('AvatarUpdated', self._avatar_updated_cb)
 
-        # hack
-        self._conn._valid_interfaces.add(CONN_INTERFACE_ALIASING)
         # FIXME: we need to use PEP to store the nick. We aren't notified when
         # vcards are changed
         #self._conn[CONN_INTERFACE_ALIASING].connect_to_signal('AliasesChanged', self._alias_changed_cb)
