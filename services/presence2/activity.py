@@ -17,6 +17,8 @@
 
 import dbus, dbus.service
 
+from telepathy.interfaces import (CHANNEL_INTERFACE)
+
 _ACTIVITY_PATH = "/org/laptop/Sugar/Presence/Activities/"
 _ACTIVITY_INTERFACE = "org.laptop.Sugar.Presence.Activity"
 
@@ -119,3 +121,8 @@ class Activity(dbus.service.Object):
         conn = self._tp.get_connection()
         # FIXME add tubes and others channels
         return str(conn.service_name), conn.object_path, [self._activity_text_channel.object_path]
+
+    def leave(self):
+        if self._joined:
+            self._activity_text_channel[CHANNEL_INTERFACE].Close()
+            self._joined = False
