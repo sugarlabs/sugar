@@ -55,7 +55,7 @@ class Shell(gobject.GObject):
         self._frame = Frame(self)
         self._frame.show_and_hide(3)
 
-        self.start_activity('org.laptop.JournalActivity')
+        #self.start_activity('org.laptop.JournalActivity')
 
     def _activity_added_cb(self, home_model, home_activity):
         activity_host = ActivityHost(home_activity)
