@@ -76,7 +76,8 @@ class PresenceService(dbus.service.Object):
         dbus.service.Object.__init__(self, self._bus_name, _PRESENCE_PATH)
 
     def _server_status_cb(self, plugin, status, reason):
-        pass
+        if status == CONNECTION_STATUS_CONNECTED:
+            pass
 
     def _contact_online(self, tp, handle, props):
         new_buddy = False
@@ -133,9 +134,9 @@ class PresenceService(dbus.service.Object):
             buddy.set_properties(prop)
             print "Buddy %s properties updated" % buddy.props.key
 
-    def _new_activity(self, activity_id):
+    def _new_activity(self, activity_id, tp):
         objid = self._get_next_object_id()
-        activity = Activity(self._bus_name, objid, activity_id)
+        activity = Activity(self._bus_name, objid, activity_id, tp)
         # FIXME : don't do that shit !
         activity._valid = True
         self._activities[activity_id] = activity
@@ -175,11 +176,11 @@ class PresenceService(dbus.service.Object):
             activity = self._activities.get(act)
             if not activity:
                 # new activity
-                activity = self._new_activity(act)
+                activity = self._new_activity(act, tp)
 
             activity.buddy_joined(buddy)
             buddy.add_activity(activity)
-        
+
         activities_left = old_activities - new_activities
         for act in activities_left:
             print "buddy", contact_handle, "left", act
@@ -248,11 +249,28 @@ class PresenceService(dbus.service.Object):
 
     @dbus.service.method(_PRESENCE_INTERFACE, in_signature="sssa{sv}", out_signature="o")
     def ShareActivity(self, actid, atype, name, properties):
-        raise NotImplementedError("not implemented yet")
+        activity = self._share_activity(actid, atype, name, properties)
+        return activity.object_path()
 
     def cleanup(self):
         for tp in self._handles_buddies:
             tp.cleanup()
+
+    def _share_activity(self, actid, atype, name, properties):
+        objid = self._get_next_object_id()
+        # FIXME check which tp client we should use to share the activity
+        activity = Activity(self._bus_name, objid, actid, self._server_plugin)
+        # FIXME : don't do that shit !
+        activity._valid = True
+        self._activities[actid] = activity
+        # FIXME set the type, name, properties...
+
+        print "new activity", actid
+        activity.join()
+        self.ActivityAppeared(activity.object_path())
+
+        return activity
+
 
 def main():
     loop = gobject.MainLoop()

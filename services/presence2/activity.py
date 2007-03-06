@@ -21,7 +21,7 @@ _ACTIVITY_PATH = "/org/laptop/Sugar/Presence/Activities/"
 _ACTIVITY_INTERFACE = "org.laptop.Sugar.Presence.Activity"
 
 class Activity(dbus.service.Object):
-    def __init__(self, bus_name, object_id, activity_id):
+    def __init__(self, bus_name, object_id, activity_id, tp):
         self._buddies = []
         self._color = None
         self._valid = False
@@ -29,6 +29,12 @@ class Activity(dbus.service.Object):
 
         self._object_id = object_id
         self._object_path = "/org/laptop/Presence/Activities/%d" % self._object_id
+    
+        # the telepathy client
+        self._tp = tp
+        self._activity_text_channel = None
+
+        self._joined = False
 
         dbus.service.Object.__init__(self, bus_name, self._object_path)
         
@@ -63,7 +69,7 @@ class Activity(dbus.service.Object):
     @dbus.service.method(_ACTIVITY_INTERFACE,
                         in_signature="", out_signature="")
     def Join(self):
-        raise NotImplementedError("not implemented yet")
+        self.join()
 
     @dbus.service.method(_ACTIVITY_INTERFACE,
                         in_signature="", out_signature="ao")
@@ -103,3 +109,8 @@ class Activity(dbus.service.Object):
         if buddy in self._buddies:
             self._buddies.remove(buddy)
             self.BuddyLeft(buddy.object_path())
+
+    def join(self):
+        if not self._joined:
+            self._activity_text_channel = self._tp.join_activity(self._activity_id)
+            self._joined = True

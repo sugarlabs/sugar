@@ -29,11 +29,11 @@ import hashlib
 from telepathy.client import ConnectionManager, ManagerRegistry, Connection, Channel
 from telepathy.interfaces import (
     CONN_MGR_INTERFACE, CONN_INTERFACE, CHANNEL_TYPE_CONTACT_LIST, CHANNEL_INTERFACE_GROUP, CONN_INTERFACE_ALIASING,
-    CONN_INTERFACE_AVATARS, CONN_INTERFACE_PRESENCE)
+    CONN_INTERFACE_AVATARS, CONN_INTERFACE_PRESENCE, CHANNEL_TYPE_TEXT)
 from telepathy.constants import (
     CONNECTION_HANDLE_TYPE_NONE, CONNECTION_HANDLE_TYPE_CONTACT,
     CONNECTION_STATUS_CONNECTED, CONNECTION_STATUS_DISCONNECTED, CONNECTION_STATUS_CONNECTING,
-    CONNECTION_HANDLE_TYPE_LIST, CONNECTION_HANDLE_TYPE_CONTACT,CONNECTION_HANDLE_TYPE_ROOM,
+    CONNECTION_HANDLE_TYPE_LIST, CONNECTION_HANDLE_TYPE_CONTACT, CONNECTION_HANDLE_TYPE_ROOM,
     CONNECTION_STATUS_REASON_AUTHENTICATION_FAILED)
 
 CONN_INTERFACE_BUDDY_INFO = 'org.laptop.Telepathy.BuddyInfo'
@@ -93,7 +93,9 @@ class ServerPlugin(gobject.GObject):
 
         self._gabble_mgr = registry.GetManager('gabble')
         self._online_contacts = {}  # handle -> jid
+
         self._activities = {} # activity id -> handle
+        self._joined_activities = [] # (activity_id, handle of the activity channel)
         self._account = self._get_account_info()
 
         self._conn = self._init_connection()
@@ -137,6 +139,9 @@ class ServerPlugin(gobject.GObject):
                     continue
             return item
         return None
+
+    def get_connection(self):
+        return self._conn
 
     def _init_connection(self):
         conn = self._find_existing_connection()
@@ -249,6 +254,27 @@ class ServerPlugin(gobject.GObject):
         except RuntimeError, e:
             pass
 
+    def join_activity(self, act):
+        handle = self._activities.get(act)
+
+        if not handle:
+            handle = self._conn[CONN_INTERFACE].RequestHandles(CONNECTION_HANDLE_TYPE_ROOM, [act])[0]
+            self._activities[act] = handle
+
+        if (act, handle) in self._joined_activities:
+            print "%s already joined" % act
+            return
+
+        chan_path = self._conn[CONN_INTERFACE].RequestChannel(
+            CHANNEL_TYPE_TEXT, CONNECTION_HANDLE_TYPE_ROOM,
+            handle, True)
+        channel = Channel(self._conn._dbus_object._named_service, chan_path)
+
+        self._joined_activities.append((act, handle))
+        self._conn[CONN_INTERFACE_BUDDY_INFO].SetActivities(self._joined_activities)
+
+        return channel
+
     def _set_self_buddy_info(self):
         # Set our OLPC buddy properties
         props = {}
@@ -264,7 +290,7 @@ class ServerPlugin(gobject.GObject):
         self_handle = self._conn[CONN_INTERFACE].GetSelfHandle()
         self._conn[CONN_INTERFACE_ALIASING].SetAliases( {self_handle : name} )
 
-        self._conn[CONN_INTERFACE_BUDDY_INFO].SetActivities([])
+        self._conn[CONN_INTERFACE_BUDDY_INFO].SetActivities(self._joined_activities)
 
         self._upload_avatar()
 
@@ -273,8 +299,8 @@ class ServerPlugin(gobject.GObject):
             print 'connecting: %r' % reason
         elif state == CONNECTION_STATUS_CONNECTED:
             print 'connected: %r' % reason
-            self.emit('status', state, int(reason))
             self._connected_cb()
+            self.emit('status', state, int(reason))
         elif state == CONNECTION_STATUS_DISCONNECTED:
             print 'disconnected: %r' % reason
             self.emit('status', state, int(reason))
