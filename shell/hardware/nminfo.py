@@ -434,9 +434,8 @@ class NMInfo(object):
         is closed.
         """
         if canceled:
-            e = CanceledKeyRequestError("Request was canceled.")
             # key dialog dialog was canceled; send the error back to NM
-            async_err_cb(e)
+            async_err_cb(CanceledKeyRequestError())
             return
 
         if not key or not auth_alg:
