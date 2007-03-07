@@ -27,6 +27,7 @@ class Activity(dbus.service.Object):
         self._buddies = []
         self._color = None
         self._valid = False
+        self._name = None
         self._activity_id = activity_id
 
         self._object_id = object_id
@@ -85,6 +86,11 @@ class Activity(dbus.service.Object):
     def GetChannels(self):
         return self.get_channels()
 
+    @dbus.service.method(_ACTIVITY_INTERFACE,
+                        in_signature="", out_signature="s")
+    def GetName(self):
+        return self.get_name()
+
     # methods
     def object_path(self):
         return dbus.ObjectPath(self._object_path)
@@ -101,6 +107,9 @@ class Activity(dbus.service.Object):
 
     def get_joined_buddies(self):
         return self._buddies
+
+    def get_name(self):
+        return self._name
 
     def buddy_joined(self, buddy):
         if buddy not in self._buddies:
