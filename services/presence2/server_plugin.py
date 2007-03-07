@@ -83,7 +83,9 @@ class ServerPlugin(gobject.GObject):
         'properties-changed':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                              ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
         'contact-activities-changed':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                             ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT]))
+                             ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
+        'activity-invited': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                             ([gobject.TYPE_PYOBJECT]))
     }
     
     def __init__(self, registry):
@@ -154,6 +156,7 @@ class ServerPlugin(gobject.GObject):
             del acct
 
         conn[CONN_INTERFACE].connect_to_signal('StatusChanged', self._status_changed_cb)
+        conn[CONN_INTERFACE].connect_to_signal('NewChannel', self._new_channel_cb)
 
         # hack
         conn._valid_interfaces.add(CONN_INTERFACE_PRESENCE)
@@ -417,3 +420,17 @@ class ServerPlugin(gobject.GObject):
             self._activities[act_id] = act_handle
         activities_id = map(lambda x: x[0], activities)
         self.emit("contact-activities-changed", contact, activities_id)
+
+    def _new_channel_cb(self, object_path, channel_type, handle_type, handle, suppress_handler):
+        if handle_type == CONNECTION_HANDLE_TYPE_ROOM:
+            channel = Channel(self._conn._dbus_object._named_service, object_path)
+
+            # hack
+            channel._valid_interfaces.add(CHANNEL_INTERFACE_GROUP)
+
+            current, local_pending, remote_pending = channel[CHANNEL_INTERFACE_GROUP].GetAllMembers()
+            
+            if local_pending:
+                for act_id, act_handle in self._activities.items():
+                    if handle == act_handle:
+                        self.emit("activity-invited", act_id)

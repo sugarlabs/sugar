@@ -67,6 +67,7 @@ class PresenceService(dbus.service.Object):
         self._server_plugin.connect('avatar-updated', self._avatar_updated)
         self._server_plugin.connect('properties-changed', self._properties_changed)
         self._server_plugin.connect('contact-activities-changed', self._contact_activities_changed)
+        self._server_plugin.connect('activity-invited', self._activity_invited)
         self._server_plugin.start()
 
         # Set up the link local connection
@@ -197,6 +198,12 @@ class PresenceService(dbus.service.Object):
         # current activity
         if len(activities) > 0:
             buddy.set_properties({'current-activity':activities[0]})
+
+    def _activity_invited(self, tp, act_id):
+        activity = self._activities.get(act_id)
+        if activity:
+            pass
+            # FIXME do something 
 
     @dbus.service.signal(_PRESENCE_INTERFACE, signature="o")
     def ActivityAppeared(self, activity):
