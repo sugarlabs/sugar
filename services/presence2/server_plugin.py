@@ -358,9 +358,6 @@ class ServerPlugin(gobject.GObject):
         except dbus.DBusException, e:
             if str(e).startswith("org.freedesktop.DBus.Error.NoReply"):
                 raise InvalidBuddyError("couldn't get properties")
-        except KeyError, e:
-            if str(e) == "'%s'" % CONN_INTERFACE_BUDDY_INFO:
-                raise InvalidBuddyError("server doesn't support BuddyInfo interface")
 
         if not props.has_key('color'):
             raise InvalidBuddyError("no color")
