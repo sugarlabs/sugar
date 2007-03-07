@@ -115,6 +115,7 @@ class Activity(dbus.service.Object):
     def join(self):
         if not self._joined:
             self._activity_text_channel = self._tp.join_activity(self._activity_id)
+            self._activity_text_channel[CHANNEL_INTERFACE].connect_to_signal('Closed', self._activity_text_channel_closed_cb)
             self._joined = True
 
     def get_channels(self):
@@ -125,4 +126,7 @@ class Activity(dbus.service.Object):
     def leave(self):
         if self._joined:
             self._activity_text_channel[CHANNEL_INTERFACE].Close()
-            self._joined = False
+
+    def _activity_text_channel_closed_cb(self):
+        self._joined = False
+        self._activity_text_channel = None

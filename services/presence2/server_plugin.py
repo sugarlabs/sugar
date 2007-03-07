@@ -229,6 +229,9 @@ class ServerPlugin(gobject.GObject):
 
     def _upload_avatar(self):
         icon = os.path.join(env.get_profile_path(), "buddy-icon.jpg")
+        if not os.path.exists(icon):
+            return
+
         md5 = hashlib.md5()
         md5.update(open(icon).read())
         hash = md5.hexdigest()
@@ -378,7 +381,8 @@ class ServerPlugin(gobject.GObject):
             timestamp, statuses = presence[handle]
             online = handle in self._online_contacts
             for status, params in statuses.items():
-                print "Handle %s now online=%s with status %s" % (handle, online, status)
+                jid = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
+                print "Handle %s (%s) was online=%s. new statuse %s" % (handle, jid, online, status)
                 if not online and status in ["available", "away", "brb", "busy", "dnd", "xa"]:
                     try:
                         self._contact_online(handle)
