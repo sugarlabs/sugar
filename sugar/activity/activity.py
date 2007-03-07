@@ -36,6 +36,7 @@ class Activity(Window, gtk.Container):
         self._shared = False
         self._activity_id = handle.activity_id
         self._pservice = PresenceService.get_instance()
+        self._service = None
 
         service = handle.get_presence_service()
         if service:
