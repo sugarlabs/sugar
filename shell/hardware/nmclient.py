@@ -288,8 +288,10 @@ class Device(gobject.GObject):
     def set_active_network(self, network):
         if self._active_network == network:
             return
+
         if self._active_network:
             self._active_network.disconnect(self._ssid_sid)
+            self._active_network.set_state(NETWORK_STATE_NOTCONNECTED)
 
         self._active_network = network
 

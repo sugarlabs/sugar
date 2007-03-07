@@ -74,5 +74,5 @@ class AccessPointModel(gobject.GObject):
         elif pspec.name == 'name':
             return self._nm_network.get_ssid()
         elif pspec.name == 'state':
-            nm_state = self._nm_device.get_state()
+            nm_state = self._nm_network.get_state()
             return _nm_state_to_state[nm_state]

@@ -170,7 +170,7 @@ class MeshBox(SpreadBox):
         self._add_access_point(ap_model)
 
     def _access_point_removed_cb(self, model, ap_model):
-        self._add_access_point(ap_model) 
+        self._remove_access_point(ap_model) 
 
     def _add_alone_buddy(self, buddy_model):
         icon = BuddyIcon(self._shell, self._menu_shell, buddy_model)
