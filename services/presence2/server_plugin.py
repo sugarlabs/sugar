@@ -29,7 +29,7 @@ import hashlib
 from telepathy.client import ConnectionManager, ManagerRegistry, Connection, Channel
 from telepathy.interfaces import (
     CONN_MGR_INTERFACE, CONN_INTERFACE, CHANNEL_TYPE_CONTACT_LIST, CHANNEL_INTERFACE_GROUP, CONN_INTERFACE_ALIASING,
-    CONN_INTERFACE_AVATARS, CONN_INTERFACE_PRESENCE, CHANNEL_TYPE_TEXT)
+    CONN_INTERFACE_AVATARS, CONN_INTERFACE_PRESENCE, CHANNEL_TYPE_TEXT, CHANNEL_TYPE_STREAMED_MEDIA)
 from telepathy.constants import (
     CONNECTION_HANDLE_TYPE_NONE, CONNECTION_HANDLE_TYPE_CONTACT,
     CONNECTION_STATUS_CONNECTED, CONNECTION_STATUS_DISCONNECTED, CONNECTION_STATUS_CONNECTING,
@@ -84,7 +84,9 @@ class ServerPlugin(gobject.GObject):
                              ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
         'contact-activities-changed':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                              ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
-        'activity-invited': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'activity-invitation': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                             ([gobject.TYPE_PYOBJECT])),
+        'private-invitation':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                              ([gobject.TYPE_PYOBJECT]))
     }
     
@@ -419,7 +421,7 @@ class ServerPlugin(gobject.GObject):
         self.emit("contact-activities-changed", contact, activities_id)
 
     def _new_channel_cb(self, object_path, channel_type, handle_type, handle, suppress_handler):
-        if handle_type == CONNECTION_HANDLE_TYPE_ROOM:
+        if handle_type == CONNECTION_HANDLE_TYPE_ROOM and channel_type == CHANNEL_TYPE_TEXT:
             channel = Channel(self._conn._dbus_object._named_service, object_path)
 
             # hack
@@ -430,4 +432,8 @@ class ServerPlugin(gobject.GObject):
             if local_pending:
                 for act_id, act_handle in self._activities.items():
                     if handle == act_handle:
-                        self.emit("activity-invited", act_id)
+                        self.emit("activity-invitation", act_id)
+
+        elif handle_type == CONNECTION_HANDLE_TYPE_CONTACT and \
+            channel_type in [CHANNEL_TYPE_TEXT, CHANNEL_TYPE_STREAMED_MEDIA]:
+            self.emit("private-invitation", object_path)
