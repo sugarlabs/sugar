@@ -67,7 +67,8 @@ class PresenceService(dbus.service.Object):
         self._server_plugin.connect('avatar-updated', self._avatar_updated)
         self._server_plugin.connect('properties-changed', self._properties_changed)
         self._server_plugin.connect('contact-activities-changed', self._contact_activities_changed)
-        self._server_plugin.connect('activity-invited', self._activity_invited)
+        self._server_plugin.connect('activity-invitation', self._activity_invitation)
+        self._server_plugin.connect('private-invitation', self._private_invitation)
         self._server_plugin.start()
 
         # Set up the link local connection
@@ -199,11 +200,14 @@ class PresenceService(dbus.service.Object):
         if len(activities) > 0:
             buddy.set_properties({'current-activity':activities[0]})
 
-    def _activity_invited(self, tp, act_id):
+    def _activity_invitation(self, tp, act_id):
         activity = self._activities.get(act_id)
         if activity:
-            pass
-            # FIXME do something 
+            self.ActivityInvitation(activity.object_path())
+
+    def _private_invitation(self, tp, chan_path):
+        conn = tp.get_connection()
+        self.PrivateInvitation(str(conn.service_name), conn.object_path, chan_path)
 
     @dbus.service.signal(_PRESENCE_INTERFACE, signature="o")
     def ActivityAppeared(self, activity):
@@ -219,6 +223,14 @@ class PresenceService(dbus.service.Object):
 
     @dbus.service.signal(_PRESENCE_INTERFACE, signature="o")
     def BuddyDisappeared(self, buddy):
+        pass
+
+    @dbus.service.signal(_PRESENCE_INTERFACE, signature="o")
+    def ActivityInvitation(self, activity):
+        pass
+
+    @dbus.service.signal(_PRESENCE_INTERFACE, signature="soo")
+    def PrivateInvitation(self, bus_name, connection, channel):
         pass
 
     @dbus.service.method(_PRESENCE_INTERFACE, out_signature="ao")
