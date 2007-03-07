@@ -45,16 +45,11 @@ class AccessPointModel(gobject.GObject):
 
         self._nm_network.connect('strength-changed',
                                  self._strength_changed_cb)
-        self._nm_network.connect('ssid-changed',
-                                 self._ssid_changed_cb)
         self._nm_network.connect('state-changed',
                                  self._state_changed_cb)
 
     def _strength_changed_cb(self, nm_network):
         self.notify('strength')
-
-    def _ssid_changed_cb(self, nm_network):
-        self.notify('name')
 
     def _state_changed_cb(self, nm_network):
         self.notify('state')

@@ -80,11 +80,9 @@ DEVICE_STATE_INACTIVE   = 2
 
 class Network(gobject.GObject):
     __gsignals__ = {
-        'init-failed'     : (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([])),
+        'initialized'     : (gobject.SIGNAL_RUN_FIRST,
+                             gobject.TYPE_NONE, ([gobject.TYPE_BOOLEAN])),
         'strength-changed': (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([])),
-        'ssid-changed'    : (gobject.SIGNAL_RUN_FIRST,
                              gobject.TYPE_NONE, ([])),
         'state-changed'   : (gobject.SIGNAL_RUN_FIRST,
                              gobject.TYPE_NONE, ([]))
@@ -115,19 +113,19 @@ class Network(gobject.GObject):
             logging.debug("Net(%s): ssid '%s' dropping because WPA[2] unsupported" % (self._op,
                     self._ssid))
             self._valid = False
-            self.emit('init-failed')
-        else:
-            self._valid = True
-            logging.debug("Net(%s): ssid '%s', mode %d, strength %d" % (self._op,
-                    self._ssid, self._mode, self._strength))
+            self.emit('initialized', self._valid)
+            return
 
-        self.emit('strength-changed')
-        self.emit('ssid-changed')
+        self._valid = True
+        logging.debug("Net(%s): ssid '%s', mode %d, strength %d" % (self._op,
+                self._ssid, self._mode, self._strength))
+
+        self.emit('initialized', self._valid)
 
     def _update_error_cb(self, err):
         logging.debug("Net(%s): failed to update. (%s)" % (self._op, err))
         self._valid = False
-        self.emit('init-failed')
+        self.emit('initialized', self._valid)
 
     def get_ssid(self):
         return self._ssid
@@ -136,8 +134,11 @@ class Network(gobject.GObject):
         return self._state
 
     def set_state(self, state):
+        if state == self._state:
+            return
         self._state = state
-        self.emit('state-changed')
+        if self._valid:
+            self.emit('state-changed')
 
     def get_op(self):
         return self._op
@@ -146,8 +147,11 @@ class Network(gobject.GObject):
         return self._strength
 
     def set_strength(self, strength):
+        if strength == self._strength:
+            return
         self._strength = strength
-        self.emit('strength-changed')
+        if self._valid:
+            self.emit('strength-changed')
 
     def is_valid(self):
         return self._valid
@@ -156,12 +160,9 @@ class Device(gobject.GObject):
     __gsignals__ = {
         'init-failed':         (gobject.SIGNAL_RUN_FIRST,
                                 gobject.TYPE_NONE, ([])),
-        'strength-changed':    (gobject.SIGNAL_RUN_FIRST,
-                                gobject.TYPE_NONE,
-                               ([gobject.TYPE_PYOBJECT])),
-        'strength-changed':    (gobject.SIGNAL_RUN_FIRST,
-                                gobject.TYPE_NONE, ([])),
         'ssid-changed':        (gobject.SIGNAL_RUN_FIRST,
+                                gobject.TYPE_NONE, ([])),
+        'strength-changed':    (gobject.SIGNAL_RUN_FIRST,
                                 gobject.TYPE_NONE, ([])),
         'state-changed':       (gobject.SIGNAL_RUN_FIRST,
                                 gobject.TYPE_NONE, ([])),
@@ -220,36 +221,49 @@ class Device(gobject.GObject):
         for op in net_ops:
             net = Network(op)
             self._networks[op] = net
-            net.connect('init-failed', self._net_init_failed)
-            if op == active_op:
-                self.set_active_network(net)
-
-            self.emit('network-appeared', net)
+            net.connect('initialized', lambda *args: self._net_initialized_cb(active_op, *args))
 
     def _update_error_cb(self, err):
         logging.debug("Device(%s): failed to update. (%s)" % (self._op, err))
         self._valid = False
         self.emit('init-failed')
 
-    def _net_init_failed(self, net):
+    def _net_initialized_cb(self, active_op, net, valid):
         net_op = net.get_op()
         if not self._networks.has_key(net_op):
             return
-        del self._networks[net_op]
+
+        if not valid:
+            # init failure
+            del self._networks[net_op]
+            return
+
+        # init success
+        self.emit('network-appeared', net)
+        if active_op and net_op == active_op:
+            self.set_active_network(net)
 
     def get_op(self):
         return self._op
 
     def get_networks(self):
-        return self._networks.values()
+        ret = []
+        for net in self._networks.values():
+            if net.is_valid():
+                ret.append(net)
+        return ret
 
     def get_network(self, op):
-        if self._networks.has_key(op):
+        if self._networks.has_key(op) and self._networks[op].is_valid():
             return self._networks[op]
         return None
 
     def get_network_ops(self):
-        return self._networks.keys()
+        ret = []
+        for net in self._networks.values():
+            if net.is_valid():
+                ret.append(net.get_op())
+        return ret
 
     def get_strength(self):
         return self._strength
@@ -270,8 +284,7 @@ class Device(gobject.GObject):
             return
         net = Network(network)
         self._networks[network] = net
-        net.connect('init-failed', self._net_init_failed)
-        self.emit('network-appeared', net)
+        net.connect('initialized', lambda *args: self._net_initialized_cb(None, *args))
 
     def network_disappeared(self, network):
         if not self._networks.has_key(network):
@@ -281,42 +294,29 @@ class Device(gobject.GObject):
 
         del self._networks[network]
 
-    def _active_network_ssid_changed_cb(self, active_network):
-        self._ssid = active_network.get_ssid()
-        self.emit('ssid-changed')
-
     def set_active_network(self, network):
         if self._active_network == network:
             return
 
+        # Make sure the old one doesn't get a stuck state
         if self._active_network:
             self._active_network.disconnect(self._ssid_sid)
             self._active_network.set_state(NETWORK_STATE_NOTCONNECTED)
 
         self._active_network = network
 
-        if self._active_network:
-            self._ssid_sid = network.connect(
-                'ssid-changed', self._active_network_ssid_changed_cb)
+        # don't emit ssid-changed for networks that are not yet valid
+        if self._active_network and self._active_network.is_valid():
+            self.emit('ssid-changed')
+        elif not self._active_network:
+            self.emit('ssid-changed')
 
-    def get_state(self):
-        return self._state
+    def _get_active_net_cb(self, state, net_op):
+        if not self._networks.has_key(net_op):
+            self.set_active_network(None)
+            return
 
-    def set_state(self, state):
-        self._state = state
-
-        if self._type == DEVICE_TYPE_802_11_WIRELESS:
-            try:
-                obj = sys_bus.get_object(NM_SERVICE, self._op)
-                dev = dbus.Interface(obj, NM_IFACE_DEVICES)
-                network = dev.getActiveNetwork()
-            except dbus.DBusException:
-                network = None
-
-            if self._networks.has_key(network):
-                self.set_active_network(self._networks[network])
-            else:
-                self.set_active_network(None)
+        self.set_active_network(self._networks[net_op])
 
         _device_to_network_state = {
             DEVICE_STATE_ACTIVATING : NETWORK_STATE_CONNECTING,
@@ -324,11 +324,31 @@ class Device(gobject.GObject):
             DEVICE_STATE_INACTIVE   : NETWORK_STATE_NOTCONNECTED
         }
 
-        if self._active_network:
-            network_state = _device_to_network_state[state]
-            self._active_network.set_state(network_state)
+        network_state = _device_to_network_state[state]
+        self._active_network.set_state(network_state)
 
+    def _get_active_net_error_cb(self, err):
+        logging.debug("Couldn't get active network: %s" % err)
+        self.set_active_network(None)
+
+    def get_state(self):
+        return self._state
+
+    def set_state(self, state):
+        if state == self._state:
+            return
+
+        self._state = state
         self.emit('state-changed')
+
+        if self._type == DEVICE_TYPE_802_11_WIRELESS:
+            if state == DEVICE_STATE_INACTIVE:
+                self.set_active_network(None)
+            else:
+                obj = sys_bus.get_object(NM_SERVICE, self._op)
+                dev = dbus.Interface(obj, NM_IFACE_DEVICES)
+                dev.getActiveNetwork(reply_handler=lambda *args: self._get_active_net_cb(state, *args),
+                            error_handler=self._get_active_net_error_cb)
 
     def get_ssid(self):
         return self._ssid
