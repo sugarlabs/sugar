@@ -22,10 +22,6 @@ from sugar.graphics.toolbar import Toolbar
 from sugar.graphics.label import Label
 from sugar.graphics.iconbutton import IconButton
 
-import os
-theme = gtk.icon_theme_get_default()
-theme.prepend_search_path(os.path.join(os.path.dirname(__file__), 'data'))
-
 BUTTON_DELETE = 1
     
 window = gtk.Window()
