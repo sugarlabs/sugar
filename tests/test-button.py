@@ -29,10 +29,6 @@ from sugar.graphics.entry import Entry
 def _button_activated_cb(button):
     print "_button_activated_cb"
 
-import os
-theme = gtk.icon_theme_get_default()
-theme.prepend_search_path(os.path.join(os.path.dirname(__file__), 'data'))
-
 window = gtk.Window()
 window.connect("destroy", lambda w: gtk.main_quit())
 window.show()

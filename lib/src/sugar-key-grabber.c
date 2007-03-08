@@ -103,11 +103,27 @@ get_key_from_event(SugarKeyGrabber *grabber, XEvent *xev)
 	keycode = xev->xkey.keycode;
 	state = xev->xkey.state;
 
+	if(grabber->last_key_pressed == keycode) {
+		grabber->last_key_pressed = 0;
+	}
+	if(grabber->last_key_pressed_modifier == state) {
+		grabber->last_key_pressed_modifier = 0;
+	}
+
 	for (l = grabber->keys; l != NULL; l = l->next) {
 		Key *keyinfo = (Key *)l->data;
-		if (keyinfo->keycode == keycode &&
-		    (state & USED_MODS) == keyinfo->state) {
-			return g_strdup(keyinfo->key);
+		if (keyinfo->keycode == keycode) {
+			if (xev->type == KeyPress &&
+				(state & USED_MODS) == keyinfo->state) {
+
+				return g_strdup(keyinfo->key);
+			} else if (xev->type == KeyRelease) {
+				if(!grabber->last_key_pressed &&
+					!grabber->last_key_pressed_modifier) {
+
+					return g_strdup(keyinfo->key);
+				}
+			}
 		}
 	}
 
@@ -139,6 +155,9 @@ filter_events(GdkXEvent *xevent, GdkEvent *event, gpointer data)
 
 			key = get_key_from_event(grabber, xevent);
 			if (key) {
+				grabber->last_key_pressed = xev->xkey.keycode;
+				grabber->last_key_pressed_modifier = xev->xkey.state;
+
 				g_signal_emit (grabber, signals[KEY_PRESSED], 0, key);
 				g_free(key);
 
@@ -161,6 +180,8 @@ sugar_key_grabber_init(SugarKeyGrabber *grabber)
 	screen = gdk_screen_get_default();
 	grabber->root = gdk_screen_get_root_window(screen);
 	grabber->keys = NULL;
+	grabber->last_key_pressed = 0;
+	grabber->last_key_pressed_modifier = 0;
 
 	gdk_window_add_filter(grabber->root, filter_events, grabber);
 }

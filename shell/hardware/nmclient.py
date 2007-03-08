@@ -300,7 +300,6 @@ class Device(gobject.GObject):
 
         # Make sure the old one doesn't get a stuck state
         if self._active_network:
-            self._active_network.disconnect(self._ssid_sid)
             self._active_network.set_state(NETWORK_STATE_NOTCONNECTED)
 
         self._active_network = network

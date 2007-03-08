@@ -30,10 +30,6 @@ from sugar.graphics.iconbutton import IconButton
 def _option_menu_changed_cb(option_menu):
     print '_option_menu_activated_cb: %i' % option_menu.props.value
 
-import os
-theme = gtk.icon_theme_get_default()
-theme.prepend_search_path(os.path.join(os.path.dirname(__file__), 'data'))
-
 window = gtk.Window()
 window.connect("destroy", lambda w: gtk.main_quit())
 window.show()

@@ -21,7 +21,7 @@ class DevicesModel(gobject.GObject):
         gobject.GObject.__init__(self)
 
         self._devices = {}
-        self.add_device(battery.Device())
+        #self.add_device(battery.Device())
 
         self._observe_network_manager()
 

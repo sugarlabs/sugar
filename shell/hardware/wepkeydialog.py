@@ -23,7 +23,7 @@ IW_AUTH_ALG_SHARED_KEY  = 0x00000002
 
 class WEPKeyDialog(gtk.Dialog):
     def __init__(self, net, async_cb, async_err_cb):
-        gtk.Dialog.__init__(self)
+        gtk.Dialog.__init__(self, flags=gtk.DIALOG_MODAL)
         self.set_title("Wireless Key Required")
 
         self._net = net
@@ -47,6 +47,8 @@ class WEPKeyDialog(gtk.Dialog):
 
         self.set_default_response(gtk.RESPONSE_OK)
         self._update_response_sensitivity()
+
+        self._entry.grab_focus()
 
     def get_key(self):
         return self._entry.get_text()

@@ -1,4 +1,7 @@
 confdir = $(pkgdatadir)
 conf_DATA = kbdconfig
 
-EXTRA_DIST = $(conf_DATA)
+imagedir = $(pkgdatadir)
+image_DATA = default-picture.png
+
+EXTRA_DIST = $(conf_DATA) $(image_DATA)

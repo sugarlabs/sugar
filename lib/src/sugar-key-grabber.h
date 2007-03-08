@@ -39,6 +39,8 @@ struct _SugarKeyGrabber {
 
 	GdkWindow *root;
 	GList *keys;
+	guint last_key_pressed;
+	guint last_key_pressed_modifier;
 };
 
 struct _SugarKeyGrabberClass {

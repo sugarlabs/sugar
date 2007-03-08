@@ -39,7 +39,7 @@ from sugar.emulator import Emulator
 import _sugar
 
 if len(sys.argv) == 1:
-    program = 'sugar-shell'
+    program = 'shell/sugar-shell'
 else:
     program = sys.argv[1]
 
@@ -58,7 +58,7 @@ emulator = Emulator(width, height, fullscreen, dpi)
 emulator.start()
 
 if sourcedir:
-    program = os.path.join(os.path.join(sourcedir, 'shell'), program)
+    program = os.path.join(sourcedir, program)
     os.execlp('dbus-launch', 'dbus-launch', '--exit-with-session', program, sourcedir)
 else:
     os.execlp('dbus-launch', 'dbus-launch', '--exit-with-session', program)
