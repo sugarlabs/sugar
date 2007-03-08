@@ -29,6 +29,7 @@ class Activity(dbus.service.Object):
         self._valid = False
         self._name = None
         self._activity_id = activity_id
+        self._type None
 
         self._object_id = object_id
         self._object_path = "/org/laptop/Presence/Activities/%d" % self._object_id
@@ -68,6 +69,11 @@ class Activity(dbus.service.Object):
                         in_signature="", out_signature="s")
     def GetColor(self):
         return self.get_color()
+
+    @dbus.service.method(_ACTIVITY_INTERFACE,
+                        in_signature="", out_signature="s")
+    def GetType(self):
+        return self.get_type()
 
     @dbus.service.method(_ACTIVITY_INTERFACE,
                         in_signature="", out_signature="")
@@ -110,6 +116,9 @@ class Activity(dbus.service.Object):
 
     def get_name(self):
         return self._name
+
+    def get_type(self):
+        return self._type
 
     def buddy_joined(self, buddy):
         if buddy not in self._buddies:
