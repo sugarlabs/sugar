@@ -39,7 +39,10 @@ from sugar.emulator import Emulator
 import _sugar
 
 if len(sys.argv) == 1:
-    program = 'shell/sugar-shell'
+    if sourcedir:
+        program = os.path.join(sourcedir, 'shell/sugar-shell')
+    else:
+        program = 'sugar-shell'
 else:
     program = sys.argv[1]
 
