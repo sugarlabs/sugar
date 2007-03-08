@@ -29,7 +29,7 @@ class Activity(dbus.service.Object):
         self._valid = False
         self._name = None
         self._activity_id = activity_id
-        self._type None
+        self._type = None
 
         self._object_id = object_id
         self._object_path = "/org/laptop/Presence/Activities/%d" % self._object_id
