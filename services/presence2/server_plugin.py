@@ -218,9 +218,7 @@ class ServerPlugin(gobject.GObject):
 
         self._conn[CONN_INTERFACE_AVATARS].connect_to_signal('AvatarUpdated', self._avatar_updated_cb)
 
-        # FIXME: we need to use PEP to store the nick. We aren't notified when
-        # vcards are changed
-        #self._conn[CONN_INTERFACE_ALIASING].connect_to_signal('AliasesChanged', self._alias_changed_cb)
+        self._conn[CONN_INTERFACE_ALIASING].connect_to_signal('AliasesChanged', self._alias_changed_cb)
 
         try:
             self._set_self_buddy_info()
@@ -409,9 +407,8 @@ class ServerPlugin(gobject.GObject):
 
     def _alias_changed_cb(self, aliases):
         for handle, alias in aliases:
-            nick = self._conn[CONN_INTERFACE_ALIASING].RequestAliases([handle])[0]
-            prop = {'nick': nick}
-            print "Buddy %s alias changed to %s" % (handle, nick)
+            prop = {'nick': alias}
+            #print "Buddy %s alias changed to %s" % (handle, alias)
             self._properties_changed_cb(handle, prop)
 
     def _properties_changed_cb(self, contact, properties):

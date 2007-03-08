@@ -134,7 +134,7 @@ class PresenceService(dbus.service.Object):
         buddy = self._handles_buddies[tp].get(handle)
         if buddy:
             buddy.set_properties(prop)
-            print "Buddy %s properties updated" % buddy.props.key
+            #print "Buddy %s properties updated" % buddy.props.key
 
     def _new_activity(self, activity_id, tp):
         objid = self._get_next_object_id()
