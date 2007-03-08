@@ -63,6 +63,7 @@ class IntroFallbackVideo(gtk.EventBox):
         self._image = gtk.Image()
         self._image.set_from_stock(gtk.STOCK_OPEN, -1)
         self.add(self._image)
+        self._image.show()
         self.connect('button-press-event', self._button_press_event_cb)
 
     def play(self):
@@ -80,11 +81,14 @@ class IntroFallbackVideo(gtk.EventBox):
         resp = chooser.run()
         if resp == gtk.RESPONSE_ACCEPT:
             fname = chooser.get_filename()
-            pixbuf = gtk.gdk.pixbuf_new_from_file(fname)
-            self.emit('pixbuf', pixbuf)
+            self.load_image(fname)
         chooser.hide()
         chooser.destroy()
         return True
+
+    def load_image(self, path):
+        pixbuf = gtk.gdk.pixbuf_new_from_file(path)
+        self.emit('pixbuf', pixbuf)
 
 class VideoBox(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = "SugarVideoBox"
@@ -137,6 +141,10 @@ class VideoBox(hippo.CanvasBox, hippo.CanvasItem):
         self._img.connect('button-press-event', self._clear_image_cb)
         self._img_widget = hippo.CanvasWidget()
         self._img_widget.props.widget = self._img
+
+        if not has_webcam:
+            path = os.path.join(env.get_data_dir(),'default-picture.png')
+            self._video.load_image(path)
 
     def _clear_image_cb(self, widget, event):
         del self._pixbuf
