@@ -73,9 +73,10 @@ class Buddy(DBusGObject):
         self._key = None
         self._icon = ''
 
+        if not kwargs.get("key"):
+            raise ValueError("key required")
+
         gobject.GObject.__init__(self, **kwargs)
-        if not self._key:
-            raise RuntimeError("public key required")
 
     def do_get_property(self, pspec):
         if pspec.name == "key":
@@ -109,8 +110,6 @@ class Buddy(DBusGObject):
         elif pspec.name == "current-activity":
             self._current_activity = value
         elif pspec.name == "key":
-            if self._key:
-                raise RuntimeError("key already set")
             self._key = value
 
         self._update_validity()
@@ -167,25 +166,25 @@ class Buddy(DBusGObject):
         return dbus.ObjectPath(self._object_path)
 
     def add_activity(self, activity):
-        actid = activity.get_id()
+        actid = activity.props.id
         if self._activities.has_key(actid):
             return
         self._activities[actid] = activity
-        if activity.is_valid():
+        if activity.props.valid:
             self.JoinedActivity(activity.object_path())
 
     def remove_activity(self, activity):
-        actid = activity.get_id()
+        actid = activity.props.id
         if not self._activities.has_key(actid):
             return
         del self._activities[actid]
-        if activity.is_valid():
+        if activity.props.valid:
             self.LeftActivity(activity.object_path())
 
     def get_joined_activities(self):
         acts = []
         for act in self._activities.values():
-            if act.is_valid():
+            if act.props.valid:
                 acts.append(act)
         return acts
 

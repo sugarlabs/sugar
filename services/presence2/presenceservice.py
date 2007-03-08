@@ -137,22 +137,35 @@ class PresenceService(dbus.service.Object):
             #print "Buddy %s properties updated" % buddy.props.key
 
     def _new_activity(self, activity_id, tp):
-        objid = self._get_next_object_id()
-        activity = Activity(self._bus_name, objid, activity_id, tp)
-        # FIXME : don't do that shit !
-        activity._valid = True
+        try:
+            objid = self._get_next_object_id()
+            activity = Activity(self._bus_name, objid, tp, id=activity_id)
+        except Exception, e:
+            print "Invalid activity: %s" % e
+            return None
+
+        activity.connect("validity-changed", self._activity_validity_changed_cb)
+
         self._activities[activity_id] = activity
 
-        print "new activity", activity_id
-        self.ActivityAppeared(activity.object_path())
+        # FIXME
+        # Use values from the network
+        import random
+        names = ["Tommy", "Susie", "Jill", "Bryan", "Nathan", "Sophia", "Haley", "Jimmy"]
+        name = names[random.randint(0, len(names) - 1)]
+        activity.props.name = "Chat with %s" % name
+        activity.props.type = "org.laptop.Sugar.Chat"
+        from sugar.graphics import xocolor
+        color = xocolor.XoColor().to_string()
+        activity.props.color = color
 
         return activity
 
     def _remove_activity(self, activity):
-        print "remove activity", activity.get_id()
+        print "remove activity", activity.props.id
 
         self.ActivityDisappeared(activity.object_path())
-        del self._activities[activity.get_id()]
+        del self._activities[activity.props.id]
     
     def _contact_activities_changed(self, tp, contact_handle, activities):
         print "------------activities changed-------------"
@@ -168,7 +181,7 @@ class PresenceService(dbus.service.Object):
 
         old_activities = set()
         for activity in buddy.get_joined_activities():
-            old_activities.add(activity.get_id())
+            old_activities.add(activity.props.id)
 
         new_activities = set(activities)
 
@@ -177,11 +190,12 @@ class PresenceService(dbus.service.Object):
             print "buddy", contact_handle, "joined", act
             activity = self._activities.get(act)
             if not activity:
-                # new activity
+                # new activity, can fail
                 activity = self._new_activity(act, tp)
 
-            activity.buddy_joined(buddy)
-            buddy.add_activity(activity)
+            if activity:
+                activity.buddy_joined(buddy)
+                buddy.add_activity(activity)
 
         activities_left = old_activities - new_activities
         for act in activities_left:
@@ -278,17 +292,23 @@ class PresenceService(dbus.service.Object):
     def _share_activity(self, actid, atype, name, properties):
         objid = self._get_next_object_id()
         # FIXME check which tp client we should use to share the activity
-        activity = Activity(self._bus_name, objid, actid, self._server_plugin)
-        # FIXME : don't do that shit !
-        activity._valid = True
+        color = self._owner.props.color
+        activity = Activity(self._bus_name, objid, self._server_plugin,
+                        id=actid, type=atype, name=name, color=color, local=True)
+        activity.connect("validity-changed", self._activity_validity_changed_cb)
         self._activities[actid] = activity
-        # FIXME set the type, name, properties...
 
-        print "new activity", actid
         activity.join()
-        self.ActivityAppeared(activity.object_path())
 
         return activity
+
+    def _activity_validity_changed_cb(self, activity, valid):
+        if valid:
+            self.ActivityAppeared(activity.object_path())
+            print "New Activity: %s (%s)" % (activity.props.name, activity.props.id)
+        else:
+            self.ActivityDisappeared(activity.object_path())
+            print "Activity disappeared: %s (%s)" % (activity.props.name, activity.props.id)
 
 
 def main():
