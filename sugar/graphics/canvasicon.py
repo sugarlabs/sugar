@@ -176,7 +176,6 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
 
         hippo.CanvasBox.__init__(self, **kwargs)
 
-        self.connect_after('button-press-event', self._button_press_event_cb)
         self.connect_after('motion-notify-event', self._motion_notify_event_cb)
 
     def _clear_buffers(self):
@@ -326,9 +325,9 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         [width, height] = self._get_icon_size()
         return height
 
-    def _button_press_event_cb(self, item, event):
+    def do_button_press_event(self, event):
         item.emit_activated()
-        return False
+        return True
 
     def get_popup(self):
         if self._tooltip:

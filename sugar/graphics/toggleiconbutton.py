@@ -16,11 +16,12 @@
 # Boston, MA 02111-1307, USA.
 
 import gobject
+import hippo
 
 from sugar.graphics.iconbutton import IconButton
 from sugar.graphics import color
             
-class ToggleIconButton(IconButton):
+class ToggleIconButton(IconButton, hippo.CanvasItem):
     __gtype_name__ = 'SugarToggleIconButton'    
 
     __gproperties__ = {
@@ -32,9 +33,6 @@ class ToggleIconButton(IconButton):
         self._toggled = False
 
         IconButton.__init__(self, **kwargs)
-
-        self.connect('button-press-event',
-                     self._toggle_icon_button_press_event_cb)
 
     def _get_bg_color(self):
         if self._toggled:
@@ -60,7 +58,7 @@ class ToggleIconButton(IconButton):
 
         return IconButton.do_get_property(self, pspec)
 
-    def _toggle_icon_button_press_event_cb(self, widget, event):
+    def do_button_press_event(self, event):
         self.props.toggled = not self._toggled
         return True
 
