@@ -50,24 +50,23 @@ class ShellOwner(gobject.GObject):
         gobject.GObject.__init__(self)
 
         self._nick = profile.get_nick_name()
-        user_dir = env.get_profile_path()
 
         self._icon = None
         self._icon_hash = ""
-        for fname in os.listdir(user_dir):
-            if not fname.startswith("buddy-icon."):
-                continue
-            fd = open(os.path.join(user_dir, fname), "r")
-            self._icon = fd.read()
-            fd.close()
-            if not self._icon:
-                raise RuntimeError("No buddy icon exists")
+        icon = os.path.join(env.get_profile_path(), "buddy-icon.jpg")
+        if not os.path.exists(icon):
+            raise RuntimeError("missing buddy icon")
 
-            # Get the icon's hash
-            import md5, binascii
-            digest = md5.new(self._icon).digest()
-            self._icon_hash = util.printable_hash(digest)
-            break
+        fd = open(icon, "r")
+        self._icon = fd.read()
+        fd.close()
+        if not self._icon:
+            raise RuntimeError("invalid buddy icon")
+
+        # Get the icon's hash
+        import md5
+        digest = md5.new(self._icon).digest()
+        self._icon_hash = util.printable_hash(digest)
 
         self._pservice = PresenceService.get_instance()
 
