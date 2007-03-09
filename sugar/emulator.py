@@ -64,12 +64,12 @@ class Process:
         self._stdout = result[2]
 
 class MatchboxProcess(Process):
-    def __init__(self):
-        kbd_config = os.path.join(env.get_data_dir(), 'kbdconfig')
-        options = '-kbdconfig %s ' % kbd_config
-
-        options += '-use_titlebar no '
+    def __init__(self, kbd_config):
+        options = '-use_titlebar no '
         options += '-theme olpc '
+
+        if kbd_config:
+            options = '-kbdconfig %s ' % kbd_config
 
         command = 'matchbox-window-manager %s ' % options
         Process.__init__(self, command)
@@ -78,15 +78,14 @@ class MatchboxProcess(Process):
         return 'Matchbox'
 
 class XephyrProcess(Process):
-    def __init__(self, width, height, fullscreen, dpi):
+    def __init__(self, width, height, dpi):
         self._display = get_display_number()
         cmd = 'Xephyr :%d -ac ' % (self._display)
 
-        if fullscreen:
-            cmd += ' -fullscreen '
-        
         if width > 0 and height > 0:
             cmd += ' -screen %dx%d' % (width, height)
+        else:
+            cmd += ' -fullscreen '                    
 
         if dpi > 0:
             cmd += ' -dpi %d' % (dpi)
@@ -103,20 +102,22 @@ class XephyrProcess(Process):
 
 class Emulator(object):
     """The OLPC emulator"""
-    def __init__(self, width, height, fullscreen, dpi):
-        self._fullscreen = fullscreen
+    def __init__(self, width, height, dpi):
+        self._keyboard_config = None
         self._width = width
         self._height = height
         self._dpi = dpi
 
+    def set_keyboard_config(self, config):
+        self._keyboard_config = config
+
     def start(self):
         try:
-            process = XephyrProcess(self._width, self._height,
-                                    self._fullscreen, self._dpi)
+            process = XephyrProcess(self._width, self._height, self._dpi)
             process.start()
         except:
             print 'Cannot run the emulator. You need to install Xephyr'
             sys.exit(0)
 
-        process = MatchboxProcess()
+        process = MatchboxProcess(self._keyboard_config)
         process.start()
