@@ -25,24 +25,12 @@ import gtk
 
 os.environ['SUGAR_EMULATOR'] = 'yes'
 
-sourcedir = os.path.abspath(os.path.dirname(__file__))
-if os.path.isfile(os.path.join(sourcedir, 'sugar/__uninstalled__.py')):
-	print 'Running sugar from ' + sourcedir + ' ...'
-	sys.path.insert(0, sourcedir)
-else:
-	print 'Running the installed sugar...'
-	sourcedir = None
-
 from sugar import env
-from sugar import util
 from sugar.emulator import Emulator
 import _sugar
 
 if len(sys.argv) == 1:
-    if sourcedir:
-        program = os.path.join(sourcedir, 'shell/sugar-shell')
-    else:
-        program = 'sugar-shell'
+    program = 'sugar-shell'
 else:
     program = sys.argv[1]
 
@@ -54,18 +42,10 @@ else:
     height = 900
 
 dpi = min(_sugar.get_screen_dpi(), 96)
-
-if sourcedir:
-    kbd_config = os.path.join(sourcedir, 'emulator/kbdconfig')
-else:
-    kbd_config = os.path.join(env.get_emulator_path('kbdconfig'))
+kbd_config = os.path.join(env.get_emulator_path('kbdconfig'))
 
 emulator = Emulator(width, height, dpi)
 emulator.set_keyboard_config(kbd_config)
 emulator.start()
 
-if sourcedir:
-    program = os.path.join(sourcedir, program)
-    os.execlp('dbus-launch', 'dbus-launch', '--exit-with-session', program, sourcedir)
-else:
-    os.execlp('dbus-launch', 'dbus-launch', '--exit-with-session', program)
+os.execlp('dbus-launch', 'dbus-launch', '--exit-with-session', program)

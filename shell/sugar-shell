@@ -20,9 +20,6 @@ import sys
 import os
 from ConfigParser import ConfigParser
 
-if len(sys.argv) == 2:
-    sys.path.insert(0, sys.argv[1])
-
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -36,8 +33,7 @@ from sugar import TracebackUtils
 logger.cleanup()
 logger.start('shell')
 
-if len(sys.argv) == 1:
-    sys.path.insert(0, env.get_shell_path())
+sys.path.insert(0, env.get_shell_path())
 
 from view.Shell import Shell
 from model.ShellModel import ShellModel
