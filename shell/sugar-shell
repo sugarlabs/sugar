@@ -18,6 +18,7 @@
 
 import sys
 import os
+from ConfigParser import ConfigParser
 
 if len(sys.argv) == 2:
     sys.path.insert(0, sys.argv[1])
@@ -55,9 +56,15 @@ if not key or not len(key):
 #
 # WARNING!!! this is going away at some near future point, do not rely on it
 #
-dsba_file = os.path.join(env.get_profile_path(), "session_bus_address")
+dsba_file = os.path.join(env.get_profile_path(), "session.info")
 f = open(dsba_file, "w")
-f.write(os.environ["DBUS_SESSION_BUS_ADDRESS"])
+
+cp = ConfigParser()
+cp.add_section('Session')
+cp.set('Session', 'dbus_address', os.environ['DBUS_SESSION_BUS_ADDRESS'])
+cp.set('Session', 'display', gtk.gdk.display_get_default().get_name())
+cp.write(f)
+
 f.close()
 
 model = ShellModel()

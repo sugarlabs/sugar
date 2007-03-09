@@ -18,6 +18,16 @@
 
 import sys
 import os
+from ConfigParser import ConfigParser
+
+from sugar import env
+
+# Setup the environment so that we run inside the Sugar shell
+cp = ConfigParser()
+cp.read([env.get_profile_path("session.info")])
+os.environ['DBUS_SESSION_BUS_ADDRESS'] = cp.get('Session', 'dbus_address')
+os.environ['DISPLAY'] = cp.get('Session', 'display')
+del cp
 
 import gtk
 import dbus
@@ -26,15 +36,6 @@ import dbus.glib
 from sugar.activity import bundleregistry
 from sugar.activity import activityfactory
 from sugar.activity import activityfactoryservice
-from sugar import env
-
-def _setup_bus_address():
-    '''Use the bus address of the running Sugar'''
-    bus_file = os.path.join(env.get_profile_path(), "session_bus_address")
-    f = open(bus_file, "r")
-    bus_name = f.read()
-    f.close()
-    os.environ['DBUS_SESSION_BUS_ADDRESS'] = bus_name
 
 def _success_cb(handler, exit):
     if exit:
@@ -46,8 +47,6 @@ def _error_cb(handler, err):
 
 def print_help(self):
     sys.exit(0)
-
-_setup_bus_address()
 
 bundle = None
 
