@@ -77,22 +77,25 @@ class ActivityFactoryService(dbus.service.Object):
         if len(self._activities) == 0:
             gtk.main_quit()
 
-def run(args):
+def run_with_args(args):
     """Start the activity factory."""
     parser = OptionParser()
     parser.add_option("-p", "--bundle-path", dest="bundle_path",
                       help="path to the activity bundle")
     (options, args) = parser.parse_args()
 
-    sys.path.insert(0, options.bundle_path)
+    run(options.bundle_path)
 
-    bundle = Bundle(options.bundle_path)
+def run(bundle_path):
+    sys.path.insert(0, bundle_path)
+
+    bundle = Bundle(bundle_path)
 
     logger.start(bundle.get_name())
 
-    os.environ['SUGAR_BUNDLE_PATH'] = options.bundle_path
+    os.environ['SUGAR_BUNDLE_PATH'] = bundle_path
     os.environ['SUGAR_BUNDLE_SERVICE_NAME'] = bundle.get_service_name()
     os.environ['SUGAR_BUNDLE_DEFAULT_TYPE'] = bundle.get_default_type()
 
-    factory = ActivityFactoryService(bundle.get_service_name(), args[0])
-    gtk.main()
+    factory = ActivityFactoryService(bundle.get_service_name(),
+                                     bundle.get_class())

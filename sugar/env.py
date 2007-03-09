@@ -34,20 +34,23 @@ def is_emulator():
             return True
     return False
 
-def get_profile_path():
+def get_profile_path(path=None):
     if os.environ.has_key('SUGAR_PROFILE'):
         profile_id = os.environ['SUGAR_PROFILE']
     else:
         profile_id = 'default'
 
-    path = os.path.join(os.path.expanduser('~/.sugar'), profile_id)
-    if not os.path.isdir(path):
+    base = os.path.join(os.path.expanduser('~/.sugar'), profile_id)
+    if not os.path.isdir(base):
         try:
-            os.makedirs(path)
+            os.makedirs(base)
         except OSError, exc:
             print "Could not create user directory."
 
-    return path
+    if path != None:
+        return os.path.join(base, path)
+    else:
+        return base
 
 def get_user_activities_path():
     path = os.path.expanduser('~/Activities')

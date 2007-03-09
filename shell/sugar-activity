@@ -18,30 +18,63 @@
 
 import sys
 import os
-import gobject
+from ConfigParser import ConfigParser
 
-from sugar.activity import activityfactory
 from sugar import env
-from sugar import util
 
-def _success_cb(handler, activity, loop):
-    activity.start(util.unique_id())
-    loop.quit()
+# Setup the environment so that we run inside the Sugar shell
+cp = ConfigParser()
+cp.read([env.get_profile_path("session.info")])
+os.environ['DBUS_SESSION_BUS_ADDRESS'] = cp.get('Session', 'dbus_address')
+os.environ['DISPLAY'] = cp.get('Session', 'display')
+del cp
 
-def _error_cb(handler, err, loop):
-    loop.quit()
+import gtk
+import dbus
+import dbus.glib
 
-ppath = env.get_profile_path()
-bus_file = os.path.join(ppath, "session_bus_address")
-f = open(bus_file, "r")
-bus_name = f.read()
-f.close()
-os.environ['DBUS_SESSION_BUS_ADDRESS'] = bus_name
+from sugar.activity import bundleregistry
+from sugar.activity import activityfactory
+from sugar.activity import activityfactoryservice
 
-loop = gobject.MainLoop()
+def _success_cb(handler, exit):
+    if exit:
+        gtk.main_quit()
 
-handler = activityfactory.create(sys.argv[1])
-handler.connect('success', _success_cb, loop)
-handler.connect('error', _error_cb, loop)
+def _error_cb(handler, err):
+    print err
+    gtk.main_quit()
 
-loop.run()
+def print_help(self):
+    sys.exit(0)
+
+bundle = None
+
+if len(sys.argv) > 1:
+    registry = bundleregistry.get_registry()
+    bundle = registry.find_bundle(sys.argv[1])
+
+if bundle == None:
+    print 'Usage:\n\n' \
+          'sugar-activity [bundle]\n\n' \
+          'Bundle can be a part of the service name or of bundle name.'
+    sys.exit(0)
+
+bus = dbus.SessionBus()
+bus_object = bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
+try:
+    name = bus_object.GetNameOwner(
+        bundle.get_service_name(), dbus_interface='org.freedesktop.DBus')
+except  dbus.DBusException:
+    name = None
+
+if name:
+    print '%s is already running, creating a new instance.' % service_name
+else:
+    activityfactoryservice.run(bundle.get_path())
+
+handler = activityfactory.create(bundle.get_service_name())
+handler.connect('success', _success_cb, name != None)
+handler.connect('error', _error_cb)
+
+gtk.main()

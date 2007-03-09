@@ -43,8 +43,8 @@ class Bundle:
 
         if cp.has_option(section, 'class'):
             self._class = cp.get(section, 'class')
-            self._exec = '%s %s --bundle-path="%s"' % (
-              env.get_bin_path(_PYTHON_FACTORY), self._class, self.get_path())
+            self._exec = '%s --bundle-path="%s"' % (
+              env.get_bin_path(_PYTHON_FACTORY), self.get_path())
         elif cp.has_option(section, 'exec'):
             self._class = None
             self._exec = cp.get(section, 'exec')
@@ -105,7 +105,7 @@ class Bundle:
 
     def get_class(self):
         """Get the main Activity class"""
-        return self._exec
+        return self._class
 
     def get_show_launcher(self):
         """Get whether there should be a visible launcher for the activity"""
