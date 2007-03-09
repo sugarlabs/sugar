@@ -18,6 +18,10 @@
 
 import sys
 
+import pygtk
+pygtk.require('2.0')
+import gtk
+
 from sugar.activity import activityfactoryservice
 
 activityfactoryservice.run_with_args(sys.argv)
