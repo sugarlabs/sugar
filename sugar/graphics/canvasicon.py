@@ -326,7 +326,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         return height
 
     def do_button_press_event(self, event):
-        item.emit_activated()
+        self.emit_activated()
         return True
 
     def get_popup(self):
