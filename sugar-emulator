@@ -56,9 +56,9 @@ else:
 dpi = min(_sugar.get_screen_dpi(), 96)
 
 if sourcedir:
-    kbd_config = os.path.join(sourcedir, 'shell/data/kbdconfig')
+    kbd_config = os.path.join(sourcedir, 'emulator/kbdconfig')
 else:
-    kbd_config = os.path.join(env.get_data_dir(), 'kbdconfig')
+    kbd_config = os.path.join(env.get_emulator_path('kbdconfig'))
 
 emulator = Emulator(width, height, dpi)
 emulator.set_keyboard_config(kbd_config)

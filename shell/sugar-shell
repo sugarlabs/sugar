@@ -36,7 +36,7 @@ logger.cleanup()
 logger.start('shell')
 
 if len(sys.argv) == 1:
-    sys.path.insert(0, os.path.join(env.get_data_dir(), 'shell'))
+    sys.path.insert(0, env.get_shell_path())
 
 from view.Shell import Shell
 from model.ShellModel import ShellModel

@@ -1,14 +1,26 @@
 import os
 from ConfigParser import ConfigParser
+
 import gobject
 
 from sugar.activity.bundle import Bundle
 from sugar import env
 from sugar import util
 
+# http://standards.freedesktop.org/basedir-spec/basedir-spec-0.6.html
+def _get_data_dirs():
+    if os.environ.has_key('XDG_DATA_DIRS'):
+        return os.environ['XDG_DATA_DIRS'].split(':')
+    else:
+        return [ '/usr/local/share/', '/usr/share/' ]
+
 class _ServiceManager(object):
     def __init__(self):
-        self._path = env.get_user_service_dir()
+        service_dir = os.path.expanduser('~/.local/share/dbus-1/services')
+        if not os.path.isdir(service_dir):
+            os.makedirs(service_dir)
+
+        self._path = service_dir
 
     def add(self, bundle):
         util.write_service(bundle.get_service_name(),
@@ -74,8 +86,8 @@ def get_registry():
 
 _bundle_registry = BundleRegistry()
 
-for path in env.get_data_dirs():
+for path in _get_data_dirs():
     bundles_path = os.path.join(path, 'activities')
     _bundle_registry.add_search_path(bundles_path)
 
-_bundle_registry.add_search_path(env.get_user_activities_dir())
+_bundle_registry.add_search_path(env.get_user_activities_path())

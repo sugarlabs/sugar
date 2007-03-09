@@ -24,6 +24,17 @@ try:
 except ImportError:
     from sugar.__installed__ import *
 
+def _get_prefix_path(base, path=None):
+    if os.environ.has_key('SUGAR_PREFIX'):
+        prefix = os.environ['SUGAR_PREFIX']
+    else:
+        prefix = '/usr'
+
+    if path:
+        return os.path.join(prefix, base, path)
+    else:
+        return os.path.join(prefix, base)
+
 def is_emulator():
     if os.environ.has_key('SUGAR_EMULATOR'):
         if os.environ['SUGAR_EMULATOR'] == 'yes':
@@ -45,28 +56,20 @@ def get_profile_path():
 
     return path
 
-def get_data_dir():
-    return sugar_data_dir
-
-def get_shell_bin_dir():
-    return sugar_shell_bin_dir
-
-# http://standards.freedesktop.org/basedir-spec/basedir-spec-0.6.html
-def get_data_dirs():
-    if os.environ.has_key('XDG_DATA_DIRS'):
-        return os.environ['XDG_DATA_DIRS'].split(':')
-    else:
-        return [ '/usr/local/share/', '/usr/share/' ]
-
-def get_user_service_dir():
-    service_dir = os.path.expanduser('~/.local/share/dbus-1/services')
-    if not os.path.isdir(service_dir):
-        os.makedirs(service_dir)
-    return service_dir
-
-def get_user_activities_dir():
+def get_user_activities_path():
     path = os.path.expanduser('~/Activities')
     if not os.path.isdir(path):
         os.mkdir(path)
     return path
 
+def get_bin_path(path=None):
+    return _get_prefix_path('bin', path)
+
+def get_service_path(name):
+    return _get_prefix_path('share/sugar/services', name)
+
+def get_shell_path(path=None):
+    return _get_prefix_path('share/sugar/shell', path)
+
+def get_emulator_path(path=None):
+    return _get_prefix_path('share/sugar/emulator', path)

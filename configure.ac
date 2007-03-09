@@ -104,6 +104,7 @@ AM_GLIB_GNU_GETTEXT
 
 AC_OUTPUT([
 Makefile
+emulator/Makefile
 lib/Makefile
 lib/data/Makefile
 lib/src/Makefile
@@ -116,7 +117,6 @@ services/clipboard/Makefile
 services/datastore/Makefile
 shell/Makefile
 shell/intro/Makefile
-shell/data/Makefile
 shell/hardware/Makefile
 shell/view/Makefile
 shell/view/devices/Makefile
