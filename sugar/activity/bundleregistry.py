@@ -41,6 +41,18 @@ class BundleRegistry(gobject.GObject):
         self._search_path = []
         self._service_manager = _ServiceManager()
 
+    def find_bundle(self, key):
+        """Find a bundle in the registry"""
+        key = key.lower()
+
+        for bundle in self._bundles.values():
+            name = bundle.get_name().lower()
+            service_name = bundle.get_service_name().lower()
+            if name.find(key) != -1 or service_name.find(key) != -1:
+                return bundle
+
+        return None
+
     def get_bundle(self, service_name):
         """Returns an bundle given his service name"""
         if self._bundles.has_key(service_name):

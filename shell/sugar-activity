@@ -44,17 +44,28 @@ def _error_cb(handler, err):
     print err
     gtk.main_quit()
 
+def print_help(self):
+    sys.exit(0)
+
 _setup_bus_address()
 
-service_name = sys.argv[1]
-registry = bundleregistry.get_registry()
-bundle = registry.get_bundle(service_name)
+bundle = None
+
+if len(sys.argv) > 1:
+    registry = bundleregistry.get_registry()
+    bundle = registry.find_bundle(sys.argv[1])
+
+if bundle == None:
+    print 'Usage:\n\n' \
+          'sugar-activity [bundle]\n\n' \
+          'Bundle can be a part of the service name or of bundle name.'
+    sys.exit(0)
 
 bus = dbus.SessionBus()
 bus_object = bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
 try:
     name = bus_object.GetNameOwner(
-        service_name, dbus_interface='org.freedesktop.DBus')
+        bundle.get_service_name(), dbus_interface='org.freedesktop.DBus')
 except  dbus.DBusException:
     name = None
 
@@ -63,7 +74,7 @@ if name:
 else:
     activityfactoryservice.run(bundle.get_path())
 
-handler = activityfactory.create(service_name)
+handler = activityfactory.create(bundle.get_service_name())
 handler.connect('success', _success_cb, name != None)
 handler.connect('error', _error_cb)
 
