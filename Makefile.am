@@ -3,8 +3,7 @@ SUBDIRS = lib po shell sugar services tools
 ACLOCAL_AMFLAGS = -I m4
 
 bin_SCRIPTS = 			\
-	sugar-emulator		\
-	sugar-emulator-shutdown
+	sugar-emulator
 
 DISTCLEANFILES =		\
 	intltool-extract	\

@@ -1,3 +1,6 @@
+import os
+import signal
+
 import dbus
 import gobject
 
@@ -34,7 +37,8 @@ _actions_table = {
     '0xEB'          : 'rotate',
     '<alt>r'        : 'rotate',
     '0xEC'          : 'keyboard_brightness',
-    '<alt>Tab'      : 'home'
+    '<alt>Tab'      : 'home',
+    '<alt>q'        : 'quit_emulator',
 }
 
 class KeyHandler(object):
@@ -148,6 +152,11 @@ class KeyHandler(object):
 
         gobject.spawn_async(['xrandr', '-o', states[self._screen_rotation]],
                             flags=gobject.SPAWN_SEARCH_PATH)
+
+    def handle_quit_emulator(self):
+        if os.environ.has_key('SUGAR_EMULATOR_PID'):
+            pid = int(os.environ['SUGAR_EMULATOR_PID'])
+            os.kill(pid, signal.SIGTERM)
 
     def handle_home(self):
         # FIXME: finish alt+tab support

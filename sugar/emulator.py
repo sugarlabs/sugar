@@ -98,7 +98,7 @@ class XephyrProcess(Process):
     def start(self, standard_output=False):
         Process.start(self)
         os.environ['DISPLAY'] = ":%d" % (self._display)
-        os.environ['SUGAR_XEPHYR_PID'] = '%d' % self.pid
+        os.environ['SUGAR_EMULATOR_PID'] = '%d' % self.pid
 
 class Emulator(object):
     """The OLPC emulator"""
