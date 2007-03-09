@@ -23,11 +23,15 @@ import hippo
 
 from sugar.graphics.toolbar import Toolbar
 from sugar.graphics.iconbutton import IconButton
+from sugar.graphics.toggleiconbutton import ToggleIconButton
 from sugar.graphics.button import Button
 from sugar.graphics.entry import Entry
 
 def _button_activated_cb(button):
     print "_button_activated_cb"
+
+def _toggled_changed_cb(button, pspec):
+    print "Toggle state: %d" % button.props.toggled
 
 window = gtk.Window()
 window.connect("destroy", lambda w: gtk.main_quit())
@@ -47,6 +51,10 @@ for i in [1, 2]:
 
     icon_button = IconButton(icon_name='theme:stock-close')
     toolbar.append(icon_button)
+
+    toggle = ToggleIconButton(icon_name='theme:stock-back')
+    toggle.connect('notify::toggled', _toggled_changed_cb)
+    toolbar.append(toggle)
 
     button = Button(text='Click me!', icon_name='theme:stock-close')
     button.connect('activated', _button_activated_cb)

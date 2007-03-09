@@ -27,7 +27,7 @@ from sugar.graphics import color
 STANDARD_SIZE = 0
 SMALL_SIZE    = 1
 
-class IconButton(CanvasIcon):
+class IconButton(CanvasIcon, hippo.CanvasItem):
     __gtype_name__ = 'SugarIconButton'    
 
     __gproperties__ = {
@@ -44,9 +44,6 @@ class IconButton(CanvasIcon):
             self.props.stroke_color = color.BUTTON_NORMAL
 
         self._set_size(STANDARD_SIZE)
-
-        self.connect('button-press-event',
-                     self._icon_button_button_press_event_cb)
 
     def _set_size(self, size):
         if size == SMALL_SIZE:
@@ -72,7 +69,7 @@ class IconButton(CanvasIcon):
         else:
             return CanvasIcon.do_get_property(self, pspec)
 
-    def _icon_button_button_press_event_cb(self, widget, event):
+    def do_button_press_event(self, event):
         if self._active:
             self.emit_activated()
         return True

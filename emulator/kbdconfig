@@ -5,5 +5,3 @@
 <Alt>n=next
 <Alt>p=prev
 <Alt>c=close
-
-<Alt>q=!sugar-emulator-shutdown

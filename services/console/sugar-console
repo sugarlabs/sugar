@@ -3,9 +3,10 @@
 import pygtk
 pygtk.require('2.0')
 
-import os, sys
+import os
+import sys
 from sugar import env 
 
-sys.path.insert(0, env.get_services_dir())
+sys.path.insert(0, env.get_service_path('console'))
 
-import console.console
+import console

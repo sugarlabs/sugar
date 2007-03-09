@@ -104,6 +104,7 @@ AM_GLIB_GNU_GETTEXT
 
 AC_OUTPUT([
 Makefile
+emulator/Makefile
 lib/Makefile
 lib/data/Makefile
 lib/src/Makefile
@@ -116,7 +117,6 @@ services/clipboard/Makefile
 services/datastore/Makefile
 shell/Makefile
 shell/intro/Makefile
-shell/data/Makefile
 shell/hardware/Makefile
 shell/view/Makefile
 shell/view/devices/Makefile
@@ -138,7 +138,6 @@ services/console/interface/memphis/Makefile
 services/console/interface/logviewer/Makefile
 services/console/interface/terminal/Makefile
 sugar/Makefile
-sugar/__installed__.py
 sugar/activity/Makefile
 sugar/chat/Makefile
 sugar/chat/sketchpad/Makefile

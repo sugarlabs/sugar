@@ -18,16 +18,17 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import sys
+import os
 import logging
 
 from sugar import logger
 from sugar import env
 
-sys.path.insert(0, env.get_services_dir())
+sys.path.insert(0, env.get_service_path('datastore'))
 
 logger.start('data-store')
 logging.info('Starting the data store...')
 
-from datastore import datastore
+import datastore
 
 datastore.main()
