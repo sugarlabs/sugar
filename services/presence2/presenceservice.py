@@ -58,7 +58,7 @@ class PresenceService(dbus.service.Object):
         self._registry.LoadManagers()
 
         # Set up the server connection
-        self._server_plugin = ServerPlugin(self._registry)
+        self._server_plugin = ServerPlugin(self._registry, self._owner)
         self._handles_buddies[self._server_plugin] = {}
 
         self._server_plugin.connect('status', self._server_status_cb)
@@ -72,7 +72,7 @@ class PresenceService(dbus.service.Object):
         self._server_plugin.start()
 
         # Set up the link local connection
-        self._ll_plugin = LinkLocalPlugin(self._registry)
+        self._ll_plugin = LinkLocalPlugin(self._registry, self._owner)
         self._handles_buddies[self._ll_plugin] = {}
 
         dbus.service.Object.__init__(self, self._bus_name, _PRESENCE_PATH)

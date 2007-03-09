@@ -43,32 +43,37 @@ _PROTOCOL = "jabber"
 class InvalidBuddyError(Exception):
     pass
 
-def _get_buddy_icon_at_size(maxw, maxh, maxsize):
-    icon = os.path.join(env.get_profile_path(), "buddy-icon.jpg")
-    pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(icon, maxw, maxh)
+def _buddy_icon_save_cb(buf, data):
+    data[0] += buf
+    return True
 
-    obj = {}
-    obj['data'] = ""
+def _get_buddy_icon_at_size(icon, maxw, maxh, maxsize):
+    loader = gtk.gdk.PixbufLoader()
+    loader.write(icon)
+    loader.close()
+    unscaled_pixbuf = loader.get_pixbuf()
+    del loader
+
+    pixbuf = unscaled_pixbuf.scale_simple(maxw, maxh, gtk.gdk.INTERP_BILINEAR)
+    del unscaled_pixbuf
+
+    data = [""]
     quality = 90
     img_size = maxsize + 1
     while img_size > maxsize:
-        del obj['data']
-        obj['data'] = ""
-        pixbuf.save_to_callback(_buddy_icon_save_cb, "jpeg", {"quality":"%d" % quality}, obj)
+        del data
+        data = [""]
+        pixbuf.save_to_callback(_buddy_icon_save_cb, "jpeg", {"quality":"%d" % quality}, data)
         quality -= 10
-        img_size = len(obj['data'])
+        img_size = len(data[0])
     del pixbuf
 
     if img_size > maxsize:
-        del obj['data']
+        del data
         raise RuntimeError("could not size image less than %d bytes" % maxsize)
 
-    return obj['data']
+    return str(data[0])
         
-def _buddy_icon_save_cb(buf, obj):
-    obj['data'] += buf
-    return True
-
 
 class ServerPlugin(gobject.GObject):
     __gsignals__ = {
@@ -90,7 +95,7 @@ class ServerPlugin(gobject.GObject):
                              ([gobject.TYPE_PYOBJECT]))
     }
     
-    def __init__(self, registry):
+    def __init__(self, registry, owner):
         gobject.GObject.__init__(self)
 
         self._icon_cache = BuddyIconCache()
@@ -100,16 +105,29 @@ class ServerPlugin(gobject.GObject):
 
         self._activities = {} # activity id -> handle
         self._joined_activities = [] # (activity_id, handle of the activity channel)
+
+        self._owner = owner
+        self._owner.connect("property-changed", self._owner_property_changed_cb)
+        self._owner.connect("icon-changed", self._owner_icon_changed_cb)
+
         self._account = self._get_account_info()
 
         self._conn = self._init_connection()
 
         self._reconnect_id = 0
 
+    def _owner_property_changed_cb(self, owner, properties):
+        print "Owner properties changed: %s" % properties
+        self._set_self_buddy_info()
+
+    def _owner_icon_changed_cb(self, owner, icon):
+        print "Owner icon changed to size %d" % len(str(icon))
+        self._upload_avatar()
+
     def _get_account_info(self):
         account_info = {}
                         
-        pubkey = profile.get_pubkey()
+        pubkey = self._owner.props.key
 
         server = profile.get_server()
         if not server:
@@ -231,12 +249,10 @@ class ServerPlugin(gobject.GObject):
         self._conn[CONN_INTERFACE_PRESENCE].GetPresence(subscribe_handles)
 
     def _upload_avatar(self):
-        icon = os.path.join(env.get_profile_path(), "buddy-icon.jpg")
-        if not os.path.exists(icon):
-            return
+        icon_data = self._owner.props.icon
 
         md5 = hashlib.md5()
-        md5.update(open(icon).read())
+        md5.update(icon_data)
         hash = md5.hexdigest()
 
         self_handle = self._conn[CONN_INTERFACE].GetSelfHandle()
@@ -251,12 +267,9 @@ class ServerPlugin(gobject.GObject):
             print "server does not accept JPEG format avatars."
             return
 
-        try:
-            img_data = _get_buddy_icon_at_size(min(maxw, 96), min(maxh, 96), maxsize)
-            token = self._conn[CONN_INTERFACE_AVATARS].SetAvatar(img_data, "image/jpeg")
-            self._icon_cache.set_avatar(hash, token)
-        except RuntimeError, e:
-            pass
+        img_data = _get_buddy_icon_at_size(icon_data, min(maxw, 96), min(maxh, 96), maxsize)
+        token = self._conn[CONN_INTERFACE_AVATARS].SetAvatar(img_data, "image/jpeg")
+        self._icon_cache.set_avatar(hash, token)
 
     def join_activity(self, act):
         handle = self._activities.get(act)
@@ -282,15 +295,15 @@ class ServerPlugin(gobject.GObject):
     def _set_self_buddy_info(self):
         # Set our OLPC buddy properties
         props = {}
-        props['color'] = profile.get_color().to_string()
-        props['key'] = profile.get_pubkey()
+        props['color'] = self._owner.props.color
+        props['key'] = self._owner.props.key
         try:
             self._conn[CONN_INTERFACE_BUDDY_INFO].SetProperties(props)
         except dbus.DBusException, e:
             if str(e).find("Server does not support PEP") >= 0:
                 raise RuntimeError("Server does not support PEP")
 
-        name = profile.get_nick_name()
+        name = self._owner.props.nick
         self_handle = self._conn[CONN_INTERFACE].GetSelfHandle()
         self._conn[CONN_INTERFACE_ALIASING].SetAliases( {self_handle : name} )
 

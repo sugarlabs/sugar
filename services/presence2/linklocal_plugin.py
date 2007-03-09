@@ -18,9 +18,10 @@
 import gobject
 
 class LinkLocalPlugin(gobject.GObject):
-    def __init__(self, registry):
+    def __init__(self, registry, owner):
         gobject.GObject.__init__(self)
         self._registry = registry
+        self._owner = owner
 
     def cleanup(self):
         pass
