@@ -1,4 +1,3 @@
 sugar_source_dir = None
 sugar_data_dir = '@prefix@/share/sugar'
-sugar_services_dir = '@prefix@/share/sugar/services'
 sugar_shell_bin_dir = '@prefix@/bin'

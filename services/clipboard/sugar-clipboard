@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import sys
+import os
 import logging
 
 from sugar import logger
@@ -31,9 +32,9 @@ import dbus.glib
  
 from sugar import env
 
-sys.path.insert(0, env.get_services_dir())
+sys.path.insert(0, os.path.join(env.get_data_dir(), 'services/clipboard'))
 
-from clipboard.clipboardservice import ClipboardService
+from clipboardservice import ClipboardService
 
 logging.info('Starting clipboard service.')
 

@@ -48,9 +48,6 @@ def get_profile_path():
 def get_data_dir():
     return sugar_data_dir
 
-def get_services_dir():
-    return sugar_services_dir
-
 def get_shell_bin_dir():
     return sugar_shell_bin_dir
 

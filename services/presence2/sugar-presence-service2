@@ -24,11 +24,11 @@ import os
 from sugar import logger
 from sugar import env
 
-sys.path.insert(0, env.get_services_dir())
+sys.path.insert(0, os.join.path(env.get_data_dir(), 'services/presence2'))
 
 logger.start('presenceservice')
 
-from presence2 import presenceservice
+import presenceservice
 
 logging.info('Starting presence service')
 
