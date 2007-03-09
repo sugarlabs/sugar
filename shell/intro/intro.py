@@ -143,7 +143,8 @@ class VideoBox(hippo.CanvasBox, hippo.CanvasItem):
         self._img_widget.props.widget = self._img
 
         if not has_webcam:
-            path = os.path.join(env.get_data_dir(),'default-picture.png')
+            path = os.path.join(os.path.dirname(__file__),
+                                'default-picture.png')
             self._video.load_image(path)
 
     def _clear_image_cb(self, widget, event):
