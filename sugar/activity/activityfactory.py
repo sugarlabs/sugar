@@ -53,16 +53,16 @@ def _find_activity_id():
     return act_id
 
 class ActivityCreationHandler(gobject.GObject):
-
     __gsignals__ = {
-        'error':       (gobject.SIGNAL_RUN_FIRST,
-                        gobject.TYPE_NONE, 
-                       ([gobject.TYPE_PYOBJECT])),
+        'success': (gobject.SIGNAL_RUN_FIRST,
+                    gobject.TYPE_NONE, ([])),
+        'error':   (gobject.SIGNAL_RUN_FIRST,
+                    gobject.TYPE_NONE, 
+                   ([gobject.TYPE_PYOBJECT]))
     }
 
     def __init__(self, service_name, activity_handle):
         gobject.GObject.__init__(self)
-
         self._service_name = service_name
         self._activity_handle = activity_handle
 
@@ -83,6 +83,7 @@ class ActivityCreationHandler(gobject.GObject):
     def _reply_handler(self, xid):
         logging.debug("Activity created %s (%s)." % 
             (self._activity_handle.activity_id, self._service_name))
+        self.emit('success')
 
     def _error_handler(self, err):
         logging.debug("Couldn't create activity %s (%s): %s" %

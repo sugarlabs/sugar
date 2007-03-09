@@ -18,30 +18,53 @@
 
 import sys
 import os
-import gobject
 
+import gtk
+import dbus
+import dbus.glib
+
+from sugar.activity import bundleregistry
 from sugar.activity import activityfactory
+from sugar.activity import activityfactoryservice
 from sugar import env
-from sugar import util
 
-def _success_cb(handler, activity, loop):
-    activity.start(util.unique_id())
-    loop.quit()
+def _setup_bus_address():
+    '''Use the bus address of the running Sugar'''
+    bus_file = os.path.join(env.get_profile_path(), "session_bus_address")
+    f = open(bus_file, "r")
+    bus_name = f.read()
+    f.close()
+    os.environ['DBUS_SESSION_BUS_ADDRESS'] = bus_name
 
-def _error_cb(handler, err, loop):
-    loop.quit()
+def _success_cb(handler, exit):
+    if exit:
+        gtk.main_quit()
 
-ppath = env.get_profile_path()
-bus_file = os.path.join(ppath, "session_bus_address")
-f = open(bus_file, "r")
-bus_name = f.read()
-f.close()
-os.environ['DBUS_SESSION_BUS_ADDRESS'] = bus_name
+def _error_cb(handler, err):
+    print err
+    gtk.main_quit()
 
-loop = gobject.MainLoop()
+_setup_bus_address()
 
-handler = activityfactory.create(sys.argv[1])
-handler.connect('success', _success_cb, loop)
-handler.connect('error', _error_cb, loop)
+service_name = sys.argv[1]
+registry = bundleregistry.get_registry()
+bundle = registry.get_bundle(service_name)
 
-loop.run()
+bus = dbus.SessionBus()
+bus_object = bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
+try:
+    name = bus_object.GetNameOwner(
+        service_name, dbus_interface='org.freedesktop.DBus')
+except  dbus.DBusException:
+    name = None
+
+if name:
+    print '%s is already running, creating a new instance.' % service_name
+else:
+    activityfactoryservice.run(bundle.get_path())
+
+handler = activityfactory.create(service_name)
+handler.connect('success', _success_cb, name != None)
+handler.connect('error', _error_cb)
+
+gtk.main()
