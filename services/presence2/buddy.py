@@ -15,9 +15,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import os
 import gobject
 import dbus, dbus.service
+
 from sugar import profile
+from sugar import env
 
 _BUDDY_PATH = "/org/laptop/Sugar/Presence/Buddies/"
 _BUDDY_INTERFACE = "org.laptop.Sugar.Presence.Buddy"
@@ -40,13 +43,17 @@ class Buddy(DBusGObject):
 
     __gsignals__ = {
         'validity-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                            ([gobject.TYPE_BOOLEAN]))
+                            ([gobject.TYPE_BOOLEAN])),
+        'property-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                            ([gobject.TYPE_PYOBJECT])),
+        'icon-changed':     (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                            ([gobject.TYPE_PYOBJECT]))
     }
 
     __gproperties__ = {
         'key'              : (str, None, None, None,
                               gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT_ONLY),
-        'icon'             : (str, None, None, None, gobject.PARAM_READWRITE),
+        'icon'             : (object, None, None, gobject.PARAM_READWRITE),
         'nick'             : (str, None, None, None, gobject.PARAM_READWRITE),
         'color'            : (str, None, None, None, gobject.PARAM_READWRITE),
         'current-activity' : (str, None, None, None, gobject.PARAM_READWRITE),
@@ -100,9 +107,10 @@ class Buddy(DBusGObject):
 
     def do_set_property(self, pspec, value):
         if pspec.name == "icon":
-            if value != self._icon:
-                self._icon = value
-                self.IconChanged(value)
+            if str(value) != self._icon:
+                self._icon = str(value)
+                self.IconChanged(self._icon)
+                self.emit('icon-changed', self._icon)
         elif pspec.name == "nick":
             self._nick = value
         elif pspec.name == "color":
@@ -189,16 +197,32 @@ class Buddy(DBusGObject):
         return acts
 
     def set_properties(self, properties):
+        changed = False
         if "nick" in properties.keys():
-            self._nick = properties["nick"]
+            nick = properties["nick"]
+            if nick != self._nick:
+                self._nick = nick
+                changed = True
         if "color" in properties.keys():
-            self._color = properties["color"]
+            color = properties["color"]
+            if color != self._color:
+                self._color = color
+                changed = True
+        if "current-activity" in properties.keys():
+            curact = properties["current-activity"]
+            if curact != self._current_activity:
+                self._current_activity = curact
+                changed = True
+
+        if not changed:
+            return
 
         # Try emitting PropertyChanged before updating validity
         # to avoid leaking a PropertyChanged signal before the buddy is
         # actually valid the first time after creation
         if self._valid:
             self.PropertyChanged(properties)
+            self.emit('property-changed', properties)
 
         self._update_validity()
 
@@ -219,22 +243,150 @@ class Buddy(DBusGObject):
 class Owner(Buddy):
     """Class representing the owner of the machine.  This is the client
     portion of the Owner, paired with the server portion in Owner.py."""
+
+    _SHELL_SERVICE = "org.laptop.Shell"
+    _SHELL_OWNER_INTERFACE = "org.laptop.Shell.Owner"
+    _SHELL_PATH = "/org/laptop/Shell"
+
     def __init__(self, bus_name, object_id):
         key = profile.get_pubkey()
         nick = profile.get_nick_name()
         color = profile.get_color().to_string()
 
-        Buddy.__init__(self, bus_name, object_id, key=key, nick=nick, color=color)
+        icon_file = os.path.join(env.get_profile_path(), "buddy-icon.jpg")
+        f = open(icon_file, "r")
+        icon = f.read()
+        f.close()
+
+        self._bus = dbus.SessionBus()
+        self._bus.add_signal_receiver(self._name_owner_changed_handler,
+                                      signal_name="NameOwnerChanged",
+                                      dbus_interface="org.freedesktop.DBus")
+
+        # Connect to the shell to get notifications on Owner object
+        # property changes
+        try:
+            self._connect_to_shell()
+        except dbus.DBusException:
+            pass
+
+        Buddy.__init__(self, bus_name, object_id, key=key, nick=nick, color=color,
+                icon=icon)
         self._owner = True
 
-    # dbus methods
-    @dbus.service.method(_OWNER_INTERFACE,
-                        in_signature="ay", out_signature="")
-    def SetIcon(self, icon_data):
-        self.props.icon = icon_data
+        # enable this to change random buddy properties
+        if False:
+            gobject.timeout_add(5000, self._update_something)
 
-    @dbus.service.method(_OWNER_INTERFACE,
-                        in_signature="a{sv}", out_signature="")
-    def SetProperties(self, prop):
-        self.set_properties(self, prop)
+    def _update_something(self):
+        import random
+        it = random.randint(0, 3)
+        if it == 0:
+            data = get_random_image()
+            self._icon_changed_cb(data)
+        elif it == 1:
+            from sugar.graphics import xocolor
+            xo = xocolor.XoColor()
+            self._color_changed_cb(xo.to_string())
+        elif it == 2:
+            names = ["Liam", "Noel", "Guigsy", "Whitey", "Bonehead"]
+            foo = random.randint(0, len(names) - 1)
+            self._nick_changed_cb(names[foo])
+        elif it == 3:
+            bork = random.randint(25, 65)
+            it = ""
+            for i in range(0, bork):
+                it += chr(random.randint(40, 127))
+            from sugar import util
+            self._cur_activity_changed_cb(util.unique_id(it))
+        return True
+
+    def _name_owner_changed_handler(self, name, old, new):
+        if name != self._SHELL_SERVICE:
+            return
+        if (old and len(old)) and (not new and not len(new)):
+            # shell went away
+            self._shell_owner = None
+        elif (not old and not len(old)) and (new and len(new)):
+            # shell started
+            self._connect_to_shell()
+
+    def _connect_to_shell(self):
+        obj = self._bus.get_object(self._SHELL_SERVICE, self._SHELL_PATH)
+        self._shell_owner = dbus.Interface(obj, self._SHELL_OWNER_INTERFACE)
+        self._shell_owner.connect_to_signal('IconChanged', self._icon_changed_cb)
+        self._shell_owner.connect_to_signal('ColorChanged', self._color_changed_cb)
+        self._shell_owner.connect_to_signal('NickChanged', self._nick_changed_cb)
+        self._shell_owner.connect_to_signal('CurrentActivityChanged',
+                self._cur_activity_changed_cb)
+
+    def _icon_changed_cb(self, icon):
+        self.props.icon = icon
+
+    def _color_changed_cb(self, color):
+        props = {'color': color}
+        self.set_properties(props)
+
+    def _nick_changed_cb(self, nick):
+        props = {'nick': nick}
+        self.set_properties(props)
+
+    def _cur_activity_changed_cb(self, activity_id):
+        if not self._activities.has_key(activity_id):
+            return
+        props = {'current-activity': activity_id}
+        self.set_properties(props)
+
+
+
+def get_random_image():
+    import cairo, math, random, gtk
+
+    def rand():
+        return random.random()
+
+    SIZE = 200
+
+    s = cairo.ImageSurface(cairo.FORMAT_ARGB32, SIZE, SIZE)
+    cr = cairo.Context(s)
+
+    # background gradient
+    cr.save()
+    g = cairo.LinearGradient(0, 0, 1, 1)
+    g.add_color_stop_rgba(1, rand(), rand(), rand(), rand())
+    g.add_color_stop_rgba(0, rand(), rand(), rand(), rand())
+    cr.set_source(g)
+    cr.rectangle(0, 0, SIZE, SIZE);
+    cr.fill()
+    cr.restore()
+
+    # random path
+    cr.set_line_width(10 * rand() + 5)
+    cr.move_to(SIZE * rand(), SIZE * rand())
+    cr.line_to(SIZE * rand(), SIZE * rand())
+    cr.rel_line_to(SIZE * rand() * -1, 0)
+    cr.close_path()
+    cr.stroke()
+
+    # a circle
+    cr.set_source_rgba(rand(), rand(), rand(), rand())
+    cr.arc(SIZE * rand(), SIZE * rand(), 100 * rand() + 30, 0, 2 * math.pi)
+    cr.fill()
+
+    # another circle
+    cr.set_source_rgba(rand(), rand(), rand(), rand())
+    cr.arc(SIZE * rand(), SIZE * rand(), 100 * rand() + 30, 0, 2 * math.pi)
+    cr.fill()
+
+    def img_convert_func(buf, data):
+        data[0] += buf
+        return True
+
+    data = [""]
+    pixbuf = gtk.gdk.pixbuf_new_from_data(s.get_data(), gtk.gdk.COLORSPACE_RGB,
+            True, 8, s.get_width(), s.get_height(), s.get_stride())
+    pixbuf.save_to_callback(img_convert_func, "jpeg", {"quality": "90"}, data)
+    del pixbuf
+
+    return str(data[0])
 
