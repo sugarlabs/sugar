@@ -45,8 +45,8 @@ class IconButton(CanvasIcon):
 
         self._set_size(STANDARD_SIZE)
 
-        self.connect('button-press-event',
-                     self._icon_button_button_press_event_cb)
+        self.connect_after('button-press-event',
+                           self._icon_button_button_press_event_cb)
 
     def _set_size(self, size):
         if size == SMALL_SIZE:
