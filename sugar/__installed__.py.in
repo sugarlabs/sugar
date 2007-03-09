@@ -1,2 +1,0 @@
-sugar_data_dir = '@prefix@/share/sugar'
-sugar_shell_bin_dir = '@prefix@/bin'

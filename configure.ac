@@ -138,7 +138,6 @@ services/console/interface/memphis/Makefile
 services/console/interface/logviewer/Makefile
 services/console/interface/terminal/Makefile
 sugar/Makefile
-sugar/__installed__.py
 sugar/activity/Makefile
 sugar/chat/Makefile
 sugar/chat/sketchpad/Makefile

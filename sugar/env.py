@@ -16,13 +16,6 @@
 # Boston, MA 02111-1307, USA.
 
 import os
-import sys
-import pwd
-
-try:
-    from sugar.__uninstalled__ import *
-except ImportError:
-    from sugar.__installed__ import *
 
 def _get_prefix_path(base, path=None):
     if os.environ.has_key('SUGAR_PREFIX'):
