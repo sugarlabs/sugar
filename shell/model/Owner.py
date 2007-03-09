@@ -14,6 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import gobject
 import os
 import random
 import base64
@@ -30,11 +31,24 @@ from model.Invites import Invites
 
 PRESENCE_SERVICE_TYPE = "_presence_olpc._tcp"
 
-class ShellOwner(object):
+class ShellOwner(gobject.GObject):
+    __gtype_name__ = "ShellOwner"
+
+    __gsignals__ = {
+        'nick-changed'                : (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                                        ([gobject.TYPE_STRING])),
+        'color-changed'               : (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                                        ([gobject.TYPE_PYOBJECT])),
+        'icon-changed'                : (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                                        ([gobject.TYPE_PYOBJECT]))
+    }
+
     """Class representing the owner of this machine/instance.  This class
     runs in the shell and serves up the buddy icon and other stuff.  It's the
     server portion of the Owner, paired with the client portion in Buddy.py."""
     def __init__(self):
+        gobject.GObject.__init__(self)
+
         self._nick = profile.get_nick_name()
         user_dir = env.get_profile_path()
 
@@ -45,12 +59,14 @@ class ShellOwner(object):
                 continue
             fd = open(os.path.join(user_dir, fname), "r")
             self._icon = fd.read()
-            if self._icon:
-                # Get the icon's hash
-                import md5, binascii
-                digest = md5.new(self._icon).digest()
-                self._icon_hash = util.printable_hash(digest)
             fd.close()
+            if not self._icon:
+                raise RuntimeError("No buddy icon exists")
+
+            # Get the icon's hash
+            import md5, binascii
+            digest = md5.new(self._icon).digest()
+            self._icon_hash = util.printable_hash(digest)
             break
 
         self._pservice = PresenceService.get_instance()
@@ -60,6 +76,7 @@ class ShellOwner(object):
         self._last_activity_update = time.time()
         self._pending_activity_update_timer = None
         self._pending_activity_update = None
+        self._current_activity = None
 
     def get_invites(self):
         return self._invites
@@ -94,6 +111,7 @@ class ShellOwner(object):
         self._last_activity_update = time.time()
         self._pending_activity_update_timer = None
         if self._pending_activity_update:
+            self.emit('current-activity-changed', self._pending_activity_update)
             logging.debug("*** Updating current activity to %s" % self._pending_activity_update)
             self._service.set_published_value('curact', dbus.String(self._pending_activity_update))
         return False
