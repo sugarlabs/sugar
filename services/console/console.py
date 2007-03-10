@@ -24,6 +24,7 @@ import sys
 import gtk
 import gobject
 
+sys.path.append(os.path.dirname(__file__))
 sys.path.append(os.path.dirname(__file__) + '/lib')
 sys.path.append(os.path.dirname(__file__) + '/interface')
 
@@ -71,8 +72,7 @@ class Console:
         self.notebook.append_page(widget, gtk.Label(label))
     
     def _delete_event_cb(self, window, gdkevent):
-        window.hide()
-        return True
+        gtk.main_quit()
     
 class Service(dbus.service.Object):
     def __init__(self, bus, object_path=CONSOLE_PATH):

@@ -26,6 +26,7 @@ import drwarea
 
 from cpu import XO_CPU
 from system import XO_System
+from battery import XO_Battery
 
 class Interface:
         
@@ -33,10 +34,16 @@ class Interface:
         
         self.widget = self.vbox = gtk.VBox(False, 3)
         
+        # System information
         xo_system = XO_System()
         self.vbox.pack_start(xo_system, False, False, 0)
 
+        # CPU usage / Graph
         xo_cpu = XO_CPU()
         self.vbox.pack_start(xo_cpu, False, False, 0)
-        
+
+        # Battery Status / Graph
+        xo_battery = XO_Battery()
+        self.vbox.pack_start(xo_battery, False, False, 0)
+
         self.vbox.show_all()

@@ -10,7 +10,8 @@ $(service_DATA): $(service_in_files) Makefile
 sugardir = $(pkgdatadir)/services/console
 sugar_PYTHON =				\
 	__init__.py			\
-	console.py
+	console.py			\
+	label.py
 
 bin_SCRIPTS = sugar-console
 

@@ -4,6 +4,8 @@ sugar_PYTHON =				\
 	drwarea.py			\
 	xo.py				\
 	cpu.py				\
-	system.py
+	system.py			\
+	battery.py
+
 
 

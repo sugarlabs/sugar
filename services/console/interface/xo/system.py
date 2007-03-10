@@ -20,6 +20,9 @@ import os
 import gtk
 import pango
 
+from label import Label
+from label import Style
+
 class XO_System(gtk.Fixed):
         
     def __init__(self):
@@ -33,13 +36,13 @@ class XO_System(gtk.Fixed):
     
         # BUILD
         build = self._get_system_build()
-        label_build = self.get_label('OLPC Build:')
-        label_build_value = self.get_label(build)
+        label_build = Label('OLPC Build:', Label.DESCRIPTION)
+        label_build_value = Label(str(build), Label.DESCRIPTION)
         
         # KERNEL
         sysinfo = os.uname()
-        label_kernel = self.get_label('Kernel Version: ')
-        label_kernel_value = self.get_label(sysinfo[0] + '-' + sysinfo[2])
+        label_kernel = Label('Kernel Version:', Label.DESCRIPTION)
+        label_kernel_value = Label(sysinfo[0] + '-' + sysinfo[2], Label.DESCRIPTION)
 
         # OLPC Build
         table.attach(label_build, 0, 1, 0, 1)
@@ -50,6 +53,8 @@ class XO_System(gtk.Fixed):
         table.attach(label_kernel_value, 1, 2, 1, 2)
         
         frame = gtk.Frame('System Information')
+        style = Style()
+        style.set_title_font(frame);
         frame.add(table)
         
         self.add(frame)
@@ -66,15 +71,4 @@ class XO_System(gtk.Fixed):
             return build
         except:
             return "None"
-
-    def get_label(self, string):
-        label = gtk.Label(string)
-        label.set_alignment(0.0, 0.5)
-        label.modify_font(self._set_font())
-        return label
-
-    def _set_font(self):
-        font = pango.FontDescription('Sans 8')
-        font.set_weight(pango.WEIGHT_NORMAL)
-        
-        return font
+    

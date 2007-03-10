@@ -251,11 +251,3 @@ class XO_CPU(gtk.Frame):
             freq+=1
         
         context.stroke()
-
-"""
-window = gtk.Window()
-window.add(XO_CPU())
-window.set_size_request(gtk.gdk.screen_width() * 85 / 100, 400)
-window.show_all()
-gtk.main()
-"""
