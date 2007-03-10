@@ -80,9 +80,13 @@ class XO_Battery(gtk.Fixed):
         
     def _update_battery_status(self):
         
-        self._battery_charge = self._get_battery_status()
-        self.label_charge_value.set_text(str(self._battery_charge) + '%')
-        self._battery_drw.queue_draw()
+        new_charge = self._get_battery_status()
+        
+        if new_charge != self._battery_charge:
+            self._battery_charge = self._get_battery_status()
+            self.label_charge_value.set_text(str(self._battery_charge) + '%')
+            self._battery_drw.queue_draw()
+
         return True
 
     def do_expose(self, widget, event):
