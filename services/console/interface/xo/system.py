@@ -18,25 +18,39 @@
 
 import os
 import gtk
+import pango
 
 class XO_System(gtk.Fixed):
-    
+        
     def __init__(self):
         gtk.Fixed.__init__(self)
-        self.set_border_width(10)
+        self.set_border_width(12)
         
+        table = gtk.Table(2, 2)
+        table.set_border_width(15)
+        table.set_col_spacings(7)
+        table.set_row_spacings(7)
+    
+        # BUILD
         build = self._get_system_build()
-        label_build = gtk.Label('OLPC Build: ' + str(build))
-
-        hbox = gtk.HBox(False, 0)
-        hbox.pack_start(label_build, False, False, 5)
+        label_build = self.get_label('OLPC Build:')
+        label_build_value = self.get_label(build)
         
-        fixed_border = gtk.Fixed()
-        fixed_border.set_border_width(8)
-        fixed_border.add(hbox)
+        # KERNEL
+        sysinfo = os.uname()
+        label_kernel = self.get_label('Kernel Version: ')
+        label_kernel_value = self.get_label(sysinfo[0] + '-' + sysinfo[2])
+
+        # OLPC Build
+        table.attach(label_build, 0, 1, 0, 1)
+        table.attach(label_build_value, 1,2, 0,1)
+        
+        # Kernel Version
+        table.attach(label_kernel, 0, 1, 1, 2)
+        table.attach(label_kernel_value, 1, 2, 1, 2)
         
         frame = gtk.Frame('System Information')
-        frame.add(fixed_border)
+        frame.add(table)
         
         self.add(frame)
         self.show_all()
@@ -46,8 +60,21 @@ class XO_System(gtk.Fixed):
         
         try:
             f = open(build_file_path, 'r')
-            build = f.read()
+            build = int(f.read())
             f.close()
+            
             return build
         except:
             return "None"
+
+    def get_label(self, string):
+        label = gtk.Label(string)
+        label.set_alignment(0.0, 0.5)
+        label.modify_font(self._set_font())
+        return label
+
+    def _set_font(self):
+        font = pango.FontDescription('Sans 8')
+        font.set_weight(pango.WEIGHT_NORMAL)
+        
+        return font

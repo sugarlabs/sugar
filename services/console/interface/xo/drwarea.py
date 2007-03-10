@@ -55,23 +55,3 @@ class Drawing_Area_Tools:
         self.draw_line(context, self.margin, self.height - self.margin - 1, self.width - self.margin, self.height - self.margin - 1)
         context.stroke()
         
-    # Draw a grid
-    def draw_grid(self, context, init_x, init_y, end_x, end_y):
-    
-        x_range = (end_x - init_x) + 5
-        y_range = (end_y - init_y) + 1
-        
-        current_y = init_y
-        context.set_line_width(0.3)
-        
-        for y in range(y_range):
-            if (y%20) == 0:
-                context.move_to(init_x, y)
-                context.line_to(end_x, y)
-        
-        for x in range(x_range):
-            if (x%20) == 0:
-                context.move_to(x, init_y)
-                context.line_to(x, end_y)
-        
-        context.stroke()

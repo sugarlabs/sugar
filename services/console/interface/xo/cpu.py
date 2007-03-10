@@ -79,20 +79,19 @@ class XO_CPU(gtk.Frame):
     
     context = None
     frequency_timer = 1
-    graph_offset = 7
-
+    graph_offset = 7        
+        
     def __init__(self):
         gtk.Frame.__init__(self, 'System CPU Usage')
-        
-        self.drw_width = gtk.gdk.screen_width() * 90 / 100
-        self.drw_height = gtk.gdk.screen_height() * 20 / 100
-        
-        self.set_size_request(self.drw_width, self.drw_height + 60)
         self.set_border_width(10)
+
+        self._updated = False
+        self.drw_width = (gtk.gdk.screen_width() * 99 / 100) - 50
+        self.drw_height = (gtk.gdk.screen_height() * 15 / 100) - 20
 
         self.y_cpu = self.drw_height - self.graph_offset
         self._cpu = 0
-        self._cpu_buffer = []
+        self._cpu_buffer = [0]
 
         self._drawingarea = gtk.DrawingArea()
         self._drawingarea.set_size_request(self.drw_width, self.drw_height)
@@ -100,7 +99,7 @@ class XO_CPU(gtk.Frame):
 
         self.dat = drwarea.Drawing_Area_Tools(self._drawingarea)
         
-        fixed = gtk.Fixed();
+        fixed = gtk.Fixed()
         fixed.set_border_width(10)
         fixed.add(self._drawingarea)
         
@@ -108,23 +107,37 @@ class XO_CPU(gtk.Frame):
         
         DRW_CPU = CPU_Usage()
         DRW_CPU.frequency = 1000 # 1 Second
-        
-        gobject.timeout_add(DRW_CPU.frequency, self._update_cpu_usage, DRW_CPU)
 
+        gobject.timeout_add(DRW_CPU.frequency, self._update_cpu_usage, DRW_CPU)
 
     def _update_cpu_usage(self, DRW_CPU):
         
+        redraw_all = False
+        
+        # end of the drawing area
         if ((self.frequency_timer + 1)*self.graph_offset) >= (self.drw_width - self.graph_offset):
             self.frequency_timer = 1
-            self._cpu_buffer = []
+            self._cpu_buffer = [self._cpu_buffer[-1]]
+            redraw_all = True
+            length = 1
+        else:
+            length = len(self._cpu_buffer) - 1
 
         self._cpu = DRW_CPU._get_CPU_usage()
         self._cpu_buffer.append(self._cpu)
 
         self._updated = True
-        self._drawingarea.queue_draw()
+
+        if redraw_all:
+            area_x = 0
+            area_width = self.drw_width
+        else:
+            area_x = (length*self.graph_offset)
+            area_width = self.graph_offset*2
+
+        self._drawingarea.queue_draw_area(area_x, 0, area_width, self.drw_height - 5)
         self.frequency_timer += 1
-        
+
         return True
     
     def _get_y_cpu(self, pcpu):
@@ -137,49 +150,112 @@ class XO_CPU(gtk.Frame):
         return int(y_value) 
     
     def do_expose(self, widget, event):
-        context = widget.window.cairo_create()
-        
-        context.rectangle(0, 0, self.dat.width - 1, self.dat.height - 1)
-        #context.clip()
+        context = widget.window.cairo_create()        
 
+        context.rectangle(0, 0, self.dat.width - 1, self.dat.height - 1)
         context.set_source_rgb (0,0,0)
         context.fill_preserve()
 
+        if event.area.x == 0:
+            draw_all = True
+        else:
+            draw_all = False
+            
+        context.rectangle(event.area.x, event.area.y, event.area.width, event.area.height)
+        context.clip()
+    
         # Drawing horizontal and vertical border lines
         self.dat.draw_border_lines(context)
-        
+            
         # Drawing grid
         line_margin = self.dat.margin
         context.set_source_rgb(1, 1, 1)
         context.set_line_width(1)
-        self.dat.draw_grid(context, line_margin + 1, line_margin + 1, self.dat.width - line_margin - 2, self.dat.height - line_margin - 2)
-        context.stroke()
+        #self.draw_grid(context, event, line_margin + 1, line_margin + 1, self.dat.width - line_margin - 2, self.dat.height - line_margin - 2)
 
-        self._draw_buffer(widget, context)
-        
+        self._draw_buffer(event, widget, context, draw_all)
+
         cpu_label = str(round(self._cpu, 4))
         self.set_label('System CPU Usage: ' + cpu_label + ' %')
 
         self._updated = False
         return False
 
-    def _draw_buffer(self, drwarea, context):
-        freq = 1 # Frequency timer
-        last_y = self.drw_height - self.graph_offset
-
-        for pcpu in self._cpu_buffer:
-            
-            from_x = freq * self.graph_offset
-            from_y = last_y
+    # Draw a grid
+    def draw_grid(self, context, event, init_x, init_y, end_x, end_y):
     
-            freq+=1
+        x_range = (end_x - init_x) + 5
+        y_range = (end_y - init_y) + 1
+        
+        current_y = init_y
+        context.set_line_width(0.3)
+        
+        #for y in range(y_range):
+        for y in range(0, y_range, 20):
+            if (y%20) == 0:
+                context.move_to(init_x, y)
+                context.line_to(end_x, y)
+
+        for x in range(0, x_range, 20):
+            if (x%20) == 0:
+                context.move_to(x, init_y)
+                context.line_to(x, end_y)
+        
+        context.stroke()
+    
+    def check_context(self, event, offset, length, freq):
+        print "CONTEXT ALLOWED - from: " + str(event.area.x) + " to: " + str(event.area.x+event.area.width)
+        
+        if event.area.x != (freq*self.graph_offset):
+            print "************************"
+            print " ERROR DRAWING CONTEXT"
+            print " ---> Area X: " + str(event.area.x) + " To X: " + str(freq*self.graph_offset)
+            print "************************"
             
-            to_x = freq * self.graph_offset
-            last_y = to_y = self._get_y_cpu(pcpu)
+    def _draw_buffer(self, event, drwarea, context, draw_all=True):
+        buffer_offset = 0
+        freq = 1 # Frequency timer
+
+        length = len(self._cpu_buffer)
+        
+        if length == 0:
+            return
+        
+        # Context properties
+        context.set_line_width(2)
+        context.set_source_rgb(0,1,0)
+        
+        if draw_all == True:
+            buffer_offset = 0
+            freq = 0
+        else:
+            freq = buffer_offset = (event.area.x/self.graph_offset)
+
+        for pcpu in self._cpu_buffer[buffer_offset:length]:
+            if buffer_offset == 0:
+                from_y = self.drw_height - self.graph_offset
+                from_x = self.graph_offset
+            else:
+                from_y = self._get_y_cpu(self._cpu_buffer[buffer_offset-1])
+                from_x = (freq * self.graph_offset)
+            
+    
+            to_x = (freq+1) * self.graph_offset
+            to_y = self._get_y_cpu(pcpu)
                 
-            # Context properties
-            context.set_line_width(2)
-            context.set_source_rgb(0,1,0)
-                
+            # Debug context, just for development
+            #self.check_context(event, buffer_offset, length, freq)
+            
             self.dat.draw_line(context, from_x, from_y, to_x, to_y)
-            context.stroke()
+            buffer_offset+=1
+            freq+=1
+        
+        context.stroke()
+
+"""
+window = gtk.Window()
+window.add(XO_CPU())
+window.set_size_request(gtk.gdk.screen_width() * 85 / 100, 400)
+window.show_all()
+gtk.main()
+"""
