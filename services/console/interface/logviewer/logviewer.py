@@ -25,6 +25,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import gobject
+import pango
 
 from sugar import env
 
@@ -154,6 +155,10 @@ class LogView(gtk.ScrolledWindow):
 
         self.textview = gtk.TextView()
         self.textview.set_wrap_mode(gtk.WRAP_WORD)
+        
+        font = pango.FontDescription('Sans 8')
+        font.set_weight(pango.WEIGHT_LIGHT)
+        self.textview.modify_font(font)
         
         # Set background color
         bgcolor = gtk.gdk.color_parse("#FFFFFF")
