@@ -33,6 +33,11 @@ from sugar.graphics import units
 STATE_SHOWING = 0
 STATE_HIDING  = 1
 
+MODE_NONE            = 0
+MODE_MOUSE           = 1
+MODE_KEYBOARD        = 2
+MODE_NOT_INTERACTIVE = 3
+
 _FRAME_HIDING_DELAY = 500
 
 class _Animation(animator.Animation):
@@ -50,15 +55,18 @@ class _MouseListener(object):
         self._hide_sid = 0
 
     def mouse_enter(self):
-        self._show_frame()
+        if self._frame.mode == MODE_NONE:
+            self._show_frame()
 
     def mouse_leave(self):
-        self._hide_frame()
+        if self._frame.mode == MODE_MOUSE:
+            self._hide_frame()
 
     def _show_frame(self):
         if self._hide_sid != 0:
             gobject.source_remove(self._hide_sid)
         self._frame.show()
+        self._frame.mode = MODE_MOUSE
 
     def _hide_frame_timeout_cb(self):
         self._frame.hide()
@@ -76,7 +84,11 @@ class _KeyListener(object):
         self._hide_sid = 0
 
     def key_press(self):
-        if self._frame.get_state() == STATE_SHOWING:
+        if self._frame.mode != MODE_NONE and \
+           self._frame.mode != MODE_KEYBOARD:
+            return
+
+        if self._frame.state == STATE_SHOWING:
             self._hide_frame()
         else:
             self._show_frame()
@@ -92,6 +104,7 @@ class _KeyListener(object):
         if self._hide_sid != 0:
             gobject.source_remove(self._hide_sid)
         self._frame.show()
+        self._frame.mode = MODE_KEYBOARD
 
     def _hide_frame(self):
         if self._hide_sid != 0:
@@ -101,6 +114,9 @@ class _KeyListener(object):
 
 class Frame(object):
     def __init__(self, shell):
+        self.mode = MODE_NONE
+        self.state = STATE_HIDING
+
         self._left_panel = None
         self._right_panel = None
         self._top_panel = None
@@ -108,7 +124,8 @@ class Frame(object):
 
         self._shell = shell
         self._current_position = 0.0
-        self._state = STATE_HIDING
+        self._animator = None
+        self._hover_frame = False
 
         self._event_frame = EventFrame()
         self._event_frame.connect('enter-corner', self._enter_corner_cb)
@@ -139,9 +156,6 @@ class Frame(object):
 
     def get_current_position(self):
         return self._current_position
-
-    def get_state(self):
-        return self._state
 
     def move(self, pos):
         self._current_position = pos
@@ -231,29 +245,35 @@ class Frame(object):
                          screen_w - units.grid_to_pixels(1), 0)
 
     def hide(self):
-        if self._state == STATE_HIDING:
+        if self.state == STATE_HIDING:
             return
+        if self._animator:
+            self._animator.stop()
 
-        anim = animator.Animator(0.5, 30, animator.EASE_OUT_EXPO)
-        anim.add(_Animation(self, 0.0))
-        anim.start()
+        self._animator = animator.Animator(0.5, 30, animator.EASE_OUT_EXPO)
+        self._animator.add(_Animation(self, 0.0))
+        self._animator.start()
 
         self._event_frame.show()
 
-        self._state = STATE_HIDING
+        self.state = STATE_HIDING
+        self.mode = MODE_NONE
 
     def show(self):
-        if self._state == STATE_SHOWING:
+        if self.state == STATE_SHOWING:
             return
+        if self._animator:
+            self._animator.stop()
 
-        anim = animator.Animator(0.5, 30, animator.EASE_OUT_EXPO)
-        anim.add(_Animation(self, 1.0))
-        anim.start()
+        self._animator = animator.Animator(0.5, 30, animator.EASE_OUT_EXPO)
+        self._animator.add(_Animation(self, 1.0))
+        self._animator.start()
 
         self._event_frame.hide()
 
-        self._state = STATE_SHOWING
-            
+        self.state = STATE_SHOWING
+        self.mode = MODE_NOT_INTERACTIVE
+
     def _size_changed_cb(self, screen):
        self._update_position()
                
@@ -261,12 +281,15 @@ class Frame(object):
         self._mouse_listener.mouse_enter()
 
     def _popup_context_deactivated_cb(self, popup_context):
-        self._mouse_listener.mouse_leave()
+        if not self._hover_frame:
+            self._mouse_listener.mouse_leave()
 
     def _enter_notify_cb(self, window, event):
+        self._hover_frame = True
         self._mouse_listener.mouse_enter()
 
     def _leave_notify_cb(self, window, event):
+        self._hover_frame = False
         if not self._popup_context.is_active():
             self._mouse_listener.mouse_leave()
         
