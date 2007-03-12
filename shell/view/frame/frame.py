@@ -55,7 +55,8 @@ class _MouseListener(object):
         self._hide_sid = 0
 
     def mouse_enter(self):
-        if self._frame.mode == MODE_NONE:
+        if self._frame.mode == MODE_NONE or \
+           self._frame.mode == MODE_MOUSE:
             self._show_frame()
 
     def mouse_leave(self):
