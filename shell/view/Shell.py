@@ -84,8 +84,9 @@ class Shell(gobject.GObject):
 
         if self._current_host:
             self._current_host.set_active(True)
-
-        self._zoom_level = sugar.ZOOM_ACTIVITY
+            self._zoom_level = sugar.ZOOM_ACTIVITY
+        else:
+            self.set_zoom_level(sugar.ZOOM_HOME)
 
     def get_model(self):
         return self._model
