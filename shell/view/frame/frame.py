@@ -30,10 +30,10 @@ from model.ShellModel import ShellModel
 from sugar.graphics import animator
 from sugar.graphics import units
 
-MODE_NONE            = 0
-MODE_MOUSE           = 1
-MODE_KEYBOARD        = 2
-MODE_FORCE = 3
+MODE_NONE     = 0
+MODE_MOUSE    = 1
+MODE_KEYBOARD = 2
+MODE_FORCE    = 3
 
 _FRAME_HIDING_DELAY = 500
 
