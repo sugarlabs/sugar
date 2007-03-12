@@ -30,9 +30,6 @@ from model.ShellModel import ShellModel
 from sugar.graphics import animator
 from sugar.graphics import units
 
-STATE_SHOWING = 0
-STATE_HIDING  = 1
-
 MODE_NONE            = 0
 MODE_MOUSE           = 1
 MODE_KEYBOARD        = 2
@@ -89,7 +86,7 @@ class _KeyListener(object):
            self._frame.mode != MODE_KEYBOARD:
             return
 
-        if self._frame.state == STATE_SHOWING:
+        if self._frame.visible:
             self._hide_frame()
         else:
             self._show_frame()
@@ -116,7 +113,7 @@ class _KeyListener(object):
 class Frame(object):
     def __init__(self, shell):
         self.mode = MODE_NONE
-        self.state = STATE_HIDING
+        self.visible = False
 
         self._left_panel = None
         self._right_panel = None
@@ -153,7 +150,7 @@ class Frame(object):
         self._mouse_listener = _MouseListener(self)
 
     def hide(self, force=False):
-        if self.state == STATE_HIDING:
+        if not self.visible:
             return
         if self._animator:
             self._animator.stop()
@@ -164,7 +161,7 @@ class Frame(object):
 
         self._event_frame.show()
 
-        self.state = STATE_HIDING
+        self.visible = False
         if force:
             self.mode = MODE_NONE
         else:
@@ -172,7 +169,7 @@ class Frame(object):
             self._animator.connect('completed', self._hide_completed_cb)
 
     def show(self):
-        if self.state == STATE_SHOWING:
+        if self.visible:
             return
         if self._animator:
             self._animator.stop()
@@ -183,7 +180,7 @@ class Frame(object):
 
         self._event_frame.hide()
 
-        self.state = STATE_SHOWING
+        self.visible = True
         self.mode = MODE_FORCE
 
     def get_popup_context(self):
