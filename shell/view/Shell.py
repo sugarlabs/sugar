@@ -53,7 +53,6 @@ class Shell(gobject.GObject):
         self._popup_context = PopupContext()
 
         self._frame = Frame(self)
-        self._frame.show_and_hide(3)
 
         #self.start_activity('org.laptop.JournalActivity')
 
