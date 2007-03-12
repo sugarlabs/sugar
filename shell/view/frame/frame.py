@@ -232,7 +232,15 @@ class Frame:
 
     def do_slide_in(self, current=0, n_frames=0):
         if _ANIMATION:
-            self._move(float(current + 1) / float(n_frames))
+            if current + 1 == n_frames:
+                # hardcode last frame to avoid precision errors in division
+                self._move(1)
+            else:
+                # each frame, move half the remaining distance
+                pos = 0.0
+                for i in range(0, current + 1):
+                    pos += float((1.0 - float(pos)) / 2.0)
+                self._move(pos)
         elif current == 0:
             self._move(1)
         if self._event_frame.is_visible():
@@ -240,7 +248,15 @@ class Frame:
 
     def do_slide_out(self, current=0, n_frames=0):
         if _ANIMATION:
-            self._move(1 - (float(current + 1) / float(n_frames)))
+            if current + 1 == n_frames:
+                # hardcode last frame to avoid precision errors in division
+                self._move(0)
+            else:
+                # each frame, move half the remaining distance
+                pos = 0.0
+                for i in range(0, current + 1):
+                    pos += float((1.0 - float(pos)) / 2.0)
+                self._move(1.0 - float(pos))
         elif current == 0:
             self._move(0)
         if not self._event_frame.is_visible():
