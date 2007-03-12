@@ -125,7 +125,6 @@ class Frame(object):
         self._shell = shell
         self._current_position = 0.0
         self._animator = None
-        self._hover_frame = False
 
         self._event_frame = EventFrame()
         self._event_frame.connect('enter-corner', self._enter_corner_cb)
@@ -151,6 +150,36 @@ class Frame(object):
         self._key_listener = _KeyListener(self)
         self._mouse_listener = _MouseListener(self)
 
+    def hide(self):
+        if self.state == STATE_HIDING:
+            return
+        if self._animator:
+            self._animator.stop()
+
+        self._animator = animator.Animator(0.5, 30, animator.EASE_OUT_EXPO)
+        self._animator.add(_Animation(self, 0.0))
+        self._animator.start()
+
+        self._event_frame.show()
+
+        self.state = STATE_HIDING
+        self.mode = MODE_NONE
+
+    def show(self):
+        if self.state == STATE_SHOWING:
+            return
+        if self._animator:
+            self._animator.stop()
+
+        self._animator = animator.Animator(0.5, 30, animator.EASE_OUT_EXPO)
+        self._animator.add(_Animation(self, 1.0))
+        self._animator.start()
+
+        self._event_frame.hide()
+
+        self.state = STATE_SHOWING
+        self.mode = MODE_NOT_INTERACTIVE
+
     def get_popup_context(self):
         return self._popup_context
 
@@ -160,6 +189,12 @@ class Frame(object):
     def move(self, pos):
         self._current_position = pos
         self._update_position()
+
+    def _is_hover(self):
+        return (self._top_panel.hover or \
+                self._bottom_panel.hover or \
+                self._left_panel.hover or \
+                self._right_panel.hover)
 
     def _create_top_panel(self):
         panel = self._create_panel(hippo.ORIENTATION_HORIZONTAL)
@@ -244,36 +279,6 @@ class Frame(object):
                          screen_w, 0,
                          screen_w - units.grid_to_pixels(1), 0)
 
-    def hide(self):
-        if self.state == STATE_HIDING:
-            return
-        if self._animator:
-            self._animator.stop()
-
-        self._animator = animator.Animator(0.5, 30, animator.EASE_OUT_EXPO)
-        self._animator.add(_Animation(self, 0.0))
-        self._animator.start()
-
-        self._event_frame.show()
-
-        self.state = STATE_HIDING
-        self.mode = MODE_NONE
-
-    def show(self):
-        if self.state == STATE_SHOWING:
-            return
-        if self._animator:
-            self._animator.stop()
-
-        self._animator = animator.Animator(0.5, 30, animator.EASE_OUT_EXPO)
-        self._animator.add(_Animation(self, 1.0))
-        self._animator.start()
-
-        self._event_frame.hide()
-
-        self.state = STATE_SHOWING
-        self.mode = MODE_NOT_INTERACTIVE
-
     def _size_changed_cb(self, screen):
        self._update_position()
                
@@ -281,15 +286,13 @@ class Frame(object):
         self._mouse_listener.mouse_enter()
 
     def _popup_context_deactivated_cb(self, popup_context):
-        if not self._hover_frame:
+        if not self._is_hover():
             self._mouse_listener.mouse_leave()
 
     def _enter_notify_cb(self, window, event):
-        self._hover_frame = True
         self._mouse_listener.mouse_enter()
 
     def _leave_notify_cb(self, window, event):
-        self._hover_frame = False
         if not self._popup_context.is_active():
             self._mouse_listener.mouse_leave()
         

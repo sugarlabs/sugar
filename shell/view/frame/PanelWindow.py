@@ -23,10 +23,14 @@ from sugar.graphics.window import Window
 class PanelWindow(Window):
     def __init__(self, orientation):
         Window.__init__(self)
+        self.hover = False
+
         self._orientation = orientation
 
         self.set_decorated(False)
         self.connect('realize', self._realize_cb)
+        self.connect('enter-notify-event', self._enter_notify_cb)
+        self.connect('leave-notify-event', self._leave_notify_cb)
 
         self._bg = hippo.CanvasBox(background_color=0x414141ff,
                                    orientation=self._orientation)
@@ -63,6 +67,12 @@ class PanelWindow(Window):
     def _realize_cb(self, widget):
         self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
         self.window.set_accept_focus(False)
+
+    def _enter_notify_cb(self, window, event):
+        self.hover = True
+
+    def _leave_notify_cb(self, window, event):
+        self.hover = False
         
     def _size_changed_cb(self, screen):
         self._update_size()
