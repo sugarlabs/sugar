@@ -96,11 +96,12 @@ class Menu(Popup):
         self.props.padding = units.points_to_pixels(3)
         self.props.spacing = units.points_to_pixels(3)
 
+        self._title_item = None
         if title:
-            title_item = hippo.CanvasText(text=title)
-            title_item.props.color = color.LABEL_TEXT.get_int()
-            title_item.props.font_desc = font.DEFAULT.get_pango_desc()
-            self.append(title_item)
+            self._title_item = hippo.CanvasText(text=title)
+            self._title_item.props.color = color.LABEL_TEXT.get_int()
+            self._title_item.props.font_desc = font.DEFAULT.get_pango_desc()
+            self.append(self._title_item)
             self.add_separator()
 
     def add_item(self, item):
@@ -118,3 +119,8 @@ class Menu(Popup):
 
     def _item_button_press_event_cb(self, menu_item, event):
         self.emit('action', menu_item)
+
+    def set_title(self, title):
+        # FIXME: allow adding a title after __init__ when hippo support is complete
+        if self._title_item:
+            self._title_item.props.text = title
