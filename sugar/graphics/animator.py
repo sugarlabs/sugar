@@ -21,8 +21,14 @@ import gobject
 
 EASE_OUT_EXPO = 1
 
-class Animator(object):
+class Animator(gobject.GObject):
+    __gsignals__ = {
+        'completed': (gobject.SIGNAL_RUN_FIRST,
+                      gobject.TYPE_NONE, ([])),
+    }
+    
     def __init__(self, time, fps, easing=EASE_OUT_EXPO):
+        gobject.GObject.__init__(self)
         self._animations = []
         self._time = time
         self._interval = 1.0 / fps
@@ -44,13 +50,18 @@ class Animator(object):
         if self._timeout_sid:
             gobject.source_remove(self._timeout_sid)
             self._timeout_sid = 0
+        self.emit('completed')
 
     def _next_frame_cb(self):
         current_time = min (self._time, time.time() - self._start_time)
         for animation in self._animations:
             animation.do_frame(current_time, self._time, self._easing)
 
-        return (current_time != self._time)
+        if current_time == self._time:
+            self.stop()
+            return False
+        else:
+            return True
 
 class Animation(object):
     def __init__(self, start, end):

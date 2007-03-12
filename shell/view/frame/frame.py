@@ -36,7 +36,7 @@ STATE_HIDING  = 1
 MODE_NONE            = 0
 MODE_MOUSE           = 1
 MODE_KEYBOARD        = 2
-MODE_NOT_INTERACTIVE = 3
+MODE_FORCE = 3
 
 _FRAME_HIDING_DELAY = 500
 
@@ -152,7 +152,7 @@ class Frame(object):
         self._key_listener = _KeyListener(self)
         self._mouse_listener = _MouseListener(self)
 
-    def hide(self):
+    def hide(self, force=False):
         if self.state == STATE_HIDING:
             return
         if self._animator:
@@ -165,7 +165,11 @@ class Frame(object):
         self._event_frame.show()
 
         self.state = STATE_HIDING
-        self.mode = MODE_NONE
+        if force:
+            self.mode = MODE_NONE
+        else:
+            self.mode = MODE_FORCE
+            self._animator.connect('completed', self._hide_completed_cb)
 
     def show(self):
         if self.state == STATE_SHOWING:
@@ -180,7 +184,7 @@ class Frame(object):
         self._event_frame.hide()
 
         self.state = STATE_SHOWING
-        self.mode = MODE_NOT_INTERACTIVE
+        self.mode = MODE_FORCE
 
     def get_popup_context(self):
         return self._popup_context
@@ -280,6 +284,9 @@ class Frame(object):
         self._move_panel(self._right_panel, self._current_position,
                          screen_w, 0,
                          screen_w - units.grid_to_pixels(1), 0)
+
+    def _hide_completed_cb(self, animator):
+        self.mode = MODE_NONE
 
     def _size_changed_cb(self, screen):
        self._update_position()
