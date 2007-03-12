@@ -110,6 +110,11 @@ class _KeyListener(object):
         self._hide_sid = gobject.timeout_add(
                         100, self._hide_frame_timeout_cb)
 
+class _FrameState(object):
+    def __init__(self, visible, mode):
+        self.visible = visible
+        self.mode = mode
+
 class Frame(object):
     def __init__(self, shell):
         self.mode = MODE_NONE
@@ -124,6 +129,7 @@ class Frame(object):
         self._current_position = 0.0
         self._animator = None
         self._hover = False
+        self._saved_state = None
 
         self._event_frame = EventFrame()
         self._event_frame.connect('enter-corner', self._enter_corner_cb)
@@ -148,6 +154,16 @@ class Frame(object):
 
         self._key_listener = _KeyListener(self)
         self._mouse_listener = _MouseListener(self)
+
+    def save_state(self):
+        self._saved_state = _FrameState(self.visible, self.mode)
+
+    def restore_state(self):
+        if self.saved_state.visible:
+            self.show()
+        else:
+            self.hide()
+        self.mode = self._saved_state.mode
 
     def hide(self, force=False):
         if not self.visible:

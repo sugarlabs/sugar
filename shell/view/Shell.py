@@ -38,21 +38,19 @@ class Shell(gobject.GObject):
         self._current_host = None
         self._screen_rotation = 0
 
+        self._key_handler = KeyHandler(self)
+        self._popup_context = PopupContext()
+        self._frame = Frame(self)
+
         self._home_window = HomeWindow(self)
         self._home_window.show()
-        self.set_zoom_level(sugar.ZOOM_HOME)
-
-        self._key_handler = KeyHandler(self)
+        self._zoom_level = sugar.ZOOM_HOME
 
         home_model = self._model.get_home()
         home_model.connect('activity-added', self._activity_added_cb)
         home_model.connect('activity-removed', self._activity_removed_cb)
         home_model.connect('active-activity-changed',
                            self._active_activity_changed_cb)
-
-        self._popup_context = PopupContext()
-
-        self._frame = Frame(self)
 
         #self.start_activity('org.laptop.JournalActivity')
 
@@ -137,6 +135,10 @@ class Shell(gobject.GObject):
         self.set_zoom_level(sugar.ZOOM_HOME)
 
     def set_zoom_level(self, level):
+        self._zoom_level = level
+        self._update_zoom_level()
+
+    def _update_zoom_level(self):
         if level == sugar.ZOOM_ACTIVITY:
             self._screen.toggle_showing_desktop(False)
         else:
