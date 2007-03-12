@@ -30,6 +30,9 @@ from model.ShellModel import ShellModel
 from sugar.graphics import animator
 from sugar.graphics import units
 
+STATE_SHOWING = 0
+STATE_HIDING  = 1
+
 class _Animation(animator.Animation):
     def __init__(self, frame, end):
         start = frame.get_current_position()
@@ -42,18 +45,31 @@ class _Animation(animator.Animation):
 class _KeyListener(object):
     def __init__(self, frame):
         self._frame = frame
-        self._frame_active = False
+        self._hide_sid = 0
 
     def key_press(self):
-        if self._frame_active:
-            self._frame.hide()
-            self._frame_active = False
+        if self._frame.get_state() == STATE_SHOWING:
+            self._hide_frame()
         else:
-            self._frame.show()
-            self._frame_active = True
+            self._show_frame()
 
     def key_release(self):
-        pass
+        self._hide_frame()
+
+    def _hide_frame_timeout_cb(self):
+        self._frame.hide()
+        return False
+
+    def _show_frame(self):
+        if self._hide_sid != 0:
+            gobject.source_remove(self._hide_sid)
+        self._frame.show()
+
+    def _hide_frame(self):
+        if self._hide_sid != 0:
+            gobject.source_remove(self._hide_sid)
+        self._hide_sid = gobject.timeout_add(
+                        100, self._hide_frame_timeout_cb)
 
 class Frame(object):
     def __init__(self, shell):
@@ -64,6 +80,7 @@ class Frame(object):
 
         self._shell = shell
         self._current_position = 0.0
+        self._state = STATE_HIDING
 
         self._event_frame = EventFrame()
         self._event_frame.connect('enter-edge', self._enter_edge_cb)
@@ -90,14 +107,14 @@ class Frame(object):
 
         self._key_listener = _KeyListener(self)
 
-    def is_visible(self):
-        return self._top_panel.props.visible
-
     def get_popup_context(self):
         return self._popup_context
 
     def get_current_position(self):
         return self._current_position
+
+    def get_state(self):
+        return self._state
 
     def move(self, pos):
         self._current_position = pos
@@ -187,14 +204,24 @@ class Frame(object):
                          screen_w - units.grid_to_pixels(1), 0)
 
     def hide(self):
+        if self._state == STATE_HIDING:
+            return
+
         anim = animator.Animator(0.5, 30, animator.EASE_OUT_EXPO)
         anim.add(_Animation(self, 0.0))
         anim.start()
 
+        self._state = STATE_HIDING
+
     def show(self):
+        if self._state == STATE_SHOWING:
+            return
+
         anim = animator.Animator(0.5, 30, animator.EASE_OUT_EXPO)
         anim.add(_Animation(self, 1.0))
         anim.start()
+
+        self._state = STATE_SHOWING
             
     def _size_changed_cb(self, screen):
        self._update_position()
