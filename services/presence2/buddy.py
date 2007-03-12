@@ -79,6 +79,9 @@ class Buddy(DBusGObject):
         self._owner = False
         self._key = None
         self._icon = ''
+        self._current_activity = None
+        self._nick = None
+        self._color = None
 
         if not kwargs.get("key"):
             raise ValueError("key required")
