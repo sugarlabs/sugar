@@ -14,6 +14,7 @@
 # License along with this library; if not, write to the
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
+
 import logging
 import re
 
@@ -24,12 +25,21 @@ import rsvg
 import cairo
 import time
 
-from sugar.graphics.timeline import Timeline
 from sugar.graphics.popup import Popup
 from sugar.graphics import color
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics import font
 from sugar.graphics import units
+from sugar.graphics import animator
+
+class _PopupAnimation(animator.Animation):
+    def __init__(self, icon):
+        animator.Animation.__init__(self, 0.0, 1.0)
+        self._icon = icon
+
+    def next_frame(self, current):
+        if current == 1.0:
+            self._icon.show_popup()
 
 class _IconCacheIcon:
     def __init__(self, name, fill_color, stroke_color, now):
@@ -165,15 +175,13 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         self._cache = False
         self._handle = None
         self._popup = None
+        self._hover_icon = False
         self._hover_popup = False
         self._tooltip = False
         self._active = True
+        self._popup_anim = None
+        self._enter_or_leave_sid = 0
         
-        self._timeline = Timeline(self)
-        self._timeline.add_tag('popup', 6, 6)
-        self._timeline.add_tag('before_popdown', 7, 7)
-        self._timeline.add_tag('popdown', 8, 8)
-
         hippo.CanvasBox.__init__(self, **kwargs)
 
         self.connect_after('motion-notify-event', self._motion_notify_event_cb)
@@ -346,10 +354,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
     def get_popup_context(self):
         return None
 
-    def do_popup(self, current, n_frames):
-        if self._popup:
-            return
-
+    def show_popup(self):
         popup = self.get_popup()
         if not popup:
             return
@@ -386,7 +391,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         
         self._popup = popup
 
-    def do_popdown(self, current, frame):
+    def hide_popup(self):
         if self._popup:
             self._popup.popdown()
 
@@ -396,32 +401,57 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
 
             self._popup = None
 
-    def popdown(self):
-        self._timeline.play('popdown', 'popdown')
+    def _enter(self):
+        self._popup_anim = animator.Animator(0.2, 10)
+        self._popup_anim.add(_PopupAnimation(self))
+        self._popup_anim.start()
+
+        self.prelight(enter=True)
+
+    def _leave(self):
+        self.hide_popup()
+        self.prelight(enter=False)
+
+    def _enter_or_leave_cb(self):
+        if self._popup_anim:
+            self._popup_anim.stop()
+
+        if self._hover_icon or self._hover_popup:
+            self._enter()
+        else:
+            self._leave()
+
+        self._enter_or_leave_sid = 0
+
+        return False
+
+    def _schedule_enter_or_leave(self):
+        if self._enter_or_leave_sid == 0:
+            sid = gobject.idle_add(self._enter_or_leave_cb)
+            self._enter_or_leave_sid = sid
 
     def _motion_notify_event_cb(self, button, event):
         if event.detail == hippo.MOTION_DETAIL_ENTER:
-            self._timeline.play(None, 'popup')
-            self.prelight(enter=True)
+            self._hover_icon = True
         elif event.detail == hippo.MOTION_DETAIL_LEAVE:
-            if not self._hover_popup:
-                self._timeline.play('before_popdown', 'popdown')
-            self.prelight(enter=False)
+            self._hover_icon = False
+
+        self._schedule_enter_or_leave()
+
         return False
 
     def popup_motion_notify_event_cb(self, popup, event):
         if event.detail == hippo.MOTION_DETAIL_ENTER:
             self._hover_popup = True
-            self._timeline.play('popup', 'popup')
-            self.prelight(enter=True)
         elif event.detail == hippo.MOTION_DETAIL_LEAVE:
             self._hover_popup = False
-            self._timeline.play('popdown', 'popdown')
-            self.prelight(enter=False)
+
+        self._schedule_enter_or_leave()
+
         return False
 
     def _popup_action_completed_cb(self, popup):
-        self.popdown()
+        self.hide_popup()
 
     def prelight(self, enter):
         """

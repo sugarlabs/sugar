@@ -53,7 +53,9 @@ class Animator(gobject.GObject):
         self.emit('completed')
 
     def _next_frame_cb(self):
-        current_time = min (self._time, time.time() - self._start_time)
+        current_time = min(self._time, time.time() - self._start_time)
+        current_time = max(current_time, 0.0)
+
         for animation in self._animations:
             animation.do_frame(current_time, self._time, self._easing)
 
