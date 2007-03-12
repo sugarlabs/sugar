@@ -33,6 +33,8 @@ from sugar.graphics import units
 STATE_SHOWING = 0
 STATE_HIDING  = 1
 
+_FRAME_HIDING_DELAY = 500
+
 class _Animation(animator.Animation):
     def __init__(self, frame, end):
         start = frame.get_current_position()
@@ -41,6 +43,32 @@ class _Animation(animator.Animation):
 
     def next_frame(self, current):
         self._frame.move(current)
+
+class _MouseListener(object):
+    def __init__(self, frame):
+        self._frame = frame
+        self._hide_sid = 0
+
+    def mouse_enter(self):
+        self._show_frame()
+
+    def mouse_leave(self):
+        self._hide_frame()
+
+    def _show_frame(self):
+        if self._hide_sid != 0:
+            gobject.source_remove(self._hide_sid)
+        self._frame.show()
+
+    def _hide_frame_timeout_cb(self):
+        self._frame.hide()
+        return False
+
+    def _hide_frame(self):
+        if self._hide_sid != 0:
+            gobject.source_remove(self._hide_sid)
+        self._hide_sid = gobject.timeout_add(
+                  _FRAME_HIDING_DELAY, self._hide_frame_timeout_cb)
 
 class _KeyListener(object):
     def __init__(self, frame):
@@ -83,9 +111,7 @@ class Frame(object):
         self._state = STATE_HIDING
 
         self._event_frame = EventFrame()
-        self._event_frame.connect('enter-edge', self._enter_edge_cb)
         self._event_frame.connect('enter-corner', self._enter_corner_cb)
-        self._event_frame.connect('leave', self._event_frame_leave_cb)
         self._event_frame.show()
 
         self._popup_context = FramePopupContext()
@@ -106,6 +132,7 @@ class Frame(object):
         screen.connect('size-changed', self._size_changed_cb)
 
         self._key_listener = _KeyListener(self)
+        self._mouse_listener = _MouseListener(self)
 
     def get_popup_context(self):
         return self._popup_context
@@ -211,6 +238,8 @@ class Frame(object):
         anim.add(_Animation(self, 0.0))
         anim.start()
 
+        self._event_frame.show()
+
         self._state = STATE_HIDING
 
     def show(self):
@@ -221,37 +250,34 @@ class Frame(object):
         anim.add(_Animation(self, 1.0))
         anim.start()
 
+        self._event_frame.hide()
+
         self._state = STATE_SHOWING
             
     def _size_changed_cb(self, screen):
        self._update_position()
                
     def _popup_context_activated_cb(self, popup_context):
-        pass
+        self._mouse_listener.mouse_enter()
 
     def _popup_context_deactivated_cb(self, popup_context):
-        pass
+        self._mouse_listener.mouse_leave()
 
     def _enter_notify_cb(self, window, event):
-        pass
+        self._mouse_listener.mouse_enter()
 
     def _leave_notify_cb(self, window, event):
-        pass
+        if not self._popup_context.is_active():
+            self._mouse_listener.mouse_leave()
         
     def _drag_motion_cb(self, window, context, x, y, time):
-        pass
+        self._mouse_listener.mouse_enter()
         
     def _drag_leave_cb(self, window, drag_context, timestamp):
-        pass
+        self._mouse_listener.mouse_leave()
             
-    def _enter_edge_cb(self, event_frame):
-        pass
-        
     def _enter_corner_cb(self, event_frame):
-        pass
-        
-    def _event_frame_leave_cb(self, event_frame):
-        pass
+        self._mouse_listener.mouse_enter()
         
     def notify_key_press(self):
         self._key_listener.key_press()
