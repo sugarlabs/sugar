@@ -7,5 +7,14 @@ class DeviceView(canvasicon.CanvasIcon):
         canvasicon.CanvasIcon.__init__(self)
         self._model = model
 
-        icon_name = canvasicon.get_icon_state(_ICON_NAME, 60)
-        self.props.icon_name = icon_name
+        model.connect('notify::strength', self._level_changed_cb)
+
+        self._update_level()
+
+    def _update_level(self):
+        self.props.icon_name = canvasicon.get_icon_state(
+                                    _ICON_NAME, self._model.props.level)
+
+    def _level_changed_cb(self, pspec):
+        self._update_level()
+        
