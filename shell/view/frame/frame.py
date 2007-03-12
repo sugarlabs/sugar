@@ -155,11 +155,16 @@ class Frame(object):
         self._key_listener = _KeyListener(self)
         self._mouse_listener = _MouseListener(self)
 
+        self.save_state()
+
     def save_state(self):
         self._saved_state = _FrameState(self.visible, self.mode)
 
     def restore_state(self):
-        if self.saved_state.visible:
+        if self._saved_state == None:
+            return
+
+        if self._saved_state.visible:
             self.show()
         else:
             self.hide()

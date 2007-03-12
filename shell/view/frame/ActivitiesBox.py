@@ -76,7 +76,6 @@ class ActivitiesBox(hippo.CanvasBox):
         self._invites.connect('invite-removed', self._invite_removed_cb)
 
     def _activity_clicked_cb(self, icon):
-        self._shell.get_frame().hide()
         self._shell.start_activity(icon.get_bundle_id())
 
     def _invite_clicked_cb(self, icon):

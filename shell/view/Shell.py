@@ -40,10 +40,13 @@ class Shell(gobject.GObject):
 
         self._key_handler = KeyHandler(self)
         self._popup_context = PopupContext()
+
         self._frame = Frame(self)
+        self._frame.show()
 
         self._home_window = HomeWindow(self)
         self._home_window.show()
+
         self._zoom_level = sugar.ZOOM_HOME
 
         home_model = self._model.get_home()
@@ -57,6 +60,8 @@ class Shell(gobject.GObject):
     def _activity_added_cb(self, home_model, home_activity):
         activity_host = ActivityHost(home_activity)
         self._hosts[activity_host.get_xid()] = activity_host
+
+        self._frame.hide()
 
     def _activity_removed_cb(self, home_model, home_activity):
         if not home_activity.get_launched():
@@ -79,6 +84,8 @@ class Shell(gobject.GObject):
 
         if self._current_host:
             self._current_host.set_active(True)
+
+        self._zoom_level = sugar.ZOOM_ACTIVITY
 
     def get_model(self):
         return self._model
@@ -135,15 +142,25 @@ class Shell(gobject.GObject):
         self.set_zoom_level(sugar.ZOOM_HOME)
 
     def set_zoom_level(self, level):
-        self._zoom_level = level
-        self._update_zoom_level()
+        if self._zoom_level == level:
+            return
+        if len(self._hosts) == 0 and level == sugar.ZOOM_ACTIVITY:
+            return
 
-    def _update_zoom_level(self):
-        if level == sugar.ZOOM_ACTIVITY:
+        if self._zoom_level == sugar.ZOOM_HOME:
+            self._frame.restore_state()
+
+        self._zoom_level = level
+
+        if self._zoom_level == sugar.ZOOM_ACTIVITY:
             self._screen.toggle_showing_desktop(False)
         else:
             self._screen.toggle_showing_desktop(True)
-            self._home_window.set_zoom_level(level)
+            self._home_window.set_zoom_level(self._zoom_level)
+
+        if self._zoom_level == sugar.ZOOM_HOME:
+            self._frame.save_state()     
+            self._frame.show()
 
     def get_current_activity(self):
         return self._current_host
