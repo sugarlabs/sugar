@@ -143,7 +143,7 @@ class Shell(gobject.GObject):
             self._screen.toggle_showing_desktop(False)
         else:
             self._screen.toggle_showing_desktop(True)
-            self._home_window.set_zoom_level(level)
+            self._home_window.set_zoom_level(self._zoom_level)
 
     def get_current_activity(self):
         return self._current_host
