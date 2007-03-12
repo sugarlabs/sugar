@@ -31,6 +31,6 @@ init_sugar(void)
     py_sugar_register_classes (d);
 
     if (PyErr_Occurred ()) {
-        Py_FatalError ("can't initialise module globalkeys");
+        Py_FatalError ("can't initialise module _sugar");
     }
 }

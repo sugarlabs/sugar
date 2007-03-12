@@ -20,7 +20,6 @@ sugar_PYTHON =			\
 	popupcontext.py		\
 	snowflakebox.py		\
 	spreadbox.py		\
-	timeline.py         	\
 	toggleiconbutton.py     \
 	toolbar.py		\
 	units.py		\
