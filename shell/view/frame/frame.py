@@ -125,6 +125,7 @@ class Frame(object):
         self._shell = shell
         self._current_position = 0.0
         self._animator = None
+        self._hover = False
 
         self._event_frame = EventFrame()
         self._event_frame.connect('enter-corner', self._enter_corner_cb)
@@ -286,15 +287,24 @@ class Frame(object):
         self._mouse_listener.mouse_enter()
 
     def _popup_context_deactivated_cb(self, popup_context):
-        if not self._is_hover():
+        if not self._hover:
             self._mouse_listener.mouse_leave()
 
     def _enter_notify_cb(self, window, event):
+        if self._hover:
+            return
+
+        self._hover = True
         self._mouse_listener.mouse_enter()
 
     def _leave_notify_cb(self, window, event):
-        if not self._popup_context.is_active():
-            self._mouse_listener.mouse_leave()
+        if not self._hover:
+            return
+
+        if not self._is_hover():
+            self._hover = False
+            if not self._popup_context.is_active():
+                self._mouse_listener.mouse_leave()
         
     def _drag_motion_cb(self, window, context, x, y, time):
         self._mouse_listener.mouse_enter()
