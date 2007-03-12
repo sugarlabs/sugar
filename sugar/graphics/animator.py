@@ -19,7 +19,8 @@ import time
 
 import gobject
 
-EASE_OUT_EXPO = 1
+EASE_OUT_EXPO = 0
+EASE_IN_EXPO  = 1
 
 class Animator(gobject.GObject):
     __gsignals__ = {
@@ -75,6 +76,8 @@ class Animation(object):
         change = self.end - self.start
 
         if easing == EASE_OUT_EXPO:
+            frame = change * (-pow(2, -10 * time/duration) + 1) + start;
+        elif easing == EASE_IN_EXPO:
             frame = change * pow(2, 10 * (time / duration - 1)) + start;
 
         self.next_frame(frame)
