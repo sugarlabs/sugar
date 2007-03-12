@@ -139,7 +139,7 @@ class Shell(gobject.GObject):
         self._update_zoom_level()
 
     def _update_zoom_level(self):
-        if level == sugar.ZOOM_ACTIVITY:
+        if self._zoom_level == sugar.ZOOM_ACTIVITY:
             self._screen.toggle_showing_desktop(False)
         else:
             self._screen.toggle_showing_desktop(True)
