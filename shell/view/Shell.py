@@ -61,8 +61,6 @@ class Shell(gobject.GObject):
         activity_host = ActivityHost(home_activity)
         self._hosts[activity_host.get_xid()] = activity_host
 
-        self._frame.hide()
-
     def _activity_removed_cb(self, home_model, home_activity):
         if not home_activity.get_launched():
             return
@@ -84,7 +82,7 @@ class Shell(gobject.GObject):
 
         if self._current_host:
             self._current_host.set_active(True)
-            self._zoom_level = sugar.ZOOM_ACTIVITY
+            self.set_zoom_level(sugar.ZOOM_ACTIVITY)
         else:
             self.set_zoom_level(sugar.ZOOM_HOME)
 
@@ -148,9 +146,6 @@ class Shell(gobject.GObject):
         if len(self._hosts) == 0 and level == sugar.ZOOM_ACTIVITY:
             return
 
-        if self._zoom_level == sugar.ZOOM_HOME:
-            self._frame.restore_state()
-
         self._zoom_level = level
 
         if self._zoom_level == sugar.ZOOM_ACTIVITY:
@@ -160,8 +155,9 @@ class Shell(gobject.GObject):
             self._home_window.set_zoom_level(self._zoom_level)
 
         if self._zoom_level == sugar.ZOOM_HOME:
-            self._frame.save_state()     
             self._frame.show()
+        else:
+            self._frame.hide()
 
     def get_current_activity(self):
         return self._current_host
