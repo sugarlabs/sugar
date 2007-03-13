@@ -37,6 +37,9 @@
 #include <nsIGenericFactory.h>
 #include <nsIHelperAppLauncherDialog.h>
 #include <nsIComponentRegistrar.h>
+#include <nsIDOMNode.h>
+#include <nsIDOMEventTarget.h>
+#include <nsIDOMHTMLImageElement.h>
 
 enum {
 	PROP_0,
@@ -370,15 +373,53 @@ location_cb(GtkMozEmbed *embed)
 }
 
 static gboolean
-dom_mouse_click_cb(GtkMozEmbed *embed, nsIDOMMouseEvent *dom_event)
+dom_mouse_click_cb(GtkMozEmbed *embed, nsIDOMMouseEvent *mouseEvent)
 {
 	SugarBrowser *browser = SUGAR_BROWSER(embed);
     SugarBrowserEvent *event;
     gint return_value = FALSE;
 
+    nsCOMPtr<nsIDOMEventTarget> eventTarget;
+    mouseEvent->GetTarget(getter_AddRefs(eventTarget));
+    NS_ENSURE_TRUE(mouseEvent, FALSE);
+
+    nsCOMPtr<nsIDOMNode> targetNode;
+    targetNode = do_QueryInterface(eventTarget);
+    NS_ENSURE_TRUE(targetNode, FALSE);
+
     event = sugar_browser_event_new();
-    event->image_uri = g_strdup("testimage");
-    
+
+    nsresult rv;
+
+    PRUint16 type;
+    rv = targetNode->GetNodeType(&type);
+    if (NS_FAILED(rv)) return NS_ERROR_FAILURE;
+
+    nsCOMPtr<nsIDOMHTMLElement> element = do_QueryInterface(targetNode);
+    if ((nsIDOMNode::ELEMENT_NODE == type) && element) {
+        nsString uTag;
+        rv = element->GetLocalName(uTag);
+        if (NS_FAILED(rv)) return NS_ERROR_FAILURE;
+
+        nsCString tag;
+        NS_UTF16ToCString (uTag, NS_CSTRING_ENCODING_UTF8, tag);
+
+        if (g_ascii_strcasecmp (tag.get(), "img") == 0) {
+            nsString img;
+
+            nsCOMPtr <nsIDOMHTMLImageElement> image;
+            image = do_QueryInterface(targetNode, &rv);
+            if (NS_FAILED(rv) || !image) return NS_ERROR_FAILURE;
+
+            rv = image->GetSrc(img);
+            if (NS_FAILED(rv)) return NS_ERROR_FAILURE;
+
+            nsCString cImg;
+            NS_UTF16ToCString (img, NS_CSTRING_ENCODING_UTF8, cImg);
+            event->image_uri = g_strdup(cImg.get());
+        }
+    }
+
     g_signal_emit(browser, signals[MOUSE_CLICK], 0, event, &return_value);
 
     return return_value;
@@ -421,7 +462,7 @@ sugar_browser_scroll_pixels(SugarBrowser *browser,
 	nsCOMPtr<nsIDOMWindow> DOMWindow;
 	webBrowserFocus->GetFocusedWindow (getter_AddRefs(DOMWindow));
 	if (!DOMWindow) {
-		webBrowser->GetContentDOMWindow (getter_AddRefs (DOMWindow));
+		webBrowser->GetContentDOMWindow (getter_AddRefs(DOMWindow));
 	}
 	NS_ENSURE_TRUE (DOMWindow, );
 

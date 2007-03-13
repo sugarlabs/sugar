@@ -19,7 +19,7 @@ headers
 extern Pycairo_CAPI_t *Pycairo_CAPI;
 
 %%
-modulename _sugar
+modulename gecko
 %%
 import gobject.GObject as PyGObject_Type
 import gtk.Entry as PyGtkEntry_Type
@@ -187,8 +187,14 @@ _wrap_sugar_browser_event_tp_getattr(PyObject *self, char *attr)
 
     if (!strcmp(attr, "__members__"))
         return Py_BuildValue("[s]", "image_uri");
-    if (!strcmp(attr, "image_uri"))
-        return PyString_FromString(event->image_uri);
+    if (!strcmp(attr, "image_uri")) {
+        if (event->image_uri) {
+            return PyString_FromString(event->image_uri);
+        } else {
+            Py_INCREF(Py_None);
+            return Py_None;
+        }
+    }
 
     return NULL;
 }
