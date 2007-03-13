@@ -75,10 +75,14 @@ class Animation(object):
         start = self.start
         change = self.end - self.start
 
-        if easing == EASE_OUT_EXPO:
-            frame = change * (-pow(2, -10 * time/duration) + 1) + start;
-        elif easing == EASE_IN_EXPO:
-            frame = change * pow(2, 10 * (time / duration - 1)) + start;
+        if time == duration:
+            # last frame
+            frame = self.end
+        else:
+            if easing == EASE_OUT_EXPO:
+                frame = change * (-pow(2, -10 * time/duration) + 1) + start;
+            elif easing == EASE_IN_EXPO:
+                frame = change * pow(2, 10 * (time / duration - 1)) + start;
 
         self.next_frame(frame)
 
