@@ -32,6 +32,7 @@
 #include <nsILocalFile.h>
 #include <nsIWebBrowser.h>
 #include <nsIWebBrowserFocus.h>
+#include <nsIWebBrowserPersist.h>
 #include <nsIDOMWindow.h>
 #include <nsIDOMMouseEvent.h>
 #include <nsIGenericFactory.h>
@@ -40,6 +41,8 @@
 #include <nsIDOMNode.h>
 #include <nsIDOMEventTarget.h>
 #include <nsIDOMHTMLImageElement.h>
+#include <nsIIOService.h>
+#include <nsComponentManagerUtils.h>
 
 enum {
 	PROP_0,
@@ -484,14 +487,53 @@ sugar_browser_grab_focus(SugarBrowser *browser)
 	}
 }
 
-void
+nsresult
+NewURI(const char *uri, nsIURI **result)
+{
+    nsresult rv;
+
+    nsCOMPtr<nsIServiceManager> mgr;
+    NS_GetServiceManager (getter_AddRefs (mgr));
+    NS_ENSURE_TRUE(mgr, FALSE);
+
+    nsCOMPtr<nsIIOService> ioService;
+    rv = mgr->GetServiceByContractID ("@mozilla.org/network/io-service;1",
+                                      NS_GET_IID (nsIIOService),
+                                      getter_AddRefs(ioService));
+    NS_ENSURE_SUCCESS(rv, FALSE);
+
+    nsCString cSpec(uri);
+    return ioService->NewURI (cSpec, nsnull, nsnull, result);
+}
+
+gboolean
 sugar_browser_save_uri(SugarBrowser *browser,
                        const char   *uri,
                        const char   *filename)
 {
+    nsresult rv;
+
+    nsCOMPtr<nsIURI> sourceURI;
+    rv = NewURI(uri, getter_AddRefs(sourceURI));
+    NS_ENSURE_SUCCESS(rv, FALSE);
+
+    nsCOMPtr<nsILocalFile> destFile = do_CreateInstance(NS_LOCAL_FILE_CONTRACTID);
+    NS_ENSURE_TRUE(destFile, FALSE);
+
+    destFile->InitWithNativePath(nsCString(filename));
+
+	nsCOMPtr<nsIWebBrowser> webBrowser;
+	gtk_moz_embed_get_nsIWebBrowser(GTK_MOZ_EMBED(browser),
+									getter_AddRefs(webBrowser));
+	NS_ENSURE_TRUE(webBrowser, FALSE);
+
+	nsCOMPtr<nsIWebBrowserPersist> webPersist = do_QueryInterface (webBrowser);
+	NS_ENSURE_TRUE(webPersist, FALSE);
+
+    rv = webPersist->SaveURI(sourceURI, nsnull, nsnull, nsnull, nsnull, destFile);
 }
 
-void
+gboolean
 sugar_browser_save_document(SugarBrowser *browser,
                             const char   *filename)
 {

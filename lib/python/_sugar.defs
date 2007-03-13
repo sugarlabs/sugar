@@ -101,7 +101,7 @@
 (define-method save_uri
   (of-object "SugarBrowser")
   (c-name "sugar_browser_save_uri")
-  (return-type "none")
+  (return-type "gboolean")
   (parameters
     '("const-char*" "uri")
     '("const-char*" "filename")
@@ -111,7 +111,7 @@
 (define-method save_document
   (of-object "SugarBrowser")
   (c-name "sugar_browser_save_document")
-  (return-type "none")
+  (return-type "gboolean")
   (parameters
     '("const-char*" "filename")
   )
