@@ -34,6 +34,7 @@
 #include <nsIWebBrowserFocus.h>
 #include <nsIWebBrowserPersist.h>
 #include <nsIDOMWindow.h>
+#include <nsIDOMDocument.h>
 #include <nsIDOMMouseEvent.h>
 #include <nsIGenericFactory.h>
 #include <nsIHelperAppLauncherDialog.h>
@@ -537,6 +538,45 @@ gboolean
 sugar_browser_save_document(SugarBrowser *browser,
                             const char   *filename)
 {
+    nsresult rv;
+
+    nsCString cFile(filename);
+
+    nsCOMPtr<nsILocalFile> destFile = do_CreateInstance(NS_LOCAL_FILE_CONTRACTID);
+    NS_ENSURE_TRUE(destFile, FALSE);
+
+    destFile->InitWithNativePath(cFile);
+
+    GString *path = g_string_new (filename);
+    char *dot_pos = strchr (path->str, '.');
+    if (dot_pos) {
+        g_string_truncate (path, dot_pos - path->str);
+    }
+    g_string_append (path, " Files");
+
+    nsCOMPtr<nsILocalFile> filesFolder;    
+    filesFolder = do_CreateInstance (NS_LOCAL_FILE_CONTRACTID);
+    filesFolder->InitWithNativePath (nsCString(path->str));
+
+    g_string_free (path, TRUE);
+
+	nsCOMPtr<nsIWebBrowser> webBrowser;
+	gtk_moz_embed_get_nsIWebBrowser(GTK_MOZ_EMBED(browser),
+									getter_AddRefs(webBrowser));
+	NS_ENSURE_TRUE(webBrowser, FALSE);
+
+    nsCOMPtr<nsIDOMWindow> DOMWindow;
+    webBrowser->GetContentDOMWindow(getter_AddRefs(DOMWindow));
+	NS_ENSURE_TRUE(DOMWindow, FALSE);
+
+    nsCOMPtr<nsIDOMDocument> DOMDocument;
+    DOMWindow->GetDocument (getter_AddRefs(DOMDocument));
+	NS_ENSURE_TRUE(DOMDocument, FALSE);
+
+	nsCOMPtr<nsIWebBrowserPersist> webPersist = do_QueryInterface (webBrowser);
+	NS_ENSURE_TRUE(webPersist, FALSE);
+
+    rv = webPersist->SaveDocument(DOMDocument, destFile, filesFolder, nsnull, 0, 0);
 }
 
 GType
