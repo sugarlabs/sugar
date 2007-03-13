@@ -63,6 +63,11 @@ void			sugar_browser_scroll_pixels (SugarBrowser *browser,
                             				 int           dx,
                             				 int           dy);
 void			sugar_browser_grab_focus	(SugarBrowser *browser);
+void            sugar_browser_save_uri      (SugarBrowser *browser,
+                                             const char   *uri,
+                                             const char   *filename);
+void            sugar_browser_save_document (SugarBrowser *browser,
+                                             const char   *filename);
 
 gboolean        sugar_browser_startup       (const char *profile_path,
                                              const char *profile_name);

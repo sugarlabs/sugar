@@ -484,8 +484,21 @@ sugar_browser_grab_focus(SugarBrowser *browser)
 	}
 }
 
+void
+sugar_browser_save_uri(SugarBrowser *browser,
+                       const char   *uri,
+                       const char   *filename)
+{
+}
+
+void
+sugar_browser_save_document(SugarBrowser *browser,
+                            const char   *filename)
+{
+}
+
 GType
-sugar_browser_event_get_type (void)
+sugar_browser_event_get_type(void)
 {
     static GType type = 0;
 

@@ -98,6 +98,25 @@
   (return-type "none")
 )
 
+(define-method save_uri
+  (of-object "SugarBrowser")
+  (c-name "sugar_browser_save_uri")
+  (return-type "none")
+  (parameters
+    '("const-char*" "uri")
+    '("const-char*" "filename")
+  )
+)
+
+(define-method save_document
+  (of-object "SugarBrowser")
+  (c-name "sugar_browser_save_document")
+  (return-type "none")
+  (parameters
+    '("const-char*" "filename")
+  )
+)
+
 (define-method create_window
   (of-object "SugarBrowser")
   (c-name "sugar_browser_create_window")
