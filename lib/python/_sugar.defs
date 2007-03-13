@@ -1,5 +1,14 @@
 ;; -*- scheme -*-
 ; object definitions ...
+
+(define-boxed SugarBrowserEvent
+  (in-module "Sugar")
+  (c-name "SugarBrowserEvent")
+  (gtype-id "SUGAR_TYPE_BROWSER_EVENT")
+  (copy-func "sugar_browser_event_copy")
+  (release-func "sugar_browser_event_free")
+)
+
 (define-object AddressEntry
   (in-module "Sugar")
   (parent "GtkEntry")

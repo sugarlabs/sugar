@@ -20,6 +20,7 @@
 #include <config.h>
 
 #include "sugar-browser.h"
+#include "sugar-marshal.h"
 #include "GeckoContentHandler.h"
 #include "GeckoDownload.h"
 
@@ -32,6 +33,7 @@
 #include <nsIWebBrowser.h>
 #include <nsIWebBrowserFocus.h>
 #include <nsIDOMWindow.h>
+#include <nsIDOMMouseEvent.h>
 #include <nsIGenericFactory.h>
 #include <nsIHelperAppLauncherDialog.h>
 #include <nsIComponentRegistrar.h>
@@ -45,6 +47,13 @@ enum {
 	PROP_CAN_GO_FORWARD,
 	PROP_LOADING
 };
+
+enum {
+    MOUSE_CLICK,
+    N_SIGNALS
+};
+
+static guint signals[N_SIGNALS];
 
 static const nsModuleComponentInfo sSugarComponents[] = {
 	{
@@ -189,6 +198,16 @@ sugar_browser_class_init(SugarBrowserClass *browser_class)
 	GObjectClass *gobject_class = G_OBJECT_CLASS(browser_class);
 
 	gobject_class->get_property = sugar_browser_get_property;
+
+    signals[MOUSE_CLICK] = g_signal_new ("mouse_click",
+                                SUGAR_TYPE_BROWSER,
+                                G_SIGNAL_RUN_LAST,
+                                G_STRUCT_OFFSET(SugarBrowser, mouse_click),
+                                g_signal_accumulator_true_handled, NULL,
+                                sugar_marshal_BOOLEAN__BOXED,
+                                G_TYPE_BOOLEAN,
+                                1,
+                                SUGAR_TYPE_BROWSER_EVENT);
 
 	g_object_class_install_property(gobject_class, PROP_PROGRESS,
                                     g_param_spec_double ("progress",
@@ -350,6 +369,21 @@ location_cb(GtkMozEmbed *embed)
 	update_navigation_properties(browser);
 }
 
+static gboolean
+dom_mouse_click_cb(GtkMozEmbed *embed, nsIDOMMouseEvent *dom_event)
+{
+	SugarBrowser *browser = SUGAR_BROWSER(embed);
+    SugarBrowserEvent *event;
+    gint return_value = FALSE;
+
+    event = sugar_browser_event_new();
+    event->image_uri = g_strdup("testimage");
+    
+    g_signal_emit(browser, signals[MOUSE_CLICK], 0, event, &return_value);
+
+    return return_value;
+}
+
 static void
 sugar_browser_init(SugarBrowser *browser)
 {
@@ -365,6 +399,8 @@ sugar_browser_init(SugarBrowser *browser)
 					 G_CALLBACK(title_cb), NULL);
 	g_signal_connect(G_OBJECT(browser), "location",
 					 G_CALLBACK(location_cb), NULL);
+	g_signal_connect(G_OBJECT(browser), "dom-mouse-click",
+					 G_CALLBACK(dom_mouse_click_cb), NULL);
 }
 
 void
@@ -405,4 +441,48 @@ sugar_browser_grab_focus(SugarBrowser *browser)
 	} else {
 		g_warning ("Need to realize the embed before grabbing focus!\n");
 	}
+}
+
+GType
+sugar_browser_event_get_type (void)
+{
+    static GType type = 0;
+
+    if (G_UNLIKELY(type == 0)) {
+        type = g_boxed_type_register_static("SugarBrowserEvent",
+                            (GBoxedCopyFunc)sugar_browser_event_copy,
+                            (GBoxedFreeFunc)sugar_browser_event_free);
+    }
+
+    return type;
+}
+
+SugarBrowserEvent *
+sugar_browser_event_new(void)
+{
+    SugarBrowserEvent *event;
+
+    event = g_new0(SugarBrowserEvent, 1);
+
+    return event;
+}
+
+SugarBrowserEvent *
+sugar_browser_event_copy(SugarBrowserEvent *event)
+{
+    g_return_val_if_fail(event != NULL, NULL);
+
+    return (SugarBrowserEvent *)g_memdup(event, sizeof(SugarBrowserEvent));
+}
+
+void
+sugar_browser_event_free(SugarBrowserEvent *event)
+{
+    g_return_if_fail(event != NULL);
+
+    if (event->image_uri) {
+        g_free(event->image_uri);
+    }
+
+    g_free(event);
 }
