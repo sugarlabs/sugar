@@ -1,5 +1,14 @@
 ;; -*- scheme -*-
 ; object definitions ...
+
+(define-boxed SugarBrowserEvent
+  (in-module "Sugar")
+  (c-name "SugarBrowserEvent")
+  (gtype-id "SUGAR_TYPE_BROWSER_EVENT")
+  (copy-func "sugar_browser_event_copy")
+  (release-func "sugar_browser_event_free")
+)
+
 (define-object AddressEntry
   (in-module "Sugar")
   (parent "GtkEntry")
@@ -87,6 +96,25 @@
   (of-object "SugarBrowser")
   (c-name "sugar_browser_grab_focus")
   (return-type "none")
+)
+
+(define-method save_uri
+  (of-object "SugarBrowser")
+  (c-name "sugar_browser_save_uri")
+  (return-type "none")
+  (parameters
+    '("const-char*" "uri")
+    '("const-char*" "filename")
+  )
+)
+
+(define-method save_document
+  (of-object "SugarBrowser")
+  (c-name "sugar_browser_save_document")
+  (return-type "none")
+  (parameters
+    '("const-char*" "filename")
+  )
 )
 
 (define-method create_window

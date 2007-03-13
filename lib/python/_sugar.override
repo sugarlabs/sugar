@@ -179,3 +179,23 @@ _wrap_sugar_cairo_surface_from_gdk_pixbuf(PyGObject *self, PyObject *args, PyObj
     return PycairoSurface_FromSurface(surface, NULL);
 }
 %%
+override-slot SugarBrowserEvent.tp_getattr
+static PyObject *
+_wrap_sugar_browser_event_tp_getattr(PyObject *self, char *attr)
+{
+    SugarBrowserEvent *event = pyg_boxed_get(self, SugarBrowserEvent);
+
+    if (!strcmp(attr, "__members__"))
+        return Py_BuildValue("[s]", "image_uri");
+    if (!strcmp(attr, "image_uri")) {
+        if (event->image_uri) {
+            return PyString_FromString(event->image_uri);
+        } else {
+            Py_INCREF(Py_None);
+            return Py_None;
+        }
+    }
+
+    return NULL;
+}
+%%

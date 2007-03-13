@@ -24,8 +24,9 @@
 
 G_BEGIN_DECLS
 
-typedef struct _SugarBrowser SugarBrowser;
+typedef struct _SugarBrowser      SugarBrowser;
 typedef struct _SugarBrowserClass SugarBrowserClass;
+typedef struct _SugarBrowserEvent SugarBrowserEvent;
 
 #define SUGAR_TYPE_BROWSER				(sugar_browser_get_type())
 #define SUGAR_BROWSER(object)	    	(G_TYPE_CHECK_INSTANCE_CAST((object), SUGAR_TYPE_BROWSER, SugarBrowser))
@@ -45,6 +46,9 @@ struct _SugarBrowser {
 	gboolean can_go_back;
 	gboolean can_go_forward;
 	gboolean loading;
+
+    gboolean (* mouse_click) (SugarBrowser      *browser,
+                              SugarBrowserEvent *event);
 };
 
 struct _SugarBrowserClass {
@@ -59,11 +63,26 @@ void			sugar_browser_scroll_pixels (SugarBrowser *browser,
                             				 int           dx,
                             				 int           dy);
 void			sugar_browser_grab_focus	(SugarBrowser *browser);
+void            sugar_browser_save_uri      (SugarBrowser *browser,
+                                             const char   *uri,
+                                             const char   *filename);
+void            sugar_browser_save_document (SugarBrowser *browser,
+                                             const char   *filename);
 
 gboolean        sugar_browser_startup       (const char *profile_path,
                                              const char *profile_name);
 void            sugar_browser_shutdown      (void);
 
+#define SUGAR_TYPE_BROWSER_EVENT (sugar_browser_event_get_type())
+
+struct _SugarBrowserEvent {
+    char *image_uri;
+};
+
+GType                sugar_browser_event_get_type (void);
+SugarBrowserEvent   *sugar_browser_event_new      (void);
+SugarBrowserEvent   *sugar_browser_event_copy     (SugarBrowserEvent *event);
+void                 sugar_browser_event_free     (SugarBrowserEvent *event);
 
 G_END_DECLS
 
