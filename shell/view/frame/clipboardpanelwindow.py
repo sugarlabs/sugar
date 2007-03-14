@@ -14,35 +14,43 @@ class ClipboardPanelWindow(PanelWindow):
         self._frame = frame
 
         # Listening for new clipboard objects
-        clipboard = gtk.Clipboard()
-        clipboard.connect("owner-change", self._owner_change_cb)
+        # NOTE: we need to keep a reference to gtk.Clipboard in order to keep
+        # listening to it.
+        self._clipboard = gtk.Clipboard()
+        self._clipboard.connect("owner-change", self._owner_change_cb)
 
         root = self.get_root()
 
-        box = ClipboardBox(frame.get_popup_context())
-        root.append(box)
+        self._clipboard_box = ClipboardBox(frame.get_popup_context())
+        root.append(self._clipboard_box)
 
         # Receiving dnd drops
         self.drag_dest_set(0, [], 0)
-        self.connect("drag_motion", box.drag_motion_cb)
-        self.connect("drag_drop", box.drag_drop_cb)
-        self.connect("drag_data_received", box.drag_data_received_cb)
+        self.connect("drag_motion", self._clipboard_box.drag_motion_cb)
+        self.connect("drag_drop", self._clipboard_box.drag_drop_cb)
+        self.connect("drag_data_received",
+                     self._clipboard_box.drag_data_received_cb)
         
         # Offering dnd drags
         self.drag_source_set(0, [], 0)
         self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
                         gtk.gdk.POINTER_MOTION_HINT_MASK)
-        self.connect("motion_notify_event", box.motion_notify_event_cb)
+        self.connect("motion_notify_event",
+                     self._clipboard_box.motion_notify_event_cb)
 
         # FIXME I'm not sure we should expose the canvas in the Window API
-        self._canvas.connect("button_press_event", box.button_press_event_cb)
+        self._canvas.connect("button_press_event",
+                             self._clipboard_box.button_press_event_cb)
 
-        self.connect("drag_end", box.drag_end_cb)
-        self.connect("drag_data_get", box.drag_data_get_cb)
+        self.connect("drag_end", self._clipboard_box.drag_end_cb)
+        self.connect("drag_data_get", self._clipboard_box.drag_data_get_cb)
 
     def _owner_change_cb(self, clipboard, event):
+        if self._clipboard_box.owns_clipboard():
+            return
+
         logging.debug("owner_change_cb")
-        
+
         cb_service = clipboardservice.get_instance()
         key = cb_service.add_object(name="")
         cb_service.set_object_percent(key, percent = 100)
@@ -53,8 +61,11 @@ class ClipboardPanelWindow(PanelWindow):
                 selection = clipboard.wait_for_contents(target)
                 if selection:
                     self._add_selection(key, selection)
-        
-        self._frame.show_and_hide(0)
+
+        cb_service.set_object_percent(key, percent=100)
+
+        # TODO: Notify somehow the object added.
+        #self._frame.show_and_hide(0)
 
     def _add_selection(self, key, selection):
         if selection.data:
