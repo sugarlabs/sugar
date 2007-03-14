@@ -512,6 +512,7 @@ sugar_browser_save_uri(SugarBrowser *browser,
                        const char   *uri,
                        const char   *filename)
 {
+#ifdef HAVE_NS_WEB_BROWSER
     nsresult rv;
 
     nsCOMPtr<nsIURI> sourceURI;
@@ -523,21 +524,26 @@ sugar_browser_save_uri(SugarBrowser *browser,
 
     destFile->InitWithNativePath(nsCString(filename));
 
-	nsCOMPtr<nsIWebBrowser> webBrowser;
-	gtk_moz_embed_get_nsIWebBrowser(GTK_MOZ_EMBED(browser),
-									getter_AddRefs(webBrowser));
-	NS_ENSURE_TRUE(webBrowser, FALSE);
+    nsCOMPtr<nsIWebBrowser> webBrowser;
+    gtk_moz_embed_get_nsIWebBrowser(GTK_MOZ_EMBED(browser),
+                                    getter_AddRefs(webBrowser));
+    NS_ENSURE_TRUE(webBrowser, FALSE);
 
-	nsCOMPtr<nsIWebBrowserPersist> webPersist = do_QueryInterface (webBrowser);
-	NS_ENSURE_TRUE(webPersist, FALSE);
+    nsCOMPtr<nsIWebBrowserPersist> webPersist = do_QueryInterface (webBrowser);
+    NS_ENSURE_TRUE(webPersist, FALSE);
 
     rv = webPersist->SaveURI(sourceURI, nsnull, nsnull, nsnull, nsnull, destFile);
+    NS_ENSURE_SUCCESS(rv, FALSE);
+#else
+    return FALSE;
+#endif
 }
 
 gboolean
 sugar_browser_save_document(SugarBrowser *browser,
                             const char   *filename)
 {
+#ifdef HAVE_NS_WEB_BROWSER
     nsresult rv;
 
     nsCString cFile(filename);
@@ -577,6 +583,10 @@ sugar_browser_save_document(SugarBrowser *browser,
 	NS_ENSURE_TRUE(webPersist, FALSE);
 
     rv = webPersist->SaveDocument(DOMDocument, destFile, filesFolder, nsnull, 0, 0);
+    NS_ENSURE_SUCCESS(rv, FALSE);
+#else
+    return FALSE;
+#endif
 }
 
 GType
