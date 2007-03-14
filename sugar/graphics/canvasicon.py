@@ -327,11 +327,11 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
 
     def do_get_content_width_request(self):
         [width, height] = self._get_icon_size()
-        return width
+        return (width, width)
 
     def do_get_content_height_request(self, for_width):
         [width, height] = self._get_icon_size()
-        return height
+        return (height, height)
 
     def do_button_press_event(self, event):
         self.emit_activated()
@@ -373,8 +373,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             [x, y] = context.translate_to_screen(self)
         
             # TODO: Any better place to do this?
-            popup.props.box_width = max(popup.get_width_request(),
-                                        self.get_width_request())
+            [min_width, natural_width] = self.get_width_request()
+            popup.props.box_width = max(popup.get_width_request(), min_width)
 
             [width, height] = self.get_allocation()
             y += height

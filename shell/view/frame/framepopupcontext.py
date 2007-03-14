@@ -32,7 +32,9 @@ class FramePopupContext(PopupContext):
     def get_position(self, control, popup):
         [item_x, item_y] = control.get_context().translate_to_screen(control)
         [item_w, item_h] = control.get_allocation()
-        [popup_w, popup_h] = popup.get_request()
+
+        [popup_w, natural_w] = popup.get_width_request()
+        [popup_h, natural_h] = popup.get_height_request(popup_w)
 
         left_x = item_x + item_w
         left_y = item_y

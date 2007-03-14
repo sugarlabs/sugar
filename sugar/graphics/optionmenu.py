@@ -104,16 +104,6 @@ class OptionMenu(hippo.CanvasBox, hippo.CanvasItem):
 
         self._menu.add_item(menu_item)
 
-    def do_get_width_request(self):
-        max_width = max(self._canvas_text.do_get_content_width_request(self._canvas_text),
-                        self._menu.do_get_content_width_request(self._menu))
-
-        self._canvas_text.props.box_width = max_width
-        
-        current_width = hippo.CanvasBox.do_get_width_request(self)
-        self._menu.props.box_width = current_width
-        return current_width
-
     def add_separator(self):
         self._menu.add_separator()
 
