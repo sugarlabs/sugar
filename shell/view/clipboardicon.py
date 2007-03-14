@@ -1,5 +1,5 @@
 # Copyright (C) 2007, Red Hat, Inc.
-# Copyright (C) 2007, Tomeu Vizoso <tomeu@tomeuvizoso.net>
+# Copyright (C) 2007, One Laptop Per Child
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
 import logging
 import os
 
+import gobject
+
 from sugar.graphics.canvasicon import CanvasIcon
 from view.clipboardmenu import ClipboardMenu
 from sugar.graphics.xocolor import XoColor
@@ -28,6 +30,12 @@ from sugar.clipboard import clipboardservice
 from sugar import util
 
 class ClipboardIcon(CanvasIcon):
+    __gtype_name__ = 'SugarClipboardIcon'
+
+    __gproperties__ = {
+        'selected'      : (bool, None, None, False,
+                           gobject.PARAM_READWRITE)
+    }
 
     def __init__(self, popup_context, object_id, name):
         CanvasIcon.__init__(self)
@@ -37,12 +45,34 @@ class ClipboardIcon(CanvasIcon):
         self._percent = 0
         self._preview = None
         self._activity = None
+        self._selected = False
+        self._hover = False
         self.props.box_width = units.grid_to_pixels(1)
         self.props.box_height = units.grid_to_pixels(1)
         self.props.scale = units.STANDARD_ICON_SCALE
-        self.connect('activated', self._icon_activated_cb)
         self._menu = None
-        
+
+    def do_set_property(self, pspec, value):
+        if pspec.name == 'selected':
+            self._set_selected(value)
+            self.emit_paint_needed(0, 0, -1, -1)
+        else:
+            CanvasIcon.do_set_property(self, pspec, value)
+
+    def do_get_property(self, pspec):
+        if pspec.name == 'selected':
+            return self._selected
+        else:
+            return CanvasIcon.do_get_property(self, pspec)
+
+    def _set_selected(self, selected):
+        self._selected = selected
+        if selected:
+            if not self._hover:
+                self.props.background_color = color.DESKTOP_BACKGROUND.get_int()
+        else:
+            self.props.background_color = color.TOOLBAR_BACKGROUND.get_int()
+
     def get_popup(self):
         self._menu = ClipboardMenu(self._name, self._percent, self._preview,
                                    self._activity)
@@ -70,7 +100,7 @@ class ClipboardIcon(CanvasIcon):
         if self._percent < 100 or not self._activity:
             return
 
-        logging.debug("_icon_activated_cb: " + self._object_id)
+        logging.debug("_open_file: " + self._object_id)
 
         # Get the file path
         cb_service = clipboardservice.get_instance()
@@ -82,9 +112,6 @@ class ClipboardIcon(CanvasIcon):
                 activityfactory.create_with_uri(self._activity, path)
             else:
                 logging.debug("Clipboard item file path %s didn't exist" % path)
-
-    def _icon_activated_cb(self, icon):
-        self._open_file()
                         
     def _popup_action_cb(self, popup, menu_item):
         action = menu_item.props.action_id
@@ -102,6 +129,11 @@ class ClipboardIcon(CanvasIcon):
 
     def prelight(self, enter):
         if enter:
+            self._hover = True
             self.props.background_color = color.BLACK.get_int()
         else:
-            self.props.background_color = color.TOOLBAR_BACKGROUND.get_int()
+            self._hover = False
+            if self._selected:
+                self.props.background_color = color.DESKTOP_BACKGROUND.get_int()
+            else:
+                self.props.background_color = color.TOOLBAR_BACKGROUND.get_int()

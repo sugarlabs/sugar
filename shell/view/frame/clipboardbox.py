@@ -42,15 +42,20 @@ class ClipboardBox(hippo.CanvasBox):
         self._popup_context = popup_context
         self._icons = {}
         self._context_map = _ContextMap()
+        self._selected_icon = None
+        self._owns_clipboard = False
 
         self._pressed_button = None
         self._press_start_x = None
         self._press_start_y = None
-        
+
         cb_service = clipboardservice.get_instance()
         cb_service.connect('object-added', self._object_added_cb)
         cb_service.connect('object-deleted', self._object_deleted_cb)
         cb_service.connect('object-state-changed', self._object_state_changed_cb)
+
+    def owns_clipboard(self):
+        return self._owns_clipboard
 
     def _get_icon_at_coords(self, x, y):
         for object_id, icon in self._icons.iteritems():
@@ -77,14 +82,57 @@ class ClipboardBox(hippo.CanvasBox):
     
     def _object_added_cb(self, cb_service, object_id, name):
         icon = ClipboardIcon(self._popup_context, object_id, name)
-        self.append(icon)
+        icon.connect('activated', self._icon_activated_cb)
+        self._set_icon_selected(icon)
+
+        self.prepend(icon)
         self._icons[object_id] = icon
         
         logging.debug('ClipboardBox: ' + object_id + ' was added.')
 
+    def _set_icon_selected(self, icon):
+        logging.debug('_set_icon_selected')
+        icon.props.selected = True
+        if self._selected_icon:
+            self._selected_icon.props.selected = False
+        self._selected_icon = icon
+
+    def _put_in_clipboard(self, object_id):
+        logging.debug('ClipboardBox._put_in_clipboard')
+        targets = self._get_object_targets(object_id)
+        if targets:
+            clipboard = gtk.Clipboard()
+            if not clipboard.set_with_data(targets,
+                                           self._clipboard_data_get_cb,
+                                           self._clipboard_clear_cb):
+                logging.error('GtkClipboard.set_with_data failed!')
+            else:
+                self._owns_clipboard = True
+
+    def _clipboard_data_get_cb(self, clipboard, selection, info, data):
+        object_id = self._selected_icon.get_object_id()
+        cb_service = clipboardservice.get_instance()
+        data = cb_service.get_object_data(object_id, selection.target)
+        
+        selection.set(selection.target, 8, data)
+
+    def _clipboard_clear_cb(self, clipboard, data):
+        logging.debug('ClipboardBox._clipboard_clear_cb')
+        self._owns_clipboard = False
+
+    def _icon_activated_cb(self, icon):
+        logging.debug('ClipboardBox._icon_activated_cb')
+        if not icon.props.selected:
+            self._set_icon_selected(icon)
+
     def _object_deleted_cb(self, cb_service, object_id):
         icon = self._icons[object_id]
+        position = self.get_children().index(icon)
         self.remove(icon)
+        
+        if icon.props.selected:
+            self._set_icon_selected(self.get_children()[position])
+
         del self._icons[object_id]
         logging.debug('ClipboardBox: ' + object_id + ' was deleted.')
 
@@ -92,11 +140,13 @@ class ClipboardBox(hippo.CanvasBox):
                                  icon_name, preview, activity):
         icon = self._icons[object_id]
         icon.set_state(name, percent, icon_name, preview, activity)
+        if icon.props.selected and percent == 100:
+            self._put_in_clipboard(object_id)
 
     def drag_motion_cb(self, widget, context, x, y, time):
         logging.debug('ClipboardBox._drag_motion_cb')
         context.drag_status(gtk.gdk.ACTION_COPY, time)
-        return True
+        return False;
 
     def drag_drop_cb(self, widget, context, x, y, time):
         logging.debug('ClipboardBox._drag_drop_cb')
@@ -169,7 +219,7 @@ class ClipboardBox(hippo.CanvasBox):
                                        int(self._press_start_y),
                                        int(x),
                                        int(y)):
-            targets = self._get_targets_for_dnd(
+            targets = self._get_object_targets(
                 self._last_clicked_icon.get_object_id())
 
             context = widget.drag_begin(targets,
@@ -183,7 +233,7 @@ class ClipboardBox(hippo.CanvasBox):
         logging.debug("drag_end_cb")
         self._pressed_button = None
 
-    def _get_targets_for_dnd(self, object_id):
+    def _get_object_targets(self, object_id):
         cb_service = clipboardservice.get_instance()
 
         attrs = cb_service.get_object(object_id)
@@ -192,7 +242,5 @@ class ClipboardBox(hippo.CanvasBox):
         targets = []        
         for format_type in format_types:
             targets.append((format_type, 0, 0))
-
-        logging.debug(str(targets))
         
         return targets

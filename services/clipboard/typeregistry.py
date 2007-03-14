@@ -34,7 +34,7 @@ class TextFileType(FileType):
     def get_preview(self):
         for format, data in self._formats.iteritems():
             if format in TextFileType._types:
-                text = str(data.get_data())
+                text = data.get_data()
                 if len(text) < 50:
                     return text
                 else:
@@ -43,7 +43,7 @@ class TextFileType(FileType):
         return ''
 
     def get_activity(self):
-        return ''
+        return 'org.laptop.AbiWordActivity'
         
     def matches_mime_type(cls, mime_type):
         return mime_type in cls._types
@@ -135,21 +135,12 @@ class MsWordFileType(FileType):
         return mime_type in cls._types
     matches_mime_type = classmethod(matches_mime_type)
 
-class RtfFileType(FileType):
+class RtfFileType(TextFileType):
     
     _types = set(['application/rtf', 'text/rtf'])
     
     def get_name(self):
         return _('RTF file')
-
-    def get_icon(self):
-        return 'theme:object-text'
-
-    def get_preview(self):
-        return ''
-
-    def get_activity(self):
-        return 'org.laptop.AbiWordActivity'
         
     def matches_mime_type(cls, mime_type):
         return mime_type in cls._types

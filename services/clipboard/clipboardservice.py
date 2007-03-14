@@ -100,7 +100,7 @@ class ClipboardDBusServiceHelper(dbus.service.Object):
     def get_object(self, object_path):
         cb_object = self._objects[str(object_path)]
         formats = cb_object.get_formats()
-        format_types = []
+        format_types = dbus.Array([], 's')
         
         for type, format in formats.iteritems():
             format_types.append(type)
