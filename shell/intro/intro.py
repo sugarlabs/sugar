@@ -231,10 +231,10 @@ class IntroBox(hippo.CanvasBox, hippo.CanvasItem):
         hippo.CanvasBox.__init__(self, **kwargs)
         self._pixbuf = None
 
-        self._video_box = VideoBox(xalign=hippo.ALIGNMENT_CENTER,
-                                   yalign=hippo.ALIGNMENT_START,
-                                   padding_bottom=units.grid_to_pixels(0.5))
-        self.append(self._video_box)
+        #self._video_box = VideoBox(xalign=hippo.ALIGNMENT_CENTER,
+        #                           yalign=hippo.ALIGNMENT_START,
+        #                           padding_bottom=units.grid_to_pixels(0.5))
+        #self.append(self._video_box)
 
         self._entry_box = EntryBox(xalign=hippo.ALIGNMENT_CENTER,
                                    padding_bottom=units.grid_to_pixels(0.5))
@@ -250,15 +250,21 @@ class IntroBox(hippo.CanvasBox, hippo.CanvasItem):
         self.append(self._ok)
 
     def _ok_activated(self, item):
-        pixbuf = self._video_box.get_pixbuf()
+        #pixbuf = self._video_box.get_pixbuf()
         name = self._entry_box.get_text()
         color = self._color_box.get_color()
 
-        if not pixbuf or not name or not color:
-            print "not one of pixbuf(%r), name(%r), or color(%r)"
+        #if not pixbuf or not name or not color:
+        #    print "Missing a picture (%r), name (%r), or color (%r)" % (pixbuf, name, color)
+        if not name:
+            print "Please pick a nickname"
+            return
+        if not color:
+            print "Please pick a color"
             return
 
-        self.emit('ok', pixbuf, name, color)
+        #self.emit('ok', pixbuf, name, color)
+        self.emit('ok', None, name, color)
 
 
 class IntroWindow(gtk.Window):
@@ -286,9 +292,9 @@ class IntroWindow(gtk.Window):
 
     def _create_profile(self, pixbuf, name, color):
         # Save the buddy icon
-        icon_path = os.path.join(env.get_profile_path(), "buddy-icon.jpg")
-        scaled = pixbuf.scale_simple(200, 200, gtk.gdk.INTERP_BILINEAR)
-        pixbuf.save(icon_path, "jpeg", {"quality":"85"})
+        #icon_path = os.path.join(env.get_profile_path(), "buddy-icon.jpg")
+        #scaled = pixbuf.scale_simple(200, 200, gtk.gdk.INTERP_BILINEAR)
+        #pixbuf.save(icon_path, "jpeg", {"quality":"85"})
 
         cp = ConfigParser()
         section = 'Buddy'
