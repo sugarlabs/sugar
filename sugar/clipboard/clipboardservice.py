@@ -64,40 +64,37 @@ class ClipboardService(gobject.GObject):
             self._connect_clipboard_signals()
 
     def _object_added_cb(self, object_id, name):
-        self.emit('object-added', object_id, name)
+        self.emit('object-added', str(object_id), name)
 
     def _object_deleted_cb(self, object_id):
-        self.emit('object-deleted', object_id)
+        self.emit('object-deleted', str(object_id))
 
     def _object_state_changed_cb(self, object_id, values):
-        self.emit('object-state-changed', object_id, values[NAME_KEY],
+        self.emit('object-state-changed', str(object_id), values[NAME_KEY],
                   values[PERCENT_KEY], values[ICON_KEY], values[PREVIEW_KEY],
                   values[ACTIVITY_KEY])
 
-    def add_object(self, object_id, name):
-        self._dbus_service.add_object(object_id, name)
+    def add_object(self, name):
+        return str(self._dbus_service.add_object(name))
 
     def add_object_format(self, object_id, formatType, data, on_disk):
-        self._dbus_service.add_object_format(object_id,
+        self._dbus_service.add_object_format(dbus.ObjectPath(object_id),
                 formatType,
                 data,
                 on_disk)
     
     def delete_object(self, object_id):
-        self._dbus_service.delete_object(object_id)
+        self._dbus_service.delete_object(dbus.ObjectPath(object_id))
     
     def set_object_percent(self, object_id, percent):
-        self._dbus_service.set_object_percent(object_id, percent)
+        self._dbus_service.set_object_percent(dbus.ObjectPath(object_id), percent)
 
     def get_object(self, object_id):
-        result_dict = self._dbus_service.get_object(object_id,)
-        
-        return (result_dict[NAME_KEY], result_dict[PERCENT_KEY],
-                result_dict[ICON_KEY], result_dict[PREVIEW_KEY],
-                result_dict[ACTIVITY_KEY], result_dict[FORMATS_KEY])
+        return self._dbus_service.get_object(dbus.ObjectPath(object_id),)
 
     def get_object_data(self, object_id, formatType):    
-        return self._dbus_service.get_object_data(object_id, formatType,
+        return self._dbus_service.get_object_data(dbus.ObjectPath(object_id),
+                                                  formatType,
                                                   byte_arrays=True)
         
 _clipboard_service = None

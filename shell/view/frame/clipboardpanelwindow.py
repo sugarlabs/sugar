@@ -43,10 +43,8 @@ class ClipboardPanelWindow(PanelWindow):
     def _owner_change_cb(self, clipboard, event):
         logging.debug("owner_change_cb")
         
-        key = util.unique_id()
-        
         cb_service = clipboardservice.get_instance()
-        cb_service.add_object(key, name="")
+        key = cb_service.add_object(name="")
         cb_service.set_object_percent(key, percent = 100)
         
         targets = clipboard.wait_for_targets()

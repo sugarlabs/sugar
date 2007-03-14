@@ -33,27 +33,35 @@ class ClipboardDBusServiceHelper(dbus.service.Object):
 
     _CLIPBOARD_DBUS_INTERFACE = "org.laptop.Clipboard"
     _CLIPBOARD_OBJECT_PATH = "/org/laptop/Clipboard"
+    _CLIPBOARD_OBJECTS_PATH = _CLIPBOARD_OBJECT_PATH + "/Objects/"
 
     def __init__(self, parent):
         self._parent = parent
         self._objects = {}
+        self._next_id = 0
 
         bus = dbus.SessionBus()
         bus_name = dbus.service.BusName(self._CLIPBOARD_DBUS_INTERFACE, bus=bus)
         dbus.service.Object.__init__(self, bus_name, self._CLIPBOARD_OBJECT_PATH)
 
+    def _get_next_object_id(self):
+        self._next_id += 1
+        return self._next_id
+
     # dbus methods        
     @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
-                         in_signature="ss", out_signature="")
-    def add_object(self, object_id, name):
-        self._objects[object_id] = ClipboardObject(object_id, name)
-        self.object_added(object_id, name)
-        logging.debug('Added object ' + object_id + ' with name ' + name)
+                         in_signature="s", out_signature="o")
+    def add_object(self, name):
+        op = self._CLIPBOARD_OBJECTS_PATH + "%d" % self._get_next_object_id()
+        self._objects[op] = ClipboardObject(op, name)
+        self.object_added(dbus.ObjectPath(op), name)
+        logging.debug('Added object ' + op + ' with name ' + name)
+        return dbus.ObjectPath(op)
 
     @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
                          in_signature="ssayb", out_signature="", byte_arrays=True)
-    def add_object_format(self, object_id, format_type, data, on_disk):
-        cb_object = self._objects[object_id]
+    def add_object_format(self, object_path, format_type, data, on_disk):
+        cb_object = self._objects[str(object_path)]
         cb_object.add_format(Format(format_type, data, on_disk))
 
         if on_disk:
@@ -61,37 +69,36 @@ class ClipboardDBusServiceHelper(dbus.service.Object):
         else:
             logging.debug('Added in-memory format of type ' + format_type + '.')
                         
-        self.object_state_changed(object_id, {NAME_KEY: cb_object.get_name(),
+        self.object_state_changed(object_path, {NAME_KEY: cb_object.get_name(),
                                   PERCENT_KEY: cb_object.get_percent(),
                                   ICON_KEY: cb_object.get_icon(),
                                   PREVIEW_KEY: cb_object.get_preview(),
                                   ACTIVITY_KEY: cb_object.get_activity()})
 
     @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
-                         in_signature="s", out_signature="")
-    def delete_object(self, object_id):
-        del self._objects[object_id]
-        self.object_deleted(object_id)
-        logging.debug('Deleted object with object_id ' + object_id)
+                         in_signature="o", out_signature="")
+    def delete_object(self, object_path):
+        del self._objects[str(object_path)]
+        self.object_deleted(object_path)
+        logging.debug('Deleted object with object_id ' + object_path)
         
     @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
-                         in_signature="si", out_signature="")
-    def set_object_percent(self, object_id, percent):
-        cb_object = self._objects[object_id]
+                         in_signature="oi", out_signature="")
+    def set_object_percent(self, object_path, percent):
+        cb_object = self._objects[str(object_path)]
+        if percent < 0 or percent > 100:
+            raise ValueError("invalid percentage")
         cb_object.set_percent(percent)
-        self.object_state_changed(object_id, {NAME_KEY: cb_object.get_name(),
-                                  PERCENT_KEY: percent,
-                                  ICON_KEY: cb_object.get_icon(),
-                                  PREVIEW_KEY: cb_object.get_preview(),
-                                  ACTIVITY_KEY: cb_object.get_activity()})
-
-        logging.debug('Changed object with object_id ' + object_id +
-                ' with percent ' + str(percent))
+        self.object_state_changed(object_path, {NAME_KEY: cb_object.get_name(),
+                                    PERCENT_KEY: percent,
+                                    ICON_KEY: cb_object.get_icon(),
+                                    PREVIEW_KEY: cb_object.get_preview(),
+                                    ACTIVITY_KEY: cb_object.get_activity()})
 
     @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
-                         in_signature="s", out_signature="a{sv}")
-    def get_object(self, object_id):
-        cb_object = self._objects[object_id]
+                         in_signature="o", out_signature="a{sv}")
+    def get_object(self, object_path):
+        cb_object = self._objects[str(object_path)]
         formats = cb_object.get_formats()
         format_types = []
         
@@ -104,26 +111,26 @@ class ClipboardDBusServiceHelper(dbus.service.Object):
                 PREVIEW_KEY: cb_object.get_preview(),
                 ACTIVITY_KEY: cb_object.get_activity(),
                 FORMATS_KEY: format_types}
-        return result_dict
+        return dbus.Dictionary(result_dict)
 
     @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
-                         in_signature="ss", out_signature="ay")
-    def get_object_data(self, object_id, format_type):       
-        cb_object = self._objects[object_id]
+                         in_signature="os", out_signature="ay")
+    def get_object_data(self, object_path, format_type):       
+        cb_object = self._objects[str(object_path)]
         formats = cb_object.get_formats()
-        return formats[format_type].get_data()
+        return dbus.ByteArray(formats[format_type].get_data())
     
     # dbus signals
-    @dbus.service.signal(_CLIPBOARD_DBUS_INTERFACE, signature="ss")
-    def object_added(self, object_id, name):
+    @dbus.service.signal(_CLIPBOARD_DBUS_INTERFACE, signature="os")
+    def object_added(self, object_path, name):
         pass
 
-    @dbus.service.signal(_CLIPBOARD_DBUS_INTERFACE, signature="s")
-    def object_deleted(self, object_id):
+    @dbus.service.signal(_CLIPBOARD_DBUS_INTERFACE, signature="o")
+    def object_deleted(self, object_path):
         pass
 
-    @dbus.service.signal(_CLIPBOARD_DBUS_INTERFACE, signature="sa{sv}")
-    def object_state_changed(self, object_id, values):
+    @dbus.service.signal(_CLIPBOARD_DBUS_INTERFACE, signature="oa{sv}")
+    def object_state_changed(self, object_path, values):
         pass
 
 class ClipboardService(object):

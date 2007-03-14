@@ -2,12 +2,12 @@ import typeregistry
 
 class ClipboardObject:
 
-    def __init__(self, id, name):
-        self._id = id
+    def __init__(self, object_path, name):
+        self._id = object_path
         self._name = name
         self._percent = 0
         self._formats = {}
-            
+
     def get_id(self):
         return self._id
 

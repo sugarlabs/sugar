@@ -16,6 +16,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
+import os
 
 from sugar.graphics.canvasicon import CanvasIcon
 from view.clipboardmenu import ClipboardMenu
@@ -71,7 +72,16 @@ class ClipboardIcon(CanvasIcon):
 
         logging.debug("_icon_activated_cb: " + self._object_id)
 
-        activityfactory.create_with_uri(self._activity, self._object_id)
+        # Get the file path
+        cb_service = clipboardservice.get_instance()
+        obj = cb_service.get_object(self._object_id)
+        formats = obj['FORMATS']
+        if len(formats) > 0:
+            path = cb_service.get_object_data(self._object_id, formats[0])
+            if os.path.exists(path):
+                activityfactory.create_with_uri(self._activity, path)
+            else:
+                logging.debug("Clipboard item file path %s didn't exist" % path)
 
     def _icon_activated_cb(self, icon):
         self._open_file()

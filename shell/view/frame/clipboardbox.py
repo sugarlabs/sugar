@@ -64,14 +64,16 @@ class ClipboardBox(hippo.CanvasBox):
         return None
 
     def _add_selection(self, object_id, selection):
-        if selection.data:
-            logging.debug('ClipboardBox: adding type ' + selection.type + '.')
-                        
-            cb_service = clipboardservice.get_instance()
-            cb_service.add_object_format(object_id, 
-                                  selection.type,
-                                  selection.data,
-                                  on_disk = False)
+        if not selection.data:
+            return
+
+        logging.debug('ClipboardBox: adding type ' + selection.type + '.')
+                    
+        cb_service = clipboardservice.get_instance()
+        cb_service.add_object_format(object_id, 
+                                selection.type,
+                                selection.data,
+                                on_disk = False)
     
     def _object_added_cb(self, cb_service, object_id, name):
         icon = ClipboardIcon(self._popup_context, object_id, name)
@@ -90,7 +92,6 @@ class ClipboardBox(hippo.CanvasBox):
                                  icon_name, preview, activity):
         icon = self._icons[object_id]
         icon.set_state(name, percent, icon_name, preview, activity)
-        logging.debug('ClipboardBox: ' + object_id + ' state was changed.')
 
     def drag_motion_cb(self, widget, context, x, y, time):
         logging.debug('ClipboardBox._drag_motion_cb')
@@ -99,12 +100,11 @@ class ClipboardBox(hippo.CanvasBox):
 
     def drag_drop_cb(self, widget, context, x, y, time):
         logging.debug('ClipboardBox._drag_drop_cb')
-        object_id = util.unique_id()
+        cb_service = clipboardservice.get_instance()
+        object_id = cb_service.add_object(name="")
+
         self._context_map.add_context(context, object_id, len(context.targets))
         
-        cb_service = clipboardservice.get_instance()
-        cb_service.add_object(object_id, name="")
-
         for target in context.targets:
             if str(target) not in ('TIMESTAMP', 'TARGETS', 'MULTIPLE'):
                 widget.drag_get_data(context, target, time)
@@ -186,8 +186,8 @@ class ClipboardBox(hippo.CanvasBox):
     def _get_targets_for_dnd(self, object_id):
         cb_service = clipboardservice.get_instance()
 
-        (name, percent, icon, preview, activity, format_types) =  \
-            cb_service.get_object(object_id)
+        attrs = cb_service.get_object(object_id)
+        format_types = attrs[clipboardservice.FORMATS_KEY]
         
         targets = []        
         for format_type in format_types:
