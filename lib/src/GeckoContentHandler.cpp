@@ -1,6 +1,10 @@
 #include <nsCExternalHandlerService.h>
 #include <nsIFile.h>
 #include <nsIFactory.h>
+#include <nsILocalFile.h>
+#include <nsStringAPI.h>
+
+#include <nsComponentManagerUtils.h>
 
 #include "GeckoContentHandler.h"
 
@@ -30,15 +34,13 @@ NS_IMETHODIMP
 GeckoContentHandler::Show (nsIHelperAppLauncher *aLauncher,
 						   nsISupports *aContext,
 						   PRUint32 aReason)
-{	
-	nsCOMPtr<nsIFile> tmpFile;
-	aLauncher->GetTargetFile(getter_AddRefs(tmpFile));
-		
-	aLauncher->SaveToDisk (tmpFile, PR_FALSE);
+{
+	aLauncher->SaveToDisk(NULL, PR_FALSE);
 
 	return NS_OK;
 }
 
+#include <glib.h>
 NS_IMETHODIMP
 GeckoContentHandler::PromptForSaveToFile (nsIHelperAppLauncher *aLauncher,			    
 										  nsISupports *aWindowContext,
@@ -46,6 +48,28 @@ GeckoContentHandler::PromptForSaveToFile (nsIHelperAppLauncher *aLauncher,
 										  const PRUnichar *aSuggestedFileExtension,
 										  nsILocalFile **_retval)
 {
+	char *filename = NULL;
+	nsCString defaultFile;
+
+	NS_UTF16ToCString(nsString(aDefaultFile), NS_CSTRING_ENCODING_UTF8, defaultFile);
+
+	nsCOMPtr <nsILocalFile> destFile(do_CreateInstance(NS_LOCAL_FILE_CONTRACTID));
+	NS_ENSURE_TRUE(destFile, NS_ERROR_FAILURE);
+
+	const char * suggested = defaultFile.get();
+	if (strlen(suggested) > 0) {
+		filename = g_build_path("/", g_get_tmp_dir (), suggested, NULL);
+	} else {
+		filename = tempnam(NULL, NULL);
+	}
+
+	if (filename == NULL)
+		return NS_ERROR_OUT_OF_MEMORY;
+
+	destFile->InitWithNativePath(nsCString(filename));
+	g_free(filename);
+
+	NS_IF_ADDREF(*_retval = destFile);
 	return NS_OK;
 }
 
