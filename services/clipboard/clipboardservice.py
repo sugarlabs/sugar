@@ -16,11 +16,14 @@
 
 import logging
 import gobject
+import os
+import shutil
 import dbus
 import dbus.service
 from sugar import env
 from sugar import util
 from clipboardobject import ClipboardObject, Format
+import typeregistry
 
 NAME_KEY = 'NAME'
 PERCENT_KEY = 'PERCENT'
@@ -47,6 +50,34 @@ class ClipboardDBusServiceHelper(dbus.service.Object):
     def _get_next_object_id(self):
         self._next_id += 1
         return self._next_id
+
+    def _handle_file_completed(self, cb_object):
+        """If the object is an on-disk file, and it's at 100%, and we care about
+        it's file type, copy that file to $HOME and upate the clipboard object's
+        data to point to the new location"""
+        formats = cb_object.get_formats()
+        if not len(formats) or len(formats) > 1:
+            return
+
+        format = formats.values()[0]
+        if not format.get_on_disk():
+            return
+
+        if not len(cb_object.get_activity()):
+            # no activity to handle this, don't autosave it
+            return
+
+        # copy to homedir
+        src = format.get_data()
+        if not os.path.exists(src):
+            logging.debug("File %s doesn't appear to exist" % src)
+            return
+        dst = os.path.join(os.path.expanduser("~"), os.path.basename(src))
+        try:
+            shutil.move(src, dst)
+            format._set_data(dst)
+        except IOError, e:
+            logging.debug("Couldn't move file %s to %s: %s" % (src, dst, e))
 
     # dbus methods        
     @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
@@ -93,7 +124,12 @@ class ClipboardDBusServiceHelper(dbus.service.Object):
         if cb_object.get_percent() == percent:
             # ignore setting same percentage
             return
+
         cb_object.set_percent(percent)
+
+        if percent == 100:
+            self._handle_file_completed(cb_object)
+
         self.object_state_changed(object_path, {NAME_KEY: cb_object.get_name(),
                                     PERCENT_KEY: percent,
                                     ICON_KEY: cb_object.get_icon(),
