@@ -96,11 +96,17 @@ class ClipboardIcon(CanvasIcon):
         else:
             self.props.xo_color = XoColor("#000000,#FFFFFF")
 
+        if activity and percent == 100:
+            # FIXME: restrict based on file type rather than activity once
+            # we have a better type registry
+            # restrict auto-open to a specific set of activities
+            allowed = ["org.laptop.AbiWordActivity", "org.laptop.sugar.Xbook"]
+            if activity in allowed:
+                self._open_file()
+
     def _open_file(self):
         if self._percent < 100 or not self._activity:
             return
-
-        logging.debug("_open_file: " + self._object_id)
 
         # Get the file path
         cb_service = clipboardservice.get_instance()
