@@ -88,6 +88,11 @@ class ClipboardDBusServiceHelper(dbus.service.Object):
         cb_object = self._objects[str(object_path)]
         if percent < 0 or percent > 100:
             raise ValueError("invalid percentage")
+        if cb_object.get_percent() > percent:
+            raise ValueError("invalid percentage; less than current percent")
+        if cb_object.get_percent() == percent:
+            # ignore setting same percentage
+            return
         cb_object.set_percent(percent)
         self.object_state_changed(object_path, {NAME_KEY: cb_object.get_name(),
                                     PERCENT_KEY: percent,
