@@ -69,6 +69,7 @@ class Activity(DBusGObject):
 
         self._valid = False
         self._id = None
+        self._color = None
         self._local = False
         self._type = None
 
@@ -225,3 +226,33 @@ class Activity(DBusGObject):
     def _activity_text_channel_closed_cb(self):
         self._joined = False
         self._activity_text_channel = None
+
+    def send_properties(self):
+        props = {}
+        props['name'] = self._name
+        props['color'] = self._color
+        props['type'] = self._type
+        self._tp.set_activity_properties(self.props.id, props)
+
+    def set_properties(self, properties):
+        changed  = False
+        if "name" in properties.keys():
+            name = properties["name"]
+            if name != self._name:
+                self._name = name
+                changed = True
+
+        if "color" in properties.keys():
+            color = properties["color"]
+            if color != self._color:
+                self._color = color
+                changed = True
+
+        if "type" in properties.keys():
+            type = properties["type"]
+            if type != self._type:
+                self._type = type
+                changed = True
+
+        if changed:
+            self._update_validity()

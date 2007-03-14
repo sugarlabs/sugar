@@ -23,6 +23,7 @@ from telepathy.constants import (CONNECTION_STATUS_CONNECTING, CONNECTION_STATUS
  
 from server_plugin import ServerPlugin
 from linklocal_plugin import LinkLocalPlugin
+from sugar import util
 
 from buddy import Buddy, Owner
 from activity import Activity
@@ -65,10 +66,11 @@ class PresenceService(dbus.service.Object):
         self._server_plugin.connect('contact-online', self._contact_online)
         self._server_plugin.connect('contact-offline', self._contact_offline)
         self._server_plugin.connect('avatar-updated', self._avatar_updated)
-        self._server_plugin.connect('properties-changed', self._properties_changed)
-        self._server_plugin.connect('contact-activities-changed', self._contact_activities_changed)
+        self._server_plugin.connect('buddy-properties-changed', self._buddy_properties_changed)
+        self._server_plugin.connect('buddy-activities-changed', self._buddy_activities_changed)
         self._server_plugin.connect('activity-invitation', self._activity_invitation)
         self._server_plugin.connect('private-invitation', self._private_invitation)
+        self._server_plugin.connect('activity-properties-changed', self._activity_properties_changed)
         self._server_plugin.start()
 
         # Set up the link local connection
@@ -80,6 +82,10 @@ class PresenceService(dbus.service.Object):
     def _server_status_cb(self, plugin, status, reason):
         if status == CONNECTION_STATUS_CONNECTED:
             pass
+            # TEST
+            id = util.unique_id()
+            self._share_activity(id, "org.laptop.Sugar.lapin",
+                "Chat of %s" % self._owner.props.nick, [])
 
     def _contact_online(self, tp, handle, props):
         new_buddy = False
@@ -130,7 +136,7 @@ class PresenceService(dbus.service.Object):
             print "Buddy %s icon updated" % buddy.props.key
             buddy.props.icon = avatar
 
-    def _properties_changed(self, tp, handle, prop):
+    def _buddy_properties_changed(self, tp, handle, prop):
         buddy = self._handles_buddies[tp].get(handle)
         if buddy:
             buddy.set_properties(prop)
@@ -150,14 +156,14 @@ class PresenceService(dbus.service.Object):
 
         # FIXME
         # Use values from the network
-        import random
-        names = ["Tommy", "Susie", "Jill", "Bryan", "Nathan", "Sophia", "Haley", "Jimmy"]
-        name = names[random.randint(0, len(names) - 1)]
-        activity.props.name = "Chat with %s" % name
-        activity.props.type = "org.laptop.Sugar.Chat"
-        from sugar.graphics import xocolor
-        color = xocolor.XoColor().to_string()
-        activity.props.color = color
+        #import random
+        #names = ["Tommy", "Susie", "Jill", "Bryan", "Nathan", "Sophia", "Haley", "Jimmy"]
+        #name = names[random.randint(0, len(names) - 1)]
+        #activity.props.name = "Chat with %s" % name
+        #activity.props.type = "org.laptop.Sugar.Chat"
+        #from sugar.graphics import xocolor
+        #color = xocolor.XoColor().to_string()
+        #activity.props.color = color
 
         return activity
 
@@ -167,7 +173,7 @@ class PresenceService(dbus.service.Object):
         self.ActivityDisappeared(activity.object_path())
         del self._activities[activity.props.id]
     
-    def _contact_activities_changed(self, tp, contact_handle, activities):
+    def _buddy_activities_changed(self, tp, contact_handle, activities):
         print "------------activities changed-------------"
         buddies = self._handles_buddies[tp]
         buddy = buddies.get(contact_handle)
@@ -299,6 +305,7 @@ class PresenceService(dbus.service.Object):
         self._activities[actid] = activity
 
         activity.join()
+        activity.send_properties()
 
         return activity
 
@@ -309,6 +316,11 @@ class PresenceService(dbus.service.Object):
         else:
             self.ActivityDisappeared(activity.object_path())
             print "Activity disappeared: %s (%s)" % (activity.props.name, activity.props.id)
+
+    def _activity_properties_changed(self, tp, act_id, props):
+        activity = self._activities.get(act_id)
+        if activity:
+            activity.set_properties(props)
 
 
 def main():

@@ -37,6 +37,7 @@ from telepathy.constants import (
     CONNECTION_STATUS_REASON_AUTHENTICATION_FAILED)
 
 CONN_INTERFACE_BUDDY_INFO = 'org.laptop.Telepathy.BuddyInfo'
+CONN_INTERFACE_ACTIVITY_PROPERTIES = 'org.laptop.Telepathy.ActivityProperties'
 
 _PROTOCOL = "jabber"
 
@@ -85,14 +86,16 @@ class ServerPlugin(gobject.GObject):
                              ([gobject.TYPE_INT, gobject.TYPE_INT])),
         'avatar-updated':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                              ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
-        'properties-changed':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'buddy-properties-changed':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                              ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
-        'contact-activities-changed':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'buddy-activities-changed':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                              ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
         'activity-invitation': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                              ([gobject.TYPE_PYOBJECT])),
         'private-invitation':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                             ([gobject.TYPE_PYOBJECT]))
+                             ([gobject.TYPE_PYOBJECT])),
+        'activity-properties-changed':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                             ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
     }
     
     def __init__(self, registry, owner):
@@ -142,6 +145,7 @@ class ServerPlugin(gobject.GObject):
         account_info['account'] = "%s@%s" % (khash, account_info['server'])
 
         account_info['password'] = profile.get_private_key_hash()
+        print account_info
         return account_info
 
     def _find_existing_connection(self):
@@ -181,6 +185,7 @@ class ServerPlugin(gobject.GObject):
         # hack
         conn._valid_interfaces.add(CONN_INTERFACE_PRESENCE)
         conn._valid_interfaces.add(CONN_INTERFACE_BUDDY_INFO)
+        conn._valid_interfaces.add(CONN_INTERFACE_ACTIVITY_PROPERTIES)
         conn._valid_interfaces.add(CONN_INTERFACE_AVATARS)
         conn._valid_interfaces.add(CONN_INTERFACE_ALIASING)
 
@@ -231,12 +236,14 @@ class ServerPlugin(gobject.GObject):
             self.cleanup()
             return
 
-        self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('PropertiesChanged', self._properties_changed_cb)
-        self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('ActivitiesChanged', self._activities_changed_cb)
+        self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('PropertiesChanged', self._buddy_properties_changed_cb)
+        self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('ActivitiesChanged', self._buddy_activities_changed_cb)
 
         self._conn[CONN_INTERFACE_AVATARS].connect_to_signal('AvatarUpdated', self._avatar_updated_cb)
 
         self._conn[CONN_INTERFACE_ALIASING].connect_to_signal('AliasesChanged', self._alias_changed_cb)
+
+        self._conn[CONN_INTERFACE_ACTIVITY_PROPERTIES].connect_to_signal('PropertiesChanged', self._activity_properties_changed_cb)
 
         try:
             self._set_self_buddy_info()
@@ -289,7 +296,7 @@ class ServerPlugin(gobject.GObject):
 
         self._joined_activities.append((act, handle))
         self._conn[CONN_INTERFACE_BUDDY_INFO].SetActivities(self._joined_activities)
-
+        
         return channel
 
     def _set_self_buddy_info(self):
@@ -387,7 +394,7 @@ class ServerPlugin(gobject.GObject):
         self.emit("contact-online", handle, props)
 
         activities = self._conn[CONN_INTERFACE_BUDDY_INFO].GetActivities(handle)
-        self._activities_changed_cb(handle, activities)
+        self._buddy_activities_changed_cb(handle, activities)
 
     def _presence_update_cb(self, presence):
         for handle in presence:
@@ -419,16 +426,16 @@ class ServerPlugin(gobject.GObject):
         for handle, alias in aliases:
             prop = {'nick': alias}
             #print "Buddy %s alias changed to %s" % (handle, alias)
-            self._properties_changed_cb(handle, prop)
+            self._buddy_properties_changed_cb(handle, prop)
 
-    def _properties_changed_cb(self, contact, properties):
-        self.emit("properties-changed", contact, properties)
+    def _buddy_properties_changed_cb(self, contact, properties):
+        self.emit("buddy-properties-changed", contact, properties)
 
-    def _activities_changed_cb(self, contact, activities):
+    def _buddy_activities_changed_cb(self, contact, activities):
         for act_id, act_handle in activities:
             self._activities[act_id] = act_handle
         activities_id = map(lambda x: x[0], activities)
-        self.emit("contact-activities-changed", contact, activities_id)
+        self.emit("buddy-activities-changed", contact, activities_id)
 
     def _new_channel_cb(self, object_path, channel_type, handle_type, handle, suppress_handler):
         if handle_type == CONNECTION_HANDLE_TYPE_ROOM and channel_type == CHANNEL_TYPE_TEXT:
@@ -447,3 +454,17 @@ class ServerPlugin(gobject.GObject):
         elif handle_type == CONNECTION_HANDLE_TYPE_CONTACT and \
             channel_type in [CHANNEL_TYPE_TEXT, CHANNEL_TYPE_STREAMED_MEDIA]:
             self.emit("private-invitation", object_path)
+
+    def set_activity_properties(self, act_id, props):
+        handle = self._activities.get(act_id)
+
+        if not handle:
+            print "set_activity_properties: handle unkown"
+            return
+
+        self._conn[CONN_INTERFACE_ACTIVITY_PROPERTIES].SetProperties(handle, props)
+
+    def _activity_properties_changed_cb(self, room, properties):
+        for act_id, act_handle in self._activities.items():
+            if room == act_handle:
+                self.emit("activity-properties-changed", act_id, properties)
