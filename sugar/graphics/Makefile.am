@@ -9,6 +9,7 @@ sugar_PYTHON =			\
 	color.py		\
 	ClipboardBubble.py	\
 	entry.py                \
+	filechooser.py		\
 	font.py			\
 	frame.py		\
 	label.py		\
