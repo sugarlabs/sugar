@@ -30,7 +30,7 @@ _ACTIVITY_SERVICE_NAME = "org.laptop.Activity"
 _ACTIVITY_SERVICE_PATH = "/org/laptop/Activity"
 _ACTIVITY_INTERFACE = "org.laptop.Activity"
 
-def _find_activity_id():
+def create_activity_id():
     pservice = PresenceService.get_instance()
 
     # create a new unique activity ID
@@ -93,17 +93,17 @@ class ActivityCreationHandler(gobject.GObject):
 def create(service_name, activity_handle=None):
     """Create a new activity from its name."""
     if not activity_handle:
-        activity_handle = ActivityHandle(_find_activity_id())
+        activity_handle = ActivityHandle(create_activity_id())
     return ActivityCreationHandler(service_name, activity_handle)
 
 def create_with_uri(service_name, uri):
     """Create a new activity and pass the uri as handle."""
-    activity_handle = ActivityHandle(_find_activity_id())
+    activity_handle = ActivityHandle(create_activity_id())
     activity_handle.uri = uri
     return ActivityCreationHandler(service_name, activity_handle)
 
 def create_with_object_id(service_name, object_id):
     """Create a new activity and pass the object id as handle."""
-    activity_handle = ActivityHandle(_find_activity_id())
+    activity_handle = ActivityHandle(create_activity_id())
     activity_handle.object_id = object_id
     return ActivityCreationHandler(service_name, activity_handle)
