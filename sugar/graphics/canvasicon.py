@@ -374,7 +374,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         
             # TODO: Any better place to do this?
             [min_width, natural_width] = self.get_width_request()
-            popup.props.box_width = max(popup.get_width_request(), min_width)
+            [pop_min_width, pop_natural_width] = popup.get_width_request()
+            popup.props.box_width = max(pop_min_width, min_width)
 
             [width, height] = self.get_allocation()
             y += height
