@@ -73,14 +73,14 @@ class SnowflakeBox(hippo.CanvasBox, hippo.CanvasItem):
         max_child_size = 0
         for child in self.get_children():
             [min_w, natural_w] = child.get_width_request()
-            [min_h, natural_h] = child.get_height_request(width)
+            [min_h, natural_h] = child.get_height_request(min_w)
             max_child_size = max (max_child_size, min_w)
             max_child_size = max (max_child_size, min_h)
 
         width = self._get_radius() * 2 +    \
                 max_child_size + _FLAKE_DISTANCE * 2
 
-        return [width, width]
+        return (width, width)
 
     def do_allocate(self, width, height, origin_changed):
         hippo.CanvasBox.do_allocate(self, width, height, origin_changed)
