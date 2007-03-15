@@ -14,6 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+from sets import Set
 import logging
 
 import gobject
@@ -32,6 +33,7 @@ class Shell(gobject.GObject):
     def __init__(self, model):
         gobject.GObject.__init__(self)
 
+        self._activities_starting = Set()
         self._model = model
         self._hosts = {}
         self._screen = wnck.screen_get_default()
@@ -60,8 +62,12 @@ class Shell(gobject.GObject):
     def _activity_added_cb(self, home_model, home_activity):
         activity_host = ActivityHost(home_activity)
         self._hosts[activity_host.get_xid()] = activity_host
+        if home_activity.get_type() in self._activities_starting:
+            self._activities_starting.remove(home_activity.get_type())
 
     def _activity_removed_cb(self, home_model, home_activity):
+        if home_activity.get_type() in self._activities_starting:
+            self._activities_starting.remove(home_activity.get_type())
         if not home_activity.get_launched():
             return
         xid = home_activity.get_xid()
@@ -127,7 +133,13 @@ class Shell(gobject.GObject):
         home_model.notify_activity_launch_failed(handler.get_activity_id())
 
     def start_activity(self, activity_type):
+        if activity_type in self._activities_starting:
+            logging.debug("This activity is still launching.")
+            return
+
         logging.debug('Shell.start_activity')
+
+        self._activities_starting.add(activity_type)
 
         handler = activityfactory.create(activity_type)
 

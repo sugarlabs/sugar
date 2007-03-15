@@ -110,7 +110,7 @@ class HomeModel(gobject.GObject):
                 self._current_activity = act
             else:
                 self._current_activity = None
-                logging.error('Actiivty for window %d was not yet launched.' % xid)
+                logging.error('Activity for window %d was not yet launched.' % xid)
         else:
             self._current_activity = None
             logging.error('Model for window %d does not exist.' % xid)
