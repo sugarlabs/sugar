@@ -94,6 +94,7 @@ class Network(gobject.GObject):
         self._ssid = None
         self._mode = None
         self._strength = 0
+        self._caps = 0
         self._valid = False
         self._state = NETWORK_STATE_NOTCONNECTED
 
@@ -106,8 +107,8 @@ class Network(gobject.GObject):
         self._ssid = props[1]
         self._strength = props[3]
         self._mode = props[6]
-        caps = props[7]
-        if caps & NM_802_11_CAP_PROTO_WPA or caps & NM_802_11_CAP_PROTO_WPA2:
+        self._caps = props[7]
+        if self._caps & NM_802_11_CAP_PROTO_WPA or self._caps & NM_802_11_CAP_PROTO_WPA2:
             # We do not support WPA at this time, so don't show
             # WPA-enabled access points in the menu
             logging.debug("Net(%s): ssid '%s' dropping because WPA[2] unsupported" % (self._op,
@@ -129,6 +130,9 @@ class Network(gobject.GObject):
 
     def get_ssid(self):
         return self._ssid
+
+    def get_caps(self):
+        return self._caps
 
     def get_state(self):
         return self._state
