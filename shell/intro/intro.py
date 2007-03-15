@@ -231,10 +231,10 @@ class IntroBox(hippo.CanvasBox, hippo.CanvasItem):
         hippo.CanvasBox.__init__(self, **kwargs)
         self._pixbuf = None
 
-        self._video_box = VideoBox(xalign=hippo.ALIGNMENT_CENTER,
-                                   yalign=hippo.ALIGNMENT_START,
-                                   padding_bottom=units.grid_to_pixels(0.5))
-        self.append(self._video_box)
+        #self._video_box = VideoBox(xalign=hippo.ALIGNMENT_CENTER,
+        #                           yalign=hippo.ALIGNMENT_START,
+        #                           padding_bottom=units.grid_to_pixels(0.5))
+        #self.append(self._video_box)
 
         self._entry_box = EntryBox(xalign=hippo.ALIGNMENT_CENTER,
                                    padding_bottom=units.grid_to_pixels(0.5))
@@ -250,7 +250,10 @@ class IntroBox(hippo.CanvasBox, hippo.CanvasItem):
         self.append(self._ok)
 
     def _ok_activated(self, item):
-        pixbuf = self._video_box.get_pixbuf()
+        #pixbuf = self._video_box.get_pixbuf()
+        path = os.path.join(os.path.dirname(__file__),
+                            'default-picture.png')
+        pixbuf = gtk.gdk.pixbuf_new_from_file(path)
         name = self._entry_box.get_text()
         color = self._color_box.get_color()
 

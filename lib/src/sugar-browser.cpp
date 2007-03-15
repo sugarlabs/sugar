@@ -534,6 +534,8 @@ sugar_browser_save_uri(SugarBrowser *browser,
 
     rv = webPersist->SaveURI(sourceURI, nsnull, nsnull, nsnull, nsnull, destFile);
     NS_ENSURE_SUCCESS(rv, FALSE);
+
+    return TRUE;
 #else
     return FALSE;
 #endif
@@ -584,6 +586,8 @@ sugar_browser_save_document(SugarBrowser *browser,
 
     rv = webPersist->SaveDocument(DOMDocument, destFile, filesFolder, nsnull, 0, 0);
     NS_ENSURE_SUCCESS(rv, FALSE);
+
+    return TRUE;
 #else
     return FALSE;
 #endif
