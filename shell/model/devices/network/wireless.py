@@ -70,7 +70,7 @@ class Device(device.Device):
             return _nm_state_to_state[nm_state]
 
     def get_type(self):
-        return 'wirelessnetwork'
+        return 'network.wireless'
 
     def get_id(self):
         return self._nm_device.get_op()

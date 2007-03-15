@@ -18,7 +18,7 @@
 from sugar.graphics import canvasicon
 from sugar.graphics import color
 from sugar.graphics import units
-from model.devices import wirelessnetwork
+from model.devices.network import wireless
 from view.pulsingicon import PulsingIcon
 
 _ICON_NAME = 'device-network-wireless'
@@ -57,12 +57,12 @@ class DeviceView(PulsingIcon):
     def _update_state(self):
         # FIXME Change icon colors once we have real icons
         state = self._model.props.state
-        if state == wirelessnetwork.STATE_ACTIVATING:
+        if state == wireless.STATE_ACTIVATING:
             self.props.fill_color = color.ICON_FILL_INACTIVE
             self.props.stroke_color = color.ICON_STROKE_INACTIVE
-        elif state == wirelessnetwork.STATE_ACTIVATED:
+        elif state == wireless.STATE_ACTIVATED:
             self.props.fill_color = None
             self.props.stroke_color = None
-        elif state == wirelessnetwork.STATE_INACTIVE:
+        elif state == wireless.STATE_INACTIVE:
             self.props.fill_color = color.ICON_FILL_INACTIVE
             self.props.stroke_color = color.ICON_STROKE_INACTIVE

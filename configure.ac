@@ -130,10 +130,12 @@ shell/intro/Makefile
 shell/hardware/Makefile
 shell/view/Makefile
 shell/view/devices/Makefile
+shell/view/devices/network/Makefile
 shell/view/frame/Makefile
 shell/view/home/Makefile
 shell/model/Makefile
 shell/model/devices/Makefile
+shell/model/devices/network/Makefile
 services/console/lib/Makefile
 services/console/lib/procmem/Makefile
 services/console/Makefile

@@ -9,4 +9,4 @@ class Device(device.Device):
         return self._nm_device.get_op()
 
     def get_type(self):
-        return 'wirednetwork'
+        return 'network.wired'

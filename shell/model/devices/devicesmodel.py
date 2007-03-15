@@ -1,8 +1,8 @@
 import gobject
 
 from model.devices import device
-from model.devices import wirednetwork
-from model.devices import wirelessnetwork
+from model.devices.network import wired
+from model.devices.network import wireless
 from model.devices import battery
 from hardware import hardwaremanager
 from hardware import nmclient
@@ -59,7 +59,7 @@ class DevicesModel(gobject.GObject):
         return self._devices[nm_device.get_op()]
 
     def _add_network_device(self, nm_device):
-        self.add_device(wirelessnetwork.Device(nm_device))
+        self.add_device(wireless.Device(nm_device))
         nm_device.connect('state-changed',
                           self._network_device_state_changed_cb)
 
