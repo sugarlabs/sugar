@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import gobject
+import sys
 
 from hardware import nmclient
 
@@ -35,7 +36,9 @@ class AccessPointModel(gobject.GObject):
         'strength' : (int, None, None, 0, 100, 0,
                       gobject.PARAM_READABLE),
         'state'    : (int, None, None, STATE_CONNECTING,
-                      STATE_NOTCONNECTED, 0, gobject.PARAM_READABLE)
+                      STATE_NOTCONNECTED, 0, gobject.PARAM_READABLE),
+        'capabilities' : (int, None, None, 0, sys.maxint, 0,
+                      gobject.PARAM_READABLE)
     }
 
     def __init__(self, nm_device, nm_network):
@@ -71,3 +74,5 @@ class AccessPointModel(gobject.GObject):
         elif pspec.name == 'state':
             nm_state = self._nm_network.get_state()
             return _nm_state_to_state[nm_state]
+        elif pspec.name == 'capabilities':
+            return self._nm_network.get_caps()
