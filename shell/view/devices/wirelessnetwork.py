@@ -17,6 +17,7 @@
 
 from sugar.graphics import canvasicon
 from sugar.graphics import color
+from sugar.graphics import units
 from model.devices import wirelessnetwork
 from view.pulsingicon import PulsingIcon
 
@@ -24,7 +25,7 @@ _ICON_NAME = 'device-network-wireless'
 
 class DeviceView(PulsingIcon):
     def __init__(self, model):
-        PulsingIcon.__init__(self)
+        PulsingIcon.__init__(self, scale=units.MEDIUM_ICON_SCALE)
         self._model = model
 
         model.connect('notify::name', self._name_changed_cb)

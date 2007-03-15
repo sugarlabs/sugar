@@ -34,8 +34,8 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
         hippo.CanvasBox.__init__(self, background_color=0xe2e2e2ff, yalign=2)
 
         self._donut = ActivitiesDonut(shell,
-                                      box_width=units.grid_to_pixels(7),
-                                      box_height=units.grid_to_pixels(7))
+                                      box_width=units.grid_to_pixels(6),
+                                      box_height=units.grid_to_pixels(6))
         self.append(self._donut)
 
         self._my_icon = MyIcon(units.XLARGE_ICON_SCALE)
@@ -93,7 +93,7 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
         i = 0
         for icon in self._device_icons.values():
             angle = 2 * math.pi / len(self._device_icons) * i + math.pi / 2
-            radius = units.grid_to_pixels(5)
+            radius = units.grid_to_pixels(4)
 
             [icon_width, icon_height] = icon.get_allocation()
 

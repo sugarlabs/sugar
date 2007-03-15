@@ -81,7 +81,7 @@ STANDARD_ICON_SCALE = 1.0 * _dpi_factor * _zoom_factor
 SMALL_ICON_SCALE    = 0.5 * _dpi_factor * _zoom_factor
 MEDIUM_ICON_SCALE   = 1.5 * _dpi_factor * _zoom_factor
 LARGE_ICON_SCALE    = 2.0 * _dpi_factor * _zoom_factor
-XLARGE_ICON_SCALE   = 3.0 * _dpi_factor * _zoom_factor
+XLARGE_ICON_SCALE   = 2.75 * _dpi_factor * _zoom_factor
 
 def points_to_device(points):
     return int(points * _zoom_factor)
