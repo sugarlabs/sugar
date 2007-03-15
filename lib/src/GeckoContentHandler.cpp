@@ -53,7 +53,7 @@ GeckoContentHandler::PromptForSaveToFile (nsIHelperAppLauncher *aLauncher,
 
 	NS_UTF16ToCString(nsString(aDefaultFile), NS_CSTRING_ENCODING_UTF8, defaultFile);
 
-	nsCOMPtr <nsILocalFile> destFile(do_CreateInstance(NS_LOCAL_FILE_CONTRACTID));
+	nsCOMPtr <nsILocalFile> destFile(do_CreateInstance("@mozilla.org/file/local;1"));
 	NS_ENSURE_TRUE(destFile, NS_ERROR_FAILURE);
 
 	const char * suggested = defaultFile.get();

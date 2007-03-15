@@ -519,7 +519,7 @@ sugar_browser_save_uri(SugarBrowser *browser,
     rv = NewURI(uri, getter_AddRefs(sourceURI));
     NS_ENSURE_SUCCESS(rv, FALSE);
 
-    nsCOMPtr<nsILocalFile> destFile = do_CreateInstance(NS_LOCAL_FILE_CONTRACTID);
+    nsCOMPtr<nsILocalFile> destFile = do_CreateInstance("@mozilla.org/file/local;1");
     NS_ENSURE_TRUE(destFile, FALSE);
 
     destFile->InitWithNativePath(nsCString(filename));
@@ -550,7 +550,7 @@ sugar_browser_save_document(SugarBrowser *browser,
 
     nsCString cFile(filename);
 
-    nsCOMPtr<nsILocalFile> destFile = do_CreateInstance(NS_LOCAL_FILE_CONTRACTID);
+    nsCOMPtr<nsILocalFile> destFile = do_CreateInstance("@mozilla.org/file/local;1");
     NS_ENSURE_TRUE(destFile, FALSE);
 
     destFile->InitWithNativePath(cFile);
@@ -563,7 +563,7 @@ sugar_browser_save_document(SugarBrowser *browser,
     g_string_append (path, " Files");
 
     nsCOMPtr<nsILocalFile> filesFolder;    
-    filesFolder = do_CreateInstance (NS_LOCAL_FILE_CONTRACTID);
+    filesFolder = do_CreateInstance ("@mozilla.org/file/local;1");
     filesFolder->InitWithNativePath (nsCString(path->str));
 
     g_string_free (path, TRUE);
