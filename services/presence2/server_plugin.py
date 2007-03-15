@@ -243,7 +243,7 @@ class ServerPlugin(gobject.GObject):
 
         self._conn[CONN_INTERFACE_ALIASING].connect_to_signal('AliasesChanged', self._alias_changed_cb)
 
-        self._conn[CONN_INTERFACE_ACTIVITY_PROPERTIES].connect_to_signal('PropertiesChanged', self._activity_properties_changed_cb)
+        self._conn[CONN_INTERFACE_ACTIVITY_PROPERTIES].connect_to_signal('ActivityPropertiesChanged', self._activity_properties_changed_cb)
 
         try:
             self._set_self_buddy_info()
