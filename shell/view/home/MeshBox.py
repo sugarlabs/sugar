@@ -23,6 +23,7 @@ from sugar.graphics.spreadbox import SpreadBox
 from sugar.graphics.snowflakebox import SnowflakeBox
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import color
+from sugar.graphics import xocolor
 from sugar.graphics import canvasicon
 from model import accesspointmodel
 from hardware import hardwaremanager
@@ -42,9 +43,19 @@ class AccessPointView(PulsingIcon):
         model.connect('notify::name', self._name_changed_cb)
         model.connect('notify::state', self._state_changed_cb)
 
+        import sha
+        sh = sha.new()
+        data = self._model.props.name + hex(self._model.props.capabilities) + \
+                hex(self._model.props.mode)
+        sh.update(data)
+        h = hash(sh.digest())
+        idx = h % len(xocolor._colors)
+        self._inactive_stroke_color = xocolor._colors[idx][0]
+        self._inactive_fill_color = xocolor._colors[idx][1]
+
         self.props.colors = [
             [ None, None ],
-            [ color.ICON_FILL_INACTIVE, color.ICON_STROKE_INACTIVE ]
+            [ self._inactive_stroke_color, self._inactive_fill_color ]
         ]
 
         self._update_icon()
@@ -85,8 +96,8 @@ class AccessPointView(PulsingIcon):
             self.props.stroke_color = None
         elif self._model.props.state == accesspointmodel.STATE_NOTCONNECTED:
             self.props.pulsing = False
-            self.props.fill_color = color.ICON_FILL_INACTIVE
-            self.props.stroke_color = color.ICON_STROKE_INACTIVE
+            self.props.fill_color = color.HTMLColor(self._inactive_fill_color)
+            self.props.stroke_color = color.HTMLColor(self._inactive_stroke_color)
 
 class ActivityView(SnowflakeBox):
     def __init__(self, shell, menu_shell, model):
