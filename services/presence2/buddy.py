@@ -102,7 +102,7 @@ class Buddy(DBusGObject):
                 return None
             if not self._activities.has_key(self._current_activity):
                 return None
-            return self._activities[self._current_activity]
+            return self._current_activity
         elif pspec.name == "valid":
             return self._valid
         elif pspec.name == "owner":
@@ -336,7 +336,8 @@ class Owner(Buddy):
 
     def _cur_activity_changed_cb(self, activity_id):
         if not self._activities.has_key(activity_id):
-            return
+            # This activity is local-only
+            activity_id = None
         props = {'current-activity': activity_id}
         self.set_properties(props)
 

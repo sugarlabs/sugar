@@ -238,6 +238,7 @@ class ServerPlugin(gobject.GObject):
 
         self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('PropertiesChanged', self._buddy_properties_changed_cb)
         self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('ActivitiesChanged', self._buddy_activities_changed_cb)
+        self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('CurrentActivityChanged', self._buddy_current_activity_changed_cb)
 
         self._conn[CONN_INTERFACE_AVATARS].connect_to_signal('AvatarUpdated', self._avatar_updated_cb)
 
@@ -316,7 +317,24 @@ class ServerPlugin(gobject.GObject):
 
         self._conn[CONN_INTERFACE_BUDDY_INFO].SetActivities(self._joined_activities)
 
+        cur_activity = self._owner.props.current_activity
+        cur_activity_handle = 0
+        if not cur_activity:
+            cur_activity = ""
+        else:
+            cur_activity_handle = self._get_handle_for_activity(cur_activity)
+            if not cur_activity_handle:
+                # dont advertise a current activity that's not shared
+                cur_activity = ""
+        self._conn[CONN_INTERFACE_BUDDY_INFO].SetCurrentActivity(cur_activity, cur_activity_handle)
+
         self._upload_avatar()
+
+    def _get_handle_for_activity(self, activity_id):
+        for (act, handle) in self._joined_activities:
+            if activity_id == act:
+                return handle
+        return None
 
     def _status_changed_cb(self, state, reason):
         if state == CONNECTION_STATUS_CONNECTING:
@@ -454,6 +472,18 @@ class ServerPlugin(gobject.GObject):
             self._activities[act_id] = act_handle
         activities_id = map(lambda x: x[0], activities)
         self.emit("buddy-activities-changed", handle, activities_id)
+
+    def _buddy_current_activity_changed_cb(self, handle, activity, channel):
+        if handle == self._conn[CONN_INTERFACE].GetSelfHandle():
+            # ignore network events for Owner current activity changes since those
+            # are handled locally
+            return
+
+        if not len(activity) or not util.validate_activity_id(activity):
+            activity = None
+        prop = {'current-activity': activity}
+        logging.debug("Handle %s: current activity now %s" % (handle, activity))
+        self._buddy_properties_changed_cb(handle, prop)
 
     def _new_channel_cb(self, object_path, channel_type, handle_type, handle, suppress_handler):
         if handle_type == CONNECTION_HANDLE_TYPE_ROOM and channel_type == CHANNEL_TYPE_TEXT:

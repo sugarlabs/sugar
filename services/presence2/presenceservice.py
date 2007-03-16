@@ -216,10 +216,6 @@ class PresenceService(dbus.service.Object):
             if not activity.get_joined_buddies():
                 self._remove_activity(activity)
 
-        # current activity
-        if len(activities) > 0:
-            buddy.set_properties({'current-activity':activities[0]})
-
     def _activity_invitation(self, tp, act_id):
         activity = self._activities.get(act_id)
         if activity:
