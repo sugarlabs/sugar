@@ -140,14 +140,16 @@ class Shell(gobject.GObject):
         logging.debug('Shell.start_activity')
 
         self._activities_starting.add(activity_type)
+        try:
+            handler = activityfactory.create(activity_type)
 
-        handler = activityfactory.create(activity_type)
+            home_model = self._model.get_home()
+            home_model.notify_activity_launch(handler.get_activity_id(),
+                                                activity_type)
 
-        home_model = self._model.get_home()
-        home_model.notify_activity_launch(handler.get_activity_id(),
-                                          activity_type)
-
-        handler.connect('error', self._start_error_cb, home_model)
+            handler.connect('error', self._start_error_cb, home_model)
+        except:
+            self._activities_starting.remove(activity_type)
 
         # Zoom to Home for launch feedback
         self.set_zoom_level(sugar.ZOOM_HOME)
