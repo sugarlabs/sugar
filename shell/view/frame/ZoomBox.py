@@ -31,10 +31,11 @@ class ActivityMenu(Menu):
     def __init__(self, activity_model):
         Menu.__init__(self, activity_model.get_title())
 
-        if not activity_model.get_shared():
-            self.add_item(MenuItem(ActivityMenu.ACTION_SHARE,
-                                   _('Share'),
-                                  'theme:stock-share-mesh'))
+# FIXME: re-enable after trial1
+#        if not activity_model.get_shared():
+#            self.add_item(MenuItem(ActivityMenu.ACTION_SHARE,
+#                                   _('Share'),
+#                                  'theme:stock-share-mesh'))
 
         self.add_item(MenuItem(ActivityMenu.ACTION_CLOSE,
                                _('Close'),
