@@ -30,7 +30,7 @@ class PopupContext(gobject.GObject):
         gobject.GObject.__init__(self)
 
     def popped_up(self, control):
-        if self._active_control:
+        if self._active_control and self._active_control != control:
             self._active_control.popdown()
         self._active_control = control
         self.emit('activated')
