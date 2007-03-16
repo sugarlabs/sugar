@@ -23,8 +23,8 @@ _actions_table = {
     'F10'           : 'volume_2',
     'F11'           : 'volume_3',
     'F12'           : 'volume_4',
-    '<alt>F5'       : 'color_mode',
-    '<alt>F8'       : 'b_and_w_mode',
+    '<alt>F8'       : 'color_mode',
+    '<alt>F5'       : 'b_and_w_mode',
     '<alt>equal'    : 'console',
     '<alt>0'        : 'console',
     '<alt>f'        : 'frame',
@@ -60,6 +60,10 @@ class KeyHandler(object):
         hw_manager = hardwaremanager.get_hardware_manager()
         if hw_manager:
             hw_manager.set_display_brightness(level)
+            if level == 0:
+                self._set_display_mode(hardwaremanager.B_AND_W_MODE)
+            else:
+                self._set_display_mode(hardwaremanager.COLOR_MODE)
 
     def _set_display_mode(self, mode):
         hw_manager = hardwaremanager.get_hardware_manager()
