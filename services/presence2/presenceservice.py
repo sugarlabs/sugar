@@ -48,7 +48,7 @@ class PresenceService(dbus.service.Object):
         self._activities = {}   # activity id -> Activity
 
         bus = dbus.SessionBus()
-        self._bus_name = dbus.service.BusName(_PRESENCE_SERVICE, bus=bus)        
+        self._bus_name = dbus.service.BusName(_PRESENCE_SERVICE, bus=bus)
 
         # Create the Owner object
         objid = self._get_next_object_id()
@@ -84,7 +84,7 @@ class PresenceService(dbus.service.Object):
             pass
             # TEST
             id = util.unique_id()
-            self._share_activity(id, "org.laptop.Sugar.lapin",
+            self._share_activity(id, "org.laptop.Sugar.Test",
                 "Chat of %s" % self._owner.props.nick, [])
 
     def _contact_online(self, tp, handle, props):
