@@ -134,6 +134,9 @@ class Network(gobject.GObject):
     def get_caps(self):
         return self._caps
 
+    def get_mode(self):
+        return self._mode
+
     def get_state(self):
         return self._state
 
