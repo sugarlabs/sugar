@@ -55,7 +55,9 @@ class AccessPointView(PulsingIcon):
 
         self.props.colors = [
             [ None, None ],
-            [ self._inactive_stroke_color, self._inactive_fill_color ]
+            [ color.HTMLColor(self._inactive_stroke_color), 
+              color.HTMLColor(self._inactive_fill_color)
+            ]
         ]
 
         self._update_icon()
