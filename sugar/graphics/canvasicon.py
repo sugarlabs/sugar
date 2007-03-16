@@ -41,6 +41,15 @@ class _PopupAnimation(animator.Animation):
         if current == 1.0:
             self._icon.show_popup()
 
+class _PopdownAnimation(animator.Animation):
+    def __init__(self, icon):
+        animator.Animation.__init__(self, 0.0, 1.0)
+        self._icon = icon
+
+    def next_frame(self, current):
+        if current == 1.0:
+            self._icon.hide_popup()
+
 class _IconCacheIcon:
     def __init__(self, name, fill_color, stroke_color, now):
         self.data_size = None
@@ -409,7 +418,10 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         self.prelight(enter=True)
 
     def _leave(self):
-        self.hide_popup()
+        self._popup_anim = animator.Animator(0.2, 10)
+        self._popup_anim.add(_PopdownAnimation(self))
+        self._popup_anim.start()
+
         self.prelight(enter=False)
 
     def _enter_or_leave_cb(self):
