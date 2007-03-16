@@ -186,7 +186,7 @@ _wrap_sugar_browser_event_tp_getattr(PyObject *self, char *attr)
     SugarBrowserEvent *event = pyg_boxed_get(self, SugarBrowserEvent);
 
     if (!strcmp(attr, "__members__"))
-        return Py_BuildValue("[s]", "image_uri");
+        return Py_BuildValue("[ss]", "image_uri", "button");
     if (!strcmp(attr, "image_uri")) {
         if (event->image_uri) {
             return PyString_FromString(event->image_uri);
@@ -195,6 +195,8 @@ _wrap_sugar_browser_event_tp_getattr(PyObject *self, char *attr)
             return Py_None;
         }
     }
+    else if (!strcmp(attr, "button"))
+        return PyInt_FromLong(event->button);
 
     return NULL;
 }

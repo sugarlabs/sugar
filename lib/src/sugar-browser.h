@@ -76,6 +76,7 @@ void            sugar_browser_shutdown      (void);
 #define SUGAR_TYPE_BROWSER_EVENT (sugar_browser_event_get_type())
 
 struct _SugarBrowserEvent {
+    int   button;
     char *image_uri;
 };
 

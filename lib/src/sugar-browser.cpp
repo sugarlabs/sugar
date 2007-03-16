@@ -424,7 +424,13 @@ dom_mouse_click_cb(GtkMozEmbed *embed, nsIDOMMouseEvent *mouseEvent)
         }
     }
 
+    PRUint16 btn = 0;
+    mouseEvent->GetButton (&btn);
+    event->button = btn + 1;
+
     g_signal_emit(browser, signals[MOUSE_CLICK], 0, event, &return_value);
+
+    sugar_browser_event_free(event);
 
     return return_value;
 }
