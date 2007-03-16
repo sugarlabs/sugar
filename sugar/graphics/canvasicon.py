@@ -355,16 +355,17 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         return None
 
     def show_popup(self):
-        popup = self.get_popup()
-        if not popup:
-            return
+        if not self._popup:
+            self._popup = self.get_popup()
+            if not self._popup:
+                return
 
         popup_context = self.get_popup_context()
         
         [x, y] = [None, None]
         if popup_context:
             try:
-                [x, y] = popup_context.get_position(self, popup)
+                [x, y] = popup_context.get_position(self, self._popup)
             except NotImplementedError:
                 pass
 
@@ -374,23 +375,21 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         
             # TODO: Any better place to do this?
             [min_width, natural_width] = self.get_width_request()
-            [pop_min_width, pop_natural_width] = popup.get_width_request()
-            popup.props.box_width = max(pop_min_width, min_width)
+            [pop_min_width, pop_natural_width] = self._popup.get_width_request()
+            self._popup.props.box_width = max(pop_min_width, min_width)
 
             [width, height] = self.get_allocation()
             y += height
             position = [x, y]
 
-        popup.popup(x, y)
-        popup.connect('motion-notify-event',
-                      self.popup_motion_notify_event_cb)
-        popup.connect('action-completed',
-                      self._popup_action_completed_cb)
+        self._popup.popup(x, y)
+        self._popup.connect('motion-notify-event',
+                            self.popup_motion_notify_event_cb)
+        self._popup.connect('action-completed',
+                            self._popup_action_completed_cb)
 
         if popup_context:
-            popup_context.popped_up(popup)
-        
-        self._popup = popup
+            popup_context.popped_up(self._popup)
 
     def hide_popup(self):
         if self._popup:
