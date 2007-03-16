@@ -18,16 +18,62 @@
 
 import os
 import sys
+import socket
 
 import pygtk
 pygtk.require('2.0')
 import gtk
-
-os.environ['SUGAR_EMULATOR'] = 'yes'
+import gobject
 
 from sugar import env
-from sugar.emulator import Emulator
 import _sugar
+
+def _get_display_number():
+    """Find a free display number trying to connect to 6000+ ports"""
+    retries = 20
+    display_number = 1
+    display_is_free = False    
+
+    while not display_is_free and retries > 0:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            s.connect(('127.0.0.1', 6000 + display_number))
+            s.close()
+
+            display_number += 1
+            retries -= 1
+        except:
+            display_is_free = True
+
+    if display_is_free:
+        return display_number
+    else:
+        logging.error('Cannot find a free display.')
+        sys.exit(0)
+
+def _start_xephyr(width, height, dpi):
+    display = _get_display_number()
+
+    cmd = [ 'Xephyr' ]
+    cmd.append(':%d' % display)
+    cmd.append('-ac') 
+
+    if width > 0 and height > 0:
+        cmd.append('-screen %dx%d' % (width, height))
+    else:
+        cmd.append('-fullscreen')
+
+    if dpi > 0:
+        cmd.append('-dpi')
+        cmd.append(str(dpi))
+
+    result = gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
+    pid = result[0]
+
+    os.environ['DISPLAY'] = ":%d" % (display)
+    os.environ['SUGAR_EMULATOR_PID'] = str(pid)
+
+os.environ['SUGAR_EMULATOR'] = 'yes'
 
 if len(sys.argv) == 1:
     program = 'sugar-shell'
@@ -41,11 +87,6 @@ else:
     width = 1200
     height = 900
 
-dpi = min(_sugar.get_screen_dpi(), 96)
-kbd_config = os.path.join(env.get_emulator_path('kbdconfig'))
-
-emulator = Emulator(width, height, dpi)
-emulator.set_keyboard_config(kbd_config)
-emulator.start()
+_start_xephyr(width, height, min(_sugar.get_screen_dpi(), 96))
 
 os.execlp('dbus-launch', 'dbus-launch', '--exit-with-session', program)

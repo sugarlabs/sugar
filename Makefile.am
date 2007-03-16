@@ -1,4 +1,4 @@
-SUBDIRS = emulator lib po shell sugar services tools
+SUBDIRS = lib po shell sugar services tools
 
 ACLOCAL_AMFLAGS = -I m4
 

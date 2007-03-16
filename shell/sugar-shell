@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 # Copyright (C) 2006, Red Hat, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -40,6 +39,34 @@ from model.ShellModel import ShellModel
 from shellservice import ShellService
 from intro import intro
 
+def _start_matchbox():
+    cmd = ['matchbox-window-manager']
+
+    cmd.extend(['-use_titlebar', 'no'])
+    cmd.extend(['-theme', 'olpc'])
+    cmd.extend(['-kbdconfig', env.get_shell_path('kbdconfig')])
+
+    gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
+
+def _save_session_info():
+    # Save our DBus Session Bus address somewhere it can be found
+    #
+    # WARNING!!! this is going away at some near future point, do not rely on it
+    #
+    dsba_file = os.path.join(env.get_profile_path(), "session.info")
+    f = open(dsba_file, "w")
+
+    cp = ConfigParser()
+    cp.add_section('Session')
+    cp.set('Session', 'dbus_address', os.environ['DBUS_SESSION_BUS_ADDRESS'])
+    cp.set('Session', 'display', gtk.gdk.display_get_default().get_name())
+    cp.write(f)
+
+    f.close()
+
+_save_session_info()
+_start_matchbox()
+
 # Do initial setup if needed
 key = profile.get_pubkey() 
 if not key or not len(key):
@@ -47,21 +74,6 @@ if not key or not len(key):
 	win.show_all()
 	gtk.main()
 	profile.update()
-
-# Save our DBus Session Bus address somewhere it can be found
-#
-# WARNING!!! this is going away at some near future point, do not rely on it
-#
-dsba_file = os.path.join(env.get_profile_path(), "session.info")
-f = open(dsba_file, "w")
-
-cp = ConfigParser()
-cp.add_section('Session')
-cp.set('Session', 'dbus_address', os.environ['DBUS_SESSION_BUS_ADDRESS'])
-cp.set('Session', 'display', gtk.gdk.display_get_default().get_name())
-cp.write(f)
-
-f.close()
 
 model = ShellModel()
 service = ShellService(model)
