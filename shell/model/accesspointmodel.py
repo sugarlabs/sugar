@@ -38,7 +38,8 @@ class AccessPointModel(gobject.GObject):
         'state'    : (int, None, None, STATE_CONNECTING,
                       STATE_NOTCONNECTED, 0, gobject.PARAM_READABLE),
         'capabilities' : (int, None, None, 0, sys.maxint, 0,
-                      gobject.PARAM_READABLE)
+                      gobject.PARAM_READABLE),
+        'mode'     : (int, None, None, 0, 6, 0, gobject.PARAM_READABLE)
     }
 
     def __init__(self, nm_device, nm_network):
@@ -76,3 +77,5 @@ class AccessPointModel(gobject.GObject):
             return _nm_state_to_state[nm_state]
         elif pspec.name == 'capabilities':
             return self._nm_network.get_caps()
+        elif pspec.name == 'mode':
+            return self._nm_network.get_mode()
