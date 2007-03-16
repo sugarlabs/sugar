@@ -378,6 +378,8 @@ class ServerPlugin(gobject.GObject):
         except dbus.DBusException, e:
             if str(e).startswith("org.freedesktop.DBus.Error.NoReply"):
                 raise InvalidBuddyError("couldn't get properties")
+            props = {}
+            logging.debug("Error getting buddy properties: %s" % e)
 
         if not props.has_key('color'):
             raise InvalidBuddyError("no color")
@@ -402,7 +404,9 @@ class ServerPlugin(gobject.GObject):
             online = handle in self._online_contacts
             for status, params in statuses.items():
                 jid = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
-                print "Handle %s (%s) was online=%s. new statuse %s" % (handle, jid, online, status)
+                olstr = "ONLINE"
+                if not online: olstr = "OFFLINE"
+                print "Handle %s (%s) was %s, status now '%s'." % (handle, jid, olstr, status)
                 if not online and status in ["available", "away", "brb", "busy", "dnd", "xa"]:
                     try:
                         self._contact_online(handle)
@@ -412,6 +416,11 @@ class ServerPlugin(gobject.GObject):
                     self._contact_offline(handle)
 
     def _avatar_updated_cb(self, handle, new_avatar_token):
+        if handle == self._conn[CONN_INTERFACE].GetSelfHandle():
+            # ignore network events for Owner property changes since those
+            # are handled locally
+            return
+
         jid = self._online_contacts[handle]
         icon = self._icon_cache.get_icon(jid, new_avatar_token)
         if not icon:
@@ -428,14 +437,23 @@ class ServerPlugin(gobject.GObject):
             #print "Buddy %s alias changed to %s" % (handle, alias)
             self._buddy_properties_changed_cb(handle, prop)
 
-    def _buddy_properties_changed_cb(self, contact, properties):
-        self.emit("buddy-properties-changed", contact, properties)
+    def _buddy_properties_changed_cb(self, handle, properties):
+        if handle == self._conn[CONN_INTERFACE].GetSelfHandle():
+            # ignore network events for Owner property changes since those
+            # are handled locally
+            return
+        self.emit("buddy-properties-changed", handle, properties)
 
-    def _buddy_activities_changed_cb(self, contact, activities):
+    def _buddy_activities_changed_cb(self, handle, activities):
+        if handle == self._conn[CONN_INTERFACE].GetSelfHandle():
+            # ignore network events for Owner activity changes since those
+            # are handled locally
+            return
+
         for act_id, act_handle in activities:
             self._activities[act_id] = act_handle
         activities_id = map(lambda x: x[0], activities)
-        self.emit("buddy-activities-changed", contact, activities_id)
+        self.emit("buddy-activities-changed", handle, activities_id)
 
     def _new_channel_cb(self, object_path, channel_type, handle_type, handle, suppress_handler):
         if handle_type == CONNECTION_HANDLE_TYPE_ROOM and channel_type == CHANNEL_TYPE_TEXT:
