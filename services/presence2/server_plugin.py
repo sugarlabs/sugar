@@ -378,6 +378,8 @@ class ServerPlugin(gobject.GObject):
         except dbus.DBusException, e:
             if str(e).startswith("org.freedesktop.DBus.Error.NoReply"):
                 raise InvalidBuddyError("couldn't get properties")
+            props = {}
+            logging.debug("Error getting buddy properties: %s" % e)
 
         if not props.has_key('color'):
             raise InvalidBuddyError("no color")
@@ -402,7 +404,9 @@ class ServerPlugin(gobject.GObject):
             online = handle in self._online_contacts
             for status, params in statuses.items():
                 jid = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
-                print "Handle %s (%s) was online=%s. new statuse %s" % (handle, jid, online, status)
+                olstr = "ONLINE"
+                if not online: olstr = "OFFLINE"
+                print "Handle %s (%s) was %s, status now '%s'." % (handle, jid, olstr, status)
                 if not online and status in ["available", "away", "brb", "busy", "dnd", "xa"]:
                     try:
                         self._contact_online(handle)
