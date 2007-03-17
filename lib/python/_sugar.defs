@@ -153,6 +153,16 @@
   )
 )
 
+(define-method get_key
+  (of-object "SugarKeyGrabber")
+  (c-name "sugar_key_grabber_get_key")
+  (return-type "char*")
+  (parameters
+    '("guint" "keycode")
+    '("guint" "state")
+  )
+)
+
 ;; From sugar-push-scroller.h
 
 (define-function push_scroller_get_type

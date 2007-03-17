@@ -39,22 +39,25 @@ struct _SugarKeyGrabber {
 
 	GdkWindow *root;
 	GList *keys;
-	guint last_key_pressed;
-	guint last_key_pressed_modifier;
 };
 
 struct _SugarKeyGrabberClass {
 	GObjectClass base_class;
 
-	void (* key_pressed)  (SugarKeyGrabber *grabber,
-						   const char      *key);
-	void (* key_released) (SugarKeyGrabber *grabber,
-						   const char      *key);
+	gboolean (* key_pressed)  (SugarKeyGrabber *grabber,
+							   guint            keycode,
+							   guint            state);
+	gboolean (* key_released) (SugarKeyGrabber *grabber,
+							   guint            keycode,
+							   guint            state);
 };
 
 GType	 sugar_key_grabber_get_type	(void);
 void     sugar_key_grabber_grab		(SugarKeyGrabber *grabber,
 									 const char	     *key);
+char    *sugar_key_grabber_get_key  (SugarKeyGrabber *grabber,
+									 guint            keycode,
+									 guint            state);
 
 G_END_DECLS
 

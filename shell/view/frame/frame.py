@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+import logging
 
 import gtk
 import gobject
@@ -77,38 +78,36 @@ class _MouseListener(object):
                   _FRAME_HIDING_DELAY, self._hide_frame_timeout_cb)
 
 class _KeyListener(object):
+    _HIDDEN = 1
+    _SHOWN_PRESSED = 2
+    _SHOWN_REPEAT = 3
+    _SHOWN_RELEASED = 4
+
     def __init__(self, frame):
         self._frame = frame
-        self._hide_sid = 0
+        self._state = _KeyListener._HIDDEN
 
     def key_press(self):
         if self._frame.mode != MODE_NONE and \
            self._frame.mode != MODE_KEYBOARD:
             return
 
-        if self._frame.visible:
-            self._hide_frame()
-        else:
-            self._show_frame()
+        if self._state == _KeyListener._HIDDEN:
+            self._frame.show()
+            self._frame.mode = MODE_KEYBOARD
+            self._state = _KeyListener._SHOWN_PRESSED
+        elif self._state == _KeyListener._SHOWN_PRESSED:
+            self._state = _KeyListener._SHOWN_REPEAT
+        elif self._state == _KeyListener._SHOWN_RELEASED:
+            self._frame.hide()
+            self._state = _KeyListener._HIDDEN
 
     def key_release(self):
-        self._hide_frame()
-
-    def _hide_frame_timeout_cb(self):
-        self._frame.hide()
-        return False
-
-    def _show_frame(self):
-        if self._hide_sid != 0:
-            gobject.source_remove(self._hide_sid)
-        self._frame.show()
-        self._frame.mode = MODE_KEYBOARD
-
-    def _hide_frame(self):
-        if self._hide_sid != 0:
-            gobject.source_remove(self._hide_sid)
-        self._hide_sid = gobject.timeout_add(
-                        100, self._hide_frame_timeout_cb)
+        if self._state == _KeyListener._SHOWN_PRESSED:
+            self._state = _KeyListener._SHOWN_RELEASED
+        elif self._state == _KeyListener._SHOWN_REPEAT:
+            self._frame.hide()
+            self._state = _KeyListener._HIDDEN
 
 class Frame(object):
     def __init__(self, shell):

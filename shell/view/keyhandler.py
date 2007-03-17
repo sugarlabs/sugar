@@ -1,8 +1,10 @@
 import os
 import signal
+import logging
 
 import dbus
 import gobject
+import gtk
 
 from sugar import env
 from hardware import hardwaremanager
@@ -46,6 +48,9 @@ class KeyHandler(object):
         self._shell = shell
         self._audio_manager = hardwaremanager.get_audio_manager()
         self._screen_rotation = 0
+        self._key_pressed = None
+        self._keycode_pressed = 0
+        self._keystate_pressed = 0
 
         self._key_grabber = KeyGrabber()
         self._key_grabber.connect('key-pressed',
@@ -166,16 +171,42 @@ class KeyHandler(object):
         # FIXME: finish alt+tab support
         pass
 
-    def _key_pressed_cb(self, grabber, key):
-        action = _actions_table[key]
-        method = getattr(self, 'handle_' + action)
-        method()
+    def _key_pressed_cb(self, grabber, keycode, state):
+        key = grabber.get_key(keycode, state)
+        if key:
+            self._key_pressed = key
+            self._keycode_pressed = keycode
+            self._keystate_pressed = state
+            gtk.gdk.keyboard_grab(gtk.gdk.get_default_root_window(),
+                                  owner_events=False, time=0L)
 
-    def _key_released_cb(self, grabber, key):
-        if key == '<shft><alt>F9':
-            self._shell.get_frame().notify_key_release()
-        elif key == '0x93':
-            self._shell.get_frame().notify_key_release()
+            action = _actions_table[key]
+            method = getattr(self, 'handle_' + action)
+            method()
+
+            return True
+
+        return False
+
+    def _key_released_cb(self, grabber, keycode, state):
+        if self._keycode_pressed == keycode:
+            self._keycode_pressed = 0
+
+        if self._keystate_pressed == state:
+            self._keystate_pressed = 0
+
+        if not self._keycode_pressed and not self._keystate_pressed and \
+           self._key_pressed:
+            gtk.gdk.keyboard_ungrab(time=0L)
+
+            if self._key_pressed == '<alt>f':
+                self._shell.get_frame().notify_key_release()
+            elif self._key_pressed == '0x93':
+                self._shell.get_frame().notify_key_release()
+
+            return True
+
+        return False
 
     def _toggle_console_visibility_cb(self):
         bus = dbus.SessionBus()
