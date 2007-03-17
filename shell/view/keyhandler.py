@@ -173,12 +173,18 @@ class KeyHandler(object):
 
     def _key_pressed_cb(self, grabber, keycode, state):
         key = grabber.get_key(keycode, state)
+        logging.debug('_key_pressed_cb: %i %i %s' % (keycode, state, key))
         if key:
             self._key_pressed = key
             self._keycode_pressed = keycode
             self._keystate_pressed = state
-            gtk.gdk.keyboard_grab(gtk.gdk.get_default_root_window(),
-                                  owner_events=False, time=0L)
+
+            """
+            status = gtk.gdk.keyboard_grab(gtk.gdk.get_default_root_window(),
+                                           owner_events=False, time=0L)
+            if status != gtk.gdk.GRAB_SUCCESS:
+                logging.error("KeyHandler._key_pressed_cb(): keyboard grab failed: " + status)
+            """
 
             action = _actions_table[key]
             method = getattr(self, 'handle_' + action)

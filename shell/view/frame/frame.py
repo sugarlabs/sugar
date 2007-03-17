@@ -92,6 +92,13 @@ class _KeyListener(object):
            self._frame.mode != MODE_KEYBOARD:
             return
 
+        if self._frame.visible:
+            self._frame.hide()
+        else:
+            self._frame.show()
+            self._frame.mode = MODE_KEYBOARD
+
+        """
         if self._state == _KeyListener._HIDDEN:
             self._frame.show()
             self._frame.mode = MODE_KEYBOARD
@@ -101,13 +108,17 @@ class _KeyListener(object):
         elif self._state == _KeyListener._SHOWN_RELEASED:
             self._frame.hide()
             self._state = _KeyListener._HIDDEN
+        """
 
     def key_release(self):
+        pass
+        """
         if self._state == _KeyListener._SHOWN_PRESSED:
             self._state = _KeyListener._SHOWN_RELEASED
         elif self._state == _KeyListener._SHOWN_REPEAT:
             self._frame.hide()
             self._state = _KeyListener._HIDDEN
+        """
 
 class Frame(object):
     def __init__(self, shell):
