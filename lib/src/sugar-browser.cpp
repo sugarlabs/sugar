@@ -44,6 +44,10 @@
 #include <nsIDOMHTMLImageElement.h>
 #include <nsIIOService.h>
 #include <nsComponentManagerUtils.h>
+#include <imgICache.h>
+#include <nsIProperties.h>
+#include <nsISupportsPrimitives.h>
+#include <nsIMIMEHeaderParam.h>
 
 enum {
 	PROP_0,
@@ -376,6 +380,85 @@ location_cb(GtkMozEmbed *embed)
 	update_navigation_properties(browser);
 }
 
+static nsresult
+NewURI(const char *uri, nsIURI **result)
+{
+    nsresult rv;
+
+    nsCOMPtr<nsIServiceManager> mgr;
+    NS_GetServiceManager (getter_AddRefs (mgr));
+    NS_ENSURE_TRUE(mgr, FALSE);
+
+    nsCOMPtr<nsIIOService> ioService;
+    rv = mgr->GetServiceByContractID ("@mozilla.org/network/io-service;1",
+                                      NS_GET_IID (nsIIOService),
+                                      getter_AddRefs(ioService));
+    NS_ENSURE_SUCCESS(rv, FALSE);
+
+    nsCString cSpec(uri);
+    return ioService->NewURI (cSpec, nsnull, nsnull, result);
+}
+
+static char *
+get_image_name_from_cache(const char *uri)
+{
+    nsresult rv;
+
+    g_print(uri);
+
+    nsCOMPtr<nsIServiceManager> mgr;
+    NS_GetServiceManager (getter_AddRefs (mgr));
+    NS_ENSURE_TRUE(mgr, NULL);
+
+    nsCOMPtr<imgICache> imgCache;
+    rv = mgr->GetServiceByContractID("@mozilla.org/image/cache;1",
+                                     NS_GET_IID (imgICache),
+                                     getter_AddRefs(imgCache));
+    NS_ENSURE_SUCCESS(rv, NULL);
+
+    nsCOMPtr<nsIURI> imgURI;
+    rv = NewURI(uri, getter_AddRefs(imgURI));
+    NS_ENSURE_SUCCESS(rv, NULL);
+
+    nsCOMPtr<nsIProperties> imgProperties;
+    imgCache->FindEntryProperties(imgURI, getter_AddRefs(imgProperties));
+    if (imgProperties) {
+        nsCOMPtr<nsISupportsCString> dispositionCString;
+        imgProperties->Get("content-disposition",
+                           NS_GET_IID(nsISupportsCString),
+                           getter_AddRefs(dispositionCString));
+        if (dispositionCString) {
+            nsCString fallbackCharset;
+
+            nsCString contentDisposition;
+            dispositionCString->GetData(contentDisposition);
+
+            nsCOMPtr<nsIMIMEHeaderParam> mimehdrpar =
+                do_GetService("@mozilla.org/network/mime-hdrparam;1");
+            NS_ENSURE_TRUE(mimehdrpar, NULL);
+
+            nsString fileName;
+            rv = mimehdrpar->GetParameter (contentDisposition, "filename",
+                                           fallbackCharset, PR_TRUE, nsnull,
+                                           fileName);
+
+            if (NS_FAILED(rv) || !fileName.Length()) {
+                rv = mimehdrpar->GetParameter (contentDisposition, "name",
+                                               fallbackCharset, PR_TRUE, nsnull,
+                                               fileName);
+            }
+
+            if (NS_SUCCEEDED(rv) && fileName.Length()) {
+                nsCString cFileName;
+                NS_UTF16ToCString (fileName, NS_CSTRING_ENCODING_UTF8, cFileName);
+                return g_strdup(cFileName.get());
+            }
+        }
+    }
+
+    return NULL;
+}
+
 static gboolean
 dom_mouse_click_cb(GtkMozEmbed *embed, nsIDOMMouseEvent *mouseEvent)
 {
@@ -421,6 +504,7 @@ dom_mouse_click_cb(GtkMozEmbed *embed, nsIDOMMouseEvent *mouseEvent)
             nsCString cImg;
             NS_UTF16ToCString (img, NS_CSTRING_ENCODING_UTF8, cImg);
             event->image_uri = g_strdup(cImg.get());
+            event->image_name = get_image_name_from_cache(event->image_uri);
         }
     }
 
@@ -492,25 +576,6 @@ sugar_browser_grab_focus(SugarBrowser *browser)
 	} else {
 		g_warning ("Need to realize the embed before grabbing focus!\n");
 	}
-}
-
-nsresult
-NewURI(const char *uri, nsIURI **result)
-{
-    nsresult rv;
-
-    nsCOMPtr<nsIServiceManager> mgr;
-    NS_GetServiceManager (getter_AddRefs (mgr));
-    NS_ENSURE_TRUE(mgr, FALSE);
-
-    nsCOMPtr<nsIIOService> ioService;
-    rv = mgr->GetServiceByContractID ("@mozilla.org/network/io-service;1",
-                                      NS_GET_IID (nsIIOService),
-                                      getter_AddRefs(ioService));
-    NS_ENSURE_SUCCESS(rv, FALSE);
-
-    nsCString cSpec(uri);
-    return ioService->NewURI (cSpec, nsnull, nsnull, result);
 }
 
 gboolean
@@ -626,9 +691,16 @@ sugar_browser_event_new(void)
 SugarBrowserEvent *
 sugar_browser_event_copy(SugarBrowserEvent *event)
 {
+    SugarBrowserEvent *copy;
+
     g_return_val_if_fail(event != NULL, NULL);
 
-    return (SugarBrowserEvent *)g_memdup(event, sizeof(SugarBrowserEvent));
+    copy = g_new0(SugarBrowserEvent, 1);
+    copy->button = event->button;
+    copy->image_uri = g_strdup(event->image_uri);
+    copy->image_name = g_strdup(event->image_name);
+
+    return copy;
 }
 
 void
@@ -638,6 +710,9 @@ sugar_browser_event_free(SugarBrowserEvent *event)
 
     if (event->image_uri) {
         g_free(event->image_uri);
+    }
+    if (event->image_name) {
+        g_free(event->image_name);
     }
 
     g_free(event);
