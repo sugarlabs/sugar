@@ -4,6 +4,7 @@ libsugarprivate_la_CPPFLAGS =				\
 	$(GECKO_CFLAGS)					\
 	$(NSPR_CFLAGS)					\
 	-I$(MOZILLA_INCLUDE_DIR)/dom			\
+	-I$(MOZILLA_INCLUDE_DIR)/docshell		\
 	-I$(MOZILLA_INCLUDE_DIR)/exthandler		\
 	-I$(MOZILLA_INCLUDE_DIR)/gtkembedmoz		\
 	-I$(MOZILLA_INCLUDE_DIR)/imglib2		\

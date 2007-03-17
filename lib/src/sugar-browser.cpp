@@ -34,6 +34,7 @@
 #include <nsIWebBrowserFocus.h>
 #include <nsIWebBrowserPersist.h>
 #include <nsIDOMWindow.h>
+#include <nsIDOMWindowUtils.h>
 #include <nsIDOMDocument.h>
 #include <nsIDOMMouseEvent.h>
 #include <nsIGenericFactory.h>
@@ -46,7 +47,9 @@
 #include <nsComponentManagerUtils.h>
 #include <imgICache.h>
 #include <nsIProperties.h>
+#include <nsIWebNavigation.h>
 #include <nsISupportsPrimitives.h>
+#include <nsIInterfaceRequestorUtils.h>
 #include <nsIMIMEHeaderParam.h>
 
 enum {
@@ -56,7 +59,8 @@ enum {
 	PROP_ADDRESS,
 	PROP_CAN_GO_BACK,
 	PROP_CAN_GO_FORWARD,
-	PROP_LOADING
+	PROP_LOADING,
+    PROP_DOCUMENT_METADATA
 };
 
 enum {
@@ -169,6 +173,140 @@ sugar_browser_shutdown(void)
 
 G_DEFINE_TYPE(SugarBrowser, sugar_browser, GTK_TYPE_MOZ_EMBED)
 
+static nsresult
+NewURI(const char *uri, nsIURI **result)
+{
+    nsresult rv;
+
+    nsCOMPtr<nsIServiceManager> mgr;
+    NS_GetServiceManager (getter_AddRefs (mgr));
+    NS_ENSURE_TRUE(mgr, FALSE);
+
+    nsCOMPtr<nsIIOService> ioService;
+    rv = mgr->GetServiceByContractID ("@mozilla.org/network/io-service;1",
+                                      NS_GET_IID (nsIIOService),
+                                      getter_AddRefs(ioService));
+    NS_ENSURE_SUCCESS(rv, FALSE);
+
+    nsCString cSpec(uri);
+    return ioService->NewURI (cSpec, nsnull, nsnull, result);
+}
+
+static nsresult
+FilenameFromContentDisposition(nsCString contentDisposition, nsCString &fileName)
+{
+    nsresult rv;
+
+    nsCString fallbackCharset;
+
+    nsCOMPtr<nsIMIMEHeaderParam> mimehdrpar =
+        do_GetService("@mozilla.org/network/mime-hdrparam;1");
+    NS_ENSURE_TRUE(mimehdrpar, NS_ERROR_FAILURE);
+
+    nsString aFileName;
+    rv = mimehdrpar->GetParameter (contentDisposition, "filename",
+                                   fallbackCharset, PR_TRUE, nsnull,
+                                   aFileName);
+
+    if (NS_FAILED(rv) || !fileName.Length()) {
+        rv = mimehdrpar->GetParameter (contentDisposition, "name",
+                                       fallbackCharset, PR_TRUE, nsnull,
+                                       aFileName);
+    }
+
+    if (NS_SUCCEEDED(rv) && fileName.Length()) {
+        NS_UTF16ToCString (aFileName, NS_CSTRING_ENCODING_UTF8, fileName);
+    }
+
+    return NS_OK;
+}
+
+static nsresult
+ImageNameFromCache(nsIURI *imgURI, nsCString &imgName)
+{
+    nsresult rv;
+
+    nsCOMPtr<nsIServiceManager> mgr;
+    NS_GetServiceManager (getter_AddRefs (mgr));
+    NS_ENSURE_TRUE(mgr, NS_ERROR_FAILURE);
+
+    nsCOMPtr<imgICache> imgCache;
+    rv = mgr->GetServiceByContractID("@mozilla.org/image/cache;1",
+                                     NS_GET_IID (imgICache),
+                                     getter_AddRefs(imgCache));
+    NS_ENSURE_SUCCESS(rv, NS_ERROR_FAILURE);
+
+    nsCOMPtr<nsIProperties> imgProperties;
+    imgCache->FindEntryProperties(imgURI, getter_AddRefs(imgProperties));
+    if (imgProperties) {
+        nsCOMPtr<nsISupportsCString> dispositionCString;
+        imgProperties->Get("content-disposition",
+                           NS_GET_IID(nsISupportsCString),
+                           getter_AddRefs(dispositionCString));
+        if (dispositionCString) {
+            nsCString contentDisposition;
+            dispositionCString->GetData(contentDisposition);
+            FilenameFromContentDisposition(contentDisposition, imgName);
+        }
+    }
+
+    return NS_OK;
+}
+
+static SugarBrowserMetadata *
+sugar_browser_get_document_metadata(SugarBrowser *browser)
+{
+    SugarBrowserMetadata *metadata = sugar_browser_metadata_new();
+
+#ifdef HAVE_NS_WEB_BROWSER
+	nsCOMPtr<nsIWebBrowser> webBrowser;
+	gtk_moz_embed_get_nsIWebBrowser(GTK_MOZ_EMBED(browser),
+									getter_AddRefs(webBrowser));
+	NS_ENSURE_TRUE(webBrowser, metadata);
+
+    nsCOMPtr<nsIDOMWindow> DOMWindow;
+    webBrowser->GetContentDOMWindow(getter_AddRefs(DOMWindow));
+	NS_ENSURE_TRUE(DOMWindow, metadata);
+
+    nsCOMPtr<nsIDOMWindowUtils> DOMWindowUtils(do_GetInterface(DOMWindow));
+	NS_ENSURE_TRUE(DOMWindowUtils, metadata);
+
+    const PRUnichar contentDispositionLiteral[] =
+        {'c', 'o', 'n', 't', 'e', 'n', 't', '-', 'd', 'i', 's', 'p',
+         'o', 's', 'i', 't', 'i', 'o', 'n', '\0'};
+
+    nsString contentDisposition;
+    DOMWindowUtils->GetDocumentMetadata(nsString(contentDispositionLiteral),
+                                        contentDisposition);
+
+    nsCString cContentDisposition;
+    NS_UTF16ToCString (contentDisposition, NS_CSTRING_ENCODING_UTF8,
+                       cContentDisposition);
+
+    nsCString fileName;
+    FilenameFromContentDisposition(cContentDisposition, fileName);
+
+    if (!fileName.Length()) {
+        nsCOMPtr<nsIWebNavigation> webNav(do_QueryInterface(webBrowser));
+        if (webNav) {
+            nsCOMPtr<nsIURI> docURI;
+            webNav->GetCurrentURI (getter_AddRefs(docURI));
+
+            nsCOMPtr<nsIURL> url(do_QueryInterface(docURI));
+            if (url) {
+                url->GetFileName(fileName);
+            }
+        }
+    }
+
+    if (fileName.Length()) {
+        metadata->filename = g_strdup(fileName.get());
+    }
+#endif
+
+    return metadata;
+}
+
 static void
 sugar_browser_get_property(GObject         *object,
 						   guint            prop_id,
@@ -195,6 +333,11 @@ sugar_browser_get_property(GObject         *object,
 		break;
 	    case PROP_LOADING:
 			g_value_set_boolean(value, browser->loading);
+		break;
+	    case PROP_DOCUMENT_METADATA:
+            SugarBrowserMetadata *metadata;
+            metadata = sugar_browser_get_document_metadata(browser);
+			g_value_set_boxed(value, metadata);
 		break;
 		default:
 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -261,6 +404,14 @@ sugar_browser_class_init(SugarBrowserClass *browser_class)
 														   "Loading",
 														   FALSE,
 														   G_PARAM_READABLE));
+
+    g_object_class_install_property(gobject_class, PROP_DOCUMENT_METADATA,
+                                    g_param_spec_boxed("document-metadata",
+                                                       "Document Metadata",
+                                                       "Document metadata",
+                                                       SUGAR_TYPE_BROWSER_METADATA,
+                                                       G_PARAM_READABLE));
+
 }
 
 SugarBrowser *
@@ -378,76 +529,6 @@ location_cb(GtkMozEmbed *embed)
 	g_object_notify (G_OBJECT(browser), "address");
 
 	update_navigation_properties(browser);
-}
-
-static nsresult
-NewURI(const char *uri, nsIURI **result)
-{
-    nsresult rv;
-
-    nsCOMPtr<nsIServiceManager> mgr;
-    NS_GetServiceManager (getter_AddRefs (mgr));
-    NS_ENSURE_TRUE(mgr, FALSE);
-
-    nsCOMPtr<nsIIOService> ioService;
-    rv = mgr->GetServiceByContractID ("@mozilla.org/network/io-service;1",
-                                      NS_GET_IID (nsIIOService),
-                                      getter_AddRefs(ioService));
-    NS_ENSURE_SUCCESS(rv, FALSE);
-
-    nsCString cSpec(uri);
-    return ioService->NewURI (cSpec, nsnull, nsnull, result);
-}
-
-static nsresult
-ImageNameFromCache(nsIURI *imgURI, nsCString &imgName)
-{
-    nsresult rv;
-
-    nsCOMPtr<nsIServiceManager> mgr;
-    NS_GetServiceManager (getter_AddRefs (mgr));
-    NS_ENSURE_TRUE(mgr, NS_ERROR_FAILURE);
-
-    nsCOMPtr<imgICache> imgCache;
-    rv = mgr->GetServiceByContractID("@mozilla.org/image/cache;1",
-                                     NS_GET_IID (imgICache),
-                                     getter_AddRefs(imgCache));
-    NS_ENSURE_SUCCESS(rv, NS_ERROR_FAILURE);
-
-    nsCOMPtr<nsIProperties> imgProperties;
-    imgCache->FindEntryProperties(imgURI, getter_AddRefs(imgProperties));
-    if (imgProperties) {
-        nsCOMPtr<nsISupportsCString> dispositionCString;
-        imgProperties->Get("content-disposition",
-                           NS_GET_IID(nsISupportsCString),
-                           getter_AddRefs(dispositionCString));
-        if (dispositionCString) {
-            nsCString fallbackCharset;
-
-            nsCString contentDisposition;
-            dispositionCString->GetData(contentDisposition);
-
-            nsCOMPtr<nsIMIMEHeaderParam> mimehdrpar =
-                do_GetService("@mozilla.org/network/mime-hdrparam;1");
-            NS_ENSURE_TRUE(mimehdrpar, NS_ERROR_FAILURE);
-
-            nsString fileName;
-            rv = mimehdrpar->GetParameter (contentDisposition, "filename",
-                                           fallbackCharset, PR_TRUE, nsnull,
-                                           fileName);
-
-            if (NS_FAILED(rv) || !fileName.Length()) {
-                rv = mimehdrpar->GetParameter (contentDisposition, "name",
-                                               fallbackCharset, PR_TRUE, nsnull,
-                                               fileName);
-            }
-
-            if (NS_SUCCEEDED(rv) && fileName.Length()) {
-                nsCString cFileName;
-                NS_UTF16ToCString (fileName, NS_CSTRING_ENCODING_UTF8, imgName);
-            }
-        }
-    }
 }
 
 static char *
@@ -730,4 +811,53 @@ sugar_browser_event_free(SugarBrowserEvent *event)
     }
 
     g_free(event);
+}
+
+GType
+sugar_browser_metadata_get_type(void)
+{
+    static GType type = 0;
+
+    if (G_UNLIKELY(type == 0)) {
+        type = g_boxed_type_register_static("SugarBrowserMetadata",
+                            (GBoxedCopyFunc)sugar_browser_metadata_copy,
+                            (GBoxedFreeFunc)sugar_browser_metadata_free);
+    }
+
+    return type;
+}
+
+SugarBrowserMetadata *
+sugar_browser_metadata_new(void)
+{
+    SugarBrowserMetadata *metadata;
+
+    metadata = g_new0(SugarBrowserMetadata, 1);
+
+    return metadata;
+}
+
+SugarBrowserMetadata *
+sugar_browser_metadata_copy(SugarBrowserMetadata *metadata)
+{
+    SugarBrowserMetadata *copy;
+
+    g_return_val_if_fail(metadata != NULL, NULL);
+
+    copy = g_new0(SugarBrowserMetadata, 1);
+    copy->filename = g_strdup(metadata->filename);
+
+    return copy;
+}
+
+void
+sugar_browser_metadata_free(SugarBrowserMetadata *metadata)
+{
+    g_return_if_fail(metadata != NULL);
+
+    if (metadata->filename) {
+        g_free(metadata->filename);
+    }
+
+    g_free(metadata);
 }

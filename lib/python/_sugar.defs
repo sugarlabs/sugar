@@ -9,6 +9,14 @@
   (release-func "sugar_browser_event_free")
 )
 
+(define-boxed SugarBrowserMetadata
+  (in-module "Sugar")
+  (c-name "SugarBrowserMetadata")
+  (gtype-id "SUGAR_TYPE_BROWSER_METADATA")
+  (copy-func "sugar_browser_metadata_copy")
+  (release-func "sugar_browser_metadata_free")
+)
+
 (define-object AddressEntry
   (in-module "Sugar")
   (parent "GtkEntry")
