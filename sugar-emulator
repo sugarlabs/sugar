@@ -59,7 +59,8 @@ def _start_xephyr(width, height, dpi):
     cmd.append('-ac') 
 
     if width > 0 and height > 0:
-        cmd.append('-screen %dx%d' % (width, height))
+        cmd.append('-screen')
+        cmd.append('%dx%d' % (width, height))
     else:
         cmd.append('-fullscreen')
 
