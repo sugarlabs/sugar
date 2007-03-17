@@ -399,26 +399,20 @@ NewURI(const char *uri, nsIURI **result)
     return ioService->NewURI (cSpec, nsnull, nsnull, result);
 }
 
-static char *
-get_image_name_from_cache(const char *uri)
+static nsresult
+ImageNameFromCache(nsIURI *imgURI, nsCString &imgName)
 {
     nsresult rv;
 
-    g_print(uri);
-
     nsCOMPtr<nsIServiceManager> mgr;
     NS_GetServiceManager (getter_AddRefs (mgr));
-    NS_ENSURE_TRUE(mgr, NULL);
+    NS_ENSURE_TRUE(mgr, NS_ERROR_FAILURE);
 
     nsCOMPtr<imgICache> imgCache;
     rv = mgr->GetServiceByContractID("@mozilla.org/image/cache;1",
                                      NS_GET_IID (imgICache),
                                      getter_AddRefs(imgCache));
-    NS_ENSURE_SUCCESS(rv, NULL);
-
-    nsCOMPtr<nsIURI> imgURI;
-    rv = NewURI(uri, getter_AddRefs(imgURI));
-    NS_ENSURE_SUCCESS(rv, NULL);
+    NS_ENSURE_SUCCESS(rv, NS_ERROR_FAILURE);
 
     nsCOMPtr<nsIProperties> imgProperties;
     imgCache->FindEntryProperties(imgURI, getter_AddRefs(imgProperties));
@@ -435,7 +429,7 @@ get_image_name_from_cache(const char *uri)
 
             nsCOMPtr<nsIMIMEHeaderParam> mimehdrpar =
                 do_GetService("@mozilla.org/network/mime-hdrparam;1");
-            NS_ENSURE_TRUE(mimehdrpar, NULL);
+            NS_ENSURE_TRUE(mimehdrpar, NS_ERROR_FAILURE);
 
             nsString fileName;
             rv = mimehdrpar->GetParameter (contentDisposition, "filename",
@@ -450,13 +444,33 @@ get_image_name_from_cache(const char *uri)
 
             if (NS_SUCCEEDED(rv) && fileName.Length()) {
                 nsCString cFileName;
-                NS_UTF16ToCString (fileName, NS_CSTRING_ENCODING_UTF8, cFileName);
-                return g_strdup(cFileName.get());
+                NS_UTF16ToCString (fileName, NS_CSTRING_ENCODING_UTF8, imgName);
             }
         }
     }
+}
 
-    return NULL;
+static char *
+get_image_name(const char *uri)
+{
+    nsresult rv;
+
+    nsCString imgName;
+
+    nsCOMPtr<nsIURI> imgURI;
+    rv = NewURI(uri, getter_AddRefs(imgURI));
+    NS_ENSURE_SUCCESS(rv, NULL);
+
+    ImageNameFromCache(imgURI, imgName);
+
+    if (!imgName.Length()) {
+        nsCOMPtr<nsIURL> url(do_QueryInterface(imgURI));
+        if (url) {
+            url->GetFileName(imgName);
+        }
+    }
+
+    return imgName.Length() ? g_strdup(imgName.get()) : NULL;
 }
 
 static gboolean
@@ -504,7 +518,7 @@ dom_mouse_click_cb(GtkMozEmbed *embed, nsIDOMMouseEvent *mouseEvent)
             nsCString cImg;
             NS_UTF16ToCString (img, NS_CSTRING_ENCODING_UTF8, cImg);
             event->image_uri = g_strdup(cImg.get());
-            event->image_name = get_image_name_from_cache(event->image_uri);
+            event->image_name = get_image_name(event->image_uri);
         }
     }
 
