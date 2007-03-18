@@ -53,10 +53,7 @@ def get_profile_path(path=None):
         return base
 
 def get_user_activities_path():
-    path = os.path.expanduser('~/Activities')
-    if not os.path.isdir(path):
-        os.mkdir(path)
-    return path
+    return os.path.expanduser('~/Activities')
 
 def get_bin_path(path=None):
     return _get_prefix_path('bin', path)

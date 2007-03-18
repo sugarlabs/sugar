@@ -28,6 +28,8 @@ proxy_obj = bus.get_object(DBUS_SERVICE, DBUS_PATH)
 dbus_service = dbus.Interface(proxy_obj, DBUS_SERVICE)
 
 bundle_dir = env.get_user_activities_path()
+if not os.path.isdir(bundle_dir):
+    os.mkdir(bundle_dir)
 
 zip_file = zipfile.ZipFile(sys.argv[1])
 file_names = zip_file.namelist()

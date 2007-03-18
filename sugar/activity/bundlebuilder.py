@@ -92,9 +92,6 @@ def _get_bundle_dir():
 def _get_install_dir(prefix):
     return os.path.join(prefix, 'share/activities')
 
-def _get_bundle_path():
-    return os.path.join(env.get_user_activities_path(), _get_bundle_dir())
-
 def _get_package_name():
     bundle = Bundle(_get_source_path())
     zipname = '%s-%d.xo' % (bundle.get_name(), bundle.get_activity_version())
@@ -120,7 +117,10 @@ setup.py help                - print this message \n\
 '
 
 def cmd_dev():
-    bundle_path = os.path.join(env.get_user_activities_path(), _get_bundle_dir())
+    bundle_path = env.get_user_activities_path()
+    if not os.path.isdir(bundle_path):
+        os.mkdir(bundle_path)
+    bundle_path = os.path.join(bundle_path, _get_bundle_dir())
     try:
         os.symlink(_get_source_path(), bundle_path)
     except OSError:
