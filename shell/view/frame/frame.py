@@ -30,6 +30,7 @@ from view.frame.framepopupcontext import FramePopupContext
 from model.ShellModel import ShellModel
 from sugar.graphics import animator
 from sugar.graphics import units
+from sugar.clipboard import clipboardservice
 
 MODE_NONE     = 0
 MODE_MOUSE    = 1
@@ -155,6 +156,9 @@ class Frame(object):
                                   
         screen = gtk.gdk.screen_get_default()
         screen.connect('size-changed', self._size_changed_cb)
+
+        cb_service = clipboardservice.get_instance()
+        cb_service.connect_after('object-added', self._clipboard_object_added_cb)
 
         self._key_listener = _KeyListener(self)
         self._mouse_listener = _MouseListener(self)
@@ -297,7 +301,12 @@ class Frame(object):
 
     def _size_changed_cb(self, screen):
        self._update_position()
-               
+
+    def _clipboard_object_added_cb(self, cb_service, object_id, name):
+        if not self.visible:
+            self.show()
+            gobject.timeout_add(2000, lambda: self.hide())
+
     def _popup_context_activated_cb(self, popup_context):
         self._mouse_listener.mouse_enter()
 
