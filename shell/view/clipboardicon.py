@@ -114,7 +114,14 @@ class ClipboardIcon(CanvasIcon):
         formats = obj['FORMATS']
         if len(formats) > 0:
             path = cb_service.get_object_data(self._object_id, formats[0])
-            if os.path.exists(path):
+
+            # FIXME: would be better to check for format.onDisk
+            try:
+                path_exists = os.path.exists(path)
+            except TypeError:
+                path_exists = False
+
+            if path_exists:
                 activityfactory.create_with_uri(self._activity, path)
             else:
                 logging.debug("Clipboard item file path %s didn't exist" % path)
