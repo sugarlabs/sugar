@@ -11,6 +11,7 @@ libsugarprivate_la_CPPFLAGS =				\
 	-I$(MOZILLA_INCLUDE_DIR)/mimetype   		\
 	-I$(MOZILLA_INCLUDE_DIR)/necko			\
 	-I$(MOZILLA_INCLUDE_DIR)/pref			\
+	-I$(MOZILLA_INCLUDE_DIR)/shistory		\
 	-I$(MOZILLA_INCLUDE_DIR)/uriloader		\
 	-I$(MOZILLA_INCLUDE_DIR)/webbrwsr		\
 	-I$(MOZILLA_INCLUDE_DIR)/webbrowserpersist	\

@@ -51,6 +51,10 @@
 #include <nsISupportsPrimitives.h>
 #include <nsIInterfaceRequestorUtils.h>
 #include <nsIMIMEHeaderParam.h>
+#include <nsISHistory.h>
+#include <nsIHistoryEntry.h>
+#include <nsISHEntry.h>
+#include <nsIInputStream.h>
 
 enum {
 	PROP_0,
@@ -673,6 +677,39 @@ sugar_browser_grab_focus(SugarBrowser *browser)
 	}
 }
 
+
+static nsresult
+GetPostData(SugarBrowser *browser, nsIInputStream **postData)
+{
+#ifdef HAVE_NS_WEB_BROWSER
+	nsCOMPtr<nsIWebBrowser> webBrowser;
+	gtk_moz_embed_get_nsIWebBrowser(GTK_MOZ_EMBED(browser),
+									getter_AddRefs(webBrowser));
+	NS_ENSURE_TRUE(webBrowser, NS_ERROR_FAILURE);
+
+    nsCOMPtr<nsIWebNavigation> webNav(do_QueryInterface(webBrowser));
+	NS_ENSURE_TRUE(webNav, NS_ERROR_FAILURE);
+
+    PRInt32 sindex;
+
+    nsCOMPtr<nsISHistory> sessionHistory;
+    webNav->GetSessionHistory(getter_AddRefs(sessionHistory));
+	NS_ENSURE_TRUE(sessionHistory, NS_ERROR_FAILURE);
+
+    nsCOMPtr<nsIHistoryEntry> entry;
+    sessionHistory->GetIndex(&sindex);
+    sessionHistory->GetEntryAtIndex(sindex, PR_FALSE, getter_AddRefs(entry));
+
+    nsCOMPtr<nsISHEntry> shEntry(do_QueryInterface(entry));
+    if (shEntry) {
+        shEntry->GetPostData(postData);
+    }
+
+    return NS_OK;
+#endif
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
 gboolean
 sugar_browser_save_uri(SugarBrowser *browser,
                        const char   *uri,
@@ -698,7 +735,10 @@ sugar_browser_save_uri(SugarBrowser *browser,
     nsCOMPtr<nsIWebBrowserPersist> webPersist = do_QueryInterface (webBrowser);
     NS_ENSURE_TRUE(webPersist, FALSE);
 
-    rv = webPersist->SaveURI(sourceURI, nsnull, nsnull, nsnull, nsnull, destFile);
+    nsCOMPtr<nsIInputStream> postData;
+    GetPostData(browser, getter_AddRefs(postData));
+
+    rv = webPersist->SaveURI(sourceURI, nsnull, nsnull, postData, nsnull, destFile);
     NS_ENSURE_SUCCESS(rv, FALSE);
 
     return TRUE;
