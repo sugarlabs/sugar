@@ -21,6 +21,7 @@ import os
 import gtk
 import hippo
 
+import _sugar
 from sugar.presence import PresenceService
 from sugar.activity.activityservice import ActivityService
 from sugar.graphics.window import Window
@@ -30,6 +31,11 @@ class Activity(Window, gtk.Container):
     __gtype_name__ = 'SugarActivity'
     def __init__(self, handle):
         Window.__init__(self)
+
+        # FIXME: This will work only for activities in python. We need a xsetting.
+        display = gtk.gdk.display_manager_get().get_default_display()
+        screen = display.get_default_screen()
+        screen.set_resolution(_sugar.get_screen_dpi())
 
         self.connect('destroy', self._destroy_cb)
 
