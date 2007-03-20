@@ -130,7 +130,7 @@ class ClipboardBox(hippo.CanvasBox):
         position = self.get_children().index(icon)
         self.remove(icon)
         
-        if icon.props.selected:
+        if icon.props.selected and self.get_children():
             self._set_icon_selected(self.get_children()[position])
 
         del self._icons[object_id]
