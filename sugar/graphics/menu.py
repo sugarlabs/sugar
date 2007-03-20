@@ -42,11 +42,13 @@ class MenuItem(hippo.CanvasBox):
         
         self._action_id = action_id
         self.props.spacing = units.points_to_pixels(2)
+        self.props.padding = units.points_to_pixels(2)
 
         if icon_name:
             icon = CanvasIcon(icon_name=icon_name,
                               scale=units.SMALL_ICON_SCALE,
-                              box_width=units.microgrid_to_pixels(2))
+                              box_width=units.microgrid_to_pixels(2),
+                              box_height=units.microgrid_to_pixels(2))
             if icon_color:
                 icon.props.xo_color = icon_color
             self.append(icon)
@@ -93,14 +95,13 @@ class Menu(Popup):
         self.props.background_color = color.MENU_BACKGROUND.get_int()
         self.props.border_color = color.MENU_BORDER.get_int()
         self.props.border = units.points_to_pixels(1) 
-        self.props.padding = units.points_to_pixels(3)
-        self.props.spacing = units.points_to_pixels(3)
 
         self._title_item = None
         if title:
             self._title_item = hippo.CanvasText(text=title)
             self._title_item.props.color = color.LABEL_TEXT.get_int()
             self._title_item.props.font_desc = font.DEFAULT.get_pango_desc()
+            self._title_item.props.padding = units.points_to_pixels(2)
             self.append(self._title_item)
             self.add_separator()
 
@@ -113,9 +114,13 @@ class Menu(Popup):
 
     def add_separator(self):
         box = hippo.CanvasBox()
-        box.props.background_color = color.MENU_SEPARATOR.get_int()
-        box.props.box_height = units.points_to_pixels(1)
+        box.props.padding = units.points_to_pixels(2)
         self.append(box)
+        
+        separator = hippo.CanvasBox()
+        separator.props.background_color = color.MENU_SEPARATOR.get_int()
+        separator.props.box_height = units.points_to_pixels(1)
+        box.append(separator)
 
     def _item_button_press_event_cb(self, menu_item, event):
         self.emit('action', menu_item)
