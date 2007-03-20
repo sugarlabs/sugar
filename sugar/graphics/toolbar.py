@@ -10,5 +10,5 @@ class Toolbar(hippo.CanvasBox):
         hippo.CanvasBox.__init__(self, orientation=orientation,
                                  background_color=0x414141ff,
                                  box_height=units.grid_to_pixels(1),
-                                 spacing=units.points_to_pixels(5)
-)
+                                 padding_left=units.grid_to_pixels(1),
+                                 padding_right=units.grid_to_pixels(1))
