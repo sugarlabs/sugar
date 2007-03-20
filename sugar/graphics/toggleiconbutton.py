@@ -60,7 +60,7 @@ class ToggleIconButton(IconButton, hippo.CanvasItem):
 
     def do_button_press_event(self, event):
         self.props.toggled = not self._toggled
-        return True
+        return IconButton.do_button_press_event(self, event)
 
     def prelight(self, enter):
         if enter:
