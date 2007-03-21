@@ -456,9 +456,10 @@ sugar_address_entry_expose(GtkWidget      *widget,
                           0, 0, area_width, area_height);
 */
 
-		if (address_entry->progress != 0.0 && address_entry->progress != 1.0) {
+		if (address_entry->progress != 0.0 && address_entry->progress != 1.0 &&
+		    !GTK_WIDGET_HAS_FOCUS(entry)) {
 			int bar_width = area_width * address_entry->progress;
-			float radius = 5.0;
+			float radius = area_height / 2;
 
 			cr = gdk_cairo_create(entry->text_area);
 	        cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
