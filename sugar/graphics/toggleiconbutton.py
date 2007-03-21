@@ -63,7 +63,7 @@ class ToggleIconButton(IconButton, hippo.CanvasItem):
         return IconButton.do_button_press_event(self, event)
 
     def prelight(self, enter):
-        if enter:
+        if enter and not self._toggled:
             IconButton.prelight(self, enter)
         else:
             self.props.background_color = self._get_bg_color()
