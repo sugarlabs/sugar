@@ -100,7 +100,9 @@ class ClipboardIcon(CanvasIcon):
             # FIXME: restrict based on file type rather than activity once
             # we have a better type registry
             # restrict auto-open to a specific set of activities
-            allowed = ["org.laptop.AbiWordActivity", "org.laptop.sugar.Xbook"]
+            allowed = ["org.laptop.AbiWordActivity",
+                       "org.laptop.sugar.Xbook",
+                       "org.vpri.EtoysActivity"]
             if activity in allowed:
                 self._open_file()
 
