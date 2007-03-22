@@ -146,6 +146,17 @@ class RtfFileType(TextFileType):
         return mime_type in cls._types
     matches_mime_type = classmethod(matches_mime_type)
 
+class AbiwordFileType(TextFileType):
+    
+    _types = set(['application/x-abiword'])
+    
+    def get_name(self):
+        return _('Abiword file')
+        
+    def matches_mime_type(cls, mime_type):
+        return mime_type in cls._types
+    matches_mime_type = classmethod(matches_mime_type)
+
 class SqueakProjectFileType(FileType):
     
     _types = set(['application/x-squeak-project'])
@@ -212,6 +223,7 @@ class TypeRegistry:
         self._types.append(OOTextFileType)
         self._types.append(UriFileType)
         self._types.append(ImageFileType)
+        self._types.append(AbiwordFileType)
         self._types.append(TextFileType)
         self._types.append(SqueakProjectFileType)
     
