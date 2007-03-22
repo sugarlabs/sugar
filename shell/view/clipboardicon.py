@@ -124,7 +124,8 @@ class ClipboardIcon(CanvasIcon):
                 path_exists = False
 
             if path_exists:
-                activityfactory.create_with_uri(self._activity, path)
+                uri = 'file://' + path
+                activityfactory.create_with_uri(self._activity, uri)
             else:
                 logging.debug("Clipboard item file path %s didn't exist" % path)
                         
