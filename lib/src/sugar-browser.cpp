@@ -135,6 +135,8 @@ sugar_browser_startup(const char *profile_path, const char *profile_name)
 	prefService->GetBranch ("", getter_AddRefs(pref));
 	NS_ENSURE_TRUE(pref, FALSE);
 
+    pref->SetCharPref ("helpers.private_mime_types_file", SHARE_DIR"/mime.types");
+
 	rv = prefService->ReadUserPrefs (nsnull);
 	if (NS_FAILED(rv)) {
 		g_warning ("failed to read user preferences, error: %x", rv);

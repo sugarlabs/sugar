@@ -146,6 +146,26 @@ class RtfFileType(TextFileType):
         return mime_type in cls._types
     matches_mime_type = classmethod(matches_mime_type)
 
+class SqueakProjectFileType(FileType):
+    
+    _types = set(['application/x-squeak-project'])
+    
+    def get_name(self):
+        return _('Squeak project')
+
+    def get_icon(self):
+        return 'theme:object-squeak-project'
+
+    def get_preview(self):
+        return ''
+
+    def get_activity(self):
+        return 'org.vpri.EtoysActivity'
+        
+    def matches_mime_type(cls, mime_type):
+        return mime_type in cls._types
+    matches_mime_type = classmethod(matches_mime_type)
+
 class OOTextFileType(FileType):
     
     _types = set(['application/vnd.oasis.opendocument.text'])
@@ -193,6 +213,7 @@ class TypeRegistry:
         self._types.append(UriFileType)
         self._types.append(ImageFileType)
         self._types.append(TextFileType)
+        self._types.append(SqueakProjectFileType)
     
     def get_type(self, formats):
         for file_type in self._types:
