@@ -5,3 +5,6 @@ bin_SCRIPTS = 			\
 EXTRA_DIST =                    \
 	$(bin_SCRIPTS)		\
 	sugar.in
+
+DISTCLEANFILES =                \
+	sugar
