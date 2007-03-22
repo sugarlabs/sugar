@@ -55,3 +55,4 @@ lib/src/stamp-sugar-marshal.c
 lib/src/stamp-sugar-marshal.h
 services/clipboard/org.laptop.Clipboard.service
 services/console/org.laptop.sugar.Console.service
+bin/sugar

@@ -1,4 +1,4 @@
-SUBDIRS = lib po shell sugar services tools
+SUBDIRS = bin data lib po shell sugar services
 
 ACLOCAL_AMFLAGS = -I m4
 

@@ -90,4 +90,6 @@ else:
 
 _start_xephyr(width, height, min(_sugar.get_screen_dpi(), 96))
 
+os.environ['GTK2_RC_FILES'] = env.get_data_path('gtkrc')
+
 os.execlp('dbus-launch', 'dbus-launch', '--exit-with-session', program)

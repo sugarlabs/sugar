@@ -63,3 +63,6 @@ def get_service_path(name):
 
 def get_shell_path(path=None):
     return _get_prefix_path('share/sugar/shell', path)
+
+def get_data_path(path=None):
+    return _get_prefix_path('share/sugar', path)

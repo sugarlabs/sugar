@@ -112,8 +112,12 @@ AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
 AM_GLIB_GNU_GETTEXT
 
+AC_CONFIG_FILES([bin/sugar], [chmod +x sugar])
+
 AC_OUTPUT([
 Makefile
+bin/Makefile
+data/Makefile
 lib/Makefile
 lib/data/Makefile
 lib/src/Makefile
@@ -158,6 +162,4 @@ sugar/p2p/Makefile
 sugar/presence/Makefile
 sugar/datastore/Makefile
 po/Makefile.in
-tools/Makefile
-tools/sugar-setup-activity
 ])
