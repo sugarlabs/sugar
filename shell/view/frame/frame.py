@@ -220,8 +220,8 @@ class Frame(object):
         box = ZoomBox(self._shell, self._popup_context)
         root.append(box)
 
-        box = OverlayBox(self._shell)
-        root.append(box, hippo.PACK_END)
+        #box = OverlayBox(self._shell)
+        #root.append(box, hippo.PACK_END)
 
         return panel
 
