@@ -26,7 +26,7 @@ class Bundle:
 
         linfo_path = self._get_linfo_path()
         if linfo_path and os.path.isfile(linfo_path):
-            self._parse_locale_info(linfo_path)
+            self._parse_linfo(linfo_path)
 
     def _parse_info(self, info_path):
         cp = ConfigParser()
@@ -74,7 +74,9 @@ class Bundle:
         cp = ConfigParser()
         cp.read([linfo_path])
 
-        if cp.has_option('Activity', 'name'):
+        section = 'Activity'
+
+        if cp.has_option(section, 'name'):
             self._name = cp.get(section, 'name')
 
     def _get_linfo_path(self):
@@ -82,7 +84,7 @@ class Bundle:
         lang = locale.getdefaultlocale()[0]
         if lang != None:
             path = os.path.join(self.get_locale_path(), lang)
-            if os.path.isdir(path):
+            if not os.path.isdir(path):
                 path = os.path.join(self._path, 'locale', lang[:2])
                 if not os.path.isdir(path):
                     path = None
