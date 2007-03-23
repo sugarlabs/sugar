@@ -144,6 +144,7 @@ def _get_file_list(manifest):
         return _DefaultFileList()
 
 def cmd_dist(manifest):
+    cmd_genmo(manifest)
     file_list = _get_file_list(manifest)
 
     zipname = _get_package_name()
@@ -152,6 +153,17 @@ def cmd_dist(manifest):
     for filename in file_list:
         arcname = os.path.join(_get_bundle_name() + '.activity', filename)
         bundle_zip.write(filename, arcname)
+
+    for langdir in os.listdir('locale'):
+        if os.path.isdir(os.path.join('locale', langdir)):
+            for filename in os.listdir(os.path.join('locale', langdir, 'LC_MESSAGES')):
+                if filename.endswith('.mo'):
+                    arcname = os.path.join(_get_bundle_name() + '.activity',
+                                           'locale', langdir, 'LC_MESSAGES',
+                                           filename)
+                    bundle_zip.write(
+                        os.path.join('locale', langdir, 'LC_MESSAGES', filename),
+                        arcname)
 
     bundle_zip.close()
 
