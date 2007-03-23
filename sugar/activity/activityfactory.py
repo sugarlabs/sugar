@@ -20,7 +20,6 @@ import logging
 import dbus
 import gobject
 import gtk
-import gettext
 
 from sugar.presence import PresenceService
 from sugar.activity import bundleregistry
@@ -69,9 +68,6 @@ class ActivityCreationHandler(gobject.GObject):
 
         registry = bundleregistry.get_registry()
         bundle = registry.get_bundle(service_name)
-
-        gettext.bindtextdomain(self._service_name, bundle.get_locale_path())
-        gettext.textdomain(self._service_name)
 
         bus = dbus.SessionBus()
         proxy_obj = bus.get_object(service_name, bundle.get_object_path(), follow_name_owner_changes=True)

@@ -18,6 +18,7 @@
 import os
 import sys
 from optparse import OptionParser
+import gettext
 
 import gobject
 import gtk
@@ -92,6 +93,10 @@ def run(bundle_path):
     bundle = Bundle(bundle_path)
 
     logger.start(bundle.get_name())
+
+    gettext.bindtextdomain(bundle.get_service_name(),
+                           bundle.get_locale_path())
+    gettext.textdomain(bundle.get_service_name())
 
     os.environ['SUGAR_BUNDLE_PATH'] = bundle_path
     os.environ['SUGAR_BUNDLE_SERVICE_NAME'] = bundle.get_service_name()
