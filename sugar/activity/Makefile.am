@@ -8,5 +8,4 @@ sugar_PYTHON =				\
 	activityservice.py		\
 	bundle.py			\
 	bundlebuilder.py		\
-	bundleregistry.py		\
-	locale.py
+	bundleregistry.py

@@ -1,4 +1,5 @@
 import logging
+import locale
 import os
 from ConfigParser import ConfigParser
 
@@ -22,6 +23,10 @@ class Bundle:
             self._parse_info(info_path)
         else:
             self._valid = False
+
+        linfo_path = self._get_linfo_path()
+        if linfo_path and os.path.isfile(linfo_path):
+            self._parse_locale_info(linfo_path)
 
     def _parse_info(self, info_path):
         cp = ConfigParser()
@@ -64,6 +69,28 @@ class Bundle:
 
         if cp.has_option(section, 'activity_version'):
             self._activity_version = int(cp.get(section, 'activity_version'))
+
+    def _parse_linfo(self, linfo_path):
+        cp = ConfigParser()
+        cp.read([linfo_path])
+
+        if cp.has_option('Activity', 'name'):
+            self._name = cp.get(section, 'name')
+
+    def _get_linfo_path(self):
+        path = None
+        lang = locale.getdefaultlocale()[0]
+        if lang != None:
+            path = os.path.join(self._path, 'locale', lang)
+            if os.path.isdir(path):
+                path = os.path.join(self._path, 'locale', lang[:2])
+                if not os.path.isdir(path):
+                    path = None
+
+        if path:
+            return os.path.join(path, 'activity.linfo')
+        else:
+            return None
 
     def is_valid(self):
         return self._valid
