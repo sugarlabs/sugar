@@ -21,6 +21,8 @@ import sys
 import os
 import zipfile
 import shutil
+import subprocess
+import re
 
 from sugar import env
 from sugar.activity.bundle import Bundle
@@ -112,6 +114,8 @@ setup.py dev                 - setup for development \n\
 setup.py dist                - create a bundle package \n\
 setup.py install   [dirname] - install the bundle \n\
 setup.py uninstall [dirname] - uninstall the bundle \n\
+setup.py genpot              - generate the gettext pot file \n\
+setup.py genmo               - compile gettext po files in mo \n\
 setup.py clean               - clean the directory \n\
 setup.py help                - print this message \n\
 '
@@ -129,15 +133,18 @@ def cmd_dev():
         else:
             print 'ERROR - A bundle with the same name is already installed.'    
 
-def cmd_dist(manifest):
+def _get_file_list(manifest):
     if os.path.isfile(manifest):
-        file_list = _ManifestFileList(manifest)
+        return _ManifestFileList(manifest)
     elif os.path.isdir('.git'):
-        file_list = _GitFileList()
+        return _GitFileList()
     elif os.path.isdir('.svn'):
-        file_list = _SvnFileList()
+        return _SvnFileList()
     else:
-        file_list = _DefaultFileList()
+        return _DefaultFileList()
+
+def cmd_dist(manifest):
+    file_list = _get_file_list(manifest)
 
     zipname = _get_package_name()
     bundle_zip = zipfile.ZipFile(zipname, 'w', zipfile.ZIP_DEFLATED)
@@ -158,6 +165,33 @@ def cmd_uninstall(prefix):
     if os.path.isdir(path):
         shutil.rmtree(path)
 
+def cmd_genpot(manifest):
+    python_files = []
+    file_list = _get_file_list(manifest)
+    for file_name in file_list:
+        if file_name.endswith('.py'):
+            python_files.append(file_name)
+    service_name = Bundle(_get_source_path()).get_service_name()
+    args = ["xgettext", "--language=Python", "--keyword=_",
+            "--output=locale/%s.pot" % service_name]
+    args += python_files
+    retcode = subprocess.call(args)
+    if retcode:
+        print 'ERROR - xgettext failed with return code %i.' % retcode
+
+def cmd_genmo(manifest):
+    po_regex = re.compile("locale/.*/LC_MESSAGES/.*\.po")
+    service_name = Bundle(_get_source_path()).get_service_name()
+    file_list = _get_file_list(manifest)
+    for file_name in file_list:
+        if po_regex.match(file_name):
+            dir_name = os.path.dirname(file_name)
+            mo_file = os.path.join(dir_name, "%s.mo" % service_name)
+            args = ["msgfmt", "--output-file=%s" % mo_file, file_name]
+            retcode = subprocess.call(args)
+            if retcode:
+                print 'ERROR - msgfmt failed with return code %i.' % retcode
+
 def cmd_clean():
     os.path.walk('.', _delete_backups, None)
 
@@ -174,6 +208,10 @@ def start(manifest='MANIFEST'):
         cmd_install(sys.argv[2], manifest)
     elif sys.argv[1] == 'uninstall' and len(sys.argv) == 3:
         cmd_uninstall(sys.argv[2])
+    elif sys.argv[1] == 'genpot':
+        cmd_genpot(manifest)
+    elif sys.argv[1] == 'genmo':
+        cmd_genmo(manifest)
     elif sys.argv[1] == 'clean':
         cmd_clean()
     else:
