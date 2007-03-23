@@ -18,6 +18,7 @@
 import sys
 import os
 from ConfigParser import ConfigParser
+import gettext
 
 import pygtk
 pygtk.require('2.0')
@@ -64,8 +65,14 @@ def _save_session_info():
 
     f.close()
 
+def _setup_translations():
+    domain = 'sugar'
+    gettext.bindtextdomain(domain, env.get_locale_path())
+    gettext.textdomain(domain)
+
 _save_session_info()
 _start_matchbox()
+_setup_translations()
 
 # Do initial setup if needed
 key = profile.get_pubkey() 
