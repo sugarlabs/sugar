@@ -53,11 +53,11 @@ OPTION_WRITE = 3
 OPTION_CHAT = 4
 
 option_menu = OptionMenu()
-option_menu.add_item(MenuItem(OPTION_ANYTHING, _('Anything')))
+option_menu.add_item(MenuItem(OPTION_ANYTHING, 'Anything'))
 option_menu.add_separator()
-option_menu.add_item(MenuItem(OPTION_DRAW, _('Draw'), 'theme:stock-close'))
-option_menu.add_item(MenuItem(OPTION_WRITE, _('Write')))
-option_menu.add_item(MenuItem(OPTION_CHAT, _('Chat')))
+option_menu.add_item(MenuItem(OPTION_DRAW, 'Draw', 'theme:stock-close'))
+option_menu.add_item(MenuItem(OPTION_WRITE, 'Write'))
+option_menu.add_item(MenuItem(OPTION_CHAT, 'Chat'))
 option_menu.connect('changed', _option_menu_changed_cb)
 toolbar.append(option_menu)
 

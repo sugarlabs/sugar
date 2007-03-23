@@ -1,1 +1,7 @@
+services/clipboard/typeregistry.py
+shell/intro/intro.py
+shell/view/BuddyMenu.py
+shell/view/clipboardmenu.py
+shell/view/frame/ZoomBox.py
+sugar/graphics/optionmenu.py
 sugar/chat/ChatEditor.py
