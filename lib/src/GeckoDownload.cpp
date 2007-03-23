@@ -1,6 +1,8 @@
 #include "config.h"
 
 #include <nsIFactory.h>
+#include <nsIFile.h>
+#include <nsIFileURL.h>
 
 #include "sugar-download-manager.h"
 
@@ -46,13 +48,20 @@ GeckoDownload::Init (nsIURI *aSource,
 					 nsILocalFile *aTempFile,
 					 nsICancelable *aCancelable)
 {
-	mSource = aSource;
-	aTarget->GetPath (mTargetFileName);
-	mMIMEInfo = aMIMEInfo;
-	mTempFile = aTempFile;
-//	mCancelable = aCancelable;	Just a reminder for when we implement cancelling downloads.
+    mSource = aSource;
+    mMIMEInfo = aMIMEInfo;
+    mTempFile = aTempFile;
 
-	return NS_OK;
+    nsresult rv;
+
+    nsCOMPtr<nsIFileURL> fileURL = do_QueryInterface(aTarget);
+    NS_ENSURE_TRUE(fileURL, NS_ERROR_FAILURE);
+
+    nsCOMPtr<nsIFile> file;
+    rv = fileURL->GetFile(getter_AddRefs(file));
+    NS_ENSURE_SUCCESS(rv, NS_ERROR_FAILURE);
+
+    file->GetNativePath (mTargetFileName);
 }
 
 NS_IMETHODIMP 
