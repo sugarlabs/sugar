@@ -70,8 +70,9 @@ class ActivityCreationHandler(gobject.GObject):
         registry = bundleregistry.get_registry()
         bundle = registry.get_bundle(service_name)
 
-        gettext.bindtextdomain(self._service_name,
-                               os.path.join(bundle.get_path(), "locale"))
+        print self._service_name
+        print bundle.get_locale_path()
+        gettext.bindtextdomain(self._service_name, bundle.get_locale_path())
         gettext.textdomain(self._service_name)
 
         bus = dbus.SessionBus()

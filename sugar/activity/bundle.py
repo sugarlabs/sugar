@@ -81,7 +81,7 @@ class Bundle:
         path = None
         lang = locale.getdefaultlocale()[0]
         if lang != None:
-            path = os.path.join(self._path, 'locale', lang)
+            path = os.path.join(self.get_locale_path(), lang)
             if os.path.isdir(path):
                 path = os.path.join(self._path, 'locale', lang[:2])
                 if not os.path.isdir(path):
@@ -94,6 +94,10 @@ class Bundle:
 
     def is_valid(self):
         return self._valid
+
+    def get_locale_path(self):
+        """Get the locale path inside the activity bundle."""
+        return os.path.join(self._path, 'locale')
 
     def get_path(self):
         """Get the activity bundle path."""
