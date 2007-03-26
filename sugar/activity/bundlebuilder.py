@@ -60,7 +60,9 @@ class _ManifestFileList(list):
 
         f = open(manifest,'r')
         for line in f.readlines():
-            self.append(line[:-1])
+            stripped_line = line.strip()
+            if stripped_line:
+                self.append(stripped_line)
         f.close()
 
         defaults = _DefaultFileList()
