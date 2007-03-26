@@ -145,6 +145,19 @@ def _get_file_list(manifest):
     else:
         return _DefaultFileList()
 
+def _include_mo_in_bundle(bundle_zip):
+    for langdir in os.listdir('locale'):
+        if os.path.isdir(os.path.join('locale', langdir, 'LC_MESSAGES')):
+            for filename in os.listdir(os.path.join('locale', langdir,
+                                                    'LC_MESSAGES')):
+                if filename.endswith('.mo'):
+                    arcname = os.path.join(_get_bundle_name() + '.activity',
+                                           'locale', langdir, 'LC_MESSAGES',
+                                           filename)
+                    bundle_zip.write(
+                        os.path.join('locale', langdir, 'LC_MESSAGES', filename),
+                        arcname)
+
 def cmd_dist(manifest):
     cmd_genmo(manifest)
     file_list = _get_file_list(manifest)
@@ -156,16 +169,8 @@ def cmd_dist(manifest):
         arcname = os.path.join(_get_bundle_name() + '.activity', filename)
         bundle_zip.write(filename, arcname)
 
-    for langdir in os.listdir('locale'):
-        if os.path.isdir(os.path.join('locale', langdir)):
-            for filename in os.listdir(os.path.join('locale', langdir, 'LC_MESSAGES')):
-                if filename.endswith('.mo'):
-                    arcname = os.path.join(_get_bundle_name() + '.activity',
-                                           'locale', langdir, 'LC_MESSAGES',
-                                           filename)
-                    bundle_zip.write(
-                        os.path.join('locale', langdir, 'LC_MESSAGES', filename),
-                        arcname)
+    if os.path.exists('locale'):
+        _include_mo_in_bundle(bundle_zip)
 
     bundle_zip.close()
 
