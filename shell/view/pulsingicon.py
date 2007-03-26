@@ -48,7 +48,7 @@ class PulsingIcon(CanvasIcon):
             self._pos = 0
 
     def do_get_property(self, pspec):
-        CanvasIcon.do_get_property(self, pspec, value)
+        CanvasIcon.do_get_property(self, pspec)
 
         if pspec.name == 'pulsing':
             return self._pulsing
