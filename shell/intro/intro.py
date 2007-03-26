@@ -300,7 +300,7 @@ class IntroWindow(gtk.Window):
         cp.set(section, 'NickName', name)
         cp.set(section, 'Color', color.to_string())
 
-        secion = 'Server'
+        section = 'Server'
         if not cp.has_section(section):
             cp.add_section(section)
         cp.set(section, 'Server', 'olpc.collabora.co.uk')
