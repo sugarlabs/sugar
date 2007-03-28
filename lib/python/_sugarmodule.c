@@ -29,6 +29,7 @@ init_sugar(void)
     d = PyModule_GetDict (m);
 
     py_sugar_register_classes (d);
+    py_sugar_add_constants(m, "GTK_MOZ_EMBED_");
 
     if (PyErr_Occurred ()) {
         Py_FatalError ("can't initialise module _sugar");
