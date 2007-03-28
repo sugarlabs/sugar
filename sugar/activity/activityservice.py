@@ -18,8 +18,6 @@
 import dbus
 import dbus.service
 
-from sugar.presence import PresenceService
-
 _ACTIVITY_SERVICE_NAME = "org.laptop.Activity"
 _ACTIVITY_SERVICE_PATH = "/org/laptop/Activity"
 _ACTIVITY_INTERFACE = "org.laptop.Activity"
