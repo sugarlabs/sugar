@@ -23,6 +23,8 @@ import gobject
 import gtk
 import hippo
 
+from sugar.graphics import units
+
 class ClipboardBubble(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'ClipboardBubble'
 
@@ -42,7 +44,7 @@ class ClipboardBubble(hippo.CanvasBox, hippo.CanvasItem):
         self._fill_color = 0xFFFFFFFF
         self._progress_color = 0x000000FF
         self._percent = 0
-        self._radius = 8
+        self._radius = units.points_to_pixels(3)
 
         hippo.CanvasBox.__init__(self, **kwargs)
 
