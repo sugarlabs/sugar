@@ -418,9 +418,15 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         self.prelight(enter=True)
 
     def _leave(self):
-        self._popup_anim = animator.Animator(0.2, 10)
-        self._popup_anim.add(_PopdownAnimation(self))
-        self._popup_anim.start()
+        # FIXME: This is a hack for taking out the popdown delay for tooltips and
+        # increasing the rest of rollovers. We need a better way for specifiying
+        # different behaviors for the different kinds of popups.
+        if type(self._popup) == Popup:
+            self.hide_popup()
+        else:
+            self._popup_anim = animator.Animator(0.5, 10)
+            self._popup_anim.add(_PopdownAnimation(self))
+            self._popup_anim.start()
 
         self.prelight(enter=False)
 
