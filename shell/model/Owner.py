@@ -89,11 +89,11 @@ class ShellOwner(gobject.GObject):
         props = {'color': color.to_string(), 'icon-hash': self._icon_hash}
         self._service = self._pservice.register_service(self._nick,
                 PRESENCE_SERVICE_TYPE, properties=props)
-        logging.debug("Owner '%s' using port %d" % (self._nick, self._service.get_port()))
+        #logging.debug("Owner '%s' using port %d" % (self._nick, self._service.get_port()))
 
-        self._icon_stream = Stream.Stream.new_from_service(self._service)
-        self._icon_stream.register_reader_handler(self._handle_buddy_icon_request, "get_buddy_icon")
-        self._icon_stream.register_reader_handler(self._handle_invite, "invite")
+        #self._icon_stream = Stream.Stream.new_from_service(self._service)
+        #self._icon_stream.register_reader_handler(self._handle_buddy_icon_request, "get_buddy_icon")
+        #self._icon_stream.register_reader_handler(self._handle_invite, "invite")
 
     def _handle_buddy_icon_request(self):
         """XMLRPC method, return the owner's icon encoded with base64."""

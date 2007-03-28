@@ -19,6 +19,8 @@ import dbus, dbus.glib, gobject
 
 import Buddy, Service, Activity
 
+_ENABLED = False
+
 class ObjectCache(object):
     def __init__(self):
         self._cache = {}
@@ -223,15 +225,77 @@ class PresenceService(gobject.GObject):
     def unregister_service_type(self, stype):
         self._ps.unregisterServiceType(stype)
 
+class _MockPresenceService(gobject.GObject):
+
+    __gsignals__ = {
+        'buddy-appeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                        ([gobject.TYPE_PYOBJECT])),
+        'buddy-disappeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                        ([gobject.TYPE_PYOBJECT])),
+        'service-appeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                        ([gobject.TYPE_PYOBJECT])),
+        'service-disappeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                        ([gobject.TYPE_PYOBJECT])),
+        'activity-appeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                        ([gobject.TYPE_PYOBJECT])),
+        'activity-disappeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                        ([gobject.TYPE_PYOBJECT]))
+    }
+
+    def __init__(self):
+        gobject.GObject.__init__(self)
+
+    def get_services(self):
+        return []
+
+    def get_services_of_type(self, stype):
+        return []
+
+    def get_activities(self):
+        return []
+
+    def get_activity(self, activity_id):
+        return None
+
+    def get_buddies(self):
+        return []
+
+    def get_buddy_by_name(self, name):
+        return None
+
+    def get_buddy_by_address(self, addr):
+        return None
+
+    def get_owner(self):
+        return None
+
+    def share_activity(self, activity, stype, properties={}, address=None, port=-1, domain=u"local"):
+        return None
+
+    def register_service(self, name, stype, properties={}, address=None, port=-1, domain=u"local"):
+        return None
+
+    def unregister_service(self, service):
+        pass
+
+    def register_service_type(self, stype):
+        pass
+
+    def unregister_service_type(self, stype):
+        pass
+
 _ps = None
 def get_instance():
     global _ps
     if not _ps:
-        _ps = PresenceService()
+        if _ENABLED:
+            _ps = PresenceService()
+        else:
+            _ps = _MockPresenceService()
     return _ps
 
-
 def start():
-    bus = dbus.SessionBus()
-    ps = dbus.Interface(bus.get_object(DBUS_SERVICE, DBUS_PATH), DBUS_INTERFACE)
-    ps.start()
+    if _ENABLED:
+        bus = dbus.SessionBus()
+        ps = dbus.Interface(bus.get_object(DBUS_SERVICE, DBUS_PATH), DBUS_INTERFACE)
+        ps.start()

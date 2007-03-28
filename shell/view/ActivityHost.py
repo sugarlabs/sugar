@@ -51,7 +51,8 @@ class ActivityHost:
             win = self._gdk_window
 
         #self._chat_widget = ActivityChat.ActivityChat(self)
-        #self._chat_window = ActivityChatWindow(win, self._chat_widget)
+        self._chat_widget = gtk.HBox()
+        self._chat_window = ActivityChatWindow(win, self._chat_widget)
 
         self._frame_was_visible = False
 
