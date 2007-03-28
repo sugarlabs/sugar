@@ -72,15 +72,7 @@ class ActivityHost:
         self._chat_widget.share()
 
     def invite(self, buddy):
-        if not self.get_shared():
-            self.share()
-
-        issuer = self._pservice.get_owner().get_name()
-        service = buddy.get_service_of_type("_presence_olpc._tcp")
-        stream = Stream.Stream.new_from_service(service, start_reader=False)
-        writer = stream.new_writer(service)
-        writer.custom_request("invite", None, None, issuer,
-                              self._type, self._id)
+        pass
 
     def present(self):
         self._window.activate(gtk.get_current_event_time())
