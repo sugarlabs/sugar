@@ -37,6 +37,7 @@ NM_DEVICE_STAGE_STRINGS=("Unknown",
     "IP Config",
     "IP Config Get",
     "IP Config Commit",
+    "Post-IP Start"
     "Activated",
     "Failed",
     "Cancled"
@@ -50,6 +51,7 @@ NM_PATH = '/org/freedesktop/NetworkManager'
 DEVICE_TYPE_UNKNOWN = 0
 DEVICE_TYPE_802_3_ETHERNET = 1
 DEVICE_TYPE_802_11_WIRELESS = 2
+DEVICE_TYPE_802_11_MESH_OLPC = 3
 
 NM_DEVICE_CAP_NONE = 0x00000000
 NM_DEVICE_CAP_NM_SUPPORTED = 0x00000001
@@ -165,6 +167,8 @@ class Network(gobject.GObject):
 
 class Device(gobject.GObject):
     __gsignals__ = {
+        'initialized':         (gobject.SIGNAL_RUN_FIRST,
+                                gobject.TYPE_NONE, ([])),
         'init-failed':         (gobject.SIGNAL_RUN_FIRST,
                                 gobject.TYPE_NONE, ([])),
         'ssid-changed':        (gobject.SIGNAL_RUN_FIRST,
@@ -216,6 +220,11 @@ class Device(gobject.GObject):
             if self._strength != old_strength:
                 self.emit('strength-changed')
             self._update_networks(props[20], props[19])
+        elif self._type ==  DEVICE_TYPE_802_11_MESH_OLPC:
+            old_strength = self._strength
+            self._strength = props[14]
+            if self._strength != old_strength:
+                self.emit('strength-changed')
 
         self._valid = True
 
@@ -223,6 +232,8 @@ class Device(gobject.GObject):
             self.set_state(DEVICE_STATE_ACTIVATED)
         else:
             self.set_state(DEVICE_STATE_INACTIVE)
+
+        self.emit('initialized')
 
     def _update_networks(self, net_ops, active_op):
         for op in net_ops:
@@ -407,6 +418,9 @@ class NMClient(gobject.GObject):
         for op in ops:
             self._add_device(op)
 
+    def _dev_initialized_cb(self, dev):
+        self.emit('device-added', dev)
+
     def _dev_init_failed_cb(self, dev):
         # Device failed to initialize, likely due to dbus errors or something
         op = dev.get_op()
@@ -425,25 +439,22 @@ class NMClient(gobject.GObject):
         dev = Device(dev_op)
         self._devices[dev_op] = dev
         dev.connect('init-failed', self._dev_init_failed_cb)
+        dev.connect('initialized', self._dev_initialized_cb)
         dev.connect('state-changed', self._dev_state_changed_cb)
-
-        self.emit('device-added', dev)
 
     def _remove_device(self, dev_op):
         if not self._devices.has_key(dev_op):
             return
         dev = self._devices[dev_op]
-        dev.disconnect('state-changed')
-        dev.disconnect('init-failed')
+        if dev.is_valid():
+            self.emit('device-removed', dev)
         del self._devices[dev_op]
-
-        self.emit('device-removed', dev)
 
     def _dev_state_changed_cb(self, dev):
         op = dev.get_op()
-        if not self._devices.has_key(op):
+        if not self._devices.has_key(op) or not dev.is_valid():
             return
-        if dev.get_state() != DEVICE_STATE_INACTIVE :
+        if dev.get_state() != DEVICE_STATE_INACTIVE:
             self.emit('device-activated', dev)
 
     def get_device(self, dev_op):
