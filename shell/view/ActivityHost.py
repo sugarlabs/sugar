@@ -19,7 +19,6 @@ import dbus
 
 from sugar.p2p import Stream
 from sugar.p2p import network
-from sugar.chat import ActivityChat
 import OverlayWindow
 
 class ActivityChatWindow(gtk.Window):
@@ -51,8 +50,8 @@ class ActivityHost:
             self._overlay_window = None
             win = self._gdk_window
 
-        self._chat_widget = ActivityChat.ActivityChat(self)
-        self._chat_window = ActivityChatWindow(win, self._chat_widget)
+        #self._chat_widget = ActivityChat.ActivityChat(self)
+        #self._chat_window = ActivityChatWindow(win, self._chat_widget)
 
         self._frame_was_visible = False
 

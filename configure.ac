@@ -154,8 +154,6 @@ services/console/interface/logviewer/Makefile
 services/console/interface/terminal/Makefile
 sugar/Makefile
 sugar/activity/Makefile
-sugar/chat/Makefile
-sugar/chat/sketchpad/Makefile
 sugar/clipboard/Makefile
 sugar/graphics/Makefile
 sugar/p2p/Makefile
