@@ -22,6 +22,7 @@ from sugar.activity import bundleregistry
 from model.BuddyModel import BuddyModel
 from model.accesspointmodel import AccessPointModel
 from hardware import hardwaremanager
+from hardware import nmclient
 
 class ActivityModel:
     def __init__(self, activity, bundle, service):
@@ -58,7 +59,10 @@ class MeshModel(gobject.GObject):
         'access-point-added':   (gobject.SIGNAL_RUN_FIRST,
                                  gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
         'access-point-removed': (gobject.SIGNAL_RUN_FIRST,
-                                 gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT]))
+                                 gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
+        'mesh-added':           (gobject.SIGNAL_RUN_FIRST,
+                                 gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
+        'mesh-removed':         (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
     }
 
     def __init__(self):
@@ -67,6 +71,7 @@ class MeshModel(gobject.GObject):
         self._activities = {}
         self._buddies = {}
         self._access_points = {}
+        self._mesh = None
         self._bundle_registry = bundleregistry.get_registry()
 
         self._pservice = PresenceService.get_instance()
@@ -92,9 +97,14 @@ class MeshModel(gobject.GObject):
                 self._add_network_device(nm_device)
             network_manager.connect('device-added',
                                     self._nm_device_added_cb)
+            network_manager.connect('device-removed',
+                                    self._nm_device_removed_cb)
 
     def _nm_device_added_cb(self, manager, nm_device):
         self._add_network_device(nm_device)
+
+    def _nm_device_removed_cb(self, manager, nm_device):
+        self._remove_network_device(nm_device)
 
     def _nm_network_appeared_cb(self, nm_device, nm_network):
         self._add_access_point(nm_device, nm_network)
@@ -103,13 +113,28 @@ class MeshModel(gobject.GObject):
         self._remove_access_point(nm_network)
 
     def _add_network_device(self, nm_device):
-        for nm_network in nm_device.get_networks():
-            self._add_access_point(nm_device, nm_network)
+        dtype = nm_device.get_type()
+        if dtype == nmclient.DEVICE_TYPE_802_11_WIRELESS:
+            for nm_network in nm_device.get_networks():
+                self._add_access_point(nm_device, nm_network)
 
-        nm_device.connect('network-appeared',
-                          self._nm_network_appeared_cb)
-        nm_device.connect('network-disappeared',
-                          self._nm_network_disappeared_cb)
+            nm_device.connect('network-appeared',
+                              self._nm_network_appeared_cb)
+            nm_device.connect('network-disappeared',
+                              self._nm_network_disappeared_cb)
+        elif dtype == nmclient.DEVICE_TYPE_802_11_MESH_OLPC:
+            self._mesh = nm_device
+            self.emit('mesh-added', self._mesh)
+
+    def _remove_network_device(self, nm_device):
+        if nm_device == self._mesh:
+            self._mesh = None
+            self.emit('mesh-removed')
+        elif nm_device.get_type() == nmclient.DEVICE_TYPE_802_11_WIRELESS:
+            aplist = self._access_points.values()
+            for ap in aplist:
+                if ap.get_nm_device() == nm_device:
+                    self._remove_access_point(ap)
 
     def _add_access_point(self, nm_device, nm_network):
         model = AccessPointModel(nm_device, nm_network)
@@ -120,6 +145,9 @@ class MeshModel(gobject.GObject):
         self.emit('access-point-removed',
                   self._access_points[nm_network.get_op()])
         del self._access_points[nm_network.get_op()]
+
+    def get_mesh(self):
+        return self._mesh
 
     def get_access_points(self):
         return self._access_points.values()

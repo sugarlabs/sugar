@@ -3,6 +3,7 @@ import gobject
 from model.devices import device
 from model.devices.network import wired
 from model.devices.network import wireless
+from model.devices.network import mesh
 from model.devices import battery
 from hardware import hardwaremanager
 from hardware import nmclient
@@ -45,21 +46,28 @@ class DevicesModel(gobject.GObject):
         self._remove_network_device(nm_device)
 
     def _network_device_state_changed_cb(self, nm_device):
-        if nm_device.get_state == nmclient.DEVICE_STATE_INACTIVE:
+        if nm_device.get_state() == nmclient.DEVICE_STATE_INACTIVE:
             self._remove_network_device(nm_device)
 
     def _check_network_device(self, nm_device):
         if not nm_device.is_valid():
             return
 
-        if nm_device.get_type() == nmclient.DEVICE_TYPE_802_11_WIRELESS:
+        dtype = nm_device.get_type()
+        if dtype == nmclient.DEVICE_TYPE_802_11_WIRELESS \
+           or dtype == nmclient.DEVICE_TYPE_802_11_MESH_OLPC:
             self._add_network_device(nm_device)
 
     def _get_network_device(self, nm_device):
-        return self._devices[nm_device.get_op()]
+        return self._devices[str(nm_device.get_op())]
 
     def _add_network_device(self, nm_device):
-        self.add_device(wireless.Device(nm_device))
+        dtype = nm_device.get_type()
+        if dtype == nmclient.DEVICE_TYPE_802_11_WIRELESS:
+            self.add_device(wireless.Device(nm_device))
+        if dtype == nmclient.DEVICE_TYPE_802_11_MESH_OLPC:
+            self.add_device(mesh.Device(nm_device))
+
         nm_device.connect('state-changed',
                           self._network_device_state_changed_cb)
 
@@ -71,6 +79,8 @@ class DevicesModel(gobject.GObject):
 
     def add_device(self, device):
         self._devices[device.get_id()] = device
+        import logging
+        logging.debug("adding device %s" % device.get_id())
         self.emit('device-appeared', device)
 
     def remove_device(self, device):

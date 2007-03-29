@@ -18,6 +18,7 @@ import random
 
 import hippo
 import gobject
+from gettext import gettext as _
 
 from sugar.graphics.spreadbox import SpreadBox
 from sugar.graphics.snowflakebox import SnowflakeBox
@@ -25,10 +26,14 @@ from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import color
 from sugar.graphics import xocolor
 from sugar.graphics import canvasicon
+from sugar.graphics import units
 from model import accesspointmodel
+from model.devices.network import mesh
 from hardware import hardwaremanager
+from hardware import nmclient
 from view.BuddyIcon import BuddyIcon
 from view.pulsingicon import PulsingIcon
+from sugar import profile
 
 _ICON_NAME = 'device-network-wireless'
 
@@ -101,6 +106,39 @@ class AccessPointView(PulsingIcon):
             self.props.fill_color = color.HTMLColor(self._inactive_fill_color)
             self.props.stroke_color = color.HTMLColor(self._inactive_stroke_color)
 
+class MeshDeviceView(CanvasIcon):
+    def __init__(self, nm_device):
+        CanvasIcon.__init__(self, scale=units.MEDIUM_ICON_SCALE,
+                icon_name='theme:device-network-mesh')
+        self._nm_device = nm_device
+        self.props.tooltip = _("Mesh Network")
+
+        self.connect('activated', self._activate_cb)
+
+        self._nm_device.connect('state-changed', self._state_changed_cb)
+        self._update_state()
+
+    def _activate_cb(self, icon):
+        network_manager = hardwaremanager.get_network_manager()
+        network_manager.set_active_device(self._nm_device)
+
+    def _state_changed_cb(self, model):
+        self._update_state()
+
+    def _update_state(self):
+        # FIXME Change icon colors once we have real icons
+        state = self._nm_device.get_state()
+        if state == nmclient.DEVICE_STATE_ACTIVATING:
+            self.props.fill_color = color.ICON_FILL_INACTIVE
+            self.props.stroke_color = color.ICON_STROKE_INACTIVE
+        elif state == nmclient.DEVICE_STATE_ACTIVATED:
+            mycolor = profile.get_color()
+            self.props.fill_color = color.HTMLColor(mycolor.get_fill_color())
+            self.props.stroke_color = color.HTMLColor(mycolor.get_stroke_color())
+        elif state == nmclient.DEVICE_STATE_INACTIVE:
+            self.props.fill_color = color.ICON_FILL_INACTIVE
+            self.props.stroke_color = color.ICON_STROKE_INACTIVE
+
 class ActivityView(SnowflakeBox):
     def __init__(self, shell, menu_shell, model):
         SnowflakeBox.__init__(self)
@@ -141,6 +179,7 @@ class MeshBox(SpreadBox):
         self._buddies = {}
         self._activities = {}
         self._access_points = {}
+        self._mesh = None
         self._buddy_to_activity = {}
 
         for buddy_model in self._model.get_buddies():
@@ -164,6 +203,20 @@ class MeshBox(SpreadBox):
         self._model.connect('access-point-removed',
                             self._access_point_removed_cb)
 
+        if self._model.get_mesh():
+            self._add_mesh_icon(self._model.get_mesh())
+
+        self._model.connect('mesh-added',
+                            self._mesh_added_cb)
+        self._model.connect('mesh-removed',
+                            self._mesh_removed_cb)
+
+    def _mesh_added_cb(self, model, mesh):
+        self._add_mesh_icon(mesh)
+
+    def _mesh_removed_cb(self, model):
+        self._remove_mesh_icon()
+
     def _buddy_added_cb(self, model, buddy_model):
         self._add_alone_buddy(buddy_model)
 
@@ -184,6 +237,20 @@ class MeshBox(SpreadBox):
 
     def _access_point_removed_cb(self, model, ap_model):
         self._remove_access_point(ap_model) 
+
+    def _add_mesh_icon(self, mesh):
+        if self._mesh:
+            self._remove_mesh()
+        if not mesh:
+            return
+        self._mesh = MeshDeviceView(mesh)
+        self.add_item(self._mesh)
+
+    def _remove_access_point(self):
+        if not self._mesh:
+            return
+        self.remove_item(self._mesh)
+        self._mesh = None
 
     def _add_alone_buddy(self, buddy_model):
         icon = BuddyIcon(self._shell, self._menu_shell, buddy_model)
