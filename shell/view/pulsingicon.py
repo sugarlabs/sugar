@@ -28,7 +28,7 @@ class PulsingIcon(CanvasIcon):
     }
 
     def __init__(self, **kwargs):
-        self._puls_time = 0.0
+        self._pulse_time = 0.0
         self._colors = None
         self._pulse_sid = 0
         self._pos = 0
