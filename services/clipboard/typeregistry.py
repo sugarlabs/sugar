@@ -97,7 +97,7 @@ class UriFileType(FileType):
 
 class PdfFileType(FileType):
     
-    _types = set(['application/pdf'])
+    _types = set(['application/pdf', 'application/x-pdf'])
     
     def get_name(self):
         return _('PDF file')
