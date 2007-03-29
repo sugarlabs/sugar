@@ -20,6 +20,8 @@ from sugar.graphics.canvasicon import CanvasIcon
 
 class PulsingIcon(CanvasIcon):
     __gproperties__ = {
+        'paused'     : (bool, None, None, False,
+                        gobject.PARAM_READWRITE),
         'colors'     : (object, None, None,
                         gobject.PARAM_READWRITE),
         'pulse-time' : (float, None, None,
@@ -28,6 +30,7 @@ class PulsingIcon(CanvasIcon):
     }
 
     def __init__(self, **kwargs):
+        self._paused = False
         self._pulse_time = 0.0
         self._colors = None
         self._pulse_sid = 0
@@ -41,12 +44,18 @@ class PulsingIcon(CanvasIcon):
         if pspec.name == 'pulse-time':
             self._pulse_time = value
             self._stop()
-            if self._pulse_time > 0.0:
+            if not self._paused and self._pulse_time > 0.0:
                 self._start()
         elif pspec.name == 'colors':
             self._colors = value
             self._pos = 0
             self._update_colors()
+        elif pspec.name == 'paused':
+            self._paused = value
+            if not self._paused and self._pulse_time > 0.0:
+                self._start()
+            else:
+                self._stop()
 
     def do_get_property(self, pspec):
         CanvasIcon.do_get_property(self, pspec)

@@ -204,6 +204,7 @@ class MeshBox(SpreadBox):
         self._access_points = {}
         self._mesh = None
         self._buddy_to_activity = {}
+        self._suspended = True
 
         for buddy_model in self._model.get_buddies():
             self._add_alone_buddy(buddy_model)
@@ -329,3 +330,15 @@ class MeshBox(SpreadBox):
         icon = self._access_points[ap_model.get_id()]
         self.remove_item(icon)
         del self._access_points[ap_model.get_id()]
+
+    def suspend(self):
+        if not self._suspended:
+            self._suspended = True
+            for ap in self._access_points.values():
+                ap.props.paused = True
+
+    def resume(self):
+        if self._suspended:
+            self._suspended = False
+            for ap in self._access_points.values():
+                ap.props.paused = False
