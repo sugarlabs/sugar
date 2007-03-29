@@ -111,12 +111,19 @@ class AccessPointView(PulsingIcon):
                   color.HTMLColor(self._device_fill) ]
             ]
 
-class MeshDeviceView(CanvasIcon):
+
+_MESH_ICON_NAME = 'theme:device-network-mesh'
+
+class MeshDeviceView(PulsingIcon):
     def __init__(self, nm_device):
-        CanvasIcon.__init__(self, scale=units.MEDIUM_ICON_SCALE,
-                icon_name='theme:device-network-mesh')
+        PulsingIcon.__init__(self, scale=units.MEDIUM_ICON_SCALE,
+                icon_name=_MESH_ICON_NAME)
         self._nm_device = nm_device
         self.props.tooltip = _("Mesh Network")
+
+        mycolor = profile.get_color()
+        self._device_fill = mycolor.get_fill_color()
+        self._device_stroke = mycolor.get_stroke_color()
 
         self.connect('activated', self._activate_cb)
 
@@ -131,18 +138,29 @@ class MeshDeviceView(CanvasIcon):
         self._update_state()
 
     def _update_state(self):
-        # FIXME Change icon colors once we have real icons
         state = self._nm_device.get_state()
         if state == nmclient.DEVICE_STATE_ACTIVATING:
-            self.props.fill_color = color.ICON_FILL_INACTIVE
-            self.props.stroke_color = color.ICON_STROKE_INACTIVE
+            self.props.pulse_time = 0.75
+            self.props.colors = [
+                [ color.HTMLColor(self._device_stroke),
+                  color.HTMLColor(self._device_fill) ],
+                [ color.HTMLColor(self._device_stroke),
+                  color.HTMLColor('#e2e2e2') ]
+            ]
         elif state == nmclient.DEVICE_STATE_ACTIVATED:
-            mycolor = profile.get_color()
-            self.props.fill_color = color.HTMLColor(mycolor.get_fill_color())
-            self.props.stroke_color = color.HTMLColor(mycolor.get_stroke_color())
+            self.props.pulse_time = 1.5
+            self.props.colors = [
+                [ color.HTMLColor(self._device_stroke),
+                  color.HTMLColor(self._device_fill) ],
+                [ color.HTMLColor('#ffffff'),
+                  color.HTMLColor(self._device_fill) ]
+            ]
         elif state == nmclient.DEVICE_STATE_INACTIVE:
-            self.props.fill_color = color.ICON_FILL_INACTIVE
-            self.props.stroke_color = color.ICON_STROKE_INACTIVE
+            self.props.pulse_time = 0.0
+            self.props.colors = [
+                [ color.HTMLColor(self._device_stroke),
+                  color.HTMLColor(self._device_fill) ]
+            ]
 
 class ActivityView(SnowflakeBox):
     def __init__(self, shell, menu_shell, model):
