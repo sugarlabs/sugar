@@ -1,3 +1,4 @@
+import logging
 import gobject
 
 from model.devices import device
@@ -34,13 +35,27 @@ class DevicesModel(gobject.GObject):
         for device in network_manager.get_devices():
             self._check_network_device(device)
 
+        network_manager.connect('device-added',
+                                self._network_device_added_cb)
+        network_manager.connect('device-activating',
+                                self._network_device_activating_cb)
         network_manager.connect('device-activated',
                                 self._network_device_activated_cb)
         network_manager.connect('device-removed',
                                 self._network_device_removed_cb)
 
-    def _network_device_activated_cb(self, network_manager, nm_device):
+    def _network_device_added_cb(self, network_manager, nm_device):
+        logging.debug("got added isgnal for %s" % nm_device.get_op())
+        state = nm_device.get_state()
+        if state == nmclient.DEVICE_STATE_ACTIVATING \
+                or state == nmclient.DEVICE_STATE_ACTIVATED:
+            self._check_network_device(nm_device)
+
+    def _network_device_activating_cb(self, network_manager, nm_device):
         self._check_network_device(nm_device)
+
+    def _network_device_activated_cb(self, network_manager, nm_device):
+        pass
 
     def _network_device_removed_cb(self, nm_device):
         self._remove_network_device(nm_device)
@@ -51,6 +66,7 @@ class DevicesModel(gobject.GObject):
 
     def _check_network_device(self, nm_device):
         if not nm_device.is_valid():
+            logging.debug("Device %s not valid" % nm_device.get_op())
             return
 
         dtype = nm_device.get_type()
@@ -62,7 +78,12 @@ class DevicesModel(gobject.GObject):
         return self._devices[str(nm_device.get_op())]
 
     def _add_network_device(self, nm_device):
+        if self._devices.has_key(str(nm_device.get_op())):
+            logging.debug("Tried to add device %s twice" % nm_device.get_op())
+            return
+
         dtype = nm_device.get_type()
+        logging.debug("Adding device %s type %d" % (nm_device.get_op(), dtype))
         if dtype == nmclient.DEVICE_TYPE_802_11_WIRELESS:
             self.add_device(wireless.Device(nm_device))
         if dtype == nmclient.DEVICE_TYPE_802_11_MESH_OLPC:
@@ -79,8 +100,6 @@ class DevicesModel(gobject.GObject):
 
     def add_device(self, device):
         self._devices[device.get_id()] = device
-        import logging
-        logging.debug("adding device %s" % device.get_id())
         self.emit('device-appeared', device)
 
     def remove_device(self, device):
