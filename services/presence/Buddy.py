@@ -259,7 +259,8 @@ class Buddy(object):
             # A buddy isn't valid until its official presence
             # service has been found and resolved
             self._valid = True
-            self._get_buddy_icon(service)
+            ### TRIAL1: disable
+            #self._get_buddy_icon(service)
             color = service.get_one_property(_BUDDY_KEY_COLOR)
             if xocolor.is_valid(color):
                 self._color = color
