@@ -390,6 +390,9 @@ class NMClient(gobject.GObject):
         'device-activated' : (gobject.SIGNAL_RUN_FIRST,
                               gobject.TYPE_NONE, 
                              ([gobject.TYPE_PYOBJECT])),
+        'device-activating': (gobject.SIGNAL_RUN_FIRST,
+                              gobject.TYPE_NONE, 
+                             ([gobject.TYPE_PYOBJECT])),
         'device-removed'   : (gobject.SIGNAL_RUN_FIRST,
                               gobject.TYPE_NONE, 
                              ([gobject.TYPE_PYOBJECT]))
@@ -454,7 +457,9 @@ class NMClient(gobject.GObject):
         op = dev.get_op()
         if not self._devices.has_key(op) or not dev.is_valid():
             return
-        if dev.get_state() != DEVICE_STATE_INACTIVE:
+        if dev.get_state() == DEVICE_STATE_ACTIVATING:
+            self.emit('device-activating', dev)
+        elif dev.get_state() == DEVICE_STATE_ACTIVATED:
             self.emit('device-activated', dev)
 
     def get_device(self, dev_op):
