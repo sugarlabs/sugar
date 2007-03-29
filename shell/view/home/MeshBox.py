@@ -55,15 +55,8 @@ class AccessPointView(PulsingIcon):
         sh.update(data)
         h = hash(sh.digest())
         idx = h % len(xocolor._colors)
-        self._inactive_stroke_color = xocolor._colors[idx][0]
-        self._inactive_fill_color = xocolor._colors[idx][1]
-
-        self.props.colors = [
-            [ None, None ],
-            [ color.HTMLColor(self._inactive_stroke_color), 
-              color.HTMLColor(self._inactive_fill_color)
-            ]
-        ]
+        self._device_stroke = xocolor._colors[idx][0]
+        self._device_fill = xocolor._colors[idx][1]
 
         self._update_icon()
         self._update_name()
@@ -96,15 +89,27 @@ class AccessPointView(PulsingIcon):
 
     def _update_state(self):
         if self._model.props.state == accesspointmodel.STATE_CONNECTING:
-            self.props.pulsing = True
+            self.props.pulse_time = 0.75
+            self.props.colors = [
+                [ color.HTMLColor(self._device_stroke),
+                  color.HTMLColor(self._device_fill) ],
+                [ color.HTMLColor(self._device_stroke),
+                  color.HTMLColor('#e2e2e2') ]
+            ]
         elif self._model.props.state == accesspointmodel.STATE_CONNECTED:
-            self.props.pulsing = False
-            self.props.fill_color = None
-            self.props.stroke_color = None
+            self.props.pulse_time = 1.5
+            self.props.colors = [
+                [ color.HTMLColor(self._device_stroke),
+                  color.HTMLColor(self._device_fill) ],
+                [ color.HTMLColor('#ffffff'),
+                  color.HTMLColor(self._device_fill) ]
+            ]
         elif self._model.props.state == accesspointmodel.STATE_NOTCONNECTED:
-            self.props.pulsing = False
-            self.props.fill_color = color.HTMLColor(self._inactive_fill_color)
-            self.props.stroke_color = color.HTMLColor(self._inactive_stroke_color)
+            self.props.pulse_time = 0.0
+            self.props.colors = [
+                [ color.HTMLColor(self._device_stroke),
+                  color.HTMLColor(self._device_fill) ]
+            ]
 
 class MeshDeviceView(CanvasIcon):
     def __init__(self, nm_device):

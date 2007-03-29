@@ -19,7 +19,7 @@ import dbus, dbus.glib, gobject
 
 import Buddy, Service, Activity
 
-_ENABLED = False
+_ENABLED = True
 
 class ObjectCache(object):
     def __init__(self):

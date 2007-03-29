@@ -20,14 +20,15 @@ from sugar.graphics.canvasicon import CanvasIcon
 
 class PulsingIcon(CanvasIcon):
     __gproperties__ = {
-        'colors'  : (object, None, None,
-                     gobject.PARAM_READWRITE),
-        'pulsing' : (bool, None, None, False,
-                     gobject.PARAM_READWRITE)
+        'colors'     : (object, None, None,
+                        gobject.PARAM_READWRITE),
+        'pulse-time' : (float, None, None,
+                        0.0, 500.0, 0.0,
+                        gobject.PARAM_READWRITE),
     }
 
     def __init__(self, **kwargs):
-        self._pulsing = False
+        self._puls_time = 0.0
         self._colors = None
         self._pulse_sid = 0
         self._pos = 0
@@ -37,30 +38,31 @@ class PulsingIcon(CanvasIcon):
     def do_set_property(self, pspec, value):
         CanvasIcon.do_set_property(self, pspec, value)
 
-        if pspec.name == 'pulsing':
-            self._pulsing = value
-            if self._pulsing:
+        if pspec.name == 'pulse-time':
+            self._pulse_time = value
+            self._stop()
+            if self._pulse_time > 0.0:
                 self._start()
-            else:
-                self._stop()
         elif pspec.name == 'colors':
             self._colors = value
             self._pos = 0
+            self._update_colors()
 
     def do_get_property(self, pspec):
         CanvasIcon.do_get_property(self, pspec)
 
-        if pspec.name == 'pulsing':
-            return self._pulsing
+        if pspec.name == 'pulse-time':
+            return self._pulse_time
         elif pspec.name == 'colors':
             return self._colors
 
-    def _pulse_timeout(self):
-        if not self._colors:
-            return
-
+    def _update_colors(self):
         self.props.stroke_color = self._colors[self._pos][0]
         self.props.fill_color = self._colors[self._pos][1]
+
+    def _pulse_timeout(self):
+        if self._colors:
+            self._update_colors()
 
         self._pos += 1
         if self._pos == len(self._colors):
@@ -70,7 +72,8 @@ class PulsingIcon(CanvasIcon):
 
     def _start(self):
         if self._pulse_sid == 0:
-            self._pulse_sid = gobject.timeout_add(1000, self._pulse_timeout)
+            self._pulse_sid = gobject.timeout_add(
+                    self._pulse_time * 1000, self._pulse_timeout)
 
     def _stop(self):
         if self._pulse_sid:
