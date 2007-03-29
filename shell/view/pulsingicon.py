@@ -73,7 +73,7 @@ class PulsingIcon(CanvasIcon):
     def _start(self):
         if self._pulse_sid == 0:
             self._pulse_sid = gobject.timeout_add(
-                    self._pulse_time * 1000, self._pulse_timeout)
+                    int(self._pulse_time * 1000), self._pulse_timeout)
 
     def _stop(self):
         if self._pulse_sid:
