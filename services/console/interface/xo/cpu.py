@@ -23,6 +23,8 @@ import string
 import gobject
 import drwarea
 
+import procmem
+
 class CPU_Usage:
     
     CPU_HZ = 0
@@ -105,12 +107,12 @@ class XO_CPU(gtk.Frame):
         
         self.add(fixed)
         
-        DRW_CPU = CPU_Usage()
-        DRW_CPU.frequency = 1000 # 1 Second
+        self._DRW_CPU = CPU_Usage()
+        self._DRW_CPU.frequency = 1000 # 1 Second
 
-        gobject.timeout_add(DRW_CPU.frequency, self._update_cpu_usage, DRW_CPU)
+        gobject.timeout_add(self._DRW_CPU.frequency, self._update_cpu_usage)
 
-    def _update_cpu_usage(self, DRW_CPU):
+    def _update_cpu_usage(self):
         
         redraw_all = False
         
@@ -123,7 +125,7 @@ class XO_CPU(gtk.Frame):
         else:
             length = len(self._cpu_buffer) - 1
 
-        self._cpu = DRW_CPU._get_CPU_usage()
+        self._cpu = self._DRW_CPU._get_CPU_usage()
         self._cpu_buffer.append(self._cpu)
 
         self._updated = True
@@ -160,10 +162,10 @@ class XO_CPU(gtk.Frame):
             draw_all = True
         else:
             draw_all = False
-            
+
         context.rectangle(event.area.x, event.area.y, event.area.width, event.area.height)
         context.clip()
-    
+
         # Drawing horizontal and vertical border lines
         self.dat.draw_border_lines(context)
             
@@ -251,3 +253,4 @@ class XO_CPU(gtk.Frame):
             freq+=1
         
         context.stroke()
+
