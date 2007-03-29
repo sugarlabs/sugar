@@ -89,7 +89,7 @@ class AccessPointView(PulsingIcon):
 
     def _update_state(self):
         if self._model.props.state == accesspointmodel.STATE_CONNECTING:
-            self.props.pulse_time = 0.75
+            self.props.pulse_time = 1.0
             self.props.colors = [
                 [ color.HTMLColor(self._device_stroke),
                   color.HTMLColor(self._device_fill) ],
@@ -97,7 +97,7 @@ class AccessPointView(PulsingIcon):
                   color.HTMLColor('#e2e2e2') ]
             ]
         elif self._model.props.state == accesspointmodel.STATE_CONNECTED:
-            self.props.pulse_time = 1.5
+            self.props.pulse_time = 2.0
             self.props.colors = [
                 [ color.HTMLColor(self._device_stroke),
                   color.HTMLColor(self._device_fill) ],
