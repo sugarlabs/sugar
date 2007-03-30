@@ -3,10 +3,14 @@
 #include <nsIFactory.h>
 #include <nsIFile.h>
 #include <nsIFileURL.h>
+#include <nsServiceManagerUtils.h>
+#include <nsIMIMEService.h>
 
 #include "sugar-download-manager.h"
 
 #include "GeckoDownload.h"
+
+#define APPLICATION_OCTET_STREAM "application/octet-stream"
 
 class GeckoDownload : public nsITransfer
 {
@@ -62,41 +66,63 @@ GeckoDownload::Init (nsIURI *aSource,
     NS_ENSURE_SUCCESS(rv, NS_ERROR_FAILURE);
 
     file->GetNativePath (mTargetFileName);
+
+    return NS_OK; 
 }
 
 NS_IMETHODIMP 
-GeckoDownload::OnStateChange (nsIWebProgress *aWebProgress,
-							  nsIRequest *aRequest,
-							  PRUint32 aStateFlags,
-							  nsresult aStatus)
+GeckoDownload::OnStateChange(nsIWebProgress *aWebProgress,
+	                          nsIRequest *aRequest,
+                              PRUint32 aStateFlags,
+                              nsresult aStatus)
 {
-	SugarDownloadManager *download_manager = sugar_get_download_manager ();
+    SugarDownloadManager *download_manager = sugar_get_download_manager();
 
-	if (aStateFlags == STATE_START) {
+    if(aStateFlags == STATE_START) {
 
-		nsCString url;
-		nsCString mimeType;
-	
-		mMIMEInfo->GetMIMEType (mimeType);
-		mSource->GetSpec (url);
-		
-		sugar_download_manager_download_started (download_manager,
-												 url.get (),
-												 mimeType.get (),
-												 mTargetFileName.get ());
+        nsCString url;
+        nsCString mimeType;
 
-	} else if (aStateFlags == STATE_STOP) {
-		
-		if (NS_SUCCEEDED (aStatus)) {
-			sugar_download_manager_download_completed (download_manager,
-													   mTargetFileName.get ());
-		} else {
-			sugar_download_manager_download_cancelled (download_manager,
-													   mTargetFileName.get ());
-		}
-	}
+        mMIMEInfo->GetMIMEType(mimeType);
+        mSource->GetSpec(url);
 
-	return NS_OK; 
+        /* If the file is application/octet-stream, look up a better mime type
+           from the extension. */
+        if(mimeType.Equals(APPLICATION_OCTET_STREAM)) {
+            nsresult rv;
+            nsCOMPtr<nsIMIMEService> mimeService(
+                do_GetService("@mozilla.org/mime;1", &rv));
+            NS_ENSURE_SUCCESS(rv, rv);
+            
+            const char *fileExt = strrchr(mTargetFileName.get(), '.');
+            if(fileExt) {
+                nsCString contentType;
+
+                mimeService->GetTypeFromExtension(nsCString(fileExt),
+                                                   contentType);
+                if(!contentType.IsEmpty()) {
+                    mimeType = contentType;
+                }
+            }
+        }
+        
+        sugar_download_manager_download_started(download_manager,
+                                                 url.get(),
+                                                 mimeType.get(),
+                                                 mTargetFileName.get());
+
+    } else if(aStateFlags == STATE_STOP) {
+        
+        if(NS_SUCCEEDED(aStatus)) {
+            sugar_download_manager_download_completed(download_manager,
+                                                       mTargetFileName.get());
+        } else {
+            sugar_download_manager_download_cancelled(download_manager,
+                                                       mTargetFileName.get());
+        }
+    }
+
+    return NS_OK; 
 }
 
 NS_IMETHODIMP
