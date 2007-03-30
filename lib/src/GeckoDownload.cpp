@@ -86,6 +86,7 @@ GeckoDownload::OnStateChange(nsIWebProgress *aWebProgress,
         mMIMEInfo->GetMIMEType(mimeType);
         mSource->GetSpec(url);
 
+#ifdef HAVE_GECKO_1_9
         /* If the file is application/octet-stream, look up a better mime type
            from the extension. */
         if(mimeType.Equals(APPLICATION_OCTET_STREAM)) {
@@ -105,7 +106,8 @@ GeckoDownload::OnStateChange(nsIWebProgress *aWebProgress,
                 }
             }
         }
-        
+#endif
+
         sugar_download_manager_download_started(download_manager,
                                                  url.get(),
                                                  mimeType.get(),
