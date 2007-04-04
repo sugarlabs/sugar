@@ -98,21 +98,21 @@ error_handler (Display *d, XErrorEvent *e)
     gchar buf[64];
     gchar *msg;
 
-    XGetErrorText (d, e->error_code, buf, 63);
+    XGetErrorText(d, e->error_code, buf, 63);
 
     msg =
-    g_strdup_printf ("The program '%s' received an X Window System error.\n"
-                     "This probably reflects a bug in the program.\n"
-                     "The error was '%s'.\n"
-                     "  (Details: serial %ld error_code %d request_code %d minor_code %d)\n",
-                     g_get_prgname (),
-                     buf,
-                     e->serial, 
-                     e->error_code, 
-                     e->request_code,
-                     e->minor_code);
+    g_strdup_printf("The program '%s' received an X Window System error.\n"
+                    "This probably reflects a bug in the program.\n"
+                    "The error was '%s'.\n"
+                    "  (Details: serial %ld error_code %d request_code %d minor_code %d)\n",
+                    g_get_prgname (),
+                    buf,
+                    e->serial, 
+                    e->error_code, 
+                    e->request_code,
+                    e->minor_code);
 
-    g_error ("%s", msg);
+    g_warning ("%s", msg);
 
     return 0;
     /*return (*old_handler)(d, e);*/
@@ -142,7 +142,7 @@ sugar_browser_startup(const char *profile_path, const char *profile_name)
 
 	gtk_moz_embed_set_profile_path(profile_path, profile_name);
 
-    old_handler = XSetErrorHandler (error_handler);
+    old_handler = XSetErrorHandler(error_handler);
 
     gtk_moz_embed_push_startup();
 
