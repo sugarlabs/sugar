@@ -239,7 +239,7 @@ class MeshBox(SpreadBox):
         self._add_mesh_icon(mesh)
 
     def _mesh_removed_cb(self, model):
-        self._remove_mesh_icon()
+        self._remove_mesh()
 
     def _buddy_added_cb(self, model, buddy_model):
         self._add_alone_buddy(buddy_model)
@@ -270,7 +270,7 @@ class MeshBox(SpreadBox):
         self._mesh = MeshDeviceView(mesh)
         self.add_item(self._mesh)
 
-    def _remove_access_point(self):
+    def _remove_mesh(self):
         if not self._mesh:
             return
         self.remove_item(self._mesh)

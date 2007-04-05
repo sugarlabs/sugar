@@ -75,7 +75,8 @@ class DevicesModel(gobject.GObject):
         pass
 
     def _network_device_removed_cb(self, network_manager, nm_device):
-        self.remove_device(self._get_network_device(nm_device))
+        if self._devices.has_key(str(nm_device.get_op())):
+            self.remove_device(self._get_network_device(nm_device))
 
     def _check_network_device(self, nm_device):
         if not nm_device.is_valid():
