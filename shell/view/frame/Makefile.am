@@ -5,7 +5,7 @@ sugar_PYTHON =				\
 	clipboardbox.py			\
 	clipboardpanelwindow.py		\
 	FriendsBox.py			\
-	eventframe.py			\
+	eventarea.py			\
 	frame.py			\
 	ZoomBox.py			\
 	overlaybox.py			\

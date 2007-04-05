@@ -19,7 +19,7 @@ import gtk
 import gobject
 import hippo
 
-from view.frame.eventframe import EventFrame
+from view.frame.eventarea import EventArea
 from view.frame.ActivitiesBox import ActivitiesBox
 from view.frame.ZoomBox import ZoomBox
 from view.frame.overlaybox import OverlayBox
@@ -136,9 +136,9 @@ class Frame(object):
         self._animator = None
         self._hover = False
 
-        self._event_frame = EventFrame()
-        self._event_frame.connect('enter-corner', self._enter_corner_cb)
-        self._event_frame.show()
+        self._event_area = EventArea()
+        self._event_area.connect('enter', self._enter_corner_cb)
+        self._event_area.show()
 
         self._popup_context = FramePopupContext()
         self._popup_context.connect('activated',
@@ -173,7 +173,7 @@ class Frame(object):
         self._animator.add(_Animation(self, 0.0))
         self._animator.start()
 
-        self._event_frame.show()
+        self._event_area.show()
 
         self.visible = False
         if force:
@@ -192,7 +192,7 @@ class Frame(object):
         self._animator.add(_Animation(self, 1.0))
         self._animator.start()
 
-        self._event_frame.hide()
+        self._event_area.hide()
 
         self.visible = True
         self.mode = MODE_FORCE
@@ -336,7 +336,7 @@ class Frame(object):
     def _drag_leave_cb(self, window, drag_context, timestamp):
         self._mouse_listener.mouse_leave()
             
-    def _enter_corner_cb(self, event_frame):
+    def _enter_corner_cb(self, event_area):
         self._mouse_listener.mouse_enter()
         
     def notify_key_press(self):
