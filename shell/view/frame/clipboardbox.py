@@ -146,7 +146,7 @@ class ClipboardBox(hippo.CanvasBox):
     def drag_motion_cb(self, widget, context, x, y, time):
         logging.debug('ClipboardBox._drag_motion_cb')
         context.drag_status(gtk.gdk.ACTION_COPY, time)
-        return False;
+        return True;
 
     def drag_drop_cb(self, widget, context, x, y, time):
         logging.debug('ClipboardBox._drag_drop_cb')
