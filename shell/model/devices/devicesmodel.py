@@ -1,3 +1,20 @@
+#
+# Copyright (C) 2007, Red Hat, Inc.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
 import logging
 import gobject
 
@@ -23,6 +40,7 @@ class DevicesModel(gobject.GObject):
         gobject.GObject.__init__(self)
 
         self._devices = {}
+        self._sigids = {}
         self.add_device(battery.Device())
 
         self._observe_network_manager()
@@ -45,7 +63,6 @@ class DevicesModel(gobject.GObject):
                                 self._network_device_removed_cb)
 
     def _network_device_added_cb(self, network_manager, nm_device):
-        logging.debug("got added isgnal for %s" % nm_device.get_op())
         state = nm_device.get_state()
         if state == nmclient.DEVICE_STATE_ACTIVATING \
                 or state == nmclient.DEVICE_STATE_ACTIVATED:
@@ -57,12 +74,8 @@ class DevicesModel(gobject.GObject):
     def _network_device_activated_cb(self, network_manager, nm_device):
         pass
 
-    def _network_device_removed_cb(self, nm_device):
-        self._remove_network_device(nm_device)
-
-    def _network_device_state_changed_cb(self, nm_device):
-        if nm_device.get_state() == nmclient.DEVICE_STATE_INACTIVE:
-            self._remove_network_device(nm_device)
+    def _network_device_removed_cb(self, network_manager, nm_device):
+        self.remove_device(self._get_network_device(nm_device))
 
     def _check_network_device(self, nm_device):
         if not nm_device.is_valid():
@@ -77,23 +90,26 @@ class DevicesModel(gobject.GObject):
     def _get_network_device(self, nm_device):
         return self._devices[str(nm_device.get_op())]
 
+    def _network_device_state_changed_cb(self, dev, param):
+        if dev.props.state == device.STATE_INACTIVE:
+            self.remove_device(dev)
+
     def _add_network_device(self, nm_device):
         if self._devices.has_key(str(nm_device.get_op())):
             logging.debug("Tried to add device %s twice" % nm_device.get_op())
             return
 
         dtype = nm_device.get_type()
-        logging.debug("Adding device %s type %d" % (nm_device.get_op(), dtype))
         if dtype == nmclient.DEVICE_TYPE_802_11_WIRELESS:
-            self.add_device(wireless.Device(nm_device))
+            dev = wireless.Device(nm_device)
+            self.add_device(dev)
+            sigid = dev.connect('notify::state', self._network_device_state_changed_cb)
+            self._sigids[dev] = sigid
         if dtype == nmclient.DEVICE_TYPE_802_11_MESH_OLPC:
-            self.add_device(mesh.Device(nm_device))
-
-        nm_device.connect('state-changed',
-                          self._network_device_state_changed_cb)
-
-    def _remove_network_device(self, nm_device):
-        self.remove_device(self._get_network_device(nm_device))
+            dev = mesh.Device(nm_device)
+            self.add_device(dev)
+            sigid = dev.connect('notify::state', self._network_device_state_changed_cb)
+            self._sigids[dev] = sigid
 
     def __iter__(self):
         return iter(self._devices.values())
@@ -104,4 +120,6 @@ class DevicesModel(gobject.GObject):
 
     def remove_device(self, device):
         self.emit('device-disappeared', self._devices[device.get_id()])
+        device.disconnect(self._sigids[device])
+        del self._sigids[device]
         del self._devices[device.get_id()]

@@ -20,22 +20,12 @@ import gobject
 from model.devices import device
 from hardware import nmclient
 
-STATE_ACTIVATING = 0
-STATE_ACTIVATED  = 1
-STATE_INACTIVE   = 2
-
-_nm_state_to_state = {
-    nmclient.DEVICE_STATE_ACTIVATING : STATE_ACTIVATING,
-    nmclient.DEVICE_STATE_ACTIVATED  : STATE_ACTIVATED,
-    nmclient.DEVICE_STATE_INACTIVE   : STATE_INACTIVE
-}
-
 class Device(device.Device):
     __gproperties__ = {
         'strength' : (int, None, None, 0, 100, 0,
                       gobject.PARAM_READABLE),
-        'state'    : (int, None, None, STATE_ACTIVATING,
-                      STATE_INACTIVE, 0, gobject.PARAM_READABLE)
+        'state'    : (int, None, None, device.STATE_ACTIVATING,
+                      device.STATE_INACTIVE, 0, gobject.PARAM_READABLE)
     }
 
     def __init__(self, nm_device):
@@ -58,10 +48,10 @@ class Device(device.Device):
             return self._nm_device.get_strength()
         elif pspec.name == 'state':
             nm_state = self._nm_device.get_state()
-            return _nm_state_to_state[nm_state]
+            return device._nm_state_to_state[nm_state]
 
     def get_type(self):
         return 'network.mesh'
 
     def get_id(self):
-        return self._nm_device.get_op()
+        return str(self._nm_device.get_op())

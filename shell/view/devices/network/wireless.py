@@ -20,6 +20,7 @@ from sugar.graphics import color
 from sugar.graphics import units
 from model.devices.network import wireless
 from sugar.graphics.canvasicon import CanvasIcon
+from model.devices import device
 
 _ICON_NAME = 'device-network-wireless'
 
@@ -57,12 +58,12 @@ class DeviceView(CanvasIcon):
     def _update_state(self):
         # FIXME Change icon colors once we have real icons
         state = self._model.props.state
-        if state == wireless.STATE_ACTIVATING:
+        if state == device.STATE_ACTIVATING:
             self.props.fill_color = color.ICON_FILL_INACTIVE
             self.props.stroke_color = color.ICON_STROKE_INACTIVE
-        elif state == wireless.STATE_ACTIVATED:
+        elif state == device.STATE_ACTIVATED:
             self.props.fill_color = None
             self.props.stroke_color = None
-        elif state == wireless.STATE_INACTIVE:
+        elif state == device.STATE_INACTIVE:
             self.props.fill_color = color.ICON_FILL_INACTIVE
             self.props.stroke_color = color.ICON_STROKE_INACTIVE

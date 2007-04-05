@@ -18,7 +18,7 @@
 from sugar.graphics import canvasicon
 from sugar.graphics import color
 from sugar.graphics import units
-from model.devices.network import mesh
+from model.devices import device
 
 class DeviceView(canvasicon.CanvasIcon):
     def __init__(self, model):
@@ -35,12 +35,12 @@ class DeviceView(canvasicon.CanvasIcon):
     def _update_state(self):
         # FIXME Change icon colors once we have real icons
         state = self._model.props.state
-        if state == mesh.STATE_ACTIVATING:
+        if state == device.STATE_ACTIVATING:
             self.props.fill_color = color.ICON_FILL_INACTIVE
             self.props.stroke_color = color.ICON_STROKE_INACTIVE
-        elif state == mesh.STATE_ACTIVATED:
+        elif state == device.STATE_ACTIVATED:
             self.props.fill_color = None
             self.props.stroke_color = None
-        elif state == mesh.STATE_INACTIVE:
+        elif state == device.STATE_INACTIVE:
             self.props.fill_color = color.ICON_FILL_INACTIVE
             self.props.stroke_color = color.ICON_STROKE_INACTIVE
