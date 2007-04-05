@@ -37,10 +37,10 @@ NM_DEVICE_STAGE_STRINGS=("Unknown",
     "IP Config",
     "IP Config Get",
     "IP Config Commit",
-    "Post-IP Start"
+    "Post-IP Start",
     "Activated",
     "Failed",
-    "Cancled"
+    "Canceled"
 )
 
 NM_SERVICE = 'org.freedesktop.NetworkManager'
@@ -192,6 +192,7 @@ class Device(gobject.GObject):
         self._type = DEVICE_TYPE_UNKNOWN
         self._udi = None
         self._active = False
+        self._act_stage = 0
         self._strength = 0
         self._link = False
         self._valid = False
@@ -206,11 +207,22 @@ class Device(gobject.GObject):
         dev.getProperties(reply_handler=self._update_reply_cb,
                 error_handler=self._update_error_cb)
 
+    def _is_activating(self):
+        if self._active and self._act_stage >= 1 and self._act_stage <= 7:
+            return True
+        return False
+
+    def _is_activated(self):
+        if self._active and self._act_stage == 8:
+            return True
+        return False
+
     def _update_reply_cb(self, *props):
         self._iface = props[1]
         self._type = props[2]
         self._udi = props[3]
         self._active = props[4]
+        self._act_stage = props[5]
         self._link = props[15]
         self._caps = props[17]
 
@@ -218,17 +230,21 @@ class Device(gobject.GObject):
             old_strength = self._strength
             self._strength = props[14]
             if self._strength != old_strength:
-                self.emit('strength-changed')
+                if self._valid:
+                    self.emit('strength-changed')
             self._update_networks(props[20], props[19])
         elif self._type ==  DEVICE_TYPE_802_11_MESH_OLPC:
             old_strength = self._strength
             self._strength = props[14]
             if self._strength != old_strength:
-                self.emit('strength-changed')
+                if self._valid:
+                    self.emit('strength-changed')
 
         self._valid = True
 
-        if self._active:
+        if self._is_activating():
+            self.set_state(DEVICE_STATE_ACTIVATING)
+        elif self._is_activated():
             self.set_state(DEVICE_STATE_ACTIVATED)
         else:
             self.set_state(DEVICE_STATE_INACTIVE)
@@ -257,7 +273,8 @@ class Device(gobject.GObject):
             return
 
         # init success
-        self.emit('network-appeared', net)
+        if self._valid:
+            self.emit('network-appeared', net)
         if active_op and net_op == active_op:
             self.set_active_network(net)
 
@@ -295,7 +312,8 @@ class Device(gobject.GObject):
         else:
             self._strength = 0
 
-        self.emit('strength-changed')
+        if self._valid:
+            self.emit('strength-changed')
 
     def network_appeared(self, network):
         if self._networks.has_key(network):
@@ -308,7 +326,8 @@ class Device(gobject.GObject):
         if not self._networks.has_key(network):
             return
 
-        self.emit('network-disappeared', self._networks[network])
+        if self._valid:
+            self.emit('network-disappeared', self._networks[network])
 
         del self._networks[network]
 
@@ -323,10 +342,11 @@ class Device(gobject.GObject):
         self._active_network = network
 
         # don't emit ssid-changed for networks that are not yet valid
-        if self._active_network and self._active_network.is_valid():
-            self.emit('ssid-changed')
-        elif not self._active_network:
-            self.emit('ssid-changed')
+        if self._valid:
+            if self._active_network and self._active_network.is_valid():
+                self.emit('ssid-changed')
+            elif not self._active_network:
+                self.emit('ssid-changed')
 
     def _get_active_net_cb(self, state, net_op):
         if not self._networks.has_key(net_op):
@@ -356,7 +376,8 @@ class Device(gobject.GObject):
             return
 
         self._state = state
-        self.emit('state-changed')
+        if self._valid:
+            self.emit('state-changed')
 
         if self._type == DEVICE_TYPE_802_11_WIRELESS:
             if state == DEVICE_STATE_INACTIVE:
@@ -469,6 +490,7 @@ class NMClient(gobject.GObject):
 
     def _setup_dbus(self):
         self._sig_handlers = {
+            'StateChange': self.state_changed_sig_handler,
             'DeviceAdded': self.device_added_sig_handler,
             'DeviceRemoved': self.device_removed_sig_handler,
             'DeviceActivationStage': self.device_activation_stage_sig_handler,
@@ -568,6 +590,9 @@ class NMClient(gobject.GObject):
             return
         self._key_dialog_destroy_cb(self._key_dialog)
 
+    def state_changed_sig_handler(self, new_state):
+        logging.debug('NM State Changed to %d' % new_state)
+
     def device_activation_stage_sig_handler(self, device, stage):
         logging.debug('Device Activation Stage "%s" for device %s' % (NM_DEVICE_STAGE_STRINGS[stage], device))
 
@@ -605,8 +630,9 @@ class NMClient(gobject.GObject):
         if (old and len(old)) and (not new and not len(new)):
             # NM went away
             self._nm_present = False
-            for op in self._devices.keys():
-                del self._devices[op]
+            devs = self._devices.keys()
+            for op in devs:
+                self._remove_device(op)
             self._devices = {}
         elif (not old and not len(old)) and (new and len(new)):
             # NM started up

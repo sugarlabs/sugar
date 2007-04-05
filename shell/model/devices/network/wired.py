@@ -6,7 +6,7 @@ class Device(device.Device):
         self._nm_device = device
 
     def get_id(self):
-        return self._nm_device.get_op()
+        return str(self._nm_device.get_op())
 
     def get_type(self):
         return 'network.wired'

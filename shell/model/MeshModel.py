@@ -110,7 +110,9 @@ class MeshModel(gobject.GObject):
         self._add_access_point(nm_device, nm_network)
 
     def _nm_network_disappeared_cb(self, nm_device, nm_network):
-        self._remove_access_point(nm_network)
+        if self._access_points.has_key(nm_network.get_op()):
+            ap = self._access_points[nm_network.get_op()]
+            self._remove_access_point(ap)
 
     def _add_network_device(self, nm_device):
         dtype = nm_device.get_type()
@@ -138,13 +140,14 @@ class MeshModel(gobject.GObject):
 
     def _add_access_point(self, nm_device, nm_network):
         model = AccessPointModel(nm_device, nm_network)
-        self._access_points[nm_network.get_op()] = model
+        self._access_points[model.get_id()] = model
         self.emit('access-point-added', model)
 
-    def _remove_access_point(self, nm_network):
-        self.emit('access-point-removed',
-                  self._access_points[nm_network.get_op()])
-        del self._access_points[nm_network.get_op()]
+    def _remove_access_point(self, ap):
+        if not self._access_points.has_key(ap.get_id()):
+            return
+        self.emit('access-point-removed', ap)
+        del self._access_points[ap.get_id()]
 
     def get_mesh(self):
         return self._mesh
