@@ -1,9 +1,6 @@
 SUBDIRS = hardware model view intro
 
-bin_SCRIPTS = 				\
-	sugar-activity			\
-	sugar-activity-factory		\
-	sugar-shell
+bin_SCRIPTS = sugar-shell
 
 sugardir = $(pkgdatadir)/shell
 sugar_PYTHON =				\
