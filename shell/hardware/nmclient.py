@@ -80,6 +80,9 @@ DEVICE_STATE_ACTIVATING = 0
 DEVICE_STATE_ACTIVATED  = 1
 DEVICE_STATE_INACTIVE   = 2
 
+IW_MODE_ADHOC = 1
+IW_MODE_INFRA = 2
+
 class Network(gobject.GObject):
     __gsignals__ = {
         'initialized'     : (gobject.SIGNAL_RUN_FIRST,
@@ -114,6 +117,15 @@ class Network(gobject.GObject):
             # We do not support WPA at this time, so don't show
             # WPA-enabled access points in the menu
             logging.debug("Net(%s): ssid '%s' dropping because WPA[2] unsupported" % (self._op,
+                    self._ssid))
+            self._valid = False
+            self.emit('initialized', self._valid)
+            return
+        if self._mode != IW_MODE_INFRA:
+            # Don't show Ad-Hoc networks; they usually don't DHCP and therefore
+            # won't work well here.  This also works around the bug where we show
+            # our own mesh SSID on the Mesh view when in mesh mode
+            logging.debug("Net(%s): ssid '%s' is adhoc; not showing" % (self._op,
                     self._ssid))
             self._valid = False
             self.emit('initialized', self._valid)
