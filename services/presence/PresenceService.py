@@ -848,17 +848,12 @@ class PresenceService(object):
 
 
 def main():
-    from sugar import TracebackUtils
     loop = gobject.MainLoop()
     ps = PresenceService()
-    tbh = TracebackUtils.TracebackHelper()
     try:
         loop.run()
     except KeyboardInterrupt:
         print 'Ctrl+C pressed, exiting...'
-
-    del tbh
-
 
 if __name__ == "__main__":
     main()
