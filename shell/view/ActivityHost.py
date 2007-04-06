@@ -66,7 +66,7 @@ class ActivityHost:
         return self._model
 
     def execute(self, command, args):
-        return self._activity.execute(command, args)
+        return self._activity.execute(command, dbus.Array(args))
 
     def share(self):
         self._activity.share()
