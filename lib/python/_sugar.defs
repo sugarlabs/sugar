@@ -38,13 +38,6 @@
   (gtype-id "SUGAR_TYPE_KEY_GRABBER")
 )
 
-(define-object PushScroller
-  (in-module "Sugar")
-  (parent "GObject")
-  (c-name "SugarPushScroller")
-  (gtype-id "SUGAR_TYPE_PUSH_SCROLLER")
-)
-
 (define-object DownloadManager
   (in-module "Sugar")
   (parent "GObject")
@@ -160,33 +153,6 @@
   (parameters
     '("guint" "keycode")
     '("guint" "state")
-  )
-)
-
-;; From sugar-push-scroller.h
-
-(define-function push_scroller_get_type
-  (c-name "sugar_push_scroller_get_type")
-  (return-type "GType")
-)
-
-(define-method start
-  (of-object "SugarPushScroller")
-  (c-name "sugar_push_scroller_start")
-  (return-type "none")
-  (parameters
-    '("SugarBrowser*" "browser")
-    '("int" "x")
-    '("int" "y")
-  )
-)
-
-(define-method stop
-  (of-object "SugarPushScroller")
-  (c-name "sugar_push_scroller_stop")
-  (return-type "none")
-  (parameters
-    '("guint32" "timestamp")
   )
 )
 
