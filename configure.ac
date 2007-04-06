@@ -121,7 +121,6 @@ data/Makefile
 lib/Makefile
 lib/src/Makefile
 lib/python/Makefile
-lib/threadframe/Makefile
 services/Makefile
 services/presence/Makefile
 services/presence2/Makefile
