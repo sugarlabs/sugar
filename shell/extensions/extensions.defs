@@ -1,0 +1,60 @@
+;; -*- scheme -*-
+; object definitions ...
+
+(define-object KeyGrabber
+  (in-module "Sugar")
+  (parent "GObject")
+  (c-name "SugarKeyGrabber")
+  (gtype-id "SUGAR_TYPE_KEY_GRABBER")
+)
+
+(define-object AudioManager
+  (in-module "Sugar")
+  (parent "GObject")
+  (c-name "SugarAudioManager")
+  (gtype-id "SUGAR_TYPE_AUDIO_MANAGER")
+)
+
+;; Enumerations and flags ...
+
+;; From sugar-key-grabber.h
+
+(define-function sugar_key_grabber_get_type
+  (c-name "sugar_key_grabber_get_type")
+  (return-type "GType")
+)
+
+(define-method grab
+  (of-object "SugarKeyGrabber")
+  (c-name "sugar_key_grabber_grab")
+  (return-type "none")
+  (parameters
+    '("const-char*" "key")
+  )
+)
+
+(define-method get_key
+  (of-object "SugarKeyGrabber")
+  (c-name "sugar_key_grabber_get_key")
+  (return-type "char*")
+  (parameters
+    '("guint" "keycode")
+    '("guint" "state")
+  )
+)
+
+;; From sugar-audio-manager.h
+
+(define-function audio_manager_get_type
+  (c-name "sugar_audio_manager_get_type")
+  (return-type "GType")
+)
+
+(define-method set_volume
+  (of-object "SugarAudioManager")
+  (c-name "sugar_audio_manager_set_volume")
+  (return-type "none")
+  (parameters
+    '("int" "level")
+  )
+)

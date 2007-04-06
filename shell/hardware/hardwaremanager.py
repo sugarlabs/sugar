@@ -19,7 +19,7 @@ import logging
 import dbus
 
 from hardware.nmclient import NMClient
-from _sugar import AudioManager
+from extensions import AudioManager
 
 _HARDWARE_MANAGER_INTERFACE = 'org.laptop.HardwareManager'
 _HARDWARE_MANAGER_SERVICE = 'org.laptop.HardwareManager'

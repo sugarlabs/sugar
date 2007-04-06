@@ -5,11 +5,9 @@ headers
 
 #include "pygobject.h"
 #include "sugar-browser.h"
-#include "sugar-key-grabber.h"
 #include "sugar-address-entry.h"
 #include "sugar-download-manager.h"
 #include "sugar-download.h"
-#include "sugar-audio-manager.h"
 
 #include "pycairo.h"
 #include <pygtk/pygtk.h>

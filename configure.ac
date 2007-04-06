@@ -37,7 +37,9 @@ PKG_CHECK_MODULES(PYGTK, pygtk-2.0)
 
 PKG_CHECK_MODULES(PYCAIRO, pycairo)
 
-PKG_CHECK_MODULES(LIB, gtk+-2.0 gstreamer-0.10 gstreamer-plugins-base-0.10)
+PKG_CHECK_MODULES(LIB, gtk+-2.0)
+
+PKG_CHECK_MODULES(SHELL, gtk+-2.0 gstreamer-0.10 gstreamer-plugins-base-0.10)
 
 PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
 AC_SUBST(PYGTK_DEFSDIR)
@@ -127,6 +129,7 @@ services/presence2/Makefile
 services/clipboard/Makefile
 services/datastore/Makefile
 shell/Makefile
+shell/extensions/Makefile
 shell/intro/Makefile
 shell/hardware/Makefile
 shell/view/Makefile

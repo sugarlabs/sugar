@@ -23,7 +23,7 @@
 
 #include "sugar-key-grabber.h"
 #include "eggaccelerators.h"
-#include "sugar-marshal.h"
+#include "sugar-shell-marshal.h"
 
 /* we exclude shift, GDK_CONTROL_MASK and GDK_MOD1_MASK since we know what
    these modifiers mean
@@ -82,7 +82,7 @@ sugar_key_grabber_class_init(SugarKeyGrabberClass *grabber_class)
                          G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
                          G_STRUCT_OFFSET (SugarKeyGrabberClass, key_pressed),
                          NULL, NULL,
-                         sugar_marshal_BOOLEAN__UINT_UINT,
+                         sugar_shell_marshal_BOOLEAN__UINT_UINT,
                          G_TYPE_BOOLEAN, 2,
                          G_TYPE_UINT,
                          G_TYPE_UINT);
@@ -91,7 +91,7 @@ sugar_key_grabber_class_init(SugarKeyGrabberClass *grabber_class)
                          G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
                          G_STRUCT_OFFSET (SugarKeyGrabberClass, key_released),
                          NULL, NULL,
-                         sugar_marshal_BOOLEAN__UINT_UINT,
+                         sugar_shell_marshal_BOOLEAN__UINT_UINT,
                          G_TYPE_BOOLEAN, 2,
                          G_TYPE_UINT,
                          G_TYPE_UINT);

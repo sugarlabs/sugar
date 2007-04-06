@@ -9,7 +9,7 @@ import gtk
 from sugar import env
 from hardware import hardwaremanager
 from model.ShellModel import ShellModel
-from _sugar import KeyGrabber
+from extensions import KeyGrabber
 import sugar
 
 _actions_table = {
