@@ -312,6 +312,8 @@ class PresenceService(object):
         self._services = {}        # (name, type) -> Service
         self._activities = {}    # activity id -> Activity
 
+        self._service_blacklist = {}
+
         # Keep track of stuff we're already browsing
         self._service_type_browsers = {}
         self._service_browsers = {}
@@ -584,6 +586,11 @@ class PresenceService(object):
                 retried = True
                 logging.error("Retrying resolution of service %s.%s: %s" % (adv.name(),
                     adv.stype(), err))
+            else:
+                key = adv.name() + "." + adv.stype()
+                if not self._service_blacklist.has_key(key):
+                    logging.error("Adding service %s to blacklist" % key)
+                    self._service_blacklist[key] = 1
 
         if not retried:
             logging.error("Error resolving service %s.%s: %s" % (adv.name(),
@@ -592,10 +599,20 @@ class PresenceService(object):
 
     def _resolve_service(self, adv):
         """Resolve and lookup a ZeroConf service to obtain its address and TXT records."""
+        key = adv.name() + "." + adv.stype()
+        if self._service_blacklist.has_key(key):
+            return False
+
         # Ask avahi to resolve this particular service
-        path = self._mdns_service.ServiceResolverNew(dbus.Int32(adv.interface()),
-                dbus.Int32(adv.protocol()), adv.name(), adv.stype(), adv.domain(),
-                avahi.PROTO_INET, dbus.UInt32(0))
+        try:
+            path = self._mdns_service.ServiceResolverNew(dbus.Int32(adv.interface()),
+                    dbus.Int32(adv.protocol()), adv.name(), adv.stype(), adv.domain(),
+                    avahi.PROTO_INET, dbus.UInt32(0))
+        except dbus.DBusException, e:
+            if str(e).find("TooManyObjectsError") >= 0:
+                return False
+            raise e
+
         resolver = dbus.Interface(self._system_bus.get_object(avahi.DBUS_NAME, path),
                             avahi.DBUS_INTERFACE_SERVICE_RESOLVER)
         resolver.connect_to_signal('Found', lambda *args: self._service_resolved_cb_glue(adv, *args))
