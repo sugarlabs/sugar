@@ -46,12 +46,11 @@ depcomp
 libtool
 ltmain.sh
 m4/intltool.m4
-lib/python/_sugar.c
-lib/python/gtkmozembed.c
-lib/src/sugar-marshal.c
-lib/src/sugar-marshal.h
-lib/src/stamp-sugar-marshal.c
-lib/src/stamp-sugar-marshal.h
+sugar/browser/_sugarbrowser.c
+browser/sugar-marshal.c
+browser/sugar-marshal.h
+browser/stamp-sugar-marshal.c
+browser/stamp-sugar-marshal.h
 services/clipboard/org.laptop.Clipboard.service
 services/console/org.laptop.sugar.Console.service
 bin/sugar
