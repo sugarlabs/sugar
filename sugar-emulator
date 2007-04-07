@@ -88,7 +88,8 @@ else:
     width = 1200
     height = 900
 
-_start_xephyr(width, height, min(_sugar.get_screen_dpi(), 96))
+_gtk_xft_dpi = float(gtk.settings_get_default().get_property('gtk-xft-dpi'))
+_start_xephyr(width, height, _gtk_xft_dpi / 1024)
 
 os.environ['GTK2_RC_FILES'] = env.get_data_path('gtkrc')
 

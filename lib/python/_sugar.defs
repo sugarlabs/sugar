@@ -199,11 +199,4 @@
   )
 )
 
-;; From sugar-utils.h
-
-(define-function get_screen_dpi
-  (c-name "sugar_get_screen_dpi")
-  (return-type "gint")
-)
-
 (include "gtkmozembed.defs")

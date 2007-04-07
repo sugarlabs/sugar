@@ -37,9 +37,7 @@ libsugarprivate_la_SOURCES =		\
 	sugar-download.h		\
 	sugar-download.c		\
 	sugar-download-manager.h	\
-	sugar-download-manager.c	\
-	sugar-utils.c			\
-	sugar-utils.h
+	sugar-download-manager.c
 
 BUILT_SOURCES = 		\
 	sugar-marshal.c		\

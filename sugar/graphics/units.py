@@ -61,19 +61,18 @@ units to device units.
 
 import gtk
 
-import _sugar
-
 _MAX_ZOOM_FACTOR = 2.0
 _ZOOM_CONSTANT   = 650.0
 
 def _compute_zoom_factor():
     screen_width = gtk.gdk.screen_width()
-    if _sugar.get_screen_dpi() == 201.0 and screen_width == 1200:
+    if _screen_dpi == 201.0 and screen_width == 1200:
         return 1.0
     else:
         return min(_MAX_ZOOM_FACTOR, screen_width / _ZOOM_CONSTANT)
 
-_screen_dpi = float(_sugar.get_screen_dpi())
+_gtk_xft_dpi = gtk.settings_get_default().get_property('gtk-xft-dpi')
+_screen_dpi = float(_gtk_xft_dpi / 1024)
 _dpi_factor  = _screen_dpi / 201.0
 _zoom_factor = _compute_zoom_factor()
 
