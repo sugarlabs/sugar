@@ -62,7 +62,7 @@
   (return-type "GType")
 )
 
-(define-function browser_startup
+(define-function startup
   (c-name "sugar_browser_startup")
   (parameters
     '("const-char*" "profile_path")
@@ -71,7 +71,7 @@
   (return-type "gboolean")
 )
 
-(define-function browser_shutdown
+(define-function shutdown
   (c-name "sugar_browser_shutdown")
   (return-type "none")
 )
@@ -180,23 +180,6 @@
   (of-object "SugarDownload")
   (c-name "sugar_download_get_percent")
   (return-type "gint")
-)
-
-(define-function hippo_canvas_image_set_image_from_gdk_pixbuf
-  (c-name "sugar_hippo_canvas_image_set_image_from_gdk_pixbuf")
-  (return-type "none")
-  (parameters
-    '("GObject*" "image")
-    '("GdkPixbuf*" "pixbuf")
-  )
-)
-
-(define-function cairo_surface_from_gdk_pixbuf
-  (c-name "sugar_cairo_surface_from_gdk_pixbuf")
-  (return-type "cairo_surface_t*")
-  (parameters
-    '("GdkPixbuf*" "pixbuf")
-  )
 )
 
 (include "gtkmozembed.defs")

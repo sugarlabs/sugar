@@ -21,7 +21,6 @@ import os
 import gtk
 import hippo
 
-import _sugar
 from sugar.presence import PresenceService
 from sugar.activity.activityservice import ActivityService
 from sugar.graphics.window import Window

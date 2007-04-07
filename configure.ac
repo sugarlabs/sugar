@@ -120,9 +120,7 @@ AC_OUTPUT([
 Makefile
 bin/Makefile
 data/Makefile
-lib/Makefile
-lib/src/Makefile
-lib/python/Makefile
+browser/Makefile
 services/Makefile
 services/presence/Makefile
 services/presence2/Makefile
@@ -155,6 +153,7 @@ services/console/interface/logviewer/Makefile
 services/console/interface/terminal/Makefile
 sugar/Makefile
 sugar/activity/Makefile
+sugar/browser/Makefile
 sugar/clipboard/Makefile
 sugar/graphics/Makefile
 sugar/p2p/Makefile

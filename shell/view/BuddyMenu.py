@@ -23,7 +23,6 @@ from sugar.graphics.menu import Menu, MenuItem
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import units
 from sugar.presence import PresenceService
-import _sugar
 
 class BuddyMenu(Menu):
     ACTION_MAKE_FRIEND = 0
@@ -49,7 +48,7 @@ class BuddyMenu(Menu):
             # FIXME: have to set the image _after_ adding the HippoCanvasImage
             # to it's parent item, because that sets the HippoCanvasImage's context,
             # which resets the object's 'image' property.  Grr.
-            _sugar.hippo_canvas_image_set_image_from_gdk_pixbuf(icon_item, scaled_pixbuf)
+            #_sugar.hippo_canvas_image_set_image_from_gdk_pixbuf(icon_item, scaled_pixbuf)
 
         self._buddy.connect('icon-changed', self.__buddy_icon_changed_cb)
 

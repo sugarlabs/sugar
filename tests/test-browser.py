@@ -22,15 +22,15 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-import _sugar
+import sugar.browser
 
 # Main window
 window = gtk.Window()
 window.connect("destroy", lambda w: gtk.main_quit())
 
-_sugar.browser_startup(os.path.expanduser('~/.sugar-browser-test'), 'test')
+sugar.browser.startup(os.path.expanduser('~/.sugar-browser-test'), 'test')
 
-browser = _sugar.Browser()
+browser = sugar.browser.Browser()
 window.add(browser)
 browser.show()
 

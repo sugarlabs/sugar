@@ -1,0 +1,80 @@
+/* -*- Mode: C; c-basic-offset: 4 -*- */
+%%
+headers
+#include <Python.h>
+
+#include "pygobject.h"
+#include "sugar-browser.h"
+#include "sugar-address-entry.h"
+#include "sugar-download-manager.h"
+#include "sugar-download.h"
+
+#include <pygtk/pygtk.h>
+#include <glib.h>
+
+%%
+modulename _sugarbrowser
+%%
+import gobject.GObject as PyGObject_Type
+import gtk.Entry as PyGtkEntry_Type
+import gtk.gdk.Screen as PyGdkScreen_Type
+import gtk.gdk.Pixbuf as PyGdkPixbuf_Type
+import hippo.CanvasImage as HippoCanvasImage_Type
+%%
+ignore-glob
+  *_get_type
+  _*
+%%
+include
+  gtkmozembed.override
+%%
+override-slot SugarBrowserMetadata.tp_getattr
+static PyObject *
+_wrap_sugar_browser_metadata_tp_getattr(PyObject *self, char *attr)
+{
+    SugarBrowserMetadata *metadata = pyg_boxed_get(self, SugarBrowserMetadata);
+
+    if (!strcmp(attr, "__members__"))
+        return Py_BuildValue("[s]", "filename");
+    else if (!strcmp(attr, "filename")) {
+        if (metadata->filename) {
+            return PyString_FromString(metadata->filename);
+        } else {
+            Py_INCREF(Py_None);
+            return Py_None;
+        }
+    }
+
+    return NULL;
+}
+%%
+override-slot SugarBrowserEvent.tp_getattr
+static PyObject *
+_wrap_sugar_browser_event_tp_getattr(PyObject *self, char *attr)
+{
+    SugarBrowserEvent *event = pyg_boxed_get(self, SugarBrowserEvent);
+
+    if (!strcmp(attr, "__members__"))
+        return Py_BuildValue("[sss]", "image_uri", "button", "image_name");
+    else if (!strcmp(attr, "image_uri")) {
+        if (event->image_uri) {
+            return PyString_FromString(event->image_uri);
+        } else {
+            Py_INCREF(Py_None);
+            return Py_None;
+        }
+    }
+    else if (!strcmp(attr, "image_name")) {
+        if (event->image_name) {
+            return PyString_FromString(event->image_name);
+        } else {
+            Py_INCREF(Py_None);
+            return Py_None;
+        }
+    }
+    else if (!strcmp(attr, "button"))
+        return PyInt_FromLong(event->button);
+
+    return NULL;
+}
+%%

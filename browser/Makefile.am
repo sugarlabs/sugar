@@ -1,4 +1,4 @@
-libsugarprivate_la_CPPFLAGS =				\
+libsugarbrowser_la_CPPFLAGS =				\
 	$(WARN_CFLAGS)					\
 	$(LIB_CFLAGS)					\
 	$(GECKO_CFLAGS)					\
@@ -18,13 +18,13 @@ libsugarprivate_la_CPPFLAGS =				\
 	-DPLUGIN_DIR=\"$(libdir)/mozilla/plugins\"	\
 	-DSHARE_DIR=\"$(pkgdatadir)\"
 	
-noinst_LTLIBRARIES = libsugarprivate.la
+noinst_LTLIBRARIES = libsugarbrowser.la
 
-libsugarprivate_la_LIBADD = \
+libsugarbrowser_la_LIBADD = \
 	$(LIB_LIBS) 		\
 	$(GECKO_LIBS)
 
-libsugarprivate_la_SOURCES =		\
+libsugarbrowser_la_SOURCES =		\
 	$(BUILT_SOURCES)		\
 	GeckoContentHandler.h		\
 	GeckoContentHandler.cpp		\
