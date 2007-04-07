@@ -1,5 +1,5 @@
 sugardir = $(pkgdatadir)
-sugar_DATA =
+sugar_DATA =		\
 	gtkrc		\
 	gecko-prefs.js	\
 	mime.types
