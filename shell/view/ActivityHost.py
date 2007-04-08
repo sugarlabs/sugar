@@ -38,7 +38,6 @@ class ActivityChatWindow(gtk.Window):
 class ActivityHost:
     def __init__(self, model):
         self._model = model
-        self._id = model.get_id()
         self._window = model.get_window()
         self._activity = model.get_service()
         self._gdk_window = gtk.gdk.window_foreign_new(self.get_xid())
@@ -57,7 +56,7 @@ class ActivityHost:
         self._frame_was_visible = False
 
     def get_id(self):
-        return self._id
+        return self._model.get_activity_id()
 
     def get_xid(self):
         return self._window.get_xid()

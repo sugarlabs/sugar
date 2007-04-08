@@ -141,7 +141,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
 
     def _activity_added_cb(self, model, activity):
         # Mark the activity as launched
-        act_id = activity.get_id()
+        act_id = activity.get_activity_id()
         if not self._activities.has_key(act_id):
             self._add_activity(activity)
         icon = self._activities[act_id]
@@ -154,7 +154,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
         self.emit_paint_needed(0, 0, -1, -1)
 
     def _remove_activity(self, activity):
-        act_id = activity.get_id()
+        act_id = activity.get_activity_id()
         if not self._activities.has_key(act_id):
             return
         icon = self._activities[act_id]
@@ -167,7 +167,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
         icon.connect('activated', self._activity_icon_clicked_cb)
         self.append(icon, hippo.PACK_FIXED)
 
-        self._activities[activity.get_id()] = icon
+        self._activities[activity.get_activity_id()] = icon
 
         self.emit_paint_needed(0, 0, -1, -1)
 
@@ -176,7 +176,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
         if not icon.get_launched():
             return
 
-        activity_host = self._shell.get_activity(activity.get_id())
+        activity_host = self._shell.get_activity(activity.get_activity_id())
         if activity_host:
             activity_host.present()
 
@@ -250,7 +250,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
 
         i = 0
         for h_activity in self._model:
-            icon = self._activities[h_activity.get_id()]
+            icon = self._activities[h_activity.get_activity_id()]
             [angle_start, angle_end] = self._get_angles(i)
             angle = angle_start + (angle_end - angle_start) / 2
 

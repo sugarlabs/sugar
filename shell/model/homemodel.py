@@ -21,10 +21,11 @@ import wnck
 import dbus
 
 from model.homeactivity import HomeActivity
+from model.homerawwindow import HomeRawWindow
 from sugar.activity import bundleregistry
 
-_ACTIVITY_SERVICE_NAME = "org.laptop.Activity"
-_ACTIVITY_SERVICE_PATH = "/org/laptop/Activity"
+_SERVICE_NAME = "org.laptop.Activity"
+_SERVICE_PATH = "/org/laptop/Activity"
 
 class HomeModel(gobject.GObject):
 
@@ -116,15 +117,28 @@ class HomeModel(gobject.GObject):
             logging.error('Model for window %d does not exist.' % xid)
 
         self.emit('active-activity-changed', self._current_activity)
-        
+
+    def _add_window(self, window):
+        home_window = HomeRawWindow(window)
+        self._activities[home_window.get_activity_id()] = home_window
+        self.emit('activity-added', home_window)
+
     def _add_activity(self, window):
         bus = dbus.SessionBus()
         xid = window.get_xid()
-        act_service = bus.get_object(_ACTIVITY_SERVICE_NAME + '%d' % xid,
-                                     _ACTIVITY_SERVICE_PATH + "/%s" % xid)
-        act_id = act_service.get_id()
+        try:
+            service = bus.get_object(_SERVICE_NAME + '%d' % xid,
+                                     _SERVICE_PATH + "/%s" % xid)
+        except dbus.DBusException:
+            service = None
+
+        if not service:
+            self._add_window(window)
+            return
 
         activity = None
+        act_id = service.get_id()
+        act_type = service.get_service_name()
         if self._activities.has_key(act_id):
             activity = self._activities[act_id]
         else:
@@ -138,6 +152,7 @@ class HomeModel(gobject.GObject):
             activity = HomeActivity(bundle, act_id)
             self._activities[act_id] = activity
 
+        activity.set_service(service)
         activity.set_window(window)
         self.emit('activity-added', activity)
 
@@ -146,7 +161,7 @@ class HomeModel(gobject.GObject):
             self._current_activity = None
 
         self.emit('activity-removed', activity)
-        act_id = activity.get_id()
+        act_id = activity.get_activity_id()
         del self._activities[act_id]
         
     def _remove_activity(self, xid):
@@ -157,7 +172,7 @@ class HomeModel(gobject.GObject):
             logging.error('Model for window %d does not exist.' % xid)
 
     def _activity_launch_timeout_cb(self, activity):
-        act_id = activity.get_id()
+        act_id = activity.get_activity_id()
         if not act_id in self._activities.keys():
             return
         self._internal_remove_activity(activity)

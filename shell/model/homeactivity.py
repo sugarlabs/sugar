@@ -24,9 +24,6 @@ from sugar.graphics.xocolor import XoColor
 from sugar.presence import PresenceService
 from sugar import profile
 
-_ACTIVITY_SERVICE_NAME = "org.laptop.Activity"
-_ACTIVITY_SERVICE_PATH = "/org/laptop/Activity"
-
 class HomeActivity(gobject.GObject):
     __gsignals__ = {
         'launch-timeout':          (gobject.SIGNAL_RUN_FIRST,
@@ -39,29 +36,32 @@ class HomeActivity(gobject.GObject):
         self._window = None
         self._xid = None
         self._service = None
-        self._id = activity_id
-        self._type = bundle.get_service_name()
-        self._icon_name = bundle.get_icon()
+        self._activity_id = activity_id
+        self._bundle = bundle
 
         self._launch_time = time.time()
         self._launched = False
-        self._launch_timeout_id = gobject.timeout_add(20000, self._launch_timeout_cb)
+        self._launch_timeout_id = gobject.timeout_add(
+                                    20000, self._launch_timeout_cb)
 
-        logging.debug("Activity %s (%s) launching..." % (self._id, self._type))
+        logging.debug("Activity %s (%s) launching..." %
+                      (self._activity_id, self.get_type))
 
     def __del__(self):
         gobject.source_remove(self._launch_timeout_id)
         self._launch_timeout_id = 0
 
     def _launch_timeout_cb(self, user_data=None):
-        logging.debug("Activity %s (%s) launch timed out" % (self._id, self._type))
+        logging.debug("Activity %s (%s) launch timed out" %
+                      (self._activity_id, self.get_type))
         self._launch_timeout_id = 0
         self.emit('launch-timeout')
         return False
 
     def set_window(self, window):
         """An activity is 'launched' once we get its window."""
-        logging.debug("Activity %s (%s) finished launching" % (self._id, self._type))
+        logging.debug("Activity %s (%s) finished launching" %
+                      (self._activity_id, self.get_type))
         self._launched = True
         gobject.source_remove(self._launch_timeout_id)
         self._launch_timeout_id = 0
@@ -74,17 +74,8 @@ class HomeActivity(gobject.GObject):
         self._window = window
         self._xid = window.get_xid()
 
-        bus = dbus.SessionBus()
-        self._service = bus.get_object(_ACTIVITY_SERVICE_NAME + '%d' % self._xid,
-                                       _ACTIVITY_SERVICE_PATH + "/%s" % self._xid)
-
-        # verify id and type details
-        act_id = self._service.get_id()
-        if act_id != self._id:
-            raise RuntimeError("Activity's real ID (%s) didn't match expected (%s)." % (act_id, self._id))
-        act_type = self._service.get_service_name()
-        if act_type != self._type:
-            raise RuntimeError("Activity's real type (%s) didn't match expected (%s)." % (act_type, self._type))
+    def set_service(self, service):
+        self._service = service
 
     def get_service(self):
         return self._service
@@ -95,17 +86,18 @@ class HomeActivity(gobject.GObject):
         return self._window.get_name()
 
     def get_icon_name(self):
-        return self._icon_name
+        return self._bundle.get_icon()
     
     def get_icon_color(self):
-        activity = PresenceService.get_instance().get_activity(self._id)
+        pservice = PresenceService.get_instance()
+        activity = pservice.get_activity(self._activity_id)
         if activity != None:
             return XoColor(activity.get_color())
         else:
             return profile.get_color()
         
-    def get_id(self):
-        return self._id
+    def get_activity_id(self):
+        return self._activity_id
 
     def get_xid(self):
         if not self._launched:
@@ -118,7 +110,7 @@ class HomeActivity(gobject.GObject):
         return self._window
 
     def get_type(self):
-        return self._type
+        return self._bundle.get_service_name()
 
     def get_shared(self):
         if not self._launched:

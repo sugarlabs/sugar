@@ -57,5 +57,5 @@ class ShellService(dbus.service.Object):
     def _cur_activity_changed_cb(self, owner, new_activity):
         new_id = ""
         if new_activity:
-            new_id = new_activity.get_id()
+            new_id = new_activity.get_activity_id()
         self.CurrentActivityChanged(new_id)
