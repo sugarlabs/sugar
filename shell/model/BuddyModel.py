@@ -52,7 +52,10 @@ class BuddyModel(gobject.GObject):
         if not buddy:
             self._name = name
             # FIXME: use public key, not name
-            buddy = self._pservice.get_buddy_by_name(self._name)
+            for iter_buddy in self._pservice.get_buddies():
+                if iter_buddy.props.nick == name:
+                    buddy = iter_buddy
+                    break
 
         # If successful, copy properties from the PS buddy object
         if buddy:

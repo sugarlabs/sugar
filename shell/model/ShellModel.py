@@ -47,7 +47,6 @@ class ShellModel(gobject.GObject):
         self._pservice = presenceservice.get_instance()
 
         self._owner = ShellOwner()
-        self._owner.announce()
 
         self._friends = Friends()
         self._mesh = MeshModel()

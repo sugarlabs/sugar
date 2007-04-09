@@ -326,6 +326,7 @@ class ServerPlugin(gobject.GObject):
             if not cur_activity_handle:
                 # dont advertise a current activity that's not shared
                 cur_activity = ""
+        print "cur_activity is '%s', handle is %s" % (cur_activity, cur_activity_handle)
         self._conn[CONN_INTERFACE_BUDDY_INFO].SetCurrentActivity(cur_activity, cur_activity_handle)
 
         self._upload_avatar()
@@ -404,6 +405,16 @@ class ServerPlugin(gobject.GObject):
         if not props.has_key('key'):
             raise InvalidBuddyError("no key")
 
+        # Convert from D-Bus array types to a standard python byte array
+        key = ""
+        for item in props["key"]:
+            try:
+                # int type
+                key = key + "%s" % chr(item)
+            except TypeError:
+                # string type
+                key = key + str(item)
+
         jid = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
         nick = self._conn[CONN_INTERFACE_ALIASING].RequestAliases([handle])[0]
         if not nick:
@@ -411,6 +422,8 @@ class ServerPlugin(gobject.GObject):
         props['nick'] = nick
 
         self._online_contacts[handle] = jid
+        # Any properties that are returned by TP as dbus.ByteArray or dbus.Array
+        # must be converted before emitting signals
         self.emit("contact-online", handle, props)
 
         activities = self._conn[CONN_INTERFACE_BUDDY_INFO].GetActivities(handle)

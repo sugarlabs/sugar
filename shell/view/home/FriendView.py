@@ -45,14 +45,10 @@ class FriendView(hippo.CanvasBox):
         self._buddy.connect('color-changed', self._buddy_color_changed_cb)
 
     def _get_new_icon_name(self, activity):
-        # FIXME: do something better here; we probably need to use "flagship"
-        # services like mDNS where activities default services are marked
-        # somehow.
-        activity_registry = shell.get_model().get_bundle_registry()
-        for serv in activity.get_services():
-            bundle = activity_registry.get_bundle(serv.get_type())
-            if bundle:
-                return bundle.get_icon()
+        registry = shell.get_model().get_bundle_registry()
+        bundle = registry.get_bundle(activity.get_type())
+        if bundle:
+            return bundle.get_icon()
         return None
 
     def _remove_activity_icon(self):

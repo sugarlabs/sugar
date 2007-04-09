@@ -25,8 +25,7 @@ from hardware import hardwaremanager
 from hardware import nmclient
 
 class ActivityModel:
-    def __init__(self, activity, bundle, service):
-        self._service = service
+    def __init__(self, activity, bundle):
         self._activity = activity
         self._bundle = bundle
 
@@ -39,8 +38,6 @@ class ActivityModel:
     def get_color(self):
         return XoColor(self._activity.get_color())
 
-    def get_service(self):
-        return self._service
 
 class MeshModel(gobject.GObject):
     __gsignals__ = {
@@ -75,8 +72,8 @@ class MeshModel(gobject.GObject):
         self._bundle_registry = bundleregistry.get_registry()
 
         self._pservice = presenceservice.get_instance()
-        self._pservice.connect("service-appeared",
-                               self._service_appeared_cb)
+        self._pservice.connect("activity-appeared",
+                               self._activity_appeared_cb)
         self._pservice.connect('activity-disappeared',
                                self._activity_disappeared_cb)
         self._pservice.connect("buddy-appeared",
@@ -88,8 +85,8 @@ class MeshModel(gobject.GObject):
         for buddy in self._pservice.get_buddies():
             self._buddy_appeared_cb(self._pservice, buddy)
 
-        for service in self._pservice.get_services():
-            self._check_service(service)
+        for activity in self._pservice.get_activities():
+            self._check_activity(activity)
 
         network_manager = hardwaremanager.get_network_manager()
         if network_manager:
@@ -196,18 +193,18 @@ class MeshModel(gobject.GObject):
         self.emit('buddy-removed', buddy)
         del self._buddies[buddy.get_name()]
 
-    def _service_appeared_cb(self, pservice, service):
-        self._check_service(service)
+    def _activity_appeared_cb(self, pservice, activity):
+        self._check_activity(activity)
 
-    def _check_service(self, service):
-        service_type = service.get_type()
-        bundle = self._bundle_registry.find_by_default_type(service_type)
-        if bundle != None:
-            activity_id = service.get_activity_id()
-            if not self.has_activity(activity_id):
-                activity = self._pservice.get_activity(activity_id)
-                if activity != None:
-                    self.add_activity(bundle, activity, service)
+    def _check_activity(self, activity):
+        atype = activity.get_type()
+        bundle = self._bundle_registry.get_bundle(atype)
+        if not bundle:
+            return
+        activity_id = activity.get_id()
+        if self.has_activity(activity_id):
+            return
+        self.add_activity(bundle, activity)
 
     def has_activity(self, activity_id):
         return self._activities.has_key(activity_id)
@@ -218,14 +215,14 @@ class MeshModel(gobject.GObject):
         else:
             return None
 
-    def add_activity(self, bundle, activity, service):
-        model = ActivityModel(activity, bundle, service)
+    def add_activity(self, bundle, activity):
+        model = ActivityModel(activity, bundle)
         self._activities[model.get_id()] = model
         self.emit('activity-added', model)
 
         for buddy in self._pservice.get_buddies():
-            cur_activity = buddy.get_current_activity()
-            name = buddy.get_name()
+            cur_activity = buddy.props.current_activity
+            name = buddy.props.nick
             if cur_activity == activity and self._buddies.has_key(name):
                 buddy_model = self._buddies[name]
                 self.emit('buddy-moved', buddy_model, model)

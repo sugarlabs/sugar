@@ -83,10 +83,10 @@ class PresenceService(gobject.GObject):
         obj = self._objcache.get(object_path)
         if not obj:
             if object_path.startswith(self._PS_BUDDY_OP):
-                obj = Buddy.Buddy(self._bus, self._new_object,
+                obj = buddy.Buddy(self._bus, self._new_object,
                         self._del_object, object_path)
             elif object_path.startswith(self._PS_ACTIVITY_OP):
-                obj = Activity.Activity(self._bus, self._new_object,
+                obj = activity.Activity(self._bus, self._new_object,
                         self._del_object, object_path)
             else:
                 raise RuntimeError("Unknown object type")
@@ -158,7 +158,7 @@ class PresenceService(gobject.GObject):
         return self._new_object(act_op)
 
     def get_buddies(self):
-        resp = self._ps.getBuddies()
+        resp = self._ps.GetBuddies()
         buddies = []
         for item in resp:
             buddies.append(self._new_object(item))

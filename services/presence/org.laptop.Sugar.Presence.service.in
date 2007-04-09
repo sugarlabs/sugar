@@ -1,4 +1,4 @@
 [D-BUS Service]
-Name = org.laptop.Presence
+Name = org.laptop.Sugar.Presence
 Exec = @bindir@/sugar-presence-service
 
