@@ -17,8 +17,6 @@
 import gtk
 import dbus
 
-from sugar.p2p import Stream
-from sugar.p2p import network
 import OverlayWindow
 
 class ActivityChatWindow(gtk.Window):
