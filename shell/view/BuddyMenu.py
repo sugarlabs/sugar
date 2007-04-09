@@ -22,7 +22,7 @@ import hippo
 from sugar.graphics.menu import Menu, MenuItem
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import units
-from sugar.presence import PresenceService
+from sugar.presence import presenceservice
 
 class BuddyMenu(Menu):
     ACTION_MAKE_FRIEND = 0
@@ -80,7 +80,7 @@ class BuddyMenu(Menu):
 
     def _add_items(self):
         shell_model = self._shell.get_model()
-        pservice = PresenceService.get_instance()
+        pservice = presenceservice.get_instance()
 
         friends = shell_model.get_friends()
         if friends.has_buddy(self._buddy):

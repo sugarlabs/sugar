@@ -21,7 +21,7 @@ import dbus
 import gobject
 import gtk
 
-from sugar.presence import PresenceService
+from sugar.presence import presenceservice
 from sugar.activity import bundleregistry
 from sugar.activity.activityhandle import ActivityHandle
 from sugar import util
@@ -31,7 +31,7 @@ _ACTIVITY_SERVICE_PATH = "/org/laptop/Activity"
 _ACTIVITY_INTERFACE = "org.laptop.Activity"
 
 def create_activity_id():
-    pservice = PresenceService.get_instance()
+    pservice = presenceservice.get_instance()
 
     # create a new unique activity ID
     i = 0

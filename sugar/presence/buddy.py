@@ -1,4 +1,4 @@
-# Copyright (C) 2006, Red Hat, Inc.
+# Copyright (C) 2007, Red Hat, Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -24,24 +24,25 @@ class Buddy(gobject.GObject):
     __gsignals__ = {
         'icon-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                          ([])),
-        'disappeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                         ([])),
-        'service-appeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                         ([gobject.TYPE_PYOBJECT])),
-        'service-disappeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                         ([gobject.TYPE_PYOBJECT])),
         'joined-activity': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                          ([gobject.TYPE_PYOBJECT])),
         'left-activity': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                          ([gobject.TYPE_PYOBJECT])),
         'property-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                          ([gobject.TYPE_PYOBJECT])),
-        'current-activity-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                         ([gobject.TYPE_PYOBJECT]))
     }
 
-    _PRESENCE_SERVICE = "org.laptop.Presence"
-    _BUDDY_DBUS_INTERFACE = "org.laptop.Presence.Buddy"
+    __gproperties__ = {
+        'key'              : (str, None, None, None, gobject.PARAM_READABLE),
+        'icon'             : (object, None, None, gobject.PARAM_READABLE),
+        'nick'             : (str, None, None, None, gobject.PARAM_READABLE),
+        'color'            : (str, None, None, None, gobject.PARAM_READABLE),
+        'current-activity' : (str, None, None, None, gobject.PARAM_READABLE),
+        'owner'            : (bool, None, None, False, gobject.PARAM_READABLE)
+    }
+
+    _PRESENCE_SERVICE = "org.laptop.Sugar.Presence"
+    _BUDDY_DBUS_INTERFACE = "org.laptop.Sugar.Presence.Buddy"
 
     def __init__(self, bus, new_obj_cb, del_obj_cb, object_path):
         gobject.GObject.__init__(self)
@@ -52,62 +53,61 @@ class Buddy(gobject.GObject):
         bobj = bus.get_object(self._PRESENCE_SERVICE, object_path)
         self._buddy = dbus.Interface(bobj, self._BUDDY_DBUS_INTERFACE)
         self._buddy.connect_to_signal('IconChanged', self._icon_changed_cb)
-        self._buddy.connect_to_signal('ServiceAppeared', self._service_appeared_cb)
-        self._buddy.connect_to_signal('ServiceDisappeared', self._service_disappeared_cb)
-        self._buddy.connect_to_signal('Disappeared', self._disappeared_cb)
         self._buddy.connect_to_signal('JoinedActivity', self._joined_activity_cb)
         self._buddy.connect_to_signal('LeftActivity', self._left_activity_cb)
         self._buddy.connect_to_signal('PropertyChanged', self._property_changed_cb)
-        self._buddy.connect_to_signal('CurrentActivityChanged', self._current_activity_changed_cb)
         self._properties = self._get_properties_helper()
 
-        self._current_activity = None
-        try:
-            self._current_activity = self._buddy.getCurrentActivity()
-        except Exception, e:
-            pass
+        self._activities = {}
+        self._icon = None
 
     def _get_properties_helper(self):
-        props = self._buddy.getProperties()
+        props = self._buddy.GetProperties()
         if not props:
             return {}
         return props
+
+    def do_get_property(self, pspec):
+        if pspec.name == "key":
+            return self._properties["key"]
+        elif pspec.name == "nick":
+            return self._properties["nick"]
+        elif pspec.name == "color":
+            return self._properties["color"]
+        elif pspec.name == "current-activity":
+            if not self._properties.has_key("current-activity"):
+                return None
+            curact = self._properties["current-activity"]
+            if not len(curact):
+                return None
+            if not self._activities.has_key(curact):
+                return None
+            return self._activities[curact]
+        elif pspec.name == "owner":
+            return self._properties["owner"]
+        elif pspec.name == "icon":
+            if not self._icon:
+                self._icon = self._buddy.GetIcon()
+            return self._icon
 
     def object_path(self):
         return self._object_path
 
     def _emit_icon_changed_signal(self):
+        self._icon = self._buddy.GetIcon()
         self.emit('icon-changed')
         return False
 
     def _icon_changed_cb(self):
         gobject.idle_add(self._emit_icon_changed_signal)
 
-    def _emit_disappeared_signal(self):
-        self.emit('disappeared')
-
-    def _disappeared_cb(self):
-        gobject.idle_add(self._emit_disappeared_signal)
-
-    def _emit_service_appeared_signal(self, object_path):
-        self.emit('service-appeared', self._ps_new_object(object_path))
-        return False
-
-    def _service_appeared_cb(self, object_path):
-        gobject.idle_add(self._emit_service_appeared_signal, object_path)
-
-    def _emit_service_disappeared_signal(self, object_path):
-        self.emit('service-disappeared', self._ps_new_object(object_path))
-        return False
-
-    def _service_disappeared_cb(self, object_path):
-        gobject.idle_add(self._emit_service_disappeared_signal, object_path)
-
     def _emit_joined_activity_signal(self, object_path):
         self.emit('joined-activity', self._ps_new_object(object_path))
         return False
 
     def _joined_activity_cb(self, object_path):
+        if not self._activities.has_key(object_path):
+            self._activities[object_path] = self._ps_new_object(object_path)
         gobject.idle_add(self._emit_joined_activity_signal, object_path)
 
     def _emit_left_activity_signal(self, object_path):
@@ -115,56 +115,24 @@ class Buddy(gobject.GObject):
         return False
 
     def _left_activity_cb(self, object_path):
+        if self._activities.has_key(object_path):
+            del self._activities[object_path]
         gobject.idle_add(self._emit_left_activity_signal, object_path)
 
     def _handle_property_changed_signal(self, prop_list):
         self._properties = self._get_properties_helper()
+        # FIXME: don't leak unexposed property names
         self.emit('property-changed', prop_list)
         return False
 
     def _property_changed_cb(self, prop_list):
         gobject.idle_add(self._handle_property_changed_signal, prop_list)
 
-    def _handle_current_activity_changed_signal(self, act_list):
-        if len(act_list) == 0:
-            self._current_activity = None
-            self.emit('current-activity-changed', None)
-        else:
-            self._current_activity = act_list[0]
-            self.emit('current-activity-changed', self._ps_new_object(act_list[0]))
-        return False
-
-    def _current_activity_changed_cb(self, act_list):
-        gobject.idle_add(self._handle_current_activity_changed_signal, act_list)
-
-    def get_name(self):
-        return self._properties['name']
-
-    def get_ip4_address(self):
-        return self._properties['ip4_address']
-
-    def is_owner(self):
-        return self._properties['owner']
-
-    def get_color(self):
-        return self._properties['color']
-
-    def get_icon(self):
-        return self._buddy.getIcon()
-
-    def get_current_activity(self):
-        if not self._current_activity:
-            return None
-        return self._ps_new_object(self._current_activity)
-
     def get_icon_pixbuf(self):
-        icon = self._buddy.getIcon()
-        if icon and len(icon):
+        if self.props.icon and len(self.props.icon):
             pbl = gtk.gdk.PixbufLoader()
             icon_data = ""
-            for item in icon:
-                if item < 0:
-                    item = item + 128
+            for item in self.props.icon:
                 icon_data = icon_data + chr(item)
             pbl.write(icon_data)
             pbl.close()
@@ -172,19 +140,9 @@ class Buddy(gobject.GObject):
         else:
             return None
 
-    def get_service_of_type(self, stype, activity=None):
-        try:
-            act_op = "/"
-            if activity:
-                act_op = activity.object_path()
-            object_path = self._buddy.getServiceOfType(stype, act_op)
-        except dbus.exceptions.DBusException:
-            return None
-        return self._ps_new_object(object_path)
-
     def get_joined_activities(self):
         try:
-            resp = self._buddy.getJoinedActivities()
+            resp = self._buddy.GetJoinedActivities()
         except dbus.exceptions.DBusException:
             return []
         acts = []

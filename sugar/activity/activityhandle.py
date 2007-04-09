@@ -15,7 +15,7 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-from sugar.presence import PresenceService
+from sugar.presence import presenceservice
 
 class ActivityHandle(object):
     def __init__(self, activity_id):
@@ -26,7 +26,7 @@ class ActivityHandle(object):
 
     def get_presence_service(self):
         if self.pservice_id:
-            pservice = PresenceService.get_instance()
+            pservice = presenceservice.get_instance()
             return pservice.get_activity(self.pservice_id)
         else:
             return None

@@ -18,7 +18,7 @@ import hippo
 
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import color
-from sugar.presence import PresenceService
+from sugar.presence import presenceservice
 from view.BuddyIcon import BuddyIcon
 from model.BuddyModel import BuddyModel
 
@@ -46,7 +46,7 @@ class FriendsBox(hippo.CanvasBox):
         self._left_hid = -1
         self._buddies = {}
 
-        self._pservice = PresenceService.get_instance()
+        self._pservice = presenceservice.get_instance()
         self._pservice.connect('activity-appeared',
                                self.__activity_appeared_cb)
 

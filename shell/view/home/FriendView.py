@@ -20,13 +20,13 @@ import gobject
 from view.BuddyIcon import BuddyIcon
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import units
-from sugar.presence import PresenceService
+from sugar.presence import presenceservice
 
 class FriendView(hippo.CanvasBox):
     def __init__(self, shell, menu_shell, buddy, **kwargs):
         hippo.CanvasBox.__init__(self, **kwargs)
 
-        self._pservice = PresenceService.get_instance()
+        self._pservice = presenceservice.get_instance()
 
         self._buddy = buddy
         self._buddy_icon = BuddyIcon(shell, menu_shell, buddy)

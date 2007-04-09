@@ -18,7 +18,7 @@ import os
 
 import gobject
 
-from sugar.presence import PresenceService
+from sugar.presence import presenceservice
 from sugar.activity.bundleregistry import BundleRegistry
 from model.Friends import Friends
 from model.MeshModel import MeshModel
@@ -44,8 +44,7 @@ class ShellModel(gobject.GObject):
         self._current_activity = None
         self._state = self.STATE_RUNNING
 
-        PresenceService.start()
-        self._pservice = PresenceService.get_instance()
+        self._pservice = presenceservice.get_instance()
 
         self._owner = ShellOwner()
         self._owner.announce()

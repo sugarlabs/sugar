@@ -1,4 +1,4 @@
-# Copyright (C) 2006, Red Hat, Inc.
+# Copyright (C) 2007, Red Hat, Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -25,14 +25,12 @@ class Activity(gobject.GObject):
                          ([gobject.TYPE_PYOBJECT])),
         'buddy-left': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                          ([gobject.TYPE_PYOBJECT])),
-        'service-appeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                         ([gobject.TYPE_PYOBJECT])),
-        'service-disappeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'new-channel': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                          ([gobject.TYPE_PYOBJECT]))
     }
 
-    _PRESENCE_SERVICE = "org.laptop.Presence"
-    _ACTIVITY_DBUS_INTERFACE = "org.laptop.Presence.Activity"
+    _PRESENCE_SERVICE = "org.laptop.Sugar.Presence"
+    _ACTIVITY_DBUS_INTERFACE = "org.laptop.Sugar.Presence.Activity"
 
     def __init__(self, bus, new_obj_cb, del_obj_cb, object_path):
         gobject.GObject.__init__(self)
@@ -43,11 +41,13 @@ class Activity(gobject.GObject):
         self._activity = dbus.Interface(bobj, self._ACTIVITY_DBUS_INTERFACE)
         self._activity.connect_to_signal('BuddyJoined', self._buddy_joined_cb)
         self._activity.connect_to_signal('BuddyLeft', self._buddy_left_cb)
-        self._activity.connect_to_signal('ServiceAppeared', self._service_appeared_cb)
-        self._activity.connect_to_signal('ServiceDisappeared', self._service_disappeared_cb)
-        
+        self._activity.connect_to_signal('NewChannel', self._new_channel_cb)
+
         self._id = None
         self._color = None
+        self._name = None
+        self._type = None
+        self._joined = False
 
     def object_path(self):
         return self._object_path
@@ -66,51 +66,50 @@ class Activity(gobject.GObject):
     def _buddy_left_cb(self, object_path):
         gobject.idle_add(self._emit_buddy_left_signal, object_path)
 
-    def _emit_service_appeared_signal(self, object_path):
-        self.emit('service-appeared', self._ps_new_object(object_path))
+    def _emit_new_channel_signal(self, object_path):
+        self.emit('new-channel', object_path)
         return False
 
-    def _service_appeared_cb(self, object_path):
-        gobject.idle_add(self._emit_service_appeared_signal, object_path)
-
-    def _emit_service_disappeared_signal(self, object_path):
-        self.emit('service-disappeared', self._ps_new_object(object_path))
-        return False
-
-    def _service_disappeared_cb(self, object_path):
-        gobject.idle_add(self._emit_service_disappeared_signal, object_path)
+    def _new_channel_cb(self, object_path):
+        gobject.idle_add(self._emit_new_channel_signal, object_path)
 
     def get_id(self):
         # Cache activity ID, which should never change anyway
         if not self._id:
-            self._id = self._activity.getId()
+            self._id = self._activity.GetId()
         return self._id
 
     def get_color(self):
         if not self._color:
-            self._color = self._activity.getColor()
+            self._color = self._activity.GetColor()
         return self._color
 
-    def get_services(self):
-        resp = self._activity.getServices()
-        servs = []
-        for item in resp:
-            servs.append(self._ps_new_object(item))
-        return servs
+    def get_name(self):
+        if not self._name:
+            self._name = self._activity.GetName()
+        return self._name
 
-    def get_services_of_type(self, stype):
-        resp = self._activity.getServicesOfType(stype)
-        servs = []
-        for item in resp:
-            servs.append(self._ps_new_object(item))
-        return servs
+    def get_type(self):
+        if not self._type:
+            self._type = self._activity.GetType()
+        return self._type
 
     def get_joined_buddies(self):
-        resp = self._activity.getJoinedBuddies()
+        resp = self._activity.GetJoinedBuddies()
         buddies = []
         for item in resp:
             buddies.append(self._ps_new_object(item))
         return buddies
+
+    def join(self):
+        if self._joined:
+            return
+        self._activity.Join()
+        self._joined = True
+
+    def get_channels(self):
+        (bus_name, connection, channels) = self._activity.GetChannels()
+        return bus_name, connection, channels
 
     def owner_has_joined(self):
         # FIXME

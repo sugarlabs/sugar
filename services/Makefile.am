@@ -1,1 +1,1 @@
-SUBDIRS = presence presence2 clipboard datastore console
+SUBDIRS = presence clipboard datastore console

@@ -17,7 +17,7 @@
 import gobject
 
 from sugar.graphics.xocolor import XoColor
-from sugar.presence import PresenceService
+from sugar.presence import presenceservice
 from sugar.activity import bundleregistry
 from model.BuddyModel import BuddyModel
 from model.accesspointmodel import AccessPointModel
@@ -74,7 +74,7 @@ class MeshModel(gobject.GObject):
         self._mesh = None
         self._bundle_registry = bundleregistry.get_registry()
 
-        self._pservice = PresenceService.get_instance()
+        self._pservice = presenceservice.get_instance()
         self._pservice.connect("service-appeared",
                                self._service_appeared_cb)
         self._pservice.connect('activity-disappeared',

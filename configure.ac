@@ -123,7 +123,6 @@ data/Makefile
 browser/Makefile
 services/Makefile
 services/presence/Makefile
-services/presence2/Makefile
 services/clipboard/Makefile
 services/datastore/Makefile
 shell/Makefile

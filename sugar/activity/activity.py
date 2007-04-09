@@ -21,7 +21,7 @@ import os
 import gtk
 import hippo
 
-from sugar.presence import PresenceService
+from sugar.presence import presenceservice
 from sugar.activity.activityservice import ActivityService
 from sugar.graphics.window import Window
 
@@ -35,7 +35,7 @@ class Activity(Window, gtk.Container):
 
         self._shared = False
         self._activity_id = handle.activity_id
-        self._pservice = PresenceService.get_instance()
+        self._pservice = presenceservice.get_instance()
         self._service = None
 
         service = handle.get_presence_service()

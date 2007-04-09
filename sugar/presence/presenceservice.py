@@ -1,4 +1,4 @@
-# Copyright (C) 2006, Red Hat, Inc.
+# Copyright (C) 2007, Red Hat, Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -17,7 +17,7 @@
 
 import dbus, dbus.glib, gobject
 
-import buddy, service, activity
+import buddy, activity
 
 class ObjectCache(object):
     def __init__(self):
@@ -63,7 +63,6 @@ class PresenceService(gobject.GObject):
     }
 
     _PS_BUDDY_OP = DBUS_PATH + "/Buddies/"
-    _PS_SERVICE_OP = DBUS_PATH + "/Services/"
     _PS_ACTIVITY_OP = DBUS_PATH + "/Activities/"
     
 
@@ -83,10 +82,7 @@ class PresenceService(gobject.GObject):
     def _new_object(self, object_path):
         obj = self._objcache.get(object_path)
         if not obj:
-            if object_path.startswith(self._PS_SERVICE_OP):
-                obj = Service.Service(self._bus, self._new_object,
-                        self._del_object, object_path)
-            elif object_path.startswith(self._PS_BUDDY_OP):
+            if object_path.startswith(self._PS_BUDDY_OP):
                 obj = Buddy.Buddy(self._bus, self._new_object,
                         self._del_object, object_path)
             elif object_path.startswith(self._PS_ACTIVITY_OP):
@@ -115,19 +111,20 @@ class PresenceService(gobject.GObject):
     def _buddy_disappeared_cb(self, object_path):
         gobject.idle_add(self._emit_buddy_disappeared_signal, object_path)
 
-    def _emit_service_appeared_signal(self, object_path):
-        self.emit('service-appeared', self._new_object(object_path))
+    def _emit_activity_invitation_signal(self, object_path):
+        self.emit('activity-invitation', self._new_object(object_path))
         return False
 
-    def _service_appeared_cb(self, object_path):
-        gobject.idle_add(self._emit_service_appeared_signal, object_path)
+    def _activity_invitation_cb(self, object_path):
+        gobject.idle_add(self._emit_activity_invitation_signal, object_path)
 
-    def _emit_service_disappeared_signal(self, object_path):
-        self.emit('service-disappeared', self._new_object(object_path))
+    def _emit_private_invitation_signal(self, bus_name, connection, channel):
+        self.emit('service-disappeared', bus_name, connection, channel)
         return False
 
-    def _service_disappeared_cb(self, object_path):
-        gobject.idle_add(self._emit_service_disappeared_signal, object_path)
+    def _private_invitation_cb(self, bus_name, connection, channel):
+        gobject.idle_add(self._emit_service_disappeared_signal, bus_name,
+                connection, channel)
 
     def _emit_activity_appeared_signal(self, object_path):
         self.emit('activity-appeared', self._new_object(object_path))
@@ -146,22 +143,8 @@ class PresenceService(gobject.GObject):
     def get(self, object_path):
         return self._new_object(object_path)
 
-    def get_services(self):
-        resp = self._ps.getServices()
-        servs = []
-        for item in resp:
-            servs.append(self._new_object(item))
-        return servs
-
-    def get_services_of_type(self, stype):
-        resp = self._ps.getServicesOfType(stype)
-        servs = []
-        for item in resp:
-            servs.append(self._new_object(item))
-        return servs
-
     def get_activities(self):
-        resp = self._ps.getActivities()
+        resp = self._ps.GetActivities()
         acts = []
         for item in resp:
             acts.append(self._new_object(item))
@@ -169,7 +152,7 @@ class PresenceService(gobject.GObject):
 
     def get_activity(self, activity_id):
         try:
-            act_op = self._ps.getActivity(activity_id)
+            act_op = self._ps.GetActivityById(activity_id)
         except dbus.exceptions.DBusException:
             return None
         return self._new_object(act_op)
@@ -181,48 +164,26 @@ class PresenceService(gobject.GObject):
             buddies.append(self._new_object(item))
         return buddies
 
-    def get_buddy_by_name(self, name):
+    def get_buddy(self, key):
         try:
-            buddy_op = self._ps.getBuddyByName(name)
-        except dbus.exceptions.DBusException:
-            return None
-        return self._new_object(buddy_op)
-
-    def get_buddy_by_address(self, addr):
-        try:
-            buddy_op = self._ps.getBuddyByAddress(addr)
+            buddy_op = self._ps.GetBuddyByPublicKey(dbus.ByteArray(key))
         except dbus.exceptions.DBusException:
             return None
         return self._new_object(buddy_op)
 
     def get_owner(self):
         try:
-            owner_op = self._ps.getOwner()
+            owner_op = self._ps.GetOwner()
         except dbus.exceptions.DBusException:
             return None
         return self._new_object(owner_op)
 
-    def share_activity(self, activity, stype, properties={}, address=None, port=-1, domain=u"local"):
+    def share_activity(self, activity, properties={}):
         actid = activity.get_id()
-        if address == None:
-            address = u""
-        serv_op = self._ps.shareActivity(actid, stype, properties, address, port, domain)
+        atype = activity.get_service_name()
+        name = activity.props.title
+        serv_op = self._ps.ShareActivity(actid, atype, name, properties)
         return self._new_object(serv_op)
-
-    def register_service(self, name, stype, properties={}, address=None, port=-1, domain=u"local"):
-        if address == None:
-            address = u""
-        serv_op = self._ps.registerService(name, stype, properties, address, port, domain)
-        return self._new_object(serv_op)
-
-    def unregister_service(self, service):
-        self._ps.unregisterService(service.object_path())
-
-    def register_service_type(self, stype):
-        self._ps.registerServiceType(stype)
-
-    def unregister_service_type(self, stype):
-        self._ps.unregisterServiceType(stype)
 
 _ps = None
 def get_instance():

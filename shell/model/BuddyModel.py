@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from sugar.presence import PresenceService
+from sugar.presence import presenceservice
 from sugar.graphics.xocolor import XoColor
 import gobject
 
@@ -44,7 +44,7 @@ class BuddyModel(gobject.GObject):
         self._bic_handler = None
         self._cac_handler = None
 
-        self._pservice = PresenceService.get_instance()
+        self._pservice = presenceservice.get_instance()
 
         self._buddy = None
 

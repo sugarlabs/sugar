@@ -1,4 +1,11 @@
-sugardir = $(pkgdatadir)/services/presence2
+servicedir = $(datadir)/dbus-1/services
+service_in_files = org.laptop.Sugar.Presence.service.in
+service_DATA = $(service_in_files:.service.in=.service)
+
+$(service_DATA): $(service_in_files) Makefile
+	@sed -e "s|\@bindir\@|$(bindir)|" $< > $@
+
+sugardir = $(pkgdatadir)/services/presence
 sugar_PYTHON = \
 	__init__.py \
 	activity.py \
@@ -8,6 +15,8 @@ sugar_PYTHON = \
 	presenceservice.py \
 	server_plugin.py
 
-bin_SCRIPTS = sugar-presence-service2
+bin_SCRIPTS = sugar-presence-service
 
-EXTRA_DIST = $(bin_SCRIPTS)
+DISTCLEANFILES = $(service_DATA)
+
+EXTRA_DIST = $(service_in_files) $(bin_SCRIPTS)

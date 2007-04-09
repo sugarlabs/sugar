@@ -25,7 +25,7 @@ import dbus
 from sugar import env
 from sugar import profile
 from sugar.p2p import Stream
-from sugar.presence import PresenceService
+from sugar.presence import presenceservice
 from sugar import util
 from model.Invites import Invites
 
@@ -68,7 +68,7 @@ class ShellOwner(gobject.GObject):
         digest = md5.new(self._icon).digest()
         self._icon_hash = util.printable_hash(digest)
 
-        self._pservice = PresenceService.get_instance()
+        self._pservice = presenceservice.get_instance()
 
         self._invites = Invites()
 
