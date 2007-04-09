@@ -159,9 +159,9 @@ class MeshModel(gobject.GObject):
         return self._buddies.values()
 
     def _buddy_activity_changed_cb(self, buddy, cur_activity):
-        if not self._buddies.has_key(buddy.get_name()):
+        if not self._buddies.has_key(buddy.props.nick):
             return
-        buddy_model = self._buddies[buddy.get_name()]
+        buddy_model = self._buddies[buddy.props.nick]
         if cur_activity == None:
             self.emit('buddy-moved', buddy_model, None)
         else:
@@ -183,15 +183,15 @@ class MeshModel(gobject.GObject):
         self._buddies[model.get_name()] = model
         self.emit('buddy-added', model)
 
-        cur_activity = buddy.get_current_activity()
+        cur_activity = buddy.props.current_activity
         if cur_activity:
             self._notify_buddy_change(model, cur_activity)
 
     def _buddy_disappeared_cb(self, pservice, buddy):
-        if not self._buddies.has_key(buddy.get_name()):
+        if not self._buddies.has_key(buddy.props.nick):
             return
         self.emit('buddy-removed', buddy)
-        del self._buddies[buddy.get_name()]
+        del self._buddies[buddy.props.nick]
 
     def _activity_appeared_cb(self, pservice, activity):
         self._check_activity(activity)
