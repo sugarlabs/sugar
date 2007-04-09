@@ -47,10 +47,9 @@ def create_activity_id():
             if act_id == act.get_id():
                 found = True
                 break
-        if found:
-            raise RuntimeError("Cannot generate unique activity id.")
-
-    return act_id
+        if not found:
+            return act_id
+    raise RuntimeError("Cannot generate unique activity id.")
 
 class ActivityCreationHandler(gobject.GObject):
     __gsignals__ = {
