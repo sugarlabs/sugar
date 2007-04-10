@@ -89,7 +89,8 @@ class PresenceService(dbus.service.Object):
 
     def _contact_online(self, tp, handle, props):
         new_buddy = False
-        buddy = self._buddies.get(props["key"])
+        key = props["key"]
+        buddy = self._buddies.get(key)
         if not buddy:
             # we don't know yet this buddy
             objid = self._get_next_object_id()
