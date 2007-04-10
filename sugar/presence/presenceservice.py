@@ -185,9 +185,53 @@ class PresenceService(gobject.GObject):
         serv_op = self._ps.ShareActivity(actid, atype, name, properties)
         return self._new_object(serv_op)
 
+
+class _MockPresenceService(gobject.GObject):
+    __gsignals__ = {
+        'buddy-appeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                        ([gobject.TYPE_PYOBJECT])),
+        'buddy-disappeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                        ([gobject.TYPE_PYOBJECT])),
+        'activity-invitation': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                        ([gobject.TYPE_PYOBJECT])),
+        'private-invitation': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                        ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT,
+                          gobject.TYPE_PYOBJECT])),
+        'activity-appeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                        ([gobject.TYPE_PYOBJECT])),
+        'activity-disappeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                        ([gobject.TYPE_PYOBJECT]))
+    }
+
+    def __init__(self):
+        gobject.GObject.__init__(self)
+
+    def get_activities(self):
+        return []
+
+    def get_activity(self, activity_id):
+        return None
+
+    def get_buddies(self):
+        return []
+
+    def get_buddy(self, key):
+        return None
+
+    def get_owner(self):
+        return None
+
+    def share_activity(self, activity, properties={}):
+        return None
+
+_REAL_PS_ENABLED = False
 _ps = None
 def get_instance():
     global _ps
     if not _ps:
-        _ps = PresenceService()
+        if _REAL_PS_ENABLED:
+            _ps = PresenceService()
+        else:
+            _ps = _MockPresenceService()
     return _ps
+
