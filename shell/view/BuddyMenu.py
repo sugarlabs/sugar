@@ -62,7 +62,7 @@ class BuddyMenu(Menu):
             return None
 
         pixbuf = None
-        icon_data = buddy_object.get_icon()
+        icon_data = buddy_object.props.icon
         icon_data_string = ""
         for item in icon_data:
             if item < 0:
