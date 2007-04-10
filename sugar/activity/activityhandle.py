@@ -18,13 +18,47 @@
 from sugar.presence import presenceservice
 
 class ActivityHandle(object):
-    def __init__(self, activity_id):
+    """Data structure storing simple activity metadata"""
+    def __init__(
+        self, activity_id, pservice_id=None,
+        object_id=None,uri=None
+    ):
+        """Initialise the handle from activity_id
+        
+        activity_id -- unique id for the activity to be
+            created
+        pservice_id -- identity of the sharing service 
+            for this activity in the PresenceService
+        object_id -- identity of the journal object 
+            associated with the activity. It was used by 
+            the journal prototype implementation, might 
+            change when we do the real one. 
+            
+            When you resume an activity from the journal 
+            the object_id will be passed in. It's optional 
+            since new activities does not have an 
+            associated object (yet).
+            
+            XXX Not clear how this relates to the activity
+            id yet, i.e. not sure we really need both. TBF
+        uri -- URI associated with the activity. Used when 
+            opening an external file or resource in the 
+            activity, rather than a journal object 
+            (downloads stored on the file system for 
+            example or web pages)
+        """
         self.activity_id = activity_id
-        self.pservice_id = None
-        self.object_id = None
-        self.uri = None
+        self.pservice_id = pservice_id
+        self.object_id = object_id
+        self.uri = uri
 
     def get_presence_service(self):
+        """Retrieve the "sharing service" for this activity 
+        
+        Uses the PresenceService to find any existing dbus 
+        service which provides sharing mechanisms for this 
+        activity.
+        """
         if self.pservice_id:
             pservice = presenceservice.get_instance()
             return pservice.get_activity(self.pservice_id)
@@ -32,6 +66,7 @@ class ActivityHandle(object):
             return None
 
     def get_dict(self):
+        """Retrieve our settings as a dictionary"""
         result = { 'activity_id' : self.activity_id }
         if self.pservice_id:
             result['pservice_id'] = self.pservice_id
@@ -43,12 +78,11 @@ class ActivityHandle(object):
         return result
 
 def create_from_dict(handle_dict):
-    result = ActivityHandle(handle_dict['activity_id'])
-    if handle_dict.has_key('pservice_id'):
-        result.pservice_id = handle_dict['pservice_id']
-    if handle_dict.has_key('object_id'):
-        result.object_id = handle_dict['object_id']
-    if handle_dict.has_key('uri'):
-        result.uri = handle_dict['uri']
-
+    """Create a handle from a dictionary of parameters"""
+    result = ActivityHandle(
+        handle_dict['activity_id'],
+        pservice_id = handle_dict.get( 'pservice_id' ),
+        object_id = handle_dict.get('object_id'),
+        uri = handle_dict.get('uri'),
+    )
     return result

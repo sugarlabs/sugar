@@ -1,3 +1,4 @@
+"""Various utility functions"""
 # Copyright (C) 2006, Red Hat, Inc.
 #
 # This library is free software; you can redistribute it and/or
@@ -38,6 +39,19 @@ def _sha_data(data):
     return sha_hash.digest()
 
 def unique_id(data = ''):
+    """Generate a likely-unique ID for whatever purpose
+    
+    data -- suffix appended to working data before hashing
+    
+    Returns a 40-character string with hexidecimal digits
+    representing an SHA hash of the time, a random digit 
+    within a constrained range and the data passed.
+    
+    Note: these are *not* crypotographically secure or 
+        globally unique identifiers.  While they are likely 
+        to be unique-enough, no attempt is made to make 
+        perfectly unique values.
+    """
     data_string = "%s%s%s" % (time.time(), random.randint(10000, 100000), data)
     return printable_hash(_sha_data(data_string))
 
@@ -49,7 +63,7 @@ def is_hex(s):
 
 def validate_activity_id(actid):
     """Validate an activity ID."""
-    if not isinstance(actid, str) and not isinstance(actid, unicode):
+    if not isinstance(actid, (str,unicode)):
         return False
     if len(actid) != ACTIVITY_ID_LEN:
         return False
@@ -62,6 +76,23 @@ class _ServiceParser(ConfigParser):
         return option
 
 def write_service(name, bin, path):
+    """Write a D-BUS service definition file 
+    
+    These are written by the bundleregistry when 
+    a new activity is registered.  They bind a 
+    D-BUS bus-name with an executable which is 
+    to provide the named service.
+    
+    name -- D-BUS service name, must be a valid 
+        filename/D-BUS name
+    bin -- executable providing named service 
+    path -- directory into which to write the 
+        name.service file
+    
+    The service files themselves are written using 
+    the _ServiceParser class, which is a subclass 
+    of the standard ConfigParser class.
+    """
     service_cp = _ServiceParser()
     section = 'D-BUS Service'    
     service_cp.add_section(section)

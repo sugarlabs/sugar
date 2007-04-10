@@ -35,9 +35,43 @@ gobject.threads_init()
 dbus.glib.threads_init()
 
 class ActivityFactoryService(dbus.service.Object):
-    """D-Bus service that creates new instances of an activity"""
+    """D-Bus service that creates instances of Python activities
+    
+    The ActivityFactoryService is a dbus service created for 
+    each Python based activity type (that is, each activity 
+    bundle which declares a "class" in its activity.info file,
+    rather than an "exec").
+    
+    The ActivityFactoryService is the actual process which 
+    instantiates the Python classes for Sugar interfaces.  That
+    is, your Python code runs in the same process as the 
+    ActivityFactoryService itself.
+    
+    The "service" process is created at the moment Sugar first 
+    attempts to create an instance of the activity type.  It
+    then remains in memory until the last instance of the 
+    activity type is terminated.
+    """
 
     def __init__(self, service_name, activity_class):
+        """Initialize the service to create activities of this type
+        
+        service_name -- bundle's service name, this is used 
+            to construct the dbus service name used to access
+            the created service.
+        activity_class -- dotted Python class name for the 
+            Activity class which is to be instantiated by 
+            the service.  Assumed to be composed of a module 
+            followed by a class.
+            
+        if the module specified has a "start" attribute this object
+        will be called on service initialisation (before first 
+        instance is created).
+        
+        if the module specified has a "stop" attribute this object 
+        will be called after every instance exits (note: may be 
+        called multiple times for each time start is called!)
+        """
         self._activities = []
 
         splitted_module = activity_class.rsplit('.', 1)
@@ -60,6 +94,12 @@ class ActivityFactoryService(dbus.service.Object):
 
     @dbus.service.method("com.redhat.Sugar.ActivityFactory", in_signature="a{ss}")
     def create(self, handle):
+        """Create a new instance of this activity 
+        
+        handle -- sugar.activity.activityhandle.ActivityHandle
+            compatible dictionary providing the instance-specific
+            values for the new instance 
+        """
         activity_handle = activityhandle.create_from_dict(handle)
         activity = self._constructor(activity_handle)
         activity.present()
@@ -70,6 +110,16 @@ class ActivityFactoryService(dbus.service.Object):
         return activity.window.xid
 
     def _activity_destroy_cb(self, activity):
+        """On close of an instance's root window
+        
+        Removes the activity from the tracked activities.
+        
+        If our implementation module has a stop, calls 
+        that.
+        
+        If there are no more tracked activities, closes 
+        the activity.
+        """
         self._activities.remove(activity)
 
         if hasattr(self._module, 'stop'):

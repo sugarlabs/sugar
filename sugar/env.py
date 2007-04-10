@@ -1,3 +1,4 @@
+"""Calculates file-paths for the Sugar working environment"""
 # Copyright (C) 2006, Red Hat, Inc.
 #
 # This library is free software; you can redistribute it and/or

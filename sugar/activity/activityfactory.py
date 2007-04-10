@@ -1,3 +1,4 @@
+"""Shell side object which manages request to start activity"""
 # Copyright (C) 2006, Red Hat, Inc.
 #
 # This library is free software; you can redistribute it and/or
@@ -31,6 +32,7 @@ _ACTIVITY_SERVICE_PATH = "/org/laptop/Activity"
 _ACTIVITY_INTERFACE = "org.laptop.Activity"
 
 def create_activity_id():
+    """Generate a new, unique ID for this activity"""
     pservice = presenceservice.get_instance()
 
     # create a new unique activity ID
@@ -52,6 +54,14 @@ def create_activity_id():
     raise RuntimeError("Cannot generate unique activity id.")
 
 class ActivityCreationHandler(gobject.GObject):
+    """Sugar-side activity creation interface
+    
+    This object uses a dbus method on the ActivityFactory
+    service to create the new activity.  It generates 
+    GObject events in response to the success/failure of
+    activity startup using callbacks to the service's 
+    create call.
+    """
     __gsignals__ = {
         'success': (gobject.SIGNAL_RUN_FIRST,
                     gobject.TYPE_NONE, ([])),
@@ -61,6 +71,29 @@ class ActivityCreationHandler(gobject.GObject):
     }
 
     def __init__(self, service_name, activity_handle):
+        """Initialise the handler
+        
+        service_name -- used to retrieve the activity bundle
+            from the global BundleRegistry.  This is what 
+            determines what activity will be run.
+        activity_handle -- stores the values which are to 
+            be passed to the service to uniquely identify
+            the activity to be created and the sharing 
+            service that may or may not be connected with it
+            
+            sugar.activity.activityhandle.ActivityHandle instance
+        
+        calls the "create" method on the service for this 
+        particular activity type and registers the 
+        _reply_handler and _error_handler methods on that 
+        call's results.
+        
+        The specific service which creates new instances of this 
+        particular type of activity is created during the activity
+        registration process in 
+        sugar.activity.bundleregistry.BundleRegistry which creates 
+        service definition files for each registered bundle type.
+        """
         gobject.GObject.__init__(self)
         self._service_name = service_name
         self._activity_handle = activity_handle
@@ -75,16 +108,28 @@ class ActivityCreationHandler(gobject.GObject):
         factory.create(self._activity_handle.get_dict(),
                        reply_handler=self._reply_handler,
                        error_handler=self._error_handler)
-
     def get_activity_id(self):
+        """Retrieve the unique identity for this activity"""
         return self._activity_handle.activity_id
 
     def _reply_handler(self, xid):
+        """Reply from service regarding what window was created 
+        
+        xid -- X windows ID for the window that was just created
+        
+        emits the "success" message (on ourselves)
+        """
         logging.debug("Activity created %s (%s)." % 
             (self._activity_handle.activity_id, self._service_name))
         self.emit('success')
 
     def _error_handler(self, err):
+        """Reply from service with an error message (exception)
+        
+        err -- exception object describing the error
+        
+        emits the "error" message (on ourselves)
+        """
         logging.debug("Couldn't create activity %s (%s): %s" %
             (self._activity_handle.activity_id, self._service_name, err))
         self.emit('error', err)

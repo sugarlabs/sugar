@@ -1,3 +1,4 @@
+"""Metadata description of a given application/activity"""
 import logging
 import locale
 import os
@@ -8,7 +9,17 @@ from sugar import env
 _PYTHON_FACTORY='sugar-activity-factory'
 
 class Bundle:
-    """Info about an activity bundle. Wraps the activity.info file."""
+    """Metadata description of a given application/activity
+    
+    The metadata is normally read from an activity.info file,
+    which is an INI-style configuration file read using the 
+    standard Python ConfigParser module.
+    
+    The format reference for the Bundle definition files is 
+    available for further reference:
+    
+        http://wiki.laptop.org/go/Activity_bundles
+    """
     def __init__(self, path):
         self._name = None
         self._icon = None

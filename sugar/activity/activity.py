@@ -1,3 +1,8 @@
+"""Base class for Python-coded activities
+
+This is currently the only reference for what an 
+activity must do to participate in the Sugar desktop.
+"""
 # Copyright (C) 2006, Red Hat, Inc.
 #
 # This library is free software; you can redistribute it and/or
@@ -29,6 +34,26 @@ class Activity(Window, gtk.Container):
     """Base Activity class that all other Activities derive from."""
     __gtype_name__ = 'SugarActivity'
     def __init__(self, handle):
+        """Initialise the Activity 
+        
+        handle -- sugar.activity.activityhandle.ActivityHandle
+            instance providing the activity id and access to the 
+            presence service which *may* provide sharing for this 
+            application
+        
+        Side effects: 
+        
+            Sets the gdk screen DPI setting (resolution) to the 
+            Sugar screen resolution.
+            
+            Connects our "destroy" message to our _destroy_cb
+            method.
+        
+            Creates a base gtk.Window within this window.
+            
+            Creates an ActivityService (self._bus) servicing
+            this application.
+        """
         Window.__init__(self)
 
         self.connect('destroy', self._destroy_cb)
@@ -105,6 +130,7 @@ class Activity(Window, gtk.Container):
         return False
 
     def _destroy_cb(self, window):
+        """Destroys our ActivityService and sharing service"""
         if self._bus:
             del self._bus
             self._bus = None
@@ -112,4 +138,6 @@ class Activity(Window, gtk.Container):
             self._pservice.unregister_service(self._service)
 
 def get_bundle_path():
+    """Return the bundle path for the current process' bundle
+    """
     return os.environ['SUGAR_BUNDLE_PATH']

@@ -1,3 +1,4 @@
+"""OLPC Sugar User Interface"""
 ZOOM_MESH = 0
 ZOOM_FRIENDS = 1
 ZOOM_HOME = 2

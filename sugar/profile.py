@@ -1,3 +1,4 @@
+"""User settings/configuration loading"""
 # Copyright (C) 2006, Red Hat, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -23,6 +24,30 @@ from sugar import util
 from sugar.graphics.xocolor import XoColor
 
 class _Profile(object):
+    """Local user's current options/profile information
+    
+    User settings are stored in an INI-style configuration
+    file.  This object uses the ConfigParser module to load 
+    the settings.  At the moment the only storage mechanism
+    is in the set_server_registered method, which loads the 
+    file directly from disk, then dumps it back out again 
+    immediately, rather than using the class.
+    
+    The profile is also responsible for loading the user's
+    public and private ssh keys from disk.
+    
+    Attributes:
+    
+        name -- child's name 
+        color -- XoColor for the child's icon
+        server -- school server with which the child is 
+            associated 
+        server_registered -- whether the child has registered 
+            with the school server or not
+        
+        pubkey -- public ssh key
+        privkey_hash -- SHA has of the child's public key 
+    """
     def __init__(self):
         self.name = None
         self.color = None
