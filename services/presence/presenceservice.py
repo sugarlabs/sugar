@@ -89,8 +89,7 @@ class PresenceService(dbus.service.Object):
 
     def _contact_online(self, tp, handle, props):
         new_buddy = False
-        key = props['key']
-        buddy = self._buddies.get(key)
+        buddy = self._buddies.get(props["key"])
         if not buddy:
             # we don't know yet this buddy
             objid = self._get_next_object_id()
@@ -253,26 +252,33 @@ class PresenceService(dbus.service.Object):
     def GetActivities(self):
         ret = []
         for act in self._activities.values():
-            ret.append(act.object_path())
+            if act.props.valid:
+                ret.append(act.object_path())
         return ret
 
     @dbus.service.method(_PRESENCE_INTERFACE, in_signature="s", out_signature="o")
     def GetActivityById(self, actid):
         if self._activities.has_key(actid):
-            return self._activities[actid].object_path()
+            act = self._activities[actid]
+            if act.props.valid:
+                return act.object_path()
         raise NotFoundError("The activity was not found.")
 
     @dbus.service.method(_PRESENCE_INTERFACE, out_signature="ao")
     def GetBuddies(self):
         ret = []
         for buddy in self._buddies.values():
-            ret.append(buddy.object_path())
+            if buddy.props.valid:
+                ret.append(buddy.object_path())
         return ret
 
     @dbus.service.method(_PRESENCE_INTERFACE, in_signature="ay", out_signature="o")
     def GetBuddyByPublicKey(self, key):
+        key = psutils.bytes_to_string(key)
         if self._buddies.has_key(key):
-            return self._buddies[key].object_path()
+            buddy = self._buddies[key]
+            if buddy.props.valid:
+                return buddy.object_path()
         raise NotFoundError("The buddy was not found.")
 
     @dbus.service.method(_PRESENCE_INTERFACE, out_signature="o")
