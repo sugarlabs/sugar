@@ -121,11 +121,11 @@ class ServerPlugin(gobject.GObject):
         self._reconnect_id = 0
 
     def _owner_property_changed_cb(self, owner, properties):
-        print "Owner properties changed: %s" % properties
+        logging.debug("Owner properties changed: %s" % properties)
         self._set_self_buddy_info()
 
     def _owner_icon_changed_cb(self, owner, icon):
-        print "Owner icon changed to size %d" % len(str(icon))
+        logging.debug("Owner icon changed to size %d" % len(str(icon)))
         self._upload_avatar()
 
     def _get_account_info(self):
@@ -146,7 +146,6 @@ class ServerPlugin(gobject.GObject):
         account_info['account'] = "%s@%s" % (khash, account_info['server'])
 
         account_info['password'] = profile.get_private_key_hash()
-        print account_info
         return account_info
 
     def _find_existing_connection(self):
@@ -233,7 +232,7 @@ class ServerPlugin(gobject.GObject):
             subscribe[CHANNEL_INTERFACE_GROUP].AddMembers([self_handle], '')
 
         if CONN_INTERFACE_BUDDY_INFO not in self._conn.get_valid_interfaces():
-            print 'OLPC information not available'
+            logging.debug('OLPC information not available')
             self.cleanup()
             return
 
@@ -250,7 +249,7 @@ class ServerPlugin(gobject.GObject):
         try:
             self._set_self_buddy_info()
         except RuntimeError, e:
-            print e
+            logging.debug("Could not set owner properties: %s" % e)
             self.cleanup()
             return
 
@@ -273,7 +272,7 @@ class ServerPlugin(gobject.GObject):
 
         types, minw, minh, maxw, maxh, maxsize = self._conn[CONN_INTERFACE_AVATARS].GetAvatarRequirements()
         if not "image/jpeg" in types:
-            print "server does not accept JPEG format avatars."
+            logging.debug("server does not accept JPEG format avatars.")
             return
 
         img_data = _get_buddy_icon_at_size(icon_data, min(maxw, 96), min(maxh, 96), maxsize)
@@ -288,7 +287,7 @@ class ServerPlugin(gobject.GObject):
             self._activities[act] = handle
 
         if (act, handle) in self._joined_activities:
-            print "%s already joined" % act
+            logging.debug("Already joined %s" % act)
             return
 
         chan_path = self._conn[CONN_INTERFACE].RequestChannel(
@@ -327,7 +326,7 @@ class ServerPlugin(gobject.GObject):
             if not cur_activity_handle:
                 # dont advertise a current activity that's not shared
                 cur_activity = ""
-        print "cur_activity is '%s', handle is %s" % (cur_activity, cur_activity_handle)
+        logging.debug("cur_activity is '%s', handle is %s" % (cur_activity, cur_activity_handle))
         self._conn[CONN_INTERFACE_BUDDY_INFO].SetCurrentActivity(cur_activity, cur_activity_handle)
 
         self._upload_avatar()
@@ -340,13 +339,13 @@ class ServerPlugin(gobject.GObject):
 
     def _status_changed_cb(self, state, reason):
         if state == CONNECTION_STATUS_CONNECTING:
-            print 'connecting: %r' % reason
+            logging.debug("State: connecting...")
         elif state == CONNECTION_STATUS_CONNECTED:
-            print 'connected: %r' % reason
+            logging.debug("State: connected")
             self._connected_cb()
             self.emit('status', state, int(reason))
         elif state == CONNECTION_STATUS_DISCONNECTED:
-            print 'disconnected: %r' % reason
+            logging.debug("State: disconnected (reason %r)" % reason)
             self.emit('status', state, int(reason))
             self._conn = None
             if reason == CONNECTION_STATUS_REASON_AUTHENTICATION_FAILED:
@@ -355,7 +354,7 @@ class ServerPlugin(gobject.GObject):
         return False
 
     def start(self):
-        print "Trying to connect..."
+        logging.debug("Starting up...")
         # If the connection is already connected query initial contacts
         conn_status = self._conn[CONN_INTERFACE].GetStatus()
         if conn_status == CONNECTION_STATUS_CONNECTED:
@@ -379,7 +378,7 @@ class ServerPlugin(gobject.GObject):
         return False
 
     def _connect_error_cb(self, exception):
-        print "Connect error: %s" % exception
+        logging.debug("Connect error: %s" % exception)
         if not self._reconnect_id:
             self._reconnect_id = gobject.timeout_add(10000, self._reconnect)
 
@@ -392,36 +391,52 @@ class ServerPlugin(gobject.GObject):
         self.emit("contact-offline", handle)
         del self._online_contacts[handle]
 
-    def _contact_online(self, handle):
-        try:
-            props = self._conn[CONN_INTERFACE_BUDDY_INFO].GetProperties(handle)
-        except dbus.DBusException, e:
-            if str(e).startswith("org.freedesktop.DBus.Error.NoReply"):
-                raise InvalidBuddyError("couldn't get properties")
-            props = {}
-            logging.debug("Error getting buddy properties: %s" % e)
+    def _contact_online_activities_cb(self, handle, activities):
+        if not activities or not len(activities):
+            logging.debug("Handle %s - No activities" % handle)
+            return
+        self._buddy_activities_changed_cb(handle, activities)
 
-        if not props.has_key('color'):
-            raise InvalidBuddyError("no color")
+    def _contact_online_activities_error_cb(self, handle, err):
+        logging.debug("Handle %s - Error getting activities: %s" % (handle, err))
+
+    def _contact_online_aliases_cb(self, handle, props, aliases):
+        if not aliases or not len(aliases):
+            logging.debug("Handle %s - No aliases" % handle)
+            return
+
+        props['nick'] = aliases[0]
+        jid = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
+        self._online_contacts[handle] = jid
+        self.emit("contact-online", handle, props)
+
+        self._conn[CONN_INTERFACE_BUDDY_INFO].GetActivities(handle,
+            reply_handler=lambda *args: self._contact_online_activities_cb(handle, *args),
+            error_handler=lambda *args: self._contact_online_activities_error_cb(handle, *args))
+
+    def _contact_online_aliases_error_cb(self, handle, err):
+        logging.debug("Handle %s - Error getting nickname: %s" % (handle, err))
+
+    def _contact_online_properties_cb(self, handle, props):
         if not props.has_key('key'):
-            raise InvalidBuddyError("no key")
+            logging.debug("Handle %s - invalid key." % handle)
+        if not props.has_key('color'):
+            logging.debug("Handle %s - invalid color." % handle)
 
         # Convert key from dbus byte array to python string
         props["key"] = psutils.bytes_to_string(props["key"])
 
-        jid = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
-        nick = self._conn[CONN_INTERFACE_ALIASING].RequestAliases([handle])[0]
-        if not nick:
-            raise InvalidBuddyError("no name")
-        props['nick'] = nick
+        self._conn[CONN_INTERFACE_ALIASING].RequestAliases([handle],
+            reply_handler=lambda *args: self._contact_online_aliases_cb(handle, props, *args),
+            error_handler=lambda *args: self._contact_online_aliases_error_cb(handle, *args))
+        
+    def _contact_online_properties_error_cb(self, handle, err):
+        logging.debug("Handle %s - Error getting properties: %s" % (handle, err))
 
-        self._online_contacts[handle] = jid
-        # Any properties that are returned by TP as dbus.ByteArray or dbus.Array
-        # must be converted before emitting signals
-        self.emit("contact-online", handle, props)
-
-        activities = self._conn[CONN_INTERFACE_BUDDY_INFO].GetActivities(handle)
-        self._buddy_activities_changed_cb(handle, activities)
+    def _contact_online(self, handle):
+        self._conn[CONN_INTERFACE_BUDDY_INFO].GetProperties(handle,
+            reply_handler=lambda *args: self._contact_online_properties_cb(handle, *args),
+            error_handler=lambda *args: self._contact_online_properties_error_cb(handle, *args))
 
     def _presence_update_cb(self, presence):
         for handle in presence:
@@ -431,12 +446,9 @@ class ServerPlugin(gobject.GObject):
                 jid = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
                 olstr = "ONLINE"
                 if not online: olstr = "OFFLINE"
-                print "Handle %s (%s) was %s, status now '%s'." % (handle, jid, olstr, status)
+                logging.debug("Handle %s (%s) was %s, status now '%s'." % (handle, jid, olstr, status))
                 if not online and status in ["available", "away", "brb", "busy", "dnd", "xa"]:
-                    try:
-                        self._contact_online(handle)
-                    except InvalidBuddyError, e:
-                        print "Not adding %s because %s" % (handle, e)
+                    self._contact_online(handle)
                 elif online and status in ["offline", "invisible"]:
                     self._contact_offline(handle)
 
@@ -514,7 +526,7 @@ class ServerPlugin(gobject.GObject):
         handle = self._activities.get(act_id)
 
         if not handle:
-            print "set_activity_properties: handle unkown"
+            logging.debug("set_activity_properties: handle unkown")
             return
 
         self._conn[CONN_INTERFACE_ACTIVITY_PROPERTIES].SetProperties(handle, props)
