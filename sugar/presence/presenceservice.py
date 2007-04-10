@@ -224,14 +224,10 @@ class _MockPresenceService(gobject.GObject):
     def share_activity(self, activity, properties={}):
         return None
 
-_REAL_PS_ENABLED = False
 _ps = None
 def get_instance():
     global _ps
     if not _ps:
-        if _REAL_PS_ENABLED:
-            _ps = PresenceService()
-        else:
-            _ps = _MockPresenceService()
+        _ps = PresenceService()
     return _ps
 
