@@ -28,6 +28,7 @@ class BuddyIconCache(object):
         self._cachepath = os.path.join(ppath, "cache", "buddy-icons", "cache")
 
         if not os.path.exists(self._cachepath):
+            os.makedirs(self._cachepath)
             self._cache = {}
             # md5 and server token of the last avatar uploaded
             self._md5 = ''
