@@ -38,17 +38,14 @@ class BuddyMenu(Menu):
         self.props.padding = units.points_to_pixels(5)
         pixbuf = self._get_buddy_icon_pixbuf()
         if pixbuf:
-            icon_item = hippo.CanvasImage()
             scaled_pixbuf = pixbuf.scale_simple(units.grid_to_pixels(1),
                                                 units.grid_to_pixels(1),
                                                 gtk.gdk.INTERP_BILINEAR)
             del pixbuf
+            image = hippo.cairo_surface_from_gdk_pixbuf(scaled_pixbuf)
+            icon_item = hippo.CanvasImage(image=image)
             self.add_separator()
             self.append(icon_item)
-            # FIXME: have to set the image _after_ adding the HippoCanvasImage
-            # to it's parent item, because that sets the HippoCanvasImage's context,
-            # which resets the object's 'image' property.  Grr.
-            #_sugar.hippo_canvas_image_set_image_from_gdk_pixbuf(icon_item, scaled_pixbuf)
 
         self._buddy.connect('icon-changed', self.__buddy_icon_changed_cb)
 
