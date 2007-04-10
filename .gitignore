@@ -38,7 +38,6 @@ po/stamp-it
 po/*.gmo
 sugar/__installed__.py
 tools/sugar-setup-activity
-services/presence/org.laptop.Presence.service
 threadframe
 config.guess
 config.sub
@@ -53,4 +52,5 @@ browser/stamp-sugar-marshal.c
 browser/stamp-sugar-marshal.h
 services/clipboard/org.laptop.Clipboard.service
 services/console/org.laptop.sugar.Console.service
+services/presence/org.laptop.Sugar.Presence.service
 bin/sugar
