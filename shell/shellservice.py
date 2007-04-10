@@ -1,3 +1,4 @@
+"""D-bus service providing access to the shell's functionality"""
 import dbus
 
 from sugar.activity import bundleregistry
@@ -8,7 +9,23 @@ _DBUS_OWNER_INTERFACE = "org.laptop.Shell.Owner"
 _DBUS_PATH = "/org/laptop/Shell"
 
 class ShellService(dbus.service.Object):
-
+    """Provides d-bus service to script the shell's operations
+    
+    Uses a shell_model object to observe events such as changes to:
+    
+        * nickname 
+        * colour
+        * icon
+        * currently active activity
+    
+    and pass the event off to the methods in the dbus signature.
+    
+    Key method here at the moment is add_bundle, which is used to 
+    do a run-time registration of a bundle using it's application path.
+    
+    XXX At the moment the d-bus service methods do not appear to do
+    anything other than add_bundle
+    """
     def __init__(self, shell_model):
         self._shell_model = shell_model
 
@@ -26,6 +43,15 @@ class ShellService(dbus.service.Object):
 
     @dbus.service.method(_DBUS_INTERFACE, in_signature="s", out_signature="b")
     def add_bundle(self, bundle_path):
+        """Register the activity bundle with the global registry 
+        
+        bundle_path -- path to the activity bundle's root directory,
+            that is, the directory with activity/activity.info as a 
+            child of the directory.
+        
+        The bundleregistry.BundleRegistry is responsible for setting 
+        up a set of d-bus service mappings for each available activity.
+        """
         registry = bundleregistry.get_registry()
         return registry.add_bundle(bundle_path)
 
