@@ -31,7 +31,7 @@ class NotFoundError(dbus.DBusException):
         dbus.DBusException.__init__(self)
         self._dbus_error_name = _PRESENCE_INTERFACE + '.NotFound'
 
-class DBusGObjectMetaclass(gobject.GObjectMeta, dbus.service.InterfaceType): pass
+class DBusGObjectMetaclass(dbus.service.InterfaceType, gobject.GObjectMeta): pass
 class DBusGObject(dbus.service.Object, gobject.GObject): __metaclass__ = DBusGObjectMetaclass
 
 
