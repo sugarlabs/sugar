@@ -93,13 +93,13 @@ class Buddy(gobject.GObject):
     def object_path(self):
         return self._object_path
 
-    def _emit_icon_changed_signal(self):
-        self._icon = self._buddy.GetIcon()
+    def _emit_icon_changed_signal(self, icon_data):
+        self._icon = icon_data
         self.emit('icon-changed')
         return False
 
-    def _icon_changed_cb(self):
-        gobject.idle_add(self._emit_icon_changed_signal)
+    def _icon_changed_cb(self, icon_data):
+        gobject.idle_add(self._emit_icon_changed_signal, icon_data)
 
     def _emit_joined_activity_signal(self, object_path):
         self.emit('joined-activity', self._ps_new_object(object_path))
