@@ -29,12 +29,8 @@ class BuddyIconCache(object):
 
         if not os.path.exists(self._cachepath):
             os.makedirs(self._cachepath)
-            self._cache = {}
-            # md5 and server token of the last avatar uploaded
-            self._md5 = ''
-            self._token = ''
-        else:
-            self._load_cache()
+
+        self._load_cache()
 
     def _load_cache(self):
         try:
