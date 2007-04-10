@@ -32,9 +32,9 @@ class BuddyModel(gobject.GObject):
                                     ([gobject.TYPE_PYOBJECT]))
     }
 
-    def __init__(self, name=None, buddy=None):
-        if name and buddy:
-            raise RuntimeError("Must specify only _one_ of name or buddy.")
+    def __init__(self, key=None, buddy=None):
+        if (key and buddy) or (not key and not buddy):
+            raise RuntimeError("Must specify only _one_ of key or buddy.")
 
         gobject.GObject.__init__(self)
 
@@ -48,12 +48,11 @@ class BuddyModel(gobject.GObject):
 
         self._buddy = None
 
-        # If given just a name, try to get the buddy from the PS first
+        # If given just a key, try to get the buddy from the PS first
         if not buddy:
-            self._name = name
-            # FIXME: use public key, not name
+            self._key = key
             for iter_buddy in self._pservice.get_buddies():
-                if iter_buddy.props.nick == name:
+                if iter_buddy.props.key == key:
                     buddy = iter_buddy
                     break
 
@@ -65,15 +64,19 @@ class BuddyModel(gobject.GObject):
             # wait for the buddy to appear
             self._ba_handler = self._pservice.connect('buddy-appeared',
                     self._buddy_appeared_cb)
-            self._name = name
+            self._key = key
             # Set color to 'inactive'/'disconnected'
             self._set_color_from_string(_NOT_PRESENT_COLOR)
+            self._name = "Unknown buddy"
 
     def _set_color_from_string(self, color_string):
         self._color = XoColor(color_string)
 
-    def get_name(self):
-        return self._name
+    def get_key(self):
+        return self._key
+
+    def get_nick(self):
+        return self._nick
 
     def get_color(self):
         return self._color
@@ -96,15 +99,15 @@ class BuddyModel(gobject.GObject):
             raise ValueError("Buddy cannot be None.")
 
         self._buddy = buddy
-        self._name = self._buddy.props.nick
+        self._key = self._buddy.props.key
+        self._nick = self._buddy.props.nick
         self._set_color_from_string(self._buddy.props.color)
 
         self._pc_handler = self._buddy.connect('property-changed', self._buddy_property_changed_cb)
         self._bic_handler = self._buddy.connect('icon-changed', self._buddy_icon_changed_cb)
 
     def _buddy_appeared_cb(self, pservice, buddy):
-        # FIXME: use public key rather than buddy name
-        if self._buddy or buddy.get_name() != self._name:
+        if self._buddy or buddy.props.key != self._key:
             return
 
         if self._ba_handler:

@@ -59,20 +59,20 @@ class FriendsBox(hippo.CanvasBox):
                            self._active_activity_changed_cb)
 
     def add_buddy(self, buddy):
-        if self._buddies.has_key(buddy.get_name()):
+        if self._buddies.has_key(buddy.get_key()):
             return
 
         model = BuddyModel(buddy=buddy)
         icon = FriendIcon(self._shell, self._popup_context, model)
         self.append(icon)
 
-        self._buddies[buddy.get_name()] = icon
+        self._buddies[buddy.get_key()] = icon
 
     def remove_buddy(self, buddy):
-        if not self._buddies.has_key(buddy.get_name()):
+        if not self._buddies.has_key(buddy.get_key()):
             return
 
-        self.remove(self._buddies[buddy.get_name()])
+        self.remove(self._buddies[buddy.get_key()])
 
     def clear(self):
         for item in self.get_children():

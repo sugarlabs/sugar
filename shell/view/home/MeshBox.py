@@ -176,17 +176,17 @@ class ActivityView(SnowflakeBox):
         self.append(icon, hippo.PACK_FIXED)
         self.set_root(icon)
 
-    def has_buddy_icon(self, name):
-        return self._icons.has_key(name)
+    def has_buddy_icon(self, key):
+        return self._icons.has_key(key)
 
-    def add_buddy_icon(self, name, icon):
-        self._icons[name] = icon
+    def add_buddy_icon(self, key, icon):
+        self._icons[key] = icon
         self.append(icon, hippo.PACK_FIXED)
 
-    def remove_buddy_icon(self, name):
-        icon = self._icons[name]
+    def remove_buddy_icon(self, key):
+        icon = self._icons[key]
         self.remove(icon)
-        del self._icons[name]
+        del self._icons[key]
 
     def _clicked_cb(self, item):
         bundle_id = self._model.get_service().get_type()
@@ -280,24 +280,24 @@ class MeshBox(SpreadBox):
         icon = BuddyIcon(self._shell, self._menu_shell, buddy_model)
         self.add_item(icon)
 
-        self._buddies[buddy_model.get_name()] = icon
+        self._buddies[buddy_model.get_key()] = icon
 
     def _remove_alone_buddy(self, buddy_model):
-        icon = self._buddies[buddy_model.get_name()]
+        icon = self._buddies[buddy_model.get_key()]
         self.remove_item(icon)
-        del self._buddies[buddy_model.get_name()]
+        del self._buddies[buddy_model.get_key()]
 
     def _remove_buddy(self, buddy_model):
-        name = buddy_model.get_name()
-        if self._buddies.has_key(name):
+        key = buddy_model.get_key()
+        if self._buddies.has_key(key):
             self._remove_alone_buddy(buddy_model)
         else:
             for activity in self._activities.values():
-                if activity.has_buddy_icon(name):
-                    activity.remove_buddy_icon(name)
+                if activity.has_buddy_icon(key):
+                    activity.remove_buddy_icon(key)
 
     def _move_buddy(self, buddy_model, activity_model):
-        name = buddy_model.get_name()
+        key = buddy_model.get_key()
 
         self._remove_buddy(buddy_model)
 
@@ -307,7 +307,7 @@ class MeshBox(SpreadBox):
             activity = self._activities[activity_model.get_id()]
 
             icon = BuddyIcon(self._shell, self._menu_shell, buddy_model)
-            activity.add_buddy_icon(buddy_model.get_name(), icon)
+            activity.add_buddy_icon(buddy_model.get_key(), icon)
 
     def _add_activity(self, activity_model):
         icon = ActivityView(self._shell, self._menu_shell, activity_model)

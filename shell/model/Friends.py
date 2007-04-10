@@ -40,10 +40,10 @@ class Friends(gobject.GObject):
         self.load()
 
     def has_buddy(self, buddy):
-        return self._friends.has_key(buddy.get_name())
+        return self._friends.has_key(buddy.get_key())
 
     def add_friend(self, buddy_info):
-        self._friends[buddy_info.get_name()] = buddy_info
+        self._friends[buddy_info.get_key()] = buddy_info
         self.emit('friend-added', buddy_info)
 
     def make_friend(self, buddy):
@@ -52,9 +52,9 @@ class Friends(gobject.GObject):
             self.save()
 
     def remove(self, buddy_info):
-        del self._friends[buddy_info.get_name()]
+        del self._friends[buddy_info.get_key()]
         self.save()
-        self.emit('friend-removed', buddy_info.get_name())
+        self.emit('friend-removed', buddy_info.get_key())
 
     def __iter__(self):
         return self._friends.values().__iter__()
@@ -65,8 +65,11 @@ class Friends(gobject.GObject):
         try:
             success = cp.read([self._path])
             if success:
-                for name in cp.sections():
-                    buddy = BuddyModel(name)
+                for key in cp.sections():
+                    # HACK: don't screw up on old friends files
+                    if len(key) < 20:
+                        continue
+                    buddy = BuddyModel(key=key)
                     self.add_friend(buddy)
         except Exception, exc:
             logging.error("Error parsing friends file: %s" % exc)
@@ -75,8 +78,9 @@ class Friends(gobject.GObject):
         cp = ConfigParser()
 
         for friend in self:
-            section = friend.get_name()
+            section = friend.get_key()
             cp.add_section(section)
+            cp.set(section, 'nick', friend.get_nick())
             cp.set(section, 'color', friend.get_color().to_string())
 
         fileobject = open(self._path, 'w')

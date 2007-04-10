@@ -72,7 +72,7 @@ class ShellOwner(gobject.GObject):
     def get_invites(self):
         return self._invites
 
-    def get_name(self):
+    def get_nick(self):
         return self._nick
 
     def _handle_invite(self, issuer, bundle_id, activity_id):

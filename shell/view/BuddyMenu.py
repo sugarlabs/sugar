@@ -33,7 +33,7 @@ class BuddyMenu(Menu):
         self._buddy = buddy
         self._shell = shell
 
-        Menu.__init__(self, buddy.get_name())
+        Menu.__init__(self, buddy.get_nick())
         self.props.border = 0
         self.props.padding = units.points_to_pixels(5)
         pixbuf = self._get_buddy_icon_pixbuf()
@@ -53,7 +53,7 @@ class BuddyMenu(Menu):
         self._buddy.connect('icon-changed', self.__buddy_icon_changed_cb)
 
         owner = shell.get_model().get_owner()
-        if buddy.get_name() != owner.get_name():
+        if buddy.get_nick() != owner.get_nick():
             self._add_items()
 
     def _get_buddy_icon_pixbuf(self):
