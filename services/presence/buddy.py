@@ -170,7 +170,10 @@ class Buddy(DBusGObject):
         props['owner'] = self.props.owner
         props['key'] = self.props.key
         props['color'] = self.props.color
-        props['current-activity'] = self.props.current_activity
+        if self.props.current_activity:
+            props['current-activity'] = self.props.current_activity
+        else:
+            props['current-activity'] = ""
         return props
 
     # methods

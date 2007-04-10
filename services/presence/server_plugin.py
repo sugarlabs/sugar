@@ -25,6 +25,7 @@ from buddyiconcache import BuddyIconCache
 import logging
 import os
 import hashlib
+import psutils
 
 from telepathy.client import ConnectionManager, ManagerRegistry, Connection, Channel
 from telepathy.interfaces import (
@@ -304,7 +305,7 @@ class ServerPlugin(gobject.GObject):
         # Set our OLPC buddy properties
         props = {}
         props['color'] = self._owner.props.color
-        props['key'] = self._owner.props.key
+        props['key'] = dbus.ByteArray(self._owner.props.key)
         try:
             self._conn[CONN_INTERFACE_BUDDY_INFO].SetProperties(props)
         except dbus.DBusException, e:
@@ -405,15 +406,8 @@ class ServerPlugin(gobject.GObject):
         if not props.has_key('key'):
             raise InvalidBuddyError("no key")
 
-        # Convert from D-Bus array types to a standard python byte array
-        key = ""
-        for item in props["key"]:
-            try:
-                # int type
-                key = key + "%s" % chr(item)
-            except TypeError:
-                # string type
-                key = key + str(item)
+        # Convert key from dbus byte array to python string
+        props["key"] = psutils.bytes_to_string(props["key"])
 
         jid = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
         nick = self._conn[CONN_INTERFACE_ALIASING].RequestAliases([handle])[0]
