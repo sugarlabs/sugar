@@ -24,7 +24,7 @@ from telepathy.interfaces import (CHANNEL_INTERFACE)
 _ACTIVITY_PATH = "/org/laptop/Sugar/Presence/Activities/"
 _ACTIVITY_INTERFACE = "org.laptop.Sugar.Presence.Activity"
 
-class DBusGObjectMetaclass(gobject.GObjectMeta, dbus.service.InterfaceType): pass
+class DBusGObjectMetaclass(dbus.service.InterfaceType, gobject.GObjectMeta): pass
 class DBusGObject(dbus.service.Object, gobject.GObject): __metaclass__ = DBusGObjectMetaclass
 
 
