@@ -190,7 +190,7 @@ class MeshModel(gobject.GObject):
     def _buddy_disappeared_cb(self, pservice, buddy):
         if not self._buddies.has_key(buddy.props.nick):
             return
-        self.emit('buddy-removed', buddy)
+        self.emit('buddy-removed', self._buddies[buddy.props.nick])
         del self._buddies[buddy.props.nick]
 
     def _activity_appeared_cb(self, pservice, activity):
