@@ -50,12 +50,8 @@ class BuddyIcon(CanvasIcon):
         if action == BuddyMenu.ACTION_REMOVE_FRIEND:
             friends.remove(self._buddy)
 
-        ps_buddy = self._buddy.get_buddy()
-        if ps_buddy == None:
-            return
-
         if action == BuddyMenu.ACTION_INVITE:
             activity = self._shell.get_current_activity()
-            activity.invite(ps_buddy)
+            activity.invite(self._buddy)
         elif action == BuddyMenu.ACTION_MAKE_FRIEND:
-            friends.make_friend(ps_buddy)
+            friends.make_friend(self._buddy)
