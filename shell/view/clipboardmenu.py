@@ -33,11 +33,9 @@ class ClipboardMenu(Menu):
     ACTION_OPEN = 1
     ACTION_STOP_DOWNLOAD = 2
     
-    def __init__(self, name, percent, preview):
+    def __init__(self, name, percent, preview, activity):
         Menu.__init__(self, name)
         self.props.border = 0
-        
-        self._activities = None
 
         if percent < 100:        
             self._progress_bar = ClipboardProgressBar(percent)
@@ -56,10 +54,10 @@ class ClipboardMenu(Menu):
             self._preview_text.props.font_desc = font.DEFAULT.get_pango_desc()        
             self.append(self._preview_text)
         
-        self._update_icons(percent)
+        self._update_icons(percent, activity)
         
-    def _update_icons(self, percent):
-        if percent == 100 and self._activities:
+    def _update_icons(self, percent, activity):
+        if percent == 100 and activity:
             if not self._remove_item:
                 self._remove_item = MenuItem(ClipboardMenu.ACTION_DELETE,
                                              _('Remove'),
@@ -75,7 +73,7 @@ class ClipboardMenu(Menu):
             if self._stop_item:
                 self.remove_item(self._stop_item)
                 self._stop_item = None
-        elif percent == 100 and not self._activities:
+        elif percent == 100 and not activity:
             if not self._remove_item:
                 self._remove_item = MenuItem(ClipboardMenu.ACTION_DELETE,
                                              _('Remove'),
@@ -104,33 +102,8 @@ class ClipboardMenu(Menu):
                 self.remove_item(self._open_item)
                 self._open_item = None
 
-    def _open_file(self):
-        if self._percent < 100 or not self._activity:
-            return
-
-        # Get the file path
-        cb_service = clipboardservice.get_instance()
-        obj = cb_service.get_object(self._object_id)
-        formats = obj['FORMATS']
-        if len(formats) > 0:
-            path = cb_service.get_object_data(self._object_id, formats[0])
-
-            # FIXME: would be better to check for format.onDisk
-            try:
-                path_exists = os.path.exists(path)
-            except TypeError:
-                path_exists = False
-
-            if path_exists:
-                uri = 'file://' + path
-                activityfactory.create_with_uri(self._activity, uri)
-            else:
-                logging.debug("Clipboard item file path %s didn't exist" % path)
-
-    def set_activities(self, activities):
-        self._activities = activities
-
-    def set_state(self, percent):
+    def set_state(self, name, percent, preview, activity):
+        self.set_title(name)
         if self._progress_bar:
-            self._progress_bar.props.percent = percent
-            self._update_icons(percent)
+            self._progress_bar.set_property('percent', percent)
+            self._update_icons(percent, activity)

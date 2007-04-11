@@ -52,7 +52,6 @@ class ClipboardBox(hippo.CanvasBox):
         cb_service = clipboardservice.get_instance()
         cb_service.connect('object-added', self._object_added_cb)
         cb_service.connect('object-deleted', self._object_deleted_cb)
-        cb_service.connect('object-changed', self._object_changed_cb)
         cb_service.connect('object-state-changed', self._object_state_changed_cb)
 
     def owns_clipboard(self):
@@ -137,14 +136,10 @@ class ClipboardBox(hippo.CanvasBox):
         del self._icons[object_id]
         logging.debug('ClipboardBox: ' + object_id + ' was deleted.')
 
-    def _object_changed_cb(self, cb_service, object_id, name, formats):
+    def _object_state_changed_cb(self, cb_service, object_id, name, percent,
+                                 icon_name, preview, activity):
         icon = self._icons[object_id]
-        icon.set_name(name)
-        icon.set_formats(formats)
-
-    def _object_state_changed_cb(self, cb_service, object_id, percent):
-        icon = self._icons[object_id]
-        icon.set_state(percent)
+        icon.set_state(name, percent, icon_name, preview, activity)
         if icon.props.selected and percent == 100:
             self._put_in_clipboard(object_id)
 

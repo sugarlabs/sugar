@@ -27,6 +27,9 @@ import typeregistry
 
 NAME_KEY = 'NAME'
 PERCENT_KEY = 'PERCENT'
+ICON_KEY = 'ICON'
+PREVIEW_KEY = 'PREVIEW'
+ACTIVITY_KEY = 'ACTIVITY'
 FORMATS_KEY = 'FORMATS'
 
 class ClipboardDBusServiceHelper(dbus.service.Object):
@@ -48,18 +51,6 @@ class ClipboardDBusServiceHelper(dbus.service.Object):
         self._next_id += 1
         return self._next_id
 
-    def _get_object_dict(self, object_path):
-        cb_object = self._objects[str(object_path)]
-        formats = cb_object.get_formats()
-        format_types = dbus.Array([], 's')
-        
-        for type, format in formats.iteritems():
-            format_types.append(type)
-        
-        return { NAME_KEY: cb_object.get_name(),
-                 PERCENT_KEY: cb_object.get_percent(),
-                 FORMATS_KEY: format_types }
-
     def _handle_file_completed(self, cb_object):
         """If the object is an on-disk file, and it's at 100%, and we care about
         it's file type, copy that file to $HOME and upate the clipboard object's
@@ -70,6 +61,10 @@ class ClipboardDBusServiceHelper(dbus.service.Object):
 
         format = formats.values()[0]
         if not format.get_on_disk():
+            return
+
+        if not len(cb_object.get_activity()):
+            # no activity to handle this, don't autosave it
             return
 
         # copy to homedir
@@ -105,7 +100,11 @@ class ClipboardDBusServiceHelper(dbus.service.Object):
         else:
             logging.debug('Added in-memory format of type ' + format_type + '.')
                         
-        self.object_changed(object_path, self._get_object_dict(object_path))
+        self.object_state_changed(object_path, {NAME_KEY: cb_object.get_name(),
+                                  PERCENT_KEY: cb_object.get_percent(),
+                                  ICON_KEY: cb_object.get_icon(),
+                                  PREVIEW_KEY: cb_object.get_preview(),
+                                  ACTIVITY_KEY: cb_object.get_activity()})
 
     @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
                          in_signature="o", out_signature="")
@@ -131,12 +130,29 @@ class ClipboardDBusServiceHelper(dbus.service.Object):
         if percent == 100:
             self._handle_file_completed(cb_object)
 
-        self.object_state_changed(object_path, { PERCENT_KEY: percent })
+        self.object_state_changed(object_path, {NAME_KEY: cb_object.get_name(),
+                                    PERCENT_KEY: percent,
+                                    ICON_KEY: cb_object.get_icon(),
+                                    PREVIEW_KEY: cb_object.get_preview(),
+                                    ACTIVITY_KEY: cb_object.get_activity()})
 
     @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
                          in_signature="o", out_signature="a{sv}")
     def get_object(self, object_path):
-        return dbus.Dictionary(self._get_object_dict(object_path))
+        cb_object = self._objects[str(object_path)]
+        formats = cb_object.get_formats()
+        format_types = dbus.Array([], 's')
+        
+        for type, format in formats.iteritems():
+            format_types.append(type)
+        
+        result_dict = {NAME_KEY: cb_object.get_name(),
+                PERCENT_KEY: cb_object.get_percent(),
+                ICON_KEY: cb_object.get_icon(),
+                PREVIEW_KEY: cb_object.get_preview(),
+                ACTIVITY_KEY: cb_object.get_activity(),
+                FORMATS_KEY: format_types}
+        return dbus.Dictionary(result_dict)
 
     @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
                          in_signature="os", out_signature="ay")
@@ -148,10 +164,6 @@ class ClipboardDBusServiceHelper(dbus.service.Object):
     # dbus signals
     @dbus.service.signal(_CLIPBOARD_DBUS_INTERFACE, signature="os")
     def object_added(self, object_path, name):
-        pass
-
-    @dbus.service.signal(_CLIPBOARD_DBUS_INTERFACE, signature="oa{sv}")
-    def object_changed(self, object_path, values):
         pass
 
     @dbus.service.signal(_CLIPBOARD_DBUS_INTERFACE, signature="o")
