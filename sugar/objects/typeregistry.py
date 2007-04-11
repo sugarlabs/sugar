@@ -25,14 +25,30 @@ _text_type = {
     'type_id' : 'Text',
     'name'    : _('Text'),
     'icon'    : 'theme:object-text',
-    'formats' : [ 'text/plain', 'application/pdf' ]
+    'formats' : [ 'text/plain',
+                  'application/pdf',
+                  'application/x-pdf',
+                  'application/msword',
+                  'application/rtf',
+                  'text/rtf',
+                  'application/x-abiword',
+                  'application/vnd.oasis.opendocument.text']
 }
 
 _image_type = {
     'type_id' : 'Image',
     'name'    : _('Image'),
     'icon'    : 'theme:object-image',
-    'formats' : [ 'image/jpeg', 'image/gif', 'image/png' ]
+    'formats' : [ 'image/jpeg',
+                  'image/gif',
+                  'image/png',
+                  'image/tiff' ]
+}
+
+_other_type = {
+    'type_id' : 'Other',
+    'name'    : _('Other'),
+    'formats' : []
 }
 
 class _RootNode(_TypeNode):
@@ -61,8 +77,10 @@ class _TypeNode(list):
 class TypeRegistry(object):
     def __init__(self):
         self._tree = _RootNode()
+
         self._tree.append_primitive(_image_type)
         self._tree.append_primitive(_text_type)
+        self._tree.append_primitive(_other_type)
 
         self._bundle_registry = bundleregistry.get_registry()
         for bundle in self._bundle_registry:
