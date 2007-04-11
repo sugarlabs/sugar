@@ -518,8 +518,13 @@ class NMClient(gobject.GObject):
             'WirelessNetworkStrengthChanged': self.wireless_network_strength_changed_sig_handler
         }
 
-        self._nm_proxy = sys_bus.get_object(NM_SERVICE, NM_PATH)
-        self._nm_obj = dbus.Interface(self._nm_proxy, NM_IFACE)
+        try:
+            self._nm_proxy = sys_bus.get_object(NM_SERVICE, NM_PATH)
+            self._nm_obj = dbus.Interface(self._nm_proxy, NM_IFACE)
+        except dbus.DBusException, e:
+            logging.debug("Could not connect to NetworkManager!")
+            self._nm_present = False
+            return
 
         sys_bus.add_signal_receiver(self.name_owner_changed_sig_handler,
                                          signal_name="NameOwnerChanged",
@@ -528,7 +533,7 @@ class NMClient(gobject.GObject):
         for (signal, handler) in self._sig_handlers.items():
             sys_bus.add_signal_receiver(handler, signal_name=signal, dbus_interface=NM_IFACE)
 
-        # Find out whether or not NM is running
+        # Find out whether or not NMI is running
         try:
             bus_object = sys_bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
             name = bus_object.GetNameOwner("org.freedesktop.NetworkManagerInfo", \
