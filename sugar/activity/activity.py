@@ -85,10 +85,6 @@ class Activity(Window, gtk.Container):
         """Gets the activity service name."""
         return os.environ['SUGAR_BUNDLE_SERVICE_NAME']
 
-    def get_default_type(self):
-        """Gets the type of the default activity network service"""
-        return os.environ['SUGAR_BUNDLE_DEFAULT_TYPE']
-
     def get_shared(self):
         """Returns TRUE if the activity is shared on the mesh."""
         return self._shared
@@ -98,31 +94,16 @@ class Activity(Window, gtk.Container):
         return self._activity_id
 
     def _join(self, service):
+        """Join an existing instance of this activity on the network."""
         self._service = service
         self._shared = True
-
-        # Publish the default service, it's a copy of
-        # one of those we found on the network.
-        default_type = self.get_default_type()
-        services = activity_ps.get_services_of_type(default_type)
-        if len(services) > 0:
-            service = services[0]
-            addr = service.get_address()
-            port = service.get_port()
-            properties = service.get_published_values()
-            self._service = self._pservice.share_activity(
-                            self, default_type, properties, addr, port)
-        else:
-            logging.error('Cannot join the activity')
-
+        self._service.join()
         self.present()
 
     def share(self):
         """Share the activity on the network."""
         logging.debug('Share activity %s on the network.' % self.get_id())
-
-        default_type = self.get_default_type()
-        self._service = self._pservice.share_activity(self, default_type)
+        self._service = self._pservice.share_activity(self)
         self._shared = True
 
     def execute(self, command, args):

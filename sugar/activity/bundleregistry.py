@@ -93,13 +93,6 @@ class BundleRegistry(gobject.GObject):
         else:
             return None
 
-    def find_by_default_type(self, default_type):
-        """Find a bundle by the network service default type"""
-        for bundle in self._bundles.values():
-            if bundle.get_default_type() == default_type:
-                return bundle
-        return None
-
     def add_search_path(self, path):
         """Add a directory to the bundles search path"""
         self._search_path.append(path)

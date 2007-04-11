@@ -114,19 +114,18 @@ class Shell(gobject.GObject):
         # we have a bundle on the system capable of handling
         # this activity type
         breg = self._model.get_bundle_registry()
-        bundle = breg.find_by_default_type(bundle_id)
+        bundle = breg.get_bundle(bundle_id)
         if not bundle:
             logging.error("Couldn't find activity for type %s" % bundle_id)
             return
 
-        act_type = bundle.get_service_name()
         home_model = self._model.get_home()
-        home_model.notify_activity_launch(activity_id, act_type)
+        home_model.notify_activity_launch(activity_id, bundle_id)
 
         handle = ActivityHandle(activity_id)
         handle.pservice_id = activity_id
 
-        handler = activityfactory.create(act_type, handle)
+        handler = activityfactory.create(bundle_id, handle)
         handler.connect('error', self._join_error_cb, home_model)
 
     def _start_error_cb(self, handler, err, home_model):

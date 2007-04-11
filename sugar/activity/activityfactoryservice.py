@@ -150,7 +150,6 @@ def run(bundle_path):
 
     os.environ['SUGAR_BUNDLE_PATH'] = bundle_path
     os.environ['SUGAR_BUNDLE_SERVICE_NAME'] = bundle.get_service_name()
-    os.environ['SUGAR_BUNDLE_DEFAULT_TYPE'] = bundle.get_default_type()
 
     factory = ActivityFactoryService(bundle.get_service_name(),
                                      bundle.get_class())
