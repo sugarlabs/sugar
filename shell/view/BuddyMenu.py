@@ -58,15 +58,12 @@ class BuddyMenu(Menu):
         if not buddy_object:
             return None
 
-        pixbuf = None
         icon_data = buddy_object.props.icon
-        icon_data_string = ""
-        for item in icon_data:
-            if item < 0:
-                item = item + 128
-            icon_data_string += chr(item)
+        if not icon_data:
+            return None
         pbl = gtk.gdk.PixbufLoader()
-        pbl.write(icon_data_string)
+        pbl.write(icon_data)
+        pixbuf = None
         try:
             pbl.close()
             pixbuf = pbl.get_pixbuf()

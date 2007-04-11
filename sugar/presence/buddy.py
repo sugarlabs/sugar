@@ -19,6 +19,12 @@ import gobject
 import gtk
 import dbus
 
+def _bytes_to_string(bytes):
+    if len(bytes):
+        return ''.join([chr(item) for item in bytes])
+    return None
+
+
 class Buddy(gobject.GObject):
 
     __gsignals__ = {
@@ -87,14 +93,14 @@ class Buddy(gobject.GObject):
             return self._properties["owner"]
         elif pspec.name == "icon":
             if not self._icon:
-                self._icon = self._buddy.GetIcon()
+                self._icon = _bytes_to_string(self._buddy.GetIcon())
             return self._icon
 
     def object_path(self):
         return self._object_path
 
-    def _emit_icon_changed_signal(self, icon_data):
-        self._icon = icon_data
+    def _emit_icon_changed_signal(self, bytes):
+        self._icon = _bytes_to_string(bytes)
         self.emit('icon-changed')
         return False
 
