@@ -1,7 +1,4 @@
-import typeregistry
-
 class ClipboardObject:
-
     def __init__(self, object_path, name):
         self._id = object_path
         self._name = name
@@ -11,24 +8,8 @@ class ClipboardObject:
     def get_id(self):
         return self._id
 
-    def _get_type_info(self):
-        type_registry = typeregistry.get_instance()
-        return type_registry.get_type(self._formats)
-    
     def get_name(self):
-        if self._name:
-            return self._name
-        else:
-            return self._get_type_info().get_name()
-
-    def get_icon(self):
-        return self._get_type_info().get_icon()
-
-    def get_preview(self):
-        return self._get_type_info().get_preview()
-
-    def get_activity(self):
-        return self._get_type_info().get_activity()
+        return self._name
         
     def get_percent(self):
         return self._percent
@@ -43,7 +24,6 @@ class ClipboardObject:
         return self._formats
         
 class Format:
-
     def __init__(self, type, data, on_disk):
         self._type = type
         self._data = data

@@ -4,9 +4,6 @@ import gobject
 
 NAME_KEY = 'NAME'
 PERCENT_KEY = 'PERCENT'
-ICON_KEY = 'ICON'
-PREVIEW_KEY = 'PREVIEW'
-ACTIVITY_KEY = 'ACTIVITY'
 FORMATS_KEY = 'FORMATS'
 
 DBUS_SERVICE = "org.laptop.Clipboard"
@@ -14,14 +11,15 @@ DBUS_INTERFACE = "org.laptop.Clipboard"
 DBUS_PATH = "/org/laptop/Clipboard"
 
 class ClipboardService(gobject.GObject):
-
     __gsignals__ = {
-        'object-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                        ([str, str])),
+        'object-added':   (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([str, str])),
+        'object-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([str, str, gobject.TYPE_PYOBJECT])),
         'object-deleted': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                        ([str])),
+                           ([str])),
         'object-state-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                        ([str, str, int, str, str, str])),
+                                 ([str, int])),
     }
     
     def __init__(self):
@@ -54,6 +52,8 @@ class ClipboardService(gobject.GObject):
                                                  self._object_deleted_cb)
             self._dbus_service.connect_to_signal('object_state_changed',
                                                  self._object_state_changed_cb)
+            self._dbus_service.connect_to_signal('object_changed',
+                                                 self._object_changed_cb)
             self._connected = True
 
         bus.remove_signal_receiver(self._nameOwnerChangedHandler)
@@ -66,13 +66,15 @@ class ClipboardService(gobject.GObject):
     def _object_added_cb(self, object_id, name):
         self.emit('object-added', str(object_id), name)
 
+    def _object_changed_cb(self, object_id, values):
+        self.emit('object-changed', str(object_id),
+                  values[NAME_KEY], values[FORMATS_KEY])
+
     def _object_deleted_cb(self, object_id):
         self.emit('object-deleted', str(object_id))
 
     def _object_state_changed_cb(self, object_id, values):
-        self.emit('object-state-changed', str(object_id), values[NAME_KEY],
-                  values[PERCENT_KEY], values[ICON_KEY], values[PREVIEW_KEY],
-                  values[ACTIVITY_KEY])
+        self.emit('object-state-changed', str(object_id), values[PERCENT_KEY])
 
     def add_object(self, name):
         return str(self._dbus_service.add_object(name))

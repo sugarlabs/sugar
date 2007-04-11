@@ -44,7 +44,6 @@ class ClipboardIcon(CanvasIcon):
         self._name = name
         self._percent = 0
         self._preview = None
-        self._activity = None
         self._selected = False
         self._hover = False
         self.props.box_width = units.grid_to_pixels(1)
@@ -74,60 +73,26 @@ class ClipboardIcon(CanvasIcon):
             self.props.background_color = color.TOOLBAR_BACKGROUND.get_int()
 
     def get_popup(self):
-        self._menu = ClipboardMenu(self._name, self._percent, self._preview,
-                                   self._activity)
+        self._menu = ClipboardMenu(self._name, self._percent, self._preview)
         self._menu.connect('action', self._popup_action_cb)
         return self._menu
 
     def get_popup_context(self):
         return self._popup_context
 
-    def set_state(self, name, percent, icon_name, preview, activity):
+    def set_name(self, name):
         self._name = name
-        self._percent = percent
-        self._preview = preview
-        self._activity = activity
-        self.set_property("icon_name", icon_name)
         if self._menu:
-            self._menu.set_state(name, percent, preview, activity)
+            self._menu.set_title(name)
+            
+    def set_formats(self, formats):
+        self._preview = None
+        self.props.icon_name = 'theme:stock-missing'
 
-        if activity and percent < 100:
-            self.props.xo_color = XoColor("#000000,#424242")
-        else:
-            self.props.xo_color = XoColor("#000000,#FFFFFF")
-
-        if activity and percent == 100:
-            # FIXME: restrict based on file type rather than activity once
-            # we have a better type registry
-            # restrict auto-open to a specific set of activities
-            allowed = ["org.laptop.AbiWordActivity",
-                       "org.laptop.sugar.Xbook",
-                       "org.vpri.EtoysActivity"]
-            if activity in allowed:
-                self._open_file()
-
-    def _open_file(self):
-        if self._percent < 100 or not self._activity:
-            return
-
-        # Get the file path
-        cb_service = clipboardservice.get_instance()
-        obj = cb_service.get_object(self._object_id)
-        formats = obj['FORMATS']
-        if len(formats) > 0:
-            path = cb_service.get_object_data(self._object_id, formats[0])
-
-            # FIXME: would be better to check for format.onDisk
-            try:
-                path_exists = os.path.exists(path)
-            except TypeError:
-                path_exists = False
-
-            if path_exists:
-                uri = 'file://' + path
-                activityfactory.create_with_uri(self._activity, uri)
-            else:
-                logging.debug("Clipboard item file path %s didn't exist" % path)
+    def set_state(self, percent):
+        self._percent = percent
+        if self._menu:
+            self._menu.set_state(percent)
                         
     def _popup_action_cb(self, popup, menu_item):
         action = menu_item.props.action_id
