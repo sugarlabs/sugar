@@ -18,9 +18,11 @@
 import os
 import gobject
 import dbus, dbus.service
+from ConfigParser import ConfigParser, NoOptionError
 
-from sugar import profile
-from sugar import env
+from sugar import env, profile, util
+import logging
+import random
 
 _BUDDY_PATH = "/org/laptop/Sugar/Presence/Buddies/"
 _BUDDY_INTERFACE = "org.laptop.Sugar.Presence.Buddy"
@@ -38,8 +40,6 @@ class DBusGObject(dbus.service.Object, gobject.GObject): __metaclass__ = DBusGOb
 class Buddy(DBusGObject):
     """Represents another person on the network and keeps track of the
     activities and resources they make available for sharing."""
-
-    __gtype_name__ = "Buddy"
 
     __gsignals__ = {
         'validity-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
@@ -246,16 +246,58 @@ class Buddy(DBusGObject):
         except AttributeError:
             self._valid = False
 
+class GenericOwner(Buddy):
+    __gtype_name__ = "GenericOwner"
 
-class Owner(Buddy):
+    __gproperties__ = {
+        'registered' : (bool, None, None, False, gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT),
+        'server'     : (str, None, None, None, gobject.PARAM_READABLE | gobject.PARAM_CONSTRUCT),
+        'key-hash'   : (str, None, None, None, gobject.PARAM_READABLE | gobject.PARAM_CONSTRUCT)
+    }
+
+    def __init__(self, bus_name, object_id, **kwargs):
+        self._server = 'olpc.collabora.co.uk'
+        self._key_hash = None
+        self._registered = False
+        if kwargs.has_key("server"):
+            self._server = kwargs["server"]
+            del kwargs["server"]
+        if kwargs.has_key("key_hash"):
+            self._key_hash = kwargs["key_hash"]
+            del kwargs["key_hash"]
+        if kwargs.has_key("registered"):
+            self._registered = kwargs["registered"]
+            del kwargs["registered"]
+
+        Buddy.__init__(self, bus_name, object_id, **kwargs)
+        self._owner = True
+
+    def get_registered(self):
+        return self._registered
+
+    def get_server(self):
+        return self._server
+
+    def get_key_hash(self):
+        return self._key_hash
+
+    def set_registered(self, registered):
+        raise RuntimeError("Subclasses must implement")
+
+class ShellOwner(GenericOwner):
     """Class representing the owner of the machine.  This is the client
     portion of the Owner, paired with the server portion in Owner.py."""
+
+    __gtype_name__ = "ShellOwner"
 
     _SHELL_SERVICE = "org.laptop.Shell"
     _SHELL_OWNER_INTERFACE = "org.laptop.Shell.Owner"
     _SHELL_PATH = "/org/laptop/Shell"
 
-    def __init__(self, bus_name, object_id):
+    def __init__(self, bus_name, object_id, test=False):
+        server = profile.get_server()
+        key_hash = profile.get_private_key_hash()
+        registered = profile.get_server_registered()
         key = profile.get_pubkey()
         nick = profile.get_nick_name()
         color = profile.get_color().to_string()
@@ -265,10 +307,14 @@ class Owner(Buddy):
         icon = f.read()
         f.close()
 
+        GenericOwner.__init__(self, bus_name, object_id, key=key, nick=nick,
+                color=color, icon=icon, server=server, key_hash=key_hash,
+                registered=registered)
+
         self._bus = dbus.SessionBus()
         self._bus.add_signal_receiver(self._name_owner_changed_handler,
-                                      signal_name="NameOwnerChanged",
-                                      dbus_interface="org.freedesktop.DBus")
+                                    signal_name="NameOwnerChanged",
+                                    dbus_interface="org.freedesktop.DBus")
 
         # Connect to the shell to get notifications on Owner object
         # property changes
@@ -277,36 +323,9 @@ class Owner(Buddy):
         except dbus.DBusException:
             pass
 
-        Buddy.__init__(self, bus_name, object_id, key=key, nick=nick, color=color,
-                icon=icon)
-        self._owner = True
-
-        # enable this to change random buddy properties
-        if False:
-            gobject.timeout_add(5000, self._update_something)
-
-    def _update_something(self):
-        import random
-        it = random.randint(0, 3)
-        if it == 0:
-            data = get_random_image()
-            self._icon_changed_cb(data)
-        elif it == 1:
-            from sugar.graphics import xocolor
-            xo = xocolor.XoColor()
-            self._color_changed_cb(xo.to_string())
-        elif it == 2:
-            names = ["Liam", "Noel", "Guigsy", "Whitey", "Bonehead"]
-            foo = random.randint(0, len(names) - 1)
-            self._nick_changed_cb(names[foo])
-        elif it == 3:
-            bork = random.randint(25, 65)
-            it = ""
-            for i in range(0, bork):
-                it += chr(random.randint(40, 127))
-            from sugar import util
-            self._cur_activity_changed_cb(util.unique_id(it))
-        return True
+    def set_registered(self, value):
+        if value:
+            profile.set_server_registered()
 
     def _name_owner_changed_handler(self, name, old, new):
         if name != self._SHELL_SERVICE:
@@ -346,8 +365,204 @@ class Owner(Buddy):
         self.set_properties(props)
 
 
+class TestOwner(GenericOwner):
+    """Class representing the owner of the machine.  This test owner
+    changes random attributes periodically."""
 
-def get_random_image():
+    __gtype_name__ = "TestOwner"
+
+    def __init__(self, bus_name, object_id, test_num):
+        self._cp = ConfigParser()
+        self._section = "Info"
+
+        self._cfg_file = os.path.join(env.get_profile_path(), 'test-buddy-%d' % test_num)
+
+        (pubkey, privkey, registered) = self._load_config()
+        if not pubkey or not len(pubkey) or not privkey or not len(privkey):
+            (pubkey, privkey) = _get_new_keypair(test_num)
+
+        if not pubkey or not privkey:
+            raise RuntimeError("Couldn't get or create test buddy keypair")
+
+        self._save_config(pubkey, privkey, registered)
+        privkey_hash = util.printable_hash(util._sha_data(privkey))
+
+        nick = _get_random_name()
+        from sugar.graphics import xocolor
+        color = xocolor.XoColor().to_string()
+        icon = _get_random_image()
+
+        GenericOwner.__init__(self, bus_name, object_id, key=pubkey, nick=nick,
+                color=color, icon=icon, registered=registered, key_hash=privkey_hash)
+
+        # Change a random property ever 10 seconds
+        gobject.timeout_add(10000, self._update_something)
+
+    def set_registered(self, value):
+        if value:
+            self._registered = True
+
+    def _load_config(self):
+        if not os.path.exists(self._cfg_file):
+            return (None, None, False)
+        if not self._cp.read([self._cfg_file]):
+            return (None, None, False)
+        if not self._cp.has_section(self._section):
+            return (None, None, False)
+
+        try:
+            pubkey = self._cp.get(self._section, "pubkey")
+            privkey = self._cp.get(self._section, "privkey")
+            registered = self._cp.get(self._section, "registered")
+            return (pubkey, privkey, registered)
+        except NoOptionError:
+            pass
+
+        return (None, None, False)
+
+    def _save_config(self, pubkey, privkey, registered):
+        # Save config again
+        if not self._cp.has_section(self._section):
+            self._cp.add_section(self._section)
+        self._cp.set(self._section, "pubkey", pubkey)
+        self._cp.set(self._section, "privkey", privkey)
+        self._cp.set(self._section, "registered", registered)
+        f = open(self._cfg_file, 'w')
+        self._cp.write(f)
+        f.close()
+
+    def _update_something(self):
+        it = random.randint(0, 10000) % 4
+        if it == 0:
+            self.props.icon = _get_random_image()
+        elif it == 1:
+            from sugar.graphics import xocolor
+            props = {'color': xocolor.XoColor().to_string()}
+            self.set_properties(props)
+        elif it == 2:
+            props = {'nick': _get_random_name()}
+            self.set_properties(props)
+        elif it == 3:
+            bork = random.randint(25, 65)
+            it = ""
+            for i in range(0, bork):
+                it += chr(random.randint(40, 127))
+            from sugar import util
+            props = {'current-activity': util.unique_id(it)}
+            self.set_properties(props)
+        return True
+
+
+def _hash_private_key(self):
+    self.privkey_hash = None
+    
+    key_path = os.path.join(env.get_profile_path(), 'owner.key')
+    try:
+        f = open(key_path, "r")
+        lines = f.readlines()
+        f.close()
+    except IOError, e:
+        logging.error("Error reading private key: %s" % e)
+        return
+
+    key = ""
+    for l in lines:
+        l = l.strip()
+        if l.startswith("-----BEGIN DSA PRIVATE KEY-----"):
+            continue
+        if l.startswith("-----END DSA PRIVATE KEY-----"):
+            continue
+        key += l
+    if not len(key):
+        logging.error("Error parsing public key.")
+
+    # hash it
+    key_hash = util._sha_data(key)
+    self.privkey_hash = util.printable_hash(key_hash)
+
+def _extract_public_key(keyfile):
+    try:
+        f = open(keyfile, "r")
+        lines = f.readlines()
+        f.close()
+    except IOError, e:
+        logging.error("Error reading public key: %s" % e)
+        return None
+
+    # Extract the public key
+    magic = "ssh-dss "
+    key = ""
+    for l in lines:
+        l = l.strip()
+        if not l.startswith(magic):
+            continue
+        key = l[len(magic):]
+        break
+    if not len(key):
+        logging.error("Error parsing public key.")
+        return None
+    return key
+
+def _extract_private_key(keyfile):
+    # Extract the private key
+    try:
+        f = open(keyfile, "r")
+        lines = f.readlines()
+        f.close()
+    except IOError, e:
+        logging.error("Error reading private key: %s" % e)
+        return None
+
+    key = ""
+    for l in lines:
+        l = l.strip()
+        if l.startswith("-----BEGIN DSA PRIVATE KEY-----"):
+            continue
+        if l.startswith("-----END DSA PRIVATE KEY-----"):
+            continue
+        key += l
+    if not len(key):
+        logging.error("Error parsing private key.")
+        return None
+    return key
+
+def _get_new_keypair(num):
+    # Generate keypair
+    privkeyfile = os.path.join("/tmp", "test%d.key" % num)
+    pubkeyfile = os.path.join("/tmp", 'test%d.key.pub' % num)
+
+    # force-remove key files if they exist to ssh-keygen doesn't
+    # start asking questions
+    try:
+        os.remove(pubkeyfile)
+        os.remove(privkeyfile)
+    except OSError:
+        pass
+
+    cmd = "ssh-keygen -q -t dsa -f %s -C '' -N ''" % privkeyfile
+    import commands
+    print "Generating new keypair..."
+    (s, o) = commands.getstatusoutput(cmd)
+    print "Done."
+    pubkey = privkey = None
+    if s != 0:
+        logging.error("Could not generate key pair: %d (%s)" % (s, o))
+    else:
+        pubkey = _extract_public_key(pubkeyfile)
+        privkey = _extract_private_key(privkeyfile)
+
+    try:
+        os.remove(pubkeyfile)
+        os.remove(privkeyfile)
+    except OSError:
+        pass
+    return (pubkey, privkey)
+
+def _get_random_name():
+    names = ["Liam", "Noel", "Guigsy", "Whitey", "Bonehead"]
+    return names[random.randint(0, len(names) - 1)]
+
+def _get_random_image():
     import cairo, math, random, gtk
 
     def rand():

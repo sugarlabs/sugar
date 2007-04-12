@@ -26,10 +26,22 @@ from sugar import env
 
 sys.path.insert(0, env.get_service_path('presence'))
 
-logger.start('presenceservice')
+test=0
+if len(sys.argv) > 1:
+    try:
+        test = int(sys.argv[1])
+    except ValueError:
+        logging.debug("Bad test user number.")
+    if test < 1 or test > 10:
+        logging.debug("Bad test user number.")
+
+if test > 0:
+    logger.start('test-%d-presenceservice' % test)
+else:
+    logger.start('presenceservice')
 
 import presenceservice
 
 logging.info('Starting presence service')
 
-presenceservice.main()
+presenceservice.main(test)
