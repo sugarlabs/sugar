@@ -432,7 +432,7 @@ class TestOwner(GenericOwner):
         f.close()
 
     def _update_something(self):
-        it = random.randint(0, 3)
+        it = random.randint(0, 10000) % 4
         if it == 0:
             self.props.icon = _get_random_image()
         elif it == 1:
