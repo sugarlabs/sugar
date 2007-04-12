@@ -16,6 +16,8 @@
 
 import gobject
 import dbus, dbus.service, dbus.glib
+import logging
+
 from telepathy.client import ManagerRegistry, Connection
 from telepathy.interfaces import (CONN_MGR_INTERFACE, CONN_INTERFACE)
 from telepathy.constants import (CONNECTION_STATUS_CONNECTING, CONNECTION_STATUS_CONNECTED,
@@ -111,10 +113,10 @@ class PresenceService(dbus.service.Object):
     def _buddy_validity_changed_cb(self, buddy, valid):
         if valid:
             self.BuddyAppeared(buddy.object_path())
-            print "New Buddy: %s (%s)" % (buddy.props.nick, buddy.props.color)
+            logging.debug("New Buddy: %s (%s)" % (buddy.props.nick, buddy.props.color))
         else:
             self.BuddyDisappeared(buddy.object_path())
-            print "Buddy left: %s (%s)" % (buddy.props.nick, buddy.props.color)
+            logging.debug("Buddy left: %s (%s)" % (buddy.props.nick, buddy.props.color))
             
     def _contact_offline(self, tp, handle):
         buddy = self._handles_buddies[tp].pop(handle)
@@ -125,7 +127,7 @@ class PresenceService(dbus.service.Object):
         if not buddy.handles:
             if buddy.props.valid:
                 self.BuddyDisappeared(buddy.object_path())
-                print "Buddy left: %s (%s)" % (buddy.props.nick, buddy.props.color)
+                logging.debug("Buddy left: %s (%s)" % (buddy.props.nick, buddy.props.color))
             self._buddies.pop(key)
 
     def _get_next_object_id(self):
@@ -136,21 +138,21 @@ class PresenceService(dbus.service.Object):
     def _avatar_updated(self, tp, handle, avatar):
         buddy = self._handles_buddies[tp].get(handle)
         if buddy and not buddy.props.owner:
-            print "Buddy %s icon updated" % buddy.props.key
+            logging.debug("Buddy %s icon updated" % buddy.props.nick)
             buddy.props.icon = avatar
 
     def _buddy_properties_changed(self, tp, handle, prop):
         buddy = self._handles_buddies[tp].get(handle)
         if buddy:
             buddy.set_properties(prop)
-            #print "Buddy %s properties updated" % buddy.props.key
+            logging.debug("Buddy %s properties updated" % buddy.props.nick)
 
     def _new_activity(self, activity_id, tp):
         try:
             objid = self._get_next_object_id()
             activity = Activity(self._bus_name, objid, tp, id=activity_id)
         except Exception, e:
-            print "Invalid activity: %s" % e
+            logging.debug("Invalid activity: %s" % e)
             return None
 
         activity.connect("validity-changed", self._activity_validity_changed_cb)
@@ -171,13 +173,13 @@ class PresenceService(dbus.service.Object):
         return activity
 
     def _remove_activity(self, activity):
-        print "remove activity", activity.props.id
+        logging.debug("remove activity", activity.props.id)
 
         self.ActivityDisappeared(activity.object_path())
         del self._activities[activity.props.id]
     
     def _buddy_activities_changed(self, tp, contact_handle, activities):
-        print "------------activities changed-------------"
+        logging.debug("------------activities changed-------------")
         buddies = self._handles_buddies[tp]
         buddy = buddies.get(contact_handle)
 
@@ -185,7 +187,7 @@ class PresenceService(dbus.service.Object):
             # We don't know this buddy
             # FIXME: What should we do here? 
             # FIXME: Do we need to check if the buddy is valid or something?
-            print "contact_activities_changed: buddy unknow"
+            logging.debug("contact_activities_changed: buddy unknown")
             return
 
         old_activities = set()
@@ -196,7 +198,7 @@ class PresenceService(dbus.service.Object):
 
         activities_joined = new_activities - old_activities
         for act in activities_joined:
-            print "buddy", contact_handle, "joined", act
+            logging.debug("Buddy", contact_handle, "joined", act)
             activity = self._activities.get(act)
             if not activity:
                 # new activity, can fail
@@ -208,7 +210,7 @@ class PresenceService(dbus.service.Object):
 
         activities_left = old_activities - new_activities
         for act in activities_left:
-            print "buddy", contact_handle, "left", act
+            logging.debug("Buddy", contact_handle, "left", act)
             activity = self._activities.get(act)
             if not activity:
                 continue
@@ -304,6 +306,9 @@ class PresenceService(dbus.service.Object):
     def _share_activity(self, actid, atype, name, properties):
         objid = self._get_next_object_id()
         # FIXME check which tp client we should use to share the activity
+        import time
+        start = time.time()
+        logging.debug("Start share of %s (%s)" % (actid, atype))
         color = self._owner.props.color
         activity = Activity(self._bus_name, objid, self._server_plugin,
                         id=actid, type=atype, name=name, color=color, local=True)
@@ -312,16 +317,17 @@ class PresenceService(dbus.service.Object):
 
         activity.join()
         activity.send_properties()
+        logging.debug("End share of %s (%s).  Time: %f" % (actid, atype, (float)(time.time() - start)))
 
         return activity
 
     def _activity_validity_changed_cb(self, activity, valid):
         if valid:
             self.ActivityAppeared(activity.object_path())
-            print "New Activity: %s (%s)" % (activity.props.name, activity.props.id)
+            logging.debug("New Activity: %s (%s)" % (activity.props.name, activity.props.id))
         else:
             self.ActivityDisappeared(activity.object_path())
-            print "Activity disappeared: %s (%s)" % (activity.props.name, activity.props.id)
+            logging.debug("Activity disappeared: %s (%s)" % (activity.props.name, activity.props.id))
 
     def _activity_properties_changed(self, tp, act_id, props):
         activity = self._activities.get(act_id)
@@ -336,7 +342,7 @@ def main(test=False):
         loop.run()
     except KeyboardInterrupt:
         ps.cleanup()
-        print 'Ctrl+C pressed, exiting...'
+        logging.debug('Ctrl+C pressed, exiting...')
 
 if __name__ == "__main__":
     main()
