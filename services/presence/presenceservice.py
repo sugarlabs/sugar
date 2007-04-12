@@ -87,10 +87,6 @@ class PresenceService(dbus.service.Object):
     def _server_status_cb(self, plugin, status, reason):
         if status == CONNECTION_STATUS_CONNECTED:
             pass
-            # TEST
-            id = util.unique_id()
-            self._share_activity(id, "org.laptop.Sugar.Test",
-                "Chat of %s" % self._owner.props.nick, [])
 
     def _contact_online(self, tp, handle, props):
         new_buddy = False
