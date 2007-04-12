@@ -32,4 +32,13 @@ import presenceservice
 
 logging.info('Starting presence service')
 
-presenceservice.main()
+test=0
+if len(sys.argv) > 1:
+    try:
+        test = int(sys.argv[1])
+    except ValueError:
+        logging.debug("Bad test user number.")
+    if test < 1 or test > 10:
+        logging.debug("Bad test user number.")
+
+presenceservice.main(test)

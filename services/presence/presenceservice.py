@@ -25,7 +25,7 @@ from server_plugin import ServerPlugin
 from linklocal_plugin import LinkLocalPlugin
 from sugar import util
 
-from buddy import Buddy, Owner
+from buddy import Buddy, ShellOwner, TestOwner
 from activity import Activity
 
 _PRESENCE_SERVICE = "org.laptop.Sugar.Presence"
@@ -40,7 +40,7 @@ class NotFoundError(dbus.DBusException):
 
 
 class PresenceService(dbus.service.Object):
-    def __init__(self):
+    def __init__(self, test=0):
         self._next_object_id = 0
 
         self._buddies = {}      # key -> Buddy
@@ -52,7 +52,10 @@ class PresenceService(dbus.service.Object):
 
         # Create the Owner object
         objid = self._get_next_object_id()
-        self._owner = Owner(self._bus_name, objid)
+        if test > 0:
+            self._owner = TestOwner(self._bus_name, objid, test)
+        else:
+            self._owner = ShellOwner(self._bus_name, objid)
         self._buddies[self._owner.props.key] = self._owner
 
         self._registry = ManagerRegistry()
@@ -326,9 +329,9 @@ class PresenceService(dbus.service.Object):
             activity.set_properties(props)
 
 
-def main():
+def main(test=False):
     loop = gobject.MainLoop()
-    ps = PresenceService()
+    ps = PresenceService(test)
     try:
         loop.run()
     except KeyboardInterrupt:

@@ -17,9 +17,7 @@
 
 import gobject
 import dbus
-from sugar import profile
 from sugar import util
-from sugar import env
 import gtk
 from buddyiconcache import BuddyIconCache
 import logging
@@ -131,21 +129,15 @@ class ServerPlugin(gobject.GObject):
     def _get_account_info(self):
         account_info = {}
                         
-        pubkey = self._owner.props.key
+        account_info['server'] = self._owner.get_server()
 
-        server = profile.get_server()
-        if not server:
-            account_info['server'] = 'olpc.collabora.co.uk'
-        else:
-            account_info['server'] = server
-
-        registered = profile.get_server_registered()
-        account_info['register'] = not registered
-
-        khash = util.printable_hash(util._sha_data(pubkey))
+        khash = util.printable_hash(util._sha_data(self._owner.props.key))
         account_info['account'] = "%s@%s" % (khash, account_info['server'])
 
-        account_info['password'] = profile.get_private_key_hash()
+        account_info['password'] = self._owner.get_key_hash()
+        account_info['register'] = not self._owner.get_registered()
+
+        print "ACCT: %s" % account_info
         return account_info
 
     def _find_existing_connection(self):
@@ -208,7 +200,7 @@ class ServerPlugin(gobject.GObject):
     def _connected_cb(self):
         if self._account['register']:
             # we successfully register this account
-            profile.set_server_registered()
+            self._owner.props.registered = True
 
         # the group of contacts who may receive your presence
         publish = self._request_list_channel('publish')
@@ -388,21 +380,27 @@ class ServerPlugin(gobject.GObject):
         self._conn[CONN_INTERFACE].Disconnect()
 
     def _contact_offline(self, handle):
-        self.emit("contact-offline", handle)
+        if not self._online_contacts.has_key(handle):
+            return
+        if self._online_contacts[handle]:
+            self.emit("contact-offline", handle)
         del self._online_contacts[handle]
 
     def _contact_online_activities_cb(self, handle, activities):
         if not activities or not len(activities):
             logging.debug("Handle %s - No activities" % handle)
+            self._contact_offline(handle)
             return
         self._buddy_activities_changed_cb(handle, activities)
 
     def _contact_online_activities_error_cb(self, handle, err):
         logging.debug("Handle %s - Error getting activities: %s" % (handle, err))
+        self._contact_offline(handle)
 
     def _contact_online_aliases_cb(self, handle, props, aliases):
         if not aliases or not len(aliases):
             logging.debug("Handle %s - No aliases" % handle)
+            self._contact_offline(handle)
             return
 
         props['nick'] = aliases[0]
@@ -416,12 +414,17 @@ class ServerPlugin(gobject.GObject):
 
     def _contact_online_aliases_error_cb(self, handle, err):
         logging.debug("Handle %s - Error getting nickname: %s" % (handle, err))
+        self._contact_offline(handle)
 
     def _contact_online_properties_cb(self, handle, props):
         if not props.has_key('key'):
             logging.debug("Handle %s - invalid key." % handle)
+            self._contact_offline(handle)
+            return
         if not props.has_key('color'):
             logging.debug("Handle %s - invalid color." % handle)
+            self._contact_offline(handle)
+            return
 
         # Convert key from dbus byte array to python string
         props["key"] = psutils.bytes_to_string(props["key"])
@@ -432,8 +435,10 @@ class ServerPlugin(gobject.GObject):
         
     def _contact_online_properties_error_cb(self, handle, err):
         logging.debug("Handle %s - Error getting properties: %s" % (handle, err))
+        self._contact_offline(handle)
 
     def _contact_online(self, handle):
+        self._online_contacts[handle] = None
         self._conn[CONN_INTERFACE_BUDDY_INFO].GetProperties(handle,
             reply_handler=lambda *args: self._contact_online_properties_cb(handle, *args),
             error_handler=lambda *args: self._contact_online_properties_error_cb(handle, *args))
@@ -449,7 +454,7 @@ class ServerPlugin(gobject.GObject):
                 logging.debug("Handle %s (%s) was %s, status now '%s'." % (handle, jid, olstr, status))
                 if not online and status in ["available", "away", "brb", "busy", "dnd", "xa"]:
                     self._contact_online(handle)
-                elif online and status in ["offline", "invisible"]:
+                elif status in ["offline", "invisible"]:
                     self._contact_offline(handle)
 
     def _avatar_updated_cb(self, handle, new_avatar_token):
@@ -459,6 +464,10 @@ class ServerPlugin(gobject.GObject):
             return
 
         jid = self._online_contacts[handle]
+        if not jid:
+            logging.debug("Handle %s not valid yet...")
+            return
+
         icon = self._icon_cache.get_icon(jid, new_avatar_token)
         if not icon:
             # cache miss
@@ -472,19 +481,23 @@ class ServerPlugin(gobject.GObject):
         for handle, alias in aliases:
             prop = {'nick': alias}
             #print "Buddy %s alias changed to %s" % (handle, alias)
-            self._buddy_properties_changed_cb(handle, prop)
+            if self._online_contacts.has_key(handle) and self._online_contacts[handle]:
+                self._buddy_properties_changed_cb(handle, prop)
 
     def _buddy_properties_changed_cb(self, handle, properties):
         if handle == self._conn[CONN_INTERFACE].GetSelfHandle():
             # ignore network events for Owner property changes since those
             # are handled locally
             return
-        self.emit("buddy-properties-changed", handle, properties)
+        if self._online_contacts.has_key(handle) and self._online_contacts[handle]:
+	        self.emit("buddy-properties-changed", handle, properties)
 
     def _buddy_activities_changed_cb(self, handle, activities):
         if handle == self._conn[CONN_INTERFACE].GetSelfHandle():
             # ignore network events for Owner activity changes since those
             # are handled locally
+            return
+        if not self._online_contacts.has_key(handle) or not self._online_contacts[handle]:
             return
 
         for act_id, act_handle in activities:
@@ -496,6 +509,8 @@ class ServerPlugin(gobject.GObject):
         if handle == self._conn[CONN_INTERFACE].GetSelfHandle():
             # ignore network events for Owner current activity changes since those
             # are handled locally
+            return
+        if not self._online_contacts.has_key(handle) or not self._online_contacts[handle]:
             return
 
         if not len(activity) or not util.validate_activity_id(activity):
