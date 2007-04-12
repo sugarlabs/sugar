@@ -574,12 +574,12 @@ class ServerPlugin(gobject.GObject):
 
     def set_activity_properties(self, act_id, props):
         handle = self._activities.get(act_id)
-
         if not handle:
-            logging.debug("set_activity_properties: handle unkown")
+            logging.debug("set_activity_properties: handle unknown")
             return
-
-        self._conn[CONN_INTERFACE_ACTIVITY_PROPERTIES].SetProperties(handle, props)
+        self._conn[CONN_INTERFACE_ACTIVITY_PROPERTIES].SetProperties(handle, props,
+                reply_handler=self._ignore_success_cb,
+                error_handler=lambda *args: self._log_error_cb("activity properties", *args))
 
     def _activity_properties_changed_cb(self, room, properties):
         for act_id, act_handle in self._activities.items():
