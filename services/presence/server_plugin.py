@@ -463,6 +463,10 @@ class ServerPlugin(gobject.GObject):
             # are handled locally
             return
 
+        if not self._online_contacts.has_key(handle):
+            logging.debug("Handle %s not valid yet...")
+            return
+
         jid = self._online_contacts[handle]
         if not jid:
             logging.debug("Handle %s not valid yet...")
