@@ -120,11 +120,19 @@ class ServerPlugin(gobject.GObject):
 
     def _owner_property_changed_cb(self, owner, properties):
         logging.debug("Owner properties changed: %s" % properties)
-        self._set_self_buddy_info()
+
+        if properties.has_key("current-activity"):
+            self._set_self_current_activity()
+
+        if properties.has_key("nick"):
+            self._set_self_alias()
+
+        if properties.has_key("color"):
+            self._set_self._olpc_properties()
 
     def _owner_icon_changed_cb(self, owner, icon):
         logging.debug("Owner icon changed to size %d" % len(str(icon)))
-        self._upload_avatar()
+        self._set_self_avatar(icon)
 
     def _get_account_info(self):
         account_info = {}
@@ -228,28 +236,37 @@ class ServerPlugin(gobject.GObject):
             self.cleanup()
             return
 
-        self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('PropertiesChanged', self._buddy_properties_changed_cb)
-        self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('ActivitiesChanged', self._buddy_activities_changed_cb)
-        self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('CurrentActivityChanged', self._buddy_current_activity_changed_cb)
+        self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('PropertiesChanged',
+                self._buddy_properties_changed_cb)
+        self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('ActivitiesChanged',
+                self._buddy_activities_changed_cb)
+        self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('CurrentActivityChanged',
+                self._buddy_current_activity_changed_cb)
 
-        self._conn[CONN_INTERFACE_AVATARS].connect_to_signal('AvatarUpdated', self._avatar_updated_cb)
+        self._conn[CONN_INTERFACE_AVATARS].connect_to_signal('AvatarUpdated',
+                self._avatar_updated_cb)
+        self._conn[CONN_INTERFACE_ALIASING].connect_to_signal('AliasesChanged',
+                self._alias_changed_cb)
+        self._conn[CONN_INTERFACE_ACTIVITY_PROPERTIES].connect_to_signal('ActivityPropertiesChanged',
+                self._activity_properties_changed_cb)
 
-        self._conn[CONN_INTERFACE_ALIASING].connect_to_signal('AliasesChanged', self._alias_changed_cb)
-
-        self._conn[CONN_INTERFACE_ACTIVITY_PROPERTIES].connect_to_signal('ActivityPropertiesChanged', self._activity_properties_changed_cb)
-
-        try:
-            self._set_self_buddy_info()
-        except RuntimeError, e:
-            logging.debug("Could not set owner properties: %s" % e)
-            self.cleanup()
-            return
+        # Set initial buddy properties, avatar, and activities
+        self._set_self_olpc_properties(True)
+        self._set_self_alias()
+        self._set_self_activities()
+        self._set_self_current_activity()
+        self._set_self_avatar()
 
         # Request presence for everyone on the channel
-        self._conn[CONN_INTERFACE_PRESENCE].GetPresence(subscribe_handles)
+        self._conn[CONN_INTERFACE_PRESENCE].GetPresence(subscribe_handles,
+                ignore_reply=True)
 
-    def _upload_avatar(self):
-        icon_data = self._owner.props.icon
+    def _set_self_avatar_cb(self, token):
+        self._icon_cache.set_avatar(hash, token)
+
+    def _set_self_avatar(self, icon_data=None):
+        if not icon_data:
+            icon_data = self._owner.props.icon
 
         md5 = hashlib.md5()
         md5.update(icon_data)
@@ -268,8 +285,9 @@ class ServerPlugin(gobject.GObject):
             return
 
         img_data = _get_buddy_icon_at_size(icon_data, min(maxw, 96), min(maxh, 96), maxsize)
-        token = self._conn[CONN_INTERFACE_AVATARS].SetAvatar(img_data, "image/jpeg")
-        self._icon_cache.set_avatar(hash, token)
+        self._conn[CONN_INTERFACE_AVATARS].SetAvatar(img_data, "image/jpeg",
+                reply_handler=self._set_self_avatar_cb,
+                error_handler=lambda *args: self._log_error_cb("avatar", *args))
 
     def join_activity(self, act):
         handle = self._activities.get(act)
@@ -292,23 +310,34 @@ class ServerPlugin(gobject.GObject):
         
         return channel
 
-    def _set_self_buddy_info(self):
-        # Set our OLPC buddy properties
+    def _ignore_success_cb(self):
+        pass
+
+    def _log_error_cb(self, msg, err):
+        logging.debug("Error setting %s: %s" % (msg, err))
+
+    def _set_self_olpc_properties(self, set_key=False):
         props = {}
         props['color'] = self._owner.props.color
-        props['key'] = dbus.ByteArray(self._owner.props.key)
-        try:
-            self._conn[CONN_INTERFACE_BUDDY_INFO].SetProperties(props)
-        except dbus.DBusException, e:
-            if str(e).find("Server does not support PEP") >= 0:
-                raise RuntimeError("Server does not support PEP")
+        if set_key:
+            props['key'] = dbus.ByteArray(self._owner.props.key)
+        self._conn[CONN_INTERFACE_BUDDY_INFO].SetProperties(props,
+                reply_handler=self._ignore_success_cb,
+                error_handler=lambda *args: self._log_error_cb("properties", *args))
 
-        name = self._owner.props.nick
+    def _set_self_alias(self):
+        alias = self._owner.props.nick
         self_handle = self._conn[CONN_INTERFACE].GetSelfHandle()
-        self._conn[CONN_INTERFACE_ALIASING].SetAliases( {self_handle : name} )
+        self._conn[CONN_INTERFACE_ALIASING].SetAliases({self_handle : alias},
+                reply_handler=self._ignore_success_cb,
+                error_handler=lambda *args: self._log_error_cb("alias", *args))
 
-        self._conn[CONN_INTERFACE_BUDDY_INFO].SetActivities(self._joined_activities)
+    def _set_self_activities(self):
+        self._conn[CONN_INTERFACE_BUDDY_INFO].SetActivities(self._joined_activities,
+                reply_handler=self._ignore_success_cb,
+                error_handler=lambda *args: self._log_error_cb("activities", *args))
 
+    def _set_self_current_activity(self):
         cur_activity = self._owner.props.current_activity
         cur_activity_handle = 0
         if not cur_activity:
@@ -318,10 +347,12 @@ class ServerPlugin(gobject.GObject):
             if not cur_activity_handle:
                 # dont advertise a current activity that's not shared
                 cur_activity = ""
-        logging.debug("cur_activity is '%s', handle is %s" % (cur_activity, cur_activity_handle))
-        self._conn[CONN_INTERFACE_BUDDY_INFO].SetCurrentActivity(cur_activity, cur_activity_handle)
 
-        self._upload_avatar()
+        logging.debug("Setting current activity to '%s' (handle %s)" % (cur_activity, cur_activity_handle))
+        self._conn[CONN_INTERFACE_BUDDY_INFO].SetCurrentActivity(cur_activity,
+                cur_activity_handle,
+                reply_handler=self._ignore_success_cb,
+                error_handler=lambda *args: self._log_error_cb("current activity", *args))
 
     def _get_handle_for_activity(self, activity_id):
         for (act, handle) in self._joined_activities:
@@ -543,12 +574,12 @@ class ServerPlugin(gobject.GObject):
 
     def set_activity_properties(self, act_id, props):
         handle = self._activities.get(act_id)
-
         if not handle:
-            logging.debug("set_activity_properties: handle unkown")
+            logging.debug("set_activity_properties: handle unknown")
             return
-
-        self._conn[CONN_INTERFACE_ACTIVITY_PROPERTIES].SetProperties(handle, props)
+        self._conn[CONN_INTERFACE_ACTIVITY_PROPERTIES].SetProperties(handle, props,
+                reply_handler=self._ignore_success_cb,
+                error_handler=lambda *args: self._log_error_cb("activity properties", *args))
 
     def _activity_properties_changed_cb(self, room, properties):
         for act_id, act_handle in self._activities.items():
