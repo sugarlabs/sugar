@@ -95,6 +95,12 @@ class ServerPlugin(gobject.GObject):
                              ([gobject.TYPE_PYOBJECT])),
         'activity-properties-changed':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                              ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
+        'activity-shared':   (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                               ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT,
+                                 gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
+        'activity-joined':   (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                               ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT,
+                                 gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT]))
     }
     
     def __init__(self, registry, owner):
@@ -289,26 +295,46 @@ class ServerPlugin(gobject.GObject):
                 reply_handler=self._set_self_avatar_cb,
                 error_handler=lambda *args: self._log_error_cb("avatar", *args))
 
-    def join_activity(self, act):
-        handle = self._activities.get(act)
+    def _join_activity_create_channel_cb(self, activity_id, signal, handle, userdata, chan_path):
+        channel = Channel(self._conn._dbus_object._named_service, chan_path)
+        self._joined_activities.append((activity_id, handle))
+        self._set_self_activities()
+        self.emit(signal, activity_id, channel, None, userdata)
 
-        if not handle:
-            handle = self._conn[CONN_INTERFACE].RequestHandles(CONNECTION_HANDLE_TYPE_ROOM, [act])[0]
-            self._activities[act] = handle
+    def _join_activity_get_channel_cb(self, activity_id, signal, userdata, handles):
+        if not self._activities.has_key(activity_id):
+            self._activities[activity_id] = handles[0]
 
-        if (act, handle) in self._joined_activities:
-            logging.debug("Already joined %s" % act)
+        if (activity_id, handles[0]) in self._joined_activities:
+            e = RuntimeError("Already joined activity %s" % activity_id)
+            logging.debug(str(e))
+            self.emit(signal, activity_id, None, e, userdata)
             return
 
-        chan_path = self._conn[CONN_INTERFACE].RequestChannel(
-            CHANNEL_TYPE_TEXT, CONNECTION_HANDLE_TYPE_ROOM,
-            handle, True)
-        channel = Channel(self._conn._dbus_object._named_service, chan_path)
+        self._conn[CONN_INTERFACE].RequestChannel(CHANNEL_TYPE_TEXT,
+            CONNECTION_HANDLE_TYPE_ROOM, handles[0], True,
+            reply_handler=lambda *args: self._join_activity_create_channel_cb(activity_id, signal, handle, userdata, *args),
+            error_handler=lambda *args: self._join_error_cb(activity_id, signal, userdata, *args))
 
-        self._joined_activities.append((act, handle))
-        self._conn[CONN_INTERFACE_BUDDY_INFO].SetActivities(self._joined_activities)
-        
-        return channel
+    def _join_error_cb(self, activity_id, signal, userdata, err):
+        e = Exception("Error joining/sharing activity %s: %s" % (activity_id, err))
+        logging.debug(str(e))
+        self.emit(signal, activity_id, None, e, userdata)
+
+    def _internal_join_activity(self, activity_id, signal, userdata):
+        handle = self._activities.get(activity_id)
+        if not handle:
+            self._conn[CONN_INTERFACE].RequestHandles(CONNECTION_HANDLE_TYPE_ROOM, [activity_id],
+                    reply_handler=lambda *args: self._join_activity_get_channel_cb(activity_id, signal, userdata, *args),
+                    error_handler=lambda *args: self._join_error_cb(activity_id, signal, userdata, *args))
+        else:
+            self._join_activity_get_channel_cb(activity_id, userdata, [handle])
+    
+    def share_activity(self, activity_id, userdata):
+        self._internal_join_activity(activity_id, "activity-shared", userdata)
+
+    def join_activity(self, activity_id, userdata):
+        self._internal_join_activity(activity_id, "activity-joined", userdata)
 
     def _ignore_success_cb(self):
         pass
