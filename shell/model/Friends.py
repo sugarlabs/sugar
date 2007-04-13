@@ -47,8 +47,8 @@ class Friends(gobject.GObject):
         self.emit('friend-added', buddy_info)
 
     def make_friend(self, buddy):
-        if not self.has_buddy(buddy):    
-            self.add_friend(BuddyModel(buddy=buddy))
+        if not self.has_buddy(buddy):
+            self.add_friend(buddy)
             self.save()
 
     def remove(self, buddy_info):
