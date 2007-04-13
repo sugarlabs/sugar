@@ -103,6 +103,7 @@ class Activity(Window, gtk.Container):
 
     def _share_cb(self, ps, success, service, err):
         self._pservice.disconnect(self._share_sigid)
+        self._share_sigid = None
         if success:
             logging.debug('Share of activity %s successful.' % self.get_id())
             self._service = service
