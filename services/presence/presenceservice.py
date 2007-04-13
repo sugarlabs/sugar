@@ -321,6 +321,12 @@ class PresenceService(dbus.service.Object):
         self._activities[actid] = activity
         activity._share(callbacks)
 
+        # local activities are valid at creation by definition, but we can't
+        # connect to the activity's validity-changed signal until its already
+        # issued the signal, which happens in the activity's constructor
+        # for local activities.
+        self._activity_validity_changed_cb(activity, activity.props.valid)
+
     def _activity_validity_changed_cb(self, activity, valid):
         if valid:
             self.ActivityAppeared(activity.object_path())
