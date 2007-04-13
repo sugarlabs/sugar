@@ -66,8 +66,7 @@ class ActivityHost:
         return self._activity.execute(command, dbus.Array(args))
 
     def share(self):
-        self._activity.share()
-        self._chat_widget.share()
+        self._activity.share(ignore_reply=True)
 
     def invite(self, buddy):
         pass
