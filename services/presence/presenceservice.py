@@ -201,7 +201,7 @@ class PresenceService(dbus.service.Object):
 
         activities_joined = new_activities - old_activities
         for act in activities_joined:
-            logging.debug("Buddy", contact_handle, "joined", act)
+            logging.debug("Handle %s joined activity %s" % (contact_handle, act))
             activity = self._activities.get(act)
             if not activity:
                 # new activity, can fail
@@ -213,7 +213,7 @@ class PresenceService(dbus.service.Object):
 
         activities_left = old_activities - new_activities
         for act in activities_left:
-            logging.debug("Buddy", contact_handle, "left", act)
+            logging.debug("Handle %s left activity %s" % (contact_handle, act))
             activity = self._activities.get(act)
             if not activity:
                 continue
