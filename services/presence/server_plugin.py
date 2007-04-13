@@ -444,10 +444,6 @@ class ServerPlugin(gobject.GObject):
         del self._online_contacts[handle]
 
     def _contact_online_activities_cb(self, handle, activities):
-        if not activities or not len(activities):
-            logging.debug("Handle %s - No activities" % handle)
-            self._contact_offline(handle)
-            return
         self._buddy_activities_changed_cb(handle, activities)
 
     def _contact_online_activities_error_cb(self, handle, err):
