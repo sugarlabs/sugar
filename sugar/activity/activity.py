@@ -62,6 +62,7 @@ class Activity(Window, gtk.Container):
         self._activity_id = handle.activity_id
         self._pservice = presenceservice.get_instance()
         self._service = None
+        self._share_sigid = None
 
         service = handle.get_presence_service()
         if service:
@@ -100,11 +101,20 @@ class Activity(Window, gtk.Container):
         self._service.join()
         self.present()
 
+    def _share_cb(self, ps, success, service, err):
+        self._pservice.disconnect(self._share_sigid)
+        if success:
+            logging.debug('Share of activity %s successful.' % self.get_id())
+            self._service = service
+            self._shared = True
+        else:
+            logging.debug('Share of activity %s failed: %s.' % (self.get_id(), err))
+
     def share(self):
-        """Share the activity on the network."""
-        logging.debug('Share activity %s on the network.' % self.get_id())
-        self._service = self._pservice.share_activity(self)
-        self._shared = True
+        """Request that the activity be shared on the network."""
+        logging.debug('Requesting share of activity %s.' % self.get_id())
+        self._share_sigid = self._pservice.connect("activity-shared", self._share_cb)
+        self._pservice.share_activity(self)
 
     def execute(self, command, args):
         """Execute the given command with args"""
