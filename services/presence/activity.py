@@ -82,6 +82,10 @@ class Activity(DBusGObject):
         if self.props.local and not self.props.valid:
             raise RuntimeError("local activities require color, type, and name")
 
+        # If not yet valid, query activity properties
+        if not self.props.valid:
+            tp.update_activity_properties(self._id)
+
     def do_get_property(self, pspec):
         if pspec.name == "id":
             return self._id
