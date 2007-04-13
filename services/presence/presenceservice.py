@@ -159,20 +159,7 @@ class PresenceService(dbus.service.Object):
             return None
 
         activity.connect("validity-changed", self._activity_validity_changed_cb)
-
         self._activities[activity_id] = activity
-
-        # FIXME
-        # Use values from the network
-        #import random
-        #names = ["Tommy", "Susie", "Jill", "Bryan", "Nathan", "Sophia", "Haley", "Jimmy"]
-        #name = names[random.randint(0, len(names) - 1)]
-        #activity.props.name = "Chat with %s" % name
-        #activity.props.type = "org.laptop.Sugar.Chat"
-        #from sugar.graphics import xocolor
-        #color = xocolor.XoColor().to_string()
-        #activity.props.color = color
-
         return activity
 
     def _remove_activity(self, activity):
