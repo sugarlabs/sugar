@@ -293,7 +293,7 @@ class ServerPlugin(gobject.GObject):
         img_data = _get_buddy_icon_at_size(icon_data, min(maxw, 96), min(maxh, 96), maxsize)
         self._conn[CONN_INTERFACE_AVATARS].SetAvatar(img_data, "image/jpeg",
                 reply_handler=self._set_self_avatar_cb,
-                error_handler=lambda *args: self._log_error_cb("avatar", *args))
+                error_handler=lambda *args: self._log_error_cb("setting avatar", *args))
 
     def _join_activity_create_channel_cb(self, activity_id, signal, handle, userdata, chan_path):
         channel = Channel(self._conn._dbus_object._named_service, chan_path)
@@ -340,7 +340,7 @@ class ServerPlugin(gobject.GObject):
         pass
 
     def _log_error_cb(self, msg, err):
-        logging.debug("Error setting %s: %s" % (msg, err))
+        logging.debug("Error %s: %s" % (msg, err))
 
     def _set_self_olpc_properties(self, set_key=False):
         props = {}
@@ -349,19 +349,19 @@ class ServerPlugin(gobject.GObject):
             props['key'] = dbus.ByteArray(self._owner.props.key)
         self._conn[CONN_INTERFACE_BUDDY_INFO].SetProperties(props,
                 reply_handler=self._ignore_success_cb,
-                error_handler=lambda *args: self._log_error_cb("properties", *args))
+                error_handler=lambda *args: self._log_error_cb("setting properties", *args))
 
     def _set_self_alias(self):
         alias = self._owner.props.nick
         self_handle = self._conn[CONN_INTERFACE].GetSelfHandle()
         self._conn[CONN_INTERFACE_ALIASING].SetAliases({self_handle : alias},
                 reply_handler=self._ignore_success_cb,
-                error_handler=lambda *args: self._log_error_cb("alias", *args))
+                error_handler=lambda *args: self._log_error_cb("setting alias", *args))
 
     def _set_self_activities(self):
         self._conn[CONN_INTERFACE_BUDDY_INFO].SetActivities(self._joined_activities,
                 reply_handler=self._ignore_success_cb,
-                error_handler=lambda *args: self._log_error_cb("activities", *args))
+                error_handler=lambda *args: self._log_error_cb("setting activities", *args))
 
     def _set_self_current_activity(self):
         cur_activity = self._owner.props.current_activity
@@ -378,7 +378,7 @@ class ServerPlugin(gobject.GObject):
         self._conn[CONN_INTERFACE_BUDDY_INFO].SetCurrentActivity(cur_activity,
                 cur_activity_handle,
                 reply_handler=self._ignore_success_cb,
-                error_handler=lambda *args: self._log_error_cb("current activity", *args))
+                error_handler=lambda *args: self._log_error_cb("setting current activity", *args))
 
     def _get_handle_for_activity(self, activity_id):
         for (act, handle) in self._joined_activities:
@@ -594,16 +594,26 @@ class ServerPlugin(gobject.GObject):
             channel_type in [CHANNEL_TYPE_TEXT, CHANNEL_TYPE_STREAMED_MEDIA]:
             self.emit("private-invitation", object_path)
 
+    def update_activity_properties(self, act_id):
+        handle = self._activities.get(act_id)
+        if not handle:
+            raise RuntimeError("Unknown activity %s: couldn't find handle.")
+
+        self._conn[CONN_INTERFACE_ACTIVITY_PROPERTIES].GetProperties(handle,
+                reply_handler=lambda *args: self._activity_properties_changed_cb(handle, *args),
+                error_handler=lambda *args: self._log_error_cb("getting activity properties", *args))
+
     def set_activity_properties(self, act_id, props):
         handle = self._activities.get(act_id)
         if not handle:
-            logging.debug("set_activity_properties: handle unknown")
-            return
+            raise RuntimeError("Unknown activity %s: couldn't find handle.")
+
         self._conn[CONN_INTERFACE_ACTIVITY_PROPERTIES].SetProperties(handle, props,
                 reply_handler=self._ignore_success_cb,
-                error_handler=lambda *args: self._log_error_cb("activity properties", *args))
+                error_handler=lambda *args: self._log_error_cb("setting activity properties", *args))
 
     def _activity_properties_changed_cb(self, room, properties):
         for act_id, act_handle in self._activities.items():
             if room == act_handle:
                 self.emit("activity-properties-changed", act_id, properties)
+                return
