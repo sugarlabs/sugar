@@ -128,7 +128,7 @@ class ServerPlugin(gobject.GObject):
             self._set_self_alias()
 
         if properties.has_key("color"):
-            self._set_self._olpc_properties()
+            self._set_self_olpc_properties()
 
     def _owner_icon_changed_cb(self, owner, icon):
         logging.debug("Owner icon changed to size %d" % len(str(icon)))

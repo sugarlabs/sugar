@@ -295,6 +295,11 @@ class PresenceService(dbus.service.Object):
         activity = self._share_activity(actid, atype, name, properties)
         return activity.object_path()
 
+    @dbus.service.method(_PRESENCE_INTERFACE, out_signature="so")
+    def GetPreferredConnection(self):
+        conn = self._server_plugin.get_connection()
+        return str(conn.service_name), conn.object_path
+
     def cleanup(self):
         for tp in self._handles_buddies:
             tp.cleanup()
