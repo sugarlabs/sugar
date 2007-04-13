@@ -81,6 +81,39 @@ if not key or not len(key):
 	gtk.main()
 	profile.update()
 
+def check_gabble(bus_name):
+    try:
+        import dbus
+        bus = dbus.SessionBus()
+        bus_object = bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
+        name = bus_object.GetNameOwner(bus_name, dbus_interface='org.freedesktop.DBus')
+        if name:
+            return True
+    except dbus.DBusException:
+        pass
+    return False
+
+if os.environ.has_key("TP_DEBUG"):
+    # Allow the user time to start up telepathy connection managers
+    # using the Sugar DBus bus address
+    import time
+    from telepathy.client import ManagerRegistry
+
+    registry = ManagerRegistry()
+    registry.LoadManagers()
+    try:
+        gabble = registry.services["gabble"]
+    except KeyError:
+        raise RuntimeError("Gabble connection manager not found!")
+
+    while not check_gabble(gabble['busname']):
+        print "Waiting for gabble on: DBUS_SESSION_BUS_ADDRESS=%s" % os.environ["DBUS_SESSION_BUS_ADDRESS"]
+        try:
+            time.sleep(5)
+        except KeyboardInterrupt:
+            print "Got Ctrl+C, continuing..."
+            break
+
 model = ShellModel()
 service = ShellService(model)
 shell = Shell(model)

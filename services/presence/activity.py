@@ -65,7 +65,7 @@ class Activity(DBusGObject):
 
         # the telepathy client
         self._tp = tp
-        self._activity_text_channel = None
+        self._text_channel = None
 
         self._valid = False
         self._id = None
@@ -161,10 +161,10 @@ class Activity(DBusGObject):
     def GetType(self):
         return self.props.type
 
-    @dbus.service.method(_ACTIVITY_INTERFACE,
-                        in_signature="", out_signature="")
-    def Join(self):
-        self.join()
+    @dbus.service.method(_ACTIVITY_INTERFACE, in_signature="", out_signature="",
+                        async_callbacks=('async_cb', 'async_err_cb'))
+    def Join(self, async_cb, async_err_cb):
+        self.join(async_cb, async_err_cb)
 
     @dbus.service.method(_ACTIVITY_INTERFACE,
                         in_signature="", out_signature="ao")
@@ -208,24 +208,72 @@ class Activity(DBusGObject):
             if self.props.valid:
                 self.BuddyLeft(buddy.object_path())
 
-    def join(self):
-        if not self._joined:
-            self._activity_text_channel = self._tp.join_activity(self.props.id)
-            self._activity_text_channel[CHANNEL_INTERFACE].connect_to_signal('Closed', self._activity_text_channel_closed_cb)
-            self._joined = True
+    def _handle_share_join(self, tp, text_channel):
+        if not text_channel:
+            logging.debug("Error sharing: text channel was None, shouldn't happen")
+            raise RuntimeError("Plugin returned invalid text channel")
+
+        self._text_channel = text_channel
+        self._text_channel[CHANNEL_INTERFACE].connect_to_signal('Closed',
+                self._text_channel_closed_cb)
+        self._joined = True
+        return True
+
+    def _shared_cb(self, tp, activity_id, text_channel, exc, userdata):
+        if activity_id != self.props.id:
+            # Not for us
+            return
+
+        (sigid, async_cb, async_err_cb) = userdata
+        self._tp.disconnect(sigid)
+
+        if exc:
+            async_err_cb(exc)
+        else:
+            self._handle_share_join(tp, text_channel)
+            self.send_properties()
+            async_cb(dbus.ObjectPath(self._object_path))
+
+    def _share(self, (async_cb, async_err_cb)):
+        if self._joined:
+            async_err_cb(RuntimeError("Already shared activity %s" % self.props.id))
+            return
+        sigid = self._tp.connect('activity-shared', self._shared_cb)
+        self._tp.share_activity(self.props.id, (sigid, async_cb, async_err_cb))
+
+    def _joined_cb(self, tp, activity_id, text_channel, exc, userdata):
+        if activity_id != self.props.id:
+            # Not for us
+            return
+
+        (sigid, async_cb, async_err_cb) = userdata
+        self._tp.disconnect(sigid)
+
+        if exc:
+            async_err_cb(exc)
+        else:
+            self._handle_share_join(tp, text_channel)
+            async_cb()
+
+    def join(self, async_cb, async_err_cb):
+        if self._joined:
+            async_err_cb(RuntimeError("Already joined activity %s" % self.props.id))
+            return
+        sigid = self._tp.connect('activity-joined', self._joined_cb)
+        self._tp.join_activity(self.props.id, (sigid, async_cb, async_err_cb))
 
     def get_channels(self):
         conn = self._tp.get_connection()
         # FIXME add tubes and others channels
-        return str(conn.service_name), conn.object_path, [self._activity_text_channel.object_path]
+        return str(conn.service_name), conn.object_path, [self._text_channel.object_path]
 
     def leave(self):
         if self._joined:
-            self._activity_text_channel[CHANNEL_INTERFACE].Close()
+            self._text_channel[CHANNEL_INTERFACE].Close()
 
-    def _activity_text_channel_closed_cb(self):
+    def _text_channel_closed_cb(self):
         self._joined = False
-        self._activity_text_channel = None
+        self._text_channel = None
 
     def send_properties(self):
         props = {}

@@ -84,6 +84,13 @@ class PresenceService(dbus.service.Object):
 
         dbus.service.Object.__init__(self, self._bus_name, _PRESENCE_PATH)
 
+    def _activity_shared_cb(self, tp, activity, success, exc, async_cb, async_err_cb):
+        if success:
+            async_cb(activity.object_path())
+        else:
+            del self._activities[activity.props.id]
+            async_err_cb(exc)
+
     def _server_status_cb(self, plugin, status, reason):
         if status == CONNECTION_STATUS_CONNECTED:
             pass
@@ -290,10 +297,10 @@ class PresenceService(dbus.service.Object):
         else:
             return self._owner.get_object_path()
 
-    @dbus.service.method(_PRESENCE_INTERFACE, in_signature="sssa{sv}", out_signature="o")
-    def ShareActivity(self, actid, atype, name, properties):
-        activity = self._share_activity(actid, atype, name, properties)
-        return activity.object_path()
+    @dbus.service.method(_PRESENCE_INTERFACE, in_signature="sssa{sv}",
+            out_signature="o", async_callbacks=('async_cb', 'async_err_cb'))
+    def ShareActivity(self, actid, atype, name, properties, async_cb, async_err_cb):
+        self._share_activity(actid, atype, name, properties, (async_cb, async_err_cb))
 
     @dbus.service.method(_PRESENCE_INTERFACE, out_signature="so")
     def GetPreferredConnection(self):
@@ -304,23 +311,15 @@ class PresenceService(dbus.service.Object):
         for tp in self._handles_buddies:
             tp.cleanup()
 
-    def _share_activity(self, actid, atype, name, properties):
+    def _share_activity(self, actid, atype, name, properties, callbacks):
         objid = self._get_next_object_id()
         # FIXME check which tp client we should use to share the activity
-        import time
-        start = time.time()
-        logging.debug("Start share of %s (%s)" % (actid, atype))
         color = self._owner.props.color
         activity = Activity(self._bus_name, objid, self._server_plugin,
                         id=actid, type=atype, name=name, color=color, local=True)
         activity.connect("validity-changed", self._activity_validity_changed_cb)
         self._activities[actid] = activity
-
-        activity.join()
-        activity.send_properties()
-        logging.debug("End share of %s (%s).  Time: %f" % (actid, atype, (float)(time.time() - start)))
-
-        return activity
+        activity._share(callbacks)
 
     def _activity_validity_changed_cb(self, activity, valid):
         if valid:
