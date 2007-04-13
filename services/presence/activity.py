@@ -18,6 +18,7 @@
 import gobject
 import dbus, dbus.service
 from sugar import util
+import logging
 
 from telepathy.interfaces import (CHANNEL_INTERFACE)
 
