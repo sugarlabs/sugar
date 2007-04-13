@@ -229,7 +229,7 @@ class Activity(DBusGObject):
             # Not for us
             return
 
-        (sigid, async_cb, async_err_cb) = userdata
+        (sigid, owner, async_cb, async_err_cb) = userdata
         self._tp.disconnect(sigid)
 
         if exc:
@@ -238,16 +238,17 @@ class Activity(DBusGObject):
         else:
             self._handle_share_join(tp, text_channel)
             self.send_properties()
+            owner.add_activity(self)
             async_cb(dbus.ObjectPath(self._object_path))
             logging.debug("Share of activity %s succeeded." % self._id)
 
-    def _share(self, (async_cb, async_err_cb)):
+    def _share(self, (async_cb, async_err_cb), owner):
         logging.debug("Starting share of activity %s" % self._id)
         if self._joined:
             async_err_cb(RuntimeError("Already shared activity %s" % self.props.id))
             return
         sigid = self._tp.connect('activity-shared', self._shared_cb)
-        self._tp.share_activity(self.props.id, (sigid, async_cb, async_err_cb))
+        self._tp.share_activity(self.props.id, (sigid, owner, async_cb, async_err_cb))
         logging.debug("done with share attempt %s" % self._id)
 
     def _joined_cb(self, tp, activity_id, text_channel, exc, userdata):
