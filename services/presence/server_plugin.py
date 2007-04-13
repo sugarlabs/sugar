@@ -313,7 +313,7 @@ class ServerPlugin(gobject.GObject):
 
         self._conn[CONN_INTERFACE].RequestChannel(CHANNEL_TYPE_TEXT,
             CONNECTION_HANDLE_TYPE_ROOM, handles[0], True,
-            reply_handler=lambda *args: self._join_activity_create_channel_cb(activity_id, signal, handle, userdata, *args),
+            reply_handler=lambda *args: self._join_activity_create_channel_cb(activity_id, signal, handles[0], userdata, *args),
             error_handler=lambda *args: self._join_error_cb(activity_id, signal, userdata, *args))
 
     def _join_error_cb(self, activity_id, signal, userdata, err):
