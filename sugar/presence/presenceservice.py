@@ -16,6 +16,7 @@
 # Boston, MA 02111-1307, USA.
 
 import dbus, dbus.glib, gobject
+import logging
 
 import buddy, activity
 
@@ -59,7 +60,10 @@ class PresenceService(gobject.GObject):
         'activity-appeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                         ([gobject.TYPE_PYOBJECT])),
         'activity-disappeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                        ([gobject.TYPE_PYOBJECT]))
+                        ([gobject.TYPE_PYOBJECT])),
+        'activity-shared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                        ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT,
+                          gobject.TYPE_PYOBJECT]))
     }
 
     _PS_BUDDY_OP = DBUS_PATH + "/Buddies/"
@@ -178,12 +182,20 @@ class PresenceService(gobject.GObject):
             return None
         return self._new_object(owner_op)
 
+    def _share_activity_cb(self, activity, op):
+        self.emit("activity-shared", True, self._new_object(op), None)
+
+    def _share_activity_error_cb(self, activity, err):
+        logging.debug("Error sharing activity %s: %s" % (activity.get_id(), err))
+        self.emit("activity-shared", False, None, err)
+
     def share_activity(self, activity, properties={}):
         actid = activity.get_id()
         atype = activity.get_service_name()
         name = activity.props.title
-        serv_op = self._ps.ShareActivity(actid, atype, name, properties)
-        return self._new_object(serv_op)
+        self._ps.ShareActivity(actid, atype, name, properties,
+                reply_handler=lambda *args: self._share_activity_cb(activity, *args),
+                error_handler=lambda *args: self._share_activity_error_cb(activity, *args))
 
 
 class _MockPresenceService(gobject.GObject):

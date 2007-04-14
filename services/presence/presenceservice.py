@@ -169,7 +169,10 @@ class PresenceService(dbus.service.Object):
         del self._activities[activity.props.id]
     
     def _buddy_activities_changed(self, tp, contact_handle, activities):
-        logging.debug("------------activities changed-------------")
+        acts = []
+        for act in activities:
+            acts.append(str(act))
+        logging.debug("Handle %s activities changed: %s" % (contact_handle, acts))
         buddies = self._handles_buddies[tp]
         buddy = buddies.get(contact_handle)
 
@@ -306,7 +309,7 @@ class PresenceService(dbus.service.Object):
                         id=actid, type=atype, name=name, color=color, local=True)
         activity.connect("validity-changed", self._activity_validity_changed_cb)
         self._activities[actid] = activity
-        activity._share(callbacks)
+        activity._share(callbacks, self._owner)
 
         # local activities are valid at creation by definition, but we can't
         # connect to the activity's validity-changed signal until its already
