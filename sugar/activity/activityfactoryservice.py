@@ -99,6 +99,8 @@ class ActivityFactoryService(dbus.service.Object):
         handle -- sugar.activity.activityhandle.ActivityHandle
             compatible dictionary providing the instance-specific
             values for the new instance 
+        
+        returns xid for the created instance' root window
         """
         activity_handle = activityhandle.create_from_dict(handle)
         activity = self._constructor(activity_handle)
