@@ -57,7 +57,7 @@ def get_user_activities_path():
     return os.path.expanduser('~/Activities')
 
 def get_bin_path(path=None):
-    return _get_prefix_path('bin', path)
+    return _get_prefix_path('share/sugar/bin', path)
 
 def get_locale_path(path=None):
     return _get_prefix_path('share/locale', path)
