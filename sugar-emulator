@@ -25,8 +25,6 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
-from sugar import env
-
 def _get_display_number():
     """Find a free display number trying to connect to 6000+ ports"""
     retries = 20
@@ -89,6 +87,8 @@ else:
 
 _gtk_xft_dpi = float(gtk.settings_get_default().get_property('gtk-xft-dpi'))
 _start_xephyr(width, height, _gtk_xft_dpi / 1024)
+
+from sugar import env
 
 os.environ['GTK2_RC_FILES'] = env.get_data_path('gtkrc')
 
