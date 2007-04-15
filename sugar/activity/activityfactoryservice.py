@@ -140,7 +140,7 @@ def run_with_args(args):
     run(options.bundle_path)
 
 def run(bundle_path):
-    sys.path.insert(0, bundle_path)
+    sys.path.append(bundle_path)
 
     bundle = Bundle(bundle_path)
 

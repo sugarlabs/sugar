@@ -24,7 +24,7 @@ import os
 from sugar import logger
 from sugar import env
 
-sys.path.insert(0, env.get_service_path('presence'))
+sys.path.append(env.get_service_path('presence'))
 
 test=0
 if len(sys.argv) > 1:
