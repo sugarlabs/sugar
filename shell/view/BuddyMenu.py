@@ -88,7 +88,7 @@ class BuddyMenu(Menu):
 
         activity = shell_model.get_home().get_current_activity()
         if activity != None:
-            activity_ps = pservice.get_activity(activity.get_id())
+            activity_ps = pservice.get_activity(activity.get_activity_id())
 
             # FIXME check that the buddy is not in the activity already
 
