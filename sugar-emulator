@@ -72,17 +72,19 @@ def _start_xephyr():
     os.environ['DISPLAY'] = ":%d" % (display)
     os.environ['SUGAR_EMULATOR_PID'] = str(pid)
 
-os.environ['SUGAR_EMULATOR'] = 'yes'
+def _setup_env():
+    os.environ['SUGAR_EMULATOR'] = 'yes'
 
-if len(sys.argv) == 1:
-    program = 'sugar-shell'
-else:
-    program = sys.argv[1]
-
+_setup_env()
 _start_xephyr()
 
 from sugar import env
 
 os.environ['GTK2_RC_FILES'] = env.get_data_path('gtkrc')
+
+if len(sys.argv) == 1:
+    program = 'sugar-shell'
+else:
+    program = sys.argv[1]
 
 os.execlp('dbus-launch', 'dbus-launch', '--exit-with-session', program)
