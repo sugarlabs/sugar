@@ -74,6 +74,13 @@ def _start_xephyr():
 
 def _setup_env():
     os.environ['SUGAR_EMULATOR'] = 'yes'
+    
+    source_dir = os.path.dirname(os.path.abspath(__file__))
+    if os.path.isfile(os.path.join(source_dir, 'autogen.sh')):
+        os.environ['SUGAR_PATH'] = source_dir
+        if os.environ.has_key('PYTHONPATH'):
+            path = os.environ['PYTHONPATH']
+            os.environ['PYTHONPATH'] = source_dir + ':' + path
 
 _setup_env()
 _start_xephyr()
