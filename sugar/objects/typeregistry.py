@@ -40,7 +40,7 @@ class _RootNode(_TypeNode):
         _TypeNode.__init__('')
     
     def append_primitive(self, info_dict):
-        self.append(TypeInfo(info_dict)
+        self.append(TypeInfo(info_dict))
 
 class _TypeNode(list):
     def __init__(self, type_info):
@@ -85,10 +85,10 @@ class TypeRegistry(object):
         
         for section in cp.sections():
             type_info = TypeInfo()
-            if type_info.read_from_config(section, items, l_items)
+            if type_info.read_from_config(section, items, l_items):
                 parent_node = self._tree.get_node_from_type(type_info.parent)
                 if parent_node:
-                    parent_node.append(_TypeNode(type_info)
+                    parent_node.append(_TypeNode(type_info))
                     return True
 
         return False       
