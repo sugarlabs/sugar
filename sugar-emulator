@@ -48,22 +48,23 @@ def _get_display_number():
         logging.error('Cannot find a free display.')
         sys.exit(0)
 
-def _start_xephyr(width, height, dpi):
+def _start_xephyr():
     display = _get_display_number()
 
     cmd = [ 'Xephyr' ]
     cmd.append(':%d' % display)
     cmd.append('-ac') 
 
-    if width > 0 and height > 0:
-        cmd.append('-screen')
-        cmd.append('%dx%d' % (width, height))
-    else:
+    if gtk.gdk.screen_width() < 1200 or gtk.gdk.screen_height() < 900:
         cmd.append('-fullscreen')
+    else:
+        cmd.append('-screen')
+        cmd.append('%dx%d' % (1200, 900))
 
+    dpi = gtk.settings_get_default().get_property('gtk-xft-dpi')
     if dpi > 0:
         cmd.append('-dpi')
-        cmd.append(str(dpi))
+        cmd.append('%d' % int(dpi/1024))
 
     result = gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
     pid = result[0]
@@ -78,15 +79,7 @@ if len(sys.argv) == 1:
 else:
     program = sys.argv[1]
 
-if gtk.gdk.screen_width() < 1200 or gtk.gdk.screen_height() < 900:
-    width = -1
-    height = -1
-else:
-    width = 1200
-    height = 900
-
-_gtk_xft_dpi = float(gtk.settings_get_default().get_property('gtk-xft-dpi'))
-_start_xephyr(width, height, _gtk_xft_dpi / 1024)
+_start_xephyr()
 
 from sugar import env
 
