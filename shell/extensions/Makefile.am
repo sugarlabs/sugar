@@ -1,27 +1,27 @@
-sugardir = $(pkgdatadir)/shell
+sugardir = $(pkgdatadir)/shell/extensions
 sugar_PYTHON =		\
 	__init__.py
 
-pkgpyexecdir = $(pkgdatadir)/shell
+pkgpyexecdir = $(pkgdatadir)/shell/extensions
 
-pkgpyexec_LTLIBRARIES = extensions.la
+pkgpyexec_LTLIBRARIES = _extensions.la
 
-extensions_la_LDFLAGS = -module -avoid-version
+_extensions_la_LDFLAGS = -module -avoid-version
 
-extensions_la_CFLAGS =			\
+_extensions_la_CFLAGS =			\
 	$(WARN_CFLAGS)			\
 	$(PYTHON_INCLUDES)		\
 	$(PYGTK_CFLAGS)			\
 	$(SHELL_CFLAGS)			\
 	$(top_srcdir)/shell/extensions
 
-extensions_la_LIBADD = 		\
+_extensions_la_LIBADD = 	\
 	$(SHELL_LIBS) 		\
 	$(PYCAIRO_LIBS)		\
 	-lgstinterfaces-0.10	\
 	-lgstaudio-0.10
 
-extensions_la_SOURCES =		\
+_extensions_la_SOURCES =	\
 	$(BUILT_SOURCES)	\
 	eggaccelerators.h	\
 	eggaccelerators.c	\
@@ -29,10 +29,10 @@ extensions_la_SOURCES =		\
 	sugar-audio-manager.h	\
 	sugar-key-grabber.h	\
 	sugar-key-grabber.c	\
-	extensionsmodule.c
+	_extensionsmodule.c
 
 BUILT_SOURCES = 		\
-	extensions.c		\
+	_extensions.c		\
 	sugar-shell-marshal.c	\
 	sugar-shell-marshal.h
 
@@ -58,9 +58,9 @@ CLEANFILES = $(stamp_files) $(BUILT_SOURCES)
 DISTCLEANFILES = $(stamp_files) $(BUILT_SOURCES)
 MAINTAINERCLEANFILES = $(stamp_files) $(BUILT_SOURCES)
 
-EXTRA_DIST = sugar-marshal.list extensions.override extensions.defs
+EXTRA_DIST = sugar-marshal.list _extensions.override _extensions.defs
 
-extensions.c: extensions.defs extensions.override
+extensions.c: _extensions.defs _extensions.override
 
 .defs.c:
 	(cd $(srcdir)\
