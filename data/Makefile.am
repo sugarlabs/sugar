@@ -1,4 +1,4 @@
-sugardir = $(pkgdatadir)
+sugardir = $(pkgdatadir)/data
 sugar_DATA =		\
 	gtkrc		\
 	gecko-prefs.js	\

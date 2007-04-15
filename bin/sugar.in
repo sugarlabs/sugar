@@ -1,2 +1,2 @@
-export GTK2_RC_FILES=@prefix@/share/sugar/gtkrc
+export GTK2_RC_FILES=@prefix@/share/sugar/data/gtkrc
 dbus-launch --exit-with-session sugar-shell
