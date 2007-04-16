@@ -278,7 +278,10 @@ class MeshBox(SpreadBox):
 
     def _add_alone_buddy(self, buddy_model):
         icon = BuddyIcon(self._shell, self._menu_shell, buddy_model)
-        self.add_item(icon)
+        if buddy_model.is_owner():
+            self.set_center_item(icon)
+        else:
+            self.add_item(icon)
 
         self._buddies[buddy_model.get_key()] = icon
 
