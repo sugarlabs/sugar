@@ -28,7 +28,7 @@ class Animator(gobject.GObject):
                       gobject.TYPE_NONE, ([])),
     }
     
-    def __init__(self, time, fps, easing=EASE_OUT_EXPO):
+    def __init__(self, time, fps=20, easing=EASE_OUT_EXPO):
         gobject.GObject.__init__(self)
         self._animations = []
         self._time = time
@@ -38,6 +38,10 @@ class Animator(gobject.GObject):
 
     def add(self, animation):
         self._animations.append(animation)
+
+    def remove_all(self):
+        self.stop()
+        self._animations = []
 
     def start(self):
         if self._timeout_sid:
@@ -51,7 +55,7 @@ class Animator(gobject.GObject):
         if self._timeout_sid:
             gobject.source_remove(self._timeout_sid)
             self._timeout_sid = 0
-        self.emit('completed')
+            self.emit('completed')
 
     def _next_frame_cb(self):
         current_time = min(self._time, time.time() - self._start_time)

@@ -169,7 +169,7 @@ class Frame(object):
         if self._animator:
             self._animator.stop()
 
-        self._animator = animator.Animator(0.5, 30, animator.EASE_OUT_EXPO)
+        self._animator = animator.Animator(0.5)
         self._animator.add(_Animation(self, 0.0))
         self._animator.start()
 
@@ -188,7 +188,7 @@ class Frame(object):
         if self._animator:
             self._animator.stop()
 
-        self._animator = animator.Animator(0.5, 30, animator.EASE_OUT_EXPO)
+        self._animator = animator.Animator(0.5)
         self._animator.add(_Animation(self, 1.0))
         self._animator.start()
 

@@ -7,4 +7,5 @@ sugar_PYTHON =			\
 	HomeBox.py		\
 	HomeWindow.py		\
 	MeshBox.py		\
-	MyIcon.py
+	MyIcon.py		\
+	transitionbox.py

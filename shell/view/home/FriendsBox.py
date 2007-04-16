@@ -24,7 +24,7 @@ from sugar.graphics import units
 from view.home.MyIcon import MyIcon
 from view.home.FriendView import FriendView
 
-class FriendsBox(SpreadBox, hippo.CanvasItem):
+class FriendsBox(SpreadBox):
     __gtype_name__ = 'SugarFriendsBox'
     def __init__(self, shell, menu_shell):
         SpreadBox.__init__(self, background_color=0xe2e2e2ff)
@@ -34,7 +34,7 @@ class FriendsBox(SpreadBox, hippo.CanvasItem):
         self._friends = {}
 
         self._my_icon = MyIcon(units.LARGE_ICON_SCALE)
-        self.append(self._my_icon, hippo.PACK_FIXED)
+        self.set_center_item(self._my_icon)
 
         friends = self._shell.get_model().get_friends()
 
@@ -56,10 +56,3 @@ class FriendsBox(SpreadBox, hippo.CanvasItem):
     def _friend_removed_cb(self, data_model, key):
         self.remove_item(self._friends[key])
         del self._friends[key]
-
-    def do_allocate(self, width, height, origin_changed):
-        SpreadBox.do_allocate(self, width, height, origin_changed)
-
-        [icon_width, icon_height] = self._my_icon.get_allocation()
-        self.set_position(self._my_icon, (width - icon_width) / 2,
-                          (height - icon_height) / 2)

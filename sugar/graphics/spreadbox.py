@@ -22,19 +22,30 @@ import gtk
 
 from sugar.graphics import units
 
+_WIDTH = gtk.gdk.screen_width()
+_HEIGHT = gtk.gdk.screen_height()
 _CELL_WIDTH  = units.grid_to_pixels(1)
 _CELL_HEIGHT = units.grid_to_pixels(1)
-_GRID_WIDTH  = gtk.gdk.screen_width() / _CELL_WIDTH
-_GRID_HEIGHT = gtk.gdk.screen_height() / _CELL_HEIGHT
+_GRID_WIDTH  = _WIDTH / _CELL_WIDTH
+_GRID_HEIGHT = _HEIGHT / _CELL_HEIGHT
 
-class SpreadBox(hippo.CanvasBox):
+class SpreadBox(hippo.CanvasBox, hippo.CanvasItem):
+    __gtype_name__ = 'SugarSpreadBox'
     def __init__(self, **kwargs):
         hippo.CanvasBox.__init__(self, **kwargs)
 
         self._grid = []
+        self._center = None
 
         for i in range(0, _GRID_WIDTH * _GRID_HEIGHT):
             self._grid.append(None)
+
+    def set_center_item(self, item):
+        if self._center:
+            self.remove(self._center)
+
+        self._center = item
+        self.append(item, hippo.PACK_FIXED)
 
     def add_item(self, item):
         start_pos = int(random.random() * len(self._grid))
@@ -60,3 +71,11 @@ class SpreadBox(hippo.CanvasBox):
             if self._grid[i] == item:
                 self._grid[i] = None
         self.remove(item)
+        
+    def do_allocate(self, width, height, origin_changed):
+        hippo.CanvasBox.do_allocate(self, width, height, origin_changed)
+
+        if self._center:
+            [icon_width, icon_height] = self._center.get_allocation()
+            self.set_position(self._center, (width - icon_width) / 2,
+                              (height - icon_height) / 2)

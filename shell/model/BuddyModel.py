@@ -84,6 +84,11 @@ class BuddyModel(gobject.GObject):
     def get_buddy(self):
         return self._buddy
 
+    def is_owner(self):
+        if not self._buddy:
+            return False
+        return self._buddy.props.owner
+
     def is_present(self):
         if self._buddy:
             return True
