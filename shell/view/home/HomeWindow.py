@@ -19,20 +19,25 @@ import hippo
 import cairo
 
 from sugar.graphics.menushell import MenuShell
+from sugar.graphics import units
 import sugar
+
 from view.home.MeshBox import MeshBox
 from view.home.HomeBox import HomeBox
 from view.home.FriendsBox import FriendsBox
+from view.home.transitionbox import TransitionBox
 
-_HOME_PAGE    = 0
-_FRIENDS_PAGE = 1
-_MESH_PAGE    = 2
+_HOME_PAGE       = 0
+_FRIENDS_PAGE    = 1
+_MESH_PAGE       = 2
+_TRANSITION_PAGE = 3
 
 class HomeWindow(gtk.Window):
     def __init__(self, shell):
         gtk.Window.__init__(self)
         self._shell = shell
         self._active = False
+        self._level = sugar.ZOOM_HOME
 
         self.set_default_size(gtk.gdk.screen_width(),
                               gtk.gdk.screen_height())
@@ -68,6 +73,15 @@ class HomeWindow(gtk.Window):
         self._nb.append_page(canvas)
         canvas.show()
 
+        canvas = hippo.Canvas()
+        self._transition_box = TransitionBox()
+        canvas.set_root(self._transition_box)
+        self._nb.append_page(canvas)
+        canvas.show()
+        
+        self._transition_box.connect('completed',
+                                     self._transition_completed_cb)
+
     def _key_release_cb(self, widget, event):
         keyname = gtk.gdk.keyval_name(event.keyval)
         if keyname == "Alt_L":
@@ -88,11 +102,25 @@ class HomeWindow(gtk.Window):
         self._update_mesh_state()
             
     def set_zoom_level(self, level):
+        self._level = level
+    
+        self._nb.set_current_page(_TRANSITION_PAGE)
+
         if level == sugar.ZOOM_HOME:
-            self._nb.set_current_page(_HOME_PAGE)
+            scale = units.XLARGE_ICON_SCALE
         elif level == sugar.ZOOM_FRIENDS:
-            self._nb.set_current_page(_FRIENDS_PAGE)
+            scale = units.LARGE_ICON_SCALE
         elif level == sugar.ZOOM_MESH:
+            scale = units.STANDARD_ICON_SCALE
+            
+        self._transition_box.set_scale(scale)
+    
+    def _transition_completed_cb(self, transition_box):
+        if self._level == sugar.ZOOM_HOME:
+            self._nb.set_current_page(_HOME_PAGE)
+        elif self._level == sugar.ZOOM_FRIENDS:
+            self._nb.set_current_page(_FRIENDS_PAGE)
+        elif self._level == sugar.ZOOM_MESH:
             self._nb.set_current_page(_MESH_PAGE)
 
         self._update_mesh_state()
