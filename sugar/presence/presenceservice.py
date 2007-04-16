@@ -337,6 +337,19 @@ class PresenceService(gobject.GObject):
                 reply_handler=lambda *args: self._share_activity_cb(activity, *args),
                 error_handler=lambda *args: self._share_activity_error_cb(activity, *args))
 
+    def get_preferred_connection(self):
+        """Gets the preferred telepathy connection object that an activity
+        should use when talking directly to telepathy
+
+        returns the bus name and the object path of the Telepathy connection"""
+
+        try:
+            bus_name, object_path = self._ps.GetPreferredConnection()
+        except dbus.exceptions.DBusException:
+            return None
+
+        return bus_name, object_path
+
 
 class _MockPresenceService(gobject.GObject):
     """Test fixture allowing testing of items that use PresenceService
