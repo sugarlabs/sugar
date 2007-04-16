@@ -51,7 +51,7 @@ class TransitionBox(SpreadBox):
         self._my_icon = MyIcon(self._scale)
         self.set_center_item(self._my_icon)
 
-        self._animator = animator.Animator(0.3, 30)
+        self._animator = animator.Animator(0.3)
         self._animator.connect('completed', self._animation_completed_cb)
 
     def _animation_completed_cb(self, anim):

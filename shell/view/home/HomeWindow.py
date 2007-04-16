@@ -19,6 +19,7 @@ import hippo
 import cairo
 
 from sugar.graphics.menushell import MenuShell
+from sugar.graphics.window import Window
 from sugar.graphics import units
 import sugar
 
@@ -32,9 +33,9 @@ _FRIENDS_PAGE    = 1
 _MESH_PAGE       = 2
 _TRANSITION_PAGE = 3
 
-class HomeWindow(gtk.Window):
+class HomeWindow(Window):
     def __init__(self, shell):
-        gtk.Window.__init__(self)
+        Window.__init__(self)
         self._shell = shell
         self._active = False
         self._level = sugar.ZOOM_HOME
@@ -48,36 +49,12 @@ class HomeWindow(gtk.Window):
         self.connect('focus-in-event', self._focus_in_cb)
         self.connect('focus-out-event', self._focus_out_cb)
 
-        self._nb = gtk.Notebook()
-        self._nb.set_show_border(False)
-        self._nb.set_show_tabs(False)
-
-        self.add(self._nb)
-        self._nb.show()
-
-        canvas = hippo.Canvas()
         self._home_box = HomeBox(shell)
-        canvas.set_root(self._home_box)
-        self._nb.append_page(canvas)
-        canvas.show()
-
-        canvas = hippo.Canvas()
-        box = FriendsBox(shell, MenuShell(canvas))
-        canvas.set_root(box)
-        self._nb.append_page(canvas)
-        canvas.show()
-
-        canvas = hippo.Canvas()
-        self._mesh_box = MeshBox(shell, MenuShell(canvas))
-        canvas.set_root(self._mesh_box)
-        self._nb.append_page(canvas)
-        canvas.show()
-
-        canvas = hippo.Canvas()
+        self._friends_box = FriendsBox(shell, MenuShell(self))
+        self._mesh_box = MeshBox(shell, MenuShell(self))
         self._transition_box = TransitionBox()
-        canvas.set_root(self._transition_box)
-        self._nb.append_page(canvas)
-        canvas.show()
+
+        self.set_root(self._home_box)
         
         self._transition_box.connect('completed',
                                      self._transition_completed_cb)
@@ -88,7 +65,7 @@ class HomeWindow(gtk.Window):
             self._home_box.release()
 
     def _update_mesh_state(self):
-        if self._active and self._nb.get_current_page() == _MESH_PAGE:
+        if self._active and self._level == sugar.ZOOM_MESH:
             self._mesh_box.resume()
         else:
             self._mesh_box.suspend()
@@ -104,7 +81,7 @@ class HomeWindow(gtk.Window):
     def set_zoom_level(self, level):
         self._level = level
     
-        self._nb.set_current_page(_TRANSITION_PAGE)
+        self.set_root(self._transition_box)
 
         if level == sugar.ZOOM_HOME:
             scale = units.XLARGE_ICON_SCALE
@@ -117,11 +94,11 @@ class HomeWindow(gtk.Window):
     
     def _transition_completed_cb(self, transition_box):
         if self._level == sugar.ZOOM_HOME:
-            self._nb.set_current_page(_HOME_PAGE)
+            self.set_root(self._home_box)
         elif self._level == sugar.ZOOM_FRIENDS:
-            self._nb.set_current_page(_FRIENDS_PAGE)
+            self.set_root(self._friends_box)
         elif self._level == sugar.ZOOM_MESH:
-            self._nb.set_current_page(_MESH_PAGE)
+            self.set_root(self._mesh_box)
 
         self._update_mesh_state()
         

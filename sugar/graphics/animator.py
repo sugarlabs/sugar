@@ -28,7 +28,7 @@ class Animator(gobject.GObject):
                       gobject.TYPE_NONE, ([])),
     }
     
-    def __init__(self, time, fps, easing=EASE_OUT_EXPO):
+    def __init__(self, time, fps=20, easing=EASE_OUT_EXPO):
         gobject.GObject.__init__(self)
         self._animations = []
         self._time = time
