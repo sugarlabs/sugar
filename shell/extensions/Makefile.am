@@ -8,12 +8,11 @@ pkgpyexec_LTLIBRARIES = _extensions.la
 
 _extensions_la_LDFLAGS = -module -avoid-version
 
-_extensions_la_CFLAGS =			\
-	$(WARN_CFLAGS)			\
-	$(PYTHON_INCLUDES)		\
-	$(PYGTK_CFLAGS)			\
-	$(SHELL_CFLAGS)			\
-	$(top_srcdir)/shell/extensions
+_extensions_la_CFLAGS =		\
+	$(WARN_CFLAGS)		\
+	$(PYTHON_INCLUDES)	\
+	$(PYGTK_CFLAGS)		\
+	$(SHELL_CFLAGS)
 
 _extensions_la_LIBADD = 	\
 	$(SHELL_LIBS) 		\
