@@ -1,3 +1,5 @@
+#include <config.h>
+
 #ifdef HAVE_GECKO_1_9
 
 #include <stdio.h>
@@ -16,7 +18,6 @@
 #include <nsIInputStream.h>
 #include <nsIWebNavigation.h>
 
-#include <config.h>
 #include "GeckoBrowserPersist.h"
 
 GeckoBrowserPersist::GeckoBrowserPersist(SugarBrowser *browser)

@@ -1,3 +1,5 @@
+#include <config.h>
+
 #ifdef HAVE_GECKO_1_9
 
 #include <unistd.h>
@@ -18,7 +20,6 @@
 #include <nsServiceManagerUtils.h>
 #include <nsStringAPI.h>
 
-#include <config.h>
 #include "GeckoDocumentObject.h"
 #include "GeckoBrowserPersist.h"
                     

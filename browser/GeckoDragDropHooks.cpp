@@ -1,3 +1,5 @@
+#include <config.h>
+
 #ifdef HAVE_GECKO_1_9
 
 #include <sys/time.h>
@@ -14,7 +16,6 @@
 #include <nsIInterfaceRequestorUtils.h>
 #include <nsIDOMMouseEvent.h>
 
-#include <config.h>
 #include "GeckoDragDropHooks.h"
 #include "GeckoDocumentObject.h"
 
