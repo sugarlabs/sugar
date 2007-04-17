@@ -144,11 +144,11 @@ class PresenceService(dbus.service.Object):
             logging.debug("Buddy %s icon updated" % buddy.props.nick)
             buddy.props.icon = avatar
 
-    def _buddy_properties_changed(self, tp, handle, prop):
+    def _buddy_properties_changed(self, tp, handle, properties):
         buddy = self._handles_buddies[tp].get(handle)
         if buddy:
-            buddy.set_properties(prop)
-            logging.debug("Buddy %s properties updated" % buddy.props.nick)
+            buddy.set_properties(properties)
+            logging.debug("Buddy %s properties updated: %s" % (buddy.props.nick, properties.keys()))
 
     def _new_activity(self, activity_id, tp):
         try:
