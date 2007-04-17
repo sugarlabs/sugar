@@ -369,6 +369,11 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             if not self._popup:
                 return
 
+        if not self.get_context():
+            # If we have been detached from our parent, don't show up the popup
+            # in this case.
+            return
+
         popup_context = self.get_popup_context()
         
         [x, y] = [None, None]
