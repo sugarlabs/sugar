@@ -205,31 +205,35 @@ class Buddy(DBusGObject):
 
     def set_properties(self, properties):
         changed = False
+        changed_props = {}
         if "nick" in properties.keys():
             nick = properties["nick"]
             if nick != self._nick:
                 self._nick = nick
+                changed_props["nick"] = nick
                 changed = True
         if "color" in properties.keys():
             color = properties["color"]
             if color != self._color:
                 self._color = color
+                changed_props["color"] = color
                 changed = True
         if "current-activity" in properties.keys():
             curact = properties["current-activity"]
             if curact != self._current_activity:
                 self._current_activity = curact
+                changed_props["current-activity"] = curact
                 changed = True
 
-        if not changed:
+        if not changed or not len(changed_props.keys()):
             return
 
         # Try emitting PropertyChanged before updating validity
         # to avoid leaking a PropertyChanged signal before the buddy is
         # actually valid the first time after creation
         if self._valid:
-            self.PropertyChanged(properties)
-            self.emit('property-changed', properties)
+            self.PropertyChanged(changed_props)
+            self.emit('property-changed', changed_props)
 
         self._update_validity()
 
