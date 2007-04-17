@@ -1,3 +1,5 @@
+#ifdef HAVE_GECKO_1_9
+
 #include <unistd.h>
 
 #include <glib.h>
@@ -185,3 +187,5 @@ GeckoDocumentObject::SaveImage(const char *filename)
     GeckoBrowserPersist browserPersist(mBrowser);
     return browserPersist.SaveURI(mImageURI.get(), filename);
 }
+
+#endif

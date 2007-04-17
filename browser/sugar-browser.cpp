@@ -23,9 +23,12 @@
 #include "sugar-marshal.h"
 #include "GeckoContentHandler.h"
 #include "GeckoDownload.h"
+
+#ifdef HAVE_GECKO_1_9
 #include "GeckoDragDropHooks.h"
 #include "GeckoDocumentObject.h"
 #include "GeckoBrowserPersist.h"
+#endif
 
 #include <gdk/gdkx.h>
 #include <gtkmozembed_internal.h>
@@ -563,7 +566,8 @@ location_cb(GtkMozEmbed *embed)
 static gboolean
 dom_mouse_click_cb(GtkMozEmbed *embed, nsIDOMMouseEvent *mouseEvent)
 {
-	SugarBrowser *browser = SUGAR_BROWSER(embed);
+#ifdef HAVE_GECKO_1_9
+    SugarBrowser *browser = SUGAR_BROWSER(embed);
     SugarBrowserEvent *event;
     gint return_value = FALSE;
 
@@ -592,6 +596,9 @@ dom_mouse_click_cb(GtkMozEmbed *embed, nsIDOMMouseEvent *mouseEvent)
     sugar_browser_event_free(event);
 
     return return_value;
+#else
+    return FALSE;
+#endif
 }
 
 static void
@@ -658,8 +665,12 @@ sugar_browser_save_uri(SugarBrowser *browser,
                        const char   *uri,
                        const char   *filename)
 {
+#ifdef HAVE_GECKO_1_9
     GeckoBrowserPersist browserPersist(browser);
     return browserPersist.SaveURI(uri, filename);
+#else
+    return FALSE;
+#endif
 }
 
 gboolean
