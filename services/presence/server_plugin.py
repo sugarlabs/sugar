@@ -324,7 +324,9 @@ class ServerPlugin(gobject.GObject):
     def _internal_join_activity(self, activity_id, signal, userdata):
         handle = self._activities.get(activity_id)
         if not handle:
-            self._conn[CONN_INTERFACE].RequestHandles(CONNECTION_HANDLE_TYPE_ROOM, [activity_id],
+            # FIXME: figure out why the server can't figure this out itself
+            room_jid = activity_id + "@conference." + self._account["server"]
+            self._conn[CONN_INTERFACE].RequestHandles(CONNECTION_HANDLE_TYPE_ROOM, [room_jid],
                     reply_handler=lambda *args: self._join_activity_get_channel_cb(activity_id, signal, userdata, *args),
                     error_handler=lambda *args: self._join_error_cb(activity_id, signal, userdata, *args))
         else:
