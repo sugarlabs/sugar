@@ -257,7 +257,7 @@ class ServerPlugin(gobject.GObject):
                 self._activity_properties_changed_cb)
 
         # Set initial buddy properties, avatar, and activities
-        self._set_self_olpc_properties(True)
+        self._set_self_olpc_properties()
         self._set_self_alias()
         self._set_self_activities()
         self._set_self_current_activity()
@@ -342,11 +342,10 @@ class ServerPlugin(gobject.GObject):
     def _log_error_cb(self, msg, err):
         logging.debug("Error %s: %s" % (msg, err))
 
-    def _set_self_olpc_properties(self, set_key=False):
+    def _set_self_olpc_properties(self):
         props = {}
         props['color'] = self._owner.props.color
-        if set_key:
-            props['key'] = dbus.ByteArray(self._owner.props.key)
+        props['key'] = dbus.ByteArray(self._owner.props.key)
         self._conn[CONN_INTERFACE_BUDDY_INFO].SetProperties(props,
                 reply_handler=self._ignore_success_cb,
                 error_handler=lambda *args: self._log_error_cb("setting properties", *args))
