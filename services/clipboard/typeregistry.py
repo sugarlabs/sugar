@@ -197,6 +197,26 @@ class OOTextFileType(FileType):
         return mime_type in cls._types
     matches_mime_type = classmethod(matches_mime_type)
 
+class UriListFileType(FileType):
+    
+    _types = set(['text/uri-list'])
+    
+    def get_name(self):
+        return _('text/uri-list')
+
+    def get_icon(self):
+        return 'theme:stock-missing'
+
+    def get_preview(self):
+        return 'preview'
+
+    def get_activity(self):
+        return ''
+        
+    def matches_mime_type(cls, mime_type):
+        return mime_type in cls._types
+    matches_mime_type = classmethod(matches_mime_type)
+
 class UnknownFileType(FileType):
     def get_name(self):
         return _('Object')
@@ -221,6 +241,7 @@ class TypeRegistry:
         self._types.append(MsWordFileType)
         self._types.append(RtfFileType)
         self._types.append(OOTextFileType)
+        self._types.append(UriListFileType)
         self._types.append(UriFileType)
         self._types.append(ImageFileType)
         self._types.append(AbiwordFileType)
