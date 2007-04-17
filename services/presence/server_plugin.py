@@ -517,12 +517,12 @@ class ServerPlugin(gobject.GObject):
             return
 
         if not self._online_contacts.has_key(handle):
-            logging.debug("Handle %s not valid yet...")
+            logging.debug("Handle %s unknown." % handle)
             return
 
         jid = self._online_contacts[handle]
         if not jid:
-            logging.debug("Handle %s not valid yet...")
+            logging.debug("Handle %s not valid yet..." % handle)
             return
 
         icon = self._icon_cache.get_icon(jid, new_avatar_token)
