@@ -255,7 +255,8 @@ class GenericOwner(Buddy):
         'key-hash'   : (str, None, None, None, gobject.PARAM_READABLE | gobject.PARAM_CONSTRUCT)
     }
 
-    def __init__(self, bus_name, object_id, **kwargs):
+    def __init__(self, ps, bus_name, object_id, **kwargs):
+        self._ps = ps
         self._server = 'olpc.collabora.co.uk'
         self._key_hash = None
         self._registered = False
@@ -294,7 +295,7 @@ class ShellOwner(GenericOwner):
     _SHELL_OWNER_INTERFACE = "org.laptop.Shell.Owner"
     _SHELL_PATH = "/org/laptop/Shell"
 
-    def __init__(self, bus_name, object_id, test=False):
+    def __init__(self, ps, bus_name, object_id, test=False):
         server = profile.get_server()
         key_hash = profile.get_private_key_hash()
         registered = profile.get_server_registered()
@@ -307,7 +308,7 @@ class ShellOwner(GenericOwner):
         icon = f.read()
         f.close()
 
-        GenericOwner.__init__(self, bus_name, object_id, key=key, nick=nick,
+        GenericOwner.__init__(self, ps, bus_name, object_id, key=key, nick=nick,
                 color=color, icon=icon, server=server, key_hash=key_hash,
                 registered=registered)
 
@@ -371,9 +372,12 @@ class TestOwner(GenericOwner):
 
     __gtype_name__ = "TestOwner"
 
-    def __init__(self, bus_name, object_id, test_num):
+    def __init__(self, ps, bus_name, object_id, test_num):
         self._cp = ConfigParser()
         self._section = "Info"
+        self._test_activities = []
+        self._test_cur_act = ""
+        self._change_timeout = 0
 
         self._cfg_file = os.path.join(env.get_profile_path(), 'test-buddy-%d' % test_num)
 
@@ -392,11 +396,46 @@ class TestOwner(GenericOwner):
         color = xocolor.XoColor().to_string()
         icon = _get_random_image()
 
-        GenericOwner.__init__(self, bus_name, object_id, key=pubkey, nick=nick,
+        logging.debug("pubkey is %s" % pubkey)
+        GenericOwner.__init__(self, ps, bus_name, object_id, key=pubkey, nick=nick,
                 color=color, icon=icon, registered=registered, key_hash=privkey_hash)
 
+        self._ps.connect('connection-status', self._ps_connection_status_cb)
+
+    def _share_reply_cb(self, actid, object_path):
+        activity = self._ps.internal_get_activity(actid)
+        if not activity or not object_path:
+            logging.debug("Couldn't find activity %s even though it was shared." % actid)
+            return
+        logging.debug("Shared activity %s (%s)." % (actid, activity.props.name))
+        self._test_activities.append(activity)
+
+    def _share_error_cb(self, actid, err):
+        logging.debug("Error sharing activity %s: %s" % (actid, str(err)))
+
+    def _ps_connection_status_cb(self, ps, connected):
+        if not connected:
+            return
+
+        if not len(self._test_activities):
+            # Share some activities
+            actid = util.unique_id("Activity 1")
+            callbacks = (lambda *args: self._share_reply_cb(actid, *args),
+                         lambda *args: self._share_error_cb(actid, *args))
+            atype = "org.laptop.WebActivity"
+            properties = {"foo": "bar"}
+            self._ps._share_activity(actid, atype, "Wembley Stadium", properties, callbacks)
+
+            actid2 = util.unique_id("Activity 2")
+            callbacks = (lambda *args: self._share_reply_cb(actid2, *args),
+                         lambda *args: self._share_error_cb(actid2, *args))
+            atype = "org.laptop.WebActivity"
+            properties = {"baz": "bar"}
+            self._ps._share_activity(actid2, atype, "Maine Road", properties, callbacks)
+
         # Change a random property ever 10 seconds
-        gobject.timeout_add(10000, self._update_something)
+        if self._change_timeout == 0:
+            self._change_timeout = gobject.timeout_add(10000, self._update_something)
 
     def set_registered(self, value):
         if value:
@@ -443,12 +482,14 @@ class TestOwner(GenericOwner):
             props = {'nick': _get_random_name()}
             self.set_properties(props)
         elif it == 3:
-            bork = random.randint(25, 65)
-            it = ""
-            for i in range(0, bork):
-                it += chr(random.randint(40, 127))
-            from sugar import util
-            props = {'current-activity': util.unique_id(it)}
+            actid = ""
+            idx = random.randint(0, len(self._test_activities))
+            # if idx == len(self._test_activites), it means no current
+            # activity
+            if idx < len(self._test_activities):
+                activity = self._test_activities[idx]
+                actid = activity.props.id
+            props = {'current-activity': actid}
             self.set_properties(props)
         return True
 

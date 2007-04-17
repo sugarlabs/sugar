@@ -40,14 +40,26 @@ class NotFoundError(dbus.DBusException):
         dbus.DBusException.__init__(self)
         self._dbus_error_name = _PRESENCE_INTERFACE + '.NotFound'
 
+class DBusGObjectMetaclass(dbus.service.InterfaceType, gobject.GObjectMeta): pass
+class DBusGObject(dbus.service.Object, gobject.GObject): __metaclass__ = DBusGObjectMetaclass
 
-class PresenceService(dbus.service.Object):
+class PresenceService(DBusGObject):
+    __gtype_name__ = "PresenceService"
+
+    __gsignals__ = {
+        'connection-status': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                            ([gobject.TYPE_BOOLEAN]))
+    }
+
     def __init__(self, test=0):
         self._next_object_id = 0
+        self._connected = False
 
         self._buddies = {}      # key -> Buddy
         self._handles_buddies = {}      # tp client -> (handle -> Buddy)
         self._activities = {}   # activity id -> Activity
+
+        gobject.GObject.__init__(self)
 
         bus = dbus.SessionBus()
         self._bus_name = dbus.service.BusName(_PRESENCE_SERVICE, bus=bus)
@@ -55,9 +67,9 @@ class PresenceService(dbus.service.Object):
         # Create the Owner object
         objid = self._get_next_object_id()
         if test > 0:
-            self._owner = TestOwner(self._bus_name, objid, test)
+            self._owner = TestOwner(self, self._bus_name, objid, test)
         else:
-            self._owner = ShellOwner(self._bus_name, objid)
+            self._owner = ShellOwner(self, self._bus_name, objid)
         self._buddies[self._owner.props.key] = self._owner
 
         self._registry = ManagerRegistry()
@@ -92,8 +104,15 @@ class PresenceService(dbus.service.Object):
             async_err_cb(exc)
 
     def _server_status_cb(self, plugin, status, reason):
+        # FIXME: figure out connection status when we have a salut plugin too
+        old_status = self._connected
         if status == CONNECTION_STATUS_CONNECTED:
-            pass
+            self._connected = True
+        else:
+            self._connected = False
+
+        if self._connected != old_status:
+            self.emit('connection-status', self._connected)
 
     def _contact_online(self, tp, handle, props):
         new_buddy = False
@@ -260,11 +279,10 @@ class PresenceService(dbus.service.Object):
 
     @dbus.service.method(_PRESENCE_INTERFACE, in_signature="s", out_signature="o")
     def GetActivityById(self, actid):
-        if self._activities.has_key(actid):
-            act = self._activities[actid]
-            if act.props.valid:
-                return act.object_path()
-        raise NotFoundError("The activity was not found.")
+        act = self.internal_get_activity(actid)
+        if not act or not act.props.valid:
+            raise NotFoundError("The activity was not found.")
+        return act.object_path()
 
     @dbus.service.method(_PRESENCE_INTERFACE, out_signature="ao")
     def GetBuddies(self):
@@ -332,6 +350,11 @@ class PresenceService(dbus.service.Object):
         activity = self._activities.get(act_id)
         if activity:
             activity.set_properties(props)
+
+    def internal_get_activity(self, actid):
+        if not self._activities.has_key(actid):
+            return None
+        return self._activities[actid]
 
 
 def main(test=False):
