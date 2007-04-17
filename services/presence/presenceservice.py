@@ -120,8 +120,11 @@ class PresenceService(dbus.service.Object):
         else:
             self.BuddyDisappeared(buddy.object_path())
             logging.debug("Buddy left: %s (%s)" % (buddy.props.nick, buddy.props.color))
-            
+
     def _contact_offline(self, tp, handle):
+        if not self._handles_buddies[tp].has_key(handle):
+            return
+
         buddy = self._handles_buddies[tp].pop(handle)
         key = buddy.props.key
 
