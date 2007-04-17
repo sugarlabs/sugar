@@ -166,7 +166,7 @@ class HomeModel(gobject.GObject):
         else:
             # activity got lost, took longer to launch than we allow,
             # or it was launched by something other than the shell
-            act_type = act_service.get_service_name()
+            act_type = service.get_service_name()
             bundle = self._bundle_registry.get_bundle(act_type)
             if not bundle:
                 raise RuntimeError("No bundle for activity type '%s'." % act_type)
