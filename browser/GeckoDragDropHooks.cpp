@@ -15,6 +15,7 @@
 #include <nsServiceManagerUtils.h>
 #include <nsIInterfaceRequestorUtils.h>
 #include <nsIDOMMouseEvent.h>
+#include <nsIMIMEService.h>
 
 #include "GeckoDragDropHooks.h"
 #include "GeckoDocumentObject.h"
@@ -66,6 +67,9 @@ UriListDataProvider::GetFlavorData(nsITransferable *aTransferable,
 
     nsresult rv = NS_ERROR_NOT_IMPLEMENTED;
     char *image_name;
+    char *mime_type;
+    char *file_ext;
+    nsCString mime_ext;
     timeval timestamp;
 
     *aData = nsnull;
@@ -83,7 +87,31 @@ UriListDataProvider::GetFlavorData(nsITransferable *aTransferable,
     mFilePath.AppendInt(timestamp.tv_usec);
 
     image_name = mDocumentObject->GetImageName();
-    mFilePath.Append(image_name);
+    file_ext = strrchr(image_name, '.');
+    mime_type = mDocumentObject->GetImageMimeType();
+    
+    nsCOMPtr<nsIMIMEService> mimeService(do_GetService("@mozilla.org/mime;1",
+                                                       &rv));
+    NS_ENSURE_SUCCESS(rv, rv);
+    rv = mimeService->GetPrimaryExtension(nsCString(mime_type),
+                                          EmptyCString(),
+                                          mime_ext);
+    NS_ENSURE_SUCCESS(rv, rv);
+
+    if(!file_ext) {
+        mFilePath.Append(image_name);
+        mFilePath.Append(".");
+        mFilePath.Append(mime_ext);    
+    } else if(strcmp(file_ext, mime_ext.get())) {
+        image_name[strlen(file_ext)] = 0;
+        mFilePath.Append(image_name);
+        mFilePath.Append(".");
+        mFilePath.Append(mime_ext);
+    } else {
+        mFilePath.Append(image_name);
+    }
+
+    g_free(mime_type);
     g_free(image_name);
 
     if(!mDocumentObject->SaveImage(mFilePath.get())) {

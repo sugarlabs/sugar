@@ -116,6 +116,30 @@ FilenameFromContentDisposition(nsCString contentDisposition, nsCString &fileName
     return NS_OK;
 }
 
+static nsresult
+GetImageProperties(char *imgURIStr, nsIProperties **properties)
+{
+    nsresult rv;
+
+    nsCOMPtr<nsIURI> imageURI;
+    rv = NewURI(imgURIStr, getter_AddRefs(imageURI));
+    if(NS_FAILED(rv)) return rv;
+
+    nsCOMPtr<nsIServiceManager> mgr;
+    NS_GetServiceManager(getter_AddRefs(mgr));
+    NS_ENSURE_TRUE(mgr, NS_ERROR_FAILURE);
+
+    nsCOMPtr<imgICache> imgCache;
+    rv = mgr->GetServiceByContractID("@mozilla.org/image/cache;1",
+                                     NS_GET_IID(imgICache),
+                                     getter_AddRefs(imgCache));
+    if(NS_FAILED(rv)) return rv;
+
+    imgCache->FindEntryProperties(imageURI, properties);
+    NS_ENSURE_TRUE(mgr, NS_ERROR_FAILURE);
+    return NS_OK;
+}
+
 char *
 GeckoDocumentObject::GetImageName()
 {
@@ -123,25 +147,16 @@ GeckoDocumentObject::GetImageName()
         return NULL;
     }
 
+    if(mImageName.Length()) {
+        return g_strdup(mImageName.get());
+    }
+
     nsresult rv;
     char *imgURIStr = GetImageURI();
 
-    nsCOMPtr<nsIURI> imageURI;
-    rv = NewURI(imgURIStr, getter_AddRefs(imageURI));
-    NS_ENSURE_SUCCESS(rv, NULL);
-
-    nsCOMPtr<nsIServiceManager> mgr;
-    NS_GetServiceManager (getter_AddRefs (mgr));
-    NS_ENSURE_TRUE(mgr, NULL);
-
-    nsCOMPtr<imgICache> imgCache;
-    rv = mgr->GetServiceByContractID("@mozilla.org/image/cache;1",
-                                     NS_GET_IID (imgICache),
-                                     getter_AddRefs(imgCache));
-    NS_ENSURE_SUCCESS(rv, NULL);
-
     nsCOMPtr<nsIProperties> imgProperties;
-    imgCache->FindEntryProperties(imageURI, getter_AddRefs(imgProperties));
+    rv = GetImageProperties(imgURIStr, getter_AddRefs(imgProperties));
+    NS_ENSURE_SUCCESS(rv, NULL);
     if (imgProperties) {
         nsCOMPtr<nsISupportsCString> dispositionCString;
         imgProperties->Get("content-disposition",
@@ -155,6 +170,10 @@ GeckoDocumentObject::GetImageName()
     }
 
     if (!mImageName.Length()) {
+        nsCOMPtr<nsIURI> imageURI;
+        rv = NewURI(imgURIStr, getter_AddRefs(imageURI));
+        NS_ENSURE_SUCCESS(rv, NULL);
+
         nsCOMPtr<nsIURL> url(do_QueryInterface(imageURI));
         if (url) {
             url->GetFileName(mImageName);
@@ -162,6 +181,36 @@ GeckoDocumentObject::GetImageName()
     }
 
     return mImageName.Length() ? g_strdup(mImageName.get()) : NULL;
+}
+
+char *
+GeckoDocumentObject::GetImageMimeType()
+{
+    if(!IsImage()) {
+        return NULL;
+    }
+
+    if(mImageMimeType.Length()) {
+        return g_strdup(mImageMimeType.get());
+    }
+
+    nsresult rv;
+    char *imgURIStr = GetImageURI();
+
+    nsCOMPtr<nsIProperties> imgProperties;
+    rv = GetImageProperties(imgURIStr, getter_AddRefs(imgProperties));
+    NS_ENSURE_SUCCESS(rv, NULL);
+    if (imgProperties) {
+        nsCOMPtr<nsISupportsCString> typeCString;
+        imgProperties->Get("type",
+                           NS_GET_IID(nsISupportsCString),
+                           getter_AddRefs(typeCString));
+        if (typeCString) {
+            typeCString->GetData(mImageMimeType);
+        }
+    }
+
+    return mImageMimeType.Length() ? g_strdup(mImageMimeType.get()) : NULL;
 }
 
 char *
