@@ -1,6 +1,7 @@
 import shutil
 import os
 import logging
+import urlparse
 
 import hippo
 import gtk
@@ -79,15 +80,19 @@ class ClipboardBox(hippo.CanvasBox):
 
         cb_service = clipboardservice.get_instance()
         if selection.type == 'text/uri-list':
+            uris = selection.data.split('\n')
+            if len(uris) > 1:
+                raise NotImplementedError('Multiple uris in text/uri-list still not supported.')
+            uri = urlparse.urlparse(uris[0])
+            path, file_name = os.path.split(uri.path)
+
             # Copy the file, as it will be deleted when the dnd operation finishes.
-            file_path = selection.data.replace('file://', '')
-            new_file_path = os.path.join(os.path.split(file_path)[0],
-                                         "cb" + os.path.split(file_path)[1])
-            shutil.copyfile(file_path, new_file_path)
+            new_file_path = os.path.join(path, 'cb' + file_name)
+            shutil.copyfile(uri.path, new_file_path)
 
             cb_service.add_object_format(object_id, 
                                          selection.type,
-                                         'file://' + new_file_path,
+                                         uri.scheme + "://" + new_file_path,
                                          on_disk=True)
         else:
             cb_service.add_object_format(object_id, 
