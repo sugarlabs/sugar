@@ -15,6 +15,7 @@ public:
     bool IsImage();
     char *GetImageURI();
     char *GetImageName();
+    char *GetImageMimeType();
     bool SaveImage(const char *filename);
 private:
     SugarBrowser                        *mBrowser;
@@ -22,6 +23,7 @@ private:
     nsCOMPtr<nsIDOMHTMLImageElement>     mImage;
     nsCString                            mImageURI;
     nsCString                            mImageName;
+    nsCString                            mImageMimeType;
 protected:
     /* additional members */
 };
