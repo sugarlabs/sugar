@@ -109,7 +109,8 @@ class ClipboardDBusServiceHelper(dbus.service.Object):
     @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
                          in_signature="o", out_signature="")
     def delete_object(self, object_path):
-        del self._objects[str(object_path)]
+        cb_object = self._objects.pop(str(object_path))
+        cb_object.destroy()
         self.object_deleted(object_path)
         logging.debug('Deleted object with object_id ' + object_path)
         

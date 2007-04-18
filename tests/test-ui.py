@@ -17,20 +17,14 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import gtk
-import hippo
 
-from sugar.graphics.frame import Frame
-
-window = gtk.Window()
+class Window(gtk.Window):
+    def __init__(self):
+        gtk.Window.__init__(self)
+        self.set_default_size(800, 600)
+        
+window = Window()
 window.connect("destroy", lambda w: gtk.main_quit())
 window.show()
-
-canvas = hippo.Canvas()
-
-frame = Frame()
-canvas.set_root(frame)
-
-window.add(canvas)
-canvas.show()
 
 gtk.main()

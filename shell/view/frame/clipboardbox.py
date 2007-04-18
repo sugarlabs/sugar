@@ -1,4 +1,7 @@
+import shutil
+import os
 import logging
+
 import hippo
 import gtk
  
@@ -72,13 +75,25 @@ class ClipboardBox(hippo.CanvasBox):
         if not selection.data:
             return
 
-        logging.debug('ClipboardBox: adding type ' + selection.type + '.')
-                    
+        logging.debug('ClipboardBox: adding type ' + selection.type + ' ' + selection.data)
+
         cb_service = clipboardservice.get_instance()
-        cb_service.add_object_format(object_id, 
-                                selection.type,
-                                selection.data,
-                                on_disk = False)
+        if selection.type == 'text/uri-list':
+            # Copy the file, as it will be deleted when the dnd operation finishes.
+            file_path = selection.data.replace('file://', '')
+            new_file_path = os.path.join(os.path.split(file_path)[0],
+                                         "cb" + os.path.split(file_path)[1])
+            shutil.copyfile(file_path, new_file_path)
+
+            cb_service.add_object_format(object_id, 
+                                         selection.type,
+                                         'file://' + new_file_path,
+                                         on_disk=True)
+        else:
+            cb_service.add_object_format(object_id, 
+                                         selection.type,
+                                         selection.data,
+                                         on_disk=False)
     
     def _object_added_cb(self, cb_service, object_id, name):
         icon = ClipboardIcon(self._popup_context, object_id, name)
@@ -165,15 +180,16 @@ class ClipboardBox(hippo.CanvasBox):
 
     def drag_data_received_cb(self, widget, context, x, y, selection, targetType, time):
         logging.debug('ClipboardBox: got data for target ' + selection.target)
-        if selection:
-            object_id = self._context_map.get_object_id(context)
-            self._add_selection(object_id, selection)
-        else:
-            logging.warn('ClipboardBox: empty selection for target ' + selection.target)
-        
-        # If it's the last target to be processed, finish the dnd transaction
-        if not self._context_map.has_context(context):
-            context.finish(True, False, time)
+        try:
+            if selection:
+                object_id = self._context_map.get_object_id(context)
+                self._add_selection(object_id, selection)
+            else:
+                logging.warn('ClipboardBox: empty selection for target ' + selection.target)
+        finally:
+            # If it's the last target to be processed, finish the dnd transaction
+            if not self._context_map.has_context(context):
+                context.drop_finish(True, gtk.get_current_event_time())
 
     def drag_data_get_cb(self, widget, context, selection, targetType, eventTime):
         logging.debug("drag_data_get_cb: requested target " + selection.target)
