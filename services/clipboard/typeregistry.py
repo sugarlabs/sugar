@@ -1,5 +1,7 @@
 import logging
 from gettext import gettext as _
+import urlparse
+import posixpath
 
 class FileType:
     def __init__(self, formats):
@@ -200,15 +202,33 @@ class OOTextFileType(FileType):
 class UriListFileType(FileType):
     
     _types = set(['text/uri-list'])
-    
+
+    def _is_image(self):
+        uris = self._formats['text/uri-list'].get_data().split('\n')
+        if len(uris) == 1:
+            uri = urlparse.urlparse(uris[0])
+            ext = posixpath.splitext(uri.path)[1]
+            logging.debug(ext)
+            # FIXME: Bad hack, the type registry should treat text/uri-list as a special case.
+            if ext in ['.jpg', '.jpeg', '.gif', '.png', '.svg']:
+                return True
+        
+        return False
+
     def get_name(self):
-        return _('text/uri-list')
+        if self._is_image():
+            return _('Image')
+        else:
+            return _('File')
 
     def get_icon(self):
-        return 'theme:stock-missing'
+        if self._is_image():
+            return 'theme:object-image'
+        else:
+            return 'theme:stock-missing'
 
     def get_preview(self):
-        return 'preview'
+        return ''
 
     def get_activity(self):
         return ''
