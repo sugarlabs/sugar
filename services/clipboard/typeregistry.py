@@ -292,7 +292,6 @@ class TypeRegistry:
     def get_type(self, formats):
         for file_type in self._types:
             for format, data in formats.iteritems():
-                logging.debug(format)
                 if file_type.matches_mime_type(format):
                     return file_type(formats)
 
