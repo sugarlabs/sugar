@@ -18,10 +18,28 @@
 
 import gtk
 
+
+class Toolbar(gtk.Toolbar):
+    def __init__(self):
+        gtk.Toolbar.__init__(self)
+        
+        icon = gtk.ToolButton()
+        icon.set_icon_name('text-format-bold')
+        self.insert(icon, -1)
+        icon.show()
+
 class Window(gtk.Window):
     def __init__(self):
         gtk.Window.__init__(self)
         self.set_default_size(800, 600)
+        
+        box = gtk.VBox()
+        self.add(box)
+        box.show()
+        
+        toolbar = Toolbar()
+        box.pack_start(toolbar, False)
+        toolbar.show()
         
 window = Window()
 window.connect("destroy", lambda w: gtk.main_quit())
