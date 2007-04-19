@@ -65,6 +65,8 @@
 #include <nsICommandManager.h>
 #include <nsIClipboardDragDropHooks.h>
 
+#define SUGAR_PATH "SUGAR_PATH"
+
 enum {
 	PROP_0,
 	PROP_PROGRESS,
@@ -161,9 +163,11 @@ sugar_browser_startup(const char *profile_path, const char *profile_name)
 	NS_ENSURE_TRUE(prefService, FALSE);
 
 	/* Read our predefined default prefs */
+	nsCString pathToPrefs(g_getenv(SUGAR_PATH));
+	pathToPrefs.Append("/data/gecko-prefs.js");
+
 	nsCOMPtr<nsILocalFile> file;
-	NS_NewNativeLocalFile(nsCString(SHARE_DIR"/gecko-prefs.js"),
-						  PR_TRUE, getter_AddRefs(file));
+	NS_NewNativeLocalFile(pathToPrefs, PR_TRUE, getter_AddRefs(file));
 	NS_ENSURE_TRUE(file, FALSE);
 
 	rv = prefService->ReadUserPrefs (file);
@@ -176,7 +180,10 @@ sugar_browser_startup(const char *profile_path, const char *profile_name)
 	prefService->GetBranch ("", getter_AddRefs(pref));
 	NS_ENSURE_TRUE(pref, FALSE);
 
-    pref->SetCharPref ("helpers.private_mime_types_file", SHARE_DIR"/mime.types");
+	nsCString pathToMimeTypes(g_getenv(SUGAR_PATH));
+	pathToMimeTypes.Append("/data/mime.types");
+
+    pref->SetCharPref ("helpers.private_mime_types_file", pathToMimeTypes.get());
 
 	rv = prefService->ReadUserPrefs (nsnull);
 	if (NS_FAILED(rv)) {
