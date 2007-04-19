@@ -1,7 +1,5 @@
 gtk-theme-name = "sugar"
 gtk-icon-theme-name = "sugar"
-gtk-font-name = "Bitstream Vera Sans 7"
-gtk-icon-sizes = "gtk-menu=32,32:gtk-button=32,32"
+gtk-font-name = "Sans Serif 11"
 gtk-cursor-theme-name = "sugar"
-gtk-cursor-theme-size = 48
 gtk-toolbar-style = GTK_TOOLBAR_ICONS

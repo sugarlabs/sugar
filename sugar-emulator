@@ -87,7 +87,12 @@ _start_xephyr()
 
 from sugar import env
 
-os.environ['GTK2_RC_FILES'] = env.get_data_path('gtkrc')
+if env.is_emulator():
+    gtkrc_filename = 'sugar.gtkrc'
+else:
+    gtkrc_filename = 'sugar-xo.gtkrc'
+
+os.environ['GTK2_RC_FILES'] = env.get_data_path(gtkrc_filename)
 
 if len(sys.argv) == 1:
     program = 'sugar-shell'
