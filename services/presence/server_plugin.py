@@ -548,7 +548,7 @@ class ServerPlugin(gobject.GObject):
             # are handled locally
             return
         if self._online_contacts.has_key(handle) and self._online_contacts[handle]:
-	        self.emit("buddy-properties-changed", handle, properties)
+            self.emit("buddy-properties-changed", handle, properties)
 
     def _buddy_activities_changed_cb(self, handle, activities):
         if handle == self._conn[CONN_INTERFACE].GetSelfHandle():
