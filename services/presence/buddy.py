@@ -91,7 +91,7 @@ class Buddy(DBusGObject):
         self._nick = None
         self._color = None
 
-        if not kwargs.get("key"):
+        if not kwargs.get(_PROP_KEY):
             raise ValueError("key required")
 
         _ALLOWED_INIT_PROPS = [_PROP_NICK, _PROP_KEY, _PROP_ICON, _PROP_CURACT, _PROP_COLOR]
@@ -380,7 +380,7 @@ class ShellOwner(GenericOwner):
         if not self._activities.has_key(activity_id):
             # This activity is local-only
             activity_id = None
-        props = {'current-activity': activity_id}
+        props = {_PROP_CURACT: activity_id}
         self.set_properties(props)
 
 
