@@ -237,6 +237,26 @@ class UriListFileType(FileType):
         return mime_type in cls._types
     matches_mime_type = classmethod(matches_mime_type)
 
+class XoFileType(FileType):
+    
+    _types = set(['application/vnd.olpc-x-sugar'])
+
+    def get_name(self):
+        return _('Activity package')
+
+    def get_icon(self):
+        return 'theme:stock-missing'
+
+    def get_preview(self):
+        return ''
+
+    def get_activity(self):
+        return ''
+        
+    def matches_mime_type(cls, mime_type):
+        return mime_type in cls._types
+    matches_mime_type = classmethod(matches_mime_type)
+
 class UnknownFileType(FileType):
     def get_name(self):
         return _('Object')
@@ -267,6 +287,7 @@ class TypeRegistry:
         self._types.append(AbiwordFileType)
         self._types.append(TextFileType)
         self._types.append(SqueakProjectFileType)
+        self._types.append(XoFileType)
     
     def get_type(self, formats):
         for file_type in self._types:

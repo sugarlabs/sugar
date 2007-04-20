@@ -1,6 +1,0 @@
-gtk-theme-name = "sugar"
-gtk-icon-theme-name = "olpc"
-gtk-font-name = "Bitstream Vera Sans 7"
-gtk-icon-sizes = "gtk-menu=32,32:gtk-button=32,32"
-gtk-cursor-theme-name = "olpc"
-gtk-cursor-theme-size = 48
