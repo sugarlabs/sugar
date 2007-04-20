@@ -37,6 +37,14 @@ class DBusGObjectMetaclass(dbus.service.InterfaceType, gobject.GObjectMeta): pas
 class DBusGObject(dbus.service.Object, gobject.GObject): __metaclass__ = DBusGObjectMetaclass
 
 
+_PROP_NICK = "nick"
+_PROP_KEY = "key"
+_PROP_ICON = "icon"
+_PROP_CURACT = "current-activity"
+_PROP_COLOR = "color"
+_PROP_OWNER = "owner"
+_PROP_VALID = "valid"
+
 class Buddy(DBusGObject):
     """Represents another person on the network and keeps track of the
     activities and resources they make available for sharing."""
@@ -51,14 +59,14 @@ class Buddy(DBusGObject):
     }
 
     __gproperties__ = {
-        'key'              : (str, None, None, None,
+        _PROP_KEY          : (str, None, None, None,
                               gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT_ONLY),
-        'icon'             : (object, None, None, gobject.PARAM_READWRITE),
-        'nick'             : (str, None, None, None, gobject.PARAM_READWRITE),
-        'color'            : (str, None, None, None, gobject.PARAM_READWRITE),
-        'current-activity' : (str, None, None, None, gobject.PARAM_READWRITE),
-        'valid'            : (bool, None, None, False, gobject.PARAM_READABLE),
-        'owner'            : (bool, None, None, False, gobject.PARAM_READABLE)
+        _PROP_ICON         : (object, None, None, gobject.PARAM_READWRITE),
+        _PROP_NICK         : (str, None, None, None, gobject.PARAM_READWRITE),
+        _PROP_COLOR        : (str, None, None, None, gobject.PARAM_READWRITE),
+        _PROP_CURACT       : (str, None, None, None, gobject.PARAM_READWRITE),
+        _PROP_VALID        : (bool, None, None, False, gobject.PARAM_READABLE),
+        _PROP_OWNER        : (bool, None, None, False, gobject.PARAM_READABLE)
     }
 
     def __init__(self, bus_name, object_id, **kwargs):
@@ -86,41 +94,47 @@ class Buddy(DBusGObject):
         if not kwargs.get("key"):
             raise ValueError("key required")
 
+        _ALLOWED_INIT_PROPS = [_PROP_NICK, _PROP_KEY, _PROP_ICON, _PROP_CURACT, _PROP_COLOR]
+        for (key, value) in kwargs.items():
+            if key not in _ALLOWED_INIT_PROPS:
+                logging.debug("Invalid init property '%s'; ignoring..." % key)
+                del kwargs[key]
+                
         gobject.GObject.__init__(self, **kwargs)
 
     def do_get_property(self, pspec):
-        if pspec.name == "key":
+        if pspec.name == _PROP_KEY:
             return self._key
-        elif pspec.name == "icon":
+        elif pspec.name == _PROP_ICON:
             return self._icon
-        elif pspec.name == "nick":
+        elif pspec.name == _PROP_NICK:
             return self._nick
-        elif pspec.name == "color":
+        elif pspec.name == _PROP_COLOR:
             return self._color
-        elif pspec.name == "current-activity":
+        elif pspec.name == _PROP_CURACT:
             if not self._current_activity:
                 return None
             if not self._activities.has_key(self._current_activity):
                 return None
             return self._current_activity
-        elif pspec.name == "valid":
+        elif pspec.name == _PROP_VALID:
             return self._valid
-        elif pspec.name == "owner":
+        elif pspec.name == _PROP_OWNER:
             return self._owner
 
     def do_set_property(self, pspec, value):
-        if pspec.name == "icon":
+        if pspec.name == _PROP_ICON:
             if str(value) != self._icon:
                 self._icon = str(value)
                 self.IconChanged(self._icon)
                 self.emit('icon-changed', self._icon)
-        elif pspec.name == "nick":
+        elif pspec.name == _PROP_NICK:
             self._nick = value
-        elif pspec.name == "color":
+        elif pspec.name == _PROP_COLOR:
             self._color = value
-        elif pspec.name == "current-activity":
+        elif pspec.name == _PROP_CURACT:
             self._current_activity = value
-        elif pspec.name == "key":
+        elif pspec.name == _PROP_KEY:
             self._key = value
 
         self._update_validity()
@@ -166,14 +180,14 @@ class Buddy(DBusGObject):
                         in_signature="", out_signature="a{sv}")
     def GetProperties(self):
         props = {}
-        props['nick'] = self.props.nick
-        props['owner'] = self.props.owner
-        props['key'] = self.props.key
-        props['color'] = self.props.color
+        props[_PROP_NICK] = self.props.nick
+        props[_PROP_OWNER] = self.props.owner
+        props[_PROP_KEY] = self.props.key
+        props[_PROP_COLOR] = self.props.color
         if self.props.current_activity:
-            props['current-activity'] = self.props.current_activity
+            props[_PROP_CURACT] = self.props.current_activity
         else:
-            props['current-activity'] = ""
+            props[_PROP_CURACT] = ""
         return props
 
     # methods
@@ -206,23 +220,23 @@ class Buddy(DBusGObject):
     def set_properties(self, properties):
         changed = False
         changed_props = {}
-        if "nick" in properties.keys():
-            nick = properties["nick"]
+        if _PROP_NICK in properties.keys():
+            nick = properties[_PROP_NICK]
             if nick != self._nick:
                 self._nick = nick
-                changed_props["nick"] = nick
+                changed_props[_PROP_NICK] = nick
                 changed = True
-        if "color" in properties.keys():
-            color = properties["color"]
+        if _PROP_COLOR in properties.keys():
+            color = properties[_PROP_COLOR]
             if color != self._color:
                 self._color = color
-                changed_props["color"] = color
+                changed_props[_PROP_COLOR] = color
                 changed = True
-        if "current-activity" in properties.keys():
-            curact = properties["current-activity"]
+        if _PROP_CURACT in properties.keys():
+            curact = properties[_PROP_CURACT]
             if curact != self._current_activity:
                 self._current_activity = curact
-                changed_props["current-activity"] = curact
+                changed_props[_PROP_CURACT] = curact
                 changed = True
 
         if not changed or not len(changed_props.keys()):
@@ -355,11 +369,11 @@ class ShellOwner(GenericOwner):
         self.props.icon = icon
 
     def _color_changed_cb(self, color):
-        props = {'color': color}
+        props = {_PROP_COLOR: color}
         self.set_properties(props)
 
     def _nick_changed_cb(self, nick):
-        props = {'nick': nick}
+        props = {_PROP_NICK: nick}
         self.set_properties(props)
 
     def _cur_activity_changed_cb(self, activity_id):
@@ -480,10 +494,10 @@ class TestOwner(GenericOwner):
             self.props.icon = _get_random_image()
         elif it == 1:
             from sugar.graphics import xocolor
-            props = {'color': xocolor.XoColor().to_string()}
+            props = {_PROP_COLOR: xocolor.XoColor().to_string()}
             self.set_properties(props)
         elif it == 2:
-            props = {'nick': _get_random_name()}
+            props = {_PROP_NICK: _get_random_name()}
             self.set_properties(props)
         elif it == 3:
             actid = ""
@@ -493,7 +507,7 @@ class TestOwner(GenericOwner):
             if idx < len(self._test_activities):
                 activity = self._test_activities[idx]
                 actid = activity.props.id
-            props = {'current-activity': actid}
+            props = {_PROP_CURACT: actid}
             self.set_properties(props)
         return True
 
