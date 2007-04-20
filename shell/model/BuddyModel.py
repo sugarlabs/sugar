@@ -130,6 +130,8 @@ class BuddyModel(gobject.GObject):
         if 'color' in keys:
             self._set_color_from_string(self._buddy.props.color)
             self.emit('color-changed', self.get_color())
+        if 'current-activity' in keys:
+            self.emit('current-activity-changed', buddy.props.current_activity)
 
     def _buddy_disappeared_cb(self, buddy):
         if buddy != self._buddy:
@@ -144,8 +146,3 @@ class BuddyModel(gobject.GObject):
 
     def _buddy_icon_changed_cb(self, buddy):
         self.emit('icon-changed')
-
-    def _buddy_current_activity_changed_cb(self, buddy, activity=None):
-        if not self._buddy:
-            return
-        self.emit('current-activity-changed', activity)

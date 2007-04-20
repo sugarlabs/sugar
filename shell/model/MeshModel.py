@@ -160,19 +160,14 @@ class MeshModel(gobject.GObject):
     def get_buddies(self):
         return self._buddies.values()
 
-    def _buddy_activity_changed_cb(self, buddy, cur_activity):
-        if not self._buddies.has_key(buddy.props.key):
+    def _buddy_activity_changed_cb(self, model, cur_activity):
+        if not self._buddies.has_key(model.get_key()):
             return
-        buddy_model = self._buddies[buddy.props.key]
-        if cur_activity == None:
-            self.emit('buddy-moved', buddy_model, None)
-        else:
-            self._notify_buddy_change(buddy_model, cur_activity)
-
-    def _notify_buddy_change(self, buddy_model, cur_activity):
-        if self._activities.has_key(cur_activity.get_id()):
+        if cur_activity and self._activities.has_key(cur_activity.get_id()):
             activity_model = self._activities[cur_activity.get_id()]
-            self.emit('buddy-moved', buddy_model, activity_model)
+            self.emit('buddy-moved', model, activity_model)
+        else:
+            self.emit('buddy-moved', model, None)
 
     def _buddy_appeared_cb(self, pservice, buddy):
         if self._buddies.has_key(buddy.props.key):
@@ -186,7 +181,7 @@ class MeshModel(gobject.GObject):
 
         cur_activity = buddy.props.current_activity
         if cur_activity:
-            self._notify_buddy_change(model, cur_activity)
+            self._buddy_activity_changed_cb(model, cur_activity)
 
     def _buddy_disappeared_cb(self, pservice, buddy):
         if not self._buddies.has_key(buddy.props.key):
