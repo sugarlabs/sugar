@@ -17,32 +17,28 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import gtk
+import hippo
 
+from sugar.graphics2.window import Window
 
-class Toolbar(gtk.Toolbar):
+class TextToolbar(gtk.Toolbar):
     def __init__(self):
         gtk.Toolbar.__init__(self)
-        
-        icon = gtk.ToolButton()
-        icon.set_icon_name('text-format-bold')
-        self.insert(icon, -1)
-        icon.show()
 
-class Window(gtk.Window):
-    def __init__(self):
-        gtk.Window.__init__(self)
-        self.set_default_size(800, 600)
-        
-        box = gtk.VBox()
-        self.add(box)
-        box.show()
-        
-        toolbar = Toolbar()
-        box.pack_start(toolbar, False)
-        toolbar.show()
-        
+        button = gtk.ToolButton()
+        button.set_icon_name('text-format-bold')
+        self.insert(button, -1)
+        button.show()
+
 window = Window()
 window.connect("destroy", lambda w: gtk.main_quit())
+
+text_toolbar = TextToolbar()
+window.toolbox.add_toolbar('Text', text_toolbar)
+text_toolbar.show()
+
+window.canvas.set_root(hippo.CanvasBox(background_color=0))
+
 window.show()
 
 gtk.main()

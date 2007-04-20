@@ -72,6 +72,14 @@ def _start_xephyr():
     os.environ['DISPLAY'] = ":%d" % (display)
     os.environ['SUGAR_EMULATOR_PID'] = str(pid)
 
+def _start_matchbox():
+    cmd = ['matchbox-window-manager']
+
+    cmd.extend(['-use_titlebar', 'no'])
+    cmd.extend(['-theme', 'olpc'])
+
+    gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
+
 def _setup_env():
     os.environ['SUGAR_EMULATOR'] = 'yes'
     
@@ -97,6 +105,7 @@ os.environ['GTK2_RC_FILES'] = env.get_data_path(gtkrc_filename)
 if len(sys.argv) == 1:
     program = 'sugar-shell'
 else:
+    _start_matchbox()
     program = sys.argv[1]
 
 os.execlp('dbus-launch', 'dbus-launch', '--exit-with-session', program)
