@@ -31,8 +31,19 @@ class Window(gtk.Window):
         vbox.pack_start(self.toolbox, False)
         self.toolbox.show()
         
+        self._canvas_box = gtk.VBox()
+        vbox.pack_start(self._canvas_box)
+        self._canvas_box.show()
+        
         self.canvas = hippo.Canvas()
-        vbox.pack_start(self.canvas)
+        self._canvas_box.pack_start(self.canvas)
         self.canvas.show()
         
         vbox.show()
+
+    def set_canvas(self, canvas):
+        if self.canvas:
+            self._canvas_box.remove(self.canvas)
+
+        self._canvas_box.add(canvas)
+        self.canvas = canvas

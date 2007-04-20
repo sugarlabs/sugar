@@ -24,6 +24,7 @@ class Toolbox(gtk.VBox):
         
         self._notebook = gtk.Notebook()
         self._notebook.set_tab_pos(gtk.POS_BOTTOM)
+        self._notebook.set_show_border(False)
         self.pack_start(self._notebook)
         self._notebook.show()
         
