@@ -235,7 +235,8 @@ class Buddy(DBusGObject):
         """
         acts = []
         for act in self.get_joined_activities():
-            acts.append(act.object_path())
+            if act.props.valid:
+                acts.append(act.object_path())
         return acts
 
     @dbus.service.method(_BUDDY_INTERFACE,
@@ -313,8 +314,7 @@ class Buddy(DBusGObject):
         """Retrieves list of still-valid activity objects"""
         acts = []
         for act in self._activities.values():
-            if act.props.valid:
-                acts.append(act)
+            acts.append(act)
         return acts
 
     def set_properties(self, properties):
