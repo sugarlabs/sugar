@@ -110,6 +110,7 @@ class Buddy(DBusGObject):
         dbus.service.Object.__init__(self, self._bus_name, self._object_path)
 
         self._activities = {}   # Activity ID -> Activity
+        self._activity_sigids = {}
         self.handles = {} # tp client -> handle
 
         self._valid = False
@@ -268,6 +269,13 @@ class Buddy(DBusGObject):
         """Retrieve our dbus.ObjectPath object"""
         return dbus.ObjectPath(self._object_path)
 
+    def _activity_validity_changed_cb(self, activity, valid):
+        """Join or leave the activity when its validity changes"""
+        if valid:
+            self.JoinedActivity(activity.object_path())
+        else:
+            self.LeftActivity(activity.object_path())
+
     def add_activity(self, activity):
         """Add an activity to the Buddy's set of activities
         
@@ -279,6 +287,9 @@ class Buddy(DBusGObject):
         if self._activities.has_key(actid):
             return
         self._activities[actid] = activity
+        # join/leave activity when it's validity changes
+        sigid = activity.connect("validity-changed", self._activity_validity_changed_cb)
+        self._activity_sigids[actid] = sigid
         if activity.props.valid:
             self.JoinedActivity(activity.object_path())
 
@@ -292,6 +303,8 @@ class Buddy(DBusGObject):
         actid = activity.props.id
         if not self._activities.has_key(actid):
             return
+        activity.disconnect(self._activity_sigids[actid])
+        del self._activity_sigids[actid]
         del self._activities[actid]
         if activity.props.valid:
             self.LeftActivity(activity.object_path())
