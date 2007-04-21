@@ -30,6 +30,9 @@ class DBusGObject(dbus.service.Object, gobject.GObject): __metaclass__ = DBusGOb
 
 
 class Activity(DBusGObject):
+    """Represents a potentially shareable activity on the network.
+    """
+    
     __gtype_name__ = "Activity"
 
     __gsignals__ = {
@@ -50,6 +53,15 @@ class Activity(DBusGObject):
     }
 
     def __init__(self, bus_name, object_id, tp, **kwargs):
+        """Initializes the activity and sets its properties to default values.
+        
+        bus_name -- DBUS name for lookup on local host
+        object_id -- The unique worldwide ID for this activity
+        tp -- The server plugin object (stands for "telepathy plugin")
+        kwargs -- Keyword arguments for the GObject properties
+    
+        """
+        
         if not bus_name:
             raise ValueError("DBus bus name must be valid")
         if not object_id or not isinstance(object_id, int):
@@ -88,6 +100,13 @@ class Activity(DBusGObject):
             tp.update_activity_properties(self._id)
 
     def do_get_property(self, pspec):
+        """Gets the value of a property associated with this activity.
+        
+        pspec -- Property specifier
+
+        returns The value of the given property.
+        """
+        
         if pspec.name == "id":
             return self._id
         elif pspec.name == "name":
@@ -104,6 +123,15 @@ class Activity(DBusGObject):
             return self._local
 
     def do_set_property(self, pspec, value):
+        """Sets the value of a property associated with this activity.
+        
+        pspec -- Property specifier
+        value -- Desired value
+
+        Note that the "type" property can be set only once; attempting to set it
+        to something different later will raise a RuntimeError.
+        
+        """
         if pspec.name == "id":
             self._id = value
         elif pspec.name == "name":
@@ -122,6 +150,15 @@ class Activity(DBusGObject):
         self._update_validity()
 
     def _update_validity(self):
+        """Sends a "validity-changed" signal if this activity's validity has changed.
+        
+        Determines whether this activity's status has changed from valid to
+        invalid, or invalid to valid, and emits a "validity-changed" signal
+        if either is true.  "Valid" means that the object's type, ID, name,
+        colour and type properties have all been set to something valid
+        (i.e., not "None").
+        
+        """
         try:
             old_valid = self._valid
             if self._color and self._name and self._id and self._type:
@@ -138,42 +175,80 @@ class Activity(DBusGObject):
     @dbus.service.signal(_ACTIVITY_INTERFACE,
                         signature="o")
     def BuddyJoined(self, buddy_path):
+        """Generates DBUS signal when a buddy joins this activity.
+        
+        buddy_path -- DBUS path to buddy object
+        """
         pass
 
     @dbus.service.signal(_ACTIVITY_INTERFACE,
                         signature="o")
     def BuddyLeft(self, buddy_path):
+        """Generates DBUS signal when a buddy leaves this activity.
+        
+        buddy_path -- DBUS path to buddy object
+        """
         pass
 
     @dbus.service.signal(_ACTIVITY_INTERFACE,
                         signature="o")
     def NewChannel(self, channel_path):
+        """Generates DBUS signal when a new channel is created for this activity.
+        
+        channel_path -- DBUS path to new channel
+        
+        XXX - what is this supposed to do?  Who is supposed to call it?
+        What is the channel path?  Right now this is never called.
+        
+        """
         pass
 
     # dbus methods
     @dbus.service.method(_ACTIVITY_INTERFACE,
                         in_signature="", out_signature="s")
     def GetId(self):
+        """DBUS method to get this activity's ID
+        
+        returns Activity ID
+        """
         return self.props.id
 
     @dbus.service.method(_ACTIVITY_INTERFACE,
                         in_signature="", out_signature="s")
     def GetColor(self):
+        """DBUS method to get this activity's colour
+        
+        returns Activity colour
+        """
         return self.props.color
 
     @dbus.service.method(_ACTIVITY_INTERFACE,
                         in_signature="", out_signature="s")
     def GetType(self):
+        """DBUS method to get this activity's type
+        
+        returns Activity type
+        """
         return self.props.type
 
     @dbus.service.method(_ACTIVITY_INTERFACE, in_signature="", out_signature="",
                         async_callbacks=('async_cb', 'async_err_cb'))
     def Join(self, async_cb, async_err_cb):
+        """DBUS method to for the local user to attempt to join the activity
+        
+        async_cb -- Callback method to be called if join attempt is successful
+        async_err_cb -- Callback method to be called if join attempt is unsuccessful
+        
+        """
         self.join(async_cb, async_err_cb)
 
     @dbus.service.method(_ACTIVITY_INTERFACE,
                         in_signature="", out_signature="ao")
     def GetJoinedBuddies(self):
+        """DBUS method to return a list of valid buddies who are joined in this activity
+        
+        returns A list of buddy object paths
+        """
         ret = []
         for buddy in self._buddies:
             if buddy.props.valid:
@@ -183,18 +258,37 @@ class Activity(DBusGObject):
     @dbus.service.method(_ACTIVITY_INTERFACE,
                         in_signature="", out_signature="soao")
     def GetChannels(self):
+        """DBUS method to get the list of channels associated with this activity
+        
+        returns XXX - Not sure what this returns as get_channels doesn't actually return
+          a list of channels!
+        """
         return self.get_channels()
 
     @dbus.service.method(_ACTIVITY_INTERFACE,
                         in_signature="", out_signature="s")
     def GetName(self):
+        """DBUS method to get this activity's name
+        
+        returns Activity name
+        """
         return self.props.name
 
     # methods
     def object_path(self):
+        """Retrieves our dbus.ObjectPath object
+        
+        returns DBUS ObjectPath object
+        """
         return dbus.ObjectPath(self._object_path)
 
     def get_joined_buddies(self):
+        """Local method to return a list of valid buddies who are joined in this activity
+        
+        This method is called by the PresenceService on the local machine.
+        
+        returns A list of buddy objects
+        """
         ret = []
         for buddy in self._buddies:
             if buddy.props.valid:
@@ -202,18 +296,40 @@ class Activity(DBusGObject):
         return ret
 
     def buddy_joined(self, buddy):
+        """Adds a buddy to this activity and sends a BuddyJoined signal
+        
+        buddy -- Buddy object representing the buddy being added
+        
+        Adds a buddy to this activity if the buddy is not already in the buddy list.
+        If this activity is "valid", a BuddyJoined signal is also sent.
+        This method is called by the PresenceService on the local machine.
+        
+        """
         if buddy not in self._buddies:
             self._buddies.append(buddy)
             if self.props.valid:
                 self.BuddyJoined(buddy.object_path())
 
     def buddy_left(self, buddy):
+        """Removes a buddy from this activity and sends a BuddyLeft signal.
+        
+        buddy -- Buddy object representing the buddy being removed
+        
+        Removes a buddy from this activity if the buddy is in the buddy list.
+        If this activity is "valid", a BuddyLeft signal is also sent.
+        This method is called by the PresenceService on the local machine.
+        
+        """
         if buddy in self._buddies:
             self._buddies.remove(buddy)
             if self.props.valid:
                 self.BuddyLeft(buddy.object_path())
 
     def _handle_share_join(self, tp, text_channel):
+        """Called when a join to a network activity was successful.
+        
+        Called by the _shared_cb and _joined_cb methods.
+        """
         if not text_channel:
             logging.debug("Error sharing: text channel was None, shouldn't happen")
             raise RuntimeError("Plugin returned invalid text channel")
@@ -225,6 +341,8 @@ class Activity(DBusGObject):
         return True
 
     def _shared_cb(self, tp, activity_id, text_channel, exc, userdata):
+        """XXX - not documented yet
+        """
         if activity_id != self.props.id:
             # Not for us
             return
@@ -243,6 +361,11 @@ class Activity(DBusGObject):
             logging.debug("Share of activity %s succeeded." % self._id)
 
     def _share(self, (async_cb, async_err_cb), owner):
+        """XXX - not documented yet
+        
+        XXX - This method is called externally by the PresenceService despite the fact
+        that this is supposed to be an internal method!
+        """
         logging.debug("Starting share of activity %s" % self._id)
         if self._joined:
             async_err_cb(RuntimeError("Already shared activity %s" % self.props.id))
@@ -252,6 +375,8 @@ class Activity(DBusGObject):
         logging.debug("done with share attempt %s" % self._id)
 
     def _joined_cb(self, tp, activity_id, text_channel, exc, userdata):
+        """XXX - not documented yet
+        """
         if activity_id != self.props.id:
             # Not for us
             return
@@ -266,6 +391,16 @@ class Activity(DBusGObject):
             async_cb()
 
     def join(self, async_cb, async_err_cb):
+        """Local method for the local user to attempt to join the activity.
+        
+        async_cb -- Callback method to be called if join attempt is successful
+        async_err_cb -- Callback method to be called if join attempt is unsuccessful
+        
+        The two callbacks are passed to the server_plugin ("tp") object, which in turn
+        passes them back as parameters in a callback to the _joined_cb method; this
+        callback is set up within this method.
+        
+        """
         if self._joined:
             async_err_cb(RuntimeError("Already joined activity %s" % self.props.id))
             return
@@ -273,19 +408,35 @@ class Activity(DBusGObject):
         self._tp.join_activity(self.props.id, (sigid, async_cb, async_err_cb))
 
     def get_channels(self):
+        """Local method to get the list of channels associated with this activity
+        
+        returns XXX - expected a list of channels, instead returning a tuple?  ???
+        """
         conn = self._tp.get_connection()
         # FIXME add tubes and others channels
         return str(conn.service_name), conn.object_path, [self._text_channel.object_path]
 
     def leave(self):
+        """Local method called when the user wants to leave the activity.
+        
+        (XXX - doesn't appear to be called anywhere!)
+        
+        """
         if self._joined:
             self._text_channel[CHANNEL_INTERFACE].Close()
 
     def _text_channel_closed_cb(self):
+        """Callback method called when the text channel is closed.
+        
+        This callback is set up in the _handle_share_join method.
+        """
         self._joined = False
         self._text_channel = None
 
     def send_properties(self):
+        """Tells the Telepathy server what the properties of this activity are.
+        
+        """
         props = {}
         props['name'] = self._name
         props['color'] = self._color
@@ -293,6 +444,17 @@ class Activity(DBusGObject):
         self._tp.set_activity_properties(self.props.id, props)
 
     def set_properties(self, properties):
+        """Sets name, colour and/or type properties for this activity all at once.
+        
+        properties - Dictionary object containing properties keyed by property names
+        
+        Note that if any of the name, colour and/or type property values is changed from
+        what it originally was, the update_validity method will be called, resulting in
+        a "validity-changed" signal being generated.  (Also note that unlike with the
+        do_set_property method, it *is* possible to change an already-set activity type
+        to something else; this may be a bug.)  Called by the PresenceService on the
+        local machine.
+        """
         changed  = False
         if "name" in properties.keys():
             name = properties["name"]

@@ -3,6 +3,7 @@ libsugarbrowser_la_CPPFLAGS =				\
 	$(LIB_CFLAGS)					\
 	$(GECKO_CFLAGS)					\
 	$(NSPR_CFLAGS)					\
+	-I$(MOZILLA_INCLUDE_DIR)/commandhandler	\
 	-I$(MOZILLA_INCLUDE_DIR)/dom			\
 	-I$(MOZILLA_INCLUDE_DIR)/docshell		\
 	-I$(MOZILLA_INCLUDE_DIR)/exthandler		\
@@ -15,6 +16,8 @@ libsugarbrowser_la_CPPFLAGS =				\
 	-I$(MOZILLA_INCLUDE_DIR)/uriloader		\
 	-I$(MOZILLA_INCLUDE_DIR)/webbrwsr		\
 	-I$(MOZILLA_INCLUDE_DIR)/webbrowserpersist	\
+	-I$(MOZILLA_INCLUDE_DIR)/widget			\
+	-I$(MOZILLA_INCLUDE_DIR)/xpcom			\
 	-DPLUGIN_DIR=\"$(libdir)/mozilla/plugins\"	\
 	-DSHARE_DIR=\"$(pkgdatadir)\"
 	
@@ -26,8 +29,14 @@ libsugarbrowser_la_LIBADD = \
 
 libsugarbrowser_la_SOURCES =		\
 	$(BUILT_SOURCES)		\
+	GeckoBrowserPersist.h		\
+	GeckoBrowserPersist.cpp		\
 	GeckoContentHandler.h		\
 	GeckoContentHandler.cpp		\
+	GeckoDocumentObject.h		\
+	GeckoDocumentObject.cpp		\
+	GeckoDragDropHooks.h	\
+	GeckoDragDropHooks.cpp	\
 	GeckoDownload.h			\
 	GeckoDownload.cpp		\
 	sugar-address-entry.c		\

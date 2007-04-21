@@ -24,7 +24,7 @@ import logging
 from sugar import logger
 from sugar import env
 
-sys.path.insert(0, env.get_service_path('datastore'))
+sys.path.append(env.get_service_path('datastore'))
 
 logger.start('data-store')
 logging.info('Starting the data store...')

@@ -32,7 +32,7 @@ import dbus.glib
  
 from sugar import env
 
-sys.path.insert(0, env.get_service_path('clipboard'))
+sys.path.append(env.get_service_path('clipboard'))
 
 from clipboardservice import ClipboardService
 

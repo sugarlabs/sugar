@@ -33,7 +33,7 @@ class ClipboardMenu(Menu):
     ACTION_OPEN = 1
     ACTION_STOP_DOWNLOAD = 2
     
-    def __init__(self, name, percent, preview, activity):
+    def __init__(self, name, percent, preview, activity, installable):
         Menu.__init__(self, name)
         self.props.border = 0
 
@@ -54,10 +54,10 @@ class ClipboardMenu(Menu):
             self._preview_text.props.font_desc = font.DEFAULT.get_pango_desc()        
             self.append(self._preview_text)
         
-        self._update_icons(percent, activity)
+        self._update_icons(percent, activity, installable)
         
-    def _update_icons(self, percent, activity):
-        if percent == 100 and activity:
+    def _update_icons(self, percent, activity, installable):
+        if percent == 100 and (activity or installable):
             if not self._remove_item:
                 self._remove_item = MenuItem(ClipboardMenu.ACTION_DELETE,
                                              _('Remove'),
@@ -73,7 +73,7 @@ class ClipboardMenu(Menu):
             if self._stop_item:
                 self.remove_item(self._stop_item)
                 self._stop_item = None
-        elif percent == 100 and not activity:
+        elif percent == 100 and (not activity and not installable):
             if not self._remove_item:
                 self._remove_item = MenuItem(ClipboardMenu.ACTION_DELETE,
                                              _('Remove'),
@@ -102,8 +102,8 @@ class ClipboardMenu(Menu):
                 self.remove_item(self._open_item)
                 self._open_item = None
 
-    def set_state(self, name, percent, preview, activity):
+    def set_state(self, name, percent, preview, activity, installable):
         self.set_title(name)
         if self._progress_bar:
             self._progress_bar.set_property('percent', percent)
-            self._update_icons(percent, activity)
+            self._update_icons(percent, activity, installable)

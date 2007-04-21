@@ -1,3 +1,4 @@
+"""An "actor" on the network, whether remote or local"""
 # Copyright (C) 2007, Red Hat, Inc.
 # Copyright (C) 2007, Collabora Ltd.
 #
@@ -29,6 +30,7 @@ _BUDDY_INTERFACE = "org.laptop.Sugar.Presence.Buddy"
 _OWNER_INTERFACE = "org.laptop.Sugar.Presence.Buddy.Owner"
 
 class NotFoundError(dbus.DBusException):
+    """Raised when a given actor is not found on the network"""
     def __init__(self):
         dbus.DBusException.__init__(self)
         self._dbus_error_name = _PRESENCE_INTERFACE + '.NotFound'
@@ -37,9 +39,35 @@ class DBusGObjectMetaclass(dbus.service.InterfaceType, gobject.GObjectMeta): pas
 class DBusGObject(dbus.service.Object, gobject.GObject): __metaclass__ = DBusGObjectMetaclass
 
 
+_PROP_NICK = "nick"
+_PROP_KEY = "key"
+_PROP_ICON = "icon"
+_PROP_CURACT = "current-activity"
+_PROP_COLOR = "color"
+_PROP_OWNER = "owner"
+_PROP_VALID = "valid"
+
 class Buddy(DBusGObject):
-    """Represents another person on the network and keeps track of the
-    activities and resources they make available for sharing."""
+    """Person on the network (tracks properties and shared activites)
+    
+    The Buddy is a collection of metadata describing a particular
+    actor/person on the network.  The Buddy object tracks a set of
+    activities which the actor has shared with the presence service.
+    
+    Buddies have a "valid" property which is used to flag Buddies
+    which are no longer reachable.  That is, a Buddy may represent
+    a no-longer reachable target on the network.
+    
+    The Buddy emits GObject events that the PresenceService uses 
+    to track changes in its status.
+    
+    Attributes:
+    
+        _activities -- dictionary mapping activity ID to 
+            activity.Activity objects 
+        handles -- dictionary mapping telepresence client to 
+            "handle" (XXX what's that)
+    """
 
     __gsignals__ = {
         'validity-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
@@ -51,17 +79,26 @@ class Buddy(DBusGObject):
     }
 
     __gproperties__ = {
-        'key'              : (str, None, None, None,
+        _PROP_KEY          : (str, None, None, None,
                               gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT_ONLY),
-        'icon'             : (object, None, None, gobject.PARAM_READWRITE),
-        'nick'             : (str, None, None, None, gobject.PARAM_READWRITE),
-        'color'            : (str, None, None, None, gobject.PARAM_READWRITE),
-        'current-activity' : (str, None, None, None, gobject.PARAM_READWRITE),
-        'valid'            : (bool, None, None, False, gobject.PARAM_READABLE),
-        'owner'            : (bool, None, None, False, gobject.PARAM_READABLE)
+        _PROP_ICON         : (object, None, None, gobject.PARAM_READWRITE),
+        _PROP_NICK         : (str, None, None, None, gobject.PARAM_READWRITE),
+        _PROP_COLOR        : (str, None, None, None, gobject.PARAM_READWRITE),
+        _PROP_CURACT       : (str, None, None, None, gobject.PARAM_READWRITE),
+        _PROP_VALID        : (bool, None, None, False, gobject.PARAM_READABLE),
+        _PROP_OWNER        : (bool, None, None, False, gobject.PARAM_READABLE)
     }
 
     def __init__(self, bus_name, object_id, **kwargs):
+        """Initialize the Buddy object 
+        
+        bus_name -- DBUS object bus name (identifier)
+        object_id -- the activity's unique identifier 
+        kwargs -- used to initialize the object's properties
+        
+        constructs a DBUS "object path" from the _BUDDY_PATH
+        and object_id
+        """
         if not bus_name:
             raise ValueError("DBus bus name must be valid")
         if not object_id or not isinstance(object_id, int):
@@ -83,44 +120,62 @@ class Buddy(DBusGObject):
         self._nick = None
         self._color = None
 
-        if not kwargs.get("key"):
+        if not kwargs.get(_PROP_KEY):
             raise ValueError("key required")
 
+        _ALLOWED_INIT_PROPS = [_PROP_NICK, _PROP_KEY, _PROP_ICON, _PROP_CURACT, _PROP_COLOR]
+        for (key, value) in kwargs.items():
+            if key not in _ALLOWED_INIT_PROPS:
+                logging.debug("Invalid init property '%s'; ignoring..." % key)
+                del kwargs[key]
+                
         gobject.GObject.__init__(self, **kwargs)
 
     def do_get_property(self, pspec):
-        if pspec.name == "key":
+        """Retrieve current value for the given property specifier
+        
+        pspec -- property specifier with a "name" attribute
+        """
+        if pspec.name == _PROP_KEY:
             return self._key
-        elif pspec.name == "icon":
+        elif pspec.name == _PROP_ICON:
             return self._icon
-        elif pspec.name == "nick":
+        elif pspec.name == _PROP_NICK:
             return self._nick
-        elif pspec.name == "color":
+        elif pspec.name == _PROP_COLOR:
             return self._color
-        elif pspec.name == "current-activity":
+        elif pspec.name == _PROP_CURACT:
             if not self._current_activity:
                 return None
             if not self._activities.has_key(self._current_activity):
                 return None
             return self._current_activity
-        elif pspec.name == "valid":
+        elif pspec.name == _PROP_VALID:
             return self._valid
-        elif pspec.name == "owner":
+        elif pspec.name == _PROP_OWNER:
             return self._owner
 
     def do_set_property(self, pspec, value):
-        if pspec.name == "icon":
+        """Set given property 
+        
+        pspec -- property specifier with a "name" attribute
+        value -- value to set
+        
+        emits 'icon-changed' signal on icon setting
+        calls _update_validity on all calls
+        """
+        if pspec.name == _PROP_ICON:
             if str(value) != self._icon:
                 self._icon = str(value)
                 self.IconChanged(self._icon)
                 self.emit('icon-changed', self._icon)
-        elif pspec.name == "nick":
+        elif pspec.name == _PROP_NICK:
             self._nick = value
-        elif pspec.name == "color":
+        elif pspec.name == _PROP_COLOR:
             self._color = value
-        elif pspec.name == "current-activity":
+        elif pspec.name == _PROP_CURACT:
             self._current_activity = value
-        elif pspec.name == "key":
+        elif pspec.name == _PROP_KEY:
             self._key = value
 
         self._update_validity()
@@ -129,27 +184,42 @@ class Buddy(DBusGObject):
     @dbus.service.signal(_BUDDY_INTERFACE,
                         signature="ay")
     def IconChanged(self, icon_data):
-        pass
+        """Generates DBUS signal with icon_data"""
 
     @dbus.service.signal(_BUDDY_INTERFACE,
                         signature="o")
     def JoinedActivity(self, activity_path):
-        pass
+        """Generates DBUS signal when buddy joins activity
+        
+        activity_path -- DBUS path to the activity object
+        """
 
     @dbus.service.signal(_BUDDY_INTERFACE,
                         signature="o")
     def LeftActivity(self, activity_path):
-        pass
+        """Generates DBUS signal when buddy leaves activity
+        
+        activity_path -- DBUS path to the activity object
+        """
 
     @dbus.service.signal(_BUDDY_INTERFACE,
                         signature="a{sv}")
     def PropertyChanged(self, updated):
-        pass
+        """Generates DBUS signal when buddy's property changes
+        
+        updated -- updated property-set (dictionary) with the
+            Buddy's property (changed) values. Note: not the 
+            full set of properties, just the changes.
+        """
 
     # dbus methods
     @dbus.service.method(_BUDDY_INTERFACE,
                         in_signature="", out_signature="ay")
     def GetIcon(self):
+        """Retrieve Buddy's icon data
+        
+        returns empty string or dbus.ByteArray
+        """
         if not self.props.icon:
             return ""
         return dbus.ByteArray(self.props.icon)
@@ -157,6 +227,11 @@ class Buddy(DBusGObject):
     @dbus.service.method(_BUDDY_INTERFACE,
                         in_signature="", out_signature="ao")
     def GetJoinedActivities(self):
+        """Retrieve set of Buddy's joined activities (paths)
+        
+        returns list of dbus service paths for the Buddy's joined 
+            activities
+        """
         acts = []
         for act in self.get_joined_activities():
             acts.append(act.object_path())
@@ -165,22 +240,41 @@ class Buddy(DBusGObject):
     @dbus.service.method(_BUDDY_INTERFACE,
                         in_signature="", out_signature="a{sv}")
     def GetProperties(self):
+        """Retrieve set of Buddy's properties 
+        
+        returns dictionary of
+            nick : str(nickname)
+            owner : bool( whether this Buddy is an owner??? )
+                XXX what is the owner flag for?
+            key : str(public-key)
+            color: Buddy's icon colour
+                XXX what type?
+            current-activity: Buddy's current activity_id, or 
+                "" if no current activity
+        """
         props = {}
-        props['nick'] = self.props.nick
-        props['owner'] = self.props.owner
-        props['key'] = self.props.key
-        props['color'] = self.props.color
+        props[_PROP_NICK] = self.props.nick
+        props[_PROP_OWNER] = self.props.owner
+        props[_PROP_KEY] = self.props.key
+        props[_PROP_COLOR] = self.props.color
         if self.props.current_activity:
-            props['current-activity'] = self.props.current_activity
+            props[_PROP_CURACT] = self.props.current_activity
         else:
-            props['current-activity'] = ""
+            props[_PROP_CURACT] = ""
         return props
 
     # methods
     def object_path(self):
+        """Retrieve our dbus.ObjectPath object"""
         return dbus.ObjectPath(self._object_path)
 
     def add_activity(self, activity):
+        """Add an activity to the Buddy's set of activities
+        
+        activity -- activity.Activity instance
+        
+        calls JoinedActivity
+        """
         actid = activity.props.id
         if self._activities.has_key(actid):
             return
@@ -189,6 +283,12 @@ class Buddy(DBusGObject):
             self.JoinedActivity(activity.object_path())
 
     def remove_activity(self, activity):
+        """Remove the activity from the Buddy's set of activities
+        
+        activity -- activity.Activity instance
+        
+        calls LeftActivity
+        """
         actid = activity.props.id
         if not self._activities.has_key(actid):
             return
@@ -197,6 +297,7 @@ class Buddy(DBusGObject):
             self.LeftActivity(activity.object_path())
 
     def get_joined_activities(self):
+        """Retrieves list of still-valid activity objects"""
         acts = []
         for act in self._activities.values():
             if act.props.valid:
@@ -204,36 +305,54 @@ class Buddy(DBusGObject):
         return acts
 
     def set_properties(self, properties):
+        """Set the given set of properties on the object 
+        
+        properties -- set of property values to set 
+        
+        if no change, no events generated 
+        if change, generates property-changed and 
+            calls _update_validity
+        """
         changed = False
-        if "nick" in properties.keys():
-            nick = properties["nick"]
+        changed_props = {}
+        if _PROP_NICK in properties.keys():
+            nick = properties[_PROP_NICK]
             if nick != self._nick:
                 self._nick = nick
+                changed_props[_PROP_NICK] = nick
                 changed = True
-        if "color" in properties.keys():
-            color = properties["color"]
+        if _PROP_COLOR in properties.keys():
+            color = properties[_PROP_COLOR]
             if color != self._color:
                 self._color = color
+                changed_props[_PROP_COLOR] = color
                 changed = True
-        if "current-activity" in properties.keys():
-            curact = properties["current-activity"]
+        if _PROP_CURACT in properties.keys():
+            curact = properties[_PROP_CURACT]
             if curact != self._current_activity:
                 self._current_activity = curact
+                changed_props[_PROP_CURACT] = curact
                 changed = True
 
-        if not changed:
+        if not changed or not len(changed_props.keys()):
             return
 
         # Try emitting PropertyChanged before updating validity
         # to avoid leaking a PropertyChanged signal before the buddy is
         # actually valid the first time after creation
         if self._valid:
-            self.PropertyChanged(properties)
-            self.emit('property-changed', properties)
+            self.PropertyChanged(changed_props)
+            self.emit('property-changed', changed_props)
 
         self._update_validity()
 
     def _update_validity(self):
+        """Check whether we are now valid
+        
+        validity is True if color, nick and key are non-null
+        
+        emits validity-changed if we have changed validity
+        """
         try:
             old_valid = self._valid
             if self._color and self._nick and self._key:
@@ -247,6 +366,13 @@ class Buddy(DBusGObject):
             self._valid = False
 
 class GenericOwner(Buddy):
+    """Common functionality for Local User-like objects 
+    
+    The TestOwner wants to produce something *like* a 
+    ShellOwner, but with randomised changes and the like.
+    This class provides the common features for a real 
+    local owner and a testing one.
+    """
     __gtype_name__ = "GenericOwner"
 
     __gproperties__ = {
@@ -255,7 +381,17 @@ class GenericOwner(Buddy):
         'key-hash'   : (str, None, None, None, gobject.PARAM_READABLE | gobject.PARAM_CONSTRUCT)
     }
 
-    def __init__(self, bus_name, object_id, **kwargs):
+    def __init__(self, ps, bus_name, object_id, **kwargs):
+        """Initialize the GenericOwner instance 
+        
+        ps -- presenceservice.PresenceService object
+        bus_name -- DBUS object bus name (identifier)
+        object_id -- the activity's unique identifier 
+        kwargs -- used to initialize the object's properties
+        
+        calls Buddy.__init__
+        """
+        self._ps = ps
         self._server = 'olpc.collabora.co.uk'
         self._key_hash = None
         self._registered = False
@@ -273,28 +409,47 @@ class GenericOwner(Buddy):
         self._owner = True
 
     def get_registered(self):
+        """Retrieve whether owner has registered with presence server"""
         return self._registered
 
     def get_server(self):
+        """Retrieve presence server (XXX url??)"""
         return self._server
 
     def get_key_hash(self):
+        """Retrieve the user's private-key hash"""
         return self._key_hash
 
     def set_registered(self, registered):
+        """Customisation point: handle the registration of the owner"""
         raise RuntimeError("Subclasses must implement")
 
 class ShellOwner(GenericOwner):
-    """Class representing the owner of the machine.  This is the client
-    portion of the Owner, paired with the server portion in Owner.py."""
-
+    """Representation of the local-machine owner using Sugar's Shell
+    
+    The ShellOwner uses the Sugar Shell's dbus services to 
+    register for updates about the user's profile description.
+    """
     __gtype_name__ = "ShellOwner"
 
     _SHELL_SERVICE = "org.laptop.Shell"
     _SHELL_OWNER_INTERFACE = "org.laptop.Shell.Owner"
     _SHELL_PATH = "/org/laptop/Shell"
 
-    def __init__(self, bus_name, object_id, test=False):
+    def __init__(self, ps, bus_name, object_id, test=False):
+        """Initialize the ShellOwner instance 
+        
+        ps -- presenceservice.PresenceService object
+        bus_name -- DBUS object bus name (identifier)
+        object_id -- the activity's unique identifier 
+        test -- ignored
+        
+        Retrieves initial property values from the profile 
+        module.  Loads the buddy icon from file as well.
+            XXX note: no error handling on that
+        
+        calls GenericOwner.__init__
+        """
         server = profile.get_server()
         key_hash = profile.get_private_key_hash()
         registered = profile.get_server_registered()
@@ -307,7 +462,7 @@ class ShellOwner(GenericOwner):
         icon = f.read()
         f.close()
 
-        GenericOwner.__init__(self, bus_name, object_id, key=key, nick=nick,
+        GenericOwner.__init__(self, ps, bus_name, object_id, key=key, nick=nick,
                 color=color, icon=icon, server=server, key_hash=key_hash,
                 registered=registered)
 
@@ -324,10 +479,17 @@ class ShellOwner(GenericOwner):
             pass
 
     def set_registered(self, value):
+        """Handle notification that we have been registered"""
         if value:
             profile.set_server_registered()
 
     def _name_owner_changed_handler(self, name, old, new):
+        """Handle DBUS notification of a new / renamed service 
+        
+        Watches for the _SHELL_SERVICE, i.e. the Sugar Shell,
+        and registers with it if we have not yet registered 
+        with it (using _connect_to_shell).
+        """
         if name != self._SHELL_SERVICE:
             return
         if (old and len(old)) and (not new and not len(new)):
@@ -338,6 +500,11 @@ class ShellOwner(GenericOwner):
             self._connect_to_shell()
 
     def _connect_to_shell(self):
+        """Connect to the Sugar Shell service to watch for events 
+        
+        Connects the various XChanged events on the Sugar Shell 
+        service to our _x_changed_cb methods.
+        """
         obj = self._bus.get_object(self._SHELL_SERVICE, self._SHELL_PATH)
         self._shell_owner = dbus.Interface(obj, self._SHELL_OWNER_INTERFACE)
         self._shell_owner.connect_to_signal('IconChanged', self._icon_changed_cb)
@@ -347,21 +514,30 @@ class ShellOwner(GenericOwner):
                 self._cur_activity_changed_cb)
 
     def _icon_changed_cb(self, icon):
+        """Handle icon change, set property to generate event"""
         self.props.icon = icon
 
     def _color_changed_cb(self, color):
-        props = {'color': color}
+        """Handle color change, set property to generate event"""
+        props = {_PROP_COLOR: color}
         self.set_properties(props)
 
     def _nick_changed_cb(self, nick):
-        props = {'nick': nick}
+        """Handle nickname change, set property to generate event"""
+        props = {_PROP_NICK: nick}
         self.set_properties(props)
 
     def _cur_activity_changed_cb(self, activity_id):
+        """Handle current-activity change, set property to generate event
+        
+        Filters out local activities (those not in self.activites)
+        because the network users can't join those activities, so 
+        the activity_id shared will be None in those cases...
+        """
         if not self._activities.has_key(activity_id):
             # This activity is local-only
             activity_id = None
-        props = {'current-activity': activity_id}
+        props = {_PROP_CURACT: activity_id}
         self.set_properties(props)
 
 
@@ -371,9 +547,12 @@ class TestOwner(GenericOwner):
 
     __gtype_name__ = "TestOwner"
 
-    def __init__(self, bus_name, object_id, test_num):
+    def __init__(self, ps, bus_name, object_id, test_num):
         self._cp = ConfigParser()
         self._section = "Info"
+        self._test_activities = []
+        self._test_cur_act = ""
+        self._change_timeout = 0
 
         self._cfg_file = os.path.join(env.get_profile_path(), 'test-buddy-%d' % test_num)
 
@@ -392,11 +571,46 @@ class TestOwner(GenericOwner):
         color = xocolor.XoColor().to_string()
         icon = _get_random_image()
 
-        GenericOwner.__init__(self, bus_name, object_id, key=pubkey, nick=nick,
+        logging.debug("pubkey is %s" % pubkey)
+        GenericOwner.__init__(self, ps, bus_name, object_id, key=pubkey, nick=nick,
                 color=color, icon=icon, registered=registered, key_hash=privkey_hash)
 
+        self._ps.connect('connection-status', self._ps_connection_status_cb)
+
+    def _share_reply_cb(self, actid, object_path):
+        activity = self._ps.internal_get_activity(actid)
+        if not activity or not object_path:
+            logging.debug("Couldn't find activity %s even though it was shared." % actid)
+            return
+        logging.debug("Shared activity %s (%s)." % (actid, activity.props.name))
+        self._test_activities.append(activity)
+
+    def _share_error_cb(self, actid, err):
+        logging.debug("Error sharing activity %s: %s" % (actid, str(err)))
+
+    def _ps_connection_status_cb(self, ps, connected):
+        if not connected:
+            return
+
+        if not len(self._test_activities):
+            # Share some activities
+            actid = util.unique_id("Activity 1")
+            callbacks = (lambda *args: self._share_reply_cb(actid, *args),
+                         lambda *args: self._share_error_cb(actid, *args))
+            atype = "org.laptop.WebActivity"
+            properties = {"foo": "bar"}
+            self._ps._share_activity(actid, atype, "Wembley Stadium", properties, callbacks)
+
+            actid2 = util.unique_id("Activity 2")
+            callbacks = (lambda *args: self._share_reply_cb(actid2, *args),
+                         lambda *args: self._share_error_cb(actid2, *args))
+            atype = "org.laptop.WebActivity"
+            properties = {"baz": "bar"}
+            self._ps._share_activity(actid2, atype, "Maine Road", properties, callbacks)
+
         # Change a random property ever 10 seconds
-        gobject.timeout_add(10000, self._update_something)
+        if self._change_timeout == 0:
+            self._change_timeout = gobject.timeout_add(10000, self._update_something)
 
     def set_registered(self, value):
         if value:
@@ -437,23 +651,26 @@ class TestOwner(GenericOwner):
             self.props.icon = _get_random_image()
         elif it == 1:
             from sugar.graphics import xocolor
-            props = {'color': xocolor.XoColor().to_string()}
+            props = {_PROP_COLOR: xocolor.XoColor().to_string()}
             self.set_properties(props)
         elif it == 2:
-            props = {'nick': _get_random_name()}
+            props = {_PROP_NICK: _get_random_name()}
             self.set_properties(props)
         elif it == 3:
-            bork = random.randint(25, 65)
-            it = ""
-            for i in range(0, bork):
-                it += chr(random.randint(40, 127))
-            from sugar import util
-            props = {'current-activity': util.unique_id(it)}
+            actid = ""
+            idx = random.randint(0, len(self._test_activities))
+            # if idx == len(self._test_activites), it means no current
+            # activity
+            if idx < len(self._test_activities):
+                activity = self._test_activities[idx]
+                actid = activity.props.id
+            props = {_PROP_CURACT: actid}
             self.set_properties(props)
         return True
 
 
 def _hash_private_key(self):
+    """Unused method to has a private key, see profile"""
     self.privkey_hash = None
     
     key_path = os.path.join(env.get_profile_path(), 'owner.key')
@@ -504,6 +721,7 @@ def _extract_public_key(keyfile):
     return key
 
 def _extract_private_key(keyfile):
+    """Get a private key from a private key file"""
     # Extract the private key
     try:
         f = open(keyfile, "r")
@@ -527,6 +745,7 @@ def _extract_private_key(keyfile):
     return key
 
 def _get_new_keypair(num):
+    """Retrieve a public/private key pair for testing"""
     # Generate keypair
     privkeyfile = os.path.join("/tmp", "test%d.key" % num)
     pubkeyfile = os.path.join("/tmp", 'test%d.key.pub' % num)
@@ -559,10 +778,12 @@ def _get_new_keypair(num):
     return (pubkey, privkey)
 
 def _get_random_name():
+    """Produce random names for testing"""
     names = ["Liam", "Noel", "Guigsy", "Whitey", "Bonehead"]
     return names[random.randint(0, len(names) - 1)]
 
 def _get_random_image():
+    """Produce a random image for display"""
     import cairo, math, random, gtk
 
     def rand():

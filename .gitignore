@@ -54,3 +54,4 @@ services/clipboard/org.laptop.Clipboard.service
 services/console/org.laptop.sugar.Console.service
 services/presence/org.laptop.Sugar.Presence.service
 bin/sugar
+shell/extensions/_extensions.c

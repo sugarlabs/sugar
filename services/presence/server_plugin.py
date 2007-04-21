@@ -1,3 +1,4 @@
+"""Telepathy-python presence server interface/implementation plugin"""
 # Copyright (C) 2007, Red Hat, Inc.
 # Copyright (C) 2007, Collabora Ltd.
 #
@@ -41,7 +42,7 @@ CONN_INTERFACE_ACTIVITY_PROPERTIES = 'org.laptop.Telepathy.ActivityProperties'
 _PROTOCOL = "jabber"
 
 class InvalidBuddyError(Exception):
-    pass
+    """(Unused) exception to indicate an invalid buddy specifier"""
 
 def _buddy_icon_save_cb(buf, data):
     data[0] += buf
@@ -76,6 +77,13 @@ def _get_buddy_icon_at_size(icon, maxw, maxh, maxsize):
         
 
 class ServerPlugin(gobject.GObject):
+    """Telepathy-python-based presence server interface
+    
+    The ServerPlugin instance translates network events from 
+    Telepathy Python into GObject events.  It provides direct 
+    python calls to perform the required network operations 
+    to implement the PresenceService.
+    """
     __gsignals__ = {
         'contact-online':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                              ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
@@ -104,6 +112,14 @@ class ServerPlugin(gobject.GObject):
     }
     
     def __init__(self, registry, owner):
+        """Initialize the ServerPlugin instance 
+        
+        registry -- telepathy.client.ManagerRegistry from the 
+            PresenceService, used to find the "gabble" connection 
+            manager in this case...
+        owner -- presence.buddy.GenericOwner instance (normally a 
+            presence.buddy.ShellOwner instance)
+        """
         gobject.GObject.__init__(self)
 
         self._icon_cache = BuddyIconCache()
@@ -125,6 +141,20 @@ class ServerPlugin(gobject.GObject):
         self._reconnect_id = 0
 
     def _owner_property_changed_cb(self, owner, properties):
+        """Local user's configuration properties have changed 
+        
+        owner -- the Buddy object for the local user 
+        properties -- set of updated properties 
+        
+        calls:
+        
+            _set_self_current_activity    current-activity
+            _set_self_alias    nick
+            _set_self_olpc_properties   color
+        
+        depending on which properties are present in the 
+        set of properties.
+        """
         logging.debug("Owner properties changed: %s" % properties)
 
         if properties.has_key("current-activity"):
@@ -137,10 +167,21 @@ class ServerPlugin(gobject.GObject):
             self._set_self_olpc_properties()
 
     def _owner_icon_changed_cb(self, owner, icon):
+        """Owner has changed their icon, forward to network"""
         logging.debug("Owner icon changed to size %d" % len(str(icon)))
         self._set_self_avatar(icon)
 
     def _get_account_info(self):
+        """Retrieve metadata dictionary describing this account 
+        
+        returns dictionary with:
+        
+            server : server url from owner 
+            account : printable-ssh-key-hash@server
+            password : ssh-key-hash
+            register : whether to register (i.e. whether not yet 
+                registered)
+        """
         account_info = {}
                         
         account_info['server'] = self._owner.get_server()
@@ -155,6 +196,16 @@ class ServerPlugin(gobject.GObject):
         return account_info
 
     def _find_existing_connection(self):
+        """Try to find an existing Telepathy connection to this server 
+        
+        filters the set of connections from 
+            telepathy.client.Connection.get_connections
+        to find a connection using our protocol with the 
+        "self handle" of that connection being a handle 
+        which matches our account (see _get_account_info)
+        
+        returns connection or None
+        """
         our_name = self._account['account']
 
         # Search existing connections, if any, that we might be able to use
@@ -173,9 +224,20 @@ class ServerPlugin(gobject.GObject):
         return None
 
     def get_connection(self):
+        """Retrieve our telepathy.client.Connection object"""
         return self._conn
 
     def _init_connection(self):
+        """Set up our connection 
+        
+        if there is no existing connection 
+            (_find_existing_connection returns None)
+        produce a new connection with our protocol for our
+        account.
+        
+        if there is an existing connection, reuse it by 
+        registering for various of events on it.
+        """
         conn = self._find_existing_connection()
         if not conn:
             acct = self._account.copy()
@@ -201,6 +263,10 @@ class ServerPlugin(gobject.GObject):
         return conn
 
     def _request_list_channel(self, name):
+        """Request a contact-list channel from Telepathy
+        
+        name -- publish/subscribe, for the type of channel
+        """
         handle = self._conn[CONN_INTERFACE].RequestHandles(
             CONNECTION_HANDLE_TYPE_LIST, [name])[0]
         chan_path = self._conn[CONN_INTERFACE].RequestChannel(
@@ -212,6 +278,9 @@ class ServerPlugin(gobject.GObject):
         return channel
 
     def _connected_cb(self):
+        """Callback on successful connection to a server 
+        """
+    
         if self._account['register']:
             # we successfully register this account
             self._owner.props.registered = True
@@ -257,7 +326,7 @@ class ServerPlugin(gobject.GObject):
                 self._activity_properties_changed_cb)
 
         # Set initial buddy properties, avatar, and activities
-        self._set_self_olpc_properties(True)
+        self._set_self_olpc_properties()
         self._set_self_alias()
         self._set_self_activities()
         self._set_self_current_activity()
@@ -324,34 +393,58 @@ class ServerPlugin(gobject.GObject):
     def _internal_join_activity(self, activity_id, signal, userdata):
         handle = self._activities.get(activity_id)
         if not handle:
-            self._conn[CONN_INTERFACE].RequestHandles(CONNECTION_HANDLE_TYPE_ROOM, [activity_id],
+            # FIXME: figure out why the server can't figure this out itself
+            room_jid = activity_id + "@conference." + self._account["server"]
+            self._conn[CONN_INTERFACE].RequestHandles(CONNECTION_HANDLE_TYPE_ROOM, [room_jid],
                     reply_handler=lambda *args: self._join_activity_get_channel_cb(activity_id, signal, userdata, *args),
                     error_handler=lambda *args: self._join_error_cb(activity_id, signal, userdata, *args))
         else:
             self._join_activity_get_channel_cb(activity_id, userdata, [handle])
     
     def share_activity(self, activity_id, userdata):
+        """Share activity with the network
+        
+        activity_id -- unique ID for the activity 
+        userdata -- opaque token to be passed in the resulting event
+            (id, callback, errback) normally
+        
+        Asks the Telepathy server to create a "conference" channel 
+        for the activity or return a handle to an already created 
+        conference channel for the activity.
+        """
         self._internal_join_activity(activity_id, "activity-shared", userdata)
 
     def join_activity(self, activity_id, userdata):
+        """Join an activity on the network (or locally)
+        
+        activity_id -- unique ID for the activity 
+        userdata -- opaque token to be passed in the resulting event
+            (id, callback, errback) normally
+        
+        Asks the Telepathy server to create a "conference" channel 
+        for the activity or return a handle to an already created 
+        conference channel for the activity.
+        """
         self._internal_join_activity(activity_id, "activity-joined", userdata)
 
     def _ignore_success_cb(self):
-        pass
+        """Ignore an event (null-operation)"""
 
     def _log_error_cb(self, msg, err):
+        """Log a message (error) at debug level with prefix msg"""
         logging.debug("Error %s: %s" % (msg, err))
 
-    def _set_self_olpc_properties(self, set_key=False):
+    def _set_self_olpc_properties(self):
+        """Set color and key on our Telepathy server identity"""
         props = {}
         props['color'] = self._owner.props.color
-        if set_key:
-            props['key'] = dbus.ByteArray(self._owner.props.key)
+        props['key'] = dbus.ByteArray(self._owner.props.key)
         self._conn[CONN_INTERFACE_BUDDY_INFO].SetProperties(props,
                 reply_handler=self._ignore_success_cb,
                 error_handler=lambda *args: self._log_error_cb("setting properties", *args))
 
     def _set_self_alias(self):
+        """Forwarded to SetActivities on AliasInfo channel"""
         alias = self._owner.props.nick
         self_handle = self._conn[CONN_INTERFACE].GetSelfHandle()
         self._conn[CONN_INTERFACE_ALIASING].SetAliases({self_handle : alias},
@@ -359,11 +452,19 @@ class ServerPlugin(gobject.GObject):
                 error_handler=lambda *args: self._log_error_cb("setting alias", *args))
 
     def _set_self_activities(self):
+        """Forward set of joined activities to network 
+       
+        uses SetActivities on BuddyInfo channel
+        """
         self._conn[CONN_INTERFACE_BUDDY_INFO].SetActivities(self._joined_activities,
                 reply_handler=self._ignore_success_cb,
                 error_handler=lambda *args: self._log_error_cb("setting activities", *args))
 
     def _set_self_current_activity(self):
+        """Forward our current activity (or "") to network
+       
+        uses SetCurrentActivity on BuddyInfo channel
+        """
         cur_activity = self._owner.props.current_activity
         cur_activity_handle = 0
         if not cur_activity:
@@ -381,12 +482,20 @@ class ServerPlugin(gobject.GObject):
                 error_handler=lambda *args: self._log_error_cb("setting current activity", *args))
 
     def _get_handle_for_activity(self, activity_id):
+        """Retrieve current handle for given activity or None"""
         for (act, handle) in self._joined_activities:
             if activity_id == act:
                 return handle
         return None
 
     def _status_changed_cb(self, state, reason):
+        """Handle notification of connection-status change
+        
+        state -- CONNECTION_STATUS_*
+        reason -- integer code describing the reason...
+        
+        returns False XXX what does that mean?
+        """
         if state == CONNECTION_STATUS_CONNECTING:
             logging.debug("State: connecting...")
         elif state == CONNECTION_STATUS_CONNECTED:
@@ -403,6 +512,16 @@ class ServerPlugin(gobject.GObject):
         return False
 
     def start(self):
+        """Start up the Telepathy networking connections
+        
+        if we are already connected, query for the initial contact
+        information.
+       
+        if we are already connecting, do nothing
+        
+        otherwise initiate a connection and transfer control to 
+            _connect_reply_cb or _connect_error_cb
+        """
         logging.debug("Starting up...")
         # If the connection is already connected query initial contacts
         conn_status = self._conn[CONN_INTERFACE].GetStatus()
@@ -418,25 +537,30 @@ class ServerPlugin(gobject.GObject):
                     error_handler=self._connect_error_cb)
 
     def _connect_reply_cb(self):
+        """Handle connection success"""
         if self._reconnect_id > 0:
             gobject.source_remove(self._reconnect_id)
 
     def _reconnect(self):
+        """Reset number-of-attempted connections and re-attempt"""
         self._reconnect_id = 0
         self.start()
         return False
 
     def _connect_error_cb(self, exception):
+        """Handle connection failure"""
         logging.debug("Connect error: %s" % exception)
         if not self._reconnect_id:
             self._reconnect_id = gobject.timeout_add(10000, self._reconnect)
 
     def cleanup(self):
+        """If we still have a connection, disconnect it"""
         if not self._conn:
             return
         self._conn[CONN_INTERFACE].Disconnect()
 
     def _contact_offline(self, handle):
+        """Handle contact going offline (send message, update set)"""
         if not self._online_contacts.has_key(handle):
             return
         if self._online_contacts[handle]:
@@ -444,13 +568,16 @@ class ServerPlugin(gobject.GObject):
         del self._online_contacts[handle]
 
     def _contact_online_activities_cb(self, handle, activities):
+        """Handle contact's activity list update"""
         self._buddy_activities_changed_cb(handle, activities)
 
     def _contact_online_activities_error_cb(self, handle, err):
+        """Handle contact's activity list being unavailable"""
         logging.debug("Handle %s - Error getting activities: %s" % (handle, err))
         self._contact_offline(handle)
 
     def _contact_online_aliases_cb(self, handle, props, aliases):
+        """Handle contact's alias being received (do further queries)"""
         if not aliases or not len(aliases):
             logging.debug("Handle %s - No aliases" % handle)
             self._contact_offline(handle)
@@ -466,10 +593,12 @@ class ServerPlugin(gobject.GObject):
             error_handler=lambda *args: self._contact_online_activities_error_cb(handle, *args))
 
     def _contact_online_aliases_error_cb(self, handle, err):
+        """Handle failure to retrieve given user's alias/information"""
         logging.debug("Handle %s - Error getting nickname: %s" % (handle, err))
         self._contact_offline(handle)
 
     def _contact_online_properties_cb(self, handle, props):
+        """Handle failure to retrieve given user's alias/information"""
         if not props.has_key('key'):
             logging.debug("Handle %s - invalid key." % handle)
             self._contact_offline(handle)
@@ -487,16 +616,19 @@ class ServerPlugin(gobject.GObject):
             error_handler=lambda *args: self._contact_online_aliases_error_cb(handle, *args))
         
     def _contact_online_properties_error_cb(self, handle, err):
+        """Handle error retrieving property-set for a user (handle)"""
         logging.debug("Handle %s - Error getting properties: %s" % (handle, err))
         self._contact_offline(handle)
 
     def _contact_online(self, handle):
+        """Handle a contact coming online"""
         self._online_contacts[handle] = None
         self._conn[CONN_INTERFACE_BUDDY_INFO].GetProperties(handle,
             reply_handler=lambda *args: self._contact_online_properties_cb(handle, *args),
             error_handler=lambda *args: self._contact_online_properties_error_cb(handle, *args))
 
     def _presence_update_cb(self, presence):
+        """Send update for online/offline status of presence"""
         for handle in presence:
             timestamp, statuses = presence[handle]
             online = handle in self._online_contacts
@@ -511,18 +643,19 @@ class ServerPlugin(gobject.GObject):
                     self._contact_offline(handle)
 
     def _avatar_updated_cb(self, handle, new_avatar_token):
+        """Handle update of given user (handle)'s avatar"""
         if handle == self._conn[CONN_INTERFACE].GetSelfHandle():
             # ignore network events for Owner property changes since those
             # are handled locally
             return
 
         if not self._online_contacts.has_key(handle):
-            logging.debug("Handle %s not valid yet...")
+            logging.debug("Handle %s unknown." % handle)
             return
 
         jid = self._online_contacts[handle]
         if not jid:
-            logging.debug("Handle %s not valid yet...")
+            logging.debug("Handle %s not valid yet..." % handle)
             return
 
         icon = self._icon_cache.get_icon(jid, new_avatar_token)
@@ -535,6 +668,7 @@ class ServerPlugin(gobject.GObject):
         self.emit("avatar-updated", handle, icon)
 
     def _alias_changed_cb(self, aliases):
+        """Handle update of aliases for all users"""
         for handle, alias in aliases:
             prop = {'nick': alias}
             #print "Buddy %s alias changed to %s" % (handle, alias)
@@ -542,14 +676,16 @@ class ServerPlugin(gobject.GObject):
                 self._buddy_properties_changed_cb(handle, prop)
 
     def _buddy_properties_changed_cb(self, handle, properties):
+        """Handle update of given user (handle)'s properties"""
         if handle == self._conn[CONN_INTERFACE].GetSelfHandle():
             # ignore network events for Owner property changes since those
             # are handled locally
             return
         if self._online_contacts.has_key(handle) and self._online_contacts[handle]:
-	        self.emit("buddy-properties-changed", handle, properties)
+            self.emit("buddy-properties-changed", handle, properties)
 
     def _buddy_activities_changed_cb(self, handle, activities):
+        """Handle update of given user (handle)'s activities"""
         if handle == self._conn[CONN_INTERFACE].GetSelfHandle():
             # ignore network events for Owner activity changes since those
             # are handled locally
@@ -563,6 +699,8 @@ class ServerPlugin(gobject.GObject):
         self.emit("buddy-activities-changed", handle, activities_id)
 
     def _buddy_current_activity_changed_cb(self, handle, activity, channel):
+        """Handle update of given user (handle)'s current activity"""
+    
         if handle == self._conn[CONN_INTERFACE].GetSelfHandle():
             # ignore network events for Owner current activity changes since those
             # are handled locally
@@ -577,6 +715,8 @@ class ServerPlugin(gobject.GObject):
         self._buddy_properties_changed_cb(handle, prop)
 
     def _new_channel_cb(self, object_path, channel_type, handle_type, handle, suppress_handler):
+        """Handle creation of a new channel
+        """
         if handle_type == CONNECTION_HANDLE_TYPE_ROOM and channel_type == CHANNEL_TYPE_TEXT:
             channel = Channel(self._conn._dbus_object._named_service, object_path)
 
@@ -595,6 +735,7 @@ class ServerPlugin(gobject.GObject):
             self.emit("private-invitation", object_path)
 
     def update_activity_properties(self, act_id):
+        """Request update from network on the activity properties of act_id"""
         handle = self._activities.get(act_id)
         if not handle:
             raise RuntimeError("Unknown activity %s: couldn't find handle.")
@@ -604,6 +745,7 @@ class ServerPlugin(gobject.GObject):
                 error_handler=lambda *args: self._log_error_cb("getting activity properties", *args))
 
     def set_activity_properties(self, act_id, props):
+        """Send update to network on the activity properties of act_id (props)"""
         handle = self._activities.get(act_id)
         if not handle:
             raise RuntimeError("Unknown activity %s: couldn't find handle.")
@@ -613,6 +755,7 @@ class ServerPlugin(gobject.GObject):
                 error_handler=lambda *args: self._log_error_cb("setting activity properties", *args))
 
     def _activity_properties_changed_cb(self, room, properties):
+        """Handle update of properties for a "room" (activity handle)"""
         for act_id, act_handle in self._activities.items():
             if room == act_handle:
                 self.emit("activity-properties-changed", act_id, properties)

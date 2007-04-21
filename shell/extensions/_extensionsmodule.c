@@ -5,21 +5,21 @@
 /* include this first, before NO_IMPORT_PYGOBJECT is defined */
 #include <pygobject.h>
 
-void pyextensions_register_classes (PyObject *d);
+void py_extensions_register_classes (PyObject *d);
 
-extern PyMethodDef pyextensions_functions[];
+extern PyMethodDef py_extensions_functions[];
 
 DL_EXPORT(void)
-initextensions(void)
+init_extensions(void)
 {
     PyObject *m, *d;
 
     init_pygobject ();
 
-    m = Py_InitModule ("extensions", pyextensions_functions);
+    m = Py_InitModule ("_extensions", py_extensions_functions);
     d = PyModule_GetDict (m);
 
-    pyextensions_register_classes (d);
+    py_extensions_register_classes (d);
 
     if (PyErr_Occurred ()) {
         Py_FatalError ("can't initialise module _sugar");

@@ -4,7 +4,6 @@ bin_SCRIPTS = sugar-shell
 
 sugardir = $(pkgdatadir)/shell
 sugar_PYTHON =				\
-	__init__.py			\
 	shellservice.py
 
 confdir = $(pkgdatadir)/shell

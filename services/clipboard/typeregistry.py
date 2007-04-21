@@ -1,5 +1,7 @@
 import logging
 from gettext import gettext as _
+import urlparse
+import posixpath
 
 class FileType:
     def __init__(self, formats):
@@ -197,6 +199,64 @@ class OOTextFileType(FileType):
         return mime_type in cls._types
     matches_mime_type = classmethod(matches_mime_type)
 
+class UriListFileType(FileType):
+    
+    _types = set(['text/uri-list'])
+
+    def _is_image(self):
+        uris = self._formats['text/uri-list'].get_data().split('\n')
+        if len(uris) == 1:
+            uri = urlparse.urlparse(uris[0])
+            ext = posixpath.splitext(uri.path)[1]
+            logging.debug(ext)
+            # FIXME: Bad hack, the type registry should treat text/uri-list as a special case.
+            if ext in ['.jpg', '.jpeg', '.gif', '.png', '.svg']:
+                return True
+        
+        return False
+
+    def get_name(self):
+        if self._is_image():
+            return _('Image')
+        else:
+            return _('File')
+
+    def get_icon(self):
+        if self._is_image():
+            return 'theme:object-image'
+        else:
+            return 'theme:stock-missing'
+
+    def get_preview(self):
+        return ''
+
+    def get_activity(self):
+        return ''
+        
+    def matches_mime_type(cls, mime_type):
+        return mime_type in cls._types
+    matches_mime_type = classmethod(matches_mime_type)
+
+class XoFileType(FileType):
+    
+    _types = set(['application/vnd.olpc-x-sugar'])
+
+    def get_name(self):
+        return _('Activity package')
+
+    def get_icon(self):
+        return 'theme:stock-missing'
+
+    def get_preview(self):
+        return ''
+
+    def get_activity(self):
+        return ''
+        
+    def matches_mime_type(cls, mime_type):
+        return mime_type in cls._types
+    matches_mime_type = classmethod(matches_mime_type)
+
 class UnknownFileType(FileType):
     def get_name(self):
         return _('Object')
@@ -221,11 +281,13 @@ class TypeRegistry:
         self._types.append(MsWordFileType)
         self._types.append(RtfFileType)
         self._types.append(OOTextFileType)
+        self._types.append(UriListFileType)
         self._types.append(UriFileType)
         self._types.append(ImageFileType)
         self._types.append(AbiwordFileType)
         self._types.append(TextFileType)
         self._types.append(SqueakProjectFileType)
+        self._types.append(XoFileType)
     
     def get_type(self, formats):
         for file_type in self._types:

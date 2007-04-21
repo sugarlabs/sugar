@@ -29,6 +29,17 @@ def _get_prefix_path(base, path=None):
     else:
         return os.path.join(prefix, base)
 
+def _get_sugar_path(base, path=None):
+    if os.environ.has_key('SUGAR_PATH'):
+        sugar_path = os.environ['SUGAR_PATH']
+    else:
+        sugar_path = _get_prefix_path('share/sugar')
+
+    if path:
+        return os.path.join(sugar_path, base, path)
+    else:
+        return os.path.join(sugar_path, base)
+
 def is_emulator():
     if os.environ.has_key('SUGAR_EMULATOR'):
         if os.environ['SUGAR_EMULATOR'] == 'yes':
@@ -56,17 +67,17 @@ def get_profile_path(path=None):
 def get_user_activities_path():
     return os.path.expanduser('~/Activities')
 
-def get_bin_path(path=None):
-    return _get_prefix_path('bin', path)
-
 def get_locale_path(path=None):
     return _get_prefix_path('share/locale', path)
 
+def get_bin_path(path=None):
+    return _get_sugar_path('bin', path)
+
 def get_service_path(name):
-    return _get_prefix_path('share/sugar/services', name)
+    return _get_sugar_path('services', name)
 
 def get_shell_path(path=None):
-    return _get_prefix_path('share/sugar/shell', path)
+    return _get_sugar_path('shell', path)
 
 def get_data_path(path=None):
-    return _get_prefix_path('share/sugar', path)
+    return _get_sugar_path('data', path)

@@ -7,6 +7,6 @@ import os
 import sys
 from sugar import env 
 
-sys.path.insert(0, env.get_service_path('console'))
+sys.path.append(env.get_service_path('console'))
 
 import console

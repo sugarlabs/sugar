@@ -24,6 +24,12 @@
 #include "GeckoContentHandler.h"
 #include "GeckoDownload.h"
 
+#ifdef HAVE_GECKO_1_9
+#include "GeckoDragDropHooks.h"
+#include "GeckoDocumentObject.h"
+#include "GeckoBrowserPersist.h"
+#endif
+
 #include <gdk/gdkx.h>
 #include <gtkmozembed_internal.h>
 #include <nsCOMPtr.h>
@@ -56,6 +62,10 @@
 #include <nsIHistoryEntry.h>
 #include <nsISHEntry.h>
 #include <nsIInputStream.h>
+#include <nsICommandManager.h>
+#include <nsIClipboardDragDropHooks.h>
+
+#define SUGAR_PATH "SUGAR_PATH"
 
 enum {
 	PROP_0,
@@ -74,6 +84,8 @@ enum {
 };
 
 static guint signals[N_SIGNALS];
+
+static GObjectClass *parent_class = NULL;
 
 static const nsModuleComponentInfo sSugarComponents[] = {
 	{
@@ -151,9 +163,11 @@ sugar_browser_startup(const char *profile_path, const char *profile_name)
 	NS_ENSURE_TRUE(prefService, FALSE);
 
 	/* Read our predefined default prefs */
+	nsCString pathToPrefs(g_getenv(SUGAR_PATH));
+	pathToPrefs.Append("/data/gecko-prefs.js");
+
 	nsCOMPtr<nsILocalFile> file;
-	NS_NewNativeLocalFile(nsCString(SHARE_DIR"/gecko-prefs.js"),
-						  PR_TRUE, getter_AddRefs(file));
+	NS_NewNativeLocalFile(pathToPrefs, PR_TRUE, getter_AddRefs(file));
 	NS_ENSURE_TRUE(file, FALSE);
 
 	rv = prefService->ReadUserPrefs (file);
@@ -166,7 +180,10 @@ sugar_browser_startup(const char *profile_path, const char *profile_name)
 	prefService->GetBranch ("", getter_AddRefs(pref));
 	NS_ENSURE_TRUE(pref, FALSE);
 
-    pref->SetCharPref ("helpers.private_mime_types_file", SHARE_DIR"/mime.types");
+	nsCString pathToMimeTypes(g_getenv(SUGAR_PATH));
+	pathToMimeTypes.Append("/data/mime.types");
+
+    pref->SetCharPref ("helpers.private_mime_types_file", pathToMimeTypes.get());
 
 	rv = prefService->ReadUserPrefs (nsnull);
 	if (NS_FAILED(rv)) {
@@ -211,25 +228,6 @@ sugar_browser_shutdown(void)
 G_DEFINE_TYPE(SugarBrowser, sugar_browser, GTK_TYPE_MOZ_EMBED)
 
 static nsresult
-NewURI(const char *uri, nsIURI **result)
-{
-    nsresult rv;
-
-    nsCOMPtr<nsIServiceManager> mgr;
-    NS_GetServiceManager (getter_AddRefs (mgr));
-    NS_ENSURE_TRUE(mgr, FALSE);
-
-    nsCOMPtr<nsIIOService> ioService;
-    rv = mgr->GetServiceByContractID ("@mozilla.org/network/io-service;1",
-                                      NS_GET_IID (nsIIOService),
-                                      getter_AddRefs(ioService));
-    NS_ENSURE_SUCCESS(rv, FALSE);
-
-    nsCString cSpec(uri);
-    return ioService->NewURI (cSpec, nsnull, nsnull, result);
-}
-
-static nsresult
 FilenameFromContentDisposition(nsCString contentDisposition, nsCString &fileName)
 {
     nsresult rv;
@@ -253,38 +251,6 @@ FilenameFromContentDisposition(nsCString contentDisposition, nsCString &fileName
 
     if (NS_SUCCEEDED(rv) && fileName.Length()) {
         NS_UTF16ToCString (aFileName, NS_CSTRING_ENCODING_UTF8, fileName);
-    }
-
-    return NS_OK;
-}
-
-static nsresult
-ImageNameFromCache(nsIURI *imgURI, nsCString &imgName)
-{
-    nsresult rv;
-
-    nsCOMPtr<nsIServiceManager> mgr;
-    NS_GetServiceManager (getter_AddRefs (mgr));
-    NS_ENSURE_TRUE(mgr, NS_ERROR_FAILURE);
-
-    nsCOMPtr<imgICache> imgCache;
-    rv = mgr->GetServiceByContractID("@mozilla.org/image/cache;1",
-                                     NS_GET_IID (imgICache),
-                                     getter_AddRefs(imgCache));
-    NS_ENSURE_SUCCESS(rv, NS_ERROR_FAILURE);
-
-    nsCOMPtr<nsIProperties> imgProperties;
-    imgCache->FindEntryProperties(imgURI, getter_AddRefs(imgProperties));
-    if (imgProperties) {
-        nsCOMPtr<nsISupportsCString> dispositionCString;
-        imgProperties->Get("content-disposition",
-                           NS_GET_IID(nsISupportsCString),
-                           getter_AddRefs(dispositionCString));
-        if (dispositionCString) {
-            nsCString contentDisposition;
-            dispositionCString->GetData(contentDisposition);
-            FilenameFromContentDisposition(contentDisposition, imgName);
-        }
     }
 
     return NS_OK;
@@ -382,13 +348,47 @@ sugar_browser_get_property(GObject         *object,
 	}
 }
 
+static void
+sugar_browser_realize(GtkWidget *widget)
+{
+    GTK_WIDGET_CLASS(parent_class)->realize(widget);
+
+#ifdef HAVE_NS_WEB_BROWSER
+       GtkMozEmbed *embed = GTK_MOZ_EMBED(widget);
+       nsCOMPtr<nsIWebBrowser> webBrowser;
+       gtk_moz_embed_get_nsIWebBrowser(embed, getter_AddRefs(webBrowser));
+       NS_ENSURE_TRUE(webBrowser, );
+
+    nsCOMPtr<nsICommandManager> commandManager = do_GetInterface(webBrowser);
+    if (commandManager) {
+        nsresult rv;
+        nsIClipboardDragDropHooks *rawPtr = new GeckoDragDropHooks(
+            SUGAR_BROWSER(widget));
+        nsCOMPtr<nsIClipboardDragDropHooks> geckoDragDropHooks(
+            do_QueryInterface(rawPtr, &rv));
+        NS_ENSURE_SUCCESS(rv, );
+
+        nsCOMPtr<nsIDOMWindow> DOMWindow = do_GetInterface(webBrowser); 
+        nsCOMPtr<nsICommandParams> cmdParamsObj = do_CreateInstance(
+            NS_COMMAND_PARAMS_CONTRACTID, &rv);
+        NS_ENSURE_SUCCESS(rv, );
+        cmdParamsObj->SetISupportsValue("addhook", geckoDragDropHooks);
+        commandManager->DoCommand("cmd_clipboardDragDropHook", cmdParamsObj,
+                                  DOMWindow);
+    }
+#endif
+}
 
 static void
 sugar_browser_class_init(SugarBrowserClass *browser_class)
 {
-	GObjectClass *gobject_class = G_OBJECT_CLASS(browser_class);
+    GObjectClass    *gobject_class = G_OBJECT_CLASS(browser_class);
+    GtkWidgetClass  *widget_class = GTK_WIDGET_CLASS(browser_class);
 
-	gobject_class->get_property = sugar_browser_get_property;
+    parent_class = (GObjectClass *) g_type_class_peek_parent(browser_class);
+
+    gobject_class->get_property = sugar_browser_get_property;
+    widget_class->realize = sugar_browser_realize;
 
     signals[MOUSE_CLICK] = g_signal_new ("mouse_click",
                                 SUGAR_TYPE_BROWSER,
@@ -570,33 +570,11 @@ location_cb(GtkMozEmbed *embed)
 	update_navigation_properties(browser);
 }
 
-static char *
-get_image_name(const char *uri)
-{
-    nsresult rv;
-
-    nsCString imgName;
-
-    nsCOMPtr<nsIURI> imgURI;
-    rv = NewURI(uri, getter_AddRefs(imgURI));
-    NS_ENSURE_SUCCESS(rv, NULL);
-
-    ImageNameFromCache(imgURI, imgName);
-
-    if (!imgName.Length()) {
-        nsCOMPtr<nsIURL> url(do_QueryInterface(imgURI));
-        if (url) {
-            url->GetFileName(imgName);
-        }
-    }
-
-    return imgName.Length() ? g_strdup(imgName.get()) : NULL;
-}
-
 static gboolean
 dom_mouse_click_cb(GtkMozEmbed *embed, nsIDOMMouseEvent *mouseEvent)
 {
-	SugarBrowser *browser = SUGAR_BROWSER(embed);
+#ifdef HAVE_GECKO_1_9
+    SugarBrowser *browser = SUGAR_BROWSER(embed);
     SugarBrowserEvent *event;
     gint return_value = FALSE;
 
@@ -610,36 +588,10 @@ dom_mouse_click_cb(GtkMozEmbed *embed, nsIDOMMouseEvent *mouseEvent)
 
     event = sugar_browser_event_new();
 
-    nsresult rv;
-
-    PRUint16 type;
-    rv = targetNode->GetNodeType(&type);
-    if (NS_FAILED(rv)) return NS_ERROR_FAILURE;
-
-    nsCOMPtr<nsIDOMHTMLElement> element = do_QueryInterface(targetNode);
-    if ((nsIDOMNode::ELEMENT_NODE == type) && element) {
-        nsString uTag;
-        rv = element->GetLocalName(uTag);
-        if (NS_FAILED(rv)) return NS_ERROR_FAILURE;
-
-        nsCString tag;
-        NS_UTF16ToCString (uTag, NS_CSTRING_ENCODING_UTF8, tag);
-
-        if (g_ascii_strcasecmp (tag.get(), "img") == 0) {
-            nsString img;
-
-            nsCOMPtr <nsIDOMHTMLImageElement> image;
-            image = do_QueryInterface(targetNode, &rv);
-            if (NS_FAILED(rv) || !image) return NS_ERROR_FAILURE;
-
-            rv = image->GetSrc(img);
-            if (NS_FAILED(rv)) return NS_ERROR_FAILURE;
-
-            nsCString cImg;
-            NS_UTF16ToCString (img, NS_CSTRING_ENCODING_UTF8, cImg);
-            event->image_uri = g_strdup(cImg.get());
-            event->image_name = get_image_name(event->image_uri);
-        }
+    GeckoDocumentObject documentObject(browser, targetNode);
+    if(documentObject.IsImage()) {
+        event->image_uri = documentObject.GetImageURI();
+        event->image_name = documentObject.GetImageName();
     }
 
     PRUint16 btn = 0;
@@ -651,6 +603,9 @@ dom_mouse_click_cb(GtkMozEmbed *embed, nsIDOMMouseEvent *mouseEvent)
     sugar_browser_event_free(event);
 
     return return_value;
+#else
+    return FALSE;
+#endif
 }
 
 static void
@@ -712,71 +667,14 @@ sugar_browser_grab_focus(SugarBrowser *browser)
 	}
 }
 
-
-static nsresult
-GetPostData(SugarBrowser *browser, nsIInputStream **postData)
-{
-#ifdef HAVE_NS_WEB_BROWSER
-	nsCOMPtr<nsIWebBrowser> webBrowser;
-	gtk_moz_embed_get_nsIWebBrowser(GTK_MOZ_EMBED(browser),
-									getter_AddRefs(webBrowser));
-	NS_ENSURE_TRUE(webBrowser, NS_ERROR_FAILURE);
-
-    nsCOMPtr<nsIWebNavigation> webNav(do_QueryInterface(webBrowser));
-	NS_ENSURE_TRUE(webNav, NS_ERROR_FAILURE);
-
-    PRInt32 sindex;
-
-    nsCOMPtr<nsISHistory> sessionHistory;
-    webNav->GetSessionHistory(getter_AddRefs(sessionHistory));
-	NS_ENSURE_TRUE(sessionHistory, NS_ERROR_FAILURE);
-
-    nsCOMPtr<nsIHistoryEntry> entry;
-    sessionHistory->GetIndex(&sindex);
-    sessionHistory->GetEntryAtIndex(sindex, PR_FALSE, getter_AddRefs(entry));
-
-    nsCOMPtr<nsISHEntry> shEntry(do_QueryInterface(entry));
-    if (shEntry) {
-        shEntry->GetPostData(postData);
-    }
-
-    return NS_OK;
-#endif
-    return NS_ERROR_NOT_IMPLEMENTED;
-}
-
 gboolean
 sugar_browser_save_uri(SugarBrowser *browser,
                        const char   *uri,
                        const char   *filename)
 {
-#ifdef HAVE_NS_WEB_BROWSER
-    nsresult rv;
-
-    nsCOMPtr<nsIURI> sourceURI;
-    rv = NewURI(uri, getter_AddRefs(sourceURI));
-    NS_ENSURE_SUCCESS(rv, FALSE);
-
-    nsCOMPtr<nsILocalFile> destFile = do_CreateInstance("@mozilla.org/file/local;1");
-    NS_ENSURE_TRUE(destFile, FALSE);
-
-    destFile->InitWithNativePath(nsCString(filename));
-
-    nsCOMPtr<nsIWebBrowser> webBrowser;
-    gtk_moz_embed_get_nsIWebBrowser(GTK_MOZ_EMBED(browser),
-                                    getter_AddRefs(webBrowser));
-    NS_ENSURE_TRUE(webBrowser, FALSE);
-
-    nsCOMPtr<nsIWebBrowserPersist> webPersist = do_QueryInterface (webBrowser);
-    NS_ENSURE_TRUE(webPersist, FALSE);
-
-    nsCOMPtr<nsIInputStream> postData;
-    GetPostData(browser, getter_AddRefs(postData));
-
-    rv = webPersist->SaveURI(sourceURI, nsnull, nsnull, postData, nsnull, destFile);
-    NS_ENSURE_SUCCESS(rv, FALSE);
-
-    return TRUE;
+#ifdef HAVE_GECKO_1_9
+    GeckoBrowserPersist browserPersist(browser);
+    return browserPersist.SaveURI(uri, filename);
 #else
     return FALSE;
 #endif

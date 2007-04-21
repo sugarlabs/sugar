@@ -1,3 +1,6 @@
+sugardir = $(pkgdatadir)/bin
+sugar_SCRIPTS = sugar-activity-factory
+
 bin_SCRIPTS = 			\
 	sugar			\
 	sugar-activity		\
@@ -6,6 +9,7 @@ bin_SCRIPTS = 			\
 
 EXTRA_DIST =                    \
 	$(bin_SCRIPTS)		\
+	$(sugar_SCRIPTS)	\
 	sugar.in
 
 DISTCLEANFILES =                \

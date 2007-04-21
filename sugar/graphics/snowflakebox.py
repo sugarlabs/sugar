@@ -20,9 +20,11 @@ import math
 import cairo
 import hippo
 
-_BASE_RADIUS = 65
+from sugar.graphics import units
+
+_BASE_RADIUS = units.points_to_pixels(20)
 _CHILDREN_FACTOR = 1
-_FLAKE_DISTANCE = 6
+_FLAKE_DISTANCE = units.points_to_pixels(4)
 
 class SnowflakeBox(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarSnowflakeBox'
@@ -66,6 +68,13 @@ class SnowflakeBox(hippo.CanvasBox, hippo.CanvasItem):
         y = cy + math.sin(angle) * r - (height / 2)
 
         self.set_position(child, int(x), int(y))
+
+    def do_get_height_request(self, for_width):
+        hippo.CanvasBox.do_get_height_request(self, for_width)
+        
+        height = for_width
+        
+        return (height, height)
 
     def do_get_width_request(self):
         hippo.CanvasBox.do_get_width_request(self)

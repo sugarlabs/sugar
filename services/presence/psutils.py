@@ -16,7 +16,11 @@
 
 
 def bytes_to_string(bytes):
-    # Handle both DBus byte arrays and strings
+    """The function converts a  D-BUS byte array provided by dbus to string format.
+    
+    bytes -- a D-Bus array of bytes. Handle both DBus byte arrays and strings
+    
+    """
     try:
         # DBus Byte array
         ret = ''.join([chr(item) for item in bytes])

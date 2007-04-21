@@ -1,3 +1,6 @@
+import os
+import logging
+
 import typeregistry
 
 class ClipboardObject:
@@ -7,6 +10,10 @@ class ClipboardObject:
         self._name = name
         self._percent = 0
         self._formats = {}
+
+    def destroy(self):
+        for type, format in self._formats.iteritems():
+            format.destroy()
 
     def get_id(self):
         return self._id
@@ -48,6 +55,10 @@ class Format:
         self._type = type
         self._data = data
         self._on_disk = on_disk
+
+    def destroy(self):
+        if self._on_disk:
+            os.remove(self._data.replace('file://', ''))
 
     def get_type(self):
         return self._type
