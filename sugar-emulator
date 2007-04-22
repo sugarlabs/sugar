@@ -19,6 +19,10 @@
 import os
 import sys
 import socket
+import logging 
+
+log = logging.getLogger( 'sugar-emulator' )
+log.setLevel( logging.DEBUG )
 
 import pygtk
 pygtk.require('2.0')
@@ -27,6 +31,7 @@ import gobject
 
 def _get_display_number():
     """Find a free display number trying to connect to 6000+ ports"""
+    log.info( "Attempting to find free port for X11 (Xephyr)" )
     retries = 20
     display_number = 1
     display_is_free = False    
@@ -43,6 +48,10 @@ def _get_display_number():
             display_is_free = True
 
     if display_is_free:
+        log.info( 
+            '  Found free port: #%s (%s)', 
+            display_number, display_number+6000 
+        )
         return display_number
     else:
         logging.error('Cannot find a free display.')
@@ -50,6 +59,7 @@ def _get_display_number():
 
 def _start_xephyr():
     display = _get_display_number()
+    log.info( 'Starting the Xephyr nested X display on display %s', display )
 
     cmd = [ 'Xephyr' ]
     cmd.append(':%d' % display)
@@ -66,6 +76,7 @@ def _start_xephyr():
         cmd.append('-dpi')
         cmd.append('%d' % int(dpi/1024))
 
+    log.debug( 'Xephyr command: %s', " ".join( cmd ) )
     result = gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
     pid = result[0]
 
@@ -73,11 +84,13 @@ def _start_xephyr():
     os.environ['SUGAR_EMULATOR_PID'] = str(pid)
 
 def _start_matchbox():
+    log.info( 'Starting the matchbox window manager' )
     cmd = ['matchbox-window-manager']
 
     cmd.extend(['-use_titlebar', 'no'])
     cmd.extend(['-theme', 'olpc'])
 
+    log.debug( 'Matchbox command: %s', " ".join( cmd) )
     gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
 
 def _setup_env():
@@ -89,23 +102,32 @@ def _setup_env():
         if os.environ.has_key('PYTHONPATH'):
             path = os.environ['PYTHONPATH']
             os.environ['PYTHONPATH'] = source_dir + ':' + path
+            log.info( 'Set PYTHONPATH=%s', os.environ['PYTHONPATH'] )
 
-_setup_env()
-_start_xephyr()
+def main():
+    """Script-level operations"""
+    logging.basicConfig()
+    _setup_env()
+    _start_xephyr()
+    
+    from sugar import env
+    
+    if env.is_emulator():
+        gtkrc_filename = 'sugar.gtkrc'
+    else:
+        gtkrc_filename = 'sugar-xo.gtkrc'
+    
+    os.environ['GTK2_RC_FILES'] = env.get_data_path(gtkrc_filename)
+    
+    if len(sys.argv) == 1:
+        program = 'sugar-shell'
+    else:
+        _start_matchbox()
+        program = sys.argv[1]
+    
+    command = ['dbus-launch', 'dbus-launch', '--exit-with-session', program]
+    log.info( "Attempting to launch sugar to replace this process: %s", " ".join(command) )
+    os.execlp( *command )
 
-from sugar import env
-
-if env.is_emulator():
-    gtkrc_filename = 'sugar.gtkrc'
-else:
-    gtkrc_filename = 'sugar-xo.gtkrc'
-
-os.environ['GTK2_RC_FILES'] = env.get_data_path(gtkrc_filename)
-
-if len(sys.argv) == 1:
-    program = 'sugar-shell'
-else:
-    _start_matchbox()
-    program = sys.argv[1]
-
-os.execlp('dbus-launch', 'dbus-launch', '--exit-with-session', program)
+if __name__ == "__main__":
+    main()
