@@ -132,18 +132,64 @@ class PresenceService(gobject.GObject):
     
 
     def __init__(self):
-        """Initialise the service and connect to events"""
+        """Initialise the service and attempt to connect to events
+        """
         gobject.GObject.__init__(self)
         self._objcache = ObjectCache()
-        self._bus = dbus.SessionBus()
-        self._ps = dbus.Interface(self._bus.get_object(DBUS_SERVICE,
-                DBUS_PATH), DBUS_INTERFACE)
-        self._ps.connect_to_signal('BuddyAppeared', self._buddy_appeared_cb)
-        self._ps.connect_to_signal('BuddyDisappeared', self._buddy_disappeared_cb)
-        self._ps.connect_to_signal('ActivityAppeared', self._activity_appeared_cb)
-        self._ps.connect_to_signal('ActivityDisappeared', self._activity_disappeared_cb)
-        self._ps.connect_to_signal('ActivityInvitation', self._activity_invitation_cb)
-        self._ps.connect_to_signal('PrivateInvitation', self._private_invitation_cb)
+        # attempt to load the interface to the service...
+        self._get_ps()
+    
+    _bus_ = None 
+    def _get_bus( self ):
+        """Retrieve dbus session-bus or create new"""
+        if not self._bus_:
+            self._bus_ = dbus.SessionBus()
+        return self._bus_
+    _bus = property( 
+        _get_bus, None, None, 
+        """DBUS SessionBus object for user-local communications""" 
+    )
+    _ps_ = None
+    def _get_ps( self ):
+        """Retrieve dbus interface to PresenceService 
+        
+        Also registers for updates from various dbus events on the 
+        interface.
+        
+        If unable to retrieve the interface, we will temporarily 
+        return an _OfflineInterface object to allow the calling 
+        code to continue functioning as though it had accessed a 
+        real presence service.
+        
+        If successful, caches the presence service interface 
+        for use by other methods and returns that interface
+        """
+        if not self._ps_:
+            try:
+                ps = dbus.Interface(
+                    self._bus.get_object(DBUS_SERVICE,DBUS_PATH), 
+                    DBUS_INTERFACE
+                )
+            except dbus.exceptions.DBusException, err:
+                logging.error(
+                    """Failure retrieving %r interface from the D-BUS service %r %r: %s""",
+                    DBUS_INTERFACE, DBUS_SERVICE, DBUS_PATH, err
+                )
+                return _OfflineInterface()
+            else:
+                self._ps_ = ps 
+                ps.connect_to_signal('BuddyAppeared', self._buddy_appeared_cb)
+                ps.connect_to_signal('BuddyDisappeared', self._buddy_disappeared_cb)
+                ps.connect_to_signal('ActivityAppeared', self._activity_appeared_cb)
+                ps.connect_to_signal('ActivityDisappeared', self._activity_disappeared_cb)
+                ps.connect_to_signal('ActivityInvitation', self._activity_invitation_cb)
+                ps.connect_to_signal('PrivateInvitation', self._private_invitation_cb)
+        return self._ps_
+        
+    _ps = property(
+        _get_ps, None, None,
+        """DBUS interface to the PresenceService (services/presence/presenceservice)"""
+    )
 
     def _new_object(self, object_path):
         """Turn new object path into (cached) Buddy/Activity instance
@@ -350,6 +396,35 @@ class PresenceService(gobject.GObject):
 
         return bus_name, object_path
 
+class _OfflineInterface( object ):
+    """Offline-presence-service interface
+    
+    Used to mimic the behaviour of a real PresenceService sufficiently
+    to avoid crashing client code that expects the given interface.
+    
+    XXX we could likely return a "MockOwner" object reasonably 
+    easily, but would it be worth it?
+    """
+    def raiseException( self, *args, **named ):
+        """Raise dbus.exceptions.DBusException"""
+        raise dbus.exceptions.DBusException( 
+            """PresenceService Interface not available"""
+        )
+    GetActivities = raiseException
+    GetActivityById = raiseException
+    GetBuddies = raiseException
+    GetBuddyByPublicKey = raiseException
+    GetOwner = raiseException
+    GetPreferredConnection = raiseException
+    def ShareActivity( 
+        self, actid, atype, name, properties,
+        reply_handler, error_handler,
+    ):
+        """Pretend to share and fail..."""
+        exc = IOError(
+            """Unable to share activity as PresenceService is not currenly available"""
+        )
+        return error_handler( exc )
 
 class _MockPresenceService(gobject.GObject):
     """Test fixture allowing testing of items that use PresenceService
