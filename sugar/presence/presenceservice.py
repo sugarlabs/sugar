@@ -294,11 +294,19 @@ class PresenceService(gobject.GObject):
         returns list of Activity objects for all object paths
             the service reports exist (using GetActivities)
         """
-        resp = self._ps.GetActivities()
-        acts = []
-        for item in resp:
-            acts.append(self._new_object(item))
-        return acts
+        try:
+            resp = self._ps.GetActivities()
+        except dbus.exceptions.DBusException, err:
+            logging.warn(
+                """Unable to retrieve activity list from presence service: %s""",
+                err
+            )
+            return []
+        else:
+            acts = []
+            for item in resp:
+                acts.append(self._new_object(item))
+            return acts
 
     def get_activity(self, activity_id):
         """Retrieve single Activity object for the given unique id 
@@ -310,7 +318,12 @@ class PresenceService(gobject.GObject):
         """
         try:
             act_op = self._ps.GetActivityById(activity_id)
-        except dbus.exceptions.DBusException:
+        except dbus.exceptions.DBusException, err:
+            logging.warn(
+                """Unable to retrieve activity handle for %r from presence service: %s""",
+                activity_id,
+                err
+            )
             return None
         return self._new_object(act_op)
 
@@ -320,11 +333,19 @@ class PresenceService(gobject.GObject):
         returns list of Buddy objects for all object paths
             the service reports exist (using GetBuddies)
         """
-        resp = self._ps.GetBuddies()
-        buddies = []
-        for item in resp:
-            buddies.append(self._new_object(item))
-        return buddies
+        try:
+            resp = self._ps.GetBuddies()
+        except dbus.exceptions.DBusException, err:
+            logging.warn(
+                """Unable to retrieve buddy-list from presence service: %s""",
+                err
+            )
+            return []
+        else:
+            buddies = []
+            for item in resp:
+                buddies.append(self._new_object(item))
+            return buddies
 
     def get_buddy(self, key):
         """Retrieve single Buddy object for the given public key
@@ -337,7 +358,12 @@ class PresenceService(gobject.GObject):
         """
         try:
             buddy_op = self._ps.GetBuddyByPublicKey(dbus.ByteArray(key))
-        except dbus.exceptions.DBusException:
+        except dbus.exceptions.DBusException, err:
+            logging.warn(
+                """Unable to retrieve buddy handle for %r from presence service: %s""",
+                key,
+                err
+            )
             return None
         return self._new_object(buddy_op)
 
@@ -350,7 +376,11 @@ class PresenceService(gobject.GObject):
         """
         try:
             owner_op = self._ps.GetOwner()
-        except dbus.exceptions.DBusException:
+        except dbus.exceptions.DBusException, err:
+            logging.warn(
+                """Unable to retrieve local user/owner from presence service: %s""",
+                err
+            )
             return None
         return self._new_object(owner_op)
 
