@@ -66,16 +66,17 @@ class PresenceService(gobject.GObject):
     _PS_ACTIVITY_OP = DBUS_PATH + "/Activities/"
     
 
-    def __init__(self):
+    def __init__(self, allow_offline_iface=True):
         """Initialise the service and attempt to connect to events
         """
         gobject.GObject.__init__(self)
         self._objcache = {}
         # attempt to load the interface to the service...
+        self._allow_offline_iface = allow_offline_iface
         self._get_ps()
     
     _bus_ = None 
-    def _get_bus( self ):
+    def _get_bus(self):
         """Retrieve dbus session-bus or create new"""
         if not self._bus_:
             self._bus_ = dbus.SessionBus()
@@ -85,7 +86,7 @@ class PresenceService(gobject.GObject):
         """DBUS SessionBus object for user-local communications""" 
     )
     _ps_ = None
-    def _get_ps( self ):
+    def _get_ps(self):
         """Retrieve dbus interface to PresenceService 
         
         Also registers for updates from various dbus events on the 
@@ -110,7 +111,9 @@ class PresenceService(gobject.GObject):
                     """Failure retrieving %r interface from the D-BUS service %r %r: %s""",
                     DBUS_INTERFACE, DBUS_SERVICE, DBUS_PATH, err
                 )
-                return _OfflineInterface()
+                if self._allow_offline_iface:
+                    return _OfflineInterface()
+                raise RuntimeError("Failed to connect to the presence service.")
             else:
                 self._ps_ = ps 
                 ps.connect_to_signal('BuddyAppeared', self._buddy_appeared_cb)
