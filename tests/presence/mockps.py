@@ -283,8 +283,9 @@ class TestPresenceService(dbus.service.Object):
     def RemoveBuddy(self, pubkey):
         pubkey = ''.join([chr(item) for item in pubkey])
         if self._buddies.has_key(pubkey):
-            del self._buddies[pubkey]
+            buddy = self._buddies[pubkey]
             self.BuddyDisappeared(buddy._object_path)
+            del self._buddies[pubkey]
             return
         raise NotFoundError("Buddy not found")
 
