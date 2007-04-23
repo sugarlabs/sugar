@@ -430,10 +430,10 @@ class _MockPresenceService(gobject.GObject):
         return None
 
 _ps = None
-def get_instance():
+def get_instance(allow_offline_iface=False):
     """Retrieve this process' view of the PresenceService"""
     global _ps
     if not _ps:
-        _ps = PresenceService()
+        _ps = PresenceService(allow_offline_iface)
     return _ps
 
