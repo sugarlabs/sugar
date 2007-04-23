@@ -180,6 +180,7 @@ class TestOwner(TestBuddy):
 
 _PRESENCE_SERVICE = "org.laptop.Sugar.Presence"
 _PRESENCE_INTERFACE = "org.laptop.Sugar.Presence"
+_PRESENCE_TEST_INTERFACE = "org.laptop.Sugar.Presence._Test"
 _PRESENCE_PATH = "/org/laptop/Sugar/Presence"
 
 class TestPresenceService(dbus.service.Object):
@@ -268,6 +269,24 @@ class TestPresenceService(dbus.service.Object):
     @dbus.service.method(_PRESENCE_INTERFACE, out_signature="so")
     def GetPreferredConnection(self):
         return "bar.baz.foo", "/bar/baz/foo"
+
+    # Private methods used for testing
+    @dbus.service.method(_PRESENCE_TEST_INTERFACE, in_signature="ayss")
+    def AddBuddy(self, pubkey, nick, color):
+        pubkey = ''.join([chr(item) for item in pubkey])
+        objid = self._get_next_object_id()
+        buddy = TestBuddy(self._bus_name, objid, pubkey, nick, color)
+        self._buddies[pubkey] = buddy
+        self.BuddyAppeared(buddy._object_path)
+
+    @dbus.service.method(_PRESENCE_TEST_INTERFACE, in_signature="ay")
+    def RemoveBuddy(self, pubkey):
+        pubkey = ''.join([chr(item) for item in pubkey])
+        if self._buddies.has_key(pubkey):
+            del self._buddies[pubkey]
+            self.BuddyDisappeared(buddy._object_path)
+            return
+        raise NotFoundError("Buddy not found")
 
 def main():
     loop = gobject.MainLoop()
