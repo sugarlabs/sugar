@@ -47,6 +47,9 @@ def start_ps():
     return pid
 
 def stop_ps(pid):
+    # EVIL HACK: get a new presence service object every time
+    del presenceservice._ps
+    presenceservice._ps = None
     if pid >= 0:
         os.kill(pid, 15)
     
@@ -135,7 +138,7 @@ class BuddyTests(unittest.TestCase):
         ps = presenceservice.get_instance(False)
         assert ps, "Couldn't get presence service"
 
-        user_data = {"success": False, "err": "", "buddy": None, "ps": ps}
+        user_data = {"success": False, "err": "", "buddy": None}
         gobject.idle_add(self._testBuddyAppeared_helper, user_data)
         gtk.main()
 
@@ -154,9 +157,65 @@ class BuddyTests(unittest.TestCase):
         assert buddy2.props.nick == self._BA_NICK, "Nickname doesn't match expected"
         assert buddy2.props.color == self._BA_COLOR, "Color doesn't match expected"
 
+    def _testBuddyDisappeared_helper_timeout(self, user_data):
+        self._handle_error("Timeout waiting for buddy-disappeared signal", user_data)
+        return False
+
+    def _testBuddyDisappeared_helper_cb(self, ps, buddy, user_data):
+        user_data["buddy"] = buddy
+        user_data["success"] = True
+        gtk.main_quit()
+
+    def _testBuddyDisappeared_helper(self, user_data):
+        busobj = dbus.SessionBus().get_object(mockps._PRESENCE_SERVICE,
+                    mockps._PRESENCE_PATH)
+        try:
+            testps = dbus.Interface(busobj, mockps._PRESENCE_TEST_INTERFACE)
+        except dbus.exceptions.DBusException, err:
+            self._handle_error(err, user_data)
+            return False
+
+        # Add a fake buddy
+        try:
+            testps.AddBuddy(self._BA_PUBKEY, self._BA_NICK, self._BA_COLOR)
+        except dbus.exceptions.DBusException, err:
+            self._handle_error(err, user_data)
+            return False
+
+        ps = presenceservice.get_instance(False)
+        ps.connect('buddy-disappeared', self._testBuddyDisappeared_helper_cb, user_data)
+        # Wait 5 seconds max for signal to be emitted
+        gobject.timeout_add(5000, self._testBuddyDisappeared_helper_timeout, user_data)
+
+        # Delete the fake buddy
+        try:
+            testps.RemoveBuddy(self._BA_PUBKEY)
+        except dbus.exceptions.DBusException, err:
+            self._handle_error(err, user_data)
+            return False
+
+        return False
+
+    def testBuddyDisappeared(self):
+        ps = presenceservice.get_instance(False)
+        assert ps, "Couldn't get presence service"
+
+        user_data = {"success": False, "err": "", "buddy": None}
+        gobject.idle_add(self._testBuddyDisappeared_helper, user_data)
+        gtk.main()
+
+        assert user_data["success"] == True, user_data["err"]
+        assert user_data["buddy"], "Buddy was not received"
+
+        buddy = user_data["buddy"]
+        assert buddy.props.key == self._BA_PUBKEY, "Public key doesn't match expected"
+        assert buddy.props.nick == self._BA_NICK, "Nickname doesn't match expected"
+        assert buddy.props.color == self._BA_COLOR, "Color doesn't match expected"
+
     def addToSuite(suite):
         suite.addTest(BuddyTests("testOwner"))
         suite.addTest(BuddyTests("testBuddyAppeared"))
+        suite.addTest(BuddyTests("testBuddyDisappeared"))
     addToSuite = staticmethod(addToSuite)
 
 def main():
