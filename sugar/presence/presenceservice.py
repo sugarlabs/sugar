@@ -71,20 +71,27 @@ class PresenceService(gobject.GObject):
         """
         gobject.GObject.__init__(self)
         self._objcache = {}
+
+        # Get a connection to the session bus
+        self._bus = dbus.SessionBus()
+        self._bus.add_signal_receiver(self._name_owner_changed_cb,
+                                    signal_name="NameOwnerChanged",
+                                    dbus_interface="org.freedesktop.DBus")
+
         # attempt to load the interface to the service...
         self._allow_offline_iface = allow_offline_iface
         self._get_ps()
-    
-    _bus_ = None 
-    def _get_bus(self):
-        """Retrieve dbus session-bus or create new"""
-        if not self._bus_:
-            self._bus_ = dbus.SessionBus()
-        return self._bus_
-    _bus = property( 
-        _get_bus, None, None, 
-        """DBUS SessionBus object for user-local communications""" 
-    )
+
+    def _name_owner_changed_cb(self, name, old, new):
+        if name != DBUS_SERVICE:
+            return
+        if (old and len(old)) and (not new and not len(new)):
+            # PS went away, clear out PS dbus service wrapper
+            self._ps_ = None
+        elif (not old and not len(old)) and (new and len(new)):
+            # PS started up
+            self._get_ps()
+
     _ps_ = None
     def _get_ps(self):
         """Retrieve dbus interface to PresenceService 
