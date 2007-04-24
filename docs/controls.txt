@@ -81,7 +81,7 @@ gtk.OptionMenu
 
 sugar.Entry
 
-* Support for packing icons before and after the entry (maybe patch gtk.Entry)
+* Support for packing icons before and after the entry. Extend gtk.Entry.
 * Activate/Cancel functionality.
     Two buttons at the end to the entry and key bindings (Esc and Enter). They are visible only when there are changes.
     The icons appear only when the field is focused and the content is changed since it gained focus.
@@ -108,6 +108,63 @@ sugar.SearchEntry
 * Default implementation of suggestions which automatically save the latest searches.
 
 sugar.DateSelector
+sugar.DateComboBox (lower priority)
 
 * Pluggable calendar implementation to support different kind of calendars (localization).
 * Might reuse gtk.Calendar. We should unify month/year selectors and accellerate the movement gradually.
+
+gtk.SpinButton
+
+* Make it match the visual design, hopefully just theme changes
+
+sugar.ToolItem
+
+* Optional label, either text or icon
+* Used for example to have a label near a SpinButton. Clicking on the label should focus the spin button.
+
+gtk.ProgressBar
+
+* Make it match the visual design, hopefully just theme changes.
+* For determinate progress bars should we always pulse to show that there is activity (power consumption? necessary feedback?)
+* Do not use text inside the progress bar
+
+sugar.Spinner
+
+* pulse() call to keep it running with a timeout
+* stop()
+
+gtk.Range (or sugar.Slider?)
+
+* Property to show the fill in white color, probably default on.
+* Draw the discrete steps.
+* For colored sliders, subclass gtk.Range and add a gradient.
+
+sugar.LevelIndicator
+
+* Set the number of blocks
+* Set the level as percentage
+* Property for discrete or not
+* We can probably use a GtkAdjustment for most of the above.Rollovers
+
+
+gtk.TextView
+
+gtk.ScrolledWindow
+
+* Theme it to match the visual.
+
+sugar.ScrolledWindow
+
+* Support for markers. Line as default and optional support for other shapes (star for bookmarks, circles for xos...). Generic way of add marks and keep them updated (observer?)
+
+
+TODO
+
+**Rollovers**
+Grab key
+Trays
+Grouping
+Tabs
+Sorting
+Expander
+Clipboard
