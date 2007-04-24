@@ -42,6 +42,14 @@ class Activity(gobject.GObject):
                          ([gobject.TYPE_PYOBJECT]))
     }
 
+    __gproperties__ = {
+        'id'        : (str, None, None, None, gobject.PARAM_READABLE),
+        'name'      : (str, None, None, None, gobject.PARAM_READABLE),
+        'color'     : (str, None, None, None, gobject.PARAM_READABLE),
+        'type'      : (str, None, None, None, gobject.PARAM_READABLE),
+        'joined'    : (bool, None, None, False, gobject.PARAM_READABLE)
+    }
+
     _PRESENCE_SERVICE = "org.laptop.Sugar.Presence"
     _ACTIVITY_DBUS_INTERFACE = "org.laptop.Sugar.Presence.Activity"
 
@@ -66,6 +74,27 @@ class Activity(gobject.GObject):
     def object_path(self):
         """Get our dbus object path"""
         return self._object_path
+
+    def do_get_property(self, pspec):
+        """Retrieve a particular property from our property dictionary"""
+        if pspec.name == "id":
+            if not self._id:
+                self._id = self._activity.GetId()
+            return self._id
+        elif pspec.name == "name":
+            if not self._name:
+                self._name = self._activity.GetName()
+            return self._name
+        elif pspec.name == "color":
+            if not self._color:
+                self._color = self._activity.GetColor()
+            return self._color
+        elif pspec.name == "type":
+            if not self._type:
+                self._type = self._activity.GetType()
+            return self._type
+        elif pspec.name == "joined":
+            return self._joined
 
     def _emit_buddy_joined_signal(self, object_path):
         """Generate buddy-joined GObject signal with presence Buddy object"""
@@ -96,31 +125,6 @@ class Activity(gobject.GObject):
 
     def _new_channel_cb(self, object_path):
         gobject.idle_add(self._emit_new_channel_signal, object_path)
-
-    def get_id(self):
-        """Retrieve the unique identifier for this activity instance"""
-        # Cache activity ID, which should never change anyway
-        if not self._id:
-            self._id = self._activity.GetId()
-        return self._id
-
-    def get_color(self):
-        """Retrieve the activity icon colour for this activity instance"""
-        if not self._color:
-            self._color = self._activity.GetColor()
-        return self._color
-
-    def get_name(self):
-        """Retrieve the activity name for this activity instance"""
-        if not self._name:
-            self._name = self._activity.GetName()
-        return self._name
-
-    def get_type(self):
-        """Retrieve the activity/bundle type for this activity instance"""
-        if not self._type:
-            self._type = self._activity.GetType()
-        return self._type
 
     def get_joined_buddies(self):
         """Retrieve the set of Buddy objects attached to this activity
