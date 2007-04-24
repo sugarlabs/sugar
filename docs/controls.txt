@@ -76,3 +76,38 @@ gtk.OptionMenu
 * Match the visual style. Hopefully only theme changes.
 * Add the scroll thing.
 * Groups. Either by a normal separator or a titled separator.
+* Optional support for showing just the icon from the menu (maybe, low priority)
+* Allow fixed sizing of the "button" and ellipsize the label
+
+sugar.Entry
+
+* Support for packing icons before and after the entry (maybe patch gtk.Entry)
+* Activate/Cancel functionality.
+    Two buttons at the end to the entry and key bindings (Esc and Enter). They are visible only when there are changes.
+    The icons appear only when the field is focused and the content is changed since it gained focus.
+    When hitting escape revert and select all the text.
+
+gtk.ComboxBox
+
+* We miss accept/cancel functionality. Probably patch gtk to allow to replace the entry in the combo box with sugar.Entry.
+
+sugar.SearchEntry
+
+* Use sugar.Entry
+* Search button on the left. Clicking should focus the entry.
+* Cancel button (Esc) on the right, always visible when there is text in the entry. Clicking it will clear the text and focus the textfield.
+* Activate button (Enter) on the right displayed when the content of the text field changed from the last focus or activation.
+* While activating:
+    the Activate button becomes a Spinner.
+    clicking the close button also cancel the search.
+* When activation is completed:
+    The spinner goes away.
+    We *don't* clear the entry but we select the text.
+* Search can either be incremental or on activation. For incremental there is no Accept button. start_spinning and stop_spinning to control the spin icon. start would only spin for an amount of time decided by the widget itself (and documented).
+* The suggestions list is provided by the application. Need to figure out which api to use, either model or signal based.
+* Default implementation of suggestions which automatically save the latest searches.
+
+sugar.DateSelector
+
+* Pluggable calendar implementation to support different kind of calendars (localization).
+* Might reuse gtk.Calendar. We should unify month/year selectors and accellerate the movement gradually.
