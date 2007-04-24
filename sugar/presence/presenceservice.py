@@ -29,71 +29,6 @@ import logging
 # see PEP: http://docs.python.org/whatsnew/pep-328.html
 import buddy, activity
 
-class ObjectCache(object):
-    """Path to Activity/Buddy object cache
-    
-    On notification of a new object of either type the 
-    PresenceService client stores the object's representation
-    in this object.
-    
-    XXX Why not just sub-class dict?  We're only adding two
-        methods then and we would have all of the other 
-        standard operations on dictionaries.
-    """
-    def __init__(self):
-        """Initialise the cache"""
-        self._cache = {}
-
-    def get(self, object_path):
-        """Retrieve specified object from the cache 
-        
-        object_path -- full dbus path to the object
-        
-        returns a presence.buddy.Buddy or presence.activity.Activity
-        instance or None if the object_path is not yet cached.
-        
-        XXX could be written as return self._cache.get( object_path )
-        """
-        try:
-            return self._cache[object_path]
-        except KeyError:
-            return None
-
-    def add(self, obj):
-        """Adds given presence object to the cache 
-        
-        obj -- presence Buddy or Activity representation, the object's
-            object_path() method is used as the key for storage
-        
-        returns None 
-        
-        XXX should raise an error on collisions, shouldn't it? or 
-            return True/False to say whether the item was actually
-            added
-        """
-        op = obj.object_path()
-        if not self._cache.has_key(op):
-            self._cache[op] = obj
-
-    def remove(self, object_path):
-        """Remove the given presence object from the cache 
-        
-        object_path -- full dbus path to the object
-        
-        returns None 
-        
-        XXX does two checks instead of one with a try:except for the 
-            keyerror, normal case of deleting existing penalised as
-            a result.
-            
-            try:
-                return self._cache.pop( key )
-            except KeyError:
-                return None
-        """
-        if self._cache.has_key(object_path):
-            del self._cache[object_path]
-
 
 DBUS_SERVICE = "org.laptop.Sugar.Presence"
 DBUS_INTERFACE = "org.laptop.Sugar.Presence"
@@ -131,26 +66,34 @@ class PresenceService(gobject.GObject):
     _PS_ACTIVITY_OP = DBUS_PATH + "/Activities/"
     
 
-    def __init__(self):
+    def __init__(self, allow_offline_iface=True):
         """Initialise the service and attempt to connect to events
         """
         gobject.GObject.__init__(self)
-        self._objcache = ObjectCache()
+        self._objcache = {}
+
+        # Get a connection to the session bus
+        self._bus = dbus.SessionBus()
+        self._bus.add_signal_receiver(self._name_owner_changed_cb,
+                                    signal_name="NameOwnerChanged",
+                                    dbus_interface="org.freedesktop.DBus")
+
         # attempt to load the interface to the service...
+        self._allow_offline_iface = allow_offline_iface
         self._get_ps()
-    
-    _bus_ = None 
-    def _get_bus( self ):
-        """Retrieve dbus session-bus or create new"""
-        if not self._bus_:
-            self._bus_ = dbus.SessionBus()
-        return self._bus_
-    _bus = property( 
-        _get_bus, None, None, 
-        """DBUS SessionBus object for user-local communications""" 
-    )
+
+    def _name_owner_changed_cb(self, name, old, new):
+        if name != DBUS_SERVICE:
+            return
+        if (old and len(old)) and (not new and not len(new)):
+            # PS went away, clear out PS dbus service wrapper
+            self._ps_ = None
+        elif (not old and not len(old)) and (new and len(new)):
+            # PS started up
+            self._get_ps()
+
     _ps_ = None
-    def _get_ps( self ):
+    def _get_ps(self):
         """Retrieve dbus interface to PresenceService 
         
         Also registers for updates from various dbus events on the 
@@ -175,7 +118,9 @@ class PresenceService(gobject.GObject):
                     """Failure retrieving %r interface from the D-BUS service %r %r: %s""",
                     DBUS_INTERFACE, DBUS_SERVICE, DBUS_PATH, err
                 )
-                return _OfflineInterface()
+                if self._allow_offline_iface:
+                    return _OfflineInterface()
+                raise RuntimeError("Failed to connect to the presence service.")
             else:
                 self._ps_ = ps 
                 ps.connect_to_signal('BuddyAppeared', self._buddy_appeared_cb)
@@ -199,12 +144,16 @@ class PresenceService(gobject.GObject):
         
         Note that this method is called throughout the class whenever
         the representation of the object is required, it is not only 
-        called when the object is first discovered.
+        called when the object is first discovered.  The point is to only have
+        _one_ Python object for any D-Bus object represented by an object path,
+        effectively wrapping the D-Bus object in a single Python GObject.
         
         returns presence Buddy or Activity representation
         """
-        obj = self._objcache.get(object_path)
-        if not obj:
+        obj = None
+        try:
+            obj = self._objcache[object_path]
+        except KeyError:
             if object_path.startswith(self._PS_BUDDY_OP):
                 obj = buddy.Buddy(self._bus, self._new_object,
                         self._del_object, object_path)
@@ -213,12 +162,13 @@ class PresenceService(gobject.GObject):
                         self._del_object, object_path)
             else:
                 raise RuntimeError("Unknown object type")
-            self._objcache.add(obj)
+            self._objcache[object_path] = obj
         return obj
 
     def _del_object(self, object_path):
-        # FIXME
-        pass
+        """Fully remove an object from the object cache when it's no longer needed.
+        """
+        del self._objcache[object_path]
 
     def _emit_buddy_appeared_signal(self, object_path):
         """Emit GObject event with presence.buddy.Buddy object"""
@@ -248,13 +198,8 @@ class PresenceService(gobject.GObject):
         gobject.idle_add(self._emit_activity_invitation_signal, object_path)
 
     def _emit_private_invitation_signal(self, bus_name, connection, channel):
-        """Emit GObject event with bus_name, connection and channel
-        
-        XXX This seems to generate the wrong GObject event?  It generates 
-            'service-disappeared' instead of private-invitation for some 
-            reason.  That event doesn't even seem to be registered?
-        """
-        self.emit('service-disappeared', bus_name, connection, channel)
+        """Emit GObject event with bus_name, connection and channel"""
+        self.emit('private-invitation', bus_name, connection, channel)
         return False
 
     def _private_invitation_cb(self, bus_name, connection, channel):
@@ -281,10 +226,8 @@ class PresenceService(gobject.GObject):
         gobject.idle_add(self._emit_activity_disappeared_signal, object_path)
 
     def get(self, object_path):
-        """Retrieve given object path as a Buddy/Activity object
-        
-        XXX This is basically just an alias for _new_object, i.e. it 
-            just adds an extra function-call to the operation.
+        """Return the Buddy or Activity object corresponding to the given
+        D-Bus object path.
         """
         return self._new_object(object_path)
 
@@ -368,12 +311,7 @@ class PresenceService(gobject.GObject):
         return self._new_object(buddy_op)
 
     def get_owner(self):
-        """Retrieves "owner" as a Buddy
-        
-        XXX check that it really is a Buddy that's produced, what is 
-            this the owner of?  Shouldn't it be getting an activity 
-            and then asking who the owner of that is?
-        """
+        """Retrieves the laptop "owner" Buddy object."""
         try:
             owner_op = self._ps.GetOwner()
         except dbus.exceptions.DBusException, err:
@@ -381,7 +319,7 @@ class PresenceService(gobject.GObject):
                 """Unable to retrieve local user/owner from presence service: %s""",
                 err
             )
-            return None
+            raise RuntimeError("Could not get owner object from presence service.")
         return self._new_object(owner_op)
 
     def _share_activity_cb(self, activity, op):
@@ -499,10 +437,10 @@ class _MockPresenceService(gobject.GObject):
         return None
 
 _ps = None
-def get_instance():
+def get_instance(allow_offline_iface=False):
     """Retrieve this process' view of the PresenceService"""
     global _ps
     if not _ps:
-        _ps = PresenceService()
+        _ps = PresenceService(allow_offline_iface)
     return _ps
 
