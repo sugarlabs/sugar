@@ -30,7 +30,7 @@ _ACTIVITY_INTERFACE = "org.laptop.Sugar.Presence.Activity"
 class TestActivity(dbus.service.Object):
     def __init__(self, bus_name, object_id, actid, name, color, atype):
         self._actid = actid
-        self._name = name
+        self._aname = name
         self._color = color
         self._type = atype
         self._buddies = {}
@@ -51,34 +51,34 @@ class TestActivity(dbus.service.Object):
     def NewChannel(self, channel_path):
         pass
 
-    @dbus.service.method(_ACTIVITY_INTERFACE, in_signature="", out_signature="s")
+    @dbus.service.method(_ACTIVITY_INTERFACE, out_signature="s")
     def GetId(self):
         return self._actid
 
-    @dbus.service.method(_ACTIVITY_INTERFACE, in_signature="", out_signature="s")
+    @dbus.service.method(_ACTIVITY_INTERFACE, out_signature="s")
+    def GetName(self):
+        return self._aname
+
+    @dbus.service.method(_ACTIVITY_INTERFACE, out_signature="s")
     def GetColor(self):
         return self._color
 
-    @dbus.service.method(_ACTIVITY_INTERFACE, in_signature="", out_signature="s")
+    @dbus.service.method(_ACTIVITY_INTERFACE, out_signature="s")
     def GetType(self):
         return self._type
 
-    @dbus.service.method(_ACTIVITY_INTERFACE, in_signature="", out_signature="",
+    @dbus.service.method(_ACTIVITY_INTERFACE,
                         async_callbacks=('async_cb', 'async_err_cb'))
     def Join(self, async_cb, async_err_cb):
         pass
 
-    @dbus.service.method(_ACTIVITY_INTERFACE, in_signature="", out_signature="ao")
+    @dbus.service.method(_ACTIVITY_INTERFACE, out_signature="ao")
     def GetJoinedBuddies(self):
         return []
 
-    @dbus.service.method(_ACTIVITY_INTERFACE, in_signature="", out_signature="soao")
+    @dbus.service.method(_ACTIVITY_INTERFACE, out_signature="soao")
     def GetChannels(self):
         return None
-
-    @dbus.service.method(_ACTIVITY_INTERFACE, in_signature="", out_signature="s")
-    def GetName(self):
-        return self._name
 
 
 _BUDDY_PATH = "/org/laptop/Sugar/Presence/Buddies/"
@@ -282,14 +282,31 @@ class TestPresenceService(dbus.service.Object):
     @dbus.service.method(_PRESENCE_TEST_INTERFACE, in_signature="ay")
     def RemoveBuddy(self, pubkey):
         pubkey = ''.join([chr(item) for item in pubkey])
-        if self._buddies.has_key(pubkey):
-            buddy = self._buddies[pubkey]
-            self.BuddyDisappeared(buddy._object_path)
-            del self._buddies[pubkey]
-            return
-        raise NotFoundError("Buddy not found")
+        if not self._buddies.has_key(pubkey):
+            raise NotFoundError("Buddy not found")
+        buddy = self._buddies[pubkey]
+        self.BuddyDisappeared(buddy._object_path)
+        del self._buddies[pubkey]
+
+    @dbus.service.method(_PRESENCE_TEST_INTERFACE, in_signature="ssss")
+    def AddActivity(self, actid, name, color, atype):
+        objid = self._get_next_object_id()
+        act = TestActivity(self._bus_name, objid, actid, name, color, atype)
+        self._activities[actid] = act
+        self.ActivityAppeared(act._object_path)
+
+    @dbus.service.method(_PRESENCE_TEST_INTERFACE, in_signature="s")
+    def RemoveActivity(self, actid):
+        if not self._activities.has_key(actid):
+            raise NotFoundError("Activity not found")
+        act = self._activities[actid]
+        self.ActivityDisappeared(act._object_path)
+        del self._activities[actid]
 
 def main():
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+
     loop = gobject.MainLoop()
     ps = TestPresenceService()
     loop.run()

@@ -54,7 +54,7 @@ def stop_ps(pid):
         os.kill(pid, 15)
     
 
-class BuddyTests(unittest.TestCase):
+class GenericTestCase(unittest.TestCase):
     def setUp(self):
         self._pspid = start_ps()
 
@@ -68,6 +68,8 @@ class BuddyTests(unittest.TestCase):
         user_data["err"] = str(err)
         gtk.main_quit()
 
+
+class BuddyTests(GenericTestCase):
     def _testOwner_helper(self, user_data):
         try:
             ps = presenceservice.get_instance(False)
@@ -218,9 +220,135 @@ class BuddyTests(unittest.TestCase):
         suite.addTest(BuddyTests("testBuddyDisappeared"))
     addToSuite = staticmethod(addToSuite)
 
+class ActivityTests(GenericTestCase):
+    _AA_ID = "d622b99b9f365d712296094b9f6110521e6c9cba"
+    _AA_NAME = "Test Activity"
+    _AA_TYPE = "org.laptop.Sugar.Foobar"
+    _AA_COLOR = "#adfe20,#bf781a"
+
+    def _testActivityAppeared_helper_timeout(self, user_data):
+        self._handle_error("Timeout waiting for activity-appeared signal", user_data)
+        return False
+
+    def _testActivityAppeared_helper_cb(self, ps, activity, user_data):
+        user_data["activity"] = activity
+        user_data["success"] = True
+        gtk.main_quit()
+
+    def _testActivityAppeared_helper(self, user_data):
+        ps = presenceservice.get_instance(False)
+        ps.connect('activity-appeared', self._testActivityAppeared_helper_cb, user_data)
+        # Wait 5 seconds max for signal to be emitted
+        gobject.timeout_add(5000, self._testActivityAppeared_helper_timeout, user_data)
+
+        busobj = dbus.SessionBus().get_object(mockps._PRESENCE_SERVICE,
+                    mockps._PRESENCE_PATH)
+        try:
+            testps = dbus.Interface(busobj, mockps._PRESENCE_TEST_INTERFACE)
+        except dbus.exceptions.DBusException, err:
+            self._handle_error(err, user_data)
+            return False
+
+        try:
+            testps.AddActivity(self._AA_ID, self._AA_NAME, self._AA_COLOR, self._AA_TYPE)
+        except dbus.exceptions.DBusException, err:
+            self._handle_error(err, user_data)
+            return False
+
+        return False
+
+    def testActivityAppeared(self):
+        ps = presenceservice.get_instance(False)
+        assert ps, "Couldn't get presence service"
+
+        user_data = {"success": False, "err": "", "activity": None}
+        gobject.idle_add(self._testActivityAppeared_helper, user_data)
+        gtk.main()
+
+        assert user_data["success"] == True, user_data["err"]
+        assert user_data["activity"], "Activity was not received"
+
+        act = user_data["activity"]
+        assert act.props.id == self._AA_ID, "ID doesn't match expected"
+        assert act.props.name == self._AA_NAME, "Name doesn't match expected"
+        assert act.props.color == self._AA_COLOR, "Color doesn't match expected"
+        assert act.props.type == self._AA_TYPE, "Type doesn't match expected"
+        assert act.props.joined == False, "Joined doesn't match expected"
+
+        # Try to get activity by activity ID
+        act2 = ps.get_activity(self._AA_ID)
+        assert act2.props.id == self._AA_ID, "ID doesn't match expected"
+        assert act2.props.name == self._AA_NAME, "Name doesn't match expected"
+        assert act2.props.color == self._AA_COLOR, "Color doesn't match expected"
+        assert act2.props.type == self._AA_TYPE, "Type doesn't match expected"
+        assert act2.props.joined == False, "Joined doesn't match expected"
+
+    def _testActivityDisappeared_helper_timeout(self, user_data):
+        self._handle_error("Timeout waiting for activity-disappeared signal", user_data)
+        return False
+
+    def _testActivityDisappeared_helper_cb(self, ps, activity, user_data):
+        user_data["activity"] = activity
+        user_data["success"] = True
+        gtk.main_quit()
+
+    def _testActivityDisappeared_helper(self, user_data):
+        busobj = dbus.SessionBus().get_object(mockps._PRESENCE_SERVICE,
+                    mockps._PRESENCE_PATH)
+        try:
+            testps = dbus.Interface(busobj, mockps._PRESENCE_TEST_INTERFACE)
+        except dbus.exceptions.DBusException, err:
+            self._handle_error(err, user_data)
+            return False
+
+        # Add a fake activity
+        try:
+            testps.AddActivity(self._AA_ID, self._AA_NAME, self._AA_COLOR, self._AA_TYPE)
+        except dbus.exceptions.DBusException, err:
+            self._handle_error(err, user_data)
+            return False
+
+        ps = presenceservice.get_instance(False)
+        ps.connect('activity-disappeared', self._testActivityDisappeared_helper_cb, user_data)
+        # Wait 5 seconds max for signal to be emitted
+        gobject.timeout_add(5000, self._testActivityDisappeared_helper_timeout, user_data)
+
+        # Delete the fake activity
+        try:
+            testps.RemoveActivity(self._AA_ID)
+        except dbus.exceptions.DBusException, err:
+            self._handle_error(err, user_data)
+            return False
+
+        return False
+
+    def testActivityDisappeared(self):
+        ps = presenceservice.get_instance(False)
+        assert ps, "Couldn't get presence service"
+
+        user_data = {"success": False, "err": "", "activity": None}
+        gobject.idle_add(self._testActivityDisappeared_helper, user_data)
+        gtk.main()
+
+        assert user_data["success"] == True, user_data["err"]
+        assert user_data["activity"], "Activity was not received"
+
+        act = user_data["activity"]
+        assert act.props.id == self._AA_ID, "ID doesn't match expected"
+        assert act.props.name == self._AA_NAME, "Name doesn't match expected"
+        assert act.props.color == self._AA_COLOR, "Color doesn't match expected"
+        assert act.props.type == self._AA_TYPE, "Type doesn't match expected"
+        assert act.props.joined == False, "Joined doesn't match expected"
+
+    def addToSuite(suite):
+        suite.addTest(ActivityTests("testActivityAppeared"))
+        suite.addTest(ActivityTests("testActivityDisappeared"))
+    addToSuite = staticmethod(addToSuite)
+
 def main():
     suite = unittest.TestSuite()
     BuddyTests.addToSuite(suite)
+    ActivityTests.addToSuite(suite)
     runner = unittest.TextTestRunner()
     runner.run(suite)
 
