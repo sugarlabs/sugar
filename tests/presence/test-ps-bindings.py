@@ -346,6 +346,9 @@ class ActivityTests(GenericTestCase):
     addToSuite = staticmethod(addToSuite)
 
 def main():
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+
     suite = unittest.TestSuite()
     BuddyTests.addToSuite(suite)
     ActivityTests.addToSuite(suite)
