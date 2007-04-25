@@ -28,16 +28,40 @@ _ACTIVITY_PATH = "/org/laptop/Sugar/Presence/Activities/"
 _ACTIVITY_INTERFACE = "org.laptop.Sugar.Presence.Activity"
 
 class TestActivity(dbus.service.Object):
-    def __init__(self, bus_name, object_id, actid, name, color, atype):
+    def __init__(self, bus_name, object_id, actid, name, color, atype, properties):
         self._actid = actid
         self._aname = name
         self._color = color
         self._type = atype
+        self._properties = {}
+        for (key, value) in properties.items():
+            self._properties[str(key)] = str(value)
         self._buddies = {}
 
         self._object_id = object_id
         self._object_path = _ACTIVITY_PATH + str(self._object_id)
         dbus.service.Object.__init__(self, bus_name, self._object_path)
+
+    def add_buddy(self, buddy):
+        if self._buddies.has_key(buddy._key):
+            raise NotFoundError("Buddy already in activity")
+        self._buddies[buddy._key] = buddy
+        self.BuddyJoined(buddy._object_path)
+
+    def remove_buddy(self, buddy):
+        if not self._buddies.has_key(buddy._key):
+            raise NotFoundError("Buddy not in activity")
+        self.BuddyLeft(buddy._object_path)
+        del self._buddies[buddy._key]
+
+    def disappear(self):
+        # remove all buddies from activity
+        for buddy in self.get_buddies():
+            self.BuddyLeft(buddy._object_path)
+        self._buddies = {}
+
+    def get_buddies(self):
+        return self._buddies.values()
 
     @dbus.service.signal(_ACTIVITY_INTERFACE, signature="o")
     def BuddyJoined(self, buddy_path):
@@ -67,14 +91,16 @@ class TestActivity(dbus.service.Object):
     def GetType(self):
         return self._type
 
-    @dbus.service.method(_ACTIVITY_INTERFACE,
-                        async_callbacks=('async_cb', 'async_err_cb'))
-    def Join(self, async_cb, async_err_cb):
+    @dbus.service.method(_ACTIVITY_INTERFACE)
+    def Join(self):
         pass
 
     @dbus.service.method(_ACTIVITY_INTERFACE, out_signature="ao")
     def GetJoinedBuddies(self):
-        return []
+        ret = []
+        for buddy in self._buddies.values():
+            ret.append(dbus.ObjectPath(buddy._object_path))
+        return ret
 
     @dbus.service.method(_ACTIVITY_INTERFACE, out_signature="soao")
     def GetChannels(self):
@@ -105,6 +131,26 @@ class TestBuddy(dbus.service.Object):
         self._object_id = object_id
         self._object_path = _BUDDY_PATH + str(self._object_id)
         dbus.service.Object.__init__(self, bus_name, self._object_path)
+
+    def add_activity(self, activity):
+        if self._activities.has_key(activity._actid):
+            raise NotFoundError("Buddy already in activity")
+        self._activities[activity._actid] = activity
+        self.JoinedActivity(activity._object_path)
+
+    def remove_activity(self, activity):
+        if not self._activities.has_key(activity._actid):
+            raise NotFoundError("Buddy not in activity")
+        self.LeftActivity(activity._object_path)
+        del self._activities[activity._actid]
+
+    def leave_activities(self):
+        for activity in self.get_activities():
+            self.LeftActivity(activity._object_path)
+        self._activities = {}
+
+    def get_activities(self):
+        return self._activities.values()
 
     @dbus.service.signal(_BUDDY_INTERFACE, signature="ay")
     def IconChanged(self, icon_data):
@@ -261,10 +307,22 @@ class TestPresenceService(dbus.service.Object):
             raise NotFoundError("The owner was not found.")
         return dbus.ObjectPath(self._owner._object_path)
 
+    def _internal_share_activity(self, actid, atype, name, properties, color=None):
+        objid = self._get_next_object_id()
+        if not color:
+            color = self._owner._color
+        act = TestActivity(self._bus_name, objid, actid, name, color, atype, properties)
+        self._activities[actid] = act
+        self.ActivityAppeared(act._object_path)
+        return act
+
     @dbus.service.method(_PRESENCE_INTERFACE, in_signature="sssa{sv}",
-            out_signature="o", async_callbacks=('async_cb', 'async_err_cb'))
-    def ShareActivity(self, actid, atype, name, properties, async_cb, async_err_cb):
-        pass
+            out_signature="o")
+    def ShareActivity(self, actid, atype, name, properties):
+        act = self._internal_share_activity(actid, atype, name, properties)
+        act.add_buddy(self._owner)
+        self._owner.add_activity(act)
+        return act._object_path
 
     @dbus.service.method(_PRESENCE_INTERFACE, out_signature="so")
     def GetPreferredConnection(self):
@@ -285,21 +343,54 @@ class TestPresenceService(dbus.service.Object):
         if not self._buddies.has_key(pubkey):
             raise NotFoundError("Buddy not found")
         buddy = self._buddies[pubkey]
+        activities = buddy.get_activities()
+        # remove activity from the buddy
+        buddy.leave_activities()
+        # remove the buddy from all activities
+        for act in activities:
+            act.remove_buddy(buddy)
         self.BuddyDisappeared(buddy._object_path)
         del self._buddies[pubkey]
 
-    @dbus.service.method(_PRESENCE_TEST_INTERFACE, in_signature="ssss")
-    def AddActivity(self, actid, name, color, atype):
-        objid = self._get_next_object_id()
-        act = TestActivity(self._bus_name, objid, actid, name, color, atype)
-        self._activities[actid] = act
-        self.ActivityAppeared(act._object_path)
+    @dbus.service.method(_PRESENCE_TEST_INTERFACE, in_signature="oo")
+    def AddBuddyToActivity(self, pubkey, actid):
+        pubkey = ''.join([chr(item) for item in pubkey])
+        if not self._buddies.has_key(pubkey):
+            raise NotFoundError("Buddy unknown")
+        if not self._activities.has_key(actid):
+            raise NotFoundError("Activity unknown")
+
+        buddy = self._buddies[pubkey]
+        activity = self._activities[actid]
+        activity.add_buddy(buddy)
+        buddy.add_activity(activity)
+
+    @dbus.service.method(_PRESENCE_TEST_INTERFACE, in_signature="oo")
+    def RemoveBuddyFromActivity(self, pubkey, actid):
+        pubkey = ''.join([chr(item) for item in pubkey])
+        if not self._buddies.has_key(pubkey):
+            raise NotFoundError("Buddy unknown")
+        if not self._activities.has_key(actid):
+            raise NotFoundError("Activity unknown")
+
+        buddy = self._buddies[pubkey]
+        activity = self._activities[actid]
+        buddy.remove_activity(activity)
+        activity.remove_buddy(buddy)
+
+    @dbus.service.method(_PRESENCE_TEST_INTERFACE, in_signature="ssssa{sv}")
+    def AddActivity(self, actid, name, color, atype, properties):
+        self._internal_share_activity(actid, atype, name, properties, color=color)
 
     @dbus.service.method(_PRESENCE_TEST_INTERFACE, in_signature="s")
     def RemoveActivity(self, actid):
         if not self._activities.has_key(actid):
             raise NotFoundError("Activity not found")
         act = self._activities[actid]
+        # remove activity from all buddies
+        for buddy in act.get_buddies():
+            buddy.remove_activity(act)
+        act.disappear()
         self.ActivityDisappeared(act._object_path)
         del self._activities[actid]
 
