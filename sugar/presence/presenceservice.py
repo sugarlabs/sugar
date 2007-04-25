@@ -241,8 +241,8 @@ class PresenceService(gobject.GObject):
             resp = self._ps.GetActivities()
         except dbus.exceptions.DBusException, err:
             logging.warn(
-                """Unable to retrieve activity list from presence service: %s""",
-                err
+                """Unable to retrieve activity list from presence service: %s"""
+                % err
             )
             return []
         else:
@@ -263,9 +263,8 @@ class PresenceService(gobject.GObject):
             act_op = self._ps.GetActivityById(activity_id)
         except dbus.exceptions.DBusException, err:
             logging.warn(
-                """Unable to retrieve activity handle for %r from presence service: %s""",
-                activity_id,
-                err
+                """Unable to retrieve activity handle for %r from presence service: %s"""
+                % (activity_id, err)
             )
             return None
         return self._new_object(act_op)
@@ -280,8 +279,8 @@ class PresenceService(gobject.GObject):
             resp = self._ps.GetBuddies()
         except dbus.exceptions.DBusException, err:
             logging.warn(
-                """Unable to retrieve buddy-list from presence service: %s""",
-                err
+                """Unable to retrieve buddy-list from presence service: %s"""
+                % err
             )
             return []
         else:
@@ -303,9 +302,8 @@ class PresenceService(gobject.GObject):
             buddy_op = self._ps.GetBuddyByPublicKey(dbus.ByteArray(key))
         except dbus.exceptions.DBusException, err:
             logging.warn(
-                """Unable to retrieve buddy handle for %r from presence service: %s""",
-                key,
-                err
+                """Unable to retrieve buddy handle for %r from presence service: %s"""
+                % key, err
             )
             return None
         return self._new_object(buddy_op)
@@ -316,8 +314,8 @@ class PresenceService(gobject.GObject):
             owner_op = self._ps.GetOwner()
         except dbus.exceptions.DBusException, err:
             logging.warn(
-                """Unable to retrieve local user/owner from presence service: %s""",
-                err
+                """Unable to retrieve local user/owner from presence service: %s"""
+                % err
             )
             raise RuntimeError("Could not get owner object from presence service.")
         return self._new_object(owner_op)
