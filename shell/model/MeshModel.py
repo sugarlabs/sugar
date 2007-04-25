@@ -193,7 +193,7 @@ class MeshModel(gobject.GObject):
         self._check_activity(activity)
 
     def _check_activity(self, activity):
-        atype = activity.get_type()
+        atype = activity.props.type
         bundle = self._bundle_registry.get_bundle(atype)
         if not bundle:
             return
