@@ -220,11 +220,33 @@ class BuddyTests(GenericTestCase):
         suite.addTest(BuddyTests("testBuddyDisappeared"))
     addToSuite = staticmethod(addToSuite)
 
+class MockSugarActivity(gobject.GObject):
+    __gproperties__ = {
+        'title'     : (str, None, None, None, gobject.PARAM_READABLE)
+    }
+
+    def __init__(self, actid, name, atype):
+        self._actid = actid
+        self._name = name
+        self._type = atype
+        gobject.GObject.__init__(self)
+
+    def do_get_property(self, pspec):
+        if pspec.name == "title":
+            return self._name
+
+    def get_id(self):
+        return self._actid
+
+    def get_service_name(self):
+        return self._type
+
 class ActivityTests(GenericTestCase):
     _AA_ID = "d622b99b9f365d712296094b9f6110521e6c9cba"
     _AA_NAME = "Test Activity"
     _AA_TYPE = "org.laptop.Sugar.Foobar"
     _AA_COLOR = "#adfe20,#bf781a"
+    _AA_PROPS = {"foo": "asdfadf", "bar":"5323aggdas"}
 
     def _testActivityAppeared_helper_timeout(self, user_data):
         self._handle_error("Timeout waiting for activity-appeared signal", user_data)
@@ -250,7 +272,7 @@ class ActivityTests(GenericTestCase):
             return False
 
         try:
-            testps.AddActivity(self._AA_ID, self._AA_NAME, self._AA_COLOR, self._AA_TYPE)
+            testps.AddActivity(self._AA_ID, self._AA_NAME, self._AA_COLOR, self._AA_TYPE, {})
         except dbus.exceptions.DBusException, err:
             self._handle_error(err, user_data)
             return False
@@ -303,7 +325,7 @@ class ActivityTests(GenericTestCase):
 
         # Add a fake activity
         try:
-            testps.AddActivity(self._AA_ID, self._AA_NAME, self._AA_COLOR, self._AA_TYPE)
+            testps.AddActivity(self._AA_ID, self._AA_NAME, self._AA_COLOR, self._AA_TYPE, {})
         except dbus.exceptions.DBusException, err:
             self._handle_error(err, user_data)
             return False
@@ -340,9 +362,89 @@ class ActivityTests(GenericTestCase):
         assert act.props.type == self._AA_TYPE, "Type doesn't match expected"
         assert act.props.joined == False, "Joined doesn't match expected"
 
+    def _testActivityShare_helper_is_done(self, user_data):
+        if user_data["got-act-appeared"] and user_data["got-joined-activity"]:
+            user_data["success"] = True
+            gtk.main_quit()
+
+    def _testActivityShare_helper_timeout(self, user_data):
+        self._handle_error("Timeout waiting for activity share", user_data)
+        return False
+
+    def _testActivityShare_helper_joined_activity_cb(self, buddy, activity, user_data):
+        user_data["joined-activity-buddy"] = buddy
+        user_data["joined-activity-activity"] = activity
+        user_data["got-joined-activity"] = True
+        self._testActivityShare_helper_is_done(user_data)
+
+    def _testActivityShare_helper_cb(self, ps, activity, user_data):
+        user_data["activity"] = activity
+        user_data["got-act-appeared"] = True
+        self._testActivityShare_helper_is_done(user_data)
+
+    def _testActivityShare_helper(self, user_data):
+        ps = presenceservice.get_instance(False)
+        mockact = MockSugarActivity(self._AA_ID, self._AA_NAME, self._AA_TYPE)
+
+        ps.connect('activity-appeared', self._testActivityShare_helper_cb, user_data)
+        try:
+            # Hook up to the owner's joined-activity signal
+            owner = ps.get_owner()
+            owner.connect("joined-activity", self._testActivityShare_helper_joined_activity_cb, user_data)
+        except RuntimeError, err:
+            self._handle_error(err, user_data)
+            return False
+
+        # Wait 5 seconds max for signal to be emitted
+        gobject.timeout_add(5000, self._testActivityShare_helper_timeout, user_data)
+
+        ps.share_activity(mockact, self._AA_PROPS)
+
+        return False
+
+    def testActivityShare(self):
+        ps = presenceservice.get_instance(False)
+        assert ps, "Couldn't get presence service"
+
+        user_data = {"success": False,
+                     "err": "",
+                     "activity": None,
+                     "got-act-appeared": False,
+                     "joined-activity-buddy": None,
+                     "joined-activity-activity": None,
+                     "got-joined-activity": False
+                    }
+        gobject.idle_add(self._testActivityShare_helper, user_data)
+        gtk.main()
+
+        assert user_data["success"] == True, user_data["err"]
+        assert user_data["activity"], "Shared activity was not received"
+
+        act = user_data["activity"]
+        assert act.props.id == self._AA_ID, "ID doesn't match expected"
+        assert act.props.name == self._AA_NAME, "Name doesn't match expected"
+        # Shared activities from local machine take the owner's color
+        assert act.props.color == mockps._OWNER_COLOR, "Color doesn't match expected"
+        assert act.props.type == self._AA_TYPE, "Type doesn't match expected"
+        assert act.props.joined == False, "Joined doesn't match expected"
+
+        buddies = act.get_joined_buddies()
+        assert len(buddies) == 1, "No buddies in activity"
+        owner = buddies[0]
+        assert owner.props.key == mockps._OWNER_PUBKEY, "Buddy key doesn't match expected"
+        assert owner.props.nick == mockps._OWNER_NICK, "Buddy nick doesn't match expected"
+        assert owner.props.color == mockps._OWNER_COLOR, "Buddy color doesn't match expected"
+
+        real_owner = ps.get_owner()
+        assert real_owner == owner, "Owner mismatch"
+
+        assert user_data["joined-activity-activity"] == act, "Activity mismatch"
+        assert user_data["joined-activity-buddy"] == owner, "Owner mismatch"
+
     def addToSuite(suite):
         suite.addTest(ActivityTests("testActivityAppeared"))
         suite.addTest(ActivityTests("testActivityDisappeared"))
+        suite.addTest(ActivityTests("testActivityShare"))
     addToSuite = staticmethod(addToSuite)
 
 def main():
