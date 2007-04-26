@@ -16,34 +16,10 @@
 # Boston, MA 02111-1307, USA.
 
 import gtk
-import hippo
 
-from sugar.graphics2.toolbox import Toolbox
-
-class Window(gtk.Window):
-    def __init__(self):
-        gtk.Window.__init__(self)
+class ToolButton(gtk.ToolButton):
+    def __init__(self, icon_name=None):
+        gtk.ToolButton.__init__(self)
         
-        vbox = gtk.VBox()
-        self.add(vbox)
-        
-        self.toolbox = Toolbox()
-        vbox.pack_start(self.toolbox, False)
-        self.toolbox.show()
-        
-        self._canvas_box = gtk.VBox()
-        vbox.pack_start(self._canvas_box)
-        self._canvas_box.show()
-        
-        self.canvas = hippo.Canvas()
-        self._canvas_box.pack_start(self.canvas)
-        self.canvas.show()
-        
-        vbox.show()
-
-    def set_canvas(self, canvas):
-        if self.canvas:
-            self._canvas_box.remove(self.canvas)
-
-        self._canvas_box.add(canvas)
-        self.canvas = canvas
+        if icon_name:
+            self.set_icon_name(icon_name) 

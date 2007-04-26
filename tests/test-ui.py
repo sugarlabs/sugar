@@ -18,11 +18,9 @@
 
 import gtk
 
-from sugar.graphics2.window import Window
-
-class ActivityToolbar(gtk.Toolbar):
-    def __init__(self):
-        gtk.Toolbar.__init__(self)
+from sugar.graphics.window import Window
+from sugar.graphics.toolbutton import ToolButton
+from sugar.graphics.toolbox import ActivityToolbar
 
 class EditToolbar(gtk.Toolbar):
     def __init__(self):
@@ -32,8 +30,7 @@ class TextToolbar(gtk.Toolbar):
     def __init__(self):
         gtk.Toolbar.__init__(self)
 
-        button = gtk.ToolButton()
-        button.set_icon_name('text-format-bold')
+        button = ToolButton('text-format-bold')
         self.insert(button, -1)
         button.show()
 

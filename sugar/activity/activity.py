@@ -68,13 +68,11 @@ class Activity(Window, gtk.Container):
         if service:
             self._join(service)
 
-        self.realize()
-    
-        group = gtk.Window()
-        group.realize()
-        self.window.set_group(group.window)
-
         self._bus = ActivityService(self)
+
+        activity_toolbar = ActivityToolbar()
+        self.toolbox.add_toolbar('Activity', activity_toolbar)
+        activity_toolbar.show()
 
     # DEPRECATED It will be removed after 3-6-2007 stable image
     def do_add(self, widget):

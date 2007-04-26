@@ -18,11 +18,10 @@ import gtk
 import hippo
 
 from sugar.graphics import units
-from sugar.graphics.window import Window
 
-class PanelWindow(Window):
+class PanelWindow(gtk.Window):
     def __init__(self, orientation):
-        Window.__init__(self)
+        gtk.Window.__init__(self)
         self.hover = False
 
         self._orientation = orientation
@@ -32,9 +31,13 @@ class PanelWindow(Window):
         self.connect('enter-notify-event', self._enter_notify_cb)
         self.connect('leave-notify-event', self._leave_notify_cb)
 
+        self._canvas = hippo.Canvas()
+        self.add(self._canvas)
+        self._canvas.show()
+
         self._bg = hippo.CanvasBox(background_color=0x414141ff,
                                    orientation=self._orientation)
-        self.set_root(self._bg)
+        self._canvas.set_root(self._bg)
 
         self._update_size()
     

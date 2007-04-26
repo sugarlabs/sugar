@@ -54,7 +54,7 @@ class HomeWindow(Window):
         self._mesh_box = MeshBox(shell, MenuShell(self))
         self._transition_box = TransitionBox()
 
-        self.set_root(self._home_box)
+        self.canvas.set_root(self._home_box)
         
         self._transition_box.connect('completed',
                                      self._transition_completed_cb)
@@ -81,7 +81,7 @@ class HomeWindow(Window):
     def set_zoom_level(self, level):
         self._level = level
     
-        self.set_root(self._transition_box)
+        self.canvas.set_root(self._transition_box)
 
         if level == sugar.ZOOM_HOME:
             scale = units.XLARGE_ICON_SCALE
@@ -94,11 +94,11 @@ class HomeWindow(Window):
     
     def _transition_completed_cb(self, transition_box):
         if self._level == sugar.ZOOM_HOME:
-            self.set_root(self._home_box)
+            self.canvas.set_root(self._home_box)
         elif self._level == sugar.ZOOM_FRIENDS:
-            self.set_root(self._friends_box)
+            self.canvas.set_root(self._friends_box)
         elif self._level == sugar.ZOOM_MESH:
-            self.set_root(self._mesh_box)
+            self.canvas.set_root(self._mesh_box)
 
         self._update_mesh_state()
         
