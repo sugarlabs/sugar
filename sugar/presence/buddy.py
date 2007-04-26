@@ -64,7 +64,7 @@ class Buddy(gobject.GObject):
         'icon'             : (object, None, None, gobject.PARAM_READABLE),
         'nick'             : (str, None, None, None, gobject.PARAM_READABLE),
         'color'            : (str, None, None, None, gobject.PARAM_READABLE),
-        'current-activity' : (str, None, None, None, gobject.PARAM_READABLE),
+        'current-activity' : (object, None, None, gobject.PARAM_READABLE),
         'owner'            : (bool, None, None, False, gobject.PARAM_READABLE)
     }
 
@@ -93,6 +93,9 @@ class Buddy(gobject.GObject):
         self._properties = self._get_properties_helper()
 
         self._activities = {}
+        activities = self._buddy.GetJoinedActivities()
+        for op in activities:
+            self._activities[op] = self._ps_new_object(op)
         self._icon = None
 
     def _get_properties_helper(self):
@@ -121,9 +124,10 @@ class Buddy(gobject.GObject):
             curact = self._properties["current-activity"]
             if not len(curact):
                 return None
-            if not self._activities.has_key(curact):
-                return None
-            return self._activities[curact]
+            for activity in self._activities.values():
+                if activity.props.id == curact:
+                    return activity
+            return None
         elif pspec.name == "owner":
             return self._properties["owner"]
         elif pspec.name == "icon":
