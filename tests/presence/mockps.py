@@ -18,9 +18,15 @@
 import gobject
 import dbus, dbus.service, dbus.glib
 
+_PRESENCE_SERVICE = "org.laptop.Sugar.Presence"
+_PRESENCE_INTERFACE = "org.laptop.Sugar.Presence"
+_PRESENCE_TEST_INTERFACE = "org.laptop.Sugar.Presence._Test"
+_PRESENCE_PATH = "/org/laptop/Sugar/Presence"
+
+
 class NotFoundError(dbus.DBusException):
-    def __init__(self):
-        dbus.DBusException.__init__(self)
+    def __init__(self, msg=None):
+        dbus.DBusException.__init__(self, msg)
         self._dbus_error_name = _PRESENCE_INTERFACE + '.NotFound'
 
 
@@ -226,11 +232,6 @@ class TestOwner(TestBuddy):
                 _OWNER_NICK, _OWNER_COLOR)
         self._owner = True
 
-
-_PRESENCE_SERVICE = "org.laptop.Sugar.Presence"
-_PRESENCE_INTERFACE = "org.laptop.Sugar.Presence"
-_PRESENCE_TEST_INTERFACE = "org.laptop.Sugar.Presence._Test"
-_PRESENCE_PATH = "/org/laptop/Sugar/Presence"
 
 class TestPresenceService(dbus.service.Object):
     """A test D-Bus PresenceService used to exercise the Sugar PS bindings."""
