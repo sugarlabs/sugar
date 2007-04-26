@@ -157,14 +157,19 @@ sugar.ScrolledWindow
 
 * Support for markers. Line as default and optional support for other shapes (star for bookmarks, circles for xos...). Generic way of add marks and keep them updated (observer?)
 
+gtk.Expander
 
-TODO
+gtk.Separator
 
-**Rollovers**
-Grab key
-Trays
-Grouping
-Tabs
-Sorting
-Expander
-Clipboard
+sugar.GroupBox
+
+* just a container
+* set_title and set_title_widget (checkbox, radiobutton...)
+* different color and separator under title
+
+gtk.TreeView
+
+gtk.Notebook
+
+* Expand to fill the whole space by default but property to turn it off
+* Switching tabs with the little arrows should page
