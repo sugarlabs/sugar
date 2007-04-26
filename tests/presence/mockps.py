@@ -28,7 +28,8 @@ _ACTIVITY_PATH = "/org/laptop/Sugar/Presence/Activities/"
 _ACTIVITY_INTERFACE = "org.laptop.Sugar.Presence.Activity"
 
 class TestActivity(dbus.service.Object):
-    def __init__(self, bus_name, object_id, actid, name, color, atype, properties):
+    def __init__(self, bus_name, object_id, parent, actid, name, color, atype, properties):
+        self._parent = parent
         self._actid = actid
         self._aname = name
         self._color = color
@@ -93,7 +94,9 @@ class TestActivity(dbus.service.Object):
 
     @dbus.service.method(_ACTIVITY_INTERFACE)
     def Join(self):
-        pass
+        owner = self._parent._owner
+        self.add_buddy(owner)
+        owner.add_activity(self)
 
     @dbus.service.method(_ACTIVITY_INTERFACE, out_signature="ao")
     def GetJoinedBuddies(self):
@@ -311,7 +314,7 @@ class TestPresenceService(dbus.service.Object):
         objid = self._get_next_object_id()
         if not color:
             color = self._owner._color
-        act = TestActivity(self._bus_name, objid, actid, name, color, atype, properties)
+        act = TestActivity(self._bus_name, objid, self, actid, name, color, atype, properties)
         self._activities[actid] = act
         self.ActivityAppeared(act._object_path)
         return act
