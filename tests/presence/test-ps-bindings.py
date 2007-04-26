@@ -67,87 +67,92 @@ def get_ps():
 class GenericTestCase(unittest.TestCase):
     def setUp(self):
         self._pspid = start_ps()
+        self._success = False
+        self._err = ""
+        self._signals = []
+        self._sources = []
 
     def tearDown(self):
+        # Remove all signal handlers
+        for (obj, sid) in self._signals:
+            obj.disconnect(sid)
+        for source in self._sources:
+            gobject.source_remove(source)
+
         if self._pspid > 0:
             stop_ps(self._pspid)
         self._pspid = -1
 
-    def _handle_error(self, err, user_data):
-        user_data["success"] = False
-        user_data["err"] = str(err)
+    def _handle_success(self):
+        self._success = True
         gtk.main_quit()
 
-    def cleanup(self, user_data):
-        if user_data.has_key("sources"):
-            for source in user_data["sources"]:
-                gobject.source_remove(source)
+    def _handle_error(self, err):
+        self._success = False
+        self._err = str(err)
+        gtk.main_quit()
 
 class BuddyTests(GenericTestCase):
-    def _testOwner_helper(self, user_data):
+    def _testOwner_helper(self):
         try:
             ps = get_ps()
         except RuntimeError, err:
-            self._handle_error(err, user_data)
+            self._handle_error(err)
             return False
         
         try:
             owner = ps.get_owner()
         except RuntimeError, err:
-            self._handle_error(err, user_data)
+            self._handle_error(err)
             return False
 
-        user_data["success"] = True
-        user_data["owner"] = owner
-        gtk.main_quit()
+        self._owner = owner
+        self._handle_success()
         return False
 
     def testOwner(self):
-        user_data = {"success": False, "err": "", "owner": None}
-        gobject.idle_add(self._testOwner_helper, user_data)
+        gobject.idle_add(self._testOwner_helper)
         gtk.main()
 
-        assert user_data["success"] == True, user_data["err"]
-        assert user_data["owner"], "Owner could not be found."
+        assert self._success == True, "Test unsuccessful."
+        assert self._owner, "Owner could not be found."
 
-        owner = user_data["owner"]
-        assert owner.props.key == mockps._OWNER_PUBKEY, "Owner public key doesn't match expected"
-        assert owner.props.nick == mockps._OWNER_NICK, "Owner nickname doesn't match expected"
-        assert owner.props.color == mockps._OWNER_COLOR, "Owner color doesn't match expected"
+        assert self._owner.props.key == mockps._OWNER_PUBKEY, "Owner public key doesn't match expected"
+        assert self._owner.props.nick == mockps._OWNER_NICK, "Owner nickname doesn't match expected"
+        assert self._owner.props.color == mockps._OWNER_COLOR, "Owner color doesn't match expected"
 
     _BA_PUBKEY = "akjadskjjfahfdahfdsahjfhfewaew3253232832832q098qewa98fdsafa98fa"
     _BA_NICK = "BuddyAppearedTestBuddy"
     _BA_COLOR = "#23adfb,#56bb11"
 
-    def _testBuddyAppeared_helper_timeout(self, user_data):
-        self._handle_error("Timeout waiting for buddy-appeared signal", user_data)
+    def _testBuddyAppeared_helper_timeout(self):
+        self._handle_error("Timeout waiting for buddy-appeared signal")
         return False
 
-    def _testBuddyAppeared_helper_cb(self, ps, buddy, user_data):
-        user_data["buddy"] = buddy
-        user_data["success"] = True
-        gtk.main_quit()
+    def _testBuddyAppeared_helper_cb(self, ps, buddy):
+        self._buddy = buddy
+        self._handle_success()
 
-    def _testBuddyAppeared_helper(self, user_data):
+    def _testBuddyAppeared_helper(self):
         ps = get_ps()
-        sid = ps.connect('buddy-appeared', self._testBuddyAppeared_helper_cb, user_data)
-        user_data["sources"].append(sid)
+        sid = ps.connect('buddy-appeared', self._testBuddyAppeared_helper_cb)
+        self._signals.append((ps, sid))
         # Wait 5 seconds max for signal to be emitted
-        sid = gobject.timeout_add(5000, self._testBuddyAppeared_helper_timeout, user_data)
-        user_data["sources"].append(sid)
+        sid = gobject.timeout_add(5000, self._testBuddyAppeared_helper_timeout)
+        self._sources.append(sid)
 
         busobj = dbus.SessionBus().get_object(mockps._PRESENCE_SERVICE,
                     mockps._PRESENCE_PATH)
         try:
             testps = dbus.Interface(busobj, mockps._PRESENCE_TEST_INTERFACE)
         except dbus.exceptions.DBusException, err:
-            self._handle_error(err, user_data)
+            self._handle_error(err)
             return False
 
         try:
             testps.AddBuddy(self._BA_PUBKEY, self._BA_NICK, self._BA_COLOR)
         except dbus.exceptions.DBusException, err:
-            self._handle_error(err, user_data)
+            self._handle_error(err)
             return False
 
         return False
@@ -156,18 +161,16 @@ class BuddyTests(GenericTestCase):
         ps = get_ps()
         assert ps, "Couldn't get presence service"
 
-        user_data = {"success": False, "err": "", "buddy": None, "sources": []}
-        gobject.idle_add(self._testBuddyAppeared_helper, user_data)
+        self._buddy = None
+        gobject.idle_add(self._testBuddyAppeared_helper)
         gtk.main()
-        self.cleanup(user_data)
 
-        assert user_data["success"] == True, user_data["err"]
-        assert user_data["buddy"], "Buddy was not received"
+        assert self._success == True, "Test unsuccessful."
+        assert self._buddy, "Buddy was not received"
 
-        buddy = user_data["buddy"]
-        assert buddy.props.key == self._BA_PUBKEY, "Public key doesn't match expected"
-        assert buddy.props.nick == self._BA_NICK, "Nickname doesn't match expected"
-        assert buddy.props.color == self._BA_COLOR, "Color doesn't match expected"
+        assert self._buddy.props.key == self._BA_PUBKEY, "Public key doesn't match expected"
+        assert self._buddy.props.nick == self._BA_NICK, "Nickname doesn't match expected"
+        assert self._buddy.props.color == self._BA_COLOR, "Color doesn't match expected"
 
         # Try to get buddy by public key
         buddy2 = ps.get_buddy(self._BA_PUBKEY)
@@ -176,44 +179,43 @@ class BuddyTests(GenericTestCase):
         assert buddy2.props.nick == self._BA_NICK, "Nickname doesn't match expected"
         assert buddy2.props.color == self._BA_COLOR, "Color doesn't match expected"
 
-    def _testBuddyDisappeared_helper_timeout(self, user_data):
-        self._handle_error("Timeout waiting for buddy-disappeared signal", user_data)
+    def _testBuddyDisappeared_helper_timeout(self):
+        self._handle_error("Timeout waiting for buddy-disappeared signal")
         return False
 
-    def _testBuddyDisappeared_helper_cb(self, ps, buddy, user_data):
-        user_data["buddy"] = buddy
-        user_data["success"] = True
-        gtk.main_quit()
+    def _testBuddyDisappeared_helper_cb(self, ps, buddy):
+        self._buddy = buddy
+        self._handle_success()
 
-    def _testBuddyDisappeared_helper(self, user_data):
+    def _testBuddyDisappeared_helper(self):
         busobj = dbus.SessionBus().get_object(mockps._PRESENCE_SERVICE,
                     mockps._PRESENCE_PATH)
         try:
             testps = dbus.Interface(busobj, mockps._PRESENCE_TEST_INTERFACE)
         except dbus.exceptions.DBusException, err:
-            self._handle_error(err, user_data)
+            self._handle_error(err)
             return False
 
         # Add a fake buddy
         try:
             testps.AddBuddy(self._BA_PUBKEY, self._BA_NICK, self._BA_COLOR)
         except dbus.exceptions.DBusException, err:
-            self._handle_error(err, user_data)
+            self._handle_error(err)
             return False
 
         ps = get_ps()
-        sid = ps.connect('buddy-disappeared', self._testBuddyDisappeared_helper_cb, user_data)
-        user_data["sources"].append(sid)
+        sid = ps.connect('buddy-disappeared', self._testBuddyDisappeared_helper_cb)
+        self._signals.append((ps, sid))
 
         # Wait 5 seconds max for signal to be emitted
-        sid = gobject.timeout_add(5000, self._testBuddyDisappeared_helper_timeout, user_data)
-        user_data["sources"].append(sid)
+        sid = gobject.timeout_add(5000, self._testBuddyDisappeared_helper_timeout)
+        self._sources.append(sid)
 
         # Delete the fake buddy
         try:
             testps.RemoveBuddy(self._BA_PUBKEY)
         except dbus.exceptions.DBusException, err:
-            self._handle_error(err, user_data)
+            self._handle_error(err)
             return False
 
         return False
@@ -222,18 +224,16 @@ class BuddyTests(GenericTestCase):
         ps = get_ps()
         assert ps, "Couldn't get presence service"
 
-        user_data = {"success": False, "err": "", "buddy": None, "sources": []}
-        gobject.idle_add(self._testBuddyDisappeared_helper, user_data)
+        self._buddy = None
+        gobject.idle_add(self._testBuddyDisappeared_helper)
         gtk.main()
-        self.cleanup(user_data)
 
-        assert user_data["success"] == True, user_data["err"]
-        assert user_data["buddy"], "Buddy was not received"
+        assert self._success == True, "Test unsuccessful."
+        assert self._buddy, "Buddy was not received"
 
-        buddy = user_data["buddy"]
-        assert buddy.props.key == self._BA_PUBKEY, "Public key doesn't match expected"
-        assert buddy.props.nick == self._BA_NICK, "Nickname doesn't match expected"
-        assert buddy.props.color == self._BA_COLOR, "Color doesn't match expected"
+        assert self._buddy.props.key == self._BA_PUBKEY, "Public key doesn't match expected"
+        assert self._buddy.props.nick == self._BA_NICK, "Nickname doesn't match expected"
+        assert self._buddy.props.color == self._BA_COLOR, "Color doesn't match expected"
 
     def addToSuite(suite):
         suite.addTest(BuddyTests("testOwner"))
@@ -269,36 +269,35 @@ class ActivityTests(GenericTestCase):
     _AA_COLOR = "#adfe20,#bf781a"
     _AA_PROPS = {"foo": "asdfadf", "bar":"5323aggdas"}
 
-    def _testActivityAppeared_helper_timeout(self, user_data):
-        self._handle_error("Timeout waiting for activity-appeared signal", user_data)
+    def _testActivityAppeared_helper_timeout(self):
+        self._handle_error("Timeout waiting for activity-appeared signal")
         return False
 
-    def _testActivityAppeared_helper_cb(self, ps, activity, user_data):
-        user_data["activity"] = activity
-        user_data["success"] = True
-        gtk.main_quit()
+    def _testActivityAppeared_helper_cb(self, ps, activity):
+        self._activity = activity
+        self._handle_success()
 
-    def _testActivityAppeared_helper(self, user_data):
+    def _testActivityAppeared_helper(self):
         ps = get_ps()
-        sid = ps.connect('activity-appeared', self._testActivityAppeared_helper_cb, user_data)
-        user_data["sources"].append(sid)
+        sid = ps.connect('activity-appeared', self._testActivityAppeared_helper_cb)
+        self._signals.append((ps, sid))
 
         # Wait 5 seconds max for signal to be emitted
-        sid = gobject.timeout_add(5000, self._testActivityAppeared_helper_timeout, user_data)
-        user_data["sources"].append(sid)
+        sid = gobject.timeout_add(5000, self._testActivityAppeared_helper_timeout)
+        self._sources.append(sid)
 
         busobj = dbus.SessionBus().get_object(mockps._PRESENCE_SERVICE,
                     mockps._PRESENCE_PATH)
         try:
             testps = dbus.Interface(busobj, mockps._PRESENCE_TEST_INTERFACE)
         except dbus.exceptions.DBusException, err:
-            self._handle_error(err, user_data)
+            self._handle_error(err)
             return False
 
         try:
             testps.AddActivity(self._AA_ID, self._AA_NAME, self._AA_COLOR, self._AA_TYPE, {})
         except dbus.exceptions.DBusException, err:
-            self._handle_error(err, user_data)
+            self._handle_error(err)
             return False
 
         return False
@@ -307,20 +306,18 @@ class ActivityTests(GenericTestCase):
         ps = get_ps()
         assert ps, "Couldn't get presence service"
 
-        user_data = {"success": False, "err": "", "activity": None, "sources": []}
-        gobject.idle_add(self._testActivityAppeared_helper, user_data)
+        self._activity = None
+        gobject.idle_add(self._testActivityAppeared_helper)
         gtk.main()
-        self.cleanup(user_data)
 
-        assert user_data["success"] == True, user_data["err"]
-        assert user_data["activity"], "Activity was not received"
+        assert self._success == True, "Test unsuccessful"
+        assert self._activity, "Activity was not received"
 
-        act = user_data["activity"]
-        assert act.props.id == self._AA_ID, "ID doesn't match expected"
-        assert act.props.name == self._AA_NAME, "Name doesn't match expected"
-        assert act.props.color == self._AA_COLOR, "Color doesn't match expected"
-        assert act.props.type == self._AA_TYPE, "Type doesn't match expected"
-        assert act.props.joined == False, "Joined doesn't match expected"
+        assert self._activity.props.id == self._AA_ID, "ID doesn't match expected"
+        assert self._activity.props.name == self._AA_NAME, "Name doesn't match expected"
+        assert self._activity.props.color == self._AA_COLOR, "Color doesn't match expected"
+        assert self._activity.props.type == self._AA_TYPE, "Type doesn't match expected"
+        assert self._activity.props.joined == False, "Joined doesn't match expected"
 
         # Try to get activity by activity ID
         act2 = ps.get_activity(self._AA_ID)
@@ -330,44 +327,43 @@ class ActivityTests(GenericTestCase):
         assert act2.props.type == self._AA_TYPE, "Type doesn't match expected"
         assert act2.props.joined == False, "Joined doesn't match expected"
 
-    def _testActivityDisappeared_helper_timeout(self, user_data):
-        self._handle_error("Timeout waiting for activity-disappeared signal", user_data)
+    def _testActivityDisappeared_helper_timeout(self):
+        self._handle_error("Timeout waiting for activity-disappeared signal")
         return False
 
-    def _testActivityDisappeared_helper_cb(self, ps, activity, user_data):
-        user_data["activity"] = activity
-        user_data["success"] = True
-        gtk.main_quit()
+    def _testActivityDisappeared_helper_cb(self, ps, activity):
+        self._activity = activity
+        self._handle_success()
 
-    def _testActivityDisappeared_helper(self, user_data):
+    def _testActivityDisappeared_helper(self):
         busobj = dbus.SessionBus().get_object(mockps._PRESENCE_SERVICE,
                     mockps._PRESENCE_PATH)
         try:
             testps = dbus.Interface(busobj, mockps._PRESENCE_TEST_INTERFACE)
         except dbus.exceptions.DBusException, err:
-            self._handle_error(err, user_data)
+            self._handle_error(err)
             return False
 
         # Add a fake activity
         try:
             testps.AddActivity(self._AA_ID, self._AA_NAME, self._AA_COLOR, self._AA_TYPE, {})
         except dbus.exceptions.DBusException, err:
-            self._handle_error(err, user_data)
+            self._handle_error(err)
             return False
 
         ps = get_ps()
-        sid = ps.connect('activity-disappeared', self._testActivityDisappeared_helper_cb, user_data)
-        user_data["sources"].append(sid)
+        sid = ps.connect('activity-disappeared', self._testActivityDisappeared_helper_cb)
+        self._signals.append((ps, sid))
 
         # Wait 5 seconds max for signal to be emitted
-        sid = gobject.timeout_add(5000, self._testActivityDisappeared_helper_timeout, user_data)
-        user_data["sources"].append(sid)
+        sid = gobject.timeout_add(5000, self._testActivityDisappeared_helper_timeout)
+        self._sources.append(sid)
 
         # Delete the fake activity
         try:
             testps.RemoveActivity(self._AA_ID)
         except dbus.exceptions.DBusException, err:
-            self._handle_error(err, user_data)
+            self._handle_error(err)
             return False
 
         return False
@@ -376,59 +372,56 @@ class ActivityTests(GenericTestCase):
         ps = get_ps()
         assert ps, "Couldn't get presence service"
 
-        user_data = {"success": False, "err": "", "activity": None, "sources": []}
-        gobject.idle_add(self._testActivityDisappeared_helper, user_data)
+        self._activity = None
+        gobject.idle_add(self._testActivityDisappeared_helper)
         gtk.main()
-        self.cleanup(user_data)
 
-        assert user_data["success"] == True, user_data["err"]
-        assert user_data["activity"], "Activity was not received"
+        assert self._success == True, "Test unsuccessful"
+        assert self._activity, "Activity was not received"
 
-        act = user_data["activity"]
-        assert act.props.id == self._AA_ID, "ID doesn't match expected"
-        assert act.props.name == self._AA_NAME, "Name doesn't match expected"
-        assert act.props.color == self._AA_COLOR, "Color doesn't match expected"
-        assert act.props.type == self._AA_TYPE, "Type doesn't match expected"
-        assert act.props.joined == False, "Joined doesn't match expected"
+        assert self._activity.props.id == self._AA_ID, "ID doesn't match expected"
+        assert self._activity.props.name == self._AA_NAME, "Name doesn't match expected"
+        assert self._activity.props.color == self._AA_COLOR, "Color doesn't match expected"
+        assert self._activity.props.type == self._AA_TYPE, "Type doesn't match expected"
+        assert self._activity.props.joined == False, "Joined doesn't match expected"
 
-    def _testActivityShare_helper_is_done(self, user_data):
-        if user_data["got-act-appeared"] and user_data["got-joined-activity"]:
-            user_data["success"] = True
-            gtk.main_quit()
+    def _testActivityShare_helper_is_done(self):
+        if self._got_act_appeared and self._got_joined_activity:
+            self._handle_success()
 
-    def _testActivityShare_helper_timeout(self, user_data):
-        self._handle_error("Timeout waiting for activity share", user_data)
+    def _testActivityShare_helper_timeout(self):
+        self._handle_error("Timeout waiting for activity share")
         return False
 
-    def _testActivityShare_helper_joined_activity_cb(self, buddy, activity, user_data):
-        user_data["joined-activity-buddy"] = buddy
-        user_data["joined-activity-activity"] = activity
-        user_data["got-joined-activity"] = True
-        self._testActivityShare_helper_is_done(user_data)
+    def _testActivityShare_helper_joined_activity_cb(self, buddy, activity):
+        self._joined_activity_buddy = buddy
+        self._joined_activity_activity = activity
+        self._got_joined_activity = True
+        self._testActivityShare_helper_is_done()
 
-    def _testActivityShare_helper_cb(self, ps, activity, user_data):
-        user_data["activity"] = activity
-        user_data["got-act-appeared"] = True
-        self._testActivityShare_helper_is_done(user_data)
+    def _testActivityShare_helper_cb(self, ps, activity):
+        self._activity = activity
+        self._got_act_appeared = True
+        self._testActivityShare_helper_is_done()
 
-    def _testActivityShare_helper(self, user_data):
+    def _testActivityShare_helper(self):
         ps = get_ps()
         mockact = MockSugarActivity(self._AA_ID, self._AA_NAME, self._AA_TYPE)
 
-        sid = ps.connect('activity-appeared', self._testActivityShare_helper_cb, user_data)
-        user_data["sources"].append(sid)
+        sid = ps.connect('activity-appeared', self._testActivityShare_helper_cb)
+        self._signals.append((ps, sid))
         try:
             # Hook up to the owner's joined-activity signal
             owner = ps.get_owner()
-            sid = owner.connect("joined-activity", self._testActivityShare_helper_joined_activity_cb, user_data)
-            user_data["sources"].append(sid)
+            sid = owner.connect("joined-activity", self._testActivityShare_helper_joined_activity_cb)
+            self._signals.append((owner, sid))
         except RuntimeError, err:
-            self._handle_error(err, user_data)
+            self._handle_error(err)
             return False
 
         # Wait 5 seconds max for signal to be emitted
-        sid = gobject.timeout_add(5000, self._testActivityShare_helper_timeout, user_data)
-        user_data["sources"].append(sid)
+        sid = gobject.timeout_add(5000, self._testActivityShare_helper_timeout)
+        self._sources.append(sid)
 
         ps.share_activity(mockact, self._AA_PROPS)
 
@@ -438,31 +431,25 @@ class ActivityTests(GenericTestCase):
         ps = get_ps()
         assert ps, "Couldn't get presence service"
 
-        user_data = {"success": False,
-                     "err": "",
-                     "sources": [],
-                     "activity": None,
-                     "got-act-appeared": False,
-                     "joined-activity-buddy": None,
-                     "joined-activity-activity": None,
-                     "got-joined-activity": False
-                    }
-        gobject.idle_add(self._testActivityShare_helper, user_data)
+        self._activity = None
+        self._got_act_appeared = False
+        self._joined_activity_buddy = None
+        self._joined_activity_activity = None
+        self._got_joined_activity = False
+        gobject.idle_add(self._testActivityShare_helper)
         gtk.main()
-        self.cleanup(user_data)
 
-        assert user_data["success"] == True, user_data["err"]
-        assert user_data["activity"], "Shared activity was not received"
+        assert self._success == True, "Test unsuccessful."
+        assert self._activity, "Shared activity was not received"
 
-        act = user_data["activity"]
-        assert act.props.id == self._AA_ID, "ID doesn't match expected"
-        assert act.props.name == self._AA_NAME, "Name doesn't match expected"
+        assert self._activity.props.id == self._AA_ID, "ID doesn't match expected"
+        assert self._activity.props.name == self._AA_NAME, "Name doesn't match expected"
         # Shared activities from local machine take the owner's color
-        assert act.props.color == mockps._OWNER_COLOR, "Color doesn't match expected"
-        assert act.props.type == self._AA_TYPE, "Type doesn't match expected"
-        assert act.props.joined == False, "Joined doesn't match expected"
+        assert self._activity.props.color == mockps._OWNER_COLOR, "Color doesn't match expected"
+        assert self._activity.props.type == self._AA_TYPE, "Type doesn't match expected"
+        assert self._activity.props.joined == False, "Joined doesn't match expected"
 
-        buddies = act.get_joined_buddies()
+        buddies = self._activity.get_joined_buddies()
         assert len(buddies) == 1, "No buddies in activity"
         owner = buddies[0]
         assert owner.props.key == mockps._OWNER_PUBKEY, "Buddy key doesn't match expected"
@@ -472,71 +459,69 @@ class ActivityTests(GenericTestCase):
         real_owner = ps.get_owner()
         assert real_owner == owner, "Owner mismatch"
 
-        assert user_data["joined-activity-activity"] == act, "Activity mismatch"
-        assert user_data["joined-activity-buddy"] == owner, "Owner mismatch"
+        assert self._joined_activity_activity == self._activity, "Activity mismatch"
+        assert self._joined_activity_buddy == owner, "Owner mismatch"
 
-    def _testActivityJoin_helper_is_done(self, user_data):
-        if user_data["got-act-appeared"] and \
-                user_data["got-joined-activity"] and \
-                user_data["got-buddy-joined"]:
-            user_data["success"] = True
-            gtk.main_quit()
+    def _testActivityJoin_helper_is_done(self):
+        if self._got_act_appeared and self._got_joined_activity and \
+                self._got_buddy_joined:
+            self._handle_success()
 
-    def _testActivityJoin_helper_timeout(self, user_data):
-        self._handle_error("Timeout waiting for activity share", user_data)
+    def _testActivityJoin_helper_timeout(self):
+        self._handle_error("Timeout waiting for activity share")
         return False
 
-    def _testActivityJoin_helper_buddy_joined_cb(self, activity, buddy, user_data):
-        user_data["buddy-joined-buddy"] = buddy
-        user_data["buddy-joined-activity"] = activity
-        user_data["got-buddy-joined"] = True
-        self._testActivityJoin_helper_is_done(user_data)
+    def _testActivityJoin_helper_buddy_joined_cb(self, activity, buddy):
+        self._buddy_joined_buddy = buddy
+        self._buddy_joined_activity = activity
+        self._got_buddy_joined = True
+        self._testActivityJoin_helper_is_done()
 
-    def _testActivityJoin_helper_joined_activity_cb(self, buddy, activity, user_data):
-        user_data["joined-activity-buddy"] = buddy
-        user_data["joined-activity-activity"] = activity
-        user_data["got-joined-activity"] = True
-        self._testActivityJoin_helper_is_done(user_data)
+    def _testActivityJoin_helper_joined_activity_cb(self, buddy, activity):
+        self._joined_activity_buddy = buddy
+        self._joined_activity_activity = activity
+        self._got_joined_activity = True
+        self._testActivityJoin_helper_is_done()
 
-    def _testActivityJoin_helper_cb(self, ps, activity, user_data):
-        user_data["activity"] = activity
-        user_data["got-act-appeared"] = True
+    def _testActivityJoin_helper_cb(self, ps, activity):
+        self._activity = activity
+        self._got_act_appeared = True
 
         # Hook up to the join signals
-        sid = activity.connect("buddy-joined", self._testActivityJoin_helper_buddy_joined_cb, user_data)
-        user_data["sources"].append(sid)
+        sid = activity.connect("buddy-joined", self._testActivityJoin_helper_buddy_joined_cb)
+        self._signals.append((activity, sid))
 
         ps = get_ps()
         owner = ps.get_owner()
-        sid = owner.connect("joined-activity", self._testActivityJoin_helper_joined_activity_cb, user_data)
-        user_data["sources"].append(sid)
+        sid = owner.connect("joined-activity", self._testActivityJoin_helper_joined_activity_cb)
+        self._signals.append((owner, sid))
 
         # Join the activity
         activity.join()
 
-    def _testActivityJoin_helper(self, user_data):
+    def _testActivityJoin_helper(self):
         busobj = dbus.SessionBus().get_object(mockps._PRESENCE_SERVICE,
                     mockps._PRESENCE_PATH)
         try:
             testps = dbus.Interface(busobj, mockps._PRESENCE_TEST_INTERFACE)
         except dbus.exceptions.DBusException, err:
-            self._handle_error(err, user_data)
+            self._handle_error(err)
             return False
 
         ps = get_ps()
-        sid = ps.connect('activity-appeared', self._testActivityJoin_helper_cb, user_data)
-        user_data["sources"].append(sid)
+        sid = ps.connect('activity-appeared', self._testActivityJoin_helper_cb)
+        self._signals.append((ps, sid))
 
         # Add a fake activity
         try:
             testps.AddActivity(self._AA_ID, self._AA_NAME, self._AA_COLOR, self._AA_TYPE, {})
         except dbus.exceptions.DBusException, err:
-            self._handle_error(err, user_data)
+            self._handle_error(err)
             return False
 
         # Wait 5 seconds max for signal to be emitted
-        sid = gobject.timeout_add(5000, self._testActivityJoin_helper_timeout, user_data)
-        user_data["sources"].append(sid)
+        sid = gobject.timeout_add(5000, self._testActivityJoin_helper_timeout)
+        self._sources.append(sid)
 
         return False
 
@@ -544,30 +529,24 @@ class ActivityTests(GenericTestCase):
         ps = get_ps()
         assert ps, "Couldn't get presence service"
 
-        user_data = {"success": False,
-                     "err": "",
-                     "sources": [],
-                     "activity": None,
-                     "got-act-appeared": False,
-                     "joined-activity-buddy": None,
-                     "joined-activity-activity": None,
-                     "got-joined-activity": False,
-                     "buddy-joined-buddy": None,
-                     "buddy-joined-activity": None,
-                     "got-buddy-joined": False
-                    }
-        gobject.idle_add(self._testActivityJoin_helper, user_data)
+        self._activity = None
+        self._got_act_appeared = False
+        self._joined_activity_buddy = None
+        self._joined_activity_activity = None
+        self._got_joined_activity = False
+        self._buddy_joined_buddy = None
+        self._buddy_joined_activity = None
+        self._got_buddy_joined = False
+        gobject.idle_add(self._testActivityJoin_helper)
         gtk.main()
-        self.cleanup(user_data)
 
-        assert user_data["success"] == True, "Test unsuccessful"
-        assert user_data["activity"], "Shared activity was not received"
+        assert self._success == True, "Test unsuccessful"
+        assert self._activity, "Shared activity was not received"
 
-        act = user_data["activity"]
-        assert act.props.id == self._AA_ID, "ID doesn't match expected"
-        assert act.props.name == self._AA_NAME, "Name doesn't match expected"
+        assert self._activity.props.id == self._AA_ID, "ID doesn't match expected"
+        assert self._activity.props.name == self._AA_NAME, "Name doesn't match expected"
 
-        buddies = act.get_joined_buddies()
+        buddies = self._activity.get_joined_buddies()
         assert len(buddies) == 1, "No buddies in activity"
         owner = buddies[0]
         assert owner.props.key == mockps._OWNER_PUBKEY, "Buddy key doesn't match expected"
@@ -577,10 +556,10 @@ class ActivityTests(GenericTestCase):
         real_owner = ps.get_owner()
         assert real_owner == owner, "Owner mismatch"
 
-        assert user_data["joined-activity-activity"] == act, "Activity mismatch"
-        assert user_data["joined-activity-buddy"] == owner, "Owner mismatch"
-        assert user_data["buddy-joined-activity"] == act, "Activity mismatch"
-        assert user_data["buddy-joined-buddy"] == owner, "Owner mismatch"
+        assert self._joined_activity_activity == self._activity, "Activity mismatch"
+        assert self._joined_activity_buddy == owner, "Owner mismatch"
+        assert self._buddy_joined_activity == self._activity, "Activity mismatch"
+        assert self._buddy_joined_buddy == owner, "Owner mismatch"
 
     def addToSuite(suite):
         suite.addTest(ActivityTests("testActivityAppeared"))
