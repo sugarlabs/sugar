@@ -173,3 +173,27 @@ gtk.Notebook
 
 * Expand to fill the whole space by default but property to turn it off
 * Switching tabs with the little arrows should page
+
+Palettes in ToolIconButton, IconButton
+* Inmediately on rollover, show the black background.
+* After a very short delay, show the primary state (name of the action and key shortcut).
+* After a bigger delay, show the popup secondary state.
+* Could be animated.
+* Menu Items would go on the top and then the free-form rollover content.
+* The popup would be a gtk.Window that contains a Label, a MenuShell, an hippo.Canvas (or whatever) and finally a button bar (OK/Cancel).
+* The popup will have a setPrimaryState(label, accelerator) method. For action buttons would be a MenuItem, for the others would only be a Label.
+* The primary state should already have the same width as the secondary state and the expandable areas.
+* Primary states appear and disappear automatically (with a short delay). A click outside makes it disappear instantly.
+* Secondary states appear after a delay, or with a single click on the icon. 
+* Secondary disappears with the esc key, clicking outside the popup or clicking on a button inside.
+
+Toolbox    
+* When an activity opens, the activity tab should be opened and the focus on the activity title.
+* We must provide an activity tab in the toolbox and would be good to also provide an standard Edit tab.
+
+Grab key
+* We probably will need the grab mode.
+* Highlight the scrollbar in the view the pointer is (the view that will scroll when moving the pointer).
+
+Clipboard
+* Window manager to handle in an invisible window in every corner and forward the events when they are not in the corner, or use XEvIE (X Event Interception Extension).
