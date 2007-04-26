@@ -44,6 +44,8 @@ class ActivityService(dbus.service.Object):
         The various methods exposed on dbus are just forwarded
         to the client Activity object's equally-named methods.
         """
+        activity.realize()
+
         xid = activity.window.xid
         service_name = _ACTIVITY_SERVICE_NAME + '%d' % xid 
         object_path = _ACTIVITY_SERVICE_PATH + "/%s" % xid

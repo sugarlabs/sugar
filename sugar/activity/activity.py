@@ -24,11 +24,11 @@ import logging
 import os
 
 import gtk
-import hippo
 
 from sugar.presence import presenceservice
 from sugar.activity.activityservice import ActivityService
 from sugar.graphics.window import Window
+from sugar.graphics.toolbox import ActivityToolbar
 
 class Activity(Window, gtk.Container):
     """Base Activity class that all other Activities derive from."""
@@ -73,12 +73,6 @@ class Activity(Window, gtk.Container):
         activity_toolbar = ActivityToolbar()
         self.toolbox.add_toolbar('Activity', activity_toolbar)
         activity_toolbar.show()
-
-    # DEPRECATED It will be removed after 3-6-2007 stable image
-    def do_add(self, widget):
-        if self.child:
-            self.remove(self.child)
-        gtk.Window.do_add(self, widget)
 
     def get_service_name(self):
         """Gets the activity service name."""
