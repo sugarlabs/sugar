@@ -161,6 +161,10 @@ class TestBuddy(dbus.service.Object):
     def get_activities(self):
         return self._activities.values()
 
+    def set_current_activity(self, actid):
+        self._curact = actid
+        self.PropertyChanged({_PROP_CURACT: actid})
+
     @dbus.service.signal(_BUDDY_INTERFACE, signature="ay")
     def IconChanged(self, icon_data):
         pass
@@ -185,8 +189,8 @@ class TestBuddy(dbus.service.Object):
     @dbus.service.method(_BUDDY_INTERFACE, in_signature="", out_signature="ao")
     def GetJoinedActivities(self):
         acts = []
-        for key in self._activities.keys():
-            acts.append(dbus.ObjectPath(key))
+        for activity in self._activities.values():
+            acts.append(dbus.ObjectPath(activity._object_path))
         return acts
 
     @dbus.service.method(_BUDDY_INTERFACE, in_signature="", out_signature="a{sv}")
@@ -356,7 +360,7 @@ class TestPresenceService(dbus.service.Object):
         self.BuddyDisappeared(buddy._object_path)
         del self._buddies[pubkey]
 
-    @dbus.service.method(_PRESENCE_TEST_INTERFACE, in_signature="oo")
+    @dbus.service.method(_PRESENCE_TEST_INTERFACE, in_signature="ays")
     def AddBuddyToActivity(self, pubkey, actid):
         pubkey = ''.join([chr(item) for item in pubkey])
         if not self._buddies.has_key(pubkey):
@@ -369,7 +373,7 @@ class TestPresenceService(dbus.service.Object):
         activity.add_buddy(buddy)
         buddy.add_activity(activity)
 
-    @dbus.service.method(_PRESENCE_TEST_INTERFACE, in_signature="oo")
+    @dbus.service.method(_PRESENCE_TEST_INTERFACE, in_signature="ays")
     def RemoveBuddyFromActivity(self, pubkey, actid):
         pubkey = ''.join([chr(item) for item in pubkey])
         if not self._buddies.has_key(pubkey):
@@ -397,6 +401,14 @@ class TestPresenceService(dbus.service.Object):
         act.disappear()
         self.ActivityDisappeared(act._object_path)
         del self._activities[actid]
+
+    @dbus.service.method(_PRESENCE_TEST_INTERFACE, in_signature="ays")
+    def SetBuddyCurrentActivity(self, pubkey, actid):
+        pubkey = ''.join([chr(item) for item in pubkey])
+        if not self._buddies.has_key(pubkey):
+            raise NotFoundError("Buddy unknown")
+        buddy = self._buddies[pubkey]
+        buddy.set_current_activity(actid)
 
 def main():
     import logging
