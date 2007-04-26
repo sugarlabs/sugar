@@ -23,6 +23,8 @@ sugar_PYTHON =			\
 	spreadbox.py		\
 	toggleiconbutton.py     \
 	toolbar.py		\
+	toolbox.py		\
+	toolbutton.py		\
 	units.py		\
 	window.py		\
 	xocolor.py
