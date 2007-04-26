@@ -72,6 +72,7 @@ class Activity(Window, gtk.Container):
 
         activity_toolbar = ActivityToolbar()
         self.toolbox.add_toolbar('Activity', activity_toolbar)
+        activity_toolbar.connect('close', self._activity_toolbar_close_cb)
         activity_toolbar.show()
 
     def get_service_name(self):
@@ -92,6 +93,9 @@ class Activity(Window, gtk.Container):
         self._shared = True
         self._service.join()
         self.present()
+
+    def _activity_toolbar_close_cb(self, activity_toolbar):
+        self.destroy()
 
     def _share_cb(self, ps, success, service, err):
         self._pservice.disconnect(self._share_sigid)
