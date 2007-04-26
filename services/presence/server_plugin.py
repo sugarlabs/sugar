@@ -23,7 +23,8 @@ import gtk
 from buddyiconcache import BuddyIconCache
 import logging
 import os
-import md5
+
+import sys
 import psutils
 
 from telepathy.client import ConnectionManager, ManagerRegistry, Connection, Channel
@@ -343,7 +344,14 @@ class ServerPlugin(gobject.GObject):
         if not icon_data:
             icon_data = self._owner.props.icon
 
-        m = md5.new()
+        m = None
+        if sys.version_info[:3] >= (2, 5, 0):
+            import hashlib
+            m = hashlib.md5()
+        else:
+            import md5
+            m = md5.new()
+
         m.update(icon_data)
         hash = m.hexdigest()
 
