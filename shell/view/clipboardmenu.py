@@ -4,9 +4,10 @@ import hippo
 
 from sugar.graphics.menu import Menu, MenuItem
 from sugar.graphics.canvasicon import CanvasIcon
-from sugar.graphics.ClipboardBubble import ClipboardBubble
 from sugar.graphics import color
 from sugar.graphics import font
+
+from view.ClipboardBubble import ClipboardBubble
 
 class ClipboardProgressBar(ClipboardBubble):
 

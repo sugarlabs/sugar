@@ -6,6 +6,7 @@ sugar_PYTHON =				\
 	ActivityHost.py			\
 	BuddyIcon.py			\
 	BuddyMenu.py			\
+	ClipboardBubble.py		\
 	clipboardicon.py		\
 	clipboardmenu.py		\
 	keyhandler.py			\

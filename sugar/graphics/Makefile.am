@@ -2,12 +2,10 @@ sugardir = $(pythondir)/sugar/graphics
 sugar_PYTHON =			\
 	__init__.py		\
 	animator.py		\
-	bubble.py		\
 	button.py		\
 	iconbutton.py          	\
 	canvasicon.py		\
 	color.py		\
-	ClipboardBubble.py	\
 	entry.py                \
 	filechooser.py		\
 	font.py			\
