@@ -132,8 +132,8 @@ class Network(gobject.GObject):
             return
 
         self._valid = True
-        logging.debug("Net(%s): ssid '%s', mode %d, strength %d" % (self._op,
-                self._ssid, self._mode, self._strength))
+#        logging.debug("Net(%s): ssid '%s', mode %d, strength %d" % (self._op,
+#                self._ssid, self._mode, self._strength))
 
         self.emit('initialized', self._valid)
 
