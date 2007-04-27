@@ -217,7 +217,7 @@ class Frame(object):
         panel = self._create_panel(hippo.ORIENTATION_HORIZONTAL)
         root = panel.get_root()
 
-        box = ZoomBox(self._shell, self._popup_context)
+        box = ZoomBox(self._shell)
         root.append(box)
 
         #box = OverlayBox(self._shell)
