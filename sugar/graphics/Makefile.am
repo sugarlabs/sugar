@@ -7,10 +7,8 @@ sugar_PYTHON =			\
 	color.py		\
 	font.py			\
 	frame.py		\
-	label.py		\
 	menu.py			\
 	menushell.py		\
-	optionmenu.py		\
 	roundbox.py		\
 	popup.py		\
 	popupcontext.py		\
