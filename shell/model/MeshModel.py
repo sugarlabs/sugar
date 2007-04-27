@@ -30,13 +30,13 @@ class ActivityModel:
         self._bundle = bundle
 
     def get_id(self):
-        return self._activity.get_id()
+        return self._activity.props.id
         
     def get_icon_name(self):
         return self._bundle.get_icon()
     
     def get_color(self):
-        return XoColor(self._activity.get_color())
+        return XoColor(self._activity.props.color)
 
     def get_service_name(self):
         return self._bundle.get_service_name()
@@ -163,8 +163,8 @@ class MeshModel(gobject.GObject):
     def _buddy_activity_changed_cb(self, model, cur_activity):
         if not self._buddies.has_key(model.get_key()):
             return
-        if cur_activity and self._activities.has_key(cur_activity.get_id()):
-            activity_model = self._activities[cur_activity.get_id()]
+        if cur_activity and self._activities.has_key(cur_activity.props.id):
+            activity_model = self._activities[cur_activity.props.id]
             self.emit('buddy-moved', model, activity_model)
         else:
             self.emit('buddy-moved', model, None)
@@ -193,12 +193,10 @@ class MeshModel(gobject.GObject):
         self._check_activity(activity)
 
     def _check_activity(self, activity):
-        atype = activity.props.type
-        bundle = self._bundle_registry.get_bundle(atype)
+        bundle = self._bundle_registry.get_bundle(activity.props.type)
         if not bundle:
             return
-        activity_id = activity.get_id()
-        if self.has_activity(activity_id):
+        if self.has_activity(activity.props.id):
             return
         self.add_activity(bundle, activity)
 
@@ -224,7 +222,7 @@ class MeshModel(gobject.GObject):
                 self.emit('buddy-moved', buddy_model, model)
 
     def _activity_disappeared_cb(self, pservice, activity):
-        if self._activities.has_key(activity.get_id()):
-            activity_model = self._activities[activity.get_id()]
+        if self._activities.has_key(activity.props.id):
+            activity_model = self._activities[activity.props.id]
             self.emit('activity-removed', activity_model)
-            del self._activities[activity.get_id()]
+            del self._activities[activity.props.id]
