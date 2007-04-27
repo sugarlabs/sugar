@@ -671,7 +671,35 @@ class ActivityTests(GenericTestCase):
 
         assert self._success == True, "Test unsuccessful"
         assert len(self._activities) == 2, "Shared activities were not received"
-        # FIXME: check everything
+        assert self._got_first_curact == True, "Couldn't discover first activity"
+        assert self._got_other_curact == True, "Couldn't discover second activity"
+        assert self._start_monitor == True, "Couldn't discover both activities"
+
+        # check the buddy
+        assert self._buddy.props.key == BuddyTests._BA_PUBKEY, "Buddy key doesn't match expected"
+        assert self._buddy.props.nick == BuddyTests._BA_NICK, "Buddy nick doesn't match expected"
+        assert self._buddy.props.color == BuddyTests._BA_COLOR, "Buddy color doesn't match expected"
+        assert self._buddy.props.current_activity.props.id == self._other_actid, "Buddy current activity didn't match expected"
+
+        # check both activities
+        found = 0
+        for act in self._activities:
+            if act.props.id == self._AA_ID:
+                assert act.props.name == self._AA_NAME, "Name doesn't match expected"
+                assert act.props.color == self._AA_COLOR, "Color doesn't match expected"
+                buddies = act.get_joined_buddies()
+                assert len(buddies) == 1, "Unexpected number of buddies in first activity"
+                assert buddies[0] == self._buddy, "Unexpected buddy in first activity"
+                found += 1
+            elif act.props.id == self._other_actid:
+                assert act.props.name == self._other_actname, "Name doesn't match expected"
+                assert act.props.color == self._other_actcolor, "Color doesn't match expected"
+                buddies = act.get_joined_buddies()
+                assert len(buddies) == 1, "Unexpected number of buddies in first activity"
+                assert buddies[0] == self._buddy, "Unexpected buddy in first activity"
+                found += 1
+
+        assert found == 2, "Couldn't discover both activities"
 
     def addToSuite(suite):
         suite.addTest(ActivityTests("testActivityAppeared"))
