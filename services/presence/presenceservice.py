@@ -36,8 +36,8 @@ _PRESENCE_PATH = "/org/laptop/Sugar/Presence"
 
 
 class NotFoundError(dbus.DBusException):
-    def __init__(self):
-        dbus.DBusException.__init__(self)
+    def __init__(self, msg):
+        dbus.DBusException.__init__(self, msg)
         self._dbus_error_name = _PRESENCE_INTERFACE + '.NotFound'
 
 class DBusGObjectMetaclass(dbus.service.InterfaceType, gobject.GObjectMeta): pass
