@@ -28,7 +28,30 @@ import gtk
 from sugar.presence import presenceservice
 from sugar.activity.activityservice import ActivityService
 from sugar.graphics.window import Window
-from sugar.graphics.toolbox import ActivityToolbar
+from sugar.graphics.toolbox import Toolbox
+from sugar.graphics.toolbutton import ToolButton
+
+class ActivityToolbar(gtk.Toolbar):
+    def __init__(self, activity):
+        gtk.Toolbar.__init__(self)
+
+        self._activity = activity
+
+        button = ToolButton('window-close')
+        button.connect('clicked', self._close_button_clicked_cb)
+        self.insert(button, -1)
+        button.show()
+        
+    def _close_button_clicked_cb(self, button):
+        self._activity.destroy()
+
+class ActivityToolbox(Toolbox):
+    def __init__(self, activity):
+        Toolbox.__init__(self)
+        
+        activity_toolbar = ActivityToolbar(activity)
+        self.add_toolbar('Activity', activity_toolbar)
+        activity_toolbar.show()
 
 class Activity(Window, gtk.Container):
     """Base Activity class that all other Activities derive from."""
@@ -70,11 +93,6 @@ class Activity(Window, gtk.Container):
 
         self._bus = ActivityService(self)
 
-        activity_toolbar = ActivityToolbar()
-        self.toolbox.add_toolbar('Activity', activity_toolbar)
-        activity_toolbar.connect('close', self._activity_toolbar_close_cb)
-        activity_toolbar.show()
-
     def get_service_name(self):
         """Gets the activity service name."""
         return os.environ['SUGAR_BUNDLE_SERVICE_NAME']
@@ -93,9 +111,6 @@ class Activity(Window, gtk.Container):
         self._shared = True
         self._service.join()
         self.present()
-
-    def _activity_toolbar_close_cb(self, activity_toolbar):
-        self.destroy()
 
     def _share_cb(self, ps, success, service, err):
         self._pservice.disconnect(self._share_sigid)

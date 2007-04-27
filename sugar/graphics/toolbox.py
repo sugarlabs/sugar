@@ -33,20 +33,3 @@ class Toolbox(gtk.VBox):
         
     def add_toolbar(self, name, toolbar):
         self._notebook.append_page(toolbar, gtk.Label(name))
-
-class ActivityToolbar(gtk.Toolbar):
-    __gsignals__ = {
-        'close': (gobject.SIGNAL_RUN_FIRST,
-                  gobject.TYPE_NONE, ([])),
-    }
-
-    def __init__(self):
-        gtk.Toolbar.__init__(self)
-
-        button = ToolButton('window-close')
-        button.connect('clicked', self._close_button_clicked_cb)
-        self.insert(button, -1)
-        button.show()
-        
-    def _close_button_clicked_cb(self, button):
-        self.emit('close')

@@ -19,7 +19,6 @@ import hippo
 import cairo
 
 from sugar.graphics.menushell import MenuShell
-from sugar.graphics.window import Window
 from sugar.graphics import units
 import sugar
 
@@ -33,12 +32,17 @@ _FRIENDS_PAGE    = 1
 _MESH_PAGE       = 2
 _TRANSITION_PAGE = 3
 
-class HomeWindow(Window):
+class HomeWindow(gtk.Window):
     def __init__(self, shell):
-        Window.__init__(self)
+        gtk.Window.__init__(self)
+
         self._shell = shell
         self._active = False
         self._level = sugar.ZOOM_HOME
+
+        self._canvas = hippo.Canvas()
+        self.add(self._canvas)
+        self._canvas.show()
 
         self.set_default_size(gtk.gdk.screen_width(),
                               gtk.gdk.screen_height())
@@ -54,7 +58,7 @@ class HomeWindow(Window):
         self._mesh_box = MeshBox(shell, MenuShell(self))
         self._transition_box = TransitionBox()
 
-        self.canvas.set_root(self._home_box)
+        self._canvas.set_root(self._home_box)
         
         self._transition_box.connect('completed',
                                      self._transition_completed_cb)
@@ -81,7 +85,7 @@ class HomeWindow(Window):
     def set_zoom_level(self, level):
         self._level = level
     
-        self.canvas.set_root(self._transition_box)
+        self._canvas.set_root(self._transition_box)
 
         if level == sugar.ZOOM_HOME:
             scale = units.XLARGE_ICON_SCALE
@@ -94,11 +98,11 @@ class HomeWindow(Window):
     
     def _transition_completed_cb(self, transition_box):
         if self._level == sugar.ZOOM_HOME:
-            self.canvas.set_root(self._home_box)
+            self._canvas.set_root(self._home_box)
         elif self._level == sugar.ZOOM_FRIENDS:
-            self.canvas.set_root(self._friends_box)
+            self._canvas.set_root(self._friends_box)
         elif self._level == sugar.ZOOM_MESH:
-            self.canvas.set_root(self._mesh_box)
+            self._canvas.set_root(self._mesh_box)
 
         self._update_mesh_state()
         

@@ -18,37 +18,36 @@
 import gtk
 import hippo
 
-from sugar.graphics.toolbox import Toolbox
-
 class Window(gtk.Window):
     def __init__(self):
         gtk.Window.__init__(self)
 
-        self.connect('realize', self._window_realize_cb)        
-    
-        vbox = gtk.VBox()
-        self.add(vbox)
-        
-        self.toolbox = Toolbox()
-        vbox.pack_start(self.toolbox, False)
-        self.toolbox.show()
+        self.connect('realize', self._window_realize_cb)
 
-        self._canvas_box = gtk.VBox()
-        vbox.pack_start(self._canvas_box)
-        self._canvas_box.show()
-        
-        self.canvas = hippo.Canvas()
-        self._canvas_box.pack_start(self.canvas)
-        self.canvas.show()
-        
-        vbox.show()
+        self.toolbox = None
+        self.canvas = None
+    
+        self._vbox = gtk.VBox()
+        self.add(self._vbox)        
+        self._vbox.show()
 
     def set_canvas(self, canvas):
         if self.canvas:
-            self._canvas_box.remove(self.canvas)
+            self._vbox.remove(self.canvas)
 
-        self._canvas_box.add(canvas)
+        self._vbox.pack_start(canvas)
+        self._vbox.reorder_child(canvas, -1)
+        
         self.canvas = canvas
+
+    def set_toolbox(self, toolbox):
+        if self.toolbox:
+            self._vbox.remove(self.toolbox)
+
+        self._vbox.pack_start(toolbox, False)
+        self._vbox.reorder_child(toolbox, 0)
+        
+        self.toolbox = toolbox
         
     def _window_realize_cb(self, window):
         group = gtk.Window()
