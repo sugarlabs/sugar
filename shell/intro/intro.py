@@ -25,7 +25,6 @@ from ConfigParser import ConfigParser
 
 from sugar import env
 
-from sugar.graphics import entry
 from sugar.graphics import units
 from sugar.graphics import font
 from sugar.graphics import color
@@ -185,8 +184,9 @@ class EntryBox(hippo.CanvasBox, hippo.CanvasItem):
         self._label.props.font_desc = font.DEFAULT.get_pango_desc()
         self.append(self._label)
 
-        self._entry = entry.Entry()
-        self.append(self._entry)
+        self._entry = gtk.Entry()
+        entry_item = hippo.CanvasWidget(widget=self._entry)
+        self.append(entry_item)
 
     def get_text(self):
         return self._entry.props.text
