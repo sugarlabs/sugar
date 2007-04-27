@@ -23,7 +23,7 @@ activity must do to participate in the Sugar desktop.
 import logging
 import os
 
-import gtk
+import gtk, gobject
 
 from sugar.presence import presenceservice
 from sugar.activity.activityservice import ActivityService
@@ -32,30 +32,57 @@ from sugar.graphics.toolbox import Toolbox
 from sugar.graphics.toolbutton import ToolButton
 
 class ActivityToolbar(gtk.Toolbar):
+    __gsignals__ = {
+        'share-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'close-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
+    }
+
     def __init__(self, activity):
         gtk.Toolbar.__init__(self)
 
         self._activity = activity
+        activity.connect('shared', self._activity_shared_cb)
 
         button = ToolButton('window-close')
         button.connect('clicked', self._close_button_clicked_cb)
         self.insert(button, -1)
         button.show()
+
+        self._share_button = ToolButton('stock-share-mesh')
+        self._share_button.connect('clicked', self._share_button_clicked_cb)
+        self.insert(self._share_button, -1)
+        if activity.get_shared():
+            self._share_button.set_sensitive(False)
+        self._share_button.show()
         
     def _close_button_clicked_cb(self, button):
-        self._activity.destroy()
+        self.emit('close-clicked')
+
+    def _share_button_clicked_cb(self, button):
+        self.emit('share-clicked')
+
+    def _activity_shared_cb(self, activity):
+        self._share_button.set_sensitive(False)
 
 class ActivityToolbox(Toolbox):
     def __init__(self, activity):
         Toolbox.__init__(self)
         
-        activity_toolbar = ActivityToolbar(activity)
-        self.add_toolbar('Activity', activity_toolbar)
-        activity_toolbar.show()
+        self._activity_toolbar = ActivityToolbar(activity)
+        self.add_toolbar('Activity', self._activity_toolbar)
+        self._activity_toolbar.show()
+
+    def get_activity_toolbar(self):
+        return self._activity_toolbar
 
 class Activity(Window, gtk.Container):
     """Base Activity class that all other Activities derive from."""
     __gtype_name__ = 'SugarActivity'
+
+    __gsignals__ = {
+        'shared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
+    }
+
     def __init__(self, handle):
         """Initialise the Activity 
         
@@ -111,6 +138,7 @@ class Activity(Window, gtk.Container):
         self._shared = True
         self._service.join()
         self.present()
+        self.emit('shared')
 
     def _share_cb(self, ps, success, service, err):
         self._pservice.disconnect(self._share_sigid)
@@ -119,6 +147,7 @@ class Activity(Window, gtk.Container):
             logging.debug('Share of activity %s successful.' % self.get_id())
             self._service = service
             self._shared = True
+            self.emit('shared')
         else:
             logging.debug('Share of activity %s failed: %s.' % (self.get_id(), err))
 
@@ -139,6 +168,18 @@ class Activity(Window, gtk.Container):
             self._bus = None
         if self._service:
             self._pservice.unregister_service(self._service)
+
+    def _handle_close_cb(self, toolbar):
+        self.destroy()
+
+    def _handle_share_cb(self, toolbar):
+        self.share()
+
+    def set_toolbox(self, toolbox):
+        Window.set_toolbox(self, toolbox)
+        act_toolbar = toolbox.get_activity_toolbar()
+        act_toolbar.connect('share-clicked', self._handle_share_cb)
+        act_toolbar.connect('close-clicked', self._handle_close_cb)
 
 def get_bundle_path():
     """Return the bundle path for the current process' bundle
