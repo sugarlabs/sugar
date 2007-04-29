@@ -33,3 +33,6 @@ class Toolbox(gtk.VBox):
         
     def add_toolbar(self, name, toolbar):
         self._notebook.append_page(toolbar, gtk.Label(name))
+        
+    def remove_toolbar(self, index):
+        self._notebook.remove_page(index)
