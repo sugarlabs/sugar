@@ -560,7 +560,7 @@ class TestOwner(GenericOwner):
 
     __gtype_name__ = "TestOwner"
 
-    def __init__(self, ps, bus_name, object_id, test_num):
+    def __init__(self, ps, bus_name, object_id, test_num, randomize):
         self._cp = ConfigParser()
         self._section = "Info"
         self._test_activities = []
@@ -588,7 +588,9 @@ class TestOwner(GenericOwner):
         GenericOwner.__init__(self, ps, bus_name, object_id, key=pubkey, nick=nick,
                 color=color, icon=icon, registered=registered, key_hash=privkey_hash)
 
-        self._ps.connect('connection-status', self._ps_connection_status_cb)
+        # Only do the random stuff if randomize is true
+        if randomize:
+            self._ps.connect('connection-status', self._ps_connection_status_cb)
 
     def _share_reply_cb(self, actid, object_path):
         activity = self._ps.internal_get_activity(actid)
