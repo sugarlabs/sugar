@@ -24,7 +24,7 @@ from sugar.presence import presenceservice
 import mockps
 
 def start_ps():
-    argv = ["mockps.py", "mockps.py"]
+    argv = ["mockps.py"]
     (pid, stdin, stdout, stderr) = gobject.spawn_async(argv, flags=gobject.SPAWN_LEAVE_DESCRIPTORS_OPEN)
 
     # Wait until it shows up on the bus
