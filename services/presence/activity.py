@@ -63,7 +63,7 @@ class Activity(DBusGObject):
                               gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT_ONLY)
     }
 
-    _RESERVED_PROPNAMES = self.__gproperties__.keys()
+    _RESERVED_PROPNAMES = __gproperties__.keys()
 
     def __init__(self, bus_name, object_id, tp, **kwargs):
         """Initializes the activity and sets its properties to default values.
@@ -169,9 +169,11 @@ class Activity(DBusGObject):
         elif pspec.name == _PROP_LOCAL:
             self._local = value
         elif pspec.name == _PROP_CUSTOM_PROPS:
+            if not value:
+                value = {}
             (rprops, cprops) = self._split_properties(value)
             self._custom_props = {}
-            for (key, dvalue) in cprops:
+            for (key, dvalue) in cprops.items():
                 self._custom_props[str(key)] = str(dvalue)
 
         self._update_validity()
@@ -487,7 +489,7 @@ class Activity(DBusGObject):
         """
         changed  = False
         # split reserved properties from activity-custom properties
-        (rprops, cprops) = self._split_properties()
+        (rprops, cprops) = self._split_properties(properties)
         if _PROP_NAME in rprops.keys():
             name = rprops[_PROP_NAME]
             if name != self._name:
@@ -526,7 +528,7 @@ class Activity(DBusGObject):
         """
         rprops = {}
         cprops = {}
-        for (key, value) in properties:
+        for (key, value) in properties.items():
             if key in self._RESERVED_PROPNAMES:
                 rprops[key] = value
             else:
