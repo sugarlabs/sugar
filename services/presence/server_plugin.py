@@ -501,8 +501,6 @@ class ServerPlugin(gobject.GObject):
         
         state -- CONNECTION_STATUS_*
         reason -- integer code describing the reason...
-        
-        returns False XXX what does that mean?
         """
         if state == CONNECTION_STATUS_CONNECTING:
             logging.debug("State: connecting...")
@@ -517,7 +515,6 @@ class ServerPlugin(gobject.GObject):
             if reason == CONNECTION_STATUS_REASON_AUTHENTICATION_FAILED:
                 # FIXME: handle connection failure; retry later?
                 pass
-        return False
 
     def start(self):
         """Start up the Telepathy networking connections
