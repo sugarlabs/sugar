@@ -51,7 +51,7 @@ class PresenceService(DBusGObject):
                             ([gobject.TYPE_BOOLEAN]))
     }
 
-    def __init__(self, test=0):
+    def __init__(self, test_num=0, randomize=False):
         self._next_object_id = 0
         self._connected = False
 
@@ -66,8 +66,8 @@ class PresenceService(DBusGObject):
 
         # Create the Owner object
         objid = self._get_next_object_id()
-        if test > 0:
-            self._owner = TestOwner(self, self._bus_name, objid, test)
+        if test_num > 0:
+            self._owner = TestOwner(self, self._bus_name, objid, test_num, randomize)
         else:
             self._owner = ShellOwner(self, self._bus_name, objid)
         self._buddies[self._owner.props.key] = self._owner
@@ -357,9 +357,9 @@ class PresenceService(DBusGObject):
         return self._activities[actid]
 
 
-def main(test=False):
+def main(test_num=0, randomize=False):
     loop = gobject.MainLoop()
-    ps = PresenceService(test)
+    ps = PresenceService(test_num, randomize)
     try:
         loop.run()
     except KeyboardInterrupt:

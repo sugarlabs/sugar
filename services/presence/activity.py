@@ -29,6 +29,15 @@ class DBusGObjectMetaclass(dbus.service.InterfaceType, gobject.GObjectMeta): pas
 class DBusGObject(dbus.service.Object, gobject.GObject): __metaclass__ = DBusGObjectMetaclass
 
 
+_PROP_ID = "id"
+_PROP_NAME = "name"
+_PROP_COLOR = "color"
+_PROP_TYPE = "type"
+_PROP_VALID = "valid"
+_PROP_LOCAL = "local"
+_PROP_JOINED = "joined"
+_PROP_CUSTOM_PROPS = "custom-props"
+
 class Activity(DBusGObject):
     """Represents a potentially shareable activity on the network.
     """
@@ -41,16 +50,20 @@ class Activity(DBusGObject):
     }
 
     __gproperties__ = {
-        'id'     : (str, None, None, None,
-                    gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT_ONLY),
-        'name'   : (str, None, None, None, gobject.PARAM_READWRITE),
-        'color'  : (str, None, None, None, gobject.PARAM_READWRITE),
-        'type'   : (str, None, None, None, gobject.PARAM_READWRITE),
-        'valid'  : (bool, None, None, False, gobject.PARAM_READABLE),
-        'local'  : (bool, None, None, False,
-                    gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT_ONLY),
-        'joined' : (bool, None, None, False, gobject.PARAM_READABLE)
+        _PROP_ID           : (str, None, None, None,
+                              gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT_ONLY),
+        _PROP_NAME         : (str, None, None, None, gobject.PARAM_READWRITE),
+        _PROP_COLOR        : (str, None, None, None, gobject.PARAM_READWRITE),
+        _PROP_TYPE         : (str, None, None, None, gobject.PARAM_READWRITE),
+        _PROP_VALID        : (bool, None, None, False, gobject.PARAM_READABLE),
+        _PROP_LOCAL        : (bool, None, None, False,
+                              gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT_ONLY),
+        _PROP_JOINED       : (bool, None, None, False, gobject.PARAM_READABLE),
+        _PROP_CUSTOM_PROPS : (object, None, None,
+                              gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT_ONLY)
     }
+
+    _RESERVED_PROPNAMES = __gproperties__.keys()
 
     def __init__(self, bus_name, object_id, tp, **kwargs):
         """Initializes the activity and sets its properties to default values.
@@ -85,11 +98,18 @@ class Activity(DBusGObject):
         self._color = None
         self._local = False
         self._type = None
+        self._custom_props = {}
 
-        if not kwargs.get("id"):
+        # ensure no reserved property names are in custom properties
+        if kwargs.get(_PROP_CUSTOM_PROPS):
+            (rprops, cprops) = self._split_properties(kwargs.get(_PROP_CUSTOM_PROPS))
+            if len(rprops.keys()) > 0:
+                raise ValueError("Cannot use reserved property names '%s'" % ", ".join(rprops.keys()))
+
+        if not kwargs.get(_PROP_ID):
             raise ValueError("activity id is required")
-        if not util.validate_activity_id(kwargs['id']):
-            raise ValueError("Invalid activity id '%s'" % kwargs['id'])
+        if not util.validate_activity_id(kwargs[_PROP_ID]):
+            raise ValueError("Invalid activity id '%s'" % kwargs[_PROP_ID])
 
         gobject.GObject.__init__(self, **kwargs)
         if self.props.local and not self.props.valid:
@@ -107,19 +127,19 @@ class Activity(DBusGObject):
         returns The value of the given property.
         """
         
-        if pspec.name == "id":
+        if pspec.name == _PROP_ID:
             return self._id
-        elif pspec.name == "name":
+        elif pspec.name == _PROP_NAME:
             return self._name
-        elif pspec.name == "color":
+        elif pspec.name == _PROP_COLOR:
             return self._color
-        elif pspec.name == "type":
+        elif pspec.name == _PROP_TYPE:
             return self._type
-        elif pspec.name == "valid":
+        elif pspec.name == _PROP_VALID:
             return self._valid
-        elif pspec.name == "joined":
+        elif pspec.name == _PROP_JOINED:
             return self._joined
-        elif pspec.name == "local":
+        elif pspec.name == _PROP_LOCAL:
             return self._local
 
     def do_set_property(self, pspec, value):
@@ -132,20 +152,29 @@ class Activity(DBusGObject):
         to something different later will raise a RuntimeError.
         
         """
-        if pspec.name == "id":
+        if pspec.name == _PROP_ID:
+            if self._id:
+                raise RuntimeError("activity ID is already set")
             self._id = value
-        elif pspec.name == "name":
+        elif pspec.name == _PROP_NAME:
             self._name = value
-        elif pspec.name == "color":
+        elif pspec.name == _PROP_COLOR:
             self._color = value
-        elif pspec.name == "type":
+        elif pspec.name == _PROP_TYPE:
             if self._type:
                 raise RuntimeError("activity type is already set")
             self._type = value
-        elif pspec.name == "joined":
+        elif pspec.name == _PROP_JOINED:
             self._joined = value
-        elif pspec.name == "local":
+        elif pspec.name == _PROP_LOCAL:
             self._local = value
+        elif pspec.name == _PROP_CUSTOM_PROPS:
+            if not value:
+                value = {}
+            (rprops, cprops) = self._split_properties(value)
+            self._custom_props = {}
+            for (key, dvalue) in cprops.items():
+                self._custom_props[str(key)] = str(dvalue)
 
         self._update_validity()
 
@@ -441,6 +470,11 @@ class Activity(DBusGObject):
         props['name'] = self._name
         props['color'] = self._color
         props['type'] = self._type
+
+        # Add custom properties
+        for (key, value) in self._custom_props.items():
+            props[key] = value
+
         self._tp.set_activity_properties(self.props.id, props)
 
     def set_properties(self, properties):
@@ -450,29 +484,53 @@ class Activity(DBusGObject):
         
         Note that if any of the name, colour and/or type property values is changed from
         what it originally was, the update_validity method will be called, resulting in
-        a "validity-changed" signal being generated.  (Also note that unlike with the
-        do_set_property method, it *is* possible to change an already-set activity type
-        to something else; this may be a bug.)  Called by the PresenceService on the
-        local machine.
+        a "validity-changed" signal being generated.  Called by the PresenceService
+        on the local machine.
         """
         changed  = False
-        if "name" in properties.keys():
-            name = properties["name"]
+        # split reserved properties from activity-custom properties
+        (rprops, cprops) = self._split_properties(properties)
+        if _PROP_NAME in rprops.keys():
+            name = rprops[_PROP_NAME]
             if name != self._name:
                 self._name = name
                 changed = True
 
-        if "color" in properties.keys():
-            color = properties["color"]
+        if _PROP_COLOR in rprops.keys():
+            color = rprops[_PROP_COLOR]
             if color != self._color:
                 self._color = color
                 changed = True
 
-        if "type" in properties.keys():
-            type = properties["type"]
-            if type != self._type:
-                self._type = type
-                changed = True
+        if _PROP_TYPE in rprops.keys():
+            type = rprops[_PROP_TYPE]
+            # Type can never be changed after first set
+            if self._type:
+                logging.debug("Activity type changed by network; this is illegal")
+            else:
+                if type != self._type:
+                    self._type = type
+                    changed = True
+
+        # Set custom properties
+        if len(cprops.keys()) > 0:
+            self.props.custom_props = cprops
 
         if changed:
             self._update_validity()
+
+    def _split_properties(self, properties):
+        """Extracts reserved properties.
+        
+        properties - Dictionary object containing properties keyed by property names
+        
+        returns a tuple of 2 dictionaries, reserved properties and custom properties
+        """
+        rprops = {}
+        cprops = {}
+        for (key, value) in properties.items():
+            if key in self._RESERVED_PROPNAMES:
+                rprops[key] = value
+            else:
+                cprops[key] = value
+        return (rprops, cprops)

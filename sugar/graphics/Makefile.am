@@ -2,6 +2,7 @@ sugardir = $(pythondir)/sugar/graphics
 sugar_PYTHON =			\
 	__init__.py		\
 	animator.py		\
+	icon.py			\
 	iconbutton.py          	\
 	canvasicon.py		\
 	color.py		\
@@ -11,6 +12,7 @@ sugar_PYTHON =			\
 	menu.py			\
 	menushell.py		\
 	roundbox.py		\
+	panel.py		\
 	popup.py		\
 	popupcontext.py		\
 	snowflakebox.py		\
