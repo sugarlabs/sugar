@@ -16,24 +16,13 @@
 # Boston, MA 02111-1307, USA.
 
 import gtk
-import gobject
 
-from sugar.graphics.toolbutton import ToolButton
+from sugar.graphics.icon import Icon
 
-class Toolbox(gtk.VBox):
-    __gtype_name__ = 'SugarToolbox'
-    def __init__(self):
-        gtk.VBox.__init__(self)
+class ToggleToolButton(gtk.ToggleToolButton):
+    def __init__(self, icon_resource=None):
+        gtk.ToggleToolButton.__init__(self)
         
-        self._notebook = gtk.Notebook()
-        self._notebook.set_name('sugar-toolbox-notebook')
-        self._notebook.set_tab_pos(gtk.POS_BOTTOM)
-        self._notebook.set_show_border(False)
-        self.pack_start(self._notebook)
-        self._notebook.show()
-        
-    def add_toolbar(self, name, toolbar):
-        self._notebook.append_page(toolbar, gtk.Label(name))
-        
-    def remove_toolbar(self, index):
-        self._notebook.remove_page(index)
+        icon = Icon(icon_resource)
+        self.set_icon_widget(icon)
+        icon.show()
