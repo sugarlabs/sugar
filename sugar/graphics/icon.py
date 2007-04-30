@@ -18,19 +18,19 @@
 import gtk
 
 class Icon(gtk.Image):
-    def __init__(self, icon_resource, size=gtk.ICON_SIZE_LARGE_TOOLBAR):
+    def __init__(self, name, size=gtk.ICON_SIZE_LARGE_TOOLBAR):
         gtk.Image.__init__(self)
 
         icon_theme = gtk.icon_theme_get_for_screen(self.get_screen())
         icon_set = gtk.IconSet()
 
-        normal_name = icon_resource
+        normal_name = name
         if icon_theme.has_icon(normal_name):
             source = gtk.IconSource()
             source.set_icon_name(normal_name)
             icon_set.add_source(source)
 
-        inactive_name = icon_resource + '-inactive'
+        inactive_name = name + '-inactive'
         if icon_theme.has_icon(inactive_name):
             source = gtk.IconSource()
             source.set_icon_name(inactive_name)

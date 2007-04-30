@@ -20,9 +20,9 @@ import gtk
 from sugar.graphics.icon import Icon
 
 class ToggleToolButton(gtk.ToggleToolButton):
-    def __init__(self, icon_resource=None):
+    def __init__(self, named_icon=None):
         gtk.ToggleToolButton.__init__(self)
         
-        icon = Icon(icon_resource)
+        icon = Icon(named_icon)
         self.set_icon_widget(icon)
         icon.show()
