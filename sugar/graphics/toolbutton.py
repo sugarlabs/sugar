@@ -17,9 +17,12 @@
 
 import gtk
 
+from sugar.graphics.icon import Icon
+
 class ToolButton(gtk.ToolButton):
-    def __init__(self, icon_name=None):
+    def __init__(self, icon_resource=None):
         gtk.ToolButton.__init__(self)
         
-        if icon_name:
-            self.set_icon_name(icon_name) 
+        icon = Icon(icon_resource)
+        self.set_icon_widget(icon)
+        icon.show()
