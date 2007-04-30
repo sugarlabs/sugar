@@ -64,6 +64,31 @@ class ActivityToolbar(gtk.Toolbar):
     def _activity_shared_cb(self, activity):
         self._share_button.set_sensitive(False)
 
+class EditToolbar(gtk.Toolbar):
+    def __init__(self):
+        gtk.Toolbar.__init__(self)
+
+        self.undo = ToolButton('edit-undo')
+        self.insert(self.undo, -1)
+        self.undo.show()
+
+        self.redo = ToolButton('edit-redo')
+        self.insert(self.redo, -1)
+        self.redo.show()
+
+        separator = gtk.SeparatorToolItem()
+        separator.set_draw(True)
+        self.insert(separator, -1)
+        separator.show()
+
+        self.copy = ToolButton('edit-copy')
+        self.insert(self.copy, -1)
+        self.copy.show()
+
+        self.paste = ToolButton('edit-paste')
+        self.insert(self.paste, -1)
+        self.paste.show()
+
 class ActivityToolbox(Toolbox):
     def __init__(self, activity):
         Toolbox.__init__(self)
