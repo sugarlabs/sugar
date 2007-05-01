@@ -20,6 +20,8 @@ import gobject
 
 from sugar.graphics.toolbutton import ToolButton
 
+_N_TABS = 8
+
 class Toolbox(gtk.VBox):
     __gtype_name__ = 'SugarToolbox'
     def __init__(self):
@@ -33,7 +35,10 @@ class Toolbox(gtk.VBox):
         self._notebook.show()
         
     def add_toolbar(self, name, toolbar):
-        self._notebook.append_page(toolbar, gtk.Label(name))
+        label = gtk.Label(name)
+        label.set_size_request(gtk.gdk.screen_width() / _N_TABS, -1)
+        label.set_alignment(0.0, 0.5)
+        self._notebook.append_page(toolbar, label)
         
     def remove_toolbar(self, index):
         self._notebook.remove_page(index)
