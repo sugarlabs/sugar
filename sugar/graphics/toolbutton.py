@@ -22,7 +22,9 @@ from sugar.graphics.icon import Icon
 class ToolButton(gtk.ToolButton):
     def __init__(self, named_icon=None):
         gtk.ToolButton.__init__(self)
+        self.set_named_icon(named_icon)
         
+    def set_named_icon(self, named_icon):
         icon = Icon(named_icon)
         self.set_icon_widget(icon)
-        icon.show()
+        icon.show()        
