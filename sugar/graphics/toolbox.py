@@ -19,6 +19,7 @@ import gtk
 import gobject
 
 from sugar.graphics.toolbutton import ToolButton
+from sugar.graphics import units
 
 _N_TABS = 8
 
@@ -38,7 +39,12 @@ class Toolbox(gtk.VBox):
         label = gtk.Label(name)
         label.set_size_request(gtk.gdk.screen_width() / _N_TABS, -1)
         label.set_alignment(0.0, 0.5)
-        self._notebook.append_page(toolbar, label)
+
+        toolbar_box = gtk.HBox()
+        toolbar_box.pack_start(toolbar, True, True, units.grid_to_pixels(1))
+            
+        self._notebook.append_page(toolbar_box, label)
+        toolbar_box.show()
         
     def remove_toolbar(self, index):
         self._notebook.remove_page(index)
