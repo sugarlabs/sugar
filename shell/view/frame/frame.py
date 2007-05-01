@@ -24,7 +24,7 @@ from view.frame.ActivitiesBox import ActivitiesBox
 from view.frame.ZoomBox import ZoomBox
 from view.frame.overlaybox import OverlayBox
 from view.frame.FriendsBox import FriendsBox
-from view.frame.PanelWindow import PanelWindow
+from view.frame.framewindow import FrameWindow
 from view.frame.clipboardpanelwindow import ClipboardPanelWindow
 from view.frame.framepopupcontext import FramePopupContext
 from model.ShellModel import ShellModel
@@ -257,7 +257,7 @@ class Frame(object):
             self._timeline.goto('slide_out', True)
         
     def _create_panel(self, orientation):
-        panel = PanelWindow(orientation)
+        panel = FrameWindow(orientation)
         self._connect_to_panel(panel)
 
         return panel

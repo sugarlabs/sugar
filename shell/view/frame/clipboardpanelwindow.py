@@ -2,14 +2,14 @@ import logging
 import gtk
 import hippo
 
-from view.frame.PanelWindow import PanelWindow
+from view.frame.framewindow import FrameWindow
 from view.frame.clipboardbox import ClipboardBox
 from sugar.clipboard import clipboardservice
 from sugar import util
 
-class ClipboardPanelWindow(PanelWindow):
+class ClipboardPanelWindow(FrameWindow):
     def __init__(self, frame, orientation):
-        PanelWindow.__init__(self, orientation)
+        FrameWindow.__init__(self, orientation)
 
         self._frame = frame
 

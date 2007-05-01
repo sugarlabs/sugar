@@ -29,7 +29,6 @@ class Toolbox(gtk.VBox):
         gtk.VBox.__init__(self)
         
         self._notebook = gtk.Notebook()
-        self._notebook.set_name('sugar-toolbox-notebook')
         self._notebook.set_tab_pos(gtk.POS_BOTTOM)
         self._notebook.set_show_border(False)
         self.pack_start(self._notebook)

@@ -9,5 +9,5 @@ sugar_PYTHON =				\
 	frame.py			\
 	ZoomBox.py			\
 	overlaybox.py			\
-	PanelWindow.py			\
+	framewindow.py			\
 	framepopupcontext.py

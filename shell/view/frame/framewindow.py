@@ -19,7 +19,8 @@ import hippo
 
 from sugar.graphics import units
 
-class PanelWindow(gtk.Window):
+class FrameWindow(gtk.Window):
+    __gtype_name__ = 'SugarFrameWindow'
     def __init__(self, orientation):
         gtk.Window.__init__(self)
         self.hover = False
@@ -35,8 +36,7 @@ class PanelWindow(gtk.Window):
         self.add(self._canvas)
         self._canvas.show()
 
-        self._bg = hippo.CanvasBox(background_color=0x414141ff,
-                                   orientation=self._orientation)
+        self._bg = hippo.CanvasBox(orientation=self._orientation)
         self._canvas.set_root(self._bg)
 
         self._update_size()
