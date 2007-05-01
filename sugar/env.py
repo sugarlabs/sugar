@@ -33,7 +33,7 @@ def _get_sugar_path(base, path=None):
     if os.environ.has_key('SUGAR_PATH'):
         sugar_path = os.environ['SUGAR_PATH']
     else:
-        sugar_path = _get_prefix_path('share/sugar')
+        raise RuntimeError("The SUGAR_PATH environment variable is not set.")
 
     if path:
         return os.path.join(sugar_path, base, path)
