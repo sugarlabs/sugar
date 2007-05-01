@@ -164,7 +164,7 @@ class ServerPlugin(gobject.GObject):
         if properties.has_key("nick"):
             self._set_self_alias()
 
-        if properties.has_key("color"):
+        if properties.has_key("color") or properties.has_key("ip4-address"):
             self._set_self_olpc_properties()
 
     def _owner_icon_changed_cb(self, owner, icon):
@@ -447,6 +447,11 @@ class ServerPlugin(gobject.GObject):
         props = {}
         props['color'] = self._owner.props.color
         props['key'] = dbus.ByteArray(self._owner.props.key)
+        addr = self._owner.props.ip4_address
+        if not addr:
+            props['ip4-address'] = ""
+        else:
+            props['ip4-address'] = addr
         self._conn[CONN_INTERFACE_BUDDY_INFO].SetProperties(props,
                 reply_handler=self._ignore_success_cb,
                 error_handler=lambda *args: self._log_error_cb("setting properties", *args))

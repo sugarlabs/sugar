@@ -65,7 +65,8 @@ class Buddy(gobject.GObject):
         'nick'             : (str, None, None, None, gobject.PARAM_READABLE),
         'color'            : (str, None, None, None, gobject.PARAM_READABLE),
         'current-activity' : (object, None, None, gobject.PARAM_READABLE),
-        'owner'            : (bool, None, None, False, gobject.PARAM_READABLE)
+        'owner'            : (bool, None, None, False, gobject.PARAM_READABLE),
+        'ip4-address'      : (str, None, None, None, gobject.PARAM_READABLE)
     }
 
     _PRESENCE_SERVICE = "org.laptop.Sugar.Presence"
@@ -134,6 +135,11 @@ class Buddy(gobject.GObject):
             if not self._icon:
                 self._icon = _bytes_to_string(self._buddy.GetIcon())
             return self._icon
+        elif pspec.name == "ip4-address":
+            # IPv4 address will go away quite soon
+            if not self._properties.has_key("ip4-address"):
+                return None
+            return self._properties["ip4-address"]
 
     def object_path(self):
         """Retrieve our dbus object path"""
