@@ -181,7 +181,7 @@ class Activity(Window, gtk.Container):
 
     def share(self):
         """Request that the activity be shared on the network."""
-        if self._shared_activty and self._shared_activity.props.joined:
+        if self._shared_activity and self._shared_activity.props.joined:
             raise RuntimeError("Activity %s already shared." % self._activity_id)
         logging.debug('Requesting share of activity %s.' % self._activity_id)
         self._share_id = self._pservice.connect("activity-shared", self._internal_share_cb)
