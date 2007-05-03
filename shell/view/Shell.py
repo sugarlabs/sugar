@@ -102,7 +102,8 @@ class Shell(gobject.GObject):
         return self._popup_context
 
     def _join_error_cb(self, handler, err, home_model):
-        home_mode.notify_activity_launch_failed(handler.get_activity_id())
+        logging.debug("Failed to join activity %s: %s" % (handler.get_activity_id(), err))
+        home_model.notify_activity_launch_failed(handler.get_activity_id())
 
     def join_activity(self, bundle_id, activity_id):
         activity = self.get_activity(activity_id)
