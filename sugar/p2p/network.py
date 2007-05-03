@@ -18,14 +18,18 @@
 # pylint: disable-msg = W0221
 
 import socket
+import os
 import threading
 import traceback
 import xmlrpclib
 import sys
 import httplib
+import urllib
+import fcntl
 
 import gobject
 import SimpleXMLRPCServer
+import SimpleHTTPServer
 import SocketServer
 
 
@@ -67,6 +71,174 @@ class GlibTCPServer(SocketServer.TCPServer):
             return True
         self.handle_request()
         return True
+
+
+class ChunkedGlibHTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+    """RequestHandler class that integrates with Glib mainloop.  It writes
+       the specified file to the client in chunks, returning control to the
+       mainloop between chunks.
+    """
+
+    CHUNK_SIZE = 4096
+
+    def __init__(self, request, client_address, server):
+        self._file = None
+        self._srcid = 0
+        SimpleHTTPServer.SimpleHTTPRequestHandler.__init__(self, request, client_address, server)
+
+    def log_request(self, code='-', size='-'):
+        pass
+
+    def do_GET(self):
+        """Serve a GET request."""
+        self._file = self.send_head()
+        if self._file:
+            self._srcid = gobject.io_add_watch(self.wfile, gobject.IO_OUT | gobject.IO_ERR, self._send_next_chunk)
+        else:
+            f.close()
+            self._cleanup()
+
+    def _send_next_chunk(self, source, condition):
+        if condition & gobject.IO_ERR:
+            self._cleanup()
+            return False
+        if not (condition & gobject.IO_OUT):
+            self._cleanup()
+            return False
+        data = self._file.read(self.CHUNK_SIZE)
+        count = os.write(self.wfile.fileno(), data)
+        if count != len(data) or len(data) != self.CHUNK_SIZE:
+            self._cleanup()
+            return False
+        return True
+
+    def _cleanup(self):
+        if self._file:
+            self._file.close()
+        if self._srcid > 0:
+            gobject.source_remove(self._srcid)
+            self._srcid = 0
+        if not self.wfile.closed:
+            self.wfile.flush()
+        self.wfile.close()
+        self.rfile.close()
+        
+    def finish(self):
+        """Close the sockets when we're done, not before"""
+        pass
+
+    def send_head(self):
+        """Common code for GET and HEAD commands.
+
+        This sends the response code and MIME headers.
+
+        Return value is either a file object (which has to be copied
+        to the outputfile by the caller unless the command was HEAD,
+        and must be closed by the caller under all circumstances), or
+        None, in which case the caller has nothing further to do.
+
+        ** [dcbw] modified to send Content-disposition filename too
+        """
+        path = self.translate_path(self.path)
+        f = None
+        if os.path.isdir(path):
+            for index in "index.html", "index.htm":
+                index = os.path.join(path, index)
+                if os.path.exists(index):
+                    path = index
+                    break
+            else:
+                return self.list_directory(path)
+        ctype = self.guess_type(path)
+        try:
+            # Always read in binary mode. Opening files in text mode may cause
+            # newline translations, making the actual size of the content
+            # transmitted *less* than the content-length!
+            f = open(path, 'rb')
+        except IOError:
+            self.send_error(404, "File not found")
+            return None
+        self.send_response(200)
+        self.send_header("Content-type", ctype)
+        self.send_header("Content-Length", str(os.fstat(f.fileno())[6]))
+        self.send_header("Content-Disposition", 'attachment; filename="%s"' % os.path.basename(path))
+        self.end_headers()
+        return f
+
+class GlibURLDownloader(gobject.GObject):
+    """Grabs a URL in chunks, returning to the mainloop after each chunk"""
+
+    __gsignals__ = {
+        'finished': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                         ([gobject.TYPE_PYOBJECT]))
+    }
+
+    CHUNK_SIZE = 4096
+
+    def __init__(self, url, destdir=None):
+        self._url = url
+        if not destdir:
+            destdir = "/tmp"
+        self._destdir = destdir
+        self._srcid = 0
+        self._fname = None
+        self._outf = None
+        gobject.GObject.__init__(self)
+
+    def start(self):
+        self._info = urllib.urlopen(self._url)
+        self._fname = _get_filename_from_headers(info.headers)
+        if not self._fname:
+            import tempfile
+            garbage, path = urllib.splittype(url)
+            garbage, path = urllib.splithost(path or "")
+            path, garbage = urllib.splitquery(path or "")
+            path, garbage = urllib.splitattr(path or "")
+            suffix = os.path.splitext(path)[1]
+            (outf, self._fname) = tempfile.mkstemp(suffix=suffix, dir=self._destdir)
+        else:
+            outf = open(os.path.join(self._destdir, self._fname), "w")
+
+        fcntl.fcntl(self._info.fp.fileno(), fcntl.F_SETFD, os.O_NDELAY)
+        self._srcid = gobject.io_add_watch(self._info.fp.fileno(), gobject.IO_IN, self._read_next_chunk)
+
+    def _get_filename_from_headers(self, headers):
+        if not headers.has_key("Content-Disposition"):
+            return None
+
+        ftag = "filename="
+        data = headers["Content-Disposition"]
+        fidx = data.find(ftag)
+        if fidx < 0:
+            return None
+        fname = data[fidx+len(ftag):]
+        if fname[0] == '"' or fname[0] == "'":
+            fname = fname[1:]
+        if fname[len(fname)-1] == '"' or fname[len(fname)-1] == "'":
+            fname = fname[:len(fname)-1]
+        return fname
+
+    def _read_next_chunk(self, source, condition):
+        if not (condition & gobject.IO_IN):
+            self.cleanup()
+            self.emit("finished", None)
+            return False
+
+        data = info.fp.read(self.CHUNK_SIZE)
+        count = outf.write(data)
+        if len(data) < self.CHUNK_SIZE:
+            self.cleanup()
+            self.emit("finished", self._fname)
+            return False
+        return True
+
+    def cleanup(self):
+        if self._srcid > 0:
+            gobject.source_remove(self._srcid)
+            self._srcid = 0
+        del self._info
+        self._outf.close()
+
 
 class GlibXMLRPCRequestHandler(SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
     """ GlibXMLRPCRequestHandler
