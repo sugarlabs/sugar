@@ -44,26 +44,18 @@ class ActivityToolbar(gtk.Toolbar):
         activity.connect('shared', self._activity_shared_cb)
         activity.connect('joined', self._activity_shared_cb)
 
-        button = ToolButton('window-close')
-        button.connect('clicked', self._close_button_clicked_cb)
-        self.insert(button, -1)
-        button.show()
+        self.close = ToolButton('window-close')
+        self.insert(self.close, -1)
+        self.close.show()
 
-        self._share_button = ToolButton('stock-share-mesh')
-        self._share_button.connect('clicked', self._share_button_clicked_cb)
-        self.insert(self._share_button, -1)
+        self.share = ToolButton('stock-share-mesh')
+        self.insert(self.share, -1)
         if activity.get_shared():
-            self._share_button.set_sensitive(False)
-        self._share_button.show()
-        
-    def _close_button_clicked_cb(self, button):
-        self.emit('close-clicked')
-
-    def _share_button_clicked_cb(self, button):
-        self.emit('share-clicked')
+            self.share.set_sensitive(False)
+        self.share.show()
 
     def _activity_shared_cb(self, activity):
-        self._share_button.set_sensitive(False)
+        self.share.set_sensitive(False)
 
 class EditToolbar(gtk.Toolbar):
     def __init__(self):
@@ -216,8 +208,8 @@ class Activity(Window, gtk.Container):
     def set_toolbox(self, toolbox):
         Window.set_toolbox(self, toolbox)
         act_toolbar = toolbox.get_activity_toolbar()
-        act_toolbar.connect('share-clicked', self._handle_share_cb)
-        act_toolbar.connect('close-clicked', self._handle_close_cb)
+        act_toolbar.share.connect('clicked', self._handle_share_cb)
+        act_toolbar.close.connect('clicked', self._handle_close_cb)
 
 def get_bundle_path():
     """Return the bundle path for the current process' bundle

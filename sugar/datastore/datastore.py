@@ -62,6 +62,10 @@ class Link(DataStoreObject):
     def get_object_type(self):
         return 'link'
 
+class WebSession(DataStoreObject):
+    def get_object_type(self):
+        return 'web_session'
+
 def _read_from_object_path(object_path):
     dbus_object = _bus.get_object(DS_DBUS_SERVICE, object_path)
     metadata = dbus_object.get_properties(dbus.Dictionary({}, signature='sv'))
@@ -80,6 +84,8 @@ def _read_from_object_path(object_path):
         return Picture(metadata, file_path, handle)
     elif object_type == 'link':
         return Link(metadata, file_path, handle)
+    elif object_type == 'web_session':
+        return WebSession(metadata, file_path, handle)
     else:
         raise NotImplementedError('Unknown object type.')
 
