@@ -19,7 +19,6 @@ import os
 import gobject
 
 from sugar.presence import presenceservice
-from sugar.activity.bundleregistry import BundleRegistry
 from model.Friends import Friends
 from model.MeshModel import MeshModel
 from model.homemodel import HomeModel
