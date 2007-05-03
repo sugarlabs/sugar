@@ -136,7 +136,7 @@ class Shell(gobject.GObject):
             logging.debug("This activity is still launching.")
             return
 
-        logging.debug('Shell.start_activity')
+        logging.debug('Trying to start activity of type %s' % activity_type)
 
         self._activities_starting.add(activity_type)
         try:
@@ -147,7 +147,8 @@ class Shell(gobject.GObject):
                                                 activity_type)
 
             handler.connect('error', self._start_error_cb, home_model)
-        except:
+        except Exception, err:
+            logging.debug("Couldn't start activity of type %s: %s" % (activity_type, err))
             self._activities_starting.remove(activity_type)
 
         # Zoom to Home for launch feedback
