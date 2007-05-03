@@ -24,7 +24,7 @@ from view.home.HomeWindow import HomeWindow
 from sugar.activity.activityhandle import ActivityHandle
 from sugar.graphics.popupcontext import PopupContext
 from view.ActivityHost import ActivityHost
-from sugar.activity import activityfactory
+from sugar.activity import activityfactory, bundleregistry
 from view.frame.frame import Frame
 from view.keyhandler import KeyHandler
 import sugar
@@ -113,7 +113,7 @@ class Shell(gobject.GObject):
         # Get the service name for this activity, if
         # we have a bundle on the system capable of handling
         # this activity type
-        breg = self._model.get_bundle_registry()
+        breg = bundleregistry.get_registry()
         bundle = breg.get_bundle(bundle_id)
         if not bundle:
             logging.error("Couldn't find activity for type %s" % bundle_id)

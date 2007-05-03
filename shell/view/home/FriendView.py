@@ -21,6 +21,7 @@ from view.BuddyIcon import BuddyIcon
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import units
 from sugar.presence import presenceservice
+from sugar.activity import bundleregistry
 
 class FriendView(hippo.CanvasBox):
     def __init__(self, shell, menu_shell, buddy, **kwargs):
@@ -45,7 +46,7 @@ class FriendView(hippo.CanvasBox):
         self._buddy.connect('color-changed', self._buddy_color_changed_cb)
 
     def _get_new_icon_name(self, activity):
-        registry = shell.get_model().get_bundle_registry()
+        registry = bundleregistry.get_registry()
         bundle = registry.get_bundle(activity.get_type())
         if bundle:
             return bundle.get_icon()
