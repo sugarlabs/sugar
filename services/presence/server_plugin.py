@@ -407,7 +407,7 @@ class ServerPlugin(gobject.GObject):
                     reply_handler=lambda *args: self._join_activity_get_channel_cb(activity_id, signal, userdata, *args),
                     error_handler=lambda *args: self._join_error_cb(activity_id, signal, userdata, *args))
         else:
-            self._join_activity_get_channel_cb(activity_id, userdata, [handle])
+            self._join_activity_get_channel_cb(activity_id, signal, userdata, [handle])
     
     def share_activity(self, activity_id, userdata):
         """Share activity with the network
