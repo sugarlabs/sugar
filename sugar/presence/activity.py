@@ -36,10 +36,12 @@ class Activity(gobject.GObject):
     __gsignals__ = {
         'buddy-joined': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                          ([gobject.TYPE_PYOBJECT])),
-        'buddy-left': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'buddy-left':   (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                          ([gobject.TYPE_PYOBJECT])),
-        'new-channel': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                         ([gobject.TYPE_PYOBJECT]))
+        'new-channel':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                         ([gobject.TYPE_PYOBJECT])),
+        'joined':       (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                         ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT]))
     }
 
     __gproperties__ = {
@@ -137,15 +139,22 @@ class Activity(gobject.GObject):
             buddies.append(self._ps_new_object(item))
         return buddies
 
+    def _join_cb(self):
+        self._joined = True
+        self.emit("joined", True, None)
+
+    def _join_error_cb(self, err):
+        self.emit("joined", False, str(err))
+
     def join(self):
         """Join this activity 
         
         XXX if these are all activities, can I join my own activity?
         """
         if self._joined:
+            self.emit("joined", True, None)
             return
-        self._activity.Join()
-        self._joined = True
+        self._activity.Join(reply_handler=self._join_cb, error_handler=self._join_error_cb)
 
     def get_channels(self):
         """Retrieve communications channel descriptions for the activity 
@@ -157,7 +166,6 @@ class Activity(gobject.GObject):
         (bus_name, connection, channels) = self._activity.GetChannels()
         return bus_name, connection, channels
 
-    def owner_has_joined(self):
-        """Retrieve whether the owner of the activity is active within it"""
+    def leave(self):
         # FIXME
-        return False
+        self._joined = False

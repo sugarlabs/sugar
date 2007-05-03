@@ -42,6 +42,7 @@ class ActivityToolbar(gtk.Toolbar):
 
         self._activity = activity
         activity.connect('shared', self._activity_shared_cb)
+        activity.connect('joined', self._activity_shared_cb)
 
         button = ToolButton('window-close')
         button.connect('clicked', self._close_button_clicked_cb)
@@ -105,7 +106,8 @@ class Activity(Window, gtk.Container):
     __gtype_name__ = 'SugarActivity'
 
     __gsignals__ = {
-        'shared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
+        'shared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'joined': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
     }
 
     def __init__(self, handle):
@@ -133,17 +135,33 @@ class Activity(Window, gtk.Container):
 
         self.connect('destroy', self._destroy_cb)
 
-        self._shared = False
         self._activity_id = handle.activity_id
         self._pservice = presenceservice.get_instance()
-        self._service = None
-        self._share_sigid = None
+        self._shared_activity = None
+        self._share_id = None
+        self._join_id = None
 
-        service = handle.get_presence_service()
-        if service:
-            self._join(service)
+        shared_activity = handle.get_shared_activity()
+        if shared_activity:
+            # Join an existing instance of this activity on the network
+            self._shared_activity = shared_activity
+            self._join_id = self._shared_activity.connect("joined", self._internal_joined_cb)
+            if not self._shared_activity.props.joined:
+                self._shared_activity.join()
+            else:
+                self._joined_cb(self._shared_activity, True, None)
 
         self._bus = ActivityService(self)
+
+    def _internal_joined_cb(self, activity, success, err):
+        """Callback when join has finished"""
+        self._shared_activity.disconnect(self._join_id)
+        self._join_id = None
+        if not success:
+            logging.debug("Failed to join activity: %s" % err)
+            return
+        self.present()
+        self.emit('joined')
 
     def get_service_name(self):
         """Gets the activity service name."""
@@ -151,35 +169,30 @@ class Activity(Window, gtk.Container):
 
     def get_shared(self):
         """Returns TRUE if the activity is shared on the mesh."""
-        return self._shared
+        if not self._shared_activity:
+            return False
+        return self._shared_activity.props.joined
 
     def get_id(self):
         """Get the unique activity identifier."""
         return self._activity_id
 
-    def _join(self, service):
-        """Join an existing instance of this activity on the network."""
-        self._service = service
-        self._shared = True
-        self._service.join()
-        self.present()
+    def _internal_share_cb(self, ps, success, activity, err):
+        self._pservice.disconnect(self._share_id)
+        self._share_id = None
+        if not success:
+            logging.debug('Share of activity %s failed: %s.' % (self._activity_id, err))
+            return
+        logging.debug('Share of activity %s successful.' % self._activity_id)
+        self.shared_activity = activity
         self.emit('shared')
-
-    def _share_cb(self, ps, success, service, err):
-        self._pservice.disconnect(self._share_sigid)
-        self._share_sigid = None
-        if success:
-            logging.debug('Share of activity %s successful.' % self.get_id())
-            self._service = service
-            self._shared = True
-            self.emit('shared')
-        else:
-            logging.debug('Share of activity %s failed: %s.' % (self.get_id(), err))
 
     def share(self):
         """Request that the activity be shared on the network."""
-        logging.debug('Requesting share of activity %s.' % self.get_id())
-        self._share_sigid = self._pservice.connect("activity-shared", self._share_cb)
+        if self._shared_activty and self._shared_activity.props.joined:
+            raise RuntimeError("Activity %s already shared." % self._activity_id)
+        logging.debug('Requesting share of activity %s.' % self._activity_id)
+        self._share_id = self._pservice.connect("activity-shared", self._internal_share_cb)
         self._pservice.share_activity(self)
 
     def execute(self, command, args):
@@ -191,8 +204,8 @@ class Activity(Window, gtk.Container):
         if self._bus:
             del self._bus
             self._bus = None
-        if self._service:
-            self._pservice.unregister_service(self._service)
+        if self._shared_activity:
+            self._shared_activity.leave()
 
     def _handle_close_cb(self, toolbar):
         self.destroy()

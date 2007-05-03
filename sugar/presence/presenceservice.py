@@ -160,6 +160,11 @@ class PresenceService(gobject.GObject):
             elif object_path.startswith(self._PS_ACTIVITY_OP):
                 obj = activity.Activity(self._bus, self._new_object,
                         self._del_object, object_path)
+                try:
+                    # Pre-fill the activity's ID
+                    foo = obj.props.id
+                except dbus.exceptions.DBusException, err:
+                    pass
             else:
                 raise RuntimeError("Unknown object type")
             self._objcache[object_path] = obj
@@ -322,7 +327,9 @@ class PresenceService(gobject.GObject):
 
     def _share_activity_cb(self, activity, op):
         """Notify with GObject event of successful sharing of activity"""
-        self.emit("activity-shared", True, self._new_object(op), None)
+        psact = self._new_object(op)
+        psact._joined = True
+        self.emit("activity-shared", True, psact, None)
 
     def _share_activity_error_cb(self, activity, err):
         """Notify with GObject event of unsuccessful sharing of activity"""
@@ -343,6 +350,14 @@ class PresenceService(gobject.GObject):
         returns None
         """
         actid = activity.get_id()
+
+        # Ensure the activity is not already shared/joined
+        for obj in self._objcache.values():
+            if not isinstance(object, activity.Activity):
+                continue
+            if obj.props.id == actid or obj.props.joined:
+                raise RuntimeError("Activity %s is already shared." % actid)
+
         atype = activity.get_service_name()
         name = activity.props.title
         self._ps.ShareActivity(actid, atype, name, properties,

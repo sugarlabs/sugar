@@ -52,8 +52,8 @@ class ActivityHandle(object):
         self.object_id = object_id
         self.uri = uri
 
-    def get_presence_service(self):
-        """Retrieve the "sharing service" for this activity 
+    def get_shared_activity(self):
+        """Retrieve the shared instance of this activity
         
         Uses the PresenceService to find any existing dbus 
         service which provides sharing mechanisms for this 
