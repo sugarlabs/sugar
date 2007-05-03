@@ -71,7 +71,7 @@ class HomeActivity(gobject.GObject):
         """Callback for launch operation timeouts
         """
         logging.debug("Activity %s (%s) launch timed out" %
-                      (self._activity_id, self.get_type))
+                      (self._activity_id, self.get_type()))
         self._launch_timeout_id = 0
         self.emit('launch-timeout')
         return False
@@ -79,7 +79,7 @@ class HomeActivity(gobject.GObject):
     def set_window(self, window):
         """An activity is 'launched' once we get its window."""
         logging.debug("Activity %s (%s) finished launching" %
-                      (self._activity_id, self.get_type))
+                      (self._activity_id, self.get_type()))
         self._launched = True
         gobject.source_remove(self._launch_timeout_id)
         self._launch_timeout_id = 0
