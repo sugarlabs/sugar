@@ -61,7 +61,7 @@ class HomeActivity(gobject.GObject):
                                     20000, self._launch_timeout_cb)
 
         logging.debug("Activity %s (%s) launching..." %
-                      (self._activity_id, self.get_type))
+                      (self._activity_id, self.get_type()))
 
     def __del__(self):
         gobject.source_remove(self._launch_timeout_id)
