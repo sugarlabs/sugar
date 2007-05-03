@@ -167,6 +167,8 @@ class GlibURLDownloader(gobject.GObject):
 
     __gsignals__ = {
         'finished': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                         ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
+        'error':    (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                          ([gobject.TYPE_PYOBJECT]))
     }
 
@@ -184,17 +186,19 @@ class GlibURLDownloader(gobject.GObject):
 
     def start(self):
         self._info = urllib.urlopen(self._url)
-        self._suggested_fname = _get_filename_from_headers(info.headers)
+        self._suggested_fname = self._get_filename_from_headers(self._info.headers)
         import tempfile
-        garbage, path = urllib.splittype(url)
+        garbage, path = urllib.splittype(self._url)
         garbage, path = urllib.splithost(path or "")
         path, garbage = urllib.splitquery(path or "")
         path, garbage = urllib.splitattr(path or "")
         suffix = os.path.splitext(path)[1]
-        (outf, self._fname) = tempfile.mkstemp(suffix=suffix, dir=self._destdir)
+        (self._outf, self._fname) = tempfile.mkstemp(suffix=suffix, dir=self._destdir)
 
         fcntl.fcntl(self._info.fp.fileno(), fcntl.F_SETFD, os.O_NDELAY)
-        self._srcid = gobject.io_add_watch(self._info.fp.fileno(), gobject.IO_IN, self._read_next_chunk)
+        self._srcid = gobject.io_add_watch(self._info.fp.fileno(),
+                                           gobject.IO_IN | gobject.IO_ERR,
+                                           self._read_next_chunk)
 
     def _get_filename_from_headers(self, headers):
         if not headers.has_key("Content-Disposition"):
@@ -213,17 +217,29 @@ class GlibURLDownloader(gobject.GObject):
         return fname
 
     def _read_next_chunk(self, source, condition):
-        if not (condition & gobject.IO_IN):
+        if condition & gobject.IO_ERR:
             self.cleanup()
             os.remove(self._fname)
-            self.emit("finished", None, None)
+            self.emit("error", "Error downloading file.")
             return False
+        elif not (condition & gobject.IO_IN):
+            # shouldn't get here, but...
+            return True
 
-        data = info.fp.read(self.CHUNK_SIZE)
-        count = outf.write(data)
-        if len(data) < self.CHUNK_SIZE:
+        try:
+            data = self._info.fp.read(self.CHUNK_SIZE)
+            count = os.write(self._outf, data)
+            if len(data) < self.CHUNK_SIZE:
+                self.cleanup()
+                self.emit("finished", self._fname, self._suggested_fname)
+                return False
+            if count < len(data):
+                self.cleanup()
+                self.emit("error", "Error writing to download file.")
+                return False
+        except Exception, err:
             self.cleanup()
-            self.emit("finished", self._fname, self._suggested_fname)
+            self.emit("error", "Error downloading file: %s" % err)
             return False
         return True
 
@@ -232,7 +248,9 @@ class GlibURLDownloader(gobject.GObject):
             gobject.source_remove(self._srcid)
             self._srcid = 0
         del self._info
-        self._outf.close()
+        self._info = None
+        os.close(self._outf)
+        self._outf = None
 
 
 class GlibXMLRPCRequestHandler(SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
@@ -381,7 +399,10 @@ class GlibXMLRPCTransport(xmlrpclib.Transport):
         self.verbose = verbose        
         response = self._parse_response(h.getfile(), h._conn.sock)
         if reply_handler:
+            # Coerce to a list so we can append user data
             response = response[0]
+            if not isinstance(response, list):
+                response = [response]
             response.append(user_data)
             gobject.idle_add(reply_handler, *response)
         return False
