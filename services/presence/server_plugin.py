@@ -633,6 +633,13 @@ class ServerPlugin(gobject.GObject):
     def _contact_online(self, handle):
         """Handle a contact coming online"""
         self._online_contacts[handle] = None
+        if handle == self._conn[CONN_INTERFACE].GetSelfHandle():
+            jid = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
+            self._online_contacts[handle] = jid
+            # ignore network events for Owner property changes since those
+            # are handled locally
+            return
+
         self._conn[CONN_INTERFACE_BUDDY_INFO].GetProperties(handle,
             reply_handler=lambda *args: self._contact_online_properties_cb(handle, *args),
             error_handler=lambda *args: self._contact_online_properties_error_cb(handle, *args))
