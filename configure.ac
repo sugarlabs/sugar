@@ -16,16 +16,6 @@ AM_MAINTAINER_MODE
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 
-AC_ARG_ENABLE(ns-web-browser,
-              AC_HELP_STRING([--enable-ns-web-browser],
-                             [Enable features which requires access to nsIWebBrowser]),
-             [have_ns_web_browser=yes],
-              [have_ns_web_browser=no])
-
-if test "x$have_ns_web_browser" != "xno"; then
-       AC_DEFINE([HAVE_NS_WEB_BROWSER], [1], ["Have nsIWebBrowser"])
-fi
-
 AC_PATH_PROG([GLIB_GENMARSHAL], [glib-genmarshal])
 
 AM_PATH_PYTHON

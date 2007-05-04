@@ -51,7 +51,6 @@ NewURI(const char *uri, nsIURI **result)
 static nsresult
 GetPostData(SugarBrowser *browser, nsIInputStream **postData)
 {
-#ifdef HAVE_NS_WEB_BROWSER
     nsCOMPtr<nsIWebBrowser> webBrowser;
     gtk_moz_embed_get_nsIWebBrowser(GTK_MOZ_EMBED(browser),
                                     getter_AddRefs(webBrowser));
@@ -76,8 +75,6 @@ GetPostData(SugarBrowser *browser, nsIInputStream **postData)
     }
 
     return NS_OK;
-#endif
-    return NS_ERROR_NOT_IMPLEMENTED;
 }
 
 bool

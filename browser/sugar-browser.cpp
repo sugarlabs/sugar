@@ -283,7 +283,6 @@ sugar_browser_get_document_metadata(SugarBrowser *browser)
 {
     SugarBrowserMetadata *metadata = sugar_browser_metadata_new();
 
-#ifdef HAVE_NS_WEB_BROWSER
 	nsCOMPtr<nsIWebBrowser> webBrowser;
 	gtk_moz_embed_get_nsIWebBrowser(GTK_MOZ_EMBED(browser),
 									getter_AddRefs(webBrowser));
@@ -327,7 +326,6 @@ sugar_browser_get_document_metadata(SugarBrowser *browser)
     if (fileName.Length()) {
         metadata->filename = g_strdup(fileName.get());
     }
-#endif
 
     return metadata;
 }
@@ -375,7 +373,6 @@ sugar_browser_realize(GtkWidget *widget)
 {
     GTK_WIDGET_CLASS(parent_class)->realize(widget);
 
-#ifdef HAVE_NS_WEB_BROWSER
     GtkMozEmbed *embed = GTK_MOZ_EMBED(widget);
     nsCOMPtr<nsIWebBrowser> webBrowser;
     gtk_moz_embed_get_nsIWebBrowser(embed, getter_AddRefs(webBrowser));
@@ -398,7 +395,6 @@ sugar_browser_realize(GtkWidget *widget)
         commandManager->DoCommand("cmd_clipboardDragDropHook", cmdParamsObj,
                                   DOMWindow);
     }
-#endif
 }
 
 static void
@@ -706,7 +702,6 @@ gboolean
 sugar_browser_save_document(SugarBrowser *browser,
                             const char   *filename)
 {
-#ifdef HAVE_NS_WEB_BROWSER
     nsresult rv;
 
     nsCString cFile(filename);
@@ -749,9 +744,6 @@ sugar_browser_save_document(SugarBrowser *browser,
     NS_ENSURE_SUCCESS(rv, FALSE);
 
     return TRUE;
-#else
-    return FALSE;
-#endif
 }
 
 char *
