@@ -17,6 +17,7 @@ sugar_PYTHON =			\
 	popupcontext.py		\
 	snowflakebox.py		\
 	spreadbox.py		\
+	toggletoolbutton.py	\
 	toolbar.py		\
 	toolbox.py		\
 	toolbutton.py		\
