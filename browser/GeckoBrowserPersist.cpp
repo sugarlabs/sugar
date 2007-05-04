@@ -1,7 +1,5 @@
 #include <config.h>
 
-#ifdef HAVE_GECKO_1_9
-
 #include <stdio.h>
 
 #include <gtkmozembed.h>
@@ -183,5 +181,3 @@ GeckoBrowserPersist::SaveURI(const char *uri, const char *filename)
 
     return TRUE;
 }
-
-#endif

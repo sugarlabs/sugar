@@ -1,7 +1,5 @@
 #include <config.h>
 
-#ifdef HAVE_GECKO_1_9
-
 #include <sys/time.h>
 #include <time.h>
 
@@ -214,5 +212,3 @@ GeckoDragDropHooks::OnPasteOrDrop(nsIDOMEvent *event, nsITransferable *trans,
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
-
-#endif

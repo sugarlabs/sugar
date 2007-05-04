@@ -57,8 +57,6 @@ AC_SUBST(MOZILLA_INCLUDE_DIR)
 AC_SUBST(XPIDL)
 AC_SUBST(MOZILLA_IDL_DIR)
 
-AC_DEFINE([HAVE_GECKO_1_9],[1],[Define if we have gecko 1.9])
-
 PKG_CHECK_MODULES(NSPR, [nspr],
   [have_nspr=true],
   [

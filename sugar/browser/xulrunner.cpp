@@ -21,15 +21,11 @@
 
 #include <string.h>
 
-#ifdef HAVE_GECKO_1_9
 #include "gtkmozembed_glue.cpp"
-#endif
 
 extern "C" int
 xulrunner_startup(void)
 {
-#ifdef HAVE_GECKO_1_9
-
     static const GREVersionRange greVersion = {
         "1.9a", PR_TRUE,
         "2", PR_TRUE
@@ -61,5 +57,4 @@ xulrunner_startup(void)
         *lastSlash = '\0';
 
     gtk_moz_embed_set_path(xpcomPath);
-#endif
 }
