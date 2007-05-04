@@ -113,6 +113,21 @@
   (return-type "SugarBrowser*")
 )
 
+(define-method get_session
+  (of-object "SugarBrowser")
+  (c-name "sugar_browser_get_session")
+  (return-type "char*")
+)
+
+(define-method set_session
+  (of-object "SugarBrowser")
+  (c-name "sugar_browser_set_session")
+  (return-type "none")
+  (parameters
+    '("const-char*" "session")
+  )
+)
+
 ;; From sugar-key-grabber.h
 
 (define-function sugar_key_grabber_get_type

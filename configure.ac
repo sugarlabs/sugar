@@ -19,11 +19,11 @@ AC_PROG_LIBTOOL
 AC_ARG_ENABLE(ns-web-browser,
               AC_HELP_STRING([--enable-ns-web-browser],
                              [Enable features which requires access to nsIWebBrowser]),
-	      [have_ns_web_browser=yes],
+             [have_ns_web_browser=yes],
               [have_ns_web_browser=no])
 
 if test "x$have_ns_web_browser" != "xno"; then
-	AC_DEFINE([HAVE_NS_WEB_BROWSER], [1], ["Have nsIWebBrowser"])
+       AC_DEFINE([HAVE_NS_WEB_BROWSER], [1], ["Have nsIWebBrowser"])
 fi
 
 AC_PATH_PROG([GLIB_GENMARSHAL], [glib-genmarshal])
@@ -58,9 +58,14 @@ if test -d "$with_libxul_sdk"; then
 GECKO_CFLAGS="-I$with_libxul_sdk/sdk/include -DXPCOM_GLUE"
 XPCOMGLUE_LIBS="-L$with_libxul_sdk/sdk/lib -lxpcomglue"
 MOZILLA_INCLUDE_DIR="$with_libxul_sdk/include"
+XPIDL="$with_libxul_sdk/sdk/bin/xpidl"
+MOZILLA_IDL_DIR="$with_libxul_sdk/sdk/idl"
 
 AC_SUBST(XPCOMGLUE_LIBS)
 AC_SUBST(GECKO_CFLAGS)
+AC_SUBST(MOZILLA_INCLUDE_DIR)
+AC_SUBST(XPIDL)
+AC_SUBST(MOZILLA_IDL_DIR)
 
 AC_DEFINE([HAVE_GECKO_1_9],[1],[Define if we have gecko 1.9])
 
@@ -82,25 +87,7 @@ fi
 
 else
 
-# xulrunner 1.8
-
-PKG_CHECK_MODULES(GECKO, [xulrunner-gtkmozembed >= 1.8],
-  [have_gecko=true; mozpackage=xulrunner],
-  [
-PKG_CHECK_MODULES(GECKO, [firefox-gtkmozembed >= 1.5],
-  [have_gecko=true; mozpackage=firefox],
-  have_gecko=false)
-  ])
-
-if test "x$have_gecko" = xfalse; then
-  AC_MSG_ERROR([Could not find xulrunner, mozilla or firefox $mozilla_required_version])
-fi
-
-GECKO_LDFLAGS="-R`$PKG_CONFIG --variable=libdir $mozpackage-gtkmozembed`"
-AC_SUBST(GECKO_LDFLAGS)
-
-MOZILLA_INCLUDE_DIR="`$PKG_CONFIG --variable=includedir $mozpackage-gtkmozembed`"
-AC_SUBST(MOZILLA_INCLUDE_DIR)
+AC_MSG_ERROR([Must specify the xulrunner sdk dir (--with-libxul-sdk)])
 
 fi
 
@@ -121,6 +108,7 @@ Makefile
 bin/Makefile
 data/Makefile
 browser/Makefile
+browser/sessionstore/Makefile
 services/Makefile
 services/presence/Makefile
 services/clipboard/Makefile

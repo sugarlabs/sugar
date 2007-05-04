@@ -1,9 +1,13 @@
+SUBDIRS = sessionstore
+
 libsugarbrowser_la_CPPFLAGS =				\
 	$(WARN_CFLAGS)					\
 	$(LIB_CFLAGS)					\
 	$(GECKO_CFLAGS)					\
 	$(NSPR_CFLAGS)					\
-	-I$(MOZILLA_INCLUDE_DIR)/commandhandler	\
+	-I$(MOZILLA_INCLUDE_DIR)/chrome			\
+	-I$(MOZILLA_INCLUDE_DIR)/commandhandler		\
+	-I$(MOZILLA_INCLUDE_DIR)/content		\
 	-I$(MOZILLA_INCLUDE_DIR)/dom			\
 	-I$(MOZILLA_INCLUDE_DIR)/docshell		\
 	-I$(MOZILLA_INCLUDE_DIR)/exthandler		\
@@ -35,8 +39,10 @@ libsugarbrowser_la_SOURCES =		\
 	GeckoContentHandler.cpp		\
 	GeckoDocumentObject.h		\
 	GeckoDocumentObject.cpp		\
-	GeckoDragDropHooks.h	\
-	GeckoDragDropHooks.cpp	\
+	GeckoDirectoryProvider.h	\
+	GeckoDirectoryProvider.cpp	\
+	GeckoDragDropHooks.h		\
+	GeckoDragDropHooks.cpp		\
 	GeckoDownload.h			\
 	GeckoDownload.cpp		\
 	sugar-address-entry.c		\

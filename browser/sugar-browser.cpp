@@ -28,6 +28,7 @@
 #include "GeckoDragDropHooks.h"
 #include "GeckoDocumentObject.h"
 #include "GeckoBrowserPersist.h"
+#include "GeckoDirectoryProvider.h"
 #endif
 
 #include <gdk/gdkx.h>
@@ -64,6 +65,8 @@
 #include <nsIInputStream.h>
 #include <nsICommandManager.h>
 #include <nsIClipboardDragDropHooks.h>
+
+#include "sessionstore/nsISessionStore.h"
 
 #define SUGAR_PATH "SUGAR_PATH"
 
@@ -155,6 +158,25 @@ sugar_browser_startup(const char *profile_path, const char *profile_name)
 	gtk_moz_embed_set_profile_path(profile_path, profile_name);
 
     old_handler = XSetErrorHandler(error_handler);
+
+    #if 0
+    GeckoDirectoryProvider *dirProvider =
+        new GeckoDirectoryProvider(g_getenv(SUGAR_PATH));
+    if (!dirProvider) {
+        g_warning ("failed to create GeckoDirectoryProvider");
+        return FALSE;
+    }
+
+    NS_ADDREF (dirProvider);
+
+    nsCOMPtr<nsIDirectoryServiceProvider> dp (do_QueryInterface (dirProvider));
+    NS_RELEASE (dirProvider);
+    dirProvider = nsnull;
+
+    if (!dp) return FALSE;
+
+    gtk_moz_embed_set_directory_service_provider(dp);
+    #endif
 
     gtk_moz_embed_push_startup();
 
@@ -354,10 +376,10 @@ sugar_browser_realize(GtkWidget *widget)
     GTK_WIDGET_CLASS(parent_class)->realize(widget);
 
 #ifdef HAVE_NS_WEB_BROWSER
-       GtkMozEmbed *embed = GTK_MOZ_EMBED(widget);
-       nsCOMPtr<nsIWebBrowser> webBrowser;
-       gtk_moz_embed_get_nsIWebBrowser(embed, getter_AddRefs(webBrowser));
-       NS_ENSURE_TRUE(webBrowser, );
+    GtkMozEmbed *embed = GTK_MOZ_EMBED(widget);
+    nsCOMPtr<nsIWebBrowser> webBrowser;
+    gtk_moz_embed_get_nsIWebBrowser(embed, getter_AddRefs(webBrowser));
+    NS_ENSURE_TRUE(webBrowser, );
 
     nsCOMPtr<nsICommandManager> commandManager = do_GetInterface(webBrowser);
     if (commandManager) {
@@ -725,6 +747,76 @@ sugar_browser_save_document(SugarBrowser *browser,
 
     rv = webPersist->SaveDocument(DOMDocument, destFile, filesFolder, nsnull, 0, 0);
     NS_ENSURE_SUCCESS(rv, FALSE);
+
+    return TRUE;
+#else
+    return FALSE;
+#endif
+}
+
+char *
+sugar_browser_get_session(SugarBrowser *browser)
+{
+#if 0
+    nsCOMPtr<nsIWebBrowser> webBrowser;
+    gtk_moz_embed_get_nsIWebBrowser(GTK_MOZ_EMBED(browser),
+                                    getter_AddRefs(webBrowser));
+    if (!webBrowser) {
+        g_warning ("failed to get nsIWebBrowser");
+        return NULL;
+    }
+
+    nsCOMPtr<nsISessionStore> sessionStore;
+    sessionStore = do_GetService("@mozilla.org/browser/sessionstore;1");
+    if (!sessionStore) {
+        g_warning ("failed to get nsISessionStore");
+        return NULL;
+    }
+
+    nsString session;
+    nsresult rv = sessionStore->GetBrowserState(webBrowser, session);
+    if (NS_FAILED(rv)) {
+        g_warning ("failed to get browser state");
+        return NULL;
+    }
+
+    nsCString sessionUTF8;
+    NS_UTF16ToCString (session, NS_CSTRING_ENCODING_UTF8, sessionUTF8);
+
+    return g_strdup(sessionUTF8.get());
+#else
+    return NULL;
+#endif
+}
+
+gboolean
+sugar_browser_set_session(SugarBrowser *browser,
+                          const char   *session)
+{
+#if 0
+    nsCOMPtr<nsIWebBrowser> webBrowser;
+    gtk_moz_embed_get_nsIWebBrowser(GTK_MOZ_EMBED(browser),
+                                    getter_AddRefs(webBrowser));
+    if (!webBrowser) {
+        g_warning ("failed to get nsIWebBrowser");
+        return FALSE;
+    }
+
+    nsCOMPtr<nsISessionStore> sessionStore;
+    sessionStore = do_GetService("@mozilla.org/browser/sessionstore;1");
+    if (!sessionStore) {
+        g_warning ("failed to get nsISessionStore");
+        return FALSE;
+    }
+
+    nsCString sessionUTF8(session);
+    nsString sessionUTF16;
+    NS_CStringToUTF16(sessionUTF8, NS_CSTRING_ENCODING_UTF8, sessionUTF16);
+    nsresult rv = sessionStore->SetBrowserState(webBrowser, sessionUTF16);
+    if (NS_FAILED(rv)) {
+        g_warning ("failed to set browser state");
+        return FALSE;
+    }
 
     return TRUE;
 #else

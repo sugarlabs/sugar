@@ -74,6 +74,10 @@ gboolean        sugar_browser_startup       (const char *profile_path,
                                              const char *profile_name);
 void            sugar_browser_shutdown      (void);
 
+char           *sugar_browser_get_session   (SugarBrowser *browser);
+gboolean        sugar_browser_set_session   (SugarBrowser *browser,
+                                             const char   *session);
+
 #define SUGAR_TYPE_BROWSER_EVENT (sugar_browser_event_get_type())
 
 struct _SugarBrowserEvent {
