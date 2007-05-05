@@ -135,7 +135,7 @@ class ClipboardIcon(CanvasIcon):
         if not uri.startswith('file://'):
             return
 
-        path = urlparse.urlparse(uri).path
+        (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(uri)
 
         # FIXME: would be better to check for format.onDisk
         try:
