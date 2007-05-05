@@ -244,7 +244,7 @@ class IntroBox(hippo.CanvasBox, hippo.CanvasItem):
                                    padding_bottom=units.grid_to_pixels(0.5))
         self.append(self._color_box)
 
-        self._ok = iconbutton.IconButton(icon_name="theme:stock-forward",
+        self._ok = iconbutton.IconButton(icon_name="theme:go-next",
                                    padding_bottom=units.grid_to_pixels(0.5))
         self._ok.connect('activated', self._ok_activated)
         self.append(self._ok)
