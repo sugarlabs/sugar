@@ -14,6 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import sys
+import logging
 
 import gobject
 import gtk
@@ -29,19 +30,14 @@ class ComboBox(gtk.ComboBox):
     def __init__(self):
         gtk.ComboBox.__init__(self)
 
+        self._text_renderer = None
+        self._icon_renderer = None
+
         self._model = gtk.ListStore(gobject.TYPE_INT,
                                     gobject.TYPE_STRING,
                                     gobject.TYPE_STRING,
                                     gobject.TYPE_BOOLEAN)
         self.set_model(self._model)
-
-        renderer = gtk.CellRendererPixbuf()
-        self.pack_start(renderer, False)
-        self.add_attribute(renderer, 'icon-name', 2)
-
-        renderer = gtk.CellRendererText()
-        self.pack_start(renderer, True)
-        self.add_attribute(renderer, 'text', 1)
 
         self.set_row_separator_func(self._is_separator)
         self.connect('realize', self._realize_cb)
@@ -58,6 +54,18 @@ class ComboBox(gtk.ComboBox):
             self.set_active(0)
 
     def append_item(self, action_id, text, icon_name=None):
+        if not self._icon_renderer and icon_name:
+            logging.debug('Adding icon renderer.')
+            self._icon_renderer = gtk.CellRendererPixbuf()
+            self.pack_start(self._icon_renderer, False)
+            self.add_attribute(self._icon_renderer, 'icon-name', 2)
+
+        if not self._text_renderer and text:
+            logging.debug('Adding text renderer.')
+            self._text_renderer = gtk.CellRendererText()
+            self.pack_end(self._text_renderer, True)
+            self.add_attribute(self._text_renderer, 'text', 1)
+
         self._model.append([action_id, text, icon_name, False])
 
     def append_separator(self):
