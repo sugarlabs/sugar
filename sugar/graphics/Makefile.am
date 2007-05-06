@@ -11,6 +11,7 @@ sugar_PYTHON =			\
 	frame.py		\
 	menu.py			\
 	menushell.py		\
+	notebook.py		\
 	roundbox.py		\
 	panel.py		\
 	popup.py		\
