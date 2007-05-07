@@ -66,7 +66,9 @@ class _Profile(object):
         parsed = cp.read([config_path])
 
         if cp.has_option('Buddy', 'NickName'):
-            self.name = cp.get('Buddy', 'NickName')
+            name = cp.get('Buddy', 'NickName')
+            # decode nickname from ascii-safe chars to unicode
+            self.name = name.decode("utf-8")
 
         if cp.has_option('Buddy', 'Color'):
             self.color = XoColor(cp.get('Buddy', 'Color'))
