@@ -55,6 +55,10 @@ root_box = SpreadBox(background_color=0xe2e2e2ff)
 canvas.set_root(root_box)
 
 box = SnowflakeBox()
+snow_flake = _create_snowflake(box, 0)
+root_box.set_center_item(box)
+
+box = SnowflakeBox()
 snow_flake = _create_snowflake(box, 30)
 root_box.add_item(box)
 
