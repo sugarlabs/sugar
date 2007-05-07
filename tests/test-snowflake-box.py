@@ -17,7 +17,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import sys
-import random
+from random import random
 
 import pygtk
 pygtk.require('2.0')
@@ -33,14 +33,14 @@ from sugar.graphics.canvasicon import CanvasIcon
 
 def _create_snowflake(parent, children):
     color = XoColor()
-    icon = CanvasIcon(scale=1.0, xo_color=color,
+    icon = CanvasIcon(scale=0.8, xo_color=color,
                       icon_name='theme:object-link')
     parent.append(icon, hippo.PACK_FIXED)
     parent.set_root(icon)
 
     for i in range(0, children):
         color = XoColor()
-        icon = CanvasIcon(scale=0.5, xo_color=color,
+        icon = CanvasIcon(scale=0.4, xo_color=color,
                           icon_name='theme:stock-buddy')
         parent.append(icon, hippo.PACK_FIXED)
 
@@ -58,25 +58,10 @@ box = SnowflakeBox()
 snow_flake = _create_snowflake(box, 0)
 root_box.set_center_item(box)
 
-box = SnowflakeBox()
-snow_flake = _create_snowflake(box, 30)
-root_box.add_item(box)
-
-box = SnowflakeBox()
-snow_flake = _create_snowflake(box, 15)
-root_box.add_item(box)
-
-box = SnowflakeBox()
-snow_flake = _create_snowflake(box, 10)
-root_box.add_item(box)
-
-box = SnowflakeBox()
-snow_flake = _create_snowflake(box, 5)
-root_box.add_item(box)
-
-box = SnowflakeBox()
-snow_flake = _create_snowflake(box, 2)
-root_box.add_item(box)
+for i in range(0, 30):
+    box = SnowflakeBox()
+    snow_flake = _create_snowflake(box, int(2 + random() * 8))
+    root_box.add_item(box)
 
 canvas.show()
 window.add(canvas)
