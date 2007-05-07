@@ -29,6 +29,8 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
+from sugar import env
+
 def _get_display_number():
     """Find a free display number trying to connect to 6000+ ports"""
     log.info( "Attempting to find free port for X11 (Xephyr)" )
@@ -103,6 +105,9 @@ def _setup_env():
             path = os.environ['PYTHONPATH']
             os.environ['PYTHONPATH'] = source_dir + ':' + path
             log.info( 'Set PYTHONPATH=%s', os.environ['PYTHONPATH'] )
+
+    os.environ['GABBLE_LOGFILE'] = os.path.join(env.get_profile_path(), 'logs', 'telepathy-gabble.log')
+    os.environ['STREAM_ENGINE_LOGFILE'] = os.path.join(env.get_profile_path(), 'logs', 'telepathy-stream-engine.log')
 
 def main():
     """Script-level operations"""
