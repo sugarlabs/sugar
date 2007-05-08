@@ -284,7 +284,7 @@ class ServerPlugin(gobject.GObject):
     
         if self._account['register']:
             # we successfully register this account
-            self._owner.props.registered = True
+            self._owner.set_registered(True)
 
         # the group of contacts who may receive your presence
         publish = self._request_list_channel('publish')
