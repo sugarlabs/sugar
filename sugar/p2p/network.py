@@ -92,7 +92,7 @@ class ChunkedGlibHTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         if self._file:
             self._srcid = gobject.io_add_watch(self.wfile, gobject.IO_OUT | gobject.IO_ERR, self._send_next_chunk)
         else:
-            f.close()
+            self._file.close()
             self._cleanup()
 
     def _send_next_chunk(self, source, condition):
