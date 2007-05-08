@@ -46,7 +46,7 @@ def create_activity_id():
         found = False
         activities = pservice.get_activities()
         for act in activities:
-            if act_id == act.get_id():
+            if act_id == act.props.id:
                 found = True
                 break
         if not found:
