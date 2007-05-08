@@ -29,6 +29,8 @@ _log_writer = None
 STDOUT_LEVEL = 1000
 STDERR_LEVEL = 2000
 
+formatter = logging.Formatter('%(name)s: %(message)s')
+
 class LogWriter:
     def __init__(self, module_id):
         self._module_id = module_id
@@ -38,7 +40,7 @@ class LogWriter:
         self._log_file = open(log_path, 'w')
 
     def write_record(self, record):
-        self.write(record.levelno, record.getMessage())
+        self.write(record.levelno, formatter.format(record))
 
     def write(self, level, msg):
         if level == logging.ERROR:
