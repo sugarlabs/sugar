@@ -27,7 +27,9 @@ import logging
 # import), that would read as:
 #   from . import buddy, activity 
 # see PEP: http://docs.python.org/whatsnew/pep-328.html
-import buddy, activity
+
+import buddy
+from activity import Activity
 
 
 DBUS_SERVICE = "org.laptop.Sugar.Presence"
@@ -158,7 +160,7 @@ class PresenceService(gobject.GObject):
                 obj = buddy.Buddy(self._bus, self._new_object,
                         self._del_object, object_path)
             elif object_path.startswith(self._PS_ACTIVITY_OP):
-                obj = activity.Activity(self._bus, self._new_object,
+                obj = Activity(self._bus, self._new_object,
                         self._del_object, object_path)
                 try:
                     # Pre-fill the activity's ID
@@ -353,7 +355,7 @@ class PresenceService(gobject.GObject):
 
         # Ensure the activity is not already shared/joined
         for obj in self._objcache.values():
-            if not isinstance(object, activity.Activity):
+            if not isinstance(object, Activity):
                 continue
             if obj.props.id == actid or obj.props.joined:
                 raise RuntimeError("Activity %s is already shared." % actid)
