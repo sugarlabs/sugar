@@ -24,8 +24,12 @@ from sugar.graphics.notebook import Notebook
 
 window = gtk.Window()
 window.connect("destroy", lambda w: gtk.main_quit())
+window.set_size_request(800, 600)
+window.show_all()
 
 nb = Notebook()
+nb.set_property('can-close-tabs', True)
+
 window.add(nb)
 
 button1 = gtk.Button('Example 1')
@@ -36,5 +40,4 @@ nb.add_page('Testing label 1', button1)
 nb.add_page('Testing label 2', button2)
 nb.add_page('Testing label 3', button3)
 
-window.show_all()
 gtk.main()
