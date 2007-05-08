@@ -185,6 +185,7 @@ class EntryBox(hippo.CanvasBox, hippo.CanvasItem):
         self.append(self._label)
 
         self._entry = gtk.Entry()
+        self._entry.set_max_length(45)
         entry_item = hippo.CanvasWidget(widget=self._entry)
         self.append(entry_item)
 
@@ -297,7 +298,8 @@ class IntroWindow(gtk.Window):
         section = 'Buddy'
         if not cp.has_section(section):
             cp.add_section(section)
-        cp.set(section, 'NickName', name)
+        # encode nickname to ascii-safe characters
+        cp.set(section, 'NickName', name.encode("utf-8"))
         cp.set(section, 'Color', color.to_string())
 
         section = 'Server'

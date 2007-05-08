@@ -15,67 +15,137 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-import random
+from array import array
+from random import random
 
 import hippo
-import gtk
 
-from sugar.graphics import units
+_X_TILES = 120
+_NUM_TRIALS = 20
+_MAX_WEIGHT = 255
 
-_WIDTH = gtk.gdk.screen_width()
-_HEIGHT = gtk.gdk.screen_height()
-_CELL_WIDTH  = units.grid_to_pixels(1)
-_CELL_HEIGHT = units.grid_to_pixels(1)
-_GRID_WIDTH  = _WIDTH / _CELL_WIDTH
-_GRID_HEIGHT = _HEIGHT / _CELL_HEIGHT
+class _Grid(object):
+    def __init__(self, x_tiles, y_tiles, cell_size):
+        self._array = array('B')
+        self.x_tiles = x_tiles
+        self.y_tiles = y_tiles
+        self.cell_size = cell_size
+
+        for i in range(self.y_tiles * self.x_tiles):
+            self._array.append(0)
+    
+    def __getitem__(self, (row, col)):
+        return self._array[col + row * self.x_tiles]
+
+    def __setitem__(self, (row, col), value):
+        self._array[col + row * self.x_tiles] = value
+
+    def compute_weight_at(self, x, y, width, height):
+        weight = 0
+
+        for i in range(x, x + width):
+            for j in range(y, y + height):
+                weight += self[j, i]
+                
+        return weight
+
+    def add_weight_at(self, x, y, width, height):
+        for i in range(x, x + width):
+            for j in range(y, y + height):
+                self[j, i] += 1
+
+    def remove_weight_at(self, x, y, width, height):
+        for i in range(x, x + width):
+            for j in range(y, y + height):
+                self[j, i] -= 1
 
 class SpreadBox(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarSpreadBox'
     def __init__(self, **kwargs):
         hippo.CanvasBox.__init__(self, **kwargs)
 
-        self._grid = []
+        self._grid = None
         self._center = None
-
-        for i in range(0, _GRID_WIDTH * _GRID_HEIGHT):
-            self._grid.append(None)
+        self._width = -1
+        self._height = -1
 
     def set_center_item(self, item):
         if self._center:
             self.remove(self._center)
 
-        self._center = item
         self.append(item, hippo.PACK_FIXED)
+        self._center = item
+
+        self._layout_center()
 
     def add_item(self, item):
-        start_pos = int(random.random() * len(self._grid))
-
-        pos = start_pos
-        while self._grid[pos] != None:
-            pos = pos + 1
-            if pos == len(self._grid):
-                pos = 0
-            elif pos == start_pos:
-                break
-
-        self._grid[pos] = item
-
         self.append(item, hippo.PACK_FIXED)
-
-        cell_y = int(pos / _GRID_WIDTH)
-        cell_x = pos - cell_y * _GRID_WIDTH
-        self.set_position(item, cell_x * _CELL_WIDTH, cell_y * _CELL_HEIGHT)
+        self._layout_item(item)
 
     def remove_item(self, item):
-        for i in range(0, len(self._grid)):
-            if self._grid[i] == item:
-                self._grid[i] = None
         self.remove(item)
+
+
+    def _place_item(self, item, x, y, w, h):
+        self._grid.add_weight_at(x, y, w, h)
+        self.set_position(item,
+                          self._grid.cell_size * x,
+                          self._grid.cell_size * y)
+
+    def _layout_item(self, item):
+        if not self._grid:
+            return
+    
+        trials = _NUM_TRIALS
+        placed = False
+        best_weight = _MAX_WEIGHT
+
+        [width, height] = item.get_allocation()
+        w = int(width / self._grid.cell_size)
+        h = int(height / self._grid.cell_size)
+
+        while trials > 0 and not placed:
+            x = int(random() * (self._grid.x_tiles - w))
+            y = int(random() * (self._grid.y_tiles - h))
+
+            weight = self._grid.compute_weight_at(x, y, w, h)
+            if weight == 0:
+                self._place_item(item, x, y, w, h)
+                placed = True
+            elif weight < best_weight:
+                best_x = x
+                best_y = y
+
+            trials -= 1
+            
+        if not placed:
+            self._place_item(item, best_x, best_y, w, h)
+
+    def _layout(self):        
+        for item in self.get_children():
+            if item != self._center:
+                self._layout_item(item)
+
+    def _layout_center(self):
+        if not self._center or not self._grid:
+            return
         
+        [width, height] = self._center.get_allocation()
+        x = (self._width - width) / 2
+        y = (self._height - height) / 2        
+        self.set_position(self._center, x, y)
+                          
     def do_allocate(self, width, height, origin_changed):
         hippo.CanvasBox.do_allocate(self, width, height, origin_changed)
 
-        if self._center:
-            [icon_width, icon_height] = self._center.get_allocation()
-            self.set_position(self._center, (width - icon_width) / 2,
-                              (height - icon_height) / 2)
+        if width != self._width or height != self._height:
+            cell_size = width / _X_TILES
+            y_tiles = height / cell_size
+        
+            self._grid = _Grid(_X_TILES, y_tiles, cell_size)
+            self._width = width
+            self._height = height
+
+            self._layout()
+
+        self._layout_center()

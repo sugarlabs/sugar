@@ -306,7 +306,7 @@ class PresenceService(DBusGObject):
         if not self._owner:
             raise NotFoundError("The owner was not found.")
         else:
-            return self._owner.get_object_path()
+            return self._owner.object_path()
 
     @dbus.service.method(_PRESENCE_INTERFACE, in_signature="sssa{sv}",
             out_signature="o", async_callbacks=('async_cb', 'async_err_cb'))
