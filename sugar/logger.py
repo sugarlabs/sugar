@@ -38,7 +38,7 @@ class LogWriter:
         self._log_file = open(log_path, 'w')
 
     def write_record(self, record):
-        self.write(record.levelno, record.msg)
+        self.write(record.levelno, record.getMessage())
 
     def write(self, level, msg):
         if level == logging.ERROR:
