@@ -141,7 +141,7 @@ class Activity(Window, gtk.Container):
             if not self._shared_activity.props.joined:
                 self._shared_activity.join()
             else:
-                self._joined_cb(self._shared_activity, True, None)
+                self._internal_joined_cb(self._shared_activity, True, None)
 
         self._bus = ActivityService(self)
 
