@@ -29,23 +29,23 @@ class Notebook(gtk.Notebook):
     __gtype_name__ = 'SugarNotebook'
 
     __gproperties__ = {
-        'can-close-tabs': (bool, None, None, True,
-                           gobject.PARAM_READWRITE)
+        'can-close-tabs': (bool, None, None, False,
+                           gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT_ONLY)
     }
 
-    def __init__(self):
-        """Initialise the Widget
-            
-            Side effects: 
-                Set False the 'can-close-tabs' property
-                Set True the scrollable notebook property
-        """
+    def __init__(self, **kwargs):
+        # Initialise the Widget
+        #
+        #    Side effects: 
+        #        Set the 'can-close-tabs' property using **kwargs
+        #        Set True the scrollable notebook property
+        
+        gobject.GObject.__init__(self, **kwargs)
         gtk.Notebook.__init__(self)
 
-        self._can_close_tabs = False
         self.set_scrollable(True)
         self.show()
-	
+
     def do_set_property(self, pspec, value):
         if pspec.name == 'can-close-tabs':
             self._can_close_tabs = value
@@ -92,7 +92,7 @@ class Notebook(gtk.Notebook):
         return event_box
 
     def add_page(self, text_label, widget):
-        """ Add a new page to the notebook """
+        # Add a new page to the notebook
         if self._can_close_tabs:
             eventbox = self._create_custom_tab(text_label, widget)
             self.append_page(widget, eventbox)		
@@ -101,14 +101,14 @@ class Notebook(gtk.Notebook):
             
         pages = self.get_n_pages()
 
-        """ Set the new page """
+        # Set the new page
         self.set_current_page(pages - 1)
         self.show_all()
         
         return True
 
     def _close_page(self, button, child):
-        """ Remove a page from the notebook """
+        # Remove a page from the notebook
         page = self.page_num(child)
 
         if page != -1:

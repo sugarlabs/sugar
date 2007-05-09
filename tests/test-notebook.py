@@ -27,8 +27,7 @@ window.connect("destroy", lambda w: gtk.main_quit())
 window.set_size_request(800, 600)
 window.show_all()
 
-nb = Notebook()
-nb.set_property('can-close-tabs', True)
+nb = Notebook(can_close_tabs=True)
 
 window.add(nb)
 
