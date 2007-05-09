@@ -1,3 +1,9 @@
+"""Notebook class
+
+This class create a gtk.Notebook() widget supporting 
+a close button in every tab when the 'can-close-tabs' gproperty
+is enabled (True)
+"""
 #!/usr/bin/env python
 
 # Copyright (C) 2007, Eduardo Silva (edsiper@gmail.com)
@@ -28,6 +34,12 @@ class Notebook(gtk.Notebook):
     }
 
     def __init__(self):
+        """Initialise the Widget
+            
+            Side effects: 
+                Set False the 'can-close-tabs' property
+                Set True the scrollable notebook property
+        """
         gtk.Notebook.__init__(self)
 
         self._can_close_tabs = False
@@ -61,7 +73,7 @@ class Notebook(gtk.Notebook):
         tab_label = gtk.Label(text)
 
         tab_button = gtk.Button()
-        tab_button.connect('clicked', self.close_page, child)
+        tab_button.connect('clicked', self._close_page, child)
 
         # Add a picture on a button
         self._add_icon_to_button(tab_button)
@@ -79,8 +91,8 @@ class Notebook(gtk.Notebook):
         
         return event_box
 
-    # Add a new page to the notebook
     def add_page(self, text_label, widget):
+        """ Add a new page to the notebook """
         if self._can_close_tabs:
             eventbox = self._create_custom_tab(text_label, widget)
             self.append_page(widget, eventbox)		
@@ -89,14 +101,14 @@ class Notebook(gtk.Notebook):
             
         pages = self.get_n_pages()
 
-        # Set the new page
+        """ Set the new page """
         self.set_current_page(pages - 1)
         self.show_all()
         
         return True
 
-    # Remove a page from the notebook
-    def close_page(self, button, child):
+    def _close_page(self, button, child):
+        """ Remove a page from the notebook """
         page = self.page_num(child)
 
         if page != -1:
