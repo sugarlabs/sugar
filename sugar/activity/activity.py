@@ -176,7 +176,7 @@ class Activity(Window, gtk.Container):
             logging.debug('Share of activity %s failed: %s.' % (self._activity_id, err))
             return
         logging.debug('Share of activity %s successful.' % self._activity_id)
-        self.shared_activity = activity
+        self._shared_activity = activity
         self.emit('shared')
 
     def share(self):
