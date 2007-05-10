@@ -18,6 +18,7 @@
 from array import array
 from random import random
 
+import gobject
 import hippo
 
 _X_TILES = 120
@@ -58,6 +59,34 @@ class _Grid(object):
         for i in range(x, x + width):
             for j in range(y, y + height):
                 self[j, i] -= 1
+                
+    def from_canvas(self, dim):
+        return dim / self.cell_size
+
+    def to_canvas(self, dim):
+        return dim * self.cell_size
+
+class _ItemInfo(gobject.GObject):
+    def __init__(self):
+        gobject.GObject.__init__(self)
+        self.x = -1
+        self.y = -1
+        self.width = -1
+        self.height = -1
+        
+    def add_weight(self, grid):
+        grid.add_weight_at(self.x, self.y, self.width, self.height)
+
+    def remove_weight(self, grid):
+        grid.remove_weight_at(self.x, self.y, self.width, self.height)
+
+    def compute_weight(self, grid, x=-1, y=-1):
+        if x < 0:
+            x = self.x
+        if y < 0:
+            y = self.y
+
+        grid.compute_weight_at(x, y, self.width, self.height)
 
 class SpreadBox(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarSpreadBox'
@@ -79,38 +108,47 @@ class SpreadBox(hippo.CanvasBox, hippo.CanvasItem):
         self._layout_center()
 
     def add_item(self, item):
+        item.set_data('item-info', _ItemInfo())
         self.append(item, hippo.PACK_FIXED)
         self._layout_item(item)
 
     def remove_item(self, item):
+        info = item.get_data('item-info')
+        info.remove_weigth(self._grid)
+        
         self.remove(item)
 
+    def _place_item(self, item, x, y):
+        info = item.get_data('item-info')
+        info.x = x
+        info.y = y
+        info.add_weight(self._grid)        
 
-    def _place_item(self, item, x, y, w, h):
-        self._grid.add_weight_at(x, y, w, h)
-        self.set_position(item,
-                          self._grid.cell_size * x,
-                          self._grid.cell_size * y)
+        self.set_position(item, self._grid.to_canvas(x),
+                          self._grid.to_canvas(y))
 
     def _layout_item(self, item):
         if not self._grid:
             return
-    
+
+        info = item.get_data('item-info')
+
+        [width, height] = item.get_allocation()
+        info.width = self._grid.from_canvas(width)
+        info.height = self._grid.from_canvas(height)
+
         trials = _NUM_TRIALS
         placed = False
         best_weight = _MAX_WEIGHT
 
-        [width, height] = item.get_allocation()
-        w = int(width / self._grid.cell_size)
-        h = int(height / self._grid.cell_size)
-
         while trials > 0 and not placed:
-            x = int(random() * (self._grid.x_tiles - w))
-            y = int(random() * (self._grid.y_tiles - h))
+            x = int(random() * (self._grid.x_tiles - info.width))
+            y = int(random() * (self._grid.y_tiles - info.height))
 
-            weight = self._grid.compute_weight_at(x, y, w, h)
+            weight = info.compute_weight(self._grid, x, y)
+
             if weight == 0:
-                self._place_item(item, x, y, w, h)
+                self._place_item(item, x, y)
                 placed = True
             elif weight < best_weight:
                 best_x = x
@@ -119,7 +157,7 @@ class SpreadBox(hippo.CanvasBox, hippo.CanvasItem):
             trials -= 1
             
         if not placed:
-            self._place_item(item, best_x, best_y, w, h)
+            self._place_item(item, best_x, best_y)
 
     def _layout(self):        
         for item in self.get_children():
