@@ -189,7 +189,8 @@ class Activity(Window, gtk.Container):
             self.jobject['buddies'] = ''
             self.jobject['preview'] = ''
             self.jobject['icon-color'] = profile.get_color().to_string()
-            self.jobject.file_path = '/tmp/teste'
+            from sugar import env
+            self.jobject.file_path = os.path.join(env.get_profile_path(), 'test.txt')
             f = open(self.jobject.file_path, 'w')
             f.write('mec')
             f.close()
