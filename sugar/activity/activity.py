@@ -193,7 +193,10 @@ class Activity(Window, gtk.Container):
             f = open(self.jobject.file_path, 'w')
             f.write('mec')
             f.close()
-            datastore.write(self.jobject)
+            try:
+                datastore.write(self.jobject)
+            except Exception, e:
+                logging.error(e)
         else:
             self.jobject = None
         

@@ -27,8 +27,12 @@ DS_DBUS_INTERFACE = "org.laptop.sugar.DataStore"
 DS_DBUS_PATH = "/org/laptop/sugar/DataStore"
 
 _bus = dbus.SessionBus()
-_data_store = dbus.Interface(_bus.get_object(DS_DBUS_SERVICE, DS_DBUS_PATH),
-                             DS_DBUS_INTERFACE)
+try:
+    _data_store = dbus.Interface(_bus.get_object(DS_DBUS_SERVICE, DS_DBUS_PATH),
+                                 DS_DBUS_INTERFACE)
+except Exception, e:
+    _data_store = None
+    logging.error(e)
 
 def create(properties, filename):
     logging.debug('dbus_helpers.create: %s, %s' % (properties, filename))
