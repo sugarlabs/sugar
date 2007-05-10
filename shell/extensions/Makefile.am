@@ -57,7 +57,7 @@ CLEANFILES = $(stamp_files) $(BUILT_SOURCES)
 DISTCLEANFILES = $(stamp_files) $(BUILT_SOURCES)
 MAINTAINERCLEANFILES = $(stamp_files) $(BUILT_SOURCES)
 
-EXTRA_DIST = sugar-marshal.list _extensions.override _extensions.defs
+EXTRA_DIST = sugar-shell-marshal.list _extensions.override _extensions.defs
 
 extensions.c: _extensions.defs _extensions.override
 

@@ -31,4 +31,4 @@ stamp-nsISessionStore.h: nsISessionStore.idl
 CLEANFILES = $(stamp_files) $(BUILT_SOURCES)
 DISTCLEANFILES = $(stamp_files) $(BUILT_SOURCES)
 MAINTAINERCLEANFILES = $(stamp_files) $(BUILT_SOURCES)
-
+EXTRA_DIST = nsISessionStore.idl
