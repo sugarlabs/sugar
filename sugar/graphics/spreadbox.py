@@ -114,7 +114,7 @@ class SpreadBox(hippo.CanvasBox, hippo.CanvasItem):
 
     def remove_item(self, item):
         info = item.get_data('item-info')
-        info.remove_weigth(self._grid)
+        info.remove_weight(self._grid)
         
         self.remove(item)
 
