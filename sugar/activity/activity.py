@@ -22,6 +22,7 @@ activity must do to participate in the Sugar desktop.
 
 import logging
 import os
+import time
 
 import gtk, gobject
 
@@ -30,6 +31,8 @@ from sugar.activity.activityservice import ActivityService
 from sugar.graphics.window import Window
 from sugar.graphics.toolbox import Toolbox
 from sugar.graphics.toolbutton import ToolButton
+from sugar.datastore import datastore
+from sugar import profile
 
 class ActivityToolbar(gtk.Toolbar):
     __gsignals__ = {
@@ -53,6 +56,30 @@ class ActivityToolbar(gtk.Toolbar):
         if activity.get_shared():
             self.share.set_sensitive(False)
         self.share.show()
+        if activity.jobject:
+            self.title = gtk.Entry()
+            self.title.set_text(activity.jobject['title'])
+            self.title.connect('activate', self._title_activate_cb)
+            self._add_widget(self.title, expand=True)
+
+            activity.jobject.connect('updated', self._jobject_updated_cb)
+
+    def _jobject_updated_cb(self, jobject):
+        self.title.set_text(jobject['title'])
+
+    def _title_activate_cb(self, entry):
+        self._activity.jobject['title'] = self.title.get_text()
+        self._activity.save()
+
+    def _add_widget(self, widget, expand=False):
+        tool_item = gtk.ToolItem()
+        tool_item.set_expand(expand)
+
+        tool_item.add(widget)
+        widget.show()
+
+        self.insert(tool_item, -1)
+        tool_item.show()
 
     def _activity_shared_cb(self, activity):
         self.share.set_sensitive(False)
@@ -102,14 +129,18 @@ class Activity(Window, gtk.Container):
         'joined': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
     }
 
-    def __init__(self, handle):
+    def __init__(self, handle, create_jobject=True):
         """Initialise the Activity 
         
         handle -- sugar.activity.activityhandle.ActivityHandle
             instance providing the activity id and access to the 
             presence service which *may* provide sharing for this 
             application
-        
+
+        create_jobject -- boolean
+            define if it should create a journal object if we are
+            not resuming
+
         Side effects: 
         
             Sets the gdk screen DPI setting (resolution) to the 
@@ -144,6 +175,61 @@ class Activity(Window, gtk.Container):
                 self._internal_joined_cb(self._shared_activity, True, None)
 
         self._bus = ActivityService(self)
+
+        if handle.object_id:
+            self.jobject = datastore.get(handle.object_id)
+        elif create_jobject:
+            logging.debug('Creating a jobject.')
+            self.jobject = datastore.create()
+            self.jobject['title'] = 'New entry'
+            self.jobject['activity'] = self.get_service_name()
+            self.jobject['date'] = str(time.time())
+            self.jobject['icon'] = 'theme:object-text'
+            self.jobject['keep'] = '0'
+            self.jobject['buddies'] = ''
+            self.jobject['preview'] = ''
+            self.jobject['icon-color'] = profile.get_color().to_string()
+            self.jobject.file_path = '/tmp/teste'
+            f = open(self.jobject.file_path, 'w')
+            f.write('mec')
+            f.close()
+            datastore.write(self.jobject)
+        else:
+            self.jobject = None
+        
+        self.connect('realize', self._realize_cb)
+
+    def _realize_cb(self, activity):
+        try:
+            self.read_file()
+        except NotImplementedError:
+            logging.debug('read_file() not implemented.')
+            pass
+
+    def read_file(self):
+        """
+        Subclasses implement this method if they support resuming objects from
+        the journal. Can access the object through the jobject attribute.
+        """
+        raise NotImplementedError
+
+    def write_file(self):
+        """
+        Subclasses implement this method if they support saving data to objects
+        in the journal. Can access the object through the jobject attribute.
+        Must return the file path the data was saved to.
+        """
+        raise NotImplementedError
+
+    def save(self):
+        """Request that the activity is saved to the Journal."""
+        try:
+            file_path = self.write_file()
+            self.jobject.file_path = file_path
+        except NotImplementedError:
+            pass
+        datastore.write(self.jobject)
+
 
     def _internal_joined_cb(self, activity, success, err):
         """Callback when join has finished"""
@@ -200,6 +286,12 @@ class Activity(Window, gtk.Container):
             self._shared_activity.leave()
 
     def _handle_close_cb(self, toolbar):
+        if self.jobject:
+            try:
+                self.save()
+            except:
+                self.destroy()
+                raise
         self.destroy()
 
     def _handle_share_cb(self, toolbar):

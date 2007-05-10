@@ -1,4 +1,0 @@
-[D-BUS Service]
-Name = org.laptop.sugar.DataStore
-Exec = @bindir@/sugar-data-store
-

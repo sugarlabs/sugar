@@ -55,13 +55,11 @@ class ComboBox(gtk.ComboBox):
 
     def append_item(self, action_id, text, icon_name=None):
         if not self._icon_renderer and icon_name:
-            logging.debug('Adding icon renderer.')
             self._icon_renderer = gtk.CellRendererPixbuf()
             self.pack_start(self._icon_renderer, False)
             self.add_attribute(self._icon_renderer, 'icon-name', 2)
 
         if not self._text_renderer and text:
-            logging.debug('Adding text renderer.')
             self._text_renderer = gtk.CellRendererText()
             self.pack_end(self._text_renderer, True)
             self.add_attribute(self._text_renderer, 'text', 1)
