@@ -100,7 +100,6 @@ browser/sessionstore/Makefile
 services/Makefile
 services/presence/Makefile
 services/clipboard/Makefile
-services/datastore/Makefile
 shell/Makefile
 shell/extensions/Makefile
 shell/intro/Makefile
