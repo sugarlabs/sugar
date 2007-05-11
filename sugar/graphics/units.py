@@ -61,19 +61,20 @@ units to device units.
 
 import gtk
 
+_XO_DPI = 200.0
 _MAX_ZOOM_FACTOR = 2.0
 _ZOOM_CONSTANT   = 650.0
 
 def _compute_zoom_factor():
     screen_width = gtk.gdk.screen_width()
-    if _screen_dpi == 201.0 and screen_width == 1200:
+    if _screen_dpi == _XO_DPI and screen_width == 1200:
         return 1.0
     else:
         return min(_MAX_ZOOM_FACTOR, screen_width / _ZOOM_CONSTANT)
 
 _gtk_xft_dpi = gtk.settings_get_default().get_property('gtk-xft-dpi')
 _screen_dpi = float(_gtk_xft_dpi / 1024)
-_dpi_factor  = _screen_dpi / 201.0
+_dpi_factor  = _screen_dpi / _XO_DPI
 _zoom_factor = _compute_zoom_factor()
 
 STANDARD_ICON_SCALE = 1.0 * _dpi_factor * _zoom_factor
