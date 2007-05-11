@@ -6,7 +6,7 @@ else:
     font_name = 'Sans Serif 7'
     icon_sizes = 'gtk-large-toolbar=55,55'
 }@
-gtk-theme-name = "sugar"
+gtk-theme-name = "@theme"
 gtk-icon-theme-name = "sugar"
 gtk-font-name = "@font_name"
 gtk-cursor-theme-name = "sugar"
