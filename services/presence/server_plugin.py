@@ -138,6 +138,7 @@ class ServerPlugin(gobject.GObject):
         self._account = self._get_account_info()
 
         self._conn = self._init_connection()
+        self._conn_status = CONNECTION_STATUS_DISCONNECTED
 
         self._reconnect_id = 0
 
@@ -281,7 +282,7 @@ class ServerPlugin(gobject.GObject):
     def _connected_cb(self):
         """Callback on successful connection to a server 
         """
-    
+
         if self._account['register']:
             # we successfully register this account
             self._owner.set_registered(True)
@@ -309,8 +310,7 @@ class ServerPlugin(gobject.GObject):
 
         if CONN_INTERFACE_BUDDY_INFO not in self._conn.get_valid_interfaces():
             logging.debug('OLPC information not available')
-            self.cleanup()
-            return
+            return False
 
         self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('PropertiesChanged',
                 self._buddy_properties_changed_cb)
@@ -336,6 +336,7 @@ class ServerPlugin(gobject.GObject):
         # Request presence for everyone on the channel
         self._conn[CONN_INTERFACE_PRESENCE].GetPresence(subscribe_handles,
                 ignore_reply=True)
+        return True
 
     def _set_self_avatar_cb(self, token):
         self._icon_cache.set_avatar(hash, token)
@@ -444,6 +445,8 @@ class ServerPlugin(gobject.GObject):
 
     def _set_self_olpc_properties(self):
         """Set color and key on our Telepathy server identity"""
+        if self._conn_status != CONNECTION_STATUS_CONNECTED:
+            return
         props = {}
         props['color'] = self._owner.props.color
         props['key'] = dbus.ByteArray(self._owner.props.key)
@@ -508,18 +511,23 @@ class ServerPlugin(gobject.GObject):
         reason -- integer code describing the reason...
         """
         if state == CONNECTION_STATUS_CONNECTING:
+            self._conn_status = state
             logging.debug("State: connecting...")
         elif state == CONNECTION_STATUS_CONNECTED:
-            logging.debug("State: connected")
-            self._connected_cb()
-            self.emit('status', state, int(reason))
+            if self._connected_cb():
+                logging.debug("State: connected")
+                self._conn_status = state
+            else:
+                self.cleanup()
+                logging.debug("State: was connected, but an error occurred")
         elif state == CONNECTION_STATUS_DISCONNECTED:
+            self.cleanup()
             logging.debug("State: disconnected (reason %r)" % reason)
-            self.emit('status', state, int(reason))
-            self._conn = None
             if reason == CONNECTION_STATUS_REASON_AUTHENTICATION_FAILED:
                 # FIXME: handle connection failure; retry later?
                 pass
+
+        self.emit('status', self._conn_status, int(reason))
 
     def start(self):
         """Start up the Telepathy networking connections
@@ -565,9 +573,10 @@ class ServerPlugin(gobject.GObject):
 
     def cleanup(self):
         """If we still have a connection, disconnect it"""
-        if not self._conn:
-            return
-        self._conn[CONN_INTERFACE].Disconnect()
+        if self._conn:
+            self._conn[CONN_INTERFACE].Disconnect()
+        self._conn = None
+        self._conn_status = CONNECTION_STATUS_DISCONNECTED
 
     def _contact_offline(self, handle):
         """Handle contact going offline (send message, update set)"""
