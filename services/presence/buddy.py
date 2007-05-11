@@ -18,7 +18,9 @@
 
 import os
 import gobject
-import dbus, dbus.service
+import dbus
+import dbus.service
+from dbus.gobject_service import ExportedGObject
 from ConfigParser import ConfigParser, NoOptionError
 
 from sugar import env, profile, util
@@ -35,10 +37,6 @@ class NotFoundError(dbus.DBusException):
         dbus.DBusException.__init__(self)
         self._dbus_error_name = _PRESENCE_INTERFACE + '.NotFound'
 
-class DBusGObjectMetaclass(dbus.service.InterfaceType, gobject.GObjectMeta): pass
-class DBusGObject(dbus.service.Object, gobject.GObject): __metaclass__ = DBusGObjectMetaclass
-
-
 _PROP_NICK = "nick"
 _PROP_KEY = "key"
 _PROP_ICON = "icon"
@@ -50,7 +48,7 @@ _PROP_VALID = "valid"
 # Will go away soon
 _PROP_IP4_ADDRESS = "ip4-address"
 
-class Buddy(DBusGObject):
+class Buddy(ExportedGObject):
     """Person on the network (tracks properties and shared activites)
     
     The Buddy is a collection of metadata describing a particular
@@ -111,7 +109,6 @@ class Buddy(DBusGObject):
         self._bus_name = bus_name
         self._object_id = object_id
         self._object_path = _BUDDY_PATH + str(self._object_id)
-        dbus.service.Object.__init__(self, self._bus_name, self._object_path)
 
         self._activities = {}   # Activity ID -> Activity
         self._activity_sigids = {}
@@ -134,8 +131,9 @@ class Buddy(DBusGObject):
             if key not in _ALLOWED_INIT_PROPS:
                 logging.debug("Invalid init property '%s'; ignoring..." % key)
                 del kwargs[key]
-                
-        gobject.GObject.__init__(self, **kwargs)
+
+        ExportedGObject.__init__(self, bus_name, self._object_path,
+                                 gobject_properties=kwargs)
 
     def do_get_property(self, pspec):
         """Retrieve current value for the given property specifier

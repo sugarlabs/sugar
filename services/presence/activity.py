@@ -16,7 +16,9 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import gobject
-import dbus, dbus.service
+import dbus
+import dbus.service
+from dbus.gobject_service import ExportedGObject
 from sugar import util
 import logging
 
@@ -24,10 +26,6 @@ from telepathy.interfaces import (CHANNEL_INTERFACE)
 
 _ACTIVITY_PATH = "/org/laptop/Sugar/Presence/Activities/"
 _ACTIVITY_INTERFACE = "org.laptop.Sugar.Presence.Activity"
-
-class DBusGObjectMetaclass(dbus.service.InterfaceType, gobject.GObjectMeta): pass
-class DBusGObject(dbus.service.Object, gobject.GObject): __metaclass__ = DBusGObjectMetaclass
-
 
 _PROP_ID = "id"
 _PROP_NAME = "name"
@@ -38,7 +36,7 @@ _PROP_LOCAL = "local"
 _PROP_JOINED = "joined"
 _PROP_CUSTOM_PROPS = "custom-props"
 
-class Activity(DBusGObject):
+class Activity(ExportedGObject):
     """Represents a potentially shareable activity on the network.
     """
     
@@ -84,7 +82,6 @@ class Activity(DBusGObject):
 
         self._object_id = object_id
         self._object_path = _ACTIVITY_PATH + str(self._object_id)
-        dbus.service.Object.__init__(self, bus_name, self._object_path)
 
         self._buddies = []
         self._joined = False
@@ -111,7 +108,8 @@ class Activity(DBusGObject):
         if not util.validate_activity_id(kwargs[_PROP_ID]):
             raise ValueError("Invalid activity id '%s'" % kwargs[_PROP_ID])
 
-        gobject.GObject.__init__(self, **kwargs)
+        ExportedGObject.__init__(self, bus_name, self._object_path,
+                                 gobject_properties=kwargs)
         if self.props.local and not self.props.valid:
             raise RuntimeError("local activities require color, type, and name")
 

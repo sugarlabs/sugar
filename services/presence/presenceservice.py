@@ -15,8 +15,13 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import gobject
-import dbus, dbus.service, dbus.glib
+import dbus
+import dbus.service
+from dbus.gobject_service import ExportedGObject
 import logging
+
+# Note that this import has side effects!
+import dbus.glib
 
 from telepathy.client import ManagerRegistry, Connection
 from telepathy.interfaces import (CONN_MGR_INTERFACE, CONN_INTERFACE)
@@ -40,10 +45,7 @@ class NotFoundError(dbus.DBusException):
         dbus.DBusException.__init__(self, msg)
         self._dbus_error_name = _PRESENCE_INTERFACE + '.NotFound'
 
-class DBusGObjectMetaclass(dbus.service.InterfaceType, gobject.GObjectMeta): pass
-class DBusGObject(dbus.service.Object, gobject.GObject): __metaclass__ = DBusGObjectMetaclass
-
-class PresenceService(DBusGObject):
+class PresenceService(ExportedGObject):
     __gtype_name__ = "PresenceService"
 
     __gsignals__ = {
@@ -58,8 +60,6 @@ class PresenceService(DBusGObject):
         self._buddies = {}      # key -> Buddy
         self._handles_buddies = {}      # tp client -> (handle -> Buddy)
         self._activities = {}   # activity id -> Activity
-
-        gobject.GObject.__init__(self)
 
         bus = dbus.SessionBus()
         self._bus_name = dbus.service.BusName(_PRESENCE_SERVICE, bus=bus)
@@ -94,7 +94,7 @@ class PresenceService(DBusGObject):
         self._ll_plugin = LinkLocalPlugin(self._registry, self._owner)
         self._handles_buddies[self._ll_plugin] = {}
 
-        dbus.service.Object.__init__(self, self._bus_name, _PRESENCE_PATH)
+        ExportedGObject.__init__(self, self._bus_name, _PRESENCE_PATH)
 
     def _activity_shared_cb(self, tp, activity, success, exc, async_cb, async_err_cb):
         if success:
