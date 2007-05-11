@@ -1,8 +1,18 @@
+sugar.gtkrc: gtkrc.em
+	$(srcdir)/em.py -D theme=\'sugar\' $(srcdir)/gtkrc.em > $(top_builddir)/data/sugar.gtkrc
+
+sugar-xo.gtkrc: gtkrc.em
+	$(srcdir)/em.py -D theme=\'sugar-xo\' $(srcdir)/gtkrc.em > $(top_builddir)/data/sugar-xo.gtkrc
+
 sugardir = $(pkgdatadir)/data
 sugar_DATA =		\
-	sugar.gtkrc	\
-	sugar-xo.gtkrc	\
+	$(GTKRC_FILES)	\
 	gecko-prefs.js	\
 	mime.types
 
+GTKRC_FILES =		\
+	sugar.gtkrc	\
+	sugar-xo.gtkrc
+
 EXTRA_DIST = $(sugar_DATA)
+CLEANFILES = $(GTKRC_FILES)
