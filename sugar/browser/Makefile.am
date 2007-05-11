@@ -33,7 +33,7 @@ nodist__sugarbrowser_la_SOURCES = _sugarbrowser.c
 
 _sugar.c: _sugarbrowser.defs gtkmozembed.defs _sugarbrowser.override gtkmozembed.override
 
-CLEANFILES = _sugar.c
+CLEANFILES = _sugarbrowser.c
 EXTRA_DIST = _sugarbrowser.override _sugarbrowser.defs gtkmozembed.defs gtkmozembed.override
 
 .defs.c:
