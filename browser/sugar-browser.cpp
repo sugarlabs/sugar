@@ -156,7 +156,6 @@ sugar_browser_startup(const char *profile_path, const char *profile_name)
 
     old_handler = XSetErrorHandler(error_handler);
 
-    #if 0
     GeckoDirectoryProvider *dirProvider =
         new GeckoDirectoryProvider(g_getenv(SUGAR_PATH));
     if (!dirProvider) {
@@ -173,7 +172,6 @@ sugar_browser_startup(const char *profile_path, const char *profile_name)
     if (!dp) return FALSE;
 
     gtk_moz_embed_set_directory_service_provider(dp);
-    #endif
 
     gtk_moz_embed_push_startup();
 
@@ -736,7 +734,6 @@ sugar_browser_save_document(SugarBrowser *browser,
 char *
 sugar_browser_get_session(SugarBrowser *browser)
 {
-#if 0
     nsCOMPtr<nsIWebBrowser> webBrowser;
     gtk_moz_embed_get_nsIWebBrowser(GTK_MOZ_EMBED(browser),
                                     getter_AddRefs(webBrowser));
@@ -763,16 +760,12 @@ sugar_browser_get_session(SugarBrowser *browser)
     NS_UTF16ToCString (session, NS_CSTRING_ENCODING_UTF8, sessionUTF8);
 
     return g_strdup(sessionUTF8.get());
-#else
-    return NULL;
-#endif
 }
 
 gboolean
 sugar_browser_set_session(SugarBrowser *browser,
                           const char   *session)
 {
-#if 0
     nsCOMPtr<nsIWebBrowser> webBrowser;
     gtk_moz_embed_get_nsIWebBrowser(GTK_MOZ_EMBED(browser),
                                     getter_AddRefs(webBrowser));
@@ -798,9 +791,6 @@ sugar_browser_set_session(SugarBrowser *browser,
     }
 
     return TRUE;
-#else
-    return FALSE;
-#endif
 }
 
 GType
