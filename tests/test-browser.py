@@ -24,9 +24,13 @@ import gtk
 
 import sugar.browser
 
+def _quit(window):
+    sugar.browser.shutdown()
+    gtk.main_quit()
+
 # Main window
 window = gtk.Window()
-window.connect("destroy", lambda w: gtk.main_quit())
+window.connect("destroy", _quit)
 
 sugar.browser.startup(os.path.expanduser('~/.sugar-browser-test'), 'test')
 

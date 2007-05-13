@@ -35,7 +35,7 @@ BrowserHelperService.prototype = {
     
     return this;
   }
-;
+}
 
 /* :::::::: Service Registration & Initialization ::::::::::::::: */
 
@@ -94,5 +94,6 @@ const BrowserHelperFactory = {
 };
 
 function NSGetModule(aComMgr, aFileSpec) {
+  dump("nsBrowserHelper: NSGetModule\n")
   return BrowserHelperModule;
 }
