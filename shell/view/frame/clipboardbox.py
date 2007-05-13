@@ -84,7 +84,7 @@ class ClipboardBox(hippo.CanvasBox):
             if len(uris) > 1:
                 raise NotImplementedError('Multiple uris in text/uri-list still not supported.')
             uri = urlparse.urlparse(uris[0])
-            path, file_name = os.path.split(uri.path)
+            path, file_name = os.path.split(uri[2])
 
             # Copy the file, as it will be deleted when the dnd operation finishes.
             new_file_path = os.path.join(path, 'cb' + file_name)

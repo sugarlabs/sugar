@@ -22,26 +22,48 @@ from sugar.datastore import dbus_helpers
 class DSObject(gobject.GObject):
     __gsignals__ = {
         'updated': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                    ([gobject.TYPE_PYOBJECT]))
+                    ([]))
     }
 
     def __init__(self, object_id, metadata, file_path):
         gobject.GObject.__init__(self)
         self.object_id = object_id
-        self.metadata = metadata
-        self.file_path = file_path
+        self._metadata = metadata
+        self._file_path = file_path
 
     def __getitem__(self, key):
         return self.metadata[key]
 
     def __setitem__(self, key, value):
-        self.metadata[key] = value
+        if not self.metadata.has_key(key) or self.metadata[key] != value:
+            self.metadata[key] = value
+            self.emit('updated')
+
+    def get_metadata(self):
+        return self._metadata
+    
+    def set_metadata(self, metadata):
+        if self._metadata != metadata:
+            self._metadata = metadata
+            self.emit('updated')
+
+    metadata = property(get_metadata, set_metadata)
+
+    def get_file_path(self):
+        return self._file_path
+    
+    def set_file_path(self, file_path):
+        if self._file_path != file_path:
+            self._file_path = file_path
+            self.emit('updated')
+
+    file_path = property(get_file_path, set_file_path)
 
 def get(object_id):
     logging.debug('datastore.get')
     metadata = dbus_helpers.get_properties(object_id)
     file_path = dbus_helpers.get_filename(object_id)
-    logging.debug('filepath: ' + file_path)
+
     ds_object = DSObject(object_id, metadata, file_path)
     # TODO: register the object for updates
     return ds_object

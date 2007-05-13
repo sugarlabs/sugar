@@ -59,7 +59,7 @@ class ActivityToolbar(gtk.Toolbar):
         if activity.jobject:
             self.title = gtk.Entry()
             self.title.set_text(activity.jobject['title'])
-            self.title.connect('activate', self._title_activate_cb)
+            self.title.connect('focus-out-event', self._title_focus_out_event_cb)
             self._add_widget(self.title, expand=True)
 
             activity.jobject.connect('updated', self._jobject_updated_cb)
@@ -67,9 +67,10 @@ class ActivityToolbar(gtk.Toolbar):
     def _jobject_updated_cb(self, jobject):
         self.title.set_text(jobject['title'])
 
-    def _title_activate_cb(self, entry):
-        self._activity.jobject['title'] = self.title.get_text()
-        self._activity.save()
+    def _title_focus_out_event_cb(self, entry, event):
+        if self._activity.jobject['title'] != self.title.get_text():
+            self._activity.jobject['title'] = self.title.get_text()
+            self._activity.save()
 
     def _add_widget(self, widget, expand=False):
         tool_item = gtk.ToolItem()
@@ -181,34 +182,27 @@ class Activity(Window, gtk.Container):
         elif create_jobject:
             logging.debug('Creating a jobject.')
             self.jobject = datastore.create()
-            self.jobject['title'] = 'New entry'
+            self.jobject['title'] = ''
             self.jobject['activity'] = self.get_service_name()
             self.jobject['date'] = str(time.time())
-            self.jobject['icon'] = 'theme:object-text'
+            self.jobject['icon'] = ''
             self.jobject['keep'] = '0'
             self.jobject['buddies'] = ''
             self.jobject['preview'] = ''
             self.jobject['icon-color'] = profile.get_color().to_string()
-            from sugar import env
-            self.jobject.file_path = os.path.join(env.get_profile_path(), 'test.txt')
-            f = open(self.jobject.file_path, 'w')
-            f.write('mec')
-            f.close()
+            self.jobject.file_path = ''
             try:
                 datastore.write(self.jobject)
             except Exception, e:
                 logging.error(e)
         else:
             self.jobject = None
-        
-        self.connect('realize', self._realize_cb)
 
-    def _realize_cb(self, activity):
-        try:
-            self.read_file()
-        except NotImplementedError:
-            logging.debug('read_file() not implemented.')
-            pass
+        self.connect('focus-out-event', self._focus_out_event_cb)
+
+    def _focus_out_event_cb(self, widget, event):
+        if self.jobject:
+            self.save()
 
     def read_file(self):
         """
@@ -221,19 +215,17 @@ class Activity(Window, gtk.Container):
         """
         Subclasses implement this method if they support saving data to objects
         in the journal. Can access the object through the jobject attribute.
-        Must return the file path the data was saved to.
         """
         raise NotImplementedError
 
     def save(self):
         """Request that the activity is saved to the Journal."""
         try:
-            file_path = self.write_file()
-            self.jobject.file_path = file_path
+            self.jobject.file_path = os.path.join('/tmp', '%i.txt' % time.time())
+            self.write_file()
         except NotImplementedError:
-            pass
+            self.jobject.file_path = ''
         datastore.write(self.jobject)
-
 
     def _internal_joined_cb(self, activity, success, err):
         """Callback when join has finished"""

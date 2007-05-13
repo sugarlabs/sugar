@@ -34,20 +34,47 @@ except Exception, e:
     _data_store = None
     logging.error(e)
 
+def get_contents(filename):
+    if not filename:
+        return ''
+    f = open(filename, "r")
+    try:
+        contents = f.read()
+    finally:
+        f.close()
+    return contents
+
 def create(properties, filename):
     logging.debug('dbus_helpers.create: %s, %s' % (properties, filename))
+    try:
+        logging.debug(get_contents(filename))
+    except UnicodeDecodeError:
+        pass
     object_id = _data_store.create(dbus.Dictionary(properties), filename)
     logging.debug('dbus_helpers.create: ' + object_id)
     return object_id
 
 def update(uid, properties, filename):
+    logging.debug('dbus_helpers.update: %s, %s, %s' % (uid, properties, filename))
+    try:
+        logging.debug(get_contents(filename))
+    except UnicodeDecodeError:
+        pass
     _data_store.update(uid, dbus.Dictionary(properties), filename)
 
 def get_properties(uid):
-    return _data_store.get_properties(uid)
+    props = _data_store.get_properties(uid)
+    logging.debug('dbus_helpers.get_properties: %s, %s' % (uid, props))
+    return props
 
 def get_filename(uid):
-    return _data_store.get_filename(uid)
+    filename = _data_store.get_filename(uid)
+    logging.debug('dbus_helpers.get_filename: %s, %s' % (uid, filename))
+    try:
+        logging.debug(get_contents(filename))
+    except UnicodeDecodeError:
+        pass
+    return filename
 
 def find(query):
     return _data_store.find(query)
