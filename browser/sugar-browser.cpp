@@ -64,6 +64,7 @@
 #include <nsIClipboardDragDropHooks.h>
 
 #include "nsISessionStore.h"
+#include "nsIBrowserHelper.h"
 
 #define SUGAR_PATH "SUGAR_PATH"
 
@@ -82,6 +83,8 @@ enum {
     MOUSE_CLICK,
     N_SIGNALS
 };
+
+static int last_instance_id = 0;
 
 static guint signals[N_SIGNALS];
 
@@ -366,12 +369,22 @@ sugar_browser_get_property(GObject         *object,
 static void
 sugar_browser_realize(GtkWidget *widget)
 {
+    SugarBrowser *browser = SUGAR_BROWSER(widget);
+
     GTK_WIDGET_CLASS(parent_class)->realize(widget);
 
     GtkMozEmbed *embed = GTK_MOZ_EMBED(widget);
     nsCOMPtr<nsIWebBrowser> webBrowser;
     gtk_moz_embed_get_nsIWebBrowser(embed, getter_AddRefs(webBrowser));
     NS_ENSURE_TRUE(webBrowser, );
+    
+    nsCOMPtr<nsIBrowserHelper> browserHelper;
+    browserHelper = do_GetService("@laptop.org/browser/browserhelper;1");
+    if (browserHelper) {
+        browserHelper->RegisterBrowser(browser->instance_id, webBrowser);
+    } else {
+        g_warning ("Failed to get nsIBrowserHelper");
+    }
 
     nsCOMPtr<nsICommandManager> commandManager = do_GetInterface(webBrowser);
     if (commandManager) {
@@ -393,6 +406,25 @@ sugar_browser_realize(GtkWidget *widget)
 }
 
 static void
+sugar_browser_dispose(GObject *object)
+{
+    SugarBrowser *browser = SUGAR_BROWSER(object);
+
+    GtkMozEmbed *embed = GTK_MOZ_EMBED(object);
+    nsCOMPtr<nsIWebBrowser> webBrowser;
+    gtk_moz_embed_get_nsIWebBrowser(embed, getter_AddRefs(webBrowser));
+    NS_ENSURE_TRUE(webBrowser, );
+
+    nsCOMPtr<nsIBrowserHelper> browserHelper;
+    browserHelper = do_GetService("@laptop.org/browser/browserhelper;1");
+    if (browserHelper) {
+        browserHelper->UnregisterBrowser(browser->instance_id);
+    } else {
+        g_warning ("Failed to get nsIBrowserHelper");
+    }
+}
+
+static void
 sugar_browser_class_init(SugarBrowserClass *browser_class)
 {
     GObjectClass    *gobject_class = G_OBJECT_CLASS(browser_class);
@@ -401,6 +433,7 @@ sugar_browser_class_init(SugarBrowserClass *browser_class)
     parent_class = (GObjectClass *) g_type_class_peek_parent(browser_class);
 
     gobject_class->get_property = sugar_browser_get_property;
+    gobject_class->dispose = sugar_browser_dispose;
     widget_class->realize = sugar_browser_realize;
 
     signals[MOUSE_CLICK] = g_signal_new ("mouse_click",
@@ -620,6 +653,9 @@ dom_mouse_click_cb(GtkMozEmbed *embed, nsIDOMMouseEvent *mouseEvent)
 static void
 sugar_browser_init(SugarBrowser *browser)
 {
+    browser->instance_id = last_instance_id;
+    last_instance_id++;
+    
 	browser->title = NULL;
 	browser->address = NULL;
 	browser->progress = 0.0;
@@ -634,6 +670,12 @@ sugar_browser_init(SugarBrowser *browser)
 					 G_CALLBACK(location_cb), NULL);
 	g_signal_connect(G_OBJECT(browser), "dom-mouse-click",
 					 G_CALLBACK(dom_mouse_click_cb), NULL);
+}
+
+int
+sugar_browser_get_instance_id(SugarBrowser *browser)
+{
+    return browser->instance_id;
 }
 
 void

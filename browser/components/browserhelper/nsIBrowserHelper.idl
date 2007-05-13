@@ -5,9 +5,9 @@ interface nsIWebBrowser;
 [scriptable, uuid(475e1194-92bc-4e03-92f3-5ad6ccddaca3)]
 interface nsIBrowserHelper : nsISupports
 {
-  nsIWebBrowser getBrowser(in ACString id);
+  nsIWebBrowser getBrowser(in long id);
 
-  void registerBrowser(in ACString id, in nsIWebBrowser browser);
+  void registerBrowser(in long id, in nsIWebBrowser browser);
 
-  void unregisterBrowser(in ACString id); 
+  void unregisterBrowser(in long id); 
 };

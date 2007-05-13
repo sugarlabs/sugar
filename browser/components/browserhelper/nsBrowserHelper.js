@@ -6,7 +6,7 @@ const CID = Components.ID("{475e1194-92bc-4e03-92f3-5ad6ccddaca3}");
 const CONTRACT_ID = "@laptop.org/browser/browserhelper;1";
 const CLASS_NAME = "Browser Helper";
 
-var browser;
+var browsers = [];
 
 function BrowserHelperService() {
 }
@@ -16,14 +16,15 @@ BrowserHelperService.prototype = {
 /* ........ nsIBrowserHelper API .............. */
 
   getBrowser: function bh_getBrowser(aId) {
-    return browser;
+    return browsers[aId]
   },
 
-  registerBrowser: function bh_registerBrowser(aBrowser, aId) {
-    browser = aBrowser;
+  registerBrowser: function bh_registerBrowser(aId, aBrowser) {
+    browsers[aId] = aBrowser;
   },
 
   unregisterBrowser: function bh_unregisterBrowser(aId) {
+    browsers.pop(aId)
   },
 
   QueryInterface: function(aIID) {

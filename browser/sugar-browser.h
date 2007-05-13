@@ -39,6 +39,7 @@ typedef struct _SugarBrowserMetadata SugarBrowserMetadata;
 struct _SugarBrowser {
 	GtkMozEmbed base_instance;
 
+    int instance_id;
 	int total_requests;
 	int current_requests;
 	float progress;
@@ -58,25 +59,25 @@ struct _SugarBrowserClass {
 	SugarBrowser * (* create_window) (SugarBrowser *browser);
 };
 
-GType			sugar_browser_get_type		(void);
-SugarBrowser   *sugar_browser_create_window	(SugarBrowser *browser);
-void			sugar_browser_scroll_pixels (SugarBrowser *browser,
-                            				 int           dx,
-                            				 int           dy);
-void			sugar_browser_grab_focus	(SugarBrowser *browser);
-gboolean        sugar_browser_save_uri      (SugarBrowser *browser,
-                                             const char   *uri,
-                                             const char   *filename);
-gboolean        sugar_browser_save_document (SugarBrowser *browser,
-                                             const char   *filename);
+GType			sugar_browser_get_type		  (void);
+int             sugar_browser_get_instance_id (SugarBrowser *browser);
+SugarBrowser   *sugar_browser_create_window	  (SugarBrowser *browser);
+void			sugar_browser_scroll_pixels   (SugarBrowser *browser,
+                            				   int           dx,
+                            				   int           dy);
+void			sugar_browser_grab_focus	  (SugarBrowser *browser);
+gboolean        sugar_browser_save_uri        (SugarBrowser *browser,
+                                               const char   *uri,
+                                               const char   *filename);
+gboolean        sugar_browser_save_document   (SugarBrowser *browser,
+                                               const char   *filename);
+char           *sugar_browser_get_session     (SugarBrowser *browser);
+gboolean        sugar_browser_set_session     (SugarBrowser *browser,
+                                               const char   *session);
 
-gboolean        sugar_browser_startup       (const char *profile_path,
-                                             const char *profile_name);
-void            sugar_browser_shutdown      (void);
-
-char           *sugar_browser_get_session   (SugarBrowser *browser);
-gboolean        sugar_browser_set_session   (SugarBrowser *browser,
-                                             const char   *session);
+gboolean        sugar_browser_startup         (const char *profile_path,
+                                               const char *profile_name);
+void            sugar_browser_shutdown        (void);
 
 #define SUGAR_TYPE_BROWSER_EVENT (sugar_browser_event_get_type())
 

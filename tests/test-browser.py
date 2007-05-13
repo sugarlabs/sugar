@@ -21,8 +21,13 @@ import os
 import pygtk
 pygtk.require('2.0')
 import gtk
+import gobject
 
 import sugar.browser
+
+def _print_document():
+    #print browser.document
+    pass
 
 def _quit(window):
     sugar.browser.shutdown()
@@ -38,7 +43,9 @@ browser = sugar.browser.Browser()
 window.add(browser)
 browser.show()
 
-browser.load_url('http://www.google.com')
+browser.load_url('about:blank')
+
+gobject.idle_add(_print_document)
 
 window.show()
 

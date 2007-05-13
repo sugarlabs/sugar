@@ -39,7 +39,7 @@ xulrunner_startup(void)
         fprintf(stderr, "Couldn't find a compatible GRE.\n");
         return 1;
     }
-
+    
     rv = XPCOMGlueStartup(xpcomPath);
     if (NS_FAILED(rv)) {
         fprintf(stderr, "Couldn't start XPCOM.");
