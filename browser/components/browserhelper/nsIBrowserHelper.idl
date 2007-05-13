@@ -1,0 +1,13 @@
+#include "nsISupports.idl"
+
+interface nsIWebBrowser;
+
+[scriptable, uuid(475e1194-92bc-4e03-92f3-5ad6ccddaca3)]
+interface nsIBrowserHelper : nsISupports
+{
+  nsIWebBrowser getBrowser(in ACString id);
+
+  void registerBrowser(in ACString id, in nsIWebBrowser browser);
+
+  void unregisterBrowser(in ACString id); 
+};

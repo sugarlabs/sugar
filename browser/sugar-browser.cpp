@@ -63,7 +63,7 @@
 #include <nsICommandManager.h>
 #include <nsIClipboardDragDropHooks.h>
 
-#include "sessionstore/nsISessionStore.h"
+#include "nsISessionStore.h"
 
 #define SUGAR_PATH "SUGAR_PATH"
 

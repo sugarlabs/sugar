@@ -96,7 +96,9 @@ Makefile
 bin/Makefile
 data/Makefile
 browser/Makefile
-browser/sessionstore/Makefile
+browser/components/Makefile
+browser/components/sessionstore/Makefile
+browser/components/browserhelper/Makefile
 services/Makefile
 services/presence/Makefile
 services/clipboard/Makefile

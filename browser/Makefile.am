@@ -1,4 +1,4 @@
-SUBDIRS = sessionstore
+SUBDIRS = components
 
 libsugarbrowser_la_CPPFLAGS =				\
 	$(WARN_CFLAGS)					\
@@ -22,6 +22,8 @@ libsugarbrowser_la_CPPFLAGS =				\
 	-I$(MOZILLA_INCLUDE_DIR)/webbrowserpersist	\
 	-I$(MOZILLA_INCLUDE_DIR)/widget			\
 	-I$(MOZILLA_INCLUDE_DIR)/xpcom			\
+	-I$(srcdir)/components/sessionstore		\
+	-I$(srcdir)/components/browserhelper		\
 	-DPLUGIN_DIR=\"$(libdir)/mozilla/plugins\"	\
 	-DSHARE_DIR=\"$(pkgdatadir)\"
 	
