@@ -92,6 +92,7 @@ class Activity(ExportedGObject):
 
         self._valid = False
         self._id = None
+        self._actname = None
         self._color = None
         self._local = False
         self._type = None
