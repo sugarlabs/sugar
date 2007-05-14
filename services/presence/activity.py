@@ -502,11 +502,11 @@ class Activity(ExportedGObject):
 
         if _PROP_TYPE in rprops.keys():
             type = rprops[_PROP_TYPE]
-            # Type can never be changed after first set
-            if self._type:
-                logging.debug("Activity type changed by network; this is illegal")
-            else:
-                if type != self._type:
+            if type != self._type:
+                # Type can never be changed after first set
+                if self._type:
+                    logging.debug("Activity type changed by network; this is illegal")
+                else:
                     self._type = type
                     changed = True
 
