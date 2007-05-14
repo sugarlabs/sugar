@@ -24,6 +24,8 @@ class BuddyModel(gobject.GObject):
     __gsignals__ = {
         'appeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
         'disappeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'nick-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                         ([gobject.TYPE_PYOBJECT])),
         'color-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                          ([gobject.TYPE_PYOBJECT])),
         'icon-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
@@ -132,6 +134,9 @@ class BuddyModel(gobject.GObject):
             self.emit('color-changed', self.get_color())
         if 'current-activity' in keys:
             self.emit('current-activity-changed', buddy.props.current_activity)
+        if 'nick' in keys:
+            self._nick = self._buddy.props.nick
+            self.emit('nick-changed', self.get_nick())            
 
     def _buddy_disappeared_cb(self, buddy):
         if buddy != self._buddy:

@@ -47,7 +47,8 @@ class BuddyMenu(Menu):
             self.add_separator()
             self.append(icon_item)
 
-        self._buddy.connect('icon-changed', self.__buddy_icon_changed_cb)
+        self._buddy.connect('icon-changed', self._buddy_icon_changed_cb)
+        self._buddy.connect('nick-changed', self._buddy_nick_changed_cb)
 
         owner = shell.get_model().get_owner()
         if buddy.get_nick() != owner.get_nick():
@@ -96,5 +97,8 @@ class BuddyMenu(Menu):
                                    _('Invite'),
                                    'theme:stock-invite'))
 
-    def __buddy_icon_changed_cb(self, buddy):
+    def _buddy_icon_changed_cb(self, buddy):
         pass
+
+    def _buddy_nick_changed_cb(self, buddy, nick):
+        self.set_title(nick)
