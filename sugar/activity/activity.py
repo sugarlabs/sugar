@@ -47,22 +47,35 @@ class ActivityToolbar(gtk.Toolbar):
         activity.connect('shared', self._activity_shared_cb)
         activity.connect('joined', self._activity_shared_cb)
 
-        self.close = ToolButton('window-close')
-        self.insert(self.close, -1)
-        self.close.show()
+        if activity.jobject:
+            self.title = gtk.Entry()
+            self.title.set_size_request(int(gtk.gdk.screen_width() / 6), -1)
+            self.title.set_text(activity.jobject['title'])
+            self.title.connect('focus-out-event', self._title_focus_out_event_cb)
+            self._add_widget(self.title)
+
+            activity.jobject.connect('updated', self._jobject_updated_cb)
+
+        separator = gtk.SeparatorToolItem()
+        separator.props.draw = False
+        separator.set_expand(True);
+        self.insert(separator, -1)
+        separator.show()
 
         self.share = ToolButton('stock-share-mesh')
         self.insert(self.share, -1)
         if activity.get_shared():
             self.share.set_sensitive(False)
         self.share.show()
-        if activity.jobject:
-            self.title = gtk.Entry()
-            self.title.set_text(activity.jobject['title'])
-            self.title.connect('focus-out-event', self._title_focus_out_event_cb)
-            self._add_widget(self.title, expand=True)
 
-            activity.jobject.connect('updated', self._jobject_updated_cb)
+        separator = gtk.SeparatorToolItem()
+        separator.props.draw = False
+        self.insert(separator, -1)
+        separator.show()
+
+        self.close = ToolButton('window-close')
+        self.insert(self.close, -1)
+        self.close.show()
 
     def _jobject_updated_cb(self, jobject):
         self.title.set_text(jobject['title'])
