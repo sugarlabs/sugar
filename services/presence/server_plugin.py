@@ -136,11 +136,22 @@ class ServerPlugin(gobject.GObject):
         self._owner.connect("icon-changed", self._owner_icon_changed_cb)
 
         self._account = self._get_account_info()
-
-        self._conn = self._init_connection()
         self._conn_status = CONNECTION_STATUS_DISCONNECTED
 
-        self._reconnect_id = 0
+        # Monitor IPv4 address as an indicator of the network connection
+        self._ip4am = psutils.IP4AddressMonitor.get_instance()
+        self._ip4am.connect('address-changed', self._ip4_address_changed_cb)
+
+    def _ip4_address_changed_cb(self, ip4am, address):
+        logging.debug("::: IP4 address now %s" % address)
+        if address:
+            logging.debug("::: valid IP4 address, conn_status %s" % self._conn_status)
+            if self._conn_status == CONNECTION_STATUS_DISCONNECTED:
+                logging.debug("::: will connect")
+                self.start()
+        else:
+            logging.debug("::: invalid IP4 address, will disconnect")
+            self.cleanup()
 
     def _owner_property_changed_cb(self, owner, properties):
         """Local user's configuration properties have changed 
@@ -229,6 +240,14 @@ class ServerPlugin(gobject.GObject):
         """Retrieve our telepathy.client.Connection object"""
         return self._conn
 
+    def _connect_reply_cb(self):
+        """Handle connection success"""
+        pass
+
+    def _connect_error_cb(self, exception):
+        """Handle connection failure"""
+        logging.debug("Connect error: %s" % exception)
+
     def _init_connection(self):
         """Set up our connection 
         
@@ -262,7 +281,12 @@ class ServerPlugin(gobject.GObject):
         conn[CONN_INTERFACE_PRESENCE].connect_to_signal('PresenceUpdate',
             self._presence_update_cb)
 
-        return conn
+        self._conn = conn
+        status = self._conn[CONN_INTERFACE].GetStatus()
+        if status == CONNECTION_STATUS_DISCONNECTED:
+            self._conn[CONN_INTERFACE].Connect(reply_handler=self._connect_reply_cb,
+                    error_handler=self._connect_error_cb)
+        self._handle_connection_status_change(self._conn, status)
 
     def _request_list_channel(self, name):
         """Request a contact-list channel from Telepathy
@@ -297,16 +321,14 @@ class ServerPlugin(gobject.GObject):
 
         if local_pending:
             # accept pending subscriptions
-            #print 'pending: %r' % local_pending
             publish[CHANNEL_INTERFACE_GROUP].AddMembers(local_pending, '')
 
-        not_subscribed = list(set(publish_handles) - set(subscribe_handles))
         self_handle = self._conn[CONN_INTERFACE].GetSelfHandle()
         self._online_contacts[self_handle] = self._account['account']
 
-        for handle in not_subscribed:
-            # request subscriptions from people subscribed to us if we're not subscribed to them
-            subscribe[CHANNEL_INTERFACE_GROUP].AddMembers([self_handle], '')
+        # request subscriptions from people subscribed to us if we're not subscribed to them
+        not_subscribed = list(set(publish_handles) - set(subscribe_handles))
+        subscribe[CHANNEL_INTERFACE_GROUP].AddMembers(not_subscribed, '')
 
         if CONN_INTERFACE_BUDDY_INFO not in self._conn.get_valid_interfaces():
             logging.debug('OLPC information not available')
@@ -334,8 +356,8 @@ class ServerPlugin(gobject.GObject):
         self._set_self_avatar()
 
         # Request presence for everyone on the channel
-        self._conn[CONN_INTERFACE_PRESENCE].GetPresence(subscribe_handles,
-                ignore_reply=True)
+        subscribe_handles = subscribe[CHANNEL_INTERFACE_GROUP].GetMembers()
+        self._conn[CONN_INTERFACE_PRESENCE].RequestPresence(subscribe_handles)
         return True
 
     def _set_self_avatar_cb(self, token):
@@ -504,30 +526,37 @@ class ServerPlugin(gobject.GObject):
                 return handle
         return None
 
-    def _status_changed_cb(self, state, reason):
-        """Handle notification of connection-status change
-        
-        state -- CONNECTION_STATUS_*
-        reason -- integer code describing the reason...
-        """
-        if state == CONNECTION_STATUS_CONNECTING:
-            self._conn_status = state
-            logging.debug("State: connecting...")
-        elif state == CONNECTION_STATUS_CONNECTED:
+    def _handle_connection_status_change(self, status, reason):
+        if status == self._conn_status:
+            return
+
+        if status == CONNECTION_STATUS_CONNECTING:
+            self._conn_status = status
+            logging.debug("status: connecting...")
+        elif status == CONNECTION_STATUS_CONNECTED:
             if self._connected_cb():
-                logging.debug("State: connected")
-                self._conn_status = state
+                logging.debug("status: connected")
+                self._conn_status = status
             else:
                 self.cleanup()
-                logging.debug("State: was connected, but an error occurred")
-        elif state == CONNECTION_STATUS_DISCONNECTED:
+                logging.debug("status: was connected, but an error occurred")
+        elif status == CONNECTION_STATUS_DISCONNECTED:
             self.cleanup()
-            logging.debug("State: disconnected (reason %r)" % reason)
+            logging.debug("status: disconnected (reason %r)" % reason)
             if reason == CONNECTION_STATUS_REASON_AUTHENTICATION_FAILED:
                 # FIXME: handle connection failure; retry later?
                 pass
 
         self.emit('status', self._conn_status, int(reason))
+
+    def _status_changed_cb(self, status, reason):
+        """Handle notification of connection-status change
+        
+        status -- CONNECTION_STATUS_*
+        reason -- integer code describing the reason...
+        """
+        logging.debug("::: connection status changed to %s" % status)
+        self._handle_connection_status_change(status, reason)
 
     def start(self):
         """Start up the Telepathy networking connections
@@ -541,35 +570,13 @@ class ServerPlugin(gobject.GObject):
             _connect_reply_cb or _connect_error_cb
         """
         logging.debug("Starting up...")
-        # If the connection is already connected query initial contacts
-        conn_status = self._conn[CONN_INTERFACE].GetStatus()
-        if conn_status == CONNECTION_STATUS_CONNECTED:
-            self._connected_cb()
-            subscribe = self._request_list_channel('subscribe')
-            subscribe_handles = subscribe[CHANNEL_INTERFACE_GROUP].GetMembers()
-            self._conn[CONN_INTERFACE_PRESENCE].RequestPresence(subscribe_handles)
-        elif conn_status == CONNECTION_STATUS_CONNECTING:
-            pass
+
+        # Only init connection if we have a valid IP address
+        if self._ip4am.props.address:
+            logging.debug("::: Have IP4 address %s, will connect" % self._ip4am.props.address)
+            self._init_connection()
         else:
-            self._conn[CONN_INTERFACE].Connect(reply_handler=self._connect_reply_cb,
-                    error_handler=self._connect_error_cb)
-
-    def _connect_reply_cb(self):
-        """Handle connection success"""
-        if self._reconnect_id > 0:
-            gobject.source_remove(self._reconnect_id)
-
-    def _reconnect(self):
-        """Reset number-of-attempted connections and re-attempt"""
-        self._reconnect_id = 0
-        self.start()
-        return False
-
-    def _connect_error_cb(self, exception):
-        """Handle connection failure"""
-        logging.debug("Connect error: %s" % exception)
-        if not self._reconnect_id:
-            self._reconnect_id = gobject.timeout_add(10000, self._reconnect)
+            logging.debug("::: No IP4 address, postponing connection")
 
     def cleanup(self):
         """If we still have a connection, disconnect it"""
@@ -577,6 +584,12 @@ class ServerPlugin(gobject.GObject):
             self._conn[CONN_INTERFACE].Disconnect()
         self._conn = None
         self._conn_status = CONNECTION_STATUS_DISCONNECTED
+
+        for handle in self._online_contacts.keys():
+            self._contact_offline(handle)
+        self._online_contacts = {}
+        self._joined_activites = []
+        self._activites = {}
 
     def _contact_offline(self, handle):
         """Handle contact going offline (send message, update set)"""
@@ -659,6 +672,9 @@ class ServerPlugin(gobject.GObject):
             timestamp, statuses = presence[handle]
             online = handle in self._online_contacts
             for status, params in statuses.items():
+                if not online and status == "offline":
+                    # weren't online in the first place...
+                    continue
                 jid = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
                 olstr = "ONLINE"
                 if not online: olstr = "OFFLINE"
