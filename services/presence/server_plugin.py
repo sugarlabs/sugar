@@ -125,7 +125,7 @@ class ServerPlugin(gobject.GObject):
 
         self._icon_cache = BuddyIconCache()
 
-        self._gabble_mgr = registry.GetManager('gabble')
+        self._registry = registry
         self._online_contacts = {}  # handle -> jid
 
         self._activities = {} # activity id -> handle
@@ -264,7 +264,8 @@ class ServerPlugin(gobject.GObject):
             acct = self._account.copy()
 
             # Create a new connection
-            name, path = self._gabble_mgr[CONN_MGR_INTERFACE].RequestConnection(_PROTOCOL, acct)
+            gabble_mgr = self._registry.GetManager('gabble')
+            name, path = gabble_mgr[CONN_MGR_INTERFACE].RequestConnection(_PROTOCOL, acct)
             conn = Connection(name, path)
             del acct
 
