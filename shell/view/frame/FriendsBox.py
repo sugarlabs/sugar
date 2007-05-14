@@ -69,10 +69,10 @@ class FriendsBox(hippo.CanvasBox):
         self._buddies[buddy.props.key] = icon
 
     def remove_buddy(self, buddy):
-        if not self._buddies.has_key(buddy.get_key()):
+        if not self._buddies.has_key(buddy.props.key):
             return
 
-        self.remove(self._buddies[buddy.get_key()])
+        self.remove(self._buddies[buddy.props.key])
 
     def clear(self):
         for item in self.get_children():
