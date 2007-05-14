@@ -137,6 +137,7 @@ class ServerPlugin(gobject.GObject):
 
         self._account = self._get_account_info()
         self._conn_status = CONNECTION_STATUS_DISCONNECTED
+        self._reconnect_id = 0
 
         # Monitor IPv4 address as an indicator of the network connection
         self._ip4am = psutils.IP4AddressMonitor.get_instance()
@@ -527,6 +528,17 @@ class ServerPlugin(gobject.GObject):
                 return handle
         return None
 
+    def _start_helper(self):
+        """Helper so start() doesn't have to return False"""
+        self.start()
+        return False
+
+    def _reconnect_cb(self):
+        """Schedule a reconnection attempt"""
+        gobject.idle_add(self._start_helper)
+        self._reconnect_id = 0
+        return False
+
     def _handle_connection_status_change(self, status, reason):
         if status == self._conn_status:
             return
@@ -547,8 +559,16 @@ class ServerPlugin(gobject.GObject):
             if reason == CONNECTION_STATUS_REASON_AUTHENTICATION_FAILED:
                 # FIXME: handle connection failure; retry later?
                 pass
+            else:
+                # If disconnected, but still have a network connection, retry
+                # If disconnected and no network connection, do nothing here
+                # and let the IP4AddressMonitor address-changed signal handle
+                # reconnection
+                if self._ip4am.props.address:
+                    self._reconnect_id = gobject.timeout_add(5000, self._reconnect_cb)
 
         self.emit('status', self._conn_status, int(reason))
+        return False
 
     def _status_changed_cb(self, status, reason):
         """Handle notification of connection-status change
@@ -572,6 +592,10 @@ class ServerPlugin(gobject.GObject):
         """
         logging.debug("Starting up...")
 
+        if self._reconnect_id > 0:
+            gobject.source_remove(self._reconnect_id)
+            self._reconnect_id = 0
+
         # Only init connection if we have a valid IP address
         if self._ip4am.props.address:
             logging.debug("::: Have IP4 address %s, will connect" % self._ip4am.props.address)
@@ -592,6 +616,10 @@ class ServerPlugin(gobject.GObject):
         self._joined_activites = []
         self._activites = {}
 
+        if self._reconnect_id > 0:
+            gobject.source_remove(self._reconnect_id)
+            self._reconnect_id = 0
+
     def _contact_offline(self, handle):
         """Handle contact going offline (send message, update set)"""
         if not self._online_contacts.has_key(handle):
@@ -611,7 +639,7 @@ class ServerPlugin(gobject.GObject):
 
     def _contact_online_aliases_cb(self, handle, props, aliases):
         """Handle contact's alias being received (do further queries)"""
-        if not aliases or not len(aliases):
+        if not self._conn or not aliases or not len(aliases):
             logging.debug("Handle %s - No aliases" % handle)
             self._contact_offline(handle)
             return
