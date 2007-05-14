@@ -63,6 +63,9 @@ class PresenceService(ExportedGObject):
 
         bus = dbus.SessionBus()
         self._bus_name = dbus.service.BusName(_PRESENCE_SERVICE, bus=bus)
+        bus.add_signal_receiver(self._connection_disconnected_cb,
+                                signal_name="Disconnected",
+                                dbus_interface="org.freedesktop.DBus")
 
         # Create the Owner object
         objid = self._get_next_object_id()
@@ -96,12 +99,9 @@ class PresenceService(ExportedGObject):
 
         ExportedGObject.__init__(self, self._bus_name, _PRESENCE_PATH)
 
-    def _activity_shared_cb(self, tp, activity, success, exc, async_cb, async_err_cb):
-        if success:
-            async_cb(activity.object_path())
-        else:
-            del self._activities[activity.props.id]
-            async_err_cb(exc)
+    def _connection_disconnected_cb(self, foo=None):
+        """Log event when D-Bus kicks us off the bus for some reason"""
+        logging.debug("Disconnected from session bus!!!")
 
     def _server_status_cb(self, plugin, status, reason):
         # FIXME: figure out connection status when we have a salut plugin too
