@@ -128,7 +128,7 @@ class Activity(ExportedGObject):
         if pspec.name == _PROP_ID:
             return self._id
         elif pspec.name == _PROP_NAME:
-            return self._name
+            return self._actname
         elif pspec.name == _PROP_COLOR:
             return self._color
         elif pspec.name == _PROP_TYPE:
@@ -155,7 +155,7 @@ class Activity(ExportedGObject):
                 raise RuntimeError("activity ID is already set")
             self._id = value
         elif pspec.name == _PROP_NAME:
-            self._name = value
+            self._actname = value
         elif pspec.name == _PROP_COLOR:
             self._color = value
         elif pspec.name == _PROP_TYPE:
@@ -188,7 +188,7 @@ class Activity(ExportedGObject):
         """
         try:
             old_valid = self._valid
-            if self._color and self._name and self._id and self._type:
+            if self._color and self._actname and self._id and self._type:
                 self._valid = True
             else:
                 self._valid = False
@@ -465,7 +465,7 @@ class Activity(ExportedGObject):
         
         """
         props = {}
-        props['name'] = self._name
+        props['name'] = self._actname
         props['color'] = self._color
         props['type'] = self._type
 
@@ -490,8 +490,8 @@ class Activity(ExportedGObject):
         (rprops, cprops) = self._split_properties(properties)
         if _PROP_NAME in rprops.keys():
             name = rprops[_PROP_NAME]
-            if name != self._name:
-                self._name = name
+            if name != self._actname:
+                self._actname = name
                 changed = True
 
         if _PROP_COLOR in rprops.keys():
