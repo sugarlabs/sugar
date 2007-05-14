@@ -195,7 +195,7 @@ class Activity(Window, gtk.Container):
         elif create_jobject:
             logging.debug('Creating a jobject.')
             self.jobject = datastore.create()
-            self.jobject['title'] = ''
+            self.jobject['title'] = '%s %s' % (get_bundle_name(), 'Activity')
             self.jobject['activity'] = self.get_service_name()
             self.jobject['date'] = str(time.time())
             self.jobject['icon'] = ''
@@ -312,6 +312,11 @@ class Activity(Window, gtk.Container):
         act_toolbar.share.connect('clicked', self._handle_share_cb)
         act_toolbar.close.connect('clicked', self._handle_close_cb)
 
+def get_bundle_name():
+    """Return the bundle name for the current process' bundle
+    """
+    return os.environ['SUGAR_BUNDLE_NAME']
+    
 def get_bundle_path():
     """Return the bundle path for the current process' bundle
     """
