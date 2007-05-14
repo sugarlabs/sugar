@@ -185,7 +185,7 @@ class PresenceService(ExportedGObject):
         return activity
 
     def _remove_activity(self, activity):
-        logging.debug("remove activity", activity.props.id)
+        logging.debug("remove activity %s" % activity.props.id)
 
         self.ActivityDisappeared(activity.object_path())
         del self._activities[activity.props.id]
