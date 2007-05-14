@@ -178,7 +178,8 @@ class ServerPlugin(gobject.GObject):
             self._set_self_alias()
 
         if properties.has_key("color") or properties.has_key("ip4-address"):
-            self._set_self_olpc_properties()
+            if self._conn_status == CONNECTION_STATUS_CONNECTED:
+                self._set_self_olpc_properties()
 
     def _owner_icon_changed_cb(self, owner, icon):
         """Owner has changed their icon, forward to network"""
@@ -469,8 +470,6 @@ class ServerPlugin(gobject.GObject):
 
     def _set_self_olpc_properties(self):
         """Set color and key on our Telepathy server identity"""
-        if self._conn_status != CONNECTION_STATUS_CONNECTED:
-            return
         props = {}
         props['color'] = self._owner.props.color
         props['key'] = dbus.ByteArray(self._owner.props.key)
