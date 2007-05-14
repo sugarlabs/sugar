@@ -634,7 +634,8 @@ class ServerPlugin(gobject.GObject):
     def _contact_online_activities_error_cb(self, handle, err):
         """Handle contact's activity list being unavailable"""
         logging.debug("Handle %s - Error getting activities: %s" % (handle, err))
-        self._contact_offline(handle)
+        # Don't drop the buddy if we can't get their activities, for now
+        #self._contact_offline(handle)
 
     def _contact_online_aliases_cb(self, handle, props, aliases):
         """Handle contact's alias being received (do further queries)"""
