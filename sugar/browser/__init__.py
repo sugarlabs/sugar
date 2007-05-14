@@ -5,12 +5,13 @@ XUL Runner and gtkmozembed and is produced by the PyGTK
 """
 
 try:
-    from sugar.browser._sugarbrowser import startup, shutdown
     from sugar.browser import _sugarbrowser
 except ImportError:
     from sugar import ltihooks
-    from sugar.browser._sugarbrowser import startup, shutdown
     from sugar.browser import _sugarbrowser
+
+from _sugarbrowser import AddressEntry
+from _sugarbrowser import startup, shutdown, get_download_manager
 
 class Browser(_sugarbrowser.Browser):
     def __init__(self):

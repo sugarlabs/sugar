@@ -1,6 +1,6 @@
 VERSION=0.63
 DATE=`date +%Y%m%d`
-RELEASE=2.78
+RELEASE=2.79
 TARBALL=sugar-$VERSION-$RELEASE.${DATE}git.tar.bz2
 
 rm sugar-$VERSION.tar.bz2

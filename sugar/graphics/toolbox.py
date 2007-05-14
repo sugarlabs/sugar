@@ -31,6 +31,7 @@ class Toolbox(gtk.VBox):
         self._notebook = gtk.Notebook()
         self._notebook.set_tab_pos(gtk.POS_BOTTOM)
         self._notebook.set_show_border(False)
+        self._notebook.set_show_tabs(False)
         self.pack_start(self._notebook)
         self._notebook.show()
         
@@ -44,6 +45,12 @@ class Toolbox(gtk.VBox):
             
         self._notebook.append_page(toolbar_box, label)
         toolbar_box.show()
-        
+
+        if self._notebook.get_n_pages() > 1:
+            self._notebook.set_show_tabs(True)
+                    
     def remove_toolbar(self, index):
         self._notebook.remove_page(index)
+
+        if self._notebook.get_n_pages() < 2:
+            self._notebook.set_show_tabs(False)
