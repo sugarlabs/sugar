@@ -24,8 +24,12 @@ import os
 from sugar import logger
 from sugar import env
 
+
+_logger = logging.getLogger('s-p-s')
+
+
 def usage():
-    logging.debug("Usage: sugar-presence-service [<test buddy number (1 - 10)>] [randomize]")
+    _logger.debug("Usage: sugar-presence-service [<test buddy number (1 - 10)>] [randomize]")
 
 sys.path.append(env.get_service_path('presence'))
 
@@ -35,9 +39,9 @@ if len(sys.argv) in [2, 3]:
     try:
         test_num = int(sys.argv[1])
     except ValueError:
-        logging.debug("Bad test user number.")
+        _logger.debug("Bad test user number.")
     if test_num < 1 or test_num > 10:
-        logging.debug("Bad test user number.")
+        _logger.debug("Bad test user number.")
 
     if len(sys.argv) == 3 and sys.argv[2] == "randomize":
         randomize = True
@@ -54,6 +58,6 @@ else:
 
 import presenceservice
 
-logging.info('Starting presence service...')
+_logger.info('Starting presence service...')
 
 presenceservice.main(test_num, randomize)

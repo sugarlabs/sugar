@@ -36,6 +36,8 @@ DBUS_SERVICE = "org.laptop.Sugar.Presence"
 DBUS_INTERFACE = "org.laptop.Sugar.Presence"
 DBUS_PATH = "/org/laptop/Sugar/Presence"
 
+_logger = logging.getLogger('sugar.presence.presenceservice')
+
 
 class PresenceService(gobject.GObject):
     """UI-side interface to the dbus presence service 
@@ -116,7 +118,7 @@ class PresenceService(gobject.GObject):
                     DBUS_INTERFACE
                 )
             except dbus.exceptions.DBusException, err:
-                logging.error(
+                _logger.error(
                     """Failure retrieving %r interface from the D-BUS service %r %r: %s""",
                     DBUS_INTERFACE, DBUS_SERVICE, DBUS_PATH, err
                 )
@@ -247,7 +249,7 @@ class PresenceService(gobject.GObject):
         try:
             resp = self._ps.GetActivities()
         except dbus.exceptions.DBusException, err:
-            logging.warn(
+            _logger.warn(
                 """Unable to retrieve activity list from presence service: %s"""
                 % err
             )
@@ -269,7 +271,7 @@ class PresenceService(gobject.GObject):
         try:
             act_op = self._ps.GetActivityById(activity_id)
         except dbus.exceptions.DBusException, err:
-            logging.warn(
+            _logger.warn(
                 """Unable to retrieve activity handle for %r from presence service: %s"""
                 % (activity_id, err)
             )
@@ -285,7 +287,7 @@ class PresenceService(gobject.GObject):
         try:
             resp = self._ps.GetBuddies()
         except dbus.exceptions.DBusException, err:
-            logging.warn(
+            _logger.warn(
                 """Unable to retrieve buddy-list from presence service: %s"""
                 % err
             )
@@ -308,7 +310,7 @@ class PresenceService(gobject.GObject):
         try:
             buddy_op = self._ps.GetBuddyByPublicKey(dbus.ByteArray(key))
         except dbus.exceptions.DBusException, err:
-            logging.warn(
+            _logger.warn(
                 """Unable to retrieve buddy handle for %r from presence service: %s"""
                 % key, err
             )
@@ -320,7 +322,7 @@ class PresenceService(gobject.GObject):
         try:
             owner_op = self._ps.GetOwner()
         except dbus.exceptions.DBusException, err:
-            logging.warn(
+            _logger.warn(
                 """Unable to retrieve local user/owner from presence service: %s"""
                 % err
             )
@@ -335,7 +337,7 @@ class PresenceService(gobject.GObject):
 
     def _share_activity_error_cb(self, activity, err):
         """Notify with GObject event of unsuccessful sharing of activity"""
-        logging.debug("Error sharing activity %s: %s" % (activity.get_id(), err))
+        _logger.debug("Error sharing activity %s: %s" % (activity.get_id(), err))
         self.emit("activity-shared", False, None, err)
 
     def share_activity(self, activity, properties={}):

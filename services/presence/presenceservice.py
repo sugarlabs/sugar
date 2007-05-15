@@ -40,6 +40,9 @@ _PRESENCE_INTERFACE = "org.laptop.Sugar.Presence"
 _PRESENCE_PATH = "/org/laptop/Sugar/Presence"
 
 
+_logger = logging.getLogger('s-p-s.presenceservice')
+
+
 class NotFoundError(dbus.DBusException):
     def __init__(self, msg):
         dbus.DBusException.__init__(self, msg)
@@ -101,7 +104,7 @@ class PresenceService(ExportedGObject):
 
     def _connection_disconnected_cb(self, foo=None):
         """Log event when D-Bus kicks us off the bus for some reason"""
-        logging.debug("Disconnected from session bus!!!")
+        _logger.debug("Disconnected from session bus!!!")
 
     def _server_status_cb(self, plugin, status, reason):
         # FIXME: figure out connection status when we have a salut plugin too
@@ -135,10 +138,10 @@ class PresenceService(ExportedGObject):
     def _buddy_validity_changed_cb(self, buddy, valid):
         if valid:
             self.BuddyAppeared(buddy.object_path())
-            logging.debug("New Buddy: %s (%s)" % (buddy.props.nick, buddy.props.color))
+            _logger.debug("New Buddy: %s (%s)" % (buddy.props.nick, buddy.props.color))
         else:
             self.BuddyDisappeared(buddy.object_path())
-            logging.debug("Buddy left: %s (%s)" % (buddy.props.nick, buddy.props.color))
+            _logger.debug("Buddy left: %s (%s)" % (buddy.props.nick, buddy.props.color))
 
     def _contact_offline(self, tp, handle):
         if not self._handles_buddies[tp].has_key(handle):
@@ -152,7 +155,7 @@ class PresenceService(ExportedGObject):
         if not buddy.handles:
             if buddy.props.valid:
                 self.BuddyDisappeared(buddy.object_path())
-                logging.debug("Buddy left: %s (%s)" % (buddy.props.nick, buddy.props.color))
+                _logger.debug("Buddy left: %s (%s)" % (buddy.props.nick, buddy.props.color))
             self._buddies.pop(key)
 
     def _get_next_object_id(self):
@@ -163,21 +166,21 @@ class PresenceService(ExportedGObject):
     def _avatar_updated(self, tp, handle, avatar):
         buddy = self._handles_buddies[tp].get(handle)
         if buddy and not buddy.props.owner:
-            logging.debug("Buddy %s icon updated" % buddy.props.nick)
+            _logger.debug("Buddy %s icon updated" % buddy.props.nick)
             buddy.props.icon = avatar
 
     def _buddy_properties_changed(self, tp, handle, properties):
         buddy = self._handles_buddies[tp].get(handle)
         if buddy:
             buddy.set_properties(properties)
-            logging.debug("Buddy %s properties updated: %s" % (buddy.props.nick, properties.keys()))
+            _logger.debug("Buddy %s properties updated: %s" % (buddy.props.nick, properties.keys()))
 
     def _new_activity(self, activity_id, tp):
         try:
             objid = self._get_next_object_id()
             activity = Activity(self._bus_name, objid, tp, id=activity_id)
         except Exception, e:
-            logging.debug("Invalid activity: %s" % e)
+            _logger.debug("Invalid activity: %s" % e)
             return None
 
         activity.connect("validity-changed", self._activity_validity_changed_cb)
@@ -185,7 +188,7 @@ class PresenceService(ExportedGObject):
         return activity
 
     def _remove_activity(self, activity):
-        logging.debug("remove activity %s" % activity.props.id)
+        _logger.debug("remove activity %s" % activity.props.id)
 
         self.ActivityDisappeared(activity.object_path())
         del self._activities[activity.props.id]
@@ -194,7 +197,7 @@ class PresenceService(ExportedGObject):
         acts = []
         for act in activities:
             acts.append(str(act))
-        logging.debug("Handle %s activities changed: %s" % (contact_handle, acts))
+        _logger.debug("Handle %s activities changed: %s" % (contact_handle, acts))
         buddies = self._handles_buddies[tp]
         buddy = buddies.get(contact_handle)
 
@@ -202,7 +205,7 @@ class PresenceService(ExportedGObject):
             # We don't know this buddy
             # FIXME: What should we do here? 
             # FIXME: Do we need to check if the buddy is valid or something?
-            logging.debug("contact_activities_changed: buddy unknown")
+            _logger.debug("contact_activities_changed: buddy unknown")
             return
 
         old_activities = set()
@@ -213,7 +216,7 @@ class PresenceService(ExportedGObject):
 
         activities_joined = new_activities - old_activities
         for act in activities_joined:
-            logging.debug("Handle %s joined activity %s" % (contact_handle, act))
+            _logger.debug("Handle %s joined activity %s" % (contact_handle, act))
             activity = self._activities.get(act)
             if not activity:
                 # new activity, can fail
@@ -225,7 +228,7 @@ class PresenceService(ExportedGObject):
 
         activities_left = old_activities - new_activities
         for act in activities_left:
-            logging.debug("Handle %s left activity %s" % (contact_handle, act))
+            _logger.debug("Handle %s left activity %s" % (contact_handle, act))
             activity = self._activities.get(act)
             if not activity:
                 continue
@@ -341,10 +344,10 @@ class PresenceService(ExportedGObject):
     def _activity_validity_changed_cb(self, activity, valid):
         if valid:
             self.ActivityAppeared(activity.object_path())
-            logging.debug("New Activity: %s (%s)" % (activity.props.name, activity.props.id))
+            _logger.debug("New Activity: %s (%s)" % (activity.props.name, activity.props.id))
         else:
             self.ActivityDisappeared(activity.object_path())
-            logging.debug("Activity disappeared: %s (%s)" % (activity.props.name, activity.props.id))
+            _logger.debug("Activity disappeared: %s (%s)" % (activity.props.name, activity.props.id))
 
     def _activity_properties_changed(self, tp, act_id, props):
         activity = self._activities.get(act_id)
@@ -364,7 +367,7 @@ def main(test_num=0, randomize=False):
         loop.run()
     except KeyboardInterrupt:
         ps.cleanup()
-        logging.debug('Ctrl+C pressed, exiting...')
+        _logger.debug('Ctrl+C pressed, exiting...')
 
 if __name__ == "__main__":
     main()
