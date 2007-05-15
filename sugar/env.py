@@ -22,7 +22,7 @@ def _get_prefix_path(base, path=None):
     if os.environ.has_key('SUGAR_PREFIX'):
         prefix = os.environ['SUGAR_PREFIX']
     else:
-        prefix = '/usr'
+        raise RuntimeError("The SUGAR_PREFIX environment variable is not set.")
 
     if path:
         return os.path.join(prefix, base, path)

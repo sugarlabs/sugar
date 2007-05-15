@@ -159,12 +159,22 @@ sugar_browser_startup(const char *profile_path, const char *profile_name)
 
     old_handler = XSetErrorHandler(error_handler);
 
+    const char *prefix = g_getenv("SUGAR_PREFIX");
+    if (prefix == NULL) {
+        g_print("The SUGAR_PREFIX environment variable is not set.");
+        exit(1);
+    }
+    
+    char *components_path = g_build_filename(prefix, "share/sugar", NULL);
+
     GeckoDirectoryProvider *dirProvider =
-        new GeckoDirectoryProvider(g_getenv(SUGAR_PATH));
+        new GeckoDirectoryProvider(components_path);
     if (!dirProvider) {
         g_warning ("failed to create GeckoDirectoryProvider");
         return FALSE;
     }
+
+    g_free(components_path);
 
     NS_ADDREF (dirProvider);
 
