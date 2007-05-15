@@ -118,13 +118,13 @@ class IP4AddressMonitor(gobject.GObject):
         match = sys_bus.add_signal_receiver(self._nm_device_no_longer_active_cb,
                                             signal_name="DeviceNoLongerActive",
                                             dbus_interface=NM_IFACE,
-                                            named_service=NM_SERVICE)
+                                            bus_name=NM_SERVICE)
         self._matches.append(match)
 
         match = sys_bus.add_signal_receiver(self._nm_state_change_cb,
                                             signal_name="StateChange",
                                             dbus_interface=NM_IFACE,
-                                            named_service=NM_SERVICE)
+                                            bus_name=NM_SERVICE)
         self._matches.append(match)
 
         state = self._nm_obj.state()
