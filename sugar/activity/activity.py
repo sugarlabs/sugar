@@ -35,11 +35,6 @@ from sugar.datastore import datastore
 from sugar import profile
 
 class ActivityToolbar(gtk.Toolbar):
-    __gsignals__ = {
-        'share-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
-        'close-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
-    }
-
     def __init__(self, activity):
         gtk.Toolbar.__init__(self)
 
@@ -63,6 +58,7 @@ class ActivityToolbar(gtk.Toolbar):
         separator.show()
 
         self.share = ToolButton('stock-share-mesh')
+        self.share.connect('clicked', self._share_clicked_cb)
         self.insert(self.share, -1)
         if activity.get_shared():
             self.share.set_sensitive(False)
@@ -74,8 +70,15 @@ class ActivityToolbar(gtk.Toolbar):
         separator.show()
 
         self.close = ToolButton('window-close')
+        self.close.connect('clicked', self._close_clicked_cb)
         self.insert(self.close, -1)
         self.close.show()
+
+    def _share_clicked_cb(self, button):
+        self._activity.share()
+
+    def _close_clicked_cb(self, button):
+        self._activity.close()
 
     def _jobject_updated_cb(self, jobject):
         self.title.set_text(jobject['title'])
@@ -294,7 +297,7 @@ class Activity(Window, gtk.Container):
         if self._shared_activity:
             self._shared_activity.leave()
 
-    def _handle_close_cb(self, toolbar):
+    def close(self):
         if self.jobject:
             try:
                 self.save()
@@ -302,15 +305,6 @@ class Activity(Window, gtk.Container):
                 self.destroy()
                 raise
         self.destroy()
-
-    def _handle_share_cb(self, toolbar):
-        self.share()
-
-    def set_toolbox(self, toolbox):
-        Window.set_toolbox(self, toolbox)
-        act_toolbar = toolbox.get_activity_toolbar()
-        act_toolbar.share.connect('clicked', self._handle_share_cb)
-        act_toolbar.close.connect('clicked', self._handle_close_cb)
 
 def get_bundle_name():
     """Return the bundle name for the current process' bundle
