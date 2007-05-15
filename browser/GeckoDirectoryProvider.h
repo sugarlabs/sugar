@@ -28,11 +28,13 @@ class GeckoDirectoryProvider : public nsIDirectoryServiceProvider2
         NS_DECL_NSIDIRECTORYSERVICEPROVIDER
         NS_DECL_NSIDIRECTORYSERVICEPROVIDER2
 
-        GeckoDirectoryProvider(const char *sugar_path);
+        GeckoDirectoryProvider(const char *sugar_path,
+                               const char *profile_path);
         virtual ~GeckoDirectoryProvider();
 
     private:
         char *mComponentPath;
+        char *mCompregPath;
 };
 
 #endif /* GECKO_DIRECTORY_PROVIDER_H */

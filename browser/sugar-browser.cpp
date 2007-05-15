@@ -148,6 +148,39 @@ setup_plugin_path ()
     g_free (new_path);
 }
 
+static gboolean
+setup_directory_provider(const char *full_prof_path)
+{
+    const char *prefix = g_getenv("SUGAR_PREFIX");
+    if (prefix == NULL) {
+        g_print("The SUGAR_PREFIX environment variable is not set.");
+        exit(1);
+    }
+    
+    char *components_path = g_build_filename(prefix, "share/sugar", NULL);
+
+    GeckoDirectoryProvider *dirProvider =
+        new GeckoDirectoryProvider(components_path, full_prof_path);
+    if (!dirProvider) {
+        g_warning ("failed to create GeckoDirectoryProvider");
+        return FALSE;
+    }
+
+    g_free(components_path);
+    
+    NS_ADDREF (dirProvider);
+
+    nsCOMPtr<nsIDirectoryServiceProvider> dp (do_QueryInterface (dirProvider));
+    NS_RELEASE (dirProvider);
+    dirProvider = nsnull;
+
+    if (!dp) return FALSE;
+
+    gtk_moz_embed_set_directory_service_provider(dp);
+    
+    return TRUE;
+}
+
 gboolean
 sugar_browser_startup(const char *profile_path, const char *profile_name)
 {
@@ -159,32 +192,11 @@ sugar_browser_startup(const char *profile_path, const char *profile_name)
 
     old_handler = XSetErrorHandler(error_handler);
 
-    const char *prefix = g_getenv("SUGAR_PREFIX");
-    if (prefix == NULL) {
-        g_print("The SUGAR_PREFIX environment variable is not set.");
-        exit(1);
-    }
-    
-    char *components_path = g_build_filename(prefix, "share/sugar", NULL);
-
-    GeckoDirectoryProvider *dirProvider =
-        new GeckoDirectoryProvider(components_path);
-    if (!dirProvider) {
-        g_warning ("failed to create GeckoDirectoryProvider");
+    char *full_prof_path = g_build_filename(profile_path, profile_name, NULL);
+    if (!setup_directory_provider(full_prof_path)) {
         return FALSE;
     }
-
-    g_free(components_path);
-
-    NS_ADDREF (dirProvider);
-
-    nsCOMPtr<nsIDirectoryServiceProvider> dp (do_QueryInterface (dirProvider));
-    NS_RELEASE (dirProvider);
-    dirProvider = nsnull;
-
-    if (!dp) return FALSE;
-
-    gtk_moz_embed_set_directory_service_provider(dp);
+    g_free(full_prof_path);
 
     gtk_moz_embed_push_startup();
 

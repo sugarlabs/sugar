@@ -16,23 +16,43 @@ NS_IMPL_ISUPPORTS2 (GeckoDirectoryProvider,
                     nsIDirectoryServiceProvider,
                     nsIDirectoryServiceProvider2)
 
-GeckoDirectoryProvider::GeckoDirectoryProvider(const char *sugar_path)
+GeckoDirectoryProvider::GeckoDirectoryProvider(const char *sugar_path,
+                                               const char *profile_path)
 {
-    mComponentPath = g_strconcat(sugar_path, "/mozilla/components", NULL);
+    mComponentPath = g_build_filename
+            (sugar_path, "mozilla", "components", NULL);
+    mCompregPath = g_build_filename
+            (profile_path, "compreg.dat", NULL);
 }
 
 GeckoDirectoryProvider::~GeckoDirectoryProvider()
 {
     if(mComponentPath)
         g_free(mComponentPath);
+    if(mCompregPath)
+        g_free(mCompregPath);
 }
 
 /* nsIFile getFile (in string prop, out PRBool persistent); */
 NS_IMETHODIMP
 GeckoDirectoryProvider::GetFile (const char *prop,
-                                PRBool *persistent,
-                                nsIFile **_retval)
+                                 PRBool *persistent,
+                                 nsIFile **_retval)
 {
+    nsresult rv = NS_ERROR_FAILURE;
+    nsCOMPtr<nsILocalFile> file;
+
+    if (!strcmp(prop, NS_XPCOM_COMPONENT_REGISTRY_FILE)) {
+        rv = NS_NewNativeLocalFile(nsDependentCString(mCompregPath),
+                                   PR_TRUE,
+                                   getter_AddRefs(file));
+    }
+
+    if (NS_SUCCEEDED(rv) && file) {
+        NS_ADDREF(*_retval = file);
+        return NS_OK;
+    }
+
     return NS_ERROR_FAILURE;
 }
 
@@ -47,7 +67,7 @@ GeckoDirectoryProvider::GetFiles (const char *aProperty, nsISimpleEnumerator **a
             nsCOMPtr<nsILocalFile> componentDir;
             rv = NS_NewNativeLocalFile(nsDependentCString(mComponentPath),
                                        PR_TRUE,
-                                       getter_AddRefs (componentDir));
+                                       getter_AddRefs(componentDir));
             NS_ENSURE_SUCCESS (rv, rv);
 
             nsCOMArray<nsIFile> array;
@@ -61,6 +81,6 @@ GeckoDirectoryProvider::GetFiles (const char *aProperty, nsISimpleEnumerator **a
             rv = NS_SUCCESS_AGGREGATE_RESULT;
         }
     }
-
+    
     return rv;
 }
