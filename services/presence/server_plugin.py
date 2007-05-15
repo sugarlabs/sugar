@@ -176,6 +176,8 @@ class ServerPlugin(gobject.GObject):
 
         if properties.has_key("nick"):
             self._set_self_alias()
+            # Hack; send twice to make sure the server gets it
+            gobject.timeout_add(1000, self._set_self_alias)
 
         if properties.has_key("color") or properties.has_key("ip4-address"):
             if self._conn_status == CONNECTION_STATUS_CONNECTED:
@@ -354,6 +356,8 @@ class ServerPlugin(gobject.GObject):
         # Set initial buddy properties, avatar, and activities
         self._set_self_olpc_properties()
         self._set_self_alias()
+        # Hack; send twice to make sure the server gets it
+        gobject.timeout_add(1000, self._set_self_alias)
         self._set_self_activities()
         self._set_self_current_activity()
         self._set_self_avatar()
@@ -489,6 +493,7 @@ class ServerPlugin(gobject.GObject):
         self._conn[CONN_INTERFACE_ALIASING].SetAliases({self_handle : alias},
                 reply_handler=self._ignore_success_cb,
                 error_handler=lambda *args: self._log_error_cb("setting alias", *args))
+        return False
 
     def _set_self_activities(self):
         """Forward set of joined activities to network 
