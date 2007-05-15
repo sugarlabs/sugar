@@ -610,7 +610,10 @@ class ServerPlugin(gobject.GObject):
     def cleanup(self):
         """If we still have a connection, disconnect it"""
         if self._conn:
-            self._conn[CONN_INTERFACE].Disconnect()
+            try:
+                self._conn[CONN_INTERFACE].Disconnect()
+            except:
+                pass
         self._conn = None
         self._conn_status = CONNECTION_STATUS_DISCONNECTED
 
@@ -658,10 +661,16 @@ class ServerPlugin(gobject.GObject):
             reply_handler=lambda *args: self._contact_online_activities_cb(handle, *args),
             error_handler=lambda *args: self._contact_online_activities_error_cb(handle, *args))
 
-    def _contact_online_aliases_error_cb(self, handle, err):
+    def _contact_online_aliases_error_cb(self, handle, props, retry, err):
         """Handle failure to retrieve given user's alias/information"""
-        logging.debug("Handle %s - Error getting nickname: %s" % (handle, err))
-        self._contact_offline(handle)
+        if retry:
+            logging.debug("Handle %s - Error getting nickname (will retry): %s" % (handle, err))
+            self._conn[CONN_INTERFACE_ALIASING].RequestAliases([handle],
+                reply_handler=lambda *args: self._contact_online_aliases_cb(handle, props, *args),
+                error_handler=lambda *args: self._contact_online_aliases_error_cb(handle, props, False, *args))
+        else:
+            logging.debug("Handle %s - Error getting nickname: %s" % (handle, err))
+            self._contact_offline(handle)
 
     def _contact_online_properties_cb(self, handle, props):
         """Handle failure to retrieve given user's alias/information"""
@@ -679,7 +688,7 @@ class ServerPlugin(gobject.GObject):
 
         self._conn[CONN_INTERFACE_ALIASING].RequestAliases([handle],
             reply_handler=lambda *args: self._contact_online_aliases_cb(handle, props, *args),
-            error_handler=lambda *args: self._contact_online_aliases_error_cb(handle, *args))
+            error_handler=lambda *args: self._contact_online_aliases_error_cb(handle, props, True, *args))
         
     def _contact_online_properties_error_cb(self, handle, err):
         """Handle error retrieving property-set for a user (handle)"""
@@ -718,6 +727,15 @@ class ServerPlugin(gobject.GObject):
                 elif status in ["offline", "invisible"]:
                     self._contact_offline(handle)
 
+    def _request_avatar_cb(self, handle, new_avatar_token, avatar, mime_type):
+        jid = self._online_contacts[handle]
+        if not jid:
+            logging.debug("Handle %s not valid yet..." % handle)
+            return
+        icon = ''.join(map(chr, avatar))
+        self._icon_cache.store_icon(jid, new_avatar_token, icon)
+        self.emit("avatar-updated", handle, icon)
+
     def _avatar_updated_cb(self, handle, new_avatar_token):
         """Handle update of given user (handle)'s avatar"""
         if handle == self._conn[CONN_INTERFACE].GetSelfHandle():
@@ -737,11 +755,11 @@ class ServerPlugin(gobject.GObject):
         icon = self._icon_cache.get_icon(jid, new_avatar_token)
         if not icon:
             # cache miss
-            avatar, mime_type = self._conn[CONN_INTERFACE_AVATARS].RequestAvatar(handle)
-            icon = ''.join(map(chr, avatar))
-            self._icon_cache.store_icon(jid, new_avatar_token, icon)
-
-        self.emit("avatar-updated", handle, icon)
+            self._conn[CONN_INTERFACE_AVATARS].RequestAvatar(handle,
+                    reply_handler=lambda *args: self._request_avatar_cb(handle, new_avatar_token, *args),
+                    error_handler=lambda *args: self._log_error_cb("getting avatar", *args))
+        else:
+            self.emit("avatar-updated", handle, icon)
 
     def _alias_changed_cb(self, aliases):
         """Handle update of aliases for all users"""
