@@ -41,6 +41,9 @@ class ActivityModel:
     def get_service_name(self):
         return self._bundle.get_service_name()
 
+    def get_title(self):
+        return self._activity.props.name
+
 class MeshModel(gobject.GObject):
     __gsignals__ = {
         'activity-added':       (gobject.SIGNAL_RUN_FIRST,

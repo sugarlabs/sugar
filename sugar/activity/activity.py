@@ -207,14 +207,19 @@ class Activity(Window, gtk.Container):
             self.jobject['preview'] = ''
             self.jobject['icon-color'] = profile.get_color().to_string()
             self.jobject.file_path = ''
-            try:
-                datastore.write(self.jobject)
-            except Exception, e:
-                logging.error(e)
+            datastore.write(self.jobject,
+                    reply_handler=self._internal_jobject_create_cb,
+                    error_handler=self._internal_jobject_error_cb)
         else:
             self.jobject = None
 
         self.connect('focus-out-event', self._focus_out_event_cb)
+
+    def _internal_jobject_create_cb(self):
+        pass
+
+    def _internal_jobject_error_cb(self, err):
+        logging.debug("Error creating activity datastore object: %s" % err)
 
     def _focus_out_event_cb(self, widget, event):
         if self.jobject:
@@ -234,6 +239,12 @@ class Activity(Window, gtk.Container):
         """
         raise NotImplementedError
 
+    def _internal_save_cb(self):
+        pass
+
+    def _internal_save_error_cb(self, err):
+        logging.debug("Error saving activity object to datastore: %s" % err)
+
     def save(self):
         """Request that the activity is saved to the Journal."""
         try:
@@ -241,7 +252,9 @@ class Activity(Window, gtk.Container):
             self.write_file()
         except NotImplementedError:
             self.jobject.file_path = ''
-        datastore.write(self.jobject)
+        datastore.write(self.jobject,
+                reply_handler=self._internal_save_cb,
+                error_handler=self._internal_save_error_cb)
 
     def _internal_joined_cb(self, activity, success, err):
         """Callback when join has finished"""
