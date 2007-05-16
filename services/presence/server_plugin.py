@@ -320,11 +320,22 @@ class ServerPlugin(gobject.GObject):
 
         # the group of contacts who may receive your presence
         publish = self._request_list_channel('publish')
-        publish_handles, local_pending, remote_pending = publish[CHANNEL_INTERFACE_GROUP].GetAllMembers()
+        self._publish_channel = publish
+        publish[CHANNEL_INTERFACE_GROUP].connect_to_signal('MembersChanged',
+                self._publish_members_changed_cb)
+        publish_handles, local_pending, remote_pending = \
+                publish[CHANNEL_INTERFACE_GROUP].GetAllMembers()
 
         # the group of contacts for whom you wish to receive presence
         subscribe = self._request_list_channel('subscribe')
-        subscribe_handles = subscribe[CHANNEL_INTERFACE_GROUP].GetMembers()
+        self._subscribe_channel = subscribe
+        subscribe[CHANNEL_INTERFACE_GROUP].connect_to_signal('MembersChanged',
+                self._subscribe_members_changed_cb)
+        subscribe_handles, subscribe_lp, subscribe_rp = \
+                subscribe[CHANNEL_INTERFACE_GROUP].GetAllMembers()
+        self._subscribe_members = set(subscribe_handles)
+        self._subscribe_local_pending = set(subscribe_lp)
+        self._subscribe_remote_pending = set(subscribe_rp)
 
         if local_pending:
             # accept pending subscriptions
@@ -364,8 +375,7 @@ class ServerPlugin(gobject.GObject):
         self._set_self_current_activity()
         self._set_self_avatar()
 
-        # Request presence for everyone on the channel
-        subscribe_handles = subscribe[CHANNEL_INTERFACE_GROUP].GetMembers()
+        # Request presence for everyone we're subscribed to
         self._conn[CONN_INTERFACE_PRESENCE].RequestPresence(subscribe_handles)
         return True
 
@@ -690,6 +700,13 @@ class ServerPlugin(gobject.GObject):
 
     def _contact_online(self, handle):
         """Handle a contact coming online"""
+        if (handle not in self._subscribe_members and
+                handle not in self._subscribe_local_pending and
+                handle not in self._subscribe_remote_pending):
+            # it's probably a channel-specific handle - can't create a Buddy
+            # object
+            return
+
         self._online_contacts[handle] = None
         if handle == self._conn[CONN_INTERFACE].GetSelfHandle():
             jid = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
@@ -701,6 +718,34 @@ class ServerPlugin(gobject.GObject):
         self._conn[CONN_INTERFACE_BUDDY_INFO].GetProperties(handle,
             reply_handler=lambda *args: self._contact_online_properties_cb(handle, *args),
             error_handler=lambda *args: self._contact_online_properties_error_cb(handle, *args))
+
+    def _subscribe_members_changed_cb(self, added, removed, local_pending,
+            remote_pending, actor, reason):
+        for handle in added:
+            self._subscribe_members.add(handle)
+        for handle in local_pending:
+            self._subscribe_local_pending.add(handle)
+        for handle in remote_pending:
+            self._subscribe_remote_pending.add(handle)
+        for handle in removed:
+            self._subscribe_members.discard(handle)
+            self._subscribe_local_pending.discard(handle)
+            self._subscribe_remote_pending.discard(handle)
+
+    def _publish_members_changed_cb(self, added, removed, local_pending,
+            remote_pending, actor, reason):
+
+        if local_pending:
+            # accept all requested subscriptions
+            self._publish_channel[CHANNEL_INTERFACE_GROUP].AddMembers(
+                    local_pending, '')
+
+        # subscribe to people who've subscribed to us, if necessary
+        added = list(set(added) - self._subscribe_members
+                     - self._subscribe_remote_pending)
+        if added:
+            self._subscribe_channel[CHANNEL_INTERFACE_GROUP].AddMembers(
+                    added, '')
 
     def _presence_update_cb(self, presence):
         """Send update for online/offline status of presence"""
