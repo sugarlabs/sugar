@@ -54,13 +54,18 @@ def create(properties, filename):
     logging.debug('dbus_helpers.create: ' + object_id)
     return object_id
 
-def update(uid, properties, filename):
+def update(uid, properties, filename, reply_handler=None, error_handler=None):
     logging.debug('dbus_helpers.update: %s, %s, %s' % (uid, properties, filename))
     try:
         logging.debug(get_contents(filename))
     except UnicodeDecodeError:
         pass
-    _data_store.update(uid, dbus.Dictionary(properties), filename)
+    if reply_handler and error_handler:
+        _data_store.update(uid, dbus.Dictionary(properties), filename,
+                reply_handler=reply_handler,
+                error_handler=error_handler)
+    else:
+        _data_store.update(uid, dbus.Dictionary(properties), filename)
 
 def get_properties(uid):
     props = _data_store.get_properties(uid)
@@ -76,8 +81,12 @@ def get_filename(uid):
         pass
     return filename
 
-def find(query):
-    return _data_store.find(query)
+def find(query, reply_handler, error_handler):
+    if reply_handler and error_handler:
+        return _data_store.find(query, reply_handler=reply_handler,
+                error_handler=error_handler)
+    else:
+        return _data_store.find(query)
 """
 
 

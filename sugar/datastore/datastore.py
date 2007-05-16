@@ -71,20 +71,22 @@ def get(object_id):
 def create():
     return DSObject(object_id=None, metadata={}, file_path=None)
 
-def write(ds_object):
+def write(ds_object, reply_handler=None, error_handler=None):
     logging.debug('datastore.write')
     if ds_object.object_id:
         dbus_helpers.update(ds_object.object_id,
                             ds_object.metadata,
-                            ds_object.file_path)
+                            ds_object.file_path,
+                            reply_handler=reply_handler,
+                            error_handler=error_handler)
     else:
         ds_object.object_id = dbus_helpers.create(ds_object.metadata,
                                                   ds_object.file_path)
         # TODO: register the object for updates
     logging.debug('Written object %s to the datastore.' % ds_object.object_id)
 
-def find(query):
-    object_ids = dbus_helpers.find({})
+def find(query, reply_handler=None, error_handler=None):
+    object_ids = dbus_helpers.find(query, reply_handler, error_handler)
     objects = []
     for object_id in object_ids:
         objects.append(get(object_id))
