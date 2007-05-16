@@ -101,6 +101,7 @@ class HomeModel(gobject.GObject):
             self._remove_activity(window.get_xid())
         if not self._activities:
             self.emit('active-activity-changed', None)
+            self._notify_activity_activation(self._current_activity, None)
 
     def _get_activity_by_xid(self, xid):
         for act in self._activities.values():
@@ -108,10 +109,25 @@ class HomeModel(gobject.GObject):
                 return act
         return None
 
+    def _notify_activity_activation(self, old_activity, new_activity):
+        if old_activity == new_activity:
+            return
+
+        if old_activity:
+            service = old_activity.get_service()
+            if service:
+                service.set_active(False)
+
+        if new_activity:
+            service = new_activity.get_service()
+            if service:
+                service.set_active(True)
+
     def _active_window_changed_cb(self, screen):
         window = screen.get_active_window()
         if window == None:
             self.emit('active-activity-changed', None)
+            self._notify_activity_activation(self._current_activity, None)
             return
         if window.get_window_type() != wnck.WINDOW_NORMAL:
             return
@@ -120,11 +136,14 @@ class HomeModel(gobject.GObject):
         act = self._get_activity_by_xid(window.get_xid())
         if act:
             if act.get_launched() == True:
+                self._notify_activity_activation(self._current_activity, act)
                 self._current_activity = act
             else:
+                self._notify_activity_activation(self._current_activity, None)
                 self._current_activity = None
                 logging.error('Activity for window %d was not yet launched.' % xid)
         else:
+            self._notify_activity_activation(self._current_activity, None)
             self._current_activity = None
             logging.error('Model for window %d does not exist.' % xid)
 
