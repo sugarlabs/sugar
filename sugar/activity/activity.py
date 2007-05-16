@@ -213,17 +213,11 @@ class Activity(Window, gtk.Container):
         else:
             self.jobject = None
 
-        self.connect('focus-out-event', self._focus_out_event_cb)
-
     def _internal_jobject_create_cb(self):
         pass
 
     def _internal_jobject_error_cb(self, err):
         logging.debug("Error creating activity datastore object: %s" % err)
-
-    def _focus_out_event_cb(self, widget, event):
-        if self.jobject:
-            self.save()
 
     def read_file(self):
         """
