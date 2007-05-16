@@ -689,11 +689,22 @@ class ServerPlugin(gobject.GObject):
         self._conn[CONN_INTERFACE_ALIASING].RequestAliases([handle],
             reply_handler=lambda *args: self._contact_online_aliases_cb(handle, props, *args),
             error_handler=lambda *args: self._contact_online_aliases_error_cb(handle, props, True, *args))
-        
-    def _contact_online_properties_error_cb(self, handle, err):
-        """Handle error retrieving property-set for a user (handle)"""
-        logging.debug("Handle %s - Error getting properties: %s" % (handle, err))
-        self._contact_offline(handle)
+
+    def _contact_online_request_properties(self, handle, tries):
+        self._conn[CONN_INTERFACE_BUDDY_INFO].GetProperties(handle,
+            reply_handler=lambda *args: self._contact_online_properties_cb(handle, *args),
+            error_handler=lambda *args: self._contact_online_properties_error_cb(handle, tries, *args))
+        return False
+
+    def _contact_online_properties_error_cb(self, handle, tries, err):
+        """Handle error retrieving property-set for a user (handle)"""        
+        if tries <= 3:
+            logging.debug("Handle %s - Error getting properties (will retry): %s" % (handle, err))
+            tries += 1
+            gobject.timeout_add(1000, self._contact_online_request_properties, handle, tries)
+        else:
+            logging.debug("Handle %s - Error getting properties: %s" % (handle, err))
+            self._contact_offline(handle)
 
     def _contact_online(self, handle):
         """Handle a contact coming online"""
@@ -705,9 +716,7 @@ class ServerPlugin(gobject.GObject):
             # are handled locally
             return
 
-        self._conn[CONN_INTERFACE_BUDDY_INFO].GetProperties(handle,
-            reply_handler=lambda *args: self._contact_online_properties_cb(handle, *args),
-            error_handler=lambda *args: self._contact_online_properties_error_cb(handle, *args))
+        self._contact_online_request_properties(handle, 1)
 
     def _presence_update_cb(self, presence):
         """Send update for online/offline status of presence"""
