@@ -146,6 +146,10 @@ class Activity(Window, gtk.Container):
         'joined': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
     }
 
+    __gproperties__ = {
+        'active': (bool, None, None, False, gobject.PARAM_READWRITE)
+    }
+
     def __init__(self, handle, create_jobject=True):
         """Initialise the Activity 
         
@@ -175,6 +179,7 @@ class Activity(Window, gtk.Container):
 
         self.connect('destroy', self._destroy_cb)
 
+        self._active = False
         self._activity_id = handle.activity_id
         self._pservice = presenceservice.get_instance()
         self._shared_activity = None
@@ -213,17 +218,22 @@ class Activity(Window, gtk.Container):
         else:
             self.jobject = None
 
-        self.connect('focus-out-event', self._focus_out_event_cb)
+    def do_set_property(self, pspec, value):
+        if pspec.name == 'active':
+            if self._active != value:
+                self._active = value
+                if not self._active and self.jobject:
+                    self.save()
+
+    def do_get_property(self, pspec):
+        if pspec.name == 'active':
+            return self._active
 
     def _internal_jobject_create_cb(self):
         pass
 
     def _internal_jobject_error_cb(self, err):
         logging.debug("Error creating activity datastore object: %s" % err)
-
-    def _focus_out_event_cb(self, widget, event):
-        if self.jobject:
-            self.save()
 
     def read_file(self):
         """

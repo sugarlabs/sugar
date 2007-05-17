@@ -15,6 +15,8 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+import logging
+
 import dbus
 import dbus.service
 
@@ -81,3 +83,7 @@ class ActivityService(dbus.service.Object):
     def execute(self, command, args):
         return self._activity.execute(command, args)
 
+    @dbus.service.method(_ACTIVITY_INTERFACE)
+    def set_active(self, active):
+        logging.debug('ActivityService.set_active: %s.' % active)
+        self._activity.props.active = active

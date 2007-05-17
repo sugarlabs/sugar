@@ -40,7 +40,6 @@ class ComboBox(gtk.ComboBox):
         self.set_model(self._model)
 
         self.set_row_separator_func(self._is_separator)
-        self.connect('realize', self._realize_cb)
 
     def do_get_property(self, pspec):
         if pspec.name == 'value':
@@ -48,10 +47,6 @@ class ComboBox(gtk.ComboBox):
              return action_id
         else:
             return gtk.ComboBox.do_get_property(self, pspec)
-
-    def _realize_cb(self, widget, data=None):
-        if self.get_active() == -1:
-            self.set_active(0)
 
     def append_item(self, action_id, text, icon_name=None):
         if not self._icon_renderer and icon_name:
