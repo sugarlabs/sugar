@@ -386,7 +386,14 @@ class Buddy(ExportedGObject):
         # to avoid leaking a PropertyChanged signal before the buddy is
         # actually valid the first time after creation
         if self._valid:
-            self.PropertyChanged(changed_props)
+            dbus_changed = {}
+            for key, value in changed_props.items():
+                if value:
+                    dbus_changed[key] = value
+                else:
+                    dbus_changed[key] = ""
+            self.PropertyChanged(dbus_changed)
+
             self.emit('property-changed', changed_props)
 
         self._update_validity()
