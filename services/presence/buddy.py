@@ -457,6 +457,11 @@ class GenericOwner(Buddy):
             self._registered = kwargs["registered"]
             del kwargs["registered"]
 
+        self._ip4_addr_monitor = psutils.IP4AddressMonitor.get_instance()
+        self._ip4_addr_monitor.connect("address-changed", self._ip4_address_changed_cb)
+        if self._ip4_addr_monitor.props.address:
+            kwargs["ip4-address"] = self._ip4_addr_monitor.props.address
+        
         Buddy.__init__(self, bus_name, object_id, **kwargs)
         self._owner = True
 
@@ -465,9 +470,6 @@ class GenericOwner(Buddy):
                                     signal_name="NameOwnerChanged",
                                     dbus_interface="org.freedesktop.DBus")
 
-        self._ip4_addr_monitor = psutils.IP4AddressMonitor.get_instance()
-        self._ip4_addr_monitor.connect("address-changed", self._ip4_address_changed_cb)
-        
     def _ip4_address_changed_cb(self, monitor, address):
         """Handle IPv4 address change, set property to generate event"""
         props = {_PROP_IP4_ADDRESS: address}
