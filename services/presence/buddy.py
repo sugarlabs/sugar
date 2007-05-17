@@ -236,6 +236,28 @@ class Buddy(ExportedGObject):
             full set of properties, just the changes.
         """
 
+    @dbus.service.signal(_BUDDY_INTERFACE, signature='sou')
+    def TelepathyHandleAdded(self, tp_conn_name, tp_conn_path, handle):
+        """Another Telepathy handle has become associated with the buddy.
+
+        This must only be emitted for non-channel-specific handles.
+
+        tp_conn_name -- The bus name at which the Telepathy connection may be
+            found
+        tp_conn_path -- The object path at which the Telepathy connection may
+            be found
+        handle -- The handle of type CONTACT, which is not channel-specific,
+            newly associated with the buddy
+        """
+
+    @dbus.service.signal(_BUDDY_INTERFACE, signature='sou')
+    def TelepathyHandleRemoved(self, tp_conn_name, tp_conn_path, handle):
+        """A Telepathy handle has ceased to be associated with the buddy,
+        probably because that contact went offline.
+
+        The parameters are the same as for TelepathyHandleAdded.
+        """
+
     # dbus methods
     @dbus.service.method(_BUDDY_INTERFACE,
                         in_signature="", out_signature="ay")
@@ -293,6 +315,22 @@ class Buddy(ExportedGObject):
         else:
             props[_PROP_CURACT] = ""
         return props
+
+    @dbus.service.method(_BUDDY_INTERFACE,
+                         in_signature='', out_signature='a(sou)')
+    def GetTelepathyHandles(self):
+        """Return a list of non-channel-specific Telepathy contact handles
+        associated with this Buddy.
+
+        :Returns:
+            An array of triples (connection well-known bus name, connection
+            object path, handle).
+        """
+        ret = []
+        for plugin in self.handles:
+            conn = plugin.get_connection()
+            ret.append((str(conn.service_name), conn.object_path,
+                        self.handles[plugin]))
 
     # methods
     def object_path(self):
