@@ -23,17 +23,8 @@ import dbus.exceptions
 import dbus.glib
 import gobject
 
-# XXX use absolute imports
-#   from sugar.presence import buddy, activity
-# this *kind* of relative import is deprecated
-# with an explicit relative import slated to be 
-# introduced (available in Python 2.5 with a __future__
-# import), that would read as:
-#   from . import buddy, activity 
-# see PEP: http://docs.python.org/whatsnew/pep-328.html
-
-import buddy
-from activity import Activity
+from sugar.presence.buddy import Buddy
+from sugar.presence.activity import Activity
 
 
 DBUS_SERVICE = "org.laptop.Sugar.Presence"
@@ -163,7 +154,7 @@ class PresenceService(gobject.GObject):
             obj = self._objcache[object_path]
         except KeyError:
             if object_path.startswith(self._PS_BUDDY_OP):
-                obj = buddy.Buddy(self._bus, self._new_object,
+                obj = Buddy(self._bus, self._new_object,
                         self._del_object, object_path)
             elif object_path.startswith(self._PS_ACTIVITY_OP):
                 obj = Activity(self._bus, self._new_object,
