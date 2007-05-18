@@ -125,6 +125,7 @@ class ServerPlugin(gobject.GObject):
         """
         gobject.GObject.__init__(self)
 
+        self._conn = None
         self._icon_cache = BuddyIconCache()
 
         self._registry = registry
