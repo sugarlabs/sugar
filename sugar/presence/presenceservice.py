@@ -16,8 +16,12 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-import dbus, dbus.glib, gobject
 import logging
+
+import dbus
+import dbus.exceptions
+import dbus.glib
+import gobject
 
 # XXX use absolute imports
 #   from sugar.presence import buddy, activity
