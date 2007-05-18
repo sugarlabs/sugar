@@ -34,6 +34,16 @@ class Toolbox(gtk.VBox):
         self._notebook.set_show_tabs(False)
         self.pack_start(self._notebook)
         self._notebook.show()
+                
+    def _toolbar_box_expose_cb(self, widget, event):
+        widget.style.paint_flat_box(widget.window,
+                                    gtk.STATE_NORMAL, gtk.SHADOW_NONE,
+                                    event.area, widget, 'toolbox',
+                                    widget.allocation.x,
+                                    widget.allocation.y,
+                                    widget.allocation.width,
+                                    widget.allocation.height)
+        return False
         
     def add_toolbar(self, name, toolbar):
         label = gtk.Label(name)
@@ -42,7 +52,8 @@ class Toolbox(gtk.VBox):
 
         toolbar_box = gtk.HBox()
         toolbar_box.pack_start(toolbar, True, True, units.grid_to_pixels(1))
-            
+        toolbar_box.connect('expose-event', self._toolbar_box_expose_cb)
+
         self._notebook.append_page(toolbar_box, label)
         toolbar_box.show()
 
