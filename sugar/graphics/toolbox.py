@@ -52,6 +52,7 @@ class Toolbox(gtk.VBox):
 
         toolbar_box = gtk.HBox()
         toolbar_box.pack_start(toolbar, True, True, units.grid_to_pixels(1))
+        toolbar_box.set_size_request(-1, units.grid_to_pixels(1))
         toolbar_box.connect('expose-event', self._toolbar_box_expose_cb)
 
         self._notebook.append_page(toolbar_box, label)
