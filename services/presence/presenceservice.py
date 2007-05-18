@@ -126,12 +126,12 @@ class PresenceService(ExportedGObject):
             objid = self._get_next_object_id()
             buddy = Buddy(self._bus_name, objid, key=key)
             buddy.connect("validity-changed", self._buddy_validity_changed_cb)
+            buddy.connect("disappeared", self._buddy_disappeared_cb)
             self._buddies[key] = buddy
 
-        buddies = self._handles_buddies[tp]
-        buddies[handle] = buddy
+        self._handles_buddies[tp][handle] = buddy
         # store the handle of the buddy for this CM
-        buddy.handles[tp] = handle
+        buddy.add_telepathy_handle(tp, handle)
 
         buddy.set_properties(props)
 
@@ -143,6 +143,12 @@ class PresenceService(ExportedGObject):
             self.BuddyDisappeared(buddy.object_path())
             _logger.debug("Buddy left: %s (%s)" % (buddy.props.nick, buddy.props.color))
 
+    def _buddy_disappeared_cb(self, buddy):
+        if buddy.props.valid:
+            self.BuddyDisappeared(buddy.object_path())
+            _logger.debug('Buddy left: %s (%s)' % (buddy.props.nick, buddy.props.color)
+        self._buddies.pop(buddy.props.key)
+
     def _contact_offline(self, tp, handle):
         if not self._handles_buddies[tp].has_key(handle):
             return
@@ -151,12 +157,7 @@ class PresenceService(ExportedGObject):
         key = buddy.props.key
 
         # the handle of the buddy for this CM is not valid anymore
-        buddy.handles.pop(tp)
-        if not buddy.handles:
-            if buddy.props.valid:
-                self.BuddyDisappeared(buddy.object_path())
-                _logger.debug("Buddy left: %s (%s)" % (buddy.props.nick, buddy.props.color))
-            self._buddies.pop(key)
+        buddy.remove_telepathy_handle(tp, handle)
 
     def _get_next_object_id(self):
         """Increment and return the object ID counter."""
@@ -303,6 +304,42 @@ class PresenceService(ExportedGObject):
             if buddy.props.valid:
                 return buddy.object_path()
         raise NotFoundError("The buddy was not found.")
+
+    @dbus.service.method(_PRESENCE_INTERFACE, in_signature='sou',
+                         out_signature='o')
+    def GetBuddyByTelepathyHandle(self, tp_conn_name, tp_conn_path, handle):
+        """Get the buddy corresponding to a Telepathy handle.
+
+        :Parameters:
+            `tp_conn_name` : str
+                The well-known bus name of a Telepathy connection
+            `tp_conn_path` : dbus.ObjectPath
+                The object path of the Telepathy connection
+            `handle` : int or long
+                The handle of a Telepathy contact on that connection,
+                of type HANDLE_TYPE_CONTACT. This may not be a
+                channel-specific handle.
+        :Returns: the object path of a Buddy
+        :Raises NotFoundError: if the buddy is not found.
+        """
+        for tp, handles in self._handles_buddies.iteritems():
+            conn = tp.get_connection()
+            if conn is None:
+                continue
+            if (conn.service_name == tp_conn_name
+                and conn.object_path == tp_conn_path):
+                buddy = handles.get(handle)
+                if buddy is not None and buddy.props.valid:
+                        return buddy.object_path()
+                # either the handle is invalid, or we don't have a Buddy
+                # object for that buddy because we don't have all their
+                # details yet
+                raise NotFoundError("The buddy %u was not found on the "
+                                    "connection to %s:%s"
+                                    % (handle, tp_conn_name, tp_conn_path))
+        raise NotFoundError("The buddy %u was not found: we have no "
+                            "connection to %s:%s" % (handle, tp_conn_name,
+                                                     tp_conn_path))
 
     @dbus.service.method(_PRESENCE_INTERFACE, out_signature="o")
     def GetOwner(self):
