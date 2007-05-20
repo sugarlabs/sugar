@@ -201,12 +201,14 @@ class Activity(Window, gtk.Container):
 
         if handle.object_id:
             self.jobject = datastore.get(handle.object_id)
+            self.jobject.object_id = ''
+            del self.jobject['ctime']
+            del self.jobject['mtime']
         elif create_jobject:
             logging.debug('Creating a jobject.')
             self.jobject = datastore.create()
             self.jobject['title'] = '%s %s' % (get_bundle_name(), 'Activity')
             self.jobject['activity'] = self.get_service_name()
-            self.jobject['date'] = str(time.time())
             self.jobject['icon'] = self._get_icon()
             self.jobject['keep'] = '0'
             self.jobject['buddies'] = ''
