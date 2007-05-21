@@ -8,9 +8,7 @@ sugar-xo.gtkrc: gtkrc.em
 
 sugardir = $(pkgdatadir)/data
 sugar_DATA =		\
-	$(GTKRC_FILES)	\
-	gecko-prefs.js	\
-	mime.types
+	$(GTKRC_FILES)
 
 GTKRC_FILES =		\
 	sugar.gtkrc	\
