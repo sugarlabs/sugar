@@ -146,7 +146,7 @@ class PresenceService(ExportedGObject):
     def _buddy_disappeared_cb(self, buddy):
         if buddy.props.valid:
             self.BuddyDisappeared(buddy.object_path())
-            _logger.debug('Buddy left: %s (%s)' % (buddy.props.nick, buddy.props.color)
+            _logger.debug('Buddy left: %s (%s)' % (buddy.props.nick, buddy.props.color))
         self._buddies.pop(buddy.props.key)
 
     def _contact_offline(self, tp, handle):
