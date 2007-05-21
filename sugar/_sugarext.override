@@ -1,0 +1,20 @@
+/* -*- Mode: C; c-basic-offset: 4 -*- */
+%%
+headers
+#include <Python.h>
+
+#include "pygobject.h"
+#include "sugar-address-entry.h"
+
+#include <pygtk/pygtk.h>
+#include <glib.h>
+
+%%
+modulename _sugarext
+%%
+import gtk.Entry as PyGtkEntry_Type
+%%
+ignore-glob
+  *_get_type
+  _*
+%%

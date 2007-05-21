@@ -2,4 +2,5 @@
 export ACLOCAL="aclocal -I m4"
 
 autoreconf -i
+intltoolize
 ./configure "$@"

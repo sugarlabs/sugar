@@ -1,0 +1,9 @@
+;; -*- scheme -*-
+; object definitions ...
+
+(define-object AddressEntry
+  (in-module "Sugar")
+  (parent "GtkEntry")
+  (c-name "SugarAddressEntry")
+  (gtype-id "SUGAR_TYPE_ADDRESS_ENTRY")
+)
