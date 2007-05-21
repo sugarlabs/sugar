@@ -40,7 +40,7 @@ def create(properties, filename):
     return object_id
 
 def update(uid, properties, filename, reply_handler=None, error_handler=None):
-    logging.debug('dbus_helpers.update')
+    logging.debug('dbus_helpers.update: %s, %s' % (uid, filename))
     if reply_handler and error_handler:
         _data_store.update(uid, dbus.Dictionary(properties), filename,
                 reply_handler=reply_handler,
