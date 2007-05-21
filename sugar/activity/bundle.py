@@ -78,10 +78,14 @@ class Bundle:
         if cp.has_option(section, 'class'):
             self._class = cp.get(section, 'class')
             self._exec = '%s --bundle-path="%s"' % (
-              env.get_bin_path(_PYTHON_FACTORY), self.get_path())
+              env.get_bin_path(_PYTHON_FACTORY), self._path)
         elif cp.has_option(section, 'exec'):
             self._class = None
-            self._exec = cp.get(section, 'exec')
+            cmdline = cp.get(section, 'exec')
+            cmdline = os.path.join(self._path, cmdline)
+            cmdline = cmdline.replace('$SUGAR_BUNDLE_PATH', self._path) 
+            cmdline = os.path.expandvars(cmdline)
+            self._exec = cmdline
         else:
             self._exec = None
             self._valid = False

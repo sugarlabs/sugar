@@ -39,6 +39,9 @@ class DSObject(gobject.GObject):
             self.metadata[key] = value
             self.emit('updated')
 
+    def __delitem__(self, key):
+        del self.metadata[key]
+
     def get_metadata(self):
         return self._metadata
     

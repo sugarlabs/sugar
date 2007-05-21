@@ -690,8 +690,9 @@ sugar_browser_init(SugarBrowser *browser)
 					 G_CALLBACK(title_cb), NULL);
 	g_signal_connect(G_OBJECT(browser), "location",
 					 G_CALLBACK(location_cb), NULL);
-	g_signal_connect(G_OBJECT(browser), "dom-mouse-click",
+/*	g_signal_connect(G_OBJECT(browser), "dom-mouse-click",
 					 G_CALLBACK(dom_mouse_click_cb), NULL);
+*/
 }
 
 int

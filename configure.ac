@@ -57,22 +57,6 @@ AC_SUBST(MOZILLA_INCLUDE_DIR)
 AC_SUBST(XPIDL)
 AC_SUBST(MOZILLA_IDL_DIR)
 
-PKG_CHECK_MODULES(NSPR, [nspr],
-  [have_nspr=true],
-  [
-PKG_CHECK_MODULES(NSPR, [mozilla-nspr],
-  [have_nspr=true],
-  [
-PKG_CHECK_MODULES(NSPR, [xulrunner-nspr],
-  [have_nspr=true],
-  have_nspr=false)
-  ])
-  ])
-
-if test "x$have_nspr" = xfalse; then
-  AC_MSG_ERROR([Could not find nspr])
-fi
-
 else
 
 AC_MSG_ERROR([Must specify the xulrunner sdk dir (--with-libxul-sdk)])
