@@ -49,6 +49,9 @@ _PROP_VALID = "valid"
 # Will go away soon
 _PROP_IP4_ADDRESS = "ip4-address"
 
+_logger = logging.getLogger('s-p-s.buddy')
+
+
 class Buddy(ExportedGObject):
     """Person on the network (tracks properties and shared activites)
     
@@ -130,7 +133,7 @@ class Buddy(ExportedGObject):
         _ALLOWED_INIT_PROPS = [_PROP_NICK, _PROP_KEY, _PROP_ICON, _PROP_CURACT, _PROP_COLOR, _PROP_IP4_ADDRESS]
         for (key, value) in kwargs.items():
             if key not in _ALLOWED_INIT_PROPS:
-                logging.debug("Invalid init property '%s'; ignoring..." % key)
+                _logger.debug("Invalid init property '%s'; ignoring..." % key)
                 del kwargs[key]
 
         # Set icon after superclass init, because it sends DBus and GObject
@@ -634,7 +637,7 @@ class TestOwner(GenericOwner):
         color = xocolor.XoColor().to_string()
         icon = _get_random_image()
 
-        logging.debug("pubkey is %s" % pubkey)
+        _logger.debug("pubkey is %s" % pubkey)
         GenericOwner.__init__(self, ps, bus_name, object_id, key=pubkey, nick=nick,
                 color=color, icon=icon, registered=registered, key_hash=privkey_hash)
 
@@ -645,13 +648,13 @@ class TestOwner(GenericOwner):
     def _share_reply_cb(self, actid, object_path):
         activity = self._ps.internal_get_activity(actid)
         if not activity or not object_path:
-            logging.debug("Couldn't find activity %s even though it was shared." % actid)
+            _logger.debug("Couldn't find activity %s even though it was shared." % actid)
             return
-        logging.debug("Shared activity %s (%s)." % (actid, activity.props.name))
+        _logger.debug("Shared activity %s (%s)." % (actid, activity.props.name))
         self._test_activities.append(activity)
 
     def _share_error_cb(self, actid, err):
-        logging.debug("Error sharing activity %s: %s" % (actid, str(err)))
+        _logger.debug("Error sharing activity %s: %s" % (actid, str(err)))
 
     def _ps_connection_status_cb(self, ps, connected):
         if not connected:
@@ -744,7 +747,7 @@ def _hash_private_key(self):
         lines = f.readlines()
         f.close()
     except IOError, e:
-        logging.error("Error reading private key: %s" % e)
+        _logger.error("Error reading private key: %s" % e)
         return
 
     key = ""
@@ -756,7 +759,7 @@ def _hash_private_key(self):
             continue
         key += l
     if not len(key):
-        logging.error("Error parsing public key.")
+        _logger.error("Error parsing public key.")
 
     # hash it
     key_hash = util._sha_data(key)
@@ -768,7 +771,7 @@ def _extract_public_key(keyfile):
         lines = f.readlines()
         f.close()
     except IOError, e:
-        logging.error("Error reading public key: %s" % e)
+        _logger.error("Error reading public key: %s" % e)
         return None
 
     # Extract the public key
@@ -781,7 +784,7 @@ def _extract_public_key(keyfile):
         key = l[len(magic):]
         break
     if not len(key):
-        logging.error("Error parsing public key.")
+        _logger.error("Error parsing public key.")
         return None
     return key
 
@@ -793,7 +796,7 @@ def _extract_private_key(keyfile):
         lines = f.readlines()
         f.close()
     except IOError, e:
-        logging.error("Error reading private key: %s" % e)
+        _logger.error("Error reading private key: %s" % e)
         return None
 
     key = ""
@@ -805,7 +808,7 @@ def _extract_private_key(keyfile):
             continue
         key += l
     if not len(key):
-        logging.error("Error parsing private key.")
+        _logger.error("Error parsing private key.")
         return None
     return key
 
@@ -830,7 +833,7 @@ def _get_new_keypair(num):
     print "Done."
     pubkey = privkey = None
     if s != 0:
-        logging.error("Could not generate key pair: %d (%s)" % (s, o))
+        _logger.error("Could not generate key pair: %d (%s)" % (s, o))
     else:
         pubkey = _extract_public_key(pubkeyfile)
         privkey = _extract_private_key(privkeyfile)

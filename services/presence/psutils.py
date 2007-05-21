@@ -18,6 +18,9 @@ import dbus, dbus.glib, gobject
 import logging
 
 
+_logger = logging.getLogger('s-p-s.psutils')
+
+
 def bytes_to_string(bytes):
     """The function converts a  D-BUS byte array provided by dbus to string format.
     
@@ -92,7 +95,7 @@ class IP4AddressMonitor(gobject.GObject):
             return
 
         self._addr = new_addr
-        logging.debug("IP4 address now '%s'" % new_addr)
+        _logger.debug("IP4 address now '%s'" % new_addr)
         self.emit('address-changed', new_addr)
 
     def _connect_to_nm(self):
@@ -102,7 +105,7 @@ class IP4AddressMonitor(gobject.GObject):
             proxy = sys_bus.get_object(NM_SERVICE, NM_PATH)
             self._nm_obj = dbus.Interface(proxy, NM_IFACE)
         except dbus.DBusException, err:
-            logging.debug("Error finding NetworkManager: %s" % err)
+            _logger.debug("Error finding NetworkManager: %s" % err)
             self._nm_present = False
             return
 
@@ -115,13 +118,13 @@ class IP4AddressMonitor(gobject.GObject):
         match = sys_bus.add_signal_receiver(self._nm_device_no_longer_active_cb,
                                             signal_name="DeviceNoLongerActive",
                                             dbus_interface=NM_IFACE,
-                                            named_service=NM_SERVICE)
+                                            bus_name=NM_SERVICE)
         self._matches.append(match)
 
         match = sys_bus.add_signal_receiver(self._nm_state_change_cb,
                                             signal_name="StateChange",
                                             dbus_interface=NM_IFACE,
-                                            named_service=NM_SERVICE)
+                                            bus_name=NM_SERVICE)
         self._matches.append(match)
 
         state = self._nm_obj.state()
@@ -141,7 +144,7 @@ class IP4AddressMonitor(gobject.GObject):
         self._update_address(props[6])
 
     def _device_properties_error_cb(self, err):
-        logging.debug("Error querying device properties: %s" % err)
+        _logger.debug("Error querying device properties: %s" % err)
 
     def _query_device_properties(self, device):
         sys_bus = dbus.SystemBus()
@@ -156,7 +159,7 @@ class IP4AddressMonitor(gobject.GObject):
             self._query_device_properties(op)
 
     def _get_devices_error_cb(self, err):
-        logging.debug("Error getting NetworkManager devices: %s" % err)
+        _logger.debug("Error getting NetworkManager devices: %s" % err)
 
     def _query_devices(self):
         """Query NM for a list of network devices"""

@@ -32,7 +32,6 @@ PKG_CHECK_MODULES(SHELL, gtk+-2.0 gstreamer-0.10 gstreamer-plugins-base-0.10)
 PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
 AC_SUBST(PYGTK_DEFSDIR)
 
-#
 # Setup GETTEXT
 #
 ALL_LINGUAS="it ha ig yo"

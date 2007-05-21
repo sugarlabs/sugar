@@ -28,6 +28,7 @@ import gtk, gobject
 
 from sugar.presence import presenceservice
 from sugar.activity.activityservice import ActivityService
+from sugar.activity import bundleregistry
 from sugar.graphics.window import Window
 from sugar.graphics.toolbox import Toolbox
 from sugar.graphics.toolbutton import ToolButton
@@ -200,13 +201,15 @@ class Activity(Window, gtk.Container):
 
         if handle.object_id:
             self.jobject = datastore.get(handle.object_id)
+            self.jobject.object_id = ''
+            del self.jobject['ctime']
+            del self.jobject['mtime']
         elif create_jobject:
             logging.debug('Creating a jobject.')
             self.jobject = datastore.create()
             self.jobject['title'] = '%s %s' % (get_bundle_name(), 'Activity')
             self.jobject['activity'] = self.get_service_name()
-            self.jobject['date'] = str(time.time())
-            self.jobject['icon'] = ''
+            self.jobject['icon'] = self._get_icon()
             self.jobject['keep'] = '0'
             self.jobject['buddies'] = ''
             self.jobject['preview'] = ''
@@ -328,6 +331,10 @@ class Activity(Window, gtk.Container):
                 self.destroy()
                 raise
         self.destroy()
+
+    def _get_icon(self):
+        registry = bundleregistry.get_registry()
+        return registry.get_bundle(self.get_service_name()).get_icon()
 
 def get_bundle_name():
     """Return the bundle name for the current process' bundle

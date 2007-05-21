@@ -123,7 +123,7 @@ class _IconCache:
             del self._icons[evict_key]
 
     def get_handle(self, name, fill_color, stroke_color):
-        if name == None:
+        if not name:
             return None
 
         if name[0:6] == "theme:": 

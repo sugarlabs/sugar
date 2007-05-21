@@ -36,6 +36,8 @@ _PROP_LOCAL = "local"
 _PROP_JOINED = "joined"
 _PROP_CUSTOM_PROPS = "custom-props"
 
+_logger = logging.getLogger('s-p-s.activity')
+
 class Activity(ExportedGObject):
     """Represents a potentially shareable activity on the network.
     """
@@ -359,7 +361,7 @@ class Activity(ExportedGObject):
         Called by the _shared_cb and _joined_cb methods.
         """
         if not text_channel:
-            logging.debug("Error sharing: text channel was None, shouldn't happen")
+            _logger.debug("Error sharing: text channel was None, shouldn't happen")
             raise RuntimeError("Plugin returned invalid text channel")
 
         self._text_channel = text_channel
@@ -379,14 +381,14 @@ class Activity(ExportedGObject):
         self._tp.disconnect(sigid)
 
         if exc:
-            logging.debug("Share of activity %s failed: %s" % (self._id, exc))
+            _logger.debug("Share of activity %s failed: %s" % (self._id, exc))
             async_err_cb(exc)
         else:
             self._handle_share_join(tp, text_channel)
             self.send_properties()
             owner.add_activity(self)
             async_cb(dbus.ObjectPath(self._object_path))
-            logging.debug("Share of activity %s succeeded." % self._id)
+            _logger.debug("Share of activity %s succeeded." % self._id)
 
     def _share(self, (async_cb, async_err_cb), owner):
         """XXX - not documented yet
@@ -394,13 +396,13 @@ class Activity(ExportedGObject):
         XXX - This method is called externally by the PresenceService despite the fact
         that this is supposed to be an internal method!
         """
-        logging.debug("Starting share of activity %s" % self._id)
+        _logger.debug("Starting share of activity %s" % self._id)
         if self._joined:
             async_err_cb(RuntimeError("Already shared activity %s" % self.props.id))
             return
         sigid = self._tp.connect('activity-shared', self._shared_cb)
         self._tp.share_activity(self.props.id, (sigid, owner, async_cb, async_err_cb))
-        logging.debug("done with share attempt %s" % self._id)
+        _logger.debug("done with share attempt %s" % self._id)
 
     def _joined_cb(self, tp, activity_id, text_channel, exc, userdata):
         """XXX - not documented yet
@@ -506,7 +508,7 @@ class Activity(ExportedGObject):
             if type != self._type:
                 # Type can never be changed after first set
                 if self._type:
-                    logging.debug("Activity type changed by network; this is illegal")
+                    _logger.debug("Activity type changed by network; this is illegal")
                 else:
                     self._type = type
                     changed = True
