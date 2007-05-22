@@ -146,6 +146,12 @@ class ServerPlugin(gobject.GObject):
         self._ip4am = psutils.IP4AddressMonitor.get_instance()
         self._ip4am.connect('address-changed', self._ip4_address_changed_cb)
 
+        self._publish_channel = None
+        self._subscribe_channel = None
+        self._subscribe_members = set()
+        self._subscribe_local_pending = set()
+        self._subscribe_remote_pending = set()
+
     def _ip4_address_changed_cb(self, ip4am, address):
         _logger.debug("::: IP4 address now %s" % address)
         if address:
