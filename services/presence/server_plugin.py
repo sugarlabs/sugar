@@ -30,12 +30,14 @@ import psutils
 from telepathy.client import ConnectionManager, ManagerRegistry, Connection, Channel
 from telepathy.interfaces import (
     CONN_MGR_INTERFACE, CONN_INTERFACE, CHANNEL_TYPE_CONTACT_LIST, CHANNEL_INTERFACE_GROUP, CONN_INTERFACE_ALIASING,
-    CONN_INTERFACE_AVATARS, CONN_INTERFACE_PRESENCE, CHANNEL_TYPE_TEXT, CHANNEL_TYPE_STREAMED_MEDIA)
+    CONN_INTERFACE_AVATARS, CONN_INTERFACE_PRESENCE, CHANNEL_TYPE_TEXT, CHANNEL_TYPE_STREAMED_MEDIA,
+    PROPERTIES_INTERFACE)
 from telepathy.constants import (
     CONNECTION_HANDLE_TYPE_NONE, CONNECTION_HANDLE_TYPE_CONTACT,
     CONNECTION_STATUS_CONNECTED, CONNECTION_STATUS_DISCONNECTED, CONNECTION_STATUS_CONNECTING,
     CONNECTION_HANDLE_TYPE_LIST, CONNECTION_HANDLE_TYPE_CONTACT, CONNECTION_HANDLE_TYPE_ROOM,
-    CONNECTION_STATUS_REASON_AUTHENTICATION_FAILED)
+    CONNECTION_STATUS_REASON_AUTHENTICATION_FAILED,
+    PROPERTY_FLAG_WRITE)
 
 CONN_INTERFACE_BUDDY_INFO = 'org.laptop.Telepathy.BuddyInfo'
 CONN_INTERFACE_ACTIVITY_PROPERTIES = 'org.laptop.Telepathy.ActivityProperties'
@@ -422,11 +424,42 @@ class ServerPlugin(gobject.GObject):
                 reply_handler=self._set_self_avatar_cb,
                 error_handler=lambda *args: self._log_error_cb("setting avatar", *args))
 
-    def _join_activity_create_channel_cb(self, activity_id, signal, handle, userdata, chan_path):
-        channel = Channel(self._conn._dbus_object._named_service, chan_path)
+    def _join_activity_channel_props_set_cb(self, activity_id, signal, handle, channel, userdata):
         self._joined_activities.append((activity_id, handle))
         self._set_self_activities()
         self.emit(signal, activity_id, channel, None, userdata)
+
+    def _join_activity_channel_props_listed_cb(self, activity_id, signal, handle, channel, userdata, props, prop_specs):
+
+        props_to_set = []
+        for ident, name, sig, flags in prop_specs:
+            value = props.pop(name, None)
+            if value is not None:
+                if flags & PROPERTY_FLAG_WRITE:
+                    props_to_set.append((ident, value))
+                # FIXME: else error, but only if we're creating the room?
+        # FIXME: if props is nonempty, then we want to set props that aren't
+        # supported here - raise an error?
+
+        if props_to_set:
+            channel[PROPERTIES_INTERFACE].SetProperties(props_to_set,
+                reply_handler=lambda: self._join_activity_channel_props_set_cb(activity_id, signal, handle, channel, userdata),
+                error_handler=lambda e: self._join_error_cb(activity_id, signal, userdata, 'SetProperties(%r)' % props_to_set, e))
+        else:
+            self._join_activity_channel_props_set_cb(activity_id, signal, handle, channel, userdata)
+
+    def _join_activity_create_channel_cb(self, activity_id, signal, handle, userdata, chan_path):
+        channel = Channel(self._conn._dbus_object._named_service, chan_path)
+        props = {
+            'anonymous': False,         # otherwise buddy resolution breaks
+            'invite-only': False,       # XXX: should be True in future
+            #'name': ...                # XXX: set from activity name?
+            'persistent': False,        # vanish when there are no members
+            'private': False,           # XXX: should be True unless public
+        }
+        channel[PROPERTIES_INTERFACE].ListProperties(
+            reply_handler=lambda prop_specs: self._join_activity_channel_props_listed_cb(activity_id, signal, handle, channel, userdata, props, prop_specs),
+            error_handler=lambda e: self._join_error_cb(activity_id, signal, userdata, 'ListProperties', e))
 
     def _join_activity_get_channel_cb(self, activity_id, signal, userdata, handles):
         if not self._activities.has_key(activity_id):
@@ -441,10 +474,10 @@ class ServerPlugin(gobject.GObject):
         self._conn[CONN_INTERFACE].RequestChannel(CHANNEL_TYPE_TEXT,
             CONNECTION_HANDLE_TYPE_ROOM, handles[0], True,
             reply_handler=lambda *args: self._join_activity_create_channel_cb(activity_id, signal, handles[0], userdata, *args),
-            error_handler=lambda *args: self._join_error_cb(activity_id, signal, userdata, *args))
+            error_handler=lambda e: self._join_error_cb(activity_id, signal, userdata, 'RequestChannel(TEXT, ROOM, %r, True)' % handles[0], e))
 
-    def _join_error_cb(self, activity_id, signal, userdata, err):
-        e = Exception("Error joining/sharing activity %s: %s" % (activity_id, err))
+    def _join_error_cb(self, activity_id, signal, userdata, where, err):
+        e = Exception("Error joining/sharing activity %s: (%s): %s" % (activity_id, err))
         _logger.debug(str(e))
         self.emit(signal, activity_id, None, e, userdata)
 
