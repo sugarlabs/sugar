@@ -107,12 +107,19 @@ class PresenceService(ExportedGObject):
         _logger.debug("Disconnected from session bus!!!")
 
     def _server_status_cb(self, plugin, status, reason):
+
         # FIXME: figure out connection status when we have a salut plugin too
         old_status = self._connected
         if status == CONNECTION_STATUS_CONNECTED:
             self._connected = True
+            self._handles_buddies[plugin][plugin.self_handle] = self._owner
+            self._owner.add_telepathy_handle(plugin, plugin.self_handle)
         else:
             self._connected = False
+            if plugin.self_handle is not None:
+                self._handles_buddies.setdefault(plugin, {}).pop(
+                        plugin.self_handle, None)
+                self._owner.remove_telepathy_handle(plugin, plugin.self_handle)
 
         if self._connected != old_status:
             self.emit('connection-status', self._connected)

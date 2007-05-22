@@ -137,6 +137,7 @@ class ServerPlugin(gobject.GObject):
         self._owner = owner
         self._owner.connect("property-changed", self._owner_property_changed_cb)
         self._owner.connect("icon-changed", self._owner_icon_changed_cb)
+        self.self_handle = None
 
         self._account = self._get_account_info()
         self._conn_status = CONNECTION_STATUS_DISCONNECTED
@@ -348,8 +349,8 @@ class ServerPlugin(gobject.GObject):
             # accept pending subscriptions
             publish[CHANNEL_INTERFACE_GROUP].AddMembers(local_pending, '')
 
-        self_handle = self._conn[CONN_INTERFACE].GetSelfHandle()
-        self._online_contacts[self_handle] = self._account['account']
+        self.self_handle = self._conn[CONN_INTERFACE].GetSelfHandle()
+        self._online_contacts[self.self_handle] = self._account['account']
 
         # request subscriptions from people subscribed to us if we're not subscribed to them
         not_subscribed = list(set(publish_handles) - set(subscribe_handles))
