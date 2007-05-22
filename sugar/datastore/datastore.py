@@ -25,7 +25,7 @@ class DSObject(gobject.GObject):
                     ([]))
     }
 
-    def __init__(self, object_id, metadata, file_path):
+    def __init__(self, object_id, metadata=None, file_path=None):
         gobject.GObject.__init__(self)
         self.object_id = object_id
         self._metadata = metadata
@@ -43,6 +43,8 @@ class DSObject(gobject.GObject):
         del self.metadata[key]
 
     def get_metadata(self):
+        if self._metadata is None and not self.object_id is None:
+            self.set_metadata(dbus_helpers.get_properties(self.object_id))
         return self._metadata
     
     def set_metadata(self, metadata):
@@ -53,6 +55,8 @@ class DSObject(gobject.GObject):
     metadata = property(get_metadata, set_metadata)
 
     def get_file_path(self):
+        if self._file_path is None and not self.object_id is None:
+            self.set_file_path(dbus_helpers.get_filename(self.object_id))
         return self._file_path
     
     def set_file_path(self, file_path):
@@ -88,9 +92,30 @@ def write(ds_object, reply_handler=None, error_handler=None):
         # TODO: register the object for updates
     logging.debug('Written object %s to the datastore.' % ds_object.object_id)
 
-def find(query, reply_handler=None, error_handler=None):
-    object_ids = dbus_helpers.find(query, reply_handler, error_handler)
+def find(query, sorting=None, limit=None, offset=None, reply_handler=None,
+         error_handler=None):
+    if sorting:
+        query['order_by'] = sorting
+    if limit:
+        query['limit'] = limit
+    if offset:
+        query['offset'] = offset
+    
+    props_list, total_count = dbus_helpers.find(query, reply_handler, error_handler)
+    
     objects = []
-    for object_id in object_ids:
-        objects.append(get(object_id))
-    return objects
+    for props in props_list:
+        if props.has_key('filename') and props['filename']:
+            file_path = props['filename']
+            del props['filename']
+        else:
+            file_path = None
+
+        object_id = props['uid']
+        del props['uid']
+
+        ds_object = DSObject(object_id, props, file_path)
+        objects.append(ds_object)
+
+    return objects, total_count
+
