@@ -82,6 +82,9 @@ class StderrCatcher:
         _log_writer.write(STDERR_LEVEL, txt)
         sys.__stderr__.write(txt)
 
+    def flush(self):
+        sys.__stderr__.flush()
+
 def __exception_handler(typ, exc, tb):
     trace = StringIO()
     traceback.print_exception(typ, exc, tb, None, trace)
