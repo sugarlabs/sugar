@@ -266,7 +266,8 @@ class Buddy(ExportedGObject):
             del self.handles[tp_client]
             self.TelepathyHandleRemoved(conn.service_name, conn.object_path,
                                         handle)
-            if not self.handles:
+            # the Owner can't disappear - that would be silly
+            if not self.handles and not self._owner:
                 self.emit('disappeared')
         else:
             _logger.debug('Telepathy handle %u supposedly removed, but '
