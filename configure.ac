@@ -75,7 +75,6 @@ sugar/activity/Makefile
 sugar/clipboard/Makefile
 sugar/graphics/Makefile
 sugar/objects/Makefile
-sugar/p2p/Makefile
 sugar/presence/Makefile
 sugar/datastore/Makefile
 po/Makefile.in
