@@ -79,7 +79,27 @@ PyTypeObject G_GNUC_INTERNAL PySugarAddressEntry_Type = {
 
 /* ----------- functions ----------- */
 
+static PyObject *
+_wrap_sugar_mime_get_mime_type_from_file_name(PyObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "filename", NULL };
+    char *filename;
+    const gchar *ret;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"s:get_mime_type_from_file_name", kwlist, &filename))
+        return NULL;
+    
+    ret = sugar_mime_get_mime_type_from_file_name(filename);
+    
+    if (ret)
+        return PyString_FromString(ret);
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 const PyMethodDef py_sugarext_functions[] = {
+    { "get_mime_type_from_file_name", (PyCFunction)_wrap_sugar_mime_get_mime_type_from_file_name, METH_VARARGS|METH_KEYWORDS,
+      NULL },
     { NULL, NULL, 0, NULL }
 };
 
@@ -103,6 +123,6 @@ py_sugarext_register_classes(PyObject *d)
     }
 
 
-#line 107 "_sugarext.c"
+#line 127 "_sugarext.c"
     pygobject_register_class(d, "SugarAddressEntry", SUGAR_TYPE_ADDRESS_ENTRY, &PySugarAddressEntry_Type, Py_BuildValue("(O)", &PyGtkEntry_Type));
 }

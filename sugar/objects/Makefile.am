@@ -1,5 +1,4 @@
 sugardir = $(pythondir)/sugar/objects
-sugar_PYTHON =			\
-	__init__.py		\
-	typeregistry.py		\
-	typeinfo.py
+sugar_PYTHON =		\
+	__init__.py	\
+	mime.py

@@ -44,6 +44,7 @@ Makefile
 bin/Makefile
 data/Makefile
 lib/Makefile
+lib/xdgmime/Makefile
 services/Makefile
 services/presence/Makefile
 services/clipboard/Makefile
@@ -76,6 +77,7 @@ sugar/Makefile
 sugar/activity/Makefile
 sugar/clipboard/Makefile
 sugar/graphics/Makefile
+sugar/objects/Makefile
 sugar/p2p/Makefile
 sugar/presence/Makefile
 sugar/datastore/Makefile

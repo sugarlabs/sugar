@@ -16,37 +16,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import os
+from sugar import objects
 
-import pygtk
-pygtk.require('2.0')
-import gtk
-import gobject
-
-import sugar.browser
-
-def _print_document():
-    #print browser.document
-    pass
-
-def _quit(window):
-    sugar.browser.shutdown()
-    gtk.main_quit()
-
-# Main window
-window = gtk.Window()
-window.connect("destroy", _quit)
-
-sugar.browser.startup(os.path.expanduser('~/.sugar-browser-test'), 'test')
-
-browser = sugar.browser.Browser()
-window.add(browser)
-browser.show()
-
-browser.load_url('about:blank')
-
-gobject.idle_add(_print_document)
-
-window.show()
-
-gtk.main()
+print objects.mime.get_from_filename('test.pdf')
