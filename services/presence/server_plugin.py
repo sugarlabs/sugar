@@ -315,7 +315,7 @@ class ServerPlugin(gobject.GObject):
         chan_path = self._conn[CONN_INTERFACE].RequestChannel(
             CHANNEL_TYPE_CONTACT_LIST, CONNECTION_HANDLE_TYPE_LIST,
             handle, True)
-        channel = Channel(self._conn._dbus_object._named_service, chan_path)
+        channel = Channel(self._conn.service_name, chan_path)
         # hack
         channel._valid_interfaces.add(CHANNEL_INTERFACE_GROUP)
         return channel
@@ -449,7 +449,7 @@ class ServerPlugin(gobject.GObject):
             self._join_activity_channel_props_set_cb(activity_id, signal, handle, channel, userdata)
 
     def _join_activity_create_channel_cb(self, activity_id, signal, handle, userdata, chan_path):
-        channel = Channel(self._conn._dbus_object._named_service, chan_path)
+        channel = Channel(self._conn.service_name, chan_path)
         props = {
             'anonymous': False,         # otherwise buddy resolution breaks
             'invite-only': False,       # XXX: should be True in future
