@@ -905,24 +905,52 @@ class ServerPlugin(gobject.GObject):
         _logger.debug("Handle %s: current activity now %s" % (handle, activity))
         self._buddy_properties_changed_cb(handle, prop)
 
-    def _new_channel_cb(self, object_path, channel_type, handle_type, handle, suppress_handler):
+    def _new_channel_cb(self, object_path, channel_type, handle_type, handle,
+                        suppress_handler):
         """Handle creation of a new channel
         """
-        if handle_type == CONNECTION_HANDLE_TYPE_ROOM and channel_type == CHANNEL_TYPE_TEXT:
-            channel = Channel(self._conn._dbus_object._named_service, object_path)
+        if (handle_type == CONNECTION_HANDLE_TYPE_ROOM and
+            channel_type == CHANNEL_TYPE_TEXT):
+            def ready(channel):
 
-            # hack
-            channel._valid_interfaces.add(CHANNEL_INTERFACE_GROUP)
-
-            current, local_pending, remote_pending = channel[CHANNEL_INTERFACE_GROUP].GetAllMembers()
-            
-            if local_pending:
-                for act_id, act_handle in self._activities.items():
+                for act_id, act_handle in self._activities.iteritems():
                     if handle == act_handle:
-                        self.emit("activity-invitation", act_id)
+                        break
+                    else:
+                        return
 
-        elif handle_type == CONNECTION_HANDLE_TYPE_CONTACT and \
-            channel_type in [CHANNEL_TYPE_TEXT, CHANNEL_TYPE_STREAMED_MEDIA]:
+                def members_changed(message, added, removed, local_pending,
+                                    remote_pending, actor, reason):
+                    # FIXME: if contacts were added, who don't have this
+                    # activity in their PEP node for whatever reason, then
+                    # emit buddy-activities-changed for them (otherwise they
+                    # could be in an activity while pretending they weren't,
+                    # which would be crazy)
+                    pass
+
+                def got_all_members(current, local_pending, remote_pending):
+                    if local_pending:
+                        for act_id, act_handle in self._activities.iteritems():
+                            if handle == act_handle:
+                                self.emit('activity-invitation', act_id)
+                def got_all_members_err(e):
+                    logger.debug('Unable to get channel members for %s:',
+                                 object_path, exc_info=1)
+
+                # hook the MembersChanged signal so we get told when people
+                # join/leave
+                group = channel[CHANNEL_INTERFACE_GROUP]
+                group.connect_to_signal('MembersChanged', members_changed)
+                group.GetAllMembers(reply_handler=got_all_members,
+                                    error_handler=got_all_members_err)
+
+            # we throw away the channel as soon as ready() finishes
+            Channel(self._conn.service_name, object_path,
+                    ready_handler=ready)
+
+        elif (handle_type == CONNECTION_HANDLE_TYPE_CONTACT and
+              channel_type in (CHANNEL_TYPE_TEXT,
+                               CHANNEL_TYPE_STREAMED_MEDIA)):
             self.emit("private-invitation", object_path)
 
     def update_activity_properties(self, act_id):
