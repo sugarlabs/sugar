@@ -488,7 +488,7 @@ class ServerPlugin(gobject.GObject):
             room_jid = activity_id + "@conference." + self._account["server"]
             self._conn[CONN_INTERFACE].RequestHandles(CONNECTION_HANDLE_TYPE_ROOM, [room_jid],
                     reply_handler=lambda *args: self._join_activity_get_channel_cb(activity_id, signal, userdata, *args),
-                    error_handler=lambda *args: self._join_error_cb(activity_id, signal, userdata, *args))
+                    error_handler=lambda *args: self._join_error_cb(activity_id, signal, userdata, 'RequestHandles([%u])' % room_jid, *args))
         else:
             self._join_activity_get_channel_cb(activity_id, signal, userdata, [handle])
     
