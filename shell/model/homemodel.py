@@ -26,6 +26,7 @@ from sugar.activity import bundleregistry
 
 _SERVICE_NAME = "org.laptop.Activity"
 _SERVICE_PATH = "/org/laptop/Activity"
+_SERVICE_INTERFACE = "org.laptop.Activity"
 
 class HomeModel(gobject.GObject):
     """Model of the "Home" view (activity management)
@@ -196,8 +197,11 @@ class HomeModel(gobject.GObject):
         bus = dbus.SessionBus()
         xid = window.get_xid()
         try:
-            service = bus.get_object(_SERVICE_NAME + '%d' % xid,
-                                     _SERVICE_PATH + "/%s" % xid)
+            service = dbus.Interface(
+                bus.get_object(_SERVICE_NAME + '%d' % xid,
+                               _SERVICE_PATH + "/%s" % xid),
+                _SERVICE_INTERFACE)
+            
         except dbus.DBusException:
             service = None
 
