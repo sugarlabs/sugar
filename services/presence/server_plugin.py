@@ -16,23 +16,20 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gobject
-import dbus
-from sugar import util
-import gtk
-from buddyiconcache import BuddyIconCache
+# Standard library
 import logging
 import os
-
+import sys
 try:
     # Python >= 2.5
     from hashlib import md5
 except ImportError:
     from md5 import new as md5
 
-import sys
-import psutils
-
+# Other libraries
+import dbus
+import gobject
+import gtk
 from telepathy.client import (ConnectionManager, ManagerRegistry, Connection,
     Channel)
 from telepathy.interfaces import (CONN_MGR_INTERFACE, CONN_INTERFACE,
@@ -45,6 +42,12 @@ from telepathy.constants import (HANDLE_TYPE_CONTACT,
     CONNECTION_STATUS_CONNECTING,
     CONNECTION_STATUS_REASON_AUTHENTICATION_FAILED,
     PROPERTY_FLAG_WRITE)
+from sugar import util
+
+# Presence Service local modules
+from buddyiconcache import BuddyIconCache
+import psutils
+
 
 CONN_INTERFACE_BUDDY_INFO = 'org.laptop.Telepathy.BuddyInfo'
 CONN_INTERFACE_ACTIVITY_PROPERTIES = 'org.laptop.Telepathy.ActivityProperties'
