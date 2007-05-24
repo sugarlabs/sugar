@@ -291,7 +291,8 @@ class PresenceService(ExportedGObject):
     def PrivateInvitation(self, bus_name, connection, channel):
         pass
 
-    @dbus.service.method(_PRESENCE_INTERFACE, out_signature="ao")
+    @dbus.service.method(_PRESENCE_INTERFACE, in_signature='',
+                         out_signature="ao")
     def GetActivities(self):
         ret = []
         for act in self._activities.values():
@@ -307,7 +308,8 @@ class PresenceService(ExportedGObject):
             raise NotFoundError("The activity was not found.")
         return act.object_path()
 
-    @dbus.service.method(_PRESENCE_INTERFACE, out_signature="ao")
+    @dbus.service.method(_PRESENCE_INTERFACE, in_signature='',
+                         out_signature="ao")
     def GetBuddies(self):
         ret = []
         for buddy in self._buddies.values():
@@ -361,7 +363,8 @@ class PresenceService(ExportedGObject):
                             "connection to %s:%s" % (handle, tp_conn_name,
                                                      tp_conn_path))
 
-    @dbus.service.method(_PRESENCE_INTERFACE, out_signature="o")
+    @dbus.service.method(_PRESENCE_INTERFACE,
+                         in_signature='', out_signature="o")
     def GetOwner(self):
         if not self._owner:
             raise NotFoundError("The owner was not found.")
@@ -375,7 +378,8 @@ class PresenceService(ExportedGObject):
         self._share_activity(actid, atype, name, properties,
                              (async_cb, async_err_cb))
 
-    @dbus.service.method(_PRESENCE_INTERFACE, out_signature="so")
+    @dbus.service.method(_PRESENCE_INTERFACE,
+                         in_signature='', out_signature="so")
     def GetPreferredConnection(self):
         conn = self._server_plugin.get_connection()
         return str(conn.service_name), conn.object_path
