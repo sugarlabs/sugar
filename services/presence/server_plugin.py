@@ -356,21 +356,6 @@ class ServerPlugin(gobject.GObject):
         self._handle_connection_status_change(status,
                 CONNECTION_STATUS_REASON_NONE_SPECIFIED)
 
-    def _request_list_channel(self, name):
-        """Request a contact-list channel from Telepathy
-
-        name -- publish/subscribe, for the type of channel
-        """
-        handle = self._conn[CONN_INTERFACE].RequestHandles(
-            HANDLE_TYPE_LIST, [name])[0]
-        chan_path = self._conn[CONN_INTERFACE].RequestChannel(
-            CHANNEL_TYPE_CONTACT_LIST, HANDLE_TYPE_LIST,
-            handle, True)
-        channel = Channel(self._conn.service_name, chan_path)
-        # hack
-        channel._valid_interfaces.add(CHANNEL_INTERFACE_GROUP)
-        return channel
-
     def _connected_cb(self):
         """Callback on successful connection to a server
         """
@@ -379,8 +364,13 @@ class ServerPlugin(gobject.GObject):
             # we successfully register this account
             self._owner.set_registered(True)
 
+        # request both handles at the same time to reduce round-trips
+        pub_handle, sub_handle = self._conn[CONN_INTERFACE].RequestHandles(
+                HANDLE_TYPE_LIST, ['publish', 'subscribe'])
+
         # the group of contacts who may receive your presence
-        publish = self._request_list_channel('publish')
+        publish = self._conn.request_channel(CHANNEL_TYPE_CONTACT_LIST,
+                HANDLE_TYPE_LIST, pub_handle, True)
         self._publish_channel = publish
         publish[CHANNEL_INTERFACE_GROUP].connect_to_signal('MembersChanged',
                 self._publish_members_changed_cb)
@@ -388,7 +378,8 @@ class ServerPlugin(gobject.GObject):
                 publish[CHANNEL_INTERFACE_GROUP].GetAllMembers()
 
         # the group of contacts for whom you wish to receive presence
-        subscribe = self._request_list_channel('subscribe')
+        subscribe = self._conn.request_channel(CHANNEL_TYPE_CONTACT_LIST,
+                HANDLE_TYPE_LIST, sub_handle, True)
         self._subscribe_channel = subscribe
         subscribe[CHANNEL_INTERFACE_GROUP].connect_to_signal('MembersChanged',
                 self._subscribe_members_changed_cb)
