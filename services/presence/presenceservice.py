@@ -303,9 +303,10 @@ class PresenceService(ExportedGObject):
                 ret.append(buddy.object_path())
         return ret
 
-    @dbus.service.method(_PRESENCE_INTERFACE, in_signature="ay", out_signature="o")
+    @dbus.service.method(_PRESENCE_INTERFACE,
+                         in_signature="ay", out_signature="o",
+                         byte_arrays=True)
     def GetBuddyByPublicKey(self, key):
-        key = psutils.bytes_to_string(key)
         if self._buddies.has_key(key):
             buddy = self._buddies[key]
             if buddy.props.valid:
