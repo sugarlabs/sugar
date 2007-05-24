@@ -79,7 +79,8 @@ def _get_buddy_icon_at_size(icon, maxw, maxh, maxsize):
     while img_size > maxsize:
         del data
         data = [""]
-        pixbuf.save_to_callback(_buddy_icon_save_cb, "jpeg", {"quality":"%d" % quality}, data)
+        pixbuf.save_to_callback(_buddy_icon_save_cb, "jpeg",
+                                {"quality":"%d" % quality}, data)
         quality -= 10
         img_size = len(data[0])
     del pixbuf
@@ -89,14 +90,14 @@ def _get_buddy_icon_at_size(icon, maxw, maxh, maxsize):
         raise RuntimeError("could not size image less than %d bytes" % maxsize)
 
     return str(data[0])
-        
+
 
 class ServerPlugin(gobject.GObject):
     """Telepathy-python-based presence server interface
-    
-    The ServerPlugin instance translates network events from 
-    Telepathy Python into GObject events.  It provides direct 
-    python calls to perform the required network operations 
+
+    The ServerPlugin instance translates network events from
+    Telepathy Python into GObject events.  It provides direct
+    python calls to perform the required network operations
     to implement the PresenceService.
     """
     __gsignals__ = {
@@ -125,14 +126,14 @@ class ServerPlugin(gobject.GObject):
                                ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT,
                                  gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT]))
     }
-    
+
     def __init__(self, registry, owner):
-        """Initialize the ServerPlugin instance 
-        
-        registry -- telepathy.client.ManagerRegistry from the 
-            PresenceService, used to find the "gabble" connection 
+        """Initialize the ServerPlugin instance
+
+        registry -- telepathy.client.ManagerRegistry from the
+            PresenceService, used to find the "gabble" connection
             manager in this case...
-        owner -- presence.buddy.GenericOwner instance (normally a 
+        owner -- presence.buddy.GenericOwner instance (normally a
             presence.buddy.ShellOwner instance)
         """
         gobject.GObject.__init__(self)
@@ -177,18 +178,18 @@ class ServerPlugin(gobject.GObject):
             self.cleanup()
 
     def _owner_property_changed_cb(self, owner, properties):
-        """Local user's configuration properties have changed 
-        
-        owner -- the Buddy object for the local user 
-        properties -- set of updated properties 
-        
+        """Local user's configuration properties have changed
+
+        owner -- the Buddy object for the local user
+        properties -- set of updated properties
+
         calls:
-        
+
             _set_self_current_activity    current-activity
             _set_self_alias    nick
             _set_self_olpc_properties   color
-        
-        depending on which properties are present in the 
+
+        depending on which properties are present in the
         set of properties.
         """
         _logger.debug("Owner properties changed: %s" % properties)
@@ -211,18 +212,18 @@ class ServerPlugin(gobject.GObject):
         self._set_self_avatar(icon)
 
     def _get_account_info(self):
-        """Retrieve metadata dictionary describing this account 
-        
+        """Retrieve metadata dictionary describing this account
+
         returns dictionary with:
-        
-            server : server url from owner 
+
+            server : server url from owner
             account : printable-ssh-key-hash@server
             password : ssh-key-hash
-            register : whether to register (i.e. whether not yet 
+            register : whether to register (i.e. whether not yet
                 registered)
         """
         account_info = {}
-                        
+
         account_info['server'] = self._owner.get_server()
 
         khash = util.printable_hash(util._sha_data(self._owner.props.key))
@@ -235,14 +236,14 @@ class ServerPlugin(gobject.GObject):
         return account_info
 
     def _find_existing_connection(self):
-        """Try to find an existing Telepathy connection to this server 
-        
-        filters the set of connections from 
+        """Try to find an existing Telepathy connection to this server
+
+        filters the set of connections from
             telepathy.client.Connection.get_connections
-        to find a connection using our protocol with the 
-        "self handle" of that connection being a handle 
+        to find a connection using our protocol with the
+        "self handle" of that connection being a handle
         which matches our account (see _get_account_info)
-        
+
         returns connection or None
         """
         our_name = self._account['account']
@@ -275,14 +276,14 @@ class ServerPlugin(gobject.GObject):
         _logger.debug("Connect error: %s" % exception)
 
     def _init_connection(self):
-        """Set up our connection 
-        
-        if there is no existing connection 
+        """Set up our connection
+
+        if there is no existing connection
             (_find_existing_connection returns None)
         produce a new connection with our protocol for our
         account.
-        
-        if there is an existing connection, reuse it by 
+
+        if there is an existing connection, reuse it by
         registering for various of events on it.
         """
         conn = self._find_existing_connection()
@@ -317,7 +318,7 @@ class ServerPlugin(gobject.GObject):
 
     def _request_list_channel(self, name):
         """Request a contact-list channel from Telepathy
-        
+
         name -- publish/subscribe, for the type of channel
         """
         handle = self._conn[CONN_INTERFACE].RequestHandles(
@@ -331,7 +332,7 @@ class ServerPlugin(gobject.GObject):
         return channel
 
     def _connected_cb(self):
-        """Callback on successful connection to a server 
+        """Callback on successful connection to a server
         """
 
         if self._account['register']:
@@ -494,29 +495,29 @@ class ServerPlugin(gobject.GObject):
                     error_handler=lambda e: self._join_error_cb(activity_id, signal, userdata, 'RequestHandles([%u])' % room_jid, e))
         else:
             self._join_activity_get_channel_cb(activity_id, signal, userdata, [handle])
-    
+
     def share_activity(self, activity_id, userdata):
         """Share activity with the network
-        
-        activity_id -- unique ID for the activity 
+
+        activity_id -- unique ID for the activity
         userdata -- opaque token to be passed in the resulting event
             (id, callback, errback) normally
-        
-        Asks the Telepathy server to create a "conference" channel 
-        for the activity or return a handle to an already created 
+
+        Asks the Telepathy server to create a "conference" channel
+        for the activity or return a handle to an already created
         conference channel for the activity.
         """
         self._internal_join_activity(activity_id, "activity-shared", userdata)
 
     def join_activity(self, activity_id, userdata):
         """Join an activity on the network (or locally)
-        
-        activity_id -- unique ID for the activity 
+
+        activity_id -- unique ID for the activity
         userdata -- opaque token to be passed in the resulting event
             (id, callback, errback) normally
-        
-        Asks the Telepathy server to create a "conference" channel 
-        for the activity or return a handle to an already created 
+
+        Asks the Telepathy server to create a "conference" channel
+        for the activity or return a handle to an already created
         conference channel for the activity.
         """
         self._internal_join_activity(activity_id, "activity-joined", userdata)
@@ -552,8 +553,8 @@ class ServerPlugin(gobject.GObject):
         return False
 
     def _set_self_activities(self):
-        """Forward set of joined activities to network 
-       
+        """Forward set of joined activities to network
+
         uses SetActivities on BuddyInfo channel
         """
         self._conn[CONN_INTERFACE_BUDDY_INFO].SetActivities(self._joined_activities,
@@ -562,7 +563,7 @@ class ServerPlugin(gobject.GObject):
 
     def _set_self_current_activity(self):
         """Forward our current activity (or "") to network
-       
+
         uses SetCurrentActivity on BuddyInfo channel
         """
         cur_activity = self._owner.props.current_activity
@@ -632,7 +633,7 @@ class ServerPlugin(gobject.GObject):
 
     def _status_changed_cb(self, status, reason):
         """Handle notification of connection-status change
-        
+
         status -- CONNECTION_STATUS_*
         reason -- integer code describing the reason...
         """
@@ -641,13 +642,13 @@ class ServerPlugin(gobject.GObject):
 
     def start(self):
         """Start up the Telepathy networking connections
-        
+
         if we are already connected, query for the initial contact
         information.
-       
+
         if we are already connecting, do nothing
-        
-        otherwise initiate a connection and transfer control to 
+
+        otherwise initiate a connection and transfer control to
             _connect_reply_cb or _connect_error_cb
         """
         _logger.debug("Starting up...")
@@ -751,7 +752,7 @@ class ServerPlugin(gobject.GObject):
         return False
 
     def _contact_online_properties_error_cb(self, handle, tries, err):
-        """Handle error retrieving property-set for a user (handle)"""        
+        """Handle error retrieving property-set for a user (handle)"""
         if tries <= 3:
             _logger.debug("Handle %s - Error getting properties (will retry): %s" % (handle, err))
             tries += 1
@@ -892,7 +893,7 @@ class ServerPlugin(gobject.GObject):
 
     def _buddy_current_activity_changed_cb(self, handle, activity, channel):
         """Handle update of given user (handle)'s current activity"""
-    
+
         if handle == self._conn[CONN_INTERFACE].GetSelfHandle():
             # ignore network events for Owner current activity changes since those
             # are handled locally
