@@ -533,7 +533,7 @@ class ServerPlugin(gobject.GObject):
 
     def _join_error_cb(self, activity_id, signal, userdata, where, err):
         e = Exception("Error joining/sharing activity %s: (%s): %s"
-                      % (activity_id, err))
+                      % (activity_id, where, err))
         _logger.debug('%s', e)
         self.emit(signal, activity_id, None, e, userdata)
 
