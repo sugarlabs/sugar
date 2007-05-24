@@ -739,15 +739,13 @@ class ServerPlugin(gobject.GObject):
             self._contact_offline(handle)
             return
 
-        # Convert key from dbus byte array to python string
-        props["key"] = psutils.bytes_to_string(props["key"])
-
         self._conn[CONN_INTERFACE_ALIASING].RequestAliases([handle],
             reply_handler=lambda *args: self._contact_online_aliases_cb(handle, props, *args),
             error_handler=lambda e: self._contact_online_aliases_error_cb(handle, props, True, e))
 
     def _contact_online_request_properties(self, handle, tries):
         self._conn[CONN_INTERFACE_BUDDY_INFO].GetProperties(handle,
+            byte_arrays=True,
             reply_handler=lambda *args: self._contact_online_properties_cb(handle, *args),
             error_handler=lambda e: self._contact_online_properties_error_cb(handle, tries, e))
         return False
