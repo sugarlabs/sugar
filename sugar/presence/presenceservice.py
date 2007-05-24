@@ -312,32 +312,6 @@ class PresenceService(gobject.GObject):
             return None
         return self._new_object(buddy_op)
 
-    def get_buddy_by_telepathy_handle(self, tp_conn_name, tp_conn_path,
-                                      handle):
-        """Retrieve single Buddy object for the given public key
-
-        :Parameters:
-            `tp_conn_name` : str
-                The well-known bus name of a Telepathy connection
-            `tp_conn_path` : dbus.ObjectPath
-                The object path of the Telepathy connection
-            `handle` : int or long
-                The handle of a Telepathy contact on that connection,
-                of type HANDLE_TYPE_CONTACT. This may not be a
-                channel-specific handle.
-        :Returns: the Buddy object, or None if the buddy is not found
-        """
-        try:
-            buddy_op = self._ps.GetBuddyByTelepathyHandle(tp_conn_name,
-                                                          tp_conn_path,
-                                                          handle)
-        except dbus.exceptions.DBusException, err:
-            _logger.warn('Unable to retrieve buddy handle for handle %u at '
-                         'conn %s:%s from presence service: %s',
-                         handle, tp_conn_name, tp_conn_path, err)
-            return None
-        return self._new_object(buddy_op)
-
     def get_owner(self):
         """Retrieves the laptop "owner" Buddy object."""
         try:
