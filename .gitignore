@@ -9,6 +9,7 @@ Makefile.in
 *.la
 *.lo
 *.loT
+.*.sw?
 
 # Absolute
 
