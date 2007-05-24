@@ -53,6 +53,7 @@ CONN_INTERFACE_BUDDY_INFO = 'org.laptop.Telepathy.BuddyInfo'
 CONN_INTERFACE_ACTIVITY_PROPERTIES = 'org.laptop.Telepathy.ActivityProperties'
 
 _PROTOCOL = "jabber"
+_OBJ_PATH_PREFIX = "/org/freedesktop/Telepathy/Connection/gabble/jabber/"
 
 _logger = logging.getLogger('s-p-s.server_plugin')
 
@@ -174,11 +175,14 @@ class ServerPlugin(gobject.GObject):
         self._registry = registry
         self._online_contacts = {}  # handle -> jid
 
-        self._activities = {} # activity id -> handle
-        self._joined_activities = [] # (activity_id, handle of the activity channel)
+        # activity id -> handle
+        self._activities = {}
+        # (activity_id, handle of the activity channel)
+        self._joined_activities = []
 
         self._owner = owner
-        self._owner.connect("property-changed", self._owner_property_changed_cb)
+        self._owner.connect("property-changed",
+                            self._owner_property_changed_cb)
         self._owner.connect("icon-changed", self._owner_icon_changed_cb)
         self.self_handle = None
 
@@ -197,9 +201,10 @@ class ServerPlugin(gobject.GObject):
         self._subscribe_remote_pending = set()
 
     def _ip4_address_changed_cb(self, ip4am, address):
-        _logger.debug("::: IP4 address now %s" % address)
+        _logger.debug("::: IP4 address now %s", address)
         if address:
-            _logger.debug("::: valid IP4 address, conn_status %s" % self._conn_status)
+            _logger.debug("::: valid IP4 address, conn_status %s",
+                          self._conn_status)
             if self._conn_status == CONNECTION_STATUS_DISCONNECTED:
                 _logger.debug("::: will connect")
                 self.start()
@@ -222,7 +227,7 @@ class ServerPlugin(gobject.GObject):
         depending on which properties are present in the
         set of properties.
         """
-        _logger.debug("Owner properties changed: %s" % properties)
+        _logger.debug("Owner properties changed: %s", properties)
 
         if properties.has_key("current-activity"):
             self._set_self_current_activity()
@@ -238,7 +243,7 @@ class ServerPlugin(gobject.GObject):
 
     def _owner_icon_changed_cb(self, owner, icon):
         """Owner has changed their icon, forward to network"""
-        _logger.debug("Owner icon changed to size %d" % len(str(icon)))
+        _logger.debug("Owner icon changed to size %d", len(str(icon)))
         self._set_self_avatar(icon)
 
     def _get_account_info(self):
@@ -282,12 +287,13 @@ class ServerPlugin(gobject.GObject):
         connections = Connection.get_connections()
         conn = None
         for item in connections:
-            if not item.object_path.startswith("/org/freedesktop/Telepathy/Connection/gabble/jabber/"):
+            if not item.object_path.startswith(_OBJ_PATH_PREFIX):
                 continue
             if item[CONN_INTERFACE].GetProtocol() != _PROTOCOL:
                 continue
             if item[CONN_INTERFACE].GetStatus() == CONNECTION_STATUS_CONNECTED:
-                test_handle = item[CONN_INTERFACE].RequestHandles(HANDLE_TYPE_CONTACT, [our_name])[0]
+                test_handle = item[CONN_INTERFACE].RequestHandles(
+                    HANDLE_TYPE_CONTACT, [our_name])[0]
                 if item[CONN_INTERFACE].GetSelfHandle() != test_handle:
                     continue
             return item
@@ -303,7 +309,7 @@ class ServerPlugin(gobject.GObject):
 
     def _connect_error_cb(self, exception):
         """Handle connection failure"""
-        _logger.debug("Connect error: %s" % exception)
+        _logger.debug("Connect error: %s", exception)
 
     def _init_connection(self):
         """Set up our connection
@@ -322,12 +328,15 @@ class ServerPlugin(gobject.GObject):
 
             # Create a new connection
             gabble_mgr = self._registry.GetManager('gabble')
-            name, path = gabble_mgr[CONN_MGR_INTERFACE].RequestConnection(_PROTOCOL, acct)
+            name, path = gabble_mgr[CONN_MGR_INTERFACE].RequestConnection(
+                _PROTOCOL, acct)
             conn = Connection(name, path)
             del acct
 
-        conn[CONN_INTERFACE].connect_to_signal('StatusChanged', self._status_changed_cb)
-        conn[CONN_INTERFACE].connect_to_signal('NewChannel', self._new_channel_cb)
+        conn[CONN_INTERFACE].connect_to_signal('StatusChanged',
+                                               self._status_changed_cb)
+        conn[CONN_INTERFACE].connect_to_signal('NewChannel',
+                                               self._new_channel_cb)
 
         # hack
         conn._valid_interfaces.add(CONN_INTERFACE_PRESENCE)
@@ -342,7 +351,8 @@ class ServerPlugin(gobject.GObject):
         self._conn = conn
         status = self._conn[CONN_INTERFACE].GetStatus()
         if status == CONNECTION_STATUS_DISCONNECTED:
-            self._conn[CONN_INTERFACE].Connect(reply_handler=self._connect_reply_cb,
+            self._conn[CONN_INTERFACE].Connect(
+                    reply_handler=self._connect_reply_cb,
                     error_handler=self._connect_error_cb)
         self._handle_connection_status_change(self._conn, status)
 
@@ -395,7 +405,8 @@ class ServerPlugin(gobject.GObject):
         self.self_handle = self._conn[CONN_INTERFACE].GetSelfHandle()
         self._online_contacts[self.self_handle] = self._account['account']
 
-        # request subscriptions from people subscribed to us if we're not subscribed to them
+        # request subscriptions from people subscribed to us if we're not
+        # subscribed to them
         not_subscribed = list(set(publish_handles) - set(subscribe_handles))
         subscribe[CHANNEL_INTERFACE_GROUP].AddMembers(not_subscribed, '')
 
@@ -403,18 +414,20 @@ class ServerPlugin(gobject.GObject):
             _logger.debug('OLPC information not available')
             return False
 
-        self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('PropertiesChanged',
-                self._buddy_properties_changed_cb)
-        self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('ActivitiesChanged',
-                self._buddy_activities_changed_cb)
-        self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal('CurrentActivityChanged',
+        self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal(
+                'PropertiesChanged', self._buddy_properties_changed_cb)
+        self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal(
+                'ActivitiesChanged', self._buddy_activities_changed_cb)
+        self._conn[CONN_INTERFACE_BUDDY_INFO].connect_to_signal(
+                'CurrentActivityChanged',
                 self._buddy_current_activity_changed_cb)
 
         self._conn[CONN_INTERFACE_AVATARS].connect_to_signal('AvatarUpdated',
                 self._avatar_updated_cb)
         self._conn[CONN_INTERFACE_ALIASING].connect_to_signal('AliasesChanged',
                 self._alias_changed_cb)
-        self._conn[CONN_INTERFACE_ACTIVITY_PROPERTIES].connect_to_signal('ActivityPropertiesChanged',
+        self._conn[CONN_INTERFACE_ACTIVITY_PROPERTIES].connect_to_signal(
+                'ActivityPropertiesChanged',
                 self._activity_properties_changed_cb)
 
         # Set initial buddy properties, avatar, and activities
@@ -442,28 +455,34 @@ class ServerPlugin(gobject.GObject):
         hash = m.hexdigest()
 
         self_handle = self._conn[CONN_INTERFACE].GetSelfHandle()
-        token = self._conn[CONN_INTERFACE_AVATARS].GetAvatarTokens([self_handle])[0]
+        token = self._conn[CONN_INTERFACE_AVATARS].GetAvatarTokens(
+                [self_handle])[0]
 
         if self._icon_cache.check_avatar(hash, token):
             # avatar is up to date
             return
 
-        types, minw, minh, maxw, maxh, maxsize = self._conn[CONN_INTERFACE_AVATARS].GetAvatarRequirements()
+        types, minw, minh, maxw, maxh, maxsize = \
+                self._conn[CONN_INTERFACE_AVATARS].GetAvatarRequirements()
         if not "image/jpeg" in types:
             _logger.debug("server does not accept JPEG format avatars.")
             return
 
-        img_data = _get_buddy_icon_at_size(icon_data, min(maxw, 96), min(maxh, 96), maxsize)
+        img_data = _get_buddy_icon_at_size(icon_data, min(maxw, 96),
+                                           min(maxh, 96), maxsize)
         self._conn[CONN_INTERFACE_AVATARS].SetAvatar(img_data, "image/jpeg",
                 reply_handler=self._set_self_avatar_cb,
                 error_handler=lambda e: self._log_error_cb("setting avatar", e))
 
-    def _join_activity_channel_props_set_cb(self, activity_id, signal, handle, channel, userdata):
+    def _join_activity_channel_props_set_cb(self, activity_id, signal, handle,
+                                            channel, userdata):
         self._joined_activities.append((activity_id, handle))
         self._set_self_activities()
         self.emit(signal, activity_id, channel, None, userdata)
 
-    def _join_activity_channel_props_listed_cb(self, activity_id, signal, handle, channel, userdata, props, prop_specs):
+    def _join_activity_channel_props_listed_cb(self, activity_id, signal,
+                                               handle, channel, userdata,
+                                               props, prop_specs):
 
         props_to_set = []
         for ident, name, sig, flags in prop_specs:
@@ -477,12 +496,17 @@ class ServerPlugin(gobject.GObject):
 
         if props_to_set:
             channel[PROPERTIES_INTERFACE].SetProperties(props_to_set,
-                reply_handler=lambda: self._join_activity_channel_props_set_cb(activity_id, signal, handle, channel, userdata),
-                error_handler=lambda e: self._join_error_cb(activity_id, signal, userdata, 'SetProperties(%r)' % props_to_set, e))
+                reply_handler=lambda: self._join_activity_channel_props_set_cb(
+                    activity_id, signal, handle, channel, userdata),
+                error_handler=lambda e: self._join_error_cb(
+                    activity_id, signal, userdata,
+                    'SetProperties(%r)' % props_to_set, e))
         else:
-            self._join_activity_channel_props_set_cb(activity_id, signal, handle, channel, userdata)
+            self._join_activity_channel_props_set_cb(activity_id, signal,
+                    handle, channel, userdata)
 
-    def _join_activity_create_channel_cb(self, activity_id, signal, handle, userdata, chan_path):
+    def _join_activity_create_channel_cb(self, activity_id, signal, handle,
+                                         userdata, chan_path):
         channel = Channel(self._conn.service_name, chan_path)
         props = {
             'anonymous': False,         # otherwise buddy resolution breaks
@@ -492,27 +516,34 @@ class ServerPlugin(gobject.GObject):
             'private': False,           # XXX: should be True unless public
         }
         channel[PROPERTIES_INTERFACE].ListProperties(
-            reply_handler=lambda prop_specs: self._join_activity_channel_props_listed_cb(activity_id, signal, handle, channel, userdata, props, prop_specs),
-            error_handler=lambda e: self._join_error_cb(activity_id, signal, userdata, 'ListProperties', e))
+            reply_handler=lambda prop_specs: self._join_activity_channel_props_listed_cb(
+                activity_id, signal, handle, channel, userdata, props, prop_specs),
+            error_handler=lambda e: self._join_error_cb(
+                activity_id, signal, userdata, 'ListProperties', e))
 
-    def _join_activity_get_channel_cb(self, activity_id, signal, userdata, handles):
+    def _join_activity_get_channel_cb(self, activity_id, signal, userdata,
+                                      handles):
         if not self._activities.has_key(activity_id):
             self._activities[activity_id] = handles[0]
 
         if (activity_id, handles[0]) in self._joined_activities:
             e = RuntimeError("Already joined activity %s" % activity_id)
-            _logger.debug(str(e))
+            _logger.debug('%s', e)
             self.emit(signal, activity_id, None, e, userdata)
             return
 
         self._conn[CONN_INTERFACE].RequestChannel(CHANNEL_TYPE_TEXT,
             HANDLE_TYPE_ROOM, handles[0], True,
-            reply_handler=lambda *args: self._join_activity_create_channel_cb(activity_id, signal, handles[0], userdata, *args),
-            error_handler=lambda e: self._join_error_cb(activity_id, signal, userdata, 'RequestChannel(TEXT, ROOM, %r, True)' % handles[0], e))
+            reply_handler=lambda *args: self._join_activity_create_channel_cb(
+                activity_id, signal, handles[0], userdata, *args),
+            error_handler=lambda e: self._join_error_cb(activity_id, signal,
+                userdata, 'RequestChannel(TEXT, ROOM, %r, True)' % handles[0],
+                e))
 
     def _join_error_cb(self, activity_id, signal, userdata, where, err):
-        e = Exception("Error joining/sharing activity %s: (%s): %s" % (activity_id, err))
-        _logger.debug(str(e))
+        e = Exception("Error joining/sharing activity %s: (%s): %s"
+                      % (activity_id, err))
+        _logger.debug('%s', e)
         self.emit(signal, activity_id, None, e, userdata)
 
     def _internal_join_activity(self, activity_id, signal, userdata):
@@ -520,11 +551,16 @@ class ServerPlugin(gobject.GObject):
         if not handle:
             # FIXME: figure out why the server can't figure this out itself
             room_jid = activity_id + "@conference." + self._account["server"]
-            self._conn[CONN_INTERFACE].RequestHandles(HANDLE_TYPE_ROOM, [room_jid],
-                    reply_handler=lambda *args: self._join_activity_get_channel_cb(activity_id, signal, userdata, *args),
-                    error_handler=lambda e: self._join_error_cb(activity_id, signal, userdata, 'RequestHandles([%u])' % room_jid, e))
+            self._conn[CONN_INTERFACE].RequestHandles(HANDLE_TYPE_ROOM,
+                    [room_jid],
+                    reply_handler=lambda *args: self._join_activity_get_channel_cb(
+                        activity_id, signal, userdata, *args),
+                    error_handler=lambda e: self._join_error_cb(activity_id,
+                        signal, userdata, 'RequestHandles([%u])' % room_jid,
+                        e))
         else:
-            self._join_activity_get_channel_cb(activity_id, signal, userdata, [handle])
+            self._join_activity_get_channel_cb(activity_id, signal, userdata,
+                    [handle])
 
     def share_activity(self, activity_id, userdata):
         """Share activity with the network
@@ -557,7 +593,7 @@ class ServerPlugin(gobject.GObject):
 
     def _log_error_cb(self, msg, err):
         """Log a message (error) at debug level with prefix msg"""
-        _logger.debug("Error %s: %s" % (msg, err))
+        _logger.debug("Error %s: %s", msg, err)
 
     def _set_self_olpc_properties(self):
         """Set color and key on our Telepathy server identity"""
@@ -587,7 +623,8 @@ class ServerPlugin(gobject.GObject):
 
         uses SetActivities on BuddyInfo channel
         """
-        self._conn[CONN_INTERFACE_BUDDY_INFO].SetActivities(self._joined_activities,
+        self._conn[CONN_INTERFACE_BUDDY_INFO].SetActivities(
+                self._joined_activities,
                 reply_handler=self._ignore_success_cb,
                 error_handler=lambda e: self._log_error_cb("setting activities", e))
 
@@ -606,7 +643,8 @@ class ServerPlugin(gobject.GObject):
                 # dont advertise a current activity that's not shared
                 cur_activity = ""
 
-        _logger.debug("Setting current activity to '%s' (handle %s)" % (cur_activity, cur_activity_handle))
+        _logger.debug("Setting current activity to '%s' (handle %s)",
+                      cur_activity, cur_activity_handle)
         self._conn[CONN_INTERFACE_BUDDY_INFO].SetCurrentActivity(cur_activity,
                 cur_activity_handle,
                 reply_handler=self._ignore_success_cb,
@@ -646,7 +684,7 @@ class ServerPlugin(gobject.GObject):
                 _logger.debug("status: was connected, but an error occurred")
         elif status == CONNECTION_STATUS_DISCONNECTED:
             self.cleanup()
-            _logger.debug("status: disconnected (reason %r)" % reason)
+            _logger.debug("status: disconnected (reason %r)", reason)
             if reason == CONNECTION_STATUS_REASON_AUTHENTICATION_FAILED:
                 # FIXME: handle connection failure; retry later?
                 pass
@@ -656,7 +694,8 @@ class ServerPlugin(gobject.GObject):
                 # and let the IP4AddressMonitor address-changed signal handle
                 # reconnection
                 if self._ip4am.props.address:
-                    self._reconnect_id = gobject.timeout_add(5000, self._reconnect_cb)
+                    self._reconnect_id = gobject.timeout_add(5000,
+                            self._reconnect_cb)
 
         self.emit('status', self._conn_status, int(reason))
         return False
@@ -667,7 +706,7 @@ class ServerPlugin(gobject.GObject):
         status -- CONNECTION_STATUS_*
         reason -- integer code describing the reason...
         """
-        _logger.debug("::: connection status changed to %s" % status)
+        _logger.debug("::: connection status changed to %s", status)
         self._handle_connection_status_change(status, reason)
 
     def start(self):
@@ -689,7 +728,8 @@ class ServerPlugin(gobject.GObject):
 
         # Only init connection if we have a valid IP address
         if self._ip4am.props.address:
-            _logger.debug("::: Have IP4 address %s, will connect" % self._ip4am.props.address)
+            _logger.debug("::: Have IP4 address %s, will connect",
+                          self._ip4am.props.address)
             self._init_connection()
         else:
             _logger.debug("::: No IP4 address, postponing connection")
@@ -728,67 +768,82 @@ class ServerPlugin(gobject.GObject):
 
     def _contact_online_activities_error_cb(self, handle, err):
         """Handle contact's activity list being unavailable"""
-        _logger.debug("Handle %s - Error getting activities: %s" % (handle, err))
+        _logger.debug("Handle %s - Error getting activities: %s",
+                      handle, err)
         # Don't drop the buddy if we can't get their activities, for now
         #self._contact_offline(handle)
 
     def _contact_online_aliases_cb(self, handle, props, aliases):
         """Handle contact's alias being received (do further queries)"""
         if not self._conn or not aliases or not len(aliases):
-            _logger.debug("Handle %s - No aliases" % handle)
+            _logger.debug("Handle %s - No aliases", handle)
             self._contact_offline(handle)
             return
 
         props['nick'] = aliases[0]
-        jid = self._conn[CONN_INTERFACE].InspectHandles(HANDLE_TYPE_CONTACT, [handle])[0]
+        jid = self._conn[CONN_INTERFACE].InspectHandles(HANDLE_TYPE_CONTACT,
+                                                        [handle])[0]
         self._online_contacts[handle] = jid
         self.emit("contact-online", handle, props)
 
         self._conn[CONN_INTERFACE_BUDDY_INFO].GetActivities(handle,
-            reply_handler=lambda *args: self._contact_online_activities_cb(handle, *args),
-            error_handler=lambda e: self._contact_online_activities_error_cb(handle, e))
+            reply_handler=lambda *args: self._contact_online_activities_cb(
+                handle, *args),
+            error_handler=lambda e: self._contact_online_activities_error_cb(
+                handle, e))
 
     def _contact_online_aliases_error_cb(self, handle, props, retry, err):
         """Handle failure to retrieve given user's alias/information"""
         if retry:
-            _logger.debug("Handle %s - Error getting nickname (will retry): %s" % (handle, err))
+            _logger.debug("Handle %s - Error getting nickname (will retry):"
+                          "%s", handle, err)
             self._conn[CONN_INTERFACE_ALIASING].RequestAliases([handle],
-                reply_handler=lambda *args: self._contact_online_aliases_cb(handle, props, *args),
-                error_handler=lambda e: self._contact_online_aliases_error_cb(handle, props, False, e))
+                reply_handler=lambda *args: self._contact_online_aliases_cb(
+                    handle, props, *args),
+                error_handler=lambda e: self._contact_online_aliases_error_cb(
+                    handle, props, False, e))
         else:
-            _logger.debug("Handle %s - Error getting nickname: %s" % (handle, err))
+            _logger.debug("Handle %s - Error getting nickname: %s",
+                          handle, err)
             self._contact_offline(handle)
 
     def _contact_online_properties_cb(self, handle, props):
         """Handle failure to retrieve given user's alias/information"""
         if not props.has_key('key'):
-            _logger.debug("Handle %s - invalid key." % handle)
+            _logger.debug("Handle %s - invalid key.", handle)
             self._contact_offline(handle)
             return
         if not props.has_key('color'):
-            _logger.debug("Handle %s - invalid color." % handle)
+            _logger.debug("Handle %s - invalid color.", handle)
             self._contact_offline(handle)
             return
 
         self._conn[CONN_INTERFACE_ALIASING].RequestAliases([handle],
-            reply_handler=lambda *args: self._contact_online_aliases_cb(handle, props, *args),
-            error_handler=lambda e: self._contact_online_aliases_error_cb(handle, props, True, e))
+            reply_handler=lambda *args: self._contact_online_aliases_cb(
+                handle, props, *args),
+            error_handler=lambda e: self._contact_online_aliases_error_cb(
+                handle, props, True, e))
 
     def _contact_online_request_properties(self, handle, tries):
         self._conn[CONN_INTERFACE_BUDDY_INFO].GetProperties(handle,
             byte_arrays=True,
-            reply_handler=lambda *args: self._contact_online_properties_cb(handle, *args),
-            error_handler=lambda e: self._contact_online_properties_error_cb(handle, tries, e))
+            reply_handler=lambda *args: self._contact_online_properties_cb(
+                handle, *args),
+            error_handler=lambda e: self._contact_online_properties_error_cb(
+                handle, tries, e))
         return False
 
     def _contact_online_properties_error_cb(self, handle, tries, err):
         """Handle error retrieving property-set for a user (handle)"""
         if tries <= 3:
-            _logger.debug("Handle %s - Error getting properties (will retry): %s" % (handle, err))
+            _logger.debug("Handle %s - Error getting properties (will retry):"
+                          " %s", handle, err)
             tries += 1
-            gobject.timeout_add(1000, self._contact_online_request_properties, handle, tries)
+            gobject.timeout_add(1000, self._contact_online_request_properties,
+                                handle, tries)
         else:
-            _logger.debug("Handle %s - Error getting properties: %s" % (handle, err))
+            _logger.debug("Handle %s - Error getting properties: %s",
+                          handle, err)
             self._contact_offline(handle)
 
     def _contact_online(self, handle):
@@ -802,7 +857,8 @@ class ServerPlugin(gobject.GObject):
 
         self._online_contacts[handle] = None
         if handle == self._conn[CONN_INTERFACE].GetSelfHandle():
-            jid = self._conn[CONN_INTERFACE].InspectHandles(HANDLE_TYPE_CONTACT, [handle])[0]
+            jid = self._conn[CONN_INTERFACE].InspectHandles(
+                    HANDLE_TYPE_CONTACT, [handle])[0]
             self._online_contacts[handle] = jid
             # ignore network events for Owner property changes since those
             # are handled locally
@@ -847,11 +903,14 @@ class ServerPlugin(gobject.GObject):
                 if not online and status == "offline":
                     # weren't online in the first place...
                     continue
-                jid = self._conn[CONN_INTERFACE].InspectHandles(HANDLE_TYPE_CONTACT, [handle])[0]
+                jid = self._conn[CONN_INTERFACE].InspectHandles(
+                        HANDLE_TYPE_CONTACT, [handle])[0]
                 olstr = "ONLINE"
                 if not online: olstr = "OFFLINE"
-                _logger.debug("Handle %s (%s) was %s, status now '%s'." % (handle, jid, olstr, status))
-                if not online and status in ["available", "away", "brb", "busy", "dnd", "xa"]:
+                _logger.debug("Handle %s (%s) was %s, status now '%s'.",
+                              handle, jid, olstr, status)
+                if not online and status in ["available", "away", "brb",
+                                             "busy", "dnd", "xa"]:
                     self._contact_online(handle)
                 elif status in ["offline", "invisible"]:
                     self._contact_offline(handle)
@@ -873,20 +932,22 @@ class ServerPlugin(gobject.GObject):
             return
 
         if not self._online_contacts.has_key(handle):
-            _logger.debug("Handle %s unknown." % handle)
+            _logger.debug("Handle %s unknown.", handle)
             return
 
         jid = self._online_contacts[handle]
         if not jid:
-            _logger.debug("Handle %s not valid yet..." % handle)
+            _logger.debug("Handle %s not valid yet...", handle)
             return
 
         icon = self._icon_cache.get_icon(jid, new_avatar_token)
         if not icon:
             # cache miss
             self._conn[CONN_INTERFACE_AVATARS].RequestAvatar(handle,
-                    reply_handler=lambda *args: self._request_avatar_cb(handle, new_avatar_token, *args),
-                    error_handler=lambda e: self._log_error_cb("getting avatar", e))
+                    reply_handler=lambda *args: self._request_avatar_cb(handle,
+                        new_avatar_token, *args),
+                    error_handler=lambda e: self._log_error_cb(
+                        "getting avatar", e))
         else:
             self.emit("avatar-updated", handle, icon)
 
@@ -895,7 +956,8 @@ class ServerPlugin(gobject.GObject):
         for handle, alias in aliases:
             prop = {'nick': alias}
             #print "Buddy %s alias changed to %s" % (handle, alias)
-            if self._online_contacts.has_key(handle) and self._online_contacts[handle]:
+            if (self._online_contacts.has_key(handle) and
+                    self._online_contacts[handle]):
                 self._buddy_properties_changed_cb(handle, prop)
 
     def _buddy_properties_changed_cb(self, handle, properties):
@@ -904,7 +966,8 @@ class ServerPlugin(gobject.GObject):
             # ignore network events for Owner property changes since those
             # are handled locally
             return
-        if self._online_contacts.has_key(handle) and self._online_contacts[handle]:
+        if (self._online_contacts.has_key(handle) and
+                self._online_contacts[handle]):
             self.emit("buddy-properties-changed", handle, properties)
 
     def _buddy_activities_changed_cb(self, handle, activities):
@@ -913,7 +976,8 @@ class ServerPlugin(gobject.GObject):
             # ignore network events for Owner activity changes since those
             # are handled locally
             return
-        if not self._online_contacts.has_key(handle) or not self._online_contacts[handle]:
+        if (not self._online_contacts.has_key(handle) or
+                not self._online_contacts[handle]):
             return
 
         for act_id, act_handle in activities:
@@ -925,16 +989,17 @@ class ServerPlugin(gobject.GObject):
         """Handle update of given user (handle)'s current activity"""
 
         if handle == self._conn[CONN_INTERFACE].GetSelfHandle():
-            # ignore network events for Owner current activity changes since those
-            # are handled locally
+            # ignore network events for Owner current activity changes since
+            # those are handled locally
             return
-        if not self._online_contacts.has_key(handle) or not self._online_contacts[handle]:
+        if (not self._online_contacts.has_key(handle) or
+                not self._online_contacts[handle]):
             return
 
         if not len(activity) or not util.validate_activity_id(activity):
             activity = None
         prop = {'current-activity': activity}
-        _logger.debug("Handle %s: current activity now %s" % (handle, activity))
+        _logger.debug("Handle %s: current activity now %s", handle, activity)
         self._buddy_properties_changed_cb(handle, prop)
 
     def _new_channel_cb(self, object_path, channel_type, handle_type, handle,
@@ -992,18 +1057,22 @@ class ServerPlugin(gobject.GObject):
             raise RuntimeError("Unknown activity %s: couldn't find handle.")
 
         self._conn[CONN_INTERFACE_ACTIVITY_PROPERTIES].GetProperties(handle,
-                reply_handler=lambda *args: self._activity_properties_changed_cb(handle, *args),
-                error_handler=lambda e: self._log_error_cb("getting activity properties", e))
+                reply_handler=lambda *args: self._activity_properties_changed_cb(
+                    handle, *args),
+                error_handler=lambda e: self._log_error_cb(
+                    "getting activity properties", e))
 
     def set_activity_properties(self, act_id, props):
-        """Send update to network on the activity properties of act_id (props)"""
+        """Send update to network on the activity properties of act_id (props).
+        """
         handle = self._activities.get(act_id)
         if not handle:
             raise RuntimeError("Unknown activity %s: couldn't find handle.")
 
-        self._conn[CONN_INTERFACE_ACTIVITY_PROPERTIES].SetProperties(handle, props,
-                reply_handler=self._ignore_success_cb,
-                error_handler=lambda e: self._log_error_cb("setting activity properties", e))
+        self._conn[CONN_INTERFACE_ACTIVITY_PROPERTIES].SetProperties(handle,
+                props, reply_handler=self._ignore_success_cb,
+                error_handler=lambda e: self._log_error_cb(
+                    "setting activity properties", e))
 
     def _activity_properties_changed_cb(self, room, properties):
         """Handle update of properties for a "room" (activity handle)"""
