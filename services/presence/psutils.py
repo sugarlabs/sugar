@@ -21,21 +21,6 @@ import logging
 _logger = logging.getLogger('s-p-s.psutils')
 
 
-def bytes_to_string(bytes):
-    """The function converts a  D-BUS byte array provided by dbus to string format.
-    
-    bytes -- a D-Bus array of bytes. Handle both DBus byte arrays and strings
-    
-    """
-    try:
-        # DBus Byte array
-        ret = ''.join([chr(item) for item in bytes])
-    except TypeError:
-        # Python string
-        ret = ''.join([str(item) for item in bytes])
-    return ret
-
-
 NM_SERVICE = 'org.freedesktop.NetworkManager'
 NM_IFACE = 'org.freedesktop.NetworkManager'
 NM_IFACE_DEVICES = 'org.freedesktop.NetworkManager.Devices'
