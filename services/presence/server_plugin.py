@@ -56,8 +56,6 @@ _PROTOCOL = "jabber"
 
 _logger = logging.getLogger('s-p-s.server_plugin')
 
-class InvalidBuddyError(Exception):
-    """(Unused) exception to indicate an invalid buddy specifier"""
 
 def _buddy_icon_save_cb(buf, data):
     data[0] += buf
