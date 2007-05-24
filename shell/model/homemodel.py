@@ -26,6 +26,7 @@ from sugar.activity import bundleregistry
 
 _SERVICE_NAME = "org.laptop.Activity"
 _SERVICE_PATH = "/org/laptop/Activity"
+_SERVICE_INTERFACE = "org.laptop.Activity"
 
 class HomeModel(gobject.GObject):
     """Model of the "Home" view (activity management)
@@ -68,6 +69,12 @@ class HomeModel(gobject.GObject):
         screen.connect('window-closed', self._window_closed_cb)
         screen.connect('active-window-changed',
                        self._active_window_changed_cb)
+        bus = dbus.SessionBus()
+        bus.add_signal_receiver(
+            self._dbus_name_owner_changed_cb, 
+            'NameOwnerChanged', 
+            'org.freedesktop.DBus', 
+            'org.freedesktop.DBus')
 
     def get_current_activity(self):
         return self._current_activity
@@ -103,9 +110,31 @@ class HomeModel(gobject.GObject):
             self.emit('active-activity-changed', None)
             self._notify_activity_activation(self._current_activity, None)
 
+    def _dbus_name_owner_changed_cb(self, name, old, new):
+        """Detect new activity instances on the DBus
+
+        Normally, new activities are detected by
+        the _window_opened_cb callback. However, if the
+        window is opened before the dbus service is up,
+        a RawHomeWindow is created. In here we create
+        a proper HomeActivity replacing the RawHomeWindow.
+        """
+        if name.startswith(_SERVICE_NAME) and new and not old:
+            xid = name[len(_SERVICE_NAME):]
+            if not xid.isdigit():
+                return
+            logging.debug("Activity instance launch detected: %s" % name)
+            xid = int(xid)
+            act = self._get_activity_by_xid(xid)
+            if isinstance(act, HomeRawWindow):
+                logging.debug("Removing bogus raw activity %s for window %i" 
+                              % (act.get_activity_id(), xid))
+                self._internal_remove_activity(act)
+                self._add_activity(act.get_window())
+
     def _get_activity_by_xid(self, xid):
         for act in self._activities.values():
-            if act.get_xid() == xid:
+            if act.get_launched() and act.get_xid() == xid:
                 return act
         return None
 
@@ -168,8 +197,11 @@ class HomeModel(gobject.GObject):
         bus = dbus.SessionBus()
         xid = window.get_xid()
         try:
-            service = bus.get_object(_SERVICE_NAME + '%d' % xid,
-                                     _SERVICE_PATH + "/%s" % xid)
+            service = dbus.Interface(
+                bus.get_object(_SERVICE_NAME + '%d' % xid,
+                               _SERVICE_PATH + "/%s" % xid),
+                _SERVICE_INTERFACE)
+            
         except dbus.DBusException:
             service = None
 

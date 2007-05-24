@@ -34,6 +34,8 @@ from sugar import logger
 gobject.threads_init()
 dbus.glib.threads_init()
 
+_ACTIVITY_FACTORY_INTERFACE = "org.laptop.ActivityFactory"
+
 class ActivityFactoryService(dbus.service.Object):
     """D-Bus service that creates instances of Python activities
     
@@ -92,7 +94,7 @@ class ActivityFactoryService(dbus.service.Object):
         object_path = '/' + service_name.replace('.', '/')
         dbus.service.Object.__init__(self, bus_name, object_path)
 
-    @dbus.service.method("com.redhat.Sugar.ActivityFactory", in_signature="a{ss}")
+    @dbus.service.method("org.laptop.ActivityFactory", in_signature="a{ss}")
     def create(self, handle):
         """Create a new instance of this activity 
         

@@ -31,6 +31,8 @@ _ACTIVITY_SERVICE_NAME = "org.laptop.Activity"
 _ACTIVITY_SERVICE_PATH = "/org/laptop/Activity"
 _ACTIVITY_INTERFACE = "org.laptop.Activity"
 
+_ACTIVITY_FACTORY_INTERFACE = "org.laptop.ActivityFactory"
+
 def create_activity_id():
     """Generate a new, unique ID for this activity"""
     pservice = presenceservice.get_instance()
@@ -103,7 +105,7 @@ class ActivityCreationHandler(gobject.GObject):
 
         bus = dbus.SessionBus()
         proxy_obj = bus.get_object(service_name, bundle.get_object_path(), follow_name_owner_changes=True)
-        factory = dbus.Interface(proxy_obj, "com.redhat.Sugar.ActivityFactory")
+        factory = dbus.Interface(proxy_obj, _ACTIVITY_FACTORY_INTERFACE)
 
         factory.create(self._activity_handle.get_dict(),
                        reply_handler=self._reply_handler,

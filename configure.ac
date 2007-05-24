@@ -2,16 +2,10 @@ AC_INIT([Sugar],[0.63],[],[sugar])
 
 AC_PREREQ([2.59])
 
-GNOME_COMMON_INIT
-GNOME_COMPILE_WARNINGS
-
 AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([configure.ac])
 
 AM_INIT_AUTOMAKE([1.9 foreign dist-bzip2 no-dist-gzip])
-
-AM_MAINTAINER_MODE
 
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
@@ -23,47 +17,14 @@ AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
 
 AC_PATH_PROG(PYGTK_CODEGEN, pygtk-codegen-2.0, no)
 
-PKG_CHECK_MODULES(PYGTK, pygtk-2.0)
-
-PKG_CHECK_MODULES(PYCAIRO, pycairo)
+PKG_CHECK_MODULES(SHELL, pygtk-2.0 gtk+-2.0 gstreamer-0.10 gstreamer-plugins-base-0.10)
 
 PKG_CHECK_MODULES(LIB, gtk+-2.0)
-
-PKG_CHECK_MODULES(SHELL, gtk+-2.0 gstreamer-0.10 gstreamer-plugins-base-0.10)
+PKG_CHECK_MODULES(LIB_BINDINGS, pygtk-2.0)
 
 PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
 AC_SUBST(PYGTK_DEFSDIR)
 
-#
-# Mozilla
-#
-
-AC_ARG_WITH(libxul_sdk,
-	AC_HELP_STRING([--with-libxul-sdk=DIR], [Path to libxul SDK]))
-
-if test -d "$with_libxul_sdk"; then
-
-# xulrunner 1.9
-
-GECKO_CFLAGS="-I$with_libxul_sdk/sdk/include -DXPCOM_GLUE"
-XPCOMGLUE_LIBS="-L$with_libxul_sdk/sdk/lib -lxpcomglue"
-MOZILLA_INCLUDE_DIR="$with_libxul_sdk/include"
-XPIDL="$with_libxul_sdk/sdk/bin/xpidl"
-MOZILLA_IDL_DIR="$with_libxul_sdk/sdk/idl"
-
-AC_SUBST(XPCOMGLUE_LIBS)
-AC_SUBST(GECKO_CFLAGS)
-AC_SUBST(MOZILLA_INCLUDE_DIR)
-AC_SUBST(XPIDL)
-AC_SUBST(MOZILLA_IDL_DIR)
-
-else
-
-AC_MSG_ERROR([Must specify the xulrunner sdk dir (--with-libxul-sdk)])
-
-fi
-
-#
 # Setup GETTEXT
 #
 ALL_LINGUAS="it ha ig yo"
@@ -79,10 +40,8 @@ AC_OUTPUT([
 Makefile
 bin/Makefile
 data/Makefile
-browser/Makefile
-browser/components/Makefile
-browser/components/sessionstore/Makefile
-browser/components/browserhelper/Makefile
+lib/Makefile
+lib/xdgmime/Makefile
 services/Makefile
 services/presence/Makefile
 services/clipboard/Makefile
@@ -113,10 +72,9 @@ services/console/interface/logviewer/Makefile
 services/console/interface/terminal/Makefile
 sugar/Makefile
 sugar/activity/Makefile
-sugar/browser/Makefile
 sugar/clipboard/Makefile
 sugar/graphics/Makefile
-sugar/p2p/Makefile
+sugar/objects/Makefile
 sugar/presence/Makefile
 sugar/datastore/Makefile
 po/Makefile.in

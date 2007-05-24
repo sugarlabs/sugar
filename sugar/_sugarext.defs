@@ -1,0 +1,27 @@
+;; -*- scheme -*-
+; object definitions
+
+(define-object AddressEntry
+  (in-module "Sugar")
+  (parent "GtkEntry")
+  (c-name "SugarAddressEntry")
+  (gtype-id "SUGAR_TYPE_ADDRESS_ENTRY")
+)
+
+; functions
+
+(define-function get_mime_type_from_file_name 
+  (c-name "sugar_mime_get_mime_type_from_file_name")
+  (return-type "const-char*")
+  (parameters
+    '("const-char*" "filename")
+  )
+)
+
+(define-function get_mime_type_for_file
+  (c-name "sugar_mime_get_mime_type_for_file")
+  (return-type "const-char*")
+  (parameters
+    '("const-char*" "filename")
+  )
+)
