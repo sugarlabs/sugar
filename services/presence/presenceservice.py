@@ -25,9 +25,10 @@ import dbus.glib
 
 from telepathy.client import ManagerRegistry, Connection
 from telepathy.interfaces import (CONN_MGR_INTERFACE, CONN_INTERFACE)
-from telepathy.constants import (CONNECTION_STATUS_CONNECTING, CONNECTION_STATUS_CONNECTED,
-    CONNECTION_STATUS_DISCONNECTED, CONNECTION_HANDLE_TYPE_CONTACT)
- 
+from telepathy.constants import (CONNECTION_STATUS_CONNECTING,
+    CONNECTION_STATUS_CONNECTED,
+    CONNECTION_STATUS_DISCONNECTED)
+
 from server_plugin import ServerPlugin
 from linklocal_plugin import LinkLocalPlugin
 from sugar import util
@@ -89,11 +90,16 @@ class PresenceService(ExportedGObject):
         self._server_plugin.connect('contact-online', self._contact_online)
         self._server_plugin.connect('contact-offline', self._contact_offline)
         self._server_plugin.connect('avatar-updated', self._avatar_updated)
-        self._server_plugin.connect('buddy-properties-changed', self._buddy_properties_changed)
-        self._server_plugin.connect('buddy-activities-changed', self._buddy_activities_changed)
-        self._server_plugin.connect('activity-invitation', self._activity_invitation)
-        self._server_plugin.connect('private-invitation', self._private_invitation)
-        self._server_plugin.connect('activity-properties-changed', self._activity_properties_changed)
+        self._server_plugin.connect('buddy-properties-changed',
+                                    self._buddy_properties_changed)
+        self._server_plugin.connect('buddy-activities-changed',
+                                    self._buddy_activities_changed)
+        self._server_plugin.connect('activity-invitation',
+                                    self._activity_invitation)
+        self._server_plugin.connect('private-invitation',
+                                    self._private_invitation)
+        self._server_plugin.connect('activity-properties-changed',
+                                    self._activity_properties_changed)
         self._server_plugin.start()
 
         # Set up the link local connection
@@ -145,15 +151,18 @@ class PresenceService(ExportedGObject):
     def _buddy_validity_changed_cb(self, buddy, valid):
         if valid:
             self.BuddyAppeared(buddy.object_path())
-            _logger.debug("New Buddy: %s (%s)" % (buddy.props.nick, buddy.props.color))
+            _logger.debug("New Buddy: %s (%s)", buddy.props.nick,
+                          buddy.props.color)
         else:
             self.BuddyDisappeared(buddy.object_path())
-            _logger.debug("Buddy left: %s (%s)" % (buddy.props.nick, buddy.props.color))
+            _logger.debug("Buddy left: %s (%s)", buddy.props.nick,
+                          buddy.props.color)
 
     def _buddy_disappeared_cb(self, buddy):
         if buddy.props.valid:
             self.BuddyDisappeared(buddy.object_path())
-            _logger.debug('Buddy left: %s (%s)' % (buddy.props.nick, buddy.props.color)
+            _logger.debug('Buddy left: %s (%s)', buddy.props.nick,
+                          buddy.props.color)
         self._buddies.pop(buddy.props.key)
 
     def _contact_offline(self, tp, handle):
@@ -181,17 +190,20 @@ class PresenceService(ExportedGObject):
         buddy = self._handles_buddies[tp].get(handle)
         if buddy:
             buddy.set_properties(properties)
-            _logger.debug("Buddy %s properties updated: %s" % (buddy.props.nick, properties.keys()))
+            _logger.debug("Buddy %s properties updated: %s", buddy.props.nick,
+                          properties.keys()))
 
     def _new_activity(self, activity_id, tp):
         try:
             objid = self._get_next_object_id()
             activity = Activity(self._bus_name, objid, tp, id=activity_id)
-        except Exception, e:
-            _logger.debug("Invalid activity: %s" % e)
+        except Exception:
+            # FIXME: catching bare Exception considered harmful
+            _logger.debug("Invalid activity:", exc_info=1)
             return None
 
-        activity.connect("validity-changed", self._activity_validity_changed_cb)
+        activity.connect("validity-changed",
+                         self._activity_validity_changed_cb)
         self._activities[activity_id] = activity
         return activity
 
@@ -200,18 +212,18 @@ class PresenceService(ExportedGObject):
 
         self.ActivityDisappeared(activity.object_path())
         del self._activities[activity.props.id]
-    
+
     def _buddy_activities_changed(self, tp, contact_handle, activities):
         acts = []
         for act in activities:
             acts.append(str(act))
-        _logger.debug("Handle %s activities changed: %s" % (contact_handle, acts))
+        _logger.debug("Handle %s activities changed: %s", contact_handle, acts)
         buddies = self._handles_buddies[tp]
         buddy = buddies.get(contact_handle)
 
         if not buddy:
             # We don't know this buddy
-            # FIXME: What should we do here? 
+            # FIXME: What should we do here?
             # FIXME: Do we need to check if the buddy is valid or something?
             _logger.debug("contact_activities_changed: buddy unknown")
             return
@@ -224,7 +236,7 @@ class PresenceService(ExportedGObject):
 
         activities_joined = new_activities - old_activities
         for act in activities_joined:
-            _logger.debug("Handle %s joined activity %s" % (contact_handle, act))
+            _logger.debug("Handle %s joined activity %s", contact_handle, act)
             activity = self._activities.get(act)
             if not activity:
                 # new activity, can fail
@@ -236,11 +248,11 @@ class PresenceService(ExportedGObject):
 
         activities_left = old_activities - new_activities
         for act in activities_left:
-            _logger.debug("Handle %s left activity %s" % (contact_handle, act))
+            _logger.debug("Handle %s left activity %s", contact_handle, act)
             activity = self._activities.get(act)
             if not activity:
                 continue
-            
+
             activity.buddy_left(buddy)
             buddy.remove_activity(activity)
 
@@ -254,7 +266,8 @@ class PresenceService(ExportedGObject):
 
     def _private_invitation(self, tp, chan_path):
         conn = tp.get_connection()
-        self.PrivateInvitation(str(conn.service_name), conn.object_path, chan_path)
+        self.PrivateInvitation(str(conn.service_name), conn.object_path,
+                               chan_path)
 
     @dbus.service.signal(_PRESENCE_INTERFACE, signature="o")
     def ActivityAppeared(self, activity):
@@ -288,7 +301,8 @@ class PresenceService(ExportedGObject):
                 ret.append(act.object_path())
         return ret
 
-    @dbus.service.method(_PRESENCE_INTERFACE, in_signature="s", out_signature="o")
+    @dbus.service.method(_PRESENCE_INTERFACE, in_signature="s",
+                         out_signature="o")
     def GetActivityById(self, actid):
         act = self.internal_get_activity(actid)
         if not act or not act.props.valid:
@@ -358,8 +372,10 @@ class PresenceService(ExportedGObject):
 
     @dbus.service.method(_PRESENCE_INTERFACE, in_signature="sssa{sv}",
             out_signature="o", async_callbacks=('async_cb', 'async_err_cb'))
-    def ShareActivity(self, actid, atype, name, properties, async_cb, async_err_cb):
-        self._share_activity(actid, atype, name, properties, (async_cb, async_err_cb))
+    def ShareActivity(self, actid, atype, name, properties, async_cb,
+                      async_err_cb):
+        self._share_activity(actid, atype, name, properties,
+                             (async_cb, async_err_cb))
 
     @dbus.service.method(_PRESENCE_INTERFACE, out_signature="so")
     def GetPreferredConnection(self):
@@ -375,8 +391,10 @@ class PresenceService(ExportedGObject):
         # FIXME check which tp client we should use to share the activity
         color = self._owner.props.color
         activity = Activity(self._bus_name, objid, self._server_plugin,
-                        id=actid, type=atype, name=name, color=color, local=True)
-        activity.connect("validity-changed", self._activity_validity_changed_cb)
+                            id=actid, type=atype, name=name, color=color,
+                            local=True)
+        activity.connect("validity-changed",
+                         self._activity_validity_changed_cb)
         self._activities[actid] = activity
         activity._share(callbacks, self._owner)
 
@@ -389,10 +407,12 @@ class PresenceService(ExportedGObject):
     def _activity_validity_changed_cb(self, activity, valid):
         if valid:
             self.ActivityAppeared(activity.object_path())
-            _logger.debug("New Activity: %s (%s)" % (activity.props.name, activity.props.id))
+            _logger.debug("New Activity: %s (%s)", activity.props.name,
+                          activity.props.id))
         else:
             self.ActivityDisappeared(activity.object_path())
-            _logger.debug("Activity disappeared: %s (%s)" % (activity.props.name, activity.props.id))
+            _logger.debug("Activity disappeared: %s (%s)", activity.props.name,
+                          activity.props.id))
 
     def _activity_properties_changed(self, tp, act_id, props):
         activity = self._activities.get(act_id)
