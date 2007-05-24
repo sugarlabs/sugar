@@ -23,7 +23,6 @@ import gobject
 import gtk
 
 from sugar.presence import presenceservice
-from sugar.activity import bundleregistry
 from sugar.activity.activityhandle import ActivityHandle
 from sugar import util
 
@@ -75,9 +74,7 @@ class ActivityCreationHandler(gobject.GObject):
     def __init__(self, service_name, activity_handle):
         """Initialise the handler
         
-        service_name -- used to retrieve the activity bundle
-            from the global BundleRegistry.  This is what 
-            determines what activity will be run.
+        service_name -- the service name of the bundle factory
         activity_handle -- stores the values which are to 
             be passed to the service to uniquely identify
             the activity to be created and the sharing 
@@ -100,16 +97,16 @@ class ActivityCreationHandler(gobject.GObject):
         self._service_name = service_name
         self._activity_handle = activity_handle
 
-        registry = bundleregistry.get_registry()
-        bundle = registry.get_bundle(service_name)
-
         bus = dbus.SessionBus()
-        proxy_obj = bus.get_object(service_name, bundle.get_object_path(), follow_name_owner_changes=True)
+        object_path = '/' + service_name.replace('.', '/')
+        proxy_obj = bus.get_object(service_name, object_path,
+                                   follow_name_owner_changes=True)
         factory = dbus.Interface(proxy_obj, _ACTIVITY_FACTORY_INTERFACE)
 
         factory.create(self._activity_handle.get_dict(),
                        reply_handler=self._reply_handler,
                        error_handler=self._error_handler)
+
     def get_activity_id(self):
         """Retrieve the unique identity for this activity"""
         return self._activity_handle.activity_id
