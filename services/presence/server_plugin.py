@@ -41,6 +41,7 @@ from telepathy.constants import (HANDLE_TYPE_CONTACT,
     CONNECTION_STATUS_CONNECTED, CONNECTION_STATUS_DISCONNECTED,
     CONNECTION_STATUS_CONNECTING,
     CONNECTION_STATUS_REASON_AUTHENTICATION_FAILED,
+    CONNECTION_STATUS_REASON_NONE_SPECIFIED,
     PROPERTY_FLAG_WRITE)
 from sugar import util
 
@@ -303,14 +304,6 @@ class ServerPlugin(gobject.GObject):
         """Retrieve our telepathy.client.Connection object"""
         return self._conn
 
-    def _connect_reply_cb(self):
-        """Handle connection success"""
-        pass
-
-    def _connect_error_cb(self, exception):
-        """Handle connection failure"""
-        _logger.debug("Connect error: %s", exception)
-
     def _init_connection(self):
         """Set up our connection
 
@@ -350,11 +343,18 @@ class ServerPlugin(gobject.GObject):
 
         self._conn = conn
         status = self._conn[CONN_INTERFACE].GetStatus()
+
         if status == CONNECTION_STATUS_DISCONNECTED:
-            self._conn[CONN_INTERFACE].Connect(
-                    reply_handler=self._connect_reply_cb,
-                    error_handler=self._connect_error_cb)
-        self._handle_connection_status_change(self._conn, status)
+            def connect_reply():
+                _logger.debug('Connect() succeeded')
+            def connect_error(e):
+                _logger.debug('Connect() failed: %s', e)
+
+            self._conn[CONN_INTERFACE].Connect(reply_handler=connect_reply,
+                                               error_handler=connect_error)
+
+        self._handle_connection_status_change(status,
+                CONNECTION_STATUS_REASON_NONE_SPECIFIED)
 
     def _request_list_channel(self, name):
         """Request a contact-list channel from Telepathy
