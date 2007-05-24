@@ -236,11 +236,11 @@ class PresenceService(ExportedGObject):
         for act in activities_joined:
             _logger.debug("Handle %s joined activity %s", contact_handle, act)
             activity = self._activities.get(act)
-            if not activity:
+            if activity is None:
                 # new activity, can fail
                 activity = self._new_activity(act, tp)
 
-            if activity:
+            if activity is not None:
                 activity.buddy_joined(buddy)
                 buddy.add_activity(activity)
 
