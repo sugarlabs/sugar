@@ -155,6 +155,9 @@ class TestPresenceService(PresenceService):
         return TestOwner(self, self._bus_name, self._get_next_object_id(),
                          self.__test_num, self.__randomize)
 
+    def internal_get_activity(self, actid):
+        return self._activities.get(actid, None):
+
 
 def _extract_public_key(keyfile):
     try:

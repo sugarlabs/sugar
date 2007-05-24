@@ -304,7 +304,7 @@ class PresenceService(ExportedGObject):
     @dbus.service.method(_PRESENCE_INTERFACE, in_signature="s",
                          out_signature="o")
     def GetActivityById(self, actid):
-        act = self.internal_get_activity(actid)
+        act = self._activities.get(actid, None)
         if not act or not act.props.valid:
             raise NotFoundError("The activity was not found.")
         return act.object_path()
@@ -418,11 +418,6 @@ class PresenceService(ExportedGObject):
         activity = self._activities.get(act_id)
         if activity:
             activity.set_properties(props)
-
-    def internal_get_activity(self, actid):
-        if not self._activities.has_key(actid):
-            return None
-        return self._activities[actid]
 
 
 def main(test_num=0, randomize=False):
