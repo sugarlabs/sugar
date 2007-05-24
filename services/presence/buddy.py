@@ -80,9 +80,7 @@ class Buddy(ExportedGObject):
         'property-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                             ([gobject.TYPE_PYOBJECT])),
         'icon-changed':     (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                            ([gobject.TYPE_PYOBJECT])),
-        'disappeared':      (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                            ([])),
+                            ([gobject.TYPE_PYOBJECT]))
     }
 
     __gproperties__ = {
@@ -238,12 +236,6 @@ class Buddy(ExportedGObject):
             full set of properties, just the changes.
         """
 
-    def add_telepathy_handle(self, tp_client, handle):
-        """Add a Telepathy handle."""
-        conn = tp_client.get_connection()
-        self.TelepathyHandleAdded(conn.service_name, conn.object_path, handle)
-        self.handles[tp_client] = handle
-
     @dbus.service.signal(_BUDDY_INTERFACE, signature='sou')
     def TelepathyHandleAdded(self, tp_conn_name, tp_conn_path, handle):
         """Another Telepathy handle has become associated with the buddy.
@@ -257,21 +249,6 @@ class Buddy(ExportedGObject):
         handle -- The handle of type CONTACT, which is not channel-specific,
             newly associated with the buddy
         """
-
-    def remove_telepathy_handle(self, tp_client, handle):
-        """Remove a Telepathy handle."""
-        conn = tp_client.get_connection()
-        my_handle = self.handles.get(tp_client, 0)
-        if my_handle == handle:
-            del self.handles[tp_client]
-            self.TelepathyHandleRemoved(conn.service_name, conn.object_path,
-                                        handle)
-            if not self.handles:
-                self.emit('disappeared')
-        else:
-            _logger.debug('Telepathy handle %u supposedly removed, but '
-                          'my handle on that connection is %u - ignoring',
-                          handle, my_handle)
 
     @dbus.service.signal(_BUDDY_INTERFACE, signature='sou')
     def TelepathyHandleRemoved(self, tp_conn_name, tp_conn_path, handle):
