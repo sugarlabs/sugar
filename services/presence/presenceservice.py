@@ -191,7 +191,7 @@ class PresenceService(ExportedGObject):
         if buddy:
             buddy.set_properties(properties)
             _logger.debug("Buddy %s properties updated: %s", buddy.props.nick,
-                          properties.keys()))
+                          properties.keys())
 
     def _new_activity(self, activity_id, tp):
         try:
@@ -408,11 +408,11 @@ class PresenceService(ExportedGObject):
         if valid:
             self.ActivityAppeared(activity.object_path())
             _logger.debug("New Activity: %s (%s)", activity.props.name,
-                          activity.props.id))
+                          activity.props.id)
         else:
             self.ActivityDisappeared(activity.object_path())
             _logger.debug("Activity disappeared: %s (%s)", activity.props.name,
-                          activity.props.id))
+                          activity.props.id)
 
     def _activity_properties_changed(self, tp, act_id, props):
         activity = self._activities.get(act_id)
