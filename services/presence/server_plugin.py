@@ -101,30 +101,62 @@ class ServerPlugin(gobject.GObject):
     to implement the PresenceService.
     """
     __gsignals__ = {
-        'contact-online':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                             ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
-        'contact-offline': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                             ([gobject.TYPE_PYOBJECT])),
-        'status':          (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                             ([gobject.TYPE_INT, gobject.TYPE_INT])),
-        'avatar-updated':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                             ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
-        'buddy-properties-changed':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                             ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
-        'buddy-activities-changed':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                             ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
-        'activity-invitation': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                             ([gobject.TYPE_PYOBJECT])),
-        'private-invitation':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                             ([gobject.TYPE_PYOBJECT])),
-        'activity-properties-changed':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                             ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
-        'activity-shared':   (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                               ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT,
-                                 gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
-        'activity-joined':   (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                               ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT,
-                                 gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT]))
+        'contact-online':
+            # Contact has come online and we've discovered all their buddy
+            # properties.
+            # args: contact handle: int; dict {name: str => property: object}
+            (gobject.SIGNAL_RUN_FIRST, None, [object, object]),
+        'contact-offline':
+            # Contact has gone offline.
+            # args: contact handle
+            (gobject.SIGNAL_RUN_FIRST, None, [object]),
+        'status':
+            # Connection status changed.
+            # args: status, reason as for Telepathy StatusChanged
+            (gobject.SIGNAL_RUN_FIRST, None, [int, int]),
+        'avatar-updated':
+            # Contact's avatar has changed
+            # args: contact handle: int; icon data: str
+            (gobject.SIGNAL_RUN_FIRST, None, [object, object]),
+        'buddy-properties-changed':
+            # OLPC buddy properties changed; as for PropertiesChanged
+            # args:
+            #   contact handle: int
+            #   properties: dict {name: str => property: object}
+            # FIXME: are these all the properties or just those that changed?
+            (gobject.SIGNAL_RUN_FIRST, None, [object, object]),
+        'buddy-activities-changed':
+            # OLPC activities changed
+            # args:
+            #   contact handle: int
+            #   activity IDs: list of str
+            (gobject.SIGNAL_RUN_FIRST, None, [object, object]),
+        'activity-invitation':
+            # We were invited to join an activity
+            # args: activity ID: str
+            (gobject.SIGNAL_RUN_FIRST, None, [object]),
+        'private-invitation':
+            # We were invited to join a chat or a media call
+            # args: channel object path
+            (gobject.SIGNAL_RUN_FIRST, None, [object]),
+        'activity-properties-changed':
+            # An activity's properties changed; as for
+            # ActivityPropertiesChanged
+            # args: activity ID: str; properties: dict { str => object }
+            # FIXME: are these all the properties or just those that changed?
+            (gobject.SIGNAL_RUN_FIRST, None, [object, object]),
+        'activity-shared':
+            # share_activity() succeeded
+            # args:
+            #   activity ID: str
+            #   channel: telepathy.client.Channel, or None on failure
+            #   error: None, or Exception on failure
+            #   userdata as passed to share_activity
+            (gobject.SIGNAL_RUN_FIRST, None, [object, object, object, object]),
+        'activity-joined':
+            # join_activity() succeeded
+            # args: as for activity-shared
+            (gobject.SIGNAL_RUN_FIRST, None, [object, object, object, object]),
     }
 
     def __init__(self, registry, owner):
