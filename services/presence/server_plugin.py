@@ -58,6 +58,7 @@ _OBJ_PATH_PREFIX = "/org/freedesktop/Telepathy/Connection/gabble/jabber/"
 
 _logger = logging.getLogger('s-p-s.server_plugin')
 
+_RECONNECT_TIMEOUT = 5000
 
 def _buddy_icon_save_cb(buf, data):
     data[0] += buf
@@ -349,6 +350,9 @@ class ServerPlugin(gobject.GObject):
                 _logger.debug('Connect() succeeded')
             def connect_error(e):
                 _logger.debug('Connect() failed: %s', e)
+                if not self._reconnect_id:
+                    self._reconnect_id = gobject.timeout_add(_RECONNECT_TIMEOUT,
+                            self._reconnect_cb)
 
             self._conn[CONN_INTERFACE].Connect(reply_handler=connect_reply,
                                                error_handler=connect_error)
@@ -648,15 +652,9 @@ class ServerPlugin(gobject.GObject):
                 return handle
         return None
 
-    def _start_helper(self):
-        """Helper so start() doesn't have to return False"""
-        self.start()
-        return False
-
     def _reconnect_cb(self):
-        """Schedule a reconnection attempt"""
-        gobject.idle_add(self._start_helper)
-        self._reconnect_id = 0
+        """Attempt to reconnect to the server"""
+        self.start()
         return False
 
     def _handle_connection_status_change(self, status, reason):
@@ -684,8 +682,8 @@ class ServerPlugin(gobject.GObject):
                 # If disconnected and no network connection, do nothing here
                 # and let the IP4AddressMonitor address-changed signal handle
                 # reconnection
-                if self._ip4am.props.address:
-                    self._reconnect_id = gobject.timeout_add(5000,
+                if self._ip4am.props.address and not self._reconnect_id:
+                    self._reconnect_id = gobject.timeout_add(_RECONNECT_TIMEOUT,
                             self._reconnect_cb)
 
         self.emit('status', self._conn_status, int(reason))
