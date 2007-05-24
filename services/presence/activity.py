@@ -67,12 +67,29 @@ class Activity(ExportedGObject):
 
     def __init__(self, bus_name, object_id, tp, **kwargs):
         """Initializes the activity and sets its properties to default values.
-        
-        bus_name -- DBUS name for lookup on local host
-        object_id -- The unique worldwide ID for this activity
-        tp -- The server plugin object (stands for "telepathy plugin")
-        kwargs -- Keyword arguments for the GObject properties
-    
+
+        :Parameters:
+            `bus_name` : dbus.service.BusName
+                D-Bus well-known name for the Presence Service
+            `object_id` : int
+                PS ID for this activity, used to construct the object-path
+            `tp` : server plugin
+                The server plugin object (stands for "telepathy plugin")
+        :Keywords:
+            `id` : str
+                The globally unique activity ID (required)
+            `name` : str
+                Human-readable title for the activity
+            `color` : str
+                Activity color in #RRGGBB,#RRGGBB (stroke,fill) format
+            `type` : str
+                D-Bus service name representing the activity type
+            `local : bool
+                If True, this activity was initiated locally and is not
+                (yet) advertised on the network
+                (FIXME: is this description right?)
+            `custom-props` : dict
+                Activity-specific properties
         """
         
         if not bus_name:
