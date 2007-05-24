@@ -18,10 +18,8 @@ import gobject
 import dbus
 import dbus.service
 from dbus.gobject_service import ExportedGObject
+from dbus.mainloop.glib import DBusGMainLoop
 import logging
-
-# Note that this import has side effects!
-import dbus.glib
 
 from telepathy.client import ManagerRegistry, Connection
 from telepathy.interfaces import (CONN_MGR_INTERFACE, CONN_INTERFACE)
@@ -422,6 +420,7 @@ class PresenceService(ExportedGObject):
 
 def main(test_num=0, randomize=False):
     loop = gobject.MainLoop()
+    dbus_mainloop_wrapper = DBusGMainLoop(set_as_default=True)
 
     if test_num > 0:
         from pstest import TestPresenceService
