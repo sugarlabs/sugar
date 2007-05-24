@@ -24,6 +24,12 @@ from buddyiconcache import BuddyIconCache
 import logging
 import os
 
+try:
+    # Python >= 2.5
+    from hashlib import md5
+except ImportError:
+    from md5 import new as md5
+
 import sys
 import psutils
 
@@ -397,14 +403,7 @@ class ServerPlugin(gobject.GObject):
         if not icon_data:
             icon_data = self._owner.props.icon
 
-        m = None
-        if sys.version_info[:3] >= (2, 5, 0):
-            import hashlib
-            m = hashlib.md5()
-        else:
-            import md5
-            m = md5.new()
-
+        m = md5()
         m.update(icon_data)
         hash = m.hexdigest()
 
