@@ -9,11 +9,12 @@
 
 #include "pygobject.h"
 #include "sugar-address-entry.h"
+#include "xdgmime.h"
 
 #include <pygtk/pygtk.h>
 #include <glib.h>
 
-#line 17 "_sugarext.c"
+#line 18 "_sugarext.c"
 
 
 /* ---------- types from other modules ---------- */
@@ -24,7 +25,7 @@ static PyTypeObject *_PyGtkEntry_Type;
 /* ---------- forward type declarations ---------- */
 PyTypeObject G_GNUC_INTERNAL PySugarAddressEntry_Type;
 
-#line 28 "_sugarext.c"
+#line 29 "_sugarext.c"
 
 
 
@@ -97,8 +98,31 @@ _wrap_sugar_mime_get_mime_type_from_file_name(PyObject *self, PyObject *args, Py
     return Py_None;
 }
 
+#line 23 "_sugarext.override"
+static PyObject *
+_wrap_sugar_mime_get_mime_type_for_file(PyObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "filename", NULL };
+    char *filename;
+    const gchar *ret;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"s:get_mime_type_for_file", kwlist, &filename))
+        return NULL;
+    
+    ret = sugar_mime_get_mime_type_for_file(filename, NULL);
+    
+    if (ret)
+        return PyString_FromString(ret);
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+#line 120 "_sugarext.c"
+
+
 const PyMethodDef py_sugarext_functions[] = {
     { "get_mime_type_from_file_name", (PyCFunction)_wrap_sugar_mime_get_mime_type_from_file_name, METH_VARARGS|METH_KEYWORDS,
+      NULL },
+    { "get_mime_type_for_file", (PyCFunction)_wrap_sugar_mime_get_mime_type_for_file, METH_VARARGS|METH_KEYWORDS,
       NULL },
     { NULL, NULL, 0, NULL }
 };
@@ -123,6 +147,6 @@ py_sugarext_register_classes(PyObject *d)
     }
 
 
-#line 127 "_sugarext.c"
+#line 151 "_sugarext.c"
     pygobject_register_class(d, "SugarAddressEntry", SUGAR_TYPE_ADDRESS_ENTRY, &PySugarAddressEntry_Type, Py_BuildValue("(O)", &PyGtkEntry_Type));
 }

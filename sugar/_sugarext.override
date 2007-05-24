@@ -5,6 +5,7 @@ headers
 
 #include "pygobject.h"
 #include "sugar-address-entry.h"
+#include "xdgmime.h"
 
 #include <pygtk/pygtk.h>
 #include <glib.h>
@@ -17,4 +18,23 @@ import gtk.Entry as PyGtkEntry_Type
 ignore-glob
   *_get_type
   _*
+%%
+override sugar_mime_get_mime_type_for_file kwargs
+static PyObject *
+_wrap_sugar_mime_get_mime_type_for_file(PyObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "filename", NULL };
+    char *filename;
+    const gchar *ret;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"s:get_mime_type_for_file", kwlist, &filename))
+        return NULL;
+    
+    ret = sugar_mime_get_mime_type_for_file(filename, NULL);
+    
+    if (ret)
+        return PyString_FromString(ret);
+    Py_INCREF(Py_None);
+    return Py_None;
+}
 %%

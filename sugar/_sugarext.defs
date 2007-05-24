@@ -17,3 +17,11 @@
     '("const-char*" "filename")
   )
 )
+
+(define-function get_mime_type_for_file
+  (c-name "sugar_mime_get_mime_type_for_file")
+  (return-type "const-char*")
+  (parameters
+    '("const-char*" "filename")
+  )
+)

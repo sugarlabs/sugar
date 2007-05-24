@@ -16,6 +16,15 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from sugar.objects import mime
+import sys
 
-print mime.get_from_file_name('test.pdf')
+from sugar import objects
+
+print 'MIME type for test.pdf (from extension):'
+print objects.mime.get_from_file_name('test.pdf')
+
+print ''
+
+if len(sys.argv) > 1:
+    print 'MIME type for file %s:' % sys.argv[1]
+    print objects.mime.get_for_file(sys.argv[1])

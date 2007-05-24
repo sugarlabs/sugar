@@ -14,7 +14,8 @@ INCLUDES = 				\
 	$(LIB_CFLAGS)			\
 	$(LIB_BINDINGS_CFLAGS)		\
 	$(PYTHON_INCLUDES)		\
-	-I$(top_srcdir)/lib
+	-I$(top_srcdir)/lib		\
+	-I$(top_srcdir)/lib/xdgmime
 
 pkgpyexecdir = $(pythondir)/sugar
 
