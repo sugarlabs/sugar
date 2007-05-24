@@ -423,7 +423,7 @@ class ServerPlugin(gobject.GObject):
         img_data = _get_buddy_icon_at_size(icon_data, min(maxw, 96), min(maxh, 96), maxsize)
         self._conn[CONN_INTERFACE_AVATARS].SetAvatar(img_data, "image/jpeg",
                 reply_handler=self._set_self_avatar_cb,
-                error_handler=lambda *args: self._log_error_cb("setting avatar", *args))
+                error_handler=lambda e: self._log_error_cb("setting avatar", e))
 
     def _join_activity_channel_props_set_cb(self, activity_id, signal, handle, channel, userdata):
         self._joined_activities.append((activity_id, handle))
@@ -489,7 +489,7 @@ class ServerPlugin(gobject.GObject):
             room_jid = activity_id + "@conference." + self._account["server"]
             self._conn[CONN_INTERFACE].RequestHandles(HANDLE_TYPE_ROOM, [room_jid],
                     reply_handler=lambda *args: self._join_activity_get_channel_cb(activity_id, signal, userdata, *args),
-                    error_handler=lambda *args: self._join_error_cb(activity_id, signal, userdata, 'RequestHandles([%u])' % room_jid, *args))
+                    error_handler=lambda e: self._join_error_cb(activity_id, signal, userdata, 'RequestHandles([%u])' % room_jid, e))
         else:
             self._join_activity_get_channel_cb(activity_id, signal, userdata, [handle])
     
@@ -538,7 +538,7 @@ class ServerPlugin(gobject.GObject):
             props['ip4-address'] = addr
         self._conn[CONN_INTERFACE_BUDDY_INFO].SetProperties(props,
                 reply_handler=self._ignore_success_cb,
-                error_handler=lambda *args: self._log_error_cb("setting properties", *args))
+                error_handler=lambda e: self._log_error_cb("setting properties", e))
 
     def _set_self_alias(self):
         """Forwarded to SetActivities on AliasInfo channel"""
@@ -546,7 +546,7 @@ class ServerPlugin(gobject.GObject):
         self_handle = self._conn[CONN_INTERFACE].GetSelfHandle()
         self._conn[CONN_INTERFACE_ALIASING].SetAliases({self_handle : alias},
                 reply_handler=self._ignore_success_cb,
-                error_handler=lambda *args: self._log_error_cb("setting alias", *args))
+                error_handler=lambda e: self._log_error_cb("setting alias", e))
         return False
 
     def _set_self_activities(self):
@@ -556,7 +556,7 @@ class ServerPlugin(gobject.GObject):
         """
         self._conn[CONN_INTERFACE_BUDDY_INFO].SetActivities(self._joined_activities,
                 reply_handler=self._ignore_success_cb,
-                error_handler=lambda *args: self._log_error_cb("setting activities", *args))
+                error_handler=lambda e: self._log_error_cb("setting activities", e))
 
     def _set_self_current_activity(self):
         """Forward our current activity (or "") to network
@@ -577,7 +577,7 @@ class ServerPlugin(gobject.GObject):
         self._conn[CONN_INTERFACE_BUDDY_INFO].SetCurrentActivity(cur_activity,
                 cur_activity_handle,
                 reply_handler=self._ignore_success_cb,
-                error_handler=lambda *args: self._log_error_cb("setting current activity", *args))
+                error_handler=lambda e: self._log_error_cb("setting current activity", e))
 
     def _get_handle_for_activity(self, activity_id):
         """Retrieve current handle for given activity or None"""
@@ -713,7 +713,7 @@ class ServerPlugin(gobject.GObject):
 
         self._conn[CONN_INTERFACE_BUDDY_INFO].GetActivities(handle,
             reply_handler=lambda *args: self._contact_online_activities_cb(handle, *args),
-            error_handler=lambda *args: self._contact_online_activities_error_cb(handle, *args))
+            error_handler=lambda e: self._contact_online_activities_error_cb(handle, e))
 
     def _contact_online_aliases_error_cb(self, handle, props, retry, err):
         """Handle failure to retrieve given user's alias/information"""
@@ -721,7 +721,7 @@ class ServerPlugin(gobject.GObject):
             _logger.debug("Handle %s - Error getting nickname (will retry): %s" % (handle, err))
             self._conn[CONN_INTERFACE_ALIASING].RequestAliases([handle],
                 reply_handler=lambda *args: self._contact_online_aliases_cb(handle, props, *args),
-                error_handler=lambda *args: self._contact_online_aliases_error_cb(handle, props, False, *args))
+                error_handler=lambda e: self._contact_online_aliases_error_cb(handle, props, False, e))
         else:
             _logger.debug("Handle %s - Error getting nickname: %s" % (handle, err))
             self._contact_offline(handle)
@@ -742,12 +742,12 @@ class ServerPlugin(gobject.GObject):
 
         self._conn[CONN_INTERFACE_ALIASING].RequestAliases([handle],
             reply_handler=lambda *args: self._contact_online_aliases_cb(handle, props, *args),
-            error_handler=lambda *args: self._contact_online_aliases_error_cb(handle, props, True, *args))
+            error_handler=lambda e: self._contact_online_aliases_error_cb(handle, props, True, e))
 
     def _contact_online_request_properties(self, handle, tries):
         self._conn[CONN_INTERFACE_BUDDY_INFO].GetProperties(handle,
             reply_handler=lambda *args: self._contact_online_properties_cb(handle, *args),
-            error_handler=lambda *args: self._contact_online_properties_error_cb(handle, tries, *args))
+            error_handler=lambda e: self._contact_online_properties_error_cb(handle, tries, e))
         return False
 
     def _contact_online_properties_error_cb(self, handle, tries, err):
@@ -855,7 +855,7 @@ class ServerPlugin(gobject.GObject):
             # cache miss
             self._conn[CONN_INTERFACE_AVATARS].RequestAvatar(handle,
                     reply_handler=lambda *args: self._request_avatar_cb(handle, new_avatar_token, *args),
-                    error_handler=lambda *args: self._log_error_cb("getting avatar", *args))
+                    error_handler=lambda e: self._log_error_cb("getting avatar", e))
         else:
             self.emit("avatar-updated", handle, icon)
 
@@ -962,7 +962,7 @@ class ServerPlugin(gobject.GObject):
 
         self._conn[CONN_INTERFACE_ACTIVITY_PROPERTIES].GetProperties(handle,
                 reply_handler=lambda *args: self._activity_properties_changed_cb(handle, *args),
-                error_handler=lambda *args: self._log_error_cb("getting activity properties", *args))
+                error_handler=lambda e: self._log_error_cb("getting activity properties", e))
 
     def set_activity_properties(self, act_id, props):
         """Send update to network on the activity properties of act_id (props)"""
@@ -972,7 +972,7 @@ class ServerPlugin(gobject.GObject):
 
         self._conn[CONN_INTERFACE_ACTIVITY_PROPERTIES].SetProperties(handle, props,
                 reply_handler=self._ignore_success_cb,
-                error_handler=lambda *args: self._log_error_cb("setting activity properties", *args))
+                error_handler=lambda e: self._log_error_cb("setting activity properties", e))
 
     def _activity_properties_changed_cb(self, room, properties):
         """Handle update of properties for a "room" (activity handle)"""
