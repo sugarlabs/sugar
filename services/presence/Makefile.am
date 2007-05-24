@@ -13,6 +13,7 @@ sugar_PYTHON = \
 	buddyiconcache.py \
 	linklocal_plugin.py \
 	presenceservice.py \
+	pstest.py \
 	psutils.py \
 	server_plugin.py
 

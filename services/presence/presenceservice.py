@@ -33,7 +33,7 @@ from server_plugin import ServerPlugin
 from linklocal_plugin import LinkLocalPlugin
 from sugar import util
 
-from buddy import Buddy, ShellOwner, TestOwner
+from buddy import Buddy, ShellOwner
 from activity import Activity
 
 _PRESENCE_SERVICE = "org.laptop.Sugar.Presence"
@@ -57,7 +57,11 @@ class PresenceService(ExportedGObject):
                             ([gobject.TYPE_BOOLEAN]))
     }
 
-    def __init__(self, test_num=0, randomize=False):
+    def _create_owner(self):
+        # Overridden by TestPresenceService
+        return ShellOwner(self, self._bus_name, self._get_next_object_id())
+
+    def __init__(self):
         self._next_object_id = 0
         self._connected = False
 
@@ -72,11 +76,7 @@ class PresenceService(ExportedGObject):
                                 dbus_interface="org.freedesktop.DBus")
 
         # Create the Owner object
-        objid = self._get_next_object_id()
-        if test_num > 0:
-            self._owner = TestOwner(self, self._bus_name, objid, test_num, randomize)
-        else:
-            self._owner = ShellOwner(self, self._bus_name, objid)
+        self._owner = self._create_owner()
         self._buddies[self._owner.props.key] = self._owner
 
         self._registry = ManagerRegistry()
@@ -427,7 +427,13 @@ class PresenceService(ExportedGObject):
 
 def main(test_num=0, randomize=False):
     loop = gobject.MainLoop()
-    ps = PresenceService(test_num, randomize)
+
+    if test_num > 0:
+        from pstest import TestPresenceService
+        ps = TestPresenceService(test_num, randomize)
+    else:
+        ps = PresenceService()
+
     try:
         loop.run()
     except KeyboardInterrupt:
