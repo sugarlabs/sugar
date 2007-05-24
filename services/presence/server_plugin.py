@@ -27,15 +27,16 @@ import os
 import sys
 import psutils
 
-from telepathy.client import ConnectionManager, ManagerRegistry, Connection, Channel
-from telepathy.interfaces import (
-    CONN_MGR_INTERFACE, CONN_INTERFACE, CHANNEL_TYPE_CONTACT_LIST, CHANNEL_INTERFACE_GROUP, CONN_INTERFACE_ALIASING,
-    CONN_INTERFACE_AVATARS, CONN_INTERFACE_PRESENCE, CHANNEL_TYPE_TEXT, CHANNEL_TYPE_STREAMED_MEDIA,
-    PROPERTIES_INTERFACE)
-from telepathy.constants import (
-    CONNECTION_HANDLE_TYPE_NONE, CONNECTION_HANDLE_TYPE_CONTACT,
-    CONNECTION_STATUS_CONNECTED, CONNECTION_STATUS_DISCONNECTED, CONNECTION_STATUS_CONNECTING,
-    CONNECTION_HANDLE_TYPE_LIST, CONNECTION_HANDLE_TYPE_CONTACT, CONNECTION_HANDLE_TYPE_ROOM,
+from telepathy.client import (ConnectionManager, ManagerRegistry, Connection,
+    Channel)
+from telepathy.interfaces import (CONN_MGR_INTERFACE, CONN_INTERFACE,
+    CHANNEL_TYPE_CONTACT_LIST, CHANNEL_INTERFACE_GROUP,
+    CONN_INTERFACE_ALIASING, CONN_INTERFACE_AVATARS, CONN_INTERFACE_PRESENCE,
+    CHANNEL_TYPE_TEXT, CHANNEL_TYPE_STREAMED_MEDIA, PROPERTIES_INTERFACE)
+from telepathy.constants import (HANDLE_TYPE_CONTACT,
+    HANDLE_TYPE_LIST, HANDLE_TYPE_CONTACT, HANDLE_TYPE_ROOM,
+    CONNECTION_STATUS_CONNECTED, CONNECTION_STATUS_DISCONNECTED,
+    CONNECTION_STATUS_CONNECTING,
     CONNECTION_STATUS_REASON_AUTHENTICATION_FAILED,
     PROPERTY_FLAG_WRITE)
 
@@ -246,7 +247,7 @@ class ServerPlugin(gobject.GObject):
             if item[CONN_INTERFACE].GetProtocol() != _PROTOCOL:
                 continue
             if item[CONN_INTERFACE].GetStatus() == CONNECTION_STATUS_CONNECTED:
-                test_handle = item[CONN_INTERFACE].RequestHandles(CONNECTION_HANDLE_TYPE_CONTACT, [our_name])[0]
+                test_handle = item[CONN_INTERFACE].RequestHandles(HANDLE_TYPE_CONTACT, [our_name])[0]
                 if item[CONN_INTERFACE].GetSelfHandle() != test_handle:
                     continue
             return item
@@ -311,9 +312,9 @@ class ServerPlugin(gobject.GObject):
         name -- publish/subscribe, for the type of channel
         """
         handle = self._conn[CONN_INTERFACE].RequestHandles(
-            CONNECTION_HANDLE_TYPE_LIST, [name])[0]
+            HANDLE_TYPE_LIST, [name])[0]
         chan_path = self._conn[CONN_INTERFACE].RequestChannel(
-            CHANNEL_TYPE_CONTACT_LIST, CONNECTION_HANDLE_TYPE_LIST,
+            CHANNEL_TYPE_CONTACT_LIST, HANDLE_TYPE_LIST,
             handle, True)
         channel = Channel(self._conn.service_name, chan_path)
         # hack
@@ -472,7 +473,7 @@ class ServerPlugin(gobject.GObject):
             return
 
         self._conn[CONN_INTERFACE].RequestChannel(CHANNEL_TYPE_TEXT,
-            CONNECTION_HANDLE_TYPE_ROOM, handles[0], True,
+            HANDLE_TYPE_ROOM, handles[0], True,
             reply_handler=lambda *args: self._join_activity_create_channel_cb(activity_id, signal, handles[0], userdata, *args),
             error_handler=lambda e: self._join_error_cb(activity_id, signal, userdata, 'RequestChannel(TEXT, ROOM, %r, True)' % handles[0], e))
 
@@ -486,7 +487,7 @@ class ServerPlugin(gobject.GObject):
         if not handle:
             # FIXME: figure out why the server can't figure this out itself
             room_jid = activity_id + "@conference." + self._account["server"]
-            self._conn[CONN_INTERFACE].RequestHandles(CONNECTION_HANDLE_TYPE_ROOM, [room_jid],
+            self._conn[CONN_INTERFACE].RequestHandles(HANDLE_TYPE_ROOM, [room_jid],
                     reply_handler=lambda *args: self._join_activity_get_channel_cb(activity_id, signal, userdata, *args),
                     error_handler=lambda *args: self._join_error_cb(activity_id, signal, userdata, 'RequestHandles([%u])' % room_jid, *args))
         else:
@@ -706,7 +707,7 @@ class ServerPlugin(gobject.GObject):
             return
 
         props['nick'] = aliases[0]
-        jid = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
+        jid = self._conn[CONN_INTERFACE].InspectHandles(HANDLE_TYPE_CONTACT, [handle])[0]
         self._online_contacts[handle] = jid
         self.emit("contact-online", handle, props)
 
@@ -770,7 +771,7 @@ class ServerPlugin(gobject.GObject):
 
         self._online_contacts[handle] = None
         if handle == self._conn[CONN_INTERFACE].GetSelfHandle():
-            jid = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
+            jid = self._conn[CONN_INTERFACE].InspectHandles(HANDLE_TYPE_CONTACT, [handle])[0]
             self._online_contacts[handle] = jid
             # ignore network events for Owner property changes since those
             # are handled locally
@@ -815,7 +816,7 @@ class ServerPlugin(gobject.GObject):
                 if not online and status == "offline":
                     # weren't online in the first place...
                     continue
-                jid = self._conn[CONN_INTERFACE].InspectHandles(CONNECTION_HANDLE_TYPE_CONTACT, [handle])[0]
+                jid = self._conn[CONN_INTERFACE].InspectHandles(HANDLE_TYPE_CONTACT, [handle])[0]
                 olstr = "ONLINE"
                 if not online: olstr = "OFFLINE"
                 _logger.debug("Handle %s (%s) was %s, status now '%s'." % (handle, jid, olstr, status))
@@ -909,7 +910,7 @@ class ServerPlugin(gobject.GObject):
                         suppress_handler):
         """Handle creation of a new channel
         """
-        if (handle_type == CONNECTION_HANDLE_TYPE_ROOM and
+        if (handle_type == HANDLE_TYPE_ROOM and
             channel_type == CHANNEL_TYPE_TEXT):
             def ready(channel):
 
@@ -948,7 +949,7 @@ class ServerPlugin(gobject.GObject):
             Channel(self._conn.service_name, object_path,
                     ready_handler=ready)
 
-        elif (handle_type == CONNECTION_HANDLE_TYPE_CONTACT and
+        elif (handle_type == HANDLE_TYPE_CONTACT and
               channel_type in (CHANNEL_TYPE_TEXT,
                                CHANNEL_TYPE_STREAMED_MEDIA)):
             self.emit("private-invitation", object_path)
