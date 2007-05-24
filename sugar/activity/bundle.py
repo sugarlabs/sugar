@@ -42,6 +42,7 @@ class Bundle:
         self._name = None
         self._icon = None
         self._service_name = None
+        self._mime_types = None
         self._show_launcher = True
         self._valid = True
         self._path = path
@@ -90,6 +91,10 @@ class Bundle:
             self._exec = None
             self._valid = False
             logging.error('%s must specify exec or class' % self._path)
+
+        if cp.has_option(section, 'mime_types'):
+            mime_list = cp.get(section, 'show_launcher')
+            self._mime_types = mime_list.strip(';')
 
         if cp.has_option(section, 'show_launcher'):
             if cp.get(section, 'show_launcher') == 'no':
@@ -165,6 +170,10 @@ class Bundle:
     def get_class(self):
         """Get the main Activity class"""
         return self._class
+
+    def get_mime_types(self):
+        """Get the MIME types supported by the activity"""
+        return self._mime_types
 
     def get_show_launcher(self):
         """Get whether there should be a visible launcher for the activity"""
