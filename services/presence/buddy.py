@@ -46,23 +46,23 @@ _logger = logging.getLogger('s-p-s.buddy')
 
 class Buddy(ExportedGObject):
     """Person on the network (tracks properties and shared activites)
-    
+
     The Buddy is a collection of metadata describing a particular
     actor/person on the network.  The Buddy object tracks a set of
     activities which the actor has shared with the presence service.
-    
+
     Buddies have a "valid" property which is used to flag Buddies
     which are no longer reachable.  That is, a Buddy may represent
     a no-longer reachable target on the network.
-    
-    The Buddy emits GObject events that the PresenceService uses 
+
+    The Buddy emits GObject events that the PresenceService uses
     to track changes in its status.
-    
+
     Attributes:
-    
-        _activities -- dictionary mapping activity ID to 
-            activity.Activity objects 
-        handles -- dictionary mapping telepresence client to 
+
+        _activities -- dictionary mapping activity ID to
+            activity.Activity objects
+        handles -- dictionary mapping telepresence client to
             "handle" (XXX what's that)
     """
 
@@ -90,7 +90,8 @@ class Buddy(ExportedGObject):
 
     __gproperties__ = {
         _PROP_KEY          : (str, None, None, None,
-                              gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT_ONLY),
+                              gobject.PARAM_READWRITE |
+                              gobject.PARAM_CONSTRUCT_ONLY),
         _PROP_ICON         : (object, None, None, gobject.PARAM_READWRITE),
         _PROP_NICK         : (str, None, None, None, gobject.PARAM_READWRITE),
         _PROP_COLOR        : (str, None, None, None, gobject.PARAM_READWRITE),
@@ -101,12 +102,12 @@ class Buddy(ExportedGObject):
     }
 
     def __init__(self, bus_name, object_id, **kwargs):
-        """Initialize the Buddy object 
-        
+        """Initialize the Buddy object
+
         bus_name -- DBUS object bus name (identifier)
-        object_id -- the activity's unique identifier 
+        object_id -- the activity's unique identifier
         kwargs -- used to initialize the object's properties
-        
+
         constructs a DBUS "object path" from the _BUDDY_PATH
         and object_id
         """
@@ -135,7 +136,8 @@ class Buddy(ExportedGObject):
         if not kwargs.get(_PROP_KEY):
             raise ValueError("key required")
 
-        _ALLOWED_INIT_PROPS = [_PROP_NICK, _PROP_KEY, _PROP_ICON, _PROP_CURACT, _PROP_COLOR, _PROP_IP4_ADDRESS]
+        _ALLOWED_INIT_PROPS = [_PROP_NICK, _PROP_KEY, _PROP_ICON,
+                               _PROP_CURACT, _PROP_COLOR, _PROP_IP4_ADDRESS]
         for (key, value) in kwargs.items():
             if key not in _ALLOWED_INIT_PROPS:
                 _logger.debug("Invalid init property '%s'; ignoring..." % key)
@@ -156,7 +158,7 @@ class Buddy(ExportedGObject):
 
     def do_get_property(self, pspec):
         """Retrieve current value for the given property specifier
-        
+
         pspec -- property specifier with a "name" attribute
         """
         if pspec.name == _PROP_KEY:
@@ -181,11 +183,11 @@ class Buddy(ExportedGObject):
             return self._ip4_address
 
     def do_set_property(self, pspec, value):
-        """Set given property 
-        
+        """Set given property
+
         pspec -- property specifier with a "name" attribute
         value -- value to set
-        
+
         emits 'icon-changed' signal on icon setting
         calls _update_validity on all calls
         """
@@ -219,7 +221,7 @@ class Buddy(ExportedGObject):
                         signature="o")
     def JoinedActivity(self, activity_path):
         """Generates DBUS signal when buddy joins activity
-        
+
         activity_path -- DBUS path to the activity object
         """
 
@@ -227,7 +229,7 @@ class Buddy(ExportedGObject):
                         signature="o")
     def LeftActivity(self, activity_path):
         """Generates DBUS signal when buddy leaves activity
-        
+
         activity_path -- DBUS path to the activity object
         """
 
@@ -235,9 +237,9 @@ class Buddy(ExportedGObject):
                         signature="a{sv}")
     def PropertyChanged(self, updated):
         """Generates DBUS signal when buddy's property changes
-        
+
         updated -- updated property-set (dictionary) with the
-            Buddy's property (changed) values. Note: not the 
+            Buddy's property (changed) values. Note: not the
             full set of properties, just the changes.
         """
 
@@ -290,7 +292,7 @@ class Buddy(ExportedGObject):
                         in_signature="", out_signature="ay")
     def GetIcon(self):
         """Retrieve Buddy's icon data
-        
+
         returns empty string or dbus.ByteArray
         """
         if not self.props.icon:
@@ -301,8 +303,8 @@ class Buddy(ExportedGObject):
                         in_signature="", out_signature="ao")
     def GetJoinedActivities(self):
         """Retrieve set of Buddy's joined activities (paths)
-        
-        returns list of dbus service paths for the Buddy's joined 
+
+        returns list of dbus service paths for the Buddy's joined
             activities
         """
         acts = []
@@ -314,8 +316,8 @@ class Buddy(ExportedGObject):
     @dbus.service.method(_BUDDY_INTERFACE,
                         in_signature="", out_signature="a{sv}")
     def GetProperties(self):
-        """Retrieve set of Buddy's properties 
-        
+        """Retrieve set of Buddy's properties
+
         returns dictionary of
             nick : str(nickname)
             owner : bool( whether this Buddy is an owner??? )
@@ -323,7 +325,7 @@ class Buddy(ExportedGObject):
             key : str(public-key)
             color: Buddy's icon colour
                 XXX what type?
-            current-activity: Buddy's current activity_id, or 
+            current-activity: Buddy's current activity_id, or
                 "" if no current activity
         """
         props = {}
@@ -373,9 +375,9 @@ class Buddy(ExportedGObject):
 
     def add_activity(self, activity):
         """Add an activity to the Buddy's set of activities
-        
+
         activity -- activity.Activity instance
-        
+
         calls JoinedActivity
         """
         actid = activity.props.id
@@ -383,16 +385,17 @@ class Buddy(ExportedGObject):
             return
         self._activities[actid] = activity
         # join/leave activity when it's validity changes
-        sigid = activity.connect("validity-changed", self._activity_validity_changed_cb)
+        sigid = activity.connect("validity-changed",
+                                 self._activity_validity_changed_cb)
         self._activity_sigids[actid] = sigid
         if activity.props.valid:
             self.JoinedActivity(activity.object_path())
 
     def remove_activity(self, activity):
         """Remove the activity from the Buddy's set of activities
-        
+
         activity -- activity.Activity instance
-        
+
         calls LeftActivity
         """
         actid = activity.props.id
@@ -412,12 +415,12 @@ class Buddy(ExportedGObject):
         return acts
 
     def set_properties(self, properties):
-        """Set the given set of properties on the object 
-        
-        properties -- set of property values to set 
-        
-        if no change, no events generated 
-        if change, generates property-changed and 
+        """Set the given set of properties on the object
+
+        properties -- set of property values to set
+
+        if no change, no events generated
+        if change, generates property-changed and
             calls _update_validity
         """
         changed = False
@@ -468,9 +471,9 @@ class Buddy(ExportedGObject):
 
     def _update_validity(self):
         """Check whether we are now valid
-        
+
         validity is True if color, nick and key are non-null
-        
+
         emits validity-changed if we have changed validity
         """
         try:
@@ -487,29 +490,32 @@ class Buddy(ExportedGObject):
 
 
 class GenericOwner(Buddy):
-    """Common functionality for Local User-like objects 
-    
-    The TestOwner wants to produce something *like* a 
+    """Common functionality for Local User-like objects
+
+    The TestOwner wants to produce something *like* a
     ShellOwner, but with randomised changes and the like.
-    This class provides the common features for a real 
+    This class provides the common features for a real
     local owner and a testing one.
     """
     __gtype_name__ = "GenericOwner"
 
     __gproperties__ = {
-        'registered' : (bool, None, None, False, gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT),
-        'server'     : (str, None, None, None, gobject.PARAM_READABLE | gobject.PARAM_CONSTRUCT),
-        'key-hash'   : (str, None, None, None, gobject.PARAM_READABLE | gobject.PARAM_CONSTRUCT)
+        'registered' : (bool, None, None, False,
+                        gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT),
+        'server'     : (str, None, None, None,
+                        gobject.PARAM_READABLE | gobject.PARAM_CONSTRUCT),
+        'key-hash'   : (str, None, None, None,
+                        gobject.PARAM_READABLE | gobject.PARAM_CONSTRUCT)
     }
 
     def __init__(self, ps, bus_name, object_id, **kwargs):
-        """Initialize the GenericOwner instance 
-        
+        """Initialize the GenericOwner instance
+
         ps -- presenceservice.PresenceService object
         bus_name -- DBUS object bus name (identifier)
-        object_id -- the activity's unique identifier 
+        object_id -- the activity's unique identifier
         kwargs -- used to initialize the object's properties
-        
+
         calls Buddy.__init__
         """
         self._ps = ps
@@ -527,10 +533,11 @@ class GenericOwner(Buddy):
             del kwargs["registered"]
 
         self._ip4_addr_monitor = psutils.IP4AddressMonitor.get_instance()
-        self._ip4_addr_monitor.connect("address-changed", self._ip4_address_changed_cb)
+        self._ip4_addr_monitor.connect("address-changed",
+                                       self._ip4_address_changed_cb)
         if self._ip4_addr_monitor.props.address:
             kwargs["ip4-address"] = self._ip4_addr_monitor.props.address
-        
+
         Buddy.__init__(self, bus_name, object_id, **kwargs)
         self._owner = True
 
@@ -567,8 +574,8 @@ class GenericOwner(Buddy):
 
 class ShellOwner(GenericOwner):
     """Representation of the local-machine owner using Sugar's Shell
-    
-    The ShellOwner uses the Sugar Shell's dbus services to 
+
+    The ShellOwner uses the Sugar Shell's dbus services to
     register for updates about the user's profile description.
     """
     __gtype_name__ = "ShellOwner"
@@ -578,17 +585,17 @@ class ShellOwner(GenericOwner):
     _SHELL_PATH = "/org/laptop/Shell"
 
     def __init__(self, ps, bus_name, object_id, test=False):
-        """Initialize the ShellOwner instance 
-        
+        """Initialize the ShellOwner instance
+
         ps -- presenceservice.PresenceService object
         bus_name -- DBUS object bus name (identifier)
-        object_id -- the activity's unique identifier 
+        object_id -- the activity's unique identifier
         test -- ignored
-        
-        Retrieves initial property values from the profile 
+
+        Retrieves initial property values from the profile
         module.  Loads the buddy icon from file as well.
             XXX note: no error handling on that
-        
+
         calls GenericOwner.__init__
         """
         server = profile.get_server()
@@ -603,9 +610,9 @@ class ShellOwner(GenericOwner):
         icon = f.read()
         f.close()
 
-        GenericOwner.__init__(self, ps, bus_name, object_id, key=key, nick=nick,
-                color=color, icon=icon, server=server, key_hash=key_hash,
-                registered=registered)
+        GenericOwner.__init__(self, ps, bus_name, object_id, key=key,
+                nick=nick, color=color, icon=icon, server=server,
+                key_hash=key_hash, registered=registered)
 
         # Connect to the shell to get notifications on Owner object
         # property changes
@@ -633,16 +640,19 @@ class ShellOwner(GenericOwner):
             self._connect_to_shell()
 
     def _connect_to_shell(self):
-        """Connect to the Sugar Shell service to watch for events 
-        
-        Connects the various XChanged events on the Sugar Shell 
+        """Connect to the Sugar Shell service to watch for events
+
+        Connects the various XChanged events on the Sugar Shell
         service to our _x_changed_cb methods.
         """
         obj = self._bus.get_object(self._SHELL_SERVICE, self._SHELL_PATH)
         self._shell_owner = dbus.Interface(obj, self._SHELL_OWNER_INTERFACE)
-        self._shell_owner.connect_to_signal('IconChanged', self._icon_changed_cb)
-        self._shell_owner.connect_to_signal('ColorChanged', self._color_changed_cb)
-        self._shell_owner.connect_to_signal('NickChanged', self._nick_changed_cb)
+        self._shell_owner.connect_to_signal('IconChanged',
+                                            self._icon_changed_cb)
+        self._shell_owner.connect_to_signal('ColorChanged',
+                                            self._color_changed_cb)
+        self._shell_owner.connect_to_signal('NickChanged',
+                                            self._nick_changed_cb)
         self._shell_owner.connect_to_signal('CurrentActivityChanged',
                 self._cur_activity_changed_cb)
 
@@ -662,9 +672,9 @@ class ShellOwner(GenericOwner):
 
     def _cur_activity_changed_cb(self, activity_id):
         """Handle current-activity change, set property to generate event
-        
+
         Filters out local activities (those not in self.activites)
-        because the network users can't join those activities, so 
+        because the network users can't join those activities, so
         the activity_id shared will be None in those cases...
         """
         if not self._activities.has_key(activity_id):
