@@ -41,7 +41,7 @@ _logger = logging.getLogger('s-p-s.activity')
 class Activity(ExportedGObject):
     """Represents a potentially shareable activity on the network.
     """
-    
+
     __gtype_name__ = "Activity"
 
     __gsignals__ = {
@@ -51,16 +51,19 @@ class Activity(ExportedGObject):
 
     __gproperties__ = {
         _PROP_ID           : (str, None, None, None,
-                              gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT_ONLY),
+                              gobject.PARAM_READWRITE |
+                              gobject.PARAM_CONSTRUCT_ONLY),
         _PROP_NAME         : (str, None, None, None, gobject.PARAM_READWRITE),
         _PROP_COLOR        : (str, None, None, None, gobject.PARAM_READWRITE),
         _PROP_TYPE         : (str, None, None, None, gobject.PARAM_READWRITE),
         _PROP_VALID        : (bool, None, None, False, gobject.PARAM_READABLE),
         _PROP_LOCAL        : (bool, None, None, False,
-                              gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT_ONLY),
+                              gobject.PARAM_READWRITE |
+                              gobject.PARAM_CONSTRUCT_ONLY),
         _PROP_JOINED       : (bool, None, None, False, gobject.PARAM_READABLE),
         _PROP_CUSTOM_PROPS : (object, None, None,
-                              gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT_ONLY)
+                              gobject.PARAM_READWRITE |
+                              gobject.PARAM_CONSTRUCT_ONLY)
     }
 
     _RESERVED_PROPNAMES = __gproperties__.keys()
@@ -91,7 +94,7 @@ class Activity(ExportedGObject):
             `custom-props` : dict
                 Activity-specific properties
         """
-        
+
         if not bus_name:
             raise ValueError("DBus bus name must be valid")
         if not object_id or not isinstance(object_id, int):
@@ -118,10 +121,12 @@ class Activity(ExportedGObject):
         self._custom_props = {}
 
         # ensure no reserved property names are in custom properties
-        if kwargs.get(_PROP_CUSTOM_PROPS):
-            (rprops, cprops) = self._split_properties(kwargs.get(_PROP_CUSTOM_PROPS))
+        cprops = kwargs.get(_PROP_CUSTOM_PROPS)
+        if cprops is not None:
+            (rprops, cprops) = self._split_properties(cprops)
             if len(rprops.keys()) > 0:
-                raise ValueError("Cannot use reserved property names '%s'" % ", ".join(rprops.keys()))
+                raise ValueError("Cannot use reserved property names '%s'"
+                                 % ", ".join(rprops.keys()))
 
         if not kwargs.get(_PROP_ID):
             raise ValueError("activity id is required")
@@ -131,7 +136,8 @@ class Activity(ExportedGObject):
         ExportedGObject.__init__(self, bus_name, self._object_path,
                                  gobject_properties=kwargs)
         if self.props.local and not self.props.valid:
-            raise RuntimeError("local activities require color, type, and name")
+            raise RuntimeError("local activities require color, type, and "
+                               "name")
 
         # If not yet valid, query activity properties
         if not self.props.valid:
@@ -139,12 +145,12 @@ class Activity(ExportedGObject):
 
     def do_get_property(self, pspec):
         """Gets the value of a property associated with this activity.
-        
+
         pspec -- Property specifier
 
         returns The value of the given property.
         """
-        
+
         if pspec.name == _PROP_ID:
             return self._id
         elif pspec.name == _PROP_NAME:
@@ -162,13 +168,13 @@ class Activity(ExportedGObject):
 
     def do_set_property(self, pspec, value):
         """Sets the value of a property associated with this activity.
-        
+
         pspec -- Property specifier
         value -- Desired value
 
-        Note that the "type" property can be set only once; attempting to set it
-        to something different later will raise a RuntimeError.
-        
+        Note that the "type" property can be set only once; attempting to set
+        it to something different later will raise a RuntimeError.
+
         """
         if pspec.name == _PROP_ID:
             if self._id:
@@ -197,14 +203,15 @@ class Activity(ExportedGObject):
         self._update_validity()
 
     def _update_validity(self):
-        """Sends a "validity-changed" signal if this activity's validity has changed.
-        
+        """Sends a "validity-changed" signal if this activity's validity has
+        changed.
+
         Determines whether this activity's status has changed from valid to
         invalid, or invalid to valid, and emits a "validity-changed" signal
         if either is true.  "Valid" means that the object's type, ID, name,
         colour and type properties have all been set to something valid
         (i.e., not "None").
-        
+
         """
         try:
             old_valid = self._valid
@@ -223,7 +230,7 @@ class Activity(ExportedGObject):
                         signature="o")
     def BuddyJoined(self, buddy_path):
         """Generates DBUS signal when a buddy joins this activity.
-        
+
         buddy_path -- DBUS path to buddy object
         """
         pass
@@ -232,7 +239,7 @@ class Activity(ExportedGObject):
                         signature="o")
     def BuddyLeft(self, buddy_path):
         """Generates DBUS signal when a buddy leaves this activity.
-        
+
         buddy_path -- DBUS path to buddy object
         """
         pass
@@ -240,13 +247,14 @@ class Activity(ExportedGObject):
     @dbus.service.signal(_ACTIVITY_INTERFACE,
                         signature="o")
     def NewChannel(self, channel_path):
-        """Generates DBUS signal when a new channel is created for this activity.
-        
+        """Generates DBUS signal when a new channel is created for this
+        activity.
+
         channel_path -- DBUS path to new channel
-        
+
         XXX - what is this supposed to do?  Who is supposed to call it?
         What is the channel path?  Right now this is never called.
-        
+
         """
         pass
 
@@ -255,7 +263,7 @@ class Activity(ExportedGObject):
                         in_signature="", out_signature="s")
     def GetId(self):
         """DBUS method to get this activity's ID
-        
+
         returns Activity ID
         """
         return self.props.id
@@ -264,7 +272,7 @@ class Activity(ExportedGObject):
                         in_signature="", out_signature="s")
     def GetColor(self):
         """DBUS method to get this activity's colour
-        
+
         returns Activity colour
         """
         return self.props.color
@@ -273,27 +281,30 @@ class Activity(ExportedGObject):
                         in_signature="", out_signature="s")
     def GetType(self):
         """DBUS method to get this activity's type
-        
+
         returns Activity type
         """
         return self.props.type
 
-    @dbus.service.method(_ACTIVITY_INTERFACE, in_signature="", out_signature="",
-                        async_callbacks=('async_cb', 'async_err_cb'))
+    @dbus.service.method(_ACTIVITY_INTERFACE,
+                         in_signature="", out_signature="",
+                         async_callbacks=('async_cb', 'async_err_cb'))
     def Join(self, async_cb, async_err_cb):
         """DBUS method to for the local user to attempt to join the activity
-        
+
         async_cb -- Callback method to be called if join attempt is successful
-        async_err_cb -- Callback method to be called if join attempt is unsuccessful
-        
+        async_err_cb -- Callback method to be called if join attempt is
+                        unsuccessful
+
         """
         self.join(async_cb, async_err_cb)
 
     @dbus.service.method(_ACTIVITY_INTERFACE,
                         in_signature="", out_signature="ao")
     def GetJoinedBuddies(self):
-        """DBUS method to return a list of valid buddies who are joined in this activity
-        
+        """DBUS method to return a list of valid buddies who are joined in
+        this activity
+
         returns A list of buddy object paths
         """
         ret = []
@@ -305,10 +316,11 @@ class Activity(ExportedGObject):
     @dbus.service.method(_ACTIVITY_INTERFACE,
                         in_signature="", out_signature="soao")
     def GetChannels(self):
-        """DBUS method to get the list of channels associated with this activity
-        
-        returns XXX - Not sure what this returns as get_channels doesn't actually return
-          a list of channels!
+        """DBUS method to get the list of channels associated with this
+        activity
+
+        returns XXX - Not sure what this returns as get_channels doesn't
+        actually return a list of channels!
         """
         return self.get_channels()
 
@@ -316,7 +328,7 @@ class Activity(ExportedGObject):
                         in_signature="", out_signature="s")
     def GetName(self):
         """DBUS method to get this activity's name
-        
+
         returns Activity name
         """
         return self.props.name
@@ -324,16 +336,17 @@ class Activity(ExportedGObject):
     # methods
     def object_path(self):
         """Retrieves our dbus.ObjectPath object
-        
+
         returns DBUS ObjectPath object
         """
         return dbus.ObjectPath(self._object_path)
 
     def get_joined_buddies(self):
-        """Local method to return a list of valid buddies who are joined in this activity
-        
+        """Local method to return a list of valid buddies who are joined in
+        this activity
+
         This method is called by the PresenceService on the local machine.
-        
+
         returns A list of buddy objects
         """
         ret = []
@@ -344,13 +357,15 @@ class Activity(ExportedGObject):
 
     def buddy_joined(self, buddy):
         """Adds a buddy to this activity and sends a BuddyJoined signal
-        
+
         buddy -- Buddy object representing the buddy being added
-        
-        Adds a buddy to this activity if the buddy is not already in the buddy list.
+
+        Adds a buddy to this activity if the buddy is not already in the
+        buddy list.
+
         If this activity is "valid", a BuddyJoined signal is also sent.
         This method is called by the PresenceService on the local machine.
-        
+
         """
         if buddy not in self._buddies:
             self._buddies.append(buddy)
@@ -359,13 +374,13 @@ class Activity(ExportedGObject):
 
     def buddy_left(self, buddy):
         """Removes a buddy from this activity and sends a BuddyLeft signal.
-        
+
         buddy -- Buddy object representing the buddy being removed
-        
+
         Removes a buddy from this activity if the buddy is in the buddy list.
         If this activity is "valid", a BuddyLeft signal is also sent.
         This method is called by the PresenceService on the local machine.
-        
+
         """
         if buddy in self._buddies:
             self._buddies.remove(buddy)
@@ -374,11 +389,12 @@ class Activity(ExportedGObject):
 
     def _handle_share_join(self, tp, text_channel):
         """Called when a join to a network activity was successful.
-        
+
         Called by the _shared_cb and _joined_cb methods.
         """
         if not text_channel:
-            _logger.debug("Error sharing: text channel was None, shouldn't happen")
+            _logger.debug("Error sharing: text channel was None, shouldn't "
+                          "happen")
             raise RuntimeError("Plugin returned invalid text channel")
 
         self._text_channel = text_channel
@@ -409,16 +425,18 @@ class Activity(ExportedGObject):
 
     def _share(self, (async_cb, async_err_cb), owner):
         """XXX - not documented yet
-        
-        XXX - This method is called externally by the PresenceService despite the fact
-        that this is supposed to be an internal method!
+
+        XXX - This method is called externally by the PresenceService
+        despite the fact that this is supposed to be an internal method!
         """
         _logger.debug("Starting share of activity %s" % self._id)
         if self._joined:
-            async_err_cb(RuntimeError("Already shared activity %s" % self.props.id))
+            async_err_cb(RuntimeError("Already shared activity %s"
+                                      % self.props.id))
             return
         sigid = self._tp.connect('activity-shared', self._shared_cb)
-        self._tp.share_activity(self.props.id, (sigid, owner, async_cb, async_err_cb))
+        self._tp.share_activity(self.props.id, (sigid, owner, async_cb,
+                                                async_err_cb))
         _logger.debug("done with share attempt %s" % self._id)
 
     def _joined_cb(self, tp, activity_id, text_channel, exc, userdata):
@@ -439,42 +457,45 @@ class Activity(ExportedGObject):
 
     def join(self, async_cb, async_err_cb):
         """Local method for the local user to attempt to join the activity.
-        
+
         async_cb -- Callback method to be called if join attempt is successful
-        async_err_cb -- Callback method to be called if join attempt is unsuccessful
-        
-        The two callbacks are passed to the server_plugin ("tp") object, which in turn
-        passes them back as parameters in a callback to the _joined_cb method; this
-        callback is set up within this method.
-        
+        async_err_cb -- Callback method to be called if join attempt is
+                        unsuccessful
+
+        The two callbacks are passed to the server_plugin ("tp") object,
+        which in turn passes them back as parameters in a callback to the
+        _joined_cb method; this callback is set up within this method.
         """
         if self._joined:
-            async_err_cb(RuntimeError("Already joined activity %s" % self.props.id))
+            async_err_cb(RuntimeError("Already joined activity %s"
+                                      % self.props.id))
             return
         sigid = self._tp.connect('activity-joined', self._joined_cb)
         self._tp.join_activity(self.props.id, (sigid, async_cb, async_err_cb))
 
     def get_channels(self):
-        """Local method to get the list of channels associated with this activity
-        
-        returns XXX - expected a list of channels, instead returning a tuple?  ???
+        """Local method to get the list of channels associated with this
+        activity
+
+        returns XXX - expected a list of channels, instead returning a tuple?
         """
         conn = self._tp.get_connection()
         # FIXME add tubes and others channels
-        return str(conn.service_name), conn.object_path, [self._text_channel.object_path]
+        return (str(conn.service_name), conn.object_path,
+                [self._text_channel.object_path])
 
     def leave(self):
         """Local method called when the user wants to leave the activity.
-        
+
         (XXX - doesn't appear to be called anywhere!)
-        
+
         """
         if self._joined:
             self._text_channel[CHANNEL_INTERFACE].Close()
 
     def _text_channel_closed_cb(self):
         """Callback method called when the text channel is closed.
-        
+
         This callback is set up in the _handle_share_join method.
         """
         self._joined = False
@@ -482,7 +503,7 @@ class Activity(ExportedGObject):
 
     def send_properties(self):
         """Tells the Telepathy server what the properties of this activity are.
-        
+
         """
         props = {}
         props['name'] = self._actname
@@ -496,14 +517,16 @@ class Activity(ExportedGObject):
         self._tp.set_activity_properties(self.props.id, props)
 
     def set_properties(self, properties):
-        """Sets name, colour and/or type properties for this activity all at once.
-        
-        properties - Dictionary object containing properties keyed by property names
-        
-        Note that if any of the name, colour and/or type property values is changed from
-        what it originally was, the update_validity method will be called, resulting in
-        a "validity-changed" signal being generated.  Called by the PresenceService
-        on the local machine.
+        """Sets name, colour and/or type properties for this activity all
+        at once.
+
+        properties - Dictionary object containing properties keyed by
+                     property names
+
+        Note that if any of the name, colour and/or type property values is
+        changed from what it originally was, the update_validity method will
+        be called, resulting in a "validity-changed" signal being generated.
+        Called by the PresenceService on the local machine.
         """
         changed  = False
         # split reserved properties from activity-custom properties
@@ -525,7 +548,8 @@ class Activity(ExportedGObject):
             if type != self._type:
                 # Type can never be changed after first set
                 if self._type:
-                    _logger.debug("Activity type changed by network; this is illegal")
+                    _logger.debug("Activity type changed by network; this "
+                                  "is illegal")
                 else:
                     self._type = type
                     changed = True
@@ -539,10 +563,12 @@ class Activity(ExportedGObject):
 
     def _split_properties(self, properties):
         """Extracts reserved properties.
-        
-        properties - Dictionary object containing properties keyed by property names
-        
-        returns a tuple of 2 dictionaries, reserved properties and custom properties
+
+        properties - Dictionary object containing properties keyed by
+                     property names
+
+        returns a tuple of 2 dictionaries, reserved properties and custom
+        properties
         """
         rprops = {}
         cprops = {}
