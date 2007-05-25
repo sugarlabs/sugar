@@ -102,22 +102,19 @@ class Buddy(ExportedGObject):
         _PROP_IP4_ADDRESS  : (str, None, None, None, gobject.PARAM_READWRITE)
     }
 
-    def __init__(self, bus_name, object_id, **kwargs):
+    def __init__(self, bus, object_id, **kwargs):
         """Initialize the Buddy object
 
-        bus_name -- DBUS object bus name (identifier)
+        bus -- connection to the D-Bus session bus
         object_id -- the activity's unique identifier
         kwargs -- used to initialize the object's properties
 
         constructs a DBUS "object path" from the _BUDDY_PATH
         and object_id
         """
-        if not bus_name:
-            raise ValueError("DBus bus name must be valid")
         if not object_id or not isinstance(object_id, int):
             raise ValueError("object id must be a valid number")
 
-        self._bus_name = bus_name
         self._object_path = _BUDDY_PATH + str(object_id)
 
         self._activities = {}   # Activity ID -> Activity
@@ -150,7 +147,7 @@ class Buddy(ExportedGObject):
             icon_data = kwargs[_PROP_ICON]
             del kwargs[_PROP_ICON]
 
-        ExportedGObject.__init__(self, bus_name, self._object_path,
+        ExportedGObject.__init__(self, bus, self._object_path,
                                  gobject_properties=kwargs)
 
         if icon_data:
@@ -499,11 +496,11 @@ class GenericOwner(Buddy):
     """
     __gtype_name__ = "GenericOwner"
 
-    def __init__(self, ps, bus_name, object_id, **kwargs):
+    def __init__(self, ps, bus, object_id, **kwargs):
         """Initialize the GenericOwner instance
 
         ps -- presenceservice.PresenceService object
-        bus_name -- DBUS object bus name (identifier)
+        bus -- a connection to the D-Bus session bus
         object_id -- the activity's unique identifier
         kwargs -- used to initialize the object's properties
 
@@ -520,7 +517,7 @@ class GenericOwner(Buddy):
         if self._ip4_addr_monitor.props.address:
             kwargs["ip4-address"] = self._ip4_addr_monitor.props.address
 
-        Buddy.__init__(self, bus_name, object_id, **kwargs)
+        Buddy.__init__(self, bus, object_id, **kwargs)
         self._owner = True
 
         self._bus = dbus.SessionBus()
@@ -561,11 +558,11 @@ class ShellOwner(GenericOwner):
     _SHELL_OWNER_INTERFACE = "org.laptop.Shell.Owner"
     _SHELL_PATH = "/org/laptop/Shell"
 
-    def __init__(self, ps, bus_name, object_id, test=False):
+    def __init__(self, ps, bus, object_id, test=False):
         """Initialize the ShellOwner instance
 
         ps -- presenceservice.PresenceService object
-        bus_name -- DBUS object bus name (identifier)
+        bus -- a connection to the D-Bus session bus
         object_id -- the activity's unique identifier
         test -- ignored
 
@@ -587,7 +584,7 @@ class ShellOwner(GenericOwner):
         icon = f.read()
         f.close()
 
-        GenericOwner.__init__(self, ps, bus_name, object_id, key=key,
+        GenericOwner.__init__(self, ps, bus, object_id, key=key,
                 nick=nick, color=color, icon=icon, server=server,
                 key_hash=key_hash, registered=registered)
 

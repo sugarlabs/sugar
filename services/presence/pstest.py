@@ -20,7 +20,7 @@ class TestOwner(GenericOwner):
 
     __gtype_name__ = "TestOwner"
 
-    def __init__(self, ps, bus_name, object_id, test_num, randomize):
+    def __init__(self, ps, bus, object_id, test_num, randomize):
         self._cp = ConfigParser()
         self._section = "Info"
         self._test_activities = []
@@ -45,7 +45,7 @@ class TestOwner(GenericOwner):
         icon = _get_random_image()
 
         _logger.debug("pubkey is %s" % pubkey)
-        GenericOwner.__init__(self, ps, bus_name, object_id, key=pubkey, nick=nick,
+        GenericOwner.__init__(self, ps, bus, object_id, key=pubkey, nick=nick,
                 color=color, icon=icon, registered=registered, key_hash=privkey_hash)
 
         # Only do the random stuff if randomize is true
@@ -152,7 +152,7 @@ class TestPresenceService(PresenceService):
         PresenceService.__init__(self)
 
     def _create_owner(self):
-        return TestOwner(self, self._bus_name, self._get_next_object_id(),
+        return TestOwner(self, self._session_bus, self._get_next_object_id(),
                          self.__test_num, self.__randomize)
 
     def internal_get_activity(self, actid):

@@ -39,7 +39,10 @@ _PROP_CUSTOM_PROPS = "custom-props"
 _logger = logging.getLogger('s-p-s.activity')
 
 class Activity(ExportedGObject):
-    """Represents a potentially shareable activity on the network.
+    """Represents a shared activity seen on the network, or a local activity
+    that has been, or will be, shared onto the network.
+
+    The activity might be public, restricted to a group, or invite-only.
     """
 
     __gtype_name__ = "Activity"
@@ -68,12 +71,12 @@ class Activity(ExportedGObject):
 
     _RESERVED_PROPNAMES = __gproperties__.keys()
 
-    def __init__(self, bus_name, object_id, tp, **kwargs):
+    def __init__(self, bus, object_id, tp, **kwargs):
         """Initializes the activity and sets its properties to default values.
 
         :Parameters:
-            `bus_name` : dbus.service.BusName
-                D-Bus well-known name for the Presence Service
+            `bus` : dbus.bus.BusConnection
+                A connection to the D-Bus session bus
             `object_id` : int
                 PS ID for this activity, used to construct the object-path
             `tp` : server plugin
@@ -95,8 +98,6 @@ class Activity(ExportedGObject):
                 Activity-specific properties
         """
 
-        if not bus_name:
-            raise ValueError("DBus bus name must be valid")
         if not object_id or not isinstance(object_id, int):
             raise ValueError("object id must be a valid number")
         if not tp:
@@ -133,7 +134,7 @@ class Activity(ExportedGObject):
         if not util.validate_activity_id(kwargs[_PROP_ID]):
             raise ValueError("Invalid activity id '%s'" % kwargs[_PROP_ID])
 
-        ExportedGObject.__init__(self, bus_name, self._object_path,
+        ExportedGObject.__init__(self, bus, self._object_path,
                                  gobject_properties=kwargs)
         if self.props.local and not self.props.valid:
             raise RuntimeError("local activities require color, type, and "
@@ -262,9 +263,9 @@ class Activity(ExportedGObject):
     @dbus.service.method(_ACTIVITY_INTERFACE,
                         in_signature="", out_signature="s")
     def GetId(self):
-        """DBUS method to get this activity's ID
+        """DBUS method to get this activity's (randomly generated) unique ID
 
-        returns Activity ID
+        :Returns: Activity ID as a string
         """
         return self.props.id
 
@@ -273,7 +274,7 @@ class Activity(ExportedGObject):
     def GetColor(self):
         """DBUS method to get this activity's colour
 
-        returns Activity colour
+        :Returns: Activity colour as a string in the format #RRGGBB,#RRGGBB
         """
         return self.props.color
 
@@ -282,7 +283,8 @@ class Activity(ExportedGObject):
     def GetType(self):
         """DBUS method to get this activity's type
 
-        returns Activity type
+        :Returns: Activity type as a string, in the same form as a D-Bus
+            well-known name
         """
         return self.props.type
 
@@ -305,7 +307,10 @@ class Activity(ExportedGObject):
         """DBUS method to return a list of valid buddies who are joined in
         this activity
 
-        returns A list of buddy object paths
+        :Returns:
+            A list of buddy object paths corresponding to those buddies
+            in this activity who are 'valid' (i.e. for whom we have complete
+            information)
         """
         ret = []
         for buddy in self._buddies:
@@ -319,8 +324,14 @@ class Activity(ExportedGObject):
         """DBUS method to get the list of channels associated with this
         activity
 
-        returns XXX - Not sure what this returns as get_channels doesn't
-        actually return a list of channels!
+        :Returns:
+            a tuple containing:
+                - the D-Bus well-known service name of the connection
+                  (FIXME: this is redundant; in Telepathy it can be derived
+                  from that of the connection)
+                - the D-Bus object path of the connection
+                - a list of D-Bus object paths representing the channels
+                  associated with this activity
         """
         return self.get_channels()
 

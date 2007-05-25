@@ -57,7 +57,7 @@ class PresenceService(ExportedGObject):
 
     def _create_owner(self):
         # Overridden by TestPresenceService
-        return ShellOwner(self, self._bus_name, self._get_next_object_id())
+        return ShellOwner(self, self._session_bus, self._get_next_object_id())
 
     def __init__(self):
         self._next_object_id = 0
@@ -67,11 +67,10 @@ class PresenceService(ExportedGObject):
         self._handles_buddies = {}      # tp client -> (handle -> Buddy)
         self._activities = {}   # activity id -> Activity
 
-        bus = dbus.SessionBus()
-        self._bus_name = dbus.service.BusName(_PRESENCE_SERVICE, bus=bus)
-        bus.add_signal_receiver(self._connection_disconnected_cb,
-                                signal_name="Disconnected",
-                                dbus_interface="org.freedesktop.DBus")
+        self._session_bus = dbus.SessionBus()
+        self._session_bus.add_signal_receiver(self._connection_disconnected_cb,
+                signal_name="Disconnected",
+                dbus_interface="org.freedesktop.DBus")
 
         # Create the Owner object
         self._owner = self._create_owner()
@@ -104,7 +103,13 @@ class PresenceService(ExportedGObject):
         self._ll_plugin = LinkLocalPlugin(self._registry, self._owner)
         self._handles_buddies[self._ll_plugin] = {}
 
-        ExportedGObject.__init__(self, self._bus_name, _PRESENCE_PATH)
+        ExportedGObject.__init__(self, self._session_bus, _PRESENCE_PATH)
+
+        # for activation to work in a race-free way, we should really
+        # export the bus name only after we export our initial object;
+        # so this comes after the parent __init__
+        self._bus_name = dbus.service.BusName(_PRESENCE_SERVICE,
+                                              bus=self._session_bus)
 
     def _connection_disconnected_cb(self, foo=None):
         """Log event when D-Bus kicks us off the bus for some reason"""
@@ -135,7 +140,7 @@ class PresenceService(ExportedGObject):
         if not buddy:
             # we don't know yet this buddy
             objid = self._get_next_object_id()
-            buddy = Buddy(self._bus_name, objid, key=key)
+            buddy = Buddy(self._session_bus, objid, key=key)
             buddy.connect("validity-changed", self._buddy_validity_changed_cb)
             buddy.connect("disappeared", self._buddy_disappeared_cb)
             self._buddies[key] = buddy
@@ -194,7 +199,7 @@ class PresenceService(ExportedGObject):
     def _new_activity(self, activity_id, tp):
         try:
             objid = self._get_next_object_id()
-            activity = Activity(self._bus_name, objid, tp, id=activity_id)
+            activity = Activity(self._session_bus, objid, tp, id=activity_id)
         except Exception:
             # FIXME: catching bare Exception considered harmful
             _logger.debug("Invalid activity:", exc_info=1)
@@ -392,7 +397,7 @@ class PresenceService(ExportedGObject):
         objid = self._get_next_object_id()
         # FIXME check which tp client we should use to share the activity
         color = self._owner.props.color
-        activity = Activity(self._bus_name, objid, self._server_plugin,
+        activity = Activity(self._session_bus, objid, self._server_plugin,
                             id=actid, type=atype, name=name, color=color,
                             local=True)
         activity.connect("validity-changed",
