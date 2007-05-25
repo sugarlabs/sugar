@@ -499,15 +499,6 @@ class GenericOwner(Buddy):
     """
     __gtype_name__ = "GenericOwner"
 
-    __gproperties__ = {
-        'registered' : (bool, None, None, False,
-                        gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT),
-        'server'     : (str, None, None, None,
-                        gobject.PARAM_READABLE | gobject.PARAM_CONSTRUCT),
-        'key-hash'   : (str, None, None, None,
-                        gobject.PARAM_READABLE | gobject.PARAM_CONSTRUCT)
-    }
-
     def __init__(self, ps, bus_name, object_id, **kwargs):
         """Initialize the GenericOwner instance
 
