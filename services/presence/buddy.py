@@ -605,47 +605,21 @@ class ShellOwner(GenericOwner):
                 nick=nick, color=color, icon=icon, server=server,
                 key_hash=key_hash, registered=registered)
 
-        # Connect to the shell to get notifications on Owner object
-        # property changes
-        try:
-            self._connect_to_shell()
-        except dbus.DBusException:
-            pass
+        # Ask to get notifications on Owner object property changes in the
+        # shell. If it's not currently running, no problem - we'll get the
+        # signals when it does run
+        for (signal, cb) in (('IconChanged', self._icon_changed_cb),
+                             ('ColorChanged', self._color_changed_cb),
+                             ('NickChanged', self._nick_changed_cb)):
+            self._bus.add_signal_receiver(cb, signal_name=signal,
+                dbus_interface=self._SHELL_OWNER_INTERFACE,
+                bus_name=self._SHELL_SERVICE,
+                path=self._SHELL_PATH)
 
     def set_registered(self, value):
         """Handle notification that we have been registered"""
         if value:
             profile.set_server_registered()
-
-    def _name_owner_changed_cb(self, name, old, new):
-        # chain up to superclass
-        GenericOwner._name_owner_changed_cb(self, name, old, new)
-
-        if name != self._SHELL_SERVICE:
-            return
-        if (old and len(old)) and (not new and not len(new)):
-            # shell went away
-            self._shell_owner = None
-        elif (not old and not len(old)) and (new and len(new)):
-            # shell started
-            self._connect_to_shell()
-
-    def _connect_to_shell(self):
-        """Connect to the Sugar Shell service to watch for events
-
-        Connects the various XChanged events on the Sugar Shell
-        service to our _x_changed_cb methods.
-        """
-        obj = self._bus.get_object(self._SHELL_SERVICE, self._SHELL_PATH)
-        self._shell_owner = dbus.Interface(obj, self._SHELL_OWNER_INTERFACE)
-        self._shell_owner.connect_to_signal('IconChanged',
-                                            self._icon_changed_cb)
-        self._shell_owner.connect_to_signal('ColorChanged',
-                                            self._color_changed_cb)
-        self._shell_owner.connect_to_signal('NickChanged',
-                                            self._nick_changed_cb)
-        self._shell_owner.connect_to_signal('CurrentActivityChanged',
-                self._cur_activity_changed_cb)
 
     def _icon_changed_cb(self, icon):
         """Handle icon change, set property to generate event"""
