@@ -104,7 +104,8 @@ class Activity(ExportedGObject):
             raise ValueError("telepathy CM must be valid")
 
         self._object_id = object_id
-        self._object_path = _ACTIVITY_PATH + str(self._object_id)
+        self._object_path = dbus.ObjectPath(_ACTIVITY_PATH +
+                                            str(self._object_id))
 
         self._buddies = []
         self._joined = False
@@ -350,7 +351,7 @@ class Activity(ExportedGObject):
 
         returns DBUS ObjectPath object
         """
-        return dbus.ObjectPath(self._object_path)
+        return self._object_path
 
     def get_joined_buddies(self):
         """Local method to return a list of valid buddies who are joined in
