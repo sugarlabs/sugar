@@ -510,18 +510,9 @@ class GenericOwner(Buddy):
         calls Buddy.__init__
         """
         self._ps = ps
-        self._server = 'olpc.collabora.co.uk'
-        self._key_hash = None
-        self._registered = False
-        if kwargs.has_key("server"):
-            self._server = kwargs["server"]
-            del kwargs["server"]
-        if kwargs.has_key("key_hash"):
-            self._key_hash = kwargs["key_hash"]
-            del kwargs["key_hash"]
-        if kwargs.has_key("registered"):
-            self._registered = kwargs["registered"]
-            del kwargs["registered"]
+        self._server = kwargs.pop("server", "olpc.collabora.co.uk")
+        self._key_hash = kwargs.pop("key_hash", None)
+        self._registered = kwargs.pop("registered", False)
 
         self._ip4_addr_monitor = psutils.IP4AddressMonitor.get_instance()
         self._ip4_addr_monitor.connect("address-changed",
@@ -544,11 +535,13 @@ class GenericOwner(Buddy):
         return self._registered
 
     def get_server(self):
-        """Retrieve presence server (XXX url??)"""
+        """Retrieve XMPP server hostname (used by the server plugin)"""
         return self._server
 
     def get_key_hash(self):
-        """Retrieve the user's private-key hash"""
+        """Retrieve the user's private-key hash (used by the server plugin
+        as a password)
+        """
         return self._key_hash
 
     def set_registered(self, registered):
