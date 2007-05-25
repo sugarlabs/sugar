@@ -53,23 +53,13 @@ class IP4AddressMonitor(gobject.GObject):
     def __init__(self):
         gobject.GObject.__init__(self)
         self._nm_present = False
+        self._nm_has_been_present = False
         self._matches = []
         self._addr = None
         self._nm_obj = None
 
         sys_bus = dbus.SystemBus()
-        bus_object = sys_bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
-        try:
-            if bus_object.GetNameOwner(NM_SERVICE, dbus_interface='org.freedesktop.DBus'):
-                self._nm_present = True
-        except dbus.DBusException:
-            pass
-
-        if self._nm_present:
-            self._connect_to_nm()
-        else:
-            addr = self._get_address_fallback()
-            self._update_address(addr)
+        self._watch = sys_bus.watch_name_owner(NM_SERVICE, self._nm_owner_cb)
 
     def do_get_property(self, pspec):
         if pspec.name == "address":
@@ -163,20 +153,23 @@ class IP4AddressMonitor(gobject.GObject):
         if new_state == 4: # NM_STATE_DISCONNECTED
             self._update_address(None)
 
-    def handle_name_owner_changed(self, name, old, new):
+    def _nm_owner_cb(self, unique_name):
         """Clear state when NM goes away"""
-        if name != NM_SERVICE:
-            return
-        if (old and len(old)) and (not new and not len(new)):
-            # NM went away
+        if unique_name == '':
+            # NM went away, or isn't there at all
             self._nm_present = False
             for match in self._matches:
                 match.remove()
             self._matches = []
-            self._update_address(None)
-        elif (not old and not len(old)) and (new and len(new)):
+            if self._nm_has_been_present:
+                self._update_address(None)
+            else:
+                addr = self._get_address_fallback()
+                self._update_address(addr)
+        elif not self._nm_present:
             # NM started up
             self._nm_present = True
+            self._nm_has_been_present = True
             self._connect_to_nm()
 
     def _get_iface_address(self, iface):

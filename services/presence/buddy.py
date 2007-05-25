@@ -533,18 +533,11 @@ class GenericOwner(Buddy):
         self._owner = True
 
         self._bus = dbus.SessionBus()
-        self._bus.add_signal_receiver(self._name_owner_changed_cb,
-                                    signal_name="NameOwnerChanged",
-                                    dbus_interface="org.freedesktop.DBus")
 
     def _ip4_address_changed_cb(self, monitor, address):
         """Handle IPv4 address change, set property to generate event"""
         props = {_PROP_IP4_ADDRESS: address}
         self.set_properties(props)
-
-    def _name_owner_changed_cb(self, name, old, new):
-        """Handle D-Bus services we care about appearing and disappearing."""
-        self._ip4_addr_monitor.handle_name_owner_changed(name, old, new)
 
     def get_registered(self):
         """Retrieve whether owner has registered with presence server"""
