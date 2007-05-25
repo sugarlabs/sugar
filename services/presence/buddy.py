@@ -62,8 +62,9 @@ class Buddy(ExportedGObject):
 
         _activities -- dictionary mapping activity ID to
             activity.Activity objects
-        handles -- dictionary mapping telepresence client to
-            "handle" (XXX what's that)
+        handles -- dictionary mapping Telepathy client plugin to
+            contact handle (an integer representing the JID or unique ID);
+            channel-specific handles do not appear here
     """
 
     __gsignals__ = {
@@ -117,8 +118,7 @@ class Buddy(ExportedGObject):
             raise ValueError("object id must be a valid number")
 
         self._bus_name = bus_name
-        self._object_id = object_id
-        self._object_path = _BUDDY_PATH + str(self._object_id)
+        self._object_path = _BUDDY_PATH + str(object_id)
 
         self._activities = {}   # Activity ID -> Activity
         self._activity_sigids = {}
