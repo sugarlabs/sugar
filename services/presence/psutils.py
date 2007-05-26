@@ -60,6 +60,9 @@ class IP4AddressMonitor(gobject.GObject):
 
         sys_bus = dbus.SystemBus()
         self._watch = sys_bus.watch_name_owner(NM_SERVICE, self._nm_owner_cb)
+        if not sys_bus.name_has_owner(NM_SERVICE):
+            addr = self._get_address_fallback()
+            self._update_address(addr)
 
     def do_get_property(self, pspec):
         if pspec.name == "address":
