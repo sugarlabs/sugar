@@ -156,7 +156,7 @@ class TestPresenceService(PresenceService):
                          self.__test_num, self.__randomize)
 
     def internal_get_activity(self, actid):
-        return self._activities.get(actid, None):
+        return self._activities.get(actid, None)
 
 
 def _extract_public_key(keyfile):
