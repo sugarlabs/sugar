@@ -151,10 +151,6 @@ class Bundle:
         """Get the activity service name"""
         return self._service_name
 
-    def get_object_path(self):
-        """Get the path to the service object"""
-        return '/' + self._service_name.replace('.', '/')
-
     def get_icon(self):
         """Get the activity icon name"""
         return self._icon

@@ -20,6 +20,7 @@ import sys
 import os
 from ConfigParser import ConfigParser
 
+from sugar.activity import ActivityRegistry
 from sugar import env
 
 # Setup the environment so that we run inside the Sugar shell
@@ -33,7 +34,6 @@ import gtk
 import dbus
 import dbus.glib
 
-from sugar.activity import bundleregistry
 from sugar.activity import activityfactory
 from sugar.activity import activityfactoryservice
 
@@ -48,13 +48,15 @@ def _error_cb(handler, err):
 def print_help(self):
     sys.exit(0)
 
-bundle = None
+activity_info = None
 
 if len(sys.argv) > 1:
-    registry = bundleregistry.get_registry()
-    bundle = registry.find_bundle(sys.argv[1])
+    registry = ActivityRegistry()
+    activities = registry.get_activities_for_name(sys.argv[1])
+    if len(activities) > 0:
+        activity_info = activities[0]
 
-if bundle == None:
+if activity_info == None:
     print 'Usage:\n\n' \
           'sugar-activity [bundle]\n\n' \
           'Bundle can be a part of the service name or of bundle name.'
@@ -64,16 +66,16 @@ bus = dbus.SessionBus()
 bus_object = bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
 try:
     name = bus_object.GetNameOwner(
-        bundle.get_service_name(), dbus_interface='org.freedesktop.DBus')
+        activity_info.service_name, dbus_interface='org.freedesktop.DBus')
 except  dbus.DBusException:
     name = None
 
 if name:
     print '%s is already running, creating a new instance.' % bundle.get_service_name()
 else:
-    activityfactoryservice.run(bundle.get_path())
+    activityfactoryservice.run(activity_info.path)
 
-handler = activityfactory.create(bundle.get_service_name())
+handler = activityfactory.create(activity_info.service_name)
 handler.connect('success', _success_cb, name != None)
 handler.connect('error', _error_cb)
 

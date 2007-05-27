@@ -20,8 +20,9 @@ import logging
 from sugar.graphics import units
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics.iconbutton import IconButton
-from sugar.activity import bundleregistry
 from sugar import profile
+
+from model import bundleregistry
 
 class ActivityButton(IconButton):
     def __init__(self, activity, popup_context):

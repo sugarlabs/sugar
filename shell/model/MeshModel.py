@@ -18,7 +18,8 @@ import gobject
 
 from sugar.graphics.xocolor import XoColor
 from sugar.presence import presenceservice
-from sugar.activity import bundleregistry
+
+from model import bundleregistry
 from model.BuddyModel import BuddyModel
 from model.accesspointmodel import AccessPointModel
 from hardware import hardwaremanager

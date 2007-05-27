@@ -1,19 +1,18 @@
-# Copyright (C) 2007, Red Hat, Inc.
+# Copyright (C) 2006, Red Hat, Inc.
 #
-# This library is free software; you can redistribute it and/or
-# modify it under the terms of the GNU Lesser General Public
-# License as published by the Free Software Foundation; either
-# version 2 of the License, or (at your option) any later version.
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
 #
-# This library is distributed in the hope that it will be useful,
+# This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# Lesser General Public License for more details.
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-# You should have received a copy of the GNU Lesser General Public
-# License along with this library; if not, write to the
-# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# Boston, MA 02111-1307, USA.
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
 
@@ -73,18 +72,6 @@ class BundleRegistry(gobject.GObject):
         self._bundles = {}
         self._search_path = []
         self._service_manager = _ServiceManager()
-
-    def find_bundle(self, key):
-        """Find a bundle in the registry"""
-        key = key.lower()
-
-        for bundle in self._bundles.values():
-            name = bundle.get_name().lower()
-            service_name = bundle.get_service_name().lower()
-            if name.find(key) != -1 or service_name.find(key) != -1:
-                return bundle
-
-        return None
 
     def get_bundle(self, service_name):
         """Returns an bundle given his service name"""
