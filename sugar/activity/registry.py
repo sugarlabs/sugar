@@ -45,14 +45,18 @@ class ActivityRegistry(object):
         bus_object = bus.get_object(_SHELL_SERVICE, _SHELL_PATH)
         self._registry = dbus.Interface(bus_object, _REGISTRY_IFACE)
 
-    def get_activities_for_name(self, name):
+    def _convert_info_list(self, info_list):
         result = []
 
-        activities = self._registry.GetActivitiesForName(name)
-        for info_dict in activities:
+        for info_dict in info_list:
             result.append(_activity_info_from_dict(info_dict))
 
         return result
 
+    def get_activities_for_name(self, name):
+        info_list = self._registry.GetActivitiesForName(name)
+        return self._convert_info_list(info_list)
+
     def get_activities_for_type(self, mime_type):
-        pass
+        info_list = self._registry.GetActivitiesForType(mime_type)
+        return self._convert_info_list(info_list)

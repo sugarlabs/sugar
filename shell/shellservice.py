@@ -90,6 +90,18 @@ class ShellService(dbus.service.Object):
 
         return result
 
+    @dbus.service.method(_DBUS_ACTIVITY_REGISTRY_IFACE,
+                         in_signature="s", out_signature="aa{sv}")
+    def GetActivitiesForType(self, mime_type):
+        result = []
+
+        for bundle in bundleregistry.get_registry():
+            service_name = bundle.get_service_name().lower()
+            if mime_type in bundle.get_mime_types():
+                result.append(self._get_activity_info(bundle).to_dict())
+
+        return result
+
     @dbus.service.signal(_DBUS_OWNER_IFACE, signature="s")
     def ColorChanged(self, color):
         pass
