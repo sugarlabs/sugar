@@ -86,7 +86,8 @@ class ShellService(dbus.service.Object):
             name = bundle.get_name().lower()
             service_name = bundle.get_service_name().lower()
             if name.find(key) != -1 or service_name.find(key) != -1:
-                result.append(self._get_activity_info(bundle).to_dict())
+                info = self._bundle_to_activity_info(bundle)
+                result.append(info.to_dict())
 
         return result
 
@@ -96,9 +97,9 @@ class ShellService(dbus.service.Object):
         result = []
 
         for bundle in bundleregistry.get_registry():
-            service_name = bundle.get_service_name().lower()
             if mime_type in bundle.get_mime_types():
-                result.append(self._get_activity_info(bundle).to_dict())
+                info = self._bundle_to_activity_info(bundle)
+                result.append(info.to_dict())
 
         return result
 
@@ -133,6 +134,6 @@ class ShellService(dbus.service.Object):
             new_id = new_activity.get_activity_id()
         self.CurrentActivityChanged(new_id)
 
-    def _get_activity_info(self, bundle):
+    def _bundle_to_activity_info(self, bundle):
         return ActivityInfo(bundle.get_name(), bundle.get_icon(),
                             bundle.get_service_name(), bundle.get_path())
