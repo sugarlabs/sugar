@@ -1,4 +1,5 @@
 # Copyright (C) 2007, Red Hat, Inc.
+# Copyright (C) 2007 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,12 +16,68 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
+from string import ascii_letters, digits
 
 import dbus
 import gobject
 
+from sugar import util
+
 
 _logger = logging.getLogger('s-p-s.psutils')
+
+_ASCII_ALNUM = ascii_letters + digits
+
+
+def pubkey_to_keyid(key):
+    """Return the key ID for the given public key. This is currently its SHA-1
+    in hex.
+
+    :Parameters:
+        `key` : str
+            The public key as a Base64 string
+    :Returns:
+        The key ID as a string of hex digits
+    """
+    return util.printable_hash(util._sha_data(key))
+
+
+def escape_identifier(identifier):
+    """Escape the given string to be a valid D-Bus object path or service
+    name component, using a reversible encoding to ensure uniqueness.
+
+    The reversible encoding is as follows:
+
+    * The empty string becomes '_'
+    * Otherwise, each non-alphanumeric character is replaced by '_' plus
+      two lower-case hex digits; the same replacement is carried out on
+      the first character, if it's a digit
+    """
+    # '' -> '_'
+    if not identifier:
+        return '_'
+
+    # A bit of a fast path for strings which are already OK.
+    # We deliberately omit '_' because, for reversibility, that must also
+    # be escaped.
+    if (identifier.strip(_ASCII_ALNUM) == '' and
+        identifier[0] in ascii_letters):
+        return identifier
+
+    # The first character may not be a digit
+    if identifier[0] not in ascii_letters:
+        ret = ['_%02x' % ord(identifier[0])]
+    else:
+        ret = [identifier[0]]
+
+    # Subsequent characters may be digits or ASCII letters
+    for c in identifier[1:]:
+        if c in _ASCII_ALNUM:
+            ret.append(c)
+        else:
+            ret.append('_%02x' % ord(c))
+
+    return ''.join(ret)
 
 
 NM_SERVICE = 'org.freedesktop.NetworkManager'
