@@ -44,8 +44,8 @@ class Palette(gtk.Window):
 
     def __init__(self):
 
-        gobject.GObject.__init__(self)
-        gtk.Window.__init__(self, gtk.WINDOW_POPUP)
+        gobject.GObject.__init__(self, type=gtk.WINDOW_POPUP)
+        gtk.Window.__init__(self)
 
         self._palette_label = gtk.Label()
         self._palette_label.set_ellipsize(pango.ELLIPSIZE_START)
@@ -74,14 +74,9 @@ class Palette(gtk.Window):
 
         self.set_border_width(self._WIN_BORDER)
         self.add(vbox)
-        self.show()
-        
-        # Set the palette position using as reference the 
-        # parent widget
-        self._set_palette_position()
 
     def do_set_property(self, pspec, value):
-        
+
         if pspec.name == 'parent':
             self._parent_widget = value
         elif pspec.name == 'alignment':
@@ -89,7 +84,7 @@ class Palette(gtk.Window):
         else:
             raise AssertionError
 
-    def _set_palette_position(self):
+    def set_position(self):
 
         window_axis = self._parent_widget.window.get_origin()
         parent_rectangle = self._parent_widget.get_allocation()
@@ -156,3 +151,6 @@ class Palette(gtk.Window):
         self._button_bar.pack_start(button, True, True, self._PADDING)
         button.show()
 
+    def display(self, button):
+        self.show()
+        self.set_position()
