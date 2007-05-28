@@ -26,6 +26,7 @@ from sugar import env, util
 
 from buddy import GenericOwner, _PROP_NICK, _PROP_CURACT, _PROP_COLOR
 from presenceservice import PresenceService
+from psutils import pubkey_to_keyid
 
 
 _logger = logging.getLogger('s-p-s.pstest')
@@ -37,7 +38,7 @@ class TestOwner(GenericOwner):
 
     __gtype_name__ = "TestOwner"
 
-    def __init__(self, ps, bus, object_id, test_num, randomize):
+    def __init__(self, ps, bus, test_num, randomize):
         self._cp = ConfigParser()
         self._section = "Info"
         self._test_activities = []
@@ -62,8 +63,9 @@ class TestOwner(GenericOwner):
         icon = _get_random_image()
 
         _logger.debug("pubkey is %s" % pubkey)
-        GenericOwner.__init__(self, ps, bus, object_id, key=pubkey, nick=nick,
-                color=color, icon=icon, registered=registered, key_hash=privkey_hash)
+        GenericOwner.__init__(self, ps, bus, pubkey_to_keyid(pubkey),
+                key=pubkey, nick=nick, color=color, icon=icon,
+                registered=registered, key_hash=privkey_hash)
 
         # Only do the random stuff if randomize is true
         if randomize:
@@ -169,7 +171,7 @@ class TestPresenceService(PresenceService):
         PresenceService.__init__(self)
 
     def _create_owner(self):
-        return TestOwner(self, self._session_bus, self._get_next_object_id(),
+        return TestOwner(self, self._session_bus,
                          self.__test_num, self.__randomize)
 
     def internal_get_activity(self, actid):

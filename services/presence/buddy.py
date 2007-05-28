@@ -37,6 +37,7 @@ _PROP_CURACT = "current-activity"
 _PROP_COLOR = "color"
 _PROP_OWNER = "owner"
 _PROP_VALID = "valid"
+_PROP_OBJID = 'objid'
 
 # Will go away soon
 _PROP_IP4_ADDRESS = "ip4-address"
@@ -90,15 +91,14 @@ class Buddy(ExportedGObject):
     }
 
     __gproperties__ = {
-        _PROP_KEY          : (str, None, None, None,
-                              gobject.PARAM_READWRITE |
-                              gobject.PARAM_CONSTRUCT_ONLY),
+        _PROP_KEY          : (str, None, None, None, gobject.PARAM_READWRITE),
         _PROP_ICON         : (object, None, None, gobject.PARAM_READWRITE),
         _PROP_NICK         : (str, None, None, None, gobject.PARAM_READWRITE),
         _PROP_COLOR        : (str, None, None, None, gobject.PARAM_READWRITE),
         _PROP_CURACT       : (str, None, None, None, gobject.PARAM_READWRITE),
         _PROP_VALID        : (bool, None, None, False, gobject.PARAM_READABLE),
         _PROP_OWNER        : (bool, None, None, False, gobject.PARAM_READABLE),
+        _PROP_OBJID        : (str, None, None, None, gobject.PARAM_READABLE),
         _PROP_IP4_ADDRESS  : (str, None, None, None, gobject.PARAM_READWRITE)
     }
 
@@ -106,16 +106,16 @@ class Buddy(ExportedGObject):
         """Initialize the Buddy object
 
         bus -- connection to the D-Bus session bus
-        object_id -- the activity's unique identifier
+        object_id -- the buddy's unique identifier, either based on their
+            key-ID or JID
         kwargs -- used to initialize the object's properties
 
         constructs a DBUS "object path" from the _BUDDY_PATH
         and object_id
         """
-        if not object_id or not isinstance(object_id, int):
-            raise ValueError("object id must be a valid number")
 
-        self._object_path = _BUDDY_PATH + str(object_id)
+        self._object_id = object_id
+        self._object_path = dbus.ObjectPath(_BUDDY_PATH + object_id)
 
         self._activities = {}   # Activity ID -> Activity
         self._activity_sigids = {}
@@ -129,9 +129,6 @@ class Buddy(ExportedGObject):
         self._nick = None
         self._color = None
         self._ip4_address = None
-
-        if not kwargs.get(_PROP_KEY):
-            raise ValueError("key required")
 
         _ALLOWED_INIT_PROPS = [_PROP_NICK, _PROP_KEY, _PROP_ICON,
                                _PROP_CURACT, _PROP_COLOR, _PROP_IP4_ADDRESS]
@@ -158,7 +155,9 @@ class Buddy(ExportedGObject):
 
         pspec -- property specifier with a "name" attribute
         """
-        if pspec.name == _PROP_KEY:
+        if pspec.name == _PROP_OBJID:
+            return self._object_id
+        elif pspec.name == _PROP_KEY:
             return self._key
         elif pspec.name == _PROP_ICON:
             return self._icon
@@ -422,32 +421,40 @@ class Buddy(ExportedGObject):
         """
         changed = False
         changed_props = {}
-        if _PROP_NICK in properties.keys():
+        if _PROP_NICK in properties:
             nick = properties[_PROP_NICK]
             if nick != self._nick:
                 self._nick = nick
                 changed_props[_PROP_NICK] = nick
                 changed = True
-        if _PROP_COLOR in properties.keys():
+        if _PROP_COLOR in properties:
             color = properties[_PROP_COLOR]
             if color != self._color:
                 self._color = color
                 changed_props[_PROP_COLOR] = color
                 changed = True
-        if _PROP_CURACT in properties.keys():
+        if _PROP_CURACT in properties:
             curact = properties[_PROP_CURACT]
             if curact != self._current_activity:
                 self._current_activity = curact
                 changed_props[_PROP_CURACT] = curact
                 changed = True
-        if _PROP_IP4_ADDRESS in properties.keys():
+        if _PROP_IP4_ADDRESS in properties:
             ip4addr = properties[_PROP_IP4_ADDRESS]
             if ip4addr != self._ip4_address:
                 self._ip4_address = ip4addr
                 changed_props[_PROP_IP4_ADDRESS] = ip4addr
                 changed = True
+        if _PROP_KEY in properties:
+            # don't allow key to be set more than once
+            if self._key is None:
+                key = properties[_PROP_KEY]
+                if key is not None:
+                    self._key = key
+                    changed_props[_PROP_KEY] = key
+                    changed = True
 
-        if not changed or not len(changed_props.keys()):
+        if not changed or not changed_props:
             return
 
         # Try emitting PropertyChanged before updating validity
@@ -558,13 +565,11 @@ class ShellOwner(GenericOwner):
     _SHELL_OWNER_INTERFACE = "org.laptop.Shell.Owner"
     _SHELL_PATH = "/org/laptop/Shell"
 
-    def __init__(self, ps, bus, object_id, test=False):
+    def __init__(self, ps, bus):
         """Initialize the ShellOwner instance
 
         ps -- presenceservice.PresenceService object
         bus -- a connection to the D-Bus session bus
-        object_id -- the activity's unique identifier
-        test -- ignored
 
         Retrieves initial property values from the profile
         module.  Loads the buddy icon from file as well.
@@ -584,8 +589,8 @@ class ShellOwner(GenericOwner):
         icon = f.read()
         f.close()
 
-        GenericOwner.__init__(self, ps, bus, object_id, key=key,
-                nick=nick, color=color, icon=icon, server=server,
+        GenericOwner.__init__(self, ps, bus, psutils.pubkey_to_keyid(key),
+                key=key, nick=nick, color=color, icon=icon, server=server,
                 key_hash=key_hash, registered=registered)
 
         # Ask to get notifications on Owner object property changes in the

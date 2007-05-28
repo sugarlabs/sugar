@@ -20,6 +20,7 @@
 import logging
 import os
 import sys
+from string import hexdigits
 try:
     # Python >= 2.5
     from hashlib import md5
@@ -42,6 +43,7 @@ from telepathy.constants import (HANDLE_TYPE_CONTACT,
     CONNECTION_STATUS_CONNECTING,
     CONNECTION_STATUS_REASON_AUTHENTICATION_FAILED,
     CONNECTION_STATUS_REASON_NONE_SPECIFIED,
+    CHANNEL_GROUP_FLAG_CHANNEL_SPECIFIC_HANDLES,
     PROPERTY_FLAG_WRITE)
 from sugar import util
 
@@ -105,8 +107,11 @@ class ServerPlugin(gobject.GObject):
         'contact-online':
             # Contact has come online and we've discovered all their buddy
             # properties.
-            # args: contact handle: int; dict {name: str => property: object}
-            (gobject.SIGNAL_RUN_FIRST, None, [object, object]),
+            # args:
+            #   contact identification (based on key ID or JID): str
+            #   contact handle: int or long
+            #   dict {name: str => property: object}
+            (gobject.SIGNAL_RUN_FIRST, None, [str, object, object]),
         'contact-offline':
             # Contact has gone offline.
             # args: contact handle
@@ -263,7 +268,7 @@ class ServerPlugin(gobject.GObject):
 
         account_info['server'] = self._owner.get_server()
 
-        khash = util.printable_hash(util._sha_data(self._owner.props.key))
+        khash = psutils.pubkey_to_keyid(self._owner.props.key)
         account_info['account'] = "%s@%s" % (khash, account_info['server'])
 
         account_info['password'] = self._owner.get_key_hash()
@@ -770,10 +775,13 @@ class ServerPlugin(gobject.GObject):
             return
 
         props['nick'] = aliases[0]
+
         jid = self._conn[CONN_INTERFACE].InspectHandles(HANDLE_TYPE_CONTACT,
                                                         [handle])[0]
         self._online_contacts[handle] = jid
-        self.emit("contact-online", handle, props)
+        objid = self.identify_contacts(None, [handle])[handle]
+
+        self.emit("contact-online", objid, handle, props)
 
         self._conn[CONN_INTERFACE_BUDDY_INFO].GetActivities(handle,
             reply_handler=lambda *args: self._contact_online_activities_cb(
@@ -841,7 +849,7 @@ class ServerPlugin(gobject.GObject):
                 handle not in self._subscribe_local_pending and
                 handle not in self._subscribe_remote_pending):
             # it's probably a channel-specific handle - can't create a Buddy
-            # object
+            # object for those yet
             return
 
         self._online_contacts[handle] = None
@@ -1063,3 +1071,93 @@ class ServerPlugin(gobject.GObject):
             if room == act_handle:
                 self.emit("activity-properties-changed", act_id, properties)
                 return
+
+    def _server_is_trusted(self, hostname):
+        """Return True if the server with the given hostname is trusted to
+        verify public-key ownership correctly, and only allows users to
+        register JIDs whose username part is either a public key fingerprint,
+        or of the wrong form to be a public key fingerprint (to allow for
+        ejabberd's admin@example.com address).
+
+        If we trust the server, we can skip verifying the key ourselves,
+        which leads to simplifications. In the current implementation we
+        never verify that people actually own the key they claim to, so
+        we will always give contacts on untrusted servers a JID- rather than
+        key-based identity.
+
+        For the moment we assume that the test server, olpc.collabora.co.uk,
+        does this verification.
+        """
+        return (hostname == 'olpc.collabora.co.uk')
+
+    def identify_contacts(self, tp_chan, handles):
+        """Work out the "best" unique identifier we can for the given handles,
+        in the context of the given channel (which may be None), using only
+        'fast' connection manager API (that does not involve network
+        round-trips).
+
+        For the XMPP server case, we proceed as follows:
+
+        * Find the owners of the given handles, if the channel has
+          channel-specific handles
+        * If the owner (globally-valid JID) is on a trusted server, return
+          'keyid/' plus the 'key fingerprint' (the user part of their JID,
+          currently implemented as the SHA-1 of the Base64 blob in
+          owner.key.pub)
+        * If the owner (globally-valid JID) cannot be found or is on an
+          untrusted server, return 'xmpp/' plus an escaped form of the JID
+
+        The idea is that we identify buddies by key-ID (i.e. by key, assuming
+        no collisions) if we can find it without making network round-trips,
+        but if that's not possible we just use their JIDs.
+
+        :Parameters:
+            `tp_chan` : telepathy.client.Channel or None
+                The channel in which the handles were found, or None if they
+                are known to be channel-specific handles
+            `handles` : iterable over (int or long)
+                The contacts' handles in that channel
+        :Returns:
+            A dict mapping the provided handles to the best available
+            unique identifier, which is a string that could be used as a
+            suffix to an object path
+        """
+        # we need to be able to index into handles, so force them to
+        # be a sequence
+        if not isinstance(handles, (tuple, list)):
+            handles = tuple(handles)
+
+        owners = handles
+
+        if tp_chan is not None and CHANNEL_INTERFACE_GROUP in tp_chan:
+
+            group = tp_chan[CHANNEL_INTERFACE_GROUP]
+            if group.GetFlags() & CHANNEL_GROUP_FLAG_CHANNEL_SPECIFIC_HANDLES:
+
+                owners = group.GetHandleOwners(handles)
+                for i, owner in enumerate(owners):
+                    if owner == 0:
+                        owners[i] = handles[i]
+
+        jids = self._conn[CONN_INTERFACE].InspectHandles(HANDLE_TYPE_CONTACT,
+                                                         owners)
+
+        ret = {}
+        for handle, jid in zip(handles, jids):
+            if '/' in jid:
+                # the contact is unidentifiable (in an anonymous MUC) - create
+                # a temporary identity for them, based on their room-JID
+                ret[handle] = 'xmpp/' + psutils.escape_identifier(jid)
+            else:
+                user, host = jid.split('@', 1)
+                if (self._server_is_trusted(host) and len(user) == 40 and
+                    user.strip(hexdigits) == ''):
+                    # they're on a trusted server and their username looks
+                    # like a key-ID
+                    ret[handle] = 'keyid/' + user.lower()
+                else:
+                    # untrusted server, or not the right format to be a
+                    # key-ID - identify the contact by their JID
+                    ret[handle] = 'xmpp/' + psutils.escape_identifier(jid)
+
+        return ret

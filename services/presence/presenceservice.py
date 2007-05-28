@@ -1,4 +1,5 @@
 # Copyright (C) 2007, Red Hat, Inc.
+# Copyright (C) 2007 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,6 +34,7 @@ from sugar import util
 
 from buddy import Buddy, ShellOwner
 from activity import Activity
+from psutils import pubkey_to_keyid
 
 _PRESENCE_SERVICE = "org.laptop.Sugar.Presence"
 _PRESENCE_INTERFACE = "org.laptop.Sugar.Presence"
@@ -57,15 +59,17 @@ class PresenceService(ExportedGObject):
 
     def _create_owner(self):
         # Overridden by TestPresenceService
-        return ShellOwner(self, self._session_bus, self._get_next_object_id())
+        return ShellOwner(self, self._session_bus)
 
     def __init__(self):
         self._next_object_id = 0
         self._connected = False
 
-        self._buddies = {}      # key -> Buddy
+        self._buddies = {}              # identifier -> Buddy
+        self._buddies_by_pubkey = {}    # base64 public key -> Buddy
         self._handles_buddies = {}      # tp client -> (handle -> Buddy)
-        self._activities = {}   # activity id -> Activity
+
+        self._activities = {}           # activity id -> Activity
 
         self._session_bus = dbus.SessionBus()
         self._session_bus.add_signal_receiver(self._connection_disconnected_cb,
@@ -74,7 +78,10 @@ class PresenceService(ExportedGObject):
 
         # Create the Owner object
         self._owner = self._create_owner()
-        self._buddies[self._owner.props.key] = self._owner
+        key = self._owner.props.key
+        keyid = pubkey_to_keyid(key)
+        self._buddies['keyid/' + keyid] = self._owner
+        self._buddies_by_pubkey[key] = self._owner
 
         self._registry = ManagerRegistry()
         self._registry.LoadManagers()
@@ -133,31 +140,35 @@ class PresenceService(ExportedGObject):
         if self._connected != old_status:
             self.emit('connection-status', self._connected)
 
-    def _contact_online(self, tp, handle, props):
-        new_buddy = False
-        key = props["key"]
-        buddy = self._buddies.get(key)
-        if not buddy:
+    def get_buddy(self, objid):
+        buddy = self._buddies.get(objid)
+        if buddy is None:
+            _logger.debug('Creating new buddy at .../%s', objid)
             # we don't know yet this buddy
-            objid = self._get_next_object_id()
-            buddy = Buddy(self._session_bus, objid, key=key)
+            buddy = Buddy(self._session_bus, objid)
             buddy.connect("validity-changed", self._buddy_validity_changed_cb)
             buddy.connect("disappeared", self._buddy_disappeared_cb)
-            self._buddies[key] = buddy
+            self._buddies[objid] = buddy
+        return buddy
+
+    def _contact_online(self, tp, objid, handle, props):
+        _logger.debug('Handle %u, .../%s is now online', handle, objid)
+        buddy = self.get_buddy(objid)
 
         self._handles_buddies[tp][handle] = buddy
         # store the handle of the buddy for this CM
         buddy.add_telepathy_handle(tp, handle)
-
         buddy.set_properties(props)
 
     def _buddy_validity_changed_cb(self, buddy, valid):
         if valid:
             self.BuddyAppeared(buddy.object_path())
+            self._buddies_by_pubkey[buddy.props.key] = buddy
             _logger.debug("New Buddy: %s (%s)", buddy.props.nick,
                           buddy.props.color)
         else:
             self.BuddyDisappeared(buddy.object_path())
+            self._buddies_by_pubkey.pop(buddy.props.key, None)
             _logger.debug("Buddy left: %s (%s)", buddy.props.nick,
                           buddy.props.color)
 
@@ -166,16 +177,17 @@ class PresenceService(ExportedGObject):
             self.BuddyDisappeared(buddy.object_path())
             _logger.debug('Buddy left: %s (%s)', buddy.props.nick,
                           buddy.props.color)
-        self._buddies.pop(buddy.props.key)
+            self._buddies_by_pubkey.pop(buddy.props.key, None)
+        self._buddies.pop(buddy.props.objid, None)
 
     def _contact_offline(self, tp, handle):
         if not self._handles_buddies[tp].has_key(handle):
             return
 
         buddy = self._handles_buddies[tp].pop(handle)
-        key = buddy.props.key
-
         # the handle of the buddy for this CM is not valid anymore
+        # (this might trigger _buddy_disappeared_cb if they are not visible
+        # via any CM)
         buddy.remove_telepathy_handle(tp, handle)
 
     def _get_next_object_id(self):
@@ -326,8 +338,8 @@ class PresenceService(ExportedGObject):
                          in_signature="ay", out_signature="o",
                          byte_arrays=True)
     def GetBuddyByPublicKey(self, key):
-        if self._buddies.has_key(key):
-            buddy = self._buddies[key]
+        buddy = self._buddies_by_pubkey.get(key)
+        if buddy is not None:
             if buddy.props.valid:
                 return buddy.object_path()
         raise NotFoundError("The buddy was not found.")
