@@ -857,16 +857,22 @@ class ServerPlugin(gobject.GObject):
 
     def _subscribe_members_changed_cb(self, added, removed, local_pending,
             remote_pending, actor, reason):
-        for handle in added:
-            self._subscribe_members.add(handle)
-        for handle in local_pending:
-            self._subscribe_local_pending.add(handle)
-        for handle in remote_pending:
-            self._subscribe_remote_pending.add(handle)
-        for handle in removed:
-            self._subscribe_members.discard(handle)
-            self._subscribe_local_pending.discard(handle)
-            self._subscribe_remote_pending.discard(handle)
+
+        added = set(added)
+        removed = set(removed)
+        local_pending = set(local_pending)
+        remote_pending = set(remote_pending)
+
+        affected = added|removed
+        affected |= local_pending
+        affected |= remote_pending
+
+        self._subscribe_members -= affected
+        self._subscribe_members |= added
+        self._subscribe_local_pending -= affected
+        self._subscribe_local_pending |= local_pending
+        self._subscribe_remote_pending -= affected
+        self._subscribe_remote_pending |= remote_pending
 
     def _publish_members_changed_cb(self, added, removed, local_pending,
             remote_pending, actor, reason):
