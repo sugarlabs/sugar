@@ -22,7 +22,7 @@ import dbus
 
 from model.homeactivity import HomeActivity
 from model.homerawwindow import HomeRawWindow
-from sugar.activity import bundleregistry
+from model import bundleregistry
 
 _SERVICE_NAME = "org.laptop.Activity"
 _SERVICE_PATH = "/org/laptop/Activity"

@@ -20,14 +20,16 @@ import logging
 import gobject
 import wnck
 
-from view.home.HomeWindow import HomeWindow
 from sugar.activity.activityhandle import ActivityHandle
 from sugar.graphics.popupcontext import PopupContext
+from sugar.activity import activityfactory
+import sugar
+
 from view.ActivityHost import ActivityHost
-from sugar.activity import activityfactory, bundleregistry
 from view.frame.frame import Frame
 from view.keyhandler import KeyHandler
-import sugar
+from view.home.HomeWindow import HomeWindow
+from model import bundleregistry
 
 class Shell(gobject.GObject):
     def __init__(self, model):

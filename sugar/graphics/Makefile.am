@@ -13,6 +13,7 @@ sugar_PYTHON =			\
 	menushell.py		\
 	notebook.py		\
 	roundbox.py		\
+	palette.py		\
 	panel.py		\
 	popup.py		\
 	popupcontext.py		\

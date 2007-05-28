@@ -89,8 +89,7 @@ class ActivityCreationHandler(gobject.GObject):
         
         The specific service which creates new instances of this 
         particular type of activity is created during the activity
-        registration process in 
-        sugar.activity.bundleregistry.BundleRegistry which creates 
+        registration process in shell bundle registry which creates 
         service definition files for each registered bundle type.
         """
         gobject.GObject.__init__(self)

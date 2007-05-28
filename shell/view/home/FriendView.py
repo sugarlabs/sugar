@@ -17,11 +17,12 @@
 import hippo
 import gobject
 
-from view.BuddyIcon import BuddyIcon
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import units
 from sugar.presence import presenceservice
-from sugar.activity import bundleregistry
+
+from model import bundleregistry
+from view.BuddyIcon import BuddyIcon
 
 class FriendView(hippo.CanvasBox):
     def __init__(self, shell, menu_shell, buddy, **kwargs):

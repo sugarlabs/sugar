@@ -1,11 +1,30 @@
+# Copyright (C) 2006, Red Hat, Inc.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
 """D-bus service providing access to the shell's functionality"""
 import dbus
 
-from sugar.activity import bundleregistry
+from sugar.activity import ActivityRegistry
+from sugar.activity import ActivityInfo
+
+from model import bundleregistry
 
 _DBUS_SERVICE = "org.laptop.Shell"
-_DBUS_INTERFACE = "org.laptop.Shell"
-_DBUS_OWNER_INTERFACE = "org.laptop.Shell.Owner"
+_DBUS_ACTIVITY_REGISTRY_IFACE = "org.laptop.Shell.ActivityRegistry"
+_DBUS_OWNER_IFACE = "org.laptop.Shell.Owner"
 _DBUS_PATH = "/org/laptop/Shell"
 
 class ShellService(dbus.service.Object):
@@ -35,14 +54,16 @@ class ShellService(dbus.service.Object):
         self._owner.connect('color-changed', self._owner_color_changed_cb)
 
         self._home_model = self._shell_model.get_home()
-        self._home_model.connect('active-activity-changed', self._cur_activity_changed_cb)
+        self._home_model.connect('active-activity-changed',
+                                 self._cur_activity_changed_cb)
 
         bus = dbus.SessionBus()
         bus_name = dbus.service.BusName(_DBUS_SERVICE, bus=bus)
         dbus.service.Object.__init__(self, bus_name, _DBUS_PATH)
 
-    @dbus.service.method(_DBUS_INTERFACE, in_signature="s", out_signature="b")
-    def add_bundle(self, bundle_path):
+    @dbus.service.method(_DBUS_ACTIVITY_REGISTRY_IFACE,
+                         in_signature="s", out_signature="b")
+    def AddBundle(self, bundle_path):
         """Register the activity bundle with the global registry 
         
         bundle_path -- path to the activity bundle's root directory,
@@ -55,28 +76,55 @@ class ShellService(dbus.service.Object):
         registry = bundleregistry.get_registry()
         return registry.add_bundle(bundle_path)
 
-    @dbus.service.signal(_DBUS_OWNER_INTERFACE, signature="s")
+    @dbus.service.method(_DBUS_ACTIVITY_REGISTRY_IFACE,
+                         in_signature="s", out_signature="aa{sv}")
+    def GetActivitiesForName(self, name):
+        result = []
+        key = name.lower()
+
+        for bundle in bundleregistry.get_registry():
+            name = bundle.get_name().lower()
+            service_name = bundle.get_service_name().lower()
+            if name.find(key) != -1 or service_name.find(key) != -1:
+                info = self._bundle_to_activity_info(bundle)
+                result.append(info.to_dict())
+
+        return result
+
+    @dbus.service.method(_DBUS_ACTIVITY_REGISTRY_IFACE,
+                         in_signature="s", out_signature="aa{sv}")
+    def GetActivitiesForType(self, mime_type):
+        result = []
+
+        for bundle in bundleregistry.get_registry():
+            if mime_type in bundle.get_mime_types():
+                info = self._bundle_to_activity_info(bundle)
+                result.append(info.to_dict())
+
+        return result
+
+    @dbus.service.signal(_DBUS_OWNER_IFACE, signature="s")
     def ColorChanged(self, color):
         pass
 
     def _owner_color_changed_cb(self, new_color):
         self.ColorChanged(new_color.to_string())
 
-    @dbus.service.signal(_DBUS_OWNER_INTERFACE, signature="s")
+    @dbus.service.signal(_DBUS_OWNER_IFACE, signature="s")
     def NickChanged(self, nick):
         pass
 
     def _owner_nick_changed_cb(self, new_nick):
         self.NickChanged(new_nick)
 
-    @dbus.service.signal(_DBUS_OWNER_INTERFACE, signature="ay")
+    @dbus.service.signal(_DBUS_OWNER_IFACE, signature="ay")
     def IconChanged(self, icon_data):
         pass
 
     def _owner_icon_changed_cb(self, new_icon):
         self.IconChanged(dbus.ByteArray(new_icon))
 
-    @dbus.service.signal(_DBUS_OWNER_INTERFACE, signature="s")
+    @dbus.service.signal(_DBUS_OWNER_IFACE, signature="s")
     def CurrentActivityChanged(self, activity_id):
         pass
 
@@ -85,3 +133,7 @@ class ShellService(dbus.service.Object):
         if new_activity:
             new_id = new_activity.get_activity_id()
         self.CurrentActivityChanged(new_id)
+
+    def _bundle_to_activity_info(self, bundle):
+        return ActivityInfo(bundle.get_name(), bundle.get_icon(),
+                            bundle.get_service_name(), bundle.get_path())

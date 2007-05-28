@@ -10,16 +10,7 @@ takes a small dictionary with values corresponding to a
 
     sugar.activity.activityhandle.ActivityHandle
 
-describing an individual instance of the activity.  The 
-ActivityFactory service is registered with dbus using the 
-global
-
-    sugar.activity.bundleregistry.BundleRegistry 
-
-service, which creates dbus .service files in a well known
-directory.  Those files tell dbus what executable to run 
-in order to load the ActivityFactory which will provide 
-the creation service.
+describing an individual instance of the activity.
 
 Each activity so registered is described by a
 
@@ -45,3 +36,6 @@ class.  This class allows for querying the ID of the root
 window, requesting sharing across the network, and basic
 "what type of application are you" queries.
 """
+
+from sugar.activity.registry import ActivityRegistry
+from sugar.activity.registry import ActivityInfo

@@ -18,6 +18,7 @@
 import gtk
 
 from sugar.graphics.icon import Icon
+from sugar.graphics.palette import *
 
 class ToolButton(gtk.ToolButton):
     def __init__(self, named_icon=None):
@@ -27,4 +28,12 @@ class ToolButton(gtk.ToolButton):
     def set_named_icon(self, named_icon):
         icon = Icon(named_icon)
         self.set_icon_widget(icon)
-        icon.show()        
+        icon.show()
+
+    def set_palette(self, palette):
+        self.connect('clicked', palette.display)
+        palette.props.parent = self
+        palette.props.alignment = ALIGNMENT_BOTTOM_LEFT
+
+    def set_tooltip(self, text):
+        pass
