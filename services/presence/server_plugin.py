@@ -1011,15 +1011,6 @@ class ServerPlugin(gobject.GObject):
                     else:
                         return
 
-                def members_changed(message, added, removed, local_pending,
-                                    remote_pending, actor, reason):
-                    # FIXME: if contacts were added, who don't have this
-                    # activity in their PEP node for whatever reason, then
-                    # emit buddy-activities-changed for them (otherwise they
-                    # could be in an activity while pretending they weren't,
-                    # which would be crazy)
-                    pass
-
                 def got_all_members(current, local_pending, remote_pending):
                     if local_pending:
                         for act_id, act_handle in self._activities.iteritems():
@@ -1029,10 +1020,7 @@ class ServerPlugin(gobject.GObject):
                     logger.debug('Unable to get channel members for %s:',
                                  object_path, exc_info=1)
 
-                # hook the MembersChanged signal so we get told when people
-                # join/leave
                 group = channel[CHANNEL_INTERFACE_GROUP]
-                group.connect_to_signal('MembersChanged', members_changed)
                 group.GetAllMembers(reply_handler=got_all_members,
                                     error_handler=got_all_members_err)
 
