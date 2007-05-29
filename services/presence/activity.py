@@ -48,8 +48,17 @@ class Activity(ExportedGObject):
     __gtype_name__ = "Activity"
 
     __gsignals__ = {
-        'validity-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                            ([gobject.TYPE_BOOLEAN]))
+        'validity-changed':
+            # The activity's validity has changed.
+            # An activity is valid if its name, color, type and ID have been
+            # set.
+            # Arguments:
+            #   validity: bool
+            (gobject.SIGNAL_RUN_FIRST, None, [bool]),
+        'disappeared':
+            # Nobody is in this activity any more.
+            # No arguments.
+            (gobject.SIGNAL_RUN_FIRST, None, []),
     }
 
     __gproperties__ = {
@@ -381,6 +390,7 @@ class Activity(ExportedGObject):
         """
         if buddy not in self._buddies:
             self._buddies.append(buddy)
+            buddy.add_activity(self)
             if self.props.valid:
                 self.BuddyJoined(buddy.object_path())
 
@@ -396,8 +406,12 @@ class Activity(ExportedGObject):
         """
         if buddy in self._buddies:
             self._buddies.remove(buddy)
+            buddy.remove_activity(self)
             if self.props.valid:
                 self.BuddyLeft(buddy.object_path())
+
+            if not self._buddies:
+                self.emit('disappeared')
 
     def _handle_share_join(self, tp, text_channel):
         """Called when a join to a network activity was successful.

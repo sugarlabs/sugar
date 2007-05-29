@@ -219,11 +219,12 @@ class PresenceService(ExportedGObject):
 
         activity.connect("validity-changed",
                          self._activity_validity_changed_cb)
+        activity.connect("disappeared", self._activity_disappeared_cb)
         self._activities[activity_id] = activity
         return activity
 
-    def _remove_activity(self, activity):
-        _logger.debug("remove activity %s" % activity.props.id)
+    def _activity_disappeared_cb(self, activity):
+        _logger.debug("activity %s disappeared" % activity.props.id)
 
         self.ActivityDisappeared(activity.object_path())
         del self._activities[activity.props.id]
@@ -259,7 +260,6 @@ class PresenceService(ExportedGObject):
 
             if activity is not None:
                 activity.buddy_joined(buddy)
-                buddy.add_activity(activity)
 
         activities_left = old_activities - new_activities
         for act in activities_left:
@@ -269,10 +269,6 @@ class PresenceService(ExportedGObject):
                 continue
 
             activity.buddy_left(buddy)
-            buddy.remove_activity(activity)
-
-            if not activity.get_joined_buddies():
-                self._remove_activity(activity)
 
     def _activity_invitation(self, tp, act_id):
         activity = self._activities.get(act_id)
