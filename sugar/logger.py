@@ -148,7 +148,9 @@ def cleanup():
             new_filepath = os.path.join(backup_dirpath, new_filename)  
             os.rename(old_filepath, new_filepath)
     
-    # Tempoarily map all backup logfiles
+    backup_map = {}
+    
+    # Temporarily map all backup logfiles
     
     for filename in os.listdir(backup_dirpath):
     
