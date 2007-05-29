@@ -1,4 +1,8 @@
-from psutils import escape_identifier
+print "Running test_psutils..."
+
+from psutils import escape_identifier, pubkey_to_keyid
+
+assert pubkey_to_keyid('abc') == 'a9993e364706816aba3e25717850c26c9cd0d89d'
 
 assert escape_identifier('') == '_'
 assert escape_identifier('_') == '_5f'
