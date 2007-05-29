@@ -10,6 +10,7 @@ Makefile.in
 *.lo
 *.loT
 .*.sw?
+*.service
 
 # Absolute
 
@@ -51,9 +52,6 @@ browser/sugar-marshal.c
 browser/sugar-marshal.h
 browser/stamp-sugar-marshal.c
 browser/stamp-sugar-marshal.h
-services/clipboard/org.laptop.Clipboard.service
-services/console/org.laptop.sugar.Console.service
-services/presence/org.laptop.Sugar.Presence.service
 bin/sugar
 shell/extensions/_extensions.c
 data/sugar.gtkrc

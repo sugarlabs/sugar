@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name = org.laptop.ObjectTypeRegistry
+Exec = @bindir@/sugar-clipboard
+

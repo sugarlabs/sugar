@@ -1,12 +1,10 @@
-VERSION=0.63
-DATE=`date +%Y%m%d`
-RELEASE=2.87
-TARBALL=sugar-$VERSION-$RELEASE.${DATE}git.tar.bz2
+VERSION=0.64
+ALPHATAG=`git-show-ref --hash=10 refs/heads/master`
+TARBALL=sugar-$VERSION-git$ALPHATAG.tar.bz2
 
 rm sugar-$VERSION.tar.bz2
 
-XUL_SDK=/home/marco/sugar-jhbuild/build/lib/xulrunner-1.9a5pre-dev
-DISTCHECK_CONFIGURE_FLAGS="--with-libxul-sdk=$XUL_SDK" make distcheck
+make distcheck
 
 mv sugar-$VERSION.tar.bz2 $TARBALL
 scp $TARBALL mpg@devserv.devel.redhat.com:~
