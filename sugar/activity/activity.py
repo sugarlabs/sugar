@@ -42,14 +42,14 @@ class ActivityToolbar(gtk.Toolbar):
         activity.connect('shared', self._activity_shared_cb)
         activity.connect('joined', self._activity_shared_cb)
 
-        if activity.jobject:
+        if activity.metadata:
             self.title = gtk.Entry()
             self.title.set_size_request(int(gtk.gdk.screen_width() / 6), -1)
-            self.title.set_text(activity.jobject['title'])
+            self.title.set_text(activity.metadata['title'])
             self.title.connect('focus-out-event', self._title_focus_out_event_cb)
             self._add_widget(self.title)
 
-            activity.jobject.connect('updated', self._jobject_updated_cb)
+            activity.metadata.connect('updated', self._jobject_updated_cb)
 
         separator = gtk.SeparatorToolItem()
         separator.props.draw = False
@@ -84,8 +84,8 @@ class ActivityToolbar(gtk.Toolbar):
         self.title.set_text(jobject['title'])
 
     def _title_focus_out_event_cb(self, entry, event):
-        if self._activity.jobject['title'] != self.title.get_text():
-            self._activity.jobject['title'] = self.title.get_text()
+        if self._activity.metadata['title'] != self.title.get_text():
+            self._activity.metadata['title'] = self.title.get_text()
             self._activity.save()
 
     def _add_widget(self, widget, expand=False):
@@ -199,36 +199,44 @@ class Activity(Window, gtk.Container):
         self._bus = ActivityService(self)
 
         if handle.object_id:
-            self.jobject = datastore.get(handle.object_id)
-            self.jobject.object_id = ''
-            del self.jobject['ctime']
-            del self.jobject['mtime']
+            self._jobject = datastore.get(handle.object_id)
+            self._jobject.object_id = ''
+            del self._jobject.metadata['ctime']
+            del self._jobject.metadata['mtime']
         elif create_jobject:
             logging.debug('Creating a jobject.')
-            self.jobject = datastore.create()
-            self.jobject['title'] = '%s %s' % (get_bundle_name(), 'Activity')
-            self.jobject['activity'] = self.get_service_name()
-            self.jobject['keep'] = '0'
-            self.jobject['buddies'] = ''
-            self.jobject['preview'] = ''
-            self.jobject['icon-color'] = profile.get_color().to_string()
-            self.jobject.file_path = ''
-            datastore.write(self.jobject,
+            self._jobject = datastore.create()
+            self._jobject.metadata['title'] = '%s %s' % (get_bundle_name(), 'Activity')
+            self._jobject.metadata['activity'] = self.get_service_name()
+            self._jobject.metadata['keep'] = '0'
+            self._jobject.metadata['buddies'] = ''
+            self._jobject.metadata['preview'] = ''
+            self._jobject.metadata['icon-color'] = profile.get_color().to_string()
+            self._jobject.file_path = ''
+            datastore.write(self._jobject,
                     reply_handler=self._internal_jobject_create_cb,
                     error_handler=self._internal_jobject_error_cb)
         else:
-            self.jobject = None
+            self._jobject = None
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'active':
             if self._active != value:
                 self._active = value
-                if not self._active and self.jobject:
+                if not self._active and self._jobject:
                     self.save()
 
     def do_get_property(self, pspec):
         if pspec.name == 'active':
             return self._active
+
+    def set_canvas(self, canvas):
+        Window.set_canvas(self, canvas)
+        canvas.connect('map', self._canvas_map_cb)
+
+    def _canvas_map_cb(self, canvas):
+        if self._jobject and self._jobject.file_path:
+            self.read_file(self._jobject.file_path)
 
     def _internal_jobject_create_cb(self):
         pass
@@ -236,17 +244,17 @@ class Activity(Window, gtk.Container):
     def _internal_jobject_error_cb(self, err):
         logging.debug("Error creating activity datastore object: %s" % err)
 
-    def read_file(self):
+    def read_file(self, file_path):
         """
         Subclasses implement this method if they support resuming objects from
-        the journal. Can access the object through the jobject attribute.
+        the journal. 'file_path' is the file to read from.
         """
         raise NotImplementedError
 
-    def write_file(self):
+    def write_file(self, file_path):
         """
         Subclasses implement this method if they support saving data to objects
-        in the journal. Can access the object through the jobject attribute.
+        in the journal. 'file_path' is the file to write to.
         """
         raise NotImplementedError
 
@@ -259,11 +267,12 @@ class Activity(Window, gtk.Container):
     def save(self):
         """Request that the activity is saved to the Journal."""
         try:
-            self.jobject.file_path = os.path.join('/tmp', '%i.txt' % time.time())
-            self.write_file()
+            file_path = os.path.join('/tmp', '%i' % time.time())
+            self.write_file(file_path)
+            self._jobject.file_path = file_path
         except NotImplementedError:
-            self.jobject.file_path = ''
-        datastore.write(self.jobject,
+            pass
+        datastore.write(self._jobject,
                 reply_handler=self._internal_save_cb,
                 error_handler=self._internal_save_error_cb)
 
@@ -322,13 +331,21 @@ class Activity(Window, gtk.Container):
             self._shared_activity.leave()
 
     def close(self):
-        if self.jobject:
+        if self._jobject:
             try:
                 self.save()
             except:
                 self.destroy()
                 raise
         self.destroy()
+
+    def get_metadata(self):
+        if self._jobject:
+            return self._jobject.metadata
+        else:
+            return None
+
+    metadata = property(get_metadata, None)
 
 def get_bundle_name():
     """Return the bundle name for the current process' bundle
