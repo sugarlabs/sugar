@@ -21,6 +21,7 @@ import os
 import logging
 import traceback
 from cStringIO import StringIO
+import time
 
 from sugar import env
 
@@ -113,6 +114,60 @@ def start(module_id):
     sys.excepthook = __exception_handler
 
 def cleanup():
-    logs_dir = _get_logs_dir()
-    for f in os.listdir(logs_dir):
-        os.remove(os.path.join(logs_dir, f))
+    logs_dir = _get_logs_dir()   
+        
+    #---------------------------------------------------------
+    # Configure logfile backups
+    #---------------------------------------------------------
+    # File extension for backed up logfiles.
+    file_suffix = int( time.time() )
+    # Absolute directory path where to store old logfiles.
+    # It will be created recursivly if it's not present.
+    backup_dirpath = os.path.join(logs_dir, 'old')
+    # How many versions shall be backed up of every logfile?
+    num_backup_versions = 4
+    #---------------------------------------------------------
+    
+    # Make sure the backup location for old log files exists
+    if not os.path.exists(backup_dirpath):
+        os.makedirs(backup_dirpath)
+    
+    # Iterate over every item in 'logs' directory
+    for filename in os.listdir(logs_dir):
+
+        old_filepath = os.path.join(logs_dir, filename)
+        
+        if os.path.isfile(old_filepath):
+            # Backup every file 
+            new_filename = filename + '.' + str(file_suffix)
+            new_filepath = os.path.join(backup_dirpath, new_filename)  
+            os.rename(old_filepath, new_filepath)
+    
+    backup_map = {}
+    
+    # Tempoarily map all backup logfiles
+    for filename in os.listdir(backup_dirpath):
+        # Remove the 'file_suffix' from the filename.
+        end = filename.rfind(".")
+        key = filename[0:end].lower()        
+        key = key.replace(".", "_")
+        
+        if key not in backup_map:
+            backup_map[key] = []
+                        
+        backup_list = backup_map[key]
+        
+        backup_list.append( os.path.join(backup_dirpath, filename) )
+    
+    print backup_map
+    
+    # Only keep 'num_backup_versions' versions of every logfile.
+    # Remove the others.
+    for key in backup_map:
+        backup_list = backup_map[key]           
+        backup_list.sort()
+        backup_list.reverse()
+            
+        for i in range(num_backup_versions, len(backup_list)):
+            os.remove(backup_list[i])
+            
