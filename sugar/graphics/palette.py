@@ -17,6 +17,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import gtk
+from gtk import gdk, keysyms
 import gobject
 import pango
 
@@ -49,6 +50,7 @@ class Palette(gtk.Window):
 
         self._palette_label = gtk.Label()
         self._palette_label.set_ellipsize(pango.ELLIPSIZE_START)
+        self._palette_label.show()
 
         self._separator = gtk.HSeparator()
         self._separator.hide()
@@ -58,7 +60,10 @@ class Palette(gtk.Window):
         self._menu_bar.show()
 
         self._content = gtk.HBox()
+        self._content.show()
+
         self._button_bar = gtk.HButtonBox()
+        self._button_bar.show()
 
         # Set main container
         vbox = gtk.VBox(False, 0)
@@ -69,11 +74,25 @@ class Palette(gtk.Window):
         vbox.pack_start(self._button_bar, True, True, self._PADDING)
         vbox.show()
 
-        # FIXME
-        self.connect('focus_out_event', self._close_palette)
+        # Widget events
+        self.connect('motion-notify-event', self._mouse_over_widget)
+        self.connect('leave-notify-event', self._mouse_out_widget)
+        self.connect('button-press-event', self._close_palette)
+        self.connect('key-press-event', self._on_key_press_event)
 
         self.set_border_width(self._WIN_BORDER)
         self.add(vbox)
+        
+    def _is_mouse_out(self, window, event):
+        # If we're clicking outside of the Palette
+        # return True
+        if (event.window != self.window or
+            (tuple(self.allocation.intersect(
+                   gdk.Rectangle(x=int(event.x), y=int(event.y),
+                                 width=1, height=1)))) == (0, 0, 0, 0)):
+            return True
+        else:
+            return False
 
     def do_set_property(self, pspec, value):
 
@@ -99,7 +118,7 @@ class Palette(gtk.Window):
         elif self._alignment == ALIGNMENT_BOTTOM_RIGHT:
             move_x = parent_rectangle.x - palette_width
             move_y = window_axis[1] + parent_rectangle.y + parent_rectangle.height
-        
+
         elif self._alignment == ALIGNMENT_LEFT_BOTTOM:
             move_x = parent_rectangle.x - palette_width
             move_y = palette_rectangle.y
@@ -126,8 +145,9 @@ class Palette(gtk.Window):
 
         self.move(move_x, move_y)
 
-    def _close_palette(self, widget, event):
-        self.destroy()
+    def _close_palette(self, widget=None, event=None):
+        gtk.gdk.pointer_ungrab()
+        self.hide()
 
     def set_primary_state(self, label, accel_path=None):
         if accel_path != None:
@@ -148,9 +168,42 @@ class Palette(gtk.Window):
         widget.show()
 
     def append_button(self, button):
+        button.connect('released', self._close_palette)
         self._button_bar.pack_start(button, True, True, self._PADDING)
         button.show()
 
     def display(self, button):
         self.show()
         self.set_position()
+        self._pointer_grab()
+
+    def _pointer_grab(self):
+        gtk.gdk.pointer_grab(self.window, owner_events=False,
+            event_mask=gtk.gdk.BUTTON_PRESS_MASK |
+            gtk.gdk.BUTTON_RELEASE_MASK |
+            gtk.gdk.ENTER_NOTIFY_MASK |
+            gtk.gdk.LEAVE_NOTIFY_MASK |
+            gtk.gdk.POINTER_MOTION_MASK)
+
+        gdk.keyboard_grab(self.window, False)
+
+    def _mouse_out_widget(self, widget, event):
+        if (widget == self) and self._is_mouse_out(widget, event):
+            self._pointer_grab()
+
+    def _mouse_over_widget(self, widget, event):
+        gtk.gdk.pointer_ungrab()
+
+    def _on_key_press_event(self, window, event):
+        
+        # Escape or Alt+Up: Close
+        # Enter, Return or Space: Select
+
+        keyval = event.keyval
+        state = event.state & gtk.accelerator_get_default_mod_mask()
+        if (keyval == keysyms.Escape or
+            ((keyval == keysyms.Up or keyval == keysyms.KP_Up) and
+             state == gdk.MOD1_MASK)):
+            self._close_palette()
+        elif keyval == keysyms.Tab:
+            self._close_palette()

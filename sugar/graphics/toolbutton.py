@@ -36,4 +36,5 @@ class ToolButton(gtk.ToolButton):
         palette.props.alignment = ALIGNMENT_BOTTOM_LEFT
 
     def set_tooltip(self, text):
-        pass
+        tp = gtk.Tooltips()
+        self.set_tooltip(tp, text, text)
