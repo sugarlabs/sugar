@@ -211,7 +211,8 @@ class PresenceService(ExportedGObject):
     def _new_activity(self, activity_id, tp):
         try:
             objid = self._get_next_object_id()
-            activity = Activity(self._session_bus, objid, tp, id=activity_id)
+            activity = Activity(self._session_bus, objid, self, tp,
+                                id=activity_id)
         except Exception:
             # FIXME: catching bare Exception considered harmful
             _logger.debug("Invalid activity:", exc_info=1)
@@ -259,7 +260,7 @@ class PresenceService(ExportedGObject):
                 activity = self._new_activity(act, tp)
 
             if activity is not None:
-                activity.buddy_joined(buddy)
+                activity.buddy_apparently_joined(buddy)
 
         activities_left = old_activities - new_activities
         for act in activities_left:
@@ -268,7 +269,7 @@ class PresenceService(ExportedGObject):
             if not activity:
                 continue
 
-            activity.buddy_left(buddy)
+            activity.buddy_apparently_left(buddy)
 
     def _activity_invitation(self, tp, act_id):
         activity = self._activities.get(act_id)
@@ -376,6 +377,48 @@ class PresenceService(ExportedGObject):
                             "connection to %s:%s" % (handle, tp_conn_name,
                                                      tp_conn_path))
 
+    def map_handles_to_buddies(self, tp, tp_chan, handles, create=True):
+        """
+
+        :Parameters:
+            `tp` : Telepathy plugin
+                The server or link-local plugin
+            `tp_chan` : telepathy.client.Channel or None
+                If not None, the channel in which these handles are
+                channel-specific
+            `handles` : iterable over int or long
+                The handles to be mapped to Buddy objects
+            `create` : bool
+                If true (default), if a corresponding `Buddy` object is not
+                found, create one.
+        :Returns:
+            A dict mapping handles from `handles` to `Buddy` objects.
+            If `create` is true, the dict's keys will be exactly the
+            items of `handles` in some order. If `create` is false,
+            the dict will contain no entry for handles for which no
+            `Buddy` is already available.
+        :Raises LookupError: if `tp` is not a plugin attached to this PS.
+        """
+        handle_to_buddy = self._handles_buddies[tp]
+
+        ret = {}
+        missing = []
+        for handle in handles:
+            buddy = handle_to_buddy.get(handle)
+            if buddy is None:
+                missing.append(handle)
+            else:
+                ret[handle] = buddy
+
+        if missing and create:
+            handle_to_objid = tp.identify_contacts(tp_chan, missing)
+            for handle, objid in handle_to_objid.iteritems():
+                buddy = self.get_buddy(objid)
+                ret[handle] = buddy
+                if tp_chan is None:
+                    handle_to_buddy[handle] = buddy
+        return ret
+
     @dbus.service.method(_PRESENCE_INTERFACE,
                          in_signature='', out_signature="o")
     def GetOwner(self):
@@ -405,9 +448,9 @@ class PresenceService(ExportedGObject):
         objid = self._get_next_object_id()
         # FIXME check which tp client we should use to share the activity
         color = self._owner.props.color
-        activity = Activity(self._session_bus, objid, self._server_plugin,
-                            id=actid, type=atype, name=name, color=color,
-                            local=True)
+        activity = Activity(self._session_bus, objid, self,
+                            self._server_plugin, id=actid, type=atype,
+                            name=name, color=color, local=True)
         activity.connect("validity-changed",
                          self._activity_validity_changed_cb)
         self._activities[actid] = activity
