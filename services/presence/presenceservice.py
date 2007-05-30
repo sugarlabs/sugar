@@ -353,6 +353,11 @@ class PresenceService(ExportedGObject):
         if buddy is not None:
             if buddy.props.valid:
                 return buddy.object_path()
+        keyid = pubkey_to_keyid(key)
+        buddy = self._buddies.get('keyid/' + keyid)
+        if buddy is not None:
+            if buddy.props.valid:
+                return buddy.object_path()
         raise NotFoundError("The buddy was not found.")
 
     @dbus.service.method(_PRESENCE_INTERFACE, in_signature='sou',
