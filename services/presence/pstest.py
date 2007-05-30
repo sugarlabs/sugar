@@ -63,7 +63,8 @@ class TestOwner(GenericOwner):
         icon = _get_random_image()
 
         _logger.debug("pubkey is %s" % pubkey)
-        GenericOwner.__init__(self, ps, bus, pubkey_to_keyid(pubkey),
+        GenericOwner.__init__(self, ps, bus,
+                'keyid/' + pubkey_to_keyid(pubkey),
                 key=pubkey, nick=nick, color=color, icon=icon,
                 registered=registered, key_hash=privkey_hash)
 

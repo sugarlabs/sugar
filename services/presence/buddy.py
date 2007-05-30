@@ -589,7 +589,8 @@ class ShellOwner(GenericOwner):
         icon = f.read()
         f.close()
 
-        GenericOwner.__init__(self, ps, bus, psutils.pubkey_to_keyid(key),
+        GenericOwner.__init__(self, ps, bus,
+                'keyid/' + psutils.pubkey_to_keyid(key),
                 key=key, nick=nick, color=color, icon=icon, server=server,
                 key_hash=key_hash, registered=registered)
 
