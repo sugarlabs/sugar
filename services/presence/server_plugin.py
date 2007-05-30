@@ -863,8 +863,9 @@ class ServerPlugin(gobject.GObject):
 
         self._contact_online_request_properties(handle, 1)
 
-    def _subscribe_members_changed_cb(self, added, removed, local_pending,
-            remote_pending, actor, reason):
+    def _subscribe_members_changed_cb(self, message, added, removed,
+                                      local_pending, remote_pending,
+                                      actor, reason):
 
         added = set(added)
         removed = set(removed)
