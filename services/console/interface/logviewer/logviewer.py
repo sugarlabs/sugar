@@ -80,10 +80,13 @@ class MultiLogView(gtk.VBox):
     def _update(self, tv_menu):
         # Searching log files
         for logfile in os.listdir(self._logs_path):
+            full_log_path = os.path.join(self._logs_path, logfile)
+            
+            if os.path.isdir(full_log_path):
+                continue
 
             if not self._activity.has_key(logfile):
                 self._add_activity(logfile)
-                full_log_path = os.path.join(self._logs_path, logfile)
                 model = LogBuffer(full_log_path)
                 self._activity[logfile] = model
                 
