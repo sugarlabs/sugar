@@ -36,23 +36,26 @@ def _get_display_number():
     log.info( "Attempting to find free port for X11 (Xephyr)" )
     retries = 20
     display_number = 1
-    display_is_free = False    
+    display_is_free = False
 
     while not display_is_free and retries > 0:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        try:
-            s.connect(('127.0.0.1', 6000 + display_number))
-            s.close()
+        lockstr = "/tmp/.X%d-lock" % display_number
+        if not os.path.exists(lockstr):
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            try:
+                s.connect(('127.0.0.1', 6000 + display_number))
+                s.close()
+            except:
+                display_is_free = True
+                break
 
-            display_number += 1
-            retries -= 1
-        except:
-            display_is_free = True
+        display_number += 1
+        retries -= 1
 
     if display_is_free:
-        log.info( 
-            '  Found free port: #%s (%s)', 
-            display_number, display_number+6000 
+        log.info(
+            '  Found free port: #%s (%s)',
+            display_number, display_number+6000
         )
         return display_number
     else:
