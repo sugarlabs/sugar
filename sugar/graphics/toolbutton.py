@@ -31,10 +31,14 @@ class ToolButton(gtk.ToolButton):
         icon.show()
 
     def set_palette(self, palette):
-        self.connect('clicked', palette.display)
-        palette.props.parent = self
-        palette.props.alignment = ALIGNMENT_BOTTOM_LEFT
-
+        self._palette = palette
+        self._palette.props.parent = self
+        self._palette.props.alignment = ALIGNMENT_BOTTOM_LEFT
+        self.connect('clicked', self._display_palette_cb)
+    
     def set_tooltip(self, text):
         tp = gtk.Tooltips()
         self.set_tooltip(tp, text, text)
+
+    def _display_palette_cb(self, widget):
+        self._palette.popup()
