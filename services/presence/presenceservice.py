@@ -15,23 +15,24 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gobject
+import logging
+from weakref import WeakValueDictionary
+
 import dbus
 import dbus.service
+import gobject
 from dbus.gobject_service import ExportedGObject
 from dbus.mainloop.glib import DBusGMainLoop
-import logging
-
 from telepathy.client import ManagerRegistry, Connection
 from telepathy.interfaces import (CONN_MGR_INTERFACE, CONN_INTERFACE)
 from telepathy.constants import (CONNECTION_STATUS_CONNECTING,
     CONNECTION_STATUS_CONNECTED,
     CONNECTION_STATUS_DISCONNECTED)
 
-from server_plugin import ServerPlugin
-from linklocal_plugin import LinkLocalPlugin
 from sugar import util
 
+from server_plugin import ServerPlugin
+from linklocal_plugin import LinkLocalPlugin
 from buddy import Buddy, ShellOwner
 from activity import Activity
 from psutils import pubkey_to_keyid
@@ -65,11 +66,20 @@ class PresenceService(ExportedGObject):
         self._next_object_id = 0
         self._connected = False
 
-        self._buddies = {}              # identifier -> Buddy
-        self._buddies_by_pubkey = {}    # base64 public key -> Buddy
-        self._handles_buddies = {}      # tp client -> (handle -> Buddy)
+        # all Buddy objects
+        # identifier -> Buddy, GC'd when no more refs exist
+        self._buddies = WeakValueDictionary()
 
-        self._activities = {}           # activity id -> Activity
+        # the online buddies for whom we know the full public key
+        # base64 public key -> Buddy
+        self._buddies_by_pubkey = {}
+
+        # The online buddies (those who're available via some CM)
+        # TP plugin -> (handle -> Buddy)
+        self._handles_buddies = {}
+
+        # activity id -> Activity
+        self._activities = {}
 
         self._session_bus = dbus.SessionBus()
         self._session_bus.add_signal_receiver(self._connection_disconnected_cb,
@@ -174,11 +184,7 @@ class PresenceService(ExportedGObject):
 
     def _buddy_disappeared_cb(self, buddy):
         if buddy.props.valid:
-            self.BuddyDisappeared(buddy.object_path())
-            _logger.debug('Buddy left: %s (%s)', buddy.props.nick,
-                          buddy.props.color)
-            self._buddies_by_pubkey.pop(buddy.props.key, None)
-        self._buddies.pop(buddy.props.objid, None)
+            self._buddy_validity_changed_cb(buddy, False)
 
     def _contact_offline(self, tp, handle):
         if not self._handles_buddies[tp].has_key(handle):
@@ -325,10 +331,18 @@ class PresenceService(ExportedGObject):
     @dbus.service.method(_PRESENCE_INTERFACE, in_signature='',
                          out_signature="ao")
     def GetBuddies(self):
-        ret = []
-        for buddy in self._buddies.values():
-            if buddy.props.valid:
-                ret.append(buddy.object_path())
+        # in the presence of an out_signature, dbus-python will convert
+        # this set into an Array automatically (because it's iterable),
+        # so it's easy to use for uniquification (we want to avoid returning
+        # buddies who're visible on both Salut and Gabble twice)
+
+        # always include myself even if I have no handles
+        ret = set((self._owner,))
+
+        for handles_buddies in self._handles_buddies.itervalues():
+            for buddy in handles_buddies.itervalues():
+                if buddy.props.valid:
+                    ret.add(buddy.object_path())
         return ret
 
     @dbus.service.method(_PRESENCE_INTERFACE,
