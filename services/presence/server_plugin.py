@@ -1131,20 +1131,27 @@ class ServerPlugin(gobject.GObject):
         owners = handles
 
         if tp_chan is not None and CHANNEL_INTERFACE_GROUP in tp_chan:
-
             group = tp_chan[CHANNEL_INTERFACE_GROUP]
-            if group.GetFlags() & CHANNEL_GROUP_FLAG_CHANNEL_SPECIFIC_HANDLES:
-
+            if (group.GetGroupFlags() &
+                CHANNEL_GROUP_FLAG_CHANNEL_SPECIFIC_HANDLES):
                 owners = group.GetHandleOwners(handles)
                 for i, owner in enumerate(owners):
                     if owner == 0:
                         owners[i] = handles[i]
+        else:
+            group = None
 
         jids = self._conn[CONN_INTERFACE].InspectHandles(HANDLE_TYPE_CONTACT,
                                                          owners)
 
         ret = {}
         for handle, jid in zip(handles, jids):
+            # special-case the Owner - we always know who we are
+            if (handle == self.self_handle or
+                (group is not None and handle == group.GetSelfHandle())):
+                ret[handle] = self._owner.props.objid
+                continue
+
             if '/' in jid:
                 # the contact is unidentifiable (in an anonymous MUC) - create
                 # a temporary identity for them, based on their room-JID
