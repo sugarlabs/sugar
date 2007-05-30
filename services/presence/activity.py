@@ -22,7 +22,8 @@ from dbus.gobject_service import ExportedGObject
 from sugar import util
 import logging
 
-from telepathy.interfaces import (CHANNEL_INTERFACE)
+from telepathy.constants import CHANNEL_GROUP_FLAG_CHANNEL_SPECIFIC_HANDLES
+from telepathy.interfaces import (CHANNEL_INTERFACE, CHANNEL_INTERFACE_GROUP)
 
 _ACTIVITY_PATH = "/org/laptop/Sugar/Presence/Activities/"
 _ACTIVITY_INTERFACE = "org.laptop.Sugar.Presence.Activity"
@@ -48,8 +49,17 @@ class Activity(ExportedGObject):
     __gtype_name__ = "Activity"
 
     __gsignals__ = {
-        'validity-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                            ([gobject.TYPE_BOOLEAN]))
+        'validity-changed':
+            # The activity's validity has changed.
+            # An activity is valid if its name, color, type and ID have been
+            # set.
+            # Arguments:
+            #   validity: bool
+            (gobject.SIGNAL_RUN_FIRST, None, [bool]),
+        'disappeared':
+            # Nobody is in this activity any more.
+            # No arguments.
+            (gobject.SIGNAL_RUN_FIRST, None, []),
     }
 
     __gproperties__ = {
@@ -71,7 +81,7 @@ class Activity(ExportedGObject):
 
     _RESERVED_PROPNAMES = __gproperties__.keys()
 
-    def __init__(self, bus, object_id, tp, **kwargs):
+    def __init__(self, bus, object_id, ps, tp, **kwargs):
         """Initializes the activity and sets its properties to default values.
 
         :Parameters:
@@ -79,6 +89,8 @@ class Activity(ExportedGObject):
                 A connection to the D-Bus session bus
             `object_id` : int
                 PS ID for this activity, used to construct the object-path
+            `ps` : presenceservice.PresenceService
+                The presence service
             `tp` : server plugin
                 The server plugin object (stands for "telepathy plugin")
         :Keywords:
@@ -103,16 +115,20 @@ class Activity(ExportedGObject):
         if not tp:
             raise ValueError("telepathy CM must be valid")
 
+        self._ps = ps
         self._object_id = object_id
         self._object_path = dbus.ObjectPath(_ACTIVITY_PATH +
                                             str(self._object_id))
 
-        self._buddies = []
+        self._buddies = set()
+        self._member_handles = set()
         self._joined = False
 
         # the telepathy client
         self._tp = tp
+        self._self_handle = None
         self._text_channel = None
+        self._text_channel_group_flags = 0
 
         self._valid = False
         self._id = None
@@ -367,8 +383,10 @@ class Activity(ExportedGObject):
                 ret.append(buddy)
         return ret
 
-    def buddy_joined(self, buddy):
-        """Adds a buddy to this activity and sends a BuddyJoined signal
+    def buddy_apparently_joined(self, buddy):
+        """Adds a buddy to this activity and sends a BuddyJoined signal,
+        unless we can already see who's in the activity by being in it
+        ourselves.
 
         buddy -- Buddy object representing the buddy being added
 
@@ -379,25 +397,54 @@ class Activity(ExportedGObject):
         This method is called by the PresenceService on the local machine.
 
         """
-        if buddy not in self._buddies:
-            self._buddies.append(buddy)
+        if not self._joined:
+            self._add_buddies((buddy,))
+
+    def _add_buddies(self, buddies):
+        buddies = set(buddies)
+
+        # disregard any who are already there
+        buddies -= self._buddies
+
+        self._buddies |= buddies
+
+        for buddy in buddies:
+            buddy.add_activity(self)
             if self.props.valid:
                 self.BuddyJoined(buddy.object_path())
 
-    def buddy_left(self, buddy):
-        """Removes a buddy from this activity and sends a BuddyLeft signal.
+    def _remove_buddies(self, buddies):
+        buddies = set(buddies)
+
+        # disregard any who are not already there
+        buddies &= self._buddies
+
+        self._buddies -= buddies
+
+        for buddy in buddies:
+            buddy.remove_activity(self)
+            if self.props.valid:
+                self.BuddyJoined(buddy.object_path())
+
+        if not self._buddies:
+            self.emit('disappeared')
+
+    def buddy_apparently_left(self, buddy):
+        """Removes a buddy from this activity and sends a BuddyLeft signal,
+        unless we can already see who's in the activity by being in it
+        ourselves.
 
         buddy -- Buddy object representing the buddy being removed
 
         Removes a buddy from this activity if the buddy is in the buddy list.
         If this activity is "valid", a BuddyLeft signal is also sent.
         This method is called by the PresenceService on the local machine.
-
         """
-        if buddy in self._buddies:
-            self._buddies.remove(buddy)
-            if self.props.valid:
-                self.BuddyLeft(buddy.object_path())
+        if not self._joined:
+            self._remove_buddies((buddy,))
+
+    def _text_channel_group_flags_changed_cb(self, flags):
+        self._text_channel_group_flags = flags
 
     def _handle_share_join(self, tp, text_channel):
         """Called when a join to a network activity was successful.
@@ -412,7 +459,36 @@ class Activity(ExportedGObject):
         self._text_channel = text_channel
         self._text_channel[CHANNEL_INTERFACE].connect_to_signal('Closed',
                 self._text_channel_closed_cb)
-        self._joined = True
+        if CHANNEL_INTERFACE_GROUP in self._text_channel:
+            group = self._text_channel[CHANNEL_INTERFACE_GROUP]
+
+            # FIXME: make these method calls async?
+
+            group.connect_to_signal('GroupFlagsChanged',
+                                    self._text_channel_group_flags_changed_cb)
+            self._text_channel_group_flags = group.GetGroupFlags()
+
+            self._self_handle = group.GetSelfHandle()
+
+            # by the time we hook this, we need to know the group flags
+            group.connect_to_signal('MembersChanged',
+                                    self._text_channel_members_changed_cb)
+            # bootstrap by getting the current state. This is where we find
+            # out whether anyone was lying to us in their PEP info
+            members = set(group.GetMembers())
+            added = members - self._member_handles
+            removed = self._member_handles - members
+            if added or removed:
+                self._text_channel_members_changed_cb('', added, removed,
+                                                      (), (), 0, 0)
+
+            # if we can see any member handles, we're probably able to see
+            # all members, so can stop caring about PEP announcements for this
+            # activity
+            self._joined = (self._self_handle in self._member_handles)
+        else:
+            self._joined = True
+
         return True
 
     def _shared_cb(self, tp, activity_id, text_channel, exc, userdata):
@@ -505,12 +581,59 @@ class Activity(ExportedGObject):
         if self._joined:
             self._text_channel[CHANNEL_INTERFACE].Close()
 
+    def _text_channel_members_changed_cb(self, message, added, removed,
+                                         local_pending, remote_pending,
+                                         actor, reason):
+        # Note: D-Bus calls this with list arguments, but after GetMembers()
+        # we call it with set and tuple arguments; we cope with any iterable.
+
+        if (self._text_channel_group_flags &
+            CHANNEL_GROUP_FLAG_CHANNEL_SPECIFIC_HANDLES):
+            map_chan = self._text_channel
+        else:
+            # we have global handles here
+            map_chan = None
+
+        # disregard any who are already there
+        added = set(added)
+        added -= self._member_handles
+        self._member_handles |= added
+
+        # for added people, we need a Buddy object
+        added_buddies = self._ps.map_handles_to_buddies(self._tp,
+                                                        map_chan,
+                                                        added)
+        self._add_buddies(added_buddies.itervalues())
+
+        # we treat all pending members as if they weren't there
+        removed = set(removed)
+        removed |= set(local_pending)
+        removed |= set(remote_pending)
+        # disregard any who aren't already there
+        removed &= self._member_handles
+        self._member_handles -= removed
+
+        # for removed people, don't bother creating a Buddy just so we can
+        # say it left. If we don't already have a Buddy object for someone,
+        # then obviously they're not in self._buddies!
+        removed_buddies = self._ps.map_handles_to_buddies(self._tp,
+                                                          map_chan,
+                                                          removed,
+                                                          create=False)
+        self._remove_buddies(removed_buddies.itervalues())
+
+        # if we were among those removed, we'll have to start believing
+        # the spoofable PEP-based activity tracking again.
+        if self._self_handle not in self._member_handles:
+            self._joined = False
+
     def _text_channel_closed_cb(self):
         """Callback method called when the text channel is closed.
 
         This callback is set up in the _handle_share_join method.
         """
         self._joined = False
+        self._self_handle = None
         self._text_channel = None
 
     def send_properties(self):

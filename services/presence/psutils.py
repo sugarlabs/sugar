@@ -17,11 +17,14 @@
 
 import logging
 from string import ascii_letters, digits
+try:
+    from hashlib import sha1
+except ImportError:
+    # Python < 2.5
+    from sha import new as sha1
 
 import dbus
 import gobject
-
-from sugar import util
 
 
 _logger = logging.getLogger('s-p-s.psutils')
@@ -39,7 +42,7 @@ def pubkey_to_keyid(key):
     :Returns:
         The key ID as a string of hex digits
     """
-    return util.printable_hash(util._sha_data(key))
+    return sha1(key).hexdigest()
 
 
 def escape_identifier(identifier):

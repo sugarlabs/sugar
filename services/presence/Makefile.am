@@ -17,8 +17,15 @@ sugar_PYTHON = \
 	psutils.py \
 	server_plugin.py
 
-bin_SCRIPTS = sugar-presence-service
+dist_bin_SCRIPTS = sugar-presence-service
 
 DISTCLEANFILES = $(service_DATA)
 
-EXTRA_DIST = $(service_in_files) $(bin_SCRIPTS)
+EXTRA_DIST = $(service_in_files)
+
+dist_check_SCRIPTS = test_psutils.py
+
+TESTS_ENVIRONMENT = \
+		    PYTHONPATH=$(top_srcdir):$(top_srcdir)/services/presence \
+		    $(PYTHON)
+TESTS = $(dist_check_SCRIPTS)

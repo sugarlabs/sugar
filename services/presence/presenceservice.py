@@ -1,4 +1,5 @@
 # Copyright (C) 2007, Red Hat, Inc.
+# Copyright (C) 2007 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,25 +15,27 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gobject
+import logging
+from weakref import WeakValueDictionary
+
 import dbus
 import dbus.service
+import gobject
 from dbus.gobject_service import ExportedGObject
 from dbus.mainloop.glib import DBusGMainLoop
-import logging
-
 from telepathy.client import ManagerRegistry, Connection
 from telepathy.interfaces import (CONN_MGR_INTERFACE, CONN_INTERFACE)
 from telepathy.constants import (CONNECTION_STATUS_CONNECTING,
     CONNECTION_STATUS_CONNECTED,
     CONNECTION_STATUS_DISCONNECTED)
 
-from server_plugin import ServerPlugin
-from linklocal_plugin import LinkLocalPlugin
 from sugar import util
 
+from server_plugin import ServerPlugin
+from linklocal_plugin import LinkLocalPlugin
 from buddy import Buddy, ShellOwner
 from activity import Activity
+from psutils import pubkey_to_keyid
 
 _PRESENCE_SERVICE = "org.laptop.Sugar.Presence"
 _PRESENCE_INTERFACE = "org.laptop.Sugar.Presence"
@@ -57,15 +60,26 @@ class PresenceService(ExportedGObject):
 
     def _create_owner(self):
         # Overridden by TestPresenceService
-        return ShellOwner(self, self._session_bus, self._get_next_object_id())
+        return ShellOwner(self, self._session_bus)
 
     def __init__(self):
         self._next_object_id = 0
         self._connected = False
 
-        self._buddies = {}      # key -> Buddy
-        self._handles_buddies = {}      # tp client -> (handle -> Buddy)
-        self._activities = {}   # activity id -> Activity
+        # all Buddy objects
+        # identifier -> Buddy, GC'd when no more refs exist
+        self._buddies = WeakValueDictionary()
+
+        # the online buddies for whom we know the full public key
+        # base64 public key -> Buddy
+        self._buddies_by_pubkey = {}
+
+        # The online buddies (those who're available via some CM)
+        # TP plugin -> (handle -> Buddy)
+        self._handles_buddies = {}
+
+        # activity id -> Activity
+        self._activities = {}
 
         self._session_bus = dbus.SessionBus()
         self._session_bus.add_signal_receiver(self._connection_disconnected_cb,
@@ -74,7 +88,10 @@ class PresenceService(ExportedGObject):
 
         # Create the Owner object
         self._owner = self._create_owner()
-        self._buddies[self._owner.props.key] = self._owner
+        key = self._owner.props.key
+        keyid = pubkey_to_keyid(key)
+        self._buddies['keyid/' + keyid] = self._owner
+        self._buddies_by_pubkey[key] = self._owner
 
         self._registry = ManagerRegistry()
         self._registry.LoadManagers()
@@ -133,49 +150,50 @@ class PresenceService(ExportedGObject):
         if self._connected != old_status:
             self.emit('connection-status', self._connected)
 
-    def _contact_online(self, tp, handle, props):
-        new_buddy = False
-        key = props["key"]
-        buddy = self._buddies.get(key)
-        if not buddy:
+    def get_buddy(self, objid):
+        buddy = self._buddies.get(objid)
+        if buddy is None:
+            _logger.debug('Creating new buddy at .../%s', objid)
             # we don't know yet this buddy
-            objid = self._get_next_object_id()
-            buddy = Buddy(self._session_bus, objid, key=key)
+            buddy = Buddy(self._session_bus, objid)
             buddy.connect("validity-changed", self._buddy_validity_changed_cb)
             buddy.connect("disappeared", self._buddy_disappeared_cb)
-            self._buddies[key] = buddy
+            self._buddies[objid] = buddy
+        return buddy
+
+    def _contact_online(self, tp, objid, handle, props):
+        _logger.debug('Handle %u, .../%s is now online', handle, objid)
+        buddy = self.get_buddy(objid)
 
         self._handles_buddies[tp][handle] = buddy
         # store the handle of the buddy for this CM
         buddy.add_telepathy_handle(tp, handle)
-
         buddy.set_properties(props)
 
     def _buddy_validity_changed_cb(self, buddy, valid):
         if valid:
             self.BuddyAppeared(buddy.object_path())
+            self._buddies_by_pubkey[buddy.props.key] = buddy
             _logger.debug("New Buddy: %s (%s)", buddy.props.nick,
                           buddy.props.color)
         else:
             self.BuddyDisappeared(buddy.object_path())
+            self._buddies_by_pubkey.pop(buddy.props.key, None)
             _logger.debug("Buddy left: %s (%s)", buddy.props.nick,
                           buddy.props.color)
 
     def _buddy_disappeared_cb(self, buddy):
         if buddy.props.valid:
-            self.BuddyDisappeared(buddy.object_path())
-            _logger.debug('Buddy left: %s (%s)', buddy.props.nick,
-                          buddy.props.color)
-        self._buddies.pop(buddy.props.key)
+            self._buddy_validity_changed_cb(buddy, False)
 
     def _contact_offline(self, tp, handle):
         if not self._handles_buddies[tp].has_key(handle):
             return
 
         buddy = self._handles_buddies[tp].pop(handle)
-        key = buddy.props.key
-
         # the handle of the buddy for this CM is not valid anymore
+        # (this might trigger _buddy_disappeared_cb if they are not visible
+        # via any CM)
         buddy.remove_telepathy_handle(tp, handle)
 
     def _get_next_object_id(self):
@@ -199,7 +217,8 @@ class PresenceService(ExportedGObject):
     def _new_activity(self, activity_id, tp):
         try:
             objid = self._get_next_object_id()
-            activity = Activity(self._session_bus, objid, tp, id=activity_id)
+            activity = Activity(self._session_bus, objid, self, tp,
+                                id=activity_id)
         except Exception:
             # FIXME: catching bare Exception considered harmful
             _logger.debug("Invalid activity:", exc_info=1)
@@ -207,11 +226,12 @@ class PresenceService(ExportedGObject):
 
         activity.connect("validity-changed",
                          self._activity_validity_changed_cb)
+        activity.connect("disappeared", self._activity_disappeared_cb)
         self._activities[activity_id] = activity
         return activity
 
-    def _remove_activity(self, activity):
-        _logger.debug("remove activity %s" % activity.props.id)
+    def _activity_disappeared_cb(self, activity):
+        _logger.debug("activity %s disappeared" % activity.props.id)
 
         self.ActivityDisappeared(activity.object_path())
         del self._activities[activity.props.id]
@@ -246,8 +266,7 @@ class PresenceService(ExportedGObject):
                 activity = self._new_activity(act, tp)
 
             if activity is not None:
-                activity.buddy_joined(buddy)
-                buddy.add_activity(activity)
+                activity.buddy_apparently_joined(buddy)
 
         activities_left = old_activities - new_activities
         for act in activities_left:
@@ -256,11 +275,7 @@ class PresenceService(ExportedGObject):
             if not activity:
                 continue
 
-            activity.buddy_left(buddy)
-            buddy.remove_activity(activity)
-
-            if not activity.get_joined_buddies():
-                self._remove_activity(activity)
+            activity.buddy_apparently_left(buddy)
 
     def _activity_invitation(self, tp, act_id):
         activity = self._activities.get(act_id)
@@ -316,18 +331,31 @@ class PresenceService(ExportedGObject):
     @dbus.service.method(_PRESENCE_INTERFACE, in_signature='',
                          out_signature="ao")
     def GetBuddies(self):
-        ret = []
-        for buddy in self._buddies.values():
-            if buddy.props.valid:
-                ret.append(buddy.object_path())
+        # in the presence of an out_signature, dbus-python will convert
+        # this set into an Array automatically (because it's iterable),
+        # so it's easy to use for uniquification (we want to avoid returning
+        # buddies who're visible on both Salut and Gabble twice)
+
+        # always include myself even if I have no handles
+        ret = set((self._owner,))
+
+        for handles_buddies in self._handles_buddies.itervalues():
+            for buddy in handles_buddies.itervalues():
+                if buddy.props.valid:
+                    ret.add(buddy.object_path())
         return ret
 
     @dbus.service.method(_PRESENCE_INTERFACE,
                          in_signature="ay", out_signature="o",
                          byte_arrays=True)
     def GetBuddyByPublicKey(self, key):
-        if self._buddies.has_key(key):
-            buddy = self._buddies[key]
+        buddy = self._buddies_by_pubkey.get(key)
+        if buddy is not None:
+            if buddy.props.valid:
+                return buddy.object_path()
+        keyid = pubkey_to_keyid(key)
+        buddy = self._buddies.get('keyid/' + keyid)
+        if buddy is not None:
             if buddy.props.valid:
                 return buddy.object_path()
         raise NotFoundError("The buddy was not found.")
@@ -368,6 +396,48 @@ class PresenceService(ExportedGObject):
                             "connection to %s:%s" % (handle, tp_conn_name,
                                                      tp_conn_path))
 
+    def map_handles_to_buddies(self, tp, tp_chan, handles, create=True):
+        """
+
+        :Parameters:
+            `tp` : Telepathy plugin
+                The server or link-local plugin
+            `tp_chan` : telepathy.client.Channel or None
+                If not None, the channel in which these handles are
+                channel-specific
+            `handles` : iterable over int or long
+                The handles to be mapped to Buddy objects
+            `create` : bool
+                If true (default), if a corresponding `Buddy` object is not
+                found, create one.
+        :Returns:
+            A dict mapping handles from `handles` to `Buddy` objects.
+            If `create` is true, the dict's keys will be exactly the
+            items of `handles` in some order. If `create` is false,
+            the dict will contain no entry for handles for which no
+            `Buddy` is already available.
+        :Raises LookupError: if `tp` is not a plugin attached to this PS.
+        """
+        handle_to_buddy = self._handles_buddies[tp]
+
+        ret = {}
+        missing = []
+        for handle in handles:
+            buddy = handle_to_buddy.get(handle)
+            if buddy is None:
+                missing.append(handle)
+            else:
+                ret[handle] = buddy
+
+        if missing and create:
+            handle_to_objid = tp.identify_contacts(tp_chan, missing)
+            for handle, objid in handle_to_objid.iteritems():
+                buddy = self.get_buddy(objid)
+                ret[handle] = buddy
+                if tp_chan is None:
+                    handle_to_buddy[handle] = buddy
+        return ret
+
     @dbus.service.method(_PRESENCE_INTERFACE,
                          in_signature='', out_signature="o")
     def GetOwner(self):
@@ -397,9 +467,9 @@ class PresenceService(ExportedGObject):
         objid = self._get_next_object_id()
         # FIXME check which tp client we should use to share the activity
         color = self._owner.props.color
-        activity = Activity(self._session_bus, objid, self._server_plugin,
-                            id=actid, type=atype, name=name, color=color,
-                            local=True)
+        activity = Activity(self._session_bus, objid, self,
+                            self._server_plugin, id=actid, type=atype,
+                            name=name, color=color, local=True)
         activity.connect("validity-changed",
                          self._activity_validity_changed_cb)
         self._activities[actid] = activity
