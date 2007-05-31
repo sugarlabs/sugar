@@ -139,6 +139,10 @@ class Bundle:
         """Get the locale path inside the activity bundle."""
         return os.path.join(self._path, 'locale')
 
+    def get_icons_path(self):
+        """Get the icons path inside the activity bundle."""
+        return os.path.join(self._path, 'icons')
+
     def get_path(self):
         """Get the activity bundle path."""
         return self._path

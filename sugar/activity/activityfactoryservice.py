@@ -152,6 +152,8 @@ def run(bundle_path):
                            bundle.get_locale_path())
     gettext.textdomain(bundle.get_service_name())
 
+    gtk.icon_theme_get_default().append_search_path(bundle.get_icons_path())
+
     os.environ['SUGAR_BUNDLE_PATH'] = bundle_path
     os.environ['SUGAR_BUNDLE_SERVICE_NAME'] = bundle.get_service_name()
     os.environ['SUGAR_BUNDLE_NAME'] = bundle.get_name()
