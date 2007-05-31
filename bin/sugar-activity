@@ -71,7 +71,8 @@ except  dbus.DBusException:
     name = None
 
 if name:
-    print '%s is already running, creating a new instance.' % bundle.get_service_name()
+    service_name = activity_info.service_name
+    print '%s is already running, creating a new instance.' % service_name
 else:
     activityfactoryservice.run(activity_info.path)
 
