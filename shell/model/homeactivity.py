@@ -33,6 +33,13 @@ class HomeActivity(gobject.GObject):
     accomplish its tasks.
     """
 
+    __gtype_name__ = 'SugarHomeActivity'
+
+    __gproperties__ = {
+        'launching' : (bool, None, None, False,
+                       gobject.PARAM_READWRITE),
+    }
+
     def __init__(self, bundle, activity_id):
         """Initialise the HomeActivity
         
@@ -44,13 +51,14 @@ class HomeActivity(gobject.GObject):
             of the activity type
         """
         gobject.GObject.__init__(self)
+
         self._window = None
         self._xid = None
         self._service = None
         self._activity_id = activity_id
         self._bundle = bundle
-
         self._launch_time = time.time()
+        self._launching = False
 
         logging.debug("Activity %s (%s) launching..." %
                       (self._activity_id, self.get_type()))
@@ -144,3 +152,11 @@ class HomeActivity(gobject.GObject):
         (seconds since the epoch)
         """
         return self._launch_time
+
+    def do_set_property(self, pspec, value):
+        if pspec.name == 'launching':
+            self._launching = value
+
+    def do_get_property(self, pspec):
+        if pspec.name == 'launching':
+            return self._launching

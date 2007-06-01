@@ -54,14 +54,14 @@ class Shell(gobject.GObject):
         self._zoom_level = sugar.ZOOM_HOME
 
         home_model = self._model.get_home()
-        home_model.connect('activity-added', self._activity_added_cb)
+        home_model.connect('activity-started', self._activity_started_cb)
         home_model.connect('activity-removed', self._activity_removed_cb)
         home_model.connect('active-activity-changed',
                            self._active_activity_changed_cb)
 
         self.start_activity('org.laptop.JournalActivity')
 
-    def _activity_added_cb(self, home_model, home_activity):
+    def _activity_started_cb(self, home_model, home_activity):
         activity_host = ActivityHost(home_activity)
         self._hosts[activity_host.get_xid()] = activity_host
         if home_activity.get_type() in self._activities_starting:

@@ -43,10 +43,10 @@ class HomeModel(gobject.GObject):
     the activity factories have set up.
     """
     __gsignals__ = {
-        'activity-launched':       (gobject.SIGNAL_RUN_FIRST,
+        'activity-added':          (gobject.SIGNAL_RUN_FIRST,
                                     gobject.TYPE_NONE, 
                                    ([gobject.TYPE_PYOBJECT])),
-        'activity-added':          (gobject.SIGNAL_RUN_FIRST,
+        'activity-started':         (gobject.SIGNAL_RUN_FIRST,
                                     gobject.TYPE_NONE, 
                                    ([gobject.TYPE_PYOBJECT])),
         'activity-removed':        (gobject.SIGNAL_RUN_FIRST,
@@ -219,10 +219,12 @@ class HomeModel(gobject.GObject):
                 return
             activity = HomeActivity(bundle, act_id)
             self._activities[act_id] = activity
+            self.emit('activity-added', activity)
 
         activity.set_service(service)
         activity.set_window(window)
-        self.emit('activity-added', activity)
+
+        self.emit('activity-started', activity)
 
     def _internal_remove_activity(self, activity):
         if activity == self._current_activity:
@@ -244,8 +246,9 @@ class HomeModel(gobject.GObject):
         if not bundle:
             raise ValueError("Activity service name '%s' was not found in the bundle registry." % service_name)
         activity = HomeActivity(bundle, activity_id)
+        activity.props.launching = True
         self._activities[activity_id] = activity
-        self.emit('activity-launched', activity)
+        self.emit('activity-added', activity)
 
     def notify_activity_launch_failed(self, activity_id):
         if self._activities.has_key(activity_id):
