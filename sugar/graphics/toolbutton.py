@@ -24,12 +24,12 @@ from sugar.graphics.palette import *
 class ToolButton(gtk.ToolButton):
     _POPUP_PALETTE_DELAY = 0.5
 
-    def __init__(self, named_icon=None):
+    def __init__(self, icon_name=None):
         gtk.ToolButton.__init__(self)
-        self.set_named_icon(named_icon)
+        self.set_icon(icon_name)
 
-    def set_named_icon(self, named_icon):
-        icon = Icon(named_icon)
+    def set_icon(self, icon_name):
+        icon = Icon(icon_name)
         self.set_icon_widget(icon)
         icon.show()
 
