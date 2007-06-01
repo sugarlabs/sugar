@@ -25,3 +25,21 @@
     '("const-char*" "filename")
   )
 )
+
+(define-function x11_set_string_property
+  (c-name "sugar_x11_util_set_string_property")
+  (parameters
+    '("GdkWindow*" "window")
+    '("const-char*" "property")
+    '("const-char*" "value")
+  )
+)
+
+(define-function x11_get_string_property
+  (c-name "sugar_x11_util_get_string_property")
+  (return-type "char*")
+  (parameters
+    '("GdkWindow*" "window")
+    '("const-char*" "property")
+  )
+)

@@ -8,7 +8,8 @@ sugar_PYTHON =		\
 	logger.py	\
         ltihooks.py	\
 	profile.py	\
-	util.py
+	util.py		\
+	x11.py
 
 INCLUDES = 				\
 	$(LIB_CFLAGS)			\

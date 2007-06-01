@@ -9,23 +9,26 @@
 
 #include "pygobject.h"
 #include "sugar-address-entry.h"
+#include "sugar-x11-util.h"
 #include "xdgmime.h"
 
 #include <pygtk/pygtk.h>
 #include <glib.h>
 
-#line 18 "_sugarext.c"
+#line 19 "_sugarext.c"
 
 
 /* ---------- types from other modules ---------- */
 static PyTypeObject *_PyGtkEntry_Type;
 #define PyGtkEntry_Type (*_PyGtkEntry_Type)
+static PyTypeObject *_PyGdkWindow_Type;
+#define PyGdkWindow_Type (*_PyGdkWindow_Type)
 
 
 /* ---------- forward type declarations ---------- */
 PyTypeObject G_GNUC_INTERNAL PySugarAddressEntry_Type;
 
-#line 29 "_sugarext.c"
+#line 32 "_sugarext.c"
 
 
 
@@ -98,7 +101,7 @@ _wrap_sugar_mime_get_mime_type_from_file_name(PyObject *self, PyObject *args, Py
     return Py_None;
 }
 
-#line 23 "_sugarext.override"
+#line 25 "_sugarext.override"
 static PyObject *
 _wrap_sugar_mime_get_mime_type_for_file(PyObject *self, PyObject *args, PyObject *kwargs)
 {
@@ -116,13 +119,55 @@ _wrap_sugar_mime_get_mime_type_for_file(PyObject *self, PyObject *args, PyObject
     Py_INCREF(Py_None);
     return Py_None;
 }
-#line 120 "_sugarext.c"
+#line 123 "_sugarext.c"
 
+
+static PyObject *
+_wrap_sugar_x11_util_set_string_property(PyObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "window", "property", "value", NULL };
+    PyGObject *window;
+    char *property, *value;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O!ss:x11_set_string_property", kwlist, &PyGdkWindow_Type, &window, &property, &value))
+        return NULL;
+    
+    sugar_x11_util_set_string_property(GDK_WINDOW(window->obj), property, value);
+    
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject *
+_wrap_sugar_x11_util_get_string_property(PyObject *self, PyObject *args, PyObject *kwargs)
+{
+    static char *kwlist[] = { "window", "property", NULL };
+    PyGObject *window;
+    char *property;
+    gchar *ret;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs,"O!s:x11_get_string_property", kwlist, &PyGdkWindow_Type, &window, &property))
+        return NULL;
+    
+    ret = sugar_x11_util_get_string_property(GDK_WINDOW(window->obj), property);
+    
+    if (ret) {
+        PyObject *py_ret = PyString_FromString(ret);
+        g_free(ret);
+        return py_ret;
+    }
+    Py_INCREF(Py_None);
+    return Py_None;
+}
 
 const PyMethodDef py_sugarext_functions[] = {
     { "get_mime_type_from_file_name", (PyCFunction)_wrap_sugar_mime_get_mime_type_from_file_name, METH_VARARGS|METH_KEYWORDS,
       NULL },
     { "get_mime_type_for_file", (PyCFunction)_wrap_sugar_mime_get_mime_type_for_file, METH_VARARGS|METH_KEYWORDS,
+      NULL },
+    { "x11_set_string_property", (PyCFunction)_wrap_sugar_x11_util_set_string_property, METH_VARARGS|METH_KEYWORDS,
+      NULL },
+    { "x11_get_string_property", (PyCFunction)_wrap_sugar_x11_util_get_string_property, METH_VARARGS|METH_KEYWORDS,
       NULL },
     { NULL, NULL, 0, NULL }
 };
@@ -145,8 +190,20 @@ py_sugarext_register_classes(PyObject *d)
             "could not import gtk");
         return ;
     }
+    if ((module = PyImport_ImportModule("gtk.gdk")) != NULL) {
+        _PyGdkWindow_Type = (PyTypeObject *)PyObject_GetAttrString(module, "Window");
+        if (_PyGdkWindow_Type == NULL) {
+            PyErr_SetString(PyExc_ImportError,
+                "cannot import name Window from gtk.gdk");
+            return ;
+        }
+    } else {
+        PyErr_SetString(PyExc_ImportError,
+            "could not import gtk.gdk");
+        return ;
+    }
 
 
-#line 151 "_sugarext.c"
+#line 208 "_sugarext.c"
     pygobject_register_class(d, "SugarAddressEntry", SUGAR_TYPE_ADDRESS_ENTRY, &PySugarAddressEntry_Type, Py_BuildValue("(O)", &PyGtkEntry_Type));
 }
