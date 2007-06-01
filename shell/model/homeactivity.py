@@ -72,6 +72,8 @@ class HomeActivity(gobject.GObject):
 
     def set_service(self, service):
         self._service = service
+        if not self._activity_id:
+            self._activity_id = service.get_id()
 
     def get_service(self):
         """Retrieve the application's sugar introspection service
@@ -153,6 +155,13 @@ class HomeActivity(gobject.GObject):
         (seconds since the epoch)
         """
         return self._launch_time
+
+    def equals(self, activity):
+        if self._activity_id and activity.get_activity_id():
+            return self._activity_id == activity.get_activity_id()
+        if self._xid and activity.get_xid():
+            return self._xid == activity.get_xid()
+        return False
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'launching':

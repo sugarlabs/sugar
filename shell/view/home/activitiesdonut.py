@@ -139,13 +139,18 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
     def __init__(self, shell, **kwargs):
         hippo.CanvasBox.__init__(self, **kwargs)
 
-        self._activities = {}
+        self._activities = []
         self._shell = shell
 
         self._model = shell.get_model().get_home()
         self._model.connect('activity-added', self._activity_added_cb)
         self._model.connect('activity-removed', self._activity_removed_cb)
         self._model.connect('active-activity-changed', self._activity_changed_cb)
+
+    def _get_icon_from_activity(self, activity):
+        for icon in self._activities:
+            if icon.get_activity().equals(activity):
+                return icon
 
     def _activity_added_cb(self, model, activity):
         self._add_activity(activity)
@@ -157,20 +162,18 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
         self.emit_paint_needed(0, 0, -1, -1)
 
     def _remove_activity(self, activity):
-        act_id = activity.get_activity_id()
-        if not self._activities.has_key(act_id):
-            return
-        icon = self._activities[act_id]
-        self.remove(icon)
-        icon._cleanup()
-        del self._activities[act_id]
+        icon = self._get_icon_from_activity(activity)
+        if icon:
+            self.remove(icon)
+            icon._cleanup()
+        self._activities.remove(icon)
 
     def _add_activity(self, activity):
         icon = ActivityIcon(activity)
         icon.connect('activated', self._activity_icon_clicked_cb)
         self.append(icon, hippo.PACK_FIXED)
 
-        self._activities[activity.get_activity_id()] = icon
+        self._activities.append(icon)
 
         self.emit_paint_needed(0, 0, -1, -1)
 
@@ -250,7 +253,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
 
         i = 0
         for h_activity in self._model:
-            icon = self._activities[h_activity.get_activity_id()]
+            icon = self._get_icon_from_activity(h_activity)
             [angle_start, angle_end] = self._get_angles(i)
             angle = angle_start + (angle_end - angle_start) / 2
 
