@@ -16,29 +16,31 @@
 # Boston, MA 02111-1307, USA.
 
 import gtk
+import time
 
 from sugar.graphics.icon import Icon
 from sugar.graphics.palette import *
 
 class ToolButton(gtk.ToolButton):
-    def __init__(self, icon_name=None):
+    _POPUP_PALETTE_DELAY = 0.5
+
+    def __init__(self, named_icon=None):
         gtk.ToolButton.__init__(self)
-        self.set_icon(icon_name)
-        
-    def set_icon(self, icon_name):
-        icon = Icon(icon_name)
+        self.set_named_icon(named_icon)
+
+    def set_named_icon(self, named_icon):
+        icon = Icon(named_icon)
         self.set_icon_widget(icon)
         icon.show()
 
     def set_palette(self, palette):
         self._palette = palette
         self._palette.props.parent = self
-        self._palette.props.alignment = ALIGNMENT_BOTTOM_LEFT
-        self.connect('clicked', self._display_palette_cb)
-    
-    def set_tooltip(self, text):
-        tp = gtk.Tooltips()
-        self.set_tooltip(tp, text, text)
+        self.child.connect('enter-notify-event', self._show_palette_timeout_cb)
 
-    def _display_palette_cb(self, widget):
+    def set_tooltip(self, text):
+        pass
+
+    def _show_palette_timeout_cb(self, widget, event):
+        time.sleep(self._POPUP_PALETTE_DELAY)
         self._palette.popup()
