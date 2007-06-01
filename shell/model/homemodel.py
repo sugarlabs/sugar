@@ -134,7 +134,7 @@ class HomeModel(gobject.GObject):
 
     def _get_activity_by_xid(self, xid):
         for act in self._activities.values():
-            if act.get_launched() and act.get_xid() == xid:
+            if act.get_xid() == xid:
                 return act
         return None
 
@@ -164,13 +164,8 @@ class HomeModel(gobject.GObject):
         xid = window.get_xid()
         act = self._get_activity_by_xid(window.get_xid())
         if act:
-            if act.get_launched() == True:
-                self._notify_activity_activation(self._current_activity, act)
-                self._current_activity = act
-            else:
-                self._notify_activity_activation(self._current_activity, None)
-                self._current_activity = None
-                logging.error('Activity for window %d was not yet launched.' % xid)
+            self._notify_activity_activation(self._current_activity, act)
+            self._current_activity = act
         else:
             self._notify_activity_activation(self._current_activity, None)
             self._current_activity = None
@@ -244,18 +239,11 @@ class HomeModel(gobject.GObject):
         else:
             logging.error('Model for window %d does not exist.' % xid)
 
-    def _activity_launch_timeout_cb(self, activity):
-        act_id = activity.get_activity_id()
-        if not act_id in self._activities.keys():
-            return
-        self._internal_remove_activity(activity)
-
     def notify_activity_launch(self, activity_id, service_name):
         bundle = self._bundle_registry.get_bundle(service_name)
         if not bundle:
             raise ValueError("Activity service name '%s' was not found in the bundle registry." % service_name)
         activity = HomeActivity(bundle, activity_id)
-        activity.connect('launch-timeout', self._activity_launch_timeout_cb)
         self._activities[activity_id] = activity
         self.emit('activity-launched', activity)
 

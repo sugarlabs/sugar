@@ -32,11 +32,6 @@ class HomeActivity(gobject.GObject):
     the sugar.activity.* modules extensively in order to 
     accomplish its tasks.
     """
-    __gsignals__ = {
-        'launch-timeout':          (gobject.SIGNAL_RUN_FIRST,
-                                    gobject.TYPE_NONE, 
-                                   ([])),
-    }
 
     def __init__(self, bundle, activity_id):
         """Initialise the HomeActivity
@@ -56,34 +51,14 @@ class HomeActivity(gobject.GObject):
         self._bundle = bundle
 
         self._launch_time = time.time()
-        self._launched = False
-        self._launch_timeout_id = gobject.timeout_add(
-                                    20000, self._launch_timeout_cb)
 
         logging.debug("Activity %s (%s) launching..." %
                       (self._activity_id, self.get_type()))
-
-    def __del__(self):
-        gobject.source_remove(self._launch_timeout_id)
-        self._launch_timeout_id = 0
-
-    def _launch_timeout_cb(self, user_data=None):
-        """Callback for launch operation timeouts
-        """
-        logging.debug("Activity %s (%s) launch timed out" %
-                      (self._activity_id, self.get_type()))
-        self._launch_timeout_id = 0
-        self.emit('launch-timeout')
-        return False
 
     def set_window(self, window):
         """An activity is 'launched' once we get its window."""
         logging.debug("Activity %s (%s) finished launching" %
                       (self._activity_id, self.get_type()))
-        self._launched = True
-        gobject.source_remove(self._launch_timeout_id)
-        self._launch_timeout_id = 0
-
         if self._window or self._xid:
             raise RuntimeError("Activity is already launched!")
         if not window:
@@ -106,8 +81,6 @@ class HomeActivity(gobject.GObject):
 
     def get_title(self):
         """Retrieve the application's root window's suggested title"""
-        if not self._launched:
-            raise RuntimeError("Activity is still launching.")
         return self._window.get_name()
 
     def get_icon_name(self):
@@ -140,8 +113,6 @@ class HomeActivity(gobject.GObject):
 
     def get_xid(self):
         """Retrieve the X-windows ID of our root window"""
-        if not self._launched:
-            raise RuntimeError("Activity is still launching.")
         return self._xid
 
     def get_window(self):
@@ -156,8 +127,6 @@ class HomeActivity(gobject.GObject):
         activity to determine to which HomeActivity the newly
         launched window belongs.
         """
-        if not self._launched:
-            raise RuntimeError("Activity is still launching.")
         return self._window
 
     def get_type(self):
@@ -166,8 +135,6 @@ class HomeActivity(gobject.GObject):
 
     def get_shared(self):
         """Return whether this activity is using Presence service sharing"""
-        if not self._launched:
-            raise RuntimeError("Activity is still launching.")
         return self._service.get_shared()
 
     def get_launch_time(self):
@@ -177,7 +144,3 @@ class HomeActivity(gobject.GObject):
         (seconds since the epoch)
         """
         return self._launch_time
-
-    def get_launched(self):
-        """Return whether we have bound our top-level window yet"""
-        return self._launched

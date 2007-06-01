@@ -70,8 +70,6 @@ class Shell(gobject.GObject):
     def _activity_removed_cb(self, home_model, home_activity):
         if home_activity.get_type() in self._activities_starting:
             self._activities_starting.remove(home_activity.get_type())
-        if not home_activity.get_launched():
-            return
         xid = home_activity.get_xid()
         if self._hosts.has_key(xid):
             self._hosts[xid].destroy()

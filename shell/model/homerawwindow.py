@@ -55,8 +55,5 @@ class HomeRawWindow(object):
     def get_shared(self):
         return False
 
-    def get_launched(self):
-        return True
-
     def get_launch_time(self):
         return self._launch_time
