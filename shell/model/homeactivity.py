@@ -40,7 +40,7 @@ class HomeActivity(gobject.GObject):
                        gobject.PARAM_READWRITE),
     }
 
-    def __init__(self, bundle, activity_id):
+    def __init__(self, bundle=None, activity_id=None):
         """Initialise the HomeActivity
         
         bundle -- sugar.activity.bundle.Bundle instance,
@@ -60,13 +60,8 @@ class HomeActivity(gobject.GObject):
         self._launch_time = time.time()
         self._launching = False
 
-        logging.debug("Activity %s (%s) launching..." %
-                      (self._activity_id, self.get_type()))
-
     def set_window(self, window):
         """An activity is 'launched' once we get its window."""
-        logging.debug("Activity %s (%s) finished launching" %
-                      (self._activity_id, self.get_type()))
         if self._window or self._xid:
             raise RuntimeError("Activity is already launched!")
         if not window:
@@ -93,7 +88,10 @@ class HomeActivity(gobject.GObject):
 
     def get_icon_name(self):
         """Retrieve the bundle's icon (file) name"""
-        return self._bundle.get_icon()
+        if self._bundle:
+            return self._bundle.get_icon()
+        else:
+            return None
     
     def get_icon_color(self):
         """Retrieve the appropriate icon colour for this activity

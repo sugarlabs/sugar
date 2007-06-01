@@ -66,7 +66,6 @@ class ActivityIcon(CanvasIcon):
             self._start_pulsing()
 
     def _launching_changed_cb(self, activity, pspec):
-        print activity.props.launching
         if activity.props.launching:
             self._start_pulsing()
         else:
@@ -163,7 +162,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
             return
         icon = self._activities[act_id]
         self.remove(icon)
-        icon.cleanup()
+        icon._cleanup()
         del self._activities[act_id]
 
     def _add_activity(self, activity):

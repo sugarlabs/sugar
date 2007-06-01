@@ -21,7 +21,6 @@ import wnck
 import dbus
 
 from model.homeactivity import HomeActivity
-from model.homerawwindow import HomeRawWindow
 from model import bundleregistry
 
 _SERVICE_NAME = "org.laptop.Activity"
@@ -60,7 +59,7 @@ class HomeModel(gobject.GObject):
     def __init__(self):
         gobject.GObject.__init__(self)
 
-        self._activities = {}
+        self._activities = []
         self._bundle_registry = bundleregistry.get_registry()
         self._current_activity = None
 
@@ -69,73 +68,83 @@ class HomeModel(gobject.GObject):
         screen.connect('window-closed', self._window_closed_cb)
         screen.connect('active-window-changed',
                        self._active_window_changed_cb)
+
         bus = dbus.SessionBus()
-        bus.add_signal_receiver(
-            self._dbus_name_owner_changed_cb, 
-            'NameOwnerChanged', 
-            'org.freedesktop.DBus', 
-            'org.freedesktop.DBus')
+        bus.add_signal_receiver(self._dbus_name_owner_changed_cb,
+                                'NameOwnerChanged', 
+                                'org.freedesktop.DBus', 
+                                'org.freedesktop.DBus')
 
     def get_current_activity(self):
         return self._current_activity
 
     def __iter__(self): 
-        ordered_acts = self._get_ordered_activities()
-        return iter(ordered_acts)
+        return iter(self._activities)
         
     def __len__(self):
         return len(self._activities)
         
     def __getitem__(self, i):
-        ordered_acts = self._get_ordered_activities()
-        return ordered_acts[i]
+        return self._activities[i]
         
     def index(self, obj):
-        ordered_acts = self._get_ordered_activities()
-        return ordered_acts.index(obj)
+        return self._activities.index(obj)
         
-    def _get_ordered_activities(self):
-        ordered_acts = self._activities.values()
-        ordered_acts.sort(key=lambda a: a.get_launch_time())
-        return ordered_acts
-    
     def _window_opened_cb(self, screen, window):
         if window.get_window_type() == wnck.WINDOW_NORMAL:
-            self._add_activity(window)
+            activity = None
+
+            service = self._get_activity_service(window.get_xid())
+            if service:
+                activity_id = service.get_id()
+                activity = self._get_activity_by_id(activity_id)
+
+            if activity:
+                activity.set_service(service)
+            else:
+                activity = self._get_activity_by_xid(window.get_xid())
+
+            if activity:
+                activity.set_window(window)
+            else:
+                activity = HomeActivity()
+                activity.set_window(window)
+                self._add_activity(activity)
+
+            activity.props.launching = False
+            self.emit('activity-started', activity)
 
     def _window_closed_cb(self, screen, window):
         if window.get_window_type() == wnck.WINDOW_NORMAL:
-            self._remove_activity(window.get_xid())
+            self._remove_activity_by_xid(window.get_xid())
         if not self._activities:
             self.emit('active-activity-changed', None)
             self._notify_activity_activation(self._current_activity, None)
 
     def _dbus_name_owner_changed_cb(self, name, old, new):
-        """Detect new activity instances on the DBus
-
-        Normally, new activities are detected by
-        the _window_opened_cb callback. However, if the
-        window is opened before the dbus service is up,
-        a RawHomeWindow is created. In here we create
-        a proper HomeActivity replacing the RawHomeWindow.
-        """
+        """Detect new activity instances on the DBus"""
         if name.startswith(_SERVICE_NAME) and new and not old:
-            xid = name[len(_SERVICE_NAME):]
-            if not xid.isdigit():
-                return
-            logging.debug("Activity instance launch detected: %s" % name)
-            xid = int(xid)
-            act = self._get_activity_by_xid(xid)
-            if isinstance(act, HomeRawWindow):
-                logging.debug("Removing bogus raw activity %s for window %i" 
-                              % (act.get_activity_id(), xid))
-                self._internal_remove_activity(act)
-                self._add_activity(act.get_window())
+            try:
+                xid = int(name[len(_SERVICE_NAME):])
+                activity = self._get_activity_by_xid(xid)
+                if activity:
+                    service = self._get_activity_service(xid)
+                    if service:
+                        activity.set_service()
+            except ValueError:
+                logging.error('Invalid activity service name, '
+                              'cannot extract the xid')
 
     def _get_activity_by_xid(self, xid):
-        for act in self._activities.values():
-            if act.get_xid() == xid:
-                return act
+        for activity in self._activities:
+            if activity.get_xid() == xid:
+                return activity
+        return None
+
+    def _get_activity_by_id(self, activity_id):
+        for activity in self._activities:
+            if activity.get_activity_id() == activity_id:
+                return activity
         return None
 
     def _notify_activity_activation(self, old_activity, new_activity):
@@ -173,71 +182,33 @@ class HomeModel(gobject.GObject):
 
         self.emit('active-activity-changed', self._current_activity)
 
-    def _add_window(self, window):
-        home_window = HomeRawWindow(window)
-        self._activities[home_window.get_activity_id()] = home_window
-        self.emit('activity-added', home_window)
-
-    def _add_activity(self, window):
-        """Add the window to the set of windows we track
-        
-        At the moment this requires that something somewhere
-        have registered a dbus service with the XID of the 
-        new window that is used to bind the requested activity 
-        to the window.
-        
-        window -- gtk.Window instance representing a new 
-            normal, top-level window
-        """
+    def _get_activity_service(self, xid):
         bus = dbus.SessionBus()
-        xid = window.get_xid()
         try:
             service = dbus.Interface(
-                bus.get_object(_SERVICE_NAME + '%d' % xid,
-                               _SERVICE_PATH + "/%s" % xid),
-                _SERVICE_INTERFACE)
-            
+                    bus.get_object(_SERVICE_NAME + '%d' % xid,
+                                   _SERVICE_PATH + "/%s" % xid),
+                                   _SERVICE_INTERFACE)
         except dbus.DBusException:
             service = None
 
-        if not service:
-            self._add_window(window)
-            return
+        return service
 
-        activity = None
-        act_id = service.get_id()
-        act_type = service.get_service_name()
-        if self._activities.has_key(act_id):
-            activity = self._activities[act_id]
-        else:
-            # activity got lost, took longer to launch than we allow,
-            # or it was launched by something other than the shell
-            act_type = service.get_service_name()
-            bundle = self._bundle_registry.get_bundle(act_type)
-            if not bundle:
-                raise RuntimeError("No bundle for activity type '%s'." % act_type)
-                return
-            activity = HomeActivity(bundle, act_id)
-            self._activities[act_id] = activity
-            self.emit('activity-added', activity)
+    def _add_activity(self, activity):
+        self._activities.append(activity)
+        self.emit('activity-added', activity)
 
-        activity.set_service(service)
-        activity.set_window(window)
-
-        self.emit('activity-started', activity)
-
-    def _internal_remove_activity(self, activity):
+    def _remove_activity(self, activity):
         if activity == self._current_activity:
             self._current_activity = None
 
         self.emit('activity-removed', activity)
-        act_id = activity.get_activity_id()
-        del self._activities[act_id]
+        self._activities.remove(activity)
         
-    def _remove_activity(self, xid):
+    def _remove_activity_by_xid(self, xid):
         activity = self._get_activity_by_xid(xid)
         if activity:
-            self._internal_remove_activity(activity)
+            self._remove_activity(activity)
         else:
             logging.error('Model for window %d does not exist.' % xid)
 
@@ -247,13 +218,12 @@ class HomeModel(gobject.GObject):
             raise ValueError("Activity service name '%s' was not found in the bundle registry." % service_name)
         activity = HomeActivity(bundle, activity_id)
         activity.props.launching = True
-        self._activities[activity_id] = activity
-        self.emit('activity-added', activity)
+        self._add_activity(activity)
 
     def notify_activity_launch_failed(self, activity_id):
         if self._activities.has_key(activity_id):
             activity = self._activities[activity_id]
             logging.debug("Activity %s (%s) launch failed" % (activity_id, activity.get_type()))
-            self._internal_remove_activity(activity)
+            self._remove_activity(activity)
         else:
             logging.error('Model for activity id %s does not exist.' % activity_id)
