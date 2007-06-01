@@ -32,6 +32,7 @@ from sugar.graphics.window import Window
 from sugar.graphics.toolbox import Toolbox
 from sugar.graphics.toolbutton import ToolButton
 from sugar.datastore import datastore
+from sugar import wm
 from sugar import profile
 
 class ActivityToolbar(gtk.Toolbar):
@@ -178,6 +179,7 @@ class Activity(Window, gtk.Container):
         Window.__init__(self)
 
         self.connect('destroy', self._destroy_cb)
+        self.connect('realize', self._realize_cb)
 
         self._active = False
         self._activity_id = handle.activity_id
@@ -207,7 +209,7 @@ class Activity(Window, gtk.Container):
             logging.debug('Creating a jobject.')
             self._jobject = datastore.create()
             self._jobject.metadata['title'] = '%s %s' % (get_bundle_name(), 'Activity')
-            self._jobject.metadata['activity'] = self.get_service_name()
+            self._jobject.metadata['activity'] = self._get_service_name()
             self._jobject.metadata['keep'] = '0'
             self._jobject.metadata['buddies'] = ''
             self._jobject.metadata['preview'] = ''
@@ -286,19 +288,11 @@ class Activity(Window, gtk.Container):
         self.present()
         self.emit('joined')
 
-    def get_service_name(self):
-        """Gets the activity service name."""
-        return os.environ['SUGAR_BUNDLE_SERVICE_NAME']
-
     def get_shared(self):
         """Returns TRUE if the activity is shared on the mesh."""
         if not self._shared_activity:
             return False
         return self._shared_activity.props.joined
-
-    def get_id(self):
-        """Get the unique activity identifier."""
-        return self._activity_id
 
     def _internal_share_cb(self, ps, success, activity, err):
         self._pservice.disconnect(self._share_id)
@@ -321,6 +315,13 @@ class Activity(Window, gtk.Container):
     def execute(self, command, args):
         """Execute the given command with args"""
         return False
+
+    def _get_service_name(self):
+        return os.environ['SUGAR_BUNDLE_SERVICE_NAME']
+
+    def _realize_cb(self, window):
+        wm.set_bundle_id(window.window, self._get_service_name())
+        wm.set_activity_id(window.window, self._activity_id)
 
     def _destroy_cb(self, window):
         """Destroys our ActivityService and sharing service"""

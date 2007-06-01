@@ -20,6 +20,8 @@ import gobject
 import wnck
 import dbus
 
+from sugar import wm
+
 from model.homeactivity import HomeActivity
 from model import bundleregistry
 
@@ -94,22 +96,24 @@ class HomeModel(gobject.GObject):
         if window.get_window_type() == wnck.WINDOW_NORMAL:
             activity = None
 
-            service = self._get_activity_service(window.get_xid())
-            if service:
-                activity_id = service.get_id()
+            activity_id = wm.get_activity_id(window)
+
+            bundle_id = wm.get_bundle_id(window)
+            if bundle_id:
+                bundle = self._bundle_registry.get_bundle(bundle_id)
+            else:
+                bundle = None
+
+            if activity_id:
                 activity = self._get_activity_by_id(activity_id)
 
-            if activity:
-                activity.set_service(service)
-            else:
-                activity = self._get_activity_by_xid(window.get_xid())
-
-            if activity:
-                activity.set_window(window)
-            else:
-                activity = HomeActivity()
-                activity.set_window(window)
+            if not activity:
+                activity = HomeActivity(bundle, activity_id)
                 self._add_activity(activity)
+
+            service = self._get_activity_service(window.get_xid())
+            activity.set_service(service)
+            activity.set_window(window)
 
             activity.props.launching = False
             self.emit('activity-started', activity)
@@ -127,10 +131,9 @@ class HomeModel(gobject.GObject):
             try:
                 xid = int(name[len(_SERVICE_NAME):])
                 activity = self._get_activity_by_xid(xid)
-                if activity:
+                if activity and not activity.get_service():
                     service = self._get_activity_service(xid)
-                    if service:
-                        activity.set_service()
+                    activity.set_service(service)
             except ValueError:
                 logging.error('Invalid activity service name, '
                               'cannot extract the xid')
@@ -221,8 +224,8 @@ class HomeModel(gobject.GObject):
         self._add_activity(activity)
 
     def notify_activity_launch_failed(self, activity_id):
-        if self._activities.has_key(activity_id):
-            activity = self._activities[activity_id]
+        activity = self._get_activity_by_id(activity_id)
+        if activity:
             logging.debug("Activity %s (%s) launch failed" % (activity_id, activity.get_type()))
             self._remove_activity(activity)
         else:

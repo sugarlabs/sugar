@@ -40,7 +40,7 @@ class HomeActivity(gobject.GObject):
                        gobject.PARAM_READWRITE),
     }
 
-    def __init__(self, bundle=None, activity_id=None):
+    def __init__(self, bundle, activity_id):
         """Initialise the HomeActivity
         
         bundle -- sugar.activity.bundle.Bundle instance,
@@ -72,8 +72,6 @@ class HomeActivity(gobject.GObject):
 
     def set_service(self, service):
         self._service = service
-        if not self._activity_id:
-            self._activity_id = service.get_id()
 
     def get_service(self):
         """Retrieve the application's sugar introspection service

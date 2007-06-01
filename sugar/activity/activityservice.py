@@ -64,16 +64,6 @@ class ActivityService(dbus.service.Object):
         self._activity.share()
 
     @dbus.service.method(_ACTIVITY_INTERFACE)
-    def get_id(self):
-        """Get the activity identifier"""
-        return self._activity.get_id()
-
-    @dbus.service.method(_ACTIVITY_INTERFACE)
-    def get_service_name(self):
-        """Get the activity service name"""
-        return self._activity.get_service_name()
-
-    @dbus.service.method(_ACTIVITY_INTERFACE)
     def get_shared(self):
         """Returns True if the activity is shared on the mesh."""
         return self._activity.get_shared()

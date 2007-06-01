@@ -9,7 +9,7 @@ sugar_PYTHON =		\
         ltihooks.py	\
 	profile.py	\
 	util.py		\
-	x11.py
+	wm.py
 
 INCLUDES = 				\
 	$(LIB_CFLAGS)			\
