@@ -111,8 +111,11 @@ class FriendsBox(hippo.CanvasBox):
     def _active_activity_changed_cb(self, home_model, home_activity):
         if home_activity:
             activity_id = home_activity.get_activity_id()
-            ps = self._pservice.get_activity(activity_id)
-            self._set_activity_ps(ps)
+            if activity_id:
+                ps = self._pservice.get_activity(activity_id)
+                self._set_activity_ps(ps)
+            else:
+                self._set_activity_ps(None)
         else:
             self._set_activity_ps(None)
 

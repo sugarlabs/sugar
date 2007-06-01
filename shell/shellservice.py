@@ -132,7 +132,8 @@ class ShellService(dbus.service.Object):
         new_id = ""
         if new_activity:
             new_id = new_activity.get_activity_id()
-        self.CurrentActivityChanged(new_id)
+        if new_id:
+            self.CurrentActivityChanged(new_id)
 
     def _bundle_to_activity_info(self, bundle):
         return ActivityInfo(bundle.get_name(), bundle.get_icon(),

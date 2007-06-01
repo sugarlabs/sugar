@@ -91,7 +91,7 @@ class HomeActivity(gobject.GObject):
         if self._bundle:
             return self._bundle.get_icon()
         else:
-            return None
+            return 'theme:stock-missing'
     
     def get_icon_color(self):
         """Retrieve the appropriate icon colour for this activity
@@ -137,7 +137,10 @@ class HomeActivity(gobject.GObject):
 
     def get_type(self):
         """Retrieve bundle's "service_name" for future reference"""
-        return self._bundle.get_service_name()
+        if self._bundle:
+            return self._bundle.get_service_name()
+        else:
+            return None
 
     def get_shared(self):
         """Return whether this activity is using Presence service sharing"""

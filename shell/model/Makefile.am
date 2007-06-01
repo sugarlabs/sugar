@@ -12,5 +12,4 @@ sugar_PYTHON =			\
 	MeshModel.py		\
 	ShellModel.py		\
 	homeactivity.py		\
-	homemodel.py		\
-	homerawwindow.py
+	homemodel.py
