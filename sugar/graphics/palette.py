@@ -38,43 +38,50 @@ class Palette(gtk.Window):
         'parent': (object, None, None, gobject.PARAM_READWRITE),
 
         'alignment': (gobject.TYPE_INT, None, None, 0, 8, ALIGNMENT_AUTOMATIC,
-                    gobject.PARAM_READWRITE)
+                    gobject.PARAM_READWRITE),
+        
+        'is-tooltip': (bool, None, None, False, gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT_ONLY)
     }
 
     _PADDING    = 1
     _WIN_BORDER = 5
 
-    def __init__(self):
-        gobject.GObject.__init__(self, type=gtk.WINDOW_POPUP)
+    def __init__(self, **kwargs):
+        gobject.GObject.__init__(self, type=gtk.WINDOW_POPUP, **kwargs)
         gtk.Window.__init__(self)
 
         self._alignment = ALIGNMENT_AUTOMATIC
 
         self._palette_label = gtk.Label()
-        self._palette_label.set_ellipsize(pango.ELLIPSIZE_START)
+        #self._palette_label.set_justify(gtk.JUSTIFY_LEFT)
         self._palette_label.show()
 
-        self._separator = gtk.HSeparator()
-        self._separator.hide()
-
-        self._menu_bar = gtk.MenuBar()
-        self._menu_bar.set_pack_direction(gtk.PACK_DIRECTION_TTB)
-        self._menu_bar.show()
-
-        self._content = gtk.HBox()
-        self._content.show()
-
-        self._button_bar = gtk.HButtonBox()
-        self._button_bar.show()
-
-        # Set main container
         vbox = gtk.VBox(False, 0)
-        vbox.pack_start(self._palette_label, False, False, self._PADDING)
-        vbox.pack_start(self._separator, True, True, self._PADDING)
-        vbox.pack_start(self._menu_bar, True, True, self._PADDING)
-        vbox.pack_start(self._content, True, True, self._PADDING)
-        vbox.pack_start(self._button_bar, True, True, self._PADDING)
+        vbox.pack_start(self._palette_label, True, True, self._PADDING)
+
+        # If it's a tooltip palette..
+        if not self._is_tooltip:
+            self._separator = gtk.HSeparator()
+            self._separator.hide()
+    
+            self._menu_bar = gtk.MenuBar()
+            self._menu_bar.set_pack_direction(gtk.PACK_DIRECTION_TTB)
+            self._menu_bar.show()
+    
+            self._content = gtk.HBox()
+            self._content.show()
+    
+            self._button_bar = gtk.HButtonBox()
+            self._button_bar.show()
+    
+            # Set main container
+            vbox.pack_start(self._separator, True, True, self._PADDING)
+            vbox.pack_start(self._menu_bar, True, True, self._PADDING)
+            vbox.pack_start(self._content, True, True, self._PADDING)
+            vbox.pack_start(self._button_bar, True, True, self._PADDING)
+        
         vbox.show()
+        self.add(vbox)
 
         # Widget events
         self.connect('motion-notify-event', self._mouse_over_widget_cb)
@@ -83,13 +90,14 @@ class Palette(gtk.Window):
         self.connect('key-press-event', self._on_key_press_event_cb)
 
         self.set_border_width(self._WIN_BORDER)
-        self.add(vbox)
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'parent':
             self._parent_widget = value
         elif pspec.name == 'alignment':
             self._alignment = value
+        elif pspec.name == 'is-tooltip':
+            self._is_tooltip = value
         else:
             raise AssertionError
 
@@ -184,7 +192,8 @@ class Palette(gtk.Window):
             self._separator.hide()
         else:
             self._palette_label.set_text(label)
-            self._separator.show()
+            if not self._is_tooltip:
+                self._separator.show()
 
     def append_menu_item(self, item):
         self._menu_bar.append(item)
