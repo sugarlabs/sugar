@@ -209,7 +209,7 @@ class Activity(Window, gtk.Container):
             logging.debug('Creating a jobject.')
             self._jobject = datastore.create()
             self._jobject.metadata['title'] = '%s %s' % (get_bundle_name(), 'Activity')
-            self._jobject.metadata['activity'] = self._get_service_name()
+            self._jobject.metadata['activity'] = self.get_service_name()
             self._jobject.metadata['keep'] = '0'
             self._jobject.metadata['buddies'] = ''
             self._jobject.metadata['preview'] = ''
@@ -231,6 +231,12 @@ class Activity(Window, gtk.Container):
     def do_get_property(self, pspec):
         if pspec.name == 'active':
             return self._active
+
+    def get_id(self):
+        return self._activity_id
+
+    def get_service_name(self):
+        return os.environ['SUGAR_BUNDLE_SERVICE_NAME']
 
     def set_canvas(self, canvas):
         Window.set_canvas(self, canvas)
@@ -316,11 +322,8 @@ class Activity(Window, gtk.Container):
         """Execute the given command with args"""
         return False
 
-    def _get_service_name(self):
-        return os.environ['SUGAR_BUNDLE_SERVICE_NAME']
-
     def _realize_cb(self, window):
-        wm.set_bundle_id(window.window, self._get_service_name())
+        wm.set_bundle_id(window.window, self.get_service_name())
         wm.set_activity_id(window.window, self._activity_id)
 
     def _destroy_cb(self, window):
