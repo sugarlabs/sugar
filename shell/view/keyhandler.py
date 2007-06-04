@@ -25,6 +25,7 @@ _actions_table = {
     'F10'           : 'volume_2',
     'F11'           : 'volume_3',
     'F12'           : 'volume_4',
+    '<alt>1'        : 'screenshot',
     '<alt>F8'       : 'color_mode',
     '<alt>F5'       : 'b_and_w_mode',
     '<alt>equal'    : 'console',
@@ -113,6 +114,9 @@ class KeyHandler(object):
 
     def handle_color_mode(self):
         self._set_display_mode(hardwaremanager.COLOR_MODE)
+
+    def handle_screenshot(self):
+        self._shell.take_screenshot()
 
     def handle_b_and_w_mode(self):
         self._set_display_mode(hardwaremanager.B_AND_W_MODE)

@@ -20,9 +20,11 @@ activity must do to participate in the Sugar desktop.
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+from gettext import gettext as _
 import logging
 import os
 import time
+import tempfile
 
 import gtk, gobject
 
@@ -208,7 +210,7 @@ class Activity(Window, gtk.Container):
         elif create_jobject:
             logging.debug('Creating a jobject.')
             self._jobject = datastore.create()
-            self._jobject.metadata['title'] = '%s %s' % (get_bundle_name(), 'Activity')
+            self._jobject.metadata['title'] = _('%s Activity') % get_bundle_name()
             self._jobject.metadata['activity'] = self.get_service_name()
             self._jobject.metadata['keep'] = '0'
             self._jobject.metadata['buddies'] = ''
@@ -275,7 +277,7 @@ class Activity(Window, gtk.Container):
     def save(self):
         """Request that the activity is saved to the Journal."""
         try:
-            file_path = os.path.join('/tmp', '%i' % time.time())
+            file_path = os.path.join(tempfile.gettempdir(), '%i' % time.time())
             self.write_file(file_path)
             self._jobject.file_path = file_path
         except NotImplementedError:
