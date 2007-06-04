@@ -66,3 +66,6 @@ class Toolbox(gtk.VBox):
 
         if self._notebook.get_n_pages() < 2:
             self._notebook.set_show_tabs(False)
+
+    def set_current_toolbar(self, index):
+        self._notebook.set_current_page(index)
