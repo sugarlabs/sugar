@@ -25,7 +25,7 @@ def get_name_and_version():
     config = f.read()
     f.close()
 
-    exp = 'AC\_INIT\(\[\w+\]\,\[([0-9.]+)\]\,\[\w*\]\,\[(\w+)'
+    exp = 'AC_INIT\(\[[^\]]+\],\[([^\]]+)\],\[\],\[([^\]]+)\]'
     match = re.search(exp, config)
     if not match:
         print 'Cannot find the package name and version.'
