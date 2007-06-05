@@ -7,6 +7,7 @@ sugar_PYTHON =		\
 	env.py		\
 	logger.py	\
         ltihooks.py	\
+        network.py	\
 	profile.py	\
 	util.py		\
 	wm.py
