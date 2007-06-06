@@ -22,7 +22,7 @@ from sugar.graphics.icon import Icon
 from sugar.graphics.palette import *
 
 class ToolButton(gtk.ToolButton):
-    _POPUP_PALETTE_DELAY = 0.5
+    _POPUP_PALETTE_DELAY = 0.15
 
     def __init__(self, icon_name=None):
         gtk.ToolButton.__init__(self)

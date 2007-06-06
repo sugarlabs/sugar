@@ -62,7 +62,7 @@ class Palette(gtk.Window):
         if not self._is_tooltip:
             self._separator = gtk.HSeparator()
             self._separator.hide()
-    
+
             self._menu_bar = gtk.MenuBar()
             self._menu_bar.set_pack_direction(gtk.PACK_DIRECTION_TTB)
             self._menu_bar.show()
@@ -89,6 +89,10 @@ class Palette(gtk.Window):
         self.connect('key-press-event', self._on_key_press_event_cb)
 
         self.set_border_width(self._WIN_BORDER)
+        
+        self._width, self._height = self.size_request()
+        self._scr_width = gtk.gdk.screen_width()
+        self._scr_height = gtk.gdk.screen_height()
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'parent':
@@ -127,19 +131,13 @@ class Palette(gtk.Window):
             self.move(move_x, move_y)
 
     def _try_position(self, alignment):
-        scr_width = gtk.gdk.screen_width()
-        scr_height = gtk.gdk.screen_height()
-
-        plt_width, plt_height = self.size_request()
-
         move_x, move_y = self._calc_position(alignment)
         self.move(move_x, move_y)
         plt_x, plt_y = self.window.get_origin()
 
-        if (plt_x<0 or plt_x+plt_width>scr_width) or (plt_y<0 or plt_y+plt_height>scr_height):
+        if (plt_x<0 or plt_x+self._width>self._scr_width) or (plt_y<0 or plt_y+self._height>self._scr_height):
             return False
         else:
-            self.move(move_x, move_y)
             return True
 
     def _calc_position(self, alignment):
@@ -147,22 +145,20 @@ class Palette(gtk.Window):
         parent_rectangle = self._parent_widget.get_allocation()
         palette_rectangle = self.get_allocation()
 
-        palette_width, palette_height = self.size_request()
-
         if alignment == ALIGNMENT_BOTTOM_LEFT:
             move_x = win_x + parent_rectangle.x
             move_y = win_y + parent_rectangle.y + parent_rectangle.height
 
         elif alignment == ALIGNMENT_BOTTOM_RIGHT:
-            move_x = (win_x + parent_rectangle.x + parent_rectangle.width) - palette_width
+            move_x = (win_x + parent_rectangle.x + parent_rectangle.width) - self._width
             move_y = win_y + parent_rectangle.y + parent_rectangle.height
 
         elif alignment == ALIGNMENT_LEFT_BOTTOM:
-            move_x = (win_x + parent_rectangle.x) - palette_width
+            move_x = (win_x + parent_rectangle.x) - self._width
             move_y = win_y + parent_rectangle.y
 
         elif alignment == ALIGNMENT_LEFT_TOP:
-            move_x = (win_x + parent_rectangle.x) - palette_width
+            move_x = (win_x + parent_rectangle.x) - self._width
             move_y = (win_y + parent_rectangle.y + parent_rectangle.height) - palette_rectangle.height 
 
         elif alignment == ALIGNMENT_RIGHT_BOTTOM:
@@ -178,7 +174,7 @@ class Palette(gtk.Window):
             move_y = (win_y + parent_rectangle.y) - (palette_rectangle.height)
 
         elif alignment == ALIGNMENT_TOP_RIGHT:
-            move_x = (win_x + parent_rectangle.x + parent_rectangle.width) - palette_width
+            move_x = (win_x + parent_rectangle.x + parent_rectangle.width) - self._width
             move_y = (win_y + parent_rectangle.y) - (palette_rectangle.height)
 
         return move_x, move_y
@@ -212,8 +208,8 @@ class Palette(gtk.Window):
         # We need to know if the mouse pointer continue inside
         # the parent widget (opener)
         pointer_x, pointer_y = self._parent_widget.get_pointer()
-        parent_alloc = self._parent_widget.get_allocation()
-        pointer_rect = gdk.Rectangle(pointer_x + parent_alloc.x, pointer_y + parent_alloc.y, 1, 1)
+        self._parent_alloc = self._parent_widget.get_allocation()
+        pointer_rect = gdk.Rectangle(pointer_x + self._parent_alloc.x, pointer_y + self._parent_alloc.y, 1, 1)
 
         if (self._parent_widget.allocation.intersect(pointer_rect).width == 0):
             return
@@ -270,6 +266,4 @@ class Palette(gtk.Window):
         if (keyval == keysyms.Escape or
             ((keyval == keysyms.Up or keyval == keysyms.KP_Up) and
              state == gdk.MOD1_MASK)):
-            self._close_palette_cb()
-        elif keyval == keysyms.Tab:
             self._close_palette_cb()
