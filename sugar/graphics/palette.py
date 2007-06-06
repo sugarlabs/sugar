@@ -53,7 +53,6 @@ class Palette(gtk.Window):
         self._alignment = ALIGNMENT_AUTOMATIC
 
         self._palette_label = gtk.Label()
-        #self._palette_label.set_justify(gtk.JUSTIFY_LEFT)
         self._palette_label.show()
 
         vbox = gtk.VBox(False, 0)
@@ -79,7 +78,7 @@ class Palette(gtk.Window):
             vbox.pack_start(self._menu_bar, True, True, self._PADDING)
             vbox.pack_start(self._content, True, True, self._PADDING)
             vbox.pack_start(self._button_bar, True, True, self._PADDING)
-        
+
         vbox.show()
         self.add(vbox)
 
@@ -267,7 +266,7 @@ class Palette(gtk.Window):
         # Enter, Return or Space: Select
         keyval = event.keyval
         state = event.state & gtk.accelerator_get_default_mod_mask()
-        
+
         if (keyval == keysyms.Escape or
             ((keyval == keysyms.Up or keyval == keysyms.KP_Up) and
              state == gdk.MOD1_MASK)):

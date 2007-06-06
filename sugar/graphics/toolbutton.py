@@ -26,6 +26,7 @@ class ToolButton(gtk.ToolButton):
 
     def __init__(self, icon_name=None):
         gtk.ToolButton.__init__(self)
+        self._palette = None
         self.set_icon(icon_name)
 
     def set_icon(self, icon_name):
@@ -36,14 +37,17 @@ class ToolButton(gtk.ToolButton):
     def set_palette(self, palette):
         self._palette = palette
         self._palette.props.parent = self
-        self.child.connect('enter-notify-event', self._show_palette_timeout_cb, self._palette)
+        self.child.connect('enter-notify-event', self._show_palette_timeout_cb)
 
     def set_tooltip(self, text):
-        self._palette_tt = Palette(is_tooltip=True)
-        self._palette_tt.set_primary_state(text)
-        self._palette_tt.props.parent = self
-        self.child.connect('enter-notify-event', self._show_palette_timeout_cb, self._palette_tt)
+        if self._palette:
+            self._palette.destroy()
 
-    def _show_palette_timeout_cb(self, widget, event, palette):
+        self._palette = Palette(is_tooltip=True)
+        self._palette.set_primary_state(text)
+        self._palette.props.parent = self
+        self.child.connect('enter-notify-event', self._show_palette_timeout_cb)
+
+    def _show_palette_timeout_cb(self, widget, event):
         time.sleep(self._POPUP_PALETTE_DELAY)
-        palette.popup()
+        self._palette.popup()
