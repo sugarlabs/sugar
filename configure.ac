@@ -43,7 +43,6 @@ data/Makefile
 lib/Makefile
 lib/xdgmime/Makefile
 services/Makefile
-services/presence/Makefile
 services/clipboard/Makefile
 shell/Makefile
 shell/extensions/Makefile

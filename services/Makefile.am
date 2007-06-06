@@ -1,1 +1,1 @@
-SUBDIRS = presence clipboard console
+SUBDIRS = clipboard console
