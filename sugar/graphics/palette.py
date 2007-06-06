@@ -19,7 +19,7 @@
 import gtk
 from gtk import gdk, keysyms
 import gobject
-import pango
+import time
 
 ALIGNMENT_AUTOMATIC     = 0
 ALIGNMENT_BOTTOM_LEFT   = 1
@@ -45,6 +45,7 @@ class Palette(gtk.Window):
 
     _PADDING    = 1
     _WIN_BORDER = 5
+    _POPUP_PALETTE_DELAY = 0.15
 
     def __init__(self, **kwargs):
         gobject.GObject.__init__(self, type=gtk.WINDOW_POPUP, **kwargs)
@@ -58,7 +59,7 @@ class Palette(gtk.Window):
         vbox = gtk.VBox(False, 0)
         vbox.pack_start(self._palette_label, True, True, self._PADDING)
 
-        # If it's a tooltip palette..
+        # tooltip palette ?
         if not self._is_tooltip:
             self._separator = gtk.HSeparator()
             self._separator.hide()
@@ -90,7 +91,6 @@ class Palette(gtk.Window):
 
         self.set_border_width(self._WIN_BORDER)
         
-        self._width, self._height = self.size_request()
         self._scr_width = gtk.gdk.screen_width()
         self._scr_height = gtk.gdk.screen_height()
 
@@ -132,12 +132,25 @@ class Palette(gtk.Window):
 
     def _try_position(self, alignment):
         move_x, move_y = self._calc_position(alignment)
-        self.move(move_x, move_y)
+        self._width, self._height = self.size_request()
+
         plt_x, plt_y = self.window.get_origin()
+
+        if move_x > plt_x:
+            plt_x += (move_x - plt_x)
+        else:
+            plt_x -= (plt_x - move_x)
+
+        if move_y > plt_y:
+            plt_y += (move_y - plt_y)
+        else:
+            plt_y -= (plt_y - move_y)
 
         if (plt_x<0 or plt_x+self._width>self._scr_width) or (plt_y<0 or plt_y+self._height>self._scr_height):
             return False
         else:
+            self.move(move_x, move_y)
+            self.show()
             return True
 
     def _calc_position(self, alignment):
@@ -214,18 +227,18 @@ class Palette(gtk.Window):
         if (self._parent_widget.allocation.intersect(pointer_rect).width == 0):
             return
 
-        self.show()
+        self.realize()
         self.set_position()
         self._pointer_grab()
 
     # PRIVATE METHODS
 
-    def _is_mouse_out(self, window, event):
-        # If we're clicking outside of the Palette
-        # return True
-        event_rect = gdk.Rectangle(int(event.x), int(event.y), 1, 1)
+    # Is the mouse out of the widget ?
+    def _is_mouse_out(self, widget):
+        mouse_x, mouse_y = widget.get_pointer()
+        event_rect = gdk.Rectangle(mouse_x, mouse_y, 1, 1)
 
-        if (event.window != self.window or self.allocation.intersect(event_rect).width==0):
+        if (self.allocation.intersect(event_rect).width==0):
             return True
         else:
             return False
@@ -249,8 +262,9 @@ class Palette(gtk.Window):
 
     # Mouse is out of the widget
     def _mouse_out_widget_cb(self, widget, event):
-        if (widget == self) and self._is_mouse_out(widget, event):
-            self._pointer_grab()
+        time.sleep(self._POPUP_PALETTE_DELAY)
+        if (widget == self) and self._is_mouse_out(widget):
+            self._close_palette_cb()
 
     # Mouse inside the widget
     def _mouse_over_widget_cb(self, widget, event):
