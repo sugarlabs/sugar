@@ -46,10 +46,10 @@ class ClipboardPanelWindow(FrameWindow):
         self.connect("drag_data_get", self._clipboard_box.drag_data_get_cb)
 
     def _owner_change_cb(self, clipboard, event):
+        logging.debug("owner_change_cb")
+
         if self._clipboard_box.owns_clipboard():
             return
-
-        logging.debug("owner_change_cb")
 
         cb_service = clipboardservice.get_instance()
         key = cb_service.add_object(name="")

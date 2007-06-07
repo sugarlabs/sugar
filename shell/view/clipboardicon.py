@@ -91,7 +91,10 @@ class ClipboardIcon(CanvasIcon):
     def set_state(self, name, percent, icon_name, preview, activity):
         cb_service = clipboardservice.get_instance()
         obj = cb_service.get_object(self._object_id)
-        installable = (obj['FORMATS'][0] == 'application/vnd.olpc-x-sugar')
+        if obj['FORMATS'] and obj['FORMATS'][0] == 'application/vnd.olpc-x-sugar':
+            installable = True
+        else:
+            installable = False
 
         self._name = name
         self._percent = percent
