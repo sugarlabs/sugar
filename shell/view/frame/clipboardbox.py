@@ -179,7 +179,7 @@ class ClipboardBox(hippo.CanvasBox):
             if str(target) not in ('TIMESTAMP', 'TARGETS', 'MULTIPLE'):
                 widget.drag_get_data(context, target, time)
 
-        cb_service.set_object_percent(object_id, percent = 100)
+        cb_service.set_object_percent(object_id, percent=100)
         
         return True
 

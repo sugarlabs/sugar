@@ -53,19 +53,16 @@ class ClipboardPanelWindow(FrameWindow):
 
         cb_service = clipboardservice.get_instance()
         key = cb_service.add_object(name="")
-        cb_service.set_object_percent(key, percent = 100)
+        cb_service.set_object_percent(key, percent=0)
         
         targets = clipboard.wait_for_targets()
         for target in targets:
-            if target not in ('TIMESTAMP', 'TARGETS', 'MULTIPLE'):
+            if target not in ('TIMESTAMP', 'TARGETS', 'MULTIPLE', 'SAVE_TARGETS'):
                 selection = clipboard.wait_for_contents(target)
                 if selection:
                     self._add_selection(key, selection)
 
         cb_service.set_object_percent(key, percent=100)
-
-        # TODO: Notify somehow the object added.
-        #self._frame.show_and_hide(0)
 
     def _add_selection(self, key, selection):
         if selection.data:
