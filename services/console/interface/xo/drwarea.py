@@ -39,9 +39,6 @@ class Drawing_Area_Tools:
         self.width	= drwarea_size[0]
         self.height	= drwarea_size[1]
 
-        # print "width %i" % self.width
-        # print "height %i" % self.height
-        
         self.range_x = {'from': self.margin+2, 'to': self.width - (self.margin+2)}
         self.range_y = {'from': self.margin+2, 'to': self.height - (self.margin+2)}
                 
@@ -54,4 +51,3 @@ class Drawing_Area_Tools:
         self.draw_line(context, self.margin, self.margin, self.margin, self.height - self.margin)
         self.draw_line(context, self.margin, self.height - self.margin - 1, self.width - self.margin, self.height - self.margin - 1)
         context.stroke()
-        
