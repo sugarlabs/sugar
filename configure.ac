@@ -57,6 +57,7 @@ shell/model/Makefile
 shell/model/devices/Makefile
 shell/model/devices/network/Makefile
 services/console/lib/Makefile
+services/console/lib/graphics/Makefile
 services/console/lib/procmem/Makefile
 services/console/Makefile
 services/console/interface/Makefile

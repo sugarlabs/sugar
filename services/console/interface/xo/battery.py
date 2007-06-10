@@ -20,6 +20,7 @@ import gtk
 import gobject
 
 from label import Label
+from graphics.box import BoxGraphic
 
 class XO_Battery(gtk.Fixed):
 
@@ -31,13 +32,13 @@ class XO_Battery(gtk.Fixed):
                 
         self._battery_charge = self._get_battery_status()
 
-        self._battery_drw = gtk.DrawingArea()
-        self._battery_drw.set_size_request(70, 150)
-        self._battery_drw.connect("expose-event", self.do_expose)
+        self._battery_box = BoxGraphic()
+        self._battery_box.set_size_request(70, 150)
+        self._battery_box.set_capacity(self._battery_charge)
 
         fixed = gtk.Fixed();
         fixed.set_border_width(10)
-        fixed.add(self._battery_drw)
+        fixed.add(self._battery_box)
 
         hbox = gtk.HBox(False, 0)
         hbox.pack_start(fixed, False, False, 4)
@@ -50,7 +51,7 @@ class XO_Battery(gtk.Fixed):
         
         label_charge = Label('Charge: ' , Label.DESCRIPTION)
         self.label_charge_value = Label(str(self._battery_charge) + '%', Label.DESCRIPTION)
-        
+
         table.attach(label_charge, 0, 1, 0, 1)
         table.attach(self.label_charge_value, 1,2, 0,1)
 
@@ -85,21 +86,9 @@ class XO_Battery(gtk.Fixed):
         if new_charge != self._battery_charge:
             self._battery_charge = self._get_battery_status()
             self.label_charge_value.set_text(str(self._battery_charge) + '%')
-            self._battery_drw.queue_draw()
+            self._battery_box.set_capacity(self._battery_charge)
 
         return True
-
-    def do_expose(self, widget, event):
-        context = widget.window.cairo_create()
-        
-        [width, height] = widget.size_request()
-        context.rectangle(0, 0, width, height)
-
-        context.set_source_rgb (0,0,0)
-        context.fill_preserve()
-        context.stroke()
-        
-        self._draw_battery_usage(context, width, height)
 
     def _get_battery_status(self):
         battery_class_path = '/sys/class/battery/psu_0/'
@@ -113,20 +102,3 @@ class XO_Battery(gtk.Fixed):
             capacity = 0
 
         return capacity
-        
-    def _draw_battery_usage(self, context, width, height):
-        
-        usage_height = (self._battery_charge*height)/100
-
-        context.rectangle(0, height - usage_height, width, height)
-        
-        if self._battery_charge > 50:
-            context.set_source_rgb (0,1,0)
-        
-        if self._battery_charge > 10 and self._battery_charge <= 50:
-            context.set_source_rgb (1,1,0)
-            
-        if self._battery_charge <= 10:
-            context.set_source_rgb (1,0,0)
-
-        context.fill_preserve()
