@@ -22,7 +22,6 @@ import gobject
 import gtk.gdk
 import cairo
 import string
-import drwarea
 
 from cpu import XO_CPU
 from system import XO_System

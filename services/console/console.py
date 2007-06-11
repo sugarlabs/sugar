@@ -35,7 +35,6 @@ CONSOLE_IFACE = 'org.laptop.sugar.Console'
 class Console:
     
     def __init__(self):
-        
         # Main Window
         self.window = gtk.Window()
         self.window.set_title('Developer console')
@@ -51,7 +50,7 @@ class Console:
         
         # Notebook
         self.notebook = gtk.Notebook()
-        
+
         self._load_interface('xo', 'XO Resources')
         self._load_interface('memphis', 'Memphis')
         self._load_interface('logviewer', 'Log Viewer')
@@ -63,7 +62,7 @@ class Console:
         
         self.notebook.show()
         self.window.add(main_hbox)
-                
+
     def _load_interface(self, interface, label):
         mod = __import__(interface)
         widget = mod.Interface().widget
