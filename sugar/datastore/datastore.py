@@ -25,9 +25,17 @@ class DSMetadata(gobject.GObject):
                     ([]))
     }
 
-    def __init__(self, props={}):
+    def __init__(self, props=None):
         gobject.GObject.__init__(self)
-        self._props = props
+        if not props:
+            self._props = {}
+        else:
+            self._props = props
+        
+        default_keys = ['activity', 'mime_type']
+        for key in default_keys:
+            if not self._props.has_key(key):
+                self._props[key] = ''
 
     def __getitem__(self, key):
         return self._props[key]
@@ -88,7 +96,7 @@ def create():
     return DSObject(object_id=None, metadata=DSMetadata(), file_path=None)
 
 def write(ds_object, reply_handler=None, error_handler=None):
-    logging.debug('datastore.write')
+    logging.debug('datastore.write: %r' % ds_object.metadata.get_dictionary())
     if ds_object.object_id:
         dbus_helpers.update(ds_object.object_id,
                             ds_object.metadata.get_dictionary(),

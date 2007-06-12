@@ -17,9 +17,6 @@
 """D-bus service providing access to the shell's functionality"""
 import dbus
 
-from sugar.activity import ActivityRegistry
-from sugar.activity import ActivityInfo
-
 from model import bundleregistry
 
 _DBUS_SERVICE = "org.laptop.Shell"
@@ -77,8 +74,18 @@ class ShellService(dbus.service.Object):
         return registry.add_bundle(bundle_path)
 
     @dbus.service.method(_DBUS_ACTIVITY_REGISTRY_IFACE,
+                         in_signature="s", out_signature="a{sv}")
+    def GetActivity(self, service_name):
+        registry = bundleregistry.get_registry()
+        bundle = registry.get_bundle(service_name)
+        if not bundle:
+            return {}
+        
+        return self._bundle_to_dict(bundle)
+
+    @dbus.service.method(_DBUS_ACTIVITY_REGISTRY_IFACE,
                          in_signature="s", out_signature="aa{sv}")
-    def GetActivitiesForName(self, name):
+    def FindActivity(self, name):
         result = []
         key = name.lower()
 
@@ -86,8 +93,7 @@ class ShellService(dbus.service.Object):
             name = bundle.get_name().lower()
             service_name = bundle.get_service_name().lower()
             if name.find(key) != -1 or service_name.find(key) != -1:
-                info = self._bundle_to_activity_info(bundle)
-                result.append(info.to_dict())
+                result.append(self._bundle_to_dict(bundle))
 
         return result
 
@@ -97,9 +103,8 @@ class ShellService(dbus.service.Object):
         result = []
 
         for bundle in bundleregistry.get_registry():
-            if mime_type in bundle.get_mime_types():
-                info = self._bundle_to_activity_info(bundle)
-                result.append(info.to_dict())
+            if bundle.get_mime_types() and mime_type in bundle.get_mime_types():
+                result.append(self._bundle_to_dict(bundle))
 
         return result
 
@@ -135,6 +140,8 @@ class ShellService(dbus.service.Object):
         if new_id:
             self.CurrentActivityChanged(new_id)
 
-    def _bundle_to_activity_info(self, bundle):
-        return ActivityInfo(bundle.get_name(), bundle.get_icon(),
-                            bundle.get_service_name(), bundle.get_path())
+    def _bundle_to_dict(self, bundle):
+        return {'name': bundle.get_name(),
+                'icon': bundle.get_icon(),
+                'service_name': bundle.get_service_name(),
+                'path': bundle.get_path()}
