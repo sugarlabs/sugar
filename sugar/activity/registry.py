@@ -32,13 +32,6 @@ class ActivityInfo(object):
         self.service_name = service_name
         self.path = path
 
-    def to_dict(self):
-        return { 'name'         : self.name,
-                 'icon'         : self.icon,
-                 'service_name' : self.service_name,
-                 'path'         : self.path
-                }
-
 class ActivityRegistry(object):
     def __init__(self):
         bus = dbus.SessionBus()
@@ -53,10 +46,19 @@ class ActivityRegistry(object):
 
         return result
 
-    def get_activities_for_name(self, name):
-        info_list = self._registry.GetActivitiesForName(name)
+    def get_activity(self, service_name):
+        info_dict = self._registry.GetActivity(service_name)
+        return _activity_info_from_dict(info_dict)
+
+    def find_activity(self, name):
+        info_list = self._registry.FindActivity(name)
         return self._convert_info_list(info_list)
 
     def get_activities_for_type(self, mime_type):
         info_list = self._registry.GetActivitiesForType(mime_type)
         return self._convert_info_list(info_list)
+
+_registry = ActivityRegistry()
+
+def get_registry():
+    return _registry

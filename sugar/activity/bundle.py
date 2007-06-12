@@ -93,7 +93,7 @@ class Bundle:
             logging.error('%s must specify exec or class' % self._path)
 
         if cp.has_option(section, 'mime_types'):
-            mime_list = cp.get(section, 'show_launcher')
+            mime_list = cp.get(section, 'mime_types')
             self._mime_types = mime_list.strip(';')
 
         if cp.has_option(section, 'show_launcher'):

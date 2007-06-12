@@ -27,7 +27,8 @@ class XO_Battery(gtk.Fixed):
     def __init__(self):
         gtk.Fixed.__init__(self)
 
-        self.frame = gtk.Frame('Battery Status')
+        self._frame_text = 'Battery Status'
+        self.frame = gtk.Frame(self._frame_text)
         self.set_border_width(10)
                 
         self._battery_charge = self._get_battery_status()
@@ -76,19 +77,15 @@ class XO_Battery(gtk.Fixed):
         self.add(self.frame)
         self.show_all()
 
-        # Update every 2 seconds
-        gobject.timeout_add(2000, self._update_battery_status)
-        
-    def _update_battery_status(self):
+    def update_status(self):
         
         new_charge = self._get_battery_status()
-        
+        frame_label = str(self._battery_charge) + '%'
+
         if new_charge != self._battery_charge:
             self._battery_charge = self._get_battery_status()
-            self.label_charge_value.set_text(str(self._battery_charge) + '%')
+            self.label_charge_value.set_text(frame_label)
             self._battery_box.set_capacity(self._battery_charge)
-
-        return True
 
     def _get_battery_status(self):
         battery_class_path = '/sys/class/battery/psu_0/'

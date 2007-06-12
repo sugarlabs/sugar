@@ -15,7 +15,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
-import gobject
 import os
 import shutil
 import dbus
@@ -32,14 +31,13 @@ PREVIEW_KEY = 'PREVIEW'
 ACTIVITY_KEY = 'ACTIVITY'
 FORMATS_KEY = 'FORMATS'
 
-class ClipboardDBusServiceHelper(dbus.service.Object):
+class ClipboardService(dbus.service.Object):
 
     _CLIPBOARD_DBUS_INTERFACE = "org.laptop.Clipboard"
     _CLIPBOARD_OBJECT_PATH = "/org/laptop/Clipboard"
     _CLIPBOARD_OBJECTS_PATH = _CLIPBOARD_OBJECT_PATH + "/Objects/"
 
-    def __init__(self, parent):
-        self._parent = parent
+    def __init__(self):
         self._objects = {}
         self._next_id = 0
 
@@ -175,13 +173,3 @@ class ClipboardDBusServiceHelper(dbus.service.Object):
     def object_state_changed(self, object_path, values):
         pass
 
-class ClipboardService(object):
-    def __init__(self):
-        self._dbus_helper = ClipboardDBusServiceHelper(self)
-
-    def run(self):
-        loop = gobject.MainLoop()
-        try:
-            loop.run()
-        except KeyboardInterrupt:
-            print 'Ctrl+C pressed, exiting...'

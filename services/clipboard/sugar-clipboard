@@ -35,11 +35,18 @@ from sugar import env
 sys.path.append(env.get_service_path('clipboard'))
 
 from clipboardservice import ClipboardService
+from objecttypeservice import ObjectTypeRegistry
 
 logging.info('Starting clipboard service.')
 
 gobject.threads_init()
 dbus.glib.threads_init()
 
-app = ClipboardService()
-app.run()
+clipboard_service = ClipboardService()
+object_type_registry = ObjectTypeRegistry()
+
+loop = gobject.MainLoop()
+try:
+    loop.run()
+except KeyboardInterrupt:
+    print 'Ctrl+C pressed, exiting...'

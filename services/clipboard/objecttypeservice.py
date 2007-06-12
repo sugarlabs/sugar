@@ -17,46 +17,49 @@
 import dbus
 import dbus.service
 
-from sugar.objects.objecttype import ObjectType
-
 _REGISTRY_IFACE = "org.laptop.ObjectTypeRegistry"
 _REGISTRY_PATH = "/org/laptop/ObjectTypeRegistry"
 
 class ObjectTypeRegistry(dbus.service.Object):
     def __init__(self):
         bus = dbus.SessionBus()
-        bus_name = dbus.service.BusName(self._REGISTRY_IFACE, bus=bus)
-        dbus.service.Object.__init__(self, bus_name, self._REGISTRY_PATH)
+        bus_name = dbus.service.BusName(_REGISTRY_IFACE, bus=bus)
+        dbus.service.Object.__init__(self, bus_name, _REGISTRY_PATH)
 
         self._types = {}
 
-        self._add_primitive('Text', _('Text'), 'object-text',
-                            [ 'text/rtf' ])
-        self._add_primitive('Image', _('Image'), 'object-image',
+        from gettext import gettext as _
+        self._add_primitive('Text', _('Text'), 'theme:object-text',
+                            [ 'text/plain', 'text/rtf', 'application/pdf',
+                              'application/x-pdf' ])
+        self._add_primitive('Image', _('Image'), 'theme:object-image',
                             [ 'image/png' ])
 
     def _add_primitive(self, type_id, name, icon, mime_types):
-        object_type = ObjectType(type_id, name, icon, mime_types)
-        self._types.add(object_type)
+        object_type = {'type_id': type_id, 
+                       'name': name,
+                       'icon': icon,
+                       'mime_types': mime_types}
+        self._types[type_id] = object_type
 
     def _get_type_for_mime(self, mime_type):
         for object_type in self._types.values():
-            if mime_type in object_type.mime_types:
+            if mime_type in object_type['mime_types']:
                 return object_type
 
-    @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
+    @dbus.service.method(_REGISTRY_IFACE,
                          in_signature="s", out_signature="a{sv}")
     def GetType(self, type_id):
         if self._types.has_key(type_id):
-            return self._types[type_id].to_dict()
+            return self._types[type_id]
         else:
-            return []
+            return {}
 
-    @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
+    @dbus.service.method(_REGISTRY_IFACE,
                          in_signature="s", out_signature="a{sv}")
     def GetTypeForMIME(self, mime_type):
         object_type = self._get_type_for_mime(mime_type)
         if object_type:
-            return object_type.to_dict()
+            return object_type
         else:
-            return []
+            return {}

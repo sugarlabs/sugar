@@ -37,5 +37,3 @@ window, requesting sharing across the network, and basic
 "what type of application are you" queries.
 """
 
-from sugar.activity.registry import ActivityRegistry
-from sugar.activity.registry import ActivityInfo
