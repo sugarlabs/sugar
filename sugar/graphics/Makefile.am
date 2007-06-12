@@ -23,6 +23,7 @@ sugar_PYTHON =			\
 	toolbar.py		\
 	toolbox.py		\
 	toolbutton.py		\
+	toolcombobox.py		\
 	units.py		\
 	window.py		\
 	xocolor.py
