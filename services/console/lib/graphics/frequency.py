@@ -41,9 +41,8 @@ class HorizontalGraphic(gtk.DrawingArea):
 
         if event.area.x == 0:
             draw_all = True
-
             self._draw_border_lines(context)
-            context.stroke()            
+            context.stroke()
         else:
             draw_all = False
             context.rectangle(event.area.x, event.area.y, event.area.width, event.area.height)
@@ -75,9 +74,9 @@ class HorizontalGraphic(gtk.DrawingArea):
             height = self._height
             width = self._width
         else:
-            area_x = (length*self._GRAPH_OFFSET)
+            area_x = self._graph_x + (length*self._GRAPH_OFFSET)
             area_y = self._graph_y
-            width = self._GRAPH_OFFSET * 2
+            width = self._GRAPH_OFFSET*2
             height = self._graph_height
 
         self.queue_draw_area(area_x, area_y, width, height)
@@ -115,8 +114,8 @@ class HorizontalGraphic(gtk.DrawingArea):
 
         for percent in self._buffer[buffer_offset:length]:
             if buffer_offset == 0:
-                from_y = self._height - self._GRAPH_OFFSET
-                from_x = self._GRAPH_OFFSET
+                from_y = self._get_y(self._buffer[0])
+                from_x = self._graph_x
             else:
                 from_y = self._get_y(self._buffer[buffer_offset-1])
                 from_x = (freq * self._GRAPH_OFFSET)
@@ -131,14 +130,18 @@ class HorizontalGraphic(gtk.DrawingArea):
         context.stroke()
 
     def _get_y(self, percent):
-        y_value = self._GRAPH_OFFSET + (self._graph_height - ((percent*self._graph_height)/100))
-        return int(y_value) 
+        if percent==0:
+            percent = 1
+        
+        graph_y = ((self._height)/(100 - 1))*(percent - 1)
+        y = self._LINE_WIDTH + abs(abs(self._height - graph_y) - self._MARGIN*2)
+        return int(y)
 
     def _change_size_cb(self, widget, allocation):
         self._width = allocation.width
         self._height = allocation.height
 
         self._graph_x = self._MARGIN + self._LINE_WIDTH
-        self._graph_y = self._MARGIN + self._LINE_WIDTH
-        self._graph_width = self._width - (self._MARGIN + self._LINE_WIDTH)
-        self._graph_height = self._height - ((self._MARGIN + self._LINE_WIDTH)*2)
+        self._graph_y = self._MARGIN
+        self._graph_width = self._width - (self._MARGIN*2 + self._LINE_WIDTH)
+        self._graph_height = self._height - ((self._MARGIN*2 + self._LINE_WIDTH))

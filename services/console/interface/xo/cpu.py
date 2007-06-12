@@ -75,7 +75,7 @@ class CPU_Usage:
 
         self._times +=1
         self._last_jiffies = used_jiffies
-        
+
         return pcpu
 
 class XO_CPU(gtk.Frame):
@@ -85,7 +85,6 @@ class XO_CPU(gtk.Frame):
         gtk.Frame.__init__(self, 'System CPU Usage')
         self.set_border_width(10)
 
-        self._updated = False
         width = (gtk.gdk.screen_width() * 99 / 100) - 50
         height = (gtk.gdk.screen_height() * 15 / 100) - 20
 
@@ -100,15 +99,16 @@ class XO_CPU(gtk.Frame):
         self.add(fixed)
 
         self._DRW_CPU = CPU_Usage()
-        self._DRW_CPU.frequency = 1000 # 1 Second
+        self._DRW_CPU.frequency = 1200 # 1 Second
 
         gobject.timeout_add(self._DRW_CPU.frequency, self._update_cpu_usage)
 
     def _update_cpu_usage(self):
+        print "update XO CPU"
         self._cpu = self._DRW_CPU._get_CPU_usage()
-        self._updated = True
-
         self.set_label('System CPU Usage: ' + str(self._cpu) + '%')
+
         # Draw the value into the graphic
         self._graphic.draw_value(self._cpu)
+
         return True
