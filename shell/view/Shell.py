@@ -223,7 +223,7 @@ class Shell(gobject.GObject):
         jobject.metadata['buddies'] = ''
         jobject.metadata['preview'] = ''
         jobject.metadata['icon-color'] = profile.get_color().to_string()
-        jobject.metadata['mime-type'] = 'image/png'
+        jobject.metadata['mime_type'] = 'image/png'
         jobject.file_path = file_path
         datastore.write(jobject)
 
