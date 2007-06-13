@@ -660,6 +660,21 @@ focus_out_event_cb(GtkWidget *widget, GdkEventFocus *event)
 }
 
 static void
+popup_unmap_cb(GtkWidget *popup, SugarAddressEntry *entry)
+{
+    g_signal_handlers_unblock_by_func(entry, focus_out_event_cb, NULL);
+}
+
+static void
+populate_popup_cb(SugarAddressEntry *entry, GtkWidget *menu)
+{
+    g_signal_handlers_block_by_func(entry, focus_out_event_cb, NULL);
+
+	g_signal_connect(menu, "unmap",
+					 G_CALLBACK(popup_unmap_cb), entry);
+}
+
+static void
 sugar_address_entry_init(SugarAddressEntry *entry)
 {
 	entry->progress = 0.0;
@@ -674,4 +689,6 @@ sugar_address_entry_init(SugarAddressEntry *entry)
 					 G_CALLBACK(entry_changed_cb), NULL);
 	g_signal_connect(entry, "button-press-event",
 					 G_CALLBACK(button_press_event_cb), NULL);
+	g_signal_connect(entry, "populate-popup",
+					 G_CALLBACK(populate_popup_cb), NULL);
 }
