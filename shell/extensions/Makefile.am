@@ -22,8 +22,6 @@ _extensions_la_SOURCES =	\
 	$(BUILT_SOURCES)	\
 	eggaccelerators.h	\
 	eggaccelerators.c	\
-	sugar-audio-manager.c	\
-	sugar-audio-manager.h	\
 	sugar-key-grabber.h	\
 	sugar-key-grabber.c	\
 	_extensionsmodule.c

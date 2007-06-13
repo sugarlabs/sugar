@@ -5,7 +5,6 @@ headers
 
 #include "pygobject.h"
 #include "sugar-key-grabber.h"
-#include "sugar-audio-manager.h"
 
 %%
 modulename extensions

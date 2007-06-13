@@ -47,7 +47,6 @@ _actions_table = {
 class KeyHandler(object):
     def __init__(self, shell):
         self._shell = shell
-        self._audio_manager = hardwaremanager.get_audio_manager()
         self._screen_rotation = 0
         self._key_pressed = None
         self._keycode_pressed = 0
@@ -64,17 +63,15 @@ class KeyHandler(object):
 
     def _set_display_brightness(self, level):
         hw_manager = hardwaremanager.get_hardware_manager()
-        if hw_manager:
-            hw_manager.set_display_brightness(level)
-            if level == 0:
-                self._set_display_mode(hardwaremanager.B_AND_W_MODE)
-            else:
-                self._set_display_mode(hardwaremanager.COLOR_MODE)
+        hw_manager.set_display_brightness(level)
+        if level == 0:
+            self._set_display_mode(hardwaremanager.B_AND_W_MODE)
+        else:
+            self._set_display_mode(hardwaremanager.COLOR_MODE)
 
     def _set_display_mode(self, mode):
         hw_manager = hardwaremanager.get_hardware_manager()
-        if hw_manager:
-            hw_manager.set_display_mode(mode)
+        hw_manager.set_display_mode(mode)
 
     def handle_zoom_mesh(self):
         self._shell.set_zoom_level(sugar.ZOOM_MESH)
@@ -101,16 +98,20 @@ class KeyHandler(object):
         self._set_display_brightness(15)
 
     def handle_volume_1(self):
-        self._audio_manager.set_volume(0)
+        hw_manager = hardwaremanager.get_hardware_manager()
+        hw_manager.set_volume(0)
 
     def handle_volume_2(self):
-        self._audio_manager.set_volume(50)
+        hw_manager = hardwaremanager.get_hardware_manager()
+        hw_manager.set_volume(50)
 
     def handle_volume_3(self):
-        self._audio_manager.set_volume(80)
+        hw_manager = hardwaremanager.get_hardware_manager()
+        hw_manager.set_volume(80)
 
     def handle_volume_4(self):
-        self._audio_manager.set_volume(100)
+        hw_manager = hardwaremanager.get_hardware_manager()
+        hw_manager.set_volume(100)
 
     def handle_color_mode(self):
         self._set_display_mode(hardwaremanager.COLOR_MODE)
