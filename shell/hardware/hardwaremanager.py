@@ -46,20 +46,28 @@ class HardwareManager(object):
 
         for track in self._mixer.list_tracks():
             if track.flags & gst.interfaces.MIXER_TRACK_MASTER:
-                self._mixer_master = track
+                self._master = track
 
     def set_volume(self, volume):
+        if not self._mixer or not self._master:
+            logging.error('Cannot set the volume')
+
         if volume < 0 or volume > 100:
             logging.error('Trying to set an invalid volume value.')
             return
 
-        max_volume = self._mixer_master.max_volume
-        min_volume = self._mixer_master.min_volume
+        max_volume = self._master.max_volume
+        min_volume = self._master.min_volume
 
         volume = (volume / 100.0) * (max_volume - min_volume) + min_volume
-        volume_list = [ volume ] * self._mixer_master.num_channels
+        volume_list = [ volume ] * self._master.num_channels
 
-        self._mixer.set_volume(self._mixer_master, tuple(volume_list))
+        self._mixer.set_volume(self._master, tuple(volume_list))
+
+    def set_mute(self, mute):
+        if not self._mixer or not self._master:
+            logging.error('Cannot mute the audio channel')
+        self._mixer.set_mute(self._master, mute)
 
     def set_display_mode(self, mode):
         if not self._service:

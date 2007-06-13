@@ -99,18 +99,21 @@ class KeyHandler(object):
 
     def handle_volume_1(self):
         hw_manager = hardwaremanager.get_hardware_manager()
-        hw_manager.set_volume(0)
+        hw_manager.set_mute(True)
 
     def handle_volume_2(self):
         hw_manager = hardwaremanager.get_hardware_manager()
+        hw_manager.set_mute(False)
         hw_manager.set_volume(50)
 
     def handle_volume_3(self):
         hw_manager = hardwaremanager.get_hardware_manager()
+        hw_manager.set_mute(False)
         hw_manager.set_volume(80)
 
     def handle_volume_4(self):
         hw_manager = hardwaremanager.get_hardware_manager()
+        hw_manager.set_mute(False)
         hw_manager.set_volume(100)
 
     def handle_color_mode(self):
