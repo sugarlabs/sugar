@@ -20,7 +20,7 @@ import sys
 import os
 from ConfigParser import ConfigParser
 
-from sugar.activity import ActivityRegistry
+from sugar import activity
 from sugar import env
 
 # Setup the environment so that we run inside the Sugar shell
@@ -51,8 +51,7 @@ def print_help(self):
 activity_info = None
 
 if len(sys.argv) > 1:
-    registry = ActivityRegistry()
-    activities = registry.find_activity(sys.argv[1])
+    activities = activity.get_registry().find_activity(sys.argv[1])
     if len(activities) > 0:
         activity_info = activities[0]
 

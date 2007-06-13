@@ -36,4 +36,6 @@ class.  This class allows for querying the ID of the root
 window, requesting sharing across the network, and basic
 "what type of application are you" queries.
 """
-
+from sugar.activity.registry import ActivityRegistry
+from sugar.activity.registry import get_registry
+from sugar.activity.registry import ActivityInfo

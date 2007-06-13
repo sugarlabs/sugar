@@ -58,7 +58,10 @@ class ActivityRegistry(object):
         info_list = self._registry.GetActivitiesForType(mime_type)
         return self._convert_info_list(info_list)
 
-_registry = ActivityRegistry()
+_registry = None
 
 def get_registry():
+    global _registry
+    if not _registry:
+        _registry = ActivityRegistry()
     return _registry
