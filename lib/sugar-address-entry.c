@@ -494,16 +494,30 @@ sugar_address_entry_expose(GtkWidget      *widget,
 }
 
 static void
+entry_changed_cb(SugarAddressEntry *entry)
+{
+    if (entry->address) {
+        g_free (entry->address);
+    }
+
+    entry->address = gtk_editable_get_chars(GTK_EDITABLE(entry), 0, -1);
+}
+
+static void
 update_entry_text(SugarAddressEntry *address_entry,
 				  gboolean           has_focus)
 {
-	if (has_focus) {
+    g_signal_handlers_block_by_func(address_entry, entry_changed_cb, NULL);
+
+	if (has_focus || address_entry->title == NULL) {
 		gtk_entry_set_text(GTK_ENTRY(address_entry),
 						   address_entry->address);
 	} else {
 		gtk_entry_set_text(GTK_ENTRY(address_entry),
 						   address_entry->title);
 	}
+
+    g_signal_handlers_unblock_by_func(address_entry, entry_changed_cb, NULL);
 }
 
 static void
@@ -656,6 +670,8 @@ sugar_address_entry_init(SugarAddressEntry *entry)
 					 G_CALLBACK(focus_in_event_cb), NULL);
 	g_signal_connect(entry, "focus-out-event",
 					 G_CALLBACK(focus_out_event_cb), NULL);
+	g_signal_connect(entry, "changed",
+					 G_CALLBACK(entry_changed_cb), NULL);
 	g_signal_connect(entry, "button-press-event",
 					 G_CALLBACK(button_press_event_cb), NULL);
 }
