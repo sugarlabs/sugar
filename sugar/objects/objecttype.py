@@ -49,7 +49,10 @@ class ObjectTypeRegistry(object):
         type_dict = self._registry.GetTypeForMIME(mime_type)
         return _object_type_from_dict(type_dict)
 
-_registry = ObjectTypeRegistry()
+_registry = None
 
 def get_registry():
+    global _registry
+    if not _registry:
+        _registry = ObjectTypeRegistry()
     return _registry
