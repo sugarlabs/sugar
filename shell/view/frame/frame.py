@@ -183,6 +183,8 @@ class Frame(object):
             self._animator.connect('completed', self._hide_completed_cb)
 
     def show(self):
+        self.mode = MODE_FORCE
+
         if self.visible:
             return
         if self._animator:
@@ -195,7 +197,6 @@ class Frame(object):
         self._event_area.hide()
 
         self.visible = True
-        self.mode = MODE_FORCE
 
     def get_popup_context(self):
         return self._popup_context
@@ -315,6 +316,9 @@ class Frame(object):
             self._mouse_listener.mouse_leave()
 
     def _enter_notify_cb(self, window, event):
+        # FIXME clicks cause leave/notify, ignore
+        if event.state == gtk.gdk.BUTTON1_MASK:
+            return
         if self._hover:
             return
 
@@ -322,6 +326,9 @@ class Frame(object):
         self._mouse_listener.mouse_enter()
 
     def _leave_notify_cb(self, window, event):
+        # FIXME clicks cause leave/notify, ignore
+        if event.state == gtk.gdk.BUTTON1_MASK:
+            return
         if not self._hover:
             return
 
