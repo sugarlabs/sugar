@@ -90,13 +90,13 @@ class HardwareManager(object):
         else:
             self._service.set_keyboard_brightness(True)            
 
-def get_hardware_manager():
-    return _hardware_manager
+def get_manager():
+    return _manager
 
 def get_network_manager():
     return _network_manager
 
-_hardware_manager = HardwareManager()
+_manager = HardwareManager()
 
 try:
     _network_manager = NMClient()

@@ -62,7 +62,7 @@ class KeyHandler(object):
             self._key_grabber.grab(key)            
 
     def _set_display_brightness(self, level):
-        hw_manager = hardwaremanager.get_hardware_manager()
+        hw_manager = hardwaremanager.get_manager()
         hw_manager.set_display_brightness(level)
         if level == 0:
             self._set_display_mode(hardwaremanager.B_AND_W_MODE)
@@ -70,7 +70,7 @@ class KeyHandler(object):
             self._set_display_mode(hardwaremanager.COLOR_MODE)
 
     def _set_display_mode(self, mode):
-        hw_manager = hardwaremanager.get_hardware_manager()
+        hw_manager = hardwaremanager.get_manager()
         hw_manager.set_display_mode(mode)
 
     def handle_zoom_mesh(self):
@@ -98,21 +98,21 @@ class KeyHandler(object):
         self._set_display_brightness(15)
 
     def handle_volume_1(self):
-        hw_manager = hardwaremanager.get_hardware_manager()
+        hw_manager = hardwaremanager.get_manager()
         hw_manager.set_mute(True)
 
     def handle_volume_2(self):
-        hw_manager = hardwaremanager.get_hardware_manager()
+        hw_manager = hardwaremanager.get_manager()
         hw_manager.set_mute(False)
         hw_manager.set_volume(50)
 
     def handle_volume_3(self):
-        hw_manager = hardwaremanager.get_hardware_manager()
+        hw_manager = hardwaremanager.get_manager()
         hw_manager.set_mute(False)
         hw_manager.set_volume(80)
 
     def handle_volume_4(self):
-        hw_manager = hardwaremanager.get_hardware_manager()
+        hw_manager = hardwaremanager.get_manager()
         hw_manager.set_mute(False)
         hw_manager.set_volume(100)
 
@@ -156,7 +156,7 @@ class KeyHandler(object):
         mgr.Shutdown()
 
     def handle_keyboard_brightness(self):
-        hw_manager = hardwaremanager.get_hardware_manager()
+        hw_manager = hardwaremanager.get_manager()
         if hw_manager:
             hw_manager.toggle_keyboard_brightness()
 
