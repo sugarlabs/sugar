@@ -62,9 +62,12 @@ class ClipboardBox(hippo.CanvasBox):
         return self._owns_clipboard
 
     def _get_icon_at_coords(self, x, y):
+        box_x, box_y = self.get_context().get_position(self)
+        x -= box_x
+        y -= box_y
         for object_id, icon in self._icons.iteritems():
-            [icon_x, icon_y] = self.get_position(icon)
-            [icon_width, icon_height] = icon.get_allocation()
+            icon_x, icon_y = self.get_position(icon)
+            icon_width, icon_height = icon.get_allocation()
 
             if (x >= icon_x ) and (x <= icon_x + icon_width) and        \
                     (y >= icon_y ) and (y <= icon_y + icon_height):
@@ -88,11 +91,11 @@ class ClipboardBox(hippo.CanvasBox):
 
             # Copy the file, as it will be deleted when the dnd operation finishes.
             new_file_path = os.path.join(path, 'cb' + file_name)
-            shutil.copyfile(uri.path, new_file_path)
+            shutil.copyfile(uri[2], new_file_path)
 
             cb_service.add_object_format(object_id, 
                                          selection.type,
-                                         uri.scheme + "://" + new_file_path,
+                                         uri[0] + "://" + new_file_path,
                                          on_disk=True)
         else:
             cb_service.add_object_format(object_id, 
@@ -184,7 +187,7 @@ class ClipboardBox(hippo.CanvasBox):
         return True
 
     def drag_data_received_cb(self, widget, context, x, y, selection, targetType, time):
-        logging.debug('ClipboardBox: got data for target ' + selection.target)
+        logging.debug('ClipboardBox: got data for target %r' % selection.target)
         try:
             if selection:
                 object_id = self._context_map.get_object_id(context)
