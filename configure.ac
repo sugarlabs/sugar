@@ -17,7 +17,7 @@ AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
 
 AC_PATH_PROG(PYGTK_CODEGEN, pygtk-codegen-2.0, no)
 
-PKG_CHECK_MODULES(SHELL, pygtk-2.0 gtk+-2.0 gst-python-0.10)
+PKG_CHECK_MODULES(SHELL, pygtk-2.0 gtk+-2.0)
 
 PKG_CHECK_MODULES(LIB, gtk+-2.0)
 PKG_CHECK_MODULES(LIB_BINDINGS, pygtk-2.0)
