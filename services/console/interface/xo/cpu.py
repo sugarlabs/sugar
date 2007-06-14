@@ -27,7 +27,6 @@ import procmem
 from graphics.frequency import HorizontalGraphic
 
 class CPU_Usage:
-    
     _CPU_HZ = 0
     _last_jiffies = 0
     _times = 0
@@ -99,7 +98,7 @@ class XO_CPU(gtk.Frame):
         self.add(fixed)
 
         self._DRW_CPU = CPU_Usage()
-        self._DRW_CPU.frequency = 1200 # 1 Second
+        self._DRW_CPU.frequency = 1000 # 1 Second
 
         gobject.timeout_add(self._DRW_CPU.frequency, self._update_cpu_usage)
 
