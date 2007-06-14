@@ -69,6 +69,12 @@ class HardwareManager(object):
             logging.error('Cannot mute the audio channel')
         self._mixer.set_mute(self._master, mute)
 
+    def set_dcon_freeze(self, frozen):
+        if not self._service:
+            return
+
+        self._service.set_dcon_freeze(frozen)
+
     def set_display_mode(self, mode):
         if not self._service:
             return

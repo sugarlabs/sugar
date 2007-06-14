@@ -38,6 +38,8 @@ from view.keyhandler import KeyHandler
 from view.home.HomeWindow import HomeWindow
 from model import bundleregistry
 
+from hardware.hardwaremanager import get_hardware_manager
+
 class Shell(gobject.GObject):
     def __init__(self, model):
         gobject.GObject.__init__(self)
@@ -67,6 +69,9 @@ class Shell(gobject.GObject):
                            self._active_activity_changed_cb)
 
         self.start_activity('org.laptop.JournalActivity')
+
+        # Unfreeze the display when it's stable
+        get_hardware_manager().set_dcon_freeze(0)
 
     def _activity_started_cb(self, home_model, home_activity):
         activity_host = ActivityHost(home_activity)
