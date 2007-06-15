@@ -22,6 +22,8 @@ _SHELL_PATH = "/org/laptop/Shell"
 _REGISTRY_IFACE = "org.laptop.Shell.ActivityRegistry"
 
 def _activity_info_from_dict(info_dict):
+    if not info_dict:
+        return None
     return ActivityInfo(info_dict['name'], info_dict['icon'],
                         info_dict['service_name'], info_dict['path'])
 

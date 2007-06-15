@@ -1,58 +1,9 @@
-a#!/usr/bin/env python
+#!/usr/bin/env python
 import sys
-import os
-import zipfile
-import dbus
 
-from sugar import env
+from sugar.activity.bundle import Bundle
 
-DBUS_SERVICE = "org.laptop.Shell"
-DBUS_PATH = "/org/laptop/Shell"
-
-# We check here that all the files in the .xo are inside one only dir (bundle_root_dir).
-def get_bundle_root_dir(file_names):
-    bundle_root_dir = None
-    for file_name in file_names:
-        if not bundle_root_dir:
-            bundle_root_dir = file_name.split('/')[0]
-            if not bundle_root_dir.endswith('.activity'):
-                raise 'Incorrect bundle.'
-        else:
-            if not file_name.startswith(bundle_root_dir):
-                raise 'Incorrect bundle.'
-
-    return bundle_root_dir
-
-bus = dbus.SessionBus()
-proxy_obj = bus.get_object(DBUS_SERVICE, DBUS_PATH)
-dbus_service = dbus.Interface(proxy_obj, DBUS_SERVICE)
-
-bundle_dir = env.get_user_activities_path()
-if not os.path.isdir(bundle_dir):
-    os.mkdir(bundle_dir)
-
-zip_file = zipfile.ZipFile(sys.argv[1])
-file_names = zip_file.namelist()
-bundle_root_dir = get_bundle_root_dir(file_names)
-bundle_path = os.path.join(bundle_dir, bundle_root_dir)
-
-# FIXME: we need to support installing different versions of the same bundle.
-if os.path.exists(bundle_path):
-    raise IOError, 'This bundle is already installed as ' + bundle_path
-
-if os.spawnlp(os.P_WAIT, 'unzip', 'unzip', sys.argv[1], '-d', bundle_dir):
-    raise RuntimeError, 'An error occurred while extracting the .xo contents.'
-
-# notify shell of new bundle
-if not dbus_service.AddBundle(bundle_path):
-    # error, let's delete the just expanded bundle.
-    for root, dirs, files in os.walk(bundle_path, topdown=False):
-        for name in files:
-            os.remove(os.path.join(root, name))
-        for name in dirs:
-            os.rmdir(os.path.join(root, name))
-    os.rmdir(bundle_path)
-            
-    raise RuntimeError, 'Bundle is not well-formed.'
+bundle = Bundle(sys.argv[1])
+bundle.install()
 
 print "%s: '%s' installed." % (sys.argv[0], sys.argv[1])
