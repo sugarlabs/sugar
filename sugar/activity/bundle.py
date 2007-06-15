@@ -80,8 +80,7 @@ class Bundle:
     def _get_info_file(self):
         info_file = None
 
-        ext = os.path.splitext(self._path)[1]
-        if ext == '.activity':
+        if os.path.isdir(self._path):
             info_path = os.path.join(self._path, 'activity', 'activity.info')
             if os.path.isfile(info_path):
                 info_file = open(info_path)
@@ -158,8 +157,7 @@ class Bundle:
         linfo_file = None
         lang = locale.getdefaultlocale()[0]
 
-        ext = os.path.splitext(self._path)[1]
-        if ext == '.activity':
+        if os.path.isdir(self._path):
             linfo_path = os.path.join(self.get_locale_path(), lang, 'activity.linfo')
             if not os.path.isfile(linfo_path):
                 linfo_path = os.path.join(self.get_locale_path(), lang[:2], 'activity.linfo')
@@ -205,8 +203,7 @@ class Bundle:
 
     def get_icon(self):
         """Get the activity icon name"""
-        ext = os.path.splitext(self._path)[1]
-        if ext == '.activity':
+        if os.path.isdir(self._path):
             activity_path = os.path.join(self._path, 'activity')
             return os.path.join(activity_path, self._icon + '.svg')
         else:
