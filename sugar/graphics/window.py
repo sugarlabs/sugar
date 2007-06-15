@@ -53,3 +53,16 @@ class Window(gtk.Window):
         group = gtk.Window()
         group.realize()
         window.window.set_group(group.window)
+
+    def get_canvas_screenshot(self):
+        if not self.canvas:
+            return None
+
+        window = self.canvas.window
+        width, height = window.get_size()
+
+        screenshot = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, has_alpha=False,
+                                    bits_per_sample=8, width=width, height=height)
+        screenshot.get_from_drawable(window, window.get_colormap(), 0, 0, 0, 0,
+                                     width, height)
+        return screenshot

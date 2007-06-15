@@ -96,7 +96,7 @@ def create():
     return DSObject(object_id=None, metadata=DSMetadata(), file_path=None)
 
 def write(ds_object, reply_handler=None, error_handler=None):
-    logging.debug('datastore.write: %r' % ds_object.metadata.get_dictionary())
+    logging.debug('datastore.write')
     if ds_object.object_id:
         dbus_helpers.update(ds_object.object_id,
                             ds_object.metadata.get_dictionary(),

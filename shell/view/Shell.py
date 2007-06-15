@@ -214,13 +214,13 @@ class Shell(gobject.GObject):
         file_path = os.path.join(tempfile.gettempdir(), '%i' % time.time())
 
         window = gtk.gdk.get_default_root_window()
-        width, height = window.get_size();
-        x_orig, y_orig = window.get_origin();
+        width, height = window.get_size()
+        x_orig, y_orig = window.get_origin()
 
         screenshot = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, has_alpha=False,
                                     bits_per_sample=8, width=width, height=height)
         screenshot.get_from_drawable(window, window.get_colormap(), x_orig, y_orig, 0, 0,
-                                     width, height);
+                                     width, height)
         screenshot.save(file_path, "png")
 
         jobject = datastore.create()

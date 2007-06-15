@@ -27,9 +27,11 @@ import time
 import tempfile
 
 import gtk, gobject
-
+import dbus
+        
 from sugar.presence import presenceservice
 from sugar.activity.activityservice import ActivityService
+from sugar.graphics import units
 from sugar.graphics.window import Window
 from sugar.graphics.toolbox import Toolbox
 from sugar.graphics.toolbutton import ToolButton
@@ -276,6 +278,25 @@ class Activity(Window, gtk.Container):
 
     def save(self):
         """Request that the activity is saved to the Journal."""
+        preview_pixbuf = self.get_canvas_screenshot()
+        preview_pixbuf = preview_pixbuf.scale_simple(units.grid_to_pixels(4),
+                                                     units.grid_to_pixels(4),
+                                                     gtk.gdk.INTERP_BILINEAR)
+
+        # TODO: Find a way of taking a png out of the pixbuf without saving to a temp file.
+        fd, file_path = tempfile.mkstemp('.png')
+        del fd
+        preview_pixbuf.save(file_path, 'png')
+        f = open(file_path)
+        try:
+            preview_data = f.read()
+        finally:
+            f.close()
+            os.remove(file_path)
+
+        # TODO: Take this out when the datastore accepts binary data.        
+        import base64
+        self.metadata['preview'] = base64.b64encode(preview_data)
         try:
             file_path = os.path.join(tempfile.gettempdir(), '%i' % time.time())
             self.write_file(file_path)
