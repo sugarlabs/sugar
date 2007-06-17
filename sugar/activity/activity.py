@@ -280,7 +280,7 @@ class Activity(Window, gtk.Container):
         """Request that the activity is saved to the Journal."""
         preview_pixbuf = self.get_canvas_screenshot()
         preview_pixbuf = preview_pixbuf.scale_simple(units.grid_to_pixels(4),
-                                                     units.grid_to_pixels(4),
+                                                     units.grid_to_pixels(3),
                                                      gtk.gdk.INTERP_BILINEAR)
 
         # TODO: Find a way of taking a png out of the pixbuf without saving to a temp file.
