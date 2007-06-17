@@ -31,6 +31,10 @@ PREVIEW_KEY = 'PREVIEW'
 ACTIVITY_KEY = 'ACTIVITY'
 FORMATS_KEY = 'FORMATS'
 
+TYPE_KEY = 'TYPE'
+DATA_KEY = 'DATA'
+ON_DISK_KEY = 'ON_DISK'
+
 class ClipboardService(dbus.service.Object):
 
     _CLIPBOARD_DBUS_INTERFACE = "org.laptop.Clipboard"
@@ -58,7 +62,7 @@ class ClipboardService(dbus.service.Object):
             return
 
         format = formats.values()[0]
-        if not format.get_on_disk():
+        if not format.is_on_disk():
             return
 
         if not len(cb_object.get_activity()):
@@ -154,12 +158,15 @@ class ClipboardService(dbus.service.Object):
         return dbus.Dictionary(result_dict)
 
     @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
-                         in_signature="os", out_signature="ay")
+                         in_signature="os", out_signature="a{sv}")
     def get_object_data(self, object_path, format_type):       
         cb_object = self._objects[str(object_path)]
-        formats = cb_object.get_formats()
-        return dbus.ByteArray(formats[format_type].get_data())
-    
+        format = cb_object.get_formats()[format_type]
+        result_dict = {TYPE_KEY: format.get_type(),
+                DATA_KEY: dbus.ByteArray(format.get_data()),
+                ON_DISK_KEY: format.is_on_disk()}
+        return dbus.Dictionary(result_dict)
+
     # dbus signals
     @dbus.service.signal(_CLIPBOARD_DBUS_INTERFACE, signature="os")
     def object_added(self, object_path, name):

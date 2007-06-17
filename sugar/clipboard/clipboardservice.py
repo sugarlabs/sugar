@@ -10,6 +10,10 @@ PREVIEW_KEY = 'PREVIEW'
 ACTIVITY_KEY = 'ACTIVITY'
 FORMATS_KEY = 'FORMATS'
 
+TYPE_KEY = 'TYPE'
+DATA_KEY = 'DATA'
+ON_DISK_KEY = 'ON_DISK'
+
 DBUS_SERVICE = "org.laptop.Clipboard"
 DBUS_INTERFACE = "org.laptop.Clipboard"
 DBUS_PATH = "/org/laptop/Clipboard"
@@ -184,12 +188,15 @@ class ClipboardService(gobject.GObject):
         object_id -- dbus path as returned from add_object
         formatType -- format specifier XXX of what description 
         
-        returns data as a string
+        returns dictionary with 
+            TYPE_KEY: str,
+            DATA_KEY: str,
+            ON_DISK_KEY: bool
         """
         return self._dbus_service.get_object_data(dbus.ObjectPath(object_id),
                                                   formatType,
                                                   byte_arrays=True)
-        
+
 _clipboard_service = None
 def get_instance():
     """Retrieve this process's interface to the clipboard service"""

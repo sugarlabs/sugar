@@ -71,5 +71,5 @@ class Format:
     def _set_data(self, data):
         self._data = data
 
-    def get_on_disk(self):
+    def is_on_disk(self):
         return self._on_disk

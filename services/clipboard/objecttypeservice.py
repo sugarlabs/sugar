@@ -33,7 +33,7 @@ class ObjectTypeRegistry(dbus.service.Object):
                             [ 'text/plain', 'text/rtf', 'application/pdf',
                               'application/x-pdf' ])
         self._add_primitive('Image', _('Image'), 'theme:object-image',
-                            [ 'image/png' ])
+                            [ 'image/png', 'image/gif', 'image/jpeg' ])
 
     def _add_primitive(self, type_id, name, icon, mime_types):
         object_type = {'type_id': type_id, 
