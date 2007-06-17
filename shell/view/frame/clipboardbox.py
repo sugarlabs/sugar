@@ -87,15 +87,15 @@ class ClipboardBox(hippo.CanvasBox):
             if len(uris) > 1:
                 raise NotImplementedError('Multiple uris in text/uri-list still not supported.')
             uri = urlparse.urlparse(uris[0])
-            path, file_name = os.path.split(uri[2])
+            path, file_name = os.path.split(uri.path)
 
             # Copy the file, as it will be deleted when the dnd operation finishes.
             new_file_path = os.path.join(path, 'cb' + file_name)
-            shutil.copyfile(uri[2], new_file_path)
+            shutil.copyfile(uri.path, new_file_path)
 
             cb_service.add_object_format(object_id, 
                                          selection.type,
-                                         uri[0] + "://" + new_file_path,
+                                         "file://" + new_file_path,
                                          on_disk=True)
         else:
             cb_service.add_object_format(object_id, 

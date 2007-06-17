@@ -598,7 +598,6 @@ class UriListFileType(FileType):
         if len(uris) == 1:
             uri = urlparse.urlparse(uris[0])
             ext = posixpath.splitext(uri[2])[1]
-            logging.debug(ext)
             # FIXME: Bad hack, the type registry should treat text/uri-list as a special case.
             if ext in ['.jpg', '.jpeg', '.gif', '.png', '.svg']:
                 return True

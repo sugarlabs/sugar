@@ -1,5 +1,6 @@
 import os
 import logging
+import urlparse
 
 import typeregistry
 
@@ -58,7 +59,8 @@ class Format:
 
     def destroy(self):
         if self._on_disk:
-            os.remove(self._data.replace('file://', ''))
+            uri = urlparse.urlparse(self._data)
+            os.remove(uri.path)
 
     def get_type(self):
         return self._type
