@@ -32,7 +32,7 @@ class DSMetadata(gobject.GObject):
         else:
             self._props = props
         
-        default_keys = ['activity', 'mime_type']
+        default_keys = ['activity', 'mime_type', 'title_set_by_user']
         for key in default_keys:
             if not self._props.has_key(key):
                 self._props[key] = ''
