@@ -3,3 +3,8 @@ shell/intro/intro.py
 shell/view/BuddyMenu.py
 shell/view/clipboardmenu.py
 shell/view/frame/ZoomBox.py
+services/clipboard/objecttypeservice.py
+shell/view/Shell.py
+shell/view/clipboardicon.py
+shell/view/home/MeshBox.py
+sugar/activity/activity.py
