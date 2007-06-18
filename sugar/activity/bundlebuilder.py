@@ -185,6 +185,10 @@ def cmd_uninstall(prefix):
         shutil.rmtree(path)
 
 def cmd_genpot(manifest):
+    locale_path = os.path.join(_get_source_path(), 'locale')
+    if not os.path.isdir(locale_path):
+        os.mkdir(locale_path)
+
     python_files = []
     file_list = _get_file_list(manifest)
     for file_name in file_list:
