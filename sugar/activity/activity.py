@@ -84,6 +84,7 @@ class ActivityToolbar(gtk.Toolbar):
 
     def _close_clicked_cb(self, button):
         self._activity.close()
+        self._activity.destroy()
 
     def _jobject_updated_cb(self, jobject):
         self.title.set_text(jobject['title'])
@@ -182,8 +183,8 @@ class Activity(Window, gtk.Container):
         """
         Window.__init__(self)
 
-        self.connect('destroy', self._destroy_cb)
         self.connect('realize', self._realize_cb)
+        self.connect('delete-event', self._delete_event_cb)
 
         self._active = False
         self._activity_id = handle.activity_id
@@ -349,22 +350,18 @@ class Activity(Window, gtk.Container):
         wm.set_bundle_id(window.window, self.get_service_name())
         wm.set_activity_id(window.window, self._activity_id)
 
-    def _destroy_cb(self, window):
-        """Destroys our ActivityService and sharing service"""
+    def _delete_event_cb(self, window, event):
+        self.close()
+        return False
+
+    def close(self):
         if self._bus:
             del self._bus
             self._bus = None
         if self._shared_activity:
             self._shared_activity.leave()
 
-    def close(self):
-        if self._jobject:
-            try:
-                self.save()
-            except:
-                self.destroy()
-                raise
-        self.destroy()
+        self.save()
 
     def get_metadata(self):
         if self._jobject:
