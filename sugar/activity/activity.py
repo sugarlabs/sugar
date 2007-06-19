@@ -51,7 +51,7 @@ class ActivityToolbar(gtk.Toolbar):
             self.title = gtk.Entry()
             self.title.set_size_request(int(gtk.gdk.screen_width() / 6), -1)
             self.title.set_text(activity.metadata['title'])
-            self.title.connect('focus-out-event', self._title_focus_out_event_cb)
+            self.title.connect('changed', self._title_changed_cb)
             self._add_widget(self.title)
 
             activity.metadata.connect('updated', self._jobject_updated_cb)
@@ -79,6 +79,8 @@ class ActivityToolbar(gtk.Toolbar):
         self.insert(self.close, -1)
         self.close.show()
 
+        self._update_title_sid = None
+
     def _share_clicked_cb(self, button):
         self._activity.share()
 
@@ -89,10 +91,16 @@ class ActivityToolbar(gtk.Toolbar):
     def _jobject_updated_cb(self, jobject):
         self.title.set_text(jobject['title'])
 
-    def _title_focus_out_event_cb(self, entry, event):
-        if self._activity.metadata['title'] != self.title.get_text():
-            self._activity.metadata['title'] = self.title.get_text()
-            self._activity.save()
+    def _title_changed_cb(self, entry):
+        if not self._update_title_sid:
+            self._update_title_sid = gobject.timeout_add(1000, self._update_title_cb)
+
+    def _update_title_cb(self):
+        self._activity.metadata['title'] = self.title.get_text()
+        self._activity.metadata['title_set_by_user'] = '1'
+        self._activity.save()
+        self._update_title_sid = None
+        return False
 
     def _add_widget(self, widget, expand=False):
         tool_item = gtk.ToolItem()
@@ -214,6 +222,7 @@ class Activity(Window, gtk.Container):
             logging.debug('Creating a jobject.')
             self._jobject = datastore.create()
             self._jobject.metadata['title'] = _('%s Activity') % get_bundle_name()
+            self._jobject.metadata['title_set_by_user'] = '0'
             self._jobject.metadata['activity'] = self.get_service_name()
             self._jobject.metadata['keep'] = '0'
             self._jobject.metadata['buddies'] = ''
