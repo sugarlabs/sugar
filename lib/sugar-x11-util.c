@@ -36,7 +36,7 @@ sugar_x11_util_set_string_property(GdkWindow  *window,
 
     display = gdk_drawable_get_display(window);
     prop_atom = gdk_x11_get_xatom_by_name_for_display(display, property);
-    string_atom = gdk_x11_get_xatom_by_name_for_display(display, "STRING_ATOM");
+    string_atom = gdk_x11_get_xatom_by_name_for_display(display, "STRING");
     prop_text = gdk_utf8_to_string_target(value);
 
     XChangeProperty(GDK_DISPLAY_XDISPLAY(display),
@@ -65,7 +65,7 @@ sugar_x11_util_get_string_property(GdkWindow  *window,
 
     display = gdk_drawable_get_display(window);
     prop_atom = gdk_x11_get_xatom_by_name_for_display(display, property);
-    string_atom = gdk_x11_get_xatom_by_name_for_display(display, "STRING_ATOM");
+    string_atom = gdk_x11_get_xatom_by_name_for_display(display, "STRING");
 
     result = XGetWindowProperty(GDK_DISPLAY_XDISPLAY(display),
                                 GDK_WINDOW_XID(window),
