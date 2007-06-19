@@ -16,18 +16,23 @@
 # Boston, MA 02111-1307, USA.
 
 import gtk
+import gobject
 import time
 
 from sugar.graphics.icon import Icon
 from sugar.graphics.palette import *
 
 class ToolButton(gtk.ToolButton):
-    _POPUP_PALETTE_DELAY = 0.15
+    _POPUP_PALETTE_DELAY = 100
 
     def __init__(self, icon_name=None):
         gtk.ToolButton.__init__(self)
         self._palette = None
         self.set_icon(icon_name)
+        self.child.connect('enter-notify-event',self._enter_notify_event_cb)
+        self.child.connect('leave-notify-event',self._leave_notify_event_cb)
+        self._enter_tag = None
+        self._leave_tag = None
 
     def set_icon(self, icon_name):
         icon = Icon(icon_name)
@@ -36,8 +41,7 @@ class ToolButton(gtk.ToolButton):
 
     def set_palette(self, palette):
         self._palette = palette
-        self._palette.props.parent = self
-        self.child.connect('enter-notify-event', self._show_palette_timeout_cb)
+        self._palette.props.invoker = WidgetInvoker(self)
 
     def set_tooltip(self, text):
         if self._palette:
@@ -45,9 +49,49 @@ class ToolButton(gtk.ToolButton):
 
         self._palette = Palette(is_tooltip=True)
         self._palette.set_primary_state(text)
-        self._palette.props.parent = self
-        self.child.connect('enter-notify-event', self._show_palette_timeout_cb)
+        self._palette.props.invoker = WidgetInvoker(self)
 
-    def _show_palette_timeout_cb(self, widget, event):
-        time.sleep(self._POPUP_PALETTE_DELAY)
+    def _enter_notify_event_cb(self, widget, event):
+        gtk.gdk.pointer_ungrab()
+
+        if self._leave_tag:
+            gobject.source_remove(self._leave_tag)
+            self._leave_tag = None
+
+        self._enter_tag = gobject.timeout_add(self._POPUP_PALETTE_DELAY, \
+            self._show_palette)
+
+    def _leave_notify_event_cb(self, widget, event):
+        if self._enter_tag:
+            gobject.source_remove(self._enter_tag)
+            self._enter_tag = None
+
+        self._leave_tag = gobject.timeout_add(self._POPUP_PALETTE_DELAY,\
+            self._hide_palette)
+
+    def _show_palette(self):
         self._palette.popup()
+        return False
+
+    def _hide_palette(self):
+        # Just hide the palette if the mouse pointer is 
+        # out of the toolbutton and the palette
+        if self._is_mouse_out(self._palette):
+            self._palette.popdown()
+        else:
+            gtk.gdk.pointer_ungrab()
+        
+        return False
+
+    def _pointer_grab(self):
+        gtk.gdk.pointer_grab(self.window, owner_events=True,\
+            event_mask=gtk.gdk.PROPERTY_CHANGE_MASK )
+
+    def _is_mouse_out(self, widget):
+        mouse_x, mouse_y = widget.get_pointer()
+        event_rect = gdk.Rectangle(mouse_x, mouse_y, 1, 1)
+
+        if (widget.allocation.intersect(event_rect).width==0):
+            return True
+        else:
+            return False

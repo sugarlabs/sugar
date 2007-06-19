@@ -21,6 +21,7 @@ import gtk
 from gtk import gdk, keysyms
 import gobject
 import time
+import hippo
 
 ALIGNMENT_AUTOMATIC     = 0
 ALIGNMENT_BOTTOM_LEFT   = 1
@@ -36,17 +37,16 @@ class Palette(gtk.Window):
     __gtype_name__ = 'SugarPalette'
 
     __gproperties__ = {
-        'parent': (object, None, None, gobject.PARAM_READWRITE),
+        'invoker': (object, None, None, gobject.PARAM_READWRITE),
 
         'alignment': (gobject.TYPE_INT, None, None, 0, 8, ALIGNMENT_AUTOMATIC,
                     gobject.PARAM_READWRITE),
-        
+
         'is-tooltip': (bool, None, None, False, gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT_ONLY)
     }
 
     _PADDING    = 1
     _WIN_BORDER = 5
-    _POPUP_PALETTE_DELAY = 0.15
 
     def __init__(self, **kwargs):
         gobject.GObject.__init__(self, type=gtk.WINDOW_POPUP, **kwargs)
@@ -85,7 +85,7 @@ class Palette(gtk.Window):
         self.add(vbox)
 
         # Widget events
-        self.connect('motion-notify-event', self._mouse_over_widget_cb)
+        self.connect('enter-notify-event', self._mouse_over_widget_cb)
         self.connect('leave-notify-event', self._mouse_out_widget_cb)
         self.connect('button-press-event', self._close_palette_cb)
         self.connect('key-press-event', self._on_key_press_event_cb)
@@ -96,8 +96,8 @@ class Palette(gtk.Window):
         self._scr_height = gtk.gdk.screen_height()
 
     def do_set_property(self, pspec, value):
-        if pspec.name == 'parent':
-            self._parent_widget = value
+        if pspec.name == 'invoker':
+            self._invoker = value
         elif pspec.name == 'alignment':
             self._alignment = value
         elif pspec.name == 'is-tooltip':
@@ -155,41 +155,41 @@ class Palette(gtk.Window):
             return True
 
     def _calc_position(self, alignment):
-        win_x, win_y = self._parent_widget.window.get_origin()
-        parent_rectangle = self._parent_widget.get_allocation()
+        # Invoker: x, y, width and height
+        inv_rect = self._invoker.get_rect()
         palette_rectangle = self.get_allocation()
 
         if alignment == ALIGNMENT_BOTTOM_LEFT:
-            move_x = win_x + parent_rectangle.x
-            move_y = win_y + parent_rectangle.y + parent_rectangle.height
+            move_x = inv_rect.x
+            move_y = inv_rect.y + inv_rect.height
 
         elif alignment == ALIGNMENT_BOTTOM_RIGHT:
-            move_x = (win_x + parent_rectangle.x + parent_rectangle.width) - self._width
-            move_y = win_y + parent_rectangle.y + parent_rectangle.height
+            move_x = (inv_rect.x + inv_rect.width) - self._width
+            move_y = inv_rect.y + inv_rect.height
 
         elif alignment == ALIGNMENT_LEFT_BOTTOM:
-            move_x = (win_x + parent_rectangle.x) - self._width
-            move_y = win_y + parent_rectangle.y
+            move_x = inv_rect.x - self._width
+            move_y = inv_rect.y
 
         elif alignment == ALIGNMENT_LEFT_TOP:
-            move_x = (win_x + parent_rectangle.x) - self._width
-            move_y = (win_y + parent_rectangle.y + parent_rectangle.height) - palette_rectangle.height 
+            move_x = inv_rect.x - self._width
+            move_y = (inv_rect.y + inv_rect.height) - palette_rectangle.height
 
         elif alignment == ALIGNMENT_RIGHT_BOTTOM:
-            move_x = win_x + parent_rectangle.x + parent_rectangle.width
-            move_y = win_y + parent_rectangle.y
+            move_x = inv_rect.x + inv_rect.width
+            move_y = inv_rect.y
 
         elif alignment == ALIGNMENT_RIGHT_TOP:
-            move_x = win_x + parent_rectangle.x + parent_rectangle.width
-            move_y = (win_y + parent_rectangle.y + parent_rectangle.height) - palette_rectangle.height
+            move_x = inv_rect.x + inv_rect.width
+            move_y = (inv_rect.y + inv_rect.height) - palette_rectangle.height
 
         elif alignment == ALIGNMENT_TOP_LEFT:
-            move_x = (win_x + parent_rectangle.x)
-            move_y = (win_y + parent_rectangle.y) - (palette_rectangle.height)
+            move_x = inv_rect.x
+            move_y = inv_rect.y - palette_rectangle.height
 
         elif alignment == ALIGNMENT_TOP_RIGHT:
-            move_x = (win_x + parent_rectangle.x + parent_rectangle.width) - self._width
-            move_y = (win_y + parent_rectangle.y) - (palette_rectangle.height)
+            move_x = (inv_rect.x + inv_rect.width) - self._width
+            move_y = inv_rect.y - palette_rectangle.height
 
         return move_x, move_y
 
@@ -219,18 +219,13 @@ class Palette(gtk.Window):
 
     # Display the palette and set the position on the screen
     def popup(self):
-        # We need to know if the mouse pointer continue inside
-        # the parent widget (opener)
-        pointer_x, pointer_y = self._parent_widget.get_pointer()
-        self._parent_alloc = self._parent_widget.get_allocation()
-        pointer_rect = gdk.Rectangle(pointer_x + self._parent_alloc.x, pointer_y + self._parent_alloc.y, 1, 1)
-
-        if (self._parent_widget.allocation.intersect(pointer_rect).width == 0):
-            return
-
         self.realize()
         self.set_position()
-        self._pointer_grab()
+        self._pointer_ungrab()
+
+    def popdown(self):
+        self._pointer_ungrab()
+        self.hide()
 
     # PRIVATE METHODS
 
@@ -244,32 +239,29 @@ class Palette(gtk.Window):
         else:
             return False
 
-    def _pointer_grab(self):
-        gtk.gdk.pointer_grab(self.window, owner_events=False,
-            event_mask=gtk.gdk.BUTTON_PRESS_MASK |
-            gtk.gdk.BUTTON_RELEASE_MASK |
-            gtk.gdk.ENTER_NOTIFY_MASK |
-            gtk.gdk.LEAVE_NOTIFY_MASK |
-            gtk.gdk.POINTER_MOTION_MASK)
+    def _pointer_ungrab(self):
+        gdk.keyboard_ungrab()
 
+    def _pointer_grab(self):
         gdk.keyboard_grab(self.window, False)
 
     # SIGNAL HANDLERS
 
     # Release the GDK pointer and hide the palette
     def _close_palette_cb(self, widget=None, event=None):
-        gtk.gdk.pointer_ungrab()
-        self.hide()
+        self.popdown()
 
     # Mouse is out of the widget
     def _mouse_out_widget_cb(self, widget, event):
-        time.sleep(self._POPUP_PALETTE_DELAY)
         if (widget == self) and self._is_mouse_out(widget):
             self._close_palette_cb()
+            return
+
+        self._pointer_grab()
 
     # Mouse inside the widget
     def _mouse_over_widget_cb(self, widget, event):
-        gtk.gdk.pointer_ungrab()
+        self._pointer_ungrab()
 
     # Some key is pressed
     def _on_key_press_event_cb(self, window, event):
@@ -282,3 +274,46 @@ class Palette(gtk.Window):
             ((keyval == keysyms.Up or keyval == keysyms.KP_Up) and
              state == gdk.MOD1_MASK)):
             self._close_palette_cb()
+
+class WidgetInvoker:
+    def __init__(self, parent):
+        self._parent = parent
+
+    def get_rect(self):
+        win_x, win_y = self._parent.window.get_origin()
+        rectangle = self._parent.get_allocation()
+
+        x = win_x + rectangle.x
+        y = win_y + rectangle.y
+        width = rectangle.width
+        height = rectangle.height
+
+        return gtk.gdk.Rectangle(x, y, width, height)
+
+    # Is mouse over self._parent ?
+    def is_mouse_over(self):
+        pointer_x, pointer_y = self._parent.get_pointer()
+        self._parent_alloc = self._parent.get_allocation()
+
+        pointer_rect = gdk.Rectangle(pointer_x + self._parent_alloc.x, \
+            pointer_y + self._parent_alloc.y, 1, 1)
+
+        if (self._parent.allocation.intersect(pointer_rect).width == 0):
+            return False
+
+        return True
+
+class CanvasInvoker:
+    def __init__(self, parent):
+        self._parent = parent
+
+    def get_rect(self):
+        context = self._parent.get_context()
+        x, y = context.translate_to_screen(self._parent)
+        width, height = self._parent.get_allocation()
+
+        return gtk.gdk.Rectangle(x, y, width, height)
+
+    # Is mouse over self._parent ?
+    def is_mouse_over(self):
+        return True
