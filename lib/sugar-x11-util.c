@@ -30,19 +30,19 @@ sugar_x11_util_set_string_property(GdkWindow  *window,
                                    const char *value)
 {
     Atom prop_atom;
-    Atom utf8_atom;
+    Atom string_atom;
     GdkDisplay *display;
     char *prop_text;
 
     display = gdk_drawable_get_display(window);
     prop_atom = gdk_x11_get_xatom_by_name_for_display(display, property);
-    utf8_atom = gdk_x11_get_xatom_by_name_for_display(display, "UTF8_ATOM");
+    string_atom = gdk_x11_get_xatom_by_name_for_display(display, "STRING_ATOM");
     prop_text = gdk_utf8_to_string_target(value);
 
     XChangeProperty(GDK_DISPLAY_XDISPLAY(display),
                     GDK_WINDOW_XID(window),
                     prop_atom,
-                    utf8_atom, 8, 
+                    string_atom, 8,
                     PropModeReplace, prop_text,
                     strlen(prop_text));
 
@@ -55,7 +55,7 @@ sugar_x11_util_get_string_property(GdkWindow  *window,
 {
     Atom type;    
     Atom prop_atom;
-    Atom utf8_atom;
+    Atom string_atom;
     int format;
     int result;
     unsigned long bytes_after, n_items;
@@ -65,17 +65,17 @@ sugar_x11_util_get_string_property(GdkWindow  *window,
 
     display = gdk_drawable_get_display(window);
     prop_atom = gdk_x11_get_xatom_by_name_for_display(display, property);
-    utf8_atom = gdk_x11_get_xatom_by_name_for_display(display, "UTF8_ATOM");
+    string_atom = gdk_x11_get_xatom_by_name_for_display(display, "STRING_ATOM");
 
     result = XGetWindowProperty(GDK_DISPLAY_XDISPLAY(display),
                                 GDK_WINDOW_XID(window),
                                 prop_atom,
                                 0, 1024L,
-                                False, utf8_atom,
+                                False, string_atom,
                                 &type, &format, &n_items,
                                 &bytes_after, (unsigned char **)&str);
 
-    if (result == Success && str != NULL && type == utf8_atom &&
+    if (result == Success && str != NULL && type == string_atom &&
         format == 8 && n_items > 0) {
         value = g_strdup(str);
     }
