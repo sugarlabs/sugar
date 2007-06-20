@@ -4,7 +4,6 @@ This class create a gtk.Notebook() widget supporting
 a close button in every tab when the 'can-close-tabs' gproperty
 is enabled (True)
 """
-#!/usr/bin/env python
 
 # Copyright (C) 2007, Eduardo Silva (edsiper@gmail.com)
 #

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright (C) 2007, Eduardo Silva (edsiper@gmail.com)
 #
 # This library is free software; you can redistribute it and/or

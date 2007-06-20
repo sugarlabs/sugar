@@ -2,7 +2,6 @@
 # This class open the /proc/PID/maps and /proc/PID/smaps files
 # to get useful information about the real memory usage
 ####################################################################
-#!/usr/bin/env python
 
 import os
 
