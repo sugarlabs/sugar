@@ -105,10 +105,14 @@ class ClipboardObject:
 
         for mime_category in ['image/', 'text/', 'application/']:
             for mime_type in self._formats.keys():
-                if mime_type.startswith(mime_category):
+                if mime_type.startswith(mime_category) and \
+                        not mime_type.split('/')[1].startswith('_'):
                     mime_type = mime_type.split(';')[0]
                     logging.debug('Choosed %r!' % mime_type)
                     return mime_type
+
+        if 'STRING' in self._formats.keys():
+            return 'text/plain'
 
         logging.debug('Returning first: %r.' % self._formats.keys()[0])
         return self._formats.keys()[0]

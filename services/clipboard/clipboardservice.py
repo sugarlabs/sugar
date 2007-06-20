@@ -22,7 +22,6 @@ import dbus.service
 from sugar import env
 from sugar import util
 from clipboardobject import ClipboardObject, Format
-import typeregistry
 
 NAME_KEY = 'NAME'
 PERCENT_KEY = 'PERCENT'
