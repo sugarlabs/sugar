@@ -11,6 +11,7 @@ Makefile.in
 *.loT
 .*.sw?
 *.service
+stamp-*
 
 # Absolute
 
@@ -25,7 +26,6 @@ compile
 install-sh
 missing
 py-compile
-stamp-h1
 dbus-installed.conf
 intltool-extract
 intltool-extract.in
@@ -36,7 +36,6 @@ intltool-update.in
 mkinstalldirs
 po/Makefile.in.in
 po/POTFILES
-po/stamp-it
 po/*.gmo
 sugar/__installed__.py
 tools/sugar-setup-activity
@@ -50,8 +49,6 @@ m4/intltool.m4
 sugar/browser/_sugarbrowser.c
 browser/sugar-marshal.c
 browser/sugar-marshal.h
-browser/stamp-sugar-marshal.c
-browser/stamp-sugar-marshal.h
 bin/sugar
 shell/extensions/_extensions.c
 data/sugar.gtkrc

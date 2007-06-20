@@ -45,7 +45,6 @@ lib/xdgmime/Makefile
 services/Makefile
 services/clipboard/Makefile
 shell/Makefile
-shell/extensions/Makefile
 shell/intro/Makefile
 shell/hardware/Makefile
 shell/view/Makefile
