@@ -44,6 +44,3 @@ tarball = '%s-%s-git%s.tar.bz2' % (name, version, alphatag)
 os.spawnlp(os.P_WAIT, 'make', 'make', 'distcheck')
 
 os.rename('%s-%s.tar.bz2' % (name, version), tarball)
-
-if os.environ.has_key('SNAPSHOT_DEST'):
-    os.spawnlp(os.P_WAIT, 'scp', 'scp', tarball, os.environ['SNAPSHOT_DEST'])
