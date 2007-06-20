@@ -71,12 +71,6 @@ class HomeModel(gobject.GObject):
         screen.connect('active-window-changed',
                        self._active_window_changed_cb)
 
-        bus = dbus.SessionBus()
-        bus.add_signal_receiver(self._dbus_name_owner_changed_cb,
-                                'NameOwnerChanged', 
-                                'org.freedesktop.DBus', 
-                                'org.freedesktop.DBus')
-
     def get_current_activity(self):
         return self._current_activity
 
@@ -111,7 +105,7 @@ class HomeModel(gobject.GObject):
                 activity = HomeActivity(bundle, activity_id)
                 self._add_activity(activity)
 
-            service = self._get_activity_service(window.get_xid())
+            service = self._get_activity_service(activity_id)
             activity.set_service(service)
             activity.set_window(window)
 
@@ -124,19 +118,6 @@ class HomeModel(gobject.GObject):
         if not self._activities:
             self.emit('active-activity-changed', None)
             self._notify_activity_activation(self._current_activity, None)
-
-    def _dbus_name_owner_changed_cb(self, name, old, new):
-        """Detect new activity instances on the DBus"""
-        if name.startswith(_SERVICE_NAME) and new and not old:
-            try:
-                xid = int(name[len(_SERVICE_NAME):])
-                activity = self._get_activity_by_xid(xid)
-                if activity and not activity.get_service():
-                    service = self._get_activity_service(xid)
-                    activity.set_service(service)
-            except ValueError:
-                logging.error('Invalid activity service name, '
-                              'cannot extract the xid')
 
     def _get_activity_by_xid(self, xid):
         for activity in self._activities:
@@ -185,12 +166,12 @@ class HomeModel(gobject.GObject):
 
         self.emit('active-activity-changed', self._current_activity)
 
-    def _get_activity_service(self, xid):
+    def _get_activity_service(self, activity_id):
         bus = dbus.SessionBus()
         try:
             service = dbus.Interface(
-                    bus.get_object(_SERVICE_NAME + '%d' % xid,
-                                   _SERVICE_PATH + "/%s" % xid),
+                    bus.get_object(_SERVICE_NAME + activity_id,
+                                   _SERVICE_PATH + "/" + activity_id),
                                    _SERVICE_INTERFACE)
         except dbus.DBusException:
             service = None

@@ -33,24 +33,21 @@ class ActivityService(dbus.service.Object):
     def __init__(self, activity):
         """Initialise the service for the given activity
         
-        activity -- sugar.activity.activity.Activity instance,
-            must have already bound it's window (i.e. it must 
-            have already initialised to the point of having
-            the X window available).
+        activity -- sugar.activity.activity.Activity instance
         
-        Creates dbus services that use the xid of the activity's
-        root window as discriminants among all active services 
+        Creates dbus services that use the instance's activity_id
+        as discriminants among all active services 
         of this type.  That is, the services are all available 
-        as names/paths derived from the xid for the window.
+        as names/paths derived from the instance's activity_id.
         
         The various methods exposed on dbus are just forwarded
         to the client Activity object's equally-named methods.
         """
         activity.realize()
 
-        xid = activity.window.xid
-        service_name = _ACTIVITY_SERVICE_NAME + '%d' % xid 
-        object_path = _ACTIVITY_SERVICE_PATH + "/%s" % xid
+        activity_id = activity.get_id()
+        service_name = _ACTIVITY_SERVICE_NAME + activity_id
+        object_path  = _ACTIVITY_SERVICE_PATH + "/" + activity_id
 
         bus = dbus.SessionBus()
         bus_name = dbus.service.BusName(service_name, bus=bus)
