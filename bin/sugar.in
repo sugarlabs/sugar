@@ -1,3 +1,5 @@
+#!/bin/sh
+
 export SUGAR_PREFIX=@prefix@
 export SUGAR_PATH=@prefix@/share/sugar
 export GTK2_RC_FILES=@prefix@/share/sugar/data/sugar-xo.gtkrc
