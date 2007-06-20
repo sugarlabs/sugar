@@ -26,10 +26,6 @@ from sugar.presence import presenceservice
 from sugar.activity.activityhandle import ActivityHandle
 from sugar import util
 
-_ACTIVITY_SERVICE_NAME = "org.laptop.Activity"
-_ACTIVITY_SERVICE_PATH = "/org/laptop/Activity"
-_ACTIVITY_INTERFACE = "org.laptop.Activity"
-
 _ACTIVITY_FACTORY_INTERFACE = "org.laptop.ActivityFactory"
 
 def create_activity_id():
