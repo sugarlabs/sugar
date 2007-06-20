@@ -20,8 +20,7 @@ sugar_PYTHON =			\
 	__init__.py		\
 	clipboardobject.py      \
 	clipboardservice.py     \
-	objecttypeservice.py    \
-	typeregistry.py
+	objecttypeservice.py
 
 bin_SCRIPTS = sugar-clipboard
 

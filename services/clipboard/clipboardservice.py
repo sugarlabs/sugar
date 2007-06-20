@@ -85,6 +85,7 @@ class ClipboardService(dbus.service.Object):
     @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
                          in_signature="s", out_signature="o")
     def add_object(self, name):
+        logging.debug('ClipboardService.add_object')
         op = self._CLIPBOARD_OBJECTS_PATH + "%d" % self._get_next_object_id()
         self._objects[op] = ClipboardObject(op, name)
         self.object_added(dbus.ObjectPath(op), name)
@@ -94,6 +95,7 @@ class ClipboardService(dbus.service.Object):
     @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
                          in_signature="ssayb", out_signature="", byte_arrays=True)
     def add_object_format(self, object_path, format_type, data, on_disk):
+        logging.debug('ClipboardService.add_object_format')
         cb_object = self._objects[str(object_path)]
         cb_object.add_format(Format(format_type, data, on_disk))
 
@@ -142,6 +144,7 @@ class ClipboardService(dbus.service.Object):
     @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
                          in_signature="o", out_signature="a{sv}")
     def get_object(self, object_path):
+        logging.debug('ClipboardService.get_object')
         cb_object = self._objects[str(object_path)]
         formats = cb_object.get_formats()
         format_types = dbus.Array([], 's')
@@ -159,7 +162,8 @@ class ClipboardService(dbus.service.Object):
 
     @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
                          in_signature="os", out_signature="a{sv}")
-    def get_object_data(self, object_path, format_type):       
+    def get_object_data(self, object_path, format_type):   
+        logging.debug('ClipboardService.get_object_data')
         cb_object = self._objects[str(object_path)]
         format = cb_object.get_formats()[format_type]
         result_dict = {TYPE_KEY: format.get_type(),
@@ -180,3 +184,10 @@ class ClipboardService(dbus.service.Object):
     def object_state_changed(self, object_path, values):
         pass
 
+_instance = None
+
+def get_instance():
+    global _instance
+    if not _instance:
+        _instance = ClipboardService()
+    return _instance

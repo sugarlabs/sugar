@@ -2,7 +2,10 @@ import os
 import logging
 import urlparse
 
-import typeregistry
+from sugar.objects import mime
+from sugar import activity
+
+import objecttypeservice
 
 class ClipboardObject:
 
@@ -20,24 +23,58 @@ class ClipboardObject:
         return self._id
 
     def _get_type_info(self):
-        type_registry = typeregistry.get_instance()
-        return type_registry.get_type(self._formats)
+        logging.debug('_get_type_info')
+        type_registry = objecttypeservice.get_instance()
+        return type_registry.GetTypeForMIME(self.get_mime_type())
     
     def get_name(self):
         if self._name:
             return self._name
         else:
-            return self._get_type_info().get_name()
+            type_info = self._get_type_info()
+            if type_info:
+                return type_info['name']
+            else:
+                return ''
 
     def get_icon(self):
-        return self._get_type_info().get_icon()
+        type_info = self._get_type_info()
+        if type_info:
+            return type_info['icon']
+        else:
+            return ''
 
     def get_preview(self):
-        return self._get_type_info().get_preview()
+        # TODO: should previews really be here?
+        #return self._get_type_info().get_preview()
+        return ''
 
     def get_activity(self):
-        return self._get_type_info().get_activity()
-        
+        logging.debug('get_activity')
+        mapping = {'text/html'        : 'org.laptop.WebActivity',
+                   'image/jpeg'       : 'org.laptop.WebActivity',
+                   'image/gif'        : 'org.laptop.WebActivity',
+                   'image/png'        : 'org.laptop.WebActivity',
+                   'text/plain'       : 'org.laptop.AbiWordActivity',
+                   'text/rtf'         : 'org.laptop.AbiWordActivity',
+                   'text/richtext'    : 'org.laptop.AbiWordActivity'}
+        mime = self.get_mime_type()
+        if not mime:
+            return ''
+        """
+        registry = activity.get_registry()
+        activities = registry.get_activities_for_type(self.get_mime_type())
+        # TODO: should we return several activities?
+        if activities:
+            return activities[0]
+        else:
+            return ''
+        """
+        if mapping.has_key(mime):
+            return mapping[mime]
+        else:
+            return ''
+
     def get_percent(self):
         return self._percent
 
@@ -46,10 +83,36 @@ class ClipboardObject:
     
     def add_format(self, format):
         self._formats[format.get_type()] = format
+        # We want to get the activity early in order to prevent a DBus lockup.
+        activity = self.get_activity()
     
     def get_formats(self):
         return self._formats
-        
+
+    def get_mime_type(self):
+        logging.debug('Choosing between %r.' % self._formats.keys())
+        if not self._formats:
+            return ''
+
+        if 'text/uri-list' in self._formats.keys():
+            data = self._formats['text/uri-list'].get_data()
+            uris = data.split('\n')
+            # TODO: could we do better when there are several uris?
+            uri = urlparse.urlparse(uris[0], 'file')
+            if uri.scheme == 'file':
+                logging.debug('Choosed %r!' % mime.get_for_file(uri.path))
+                return mime.get_for_file(uri.path)
+
+        for mime_category in ['image/', 'text/', 'application/']:
+            for mime_type in self._formats.keys():
+                if mime_type.startswith(mime_category):
+                    mime_type = mime_type.split(';')[0]
+                    logging.debug('Choosed %r!' % mime_type)
+                    return mime_type
+
+        logging.debug('Returning first: %r.' % self._formats.keys()[0])
+        return self._formats.keys()[0]
+
 class Format:
 
     def __init__(self, type, data, on_disk):

@@ -2,6 +2,7 @@
 # vi: ts=4 ai noet 
 #
 # Copyright (C) 2006, Red Hat, Inc.
+# Copyright (C) 2007, One Laptop Per Child
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,16 +35,16 @@ from sugar import env
 
 sys.path.append(env.get_service_path('clipboard'))
 
-from clipboardservice import ClipboardService
-from objecttypeservice import ObjectTypeRegistry
+import clipboardservice
+import objecttypeservice
 
 logging.info('Starting clipboard service.')
 
 gobject.threads_init()
 dbus.glib.threads_init()
 
-clipboard_service = ClipboardService()
-object_type_registry = ObjectTypeRegistry()
+clipboard_service = clipboardservice.get_instance()
+object_type_registry = objecttypeservice.get_instance()
 
 loop = gobject.MainLoop()
 try:

@@ -63,3 +63,11 @@ class ObjectTypeRegistry(dbus.service.Object):
             return object_type
         else:
             return {}
+
+_instance = None
+
+def get_instance():
+    global _instance
+    if not _instance:
+        _instance = ObjectTypeRegistry()
+    return _instance
