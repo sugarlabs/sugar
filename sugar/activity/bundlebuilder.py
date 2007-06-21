@@ -153,7 +153,7 @@ def _include_mo_in_bundle(bundle_zip, bundle_name):
                         arcname)
 
 def cmd_dist(bundle_name, manifest):
-    cmd_genmo(manifest)
+    cmd_genmo(bundle_name, manifest)
     file_list = _get_file_list(manifest)
 
     zipname = _get_package_name(bundle_name)
@@ -180,10 +180,10 @@ def cmd_uninstall(prefix):
     if os.path.isdir(path):
         shutil.rmtree(path)
 
-def cmd_genpot(manifest):
-    locale_path = os.path.join(_get_source_path(), 'locale')
-    if not os.path.isdir(locale_path):
-        os.mkdir(locale_path)
+def cmd_genpot(bundle_name, manifest):
+    po_path = os.path.join(_get_source_path(), 'po')
+    if not os.path.isdir(po_path):
+        os.mkdir(po_path)
 
     python_files = []
     file_list = _get_file_list(manifest)
@@ -192,20 +192,27 @@ def cmd_genpot(manifest):
             python_files.append(file_name)
     service_name = Bundle(_get_source_path()).get_service_name()
     args = ["xgettext", "--language=Python", "--keyword=_",
-            "--output=locale/%s.pot" % service_name]
+            "--output=po/%s.pot" % bundle_name]
     args += python_files
     retcode = subprocess.call(args)
     if retcode:
         print 'ERROR - xgettext failed with return code %i.' % retcode
 
-def cmd_genmo(manifest):
-    po_regex = re.compile("locale/.*/LC_MESSAGES/.*\.po")
-    service_name = Bundle(_get_source_path()).get_service_name()
+def cmd_genmo(bundle_name, manifest):
+    source_path = _get_source_path()
+
+    po_regex = re.compile("po/(.*)\.po$")
     file_list = _get_file_list(manifest)
     for file_name in file_list:
-        if po_regex.match(file_name):
-            dir_name = os.path.dirname(file_name)
-            mo_file = os.path.join(dir_name, "%s.mo" % service_name)
+        match = po_regex.match(file_name)
+        if match:
+            lang = match.group(1)
+
+            mo_path = os.path.join(source_path, 'locale', lang, 'LC_MESSAGES')
+            if not os.path.isdir(mo_path):
+                os.makedirs(mo_path)
+
+            mo_file = os.path.join(mo_path, "%s.mo" % bundle_name)
             args = ["msgfmt", "--output-file=%s" % mo_file, file_name]
             retcode = subprocess.call(args)
             if retcode:
@@ -231,9 +238,9 @@ def start(bundle_name=None, manifest='MANIFEST'):
     elif sys.argv[1] == 'uninstall' and len(sys.argv) == 3:
         cmd_uninstall(sys.argv[2])
     elif sys.argv[1] == 'genpot':
-        cmd_genpot(manifest)
+        cmd_genpot(bundle_name, manifest)
     elif sys.argv[1] == 'genmo':
-        cmd_genmo(manifest)
+        cmd_genmo(bundle_name, manifest)
     elif sys.argv[1] == 'clean':
         cmd_clean()
     else:
