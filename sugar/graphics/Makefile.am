@@ -21,7 +21,6 @@ sugar_PYTHON =			\
 	snowflakebox.py		\
 	spreadbox.py		\
 	toggletoolbutton.py	\
-	toolbar.py		\
 	toolbox.py		\
 	toolbutton.py		\
 	toolcombobox.py		\
