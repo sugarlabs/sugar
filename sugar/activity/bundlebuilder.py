@@ -94,14 +94,10 @@ def _get_bundle_dir():
 def _get_install_dir(prefix):
     return os.path.join(prefix, 'share/activities')
 
-def _get_package_name():
+def _get_package_name(bundle_name):
     bundle = Bundle(_get_source_path())
-    zipname = '%s-%d.xo' % (bundle.get_name(), bundle.get_activity_version())
+    zipname = '%s-%d.xo' % (bundle_name, bundle.get_activity_version())
     return zipname
-    
-def _get_bundle_name():
-    bundle = Bundle(_get_source_path())
-    return bundle.get_name()
 
 def _delete_backups(arg, dirname, names):
     for name in names:
@@ -143,39 +139,41 @@ def _get_file_list(manifest):
     else:
         return _DefaultFileList()
 
-def _include_mo_in_bundle(bundle_zip):
+def _include_mo_in_bundle(bundle_zip, bundle_name):
     for langdir in os.listdir('locale'):
         if os.path.isdir(os.path.join('locale', langdir, 'LC_MESSAGES')):
             for filename in os.listdir(os.path.join('locale', langdir,
                                                     'LC_MESSAGES')):
                 if filename.endswith('.mo'):
-                    arcname = os.path.join(_get_bundle_name() + '.activity',
+                    arcname = os.path.join(bundle_name + '.activity',
                                            'locale', langdir, 'LC_MESSAGES',
                                            filename)
                     bundle_zip.write(
                         os.path.join('locale', langdir, 'LC_MESSAGES', filename),
                         arcname)
 
-def cmd_dist(manifest):
+def cmd_dist(bundle_name, manifest):
     cmd_genmo(manifest)
     file_list = _get_file_list(manifest)
 
-    zipname = _get_package_name()
+    zipname = _get_package_name(bundle_name)
     bundle_zip = zipfile.ZipFile(zipname, 'w', zipfile.ZIP_DEFLATED)
     
     for filename in file_list:
-        arcname = os.path.join(_get_bundle_name() + '.activity', filename)
+        arcname = os.path.join(bundle_name + '.activity', filename)
         bundle_zip.write(filename, arcname)
 
     if os.path.exists('locale'):
-        _include_mo_in_bundle(bundle_zip)
+        _include_mo_in_bundle(bundle_zip, bundle_name)
 
     bundle_zip.close()
 
-def cmd_install(prefix, manifest=None):
-    cmd_dist(manifest)
+def cmd_install(bundle_name, manifest, prefix):
+    cmd_dist(bundle_name, manifest)
     cmd_uninstall(prefix)
-    _extract_bundle(_get_package_name(), _get_install_dir(prefix))
+
+    _extract_bundle(_get_package_name(bundle_name),
+                    _get_install_dir(prefix))
 
 def cmd_uninstall(prefix):
     path = os.path.join(_get_install_dir(prefix), _get_bundle_dir())
@@ -216,7 +214,10 @@ def cmd_genmo(manifest):
 def cmd_clean():
     os.path.walk('.', _delete_backups, None)
 
-def start(manifest='MANIFEST'):
+def start(bundle_name=None, manifest='MANIFEST'):
+    if not bundle_name:
+        bundle_name = os.path.basename(_get_source_path())
+
     if len(sys.argv) < 2:
         cmd_help()
     elif sys.argv[1] == 'build':
@@ -224,9 +225,9 @@ def start(manifest='MANIFEST'):
     elif sys.argv[1] == 'dev':
         cmd_dev()
     elif sys.argv[1] == 'dist':
-        cmd_dist(manifest)
+        cmd_dist(bundle_name, manifest)
     elif sys.argv[1] == 'install' and len(sys.argv) == 3:
-        cmd_install(sys.argv[2], manifest)
+        cmd_install(bundle_name, manifest, sys.argv[2])
     elif sys.argv[1] == 'uninstall' and len(sys.argv) == 3:
         cmd_uninstall(sys.argv[2])
     elif sys.argv[1] == 'genpot':
