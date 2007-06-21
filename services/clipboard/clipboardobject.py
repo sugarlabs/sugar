@@ -97,11 +97,11 @@ class ClipboardObject:
         if 'text/uri-list' in self._formats.keys():
             data = self._formats['text/uri-list'].get_data()
             uris = data.split('\n')
-            # TODO: could we do better when there are several uris?
-            uri = urlparse.urlparse(uris[0], 'file')
-            if uri.scheme == 'file':
-                logging.debug('Choosed %r!' % mime.get_for_file(uri.path))
-                return mime.get_for_file(uri.path)
+            if len(uris) == 1 or not uris[1]:
+                uri = urlparse.urlparse(uris[0], 'file')
+                if uri.scheme == 'file':
+                    logging.debug('Choosed %r!' % mime.get_for_file(uri.path))
+                    return mime.get_for_file(uri.path)
 
         for mime_category in ['image/', 'text/', 'application/']:
             for mime_type in self._formats.keys():

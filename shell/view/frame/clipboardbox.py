@@ -22,6 +22,7 @@ import hippo
 import gtk
  
 from sugar import util
+from sugar.objects import mime
 from view.clipboardicon import ClipboardIcon
 from sugar.clipboard import clipboardservice
 
@@ -104,6 +105,11 @@ class ClipboardBox(hippo.CanvasBox):
             uri = urlparse.urlparse(uris[0])
             path, file_name = os.path.split(uri.path)
 
+            root, ext = os.path.splitext(file_name)
+            if not ext or ext == '.':
+                mime_type = mime.get_for_file(uri.path)
+                file_name = root + '.' + mime.get_primary_extension(mime_type)
+            
             # Copy the file, as it will be deleted when the dnd operation finishes.
             new_file_path = os.path.join(path, 'cb' + file_name)
             shutil.copyfile(uri.path, new_file_path)
