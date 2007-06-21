@@ -1,0 +1,87 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-06-21 15:25+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../shell/intro/intro.py:77
+msgid "Pick a buddy picture"
+msgstr ""
+
+#: ../shell/intro/intro.py:100
+msgid "My Picture:"
+msgstr ""
+
+#: ../shell/intro/intro.py:180
+msgid "My Name:"
+msgstr ""
+
+#: ../shell/intro/intro.py:204
+msgid "My Color:"
+msgstr ""
+
+#: ../shell/view/BuddyMenu.py:83
+msgid "Remove friend"
+msgstr ""
+
+#: ../shell/view/BuddyMenu.py:87
+msgid "Make friend"
+msgstr ""
+
+#: ../shell/view/BuddyMenu.py:97
+msgid "Invite"
+msgstr ""
+
+#: ../shell/view/clipboardmenu.py:103
+msgid "Remove"
+msgstr ""
+
+#: ../shell/view/clipboardmenu.py:110
+msgid "Open"
+msgstr ""
+
+#: ../shell/view/clipboardmenu.py:117
+msgid "Stop download"
+msgstr ""
+
+#: ../shell/view/clipboardmenu.py:124
+msgid "Add to journal"
+msgstr ""
+
+#: ../services/clipboard/objecttypeservice.py:32
+msgid "Text"
+msgstr ""
+
+#: ../services/clipboard/objecttypeservice.py:35
+msgid "Image"
+msgstr ""
+
+#: ../shell/view/Shell.py:227
+msgid "Screenshot"
+msgstr ""
+
+#: ../shell/view/clipboardicon.py:211
+#, python-format
+msgid "Clipboard object: %s."
+msgstr ""
+
+#: ../shell/view/home/MeshBox.py:122
+msgid "Mesh Network"
+msgstr ""
+
+#: ../sugar/activity/activity.py:224
+#, python-format
+msgid "%s Activity"
+msgstr ""

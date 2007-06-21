@@ -1,4 +1,3 @@
-services/clipboard/typeregistry.py
 shell/intro/intro.py
 shell/view/BuddyMenu.py
 shell/view/clipboardmenu.py
