@@ -52,6 +52,9 @@ class ToolButton(gtk.ToolButton):
         self._palette.props.invoker = WidgetInvoker(self)
 
     def _enter_notify_event_cb(self, widget, event):
+        if not self._palette:
+            return
+
         gtk.gdk.pointer_ungrab()
 
         if self._leave_tag:
@@ -62,6 +65,9 @@ class ToolButton(gtk.ToolButton):
             self._show_palette)
 
     def _leave_notify_event_cb(self, widget, event):
+        if not self._palette:
+            return
+
         if self._enter_tag:
             gobject.source_remove(self._enter_tag)
             self._enter_tag = None
