@@ -33,32 +33,42 @@ class XO_System(gtk.Fixed):
         table.set_row_spacings(7)
     
         # BUILD
-        build = self._get_system_build()
+        build = self._read_file('/boot/olpc_build').split('\n')[0]
         label_build = Label('OLPC Build:', Label.DESCRIPTION)
         label_build_value = Label(str(build), Label.DESCRIPTION)
-        
-        # FIRMWARE
-        firmware = self._get_firmware_version()
-        label_firmware = Label('XO Firmware:', Label.DESCRIPTION)
-        label_firmware_value = Label(firmware, Label.DESCRIPTION)
 
         # KERNEL
         sysinfo = os.uname()
         label_kernel = Label('Kernel Version:', Label.DESCRIPTION)
-        label_kernel_value = Label(sysinfo[0] + '-' + sysinfo[2], Label.DESCRIPTION)
+        label_kernel_value = Label(sysinfo[0] + '-' + sysinfo[2],\
+            Label.DESCRIPTION)
+        
+        # FIRMWARE
+        firmware = self._read_file('/ofw/ec-name').split('\n')[0]
+        label_firmware = Label('XO Firmware:', Label.DESCRIPTION)
+        label_firmware_value = Label(firmware, Label.DESCRIPTION)
+
+        # SERIAL NUMBER
+        serial = self._read_file('/ofw/serial-number').split('\n')[0]
+        label_serial = Label('XO Serial Number:', Label.DESCRIPTION)
+        label_serial_value = Label(serial, Label.DESCRIPTION)
 
         # OLPC Build
         table.attach(label_build, 0, 1, 0, 1)
         table.attach(label_build_value, 1,2, 0,1)
 
-        # XO Firmware
-        table.attach(label_firmware, 0, 1, 1, 2)
-        table.attach(label_firmware_value, 1, 2, 1, 2)
-
         # Kernel Version
-        table.attach(label_kernel, 0, 1, 2, 3)
-        table.attach(label_kernel_value, 1, 2, 2, 3)
-        
+        table.attach(label_kernel, 0, 1, 1, 2)
+        table.attach(label_kernel_value, 1, 2, 1, 2)
+
+        # XO Firmware
+        table.attach(label_firmware, 0, 1, 2, 3)
+        table.attach(label_firmware_value, 1, 2, 2, 3)
+
+        # XO Serial Number
+        table.attach(label_serial, 0, 1, 3, 4)
+        table.attach(label_serial_value, 1, 2, 3, 4)
+
         frame = gtk.Frame('System Information')
         style = Style()
         style.set_title_font(frame);
@@ -67,27 +77,12 @@ class XO_System(gtk.Fixed):
         self.add(frame)
         self.show_all()
 
-    def _get_system_build(self):
-        build_file_path = '/boot/olpc_build'
-
+    def _read_file(self, path):
         try:
-            f = open(build_file_path, 'r')
-            build = int(f.read())
+            f = open(path, 'r')
+            value = f.read()
             f.close()
 
-            return build
+            return value
         except:
             return "None"
-
-    # Get XO Firmware Versions
-    def _get_firmware_version(self):
-
-        try:
-            # Shell command            
-            cmd = "/usr/sbin/olpc-bios-sig"
-
-            data = os.popen(cmd).readlines()
-            return data[0].strip()
-        except:
-            return "None"
-
