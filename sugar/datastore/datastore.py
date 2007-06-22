@@ -109,6 +109,10 @@ def write(ds_object, reply_handler=None, error_handler=None):
         # TODO: register the object for updates
     logging.debug('Written object %s to the datastore.' % ds_object.object_id)
 
+def delete(object_id):
+    logging.debug('datastore.delete')
+    dbus_helpers.delete(object_id)
+
 def find(query, sorting=None, limit=None, offset=None, reply_handler=None,
          error_handler=None):
     if sorting:
