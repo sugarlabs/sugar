@@ -122,7 +122,7 @@ class ClipboardMenu(Menu):
         if not self._journal_item:
             self._journal_item = MenuItem(ClipboardMenu.ACTION_SAVE_TO_JOURNAL,
                                         _('Add to journal'),
-                                        'theme:stock-save')
+                                        'theme:document-save')
             self.add_item(self._journal_item)
 
     def _remove_open_item(self):
