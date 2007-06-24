@@ -51,8 +51,10 @@ def cmd_build_snapshot():
     os.rename('%s-%s.tar.bz2' % (name, version), tarball)
 
 def check_licenses(path, license, missing):
-    matchers = { 'LGPL' : 'GNU Lesser General Public',
-                 'GPL'  : 'GNU General Public License' }
+    matchers = { 'LGPL' : [ 'GNU Lesser General Public',
+                            'GNU General Library License' ],
+                 'GPL'  : [ 'GNU General Public License'  ] }
+    source_exts = [ '.py', '.c', '.h', '.cpp' ]
 
     license_file = os.path.join(path, '.license')
     if os.path.isfile(license_file):
@@ -63,17 +65,38 @@ def check_licenses(path, license, missing):
     for item in os.listdir(path):
         full_path = os.path.join(path, item)
 
-        if item.endswith('.py'):
-            f = open(full_path, 'r')
-            source = f.read()
-            if source.find(matchers[license]) == -1:
-                if not missing.has_key(license):
-                    missing[license] = []
-                missing[license].append(full_path)
-            f.close()
-
         if os.path.isdir(full_path):
             check_licenses(full_path, license, missing)
+        else:
+            check_source = False
+            for ext in source_exts:
+                if item.endswith(ext):
+                    check_source = True
+
+            # Special cases.
+            if item.find('marshal') > 0 or \
+               item.startswith('egg') > 0:
+                check_source = False
+
+            if check_source:
+                f = open(full_path, 'r')
+                source = f.read()
+                f.close()
+
+                miss_license = True
+
+                for matcher in matchers[license]:
+                    if source.find(matcher) > 0:
+                        miss_license = False
+
+                # Special cases.
+                if source.find('THIS FILE IS GENERATED') > 0:
+                    miss_license = False
+
+                if miss_license:
+                    if not missing.has_key(license):
+                        missing[license] = []
+                    missing[license].append(full_path)
 
 def cmd_check_licenses():
     missing = {}
