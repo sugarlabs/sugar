@@ -19,6 +19,14 @@
 import os
 import sys
 import re
+import datetime
+
+source_exts = [ '.py', '.c', '.h', '.cpp' ]
+
+def is_source(path):
+    for ext in source_exts:
+        if path.endswith(ext):
+            return True
 
 def get_name_and_version():
     f = open('configure.ac', 'r')
@@ -35,8 +43,9 @@ def get_name_and_version():
 
 def cmd_help():
     print 'Usage: \n\
-maint-helper.py build-snapshot - build a source snapshot \n\
-maint-helper.py check-licenses - check licenses in the source'
+maint-helper.py build-snapshot       - build a source snapshot \n\
+maint-helper.py fix-copyright [path] - fix the copyright year \n\
+maint-helper.py check-licenses       - check licenses in the source'
 
 def cmd_build_snapshot():
     [ name, version ] = get_name_and_version()
@@ -53,7 +62,6 @@ def cmd_build_snapshot():
 def check_licenses(path, license, missing):
     matchers = { 'LGPL' : 'GNU Lesser General Public',
                  'GPL'  : 'GNU General Public License' }
-    source_exts = [ '.py', '.c', '.h', '.cpp' ]
 
     license_file = os.path.join(path, '.license')
     if os.path.isfile(license_file):
@@ -67,10 +75,7 @@ def check_licenses(path, license, missing):
         if os.path.isdir(full_path):
             check_licenses(full_path, license, missing)
         else:
-            check_source = False
-            for ext in source_exts:
-                if item.endswith(ext):
-                    check_source = True
+            check_source = is_source(item)
 
             # Special cases.
             if item.find('marshal') > 0 or \
@@ -105,9 +110,52 @@ def cmd_check_licenses():
             print path
         print '\n'
 
+COPYRIGHT = 'Copyright (C) '
+
+def fix_copyright(path):
+    for item in os.listdir(path):
+        full_path = os.path.join(path, item)
+
+        if os.path.isdir(full_path):
+            fix_copyright(full_path)
+        elif is_source(item):
+            f = open(full_path, 'r')
+            source = f.read()
+            f.close()
+
+            year_start = -1
+            year_end = -1
+
+            i1 = source.find(COPYRIGHT)
+            if i1 != -1:
+                i1 += len(COPYRIGHT)
+                i2 = i1 + source[i1:].find(' ')
+                if i1 > 0:
+                    try:
+                        year_start = int(source[i1:i1 + 4])
+                        year_end = int(source[i1 + 6: i1 + 10])
+                    except ValueError:
+                        pass
+
+                if year_start > 0 and year_end < 0:
+                    year_end = year_start
+
+                year = datetime.date.today().year
+                if year_end < year:
+                    result = '%s%d-%d%s' % (source[:i1], year_start,
+                                            year, source[i2:])
+                    f = open(full_path, 'w')
+                    f.write(result)
+                    f.close()
+
+def cmd_fix_copyright(path):
+    fix_copyright(path)
+
 if len(sys.argv) < 2:
     cmd_help()
 elif sys.argv[1] == 'build-snapshot':
     cmd_build_snapshot()
 elif sys.argv[1] == 'check-licenses':
     cmd_check_licenses()
+elif sys.argv[1] == 'fix-copyright' and len(sys.argv) > 2:
+    cmd_fix_copyright(sys.argv[2])

@@ -1,4 +1,4 @@
-# Copyright (C) 2006, Red Hat, Inc.
+# Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2007, One Laptop Per Child
 #
 # This library is free software; you can redistribute it and/or

@@ -2,7 +2,7 @@
 # vi:si:et:sw=4:sts=4:ts=4
 
 # ltihooks.py: python import hooks that understand libtool libraries.
-# Copyright (C) 2000 James Henstridge.
+# Copyright (C) 2000-2007 James Henstridge.
 # renamed to gstltihooks.py so it does not accidentally get imported by
 # an installed copy of gtk
 #
