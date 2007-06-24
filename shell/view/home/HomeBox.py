@@ -15,12 +15,17 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import math
+from gettext import gettext as _
 
+import gobject
+import gtk
 import hippo
 
 from sugar.graphics import units
 from sugar.graphics import color
 from sugar.graphics.xocolor import XoColor
+from sugar.graphics.palette import Palette, CanvasInvoker
+from sugar import profile
 
 from view.home.activitiesdonut import ActivitiesDonut
 from view.devices import deviceview
@@ -38,7 +43,7 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
                                       box_height=units.grid_to_pixels(6))
         self.append(self._donut)
 
-        self._my_icon = MyIcon(units.XLARGE_ICON_SCALE)
+        self._my_icon = HomeMyIcon(units.XLARGE_ICON_SCALE)
         self.append(self._my_icon, hippo.PACK_FIXED)
 
         shell_model = shell.get_model()
@@ -114,3 +119,73 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
 
     def release(self):
         pass
+
+# TODO: Most or all of it should move to CanvasIcon.
+class HomeMyIcon(MyIcon):
+    _POPUP_PALETTE_DELAY = 100
+
+    def __init__(self, scale):
+        MyIcon.__init__(self, scale)
+
+        self._palette = Palette()
+        self._palette.set_primary_state(profile.get_nick_name())
+        self._palette.props.invoker = CanvasInvoker(self)
+        
+        shutdown_menu_item = gtk.MenuItem(_('Shutdown'))
+        shutdown_menu_item.connect('activate', self._shutdown_activate_cb)
+        self._palette.append_menu_item(shutdown_menu_item)
+        
+        self.connect('motion-notify-event',self._motion_notify_event_cb)
+        self._enter_tag = None
+        self._leave_tag = None
+
+    def _motion_notify_event_cb(self, button, event):
+        if event.detail == hippo.MOTION_DETAIL_ENTER:
+            gtk.gdk.pointer_ungrab()
+
+            if self._leave_tag:
+                gobject.source_remove(self._leave_tag)
+                self._leave_tag = None
+
+            self._enter_tag = gobject.timeout_add(self._POPUP_PALETTE_DELAY, \
+                self._show_palette)
+        elif event.detail == hippo.MOTION_DETAIL_LEAVE:
+            if self._enter_tag:
+                gobject.source_remove(self._enter_tag)
+                self._enter_tag = None
+
+            self._leave_tag = gobject.timeout_add(self._POPUP_PALETTE_DELAY,\
+                self._hide_palette)
+
+        return False
+
+    def _show_palette(self):
+        self._palette.popup()
+        return False
+
+    def _hide_palette(self):
+        # Just hide the palette if the mouse pointer is 
+        # out of the toolbutton and the palette
+        if self._is_mouse_out(self._palette):
+            self._palette.popdown()
+        else:
+            gtk.gdk.pointer_ungrab()
+        
+        return False
+
+    def _pointer_grab(self):
+        gtk.gdk.pointer_grab(self.window, owner_events=True,\
+            event_mask=gtk.gdk.PROPERTY_CHANGE_MASK )
+
+    def _is_mouse_out(self, widget):
+        mouse_x, mouse_y = widget.get_pointer()
+        event_rect = gtk.gdk.Rectangle(mouse_x, mouse_y, 1, 1)
+
+        if widget.allocation.intersect(event_rect).width == 0:
+            return True
+        else:
+            return False
+
+    def _shutdown_activate_cb(self, menuitem):
+        pass
+
