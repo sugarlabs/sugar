@@ -51,9 +51,8 @@ def cmd_build_snapshot():
     os.rename('%s-%s.tar.bz2' % (name, version), tarball)
 
 def check_licenses(path, license, missing):
-    matchers = { 'LGPL' : [ 'GNU Lesser General Public',
-                            'GNU General Library License' ],
-                 'GPL'  : [ 'GNU General Public License'  ] }
+    matchers = { 'LGPL' : 'GNU Lesser General Public',
+                 'GPL'  : 'GNU General Public License' }
     source_exts = [ '.py', '.c', '.h', '.cpp' ]
 
     license_file = os.path.join(path, '.license')
@@ -84,10 +83,8 @@ def check_licenses(path, license, missing):
                 f.close()
 
                 miss_license = True
-
-                for matcher in matchers[license]:
-                    if source.find(matcher) > 0:
-                        miss_license = False
+                if source.find(matchers[license]) > 0:
+                    miss_license = False
 
                 # Special cases.
                 if source.find('THIS FILE IS GENERATED') > 0:
