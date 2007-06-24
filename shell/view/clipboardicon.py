@@ -57,6 +57,7 @@ class ClipboardIcon(CanvasIcon):
         self.props.box_width = units.grid_to_pixels(1)
         self.props.box_height = units.grid_to_pixels(1)
         self.props.scale = units.STANDARD_ICON_SCALE
+        self.props.xo_color = XoColor(profile.get_color().to_string())
         self._menu = None
 
     def do_set_property(self, pspec, value):
@@ -113,7 +114,7 @@ class ClipboardIcon(CanvasIcon):
         if (activity or installable) and percent < 100:
             self.props.xo_color = XoColor("#000000,#424242")
         else:
-            self.props.xo_color = XoColor("#000000,#FFFFFF")
+            self.props.xo_color = XoColor(profile.get_color().to_string())
 
     def _open_file(self):
         if self._percent < 100:
