@@ -15,6 +15,7 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 import sys
+import os
 import logging
 
 import gobject
@@ -26,8 +27,7 @@ class ComboBox(gtk.ComboBox):
     __gtype_name__ = 'SugarComboBox'    
 
     __gproperties__ = {
-        'value'    : (int, None, None,
-                      0, sys.maxint, 0,
+        'value'    : (object, None, None,
                       gobject.PARAM_READABLE)
     }
     def __init__(self):
@@ -36,9 +36,9 @@ class ComboBox(gtk.ComboBox):
         self._text_renderer = None
         self._icon_renderer = None
 
-        self._model = gtk.ListStore(gobject.TYPE_INT,
+        self._model = gtk.ListStore(gobject.TYPE_PYOBJECT,
                                     gobject.TYPE_STRING,
-                                    gobject.TYPE_STRING,
+                                    gtk.gdk.Pixbuf,
                                     gobject.TYPE_BOOLEAN)
         self.set_model(self._model)
 
@@ -56,14 +56,24 @@ class ComboBox(gtk.ComboBox):
             self._icon_renderer = gtk.CellRendererPixbuf()
             self._icon_renderer.props.stock_size = units.microgrid_to_pixels(3)
             self.pack_start(self._icon_renderer, False)
-            self.add_attribute(self._icon_renderer, 'icon-name', 2)
+            self.add_attribute(self._icon_renderer, 'pixbuf', 2)
 
         if not self._text_renderer and text:
             self._text_renderer = gtk.CellRendererText()
             self.pack_end(self._text_renderer, True)
             self.add_attribute(self._text_renderer, 'text', 1)
 
-        self._model.append([action_id, text, icon_name, False])
+        if icon_name:
+            width, height = gtk.icon_size_lookup(gtk.ICON_SIZE_MENU)
+            if os.path.isfile(icon_name):
+                pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(icon_name, width, height)
+            else:
+                icon_theme = gtk.icon_theme_get_default()
+                pixbuf = icon_theme.load_icon(icon_name, width, 0)
+        else:
+            pixbuf = None
+
+        self._model.append([action_id, text, pixbuf, False])
 
     def append_separator(self):
         self._model.append([0, None, None, True])    
