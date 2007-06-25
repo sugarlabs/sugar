@@ -169,7 +169,7 @@ def cmd_dist(bundle_name, manifest):
     bundle_zip.close()
 
 def cmd_install(bundle_name, manifest, prefix):
-    cmd_dist(bundle_comname, manifest)
+    cmd_dist(bundle_name, manifest)
     cmd_uninstall(prefix)
 
     _extract_bundle(_get_package_name(bundle_name),
