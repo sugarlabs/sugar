@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 from gettext import gettext as _
 
+import gtk
 import hippo
 
 from sugar.graphics.menu import Menu, MenuItem
@@ -22,27 +23,6 @@ from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import color
 from sugar.graphics import font
 
-from view.ClipboardBubble import ClipboardBubble
-
-class ClipboardProgressBar(ClipboardBubble):
-
-    def __init__(self, percent = 0):
-        self._text_item = None
-        ClipboardBubble.__init__(self, percent=percent)
-
-        self._text_item = hippo.CanvasText(text=str(percent) + ' %')
-        self._text_item.props.color = color.LABEL_TEXT.get_int()
-        self._text_item.props.font_desc = font.DEFAULT.get_pango_desc()
-
-        self.append(self._text_item)
-        
-    def do_set_property(self, pspec, value):
-        if pspec.name == 'percent':
-            if self._text_item:
-                self._text_item.set_property('text', str(value) + ' %')
-
-        ClipboardBubble.do_set_property(self, pspec, value)
-        
 class ClipboardMenu(Menu):
 
     ACTION_DELETE = 0
@@ -55,8 +35,12 @@ class ClipboardMenu(Menu):
         self.props.border = 0
 
         if percent < 100:        
-            self._progress_bar = ClipboardProgressBar(percent)
-            self.append(self._progress_bar)
+            self._progress_bar = gtk.ProgressBar()
+            self._update_progress_bar(percent)
+            
+            canvas_widget = hippo.CanvasWidget()
+            canvas_widget.props.widget = self._progress_bar
+            self.append(canvas_widget)
         else:
             self._progress_bar = None
         
@@ -91,10 +75,15 @@ class ClipboardMenu(Menu):
             self._add_stop_item()
             self._remove_journal_item()
 
+    def _update_progress_bar(self, percent):
+        if self._progress_bar:
+            self._progress_bar.props.fraction = percent / 100.0
+            self._progress_bar.props.text = '%.2f %%' % (percent / 100.0)
+
     def set_state(self, name, percent, preview, activity, installable):
         self.set_title(name)
         if self._progress_bar:
-            self._progress_bar.set_property('percent', percent)
+            self._update_progress_bar(percent)
             self._update_icons(percent, activity, installable)
 
     def _add_remove_item(self):
