@@ -16,10 +16,11 @@
 # Boston, MA 02111-1307, USA.
 
 import gtk
-from gtk import gdk, keysyms
 import gobject
 import time
 import hippo
+
+from sugar.graphics import animator
 
 ALIGNMENT_AUTOMATIC     = 0
 ALIGNMENT_BOTTOM_LEFT   = 1
@@ -51,6 +52,14 @@ class Palette(gtk.Window):
 
         self._alignment = ALIGNMENT_AUTOMATIC
 
+        self._popup_anim = animator.Animator(0.6, 10)
+        self._popup_anim.add(_PopupAnimation(self))
+        self._popup_anim.start()
+
+        self._popdown_anim = animator.Animator(0.6, 10)
+        self._popdown_anim.add(_PopdownAnimation(self))
+        self._popdown_anim.start()
+
         self._palette_label = gtk.Label()
         self._palette_label.show()
 
@@ -75,16 +84,16 @@ class Palette(gtk.Window):
         self.add(vbox)
 
         # Widget events
-        self.connect('enter-notify-event', self._mouse_over_widget_cb)
-        self.connect('leave-notify-event', self._mouse_out_widget_cb)
-        self.connect('button-press-event', self._close_palette_cb)
-        self.connect('key-press-event', self._on_key_press_event_cb)
+        self.connect('enter-notify-event', self._enter_notify_event_cb)
+        self.connect('leave-notify-event', self._leave_notify_event_cb)
+        self.connect('button-press-event', self._button_press_event_cb)
 
         self.set_border_width(self._WIN_BORDER)
         
     def do_set_property(self, pspec, value):
         if pspec.name == 'invoker':
             self._invoker = value
+            self._invoker.add_listener(self)
         elif pspec.name == 'alignment':
             self._alignment = value
         else:
@@ -119,26 +128,14 @@ class Palette(gtk.Window):
     def _try_position(self, alignment):
         screen_width = gtk.gdk.screen_width()
         screen_height = gtk.gdk.screen_height()
-        move_x, move_y = self._calc_position(alignment)
+        x, y = self._calc_position(alignment)
         self._width, self._height = self.size_request()
 
-        plt_x, plt_y = self.window.get_origin()
-
-        if move_x > plt_x:
-            plt_x += (move_x - plt_x)
-        else:
-            plt_x -= (plt_x - move_x)
-
-        if move_y > plt_y:
-            plt_y += (move_y - plt_y)
-        else:
-            plt_y -= (plt_y - move_y)
-
-        if (plt_x < 0 or plt_x + self._width > screen_width) or \
-           (plt_y < 0 or plt_y + self._height > screen_height):
+        if (x + self._width > screen_width) or \
+           (y + self._height > screen_height):
             return False
         else:
-            self.move(move_x, move_y)
+            self.move(x, y)
             self.show()
             return True
 
@@ -206,64 +203,75 @@ class Palette(gtk.Window):
         self._button_bar.pack_start(button, True, True, self._PADDING)
         button.show()
 
-    # Display the palette and set the position on the screen
     def popup(self):
-        self.realize()
-        self.place()
+        self._popdown_anim.stop()
+        self._popup_anim.start()
 
     def popdown(self):
-        gdk.keyboard_ungrab()
-        self.hide()
+        self._popup_anim.stop()
+        self._popdown_anim.start()
 
-    # PRIVATE METHODS
+    def invoker_mouse_enter(self):
+        self.popup()
 
-    # Is the mouse out of the widget ?
-    def _is_mouse_out(self, widget):
-        mouse_x, mouse_y = widget.get_pointer()
-        event_rect = gdk.Rectangle(mouse_x, mouse_y, 1, 1)
-
-        if (self.allocation.intersect(event_rect).width==0):
-            return True
-        else:
-            return False
-
-    # SIGNAL HANDLERS
-
-    # Release the GDK pointer and hide the palette
-    def _close_palette_cb(self, widget=None, event=None):
+    def invoker_mouse_leave(self):
         self.popdown()
 
-    # Mouse is out of the widget
-    def _mouse_out_widget_cb(self, widget, event):
-        if (widget == self) and self._is_mouse_out(widget):
-            self._close_palette_cb()
-            return
+    def _enter_notify_event_cb(self, widget, event):
+        if event.detail == gtk.gdk.NOTIFY_NONLINEAR:
+            self._popdown_anim.stop()
 
-        gdk.keyboard_grab(self.window, False)
+    def _leave_notify_event_cb(self, widget, event):
+        if event.detail == gtk.gdk.NOTIFY_NONLINEAR:
+            self.popdown()
 
-    # Mouse inside the widget
-    def _mouse_over_widget_cb(self, widget, event):
-        gdk.keyboard_ungrab()
+    def _button_press_event_cb(self, widget, event):
+        pass
 
-    # Some key is pressed
-    def _on_key_press_event_cb(self, window, event):
-        # Escape or Alt+Up: Close
-        # Enter, Return or Space: Select
-        keyval = event.keyval
-        state = event.state & gtk.accelerator_get_default_mod_mask()
+class _PopupAnimation(animator.Animation):
+    def __init__(self, palette):
+        animator.Animation.__init__(self, 0.0, 1.0)
+        self._palette = palette
 
-        if (keyval == keysyms.Escape or
-            ((keyval == keysyms.Up or keyval == keysyms.KP_Up) and
-             state == gdk.MOD1_MASK)):
-            self._close_palette_cb()
+    def next_frame(self, current):
+        if current == 1.0:
+            self._palette.place()
 
-class WidgetInvoker:
-    def __init__(self, parent):
-        self._parent = parent
+class _PopdownAnimation(animator.Animation):
+    def __init__(self, palette):
+        animator.Animation.__init__(self, 0.0, 1.0)
+        self._palette = palette
+
+    def next_frame(self, current):
+        if current == 1.0:
+            self._palette.hide()
+
+class Invoker(object):
+    def __init__(self):
+        self._listeners = []
+
+    def add_listener(self, listener):
+        self._listeners.append(listener)
+
+    def notify_mouse_enter(self):
+        for listener in self._listeners:
+            listener.invoker_mouse_enter()
+
+    def notify_mouse_leave(self):
+        for listener in self._listeners:
+            listener.invoker_mouse_leave()
+
+class WidgetInvoker(Invoker):
+    def __init__(self, widget):
+        Invoker.__init__(self)
+        self._widget = widget
+
+        widget.connect('enter-notify-event', self._enter_notify_event_cb)
+        widget.connect('leave-notify-event', self._leave_notify_event_cb)
 
     def get_rect(self):
-        win_x, win_y = self._parent.window.get_origin()
-        rectangle = self._parent.get_allocation()
+        win_x, win_y = self._widget.window.get_origin()
+        rectangle = self._widget.get_allocation()
 
         x = win_x + rectangle.x
         y = win_y + rectangle.y
@@ -272,30 +280,31 @@ class WidgetInvoker:
 
         return gtk.gdk.Rectangle(x, y, width, height)
 
-    # Is mouse over self._parent ?
-    def is_mouse_over(self):
-        pointer_x, pointer_y = self._parent.get_pointer()
-        self._parent_alloc = self._parent.get_allocation()
+    def _enter_notify_event_cb(self, widget, event):
+        self.notify_mouse_enter()
 
-        pointer_rect = gdk.Rectangle(pointer_x + self._parent_alloc.x, \
-            pointer_y + self._parent_alloc.y, 1, 1)
+    def _leave_notify_event_cb(self, widget, event):
+        self.notify_mouse_leave()
 
-        if (self._parent.allocation.intersect(pointer_rect).width == 0):
-            return False
+class CanvasInvoker(Invoker):
+    def __init__(self, item):
+        Invoker.__init__(self)
+        self._item = item
 
-        return True
-
-class CanvasInvoker:
-    def __init__(self, parent):
-        self._parent = parent
+        item.connect('motion-notify-event',
+                     self._motion_notify_event_cb)
 
     def get_rect(self):
-        context = self._parent.get_context()
-        x, y = context.translate_to_screen(self._parent)
-        width, height = self._parent.get_allocation()
+        context = self._item.get_context()
+        x, y = context.translate_to_screen(self._item)
+        width, height = self._item.get_allocation()
 
         return gtk.gdk.Rectangle(x, y, width, height)
 
-    # Is mouse over self._parent ?
-    def is_mouse_over(self):
-        return True
+    def _motion_notify_event_cb(self, button, event):
+        if event.detail == hippo.MOTION_DETAIL_ENTER:
+            self.notify_mouse_enter()
+        elif event.detail == hippo.MOTION_DETAIL_LEAVE:
+            self.notify_mouse_leave()
+
+        return False

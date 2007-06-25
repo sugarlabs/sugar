@@ -135,58 +135,6 @@ class HomeMyIcon(MyIcon):
         shutdown_menu_item.connect('activate', self._shutdown_activate_cb)
         self._palette.append_menu_item(shutdown_menu_item)
         shutdown_menu_item.show()
-        
-        self.connect('motion-notify-event',self._motion_notify_event_cb)
-        self._enter_tag = None
-        self._leave_tag = None
-
-    def _motion_notify_event_cb(self, button, event):
-        if event.detail == hippo.MOTION_DETAIL_ENTER:
-            gtk.gdk.pointer_ungrab()
-
-            if self._leave_tag:
-                gobject.source_remove(self._leave_tag)
-                self._leave_tag = None
-
-            self._enter_tag = gobject.timeout_add(self._POPUP_PALETTE_DELAY, \
-                self._show_palette)
-        elif event.detail == hippo.MOTION_DETAIL_LEAVE:
-            if self._enter_tag:
-                gobject.source_remove(self._enter_tag)
-                self._enter_tag = None
-
-            self._leave_tag = gobject.timeout_add(self._POPUP_PALETTE_DELAY,\
-                self._hide_palette)
-
-        return False
-
-    def _show_palette(self):
-        self._palette.popup()
-        return False
-
-    def _hide_palette(self):
-        # Just hide the palette if the mouse pointer is 
-        # out of the toolbutton and the palette
-        if self._is_mouse_out(self._palette):
-            self._palette.popdown()
-        else:
-            gtk.gdk.pointer_ungrab()
-        
-        return False
-
-    def _pointer_grab(self):
-        gtk.gdk.pointer_grab(self.window, owner_events=True,\
-            event_mask=gtk.gdk.PROPERTY_CHANGE_MASK )
-
-    def _is_mouse_out(self, widget):
-        mouse_x, mouse_y = widget.get_pointer()
-        event_rect = gtk.gdk.Rectangle(mouse_x, mouse_y, 1, 1)
-
-        if widget.allocation.intersect(event_rect).width == 0:
-            return True
-        else:
-            return False
 
     def _shutdown_activate_cb(self, menuitem):
         pass
-
