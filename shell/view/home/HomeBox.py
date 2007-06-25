@@ -14,18 +14,22 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import os
+import signal
 import math
 from gettext import gettext as _
 
 import gobject
 import gtk
 import hippo
+import dbus
 
 from sugar.graphics import units
 from sugar.graphics import color
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics.palette import Palette, CanvasInvoker
 from sugar import profile
+from sugar import env
 
 from view.home.activitiesdonut import ActivitiesDonut
 from view.devices import deviceview
@@ -43,7 +47,7 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
                                       box_height=units.grid_to_pixels(6))
         self.append(self._donut)
 
-        self._my_icon = HomeMyIcon(units.XLARGE_ICON_SCALE)
+        self._my_icon = HomeMyIcon(shell, units.XLARGE_ICON_SCALE)
         self.append(self._my_icon, hippo.PACK_FIXED)
 
         shell_model = shell.get_model()
@@ -82,11 +86,11 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
             if self._donut:
                 self.remove(self._donut)
                 self._donut = None
-                self._my_icon.props.stroke_color = color.BUTTON_INACTIVE
+                self._my_icon.props.stroke_color = color.ICON_STROKE_INACTIVE
                 self._my_icon.props.fill_color = \
-                        color.BUTTON_INACTIVE_BACKGROUND
+                        color.ICON_FILL_INACTIVE
                 self._my_icon.props.background_color = \
-                        color.BUTTON_INACTIVE_BACKGROUND
+                        color.ICON_FILL_INACTIVE.get_int()
 
     def do_allocate(self, width, height, origin_changed):
         hippo.CanvasBox.do_allocate(self, width, height, origin_changed)
@@ -124,9 +128,10 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
 class HomeMyIcon(MyIcon):
     _POPUP_PALETTE_DELAY = 100
 
-    def __init__(self, scale):
+    def __init__(self, shell, scale):
         MyIcon.__init__(self, scale)
 
+        self._shell = shell
         self._palette = Palette()
         self._palette.set_primary_state(profile.get_nick_name())
         self._palette.props.invoker = CanvasInvoker(self)
@@ -137,4 +142,16 @@ class HomeMyIcon(MyIcon):
         shutdown_menu_item.show()
 
     def _shutdown_activate_cb(self, menuitem):
-        pass
+        model = self._shell.get_model()
+        model.props.state = ShellModel.STATE_SHUTDOWN
+
+        if env.is_emulator():
+            if os.environ.has_key('SUGAR_EMULATOR_PID'):
+                pid = int(os.environ['SUGAR_EMULATOR_PID'])
+                os.kill(pid, signal.SIGTERM)
+        else:
+            bus = dbus.SystemBus()
+            proxy = bus.get_object('org.freedesktop.Hal',
+                                   '/org/freedesktop/Hal/devices/computer')
+            mgr = dbus.Interface(proxy, 'org.freedesktop.Hal.Device.SystemPowerManagement')
+            mgr.Shutdown()
