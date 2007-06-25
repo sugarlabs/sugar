@@ -82,9 +82,6 @@ class Palette(gtk.Window):
 
         self.set_border_width(self._WIN_BORDER)
         
-        self._scr_width = gtk.gdk.screen_width()
-        self._scr_height = gtk.gdk.screen_height()
-
     def do_set_property(self, pspec, value):
         if pspec.name == 'invoker':
             self._invoker = value
@@ -93,7 +90,7 @@ class Palette(gtk.Window):
         else:
             raise AssertionError
 
-    def set_position(self):
+    def place(self):
         # Automatic Alignment
         if self._alignment == ALIGNMENT_AUTOMATIC:
             # Trying Different types of ALIGNMENTS, 
@@ -120,6 +117,8 @@ class Palette(gtk.Window):
             self.move(move_x, move_y)
 
     def _try_position(self, alignment):
+        screen_width = gtk.gdk.screen_width()
+        screen_height = gtk.gdk.screen_height()
         move_x, move_y = self._calc_position(alignment)
         self._width, self._height = self.size_request()
 
@@ -135,8 +134,8 @@ class Palette(gtk.Window):
         else:
             plt_y -= (plt_y - move_y)
 
-        if (plt_x < 0 or plt_x + self._width > self._scr_width) or \
-           (plt_y < 0 or plt_y + self._height > self._scr_height):
+        if (plt_x < 0 or plt_x + self._width > screen_width) or \
+           (plt_y < 0 or plt_y + self._height > screen_height):
             return False
         else:
             self.move(move_x, move_y)
@@ -193,26 +192,27 @@ class Palette(gtk.Window):
 
     def append_menu_item(self, item):
         self._separator.show()
-        self._menu_bar.append(item)
         self._menu_bar.show()
+        self._menu_bar.append(item)
+        item.show()
 
     def set_content(self, widget):
         self._separator.show()
         self._content.pack_start(widget, True, True, self._PADDING)
+        widget.show()
 
     def append_button(self, button):
-        self._separator.show()
         button.connect('released', self._close_palette_cb)
         self._button_bar.pack_start(button, True, True, self._PADDING)
+        button.show()
 
     # Display the palette and set the position on the screen
     def popup(self):
         self.realize()
-        self.set_position()
-        self._pointer_ungrab()
+        self.place()
 
     def popdown(self):
-        self._pointer_ungrab()
+        gdk.keyboard_ungrab()
         self.hide()
 
     # PRIVATE METHODS
@@ -227,12 +227,6 @@ class Palette(gtk.Window):
         else:
             return False
 
-    def _pointer_ungrab(self):
-        gdk.keyboard_ungrab()
-
-    def _pointer_grab(self):
-        gdk.keyboard_grab(self.window, False)
-
     # SIGNAL HANDLERS
 
     # Release the GDK pointer and hide the palette
@@ -245,11 +239,11 @@ class Palette(gtk.Window):
             self._close_palette_cb()
             return
 
-        self._pointer_grab()
+        gdk.keyboard_grab(self.window, False)
 
     # Mouse inside the widget
     def _mouse_over_widget_cb(self, widget, event):
-        self._pointer_ungrab()
+        gdk.keyboard_ungrab()
 
     # Some key is pressed
     def _on_key_press_event_cb(self, window, event):
