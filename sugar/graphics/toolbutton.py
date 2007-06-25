@@ -47,7 +47,7 @@ class ToolButton(gtk.ToolButton):
         if self._palette:
             self._palette.destroy()
 
-        self._palette = Palette(is_tooltip=True)
+        self._palette = Palette()
         self._palette.set_primary_state(text)
         self._palette.props.invoker = WidgetInvoker(self)
 
