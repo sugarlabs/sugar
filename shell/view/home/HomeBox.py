@@ -134,6 +134,7 @@ class HomeMyIcon(MyIcon):
         shutdown_menu_item = gtk.MenuItem(_('Shutdown'))
         shutdown_menu_item.connect('activate', self._shutdown_activate_cb)
         self._palette.append_menu_item(shutdown_menu_item)
+        shutdown_menu_item.show()
         
         self.connect('motion-notify-event',self._motion_notify_event_cb)
         self._enter_tag = None

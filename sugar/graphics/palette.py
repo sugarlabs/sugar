@@ -35,12 +35,11 @@ class Palette(gtk.Window):
     __gtype_name__ = 'SugarPalette'
 
     __gproperties__ = {
-        'invoker': (object, None, None, gobject.PARAM_READWRITE),
-
-        'alignment': (gobject.TYPE_INT, None, None, 0, 8, ALIGNMENT_AUTOMATIC,
-                    gobject.PARAM_READWRITE),
-
-        'is-tooltip': (bool, None, None, False, gobject.PARAM_READWRITE | gobject.PARAM_CONSTRUCT_ONLY)
+        'invoker'    : (object, None, None,
+                        gobject.PARAM_READWRITE),
+        'alignment'  : (gobject.TYPE_INT, None, None, 0, 8,
+                        ALIGNMENT_AUTOMATIC,
+                        gobject.PARAM_READWRITE)
     }
 
     _PADDING    = 1
@@ -58,26 +57,19 @@ class Palette(gtk.Window):
         vbox = gtk.VBox(False, 0)
         vbox.pack_start(self._palette_label, True, True, self._PADDING)
 
-        # tooltip palette ?
-        if not self._is_tooltip:
-            self._separator = gtk.HSeparator()
-            self._separator.hide()
+        self._separator = gtk.HSeparator()
 
-            self._menu_bar = gtk.MenuBar()
-            self._menu_bar.set_pack_direction(gtk.PACK_DIRECTION_TTB)
-            self._menu_bar.show()
+        self._menu_bar = gtk.MenuBar()
+        self._menu_bar.set_pack_direction(gtk.PACK_DIRECTION_TTB)
+
+        self._content = gtk.HBox()
+        self._button_bar = gtk.HButtonBox()
     
-            self._content = gtk.HBox()
-            self._content.show()
-    
-            self._button_bar = gtk.HButtonBox()
-            self._button_bar.show()
-    
-            # Set main container
-            vbox.pack_start(self._separator, True, True, self._PADDING)
-            vbox.pack_start(self._menu_bar, True, True, self._PADDING)
-            vbox.pack_start(self._content, True, True, self._PADDING)
-            vbox.pack_start(self._button_bar, True, True, self._PADDING)
+        # Set main container
+        vbox.pack_start(self._separator, True, True, self._PADDING)
+        vbox.pack_start(self._menu_bar, True, True, self._PADDING)
+        vbox.pack_start(self._content, True, True, self._PADDING)
+        vbox.pack_start(self._button_bar, True, True, self._PADDING)
 
         vbox.show()
         self.add(vbox)
@@ -98,8 +90,6 @@ class Palette(gtk.Window):
             self._invoker = value
         elif pspec.name == 'alignment':
             self._alignment = value
-        elif pspec.name == 'is-tooltip':
-            self._is_tooltip = value
         else:
             raise AssertionError
 
@@ -145,7 +135,8 @@ class Palette(gtk.Window):
         else:
             plt_y -= (plt_y - move_y)
 
-        if (plt_x<0 or plt_x+self._width>self._scr_width) or (plt_y<0 or plt_y+self._height>self._scr_height):
+        if (plt_x < 0 or plt_x + self._width > self._scr_width) or \
+           (plt_y < 0 or plt_y + self._height > self._scr_height):
             return False
         else:
             self.move(move_x, move_y)
@@ -199,21 +190,20 @@ class Palette(gtk.Window):
             self._separator.hide()
         else:
             self._palette_label.set_text(label)
-            if not self._is_tooltip:
-                self._separator.show()
 
     def append_menu_item(self, item):
+        self._separator.show()
         self._menu_bar.append(item)
-        item.show()
+        self._menu_bar.show()
 
     def set_content(self, widget):
+        self._separator.show()
         self._content.pack_start(widget, True, True, self._PADDING)
-        widget.show()
 
     def append_button(self, button):
+        self._separator.show()
         button.connect('released', self._close_palette_cb)
         self._button_bar.pack_start(button, True, True, self._PADDING)
-        button.show()
 
     # Display the palette and set the position on the screen
     def popup(self):
