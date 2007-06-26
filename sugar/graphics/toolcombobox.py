@@ -21,12 +21,15 @@ from sugar.graphics.combobox import ComboBox
 from sugar.graphics import units
 
 class ToolComboBox(gtk.ToolItem):
-    def __init__(self):
+    def __init__(self, combo=None):
         gtk.ToolItem.__init__(self)
 
         self.set_border_width(units.microgrid_to_pixels(1))
 
-        self.combo = ComboBox()
+        if combo:
+            self.combo = combo
+        else:
+            self.combo = ComboBox()
         self.add(self.combo)
         self.combo.show()
 
