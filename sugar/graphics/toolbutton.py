@@ -35,6 +35,9 @@ class ToolButton(gtk.ToolButton):
         self.set_icon_widget(icon)
         icon.show()
 
+    def get_palette(self):
+        return self._palette
+    
     def set_palette(self, palette):
         self._palette = palette
         self._palette.props.invoker = WidgetInvoker(self.child)
@@ -42,3 +45,5 @@ class ToolButton(gtk.ToolButton):
     def set_tooltip(self, text):
         self._palette = Palette(text)
         self._palette.props.invoker = WidgetInvoker(self.child)
+    
+    palette = property(get_palette, set_palette)

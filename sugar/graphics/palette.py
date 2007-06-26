@@ -83,6 +83,23 @@ class Palette(gobject.GObject):
         self._separator.show()
         self._menu.insert(item, len(self._menu.get_children()) - 2)
 
+    def insert_menu_item(self, item, index=-1):
+        self._separator.show()
+        if index < 0:
+            self._menu.insert(item, len(self._menu.get_children()) - 2)
+        else:
+            self._menu.insert(item, index + 2)
+
+    def remove_menu_item(self, index):
+        if index > len(self._menu.get_children()) - 4:
+            raise ValueError('index %i out of range' % index)
+        self._menu.remove(self._menu.get_children()[index + 2])
+        if len(self._menu.get_children()) == 0:
+            self._separator.hide()
+
+    def menu_item_count(self):
+        return len(self._menu.get_children()) - 4
+        
     def set_content(self, widget):
         self._content.set_widget(widget)
         self._content.show()
