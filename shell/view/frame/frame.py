@@ -151,9 +151,6 @@ class Frame(object):
         self._left_panel = self._create_left_panel()
         self._right_panel = self._create_right_panel()
 
-        shell.get_model().connect('notify::state',
-                                  self._shell_state_changed_cb)
-                                  
         screen = gtk.gdk.screen_get_default()
         screen.connect('size-changed', self._size_changed_cb)
 
@@ -253,10 +250,6 @@ class Frame(object):
 
         return panel
 
-    def _shell_state_changed_cb(self, model, pspec):
-        if model.props.state == ShellModel.STATE_SHUTDOWN:
-            self._timeline.goto('slide_out', True)
-        
     def _create_panel(self, orientation):
         panel = FrameWindow(orientation)
         self._connect_to_panel(panel)
