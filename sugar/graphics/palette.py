@@ -52,7 +52,7 @@ class Palette(gtk.Window):
 
         self._alignment = ALIGNMENT_AUTOMATIC
 
-        self._popup_anim = animator.Animator(0.6, 10)
+        self._popup_anim = animator.Animator(0.3, 10)
         self._popup_anim.add(_PopupAnimation(self))
         self._popup_anim.start()
 
@@ -235,6 +235,7 @@ class _PopupAnimation(animator.Animation):
 
     def next_frame(self, current):
         if current == 1.0:
+            self._palette.realize()
             self._palette.place()
 
 class _PopdownAnimation(animator.Animation):
@@ -296,7 +297,9 @@ class CanvasInvoker(Invoker):
 
     def get_rect(self):
         context = self._item.get_context()
-        x, y = context.translate_to_screen(self._item)
+        if context:
+            x, y = context.translate_to_screen(self._item)
+
         width, height = self._item.get_allocation()
 
         return gtk.gdk.Rectangle(x, y, width, height)
