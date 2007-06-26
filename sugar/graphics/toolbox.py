@@ -25,6 +25,13 @@ _N_TABS = 8
 
 class Toolbox(gtk.VBox):
     __gtype_name__ = 'SugarToolbox'
+
+    __gsignals__ = {
+        'current-toolbar-changed': (gobject.SIGNAL_RUN_FIRST,
+                                    gobject.TYPE_NONE,
+                                    ([int]))
+    }
+
     def __init__(self):
         gtk.VBox.__init__(self)
         
@@ -34,7 +41,12 @@ class Toolbox(gtk.VBox):
         self._notebook.set_show_tabs(False)
         self.pack_start(self._notebook)
         self._notebook.show()
-                
+        
+        self._notebook.connect('notify::page', self._notify_page_cb)
+
+    def _notify_page_cb(self, notebook, pspec):
+        self.emit('current-toolbar-changed', notebook.props.page)
+        
     def _toolbar_box_expose_cb(self, widget, event):
         widget.style.paint_flat_box(widget.window,
                                     gtk.STATE_NORMAL, gtk.SHADOW_NONE,
