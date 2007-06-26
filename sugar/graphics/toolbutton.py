@@ -40,6 +40,5 @@ class ToolButton(gtk.ToolButton):
         self._palette.props.invoker = WidgetInvoker(self.child)
 
     def set_tooltip(self, text):
-        self._palette = Palette()
-        self._palette.set_primary_state(text)
+        self._palette = Palette(text)
         self._palette.props.invoker = WidgetInvoker(self.child)

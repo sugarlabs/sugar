@@ -132,8 +132,7 @@ class HomeMyIcon(MyIcon):
         MyIcon.__init__(self, scale)
 
         self._shell = shell
-        self._palette = Palette()
-        self._palette.set_primary_state(profile.get_nick_name())
+        self._palette = Palette(profile.get_nick_name())
         self._palette.props.invoker = CanvasInvoker(self)
         
         shutdown_menu_item = gtk.MenuItem(_('Shutdown'))

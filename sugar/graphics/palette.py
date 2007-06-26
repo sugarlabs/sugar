@@ -21,6 +21,7 @@ import time
 import hippo
 
 from sugar.graphics import animator
+from sugar import _sugarext
 
 ALIGNMENT_AUTOMATIC     = 0
 ALIGNMENT_BOTTOM_LEFT   = 1
@@ -32,7 +33,7 @@ ALIGNMENT_RIGHT_TOP     = 6
 ALIGNMENT_TOP_LEFT      = 7
 ALIGNMENT_TOP_RIGHT     = 8
 
-class Palette(gtk.Window):
+class Palette(gobject.GObject):
     __gtype_name__ = 'SugarPalette'
 
     __gproperties__ = {
@@ -43,12 +44,8 @@ class Palette(gtk.Window):
                         gobject.PARAM_READWRITE)
     }
 
-    _PADDING    = 1
-    _WIN_BORDER = 5
-
-    def __init__(self, **kwargs):
-        gobject.GObject.__init__(self, type=gtk.WINDOW_POPUP, **kwargs)
-        gtk.Window.__init__(self)
+    def __init__(self, label, accel_path=None):
+        gobject.GObject.__init__(self)
 
         self._alignment = ALIGNMENT_AUTOMATIC
 
@@ -60,35 +57,39 @@ class Palette(gtk.Window):
         self._popdown_anim.add(_PopdownAnimation(self))
         self._popdown_anim.start()
 
-        self._palette_label = gtk.Label()
-        self._palette_label.show()
+        self._menu = _sugarext.Menu()
 
-        vbox = gtk.VBox(False, 0)
-        vbox.pack_start(self._palette_label, True, True, self._PADDING)
+        primary = _PrimaryMenuItem(label, accel_path)
+        self._menu.append(primary)
+        primary.show()
 
-        self._separator = gtk.HSeparator()
+        self._separator = gtk.SeparatorMenuItem()
+        self._menu.append(self._separator)
 
-        self._menu_bar = gtk.MenuBar()
-        self._menu_bar.set_pack_direction(gtk.PACK_DIRECTION_TTB)
+        self._content = _ContentMenuItem()
+        self._menu.append(self._content)
 
-        self._content = gtk.HBox()
-        self._button_bar = gtk.HButtonBox()
-    
-        # Set main container
-        vbox.pack_start(self._separator, True, True, self._PADDING)
-        vbox.pack_start(self._menu_bar, True, True, self._PADDING)
-        vbox.pack_start(self._content, True, True, self._PADDING)
-        vbox.pack_start(self._button_bar, True, True, self._PADDING)
+        self._button_bar = _ButtonBarMenuItem()
+        self._menu.append(self._button_bar)
 
-        vbox.show()
-        self.add(vbox)
+        self._menu.connect('enter-notify-event',
+                           self._enter_notify_event_cb)
+        self._menu.connect('leave-notify-event',
+                           self._leave_notify_event_cb)
+        self._menu.connect('button-press-event',
+                           self._button_press_event_cb)
 
-        # Widget events
-        self.connect('enter-notify-event', self._enter_notify_event_cb)
-        self.connect('leave-notify-event', self._leave_notify_event_cb)
-        self.connect('button-press-event', self._button_press_event_cb)
+    def append_menu_item(self, item):
+        self._separator.show()
+        self._menu.insert(item, len(self._menu.get_children()) - 2)
 
-        self.set_border_width(self._WIN_BORDER)
+    def set_content(self, widget):
+        self._content.set_widget(widget)
+        self._content.show()
+
+    def append_button(self, button):
+        self._button_bar.append_button(button)
+        self._button_bar.show()
         
     def do_set_property(self, pspec, value):
         if pspec.name == 'invoker':
@@ -99,109 +100,78 @@ class Palette(gtk.Window):
         else:
             raise AssertionError
 
-    def place(self):
-        # Automatic Alignment
+    def _get_position(self):
         if self._alignment == ALIGNMENT_AUTOMATIC:
-            # Trying Different types of ALIGNMENTS, 
-            # and return the choosen one
-            if self._try_position(ALIGNMENT_BOTTOM_LEFT):
-                return ALIGNMENT_BOTTOM_LEFT
-            elif self._try_position(ALIGNMENT_BOTTOM_RIGHT):
-                return ALIGNMENT_BOTTOM_RIGHT
-            elif self._try_position(ALIGNMENT_LEFT_BOTTOM):
-                return ALIGNMENT_LEFT_BOTTOM
-            elif self._try_position(ALIGNMENT_LEFT_TOP):
-                return ALIGNMENT_LEFT_TOP
-            elif self._try_position(ALIGNMENT_RIGHT_BOTTOM):
-                return ALIGNMENT_RIGHT_BOTTOM
-            elif self._try_position(ALIGNMENT_RIGHT_TOP):
-                return ALIGNMENT_RIGHT_TOP
-            elif self._try_position(ALIGNMENT_TOP_LEFT):
-                return ALIGNMENT_TOP_LEFT
-            elif self._try_position(ALIGNMENT_TOP_RIGHT):
-                return ALIGNMENT_TOP_RIGHT
+            x, y = self._try_position(ALIGNMENT_BOTTOM_LEFT)
+            if x == -1:
+                x, y = self._try_position(ALIGNMENT_BOTTOM_LEFT)
+            if x == -1:
+                x, y = self._try_position(ALIGNMENT_BOTTOM_RIGHT)
+            if x == -1:
+                x, y = self._try_position(ALIGNMENT_LEFT_BOTTOM)
+            if x == -1:
+                x, y = self._try_position(ALIGNMENT_LEFT_TOP)
+            if x == -1:
+                x, y = self._try_position(ALIGNMENT_RIGHT_BOTTOM)
+            if x == -1:
+                x, y = self._try_position(ALIGNMENT_RIGHT_TOP)
+            if x == -1:
+                x, y = self._try_position(ALIGNMENT_LEFT_BOTTOM)
+            if x == -1:
+                x, y = self._try_position(ALIGNMENT_LEFT_BOTTOM)
         else:
-            # Manual Alignment
-            move_x, move_y = self._calc_position(self._alignment)
-            self.move(move_x, move_y)
+            x, y = self._position_for_alignment(self._alignment)
+
+        return (x, y)
 
     def _try_position(self, alignment):
-        screen_width = gtk.gdk.screen_width()
-        screen_height = gtk.gdk.screen_height()
-        x, y = self._calc_position(alignment)
-        self._width, self._height = self.size_request()
+        x, y = self._position_for_alignment(alignment)
+        allocation = self._menu.get_allocation()
 
-        if (x + self._width > screen_width) or \
-           (y + self._height > screen_height):
-            return False
+        if (x + allocation.width > gtk.gdk.screen_width()) or \
+           (y + allocation.height > gtk.gdk.screen_height()):
+            return (-1, -1)
         else:
-            self.move(x, y)
-            self.show()
-            return True
+            return (x, y)
 
-    def _calc_position(self, alignment):
+    def _position_for_alignment(self, alignment):
         # Invoker: x, y, width and height
         inv_rect = self._invoker.get_rect()
-        palette_rectangle = self.get_allocation()
+        palette_rect = self._menu.get_allocation()
 
         if alignment == ALIGNMENT_BOTTOM_LEFT:
             move_x = inv_rect.x
             move_y = inv_rect.y + inv_rect.height
-
         elif alignment == ALIGNMENT_BOTTOM_RIGHT:
             move_x = (inv_rect.x + inv_rect.width) - self._width
             move_y = inv_rect.y + inv_rect.height
-
         elif alignment == ALIGNMENT_LEFT_BOTTOM:
             move_x = inv_rect.x - self._width
             move_y = inv_rect.y
-
         elif alignment == ALIGNMENT_LEFT_TOP:
             move_x = inv_rect.x - self._width
-            move_y = (inv_rect.y + inv_rect.height) - palette_rectangle.height
-
+            move_y = (inv_rect.y + inv_rect.height) - palette_rect.height
         elif alignment == ALIGNMENT_RIGHT_BOTTOM:
             move_x = inv_rect.x + inv_rect.width
             move_y = inv_rect.y
-
         elif alignment == ALIGNMENT_RIGHT_TOP:
             move_x = inv_rect.x + inv_rect.width
-            move_y = (inv_rect.y + inv_rect.height) - palette_rectangle.height
-
+            move_y = (inv_rect.y + inv_rect.height) - palette_rect.height
         elif alignment == ALIGNMENT_TOP_LEFT:
             move_x = inv_rect.x
-            move_y = inv_rect.y - palette_rectangle.height
-
+            move_y = inv_rect.y - palette_rect.height
         elif alignment == ALIGNMENT_TOP_RIGHT:
             move_x = (inv_rect.x + inv_rect.width) - self._width
-            move_y = inv_rect.y - palette_rectangle.height
+            move_y = inv_rect.y - palette_rect.height
 
         return move_x, move_y
 
-    def set_primary_state(self, label, accel_path=None):
-        if accel_path != None:
-            item = gtk.MenuItem(label)
-            item.set_accel_path(accel_path)
-            self.append_menu_item(item)
-            self._separator.hide()
-        else:
-            self._palette_label.set_text(label)
+    def _show(self):
+        x, y = self._get_position()
+        self._menu.popup(x, y)
 
-    def append_menu_item(self, item):
-        self._separator.show()
-        self._menu_bar.show()
-        self._menu_bar.append(item)
-        item.show()
-
-    def set_content(self, widget):
-        self._separator.show()
-        self._content.pack_start(widget, True, True, self._PADDING)
-        widget.show()
-
-    def append_button(self, button):
-        button.connect('released', self._close_palette_cb)
-        self._button_bar.pack_start(button, True, True, self._PADDING)
-        button.show()
+    def _hide(self):
+        self._menu.popdown()
 
     def popup(self):
         self._popdown_anim.stop()
@@ -228,6 +198,40 @@ class Palette(gtk.Window):
     def _button_press_event_cb(self, widget, event):
         pass
 
+class _PrimaryMenuItem(gtk.MenuItem):
+    def __init__(self, label, accel_path):
+        gtk.MenuItem.__init__(self)
+
+        label = gtk.AccelLabel(label)
+        label.set_accel_widget(self)
+
+        if accel_path:
+            self.set_accel_path(accel_path)
+            label.set_alignment(0.0, 0.5)
+
+        self.add(label)
+        label.show()
+
+class _ContentMenuItem(gtk.MenuItem):
+    def __init__(self):
+        gtk.MenuItem.__init__(self)
+
+    def set_widget(self, widget):
+        if self.child:
+            self.remove(self.child)
+        self.add(widget)
+
+class _ButtonBarMenuItem(gtk.MenuItem):
+    def __init__(self):
+        gtk.MenuItem.__init__(self)
+
+        self._hbar = gtk.HButtonBox()
+        self.add(self._hbar)
+        self._hbar.show()
+
+    def append_button(self, button):
+        self._hbar.pack_start(button)
+
 class _PopupAnimation(animator.Animation):
     def __init__(self, palette):
         animator.Animation.__init__(self, 0.0, 1.0)
@@ -235,7 +239,7 @@ class _PopupAnimation(animator.Animation):
 
     def next_frame(self, current):
         if current == 1.0:
-            self._palette.place()
+            self._palette._show()
 
 class _PopdownAnimation(animator.Animation):
     def __init__(self, palette):
@@ -244,7 +248,7 @@ class _PopdownAnimation(animator.Animation):
 
     def next_frame(self, current):
         if current == 1.0:
-            self._palette.hide()
+            self._palette._hide()
 
 class Invoker(object):
     def __init__(self):

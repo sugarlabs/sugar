@@ -15,7 +15,32 @@
   (gtype-id "SUGAR_TYPE_KEY_GRABBER")
 )
 
+(define-object Menu
+  (in-module "Sugar")
+  (parent "GtkMenu")
+  (c-name "SugarMenu")
+  (gtype-id "SUGAR_TYPE_MENU")
+)
+
 ;; Enumerations and flags ...
+
+;; From sugar-menu.h
+
+(define-method popup
+  (of-object "SugarMenu")
+  (c-name "sugar_menu_popup")
+  (return-type "none")
+  (parameters
+    '("gint" "x")
+    '("gint" "y")
+  )
+)
+
+(define-method popdown
+  (of-object "SugarMenu")
+  (c-name "sugar_menu_popdown")
+  (return-type "none")
+)
 
 ;; From sugar-key-grabber.h
 

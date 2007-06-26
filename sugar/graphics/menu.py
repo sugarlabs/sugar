@@ -88,7 +88,7 @@ class MenuItem(hippo.CanvasBox):
             return hippo.CanvasBox.do_get_property(self, pspec)
 
 class Menu(Popup):
-    __gtype_name__ = 'SugarMenu'
+    __gtype_name__ = 'SugarCanvasMenu'
 
     __gsignals__ = {
         'action': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([object]))

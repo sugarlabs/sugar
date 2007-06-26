@@ -17,6 +17,8 @@ libsugar_la_SOURCES =			\
 	sugar-address-entry.h		\
 	sugar-key-grabber.c		\
 	sugar-key-grabber.h		\
+	sugar-menu.h			\
+	sugar-menu.c			\
 	sugar-x11-util.c		\
 	sugar-x11-util.h
 
