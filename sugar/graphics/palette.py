@@ -49,7 +49,7 @@ class Palette(gobject.GObject):
 
         self._alignment = ALIGNMENT_AUTOMATIC
 
-        self._popup_anim = animator.Animator(0.6, 10)
+        self._popup_anim = animator.Animator(0.3, 10)
         self._popup_anim.add(_PopupAnimation(self))
         self._popup_anim.start()
 
@@ -300,7 +300,9 @@ class CanvasInvoker(Invoker):
 
     def get_rect(self):
         context = self._item.get_context()
-        x, y = context.translate_to_screen(self._item)
+        if context:
+            x, y = context.translate_to_screen(self._item)
+
         width, height = self._item.get_allocation()
 
         return gtk.gdk.Rectangle(x, y, width, height)

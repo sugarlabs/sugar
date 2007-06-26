@@ -20,7 +20,8 @@ import gtk
 
 from sugar.graphics.window import Window
 from sugar.graphics.toolbutton import ToolButton
-from sugar.graphics.toolbox import ActivityToolbar
+from sugar.graphics.toolbox import Toolbox
+from sugar.graphics.palette import Palette
 
 class EditToolbar(gtk.Toolbar):
     def __init__(self):
@@ -33,6 +34,17 @@ class TextToolbar(gtk.Toolbar):
         button = ToolButton('text-format-bold')
         self.insert(button, -1)
         button.show()
+        
+        palette = Palette()
+        button.set_palette(palette)
+
+        palette.set_primary_state('This is a palette')
+        menu_item = gtk.MenuItem('First menu item')
+        palette.append_menu_item(menu_item)
+        menu_item = gtk.MenuItem('Second menu item')
+        palette.append_menu_item(menu_item)
+        menu_item = gtk.MenuItem('Third menu item')
+        palette.append_menu_item(menu_item)
 
 class ImageToolbar(gtk.Toolbar):
     def __init__(self):
@@ -53,33 +65,35 @@ class ViewToolbar(gtk.Toolbar):
 window = Window()
 window.connect("destroy", lambda w: gtk.main_quit())
 
-activity_toolbar = ActivityToolbar()
-window.toolbox.add_toolbar('Activity', activity_toolbar)
-activity_toolbar.show()
+toolbox = Toolbox()
+window.set_toolbox(toolbox)
+toolbox.show()
 
 edit_toolbar = EditToolbar()
-window.toolbox.add_toolbar('Edit', edit_toolbar)
+toolbox.add_toolbar('Edit', edit_toolbar)
 edit_toolbar.show()
 
 text_toolbar = TextToolbar()
-window.toolbox.add_toolbar('Text', text_toolbar)
+toolbox.add_toolbar('Text', text_toolbar)
 text_toolbar.show()
 
 image_toolbar = ImageToolbar()
-window.toolbox.add_toolbar('Image', image_toolbar)
+toolbox.add_toolbar('Image', image_toolbar)
 image_toolbar.show()
 
 table_toolbar = TableToolbar()
-window.toolbox.add_toolbar('Table', table_toolbar)
+toolbox.add_toolbar('Table', table_toolbar)
 table_toolbar.show()
 
 format_toolbar = FormatToolbar()
-window.toolbox.add_toolbar('Format', format_toolbar)
+toolbox.add_toolbar('Format', format_toolbar)
 format_toolbar.show()
 
 view_toolbar = ViewToolbar()
-window.toolbox.add_toolbar('View', view_toolbar)
+toolbox.add_toolbar('View', view_toolbar)
 view_toolbar.show()
+
+toolbox.set_current_toolbar(1)
 
 scrolled_window = gtk.ScrolledWindow()
 scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_ALWAYS)
