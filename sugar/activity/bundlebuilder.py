@@ -190,20 +190,29 @@ def cmd_genpot(bundle_name, manifest):
     for file_name in file_list:
         if file_name.endswith('.py'):
             python_files.append(file_name)
-    service_name = Bundle(_get_source_path()).get_service_name()
-    args = ["xgettext", "--language=Python", "--keyword=_",
-            "--output=po/%s.pot" % bundle_name]
+
+    pot_file = os.path.join('po', '%s.pot' % bundle_name)
+    args = [ 'xgettext', '--language=Python',
+             '--keyword=_', '--output=%s' % pot_file ]
+
     args += python_files
     retcode = subprocess.call(args)
     if retcode:
         print 'ERROR - xgettext failed with return code %i.' % retcode
 
+    po_regex = re.compile("po/.*\.po$")
+    for file_name in _get_file_list(manifest):
+        if po_regex.match(file_name):
+            args = [ 'msgmerge', '-U', file_name, pot_file ]
+            retcode = subprocess.call(args)
+            if retcode:
+                print 'ERROR - msgmerge failed with return code %i.' % retcode    
+
 def cmd_genmo(bundle_name, manifest):
     source_path = _get_source_path()
 
     po_regex = re.compile("po/(.*)\.po$")
-    file_list = _get_file_list(manifest)
-    for file_name in file_list:
+    for file_name in _get_file_list(manifest):
         match = po_regex.match(file_name)
         if match:
             lang = match.group(1)
