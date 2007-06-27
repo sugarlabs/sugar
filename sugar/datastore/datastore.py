@@ -142,3 +142,8 @@ def find(query, sorting=None, limit=None, offset=None, reply_handler=None,
 
     return objects, total_count
 
+def mount(uri, options):
+    return dbus_helpers.mount(uri, options)
+
+def mounts():
+    return dbus_helpers.mounts()

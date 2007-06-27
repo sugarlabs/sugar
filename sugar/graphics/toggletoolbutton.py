@@ -18,13 +18,28 @@
 import gtk
 
 from sugar.graphics.icon import Icon
+from sugar.graphics.palette import Palette, WidgetInvoker
 
 class ToggleToolButton(gtk.ToggleToolButton):
     def __init__(self, named_icon=None):
         gtk.ToggleToolButton.__init__(self)
+        self._palette = None
         self.set_named_icon(named_icon)
 
     def set_named_icon(self, named_icon):
         icon = Icon(named_icon)
         self.set_icon_widget(icon)
         icon.show()
+
+    def get_palette(self):
+        return self._palette
+    
+    def set_palette(self, palette):
+        self._palette = palette
+        self._palette.props.invoker = WidgetInvoker(self.child)
+
+    def set_tooltip(self, text):
+        self._palette = Palette(text)
+        self._palette.props.invoker = WidgetInvoker(self.child)
+    
+    palette = property(get_palette, set_palette)

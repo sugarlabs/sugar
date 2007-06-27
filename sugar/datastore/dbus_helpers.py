@@ -59,10 +59,16 @@ def get_filename(uid):
     return filename
 
 def find(query, reply_handler, error_handler):
-    logging.debug('dbus_helpers.find')
+    logging.debug('dbus_helpers.find: %r' % query)
     if reply_handler and error_handler:
         return _data_store.find(query, reply_handler=reply_handler,
                 error_handler=error_handler)
     else:
         return _data_store.find(query)
+
+def mount(uri, options):
+    return _data_store.mount(uri, options)
+
+def mounts():
+    return _data_store.mounts()
 
