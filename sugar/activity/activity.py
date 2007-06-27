@@ -28,7 +28,8 @@ import tempfile
 
 import gtk, gobject
 import dbus
-        
+
+from sugar import util        
 from sugar.presence import presenceservice
 from sugar.activity.activityservice import ActivityService
 from sugar.graphics import units
@@ -198,6 +199,13 @@ class Activity(Window, gtk.Container):
             this application.
         """
         Window.__init__(self)
+
+        # process titles will only show 15 characters
+        # but they get truncated anyway so if more characters
+        # are supported in the future we will get a better view
+        # of the processes
+        proc_title = "%s <%s>" % (get_bundle_name(), handle.activity_id)
+        util.set_proc_title(proc_title)
 
         self.connect('realize', self._realize_cb)
         self.connect('delete-event', self._delete_event_cb)
@@ -397,3 +405,4 @@ def get_bundle_path():
     """Return the bundle path for the current process' bundle
     """
     return os.environ['SUGAR_BUNDLE_PATH']
+

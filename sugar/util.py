@@ -103,3 +103,25 @@ def write_service(name, bin, path):
     fileobject = open(dest_filename, 'w')
     service_cp.write(fileobject)
     fileobject.close()
+
+def set_proc_title(title):
+    """Sets the process title so ps and top show more
+       descriptive names.  This does not modify argv[0]
+       and only the first 15 characters will be shown.
+
+       title -- the title you wish to change the process
+                title to 
+
+       Returns True on success.  We don't raise exceptions
+       because if something goes wrong here it is not a big
+       deal as this is intended as a nice thing to have for
+       debugging
+    """
+    try:
+        import ctypes
+        libc = ctypes.CDLL('libc.so.6')
+        libc.prctl(15, str(title), 0, 0, 0)
+
+        return True
+    except:
+        return False
