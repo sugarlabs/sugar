@@ -121,8 +121,6 @@ class Palette(gobject.GObject):
         if self._alignment == ALIGNMENT_AUTOMATIC:
             x, y = self._try_position(ALIGNMENT_BOTTOM_LEFT)
             if x == -1:
-                x, y = self._try_position(ALIGNMENT_BOTTOM_LEFT)
-            if x == -1:
                 x, y = self._try_position(ALIGNMENT_BOTTOM_RIGHT)
             if x == -1:
                 x, y = self._try_position(ALIGNMENT_LEFT_BOTTOM)
