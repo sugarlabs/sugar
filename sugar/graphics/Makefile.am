@@ -14,6 +14,7 @@ sugar_PYTHON =			\
 	menushell.py		\
 	notebook.py		\
 	objectchooser.py	\
+	radiotoolbutton.py	\
 	roundbox.py		\
 	palette.py		\
 	panel.py		\
