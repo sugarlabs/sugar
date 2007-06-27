@@ -160,13 +160,13 @@ class Palette(gobject.GObject):
             move_x = inv_rect.x
             move_y = inv_rect.y + inv_rect.height
         elif alignment == ALIGNMENT_BOTTOM_RIGHT:
-            move_x = (inv_rect.x + inv_rect.width) - self._width
+            move_x = (inv_rect.x + inv_rect.width) - palette_rect.width
             move_y = inv_rect.y + inv_rect.height
         elif alignment == ALIGNMENT_LEFT_BOTTOM:
-            move_x = inv_rect.x - self._width
+            move_x = inv_rect.x - palette_rect.width
             move_y = inv_rect.y
         elif alignment == ALIGNMENT_LEFT_TOP:
-            move_x = inv_rect.x - self._width
+            move_x = inv_rect.x - palette_rect.width
             move_y = (inv_rect.y + inv_rect.height) - palette_rect.height
         elif alignment == ALIGNMENT_RIGHT_BOTTOM:
             move_x = inv_rect.x + inv_rect.width
@@ -178,7 +178,7 @@ class Palette(gobject.GObject):
             move_x = inv_rect.x
             move_y = inv_rect.y - palette_rect.height
         elif alignment == ALIGNMENT_TOP_RIGHT:
-            move_x = (inv_rect.x + inv_rect.width) - self._width
+            move_x = (inv_rect.x + inv_rect.width) - palette_rect.width
             move_y = inv_rect.y - palette_rect.height
 
         return move_x, move_y
