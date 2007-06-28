@@ -113,6 +113,7 @@ setup.py uninstall [dirname] - uninstall the bundle \n\
 setup.py genpot              - generate the gettext pot file \n\
 setup.py genmo               - compile gettext po files in mo \n\
 setup.py clean               - clean the directory \n\
+setup.py release             - do a new release of the bundle \n\
 setup.py help                - print this message \n\
 '
 
@@ -227,6 +228,58 @@ def cmd_genmo(bundle_name, manifest):
             if retcode:
                 print 'ERROR - msgfmt failed with return code %i.' % retcode
 
+def cmd_release(bundle_name, manifest):
+    if not os.path.isdir('.git'):
+        print 'ERROR - this command works only for git repositories'
+
+    print 'Bumping activity version...'
+
+    info_path = os.path.join(_get_source_path(), 'activity', 'activity.info')
+    f = open(info_path,'r')
+    info = f.read()
+    f.close()
+
+    exp = re.compile('activity_version\s?=\s?([1-9]*)')
+    match = re.search(exp, info)
+    version = int(match.group(1)) + 1
+    info = re.sub(exp, 'activity_version = %d' % version, info)
+
+    f = open(info_path, 'w')
+    f.write(info)
+    f.close()
+
+    print 'Committing to git...'
+
+    changelog = 'Release version %d.' % version
+    retcode = subprocess.call(['git', 'commit', '-a', '-m % s' % changelog])
+    if retcode:
+        print 'ERROR - cannot commit to git'
+
+    retcode = subprocess.call(['git', 'push'])
+    if retcode:
+        print 'ERROR - cannot push to git'
+
+    print 'Creating the bundle...'
+    cmd_dist(bundle_name, manifest)
+
+    if os.environ.has_key('ACTIVITIES_REPOSITORY'):
+        print 'Uploading to the activities repository...'
+        repo = os.environ['ACTIVITIES_REPOSITORY']
+
+        server, path = repo.split(':')
+        cmd = '"rm %s/%s*"' % (path, bundle_name)
+        retcode = subprocess.call(['ssh', server, cmd])
+        if retcode:
+            print 'ERROR - cannot remove old bundles from the repository.'
+
+        bundle_path = os.path.join(_get_source_path(),
+                                   _get_package_name(bundle_name))
+        retcode = subprocess.call(['scp', bundle_path, repo])
+        if retcode:
+            print 'ERROR - cannot upload the bundle to the repository.'
+
+    print 'Done.'
+
 def cmd_clean():
     os.path.walk('.', _delete_backups, None)
 
@@ -252,6 +305,8 @@ def start(bundle_name=None, manifest='MANIFEST'):
         cmd_genmo(bundle_name, manifest)
     elif sys.argv[1] == 'clean':
         cmd_clean()
+    elif sys.argv[1] == 'release':
+        cmd_release(bundle_name, manifest)
     else:
         cmd_help()
         
