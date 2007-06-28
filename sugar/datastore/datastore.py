@@ -145,5 +145,8 @@ def find(query, sorting=None, limit=None, offset=None, reply_handler=None,
 def mount(uri, options):
     return dbus_helpers.mount(uri, options)
 
+def unmount(mount_point_id):
+    dbus_helpers.unmount(mount_point_id)
+
 def mounts():
     return dbus_helpers.mounts()

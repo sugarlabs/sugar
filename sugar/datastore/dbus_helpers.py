@@ -69,6 +69,9 @@ def find(query, reply_handler, error_handler):
 def mount(uri, options):
     return _data_store.mount(uri, options)
 
+def unmount(mount_point_id):
+    _data_store.unmount(mount_point_id)
+
 def mounts():
     return _data_store.mounts()
 
