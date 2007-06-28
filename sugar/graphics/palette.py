@@ -51,11 +51,9 @@ class Palette(gobject.GObject):
 
         self._popup_anim = animator.Animator(0.3, 10)
         self._popup_anim.add(_PopupAnimation(self))
-        self._popup_anim.start()
 
         self._popdown_anim = animator.Animator(0.6, 10)
         self._popdown_anim.add(_PopdownAnimation(self))
-        self._popdown_anim.start()
 
         self._menu = _sugarext.Menu()
 
@@ -197,12 +195,14 @@ class Palette(gobject.GObject):
         self._popdown_anim.start()
 
     def invoker_mouse_enter(self):
+        print 'Invoker enter'
         self.popup()
 
     def invoker_mouse_leave(self):
         self.popdown()
 
     def _enter_notify_event_cb(self, widget, event):
+        print 'Enter notify'
         if event.detail == gtk.gdk.NOTIFY_NONLINEAR:
             self._popdown_anim.stop()
 
