@@ -155,7 +155,10 @@ class Bundle:
 
     def _get_linfo_file(self):
         linfo_file = None
+
         lang = locale.getdefaultlocale()[0]
+        if not lang:
+            return None
 
         if os.path.isdir(self._path):
             linfo_path = os.path.join(self.get_locale_path(), lang, 'activity.linfo')
