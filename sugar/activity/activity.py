@@ -64,11 +64,13 @@ class ActivityToolbar(gtk.Toolbar):
         separator.show()
 
         self.save = ToolButton('document-save')
+        self.save.set_tooltip(_('Save'))
         self.save.connect('clicked', self._save_clicked_cb)
         self.insert(self.save, -1)
         self.save.show()
 
         self.share = ToolButton('stock-share-mesh')
+        self.share.set_tooltip(_('Share'))
         self.share.connect('clicked', self._share_clicked_cb)
         self.insert(self.share, -1)
         if activity.get_shared():
@@ -81,6 +83,7 @@ class ActivityToolbar(gtk.Toolbar):
         separator.show()
 
         self.close = ToolButton('window-close')
+        self.close.set_tooltip(_('Close'))
         self.close.connect('clicked', self._close_clicked_cb)
         self.insert(self.close, -1)
         self.close.show()
