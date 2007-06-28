@@ -195,14 +195,12 @@ class Palette(gobject.GObject):
         self._popdown_anim.start()
 
     def invoker_mouse_enter(self):
-        print 'Invoker enter'
         self.popup()
 
     def invoker_mouse_leave(self):
         self.popdown()
 
     def _enter_notify_event_cb(self, widget, event):
-        print 'Enter notify'
         if event.detail == gtk.gdk.NOTIFY_NONLINEAR:
             self._popdown_anim.stop()
 

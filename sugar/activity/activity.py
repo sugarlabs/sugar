@@ -216,6 +216,7 @@ class Activity(Window, gtk.Container):
         self._shared_activity = None
         self._share_id = None
         self._join_id = None
+        self._can_close = True
 
         shared_activity = handle.get_shared_activity()
         if shared_activity:
@@ -376,8 +377,11 @@ class Activity(Window, gtk.Container):
         wm.set_activity_id(window.window, self._activity_id)
 
     def _delete_event_cb(self, window, event):
-        self.close()
-        return False
+        if self._can_close:
+            self.close()
+            return False
+        else:
+            return True
 
     def close(self):
         if self._bus:
