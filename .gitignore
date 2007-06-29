@@ -7,6 +7,7 @@ Makefile.in
 *.deps
 *.libs
 *.la
+*.o
 *.lo
 *.loT
 .*.sw?
