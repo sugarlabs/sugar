@@ -52,6 +52,14 @@ class _DefaultFileList(list):
         self.append('activity/activity.info')
         self.append('setup.py')
 
+        news_file = os.path.join(_get_source_path(), 'NEWS')
+        if not os.path.isfile(news_file):
+            f = f.open('w')
+            f.write('')
+            f.close()
+
+        self.append('NEWS')
+
 class _ManifestFileList(list):
     def __init__(self, manifest=None):
         self.append(manifest)
