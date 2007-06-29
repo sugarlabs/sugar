@@ -21,6 +21,7 @@ from model import bundleregistry
 
 _DBUS_SERVICE = "org.laptop.Shell"
 _DBUS_ACTIVITY_REGISTRY_IFACE = "org.laptop.Shell.ActivityRegistry"
+_DBUS_SHELL_IFACE = "org.laptop.Shell"
 _DBUS_OWNER_IFACE = "org.laptop.Shell.Owner"
 _DBUS_PATH = "/org/laptop/Shell"
 
@@ -58,6 +59,17 @@ class ShellService(dbus.service.Object):
         bus = dbus.SessionBus()
         bus_name = dbus.service.BusName(_DBUS_SERVICE, bus=bus)
         dbus.service.Object.__init__(self, bus_name, _DBUS_PATH)
+
+
+    @dbus.service.method(_DBUS_SHELL_IFACE,
+                         in_signature="ss", out_signature="")
+    def NotifyLaunch(self, bundle_id, activity_id):
+        self._shell.notify_launch(bundle_id, activity_id)
+
+    @dbus.service.method(_DBUS_SHELL_IFACE,
+                         in_signature="s", out_signature="")
+    def NotifyLaunchFailure(self, activity_id):
+        self._shell.notify_launch_failure(activity_id)
 
     @dbus.service.method(_DBUS_ACTIVITY_REGISTRY_IFACE,
                          in_signature="s", out_signature="b")

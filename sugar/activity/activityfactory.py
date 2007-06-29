@@ -26,6 +26,10 @@ from sugar.presence import presenceservice
 from sugar.activity.activityhandle import ActivityHandle
 from sugar import util
 
+_SHELL_SERVICE = "org.laptop.Shell"
+_SHELL_PATH = "/org/laptop/Shell"
+_SHELL_IFACE = "org.laptop.Shell"
+
 _ACTIVITY_FACTORY_INTERFACE = "org.laptop.ActivityFactory"
 
 def create_activity_id():
@@ -59,13 +63,6 @@ class ActivityCreationHandler(gobject.GObject):
     activity startup using callbacks to the service's 
     create call.
     """
-    __gsignals__ = {
-        'success': (gobject.SIGNAL_RUN_FIRST,
-                    gobject.TYPE_NONE, ([])),
-        'error':   (gobject.SIGNAL_RUN_FIRST,
-                    gobject.TYPE_NONE, 
-                   ([gobject.TYPE_PYOBJECT]))
-    }
 
     def __init__(self, service_name, activity_handle):
         """Initialise the handler
@@ -99,34 +96,42 @@ class ActivityCreationHandler(gobject.GObject):
         factory = dbus.Interface(proxy_obj, _ACTIVITY_FACTORY_INTERFACE)
 
         factory.create(self._activity_handle.get_dict(),
-                       reply_handler=self._reply_handler,
-                       error_handler=self._error_handler)
+                       reply_handler=self._no_reply_handler,
+                       error_handler=self._create_error_handler)
+
+        bus = dbus.SessionBus()
+        bus_object = bus.get_object(_SHELL_SERVICE, _SHELL_PATH)
+        self._shell = dbus.Interface(bus_object, _SHELL_IFACE)
+
+        self._shell.NotifyLaunch(
+                    service_name, self.get_activity_id(),
+                    reply_handler=self._no_reply_handler,
+                    error_handler=self._notify_launch_error_handler)
 
     def get_activity_id(self):
         """Retrieve the unique identity for this activity"""
         return self._activity_handle.activity_id
 
-    def _reply_handler(self, xid):
-        """Reply from service regarding what window was created 
-        
-        xid -- X windows ID for the window that was just created
-        
-        emits the "success" message (on ourselves)
-        """
+    def _no_reply_handler(self, *args):
+        pass
+
+    def _notify_launch_failure_error_handler(self, err):
+        logging.debug('Notify launch failure failed %s' % err)
+
+    def _notify_launch_error_handler(self, err):
+        logging.debug('Notify launch failed %s' % err)
+
+    def _create_reply_handler(self, xid):
         logging.debug("Activity created %s (%s)." % 
             (self._activity_handle.activity_id, self._service_name))
-        self.emit('success')
 
-    def _error_handler(self, err):
-        """Reply from service with an error message (exception)
-        
-        err -- exception object describing the error
-        
-        emits the "error" message (on ourselves)
-        """
+    def _create_error_handler(self, err):
         logging.debug("Couldn't create activity %s (%s): %s" %
             (self._activity_handle.activity_id, self._service_name, err))
-        self.emit('error', err)
+        self._shell.NotifyLaunchFailure(
+                    service_name, self.get_activity_id(),
+                    reply_handler=self._no_reply_handler,
+                    error_handler=self._notify_launch_failure_error_handler)
 
 def create(service_name, activity_handle=None):
     """Create a new activity from its name."""

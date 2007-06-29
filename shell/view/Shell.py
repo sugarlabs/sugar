@@ -68,11 +68,14 @@ class Shell(gobject.GObject):
         home_model.connect('active-activity-changed',
                            self._active_activity_changed_cb)
 
-        self.start_activity('org.laptop.JournalActivity')
-
         # Unfreeze the display when it's stable
         hw_manager = hardwaremanager.get_manager()
         hw_manager.set_dcon_freeze(0)
+
+        gobject.idle_add(self._start_journal_idle)
+
+    def _start_journal_idle(self):
+        self.start_activity('org.laptop.JournalActivity')
 
     def _activity_started_cb(self, home_model, home_activity):
         activity_host = ActivityHost(home_activity)
@@ -114,10 +117,6 @@ class Shell(gobject.GObject):
     def get_popup_context(self):
         return self._popup_context
 
-    def _join_error_cb(self, handler, err, home_model):
-        logging.debug("Failed to join activity %s: %s" % (handler.get_activity_id(), err))
-        home_model.notify_activity_launch_failed(handler.get_activity_id())
-
     def join_activity(self, bundle_id, activity_id):
         activity = self.get_activity(activity_id)
         if activity:
@@ -133,40 +132,28 @@ class Shell(gobject.GObject):
             logging.error("Couldn't find activity for type %s" % bundle_id)
             return
 
-        home_model = self._model.get_home()
-        home_model.notify_activity_launch(activity_id, bundle_id)
-
         handle = ActivityHandle(activity_id)
         handle.pservice_id = activity_id
 
-        handler = activityfactory.create(bundle_id, handle)
-        handler.connect('error', self._join_error_cb, home_model)
+        activityfactory.create(bundle_id, handle)
 
-    def _start_error_cb(self, handler, err, home_model):
-        home_model.notify_activity_launch_failed(handler.get_activity_id())
+    def notify_launch(self, bundle_id, activity_id):
+        # Zoom to Home for launch feedback
+        self.set_zoom_level(sugar.ZOOM_HOME)
+
+        home_model = self._model.get_home()
+        home_model.notify_activity_launch(activity_id, bundle_id)
+
+    def notify_launch_failure(self, activity_id):
+        home_model.notify_activity_launch_failed(activity_id)
 
     def start_activity(self, activity_type):
         if activity_type in self._activities_starting:
             logging.debug("This activity is still launching.")
             return
 
-        logging.debug('Trying to start activity of type %s' % activity_type)
-
         self._activities_starting.add(activity_type)
-        try:
-            handler = activityfactory.create(activity_type)
-
-            home_model = self._model.get_home()
-            home_model.notify_activity_launch(handler.get_activity_id(),
-                                                activity_type)
-
-            handler.connect('error', self._start_error_cb, home_model)
-        except Exception, err:
-            logging.debug("Couldn't start activity of type %s: %s" % (activity_type, err))
-            self._activities_starting.remove(activity_type)
-
-        # Zoom to Home for launch feedback
-        self.set_zoom_level(sugar.ZOOM_HOME)
+        activityfactory.create(activity_type)
 
     def set_zoom_level(self, level):
         if self._zoom_level == level:
