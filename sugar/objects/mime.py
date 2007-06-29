@@ -15,11 +15,7 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-try:
-    from sugar import _sugarext
-except ImportError:
-    from sugar import ltihooks
-    from sugar import _sugarext
+from sugar import _sugarext
 
 def get_for_file(file_name):
     return _sugarext.get_mime_type_for_file(file_name)

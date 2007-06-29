@@ -145,6 +145,7 @@ class Shell(gobject.GObject):
         home_model.notify_activity_launch(activity_id, bundle_id)
 
     def notify_launch_failure(self, activity_id):
+        home_model = self._model.get_home()
         home_model.notify_activity_launch_failed(activity_id)
 
     def start_activity(self, activity_type):

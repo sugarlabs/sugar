@@ -39,6 +39,7 @@ from sugar.graphics.toolbutton import ToolButton
 from sugar.datastore import datastore
 from sugar import wm
 from sugar import profile
+from sugar import _sugarext
 
 class ActivityToolbar(gtk.Toolbar):
     def __init__(self, activity):
@@ -272,7 +273,7 @@ class Activity(Window, gtk.Container):
         return self._activity_id
 
     def get_service_name(self):
-        return os.environ['SUGAR_BUNDLE_SERVICE_NAME']
+        return _sugarext.get_prgname()
 
     def set_canvas(self, canvas):
         Window.set_canvas(self, canvas)
@@ -416,7 +417,7 @@ class Activity(Window, gtk.Container):
 def get_bundle_name():
     """Return the bundle name for the current process' bundle
     """
-    return os.environ['SUGAR_BUNDLE_NAME']
+    return _sugarext.get_application_name()
     
 def get_bundle_path():
     """Return the bundle path for the current process' bundle

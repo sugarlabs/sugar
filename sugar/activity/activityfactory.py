@@ -129,9 +129,8 @@ class ActivityCreationHandler(gobject.GObject):
         logging.debug("Couldn't create activity %s (%s): %s" %
             (self._activity_handle.activity_id, self._service_name, err))
         self._shell.NotifyLaunchFailure(
-                    service_name, self.get_activity_id(),
-                    reply_handler=self._no_reply_handler,
-                    error_handler=self._notify_launch_failure_error_handler)
+                self.get_activity_id(), reply_handler=self._no_reply_handler,
+                error_handler=self._notify_launch_failure_error_handler)
 
 def create(service_name, activity_handle=None):
     """Create a new activity from its name."""

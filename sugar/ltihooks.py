@@ -68,5 +68,3 @@ def install():
     importer.install()
 def uninstall():
     importer.uninstall()
-
-install()

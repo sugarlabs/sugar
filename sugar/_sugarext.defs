@@ -102,3 +102,27 @@
     '("const-char*" "property")
   )
 )
+
+(define-function get_prgname
+  (c-name "g_get_prgname")
+  (return-type "const-char*")
+)
+
+(define-function get_application_name
+  (c-name "g_get_application_name")
+  (return-type "const-char*")
+)
+
+(define-function set_prgname
+  (c-name "g_set_prgname")
+  (parameters
+    '("const-char*" "name")
+  )
+)
+
+(define-function set_application_name
+  (c-name "g_set_application_name")
+  (parameters
+    '("const-char*" "name")
+  )
+)

@@ -17,7 +17,15 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+import os
+
+from sugar import ltihooks
+
 ZOOM_MESH = 0
 ZOOM_FRIENDS = 1
 ZOOM_HOME = 2
 ZOOM_ACTIVITY = 3
+
+print os.path.join(os.path.dirname(__file__), 'Makefile.am')
+if os.path.isfile(os.path.join(os.path.dirname(__file__), 'Makefile.am')):
+    ltihooks.install()
