@@ -191,6 +191,26 @@ class EntryBox(hippo.CanvasBox, hippo.CanvasItem):
 
     def get_text(self):
         return self._entry.props.text
+        
+    def flash_label(self):
+        """Briefly flashes the label to draw the user's attention to the
+        control"""
+        
+        old_fg_color = color.LABEL_TEXT.get_int()
+        old_bg_color = 0x000000ff # background color set above
+        r,g,b,a = color.LABEL_TEXT.get_rgba()
+        fg_opposite = color.RGBColor(1 - r, 1 - g, 1 - b)
+        bg_opposite = color.RGBColor(1, 1, 1)
+        
+        self._label.props.color = fg_opposite.get_int()
+        self._label.props.background_color = bg_opposite.get_int()
+        
+        gobject.timeout_add(200, self._flash_reset, old_fg_color, old_bg_color)
+        
+    def _flash_reset(self, old_fg_color, old_bg_color):
+        self._label.props.color = old_fg_color
+        self._label.props.background_color = old_bg_color
+        return False
 
 
 class ColorBox(hippo.CanvasBox, hippo.CanvasItem):
@@ -257,12 +277,32 @@ class IntroBox(hippo.CanvasBox, hippo.CanvasItem):
         pixbuf = gtk.gdk.pixbuf_new_from_file(path)
         name = self._entry_box.get_text()
         color = self._color_box.get_color()
+        
+        name = self._check_nickname(name)
+        
+        if name is None:
+            self._entry_box.flash_label()
+            return
 
         if not pixbuf or not name or not color:
             print "not one of pixbuf(%r), name(%r), or color(%r)"
             return
 
         self.emit('ok', pixbuf, name, color)
+        
+    def _check_nickname(self, name):
+        """Returns None if a bad nickname, returns the corrected nickname
+        otherwise"""
+        
+        if name is None:
+            return None
+            
+        name = name.strip()
+        
+        if len(name) == 0:
+            return None
+
+        return name
 
 
 class IntroWindow(gtk.Window):
