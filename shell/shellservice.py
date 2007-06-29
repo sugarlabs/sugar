@@ -42,8 +42,9 @@ class ShellService(dbus.service.Object):
     XXX At the moment the d-bus service methods do not appear to do
     anything other than add_bundle
     """
-    def __init__(self, shell_model):
-        self._shell_model = shell_model
+    def __init__(self, shell):
+        self._shell = shell
+        self._shell_model = shell.get_model()
 
         self._owner = self._shell_model.get_owner()
         self._owner.connect('nick-changed', self._owner_nick_changed_cb)

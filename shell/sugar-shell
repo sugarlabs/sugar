@@ -115,8 +115,8 @@ if os.environ.has_key("TP_DEBUG"):
             break
 
 model = ShellModel()
-service = ShellService(model)
 shell = Shell(model)
+service = ShellService(shell)
 
 try:
 	gtk.main()
