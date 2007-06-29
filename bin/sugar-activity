@@ -47,7 +47,6 @@ def _error_cb(handler, err):
 
 def print_help(self):
     sys.exit(0)
-
 activity_info = None
 
 if len(sys.argv) > 1:
@@ -75,8 +74,6 @@ if name:
 else:
     activityfactoryservice.run(activity_info.path)
 
-handler = activityfactory.create(activity_info.service_name)
-handler.connect('success', _success_cb, name != None)
-handler.connect('error', _error_cb)
+activityfactory.create(activity_info.service_name)
 
 gtk.main()
