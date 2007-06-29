@@ -23,31 +23,35 @@ import hippo
 from sugar.graphics import animator
 from sugar import _sugarext
 
-ALIGNMENT_AUTOMATIC     = 0
-ALIGNMENT_BOTTOM_LEFT   = 1
-ALIGNMENT_BOTTOM_RIGHT  = 2
-ALIGNMENT_LEFT_BOTTOM   = 3
-ALIGNMENT_LEFT_TOP      = 4
-ALIGNMENT_RIGHT_BOTTOM  = 5
-ALIGNMENT_RIGHT_TOP     = 6
-ALIGNMENT_TOP_LEFT      = 7
-ALIGNMENT_TOP_RIGHT     = 8
+_BOTTOM_LEFT  = 0
+_BOTTOM_RIGHT = 1
+_LEFT_BOTTOM  = 2
+_LEFT_TOP     = 3
+_RIGHT_BOTTOM = 4
+_RIGHT_TOP    = 5
+_TOP_LEFT     = 6
+_TOP_RIGHT    = 7
 
 class Palette(gobject.GObject):
+    AUTOMATIC = 0
+    BOTTOM    = 1
+    LEFT      = 2
+    RIGHT     = 3
+    TOP       = 4
+
     __gtype_name__ = 'SugarPalette'
 
     __gproperties__ = {
         'invoker'    : (object, None, None,
                         gobject.PARAM_READWRITE),
-        'alignment'  : (gobject.TYPE_INT, None, None, 0, 8,
-                        ALIGNMENT_AUTOMATIC,
-                        gobject.PARAM_READWRITE)
+        'position'   : (gobject.TYPE_INT, None, None, 0, 5,
+                        0, gobject.PARAM_READWRITE)
     }
 
     def __init__(self, label, accel_path=None):
         gobject.GObject.__init__(self)
 
-        self._alignment = ALIGNMENT_AUTOMATIC
+        self._position = self.AUTOMATIC
 
         self._popup_anim = animator.Animator(0.3, 10)
         self._popup_anim.add(_PopupAnimation(self))
@@ -110,77 +114,83 @@ class Palette(gobject.GObject):
         if pspec.name == 'invoker':
             self._invoker = value
             self._invoker.add_listener(self)
-        elif pspec.name == 'alignment':
-            self._alignment = value
+        elif pspec.name == 'position':
+            self._position = value
         else:
             raise AssertionError
 
-    def _get_position(self):
-        if self._alignment == ALIGNMENT_AUTOMATIC:
-            x, y = self._try_position(ALIGNMENT_BOTTOM_LEFT)
-            if x == -1:
-                x, y = self._try_position(ALIGNMENT_BOTTOM_RIGHT)
-            if x == -1:
-                x, y = self._try_position(ALIGNMENT_LEFT_BOTTOM)
-            if x == -1:
-                x, y = self._try_position(ALIGNMENT_LEFT_TOP)
-            if x == -1:
-                x, y = self._try_position(ALIGNMENT_RIGHT_BOTTOM)
-            if x == -1:
-                x, y = self._try_position(ALIGNMENT_RIGHT_TOP)
-            if x == -1:
-                x, y = self._try_position(ALIGNMENT_LEFT_BOTTOM)
-            if x == -1:
-                x, y = self._try_position(ALIGNMENT_LEFT_BOTTOM)
-        else:
-            x, y = self._position_for_alignment(self._alignment)
-
-        return (x, y)
-
-    def _try_position(self, alignment):
-        x, y = self._position_for_alignment(alignment)
-        allocation = self._menu.get_allocation()
-
-        if (x + allocation.width > gtk.gdk.screen_width()) or \
-           (y + allocation.height > gtk.gdk.screen_height()):
-            return (-1, -1)
-        else:
-            return (x, y)
-
-    def _position_for_alignment(self, alignment):
+    def _get_position(self, alignment):
         # Invoker: x, y, width and height
         inv_rect = self._invoker.get_rect()
         palette_rect = self._menu.get_allocation()
 
-        if alignment == ALIGNMENT_BOTTOM_LEFT:
-            move_x = inv_rect.x
-            move_y = inv_rect.y + inv_rect.height
-        elif alignment == ALIGNMENT_BOTTOM_RIGHT:
-            move_x = (inv_rect.x + inv_rect.width) - palette_rect.width
-            move_y = inv_rect.y + inv_rect.height
-        elif alignment == ALIGNMENT_LEFT_BOTTOM:
-            move_x = inv_rect.x - palette_rect.width
-            move_y = inv_rect.y
-        elif alignment == ALIGNMENT_LEFT_TOP:
-            move_x = inv_rect.x - palette_rect.width
-            move_y = (inv_rect.y + inv_rect.height) - palette_rect.height
-        elif alignment == ALIGNMENT_RIGHT_BOTTOM:
-            move_x = inv_rect.x + inv_rect.width
-            move_y = inv_rect.y
-        elif alignment == ALIGNMENT_RIGHT_TOP:
-            move_x = inv_rect.x + inv_rect.width
-            move_y = (inv_rect.y + inv_rect.height) - palette_rect.height
-        elif alignment == ALIGNMENT_TOP_LEFT:
-            move_x = inv_rect.x
-            move_y = inv_rect.y - palette_rect.height
-        elif alignment == ALIGNMENT_TOP_RIGHT:
-            move_x = (inv_rect.x + inv_rect.width) - palette_rect.width
-            move_y = inv_rect.y - palette_rect.height
+        if alignment == _BOTTOM_LEFT:
+            x = inv_rect.x
+            y = inv_rect.y + inv_rect.height
+        elif alignment == _BOTTOM_RIGHT:
+            x = (inv_rect.x + inv_rect.width) - palette_rect.width
+            y = inv_rect.y + inv_rect.height
+        elif alignment == _LEFT_BOTTOM:
+            x = inv_rect.x - palette_rect.width
+            y = inv_rect.y
+        elif alignment == _LEFT_TOP:
+            x = inv_rect.x - palette_rect.width
+            y = (inv_rect.y + inv_rect.height) - palette_rect.height
+        elif alignment == _RIGHT_BOTTOM:
+            x = inv_rect.x + inv_rect.width
+            y = inv_rect.y
+        elif alignment == _RIGHT_TOP:
+            x = inv_rect.x + inv_rect.width
+            y = (inv_rect.y + inv_rect.height) - palette_rect.height
+        elif alignment == _TOP_LEFT:
+            x = inv_rect.x
+            y = inv_rect.y - palette_rect.height
+        elif alignment == _TOP_RIGHT:
+            x = (inv_rect.x + inv_rect.width) - palette_rect.width
+            y = inv_rect.y - palette_rect.height
 
-        return move_x, move_y
+        return x, y
+
+    def _in_screen(self, x, y):
+        allocation = self._menu.get_allocation()
+
+        return x + allocation.width < gtk.gdk.screen_width() and \
+               y + allocation.height < gtk.gdk.screen_height() and \
+               x >= 0 and y >= 0
+
+    def _get_automatic_position(self):
+        alignments = [ _BOTTOM_LEFT,  _BOTTOM_RIGHT,
+                       _LEFT_BOTTOM,  _LEFT_TOP,
+                       _RIGHT_BOTTOM, _RIGHT_TOP,
+                       _TOP_LEFT,     _TOP_RIGHT ]
+
+        for alignment in alignments:
+            x, y = self._get_position(alignment)
+            if self._in_screen(x, y):
+                return x, y
 
     def _show(self):
-        x, y = self._get_position()
+        x = y = 0
+
+        if self._position == self.AUTOMATIC:
+            x, y = self._get_automatic_position()
+        elif self._position == self.BOTTOM:
+            x, y = self._get_position(_BOTTOM_LEFT)
+            if not self._in_screen(x, y):
+                x, y = self._get_position(_BOTTOM_RIGHT)
+        elif self._position == self.LEFT:
+            x, y = self._get_position(_LEFT_BOTTOM)
+            if not self._in_screen(x, y):
+                x, y = self._get_position(_LEFT_TOP)
+        elif self._position == self.RIGHT:
+            x, y = self._get_position(_RIGHT_BOTTOM)
+            if not self._in_screen(x, y):
+                x, y = self._get_position(_RIGHT_TOP)
+        elif self._position == self.TOP:
+            x, y = self._get_position(_TOP_LEFT)
+            if not self._in_screen(x, y):
+                x, y = self._get_position(_TOP_RIGHT)
+
         self._menu.popup(x, y)
 
     def _hide(self):
