@@ -235,8 +235,10 @@ class Activity(Window, gtk.Container):
 
         if handle.object_id:
             self._jobject = datastore.get(handle.object_id)
-            self._jobject.object_id = ''
-            del self._jobject.metadata['ctime']
+            # TODO: Don't create so many objects until we have versioning
+            # support in the datastore
+            #self._jobject.object_id = ''
+            #del self._jobject.metadata['ctime']
             del self._jobject.metadata['mtime']
         elif create_jobject:
             logging.debug('Creating a jobject.')
@@ -306,14 +308,14 @@ class Activity(Window, gtk.Container):
     def _internal_save_error_cb(self, err):
         logging.debug("Error saving activity object to datastore: %s" % err)
 
-    def save(self):
-        """Request that the activity is saved to the Journal."""
+    def _get_preview(self):
         preview_pixbuf = self.get_canvas_screenshot()
         preview_pixbuf = preview_pixbuf.scale_simple(units.grid_to_pixels(4),
                                                      units.grid_to_pixels(3),
                                                      gtk.gdk.INTERP_BILINEAR)
 
         # TODO: Find a way of taking a png out of the pixbuf without saving to a temp file.
+        #       Impementing gtk.gdk.Pixbuf.save_to_buffer in pygtk would solve this.
         fd, file_path = tempfile.mkstemp('.png')
         del fd
         preview_pixbuf.save(file_path, 'png')
@@ -326,7 +328,15 @@ class Activity(Window, gtk.Container):
 
         # TODO: Take this out when the datastore accepts binary data.        
         import base64
-        self.metadata['preview'] = base64.b64encode(preview_data)
+        return base64.b64encode(preview_data)
+
+    def _get_buddies(self):
+        return ''
+
+    def save(self):
+        """Request that the activity is saved to the Journal."""
+        self.metadata['buddies'] = self._get_buddies()
+        self.metadata['preview'] = self._get_preview()
         try:
             file_path = os.path.join(tempfile.gettempdir(), '%i' % time.time())
             self.write_file(file_path)
