@@ -122,40 +122,40 @@ class Palette(gobject.GObject):
     def _get_position(self, alignment):
         # Invoker: x, y, width and height
         inv_rect = self._invoker.get_rect()
-        palette_rect = self._menu.get_allocation()
+        palette_width, palette_height = self._menu.size_request()
 
         if alignment == _BOTTOM_LEFT:
             x = inv_rect.x
             y = inv_rect.y + inv_rect.height
         elif alignment == _BOTTOM_RIGHT:
-            x = (inv_rect.x + inv_rect.width) - palette_rect.width
+            x = (inv_rect.x + inv_rect.width) - palette_width
             y = inv_rect.y + inv_rect.height
         elif alignment == _LEFT_BOTTOM:
-            x = inv_rect.x - palette_rect.width
+            x = inv_rect.x - palette_width
             y = inv_rect.y
         elif alignment == _LEFT_TOP:
-            x = inv_rect.x - palette_rect.width
-            y = (inv_rect.y + inv_rect.height) - palette_rect.height
+            x = inv_rect.x - palette_width
+            y = (inv_rect.y + inv_rect.height) - palette_height
         elif alignment == _RIGHT_BOTTOM:
             x = inv_rect.x + inv_rect.width
             y = inv_rect.y
         elif alignment == _RIGHT_TOP:
             x = inv_rect.x + inv_rect.width
-            y = (inv_rect.y + inv_rect.height) - palette_rect.height
+            y = (inv_rect.y + inv_rect.height) - palette_height
         elif alignment == _TOP_LEFT:
             x = inv_rect.x
-            y = inv_rect.y - palette_rect.height
+            y = inv_rect.y - palette_height
         elif alignment == _TOP_RIGHT:
-            x = (inv_rect.x + inv_rect.width) - palette_rect.width
-            y = inv_rect.y - palette_rect.height
+            x = (inv_rect.x + inv_rect.width) - palette_width
+            y = inv_rect.y - palette_height
 
         return x, y
 
     def _in_screen(self, x, y):
-        allocation = self._menu.get_allocation()
+        [width, height] = self._menu.get_size_request()
 
-        return x + allocation.width < gtk.gdk.screen_width() and \
-               y + allocation.height < gtk.gdk.screen_height() and \
+        return x + width < gtk.gdk.screen_width() and \
+               y + height < gtk.gdk.screen_height() and \
                x >= 0 and y >= 0
 
     def _get_automatic_position(self):
