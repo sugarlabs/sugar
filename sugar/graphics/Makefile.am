@@ -10,16 +10,12 @@ sugar_PYTHON =			\
 	combobox.py		\
 	font.py			\
 	frame.py		\
-	menu.py			\
-	menushell.py		\
 	notebook.py		\
 	objectchooser.py	\
 	radiotoolbutton.py	\
 	roundbox.py		\
 	palette.py		\
 	panel.py		\
-	popup.py		\
-	popupcontext.py		\
 	snowflakebox.py		\
 	spreadbox.py		\
 	toggletoolbutton.py	\
