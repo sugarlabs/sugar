@@ -89,7 +89,7 @@ class BuddyMenu(Palette):
             # FIXME check that the buddy is not in the activity already
 
             menu_item = gtk.MenuItem(_('Invite')) #, 'theme:stock-invite')
-            menu_item.connect('activate', self._invite_cb)
+            menu_item.connect('activate', self._invite_friend_cb)
             self.append_menu_item(menu_item)
             menu_item.show()
 
