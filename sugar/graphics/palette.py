@@ -84,7 +84,7 @@ class Palette(gobject.GObject):
         self._menu.connect('button-press-event',
                            self._button_press_event_cb)
 
-    def set_primary_text(self, label, accel_path):
+    def set_primary_text(self, label, accel_path=None):
         self._primary.set_label(label, accel_path)
 
     def append_menu_item(self, item):
@@ -161,10 +161,10 @@ class Palette(gobject.GObject):
         [width, height] = self._menu.size_request()
         screen_width = gtk.gdk.screen_width() - units.grid_to_pixels(1)
         screen_height = gtk.gdk.screen_height() - units.grid_to_pixels(1)
-        
+
         return x + width <= screen_width and \
                y + height <= screen_height and \
-               x >= 0 and y >= 0
+               x >= units.grid_to_pixels(1) and y >= units.grid_to_pixels(1)
 
     def _get_automatic_position(self):
         alignments = [ _BOTTOM_LEFT,  _BOTTOM_RIGHT,
