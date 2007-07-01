@@ -14,123 +14,176 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 from gettext import gettext as _
+import tempfile
+import urlparse
+import os
 
 import gtk
 import hippo
 
-from sugar.graphics.menu import Menu, MenuItem
+from sugar.graphics.palette import Palette
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import color
 from sugar.graphics import font
+from sugar.activity import activityfactory
+from sugar.activity.bundle import Bundle
+from sugar.clipboard import clipboardservice
+from sugar.datastore import datastore
+from sugar.objects import mime
+from sugar import profile
 
-class ClipboardMenu(Menu):
-
-    ACTION_DELETE = 0
-    ACTION_OPEN = 1
-    ACTION_STOP_DOWNLOAD = 2
-    ACTION_SAVE_TO_JOURNAL = 3
+class ClipboardMenu(Palette):
     
-    def __init__(self, name, percent, preview, activity, installable):
-        Menu.__init__(self, name)
-        self.props.border = 0
+    def __init__(self, object_id, name, percent, preview, activity, installable):
+        Palette.__init__(self, name)
+
+        self._object_id = object_id
+        self._percent = percent
+        self._activity = activity
 
         if percent < 100:        
             self._progress_bar = gtk.ProgressBar()
-            self._update_progress_bar(percent)
-            
-            canvas_widget = hippo.CanvasWidget()
-            canvas_widget.props.widget = self._progress_bar
-            self.append(canvas_widget)
+            self._update_progress_bar()
+
+            self.set_content(self._progress_bar)   
+            self._progress_bar.show()         
         else:
             self._progress_bar = None
-        
-        self._remove_item = None
-        self._open_item = None
-        self._stop_item = None
-        self._journal_item = None
 
+        """
         if preview:
             self._preview_text = hippo.CanvasText(text=preview,
                     size_mode=hippo.CANVAS_SIZE_WRAP_WORD)
             self._preview_text.props.color = color.LABEL_TEXT.get_int()
             self._preview_text.props.font_desc = font.DEFAULT.get_pango_desc()        
             self.append(self._preview_text)
+        """
 
-        self._update_icons(percent, activity, installable)
+        self._remove_item = gtk.MenuItem(_('Remove')) #, 'theme:stock-remove')
+        self._remove_item.connect('activate', self._remove_item_activate_cb)
+        self.append_menu_item(self._remove_item)
 
-    def _update_icons(self, percent, activity, installable):
-        if percent == 100 and (activity or installable):
-            self._add_remove_item()
-            self._add_open_item()
-            self._remove_stop_item()
-            self._add_journal_item()
-        elif percent == 100 and (not activity and not installable):
-            self._add_remove_item()
-            self._remove_open_item()
-            self._remove_stop_item()
-            self._add_journal_item()
+        self._open_item = gtk.MenuItem(_('Open')) #, 'theme:stock-keep')
+        self._open_item.connect('activate', self._open_item_activate_cb)
+        self.append_menu_item(self._open_item)
+
+        self._stop_item = gtk.MenuItem(_('Stop download')) #, 'theme:stock-close')
+        # TODO: Implement stopping downloads
+        #self._stop_item.connect('activate', self._stop_item_activate_cb)
+        self.append_menu_item(self._stop_item)
+
+        self._journal_item = gtk.MenuItem(_('Add to journal')) #, 'theme:document-save')
+        self._journal_item.connect('activate', self._journal_item_activate_cb)
+        self.append_menu_item(self._journal_item)
+
+        self._update_items_visibility(installable)
+
+    def _update_items_visibility(self, installable):
+        if self._percent == 100 and (self._activity or installable):
+            self._remove_item.show()
+            self._open_item.show()
+            self._stop_item.hide()
+            self._journal_item.show()
+        elif self._percent == 100 and (not self._activity and not installable):
+            self._remove_item.show()
+            self._open_item.hide()
+            self._stop_item.hide()
+            self._journal_item.show()
         else:
-            self._remove_remove_item()
-            self._remove_open_item()
-            self._add_stop_item()
-            self._remove_journal_item()
+            self._remove_item.hide()
+            self._open_item.hide()
+            self._stop_item.show()
+            self._journal_item.hide()
 
-    def _update_progress_bar(self, percent):
+    def _update_progress_bar(self):
         if self._progress_bar:
-            self._progress_bar.props.fraction = percent / 100.0
-            self._progress_bar.props.text = '%.2f %%' % (percent / 100.0)
+            self._progress_bar.props.fraction = self._percent / 100.0
+            self._progress_bar.props.text = '%.2f %%' % self._percent
 
     def set_state(self, name, percent, preview, activity, installable):
-        self.set_title(name)
+        self.set_primary_text(name)
+        self._percent = percent
+        self._activity = activity
         if self._progress_bar:
-            self._update_progress_bar(percent)
-            self._update_icons(percent, activity, installable)
+            self._update_progress_bar()
+            self._update_items_visibility(installable)
 
-    def _add_remove_item(self):
-        if not self._remove_item:
-            self._remove_item = MenuItem(ClipboardMenu.ACTION_DELETE,
-                                            _('Remove'),
-                                            'theme:stock-remove')
-            self.add_item(self._remove_item)
+    def _open_item_activate_cb(self, menu_item):
+        if self._percent < 100:
+            return
 
-    def _add_open_item(self):
-        if not self._open_item:
-            self._open_item = MenuItem(ClipboardMenu.ACTION_OPEN,
-                                        _('Open'),
-                                        'theme:stock-keep')
-            self.add_item(self._open_item)
+        # Get the file path
+        cb_service = clipboardservice.get_instance()
+        obj = cb_service.get_object(self._object_id)
+        formats = obj['FORMATS']
+        if len(formats) == 0:
+            return
 
-    def _add_stop_item(self):
-        if not self._stop_item:
-            self._stop_item = MenuItem(ClipboardMenu.ACTION_STOP_DOWNLOAD,
-                                        _('Stop download'),
-                                        'theme:stock-close')
-            self.add_item(self._stop_item)
+        if not self._activity and \
+                not formats[0] == 'application/vnd.olpc-x-sugar':
+            return
 
-    def _add_journal_item(self):
-        if not self._journal_item:
-            self._journal_item = MenuItem(ClipboardMenu.ACTION_SAVE_TO_JOURNAL,
-                                        _('Add to journal'),
-                                        'theme:document-save')
-            self.add_item(self._journal_item)
+        uri = cb_service.get_object_data(self._object_id, formats[0])['DATA']
+        if not uri.startswith('file://'):
+            return
 
-    def _remove_open_item(self):
-        if self._open_item:
-            self.remove_item(self._open_item)
-            self._open_item = None
+        (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(uri)
 
-    def _remove_stop_item(self):
-        if self._stop_item:
-            self.remove_item(self._stop_item)
-            self._stop_item = None
+        # FIXME: would be better to check for format.onDisk
+        try:
+            path_exists = os.path.exists(path)
+        except TypeError:
+            path_exists = False
 
-    def _remove_remove_item(self):
-        if self._remove_item:
-            self.remove_item(self._remove_item)
-            self._remove_item = None
+        if path_exists:
+            if self._activity:
+                activityfactory.create_with_uri(self._activity, uri)
+            else:
+                self._install_xo(path)
+        else:
+            logging.debug("Clipboard item file path %s didn't exist" % path)
 
-    def _remove_journal_item(self):
-        if self._journal_item:
-            self.remove_item(self._journal_item)
-            self._journal_item = None
+    def _remove_item_activate_cb(self, menu_item):
+        cb_service = clipboardservice.get_instance()
+        cb_service.delete_object(self._object_id)
+
+    def _journal_item_activate_cb(self, menu_item):
+        cb_service = clipboardservice.get_instance()
+        obj = cb_service.get_object(self._object_id)
+
+        if len(obj['FORMATS']) == 0:
+            return
+
+        if 'text/uri-list' in obj['FORMATS']:
+            data = cb_service.get_object_data(self._object_id, 'text/uri-list')
+            file_path = urlparse.urlparse(data['DATA']).path
+            mime_type = mime.get_for_file(file_path)
+        else:
+            # TODO: Find a way to choose the best mime-type from all the available.
+            mime_type = obj['FORMATS'][0]
+
+            data = cb_service.get_object_data(self._object_id, mime_type)
+            if data['ON_DISK']:
+                file_path = urlparse.urlparse(data['DATA']).path
+            else:
+                f, file_path = tempfile.mkstemp()
+                try:
+                    os.write(f, data['DATA'])
+                finally:
+                    os.close(f)
+
+        jobject = datastore.create()
+        jobject.metadata['title'] = _('Clipboard object: %s.') % obj['NAME']
+        jobject.metadata['keep'] = '0'
+        jobject.metadata['buddies'] = ''
+        jobject.metadata['preview'] = ''
+        jobject.metadata['icon-color'] = profile.get_color().to_string()
+        jobject.metadata['mime_type'] = mime_type
+        jobject.file_path = file_path
+        datastore.write(jobject)
+
+    def _install_xo(self, path):
+        bundle = Bundle(path)
+        if not bundle.is_installed():
+            bundle.install()
 

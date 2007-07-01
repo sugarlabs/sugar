@@ -25,13 +25,13 @@ from model import bundleregistry
 from view.BuddyIcon import BuddyIcon
 
 class FriendView(hippo.CanvasBox):
-    def __init__(self, shell, menu_shell, buddy, **kwargs):
+    def __init__(self, shell, buddy, **kwargs):
         hippo.CanvasBox.__init__(self, **kwargs)
 
         self._pservice = presenceservice.get_instance()
 
         self._buddy = buddy
-        self._buddy_icon = BuddyIcon(shell, menu_shell, buddy)
+        self._buddy_icon = BuddyIcon(shell, buddy)
         self._buddy_icon.props.scale = units.LARGE_ICON_SCALE
         self.append(self._buddy_icon)
 

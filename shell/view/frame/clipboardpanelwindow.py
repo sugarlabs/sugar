@@ -36,7 +36,7 @@ class ClipboardPanelWindow(FrameWindow):
 
         root = self.get_root()
 
-        self._clipboard_box = ClipboardBox(frame.get_popup_context())
+        self._clipboard_box = ClipboardBox()
         root.append(self._clipboard_box)
 
         # Receiving dnd drops

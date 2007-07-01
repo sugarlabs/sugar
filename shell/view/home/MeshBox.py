@@ -163,7 +163,7 @@ class MeshDeviceView(PulsingIcon):
             ]
 
 class ActivityView(SnowflakeBox):
-    def __init__(self, shell, menu_shell, model):
+    def __init__(self, shell, model):
         SnowflakeBox.__init__(self)
 
         self._shell = shell
@@ -197,11 +197,10 @@ class ActivityView(SnowflakeBox):
         self._shell.join_activity(bundle_id, self._model.get_id())
 
 class MeshBox(SpreadBox):
-    def __init__(self, shell, menu_shell):
+    def __init__(self, shell):
         SpreadBox.__init__(self, background_color=0xe2e2e2ff)
 
         self._shell = shell
-        self._menu_shell = menu_shell
         self._model = shell.get_model().get_mesh()
         self._buddies = {}
         self._activities = {}
@@ -281,7 +280,7 @@ class MeshBox(SpreadBox):
         self._mesh = None
 
     def _add_alone_buddy(self, buddy_model):
-        icon = BuddyIcon(self._shell, self._menu_shell, buddy_model)
+        icon = BuddyIcon(self._shell, buddy_model)
         if buddy_model.is_owner():
             self.set_center_item(icon)
         else:
@@ -313,11 +312,11 @@ class MeshBox(SpreadBox):
         else:
             activity = self._activities[activity_model.get_id()]
 
-            icon = BuddyIcon(self._shell, self._menu_shell, buddy_model)
+            icon = BuddyIcon(self._shell, buddy_model)
             activity.add_buddy_icon(buddy_model.get_key(), icon)
 
     def _add_activity(self, activity_model):
-        icon = ActivityView(self._shell, self._menu_shell, activity_model)
+        icon = ActivityView(self._shell, activity_model)
         self.add_item(icon)
 
         self._activities[activity_model.get_id()] = icon

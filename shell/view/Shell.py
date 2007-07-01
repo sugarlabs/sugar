@@ -26,7 +26,6 @@ import gtk
 import wnck
 
 from sugar.activity.activityhandle import ActivityHandle
-from sugar.graphics.popupcontext import PopupContext
 from sugar.activity import activityfactory
 from sugar.datastore import datastore
 from sugar import profile
@@ -52,7 +51,6 @@ class Shell(gobject.GObject):
         self._screen_rotation = 0
 
         self._key_handler = KeyHandler(self)
-        self._popup_context = PopupContext()
 
         self._frame = Frame(self)
         self._frame.show()
@@ -113,9 +111,6 @@ class Shell(gobject.GObject):
 
     def get_frame(self):
         return self._frame
-
-    def get_popup_context(self):
-        return self._popup_context
 
     def join_activity(self, bundle_id, activity_id):
         activity = self.get_activity(activity_id)

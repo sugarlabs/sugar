@@ -26,11 +26,10 @@ from view.home.FriendView import FriendView
 
 class FriendsBox(SpreadBox):
     __gtype_name__ = 'SugarFriendsBox'
-    def __init__(self, shell, menu_shell):
+    def __init__(self, shell):
         SpreadBox.__init__(self, background_color=0xe2e2e2ff)
 
         self._shell = shell
-        self._menu_shell = menu_shell
         self._friends = {}
 
         self._my_icon = MyIcon(units.LARGE_ICON_SCALE)
@@ -45,7 +44,7 @@ class FriendsBox(SpreadBox):
         friends.connect('friend-removed', self._friend_removed_cb)
 
     def add_friend(self, buddy_info):
-        icon = FriendView(self._shell, self._menu_shell, buddy_info)
+        icon = FriendView(self._shell, buddy_info)
         self.add_item(icon)
 
         self._friends[buddy_info.get_key()] = icon

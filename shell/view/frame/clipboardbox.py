@@ -57,9 +57,8 @@ class _ContextMap:
  
 class ClipboardBox(hippo.CanvasBox):
     
-    def __init__(self, popup_context):
+    def __init__(self):
         hippo.CanvasBox.__init__(self)
-        self._popup_context = popup_context
         self._icons = {}
         self._context_map = _ContextMap()
         self._selected_icon = None
@@ -125,7 +124,7 @@ class ClipboardBox(hippo.CanvasBox):
                                          on_disk=False)
     
     def _object_added_cb(self, cb_service, object_id, name):
-        icon = ClipboardIcon(self._popup_context, object_id, name)
+        icon = ClipboardIcon(object_id, name)
         icon.connect('activated', self._icon_activated_cb)
         self._set_icon_selected(icon)
 

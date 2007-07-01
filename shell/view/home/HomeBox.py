@@ -124,20 +124,17 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
     def release(self):
         pass
 
-# TODO: Most or all of it should move to CanvasIcon.
 class HomeMyIcon(MyIcon):
-    _POPUP_PALETTE_DELAY = 100
 
     def __init__(self, shell, scale):
         MyIcon.__init__(self, scale)
 
         self._shell = shell
-        self._palette = Palette(profile.get_nick_name())
-        self._palette.props.invoker = CanvasInvoker(self)
+        self.set_tooltip(profile.get_nick_name())
         
         shutdown_menu_item = gtk.MenuItem(_('Shutdown'))
         shutdown_menu_item.connect('activate', self._shutdown_activate_cb)
-        self._palette.append_menu_item(shutdown_menu_item)
+        self.get_palette().append_menu_item(shutdown_menu_item)
         shutdown_menu_item.show()
 
     def _shutdown_activate_cb(self, menuitem):

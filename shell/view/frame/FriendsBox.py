@@ -23,12 +23,8 @@ from view.BuddyIcon import BuddyIcon
 from model.BuddyModel import BuddyModel
 
 class FriendIcon(BuddyIcon):
-    def __init__(self, shell, popup_context, buddy):
-        BuddyIcon.__init__(self, shell, popup_context, buddy)
-        self._popup_context = popup_context
-
-    def get_popup_context(self):
-        return self._popup_context
+    def __init__(self, shell, buddy):
+        BuddyIcon.__init__(self, shell, buddy)
 
     def prelight(self, enter):
         if enter:
@@ -37,10 +33,9 @@ class FriendIcon(BuddyIcon):
             self.props.background_color = color.TOOLBAR_BACKGROUND.get_int()
 
 class FriendsBox(hippo.CanvasBox):
-    def __init__(self, shell, popup_context):
+    def __init__(self, shell):
         hippo.CanvasBox.__init__(self)
         self._shell = shell
-        self._popup_context = popup_context
         self._activity_ps = None
         self._joined_hid = -1
         self._left_hid = -1
@@ -63,7 +58,7 @@ class FriendsBox(hippo.CanvasBox):
             return
 
         model = BuddyModel(buddy=buddy)
-        icon = FriendIcon(self._shell, self._popup_context, model)
+        icon = FriendIcon(self._shell, model)
         self.append(icon)
 
         self._buddies[buddy.props.key] = icon

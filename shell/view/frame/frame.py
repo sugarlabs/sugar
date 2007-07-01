@@ -26,7 +26,6 @@ from view.frame.overlaybox import OverlayBox
 from view.frame.FriendsBox import FriendsBox
 from view.frame.framewindow import FrameWindow
 from view.frame.clipboardpanelwindow import ClipboardPanelWindow
-from view.frame.framepopupcontext import FramePopupContext
 from model.ShellModel import ShellModel
 from sugar.graphics import animator
 from sugar.graphics import units
@@ -140,12 +139,6 @@ class Frame(object):
         self._event_area.connect('enter', self._enter_corner_cb)
         self._event_area.show()
 
-        self._popup_context = FramePopupContext()
-        self._popup_context.connect('activated',
-                                    self._popup_context_activated_cb)
-        self._popup_context.connect('deactivated',
-                                    self._popup_context_deactivated_cb)
-
         self._top_panel = self._create_top_panel()
         self._bottom_panel = self._create_bottom_panel()
         self._left_panel = self._create_left_panel()
@@ -195,9 +188,6 @@ class Frame(object):
 
         self.visible = True
 
-    def get_popup_context(self):
-        return self._popup_context
-
     def get_current_position(self):
         return self._current_position
 
@@ -227,7 +217,7 @@ class Frame(object):
         panel = self._create_panel(hippo.ORIENTATION_HORIZONTAL)
         root = panel.get_root()
 
-        box = ActivitiesBox(self._shell, self._popup_context)
+        box = ActivitiesBox(self._shell)
         root.append(box)
 
         return panel
@@ -236,7 +226,7 @@ class Frame(object):
         panel = self._create_panel(hippo.ORIENTATION_VERTICAL)
         root = panel.get_root()
 
-        box = FriendsBox(self._shell, self._popup_context)
+        box = FriendsBox(self._shell)
         root.append(box)
 
         return panel
@@ -268,7 +258,6 @@ class Frame(object):
 
     def _connect_to_panel(self, panel):
         panel.connect('enter-notify-event', self._enter_notify_cb)
-        panel.connect('leave-notify-event', self._leave_notify_cb)
 
     def _update_position(self):
         screen_h = gtk.gdk.screen_height()
@@ -301,34 +290,8 @@ class Frame(object):
             self.show()
             gobject.timeout_add(2000, lambda: self.hide())
 
-    def _popup_context_activated_cb(self, popup_context):
-        self._mouse_listener.mouse_enter()
-
-    def _popup_context_deactivated_cb(self, popup_context):
-        if not self._hover:
-            self._mouse_listener.mouse_leave()
-
     def _enter_notify_cb(self, window, event):
-        # FIXME clicks cause leave/notify, ignore
-        if event.state == gtk.gdk.BUTTON1_MASK:
-            return
-        if self._hover:
-            return
-
-        self._hover = True
         self._mouse_listener.mouse_enter()
-
-    def _leave_notify_cb(self, window, event):
-        # FIXME clicks cause leave/notify, ignore
-        if event.state == gtk.gdk.BUTTON1_MASK:
-            return
-        if not self._hover:
-            return
-
-        if not self._is_hover():
-            self._hover = False
-            if not self._popup_context.is_active():
-                self._mouse_listener.mouse_leave()
         
     def _drag_motion_cb(self, window, context, x, y, time):
         self._mouse_listener.mouse_enter()

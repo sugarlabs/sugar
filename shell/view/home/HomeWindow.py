@@ -18,7 +18,6 @@ import gtk
 import hippo
 import cairo
 
-from sugar.graphics.menushell import MenuShell
 from sugar.graphics import units
 import sugar
 
@@ -54,8 +53,8 @@ class HomeWindow(gtk.Window):
         self.connect('focus-out-event', self._focus_out_cb)
 
         self._home_box = HomeBox(shell)
-        self._friends_box = FriendsBox(shell, MenuShell(self))
-        self._mesh_box = MeshBox(shell, MenuShell(self))
+        self._friends_box = FriendsBox(shell)
+        self._mesh_box = MeshBox(shell)
         self._transition_box = TransitionBox()
 
         self._canvas.set_root(self._home_box)
