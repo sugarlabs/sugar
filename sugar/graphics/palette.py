@@ -23,6 +23,7 @@ import time
 import hippo
 
 from sugar.graphics import animator
+from sugar.graphics import units
 from sugar import _sugarext
 
 _BOTTOM_LEFT  = 0
@@ -158,9 +159,11 @@ class Palette(gobject.GObject):
 
     def _in_screen(self, x, y):
         [width, height] = self._menu.size_request()
+        screen_width = gtk.gdk.screen_width() - units.grid_to_pixels(1)
+        screen_height = gtk.gdk.screen_height() - units.grid_to_pixels(1)
         
-        return x + width < gtk.gdk.screen_width() and \
-               y + height < gtk.gdk.screen_height() and \
+        return x + width <= screen_width and \
+               y + height <= screen_height and \
                x >= 0 and y >= 0
 
     def _get_automatic_position(self):

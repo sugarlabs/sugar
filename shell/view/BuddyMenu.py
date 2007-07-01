@@ -14,38 +14,33 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 from gettext import gettext as _
+import logging
 
 import gtk
 import gobject
 import hippo
 
-from sugar.graphics.menu import Menu, MenuItem
-from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics.palette import Palette
 from sugar.graphics import units
 from sugar.presence import presenceservice
 
-class BuddyMenu(Menu):
-    ACTION_MAKE_FRIEND = 0
-    ACTION_INVITE = 1
-    ACTION_REMOVE_FRIEND = 2
-
+class BuddyMenu(Palette):
     def __init__(self, shell, buddy):
         self._buddy = buddy
         self._shell = shell
 
-        Menu.__init__(self, buddy.get_nick())
-        self.props.border = 0
-        self.props.padding = units.points_to_pixels(5)
+        Palette.__init__(self, buddy.get_nick())
+
         pixbuf = self._get_buddy_icon_pixbuf()
         if pixbuf:
             scaled_pixbuf = pixbuf.scale_simple(units.grid_to_pixels(1),
                                                 units.grid_to_pixels(1),
                                                 gtk.gdk.INTERP_BILINEAR)
             del pixbuf
-            image = hippo.cairo_surface_from_gdk_pixbuf(scaled_pixbuf)
-            icon_item = hippo.CanvasImage(image=image)
-            self.add_separator()
-            self.append(icon_item)
+            image = gtk.Image()
+            image.set_from_pixbuf(scaled_pixbuf)
+            self.set_content(image)
+            image.show()
 
         self._buddy.connect('icon-changed', self._buddy_icon_changed_cb)
         self._buddy.connect('nick-changed', self._buddy_nick_changed_cb)
@@ -79,13 +74,13 @@ class BuddyMenu(Menu):
 
         friends = shell_model.get_friends()
         if friends.has_buddy(self._buddy):
-            self.add_item(MenuItem(BuddyMenu.ACTION_REMOVE_FRIEND,
-                                   _('Remove friend'),
-                                   'theme:stock-remove'))
+            menu_item = gtk.MenuItem(_('Remove friend')) #, 'theme:stock-remove')
+            menu_item.connect('activate', self._remove_friend_cb)
         else:
-            self.add_item(MenuItem(BuddyMenu.ACTION_MAKE_FRIEND,
-                                   _('Make friend'),
-                                   'theme:stock-add'))
+            menu_item = gtk.MenuItem(_('Make friend')) #, 'theme:stock-add')
+            menu_item.connect('activate', self._make_friend_cb)
+        self.append_menu_item(menu_item)
+        menu_item.show()
 
         activity = shell_model.get_home().get_current_activity()
         if activity != None:
@@ -93,12 +88,26 @@ class BuddyMenu(Menu):
 
             # FIXME check that the buddy is not in the activity already
 
-            self.add_item(MenuItem(BuddyMenu.ACTION_INVITE,
-                                   _('Invite'),
-                                   'theme:stock-invite'))
+            menu_item = gtk.MenuItem(_('Invite')) #, 'theme:stock-invite')
+            menu_item.connect('activate', self._invite_cb)
+            self.append_menu_item(menu_item)
+            menu_item.show()
 
     def _buddy_icon_changed_cb(self, buddy):
         pass
 
     def _buddy_nick_changed_cb(self, buddy, nick):
-        self.set_title(nick)
+        self.set_primary_text(nick)
+
+    def _make_friend_cb(self, menuitem):
+        friends = self._shell.get_model().get_friends()
+        friends.make_friend(self._buddy)    
+
+    def _remove_friend_cb(self, menuitem):
+        friends = self._shell.get_model().get_friends()
+        friends.remove(self._buddy)
+
+    def _invite_friend_cb(self, menuitem):
+        activity = self._shell.get_current_activity()
+        activity.invite(self._buddy)
+

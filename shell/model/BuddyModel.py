@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+import logging
 
 from sugar.presence import presenceservice
 from sugar.graphics.xocolor import XoColor
@@ -49,6 +50,7 @@ class BuddyModel(gobject.GObject):
         self._pservice = presenceservice.get_instance()
 
         self._buddy = None
+        self._nick = None
 
         # If given just a key, try to get the buddy from the PS first
         if not buddy:
