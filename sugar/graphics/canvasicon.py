@@ -166,6 +166,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         self._palette = None
 
         hippo.CanvasBox.__init__(self, **kwargs)
+        
+        self.connect_after('motion-notify-event', self._motion_notify_event_cb)
 
     def _clear_buffers(self):
         cur_buf_key = self._get_current_buffer_key()
@@ -313,6 +315,13 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
     def do_button_press_event(self, event):
         self.emit_activated()
         return True
+
+    def _motion_notify_event_cb(self, button, event):
+        if event.detail == hippo.MOTION_DETAIL_ENTER:
+            self.prelight(True)
+        elif event.detail == hippo.MOTION_DETAIL_LEAVE:
+            self.prelight(False)
+        return False
 
     def prelight(self, enter):
         """
