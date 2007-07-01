@@ -20,10 +20,9 @@ import gobject
 import time
 
 from sugar.graphics.icon import Icon
-from sugar.graphics.palette import *
+from sugar.graphics.palette import Palette, WidgetInvoker
 
 class ToolButton(gtk.ToolButton):
-    _POPUP_PALETTE_DELAY = 100
 
     def __init__(self, icon_name=None):
         gtk.ToolButton.__init__(self)
@@ -43,7 +42,6 @@ class ToolButton(gtk.ToolButton):
         self._palette.props.invoker = WidgetInvoker(self.child)
 
     def set_tooltip(self, text):
-        self._palette = Palette(text)
-        self._palette.props.invoker = WidgetInvoker(self.child)
+        self.set_palette(Palette(text))
     
     palette = property(get_palette, set_palette)

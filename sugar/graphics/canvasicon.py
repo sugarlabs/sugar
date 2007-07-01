@@ -25,30 +25,11 @@ import rsvg
 import cairo
 import time
 
-from sugar.graphics.popup import Popup
 from sugar.graphics import color
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics import font
 from sugar.graphics import units
-from sugar.graphics import animator
-
-class _PopupAnimation(animator.Animation):
-    def __init__(self, icon):
-        animator.Animation.__init__(self, 0.0, 1.0)
-        self._icon = icon
-
-    def next_frame(self, current):
-        if current == 1.0:
-            self._icon.show_popup()
-
-class _PopdownAnimation(animator.Animation):
-    def __init__(self, icon):
-        animator.Animation.__init__(self, 0.0, 1.0)
-        self._icon = icon
-
-    def next_frame(self, current):
-        if current == 1.0:
-            self._icon.hide_popup()
+from sugar.graphics.palette import Palette, CanvasInvoker
 
 class _IconCacheIcon:
     def __init__(self, name, fill_color, stroke_color, now):
@@ -166,8 +147,6 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
                            gobject.PARAM_READWRITE),
         'cache'         : (bool, None, None, False,
                            gobject.PARAM_READWRITE),
-        'tooltip'       : (str, None, None, None,
-                           gobject.PARAM_READWRITE),
         'active'        : (bool, None, None, True,
                            gobject.PARAM_READWRITE)
     }
@@ -183,17 +162,10 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         self._icon_name = None
         self._cache = False
         self._handle = None
-        self._popup = None
-        self._hover_icon = False
-        self._hover_popup = False
-        self._tooltip = False
         self._active = True
-        self._popup_anim = None
-        self._enter_or_leave_sid = 0
-        
-        hippo.CanvasBox.__init__(self, **kwargs)
+        self._palette = None
 
-        self.connect_after('motion-notify-event', self._motion_notify_event_cb)
+        hippo.CanvasBox.__init__(self, **kwargs)
 
     def _clear_buffers(self):
         cur_buf_key = self._get_current_buffer_key()
@@ -233,8 +205,6 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             self.emit_request_changed()
         elif pspec.name == 'cache':
             self._cache = value
-        elif pspec.name == 'tooltip':
-            self._tooltip = value
         elif pspec.name == 'active':
             if self._active != value:
                 if not self._cache:
@@ -282,8 +252,6 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             return self._stroke_color
         elif pspec.name == 'cache':
             return self._cache
-        elif pspec.name == 'tooltip':
-            return self._tooltip
         elif pspec.name == 'active':
             return self._active
 
@@ -346,141 +314,23 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         self.emit_activated()
         return True
 
-    def get_popup(self):
-        if self._tooltip:
-            tooltip_popup = Popup()
-            text = hippo.CanvasText(text=self._tooltip)
-            text.props.background_color = color.MENU_BACKGROUND.get_int()
-            text.props.color = color.LABEL_TEXT.get_int()
-            text.props.font_desc = font.DEFAULT.get_pango_desc()
-            text.props.padding = units.points_to_pixels(5)
-            tooltip_popup.append(text)
-            
-            return tooltip_popup
-        else:
-            return None
-
-    def get_popup_context(self):
-        return None
-
-    def show_popup(self):
-        if not self._popup:
-            self._popup = self.get_popup()
-            if not self._popup:
-                return
-
-        if not self.get_context():
-            # If we have been detached from our parent, don't show up the popup
-            # in this case.
-            return
-
-        popup_context = self.get_popup_context()
-        
-        [x, y] = [None, None]
-        if popup_context:
-            try:
-                [x, y] = popup_context.get_position(self, self._popup)
-            except NotImplementedError:
-                pass
-
-        if [x, y] == [None, None]:
-            context = self.get_context()
-            [x, y] = context.translate_to_screen(self)
-        
-            # TODO: Any better place to do this?
-            [min_width, natural_width] = self.get_width_request()
-            [pop_min_width, pop_natural_width] = self._popup.get_width_request()
-            self._popup.props.box_width = max(pop_min_width, min_width)
-
-            [width, height] = self.get_allocation()
-            y += height
-            position = [x, y]
-
-        self._popup.popup(x, y)
-        self._popup.connect('motion-notify-event',
-                            self.popup_motion_notify_event_cb)
-        self._popup.connect('action-completed',
-                            self._popup_action_completed_cb)
-
-        if popup_context:
-            popup_context.popped_up(self._popup)
-
-    def hide_popup(self):
-        if self._popup:
-            self._popup.popdown()
-
-            popup_context = self.get_popup_context()
-            if popup_context:
-                popup_context.popped_down(self._popup)
-
-            self._popup = None
-
-    def _enter(self):
-        self._popup_anim = animator.Animator(0.2, 10)
-        self._popup_anim.add(_PopupAnimation(self))
-        self._popup_anim.start()
-
-        self.prelight(enter=True)
-
-    def _leave(self):
-        # FIXME: This is a hack for taking out the popdown delay for tooltips and
-        # increasing the rest of rollovers. We need a better way for specifiying
-        # different behaviors for the different kinds of popups.
-        if type(self._popup) == Popup:
-            self.hide_popup()
-        else:
-            self._popup_anim = animator.Animator(0.5, 10)
-            self._popup_anim.add(_PopdownAnimation(self))
-            self._popup_anim.start()
-
-        self.prelight(enter=False)
-
-    def _enter_or_leave_cb(self):
-        if self._popup_anim:
-            self._popup_anim.stop()
-
-        if self._hover_icon or self._hover_popup:
-            self._enter()
-        else:
-            self._leave()
-
-        self._enter_or_leave_sid = 0
-
-        return False
-
-    def _schedule_enter_or_leave(self):
-        if self._enter_or_leave_sid == 0:
-            sid = gobject.idle_add(self._enter_or_leave_cb)
-            self._enter_or_leave_sid = sid
-
-    def _motion_notify_event_cb(self, button, event):
-        if event.detail == hippo.MOTION_DETAIL_ENTER:
-            self._hover_icon = True
-        elif event.detail == hippo.MOTION_DETAIL_LEAVE:
-            self._hover_icon = False
-
-        self._schedule_enter_or_leave()
-
-        return False
-
-    def popup_motion_notify_event_cb(self, popup, event):
-        if event.detail == hippo.MOTION_DETAIL_ENTER:
-            self._hover_popup = True
-        elif event.detail == hippo.MOTION_DETAIL_LEAVE:
-            self._hover_popup = False
-
-        self._schedule_enter_or_leave()
-
-        return False
-
-    def _popup_action_completed_cb(self, popup):
-        self.hide_popup()
-
     def prelight(self, enter):
         """
         Override this method for adding prelighting behavior.
         """
         pass
+
+    def get_palette(self):
+        return self._palette
+    
+    def set_palette(self, palette):
+        self._palette = palette
+        self._palette.props.invoker = CanvasInvoker(self)
+
+    def set_tooltip(self, text):
+        self.set_palette(Palette(text))
+    
+    palette = property(get_palette, set_palette)
 
 def get_icon_state(base_name, perc):
         step = 5

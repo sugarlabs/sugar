@@ -15,6 +15,8 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+import logging
+
 import gtk
 import gobject
 import time
@@ -61,9 +63,9 @@ class Palette(gobject.GObject):
 
         self._menu = _sugarext.Menu()
 
-        primary = _PrimaryMenuItem(label, accel_path)
-        self._menu.append(primary)
-        primary.show()
+        self._primary = _PrimaryMenuItem(label, accel_path)
+        self._menu.append(self._primary)
+        self._primary.show()
 
         self._separator = gtk.SeparatorMenuItem()
         self._menu.append(self._separator)
@@ -80,6 +82,9 @@ class Palette(gobject.GObject):
                            self._leave_notify_event_cb)
         self._menu.connect('button-press-event',
                            self._button_press_event_cb)
+
+    def set_primary_text(self, label, accel_path):
+        self._primary.set_label(label, accel_path)
 
     def append_menu_item(self, item):
         self._separator.show()
@@ -152,8 +157,8 @@ class Palette(gobject.GObject):
         return x, y
 
     def _in_screen(self, x, y):
-        [width, height] = self._menu.get_size_request()
-
+        [width, height] = self._menu.size_request()
+        
         return x + width < gtk.gdk.screen_width() and \
                y + height < gtk.gdk.screen_height() and \
                x >= 0 and y >= 0
@@ -224,17 +229,23 @@ class Palette(gobject.GObject):
 class _PrimaryMenuItem(gtk.MenuItem):
     def __init__(self, label, accel_path):
         gtk.MenuItem.__init__(self)
+        self._set_label(label, accel_path)
 
-        label = gtk.AccelLabel(label)
-        label.set_accel_widget(self)
+    def set_label(self, label, accel_path):
+        self.remove(self._label)
+        self._set_label(label, accel_path)
+
+    def _set_label(self, label, accel_path):
+        self._label = gtk.AccelLabel(label)
+        self._label.set_accel_widget(self)
 
         if accel_path:
             self.set_accel_path(accel_path)
-            label.set_alignment(0.0, 0.5)
+            self._label.set_alignment(0.0, 0.5)
 
-        self.add(label)
-        label.show()
-
+        self.add(self._label)
+        self._label.show()
+    
 class _ContentMenuItem(gtk.MenuItem):
     def __init__(self):
         gtk.MenuItem.__init__(self)
