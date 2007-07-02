@@ -52,13 +52,8 @@ class _DefaultFileList(list):
         self.append('activity/activity.info')
         self.append('setup.py')
 
-        news_file = os.path.join(_get_source_path(), 'NEWS')
-        if not os.path.isfile(news_file):
-            f = open('w')
-            f.write('')
-            f.close()
-
-        self.append('NEWS')
+        if os.path.isfile(_get_source_path('NEWS')):
+            self.append('NEWS')
 
 class _ManifestFileList(list):
     def __init__(self, manifest=None):
@@ -92,8 +87,11 @@ def _extract_bundle(source_file, dest_dir):
             outfile.flush()
             outfile.close()
 
-def _get_source_path():
-    return os.getcwd()
+def _get_source_path(path=None):
+    if path:
+        return os.path.join(os.getcwd(), path)
+    else:
+        return os.getcwd()
 
 def _get_bundle_dir():
     bundle_name = os.path.basename(_get_source_path())
@@ -291,9 +289,15 @@ def cmd_release(bundle_name, manifest):
 def cmd_clean():
     os.path.walk('.', _delete_backups, None)
 
+def sanity_check():
+    if not os.path.isfile(_get_source_path('NEWS')):
+        print 'WARNING: NEWS file is missing.'
+
 def start(bundle_name=None, manifest='MANIFEST'):
     if not bundle_name:
         bundle_name = os.path.basename(_get_source_path())
+
+    sanity_check()
 
     if len(sys.argv) < 2:
         cmd_help()
