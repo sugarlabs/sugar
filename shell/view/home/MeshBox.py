@@ -79,7 +79,10 @@ class AccessPointView(PulsingIcon):
             network_manager.set_active_device(device, network)
 
     def _update_name(self):
-        self.props.tooltip = self._model.props.name
+        if self.palette:
+            self.palette.set_primary_text(self._model.props.name)
+        else:
+            self.set_tooltip(self._model.props.name)
 
     def _update_icon(self):
         icon_name = canvasicon.get_icon_state(
