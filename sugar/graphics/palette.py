@@ -59,6 +59,9 @@ class Palette(gobject.GObject):
         self._popup_anim = animator.Animator(0.3, 10)
         self._popup_anim.add(_PopupAnimation(self))
 
+        self._secondary_anim = animator.Animator(1.3, 10)
+        self._secondary_anim.add(_SecondaryAnimation(self))
+
         self._popdown_anim = animator.Animator(0.6, 10)
         self._popdown_anim.add(_PopdownAnimation(self))
 
@@ -207,8 +210,10 @@ class Palette(gobject.GObject):
     def popup(self):
         self._popdown_anim.stop()
         self._popup_anim.start()
+        self._secondary_anim.start()
 
     def popdown(self):
+        self._secondary_anim.stop()
         self._popup_anim.stop()
         self._popdown_anim.start()
 
@@ -258,6 +263,9 @@ class _ContentMenuItem(gtk.MenuItem):
             self.remove(self.child)
         self.add(widget)
 
+    def is_empty(self):
+        return self.child is None
+
 class _ButtonBarMenuItem(gtk.MenuItem):
     def __init__(self):
         gtk.MenuItem.__init__(self)
@@ -269,6 +277,9 @@ class _ButtonBarMenuItem(gtk.MenuItem):
     def append_button(self, button):
         self._hbar.pack_start(button)
 
+    def is_empty(self):
+        return len(self._hbar.get_children()) == 0
+
 class _PopupAnimation(animator.Animation):
     def __init__(self, palette):
         animator.Animation.__init__(self, 0.0, 1.0)
@@ -276,7 +287,33 @@ class _PopupAnimation(animator.Animation):
 
     def next_frame(self, current):
         if current == 1.0:
+            self._palette._primary.show()
+            for menu_item in self._palette._menu.get_children()[1:]:
+                menu_item.hide()
             self._palette._show()
+
+class _SecondaryAnimation(animator.Animation):
+    def __init__(self, palette):
+        animator.Animation.__init__(self, 0.0, 1.0)
+        self._palette = palette
+
+    def next_frame(self, current):
+        if current == 1.0:
+            middle_menu_items = self._palette._menu.get_children()
+            middle_menu_items = middle_menu_items[2:len(middle_menu_items) - 2]
+            if middle_menu_items or \
+                    not self._palette._content.is_empty() or \
+                    not self._palette._button_bar.is_empty():
+                self._palette._separator.show()
+
+            for menu_item in middle_menu_items:
+                menu_item.show()
+
+            if not self._palette._content.is_empty():
+                self._palette._content.show()
+
+            if not self._palette._button_bar.is_empty():
+                self._palette._button_bar.show()
 
 class _PopdownAnimation(animator.Animation):
     def __init__(self, palette):
