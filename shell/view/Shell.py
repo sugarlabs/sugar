@@ -57,8 +57,6 @@ class Shell(gobject.GObject):
         self._home_window = HomeWindow(self)
         self._home_window.show()
 
-        self._zoom_level = ShellModel.ZOOM_HOME
-
         self._model.connect('notify::zoom-level',
                             self._zoom_level_changed_cb)
 
@@ -154,6 +152,9 @@ class Shell(gobject.GObject):
             self._frame.hide()
 
     def set_zoom_level(self, level):
+        if level == self._model.get_zoom_level():
+            return
+
         if level == ShellModel.ZOOM_ACTIVITY:
             self._screen.toggle_showing_desktop(False)
         else:
