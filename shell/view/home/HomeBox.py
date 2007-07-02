@@ -115,6 +115,9 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
     def has_activities(self):
         return self._donut.has_activities()
 
+    def enable_xo_palette(self):
+        self._my_icon.enable_palette()
+
     def grab_and_rotate(self):
         pass
             
@@ -130,6 +133,8 @@ class HomeMyIcon(MyIcon):
         MyIcon.__init__(self, scale)
 
         self._shell = shell
+
+    def enable_palette(self):
         self.set_tooltip(profile.get_nick_name())
         
         shutdown_menu_item = gtk.MenuItem(_('Shutdown'))
