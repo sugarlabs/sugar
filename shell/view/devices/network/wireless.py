@@ -33,7 +33,7 @@ class DeviceView(CanvasIcon):
         model.connect('notify::strength', self._strength_changed_cb)
         model.connect('notify::state', self._state_changed_cb)
 
-        self._update_name()
+        self.set_tooltip(self._model.props.name)
         self._update_icon()
         self._update_state()
 
@@ -41,13 +41,10 @@ class DeviceView(CanvasIcon):
         self._update_icon()
 
     def _name_changed_cb(self, model, pspec):
-        self._update_name()
+        self.palette.set_primary_text(self._model.props.name)
 
     def _state_changed_cb(self, model, pspec):
         self._update_state()
-
-    def _update_name(self):
-        self.props.tooltip = self._model.props.name
 
     def _update_icon(self):
         icon_name = canvasicon.get_icon_state(
