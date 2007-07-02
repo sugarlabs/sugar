@@ -68,6 +68,7 @@ class ShellModel(gobject.GObject):
 
     def set_zoom_level(self, level):
         self._zoom_level = level
+        self.notify('zoom-level')
 
     def get_zoom_level(self):
         if self._screen.get_showing_desktop():
