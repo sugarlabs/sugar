@@ -54,7 +54,7 @@ class _DefaultFileList(list):
 
         news_file = os.path.join(_get_source_path(), 'NEWS')
         if not os.path.isfile(news_file):
-            f = f.open('w')
+            f = open('w')
             f.write('')
             f.close()
 
