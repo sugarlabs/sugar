@@ -173,12 +173,12 @@ class ActivityView(SnowflakeBox):
         self._icon = CanvasIcon(icon_name=model.get_icon_name(),
                           xo_color=model.get_color(), box_width=80)
         self._icon.connect('activated', self._clicked_cb)
-        self._update_name()
+        self._icon.set_tooltip(self._model.get_title())
         self.append(self._icon, hippo.PACK_FIXED)
         self.set_root(self._icon)
 
     def _update_name(self):
-        self._icon.props.tooltip = self._model.get_title()
+        self.palette.set_primary_text(self._model.get_title())
 
     def has_buddy_icon(self, key):
         return self._icons.has_key(key)
