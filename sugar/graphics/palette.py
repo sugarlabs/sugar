@@ -315,6 +315,8 @@ class _SecondaryAnimation(animator.Animation):
             if not self._palette._button_bar.is_empty():
                 self._palette._button_bar.show()
 
+            self._palette._show()
+
 class _PopdownAnimation(animator.Animation):
     def __init__(self, palette):
         animator.Animation.__init__(self, 0.0, 1.0)
