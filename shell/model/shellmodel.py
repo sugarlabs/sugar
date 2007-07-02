@@ -16,6 +16,7 @@
 
 import os
 
+import wnck
 import gobject
 
 from sugar.presence import presenceservice
@@ -37,9 +38,12 @@ class ShellModel(gobject.GObject):
     ZOOM_ACTIVITY = 3
 
     __gproperties__ = {
-        'state'     : (int, None, None,
-                      0, 2, STATE_RUNNING,
-                      gobject.PARAM_READWRITE)
+        'state'      : (int, None, None,
+                        0, 2, STATE_RUNNING,
+                        gobject.PARAM_READWRITE),
+        'zoom-level' : (int, None, None,
+                        0, 3, ZOOM_HOME,
+                        gobject.PARAM_READABLE)
     }
 
     def __init__(self):
@@ -47,6 +51,7 @@ class ShellModel(gobject.GObject):
 
         self._current_activity = None
         self._state = self.STATE_RUNNING
+        self._zoom_level = self.ZOOM_HOME
 
         self._pservice = presenceservice.get_instance()
 
@@ -57,6 +62,19 @@ class ShellModel(gobject.GObject):
         self._home = HomeModel()
         self._devices = DevicesModel()
 
+        self._screen = wnck.screen_get_default()
+        self._screen.connect('showing-desktop-changed',
+                             self._showing_desktop_changed_cb)
+
+    def set_zoom_level(self, level):
+        self._zoom_level = level
+
+    def get_zoom_level(self):
+        if self._screen.get_showing_desktop():
+            return self._zoom_level
+        else:
+            return self.ZOOM_ACTIVITY
+
     def do_set_property(self, pspec, value):
         if pspec.name == 'state':
             self._state = value
@@ -64,6 +82,8 @@ class ShellModel(gobject.GObject):
     def do_get_property(self, pspec):
         if pspec.name == 'state':
             return self._state
+        elif pspec.name == 'zoom-level':
+            return self.get_zoom_level()                
 
     def get_mesh(self):
         return self._mesh
@@ -82,3 +102,6 @@ class ShellModel(gobject.GObject):
 
     def get_devices(self):
         return self._devices
+
+    def _showing_desktop_changed_cb(self, screen):
+        self.notify('zoom-level')

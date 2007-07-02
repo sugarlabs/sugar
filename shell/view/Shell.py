@@ -59,6 +59,9 @@ class Shell(gobject.GObject):
 
         self._zoom_level = ShellModel.ZOOM_HOME
 
+        self._model.connect('notify::zoom-level',
+                            self._zoom_level_changed_cb)
+
         home_model = self._model.get_home()
         home_model.connect('activity-started', self._activity_started_cb)
         home_model.connect('activity-removed', self._activity_removed_cb)
@@ -98,12 +101,6 @@ class Shell(gobject.GObject):
             self._current_host.set_active(False)
 
         self._current_host = host
-
-        if self._current_host:
-            self._current_host.set_active(True)
-            self.set_zoom_level(ShellModel.ZOOM_ACTIVITY)
-        else:
-            self.set_zoom_level(ShellModel.ZOOM_HOME)
 
     def get_model(self):
         return self._model
@@ -150,24 +147,19 @@ class Shell(gobject.GObject):
         self._activities_starting.add(activity_type)
         activityfactory.create(activity_type)
 
-    def set_zoom_level(self, level):
-        if self._zoom_level == level:
-            return
-        if len(self._hosts) == 0 and level == ShellModel.ZOOM_ACTIVITY:
-            return
-
-        self._zoom_level = level
-
-        if self._zoom_level == ShellModel.ZOOM_ACTIVITY:
-            self._screen.toggle_showing_desktop(False)
-        else:
-            self._screen.toggle_showing_desktop(True)
-            self._home_window.set_zoom_level(self._zoom_level)
-
-        if self._zoom_level == ShellModel.ZOOM_HOME:
+    def _zoom_level_changed_cb(self, model, pspec):
+        if model.get_zoom_level() == ShellModel.ZOOM_HOME:
             self._frame.show()
         else:
             self._frame.hide()
+
+    def set_zoom_level(self, level):
+        if level == ShellModel.ZOOM_ACTIVITY:
+            self._screen.toggle_showing_desktop(False)
+        else:
+            self._model.set_zoom_level(level)
+            self._screen.toggle_showing_desktop(True)
+            self._home_window.set_zoom_level(level)
 
     def get_current_activity(self):
         return self._current_host
