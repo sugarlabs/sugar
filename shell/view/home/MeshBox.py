@@ -122,7 +122,7 @@ class MeshDeviceView(PulsingIcon):
         PulsingIcon.__init__(self, scale=units.MEDIUM_ICON_SCALE,
                 icon_name=_MESH_ICON_NAME)
         self._nm_device = nm_device
-        self.props.tooltip = _("Mesh Network")
+        self.set_tooltip(_("Mesh Network"))
 
         mycolor = profile.get_color()
         self._device_fill = mycolor.get_fill_color()
