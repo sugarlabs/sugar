@@ -35,7 +35,7 @@ logger.start('shell')
 sys.path.insert(0, env.get_shell_path())
 
 from view.Shell import Shell
-from model.ShellModel import ShellModel
+from model.shellmodel import ShellModel
 from shellservice import ShellService
 from intro import intro
 

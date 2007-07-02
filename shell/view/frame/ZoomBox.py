@@ -18,7 +18,8 @@ import hippo
 
 from sugar.graphics import color
 from sugar.graphics.iconbutton import IconButton
-import sugar
+
+from model.shellmodel import ShellModel
 
 class ZoomBox(hippo.CanvasBox):
     def __init__(self, shell):
@@ -29,25 +30,33 @@ class ZoomBox(hippo.CanvasBox):
         icon = IconButton(icon_name='theme:stock-zoom-mesh',
                           stroke_color=color.BLACK,
                           fill_color=color.WHITE)
-        icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_MESH)
+        icon.connect('activated',
+                     self._level_clicked_cb,
+                     ShellModel.ZOOM_MESH)
         self.append(icon)
 
         icon = IconButton(icon_name='theme:stock-zoom-friends',
                           stroke_color=color.BLACK,
                           fill_color=color.WHITE)
-        icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_FRIENDS)
+        icon.connect('activated',
+                     self._level_clicked_cb,
+                     ShellModel.ZOOM_FRIENDS)
         self.append(icon)
 
         icon = IconButton(icon_name='theme:stock-zoom-home',
                           stroke_color=color.BLACK,
                           fill_color=color.WHITE)
-        icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_HOME)
+        icon.connect('activated',
+                     self._level_clicked_cb,
+                     ShellModel.ZOOM_HOME)
         self.append(icon)
 
         icon = IconButton(icon_name='theme:stock-zoom-activity',
                           stroke_color=color.BLACK,
                           fill_color=color.WHITE)
-        icon.connect('activated', self._level_clicked_cb, sugar.ZOOM_ACTIVITY)
+        icon.connect('activated',
+                     self._level_clicked_cb,
+                     ShellModel.ZOOM_ACTIVITY)
         self.append(icon)
 
     def _level_clicked_cb(self, item, level):

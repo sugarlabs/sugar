@@ -21,10 +21,5 @@ import os
 
 from sugar import ltihooks
 
-ZOOM_MESH = 0
-ZOOM_FRIENDS = 1
-ZOOM_HOME = 2
-ZOOM_ACTIVITY = 3
-
 if os.path.isfile(os.path.join(os.path.dirname(__file__), 'Makefile.am')):
     ltihooks.install()

@@ -24,9 +24,8 @@ import gtk
 
 from sugar import env
 from hardware import hardwaremanager
-from model.ShellModel import ShellModel
+from model.shellmodel import ShellModel
 from sugar._sugarext import KeyGrabber
-import sugar
 
 _actions_table = {
     'F1'            : 'zoom_mesh',
@@ -90,16 +89,16 @@ class KeyHandler(object):
         hw_manager.set_display_mode(mode)
 
     def handle_zoom_mesh(self):
-        self._shell.set_zoom_level(sugar.ZOOM_MESH)
+        self._shell.set_zoom_level(ShellModel.ZOOM_MESH)
 
     def handle_zoom_friends(self):
-        self._shell.set_zoom_level(sugar.ZOOM_FRIENDS)
+        self._shell.set_zoom_level(ShellModel.ZOOM_FRIENDS)
 
     def handle_zoom_home(self):
-        self._shell.set_zoom_level(sugar.ZOOM_HOME)
+        self._shell.set_zoom_level(ShellModel.ZOOM_HOME)
 
     def handle_zoom_activity(self):
-        self._shell.set_zoom_level(sugar.ZOOM_ACTIVITY)
+        self._shell.set_zoom_level(ShellModel.ZOOM_ACTIVITY)
 
     def handle_brightness_1(self):
         self._set_display_brightness(0)

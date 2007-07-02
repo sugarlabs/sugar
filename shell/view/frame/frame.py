@@ -27,7 +27,7 @@ from view.frame.overlaybox import OverlayBox
 from view.frame.FriendsBox import FriendsBox
 from view.frame.framewindow import FrameWindow
 from view.frame.clipboardpanelwindow import ClipboardPanelWindow
-from model.ShellModel import ShellModel
+from model.shellmodel import ShellModel
 from sugar.graphics import animator
 from sugar.graphics import units
 from sugar.clipboard import clipboardservice

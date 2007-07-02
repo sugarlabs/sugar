@@ -31,6 +31,11 @@ class ShellModel(gobject.GObject):
     STATE_RUNNING = 1
     STATE_SHUTDOWN = 2
 
+    ZOOM_MESH = 0
+    ZOOM_FRIENDS = 1
+    ZOOM_HOME = 2
+    ZOOM_ACTIVITY = 3
+
     __gproperties__ = {
         'state'     : (int, None, None,
                       0, 2, STATE_RUNNING,

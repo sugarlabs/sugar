@@ -29,14 +29,13 @@ from sugar.activity.activityhandle import ActivityHandle
 from sugar.activity import activityfactory
 from sugar.datastore import datastore
 from sugar import profile
-import sugar
 
 from view.ActivityHost import ActivityHost
 from view.frame.frame import Frame
 from view.keyhandler import KeyHandler
 from view.home.HomeWindow import HomeWindow
 from model import bundleregistry
-
+from model.shellmodel import ShellModel
 from hardware import hardwaremanager
 
 class Shell(gobject.GObject):
@@ -58,7 +57,7 @@ class Shell(gobject.GObject):
         self._home_window = HomeWindow(self)
         self._home_window.show()
 
-        self._zoom_level = sugar.ZOOM_HOME
+        self._zoom_level = ShellModel.ZOOM_HOME
 
         home_model = self._model.get_home()
         home_model.connect('activity-started', self._activity_started_cb)
@@ -102,9 +101,9 @@ class Shell(gobject.GObject):
 
         if self._current_host:
             self._current_host.set_active(True)
-            self.set_zoom_level(sugar.ZOOM_ACTIVITY)
+            self.set_zoom_level(ShellModel.ZOOM_ACTIVITY)
         else:
-            self.set_zoom_level(sugar.ZOOM_HOME)
+            self.set_zoom_level(ShellModel.ZOOM_HOME)
 
     def get_model(self):
         return self._model
@@ -134,7 +133,7 @@ class Shell(gobject.GObject):
 
     def notify_launch(self, bundle_id, activity_id):
         # Zoom to Home for launch feedback
-        self.set_zoom_level(sugar.ZOOM_HOME)
+        self.set_zoom_level(ShellModel.ZOOM_HOME)
 
         home_model = self._model.get_home()
         home_model.notify_activity_launch(activity_id, bundle_id)
@@ -154,18 +153,18 @@ class Shell(gobject.GObject):
     def set_zoom_level(self, level):
         if self._zoom_level == level:
             return
-        if len(self._hosts) == 0 and level == sugar.ZOOM_ACTIVITY:
+        if len(self._hosts) == 0 and level == ShellModel.ZOOM_ACTIVITY:
             return
 
         self._zoom_level = level
 
-        if self._zoom_level == sugar.ZOOM_ACTIVITY:
+        if self._zoom_level == ShellModel.ZOOM_ACTIVITY:
             self._screen.toggle_showing_desktop(False)
         else:
             self._screen.toggle_showing_desktop(True)
             self._home_window.set_zoom_level(self._zoom_level)
 
-        if self._zoom_level == sugar.ZOOM_HOME:
+        if self._zoom_level == ShellModel.ZOOM_HOME:
             self._frame.show()
         else:
             self._frame.hide()

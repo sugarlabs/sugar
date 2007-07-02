@@ -34,7 +34,7 @@ from sugar import env
 from view.home.activitiesdonut import ActivitiesDonut
 from view.devices import deviceview
 from view.home.MyIcon import MyIcon
-from model.ShellModel import ShellModel
+from model.shellmodel import ShellModel
 
 class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarHomeBox'

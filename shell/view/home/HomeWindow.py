@@ -19,12 +19,12 @@ import hippo
 import cairo
 
 from sugar.graphics import units
-import sugar
 
 from view.home.MeshBox import MeshBox
 from view.home.HomeBox import HomeBox
 from view.home.FriendsBox import FriendsBox
 from view.home.transitionbox import TransitionBox
+from model.shellmodel import ShellModel
 
 _HOME_PAGE       = 0
 _FRIENDS_PAGE    = 1
@@ -37,7 +37,7 @@ class HomeWindow(gtk.Window):
 
         self._shell = shell
         self._active = False
-        self._level = sugar.ZOOM_HOME
+        self._level = ShellModel.ZOOM_HOME
 
         self._canvas = hippo.Canvas()
         self.add(self._canvas)
@@ -94,7 +94,7 @@ class HomeWindow(gtk.Window):
             self._home_box.release()
 
     def _update_mesh_state(self):
-        if self._active and self._level == sugar.ZOOM_MESH:
+        if self._active and self._level == ShellModel.ZOOM_MESH:
             self._mesh_box.resume()
         else:
             self._mesh_box.suspend()
@@ -112,21 +112,21 @@ class HomeWindow(gtk.Window):
     
         self._canvas.set_root(self._transition_box)
 
-        if level == sugar.ZOOM_HOME:
+        if level == ShellModel.ZOOM_HOME:
             scale = units.XLARGE_ICON_SCALE
-        elif level == sugar.ZOOM_FRIENDS:
+        elif level == ShellModel.ZOOM_FRIENDS:
             scale = units.LARGE_ICON_SCALE
-        elif level == sugar.ZOOM_MESH:
+        elif level == ShellModel.ZOOM_MESH:
             scale = units.STANDARD_ICON_SCALE
             
         self._transition_box.set_scale(scale)
     
     def _transition_completed_cb(self, transition_box):
-        if self._level == sugar.ZOOM_HOME:
+        if self._level == ShellModel.ZOOM_HOME:
             self._canvas.set_root(self._home_box)
-        elif self._level == sugar.ZOOM_FRIENDS:
+        elif self._level == ShellModel.ZOOM_FRIENDS:
             self._canvas.set_root(self._friends_box)
-        elif self._level == sugar.ZOOM_MESH:
+        elif self._level == ShellModel.ZOOM_MESH:
             self._canvas.set_root(self._mesh_box)
 
         self._update_mesh_state()
