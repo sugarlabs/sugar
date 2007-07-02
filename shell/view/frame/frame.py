@@ -259,6 +259,7 @@ class Frame(object):
 
     def _connect_to_panel(self, panel):
         panel.connect('enter-notify-event', self._enter_notify_cb)
+        panel.connect('leave-notify-event', self._leave_notify_cb)
 
     def _update_position(self):
         screen_h = gtk.gdk.screen_height()
@@ -292,8 +293,26 @@ class Frame(object):
             gobject.timeout_add(2000, lambda: self.hide())
 
     def _enter_notify_cb(self, window, event):
+        # FIXME clicks cause leave/notify, ignore
+        if event.state == gtk.gdk.BUTTON1_MASK:
+            return
+        if self._hover:
+            return
+
+        self._hover = True
         self._mouse_listener.mouse_enter()
-        
+
+    def _leave_notify_cb(self, window, event):
+        # FIXME clicks cause leave/notify, ignore
+        if event.state == gtk.gdk.BUTTON1_MASK:
+            return
+        if not self._hover:
+            return
+
+        if not self._is_hover():
+            self._hover = False
+            self._mouse_listener.mouse_leave()
+
     def _drag_motion_cb(self, window, context, x, y, time):
         self._mouse_listener.mouse_enter()
         
