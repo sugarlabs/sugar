@@ -37,7 +37,6 @@ class ActivityHost:
     def __init__(self, model):
         self._model = model
         self._window = model.get_window()
-        self._activity = model.get_service()
         self._gdk_window = gtk.gdk.window_foreign_new(self.get_xid())
 
         try:
@@ -61,12 +60,6 @@ class ActivityHost:
 
     def get_model(self):
         return self._model
-
-    def execute(self, command, args):
-        return self._activity.execute(command, dbus.Array(args))
-
-    def share(self):
-        self._activity.share(ignore_reply=True)
 
     def invite(self, buddy):
         pass

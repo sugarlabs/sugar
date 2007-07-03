@@ -24,6 +24,10 @@ from sugar.graphics.xocolor import XoColor
 from sugar.presence import presenceservice
 from sugar import profile
 
+_SERVICE_NAME = "org.laptop.Activity"
+_SERVICE_PATH = "/org/laptop/Activity"
+_SERVICE_INTERFACE = "org.laptop.Activity"
+
 class HomeActivity(gobject.GObject):
     """Activity which appears in the "Home View" of the Sugar shell
     
@@ -70,9 +74,6 @@ class HomeActivity(gobject.GObject):
         self._window = window
         self._xid = window.get_xid()
 
-    def set_service(self, service):
-        self._service = service
-
     def get_service(self):
         """Retrieve the application's sugar introspection service
         
@@ -80,7 +81,16 @@ class HomeActivity(gobject.GObject):
         such a service, so the return value will be None in
         those cases.
         """
-        return self._service
+        bus = dbus.SessionBus()
+        try:
+            service = dbus.Interface(
+                    bus.get_object(_SERVICE_NAME + self._activity_id,
+                                   _SERVICE_PATH + "/" + self._activity_id),
+                                   _SERVICE_INTERFACE)
+        except dbus.DBusException:
+            service = None
+
+        return service
 
     def get_title(self):
         """Retrieve the application's root window's suggested title"""
@@ -141,10 +151,6 @@ class HomeActivity(gobject.GObject):
             return self._bundle.get_service_name()
         else:
             return None
-
-    def get_shared(self):
-        """Return whether this activity is using Presence service sharing"""
-        return self._service.get_shared()
 
     def get_launch_time(self):
         """Return the time at which the activity was first launched

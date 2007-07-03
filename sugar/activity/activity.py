@@ -382,10 +382,6 @@ class Activity(Window, gtk.Container):
         self._share_id = self._pservice.connect("activity-shared", self._internal_share_cb)
         self._pservice.share_activity(self)
 
-    def execute(self, command, args):
-        """Execute the given command with args"""
-        return False
-
     def _realize_cb(self, window):
         wm.set_bundle_id(window.window, self.get_service_name())
         wm.set_activity_id(window.window, self._activity_id)

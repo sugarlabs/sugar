@@ -49,7 +49,6 @@ _actions_table = {
     '0x93'          : 'frame',
     '<alt>o'        : 'overlay',
     '0xE0'          : 'overlay',
-    '0xDC'          : 'camera',
     '0x7C'          : 'shutdown',
     '<alt><shift>s' : 'shutdown',
     '0xEB'          : 'rotate',
@@ -148,14 +147,6 @@ class KeyHandler(object):
 
     def handle_overlay(self):
         self._shell.toggle_chat_visibility()
-
-    def handle_camera(self):
-        current_activity = self._shell.get_current_activity()
-        if current_activity:
-            if current_activity.execute('camera', []):
-                return
-
-        self._shell.start_activity('org.laptop.CameraActivity')
 
     def handle_shutdown(self):
         model = self._shell.get_model()

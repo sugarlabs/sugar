@@ -25,10 +25,6 @@ from sugar import wm
 from model.homeactivity import HomeActivity
 from model import bundleregistry
 
-_SERVICE_NAME = "org.laptop.Activity"
-_SERVICE_PATH = "/org/laptop/Activity"
-_SERVICE_INTERFACE = "org.laptop.Activity"
-
 class HomeModel(gobject.GObject):
     """Model of the "Home" view (activity management)
     
@@ -105,8 +101,6 @@ class HomeModel(gobject.GObject):
                 activity = HomeActivity(bundle, activity_id)
                 self._add_activity(activity)
 
-            service = self._get_activity_service(activity_id)
-            activity.set_service(service)
             activity.set_window(window)
 
             activity.props.launching = False
@@ -165,18 +159,6 @@ class HomeModel(gobject.GObject):
             logging.error('Model for window %d does not exist.' % xid)
 
         self.emit('active-activity-changed', self._current_activity)
-
-    def _get_activity_service(self, activity_id):
-        bus = dbus.SessionBus()
-        try:
-            service = dbus.Interface(
-                    bus.get_object(_SERVICE_NAME + activity_id,
-                                   _SERVICE_PATH + "/" + activity_id),
-                                   _SERVICE_INTERFACE)
-        except dbus.DBusException:
-            service = None
-
-        return service
 
     def _add_activity(self, activity):
         self._activities.append(activity)

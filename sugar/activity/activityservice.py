@@ -56,21 +56,6 @@ class ActivityService(dbus.service.Object):
         self._activity = activity
 
     @dbus.service.method(_ACTIVITY_INTERFACE)
-    def share(self):
-        """Called by the shell to request the activity to share itself on the network."""
-        self._activity.share()
-
-    @dbus.service.method(_ACTIVITY_INTERFACE)
-    def get_shared(self):
-        """Returns True if the activity is shared on the mesh."""
-        return self._activity.get_shared()
-
-    @dbus.service.method(_ACTIVITY_INTERFACE,
-                         in_signature="sas", out_signature="b")
-    def execute(self, command, args):
-        return self._activity.execute(command, args)
-
-    @dbus.service.method(_ACTIVITY_INTERFACE)
     def set_active(self, active):
         logging.debug('ActivityService.set_active: %s.' % active)
         self._activity.props.active = active
