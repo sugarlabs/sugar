@@ -46,10 +46,22 @@ class ComboBox(gtk.ComboBox):
 
     def do_get_property(self, pspec):
         if pspec.name == 'value':
-             action_id, text, icon_name, is_separator = self.get_active_item()
-             return action_id
+             row = self.get_active_item()
+             if not row:
+                return None
+             return row[0]
         else:
             return gtk.ComboBox.do_get_property(self, pspec)
+
+    def _get_real_name_from_theme(self, name):
+        icon_theme = gtk.icon_theme_get_default()
+        width, height = gtk.icon_size_lookup(gtk.ICON_SIZE_MENU)
+        info = icon_theme.lookup_icon(name, width, height)
+        if not info:
+            raise ValueError("Icon '" + name + "' not found.")
+        fname = info.get_filename()
+        del info
+        return fname
 
     def append_item(self, action_id, text, icon_name=None):
         if not self._icon_renderer and icon_name:
@@ -65,11 +77,9 @@ class ComboBox(gtk.ComboBox):
 
         if icon_name:
             width, height = gtk.icon_size_lookup(gtk.ICON_SIZE_MENU)
-            if os.path.isfile(icon_name):
-                pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(icon_name, width, height)
-            else:
-                icon_theme = gtk.icon_theme_get_default()
-                pixbuf = icon_theme.load_icon(icon_name, width, 0)
+            if icon_name[0:6] == "theme:": 
+                icon_name = self._get_real_name_from_theme(icon_name[6:])
+            pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(icon_name, width, height)
         else:
             pixbuf = None
 
@@ -84,7 +94,12 @@ class ComboBox(gtk.ComboBox):
             index = 0
 
         row = self._model.iter_nth_child(None, index)
+        if not row:
+            return None
         return self._model[row]
+
+    def remove_all(self):
+        self._model.clear()
 
     def _is_separator(self, model, row):
         action_id, text, icon_name, is_separator = model[row]
