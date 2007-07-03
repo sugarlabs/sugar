@@ -20,6 +20,7 @@ import urlparse
 
 from sugar.objects import mime
 from sugar import activity
+from sugar import util
 
 import objecttypeservice
 
@@ -106,32 +107,21 @@ class ClipboardObject:
         return self._formats
 
     def get_mime_type(self):
-        logging.debug('Choosing between %r.' % self._formats.keys())
         if not self._formats:
             return ''
 
-        if 'text/uri-list' in self._formats.keys():
+        format = util.choose_most_significant_mime_type(self._formats.keys())
+
+        if format == 'text/uri-list':
             data = self._formats['text/uri-list'].get_data()
             uris = data.split('\n')
             if len(uris) == 1 or not uris[1]:
                 uri = urlparse.urlparse(uris[0], 'file')
                 if uri.scheme == 'file':
                     logging.debug('Choosed %r!' % mime.get_for_file(uri.path))
-                    return mime.get_for_file(uri.path)
+                    format = mime.get_for_file(uri.path)
 
-        for mime_category in ['image/', 'text/', 'application/']:
-            for mime_type in self._formats.keys():
-                if mime_type.startswith(mime_category) and \
-                        not mime_type.split('/')[1].startswith('_'):
-                    mime_type = mime_type.split(';')[0]
-                    logging.debug('Choosed %r!' % mime_type)
-                    return mime_type
-
-        if 'STRING' in self._formats.keys():
-            return 'text/plain'
-
-        logging.debug('Returning first: %r.' % self._formats.keys()[0])
-        return self._formats.keys()[0]
+        return format
 
 class Format:
 

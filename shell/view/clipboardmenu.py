@@ -13,10 +13,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
 from gettext import gettext as _
 import tempfile
 import urlparse
 import os
+import logging
 
 import gtk
 import hippo
@@ -31,6 +33,7 @@ from sugar.clipboard import clipboardservice
 from sugar.datastore import datastore
 from sugar.objects import mime
 from sugar import profile
+from sugar import util
 
 class ClipboardMenu(Palette):
     
@@ -151,18 +154,13 @@ class ClipboardMenu(Palette):
         cb_service = clipboardservice.get_instance()
         obj = cb_service.get_object(self._object_id)
 
-        if len(obj['FORMATS']) == 0:
-            return
+        format = util.choose_most_significant_mime_type(obj['FORMATS'])
+        data = cb_service.get_object_data(self._object_id, format)
 
-        if 'text/uri-list' in obj['FORMATS']:
-            data = cb_service.get_object_data(self._object_id, 'text/uri-list')
+        if format == 'text/uri-list':
             file_path = urlparse.urlparse(data['DATA']).path
             mime_type = mime.get_for_file(file_path)
         else:
-            # TODO: Find a way to choose the best mime-type from all the available.
-            mime_type = obj['FORMATS'][0]
-
-            data = cb_service.get_object_data(self._object_id, mime_type)
             if data['ON_DISK']:
                 file_path = urlparse.urlparse(data['DATA']).path
             else:
@@ -171,6 +169,7 @@ class ClipboardMenu(Palette):
                     os.write(f, data['DATA'])
                 finally:
                     os.close(f)
+            mime_type = format
 
         jobject = datastore.create()
         jobject.metadata['title'] = _('Clipboard object: %s.') % obj['NAME']
