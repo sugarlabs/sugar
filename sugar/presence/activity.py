@@ -166,6 +166,17 @@ class Activity(gobject.GObject):
         (bus_name, connection, channels) = self._activity.GetChannels()
         return bus_name, connection, channels
 
+    def _leave_cb(self):
+        # XXX Is this the right thing to do?
+        self.emit("joined", False, "left activity")
+
+    def _leave_error_cb(self, err):
+        # XXX We are closing down anyway
+        pass
+
     def leave(self):
+        """Leave this shared activity"""
         # FIXME
         self._joined = False
+        self._activity.Leave(reply_handler=self._leave_cb,
+                             error_handler=self._leave_error_cb)
