@@ -75,3 +75,6 @@ def unmount(mount_point_id):
 def mounts():
     return _data_store.mounts()
 
+def get_unique_values(key):
+    return _data_store.get_uniquevaluesfor(key, {})
+
