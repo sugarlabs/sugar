@@ -18,7 +18,7 @@
 import gtk
 
 _system_colors = {
-    'toolbar-background'            : '#414141',
+    'toolbar-background'            : '#404040',
     'frame-border'                  : '#D1D1D2',
     'entry-background-focused'      : '#FFFFFF',
     'entry-background-unfocused'    : '#414141',
@@ -30,11 +30,11 @@ _system_colors = {
     'label-text'                    : '#FFFFFF',
     'desktop-background'            : '#E2E2E3',
     'menu-background'               : '#000000',
-    'menu-background-hover'         : '#424242',
+    'menu-background-hover'         : '#404040',
     'menu-separator'                : '#D1D1D2',
     'menu-border'                   : '#D1D1D2',
     'button-normal'                 : '#FFFFFF',
-    'button-background-normal'      : '#424242',
+    'button-background-normal'      : '#404040',
     'button-hover'                  : '#808080',
     'button-background-hover'       : '#000000',
     'icon-stroke-inactive'          : '#757575',
