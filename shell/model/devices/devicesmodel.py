@@ -17,6 +17,7 @@
 
 import logging
 import gobject
+import dbus
 
 from model.devices import device
 from model.devices.network import wired
@@ -41,9 +42,18 @@ class DevicesModel(gobject.GObject):
 
         self._devices = {}
         self._sigids = {}
-        self.add_device(battery.Device())
 
+        self._observe_hal_manager()
         self._observe_network_manager()
+
+    def _observe_hal_manager(self):
+        bus = dbus.Bus(dbus.Bus.TYPE_SYSTEM)
+        proxy = bus.get_object('org.freedesktop.Hal',
+                               '/org/freedesktop/Hal/Manager')
+        hal_manager = dbus.Interface(proxy, 'org.freedesktop.Hal.Manager')
+
+        for udi in hal_manager.FindDeviceByCapability('battery'):
+            self.add_device(battery.Device(udi))
 
     def _observe_network_manager(self):
         network_manager = hardwaremanager.get_network_manager()

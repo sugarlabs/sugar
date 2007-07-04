@@ -15,8 +15,11 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import gobject
+import dbus
 
 from model.devices import device
+
+_LEVEL_PROP = 'battery.charge_level.percentage'
 
 class Device(device.Device):
     __gproperties__ = {
@@ -24,11 +27,19 @@ class Device(device.Device):
                    gobject.PARAM_READABLE)
     }
 
-    def __init__(self):
-        device.Device.__init__(self)
+    def __init__(self, udi):
+        device.Device.__init__(self, udi)
         
-        self._level = 0
-        self._timeout_id = gobject.timeout_add(2000, self._check_battery_level)
+        bus = dbus.Bus(dbus.Bus.TYPE_SYSTEM)
+        proxy = bus.get_object('org.freedesktop.Hal', udi)
+        self._battery = dbus.Interface(proxy, 'org.freedesktop.Hal.Device')
+        bus.add_signal_receiver(self._battery_changed,
+                                'PropertyModified',
+                                'org.freedesktop.Hal.Device',
+                                'org.freedesktop.Hal',
+                                udi)
+
+        self._level = self._battery.GetProperty(_LEVEL_PROP)
 
     def do_get_property(self, pspec):
         if pspec.name == 'level':
@@ -37,29 +48,9 @@ class Device(device.Device):
     def get_type(self):
         return 'battery'
 
-    def _check_battery_level(self):
-        new_level = self._get_battery_level()
-        
-        if new_level != self._level:
-            self._level = new_level
-            self.notify('level')
-
-        return True
-
-    def _get_battery_level(self):
-        battery_class_path = '/sys/class/battery/psu_0/'
-
-        capacity_path = battery_class_path + 'capacity_percentage'
-        try:
-            f = open(capacity_path, 'r')
-            val = f.read().split('\n')
-            level = int(val[0])
-            f.close()
-        except:
-            level = 0
-
-        return level
-
-    def __del__(self):
-        gobject.source_remove(self._timeout_id)
-        self._timeout_id = 0
+    def _battery_changed(self, num_changes, changes_list):
+        for change in changes_list:
+            if change[0] == 'battery.charge_level.percentage':
+                self._level = self._battery.GetProperty(_LEVEL_PROP)
+                print self._level
+                self.notify('level')

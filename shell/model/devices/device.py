@@ -31,9 +31,12 @@ _nm_state_to_state = {
 }
 
 class Device(gobject.GObject):
-    def __init__(self):
+    def __init__(self, device_id=None):
         gobject.GObject.__init__(self)
-        self._id = util.unique_id()
+        if device_id:
+            self._id = device_id
+        else:
+            self._id = util.unique_id()
 
     def get_type(self):
         return 'unknown'        
