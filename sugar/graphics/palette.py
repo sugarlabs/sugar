@@ -21,7 +21,6 @@ import gtk
 import gobject
 import time
 import hippo
-import dbus
 
 from sugar.graphics import animator
 from sugar.graphics import units
@@ -87,15 +86,6 @@ class Palette(gobject.GObject):
                            self._leave_notify_event_cb)
         self._menu.connect('button-press-event',
                            self._button_press_event_cb)
-
-        gobject.idle_add(self._listen_for_zoom_level_change)
-
-    def _listen_for_zoom_level_change(self):
-        bus = dbus.Bus()
-        proxy = bus.get_object('org.laptop.Shell', '/org/laptop/Shell')
-        shell_service = dbus.Interface(proxy, 'org.laptop.Shell')
-        shell_service.connect_to_signal('ZoomLevelChanged',
-                                        self._zoom_level_changed_cb)
 
     def set_primary_text(self, label, accel_path=None):
         self._primary.set_label(label, accel_path)
@@ -244,9 +234,6 @@ class Palette(gobject.GObject):
     def _button_press_event_cb(self, widget, event):
         pass
 
-    def _zoom_level_changed_cb(self, zoom_level):
-        self._hide()
-
 class _PrimaryMenuItem(gtk.MenuItem):
     def __init__(self, label, accel_path):
         gtk.MenuItem.__init__(self)
@@ -391,8 +378,6 @@ class CanvasInvoker(Invoker):
         context = self._item.get_context()
         if context:
             x, y = context.translate_to_screen(self._item)
-        else:
-            x, y = 0, 0
 
         width, height = self._item.get_allocation()
 
