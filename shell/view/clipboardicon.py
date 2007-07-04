@@ -88,11 +88,15 @@ class ClipboardIcon(CanvasIcon):
         else:
             installable = False
 
+        if icon_name:
+            self.props.icon_name = icon_name
+        else:
+            self.props.icon_name = 'theme:object-generic'
+
         self._name = name
         self._percent = percent
         self._preview = preview
         self._activity = activity
-        self.set_property("icon_name", icon_name)
         self.palette.set_state(name, percent, preview, activity, installable)
 
         if (activity or installable) and percent < 100:
