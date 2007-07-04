@@ -52,5 +52,4 @@ class Device(device.Device):
         for change in changes_list:
             if change[0] == 'battery.charge_level.percentage':
                 self._level = self._battery.GetProperty(_LEVEL_PROP)
-                print self._level
                 self.notify('level')
