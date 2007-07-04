@@ -56,10 +56,12 @@ class ShellService(dbus.service.Object):
         self._home_model.connect('active-activity-changed',
                                  self._cur_activity_changed_cb)
 
+        self._shell_model.connect('notify::zoom-level',
+                                  self._shell_model_notify_zoom_level_cb)
+        
         bus = dbus.SessionBus()
         bus_name = dbus.service.BusName(_DBUS_SERVICE, bus=bus)
         dbus.service.Object.__init__(self, bus_name, _DBUS_PATH)
-
 
     @dbus.service.method(_DBUS_SHELL_IFACE,
                          in_signature="ss", out_signature="")
@@ -146,12 +148,19 @@ class ShellService(dbus.service.Object):
     def CurrentActivityChanged(self, activity_id):
         pass
 
+    @dbus.service.signal(_DBUS_SHELL_IFACE, signature="i")
+    def ZoomLevelChanged(self, new_level):
+        pass
+
     def _cur_activity_changed_cb(self, owner, new_activity):
         new_id = ""
         if new_activity:
             new_id = new_activity.get_activity_id()
         if new_id:
             self.CurrentActivityChanged(new_id)
+
+    def _shell_model_notify_zoom_level_cb(self, shell_model, pspec):
+        self.ZoomLevelChanged(shell_model.props.zoom_level)
 
     def _bundle_to_dict(self, bundle):
         return {'name': bundle.get_name(),
