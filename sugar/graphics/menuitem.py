@@ -1,4 +1,4 @@
-# Copyright (C) 2007, Eduardo Silva (edsiper@gmail.com)
+# Copyright (C) 2007, Eduardo Silva <edsiper@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -22,7 +22,7 @@ class MenuItem(gtk.ImageMenuItem):
     def __init__(self, text_label, icon_name=None):
         gtk.ImageMenuItem.__init__(self, text_label)
         if icon_name:
-            icon = Icon(icon_name, gtk.ICON_SIZE_SMALL_TOOLBAR)
+            icon = Icon(icon_name, gtk.ICON_SIZE_MENU)
             self.set_image(icon)
             icon.show()
 

@@ -11,6 +11,7 @@ sugar_PYTHON =			\
 	font.py			\
 	frame.py		\
 	notebook.py		\
+	menuitem.py		\
 	objectchooser.py	\
 	radiotoolbutton.py	\
 	roundbox.py		\
