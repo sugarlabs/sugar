@@ -35,6 +35,30 @@ class _Animation(animator.Animation):
         d = (self.end_scale - self.start_scale) * current
         self._icon.props.scale = self.start_scale + d
 
+class _Layout(gobject.GObject,hippo.CanvasLayout):
+    __gtype_name__ = 'SugarTransitionBoxLayout'
+    def __init__(self):
+        gobject.GObject.__init__(self)
+
+    def do_set_box(self, box):
+        self._box = box
+
+    def do_get_height_request(self, for_width):
+        return 0, 0
+
+    def do_get_width_request(self):
+        return 0, 0
+
+    def do_allocate(self, x, y, width, height,
+                    req_width, req_height, origin_changed):
+        for child in self._box.get_layout_children():
+            min_width, child_width = child.get_width_request()
+            min_height, child_height = child.get_height_request(child_width)
+
+            child.allocate(x + (width - child_width) / 2,
+                           y + (height - child_height) / 2,
+                           child_width, child_height, origin_changed)
+
 class TransitionBox(hippo.CanvasBox):
     __gtype_name__ = 'SugarTransitionBox'
     
@@ -48,11 +72,11 @@ class TransitionBox(hippo.CanvasBox):
 
         self._scale = units.XLARGE_ICON_SCALE
 
-        self._layout = SpreadLayout()
+        self._layout = _Layout()
         self.set_layout(self._layout)
 
         self._my_icon = MyIcon(self._scale)
-        self._layout.add_center(self._my_icon)
+        self.append(self._my_icon)
 
         self._animator = animator.Animator(0.3)
         self._animator.connect('completed', self._animation_completed_cb)
