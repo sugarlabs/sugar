@@ -25,16 +25,17 @@ def _object_type_from_dict(info_dict):
     if info_dict:
         return ObjectType(info_dict['type_id'],
                           info_dict['name'],
-                          info_dict['icon'])
+                          info_dict['icon'],
+                          info_dict['mime_types'])
     else:
         return None
 
 class ObjectType(object):
-    def __init__(self, type_id, name, icon):
+    def __init__(self, type_id, name, icon, mime_types):
         self.type_id = type_id
         self.name = name
         self.icon = icon
-        self.mime_types = []
+        self.mime_types = mime_types
 
 class ObjectTypeRegistry(object):
     def __init__(self):

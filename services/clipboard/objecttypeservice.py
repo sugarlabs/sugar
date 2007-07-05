@@ -31,7 +31,8 @@ class ObjectTypeRegistry(dbus.service.Object):
         from gettext import gettext as _
         self._add_primitive('Text', _('Text'), 'theme:object-text',
                             [ 'text/plain', 'text/rtf', 'application/pdf',
-                              'application/x-pdf', 'text/html' ])
+                              'application/x-pdf', 'text/html',
+                              'application/vnd.oasis.opendocument.text' ])
         self._add_primitive('Image', _('Image'), 'theme:object-image',
                             [ 'image/png', 'image/gif', 'image/jpeg' ])
 
