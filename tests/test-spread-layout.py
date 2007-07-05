@@ -38,7 +38,7 @@ def _create_icon():
                       icon_name='theme:stock-buddy')
     layout.add(icon)
 
-    return (len(box.get_children()) < 70)
+    return (len(box.get_children()) < 50)
 
 window = gtk.Window()
 window.connect("destroy", lambda w: gtk.main_quit())

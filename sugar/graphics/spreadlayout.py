@@ -30,18 +30,18 @@ class _Grid(object):
     def __init__(self, width, height):
         self.width = width
         self.height = height
+        self._children = []
+        self._collisions = []
+        self._collisions_sid = 0
 
         self._array = array('B')
         for i in range(width * height):
             self._array.append(0)
 
     def add_locked(self, child, x, y, width, height):
-        rect = gtk.gdk.Rectangle(x, y, width, height)        
-
+        child.grid_rect = gtk.gdk.Rectangle(x, y, width, height)
         child.locked = True
-        child.grid_rect = rect
-
-        self._add_weight(rect)
+        self._add_child(child)
 
     def add(self, child, width, height):
         trials = _PLACE_TRIALS
@@ -60,11 +60,32 @@ class _Grid(object):
         child.grid_rect = rect
         child.locked = False
 
-        self._add_weight(rect)
+        self._add_child(child)
+
+        if weight > 0:
+            self._detect_collisions(child)
 
     def remove(self, child):
+        self._children.remove(child)
         self._remove_weight(child.grid_rect)
         child.grid_rect = None
+
+    def _add_child(self, child):
+        self._children.append(child)
+        self._add_weight(child.grid_rect)
+
+    def _solve_collisions(self):
+        return False
+
+    def _detect_collisions(self, child):
+        for c in self._children:
+            intersection = child.grid_rect.intersect(c.grid_rect)
+            if c != child and intersection.width > 0:
+                if c not in self._collisions:
+                    self._collisions.append(c)
+                    if not self._collisions_sid:
+                        self._collisions_sid = \
+                            gobject.idle_add(self._solve_collisions)
 
     def _add_weight(self, rect):
         for i in range(rect.x, rect.x + rect.width):
