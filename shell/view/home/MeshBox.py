@@ -21,19 +21,20 @@ import gobject
 from gettext import gettext as _
 
 from sugar.graphics.spreadbox import SpreadBox
-from sugar.graphics.snowflakebox import SnowflakeBox
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import color
 from sugar.graphics import xocolor
 from sugar.graphics import canvasicon
 from sugar.graphics import units
+from sugar import profile
+
 from model import accesspointmodel
 from model.devices.network import mesh
 from hardware import hardwaremanager
 from hardware import nmclient
 from view.BuddyIcon import BuddyIcon
 from view.pulsingicon import PulsingIcon
-from sugar import profile
+from view.home.snowflakelayout import SnowflakeLayout
 
 _ICON_NAME = 'device-network-wireless'
 
@@ -165,20 +166,22 @@ class MeshDeviceView(PulsingIcon):
                   color.HTMLColor(self._device_fill) ]
             ]
 
-class ActivityView(SnowflakeBox):
+class ActivityView(hippo.CanvasBox):
     def __init__(self, shell, model):
-        SnowflakeBox.__init__(self)
+        hippo.CanvasBox.__init__(self)
 
         self._shell = shell
         self._model = model
         self._icons = {}
 
+        self._layout = SnowflakeLayout()
+        self.set_layout(self._layout)
+
         self._icon = CanvasIcon(icon_name=model.get_icon_name(),
                           xo_color=model.get_color(), box_width=80)
         self._icon.connect('activated', self._clicked_cb)
         self._icon.set_tooltip(self._model.get_title())
-        self.append(self._icon, hippo.PACK_FIXED)
-        self.set_root(self._icon)
+        self._layout.add_center(self._icon)
 
     def _update_name(self):
         self.palette.set_primary_text(self._model.get_title())
@@ -188,7 +191,7 @@ class ActivityView(SnowflakeBox):
 
     def add_buddy_icon(self, key, icon):
         self._icons[key] = icon
-        self.append(icon, hippo.PACK_FIXED)
+        self._layout.add(icon)
 
     def remove_buddy_icon(self, key):
         icon = self._icons[key]

@@ -17,32 +17,33 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import sys
-from random import random
 
-import pygtk
-pygtk.require('2.0')
-
-import gobject
 import gtk
 import hippo
 
-from sugar.graphics.snowflakebox import SnowflakeBox
-from sugar.graphics.spreadbox import SpreadBox
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics.canvasicon import CanvasIcon
+from sugar import env
 
-def _create_snowflake(parent, children):
-    color = XoColor()
-    icon = CanvasIcon(scale=0.8, xo_color=color,
+sys.path.append(env.get_shell_path())
+
+from view.home.snowflakelayout import SnowflakeLayout
+
+def add_snowflake(parent, size):
+    box = hippo.CanvasBox()
+    parent.append(box)
+
+    layout = SnowflakeLayout()
+    box.set_layout(layout)
+
+    icon = CanvasIcon(scale=0.8, xo_color=XoColor(),
                       icon_name='theme:object-link')
-    parent.append(icon, hippo.PACK_FIXED)
-    parent.set_root(icon)
+    layout.add_center(icon)
 
-    for i in range(0, children):
-        color = XoColor()
-        icon = CanvasIcon(scale=0.4, xo_color=color,
+    for k in range(0, size):
+        icon = CanvasIcon(scale=0.4, xo_color=XoColor(),
                           icon_name='theme:stock-buddy')
-        parent.append(icon, hippo.PACK_FIXED)
+        layout.add(icon)
 
 window = gtk.Window()
 window.set_default_size(gtk.gdk.screen_width(), gtk.gdk.screen_height())
@@ -51,17 +52,13 @@ window.show()
 
 canvas = hippo.Canvas()
 
-root_box = SpreadBox(background_color=0xe2e2e2ff)
-canvas.set_root(root_box)
+root = hippo.CanvasBox(background_color=0xe2e2e2ff)
+canvas.set_root(root)
 
-box = SnowflakeBox()
-snow_flake = _create_snowflake(box, 0)
-root_box.set_center_item(box)
-
-for i in range(0, 30):
-    box = SnowflakeBox()
-    snow_flake = _create_snowflake(box, int(2 + random() * 8))
-    root_box.add_item(box)
+add_snowflake(root, 10)
+add_snowflake(root, 20)
+add_snowflake(root, 15)
+add_snowflake(root, 5)
 
 canvas.show()
 window.add(canvas)

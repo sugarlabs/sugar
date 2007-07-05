@@ -8,4 +8,5 @@ sugar_PYTHON =			\
 	HomeWindow.py		\
 	MeshBox.py		\
 	MyIcon.py		\
+	snowflakelayout.py	\
 	transitionbox.py
