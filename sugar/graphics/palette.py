@@ -55,6 +55,7 @@ class Palette(gobject.GObject):
         gobject.GObject.__init__(self)
 
         self._position = self.AUTOMATIC
+        self._palette_popup_sid = None
 
         self._popup_anim = animator.Animator(0.3, 10)
         self._popup_anim.add(_PopupAnimation(self))
@@ -202,9 +203,15 @@ class Palette(gobject.GObject):
             if not self._in_screen(x, y):
                 x, y = self._get_position(_TOP_RIGHT)
 
+        self._palette_popup_sid = _palette_observer.connect('popup',
+                    self._palette_observer_popup_cb)
         self._menu.popup(x, y)
+        _palette_observer.emit('popup', self)
 
     def _hide(self):
+        if not self._palette_popup_sid is None:
+            _palette_observer.disconnect(self._palette_popup_sid)
+            self._palette_popup_sid = None
         self._menu.popdown()
 
     def popup(self):
@@ -233,6 +240,10 @@ class Palette(gobject.GObject):
 
     def _button_press_event_cb(self, widget, event):
         pass
+
+    def _palette_observer_popup_cb(self, observer, palette):
+        if self != palette:
+            self._hide()
 
 class _PrimaryMenuItem(gtk.MenuItem):
     def __init__(self, label, accel_path):
@@ -390,3 +401,15 @@ class CanvasInvoker(Invoker):
             self.notify_mouse_leave()
 
         return False
+
+class _PaletteObserver(gobject.GObject):
+    __gtype_name__ = 'SugarPaletteObserver'
+
+    __gsignals__ = {
+        'popup': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([object]))
+    }
+
+    def __init__(self):
+        gobject.GObject.__init__(self)
+
+_palette_observer = _PaletteObserver()

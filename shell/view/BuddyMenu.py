@@ -21,6 +21,7 @@ import gobject
 import hippo
 
 from sugar.graphics.palette import Palette
+from sugar.graphics.menuitem import MenuItem
 from sugar.graphics import units
 from sugar.presence import presenceservice
 
@@ -74,10 +75,10 @@ class BuddyMenu(Palette):
 
         friends = shell_model.get_friends()
         if friends.has_buddy(self._buddy):
-            menu_item = gtk.MenuItem(_('Remove friend')) #, 'theme:stock-remove')
+            menu_item = MenuItem(_('Remove friend'), 'stock-remove')
             menu_item.connect('activate', self._remove_friend_cb)
         else:
-            menu_item = gtk.MenuItem(_('Make friend')) #, 'theme:stock-add')
+            menu_item = MenuItem(_('Make friend'), 'stock-add')
             menu_item.connect('activate', self._make_friend_cb)
         self.append_menu_item(menu_item)
         menu_item.show()
@@ -88,7 +89,7 @@ class BuddyMenu(Palette):
 
             # FIXME check that the buddy is not in the activity already
 
-            menu_item = gtk.MenuItem(_('Invite')) #, 'theme:stock-invite')
+            menu_item = MenuItem(_('Invite'), 'stock-invite')
             menu_item.connect('activate', self._invite_friend_cb)
             self.append_menu_item(menu_item)
             menu_item.show()
