@@ -33,11 +33,12 @@ from sugar.graphics.canvasicon import CanvasIcon
 def _create_icon():
     color = XoColor()
 
-    icon = CanvasIcon(scale=1.0, xo_color=color,
+    scale = 1.0 + random.random() * 1.5
+    icon = CanvasIcon(scale=scale, xo_color=color,
                       icon_name='theme:stock-buddy')
     layout.add(icon)
 
-    return (len(box.get_children()) < 20)
+    return (len(box.get_children()) < 70)
 
 window = gtk.Window()
 window.connect("destroy", lambda w: gtk.main_quit())
@@ -55,6 +56,6 @@ canvas.set_root(box)
 window.add(canvas)
 canvas.show()
 
-gobject.timeout_add(500, _create_icon)
+gobject.timeout_add(100, _create_icon)
 
 gtk.main()
