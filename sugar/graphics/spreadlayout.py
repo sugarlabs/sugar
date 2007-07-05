@@ -35,6 +35,14 @@ class _Grid(object):
         for i in range(width * height):
             self._array.append(0)
 
+    def add_locked(self, child, x, y, width, height):
+        rect = gtk.gdk.Rectangle(x, y, width, height)        
+
+        child.locked = True
+        child.grid_rect = rect
+
+        self._add_weight(rect)
+
     def add(self, child, width, height):
         trials = _PLACE_TRIALS
         weight = _MAX_WEIGHT
@@ -50,10 +58,12 @@ class _Grid(object):
             trials -= 1
 
         child.grid_rect = rect
+        child.locked = False
+
         self._add_weight(rect)
 
     def remove(self, child):
-        self._remove_weight(box_child.grid_rect)
+        self._remove_weight(child.grid_rect)
         child.grid_rect = None
 
     def _add_weight(self, rect):
@@ -91,6 +101,16 @@ class SpreadLayout(gobject.GObject,hippo.CanvasLayout):
         min_height, height = self.do_get_height_request(width)
 
         self._grid = _Grid(width / _CELL_SIZE, height / _CELL_SIZE)
+
+    def add_center(self, child):
+        self._box.append(child)
+
+        width, height = self._get_child_grid_size(child)
+        box_child = self._box.find_box_child(child)
+        self._grid.add_locked(box_child,
+                              int((self._grid.width - width) / 2),
+                              int((self._grid.height - height) / 2),
+                              width, height)
 
     def add(self, child):
         self._box.append(child)

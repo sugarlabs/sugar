@@ -20,7 +20,7 @@ import hippo
 import gobject
 from gettext import gettext as _
 
-from sugar.graphics.spreadbox import SpreadBox
+from sugar.graphics.spreadlayout import SpreadLayout
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import color
 from sugar.graphics import xocolor
@@ -202,9 +202,9 @@ class ActivityView(hippo.CanvasBox):
         bundle_id = self._model.get_service_name()
         self._shell.join_activity(bundle_id, self._model.get_id())
 
-class MeshBox(SpreadBox):
+class MeshBox(hippo.CanvasBox):
     def __init__(self, shell):
-        SpreadBox.__init__(self, background_color=0xe2e2e2ff)
+        hippo.CanvasBox.__init__(self, background_color=0xe2e2e2ff)
 
         self._shell = shell
         self._model = shell.get_model().get_mesh()
@@ -214,6 +214,9 @@ class MeshBox(SpreadBox):
         self._mesh = None
         self._buddy_to_activity = {}
         self._suspended = True
+
+        self.layout = SpreadLayout()
+        self.set_layout(self.layout)
 
         for buddy_model in self._model.get_buddies():
             self._add_alone_buddy(buddy_model)
@@ -277,26 +280,26 @@ class MeshBox(SpreadBox):
         if not mesh:
             return
         self._mesh = MeshDeviceView(mesh)
-        self.add_item(self._mesh)
+        self.layout.add(self._mesh)
 
     def _remove_mesh(self):
         if not self._mesh:
             return
-        self.remove_item(self._mesh)
+        self.layout.remove(self._mesh)
         self._mesh = None
 
     def _add_alone_buddy(self, buddy_model):
         icon = BuddyIcon(self._shell, buddy_model)
         if buddy_model.is_owner():
-            self.set_center_item(icon)
+            self.layout.add_center(icon)
         else:
-            self.add_item(icon)
+            self.layout.add(icon)
 
         self._buddies[buddy_model.get_key()] = icon
 
     def _remove_alone_buddy(self, buddy_model):
         icon = self._buddies[buddy_model.get_key()]
-        self.remove_item(icon)
+        self.layout.remove(icon)
         del self._buddies[buddy_model.get_key()]
 
     def _remove_buddy(self, buddy_model):
@@ -323,24 +326,24 @@ class MeshBox(SpreadBox):
 
     def _add_activity(self, activity_model):
         icon = ActivityView(self._shell, activity_model)
-        self.add_item(icon)
+        self.layout.add(icon)
 
         self._activities[activity_model.get_id()] = icon
 
     def _remove_activity(self, activity_model):
         icon = self._activities[activity_model.get_id()]
-        self.remove_item(icon)
+        self.layout.remove(icon)
         del self._activities[activity_model.get_id()]
 
     def _add_access_point(self, ap_model):
         icon = AccessPointView(ap_model)
-        self.add_item(icon)
+        self.layout.add(icon)
 
         self._access_points[ap_model.get_id()] = icon
 
     def _remove_access_point(self, ap_model):
         icon = self._access_points[ap_model.get_id()]
-        self.remove_item(icon)
+        self.layout.remove(icon)
         del self._access_points[ap_model.get_id()]
 
     def suspend(self):
