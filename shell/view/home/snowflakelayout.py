@@ -28,7 +28,7 @@ _CHILDREN_FACTOR = 1
 class SnowflakeLayout(gobject.GObject,hippo.CanvasLayout):
     __gtype_name__ = 'SugarSnowflakeLayout'
     def __init__(self):
-        hippo.CanvasBox.__init__(self)
+        gobject.GObject.__init__(self)
         self._nflakes = 0
 
     def add(self, child):

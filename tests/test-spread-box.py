@@ -26,7 +26,7 @@ import gobject
 import gtk
 import hippo
 
-from sugar.graphics.spreadbox import SpreadBox
+from sugar.graphics.spreadlayout import SpreadLayout
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics.canvasicon import CanvasIcon
 
@@ -35,7 +35,7 @@ def _create_icon():
 
     icon = CanvasIcon(scale=1.0, xo_color=color,
                       icon_name='theme:stock-buddy')
-    box.add_item(icon)
+    layout.add(icon)
 
     return (len(box.get_children()) < 20)
 
@@ -45,7 +45,11 @@ window.show()
 
 canvas = hippo.Canvas()
 
-box = SpreadBox(background_color=0xe2e2e2ff)
+box = hippo.CanvasBox(background_color=0xe2e2e2ff)
+
+layout = SpreadLayout()
+box.set_layout(layout)
+
 canvas.set_root(box)
 
 window.add(canvas)
