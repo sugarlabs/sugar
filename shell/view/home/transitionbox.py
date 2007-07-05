@@ -19,7 +19,7 @@ import gobject
 
 from sugar.graphics import units
 from sugar.graphics import animator
-from sugar.graphics.spreadbox import SpreadBox
+from sugar.graphics.spreadlayout import SpreadLayout
 
 from view.home.MyIcon import MyIcon
 
@@ -35,7 +35,7 @@ class _Animation(animator.Animation):
         d = (self.end_scale - self.start_scale) * current
         self._icon.props.scale = self.start_scale + d
 
-class TransitionBox(SpreadBox):
+class TransitionBox(hippo.CanvasBox):
     __gtype_name__ = 'SugarTransitionBox'
     
     __gsignals__ = {
@@ -44,12 +44,15 @@ class TransitionBox(SpreadBox):
     }
     
     def __init__(self):
-        SpreadBox.__init__(self, background_color=0xe2e2e2ff)
+        hippo.CanvasBox.__init__(self, background_color=0xe2e2e2ff)
 
         self._scale = units.XLARGE_ICON_SCALE
 
+        self._layout = SpreadLayout()
+        self.set_layout(self._layout)
+
         self._my_icon = MyIcon(self._scale)
-        self.set_center_item(self._my_icon)
+        self._layout.add_center(self._my_icon)
 
         self._animator = animator.Animator(0.3)
         self._animator.connect('completed', self._animation_completed_cb)

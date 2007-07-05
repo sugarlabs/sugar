@@ -215,8 +215,8 @@ class MeshBox(hippo.CanvasBox):
         self._buddy_to_activity = {}
         self._suspended = True
 
-        self.layout = SpreadLayout()
-        self.set_layout(self.layout)
+        self._layout = SpreadLayout()
+        self.set_layout(self._layout)
 
         for buddy_model in self._model.get_buddies():
             self._add_alone_buddy(buddy_model)
@@ -280,26 +280,26 @@ class MeshBox(hippo.CanvasBox):
         if not mesh:
             return
         self._mesh = MeshDeviceView(mesh)
-        self.layout.add(self._mesh)
+        self._layout.add(self._mesh)
 
     def _remove_mesh(self):
         if not self._mesh:
             return
-        self.layout.remove(self._mesh)
+        self._layout.remove(self._mesh)
         self._mesh = None
 
     def _add_alone_buddy(self, buddy_model):
         icon = BuddyIcon(self._shell, buddy_model)
         if buddy_model.is_owner():
-            self.layout.add_center(icon)
+            self._layout.add_center(icon)
         else:
-            self.layout.add(icon)
+            self._layout.add(icon)
 
         self._buddies[buddy_model.get_key()] = icon
 
     def _remove_alone_buddy(self, buddy_model):
         icon = self._buddies[buddy_model.get_key()]
-        self.layout.remove(icon)
+        self._layout.remove(icon)
         del self._buddies[buddy_model.get_key()]
 
     def _remove_buddy(self, buddy_model):
@@ -326,24 +326,24 @@ class MeshBox(hippo.CanvasBox):
 
     def _add_activity(self, activity_model):
         icon = ActivityView(self._shell, activity_model)
-        self.layout.add(icon)
+        self._layout.add(icon)
 
         self._activities[activity_model.get_id()] = icon
 
     def _remove_activity(self, activity_model):
         icon = self._activities[activity_model.get_id()]
-        self.layout.remove(icon)
+        self._layout.remove(icon)
         del self._activities[activity_model.get_id()]
 
     def _add_access_point(self, ap_model):
         icon = AccessPointView(ap_model)
-        self.layout.add(icon)
+        self._layout.add(icon)
 
         self._access_points[ap_model.get_id()] = icon
 
     def _remove_access_point(self, ap_model):
         icon = self._access_points[ap_model.get_id()]
-        self.layout.remove(icon)
+        self._layout.remove(icon)
         del self._access_points[ap_model.get_id()]
 
     def suspend(self):

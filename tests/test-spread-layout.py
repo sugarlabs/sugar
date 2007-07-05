@@ -56,6 +56,6 @@ canvas.set_root(box)
 window.add(canvas)
 canvas.show()
 
-gobject.timeout_add(100, _create_icon)
+gobject.timeout_add(200, _create_icon)
 
 gtk.main()

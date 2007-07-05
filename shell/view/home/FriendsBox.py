@@ -19,21 +19,24 @@ import random
 import hippo
 import gobject
 
-from sugar.graphics.spreadbox import SpreadBox
+from sugar.graphics.spreadlayout import SpreadLayout
 from sugar.graphics import units
 from view.home.MyIcon import MyIcon
 from view.home.FriendView import FriendView
 
-class FriendsBox(SpreadBox):
+class FriendsBox(hippo.CanvasBox):
     __gtype_name__ = 'SugarFriendsBox'
     def __init__(self, shell):
-        SpreadBox.__init__(self, background_color=0xe2e2e2ff)
+        hippo.CanvasBox.__init__(self, background_color=0xe2e2e2ff)
 
         self._shell = shell
         self._friends = {}
 
+        self._layout = SpreadLayout()
+        self.set_layout(self._layout)
+
         self._my_icon = MyIcon(units.LARGE_ICON_SCALE)
-        self.set_center_item(self._my_icon)
+        self._layout.add_center(self._my_icon)
 
         friends = self._shell.get_model().get_friends()
 
@@ -45,7 +48,7 @@ class FriendsBox(SpreadBox):
 
     def add_friend(self, buddy_info):
         icon = FriendView(self._shell, buddy_info)
-        self.add_item(icon)
+        self._layout.add(icon)
 
         self._friends[buddy_info.get_key()] = icon
 
@@ -53,5 +56,5 @@ class FriendsBox(SpreadBox):
         self.add_friend(buddy_info)
 
     def _friend_removed_cb(self, data_model, key):
-        self.remove_item(self._friends[key])
+        self._layout.remove(self._friends[key])
         del self._friends[key]

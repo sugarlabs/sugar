@@ -82,7 +82,11 @@ class _Grid(gobject.GObject):
         self._add_weight(child.grid_rect)
 
     def _move_child(self, child, new_rect):
+        self._remove_weight(child.grid_rect)
+        self._add_weight(new_rect)
+
         child.grid_rect = new_rect
+
         self.emit('child-changed', child)
 
     def _shift_child(self, child):
@@ -128,14 +132,20 @@ class _Grid(gobject.GObject):
         return (len(self._collisions) > 0)
 
     def _detect_collisions(self, child):
+        collision_found = False
         for c in self._children:
             intersection = child.grid_rect.intersect(c.grid_rect)
             if c != child and intersection.width > 0:
                 if c not in self._collisions:
+                    collision_found = True
                     self._collisions.append(c)
-                    if not self._collisions_sid:
-                        self._collisions_sid = \
-                            gobject.idle_add(self._solve_collisions)
+
+        if collision_found:
+            if child not in self._collisions:
+                self._collisions.append(child)
+
+#        if len(self._collisions) and not self._collisions_sid:
+#            self._collisions_sid = gobject.idle_add(self._solve_collisions)
 
     def _add_weight(self, rect):
         for i in range(rect.x, rect.x + rect.width):
@@ -153,7 +163,7 @@ class _Grid(gobject.GObject):
         for i in range(rect.x, rect.x + rect.width):
             for j in range(rect.y, rect.y + rect.height):
                 weight += self[j, i]
-                
+
         return weight
     
     def __getitem__(self, (row, col)):
