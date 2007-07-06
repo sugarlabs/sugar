@@ -1,0 +1,88 @@
+# translation of pt_BR.po to Brazilian Portuguese
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Diego Búrigo Zacarão <diegobz@gmail.com>, 2007.
+msgid ""
+msgstr ""
+"Project-Id-Version: pt_BR\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-07-03 04:47-0700\n"
+"PO-Revision-Date: 2007-07-03 10:37-0300\n"
+"Last-Translator: Diego Búrigo Zacarão <diegobz@gmail.com>\n"
+"Language-Team: Brazilian Portuguese <fedora-docs-br@redhat.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#: ../shell/intro/intro.py:77
+msgid "Pick a buddy picture"
+msgstr "Escolha uma foto do camarada"
+
+#: ../shell/intro/intro.py:100
+msgid "My Picture:"
+msgstr "Minha Foto:"
+
+#: ../shell/intro/intro.py:180
+msgid "My Name:"
+msgstr "Meu Nome:"
+
+#: ../shell/intro/intro.py:204
+msgid "My Color:"
+msgstr "Minha Cor:"
+
+#: ../shell/view/BuddyMenu.py:83
+msgid "Remove friend"
+msgstr "Remover amigo"
+
+#: ../shell/view/BuddyMenu.py:87
+msgid "Make friend"
+msgstr "Fazer amigo"
+
+#: ../shell/view/BuddyMenu.py:97
+msgid "Invite"
+msgstr "Convidar"
+
+#: ../shell/view/clipboardmenu.py:103
+msgid "Remove"
+msgstr "Remover"
+
+#: ../shell/view/clipboardmenu.py:110
+msgid "Open"
+msgstr "Abrir"
+
+#: ../shell/view/clipboardmenu.py:117
+msgid "Stop download"
+msgstr "Parar download"
+
+#: ../shell/view/clipboardmenu.py:124
+msgid "Add to journal"
+msgstr "Adicionar ao jornal"
+
+#: ../services/clipboard/objecttypeservice.py:32
+msgid "Text"
+msgstr "Texto"
+
+#: ../services/clipboard/objecttypeservice.py:35
+msgid "Image"
+msgstr "Imagem"
+
+#: ../shell/view/Shell.py:227
+msgid "Screenshot"
+msgstr "Foto da tela"
+
+#: ../shell/view/clipboardicon.py:211
+#, python-format
+msgid "Clipboard object: %s."
+msgstr "Objeto da prancheta: %s. "
+
+#: ../shell/view/home/MeshBox.py:122
+msgid "Mesh Network"
+msgstr "Rede Mesh"
+
+#: ../sugar/activity/activity.py:232
+#, python-format
+msgid "%s Activity"
+msgstr "%s Atividades"
+
