@@ -373,7 +373,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
     
     def set_palette(self, palette):
         self._palette = palette
-        self._palette.props.invoker = CanvasInvoker(self)
+        if not self._palette.props.invoker:
+            self._palette.props.invoker = CanvasInvoker(self)
 
     def set_tooltip(self, text):
         self.set_palette(Palette(text))

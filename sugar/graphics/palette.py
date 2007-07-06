@@ -62,6 +62,7 @@ class Palette(gobject.GObject):
     def __init__(self, label, accel_path=None):
         gobject.GObject.__init__(self)
 
+        self._invoker = None
         self._group_id = None
         self._up = False
         self._position = self.AUTOMATIC
@@ -151,6 +152,14 @@ class Palette(gobject.GObject):
         else:
             raise AssertionError
 
+    def do_get_property(self, pspec):
+        if pspec.name == 'invoker':
+            return self._invoker
+        elif pspec.name == 'position':
+            return self._position
+        else:
+            raise AssertionError
+
     def _get_position(self, alignment):
         # Invoker: x, y, width and height
         inv_rect = self._invoker.get_rect()
@@ -185,12 +194,12 @@ class Palette(gobject.GObject):
 
     def _in_screen(self, x, y):
         [width, height] = self._menu.size_request()
-        screen_width = gtk.gdk.screen_width() - units.grid_to_pixels(1)
-        screen_height = gtk.gdk.screen_height() - units.grid_to_pixels(1)
+        screen_area = self._invoker.get_screen_area()
 
-        return x + width <= screen_width and \
-               y + height <= screen_height and \
-               x >= units.grid_to_pixels(1) and y >= units.grid_to_pixels(1)
+        return x >= screen_area.x and \
+               y >= screen_area.y and \
+               x + width <= screen_area.width and \
+               y + height <= screen_area.height
 
     def _get_automatic_position(self):
         alignments = [ _BOTTOM_LEFT,  _BOTTOM_RIGHT,
@@ -202,6 +211,9 @@ class Palette(gobject.GObject):
             x, y = self._get_position(alignment)
             if self._in_screen(x, y):
                 return x, y
+
+        # We fail
+        return (0, 0)
 
     def _show(self):
         x = y = 0
@@ -380,6 +392,11 @@ class Invoker(object):
     def notify_mouse_leave(self):
         for listener in self._listeners:
             listener.invoker_mouse_leave()
+
+    def get_screen_area(self):
+        width = gtk.gdk.screen_width()
+        height = gtk.gdk.screen_height()
+        return gtk.gdk.Rectangle(0, 0, width, height)
 
 class WidgetInvoker(Invoker):
     def __init__(self, widget):
