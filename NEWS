@@ -1,10 +1,13 @@
+* #1930: Only take preview before closing. (tomeu)
+
+Snapshot 8af15d4e73
+
 * Nicer tooltips. Improved sizing logic. (marco)
 * Do not popdown the frame when palettes are active. (marco)
 * Add macedonian translation. (ArangelAngov)
 * Add brazilian translation. (DiegoZacarao)
 * Some fixes for changing the selected clipboard object. (tomeu)
 * Fix palettes around the mesh edges. (edsiper)
-* #1930: Only take preview before closing. (tomeu)
 
 Snapshot de8b3b4c01
 
