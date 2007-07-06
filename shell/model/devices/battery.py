@@ -20,11 +20,15 @@ import dbus
 from model.devices import device
 
 _LEVEL_PROP = 'battery.charge_level.percentage'
+_CHARGING_PROP = 'battery.rechargeable.is_charging'
+_DISCHARGING_PROP = 'battery.rechargeable.is_discharging'
 
 class Device(device.Device):
     __gproperties__ = {
         'level' : (int, None, None, 0, 100, 0,
-                   gobject.PARAM_READABLE)
+                   gobject.PARAM_READABLE),
+        'charging' : (bool, None, None, False, gobject.PARAM_READABLE),
+        'discharging' : (bool, None, None, False, gobject.PARAM_READABLE)
     }
 
     def __init__(self, udi):
@@ -40,16 +44,28 @@ class Device(device.Device):
                                 udi)
 
         self._level = self._battery.GetProperty(_LEVEL_PROP)
+        self._charging = self._battery.GetProperty(_CHARGING_PROP)
+        self._discharging = self._battery.GetProperty(_DISCHARGING_PROP)
 
     def do_get_property(self, pspec):
         if pspec.name == 'level':
             return self._level 
+        if pspec.name == 'charging':
+            return self._charging
+        if pspec.name == 'discharging':
+            return self._discharging
 
     def get_type(self):
         return 'battery'
 
     def _battery_changed(self, num_changes, changes_list):
         for change in changes_list:
-            if change[0] == 'battery.charge_level.percentage':
+            if change[0] == _LEVEL_PROP:
                 self._level = self._battery.GetProperty(_LEVEL_PROP)
                 self.notify('level')
+            elif change[0] == _CHARGING_PROP:
+                self._charging = self._battery.GetProperty(_CHARGING_PROP)
+                self.notify('charging')
+            elif change[0] == _DISCHARGING_PROP:
+                self._discharging = self._battery.GetProperty(_DISCHARGING_PROP)
+                self.notify('discharging')
