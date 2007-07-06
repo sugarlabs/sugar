@@ -47,7 +47,7 @@ class DeviceView(canvasicon.CanvasIcon):
         if self._model.props.charging:
             status = _STATUS_CHARING
         elif self._model.props.discharging:
-            status = _STATUS_DISCHARING
+            status = _STATUS_DISCHARGING
         else:
             status = _STATUS_FULLY_CHARGED
 
