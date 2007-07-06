@@ -221,6 +221,7 @@ class Activity(Window, gtk.Container):
         self._share_id = None
         self._join_id = None
         self._can_close = True
+        self._preview = None
 
         shared_activity = handle.get_shared_activity()
         if shared_activity:
@@ -337,7 +338,10 @@ class Activity(Window, gtk.Container):
     def save(self):
         """Request that the activity is saved to the Journal."""
         self.metadata['buddies'] = self._get_buddies()
-        self.metadata['preview'] = self._get_preview()
+        if self._preview is None:
+            self.metadata['preview'] = ''
+        else:
+            self.metadata['preview'] = self._preview
         try:
             file_path = os.path.join(tempfile.gettempdir(), '%i' % time.time())
             self.write_file(file_path)
@@ -400,6 +404,7 @@ class Activity(Window, gtk.Container):
         if self._shared_activity:
             self._shared_activity.leave()
 
+        self._preview = self._get_preview()
         self.save()
 
     def get_metadata(self):
