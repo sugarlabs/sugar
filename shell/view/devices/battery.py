@@ -66,7 +66,7 @@ class BatteryPalette(Palette):
 
         def update_progress_bar(self, percent):
             self._level = percent
-            fraction = float(percent/100.0)
+            fraction = percent / 100.0
             self._progress_bar.set_fraction(fraction)
 
         def update_charge_status(self, charging, discharging):

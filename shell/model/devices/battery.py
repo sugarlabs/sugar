@@ -25,10 +25,12 @@ _DISCHARGING_PROP = 'battery.rechargeable.is_discharging'
 
 class Device(device.Device):
     __gproperties__ = {
-        'level' : (int, None, None, 0, 100, 0,
-                   gobject.PARAM_READABLE),
-        'charging' : (bool, None, None, False, gobject.PARAM_READABLE),
-        'discharging' : (bool, None, None, False, gobject.PARAM_READABLE)
+        'level'       : (int, None, None, 0, 100, 0,
+                         gobject.PARAM_READABLE),
+        'charging'    : (bool, None, None, False,
+                         gobject.PARAM_READABLE),
+        'discharging' : (bool, None, None, False,
+                         gobject.PARAM_READABLE)
     }
 
     def __init__(self, udi):
