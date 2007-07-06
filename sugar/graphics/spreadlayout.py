@@ -233,7 +233,4 @@ class SpreadLayout(gobject.GObject,hippo.CanvasLayout):
         return int(width / _CELL_SIZE), int(height / _CELL_SIZE)
 
     def _grid_child_changed_cb(self, grid, box_child):
-        # FIXME box_child->item is not exposed in the python bindings
-        for item in self._box.get_children():
-            if self._box.find_box_child(item) == box_child:
-                item.emit_request_changed()
+        box_child.item.emit_request_changed()
