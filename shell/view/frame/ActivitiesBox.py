@@ -24,12 +24,14 @@ from sugar.graphics.iconbutton import IconButton
 from sugar import profile
 
 from model import bundleregistry
+from frameinvoker import FrameCanvasInvoker
 
 class ActivityButton(IconButton):
     def __init__(self, activity):
         IconButton.__init__(self, icon_name=activity.get_icon())
 
         palette = Palette(activity.get_name())
+        palette.props.invoker = FrameCanvasInvoker(self)
         palette.set_group_id('frame')
         self.set_palette(palette)
 

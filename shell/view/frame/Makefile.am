@@ -4,6 +4,7 @@ sugar_PYTHON =				\
 	ActivitiesBox.py		\
 	clipboardbox.py			\
 	clipboardpanelwindow.py		\
+	frameinvoker.py			\
 	FriendsBox.py			\
 	eventarea.py			\
 	frame.py			\

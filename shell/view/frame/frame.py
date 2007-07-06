@@ -336,3 +336,4 @@ class Frame(object):
 
     def notify_key_release(self):
         self._key_listener.key_release()
+
