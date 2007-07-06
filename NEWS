@@ -1,3 +1,5 @@
+* Nicer tooltips. Improved sizing logic. (marco)
+* Do not popdown the frame when palettes are active. (marco)
 * Add macedonian translation. (ArangelAngov)
 * Add brazilian translation. (DiegoZacarao)
 
