@@ -1,0 +1,6 @@
+Snapshot de8b3b4c01
+
+* Use HAL to get battery informations. 
+* Improvements in the mesh view layout.
+* Hide the active palette when another popup.
+* Icons in the buddy menu items
