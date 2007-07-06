@@ -25,6 +25,7 @@ from model.BuddyModel import BuddyModel
 class FriendIcon(BuddyIcon):
     def __init__(self, shell, buddy):
         BuddyIcon.__init__(self, shell, buddy)
+        self.get_palette().set_group_id('frame')
 
     def prelight(self, enter):
         if enter:

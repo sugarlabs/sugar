@@ -1,4 +1,4 @@
-# Copyright (C) 2007, Eduardo Silva (edsiper@gmail.com)
+# Copyright (C) 2007, Eduardo Silva <edsiper@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -22,6 +22,7 @@ import gobject
 import time
 import hippo
 
+from sugar.graphics import palettegroup
 from sugar.graphics import animator
 from sugar.graphics import units
 from sugar import _sugarext
@@ -51,9 +52,18 @@ class Palette(gobject.GObject):
                         0, gobject.PARAM_READWRITE)
     }
 
+    __gsignals__ = {
+        'popup' :   (gobject.SIGNAL_RUN_FIRST,
+                     gobject.TYPE_NONE, ([])),
+        'popdown' : (gobject.SIGNAL_RUN_FIRST,
+                     gobject.TYPE_NONE, ([]))
+    }
+
     def __init__(self, label, accel_path=None):
         gobject.GObject.__init__(self)
 
+        self._group_id = None
+        self._up = False
         self._position = self.AUTOMATIC
         self._palette_popup_sid = None
 
@@ -88,6 +98,9 @@ class Palette(gobject.GObject):
         self._menu.connect('button-press-event',
                            self._button_press_event_cb)
 
+    def is_up(self):
+        return self._up
+
     def set_primary_text(self, label, accel_path=None):
         self._primary.set_label(label, accel_path)
 
@@ -119,7 +132,15 @@ class Palette(gobject.GObject):
     def append_button(self, button):
         self._button_bar.append_button(button)
         self._button_bar.show()
-        
+
+    def set_group_id(self, group_id):
+        if self._group_id:
+            group = palettegroup.get_group(self._group_id)
+            group.remove(self)
+        if group_id:
+            group = palettegroup.get_group(group_id)
+            group.add(self)
+
     def do_set_property(self, pspec, value):
         if pspec.name == 'invoker':
             self._invoker = value
@@ -206,13 +227,19 @@ class Palette(gobject.GObject):
         self._palette_popup_sid = _palette_observer.connect('popup',
                     self._palette_observer_popup_cb)
         self._menu.popup(x, y)
+
+        self._up = True
         _palette_observer.emit('popup', self)
+        self.emit('popup')
 
     def _hide(self):
         if not self._palette_popup_sid is None:
             _palette_observer.disconnect(self._palette_popup_sid)
             self._palette_popup_sid = None
         self._menu.popdown()
+
+        self._up = False
+        self.emit('popdown')
 
     def popup(self):
         self._popdown_anim.stop()

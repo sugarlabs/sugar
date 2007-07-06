@@ -18,6 +18,7 @@ import hippo
 import logging
 
 from sugar.graphics import units
+from sugar.graphics.palette import Palette
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics.iconbutton import IconButton
 from sugar import profile
@@ -27,7 +28,11 @@ from model import bundleregistry
 class ActivityButton(IconButton):
     def __init__(self, activity):
         IconButton.__init__(self, icon_name=activity.get_icon())
-        self.set_tooltip(activity.get_name())
+
+        palette = Palette(activity.get_name())
+        palette.set_group_id('frame')
+        self.set_palette(palette)
+
         self._activity = activity
 
     def get_bundle_id(self):

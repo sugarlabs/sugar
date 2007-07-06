@@ -44,6 +44,8 @@ class ClipboardMenu(Palette):
         self._percent = percent
         self._activity = activity
 
+        self.set_group_id('frame')
+
         if percent < 100:        
             self._progress_bar = gtk.ProgressBar()
             self._update_progress_bar()

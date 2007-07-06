@@ -16,6 +16,7 @@ sugar_PYTHON =			\
 	radiotoolbutton.py	\
 	roundbox.py		\
 	palette.py		\
+	palettegroup.py		\
 	panel.py		\
 	spreadlayout.py		\
 	toggletoolbutton.py	\

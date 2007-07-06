@@ -20,6 +20,11 @@ import gtk
 import gobject
 import hippo
 
+from sugar.graphics import animator
+from sugar.graphics import units
+from sugar.graphics import palettegroup
+from sugar.clipboard import clipboardservice
+
 from view.frame.eventarea import EventArea
 from view.frame.ActivitiesBox import ActivitiesBox
 from view.frame.ZoomBox import ZoomBox
@@ -28,9 +33,6 @@ from view.frame.FriendsBox import FriendsBox
 from view.frame.framewindow import FrameWindow
 from view.frame.clipboardpanelwindow import ClipboardPanelWindow
 from model.shellmodel import ShellModel
-from sugar.graphics import animator
-from sugar.graphics import units
-from sugar.clipboard import clipboardservice
 
 MODE_NONE     = 0
 MODE_MOUSE    = 1
@@ -125,6 +127,9 @@ class Frame(object):
     def __init__(self, shell):
         self.mode = MODE_NONE
         self.visible = False
+
+        self._palette_group = palettegroup.get_group('frame')
+        self._palette_group.connect('popdown', self._palette_group_popdown_cb)
 
         self._left_panel = None
         self._right_panel = None
@@ -309,8 +314,12 @@ class Frame(object):
         if not self._hover:
             return
 
-        if not self._is_hover():
+        if not self._is_hover() and not self._palette_group.is_up():
             self._hover = False
+            self._mouse_listener.mouse_leave()
+
+    def _palette_group_popdown_cb(self, group):
+        if not self._is_hover():
             self._mouse_listener.mouse_leave()
 
     def _drag_motion_cb(self, window, context, x, y, time):
