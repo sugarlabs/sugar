@@ -273,8 +273,9 @@ def cmd_release(bundle_name, manifest):
         repo = os.environ['ACTIVITIES_REPOSITORY']
 
         server, path = repo.split(':')
-        cmd = '"rm %s/%s*"' % (path, bundle_name)
-        retcode = subprocess.call(['ssh', server, cmd])
+        retcode = subprocess.call(['ssh', server, 'mv',
+                                   '%s/%s*' % (path, bundle_name),
+                                   '%s/old' % path])
         if retcode:
             print 'ERROR - cannot remove old bundles from the repository.'
 
