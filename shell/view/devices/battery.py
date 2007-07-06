@@ -23,6 +23,10 @@ from sugar.graphics.palette import Palette
 
 _ICON_NAME = 'device-battery'
 
+_STATUS_CHARGING = 0
+_STATUS_DISCHARGING = 1
+_STATUS_FULLY_CHARGED = 2
+
 class DeviceView(canvasicon.CanvasIcon):
     def __init__(self, model):
         canvasicon.CanvasIcon.__init__(self, scale=units.MEDIUM_ICON_SCALE)
@@ -40,43 +44,50 @@ class DeviceView(canvasicon.CanvasIcon):
                                     _ICON_NAME, self._model.props.level)
 
         # Update palette
-        self._palette.update_progress_bar(self._model.props.level)
-        self._palette.update_charge_status(self._model.props.charging, \
-            self._model.props.discharging)
+        if self._model.props.charging:
+            status = _STATUS_CHARING
+        elif self._model.props.discharging:
+            status = _STATUS_DISCHARING
+        else:
+            status = _STATUS_FULLY_CHARGED
+
+        self._palette.set_level(self._model.props.level)
+        self._palette.set_status(status)
 
     def _battery_status_changed_cb(self, pspec, param):
         self._update_info()
 
 class BatteryPalette(Palette):
-        def __init__(self, primary_text):
-            Palette.__init__(self, primary_text)
+
+    def __init__(self, primary_text):
+        Palette.__init__(self, primary_text)
             
-            self._level = 0
-            self._progress_bar = gtk.ProgressBar()
-            self._progress_bar.show()
-            self._status_label = gtk.Label()
-            self._status_label.show()
+        self._level = 0
+        self._progress_bar = gtk.ProgressBar()
+        self._progress_bar.show()
+        self._status_label = gtk.Label()
+        self._status_label.show()
 
-            vbox = gtk.VBox()
-            vbox.pack_start(self._progress_bar)
-            vbox.pack_start(self._status_label)
-            vbox.show()
+        vbox = gtk.VBox()
+        vbox.pack_start(self._progress_bar)
+        vbox.pack_start(self._status_label)
+        vbox.show()
 
-            self.set_content(vbox)
+        self.set_content(vbox)
 
-        def update_progress_bar(self, percent):
-            self._level = percent
-            fraction = percent / 100.0
-            self._progress_bar.set_fraction(fraction)
+    def set_level(self, percent):
+        self._level = percent
+        fraction = percent/100.0
+        self._progress_bar.set_fraction(fraction)
 
-        def update_charge_status(self, charging, discharging):
-            percent_string = ' (%s%%)' % self._level
+    def set_status(self, status):
+        percent_string = ' (%s%%)' % self._level
 
-            if charging:
-                charge_text = _('Battery charging') + percent_string
-            elif discharging:
-                charge_text = _('Battery discharging') + percent_string
-            else:
-                charge_text = _('Battery fully charged')
+        if status == _STATUS_CHARGING:
+            charge_text = _('Battery charging') + percent_string
+        elif status == _STATUS_DISCHARGING:
+            charge_text = _('Battery discharging') + percent_string
+        elif status == _STATUS_FULLY_CHARGED:
+            charge_text = _('Battery fully charged')
 
-            self._status_label.set_text(charge_text)
+        self._status_label.set_text(charge_text)
