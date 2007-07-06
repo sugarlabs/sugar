@@ -27,16 +27,6 @@ static void sugar_menu_init       (SugarMenu *menu);
 
 G_DEFINE_TYPE(SugarMenu, sugar_menu, GTK_TYPE_MENU)
 
-static void
-sugar_menu_class_init(SugarMenuClass *menu_class)
-{
-}
-
-static void
-sugar_menu_init(SugarMenu *menu)
-{
-}
-
 void
 sugar_menu_popup(SugarMenu *menu,
                  int         x,
@@ -69,3 +59,33 @@ sugar_menu_popdown(SugarMenu *menu)
     gtk_widget_hide(window);
 }
 
+void
+sugar_menu_set_min_width (SugarMenu *menu,
+                          int        min_width)
+{
+    menu->min_width = min_width;
+}
+
+static void
+sugar_menu_size_request (GtkWidget      *widget,
+                         GtkRequisition *requisition)
+{
+    SugarMenu *menu = SUGAR_MENU(widget);
+
+    (* GTK_WIDGET_CLASS (sugar_menu_parent_class)->size_request) (widget, requisition);
+
+    requisition->width = MAX(requisition->width, menu->min_width);
+}
+
+static void
+sugar_menu_class_init(SugarMenuClass *menu_class)
+{
+    GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(menu_class);
+
+    widget_class->size_request = sugar_menu_size_request;    
+}
+
+static void
+sugar_menu_init(SugarMenu *menu)
+{
+}

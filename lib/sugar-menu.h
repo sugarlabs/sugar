@@ -36,17 +36,21 @@ typedef struct _SugarMenuClass SugarMenuClass;
 
 struct _SugarMenu {
 	GtkMenu base_instance;
+
+    int min_width;
 };
 
 struct _SugarMenuClass {
 	GtkMenuClass base_class;
 };
 
-GType	 sugar_menu_get_type (void);
-void     sugar_menu_popup    (SugarMenu *menu,
-                              int        x,
-                              int        y);
-void     sugar_menu_popdown  (SugarMenu *menu);
+GType	 sugar_menu_get_type      (void);
+void     sugar_menu_popup         (SugarMenu *menu,
+                                   int        x,
+                                   int        y);
+void     sugar_menu_set_min_width (SugarMenu *menu,
+                                   int        min_width);
+void     sugar_menu_popdown       (SugarMenu *menu);
 
 G_END_DECLS
 
