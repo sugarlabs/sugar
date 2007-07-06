@@ -45,7 +45,7 @@ class DeviceView(canvasicon.CanvasIcon):
 
         # Update palette
         if self._model.props.charging:
-            status = _STATUS_CHARING
+            status = _STATUS_CHARGING
         elif self._model.props.discharging:
             status = _STATUS_DISCHARGING
         else:
