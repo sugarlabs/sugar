@@ -125,7 +125,7 @@ class ClipboardBox(hippo.CanvasBox):
     
     def _object_added_cb(self, cb_service, object_id, name):
         icon = ClipboardIcon(object_id, name)
-        icon.connect('activated', self._icon_activated_cb)
+        icon.connect('button-release-event', self._icon_button_release_event_cb)
         self._set_icon_selected(icon)
 
         self.prepend(icon)
@@ -147,24 +147,29 @@ class ClipboardBox(hippo.CanvasBox):
             clipboard = gtk.Clipboard()
             if not clipboard.set_with_data(targets,
                                            self._clipboard_data_get_cb,
-                                           self._clipboard_clear_cb):
+                                           self._clipboard_clear_cb,
+                                           targets):
                 logging.error('GtkClipboard.set_with_data failed!')
             else:
                 self._owns_clipboard = True
 
-    def _clipboard_data_get_cb(self, clipboard, selection, info, data):
+    def _clipboard_data_get_cb(self, clipboard, selection, info, targets):
+        if not selection.target in [target[0] for target in targets]:
+            logging.warning('ClipboardBox._clipboard_data_get_cb: asked %s but' \
+                            ' only have %r.' % (selection.target, targets))
+            return
         object_id = self._selected_icon.get_object_id()
         cb_service = clipboardservice.get_instance()
         data = cb_service.get_object_data(object_id, selection.target)['DATA']
         
         selection.set(selection.target, 8, data)
 
-    def _clipboard_clear_cb(self, clipboard, data):
+    def _clipboard_clear_cb(self, clipboard, targets):
         logging.debug('ClipboardBox._clipboard_clear_cb')
         self._owns_clipboard = False
 
-    def _icon_activated_cb(self, icon):
-        logging.debug('ClipboardBox._icon_activated_cb')
+    def _icon_button_release_event_cb(self, icon, event):
+        logging.debug('ClipboardBox._icon_button_release_event_cb: %r' % icon.props.selected)
         if not icon.props.selected:
             self._set_icon_selected(icon)
 
@@ -238,7 +243,7 @@ class ClipboardBox(hippo.CanvasBox):
                 self._press_start_x = event.x
                 self._press_start_y = event.y
 
-        return True;
+        return False
 
     def motion_notify_event_cb(self, widget, event):
        

@@ -122,10 +122,12 @@ class ClipboardMenu(Palette):
         obj = cb_service.get_object(self._object_id)
         formats = obj['FORMATS']
         if len(formats) == 0:
+            logging.warning('ClipboardMenu._open_item_activate_cb: Object without data.')
             return
 
         if not self._activity and \
                 not formats[0] == 'application/vnd.olpc-x-sugar':
+            logging.warning('ClipboardMenu._open_item_activate_cb: Object without activity.')
             return
 
         uri = cb_service.get_object_data(self._object_id, formats[0])['DATA']
