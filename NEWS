@@ -3,6 +3,7 @@
 * Add macedonian translation. (ArangelAngov)
 * Add brazilian translation. (DiegoZacarao)
 * Some fixes for changing the selected clipboard object. (tomeu)
+* Fix palettes around the mesh edges. (edsiper)
 
 Snapshot de8b3b4c01
 
