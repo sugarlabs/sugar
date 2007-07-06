@@ -78,6 +78,9 @@ class StdoutCatcher:
         _log_writer.write(STDOUT_LEVEL, txt)
         sys.__stdout__.write(txt)
 
+    def flush(self):
+        sys.__stderr__.flush()
+
 class StderrCatcher:
     def write(self, txt):
         _log_writer.write(STDERR_LEVEL, txt)
