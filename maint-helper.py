@@ -57,9 +57,9 @@ def cmd_build_snapshot():
 
     print 'Build %s...' % tarball
 
-    #os.spawnlp(os.P_WAIT, 'make', 'make', 'distcheck')
+    os.spawnlp(os.P_WAIT, 'make', 'make', 'distcheck')
 
-    #os.rename('%s-%s.tar.bz2' % (name, version), tarball)
+    os.rename('%s-%s.tar.bz2' % (name, version), tarball)
 
     print 'Update NEWS.sugar...'
 
@@ -98,6 +98,17 @@ def cmd_build_snapshot():
     f = open('NEWS', 'w')
     f.write(news)
     f.close()
+
+    print 'Committing to git...'
+
+    changelog = 'Snapshot %d.' % alphatag
+    retcode = subprocess.call(['git', 'commit', '-a', '-m % s' % changelog])
+    if retcode:
+        print 'ERROR - cannot commit to git'
+
+    retcode = subprocess.call(['git', 'push'])
+    if retcode:
+        print 'ERROR - cannot push to git'
 
     print 'Done.'
 
