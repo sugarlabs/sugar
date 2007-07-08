@@ -50,6 +50,12 @@ maint-helper.py check-licenses       - check licenses in the source'
 def cmd_build_snapshot():
     [ name, version ] = get_name_and_version()
 
+    print 'Update git...'
+
+    retcode = subprocess.call(['git', 'pull'])
+    if retcode:
+        print 'ERROR - cannot pull from git'
+
     cmd = 'git-show-ref --hash=10 refs/heads/master'
     alphatag = os.popen(cmd).readline().strip()
 
