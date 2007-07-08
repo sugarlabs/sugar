@@ -1,3 +1,5 @@
+* Hide palettes when iconbutton or toolbutton are clicked (edsiper)
+
 Snapshot cebf25739b
 
 * #1930: Only take preview before closing. (tomeu)
