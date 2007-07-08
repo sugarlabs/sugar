@@ -108,7 +108,7 @@ def cmd_build_snapshot():
 
     print 'Committing to git...'
 
-    changelog = 'Snapshot %d.' % alphatag
+    changelog = 'Snapshot %s.' % alphatag
     retcode = subprocess.call(['git', 'commit', '-a', '-m % s' % changelog])
     if retcode:
         print 'ERROR - cannot commit to git'
