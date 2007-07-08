@@ -257,7 +257,7 @@ def cmd_release(bundle_name, manifest):
     news_path = os.path.join(_get_source_path(), 'NEWS')
 
     if os.environ.has_key('SUGAR_NEWS'):
-        print 'Update NEWS.sugar'
+        print 'Update NEWS.sugar...'
 
         sugar_news_path = os.environ['SUGAR_NEWS']
         if os.path.isfile(sugar_news_path):
