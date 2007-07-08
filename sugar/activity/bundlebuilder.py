@@ -254,6 +254,47 @@ def cmd_release(bundle_name, manifest):
     f.write(info)
     f.close()
 
+    news_path = os.path.join(_get_source_path(), 'NEWS')
+
+    if os.environ.has_key('SUGAR_NEWS'):
+        print 'Update NEWS.sugar'
+
+        sugar_news_path = os.environ['SUGAR_NEWS']
+        if os.path.isfile(sugar_news_path):
+            f = open(sugar_news_path,'r')
+            sugar_news = f.read()
+            f.close()
+        else:
+            sugar_news = ''
+
+        sugar_news += '%s - %d\n\n' % (bundle_name, version)
+
+        f = open(news_path,'r')
+        for line in f.readline():
+            if len(line) > 0:
+                sugar_news += line
+            else:
+                break
+        f.close()
+
+        sugar_news += '\n'
+
+        f = open(sugar_news_path, 'w')
+        f.write(sugar_news)
+        f.close()
+
+    print 'Update NEWS...'
+
+    f = open(news_path,'r')
+    news = f.read()
+    f.close()
+
+    news = '%d\n\n' % version + news
+
+    f = open(news_path, 'w')
+    f.write(news)
+    f.close()
+
     print 'Committing to git...'
 
     changelog = 'Release version %d.' % version
