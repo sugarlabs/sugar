@@ -32,7 +32,11 @@ class BuddyMenu(Palette):
 
         Palette.__init__(self, buddy.get_nick())
 
-        pixbuf = self._get_buddy_icon_pixbuf()
+        pixbuf = None
+        try:
+            pixbuf = self._get_buddy_icon_pixbuf()
+        except gobject.GError, e:
+            pass
         if pixbuf:
             scaled_pixbuf = pixbuf.scale_simple(units.grid_to_pixels(1),
                                                 units.grid_to_pixels(1),
