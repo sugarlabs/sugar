@@ -28,6 +28,7 @@ class ToolButton(gtk.ToolButton):
         gtk.ToolButton.__init__(self)
         self._palette = None
         self.set_icon(icon_name)
+        self.connect('clicked', self._button_clicked_cb)
 
     def set_icon(self, icon_name):
         icon = Icon(icon_name)
@@ -44,4 +45,8 @@ class ToolButton(gtk.ToolButton):
     def set_tooltip(self, text):
         self.set_palette(Palette(text))
     
+    def _button_clicked_cb(self, widget):
+        if self._palette:
+            self._palette.popdown(True)
+
     palette = property(get_palette, set_palette)

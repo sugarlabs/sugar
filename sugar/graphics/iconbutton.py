@@ -48,6 +48,7 @@ class IconButton(CanvasIcon, hippo.CanvasItem):
             self.props.stroke_color = color.BUTTON_NORMAL
 
         self._set_size(STANDARD_SIZE)
+        self.connect('activated', self._icon_clicked_cb)
 
     def _set_size(self, size):
         if size == SMALL_SIZE:
@@ -85,3 +86,7 @@ class IconButton(CanvasIcon, hippo.CanvasItem):
         else:
             self.props.background_color = \
                 color.BUTTON_BACKGROUND_NORMAL.get_int()
+
+    def _icon_clicked_cb(self, button):
+        if self._palette:
+            self._palette.popdown(True)

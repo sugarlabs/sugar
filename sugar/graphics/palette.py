@@ -259,10 +259,14 @@ class Palette(gobject.GObject):
         self._popup_anim.start()
         self._secondary_anim.start()
 
-    def popdown(self):
+    def popdown(self, inmediate=False):
         self._secondary_anim.stop()
         self._popup_anim.stop()
-        self._popdown_anim.start()
+
+        if not inmediate:
+            self._popdown_anim.start()
+        else:
+            self._hide()
 
     def invoker_mouse_enter(self):
         self.popup()
