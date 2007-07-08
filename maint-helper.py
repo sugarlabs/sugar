@@ -20,6 +20,7 @@ import os
 import sys
 import re
 import datetime
+import subprocess
 
 source_exts = [ '.py', '.c', '.h', '.cpp' ]
 
