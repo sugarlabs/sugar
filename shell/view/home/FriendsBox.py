@@ -19,9 +19,12 @@ import random
 import hippo
 import gobject
 
+from sugar import profile
 from sugar.graphics.spreadlayout import SpreadLayout
 from sugar.graphics import units
-from view.home.MyIcon import MyIcon
+
+from shell.model.BuddyModel import BuddyModel
+from view.BuddyIcon import BuddyIcon
 from view.home.FriendView import FriendView
 
 class FriendsBox(hippo.CanvasBox):
@@ -35,8 +38,10 @@ class FriendsBox(hippo.CanvasBox):
         self._layout = SpreadLayout()
         self.set_layout(self._layout)
 
-        self._my_icon = MyIcon(units.LARGE_ICON_SCALE)
-        self._layout.add_center(self._my_icon)
+        buddy_model = BuddyModel(key=profile.get_pubkey())
+        self._owner_icon = BuddyIcon(shell, buddy_model)
+        self._owner_icon.props.scale = units.LARGE_ICON_SCALE
+        self._layout.add_center(self._owner_icon)
 
         friends = self._shell.get_model().get_friends()
 
