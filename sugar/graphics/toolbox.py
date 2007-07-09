@@ -19,7 +19,7 @@ import gtk
 import gobject
 
 from sugar.graphics.toolbutton import ToolButton
-from sugar.graphics import units
+from sugar.graphics import style
 
 _N_TABS = 8
 
@@ -39,8 +39,14 @@ class Toolbox(gtk.VBox):
         self._notebook.set_tab_pos(gtk.POS_BOTTOM)
         self._notebook.set_show_border(False)
         self._notebook.set_show_tabs(False)
+        self._notebook.props.tab_vborder = style.TOOLBOX_TAB_VBORDER
         self.pack_start(self._notebook)
         self._notebook.show()
+
+        label = gtk.Label('')
+        label.set_size_request(-1, style.TOOLBOX_SEPARATOR_HEIGHT)
+        self.pack_start(label, False)
+        label.show()
         
         self._notebook.connect('notify::page', self._notify_page_cb)
 
@@ -63,8 +69,8 @@ class Toolbox(gtk.VBox):
         label.set_alignment(0.0, 0.5)
 
         toolbar_box = gtk.HBox()
-        toolbar_box.pack_start(toolbar, True, True, units.grid_to_pixels(1))
-        toolbar_box.set_size_request(-1, units.grid_to_pixels(1))
+        toolbar_box.pack_start(toolbar, True, True,
+                               style.TOOLBOX_HORIZONTAL_PADDING)
         toolbar_box.connect('expose-event', self._toolbar_box_expose_cb)
 
         self._notebook.append_page(toolbar_box, label)
