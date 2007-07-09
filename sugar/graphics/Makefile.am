@@ -8,7 +8,6 @@ sugar_PYTHON =			\
 	canvasentry.py		\
 	color.py		\
 	combobox.py		\
-	font.py			\
 	frame.py		\
 	notebook.py		\
 	menuitem.py		\
@@ -19,6 +18,7 @@ sugar_PYTHON =			\
 	palettegroup.py		\
 	panel.py		\
 	spreadlayout.py		\
+	style.py		\
 	toggletoolbutton.py	\
 	toolbox.py		\
 	toolbutton.py		\

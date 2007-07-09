@@ -25,7 +25,7 @@ from sugar.graphics.frame import Frame
 from sugar.activity.bundle import Bundle
 from sugar.date import Date
 from sugar.graphics import color
-from sugar.graphics import font
+from sugar.graphics import style
 from sugar.graphics import units
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics.xocolor import XoColor
@@ -111,7 +111,7 @@ class CollapsedEntry(Frame):
 
         date = hippo.CanvasText(text=self._format_date(),
                                 xalign=hippo.ALIGNMENT_START,
-                                font_desc=font.DEFAULT.get_pango_desc(),
+                                font_desc=style.FONT_NORMAL.get_pango_desc(),
                                 box_width=self._DATE_COL_WIDTH)
         self.append(date)
 
@@ -122,7 +122,7 @@ class CollapsedEntry(Frame):
         
         title = hippo.CanvasText(text=self._format_title(),
                                  xalign=hippo.ALIGNMENT_START,
-                                 font_desc=font.DEFAULT_BOLD.get_pango_desc(),
+                                 font_desc=style.FONT_BOLD.get_pango_desc(),
                                  size_mode=hippo.CANVAS_SIZE_WRAP_WORD)
         self.append(title)
 

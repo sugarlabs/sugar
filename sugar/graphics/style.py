@@ -16,6 +16,7 @@
 # Boston, MA 02111-1307, USA.
 
 import gtk
+import pango
 
 def _compute_zoom_factor():
     return gtk.gdk.screen_width() / 1200.0
@@ -27,8 +28,8 @@ def _compute_font_height(font):
     widget = gtk.Label('')
 
     context = widget.get_pango_context()
-    font = context.load_font(font.get_pango_desc())
-    metrics = font.get_metrics()
+    pango_font = context.load_font(font.get_pango_desc())
+    metrics = pango_font.get_metrics()
     
     return pango.PIXELS(metrics.get_ascent() + metrics.get_descent())
 

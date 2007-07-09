@@ -26,7 +26,7 @@ from ConfigParser import ConfigParser
 from sugar import env
 
 from sugar.graphics import units
-from sugar.graphics import font
+from sugar.graphics import style
 from sugar.graphics import color
 from sugar.graphics import iconbutton
 
@@ -101,7 +101,7 @@ class VideoBox(hippo.CanvasBox, hippo.CanvasItem):
                                        xalign=hippo.ALIGNMENT_START,
                                        padding_right=units.grid_to_pixels(0.5))
         self._label.props.color = color.LABEL_TEXT.get_int()
-        self._label.props.font_desc = font.DEFAULT.get_pango_desc()
+        self._label.props.font_desc = style.FONT_NORMAL.get_pango_desc()
         self.append(self._label)
 
         # check for camera and if not generate a .jpg
@@ -181,7 +181,7 @@ class EntryBox(hippo.CanvasBox, hippo.CanvasItem):
                                        xalign=hippo.ALIGNMENT_START,
                                        padding_right=units.grid_to_pixels(0.5))
         self._label.props.color = color.LABEL_TEXT.get_int()
-        self._label.props.font_desc = font.DEFAULT.get_pango_desc()
+        self._label.props.font_desc = style.FONT_NORMAL.get_pango_desc()
         self.append(self._label)
 
         self._entry = gtk.Entry()
@@ -225,7 +225,7 @@ class ColorBox(hippo.CanvasBox, hippo.CanvasItem):
                                        xalign=hippo.ALIGNMENT_START,
                                        padding_right=units.grid_to_pixels(0.5))
         self._label.props.color = color.LABEL_TEXT.get_int()
-        self._label.props.font_desc = font.DEFAULT.get_pango_desc()
+        self._label.props.font_desc = style.FONT_NORMAL.get_pango_desc()
         self.append(self._label)
 
         self._cp = colorpicker.ColorPicker()

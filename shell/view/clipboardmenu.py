@@ -26,7 +26,7 @@ import hippo
 from sugar.graphics.palette import Palette
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import color
-from sugar.graphics import font
+from sugar.graphics import style
 from sugar.activity import activityfactory
 from sugar.activity.bundle import Bundle
 from sugar.clipboard import clipboardservice
@@ -60,7 +60,8 @@ class ClipboardMenu(Palette):
             self._preview_text = hippo.CanvasText(text=preview,
                     size_mode=hippo.CANVAS_SIZE_WRAP_WORD)
             self._preview_text.props.color = color.LABEL_TEXT.get_int()
-            self._preview_text.props.font_desc = font.DEFAULT.get_pango_desc()        
+            self._preview_text.props.font_desc = \
+                style.FONT_NORMAL.get_pango_desc()
             self.append(self._preview_text)
         """
 

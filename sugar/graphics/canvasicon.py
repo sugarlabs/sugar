@@ -27,7 +27,6 @@ import time
 
 from sugar.graphics import color
 from sugar.graphics.xocolor import XoColor
-from sugar.graphics import font
 from sugar.graphics import units
 from sugar.graphics.palette import Palette, CanvasInvoker
 
