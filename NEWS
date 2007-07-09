@@ -1,3 +1,5 @@
+* #1872, #1934: Hide palettes when closing activities or switching views. (tomeu)
+
 Snapshot f8cf7ff1ce
 
 * Hide palettes when buttons are clicked. (edsiper)

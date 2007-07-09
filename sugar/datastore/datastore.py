@@ -99,14 +99,21 @@ def create():
 
 def write(ds_object, reply_handler=None, error_handler=None):
     logging.debug('datastore.write')
+
+    properties = ds_object.metadata.get_dictionary().copy()
+    # The title property should be sent as a 'text' property so it gets indexed
+    if properties.has_key('title'):
+        properties['title:text'] = properties['title']
+        del properties['title']
+
     if ds_object.object_id:
         dbus_helpers.update(ds_object.object_id,
-                            ds_object.metadata.get_dictionary(),
+                            properties,
                             ds_object.file_path,
                             reply_handler=reply_handler,
                             error_handler=error_handler)
     else:
-        ds_object.object_id = dbus_helpers.create(ds_object.metadata.get_dictionary(),
+        ds_object.object_id = dbus_helpers.create(properties,
                                                   ds_object.file_path)
         # TODO: register the object for updates
     logging.debug('Written object %s to the datastore.' % ds_object.object_id)
