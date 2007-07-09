@@ -83,8 +83,8 @@ def cmd_build_snapshot():
         sugar_news += '%s - %s - %s\n\n' % (name, version, alphatag)
 
         f = open('NEWS', 'r')
-        for line in f.readline():
-            if len(line) > 0:
+        for line in f.readlines():
+            if len(line.strip()) > 0:
                 sugar_news += line
             else:
                 break
