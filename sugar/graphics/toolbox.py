@@ -21,8 +21,6 @@ import gobject
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics import style
 
-_N_TABS = 8
-
 class Toolbox(gtk.VBox):
     __gtype_name__ = 'SugarToolbox'
 
@@ -40,6 +38,7 @@ class Toolbox(gtk.VBox):
         self._notebook.set_show_border(False)
         self._notebook.set_show_tabs(False)
         self._notebook.props.tab_vborder = style.TOOLBOX_TAB_VBORDER
+        self._notebook.props.tab_hborder = style.TOOLBOX_TAB_HBORDER
         self.pack_start(self._notebook)
         self._notebook.show()
 
@@ -65,7 +64,7 @@ class Toolbox(gtk.VBox):
         
     def add_toolbar(self, name, toolbar):
         label = gtk.Label(name)
-        label.set_size_request(gtk.gdk.screen_width() / _N_TABS, -1)
+        label.set_size_request(style.TOOLBOX_TAB_LABEL_WIDTH, -1)
         label.set_alignment(0.0, 0.5)
 
         toolbar_box = gtk.HBox()

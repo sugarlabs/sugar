@@ -43,6 +43,7 @@ class Font(object):
         return pango.FontDescription(self._desc)
 
 _FOCUS_LINE_WIDTH = 2
+_TAB_CURVATURE = 1
 
 ZOOM_FACTOR = _compute_zoom_factor()
 
@@ -53,3 +54,5 @@ FONT_BOLD = Font('Bitstream Vera Sans bold %d' % FONT_SIZE)
 TOOLBOX_SEPARATOR_HEIGHT = _zoom(9)
 TOOLBOX_HORIZONTAL_PADDING = _zoom(75)
 TOOLBOX_TAB_VBORDER = int((_zoom(36) - FONT_SIZE - _FOCUS_LINE_WIDTH) / 2)
+TOOLBOX_TAB_HBORDER = _zoom(15) - _FOCUS_LINE_WIDTH - _TAB_CURVATURE
+TOOLBOX_TAB_LABEL_WIDTH = _zoom(150 - 15 * 2)
