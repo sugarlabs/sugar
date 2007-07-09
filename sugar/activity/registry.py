@@ -15,6 +15,8 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+import logging
+
 import dbus
 
 _SHELL_SERVICE = "org.laptop.Shell"
@@ -39,6 +41,11 @@ class ActivityRegistry(object):
         bus = dbus.SessionBus()
         bus_object = bus.get_object(_SHELL_SERVICE, _SHELL_PATH)
         self._registry = dbus.Interface(bus_object, _REGISTRY_IFACE)
+        self._registry.connect_to_signal('ActivityAdded', self._activity_added_cb)
+
+        # Two caches fo saving some travel across dbus.
+        self._service_name_to_activity_info = {}
+        self._mime_type_to_activities = {}
 
     def _convert_info_list(self, info_list):
         result = []
@@ -49,16 +56,33 @@ class ActivityRegistry(object):
         return result
 
     def get_activity(self, service_name):
+        if self._service_name_to_activity_info.has_key(service_name):
+            return self._service_name_to_activity_info[service_name]
+
         info_dict = self._registry.GetActivity(service_name)
-        return _activity_info_from_dict(info_dict)
+        activity_info = _activity_info_from_dict(info_dict)
+
+        self._service_name_to_activity_info[service_name] = activity_info
+        return activity_info
 
     def find_activity(self, name):
         info_list = self._registry.FindActivity(name)
         return self._convert_info_list(info_list)
 
     def get_activities_for_type(self, mime_type):
+        if self._mime_type_to_activities.has_key(mime_type):
+            return self._mime_type_to_activities[mime_type]
+
         info_list = self._registry.GetActivitiesForType(mime_type)
-        return self._convert_info_list(info_list)
+        activities = self._convert_info_list(info_list)
+
+        self._mime_type_to_activities[mime_type] = activities
+        return activities
+
+    def _activity_added_cb(self, bundle):
+        logging.debug('ActivityRegistry._activity_added_cb: flushing caches')
+        self._service_name_to_activity_info.clear()
+        self._mime_type_to_activities.clear()
 
 _registry = None
 

@@ -56,6 +56,9 @@ class ShellService(dbus.service.Object):
         self._home_model.connect('active-activity-changed',
                                  self._cur_activity_changed_cb)
 
+        bundle_registry = bundleregistry.get_registry()
+        bundle_registry.connect('bundle-added', self._bundle_added_cb)
+        
         bus = dbus.SessionBus()
         bus_name = dbus.service.BusName(_DBUS_SERVICE, bus=bus)
         dbus.service.Object.__init__(self, bus_name, _DBUS_PATH)
@@ -121,6 +124,10 @@ class ShellService(dbus.service.Object):
 
         return result
 
+    @dbus.service.signal(_DBUS_ACTIVITY_REGISTRY_IFACE, signature="a{sv}")
+    def ActivityAdded(self, activity_info):
+        pass
+
     @dbus.service.signal(_DBUS_OWNER_IFACE, signature="s")
     def ColorChanged(self, color):
         pass
@@ -158,3 +165,7 @@ class ShellService(dbus.service.Object):
                 'icon': bundle.get_icon(),
                 'service_name': bundle.get_service_name(),
                 'path': bundle.get_path()}
+
+    def _bundle_added_cb(self, bundle_registry, bundle):
+        self.ActivityAdded(self._bundle_to_dict(bundle))
+
