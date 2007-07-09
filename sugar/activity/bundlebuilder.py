@@ -270,8 +270,8 @@ def cmd_release(bundle_name, manifest):
         sugar_news += '%s - %d\n\n' % (bundle_name, version)
 
         f = open(news_path,'r')
-        for line in f.readline():
-            if len(line) > 0:
+        for line in f.readlines():
+            if len(line.strip()) > 0:
                 sugar_news += line
             else:
                 break
