@@ -146,7 +146,9 @@ class Palette(gobject.GObject):
     def do_set_property(self, pspec, value):
         if pspec.name == 'invoker':
             self._invoker = value
-            self._invoker.add_listener(self)
+            self._invoker.connect('mouse-enter', self._invoker_mouse_enter_cb)
+            self._invoker.connect('mouse-leave', self._invoker_mouse_leave_cb)
+            self._invoker.connect('focus-out', self._invoker_focus_out_cb)
         elif pspec.name == 'position':
             self._position = value
         else:
@@ -237,6 +239,8 @@ class Palette(gobject.GObject):
             if not self._in_screen(x, y):
                 x, y = self._get_position(_TOP_RIGHT)
 
+        self._invoker.connect_to_parent()
+
         self._palette_popup_sid = _palette_observer.connect('popup',
                     self._palette_observer_popup_cb)
         self._menu.popup(x, y)
@@ -268,11 +272,14 @@ class Palette(gobject.GObject):
         else:
             self._hide()
 
-    def invoker_mouse_enter(self):
+    def _invoker_mouse_enter_cb(self, invoker):
         self.popup()
 
-    def invoker_mouse_leave(self):
+    def _invoker_mouse_leave_cb(self, invoker):
         self.popdown()
+
+    def _invoker_focus_out_cb(self, invoker):
+        self._hide()
 
     def _enter_notify_event_cb(self, widget, event):
         if event.detail == gtk.gdk.NOTIFY_NONLINEAR:
@@ -382,25 +389,29 @@ class _PopdownAnimation(animator.Animation):
         if current == 1.0:
             self._palette._hide()
 
-class Invoker(object):
+class Invoker(gobject.GObject):
+    __gtype_name__ = 'SugarPaletteInvoker'
+
+    __gsignals__ = {
+        'mouse-enter': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'mouse-leave': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'focus-out':   (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
+    }
+
     def __init__(self):
-        self._listeners = []
-
-    def add_listener(self, listener):
-        self._listeners.append(listener)
-
-    def notify_mouse_enter(self):
-        for listener in self._listeners:
-            listener.invoker_mouse_enter()
-
-    def notify_mouse_leave(self):
-        for listener in self._listeners:
-            listener.invoker_mouse_leave()
+        gobject.GObject.__init__(self)
 
     def get_screen_area(self):
         width = gtk.gdk.screen_width()
         height = gtk.gdk.screen_height()
         return gtk.gdk.Rectangle(0, 0, width, height)
+
+    def connect_to_parent(self):
+        window = self.get_toplevel()
+        window.connect('focus-out-event', self._window_focus_out_event_cb)
+
+    def _window_focus_out_event_cb(self, widget, event):
+        self.emit('focus-out')
 
 class WidgetInvoker(Invoker):
     def __init__(self, widget):
@@ -422,10 +433,13 @@ class WidgetInvoker(Invoker):
         return gtk.gdk.Rectangle(x, y, width, height)
 
     def _enter_notify_event_cb(self, widget, event):
-        self.notify_mouse_enter()
+        self.emit('mouse-enter')
 
     def _leave_notify_event_cb(self, widget, event):
-        self.notify_mouse_leave()
+        self.emit('mouse-leave')
+
+    def get_toplevel(self):
+        return self._widget.get_toplevel()
 
 class CanvasInvoker(Invoker):
     def __init__(self, item):
@@ -446,11 +460,14 @@ class CanvasInvoker(Invoker):
 
     def _motion_notify_event_cb(self, button, event):
         if event.detail == hippo.MOTION_DETAIL_ENTER:
-            self.notify_mouse_enter()
+            self.emit('mouse-enter')
         elif event.detail == hippo.MOTION_DETAIL_LEAVE:
-            self.notify_mouse_leave()
+            self.emit('mouse-leave')
 
         return False
+
+    def get_toplevel(self):
+        return hippo.get_canvas_for_item(self._item).get_toplevel()
 
 class _PaletteObserver(gobject.GObject):
     __gtype_name__ = 'SugarPaletteObserver'
