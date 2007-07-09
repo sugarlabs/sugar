@@ -69,7 +69,7 @@ class Friends(gobject.GObject):
                     # HACK: don't screw up on old friends files
                     if len(key) < 20:
                         continue
-                    buddy = BuddyModel(key=key)
+                    buddy = BuddyModel(key=key, nick=cp.get(key, 'nick'))
                     self.add_friend(buddy)
         except Exception, exc:
             logging.error("Error parsing friends file: %s" % exc)

@@ -36,7 +36,7 @@ class BuddyModel(gobject.GObject):
                                     ([gobject.TYPE_PYOBJECT]))
     }
 
-    def __init__(self, key=None, buddy=None):
+    def __init__(self, key=None, buddy=None, nick=None):
         if (key and buddy) or (not key and not buddy):
             raise RuntimeError("Must specify only _one_ of key or buddy.")
 
@@ -51,7 +51,6 @@ class BuddyModel(gobject.GObject):
         self._pservice = presenceservice.get_instance()
 
         self._buddy = None
-        self._nick = None
 
         # If given just a key, try to get the buddy from the PS first
         if not buddy:
@@ -72,7 +71,7 @@ class BuddyModel(gobject.GObject):
             self._key = key
             # Set color to 'inactive'/'disconnected'
             self._set_color_from_string(_NOT_PRESENT_COLOR)
-            self._name = "Unknown buddy"
+            self._nick = nick
 
     def _set_color_from_string(self, color_string):
         self._color = XoColor(color_string)
