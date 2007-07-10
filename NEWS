@@ -1,3 +1,5 @@
+* #1984 Fix removing items from the clipboard. (tomeu)
+
 Snapshot b83a9ec27d
 
 * Fix font size on the XO. (marco)

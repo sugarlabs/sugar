@@ -17,10 +17,16 @@
 import logging
 import os
 import shutil
+import urlparse
+import tempfile
+
 import dbus
 import dbus.service
+
 from sugar import env
 from sugar import util
+from sugar.objects import mime
+
 from clipboardobject import ClipboardObject, Format
 
 NAME_KEY = 'NAME'
@@ -52,34 +58,6 @@ class ClipboardService(dbus.service.Object):
         self._next_id += 1
         return self._next_id
 
-    def _handle_file_completed(self, cb_object):
-        """If the object is an on-disk file, and it's at 100%, and we care about
-        it's file type, copy that file to $HOME and upate the clipboard object's
-        data to point to the new location"""
-        formats = cb_object.get_formats()
-        if not len(formats) or len(formats) > 1:
-            return
-
-        format = formats.values()[0]
-        if not format.is_on_disk():
-            return
-
-        if not len(cb_object.get_activity()):
-            # no activity to handle this, don't autosave it
-            return
-
-        # copy to homedir
-        src = format.get_data()
-        if not os.path.exists(src):
-            logging.debug("File %s doesn't appear to exist" % src)
-            return
-        dst = os.path.join(os.path.expanduser("~"), os.path.basename(src))
-        try:
-            shutil.move(src, dst)
-            format._set_data(dst)
-        except IOError, e:
-            logging.debug("Couldn't move file %s to %s: %s" % (src, dst, e))
-
     # dbus methods        
     @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
                          in_signature="s", out_signature="o")
@@ -96,11 +74,13 @@ class ClipboardService(dbus.service.Object):
     def add_object_format(self, object_path, format_type, data, on_disk):
         logging.debug('ClipboardService.add_object_format')
         cb_object = self._objects[str(object_path)]
-        cb_object.add_format(Format(format_type, data, on_disk))
-
-        if on_disk:
-            logging.debug('Added format of type ' + format_type + ' with path at ' + data)
+        
+        if on_disk and cb_object.get_percent() == 100:
+            new_uri = self._copy_file(data)
+            cb_object.add_format(Format(format_type, new_uri, on_disk))
+            logging.debug('Added format of type ' + format_type + ' with path at ' + new_uri)
         else:
+            cb_object.add_format(Format(format_type, data, on_disk))        
             logging.debug('Added in-memory format of type ' + format_type + '.')
                         
         self.object_state_changed(object_path, {NAME_KEY: cb_object.get_name(),
@@ -132,7 +112,10 @@ class ClipboardService(dbus.service.Object):
         cb_object.set_percent(percent)
 
         if percent == 100:
-            self._handle_file_completed(cb_object)
+            for format_name, format in cb_object.get_formats().iteritems():
+                if format.is_on_disk():
+                    new_uri = self._copy_file(format.get_data())
+                    format.set_data(new_uri)
 
         self.object_state_changed(object_path, {NAME_KEY: cb_object.get_name(),
                                     PERCENT_KEY: percent,
@@ -182,6 +165,21 @@ class ClipboardService(dbus.service.Object):
     @dbus.service.signal(_CLIPBOARD_DBUS_INTERFACE, signature="oa{sv}")
     def object_state_changed(self, object_path, values):
         pass
+
+    def _copy_file(self, original_uri):
+        uri = urlparse.urlparse(original_uri)
+        path, file_name = os.path.split(uri.path)
+
+        root, ext = os.path.splitext(file_name)
+        if not ext or ext == '.':
+            mime_type = mime.get_for_file(uri.path)
+            ext = '.' + mime.get_primary_extension(mime_type)
+
+        f, new_file_path = tempfile.mkstemp(ext, root)
+        del f
+        shutil.copyfile(uri.path, new_file_path)
+
+        return 'file://' + new_file_path
 
 _instance = None
 
