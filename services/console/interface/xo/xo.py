@@ -40,11 +40,9 @@ class Interface:
         self.vbox.pack_start(xo_cpu, False, False, 0)
 
         # Graphics: Battery Status, NandFlash
-        self._xo_battery = XO_Battery()
         self._xo_nandflash = XO_NandFlash()
 
         hbox = gtk.HBox(False, 2)
-        hbox.pack_start(self._xo_battery, False, False, 0)
         hbox.pack_start(self._xo_nandflash, False, False, 0)
 
         self.vbox.pack_start(hbox, False, False, 0)
