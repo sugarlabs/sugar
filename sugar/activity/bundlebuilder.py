@@ -54,21 +54,17 @@ class _DefaultFileList(list):
         if os.path.isfile(_get_source_path('NEWS')):
             self.append('NEWS')
 
-class _ManifestFileList(list):
+class _ManifestFileList(_DefaultFileList):
     def __init__(self, manifest):
+        _DefaultFileList.__init__(self)
         self.append(manifest)
 
         f = open(manifest,'r')
         for line in f.readlines():
             stripped_line = line.strip()
-            if stripped_line:
+            if stripped_line and not stripped_line in self:
                 self.append(stripped_line)
         f.close()
-
-        defaults = _DefaultFileList()
-        for path in defaults:
-            if not path in self:
-                self.append(path)
 
 def _extract_bundle(source_file, dest_dir):
         if not os.path.exists(dest_dir):
