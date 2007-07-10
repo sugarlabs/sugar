@@ -50,13 +50,12 @@ class _DefaultFileList(list):
                 self.append(os.path.join('activity', name))
 
         self.append('activity/activity.info')
-        self.append('setup.py')
 
         if os.path.isfile(_get_source_path('NEWS')):
             self.append('NEWS')
 
 class _ManifestFileList(list):
-    def __init__(self, manifest=None):
+    def __init__(self, manifest):
         self.append(manifest)
 
         f = open(manifest,'r')
@@ -68,7 +67,8 @@ class _ManifestFileList(list):
 
         defaults = _DefaultFileList()
         for path in defaults:
-            self.append(path)
+            if not path in self:
+                self.append(path)
 
 def _extract_bundle(source_file, dest_dir):
         if not os.path.exists(dest_dir):
