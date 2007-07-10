@@ -50,7 +50,6 @@ class _DefaultFileList(list):
                 self.append(os.path.join('activity', name))
 
         self.append('activity/activity.info')
-        self.append('setup.py')
 
         if os.path.isfile(_get_source_path('NEWS')):
             self.append('NEWS')
