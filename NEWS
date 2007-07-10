@@ -1,3 +1,5 @@
+Snapshot 757b2b8ce6
+
 * #2031: Do not die if battery properties are unavailable. (marco)
 * #1953: Retrieve friends' nicks from the profile. (tomeu)
 * #1720: Show the owner's buddy menu in the Groups view. (tomeu)
