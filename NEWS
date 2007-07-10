@@ -1,3 +1,5 @@
+* Fix broken import which was preventing startup. (marco)
+
 Snapshot 757b2b8ce6
 
 * #2031: Do not die if battery properties are unavailable. (marco)
