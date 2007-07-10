@@ -7,4 +7,5 @@ shell/view/Shell.py
 shell/view/clipboardicon.py
 shell/view/home/HomeBox.py
 shell/view/home/MeshBox.py
+shell/view/devices/battery.py
 sugar/activity/activity.py

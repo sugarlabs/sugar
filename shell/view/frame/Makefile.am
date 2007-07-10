@@ -8,6 +8,6 @@ sugar_PYTHON =				\
 	FriendsBox.py			\
 	eventarea.py			\
 	frame.py			\
-	ZoomBox.py			\
 	overlaybox.py			\
-	framewindow.py
+	framewindow.py			\
+	zoombox.py
