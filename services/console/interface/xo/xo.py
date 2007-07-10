@@ -23,7 +23,6 @@ import string
 
 from cpu import XO_CPU
 from system import XO_System
-from battery import XO_Battery
 from nandflash import XO_NandFlash
 
 class Interface:
@@ -52,7 +51,6 @@ class Interface:
         gobject.timeout_add(5000, self._update_components)
 
     def _update_components(self):
-        self._xo_battery.update_status()
         self._xo_nandflash.update_status()
 
         return True
