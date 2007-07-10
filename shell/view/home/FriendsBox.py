@@ -23,7 +23,7 @@ from sugar import profile
 from sugar.graphics.spreadlayout import SpreadLayout
 from sugar.graphics import units
 
-from shell.model.BuddyModel import BuddyModel
+from model.BuddyModel import BuddyModel
 from view.BuddyIcon import BuddyIcon
 from view.home.FriendView import FriendView
 
