@@ -83,7 +83,7 @@ class ActivityToolbar(gtk.Toolbar):
         self.insert(separator, -1)
         separator.show()
 
-        self.stop = ToolButton('window-close')
+        self.stop = ToolButton('activity-stop')
         self.stop.set_tooltip(_('Stop'))
         self.stop.connect('clicked', self._stop_clicked_cb)
         self.insert(self.stop, -1)
