@@ -48,7 +48,7 @@ class Font(object):
         return pango.FontDescription(self._desc)
 
 class Color(object):
-    def __init__(self, color, alpha=0):
+    def __init__(self, color, alpha=1.0):
         self._r, self._g, self._b = self._html_to_rgb(color)
         self._a = alpha
 
@@ -88,7 +88,7 @@ _TAB_CURVATURE = 1
 
 ZOOM_FACTOR = _compute_zoom_factor()
 
-DEFAULT_SPACING = zoom(6)
+DEFAULT_SPACING = zoom(8)
 
 FONT_SIZE = zoom(7 * _XO_DPI / _get_screen_dpi())
 FONT_NORMAL = Font('Bitstream Vera Sans %d' % FONT_SIZE)
@@ -102,4 +102,5 @@ TOOLBOX_TAB_VBORDER = int((zoom(36) - FONT_NORMAL_H - _FOCUS_LINE_WIDTH) / 2)
 TOOLBOX_TAB_HBORDER = zoom(15) - _FOCUS_LINE_WIDTH - _TAB_CURVATURE
 TOOLBOX_TAB_LABEL_WIDTH = zoom(150 - 15 * 2)
 
+COLOR_WHITE = Color('#FFFFFF')
 COLOR_PANEL_GREY = Color('#C0C0C0')

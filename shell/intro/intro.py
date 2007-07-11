@@ -111,7 +111,8 @@ class _IntroBox(hippo.CanvasBox):
     PAGE_LAST = PAGE_COLOR
 
     def __init__(self):
-        hippo.CanvasBox.__init__(self, padding=style.zoom(30))
+        hippo.CanvasBox.__init__(self, padding=style.zoom(30),
+                                 background_color=_BACKGROUND_COLOR.get_int())
 
         self._page = self.PAGE_NAME
         self._name_page = _NamePage()
