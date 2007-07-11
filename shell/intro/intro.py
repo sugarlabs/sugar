@@ -85,17 +85,13 @@ class _ColorPage(_Page):
         self.append(self._label)
 
         self._cp = colorpicker.ColorPicker(xalign=hippo.ALIGNMENT_CENTER)
-        self._cp.connect('color', self._new_color_cb)
         self.append(self._cp)
 
         self._color = self._cp.get_color()
         self.set_valid(True)
 
-    def _new_color_cb(self, widget, color):
-        self._color = color
-
     def get_color(self):
-        return self._color
+        return self._cp.get_color()
 
 class _IntroBox(hippo.CanvasBox):
     __gsignals__ = {
