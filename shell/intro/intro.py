@@ -30,44 +30,55 @@ from sugar.graphics.canvasentry import CanvasEntry
 
 import colorpicker
 
-class _NamePage(hippo.CanvasBox):
+_BACKGROUND_COLOR = style.COLOR_PANEL_GREY
+
+class _Page(hippo.CanvasBox):
+    __gproperties__ = {
+        'valid'    : (bool, None, None, False,
+                      gobject.PARAM_READABLE)
+    }
+
     def __init__(self, **kwargs):
-        hippo.CanvasBox.__init__(self, xalign=hippo.ALIGNMENT_CENTER,
-                                 spacing=style.DEFAULT_SPACING,
-                                 orientation=hippo.ORIENTATION_HORIZONTAL,
-                                 **kwargs)
+        hippo.CanvasBox.__init__(self, **kwargs)
+        self.valid = False
+
+    def set_valid(self, valid):
+        self.valid = valid
+        self.notify('valid')
+
+    def do_get_property(self, pspec):
+        if pspec.name == 'valid':
+            return self.valid
+
+class _NamePage(_Page):
+    def __init__(self):
+        _Page.__init__(self, xalign=hippo.ALIGNMENT_CENTER,
+                       background_color=_BACKGROUND_COLOR.get_int(),
+                       spacing=style.DEFAULT_SPACING,
+                       orientation=hippo.ORIENTATION_HORIZONTAL,)
 
         label = hippo.CanvasText(text=_("Name:"))
         self.append(label)
 
         self._entry = CanvasEntry(box_width=style.zoom(300))
+        self._entry.set_background(_BACKGROUND_COLOR.get_html())
         self._entry.props.widget.set_max_length(45)
+        self._entry.connect('notify::text', self._text_changed_cb)
         self.append(self._entry)
 
+    def _text_changed_cb(self, entry, pspec):
+        valid = len(entry.props.text.strip()) > 0
+        self.set_valid(valid)
+
     def get_name(self):
-        return self._check_nickname(self._entry.props.text)
+        return self._entry.props.text
 
-    def _check_nickname(self, name):
-        """Returns None if a bad nickname, returns the corrected nickname
-        otherwise"""
-        
-        if name is None:
-            return None
-            
-        name = name.strip()
-        
-        if len(name) == 0:
-            return None
-
-        return name
-
-class _ColorPage(hippo.CanvasBox):
+class _ColorPage(_Page):
     def __init__(self, **kwargs):
-        hippo.CanvasBox.__init__(self, xalign=hippo.ALIGNMENT_CENTER,
-                                 spacing=style.DEFAULT_SPACING,
-                                 yalign=hippo.ALIGNMENT_CENTER,
-                                 **kwargs)
-        self._color = None
+        _Page.__init__(self, xalign=hippo.ALIGNMENT_CENTER,
+                       background_color=_BACKGROUND_COLOR.get_int(),
+                       spacing=style.DEFAULT_SPACING,
+                       yalign=hippo.ALIGNMENT_CENTER, **kwargs)
 
         self._label = hippo.CanvasText(text=_("Click to change color:"),
                                        xalign=hippo.ALIGNMENT_CENTER)
@@ -78,6 +89,7 @@ class _ColorPage(hippo.CanvasBox):
         self.append(self._cp)
 
         self._color = self._cp.get_color()
+        self.set_valid(True)
 
     def _new_color_cb(self, widget, color):
         self._color = color
@@ -102,10 +114,9 @@ class _IntroBox(hippo.CanvasBox):
         hippo.CanvasBox.__init__(self, padding=style.zoom(30))
 
         self._page = self.PAGE_NAME
-
-        page_color = style.COLOR_PANEL_GREY.get_int()
-        self._name_page = _NamePage(background_color=page_color)
-        self._color_page = _ColorPage(background_color=page_color)
+        self._name_page = _NamePage()
+        self._color_page = _ColorPage()
+        self._current_page = None
 
         self._setup_page()
 
@@ -113,30 +124,43 @@ class _IntroBox(hippo.CanvasBox):
         self.remove_all()
 
         if self._page == self.PAGE_NAME:
-            self.append(self._name_page, hippo.PACK_EXPAND)
+            self._current_page = self._name_page
         elif self._page == self.PAGE_COLOR:
-            self.append(self._color_page, hippo.PACK_EXPAND)
+            self._current_page = self._color_page
+
+        self.append(self._current_page, hippo.PACK_EXPAND)
 
         button_box = hippo.CanvasBox(orientation=hippo.ORIENTATION_HORIZONTAL)
 
         if self._page != self.PAGE_FIRST:
             back_button = hippo.CanvasButton(text=_('Back'))
-            back_button.connect('activated', self._done_activated_cb)
+            back_button.connect('activated', self._back_activated_cb)
             button_box.append(back_button)
 
         spacer = hippo.CanvasBox()
         button_box.append(spacer, hippo.PACK_EXPAND)
 
         if self._page == self.PAGE_LAST:
-            done_button = hippo.CanvasButton(text=_('Done'))
-            done_button.connect('activated', self._done_activated_cb)
-            button_box.append(done_button)
+            self._next_button = hippo.CanvasButton(text=_('Done'))
+            self._next_button.connect('activated', self._done_activated_cb)
+            button_box.append(self._next_button)
         else:
-            next_button = hippo.CanvasButton(text=_('Next'))
-            next_button.connect('activated', self._next_activated_cb)
-            button_box.append(next_button)
+            self._next_button = hippo.CanvasButton(text=_('Next'))
+            self._next_button.connect('activated', self._next_activated_cb)
+            button_box.append(self._next_button)
+
+        self._update_next_button()
+        self._current_page.connect('notify::valid',
+                                   self._page_valid_changed_cb)
 
         self.append(button_box)
+
+    def _update_next_button(self):
+        widget = self._next_button.props.widget
+        widget.props.sensitive = self._current_page.props.valid
+
+    def _page_valid_changed_cb(self, page, pspec):
+        self._update_next_button()
 
     def _back_activated_cb(self, item):
         self._page -= 1
