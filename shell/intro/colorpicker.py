@@ -35,7 +35,7 @@ class ColorPicker(hippo.CanvasBox, hippo.CanvasItem):
         self._set_random_colors()
 
     def get_color(self):
-        return self._xo_color.to_string()
+        return self._xo_color
 
     def _set_random_colors(self):
         self._xo_color = XoColor()
