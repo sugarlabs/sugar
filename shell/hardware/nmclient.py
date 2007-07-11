@@ -211,7 +211,6 @@ class Device(gobject.GObject):
         self._networks = {}
         self._caps = 0
         self._state = DEVICE_STATE_INACTIVE
-        self._ssid = None
         self._active_network = None
 
         obj = sys_bus.get_object(NM_SERVICE, self._op)
@@ -401,7 +400,10 @@ class Device(gobject.GObject):
                             error_handler=self._get_active_net_error_cb)
 
     def get_ssid(self):
-        return self._ssid
+        if self._active_network and self._active_network.is_valid():
+            return self._active_network.get_ssid()
+        elif not self._active_network:
+            return None
 
     def get_type(self):
         return self._type

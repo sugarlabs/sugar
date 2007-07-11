@@ -54,6 +54,8 @@ class Device(device.Device):
         if pspec.name == 'strength':
             return self._nm_device.get_strength()
         elif pspec.name == 'name':
+            import logging
+            logging.debug('wireless.Device.props.name: %s' % self._nm_device.get_ssid())
             return self._nm_device.get_ssid()
         elif pspec.name == 'state':
             nm_state = self._nm_device.get_state()
