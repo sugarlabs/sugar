@@ -25,7 +25,7 @@ def _get_screen_dpi():
 def _compute_zoom_factor():
     return gtk.gdk.screen_width() / 1200.0
 
-def _zoom(units):
+def zoom(units):
     return int(ZOOM_FACTOR * units)
 
 def _compute_font_height(font):
@@ -47,6 +47,40 @@ class Font(object):
     def get_pango_desc(self):
         return pango.FontDescription(self._desc)
 
+class Color(object):
+    def __init__(self, color, alpha=0):
+        self._r, self._g, self._b = self._html_to_rgb(color)
+        self._a = alpha
+
+    def get_rgba(self):
+        return (self._r, self._g, self._b, self._a)
+
+    def get_int(self):
+        return int(self._a * 255) + (int(self._b * 255) << 8) + \
+                (int(self._g * 255) << 16) + (int(self._r * 255) << 24)
+
+    def get_gdk_color(self):
+        return gtk.gdk.Color(int(self._r * 65535), int(self._g * 65535),
+                             int(self._b * 65535))
+
+    def get_html(self):
+        return '#%02x%02x%02x' % (self._r * 255, self._g * 255, self._b * 255)
+
+    def _html_to_rgb(self, html_color):
+        """ #RRGGBB -> (r, g, b) tuple (in float format) """
+
+        html_color = html_color.strip()
+        if html_color[0] == '#':
+            html_color = html_color[1:]
+        if len(html_color) != 6:
+            raise ValueError, "input #%s is not in #RRGGBB format" % html_color
+
+        r, g, b = html_color[:2], html_color[2:4], html_color[4:]
+        r, g, b = [int(n, 16) for n in (r, g, b)]
+        r, g, b = (r / 255.0, g / 255.0, b / 255.0)
+
+        return (r, g, b)
+
 _XO_DPI = 200.0
 
 _FOCUS_LINE_WIDTH = 2
@@ -54,14 +88,18 @@ _TAB_CURVATURE = 1
 
 ZOOM_FACTOR = _compute_zoom_factor()
 
-FONT_SIZE = _zoom(7 * _XO_DPI / _get_screen_dpi())
+DEFAULT_SPACING = zoom(6)
+
+FONT_SIZE = zoom(7 * _XO_DPI / _get_screen_dpi())
 FONT_NORMAL = Font('Bitstream Vera Sans %d' % FONT_SIZE)
 FONT_BOLD = Font('Bitstream Vera Sans bold %d' % FONT_SIZE)
 FONT_NORMAL_H = _compute_font_height(FONT_NORMAL)
 FONT_BOLD_H = _compute_font_height(FONT_BOLD)
 
-TOOLBOX_SEPARATOR_HEIGHT = _zoom(9)
-TOOLBOX_HORIZONTAL_PADDING = _zoom(75)
-TOOLBOX_TAB_VBORDER = int((_zoom(36) - FONT_NORMAL_H - _FOCUS_LINE_WIDTH) / 2)
-TOOLBOX_TAB_HBORDER = _zoom(15) - _FOCUS_LINE_WIDTH - _TAB_CURVATURE
-TOOLBOX_TAB_LABEL_WIDTH = _zoom(150 - 15 * 2)
+TOOLBOX_SEPARATOR_HEIGHT = zoom(9)
+TOOLBOX_HORIZONTAL_PADDING = zoom(75)
+TOOLBOX_TAB_VBORDER = int((zoom(36) - FONT_NORMAL_H - _FOCUS_LINE_WIDTH) / 2)
+TOOLBOX_TAB_HBORDER = zoom(15) - _FOCUS_LINE_WIDTH - _TAB_CURVATURE
+TOOLBOX_TAB_LABEL_WIDTH = zoom(150 - 15 * 2)
+
+COLOR_PANEL_GREY = Color('#C0C0C0')
