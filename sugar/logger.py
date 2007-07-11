@@ -59,7 +59,7 @@ class LogWriter:
 
         if msg[len(msg) - 1] != '\n':
             msg += "\n"
-        fmt = "%s - %s" % (level_txt, msg)
+        fmt = "%.4f %s - %s" % (time.time(), level_txt, msg)
         fmt = fmt.encode("utf8")
         self._log_file.write(fmt)
         self._log_file.flush()
