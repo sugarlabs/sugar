@@ -27,8 +27,6 @@ from sugar.graphics.palette import Palette
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import color
 from sugar.graphics import style
-from sugar.activity import activityfactory
-from sugar.activity.bundle import Bundle
 from sugar.clipboard import clipboardservice
 from sugar.datastore import datastore
 from sugar.objects import mime
@@ -118,44 +116,43 @@ class ClipboardMenu(Palette):
         if self._percent < 100:
             return
 
-        # Get the file path
-        cb_service = clipboardservice.get_instance()
-        obj = cb_service.get_object(self._object_id)
-        formats = obj['FORMATS']
-        if len(formats) == 0:
-            logging.warning('ClipboardMenu._open_item_activate_cb: Object without data.')
-            return
+        jobject = self._copy_to_journal()
+        # TODO: we cannot simply call resume() right now because we would lock
+        # the shell as we are sharing the same loop as the shell service.
+        #jobject.resume()
+        
+        # TODO: take this out when we fix the mess that is the shell/shellservice.
+        from shell.model import bundleregistry
+        from sugar.activity.bundle import Bundle
+        from sugar.activity import activityfactory
+        if jobject.is_bundle():
+            bundle = Bundle(jobject.file_path)
+            if not bundle.is_installed():
+                bundle.install()
 
-        if not self._activity and \
-                not formats[0] == 'application/vnd.olpc-x-sugar':
-            logging.warning('ClipboardMenu._open_item_activate_cb: Object without activity.')
-            return
-
-        uri = cb_service.get_object_data(self._object_id, formats[0])['DATA']
-        if not uri.startswith('file://'):
-            return
-
-        (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(uri)
-
-        # FIXME: would be better to check for format.onDisk
-        try:
-            path_exists = os.path.exists(path)
-        except TypeError:
-            path_exists = False
-
-        if path_exists:
-            if self._activity:
-                activityfactory.create_with_uri(self._activity, uri)
-            else:
-                self._install_xo(path)
+            activityfactory.create(bundle.get_service_name())
         else:
-            logging.debug("Clipboard item file path %s didn't exist" % path)
+            service_name = None
+            if jobject.metadata.has_key('activity') and jobject.metadata['activity']:
+                service_name = self.metadata['activity']
+            elif jobject.metadata.has_key('mime_type') and jobject.metadata['mime_type']:
+                mime_type = jobject.metadata['mime_type']
+                for bundle in bundleregistry.get_registry():
+                    if bundle.get_mime_types() and mime_type in bundle.get_mime_types():
+                        service_name = bundle.get_service_name()
+                        break
+            if service_name:
+                activityfactory.create_with_object_id(service_name,
+                                                      jobject.object_id)
 
     def _remove_item_activate_cb(self, menu_item):
         cb_service = clipboardservice.get_instance()
         cb_service.delete_object(self._object_id)
 
     def _journal_item_activate_cb(self, menu_item):
+        self._copy_to_journal()
+
+    def _copy_to_journal(self):
         cb_service = clipboardservice.get_instance()
         obj = cb_service.get_object(self._object_id)
 
@@ -185,9 +182,6 @@ class ClipboardMenu(Palette):
         jobject.metadata['mime_type'] = mime_type
         jobject.file_path = file_path
         datastore.write(jobject)
-
-    def _install_xo(self, path):
-        bundle = Bundle(path)
-        if not bundle.is_installed():
-            bundle.install()
+        
+        return jobject
 

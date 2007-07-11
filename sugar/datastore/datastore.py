@@ -20,6 +20,9 @@ import logging
 import gobject
 
 from sugar.datastore import dbus_helpers
+from sugar import activity
+from sugar.activity.bundle import Bundle
+from sugar.activity import activityfactory
 
 class DSMetadata(gobject.GObject):
     __gsignals__ = {
@@ -84,6 +87,37 @@ class DSObject:
             self._file_path = file_path
 
     file_path = property(get_file_path, set_file_path)
+
+    def get_activities(self):
+        activities = []
+
+        if self.metadata['activity']:
+            activity_info = activity.get_registry().get_activity(self.metadata['activity'])
+            activities.append(activity_info)
+
+        mime_type = self.metadata['mime_type']
+        if mime_type:
+            activities_info = activity.get_registry().get_activities_for_type(mime_type)
+            for activity_info in activities_info:
+                if activity_info.service_name != self.metadata['activity']:
+                    activities.append(activity_info)
+
+        return activities
+
+    def is_bundle(self):
+        return self.metadata['mime_type'] == 'application/vnd.olpc-x-sugar'
+
+    def resume(self):
+        if self.is_bundle():
+            bundle = Bundle(self.file_path)
+            if not bundle.is_installed():
+                bundle.install()
+
+            activityfactory.create(bundle.get_service_name())
+        else:
+            activity_info = self.get_activities()[0]
+            activityfactory.create_with_object_id(activity_info.service_name,
+                                                  self.object_id)
 
 def get(object_id):
     logging.debug('datastore.get')

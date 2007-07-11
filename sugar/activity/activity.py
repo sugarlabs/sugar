@@ -312,6 +312,8 @@ class Activity(Window, gtk.Container):
 
     def _get_preview(self):
         preview_pixbuf = self.get_canvas_screenshot()
+        if preview_pixbuf is None:
+            return None
         preview_pixbuf = preview_pixbuf.scale_simple(units.grid_to_pixels(4),
                                                      units.grid_to_pixels(3),
                                                      gtk.gdk.INTERP_BILINEAR)
