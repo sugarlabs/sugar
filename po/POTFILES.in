@@ -1,7 +1,7 @@
 shell/intro/intro.py
 shell/view/BuddyMenu.py
 shell/view/clipboardmenu.py
-shell/view/frame/ZoomBox.py
+shell/view/frame/zoombox.py
 services/clipboard/objecttypeservice.py
 shell/view/Shell.py
 shell/view/clipboardicon.py
