@@ -14,6 +14,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
+
 import gobject
 import dbus
 
@@ -45,9 +47,30 @@ class Device(device.Device):
                                 'org.freedesktop.Hal',
                                 udi)
 
-        self._level = self._battery.GetProperty(_LEVEL_PROP)
-        self._charging = self._battery.GetProperty(_CHARGING_PROP)
-        self._discharging = self._battery.GetProperty(_DISCHARGING_PROP)
+        self._level = self._get_level()
+        self._charging = self._get_charging()
+        self._discharging = self._get_discharging()
+
+    def _get_level(self):
+        try:
+            return self._battery.GetProperty(_LEVEL_PROP)
+        except dbus.DBusException:
+            logging.error('Cannot access %s' % _LEVEL_PROP)
+            return 0
+
+    def _get_charging(self):
+        try:
+            return self._battery.GetProperty(_CHARGING_PROP)
+        except dbus.DBusException:
+            logging.error('Cannot access %s' % _CHARGING_PROP)
+            return False
+
+    def _get_discharging(self):
+        try:
+            return self._battery.GetProperty(_DISCHARGING_PROP)
+        except dbus.DBusException:
+            logging.error('Cannot access %s' % _DISCHARGING_PROP)
+            return False
 
     def do_get_property(self, pspec):
         if pspec.name == 'level':
@@ -63,11 +86,11 @@ class Device(device.Device):
     def _battery_changed(self, num_changes, changes_list):
         for change in changes_list:
             if change[0] == _LEVEL_PROP:
-                self._level = self._battery.GetProperty(_LEVEL_PROP)
+                self._level = self._get_level()
                 self.notify('level')
             elif change[0] == _CHARGING_PROP:
-                self._charging = self._battery.GetProperty(_CHARGING_PROP)
+                self._charging = self._get_charging()
                 self.notify('charging')
             elif change[0] == _DISCHARGING_PROP:
-                self._discharging = self._battery.GetProperty(_DISCHARGING_PROP)
+                self._discharging = self._get_discharging()
                 self.notify('discharging')

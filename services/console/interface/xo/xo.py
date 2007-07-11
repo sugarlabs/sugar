@@ -23,7 +23,6 @@ import string
 
 from cpu import XO_CPU
 from system import XO_System
-from battery import XO_Battery
 from nandflash import XO_NandFlash
 
 class Interface:
@@ -40,11 +39,9 @@ class Interface:
         self.vbox.pack_start(xo_cpu, False, False, 0)
 
         # Graphics: Battery Status, NandFlash
-        self._xo_battery = XO_Battery()
         self._xo_nandflash = XO_NandFlash()
 
         hbox = gtk.HBox(False, 2)
-        hbox.pack_start(self._xo_battery, False, False, 0)
         hbox.pack_start(self._xo_nandflash, False, False, 0)
 
         self.vbox.pack_start(hbox, False, False, 0)
@@ -54,7 +51,6 @@ class Interface:
         gobject.timeout_add(5000, self._update_components)
 
     def _update_components(self):
-        self._xo_battery.update_status()
         self._xo_nandflash.update_status()
 
         return True

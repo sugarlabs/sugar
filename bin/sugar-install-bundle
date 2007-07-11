@@ -3,6 +3,9 @@ import sys
 
 from sugar.activity.bundle import Bundle
 
+from dbus.mainloop.glib import DBusGMainLoop
+DBusGMainLoop(set_as_default=True)
+
 bundle = Bundle(sys.argv[1])
 bundle.install()
 

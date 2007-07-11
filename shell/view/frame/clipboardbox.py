@@ -13,16 +13,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-import shutil
+
 import os
 import logging
-import urlparse
 
 import hippo
 import gtk
  
 from sugar import util
-from sugar.objects import mime
 from view.clipboardicon import ClipboardIcon
 from sugar.clipboard import clipboardservice
 
@@ -101,21 +99,10 @@ class ClipboardBox(hippo.CanvasBox):
             uris = selection.data.split('\n')
             if len(uris) > 1:
                 raise NotImplementedError('Multiple uris in text/uri-list still not supported.')
-            uri = urlparse.urlparse(uris[0])
-            path, file_name = os.path.split(uri.path)
-
-            root, ext = os.path.splitext(file_name)
-            if not ext or ext == '.':
-                mime_type = mime.get_for_file(uri.path)
-                file_name = root + '.' + mime.get_primary_extension(mime_type)
-            
-            # Copy the file, as it will be deleted when the dnd operation finishes.
-            new_file_path = os.path.join(path, 'cb' + file_name)
-            shutil.copyfile(uri.path, new_file_path)
 
             cb_service.add_object_format(object_id, 
                                          selection.type,
-                                         "file://" + new_file_path,
+                                         uris[0],
                                          on_disk=True)
         else:
             cb_service.add_object_format(object_id, 

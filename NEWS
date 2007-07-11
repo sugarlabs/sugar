@@ -1,3 +1,26 @@
+* #1984 Fix removing items from the clipboard. (tomeu)
+
+Snapshot b83a9ec27d
+
+* Fix font size on the XO. (marco)
+* Make developer console work again. (marco)
+* #2020 Use the new activity-stop icon. (marco)
+* #2002 Tooltips for the zoom levels. (marco)
+* #2018 Rename Save to Keep. (marco)
+* #2020 Rename Close to Stop. (marco)
+
+Snapshot 42f0bcc48d
+
+* Fix broken import which was preventing startup. (marco)
+
+Snapshot 757b2b8ce6
+
+* #2031: Do not die if battery properties are unavailable. (marco)
+* #1953: Retrieve friends' nicks from the profile. (tomeu)
+* #1720: Show the owner's buddy menu in the Groups view. (tomeu)
+
+Snapshot aa6a024368
+
 * #1825: Fix tab label padding. (marco)
 * #1823: Margin at the toolbar tabs bottom. (marco)
 * #1872, #1934: Hide palettes when closing activities or switching views. (tomeu)

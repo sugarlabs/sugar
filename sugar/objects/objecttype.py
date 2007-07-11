@@ -36,20 +36,39 @@ class ObjectType(object):
         self.name = name
         self.icon = icon
         self.mime_types = mime_types
+        
+        self._type_id_to_type = {}
+        self._mime_type_to_type = {}
 
 class ObjectTypeRegistry(object):
     def __init__(self):
         bus = dbus.SessionBus()
         bus_object = bus.get_object(_SERVICE, _PATH)
         self._registry = dbus.Interface(bus_object, _IFACE)
+        
+        # Two caches fo saving some travel across dbus.
+        self._type_id_to_type = {}
+        self._mime_type_to_type = {}
 
     def get_type(self, type_id):
+        if self._type_id_to_type.has_key(type_id):
+            return self._type_id_to_type[type_id]
+
         type_dict = self._registry.GetType(type_id)
-        return _object_type_from_dict(type_dict)
+        object_type = _object_type_from_dict(type_dict)
+
+        self._type_id_to_type[type_id] = object_type
+        return object_type
 
     def get_type_for_mime(self, mime_type):
+        if self._mime_type_to_type.has_key(mime_type):
+            return self._mime_type_to_type[mime_type]
+
         type_dict = self._registry.GetTypeForMIME(mime_type)
-        return _object_type_from_dict(type_dict)
+        object_type = _object_type_from_dict(type_dict)
+
+        self._mime_type_to_type[mime_type] = object_type
+        return object_type
 
 _registry = None
 

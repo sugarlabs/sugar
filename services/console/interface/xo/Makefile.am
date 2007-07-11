@@ -4,5 +4,4 @@ sugar_PYTHON =				\
 	xo.py				\
 	cpu.py				\
 	system.py			\
-	battery.py			\
 	nandflash.py

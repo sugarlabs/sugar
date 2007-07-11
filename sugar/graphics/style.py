@@ -18,6 +18,10 @@
 import gtk
 import pango
 
+def _get_screen_dpi():
+    xft_dpi = gtk.settings_get_default().get_property('gtk-xft-dpi')
+    return  float(xft_dpi / 1024)
+
 def _compute_zoom_factor():
     return gtk.gdk.screen_width() / 1200.0
 
@@ -43,17 +47,21 @@ class Font(object):
     def get_pango_desc(self):
         return pango.FontDescription(self._desc)
 
+_XO_DPI = 200.0
+
 _FOCUS_LINE_WIDTH = 2
 _TAB_CURVATURE = 1
 
 ZOOM_FACTOR = _compute_zoom_factor()
 
-FONT_SIZE = _zoom(7 * 200 / 72.0)
+FONT_SIZE = _zoom(7 * _XO_DPI / _get_screen_dpi())
 FONT_NORMAL = Font('Bitstream Vera Sans %d' % FONT_SIZE)
 FONT_BOLD = Font('Bitstream Vera Sans bold %d' % FONT_SIZE)
+FONT_NORMAL_H = _compute_font_height(FONT_NORMAL)
+FONT_BOLD_H = _compute_font_height(FONT_BOLD)
 
 TOOLBOX_SEPARATOR_HEIGHT = _zoom(9)
 TOOLBOX_HORIZONTAL_PADDING = _zoom(75)
-TOOLBOX_TAB_VBORDER = int((_zoom(36) - FONT_SIZE - _FOCUS_LINE_WIDTH) / 2)
+TOOLBOX_TAB_VBORDER = int((_zoom(36) - FONT_NORMAL_H - _FOCUS_LINE_WIDTH) / 2)
 TOOLBOX_TAB_HBORDER = _zoom(15) - _FOCUS_LINE_WIDTH - _TAB_CURVATURE
 TOOLBOX_TAB_LABEL_WIDTH = _zoom(150 - 15 * 2)

@@ -14,10 +14,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+from gettext import gettext as _
+
 import hippo
 
 from sugar.graphics import color
+from sugar.graphics.palette import Palette
 from sugar.graphics.iconbutton import IconButton
+from frameinvoker import FrameCanvasInvoker
 
 from model.shellmodel import ShellModel
 
@@ -35,6 +39,11 @@ class ZoomBox(hippo.CanvasBox):
                      ShellModel.ZOOM_MESH)
         self.append(icon)
 
+        palette = Palette(_('Neighborhood'))
+        palette.props.invoker = FrameCanvasInvoker(icon)
+        palette.set_group_id('frame')
+        icon.set_palette(palette)
+
         icon = IconButton(icon_name='theme:stock-zoom-friends',
                           stroke_color=color.BLACK,
                           fill_color=color.WHITE)
@@ -42,6 +51,11 @@ class ZoomBox(hippo.CanvasBox):
                      self._level_clicked_cb,
                      ShellModel.ZOOM_FRIENDS)
         self.append(icon)
+
+        palette = Palette(_('Group'))
+        palette.props.invoker = FrameCanvasInvoker(icon)
+        palette.set_group_id('frame')
+        icon.set_palette(palette)
 
         icon = IconButton(icon_name='theme:stock-zoom-home',
                           stroke_color=color.BLACK,
@@ -51,6 +65,11 @@ class ZoomBox(hippo.CanvasBox):
                      ShellModel.ZOOM_HOME)
         self.append(icon)
 
+        palette = Palette(_('Home'))
+        palette.props.invoker = FrameCanvasInvoker(icon)
+        palette.set_group_id('frame')
+        icon.set_palette(palette)
+
         icon = IconButton(icon_name='theme:stock-zoom-activity',
                           stroke_color=color.BLACK,
                           fill_color=color.WHITE)
@@ -58,6 +77,11 @@ class ZoomBox(hippo.CanvasBox):
                      self._level_clicked_cb,
                      ShellModel.ZOOM_ACTIVITY)
         self.append(icon)
+
+        palette = Palette(_('Activity'))
+        palette.props.invoker = FrameCanvasInvoker(icon)
+        palette.set_group_id('frame')
+        icon.set_palette(palette)
 
     def _level_clicked_cb(self, item, level):
         self._shell.set_zoom_level(level)

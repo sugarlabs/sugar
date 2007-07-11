@@ -64,11 +64,11 @@ class ActivityToolbar(gtk.Toolbar):
         self.insert(separator, -1)
         separator.show()
 
-        self.save = ToolButton('document-save')
-        self.save.set_tooltip(_('Save'))
-        self.save.connect('clicked', self._save_clicked_cb)
-        self.insert(self.save, -1)
-        self.save.show()
+        self.keep = ToolButton('document-save')
+        self.keep.set_tooltip(_('Keep'))
+        self.keep.connect('clicked', self._keep_clicked_cb)
+        self.insert(self.keep, -1)
+        self.keep.show()
 
         self.share = ToolButton('stock-share-mesh')
         self.share.set_tooltip(_('Share'))
@@ -83,21 +83,21 @@ class ActivityToolbar(gtk.Toolbar):
         self.insert(separator, -1)
         separator.show()
 
-        self.close = ToolButton('window-close')
-        self.close.set_tooltip(_('Close'))
-        self.close.connect('clicked', self._close_clicked_cb)
-        self.insert(self.close, -1)
-        self.close.show()
+        self.stop = ToolButton('activity-stop')
+        self.stop.set_tooltip(_('Stop'))
+        self.stop.connect('clicked', self._stop_clicked_cb)
+        self.insert(self.stop, -1)
+        self.stop.show()
 
         self._update_title_sid = None
 
     def _share_clicked_cb(self, button):
         self._activity.share()
 
-    def _save_clicked_cb(self, button):
+    def _keep_clicked_cb(self, button):
         self._activity.save()
 
-    def _close_clicked_cb(self, button):
+    def _stop_clicked_cb(self, button):
         self._activity.close()
         self._activity.destroy()
 

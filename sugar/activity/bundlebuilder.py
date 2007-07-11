@@ -50,25 +50,21 @@ class _DefaultFileList(list):
                 self.append(os.path.join('activity', name))
 
         self.append('activity/activity.info')
-        self.append('setup.py')
 
         if os.path.isfile(_get_source_path('NEWS')):
             self.append('NEWS')
 
-class _ManifestFileList(list):
-    def __init__(self, manifest=None):
+class _ManifestFileList(_DefaultFileList):
+    def __init__(self, manifest):
+        _DefaultFileList.__init__(self)
         self.append(manifest)
 
         f = open(manifest,'r')
         for line in f.readlines():
             stripped_line = line.strip()
-            if stripped_line:
+            if stripped_line and not stripped_line in self:
                 self.append(stripped_line)
         f.close()
-
-        defaults = _DefaultFileList()
-        for path in defaults:
-            self.append(path)
 
 def _extract_bundle(source_file, dest_dir):
         if not os.path.exists(dest_dir):
@@ -270,8 +266,8 @@ def cmd_release(bundle_name, manifest):
         sugar_news += '%s - %d\n\n' % (bundle_name, version)
 
         f = open(news_path,'r')
-        for line in f.readline():
-            if len(line) > 0:
+        for line in f.readlines():
+            if len(line.strip()) > 0:
                 sugar_news += line
             else:
                 break
