@@ -1,3 +1,5 @@
+* Adapt to the datastore API changes. (tomeu)
+
 Snapshot ec7eb2ebbb
 
 * Update the XO colors with a new list from walter. (marco)
