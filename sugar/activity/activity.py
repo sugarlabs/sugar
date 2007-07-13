@@ -249,7 +249,7 @@ class Activity(Window, gtk.Container):
             self._jobject.metadata['title_set_by_user'] = '0'
             self._jobject.metadata['activity'] = self.get_service_name()
             self._jobject.metadata['keep'] = '0'
-            self._jobject.metadata['buddies'] = ''
+            #self._jobject.metadata['buddies'] = ''
             self._jobject.metadata['preview'] = ''
             self._jobject.metadata['icon-color'] = profile.get_color().to_string()
             self._jobject.file_path = ''
@@ -339,7 +339,7 @@ class Activity(Window, gtk.Container):
 
     def save(self):
         """Request that the activity is saved to the Journal."""
-        self.metadata['buddies'] = self._get_buddies()
+        #self.metadata['buddies'] = self._get_buddies()
         if self._preview is None:
             self.metadata['preview'] = ''
         else:
