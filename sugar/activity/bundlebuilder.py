@@ -331,10 +331,7 @@ def sanity_check():
     if not os.path.isfile(_get_source_path('NEWS')):
         print 'WARNING: NEWS file is missing.'
 
-def start(bundle_name=None, manifest='MANIFEST'):
-    if not bundle_name:
-        bundle_name = os.path.basename(_get_source_path())
-
+def start(bundle_name, manifest='MANIFEST'):
     sanity_check()
 
     if len(sys.argv) < 2:
