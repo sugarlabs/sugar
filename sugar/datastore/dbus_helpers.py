@@ -35,8 +35,6 @@ _data_store = dbus.Interface(_bus.get_object(DS_DBUS_SERVICE, DS_DBUS_PATH),
 def create(properties, filename):
     object_id = _data_store.create(dbus.Dictionary(properties), filename)
     logging.debug('dbus_helpers.create: ' + object_id)
-    # TODO: take out this forced flush
-    _data_store.complete_indexing()
     return object_id
 
 def update(uid, properties, filename, reply_handler=None, error_handler=None):
@@ -47,14 +45,10 @@ def update(uid, properties, filename, reply_handler=None, error_handler=None):
                 error_handler=error_handler)
     else:
         _data_store.update(uid, dbus.Dictionary(properties), filename)
-    # TODO: take out this forced flush
-    _data_store.complete_indexing()
 
 def delete(uid):
     logging.debug('dbus_helpers.delete: %r' % uid)
     _data_store.delete(uid)
-    # TODO: take out this forced flush
-    _data_store.complete_indexing()
         
 def get_properties(uid):
     logging.debug('dbus_helpers.get_properties: %s' % uid)
