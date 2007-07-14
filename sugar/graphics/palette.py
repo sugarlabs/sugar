@@ -327,7 +327,7 @@ class _ContentMenuItem(gtk.MenuItem):
         self.add(widget)
 
     def is_empty(self):
-        return self.child is None
+        return self.child is None or not self.child.props.visible
 
 class _ButtonBarMenuItem(gtk.MenuItem):
     def __init__(self):

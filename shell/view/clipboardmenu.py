@@ -24,7 +24,7 @@ import gtk
 import hippo
 
 from sugar.graphics.palette import Palette
-from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics.menuitem import MenuItem
 from sugar.graphics import color
 from sugar.graphics import style
 from sugar.clipboard import clipboardservice
@@ -38,13 +38,14 @@ class ClipboardMenu(Palette):
     def __init__(self, object_id, name, percent, preview, activity, installable):
         Palette.__init__(self, name)
 
+        self.props.position = Palette.RIGHT
         self._object_id = object_id
         self._percent = percent
         self._activity = activity
 
         self.set_group_id('frame')
 
-        if percent < 100:        
+        if percent < 100:
             self._progress_bar = gtk.ProgressBar()
             self._update_progress_bar()
 
@@ -63,20 +64,20 @@ class ClipboardMenu(Palette):
             self.append(self._preview_text)
         """
 
-        self._remove_item = gtk.MenuItem(_('Remove')) #, 'theme:stock-remove')
+        self._remove_item = MenuItem(_('Remove'), 'stock-remove')
         self._remove_item.connect('activate', self._remove_item_activate_cb)
         self.append_menu_item(self._remove_item)
 
-        self._open_item = gtk.MenuItem(_('Open')) #, 'theme:stock-keep')
+        self._open_item = MenuItem(_('Open'), 'stock-keep')
         self._open_item.connect('activate', self._open_item_activate_cb)
         self.append_menu_item(self._open_item)
 
-        self._stop_item = gtk.MenuItem(_('Stop download')) #, 'theme:stock-close')
+        #self._stop_item = MenuItem(_('Stop download'), 'stock-close')
         # TODO: Implement stopping downloads
         #self._stop_item.connect('activate', self._stop_item_activate_cb)
-        self.append_menu_item(self._stop_item)
+        #self.append_menu_item(self._stop_item)
 
-        self._journal_item = gtk.MenuItem(_('Add to journal')) #, 'theme:document-save')
+        self._journal_item = MenuItem(_('Add to journal'), 'document-save')
         self._journal_item.connect('activate', self._journal_item_activate_cb)
         self.append_menu_item(self._journal_item)
 
@@ -84,20 +85,26 @@ class ClipboardMenu(Palette):
 
     def _update_items_visibility(self, installable):
         if self._percent == 100 and (self._activity or installable):
-            self._remove_item.show()
-            self._open_item.show()
-            self._stop_item.hide()
-            self._journal_item.show()
+            self._remove_item.props.sensitive = True
+            self._open_item.props.sensitive = True
+            #self._stop_item.props.sensitive = False
+            self._journal_item.props.sensitive = True
         elif self._percent == 100 and (not self._activity and not installable):
-            self._remove_item.show()
-            self._open_item.hide()
-            self._stop_item.hide()
-            self._journal_item.show()
+            self._remove_item.props.sensitive = True
+            self._open_item.props.sensitive = False
+            #self._stop_item.props.sensitive = False
+            self._journal_item.props.sensitive = True
         else:
-            self._remove_item.hide()
-            self._open_item.hide()
-            self._stop_item.show()
-            self._journal_item.hide()
+            self._remove_item.props.sensitive = False
+            self._open_item.props.sensitive = False
+            # TODO: reenable the stop item when we implement stoping downloads.
+            #self._stop_item.props.sensitive = True
+            self._journal_item.props.sensitive = False
+
+        if self._percent == 100:
+            self._progress_bar.hide()
+        else:
+            self._progress_bar.show()
 
     def _update_progress_bar(self):
         if self._progress_bar:
@@ -110,7 +117,7 @@ class ClipboardMenu(Palette):
         self._activity = activity
         if self._progress_bar:
             self._update_progress_bar()
-            self._update_items_visibility(installable)
+        self._update_items_visibility(installable)
 
     def _open_item_activate_cb(self, menu_item):
         if self._percent < 100:
@@ -133,14 +140,11 @@ class ClipboardMenu(Palette):
             activityfactory.create(bundle.get_service_name())
         else:
             service_name = None
-            if jobject.metadata.has_key('activity') and jobject.metadata['activity']:
-                service_name = self.metadata['activity']
-            elif jobject.metadata.has_key('mime_type') and jobject.metadata['mime_type']:
-                mime_type = jobject.metadata['mime_type']
-                for bundle in bundleregistry.get_registry():
-                    if bundle.get_mime_types() and mime_type in bundle.get_mime_types():
-                        service_name = bundle.get_service_name()
-                        break
+            mime_type = jobject.metadata['mime_type']
+            for bundle in bundleregistry.get_registry():
+                if bundle.get_mime_types() and mime_type in bundle.get_mime_types():
+                    service_name = bundle.get_service_name()
+                    break
             if service_name:
                 activityfactory.create_with_object_id(service_name,
                                                       jobject.object_id)
