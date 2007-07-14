@@ -31,7 +31,6 @@ from sugar.clipboard import clipboardservice
 from sugar.datastore import datastore
 from sugar.objects import mime
 from sugar import profile
-from sugar import util
 
 class ClipboardMenu(Palette):
     
@@ -160,7 +159,7 @@ class ClipboardMenu(Palette):
         cb_service = clipboardservice.get_instance()
         obj = cb_service.get_object(self._object_id)
 
-        format = util.choose_most_significant_mime_type(obj['FORMATS'])
+        format = mime.choose_most_significant(obj['FORMATS'])
         data = cb_service.get_object_data(self._object_id, format)
 
         if format == 'text/uri-list':

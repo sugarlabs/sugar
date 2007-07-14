@@ -20,7 +20,6 @@ import urlparse
 
 from sugar.objects import mime
 from sugar import activity
-from sugar import util
 
 import objecttypeservice
 
@@ -111,7 +110,7 @@ class ClipboardObject:
         if not self._formats:
             return ''
 
-        format = util.choose_most_significant_mime_type(self._formats.keys())
+        format = mime.choose_most_significant(self._formats.keys())
 
         if format == 'text/uri-list':
             data = self._formats['text/uri-list'].get_data()

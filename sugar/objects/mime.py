@@ -15,6 +15,8 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+import logging
+
 from sugar import _sugarext
 
 def get_for_file(file_name):
@@ -40,3 +42,37 @@ def get_primary_extension(mime_type):
 
     _extensions_cache[mime_type] = None
     return None
+
+def choose_most_significant(mime_types):
+    logging.debug('Choosing between %r.' % mime_types)
+    if not mime_types:
+        return ''
+
+    if 'text/uri-list' in mime_types:
+        return 'text/uri-list'
+
+    for mime_category in ['image/', 'text/', 'application/']:
+        for mime_type in mime_types:
+
+            # skip text/plain and text/html, these have lower priority.
+            if mime_type in ['text/plain', 'text/html']:
+                continue
+
+            if mime_type.startswith(mime_category):
+                # skip mozilla private types (second component starts with '_') 
+                if mime_type.split('/')[1].startswith('_'):
+                    continue
+
+                # take out the specifier after ';' that mozilla likes to add
+                mime_type = mime_type.split(';')[0]
+                logging.debug('Choosed %r!' % mime_type)
+                return mime_type
+
+    if 'text/html' in mime_types:
+        return 'text/html'
+
+    if 'text/plain' in mime_types or 'STRING' in mime_types:
+        return 'text/plain'
+
+    logging.debug('Returning first: %r.' % mime_types[0])
+    return mime_types[0]

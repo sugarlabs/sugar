@@ -128,25 +128,3 @@ def set_proc_title(title):
     except:
         return False
 
-def choose_most_significant_mime_type(mime_types):
-    logging.debug('Choosing between %r.' % mime_types)
-    if not mime_types:
-        return ''
-
-    if 'text/uri-list' in mime_types:
-        return 'text/uri-list'
-
-    for mime_category in ['image/', 'text/', 'application/']:
-        for mime_type in mime_types:
-            if mime_type.startswith(mime_category) and \
-                    not mime_type.split('/')[1].startswith('_'):
-                mime_type = mime_type.split(';')[0]
-                logging.debug('Choosed %r!' % mime_type)
-                return mime_type
-
-    if 'STRING' in mime_types:
-        return 'text/plain'
-
-    logging.debug('Returning first: %r.' % mime_types[0])
-    return mime_types[0]
-
