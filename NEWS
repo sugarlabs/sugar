@@ -1,3 +1,4 @@
+* #2185 Do not shutdown on power button, ohm does it now. (marco)
 * #1888 Choose the correct mime type when adding text from Write to the
   clipboard. (tomeu)
 * #2149, #2150: fixes for the clipboard palette. (tomeu)

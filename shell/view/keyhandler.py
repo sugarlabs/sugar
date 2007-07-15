@@ -22,7 +22,6 @@ import dbus
 import gobject
 import gtk
 
-from sugar import env
 from hardware import hardwaremanager
 from model.shellmodel import ShellModel
 from sugar._sugarext import KeyGrabber
@@ -49,8 +48,6 @@ _actions_table = {
     '0x93'          : 'frame',
     '<alt>o'        : 'overlay',
     '0xE0'          : 'overlay',
-    '0x7C'          : 'shutdown',
-    '<alt><shift>s' : 'shutdown',
     '0xEB'          : 'rotate',
     '<alt>r'        : 'rotate',
     '0xEC'          : 'keyboard_brightness',
@@ -147,19 +144,6 @@ class KeyHandler(object):
 
     def handle_overlay(self):
         self._shell.toggle_chat_visibility()
-
-    def handle_shutdown(self):
-        model = self._shell.get_model()
-        model.props.state = ShellModel.STATE_SHUTDOWN
-
-        if env.is_emulator():
-            return
-
-        bus = dbus.SystemBus()
-        proxy = bus.get_object('org.freedesktop.Hal',
-                               '/org/freedesktop/Hal/devices/computer')
-        mgr = dbus.Interface(proxy, 'org.freedesktop.Hal.Device.SystemPowerManagement')
-        mgr.Shutdown()
 
     def handle_keyboard_brightness(self):
         hw_manager = hardwaremanager.get_manager()
