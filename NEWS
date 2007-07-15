@@ -1,3 +1,5 @@
+Snapshot 9f4da4e6d1
+
 * #775 Show the activity's creator colors in the donut. (danw)
 * #2185 Do not shutdown on power button, ohm does it now. (marco)
 * #1888 Choose the correct mime type when adding text from Write to the
