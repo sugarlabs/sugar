@@ -241,7 +241,7 @@ def cmd_release(bundle_name, manifest):
     info = f.read()
     f.close()
 
-    exp = re.compile('activity_version\s?=\s?([1-9]*)')
+    exp = re.compile('activity_version\s?=\s?([0-9]*)')
     match = re.search(exp, info)
     version = int(match.group(1)) + 1
     info = re.sub(exp, 'activity_version = %d' % version, info)
