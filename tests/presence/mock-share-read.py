@@ -50,7 +50,7 @@ class MockReadActivity(gobject.GObject):
     def __init__(self, filepath):
         self._actid = "ef60b3af42f7b5aa558ef9269e2ed7998798afc0"
         self._name = "Test Read Activity"
-        self._type = "org.laptop.sugar.Xbook"
+        self._type = "org.laptop.sugar.ReadActivity"
         gobject.GObject.__init__(self)
 
         self._ps_act = None
