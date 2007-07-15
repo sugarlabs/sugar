@@ -115,7 +115,7 @@ class HomeActivity(gobject.GObject):
         pservice = presenceservice.get_instance()
         activity = pservice.get_activity(self._activity_id)
         if activity != None:
-            return XoColor(activity.get_color())
+            return XoColor(activity.props.color)
         else:
             return profile.get_color()
         

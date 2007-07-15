@@ -47,7 +47,7 @@ class ActivityIcon(CanvasIcon):
 
     def __init__(self, activity):
         icon_name = activity.get_icon_name()
-        self._orig_color = profile.get_color()
+        self._orig_color = activity.get_icon_color()
         self._icon_colors = self._compute_icon_colors()
 
         self._direction = 0
