@@ -1,3 +1,5 @@
+Snapshot fd7336c2f1
+
 * Suppress traceback when creating a new buddy object on buddy-disappeared
   signal
 
