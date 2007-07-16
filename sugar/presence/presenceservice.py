@@ -169,6 +169,9 @@ class PresenceService(gobject.GObject):
             self._objcache[object_path] = obj
         return obj
 
+    def _have_object(self, object_path):
+        return object_path in self._objcache.keys()
+
     def _del_object(self, object_path):
         """Fully remove an object from the object cache when it's no longer needed.
         """
@@ -185,7 +188,10 @@ class PresenceService(gobject.GObject):
 
     def _emit_buddy_disappeared_signal(self, object_path):
         """Emit GObject event with presence.buddy.Buddy object"""
-        self.emit('buddy-disappeared', self._new_object(object_path))
+        # Don't try to create a new object here if needed; it will probably
+        # fail anyway because the object has already been destroyed in the PS
+        if self._have_object(object_path):
+            self.emit('buddy-disappeared', self._new_object(object_path))
         return False
 
     def _buddy_disappeared_cb(self, object_path):
