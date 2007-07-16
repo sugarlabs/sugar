@@ -1,3 +1,6 @@
+* Suppress traceback when creating a new buddy object on buddy-disappeared
+  signal
+
 Snapshot 9f4da4e6d1
 
 * #775 Show the activity's creator colors in the donut. (danw)
