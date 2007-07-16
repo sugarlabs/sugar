@@ -33,7 +33,7 @@ class XO_System(gtk.Fixed):
         table.set_row_spacings(7)
     
         # BUILD
-        build = self._read_file('/boot/olpc_build').split('\n')[0]
+        build = self._read_file('/boot/olpc_build')
         label_build = Label('OLPC Build:', Label.DESCRIPTION)
         label_build_value = Label(str(build), Label.DESCRIPTION)
 
@@ -44,12 +44,12 @@ class XO_System(gtk.Fixed):
             Label.DESCRIPTION)
         
         # FIRMWARE
-        firmware = self._read_file('/ofw/ec-name').split('\n')[0]
+        firmware = self._read_file('/ofw/ec-name')
         label_firmware = Label('XO Firmware:', Label.DESCRIPTION)
         label_firmware_value = Label(firmware, Label.DESCRIPTION)
 
         # SERIAL NUMBER
-        serial = self._read_file('/ofw/serial-number').split('\n')[0]
+        serial = self._read_file('/ofw/serial-number')
         label_serial = Label('XO Serial Number:', Label.DESCRIPTION)
         label_serial_value = Label(serial, Label.DESCRIPTION)
 
@@ -83,6 +83,9 @@ class XO_System(gtk.Fixed):
             value = f.read()
             f.close()
 
+            value = value.split('\n')[0]
+            if value[len(value) - 1] == '\x00':
+                value = value[:len(value) - 1]
             return value
         except:
             return "None"
