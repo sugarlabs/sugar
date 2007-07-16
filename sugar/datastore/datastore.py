@@ -16,7 +16,7 @@
 # Boston, MA 02111-1307, USA.
 
 import logging
-import time
+from datetime import datetime
 
 import gobject
 
@@ -131,20 +131,20 @@ def get(object_id):
 
 def create():
     metadata = DSMetadata()
-    metadata['ctime'] = time.strftime('%Y-%m-%d')
+    metadata['ctime'] = datetime.now().isoformat()
     metadata['mtime'] = metadata['ctime']
     return DSObject(object_id=None, metadata=metadata, file_path=None)
 
 def write(ds_object, reply_handler=None, error_handler=None):
     logging.debug('datastore.write')
 
-    ds_object.metadata['mtime'] = time.strftime('%Y-%m-%d')
-
     properties = ds_object.metadata.get_dictionary().copy()
     # The title property should be sent as a 'text' property so it gets indexed
     if properties.has_key('title'):
         properties['title:text'] = properties['title']
         del properties['title']
+
+    properties['mtime'] = datetime.now().isoformat()
 
     if ds_object.object_id:
         dbus_helpers.update(ds_object.object_id,
