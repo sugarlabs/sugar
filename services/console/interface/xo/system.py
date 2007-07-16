@@ -44,7 +44,7 @@ class XO_System(gtk.Fixed):
             Label.DESCRIPTION)
         
         # FIRMWARE
-        firmware = self._read_file('/ofw/ec-name')
+        firmware = self._read_file('/ofw/openprom/model')
         label_firmware = Label('XO Firmware:', Label.DESCRIPTION)
         label_firmware_value = Label(firmware, Label.DESCRIPTION)
 
