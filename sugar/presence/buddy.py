@@ -85,6 +85,8 @@ class Buddy(gobject.GObject):
         self._ps_new_object = new_obj_cb
         self._ps_del_object = del_obj_cb
         self._properties = {}
+        self._activities = {}
+
         bobj = bus.get_object(self._PRESENCE_SERVICE, object_path)
         self._buddy = dbus.Interface(bobj, self._BUDDY_DBUS_INTERFACE)
         self._buddy.connect_to_signal('IconChanged', self._icon_changed_cb)
@@ -93,7 +95,6 @@ class Buddy(gobject.GObject):
         self._buddy.connect_to_signal('PropertyChanged', self._property_changed_cb)
         self._properties = self._get_properties_helper()
 
-        self._activities = {}
         activities = self._buddy.GetJoinedActivities()
         for op in activities:
             self._activities[op] = self._ps_new_object(op)

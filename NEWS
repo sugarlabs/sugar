@@ -1,3 +1,4 @@
+* Fix initialization order of buddy class '_activities' member (dcbw)
 * Update brazilian translation.
 * Add polish translation.
 * Add french translation.
