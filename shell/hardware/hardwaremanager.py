@@ -48,6 +48,17 @@ class HardwareManager(object):
             if track.flags & gst.interfaces.MIXER_TRACK_MASTER:
                 self._master = track
 
+    def get_volume(self):
+        if not self._mixer or not self._master:
+            logging.error('Cannot get the volume')
+            return self._convert_volume(0)
+
+        max_volume = self._master.max_volume
+        min_volume = self._master.min_volume
+        volume = self._mixer.get_volume(self._master)[0]
+
+        return volume * 100.0 / (max_volume - min_volume) + min_volume
+
     def set_volume(self, volume):
         if not self._mixer or not self._master:
             logging.error('Cannot set the volume')
@@ -59,7 +70,7 @@ class HardwareManager(object):
         max_volume = self._master.max_volume
         min_volume = self._master.min_volume
 
-        volume = (volume / 100.0) * (max_volume - min_volume) + min_volume
+        volume = volume * (max_volume - min_volume) / 100.0 + min_volume
         volume_list = [ volume ] * self._master.num_channels
 
         self._mixer.set_volume(self._master, tuple(volume_list))
@@ -83,9 +94,17 @@ class HardwareManager(object):
 
     def set_display_brightness(self, level):
         if not self._service:
+            logging.error('Cannot set display brightness')
             return
 
         self._service.set_display_brightness(level)
+
+    def get_display_brightness(self):
+        if not self._service:
+            logging.error('Cannot get display brightness')
+            return
+
+        return self._service.get_display_brightness()
 
     def toggle_keyboard_brightness(self):
         if not self._service:

@@ -1,3 +1,6 @@
+* #958, #1433 Refactor brightness and volume key handling to follow
+Eben specification and the new B3 keyboard (marco)
+
 Snapshot fd7336c2f1
 
 * Suppress traceback when creating a new buddy object on buddy-disappeared

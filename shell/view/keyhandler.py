@@ -26,22 +26,19 @@ from hardware import hardwaremanager
 from model.shellmodel import ShellModel
 from sugar._sugarext import KeyGrabber
 
+_BRIGHTNESS_STEP = 2
+_VOLUME_STEP = 10
+
 _actions_table = {
     'F1'            : 'zoom_mesh',
     'F2'            : 'zoom_friends',
     'F3'            : 'zoom_home',
     'F4'            : 'zoom_activity',
-    'F5'            : 'brightness_1',
-    'F6'            : 'brightness_2',
-    'F7'            : 'brightness_3',
-    'F8'            : 'brightness_4',
-    'F9'            : 'volume_1',
-    'F10'           : 'volume_2',
-    'F11'           : 'volume_3',
-    'F12'           : 'volume_4',
+    'F9'            : 'brightness_down',
+    'F10'           : 'brightness_up',
+    'F11'           : 'volume_down',
+    'F12'           : 'volume_up',
     '<alt>1'        : 'screenshot',
-    '<alt>F8'       : 'color_mode',
-    '<alt>F5'       : 'b_and_w_mode',
     '<alt>equal'    : 'console',
     '<alt>0'        : 'console',
     '<alt>f'        : 'frame',
@@ -72,17 +69,26 @@ class KeyHandler(object):
         for key in _actions_table.keys():
             self._key_grabber.grab(key)            
 
-    def _set_display_brightness(self, level):
+    def _change_volume(self, step):
         hw_manager = hardwaremanager.get_manager()
+
+        volume = hw_manager.get_volume() + step
+        volume = min(max(0, volume), 100)
+
+        hw_manager.set_volume(volume)
+        hw_manager.set_mute(volume == 0)
+
+    def _change_brightness(self, step):
+        hw_manager = hardwaremanager.get_manager()
+
+        level = hw_manager.get_display_brightness() + step
+        level = min(max(0, level), 15)
+
         hw_manager.set_display_brightness(level)
         if level == 0:
-            self._set_display_mode(hardwaremanager.B_AND_W_MODE)
+            hw_manager.set_display_mode(hardwaremanager.B_AND_W_MODE)
         else:
-            self._set_display_mode(hardwaremanager.COLOR_MODE)
-
-    def _set_display_mode(self, mode):
-        hw_manager = hardwaremanager.get_manager()
-        hw_manager.set_display_mode(mode)
+            hw_manager.set_display_mode(hardwaremanager.COLOR_MODE)
 
     def handle_zoom_mesh(self):
         self._shell.set_zoom_level(ShellModel.ZOOM_MESH)
@@ -96,45 +102,20 @@ class KeyHandler(object):
     def handle_zoom_activity(self):
         self._shell.set_zoom_level(ShellModel.ZOOM_ACTIVITY)
 
-    def handle_brightness_1(self):
-        self._set_display_brightness(0)
+    def handle_brightness_up(self):
+        self._change_brightness(_BRIGHTNESS_STEP)
 
-    def handle_brightness_2(self):
-        self._set_display_brightness(5)
+    def handle_brightness_down(self):
+        self._change_brightness(-_BRIGHTNESS_STEP)
 
-    def handle_brightness_3(self):
-        self._set_display_brightness(9)
+    def handle_volume_up(self):
+        self._change_volume(_VOLUME_STEP)
 
-    def handle_brightness_4(self):
-        self._set_display_brightness(15)
-
-    def handle_volume_1(self):
-        hw_manager = hardwaremanager.get_manager()
-        hw_manager.set_mute(True)
-
-    def handle_volume_2(self):
-        hw_manager = hardwaremanager.get_manager()
-        hw_manager.set_mute(False)
-        hw_manager.set_volume(50)
-
-    def handle_volume_3(self):
-        hw_manager = hardwaremanager.get_manager()
-        hw_manager.set_mute(False)
-        hw_manager.set_volume(80)
-
-    def handle_volume_4(self):
-        hw_manager = hardwaremanager.get_manager()
-        hw_manager.set_mute(False)
-        hw_manager.set_volume(100)
-
-    def handle_color_mode(self):
-        self._set_display_mode(hardwaremanager.COLOR_MODE)
+    def handle_volume_down(self):
+        self._change_volume(-_VOLUME_STEP)
 
     def handle_screenshot(self):
         self._shell.take_screenshot()
-
-    def handle_b_and_w_mode(self):
-        self._set_display_mode(hardwaremanager.B_AND_W_MODE)
 
     def handle_console(self):
         gobject.idle_add(self._toggle_console_visibility_cb)
