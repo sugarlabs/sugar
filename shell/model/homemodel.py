@@ -132,12 +132,22 @@ class HomeModel(gobject.GObject):
         if old_activity:
             service = old_activity.get_service()
             if service:
-                service.set_active(False)
+                service.set_active(False,
+                                   reply_handler=self._set_active_success,
+                                   error_handler=self._set_active_error)
 
         if new_activity:
             service = new_activity.get_service()
             if service:
-                service.set_active(True)
+                service.set_active(True,
+                                   reply_handler=self._set_active_success,
+                                   error_handler=self._set_active_error)
+
+    def _set_active_success(self):
+        pass
+    
+    def _set_active_error(self, err):
+        logging.error("set_active() failed: %s" % err)
 
     def _active_window_changed_cb(self, screen):
         window = screen.get_active_window()
