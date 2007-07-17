@@ -1,3 +1,6 @@
+* Update brazilian translation.
+* Add polish translation.
+* Add french translation.
 * #958, #1433 Refactor brightness and volume key handling to follow
 Eben specification and the new B3 keyboard (marco)
 

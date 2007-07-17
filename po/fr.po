@@ -1,0 +1,103 @@
+# translation of sugar.po to french
+# Copyright (C) 2007 the Package Owner
+# This file is distributed under the same license as the sugar graphical shell package.
+#
+# Samuel Bizien <samuel@bizien.info>, 2007.
+msgid ""
+msgstr ""
+"Project-Id-Version: sugar\n"
+"Report-Msgid-Bugs-To:\n"
+"POT-Creation-Date: 2007-07-03 11:15+0200\n"
+"PO-Revision-Date: 2007-07-03 19:17+0200\n"
+"Last-Translator: Samuel Bizien <samuel@bizien.info>\n"
+"Language-Team: French <traduc@traduc.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: shell/intro/intro.py:77
+msgid "Pick a buddy picture"
+msgstr "Choisir une image"
+
+#: shell/intro/intro.py:100
+msgid "My Picture:"
+msgstr "Mon image :"
+
+#: shell/intro/intro.py:180
+msgid "My Name:"
+msgstr "Mon nom :"
+
+#: shell/intro/intro.py:224
+msgid "My Color:"
+msgstr "Ma couleur :"
+
+#: shell/view/BuddyMenu.py:77
+msgid "Remove friend"
+msgstr "Retirer de mes amis"
+
+#: shell/view/BuddyMenu.py:80
+msgid "Make friend"
+msgstr "Ajouter à mes amis"
+
+#: shell/view/BuddyMenu.py:91
+msgid "Invite"
+msgstr "Inviter"
+
+#: shell/view/clipboardmenu.py:62
+msgid "Remove"
+msgstr "Supprimer"
+
+#: shell/view/clipboardmenu.py:66
+msgid "Open"
+msgstr "Ouvrir"
+
+#: shell/view/clipboardmenu.py:70
+msgid "Stop download"
+msgstr "Arrêter de télécharger"
+
+#: shell/view/clipboardmenu.py:75
+msgid "Add to journal"
+msgstr "Ajouter au journal"
+
+#: shell/view/clipboardmenu.py:176
+#, python-format, fuzzy
+msgid "Clipboard object: %s."
+msgstr "Objet du presse-papier : %s."
+
+#: services/clipboard/objecttypeservice.py:32
+msgid "Text"
+msgstr "Texte"
+
+#: services/clipboard/objecttypeservice.py:35
+msgid "Image"
+msgstr "Image"
+
+#: shell/view/Shell.py:202
+msgid "Screenshot"
+msgstr "Capture d'écran"
+
+#: shell/view/home/HomeBox.py:140
+msgid "Shutdown"
+msgstr "Éteindre"
+
+#: shell/view/home/MeshBox.py:125
+#, fuzzy
+msgid "Mesh Network"
+msgstr "Mes voisins"
+
+#: sugar/activity/activity.py:68
+msgid "Save"
+msgstr "Enregistrer"
+
+#: sugar/activity/activity.py:74
+msgid "Share"
+msgstr "Partager"
+
+#: sugar/activity/activity.py:87
+msgid "Close"
+msgstr "Fermer"
+
+#: sugar/activity/activity.py:247
+#, python-format
+msgid "%s Activity"
+msgstr "Activité %s"

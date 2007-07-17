@@ -1,14 +1,14 @@
-# translation of pt_BR.po to Brazilian Portuguese
+# translation of olpc-sugar-pt_BR.po to Brazilian Portuguese
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Diego Búrigo Zacarão <diegobz@gmail.com>, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: pt_BR\n"
+"Project-Id-Version: olpc-sugar-pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-03 04:47-0700\n"
-"PO-Revision-Date: 2007-07-03 10:37-0300\n"
+"POT-Creation-Date: 2007-07-16 09:51-0700\n"
+"PO-Revision-Date: 2007-07-16 19:55-0300\n"
 "Last-Translator: Diego Búrigo Zacarão <diegobz@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <fedora-docs-br@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -16,72 +16,125 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: ../shell/intro/intro.py:77
-msgid "Pick a buddy picture"
-msgstr "Escolha uma foto do camarada"
+#: ../shell/intro/intro.py:61
+msgid "Name:"
+msgstr "Nome:"
 
-#: ../shell/intro/intro.py:100
-msgid "My Picture:"
-msgstr "Minha Foto:"
+#: ../shell/intro/intro.py:84
+msgid "Click to change color:"
+msgstr "Clique para mudar a cor:"
 
-#: ../shell/intro/intro.py:180
-msgid "My Name:"
-msgstr "Meu Nome:"
+#: ../shell/intro/intro.py:134
+msgid "Back"
+msgstr "Voltar"
 
-#: ../shell/intro/intro.py:204
-msgid "My Color:"
-msgstr "Minha Cor:"
+#: ../shell/intro/intro.py:142
+msgid "Done"
+msgstr "Terminado"
 
-#: ../shell/view/BuddyMenu.py:83
+#: ../shell/intro/intro.py:145
+msgid "Next"
+msgstr "Próximo"
+
+#: ../shell/view/BuddyMenu.py:82
 msgid "Remove friend"
 msgstr "Remover amigo"
 
-#: ../shell/view/BuddyMenu.py:87
+#: ../shell/view/BuddyMenu.py:85
 msgid "Make friend"
 msgstr "Fazer amigo"
 
-#: ../shell/view/BuddyMenu.py:97
+#. FIXME check that the buddy is not in the activity already
+#: ../shell/view/BuddyMenu.py:96
 msgid "Invite"
 msgstr "Convidar"
 
-#: ../shell/view/clipboardmenu.py:103
+#: ../shell/view/clipboardmenu.py:66
 msgid "Remove"
 msgstr "Remover"
 
-#: ../shell/view/clipboardmenu.py:110
+#: ../shell/view/clipboardmenu.py:70
 msgid "Open"
 msgstr "Abrir"
 
-#: ../shell/view/clipboardmenu.py:117
-msgid "Stop download"
-msgstr "Parar download"
-
-#: ../shell/view/clipboardmenu.py:124
+#. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
+#. TODO: Implement stopping downloads
+#. self._stop_item.connect('activate', self._stop_item_activate_cb)
+#. self.append_menu_item(self._stop_item)
+#: ../shell/view/clipboardmenu.py:79
 msgid "Add to journal"
 msgstr "Adicionar ao jornal"
+
+#: ../shell/view/clipboardmenu.py:180
+#, python-format
+msgid "Clipboard object: %s."
+msgstr "Objeto da prancheta: %s. "
+
+#: ../shell/view/frame/zoombox.py:42
+msgid "Neighborhood"
+msgstr "Vizinhança"
+
+#: ../shell/view/frame/zoombox.py:55
+msgid "Group"
+msgstr "Grupo"
+
+#: ../shell/view/frame/zoombox.py:68
+msgid "Home"
+msgstr "Casa"
+
+#: ../shell/view/frame/zoombox.py:81
+msgid "Activity"
+msgstr "Atividade"
 
 #: ../services/clipboard/objecttypeservice.py:32
 msgid "Text"
 msgstr "Texto"
 
-#: ../services/clipboard/objecttypeservice.py:35
+#: ../services/clipboard/objecttypeservice.py:36
 msgid "Image"
 msgstr "Imagem"
 
-#: ../shell/view/Shell.py:227
+#: ../shell/view/Shell.py:202
 msgid "Screenshot"
 msgstr "Foto da tela"
 
-#: ../shell/view/clipboardicon.py:211
-#, python-format
-msgid "Clipboard object: %s."
-msgstr "Objeto da prancheta: %s. "
+#: ../shell/view/home/HomeBox.py:140
+msgid "Shutdown"
+msgstr "Desligar"
 
-#: ../shell/view/home/MeshBox.py:122
+#: ../shell/view/home/MeshBox.py:126
 msgid "Mesh Network"
 msgstr "Rede Mesh"
 
-#: ../sugar/activity/activity.py:232
+#: ../shell/view/devices/battery.py:34
+msgid "My Battery life"
+msgstr "Meu tempo de bateria"
+
+#: ../shell/view/devices/battery.py:87
+msgid "Battery charging"
+msgstr "Carregando a bateria"
+
+#: ../shell/view/devices/battery.py:89
+msgid "Battery discharging"
+msgstr "Descarregando a bateria "
+
+#: ../shell/view/devices/battery.py:91
+msgid "Battery fully charged"
+msgstr "Bateria completamente carregada"
+
+#: ../sugar/activity/activity.py:68
+msgid "Keep"
+msgstr "Manter"
+
+#: ../sugar/activity/activity.py:74
+msgid "Share"
+msgstr "Compartilhar"
+
+#: ../sugar/activity/activity.py:87
+msgid "Stop"
+msgstr "Parar"
+
+#: ../sugar/activity/activity.py:248
 #, python-format
 msgid "%s Activity"
 msgstr "%s Atividades"

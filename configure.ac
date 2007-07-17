@@ -29,7 +29,7 @@ AC_SUBST(PYGTK_DEFSDIR)
 
 # Setup GETTEXT
 #
-ALL_LINGUAS="it ha ig yo"
+ALL_LINGUAS="ar es fr ha ig it mk pl pt_BR yo"
 GETTEXT_PACKAGE=sugar
 AC_PROG_INTLTOOL([0.33])
 AC_SUBST(GETTEXT_PACKAGE)

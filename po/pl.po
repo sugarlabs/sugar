@@ -1,0 +1,102 @@
+# translation of pl.po to Polish
+# Piotr Drąg <raven@pmail.pl>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pl\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-07-10 04:54-0700\n"
+"PO-Revision-Date: 2007-07-10 22:40+0200\n"
+"Last-Translator: Piotr Drąg <raven@pmail.pl>\n"
+"Language-Team: Polish <pl@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../shell/intro/intro.py:77
+msgid "Pick a buddy picture"
+msgstr "Wybierz obrazek znajomego"
+
+#: ../shell/intro/intro.py:100
+msgid "My Picture:"
+msgstr "Mój obrazek:"
+
+#: ../shell/intro/intro.py:180
+msgid "My Name:"
+msgstr "Moje imię:"
+
+#: ../shell/intro/intro.py:224
+msgid "My Color:"
+msgstr "Mój kolor:"
+
+#: ../shell/view/BuddyMenu.py:82
+msgid "Remove friend"
+msgstr "Usuń przyjaciela"
+
+#: ../shell/view/BuddyMenu.py:85
+msgid "Make friend"
+msgstr "Uczyń przyjacielem"
+
+#. FIXME check that the buddy is not in the activity already
+#: ../shell/view/BuddyMenu.py:96
+msgid "Invite"
+msgstr "Zaproś"
+
+#: ../shell/view/clipboardmenu.py:68
+msgid "Remove"
+msgstr "Usuń"
+
+#: ../shell/view/clipboardmenu.py:72
+msgid "Open"
+msgstr "Otwórz"
+
+#: ../shell/view/clipboardmenu.py:76
+msgid "Stop download"
+msgstr "Zatrzymaj pobieranie"
+
+#: ../shell/view/clipboardmenu.py:81
+msgid "Add to journal"
+msgstr "Dodaj do dziennika"
+
+#: ../shell/view/clipboardmenu.py:180
+#, python-format
+msgid "Clipboard object: %s."
+msgstr "Obiekt w schowku: %s."
+
+#: ../services/clipboard/objecttypeservice.py:32
+msgid "Text"
+msgstr "Tekst"
+
+#: ../services/clipboard/objecttypeservice.py:36
+msgid "Image"
+msgstr "Obrazek"
+
+#: ../shell/view/Shell.py:202
+msgid "Screenshot"
+msgstr "Zrzut ekranu"
+
+#: ../shell/view/home/HomeBox.py:140
+msgid "Shutdown"
+msgstr "Zakończ"
+
+#: ../shell/view/home/MeshBox.py:126
+msgid "Mesh Network"
+msgstr "Sieć"
+
+#: ../sugar/activity/activity.py:68
+msgid "Save"
+msgstr "Zapisz"
+
+#: ../sugar/activity/activity.py:74
+msgid "Share"
+msgstr "Podziel się"
+
+#: ../sugar/activity/activity.py:87
+msgid "Close"
+msgstr "Zamknij"
+
+#: ../sugar/activity/activity.py:248
+#, python-format
+msgid "%s Activity"
+msgstr "Aktywność %s"
+
