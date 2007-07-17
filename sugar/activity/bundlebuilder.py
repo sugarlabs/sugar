@@ -234,6 +234,10 @@ def cmd_release(bundle_name, manifest):
     if not os.path.isdir('.git'):
         print 'ERROR - this command works only for git repositories'
 
+    retcode = subprocess.call(['git', 'pull'])
+    if retcode:
+        print 'ERROR - cannot pull from git'
+
     print 'Bumping activity version...'
 
     info_path = os.path.join(_get_source_path(), 'activity', 'activity.info')
@@ -310,9 +314,8 @@ def cmd_release(bundle_name, manifest):
         repo = os.environ['ACTIVITIES_REPOSITORY']
 
         server, path = repo.split(':')
-        retcode = subprocess.call(['ssh', server, 'mv',
-                                   '%s/%s*' % (path, bundle_name),
-                                   '%s/old' % path])
+        retcode = subprocess.call(['ssh', server, 'rm',
+                                   '%s/%s*' % (path, bundle_name)])
         if retcode:
             print 'ERROR - cannot remove old bundles from the repository.'
 
