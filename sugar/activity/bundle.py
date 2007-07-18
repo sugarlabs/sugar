@@ -132,7 +132,7 @@ class Bundle:
 
         if cp.has_option(section, 'mime_types'):
             mime_list = cp.get(section, 'mime_types')
-            self._mime_types = mime_list.strip(';')
+            self._mime_types = mime_list.strip(';').split(';')
 
         if cp.has_option(section, 'show_launcher'):
             if cp.get(section, 'show_launcher') == 'no':
