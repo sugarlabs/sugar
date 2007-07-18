@@ -260,6 +260,9 @@ class MeshBox(hippo.CanvasBox):
         self._remove_buddy(buddy_model) 
 
     def _buddy_moved_cb(self, model, buddy_model, activity_model):
+        # Owner doesn't move from the center
+        if buddy_model.is_owner():
+            return
         self._move_buddy(buddy_model, activity_model)
 
     def _activity_added_cb(self, model, activity_model):
