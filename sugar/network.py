@@ -69,6 +69,11 @@ class GlibTCPServer(SocketServer.TCPServer):
         self.handle_request()
         return True
 
+    def close_request(self, request):
+        """Called to clean up an individual request."""
+        # let the request be closed by the request handler when its done
+        pass
+
 
 class ChunkedGlibHTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     """RequestHandler class that integrates with Glib mainloop.  It writes
@@ -112,6 +117,7 @@ class ChunkedGlibHTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def _cleanup(self):
         if self._file:
             self._file.close()
+            self._file = None
         if self._srcid > 0:
             gobject.source_remove(self._srcid)
             self._srcid = 0
@@ -507,12 +513,23 @@ def xmlrpc_test(loop):
                 error_handler=xmlrpc_error_cb,
                 user_data=loop)
 
-def main():
-    loop = gobject.MainLoop()
+def start_xmlrpc():
     server = GlibXMLRPCServer(("", 8888))
     inst = Test()
     server.register_instance(inst)
     gobject.idle_add(xmlrpc_test, loop)
+
+class TestReqHandler(ChunkedGlibHTTPRequestHandler):
+    def translate_path(self, path):
+        return "/tmp/foo"
+
+def start_http():
+    server = GlibTCPServer(("", 8890), TestReqHandler)
+
+def main():
+    loop = gobject.MainLoop()
+#    start_xmlrpc()
+    start_http()
     try:
         loop.run()
     except KeyboardInterrupt:
@@ -521,3 +538,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

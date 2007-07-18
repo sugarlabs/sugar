@@ -1,3 +1,5 @@
+* Don't close GlibTCPServer sockets prematurely (dcbw)
+
 Snapshot 5212790236
 
 * Fix initialization order of buddy class '_activities' member (dcbw)
