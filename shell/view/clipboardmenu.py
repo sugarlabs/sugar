@@ -128,7 +128,7 @@ class ClipboardMenu(Palette):
         #jobject.resume()
         
         # TODO: take this out when we fix the mess that is the shell/shellservice.
-        from shell.model import bundleregistry
+        from model import bundleregistry
         from sugar.activity.bundle import Bundle
         from sugar.activity import activityfactory
         if jobject.is_bundle():
