@@ -105,13 +105,24 @@ class FriendsBox(hippo.CanvasBox):
                             'buddy-left', self.__buddy_left_cb)
 
     def _active_activity_changed_cb(self, home_model, home_activity):
-        if home_activity:
-            activity_id = home_activity.get_activity_id()
-            if activity_id:
-                ps = self._pservice.get_activity(activity_id)
-                self._set_activity_ps(ps)
-            else:
-                self._set_activity_ps(None)
+        if not home_activity:
+            self._set_activity_ps(None)
+            return
+
+        activity_id = home_activity.get_activity_id()
+        if not activity_id:
+            self._set_activity_ps(None)
+            return
+        
+        # HACK to suppress warning in logs when activity isn't found
+        # (if it's locally launched and not shared yet)
+        activity = None
+        for act in self._pservice.get_activities():
+            if activity_id == act.props.id:
+                activity = act
+                break
+        if activity:
+            self._set_activity_ps(activity)
         else:
             self._set_activity_ps(None)
 
