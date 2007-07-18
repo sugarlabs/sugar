@@ -18,11 +18,15 @@
 import gtk
 
 from sugar.graphics import units
+from sugar.graphics.palette import Palette
 from sugar.graphics.palette import CanvasInvoker
 
 class FrameCanvasInvoker(CanvasInvoker):
     def __init__(self, item):
         CanvasInvoker.__init__(self, item)
+
+    def get_default_position(self):
+        return Palette.AROUND
 
     def get_screen_area(self):
         x = units.grid_to_pixels(1)

@@ -135,12 +135,14 @@ class HomeMyIcon(MyIcon):
         self._shell = shell
 
     def enable_palette(self):
-        self.set_tooltip(profile.get_nick_name())
-        
+        palette = Palette(profile.get_nick_name())
+
         shutdown_menu_item = gtk.MenuItem(_('Shutdown'))
         shutdown_menu_item.connect('activate', self._shutdown_activate_cb)
-        self.get_palette().append_menu_item(shutdown_menu_item)
+        palette.append_menu_item(shutdown_menu_item)
         shutdown_menu_item.show()
+
+        self.set_palette(palette)
 
     def _shutdown_activate_cb(self, menuitem):
         model = self._shell.get_model()

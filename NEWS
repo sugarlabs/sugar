@@ -1,3 +1,4 @@
+* #2008 Place free views palettes at cursor. (marco)
 * Actually handle multiple mime types (dcbw)
 * Keep owner in the center in mesh view (dcbw)
 * Suppress annoying warnings about unknown activities from the PS (dcbw)

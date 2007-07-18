@@ -37,11 +37,13 @@ _TOP_LEFT     = 6
 _TOP_RIGHT    = 7
 
 class Palette(gobject.GObject):
-    AUTOMATIC = 0
-    BOTTOM    = 1
-    LEFT      = 2
-    RIGHT     = 3
-    TOP       = 4
+    DEFAULT   = 0
+    AT_CURSOR = 1
+    AROUND    = 2
+    BOTTOM    = 3
+    LEFT      = 4
+    RIGHT     = 5
+    TOP       = 6
 
     __gtype_name__ = 'SugarPalette'
 
@@ -65,13 +67,13 @@ class Palette(gobject.GObject):
         self._invoker = None
         self._group_id = None
         self._up = False
-        self._position = self.AUTOMATIC
+        self._position = self.DEFAULT
         self._palette_popup_sid = None
 
         self._popup_anim = animator.Animator(0.3, 10)
         self._popup_anim.add(_PopupAnimation(self))
 
-        self._secondary_anim = animator.Animator(1.3, 10)
+        self._secondary_anim = animator.Animator(1.0, 10)
         self._secondary_anim.add(_SecondaryAnimation(self))
 
         self._popdown_anim = animator.Animator(0.6, 10)
@@ -97,8 +99,6 @@ class Palette(gobject.GObject):
                            self._enter_notify_event_cb)
         self._menu.connect('leave-notify-event',
                            self._leave_notify_event_cb)
-        self._menu.connect('button-press-event',
-                           self._button_press_event_cb)
 
     def is_up(self):
         return self._up
@@ -162,9 +162,10 @@ class Palette(gobject.GObject):
         else:
             raise AssertionError
 
-    def _get_position(self, alignment):
+    def _get_position(self, alignment, inv_rect=None):
         # Invoker: x, y, width and height
-        inv_rect = self._invoker.get_rect()
+        if inv_rect == None:
+            inv_rect = self._invoker.get_rect()
         palette_width, palette_height = self._menu.size_request()
 
         if alignment == _BOTTOM_LEFT:
@@ -203,14 +204,14 @@ class Palette(gobject.GObject):
                x + width <= screen_area.width and \
                y + height <= screen_area.height
 
-    def _get_automatic_position(self):
+    def _get_automatic_position(self, inv_rect=None):
         alignments = [ _BOTTOM_LEFT,  _BOTTOM_RIGHT,
                        _LEFT_BOTTOM,  _LEFT_TOP,
                        _RIGHT_BOTTOM, _RIGHT_TOP,
                        _TOP_LEFT,     _TOP_RIGHT ]
 
         for alignment in alignments:
-            x, y = self._get_position(alignment)
+            x, y = self._get_position(alignment, inv_rect)
             if self._in_screen(x, y):
                 return x, y
 
@@ -218,23 +219,36 @@ class Palette(gobject.GObject):
         return (0, 0)
 
     def _show(self):
+        if self._up:
+            return
+
         x = y = 0
 
-        if self._position == self.AUTOMATIC:
+        if self._position == self.DEFAULT:
+            position = self._invoker.get_default_position()
+        else:
+            position = self._position
+
+        if position == self.AT_CURSOR:
+            display = gtk.gdk.display_get_default()
+            screen, x, y, mask = display.get_pointer()
+            rect = gtk.gdk.Rectangle(x, y, 0, 0)
+            x, y = self._get_automatic_position(rect)
+        elif position == self.AROUND:
             x, y = self._get_automatic_position()
-        elif self._position == self.BOTTOM:
+        elif position == self.BOTTOM:
             x, y = self._get_position(_BOTTOM_LEFT)
             if not self._in_screen(x, y):
                 x, y = self._get_position(_BOTTOM_RIGHT)
-        elif self._position == self.LEFT:
+        elif position == self.LEFT:
             x, y = self._get_position(_LEFT_BOTTOM)
             if not self._in_screen(x, y):
                 x, y = self._get_position(_LEFT_TOP)
-        elif self._position == self.RIGHT:
+        elif position == self.RIGHT:
             x, y = self._get_position(_RIGHT_BOTTOM)
             if not self._in_screen(x, y):
                 x, y = self._get_position(_RIGHT_TOP)
-        elif self._position == self.TOP:
+        elif position == self.TOP:
             x, y = self._get_position(_TOP_LEFT)
             if not self._in_screen(x, y):
                 x, y = self._get_position(_TOP_RIGHT)
@@ -284,13 +298,11 @@ class Palette(gobject.GObject):
     def _enter_notify_event_cb(self, widget, event):
         if event.detail == gtk.gdk.NOTIFY_NONLINEAR:
             self._popdown_anim.stop()
+            self._secondary_anim.start()
 
     def _leave_notify_event_cb(self, widget, event):
         if event.detail == gtk.gdk.NOTIFY_NONLINEAR:
             self.popdown()
-
-    def _button_press_event_cb(self, widget, event):
-        pass
 
     def _palette_observer_popup_cb(self, observer, palette):
         if self != palette:
@@ -401,6 +413,9 @@ class Invoker(gobject.GObject):
     def __init__(self):
         gobject.GObject.__init__(self)
 
+    def get_default_position(self):
+        return Palette.AROUND
+
     def get_screen_area(self):
         width = gtk.gdk.screen_width()
         height = gtk.gdk.screen_height()
@@ -448,6 +463,9 @@ class CanvasInvoker(Invoker):
 
         item.connect('motion-notify-event',
                      self._motion_notify_event_cb)
+
+    def get_default_position(self):
+        return Palette.AT_CURSOR
 
     def get_rect(self):
         context = self._item.get_context()
