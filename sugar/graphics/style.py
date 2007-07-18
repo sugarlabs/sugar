@@ -89,6 +89,7 @@ _TAB_CURVATURE = 1
 ZOOM_FACTOR = _compute_zoom_factor()
 
 DEFAULT_SPACING = zoom(8)
+LINE_WIDTH = zoom(2)
 
 FONT_SIZE = zoom(7 * _XO_DPI / _get_screen_dpi())
 FONT_NORMAL = Font('Bitstream Vera Sans %d' % FONT_SIZE)
@@ -104,3 +105,4 @@ TOOLBOX_TAB_LABEL_WIDTH = zoom(150 - 15 * 2)
 
 COLOR_WHITE = Color('#FFFFFF')
 COLOR_PANEL_GREY = Color('#C0C0C0')
+COLOR_SELECTION_GREY = Color('#A6A6A6')
