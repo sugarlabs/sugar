@@ -25,6 +25,7 @@ import hippo
 from sugar.graphics import palettegroup
 from sugar.graphics import animator
 from sugar.graphics import units
+from sugar.graphics import style
 from sugar import _sugarext
 
 _BOTTOM_LEFT  = 0
@@ -162,39 +163,6 @@ class Palette(gobject.GObject):
         else:
             raise AssertionError
 
-    def _get_position(self, alignment, inv_rect=None):
-        # Invoker: x, y, width and height
-        if inv_rect == None:
-            inv_rect = self._invoker.get_rect()
-        palette_width, palette_height = self._menu.size_request()
-
-        if alignment == _BOTTOM_LEFT:
-            x = inv_rect.x
-            y = inv_rect.y + inv_rect.height
-        elif alignment == _BOTTOM_RIGHT:
-            x = (inv_rect.x + inv_rect.width) - palette_width
-            y = inv_rect.y + inv_rect.height
-        elif alignment == _LEFT_BOTTOM:
-            x = inv_rect.x - palette_width
-            y = inv_rect.y
-        elif alignment == _LEFT_TOP:
-            x = inv_rect.x - palette_width
-            y = (inv_rect.y + inv_rect.height) - palette_height
-        elif alignment == _RIGHT_BOTTOM:
-            x = inv_rect.x + inv_rect.width
-            y = inv_rect.y
-        elif alignment == _RIGHT_TOP:
-            x = inv_rect.x + inv_rect.width
-            y = (inv_rect.y + inv_rect.height) - palette_height
-        elif alignment == _TOP_LEFT:
-            x = inv_rect.x
-            y = inv_rect.y - palette_height
-        elif alignment == _TOP_RIGHT:
-            x = (inv_rect.x + inv_rect.width) - palette_width
-            y = inv_rect.y - palette_height
-
-        return x, y
-
     def _in_screen(self, x, y):
         [width, height] = self._menu.size_request()
         screen_area = self._invoker.get_screen_area()
@@ -204,19 +172,66 @@ class Palette(gobject.GObject):
                x + width <= screen_area.width and \
                y + height <= screen_area.height
 
-    def _get_automatic_position(self, inv_rect=None):
-        alignments = [ _BOTTOM_LEFT,  _BOTTOM_RIGHT,
-                       _LEFT_BOTTOM,  _LEFT_TOP,
-                       _RIGHT_BOTTOM, _RIGHT_TOP,
-                       _TOP_LEFT,     _TOP_RIGHT ]
+    def _get_position(self, palette_halign, palette_valign,
+                      invoker_halign, invoker_valign, inv_rect=None):
+        if inv_rect == None:
+            inv_rect = self._invoker.get_rect()
 
-        for alignment in alignments:
-            x, y = self._get_position(alignment, inv_rect)
-            if self._in_screen(x, y):
-                return x, y
+        palette_width, palette_height = self._menu.size_request()
 
-        # We fail
-        return (0, 0)
+        x = inv_rect.x + inv_rect.width * invoker_halign + \
+            palette_width * palette_halign
+
+        y = inv_rect.y + inv_rect.height * invoker_valign + \
+            palette_height * palette_valign
+
+        return int(x), int(y)
+
+    def _get_left_position(self, inv_rect=None):
+        x, y = self._get_position(-1.0, 0.0, 0.0, 0.0, inv_rect)
+        if not self._in_screen(x, y):
+            x, y = self._get_position(-1.0, -1.0, 0.0, 1.0, inv_rect)
+        return x, y
+
+    def _get_right_position(self, inv_rect=None):
+        x, y = self._get_position(0.0, 0.0, 1.0, 0.0, inv_rect)
+        if not self._in_screen(x, y):
+            x, y = self._get_position(0.0, -1.0, 1.0, 1.0, inv_rect)
+        return x, y
+
+    def _get_top_position(self, inv_rect=None):
+        x, y = self._get_position(0.0, -1.0, 0.0, 0.0, inv_rect)
+        if not self._in_screen(x, y):
+            x, y = self._get_position(-1.0, -1.0, 1.0, 0.0, inv_rect)
+        return x, y
+
+    def _get_bottom_position(self, inv_rect=None):
+        x, y = self._get_position(0.0, 0.0, 0.0, 1.0, inv_rect)
+        if not self._in_screen(x, y):
+            x, y = self._get_position(-1.0, 0.0, 1.0, 1.0, inv_rect)
+        return x, y
+
+    def _get_around_position(self, inv_rect=None):
+        x, y = self._get_bottom_position(inv_rect)
+        if not self._in_screen(x, y):
+            x, y = self._get_right_position(inv_rect)
+        if not self._in_screen(x, y):
+            x, y = self._get_top_position(inv_rect)
+        if not self._in_screen(x, y):
+            x, y = self._get_left_position(inv_rect)
+
+        return x, y
+
+    def _get_at_cursor_position(self, inv_rect=None):
+        x, y = self._get_position(0.0, 0.0, 1.0, 1.0, inv_rect)
+        if not self._in_screen(x, y):
+            x, y = self._get_position(0.0, -1.0, 1.0, 0.0, inv_rect)
+        if not self._in_screen(x, y):
+            x, y = self._get_position(-1.0, -1.0, 0.0, 0.0, inv_rect)
+        if not self._in_screen(x, y):
+            x, y = self._get_position(-1.0, 0.0, 0.0, 1.0, inv_rect)
+
+        return x, y
 
     def _show(self):
         if self._up:
@@ -232,26 +247,20 @@ class Palette(gobject.GObject):
         if position == self.AT_CURSOR:
             display = gtk.gdk.display_get_default()
             screen, x, y, mask = display.get_pointer()
-            rect = gtk.gdk.Rectangle(x, y, 0, 0)
-            x, y = self._get_automatic_position(rect)
+            dist = style.PALETTE_CURSOR_DISTANCE
+
+            rect = gtk.gdk.Rectangle(x - dist, y - dist, dist * 2, dist * 2)
+            x, y = self._get_at_cursor_position(rect)
         elif position == self.AROUND:
-            x, y = self._get_automatic_position()
+            x, y = self._get_around_position()
         elif position == self.BOTTOM:
-            x, y = self._get_position(_BOTTOM_LEFT)
-            if not self._in_screen(x, y):
-                x, y = self._get_position(_BOTTOM_RIGHT)
+            x, y = self._get_bottom_position()
         elif position == self.LEFT:
-            x, y = self._get_position(_LEFT_BOTTOM)
-            if not self._in_screen(x, y):
-                x, y = self._get_position(_LEFT_TOP)
+            x, y = self._get_left_position()
         elif position == self.RIGHT:
-            x, y = self._get_position(_RIGHT_BOTTOM)
-            if not self._in_screen(x, y):
-                x, y = self._get_position(_RIGHT_TOP)
+            x, y = self._get_right_position()
         elif position == self.TOP:
-            x, y = self._get_position(_TOP_LEFT)
-            if not self._in_screen(x, y):
-                x, y = self._get_position(_TOP_RIGHT)
+            x, y = self._get_top_position()
 
         self._invoker.connect_to_parent()
 
