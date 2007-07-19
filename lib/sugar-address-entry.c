@@ -462,7 +462,7 @@ sugar_address_entry_expose(GtkWidget      *widget,
 			float radius = area_height / 2;
 
 			cr = gdk_cairo_create(entry->text_area);
-	        cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
+	        cairo_set_source_rgb(cr, 0xA6 / 255.0, 0xA6 / 255.0, 0xA6 / 255.0);
 
 			cairo_move_to (cr, radius, 0);
 			cairo_arc (cr, bar_width - radius, radius, radius, M_PI * 1.5, M_PI * 2);
