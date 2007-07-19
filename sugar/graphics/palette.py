@@ -51,7 +51,7 @@ class Palette(gobject.GObject):
     __gproperties__ = {
         'invoker'    : (object, None, None,
                         gobject.PARAM_READWRITE),
-        'position'   : (gobject.TYPE_INT, None, None, 0, 5,
+        'position'   : (gobject.TYPE_INT, None, None, 0, 6,
                         0, gobject.PARAM_READWRITE)
     }
 
