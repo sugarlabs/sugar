@@ -129,13 +129,14 @@ class DSObject(object):
             service_name = self.get_activities()[0].service_name
 
             activity_id = self.metadata['activity_id']
-            if activity_id:
-                handle = ActivityHandle(object_id=self.object_id,
-                                        activity_id=activity_id)
-            else:
-                handle = ActivityHandle(object_id=self.object_id)
+            object_id = self.object_id
 
-            activityfactory.create(service_name, handle)
+            if activity_id:
+                handle = ActivityHandle(object_id=object_id,
+                                        activity_id=activity_id)
+                activityfactory.create(service_name, handle)
+            else:
+                activityfactory.create_with_object_id(service_name, object_id)
 
     def destroy(self):
         logging.debug('DSObject.destroy() file_path: %r.' % self._file_path)
