@@ -94,7 +94,7 @@ class ClipboardMenu(Palette):
             #self._stop_item.props.sensitive = False
             self._journal_item.props.sensitive = True
         else:
-            self._remove_item.props.sensitive = False
+            self._remove_item.props.sensitive = True
             self._open_item.props.sensitive = False
             # TODO: reenable the stop item when we implement stoping downloads.
             #self._stop_item.props.sensitive = True

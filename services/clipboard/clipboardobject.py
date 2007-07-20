@@ -134,7 +134,8 @@ class Format:
     def destroy(self):
         if self._on_disk:
             uri = urlparse.urlparse(self._data)
-            os.remove(uri.path)
+            if os.path.isfile(uri.path):
+                os.remove(uri.path)
 
     def get_type(self):
         return self._type

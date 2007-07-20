@@ -127,9 +127,13 @@ class ClipboardService(dbus.service.Object):
                          in_signature="o", out_signature="a{sv}")
     def get_object(self, object_path):
         logging.debug('ClipboardService.get_object')
+
+        if not self._objects.has_key(str(object_path)):
+            return dbus.Dictionary({}, signature='sv')
+
         cb_object = self._objects[str(object_path)]
         formats = cb_object.get_formats()
-        format_types = dbus.Array([], 's')
+        format_types = dbus.Array([], signature='s')
         
         for type, format in formats.iteritems():
             format_types.append(type)
