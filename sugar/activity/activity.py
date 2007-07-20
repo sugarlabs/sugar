@@ -248,6 +248,7 @@ class Activity(Window, gtk.Container):
             self._jobject.metadata['title'] = _('%s Activity') % get_bundle_name()
             self._jobject.metadata['title_set_by_user'] = '0'
             self._jobject.metadata['activity'] = self.get_service_name()
+            self._jobject.metadata['activity_id'] = self.get_id()
             self._jobject.metadata['keep'] = '0'
             #self._jobject.metadata['buddies'] = ''
             self._jobject.metadata['preview'] = ''

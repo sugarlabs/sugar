@@ -64,6 +64,14 @@ class HomeActivity(gobject.GObject):
         self._launch_time = time.time()
         self._launching = False
 
+        self._retrieve_service()
+
+        if not self._service:
+            bus = dbus.SessionBus()
+            bus.add_signal_receiver(self._name_owner_changed_cb,
+                                    signal_name="NameOwnerChanged",
+                                    dbus_interface="org.freedesktop.DBus")
+
     def set_window(self, window):
         """An activity is 'launched' once we get its window."""
         if self._window or self._xid:
@@ -75,22 +83,14 @@ class HomeActivity(gobject.GObject):
         self._xid = window.get_xid()
 
     def get_service(self):
-        """Retrieve the application's sugar introspection service
+        """Get the activity service
         
         Note that non-native Sugar applications will not have
         such a service, so the return value will be None in
         those cases.
         """
-        bus = dbus.SessionBus()
-        try:
-            service = dbus.Interface(
-                    bus.get_object(_SERVICE_NAME + self._activity_id,
-                                   _SERVICE_PATH + "/" + self._activity_id),
-                                   _SERVICE_INTERFACE)
-        except dbus.DBusException:
-            service = None
 
-        return service
+        return self._service
 
     def get_title(self):
         """Retrieve the application's root window's suggested title"""
@@ -182,3 +182,19 @@ class HomeActivity(gobject.GObject):
     def do_get_property(self, pspec):
         if pspec.name == 'launching':
             return self._launching
+
+    def _get_service_name(self):
+        return _SERVICE_NAME + self._activity_id
+
+    def _retrieve_service(self):
+        try:
+            bus = dbus.SessionBus()
+            proxy = bus.get_object(self._get_service_name(),
+                                   _SERVICE_PATH + "/" + self._activity_id)
+            self._service = dbus.Interface(proxy, _SERVICE_INTERFACE)
+        except dbus.DBusException:
+            self._service = None
+
+    def _name_owner_changed_cb(self, name, old, new):
+        if name == self._get_service_name():
+            self._retrieve_service()

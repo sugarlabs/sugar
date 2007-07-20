@@ -20,8 +20,8 @@ from sugar.presence import presenceservice
 class ActivityHandle(object):
     """Data structure storing simple activity metadata"""
     def __init__(
-        self, activity_id, pservice_id=None,
-        object_id=None,uri=None
+        self, activity_id=None, pservice_id=None,
+        object_id=None, uri=None
     ):
         """Initialise the handle from activity_id
         

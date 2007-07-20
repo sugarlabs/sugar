@@ -90,23 +90,31 @@ class ActivityCreationHandler(gobject.GObject):
         self._activity_handle = activity_handle
 
         bus = dbus.SessionBus()
-        object_path = '/' + service_name.replace('.', '/')
-        proxy_obj = bus.get_object(service_name, object_path,
-                                   follow_name_owner_changes=True)
-        factory = dbus.Interface(proxy_obj, _ACTIVITY_FACTORY_INTERFACE)
 
-        factory.create(self._activity_handle.get_dict(),
-                       reply_handler=self._no_reply_handler,
-                       error_handler=self._create_error_handler)
-
-        bus = dbus.SessionBus()
         bus_object = bus.get_object(_SHELL_SERVICE, _SHELL_PATH)
         self._shell = dbus.Interface(bus_object, _SHELL_IFACE)
 
+        object_path = '/' + service_name.replace('.', '/')
+        proxy_obj = bus.get_object(service_name, object_path,
+                                   follow_name_owner_changes=True)
+        self._factory = dbus.Interface(proxy_obj, _ACTIVITY_FACTORY_INTERFACE)
+
+        if self.get_activity_id() != None:
+            self._shell.ActivateActivity(self.get_activity_id(),
+                        reply_handler=self._activate_reply_handler,
+                        error_handler=self._activate_error_handler)
+        else:
+            self._launch_activity()
+
+    def _launch_activity(self):
         self._shell.NotifyLaunch(
-                    service_name, self.get_activity_id(),
+                    self._service_name, self.get_activity_id(),
                     reply_handler=self._no_reply_handler,
                     error_handler=self._notify_launch_error_handler)
+
+        self._factory.create(self._activity_handle.get_dict(),
+                             reply_handler=self._no_reply_handler,
+                             error_handler=self._create_error_handler)
 
     def get_activity_id(self):
         """Retrieve the unique identity for this activity"""
@@ -120,6 +128,13 @@ class ActivityCreationHandler(gobject.GObject):
 
     def _notify_launch_error_handler(self, err):
         logging.debug('Notify launch failed %s' % err)
+
+    def _activate_reply_handler(self, activated):
+        if not activated:
+            self._launch_activity()
+
+    def _activate_error_handler(self, err):
+        logging.debug("Activity activation request failed %s" % err)
 
     def _create_reply_handler(self, xid):
         logging.debug("Activity created %s (%s)." % 

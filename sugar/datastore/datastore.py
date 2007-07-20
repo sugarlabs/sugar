@@ -24,6 +24,7 @@ from sugar.datastore import dbus_helpers
 from sugar import activity
 from sugar.activity.bundle import Bundle
 from sugar.activity import activityfactory
+from sugar.activity.activityhandle import ActivityHandle
 
 class DSMetadata(gobject.GObject):
     __gsignals__ = {
@@ -38,7 +39,8 @@ class DSMetadata(gobject.GObject):
         else:
             self._props = props
         
-        default_keys = ['activity', 'mime_type', 'title_set_by_user']
+        default_keys = ['activity', 'activity_id',
+                        'mime_type', 'title_set_by_user']
         for key in default_keys:
             if not self._props.has_key(key):
                 self._props[key] = ''
@@ -116,9 +118,13 @@ class DSObject:
 
             activityfactory.create(bundle.get_service_name())
         else:
-            activity_info = self.get_activities()[0]
-            activityfactory.create_with_object_id(activity_info.service_name,
-                                                  self.object_id)
+            service_name = self.get_activities()[0].service_name
+
+            handle = ActivityHandle(object_id=self.object_id)
+            if self.metadata['activity_id']:
+                handle.activity_id = self.metadata['activity_id']
+
+            activityfactory.create(service_name, handle)
 
 def get(object_id):
     logging.debug('datastore.get')

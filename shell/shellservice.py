@@ -63,6 +63,15 @@ class ShellService(dbus.service.Object):
         bus_name = dbus.service.BusName(_DBUS_SERVICE, bus=bus)
         dbus.service.Object.__init__(self, bus_name, _DBUS_PATH)
 
+    @dbus.service.method(_DBUS_SHELL_IFACE,
+                         in_signature="s", out_signature="b")
+    def ActivateActivity(self, activity_id):
+        host = self._shell.get_activity(activity_id)
+        if host:
+            host.present()
+            return True
+
+        return False
 
     @dbus.service.method(_DBUS_SHELL_IFACE,
                          in_signature="ss", out_signature="")
