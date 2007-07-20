@@ -77,5 +77,5 @@ def mounts():
     return _data_store.mounts()
 
 def get_unique_values(key):
-    return _data_store.get_uniquevaluesfor(key, {})
+    return _data_store.get_uniquevaluesfor(key, dbus.Dictionary({}, signature='ss'))
 
