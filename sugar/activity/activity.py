@@ -234,6 +234,7 @@ class Activity(Window, gtk.Container):
                 self._internal_joined_cb(self._shared_activity, True, None)
 
         self._bus = ActivityService(self)
+        self._owns_file = False
 
         if handle.object_id:
             self._jobject = datastore.get(handle.object_id)
@@ -346,9 +347,13 @@ class Activity(Window, gtk.Container):
         else:
             self.metadata['preview'] = self._preview
         try:
-            file_path = os.path.join(tempfile.gettempdir(), '%i' % time.time())
-            self.write_file(file_path)
-            self._jobject.file_path = file_path
+            if self._jobject.file_path:
+                self.write_file(self._jobject.file_path)
+            else:
+                file_path = os.path.join(tempfile.gettempdir(), '%i' % time.time())
+                self.write_file(file_path)
+                self._owns_file = True
+                self._jobject.file_path = file_path
         except NotImplementedError:
             pass
         datastore.write(self._jobject,
@@ -409,6 +414,13 @@ class Activity(Window, gtk.Container):
 
         self._preview = self._get_preview()
         self.save()
+        
+        if self._jobject:
+            if self._owns_file and os.path.isfile(self._jobject.file_path):
+                os.remove(self._jobject.file_path)
+            self._owns_file = False
+            self._jobject.destroy()
+            self._jobject = None
 
     def get_metadata(self):
         if self._jobject:

@@ -17,6 +17,7 @@
 
 import logging
 from datetime import datetime
+import os
 
 import gobject
 
@@ -62,11 +63,13 @@ class DSMetadata(gobject.GObject):
     def get_dictionary(self):
         return self._props
 
-class DSObject:
+class DSObject(object):
     def __init__(self, object_id, metadata=None, file_path=None):
         self.object_id = object_id
         self._metadata = metadata
         self._file_path = file_path
+        self._destroyed = False
+        self._owns_file = False
 
     def get_metadata(self):
         if self._metadata is None and not self.object_id is None:
@@ -83,10 +86,15 @@ class DSObject:
     def get_file_path(self):
         if self._file_path is None and not self.object_id is None:
             self.set_file_path(dbus_helpers.get_filename(self.object_id))
+            self._owns_file = True
         return self._file_path
     
     def set_file_path(self, file_path):
         if self._file_path != file_path:
+            if self._file_path and self._owns_file:
+                if os.path.isfile(self._file_path):
+                    os.remove(self._file_path)
+                self._owns_file = False
             self._file_path = file_path
 
     file_path = property(get_file_path, set_file_path)
@@ -126,6 +134,26 @@ class DSObject:
 
             activityfactory.create(service_name, handle)
 
+    def destroy(self):
+        logging.debug('DSObject.destroy() file_path: %r.' % self._file_path)
+        if self._destroyed:
+            logging.warning('This DSObject has already been destroyed!.')
+            import pdb;pdb.set_trace()
+            return
+        self._destroyed = True
+        if self._file_path and self._owns_file:
+            logging.debug('Removing temp file: %r' % self._file_path)
+            if os.path.isfile(self._file_path):
+                os.remove(self._file_path)
+            self._owns_file = False
+        self._file_path = None
+
+    def __del__(self):
+        if not self._destroyed:
+            logging.warning('DSObject was deleted without cleaning up first. ' \
+                            'Please call DSObject.destroy() before disposing it.')
+            self.destroy()
+
 def get(object_id):
     logging.debug('datastore.get')
     metadata = dbus_helpers.get_properties(object_id)
@@ -145,10 +173,6 @@ def write(ds_object, update_mtime=True, reply_handler=None, error_handler=None):
     logging.debug('datastore.write')
 
     properties = ds_object.metadata.get_dictionary().copy()
-    # The title property should be sent as a 'text' property so it gets indexed
-    if properties.has_key('title'):
-        properties['title:text'] = properties['title']
-        del properties['title']
 
     if update_mtime:
         properties['mtime'] = datetime.now().isoformat()
