@@ -74,7 +74,8 @@ class ClipboardObject:
                    'text/plain'       : 'org.laptop.AbiWordActivity',
                    'text/rtf'         : 'org.laptop.AbiWordActivity',
                    'text/richtext'    : 'org.laptop.AbiWordActivity',
-                   'application/pdf'  : 'org.laptop.sugar.ReadActivity'}
+                   'application/pdf'  : 'org.laptop.sugar.ReadActivity',
+                   'application/x-squeak-project' : 'org.vpri.EtoysActivity'}
         mime = self.get_mime_type()
         if not mime:
             return ''
