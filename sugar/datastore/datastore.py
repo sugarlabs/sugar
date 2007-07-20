@@ -128,9 +128,12 @@ class DSObject(object):
         else:
             service_name = self.get_activities()[0].service_name
 
-            handle = ActivityHandle(object_id=self.object_id)
-            if self.metadata['activity_id']:
-                handle.activity_id = self.metadata['activity_id']
+            activity_id = self.metadata['activity_id']
+            if activity_id:
+                handle = ActivityHandle(object_id=self.object_id,
+                                        activity_id=activity_id)
+            else:
+                handle = ActivityHandle(object_id=self.object_id)
 
             activityfactory.create(service_name, handle)
 
