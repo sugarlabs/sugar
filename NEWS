@@ -1,3 +1,6 @@
+* #2399 Fix a bug which was preventing Write to start. (tomeu)
+* #2052 Fix error in the developer console. (edsiper)
+
 Snapshot 943c78ffa7
 
 * #2323 Make combobox icons bigger when there is no text. (marco)
