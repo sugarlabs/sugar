@@ -56,7 +56,7 @@ class ComboBox(gtk.ComboBox):
     def _get_real_name_from_theme(self, name, size):
         icon_theme = gtk.icon_theme_get_default()
         width, height = gtk.icon_size_lookup(size)
-        info = icon_theme.lookup_icon(name, width, height)
+        info = icon_theme.lookup_icon(name, width, 0)
         if not info:
             raise ValueError("Icon '" + name + "' not found.")
         fname = info.get_filename()
