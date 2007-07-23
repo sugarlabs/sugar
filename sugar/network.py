@@ -26,6 +26,7 @@ import sys
 import httplib
 import urllib
 import fcntl
+import tempfile
 
 import gobject
 import SimpleXMLRPCServer
@@ -183,23 +184,29 @@ class GlibURLDownloader(gobject.GObject):
     def __init__(self, url, destdir=None):
         self._url = url
         if not destdir:
-            destdir = "/tmp"
+            destdir = tempfile.gettempdir()
         self._destdir = destdir
         self._srcid = 0
         self._fname = None
         self._outf = None
         gobject.GObject.__init__(self)
 
-    def start(self):
+    def start(self, destfile=None):
         self._info = urllib.urlopen(self._url)
-        self._suggested_fname = self._get_filename_from_headers(self._info.headers)
-        import tempfile
-        garbage, path = urllib.splittype(self._url)
-        garbage, path = urllib.splithost(path or "")
-        path, garbage = urllib.splitquery(path or "")
-        path, garbage = urllib.splitattr(path or "")
-        suffix = os.path.splitext(path)[1]
-        (self._outf, self._fname) = tempfile.mkstemp(suffix=suffix, dir=self._destdir)
+        self._outf = None
+        self._fname = None
+        if destfile:
+            self._suggested_fname = os.path.basename(destfile)
+            self._fname = os.path.abspath(os.path.expanduser(destfile))
+            self._outf = os.open(self._fname, os.O_RDWR | os.O_TRUNC | os.O_CREAT, 0644)
+        else:
+            self._suggested_fname = self._get_filename_from_headers(self._info.headers)
+            garbage, path = urllib.splittype(self._url)
+            garbage, path = urllib.splithost(path or "")
+            path, garbage = urllib.splitquery(path or "")
+            path, garbage = urllib.splitattr(path or "")
+            suffix = os.path.splitext(path)[1]
+            (self._outf, self._fname) = tempfile.mkstemp(suffix=suffix, dir=self._destdir)
 
         fcntl.fcntl(self._info.fp.fileno(), fcntl.F_SETFD, os.O_NDELAY)
         self._srcid = gobject.io_add_watch(self._info.fp.fileno(),
