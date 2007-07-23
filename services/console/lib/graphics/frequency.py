@@ -26,9 +26,11 @@ class HorizontalGraphic(gtk.DrawingArea):
 
     def __init__(self):
         gtk.DrawingArea.__init__(self)
+        self._width = 0
+        self._height = 0
+        self._buffer = [0]
         self.connect('expose-event', self.do_expose)
         self.connect('size-allocate', self._change_size_cb)
-        self._buffer = [0]
 
     def do_expose(self, widget, event):
         context = widget.window.cairo_create()
