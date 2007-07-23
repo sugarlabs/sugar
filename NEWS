@@ -1,3 +1,5 @@
+Snapshot 943c78ffa7
+
 * #2323 Make combobox icons bigger when there is no text. (marco)
 * Add option to GlibURLDownloader to download to specified file instead
   of tempfile (dcbw)
