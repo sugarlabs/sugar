@@ -222,6 +222,8 @@ class Activity(Window, gtk.Container):
         self._join_id = None
         self._can_close = True
         self._preview = None
+        self._updating_jobject = False
+        self._closing = False
 
         shared_activity = handle.get_shared_activity()
         if shared_activity:
@@ -307,10 +309,26 @@ class Activity(Window, gtk.Container):
         raise NotImplementedError
 
     def _internal_save_cb(self):
-        pass
+        self._updating_jobject = False
+        if self._closing:
+            self._cleanup_jobject()
+            self.destroy()
 
     def _internal_save_error_cb(self, err):
+        self._updating_jobject = False
+        if self._closing:
+            self._cleanup_jobject()
+            self.destroy()
         logging.debug("Error saving activity object to datastore: %s" % err)
+
+    def _cleanup_jobject(self):
+        if self._jobject:
+            if self._owns_file and os.path.isfile(self._jobject.file_path):
+                logging.debug('_cleanup_jobject: removing %r' % self._jobject.file_path)
+                os.remove(self._jobject.file_path)
+            self._owns_file = False
+            self._jobject.destroy()
+            self._jobject = None
 
     def _get_preview(self):
         preview_pixbuf = self.get_canvas_screenshot()
@@ -341,6 +359,10 @@ class Activity(Window, gtk.Container):
 
     def save(self):
         """Request that the activity is saved to the Journal."""
+
+        if self._updating_jobject:
+            return
+
         #self.metadata['buddies'] = self._get_buddies()
         if self._preview is None:
             self.metadata['preview'] = ''
@@ -356,6 +378,7 @@ class Activity(Window, gtk.Container):
                 self._jobject.file_path = file_path
         except NotImplementedError:
             pass
+        self._updating_jobject = True
         datastore.write(self._jobject,
                 reply_handler=self._internal_save_cb,
                 error_handler=self._internal_save_error_cb)
@@ -406,6 +429,8 @@ class Activity(Window, gtk.Container):
             return True
 
     def close(self):
+        self._closing = True
+
         if self._bus:
             del self._bus
             self._bus = None
@@ -414,13 +439,13 @@ class Activity(Window, gtk.Container):
 
         self._preview = self._get_preview()
         self.save()
-        
-        if self._jobject:
-            if self._owns_file and os.path.isfile(self._jobject.file_path):
-                os.remove(self._jobject.file_path)
-            self._owns_file = False
-            self._jobject.destroy()
-            self._jobject = None
+
+    def destroy(self):
+        if self._updating_jobject:
+            # Delay destruction
+            self.hide()
+        else:
+            Window.destroy(self)
 
     def get_metadata(self):
         if self._jobject:
