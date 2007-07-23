@@ -161,9 +161,8 @@ class DSObject(object):
 def get(object_id):
     logging.debug('datastore.get')
     metadata = dbus_helpers.get_properties(object_id)
-    file_path = dbus_helpers.get_filename(object_id)
 
-    ds_object = DSObject(object_id, DSMetadata(metadata), file_path)
+    ds_object = DSObject(object_id, DSMetadata(metadata), None)
     # TODO: register the object for updates
     return ds_object
 
