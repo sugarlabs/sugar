@@ -53,9 +53,9 @@ class ComboBox(gtk.ComboBox):
         else:
             return gtk.ComboBox.do_get_property(self, pspec)
 
-    def _get_real_name_from_theme(self, name):
+    def _get_real_name_from_theme(self, name, size):
         icon_theme = gtk.icon_theme_get_default()
-        width, height = gtk.icon_size_lookup(gtk.ICON_SIZE_MENU)
+        width, height = gtk.icon_size_lookup(size)
         info = icon_theme.lookup_icon(name, width, height)
         if not info:
             raise ValueError("Icon '" + name + "' not found.")
@@ -76,9 +76,14 @@ class ComboBox(gtk.ComboBox):
             self.add_attribute(self._text_renderer, 'text', 1)
 
         if icon_name:
-            width, height = gtk.icon_size_lookup(gtk.ICON_SIZE_MENU)
+            if text:
+                size = gtk.ICON_SIZE_MENU
+            else:
+                size = gtk.ICON_SIZE_LARGE_TOOLBAR
+
+            width, height = gtk.icon_size_lookup(size)
             if icon_name[0:6] == "theme:": 
-                icon_name = self._get_real_name_from_theme(icon_name[6:])
+                icon_name = self._get_real_name_from_theme(icon_name[6:], size)
             pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(icon_name, width, height)
         else:
             pixbuf = None
