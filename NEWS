@@ -1,3 +1,4 @@
+* #2361 Ensure secondary palette state doesn't go out of screen. (marco)
 * #2014 Use a combobox to represent activity network state. (marco)
 
 Snapshot 4a924a8e5d
