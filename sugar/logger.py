@@ -103,6 +103,11 @@ def _get_logs_dir():
     return logs_dir
 
 def start(module_id):
+    # Only log if logging is set up for the activity
+    module_key = module_id.upper() + "_DEBUG"
+    if not os.environ.has_key(module_key):
+        return
+
     log_writer = LogWriter(module_id)
 
     root_logger = logging.getLogger('')
