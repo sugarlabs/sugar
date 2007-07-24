@@ -31,7 +31,7 @@ class ZoomBox(hippo.CanvasBox):
 
         self._shell = shell
 
-        icon = IconButton(icon_name='theme:stock-zoom-mesh',
+        icon = IconButton(icon_name='theme:zoom-mesh',
                           stroke_color=color.BLACK,
                           fill_color=color.WHITE)
         icon.connect('activated',
@@ -44,7 +44,7 @@ class ZoomBox(hippo.CanvasBox):
         palette.set_group_id('frame')
         icon.set_palette(palette)
 
-        icon = IconButton(icon_name='theme:stock-zoom-friends',
+        icon = IconButton(icon_name='theme:zoom-friends',
                           stroke_color=color.BLACK,
                           fill_color=color.WHITE)
         icon.connect('activated',
@@ -57,7 +57,7 @@ class ZoomBox(hippo.CanvasBox):
         palette.set_group_id('frame')
         icon.set_palette(palette)
 
-        icon = IconButton(icon_name='theme:stock-zoom-home',
+        icon = IconButton(icon_name='theme:zoom-home',
                           stroke_color=color.BLACK,
                           fill_color=color.WHITE)
         icon.connect('activated',
@@ -70,7 +70,7 @@ class ZoomBox(hippo.CanvasBox):
         palette.set_group_id('frame')
         icon.set_palette(palette)
 
-        icon = IconButton(icon_name='theme:stock-zoom-activity',
+        icon = IconButton(icon_name='theme:zoom-activity',
                           stroke_color=color.BLACK,
                           fill_color=color.WHITE)
         icon.connect('activated',
