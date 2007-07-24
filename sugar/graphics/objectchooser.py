@@ -116,8 +116,11 @@ class CollapsedEntry(Frame):
         self.append(date)
 
         icon = CanvasIcon(icon_name=self._get_icon_name(),
-                          xo_color=XoColor(self.jobject.metadata['icon-color']),
                           box_width=units.grid_to_pixels(1))
+
+        if self.jobject.metadata.has_key('icon-color'):
+            icon.props.xo_color = XoColor(self.jobject.metadata['icon-color'])
+
         self.append(icon)
         
         title = hippo.CanvasText(text=self._format_title(),
