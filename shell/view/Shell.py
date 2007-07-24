@@ -209,8 +209,8 @@ class Shell(gobject.GObject):
                 jobject.file_path = file_path
                 datastore.write(jobject)
             finally:
-                datastore.destroy()
-                del datastore
+                jobject.destroy()
+                del jobject
         finally:
             os.remove(file_path)
 
