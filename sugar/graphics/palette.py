@@ -46,6 +46,9 @@ class Palette(gobject.GObject):
     RIGHT     = 5
     TOP       = 6
 
+    _PRIMARY = 0
+    _SECONDARY = 1
+
     __gtype_name__ = 'SugarPalette'
 
     __gproperties__ = {
@@ -65,6 +68,7 @@ class Palette(gobject.GObject):
     def __init__(self, label, accel_path=None):
         gobject.GObject.__init__(self)
 
+        self._state = self._SECONDARY
         self._invoker = None
         self._group_id = None
         self._up = False
@@ -295,6 +299,33 @@ class Palette(gobject.GObject):
         else:
             self._hide()
 
+    def _set_state(self, state):
+        if self._state == state:
+            return
+
+        if state == self._PRIMARY:
+            self._primary.show()
+            for menu_item in self._menu.get_children()[1:]:
+                menu_item.hide()
+        elif state == self._SECONDARY:
+            middle_menu_items = self._menu.get_children()
+            middle_menu_items = middle_menu_items[2:len(middle_menu_items) - 2]
+            if middle_menu_items or \
+                    not self._content.is_empty() or \
+                    not self._button_bar.is_empty():
+                self._separator.show()
+
+            for menu_item in middle_menu_items:
+                menu_item.show()
+
+            if not self._content.is_empty():
+                self._content.show()
+
+            if not self._button_bar.is_empty():
+                self._button_bar.show()
+
+        self._state = state
+
     def _invoker_mouse_enter_cb(self, invoker):
         self.popup()
 
@@ -371,9 +402,7 @@ class _PopupAnimation(animator.Animation):
 
     def next_frame(self, current):
         if current == 1.0:
-            self._palette._primary.show()
-            for menu_item in self._palette._menu.get_children()[1:]:
-                menu_item.hide()
+            self._palette._set_state(Palette._PRIMARY)
             self._palette._show()
 
 class _SecondaryAnimation(animator.Animation):
@@ -383,22 +412,7 @@ class _SecondaryAnimation(animator.Animation):
 
     def next_frame(self, current):
         if current == 1.0:
-            middle_menu_items = self._palette._menu.get_children()
-            middle_menu_items = middle_menu_items[2:len(middle_menu_items) - 2]
-            if middle_menu_items or \
-                    not self._palette._content.is_empty() or \
-                    not self._palette._button_bar.is_empty():
-                self._palette._separator.show()
-
-            for menu_item in middle_menu_items:
-                menu_item.show()
-
-            if not self._palette._content.is_empty():
-                self._palette._content.show()
-
-            if not self._palette._button_bar.is_empty():
-                self._palette._button_bar.show()
-
+            self._palette._set_state(Palette._SECONDARY)
             self._palette._show()
 
 class _PopdownAnimation(animator.Animation):
