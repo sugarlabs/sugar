@@ -250,12 +250,7 @@ class Palette(gobject.GObject):
 
         self._set_state(state)
 
-    def _show(self):
-        if self._up:
-            return
-
-        self._update_full_request()
-
+    def _update_position(self):
         x = y = 0
 
         if self._position == self.DEFAULT:
@@ -281,11 +276,19 @@ class Palette(gobject.GObject):
         elif position == self.TOP:
             x, y = self._get_top_position()
 
-        self._invoker.connect_to_parent()
+        self._menu.popup(x, y)
 
+    def _show(self):
+        if self._up:
+            return
+
+        self._update_full_request()
+
+        self._invoker.connect_to_parent()
         self._palette_popup_sid = _palette_observer.connect('popup',
                     self._palette_observer_popup_cb)
-        self._menu.popup(x, y)
+
+        self._update_position()
 
         self._up = True
         _palette_observer.emit('popup', self)
@@ -428,7 +431,7 @@ class _SecondaryAnimation(animator.Animation):
     def next_frame(self, current):
         if current == 1.0:
             self._palette._set_state(Palette._SECONDARY)
-            self._palette._show()
+            self._palette._update_position()
 
 class _PopdownAnimation(animator.Animation):
     def __init__(self, palette):
