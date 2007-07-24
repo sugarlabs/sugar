@@ -68,7 +68,8 @@ class Palette(gobject.GObject):
     def __init__(self, label, accel_path=None):
         gobject.GObject.__init__(self)
 
-        self._state = self._SECONDARY
+        self._full_request = [0, 0]
+        self._state = self._SECONDARY  
         self._invoker = None
         self._group_id = None
         self._up = False
@@ -168,7 +169,7 @@ class Palette(gobject.GObject):
             raise AssertionError
 
     def _in_screen(self, x, y):
-        [width, height] = self._menu.size_request()
+        [width, height] = self._full_request
         screen_area = self._invoker.get_screen_area()
 
         return x >= screen_area.x and \
@@ -237,9 +238,23 @@ class Palette(gobject.GObject):
 
         return x, y
 
+    def _update_full_request(self):
+        state = self._state
+
+        self._menu.set_size_request(-1, -1)
+
+        self._set_state(self._SECONDARY)
+        self._full_request = self._menu.size_request()
+
+        self._menu.set_size_request(self._full_request[0], -1)
+
+        self._set_state(state)
+
     def _show(self):
         if self._up:
             return
+
+        self._update_full_request()
 
         x = y = 0
 
