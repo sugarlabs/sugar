@@ -36,12 +36,16 @@ from sugar.graphics import units
 from sugar.graphics.window import Window
 from sugar.graphics.toolbox import Toolbox
 from sugar.graphics.toolbutton import ToolButton
+from sugar.graphics.toolcombobox import ToolComboBox
 from sugar.datastore import datastore
 from sugar import wm
 from sugar import profile
 from sugar import _sugarext
 
 class ActivityToolbar(gtk.Toolbar):
+    SHARE_PRIVATE = 0
+    SHARE_NEIGHBORHOOD = 1
+
     def __init__(self, activity):
         gtk.Toolbar.__init__(self)
 
@@ -64,24 +68,20 @@ class ActivityToolbar(gtk.Toolbar):
         self.insert(separator, -1)
         separator.show()
 
+        self.share = ToolComboBox(label_text='Share with:')
+        self.share.combo.connect('changed', self._share_changed_cb)
+        self.share.combo.append_item(None, _('Private'))
+        self.share.combo.append_item(None, _('My Neighborhood'))
+        self._update_share()
+
+        self.insert(self.share, -1)
+        self.share.show()
+
         self.keep = ToolButton('document-save')
         self.keep.set_tooltip(_('Keep'))
         self.keep.connect('clicked', self._keep_clicked_cb)
         self.insert(self.keep, -1)
         self.keep.show()
-
-        self.share = ToolButton('stock-share-mesh')
-        self.share.set_tooltip(_('Share'))
-        self.share.connect('clicked', self._share_clicked_cb)
-        self.insert(self.share, -1)
-        if activity.get_shared():
-            self.share.set_sensitive(False)
-        self.share.show()
-
-        separator = gtk.SeparatorToolItem()
-        separator.props.draw = False
-        self.insert(separator, -1)
-        separator.show()
 
         self.stop = ToolButton('activity-stop')
         self.stop.set_tooltip(_('Stop'))
@@ -91,8 +91,17 @@ class ActivityToolbar(gtk.Toolbar):
 
         self._update_title_sid = None
 
-    def _share_clicked_cb(self, button):
-        self._activity.share()
+    def _update_share(self):
+        if self._activity.get_shared():
+            self.share.set_sensitive(False)
+            self.share.combo.set_active(self.SHARE_NEIGHBORHOOD)
+        else:
+            self.share.set_sensitive(True)
+            self.share.combo.set_active(self.SHARE_PRIVATE)
+    
+    def _share_changed_cb(self, combo):
+        if self.share.combo.get_active() == self.SHARE_NEIGHBORHOOD:
+            self._activity.share()
 
     def _keep_clicked_cb(self, button):
         self._activity.save()
@@ -126,7 +135,7 @@ class ActivityToolbar(gtk.Toolbar):
         tool_item.show()
 
     def _activity_shared_cb(self, activity):
-        self.share.set_sensitive(False)
+        self._update_share()
 
 class EditToolbar(gtk.Toolbar):
     def __init__(self):

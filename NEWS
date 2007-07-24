@@ -1,3 +1,5 @@
+* #2014 Use a combobox to represent activity network state. (marco)
+
 Snapshot 4a924a8e5d
 
 * #2399 Fix a bug which was preventing Write to start. (tomeu)
