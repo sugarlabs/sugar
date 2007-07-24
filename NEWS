@@ -1,3 +1,7 @@
+* Turn off logging by default.  Logs may be re-enabled on a per-module basis
+  by adding environment variables like SHELL_DEBUG and RECORD_DEBUG to
+  the sugar environment
+
 Snapshot 9ac5d38e90
 
 * #2361 Ensure secondary palette state doesn't go out of screen. (marco)
