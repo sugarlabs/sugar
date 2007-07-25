@@ -70,8 +70,10 @@ class ActivityToolbar(gtk.Toolbar):
 
         self.share = ToolComboBox(label_text='Share with:')
         self.share.combo.connect('changed', self._share_changed_cb)
-        self.share.combo.append_item(None, _('Private'))
-        self.share.combo.append_item(None, _('My Neighborhood'))
+        self.share.combo.append_item(None, _('Private'),
+                                     'theme:zoom-home-mini')
+        self.share.combo.append_item(None, _('My Neighborhood'),
+                                     'theme:zoom-neighborhood-mini')
         self._update_share()
 
         self.insert(self.share, -1)
