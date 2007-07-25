@@ -7,9 +7,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-03-23 14:50+0100\n"
+"POT-Creation-Date: 2007-07-17 17:45-0700\n"
 "PO-Revision-Date: 2007-05-02 15:17-0300\n"
-"Last-Translator: UYLUG Grupo de usuarios Linux en Uruguay <uylug-linux@uylug.org.uy>\n"
+"Last-Translator: UYLUG Grupo de usuarios Linux en Uruguay <uylug-linux@uylug."
+"org.uy>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,96 +20,174 @@ msgstr ""
 "X-Poedit-Country: SPAIN\n"
 "X-Poedit-Basepath: .\n"
 
-#: ../services/clipboard/typeregistry.py:29
-msgid "Text snippet"
-msgstr "Recorte de texto"
+#: ../shell/intro/intro.py:61
+#, fuzzy
+msgid "Name:"
+msgstr "Nombre:"
 
-#: ../services/clipboard/typeregistry.py:57
-msgid "Image"
-msgstr "Imagen"
+#: ../shell/intro/intro.py:84
+msgid "Click to change color:"
+msgstr "Clic para cambiar de color:"
 
-#: ../services/clipboard/typeregistry.py:77
-msgid "Web Page"
-msgstr "Página web"
+#: ../shell/intro/intro.py:134
+msgid "Back"
+msgstr "Atrás"
 
-#: ../services/clipboard/typeregistry.py:103
-msgid "PDF file"
-msgstr "Archivo PDF"
+#: ../shell/intro/intro.py:142
+msgid "Done"
+msgstr ""
 
-#: ../services/clipboard/typeregistry.py:123
-msgid "MS Word file"
-msgstr "Archivo MS Word"
+#: ../shell/intro/intro.py:145
+msgid "Next"
+msgstr "Siguiente"
 
-#: ../services/clipboard/typeregistry.py:143
-msgid "RTF file"
-msgstr "Archivo RTF"
-
-#: ../services/clipboard/typeregistry.py:154
-msgid "Abiword file"
-msgstr "Archivo Abiword"
-
-#: ../services/clipboard/typeregistry.py:165
-msgid "Squeak project"
-msgstr "Proyecto de Squeak"
-
-#: ../services/clipboard/typeregistry.py:185
-msgid "OpenOffice text file"
-msgstr "Archivo de texto de Openoffice"
-
-#: ../services/clipboard/typeregistry.py:202
-msgid "Object"
-msgstr "Objeto"
-
-#: ../shell/intro/intro.py:78
-msgid "Pick a buddy picture"
-msgstr "Elegir la imagen de amigo"
-
-#: ../shell/intro/intro.py:101
-msgid "My Picture:"
-msgstr "Mi imagen:"
-
-#: ../shell/intro/intro.py:181
-msgid "My Name:"
-msgstr "Mi nombre:"
-
-#: ../shell/intro/intro.py:203
-msgid "My Color:"
-msgstr "Mi color:"
-
-#: ../shell/view/BuddyMenu.py:89
+#: ../shell/view/BuddyMenu.py:82
 msgid "Remove friend"
 msgstr "Eliminar amigo"
 
-#: ../shell/view/BuddyMenu.py:93
+#: ../shell/view/BuddyMenu.py:85
 msgid "Make friend"
 msgstr "Agregar amigo"
 
-#: ../shell/view/BuddyMenu.py:103
+#. FIXME check that the buddy is not in the activity already
+#: ../shell/view/BuddyMenu.py:96
 msgid "Invite"
 msgstr "Invitar"
 
-#: ../shell/view/clipboardmenu.py:63
-#: ../shell/view/clipboardmenu.py:79
+#: ../shell/view/clipboardmenu.py:66
 msgid "Remove"
 msgstr "Eliminar"
 
-#: ../shell/view/clipboardmenu.py:69
+#: ../shell/view/clipboardmenu.py:70
 msgid "Open"
 msgstr "Abrir"
 
-#: ../shell/view/clipboardmenu.py:93
-msgid "Stop download"
-msgstr "Interrumpir la bajada"
+#. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
+#. TODO: Implement stopping downloads
+#. self._stop_item.connect('activate', self._stop_item_activate_cb)
+#. self.append_menu_item(self._stop_item)
+#: ../shell/view/clipboardmenu.py:79
+msgid "Add to journal"
+msgstr "Agregar al diario"
 
-#: ../shell/view/frame/ZoomBox.py:41
-msgid "Close"
-msgstr "Cerrar"
+#: ../shell/view/clipboardmenu.py:180
+#, python-format
+msgid "Clipboard object: %s."
+msgstr "Objeto de portapapel: %s"
 
-#: ../sugar/graphics/optionmenu.py:72
-msgid "No options"
-msgstr "Ninguna opción"
+#: ../shell/view/frame/zoombox.py:42
+msgid "Neighborhood"
+msgstr "Vecindario"
 
-#: ../sugar/chat/ChatEditor.py:56
-msgid "Send"
-msgstr "Enviar"
+#: ../shell/view/frame/zoombox.py:55
+msgid "Group"
+msgstr "Grupo"
 
+#: ../shell/view/frame/zoombox.py:68
+msgid "Home"
+msgstr "Hogar"
+
+#: ../shell/view/frame/zoombox.py:81
+msgid "Activity"
+msgstr "Actividad"
+
+#: ../services/clipboard/objecttypeservice.py:32
+msgid "Text"
+msgstr "Texto"
+
+#: ../services/clipboard/objecttypeservice.py:36
+msgid "Image"
+msgstr "Imagen"
+
+#: ../shell/view/Shell.py:202
+msgid "Screenshot"
+msgstr "Captura de pantalla"
+
+#: ../shell/view/home/HomeBox.py:140
+msgid "Shutdown"
+msgstr "Apagar"
+
+#: ../shell/view/home/MeshBox.py:126
+msgid "Mesh Network"
+msgstr "Red Malla"
+
+#: ../shell/view/devices/battery.py:34
+msgid "My Battery life"
+msgstr "Carga de mi batería"
+
+#: ../shell/view/devices/battery.py:87
+msgid "Battery charging"
+msgstr "Batería cargandose"
+
+#: ../shell/view/devices/battery.py:89
+msgid "Battery discharging"
+msgstr "Batería descargandose"
+
+#: ../shell/view/devices/battery.py:91
+msgid "Battery fully charged"
+msgstr "Batería totalmente cargada"
+
+#: ../sugar/activity/activity.py:68
+msgid "Keep"
+msgstr "Guardar"
+
+#: ../sugar/activity/activity.py:74
+msgid "Share"
+msgstr "Compartir"
+
+#: ../sugar/activity/activity.py:87
+msgid "Stop"
+msgstr "Parar"
+
+#: ../sugar/activity/activity.py:248
+#, python-format
+msgid "%s Activity"
+msgstr "Actividad %s"
+
+#~ msgid "Text snippet"
+#~ msgstr "Recorte de texto"
+
+#~ msgid "Web Page"
+#~ msgstr "Página web"
+
+#~ msgid "PDF file"
+#~ msgstr "Archivo PDF"
+
+#~ msgid "MS Word file"
+#~ msgstr "Archivo MS-Word"
+
+#~ msgid "RTF file"
+#~ msgstr "Archivo RTF"
+
+#~ msgid "Abiword file"
+#~ msgstr "Archivo Abiword"
+
+#~ msgid "Squeak project"
+#~ msgstr "Proyecto de Squeak"
+
+#~ msgid "OpenOffice text file"
+#~ msgstr "Archivo de texto de OpenOffice"
+
+#~ msgid "Object"
+#~ msgstr "Objeto"
+
+#~ msgid "Pick a buddy picture"
+#~ msgstr "Elegir la imagen de amigo"
+
+#~ msgid "My Picture:"
+#~ msgstr "Mi imagen:"
+
+#~ msgid "My Color:"
+#~ msgstr "Mi color:"
+
+#~ msgid "Stop download"
+#~ msgstr "Interrumpir la bajada"
+
+#~ msgid "Close"
+#~ msgstr "Cerrar"
+
+#~ msgid "No options"
+#~ msgstr "Ninguna opción"
+
+#~ msgid "Send"
+#~ msgstr "Enviar"
