@@ -258,12 +258,17 @@ class BuddyWatcher(object):
 
         self.iter = self.ps_watcher.add_buddy(self)
 
+        self.iface.connect_to_signal('PropertyChanged', self._on_props_changed,
+                                     byte_arrays=True)
+        self.ps_watcher.log('Calling <Buddy %s>.GetProperties()', object_path)
         self.iface.GetProperties(reply_handler=self._on_get_props_success,
                                  error_handler=self._on_get_props_failure,
                                  byte_arrays=True)
 
         self.iface.connect_to_signal('JoinedActivity', self._on_joined)
         self.iface.connect_to_signal('LeftActivity', self._on_left)
+        self.ps_watcher.log('Calling <Buddy %s>.GetJoinedActivities()',
+                            object_path)
         self.iface.GetJoinedActivities(reply_handler=self._on_get_acts_success,
                                        error_handler=self._on_get_acts_failure)
 
@@ -271,6 +276,8 @@ class BuddyWatcher(object):
                                     self._on_handle_added)
         self.iface.connect_to_signal('TelepathyHandleRemoved',
                                     self._on_handle_removed)
+        self.ps_watcher.log('Calling <Buddy %s>.GetTelepathyHandles()',
+                            object_path)
         self.iface.GetTelepathyHandles(
                 reply_handler=self._on_get_handles_success,
                 error_handler=self._on_get_handles_failure)
@@ -310,7 +317,7 @@ class BuddyWatcher(object):
             self._on_handle_added(service, conn, handle)
 
     def _on_get_handles_failure(self, e):
-        self.log('ERROR: <Buddy %s>.GetTelepathyHandles(): %s',
+        self.ps_watcher.log('ERROR: <Buddy %s>.GetTelepathyHandles(): %s',
                  self.object_path, e)
         self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_HANDLES,
                                                '!')
@@ -348,37 +355,62 @@ class BuddyWatcher(object):
             self._on_joined(act)
 
     def _on_get_acts_failure(self, e):
-        self.log('ERROR: <Buddy %s>.GetJoinedActivities(): %s',
+        self.ps_watcher.log('ERROR: <Buddy %s>.GetJoinedActivities(): %s',
                  self.object_path, e)
         self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_ACTIVITIES,
                                                '!')
 
+    def _on_props_changed(self, props):
+        try:
+            logger.debug('PropertyChanged(%s, %s)', self, props)
+            self.ps_watcher.log('INFO: <Buddy %s> emitted PropertyChanged(%r)',
+                                self.object_path, props)
+            self._props_changed(props)
+        except Exception, e:
+            self.ps_watcher.log('INTERNAL ERROR: %s', e)
+
     def _on_get_props_success(self, props):
-        # ignore key for now
-        self.log('INFO: <Buddy %s>.GetProperties() -> %r', props)
-        self.nick = props.get('nick', '?')
-        self.owner = props.get('owner', False)
-        self.color = props.get('color', '?')
-        self.ipv4 = props.get('ip4-address', '?')
-        self.ipv4 = props.get('ip4-address', '?')
-        self.cur_act = props.get('current-activity', '?')
-        key = props.get('key', None)
-        if key is not None:
-            self.keyid = sha1(key).hexdigest()[:8] + '...'
-        else:
-            self.keyid = '?'
-        self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_NICK,
-                                               self.nick)
-        self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_OWNER,
-                                               self.owner)
-        self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_COLOR,
-                                               self.color)
-        self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_IP4,
-                                               self.ipv4)
-        self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_CUR_ACT,
-                                               self.cur_act)
-        self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_KEY_ID,
-                                               self.keyid)
+        try:
+            logger.debug('GetProperties(%s, %s)', self, props)
+            self.ps_watcher.log('INFO: <Buddy %s>.GetProperties() -> %r',
+                     self.object_path, props)
+            self._props_changed(props)
+        except Exception, e:
+            self.ps_watcher.log('INTERNAL ERROR: %s', e)
+
+    def _props_changed(self, props):
+        logger.debug('Begin _props_changed')
+        if 'nick' in props:
+            self.nick = props.get('nick', '?')
+            self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_NICK,
+                                                   self.nick)
+        if 'owner' in props:
+            self.owner = bool(props.get('owner', False))
+            self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_OWNER,
+                                                   self.owner)
+        if 'color' in props:
+            self.color = props.get('color', '?')
+            self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_COLOR,
+                                                   self.color)
+        if 'ip4-address' in props:
+            self.ipv4 = props.get('ip4-address', '?')
+            self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_IP4,
+                                                   self.ipv4)
+        if 'current-activity' in props:
+            self.cur_act = props.get('current-activity', '?')
+            self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_CUR_ACT,
+                                                   self.cur_act)
+        if 'key' in props:
+            key = props.get('key', None)
+            if key:
+                self.keyid = '%d bytes, sha1 %s' % (len(key),
+                                                    sha1(key).hexdigest())
+            else:
+                # could be '' (present, empty value) or None (absent). Either way:
+                self.keyid = '?'
+            self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_KEY_ID,
+                                                   self.keyid)
+        logger.debug('End _props_changed')
 
     def _on_get_props_failure(self, e):
         self.ps_watcher.log('ERROR: <Buddy %s>.GetProperties(): %s',
@@ -507,7 +539,7 @@ class PresenceServiceWatcher(VBox):
             weight=BUDDY_COL_WEIGHT, strikethrough=BUDDY_COL_STRIKE)
         c.set_resizable(True)
         c.set_sort_column_id(BUDDY_COL_PATH)
-        c = self.buddies_list.insert_column_with_attributes(1, 'Key ID',
+        c = self.buddies_list.insert_column_with_attributes(1, 'Pubkey',
             CellRendererText(), text=BUDDY_COL_KEY_ID,
             weight=BUDDY_COL_WEIGHT, strikethrough=BUDDY_COL_STRIKE)
         c.set_resizable(True)
@@ -646,14 +678,15 @@ class PresenceServiceNameWatcher(VBox):
 
         self.bus = bus
 
+        logger.debug('Running...')
         self.label = Label('Looking for Presence Service...')
         self.errors = ListStore(str)
 
-        errors = TreeView(model=self.errors)
-        errors.insert_column_with_attributes(0, 'Log', CellRendererText(),
+        errors_tree = TreeView(model=self.errors)
+        errors_tree.insert_column_with_attributes(0, 'Log', CellRendererText(),
                                              text=0)
         scroller = ScrolledWindow()
-        scroller.add(errors)
+        scroller.add(errors_tree)
 
         self.paned = VPaned()
         self.paned.pack1(scroller)
