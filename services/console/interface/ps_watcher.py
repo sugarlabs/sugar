@@ -107,7 +107,8 @@ class ActivityWatcher(object):
             return
         if buddy.startswith('/org/laptop/Sugar/Presence/Buddies/'):
             buddy = '.../' + buddy[35:]
-        self.ps_watcher.log('INFO: Activity %s emitted BuddyJoined("%s")',
+        self.ps_watcher.log('INFO: Activity %s emitted BuddyJoined("%s") '
+                            'or mentioned the buddy in GetJoinedBuddies',
                             self.object_path, buddy)
         self.buddies.append(buddy)
         self.ps_watcher.activities_list_store.set(self.iter, ACT_COL_BUDDIES,
@@ -143,7 +144,8 @@ class ActivityWatcher(object):
             return
         if channel.startswith(self.full_conn):
             channel = '...' + channel[len(self.full_conn):]
-        self.ps_watcher.log('INFO: Activity %s emitted NewChannel("%s")',
+        self.ps_watcher.log('INFO: Activity %s emitted NewChannel("%s") '
+                            'or mentioned the channel in GetChannels()',
                             self.object_path, channel)
         self.channels.append(channel)
         # FIXME: listen for Telepathy Closed signal!
@@ -276,9 +278,10 @@ class BuddyWatcher(object):
     def _on_handle_added(self, service, conn, handle):
         if self.handles is None:
             return
-        self.ps_watcher.log('INFO: Buddy %s emitted HandleAdded("%s", '
-                            '"%s", %u)', self.object_path, service, conn,
-                            handle)
+        self.ps_watcher.log('INFO: Buddy %s emitted Telepathy HandleAdded('
+                            '"%s", "%s", %u) or mentioned the handle in '
+                            'GetTelepathyHandles()',
+                            self.object_path, service, conn, handle)
         if conn.startswith('/org/freedesktop/Telepathy/Connection/'):
             conn = '.../' + conn[38:]
         self.handles.append('%u@%s' % (handle, conn))
@@ -317,7 +320,8 @@ class BuddyWatcher(object):
             return
         if act.startswith('/org/laptop/Sugar/Presence/Activities/'):
             act = '.../' + act[38:]
-        self.ps_watcher.log('INFO: Buddy %s emitted ActivityJoined("%s")',
+        self.ps_watcher.log('INFO: Buddy %s emitted ActivityJoined("%s") '
+                            'or mentioned it in GetJoinedActivities()',
                             self.object_path, act)
         self.activities.append(act)
         self.ps_watcher.buddies_list_store.set(self.iter,
@@ -351,6 +355,7 @@ class BuddyWatcher(object):
 
     def _on_get_props_success(self, props):
         # ignore key for now
+        self.log('INFO: <Buddy %s>.GetProperties() -> %r', props)
         self.nick = props.get('nick', '?')
         self.owner = props.get('owner', False)
         self.color = props.get('color', '?')
