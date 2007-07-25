@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
+from hashlib import sha1
 
 import dbus
 from gtk import VBox, Label, TreeView, Expander, ListStore, CellRendererText,\
@@ -49,6 +50,7 @@ BUDDY_COL_OWNER = 4
 BUDDY_COL_COLOR = 5
 BUDDY_COL_IP4 = 6
 BUDDY_COL_CUR_ACT = 7
+BUDDY_COL_KEY_ID = 8
 
 
 class ActivityWatcher(object):
@@ -70,6 +72,57 @@ class ActivityWatcher(object):
         self.name = '?'
 
         self.iter = self.ps_watcher.add_activity(self)
+
+        self.iface.GetId(reply_handler=self._on_get_id_success,
+                         error_handler=self._on_get_id_failure)
+
+        self.iface.GetColor(reply_handler=self._on_get_color_success,
+                            error_handler=self._on_get_color_failure)
+
+        self.iface.GetType(reply_handler=self._on_get_type_success,
+                           error_handler=self._on_get_type_failure)
+
+        self.iface.GetName(reply_handler=self._on_get_name_success,
+                           error_handler=self._on_get_name_failure)
+
+    def _on_get_id_success(self, ident):
+        self.id = ident
+        self.ps_watcher.activities_list_store.set(self.iter, ACT_COL_ID, ident)
+
+    def _on_get_id_failure(self, e):
+        logger.warning('<Activity %s>.GetId(): %s', self.object_path, e)
+        self.ps_watcher.activities_list_store.set(self.iter, ACT_COL_ID,
+                                                  '!')
+
+    def _on_get_color_success(self, color):
+        self.color = color
+        self.ps_watcher.activities_list_store.set(self.iter, ACT_COL_COLOR,
+                                                  color)
+
+    def _on_get_color_failure(self, e):
+        logger.warning('<Activity %s>.GetColor(): %s', self.object_path, e)
+        self.ps_watcher.activities_list_store.set(self.iter, ACT_COL_COLOR,
+                                                  '!')
+
+    def _on_get_type_success(self, type_):
+        self.type = type_
+        self.ps_watcher.activities_list_store.set(self.iter, ACT_COL_TYPE,
+                                                  type_)
+
+    def _on_get_type_failure(self, e):
+        logger.warning('<Activity %s>.GetType(): %s', self.object_path, e)
+        self.ps_watcher.activities_list_store.set(self.iter, ACT_COL_TYPE,
+                                                  '!')
+
+    def _on_get_name_success(self, name):
+        self.name = name
+        self.ps_watcher.activities_list_store.set(self.iter, ACT_COL_NAME,
+                                                  name)
+
+    def _on_get_name_failure(self, e):
+        logger.warning('<Activity %s>.GetName(): %s', self.object_path, e)
+        self.ps_watcher.activities_list_store.set(self.iter, ACT_COL_NAME,
+                                                  '!')
 
     def _finish_appearing(self):
         self.appearing = False
@@ -106,8 +159,52 @@ class BuddyWatcher(object):
         self.color = '?'
         self.ipv4 = '?'
         self.cur_act = '?'
+        self.keyid = '?'
 
         self.iter = self.ps_watcher.add_buddy(self)
+
+        self.iface.GetProperties(reply_handler=self._on_get_props_success,
+                                 error_handler=self._on_get_props_failure,
+                                 byte_arrays=True)
+
+    def _on_get_props_success(self, props):
+        # ignore key for now
+        self.nick = props.get('nick', '?')
+        self.owner = props.get('owner', False)
+        self.color = props.get('color', '?')
+        self.ipv4 = props.get('ip4-address', '?')
+        self.ipv4 = props.get('ip4-address', '?')
+        self.cur_act = props.get('current-activity', '?')
+        key = props.get('key', None)
+        if key is not None:
+            self.keyid = sha1(key).hexdigest()[:8] + '...'
+        else:
+            self.keyid = '?'
+        self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_NICK,
+                                               self.nick)
+        self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_OWNER,
+                                               self.owner)
+        self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_COLOR,
+                                               self.color)
+        self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_IP4,
+                                               self.ipv4)
+        self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_CUR_ACT,
+                                               self.cur_act)
+        self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_KEY_ID,
+                                               self.keyid)
+
+    def _on_get_props_failure(self, e):
+        logger.warning('<Buddy %s>.GetProperties(): %s', self.object_path, e)
+        self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_NICK, '!')
+        self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_OWNER,
+                                               False)
+        self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_COLOR, '!')
+        self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_IP4, '!')
+        self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_CUR_ACT,
+                                               '!')
+        self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_KEY_ID,
+                                               '!')
+
 
     def _finish_appearing(self):
         self.appearing = False
@@ -168,21 +265,31 @@ class PresenceServiceWatcher(VBox):
         self.pack_start(Label('Activities:'), False, False)
 
         self.activities_list = TreeView(self.activities_list_store)
-        self.activities_list.insert_column_with_attributes(0, 'Object path',
-            CellRendererText(), text=ACT_COL_PATH,
+        c = self.activities_list.insert_column_with_attributes(0,
+            'Object path', CellRendererText(), text=ACT_COL_PATH,
             weight=ACT_COL_WEIGHT, strikethrough=ACT_COL_STRIKE)
-        self.activities_list.insert_column_with_attributes(1, 'ID',
+        c.set_resizable(True)
+        c.set_sort_column_id(ACT_COL_PATH)
+        c = self.activities_list.insert_column_with_attributes(1, 'ID',
             CellRendererText(), text=ACT_COL_ID,
             weight=ACT_COL_WEIGHT, strikethrough=ACT_COL_STRIKE)
-        self.activities_list.insert_column_with_attributes(2, 'Color',
+        c.set_resizable(True)
+        c.set_sort_column_id(ACT_COL_ID)
+        c = self.activities_list.insert_column_with_attributes(2, 'Color',
             CellRendererText(), text=ACT_COL_COLOR,
             weight=ACT_COL_WEIGHT, strikethrough=ACT_COL_STRIKE)
-        self.activities_list.insert_column_with_attributes(3, 'Type',
+        c.set_resizable(True)
+        c.set_sort_column_id(ACT_COL_COLOR)
+        c = self.activities_list.insert_column_with_attributes(3, 'Type',
             CellRendererText(), text=ACT_COL_TYPE, weight=ACT_COL_WEIGHT,
             strikethrough=ACT_COL_STRIKE)
-        self.activities_list.insert_column_with_attributes(4, 'Name',
+        c.set_resizable(True)
+        c.set_sort_column_id(ACT_COL_TYPE)
+        c = self.activities_list.insert_column_with_attributes(4, 'Name',
             CellRendererText(), text=ACT_COL_NAME, weight=ACT_COL_WEIGHT,
             strikethrough=ACT_COL_STRIKE)
+        c.set_resizable(True)
+        c.set_sort_column_id(ACT_COL_NAME)
 
         scroller = ScrolledWindow()
         scroller.add(self.activities_list)
@@ -190,27 +297,42 @@ class PresenceServiceWatcher(VBox):
 
         # keep this in sync with the BUDDY_COL_ constants
         self.buddies_list_store = ListStore(str, int, bool, str, bool,
-                                            str, str, str)
+                                            str, str, str, str)
 
         self.pack_start(Label('Buddies:'), False, False)
         self.buddies_list = TreeView(self.buddies_list_store)
-        self.buddies_list.insert_column_with_attributes(0, 'Object path',
+        c = self.buddies_list.insert_column_with_attributes(0, 'Object path',
             CellRendererText(), text=BUDDY_COL_PATH,
             weight=BUDDY_COL_WEIGHT, strikethrough=BUDDY_COL_STRIKE)
-        self.buddies_list.insert_column_with_attributes(1, 'Nick',
+        c.set_resizable(True)
+        c.set_sort_column_id(BUDDY_COL_PATH)
+        c = self.buddies_list.insert_column_with_attributes(1, 'Key ID',
+            CellRendererText(), text=BUDDY_COL_KEY_ID,
+            weight=BUDDY_COL_WEIGHT, strikethrough=BUDDY_COL_STRIKE)
+        c.set_resizable(True)
+        c.set_sort_column_id(BUDDY_COL_KEY_ID)
+        c = self.buddies_list.insert_column_with_attributes(2, 'Nick',
             CellRendererText(), text=BUDDY_COL_NICK,
             weight=BUDDY_COL_WEIGHT, strikethrough=BUDDY_COL_STRIKE)
-        self.buddies_list.insert_column_with_attributes(2, 'Owner',
+        c.set_resizable(True)
+        c.set_sort_column_id(BUDDY_COL_NICK)
+        c = self.buddies_list.insert_column_with_attributes(3, 'Owner',
             CellRendererToggle(), active=BUDDY_COL_OWNER)
-        self.buddies_list.insert_column_with_attributes(3, 'Color',
+        c = self.buddies_list.insert_column_with_attributes(4, 'Color',
             CellRendererText(), text=BUDDY_COL_COLOR,
             weight=BUDDY_COL_WEIGHT, strikethrough=BUDDY_COL_STRIKE)
-        self.buddies_list.insert_column_with_attributes(4, 'IPv4',
+        c.set_resizable(True)
+        c.set_sort_column_id(BUDDY_COL_OWNER)
+        c = self.buddies_list.insert_column_with_attributes(5, 'IPv4',
             CellRendererText(), text=BUDDY_COL_IP4,
             weight=BUDDY_COL_WEIGHT, strikethrough=BUDDY_COL_STRIKE)
-        self.buddies_list.insert_column_with_attributes(5, 'CurAct',
+        c.set_resizable(True)
+        c.set_sort_column_id(BUDDY_COL_IP4)
+        c = self.buddies_list.insert_column_with_attributes(6, 'CurAct',
             CellRendererText(), text=BUDDY_COL_CUR_ACT,
             weight=BUDDY_COL_WEIGHT, strikethrough=BUDDY_COL_STRIKE)
+        c.set_resizable(True)
+        c.set_sort_column_id(BUDDY_COL_CUR_ACT)
 
         scroller = ScrolledWindow()
         scroller.add(self.buddies_list)
@@ -280,7 +402,7 @@ class PresenceServiceWatcher(VBox):
         if path.startswith('/org/laptop/Sugar/Presence/Buddies/'):
             path = '.../' + path[35:]
         return self.buddies_list_store.append((path, 700, False,
-            b.nick, b.owner, b.color, b.ipv4, b.cur_act))
+            b.nick, b.owner, b.color, b.ipv4, b.cur_act, b.keyid))
 
     def remove_buddy(self, b):
         self.buddies.pop(b.object_path, None)
