@@ -53,6 +53,7 @@ class Console:
         self._load_interface('memphis', 'Memphis')
         self._load_interface('logviewer', 'Log Viewer')
         self._load_interface('terminal', 'Terminal')
+        self._load_interface('ps_watcher', 'Presence')
         
         main_hbox = gtk.HBox()
         main_hbox.pack_start(self.notebook, True, True, 0)
@@ -86,6 +87,7 @@ class Service(dbus.service.Object):
 
 bus = dbus.SessionBus()
 name = dbus.service.BusName(CONSOLE_BUS, bus)
+
 obj = Service(name)
 
 gtk.main()

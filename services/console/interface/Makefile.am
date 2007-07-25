@@ -1,6 +1,6 @@
 SUBDIRS = memphis logviewer terminal xo
 
-sugardir = $(pkgdatadir)/shell/console/interface
+sugardir = $(pkgdatadir)/services/console/interface
 sugar_PYTHON =				\
-	__init__.py			
-
+	__init__.py \
+	ps_watcher.py
