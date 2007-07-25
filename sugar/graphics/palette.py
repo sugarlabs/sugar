@@ -69,6 +69,8 @@ class Palette(gobject.GObject):
         gobject.GObject.__init__(self)
 
         self._full_request = [0, 0]
+        self._cursor_x = 0
+        self._cursor_y = 0
         self._state = self._SECONDARY  
         self._invoker = None
         self._group_id = None
@@ -250,6 +252,12 @@ class Palette(gobject.GObject):
 
         self._set_state(state)
 
+    def _update_cursor_position(self):
+        display = gtk.gdk.display_get_default()
+        screen, x, y, mask = display.get_pointer()
+        self._cursor_x = x
+        self._cursor_y = y
+
     def _update_position(self):
         x = y = 0
 
@@ -259,11 +267,11 @@ class Palette(gobject.GObject):
             position = self._position
 
         if position == self.AT_CURSOR:
-            display = gtk.gdk.display_get_default()
-            screen, x, y, mask = display.get_pointer()
             dist = style.PALETTE_CURSOR_DISTANCE
+            rect = gtk.gdk.Rectangle(self._cursor_x - dist,
+                                     self._cursor_y - dist,
+                                     dist * 2, dist * 2)
 
-            rect = gtk.gdk.Rectangle(x - dist, y - dist, dist * 2, dist * 2)
             x, y = self._get_at_cursor_position(rect)
         elif position == self.AROUND:
             x, y = self._get_around_position()
@@ -282,6 +290,7 @@ class Palette(gobject.GObject):
         if self._up:
             return
 
+        self._update_cursor_position()        
         self._update_full_request()
 
         self._invoker.connect_to_parent()
