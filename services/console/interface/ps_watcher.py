@@ -19,7 +19,7 @@ from hashlib import sha1
 
 import dbus
 from gtk import VBox, Label, TreeView, Expander, ListStore, CellRendererText,\
-                ScrolledWindow, CellRendererToggle
+                ScrolledWindow, CellRendererToggle, TextView, VPaned
 from gobject import timeout_add
 
 
@@ -42,6 +42,9 @@ ACT_COL_ID = 3
 ACT_COL_COLOR = 4
 ACT_COL_TYPE = 5
 ACT_COL_NAME = 6
+ACT_COL_CONN = 7
+ACT_COL_CHANNELS = 8
+ACT_COL_BUDDIES = 9
 BUDDY_COL_PATH = 0
 BUDDY_COL_WEIGHT = 1
 BUDDY_COL_STRIKE = 2
@@ -51,6 +54,8 @@ BUDDY_COL_COLOR = 5
 BUDDY_COL_IP4 = 6
 BUDDY_COL_CUR_ACT = 7
 BUDDY_COL_KEY_ID = 8
+BUDDY_COL_ACTIVITIES = 9
+BUDDY_COL_HANDLES = 10
 
 
 class ActivityWatcher(object):
@@ -70,6 +75,9 @@ class ActivityWatcher(object):
         self.color = '?'
         self.type = '?'
         self.name = '?'
+        self.conn = '?'
+        self.channels = None
+        self.buddies = None
 
         self.iter = self.ps_watcher.add_activity(self)
 
@@ -85,12 +93,84 @@ class ActivityWatcher(object):
         self.iface.GetName(reply_handler=self._on_get_name_success,
                            error_handler=self._on_get_name_failure)
 
+        self.iface.connect_to_signal('NewChannel', self._on_new_channel)
+        self.iface.GetChannels(reply_handler=self._on_get_channels_success,
+                               error_handler=self._on_get_channels_failure)
+
+        self.iface.connect_to_signal('BuddyJoined', self._on_buddy_joined)
+        self.iface.connect_to_signal('BuddyLeft', self._on_buddy_left)
+        self.iface.GetJoinedBuddies(reply_handler=self._on_get_buddies_success,
+                                    error_handler=self._on_get_buddies_failure)
+
+    def _on_buddy_joined(self, buddy):
+        if self.buddies is None:
+            return
+        if buddy.startswith('/org/laptop/Sugar/Presence/Buddies/'):
+            buddy = '.../' + buddy[35:]
+        self.buddies.append(buddy)
+        self.ps_watcher.activities_list_store.set(self.iter, ACT_COL_BUDDIES,
+                                                  ' '.join(self.buddies))
+
+    def _on_buddy_left(self, buddy):
+        if self.buddies is None:
+            return
+        if buddy.startswith('/org/laptop/Sugar/Presence/Buddies/'):
+            buddy = '.../' + buddy[35:]
+        try:
+            self.buddies.remove(buddy)
+        except ValueError:
+            pass
+        self.ps_watcher.activities_list_store.set(self.iter, ACT_COL_BUDDIES,
+                                                  ' '.join(self.buddies))
+
+    def _on_get_buddies_success(self, buddies):
+        self.buddies = []
+        for buddy in buddies:
+            self._on_buddy_joined(buddy)
+
+    def _on_get_buddies_failure(self, e):
+        self.log('<Activity %s>.GetJoinedBuddies(): %s', self.object_path, e)
+        self.ps_watcher.activities_list_store.set(self.iter, ACT_COL_BUDDIES,
+                                                  '!')
+
+    def _on_new_channel(self, channel):
+        if self.channels is None:
+            return
+        if channel.startswith(self.full_conn):
+            channel = '...' + channel[len(self.full_conn):]
+        self.channels.append(channel)
+        # FIXME: listen for Telepathy Closed signal!
+        self.ps_watcher.activities_list_store.set(self.iter, ACT_COL_CHANNELS,
+                                                  ' '.join(self.channels))
+
+    def _on_get_channels_success(self, service, conn, channels):
+        self.full_conn = conn
+        if conn.startswith('/org/freedesktop/Telepathy/Connection/'):
+            self.conn = '.../' + conn[38:]
+        else:
+            self.conn = conn
+        self.ps_watcher.activities_list_store.set(self.iter, ACT_COL_CONN,
+                                                  self.conn)
+        self.channels = []
+        for channel in channels:
+            self._on_new_channel(channel)
+        self.ps_watcher.activities_list_store.set(self.iter, ACT_COL_CHANNELS,
+                                                  ' '.join(self.channels))
+
+    def _on_get_channels_failure(self, e):
+        self.ps_watcher.log('<Activity %s>.GetChannels(): %s',
+                            self.object_path, e)
+        self.ps_watcher.activities_list_store.set(self.iter, ACT_COL_CONN,
+                                                  '!')
+        self.ps_watcher.activities_list_store.set(self.iter, ACT_COL_CHANNELS,
+                                                  '!')
+
     def _on_get_id_success(self, ident):
         self.id = ident
         self.ps_watcher.activities_list_store.set(self.iter, ACT_COL_ID, ident)
 
     def _on_get_id_failure(self, e):
-        logger.warning('<Activity %s>.GetId(): %s', self.object_path, e)
+        self.ps_watcher.log('<Activity %s>.GetId(): %s', self.object_path, e)
         self.ps_watcher.activities_list_store.set(self.iter, ACT_COL_ID,
                                                   '!')
 
@@ -100,7 +180,8 @@ class ActivityWatcher(object):
                                                   color)
 
     def _on_get_color_failure(self, e):
-        logger.warning('<Activity %s>.GetColor(): %s', self.object_path, e)
+        self.ps_watcher.log('<Activity %s>.GetColor(): %s',
+                            self.object_path, e)
         self.ps_watcher.activities_list_store.set(self.iter, ACT_COL_COLOR,
                                                   '!')
 
@@ -110,7 +191,7 @@ class ActivityWatcher(object):
                                                   type_)
 
     def _on_get_type_failure(self, e):
-        logger.warning('<Activity %s>.GetType(): %s', self.object_path, e)
+        self.ps_watcher.log('<Activity %s>.GetType(): %s', self.object_path, e)
         self.ps_watcher.activities_list_store.set(self.iter, ACT_COL_TYPE,
                                                   '!')
 
@@ -120,7 +201,7 @@ class ActivityWatcher(object):
                                                   name)
 
     def _on_get_name_failure(self, e):
-        logger.warning('<Activity %s>.GetName(): %s', self.object_path, e)
+        self.ps_watcher.log('<Activity %s>.GetName(): %s', self.object_path, e)
         self.ps_watcher.activities_list_store.set(self.iter, ACT_COL_NAME,
                                                   '!')
 
@@ -160,12 +241,89 @@ class BuddyWatcher(object):
         self.ipv4 = '?'
         self.cur_act = '?'
         self.keyid = '?'
+        self.activities = None
+        self.handles = None
 
         self.iter = self.ps_watcher.add_buddy(self)
 
         self.iface.GetProperties(reply_handler=self._on_get_props_success,
                                  error_handler=self._on_get_props_failure,
                                  byte_arrays=True)
+
+        self.iface.connect_to_signal('JoinedActivity', self._on_joined)
+        self.iface.connect_to_signal('LeftActivity', self._on_left)
+        self.iface.GetJoinedActivities(reply_handler=self._on_get_acts_success,
+                                       error_handler=self._on_get_acts_failure)
+
+        self.iface.connect_to_signal('TelepathyHandleAdded',
+                                    self._on_handle_added)
+        self.iface.connect_to_signal('TelepathyHandleRemoved',
+                                    self._on_handle_removed)
+        self.iface.GetTelepathyHandles(
+                reply_handler=self._on_get_handles_success,
+                error_handler=self._on_get_handles_failure)
+
+    def _on_handle_added(self, service, conn, handle):
+        if self.handles is None:
+            return
+        if conn.startswith('/org/freedesktop/Telepathy/Connection/'):
+            conn = '.../' + conn[38:]
+        self.handles.append('%u@%s' % (handle, conn))
+        self.ps_watcher.buddies_list_store.set(self.iter,
+                                               BUDDY_COL_HANDLES,
+                                               ' '.join(self.handles))
+
+    def _on_handle_removed(self, service, conn, handle):
+        if self.handles is None:
+            return
+        if conn.startswith('/org/freedesktop/Telepathy/Connection/'):
+            conn = '.../' + conn[38:]
+        try:
+            self.handles.append('%u@%s' % (handle, conn))
+        except ValueError:
+            pass
+        self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_HANDLES,
+                                               ' '.join(self.handles))
+
+    def _on_get_handles_success(self, handles):
+        self.handles = []
+        for service, conn, handle in handles:
+            self._on_handle_added(service, conn, handle)
+
+    def _on_get_handles_failure(self, e):
+        self.log('<Buddy %s>.GetTelepathyHandles(): %s', self.object_path, e)
+        self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_HANDLES,
+                                               '!')
+
+    def _on_joined(self, act):
+        if self.activities is None:
+            return
+        if act.startswith('/org/laptop/Sugar/Presence/Activities/'):
+            act = '.../' + act[38:]
+        self.activities.append(act)
+        self.ps_watcher.buddies_list_store.set(self.iter,
+                                               BUDDY_COL_ACTIVITIES,
+                                               ' '.join(self.activities))
+
+    def _on_left(self, act):
+        if self.activities is None:
+            return
+        try:
+            self.activities.remove(act)
+        except ValueError:
+            pass
+        self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_ACTIVITIES,
+                                               ' '.join(self.activities))
+
+    def _on_get_acts_success(self, activities):
+        self.activities = []
+        for act in activities:
+            self._on_joined(act)
+
+    def _on_get_acts_failure(self, e):
+        self.log('<Buddy %s>.GetJoinedActivities(): %s', self.object_path, e)
+        self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_ACTIVITIES,
+                                               '!')
 
     def _on_get_props_success(self, props):
         # ignore key for now
@@ -194,7 +352,8 @@ class BuddyWatcher(object):
                                                self.keyid)
 
     def _on_get_props_failure(self, e):
-        logger.warning('<Buddy %s>.GetProperties(): %s', self.object_path, e)
+        self.ps_watcher.log('<Buddy %s>.GetProperties(): %s',
+                            self.object_path, e)
         self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_NICK, '!')
         self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_OWNER,
                                                False)
@@ -204,7 +363,6 @@ class BuddyWatcher(object):
                                                '!')
         self.ps_watcher.buddies_list_store.set(self.iter, BUDDY_COL_KEY_ID,
                                                '!')
-
 
     def _finish_appearing(self):
         self.appearing = False
@@ -225,7 +383,7 @@ class BuddyWatcher(object):
 
 class PresenceServiceWatcher(VBox):
 
-    def __init__(self, bus, unique_name):
+    def __init__(self, bus, unique_name, log):
         VBox.__init__(self)
 
         logger.debug('Starting up PresenceServiceWatcher...')
@@ -233,6 +391,7 @@ class PresenceServiceWatcher(VBox):
         self.unique_name = unique_name
         self.proxy = bus.get_object(unique_name, PS_PATH)
         self.iface = dbus.Interface(self.proxy, PS_IFACE)
+        self.log = log
 
         logger.debug('Starting up PresenceServiceWatcher (2)...')
 
@@ -260,6 +419,9 @@ class PresenceServiceWatcher(VBox):
                                                str,     # color
                                                str,     # type
                                                str,     # name
+                                               str,     # conn
+                                               str,     # channels
+                                               str,     # buddies
                                                )
 
         self.pack_start(Label('Activities:'), False, False)
@@ -290,6 +452,19 @@ class PresenceServiceWatcher(VBox):
             strikethrough=ACT_COL_STRIKE)
         c.set_resizable(True)
         c.set_sort_column_id(ACT_COL_NAME)
+        c = self.activities_list.insert_column_with_attributes(5, 'Connection',
+            CellRendererText(), text=ACT_COL_CONN, weight=ACT_COL_WEIGHT,
+            strikethrough=ACT_COL_STRIKE)
+        c.set_resizable(True)
+        c.set_sort_column_id(ACT_COL_CONN)
+        c = self.activities_list.insert_column_with_attributes(6, 'Channels',
+            CellRendererText(), text=ACT_COL_CHANNELS, weight=ACT_COL_WEIGHT,
+            strikethrough=ACT_COL_STRIKE)
+        c.set_resizable(True)
+        c = self.activities_list.insert_column_with_attributes(7, 'Buddies',
+            CellRendererText(), text=ACT_COL_BUDDIES, weight=ACT_COL_WEIGHT,
+            strikethrough=ACT_COL_STRIKE)
+        c.set_resizable(True)
 
         scroller = ScrolledWindow()
         scroller.add(self.activities_list)
@@ -297,7 +472,7 @@ class PresenceServiceWatcher(VBox):
 
         # keep this in sync with the BUDDY_COL_ constants
         self.buddies_list_store = ListStore(str, int, bool, str, bool,
-                                            str, str, str, str)
+                                            str, str, str, str, str, str)
 
         self.pack_start(Label('Buddies:'), False, False)
         self.buddies_list = TreeView(self.buddies_list_store)
@@ -333,6 +508,16 @@ class PresenceServiceWatcher(VBox):
             weight=BUDDY_COL_WEIGHT, strikethrough=BUDDY_COL_STRIKE)
         c.set_resizable(True)
         c.set_sort_column_id(BUDDY_COL_CUR_ACT)
+        c = self.buddies_list.insert_column_with_attributes(7, 'Activities',
+            CellRendererText(), text=BUDDY_COL_ACTIVITIES,
+            weight=BUDDY_COL_WEIGHT, strikethrough=BUDDY_COL_STRIKE)
+        c.set_resizable(True)
+        c.set_sort_column_id(BUDDY_COL_ACTIVITIES)
+        c = self.buddies_list.insert_column_with_attributes(8, 'Handles',
+            CellRendererText(), text=BUDDY_COL_HANDLES,
+            weight=BUDDY_COL_WEIGHT, strikethrough=BUDDY_COL_STRIKE)
+        c.set_resizable(True)
+        c.set_sort_column_id(BUDDY_COL_HANDLES)
 
         scroller = ScrolledWindow()
         scroller.add(self.buddies_list)
@@ -350,14 +535,14 @@ class PresenceServiceWatcher(VBox):
             self.activities[path] = ActivityWatcher(self, path)
 
     def _on_get_activities_failure(self, e):
-        logger.warning('PS GetActivities() failed with %s', e)
+        self.log('PS GetActivities() failed with %s', e)
 
     def add_activity(self, act):
         path = act.object_path
         if path.startswith('/org/laptop/Sugar/Presence/Activities/'):
             path = '.../' + path[38:]
         return self.activities_list_store.append((path, 700, False,
-            act.id, act.color, act.type, act.name))
+            act.id, act.color, act.type, act.name, act.conn, '?', '?'))
 
     def remove_activity(self, act):
         self.activities.pop(act.object_path, None)
@@ -375,8 +560,8 @@ class PresenceServiceWatcher(VBox):
         logger.debug('PS emitted ActivityDisappeared("%s")', path)
         act = self.activities.get(path)
         if act is None:
-            logger.warning('Trying to remove activity "%s" which is already '
-                           'absent', path)
+            self.log('Trying to remove activity "%s" which is already '
+                     'absent', path)
         else:
             # we don't remove the activity straight away, just cross it out
             act.disappear()
@@ -395,14 +580,15 @@ class PresenceServiceWatcher(VBox):
             self.buddies[path] = BuddyWatcher(self, path)
 
     def _on_get_buddies_failure(self, e):
-        logger.warning('PS GetBuddies() failed with %s', e)
+        self.log('PS GetBuddies() failed with %s', e)
 
     def add_buddy(self, b):
         path = b.object_path
         if path.startswith('/org/laptop/Sugar/Presence/Buddies/'):
             path = '.../' + path[35:]
         return self.buddies_list_store.append((path, 700, False,
-            b.nick, b.owner, b.color, b.ipv4, b.cur_act, b.keyid))
+            b.nick, b.owner, b.color, b.ipv4, b.cur_act, b.keyid,
+            '?', '?'))
 
     def remove_buddy(self, b):
         self.buddies.pop(b.object_path, None)
@@ -420,8 +606,8 @@ class PresenceServiceWatcher(VBox):
         logger.debug('PS emitted BuddyDisappeared("%s")', path)
         b = self.buddies.get(path)
         if b is None:
-            logger.warning('Trying to remove buddy "%s" which is already '
-                           'absent', path)
+            self.log('Trying to remove buddy "%s" which is already '
+                     'absent', path)
         else:
             # we don't remove the activity straight away, just cross it out
             b.disappear()
@@ -435,12 +621,28 @@ class PresenceServiceNameWatcher(VBox):
         self.bus = bus
 
         self.label = Label('Looking for Presence Service...')
-        bus.watch_name_owner(PS_NAME, self.on_name_owner_change)
+        self.errors = ListStore(str)
+
+        errors = TreeView(model=self.errors)
+        errors.insert_column_with_attributes(0, 'Errors', CellRendererText(),
+                                             text=0)
+        scroller = ScrolledWindow()
+        scroller.add(errors)
+
+        self.paned = VPaned()
+        self.paned.pack1(scroller)
 
         self.pack_start(self.label, False, False)
-        self.ps_watcher = None
+        self.pack_end(self.paned)
+
+        bus.watch_name_owner(PS_NAME, self.on_name_owner_change)
+        self.ps_watcher = Label('-')
+        self.paned.pack2(self.ps_watcher)
 
         self.show_all()
+
+    def log(self, format, *args):
+        self.errors.append((format % args,))
 
     def on_name_owner_change(self, owner):
         try:
@@ -448,17 +650,19 @@ class PresenceServiceNameWatcher(VBox):
                 self.label.set_text('Presence Service running: unique name %s'
                                     % owner)
                 if self.ps_watcher is not None:
-                    self.remove(self.ps_watcher)
-                self.ps_watcher = PresenceServiceWatcher(self.bus, owner)
-                self.pack_start(self.ps_watcher)
+                    self.paned.remove(self.ps_watcher)
+                self.ps_watcher = PresenceServiceWatcher(self.bus, owner,
+                                                         self.log)
+                self.paned.pack2(self.ps_watcher)
                 self.show_all()
             else:
                 self.label.set_text('Presence Service not running')
                 if self.ps_watcher is not None:
-                    self.remove(self.ps_watcher)
-                self.ps_watcher = None
+                    self.paned.remove(self.ps_watcher)
+                self.ps_watcher = Label('-')
+                self.paned.pack2(self.ps_watcher)
         except Exception, e:
-            logger.warning('%s', e)
+            self.log('%s', e)
 
 
 class Interface(object):
