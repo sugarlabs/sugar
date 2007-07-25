@@ -1,6 +1,8 @@
 * Turn off logging by default.  Logs may be re-enabled on a per-module basis
   by adding environment variables like SHELL_DEBUG and RECORD_DEBUG to
   the sugar environment
+* #2370 Update spanish translation. (marco)
+* #2014 Add icons in the share dropdown in activities. (marco)
 
 Snapshot 9ac5d38e90
 
