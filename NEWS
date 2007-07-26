@@ -1,3 +1,4 @@
+* #2511 Fix journal entries background in the object chooser. (tomeu)
 * Activity launching now timeout after 120 seconds. (marco)
 * Add timeout arg to sugar.datastore.Datastore. (tomeu)
 * Presence Service monitor in dev console (smcv)
