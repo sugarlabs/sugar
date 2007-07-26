@@ -1,3 +1,4 @@
+* Add timeout arg to sugar.datastore.Datastore. (tomeu)
 * Turn off logging by default.  Logs may be re-enabled on a per-module basis
   by adding environment variables like SHELL_DEBUG and RECORD_DEBUG to
   the sugar environment
