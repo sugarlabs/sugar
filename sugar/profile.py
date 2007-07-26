@@ -29,10 +29,8 @@ class _Profile(object):
     
     User settings are stored in an INI-style configuration
     file.  This object uses the ConfigParser module to load 
-    the settings.  At the moment the only storage mechanism
-    is in the set_server_registered method, which loads the 
-    file directly from disk, then dumps it back out again 
-    immediately, rather than using the class.
+    the settings. (We only very rarely set keys, so we don't
+    keep the ConfigParser around between calls.)
     
     The profile is also responsible for loading the user's
     public and private ssh keys from disk.
@@ -45,6 +43,7 @@ class _Profile(object):
             associated 
         server_registered -- whether the child has registered 
             with the school server or not
+        backup1 -- temporary backup info key for Trial-2
         
         pubkey -- public ssh key
         privkey_hash -- SHA has of the child's public key 
@@ -56,6 +55,7 @@ class _Profile(object):
         self.privkey_hash = None
         self.server = None
         self.server_registered = False
+        self.backup1 = None
         self._load()
 
     def update(self):
@@ -65,7 +65,13 @@ class _Profile(object):
         cp = ConfigParser()
         config_path = os.path.join(env.get_profile_path(), 'config')
         parsed = cp.read([config_path])
+        self._load_config(cp)
+        del cp
 
+        self._load_pubkey()
+        self._hash_private_key()
+
+    def _load_config(self, cp):
         if cp.has_option('Buddy', 'NickName'):
             name = cp.get('Buddy', 'NickName')
             # decode nickname from ascii-safe chars to unicode
@@ -82,10 +88,8 @@ class _Profile(object):
             if registered.lower() == "true":
                 self.server_registered = True
 
-        del cp
-
-        self._load_pubkey()
-        self._hash_private_key()
+        if cp.has_option('Server', 'Backup1'):
+            self.backup1 = cp.get('Server', 'Backup1')
 
     def _load_pubkey(self):
         self.pubkey = None
@@ -136,6 +140,22 @@ class _Profile(object):
         key_hash = util._sha_data(key)
         self.privkey_hash = util.printable_hash(key_hash)
 
+    def set_key(section, key, value):
+        cp = ConfigParser()
+        config_path = os.path.join(env.get_profile_path(), 'config')
+        parsed = cp.read([config_path])
+
+        if not cp.has_section(section):
+            cp.add_section(section)
+        cp.set(section, key, value)
+
+        f = open(config_path, 'w')
+        cp.write(f)
+        f.close()
+
+        self._load_config(cp)
+        del cp
+
 def get_nick_name():
     return _profile.name
 
@@ -151,21 +171,20 @@ def get_private_key_hash():
 def get_server():
     return _profile.server
 
+def set_server(server):
+    _profile.set_key('Server', 'server', server)
+
+def get_trial2_backup():
+    return _profile.backup1
+
+def set_trial2_backup(backup_info):
+    _profile.set_key('Server', 'backup1', backup_info)
+
 def get_server_registered():
     return _profile.server_registered
 
 def set_server_registered():
-    _profile.server_registered = True
-
-    cp = ConfigParser()
-
-    config_path = os.path.join(env.get_profile_path(), 'config')
-    cp.read([config_path])
-
-    if not cp.has_section('Server'):
-        cp.add_section('Server')
-    cp.set('Server', 'Registered', True)
-    cp.write(open(config_path, 'w'))
+    _profile.set_key('Server', 'Registered', True)
 
 def update():
     _profile.update()
