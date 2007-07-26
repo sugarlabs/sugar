@@ -113,6 +113,7 @@ class ActivityCreationHandler(gobject.GObject):
                     error_handler=self._notify_launch_error_handler)
 
         self._factory.create(self._activity_handle.get_dict(),
+                             timeout=120 * 1000,
                              reply_handler=self._no_reply_handler,
                              error_handler=self._create_error_handler)
 

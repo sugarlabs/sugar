@@ -67,13 +67,15 @@ class ActivityHandle(object):
 
     def get_dict(self):
         """Retrieve our settings as a dictionary"""
-        result = { 'activity_id' : self.activity_id }
+        result = { }
+        if self.activity_id:
+            result['activity_id'] = str(self.activity_id)
         if self.pservice_id:
-            result['pservice_id'] = self.pservice_id
+            result['pservice_id'] = str(self.pservice_id)
         if self.object_id:
-            result['object_id'] = self.object_id
+            result['object_id'] = str(self.object_id)
         if self.uri:
-            result['uri'] = self.uri
+            result['uri'] = str(self.uri)
 
         return result
 
