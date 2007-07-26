@@ -37,7 +37,7 @@ class AccessPointModel(gobject.GObject):
                       gobject.PARAM_READABLE),
         'state'    : (int, None, None, STATE_CONNECTING,
                       STATE_NOTCONNECTED, 0, gobject.PARAM_READABLE),
-        'capabilities' : (int, None, None, 0, sys.maxint, 0,
+        'capabilities' : (int, None, None, 0, 0x7FFFFFFF, 0,
                       gobject.PARAM_READABLE),
         'mode'     : (int, None, None, 0, 6, 0, gobject.PARAM_READABLE)
     }

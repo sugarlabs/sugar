@@ -36,7 +36,7 @@ class IconButton(CanvasIcon, hippo.CanvasItem):
 
     __gproperties__ = {
         'size'      : (int, None, None,
-                       0, sys.maxint, STANDARD_SIZE,
+                       0, 32767, STANDARD_SIZE,
                        gobject.PARAM_READWRITE)
     }
 
