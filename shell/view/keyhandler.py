@@ -24,7 +24,7 @@ import gtk
 
 from hardware import hardwaremanager
 from model.shellmodel import ShellModel
-from sugar._sugarext import KeyGrabber
+from sugar._sugaruiext import KeyGrabber
 
 _BRIGHTNESS_STEP = 2
 _VOLUME_STEP = 10

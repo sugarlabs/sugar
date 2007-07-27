@@ -17,16 +17,16 @@ INCLUDES = 				\
 	$(LIB_BINDINGS_CFLAGS)		\
 	$(PYTHON_INCLUDES)		\
 	-I$(top_srcdir)/lib		\
-	-I$(top_srcdir)/lib/xdgmime
+	-I$(top_srcdir)/lib/ui
 
 pkgpyexecdir = $(pythondir)/sugar
 
-pkgpyexec_LTLIBRARIES = _sugarext.la
+pkgpyexec_LTLIBRARIES = _sugarext.la _sugaruiext.la
 
 _sugarext_la_LDFLAGS = -module -avoid-version
-_sugarext_la_LIBADD =			\
-	$(LIB_BINDINGS_LIBS)		\
-	$(LIB_LIBS)			\
+_sugarext_la_LIBADD =				\
+	$(LIB_BINDINGS_LIBS)			\
+	$(LIB_LIBS)				\
 	$(top_builddir)/lib/libsugar.la
 
 _sugarext_la_SOURCES = 		\
@@ -36,8 +36,28 @@ nodist__sugarext_la_SOURCES = _sugarext.c
 
 _sugarext.c: _sugarext.defs _sugarext.override
 
-CLEANFILES = _sugarext.c
-EXTRA_DIST = _sugarext.override _sugarext.defs
+_sugaruiext_la_LDFLAGS = -module -avoid-version
+_sugaruiext_la_LIBADD =				\
+	$(LIB_BINDINGS_LIBS)			\
+	$(LIB_LIBS)				\
+	$(top_builddir)/lib/ui/libsugarui.la
+
+_sugaruiext_la_SOURCES = 		\
+	_sugaruiextmodule.c
+
+nodist__sugaruiext_la_SOURCES = _sugaruiext.c
+
+_sugaruiext.c: _sugaruiext.defs _sugaruiext.override
+
+CLEANFILES = 		\
+	_sugarext.c	\
+	_sugaruiext.c
+
+EXTRA_DIST =			\
+	_sugarext.override	\
+	_sugarext.defs		\
+	_sugaruiext.defs	\
+	_sugaruiext.override
 
 .defs.c:
 	(cd $(srcdir)\

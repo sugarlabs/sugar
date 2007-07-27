@@ -26,7 +26,7 @@ from sugar.graphics import palettegroup
 from sugar.graphics import animator
 from sugar.graphics import units
 from sugar.graphics import style
-from sugar import _sugarext
+from sugar import _sugaruiext
 
 _BOTTOM_LEFT  = 0
 _BOTTOM_RIGHT = 1
@@ -87,7 +87,7 @@ class Palette(gobject.GObject):
         self._popdown_anim = animator.Animator(0.6, 10)
         self._popdown_anim.add(_PopdownAnimation(self))
 
-        self._menu = _sugarext.Menu()
+        self._menu = _sugaruiext.Menu()
         self._menu.set_min_width(units.grid_to_pixels(1))
 
         self._primary = _PrimaryMenuItem(label, accel_path)

@@ -2,24 +2,10 @@
 %%
 headers
 #include <Python.h>
-
-#include "pygobject.h"
-#include "sugar-address-entry.h"
-#include "sugar-key-grabber.h"
-#include "sugar-menu.h"
-#include "sugar-x11-util.h"
 #include "xdgmime.h"
-
-#include <pygtk/pygtk.h>
 #include <glib.h>
-
 %%
 modulename _sugarext
-%%
-import gobject.GObject as PyGObject_Type
-import gtk.Entry as PyGtkEntry_Type
-import gtk.Menu as PyGtkMenu_Type
-import gtk.gdk.Window as PyGdkWindow_Type
 %%
 ignore-glob
   *_get_type
