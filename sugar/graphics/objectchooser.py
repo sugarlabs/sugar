@@ -105,6 +105,8 @@ class CollapsedEntry(Frame):
         Frame.__init__(self)
         self.props.box_height = units.grid_to_pixels(1)
         self.props.spacing = units.points_to_pixels(5)
+        self.props.border_color = color.FRAME_BORDER.get_int()
+        self.props.background_color = color.DESKTOP_BACKGROUND.get_int()
 
         self.jobject = jobject
         self._icon_name = None

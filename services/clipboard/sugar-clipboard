@@ -26,9 +26,6 @@ from sugar import logger
 logger.start('clipboard')
 
 import gobject
-import pygtk
-pygtk.require('2.0')
-
 import dbus.glib
  
 from sugar import env
