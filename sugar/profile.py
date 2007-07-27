@@ -140,7 +140,7 @@ class _Profile(object):
         key_hash = util._sha_data(key)
         self.privkey_hash = util.printable_hash(key_hash)
 
-    def set_key(section, key, value):
+    def set_key(self, section, key, value):
         cp = ConfigParser()
         config_path = os.path.join(env.get_profile_path(), 'config')
         parsed = cp.read([config_path])
