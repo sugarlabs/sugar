@@ -43,7 +43,7 @@ Makefile
 bin/Makefile
 data/Makefile
 lib/Makefile
-lib/xdgmime/Makefile
+lib/ui/Makefile
 services/Makefile
 services/clipboard/Makefile
 shell/Makefile

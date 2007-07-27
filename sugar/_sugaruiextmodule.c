@@ -24,19 +24,23 @@
 /* include this first, before NO_IMPORT_PYGOBJECT is defined */
 #include <pygobject.h>
 
-extern PyMethodDef py_sugarext_functions[];
+extern PyMethodDef py_sugaruiext_functions[];
+
+void py_sugaruiext_register_classes (PyObject *d);
 
 DL_EXPORT(void)
-init_sugarext(void)
+init_sugaruiext(void)
 {
     PyObject *m, *d;
 
     init_pygobject ();
 
-    m = Py_InitModule ("_sugarext", py_sugarext_functions);
+    m = Py_InitModule ("_sugaruiext", py_sugaruiext_functions);
     d = PyModule_GetDict (m);
 
+    py_sugaruiext_register_classes (d);
+
     if (PyErr_Occurred ()) {
-        Py_FatalError ("can't initialise module _sugarext");
+        Py_FatalError ("can't initialise module _sugaruiext");
     }
 }
