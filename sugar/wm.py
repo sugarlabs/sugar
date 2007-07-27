@@ -17,22 +17,22 @@
 
 import gtk
 
-import _sugarext
+import _sugaruiext
 
 def get_activity_id(wnck_window):
     window = gtk.gdk.window_foreign_new(wnck_window.get_xid())
-    return _sugarext.x11_get_string_property(
+    return _sugaruiext.x11_get_string_property(
                             window, '_SUGAR_ACTIVITY_ID')
 
 def get_bundle_id(wnck_window):
     window = gtk.gdk.window_foreign_new(wnck_window.get_xid())
-    return _sugarext.x11_get_string_property(
+    return _sugaruiext.x11_get_string_property(
                             window, '_SUGAR_BUNDLE_ID')
 
 def set_activity_id(window, activity_id):
-    _sugarext.x11_set_string_property(
+    _sugaruiext.x11_set_string_property(
             window, '_SUGAR_ACTIVITY_ID', activity_id)
 
 def set_bundle_id(window, bundle_id):
-    _sugarext.x11_set_string_property(
+    _sugaruiext.x11_set_string_property(
             window, '_SUGAR_BUNDLE_ID', bundle_id)
