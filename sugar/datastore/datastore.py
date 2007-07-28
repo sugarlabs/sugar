@@ -118,7 +118,7 @@ class DSObject(object):
     def is_bundle(self):
         return self.metadata['mime_type'] == 'application/vnd.olpc-x-sugar'
 
-    def resume(self):
+    def resume(self, service_name=None):
         if self.is_bundle():
             bundle = Bundle(self.file_path)
             if not bundle.is_installed():
@@ -126,7 +126,8 @@ class DSObject(object):
 
             activityfactory.create(bundle.get_service_name())
         else:
-            service_name = self.get_activities()[0].service_name
+            if service_name is None:
+                service_name = self.get_activities()[0].service_name
 
             activity_id = self.metadata['activity_id']
             object_id = self.object_id
