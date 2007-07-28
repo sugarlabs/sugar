@@ -15,6 +15,8 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+import os
+
 import gtk
 
 class Icon(gtk.Image):
@@ -28,6 +30,10 @@ class Icon(gtk.Image):
         if icon_theme.has_icon(normal_name):
             source = gtk.IconSource()
             source.set_icon_name(normal_name)
+            icon_set.add_source(source)
+        elif os.path.exists(normal_name):
+            source = gtk.IconSource()
+            source.set_filename(normal_name)
             icon_set.add_source(source)
 
         inactive_name = name + '-inactive'
