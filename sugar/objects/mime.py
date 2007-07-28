@@ -59,8 +59,10 @@ def choose_most_significant(mime_types):
                 continue
 
             if mime_type.startswith(mime_category):
-                # skip mozilla private types (second component starts with '_') 
-                if mime_type.split('/')[1].startswith('_'):
+                # skip mozilla private types (second component starts with '_'
+                # or ends with '-priv') 
+                if mime_type.split('/')[1].startswith('_') or \
+                   mime_type.split('/')[1].endswith('-priv'):
                     continue
 
                 # take out the specifier after ';' that mozilla likes to add
@@ -69,9 +71,11 @@ def choose_most_significant(mime_types):
                 return mime_type
 
     if 'text/html' in mime_types:
+        logging.debug('Choosed text/html!')
         return 'text/html'
 
     if 'text/plain' in mime_types or 'STRING' in mime_types:
+        logging.debug('Choosed text/plain!')
         return 'text/plain'
 
     logging.debug('Returning first: %r.' % mime_types[0])
