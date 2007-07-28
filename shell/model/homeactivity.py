@@ -184,9 +184,15 @@ class HomeActivity(gobject.GObject):
             return self._launching
 
     def _get_service_name(self):
-        return _SERVICE_NAME + self._activity_id
+        if self._activity_id:
+            return _SERVICE_NAME + self._activity_id
+        else:
+            return None
 
     def _retrieve_service(self):
+        if not self._activity_id:
+            return
+
         try:
             bus = dbus.SessionBus()
             proxy = bus.get_object(self._get_service_name(),
