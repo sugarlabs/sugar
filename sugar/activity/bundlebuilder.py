@@ -106,6 +106,10 @@ def _delete_backups(arg, dirname, names):
         if name.endswith('~') or name.endswith('pyc'):
             os.remove(os.path.join(dirname, name))
 
+def _get_service_name():
+    bundle = Bundle(_get_source_path())
+    return bundle.get_service_name()
+
 def cmd_help():
     print 'Usage: \n\
 setup.py dev                 - setup for development \n\
@@ -224,7 +228,7 @@ def cmd_genmo(bundle_name, manifest):
             if not os.path.isdir(mo_path):
                 os.makedirs(mo_path)
 
-            mo_file = os.path.join(mo_path, "%s.mo" % bundle_name)
+            mo_file = os.path.join(mo_path, "%s.mo" % _get_service_name())
             args = ["msgfmt", "--output-file=%s" % mo_file, file_name]
             retcode = subprocess.call(args)
             if retcode:
