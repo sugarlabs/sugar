@@ -146,18 +146,26 @@ def _get_file_list(manifest):
     else:
         return _DefaultFileList()
 
-def _include_mo_in_bundle(bundle_zip, bundle_name):
-    for langdir in os.listdir('locale'):
-        if os.path.isdir(os.path.join('locale', langdir, 'LC_MESSAGES')):
-            for filename in os.listdir(os.path.join('locale', langdir,
-                                                    'LC_MESSAGES')):
-                if filename.endswith('.mo'):
-                    arcname = os.path.join(bundle_name + '.activity',
-                                           'locale', langdir, 'LC_MESSAGES',
-                                           filename)
-                    bundle_zip.write(
-                        os.path.join('locale', langdir, 'LC_MESSAGES', filename),
-                        arcname)
+def _get_po_list(manifest):
+    file_list = {}
+
+    po_regex = re.compile("po/(.*)\.po$")
+    for file_name in _get_file_list(manifest):
+        match = po_regex.match(file_name)
+        if match:
+            file_list[match.group(1)] = file_name
+
+    return file_list
+
+def _get_mo_list(manifest):
+    mo_list = []
+
+    for lang in _get_po_list(manifest).keys():
+        filename = _get_service_name() + '.mo'
+        mo_list.append(os.path.join(_get_source_path(), 'locale',
+                                    lang, 'LC_MESSAGES', filename))
+
+    return mo_list
 
 def cmd_dist(bundle_name, manifest):
     cmd_genmo(bundle_name, manifest)
@@ -165,13 +173,13 @@ def cmd_dist(bundle_name, manifest):
 
     zipname = _get_package_name(bundle_name)
     bundle_zip = zipfile.ZipFile(zipname, 'w', zipfile.ZIP_DEFLATED)
+    base_dir = bundle_name + '.activity'
     
     for filename in file_list:
-        arcname = os.path.join(bundle_name + '.activity', filename)
-        bundle_zip.write(filename, arcname)
+        bundle_zip.write(filename, os.path.join(base_dir, filename))
 
-    if os.path.exists('locale'):
-        _include_mo_in_bundle(bundle_zip, bundle_name)
+    for filename in _get_mo_list(manifest):
+        bundle_zip.write(filename, os.path.join(base_dir, filename))
 
     bundle_zip.close()
 
@@ -207,32 +215,28 @@ def cmd_genpot(bundle_name, manifest):
     if retcode:
         print 'ERROR - xgettext failed with return code %i.' % retcode
 
-    po_regex = re.compile("po/.*\.po$")
-    for file_name in _get_file_list(manifest):
-        if po_regex.match(file_name):
-            args = [ 'msgmerge', '-U', file_name, pot_file ]
-            retcode = subprocess.call(args)
-            if retcode:
-                print 'ERROR - msgmerge failed with return code %i.' % retcode    
+    for file_name in _get_po_list(manifest).values():
+        args = [ 'msgmerge', '-U', file_name, pot_file ]
+        retcode = subprocess.call(args)
+        if retcode:
+            print 'ERROR - msgmerge failed with return code %i.' % retcode    
 
 def cmd_genmo(bundle_name, manifest):
     source_path = _get_source_path()
 
-    po_regex = re.compile("po/(.*)\.po$")
-    for file_name in _get_file_list(manifest):
-        match = po_regex.match(file_name)
-        if match:
-            lang = match.group(1)
+    po_list = _get_po_list(manifest)
+    for lang in po_list.keys():
+        file_name = po_list[lang]
 
-            mo_path = os.path.join(source_path, 'locale', lang, 'LC_MESSAGES')
-            if not os.path.isdir(mo_path):
-                os.makedirs(mo_path)
+        mo_path = os.path.join(source_path, 'locale', lang, 'LC_MESSAGES')
+        if not os.path.isdir(mo_path):
+            os.makedirs(mo_path)
 
-            mo_file = os.path.join(mo_path, "%s.mo" % _get_service_name())
-            args = ["msgfmt", "--output-file=%s" % mo_file, file_name]
-            retcode = subprocess.call(args)
-            if retcode:
-                print 'ERROR - msgfmt failed with return code %i.' % retcode
+        mo_file = os.path.join(mo_path, "%s.mo" % _get_service_name())
+        args = ["msgfmt", "--output-file=%s" % mo_file, file_name]
+        retcode = subprocess.call(args)
+        if retcode:
+            print 'ERROR - msgfmt failed with return code %i.' % retcode
 
 def cmd_release(bundle_name, manifest):
     if not os.path.isdir('.git'):
