@@ -1,0 +1,139 @@
+# Greek translation of Sugar.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Simos Xenitellis <simos.lists@googlemail.com>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Sugar\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-06-21 17:38+0200\n"
+"PO-Revision-Date: 2007-07-25 23:17+0100\n"
+"Last-Translator: Simos Xenitellis <simos.lists@googlemail.com>\n"
+"Language-Team: Greek <olpc@grnet.gr>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../shell/intro/intro.py:61
+msgid "Name:"
+msgstr "Όνομα:"
+
+#: ../shell/intro/intro.py:84
+msgid "Click to change color:"
+msgstr "Πατήστε για να αλλάξτε χρώμα:"
+
+#: ../shell/intro/intro.py:134
+msgid "Back"
+msgstr "Πίσω"
+
+#: ../shell/intro/intro.py:142
+msgid "Done"
+msgstr "Ολοκληρώθηκε"
+
+#: ../shell/intro/intro.py:145
+msgid "Next"
+msgstr "Επόμενο"
+
+#: ../shell/view/BuddyMenu.py:82
+msgid "Remove friend"
+msgstr "Διαγραφή φίλου/ης"
+
+#: ../shell/view/BuddyMenu.py:85
+msgid "Make friend"
+msgstr "Να γίνει φίλος/η"
+
+#. FIXME check that the buddy is not in the activity already
+#: ../shell/view/BuddyMenu.py:96
+msgid "Invite"
+msgstr "Πρόσκληση"
+
+#: ../shell/view/clipboardmenu.py:66
+msgid "Remove"
+msgstr "Διαγραφή"
+
+#: ../shell/view/clipboardmenu.py:70
+msgid "Open"
+msgstr "Άνοιγμα"
+
+#. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
+#. TODO: Implement stopping downloads
+#. self._stop_item.connect('activate', self._stop_item_activate_cb)
+#. self.append_menu_item(self._stop_item)
+#: ../shell/view/clipboardmenu.py:79
+msgid "Add to journal"
+msgstr "Προσθήκη στα πράγματά μου"
+
+#: ../shell/view/clipboardmenu.py:180
+#, python-format
+msgid "Clipboard object: %s."
+msgstr "Αντικείμενο προχείρου: %s."
+
+#: ../shell/view/frame/zoombox.py:42
+msgid "Neighborhood"
+msgstr "Γειτονιά"
+
+#: ../shell/view/frame/zoombox.py:55
+msgid "Group"
+msgstr "Ομάδα"
+
+#: ../shell/view/frame/zoombox.py:68
+msgid "Home"
+msgstr "Αρχή"
+
+#: ../shell/view/frame/zoombox.py:81
+msgid "Activity"
+msgstr "Δραστηριότητα"
+
+#: ../services/clipboard/objecttypeservice.py:32
+msgid "Text"
+msgstr "Κείμενο"
+
+#: ../services/clipboard/objecttypeservice.py:36
+msgid "Image"
+msgstr "Εικόνα"
+
+#: ../shell/view/Shell.py:203
+msgid "Screenshot"
+msgstr "Εικόνα οθόνης"
+
+#: ../shell/view/home/HomeBox.py:140
+msgid "Shutdown"
+msgstr "Παύση λειτουργίας"
+
+#: ../shell/view/home/MeshBox.py:126
+msgid "Mesh Network"
+msgstr "ΧΟ-δίκτυο"
+
+#: ../shell/view/devices/battery.py:34
+msgid "My Battery life"
+msgstr "Η διάρκεια της μπαταρίας μου"
+
+#: ../shell/view/devices/battery.py:87
+msgid "Battery charging"
+msgstr "Η μπαταρία φορτίζεται"
+
+#: ../shell/view/devices/battery.py:89
+msgid "Battery discharging"
+msgstr "Η μπαταρία αποφορτίζεται"
+
+#: ../shell/view/devices/battery.py:91
+msgid "Battery fully charged"
+msgstr "Η μπαταρία έχει φορτιστεί πλήρως"
+
+#: ../sugar/activity/activity.py:68
+msgid "Keep"
+msgstr "Διατήρησε"
+
+#: ../sugar/activity/activity.py:74
+msgid "Share"
+msgstr "Μοίρασε"
+
+#: ../sugar/activity/activity.py:87
+msgid "Stop"
+msgstr "Σταμάτησε"
+
+#: ../sugar/activity/activity.py:251
+#, python-format
+msgid "%s Activity"
+msgstr "Δραστηριότητα %s"
