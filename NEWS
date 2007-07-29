@@ -1,3 +1,4 @@
+* Add WPA support (miguel, dcbw)
 * Fix clipboard support for text from Browse. (tomeu)
 * #2511 Fix journal entries background in the object chooser. (tomeu)
 * Activity launching now timeout after 120 seconds. (marco)
