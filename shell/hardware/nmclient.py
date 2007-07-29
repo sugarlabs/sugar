@@ -24,7 +24,6 @@ import dbus.decorators
 import gobject
 import gtk
 
-from hardware.wepkeydialog import WEPKeyDialog
 from hardware import nminfo
 
 IW_AUTH_ALG_OPEN_SYSTEM = 0x00000001
@@ -37,7 +36,6 @@ NM_DEVICE_STAGE_STRINGS=("Unknown",
     "IP Config",
     "IP Config Get",
     "IP Config Commit",
-    "Post-IP Start",
     "Activated",
     "Failed",
     "Canceled"
@@ -114,13 +112,13 @@ class Network(gobject.GObject):
         self._mode = props[6]
         self._caps = props[7]
         if self._caps & NM_802_11_CAP_PROTO_WPA or self._caps & NM_802_11_CAP_PROTO_WPA2:
-            # We do not support WPA at this time, so don't show
-            # WPA-enabled access points in the menu
-            logging.debug("Net(%s): ssid '%s' dropping because WPA[2] unsupported" % (self._op,
-                    self._ssid))
-            self._valid = False
-            self.emit('initialized', self._valid)
-            return
+            if not (self._caps & NM_802_11_CAP_KEY_MGMT_PSK):
+                # 802.1x is not supported at this time
+                logging.debug("Net(%s): ssid '%s' dropping because 802.1x is unsupported" % (self._op,
+                        self._ssid))
+                self._valid = False
+                self.emit('initialized', self._valid)
+                return
         if self._mode != IW_MODE_INFRA:
             # Don't show Ad-Hoc networks; they usually don't DHCP and therefore
             # won't work well here.  This also works around the bug where we show
@@ -132,9 +130,7 @@ class Network(gobject.GObject):
             return
 
         self._valid = True
-#        logging.debug("Net(%s): ssid '%s', mode %d, strength %d" % (self._op,
-#                self._ssid, self._mode, self._strength))
-
+        logging.debug("Net(%s): caps 0x%X" % (self._ssid, self._caps))
         self.emit('initialized', self._valid)
 
     def _update_error_cb(self, err):
@@ -559,55 +555,6 @@ class NMClient(gobject.GObject):
                 pass
             else:
                 raise dbus.DBusException(e)
-
-    def get_key_for_network(self, net, async_cb, async_err_cb):
-        # Throw up a dialog asking for the key here, and set
-        # the authentication algorithm to the given one, if any
-        #
-        # Key needs to be limited to _either_ 10 or 26 digits long,
-        # and contain _only_ _hex_ digits, 0-9 or a-f
-        #
-        # Auth algorithm should be a dropdown of: [Open System, Shared Key],
-        # mapping to the values [IW_AUTH_ALG_OPEN_SYSTEM, IW_AUTH_ALG_SHARED_KEY]
-        # above
-
-        self._key_dialog = WEPKeyDialog(net, async_cb, async_err_cb)
-        self._key_dialog.connect("response", self._key_dialog_response_cb)
-        self._key_dialog.connect("destroy", self._key_dialog_destroy_cb)
-        self._key_dialog.show_all()
-
-    def _key_dialog_destroy_cb(self, widget, foo=None):
-        if widget != self._key_dialog:
-            return
-        self._key_dialog_response_cb(widget, gtk.RESPONSE_CANCEL)
-
-    def _key_dialog_response_cb(self, widget, response_id):
-        if widget != self._key_dialog:
-            return
-        key = self._key_dialog.get_key()
-        wep_auth_alg = self._key_dialog.get_auth_alg()
-        net = self._key_dialog.get_network()
-        (async_cb, async_err_cb) = self._key_dialog.get_callbacks()
-
-        # Clear self._key_dialog before we call destroy(), otherwise
-        # the destroy will trigger and we'll get called again by
-        # self._key_dialog_destroy_cb
-        self._key_dialog = None
-        widget.destroy()
-
-        if response_id == gtk.RESPONSE_OK:
-            self.nminfo.get_key_for_network_cb(
-                    net, key, wep_auth_alg, async_cb, async_err_cb, canceled=False)
-        else:
-            self.nminfo.get_key_for_network_cb(
-                    net, None, None, async_cb, async_err_cb, canceled=True)
-
-    def cancel_get_key_for_network(self):
-        # Close the wireless key dialog and just have it return
-        # with the 'canceled' argument set to true
-        if not self._key_dialog:
-            return
-        self._key_dialog_destroy_cb(self._key_dialog)
 
     def state_changed_sig_handler(self, new_state):
         logging.debug('NM State Changed to %d' % new_state)
