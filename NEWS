@@ -1,3 +1,5 @@
+* #2564 Use the activity service name as the base name for translation files.
+  (tomeu)
 * Add WPA support (miguel, dcbw)
 * Fix clipboard support for text from Browse. (tomeu)
 * #2511 Fix journal entries background in the object chooser. (tomeu)
