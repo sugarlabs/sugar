@@ -25,10 +25,26 @@ import ConfigParser
 import logging
 
 import nmclient
-try:
-    from sugar import env
-except ImportError:
-    pass
+import keydialog
+import gtk
+from sugar import env
+
+IW_AUTH_KEY_MGMT_802_1X	= 0x1
+IW_AUTH_KEY_MGMT_PSK	= 0x2
+
+IW_AUTH_WPA_VERSION_DISABLED = 0x00000001
+IW_AUTH_WPA_VERSION_WPA      = 0x00000002
+IW_AUTH_WPA_VERSION_WPA2     = 0x00000004
+
+NM_AUTH_TYPE_WPA_PSK_AUTO = 0x00000000
+IW_AUTH_CIPHER_NONE   = 0x00000001
+IW_AUTH_CIPHER_WEP40  = 0x00000002
+IW_AUTH_CIPHER_TKIP   = 0x00000004
+IW_AUTH_CIPHER_CCMP   = 0x00000008
+IW_AUTH_CIPHER_WEP104 = 0x00000010
+
+IW_AUTH_ALG_OPEN_SYSTEM = 0x00000001
+IW_AUTH_ALG_SHARED_KEY  = 0x00000002
 
 NM_INFO_IFACE='org.freedesktop.NetworkManagerInfo'
 NM_INFO_PATH='/org/freedesktop/NetworkManagerInfo'
@@ -87,15 +103,6 @@ class NMConfig(ConfigParser.ConfigParser):
         raise ValueError("Invalid format for %s/%s.  Should be a valid float." % (section, name))
 
 
-IW_AUTH_CIPHER_NONE   = 0x00000001
-IW_AUTH_CIPHER_WEP40  = 0x00000002
-IW_AUTH_CIPHER_TKIP   = 0x00000004
-IW_AUTH_CIPHER_CCMP   = 0x00000008
-IW_AUTH_CIPHER_WEP104 = 0x00000010
-
-IW_AUTH_ALG_OPEN_SYSTEM = 0x00000001
-IW_AUTH_ALG_SHARED_KEY  = 0x00000002
-
 NETWORK_TYPE_UNKNOWN = 0
 NETWORK_TYPE_ALLOWED = 1
 NETWORK_TYPE_INVALID = 2
@@ -119,9 +126,9 @@ class Security(object):
                 security = Security(we_cipher)
             elif we_cipher == IW_AUTH_CIPHER_WEP40 or we_cipher == IW_AUTH_CIPHER_WEP104:
                 security = WEPSecurity(we_cipher)
+            elif we_cipher == NM_AUTH_TYPE_WPA_PSK_AUTO or we_cipher == IW_AUTH_CIPHER_CCMP or we_cipher == IW_AUTH_CIPHER_TKIP:
+                security = WPASecurity(we_cipher)
             else:
-                # FIXME: find a way to make WPA config option matrix not
-                # make you want to throw up
                 raise ValueError("Unsupported security combo")
             security.read_from_config(cfg, name)
         except (ConfigParser.NoOptionError, ValueError), e:
@@ -136,9 +143,9 @@ class Security(object):
                 security = Security(we_cipher)
             elif we_cipher == IW_AUTH_CIPHER_WEP40 or we_cipher == IW_AUTH_CIPHER_WEP104:
                 security = WEPSecurity(we_cipher)
+            elif we_cipher == NM_AUTH_TYPE_WPA_PSK_AUTO or we_cipher == IW_AUTH_CIPHER_CCMP or we_cipher == IW_AUTH_CIPHER_TKIP:
+                security = WPASecurity(we_cipher)
             else:
-                # FIXME: find a way to make WPA config option matrix not
-                # make you want to throw up
                 raise ValueError("Unsupported security combo")
             security.read_from_args(args)
         except ValueError, e:
@@ -197,6 +204,62 @@ class WEPSecurity(Security):
         Security.write_to_config(self, section, config)
         config.set(section, "key", self._key)
         config.set(section, "auth_alg", self._auth_alg)
+
+class WPASecurity(Security):
+    def read_from_args(self, args):
+        if len(args) != 3:
+            raise ValueError("not enough arguments")
+        key = args[0]
+        if isinstance(key, unicode):
+            key = key.encode()
+        if not isinstance(key, str):
+            raise ValueError("wrong argument type for key")
+
+        wpa_ver = args[1]
+        if not isinstance(wpa_ver, int):
+            raise ValueError("wrong argument type for WPA version")
+
+        key_mgmt = args[2]
+        if not isinstance(key_mgmt, int):
+            raise ValueError("wrong argument type for WPA key management")
+        if not key_mgmt & IW_AUTH_KEY_MGMT_PSK:
+            raise ValueError("Key management types other than PSK are not supported")
+
+        self._key = key
+        self._wpa_ver = wpa_ver
+        self._key_mgmt = key_mgmt
+
+    def read_from_config(self, cfg, name):
+        # Key should be a hex encoded string
+        self._key = cfg.get(name, "key")
+        if len(self._key) != 64:
+            raise ValueError("Key length not right for WPA-PSK")
+
+        try:
+            a = binascii.a2b_hex(self._key)
+        except TypeError:
+            raise ValueError("Key was not a hexadecimal string.")
+            
+        self._wpa_ver = cfg.get_int(name, "wpa_ver")
+        if self._wpa_ver != IW_AUTH_WPA_VERSION_WPA and self._wpa_ver != IW_AUTH_WPA_VERSION_WPA:
+            raise ValueError("Invalid WPA version %d" % self._wpa_ver)
+
+        self._key_mgmt = cfg.get_int(name, "key_mgmt")
+        if not self._key_mgmt & IW_AUTH_KEY_MGMT_PSK:
+            raise ValueError("Invalid WPA key management option %d" % self._key_mgmt)
+
+    def get_properties(self):
+        args = Security.get_properties(self)
+        args.append(dbus.String(self._key))
+        args.append(dbus.Int32(self._wpa_ver))
+        args.append(dbus.Int32(self._key_mgmt))
+        return args
+
+    def write_to_config(self, section, config):
+        Security.write_to_config(self, section, config)
+        config.set(section, "key", self._key)
+        config.set(section, "wpa_ver", self._wpa_ver)
+        config.set(section, "key_mgmt", self._key_mgmt)
 
 
 class Network:
@@ -312,15 +375,12 @@ class NMInfoDBusServiceHelper(dbus.service.Object):
 
 class NMInfo(object):
     def __init__(self, client):
-        try:
-            profile_path = env.get_profile_path()
-        except NameError:
-            home = os.path.expanduser("~")
-            profile_path = os.path.join(home, ".sugar", "default")
+        profile_path = env.get_profile_path()
         self._cfg_file = os.path.join(profile_path, "nm", "networks.cfg")
         self._nmclient = client
         self._allowed_networks = self._read_config()
         self._dbus_helper = NMInfoDBusServiceHelper(self)
+        self._key_dialog = None
 
     def save_config(self):
         self._write_config(self._allowed_networks)
@@ -426,41 +486,44 @@ class NMInfo(object):
             async_err_cb(NotFoundError("Network was unknown."))
             return
 
-        self._nmclient.get_key_for_network(net, async_cb, async_err_cb)
+        self._key_dialog = keydialog.new_key_dialog(net, async_cb, async_err_cb)
+        self._key_dialog.connect("response", self._key_dialog_response_cb)
+        self._key_dialog.connect("destroy", self._key_dialog_destroy_cb)
+        self._key_dialog.show_all()
 
-    def get_key_for_network_cb(self, net, key, auth_alg, async_cb, async_err_cb, canceled=False):
-        """
-        Called by the NMClient when the Wireless Network Key dialog
-        is closed.
-        """
-        if canceled:
-            # key dialog dialog was canceled; send the error back to NM
-            async_err_cb(CanceledKeyRequestError())
+    def _key_dialog_destroy_cb(self, widget, foo=None):
+        if widget != self._key_dialog:
+            return
+        self._key_dialog_response_cb(widget, gtk.RESPONSE_CANCEL)
+
+    def _key_dialog_response_cb(self, widget, response_id):
+        if widget != self._key_dialog:
             return
 
-        if not key or not auth_alg:
-            # no key returned, *** BUG ***; the key dialog
-            # should always return either a key + auth_alg, or a
-            #cancel error
-            raise RuntimeError("No key or auth alg given! Bug!")
+        (async_cb, async_err_cb) = self._key_dialog.get_callbacks()
+        net = self._key_dialog.get_network()
+        security = None
+        if response_id == gtk.RESPONSE_OK:
+            security = self._key_dialog.create_security()
+        self._key_dialog = None
+        widget.destroy()
 
-        we_cipher = None
-        if len(key) == 26:
-            we_cipher = IW_AUTH_CIPHER_WEP104
-        elif len(key) == 10:
-            we_cipher = IW_AUTH_CIPHER_WEP40
+        if response_id == gtk.RESPONSE_CANCEL:
+            # key dialog dialog was canceled; send the error back to NM
+            async_err_cb(CanceledKeyRequestError())
+        elif response_id == gtk.RESPONSE_OK:
+            if not security:
+                raise RuntimeError("Invalid security arguments.")
+            props = security.get_properties()
+            a = tuple(props)
+            async_cb(*a)
         else:
-            raise RuntimeError("Invalid key length!")
-
-        # Stuff the returned key and auth algorithm into a security object
-        # and return it to NetworkManager
-        sec = Security.new_from_args(we_cipher, (key, auth_alg))
-        if not sec:
-            raise RuntimeError("Invalid security arguments.")
-        props = sec.get_properties()
-        a = tuple(props)
-        async_cb(*a)
+            raise RuntimeError("Unhandled key dialog response %d" % response_id)
 
     def cancel_get_key_for_network(self):
-        # Tell the NMClient to close the key request dialog
-        self._nmclient.cancel_get_key_for_network()
+        # Close the wireless key dialog and just have it return
+        # with the 'canceled' argument set to true
+        if not self._key_dialog:
+            return
+        self._key_dialog_destroy_cb(self._key_dialog)
+

@@ -4,7 +4,7 @@ sugar_PYTHON =				\
 	hardwaremanager.py		\
 	nmclient.py			\
 	nminfo.py			\
-	wepkeydialog.py
+	keydialog.py
 
 dbusservicedir = $(sysconfdir)/dbus-1/system.d/
 dbusservice_DATA = NetworkManagerInfo.conf
