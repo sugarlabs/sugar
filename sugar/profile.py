@@ -49,6 +49,7 @@ class _Profile(object):
         privkey_hash -- SHA has of the child's public key 
     """
     def __init__(self):
+        self.valid = True
         self.name = None
         self.color = None
         self.pubkey = None
@@ -56,26 +57,29 @@ class _Profile(object):
         self.server = None
         self.server_registered = False
         self.backup1 = None
+
+        self._config_path = os.path.join(env.get_profile_path(), 'config')
+
         self._load()
 
     def update(self):
         self._load()
 
     def _load(self):
-        cp = ConfigParser()
-        config_path = os.path.join(env.get_profile_path(), 'config')
-        parsed = cp.read([config_path])
-        self._load_config(cp)
-        del cp
-
+        self._load_config()
         self._load_pubkey()
         self._hash_private_key()
 
-    def _load_config(self, cp):
+    def _load_config(self):
+        cp = ConfigParser()
+        parsed = cp.read([self._config_path])
+
         if cp.has_option('Buddy', 'NickName'):
             name = cp.get('Buddy', 'NickName')
             # decode nickname from ascii-safe chars to unicode
             self.name = name.decode("utf-8")
+        else:
+            self.valid = False
 
         if cp.has_option('Buddy', 'Color'):
             self.color = XoColor(cp.get('Buddy', 'Color'))
@@ -91,6 +95,8 @@ class _Profile(object):
         if cp.has_option('Server', 'Backup1'):
             self.backup1 = cp.get('Server', 'Backup1')
 
+        del cp
+
     def _load_pubkey(self):
         self.pubkey = None
 
@@ -100,6 +106,7 @@ class _Profile(object):
             lines = f.readlines()
             f.close()
         except IOError, e:
+            self.valid = False
             logging.error("Error reading public key: %s" % e)
             return
 
@@ -142,19 +149,22 @@ class _Profile(object):
 
     def set_key(self, section, key, value):
         cp = ConfigParser()
-        config_path = os.path.join(env.get_profile_path(), 'config')
-        parsed = cp.read([config_path])
+        parsed = cp.read([self._config_path])
 
         if not cp.has_section(section):
             cp.add_section(section)
         cp.set(section, key, value)
 
-        f = open(config_path, 'w')
+        f = open(self._config_path, 'w')
         cp.write(f)
         f.close()
 
-        self._load_config(cp)
         del cp
+
+        self._load_config()
+
+def is_valid():
+    return _profile.valid
 
 def get_nick_name():
     return _profile.name

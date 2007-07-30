@@ -232,10 +232,13 @@ class IntroWindow(gtk.Window):
         # Generate keypair
         import commands
         keypath = os.path.join(env.get_profile_path(), "owner.key")
-        cmd = "ssh-keygen -q -t dsa -f %s -C '' -N ''" % keypath
-        (s, o) = commands.getstatusoutput(cmd)
-        if s != 0:
-            logging.error("Could not generate key pair: %d" % s)
+        if not os.path.isfile(keypath):
+            cmd = "ssh-keygen -q -t dsa -f %s -C '' -N ''" % keypath
+            (s, o) = commands.getstatusoutput(cmd)
+            if s != 0:
+                logging.error("Could not generate key pair: %d" % s)
+        else:
+            logging.error("Keypair exists, skip generation.")
 
         gtk.main_quit()
         return False

@@ -74,8 +74,7 @@ _start_matchbox()
 _setup_translations()
 
 # Do initial setup if needed
-key = profile.get_pubkey() 
-if not key or not len(key):
+if not profile.is_valid():
 	win = intro.IntroWindow()
 	win.show_all()
 	gtk.main()
