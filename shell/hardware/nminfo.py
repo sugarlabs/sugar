@@ -120,19 +120,16 @@ class Security(object):
 
     def new_from_config(cfg, name):
         security = None
-        try:
-            we_cipher = cfg.get_int(name, "we_cipher")
-            if we_cipher == IW_AUTH_CIPHER_NONE:
-                security = Security(we_cipher)
-            elif we_cipher == IW_AUTH_CIPHER_WEP40 or we_cipher == IW_AUTH_CIPHER_WEP104:
-                security = WEPSecurity(we_cipher)
-            elif we_cipher == NM_AUTH_TYPE_WPA_PSK_AUTO or we_cipher == IW_AUTH_CIPHER_CCMP or we_cipher == IW_AUTH_CIPHER_TKIP:
-                security = WPASecurity(we_cipher)
-            else:
-                raise ValueError("Unsupported security combo")
-            security.read_from_config(cfg, name)
-        except (ConfigParser.NoOptionError, ValueError), e:
-            return None
+        we_cipher = cfg.get_int(name, "we_cipher")
+        if we_cipher == IW_AUTH_CIPHER_NONE:
+            security = Security(we_cipher)
+        elif we_cipher == IW_AUTH_CIPHER_WEP40 or we_cipher == IW_AUTH_CIPHER_WEP104:
+            security = WEPSecurity(we_cipher)
+        elif we_cipher == NM_AUTH_TYPE_WPA_PSK_AUTO or we_cipher == IW_AUTH_CIPHER_CCMP or we_cipher == IW_AUTH_CIPHER_TKIP:
+            security = WPASecurity(we_cipher)
+        else:
+            raise ValueError("Unsupported security combo")
+        security.read_from_config(cfg, name)
         return security
     new_from_config = staticmethod(new_from_config)
 
@@ -241,7 +238,7 @@ class WPASecurity(Security):
             raise ValueError("Key was not a hexadecimal string.")
             
         self._wpa_ver = cfg.get_int(name, "wpa_ver")
-        if self._wpa_ver != IW_AUTH_WPA_VERSION_WPA and self._wpa_ver != IW_AUTH_WPA_VERSION_WPA:
+        if self._wpa_ver != IW_AUTH_WPA_VERSION_WPA and self._wpa_ver != IW_AUTH_WPA_VERSION_WPA2:
             raise ValueError("Invalid WPA version %d" % self._wpa_ver)
 
         self._key_mgmt = cfg.get_int(name, "key_mgmt")
@@ -300,8 +297,9 @@ class Network:
         except (ConfigParser.NoOptionError, ValueError), e:
             raise NetworkInvalidError(e)
 
-        self._security = Security.new_from_config(config, self.ssid)
-        if not self._security:
+        try:
+            self._security = Security.new_from_config(config, self.ssid)
+        except Exception, e:
             raise NetworkInvalidError(e)
 
         # The following don't need to be present

@@ -1,3 +1,4 @@
+* Fix traceback when reading in saved WPA2 network configs (dcbw)
 * #2570 Accept correctly image drops from Record.
 
 Snapshot 285099fe08
