@@ -52,20 +52,29 @@ class _Page(hippo.CanvasBox):
             return self.valid
 
 class _NamePage(_Page):
-    def __init__(self):
+    def __init__(self, intro):
         _Page.__init__(self, xalign=hippo.ALIGNMENT_CENTER,
                        background_color=_BACKGROUND_COLOR.get_int(),
                        spacing=style.DEFAULT_SPACING,
                        orientation=hippo.ORIENTATION_HORIZONTAL,)
+
+        self._intro = intro
 
         label = hippo.CanvasText(text=_("Name:"))
         self.append(label)
 
         self._entry = CanvasEntry(box_width=style.zoom(300))
         self._entry.set_background(_BACKGROUND_COLOR.get_html())
-        self._entry.props.widget.set_max_length(45)
         self._entry.connect('notify::text', self._text_changed_cb)
+
+        widget = self._entry.props.widget
+        widget.set_max_length(45)
+        widget.connect('activate', self._entry_activate_cb)
+
         self.append(self._entry)
+
+    def _entry_activate_cb(self, entry):
+        self._intro.next()
 
     def _text_changed_cb(self, entry, pspec):
         valid = len(entry.props.text.strip()) > 0
@@ -112,10 +121,14 @@ class _IntroBox(hippo.CanvasBox):
                                  background_color=_BACKGROUND_COLOR.get_int())
 
         self._page = self.PAGE_NAME
-        self._name_page = _NamePage()
+        self._name_page = _NamePage(self)
         self._color_page = _ColorPage()
         self._current_page = None
 
+        self._setup_page()
+
+    def next(self):
+        self._page += 1
         self._setup_page()
 
     def _setup_page(self):
@@ -165,8 +178,7 @@ class _IntroBox(hippo.CanvasBox):
         self._setup_page()
 
     def _next_activated_cb(self, item):
-        self._page += 1
-        self._setup_page()
+        self.next()
 
     def _done_activated_cb(self, item):
         path = os.path.join(os.path.dirname(__file__), 'default-picture.png')
