@@ -45,11 +45,6 @@ class _Grid(gobject.GObject):
         for i in range(width * height):
             self._array.append(0)
 
-    def add_locked(self, child, x, y, width, height):
-        child.grid_rect = gtk.gdk.Rectangle(x, y, width, height)
-        child.locked = True
-        self._add_child(child)
-
     def add(self, child, width, height):
         trials = _PLACE_TRIALS
         weight = _MAX_WEIGHT
@@ -79,11 +74,11 @@ class _Grid(gobject.GObject):
 
     def _add_child(self, child):
         self._children.append(child)
-        self._add_weight(child.grid_rect)
+        self.add_weight(child.grid_rect)
 
     def _move_child(self, child, new_rect):
         self._remove_weight(child.grid_rect)
-        self._add_weight(new_rect)
+        self.add_weight(new_rect)
 
         child.grid_rect = new_rect
 
@@ -147,7 +142,7 @@ class _Grid(gobject.GObject):
 #        if len(self._collisions) and not self._collisions_sid:
 #            self._collisions_sid = gobject.idle_add(self._solve_collisions)
 
-    def _add_weight(self, rect):
+    def add_weight(self, rect):
         for i in range(rect.x, rect.x + rect.width):
             for j in range(rect.y, rect.y + rect.height):
                 self[j, i] += 1
@@ -188,11 +183,13 @@ class SpreadLayout(gobject.GObject,hippo.CanvasLayout):
         self._box.append(child)
 
         width, height = self._get_child_grid_size(child)
+        rect = gtk.gdk.Rectangle(int((self._grid.width - width) / 2),
+                                 int((self._grid.height - height) / 2),
+                                 width + 1, height + 1)
+        self._grid.add_weight(rect)
+
         box_child = self._box.find_box_child(child)
-        self._grid.add_locked(box_child,
-                              int((self._grid.width - width) / 2),
-                              int((self._grid.height - height) / 2),
-                              width, height)
+        box_child.grid_rect = None
 
     def add(self, child):
         self._box.append(child)
@@ -220,11 +217,18 @@ class SpreadLayout(gobject.GObject,hippo.CanvasLayout):
                     req_width, req_height, origin_changed):
         for child in self._box.get_layout_children():
             rect = child.grid_rect
-            child.allocate(rect.x * _CELL_SIZE,
-                           rect.y * _CELL_SIZE,
-                           rect.width * _CELL_SIZE,
-                           rect.height * _CELL_SIZE,
-                           origin_changed)
+            if child.grid_rect:
+                child.allocate(rect.x * _CELL_SIZE,
+                               rect.y * _CELL_SIZE,
+                               rect.width * _CELL_SIZE,
+                               rect.height * _CELL_SIZE,
+                               origin_changed)
+            else:
+                min_w, child_width = child.get_width_request()
+                min_h, child_height = child.get_height_request(child_width)
+                child.allocate(x + (width - child_width) / 2,
+                               y + (height - child_height) / 2,
+                               child_width, child_height, origin_changed)
 
     def _get_child_grid_size(self, child):
         min_width, width = child.get_width_request()
