@@ -142,7 +142,11 @@ class Bundle:
             self._icon = cp.get(section, 'icon')
 
         if cp.has_option(section, 'activity_version'):
-            self._activity_version = int(cp.get(section, 'activity_version'))
+            version = cp.get(section, 'activity_version')
+            try:
+                self._activity_version = int(version)
+            except ValueError:
+                self._valid = False
 
     def _parse_linfo(self, linfo_file):
         cp = ConfigParser()
