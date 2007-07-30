@@ -1,3 +1,4 @@
+* #2475 Retrieve correctly the file path for files in removable devices. (tomeu)
 * #2119 If config is missing start intro. (marco)
 * #2083 Fix centering of items in the spread box. (marco)
 * #2486 In the intro screen name page enter goes to next page. (marco)

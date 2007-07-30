@@ -211,16 +211,10 @@ def find(query, sorting=None, limit=None, offset=None, reply_handler=None,
     
     objects = []
     for props in props_list:
-        if props.has_key('filename') and props['filename']:
-            file_path = props['filename']
-            del props['filename']
-        else:
-            file_path = None
-
         object_id = props['uid']
         del props['uid']
 
-        ds_object = DSObject(object_id, DSMetadata(props), file_path)
+        ds_object = DSObject(object_id, DSMetadata(props), None)
         objects.append(ds_object)
 
     return objects, total_count
