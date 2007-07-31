@@ -27,7 +27,6 @@ import time
 
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics import style
-from sugar.graphics import units
 from sugar.graphics.palette import Palette, CanvasInvoker
 
 class _IconCacheIcon:
