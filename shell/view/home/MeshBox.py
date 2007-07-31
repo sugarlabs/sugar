@@ -22,7 +22,7 @@ from gettext import gettext as _
 
 from sugar.graphics.spreadlayout import SpreadLayout
 from sugar.graphics.canvasicon import CanvasIcon
-from sugar.graphics import color
+from sugar.graphics import style
 from sugar.graphics import xocolor
 from sugar.graphics import canvasicon
 from sugar.graphics import units
@@ -95,24 +95,24 @@ class AccessPointView(PulsingIcon):
         if self._model.props.state == accesspointmodel.STATE_CONNECTING:
             self.props.pulse_time = 1.0
             self.props.colors = [
-                [ color.HTMLColor(self._device_stroke),
-                  color.HTMLColor(self._device_fill) ],
-                [ color.HTMLColor(self._device_stroke),
-                  color.HTMLColor('#e2e2e2') ]
+                [ style.Color(self._device_stroke),
+                  style.Color(self._device_fill) ],
+                [ style.Color(self._device_stroke),
+                  style.Color('#e2e2e2') ]
             ]
         elif self._model.props.state == accesspointmodel.STATE_CONNECTED:
             self.props.pulse_time = 2.0
             self.props.colors = [
-                [ color.HTMLColor(self._device_stroke),
-                  color.HTMLColor(self._device_fill) ],
-                [ color.HTMLColor('#ffffff'),
-                  color.HTMLColor(self._device_fill) ]
+                [ style.Color(self._device_stroke),
+                  style.Color(self._device_fill) ],
+                [ style.Color('#ffffff'),
+                  style.Color(self._device_fill) ]
             ]
         elif self._model.props.state == accesspointmodel.STATE_NOTCONNECTED:
             self.props.pulse_time = 0.0
             self.props.colors = [
-                [ color.HTMLColor(self._device_stroke),
-                  color.HTMLColor(self._device_fill) ]
+                [ style.Color(self._device_stroke),
+                  style.Color(self._device_fill) ]
             ]
 
 
@@ -146,24 +146,24 @@ class MeshDeviceView(PulsingIcon):
         if state == nmclient.DEVICE_STATE_ACTIVATING:
             self.props.pulse_time = 0.75
             self.props.colors = [
-                [ color.HTMLColor(self._device_stroke),
-                  color.HTMLColor(self._device_fill) ],
-                [ color.HTMLColor(self._device_stroke),
-                  color.HTMLColor('#e2e2e2') ]
+                [ style.Color(self._device_stroke),
+                  style.Color(self._device_fill) ],
+                [ style.Color(self._device_stroke),
+                  style.Color('#e2e2e2') ]
             ]
         elif state == nmclient.DEVICE_STATE_ACTIVATED:
             self.props.pulse_time = 1.5
             self.props.colors = [
-                [ color.HTMLColor(self._device_stroke),
-                  color.HTMLColor(self._device_fill) ],
-                [ color.HTMLColor('#ffffff'),
-                  color.HTMLColor(self._device_fill) ]
+                [ style.Color(self._device_stroke),
+                  style.Color(self._device_fill) ],
+                [ style.Color('#ffffff'),
+                  style.Color(self._device_fill) ]
             ]
         elif state == nmclient.DEVICE_STATE_INACTIVE:
             self.props.pulse_time = 0.0
             self.props.colors = [
-                [ color.HTMLColor(self._device_stroke),
-                  color.HTMLColor(self._device_fill) ]
+                [ style.Color(self._device_stroke),
+                  style.Color(self._device_fill) ]
             ]
 
 class ActivityView(hippo.CanvasBox):

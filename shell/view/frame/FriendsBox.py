@@ -17,7 +17,7 @@
 import hippo
 
 from sugar.graphics.canvasicon import CanvasIcon
-from sugar.graphics import color
+from sugar.graphics import style
 from sugar.presence import presenceservice
 from view.BuddyIcon import BuddyIcon
 from model.BuddyModel import BuddyModel
@@ -29,9 +29,9 @@ class FriendIcon(BuddyIcon):
 
     def prelight(self, enter):
         if enter:
-            self.props.background_color = color.BLACK.get_int()
+            self.props.background_color = style.COLOR_BLACK.get_int()
         else:
-            self.props.background_color = color.TOOLBAR_BACKGROUND.get_int()
+            self.props.background_color = style.COLOR_TOOLBAR.GREY.get_int()
 
 class FriendsBox(hippo.CanvasBox):
     def __init__(self, shell):

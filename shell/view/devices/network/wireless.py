@@ -16,7 +16,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from sugar.graphics import canvasicon
-from sugar.graphics import color
+from sugar.graphics import style
 from sugar.graphics import units
 from model.devices.network import wireless
 from sugar.graphics.canvasicon import CanvasIcon
@@ -56,11 +56,11 @@ class DeviceView(CanvasIcon):
         # FIXME Change icon colors once we have real icons
         state = self._model.props.state
         if state == device.STATE_ACTIVATING:
-            self.props.fill_color = color.ICON_FILL_INACTIVE
-            self.props.stroke_color = color.ICON_STROKE_INACTIVE
+            self.props.fill_color = style.COLOR_INACTIVE_FILL
+            self.props.stroke_color = style.COLOR_INACTIVE_STROKE
         elif state == device.STATE_ACTIVATED:
             self.props.fill_color = None
             self.props.stroke_color = None
         elif state == device.STATE_INACTIVE:
-            self.props.fill_color = color.ICON_FILL_INACTIVE
-            self.props.stroke_color = color.ICON_STROKE_INACTIVE
+            self.props.fill_color = style.COLOR_INACTIVE_FILL
+            self.props.stroke_color = style.COLOR_INACTIVE_STROKE

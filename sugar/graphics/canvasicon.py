@@ -25,8 +25,8 @@ import rsvg
 import cairo
 import time
 
-from sugar.graphics import color
 from sugar.graphics.xocolor import XoColor
+from sugar.graphics import style
 from sugar.graphics import units
 from sugar.graphics.palette import Palette, CanvasInvoker
 
@@ -193,8 +193,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             self._handle = None
             self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'xo-color':
-            self.props.fill_color = color.HTMLColor(value.get_fill_color())
-            self.props.stroke_color = color.HTMLColor(value.get_stroke_color())
+            self.props.fill_color = style.Color(value.get_fill_color())
+            self.props.stroke_color = style.Color(value.get_stroke_color())
         elif pspec.name == 'fill-color':
             if self._fill_color != value:
                 if not self._cache:

@@ -25,7 +25,6 @@ import hippo
 
 from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
-from sugar.graphics import color
 from sugar.graphics import style
 from sugar.clipboard import clipboardservice
 from sugar.datastore import datastore

@@ -18,7 +18,6 @@ from gettext import gettext as _
 
 import hippo
 
-from sugar.graphics import color
 from sugar.graphics.palette import Palette
 from sugar.graphics.iconbutton import IconButton
 from frameinvoker import FrameCanvasInvoker
@@ -31,9 +30,7 @@ class ZoomBox(hippo.CanvasBox):
 
         self._shell = shell
 
-        icon = IconButton(icon_name='theme:zoom-mesh',
-                          stroke_color=color.BLACK,
-                          fill_color=color.WHITE)
+        icon = IconButton(icon_name='theme:zoom-mesh')
         icon.connect('activated',
                      self._level_clicked_cb,
                      ShellModel.ZOOM_MESH)
@@ -44,9 +41,7 @@ class ZoomBox(hippo.CanvasBox):
         palette.set_group_id('frame')
         icon.set_palette(palette)
 
-        icon = IconButton(icon_name='theme:zoom-friends',
-                          stroke_color=color.BLACK,
-                          fill_color=color.WHITE)
+        icon = IconButton(icon_name='theme:zoom-friends')
         icon.connect('activated',
                      self._level_clicked_cb,
                      ShellModel.ZOOM_FRIENDS)
@@ -57,9 +52,7 @@ class ZoomBox(hippo.CanvasBox):
         palette.set_group_id('frame')
         icon.set_palette(palette)
 
-        icon = IconButton(icon_name='theme:zoom-home',
-                          stroke_color=color.BLACK,
-                          fill_color=color.WHITE)
+        icon = IconButton(icon_name='theme:zoom-home')
         icon.connect('activated',
                      self._level_clicked_cb,
                      ShellModel.ZOOM_HOME)
@@ -70,9 +63,7 @@ class ZoomBox(hippo.CanvasBox):
         palette.set_group_id('frame')
         icon.set_palette(palette)
 
-        icon = IconButton(icon_name='theme:zoom-activity',
-                          stroke_color=color.BLACK,
-                          fill_color=color.WHITE)
+        icon = IconButton(icon_name='theme:zoom-activity')
         icon.connect('activated',
                      self._level_clicked_cb,
                      ShellModel.ZOOM_ACTIVITY)

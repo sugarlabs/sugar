@@ -25,7 +25,6 @@ import hippo
 import dbus
 
 from sugar.graphics import units
-from sugar.graphics import color
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics.palette import Palette, CanvasInvoker
 from sugar import profile
@@ -81,16 +80,9 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
         self._remove_device(device)
 
     def _shell_state_changed_cb(self, model, pspec):
-        # FIXME handle all possible mode switches
+        # FIXME implement this
         if model.props.state == ShellModel.STATE_SHUTDOWN:
-            if self._donut:
-                self.remove(self._donut)
-                self._donut = None
-                self._my_icon.props.stroke_color = color.ICON_STROKE_INACTIVE
-                self._my_icon.props.fill_color = \
-                        color.ICON_FILL_INACTIVE
-                self._my_icon.props.background_color = \
-                        color.ICON_FILL_INACTIVE.get_int()
+            pass
 
     def do_allocate(self, width, height, origin_changed):
         hippo.CanvasBox.do_allocate(self, width, height, origin_changed)

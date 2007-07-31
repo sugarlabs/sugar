@@ -26,7 +26,7 @@ import hippo
 
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import units
-from sugar.graphics import color
+from sugar.graphics import style
             
 STANDARD_SIZE = 0
 SMALL_SIZE    = 1
@@ -44,8 +44,8 @@ class IconButton(CanvasIcon, hippo.CanvasItem):
         CanvasIcon.__init__(self, cache=True, **kwargs)
 
         if not self.props.fill_color and not self.props.stroke_color:
-            self.props.fill_color = color.BUTTON_BACKGROUND_NORMAL
-            self.props.stroke_color = color.BUTTON_NORMAL
+            self.props.fill_color = style.Color("#404040")
+            self.props.stroke_color = style.Color("#FFFFFF")
 
         self._set_size(STANDARD_SIZE)
         self.connect('activated', self._icon_clicked_cb)
@@ -82,10 +82,9 @@ class IconButton(CanvasIcon, hippo.CanvasItem):
     def prelight(self, enter):
         if enter:
             if self.props.active:
-                self.props.background_color = color.BLACK.get_int()
+                self.props.background_color = 0x000000FF
         else:
-            self.props.background_color = \
-                color.BUTTON_BACKGROUND_NORMAL.get_int()
+            self.props.background_color = 0x404040FF
 
     def _icon_clicked_cb(self, button):
         if self._palette:

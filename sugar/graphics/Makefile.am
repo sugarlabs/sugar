@@ -7,7 +7,6 @@ sugar_PYTHON =			\
 	canvasbutton.py		\
 	canvasicon.py		\
 	canvasentry.py		\
-	color.py		\
 	combobox.py		\
 	frame.py		\
 	notebook.py		\

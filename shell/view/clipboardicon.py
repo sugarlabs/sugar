@@ -24,7 +24,6 @@ from sugar.graphics.canvasicon import CanvasIcon
 from view.clipboardmenu import ClipboardMenu
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics import units
-from sugar.graphics import color
 from sugar.clipboard import clipboardservice
 from sugar import util
 from sugar import profile
@@ -76,9 +75,9 @@ class ClipboardIcon(CanvasIcon):
         self._selected = selected
         if selected:
             if not self._hover:
-                self.props.background_color = color.DESKTOP_BACKGROUND.get_int()
+                self.props.background_color = style.COLOR_PANEL_GREY.get_int()
         else:
-            self.props.background_color = color.TOOLBAR_BACKGROUND.get_int()
+            self.props.background_color = style.COLOR_TOOLBAR_GREY.get_int()
 
     def set_state(self, name, percent, icon_name, preview, activity):
         cb_service = clipboardservice.get_instance()

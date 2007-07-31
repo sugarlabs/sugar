@@ -24,7 +24,6 @@ import hippo
 from sugar.graphics.frame import Frame
 from sugar.activity.bundle import Bundle
 from sugar.date import Date
-from sugar.graphics import color
 from sugar.graphics import style
 from sugar.graphics import units
 from sugar.graphics.canvasicon import CanvasIcon
@@ -43,7 +42,7 @@ class ObjectChooser(gtk.Dialog):
         self._selected_entry = False
 
         self._box = hippo.CanvasBox()
-        self._box.props.background_color = color.DESKTOP_BACKGROUND.get_int()
+        self._box.props.background_color = style.COLOR_PANEL_GREY.get_int()
         self._box.props.spacing = units.points_to_pixels(5)
         self._box.props.padding = units.points_to_pixels(5)
 
@@ -105,8 +104,8 @@ class CollapsedEntry(Frame):
         Frame.__init__(self)
         self.props.box_height = units.grid_to_pixels(1)
         self.props.spacing = units.points_to_pixels(5)
-        self.props.border_color = color.FRAME_BORDER.get_int()
-        self.props.background_color = color.DESKTOP_BACKGROUND.get_int()
+        self.props.border_color = style.COLOR_BLACK.get_int()
+        self.props.background_color = style.COLOR_PANEL_GREY.get_int()
 
         self.jobject = jobject
         self._icon_name = None
@@ -169,8 +168,8 @@ class CollapsedEntry(Frame):
 
     def set_selected(self, selected):
         if selected:
-            self.props.border_color = color.WHITE.get_int()
-            self.props.background_color = color.WHITE.get_int()
+            self.props.border_color = style.COLOR_WHITE.get_int()
+            self.props.background_color = style.COLOR_WHITE.get_int()
         else:
-            self.props.border_color = color.FRAME_BORDER.get_int()
-            self.props.background_color = color.DESKTOP_BACKGROUND.get_int()
+            self.props.border_color = style.COLOR_BLACK.get_int()
+            self.props.background_color = style.COLOR_PANEL_GREY.get_int()

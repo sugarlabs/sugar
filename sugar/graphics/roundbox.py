@@ -20,7 +20,7 @@ import math
 import hippo
 
 from sugar.graphics import units
-from sugar.graphics import color
+from sugar.graphics import style
 
 class RoundBox(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarRoundBox'
@@ -37,7 +37,7 @@ class RoundBox(hippo.CanvasBox, hippo.CanvasItem):
         self.props.border = self._BORDER_DEFAULT
         self.props.border_left = self._radius
         self.props.border_right = self._radius
-        self.props.border_color = color.BLACK.get_int()
+        self.props.border_color = style.COLOR_BLACK.get_int()
             
     def do_paint_background(self, cr, damaged_box):
         [width, height] = self.get_allocation()
