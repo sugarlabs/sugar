@@ -34,7 +34,7 @@ sugar_menu_popup(SugarMenu *menu,
 {
     GtkWidget *window;
 
-    window = GTK_WIDGET(menu)->parent;
+    window = GTK_MENU(menu)->toplevel;
     g_return_if_fail(window != NULL);
 
     GTK_MENU_SHELL(menu)->active = TRUE;
@@ -50,7 +50,7 @@ sugar_menu_popdown(SugarMenu *menu)
 {
     GtkWidget *window;
 
-    window = GTK_WIDGET(menu)->parent;
+    window = GTK_MENU(menu)->toplevel;
     g_return_if_fail(window != NULL);
 
     GTK_MENU_SHELL(menu)->active = FALSE;
