@@ -34,7 +34,7 @@ class ToolComboBox(gtk.ToolItem):
 
         gobject.GObject.__init__(self, **kwargs)
 
-        self.set_border_width(units.microgrid_to_pixels(1))
+        self.set_border_width(style.DEFAULT_PADDING)
 
         hbox = gtk.HBox(False, style.DEFAULT_SPACING)
 
