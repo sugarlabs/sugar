@@ -21,7 +21,7 @@ import hippo
 
 from sugar.graphics import style
 
-class RoundBox(hippo.CanvasBox, hippo.CanvasItem):
+class CanvasRoundBox(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarRoundBox'
 
     _BORDER_DEFAULT = style.LINE_WIDTH
