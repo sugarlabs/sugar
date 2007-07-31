@@ -25,7 +25,6 @@ from sugar.graphics.frame import Frame
 from sugar.activity.bundle import Bundle
 from sugar.date import Date
 from sugar.graphics import style
-from sugar.graphics import units
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics.xocolor import XoColor
 from sugar.datastore import datastore
@@ -43,8 +42,8 @@ class ObjectChooser(gtk.Dialog):
 
         self._box = hippo.CanvasBox()
         self._box.props.background_color = style.COLOR_PANEL_GREY.get_int()
-        self._box.props.spacing = units.points_to_pixels(5)
-        self._box.props.padding = units.points_to_pixels(5)
+        self._box.props.spacing = style.DEFAULT_SPACING
+        self._box.props.padding = style.DEFAULT_SPACING
 
         canvas = hippo.Canvas()
         canvas.set_root(self._box)
@@ -97,13 +96,13 @@ class ObjectChooser(gtk.Dialog):
             return None
 
 class CollapsedEntry(Frame):
-    _DATE_COL_WIDTH    = units.points_to_pixels(75)
-    _BUDDIES_COL_WIDTH = units.points_to_pixels(30)
+    _DATE_COL_WIDTH    = style.zoom(100)
+    _BUDDIES_COL_WIDTH = style.zoom(50)
 
     def __init__(self, jobject):
         Frame.__init__(self)
-        self.props.box_height = units.grid_to_pixels(1)
-        self.props.spacing = units.points_to_pixels(5)
+        self.props.box_height = style.zoom(75)
+        self.props.spacing = style.DEFAULT_SPACING
         self.props.border_color = style.COLOR_BLACK.get_int()
         self.props.background_color = style.COLOR_PANEL_GREY.get_int()
 
@@ -117,7 +116,7 @@ class CollapsedEntry(Frame):
         self.append(date)
 
         icon = CanvasIcon(icon_name=self._get_icon_name(),
-                          box_width=units.grid_to_pixels(1))
+                          box_width=style.zoom(75))
 
         if self.jobject.metadata.has_key('icon-color'):
             icon.props.xo_color = XoColor(self.jobject.metadata['icon-color'])

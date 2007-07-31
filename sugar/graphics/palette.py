@@ -376,7 +376,7 @@ class Palette(gobject.GObject):
 class _PrimaryMenuItem(gtk.MenuItem):
     def __init__(self, label, accel_path):
         gtk.MenuItem.__init__(self)
-        self.set_border_width(style.DEFAULT_BORDER)
+        self.set_border_width(style.DEFAULT_PADDING)
         self._set_label(label, accel_path)
 
     def set_label(self, label, accel_path):

@@ -89,7 +89,7 @@ _TAB_CURVATURE = 1
 ZOOM_FACTOR = _compute_zoom_factor()
 
 DEFAULT_SPACING = zoom(8)
-DEFAULT_BORDER = zoom(6)
+DEFAULT_PADDING = zoom(6)
 LINE_WIDTH = zoom(2)
 
 FONT_SIZE = zoom(7 * _XO_DPI / _get_screen_dpi())
