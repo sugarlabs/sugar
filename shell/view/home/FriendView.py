@@ -32,7 +32,7 @@ class FriendView(hippo.CanvasBox):
 
         self._buddy = buddy
         self._buddy_icon = BuddyIcon(shell, buddy)
-        self._buddy_icon.props.scale = style.LARGE_ICON_SIZE
+        self._buddy_icon.props.size = style.LARGE_ICON_SIZE
         self.append(self._buddy_icon)
 
         self._activity_icon = CanvasIcon(size=style.LARGE_ICON_SIZE)
