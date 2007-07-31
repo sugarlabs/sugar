@@ -17,12 +17,11 @@
 
 from sugar.graphics import canvasicon
 from sugar.graphics import style
-from sugar.graphics import units
 from model.devices import device
 
 class DeviceView(canvasicon.CanvasIcon):
     def __init__(self, model):
-        canvasicon.CanvasIcon.__init__(self, scale=units.MEDIUM_ICON_SCALE,
+        canvasicon.CanvasIcon.__init__(self, size=style.MEDIUM_ICON_SIZE,
                 icon_name='theme:device-network-mesh')
         self._model = model
 

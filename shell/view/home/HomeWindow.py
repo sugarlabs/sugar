@@ -18,7 +18,7 @@ import gtk
 import hippo
 import cairo
 
-from sugar.graphics import units
+from sugar.graphics import style
 
 from view.home.MeshBox import MeshBox
 from view.home.HomeBox import HomeBox
@@ -113,13 +113,13 @@ class HomeWindow(gtk.Window):
         self._canvas.set_root(self._transition_box)
 
         if level == ShellModel.ZOOM_HOME:
-            scale = units.XLARGE_ICON_SCALE
+            size = style.XLARGE_ICON_SIZE
         elif level == ShellModel.ZOOM_FRIENDS:
-            scale = units.LARGE_ICON_SCALE
+            size = style.LARGE_ICON_SIZE
         elif level == ShellModel.ZOOM_MESH:
-            scale = units.STANDARD_ICON_SCALE
+            size = style.STANDARD_ICON_SIZE
             
-        self._transition_box.set_scale(scale)
+        self._transition_box.set_size(size)
     
     def _transition_completed_cb(self, transition_box):
         if self._level == ShellModel.ZOOM_HOME:

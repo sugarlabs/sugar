@@ -17,7 +17,7 @@
 import hippo
 
 from sugar.graphics.canvasicon import CanvasIcon
-from sugar.graphics import units
+from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
 
 class ColorPicker(hippo.CanvasBox, hippo.CanvasItem):
@@ -25,7 +25,7 @@ class ColorPicker(hippo.CanvasBox, hippo.CanvasItem):
         hippo.CanvasBox.__init__(self, **kwargs)
         self.props.orientation = hippo.ORIENTATION_HORIZONTAL
 
-        self._xo = CanvasIcon(scale=units.XLARGE_ICON_SCALE,
+        self._xo = CanvasIcon(size=style.XLARGE_ICON_SIZE,
                               icon_name='theme:stock-buddy')
         self._set_random_colors()
         self._xo.connect('activated', self._xo_activated_cb)

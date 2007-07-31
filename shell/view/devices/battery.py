@@ -18,7 +18,7 @@ import gtk
 
 from gettext import gettext as _
 from sugar.graphics import canvasicon
-from sugar.graphics import units
+from sugar.graphics import style
 from sugar.graphics.palette import Palette
 
 _ICON_NAME = 'device-battery'
@@ -29,7 +29,7 @@ _STATUS_FULLY_CHARGED = 2
 
 class DeviceView(canvasicon.CanvasIcon):
     def __init__(self, model):
-        canvasicon.CanvasIcon.__init__(self, scale=units.MEDIUM_ICON_SCALE)
+        canvasicon.CanvasIcon.__init__(self, size=style.MEDIUM_ICON_SIZE)
         self._model = model
         self._palette = BatteryPalette(_('My Battery life'))
         self.set_palette(self._palette)

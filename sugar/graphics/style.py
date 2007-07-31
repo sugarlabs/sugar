@@ -93,6 +93,12 @@ DEFAULT_PADDING = zoom(6)
 GRID_CELL_SIZE = zoom(75)
 LINE_WIDTH = zoom(2)
 
+STANDARD_ICON_SIZE = zoom(55)
+SMALL_ICON_SIZE = zoom(55 * 0.5)
+MEDIUM_ICON_SIZE = zoom(55 * 1.5)
+LARGE_ICON_SIZE = zoom(55 * 2.0)
+XLARGE_ICON_SIZE = zoom(55 * 2.75)
+
 FONT_SIZE = zoom(7 * _XO_DPI / _get_screen_dpi())
 FONT_NORMAL = Font('Bitstream Vera Sans %d' % FONT_SIZE)
 FONT_BOLD = Font('Bitstream Vera Sans bold %d' % FONT_SIZE)

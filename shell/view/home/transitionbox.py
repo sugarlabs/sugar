@@ -17,23 +17,23 @@
 import hippo
 import gobject
 
-from sugar.graphics import units
+from sugar.graphics import style
 from sugar.graphics import animator
 from sugar.graphics.spreadlayout import SpreadLayout
 
 from view.home.MyIcon import MyIcon
 
 class _Animation(animator.Animation):
-    def __init__(self, icon, start_scale, end_scale):
+    def __init__(self, icon, start_size, end_size):
         animator.Animation.__init__(self, 0.0, 1.0)
 
         self._icon = icon
-        self.start_scale = start_scale
-        self.end_scale = end_scale
+        self.start_size = start_size
+        self.end_size = end_size
 
     def next_frame(self, current):
-        d = (self.end_scale - self.start_scale) * current
-        self._icon.props.scale = self.start_scale + d
+        d = (self.end_size - self.start_size) * current
+        self._icon.props.size = self.start_size + d
 
 class _Layout(gobject.GObject,hippo.CanvasLayout):
     __gtype_name__ = 'SugarTransitionBoxLayout'
@@ -70,12 +70,12 @@ class TransitionBox(hippo.CanvasBox):
     def __init__(self):
         hippo.CanvasBox.__init__(self, background_color=0xe2e2e2ff)
 
-        self._scale = units.XLARGE_ICON_SCALE
+        self._size = style.XLARGE_ICON_SIZE
 
         self._layout = _Layout()
         self.set_layout(self._layout)
 
-        self._my_icon = MyIcon(self._scale)
+        self._my_icon = MyIcon(self._size)
         self.append(self._my_icon)
 
         self._animator = animator.Animator(0.3)
@@ -84,10 +84,10 @@ class TransitionBox(hippo.CanvasBox):
     def _animation_completed_cb(self, anim):
         self.emit('completed')
 
-    def set_scale(self, scale):
+    def set_size(self, size):
         self._animator.remove_all()
-        self._animator.add(_Animation(self._my_icon, self._scale, scale))
+        self._animator.add(_Animation(self._my_icon, self._size, size))
         self._animator.start()
         
-        self._scale = scale
+        self._size = size
 

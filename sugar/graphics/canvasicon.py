@@ -30,8 +30,6 @@ from sugar.graphics import style
 from sugar.graphics import units
 from sugar.graphics.palette import Palette, CanvasInvoker
 
-BADGE_SCALE_FACTOR = 0.33
-
 class _IconCacheIcon:
     def __init__(self, name, fill_color, stroke_color, now):
         self.data_size = None
@@ -143,8 +141,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
                            gobject.PARAM_READWRITE),
         'stroke-color'  : (object, None, None,
                            gobject.PARAM_READWRITE),
-        'scale'         : (float, None, None,
-                           0.0, 1024.0, units.STANDARD_ICON_SCALE,
+        'size'          : (int, None, None, 0, 1024, 0,
                            gobject.PARAM_READWRITE),
         'cache'         : (bool, None, None, False,
                            gobject.PARAM_READWRITE),
@@ -159,7 +156,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
     def __init__(self, **kwargs):
         self._buffers = {}
         self._cur_buffer = None
-        self._scale = units.STANDARD_ICON_SCALE
+        self._size = 0
         self._fill_color = None
         self._stroke_color = None
         self._icon_name = None
@@ -209,10 +206,10 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
                 self._stroke_color = value
                 self._handle = None
                 self.emit_paint_needed(0, 0, -1, -1)
-        elif pspec.name == 'scale':
-            if self._scale != value and not self._cache:
+        elif pspec.name == 'size':
+            if self._size != value and not self._cache:
                 self._clear_buffers()
-            self._scale = value
+            self._size = value
             self.emit_request_changed()
         elif pspec.name == 'cache':
             self._cache = value
@@ -264,11 +261,11 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
 
     def _get_current_buffer_key(self, name):
         [fill_color, stroke_color] = self._choose_colors()
-        return (name, fill_color, stroke_color, self._scale)
+        return (name, fill_color, stroke_color, self._size)
 
     def do_get_property(self, pspec):
-        if pspec.name == 'scale':
-            return self._scale
+        if pspec.name == 'size':
+            return self._size
         elif pspec.name == 'icon-name':
             return self._icon_name
         elif pspec.name == 'fill-color':
@@ -283,13 +280,17 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             return self._badge_name
 
     def _get_icon_size(self, handle):
-        if not handle:
+        if handle:
+            dimensions = handle.get_dimension_data()
+            return int(dimensions[0]), int(dimensions[1])
+        else:
             return [0, 0]
 
-        dimensions = handle.get_dimension_data()
-
-        width  = int(dimensions[0] * self._scale) + 1
-        height = int(dimensions[1] * self._scale) + 1
+    def _get_size(self, handle):
+        if self._size == 0:
+            width, height = self._get_icon_size(handle)
+        else:
+            width = height = self._size
 
         return [width, height]
 
@@ -302,15 +303,19 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         if self._buffers.has_key(key):
             buf = self._buffers[key]
         else:
-            [w, h] = self._get_icon_size(handle)
-            scale = self._scale
+            [icon_w, icon_h] = self._get_icon_size(handle)
+            [target_w, target_h] = self._get_size(handle)
+
             if scale_factor:
-                scale = scale_factor
+                target_w = target_w * scale_factor
+                target_h = target_h * scale_factor
 
             target = cr.get_target()
-            buf = target.create_similar(cairo.CONTENT_COLOR_ALPHA, w, h)
+            buf = target.create_similar(cairo.CONTENT_COLOR_ALPHA,
+                                        target_w, target_h)
             ctx = cairo.Context(buf)
-            ctx.scale(scale, scale)
+            ctx.scale(float(target_w) / float(icon_w),
+                      float(target_h) / float(icon_h))
             handle.render_cairo(ctx)
 
             del ctx
@@ -334,7 +339,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         if self._badge_name:
             badge_handle = self._get_badge_handle()
             if badge_handle:
-                badge_buf = self._get_buffer(cr, self._badge_name, badge_handle, self._scale * 0.66)
+                badge_buf = self._get_buffer(cr, self._badge_name, badge_handle, 0.66)
                 badge_x = icon_x + icon_buf.get_width() - (icon_buf.get_width() / 4)
                 badge_y = icon_y + icon_buf.get_height() - (icon_buf.get_height() / 4)
                 cr.set_source_surface(badge_buf, badge_x, badge_y)
@@ -342,12 +347,12 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
 
     def do_get_content_width_request(self):
         handle = self._get_icon_handle()
-        [width, height] = self._get_icon_size(handle)
+        [width, height] = self._get_size(handle)
         return (width, width)
 
     def do_get_content_height_request(self, for_width):
         handle = self._get_icon_handle()
-        [width, height] = self._get_icon_size(handle)
+        [width, height] = self._get_size(handle)
         return (height, height)
 
     def do_button_press_event(self, event):

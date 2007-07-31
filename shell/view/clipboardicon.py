@@ -23,7 +23,7 @@ import gobject
 from sugar.graphics.canvasicon import CanvasIcon
 from view.clipboardmenu import ClipboardMenu
 from sugar.graphics.xocolor import XoColor
-from sugar.graphics import units
+from sugar.graphics import style
 from sugar.clipboard import clipboardservice
 from sugar import util
 from sugar import profile
@@ -45,9 +45,7 @@ class ClipboardIcon(CanvasIcon):
         self._activity = None
         self._selected = False
         self._hover = False
-        self.props.box_width = units.grid_to_pixels(1)
-        self.props.box_height = units.grid_to_pixels(1)
-        self.props.scale = units.STANDARD_ICON_SCALE
+        self.props.size = style.STANDARD_ICON_SIZE
         self.props.xo_color = XoColor(profile.get_color().to_string())
         
         cb_service = clipboardservice.get_instance()

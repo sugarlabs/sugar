@@ -21,7 +21,7 @@ import gobject
 
 from sugar import profile
 from sugar.graphics.spreadlayout import SpreadLayout
-from sugar.graphics import units
+from sugar.graphics import style
 
 from model.BuddyModel import BuddyModel
 from view.BuddyIcon import BuddyIcon
@@ -40,7 +40,7 @@ class FriendsBox(hippo.CanvasBox):
 
         buddy_model = BuddyModel(key=profile.get_pubkey())
         self._owner_icon = BuddyIcon(shell, buddy_model)
-        self._owner_icon.props.scale = units.LARGE_ICON_SCALE
+        self._owner_icon.props.size = style.LARGE_ICON_SIZE
         self._layout.add_center(self._owner_icon)
 
         friends = self._shell.get_model().get_friends()

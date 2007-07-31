@@ -24,7 +24,6 @@ import gtk
 import hippo
 import dbus
 
-from sugar.graphics import units
 from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics.palette import Palette, CanvasInvoker
@@ -46,7 +45,7 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
                                       box_height=style.zoom(450))
         self.append(self._donut)
 
-        self._my_icon = HomeMyIcon(shell, units.XLARGE_ICON_SCALE)
+        self._my_icon = HomeMyIcon(shell, style.XLARGE_ICON_SIZE)
         self.append(self._my_icon, hippo.PACK_FIXED)
 
         shell_model = shell.get_model()

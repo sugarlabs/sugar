@@ -17,7 +17,7 @@
 
 from sugar.graphics import canvasicon
 from sugar.graphics import style
-from sugar.graphics import units
+from sugar.graphics import style
 from model.devices.network import wireless
 from sugar.graphics.canvasicon import CanvasIcon
 from model.devices import device
@@ -26,7 +26,7 @@ _ICON_NAME = 'device-network-wireless'
 
 class DeviceView(CanvasIcon):
     def __init__(self, model):
-        CanvasIcon.__init__(self, scale=units.MEDIUM_ICON_SCALE)
+        CanvasIcon.__init__(self, size=style.MEDIUM_ICON_SIZE)
         self._model = model
 
         model.connect('notify::name', self._name_changed_cb)

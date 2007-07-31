@@ -25,7 +25,7 @@ from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import style
 from sugar.graphics import xocolor
 from sugar.graphics import canvasicon
-from sugar.graphics import units
+from sugar.graphics import style
 from sugar import profile
 
 from model import accesspointmodel
@@ -120,7 +120,7 @@ _MESH_ICON_NAME = 'theme:device-network-mesh'
 
 class MeshDeviceView(PulsingIcon):
     def __init__(self, nm_device):
-        PulsingIcon.__init__(self, scale=units.MEDIUM_ICON_SCALE,
+        PulsingIcon.__init__(self, size=style.MEDIUM_ICON_SIZE,
                 icon_name=_MESH_ICON_NAME)
         self._nm_device = nm_device
         self.set_tooltip(_("Mesh Network"))
