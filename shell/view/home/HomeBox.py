@@ -25,6 +25,7 @@ import hippo
 import dbus
 
 from sugar.graphics import units
+from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics.palette import Palette, CanvasInvoker
 from sugar import profile
@@ -41,9 +42,8 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
     def __init__(self, shell):
         hippo.CanvasBox.__init__(self, background_color=0xe2e2e2ff, yalign=2)
 
-        self._donut = ActivitiesDonut(shell,
-                                      box_width=units.grid_to_pixels(6),
-                                      box_height=units.grid_to_pixels(6))
+        self._donut = ActivitiesDonut(shell,box_width=style.zoom(450),
+                                      box_height=style.zoom(450))
         self.append(self._donut)
 
         self._my_icon = HomeMyIcon(shell, units.XLARGE_ICON_SCALE)
@@ -94,7 +94,7 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
         i = 0
         for icon in self._device_icons.values():
             angle = 2 * math.pi / len(self._device_icons) * i + math.pi / 2
-            radius = units.grid_to_pixels(4)
+            radius = style.zoom(300)
 
             [icon_width, icon_height] = icon.get_allocation()
 

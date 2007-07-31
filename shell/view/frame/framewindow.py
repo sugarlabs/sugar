@@ -17,7 +17,7 @@
 import gtk
 import hippo
 
-from sugar.graphics import units
+from sugar.graphics import style
 
 class FrameWindow(gtk.Window):
     __gtype_name__ = 'SugarFrameWindow'
@@ -48,7 +48,7 @@ class FrameWindow(gtk.Window):
         return self._bg
         
     def _update_size(self):
-        padding = units.grid_to_pixels(1)
+        padding = style.GRID_CELL_SIZE
         if self._orientation == hippo.ORIENTATION_HORIZONTAL:
             self._bg.props.padding_left = padding
             self._bg.props.padding_right = padding
@@ -56,14 +56,14 @@ class FrameWindow(gtk.Window):
             self._bg.props.padding_bottom = 0
 
             width = gtk.gdk.screen_width()
-            height = units.grid_to_pixels(1)
+            height = style.GRID_CELL_SIZE
         else:
             self._bg.props.padding_left = 0
             self._bg.props.padding_right = 0
             self._bg.props.padding_top = padding
             self._bg.props.padding_bottom = padding
 
-            width = units.grid_to_pixels(1)
+            width = style.GRID_CELL_SIZE
             height = gtk.gdk.screen_height()
         self.resize(width, height)
 

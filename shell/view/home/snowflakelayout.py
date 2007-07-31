@@ -20,9 +20,9 @@ import math
 import gobject
 import hippo
 
-from sugar.graphics import units
+from sugar.graphics import style
 
-_BASE_RADIUS = units.points_to_pixels(20)
+_BASE_RADIUS = style.zoom(25)
 _CHILDREN_FACTOR = 1
 
 class SnowflakeLayout(gobject.GObject,hippo.CanvasLayout):

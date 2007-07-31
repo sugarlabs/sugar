@@ -19,7 +19,6 @@ import gtk
 import gobject
 
 from sugar.graphics.combobox import ComboBox
-from sugar.graphics import units
 from sugar.graphics import style
 
 class ToolComboBox(gtk.ToolItem):

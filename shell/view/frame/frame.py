@@ -21,7 +21,7 @@ import gobject
 import hippo
 
 from sugar.graphics import animator
-from sugar.graphics import units
+from sugar.graphics import style
 from sugar.graphics import palettegroup
 from sugar.clipboard import clipboardservice
 
@@ -271,20 +271,16 @@ class Frame(object):
         screen_w = gtk.gdk.screen_width()
 
         self._move_panel(self._top_panel, self._current_position,
-                         0, units.grid_to_pixels(-1),
-                         0, 0)
+                         0, - style.GRID_CELL_SIZE, 0, 0)
 
         self._move_panel(self._bottom_panel, self._current_position,
-                         0, screen_h,
-                         0, screen_h - units.grid_to_pixels(1))
+                         0, screen_h, 0, screen_h - style.GRID_CELL_SIZE)
 
         self._move_panel(self._left_panel, self._current_position,
-                         units.grid_to_pixels(-1), 0,
-                         0, 0)
+                         - style.GRID_CELL_SIZE, 0, 0, 0)
 
         self._move_panel(self._right_panel, self._current_position,
-                         screen_w, 0,
-                         screen_w - units.grid_to_pixels(1), 0)
+                         screen_w, 0, screen_w - style.GRID_CELL_SIZE, 0)
 
     def _hide_completed_cb(self, animator):
         self.mode = MODE_NONE

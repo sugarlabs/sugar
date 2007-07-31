@@ -17,7 +17,7 @@
 
 import gtk
 
-from sugar.graphics import units
+from sugar.graphics import style
 from sugar.graphics.palette import Palette
 from sugar.graphics.palette import CanvasInvoker
 
@@ -29,9 +29,10 @@ class FrameCanvasInvoker(CanvasInvoker):
         return Palette.AROUND
 
     def get_screen_area(self):
-        x = units.grid_to_pixels(1)
-        y = units.grid_to_pixels(1)
-        width = gtk.gdk.screen_width() - units.grid_to_pixels(1)
-        height = gtk.gdk.screen_height() - units.grid_to_pixels(1)
+        frame_thickness = style.zoom(75)
+
+        x = y = frame_thickness
+        width = gtk.gdk.screen_width() - frame_thickness
+        height = gtk.gdk.screen_height() - frame_thickness
 
         return gtk.gdk.Rectangle(x, y, width, height)

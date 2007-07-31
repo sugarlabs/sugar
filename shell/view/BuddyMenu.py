@@ -22,7 +22,6 @@ import hippo
 
 from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
-from sugar.graphics import units
 from sugar.presence import presenceservice
 
 class BuddyMenu(Palette):
