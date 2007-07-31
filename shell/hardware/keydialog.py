@@ -18,7 +18,6 @@
 
 from gettext import gettext as _
 import gobject, gtk
-import logging
 
 IW_AUTH_ALG_OPEN_SYSTEM = 0x00000001
 IW_AUTH_ALG_SHARED_KEY  = 0x00000002
@@ -193,11 +192,9 @@ class WPAKeyDialog(KeyDialog):
         wpa_ver = IW_AUTH_WPA_VERSION_WPA
         caps = self.get_network().get_caps()
         if caps & NM_802_11_CAP_PROTO_WPA2:
-            logging.debug("Caps WPA2")
             wpa_ver = IW_AUTH_WPA_VERSION_WPA2
 
         from nminfo import Security
-        logging.debug("new security with caps 0x%X, wpa %d" % (caps, wpa_ver))
         return Security.new_from_args(we_cipher, (real_key, wpa_ver, IW_AUTH_KEY_MGMT_PSK))
 
     def _update_response_sensitivity(self, ignored=None):

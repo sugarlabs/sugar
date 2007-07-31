@@ -16,7 +16,7 @@
 from gettext import gettext as _
 import logging
 
-import gtk
+#import gtk
 import gobject
 import hippo
 
@@ -32,20 +32,21 @@ class BuddyMenu(Palette):
 
         Palette.__init__(self, buddy.get_nick())
 
-        pixbuf = None
-        try:
-            pixbuf = self._get_buddy_icon_pixbuf()
-        except gobject.GError, e:
-            pass
-        if pixbuf:
-            scaled_pixbuf = pixbuf.scale_simple(units.grid_to_pixels(1),
-                                                units.grid_to_pixels(1),
-                                                gtk.gdk.INTERP_BILINEAR)
-            del pixbuf
-            image = gtk.Image()
-            image.set_from_pixbuf(scaled_pixbuf)
-            self.set_content(image)
-            image.show()
+# FIXME: re-enable when buddy avatars are re-enabled
+#        pixbuf = None
+#        try:
+#            pixbuf = self._get_buddy_icon_pixbuf()
+#        except gobject.GError, e:
+#            pass
+#        if pixbuf:
+#            scaled_pixbuf = pixbuf.scale_simple(units.grid_to_pixels(1),
+#                                                units.grid_to_pixels(1),
+#                                                gtk.gdk.INTERP_BILINEAR)
+#            del pixbuf
+#            image = gtk.Image()
+#            image.set_from_pixbuf(scaled_pixbuf)
+#            self.set_content(image)
+#            image.show()
 
         self._buddy.connect('icon-changed', self._buddy_icon_changed_cb)
         self._buddy.connect('nick-changed', self._buddy_nick_changed_cb)
@@ -54,24 +55,25 @@ class BuddyMenu(Palette):
         if buddy.get_nick() != owner.get_nick():
             self._add_items()
 
-    def _get_buddy_icon_pixbuf(self):
-        buddy_object = self._buddy.get_buddy()
-        if not buddy_object:
-            return None
-
-        icon_data = buddy_object.props.icon
-        if not icon_data:
-            return None
-        pbl = gtk.gdk.PixbufLoader()
-        pbl.write(icon_data)
-        pixbuf = None
-        try:
-            pbl.close()
-            pixbuf = pbl.get_pixbuf()
-        except gobject.GError:
-            pass
-        del pbl
-        return pixbuf
+# FIXME: re-enable when buddy avatars are re-enabled
+#    def _get_buddy_icon_pixbuf(self):
+#        buddy_object = self._buddy.get_buddy()
+#        if not buddy_object:
+#            return None
+#
+#        icon_data = buddy_object.props.icon
+#        if not icon_data:
+#            return None
+#        pbl = gtk.gdk.PixbufLoader()
+#        pbl.write(icon_data)
+#        pixbuf = None
+#        try:
+#            pbl.close()
+#            pixbuf = pbl.get_pixbuf()
+#        except gobject.GError:
+#            pass
+#        del pbl
+#        return pixbuf
 
     def _add_items(self):
         shell_model = self._shell.get_model()
