@@ -26,15 +26,6 @@
 
 ;; From sugar-menu.h
 
-(define-method set_min_width
-  (of-object "SugarMenu")
-  (c-name "sugar_menu_set_min_width")
-  (return-type "none")
-  (parameters
-    '("gint" "width")
-  )
-)
-
 (define-method popup
   (of-object "SugarMenu")
   (c-name "sugar_menu_popup")

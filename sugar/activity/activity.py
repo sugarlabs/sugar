@@ -32,7 +32,7 @@ import dbus
 from sugar import util        
 from sugar.presence import presenceservice
 from sugar.activity.activityservice import ActivityService
-from sugar.graphics import units
+from sugar.graphics import style
 from sugar.graphics.window import Window
 from sugar.graphics.toolbox import Toolbox
 from sugar.graphics.toolbutton import ToolButton
@@ -345,8 +345,8 @@ class Activity(Window, gtk.Container):
         preview_pixbuf = self.get_canvas_screenshot()
         if preview_pixbuf is None:
             return None
-        preview_pixbuf = preview_pixbuf.scale_simple(units.grid_to_pixels(4),
-                                                     units.grid_to_pixels(3),
+        preview_pixbuf = preview_pixbuf.scale_simple(style.zoom(300),
+                                                     style.zoom(225),
                                                      gtk.gdk.INTERP_BILINEAR)
 
         # TODO: Find a way of taking a png out of the pixbuf without saving to a temp file.

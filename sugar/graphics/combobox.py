@@ -21,8 +21,6 @@ import logging
 import gobject
 import gtk
 
-from sugar.graphics import units
-
 class ComboBox(gtk.ComboBox):
     __gtype_name__ = 'SugarComboBox'    
 
@@ -66,7 +64,11 @@ class ComboBox(gtk.ComboBox):
     def append_item(self, action_id, text, icon_name=None):
         if not self._icon_renderer and icon_name:
             self._icon_renderer = gtk.CellRendererPixbuf()
-            self._icon_renderer.props.stock_size = units.microgrid_to_pixels(3)
+
+            settings = self.get_settings()
+            w, h = gtk.icon_size_lookup_for_settings(settings, gtk.ICON_SIZE_MENU)
+            self._icon_renderer.props.stock_size = w
+
             self.pack_start(self._icon_renderer, False)
             self.add_attribute(self._icon_renderer, 'pixbuf', 2)
 

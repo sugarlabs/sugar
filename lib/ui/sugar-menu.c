@@ -59,13 +59,6 @@ sugar_menu_popdown(SugarMenu *menu)
     gtk_widget_hide(window);
 }
 
-void
-sugar_menu_set_min_width (SugarMenu *menu,
-                          int        min_width)
-{
-    menu->min_width = min_width;
-}
-
 static void
 sugar_menu_size_request (GtkWidget      *widget,
                          GtkRequisition *requisition)

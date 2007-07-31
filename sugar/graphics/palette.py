@@ -24,7 +24,6 @@ import hippo
 
 from sugar.graphics import palettegroup
 from sugar.graphics import animator
-from sugar.graphics import units
 from sugar.graphics import style
 from sugar import _sugaruiext
 
@@ -88,7 +87,6 @@ class Palette(gobject.GObject):
         self._popdown_anim.add(_PopdownAnimation(self))
 
         self._menu = _sugaruiext.Menu()
-        self._menu.set_min_width(units.grid_to_pixels(1))
 
         self._primary = _PrimaryMenuItem(label, accel_path)
         self._menu.append(self._primary)
@@ -378,7 +376,7 @@ class Palette(gobject.GObject):
 class _PrimaryMenuItem(gtk.MenuItem):
     def __init__(self, label, accel_path):
         gtk.MenuItem.__init__(self)
-        self.set_border_width(units.points_to_pixels(1))
+        self.set_border_width(style.DEFAULT_BORDER)
         self._set_label(label, accel_path)
 
     def set_label(self, label, accel_path):
