@@ -1,3 +1,5 @@
+Snapshot 285099fe08
+
 * Disable buddy icons in BuddyMenu (dcbw)
 * Fix traceback when reading in saved WPA2 network configs (dcbw)
 * #2570 Accept correctly image drops from Record.
