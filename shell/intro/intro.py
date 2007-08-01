@@ -209,7 +209,10 @@ class IntroWindow(gtk.Window):
         section = 'Server'
         if not cp.has_section(section):
             cp.add_section(section)
-        cp.set(section, 'Server', 'olpc.collabora.co.uk')
+        if env.is_emulator():
+            cp.set(section, 'Server', 'olpc.collabora.co.uk')
+        else:
+            cp.set(section, 'Server', '')
         cp.set(section, 'Registered', 'False')
 
         config_path = os.path.join(env.get_profile_path(), 'config')
