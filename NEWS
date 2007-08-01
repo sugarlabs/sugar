@@ -1,3 +1,5 @@
+* Don't set a presence server by default (except in the emulator) (dcbw)
+
 Snapshot 285099fe08
 
 * Disable buddy icons in BuddyMenu (dcbw)
