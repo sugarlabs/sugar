@@ -147,6 +147,8 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
         self._model.connect('activity-removed', self._activity_removed_cb)
         self._model.connect('active-activity-changed', self._activity_changed_cb)
 
+        self.connect('button-release-event', self._button_release_event_cb)
+
     def _get_icon_from_activity(self, activity):
         for icon in self._activities:
             if icon.get_activity().equals(activity):
@@ -170,18 +172,49 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
 
     def _add_activity(self, activity):
         icon = ActivityIcon(activity)
-        icon.connect('activated', self._activity_icon_clicked_cb)
         self.append(icon, hippo.PACK_FIXED)
 
         self._activities.append(icon)
 
         self.emit_paint_needed(0, 0, -1, -1)
 
-    def _activity_icon_clicked_cb(self, icon):
-        activity = icon.get_activity()
+    def _get_activity(self, x, y):
+        # Compute the distance from the center.
+        [width, height] = self.get_allocation()
+        x -= width / 2
+        y -= height / 2
+        r = math.hypot(x, y)
+
+        # Ignore the click if it's not inside the donut
+        if r < self._get_inner_radius() or r > self._get_radius():
+            return None
+
+        # Now figure out where in the donut the click was.
+        angle = math.atan2(-y, -x) + math.pi
+
+        # Unfortunately, _get_angles() doesn't count from 0 to 2pi, it
+        # counts from roughly pi/2 to roughly 5pi/2. So we have to
+        # compare its return values against both angle and angle+2pi
+        high_angle = angle + 2 * math.pi
+
+        for index, activity in enumerate(self._model):
+            [angle_start, angle_end] = self._get_angles(index)
+            if angle_start < angle and angle_end > angle:
+                return activity
+            elif angle_start < high_angle and angle_end > high_angle:
+                return activity
+
+        return None
+
+    def _button_release_event_cb(self, item, event):
+        activity = self._get_activity(event.x, event.y)
+        if activity is None:
+            return False
+
         activity_host = self._shell.get_activity(activity.get_activity_id())
         if activity_host:
             activity_host.present()
+        return True
 
     def _get_angles(self, index):
         angle = 2 * math.pi / 8
@@ -251,9 +284,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
 
         radius = (self._get_inner_radius() + self._get_radius()) / 2
 
-        i = 0
-        for h_activity in self._model:
-            icon = self._get_icon_from_activity(h_activity)
+        for i, icon in enumerate(self._activities):
             [angle_start, angle_end] = self._get_angles(i)
             angle = angle_start + (angle_end - angle_start) / 2
 
@@ -262,5 +293,3 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
             x = int(radius * math.cos(angle)) - icon_width / 2
             y = int(radius * math.sin(angle)) - icon_height / 2
             self.set_position(icon, x + width / 2, y + height / 2)
-
-            i += 1
