@@ -129,7 +129,10 @@ class ActivityIcon(CanvasIcon):
         self._cleanup()
         self._level = 100.0
         self.props.xo_color = self._orig_color
-        self.emit_paint_needed(0, 0, -1, -1)
+
+        # Force the donut to redraw now that we know how much memory
+        # the activity is using.
+        self.emit_request_changed()
 
     def get_activity(self):
         return self._activity
@@ -141,6 +144,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
 
         self._activities = []
         self._shell = shell
+        self._angles = []
 
         self._model = shell.get_model().get_home()
         self._model.connect('activity-added', self._activity_added_cb)
@@ -216,11 +220,90 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
             activity_host.present()
         return True
 
+    MAX_ACTIVITIES = 10
+    MIN_ACTIVITY_WEDGE_SIZE = 1.0 / MAX_ACTIVITIES
+
+    def _get_activity_sizes(self):
+        # First get the size of each process that hosts an activity,
+        # and the number of activities it hosts.
+        process_size = {}
+        num_activities = {}
+        total_activity_size = 0
+        for activity in self._model:
+            pid = activity.get_pid()
+            if not pid:
+                # Still starting up, hasn't opened a window yet
+                continue
+
+            if process_size.has_key(pid):
+                num_activities[pid] += 1
+                continue
+
+            try:
+                statm = open('/proc/%s/statm' % pid)
+                # We use "RSS" (the second field in /proc/PID/statm)
+                # for the activity size because that's what ps and top
+                # use for calculating "%MEM". We multiply by 4 to
+                # convert from pages to kb.
+                process_size[pid] = int(statm.readline().split()[1]) * 4
+                total_activity_size += process_size[pid]
+                num_activities[pid] = 1
+                statm.close()
+            except IOError:
+                logging.warn('ActivitiesDonut: could not read /proc/%s/statm' %
+                             pid)
+            except (IndexError, ValueError):
+                logging.warn('ActivitiesDonut: /proc/%s/statm was not in ' +
+                             'expected format' % pid)
+
+        # Next, see how much free memory is left.
+        try:
+            meminfo = open('/proc/meminfo')
+            meminfo.readline()
+            free_memory = int(meminfo.readline()[9:-3])
+            meminfo.close()
+        except IOError:
+            logging.warn('ActivitiesDonut: could not read /proc/meminfo')
+        except (IndexError, ValueError):
+            logging.warn('ActivitiesDonut: /proc/meminfo was not in ' +
+                         'expected format')
+
+        # Each activity starts with MIN_ACTIVITY_WEDGE_SIZE. The
+        # remaining space in the donut is allocated proportionately
+        # among the activities-of-known-size and the free space
+        used_space = ActivitiesDonut.MIN_ACTIVITY_WEDGE_SIZE * len(self._model)
+        remaining_space = max(0.0, 1.0 - used_space)
+
+        total_memory = total_activity_size + free_memory
+
+        activity_sizes = []
+        for activity in self._model:
+            percent = ActivitiesDonut.MIN_ACTIVITY_WEDGE_SIZE
+            pid = activity.get_pid()
+            if process_size.has_key(pid):
+                size = process_size[pid] / num_activities[pid]
+                percent += remaining_space * size / total_memory
+            activity_sizes.append(percent)
+
+        return activity_sizes
+
+    def _compute_angles(self):
+        percentages = self._get_activity_sizes()
+        self._angles = []
+        if len(percentages) == 0:
+            return
+
+        # The first wedge (Journal) should be centered at 6 o'clock
+        size = percentages[0] * 2 * math.pi
+        angle = (math.pi - size) / 2
+        self._angles.append(angle)
+
+        for size in percentages:
+            self._angles.append(self._angles[-1] + size * 2 * math.pi)
+
     def _get_angles(self, index):
-        angle = 2 * math.pi / 8
-        bottom_align = (math.pi - angle) / 2
-        return [index * angle + bottom_align, 
-                (index + 1) * angle + bottom_align]
+        return [self._angles[index],
+                self._angles[(index + 1) % len(self._angles)]]
 
     def _get_radius(self):
         [width, height] = self.get_allocation()
@@ -284,6 +367,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
 
         radius = (self._get_inner_radius() + self._get_radius()) / 2
 
+        self._compute_angles()
         for i, icon in enumerate(self._activities):
             [angle_start, angle_end] = self._get_angles(i)
             angle = angle_start + (angle_end - angle_start) / 2
