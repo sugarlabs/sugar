@@ -14,12 +14,16 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import hippo
-import math
-import gobject
 import colorsys
+from gettext import gettext as _
+import math
+
+import hippo
+import gobject
+import gtk
 
 from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics.palette import Palette
 from sugar.graphics import style
 from sugar.graphics import xocolor
 from sugar import profile
@@ -45,6 +49,13 @@ def html_to_rgb(html_color):
 class ActivityIcon(CanvasIcon):
     _INTERVAL = 250
 
+    __gsignals__ = {
+        'resume': (gobject.SIGNAL_RUN_FIRST,
+                   gobject.TYPE_NONE, ([])),
+        'stop': (gobject.SIGNAL_RUN_FIRST,
+                 gobject.TYPE_NONE, ([]))
+    }
+
     def __init__(self, activity):
         icon_name = activity.get_icon_name()
         self._orig_color = activity.get_icon_color()
@@ -61,15 +72,38 @@ class ActivityIcon(CanvasIcon):
         self._activity = activity
         self._pulse_id = 0
 
+        palette = Palette(_('Starting...'))
+        self.set_palette(palette)
+
         activity.connect('notify::launching', self._launching_changed_cb)
         if activity.props.launching:
             self._start_pulsing()
+        else:
+            self._setup_palette()
+
+    def _setup_palette(self):
+        palette = self.get_palette()
+
+        palette.set_primary_text(self._activity.get_title())
+
+        resume_menu_item = gtk.MenuItem(_('Resume'))
+        resume_menu_item.connect('activate', self._resume_activate_cb)
+        palette.append_menu_item(resume_menu_item)
+        resume_menu_item.show()
+
+        # FIXME: kludge
+        if self._activity.get_type() != "org.laptop.JournalActivity":
+            stop_menu_item = gtk.MenuItem(_('Stop'))
+            stop_menu_item.connect('activate', self._stop_activate_cb)
+            palette.append_menu_item(stop_menu_item)
+            stop_menu_item.show()
 
     def _launching_changed_cb(self, activity, pspec):
         if activity.props.launching:
             self._start_pulsing()
         else:
             self._stop_pulsing()
+        self._setup_palette()
 
     def __del__(self):
         self._cleanup()
@@ -134,6 +168,12 @@ class ActivityIcon(CanvasIcon):
         # the activity is using.
         self.emit_request_changed()
 
+    def _resume_activate_cb(self, menuitem):
+        self.emit('resume')
+
+    def _stop_activate_cb(self, menuitem):
+        self.emit('stop')
+
     def get_activity(self):
         return self._activity
 
@@ -176,11 +216,31 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
 
     def _add_activity(self, activity):
         icon = ActivityIcon(activity)
+        icon.connect('resume', self._activity_icon_resumed_cb)
+        icon.connect('stop', self._activity_icon_stop_cb)
         self.append(icon, hippo.PACK_FIXED)
 
         self._activities.append(icon)
 
         self.emit_paint_needed(0, 0, -1, -1)
+
+    def _activity_icon_resumed_cb(self, icon):
+        activity = icon.get_activity()
+        activity_host = self._shell.get_activity(activity.get_activity_id())
+        if activity_host:
+            activity_host.present()
+        else:
+            logging.error("Could not find ActivityHost for activity %s" %
+                          activity.get_activity_id())
+
+    def _activity_icon_stop_cb(self, icon):
+        activity = icon.get_activity()
+        activity_host = self._shell.get_activity(activity.get_activity_id())
+        if activity_host:
+            activity_host.close()
+        else:
+            logging.error("Could not find ActivityHost for activity %s" %
+                          activity.get_activity_id())
 
     def _get_activity(self, x, y):
         # Compute the distance from the center.
