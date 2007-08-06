@@ -65,10 +65,15 @@ class ActivityHost:
         pass
 
     def present(self):
-        self._window.activate(gtk.get_current_event_time())
+        # wnck.Window.activate() expects a timestamp, but we don't
+        # always have one, and libwnck will complain if we pass "0",
+        # and matchbox doesn't look at the timestamp anyway. So we
+        # just always pass "1".
+        self._window.activate(1)
 
     def close(self):
-        self._window.close(gtk.get_current_event_time())
+        # The "1" is a fake timestamp as with present()
+        self._window.close(1)
 
     def show_dialog(self, dialog):
         dialog.show()
