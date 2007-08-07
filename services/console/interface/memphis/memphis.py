@@ -130,15 +130,14 @@ class Data:
         treeview.set_model(self.store)
 
     def _start_memphis(self, button):
-
         # Update information every 1.5 second
         button.hide()
         self.interface.button_stop.show()
         self._running_status = True
-        gobject.timeout_add(1500, self.load_data, self.treeview)
+        self._gid = gobject.timeout_add(1500, self.load_data, self.treeview)
 
     def _stop_memphis(self, button):
-
+        gobject.source_remove(self._gid)
         self._running_status = False
         button.hide()
         self.interface.button_start.show()
