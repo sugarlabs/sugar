@@ -7,20 +7,22 @@ class Analysis:
     def __init__(self, pid):
         self.pid = pid
     
-    def DirtyRSS(self):
+    def SMaps(self):
         smaps =    proc_smaps.ProcSmaps(self.pid)
-        dirty = []
+        private_dirty = 0
+        shared_dirty = 0
+        referenced = 0
 
-        private = 0
-        shared = 0
-        
         for map in smaps.mappings:
-            private += map.private_dirty
-            shared  += map.shared_dirty
+            private_dirty += map.private_dirty
+            shared_dirty  += map.shared_dirty
+            referenced += map.referenced
 
-        dirty = {"private": int(private), "shared": int(shared)}
+        smaps = {"private_dirty": int(private_dirty), \
+                    "shared_dirty": int(shared_dirty),\
+                    "referenced": int(referenced)}
 
-        return dirty
+        return smaps
     
     def ApproxRealMemoryUsage(self):
         maps = proc_smaps.ProcMaps(self.pid)
