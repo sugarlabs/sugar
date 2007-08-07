@@ -56,8 +56,8 @@ class ProcSmaps:
             mapping = Mapping (size, rss, shared_clean, shared_dirty, private_clean, private_dirty, permissions, name)
             self.mappings.append (mapping)
 
-            num_lines -= 7
-            line_idx += 7
+            num_lines -= 8
+            line_idx += 8
 
     # Parses a line of the form "foo: 42 kB" and returns an integer for the "42" field
     def parse_smaps_size_line (self, line):
