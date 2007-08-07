@@ -1,3 +1,5 @@
+ACLOCAL_AMFLAGS = -I m4
+
 SUBDIRS = bin data lib po shell sugar services
 
 bin_SCRIPTS = 			\
