@@ -58,6 +58,7 @@ class HomeActivity(gobject.GObject):
 
         self._window = None
         self._xid = None
+        self._pid = None
         self._service = None
         self._activity_id = activity_id
         self._bundle = bundle
@@ -81,6 +82,7 @@ class HomeActivity(gobject.GObject):
 
         self._window = window
         self._xid = window.get_xid()
+        self._pid = window.get_pid()
 
     def get_service(self):
         """Get the activity service
@@ -167,6 +169,10 @@ class HomeActivity(gobject.GObject):
         (seconds since the epoch)
         """
         return self._launch_time
+
+    def get_pid(self):
+        """Returns the activity's PID"""
+        return self._pid
 
     def equals(self, activity):
         if self._activity_id and activity.get_activity_id():

@@ -200,6 +200,9 @@ def delete(object_id):
 
 def find(query, sorting=None, limit=None, offset=None, reply_handler=None,
          error_handler=None):
+
+    query = query.copy()
+
     if sorting:
         query['order_by'] = sorting
     if limit:
