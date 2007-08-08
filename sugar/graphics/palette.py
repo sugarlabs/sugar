@@ -103,9 +103,6 @@ class Palette(gtk.Window):
         vbox.pack_start(menu_box)
         menu_box.show()
 
-        self._menu = _sugaruiext.Menu()
-        self._menu.embed(menu_box)
-
         self._content = gtk.VBox()
         vbox.pack_start(self._content)
 
@@ -114,6 +111,9 @@ class Palette(gtk.Window):
 
         self.add(vbox)
         vbox.show()
+
+        self._menu = _sugaruiext.Menu()
+        self._menu.embed(menu_box)
 
         self.connect('enter-notify-event',
                      self._enter_notify_event_cb)
