@@ -139,6 +139,7 @@ class Palette(gtk.Window):
         self._menu.remove(self._menu.get_children()[index])
 
     def set_content(self, widget):
+        self._update_accept_focus()
         self._content.pack_start(widget)
 
     def append_button(self, button):
@@ -158,7 +159,6 @@ class Palette(gtk.Window):
             self._invoker = value
             self._invoker.connect('mouse-enter', self._invoker_mouse_enter_cb)
             self._invoker.connect('mouse-leave', self._invoker_mouse_leave_cb)
-            self._invoker.connect('focus-out', self._invoker_focus_out_cb)
         elif pspec.name == 'position':
             self._position = value
         else:
@@ -172,9 +172,14 @@ class Palette(gtk.Window):
         else:
             raise AssertionError
 
+    def _update_accept_focus(self):
+        accept_focus = len(self._content.get_children())
+        if self.window:
+            self.window.set_accept_focus(accept_focus)
+
     def _realize_cb(self, widget):
         self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
-        self.window.set_accept_focus(False)
+        self._update_accept_focus()
 
     def _in_screen(self, x, y):
         [width, height] = self._full_request
@@ -299,9 +304,8 @@ class Palette(gtk.Window):
         self._update_cursor_position()        
         self._update_full_request()
 
-        self._invoker.connect_to_parent()
-        self._palette_popup_sid = _palette_observer.connect('popup',
-                    self._palette_observer_popup_cb)
+        self._palette_popup_sid = _palette_observer.connect(
+                                'popup', self._palette_observer_popup_cb)
 
         self._update_position()
         self._menu.set_active(True)
@@ -365,9 +369,6 @@ class Palette(gtk.Window):
     def _invoker_mouse_leave_cb(self, invoker):
         self.popdown()
 
-    def _invoker_focus_out_cb(self, invoker):
-        self._hide()
-
     def _enter_notify_event_cb(self, widget, event):
         if event.detail == gtk.gdk.NOTIFY_NONLINEAR:
             self._popdown_anim.stop()
@@ -429,13 +430,6 @@ class Invoker(gobject.GObject):
         width = gtk.gdk.screen_width()
         height = gtk.gdk.screen_height()
         return gtk.gdk.Rectangle(0, 0, width, height)
-
-    def connect_to_parent(self):
-        window = self.get_toplevel()
-        window.connect('focus-out-event', self._window_focus_out_event_cb)
-
-    def _window_focus_out_event_cb(self, widget, event):
-        self.emit('focus-out')
 
 class WidgetInvoker(Invoker):
     def __init__(self, widget):
