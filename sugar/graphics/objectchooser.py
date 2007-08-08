@@ -21,12 +21,12 @@ import time
 import gtk
 import hippo
 
-from sugar.graphics.frame import Frame
 from sugar.activity.bundle import Bundle
 from sugar.date import Date
 from sugar.graphics import style
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics.xocolor import XoColor
+from sugar.graphics.canvasroundbox import CanvasRoundBox
 from sugar.datastore import datastore
 from sugar import activity
 from sugar.objects import objecttype
@@ -95,12 +95,12 @@ class ObjectChooser(gtk.Dialog):
         else:
             return None
 
-class CollapsedEntry(Frame):
+class CollapsedEntry(CanvasRoundBox):
     _DATE_COL_WIDTH    = style.zoom(100)
     _BUDDIES_COL_WIDTH = style.zoom(50)
 
     def __init__(self, jobject):
-        Frame.__init__(self)
+        CanvasRoundBox.__init__(self)
         self.props.box_height = style.zoom(75)
         self.props.spacing = style.DEFAULT_SPACING
         self.props.border_color = style.COLOR_BLACK.get_int()
