@@ -88,9 +88,9 @@ class BuddyMenu(Palette):
         self.append_menu_item(menu_item)
         menu_item.show()
 
-        activity = shell_model.get_home().get_current_activity()
+        activity = self._shell.get_current_activity()
         if activity != None:
-            activity_ps = pservice.get_activity(activity.get_activity_id())
+            activity_ps = pservice.get_activity(activity.get_id())
 
             # FIXME check that the buddy is not in the activity already
 
