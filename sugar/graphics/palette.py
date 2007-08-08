@@ -396,6 +396,9 @@ class _Menu(_sugaruiext.Menu):
         _sugaruiext.Menu.do_insert(self, item, position)
         self._palette._update_separator()
 
+    def do_deactivate(self):
+        self._palette._hide()
+
 class _PopupAnimation(animator.Animation):
     def __init__(self, palette):
         animator.Animation.__init__(self, 0.0, 1.0)
