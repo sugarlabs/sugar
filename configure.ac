@@ -64,7 +64,7 @@ services/console/Makefile
 services/console/interface/Makefile
 services/console/interface/xo/Makefile
 services/console/interface/memphis/plugins/clean_size/Makefile
-services/console/interface/memphis/plugins/dirty_size/Makefile
+services/console/interface/memphis/plugins/smaps/Makefile
 services/console/interface/memphis/plugins/Makefile
 services/console/interface/memphis/plugins/memphis_init/Makefile
 services/console/interface/memphis/plugins/cpu/Makefile

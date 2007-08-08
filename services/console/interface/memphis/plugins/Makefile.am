@@ -1,4 +1,4 @@
-SUBDIRS = clean_size cpu dirty_size memphis_init
+SUBDIRS = clean_size cpu smaps memphis_init
 
 sugardir = $(pkgdatadir)/services/console/interface/memphis/plugins
 sugar_PYTHON = 

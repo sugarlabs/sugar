@@ -73,9 +73,9 @@ class ClipboardIcon(CanvasIcon):
         self._selected = selected
         if selected:
             if not self._hover:
-                self.props.background_color = style.COLOR_PANEL_GREY.get_int()
+                self.props.background_color = style.COLOR_SELECTION_GREY.get_int()
         else:
-            self.props.background_color = style.COLOR_TOOLBAR_GREY.get_int()
+            self.props.background_color = style.COLOR_PANEL_GREY.get_int()
 
     def set_state(self, name, percent, icon_name, preview, activity):
         cb_service = clipboardservice.get_instance()
@@ -107,11 +107,11 @@ class ClipboardIcon(CanvasIcon):
     def prelight(self, enter):
         if enter:
             self._hover = True
-            self.props.background_color = color.BLACK.get_int()
+            self.props.background_color = style.COLOR_BLACK.get_int()
         else:
             self._hover = False
             if self._selected:
-                self.props.background_color = color.DESKTOP_BACKGROUND.get_int()
+                self.props.background_color = style.COLOR_SELECTION_GREY.get_int()
             else:
-                self.props.background_color = color.TOOLBAR_BACKGROUND.get_int()
+                self.props.background_color = style.COLOR_PANEL_GREY.get_int()
 

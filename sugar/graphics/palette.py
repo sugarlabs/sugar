@@ -36,7 +36,7 @@ _RIGHT_TOP    = 5
 _TOP_LEFT     = 6
 _TOP_RIGHT    = 7
 
-class Palette(gobject.GObject):
+class Palette(gtk.Window):
     DEFAULT   = 0
     AT_CURSOR = 1
     AROUND    = 2
@@ -65,12 +65,16 @@ class Palette(gobject.GObject):
     }
 
     def __init__(self, label, accel_path=None):
-        gobject.GObject.__init__(self)
+        gtk.Window.__init__(self)
+
+        self.set_decorated(False)
+        self.set_resizable(False)
+        self.connect('realize', self._realize_cb)
 
         self._full_request = [0, 0]
         self._cursor_x = 0
         self._cursor_y = 0
-        self._state = self._SECONDARY  
+        self._state = self._PRIMARY
         self._invoker = None
         self._group_id = None
         self._up = False
@@ -86,60 +90,60 @@ class Palette(gobject.GObject):
         self._popdown_anim = animator.Animator(0.6, 10)
         self._popdown_anim.add(_PopdownAnimation(self))
 
-        self._menu = _sugaruiext.Menu()
+        vbox = gtk.VBox()
+        vbox.set_border_width(style.DEFAULT_PADDING)
 
-        self._primary = _PrimaryMenuItem(label, accel_path)
-        self._menu.append(self._primary)
-        self._primary.show()
+        self._label = gtk.Label()
+        vbox.pack_start(self._label, False)
 
-        self._separator = gtk.SeparatorMenuItem()
-        self._menu.append(self._separator)
+        self._secondary_box = gtk.VBox()
+        vbox.pack_start(self._secondary_box)
 
-        self._content = _ContentMenuItem()
-        self._menu.append(self._content)
+        self._separator = gtk.HSeparator()
+        self._secondary_box.pack_start(self._separator)
 
-        self._button_bar = _ButtonBarMenuItem()
-        self._menu.append(self._button_bar)
+        menu_box = gtk.VBox()
+        self._secondary_box.pack_start(menu_box)
+        menu_box.show()
 
-        self._menu.connect('enter-notify-event',
-                           self._enter_notify_event_cb)
-        self._menu.connect('leave-notify-event',
-                           self._leave_notify_event_cb)
+        self._content = gtk.VBox()
+        self._secondary_box.pack_start(self._content)
+        self._content.show()
+
+        self.action_bar = PaletteActionBar()
+        self._secondary_box.pack_start(self.action_bar)
+        self.action_bar.show()
+
+        self.add(vbox)
+        vbox.show()
+
+        self.menu = _Menu(self)
+        self.menu.embed(menu_box)
+        self.menu.show()
+
+        self.connect('enter-notify-event',
+                     self._enter_notify_event_cb)
+        self.connect('leave-notify-event',
+                     self._leave_notify_event_cb)
+
+        self.set_primary_text(label, accel_path)
 
     def is_up(self):
         return self._up
 
     def set_primary_text(self, label, accel_path=None):
-        self._primary.set_label(label, accel_path)
+        self._label.set_text(label)
+        self._label.show()
 
-    def append_menu_item(self, item):
-        self._separator.show()
-        self._menu.insert(item, len(self._menu.get_children()) - 2)
-
-    def insert_menu_item(self, item, index=-1):
-        self._separator.show()
-        if index < 0:
-            self._menu.insert(item, len(self._menu.get_children()) - 2)
-        else:
-            self._menu.insert(item, index + 2)
-
-    def remove_menu_item(self, index):
-        if index > len(self._menu.get_children()) - 4:
-            raise ValueError('index %i out of range' % index)
-        self._menu.remove(self._menu.get_children()[index + 2])
-        if len(self._menu.get_children()) == 0:
-            self._separator.hide()
-
-    def menu_item_count(self):
-        return len(self._menu.get_children()) - 4
-        
     def set_content(self, widget):
-        self._content.set_widget(widget)
-        self._content.show()
+        if len(self._content.get_children()) > 0:
+            self.remove(self._content.get_children()[0])
 
-    def append_button(self, button):
-        self._button_bar.append_button(button)
-        self._button_bar.show()
+        if widget is not None:
+            self._content.add(widget)
+
+        self._update_accept_focus()
+        self._update_separator()
 
     def set_group_id(self, group_id):
         if self._group_id:
@@ -154,7 +158,6 @@ class Palette(gobject.GObject):
             self._invoker = value
             self._invoker.connect('mouse-enter', self._invoker_mouse_enter_cb)
             self._invoker.connect('mouse-leave', self._invoker_mouse_leave_cb)
-            self._invoker.connect('focus-out', self._invoker_focus_out_cb)
         elif pspec.name == 'position':
             self._position = value
         else:
@@ -167,6 +170,20 @@ class Palette(gobject.GObject):
             return self._position
         else:
             raise AssertionError
+
+    def _update_separator(self):
+        visible = len(self.menu.get_children()) > 0 or  \
+                  len(self._content.get_children()) > 0
+        self._separator.props.visible = visible
+
+    def _update_accept_focus(self):
+        accept_focus = len(self._content.get_children())
+        if self.window:
+            self.window.set_accept_focus(accept_focus)
+
+    def _realize_cb(self, widget):
+        self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
+        self._update_accept_focus()
 
     def _in_screen(self, x, y):
         [width, height] = self._full_request
@@ -182,7 +199,7 @@ class Palette(gobject.GObject):
         if inv_rect == None:
             inv_rect = self._invoker.get_rect()
 
-        palette_width, palette_height = self._menu.size_request()
+        palette_width, palette_height = self.size_request()
 
         x = inv_rect.x + inv_rect.width * invoker_halign + \
             palette_width * palette_halign
@@ -241,12 +258,12 @@ class Palette(gobject.GObject):
     def _update_full_request(self):
         state = self._state
 
-        self._menu.set_size_request(-1, -1)
+        self.set_size_request(-1, -1)
 
         self._set_state(self._SECONDARY)
-        self._full_request = self._menu.size_request()
+        self._full_request = self.size_request()
 
-        self._menu.set_size_request(self._full_request[0], -1)
+        self.set_size_request(self._full_request[0], -1)
 
         self._set_state(state)
 
@@ -282,7 +299,7 @@ class Palette(gobject.GObject):
         elif position == self.TOP:
             x, y = self._get_top_position()
 
-        self._menu.popup(x, y)
+        self.move(x, y)
 
     def _show(self):
         if self._up:
@@ -291,11 +308,12 @@ class Palette(gobject.GObject):
         self._update_cursor_position()        
         self._update_full_request()
 
-        self._invoker.connect_to_parent()
-        self._palette_popup_sid = _palette_observer.connect('popup',
-                    self._palette_observer_popup_cb)
+        self._palette_popup_sid = _palette_observer.connect(
+                                'popup', self._palette_observer_popup_cb)
 
         self._update_position()
+        self.menu.set_active(True)
+        self.show()
 
         self._up = True
         _palette_observer.emit('popup', self)
@@ -305,7 +323,8 @@ class Palette(gobject.GObject):
         if not self._palette_popup_sid is None:
             _palette_observer.disconnect(self._palette_popup_sid)
             self._palette_popup_sid = None
-        self._menu.popdown()
+        self.menu.set_active(False)
+        self.hide()
 
         self._up = False
         self.emit('popdown')
@@ -329,25 +348,9 @@ class Palette(gobject.GObject):
             return
 
         if state == self._PRIMARY:
-            self._primary.show()
-            for menu_item in self._menu.get_children()[1:]:
-                menu_item.hide()
+            self._secondary_box.hide()
         elif state == self._SECONDARY:
-            middle_menu_items = self._menu.get_children()
-            middle_menu_items = middle_menu_items[2:len(middle_menu_items) - 2]
-            if middle_menu_items or \
-                    not self._content.is_empty() or \
-                    not self._button_bar.is_empty():
-                self._separator.show()
-
-            for menu_item in middle_menu_items:
-                menu_item.show()
-
-            if not self._content.is_empty():
-                self._content.show()
-
-            if not self._button_bar.is_empty():
-                self._button_bar.show()
+            self._secondary_box.show()
 
         self._state = state
 
@@ -357,68 +360,44 @@ class Palette(gobject.GObject):
     def _invoker_mouse_leave_cb(self, invoker):
         self.popdown()
 
-    def _invoker_focus_out_cb(self, invoker):
-        self._hide()
-
     def _enter_notify_event_cb(self, widget, event):
-        if event.detail == gtk.gdk.NOTIFY_NONLINEAR:
+        if event.detail != gtk.gdk.NOTIFY_INFERIOR:
             self._popdown_anim.stop()
             self._secondary_anim.start()
 
     def _leave_notify_event_cb(self, widget, event):
-        if event.detail == gtk.gdk.NOTIFY_NONLINEAR:
+        if event.detail != gtk.gdk.NOTIFY_INFERIOR:
             self.popdown()
 
     def _palette_observer_popup_cb(self, observer, palette):
         if self != palette:
             self._hide()
 
-class _PrimaryMenuItem(gtk.MenuItem):
-    def __init__(self, label, accel_path):
-        gtk.MenuItem.__init__(self)
-        self.set_border_width(style.DEFAULT_PADDING)
-        self._set_label(label, accel_path)
+class PaletteActionBar(gtk.HButtonBox):
+    def add_action(label, icon_name=None):
+        button = Button(label)
 
-    def set_label(self, label, accel_path):
-        self.remove(self._label)
-        self._set_label(label, accel_path)
+        if icon_name:
+            icon = Icon(icon_name)
+            button.set_image(icon)
+            icon.show()
 
-    def _set_label(self, label, accel_path):
-        self._label = gtk.AccelLabel(label)
-        self._label.set_accel_widget(self)
+        self.pack_start(button)
+        button.show()
 
-        if accel_path:
-            self.set_accel_path(accel_path)
-            self._label.set_alignment(0.0, 0.5)
+class _Menu(_sugaruiext.Menu):
+    __gtype_name__ = 'SugarPaletteMenu'
 
-        self.add(self._label)
-        self._label.show()
-    
-class _ContentMenuItem(gtk.MenuItem):
-    def __init__(self):
-        gtk.MenuItem.__init__(self)
+    def __init__(self, palette):
+        _sugaruiext.Menu.__init__(self)
+        self._palette = palette
 
-    def set_widget(self, widget):
-        if self.child:
-            self.remove(self.child)
-        self.add(widget)
+    def do_insert(self, item, position):
+        _sugaruiext.Menu.do_insert(self, item, position)
+        self._palette._update_separator()
 
-    def is_empty(self):
-        return self.child is None or not self.child.props.visible
-
-class _ButtonBarMenuItem(gtk.MenuItem):
-    def __init__(self):
-        gtk.MenuItem.__init__(self)
-
-        self._hbar = gtk.HButtonBox()
-        self.add(self._hbar)
-        self._hbar.show()
-
-    def append_button(self, button):
-        self._hbar.pack_start(button)
-
-    def is_empty(self):
-        return len(self._hbar.get_children()) == 0
+    def do_deactivate(self):
+        self._palette._hide()
 
 class _PopupAnimation(animator.Animation):
     def __init__(self, palette):
@@ -468,13 +447,6 @@ class Invoker(gobject.GObject):
         width = gtk.gdk.screen_width()
         height = gtk.gdk.screen_height()
         return gtk.gdk.Rectangle(0, 0, width, height)
-
-    def connect_to_parent(self):
-        window = self.get_toplevel()
-        window.connect('focus-out-event', self._window_focus_out_event_cb)
-
-    def _window_focus_out_event_cb(self, widget, event):
-        self.emit('focus-out')
 
 class WidgetInvoker(Invoker):
     def __init__(self, widget):
