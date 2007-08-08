@@ -1,4 +1,5 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2007 One Laptop Per Child
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -19,9 +20,9 @@ import logging
 
 import dbus
 
-_SHELL_SERVICE = "org.laptop.Shell"
-_SHELL_PATH = "/org/laptop/Shell"
-_REGISTRY_IFACE = "org.laptop.Shell.ActivityRegistry"
+_ACTIVITY_REGISTRY_SERVICE_NAME = 'org.laptop.ActivityRegistry'
+_ACTIVITY_REGISTRY_IFACE = 'org.laptop.ActivityRegistry'
+_ACTIVITY_REGISTRY_PATH = '/org/laptop/ActivityRegistry'
 
 def _activity_info_from_dict(info_dict):
     if not info_dict:
@@ -39,8 +40,9 @@ class ActivityInfo(object):
 class ActivityRegistry(object):
     def __init__(self):
         bus = dbus.SessionBus()
-        bus_object = bus.get_object(_SHELL_SERVICE, _SHELL_PATH)
-        self._registry = dbus.Interface(bus_object, _REGISTRY_IFACE)
+        bus_object = bus.get_object(_ACTIVITY_REGISTRY_SERVICE_NAME,
+                                    _ACTIVITY_REGISTRY_PATH)
+        self._registry = dbus.Interface(bus_object, _ACTIVITY_REGISTRY_IFACE)
         self._registry.connect_to_signal('ActivityAdded', self._activity_added_cb)
 
         # Two caches fo saving some travel across dbus.

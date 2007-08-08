@@ -1,12 +1,17 @@
 servicedir = $(datadir)/dbus-1/services
 
 service_in_files =                              \
+    org.laptop.ActivityRegistry.service.in      \
     org.laptop.Clipboard.service.in             \
     org.laptop.ObjectTypeRegistry.service.in
 
 service_DATA =					\
+    org.laptop.ActivityRegistry.service		\
     org.laptop.Clipboard.service		\
     org.laptop.ObjectTypeRegistry.service
+
+org.laptop.ActivityRegistry.service: org.laptop.ActivityRegistry.service.in Makefile
+	@sed -e "s|\@bindir\@|$(bindir)|" $< > $@
 
 org.laptop.Clipboard.service: org.laptop.Clipboard.service.in Makefile
 	@sed -e "s|\@bindir\@|$(bindir)|" $< > $@
@@ -16,10 +21,11 @@ org.laptop.ObjectTypeRegistry.service: org.laptop.ObjectTypeRegistry.service.in 
 
 sugardir = $(pkgdatadir)/services/clipboard
 
-sugar_PYTHON =			\
-	__init__.py		\
-	clipboardobject.py      \
-	clipboardservice.py     \
+sugar_PYTHON =				\
+	__init__.py			\
+	activityregistryservice.py	\
+	clipboardobject.py      	\
+	clipboardservice.py     	\
 	objecttypeservice.py
 
 bin_SCRIPTS = sugar-clipboard

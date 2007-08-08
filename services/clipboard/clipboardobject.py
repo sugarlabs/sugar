@@ -19,9 +19,9 @@ import logging
 import urlparse
 
 from sugar.objects import mime
-from sugar import activity
 
 import objecttypeservice
+import bundleregistry
 
 class ClipboardObject:
 
@@ -66,30 +66,15 @@ class ClipboardObject:
         return ''
 
     def get_activity(self):
-        logging.debug('get_activity')
-        mapping = {'text/html'        : 'org.laptop.WebActivity',
-                   'image/jpeg'       : 'org.laptop.WebActivity',
-                   'image/gif'        : 'org.laptop.WebActivity',
-                   'image/png'        : 'org.laptop.WebActivity',
-                   'text/plain'       : 'org.laptop.AbiWordActivity',
-                   'text/rtf'         : 'org.laptop.AbiWordActivity',
-                   'text/richtext'    : 'org.laptop.AbiWordActivity',
-                   'application/pdf'  : 'org.laptop.sugar.ReadActivity',
-                   'application/x-squeak-project' : 'org.vpri.EtoysActivity'}
         mime = self.get_mime_type()
         if not mime:
             return ''
-        """
-        registry = activity.get_registry()
+
+        registry = bundleregistry.get_registry()
         activities = registry.get_activities_for_type(self.get_mime_type())
         # TODO: should we return several activities?
         if activities:
-            return activities[0]
-        else:
-            return ''
-        """
-        if mapping.has_key(mime):
-            return mapping[mime]
+            return activities[0].get_service_name()
         else:
             return ''
 
@@ -101,8 +86,6 @@ class ClipboardObject:
     
     def add_format(self, format):
         self._formats[format.get_type()] = format
-        # We want to get the activity early in order to prevent a DBus lockup.
-        activity = self.get_activity()
     
     def get_formats(self):
         return self._formats

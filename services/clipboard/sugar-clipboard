@@ -34,6 +34,7 @@ sys.path.append(env.get_service_path('clipboard'))
 
 import clipboardservice
 import objecttypeservice
+import activityregistryservice
 
 logging.info('Starting clipboard service.')
 
@@ -42,9 +43,11 @@ dbus.glib.threads_init()
 
 clipboard_service = clipboardservice.get_instance()
 object_type_registry = objecttypeservice.get_instance()
+activity_registry = activityregistryservice.get_instance()
 
 loop = gobject.MainLoop()
 try:
     loop.run()
 except KeyboardInterrupt:
     print 'Ctrl+C pressed, exiting...'
+
