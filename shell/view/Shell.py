@@ -47,6 +47,7 @@ class Shell(gobject.GObject):
         self._hosts = {}
         self._screen = wnck.screen_get_default()
         self._current_host = None
+        self._pending_host = None
         self._screen_rotation = 0
 
         self._key_handler = KeyHandler(self)
@@ -65,6 +66,8 @@ class Shell(gobject.GObject):
         home_model.connect('activity-removed', self._activity_removed_cb)
         home_model.connect('active-activity-changed',
                            self._active_activity_changed_cb)
+        home_model.connect('pending-activity-changed',
+                           self._pending_activity_changed_cb)
 
         # Unfreeze the display when it's stable
         hw_manager = hardwaremanager.get_manager()
@@ -99,6 +102,12 @@ class Shell(gobject.GObject):
             self._current_host.set_active(False)
 
         self._current_host = host
+
+    def _pending_activity_changed_cb(self, home_model, home_activity):
+        if home_activity:
+            self._pending_host = self._hosts[home_activity.get_xid()]
+        else:
+            self._pending_host = None
 
     def get_model(self):
         return self._model
@@ -156,6 +165,8 @@ class Shell(gobject.GObject):
             return
 
         if level == ShellModel.ZOOM_ACTIVITY:
+            if self._pending_host is not None:
+                self._pending_host.present()
             self._screen.toggle_showing_desktop(False)
         else:
             self._model.set_zoom_level(level)
