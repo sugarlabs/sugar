@@ -20,6 +20,7 @@ import logging
 from sugar.graphics.palette import Palette
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics.iconbutton import IconButton
+from sugar.graphics import style
 from sugar import profile
 
 from model import bundleregistry
@@ -27,7 +28,9 @@ from frameinvoker import FrameCanvasInvoker
 
 class ActivityButton(IconButton):
     def __init__(self, activity):
-        IconButton.__init__(self, icon_name=activity.get_icon())
+        IconButton.__init__(self, icon_name=activity.get_icon(),
+                            stroke_color=style.COLOR_WHITE,
+                            fill_color=style.COLOR_TRANSPARENT)
 
         palette = Palette(activity.get_name())
         palette.props.invoker = FrameCanvasInvoker(self)

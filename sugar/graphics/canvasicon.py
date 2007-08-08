@@ -231,13 +231,13 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         stroke_color = None
         if self._active:
             if self._fill_color:
-                fill_color = self._fill_color.get_html()
+                fill_color = self._fill_color.get_svg()
             if self._stroke_color:
-                stroke_color = self._stroke_color.get_html()
+                stroke_color = self._stroke_color.get_svg()
         else:
-            stroke_color = color.ICON_STROKE_INACTIVE.get_html()
+            stroke_color = color.ICON_STROKE_INACTIVE.get_svg()
             if self._fill_color:
-                fill_color = self._fill_color.get_html()
+                fill_color = self._fill_color.get_svg()
         return [fill_color, stroke_color]
 
     def _get_handle(self, name, handle):

@@ -53,7 +53,7 @@ class IconButton(CanvasIcon, hippo.CanvasItem):
             if self.props.active:
                 self.props.background_color = 0x000000FF
         else:
-            self.props.background_color = 0x404040FF
+            self.props.background_color = 0x00000000
 
     def _icon_clicked_cb(self, button):
         if self._palette:
