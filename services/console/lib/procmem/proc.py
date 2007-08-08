@@ -1,4 +1,6 @@
-import sys, os
+import os
+import re
+import sys
 import string
 
 class ProcInfo:
@@ -36,10 +38,12 @@ class ProcInfo:
             return None
 
         # Parsing data , check 'man 5 proc' for details
-        data = infile.read().split()
-
+        stat_data = infile.read()
         infile.close()
-        
+
+        process_name = self._get_process_name(stat_data)
+        data = self._get_safe_split(stat_data)
+
         state_dic = {
                     'R': 'Running',
                     'S': 'Sleeping', 
@@ -48,27 +52,34 @@ class ProcInfo:
                     'T': 'Traced/Stopped', 
                     'W': 'Paging'
                     }
-
+        
         # user and group owners
         pidstat = os.stat(pidfile)
-        
         info = {
-            'pid':        int(data[0]), # Process ID
-            'name':        data[1].strip('()'), # Process name
-            'state':    data[2], # Process State, ex: R|S|D|Z|T|W
-            'state_name':    state_dic[data[2]], # Process State name, ex: Running, sleeping, Zombie, etc
-            'ppid':        int(data[3]), # Parent process ID
-            'utime':    int(data[13]), # Used jiffies in user mode
-            'stime':    int(data[14]), # Used jiffies in kernel mode
-            'start_time':    int(data[21]), # Process time from system boot (jiffies)
-            'vsize':    int(data[22]), # Virtual memory size used (bytes)
-            'rss':        int(data[23])*4,    # Resident Set Size (bytes)
+            'pid': int(data[0]), # Process ID
+            'name': process_name,
+            'state': data[2], # Process State, ex: R|S|D|Z|T|W
+            'state_name': state_dic[data[2]], # Process State name, ex: Running, sleeping, Zombie, etc
+            'ppid': int(data[3]), # Parent process ID
+            'utime': int(data[13]), # Used jiffies in user mode
+            'stime': int(data[14]), # Used jiffies in kernel mode
+            'start_time': int(data[21]), # Process time from system boot (jiffies)
+            'vsize': int(data[22]), # Virtual memory size used (bytes)
+            'rss': int(data[23])*4,    # Resident Set Size (bytes)
             'user_id': pidstat.st_uid, # process owner
             'group_id': pidstat.st_gid # owner group
         }
-        
+
         return info
-        
+    
+    # Return the process name
+    def _get_process_name(self, data):
+        m = re.search("\(.*\)", data)
+        return m.string[m.start()+1:m.end()-1]
+
+    def _get_safe_split(self, data):
+        new_data = re.sub("\(.*\)", '()', data)
+        return new_data.split()
 
     # Returns the CPU usage expressed in Jiffies
     def get_CPU_usage(self, cpu_hz, used_jiffies, start_time):

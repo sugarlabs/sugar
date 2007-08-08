@@ -8,13 +8,12 @@
 
 
 def plg_on_top_data_refresh(self, ppinfo):
-
-    dirty_sizes = get_dirty(self, ppinfo['pid'])
+    smaps = get_data(self, ppinfo['pid'])
     
-    # memhis need an array 
-    return [dirty_sizes['private']]
+    # memphis need an array 
+    return [smaps['private_dirty'], smaps['referenced']]
 
-def get_dirty(pself, pid):
+def get_data(pself, pid):
     ProcAnalysis = pself.INTERNALS['Plg'].proc_analysis(pid)
 
-    return ProcAnalysis.DirtyRSS()
+    return ProcAnalysis.SMaps()
