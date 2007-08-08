@@ -110,9 +110,9 @@ class Palette(gtk.Window):
         self._secondary_box.pack_start(self._content)
         self._content.show()
 
-        self._button_bar = gtk.HButtonBox()
-        self._secondary_box.pack_start(self._button_bar)
-        self._button_bar.show()
+        self.action_bar = PaletteActionBar()
+        self._secondary_box.pack_start(self.action_bar)
+        self.action_bar.show()
 
         self.add(vbox)
         vbox.show()
@@ -144,10 +144,6 @@ class Palette(gtk.Window):
 
         self._update_accept_focus()
         self._update_separator()
-
-    def append_button(self, button):
-        self._button_bar.append_button(button)
-        self._button_bar.show()
 
     def set_group_id(self, group_id):
         if self._group_id:
@@ -376,6 +372,18 @@ class Palette(gtk.Window):
     def _palette_observer_popup_cb(self, observer, palette):
         if self != palette:
             self._hide()
+
+class PaletteActionBar(gtk.HButtonBox):
+    def add_action(label, icon_name=None):
+        button = Button(label)
+
+        if icon_name:
+            icon = Icon(icon_name)
+            button.set_image(icon)
+            icon.show()
+
+        self.pack_start(button)
+        button.show()
 
 class _Menu(_sugaruiext.Menu):
     __gtype_name__ = 'SugarPaletteMenu'
