@@ -74,7 +74,7 @@ class ClipboardService(dbus.service.Object):
     def add_object_format(self, object_path, format_type, data, on_disk):
         logging.debug('ClipboardService.add_object_format')
         cb_object = self._objects[str(object_path)]
-        
+
         if on_disk and cb_object.get_percent() == 100:
             new_uri = self._copy_file(data)
             cb_object.add_format(Format(format_type, new_uri, on_disk))

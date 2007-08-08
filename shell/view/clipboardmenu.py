@@ -64,11 +64,13 @@ class ClipboardMenu(Palette):
 
         self._remove_item = MenuItem(_('Remove'), 'stock-remove')
         self._remove_item.connect('activate', self._remove_item_activate_cb)
-        self.append_menu_item(self._remove_item)
+        self.menu.append(self._remove_item)
+        self._remove_item.show()
 
         self._open_item = MenuItem(_('Open'), 'stock-keep')
         self._open_item.connect('activate', self._open_item_activate_cb)
-        self.append_menu_item(self._open_item)
+        self.menu.append(self._open_item)
+        self._open_item.show()
 
         #self._stop_item = MenuItem(_('Stop download'), 'stock-close')
         # TODO: Implement stopping downloads
@@ -77,7 +79,8 @@ class ClipboardMenu(Palette):
 
         self._journal_item = MenuItem(_('Add to journal'), 'document-save')
         self._journal_item.connect('activate', self._journal_item_activate_cb)
-        self.append_menu_item(self._journal_item)
+        self.menu.append(self._journal_item)
+        self._journal_item.show()
 
         self._update_items_visibility(installable)
 
