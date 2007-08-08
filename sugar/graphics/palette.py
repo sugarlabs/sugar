@@ -361,12 +361,12 @@ class Palette(gtk.Window):
         self.popdown()
 
     def _enter_notify_event_cb(self, widget, event):
-        if event.detail == gtk.gdk.NOTIFY_NONLINEAR:
+        if event.detail != gtk.gdk.NOTIFY_INFERIOR:
             self._popdown_anim.stop()
             self._secondary_anim.start()
 
     def _leave_notify_event_cb(self, widget, event):
-        if event.detail == gtk.gdk.NOTIFY_NONLINEAR:
+        if event.detail != gtk.gdk.NOTIFY_INFERIOR:
             self.popdown()
 
     def _palette_observer_popup_cb(self, observer, palette):
