@@ -26,20 +26,22 @@
 
 ;; From sugar-menu.h
 
-(define-method popup
+(define-method set_active
   (of-object "SugarMenu")
-  (c-name "sugar_menu_popup")
+  (c-name "sugar_menu_set_active")
   (return-type "none")
   (parameters
-    '("gint" "x")
-    '("gint" "y")
+    '("gboolean" "active")
   )
 )
 
-(define-method popdown
+(define-method embed
   (of-object "SugarMenu")
-  (c-name "sugar_menu_popdown")
+  (c-name "sugar_menu_embed")
   (return-type "none")
+  (parameters
+    '("GtkContainer" "container")
+  )
 )
 
 ;; From sugar-key-grabber.h
