@@ -96,24 +96,30 @@ class Palette(gtk.Window):
         self._label = gtk.Label()
         vbox.pack_start(self._label, False)
 
+        self._secondary_box = gtk.VBox()
+        vbox.pack_start(self._secondary_box)
+
         self._separator = gtk.HSeparator()
-        vbox.pack_start(self._separator)
+        self._secondary_box.pack_start(self._separator)
 
         menu_box = gtk.VBox()
-        vbox.pack_start(menu_box)
+        self._secondary_box.pack_start(menu_box)
         menu_box.show()
 
         self._content = gtk.VBox()
-        vbox.pack_start(self._content)
+        self._secondary_box.pack_start(self._content)
+        self._content.show()
 
         self._button_bar = gtk.HButtonBox()
-        vbox.pack_start(self._button_bar)
+        self._secondary_box.pack_start(self._button_bar)
+        self._button_bar.show()
 
         self.add(vbox)
         vbox.show()
 
-        self._menu = _sugaruiext.Menu()
-        self._menu.embed(menu_box)
+        self.menu = _Menu(self)
+        self.menu.embed(menu_box)
+        self.menu.show()
 
         self.connect('enter-notify-event',
                      self._enter_notify_event_cb)
@@ -129,18 +135,15 @@ class Palette(gtk.Window):
         self._label.set_text(label)
         self._label.show()
 
-    def append_menu_item(self, item):
-        self._menu.append(item)
-
-    def insert_menu_item(self, item, index=-1):
-        self._menu.insert(item, index)
-
-    def remove_menu_item(self, index):
-        self._menu.remove(self._menu.get_children()[index])
-
     def set_content(self, widget):
+        if len(self._content.get_children()) > 0:
+            self.remove(self._content.get_children()[0])
+
+        if widget is not None:
+            self._content.add(widget)
+
         self._update_accept_focus()
-        self._content.pack_start(widget)
+        self._update_separator()
 
     def append_button(self, button):
         self._button_bar.append_button(button)
@@ -171,6 +174,11 @@ class Palette(gtk.Window):
             return self._position
         else:
             raise AssertionError
+
+    def _update_separator(self):
+        visible = len(self.menu.get_children()) > 0 or  \
+                  len(self._content.get_children()) > 0
+        self._separator.props.visible = visible
 
     def _update_accept_focus(self):
         accept_focus = len(self._content.get_children())
@@ -308,7 +316,7 @@ class Palette(gtk.Window):
                                 'popup', self._palette_observer_popup_cb)
 
         self._update_position()
-        self._menu.set_active(True)
+        self.menu.set_active(True)
         self.show()
 
         self._up = True
@@ -319,7 +327,7 @@ class Palette(gtk.Window):
         if not self._palette_popup_sid is None:
             _palette_observer.disconnect(self._palette_popup_sid)
             self._palette_popup_sid = None
-        self._menu.set_active(False)
+        self.menu.set_active(False)
         self.hide()
 
         self._up = False
@@ -344,22 +352,9 @@ class Palette(gtk.Window):
             return
 
         if state == self._PRIMARY:
-            self._menu.hide()
-            self._content.hide()
-            self._separator.hide()
-            self._button_bar.hide()
+            self._secondary_box.hide()
         elif state == self._SECONDARY:
-            has_menu_items = len(self._menu.get_children()) > 0
-            self._menu.props.visible = has_menu_items
-
-            has_content = len(self._content.get_children()) > 0
-            self._content.props.visible = has_content
-
-            has_buttons = len(self._button_bar.get_children()) > 0
-            self._button_bar.props.visible = has_buttons
-
-            has_separator = has_buttons or has_menu_items or has_content
-            self._separator.props.visible = has_separator
+            self._secondary_box.show()
 
         self._state = state
 
@@ -381,6 +376,17 @@ class Palette(gtk.Window):
     def _palette_observer_popup_cb(self, observer, palette):
         if self != palette:
             self._hide()
+
+class _Menu(_sugaruiext.Menu):
+    __gtype_name__ = 'SugarPaletteMenu'
+
+    def __init__(self, palette):
+        _sugaruiext.Menu.__init__(self)
+        self._palette = palette
+
+    def do_insert(self, item, position):
+        _sugaruiext.Menu.do_insert(self, item, position)
+        self._palette._update_separator()
 
 class _PopupAnimation(animator.Animation):
     def __init__(self, palette):

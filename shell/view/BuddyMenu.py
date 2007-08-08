@@ -85,7 +85,8 @@ class BuddyMenu(Palette):
         else:
             menu_item = MenuItem(_('Make friend'), 'stock-add')
             menu_item.connect('activate', self._make_friend_cb)
-        self.append_menu_item(menu_item)
+
+        self.menu.append(menu_item)
         menu_item.show()
 
         activity = shell_model.get_home().get_current_activity()
@@ -96,7 +97,7 @@ class BuddyMenu(Palette):
 
             menu_item = MenuItem(_('Invite'), 'stock-invite')
             menu_item.connect('activate', self._invite_friend_cb)
-            self.append_menu_item(menu_item)
+            self.menu.append(menu_item)
             menu_item.show()
 
     def _buddy_icon_changed_cb(self, buddy):

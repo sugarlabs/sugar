@@ -88,14 +88,14 @@ class ActivityIcon(CanvasIcon):
 
         resume_menu_item = gtk.MenuItem(_('Resume'))
         resume_menu_item.connect('activate', self._resume_activate_cb)
-        palette.append_menu_item(resume_menu_item)
+        palette.menu.append(resume_menu_item)
         resume_menu_item.show()
 
         # FIXME: kludge
         if self._activity.get_type() != "org.laptop.JournalActivity":
             stop_menu_item = gtk.MenuItem(_('Stop'))
             stop_menu_item.connect('activate', self._stop_activate_cb)
-            palette.append_menu_item(stop_menu_item)
+            palette.menu.append(stop_menu_item)
             stop_menu_item.show()
 
     def _launching_changed_cb(self, activity, pspec):
