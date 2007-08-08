@@ -1,1 +1,1 @@
-SUBDIRS = clipboard console
+SUBDIRS = shell console

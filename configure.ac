@@ -45,7 +45,7 @@ data/Makefile
 lib/Makefile
 lib/ui/Makefile
 services/Makefile
-services/clipboard/Makefile
+services/shell/Makefile
 shell/Makefile
 shell/intro/Makefile
 shell/hardware/Makefile

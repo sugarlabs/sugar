@@ -1,4 +1,4 @@
 [D-BUS Service]
 Name = org.laptop.ActivityRegistry
-Exec = @bindir@/sugar-clipboard
+Exec = @bindir@/sugar-shell-service
 

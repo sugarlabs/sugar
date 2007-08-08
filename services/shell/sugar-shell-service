@@ -23,20 +23,20 @@ import os
 import logging
 
 from sugar import logger
-logger.start('clipboard')
+logger.start('shellservice')
 
 import gobject
 import dbus.glib
  
 from sugar import env
 
-sys.path.append(env.get_service_path('clipboard'))
+sys.path.append(env.get_service_path('shell'))
 
 import clipboardservice
 import objecttypeservice
 import activityregistryservice
 
-logging.info('Starting clipboard service.')
+logging.info('Starting shell service.')
 
 gobject.threads_init()
 dbus.glib.threads_init()
