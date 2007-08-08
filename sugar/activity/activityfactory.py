@@ -114,7 +114,7 @@ class ActivityCreationHandler(gobject.GObject):
 
         self._factory.create(self._activity_handle.get_dict(),
                              timeout=120 * 1000,
-                             reply_handler=self._no_reply_handler,
+                             reply_handler=self._create_reply_handler,
                              error_handler=self._create_error_handler)
 
     def get_activity_id(self):
@@ -137,7 +137,10 @@ class ActivityCreationHandler(gobject.GObject):
     def _activate_error_handler(self, err):
         logging.debug("Activity activation request failed %s" % err)
 
-    def _create_reply_handler(self, xid):
+    def _create_reply_handler(self, xid=None):
+        if xid is None:
+            self._create_error_handler('D-Bus error')
+            return
         logging.debug("Activity created %s (%s)." % 
             (self._activity_handle.activity_id, self._service_name))
 
