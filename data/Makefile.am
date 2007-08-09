@@ -14,5 +14,23 @@ GTKRC_FILES =		\
 	sugar.gtkrc	\
 	sugar-xo.gtkrc
 
-EXTRA_DIST = $(sugar_DATA) em.py gtkrc.em
+
+mime_xml_in_files = sugar.xml.in
+mime_xml_files = $(mime_xml_in_files:.xml.in=.xml)
+@INTLTOOL_XML_RULE@
+
+mimedir = $(datadir)/mime/packages
+mime_DATA = $(mime_xml_files)
+
+install-data-hook:
+	if [ -z "$$DESTDIR" ]; then \
+		update-mime-database "$(datadir)/mime"; \
+	fi
+
+uninstall-hook:
+	if [ -z "$$DESTDIR" ]; then \
+		update-mime-database "$(datadir)/mime"; \
+	fi
+
+EXTRA_DIST = $(sugar_DATA) $(mime_xml_in_files) em.py gtkrc.em
 CLEANFILES = $(GTKRC_FILES)
