@@ -123,32 +123,8 @@ class ClipboardMenu(Palette):
     def _open_item_activate_cb(self, menu_item):
         if self._percent < 100:
             return
-
         jobject = self._copy_to_journal()
-        # TODO: we cannot simply call resume() right now because we would lock
-        # the shell as we are sharing the same loop as the shell service.
-        #jobject.resume()
-        
-        # TODO: take this out when we fix the mess that is the shell/shellservice.
-        from model import bundleregistry
-        from sugar.activity.bundle import Bundle
-        from sugar.activity import activityfactory
-        if jobject.is_bundle():
-            bundle = Bundle(jobject.file_path)
-            if not bundle.is_installed():
-                bundle.install()
-
-            activityfactory.create(bundle.get_service_name())
-        else:
-            service_name = None
-            mime_type = jobject.metadata['mime_type']
-            for bundle in bundleregistry.get_registry():
-                if bundle.get_mime_types() and mime_type in bundle.get_mime_types():
-                    service_name = bundle.get_service_name()
-                    break
-            if service_name:
-                activityfactory.create_with_object_id(service_name,
-                                                      jobject.object_id)
+        jobject.resume()
 
     def _remove_item_activate_cb(self, menu_item):
         cb_service = clipboardservice.get_instance()

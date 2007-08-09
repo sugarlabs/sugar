@@ -296,11 +296,8 @@ class Bundle:
             raise ZipExtractException
 
         self._init_with_path(bundle_path)
-        
-        bus = dbus.SessionBus()
-        proxy_obj = bus.get_object(_DBUS_SHELL_SERVICE, _DBUS_SHELL_PATH)
-        dbus_service = dbus.Interface(proxy_obj, _DBUS_ACTIVITY_REGISTRY_IFACE)
-        if not dbus_service.AddBundle(bundle_path):
+
+        if not activity.get_registry().add_bundle(bundle_path):
             raise RegistrationException
 
     def deinstall(self):

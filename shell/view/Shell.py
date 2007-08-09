@@ -26,6 +26,7 @@ import gtk
 import wnck
 
 from sugar.activity.activityhandle import ActivityHandle
+from sugar import activity
 from sugar.activity import activityfactory
 from sugar.datastore import datastore
 from sugar import profile
@@ -34,7 +35,6 @@ from view.ActivityHost import ActivityHost
 from view.frame.frame import Frame
 from view.keyhandler import KeyHandler
 from view.home.HomeWindow import HomeWindow
-from model import bundleregistry
 from model.shellmodel import ShellModel
 from hardware import hardwaremanager
 
@@ -116,16 +116,16 @@ class Shell(gobject.GObject):
         return self._frame
 
     def join_activity(self, bundle_id, activity_id):
-        activity = self.get_activity(activity_id)
-        if activity:
-            activity.present()
+        activity_host = self.get_activity(activity_id)
+        if activity_host:
+            activity_host.present()
             return
 
         # Get the service name for this activity, if
         # we have a bundle on the system capable of handling
         # this activity type
-        breg = bundleregistry.get_registry()
-        bundle = breg.get_bundle(bundle_id)
+        registry = activity.get_registry()
+        bundle = registry.get_activity(bundle_id)
         if not bundle:
             logging.error("Couldn't find activity for type %s" % bundle_id)
             return

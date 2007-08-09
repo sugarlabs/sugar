@@ -19,6 +19,7 @@
 import logging
 
 import dbus
+import gobject
 
 _ACTIVITY_REGISTRY_SERVICE_NAME = 'org.laptop.ActivityRegistry'
 _ACTIVITY_REGISTRY_IFACE = 'org.laptop.ActivityRegistry'
@@ -28,17 +29,25 @@ def _activity_info_from_dict(info_dict):
     if not info_dict:
         return None
     return ActivityInfo(info_dict['name'], info_dict['icon'],
-                        info_dict['service_name'], info_dict['path'])
+                        info_dict['service_name'], info_dict['path'],
+                        info_dict['show_launcher'])
 
 class ActivityInfo(object):
-    def __init__(self, name, icon, service_name, path):
+    def __init__(self, name, icon, service_name, path, show_launcher):
         self.name = name
         self.icon = icon
         self.service_name = service_name
         self.path = path
+        self.show_launcher = show_launcher
 
-class ActivityRegistry(object):
+class ActivityRegistry(gobject.GObject):
+    __gsignals__ = {
+        'activity-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([gobject.TYPE_PYOBJECT]))
+    }
     def __init__(self):
+        gobject.GObject.__init__(self)
+
         bus = dbus.SessionBus()
         bus_object = bus.get_object(_ACTIVITY_REGISTRY_SERVICE_NAME,
                                     _ACTIVITY_REGISTRY_PATH)
@@ -56,6 +65,10 @@ class ActivityRegistry(object):
             result.append(_activity_info_from_dict(info_dict))
 
         return result
+
+    def get_activities(self):
+        info_list = self._registry.GetActivities()
+        return self._convert_info_list(info_list)
 
     def get_activity(self, service_name):
         if self._service_name_to_activity_info.has_key(service_name):
@@ -81,10 +94,14 @@ class ActivityRegistry(object):
         self._mime_type_to_activities[mime_type] = activities
         return activities
 
-    def _activity_added_cb(self, bundle):
+    def add_bundle(self, bundle_path):
+        return self._registry.AddBundle(bundle_path)
+
+    def _activity_added_cb(self, info_dict):
         logging.debug('ActivityRegistry._activity_added_cb: flushing caches')
         self._service_name_to_activity_info.clear()
         self._mime_type_to_activities.clear()
+        self.emit('activity-added', _activity_info_from_dict(info_dict))
 
 _registry = None
 

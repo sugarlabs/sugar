@@ -18,29 +18,29 @@ import gobject
 
 from sugar.graphics.xocolor import XoColor
 from sugar.presence import presenceservice
+from sugar import activity
 
-from model import bundleregistry
 from model.BuddyModel import BuddyModel
 from model.accesspointmodel import AccessPointModel
 from hardware import hardwaremanager
 from hardware import nmclient
 
 class ActivityModel:
-    def __init__(self, activity, bundle):
+    def __init__(self, activity, activity_info):
         self._activity = activity
-        self._bundle = bundle
+        self._activity_info = activity_info
 
     def get_id(self):
         return self._activity.props.id
         
     def get_icon_name(self):
-        return self._bundle.get_icon()
+        return self._activity_info.icon
     
     def get_color(self):
         return XoColor(self._activity.props.color)
 
     def get_service_name(self):
-        return self._bundle.get_service_name()
+        return self._activity_info.service_name
 
     def get_title(self):
         return self._activity.props.name
@@ -75,7 +75,6 @@ class MeshModel(gobject.GObject):
         self._buddies = {}
         self._access_points = {}
         self._mesh = None
-        self._bundle_registry = bundleregistry.get_registry()
 
         self._pservice = presenceservice.get_instance()
         self._pservice.connect("activity-appeared",
@@ -196,13 +195,14 @@ class MeshModel(gobject.GObject):
     def _activity_appeared_cb(self, pservice, activity):
         self._check_activity(activity)
 
-    def _check_activity(self, activity):
-        bundle = self._bundle_registry.get_bundle(activity.props.type)
-        if not bundle:
+    def _check_activity(self, presence_activity):
+        registry = activity.get_registry()
+        activity_info = registry.get_activity(presence_activity.props.type)
+        if not activity_info:
             return
-        if self.has_activity(activity.props.id):
+        if self.has_activity(presence_activity.props.id):
             return
-        self.add_activity(bundle, activity)
+        self.add_activity(activity_info, presence_activity)
 
     def has_activity(self, activity_id):
         return self._activities.has_key(activity_id)
@@ -213,8 +213,8 @@ class MeshModel(gobject.GObject):
         else:
             return None
 
-    def add_activity(self, bundle, activity):
-        model = ActivityModel(activity, bundle)
+    def add_activity(self, activity_info, activity):
+        model = ActivityModel(activity, activity_info)
         self._activities[model.get_id()] = model
         self.emit('activity-added', model)
 

@@ -20,8 +20,8 @@ import gobject
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import style
 from sugar.presence import presenceservice
+from sugar import activity
 
-from model import bundleregistry
 from view.BuddyIcon import BuddyIcon
 
 class FriendView(hippo.CanvasBox):
@@ -46,9 +46,9 @@ class FriendView(hippo.CanvasBox):
         self._buddy.connect('disappeared', self._buddy_disappeared_cb)
         self._buddy.connect('color-changed', self._buddy_color_changed_cb)
 
-    def _get_new_icon_name(self, activity):
-        registry = bundleregistry.get_registry()
-        bundle = registry.get_bundle(activity.get_type())
+    def _get_new_icon_name(self, home_activity):
+        registry = activity.get_registry()
+        bundle = registry.get_bundle(home_activity.get_type())
         if bundle:
             return bundle.get_icon()
         return None
@@ -58,14 +58,14 @@ class FriendView(hippo.CanvasBox):
             self.remove(self._activity_icon)
             self._activity_icon_visible = False
 
-    def _buddy_activity_changed_cb(self, buddy, activity=None):
-        if not activity:
+    def _buddy_activity_changed_cb(self, buddy, home_activity=None):
+        if not home_activity:
             self._remove_activity_icon()
             return
 
         # FIXME: use some sort of "unknown activity" icon rather
         # than hiding the icon?
-        name = self._get_new_icon_name(activity)
+        name = self._get_new_icon_name(home_activity)
         if name:
             self._activity_icon.props.icon_name = name
             self._activity_icon.props.xo_color = buddy.get_color()
@@ -76,8 +76,8 @@ class FriendView(hippo.CanvasBox):
             self._remove_activity_icon()
 
     def _buddy_appeared_cb(self, buddy):
-        activity = self._buddy.get_current_activity()
-        self._buddy_activity_changed_cb(buddy, activity)
+        home_activity = self._buddy.get_current_activity()
+        self._buddy_activity_changed_cb(buddy, home_activity)
 
     def _buddy_disappeared_cb(self, buddy):
         self._buddy_activity_changed_cb(buddy, None)

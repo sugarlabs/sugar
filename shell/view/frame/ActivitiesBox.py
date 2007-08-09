@@ -22,31 +22,31 @@ from sugar.graphics.xocolor import XoColor
 from sugar.graphics.iconbutton import IconButton
 from sugar.graphics import style
 from sugar import profile
+from sugar import activity
 
-from model import bundleregistry
 from frameinvoker import FrameCanvasInvoker
 
 class ActivityButton(IconButton):
-    def __init__(self, activity):
-        IconButton.__init__(self, icon_name=activity.get_icon(),
+    def __init__(self, activity_info):
+        IconButton.__init__(self, icon_name=activity_info.icon,
                             stroke_color=style.COLOR_WHITE,
                             fill_color=style.COLOR_TRANSPARENT)
 
-        palette = Palette(activity.get_name())
+        palette = Palette(activity_info.name)
         palette.props.invoker = FrameCanvasInvoker(self)
         palette.set_group_id('frame')
         self.set_palette(palette)
 
-        self._activity = activity
+        self._activity_info = activity_info
 
     def get_bundle_id(self):
-        return self._activity.get_service_name()
+        return self._activity_info.service_name
 
 class InviteButton(IconButton):
-    def __init__(self, activity, invite):
-        IconButton.__init__(self, icon_name=activity.get_icon())
+    def __init__(self, activity_model, invite):
+        IconButton.__init__(self, icon_name=activity_model.get_color())
 
-        self.props.xo_color = activity.get_color()
+        self.props.xo_color = activity_model.get_color()
         self._invite = invite
 
     def get_activity_id(self):
@@ -67,12 +67,12 @@ class ActivitiesBox(hippo.CanvasBox):
         self._invite_to_item = {}
         self._invites = self._shell_model.get_invites()
 
-        bundle_registry = bundleregistry.get_registry()
-        for bundle in bundle_registry:
-            if bundle.get_show_launcher():
-                self.add_activity(bundle)
+        registry = activity.get_registry()
+        for activity_info in registry.get_activities():
+            if activity_info.show_launcher:
+                self.add_activity(activity_info)
 
-        bundle_registry.connect('bundle-added', self._bundle_added_cb)
+        registry.connect('activity-added', self._activity_added_cb)
 
         for invite in self._invites:
             self.add_invite(invite)
@@ -93,19 +93,19 @@ class ActivitiesBox(hippo.CanvasBox):
     def _invite_removed_cb(self, invites, invite):
         self.remove_invite(invite)
 
-    def _bundle_added_cb(self, bundle_registry, bundle):
-        self.add_activity(bundle)
+    def _activity_added_cb(self, activity_registry, activity_info):
+        self.add_activity(activity_info)
 
-    def add_activity(self, activity):
-        item = ActivityButton(activity)
+    def add_activity(self, activity_info):
+        item = ActivityButton(activity_info)
         item.connect('activated', self._activity_clicked_cb)
         self.append(item, 0)
 
     def add_invite(self, invite):
         mesh = self._shell_model.get_mesh()
-        activity = mesh.get_activity(invite.get_activity_id())
+        activity_model = mesh.get_activity(invite.get_activity_id())
         if activity:
-            item = InviteButton(activity, invite)
+            item = InviteButton(activity_model, invite)
             item.connect('activated', self._invite_clicked_cb)
             self.append(item, 0)
 
