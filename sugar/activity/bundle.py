@@ -41,6 +41,7 @@ class NotInstalledException(Exception): pass
 class InvalidPathException(Exception): pass
 class ZipExtractException(Exception): pass
 class RegistrationException(Exception): pass
+class MalformedBundleException(Exception): pass
 
 class Bundle:
     """Metadata description of a given application/activity
@@ -265,10 +266,12 @@ class Bundle:
             if not bundle_root_dir:
                 bundle_root_dir = file_name.split('/')[0]
                 if not bundle_root_dir.endswith('.activity'):
-                    raise 'Incorrect bundle.'
+                    raise MalformedBundleException(
+                            'The activity directory name must end with .activity')
             else:
                 if not file_name.startswith(bundle_root_dir):
-                    raise 'Incorrect bundle.'
+                    raise MalformedBundleException(
+                        'All files in the bundle must be inside the activity directory')
 
         return bundle_root_dir
 
