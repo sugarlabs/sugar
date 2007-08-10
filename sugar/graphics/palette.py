@@ -482,6 +482,10 @@ class _Menu(_sugaruiext.Menu):
         # around everything.
         gtk.MenuShell.do_expose_event(self, event)
 
+    def do_grab_notify(self, was_grabbed):
+        # Ignore grab_notify as the menu would close otherwise
+        pass
+
     def do_deactivate(self):
         self._palette._hide()
 
