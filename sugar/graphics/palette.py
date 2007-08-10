@@ -36,6 +36,39 @@ _RIGHT_TOP    = 5
 _TOP_LEFT     = 6
 _TOP_RIGHT    = 7
 
+
+# Helper function to find the gap position and size of widget a
+def _calculate_gap(a, b):
+    # Test for each side if the palette and invoker are
+    # adjacent to each other.
+    gap = True
+
+    if a.y + a.height == b.y:
+        gap_side = gtk.POS_BOTTOM
+    elif a.x + a.width == b.x:
+        gap_side = gtk.POS_RIGHT
+    elif a.x == b.x + b.width:
+        gap_side = gtk.POS_LEFT
+    elif a.y == b.y + b.height:
+        gap_side = gtk.POS_TOP
+    else:
+        gap = False
+    
+    if gap:
+        if gap_side == gtk.POS_BOTTOM or gap_side == gtk.POS_TOP:
+            gap_start = min(a.width, max(0, b.x - b.x))
+            gap_size = max(0, min(a.width,
+                                  (b.x + b.width) - a.x) - gap_start)
+        elif gap_side == gtk.POS_RIGHT or gap_side == gtk.POS_LEFT:
+            gap_start = min(a.height, max(0, b.y - a.y))
+            gap_size = max(0, min(a.height,
+                                  (b.y + b.height) - a.y) - gap_start)
+
+    if gap and gap_size > 0:
+        return (gap_side, gap_start, gap_size)
+    else:
+        return False
+
 class Palette(gtk.Window):
     DEFAULT   = 0
     AT_CURSOR = 1
@@ -54,7 +87,9 @@ class Palette(gtk.Window):
         'invoker'    : (object, None, None,
                         gobject.PARAM_READWRITE),
         'position'   : (gobject.TYPE_INT, None, None, 0, 6,
-                        0, gobject.PARAM_READWRITE)
+                        0, gobject.PARAM_READWRITE),
+        'draw-gap'   : (bool, None, None, False,
+                        gobject.PARAM_READWRITE)
     }
 
     __gsignals__ = {
@@ -79,6 +114,7 @@ class Palette(gtk.Window):
         self._group_id = None
         self._up = False
         self._position = self.DEFAULT
+        self._draw_gap = False
         self._palette_popup_sid = None
 
         self._popup_anim = animator.Animator(0.3, 10)
@@ -131,6 +167,17 @@ class Palette(gtk.Window):
     def is_up(self):
         return self._up
 
+    def get_rect(self):
+        win_x, win_y = self.window.get_origin()
+        rectangle = self.get_allocation()
+
+        x = win_x + rectangle.x
+        y = win_y + rectangle.y
+        width = rectangle.width
+        height = rectangle.height
+        
+        return gtk.gdk.Rectangle(x, y, width, height)
+
     def set_primary_text(self, label, accel_path=None):
         self._label.set_text(label)
         self._label.show()
@@ -160,6 +207,9 @@ class Palette(gtk.Window):
             self._invoker.connect('mouse-leave', self._invoker_mouse_leave_cb)
         elif pspec.name == 'position':
             self._position = value
+        elif pspec.name == 'draw-gap':
+            self._draw_gap = value
+            self.queue_draw()
         else:
             raise AssertionError
 
@@ -168,8 +218,38 @@ class Palette(gtk.Window):
             return self._invoker
         elif pspec.name == 'position':
             return self._position
+        elif pspec.name == 'draw-gap':
+            return self._draw_gap
         else:
             raise AssertionError
+
+    def do_expose_event(self, event):
+        # We want to draw a border with a beautiful gap
+        if self._draw_gap:
+            invoker = self._invoker.get_rect()
+            palette = self.get_rect()
+
+            gap = _calculate_gap(palette, invoker)
+        else:
+            gap = False
+
+        if gap:
+            self.style.paint_box_gap(event.window, gtk.STATE_PRELIGHT,
+                                     gtk.SHADOW_IN, event.area, self, "palette",
+                                     0, 0, 
+                                     self.allocation.width,
+                                     self.allocation.height,
+                                     gap[0], gap[1], gap[2])
+        else:
+            self.style.paint_box(event.window, gtk.STATE_PRELIGHT,
+                                 gtk.SHADOW_IN, event.area, self, "palette",
+                                 0, 0,
+                                 self.allocation.width,
+                                 self.allocation.height)
+
+        # Fall trough to the container expose handler.
+        # (Leaving out the window expose handler which redraws everything)
+        gtk.Bin.do_expose_event(self, event)
 
     def _update_separator(self):
         visible = len(self.menu.get_children()) > 0 or  \
@@ -396,6 +476,12 @@ class _Menu(_sugaruiext.Menu):
         _sugaruiext.Menu.do_insert(self, item, position)
         self._palette._update_separator()
 
+    def do_expose_event(self, event):
+        # Ignore the Menu expose, just do the MenuShell expose to prevent any
+        # border from being drawn here. A border is drawn by the palette object
+        # around everything.
+        gtk.MenuShell.do_expose_event(self, event)
+
     def do_deactivate(self):
         self._palette._hide()
 
@@ -466,6 +552,37 @@ class WidgetInvoker(Invoker):
         height = rectangle.height
 
         return gtk.gdk.Rectangle(x, y, width, height)
+
+    def draw_invoker_rect(self, event, palette):
+        style = self._widget.style
+        if palette.is_up():
+            gap = _calculate_gap(self.get_rect(), palette.get_rect())
+
+            if gap:
+                style.paint_box_gap(event.window, gtk.STATE_PRELIGHT,
+                                    gtk.SHADOW_IN, event.area, self._widget,
+                                    "palette-invoker",
+                                    self._widget.allocation.x,
+                                    self._widget.allocation.y,
+                                    self._widget.allocation.width,
+                                    self._widget.allocation.height,
+                                    gap[0], gap[1], gap[2])
+            else:
+                style.paint_box(event.window, gtk.STATE_PRELIGHT,
+                                gtk.SHADOW_IN, event.area, self._widget,
+                                "palette-invoker",
+                                self._widget.allocation.x,
+                                self._widget.allocation.y,
+                                self._widget.allocation.width,
+                                self._widget.allocation.height)
+        else:
+            style.paint_box(event.window, gtk.STATE_PRELIGHT,
+                            gtk.SHADOW_NONE, event.area, self._widget,
+                            "palette-invoker",
+                            self._widget.allocation.x,
+                            self._widget.allocation.y,
+                            self._widget.allocation.width,
+                            self._widget.allocation.height)
 
     def _enter_notify_event_cb(self, widget, event):
         self.emit('mouse-enter')
