@@ -32,7 +32,7 @@ class Terminal(gtk.HBox):
 
         self._vte = vte.Terminal()
         self._configure_vte()
-        self._vte.set_size(30, 5)
+        self._vte.set_size(100, 5)
         self._vte.set_size_request(200, 450)
         self._vte.show()
         self.pack_start(self._vte)
