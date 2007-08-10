@@ -56,7 +56,7 @@ def _calculate_gap(a, b):
     
     if gap:
         if gap_side == gtk.POS_BOTTOM or gap_side == gtk.POS_TOP:
-            gap_start = min(a.width, max(0, b.x - b.x))
+            gap_start = min(a.width, max(0, b.x - a.x))
             gap_size = max(0, min(a.width,
                                   (b.x + b.width) - a.x) - gap_start)
         elif gap_side == gtk.POS_RIGHT or gap_side == gtk.POS_LEFT:
