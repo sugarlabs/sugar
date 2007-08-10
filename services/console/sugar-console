@@ -6,7 +6,15 @@ pygtk.require('2.0')
 import os
 import sys
 from sugar import env 
+from sugar import util
 
 sys.path.append(env.get_service_path('console'))
+
+# change to the user's home directory if it is set
+# root if not
+os.chdir(os.environ.get('HOME', '/'))
+
+#set the process title so it shows up as sugar-console not python
+util.set_proc_title('sugar-console')
 
 import console
