@@ -12,21 +12,19 @@ sugar_PYTHON =		\
 	util.py		\
 	wm.py
 
-INCLUDES = 				\
-	$(LIB_CFLAGS)			\
-	$(LIB_BINDINGS_CFLAGS)		\
-	$(PYTHON_INCLUDES)		\
-	-I$(top_srcdir)/lib		\
-	-I$(top_srcdir)/lib/ui
-
 pkgpyexecdir = $(pythondir)/sugar
 
 pkgpyexec_LTLIBRARIES = _sugarext.la _sugaruiext.la
 
+_sugarext_la_CFLAGS = 			\
+	$(LIB_CFLAGS)			\
+	$(LIB_BINDINGS_CFLAGS)		\
+	$(PYTHON_INCLUDES)		\
+	-I$(top_srcdir)/lib
+
 _sugarext_la_LDFLAGS = -module -avoid-version
 _sugarext_la_LIBADD =				\
 	$(LIB_BINDINGS_LIBS)			\
-	$(LIB_LIBS)				\
 	$(top_builddir)/lib/libsugar.la
 
 _sugarext_la_SOURCES = 		\
@@ -36,10 +34,16 @@ nodist__sugarext_la_SOURCES = _sugarext.c
 
 _sugarext.c: _sugarext.defs _sugarext.override
 
+_sugaruiext_la_CFLAGS = 		\
+	$(LIBUI_CFLAGS)			\
+	$(LIBUI_BINDINGS_CFLAGS)	\
+	$(PYTHON_INCLUDES)		\
+	-I$(top_srcdir)/lib/ui
+
 _sugaruiext_la_LDFLAGS = -module -avoid-version
 _sugaruiext_la_LIBADD =				\
-	$(LIB_BINDINGS_LIBS)			\
-	$(LIB_LIBS)				\
+	$(LIBUI_BINDINGS_LIBS)			\
+	$(LIBUI_LIBS)				\
 	$(top_builddir)/lib/ui/libsugarui.la
 
 _sugaruiext_la_SOURCES = 		\
