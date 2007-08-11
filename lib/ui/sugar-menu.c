@@ -36,8 +36,19 @@ sugar_menu_set_active(SugarMenu *menu, gboolean active)
 void
 sugar_menu_embed(SugarMenu *menu, GtkContainer *parent)
 {
+    menu->orig_toplevel = GTK_MENU(menu)->toplevel;
+
     GTK_MENU(menu)->toplevel = gtk_widget_get_toplevel(GTK_WIDGET(parent));
     gtk_widget_reparent(GTK_WIDGET(menu), GTK_WIDGET(parent));
+}
+
+void
+sugar_menu_unembed(SugarMenu *menu)
+{
+    if (menu->orig_toplevel) {
+        GTK_MENU(menu)->toplevel = menu->orig_toplevel;
+        gtk_widget_reparent(GTK_WIDGET(menu), GTK_WIDGET(menu->orig_toplevel));
+    }
 }
 
 static void
@@ -48,4 +59,5 @@ sugar_menu_class_init(SugarMenuClass *menu_class)
 static void
 sugar_menu_init(SugarMenu *menu)
 {
+    menu->orig_toplevel = NULL;
 }

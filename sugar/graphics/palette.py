@@ -138,9 +138,9 @@ class Palette(gtk.Window):
         self._separator = gtk.HSeparator()
         self._secondary_box.pack_start(self._separator)
 
-        menu_box = gtk.VBox()
-        self._secondary_box.pack_start(menu_box)
-        menu_box.show()
+        self._menu_box = gtk.VBox()
+        self._secondary_box.pack_start(self._menu_box)
+        self._menu_box.show()
 
         self._content = gtk.VBox()
         self._secondary_box.pack_start(self._content)
@@ -154,7 +154,6 @@ class Palette(gtk.Window):
         vbox.show()
 
         self.menu = _Menu(self)
-        self.menu.embed(menu_box)
         self.menu.show()
 
         self.connect('enter-notify-event',
@@ -222,6 +221,10 @@ class Palette(gtk.Window):
             return self._draw_gap
         else:
             raise AssertionError
+
+    def do_size_allocate(self, allocation):
+        gtk.Window.do_size_allocate(self, allocation)
+        self.queue_draw()
 
     def do_expose_event(self, event):
         # We want to draw a border with a beautiful gap
@@ -428,8 +431,10 @@ class Palette(gtk.Window):
             return
 
         if state == self._PRIMARY:
+            self.menu.unembed()
             self._secondary_box.hide()
         elif state == self._SECONDARY:
+            self.menu.embed(self._menu_box)
             self._secondary_box.show()
 
         self._state = state

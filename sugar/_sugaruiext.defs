@@ -44,6 +44,12 @@
   )
 )
 
+(define-method unembed
+  (of-object "SugarMenu")
+  (c-name "sugar_menu_unembed")
+  (return-type "none")
+)
+
 ;; From sugar-key-grabber.h
 
 (define-function sugar_key_grabber_get_type
