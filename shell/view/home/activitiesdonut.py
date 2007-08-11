@@ -88,14 +88,14 @@ class ActivityIcon(CanvasIcon):
 
         resume_menu_item = gtk.MenuItem(_('Resume'))
         resume_menu_item.connect('activate', self._resume_activate_cb)
-        palette.append_menu_item(resume_menu_item)
+        palette.menu.append(resume_menu_item)
         resume_menu_item.show()
 
         # FIXME: kludge
         if self._activity.get_type() != "org.laptop.JournalActivity":
             stop_menu_item = gtk.MenuItem(_('Stop'))
             stop_menu_item.connect('activate', self._stop_activate_cb)
-            palette.append_menu_item(stop_menu_item)
+            palette.menu.append(stop_menu_item)
             stop_menu_item.show()
 
     def _launching_changed_cb(self, activity, pspec):
@@ -189,7 +189,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
         self._model = shell.get_model().get_home()
         self._model.connect('activity-added', self._activity_added_cb)
         self._model.connect('activity-removed', self._activity_removed_cb)
-        self._model.connect('active-activity-changed', self._activity_changed_cb)
+        self._model.connect('pending-activity-changed', self._activity_changed_cb)
 
         self.connect('button-release-event', self._button_release_event_cb)
 
@@ -385,7 +385,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
         cr.fill()
 
         # Selected Wedge
-        current_activity = self._model.get_current_activity()
+        current_activity = self._model.get_pending_activity()
         if current_activity is not None:
             selected_index = self._model.index(current_activity)    
             [angle_start, angle_end] = self._get_angles(selected_index)

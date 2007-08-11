@@ -81,6 +81,12 @@ class Color(object):
 
         return (r, g, b)
 
+    def get_svg(self):
+        if self._a == 0.0:
+            return 'none'
+        else:
+            return self.get_html()
+
 _XO_DPI = 200.0
 
 _FOCUS_LINE_WIDTH = 2
@@ -113,6 +119,7 @@ TOOLBOX_TAB_LABEL_WIDTH = zoom(150 - 15 * 2)
 
 COLOR_BLACK = Color('#000000')
 COLOR_WHITE = Color('#FFFFFF')
+COLOR_TRANSPARENT = Color('#FFFFFF', alpha=0.0)
 COLOR_PANEL_GREY = Color('#C0C0C0')
 COLOR_SELECTION_GREY = Color('#A6A6A6')
 COLOR_INACTIVE_FILL = Color('#9D9FA1')

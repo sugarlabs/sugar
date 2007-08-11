@@ -64,11 +64,13 @@ class ClipboardMenu(Palette):
 
         self._remove_item = MenuItem(_('Remove'), 'stock-remove')
         self._remove_item.connect('activate', self._remove_item_activate_cb)
-        self.append_menu_item(self._remove_item)
+        self.menu.append(self._remove_item)
+        self._remove_item.show()
 
         self._open_item = MenuItem(_('Open'), 'stock-keep')
         self._open_item.connect('activate', self._open_item_activate_cb)
-        self.append_menu_item(self._open_item)
+        self.menu.append(self._open_item)
+        self._open_item.show()
 
         #self._stop_item = MenuItem(_('Stop download'), 'stock-close')
         # TODO: Implement stopping downloads
@@ -77,7 +79,8 @@ class ClipboardMenu(Palette):
 
         self._journal_item = MenuItem(_('Add to journal'), 'document-save')
         self._journal_item.connect('activate', self._journal_item_activate_cb)
-        self.append_menu_item(self._journal_item)
+        self.menu.append(self._journal_item)
+        self._journal_item.show()
 
         self._update_items_visibility(installable)
 
@@ -120,32 +123,8 @@ class ClipboardMenu(Palette):
     def _open_item_activate_cb(self, menu_item):
         if self._percent < 100:
             return
-
         jobject = self._copy_to_journal()
-        # TODO: we cannot simply call resume() right now because we would lock
-        # the shell as we are sharing the same loop as the shell service.
-        #jobject.resume()
-        
-        # TODO: take this out when we fix the mess that is the shell/shellservice.
-        from model import bundleregistry
-        from sugar.activity.bundle import Bundle
-        from sugar.activity import activityfactory
-        if jobject.is_bundle():
-            bundle = Bundle(jobject.file_path)
-            if not bundle.is_installed():
-                bundle.install()
-
-            activityfactory.create(bundle.get_service_name())
-        else:
-            service_name = None
-            mime_type = jobject.metadata['mime_type']
-            for bundle in bundleregistry.get_registry():
-                if bundle.get_mime_types() and mime_type in bundle.get_mime_types():
-                    service_name = bundle.get_service_name()
-                    break
-            if service_name:
-                activityfactory.create_with_object_id(service_name,
-                                                      jobject.object_id)
+        jobject.resume()
 
     def _remove_item_activate_cb(self, menu_item):
         cb_service = clipboardservice.get_instance()

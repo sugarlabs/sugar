@@ -106,6 +106,13 @@ class BundleRegistry(gobject.GObject):
         else:
             return False
 
+    def get_activities_for_type(self, mime_type):
+        result = []
+        for bundle in self._bundles.values():
+            if bundle.get_mime_types() and mime_type in bundle.get_mime_types():
+                result.append(bundle)
+        return result
+
 def get_registry():
     return _bundle_registry
 

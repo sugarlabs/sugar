@@ -23,6 +23,7 @@ from sugar.graphics.icon import Icon
 from sugar.graphics.palette import Palette, WidgetInvoker
 
 class ToolButton(gtk.ToolButton):
+    __gtype_name__ = "SugarToolButton"
 
     def __init__(self, icon_name=None):
         gtk.ToolButton.__init__(self)
@@ -41,12 +42,28 @@ class ToolButton(gtk.ToolButton):
     def set_palette(self, palette):
         self._palette = palette
         self._palette.props.invoker = WidgetInvoker(self.child)
+        self._palette.props.draw_gap = True
+        
+        self._palette.connect("popup", self._palette_changed)
+        self._palette.connect("popdown", self._palette_changed)
 
     def set_tooltip(self, text):
         self.set_palette(Palette(text))
     
+    def do_expose_event(self, event):
+        if self._palette and self._palette.props.draw_gap:
+            if self._palette.is_up() or self.child.state == gtk.STATE_PRELIGHT:
+                invoker = self._palette.props.invoker
+                invoker.draw_invoker_rect(event, self._palette)
+
+        gtk.ToolButton.do_expose_event(self, event)
+    
     def _button_clicked_cb(self, widget):
         if self._palette:
             self._palette.popdown(True)
+
+    def _palette_changed(self, palette):
+        # Force a redraw to update the invoker rectangle
+        self.queue_draw()
 
     palette = property(get_palette, set_palette)

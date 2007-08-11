@@ -44,10 +44,10 @@ class HomeActivity(gobject.GObject):
                        gobject.PARAM_READWRITE),
     }
 
-    def __init__(self, bundle, activity_id):
+    def __init__(self, activity_info, activity_id):
         """Initialise the HomeActivity
         
-        bundle -- sugar.activity.bundle.Bundle instance,
+        activity_info -- sugar.activity.registry.ActivityInfo instance,
             provides the information required to actually
             create the new instance.  This is, in effect,
             the "type" of activity being created.
@@ -61,7 +61,7 @@ class HomeActivity(gobject.GObject):
         self._pid = None
         self._service = None
         self._activity_id = activity_id
-        self._bundle = bundle
+        self._activity_info = activity_info
         self._launch_time = time.time()
         self._launching = False
 
@@ -99,9 +99,9 @@ class HomeActivity(gobject.GObject):
         return self._window.get_name()
 
     def get_icon_name(self):
-        """Retrieve the bundle's icon (file) name"""
-        if self._bundle:
-            return self._bundle.get_icon()
+        """Retrieve the activity's icon (file) name"""
+        if self._activity_info:
+            return self._activity_info.icon
         else:
             return 'theme:stock-missing'
     
@@ -156,9 +156,9 @@ class HomeActivity(gobject.GObject):
         return self._window
 
     def get_type(self):
-        """Retrieve bundle's "service_name" for future reference"""
-        if self._bundle:
-            return self._bundle.get_service_name()
+        """Retrieve activity_info's "service_name" for future reference"""
+        if self._activity_info:
+            return self._activity_info.service_name
         else:
             return None
 

@@ -26,6 +26,7 @@ import gtk
 import wnck
 
 from sugar.activity.activityhandle import ActivityHandle
+from sugar import activity
 from sugar.activity import activityfactory
 from sugar.datastore import datastore
 from sugar import profile
@@ -34,7 +35,6 @@ from view.ActivityHost import ActivityHost
 from view.frame.frame import Frame
 from view.keyhandler import KeyHandler
 from view.home.HomeWindow import HomeWindow
-from model import bundleregistry
 from model.shellmodel import ShellModel
 from hardware import hardwaremanager
 
@@ -47,6 +47,7 @@ class Shell(gobject.GObject):
         self._hosts = {}
         self._screen = wnck.screen_get_default()
         self._current_host = None
+        self._pending_host = None
         self._screen_rotation = 0
 
         self._key_handler = KeyHandler(self)
@@ -65,6 +66,8 @@ class Shell(gobject.GObject):
         home_model.connect('activity-removed', self._activity_removed_cb)
         home_model.connect('active-activity-changed',
                            self._active_activity_changed_cb)
+        home_model.connect('pending-activity-changed',
+                           self._pending_activity_changed_cb)
 
         # Unfreeze the display when it's stable
         hw_manager = hardwaremanager.get_manager()
@@ -100,6 +103,12 @@ class Shell(gobject.GObject):
 
         self._current_host = host
 
+    def _pending_activity_changed_cb(self, home_model, home_activity):
+        if home_activity:
+            self._pending_host = self._hosts[home_activity.get_xid()]
+        else:
+            self._pending_host = None
+
     def get_model(self):
         return self._model
 
@@ -107,16 +116,16 @@ class Shell(gobject.GObject):
         return self._frame
 
     def join_activity(self, bundle_id, activity_id):
-        activity = self.get_activity(activity_id)
-        if activity:
-            activity.present()
+        activity_host = self.get_activity(activity_id)
+        if activity_host:
+            activity_host.present()
             return
 
         # Get the service name for this activity, if
         # we have a bundle on the system capable of handling
         # this activity type
-        breg = bundleregistry.get_registry()
-        bundle = breg.get_bundle(bundle_id)
+        registry = activity.get_registry()
+        bundle = registry.get_activity(bundle_id)
         if not bundle:
             logging.error("Couldn't find activity for type %s" % bundle_id)
             return
@@ -156,6 +165,8 @@ class Shell(gobject.GObject):
             return
 
         if level == ShellModel.ZOOM_ACTIVITY:
+            if self._pending_host is not None:
+                self._pending_host.present()
             self._screen.toggle_showing_desktop(False)
         else:
             self._model.set_zoom_level(level)

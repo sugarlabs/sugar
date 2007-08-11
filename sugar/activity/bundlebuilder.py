@@ -162,8 +162,7 @@ def _get_mo_list(manifest):
 
     for lang in _get_po_list(manifest).keys():
         filename = _get_service_name() + '.mo'
-        mo_list.append(os.path.join(_get_source_path(), 'locale',
-                                    lang, 'LC_MESSAGES', filename))
+        mo_list.append(os.path.join('locale', lang, 'LC_MESSAGES', filename))
 
     return mo_list
 

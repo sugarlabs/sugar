@@ -21,8 +21,10 @@ PKG_CHECK_MODULES(SHELL, pygtk-2.0 gtk+-2.0)
 
 PKG_CHECK_MODULES(NATIVE_FACTORY, dbus-1)
 
-PKG_CHECK_MODULES(LIB, gtk+-2.0)
-PKG_CHECK_MODULES(LIB_BINDINGS, pygtk-2.0)
+PKG_CHECK_MODULES(LIBUI, gtk+-2.0)
+PKG_CHECK_MODULES(LIBUI_BINDINGS, pygtk-2.0)
+
+PKG_CHECK_MODULES(LIB_BINDINGS, pygobject-2.0)
 
 PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
 AC_SUBST(PYGTK_DEFSDIR)
@@ -45,7 +47,7 @@ data/Makefile
 lib/Makefile
 lib/ui/Makefile
 services/Makefile
-services/clipboard/Makefile
+services/shell/Makefile
 shell/Makefile
 shell/intro/Makefile
 shell/hardware/Makefile
@@ -64,7 +66,7 @@ services/console/Makefile
 services/console/interface/Makefile
 services/console/interface/xo/Makefile
 services/console/interface/memphis/plugins/clean_size/Makefile
-services/console/interface/memphis/plugins/dirty_size/Makefile
+services/console/interface/memphis/plugins/smaps/Makefile
 services/console/interface/memphis/plugins/Makefile
 services/console/interface/memphis/plugins/memphis_init/Makefile
 services/console/interface/memphis/plugins/cpu/Makefile

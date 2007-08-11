@@ -1,10 +1,10 @@
 libsugarui_la_CPPFLAGS =		\
-	$(LIB_CFLAGS)
+	$(LIBUI_CFLAGS)
 	
 noinst_LTLIBRARIES = libsugarui.la
 
 libsugarui_la_LIBADD = 			\
-	$(LIB_LIBS)
+	$(LIBUI_LIBS)
 
 libsugarui_la_SOURCES =			\
 	$(BUILT_SOURCES)		\

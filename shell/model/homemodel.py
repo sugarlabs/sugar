@@ -21,9 +21,9 @@ import wnck
 import dbus
 
 from sugar import wm
+from sugar import activity
 
 from model.homeactivity import HomeActivity
-from model import bundleregistry
 
 class HomeModel(gobject.GObject):
     """Model of the "Home" view (activity management)
@@ -51,15 +51,18 @@ class HomeModel(gobject.GObject):
                                    ([gobject.TYPE_PYOBJECT])),
         'active-activity-changed': (gobject.SIGNAL_RUN_FIRST,
                                     gobject.TYPE_NONE,
-                                   ([gobject.TYPE_PYOBJECT]))
+                                   ([gobject.TYPE_PYOBJECT])),
+        'pending-activity-changed': (gobject.SIGNAL_RUN_FIRST,
+                                     gobject.TYPE_NONE,
+                                     ([gobject.TYPE_PYOBJECT]))
     }
     
     def __init__(self):
         gobject.GObject.__init__(self)
 
         self._activities = []
-        self._bundle_registry = bundleregistry.get_registry()
-        self._current_activity = None
+        self._active_activity = None
+        self._pending_activity = None
 
         screen = wnck.screen_get_default()
         screen.connect('window-opened', self._window_opened_cb)
@@ -67,8 +70,55 @@ class HomeModel(gobject.GObject):
         screen.connect('active-window-changed',
                        self._active_window_changed_cb)
 
-    def get_current_activity(self):
-        return self._current_activity
+    def get_pending_activity(self):
+        """Returns the activity that would be seen in the Activity zoom level
+
+        In the Home (or Neighborhood or Groups) zoom level, this
+        indicates the activity that would become active if the user
+        switched to the Activity zoom level. (In the Activity zoom
+        level, this just returns the currently-active activity.)
+        Unlike get_active_activity(), this never returns None as long
+        as there is any activity running.
+        """
+        return self._pending_activity
+
+    def _set_pending_activity(self, home_activity):
+        if self._pending_activity == home_activity:
+            return
+
+        self._pending_activity = home_activity
+        self.emit('pending-activity-changed', self._pending_activity)
+
+    def get_active_activity(self):
+        """Returns the activity that the user is currently working in
+
+        In the Activity zoom level, this returns the currently-active
+        activity. In the other zoom levels, it returns the activity
+        that was most-recently active in the Activity zoom level, or
+        None if the most-recently-active activity is no longer
+        running.
+        """
+        return self._active_activity
+
+    def _set_active_activity(self, home_activity):
+        if self._active_activity == home_activity:
+            return
+
+        if self._active_activity:
+            service = self._active_activity.get_service()
+            if service:
+                service.set_active(False,
+                                   reply_handler=self._set_active_success,
+                                   error_handler=self._set_active_error)
+        if home_activity:
+            service = home_activity.get_service()
+            if service:
+                service.set_active(True,
+                                   reply_handler=self._set_active_success,
+                                   error_handler=self._set_active_error)
+
+        self._active_activity = home_activity
+        self.emit('active-activity-changed', self._active_activity)
 
     def __iter__(self): 
         return iter(self._activities)
@@ -84,64 +134,47 @@ class HomeModel(gobject.GObject):
         
     def _window_opened_cb(self, screen, window):
         if window.get_window_type() == wnck.WINDOW_NORMAL:
-            activity = None
+            home_activity = None
 
             activity_id = wm.get_activity_id(window)
 
-            bundle_id = wm.get_bundle_id(window)
-            if bundle_id:
-                bundle = self._bundle_registry.get_bundle(bundle_id)
+            service_name = wm.get_bundle_id(window)
+            if service_name:
+                registry = activity.get_registry()
+                activity_info = registry.get_activity(service_name)
             else:
-                bundle = None
+                activity_info = None
 
             if activity_id:
-                activity = self._get_activity_by_id(activity_id)
+                home_activity = self._get_activity_by_id(activity_id)
 
-            if not activity:
-                activity = HomeActivity(bundle, activity_id)
-                self._add_activity(activity)
+            if not home_activity:
+                home_activity = HomeActivity(activity_info, activity_id)
+                self._add_activity(home_activity)
 
-            activity.set_window(window)
+            home_activity.set_window(window)
 
-            activity.props.launching = False
-            self.emit('activity-started', activity)
+            home_activity.props.launching = False
+            self.emit('activity-started', home_activity)
+
+            if self._pending_activity is None:
+                self._set_pending_activity(home_activity)
 
     def _window_closed_cb(self, screen, window):
         if window.get_window_type() == wnck.WINDOW_NORMAL:
             self._remove_activity_by_xid(window.get_xid())
-        if not self._activities:
-            self.emit('active-activity-changed', None)
-            self._notify_activity_activation(self._current_activity, None)
 
     def _get_activity_by_xid(self, xid):
-        for activity in self._activities:
-            if activity.get_xid() == xid:
-                return activity
+        for home_activity in self._activities:
+            if home_activity.get_xid() == xid:
+                return home_activity
         return None
 
     def _get_activity_by_id(self, activity_id):
-        for activity in self._activities:
-            if activity.get_activity_id() == activity_id:
-                return activity
+        for home_activity in self._activities:
+            if home_activity.get_activity_id() == activity_id:
+                return home_activity
         return None
-
-    def _notify_activity_activation(self, old_activity, new_activity):
-        if old_activity == new_activity:
-            return
-
-        if old_activity:
-            service = old_activity.get_service()
-            if service:
-                service.set_active(False,
-                                   reply_handler=self._set_active_success,
-                                   error_handler=self._set_active_error)
-
-        if new_activity:
-            service = new_activity.get_service()
-            if service:
-                service.set_active(True,
-                                   reply_handler=self._set_active_success,
-                                   error_handler=self._set_active_error)
 
     def _set_active_success(self):
         pass
@@ -151,55 +184,58 @@ class HomeModel(gobject.GObject):
 
     def _active_window_changed_cb(self, screen):
         window = screen.get_active_window()
-        if window == None:
-            self.emit('active-activity-changed', None)
-            self._notify_activity_activation(self._current_activity, None)
-            return
-        if window.get_window_type() != wnck.WINDOW_NORMAL:
+        if window is None or window.get_window_type() != wnck.WINDOW_NORMAL:
             return
 
         xid = window.get_xid()
-        act = self._get_activity_by_xid(window.get_xid())
-        if act:
-            self._notify_activity_activation(self._current_activity, act)
-            self._current_activity = act
-        else:
-            self._notify_activity_activation(self._current_activity, None)
-            self._current_activity = None
+        act = self._get_activity_by_xid(xid)
+        if act is None:
             logging.error('Model for window %d does not exist.' % xid)
+        self._set_pending_activity(act)
+        self._set_active_activity(act)
 
-        self.emit('active-activity-changed', self._current_activity)
+    def _add_activity(self, home_activity):
+        self._activities.append(home_activity)
+        self.emit('activity-added', home_activity)
 
-    def _add_activity(self, activity):
-        self._activities.append(activity)
-        self.emit('activity-added', activity)
+    def _remove_activity(self, home_activity):
+        if home_activity == self._active_activity:
+            self._set_active_activity(None)
+            # Figure out the new _pending_activity.
+            windows = wnck.screen_get_default().get_windows_stacked()
+            windows.reverse()
+            for window in windows:
+                new_activity = self._get_activity_by_xid(window.get_xid())
+                if new_activity is not None:
+                    self._set_pending_activity(new_activity)
+                    break
+            else:                
+                logging.error('No activities are running')
+                self._set_pending_activity(None)
 
-    def _remove_activity(self, activity):
-        if activity == self._current_activity:
-            self._current_activity = None
-
-        self.emit('activity-removed', activity)
-        self._activities.remove(activity)
+        self.emit('activity-removed', home_activity)
+        self._activities.remove(home_activity)
         
     def _remove_activity_by_xid(self, xid):
-        activity = self._get_activity_by_xid(xid)
-        if activity:
-            self._remove_activity(activity)
+        home_activity = self._get_activity_by_xid(xid)
+        if home_activity:
+            self._remove_activity(home_activity)
         else:
             logging.error('Model for window %d does not exist.' % xid)
 
     def notify_activity_launch(self, activity_id, service_name):
-        bundle = self._bundle_registry.get_bundle(service_name)
-        if not bundle:
+        registry = activity.get_registry()
+        activity_info = registry.get_activity(service_name)
+        if not activity_info:
             raise ValueError("Activity service name '%s' was not found in the bundle registry." % service_name)
-        activity = HomeActivity(bundle, activity_id)
-        activity.props.launching = True
-        self._add_activity(activity)
+        home_activity = HomeActivity(activity_info, activity_id)
+        home_activity.props.launching = True
+        self._add_activity(home_activity)
 
     def notify_activity_launch_failed(self, activity_id):
-        activity = self._get_activity_by_id(activity_id)
-        if activity:
-            logging.debug("Activity %s (%s) launch failed" % (activity_id, activity.get_type()))
-            self._remove_activity(activity)
+        home_activity = self._get_activity_by_id(activity_id)
+        if home_activity:
+            logging.debug("Activity %s (%s) launch failed" % (activity_id, home_activity.get_type()))
+            self._remove_activity(home_activity)
         else:
             logging.error('Model for activity id %s does not exist.' % activity_id)

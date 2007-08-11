@@ -38,6 +38,7 @@ mkinstalldirs
 po/Makefile.in.in
 po/POTFILES
 po/*.gmo
+po/.intltool-merge-cache
 sugar/__installed__.py
 tools/sugar-setup-activity
 threadframe
@@ -53,4 +54,5 @@ browser/sugar-marshal.h
 bin/sugar
 shell/extensions/_extensions.c
 data/sugar.gtkrc
+data/sugar.xml
 data/sugar-xo.gtkrc

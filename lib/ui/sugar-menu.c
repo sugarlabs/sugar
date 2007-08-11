@@ -28,57 +28,36 @@ static void sugar_menu_init       (SugarMenu *menu);
 G_DEFINE_TYPE(SugarMenu, sugar_menu, GTK_TYPE_MENU)
 
 void
-sugar_menu_popup(SugarMenu *menu,
-                 int         x,
-                 int         y)
+sugar_menu_set_active(SugarMenu *menu, gboolean active)
 {
-    GtkWidget *window;
-
-    window = GTK_MENU(menu)->toplevel;
-    g_return_if_fail(window != NULL);
-
-    GTK_MENU_SHELL(menu)->active = TRUE;
-
-    gtk_widget_show(GTK_WIDGET(menu));
-
-    gtk_window_move(GTK_WINDOW(window), x, y);
-    gtk_widget_show(window);
+    GTK_MENU_SHELL(menu)->active = active;
 }
 
 void
-sugar_menu_popdown(SugarMenu *menu)
+sugar_menu_embed(SugarMenu *menu, GtkContainer *parent)
 {
-    GtkWidget *window;
+    menu->orig_toplevel = GTK_MENU(menu)->toplevel;
 
-    window = GTK_MENU(menu)->toplevel;
-    g_return_if_fail(window != NULL);
-
-    GTK_MENU_SHELL(menu)->active = FALSE;
-
-    gtk_widget_hide(GTK_WIDGET(menu));
-    gtk_widget_hide(window);
+    GTK_MENU(menu)->toplevel = gtk_widget_get_toplevel(GTK_WIDGET(parent));
+    gtk_widget_reparent(GTK_WIDGET(menu), GTK_WIDGET(parent));
 }
 
-static void
-sugar_menu_size_request (GtkWidget      *widget,
-                         GtkRequisition *requisition)
+void
+sugar_menu_unembed(SugarMenu *menu)
 {
-    SugarMenu *menu = SUGAR_MENU(widget);
-
-    (* GTK_WIDGET_CLASS (sugar_menu_parent_class)->size_request) (widget, requisition);
-
-    requisition->width = MAX(requisition->width, menu->min_width);
+    if (menu->orig_toplevel) {
+        GTK_MENU(menu)->toplevel = menu->orig_toplevel;
+        gtk_widget_reparent(GTK_WIDGET(menu), GTK_WIDGET(menu->orig_toplevel));
+    }
 }
 
 static void
 sugar_menu_class_init(SugarMenuClass *menu_class)
 {
-    GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(menu_class);
-
-    widget_class->size_request = sugar_menu_size_request;    
 }
 
 static void
 sugar_menu_init(SugarMenu *menu)
 {
+    menu->orig_toplevel = NULL;
 }
