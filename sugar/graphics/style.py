@@ -15,14 +15,20 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+import os
+
 import gtk
 import pango
 
 def _get_screen_dpi():
     xft_dpi = gtk.settings_get_default().get_property('gtk-xft-dpi')
-    return  float(xft_dpi / 1024)
+    return float(xft_dpi / 1024)
 
 def _compute_zoom_factor():
+    if os.environ.has_key('SUGAR_XO_STYLE'):
+        if os.environ['SUGAR_XO_STYLE'] == 'yes':
+            return 1.0
+
     return gtk.gdk.screen_width() / 1200.0
 
 def zoom(units):

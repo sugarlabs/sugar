@@ -19,7 +19,8 @@
 import os
 import sys
 import socket
-import logging 
+import logging
+from optparse import OptionParser
 
 log = logging.getLogger( 'sugar-emulator' )
 log.setLevel( logging.DEBUG )
@@ -63,7 +64,7 @@ def _get_display_number():
         logging.error('Cannot find a free display.')
         sys.exit(0)
 
-def _start_xephyr():
+def _start_xephyr(dpi=None):
     display = _get_display_number()
     log.info( 'Starting the Xephyr nested X display on display %s', display )
 
@@ -77,10 +78,11 @@ def _start_xephyr():
         cmd.append('-screen')
         cmd.append('%dx%d' % (1200, 900))
 
-    dpi = gtk.settings_get_default().get_property('gtk-xft-dpi')
+    if not dpi:
+        dpi = gtk.settings_get_default().get_property('gtk-xft-dpi') / 1024
     if dpi > 0:
         cmd.append('-dpi')
-        cmd.append('%d' % int(dpi/1024))
+        cmd.append('%d' % dpi)
 
     log.debug( 'Xephyr command: %s', " ".join( cmd ) )
     result = gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
@@ -110,30 +112,49 @@ def _setup_env():
             os.environ['PYTHONPATH'] = source_dir + ':' + path
             log.info( 'Set PYTHONPATH=%s', os.environ['PYTHONPATH'] )
 
-    os.environ['GABBLE_LOGFILE'] = os.path.join(env.get_profile_path(), 'logs', 'telepathy-gabble.log')
-    os.environ['SALUT_LOGFILE'] = os.path.join(env.get_profile_path(), 'logs', 'telepathy-salut.log')
-    os.environ['STREAM_ENGINE_LOGFILE'] = os.path.join(env.get_profile_path(), 'logs', 'telepathy-stream-engine.log')
+    os.environ['GABBLE_LOGFILE'] = os.path.join(
+            env.get_profile_path(), 'logs', 'telepathy-gabble.log')
+    os.environ['SALUT_LOGFILE'] = os.path.join(
+            env.get_profile_path(), 'logs', 'telepathy-salut.log')
+    os.environ['STREAM_ENGINE_LOGFILE'] = os.path.join(
+            env.get_profile_path(), 'logs', 'telepathy-stream-engine.log')
 
 def main():
     """Script-level operations"""
+
+    parser = OptionParser()
+    parser.add_option('-x', '--xo-style', dest='xo_style',
+                      action='store_true', help='use the XO style')
+    (options, args) = parser.parse_args()
+
     logging.basicConfig()
+
     _setup_env()
-    _start_xephyr()
-    
-    from sugar import env
-    
-    if env.is_emulator():
-        gtkrc_filename = 'sugar.gtkrc'
+
+    if options.xo_style:
+        _start_xephyr(dpi=201)
     else:
+        _start_xephyr()
+
+    if options.xo_style:
+        os.environ['SUGAR_XO_STYLE'] = 'yes'
+    else:
+        os.environ['SUGAR_XO_STYLE'] = 'no'
+    
+    if options.xo_style:
         gtkrc_filename = 'sugar-xo.gtkrc'
+    else:
+        gtkrc_filename = 'sugar.gtkrc'
+        os.environ['SUGAR_XO_STYLE'] = 'no'
     
     os.environ['GTK2_RC_FILES'] = env.get_data_path(gtkrc_filename)
-    
-    if len(sys.argv) == 1:
+    print os.environ['GTK2_RC_FILES']
+
+    if not args:
         program = 'sugar-shell'
     else:
         _start_matchbox()
-        program = sys.argv[1]
+        program = args[0]
     
     command = ['dbus-launch', 'dbus-launch', '--exit-with-session', program]
     log.info( "Attempting to launch sugar to replace this process: %s", " ".join(command) )
