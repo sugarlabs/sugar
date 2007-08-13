@@ -305,6 +305,18 @@ class Activity(Window, gtk.Container):
     def _internal_jobject_error_cb(self, err):
         logging.debug("Error creating activity datastore object: %s" % err)
 
+    def get_activity_root(self):
+        """
+        Return the appropriate location in the fs where to store activity related
+        data that doesn't pertain to the current execution of the activity and
+        thus cannot go into the DataStore.
+        """
+        if os.environ.has_key('SUGAR_ACTIVITY_ROOT') and \
+           os.environ['SUGAR_ACTIVITY_ROOT']:
+            return os.environ['SUGAR_ACTIVITY_ROOT']
+        else:
+            return '/'
+
     def read_file(self, file_path):
         """
         Subclasses implement this method if they support resuming objects from

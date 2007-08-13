@@ -140,14 +140,12 @@ class DSObject(object):
                 activityfactory.create_with_object_id(service_name, object_id)
 
     def destroy(self):
-        logging.debug('DSObject.destroy() file_path: %r.' % self._file_path)
         if self._destroyed:
             logging.warning('This DSObject has already been destroyed!.')
             import pdb;pdb.set_trace()
             return
         self._destroyed = True
         if self._file_path and self._owns_file:
-            logging.debug('Removing temp file: %r' % self._file_path)
             if os.path.isfile(self._file_path):
                 os.remove(self._file_path)
             self._owns_file = False
