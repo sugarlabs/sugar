@@ -1,3 +1,5 @@
+Snapshot 040c94d181
+
 * #2099 Tweak a color pair as requested by Walter. (marco)
 * Draw an invoker that is connected with the palette for toolbuttons. (benzea)
 * Fix traceback when reading in saved WPA2 network configs (dcbw)
