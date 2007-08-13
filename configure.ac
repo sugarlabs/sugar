@@ -62,6 +62,8 @@ shell/model/devices/network/Makefile
 services/console/lib/Makefile
 services/console/lib/graphics/Makefile
 services/console/lib/procmem/Makefile
+services/console/lib/net/Makefile
+services/console/lib/ui/Makefile
 services/console/Makefile
 services/console/interface/Makefile
 services/console/interface/xo/Makefile
@@ -71,6 +73,7 @@ services/console/interface/memphis/plugins/Makefile
 services/console/interface/memphis/plugins/memphis_init/Makefile
 services/console/interface/memphis/plugins/cpu/Makefile
 services/console/interface/memphis/Makefile
+services/console/interface/network/Makefile
 services/console/interface/logviewer/Makefile
 services/console/interface/terminal/Makefile
 sugar/Makefile

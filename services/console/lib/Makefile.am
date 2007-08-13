@@ -1,4 +1,4 @@
-SUBDIRS = procmem graphics
+SUBDIRS = procmem graphics net ui
 
 sugardir = $(pkgdatadir)/shell/console/lib
 sugar_PYTHON =				
