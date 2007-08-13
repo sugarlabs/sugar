@@ -2,7 +2,9 @@ shell/intro/intro.py
 shell/view/BuddyMenu.py
 shell/view/clipboardmenu.py
 shell/view/frame/zoombox.py
-services/clipboard/objecttypeservice.py
+services/shell/objecttypeservice.py
+shell/hardware/keydialog.py
+shell/view/home/activitiesdonut.py
 shell/view/Shell.py
 shell/view/clipboardicon.py
 shell/view/home/HomeBox.py
