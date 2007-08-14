@@ -16,6 +16,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+# Latest source available at git://dev.laptop.org/sugar 
+
 import os
 import sys
 import re
@@ -64,7 +66,9 @@ def cmd_build_snapshot():
 
     print 'Build %s...' % tarball
 
-    os.spawnlp(os.P_WAIT, 'make', 'make', 'distcheck')
+    retcode = subprocess.call(['make', 'distcheck'])
+    if retcode:
+        sys.exit(0)
 
     os.rename('%s-%s.tar.bz2' % (name, version), tarball)
 

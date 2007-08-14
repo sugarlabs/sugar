@@ -30,6 +30,7 @@ from sugar.activity.bundle import Bundle
 from sugar.activity import activityhandle
 from sugar import logger
 from sugar import _sugarext
+from sugar import env
 
 # Work around for dbus mutex locking issue
 gobject.threads_init()
@@ -156,6 +157,7 @@ def run(bundle_path):
     gtk.icon_theme_get_default().append_search_path(bundle.get_icons_path())
 
     os.environ['SUGAR_BUNDLE_PATH'] = bundle_path
+    os.environ['SUGAR_ACTIVITY_ROOT'] = env.get_profile_path(bundle.get_service_name())
 
     _sugarext.set_prgname(bundle.get_service_name())
     _sugarext.set_application_name(bundle.get_name())

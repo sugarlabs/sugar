@@ -50,6 +50,7 @@ class Console:
         self.notebook = gtk.Notebook()
 
         self._load_interface('xo', 'XO Resources')
+        self._load_interface('network', 'Network')
         self._load_interface('memphis', 'Memphis')
         self._load_interface('logviewer', 'Log Viewer')
         self._load_interface('terminal', 'Terminal')

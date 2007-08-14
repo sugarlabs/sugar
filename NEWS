@@ -1,3 +1,8 @@
+* #2751 Add keybindings for max/min brightness/volume
+
+Snapshot 040c94d181
+
+* #2099 Tweak a color pair as requested by Walter. (marco)
 * Draw an invoker that is connected with the palette for toolbuttons. (benzea)
 * Fix traceback when reading in saved WPA2 network configs (dcbw)
 * #2475 Retrieve correctly the file path for files in removable devices. (tomeu)

@@ -28,6 +28,8 @@ from sugar._sugaruiext import KeyGrabber
 
 _BRIGHTNESS_STEP = 2
 _VOLUME_STEP = 10
+_BRIGTHNESS_MAX = 15
+_VOLUME_MAX = 100
 
 _actions_table = {
     'F1'            : 'zoom_mesh',
@@ -36,8 +38,12 @@ _actions_table = {
     'F4'            : 'zoom_activity',
     'F9'            : 'brightness_down',
     'F10'           : 'brightness_up',
+    '<ctrl>F9'      : 'brightness_min',
+    '<ctrl>F10'     : 'brightness_max',
     'F11'           : 'volume_down',
     'F12'           : 'volume_up',
+    '<ctrl>F11'     : 'volume_min',
+    '<ctrl>F12'     : 'volume_max',
     '<alt>1'        : 'screenshot',
     '<alt>equal'    : 'console',
     '<alt>0'        : 'console',
@@ -69,20 +75,28 @@ class KeyHandler(object):
         for key in _actions_table.keys():
             self._key_grabber.grab(key)            
 
-    def _change_volume(self, step):
+    def _change_volume(self, step=None, value=None):
         hw_manager = hardwaremanager.get_manager()
 
-        volume = hw_manager.get_volume() + step
-        volume = min(max(0, volume), 100)
+        if step is not None:
+            volume = hw_manager.get_volume() + step
+        elif value is not None:
+            volume = value
+
+        volume = min(max(0, volume), _VOLUME_MAX)
 
         hw_manager.set_volume(volume)
         hw_manager.set_mute(volume == 0)
 
-    def _change_brightness(self, step):
+    def _change_brightness(self, step=None, value=None):
         hw_manager = hardwaremanager.get_manager()
 
-        level = hw_manager.get_display_brightness() + step
-        level = min(max(0, level), 15)
+        if step is not None:
+            level = hw_manager.get_display_brightness() + step
+        elif value is not None:
+            level = value
+
+        level = min(max(0, level), _BRIGHTNESS_MAX)
 
         hw_manager.set_display_brightness(level)
         if level == 0:
@@ -102,17 +116,29 @@ class KeyHandler(object):
     def handle_zoom_activity(self):
         self._shell.set_zoom_level(ShellModel.ZOOM_ACTIVITY)
 
+    def handle_brightness_max(self):
+        self._change_brightness(value=_BRIGHTNESS_MAX)
+
+    def handle_brightness_min(self):
+        self._change_brightness(value=0)
+
+    def handle_volume_max(self):
+        self._change_volume(value=_VOLUME_MAX)
+
+    def handle_volume_min(self):
+        self._change_volume(value=0)
+
     def handle_brightness_up(self):
-        self._change_brightness(_BRIGHTNESS_STEP)
+        self._change_brightness(step=_BRIGHTNESS_STEP)
 
     def handle_brightness_down(self):
-        self._change_brightness(-_BRIGHTNESS_STEP)
+        self._change_brightness(step=-_BRIGHTNESS_STEP)
 
     def handle_volume_up(self):
-        self._change_volume(_VOLUME_STEP)
+        self._change_volume(step=_VOLUME_STEP)
 
     def handle_volume_down(self):
-        self._change_volume(-_VOLUME_STEP)
+        self._change_volume(step=-_VOLUME_STEP)
 
     def handle_screenshot(self):
         self._shell.take_screenshot()

@@ -38,6 +38,12 @@ AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
 AM_GLIB_GNU_GETTEXT
 
+AC_ARG_ENABLE(update-mimedb,
+   AC_HELP_STRING([--disable-update-mimedb],
+                   [disable the update-mime-database after install [default=no]]),,
+    enable_update_mimedb=yes)
+AM_CONDITIONAL(ENABLE_UPDATE_MIMEDB, test x$enable_update_mimedb = xyes)
+
 AC_CONFIG_FILES([bin/sugar], [chmod +x sugar])
 
 AC_OUTPUT([
@@ -62,6 +68,8 @@ shell/model/devices/network/Makefile
 services/console/lib/Makefile
 services/console/lib/graphics/Makefile
 services/console/lib/procmem/Makefile
+services/console/lib/net/Makefile
+services/console/lib/ui/Makefile
 services/console/Makefile
 services/console/interface/Makefile
 services/console/interface/xo/Makefile
@@ -71,6 +79,7 @@ services/console/interface/memphis/plugins/Makefile
 services/console/interface/memphis/plugins/memphis_init/Makefile
 services/console/interface/memphis/plugins/cpu/Makefile
 services/console/interface/memphis/Makefile
+services/console/interface/network/Makefile
 services/console/interface/logviewer/Makefile
 services/console/interface/terminal/Makefile
 sugar/Makefile
