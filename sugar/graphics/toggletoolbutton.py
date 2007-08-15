@@ -39,16 +39,14 @@ class ToggleToolButton(gtk.ToggleToolButton):
     def set_palette(self, palette):
         self._palette = palette
         self._palette.props.invoker = WidgetInvoker(self.child)
-        self._palette.props.draw_gap = True
 
     def set_tooltip(self, text):
-        self._palette = Palette(text)
-        self._palette.props.invoker = WidgetInvoker(self.child)
+        self._set_palette(Palette(text))
     
     def do_expose_event(self, event):
         if self._palette and self._palette.is_up():
             invoker = self._palette.props.invoker
-            invoker.draw_invoker_rect(event, self._palette)
+            invoker.draw_rectangle(event, self._palette)
 
         gtk.ToggleToolButton.do_expose_event(self, event)
     

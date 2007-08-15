@@ -87,9 +87,7 @@ class Palette(gtk.Window):
         'invoker'    : (object, None, None,
                         gobject.PARAM_READWRITE),
         'position'   : (gobject.TYPE_INT, None, None, 0, 6,
-                        0, gobject.PARAM_READWRITE),
-        'draw-gap'   : (bool, None, None, False,
-                        gobject.PARAM_READWRITE)
+                        0, gobject.PARAM_READWRITE)
     }
 
     __gsignals__ = {
@@ -114,7 +112,6 @@ class Palette(gtk.Window):
         self._group_id = None
         self._up = False
         self._position = self.DEFAULT
-        self._draw_gap = False
         self._palette_popup_sid = None
 
         self._popup_anim = animator.Animator(0.3, 10)
@@ -206,9 +203,6 @@ class Palette(gtk.Window):
             self._invoker.connect('mouse-leave', self._invoker_mouse_leave_cb)
         elif pspec.name == 'position':
             self._position = value
-        elif pspec.name == 'draw-gap':
-            self._draw_gap = value
-            self.queue_draw()
         else:
             raise AssertionError
 
@@ -217,8 +211,6 @@ class Palette(gtk.Window):
             return self._invoker
         elif pspec.name == 'position':
             return self._position
-        elif pspec.name == 'draw-gap':
-            return self._draw_gap
         else:
             raise AssertionError
 
@@ -228,7 +220,7 @@ class Palette(gtk.Window):
 
     def do_expose_event(self, event):
         # We want to draw a border with a beautiful gap
-        if self._draw_gap:
+        if self._invoker.has_rectangle_gap():
             invoker = self._invoker.get_rect()
             palette = self.get_rect()
 
@@ -542,6 +534,12 @@ class Invoker(gobject.GObject):
     def __init__(self):
         gobject.GObject.__init__(self)
 
+    def has_rectangle_gap(self):
+        return False
+
+    def draw_rectangle(self, event, palette):
+        pass
+
     def get_default_position(self):
         return Palette.AROUND
 
@@ -575,7 +573,10 @@ class WidgetInvoker(Invoker):
 
         return gtk.gdk.Rectangle(x, y, width, height)
 
-    def draw_invoker_rect(self, event, palette):
+    def has_rectangle_gap(self):
+        return True
+
+    def draw_rectangle(self, event, palette):
         style = self._widget.style
         gap = _calculate_gap(self.get_rect(), palette.get_rect())
         if gap:
