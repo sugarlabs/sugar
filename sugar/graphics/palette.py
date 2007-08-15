@@ -398,6 +398,9 @@ class Palette(gtk.Window):
         self.menu.set_active(True)
         self.show()
 
+        if self._invoker:
+            self._invoker.notify_popup()
+
         self._up = True
         _palette_observer.emit('popup', self)
         self.emit('popup')
@@ -406,8 +409,12 @@ class Palette(gtk.Window):
         if not self._palette_popup_sid is None:
             _palette_observer.disconnect(self._palette_popup_sid)
             self._palette_popup_sid = None
+
         self.menu.set_active(False)
         self.hide()
+
+        if self._invoker:
+            self._invoker.notify_popdown()
 
         self._up = False
         self.emit('popdown')
@@ -543,6 +550,12 @@ class Invoker(gobject.GObject):
         height = gtk.gdk.screen_height()
         return gtk.gdk.Rectangle(0, 0, width, height)
 
+    def notify_popup(self):
+        pass
+
+    def notify_popdown(self):
+        pass
+
 class WidgetInvoker(Invoker):
     def __init__(self, widget):
         Invoker.__init__(self)
@@ -601,6 +614,12 @@ class WidgetInvoker(Invoker):
 
     def get_toplevel(self):
         return self._widget.get_toplevel()
+
+    def notify_popup(self):
+        self._widget.queue_draw()
+
+    def notify_popdown(self):
+        self._widget.queue_draw()
 
 class CanvasInvoker(Invoker):
     def __init__(self, item):

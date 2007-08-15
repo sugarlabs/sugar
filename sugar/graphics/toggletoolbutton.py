@@ -40,9 +40,6 @@ class ToggleToolButton(gtk.ToggleToolButton):
         self._palette = palette
         self._palette.props.invoker = WidgetInvoker(self.child)
         self._palette.props.draw_gap = True
-        
-        self._palette.connect("popup", self._palette_changed)
-        self._palette.connect("popdown", self._palette_changed)
 
     def set_tooltip(self, text):
         self._palette = Palette(text)
@@ -55,9 +52,5 @@ class ToggleToolButton(gtk.ToggleToolButton):
                 invoker.draw_invoker_rect(event, self._palette)
 
         gtk.ToggleToolButton.do_expose_event(self, event)
-    
-    def _palette_changed(self, palette):
-        # Force a redraw to update the invoker rectangle
-        self.queue_draw()
     
     palette = property(get_palette, set_palette)

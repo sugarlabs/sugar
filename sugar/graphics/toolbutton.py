@@ -43,9 +43,6 @@ class ToolButton(gtk.ToolButton):
         self._palette = palette
         self._palette.props.invoker = WidgetInvoker(self.child)
         self._palette.props.draw_gap = True
-        
-        self._palette.connect("popup", self._palette_changed)
-        self._palette.connect("popdown", self._palette_changed)
 
     def set_tooltip(self, text):
         self.set_palette(Palette(text))
@@ -61,9 +58,5 @@ class ToolButton(gtk.ToolButton):
     def _button_clicked_cb(self, widget):
         if self._palette:
             self._palette.popdown(True)
-
-    def _palette_changed(self, palette):
-        # Force a redraw to update the invoker rectangle
-        self.queue_draw()
 
     palette = property(get_palette, set_palette)
