@@ -65,16 +65,15 @@ class ClipboardObject:
         #return self._get_type_info().get_preview()
         return ''
 
-    def get_activity(self):
+    def get_activities(self):
         mime = self.get_mime_type()
         if not mime:
             return ''
 
         registry = bundleregistry.get_registry()
         activities = registry.get_activities_for_type(self.get_mime_type())
-        # TODO: should we return several activities?
         if activities:
-            return activities[0].get_service_name()
+            return [activity.get_service_name() for activity in activities]
         else:
             return ''
 

@@ -23,7 +23,7 @@ NAME_KEY = 'NAME'
 PERCENT_KEY = 'PERCENT'
 ICON_KEY = 'ICON'
 PREVIEW_KEY = 'PREVIEW'
-ACTIVITY_KEY = 'ACTIVITY'
+ACTIVITIES_KEY = 'ACTIVITIES'
 FORMATS_KEY = 'FORMATS'
 
 TYPE_KEY = 'TYPE'
@@ -51,7 +51,7 @@ class ClipboardService(gobject.GObject):
         'object-deleted': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                         ([str])),
         'object-state-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                        ([str, str, int, str, str, str])),
+                        ([str, str, int, str, str, object])),
     }
     
     def __init__(self):
@@ -118,13 +118,13 @@ class ClipboardService(gobject.GObject):
             percent 
             icon 
             preview
-            activity 
+            activities
         
         From the ClipboardObject instance which is being described.
         """
         self.emit('object-state-changed', str(object_id), values[NAME_KEY],
                   values[PERCENT_KEY], values[ICON_KEY], values[PREVIEW_KEY],
-                  values[ACTIVITY_KEY])
+                  values[ACTIVITIES_KEY])
 
     def add_object(self, name):
         """Add a new object to the path
@@ -193,7 +193,7 @@ class ClipboardService(gobject.GObject):
             PERCENT_KEY: number,
             ICON_KEY: str,
             PREVIEW_KEY: XXX what is it?,
-            ACTIVITY_KEY: source activity id,
+            ACTIVITIES_KEY: activities that can open this object,
             FORMATS_KEY: list of XXX what is it?
         """
         return self._dbus_service.get_object(dbus.ObjectPath(object_id),)

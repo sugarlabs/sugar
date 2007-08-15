@@ -33,7 +33,7 @@ NAME_KEY = 'NAME'
 PERCENT_KEY = 'PERCENT'
 ICON_KEY = 'ICON'
 PREVIEW_KEY = 'PREVIEW'
-ACTIVITY_KEY = 'ACTIVITY'
+ACTIVITIES_KEY = 'ACTIVITIES'
 FORMATS_KEY = 'FORMATS'
 
 TYPE_KEY = 'TYPE'
@@ -87,7 +87,7 @@ class ClipboardService(dbus.service.Object):
                                   PERCENT_KEY: cb_object.get_percent(),
                                   ICON_KEY: cb_object.get_icon(),
                                   PREVIEW_KEY: cb_object.get_preview(),
-                                  ACTIVITY_KEY: cb_object.get_activity()})
+                                  ACTIVITIES_KEY: cb_object.get_activities()})
 
     @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
                          in_signature="o", out_signature="")
@@ -121,7 +121,7 @@ class ClipboardService(dbus.service.Object):
                                     PERCENT_KEY: percent,
                                     ICON_KEY: cb_object.get_icon(),
                                     PREVIEW_KEY: cb_object.get_preview(),
-                                    ACTIVITY_KEY: cb_object.get_activity()})
+                                    ACTIVITIES_KEY: cb_object.get_activities()})
 
     @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
                          in_signature="o", out_signature="a{sv}")
@@ -142,7 +142,7 @@ class ClipboardService(dbus.service.Object):
                 PERCENT_KEY: cb_object.get_percent(),
                 ICON_KEY: cb_object.get_icon(),
                 PREVIEW_KEY: cb_object.get_preview(),
-                ACTIVITY_KEY: cb_object.get_activity(),
+                ACTIVITIES_KEY: cb_object.get_activities(),
                 FORMATS_KEY: format_types}
         return dbus.Dictionary(result_dict)
 
