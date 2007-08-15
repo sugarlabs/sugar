@@ -577,29 +577,19 @@ class WidgetInvoker(Invoker):
 
     def draw_invoker_rect(self, event, palette):
         style = self._widget.style
-        if palette.is_up():
-            gap = _calculate_gap(self.get_rect(), palette.get_rect())
-
-            if gap:
-                style.paint_box_gap(event.window, gtk.STATE_PRELIGHT,
-                                    gtk.SHADOW_IN, event.area, self._widget,
-                                    "palette-invoker",
-                                    self._widget.allocation.x,
-                                    self._widget.allocation.y,
-                                    self._widget.allocation.width,
-                                    self._widget.allocation.height,
-                                    gap[0], gap[1], gap[2])
-            else:
-                style.paint_box(event.window, gtk.STATE_PRELIGHT,
+        gap = _calculate_gap(self.get_rect(), palette.get_rect())
+        if gap:
+            style.paint_box_gap(event.window, gtk.STATE_PRELIGHT,
                                 gtk.SHADOW_IN, event.area, self._widget,
                                 "palette-invoker",
                                 self._widget.allocation.x,
                                 self._widget.allocation.y,
                                 self._widget.allocation.width,
-                                self._widget.allocation.height)
+                                self._widget.allocation.height,
+                                gap[0], gap[1], gap[2])
         else:
             style.paint_box(event.window, gtk.STATE_PRELIGHT,
-                            gtk.SHADOW_NONE, event.area, self._widget,
+                            gtk.SHADOW_IN, event.area, self._widget,
                             "palette-invoker",
                             self._widget.allocation.x,
                             self._widget.allocation.y,

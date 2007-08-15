@@ -48,10 +48,9 @@ class ToolButton(gtk.ToolButton):
         self.set_palette(Palette(text))
     
     def do_expose_event(self, event):
-        if self._palette and self._palette.props.draw_gap:
-            if self._palette.is_up() or self.child.state == gtk.STATE_PRELIGHT:
-                invoker = self._palette.props.invoker
-                invoker.draw_invoker_rect(event, self._palette)
+        if self._palette and self._palette.is_up():
+            invoker = self._palette.props.invoker
+            invoker.draw_invoker_rect(event, self._palette)
 
         gtk.ToolButton.do_expose_event(self, event)
     
