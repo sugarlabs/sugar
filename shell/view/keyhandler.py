@@ -28,7 +28,7 @@ from sugar._sugaruiext import KeyGrabber
 
 _BRIGHTNESS_STEP = 2
 _VOLUME_STEP = 10
-_BRIGTHNESS_MAX = 15
+_BRIGHTNESS_MAX = 15
 _VOLUME_MAX = 100
 
 _actions_table = {
