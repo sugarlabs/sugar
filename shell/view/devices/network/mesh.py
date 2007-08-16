@@ -22,7 +22,7 @@ from model.devices import device
 class DeviceView(canvasicon.CanvasIcon):
     def __init__(self, model):
         canvasicon.CanvasIcon.__init__(self, size=style.MEDIUM_ICON_SIZE,
-                icon_name='theme:device-network-mesh')
+                icon_name='theme:network-mesh')
         self._model = model
 
         model.connect('notify::state', self._state_changed_cb)

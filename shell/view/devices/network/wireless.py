@@ -22,7 +22,7 @@ from model.devices.network import wireless
 from sugar.graphics.canvasicon import CanvasIcon
 from model.devices import device
 
-_ICON_NAME = 'device-network-wireless'
+_ICON_NAME = 'network-wireless'
 
 class DeviceView(CanvasIcon):
     def __init__(self, model):

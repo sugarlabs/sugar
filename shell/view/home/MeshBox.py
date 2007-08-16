@@ -36,7 +36,7 @@ from view.BuddyIcon import BuddyIcon
 from view.pulsingicon import PulsingIcon
 from view.home.snowflakelayout import SnowflakeLayout
 
-_ICON_NAME = 'device-network-wireless'
+_ICON_NAME = 'network-wireless'
 
 class AccessPointView(PulsingIcon):
     def __init__(self, model):
@@ -116,7 +116,7 @@ class AccessPointView(PulsingIcon):
             ]
 
 
-_MESH_ICON_NAME = 'theme:device-network-mesh'
+_MESH_ICON_NAME = 'theme:network-mesh'
 
 class MeshDeviceView(PulsingIcon):
     def __init__(self, nm_device):
