@@ -76,10 +76,10 @@ class ActivityToolbar(gtk.Toolbar):
                                      'theme:zoom-home-mini')
         self.share.combo.append_item(None, _('My Neighborhood'),
                                      'theme:zoom-neighborhood-mini')
-        self._update_share()
-
         self.insert(self.share, -1)
         self.share.show()
+
+        self._update_share()
 
         self.keep = ToolButton('document-save')
         self.keep.set_tooltip(_('Keep'))
@@ -96,8 +96,10 @@ class ActivityToolbar(gtk.Toolbar):
         self._update_title_sid = None
 
     def _update_share(self):
-        max_participants = self._activity.props.max_participants
-        if self._activity.get_shared() or max_participants == 1:
+        if self._activity.props.max_participants == 1:
+            self.share.hide()
+
+        if self._activity.get_shared():
             self.share.set_sensitive(False)
             self.share.combo.set_active(self.SHARE_NEIGHBORHOOD)
         else:
