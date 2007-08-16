@@ -175,8 +175,9 @@ class Palette(gtk.Window):
         return gtk.gdk.Rectangle(x, y, width, height)
 
     def set_primary_text(self, label, accel_path=None):
-        self._label.set_text(label)
-        self._label.show()
+        if label is not None:
+            self._label.set_text(label)
+            self._label.show()
 
     def set_content(self, widget):
         if len(self._content.get_children()) > 0:

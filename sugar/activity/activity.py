@@ -52,6 +52,8 @@ class ActivityToolbar(gtk.Toolbar):
         self._activity = activity
         activity.connect('shared', self._activity_shared_cb)
         activity.connect('joined', self._activity_shared_cb)
+        activity.connect('notify::max_participants',
+                         self._max_participants_changed_cb)
 
         if activity.metadata:
             self.title = gtk.Entry()
@@ -94,10 +96,11 @@ class ActivityToolbar(gtk.Toolbar):
         self._update_title_sid = None
 
     def _update_share(self):
+        max_participants = self._activity.props.max_participants
         if self._activity.get_shared():
             self.share.set_sensitive(False)
             self.share.combo.set_active(self.SHARE_NEIGHBORHOOD)
-        else:
+        elif max_participants == -1 or max_participants > 0:
             self.share.set_sensitive(True)
             self.share.combo.set_active(self.SHARE_PRIVATE)
     
@@ -137,6 +140,9 @@ class ActivityToolbar(gtk.Toolbar):
         tool_item.show()
 
     def _activity_shared_cb(self, activity):
+        self._update_share()
+
+    def _max_participants_changed_cb(self, activity, pspec):
         self._update_share()
 
 class EditToolbar(gtk.Toolbar):
@@ -185,7 +191,8 @@ class Activity(Window, gtk.Container):
     }
 
     __gproperties__ = {
-        'active': (bool, None, None, False, gobject.PARAM_READWRITE)
+        'active':         : (bool, None, None, False, gobject.PARAM_READWRITE)
+        'max-participants': (int, -1, 1000, 0, gobject.PARAM_READWRITE)
     }
 
     def __init__(self, handle, create_jobject=True):
@@ -235,6 +242,7 @@ class Activity(Window, gtk.Container):
         self._preview = None
         self._updating_jobject = False
         self._closing = False
+        self._max_participants = -1
 
         shared_activity = handle.get_shared_activity()
         if shared_activity:
@@ -284,6 +292,8 @@ class Activity(Window, gtk.Container):
     def do_get_property(self, pspec):
         if pspec.name == 'active':
             return self._active
+        elif pspec.name == 'max-participants':
+            return self._max_participants
 
     def get_id(self):
         return self._activity_id
