@@ -97,10 +97,10 @@ class ActivityToolbar(gtk.Toolbar):
 
     def _update_share(self):
         max_participants = self._activity.props.max_participants
-        if self._activity.get_shared():
+        if self._activity.get_shared() or max_participants == 1:
             self.share.set_sensitive(False)
             self.share.combo.set_active(self.SHARE_NEIGHBORHOOD)
-        elif max_participants == -1 or max_participants > 0:
+        else:
             self.share.set_sensitive(True)
             self.share.combo.set_active(self.SHARE_PRIVATE)
     
@@ -191,8 +191,10 @@ class Activity(Window, gtk.Container):
     }
 
     __gproperties__ = {
-        'active':         : (bool, None, None, False, gobject.PARAM_READWRITE)
-        'max-participants': (int, -1, 1000, 0, gobject.PARAM_READWRITE)
+        'active'          : (bool, None, None, False,
+                             gobject.PARAM_READWRITE),
+        'max-participants': (int, None, None, 0, 1000, 0,
+                             gobject.PARAM_READWRITE)
     }
 
     def __init__(self, handle, create_jobject=True):
@@ -242,7 +244,7 @@ class Activity(Window, gtk.Container):
         self._preview = None
         self._updating_jobject = False
         self._closing = False
-        self._max_participants = -1
+        self._max_participants = 0
 
         shared_activity = handle.get_shared_activity()
         if shared_activity:
@@ -288,6 +290,8 @@ class Activity(Window, gtk.Container):
                 self._active = value
                 if not self._active and self._jobject:
                     self.save()
+        elif pspec.name == 'max-participants':
+            self._max_participants = value
 
     def do_get_property(self, pspec):
         if pspec.name == 'active':
