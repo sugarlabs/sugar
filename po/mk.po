@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: olpc-sugar.master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-05 07:57-0700\n"
-"PO-Revision-Date: 2007-07-05 19:34+0200\n"
+"POT-Creation-Date: 2007-07-24 10:09-0700\n"
+"PO-Revision-Date: 2007-08-08 15:40+0200\n"
 "Last-Translator: Arangel Angov <arangel@linux.net.mk>\n"
 "Language-Team: Macedonian <ossm-members@hedona.on.net.mk>\n"
 "MIME-Version: 1.0\n"
@@ -16,72 +16,129 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: ../shell/intro/intro.py:77
-msgid "Pick a buddy picture"
-msgstr "Избери слика за пријател"
+#: ../shell/intro/intro.py:61
+msgid "Name:"
+msgstr "Име:"
 
-#: ../shell/intro/intro.py:100
-msgid "My Picture:"
-msgstr "Мојата слика:"
+#: ../shell/intro/intro.py:84
+msgid "Click to change color:"
+msgstr "Кликни да смениш боја:"
 
-#: ../shell/intro/intro.py:180
-msgid "My Name:"
-msgstr "Моето име:"
+#: ../shell/intro/intro.py:134
+msgid "Back"
+msgstr "Назад"
 
-#: ../shell/intro/intro.py:204
-msgid "My Color:"
-msgstr "Мојата боја:"
+#: ../shell/intro/intro.py:142
+msgid "Done"
+msgstr "Завршено"
 
-#: ../shell/view/BuddyMenu.py:83
+#: ../shell/intro/intro.py:145
+msgid "Next"
+msgstr "Напред"
+
+#: ../shell/view/BuddyMenu.py:82
 msgid "Remove friend"
 msgstr "Отстрани пријател"
 
-#: ../shell/view/BuddyMenu.py:87
+#: ../shell/view/BuddyMenu.py:85
 msgid "Make friend"
 msgstr "Додај пријател"
 
-#: ../shell/view/BuddyMenu.py:97
+#. FIXME check that the buddy is not in the activity already
+#: ../shell/view/BuddyMenu.py:96
 msgid "Invite"
 msgstr "Покани"
 
-#: ../shell/view/clipboardmenu.py:103
+#: ../shell/view/clipboardmenu.py:66
 msgid "Remove"
 msgstr "Отстрани"
 
-#: ../shell/view/clipboardmenu.py:110
+#: ../shell/view/clipboardmenu.py:70
 msgid "Open"
 msgstr "Отвори"
 
-#: ../shell/view/clipboardmenu.py:117
-msgid "Stop download"
-msgstr "Прекини преземање"
-
-#: ../shell/view/clipboardmenu.py:124
+#. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
+#. TODO: Implement stopping downloads
+#. self._stop_item.connect('activate', self._stop_item_activate_cb)
+#. self.append_menu_item(self._stop_item)
+#: ../shell/view/clipboardmenu.py:79
 msgid "Add to journal"
 msgstr "Додај во дневникот"
+
+#: ../shell/view/clipboardmenu.py:180
+#, python-format
+msgid "Clipboard object: %s."
+msgstr "Објект од таблата со исечоци: %s"
+
+#: ../shell/view/frame/zoombox.py:42
+msgid "Neighborhood"
+msgstr "Соседство"
+
+#: ../shell/view/frame/zoombox.py:55
+msgid "Group"
+msgstr "Група"
+
+#: ../shell/view/frame/zoombox.py:68
+msgid "Home"
+msgstr "Дома"
+
+#: ../shell/view/frame/zoombox.py:81
+msgid "Activity"
+msgstr "Активност"
 
 #: ../services/clipboard/objecttypeservice.py:32
 msgid "Text"
 msgstr "Текст"
 
-#: ../services/clipboard/objecttypeservice.py:35
+#: ../services/clipboard/objecttypeservice.py:36
 msgid "Image"
 msgstr "Слика"
 
-#: ../shell/view/Shell.py:227
+#: ../shell/view/Shell.py:203
 msgid "Screenshot"
 msgstr "Слика од екранот"
 
-#: ../shell/view/clipboardicon.py:211
-#, python-format
-msgid "Clipboard object: %s."
-msgstr "Објект од таблата со исечоци: %s"
+#: ../shell/view/home/HomeBox.py:140
+msgid "Shutdown"
+msgstr "Исклучи"
 
-#: ../shell/view/home/MeshBox.py:122
+#: ../shell/view/home/MeshBox.py:126
 msgid "Mesh Network"
 msgstr "Соседство"
 
-#: ../sugar/activity/activity.py:232
+#: ../shell/view/devices/battery.py:34
+msgid "My Battery life"
+msgstr "Мојата батерија"
+
+#: ../shell/view/devices/battery.py:87
+msgid "Battery charging"
+msgstr "Батеријата се полни"
+
+#: ../shell/view/devices/battery.py:89
+msgid "Battery discharging"
+msgstr "Батерјате се празни"
+
+#: ../shell/view/devices/battery.py:91
+msgid "Battery fully charged"
+msgstr "Батеријата е наполнета"
+
+#: ../sugar/activity/activity.py:73
+msgid "Private"
+msgstr "Приватно"
+
+#: ../sugar/activity/activity.py:74
+msgid "My Neighborhood"
+msgstr "Мое соседство"
+
+#: ../sugar/activity/activity.py:81
+msgid "Keep"
+msgstr "Зачувај"
+
+#: ../sugar/activity/activity.py:87
+msgid "Stop"
+msgstr "Стоп"
+
+#: ../sugar/activity/activity.py:260
 #, python-format
 msgid "%s Activity"
 msgstr "%s активност"

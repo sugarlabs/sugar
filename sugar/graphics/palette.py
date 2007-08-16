@@ -87,9 +87,7 @@ class Palette(gtk.Window):
         'invoker'    : (object, None, None,
                         gobject.PARAM_READWRITE),
         'position'   : (gobject.TYPE_INT, None, None, 0, 6,
-                        0, gobject.PARAM_READWRITE),
-        'draw-gap'   : (bool, None, None, False,
-                        gobject.PARAM_READWRITE)
+                        0, gobject.PARAM_READWRITE)
     }
 
     __gsignals__ = {
@@ -114,7 +112,6 @@ class Palette(gtk.Window):
         self._group_id = None
         self._up = False
         self._position = self.DEFAULT
-        self._draw_gap = False
         self._palette_popup_sid = None
 
         self._popup_anim = animator.Animator(0.3, 10)
@@ -206,9 +203,6 @@ class Palette(gtk.Window):
             self._invoker.connect('mouse-leave', self._invoker_mouse_leave_cb)
         elif pspec.name == 'position':
             self._position = value
-        elif pspec.name == 'draw-gap':
-            self._draw_gap = value
-            self.queue_draw()
         else:
             raise AssertionError
 
@@ -217,8 +211,6 @@ class Palette(gtk.Window):
             return self._invoker
         elif pspec.name == 'position':
             return self._position
-        elif pspec.name == 'draw-gap':
-            return self._draw_gap
         else:
             raise AssertionError
 
@@ -228,7 +220,7 @@ class Palette(gtk.Window):
 
     def do_expose_event(self, event):
         # We want to draw a border with a beautiful gap
-        if self._draw_gap:
+        if self._invoker.has_rectangle_gap():
             invoker = self._invoker.get_rect()
             palette = self.get_rect()
 
@@ -398,6 +390,9 @@ class Palette(gtk.Window):
         self.menu.set_active(True)
         self.show()
 
+        if self._invoker:
+            self._invoker.notify_popup()
+
         self._up = True
         _palette_observer.emit('popup', self)
         self.emit('popup')
@@ -406,8 +401,12 @@ class Palette(gtk.Window):
         if not self._palette_popup_sid is None:
             _palette_observer.disconnect(self._palette_popup_sid)
             self._palette_popup_sid = None
+
         self.menu.set_active(False)
         self.hide()
+
+        if self._invoker:
+            self._invoker.notify_popdown()
 
         self._up = False
         self.emit('popdown')
@@ -535,6 +534,12 @@ class Invoker(gobject.GObject):
     def __init__(self):
         gobject.GObject.__init__(self)
 
+    def has_rectangle_gap(self):
+        return False
+
+    def draw_rectangle(self, event, palette):
+        pass
+
     def get_default_position(self):
         return Palette.AROUND
 
@@ -542,6 +547,12 @@ class Invoker(gobject.GObject):
         width = gtk.gdk.screen_width()
         height = gtk.gdk.screen_height()
         return gtk.gdk.Rectangle(0, 0, width, height)
+
+    def notify_popup(self):
+        pass
+
+    def notify_popdown(self):
+        pass
 
 class WidgetInvoker(Invoker):
     def __init__(self, widget):
@@ -562,31 +573,24 @@ class WidgetInvoker(Invoker):
 
         return gtk.gdk.Rectangle(x, y, width, height)
 
-    def draw_invoker_rect(self, event, palette):
-        style = self._widget.style
-        if palette.is_up():
-            gap = _calculate_gap(self.get_rect(), palette.get_rect())
+    def has_rectangle_gap(self):
+        return True
 
-            if gap:
-                style.paint_box_gap(event.window, gtk.STATE_PRELIGHT,
-                                    gtk.SHADOW_IN, event.area, self._widget,
-                                    "palette-invoker",
-                                    self._widget.allocation.x,
-                                    self._widget.allocation.y,
-                                    self._widget.allocation.width,
-                                    self._widget.allocation.height,
-                                    gap[0], gap[1], gap[2])
-            else:
-                style.paint_box(event.window, gtk.STATE_PRELIGHT,
+    def draw_rectangle(self, event, palette):
+        style = self._widget.style
+        gap = _calculate_gap(self.get_rect(), palette.get_rect())
+        if gap:
+            style.paint_box_gap(event.window, gtk.STATE_PRELIGHT,
                                 gtk.SHADOW_IN, event.area, self._widget,
                                 "palette-invoker",
                                 self._widget.allocation.x,
                                 self._widget.allocation.y,
                                 self._widget.allocation.width,
-                                self._widget.allocation.height)
+                                self._widget.allocation.height,
+                                gap[0], gap[1], gap[2])
         else:
             style.paint_box(event.window, gtk.STATE_PRELIGHT,
-                            gtk.SHADOW_NONE, event.area, self._widget,
+                            gtk.SHADOW_IN, event.area, self._widget,
                             "palette-invoker",
                             self._widget.allocation.x,
                             self._widget.allocation.y,
@@ -601,6 +605,12 @@ class WidgetInvoker(Invoker):
 
     def get_toplevel(self):
         return self._widget.get_toplevel()
+
+    def notify_popup(self):
+        self._widget.queue_draw()
+
+    def notify_popdown(self):
+        self._widget.queue_draw()
 
 class CanvasInvoker(Invoker):
     def __init__(self, item):

@@ -35,7 +35,7 @@ def _create_icon():
 
     scale = 1.0 + random.random() * 1.5
     icon = CanvasIcon(scale=scale, xo_color=color,
-                      icon_name='theme:stock-buddy')
+                      icon_name='theme:xo')
     icon.set_tooltip('Test')
     layout.add(icon)
 
