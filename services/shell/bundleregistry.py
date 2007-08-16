@@ -69,16 +69,16 @@ class BundleRegistry(gobject.GObject):
     def __init__(self):
         gobject.GObject.__init__(self)
         
-        self._bundles = {}
+        self._bundles = []
         self._search_path = []
         self._service_manager = _ServiceManager()
 
     def get_bundle(self, service_name):
         """Returns an bundle given his service name"""
-        if self._bundles.has_key(service_name):
-            return self._bundles[service_name]
-        else:
-            return None
+        for bundle in self._bundles:
+            if bundle.get_service_name() == service_name:
+                return bundle
+        return None
 
     def add_search_path(self, path):
         """Add a directory to the bundles search path"""
@@ -86,20 +86,30 @@ class BundleRegistry(gobject.GObject):
         self._scan_directory(path)
     
     def __iter__(self):
-        return self._bundles.values().__iter__()
+        return self._bundles.__iter__()
 
     def _scan_directory(self, path):
-        if os.path.isdir(path):
-            for f in os.listdir(path):
-                bundle_dir = os.path.join(path, f)
-                if os.path.isdir(bundle_dir) and \
-                   bundle_dir.endswith('.activity'):
-                    self.add_bundle(bundle_dir)
+        if not os.path.isdir(path):
+            return
+
+        # Sort by mtime to ensure a stable activity order
+        bundles = {}
+        for f in os.listdir(path):
+            if not f.endswith('.activity'):
+                continue
+            bundle_dir = os.path.join(path, f)
+            if os.path.isdir(bundle_dir):
+                bundles[bundle_dir] = os.stat(bundle_dir).st_mtime
+
+        bundle_dirs = bundles.keys()
+        bundle_dirs.sort(lambda d1,d2: cmp(bundles[d1], bundles[d2]))
+        for dir in bundle_dirs:
+            self.add_bundle(dir)
 
     def add_bundle(self, bundle_path):
         bundle = Bundle(bundle_path)
         if bundle.is_valid():
-            self._bundles[bundle.get_service_name()] = bundle
+            self._bundles.append(bundle)
             self._service_manager.add(bundle)
             self.emit('bundle-added', bundle)
             return True
@@ -108,7 +118,7 @@ class BundleRegistry(gobject.GObject):
 
     def get_activities_for_type(self, mime_type):
         result = []
-        for bundle in self._bundles.values():
+        for bundle in self._bundles:
             if bundle.get_mime_types() and mime_type in bundle.get_mime_types():
                 result.append(bundle)
         return result
