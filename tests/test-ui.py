@@ -35,16 +35,20 @@ class TextToolbar(gtk.Toolbar):
         self.insert(button, -1)
         button.show()
         
-        palette = Palette()
+        palette = Palette('Title')
         button.set_palette(palette)
 
-        palette.set_primary_state('This is a palette')
         menu_item = gtk.MenuItem('First menu item')
-        palette.append_menu_item(menu_item)
+        palette.menu.append(menu_item)
+        menu_item.show()
+
         menu_item = gtk.MenuItem('Second menu item')
-        palette.append_menu_item(menu_item)
+        palette.menu.append(menu_item)
+        menu_item.show()
+
         menu_item = gtk.MenuItem('Third menu item')
-        palette.append_menu_item(menu_item)
+        palette.menu.append(menu_item)
+        menu_item.show()
 
 class ImageToolbar(gtk.Toolbar):
     def __init__(self):
