@@ -29,7 +29,7 @@ class FrameCanvasInvoker(CanvasInvoker):
         return Palette.AROUND
 
     def get_screen_area(self):
-        frame_thickness = style.zoom(75)
+        frame_thickness = style.GRID_CELL_SIZE - style.LINE_WIDTH
 
         x = y = frame_thickness
         width = gtk.gdk.screen_width() - frame_thickness

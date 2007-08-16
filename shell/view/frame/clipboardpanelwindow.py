@@ -36,10 +36,8 @@ class ClipboardPanelWindow(FrameWindow):
         self._clipboard = gtk.Clipboard()
         self._clipboard.connect("owner-change", self._owner_change_cb)
 
-        root = self.get_root()
-
         self._clipboard_box = ClipboardBox()
-        root.append(self._clipboard_box)
+        self.append(self._clipboard_box)
 
         # Receiving dnd drops
         self.drag_dest_set(0, [], 0)
