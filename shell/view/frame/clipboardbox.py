@@ -92,7 +92,7 @@ class ClipboardBox(hippo.CanvasBox):
         if not selection.data:
             return
 
-        logging.debug('ClipboardBox: adding type ' + selection.type + ' ' + selection.data)
+        logging.debug('ClipboardBox: adding type ' + selection.type)
 
         cb_service = clipboardservice.get_instance()
         if selection.type == 'text/uri-list':

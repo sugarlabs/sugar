@@ -1,6 +1,7 @@
+* #2695: Recognize text files as such. (tomeu)
 * #2669: Add a border to the inner of the frame. (marco)
 * #2703: Update macedonian translation. (ArangelAngov)
-* #2543: Offer multiple activities for opening clipboard objects.
+* #2543: Offer multiple activities for opening clipboard objects. (tomeu)
 
 Snapshot d93122bf5e
 
