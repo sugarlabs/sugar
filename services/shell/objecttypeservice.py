@@ -17,6 +17,8 @@
 import dbus
 import dbus.service
 
+from gettext import gettext as _
+
 _REGISTRY_IFACE = "org.laptop.ObjectTypeRegistry"
 _REGISTRY_PATH = "/org/laptop/ObjectTypeRegistry"
 
@@ -28,12 +30,11 @@ class ObjectTypeRegistry(dbus.service.Object):
 
         self._types = {}
 
-        from gettext import gettext as _
-        self._add_primitive('Text', _('Text'), 'theme:object-text',
+        self._add_primitive('Text', _('Text'), 'theme:text',
                             [ 'text/plain', 'text/rtf', 'application/pdf',
                               'application/x-pdf', 'text/html',
                               'application/vnd.oasis.opendocument.text' ])
-        self._add_primitive('Image', _('Image'), 'theme:object-image',
+        self._add_primitive('Image', _('Image'), 'theme:image',
                             [ 'image/png', 'image/gif', 'image/jpeg' ])
 
     def _add_primitive(self, type_id, name, icon, mime_types):
