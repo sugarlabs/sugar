@@ -20,7 +20,7 @@ from view.BuddyMenu import BuddyMenu
 
 class BuddyIcon(CanvasIcon):
     def __init__(self, shell, buddy):
-        CanvasIcon.__init__(self, icon_name='theme:stock-buddy',
+        CanvasIcon.__init__(self, icon_name='theme:xo',
                             xo_color=buddy.get_color())
 
         self._shell = shell

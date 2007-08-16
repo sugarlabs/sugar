@@ -37,12 +37,12 @@ def add_snowflake(parent, size):
     box.set_layout(layout)
 
     icon = CanvasIcon(scale=0.8, xo_color=XoColor(),
-                      icon_name='theme:object-link')
+                      icon_name='theme:xo')
     layout.add_center(icon)
 
     for k in range(0, size):
         icon = CanvasIcon(scale=0.4, xo_color=XoColor(),
-                          icon_name='theme:stock-buddy')
+                          icon_name='theme:xo')
         layout.add(icon)
 
 window = gtk.Window()

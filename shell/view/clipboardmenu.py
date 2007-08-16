@@ -63,12 +63,12 @@ class ClipboardMenu(Palette):
             self.append(self._preview_text)
         """
 
-        self._remove_item = MenuItem(_('Remove'), 'stock-remove')
+        self._remove_item = MenuItem(_('Remove'), 'list-remove')
         self._remove_item.connect('activate', self._remove_item_activate_cb)
         self.menu.append(self._remove_item)
         self._remove_item.show()
 
-        self._open_item = MenuItem(_('Open'), 'stock-keep')
+        self._open_item = MenuItem(_('Open'))
         self._open_item_activate_sid = self._open_item.connect('activate',
                 self._open_item_activate_cb)
         self.menu.append(self._open_item)
