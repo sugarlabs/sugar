@@ -78,7 +78,7 @@ class Icon(gtk.Image):
             source.set_state(gtk.STATE_INSENSITIVE)
             icon_set.add_source(source)
 
-        self.set_from_icon_set(icon_set, self.props.icon_size)
+        self.props.icon_set = icon_set
 
     def _update_icon(self):
         if not self._constructed:
@@ -126,11 +126,11 @@ class Icon(gtk.Image):
         elif pspec.name == 'stroke-color':
             self._stroke_color = value
             self._update_icon()
-        elif pspec.name == 'icon-size':
-            gtk.Image.do_set_property(self, pspec, value)
-            self._update_icon()
         else:
             gtk.Image.do_set_property(self, pspec, value)
+
+        if pspec.name == 'icon-size':
+            self._update_icon()
 
     def do_get_property(self, pspec):
         if pspec.name == 'fill-color':
