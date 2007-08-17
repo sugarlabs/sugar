@@ -15,7 +15,7 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-from array import array
+from numpy import array
 from random import random
 
 import hippo
@@ -41,9 +41,8 @@ class _Grid(gobject.GObject):
         self._collisions = []
         self._collisions_sid = 0
 
-        self._array = array('B')
-        for i in range(width * height):
-            self._array.append(0)
+        self._array = array([0], dtype='b')
+        self._array.resize(width * height)
 
     def add(self, child, width, height):
         trials = _PLACE_TRIALS
