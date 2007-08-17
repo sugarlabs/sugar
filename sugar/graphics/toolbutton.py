@@ -28,7 +28,8 @@ class ToolButton(gtk.ToolButton):
     def __init__(self, icon_name=None):
         gtk.ToolButton.__init__(self)
         self._palette = None
-        self.set_icon(icon_name)
+        if icon_name:
+            self.set_icon(icon_name)
         self.connect('clicked', self._button_clicked_cb)
 
     def set_icon(self, icon_name):
