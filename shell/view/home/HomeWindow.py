@@ -64,6 +64,7 @@ class HomeWindow(gtk.Window):
         self._mesh_box = MeshBox(shell)
         self._transition_box = TransitionBox()
 
+        self._activate_view()
         self._canvas.set_root(self._home_box)
         
         self._transition_box.connect('completed',
@@ -93,22 +94,28 @@ class HomeWindow(gtk.Window):
         if keyname == "Alt_L":
             self._home_box.release()
 
-    def _update_mesh_state(self):
-        if self._active and self._level == ShellModel.ZOOM_MESH:
-            self._mesh_box.resume()
-        else:
+    def _deactivate_view(self):
+        if self._level == ShellModel.ZOOM_HOME:
+            self._home_box.suspend()
+        elif self._level == ShellModel.ZOOM_MESH:
             self._mesh_box.suspend()
 
+    def _activate_view(self):
+        if self._level == ShellModel.ZOOM_HOME:
+            self._home_box.resume()
+        elif self._level == ShellModel.ZOOM_MESH:
+            self._mesh_box.resume()
+
     def _focus_in_cb(self, widget, event):
-        self._active = True
-        self._update_mesh_state()
+        self._activate_view()
 
     def _focus_out_cb(self, widget, event):
-        self._active = False
-        self._update_mesh_state()
-            
+        self._deactivate_view()
+
     def set_zoom_level(self, level):
+        self._deactivate_view()
         self._level = level
+        self._activate_view()
     
         self._canvas.set_root(self._transition_box)
 
@@ -129,7 +136,5 @@ class HomeWindow(gtk.Window):
         elif self._level == ShellModel.ZOOM_MESH:
             self._canvas.set_root(self._mesh_box)
 
-        self._update_mesh_state()
-        
     def get_home_box(self):
         return self._home_box   
