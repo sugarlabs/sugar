@@ -25,6 +25,7 @@ class FrameWindow(gtk.Window):
     def __init__(self, position):
         gtk.Window.__init__(self)
         self.hover = False
+        self.size = style.GRID_CELL_SIZE + style.LINE_WIDTH
 
         self._position = position
 
@@ -80,15 +81,12 @@ class FrameWindow(gtk.Window):
 
     def append(self, child, flags=0):
         self._bg.append(child, flags)
-        
+
     def _update_size(self):
         if self._position == gtk.POS_TOP or self._position == gtk.POS_BOTTOM:
-            width = gtk.gdk.screen_width()
-            height = style.GRID_CELL_SIZE
+            self.resize(gtk.gdk.screen_width(), self.size)
         else:
-            width = style.GRID_CELL_SIZE
-            height = gtk.gdk.screen_height()
-        self.resize(width, height)
+            self.resize(self.size, gtk.gdk.screen_height())
 
     def _realize_cb(self, widget):
         self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)

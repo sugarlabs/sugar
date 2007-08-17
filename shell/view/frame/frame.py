@@ -268,16 +268,16 @@ class Frame(object):
         screen_w = gtk.gdk.screen_width()
 
         self._move_panel(self._top_panel, self._current_position,
-                         0, - style.GRID_CELL_SIZE, 0, 0)
+                         0, - self._top_panel.size, 0, 0)
 
         self._move_panel(self._bottom_panel, self._current_position,
-                         0, screen_h, 0, screen_h - style.GRID_CELL_SIZE)
+                         0, screen_h, 0, screen_h - self._bottom_panel.size)
 
         self._move_panel(self._left_panel, self._current_position,
-                         - style.GRID_CELL_SIZE, 0, 0, 0)
+                         - self._left_panel.size, 0, 0, 0)
 
         self._move_panel(self._right_panel, self._current_position,
-                         screen_w, 0, screen_w - style.GRID_CELL_SIZE, 0)
+                         screen_w, 0, screen_w - self._right_panel.size, 0)
 
     def _hide_completed_cb(self, animator):
         self.mode = MODE_NONE
