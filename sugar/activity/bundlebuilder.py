@@ -21,6 +21,7 @@ import zipfile
 import shutil
 import subprocess
 import re
+import gettext
 
 from sugar import env
 from sugar.activity.bundle import Bundle
@@ -157,14 +158,23 @@ def _get_po_list(manifest):
 
     return file_list
 
-def _get_mo_list(manifest):
-    mo_list = []
+def _get_l10n_list(manifest):
+    l10n_list = []
 
     for lang in _get_po_list(manifest).keys():
         filename = _get_service_name() + '.mo'
-        mo_list.append(os.path.join('locale', lang, 'LC_MESSAGES', filename))
+        l10n_list.append(os.path.join('locale', lang, 'LC_MESSAGES', filename))
+        l10n_list.append(os.path.join('locale', lang, 'activity.linfo'))
 
-    return mo_list
+    return l10n_list
+
+def _get_activity_name():
+    info_path = os.path.join(_get_source_path(), 'activity', 'activity.info')
+    f = open(info_path,'r')
+    info = f.read()
+    f.close()
+    match = re.search('^name\s*=\s*(.*)$', info, flags = re.MULTILINE)
+    return match.group(1)
 
 def cmd_dist(bundle_name, manifest):
     cmd_genmo(bundle_name, manifest)
@@ -177,7 +187,7 @@ def cmd_dist(bundle_name, manifest):
     for filename in file_list:
         bundle_zip.write(filename, os.path.join(base_dir, filename))
 
-    for filename in _get_mo_list(manifest):
+    for filename in _get_l10n_list(manifest):
         bundle_zip.write(filename, os.path.join(base_dir, filename))
 
     bundle_zip.close()
@@ -205,8 +215,21 @@ def cmd_genpot(bundle_name, manifest):
         if file_name.endswith('.py'):
             python_files.append(file_name)
 
+    # First write out a stub .pot file containing just the translated
+    # activity name, then have xgettext merge the rest of the
+    # translations into that. (We can't just append the activity name
+    # to the end of the .pot file afterwards, because that might
+    # create a duplicate msgid.)
     pot_file = os.path.join('po', '%s.pot' % bundle_name)
-    args = [ 'xgettext', '--language=Python',
+    activity_name = _get_activity_name()
+    escaped_name = re.sub('([\\\\"])', '\\\\\\1', activity_name)
+    f = open(pot_file, 'w')
+    f.write('#: activity/activity.info:2\n')
+    f.write('msgid "%s"\n' % escaped_name)
+    f.write('msgstr ""\n')
+    f.close()
+
+    args = [ 'xgettext', '--join-existing', '--language=Python',
              '--keyword=_', '--output=%s' % pot_file ]
 
     args += python_files
@@ -222,12 +245,14 @@ def cmd_genpot(bundle_name, manifest):
 
 def cmd_genmo(bundle_name, manifest):
     source_path = _get_source_path()
+    activity_name = _get_activity_name()
 
     po_list = _get_po_list(manifest)
     for lang in po_list.keys():
         file_name = po_list[lang]
 
-        mo_path = os.path.join(source_path, 'locale', lang, 'LC_MESSAGES')
+        localedir = os.path.join(source_path, 'locale', lang)
+        mo_path = os.path.join(localedir, 'LC_MESSAGES')
         if not os.path.isdir(mo_path):
             os.makedirs(mo_path)
 
@@ -236,6 +261,13 @@ def cmd_genmo(bundle_name, manifest):
         retcode = subprocess.call(args)
         if retcode:
             print 'ERROR - msgfmt failed with return code %i.' % retcode
+
+        cat = gettext.GNUTranslations(open(mo_file, 'r'))
+        translated_name = cat.gettext(activity_name)
+        linfo_file = os.path.join(localedir, 'activity.linfo')
+        f = open(linfo_file, 'w')
+        f.write('[Activity]\nname = %s\n' % translated_name)
+        f.close()
 
 def cmd_release(bundle_name, manifest):
     if not os.path.isdir('.git'):

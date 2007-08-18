@@ -1,3 +1,4 @@
+* #2297: Make activity name translatable. (danw)
 * #2695: Recognize text files as such. (tomeu)
 * #2669: Add a border to the inner of the frame. (marco)
 * #2703: Update macedonian translation. (ArangelAngov)
