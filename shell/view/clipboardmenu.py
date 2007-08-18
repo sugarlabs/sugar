@@ -163,19 +163,22 @@ class ClipboardMenu(Palette):
             return
         jobject = self._copy_to_journal()
         jobject.resume(self._activities[0])
+        jobject.destroy()
 
     def _open_submenu_item_activate_cb(self, menu_item, service_name):
         if self._percent < 100:
             return
         jobject = self._copy_to_journal()
         jobject.resume(service_name)
+        jobject.destroy()
 
     def _remove_item_activate_cb(self, menu_item):
         cb_service = clipboardservice.get_instance()
         cb_service.delete_object(self._object_id)
 
     def _journal_item_activate_cb(self, menu_item):
-        self._copy_to_journal()
+        jobject = self._copy_to_journal()
+        jobject.destroy()
 
     def _copy_to_journal(self):
         cb_service = clipboardservice.get_instance()
