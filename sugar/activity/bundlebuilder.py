@@ -118,7 +118,7 @@ setup.py dist                - create a bundle package \n\
 setup.py install   [dirname] - install the bundle \n\
 setup.py uninstall [dirname] - uninstall the bundle \n\
 setup.py genpot              - generate the gettext pot file \n\
-setup.py genmo               - compile gettext po files in mo \n\
+setup.py genl10n             - generate localization files \n\
 setup.py clean               - clean the directory \n\
 setup.py release             - do a new release of the bundle \n\
 setup.py help                - print this message \n\
@@ -177,7 +177,7 @@ def _get_activity_name():
     return match.group(1)
 
 def cmd_dist(bundle_name, manifest):
-    cmd_genmo(bundle_name, manifest)
+    cmd_genl10n(bundle_name, manifest)
     file_list = _get_file_list(manifest)
 
     zipname = _get_package_name(bundle_name)
@@ -243,7 +243,7 @@ def cmd_genpot(bundle_name, manifest):
         if retcode:
             print 'ERROR - msgmerge failed with return code %i.' % retcode    
 
-def cmd_genmo(bundle_name, manifest):
+def cmd_genl10n(bundle_name, manifest):
     source_path = _get_source_path()
     activity_name = _get_activity_name()
 
@@ -390,8 +390,8 @@ def start(bundle_name, manifest='MANIFEST'):
         cmd_uninstall(sys.argv[2])
     elif sys.argv[1] == 'genpot':
         cmd_genpot(bundle_name, manifest)
-    elif sys.argv[1] == 'genmo':
-        cmd_genmo(bundle_name, manifest)
+    elif sys.argv[1] == 'genl10n':
+        cmd_genl10n(bundle_name, manifest)
     elif sys.argv[1] == 'clean':
         cmd_clean()
     elif sys.argv[1] == 'release':
