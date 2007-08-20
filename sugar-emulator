@@ -96,7 +96,7 @@ def _start_matchbox():
     cmd = ['matchbox-window-manager']
 
     cmd.extend(['-use_titlebar', 'no'])
-    cmd.extend(['-theme', 'olpc'])
+    cmd.extend(['-theme', 'sugar'])
 
     log.debug( 'Matchbox command: %s', " ".join( cmd) )
     gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
@@ -150,14 +150,19 @@ def main():
     os.environ['GTK2_RC_FILES'] = env.get_data_path(gtkrc_filename)
     print os.environ['GTK2_RC_FILES']
 
+    command = ['dbus-launch', 'dbus-launch', '--exit-with-session']
+
     if not args:
-        program = 'sugar-shell'
+        command.append('sugar-shell')
     else:
         _start_matchbox()
-        program = args[0]
+
+        if args[0].endswith('.py'):
+            command.append('python')
+
+        command.append(args[0])
     
-    command = ['dbus-launch', 'dbus-launch', '--exit-with-session', program]
-    log.info( "Attempting to launch sugar to replace this process: %s", " ".join(command) )
+    log.info( "Attempting to launch sugar to replace this process: %s", " ".join(command))
     os.execlp( *command )
 
 if __name__ == "__main__":
