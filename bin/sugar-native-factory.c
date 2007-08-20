@@ -29,6 +29,7 @@ THE SOFTWARE.
 #include <errno.h>
 #include <sys/wait.h>
 #include <dbus/dbus.h>
+#include <unistd.h>
 
 char* prog;
 
@@ -76,7 +77,7 @@ remove_pid(pid_t pid)
 {
   int i;
   for (i=0; i<pidc; i++) 
-    if (pidv[i]=pid)
+    if (pidv[i]==pid)
       break;
   if (i==pidc)
     {
@@ -293,7 +294,7 @@ int main(int argc, char **argv)
     }
   if (result != DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER)
     {
-      fprintf(stderr, "%: could not become primary owner of %s\n", prog, service);
+      fprintf(stderr, "%s: could not become primary owner of %s\n", prog, service);
       exit(1);
    }
   
@@ -304,4 +305,6 @@ int main(int argc, char **argv)
 
   while (dbus_connection_read_write_dispatch(connection, -1))
      ;
+
+  _exit(0);
 }
