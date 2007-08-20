@@ -1,3 +1,5 @@
+Snapshot e83b98a8f6
+
 * #2912: Improvements to GlibURLDownloader API (dcbw)
 * #2299: Really fix buddy properties coming through as arrays of bytes (dcbw)
 
