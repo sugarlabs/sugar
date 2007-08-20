@@ -81,7 +81,7 @@ def check_gabble(bus_name):
         pass
     return False
 
-def main()
+def main():
     _save_session_info()
     _start_matchbox()
     _setup_translations()
