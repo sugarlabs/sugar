@@ -39,6 +39,7 @@ class Group(gobject.GObject):
         gobject.GObject.__init__(self)
         self._up = False
         self._palettes = []
+        self._sig_ids = {}
 
     def is_up(self):
         return self._up
@@ -46,15 +47,18 @@ class Group(gobject.GObject):
     def add(self, palette):
         self._palettes.append(palette)
 
+        self._sig_ids[palette] = []
+
         sid = palette.connect('popup', self._palette_popup_cb)
-        palette.popup_sid = sid
+        self._sig_ids[palette].append(sid)
 
         sid = palette.connect('popdown', self._palette_popdown_cb)
-        palette.podown_sid = sid
+        self._sig_ids[palette].append(sid)
 
     def remove(self, palette):
-        self.disconnect(palette.popup_sid)
-        self.disconnect(palette.popdown_sid)
+        sig_ids = self._sig_ids[palette]
+        for sid in sig_ids:
+            palette.disconnect(sid)
 
         self._palettes.remove(palette)
 

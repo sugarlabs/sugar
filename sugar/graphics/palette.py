@@ -159,6 +159,7 @@ class Palette(gtk.Window):
                      self._leave_notify_event_cb)
 
         self.set_primary_text(label, accel_path)
+        self.set_group_id('default')
 
     def is_up(self):
         return self._up
