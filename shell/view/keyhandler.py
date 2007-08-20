@@ -224,4 +224,4 @@ class KeyHandler(object):
         proxy = bus.get_object('org.laptop.sugar.Console',
                                '/org/laptop/sugar/Console')
         console = dbus.Interface(proxy, 'org.laptop.sugar.Console')
-        console.toggle_visibility()
+        console.ToggleVisibility()
