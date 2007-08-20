@@ -194,6 +194,7 @@ class Palette(gtk.Window):
             group = palettegroup.get_group(self._group_id)
             group.remove(self)
         if group_id:
+            self._group_id = group_id
             group = palettegroup.get_group(group_id)
             group.add(self)
 
@@ -412,16 +413,21 @@ class Palette(gtk.Window):
         self._up = False
         self.emit('popdown')
 
-    def popup(self):
+    def popup(self, immediate=False):
         self._popdown_anim.stop()
-        self._popup_anim.start()
+
+        if not immediate:
+            self._popup_anim.start()
+        else:
+            self._show()
+
         self._secondary_anim.start()
 
-    def popdown(self, inmediate=False):
+    def popdown(self, immediate=False):
         self._secondary_anim.stop()
         self._popup_anim.stop()
 
-        if not inmediate:
+        if not immediate:
             self._popdown_anim.start()
         else:
             self._hide()
@@ -440,7 +446,15 @@ class Palette(gtk.Window):
         self._state = state
 
     def _invoker_mouse_enter_cb(self, invoker):
-        self.popup()
+        immediate = False
+        if self._group_id:
+            group = palettegroup.get_group(self._group_id)
+            if group and group.is_up():
+                immediate = True
+                group.popdown()
+
+        print immediate
+        self.popup(immediate=immediate)
 
     def _invoker_mouse_leave_cb(self, invoker):
         self.popdown()
