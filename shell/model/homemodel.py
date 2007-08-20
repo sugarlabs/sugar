@@ -107,15 +107,15 @@ class HomeModel(gobject.GObject):
         if self._active_activity:
             service = self._active_activity.get_service()
             if service:
-                service.set_active(False,
-                                   reply_handler=self._set_active_success,
-                                   error_handler=self._set_active_error)
+                service.SetActive(False,
+                                  reply_handler=self._set_active_success,
+                                  error_handler=self._set_active_error)
         if home_activity:
             service = home_activity.get_service()
             if service:
-                service.set_active(True,
-                                   reply_handler=self._set_active_success,
-                                   error_handler=self._set_active_error)
+                service.SetActive(True,
+                                  reply_handler=self._set_active_success,
+                                  error_handler=self._set_active_error)
 
         self._active_activity = home_activity
         self.emit('active-activity-changed', self._active_activity)
