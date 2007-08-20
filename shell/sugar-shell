@@ -53,8 +53,8 @@ def _save_session_info():
     #
     # WARNING!!! this is going away at some near future point, do not rely on it
     #
-    dsba_file = os.path.join(env.get_profile_path(), "session.info")
-    f = open(dsba_file, "w")
+    session_info_file = os.path.join(env.get_profile_path(), "session.info")
+    f = open(session_info_file, "w")
 
     cp = ConfigParser()
     cp.add_section('Session')
@@ -118,7 +118,7 @@ def main():
     shell = Shell(model)
     service = ShellService(shell)
 
-if name == '__main__':
+if __name__ == '__main__':
     # running the gtk.main outside of the main() function allows us to 
     # profile startup times.  To profile startup times replace the following
     # call to main with:
@@ -132,4 +132,6 @@ if name == '__main__':
     except KeyboardInterrupt:
         print 'Ctrl+C pressed, exiting...'
 
-    os.remove(dsba_file)
+    session_info_file = os.path.join(env.get_profile_path(), "session.info")
+    os.remove(session_info_file)
+
