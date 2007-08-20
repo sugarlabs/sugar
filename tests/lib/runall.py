@@ -1,4 +1,4 @@
-# Copyright (C) 2007, Eduardo Silva <edsiper@gmail.com>
+# Copyright (C) 2007, Red Hat, Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -15,24 +15,16 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-import gtk
+import unittest
 
-from sugar.graphics import style
-from sugar.graphics.palette import Palette
-from sugar.graphics.palette import CanvasInvoker
+import test_date
+import test_mime
 
-class FrameCanvasInvoker(CanvasInvoker):
-    def __init__(self, item):
-        CanvasInvoker.__init__(self, item)
+runner = unittest.TextTestRunner()
+loader = unittest.TestLoader()
 
-    def get_default_position(self):
-        return Palette.AROUND
+suite = unittest.TestSuite()
+suite.addTest(loader.loadTestsFromModule(test_date))
+suite.addTest(loader.loadTestsFromModule(test_mime))
 
-    def get_screen_area(self):
-        frame_thickness = style.GRID_CELL_SIZE
-
-        x = y = frame_thickness
-        width = gtk.gdk.screen_width() - frame_thickness
-        height = gtk.gdk.screen_height() - frame_thickness
-
-        return gtk.gdk.Rectangle(x, y, width, height)
+runner.run(suite)

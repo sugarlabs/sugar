@@ -63,6 +63,11 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
         devices_model.connect('device-disappeared',
                               self._device_disappeared_cb)
 
+        self._redraw_id = None
+
+    def __del__(self):
+        self.suspend()
+
     def _add_device(self, device):
         view = deviceview.create(device)
         self.append(view, hippo.PACK_FIXED)
@@ -103,6 +108,23 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
 
             i += 1
                   
+    _REDRAW_TIMEOUT = 5 * 60 * 1000 # 5 minutes
+
+    def resume(self):
+        self._redraw_activity_ring()
+        if self._redraw_id is None:
+            self._redraw_id = gobject.timeout_add(self._REDRAW_TIMEOUT,
+                                                  self._redraw_activity_ring)
+
+    def suspend(self):
+        if self._redraw_id is not None:
+            gobject.source_remove(self._redraw_id)
+            self._redraw_id = None
+
+    def _redraw_activity_ring(self):
+        self._donut.emit_request_changed()
+        return True
+
     def has_activities(self):
         return self._donut.has_activities()
 

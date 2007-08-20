@@ -75,7 +75,7 @@ class ClipboardBox(hippo.CanvasBox):
         return self._owns_clipboard
 
     def _get_icon_at_coords(self, x, y):
-        box_x, box_y = self.get_context().get_position(self)
+        box_x, box_y = self.get_context().translate_to_widget(self)
         x -= box_x
         y -= box_y
         for object_id, icon in self._icons.iteritems():
@@ -92,7 +92,7 @@ class ClipboardBox(hippo.CanvasBox):
         if not selection.data:
             return
 
-        logging.debug('ClipboardBox: adding type ' + selection.type + ' ' + selection.data)
+        logging.debug('ClipboardBox: adding type ' + selection.type)
 
         cb_service = clipboardservice.get_instance()
         if selection.type == 'text/uri-list':

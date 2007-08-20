@@ -105,11 +105,7 @@ def _get_logs_dir():
 def start(module_id):
     # Only log if logging is set up for the activity
     module_key = module_id.upper() + "_DEBUG"
-    emulator = False
-    if os.environ.has_key("SUGAR_EMULATOR"):
-        if os.environ["SUGAR_EMULATOR"] == "yes":
-            emulator = True
-    if not os.environ.has_key(module_key) and not emulator:
+    if not os.environ.has_key(module_key) and not env.is_emulator():
         return
 
     log_writer = LogWriter(module_id)

@@ -28,7 +28,7 @@ from sugar._sugaruiext import KeyGrabber
 
 _BRIGHTNESS_STEP = 2
 _VOLUME_STEP = 10
-_BRIGTHNESS_MAX = 15
+_BRIGHTNESS_MAX = 15
 _VOLUME_MAX = 100
 
 _actions_table = {
@@ -224,4 +224,4 @@ class KeyHandler(object):
         proxy = bus.get_object('org.laptop.sugar.Console',
                                '/org/laptop/sugar/Console')
         console = dbus.Interface(proxy, 'org.laptop.sugar.Console')
-        console.toggle_visibility()
+        console.ToggleVisibility()

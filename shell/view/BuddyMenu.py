@@ -80,10 +80,10 @@ class BuddyMenu(Palette):
 
         friends = shell_model.get_friends()
         if friends.has_buddy(self._buddy):
-            menu_item = MenuItem(_('Remove friend'), 'stock-remove')
+            menu_item = MenuItem(_('Remove friend'), 'list-remove')
             menu_item.connect('activate', self._remove_friend_cb)
         else:
-            menu_item = MenuItem(_('Make friend'), 'stock-add')
+            menu_item = MenuItem(_('Make friend'), 'list-add')
             menu_item.connect('activate', self._make_friend_cb)
 
         self.menu.append(menu_item)

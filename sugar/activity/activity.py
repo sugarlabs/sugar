@@ -52,6 +52,8 @@ class ActivityToolbar(gtk.Toolbar):
         self._activity = activity
         activity.connect('shared', self._activity_shared_cb)
         activity.connect('joined', self._activity_shared_cb)
+        activity.connect('notify::max_participants',
+                         self._max_participants_changed_cb)
 
         if activity.metadata:
             self.title = gtk.Entry()
@@ -74,10 +76,10 @@ class ActivityToolbar(gtk.Toolbar):
                                      'theme:zoom-home-mini')
         self.share.combo.append_item(None, _('My Neighborhood'),
                                      'theme:zoom-neighborhood-mini')
-        self._update_share()
-
         self.insert(self.share, -1)
         self.share.show()
+
+        self._update_share()
 
         self.keep = ToolButton('document-save')
         self.keep.set_tooltip(_('Keep'))
@@ -94,6 +96,9 @@ class ActivityToolbar(gtk.Toolbar):
         self._update_title_sid = None
 
     def _update_share(self):
+        if self._activity.props.max_participants == 1:
+            self.share.hide()
+
         if self._activity.get_shared():
             self.share.set_sensitive(False)
             self.share.combo.set_active(self.SHARE_NEIGHBORHOOD)
@@ -137,6 +142,9 @@ class ActivityToolbar(gtk.Toolbar):
         tool_item.show()
 
     def _activity_shared_cb(self, activity):
+        self._update_share()
+
+    def _max_participants_changed_cb(self, activity, pspec):
         self._update_share()
 
 class EditToolbar(gtk.Toolbar):
@@ -185,7 +193,10 @@ class Activity(Window, gtk.Container):
     }
 
     __gproperties__ = {
-        'active': (bool, None, None, False, gobject.PARAM_READWRITE)
+        'active'          : (bool, None, None, False,
+                             gobject.PARAM_READWRITE),
+        'max-participants': (int, None, None, 0, 1000, 0,
+                             gobject.PARAM_READWRITE)
     }
 
     def __init__(self, handle, create_jobject=True):
@@ -235,6 +246,7 @@ class Activity(Window, gtk.Container):
         self._preview = None
         self._updating_jobject = False
         self._closing = False
+        self._max_participants = 0
 
         shared_activity = handle.get_shared_activity()
         if shared_activity:
@@ -280,10 +292,14 @@ class Activity(Window, gtk.Container):
                 self._active = value
                 if not self._active and self._jobject:
                     self.save()
+        elif pspec.name == 'max-participants':
+            self._max_participants = value
 
     def do_get_property(self, pspec):
         if pspec.name == 'active':
             return self._active
+        elif pspec.name == 'max-participants':
+            return self._max_participants
 
     def get_id(self):
         return self._activity_id

@@ -22,7 +22,7 @@ class MenuItem(gtk.ImageMenuItem):
     def __init__(self, text_label, icon_name=None):
         gtk.ImageMenuItem.__init__(self, text_label)
         if icon_name:
-            icon = Icon(icon_name, gtk.ICON_SIZE_MENU)
+            icon = Icon(icon_name, icon_size=gtk.ICON_SIZE_MENU)
             self.set_image(icon)
             icon.show()
 

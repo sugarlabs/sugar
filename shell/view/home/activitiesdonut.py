@@ -16,6 +16,7 @@
 
 import colorsys
 from gettext import gettext as _
+import logging
 import math
 
 import hippo
@@ -317,10 +318,12 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
                              'expected format' % pid)
 
         # Next, see how much free memory is left.
+        free_memory = 0
         try:
             meminfo = open('/proc/meminfo')
-            meminfo.readline()
-            free_memory = int(meminfo.readline()[9:-3])
+            for line in meminfo.readlines():
+                if line.startswith('MemFree:') or line.startswith('SwapFree:'):
+                    free_memory += int(line[9:-3])
             meminfo.close()
         except IOError:
             logging.warn('ActivitiesDonut: could not read /proc/meminfo')

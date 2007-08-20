@@ -10,6 +10,8 @@ libsugarui_la_SOURCES =			\
 	$(BUILT_SOURCES)		\
 	eggaccelerators.c		\
 	eggaccelerators.h		\
+	sexy-icon-entry.h		\
+	sexy-icon-entry.c		\
 	sugar-address-entry.c		\
 	sugar-address-entry.h		\
 	sugar-key-grabber.c		\

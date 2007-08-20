@@ -1,4 +1,5 @@
 # Copyright (C) 2006-2007, Red Hat, Inc.
+# Copyright (C) 2007, One Laptop Per Child
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -20,7 +21,13 @@ import logging
 from sugar import _sugarext
 
 def get_for_file(file_name):
-    return _sugarext.get_mime_type_for_file(file_name)
+    mime_type = _sugarext.get_mime_type_for_file(file_name)
+    if mime_type == 'application/octet-stream':
+        if _file_looks_like_text(file_name):
+            return 'text/plain'
+        else:
+            return 'application/octet-stream'
+    return mime_type
         
 def get_from_file_name(file_name):
     return _sugarext.get_mime_type_from_file_name(file_name)
@@ -51,12 +58,8 @@ def choose_most_significant(mime_types):
     if 'text/uri-list' in mime_types:
         return 'text/uri-list'
 
-    for mime_category in ['image/', 'text/', 'application/']:
+    for mime_category in ['image/', 'application/']:
         for mime_type in mime_types:
-
-            # skip text/plain and text/html, these have lower priority.
-            if mime_type in ['text/plain', 'text/html']:
-                continue
 
             if mime_type.startswith(mime_category):
                 # skip mozilla private types (second component starts with '_'
@@ -70,6 +73,10 @@ def choose_most_significant(mime_types):
                 logging.debug('Choosed %r!' % mime_type)
                 return mime_type
 
+    if 'text/x-moz-url' in mime_types:
+        logging.debug('Choosed text/x-moz-url!')
+        return 'text/x-moz-url'
+
     if 'text/html' in mime_types:
         logging.debug('Choosed text/html!')
         return 'text/html'
@@ -80,3 +87,22 @@ def choose_most_significant(mime_types):
 
     logging.debug('Returning first: %r.' % mime_types[0])
     return mime_types[0]
+
+def _file_looks_like_text(file_name):
+    f = open(file_name, 'r')
+    try:
+        sample = f.read(256)
+    finally:
+        f.close()
+
+    if '\000' in sample:
+        return False
+
+    for encoding in ('ascii', 'latin_1', 'utf_8', 'utf_16'):
+        try:
+            string = unicode(sample, encoding)
+            return True
+        except Exception, e:
+            pass
+
+    return False

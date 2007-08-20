@@ -9,7 +9,7 @@ sugar_PYTHON =			\
 	combobox.py		\
 	icon.py			\
 	iconbutton.py          	\
-	menuitem.py		\
+	iconentry.py          	\
 	notebook.py		\
 	objectchooser.py	\
 	radiotoolbutton.py	\

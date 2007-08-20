@@ -22,7 +22,24 @@
   (gtype-id "SUGAR_TYPE_MENU")
 )
 
+(define-object IconEntry
+  (in-module "Sexy")
+  (parent "GtkEntry")
+  (c-name "SexyIconEntry")
+  (gtype-id "SEXY_TYPE_ICON_ENTRY")
+)
+
 ;; Enumerations and flags ...
+
+(define-enum IconEntryPosition
+  (in-module "Sexy")
+  (c-name "SexyIconEntryPosition")
+  (gtype-id "SEXY_TYPE_ICON_ENTRY_POSITION")
+  (values
+    '("primary" "SEXY_ICON_ENTRY_PRIMARY")
+    '("secondary" "SEXY_ICON_ENTRY_SECONDARY")
+  )
+)
 
 ;; From sugar-menu.h
 
@@ -94,3 +111,61 @@
     '("const-char*" "property")
   )
 )
+
+;; From sexy-icon-entry.h
+
+(define-function sexy_icon_entry_get_type
+  (c-name "sexy_icon_entry_get_type")
+  (return-type "GType")
+)
+
+(define-function sexy_icon_entry_new
+  (c-name "sexy_icon_entry_new")
+  (is-constructor-of "SexyIconEntry")
+  (return-type "GtkWidget*")
+)
+
+(define-method set_icon
+  (of-object "SexyIconEntry")
+  (c-name "sexy_icon_entry_set_icon")
+  (return-type "none")
+  (parameters
+    '("SexyIconEntryPosition" "position")
+    '("GtkImage*" "icon")
+  )
+)
+
+(define-method set_icon_highlight
+  (of-object "SexyIconEntry")
+  (c-name "sexy_icon_entry_set_icon_highlight")
+  (return-type "none")
+  (parameters
+    '("SexyIconEntryPosition" "position")
+    '("gboolean" "highlight")
+  )
+)
+
+(define-method get_icon
+  (of-object "SexyIconEntry")
+  (c-name "sexy_icon_entry_get_icon")
+  (return-type "GtkImage*")
+  (parameters
+    '("SexyIconEntryPosition" "position")
+  )
+)
+
+(define-method get_icon_highlight
+  (of-object "SexyIconEntry")
+  (c-name "sexy_icon_entry_get_icon_highlight")
+  (return-type "gboolean")
+  (parameters
+    '("SexyIconEntryPosition" "position")
+  )
+)
+
+(define-method add_clear_button
+  (of-object "SexyIconEntry")
+  (c-name "sexy_icon_entry_add_clear_button")
+  (return-type "none")
+)
+

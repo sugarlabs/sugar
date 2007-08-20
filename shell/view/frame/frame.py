@@ -208,11 +208,10 @@ class Frame(object):
                 self._right_panel.hover)
 
     def _create_top_panel(self):
-        panel = self._create_panel(hippo.ORIENTATION_HORIZONTAL)
-        root = panel.get_root()
+        panel = self._create_panel(gtk.POS_TOP)
 
         box = ZoomBox(self._shell)
-        root.append(box)
+        panel.append(box)
 
         #box = OverlayBox(self._shell)
         #root.append(box, hippo.PACK_END)
@@ -220,25 +219,23 @@ class Frame(object):
         return panel
 
     def _create_bottom_panel(self):
-        panel = self._create_panel(hippo.ORIENTATION_HORIZONTAL)
-        root = panel.get_root()
+        panel = self._create_panel(gtk.POS_BOTTOM)
 
         box = ActivitiesBox(self._shell)
-        root.append(box)
+        panel.append(box)
 
         return panel
 
     def _create_right_panel(self):
-        panel = self._create_panel(hippo.ORIENTATION_VERTICAL)
-        root = panel.get_root()
+        panel = self._create_panel(gtk.POS_RIGHT)
 
         box = FriendsBox(self._shell)
-        root.append(box)
+        panel.append(box)
 
         return panel
 
     def _create_left_panel(self):
-        panel = ClipboardPanelWindow(self, hippo.ORIENTATION_VERTICAL)
+        panel = ClipboardPanelWindow(self, gtk.POS_LEFT)
 
         self._connect_to_panel(panel)
         panel.connect('drag-motion', self._drag_motion_cb)
@@ -271,16 +268,16 @@ class Frame(object):
         screen_w = gtk.gdk.screen_width()
 
         self._move_panel(self._top_panel, self._current_position,
-                         0, - style.GRID_CELL_SIZE, 0, 0)
+                         0, - self._top_panel.size, 0, 0)
 
         self._move_panel(self._bottom_panel, self._current_position,
-                         0, screen_h, 0, screen_h - style.GRID_CELL_SIZE)
+                         0, screen_h, 0, screen_h - self._bottom_panel.size)
 
         self._move_panel(self._left_panel, self._current_position,
-                         - style.GRID_CELL_SIZE, 0, 0, 0)
+                         - self._left_panel.size, 0, 0, 0)
 
         self._move_panel(self._right_panel, self._current_position,
-                         screen_w, 0, screen_w - style.GRID_CELL_SIZE, 0)
+                         screen_w, 0, screen_w - self._right_panel.size, 0)
 
     def _hide_completed_cb(self, animator):
         self.mode = MODE_NONE

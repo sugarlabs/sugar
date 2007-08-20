@@ -65,16 +65,15 @@ class ClipboardObject:
         #return self._get_type_info().get_preview()
         return ''
 
-    def get_activity(self):
+    def get_activities(self):
         mime = self.get_mime_type()
         if not mime:
             return ''
 
         registry = bundleregistry.get_registry()
         activities = registry.get_activities_for_type(self.get_mime_type())
-        # TODO: should we return several activities?
         if activities:
-            return activities[0].get_service_name()
+            return [activity.get_service_name() for activity in activities]
         else:
             return ''
 
@@ -102,8 +101,11 @@ class ClipboardObject:
             if len(uris) == 1 or not uris[1]:
                 uri = urlparse.urlparse(uris[0], 'file')
                 if uri.scheme == 'file':
-                    logging.debug('Choosed %r!' % mime.get_for_file(uri.path))
-                    format = mime.get_for_file(uri.path)
+                    if os.path.exists(uri.path):
+                        format = mime.get_for_file(uri.path)
+                    else:
+                        format = mime.get_from_file_name(uri.path)                    
+                    logging.debug('Choosed %r!' % format)
 
         return format
 

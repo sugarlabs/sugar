@@ -21,12 +21,13 @@ import datetime
 
 class Date(object):
     """Date-object storing a simple time.time() float
-    
-    XXX not sure about the rationale for this class,
-    possibly it makes transfer over dbus easier?
+
+       Useful to display dates in the UI in an
+       abbreviated and easy to read format.
     """
     def __init__(self, timestamp):
         """Initialise via a timestamp (floating point value)"""
+        self._today = datetime.date.today()
         self._timestamp = timestamp
 
     def __str__(self):
@@ -39,14 +40,13 @@ class Date(object):
         the year in the date.
         """
         date = datetime.date.fromtimestamp(self._timestamp)
-        today = datetime.date.today()
 
         # FIXME localization
-        if date == today:
+        if date == self._today:
             result = 'Today'
-        elif date == today - datetime.timedelta(1):
+        elif date == self._today - datetime.timedelta(1):
             result = 'Yesterday'
-        elif date.year == today.year:
+        elif date.year == self._today.year:
             result = date.strftime('%B %d')
         else:
             result = date.strftime('%B %d, %Y')

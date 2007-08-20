@@ -16,22 +16,29 @@
 
 import hippo
 
+from sugar.graphics.palette import Palette
 from sugar.graphics.canvasicon import CanvasIcon
 from sugar.graphics import style
 from sugar.presence import presenceservice
+
 from view.BuddyIcon import BuddyIcon
 from model.BuddyModel import BuddyModel
+from view.frame.frameinvoker import FrameCanvasInvoker
 
 class FriendIcon(BuddyIcon):
     def __init__(self, shell, buddy):
         BuddyIcon.__init__(self, shell, buddy)
-        self.get_palette().set_group_id('frame')
+
+        palette = self.get_palette()
+        palette.set_group_id('frame')
+        palette.props.position = Palette.AROUND
+        palette.props.invoker = FrameCanvasInvoker(self)
 
     def prelight(self, enter):
         if enter:
             self.props.background_color = style.COLOR_BLACK.get_int()
         else:
-            self.props.background_color = style.COLOR_TOOLBAR.GREY.get_int()
+            self.props.background_color = style.COLOR_TOOLBAR_GREY.get_int()
 
 class FriendsBox(hippo.CanvasBox):
     def __init__(self, shell):

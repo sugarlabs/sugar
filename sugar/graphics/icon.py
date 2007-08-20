@@ -34,17 +34,18 @@ class Icon(gtk.Image):
                            gobject.PARAM_READWRITE)
     }
 
-    def __init__(self, name, size=gtk.ICON_SIZE_LARGE_TOOLBAR, **kwargs):
+    def __init__(self, name, **kwargs):
+        self._constructed = False
         self._fill_color = None
         self._stroke_color = None
         self._icon_name = name
-        self._size = size
         self._theme = gtk.icon_theme_get_default()
+        self._data = None
+
         gobject.GObject.__init__(self, **kwargs)
 
-        # If we have a non-styled-icon
-        if not self._fill_color and not self._stroke_color:
-            self._update_normal_icon()
+        self._constructed = True
+        self._update_icon()
 
     def _get_pixbuf(self, data, width, height):
          loader = gtk.gdk.PixbufLoader('svg')
@@ -77,9 +78,12 @@ class Icon(gtk.Image):
             source.set_state(gtk.STATE_INSENSITIVE)
             icon_set.add_source(source)
 
-        self.set_from_icon_set(icon_set, self._size)
+        self.props.icon_set = icon_set
 
     def _update_icon(self):
+        if not self._constructed:
+            return
+
         if not self._fill_color and not self._stroke_color:
             self._update_normal_icon()
             return
@@ -100,12 +104,12 @@ class Icon(gtk.Image):
         self._data = data
 
         # Redraw pixbuf
-        [w, h] = gtk.icon_size_lookup(self._size)
+        [w, h] = gtk.icon_size_lookup(self.props.icon_size)
         pixbuf = self._get_pixbuf(self._data, w, h)
         self.set_from_pixbuf(pixbuf)
 
     def _get_real_name(self, name):
-        info = self._theme.lookup_icon(name, self._size, 0)
+        info = self._theme.lookup_icon(name, self.props.icon_size, 0)
         if not info:
             raise ValueError("Icon '" + name + "' not found.")
         fname = info.get_filename()
@@ -122,9 +126,16 @@ class Icon(gtk.Image):
         elif pspec.name == 'stroke-color':
             self._stroke_color = value
             self._update_icon()
+        else:
+            gtk.Image.do_set_property(self, pspec, value)
+
+        if pspec.name == 'icon-size':
+            self._update_icon()
 
     def do_get_property(self, pspec):
         if pspec.name == 'fill-color':
             return self._fill_color
         elif pspec.name == 'stroke-color':
             return self._stroke_color
+        else:
+            return gtk.Image.do_get_property(self, pspec)

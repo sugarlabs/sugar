@@ -88,7 +88,7 @@ class ClipboardIcon(CanvasIcon):
         if icon_name:
             self.props.icon_name = icon_name
         else:
-            self.props.icon_name = 'theme:object-generic'
+            self.props.icon_name = 'theme:unknown-object'
 
         self._name = name
         self._percent = percent

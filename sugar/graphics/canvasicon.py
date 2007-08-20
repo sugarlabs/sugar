@@ -142,6 +142,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
                            gobject.PARAM_READWRITE),
         'size'          : (int, None, None, 0, 1024, 0,
                            gobject.PARAM_READWRITE),
+        'scale'         : (int, None, None, 0, 1024, 0,
+                           gobject.PARAM_READWRITE),
         'cache'         : (bool, None, None, False,
                            gobject.PARAM_READWRITE),
         'active'        : (bool, None, None, True,
@@ -156,6 +158,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         self._buffers = {}
         self._cur_buffer = None
         self._size = 0
+        self._scale = 0
         self._fill_color = None
         self._stroke_color = None
         self._icon_name = None
@@ -209,6 +212,11 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             if self._size != value and not self._cache:
                 self._clear_buffers()
             self._size = value
+            self.emit_request_changed()
+        elif pspec.name == 'scale':
+            if self._scale != value and not self._cache:
+                self._clear_buffers()
+            self._scale = value
             self.emit_request_changed()
         elif pspec.name == 'cache':
             self._cache = value
@@ -277,6 +285,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             return self._active
         elif pspec.name == 'badge-name':
             return self._badge_name
+        elif pspec.name == 'scale':
+            return self._scale
 
     def _get_icon_size(self, handle):
         if handle:
@@ -286,9 +296,11 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             return [0, 0]
 
     def _get_size(self, handle):
-        if self._size == 0:
-            width, height = self._get_icon_size(handle)
-        else:
+        width, height = self._get_icon_size(handle)
+        if self._scale != 0:
+            width = int(width * self._scale)
+            height = int(height * self._scale)
+        elif self._size != 0:
             width = height = self._size
 
         return [width, height]

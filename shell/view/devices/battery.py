@@ -21,7 +21,7 @@ from sugar.graphics import canvasicon
 from sugar.graphics import style
 from sugar.graphics.palette import Palette
 
-_ICON_NAME = 'device-battery'
+_ICON_NAME = 'battery'
 
 _STATUS_CHARGING = 0
 _STATUS_DISCHARGING = 1

@@ -56,6 +56,6 @@ class ActivityService(dbus.service.Object):
         self._activity = activity
 
     @dbus.service.method(_ACTIVITY_INTERFACE)
-    def set_active(self, active):
+    def SetActive(self, active):
         logging.debug('ActivityService.set_active: %s.' % active)
         self._activity.props.active = active

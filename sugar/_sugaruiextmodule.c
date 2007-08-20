@@ -27,6 +27,7 @@
 extern PyMethodDef py_sugaruiext_functions[];
 
 void py_sugaruiext_register_classes (PyObject *d);
+void py_sugaruiext_add_constants (PyObject *module, const gchar *strip_prefix);
 
 DL_EXPORT(void)
 init_sugaruiext(void)
@@ -39,6 +40,7 @@ init_sugaruiext(void)
     d = PyModule_GetDict (m);
 
     py_sugaruiext_register_classes (d);
+    py_sugaruiext_add_constants(m, "SEXY_");
 
     if (PyErr_Occurred ()) {
         Py_FatalError ("can't initialise module _sugaruiext");

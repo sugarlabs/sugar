@@ -120,6 +120,9 @@ class DSObject(object):
 
     def resume(self, service_name=None):
         if self.is_bundle():
+            if service_name is not None:
+                raise ValueError('Object is a bundle, cannot be resumed as an activity.')
+
             bundle = Bundle(self.file_path)
             if not bundle.is_installed():
                 bundle.install()

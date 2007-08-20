@@ -79,7 +79,7 @@ class Service(dbus.service.Object):
         self._console = Console()
  
     @dbus.service.method(CONSOLE_IFACE)
-    def toggle_visibility(self):
+    def ToggleVisibility(self):
         window = self._console.window
         if not window.props.visible:
             window.present()
