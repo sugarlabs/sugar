@@ -103,7 +103,7 @@ class Buddy(gobject.GObject):
     def _get_properties_helper(self):
         """Retrieve the Buddy's property dictionary from the service object
         """
-        props = self._buddy.GetProperties()
+        props = self._buddy.GetProperties(byte_arrays=True)
         if not props:
             return {}
         return props
