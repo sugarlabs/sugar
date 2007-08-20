@@ -176,6 +176,8 @@ class GlibURLDownloader(gobject.GObject):
         'finished': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                          ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
         'error':    (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                         ([gobject.TYPE_PYOBJECT])),
+        'progress': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                          ([gobject.TYPE_PYOBJECT]))
     }
 
@@ -189,16 +191,23 @@ class GlibURLDownloader(gobject.GObject):
         self._srcid = 0
         self._fname = None
         self._outf = None
+        self._written = 0
         gobject.GObject.__init__(self)
 
-    def start(self, destfile=None):
+    def start(self, destfile=None, destfd=None):
         self._info = urllib.urlopen(self._url)
         self._outf = None
         self._fname = None
+        if destfd and not destfile:
+            raise ValueError("Must provide destination file too when specifying file descriptor")
         if destfile:
             self._suggested_fname = os.path.basename(destfile)
             self._fname = os.path.abspath(os.path.expanduser(destfile))
-            self._outf = os.open(self._fname, os.O_RDWR | os.O_TRUNC | os.O_CREAT, 0644)
+            if destfd:
+                # Use the user-supplied destination file descriptor
+                self._outf = destfd
+            else:
+                self._outf = os.open(self._fname, os.O_RDWR | os.O_TRUNC | os.O_CREAT, 0644)
         else:
             self._suggested_fname = self._get_filename_from_headers(self._info.headers)
             garbage, path = urllib.splittype(self._url)
@@ -212,6 +221,11 @@ class GlibURLDownloader(gobject.GObject):
         self._srcid = gobject.io_add_watch(self._info.fp.fileno(),
                                            gobject.IO_IN | gobject.IO_ERR,
                                            self._read_next_chunk)
+
+    def cancel(self):
+        if self._srcid == 0:
+            raise RuntimeError("Download already canceled or stopped")
+        self.cleanup(remove=True)
 
     def _get_filename_from_headers(self, headers):
         if not headers.has_key("Content-Disposition"):
@@ -231,8 +245,7 @@ class GlibURLDownloader(gobject.GObject):
 
     def _read_next_chunk(self, source, condition):
         if condition & gobject.IO_ERR:
-            self.cleanup()
-            os.remove(self._fname)
+            self.cleanup(remove=True)
             self.emit("error", "Error downloading file.")
             return False
         elif not (condition & gobject.IO_IN):
@@ -242,27 +255,36 @@ class GlibURLDownloader(gobject.GObject):
         try:
             data = self._info.fp.read(self.CHUNK_SIZE)
             count = os.write(self._outf, data)
+            self._written += len(data)
+
+            # error writing data to file?
+            if count < len(data):
+                self.cleanup(remove=True)
+                self.emit("error", "Error writing to download file.")
+                return False
+
+            self.emit("progress", self._written)
+
+            # done?
             if len(data) < self.CHUNK_SIZE:
                 self.cleanup()
                 self.emit("finished", self._fname, self._suggested_fname)
                 return False
-            if count < len(data):
-                self.cleanup()
-                self.emit("error", "Error writing to download file.")
-                return False
         except Exception, err:
-            self.cleanup()
+            self.cleanup(remove=True)
             self.emit("error", "Error downloading file: %s" % err)
             return False
         return True
 
-    def cleanup(self):
+    def cleanup(self, remove=False):
         if self._srcid > 0:
             gobject.source_remove(self._srcid)
             self._srcid = 0
         del self._info
         self._info = None
         os.close(self._outf)
+        if remove:
+            os.remove(self._fname)
         self._outf = None
 
 
