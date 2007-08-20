@@ -1,3 +1,5 @@
+Snapshot b24a28a77d
+
 * #2012: Fix palette position on the left frame panel. (marco)
 * #2297: Make activity name translatable. (danw)
 * #2695: Recognize text files as such. (tomeu)
