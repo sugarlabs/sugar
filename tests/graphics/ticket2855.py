@@ -15,6 +15,12 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+"""
+Test the style of toggle and radio buttons inside a palette. The buttons
+contains only an icon and should be rendered similarly to the toolbar
+controls. Ticket #2855.
+"""
+
 import gtk
 
 from sugar.graphics.palette import Palette
