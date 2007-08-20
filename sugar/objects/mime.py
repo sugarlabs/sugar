@@ -58,12 +58,8 @@ def choose_most_significant(mime_types):
     if 'text/uri-list' in mime_types:
         return 'text/uri-list'
 
-    for mime_category in ['image/', 'text/', 'application/']:
+    for mime_category in ['image/', 'application/']:
         for mime_type in mime_types:
-
-            # skip text/plain and text/html, these have lower priority.
-            if mime_type in ['text/plain', 'text/html']:
-                continue
 
             if mime_type.startswith(mime_category):
                 # skip mozilla private types (second component starts with '_'
@@ -76,6 +72,10 @@ def choose_most_significant(mime_types):
                 mime_type = mime_type.split(';')[0]
                 logging.debug('Choosed %r!' % mime_type)
                 return mime_type
+
+    if 'text/x-moz-url' in mime_types:
+        logging.debug('Choosed text/x-moz-url!')
+        return 'text/x-moz-url'
 
     if 'text/html' in mime_types:
         logging.debug('Choosed text/html!')

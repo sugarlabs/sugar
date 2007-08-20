@@ -18,11 +18,13 @@
 import unittest
 
 import test_date
+import test_mime
 
 runner = unittest.TextTestRunner()
 loader = unittest.TestLoader()
 
 suite = unittest.TestSuite()
 suite.addTest(loader.loadTestsFromModule(test_date))
+suite.addTest(loader.loadTestsFromModule(test_mime))
 
 runner.run(suite)

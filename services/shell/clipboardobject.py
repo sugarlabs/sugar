@@ -101,8 +101,11 @@ class ClipboardObject:
             if len(uris) == 1 or not uris[1]:
                 uri = urlparse.urlparse(uris[0], 'file')
                 if uri.scheme == 'file':
-                    logging.debug('Choosed %r!' % mime.get_for_file(uri.path))
-                    format = mime.get_for_file(uri.path)
+                    if os.path.exists(uri.path):
+                        format = mime.get_for_file(uri.path)
+                    else:
+                        format = mime.get_from_file_name(uri.path)                    
+                    logging.debug('Choosed %r!' % format)
 
         return format
 
