@@ -24,13 +24,16 @@ from sugar.graphics.palette import Palette, WidgetInvoker
 class RadioToolButton(gtk.RadioToolButton):
     __gtype_name__ = "SugarRadioToolButton"
 
-    def __init__(self, named_icon=None, group=None):
+    def __init__(self, named_icon=None, group=None, xo_color=None):
         gtk.RadioToolButton.__init__(self, group=group)
         self._palette = None
+        self._xo_color = xo_color
         self.set_named_icon(named_icon)
 
     def set_named_icon(self, named_icon):
-        icon = Icon(named_icon)
+        icon = Icon(named_icon,
+                    xo_color=self._xo_color,
+                    icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
         self.set_icon_widget(icon)
         icon.show()
 
