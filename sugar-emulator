@@ -148,7 +148,6 @@ def main():
         os.environ['SUGAR_XO_STYLE'] = 'no'
     
     os.environ['GTK2_RC_FILES'] = env.get_data_path(gtkrc_filename)
-    print os.environ['GTK2_RC_FILES']
 
     command = ['dbus-launch', 'dbus-launch', '--exit-with-session']
 

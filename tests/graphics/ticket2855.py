@@ -15,9 +15,39 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+import gtk
+
+from sugar.graphics.palette import Palette
+from sugar.graphics.icon import Icon
+
 import common
 
 test = common.TestPalette()
+
+palette = Palette('Test radio and toggle')
+test.set_palette(palette)
+
+box = gtk.HBox()
+
+toggle = gtk.ToggleButton()
+
+icon = Icon('go-previous', icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
+toggle.set_image(icon)
+
+box.pack_start(toggle, False)
+toggle.show()
+
+radio = gtk.RadioButton()
+
+icon = Icon('go-next', icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
+radio.set_image(icon)
+
+radio.set_mode(False)
+box.pack_start(radio, False)
+radio.show()
+
+palette.set_content(box)
+box.show()
 
 if __name__ == "__main__":
     common.main(test)

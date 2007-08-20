@@ -29,12 +29,15 @@ class TestPalette(Test):
 
         toolbar = gtk.Toolbar()
 
-        button = ToolButton('stop')
-        toolbar.insert(button, -1)
-        button.show()
+        self._invoker = ToolButton('go-previous')
+        toolbar.insert(self._invoker, -1)
+        self._invoker.show()
 
         self.pack_start(toolbar, False)
         toolbar.show()
+
+    def set_palette(self, palette):
+        self._invoker.set_palette(palette)
 
 class TestRunner(object):
     def run(self, test):
