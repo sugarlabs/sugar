@@ -69,17 +69,6 @@ def _setup_translations():
     gettext.bindtextdomain(domain, env.get_locale_path())
     gettext.textdomain(domain)
 
-_save_session_info()
-_start_matchbox()
-_setup_translations()
-
-# Do initial setup if needed
-if not profile.is_valid():
-	win = intro.IntroWindow()
-	win.show_all()
-	gtk.main()
-	profile.update()
-
 def check_gabble(bus_name):
     try:
         import dbus
@@ -92,34 +81,55 @@ def check_gabble(bus_name):
         pass
     return False
 
-if os.environ.has_key("TP_DEBUG"):
-    # Allow the user time to start up telepathy connection managers
-    # using the Sugar DBus bus address
-    import time
-    from telepathy.client import ManagerRegistry
+def main()
+    _save_session_info()
+    _start_matchbox()
+    _setup_translations()
 
-    registry = ManagerRegistry()
-    registry.LoadManagers()
-    try:
-        gabble = registry.services["gabble"]
-    except KeyError:
-        raise RuntimeError("Gabble connection manager not found!")
+    # Do initial setup if needed
+    if not profile.is_valid():
+        win = intro.IntroWindow()
+        win.show_all()
+        gtk.main()
+        profile.update()
 
-    while not check_gabble(gabble['busname']):
-        print "Waiting for gabble on: DBUS_SESSION_BUS_ADDRESS=%s" % os.environ["DBUS_SESSION_BUS_ADDRESS"]
+    if os.environ.has_key("TP_DEBUG"):
+        # Allow the user time to start up telepathy connection managers
+        # using the Sugar DBus bus address
+        import time
+        from telepathy.client import ManagerRegistry
+
+        registry = ManagerRegistry()
+        registry.LoadManagers()
         try:
-            time.sleep(5)
-        except KeyboardInterrupt:
-            print "Got Ctrl+C, continuing..."
-            break
+            gabble = registry.services["gabble"]
+        except KeyError:
+            raise RuntimeError("Gabble connection manager not found!")
 
-model = ShellModel()
-shell = Shell(model)
-service = ShellService(shell)
+        while not check_gabble(gabble['busname']):
+            print "Waiting for gabble on: DBUS_SESSION_BUS_ADDRESS=%s" % os.environ["DBUS_SESSION_BUS_ADDRESS"]
+            try:
+                time.sleep(5)
+            except KeyboardInterrupt:
+                print "Got Ctrl+C, continuing..."
+                break
 
-try:
-	gtk.main()
-except KeyboardInterrupt:
-	print 'Ctrl+C pressed, exiting...'
+    model = ShellModel()
+    shell = Shell(model)
+    service = ShellService(shell)
 
-os.remove(dsba_file)
+if name == '__main__':
+    # running the gtk.main outside of the main() function allows us to 
+    # profile startup times.  To profile startup times replace the following
+    # call to main with:
+    # import cProfile
+    # cProfile.run('main()', '/home/olpc/sugar-startup.stats')
+
+    main()
+
+    try:
+        gtk.main()
+    except KeyboardInterrupt:
+        print 'Ctrl+C pressed, exiting...'
+
+    os.remove(dsba_file)
