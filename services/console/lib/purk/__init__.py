@@ -49,7 +49,8 @@ class Core(object):
         self.trigger = Trigger()
         self.events = self.trigger.events
         self.manager = widgets.UrkUITabs(self)
-    
+        self.channels = []
+
         mods = self.trigger.get_modules()
         for m in mods:
             m.core = self
@@ -79,6 +80,7 @@ class Client(object):
     def __init__(self):
         self.core = Core()
         self.widget = self.core.manager.box
+    
     def run_command(self, command):
         self.core.run_command(command)
 
@@ -92,3 +94,8 @@ class Client(object):
     def show(self):
         self.widget.show_all()
 
+    def add_channel(self, channel):
+        self.core.channels.append(channel)
+
+    def clear_channels(self):
+        self.core.channels = []

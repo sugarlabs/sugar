@@ -54,7 +54,7 @@ class Console(object):
         self._load_interface('memphis', 'Memphis')
         self._load_interface('logviewer', 'Log Viewer')
         self._load_interface('terminal', 'Terminal')
-    	self._load_interface('irc_client', 'IRC')
+    	self._load_interface('irc_client', 'IRC Client')
         self._load_interface('ps_watcher', 'Presence')
         
         main_hbox = gtk.HBox()

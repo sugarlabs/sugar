@@ -54,6 +54,7 @@ class Network(object):
     
     def __init__(self, core, server="irc.default.org", port=6667, nicks=[], 
                     username="", fullname="", name=None, **kwargs):
+        self.core = core
         self.manager = core.manager
         self.server = server
         self.port = port
@@ -131,7 +132,7 @@ class Network(object):
             self.disconnect(error=error[1])
             #we should immediately retry if we failed to open the socket and there are hosts left
             if self.status == DISCONNECTED and not self.failedlasthost:
-                windows.get_default(self).write("* Retrying with next available host")
+                windows.get_default(self, self.core.manager).write("* Retrying with next available host")
                 self.connect()
         else:
             self.source = source = ui.Source()
@@ -143,6 +144,10 @@ class Network(object):
             if source.enabled:
                 self.source = ui.fork(self.on_read, self.socket.recv, 8192)
         
+        # Auto join channels on connect
+        for channel in self.core.channels:
+            self.core.run_command("/join %s" % channel)
+
     #called when we read data or failed to read data
     def on_read(self, result, error):
         if error:
@@ -164,7 +169,7 @@ class Network(object):
             
             if source.enabled:
                 self.source = ui.fork(self.on_read, self.socket.recv, 8192)    
-    
+
     def raw(self, msg):
         self.events.trigger("OwnRaw", network=self, raw=msg)
         
