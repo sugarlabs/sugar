@@ -357,7 +357,11 @@ class PresenceService(gobject.GObject):
         return self._new_object(owner_op)
 
     def _share_activity_cb(self, activity, op):
-        """Notify with GObject event of successful sharing of activity"""
+        """Notify with GObject event of successful sharing of activity
+        
+        op -- full dbus path of the new object, must be
+            prefixed with either of _PS_BUDDY_OP or _PS_ACTIVITY_OP
+        """
         psact = self._new_object(op)
         psact._joined = True
         self.emit("activity-shared", True, psact, None)
