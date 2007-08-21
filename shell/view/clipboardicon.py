@@ -54,7 +54,7 @@ class ClipboardIcon(CanvasIcon):
 
         self.palette = ClipboardMenu(self._object_id, self._name, self._percent,
                                      self._preview, self._activity,
-                                     formats and formats[0] == 'application/vnd.olpc-x-sugar')
+                                     formats and formats[0] == 'application/vnd.olpc-sugar')
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'selected':
@@ -80,7 +80,7 @@ class ClipboardIcon(CanvasIcon):
     def set_state(self, name, percent, icon_name, preview, activity):
         cb_service = clipboardservice.get_instance()
         obj = cb_service.get_object(self._object_id)
-        if obj['FORMATS'] and obj['FORMATS'][0] == 'application/vnd.olpc-x-sugar':
+        if obj['FORMATS'] and obj['FORMATS'][0] == 'application/vnd.olpc-sugar':
             installable = True
         else:
             installable = False
@@ -88,7 +88,7 @@ class ClipboardIcon(CanvasIcon):
         if icon_name:
             self.props.icon_name = icon_name
         else:
-            self.props.icon_name = 'theme:unknown-object'
+            self.props.icon_name = 'theme:application-octet-stream'
 
         self._name = name
         self._percent = percent

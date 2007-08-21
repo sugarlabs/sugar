@@ -116,7 +116,8 @@ class DSObject(object):
         return activities
 
     def is_bundle(self):
-        return self.metadata['mime_type'] == 'application/vnd.olpc-x-sugar'
+        return self.metadata['mime_type'] in ['application/vnd.olpc-x-sugar',
+                                              'application/vnd.olpc-sugar']
 
     def resume(self, service_name=None):
         if self.is_bundle():
