@@ -189,6 +189,7 @@ class Interface:
         ext_files = []
         ext_files.append(xserver_logfile)
         ext_files.append("/var/log/syslog")
+        ext_files.append("/var/log/messages")
 
         viewer = MultiLogView(path, ext_files)
         self.widget = viewer.hbox
