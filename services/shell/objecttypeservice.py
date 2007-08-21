@@ -43,7 +43,7 @@ class ObjectTypeRegistry(dbus.service.Object):
                             ['audio/ogg'])
 
         self._add_primitive('Video', _('Video'), 'theme:video-x-generic',
-                            ['video/ogg'])
+                            ['video/ogg', 'application/ogg'])
 
         self._add_primitive('Etoys project', _('Etoys project'),
                             'theme:application-x-squeak-project',
