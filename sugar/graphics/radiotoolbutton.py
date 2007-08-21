@@ -45,7 +45,7 @@ class RadioToolButton(gtk.RadioToolButton):
         self._palette.props.invoker = WidgetInvoker(self.child)
 
     def set_tooltip(self, text):
-        self._set_palette(Palette(text))
+        self.set_palette(Palette(text))
 
     def do_expose_event(self, event):
         if self._palette and self._palette.is_up():
