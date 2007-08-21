@@ -101,7 +101,6 @@ class XO_CPU(gtk.Frame):
         gobject.timeout_add(self._DRW_CPU.frequency, self._update_cpu_usage)
 
     def _update_cpu_usage(self):
-        print "update XO CPU"
         self._cpu = self._DRW_CPU._get_CPU_usage()
         self.set_label('System CPU Usage: ' + str(self._cpu) + '%')
 
