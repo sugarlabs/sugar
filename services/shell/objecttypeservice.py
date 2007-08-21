@@ -30,15 +30,28 @@ class ObjectTypeRegistry(dbus.service.Object):
 
         self._types = {}
 
-        self._add_primitive('Text', _('Text'), 'theme:text',
-                            [ 'text/plain', 'text/rtf', 'application/pdf',
+        self._add_primitive('Text', _('Text'), 'theme:text-x-generic',
+                            ['text/plain', 'text/rtf', 'application/pdf',
                               'application/x-pdf', 'text/html',
                               'application/vnd.oasis.opendocument.text',
-                              'application/rtf', 'text/rtf' ])
-        self._add_primitive('Image', _('Image'), 'theme:image',
-                            [ 'image/png', 'image/gif', 'image/jpeg' ])
-        self._add_primitive('Audio', _('Audio'), 'theme:audio', [ 'audio/ogg' ])
-        self._add_primitive('Video', _('Video'), 'theme:video', [ 'video/ogg' ])
+                              'application/rtf', 'text/rtf'])
+
+        self._add_primitive('Image', _('Image'), 'theme:image-x-generic',
+                            ['image/png', 'image/gif', 'image/jpeg'])
+
+        self._add_primitive('Audio', _('Audio'), 'theme:audio-x-generic',
+                            ['audio/ogg'])
+
+        self._add_primitive('Video', _('Video'), 'theme:video-x-generic',
+                            ['video/ogg'])
+
+        self._add_primitive('Etoys project', _('Etoys project'),
+                            'theme:application-x-squeak-project',
+                            ['application/x-squeak-project'])
+
+        self._add_primitive('Link', _('Link'),
+                            'theme:text-uri-list',
+                            ['text/x-moz-url', 'text/uri-list'])
 
     def _add_primitive(self, type_id, name, icon, mime_types):
         object_type = {'type_id': type_id, 
@@ -51,6 +64,7 @@ class ObjectTypeRegistry(dbus.service.Object):
         for object_type in self._types.values():
             if mime_type in object_type['mime_types']:
                 return object_type
+        return None
 
     @dbus.service.method(_REGISTRY_IFACE,
                          in_signature="s", out_signature="a{sv}")
