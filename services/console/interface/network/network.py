@@ -17,7 +17,7 @@
 
 import gobject
 from net.device import Device
-from gui.treeview import TreeView
+from ui.treeview import TreeView
 
 class NetworkView(TreeView):
     def __init__(self):

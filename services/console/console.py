@@ -30,7 +30,7 @@ CONSOLE_BUS = 'org.laptop.sugar.Console'
 CONSOLE_PATH = '/org/laptop/sugar/Console'
 CONSOLE_IFACE = 'org.laptop.sugar.Console'
 
-class Console(object):
+class Console:
     
     def __init__(self):
         # Main Window
@@ -54,7 +54,6 @@ class Console(object):
         self._load_interface('memphis', 'Memphis')
         self._load_interface('logviewer', 'Log Viewer')
         self._load_interface('terminal', 'Terminal')
-    	self._load_interface('irc_client', 'IRC Client')
         self._load_interface('ps_watcher', 'Presence')
         
         main_hbox = gtk.HBox()
@@ -91,4 +90,5 @@ bus = dbus.SessionBus()
 name = dbus.service.BusName(CONSOLE_BUS, bus)
 
 obj = Service(name)
+
 gtk.main()
