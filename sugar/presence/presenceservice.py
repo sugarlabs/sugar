@@ -371,10 +371,14 @@ class PresenceService(gobject.GObject):
         _logger.debug("Error sharing activity %s: %s" % (activity.get_id(), err))
         self.emit("activity-shared", False, None, err)
 
-    def share_activity(self, activity, properties={}):
-        """Ask presence service to ask the activity to share itself
+    def share_activity(self, activity, private=True):
+        """Ask presence service to ask the activity to share itself publicly.
+
+        activity -- sugar.activity.activity.Activity instance
+        private -- bool: True to share by invitation only,
+            False to advertise as shared to everyone.
         
-        Uses the ShareActivity method on the service to ask for the 
+        Uses the AdvertiseActivity method on the service to ask for the 
         sharing of the given activity.  Arranges to emit activity-shared 
         event with:
         
@@ -395,7 +399,8 @@ class PresenceService(gobject.GObject):
 
         atype = activity.get_service_name()
         name = activity.props.title
-        self._ps.ShareActivity(actid, atype, name, properties,
+        # FIXME: Test, then make this AdvertiseActivity:
+        self._ps.ShareActivity(actid, atype, name, private,
                 reply_handler=lambda *args: self._share_activity_cb(activity, *args),
                 error_handler=lambda *args: self._share_activity_error_cb(activity, *args))
 
