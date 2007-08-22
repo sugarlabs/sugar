@@ -1,0 +1,186 @@
+urk 0.-1.cvs
+http://urk.sourceforge.net/
+
+
+Overview:
+
+urk is an IRC client written purely in python for linux/gnome. It has a powerful
+built-in scripting system (also python), which is used to implement much of the
+client.
+
+
+Requirements/User installation:
+
+urk requires the following packages (and should run on any os that can provide 
+them):
+-python version 2.4 or greater (www.python.org)
+-pygtk 2.6 or greater (www.pygtk.org)
+
+Most Linux (or at least GNOME) users should have these things already or be able
+to easily install them.
+
+Because urk is pure python, no compilation of urk is required. Just extract the 
+source to somewhere and run 'python urk.py'.
+
+Windows versions of the above should theoretically work but may not in practice.
+I am hoping someone will come along and actually support urk on windows.
+
+
+Optional requirements:
+
+urk can also make use of these packages if you have them:
+-pygtksourceview, part of gnome-python-extras <=2.12 and gnome-python-desktop 
+ >=2.14, for source highlighting and undo in the internal script editor
+-python-dbus, for, well, not much (if dbus is available, urk only makes a single
+ instance per session, and commands can be executed remotely by calling urk.py)
+
+
+Getting started:
+
+Make sure you have all the requirements, go to the directory where you have
+extracted the source, and type 'python urk.py'.
+
+We don't have any preferences windows yet. You can change your nickname by
+typing '/nick nickname' (replacing nickname with the nick you want to use)
+or typing a new nick in the nick field on the lower right corner and pressing 
+enter.
+
+To connect, type '/server irc.gamesurge.net' (replacing irc.gamesurge.net with 
+the server you want to connect to).
+
+If you want to connect to another server (without disconnecting the current
+one), use the -m switch as in '/server -m irc.gamesurge.net'.
+
+To join a channel when you're connected to a server, type '/join #channelname',
+replacing #channelname with the channel you want to join.
+
+urk currently only supports the bare minimum commands and features you should
+need to connect and chat normally. On channels, you can send messages by
+typing them (if you want to send a message that starts with a /, use /say to
+send your message). You can send actions to channels with /me and send messages
+to arbitrary targets with /msg. If urk does not recognize a command, it will
+send it to the server. This works to implement most commands you would expect
+on an irc client.
+
+
+Configuration:
+
+Most configuration has to be done manually. If urk is running, you can configure
+it using commands. The settings are stored in urk.conf on your profile
+directory, which you can locate by typing '/pyeval urk.userpath' in urk.
+
+To set a value in urk, type
+
+/pyexec conf.conf['setting'] = value
+
+To see the current value, type
+
+/pyeval conf.conf['setting']
+
+To unset a value (meaning urk will use the default), type
+
+/pyexec del conf.conf['setting']
+
+Setting:            Description:
+
+'nick'                 The nickname urk should use. The default is to try to get
+    it from the os. Put this in quotes when you set it.
+
+'altnicks'             A list of alternative nicknames to use. The default is
+    an empty list.
+
+'quitmsg'              The message people see when you quit. The default is to
+    advertise urk with your current version; we have to promote it somehow.
+    This value needs to be in quotes.
+
+'autoreconnect'        If True, urk will try to reconnect when you're
+    disconnected from a network. Defaults to True. Set this to True or False.
+
+'highlight_words'      A list of words, in addition to your nick, that cause a
+    highlight event (normally the tab label turns blue and, if it's available,
+    the tray icon shows up). For example: ['python', 'whale', 'peanut butter']
+
+'log_dir'              The place where logs are written. The default is a
+    directory called "logs" on your profile directory.
+
+'ui-gtk/tab-pos'       The side of the window where the tabs will reside
+    2 for top
+    0 for left
+    1 for right
+    3 for bottom (default)
+
+'ui-gtk/show-menubar'  If True, the menubar is shown. The default is True. Set
+    this to True or False.
+
+'command_prefix'       The prefix used to signal a command. Defaults to '/'
+
+'font'                 The font used for output. Defaults to "sans 8".
+
+'bg_color'             The background color ("black" or "#000000").
+
+'fg_color'             The foreground color ("white" or "#ffffff").
+
+'timestamp'            A timestamp that will show up before messages. The
+    default is no timestamp. A simple timestamp with hours and minutes is
+    "[%H:%M] ". See http://docs.python.org/lib/module-time.html#l2h-1955 for
+    a key to format this string.
+
+'start-console'        If True, urk will start up with a special console window
+    that shows debugging output (normally sent to a terminal) and accepts
+    python expressions. Defaults to False.
+
+'status'               If True, urk will be in status window mode. Each network
+    will ALWAYS have a status window. When not in status window mode, networks 
+    only have a status window when there are no channel windows. Defaults to 
+    False.
+
+'open-file-command'    The command used to open files and url's with your 
+    preferred application (such as "gnome-open"). This is ignored on Windows, 
+    and you should never need to mess with this, ever.
+
+
+System-wide installation:
+
+Not yet implemented.
+
+
+About scripting:
+
+urk scripts are python source files that contain definitions of functions with 
+certain "magic" names, like onText (for when someone sends a channel or private 
+message). See www.python.org for help on writing python code. The format for 
+onText is:
+
+def onText(e):
+    code
+
+e is an object used to pass on the various information relating to the event
+that triggered the function. The name is a convention we use, much like self.
+
+e.source is the nickname of the person who sent the message.
+
+e.target is the nickname or channel that received the message.
+
+e.text is the text of the message.
+
+e.network is an object representing the network where the message was sent.
+
+e.window is a window that seems to be related to the event for some unspecified
+reason. It could be the status window, a channel window, a query, anything.
+
+Complete documentation doesn't exist yet. Sorry. Ask us or look at the source. theme.py is good for finding event names.
+
+
+Bugs/Feedback:
+
+Naturally, feedback of any sort is welcome. Of course we want to know about
+bugs. In particular, we'd also like to hear about any features you want or
+expect in an irc client that urk doesn't have. While we'd like to limit the
+things that go in the default client (a notify list, for example, is something
+we'd want to see as an external script, not as part of the default setup, and
+something we're not likely to implement soon), there are probably a lot of 
+little things that we may have skipped over because we don't use them or have 
+become used to urk not having them.
+
+The best way to get in touch with us is by irc, at #urk on irc.gamesurge.net.
+Or send a message to the mailing list, urk-discussion@lists.sourceforge.net.

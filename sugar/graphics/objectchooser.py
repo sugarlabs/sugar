@@ -133,7 +133,7 @@ class CollapsedEntry(CanvasRoundBox):
         if self._icon_name:
             return self._icon_name
 
-        if self._is_bundle():
+        if self.jobject.is_bundle():
             bundle = Bundle(self.jobject.file_path)
             self._icon_name = bundle.get_icon()
 
@@ -158,9 +158,6 @@ class CollapsedEntry(CanvasRoundBox):
         """ Convert from a string in iso format to a more human-like format. """
         ti = time.strptime(self.jobject.metadata['mtime'], "%Y-%m-%dT%H:%M:%S")        
         return str(Date(time.mktime(ti)))
-
-    def _is_bundle(self):
-        return self.jobject.metadata['mime_type'] == 'application/vnd.olpc-x-sugar'
 
     def _format_title(self):
         return '"%s"' % self.jobject.metadata['title']

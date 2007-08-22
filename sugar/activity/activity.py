@@ -25,9 +25,11 @@ import logging
 import os
 import time
 import tempfile
+from hashlib import sha1
 
 import gtk, gobject
 import dbus
+import json
 
 from sugar import util        
 from sugar.presence import presenceservice
@@ -276,9 +278,15 @@ class Activity(Window, gtk.Container):
             self._jobject.metadata['activity'] = self.get_service_name()
             self._jobject.metadata['activity_id'] = self.get_id()
             self._jobject.metadata['keep'] = '0'
-            #self._jobject.metadata['buddies'] = ''
             self._jobject.metadata['preview'] = ''
-            self._jobject.metadata['icon-color'] = profile.get_color().to_string()
+
+            if self._shared_activity is not None:
+                icon_color = self._shared_activity.props.color
+            else:
+                icon_color = profile.get_color().to_string()
+
+            self._jobject.metadata['icon-color'] = icon_color
+
             self._jobject.file_path = ''
             datastore.write(self._jobject,
                     reply_handler=self._internal_jobject_create_cb,
@@ -394,7 +402,15 @@ class Activity(Window, gtk.Container):
         return base64.b64encode(preview_data)
 
     def _get_buddies(self):
-        return ''
+        if self._shared_activity is not None:
+            buddies = {}
+            for buddy in self._shared_activity.get_joined_buddies():
+                if not buddy.props.owner:
+                    buddy_id = sha1(buddy.props.key).hexdigest()
+                    buddies[buddy_id] = [buddy.props.nick, buddy.props.color]
+            return buddies
+        else:
+            return {}
 
     def save(self):
         """Request that the activity is saved to the Journal."""
@@ -402,11 +418,16 @@ class Activity(Window, gtk.Container):
         if self._updating_jobject:
             return
 
-        #self.metadata['buddies'] = self._get_buddies()
+        buddies_dict = self._get_buddies()
+        if buddies_dict:
+            self.metadata['buddies_id'] = json.write(buddies_dict.keys())
+            self.metadata['buddies'] = json.write(self._get_buddies())
+
         if self._preview is None:
             self.metadata['preview'] = ''
         else:
             self.metadata['preview'] = self._preview
+
         try:
             if self._jobject.file_path:
                 self.write_file(self._jobject.file_path)

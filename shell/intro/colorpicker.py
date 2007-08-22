@@ -26,7 +26,7 @@ class ColorPicker(hippo.CanvasBox, hippo.CanvasItem):
         self.props.orientation = hippo.ORIENTATION_HORIZONTAL
 
         self._xo = CanvasIcon(size=style.XLARGE_ICON_SIZE,
-                              icon_name='theme:xo')
+                              icon_name='theme:computer-xo')
         self._set_random_colors()
         self._xo.connect('activated', self._xo_activated_cb)
         self.append(self._xo)
