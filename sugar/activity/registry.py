@@ -49,8 +49,14 @@ class ActivityRegistry(gobject.GObject):
         gobject.GObject.__init__(self)
 
         bus = dbus.SessionBus()
+
+        # FIXME: Is follow_name_owner_changes what we really want?
+        #        It speeds up the start time by about 2 seconds
+        #        but is really a side effect of starting a proxy 
+        #        in this state (i.e. we don't block in the constructor)
         bus_object = bus.get_object(_ACTIVITY_REGISTRY_SERVICE_NAME,
-                                    _ACTIVITY_REGISTRY_PATH)
+                                    _ACTIVITY_REGISTRY_PATH,
+                                    follow_name_owner_changes = True)
         self._registry = dbus.Interface(bus_object, _ACTIVITY_REGISTRY_IFACE)
         self._registry.connect_to_signal('ActivityAdded', self._activity_added_cb)
 
