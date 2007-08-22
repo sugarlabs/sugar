@@ -454,7 +454,6 @@ class Palette(gtk.Window):
                 immediate = True
                 group.popdown()
 
-        print immediate
         self.popup(immediate=immediate)
 
     def _invoker_mouse_leave_cb(self, invoker):
