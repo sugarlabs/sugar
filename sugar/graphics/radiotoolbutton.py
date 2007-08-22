@@ -51,6 +51,14 @@ class RadioToolButton(gtk.RadioToolButton):
         if self._palette and self._palette.is_up():
             invoker = self._palette.props.invoker
             invoker.draw_rectangle(event, self._palette)
+        elif self.child.state == gtk.STATE_PRELIGHT:
+            self.child.style.paint_box(event.window, gtk.STATE_PRELIGHT,
+                                       gtk.SHADOW_NONE, event.area,
+                                       self.child, "toolbutton-prelight",
+                                       self.allocation.x,
+                                       self.allocation.y,
+                                       self.allocation.width,
+                                       self.allocation.height)
 
         gtk.RadioToolButton.do_expose_event(self, event)
     
