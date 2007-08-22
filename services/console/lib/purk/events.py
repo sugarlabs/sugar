@@ -192,11 +192,17 @@ def run(text, window, network):
     c_data.args = split
 
     event_name = "Command" + c_data.name.capitalize()
-
+    #print "searching: " + event_name
+    #for s in all_events:
+    #    print "match: " + s
+    #    if s == event_name:
+    #        print "we got it!"
+    
     if event_name in all_events:
         result = trigger(event_name, c_data)
         
         if result:
+            print "* /%s: %s" % (c_data.name, result[0])
             c_data.window.write("* /%s: %s" % (c_data.name, result[0]))
     else:
         trigger("Command", c_data)
