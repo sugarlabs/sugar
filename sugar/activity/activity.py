@@ -484,7 +484,7 @@ class Activity(Window, gtk.Container):
                       (verb, self._activity_id))
         self._share_id = self._pservice.connect("activity-shared", 
                                                 self._internal_share_cb)
-        self._pservice.share_activity(self, private)
+        self._pservice.share_activity(self, private=private)
 
     def _realize_cb(self, window):
         wm.set_bundle_id(window.window, self.get_service_name())
