@@ -104,6 +104,7 @@ class Palette(gtk.Window):
         self.set_resizable(False)
         self.connect('realize', self._realize_cb)
 
+        self._old_alloc = None
         self._full_request = [0, 0]
         self._cursor_x = 0
         self._cursor_y = 0
@@ -219,7 +220,20 @@ class Palette(gtk.Window):
 
     def do_size_allocate(self, allocation):
         gtk.Window.do_size_allocate(self, allocation)
-        self.queue_draw()
+
+        if self._old_alloc is None or \
+           self._old_alloc.x != allocation.x or \
+           self._old_alloc.y != allocation.y or \
+           self._old_alloc.width != allocation.width or \
+           self._old_alloc.height != allocation.height:
+            self.queue_draw()
+
+        # We need to store old allocation because when size_allocate
+        # is called widget.allocation is already updated.
+        # gtk.Window resizing is different from normal containers:
+        # the X window is resized, widget.allocation is updated from
+        # the configure request handler and finally size_allocate is called.
+        self._old_alloc = allocation
 
     def do_expose_event(self, event):
         # We want to draw a border with a beautiful gap
