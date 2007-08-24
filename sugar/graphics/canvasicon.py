@@ -29,12 +29,32 @@ from sugar.graphics.xocolor import XoColor
 from sugar.graphics import style
 from sugar.graphics.palette import Palette, CanvasInvoker
 
+_ICON_REQUEST_SIZE = 50
+_BADGE_SIZE = 0.45
+
 class _IconCacheIcon:
     def __init__(self, name, fill_color, stroke_color, now):
-        self.data_size = None
-        self.handle = self._read_icon_data(name, fill_color, stroke_color)
         self.last_used = now
         self.usage_count = 1
+        self.badge_x = 1.0 - _BADGE_SIZE / 2
+        self.badge_y = 1.0 - _BADGE_SIZE / 2
+
+        if name[0:6] == "theme:": 
+            info = gtk.icon_theme_get_default().lookup_icon(
+                name[6:], _ICON_REQUEST_SIZE, 0)
+            if not info:
+                raise ValueError("Icon '" + name + "' not found.")
+
+            fname = info.get_filename()
+            attach_points = info.get_attach_points()
+            if attach_points is not None:
+                self.badge_x = float(attach_points[0][0]) / _ICON_REQUEST_SIZE
+                self.badge_y = float(attach_points[0][1]) / _ICON_REQUEST_SIZE
+            del info
+        else:
+            fname = name
+
+        self.handle = self._read_icon_data(fname, fill_color, stroke_color)
 
     def _read_icon_data(self, filename, fill_color, stroke_color):
         icon_file = open(filename, 'r')
@@ -57,16 +77,7 @@ class _IconCache:
 
     def __init__(self):
         self._icons = {}
-        self._theme = gtk.icon_theme_get_default()
         self._cache_size = 0
-
-    def _get_real_name_from_theme(self, name):
-        info = self._theme.lookup_icon(name, 50, 0)
-        if not info:
-            raise ValueError("Icon '" + name + "' not found.")
-        fname = info.get_filename()
-        del info
-        return fname
 
     def _cache_cleanup(self, key, now):
         while self._cache_size > self._CACHE_MAX:
@@ -101,12 +112,9 @@ class _IconCache:
             self._cache_size -= self._icons[evict_key].data_size
             del self._icons[evict_key]
 
-    def get_handle(self, name, fill_color, stroke_color):
+    def get_icon(self, name, fill_color, stroke_color):
         if not name:
             return None
-
-        if name[0:6] == "theme:": 
-            name = self._get_real_name_from_theme(name[6:])
 
         if fill_color or stroke_color:
             key = (name, fill_color, stroke_color)
@@ -125,7 +133,7 @@ class _IconCache:
             icon = _IconCacheIcon(name, fill_color, stroke_color, now)
             self._icons[key] = icon
             self._cache_size += icon.data_size
-        return icon.handle
+        return icon
 
 
 class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
@@ -163,11 +171,11 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         self._stroke_color = None
         self._icon_name = None
         self._cache = False
-        self._handle = None
+        self._icon = None
         self._active = True
         self._palette = None
         self._badge_name = None
-        self._badge_handle = None
+        self._badge_icon = None
 
         hippo.CanvasBox.__init__(self, **kwargs)
         
@@ -189,7 +197,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             if self._icon_name != value and not self._cache:
                 self._clear_buffers()
             self._icon_name = value
-            self._handle = None
+            self._icon = None
             self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'xo-color':
             self.props.fill_color = style.Color(value.get_fill_color())
@@ -199,14 +207,16 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
                 if not self._cache:
                     self._clear_buffers()
                 self._fill_color = value
-                self._handle = None
+                self._icon = None
+                self._badge_icon = None
                 self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'stroke-color':
             if self._stroke_color != value:
                 if not self._cache:
                     self._clear_buffers()
                 self._stroke_color = value
-                self._handle = None
+                self._icon = None
+                self._badge_icon = None
                 self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'size':
             if self._size != value and not self._cache:
@@ -225,13 +235,13 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
                 if not self._cache:
                     self._clear_buffers()
                 self._active = value
-                self._handle = None
+                self._icon = None
                 self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'badge-name':
             if self._badge_name != value and not self._cache:
                 self._clear_buffers()
             self._badge_name = value
-            self._badge_handle = None
+            self._badge_icon = None
             self.emit_paint_needed(0, 0, -1, -1)
 
     def _choose_colors(self):
@@ -248,23 +258,23 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
                 fill_color = self._fill_color.get_svg()
         return [fill_color, stroke_color]
 
-    def _get_handle(self, name, handle):
-        if not handle:
+    def _get_icon_from_cache(self, name, icon):
+        if not icon:
             cache = CanvasIcon._cache
 
             [fill_color, stroke_color] = self._choose_colors()
 
-            handle = cache.get_handle(name, fill_color, stroke_color)
-        return handle
+            icon = cache.get_icon(name, fill_color, stroke_color)
+        return icon
 
-    def _get_icon_handle(self):
-        self._handle = self._get_handle(self._icon_name, self._handle)
-        return self._handle
+    def _get_icon(self):
+        self._icon = self._get_icon_from_cache(self._icon_name, self._icon)
+        return self._icon
 
-    def _get_badge_handle(self):
-        self._badge_handle = self._get_handle(self._badge_name,
-                                              self._badge_handle)
-        return self._badge_handle
+    def _get_badge_icon(self):
+        self._badge_icon = self._get_icon_from_cache(self._badge_name,
+                                                     self._badge_icon)
+        return self._badge_icon
 
     def _get_current_buffer_key(self, name):
         [fill_color, stroke_color] = self._choose_colors()
@@ -288,15 +298,15 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         elif pspec.name == 'scale':
             return self._scale
 
-    def _get_icon_size(self, handle):
-        if handle:
-            dimensions = handle.get_dimension_data()
+    def _get_icon_size(self, icon):
+        if icon:
+            dimensions = icon.handle.get_dimension_data()
             return int(dimensions[0]), int(dimensions[1])
         else:
             return [0, 0]
 
-    def _get_size(self, handle):
-        width, height = self._get_icon_size(handle)
+    def _get_size(self, icon):
+        width, height = self._get_icon_size(icon)
         if self._scale != 0:
             width = int(width * self._scale)
             height = int(height * self._scale)
@@ -305,8 +315,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
 
         return [width, height]
 
-    def _get_buffer(self, cr, name, handle, scale_factor=None):
-        """Return a cached cairo surface for the SVG handle, or if none exists,
+    def _get_buffer(self, cr, name, icon, scale_factor=None):
+        """Return a cached cairo surface for the SVG icon, or if none exists,
         create a new cairo surface with the right size."""
         buf = None
 
@@ -314,12 +324,14 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         if self._buffers.has_key(key):
             buf = self._buffers[key]
         else:
-            [icon_w, icon_h] = self._get_icon_size(handle)
-            [target_w, target_h] = self._get_size(handle)
+            [icon_w, icon_h] = self._get_icon_size(icon)
+            [target_w, target_h] = self._get_size(icon)
 
             if scale_factor:
-                target_w = target_w * scale_factor
-                target_h = target_h * scale_factor
+                target_w = int(target_w * scale_factor)
+                target_h = int(target_h * scale_factor)
+
+            print "icon %s is %d x %d (at scale %r)" % (name, target_w, target_h, scale_factor)
 
             target = cr.get_target()
             buf = target.create_similar(cairo.CONTENT_COLOR_ALPHA,
@@ -327,7 +339,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             ctx = cairo.Context(buf)
             ctx.scale(float(target_w) / float(icon_w),
                       float(target_h) / float(icon_h))
-            handle.render_cairo(ctx)
+            icon.handle.render_cairo(ctx)
 
             del ctx
             self._buffers[key] = buf
@@ -335,11 +347,11 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         return buf
 
     def do_paint_below_children(self, cr, damaged_box):
-        handle = self._get_icon_handle()
-        if handle == None:
+        icon = self._get_icon()
+        if icon is None:
             return
 
-        icon_buf = self._get_buffer(cr, self._icon_name, handle)
+        icon_buf = self._get_buffer(cr, self._icon_name, icon)
         [width, height] = self.get_allocation()
         icon_x = (width - icon_buf.get_width()) / 2
         icon_y = (height - icon_buf.get_height()) / 2
@@ -348,22 +360,36 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         cr.paint()
 
         if self._badge_name:
-            badge_handle = self._get_badge_handle()
-            if badge_handle:
-                badge_buf = self._get_buffer(cr, self._badge_name, badge_handle, 0.66)
-                badge_x = icon_x + icon_buf.get_width() - (icon_buf.get_width() / 4)
-                badge_y = icon_y + icon_buf.get_height() - (icon_buf.get_height() / 4)
+            badge_icon = self._get_badge_icon()
+            if badge_icon:
+                badge_buf = self._get_buffer(cr, self._badge_name, badge_icon, _BADGE_SIZE)
+                badge_x = (icon_x + icon.badge_x * icon_buf.get_width() -
+                           badge_buf.get_width() / 2)
+                badge_y = (icon_y + icon.badge_y * icon_buf.get_height() -
+                           badge_buf.get_height() / 2)
                 cr.set_source_surface(badge_buf, badge_x, badge_y)
                 cr.paint()
 
     def do_get_content_width_request(self):
-        handle = self._get_icon_handle()
-        [width, height] = self._get_size(handle)
+        icon = self._get_icon()
+        [width, height] = self._get_size(icon)
+        if self._badge_name is not None:
+            # If the badge goes outside the bounding box, add space
+            # on *both* sides (to keep the main icon centered)
+            if icon.badge_x < 0.0:
+                width = int(width * 2 * (1.0 - icon.badge_x))
+            elif icon.badge_x + _BADGE_SIZE > 1.0:
+                width = int(width * 2 * (icon.badge_x + _BADGE_SIZE - 1.0))
         return (width, width)
 
     def do_get_content_height_request(self, for_width):
-        handle = self._get_icon_handle()
-        [width, height] = self._get_size(handle)
+        icon = self._get_icon()
+        [width, height] = self._get_size(icon)
+        if self._badge_name is not None:
+            if icon.badge_y < 0.0:
+                height = int(height * 2 * (1.0 - icon.badge_y))
+            elif icon.badge_y + _BADGE_SIZE > 1.0:
+                height = int(height * 2 * (icon.badge_y + _BADGE_SIZE - 1.0))
         return (height, height)
 
     def do_button_press_event(self, event):

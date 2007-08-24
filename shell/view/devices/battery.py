@@ -46,10 +46,13 @@ class DeviceView(canvasicon.CanvasIcon):
         # Update palette
         if self._model.props.charging:
             status = _STATUS_CHARGING
+            self.props.badge_name = 'theme:badge-charging'
         elif self._model.props.discharging:
             status = _STATUS_DISCHARGING
+            self.props.badge_name = None
         else:
             status = _STATUS_FULLY_CHARGED
+            self.props.badge_name = None
 
         self._palette.set_level(self._model.props.level)
         self._palette.set_status(status)

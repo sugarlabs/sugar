@@ -1,3 +1,6 @@
+* #722 Show "charging" badge on battery. (danw)
+* #2010 Remember state when scrubbing. (marco)
+
 Snapshot d38cacfe2c
 
 * Add icons to the activity ring palette. (danw)
