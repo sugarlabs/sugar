@@ -66,15 +66,25 @@ class Icon(gtk.Image):
         icon_theme = gtk.icon_theme_get_for_screen(self.get_screen())
         icon_set = gtk.IconSet()
 
-        if icon_theme.has_icon(self._icon_name):
+        if icon_theme.has_icon(self._icon_name) or os.path.exists(self._icon_name):
             source = gtk.IconSource()
-            source.set_icon_name(self._icon_name)
+
+            if os.path.exists(self._icon_name):
+                source.set_filename(self._icon_name)
+            else:
+                source.set_icon_name(self._icon_name)
+
             icon_set.add_source(source)
 
         inactive_name = self._icon_name + '-inactive'
-        if icon_theme.has_icon(inactive_name):
+        if icon_theme.has_icon(inactive_name) or os.path.exists(inactive_name):
             source = gtk.IconSource()
-            source.set_icon_name(inactive_name)
+
+            if os.path.exists(inactive_name):
+                source.set_filename(inactive_name)
+            else:
+                source.set_icon_name(inactive_name)
+
             source.set_state(gtk.STATE_INSENSITIVE)
             icon_set.add_source(source)
 
@@ -109,6 +119,9 @@ class Icon(gtk.Image):
         self.set_from_pixbuf(pixbuf)
 
     def _get_real_name(self, name):
+        if os.path.exists(name):
+            return name
+
         info = self._theme.lookup_icon(name, self.props.icon_size, 0)
         if not info:
             raise ValueError("Icon '" + name + "' not found.")
