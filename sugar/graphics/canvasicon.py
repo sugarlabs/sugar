@@ -331,8 +331,6 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
                 target_w = int(target_w * scale_factor)
                 target_h = int(target_h * scale_factor)
 
-            print "icon %s is %d x %d (at scale %r)" % (name, target_w, target_h, scale_factor)
-
             target = cr.get_target()
             buf = target.create_similar(cairo.CONTENT_COLOR_ALPHA,
                                         target_w, target_h)
