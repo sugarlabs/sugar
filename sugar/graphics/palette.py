@@ -78,8 +78,8 @@ class Palette(gtk.Window):
     RIGHT     = 5
     TOP       = 6
 
-    _PRIMARY = 0
-    _SECONDARY = 1
+    PRIMARY = 0
+    SECONDARY = 1
 
     __gtype_name__ = 'SugarPalette'
 
@@ -104,11 +104,12 @@ class Palette(gtk.Window):
         self.set_resizable(False)
         self.connect('realize', self._realize_cb)
 
+        self.palette_state = self.PRIMARY
+
         self._old_alloc = None
         self._full_request = [0, 0]
         self._cursor_x = 0
         self._cursor_y = 0
-        self._state = self._PRIMARY
         self._invoker = None
         self._group_id = None
         self._up = False
@@ -348,11 +349,11 @@ class Palette(gtk.Window):
         return x, y
 
     def _update_full_request(self):
-        state = self._state
+        state = self.palette_state
 
         self.set_size_request(-1, -1)
 
-        self._set_state(self._SECONDARY)
+        self._set_state(self.SECONDARY)
         self._full_request = self.size_request()
 
         self.set_size_request(self._full_request[0], -1)
@@ -448,23 +449,25 @@ class Palette(gtk.Window):
             self._hide()
 
     def _set_state(self, state):
-        if self._state == state:
+        if self.palette_state == state:
             return
 
-        if state == self._PRIMARY:
+        if state == self.PRIMARY:
             self.menu.unembed()
             self._secondary_box.hide()
-        elif state == self._SECONDARY:
+        elif state == self.SECONDARY:
             self.menu.embed(self._menu_box)
             self._secondary_box.show()
 
-        self._state = state
+        self.palette_state = state
 
     def _invoker_mouse_enter_cb(self, invoker):
         immediate = False
         if self._group_id:
             group = palettegroup.get_group(self._group_id)
             if group and group.is_up():
+                self._set_state(group.get_state())
+
                 immediate = True
                 group.popdown()
 
@@ -529,7 +532,7 @@ class _PopupAnimation(animator.Animation):
 
     def next_frame(self, current):
         if current == 1.0:
-            self._palette._set_state(Palette._PRIMARY)
+            self._palette._set_state(Palette.PRIMARY)
             self._palette._show()
 
 class _SecondaryAnimation(animator.Animation):
@@ -539,7 +542,7 @@ class _SecondaryAnimation(animator.Animation):
 
     def next_frame(self, current):
         if current == 1.0:
-            self._palette._set_state(Palette._SECONDARY)
+            self._palette._set_state(Palette.SECONDARY)
             self._palette._update_position()
 
 class _PopdownAnimation(animator.Animation):

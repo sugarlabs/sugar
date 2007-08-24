@@ -44,6 +44,13 @@ class Group(gobject.GObject):
     def is_up(self):
         return self._up
 
+    def get_state(self):
+        for palette in self._palettes:
+            if palette.is_up():
+                return palette.palette_state
+
+        return None
+
     def add(self, palette):
         self._palettes.append(palette)
 
