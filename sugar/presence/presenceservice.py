@@ -108,8 +108,15 @@ class PresenceService(gobject.GObject):
         """
         if not self._ps_:
             try:
+                # NOTE: We need to follow_name_owner_changes here
+                #       because we can not connect to a signal unless 
+                #       we follow the changes or we start the service
+                #       before we connect.  Starting the service here
+                #       causes a major bottleneck during startup
                 ps = dbus.Interface(
-                    self._bus.get_object(DBUS_SERVICE,DBUS_PATH), 
+                    self._bus.get_object(DBUS_SERVICE,
+                                         DBUS_PATH,
+                                         follow_name_owner_changes=True), 
                     DBUS_INTERFACE
                 )
             except dbus.exceptions.DBusException, err:

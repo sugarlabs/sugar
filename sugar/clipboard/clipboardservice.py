@@ -82,7 +82,14 @@ class ClipboardService(gobject.GObject):
         """Connect dbus signals to our GObject signal generating callbacks"""
         bus = dbus.SessionBus()
         if not self._connected:
-            proxy_obj = bus.get_object(DBUS_SERVICE, DBUS_PATH)
+            # NOTE: We need to follow_name_owner_changes here
+            #       because we can not connect to a signal unless 
+            #       we follow the changes or we start the service
+            #       before we connect.  Starting the service here
+            #       causes a major bottleneck during startup
+            proxy_obj = bus.get_object(DBUS_SERVICE, 
+                                       DBUS_PATH,
+                                       follow_name_owner_changes=True)
             self._dbus_service = dbus.Interface(proxy_obj, DBUS_SERVICE)
             self._dbus_service.connect_to_signal('object_added',
                                                  self._object_added_cb)
