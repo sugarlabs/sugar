@@ -1,4 +1,4 @@
-# Copyright (C) 2007, Eduardo Silva <edsiper@gmail.com>
+# Copyright (C) 2007, Red Hat, Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -15,14 +15,31 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+"""
+Test the sugar.graphics.icon.Icon widget.
+"""
+
 import gtk
+
 from sugar.graphics.icon import Icon
+from sugar.graphics.xocolor import XoColor
 
-class MenuItem(gtk.ImageMenuItem):
-    def __init__(self, text_label, icon_name=None):
-        gtk.ImageMenuItem.__init__(self, text_label)
-        if icon_name:
-            icon = Icon(icon_name=icon_name, icon_size=gtk.ICON_SIZE_MENU)
-            self.set_image(icon)
-            icon.show()
+import common
 
+test = common.Test()
+
+icon = Icon(icon_name='go-previous')
+icon.props.icon_size = gtk.ICON_SIZE_LARGE_TOOLBAR
+test.pack_start(icon)
+icon.show()
+
+icon = Icon(icon_name='computer-xo', 
+            icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR,
+            xo_color=XoColor())
+test.pack_start(icon)
+icon.show()
+
+test.show()
+
+if __name__ == "__main__":
+    common.main(test)

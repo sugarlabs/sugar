@@ -31,6 +31,113 @@ from sugar.graphics.xocolor import XoColor
 from sugar.graphics import style
 from sugar.graphics.palette import Palette, CanvasInvoker
 
+_svg_loader = None
+
+def _get_svg_loader():
+    global _svg_loader
+    if _svg_loader == None:
+        _svg_loader = _SVGLoader()
+    return _svg_loader
+
+class _SVGLoader(object):
+    def load(self, file_name, entities):
+        icon_file = open(file_name, 'r')
+        data = icon_file.read()
+        icon_file.close()
+
+        for entity, value in entities.items():
+            xml = '<!ENTITY %s "%s">' % (entity, value)
+            data = re.sub('<!ENTITY %s .*>' % entity, xml, data)
+
+        return rsvg.Handle(data=data)
+
+class _IconBuffer(gobject.GObject):
+    def __init__(self):
+        gobject.GObject.__init__(self)
+
+        self._svg_loader = _get_svg_loader()
+        self._surface = None
+
+        self.icon_name = None
+        self.file_name = None
+        self.fill_color = None
+        self.stroke_color = None
+        self.width = None
+        self.height = None
+
+    def _load_svg(self, file_name):
+        entities = {}
+        if self.fill_color:
+            entities['fill_color'] = self.fill_color
+        if self.stroke_color:
+            entities['stroke_color'] = self.stroke_color
+
+        return self._svg_loader.load(file_name, entities)
+
+    def _load_pixbuf(self, file_name):
+        if self.width is None or self.height is None:
+            pixbuf = gtk.gdk.pixbuf_new_from_file(file_name)
+        else:
+            pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(
+                                        file_name, self.width, self.height)
+        return hippo.cairo_surface_from_gdk_pixbuf(pixbuf)
+
+    def _get_file_name(self):
+        file_name = None
+
+        if self.file_name:
+            return self.file_name
+
+        if self.icon_name:
+            theme = gtk.icon_theme_get_default()
+
+            size = 0
+            if self.width != None:
+                size = self.width 
+
+            info = theme.lookup_icon(self.icon_name, size, 0)
+            if info:
+                return info.get_filename()
+
+        return None
+
+    def get_surface(self):
+        if self._surface is not None:
+            return self._surface
+
+        file_name = self._get_file_name()
+        if file_name is None:
+            return None
+
+        if file_name.endswith('.svg'):
+            handle = self._load_svg(file_name)
+
+            dimensions = handle.get_dimension_data()
+            icon_width = int(dimensions[0])
+            icon_height = int(dimensions[1])
+
+            if self.width is not None and self.height is not None:
+                target_width = self.width
+                target_height = self.height
+            else:
+                target_width = icon_width
+                target_height = icon_height
+
+            self._surface = cairo.ImageSurface(cairo.FORMAT_ARGB32,
+                                               target_width, target_height)
+
+            context = cairo.Context(self._surface)
+            context.scale(float(target_width) / float(icon_width),
+                          float(target_height) / float(icon_height))
+            handle.render_cairo(context)
+        else:
+            self._surface = self._load_pixbuf(file_name)
+
+        return self._surface
+
+    def invalidate(self):
+        self._surface = None
+
 class Icon(gtk.Image):
     __gtype_name__ = 'SugarIcon'
 
@@ -43,122 +150,77 @@ class Icon(gtk.Image):
                            gobject.PARAM_READWRITE)
     }
 
-    def __init__(self, name, **kwargs):
-        self._constructed = False
-        self._fill_color = None
-        self._stroke_color = None
-        self._icon_name = name
-        self._theme = gtk.icon_theme_get_default()
-        self._data = None
+    def __init__(self, **kwargs):
+        self._buffer = _IconBuffer()
 
         gobject.GObject.__init__(self, **kwargs)
 
-        self._constructed = True
-        self._update_icon()
+    def _sync_image_properties(self):
+        if self._buffer.icon_name != self.props.icon_name:
+            self._buffer.icon_name = self.props.icon_name
+            self._buffer.invalidate()
 
-    def _get_pixbuf(self, data, width, height):
-         loader = gtk.gdk.PixbufLoader('svg')
-         loader.set_size(width, height)
-         loader.write(data, len(data))
-         loader.close()
-         return loader.get_pixbuf()
+        if self._buffer.file_name != self.props.file:
+            self._buffer.file_name = self.props.file
+            self._buffer.invalidate()
 
-    def _read_icon_data(self, icon_name):
-        filename = self._get_real_name(icon_name)
-        icon_file = open(filename, 'r')
-        data = icon_file.read()
-        icon_file.close()
+        width, height = gtk.icon_size_lookup(self.props.icon_size)
+        if self._buffer.width != width and self._buffer.height != height:
+            self._buffer.width = width
+            self._buffer.height = height
+            self._buffer.invalidate()
 
-        return data
+    def _icon_size_changed_cb(self, image, pspec):
+        self._buffer.icon_size = self.props.icon_size
+        self._buffer.invalidate()
 
-    def _update_normal_icon(self):
-        icon_theme = gtk.icon_theme_get_for_screen(self.get_screen())
-        icon_set = gtk.IconSet()
+    def _icon_name_changed_cb(self, image, pspec):
+        self._buffer.icon_name = self.props.icon_name
+        self._buffer.invalidate()
 
-        if icon_theme.has_icon(self._icon_name) or os.path.exists(self._icon_name):
-            source = gtk.IconSource()
+    def _file_changed_cb(self, image, pspec):
+        self._buffer.file_name = self.props.file
+        self._buffer.invalidate()
 
-            if os.path.exists(self._icon_name):
-                source.set_filename(self._icon_name)
-            else:
-                source.set_icon_name(self._icon_name)
+    def _update_buffer_size(self):
+        width, height = gtk.icon_size_lookup(self.props.icon_size)
 
-            icon_set.add_source(source)
+        self._buffer.width = width
+        self._buffer.height = height
 
-        inactive_name = self._icon_name + '-inactive'
-        if icon_theme.has_icon(inactive_name) or os.path.exists(inactive_name):
-            source = gtk.IconSource()
+        self._buffer.invalidate()
 
-            if os.path.exists(inactive_name):
-                source.set_filename(inactive_name)
-            else:
-                source.set_icon_name(inactive_name)
+    def do_expose_event(self, event):
+        self._sync_image_properties()
 
-            source.set_state(gtk.STATE_INSENSITIVE)
-            icon_set.add_source(source)
+        surface = self._buffer.get_surface()
+        if surface is not None:
+            cr = self.window.cairo_create()
 
-        self.props.icon_set = icon_set
+            x = self.allocation.x
+            y = self.allocation.y
 
-    def _update_icon(self):
-        if not self._constructed:
-            return
-
-        if not self._fill_color and not self._stroke_color:
-            self._update_normal_icon()
-            return
-
-        if not self._data:
-            data = self._read_icon_data(self._icon_name)
-        else:
-            data = self._data
-        
-        if self._fill_color:
-            entity = '<!ENTITY fill_color "%s">' % self._fill_color
-            data = re.sub('<!ENTITY fill_color .*>', entity, data)
-
-        if self._stroke_color:
-            entity = '<!ENTITY stroke_color "%s">' % self._stroke_color
-            data = re.sub('<!ENTITY stroke_color .*>', entity, data)
-
-        self._data = data
-
-        # Redraw pixbuf
-        [w, h] = gtk.icon_size_lookup(self.props.icon_size)
-        pixbuf = self._get_pixbuf(self._data, w, h)
-        self.set_from_pixbuf(pixbuf)
-
-    def _get_real_name(self, name):
-        if os.path.exists(name):
-            return name
-
-        info = self._theme.lookup_icon(name, self.props.icon_size, 0)
-        if not info:
-            raise ValueError("Icon '" + name + "' not found.")
-        fname = info.get_filename()
-        del info
-        return fname
+            cr.set_source_surface(surface, x, y)
+            cr.paint()
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'xo-color':
             self.props.fill_color = value.get_fill_color()
             self.props.stroke_color = value.get_stroke_color()
         elif pspec.name == 'fill-color':
-            self._fill_color = value
-            self._update_icon()
+            self._buffer.fill_color = value
+            self._buffer.invalidate()
         elif pspec.name == 'stroke-color':
-            self._stroke_color = value
-            self._update_icon()
+            self._buffer.fill_color = value
+            self._buffer.invalidate()
         else:
             gtk.Image.do_set_property(self, pspec, value)
 
-        if pspec.name == 'icon-size':
-            self._update_icon()
-
     def do_get_property(self, pspec):
         if pspec.name == 'fill-color':
-            return self._fill_color
+            return self._buffer.fill_color
         elif pspec.name == 'stroke-color':
-            return self._stroke_color
+            return self._buffer.stroke_color
         else:
             return gtk.Image.do_get_property(self, pspec)
 
