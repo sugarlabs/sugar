@@ -122,7 +122,7 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
             self._redraw_id = None
 
     def _redraw_activity_ring(self):
-        self._donut.emit_request_changed()
+        self._donut.redraw()
         return True
 
     def has_activities(self):

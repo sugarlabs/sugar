@@ -17,7 +17,7 @@
 import hippo
 import gobject
 
-from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics.icon import CanvasIcon
 from sugar.graphics import style
 from sugar.presence import presenceservice
 from sugar import activity

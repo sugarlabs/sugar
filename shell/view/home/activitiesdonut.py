@@ -18,17 +18,19 @@ import colorsys
 from gettext import gettext as _
 import logging
 import math
+import os
 
 import hippo
 import gobject
 import gtk
 
-from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics.icon import CanvasIcon
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.palette import Palette
 from sugar.graphics import style
 from sugar.graphics import xocolor
 from sugar import profile
+from proc_smaps import ProcSmaps
 
 # TODO: rgb_to_html and html_to_rgb are useful elsewhere 
 #       we should put this in a common module 
@@ -47,6 +49,9 @@ def html_to_rgb(html_color):
     r, g, b = [int(n, 16) for n in (r, g, b)]
     r, g, b = (r / 255.0, g / 255.0, b / 255.0)
     return (r, g, b)
+
+_MAX_ACTIVITIES = 10
+_MIN_WEDGE_SIZE = 1.0 / _MAX_ACTIVITIES
 
 class ActivityIcon(CanvasIcon):
     _INTERVAL = 250
@@ -73,6 +78,8 @@ class ActivityIcon(CanvasIcon):
 
         self._activity = activity
         self._pulse_id = 0
+
+        self.size = _MIN_WEDGE_SIZE
 
         palette = Palette(_('Starting...'))
         self.set_palette(palette)
@@ -101,11 +108,9 @@ class ActivityIcon(CanvasIcon):
             stop_menu_item.show()
 
     def _launching_changed_cb(self, activity, pspec):
-        if activity.props.launching:
-            self._start_pulsing()
-        else:
+        if not activity.props.launching:
             self._stop_pulsing()
-        self._setup_palette()
+            self._setup_palette()
 
     def __del__(self):
         self._cleanup()
@@ -166,10 +171,6 @@ class ActivityIcon(CanvasIcon):
         self._level = 100.0
         self.props.xo_color = self._orig_color
 
-        # Force the donut to redraw now that we know how much memory
-        # the activity is using.
-        self.emit_request_changed()
-
     def _resume_activate_cb(self, menuitem):
         self.emit('resume')
 
@@ -215,6 +216,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
             self.remove(icon)
             icon._cleanup()
         self._activities.remove(icon)
+        self._compute_angles()
 
     def _add_activity(self, activity):
         icon = ActivityIcon(activity)
@@ -223,8 +225,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
         self.append(icon, hippo.PACK_FIXED)
 
         self._activities.append(icon)
-
-        self.emit_paint_needed(0, 0, -1, -1)
+        self._compute_angles()
 
     def _activity_icon_resumed_cb(self, icon):
         activity = icon.get_activity()
@@ -282,43 +283,72 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
             activity_host.present()
         return True
 
-    MAX_ACTIVITIES = 10
-    MIN_ACTIVITY_WEDGE_SIZE = 1.0 / MAX_ACTIVITIES
+    def _update_activity_sizes(self):
+        # First, get the shell's memory mappings; this memory won't be
+        # counted against the memory used by activities, since it
+        # would still be in use even if all activities exited.
+        shell_mappings = {}
+        try:
+            shell_smaps = ProcSmaps(os.getpid())
+            for mapping in shell_smaps.mappings:
+                if mapping.shared_clean > 0 or mapping.shared_dirty > 0:
+                    shell_mappings[mapping.name] = mapping
+        except Exception, e:
+            logging.warn('ActivitiesDonut: could not read own smaps: %r' % e)
 
-    def _get_activity_sizes(self):
-        # First get the size of each process that hosts an activity,
-        # and the number of activities it hosts.
-        process_size = {}
+        # Get the memory mappings of each process that hosts an
+        # activity, and count how many activity instances each
+        # activity process hosts, and how many processes are mapping
+        # each shared library, etc
+        process_smaps = {}
         num_activities = {}
-        total_activity_size = 0
+        num_mappings = {}
+        unknown_size_activities = 0
         for activity in self._model:
             pid = activity.get_pid()
             if not pid:
                 # Still starting up, hasn't opened a window yet
+                unknown_size_activities += 1
                 continue
 
-            if process_size.has_key(pid):
+            if num_activities.has_key(pid):
                 num_activities[pid] += 1
                 continue
 
             try:
-                statm = open('/proc/%s/statm' % pid)
-                # We use "RSS" (the second field in /proc/PID/statm)
-                # for the activity size because that's what ps and top
-                # use for calculating "%MEM". We multiply by 4 to
-                # convert from pages to kb.
-                process_size[pid] = int(statm.readline().split()[1]) * 4
-                total_activity_size += process_size[pid]
+                smaps = ProcSmaps(pid)
+                _subtract_mappings(smaps, shell_mappings)
+                for mapping in smaps.mappings:
+                    if mapping.shared_clean > 0 or mapping.shared_dirty > 0:
+                        if num_mappings.has_key(mapping.name):
+                            num_mappings[mapping.name] += 1
+                        else:
+                            num_mappings[mapping.name] = 1
+                process_smaps[pid] = smaps
                 num_activities[pid] = 1
-                statm.close()
-            except IOError:
-                logging.warn('ActivitiesDonut: could not read /proc/%s/statm' %
-                             pid)
-            except (IndexError, ValueError):
-                logging.warn('ActivitiesDonut: /proc/%s/statm was not in ' +
-                             'expected format' % pid)
+            except Exception, e:
+                logging.warn('ActivitiesDonut: could not read /proc/%s/smaps: %r'
+                             % (pid, e))
 
-        # Next, see how much free memory is left.
+        # Compute total memory used per process
+        process_size = {}
+        total_activity_size = 0
+        for activity in self._model:
+            pid = activity.get_pid()
+            if not process_smaps.has_key(pid):
+                continue
+
+            smaps = process_smaps[pid]
+            size = 0
+            for mapping in smaps.mappings:
+                size += mapping.private_clean + mapping.private_dirty
+                if mapping.shared_clean + mapping.shared_dirty > 0:
+                    num = num_mappings[mapping.name]
+                    size += (mapping.shared_clean + mapping.shared_dirty) / num
+            process_size[pid] = size
+            total_activity_size += size / num_activities[pid]
+
+        # Now, see how much free memory is left.
         free_memory = 0
         try:
             meminfo = open('/proc/meminfo')
@@ -332,38 +362,84 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
             logging.warn('ActivitiesDonut: /proc/meminfo was not in ' +
                          'expected format')
 
-        # Each activity starts with MIN_ACTIVITY_WEDGE_SIZE. The
-        # remaining space in the donut is allocated proportionately
-        # among the activities-of-known-size and the free space
-        used_space = ActivitiesDonut.MIN_ACTIVITY_WEDGE_SIZE * len(self._model)
-        remaining_space = max(0.0, 1.0 - used_space)
+        total_memory = float(total_activity_size + free_memory)
 
-        total_memory = total_activity_size + free_memory
+        # Each activity has an ideal size of:
+        #   process_size[pid] / num_activities[pid] / total_memory
+        # (And the free memory wedge is ideally free_memory /
+        # total_memory) However, no activity wedge is allowed to be
+        # smaller than _MIN_WEDGE_SIZE. This means the small
+        # activities will use up extra space, which would make the
+        # ring overflow. We fix that by reducing the large activities
+        # and the free space proportionately. If there are activities
+        # of unknown size, they are simply carved out of the free
+        # space.
 
+        free_percent = free_memory / total_memory
         activity_sizes = []
-        for activity in self._model:
-            percent = ActivitiesDonut.MIN_ACTIVITY_WEDGE_SIZE
-            pid = activity.get_pid()
+        overflow = 0.0
+        reducible = free_percent
+        for icon in self._activities:
+            pid = icon.get_activity().get_pid()
             if process_size.has_key(pid):
-                size = process_size[pid] / num_activities[pid]
-                percent += remaining_space * size / total_memory
-            activity_sizes.append(percent)
+                icon.size = (process_size[pid] / num_activities[pid] /
+                             total_memory)
+                if icon.size < _MIN_WEDGE_SIZE:
+                    overflow += _MIN_WEDGE_SIZE - icon.size
+                    icon.size = _MIN_WEDGE_SIZE
+                else:
+                    reducible += icon.size - _MIN_WEDGE_SIZE
+            else:
+                icon.size = _MIN_WEDGE_SIZE
 
-        return activity_sizes
+        if reducible > 0.0:
+            reduction = overflow / reducible
+            if unknown_size_activities > 0:
+                unknown_percent = _MIN_WEDGE_SIZE * unknown_size_activities
+                if (free_percent * (1 - reduction) < unknown_percent):
+                    # The free wedge won't be large enough to fit the
+                    # unknown-size activities. So adjust things
+                    overflow += unknown_percent - free_percent
+                    reducible -= free_percent
+                    reduction = overflow / reducible
+
+            if reduction > 0.0:
+                for icon in self._activities:
+                    if icon.size > _MIN_WEDGE_SIZE:
+                        icon.size -= (icon.size - _MIN_WEDGE_SIZE) * reduction
+
+    def _subtract_mappings(smaps, mappings_to_remove):
+        for mapping in smaps.mappings:
+            if mappings_to_remove.has_key(mapping.name):
+                mapping.shared_clean = 0
+                mapping.shared_dirty = 0
 
     def _compute_angles(self):
-        percentages = self._get_activity_sizes()
         self._angles = []
-        if len(percentages) == 0:
+        if len(self._activities) == 0:
             return
 
+        # Normally we don't _update_activity_sizes() when launching a
+        # new activity; but if the new wedge would overflow the ring
+        # then we have no choice.
+        total = reduce(lambda s1,s2: s1 + s2,
+                       [icon.size for icon in self._activities])
+        if total > 1.0:
+            self._update_activity_sizes()
+
         # The first wedge (Journal) should be centered at 6 o'clock
-        size = percentages[0] * 2 * math.pi
-        angle = (math.pi - size) / 2
+        size = self._activities[0].size or _MIN_WEDGE_SIZE
+        angle = (math.pi - size * 2 * math.pi) / 2
         self._angles.append(angle)
 
-        for size in percentages:
+        for icon in self._activities:
+            size = icon.size or _MIN_WEDGE_SIZE
             self._angles.append(self._angles[-1] + size * 2 * math.pi)
+
+    def redraw(self):
+        self._update_activity_sizes()
+        self._compute_angles()
+        self.emit_request_changed()
 
     def _get_angles(self, index):
         return [self._angles[index],
@@ -431,7 +507,6 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
 
         radius = (self._get_inner_radius() + self._get_radius()) / 2
 
-        self._compute_angles()
         for i, icon in enumerate(self._activities):
             [angle_start, angle_end] = self._get_angles(i)
             angle = angle_start + (angle_end - angle_start) / 2

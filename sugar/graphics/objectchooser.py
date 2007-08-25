@@ -24,9 +24,9 @@ import hippo
 from sugar.activity.bundle import Bundle
 from sugar.date import Date
 from sugar.graphics import style
-from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics.icon import CanvasIcon
 from sugar.graphics.xocolor import XoColor
-from sugar.graphics.canvasroundbox import CanvasRoundBox
+from sugar.graphics.roundbox import CanvasRoundBox
 from sugar.datastore import datastore
 from sugar import activity
 from sugar.objects import objecttype

@@ -24,7 +24,7 @@ import sys
 import gobject
 import hippo
 
-from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics.icon import CanvasIcon
 from sugar.graphics import style
             
 class IconButton(CanvasIcon, hippo.CanvasItem):

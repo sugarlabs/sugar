@@ -16,7 +16,7 @@
 
 import gobject
 
-from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics.icon import CanvasIcon
 
 class PulsingIcon(CanvasIcon):
     __gproperties__ = {

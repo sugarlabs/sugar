@@ -20,7 +20,7 @@ from gettext import gettext as _
 
 import gobject
 
-from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics.icon import CanvasIcon
 from view.clipboardmenu import ClipboardMenu
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics import style
