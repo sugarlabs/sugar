@@ -39,6 +39,12 @@ icon = Icon(icon_name='computer-xo',
 test.pack_start(icon)
 icon.show()
 
+icon = Icon(icon_name='battery-000',
+            icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR,
+            badge_name='badge-busy')
+test.pack_start(icon)
+icon.show()
+
 test.show()
 
 if __name__ == "__main__":

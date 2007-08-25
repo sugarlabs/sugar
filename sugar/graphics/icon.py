@@ -31,6 +31,8 @@ from sugar.graphics.xocolor import XoColor
 from sugar.graphics import style
 from sugar.graphics.palette import Palette, CanvasInvoker
 
+_BADGE_SIZE = 0.45
+
 _svg_loader = None
 
 def _get_svg_loader():
@@ -62,6 +64,7 @@ class _IconBuffer(gobject.GObject):
         self.file_name = None
         self.fill_color = None
         self.stroke_color = None
+        self.badge_name = None
         self.width = None
         self.height = None
 
@@ -82,6 +85,12 @@ class _IconBuffer(gobject.GObject):
                                         file_name, self.width, self.height)
         return hippo.cairo_surface_from_gdk_pixbuf(pixbuf)
 
+    def _get_icon_size_request(self):
+        if self.width != None:
+            return self.width
+        else:
+            return 50
+
     def _get_file_name(self):
         file_name = None
 
@@ -90,16 +99,52 @@ class _IconBuffer(gobject.GObject):
 
         if self.icon_name:
             theme = gtk.icon_theme_get_default()
-
-            size = 0
-            if self.width != None:
-                size = self.width 
-
-            info = theme.lookup_icon(self.icon_name, size, 0)
+            size_request = self._get_icon_size_request()
+            info = theme.lookup_icon(self.icon_name, size_request, 0)
             if info:
                 return info.get_filename()
 
         return None
+
+    def _render_badge(self, surface):
+        context = cairo.Context(surface)
+        theme = gtk.icon_theme_get_default()
+
+        size_request = self._get_icon_size_request()
+        icon_info = theme.lookup_icon(self.icon_name, size_request, 0)
+        if not icon_info or not icon_info.get_attach_points():
+            logging.info(
+                'Badge attach points not found, icon %s.' % self.icon_name)
+            return
+
+        attach_points = icon_info.get_attach_points()
+        attach_x = float(attach_points[0][0]) / size_request
+        attach_y = float(attach_points[0][1]) / size_request
+
+        badge_size = int(_BADGE_SIZE * surface.get_width())
+        badge_x = attach_x * surface.get_width() - badge_size / 2
+        badge_y = attach_y * surface.get_height() - badge_size / 2
+
+        badge_info = theme.lookup_icon(self.badge_name, badge_size, 0)
+        if not badge_info:
+            logging.info('Badge not found, %s.' % self.badge_name)
+            return
+
+        badge_file_name = badge_info.get_filename()
+        if badge_file_name.endswith('.svg'):
+            handle = self._svg_loader.load(badge_file_name, {})
+
+            context.translate(badge_x, badge_y)
+            scale = float(badge_size) / float(badge_info.get_base_size())
+            context.scale(scale, scale)
+
+            handle.render_cairo(context)
+        else:
+            buf = gtk.gdk.pixbuf_new_from_file_at_size(
+                                badge_file_name, badge_size, badge_size)
+            surface = hippo.cairo_surface_from_gdk_pixbuf(buf)
+            context.set_source_surface(badge_buf, badge_x, badge_y)
+            context.paint()
 
     def get_surface(self):
         if self._surface is not None:
@@ -123,17 +168,22 @@ class _IconBuffer(gobject.GObject):
                 target_width = icon_width
                 target_height = icon_height
 
-            self._surface = cairo.ImageSurface(cairo.FORMAT_ARGB32,
-                                               target_width, target_height)
+            surface = cairo.ImageSurface(cairo.FORMAT_ARGB32,
+                                         target_width, target_height)
 
-            context = cairo.Context(self._surface)
+            context = cairo.Context(surface)
             context.scale(float(target_width) / float(icon_width),
                           float(target_height) / float(icon_height))
             handle.render_cairo(context)
         else:
-            self._surface = self._load_pixbuf(file_name)
+            surface = self._load_pixbuf(file_name)
 
-        return self._surface
+        if self.badge_name:
+            self._render_badge(surface)
+
+        self._surface = surface
+
+        return surface
 
     def invalidate(self):
         self._surface = None
@@ -147,6 +197,8 @@ class Icon(gtk.Image):
         'fill-color'    : (object, None, None,
                            gobject.PARAM_READWRITE),
         'stroke-color'  : (object, None, None,
+                           gobject.PARAM_READWRITE),
+        'badge-name'    : (str, None, None, None,
                            gobject.PARAM_READWRITE)
     }
 
@@ -213,6 +265,9 @@ class Icon(gtk.Image):
         elif pspec.name == 'stroke-color':
             self._buffer.fill_color = value
             self._buffer.invalidate()
+        elif pspec.name == 'badge-name':
+            self._buffer.badge_name = value
+            self._buffer.invalidate()
         else:
             gtk.Image.do_set_property(self, pspec, value)
 
@@ -221,11 +276,12 @@ class Icon(gtk.Image):
             return self._buffer.fill_color
         elif pspec.name == 'stroke-color':
             return self._buffer.stroke_color
+        elif pspec.name == 'badge-name':
+            return self._buffer.badge_name
         else:
             return gtk.Image.do_get_property(self, pspec)
 
 _ICON_REQUEST_SIZE = 50
-_BADGE_SIZE = 0.45
 
 class _IconCacheIcon:
     def __init__(self, name, fill_color, stroke_color, now):
