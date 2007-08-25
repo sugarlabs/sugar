@@ -167,16 +167,17 @@ class Activity(gobject.GObject):
         return bus_name, connection, channels
 
     def _leave_cb(self):
-        # XXX Is this the right thing to do?
+        """Callback for async action of leaving shared activity."""
         self.emit("joined", False, "left activity")
 
     def _leave_error_cb(self, err):
-        # XXX We are closing down anyway
+        """Callback for error in async leaving of shared activity.
+
+        XXX Add logging!"""
         pass
 
     def leave(self):
         """Leave this shared activity"""
-        # FIXME
         self._joined = False
         self._activity.Leave(reply_handler=self._leave_cb,
                              error_handler=self._leave_error_cb)

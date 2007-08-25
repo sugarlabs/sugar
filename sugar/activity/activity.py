@@ -469,13 +469,22 @@ class Activity(Window, gtk.Container):
         self._shared_activity = activity
         self.emit('shared')
 
-    def share(self):
-        """Request that the activity be shared on the network."""
+    def share(self, private=False):
+        """Request that the activity be shared on the network.
+        
+        private -- bool: True to share by invitation only,
+            False to advertise as shared to everyone.
+        """
+        # FIXME: Make private=True to turn on the by-invitation-only scope
         if self._shared_activity and self._shared_activity.props.joined:
-            raise RuntimeError("Activity %s already shared." % self._activity_id)
-        logging.debug('Requesting share of activity %s.' % self._activity_id)
-        self._share_id = self._pservice.connect("activity-shared", self._internal_share_cb)
-        self._pservice.share_activity(self)
+            raise RuntimeError("Activity %s already shared." %
+                               self._activity_id)
+        verb = private and 'private' or 'public'
+        logging.debug('Requesting %s share of activity %s.' %
+                      (verb, self._activity_id))
+        self._share_id = self._pservice.connect("activity-shared", 
+                                                self._internal_share_cb)
+        self._pservice.share_activity(self, private=private)
 
     def _realize_cb(self, window):
         wm.set_bundle_id(window.window, self.get_service_name())

@@ -364,7 +364,11 @@ class PresenceService(gobject.GObject):
         return self._new_object(owner_op)
 
     def _share_activity_cb(self, activity, op):
-        """Notify with GObject event of successful sharing of activity"""
+        """Notify with GObject event of successful sharing of activity
+        
+        op -- full dbus path of the new object, must be
+            prefixed with either of _PS_BUDDY_OP or _PS_ACTIVITY_OP
+        """
         psact = self._new_object(op)
         psact._joined = True
         self.emit("activity-shared", True, psact, None)
@@ -374,10 +378,10 @@ class PresenceService(gobject.GObject):
         _logger.debug("Error sharing activity %s: %s" % (activity.get_id(), err))
         self.emit("activity-shared", False, None, err)
 
-    def share_activity(self, activity, properties={}):
-        """Ask presence service to ask the activity to share itself
+    def share_activity(self, activity, properties={}, private=True):
+        """Ask presence service to ask the activity to share itself publicly.
         
-        Uses the ShareActivity method on the service to ask for the 
+        Uses the AdvertiseActivity method on the service to ask for the 
         sharing of the given activity.  Arranges to emit activity-shared 
         event with:
         
@@ -388,19 +392,33 @@ class PresenceService(gobject.GObject):
         returns None
         """
         actid = activity.get_id()
+        _logger.debug('XXXX in share_activity')
 
         # Ensure the activity is not already shared/joined
         for obj in self._objcache.values():
             if not isinstance(object, Activity):
                 continue
             if obj.props.id == actid or obj.props.joined:
-                raise RuntimeError("Activity %s is already shared." % actid)
+                raise RuntimeError("Activity %s is already shared." %
+                                   actid)
 
         atype = activity.get_service_name()
         name = activity.props.title
-        self._ps.ShareActivity(actid, atype, name, properties,
-                reply_handler=lambda *args: self._share_activity_cb(activity, *args),
-                error_handler=lambda *args: self._share_activity_error_cb(activity, *args))
+        if private:
+            _logger.debug('XXXX private, so calling InviteActivity')
+            self._ps.InviteActivity(actid, atype, name, properties,
+                    reply_handler=lambda *args: \
+                        self._share_activity_cb(activity, *args),
+                    error_handler=lambda *args: \
+                        self._share_activity_error_cb(activity, *args))
+        else:
+            # FIXME: Test, then make this AdvertiseActivity:
+            _logger.debug('XXXX not private, so calling ShareActivity')
+            self._ps.ShareActivity(actid, atype, name, properties,
+                    reply_handler=lambda *args: \
+                        self._share_activity_cb(activity, *args),
+                    error_handler=lambda *args: \
+                        self._share_activity_error_cb(activity, *args))
 
     def get_preferred_connection(self):
         """Gets the preferred telepathy connection object that an activity
