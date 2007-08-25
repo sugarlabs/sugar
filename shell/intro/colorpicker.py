@@ -16,7 +16,7 @@
 
 import hippo
 
-from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics.icon import CanvasIcon
 from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
 

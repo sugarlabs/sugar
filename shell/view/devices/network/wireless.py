@@ -15,11 +15,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from sugar.graphics import canvasicon
+from sugar.graphics.icon import get_icon_state
+from sugar.graphics.icon import CanvasIcon
 from sugar.graphics import style
 from sugar.graphics import style
+
 from model.devices.network import wireless
-from sugar.graphics.canvasicon import CanvasIcon
 from model.devices import device
 
 _ICON_NAME = 'network-wireless'
@@ -47,8 +48,7 @@ class DeviceView(CanvasIcon):
         self._update_state()
 
     def _update_icon(self):
-        icon_name = canvasicon.get_icon_state(
-                    _ICON_NAME, self._model.props.strength)
+        icon_name = get_icon_state(_ICON_NAME, self._model.props.strength)
         if icon_name:
             self.props.icon_name = icon_name
 

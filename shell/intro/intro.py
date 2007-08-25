@@ -26,8 +26,8 @@ import logging
 
 from sugar import env
 from sugar.graphics import style
-from sugar.graphics.canvasbutton import CanvasButton
-from sugar.graphics.canvasentry import CanvasEntry
+from sugar.graphics.button import CanvasButton
+from sugar.graphics.entry import CanvasEntry
 
 import colorpicker
 

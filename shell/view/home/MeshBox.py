@@ -21,10 +21,10 @@ import gobject
 from gettext import gettext as _
 
 from sugar.graphics.spreadlayout import SpreadLayout
-from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics.icon import CanvasIcon
 from sugar.graphics import style
 from sugar.graphics import xocolor
-from sugar.graphics import canvasicon
+from sugar.graphics.icon import get_icon_state
 from sugar.graphics import style
 from sugar import profile
 
@@ -86,8 +86,7 @@ class AccessPointView(PulsingIcon):
             self.set_tooltip(self._model.props.name)
 
     def _update_icon(self):
-        icon_name = canvasicon.get_icon_state(
-                    _ICON_NAME, self._model.props.strength)
+        icon_name = get_icon_state(_ICON_NAME, self._model.props.strength)
         if icon_name:
             self.props.icon_name = icon_name
 

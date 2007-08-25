@@ -24,7 +24,7 @@ import hippo
 import gobject
 import gtk
 
-from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics.icon import CanvasIcon
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.palette import Palette
 from sugar.graphics import style
