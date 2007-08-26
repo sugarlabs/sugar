@@ -317,7 +317,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
 
             try:
                 smaps = ProcSmaps(pid)
-                _subtract_mappings(smaps, shell_mappings)
+                self._subtract_mappings(smaps, shell_mappings)
                 for mapping in smaps.mappings:
                     if mapping.shared_clean > 0 or mapping.shared_dirty > 0:
                         if num_mappings.has_key(mapping.name):
@@ -408,7 +408,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
                     if icon.size > _MIN_WEDGE_SIZE:
                         icon.size -= (icon.size - _MIN_WEDGE_SIZE) * reduction
 
-    def _subtract_mappings(smaps, mappings_to_remove):
+    def _subtract_mappings(self, smaps, mappings_to_remove):
         for mapping in smaps.mappings:
             if mappings_to_remove.has_key(mapping.name):
                 mapping.shared_clean = 0
