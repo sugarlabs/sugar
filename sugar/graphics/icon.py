@@ -81,12 +81,6 @@ class _IconBuffer(object):
 
         return self._svg_loader.load(file_name, entities)
 
-    def _get_icon_size_request(self):
-        if self.width != None:
-            return self.width
-        else:
-            return 50
-
     def _get_attach_points(self, info, size_request):
         attach_points = info.get_attach_points()
 
@@ -119,6 +113,30 @@ class _IconBuffer(object):
                 icon_info.attach_y = attach_y
 
         return icon_info
+
+    def _draw_badge(self, context, size):
+        theme = gtk.icon_theme_get_default()
+        badge_info = theme.lookup_icon(self.badge_name, size, 0)
+        if badge_info:
+            badge_file_name = badge_info.get_filename()
+            if badge_file_name.endswith('.svg'):
+                handle = self._svg_loader.load(badge_file_name, {})
+                handle.render_cairo(context)
+            else:
+                pixbuf = gtk.gdk.pixbuf_new_from_file(badge_file_name)
+                surface = hippo.cairo_surface_from_gdk_pixbuf(pixbuf)
+                context.set_source_surface(surface, 0, 0)
+                context.paint()
+
+    def _get_size(self, icon_width, icon_height):
+        if self.width is not None and self.height is not None:
+            width = self.width
+            height = self.height
+        else:
+            width = icon_width
+            height = icon_height
+
+        return width, height
 
     def get_surface(self):
         if self._surface is not None:
@@ -154,23 +172,16 @@ class _IconBuffer(object):
                 y_padding = icon_height - badge_y - badge_size
                 icon_padding = max(x_padding, y_padding)
 
-        if self.width is not None and self.height is not None:
-            target_width = self.width
-            target_height = self.height
-        else:
-            target_width = icon_width
-            target_height = icon_height
+        width, height = self._get_size(icon_width, icon_height)
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
 
-        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32,
-                                     target_width, target_height)
         context = cairo.Context(surface)
+        context.scale(float(width) / (icon_width + icon_padding * 2),
+                      float(height) / (icon_height + icon_padding * 2))
+        context.save()
 
         context.translate(icon_padding, icon_padding)
-        context.scale(float(target_width) / (icon_width + icon_padding * 2),
-                      float(target_height) / (icon_height + icon_padding * 2))
-
         if is_svg:
-            total_icon_width = icon_width + icon_padding
             handle.render_cairo(context)
         else:
             pixbuf_surface = hippo.cairo_surface_from_gdk_pixbuf(pixbuf)
@@ -178,19 +189,9 @@ class _IconBuffer(object):
             context.paint()
 
         if self.badge_name:
+            context.restore()
             context.translate(badge_x, badge_y)
-            theme = gtk.icon_theme_get_default()
-            badge_info = theme.lookup_icon(self.badge_name, badge_size, 0)
-            if badge_info:
-                badge_file_name = badge_info.get_filename()
-                if badge_file_name.endswith('.svg'):
-                    handle = self._svg_loader.load(badge_file_name, {})
-                    handle.render_cairo(context)
-                else:
-                    pixbuf = gtk.gdk.pixbuf_new_from_file(badge_file_name)
-                    surface = hippo.cairo_surface_from_gdk_pixbuf(pixbuf)
-                    context.set_source_surface(surface, badge_x, badge_y)
-                    context.paint()
+            self._draw_badge(context, badge_size)
 
         self._surface = surface
 
