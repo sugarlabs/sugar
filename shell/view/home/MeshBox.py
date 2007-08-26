@@ -94,33 +94,33 @@ class AccessPointView(PulsingIcon):
         if self._model.props.state == accesspointmodel.STATE_CONNECTING:
             self.props.pulse_time = 1.0
             self.props.colors = [
-                [ style.Color(self._device_stroke),
-                  style.Color(self._device_fill) ],
-                [ style.Color(self._device_stroke),
-                  style.Color('#e2e2e2') ]
+                [ style.Color(self._device_stroke).get_svg(),
+                  style.Color(self._device_fill).get_svg() ],
+                [ style.Color(self._device_stroke).get_svg(),
+                  '#e2e2e2' ]
             ]
         elif self._model.props.state == accesspointmodel.STATE_CONNECTED:
             self.props.pulse_time = 2.0
             self.props.colors = [
-                [ style.Color(self._device_stroke),
-                  style.Color(self._device_fill) ],
-                [ style.Color('#ffffff'),
-                  style.Color(self._device_fill) ]
+                [ style.Color(self._device_stroke).get_svg(),
+                  style.Color(self._device_fill).get_svg() ],
+                [ '#ffffff',
+                  style.Color(self._device_fill).get_svg() ]
             ]
         elif self._model.props.state == accesspointmodel.STATE_NOTCONNECTED:
             self.props.pulse_time = 0.0
             self.props.colors = [
-                [ style.Color(self._device_stroke),
-                  style.Color(self._device_fill) ]
+                [ style.Color(self._device_stroke).get_svg(),
+                  style.Color(self._device_fill).get_svg() ]
             ]
 
 
-_MESH_ICON_NAME = 'theme:network-mesh'
+_MESH_ICON_NAME = 'network-mesh'
 
 class MeshDeviceView(PulsingIcon):
     def __init__(self, nm_device):
         PulsingIcon.__init__(self, size=style.MEDIUM_ICON_SIZE,
-                icon_name=_MESH_ICON_NAME)
+                             icon_name=_MESH_ICON_NAME)
         self._nm_device = nm_device
         self.set_tooltip(_("Mesh Network"))
 

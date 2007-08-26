@@ -31,11 +31,11 @@ class IconButton(CanvasIcon, hippo.CanvasItem):
     __gtype_name__ = 'SugarIconButton'    
 
     def __init__(self, **kwargs):
-        CanvasIcon.__init__(self, cache=True, **kwargs)
+        CanvasIcon.__init__(self, **kwargs)
 
         if not self.props.fill_color and not self.props.stroke_color:
-            self.props.fill_color = style.Color("#404040")
-            self.props.stroke_color = style.Color("#FFFFFF")
+            self.props.fill_color = style.Color("#404040").get_svg()
+            self.props.stroke_color = style.Color("#FFFFFF").get_svg()
 
         self.connect('activated', self._icon_clicked_cb)
 

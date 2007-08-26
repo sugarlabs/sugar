@@ -20,5 +20,5 @@ from sugar import profile
 class MyIcon(CanvasIcon):
     def __init__(self, size):
         CanvasIcon.__init__(self, size=size,
-                            icon_name='theme:computer-xo',
+                            icon_name='computer-xo',
                             xo_color=profile.get_color())

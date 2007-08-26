@@ -73,8 +73,8 @@ class ActivityIcon(CanvasIcon):
         self._level = self._level_max
         color = self._icon_colors[self._level]
 
-        CanvasIcon.__init__(self, icon_name=icon_name, xo_color=color,
-                            size=style.MEDIUM_ICON_SIZE, cache=True)
+        CanvasIcon.__init__(self, file_name=icon_name, xo_color=color,
+                            size=style.MEDIUM_ICON_SIZE)
 
         self._activity = activity
         self._pulse_id = 0
@@ -119,8 +119,6 @@ class ActivityIcon(CanvasIcon):
         if self._pulse_id:
             gobject.source_remove(self._pulse_id)
         self._pulse_id = 0
-        # dispose of all rendered icons from launch feedback
-        self._clear_buffers()
 
     def _compute_icon_colors(self):
         _LEVEL_MAX = 1.6
