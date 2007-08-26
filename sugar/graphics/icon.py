@@ -128,7 +128,8 @@ class _BadgeInfo(object):
 class _IconBuffer(object):
     def __init__(self):
         self._svg_loader = _get_svg_loader()
-        self._surface = None
+        self._surface_cache = {}
+        self._cache_size = 1
 
         self.icon_name = None
         self.file_name = None
@@ -137,6 +138,10 @@ class _IconBuffer(object):
         self.badge_name = None
         self.width = None
         self.height = None
+
+    def _get_cache_key(self):
+        return (self.icon_name, self.file_name, self.fill_color,
+                self.stroke_color, self.badge_name, self.width, self.height)
 
     def _load_svg(self, file_name):
         entities = {}
@@ -224,8 +229,12 @@ class _IconBuffer(object):
         return info
 
     def get_surface(self):
-        if self._surface is not None:
-            return self._surface
+        cache_key = self._get_cache_key()
+        if self._surface_cache.has_key(cache_key):
+            print cache_key
+            return self._surface_cache[cache_key]
+
+        print 'gah'
 
         icon_info = self._get_icon_info()
         if icon_info.file_name is None:
@@ -267,12 +276,25 @@ class _IconBuffer(object):
             context.translate(badge_info.attach_x, badge_info.attach_y)
             self._draw_badge(context, badge_info.size)
 
-        self._surface = surface
+        if (len(self._surface_cache) == self._cache_size):
+            self._surface_cache.popitem()
+        self._surface_cache[cache_key] = surface
 
         return surface
 
     def invalidate(self):
         self._surface = None
+
+    def get_cache_size(self):
+        return self._cache_size
+
+    def set_cache_size(self, cache_size):
+        while len(self._surface_cache) > cache_size:
+            print len(self._surface_cache)
+            self._surface_cache.popitem()
+        self._cache_size
+
+    cache_size = property(get_cache_size, set_cache_size)
 
 class Icon(gtk.Image):
     __gtype_name__ = 'SugarIcon'
