@@ -103,7 +103,7 @@ class HomeActivity(gobject.GObject):
         if self._activity_info:
             return self._activity_info.icon
         else:
-            return 'theme:image-missing'
+            return 'image-missing'
     
     def get_icon_color(self):
         """Retrieve the appropriate icon colour for this activity

@@ -30,27 +30,27 @@ class ObjectTypeRegistry(dbus.service.Object):
 
         self._types = {}
 
-        self._add_primitive('Text', _('Text'), 'theme:text-x-generic',
+        self._add_primitive('Text', _('Text'), 'text-x-generic',
                             ['text/plain', 'text/rtf', 'application/pdf',
                               'application/x-pdf', 'text/html',
                               'application/vnd.oasis.opendocument.text',
                               'application/rtf', 'text/rtf'])
 
-        self._add_primitive('Image', _('Image'), 'theme:image-x-generic',
+        self._add_primitive('Image', _('Image'), 'image-x-generic',
                             ['image/png', 'image/gif', 'image/jpeg'])
 
-        self._add_primitive('Audio', _('Audio'), 'theme:audio-x-generic',
+        self._add_primitive('Audio', _('Audio'), 'audio-x-generic',
                             ['audio/ogg'])
 
-        self._add_primitive('Video', _('Video'), 'theme:video-x-generic',
+        self._add_primitive('Video', _('Video'), 'video-x-generic',
                             ['video/ogg', 'application/ogg'])
 
         self._add_primitive('Etoys project', _('Etoys project'),
-                            'theme:application-x-squeak-project',
+                            'application-x-squeak-project',
                             ['application/x-squeak-project'])
 
         self._add_primitive('Link', _('Link'),
-                            'theme:text-uri-list',
+                            'text-uri-list',
                             ['text/x-moz-url', 'text/uri-list'])
 
     def _add_primitive(self, type_id, name, icon, mime_types):

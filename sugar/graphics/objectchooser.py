@@ -150,7 +150,7 @@ class CollapsedEntry(CanvasRoundBox):
                 self._icon_name = type.icon
 
         if not self._icon_name:
-            self._icon_name = 'theme:image-missing'
+            self._icon_name = 'image-missing'
 
         return self._icon_name
 

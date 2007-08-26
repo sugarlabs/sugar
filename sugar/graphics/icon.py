@@ -182,6 +182,8 @@ class _IconBuffer(object):
                 icon_info.file_name = info.get_filename()
                 icon_info.attach_x = attach_x
                 icon_info.attach_y = attach_y
+            else:
+                logging.warning('No icon with the name %s was found in the theme.' % self.icon_name)
 
         return icon_info
 
@@ -413,9 +415,13 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             self.props.fill_color = value.get_fill_color()
             self.props.stroke_color = value.get_stroke_color()
         elif pspec.name == 'fill-color':
+            if not isinstance(value, basestring) and value is not None:
+                raise TypeError('fill-color must be a string, not %r' % type(value))
             self._buffer.fill_color = value
             self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'stroke-color':
+            if not isinstance(value, basestring) and value is not None:
+                raise TypeError('stroke-color must be a string, not %r' % type(value))
             self._buffer.stroke_color = value
             self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'size':

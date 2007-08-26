@@ -25,7 +25,7 @@ class CanvasButton(hippo.CanvasButton):
         hippo.CanvasButton.__init__(self, text=label)
 
         if icon_name:
-            icon = Icon(icon_name,icon_size=gtk.ICON_SIZE_BUTTON)
+            icon = Icon(icon_name=icon_name, icon_size=gtk.ICON_SIZE_BUTTON)
             self.props.widget.set_image(icon)
             icon.show()
 
