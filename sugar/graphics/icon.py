@@ -279,9 +279,6 @@ class _IconBuffer(object):
 
         return surface
 
-    def invalidate(self):
-        self._surface = None
-
     def get_cache_size(self):
         return self._cache_size
 
@@ -314,37 +311,29 @@ class Icon(gtk.Image):
     def _sync_image_properties(self):
         if self._buffer.icon_name != self.props.icon_name:
             self._buffer.icon_name = self.props.icon_name
-            self._buffer.invalidate()
 
         if self._buffer.file_name != self.props.file:
             self._buffer.file_name = self.props.file
-            self._buffer.invalidate()
 
         width, height = gtk.icon_size_lookup(self.props.icon_size)
         if self._buffer.width != width and self._buffer.height != height:
             self._buffer.width = width
             self._buffer.height = height
-            self._buffer.invalidate()
 
     def _icon_size_changed_cb(self, image, pspec):
         self._buffer.icon_size = self.props.icon_size
-        self._buffer.invalidate()
 
     def _icon_name_changed_cb(self, image, pspec):
         self._buffer.icon_name = self.props.icon_name
-        self._buffer.invalidate()
 
     def _file_changed_cb(self, image, pspec):
         self._buffer.file_name = self.props.file
-        self._buffer.invalidate()
 
     def _update_buffer_size(self):
         width, height = gtk.icon_size_lookup(self.props.icon_size)
 
         self._buffer.width = width
         self._buffer.height = height
-
-        self._buffer.invalidate()
 
     def do_expose_event(self, event):
         self._sync_image_properties()
@@ -365,13 +354,10 @@ class Icon(gtk.Image):
             self.props.stroke_color = value.get_stroke_color()
         elif pspec.name == 'fill-color':
             self._buffer.fill_color = value
-            self._buffer.invalidate()
         elif pspec.name == 'stroke-color':
             self._buffer.fill_color = value
-            self._buffer.invalidate()
         elif pspec.name == 'badge-name':
             self._buffer.badge_name = value
-            self._buffer.invalidate()
         else:
             gtk.Image.do_set_property(self, pspec, value)
 
@@ -419,31 +405,25 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
     def do_set_property(self, pspec, value):
         if pspec.name == 'file-name':
             self._buffer.file_name = value
-            self._buffer.invalidate()
             self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'icon-name':
             self._buffer.icon_name = value
-            self._buffer.invalidate()
             self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'xo-color':
             self.props.fill_color = value.get_fill_color()
             self.props.stroke_color = value.get_stroke_color()
         elif pspec.name == 'fill-color':
             self._buffer.fill_color = value
-            self._buffer.invalidate()
             self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'stroke-color':
             self._buffer.stroke_color = value
-            self._buffer.invalidate()
             self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'size':
             self._buffer.width = value
             self._buffer.height = value
-            self._buffer.invalidate()
             self.emit_request_changed()
         elif pspec.name == 'scale':
             self._buffer.scale = value
-            self._buffer.invalidate()
             self.emit_request_changed()
         elif pspec.name == 'cache-size':
             self._buffer.cache_size = value

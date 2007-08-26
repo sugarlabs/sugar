@@ -43,18 +43,6 @@ class IconButton(CanvasIcon, hippo.CanvasItem):
         self.props.box_height = style.GRID_CELL_SIZE
         self.props.size = style.STANDARD_ICON_SIZE
 
-    def do_button_press_event(self, event):
-        if self._active:
-            self.emit_activated()
-        return True
-
-    def prelight(self, enter):
-        if enter:
-            if self.props.active:
-                self.props.background_color = 0x000000FF
-        else:
-            self.props.background_color = 0x00000000
-
     def _icon_clicked_cb(self, button):
         if self._palette:
             self._palette.popdown(True)
