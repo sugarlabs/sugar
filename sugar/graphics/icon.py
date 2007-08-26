@@ -285,7 +285,7 @@ class _IconBuffer(object):
     def set_cache_size(self, cache_size):
         while len(self._surface_cache) > cache_size:
             self._surface_cache.popitem()
-        self._cache_size
+        self._cache_size = cache_size
 
     cache_size = property(get_cache_size, set_cache_size)
 
