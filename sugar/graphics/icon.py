@@ -415,13 +415,13 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             self.props.fill_color = value.get_fill_color()
             self.props.stroke_color = value.get_stroke_color()
         elif pspec.name == 'fill-color':
-            if not isinstance(value, str):
-                raise TypeError('fill-color must be a string')
+            if not isinstance(value, basestring):
+                raise TypeError('fill-color must be a string, not %r' % type(value))
             self._buffer.fill_color = value
             self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'stroke-color':
-            if not isinstance(value, str):
-                raise TypeError('stroke-color must be a string')
+            if not isinstance(value, basestring):
+                raise TypeError('stroke-color must be a string, not %r' % type(value))
             self._buffer.stroke_color = value
             self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'size':
