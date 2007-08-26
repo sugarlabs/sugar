@@ -428,6 +428,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         elif pspec.name == 'cache-size':
             self._buffer.cache_size = value
         elif pspec.name == 'badge-name':
+            self._buffer.badge_name = value
             self.emit_paint_needed(0, 0, -1, -1)
 
     def do_get_property(self, pspec):
