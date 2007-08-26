@@ -215,15 +215,15 @@ class _IconBuffer(object):
             return info
 
         info.size = int(_BADGE_SIZE * icon_width)
-        info.attach_x = icon_info.attach_x * icon_width - info.size / 2
-        info.attach_y = icon_info.attach_y * icon_height - info.size / 2
+        info.attach_x = int(icon_info.attach_x * icon_width - info.size / 2)
+        info.attach_y = int(icon_info.attach_y * icon_height - info.size / 2)
 
         if info.attach_x < 0 or info.attach_y < 0:
             info.icon_padding = max(-info.attach_x, -info.attach_y)
         elif info.attach_x + info.size > icon_width or \
              info.attach_y + info.size > icon_height:
-            x_padding = icon_width - info.attach_x - info.size 
-            y_padding = icon_height - info.attach_y - info.size
+            x_padding = info.attach_x + info.size - icon_width
+            y_padding = info.attach_y + info.size - icon_height
             info.icon_padding = max(x_padding, y_padding)
 
         return info
