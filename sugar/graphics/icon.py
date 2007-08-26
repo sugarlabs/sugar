@@ -246,8 +246,8 @@ class _IconBuffer(object):
             icon_height = int(dimensions[1])
         else:
             pixbuf = gtk.gdk.pixbuf_new_from_file(file_name)
-            icon_width = surface.get_width()
-            icon_height = surface.get_height()
+            icon_width = pixbuf.get_width()
+            icon_height = pixbuf.get_height()
 
         badge_info = self._get_badge_info(icon_info, icon_width, icon_height)
 
