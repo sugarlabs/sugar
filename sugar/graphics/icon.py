@@ -41,17 +41,76 @@ def _get_svg_loader():
         _svg_loader = _SVGLoader()
     return _svg_loader
 
+class _SVGIcon(object):
+    def __init__(self, data):
+        self.data = data
+        self.data_size = len(data)
+        self.last_used = time.time()
+
 class _SVGLoader(object):
+    CACHE_MAX_SIZE = 50000
+    CACHE_MAX_ICON_SIZE = 5000
+
+    def __init__(self):
+        self._cache = {}
+        self._cache_size = 0
+
     def load(self, file_name, entities):
-        icon_file = open(file_name, 'r')
-        data = icon_file.read()
-        icon_file.close()
+        icon = self._get_icon(file_name)
 
         for entity, value in entities.items():
             xml = '<!ENTITY %s "%s">' % (entity, value)
-            data = re.sub('<!ENTITY %s .*>' % entity, xml, data)
+            icon.data = re.sub('<!ENTITY %s .*>' % entity, xml, icon.data)
 
-        return rsvg.Handle(data=data)
+        return rsvg.Handle(data=icon.data)
+
+    def _get_icon(self, file_name):
+        if self._cache.has_key(file_name):
+            data = self._cache[file_name]
+            data.last_used = time.time()
+            return data
+
+        icon_file = open(file_name, 'r')
+        icon = _SVGIcon(icon_file.read())
+        icon_file.close()
+
+        self._cache[file_name] = icon
+        self._cleanup_cache()
+
+        return icon
+
+    def _cleanup_cache(self):
+        now = time.time()
+        while self._cache_size > self.CACHE_MAX_SIZE:
+            evict_key = None
+            oldest_key = None
+            oldest_time = now
+
+            for icon_key, icon in self._cache.items():
+                # evict large icons first
+                if icon.data_size > self.CACHE_MAX_ICON_SIZE:
+                    evict_key = icon_key
+                    break
+
+                # evict older icons next; those used over 2 minutes ago
+                if icon.last_used < now - 120:
+                    evict_key = icon_key
+                    break
+
+                # otherwise, evict the oldest
+                if oldest_time > icon.last_used:
+                    oldest_time = icon.last_used
+                    oldest_key = icon_key
+
+            # If there's nothing specific to evict, try evicting
+            # the oldest thing
+            if not evict_key:
+                if not oldest_key:
+                    break
+                evict_key = oldest_key
+
+            self._cache_size -= self._cache[evict_key].data_size
+            del self._cache[evict_key]
 
 class _IconInfo(object):
     def __init__(self):
