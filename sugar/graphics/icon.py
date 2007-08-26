@@ -389,7 +389,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
                            gobject.PARAM_READWRITE),
         'scale'         : (float, None, None, -1024.0, 1024.0, 1.0,
                            gobject.PARAM_READWRITE),
-        'cache_size'    : (int, None, None, 0, 1024, 0,
+        'cache-size'    : (int, None, None, 0, 1024, 0,
                            gobject.PARAM_READWRITE),
         'badge-name'    : (str, None, None, None,
                            gobject.PARAM_READWRITE)
