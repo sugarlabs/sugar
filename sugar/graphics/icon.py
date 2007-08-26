@@ -59,6 +59,13 @@ class _IconInfo(object):
         self.attach_x = 0
         self.attach_y = 0
 
+class _BadgeInfo(object):
+    def __init__(self):
+        self.attach_x = 0
+        self.attach_y = 0
+        self.size = 0
+        self.icon_padding = 0
+
 class _IconBuffer(object):
     def __init__(self):
         self._svg_loader = _get_svg_loader()
@@ -138,6 +145,25 @@ class _IconBuffer(object):
 
         return width, height
 
+    def _get_badge_info(self, icon_info, icon_width, icon_height):
+        info = _BadgeInfo()
+        if self.badge_name is None:
+            return info
+
+        info.size = int(_BADGE_SIZE * icon_width)
+        info.attach_x = icon_info.attach_x * icon_width - info.size / 2
+        info.attach_y = icon_info.attach_y * icon_height - info.size / 2
+
+        if info.attach_x < 0 or info.attach_y < 0:
+            info.icon_padding = max(-info.attach_x, -info.attach_y)
+        elif info.attach_x + info.size > icon_width or \
+             info.attach_y + info.size > icon_height:
+            x_padding = icon_width - info.attach_x - info.size 
+            y_padding = icon_height - info.attach_y - info.size
+            info.icon_padding = max(x_padding, y_padding)
+
+        return info
+
     def get_surface(self):
         if self._surface is not None:
             return self._surface
@@ -158,29 +184,18 @@ class _IconBuffer(object):
             icon_width = surface.get_width()
             icon_height = surface.get_height()
 
-        badge_size = int(_BADGE_SIZE * icon_width)
-        badge_x = icon_info.attach_x * icon_width - badge_size / 2
-        badge_y = icon_info.attach_y * icon_height - badge_size / 2
-
-        icon_padding = 0
-        if self.badge_name:
-            if badge_x < 0 or badge_y < 0:
-                icon_padding = max(-badge_x, -badge_y)
-            elif badge_x + badge_size > icon_width or \
-                 badge_y + badge_size > icon_height:
-                x_padding = icon_width - badge_x - badge_size 
-                y_padding = icon_height - badge_y - badge_size
-                icon_padding = max(x_padding, y_padding)
+        badge_info = self._get_badge_info(icon_info, icon_width, icon_height)
 
         width, height = self._get_size(icon_width, icon_height)
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
 
         context = cairo.Context(surface)
-        context.scale(float(width) / (icon_width + icon_padding * 2),
-                      float(height) / (icon_height + icon_padding * 2))
+        padding = badge_info.icon_padding
+        context.scale(float(width) / (icon_width + padding * 2),
+                      float(height) / (icon_height + padding * 2))
         context.save()
 
-        context.translate(icon_padding, icon_padding)
+        context.translate(padding, padding)
         if is_svg:
             handle.render_cairo(context)
         else:
@@ -190,8 +205,8 @@ class _IconBuffer(object):
 
         if self.badge_name:
             context.restore()
-            context.translate(badge_x, badge_y)
-            self._draw_badge(context, badge_size)
+            context.translate(badge_info.attach_x, badge_info.attach_y)
+            self._draw_badge(context, badge_info.size)
 
         self._surface = surface
 
