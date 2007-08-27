@@ -1,4 +1,4 @@
-# Copyright (C) 2007, Eduardo Silva <edsiper@gmail.com>
+# Copyright (C) 2007, Red Hat, Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -15,14 +15,36 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+"""
+Test the sugar.graphics.icon.Icon widget.
+"""
+
 import gtk
-from sugar.graphics.icon import Icon
 
-class MenuItem(gtk.ImageMenuItem):
-    def __init__(self, text_label, icon_name=None):
-        gtk.ImageMenuItem.__init__(self, text_label)
-        if icon_name:
-            icon = Icon(icon_name=icon_name, icon_size=gtk.ICON_SIZE_MENU)
-            self.set_image(icon)
-            icon.show()
+from sugar.graphics.tray import HTray
+from sugar.graphics.tray import TrayButton
 
+import common
+
+test = common.Test()
+
+box = gtk.VBox()
+
+tray = HTray()
+box.pack_start(tray, False)
+tray.show()
+
+theme_icons = gtk.icon_theme_get_default().list_icons()
+
+for i in range(0, 100):
+    button = TrayButton(icon_name=theme_icons[i])
+    tray.add_item(button)
+    button.show()
+
+test.pack_start(box)
+box.show()
+
+test.show()
+
+if __name__ == "__main__":
+    common.main(test)

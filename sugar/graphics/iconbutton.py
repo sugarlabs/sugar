@@ -24,36 +24,24 @@ import sys
 import gobject
 import hippo
 
-from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics.icon import CanvasIcon
 from sugar.graphics import style
             
 class IconButton(CanvasIcon, hippo.CanvasItem):
     __gtype_name__ = 'SugarIconButton'    
 
     def __init__(self, **kwargs):
-        CanvasIcon.__init__(self, cache=True, **kwargs)
+        CanvasIcon.__init__(self, **kwargs)
 
         if not self.props.fill_color and not self.props.stroke_color:
-            self.props.fill_color = style.Color("#404040")
-            self.props.stroke_color = style.Color("#FFFFFF")
+            self.props.fill_color = style.Color("#404040").get_svg()
+            self.props.stroke_color = style.Color("#FFFFFF").get_svg()
 
         self.connect('activated', self._icon_clicked_cb)
 
         self.props.box_width = style.GRID_CELL_SIZE
         self.props.box_height = style.GRID_CELL_SIZE
         self.props.size = style.STANDARD_ICON_SIZE
-
-    def do_button_press_event(self, event):
-        if self._active:
-            self.emit_activated()
-        return True
-
-    def prelight(self, enter):
-        if enter:
-            if self.props.active:
-                self.props.background_color = 0x000000FF
-        else:
-            self.props.background_color = 0x00000000
 
     def _icon_clicked_cb(self, button):
         if self._palette:

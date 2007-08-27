@@ -20,7 +20,7 @@ from gettext import gettext as _
 
 import gobject
 
-from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics.icon import CanvasIcon
 from view.clipboardmenu import ClipboardMenu
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics import style
@@ -88,7 +88,7 @@ class ClipboardIcon(CanvasIcon):
         if icon_name:
             self.props.icon_name = icon_name
         else:
-            self.props.icon_name = 'theme:application-octet-stream'
+            self.props.icon_name = 'application-octet-stream'
 
         self._name = name
         self._percent = percent

@@ -15,6 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+from sugar import profile
 from sugar.graphics import canvasicon
 from sugar.graphics import style
 from model.devices import device
@@ -22,7 +23,7 @@ from model.devices import device
 class DeviceView(canvasicon.CanvasIcon):
     def __init__(self, model):
         canvasicon.CanvasIcon.__init__(self, size=style.MEDIUM_ICON_SIZE,
-                icon_name='theme:network-mesh')
+                                       icon_name='network-mesh')
         self._model = model
 
         model.connect('notify::state', self._state_changed_cb)
@@ -35,11 +36,10 @@ class DeviceView(canvasicon.CanvasIcon):
         # FIXME Change icon colors once we have real icons
         state = self._model.props.state
         if state == device.STATE_ACTIVATING:
-            self.props.fill_color = style.COLOR_INACTIVE_FILL
-            self.props.stroke_color = style.COLOR_INACTIVE_STROKE
+            self.props.fill_color = style.COLOR_INACTIVE_FILL.get_svg()
+            self.props.stroke_color = style.COLOR_INACTIVE_STROKE.get_svg()
         elif state == device.STATE_ACTIVATED:
-            self.props.fill_color = None
-            self.props.stroke_color = None
+            self.props.xo_color = profile.get_color()
         elif state == device.STATE_INACTIVE:
-            self.props.fill_color = style.COLOR_INACTIVE_FILL
-            self.props.stroke_color = style.COLOR_INACTIVE_STROKE
+            self.props.fill_color = style.COLOR_INACTIVE_FILL.get_svg()
+            self.props.stroke_color = style.COLOR_INACTIVE_STROKE.get_svg()

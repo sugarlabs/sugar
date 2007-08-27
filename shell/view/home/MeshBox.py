@@ -21,10 +21,10 @@ import gobject
 from gettext import gettext as _
 
 from sugar.graphics.spreadlayout import SpreadLayout
-from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics.icon import CanvasIcon
 from sugar.graphics import style
 from sugar.graphics import xocolor
-from sugar.graphics import canvasicon
+from sugar.graphics.icon import get_icon_state
 from sugar.graphics import style
 from sugar import profile
 
@@ -86,8 +86,7 @@ class AccessPointView(PulsingIcon):
             self.set_tooltip(self._model.props.name)
 
     def _update_icon(self):
-        icon_name = canvasicon.get_icon_state(
-                    _ICON_NAME, self._model.props.strength)
+        icon_name = get_icon_state(_ICON_NAME, self._model.props.strength)
         if icon_name:
             self.props.icon_name = icon_name
 
@@ -95,33 +94,33 @@ class AccessPointView(PulsingIcon):
         if self._model.props.state == accesspointmodel.STATE_CONNECTING:
             self.props.pulse_time = 1.0
             self.props.colors = [
-                [ style.Color(self._device_stroke),
-                  style.Color(self._device_fill) ],
-                [ style.Color(self._device_stroke),
-                  style.Color('#e2e2e2') ]
+                [ style.Color(self._device_stroke).get_svg(),
+                  style.Color(self._device_fill).get_svg() ],
+                [ style.Color(self._device_stroke).get_svg(),
+                  '#e2e2e2' ]
             ]
         elif self._model.props.state == accesspointmodel.STATE_CONNECTED:
             self.props.pulse_time = 2.0
             self.props.colors = [
-                [ style.Color(self._device_stroke),
-                  style.Color(self._device_fill) ],
-                [ style.Color('#ffffff'),
-                  style.Color(self._device_fill) ]
+                [ style.Color(self._device_stroke).get_svg(),
+                  style.Color(self._device_fill).get_svg() ],
+                [ '#ffffff',
+                  style.Color(self._device_fill).get_svg() ]
             ]
         elif self._model.props.state == accesspointmodel.STATE_NOTCONNECTED:
             self.props.pulse_time = 0.0
             self.props.colors = [
-                [ style.Color(self._device_stroke),
-                  style.Color(self._device_fill) ]
+                [ style.Color(self._device_stroke).get_svg(),
+                  style.Color(self._device_fill).get_svg() ]
             ]
 
 
-_MESH_ICON_NAME = 'theme:network-mesh'
+_MESH_ICON_NAME = 'network-mesh'
 
 class MeshDeviceView(PulsingIcon):
     def __init__(self, nm_device):
         PulsingIcon.__init__(self, size=style.MEDIUM_ICON_SIZE,
-                icon_name=_MESH_ICON_NAME)
+                             icon_name=_MESH_ICON_NAME)
         self._nm_device = nm_device
         self.set_tooltip(_("Mesh Network"))
 
@@ -177,7 +176,7 @@ class ActivityView(hippo.CanvasBox):
         self._layout = SnowflakeLayout()
         self.set_layout(self._layout)
 
-        self._icon = CanvasIcon(icon_name=model.get_icon_name(),
+        self._icon = CanvasIcon(file_name=model.get_icon_name(),
                           xo_color=model.get_color(), box_width=80)
         self._icon.connect('activated', self._clicked_cb)
         self._icon.set_tooltip(self._model.get_title())

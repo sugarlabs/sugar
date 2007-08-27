@@ -14,10 +14,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+from gettext import gettext as _
+
 import gtk
 
-from gettext import gettext as _
-from sugar.graphics import canvasicon
+from sugar import profile
+from sugar.graphics.icon import CanvasIcon
+from sugar.graphics.icon import get_icon_state
 from sugar.graphics import style
 from sugar.graphics.palette import Palette
 
@@ -27,9 +30,10 @@ _STATUS_CHARGING = 0
 _STATUS_DISCHARGING = 1
 _STATUS_FULLY_CHARGED = 2
 
-class DeviceView(canvasicon.CanvasIcon):
+class DeviceView(CanvasIcon):
     def __init__(self, model):
-        canvasicon.CanvasIcon.__init__(self, size=style.MEDIUM_ICON_SIZE)
+        CanvasIcon.__init__(self, size=style.MEDIUM_ICON_SIZE,
+                            xo_color=profile.get_color())
         self._model = model
         self._palette = BatteryPalette(_('My Battery life'))
         self.set_palette(self._palette)
@@ -40,13 +44,13 @@ class DeviceView(canvasicon.CanvasIcon):
         self._update_info()
 
     def _update_info(self):
-        self.props.icon_name = canvasicon.get_icon_state(
-                                    _ICON_NAME, self._model.props.level)
+        name = get_icon_state(_ICON_NAME, self._model.props.level)
+        self.props.icon_name = name
 
         # Update palette
         if self._model.props.charging:
             status = _STATUS_CHARGING
-            self.props.badge_name = 'theme:badge-charging'
+            self.props.badge_name = 'badge-charging'
         elif self._model.props.discharging:
             status = _STATUS_DISCHARGING
             self.props.badge_name = None

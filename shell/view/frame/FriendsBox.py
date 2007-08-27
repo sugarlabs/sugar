@@ -17,7 +17,7 @@
 import hippo
 
 from sugar.graphics.palette import Palette
-from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics.icon import CanvasIcon
 from sugar.graphics import style
 from sugar.presence import presenceservice
 

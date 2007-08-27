@@ -1,4 +1,4 @@
-# Copyright (C) 2007 Red Hat, Inc.
+# Copyright (C) 2007, Red Hat, Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -15,18 +15,37 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-import hippo
+"""
+Test the sugar.graphics.icon.Icon widget.
+"""
+
 import gtk
 
 from sugar.graphics.icon import Icon
+from sugar.graphics.xocolor import XoColor
 
-class CanvasButton(hippo.CanvasButton):
-    def __init__(self, label, icon_name=None):
-        hippo.CanvasButton.__init__(self, text=label)
+import common
 
-        if icon_name:
-            icon = Icon(icon_name,icon_size=gtk.ICON_SIZE_BUTTON)
-            self.props.widget.set_image(icon)
-            icon.show()
+test = common.Test()
 
-        
+icon = Icon(icon_name='go-previous')
+icon.props.icon_size = gtk.ICON_SIZE_LARGE_TOOLBAR
+test.pack_start(icon)
+icon.show()
+
+icon = Icon(icon_name='computer-xo', 
+            icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR,
+            xo_color=XoColor())
+test.pack_start(icon)
+icon.show()
+
+icon = Icon(icon_name='battery-000',
+            icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR,
+            badge_name='badge-busy')
+test.pack_start(icon)
+icon.show()
+
+test.show()
+
+if __name__ == "__main__":
+    common.main(test)

@@ -24,7 +24,7 @@ class OverlayBox(hippo.CanvasBox):
 
         self._shell = shell
 
-        icon = IconButton(icon_name='theme:stock-chat')
+        icon = IconButton(icon_name='stock-chat')
         icon.connect('activated', self._overlay_clicked_cb)
         self.append(icon)
 

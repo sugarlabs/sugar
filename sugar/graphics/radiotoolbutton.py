@@ -31,7 +31,7 @@ class RadioToolButton(gtk.RadioToolButton):
         self.set_named_icon(named_icon)
 
     def set_named_icon(self, named_icon):
-        icon = Icon(named_icon,
+        icon = Icon(icon_name=named_icon,
                     xo_color=self._xo_color,
                     icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
         self.set_icon_widget(icon)

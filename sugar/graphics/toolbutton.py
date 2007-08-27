@@ -33,7 +33,7 @@ class ToolButton(gtk.ToolButton):
         self.connect('clicked', self._button_clicked_cb)
 
     def set_icon(self, icon_name):
-        icon = Icon(icon_name)
+        icon = Icon(icon_name=icon_name)
         self.set_icon_widget(icon)
         icon.show()
 

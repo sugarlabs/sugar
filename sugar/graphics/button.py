@@ -1,4 +1,4 @@
-# Copyright (C) 2007, Eduardo Silva <edsiper@gmail.com>
+# Copyright (C) 2007 Red Hat, Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -15,14 +15,18 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+import hippo
 import gtk
+
 from sugar.graphics.icon import Icon
 
-class MenuItem(gtk.ImageMenuItem):
-    def __init__(self, text_label, icon_name=None):
-        gtk.ImageMenuItem.__init__(self, text_label)
+class CanvasButton(hippo.CanvasButton):
+    def __init__(self, label, icon_name=None):
+        hippo.CanvasButton.__init__(self, text=label)
+
         if icon_name:
-            icon = Icon(icon_name=icon_name, icon_size=gtk.ICON_SIZE_MENU)
-            self.set_image(icon)
+            icon = Icon(icon_name=icon_name, icon_size=gtk.ICON_SIZE_BUTTON)
+            self.props.widget.set_image(icon)
             icon.show()
 
+        

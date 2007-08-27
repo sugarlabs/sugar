@@ -16,6 +16,7 @@
 
 """D-bus service providing access to the shell's functionality"""
 import dbus
+import os
 
 _DBUS_SERVICE = "org.laptop.Shell"
 _DBUS_SHELL_IFACE = "org.laptop.Shell"
@@ -40,6 +41,9 @@ class ShellService(dbus.service.Object):
     XXX At the moment the d-bus service methods do not appear to do
     anything other than add_bundle
     """
+
+    _rainbow = None
+
     def __init__(self, shell):
         self._shell = shell
         self._shell_model = shell.get_model()
@@ -98,9 +102,20 @@ class ShellService(dbus.service.Object):
     def _owner_icon_changed_cb(self, new_icon):
         self.IconChanged(dbus.ByteArray(new_icon))
 
+    def _get_rainbow_service(self):
+        """Lazily initializes an interface to the Rainbow security daemon."""
+        if self._rainbow is None:
+            service = iface = 'org.laptop.security.Rainbow'
+            system_bus = dbus.SystemBus()
+            object = system_bus.get_object(service, '/')
+            self._rainbow = dbus.Interface(object, dbus_interface=iface,
+                                                   follow_name_owner_change=True)
+        return self._rainbow
+
     @dbus.service.signal(_DBUS_OWNER_IFACE, signature="s")
     def CurrentActivityChanged(self, activity_id):
-        pass
+        if os.path.exists('/etc/olpc-security'):
+            self._get_rainbow_service().ChangeActivity(activity_id, dbus_interface=iface)
 
     def _cur_activity_changed_cb(self, owner, new_activity):
         new_id = ""

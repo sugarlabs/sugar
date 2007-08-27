@@ -24,7 +24,7 @@ import hippo
 import gobject
 import gtk
 
-from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics.icon import CanvasIcon
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.palette import Palette
 from sugar.graphics import style
@@ -73,8 +73,8 @@ class ActivityIcon(CanvasIcon):
         self._level = self._level_max
         color = self._icon_colors[self._level]
 
-        CanvasIcon.__init__(self, icon_name=icon_name, xo_color=color,
-                            size=style.MEDIUM_ICON_SIZE, cache=True)
+        CanvasIcon.__init__(self, file_name=icon_name, xo_color=color,
+                            size=style.MEDIUM_ICON_SIZE)
 
         self._activity = activity
         self._pulse_id = 0
@@ -119,8 +119,6 @@ class ActivityIcon(CanvasIcon):
         if self._pulse_id:
             gobject.source_remove(self._pulse_id)
         self._pulse_id = 0
-        # dispose of all rendered icons from launch feedback
-        self._clear_buffers()
 
     def _compute_icon_colors(self):
         _LEVEL_MAX = 1.6
@@ -161,6 +159,7 @@ class ActivityIcon(CanvasIcon):
         if self._pulse_id:
             return
 
+        self.props.cache_size = self._level_max
         self._pulse_id = gobject.timeout_add(self._INTERVAL, self._pulse_cb)
 
     def _stop_pulsing(self):
@@ -169,6 +168,7 @@ class ActivityIcon(CanvasIcon):
 
         self._cleanup()
         self._level = 100.0
+        self.props.cache_size = 1
         self.props.xo_color = self._orig_color
 
     def _resume_activate_cb(self, menuitem):
@@ -317,7 +317,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
 
             try:
                 smaps = ProcSmaps(pid)
-                _subtract_mappings(smaps, shell_mappings)
+                self._subtract_mappings(smaps, shell_mappings)
                 for mapping in smaps.mappings:
                     if mapping.shared_clean > 0 or mapping.shared_dirty > 0:
                         if num_mappings.has_key(mapping.name):
@@ -408,7 +408,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
                     if icon.size > _MIN_WEDGE_SIZE:
                         icon.size -= (icon.size - _MIN_WEDGE_SIZE) * reduction
 
-    def _subtract_mappings(smaps, mappings_to_remove):
+    def _subtract_mappings(self, smaps, mappings_to_remove):
         for mapping in smaps.mappings:
             if mappings_to_remove.has_key(mapping.name):
                 mapping.shared_clean = 0

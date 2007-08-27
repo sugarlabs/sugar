@@ -63,6 +63,9 @@ class DSMetadata(gobject.GObject):
     def get_dictionary(self):
         return self._props
 
+    def copy(self):
+        return DSMetadata(self._props.copy())
+
 class DSObject(object):
     def __init__(self, object_id, metadata=None, file_path=None):
         self.object_id = object_id
@@ -161,6 +164,9 @@ class DSObject(object):
                             'Please call DSObject.destroy() before disposing it.')
             self.destroy()
 
+    def copy(self):
+        return DSObject(None, self._metadata.copy(), self._file_path)
+
 def get(object_id):
     logging.debug('datastore.get')
     metadata = dbus_helpers.get_properties(object_id)
@@ -223,6 +229,16 @@ def find(query, sorting=None, limit=None, offset=None, reply_handler=None,
         objects.append(ds_object)
 
     return objects, total_count
+
+def copy(jobject, mount_point):
+
+    new_jobject = jobject.copy()
+    new_jobject.metadata['mountpoint'] = mount_point
+
+    # this will cause the file be retrieved from the DS
+    new_jobject.file_path = jobject.file_path
+
+    write(new_jobject)
 
 def mount(uri, options):
     return dbus_helpers.mount(uri, options)

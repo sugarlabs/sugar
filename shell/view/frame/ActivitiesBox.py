@@ -28,9 +28,9 @@ from frameinvoker import FrameCanvasInvoker
 
 class ActivityButton(IconButton):
     def __init__(self, activity_info):
-        IconButton.__init__(self, icon_name=activity_info.icon,
-                            stroke_color=style.COLOR_WHITE,
-                            fill_color=style.COLOR_TRANSPARENT)
+        IconButton.__init__(self, file_name=activity_info.icon,
+                            stroke_color=style.COLOR_WHITE.get_svg(),
+                            fill_color=style.COLOR_TRANSPARENT.get_svg())
 
         palette = Palette(activity_info.name)
         palette.props.invoker = FrameCanvasInvoker(self)
@@ -44,7 +44,7 @@ class ActivityButton(IconButton):
 
 class InviteButton(IconButton):
     def __init__(self, activity_model, invite):
-        IconButton.__init__(self, icon_name=activity_model.get_color())
+        IconButton.__init__(self, file_name=activity_model.get_icon())
 
         self.props.xo_color = activity_model.get_color()
         self._invite = invite

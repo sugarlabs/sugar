@@ -30,7 +30,7 @@ class ZoomBox(hippo.CanvasBox):
 
         self._shell = shell
 
-        icon = IconButton(icon_name='theme:zoom-mesh')
+        icon = IconButton(icon_name='zoom-mesh')
         icon.connect('activated',
                      self._level_clicked_cb,
                      ShellModel.ZOOM_MESH)
@@ -41,7 +41,7 @@ class ZoomBox(hippo.CanvasBox):
         palette.set_group_id('frame')
         icon.set_palette(palette)
 
-        icon = IconButton(icon_name='theme:zoom-friends')
+        icon = IconButton(icon_name='zoom-friends')
         icon.connect('activated',
                      self._level_clicked_cb,
                      ShellModel.ZOOM_FRIENDS)
@@ -52,7 +52,7 @@ class ZoomBox(hippo.CanvasBox):
         palette.set_group_id('frame')
         icon.set_palette(palette)
 
-        icon = IconButton(icon_name='theme:zoom-home')
+        icon = IconButton(icon_name='zoom-home')
         icon.connect('activated',
                      self._level_clicked_cb,
                      ShellModel.ZOOM_HOME)
@@ -63,7 +63,7 @@ class ZoomBox(hippo.CanvasBox):
         palette.set_group_id('frame')
         icon.set_palette(palette)
 
-        icon = IconButton(icon_name='theme:zoom-activity')
+        icon = IconButton(icon_name='zoom-activity')
         icon.connect('activated',
                      self._level_clicked_cb,
                      ShellModel.ZOOM_ACTIVITY)

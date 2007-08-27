@@ -3,4 +3,8 @@
 export SUGAR_PREFIX=@prefix@
 export SUGAR_PATH=@prefix@/share/sugar
 export GTK2_RC_FILES=@prefix@/share/sugar/data/sugar-xo.gtkrc
-dbus-launch --exit-with-session sugar-shell
+if [ -f /etc/olpc-security ] ; then
+  dbus-launch --exit-with-session --config-file=/etc/dbus-1/session-olpc.conf sugar-shell
+else
+  dbus-launch --exit-with-session sugar-shell
+fi

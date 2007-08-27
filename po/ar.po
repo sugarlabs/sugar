@@ -7,82 +7,155 @@ msgid ""
 msgstr ""
 "Project-Id-Version: olpc-sugar.master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-28 10:44-0700\n"
-"PO-Revision-Date: 2007-06-28 21:36+0300\n"
+"POT-Creation-Date: 2007-08-13 17:41-0700\n"
+"PO-Revision-Date: 2007-08-16 00:17+0300\n"
 "Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
-"Plural-Forms: nplurals=4; plural=n==1 ? 0 : n==2 ? 1 : n>=3 && n<=10 ? 2 : 3\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\nnplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: ../shell/intro/intro.py:77
-msgid "Pick a buddy picture"
-msgstr "اختر صورة صاحب"
+#: ../shell/intro/intro.py:63
+msgid "Name:"
+msgstr "الاسم:"
 
-#: ../shell/intro/intro.py:100
-msgid "My Picture:"
-msgstr "صورتي:"
+#: ../shell/intro/intro.py:93
+msgid "Click to change color:"
+msgstr "انقر لتغيير اللون:"
 
-#: ../shell/intro/intro.py:180
-msgid "My Name:"
-msgstr "اسمي:"
+#: ../shell/intro/intro.py:147
+msgid "Back"
+msgstr "السابق"
 
-#: ../shell/intro/intro.py:204
-msgid "My Color:"
-msgstr "لوني:"
+#: ../shell/intro/intro.py:155
+msgid "Done"
+msgstr "تمّ"
+
+#: ../shell/intro/intro.py:158
+msgid "Next"
+msgstr "التالي"
 
 #: ../shell/view/BuddyMenu.py:83
 msgid "Remove friend"
 msgstr "أزل صديق"
 
-#: ../shell/view/BuddyMenu.py:87
+#: ../shell/view/BuddyMenu.py:86
 msgid "Make friend"
 msgstr "اصنع صديق"
 
-#: ../shell/view/BuddyMenu.py:97
+#. FIXME check that the buddy is not in the activity already
+#: ../shell/view/BuddyMenu.py:98
 msgid "Invite"
 msgstr "ادعُ"
 
-#: ../shell/view/clipboardmenu.py:103
+#: ../shell/view/clipboardmenu.py:65
 msgid "Remove"
 msgstr "أزل"
 
-#: ../shell/view/clipboardmenu.py:110
+#: ../shell/view/clipboardmenu.py:70
 msgid "Open"
 msgstr "افتح"
 
-#: ../shell/view/clipboardmenu.py:117
-msgid "Stop download"
-msgstr "أوقف التنزيل"
-
-#: ../shell/view/clipboardmenu.py:124
+#. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
+#. TODO: Implement stopping downloads
+#. self._stop_item.connect('activate', self._stop_item_activate_cb)
+#. self.append_menu_item(self._stop_item)
+#: ../shell/view/clipboardmenu.py:80
 msgid "Add to journal"
-msgstr "أضف جرنال"
+msgstr "أضف يوميّة"
 
-#: ../services/clipboard/objecttypeservice.py:32
-msgid "Text"
-msgstr "نص"
-
-#: ../services/clipboard/objecttypeservice.py:35
-msgid "Image"
-msgstr "صورة"
-
-#: ../shell/view/Shell.py:227
-msgid "Screenshot"
-msgstr "لقطة شاشة"
-
-#: ../shell/view/clipboardicon.py:211
+#: ../shell/view/clipboardmenu.py:158
 #, python-format
 msgid "Clipboard object: %s."
 msgstr "عنصر الحافظة: %s."
 
-#: ../shell/view/home/MeshBox.py:122
+#: ../shell/view/frame/zoombox.py:39
+msgid "Neighborhood"
+msgstr "الجِوَار"
+
+#: ../shell/view/frame/zoombox.py:50
+msgid "Group"
+msgstr "مجموعة"
+
+#: ../shell/view/frame/zoombox.py:61
+msgid "Home"
+msgstr "منزل"
+
+#: ../shell/view/frame/zoombox.py:72
+msgid "Activity"
+msgstr "النشاط"
+
+#: ../services/shell/objecttypeservice.py:32
+msgid "Text"
+msgstr "نص"
+
+#: ../services/shell/objecttypeservice.py:36
+msgid "Image"
+msgstr "صورة"
+
+#: ../shell/hardware/keydialog.py:113
+msgid "Authentication Type:"
+msgstr "نوع الاستيثاق:"
+
+#: ../shell/hardware/keydialog.py:158
+msgid "Encryption Type:"
+msgstr "نوع التعمية:"
+
+#: ../shell/view/home/activitiesdonut.py:75
+msgid "Starting..."
+msgstr "يبدأ..."
+
+#: ../shell/view/home/activitiesdonut.py:89
+msgid "Resume"
+msgstr "استكمل"
+
+#: ../shell/view/home/activitiesdonut.py:96 ../sugar/activity/activity.py:89
+msgid "Stop"
+msgstr "قف"
+
+#: ../shell/view/Shell.py:214
+msgid "Screenshot"
+msgstr "لقطة شاشة"
+
+#: ../shell/view/home/HomeBox.py:131
+msgid "Shutdown"
+msgstr "أطفيء"
+
+#: ../shell/view/home/MeshBox.py:126
 msgid "Mesh Network"
 msgstr "شبكة عُروِيّة"
 
-#: ../sugar/activity/activity.py:232
+#: ../shell/view/devices/battery.py:34
+msgid "My Battery life"
+msgstr "عمر بطاريتي"
+
+#: ../shell/view/devices/battery.py:87
+msgid "Battery charging"
+msgstr "شحن البطاريّة"
+
+#: ../shell/view/devices/battery.py:89
+msgid "Battery discharging"
+msgstr "تفريغ البطاريّة"
+
+#: ../shell/view/devices/battery.py:91
+msgid "Battery fully charged"
+msgstr "البطارية مشحونة بالكامل"
+
+#: ../sugar/activity/activity.py:73
+msgid "Private"
+msgstr "خاص"
+
+#: ../sugar/activity/activity.py:75
+msgid "My Neighborhood"
+msgstr "جِوارِي"
+
+#: ../sugar/activity/activity.py:83
+msgid "Keep"
+msgstr "ابقِ"
+
+#: ../sugar/activity/activity.py:262
 #, python-format
 msgid "%s Activity"
 msgstr "نشاط %s"

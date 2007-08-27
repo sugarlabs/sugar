@@ -14,13 +14,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from sugar.graphics.canvasicon import CanvasIcon
+from sugar.graphics.icon import CanvasIcon
 from sugar.graphics.palette import Palette
 from view.BuddyMenu import BuddyMenu
 
 class BuddyIcon(CanvasIcon):
     def __init__(self, shell, buddy):
-        CanvasIcon.__init__(self, icon_name='theme:computer-xo',
+        CanvasIcon.__init__(self, icon_name='computer-xo',
                             xo_color=buddy.get_color())
 
         self._shell = shell
