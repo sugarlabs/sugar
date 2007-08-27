@@ -54,12 +54,15 @@ class FriendsBox(hippo.CanvasBox):
                                self.__activity_appeared_cb)
 
         # Add initial activities the PS knows about
-        for activity in self._pservice.get_activities():
-            self.__activity_appeared_cb(self._pservice, activity)
+        self._pservice.get_activities_async(reply_handler=self._get_activities_cb)
 
         home_model = shell.get_model().get_home()
         home_model.connect('active-activity-changed',
                            self._active_activity_changed_cb)
+
+    def _get_activities_cb(self, list):
+        for activity in list:
+            self.__activity_appeared_cb(self._pservice, activity)
 
     def add_buddy(self, buddy):
         if self._buddies.has_key(buddy.props.key):

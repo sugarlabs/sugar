@@ -68,9 +68,7 @@ class ActivitiesBox(hippo.CanvasBox):
         self._invites = self._shell_model.get_invites()
 
         registry = activity.get_registry()
-        for activity_info in registry.get_activities():
-            if activity_info.show_launcher:
-                self.add_activity(activity_info)
+        registry.get_activities_async(reply_handler=self._get_activities_cb)
 
         registry.connect('activity-added', self._activity_added_cb)
 
@@ -78,6 +76,11 @@ class ActivitiesBox(hippo.CanvasBox):
             self.add_invite(invite)
         self._invites.connect('invite-added', self._invite_added_cb)
         self._invites.connect('invite-removed', self._invite_removed_cb)
+
+    def _get_activities_cb(self, activity_list):
+        for activity_info in activity_list:
+            if activity_info.show_launcher:
+                self.add_activity(activity_info)
 
     def _activity_clicked_cb(self, icon):
         self._shell.start_activity(icon.get_bundle_id())
