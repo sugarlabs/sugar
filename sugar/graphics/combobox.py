@@ -85,7 +85,7 @@ class ComboBox(gtk.ComboBox):
             width, height = gtk.icon_size_lookup(size)
 
             if icon_name:
-                file_name = self._get_real_name_from_theme(icon_name[6:], size)
+                file_name = self._get_real_name_from_theme(icon_name, size)
 
             pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(file_name, width, height)
         else:
