@@ -88,7 +88,7 @@ class ClipboardIcon(CanvasIcon):
         if icon_name:
             self.props.icon_name = icon_name
         else:
-            self.props.icon_name = 'theme:application-octet-stream'
+            self.props.icon_name = 'application-octet-stream'
 
         self._name = name
         self._percent = percent
