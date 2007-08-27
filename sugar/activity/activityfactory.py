@@ -26,11 +26,17 @@ from sugar.presence import presenceservice
 from sugar.activity.activityhandle import ActivityHandle
 from sugar import util
 
+import os
+
 _SHELL_SERVICE = "org.laptop.Shell"
 _SHELL_PATH = "/org/laptop/Shell"
 _SHELL_IFACE = "org.laptop.Shell"
 
 _ACTIVITY_FACTORY_INTERFACE = "org.laptop.ActivityFactory"
+
+_RAINBOW_SERVICE_NAME = "org.laptop.security.Rainbow"
+_RAINBOW_ACTIVITY_FACTORY_PATH = "/"
+_RAINBOW_ACTIVITY_FACTORY_INTERFACE = "org.laptop.security.Rainbow"
 
 def create_activity_id():
     """Generate a new, unique ID for this activity"""
@@ -84,6 +90,9 @@ class ActivityCreationHandler(gobject.GObject):
         particular type of activity is created during the activity
         registration process in shell bundle registry which creates 
         service definition files for each registered bundle type.
+
+        If the file '/etc/olpc-security' exists, then activity launching
+        will be delegated to the prototype 'Rainbow' security service.
         """
         gobject.GObject.__init__(self)
         self._service_name = service_name
@@ -112,10 +121,22 @@ class ActivityCreationHandler(gobject.GObject):
                     reply_handler=self._no_reply_handler,
                     error_handler=self._notify_launch_error_handler)
 
-        self._factory.create(self._activity_handle.get_dict(),
-                             timeout=120 * 1000,
-                             reply_handler=self._no_reply_handler,
-                             error_handler=self._create_error_handler)
+        if not os.path.exists('/etc/olpc-security'):
+            self._factory.create(self._activity_handle.get_dict(),
+                                 timeout=120 * 1000,
+                                 reply_handler=self._no_reply_handler,
+                                 error_handler=self._create_error_handler)
+        else:
+            system_bus = dbus.SystemBus()
+            factory = system_bus.get_object(_RAINBOW_SERVICE_NAME,
+                                            _RAINBOW_ACTIVITY_FACTORY_PATH)
+            factory.CreateActivity(
+                    self._service_name,
+                    self._activity_handle.get_dict(),
+                    timeout=120 * 1000,
+                    reply_handler=self._create_reply_handler,
+                    error_handler=self._create_error_handler,
+                    dbus_interface=_RAINBOW_ACTIVITY_FACTORY_INTERFACE)
 
     def get_activity_id(self):
         """Retrieve the unique identity for this activity"""
