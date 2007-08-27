@@ -69,7 +69,7 @@ class BuddyModel(gobject.GObject):
     def _get_buddies_cb(self, list):
         buddy = None
         for iter_buddy in list:
-            if iter_buddy.props.key == key:
+            if iter_buddy.props.key == self._key:
                 buddy = iter_buddy
                 break
 
