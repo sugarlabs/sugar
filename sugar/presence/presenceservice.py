@@ -268,6 +268,35 @@ class PresenceService(gobject.GObject):
                 acts.append(self._new_object(item))
             return acts
 
+    def _get_activities_cb(self, reply_handler, resp):
+        acts = []
+        for item in resp:
+            acts.append(self._new_object(item))
+
+        reply_handler(acts)
+
+    def _get_activities_error_cb(self, error_handler, e):
+        if error_handler:
+            error_handler(e)
+        else:
+            _logger.warn(
+                """Unable to retrieve activity-list from presence service: %s"""
+                % e
+            )
+
+    def get_buddies_async(self, reply_handler=None, error_handler=None):
+        """Retrieve set of all activities from service asyncronously 
+        """
+
+        if not reply_handler:
+            logging.error('Function get_activities_async called without a reply handler. Can not run.') 
+            return
+
+        self._ps.GetActivities(
+             reply_handler=lambda resp:self._get_activities_cb(reply_handler, resp),
+             error_handler=lambda e:self._get_activities_error_cb(error_handler, e))
+
+
     def get_activity(self, activity_id):
         """Retrieve single Activity object for the given unique id 
         
@@ -305,6 +334,34 @@ class PresenceService(gobject.GObject):
             for item in resp:
                 buddies.append(self._new_object(item))
             return buddies
+
+    def _get_buddies_cb(self, reply_handler, resp):
+        buddies = []
+        for item in resp:
+            buddies.append(self._new_object(item))
+
+        reply_handler(buddies)
+
+    def _get_buddies_error_cb(self, error_handler, e):
+        if error_handler:
+            error_handler(e)
+        else:
+            _logger.warn(
+                """Unable to retrieve buddy-list from presence service: %s"""
+                % e
+            )
+
+    def get_buddies_async(self, reply_handler=None, error_handler=None):
+        """Retrieve set of all buddies from service asyncronously 
+        """
+
+        if not reply_handler:
+            logging.error('Function get_buddies_async called without a reply handler. Can not run.') 
+            return
+
+        self._ps.GetBuddies(
+             reply_handler=lambda resp:self._get_buddies_cb(reply_handler, resp),
+             error_handler=lambda e:self._get_buddies_error_cb(error_handler, e))
 
     def get_buddy(self, key):
         """Retrieve single Buddy object for the given public key

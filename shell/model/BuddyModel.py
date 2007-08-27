@@ -52,26 +52,35 @@ class BuddyModel(gobject.GObject):
 
         self._buddy = None
 
-        # If given just a key, try to get the buddy from the PS first
         if not buddy:
-            self._key = key
-            for iter_buddy in self._pservice.get_buddies():
-                if iter_buddy.props.key == key:
-                    buddy = iter_buddy
-                    break
-
-        # If successful, copy properties from the PS buddy object
-        if buddy:
-            self._update_buddy(buddy)
-        else:
-            # Otherwise, connect to the PS's buddy-appeared signal and
+            self._key = key        
+            # connect to the PS's buddy-appeared signal and
             # wait for the buddy to appear
             self._ba_handler = self._pservice.connect('buddy-appeared',
                     self._buddy_appeared_cb)
-            self._key = key
             # Set color to 'inactive'/'disconnected'
             self._set_color_from_string(_NOT_PRESENT_COLOR)
             self._nick = nick
+
+            self._pservice.get_buddies_async(reply_handler=self._get_buddies_cb)
+        else:
+            self._update_buddy(buddy)
+
+    def _get_buddies_cb(self, list):
+        buddy = None
+        for iter_buddy in list:
+            if iter_buddy.props.key == key:
+                buddy = iter_buddy
+                break
+
+        if buddy:
+            if self._ba_handler:
+                # Once we have the buddy, we no longer need to
+                # monitor buddy-appeared events
+                self._pservice.disconnect(self._ba_handler)
+                self._ba_handler = None
+
+            self._update_buddy(buddy)
 
     def _set_color_from_string(self, color_string):
         self._color = XoColor(color_string)

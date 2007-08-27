@@ -77,6 +77,29 @@ class ActivityRegistry(gobject.GObject):
         info_list = self._registry.GetActivities()
         return self._convert_info_list(info_list)
 
+    def _get_activities_cb(self, reply_handler, info_list):
+        result = []
+        i = 0
+        for info_dict in info_list:
+            result.append(_activity_info_from_dict(info_dict))
+
+        reply_handler(result)
+
+    def _get_activities_error_cb(self, error_handler, e):
+        if error_handler:
+            error_handler(e)
+        else:
+            logging.error('Error getting activities async: %s' % str(e))
+
+    def get_activities_async(self, reply_handler=None, error_handler=None):
+        if not reply_handler:
+            logging.error('Function get_activities_async called without a reply handler. Can not run.') 
+            return
+
+        self._registry.GetActivities(
+             reply_handler=lambda info_list:self._get_activities_cb(reply_handler, info_list),
+             error_handler=lambda e:self._get_activities_error_cb(error_handler, e))
+
     def get_activity(self, service_name):
         if self._service_name_to_activity_info.has_key(service_name):
             return self._service_name_to_activity_info[service_name]

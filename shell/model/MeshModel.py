@@ -87,11 +87,9 @@ class MeshModel(gobject.GObject):
                                self._buddy_disappeared_cb)
 
         # Add any buddies the PS knows about already
-        for buddy in self._pservice.get_buddies():
-            self._buddy_appeared_cb(self._pservice, buddy)
+        self._pservice.get_buddies_async(reply_handler=self._get_buddies_cb)
 
-        for activity in self._pservice.get_activities():
-            self._check_activity(activity)
+        self._pservice.get_activities_async(reply_handler=self._get_activities_cb)
 
         network_manager = hardwaremanager.get_network_manager()
         if network_manager:
@@ -101,6 +99,14 @@ class MeshModel(gobject.GObject):
                                     self._nm_device_added_cb)
             network_manager.connect('device-removed',
                                     self._nm_device_removed_cb)
+
+    def _get_buddies_cb(self, list):
+        for buddy in list:
+            self._buddy_appeared_cb(self._pservice, buddy)
+
+    def _get_activities_cb(self, list):
+        for activity in list:
+            self._check_activity(activity)            
 
     def _nm_device_added_cb(self, manager, nm_device):
         self._add_network_device(nm_device)
