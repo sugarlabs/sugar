@@ -357,7 +357,7 @@ class Icon(gtk.Image):
         elif pspec.name == 'fill-color':
             self._buffer.fill_color = value
         elif pspec.name == 'stroke-color':
-            self._buffer.fill_color = value
+            self._buffer.stroke_color = value
         elif pspec.name == 'badge-name':
             self._buffer.badge_name = value
         else:
