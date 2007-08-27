@@ -247,7 +247,7 @@ class _IconBuffer(object):
             icon_width = int(dimensions[0])
             icon_height = int(dimensions[1])
         else:
-            pixbuf = gtk.gdk.pixbuf_new_from_file(file_name)
+            pixbuf = gtk.gdk.pixbuf_new_from_file(icon_info.file_name)
             icon_width = pixbuf.get_width()
             icon_height = pixbuf.get_height()
 
