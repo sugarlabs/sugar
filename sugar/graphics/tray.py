@@ -22,7 +22,14 @@ from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.icon import Icon
 
 class _TrayViewport(gtk.Viewport):
+    __gproperties__ = {
+        'can-scroll' : (bool, None, None, False,
+                        gobject.PARAM_READABLE),
+    }
+
     def __init__(self):
+        self._can_scroll = False
+
         gobject.GObject.__init__(self)
 
         self.set_shadow_type(gtk.SHADOW_NONE)
@@ -31,6 +38,8 @@ class _TrayViewport(gtk.Viewport):
         self.traybar.set_show_arrow(False)
         self.add(self.traybar)
         self.traybar.show()
+
+        self.connect('size_allocate', self._size_allocate_cb)
 
     def scroll_right(self):
         adj = self.get_hadjustment()
@@ -41,6 +50,21 @@ class _TrayViewport(gtk.Viewport):
         adj = self.get_hadjustment()
         new_value = adj.value - self.allocation.width
         adj.value = max(adj.lower, new_value)
+
+    def do_get_property(self, pspec):
+        if pspec.name == 'can-scroll':
+            return self._can_scroll
+
+    def _size_allocate_cb(self, viewport, allocation):
+        bar_requisition = self.traybar.get_child_requisition()
+        if bar_requisition[0] < allocation.width:
+            can_scroll = False
+        else:
+            can_scroll = True
+
+        if can_scroll != self._can_scroll:
+            self._can_scroll = can_scroll
+            self.notify('can-scroll')
 
 class HTray(gtk.HBox):
     def __init__(self, **kwargs):
@@ -55,9 +79,10 @@ class HTray(gtk.HBox):
         icon.show()
 
         self.pack_start(self._scroll_left, False)
-        self._scroll_left.show()
 
         self._viewport = _TrayViewport()
+        self._viewport.connect('notify::can-scroll',
+                               self._viewport_can_scroll_changed_cb)
         self.pack_start(self._viewport)
         self._viewport.show()
 
@@ -70,7 +95,11 @@ class HTray(gtk.HBox):
         icon.show()
 
         self.pack_start(self._scroll_right, False)
-        self._scroll_right.show()
+
+    def _viewport_can_scroll_changed_cb(self, viewport, pspec):
+        if self._viewport.props.can_scroll:
+            self._scroll_left.show()
+            self._scroll_right.show()
 
     def _scroll_left_cb(self, button):
         self._viewport.scroll_left()

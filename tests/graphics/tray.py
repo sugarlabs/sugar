@@ -41,6 +41,15 @@ for i in range(0, 100):
     tray.add_item(button)
     button.show()
 
+tray = HTray()
+box.pack_start(tray, False)
+tray.show()
+
+for i in range(0, 10):
+    button = TrayButton(icon_name=theme_icons[i])
+    tray.add_item(button)
+    button.show()
+
 test.pack_start(box)
 box.show()
 
