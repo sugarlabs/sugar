@@ -14,9 +14,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+from gettext import gettext as _
+
 import gtk
 
-from gettext import gettext as _
+from sugar import profile
 from sugar.graphics.icon import CanvasIcon
 from sugar.graphics.icon import get_icon_state
 from sugar.graphics import style
@@ -30,7 +32,8 @@ _STATUS_FULLY_CHARGED = 2
 
 class DeviceView(CanvasIcon):
     def __init__(self, model):
-        CanvasIcon.__init__(self, size=style.MEDIUM_ICON_SIZE)
+        CanvasIcon.__init__(self, size=style.MEDIUM_ICON_SIZE,
+                            xo_color=profile.get_color())
         self._model = model
         self._palette = BatteryPalette(_('My Battery life'))
         self.set_palette(self._palette)
