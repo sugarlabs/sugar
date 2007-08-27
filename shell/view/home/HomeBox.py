@@ -145,29 +145,57 @@ class HomeMyIcon(MyIcon):
     def __init__(self, shell, scale):
         MyIcon.__init__(self, scale)
 
+        self._power_manager = None
         self._shell = shell
 
     def enable_palette(self):
         palette = Palette(profile.get_nick_name())
 
+        reboot_menu_item = gtk.MenuItem(_('Reboot'))
+        reboot_menu_item.connect('activate', self._reboot_activate_cb)
         shutdown_menu_item = gtk.MenuItem(_('Shutdown'))
         shutdown_menu_item.connect('activate', self._shutdown_activate_cb)
+        
+        palette.menu.append(reboot_menu_item)
         palette.menu.append(shutdown_menu_item)
+        reboot_menu_item.show()
         shutdown_menu_item.show()
 
         self.set_palette(palette)
+
+    def _reboot_activate_cb(self, menuitem):
+        model = self._shell.get_model()
+        model.props.state = ShellModel.STATE_SHUTDOWN
+
+        pm = self._get_power_manager()
+
+        if env.is_emulator():
+            self._close_emulator()
+        else:
+            pm.Reboot()
 
     def _shutdown_activate_cb(self, menuitem):
         model = self._shell.get_model()
         model.props.state = ShellModel.STATE_SHUTDOWN
 
+        pm = self._get_power_manager()
+
         if env.is_emulator():
-            if os.environ.has_key('SUGAR_EMULATOR_PID'):
-                pid = int(os.environ['SUGAR_EMULATOR_PID'])
-                os.kill(pid, signal.SIGTERM)
+            self._close_emulator()
         else:
+            pm.Shutdown()
+
+    def _close_emulator(self):
+        if os.environ.has_key('SUGAR_EMULATOR_PID'):
+            pid = int(os.environ['SUGAR_EMULATOR_PID'])
+            os.kill(pid, signal.SIGTERM)
+
+    def _get_power_manager(self):
+        if self._power_manager is None:
             bus = dbus.SystemBus()
-            proxy = bus.get_object('org.freedesktop.Hal',
-                                   '/org/freedesktop/Hal/devices/computer')
-            mgr = dbus.Interface(proxy, 'org.freedesktop.Hal.Device.SystemPowerManagement')
-            mgr.Shutdown()
+            proxy = bus.get_object('org.freedesktop.Hal', 
+                                '/org/freedesktop/Hal/devices/computer')
+            self._power_manager = dbus.Interface(proxy, \
+                            'org.freedesktop.Hal.Device.SystemPowerManagement') 
+
+        return self._power_manager
