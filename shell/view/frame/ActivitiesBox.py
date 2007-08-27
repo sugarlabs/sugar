@@ -44,7 +44,7 @@ class ActivityButton(IconButton):
 
 class InviteButton(IconButton):
     def __init__(self, activity_model, invite):
-        IconButton.__init__(self, icon_name=activity_model.get_color())
+        IconButton.__init__(self, file_name=activity_model.get_icon())
 
         self.props.xo_color = activity_model.get_color()
         self._invite = invite

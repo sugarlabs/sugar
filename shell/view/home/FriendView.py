@@ -67,7 +67,7 @@ class FriendView(hippo.CanvasBox):
         # than hiding the icon?
         name = self._get_new_icon_name(home_activity)
         if name:
-            self._activity_icon.props.icon_name = name
+            self._activity_icon.props.file_name = name
             self._activity_icon.props.xo_color = buddy.get_color()
             if not self._activity_icon_visible:
                 self.append(self._activity_icon, hippo.PACK_EXPAND)

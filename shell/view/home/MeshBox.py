@@ -176,7 +176,7 @@ class ActivityView(hippo.CanvasBox):
         self._layout = SnowflakeLayout()
         self.set_layout(self._layout)
 
-        self._icon = CanvasIcon(icon_name=model.get_icon_name(),
+        self._icon = CanvasIcon(file_name=model.get_icon_name(),
                           xo_color=model.get_color(), box_width=80)
         self._icon.connect('activated', self._clicked_cb)
         self._icon.set_tooltip(self._model.get_title())
