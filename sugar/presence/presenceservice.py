@@ -284,7 +284,7 @@ class PresenceService(gobject.GObject):
                 % e
             )
 
-    def get_buddies_async(self, reply_handler=None, error_handler=None):
+    def get_activities_async(self, reply_handler=None, error_handler=None):
         """Retrieve set of all activities from service asyncronously 
         """
 
