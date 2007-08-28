@@ -110,7 +110,7 @@ class ActivityToolbar(gtk.Toolbar):
             self.share.combo.set_active(0)
     
     def _share_changed_cb(self, combo):
-        if not self.get_sensitive():
+        if not self.props.sensitive:
             # Ignore programmatic combo changes, only respond
             # to user-initiated ones
             return
