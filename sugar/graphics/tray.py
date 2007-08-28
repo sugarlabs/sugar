@@ -111,7 +111,11 @@ class HTray(gtk.HBox):
         self._viewport.traybar.insert(item, index)
 
     def remove_item(self, index):
+        item = self._viewport.traybar.get_nth_item(index)
         self._viewport.traybar.remove(item)
+
+    def get_item_index(self, item):
+        return self._viewport.traybar.get_item_index(item)
 
 class TrayButton(ToolButton):
     def __init__(self, **kwargs):

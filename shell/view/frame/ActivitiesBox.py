@@ -20,27 +20,13 @@ import logging
 from sugar.graphics.palette import Palette
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics.iconbutton import IconButton
+from sugar.graphics.tray import HTray
 from sugar.graphics import style
 from sugar import profile
 from sugar import activity
 
 from frameinvoker import FrameCanvasInvoker
-
-class ActivityButton(IconButton):
-    def __init__(self, activity_info):
-        IconButton.__init__(self, file_name=activity_info.icon,
-                            stroke_color=style.COLOR_WHITE.get_svg(),
-                            fill_color=style.COLOR_TRANSPARENT.get_svg())
-
-        palette = Palette(activity_info.name)
-        palette.props.invoker = FrameCanvasInvoker(self)
-        palette.set_group_id('frame')
-        self.set_palette(palette)
-
-        self._activity_info = activity_info
-
-    def get_bundle_id(self):
-        return self._activity_info.service_name
+from activitybutton import ActivityButton
 
 class InviteButton(IconButton):
     def __init__(self, activity_model, invite):
@@ -66,6 +52,10 @@ class ActivitiesBox(hippo.CanvasBox):
         self._shell_model = self._shell.get_model() 
         self._invite_to_item = {}
         self._invites = self._shell_model.get_invites()
+
+        self.tray = HTray()
+        self.append(hippo.CanvasWidget(widget=self.tray))
+        self.tray.show()
 
         registry = activity.get_registry()
         registry.get_activities_async(reply_handler=self._get_activities_cb)
@@ -96,13 +86,19 @@ class ActivitiesBox(hippo.CanvasBox):
     def _invite_removed_cb(self, invites, invite):
         self.remove_invite(invite)
 
+    def _activity_removed_cb(self, item):
+        index = self.tray.get_item_index(item)
+        self.tray.remove_item(index)
+
     def _activity_added_cb(self, activity_registry, activity_info):
         self.add_activity(activity_info)
 
     def add_activity(self, activity_info):
         item = ActivityButton(activity_info)
-        item.connect('activated', self._activity_clicked_cb)
-        self.append(item, 0)
+        item.connect('clicked', self._activity_clicked_cb)
+        item.connect('remove_activity', self._activity_removed_cb)
+        self.tray.add_item(item, -1)
+        item.show()
 
     def add_invite(self, invite):
         mesh = self._shell_model.get_mesh()

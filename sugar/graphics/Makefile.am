@@ -22,5 +22,6 @@ sugar_PYTHON =			\
 	toolbox.py		\
 	toolbutton.py		\
 	toolcombobox.py		\
+	tray.py			\
 	window.py		\
 	xocolor.py
