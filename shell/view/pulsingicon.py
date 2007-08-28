@@ -66,8 +66,8 @@ class PulsingIcon(CanvasIcon):
             return self._colors
 
     def _update_colors(self):
-        self.props.stroke_color = self._colors[self._pos][0]
-        self.props.fill_color = self._colors[self._pos][1]
+        self.props.stroke_color = self._colors[self._pos][0].get_html()
+        self.props.fill_color = self._colors[self._pos][1].get_html()
 
     def _pulse_timeout(self):
         if self._colors:
