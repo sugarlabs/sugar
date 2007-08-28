@@ -57,7 +57,7 @@ class LogWriter:
         elif level == STDOUT_LEVEL:
             level_txt = 'STDOUT'            
 
-        if msg[len(msg) - 1] != '\n':
+        if not len(msg) or msg[len(msg) - 1] != '\n':
             msg += "\n"
         fmt = "%.4f %s - %s" % (time.time(), level_txt, msg)
         fmt = fmt.encode("utf8")
