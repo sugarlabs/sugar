@@ -145,24 +145,24 @@ class MeshDeviceView(PulsingIcon):
         if state == nmclient.DEVICE_STATE_ACTIVATING:
             self.props.pulse_time = 0.75
             self.props.colors = [
-                [ style.Color(self._device_stroke),
-                  style.Color(self._device_fill) ],
-                [ style.Color(self._device_stroke),
-                  style.Color('#e2e2e2') ]
+                [ style.Color(self._device_stroke).get_svg(),
+                  style.Color(self._device_fill).get_svg() ],
+                [ style.Color(self._device_stroke).get_svg(),
+                  '#e2e2e2' ]
             ]
         elif state == nmclient.DEVICE_STATE_ACTIVATED:
             self.props.pulse_time = 1.5
             self.props.colors = [
-                [ style.Color(self._device_stroke),
-                  style.Color(self._device_fill) ],
-                [ style.Color('#ffffff'),
-                  style.Color(self._device_fill) ]
+                [ style.Color(self._device_stroke).get_svg(),
+                  style.Color(self._device_fill).get_svg() ],
+                [ '#ffffff',
+                  style.Color(self._device_fill).get_svg() ]
             ]
         elif state == nmclient.DEVICE_STATE_INACTIVE:
             self.props.pulse_time = 0.0
             self.props.colors = [
-                [ style.Color(self._device_stroke),
-                  style.Color(self._device_fill) ]
+                [ style.Color(self._device_stroke).get_svg(),
+                  style.Color(self._device_fill).get_svg() ]
             ]
 
 class ActivityView(hippo.CanvasBox):

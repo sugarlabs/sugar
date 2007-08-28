@@ -16,14 +16,14 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from sugar import profile
-from sugar.graphics import canvasicon
+from sugar.graphics.icon import CanvasIcon
 from sugar.graphics import style
 from model.devices import device
 
-class DeviceView(canvasicon.CanvasIcon):
+class DeviceView(CanvasIcon):
     def __init__(self, model):
-        canvasicon.CanvasIcon.__init__(self, size=style.MEDIUM_ICON_SIZE,
-                                       icon_name='network-mesh')
+        CanvasIcon.__init__(self, size=style.MEDIUM_ICON_SIZE,
+                            icon_name='network-mesh')
         self._model = model
 
         model.connect('notify::state', self._state_changed_cb)
