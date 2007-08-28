@@ -69,7 +69,7 @@ def _setup_translations():
     gettext.bindtextdomain(domain, env.get_locale_path())
     gettext.textdomain(domain)
 
-def check_gabble(bus_name):
+def check_cm(bus_name):
     try:
         import dbus
         bus = dbus.SessionBus()
@@ -93,7 +93,7 @@ def main():
         gtk.main()
         profile.update()
 
-    if os.environ.has_key("TP_DEBUG"):
+    if os.environ.has_key("SUGAR_TP_DEBUG"):
         # Allow the user time to start up telepathy connection managers
         # using the Sugar DBus bus address
         import time
@@ -101,18 +101,24 @@ def main():
 
         registry = ManagerRegistry()
         registry.LoadManagers()
-        try:
-            gabble = registry.services["gabble"]
-        except KeyError:
-            raise RuntimeError("Gabble connection manager not found!")
 
-        while not check_gabble(gabble['busname']):
-            print "Waiting for gabble on: DBUS_SESSION_BUS_ADDRESS=%s" % os.environ["DBUS_SESSION_BUS_ADDRESS"]
+        debug_flags = os.environ["SUGAR_TP_DEBUG"].split(',')
+        for cm_name in debug_flags:
+            if cm_name not in ["gabble", "salut"]:
+                continue
+
             try:
-                time.sleep(5)
-            except KeyboardInterrupt:
-                print "Got Ctrl+C, continuing..."
-                break
+                cm = registry.services[cm_name]
+            except KeyError:
+               print RuntimeError("%s connection manager not found!" % cm_name)
+
+            while not check_cm(cm['busname']):
+                print "Waiting for %s on: DBUS_SESSION_BUS_ADDRESS=%s" %(cm_name, os.environ["DBUS_SESSION_BUS_ADDRESS"])
+                try:
+                    time.sleep(5)
+                except KeyboardInterrupt:
+                    print "Got Ctrl+C, continuing..."
+                    break
 
     model = ShellModel()
     shell = Shell(model)
