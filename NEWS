@@ -1,3 +1,5 @@
+* Re-share an activity when it gets launched from the journal if it was
+    shared before (dcbw)
 * Update to new tubes API (cassidy)
 
 Snapshot 246ec1e4aa

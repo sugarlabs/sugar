@@ -44,10 +44,11 @@ from sugar import wm
 from sugar import profile
 from sugar import _sugarext
 
-class ActivityToolbar(gtk.Toolbar):
-    SHARE_PRIVATE = 0
-    SHARE_NEIGHBORHOOD = 1
+SHARE_PRIVATE = "private"
+SHARE_INVITE_ONLY = "invite"  # shouldn't be shown in UI, it's implicit when you invite somebody
+SHARE_NEIGHBORHOOD = "public"
 
+class ActivityToolbar(gtk.Toolbar):
     def __init__(self, activity):
         gtk.Toolbar.__init__(self)
 
@@ -72,11 +73,11 @@ class ActivityToolbar(gtk.Toolbar):
         self.insert(separator, -1)
         separator.show()
 
-        self.share = ToolComboBox(label_text='Share with:')
+        self.share = ToolComboBox(label_text=_('Share with:'))
         self.share.combo.connect('changed', self._share_changed_cb)
-        self.share.combo.append_item(None, _('Private'),
+        self.share.combo.append_item(SHARE_PRIVATE, _('Private'),
                                      'zoom-home-mini')
-        self.share.combo.append_item(None, _('My Neighborhood'),
+        self.share.combo.append_item(SHARE_NEIGHBORHOOD, _('My Neighborhood'),
                                      'zoom-neighborhood-mini')
         self.insert(self.share, -1)
         self.share.show()
@@ -103,14 +104,23 @@ class ActivityToolbar(gtk.Toolbar):
 
         if self._activity.get_shared():
             self.share.set_sensitive(False)
-            self.share.combo.set_active(self.SHARE_NEIGHBORHOOD)
+            self.share.combo.set_active(1)
         else:
             self.share.set_sensitive(True)
-            self.share.combo.set_active(self.SHARE_PRIVATE)
+            self.share.combo.set_active(0)
     
     def _share_changed_cb(self, combo):
-        if self.share.combo.get_active() == self.SHARE_NEIGHBORHOOD:
+        if not self.get_sensitive():
+            # Ignore programmatic combo changes, only respond
+            # to user-initiated ones
+            return
+        model = self.share.combo.get_model()
+        it = self.share.combo.get_active_iter()
+        (scope, ) = model.get(it, 0)
+        if scope == SHARE_NEIGHBORHOOD:
             self._activity.share()
+        elif scope == SHARE_INVITE_ONLY:
+            self._activity.share(private=True)
 
     def _keep_clicked_cb(self, button):
         self._activity.save()
@@ -270,15 +280,38 @@ class Activity(Window, gtk.Container):
             #self._jobject.object_id = ''
             #del self._jobject.metadata['ctime']
             del self._jobject.metadata['mtime']
+
+            try:
+                title = self._jobject.metadata['title']
+                self.set_title(title)
+            except KeyError:
+                pass
+
+            try:
+                # Explicitly share the activity if it used to be shared,
+                # but there isn't an instance out there now
+                scope = self._jobject.metadata['share-scope']
+                if not shared_activity:
+                    logging.debug("share scope %s" % scope)
+                    if scope == SHARE_INVITE_ONLY:
+                        self.share(private=True)
+                    elif scope == SHARE_NEIGHBORHOOD:
+                        self.share(private=False)
+                    else:
+                        logging.debug("Unknown share scope %d" % scope)
+            except KeyError:
+                pass
         elif create_jobject:
             logging.debug('Creating a jobject.')
             self._jobject = datastore.create()
             self._jobject.metadata['title'] = _('%s Activity') % get_bundle_name()
+            self.set_title(self._jobject.metadata['title'])
             self._jobject.metadata['title_set_by_user'] = '0'
             self._jobject.metadata['activity'] = self.get_service_name()
             self._jobject.metadata['activity_id'] = self.get_id()
             self._jobject.metadata['keep'] = '0'
             self._jobject.metadata['preview'] = ''
+            self._jobject.metadata['share-scope'] = SHARE_PRIVATE
 
             if self._shared_activity is not None:
                 icon_color = self._shared_activity.props.color
@@ -468,6 +501,9 @@ class Activity(Window, gtk.Container):
         logging.debug('Share of activity %s successful.' % self._activity_id)
         self._shared_activity = activity
         self.emit('shared')
+        if self._jobject:
+            # FIXME: some wy to distinguish between share scopes
+            self._jobject.metadata['share-scope'] = SHARE_NEIGHBORHOOD
 
     def share(self, private=False):
         """Request that the activity be shared on the network.
