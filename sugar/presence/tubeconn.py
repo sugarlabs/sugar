@@ -34,7 +34,7 @@ class TubeConnection(Connection):
     def __new__(cls, conn, tubes_iface, tube_id, address=None,
                 group_iface=None, mainloop=None):
         if address is None:
-            address = tubes_iface.GetDBusServerAddress(tube_id)
+            address = tubes_iface.GetDBusTubeAddress(tube_id)
         self = super(TubeConnection, cls).__new__(cls, address,
                                                   mainloop=mainloop)
 
