@@ -54,7 +54,7 @@ class ActivitiesBox(hippo.CanvasBox):
         self._invites = self._shell_model.get_invites()
 
         self.tray = HTray()
-        self.append(hippo.CanvasWidget(widget=self.tray))
+        self.append(hippo.CanvasWidget(widget=self.tray), hippo.PACK_EXPAND)
         self.tray.show()
 
         registry = activity.get_registry()
@@ -87,8 +87,7 @@ class ActivitiesBox(hippo.CanvasBox):
         self.remove_invite(invite)
 
     def _activity_removed_cb(self, item):
-        index = self.tray.get_item_index(item)
-        self.tray.remove_item(index)
+        self.tray.remove_item(item)
 
     def _activity_added_cb(self, activity_registry, activity_info):
         self.add_activity(activity_info)

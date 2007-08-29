@@ -18,6 +18,7 @@
 import gobject
 import gtk
 
+from sugar.graphics import style
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.icon import Icon
 
@@ -51,6 +52,11 @@ class _TrayViewport(gtk.Viewport):
         new_value = adj.value - self.allocation.width
         adj.value = max(adj.lower, new_value)
 
+    def do_size_request(self, requisition):
+        child_requisition = self.child.size_request()
+        requisition[0] = 0
+        requisition[1] = child_requisition[1]
+
     def do_get_property(self, pspec):
         if pspec.name == 'can-scroll':
             return self._can_scroll
@@ -66,18 +72,24 @@ class _TrayViewport(gtk.Viewport):
             self._can_scroll = can_scroll
             self.notify('can-scroll')
 
+class _TrayScrollButton(gtk.Button):
+    def __init__(self, icon_name):
+        gobject.GObject.__init__(self)
+
+        self.set_relief(gtk.RELIEF_NONE)
+        self.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
+
+        icon = Icon(icon_name = icon_name,
+                    icon_size=gtk.ICON_SIZE_SMALL_TOOLBAR)
+        self.set_image(icon)
+        icon.show()
+
 class HTray(gtk.HBox):
     def __init__(self, **kwargs):
         gobject.GObject.__init__(self, **kwargs)
 
-        self._scroll_left = gtk.Button()
-        self._scroll_left.set_relief(gtk.RELIEF_NONE)
+        self._scroll_left = _TrayScrollButton('go-left')
         self._scroll_left.connect('clicked', self._scroll_left_cb)
-
-        icon = Icon(icon_name='go-left', icon_size=gtk.ICON_SIZE_MENU)
-        self._scroll_left.set_image(icon)
-        icon.show()
-
         self.pack_start(self._scroll_left, False)
 
         self._viewport = _TrayViewport()
@@ -86,14 +98,8 @@ class HTray(gtk.HBox):
         self.pack_start(self._viewport)
         self._viewport.show()
 
-        self._scroll_right = gtk.Button()
-        self._scroll_right.set_relief(gtk.RELIEF_NONE)
+        self._scroll_right = _TrayScrollButton('go-right')
         self._scroll_right.connect('clicked', self._scroll_right_cb)
-
-        icon = Icon(icon_name='go-right', icon_size=gtk.ICON_SIZE_MENU)
-        self._scroll_right.set_image(icon)
-        icon.show()
-
         self.pack_start(self._scroll_right, False)
 
     def _viewport_can_scroll_changed_cb(self, viewport, pspec):

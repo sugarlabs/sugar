@@ -222,7 +222,7 @@ class Frame(object):
         panel = self._create_panel(gtk.POS_BOTTOM)
 
         box = ActivitiesBox(self._shell)
-        panel.append(box)
+        panel.append(box, hippo.PACK_EXPAND)
 
         return panel
 
