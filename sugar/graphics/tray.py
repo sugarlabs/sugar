@@ -116,8 +116,7 @@ class HTray(gtk.HBox):
     def add_item(self, item, index=-1):
         self._viewport.traybar.insert(item, index)
 
-    def remove_item(self, index):
-        item = self._viewport.traybar.get_nth_item(index)
+    def remove_item(self, item):
         self._viewport.traybar.remove(item)
 
     def get_item_index(self, item):

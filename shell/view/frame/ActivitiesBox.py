@@ -71,6 +71,11 @@ class ActivitiesBox(hippo.CanvasBox):
         for activity_info in activity_list:
             if activity_info.show_launcher:
                 self.add_activity(activity_info)
+                self.add_activity(activity_info)
+                self.add_activity(activity_info)
+                self.add_activity(activity_info)
+                self.add_activity(activity_info)
+                self.add_activity(activity_info)
 
     def _activity_clicked_cb(self, icon):
         self._shell.start_activity(icon.get_bundle_id())
