@@ -20,6 +20,26 @@ import gtk
 from sugar.graphics import style
 from sugar.graphics.palette import Palette
 from sugar.graphics.palette import CanvasInvoker
+from sugar.graphics.palette import WidgetInvoker
+
+def _get_screen_area():
+    frame_thickness = style.GRID_CELL_SIZE
+
+    x = y = frame_thickness
+    width = gtk.gdk.screen_width() - frame_thickness
+    height = gtk.gdk.screen_height() - frame_thickness
+
+    return gtk.gdk.Rectangle(x, y, width, height)
+
+class FrameWidgetInvoker(WidgetInvoker):
+    def __init__(self, widget):
+        WidgetInvoker.__init__(self, widget)
+
+    def get_default_position(self):
+        return Palette.AROUND
+
+    def get_screen_area(self):
+        return _get_screen_area()
 
 class FrameCanvasInvoker(CanvasInvoker):
     def __init__(self, item):
@@ -29,10 +49,4 @@ class FrameCanvasInvoker(CanvasInvoker):
         return Palette.AROUND
 
     def get_screen_area(self):
-        frame_thickness = style.GRID_CELL_SIZE
-
-        x = y = frame_thickness
-        width = gtk.gdk.screen_width() - frame_thickness
-        height = gtk.gdk.screen_height() - frame_thickness
-
-        return gtk.gdk.Rectangle(x, y, width, height)
+        return _get_screen_area()

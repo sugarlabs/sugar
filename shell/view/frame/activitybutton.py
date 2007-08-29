@@ -18,13 +18,14 @@
 import gtk
 import os
 import gobject
+from gettext import gettext as _
 
 from sugar.graphics.palette import Palette
 from sugar.graphics.tray import TrayButton
 from sugar.graphics.icon import Icon
 from sugar.graphics import style
 
-from gettext import gettext as _
+from view.frame.frameinvoker import FrameWidgetInvoker
 
 class ActivityButton(TrayButton, gobject.GObject):
     __gtype_name__ = 'SugarActivityButton'
@@ -50,6 +51,7 @@ class ActivityButton(TrayButton, gobject.GObject):
     def setup_rollover_options(self):
         palette = Palette(self._activity_info.name)
         self.set_palette(palette)
+        palette.props.invoker = FrameWidgetInvoker(self)
 
         menu_item = gtk.MenuItem(_('Remove'))
         menu_item.connect('activate', self.item_remove_cb)
