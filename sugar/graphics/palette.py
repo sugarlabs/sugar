@@ -73,10 +73,6 @@ class Palette(gtk.Window):
     DEFAULT   = 0
     AT_CURSOR = 1
     AROUND    = 2
-    BOTTOM    = 3
-    LEFT      = 4
-    RIGHT     = 5
-    TOP       = 6
 
     PRIMARY = 0
     SECONDARY = 1
@@ -302,38 +298,21 @@ class Palette(gtk.Window):
 
         return int(x), int(y)
 
-    def _get_left_position(self, inv_rect=None):
-        x, y = self._get_position(-1.0, 0.0, 0.0, 0.0, inv_rect)
-        if not self._in_screen(x, y):
-            x, y = self._get_position(-1.0, -1.0, 0.0, 1.0, inv_rect)
-        return x, y
+    def _get_around_alignments(self):
+        return ((0.0, 0.0, 0.0, 1.0),
+                (-1.0, 0.0, 1.0, 1.0),
+                (0.0, 0.0, 1.0, 0.0),
+                (0.0, -1.0, 1.0, 1.0),
+                (0.0, -1.0, 0.0, 0.0),
+                (-1.0, -1.0, 1.0, 0.0),
+                (-1.0, 0.0, 0.0, 0.0),
+                (-1.0, -1.0, 0.0, 1.0))
 
-    def _get_right_position(self, inv_rect=None):
-        x, y = self._get_position(0.0, 0.0, 1.0, 0.0, inv_rect)
-        if not self._in_screen(x, y):
-            x, y = self._get_position(0.0, -1.0, 1.0, 1.0, inv_rect)
-        return x, y
-
-    def _get_top_position(self, inv_rect=None):
-        x, y = self._get_position(0.0, -1.0, 0.0, 0.0, inv_rect)
-        if not self._in_screen(x, y):
-            x, y = self._get_position(-1.0, -1.0, 1.0, 0.0, inv_rect)
-        return x, y
-
-    def _get_bottom_position(self, inv_rect=None):
-        x, y = self._get_position(0.0, 0.0, 0.0, 1.0, inv_rect)
-        if not self._in_screen(x, y):
-            x, y = self._get_position(-1.0, 0.0, 1.0, 1.0, inv_rect)
-        return x, y
-
-    def _get_around_position(self, inv_rect=None):
-        x, y = self._get_bottom_position(inv_rect)
-        if not self._in_screen(x, y):
-            x, y = self._get_right_position(inv_rect)
-        if not self._in_screen(x, y):
-            x, y = self._get_top_position(inv_rect)
-        if not self._in_screen(x, y):
-            x, y = self._get_left_position(inv_rect)
+    def _get_around_position(self):
+        for align in self._get_around_alignments():
+            x, y = self._get_position(*align)
+            if self._in_screen(x, y):
+                return x, y
 
         return x, y
 
@@ -383,14 +362,6 @@ class Palette(gtk.Window):
             x, y = self._get_at_cursor_position(rect)
         elif position == self.AROUND:
             x, y = self._get_around_position()
-        elif position == self.BOTTOM:
-            x, y = self._get_bottom_position()
-        elif position == self.LEFT:
-            x, y = self._get_left_position()
-        elif position == self.RIGHT:
-            x, y = self._get_right_position()
-        elif position == self.TOP:
-            x, y = self._get_top_position()
 
         self.move(x, y)
 
