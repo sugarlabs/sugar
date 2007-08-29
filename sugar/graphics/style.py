@@ -15,24 +15,36 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+"""
+All the constants are expressed in pixels. They are defined for the XO screen
+and are usually adapted to different resolution by applying a zoom factor. The
+factor for traditional 96 dpi screen is currently 0.72 which is the inverse
+of the one we are using to adapt web pages to the XO screen. It should be
+considered a reference value rather then a scale constant which has to be
+automatically applied and always respected.
+"""
+
 import os
 
 import gtk
 import pango
+
+_XO_DPI = 200.0
+
+_FOCUS_LINE_WIDTH = 2
+_TAB_CURVATURE = 1
 
 def _get_screen_dpi():
     xft_dpi = gtk.settings_get_default().get_property('gtk-xft-dpi')
     return float(xft_dpi / 1024)
 
 def _compute_zoom_factor():
-    if os.environ.has_key('SUGAR_XO_STYLE'):
-        if os.environ['SUGAR_XO_STYLE'] == 'yes':
-            return 1.0
+    if _get_screen_dpi() == 96.0:
+        if not os.environ.has_key('SUGAR_XO_STYLE') or \
+           not os.environ['SUGAR_XO_STYLE'] == 'yes':
+            return 0.72
 
-    return gtk.gdk.screen_width() / 1200.0
-
-def zoom(units):
-    return int(ZOOM_FACTOR * units)
+    return 1.0
 
 def _compute_font_height(font):
     widget = gtk.Label('')
@@ -93,10 +105,8 @@ class Color(object):
         else:
             return self.get_html()
 
-_XO_DPI = 200.0
-
-_FOCUS_LINE_WIDTH = 2
-_TAB_CURVATURE = 1
+def zoom(units):
+    return int(ZOOM_FACTOR * units)
 
 ZOOM_FACTOR = _compute_zoom_factor()
 

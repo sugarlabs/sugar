@@ -1,7 +1,7 @@
 @{
 if theme == 'sugar':
     font_name = 'Sans Serif 10'
-    icon_sizes = 'gtk-large-toolbar=32,32'
+    icon_sizes = 'gtk-large-toolbar=40,40'
 else:
     font_name = 'Sans Serif 7'
     icon_sizes = 'gtk-large-toolbar=55,55'
