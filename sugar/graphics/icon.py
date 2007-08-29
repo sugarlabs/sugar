@@ -17,6 +17,7 @@
 
 import os
 import re
+import math
 import time
 import logging
 
@@ -337,18 +338,38 @@ class Icon(gtk.Image):
         self._buffer.width = width
         self._buffer.height = height
 
+    def do_size_request(self, requisition):
+        self._sync_image_properties()
+        surface = self._buffer.get_surface()
+        if surface:
+            requisition[0] = surface.get_width()
+            requisition[1] = surface.get_height()
+        elif self._buffer.width and self._buffer.height:
+            requisition[0] = self._buffer.width
+            requisition[1] = self._buffer.width
+        else:
+            requisition[0] = requisition[1] = 0
+
     def do_expose_event(self, event):
         self._sync_image_properties()
-
         surface = self._buffer.get_surface()
-        if surface is not None:
-            cr = self.window.cairo_create()
+        if surface is None:
+            return
 
-            x = self.allocation.x
-            y = self.allocation.y
+        xpad, ypad = self.get_padding()
+        xalign, yalign = self.get_alignment()
+        requisition = self.get_child_requisition()
+        if self.get_direction != gtk.TEXT_DIR_LTR:
+            xalign = 1.0 - xalign
 
-            cr.set_source_surface(surface, x, y)
-            cr.paint()
+        x = math.floor(self.allocation.x + xpad +
+            (self.allocation.width - requisition[0]) * xalign)
+        y = math.floor(self.allocation.y + ypad +
+            (self.allocation.height - requisition[1]) * yalign)
+
+        cr = self.window.cairo_create()
+        cr.set_source_surface(surface, x, y)
+        cr.paint()
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'xo-color':
