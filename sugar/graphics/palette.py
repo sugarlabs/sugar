@@ -102,6 +102,7 @@ class Palette(gtk.Window):
 
         self.palette_state = self.PRIMARY
 
+        self._current_alignment = None
         self._old_alloc = None
         self._full_request = [0, 0]
         self._cursor_x = 0
@@ -274,21 +275,26 @@ class Palette(gtk.Window):
         self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
         self._update_accept_focus()
 
-    def _in_screen(self, x, y):
-        [width, height] = self._full_request
+    def _in_screen(self, rect):
         screen_area = self._invoker.get_screen_area()
+        return rect.x >= screen_area.x and \
+               rect.y >= screen_area.y and \
+               rect.x + rect.width <= screen_area.width and \
+               rect.y + rect.height <= screen_area.height
 
-        return x >= screen_area.x and \
-               y >= screen_area.y and \
-               x + width <= screen_area.width and \
-               y + height <= screen_area.height
+    def _get_rectangle(self, alignments, full=False, inv_rect=None):
+        palette_halign = alignments[0]
+        palette_valign = alignments[1]
+        invoker_halign = alignments[2]
+        invoker_valign = alignments[3]
 
-    def _get_position(self, palette_halign, palette_valign,
-                      invoker_halign, invoker_valign, inv_rect=None):
         if inv_rect == None:
             inv_rect = self._invoker.get_rect()
 
-        palette_width, palette_height = self.size_request()
+        if full:
+            palette_width, palette_height = self._full_request
+        else:
+            palette_width, palette_height = self.size_request()
 
         x = inv_rect.x + inv_rect.width * invoker_halign + \
             palette_width * palette_halign
@@ -296,36 +302,24 @@ class Palette(gtk.Window):
         y = inv_rect.y + inv_rect.height * invoker_valign + \
             palette_height * palette_valign
 
-        return int(x), int(y)
+        return gtk.gdk.Rectangle(int(x), int(y),
+                                 palette_width, palette_height)
 
     def _get_around_alignments(self):
-        return ((0.0, 0.0, 0.0, 1.0),
+        return [(0.0, 0.0, 0.0, 1.0),
                 (-1.0, 0.0, 1.0, 1.0),
                 (0.0, 0.0, 1.0, 0.0),
                 (0.0, -1.0, 1.0, 1.0),
                 (0.0, -1.0, 0.0, 0.0),
                 (-1.0, -1.0, 1.0, 0.0),
                 (-1.0, 0.0, 0.0, 0.0),
-                (-1.0, -1.0, 0.0, 1.0))
+                (-1.0, -1.0, 0.0, 1.0)]
 
-    def _get_around_position(self):
-        for align in self._get_around_alignments():
-            x, y = self._get_position(*align)
-            if self._in_screen(x, y):
-                return x, y
-
-        return x, y
-
-    def _get_at_cursor_position(self, inv_rect=None):
-        x, y = self._get_position(0.0, 0.0, 1.0, 1.0, inv_rect)
-        if not self._in_screen(x, y):
-            x, y = self._get_position(0.0, -1.0, 1.0, 0.0, inv_rect)
-        if not self._in_screen(x, y):
-            x, y = self._get_position(-1.0, -1.0, 0.0, 0.0, inv_rect)
-        if not self._in_screen(x, y):
-            x, y = self._get_position(-1.0, 0.0, 0.0, 1.0, inv_rect)
-
-        return x, y
+    def _get_at_cursor_alignments(self, inv_rect=None):
+        return [(0.0, 0.0, 1.0, 1.0),
+                (0.0, -1.0, 1.0, 0.0),
+                (-1.0, -1.0, 0.0, 0.0),
+                (-1.0, 0.0, 0.0, 1.0)]
 
     def _update_full_request(self):
         state = self.palette_state
@@ -353,17 +347,24 @@ class Palette(gtk.Window):
         else:
             position = self._position
 
+        inv_rect = None
         if position == self.AT_CURSOR:
             dist = style.PALETTE_CURSOR_DISTANCE
-            rect = gtk.gdk.Rectangle(self._cursor_x - dist,
-                                     self._cursor_y - dist,
-                                     dist * 2, dist * 2)
+            inv_rect = gtk.gdk.Rectangle(self._cursor_x - dist,
+                                         self._cursor_y - dist,
+                                         dist * 2, dist * 2)
 
-            x, y = self._get_at_cursor_position(rect)
-        elif position == self.AROUND:
-            x, y = self._get_around_position()
+        alignments = self._get_around_alignments()[:]
+        if self._current_alignment is not None:
+            alignments.remove(self._current_alignment)
+            alignments.insert(0, self._current_alignment)
 
-        self.move(x, y)
+        for align in alignments:
+            rect = self._get_rectangle(align, inv_rect=inv_rect)
+            if self._in_screen(rect):
+                break
+
+        self.move(rect.x, rect.y)
 
     def _show(self):
         if self._up:
@@ -374,6 +375,12 @@ class Palette(gtk.Window):
 
         self._palette_popup_sid = _palette_observer.connect(
                                 'popup', self._palette_observer_popup_cb)
+
+        for align in self._get_around_alignments():
+            rect = self._get_rectangle(align, full=True)
+            if self._in_screen(rect):
+                self._current_alignment = align
+                break
 
         self._update_position()
         self.menu.set_active(True)
