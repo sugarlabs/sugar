@@ -53,16 +53,6 @@ class AccessPointView(PulsingIcon):
         self._device_stroke = stroke
         self._device_fill = fill
 
-        import sha
-        sh = sha.new()
-        data = self._model.props.name + hex(self._model.props.capabilities) + \
-                hex(self._model.props.mode)
-        sh.update(data)
-        h = hash(sh.digest())
-        idx = h % len(xocolor._colors)
-        self._device_stroke = xocolor._colors[idx][0]
-        self._device_fill = xocolor._colors[idx][1]
-
         self._update_icon()
         self._update_name()
         self._update_state()
