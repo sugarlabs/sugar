@@ -637,11 +637,11 @@ class CanvasInvoker(Invoker):
         context = self._item.get_context()
         if context:
             x, y = context.translate_to_screen(self._item)
-
-        width, height = self._item.get_allocation()
-
-        return gtk.gdk.Rectangle(x, y, width, height)
-
+            width, height = self._item.get_allocation()
+            return gtk.gdk.Rectangle(x, y, width, height)
+        else:
+            return gtk.gdk.Rectangle()
+        
     def _motion_notify_event_cb(self, button, event):
         if event.detail == hippo.MOTION_DETAIL_ENTER:
             self.emit('mouse-enter')
