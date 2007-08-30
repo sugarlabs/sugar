@@ -122,7 +122,8 @@ class ActivityCreationHandler(gobject.GObject):
                     error_handler=self._notify_launch_error_handler)
 
         if not os.path.exists('/etc/olpc-security'):
-            self._factory.create(self._activity_handle.get_dict(),
+            handle = self._activity_handle.get_dict() 
+            self._factory.create(dbus.Dictionary(handle, signature='ss'),
                                  timeout=120 * 1000,
                                  reply_handler=self._no_reply_handler,
                                  error_handler=self._create_error_handler)

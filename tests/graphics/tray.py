@@ -22,16 +22,17 @@ Test the sugar.graphics.icon.Icon widget.
 import gtk
 
 from sugar.graphics.tray import HTray
+from sugar.graphics.tray import VTray
 from sugar.graphics.tray import TrayButton
 
 import common
 
 test = common.Test()
 
-box = gtk.VBox()
+vbox = gtk.VBox()
 
 tray = HTray()
-box.pack_start(tray, False)
+vbox.pack_start(tray, False)
 tray.show()
 
 theme_icons = gtk.icon_theme_get_default().list_icons()
@@ -42,7 +43,7 @@ for i in range(0, 100):
     button.show()
 
 tray = HTray()
-box.pack_start(tray, False)
+vbox.pack_start(tray, False)
 tray.show()
 
 for i in range(0, 10):
@@ -50,8 +51,31 @@ for i in range(0, 10):
     tray.add_item(button)
     button.show()
 
-test.pack_start(box)
-box.show()
+hbox = gtk.HBox()
+
+tray = VTray()
+hbox.pack_start(tray, False)
+tray.show()
+
+for i in range(0, 100):
+    button = TrayButton(icon_name=theme_icons[i])
+    tray.add_item(button)
+    button.show()
+
+tray = VTray()
+hbox.pack_start(tray, False)
+tray.show()
+
+for i in range(0, 4):
+    button = TrayButton(icon_name=theme_icons[i])
+    tray.add_item(button)
+    button.show()
+
+vbox.pack_start(hbox)
+hbox.show()
+
+test.pack_start(vbox)
+vbox.show()
 
 test.show()
 

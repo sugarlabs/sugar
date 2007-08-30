@@ -88,3 +88,6 @@ def mounts():
 def get_unique_values(key):
     return _get_data_store().get_uniquevaluesfor(key, dbus.Dictionary({}, signature='ss'))
 
+def complete_indexing():
+    return _get_data_store().complete_indexing()
+

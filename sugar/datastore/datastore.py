@@ -249,5 +249,8 @@ def unmount(mount_point_id):
 def mounts():
     return dbus_helpers.mounts()
 
+def complete_indexing():
+    return dbus_helpers.complete_indexing()
+
 def get_unique_values(key):
     return dbus_helpers.get_unique_values(key)

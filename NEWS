@@ -1,3 +1,8 @@
+* Add badges to infrastructure access points in mesh view (dcbw)
+* Add palette to Wireless device on Home view showing channel (dcbw)
+
+Snapshot 23ad88db0c
+
 * Re-share an activity when it gets launched from the journal if it was
     shared before (dcbw)
 * Update to new tubes API (cassidy)
