@@ -321,12 +321,13 @@ class Device(gobject.GObject):
         return ret
 
     def get_frequency(self):
+        freq = 0.0
         try:
             freq = self.dev.getFrequency(timeout=3000)
         except dbus.DBusException, e:
             pass
         # Hz -> GHz
-        self._freq = freq / 1000000000
+        self._freq = freq / 1000000000.0
         return self._freq
 
     def get_strength(self):
