@@ -20,17 +20,6 @@ import gobject
 import gtk
 import dbus
 
-def _bytes_to_string(bytes):
-    """Convertes an short-int (char) array to a string
-    
-    returns string or None for a null sequence
-    """
-    if len(bytes):
-        # if there's an internal buffer, we could use 
-        # ctypes to pull it out without this...
-        return ''.join([chr(item) for item in bytes])
-    return None
-
 
 class Buddy(gobject.GObject):
     """UI interface for a Buddy in the presence service
@@ -61,7 +50,7 @@ class Buddy(gobject.GObject):
 
     __gproperties__ = {
         'key'              : (str, None, None, None, gobject.PARAM_READABLE),
-        'icon'             : (object, None, None, gobject.PARAM_READABLE),
+        'icon'             : (str, None, None, None, gobject.PARAM_READABLE),
         'nick'             : (str, None, None, None, gobject.PARAM_READABLE),
         'color'            : (str, None, None, None, gobject.PARAM_READABLE),
         'current-activity' : (object, None, None, gobject.PARAM_READABLE),
@@ -89,7 +78,8 @@ class Buddy(gobject.GObject):
 
         bobj = bus.get_object(self._PRESENCE_SERVICE, object_path)
         self._buddy = dbus.Interface(bobj, self._BUDDY_DBUS_INTERFACE)
-        self._buddy.connect_to_signal('IconChanged', self._icon_changed_cb)
+        self._buddy.connect_to_signal('IconChanged', self._icon_changed_cb,
+                                      byte_arrays=True)
         self._buddy.connect_to_signal('JoinedActivity', self._joined_activity_cb)
         self._buddy.connect_to_signal('LeftActivity', self._left_activity_cb)
         self._buddy.connect_to_signal('PropertyChanged', self._property_changed_cb)
@@ -134,7 +124,7 @@ class Buddy(gobject.GObject):
             return self._properties["owner"]
         elif pspec.name == "icon":
             if not self._icon:
-                self._icon = _bytes_to_string(self._buddy.GetIcon())
+                self._icon = str(self._buddy.GetIcon(byte_arrays=True))
             return self._icon
         elif pspec.name == "ip4-address":
             # IPv4 address will go away quite soon
@@ -148,7 +138,7 @@ class Buddy(gobject.GObject):
 
     def _emit_icon_changed_signal(self, bytes):
         """Emit GObject signal when icon has changed"""
-        self._icon = _bytes_to_string(bytes)
+        self._icon = str(bytes)
         self.emit('icon-changed')
         return False
 
@@ -210,14 +200,7 @@ class Buddy(gobject.GObject):
         """
         if self.props.icon and len(self.props.icon):
             pbl = gtk.gdk.PixbufLoader()
-            icon_data = ""
-            for item in self.props.icon:
-                # XXX this is a slow way to convert the data 
-                # under Python 2.5 and below, collect in a 
-                # list and then join with "", see 
-                # _bytes_to_string in this module
-                icon_data = icon_data + chr(item)
-            pbl.write(icon_data)
+            pbl.write(self.props.icon)
             pbl.close()
             return pbl.get_pixbuf()
         else:
