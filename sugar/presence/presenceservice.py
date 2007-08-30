@@ -47,8 +47,8 @@ class PresenceService(gobject.GObject):
                         ([gobject.TYPE_PYOBJECT])),
         'buddy-disappeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                         ([gobject.TYPE_PYOBJECT])),
-        'activity-invitation': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                        ([gobject.TYPE_PYOBJECT])),
+        # parameters: (activity: Activity, inviter: Buddy, message: unicode)
+        'activity-invitation': (gobject.SIGNAL_RUN_FIRST, None, ([object]*3)),
         'private-invitation': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                         ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT,
                           gobject.TYPE_PYOBJECT])),
@@ -205,14 +205,17 @@ class PresenceService(gobject.GObject):
         """Callback for dbus event (forwards to method to emit GObject event)"""
         gobject.idle_add(self._emit_buddy_disappeared_signal, object_path)
 
-    def _emit_activity_invitation_signal(self, object_path):
+    def _emit_activity_invitation_signal(self, activity_path, buddy_path,
+                                         message):
         """Emit GObject event with presence.activity.Activity object"""
-        self.emit('activity-invitation', self._new_object(object_path))
+        self.emit('activity-invitation', self._new_object(activity_path),
+                  self._new_object(buddy_path), unicode(message))
         return False
 
-    def _activity_invitation_cb(self, object_path):
+    def _activity_invitation_cb(self, activity_path, buddy_path, message):
         """Callback for dbus event (forwards to method to emit GObject event)"""
-        gobject.idle_add(self._emit_activity_invitation_signal, object_path)
+        gobject.idle_add(self._emit_activity_invitation_signal, activity_path,
+                         buddy_path, message)
 
     def _emit_private_invitation_signal(self, bus_name, connection, channel):
         """Emit GObject event with bus_name, connection and channel"""
