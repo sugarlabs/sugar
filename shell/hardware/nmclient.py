@@ -25,6 +25,7 @@ import gobject
 import gtk
 
 from hardware import nminfo
+from sugar.graphics import xocolor
 
 IW_AUTH_ALG_OPEN_SYSTEM = 0x00000001
 IW_AUTH_ALG_SHARED_KEY  = 0x00000002
@@ -138,6 +139,16 @@ class Network(gobject.GObject):
         self._valid = False
         self.emit('initialized', self._valid)
 
+    def get_colors(self):
+        import sha
+        sh = sha.new()
+        data = self._ssid + hex(self._caps) + hex(self._mode)
+        sh.update(data)
+        h = hash(sh.digest())
+        idx = h % len(xocolor._colors)
+        # stroke, fill
+        return (xocolor._colors[idx][0], xocolor._colors[idx][1])
+
     def get_ssid(self):
         return self._ssid
 
@@ -202,25 +213,27 @@ class Device(gobject.GObject):
         self._active = False
         self._act_stage = 0
         self._strength = 0
+        self._freq = 0.0
         self._link = False
         self._valid = False
         self._networks = {}
         self._caps = 0
         self._state = DEVICE_STATE_INACTIVE
         self._active_network = None
+        self._active_net_sigid = 0
 
         obj = sys_bus.get_object(NM_SERVICE, self._op)
-        dev = dbus.Interface(obj, NM_IFACE_DEVICES)
-        dev.getProperties(reply_handler=self._update_reply_cb,
+        self.dev = dbus.Interface(obj, NM_IFACE_DEVICES)
+        self.dev.getProperties(reply_handler=self._update_reply_cb,
                 error_handler=self._update_error_cb)
 
     def _is_activating(self):
-        if self._active and self._act_stage >= 1 and self._act_stage <= 7:
+        if self._active and self._act_stage >= 1 and self._act_stage <= 6:
             return True
         return False
 
     def _is_activated(self):
-        if self._active and self._act_stage == 8:
+        if self._active and self._act_stage == 7:
             return True
         return False
 
@@ -307,6 +320,15 @@ class Device(gobject.GObject):
                 ret.append(net.get_op())
         return ret
 
+    def get_frequency(self):
+        try:
+            freq = self.dev.getFrequency(timeout=3000)
+        except dbus.DBusException, e:
+            pass
+        # Hz -> GHz
+        self._freq = freq / 1000000000
+        return self._freq
+
     def get_strength(self):
         return self._strength
 
@@ -345,8 +367,13 @@ class Device(gobject.GObject):
         # Make sure the old one doesn't get a stuck state
         if self._active_network:
             self._active_network.set_state(NETWORK_STATE_NOTCONNECTED)
+            self._active_network.disconnect(self._active_net_sigid)
 
         self._active_network = network
+
+        if self._active_network:
+            self._active_net_sigid = self._active_network.connect("initialized",
+                    self._active_net_initialized);
 
         # don't emit ssid-changed for networks that are not yet valid
         if self._valid:
@@ -354,6 +381,10 @@ class Device(gobject.GObject):
                 self.emit('ssid-changed')
             elif not self._active_network:
                 self.emit('ssid-changed')
+
+    def _active_net_initialized(self, net, user_data=None):
+        if self._active_network and self._active_network.is_valid():
+            self.emit('ssid-changed')
 
     def _get_active_net_cb(self, state, net_op):
         if not self._networks.has_key(net_op):
@@ -390,9 +421,7 @@ class Device(gobject.GObject):
             if state == DEVICE_STATE_INACTIVE:
                 self.set_active_network(None)
             else:
-                obj = sys_bus.get_object(NM_SERVICE, self._op)
-                dev = dbus.Interface(obj, NM_IFACE_DEVICES)
-                dev.getActiveNetwork(reply_handler=lambda *args: self._get_active_net_cb(state, *args),
+                self.dev.getActiveNetwork(reply_handler=lambda *args: self._get_active_net_cb(state, *args),
                             error_handler=self._get_active_net_error_cb)
 
     def get_ssid(self):
@@ -400,6 +429,9 @@ class Device(gobject.GObject):
             return self._active_network.get_ssid()
         elif not self._active_network:
             return None
+
+    def get_active_network(self):
+        return self._active_network
 
     def get_type(self):
         return self._type

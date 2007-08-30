@@ -49,6 +49,10 @@ class AccessPointView(PulsingIcon):
         model.connect('notify::name', self._name_changed_cb)
         model.connect('notify::state', self._state_changed_cb)
 
+        (stroke, fill) = model.get_nm_network().get_colors()
+        self._device_stroke = stroke
+        self._device_fill = fill
+
         import sha
         sh = sha.new()
         data = self._model.props.name + hex(self._model.props.capabilities) + \

@@ -27,7 +27,9 @@ class Device(device.Device):
         'strength' : (int, None, None, 0, 100, 0,
                       gobject.PARAM_READABLE),
         'state'    : (int, None, None, device.STATE_ACTIVATING,
-                      device.STATE_INACTIVE, 0, gobject.PARAM_READABLE)
+                      device.STATE_INACTIVE, 0, gobject.PARAM_READABLE),
+        'frequency': (float, None, None, 0.0, 9999.99, 0.0,
+                      gobject.PARAM_READABLE)
     }
 
     def __init__(self, nm_device):
@@ -60,9 +62,19 @@ class Device(device.Device):
         elif pspec.name == 'state':
             nm_state = self._nm_device.get_state()
             return device._nm_state_to_state[nm_state]
+        elif pspec.name == 'frequency':
+            print "freq: %s" % self._nm_device.get_frequency()
+            return self._nm_device.get_frequency()
 
     def get_type(self):
         return 'network.wireless'
 
     def get_id(self):
         return str(self._nm_device.get_op())
+
+    def get_active_network_colors(self):
+        net = self._nm_device.get_active_network()
+        if not net:
+            return (None, None)
+        return net.get_colors()
+
