@@ -1,3 +1,5 @@
+* Support mutable name/tags in sugar.presence (smcv)
+* Support invitations in sugar.presence (smcv)
 * Add badges to infrastructure access points in mesh view (dcbw)
 * Add palette to Wireless device on Home view showing channel (dcbw)
 
