@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
-  <mime-type type="application/vnd.olpc-x-sugar">
+  <mime-type type="application/vnd.olpc-sugar">
     <_comment>Sugar activity bundle</_comment>
     <glob pattern="*.xo"/>
   </mime-type>
