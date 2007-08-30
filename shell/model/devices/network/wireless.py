@@ -63,7 +63,6 @@ class Device(device.Device):
             nm_state = self._nm_device.get_state()
             return device._nm_state_to_state[nm_state]
         elif pspec.name == 'frequency':
-            print "freq: %s" % self._nm_device.get_frequency()
             return self._nm_device.get_frequency()
 
     def get_type(self):

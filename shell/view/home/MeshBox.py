@@ -36,6 +36,9 @@ from view.BuddyIcon import BuddyIcon
 from view.pulsingicon import PulsingIcon
 from view.home.snowflakelayout import SnowflakeLayout
 
+from hardware.nmclient import NM_802_11_CAP_PROTO_WEP, NM_802_11_CAP_PROTO_WPA, NM_802_11_CAP_PROTO_WPA2
+
+
 _ICON_NAME = 'network-wireless'
 
 class AccessPointView(PulsingIcon):
@@ -56,6 +59,13 @@ class AccessPointView(PulsingIcon):
         self._update_icon()
         self._update_name()
         self._update_state()
+
+        # Update badge
+        caps = model.props.capabilities
+        if model.get_nm_network().is_favorite():
+            self.props.badge_name = "badge-star"
+        elif (caps & NM_802_11_CAP_PROTO_WEP) or (caps & NM_802_11_CAP_PROTO_WPA) or (caps & NM_802_11_CAP_PROTO_WPA2):
+            self.props.badge_name = "badge-locked"
 
     def _strength_changed_cb(self, model, pspec):
         self._update_icon()
@@ -82,7 +92,7 @@ class AccessPointView(PulsingIcon):
     def _update_icon(self):
         icon_name = get_icon_state(_ICON_NAME, self._model.props.strength)
         if icon_name:
-            self.props.icon_name = icon_name
+            self.props.icon_name = icon_name        
 
     def _update_state(self):
         if self._model.props.state == accesspointmodel.STATE_CONNECTING:

@@ -92,14 +92,16 @@ class Network(gobject.GObject):
                              gobject.TYPE_NONE, ([]))
     }
 
-    def __init__(self, op):
+    def __init__(self, client, op):
         gobject.GObject.__init__(self)
+        self._client = client
         self._op = op
         self._ssid = None
         self._mode = None
         self._strength = 0
         self._caps = 0
         self._valid = False
+        self._favorite = False
         self._state = NETWORK_STATE_NOTCONNECTED
 
         obj = sys_bus.get_object(NM_SERVICE, self._op)
@@ -129,6 +131,12 @@ class Network(gobject.GObject):
             self._valid = False
             self.emit('initialized', self._valid)
             return
+
+        fav_nets = []
+        if self._client.nminfo:
+            fav_nets = self._client.nminfo.get_networks()
+        if self._ssid in fav_nets:
+            self._favorite = True
 
         self._valid = True
         logging.debug("Net(%s): caps 0x%X" % (self._ssid, self._caps))
@@ -184,6 +192,9 @@ class Network(gobject.GObject):
     def is_valid(self):
         return self._valid
 
+    def is_favorite(self):
+        return self._favorite
+
 class Device(gobject.GObject):
     __gsignals__ = {
         'initialized':         (gobject.SIGNAL_RUN_FIRST,
@@ -204,8 +215,9 @@ class Device(gobject.GObject):
                                ([gobject.TYPE_PYOBJECT]))
     }
 
-    def __init__(self, op):
+    def __init__(self, client, op):
         gobject.GObject.__init__(self)
+        self._client = client
         self._op = op
         self._iface = None
         self._type = DEVICE_TYPE_UNKNOWN
@@ -273,7 +285,7 @@ class Device(gobject.GObject):
 
     def _update_networks(self, net_ops, active_op):
         for op in net_ops:
-            net = Network(op)
+            net = Network(self._client, op)
             self._networks[op] = net
             net.connect('initialized', lambda *args: self._net_initialized_cb(active_op, *args))
 
@@ -348,7 +360,7 @@ class Device(gobject.GObject):
     def network_appeared(self, network):
         if self._networks.has_key(network):
             return
-        net = Network(network)
+        net = Network(self._client, network)
         self._networks[network] = net
         net.connect('initialized', lambda *args: self._net_initialized_cb(None, *args))
 
@@ -503,7 +515,7 @@ class NMClient(gobject.GObject):
     def _add_device(self, dev_op):
         if self._devices.has_key(dev_op):
             return
-        dev = Device(dev_op)
+        dev = Device(self, dev_op)
         self._devices[dev_op] = dev
         dev.connect('init-failed', self._dev_init_failed_cb)
         dev.connect('initialized', self._dev_initialized_cb)
