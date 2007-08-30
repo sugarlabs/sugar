@@ -16,8 +16,12 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+import logging
+
 import gobject
 import dbus
+
+_logger = logging.getLogger('sugar.presence.activity')
 
 class Activity(gobject.GObject):
     """UI interface for an Activity in the presence service
@@ -41,15 +45,17 @@ class Activity(gobject.GObject):
         'new-channel':  (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                          ([gobject.TYPE_PYOBJECT])),
         'joined':       (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                         ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT]))
+                         ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
     }
 
     __gproperties__ = {
         'id'        : (str, None, None, None, gobject.PARAM_READABLE),
-        'name'      : (str, None, None, None, gobject.PARAM_READABLE),
-        'color'     : (str, None, None, None, gobject.PARAM_READABLE),
+        'name'      : (str, None, None, None, gobject.PARAM_READWRITE),
+        'tags'      : (str, None, None, None, gobject.PARAM_READWRITE),
+        'color'     : (str, None, None, None, gobject.PARAM_READWRITE),
         'type'      : (str, None, None, None, gobject.PARAM_READABLE),
-        'joined'    : (bool, None, None, False, gobject.PARAM_READABLE)
+        'private'   : (bool, None, None, True, gobject.PARAM_READWRITE),
+        'joined'    : (bool, None, None, False, gobject.PARAM_READABLE),
     }
 
     _PRESENCE_SERVICE = "org.laptop.Sugar.Presence"
@@ -66,12 +72,60 @@ class Activity(gobject.GObject):
         self._activity.connect_to_signal('BuddyJoined', self._buddy_joined_cb)
         self._activity.connect_to_signal('BuddyLeft', self._buddy_left_cb)
         self._activity.connect_to_signal('NewChannel', self._new_channel_cb)
+        self._activity.connect_to_signal('PropertiesChanged',
+                                         self._properties_changed_cb,
+                                         utf8_strings=True)
+        # FIXME: this *would* just use a normal proxy call, but I want the
+        # pending call object so I can block on it, and normal proxy methods
+        # don't return those as of dbus-python 0.82.1; so do it the hard way
+        self._get_properties_call = bus.call_async(self._PRESENCE_SERVICE,
+                object_path, self._ACTIVITY_DBUS_INTERFACE, 'GetProperties',
+                '', (), self._get_properties_reply_cb,
+                self._get_properties_error_cb, utf8_strings=True)
 
         self._id = None
         self._color = None
         self._name = None
         self._type = None
+        self._tags = None
+        self._private = True
         self._joined = False
+
+    def _get_properties_reply_cb(self, new_props):
+        self._properties_changed_cb(new_props)
+        self._get_properties_call = None
+
+    def _get_properties_error_cb(self, e):
+        self._get_properties_call = None
+        # FIXME: do something with the error
+        _logger.warning('Error doing initial GetProperties: %s', e)
+
+    def _properties_changed_cb(self, new_props):
+        _logger.debug('Activity properties changed to %r', new_props)
+        val = new_props.get('name', self._name)
+        if isinstance(val, str) and val != self._name:
+            self._name = val
+            self.notify('name')
+        val = new_props.get('tags', self._tags)
+        if isinstance(val, str) and val != self._tags:
+            self._tags = val
+            self.notify('tags')
+        val = new_props.get('color', self._color)
+        if isinstance(val, str) and val != self._color:
+            self._color = val
+            self.notify('color')
+        val = bool(new_props.get('private', self._private))
+        if val != self._private:
+            self._private = val
+            self.notify('private')
+        val = new_props.get('id', self._id)
+        if isinstance(val, str) and self._id is None:
+            self._id = val
+            self.notify('id')
+        val = new_props.get('type', self._type)
+        if isinstance(val, str) and self._type is None:
+            self._type = val
+            self.notify('type')
 
     def object_path(self):
         """Get our dbus object path"""
@@ -79,24 +133,45 @@ class Activity(gobject.GObject):
 
     def do_get_property(self, pspec):
         """Retrieve a particular property from our property dictionary"""
+        _logger.debug('Looking up property %s', pspec.name)
+
+        if pspec.name == "joined":
+            return self._joined
+
+        if self._get_properties_call is not None:
+            _logger.debug('Blocking on GetProperties() because someone wants '
+                          'property %s', pspec.name)
+            self._get_properties_call.block()
+
         if pspec.name == "id":
-            if not self._id:
-                self._id = self._activity.GetId()
             return self._id
         elif pspec.name == "name":
-            if not self._name:
-                self._name = self._activity.GetName()
             return self._name
         elif pspec.name == "color":
-            if not self._color:
-                self._color = self._activity.GetColor()
             return self._color
         elif pspec.name == "type":
-            if not self._type:
-                self._type = self._activity.GetType()
             return self._type
-        elif pspec.name == "joined":
-            return self._joined
+        elif pspec.name == "tags":
+            return self._tags
+        elif pspec.name == "private":
+            return self._private
+
+    # FIXME: need an asynchronous API to set these properties, particularly
+    # 'private'
+    def do_set_property(self, pspec, val):
+        """Set a particular property in our property dictionary"""
+        if pspec.name == "name":
+            self._activity.SetProperties({'name': val})
+            self._name = val
+        elif pspec.name == "color":
+            self._activity.SetProperties({'color': val})
+            self._color = val
+        elif pspec.name == "tags":
+            self._activity.SetProperties({'tags': val})
+            self._tags = val
+        elif pspec.name == "private":
+            self._activity.SetProperties({'private': val})
+            self._private = val
 
     def _emit_buddy_joined_signal(self, object_path):
         """Generate buddy-joined GObject signal with presence Buddy object"""
@@ -138,6 +213,16 @@ class Activity(gobject.GObject):
         for item in resp:
             buddies.append(self._ps_new_object(item))
         return buddies
+
+    def invite(self, buddy, message, response_cb):
+        """Invite the given buddy to join this activity.
+
+        The callback will be called with one parameter: None on success,
+        or an exception on failure.
+        """
+        self._activity.Invite(buddy.object_path(), message,
+                              reply_handler=lambda: response_cb(None),
+                              error_handler=response_cb)
 
     def _join_cb(self):
         self._joined = True
