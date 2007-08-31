@@ -89,16 +89,20 @@ class BuddyMenu(Palette):
         self.menu.append(menu_item)
         menu_item.show()
 
-        activity = self._shell.get_current_activity()
-        if activity != None:
-            activity_ps = pservice.get_activity(activity.get_id())
+        self._invite_menu = MenuItem(_('Invite'), 'stock-invite')
+        self._invite_menu.connect('activate', self._invite_friend_cb)
+        self.menu.append(self._invite_menu)
+        self._invite_menu.show()
 
-            # FIXME check that the buddy is not in the activity already
+        home_model = shell_model.get_home()
+        home_model.connect('active-activity-changed',
+                           self._cur_activity_changed_cb)
 
-            menu_item = MenuItem(_('Invite'), 'stock-invite')
-            menu_item.connect('activate', self._invite_friend_cb)
-            self.menu.append(menu_item)
-            menu_item.show()
+    def _cur_activity_changed_cb(self, home_model, activity_model):
+        if activity_model is not None:
+            self._invite_menu.show()
+        else:
+            self._invite_menu.hide()
 
     def _buddy_icon_changed_cb(self, buddy):
         pass
