@@ -219,11 +219,9 @@ class Bundle:
             file_names = zip_file.namelist()
             root_dir = self._get_bundle_root_dir(file_names)
             icon_path = os.path.join(root_dir, 'activity', self._icon + '.svg')
-            print icon_path
-            print file_names
             if icon_path in file_names:
                 icon_data = zip_file.read(icon_path)
-                temp_file, temp_file_path = tempfile.mkstemp(self._icon)
+                temp_file, temp_file_path = tempfile.mkstemp(suffix='.svg', prefix=self._icon)
                 os.write(temp_file, icon_data)
                 os.close(temp_file)
                 return temp_file_path
