@@ -181,13 +181,15 @@ class ActivityView(hippo.CanvasBox):
         self.set_layout(self._layout)
 
         self._icon = CanvasIcon(file_name=model.get_icon_name(),
-                          xo_color=model.get_color(), box_width=80)
+                                xo_color=model.get_color(), box_width=80)
         self._icon.connect('activated', self._clicked_cb)
-        self._icon.set_tooltip(self._model.get_title())
+        self._icon.set_tooltip(self._model.activity.props.name)
         self._layout.add_center(self._icon)
 
-    def _update_name(self):
-        self.palette.set_primary_text(self._model.get_title())
+        self._model.activity.connect('notify::name', self._name_changed_cb)
+
+    def _name_changed_cb(self, activity, pspec):
+        self._icon.set_tooltip(activity.props.name)
 
     def has_buddy_icon(self, key):
         return self._icons.has_key(key)

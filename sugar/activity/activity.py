@@ -137,9 +137,16 @@ class ActivityToolbar(gtk.Toolbar):
             self._update_title_sid = gobject.timeout_add(1000, self._update_title_cb)
 
     def _update_title_cb(self):
-        self._activity.metadata['title'] = self.title.get_text()
+        title = self.title.get_text()
+
+        self._activity.metadata['title'] = title
         self._activity.metadata['title_set_by_user'] = '1'
         self._activity.save()
+
+        shared_activity = self._activity._shared_activity
+        if shared_activity:
+            shared_activity.props.name = title
+
         self._update_title_sid = None
         return False
 
@@ -499,6 +506,9 @@ class Activity(Window, gtk.Container):
             logging.debug('Share of activity %s failed: %s.' % (self._activity_id, err))
             return
         logging.debug('Share of activity %s successful.' % self._activity_id)
+
+        activity.props.name = self._jobject.metadata['title']
+
         self._shared_activity = activity
         self.emit('shared')
         if self._jobject:

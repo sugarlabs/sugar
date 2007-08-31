@@ -26,24 +26,21 @@ from hardware import hardwaremanager
 from hardware import nmclient
 
 class ActivityModel:
-    def __init__(self, activity, activity_info):
-        self._activity = activity
-        self._activity_info = activity_info
+    def __init__(self, activity, bundle):
+        self.activity = activity
+        self.bundle = bundle
 
     def get_id(self):
-        return self._activity.props.id
+        return self.activity.props.id
         
     def get_icon_name(self):
-        return self._activity_info.icon
+        return self.bundle.icon
     
     def get_color(self):
-        return XoColor(self._activity.props.color)
+        return XoColor(self.activity.props.color)
 
     def get_service_name(self):
-        return self._activity_info.service_name
-
-    def get_title(self):
-        return self._activity.props.name
+        return self.bundle.service_name
 
 class MeshModel(gobject.GObject):
     __gsignals__ = {
@@ -203,12 +200,12 @@ class MeshModel(gobject.GObject):
 
     def _check_activity(self, presence_activity):
         registry = activity.get_registry()
-        activity_info = registry.get_activity(presence_activity.props.type)
-        if not activity_info:
+        bundle = registry.get_activity(presence_activity.props.type)
+        if not bundle:
             return
         if self.has_activity(presence_activity.props.id):
             return
-        self.add_activity(activity_info, presence_activity)
+        self.add_activity(bundle, presence_activity)
 
     def has_activity(self, activity_id):
         return self._activities.has_key(activity_id)
@@ -219,8 +216,8 @@ class MeshModel(gobject.GObject):
         else:
             return None
 
-    def add_activity(self, activity_info, activity):
-        model = ActivityModel(activity, activity_info)
+    def add_activity(self, bundle, activity):
+        model = ActivityModel(activity, bundle)
         self._activities[model.get_id()] = model
         self.emit('activity-added', model)
 
