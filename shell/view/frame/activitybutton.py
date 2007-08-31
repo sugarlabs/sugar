@@ -36,6 +36,7 @@ class ActivityButton(TrayButton, gobject.GObject):
 
     def __init__(self, activity_info):
         TrayButton.__init__(self)
+
         icon = Icon(file=activity_info.icon,
                     stroke_color=style.COLOR_WHITE.get_svg(),
                     fill_color=style.COLOR_TRANSPARENT.get_svg())

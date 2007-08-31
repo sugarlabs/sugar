@@ -17,10 +17,9 @@
 import hippo
 import logging
 
-from sugar.graphics.palette import Palette
-from sugar.graphics.xocolor import XoColor
-from sugar.graphics.iconbutton import IconButton
+from sugar.graphics.tray import TrayButton
 from sugar.graphics.tray import HTray
+from sugar.graphics.icon import Icon
 from sugar.graphics import style
 from sugar import profile
 from sugar import activity
@@ -28,11 +27,15 @@ from sugar import activity
 from frameinvoker import FrameCanvasInvoker
 from activitybutton import ActivityButton
 
-class InviteButton(IconButton):
+class InviteButton(TrayButton):
     def __init__(self, activity_model, invite):
-        IconButton.__init__(self, file_name=activity_model.get_icon())
+        TrayButton.__init__(self)
 
-        self.props.xo_color = activity_model.get_color()
+        icon = Icon(file=activity_model.get_icon_name(),
+                    xo_color=activity_model.get_color())
+        self.set_icon_widget(icon)
+        icon.show()
+
         self._invite = invite
 
     def get_activity_id(self):
@@ -53,9 +56,9 @@ class ActivitiesBox(hippo.CanvasBox):
         self._invite_to_item = {}
         self._invites = self._shell_model.get_invites()
 
-        self.tray = HTray()
-        self.append(hippo.CanvasWidget(widget=self.tray), hippo.PACK_EXPAND)
-        self.tray.show()
+        self._tray = HTray()
+        self.append(hippo.CanvasWidget(widget=self._tray), hippo.PACK_EXPAND)
+        self._tray.show()
 
         registry = activity.get_registry()
         registry.get_activities_async(reply_handler=self._get_activities_cb)
@@ -87,7 +90,7 @@ class ActivitiesBox(hippo.CanvasBox):
         self.remove_invite(invite)
 
     def _activity_removed_cb(self, item):
-        self.tray.remove_item(item)
+        self._tray.remove_item(item)
 
     def _activity_added_cb(self, activity_registry, activity_info):
         self.add_activity(activity_info)
@@ -96,7 +99,7 @@ class ActivitiesBox(hippo.CanvasBox):
         item = ActivityButton(activity_info)
         item.connect('clicked', self._activity_clicked_cb)
         item.connect('remove_activity', self._activity_removed_cb)
-        self.tray.add_item(item, -1)
+        self._tray.add_item(item, -1)
         item.show()
 
     def add_invite(self, invite):
@@ -104,11 +107,12 @@ class ActivitiesBox(hippo.CanvasBox):
         activity_model = mesh.get_activity(invite.get_activity_id())
         if activity:
             item = InviteButton(activity_model, invite)
-            item.connect('activated', self._invite_clicked_cb)
-            self.append(item, 0)
+            item.connect('clicked', self._invite_clicked_cb)
+            self._tray.add_item(item, 0)
+            item.show()
 
             self._invite_to_item[invite] = item
 
     def remove_invite(self, invite):
-        self.remove(self._invite_to_item[invite])
+        self._tray.remove_item(self._invite_to_item[invite])
         del self._invite_to_item[invite]
