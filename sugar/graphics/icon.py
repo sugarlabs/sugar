@@ -373,8 +373,12 @@ class Icon(gtk.Image):
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'xo-color':
-            self.props.fill_color = value.get_fill_color()
-            self.props.stroke_color = value.get_stroke_color()
+            if value is None:
+                self.props.fill_color = None
+                self.props.stroke_color = None
+            else:
+                self.props.fill_color = value.get_fill_color()
+                self.props.stroke_color = value.get_stroke_color()
         elif pspec.name == 'fill-color':
             self._buffer.fill_color = value
         elif pspec.name == 'stroke-color':
@@ -433,8 +437,12 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             self._buffer.icon_name = value
             self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'xo-color':
-            self.props.fill_color = value.get_fill_color()
-            self.props.stroke_color = value.get_stroke_color()
+            if value is None:
+                self.props.fill_color = None
+                self.props.stroke_color = None
+            else:
+                self.props.fill_color = value.get_fill_color()
+                self.props.stroke_color = value.get_stroke_color()
         elif pspec.name == 'fill-color':
             if not isinstance(value, basestring) and value is not None:
                 raise TypeError('fill-color must be a string, not %r' % type(value))
