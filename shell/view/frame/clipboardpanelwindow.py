@@ -37,7 +37,7 @@ class ClipboardPanelWindow(FrameWindow):
         self._clipboard.connect("owner-change", self._owner_change_cb)
 
         self._clipboard_box = ClipboardBox()
-        self.append(self._clipboard_box)
+        self.append(self._clipboard_box, hippo.PACK_EXPAND)
 
         # Receiving dnd drops
         self.drag_dest_set(0, [], 0)
@@ -45,20 +45,6 @@ class ClipboardPanelWindow(FrameWindow):
         self.connect("drag_drop", self._clipboard_box.drag_drop_cb)
         self.connect("drag_data_received",
                      self._clipboard_box.drag_data_received_cb)
-        
-        # Offering dnd drags
-        self.drag_source_set(0, [], 0)
-        self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
-                        gtk.gdk.POINTER_MOTION_HINT_MASK)
-        self.connect("motion_notify_event",
-                     self._clipboard_box.motion_notify_event_cb)
-
-        # FIXME I'm not sure we should expose the canvas in the Window API
-        self._canvas.connect("button_press_event",
-                             self._clipboard_box.button_press_event_cb)
-
-        self.connect("drag_end", self._clipboard_box.drag_end_cb)
-        self.connect("drag_data_get", self._clipboard_box.drag_data_get_cb)
 
     def _owner_change_cb(self, clipboard, event):
         logging.debug("owner_change_cb")

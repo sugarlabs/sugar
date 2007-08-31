@@ -19,65 +19,95 @@ import logging
 from gettext import gettext as _
 
 import gobject
+import gtk
 
-from sugar.graphics.icon import CanvasIcon
-from view.clipboardmenu import ClipboardMenu
+from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.xocolor import XoColor
+from sugar.graphics.icon import Icon
 from sugar.graphics import style
 from sugar.clipboard import clipboardservice
 from sugar import util
 from sugar import profile
 
-class ClipboardIcon(CanvasIcon):
+from view.clipboardmenu import ClipboardMenu
+from view.frame.frameinvoker import FrameWidgetInvoker
+
+class ClipboardIcon(RadioToolButton):
     __gtype_name__ = 'SugarClipboardIcon'
 
-    __gproperties__ = {
-        'selected'      : (bool, None, None, False,
-                           gobject.PARAM_READWRITE)
-    }
-
-    def __init__(self, object_id, name):
-        CanvasIcon.__init__(self)
+    def __init__(self, object_id, name, group):
+        RadioToolButton.__init__(self, group=group)
         self._object_id = object_id
         self._name = name
         self._percent = 0
         self._preview = None
         self._activity = None
-        self._selected = False
-        self._hover = False
-        self.props.size = style.STANDARD_ICON_SIZE
-        self.props.xo_color = XoColor(profile.get_color().to_string())
+        self.owns_clipboard = False
+
+        self._icon = Icon()
+        self._icon.props.xo_color = profile.get_color()
+        self.set_icon_widget(self._icon)
+        self._icon.show()
+
+        self.props.sensitive = False
         
         cb_service = clipboardservice.get_instance()
+        cb_service.connect('object-state-changed', self._object_state_changed_cb)
         obj = cb_service.get_object(self._object_id)
         formats = obj['FORMATS']
 
         self.palette = ClipboardMenu(self._object_id, self._name, self._percent,
                                      self._preview, self._activity,
                                      formats and formats[0] == 'application/vnd.olpc-sugar')
+        self.palette.props.invoker = FrameWidgetInvoker(self)
+        
+        self.child.connect('drag_data_get', self._drag_data_get_cb)
+        self.connect('notify::active', self._notify_active_cb)
 
-    def do_set_property(self, pspec, value):
-        if pspec.name == 'selected':
-            self._set_selected(value)
-            self.emit_paint_needed(0, 0, -1, -1)
-        else:
-            CanvasIcon.do_set_property(self, pspec, value)
+    def get_object_id(self):
+        return self._object_id
 
-    def do_get_property(self, pspec):
-        if pspec.name == 'selected':
-            return self._selected
-        else:
-            return CanvasIcon.do_get_property(self, pspec)
+    def _drag_data_get_cb(self, widget, context, selection, targetType, eventTime):
+        logging.debug('_drag_data_get_cb: requested target ' + selection.target)
+        
+        cb_service = clipboardservice.get_instance()
+        data = cb_service.get_object_data(self._object_id, selection.target)['DATA']
+        
+        selection.set(selection.target, 8, data)
 
-    def _set_selected(self, selected):
-        self._selected = selected
-        if selected:
-            if not self._hover:
-                self.props.background_color = style.COLOR_SELECTION_GREY.get_int()
-        else:
-            self.props.background_color = style.COLOR_PANEL_GREY.get_int()
+    def _put_in_clipboard(self):
+        logging.debug('ClipboardIcon._put_in_clipboard')
+        targets = self._get_targets()
+        if targets:
+            clipboard = gtk.Clipboard()
+            if not clipboard.set_with_data(targets,
+                                           self._clipboard_data_get_cb,
+                                           self._clipboard_clear_cb,
+                                           targets):
+                logging.error('GtkClipboard.set_with_data failed!')
+            else:
+                self.owns_clipboard = True
 
-    def set_state(self, name, percent, icon_name, preview, activity):
+    def _clipboard_data_get_cb(self, clipboard, selection, info, targets):
+        if not selection.target in [target[0] for target in targets]:
+            logging.warning('ClipboardIcon._clipboard_data_get_cb: asked %s but' \
+                            ' only have %r.' % (selection.target, targets))
+            return
+        cb_service = clipboardservice.get_instance()
+        data = cb_service.get_object_data(self._object_id, selection.target)['DATA']
+        
+        selection.set(selection.target, 8, data)
+
+    def _clipboard_clear_cb(self, clipboard, targets):
+        logging.debug('ClipboardIcon._clipboard_clear_cb')
+        self.owns_clipboard = False
+
+    def _object_state_changed_cb(self, cb_service, object_id, name, percent,
+                                 icon_name, preview, activity):
+
+        if object_id != self._object_id:
+            return
+
         cb_service = clipboardservice.get_instance()
         obj = cb_service.get_object(self._object_id)
         if obj['FORMATS'] and obj['FORMATS'][0] == 'application/vnd.olpc-sugar':
@@ -86,32 +116,41 @@ class ClipboardIcon(CanvasIcon):
             installable = False
 
         if icon_name:
-            self.props.icon_name = icon_name
+            self._icon.props.icon_name = icon_name
         else:
-            self.props.icon_name = 'application-octet-stream'
+            self._icon.props.icon_name = 'application-octet-stream'
 
+        self.child.drag_source_set(gtk.gdk.BUTTON1_MASK,
+                                         self._get_targets(),
+                                         gtk.gdk.ACTION_COPY)
+        self.child.drag_source_set_icon_name(self._icon.props.icon_name)
+        
         self._name = name
         self._percent = percent
         self._preview = preview
         self._activity = activity
         self.palette.set_state(name, percent, preview, activity, installable)
 
-        if (activity or installable) and percent < 100:
-            self.props.xo_color = XoColor("#000000,#424242")
-        else:
-            self.props.xo_color = XoColor(profile.get_color().to_string())
+        self.props.sensitive = (percent == 100)
 
-    def get_object_id(self):
-        return self._object_id
+        if self.props.active:
+            self._put_in_clipboard()
 
-    def prelight(self, enter):
-        if enter:
-            self._hover = True
-            self.props.background_color = style.COLOR_BLACK.get_int()
+    def _notify_active_cb(self, widget, pspec):
+        if self.props.active:
+            self._put_in_clipboard()
         else:
-            self._hover = False
-            if self._selected:
-                self.props.background_color = style.COLOR_SELECTION_GREY.get_int()
-            else:
-                self.props.background_color = style.COLOR_PANEL_GREY.get_int()
+            self.owns_clipboard = False
+
+    def _get_targets(self):
+        cb_service = clipboardservice.get_instance()
+
+        attrs = cb_service.get_object(self._object_id)
+        format_types = attrs[clipboardservice.FORMATS_KEY]
+        
+        targets = []        
+        for format_type in format_types:
+            targets.append((format_type, 0, 0))
+        
+        return targets
 
