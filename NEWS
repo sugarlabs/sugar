@@ -1,3 +1,5 @@
+* Get the title on activity palette in the mesh to work. (marco)
+
 Snapshot e65fef5c79
 
 * Support mutable name/tags in sugar.presence (smcv)
