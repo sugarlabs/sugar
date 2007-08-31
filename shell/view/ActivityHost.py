@@ -16,6 +16,9 @@
 
 import gtk
 import dbus
+import logging
+
+from sugar.presence import presenceservice
 
 import OverlayWindow
 
@@ -62,7 +65,15 @@ class ActivityHost:
         return self._model
 
     def invite(self, buddy):
-        pass
+        pservice = presenceservice.get_instance()
+        activity = pservice.get_activity(self.get_id())
+        if activity is None:
+            logging.error('Invite failed, %s is unknown.' % self.get_id())
+        activity.invite(buddy.get_buddy(), '', self._invite_response_cb)
+
+    def _invite_response_cb(self, error):
+        if error:
+            logging.error('Invite failed: %s' % error)
 
     def present(self):
         # wnck.Window.activate() expects a timestamp, but we don't

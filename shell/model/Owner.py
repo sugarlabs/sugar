@@ -66,6 +66,8 @@ class ShellOwner(gobject.GObject):
         self._icon_hash = util.printable_hash(digest)
 
         self._pservice = presenceservice.get_instance()
+        self._pservice.connect('activity-invitation',
+                               self._activity_invitation_cb)
 
         self._invites = Invites()
 
@@ -75,7 +77,6 @@ class ShellOwner(gobject.GObject):
     def get_nick(self):
         return self._nick
 
-    def _handle_invite(self, issuer, bundle_id, activity_id):
-        """XMLRPC method, called when the owner is invited to an activity."""
-        self._invites.add_invite(issuer, bundle_id, activity_id)
-        return ''
+    def _activity_invitation_cb(self, pservice, activity, buddy, message):
+        self._invites.add_invite(buddy, activity.props.type,
+                                 activity.props.id)
