@@ -1,3 +1,4 @@
+* Don't allow removing system-installed activities. (tomeu)
 * #3063: Make the 'Keep' button in the activity toolbar create a copy of the
   activity in the journal. Add a copy() method for activities to use. (tomeu)
 * #3045: Fix issues with the clipboard icons and palettes. (tomeu)
