@@ -54,10 +54,11 @@ class ActivityButton(TrayButton, gobject.GObject):
         self.set_palette(palette)
         palette.props.invoker = FrameWidgetInvoker(self)
 
-        menu_item = gtk.MenuItem(_('Remove'))
-        menu_item.connect('activate', self.item_remove_cb)
-        palette.menu.append(menu_item)
-        menu_item.show()
+        if os.path.dirname(self._activity_info.path) == os.path.expanduser('~/Activities'):
+            menu_item = gtk.MenuItem(_('Remove'))
+            menu_item.connect('activate', self.item_remove_cb)
+            palette.menu.append(menu_item)
+            menu_item.show()
 
     def item_remove_cb(self, widget):
         self.emit('remove_activity')
