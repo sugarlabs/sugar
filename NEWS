@@ -1,3 +1,6 @@
+* #2971: Fix palette flash when the mouse pointer leave the palete and go
+    over the Invoker (marco)
+
 Snapshot feb462d08d
 
 * Don't allow removing system-installed activities. (tomeu)
@@ -16,6 +19,7 @@ Snapshot e65fef5c79
 
 Snapshot 23ad88db0c
 
+* #1986: Add Reboo option in Home View (edsiper)
 * Re-share an activity when it gets launched from the journal if it was
     shared before (dcbw)
 * Update to new tubes API (cassidy)
