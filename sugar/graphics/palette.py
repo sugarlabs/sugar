@@ -27,16 +27,6 @@ from sugar.graphics import animator
 from sugar.graphics import style
 from sugar import _sugaruiext
 
-_BOTTOM_LEFT  = 0
-_BOTTOM_RIGHT = 1
-_LEFT_BOTTOM  = 2
-_LEFT_TOP     = 3
-_RIGHT_BOTTOM = 4
-_RIGHT_TOP    = 5
-_TOP_LEFT     = 6
-_TOP_RIGHT    = 7
-
-
 # Helper function to find the gap position and size of widget a
 def _calculate_gap(a, b):
     # Test for each side if the palette and invoker are
@@ -70,10 +60,6 @@ def _calculate_gap(a, b):
         return False
 
 class Palette(gtk.Window):
-    DEFAULT   = 0
-    AT_CURSOR = 1
-    AROUND    = 2
-
     PRIMARY = 0
     SECONDARY = 1
 
@@ -102,7 +88,7 @@ class Palette(gtk.Window):
 
         self.palette_state = self.PRIMARY
 
-        self._current_alignment = None
+        self._alignment = None
         self._old_alloc = None
         self._full_request = [0, 0]
         self._cursor_x = 0
@@ -110,7 +96,6 @@ class Palette(gtk.Window):
         self._invoker = None
         self._group_id = None
         self._up = False
-        self._position = self.DEFAULT
         self._palette_popup_sid = None
 
         self._popup_anim = animator.Animator(0.3, 10)
@@ -203,16 +188,12 @@ class Palette(gtk.Window):
             self._invoker = value
             self._invoker.connect('mouse-enter', self._invoker_mouse_enter_cb)
             self._invoker.connect('mouse-leave', self._invoker_mouse_leave_cb)
-        elif pspec.name == 'position':
-            self._position = value
         else:
             raise AssertionError
 
     def do_get_property(self, pspec):
         if pspec.name == 'invoker':
             return self._invoker
-        elif pspec.name == 'position':
-            return self._position
         else:
             raise AssertionError
 
@@ -275,52 +256,6 @@ class Palette(gtk.Window):
         self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
         self._update_accept_focus()
 
-    def _in_screen(self, rect):
-        screen_area = self._invoker.get_screen_area()
-        return rect.x >= screen_area.x and \
-               rect.y >= screen_area.y and \
-               rect.x + rect.width <= screen_area.width and \
-               rect.y + rect.height <= screen_area.height
-
-    def _get_rectangle(self, alignments, full=False, inv_rect=None):
-        palette_halign = alignments[0]
-        palette_valign = alignments[1]
-        invoker_halign = alignments[2]
-        invoker_valign = alignments[3]
-
-        if inv_rect == None:
-            inv_rect = self._invoker.get_rect()
-
-        if full:
-            palette_width, palette_height = self._full_request
-        else:
-            palette_width, palette_height = self.size_request()
-
-        x = inv_rect.x + inv_rect.width * invoker_halign + \
-            palette_width * palette_halign
-
-        y = inv_rect.y + inv_rect.height * invoker_valign + \
-            palette_height * palette_valign
-
-        return gtk.gdk.Rectangle(int(x), int(y),
-                                 palette_width, palette_height)
-
-    def _get_around_alignments(self):
-        return [(0.0, 0.0, 0.0, 1.0),
-                (-1.0, 0.0, 1.0, 1.0),
-                (0.0, 0.0, 1.0, 0.0),
-                (0.0, -1.0, 1.0, 1.0),
-                (0.0, -1.0, 0.0, 0.0),
-                (-1.0, -1.0, 1.0, 0.0),
-                (-1.0, 0.0, 0.0, 0.0),
-                (-1.0, -1.0, 0.0, 1.0)]
-
-    def _get_at_cursor_alignments(self, inv_rect=None):
-        return [(0.0, 0.0, 1.0, 1.0),
-                (0.0, -1.0, 1.0, 0.0),
-                (-1.0, -1.0, 0.0, 0.0),
-                (-1.0, 0.0, 0.0, 1.0)]
-
     def _update_full_request(self):
         state = self.palette_state
 
@@ -333,61 +268,35 @@ class Palette(gtk.Window):
 
         self._set_state(state)
 
-    def _update_cursor_position(self):
-        display = gtk.gdk.display_get_default()
-        screen, x, y, mask = display.get_pointer()
-        self._cursor_x = x
-        self._cursor_y = y
-
     def _update_position(self):
-        x = y = 0
+        invoker = self._invoker
+        if invoker is None or self._alignment is None:
+            logging.error('Cannot update the palette position.')
+            return
 
-        if self._position == self.DEFAULT:
-            position = self._invoker.get_default_position()
-        else:
-            position = self._position
+        rect = self.size_request()
+        position = invoker.get_position_for_alignment(self._alignment, rect)
+        if position is None:
+            position = invoker.get_position(rect)
 
-        inv_rect = None
-        if position == self.AT_CURSOR:
-            dist = style.PALETTE_CURSOR_DISTANCE
-            inv_rect = gtk.gdk.Rectangle(self._cursor_x - dist,
-                                         self._cursor_y - dist,
-                                         dist * 2, dist * 2)
-
-        alignments = self._get_around_alignments()[:]
-        if self._current_alignment is not None:
-            alignments.remove(self._current_alignment)
-            alignments.insert(0, self._current_alignment)
-
-        for align in alignments:
-            rect = self._get_rectangle(align, inv_rect=inv_rect)
-            if self._in_screen(rect):
-                break
-
-        self.move(rect.x, rect.y)
+        self.move(position.x, position.y)
 
     def _show(self):
         if self._up:
             return
 
-        self._update_cursor_position()        
-        self._update_full_request()
-
         self._palette_popup_sid = _palette_observer.connect(
                                 'popup', self._palette_observer_popup_cb)
 
-        for align in self._get_around_alignments():
-            rect = self._get_rectangle(align, full=True)
-            if self._in_screen(rect):
-                self._current_alignment = align
-                break
+        if self._invoker is not None:
+            self._update_full_request()
+            self._alignment = self._invoker.get_alignment(self._full_request)
+            self._update_position()
 
-        self._update_position()
         self.menu.set_active(True)
         self.show()
 
-        if self._invoker:
-            self._invoker.notify_popup()
+        self._invoker.notify_popup()
 
         self._up = True
         _palette_observer.emit('popup', self)
@@ -541,8 +450,96 @@ class Invoker(gobject.GObject):
         'focus-out':   (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
     }
 
+    ANCHORED = 0
+    AT_CURSOR = 1
+
+    BOTTOM = [(0.0, 0.0, 0.0, 1.0),
+              (-1.0, 0.0, 1.0, 1.0)]
+    RIGHT  = [(0.0, 0.0, 1.0, 0.0),
+              (0.0, -1.0, 1.0, 1.0)]
+    TOP    = [(0.0, -1.0, 0.0, 0.0),
+              (-1.0, -1.0, 1.0, 0.0)]
+    LEFT   = [(-1.0, 0.0, 0.0, 0.0),
+              (-1.0, -1.0, 0.0, 1.0)]
+
     def __init__(self):
         gobject.GObject.__init__(self)
+
+        self._screen_area = gtk.gdk.Rectangle(0, 0, gtk.gdk.screen_width(),
+                                              gtk.gdk.screen_height())
+        self._alignments = self.BOTTOM + self.RIGHT + self.TOP + self.LEFT
+        self._position_hint = self.ANCHORED
+        self._cursor_x = -1
+        self._cursor_y = -1
+
+    def _get_position_for_alignment(self, alignment, palette_dim):
+        palette_halign = alignment[0]
+        palette_valign = alignment[1]
+        invoker_halign = alignment[2]
+        invoker_valign = alignment[3]
+
+        if self._cursor_x == -1 or self._cursor_y == -1:
+            display = gtk.gdk.display_get_default()
+            screen, x, y, mask = display.get_pointer()
+            self._cursor_x = x
+            self._cursor_y = y
+
+        if self._position_hint is self.ANCHORED:
+            rect = self.get_rect()
+        else:
+            dist = style.PALETTE_CURSOR_DISTANCE
+            rect = gtk.gdk.Rectangle(self._cursor_x - dist,
+                                     self._cursor_y - dist,
+                                     dist * 2, dist * 2)
+
+        palette_width, palette_height = palette_dim
+
+        x = rect.x + rect.width * invoker_halign + \
+            palette_width * palette_halign
+
+        y = rect.y + rect.height * invoker_valign + \
+            palette_height * palette_valign
+
+        return gtk.gdk.Rectangle(int(x), int(y),
+                                 palette_width, palette_height)
+
+    def _in_screen(self, rect):
+        return rect.x >= self._screen_area.x and \
+               rect.y >= self._screen_area.y and \
+               rect.x + rect.width <= self._screen_area.width and \
+               rect.y + rect.height <= self._screen_area.height
+
+    def _get_alignments(self):
+        if self._position_hint is self.AT_CURSOR:
+            return [(0.0, 0.0, 1.0, 1.0),
+                    (0.0, -1.0, 1.0, 0.0),
+                    (-1.0, -1.0, 0.0, 0.0),
+                    (-1.0, 0.0, 0.0, 1.0)]
+        else:
+            return self._alignments
+
+    def get_position_for_alignment(self, alignment, palette_dim):
+        rect = self._get_position_for_alignment(alignment, palette_dim)
+        if self._in_screen(rect):
+            return rect
+        else:
+            return None
+
+    def get_position(self, palette_dim):
+        for alignment in self._get_alignments():
+            rect = self._get_position_for_alignment(alignment, palette_dim)
+            if self._in_screen(rect):
+                break
+
+        return rect
+
+    def get_alignment(self, palette_dim):
+        for alignment in self._get_alignments():
+            rect = self._get_position_for_alignment(alignment, palette_dim)
+            if self._in_screen(rect):
+                break
+
+        return alignment
 
     def has_rectangle_gap(self):
         return False
@@ -550,19 +547,12 @@ class Invoker(gobject.GObject):
     def draw_rectangle(self, event, palette):
         pass
 
-    def get_default_position(self):
-        return Palette.AROUND
-
-    def get_screen_area(self):
-        width = gtk.gdk.screen_width()
-        height = gtk.gdk.screen_height()
-        return gtk.gdk.Rectangle(0, 0, width, height)
-
     def notify_popup(self):
         pass
 
     def notify_popdown(self):
-        pass
+        self._cursor_x = -1
+        self._cursor_y = -1
 
 class WidgetInvoker(Invoker):
     def __init__(self, widget):
@@ -617,15 +607,19 @@ class WidgetInvoker(Invoker):
         return self._widget.get_toplevel()
 
     def notify_popup(self):
+        Invoker.notify_popup(self)
         self._widget.queue_draw()
 
     def notify_popdown(self):
+        Invoker.notify_popdown(self)
         self._widget.queue_draw()
 
 class CanvasInvoker(Invoker):
     def __init__(self, item):
         Invoker.__init__(self)
+
         self._item = item
+        self._position_hint = self.AT_CURSOR
 
         item.connect('motion-notify-event',
                      self._motion_notify_event_cb)
@@ -644,6 +638,7 @@ class CanvasInvoker(Invoker):
         
     def _motion_notify_event_cb(self, button, event):
         if event.detail == hippo.MOTION_DETAIL_ENTER:
+            context = self._item.get_context()
             self.emit('mouse-enter')
         elif event.detail == hippo.MOTION_DETAIL_LEAVE:
             self.emit('mouse-leave')
