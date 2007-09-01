@@ -327,7 +327,6 @@ class Palette(gtk.Window):
         self._secondary_anim.start()
 
     def popdown(self, immediate=False):
-        self._secondary_anim.stop()
         self._popup_anim.stop()
 
         if not immediate:
@@ -350,6 +349,11 @@ class Palette(gtk.Window):
 
     def _invoker_mouse_enter_cb(self, invoker):
         immediate = False
+        
+        if self.is_up(): 
+            self._popdown_anim.stop() 
+            return
+
         if self._group_id:
             group = palettegroup.get_group(self._group_id)
             if group and group.is_up():
