@@ -31,7 +31,6 @@ class FriendIcon(BuddyIcon):
 
         palette = self.get_palette()
         palette.set_group_id('frame')
-        palette.props.position = Palette.AROUND
         palette.props.invoker = FrameCanvasInvoker(self)
 
     def prelight(self, enter):
