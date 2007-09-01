@@ -19,7 +19,7 @@
 import gtk
 
 from sugar.graphics.icon import Icon
-from sugar.graphics.palette import Palette, WidgetInvoker
+from sugar.graphics.palette import Palette, ToolInvoker
 
 class RadioToolButton(gtk.RadioToolButton):
     __gtype_name__ = "SugarRadioToolButton"
@@ -42,7 +42,7 @@ class RadioToolButton(gtk.RadioToolButton):
     
     def set_palette(self, palette):
         self._palette = palette
-        self._palette.props.invoker = WidgetInvoker(self.child)
+        self._palette.props.invoker = ToolInvoker(self.child)
 
     def set_tooltip(self, text):
         self.set_palette(Palette(text))

@@ -467,7 +467,6 @@ class Invoker(gobject.GObject):
 
         self._screen_area = gtk.gdk.Rectangle(0, 0, gtk.gdk.screen_width(),
                                               gtk.gdk.screen_height())
-        self._alignments = self.BOTTOM + self.RIGHT + self.TOP + self.LEFT
         self._position_hint = self.ANCHORED
         self._cursor_x = -1
         self._cursor_y = -1
@@ -516,7 +515,7 @@ class Invoker(gobject.GObject):
                     (-1.0, -1.0, 0.0, 0.0),
                     (-1.0, 0.0, 0.0, 1.0)]
         else:
-            return self._alignments
+            return self.BOTTOM + self.RIGHT + self.TOP + self.LEFT
 
     def get_position_for_alignment(self, alignment, palette_dim):
         rect = self._get_position_for_alignment(alignment, palette_dim)
@@ -647,6 +646,16 @@ class CanvasInvoker(Invoker):
 
     def get_toplevel(self):
         return hippo.get_canvas_for_item(self._item).get_toplevel()
+
+class ToolInvoker(WidgetInvoker):
+    def get_aligments(self):
+        if self.parent is None:
+            return WidgetInvoker.get_alignments()
+
+        if self.parent.get_orientation() is gtk.ORIENTATION_HORIZONTAL:
+            return self.BOTTOM + self.TOP
+        else:
+            return self.LEFT + self.RIGHT
 
 class _PaletteObserver(gobject.GObject):
     __gtype_name__ = 'SugarPaletteObserver'
