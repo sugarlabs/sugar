@@ -44,9 +44,9 @@ from sugar import wm
 from sugar import profile
 from sugar import _sugarext
 
-SHARE_PRIVATE = "private"
-SHARE_INVITE_ONLY = "invite"  # shouldn't be shown in UI, it's implicit when you invite somebody
-SHARE_NEIGHBORHOOD = "public"
+SCOPE_PRIVATE = "private"
+SCOPE_INVITE_ONLY = "invite"  # shouldn't be shown in UI, it's implicit when you invite somebody
+SCOPE_NEIGHBORHOOD = "public"
 
 class ActivityToolbar(gtk.Toolbar):
     def __init__(self, activity):
@@ -75,9 +75,9 @@ class ActivityToolbar(gtk.Toolbar):
 
         self.share = ToolComboBox(label_text=_('Share with:'))
         self.share.combo.connect('changed', self._share_changed_cb)
-        self.share.combo.append_item(SHARE_PRIVATE, _('Private'),
+        self.share.combo.append_item(SCOPE_PRIVATE, _('Private'),
                                      'zoom-home-mini')
-        self.share.combo.append_item(SHARE_NEIGHBORHOOD, _('My Neighborhood'),
+        self.share.combo.append_item(SCOPE_NEIGHBORHOOD, _('My Neighborhood'),
                                      'zoom-neighborhood-mini')
         self.insert(self.share, -1)
         self.share.show()
@@ -117,9 +117,9 @@ class ActivityToolbar(gtk.Toolbar):
         model = self.share.combo.get_model()
         it = self.share.combo.get_active_iter()
         (scope, ) = model.get(it, 0)
-        if scope == SHARE_NEIGHBORHOOD:
+        if scope == SCOPE_NEIGHBORHOOD:
             self._activity.share()
-        elif scope == SHARE_INVITE_ONLY:
+        elif scope == SCOPE_INVITE_ONLY:
             self._activity.share(private=True)
 
     def _keep_clicked_cb(self, button):
@@ -267,18 +267,10 @@ class Activity(Window, gtk.Container):
         self._closing = False
         self._max_participants = 0
 
-        shared_activity = handle.get_shared_activity()
-        if shared_activity:
-            # Join an existing instance of this activity on the network
-            self._shared_activity = shared_activity
-            self._join_id = self._shared_activity.connect("joined", self._internal_joined_cb)
-            if not self._shared_activity.props.joined:
-                self._shared_activity.join()
-            else:
-                self._internal_joined_cb(self._shared_activity, True, None)
-
         self._bus = ActivityService(self)
         self._owns_file = False
+
+        share_scope = SCOPE_PRIVATE
 
         if handle.object_id:
             self._jobject = datastore.get(handle.object_id)
@@ -289,23 +281,9 @@ class Activity(Window, gtk.Container):
             del self._jobject.metadata['mtime']
 
             try:
+                share_scope = self._jobject.metadata['share-scope']
                 title = self._jobject.metadata['title']
                 self.set_title(title)
-            except KeyError:
-                pass
-
-            try:
-                # Explicitly share the activity if it used to be shared,
-                # but there isn't an instance out there now
-                scope = self._jobject.metadata['share-scope']
-                if not shared_activity:
-                    logging.debug("share scope %s" % scope)
-                    if scope == SHARE_INVITE_ONLY:
-                        self.share(private=True)
-                    elif scope == SHARE_NEIGHBORHOOD:
-                        self.share(private=False)
-                    else:
-                        logging.debug("Unknown share scope %r" % scope)
             except KeyError:
                 pass
         elif create_jobject:
@@ -318,7 +296,7 @@ class Activity(Window, gtk.Container):
             self._jobject.metadata['activity_id'] = self.get_id()
             self._jobject.metadata['keep'] = '0'
             self._jobject.metadata['preview'] = ''
-            self._jobject.metadata['share-scope'] = SHARE_PRIVATE
+            self._jobject.metadata['share-scope'] = SCOPE_PRIVATE
 
             if self._shared_activity is not None:
                 icon_color = self._shared_activity.props.color
@@ -333,6 +311,29 @@ class Activity(Window, gtk.Container):
                     error_handler=self._internal_jobject_error_cb)
         else:
             self._jobject = None
+
+        # handle activity share/join
+        mesh_instance = self._pservice.get_activity(self._activity_id)
+        logging.debug("*** Act %s, mesh instance %r, scope %s" % (self._activity_id, mesh_instance, share_scope))
+        if mesh_instance:
+            # There's already an instance on the mesh, join it
+            logging.debug("*** Act %s joining existing mesh instance" % self._activity_id)
+            self._shared_activity = mesh_instance
+            self._join_id = self._shared_activity.connect("joined", self._internal_joined_cb)
+            if not self._shared_activity.props.joined:
+                self._shared_activity.join()
+            else:
+                self._internal_joined_cb(self._shared_activity, True, None)
+        elif share_scope != SCOPE_PRIVATE:
+            logging.debug("*** Act %s no existing mesh instance, but used to be shared, will share" % self._activity_id)
+            # no existing mesh instance, but activity used to be shared, so
+            # restart the share
+            if share_scope == SCOPE_INVITE_ONLY:
+                self.share(private=True)
+            elif share_scope == SCOPE_NEIGHBORHOOD:
+                self.share(private=False)
+            else:
+                logging.debug("Unknown share scope %r" % share_scope)
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'active':
@@ -499,6 +500,9 @@ class Activity(Window, gtk.Container):
             return
         self.present()
         self.emit('joined')
+        if self._jobject:
+            # FIXME: some way to distinguish between share scopes
+            self._jobject.metadata['share-scope'] = SCOPE_NEIGHBORHOOD
 
     def get_shared(self):
         """Returns TRUE if the activity is shared on the mesh."""
@@ -519,8 +523,8 @@ class Activity(Window, gtk.Container):
         self._shared_activity = activity
         self.emit('shared')
         if self._jobject:
-            # FIXME: some wy to distinguish between share scopes
-            self._jobject.metadata['share-scope'] = SHARE_NEIGHBORHOOD
+            # FIXME: some way to distinguish between share scopes
+            self._jobject.metadata['share-scope'] = SCOPE_NEIGHBORHOOD
 
     def share(self, private=False):
         """Request that the activity be shared on the network.

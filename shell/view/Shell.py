@@ -131,8 +131,6 @@ class Shell(gobject.GObject):
             return
 
         handle = ActivityHandle(activity_id)
-        handle.pservice_id = activity_id
-
         activityfactory.create(bundle_id, handle)
 
     def notify_launch(self, bundle_id, activity_id):

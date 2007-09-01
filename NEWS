@@ -1,3 +1,5 @@
+* Refactor activity share/join in Activity.__init__() to be clearer and cover
+    all cases (dcbw)
 * #2971: Fix palette flash when the mouse pointer leave the palete and go
     over the Invoker (marco)
 

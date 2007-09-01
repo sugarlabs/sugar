@@ -20,15 +20,12 @@ from sugar.presence import presenceservice
 class ActivityHandle(object):
     """Data structure storing simple activity metadata"""
     def __init__(
-        self, activity_id=None, pservice_id=None,
-        object_id=None, uri=None
+        self, activity_id=None, object_id=None, uri=None
     ):
         """Initialise the handle from activity_id
         
         activity_id -- unique id for the activity to be
             created
-        pservice_id -- identity of the sharing service 
-            for this activity in the PresenceService
         object_id -- identity of the journal object 
             associated with the activity. It was used by 
             the journal prototype implementation, might 
@@ -48,28 +45,12 @@ class ActivityHandle(object):
             example or web pages)
         """
         self.activity_id = activity_id
-        self.pservice_id = pservice_id
         self.object_id = object_id
         self.uri = uri
-
-    def get_shared_activity(self):
-        """Retrieve the shared instance of this activity
-        
-        Uses the PresenceService to find any existing dbus 
-        service which provides sharing mechanisms for this 
-        activity.
-        """
-        if self.pservice_id:
-            pservice = presenceservice.get_instance()
-            return pservice.get_activity(self.pservice_id)
-        else:
-            return None
 
     def get_dict(self):
         """Retrieve our settings as a dictionary"""
         result = { 'activity_id' : self.activity_id }
-        if self.pservice_id:
-            result['pservice_id'] = self.pservice_id
         if self.object_id:
             result['object_id'] = self.object_id
         if self.uri:
@@ -81,7 +62,6 @@ def create_from_dict(handle_dict):
     """Create a handle from a dictionary of parameters"""
     result = ActivityHandle(
         handle_dict['activity_id'],
-        pservice_id = handle_dict.get( 'pservice_id' ),
         object_id = handle_dict.get('object_id'),
         uri = handle_dict.get('uri'),
     )
