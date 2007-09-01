@@ -123,7 +123,7 @@ class ActivityToolbar(gtk.Toolbar):
             self._activity.share(private=True)
 
     def _keep_clicked_cb(self, button):
-        self._activity.save()
+        self._activity.copy()
 
     def _stop_clicked_cb(self, button):
         self._activity.close()
@@ -305,7 +305,7 @@ class Activity(Window, gtk.Container):
                     elif scope == SHARE_NEIGHBORHOOD:
                         self.share(private=False)
                     else:
-                        logging.debug("Unknown share scope %d" % scope)
+                        logging.debug("Unknown share scope %r" % scope)
             except KeyError:
                 pass
         elif create_jobject:
@@ -455,6 +455,8 @@ class Activity(Window, gtk.Container):
     def save(self):
         """Request that the activity is saved to the Journal."""
 
+        logging.debug('Activity.save: %r' % self._jobject.object_id)
+
         if self._updating_jobject:
             return
 
@@ -482,6 +484,11 @@ class Activity(Window, gtk.Container):
         datastore.write(self._jobject,
                 reply_handler=self._internal_save_cb,
                 error_handler=self._internal_save_error_cb)
+
+    def copy(self):
+        logging.debug('Activity.copy: %r' % self._jobject.object_id)
+        self.save()
+        self._jobject.object_id = None
 
     def _internal_joined_cb(self, activity, success, err):
         """Callback when join has finished"""

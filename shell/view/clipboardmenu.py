@@ -37,7 +37,6 @@ class ClipboardMenu(Palette):
     def __init__(self, object_id, name, percent, preview, activities, installable):
         Palette.__init__(self, name)
 
-        self.props.position = Palette.RIGHT
         self._object_id = object_id
         self._percent = percent
         self._activities = activities

@@ -134,7 +134,7 @@ class Network(gobject.GObject):
 
         fav_nets = []
         if self._client.nminfo:
-            fav_nets = self._client.nminfo.get_networks()
+            fav_nets = self._client.nminfo.get_networks(nminfo.NETWORK_TYPE_ALLOWED)
         if self._ssid in fav_nets:
             self._favorite = True
 

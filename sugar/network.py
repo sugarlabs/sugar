@@ -144,6 +144,10 @@ class ChunkedGlibHTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         ** [dcbw] modified to send Content-disposition filename too
         """
         path = self.translate_path(self.path)
+        if not path or not os.path.exists(path):
+            self.send_error(404, "File not found")
+            return None
+
         f = None
         if os.path.isdir(path):
             for index in "index.html", "index.htm":
