@@ -648,11 +648,12 @@ class CanvasInvoker(Invoker):
         return hippo.get_canvas_for_item(self._item).get_toplevel()
 
 class ToolInvoker(WidgetInvoker):
-    def get_aligments(self):
-        if self.parent is None:
+    def _get_alignments(self):
+        parent = self._widget.get_parent()
+        if parent is None:
             return WidgetInvoker.get_alignments()
 
-        if self.parent.get_orientation() is gtk.ORIENTATION_HORIZONTAL:
+        if parent.get_orientation() is gtk.ORIENTATION_HORIZONTAL:
             return self.BOTTOM + self.TOP
         else:
             return self.LEFT + self.RIGHT
