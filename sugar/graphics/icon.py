@@ -202,13 +202,13 @@ class _IconBuffer(object):
                 context.set_source_surface(surface, 0, 0)
                 context.paint()
 
-    def _get_size(self, icon_width, icon_height):
+    def _get_size(self, icon_width, icon_height, padding):
         if self.width is not None and self.height is not None:
-            width = self.width
-            height = self.height
+            width = self.width + padding
+            height = self.height + padding
         else:
-            width = icon_width
-            height = icon_height
+            width = icon_width + padding
+            height = icon_height + padding
 
         return width, height
 
@@ -254,11 +254,11 @@ class _IconBuffer(object):
 
         badge_info = self._get_badge_info(icon_info, icon_width, icon_height)
 
-        width, height = self._get_size(icon_width, icon_height)
+        padding = badge_info.icon_padding
+        width, height = self._get_size(icon_width, icon_height, padding)
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
 
         context = cairo.Context(surface)
-        padding = badge_info.icon_padding
         context.scale(float(width) / (icon_width + padding * 2),
                       float(height) / (icon_height + padding * 2))
         context.save()
