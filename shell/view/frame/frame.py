@@ -27,7 +27,7 @@ from sugar.clipboard import clipboardservice
 
 from view.frame.eventarea import EventArea
 from view.frame.ActivitiesBox import ActivitiesBox
-from view.frame.zoombox import ZoomBox
+from view.frame.zoomtoolbar import ZoomToolbar
 from view.frame.overlaybox import OverlayBox
 from view.frame.FriendsBox import FriendsBox
 from view.frame.framewindow import FrameWindow
@@ -210,11 +210,9 @@ class Frame(object):
     def _create_top_panel(self):
         panel = self._create_panel(gtk.POS_TOP)
 
-        box = ZoomBox(self._shell)
-        panel.append(box)
-
-        #box = OverlayBox(self._shell)
-        #root.append(box, hippo.PACK_END)
+        toolbar = ZoomToolbar(self._shell)
+        panel.append(hippo.CanvasWidget(widget=toolbar))
+        toolbar.show()
 
         return panel
 
