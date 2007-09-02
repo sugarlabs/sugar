@@ -303,6 +303,8 @@ class Palette(gtk.Window):
         self.emit('popup')
 
     def _hide(self):
+        self._secondary_anim.stop()
+
         if not self._palette_popup_sid is None:
             _palette_observer.disconnect(self._palette_popup_sid)
             self._palette_popup_sid = None
