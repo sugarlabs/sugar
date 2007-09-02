@@ -37,10 +37,3 @@ class FrameWidgetInvoker(WidgetInvoker):
 
         self._position_hint = self.ANCHORED
         self._screen_area = _get_screen_area()
-
-class FrameCanvasInvoker(CanvasInvoker):
-    def __init__(self, item):
-        CanvasInvoker.__init__(self, item)
-
-        self._position_hint = self.ANCHORED
-        self._screen_area = _get_screen_area()

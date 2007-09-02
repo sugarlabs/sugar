@@ -29,7 +29,7 @@ from view.frame.eventarea import EventArea
 from view.frame.ActivitiesBox import ActivitiesBox
 from view.frame.zoomtoolbar import ZoomToolbar
 from view.frame.overlaybox import OverlayBox
-from view.frame.FriendsBox import FriendsBox
+from view.frame.friendstray import FriendsTray
 from view.frame.framewindow import FrameWindow
 from view.frame.clipboardpanelwindow import ClipboardPanelWindow
 from model.shellmodel import ShellModel
@@ -227,8 +227,9 @@ class Frame(object):
     def _create_right_panel(self):
         panel = self._create_panel(gtk.POS_RIGHT)
 
-        box = FriendsBox(self._shell)
-        panel.append(box)
+        tray = FriendsTray(self._shell)
+        panel.append(hippo.CanvasWidget(widget=tray), hippo.PACK_EXPAND)
+        tray.show()
 
         return panel
 

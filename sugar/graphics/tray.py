@@ -19,6 +19,7 @@ import gobject
 import gtk
 
 from sugar.graphics import style
+from sugar.graphics.palette import Palette, ToolInvoker
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.icon import Icon
 
@@ -145,6 +146,9 @@ class HTray(gtk.HBox):
         scroll_left.viewport = self._viewport
         scroll_right.viewport = self._viewport
 
+    def get_children(self):
+        return self._viewport.traybar.get_children()
+
     def add_item(self, item, index=-1):
         self._viewport.traybar.insert(item, index)
 
@@ -173,6 +177,9 @@ class VTray(gtk.VBox):
         scroll_left.viewport = self._viewport
         scroll_right.viewport = self._viewport
 
+    def get_children(self):
+        return self._viewport.traybar.get_children()
+
     def add_item(self, item, index=-1):
         self._viewport.traybar.insert(item, index)
 
@@ -185,3 +192,24 @@ class VTray(gtk.VBox):
 class TrayButton(ToolButton):
     def __init__(self, **kwargs):
         ToolButton.__init__(self, **kwargs)
+
+class TrayIcon(gtk.ToolItem):
+    def __init__(self, icon_name=None, xo_color=None):
+        gtk.ToolItem.__init__(self)
+
+        event_box = gtk.EventBox()
+
+        icon = Icon(icon_name=icon_name, xo_color=xo_color,
+                    icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
+        event_box.add(icon)
+        icon.show()
+
+        self.add(event_box)
+        event_box.show()
+
+    def set_palette(self, palette):
+        self._palette = palette
+        self._palette.props.invoker = ToolInvoker(self.child)
+
+    def set_tooltip(self, text):
+        self.set_palette(Palette(text))

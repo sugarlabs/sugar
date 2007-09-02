@@ -6,9 +6,9 @@ sugar_PYTHON =				\
 	clipboardbox.py			\
 	clipboardpanelwindow.py		\
 	frameinvoker.py			\
-	FriendsBox.py			\
+	friendstray.py			\
 	eventarea.py			\
 	frame.py			\
 	overlaybox.py			\
 	framewindow.py			\
-	zoombox.py
+	zoomtoolbar.py

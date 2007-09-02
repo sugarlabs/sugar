@@ -6,7 +6,6 @@ sugar_PYTHON =			\
 	combobox.py		\
 	entry.py		\
 	icon.py			\
-	iconbutton.py          	\
 	iconentry.py          	\
 	menuitem.py		\
 	notebook.py		\

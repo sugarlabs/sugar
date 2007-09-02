@@ -24,7 +24,6 @@ from sugar.graphics import style
 from sugar import profile
 from sugar import activity
 
-from frameinvoker import FrameCanvasInvoker
 from activitybutton import ActivityButton
 
 class InviteButton(TrayButton):

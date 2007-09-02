@@ -16,32 +16,27 @@
 
 import hippo
 
-from sugar.graphics.palette import Palette
-from sugar.graphics.icon import CanvasIcon
-from sugar.graphics import style
 from sugar.presence import presenceservice
+from sugar.graphics.tray import VTray, TrayIcon
 
-from view.BuddyIcon import BuddyIcon
+from view.BuddyMenu import BuddyMenu
+from view.frame.frameinvoker import FrameWidgetInvoker
 from model.BuddyModel import BuddyModel
-from view.frame.frameinvoker import FrameCanvasInvoker
 
-class FriendIcon(BuddyIcon):
+class FriendIcon(TrayIcon):
     def __init__(self, shell, buddy):
-        BuddyIcon.__init__(self, shell, buddy)
+        TrayIcon.__init__(self, icon_name='computer-xo',
+                          xo_color=buddy.get_color())
 
-        palette = self.get_palette()
+        palette = BuddyMenu(shell, buddy)
+        self.set_palette(palette)
         palette.set_group_id('frame')
-        palette.props.invoker = FrameCanvasInvoker(self)
+        palette.props.invoker = FrameWidgetInvoker(self)
 
-    def prelight(self, enter):
-        if enter:
-            self.props.background_color = style.COLOR_BLACK.get_int()
-        else:
-            self.props.background_color = style.COLOR_TOOLBAR_GREY.get_int()
-
-class FriendsBox(hippo.CanvasBox):
+class FriendsTray(VTray):
     def __init__(self, shell):
-        hippo.CanvasBox.__init__(self)
+        VTray.__init__(self)
+
         self._shell = shell
         self._activity_ps = None
         self._joined_hid = -1
@@ -68,8 +63,10 @@ class FriendsBox(hippo.CanvasBox):
             return
 
         model = BuddyModel(buddy=buddy)
+ 
         icon = FriendIcon(self._shell, model)
-        self.append(icon)
+        self.add_item(icon)
+        icon.show()
 
         self._buddies[buddy.props.key] = icon
 
@@ -77,11 +74,11 @@ class FriendsBox(hippo.CanvasBox):
         if not self._buddies.has_key(buddy.props.key):
             return
 
-        self.remove(self._buddies[buddy.props.key])
+        self.remove_item(self._buddies[buddy.props.key])
 
     def clear(self):
         for item in self.get_children():
-            self.remove(item)
+            self.remove_item(item)
         self._buddies = {}
 
     def __activity_appeared_cb(self, pservice, activity_ps):

@@ -21,9 +21,8 @@ Test the sugar.graphics.icon.Icon widget.
 
 import gtk
 
-from sugar.graphics.tray import HTray
-from sugar.graphics.tray import VTray
-from sugar.graphics.tray import TrayButton
+from sugar.graphics.tray import HTray, VTray
+from sugar.graphics.tray import TrayButton, TrayIcon
 
 import common
 
@@ -47,9 +46,9 @@ vbox.pack_start(tray, False)
 tray.show()
 
 for i in range(0, 10):
-    button = TrayButton(icon_name=theme_icons[i])
-    tray.add_item(button)
-    button.show()
+    icon = TrayIcon(icon_name=theme_icons[i])
+    tray.add_item(icon)
+    icon.show()
 
 hbox = gtk.HBox()
 
