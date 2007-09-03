@@ -19,6 +19,8 @@ import os
 import sys
 from optparse import OptionParser
 import gettext
+import traceback
+import logging
 
 import gobject
 import gtk
@@ -77,6 +79,7 @@ class ActivityFactoryService(dbus.service.Object):
         called multiple times for each time start is called!)
         """
         self._activities = []
+        self._service_name = service_name
 
         splitted_module = activity_class.rsplit('.', 1)
         module_name = splitted_module[0]
@@ -107,7 +110,13 @@ class ActivityFactoryService(dbus.service.Object):
         returns xid for the created instance' root window
         """
         activity_handle = activityhandle.create_from_dict(handle)
-        activity = self._constructor(activity_handle)
+
+        try:
+            activity = self._constructor(activity_handle)
+        except Exception, e:
+            logging.error(traceback.format_exc())
+            sys.exit(1)
+
         activity.present()
 
         self._activities.append(activity)
