@@ -1,4 +1,5 @@
 * #3025: Make bundlebuilder work even if SUGAR_PREFIX is not set. (marco)
+* #2896: Remove sugar.date module. (tomeu)
 
 Snapshot 0b3f687749
 
