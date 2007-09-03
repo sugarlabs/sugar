@@ -37,6 +37,7 @@ sys.path.insert(0, env.get_shell_path())
 from view.Shell import Shell
 from model.shellmodel import ShellModel
 from shellservice import ShellService
+from hardware import hardwaremanager
 from intro import intro
 
 def _start_matchbox():
@@ -81,7 +82,14 @@ def check_cm(bus_name):
         pass
     return False
 
+def _unfreeze_dcon_idle_cb():
+    # Unfreeze the display when it's stable
+    hw_manager = hardwaremanager.get_manager()
+    hw_manager.set_dcon_freeze(0)
+
 def main():
+    gobject.idle_add(_unfreeze_dcon_idle_cb)
+
     _save_session_info()
     _start_matchbox()
     _setup_translations()

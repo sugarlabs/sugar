@@ -36,7 +36,6 @@ from view.frame.frame import Frame
 from view.keyhandler import KeyHandler
 from view.home.HomeWindow import HomeWindow
 from model.shellmodel import ShellModel
-from hardware import hardwaremanager
 
 class Shell(gobject.GObject):
     def __init__(self, model):
@@ -68,10 +67,6 @@ class Shell(gobject.GObject):
                            self._active_activity_changed_cb)
         home_model.connect('pending-activity-changed',
                            self._pending_activity_changed_cb)
-
-        # Unfreeze the display when it's stable
-        hw_manager = hardwaremanager.get_manager()
-        hw_manager.set_dcon_freeze(0)
 
         gobject.idle_add(self._start_journal_idle)
 
