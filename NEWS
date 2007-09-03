@@ -1,3 +1,5 @@
+Snapshot 0b3f687749
+
 * #3088: Fix style of zoom buttons palettes. (marco)
 * Refactor activity share/join in Activity.__init__() to be clearer and cover
     all cases (dcbw)
