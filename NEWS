@@ -1,3 +1,8 @@
+* #3025: Make bundlebuilder work even if SUGAR_PREFIX is not set. (marco)
+* #2896: Remove sugar.date module. (tomeu)
+
+Snapshot 0b3f687749
+
 * #3088: Fix style of zoom buttons palettes. (marco)
 * Refactor activity share/join in Activity.__init__() to be clearer and cover
     all cases (dcbw)

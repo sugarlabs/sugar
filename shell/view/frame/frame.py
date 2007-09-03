@@ -28,7 +28,6 @@ from sugar.clipboard import clipboardservice
 from view.frame.eventarea import EventArea
 from view.frame.activitiestray import ActivitiesTray
 from view.frame.zoomtoolbar import ZoomToolbar
-from view.frame.overlaybox import OverlayBox
 from view.frame.friendstray import FriendsTray
 from view.frame.framewindow import FrameWindow
 from view.frame.clipboardpanelwindow import ClipboardPanelWindow

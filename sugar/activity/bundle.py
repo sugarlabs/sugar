@@ -59,6 +59,9 @@ class Bundle:
         self._init_with_path(path)
 
     def _init_with_path(self, path):
+        self.activity_class = None
+        self.bundle_exec = None
+
         self._name = None
         self._icon = None
         self._service_name = None
@@ -116,18 +119,10 @@ class Bundle:
             logging.error('%s must specify a name' % self._path)
 
         if cp.has_option(section, 'class'):
-            self._class = cp.get(section, 'class')
-            self._exec = '%s --bundle-path="%s"' % (
-              env.get_bin_path(_PYTHON_FACTORY), self._path)
+            self.activity_class = cp.get(section, 'class')
         elif cp.has_option(section, 'exec'):
-            self._class = None
-            cmdline = cp.get(section, 'exec')
-            cmdline = os.path.join(self._path, cmdline)
-            cmdline = cmdline.replace('$SUGAR_BUNDLE_PATH', self._path) 
-            cmdline = os.path.expandvars(cmdline)
-            self._exec = cmdline
+            self.bundle_exec = cp.get(section, 'exec')
         else:
-            self._exec = None
             self._valid = False
             logging.error('%s must specify exec or class' % self._path)
 
@@ -232,9 +227,17 @@ class Bundle:
         """Get the activity version"""
         return self._activity_version
 
-    def get_exec(self):
+    def get_command(self):
         """Get the command to execute to launch the activity factory"""
-        return self._exec
+        if self.bundle_exec:
+            command = os.path.join(self._path, self.bundle_exec)
+            command = command.replace('$SUGAR_BUNDLE_PATH', self._path)
+            command = os.path.expandvars(command)
+        else:
+            command = '%s --bundle-path="%s"' % (
+                  env.get_bin_path(_PYTHON_FACTORY), self._path)
+
+        return command
 
     def get_class(self):
         """Get the main Activity class"""

@@ -163,4 +163,4 @@ def run(bundle_path):
     _sugarext.set_application_name(bundle.get_name())
 
     factory = ActivityFactoryService(bundle.get_service_name(),
-                                     bundle.get_class())
+                                     bundle.activity_class)

@@ -56,7 +56,7 @@ class _ServiceManager(object):
 
     def add(self, bundle):
         util.write_service(bundle.get_service_name(),
-                           bundle.get_exec(), self._path)
+                           bundle.get_command(), self._path)
 
 class BundleRegistry(gobject.GObject):
     """Service that tracks the available activity bundles"""
