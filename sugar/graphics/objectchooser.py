@@ -17,6 +17,7 @@
 
 import logging
 import time
+from gettext import gettext as _
 
 import gtk
 import hippo
@@ -30,6 +31,9 @@ from sugar.graphics.roundbox import CanvasRoundBox
 from sugar.datastore import datastore
 from sugar import activity
 from sugar.objects import objecttype
+
+# TODO: Activities should request the Journal to open objectchooser dialogs. In
+# that way, we'll be able to reuse most of this code inside the Journal.
 
 class ObjectChooser(gtk.Dialog):
     def __init__(self, title=None, parent=None, flags=0):
@@ -156,8 +160,7 @@ class CollapsedEntry(CanvasRoundBox):
 
     def _format_date(self):
         """ Convert from a string in iso format to a more human-like format. """
-        ti = time.strptime(self.jobject.metadata['mtime'], "%Y-%m-%dT%H:%M:%S")        
-        return str(Date(time.mktime(ti)))
+        return _get_elapsed_string(self.jobject.metadata['mtime'])
 
     def _format_title(self):
         return '"%s"' % self.jobject.metadata['title']
@@ -169,3 +172,39 @@ class CollapsedEntry(CanvasRoundBox):
         else:
             self.props.border_color = style.COLOR_BLACK.get_int()
             self.props.background_color = style.COLOR_PANEL_GREY.get_int()
+
+def _get_elapsed_string(date_string, max_levels=2):
+    ti = time.strptime(date_string, "%Y-%m-%dT%H:%M:%S")
+
+    units = [[_('%d year'),   _('%d years'),   356 * 24 * 60 * 60],
+             [_('%d month'),  _('%d months'),  30 * 24 * 60 * 60],
+             [_('%d week'),   _('%d weeks'),   7 * 24 * 60 * 60],
+             [_('%d day'),    _('%d days'),    24 * 60 * 60],
+             [_('%d hour'),   _('%d hours'),   60 * 60],
+             [_('%d minute'), _('%d minutes'), 60],
+             [_('%d second'), _('%d seconds'), 1]]
+    levels = 0
+    result = ''
+    elapsed_seconds = int(time.time() - time.mktime(ti))
+    for name_singular, name_plural, factor in units:
+        elapsed_units = elapsed_seconds / factor
+        if elapsed_units > 0:
+
+            if levels > 0:
+                if max_levels - levels == 1:
+                    result += _(' and ')
+                else:
+                    result += _(', ')
+                
+            if elapsed_units == 1:
+                result += name_singular % elapsed_units
+            else:
+                result += name_plural % elapsed_units
+            elapsed_seconds -= elapsed_units * factor
+            levels += 1
+            
+            if levels == max_levels:
+                break
+
+    return result
+
