@@ -26,7 +26,7 @@ from sugar.graphics import palettegroup
 from sugar.clipboard import clipboardservice
 
 from view.frame.eventarea import EventArea
-from view.frame.ActivitiesBox import ActivitiesBox
+from view.frame.activitiestray import ActivitiesTray
 from view.frame.zoomtoolbar import ZoomToolbar
 from view.frame.overlaybox import OverlayBox
 from view.frame.friendstray import FriendsTray
@@ -219,7 +219,7 @@ class Frame(object):
     def _create_bottom_panel(self):
         panel = self._create_panel(gtk.POS_BOTTOM)
 
-        box = ActivitiesBox(self._shell)
+        box = ActivitiesTray(self._shell)
         panel.append(box, hippo.PACK_EXPAND)
 
         return panel

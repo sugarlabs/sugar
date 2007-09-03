@@ -46,7 +46,7 @@ class InviteButton(TrayButton):
     def get_invite(self):
         return self._invite
 
-class ActivitiesBox(hippo.CanvasBox):
+class ActivitiesTray(hippo.CanvasBox):
     def __init__(self, shell):
         hippo.CanvasBox.__init__(self, orientation=hippo.ORIENTATION_HORIZONTAL)
 
