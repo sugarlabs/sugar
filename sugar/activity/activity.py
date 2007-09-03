@@ -171,10 +171,12 @@ class EditToolbar(gtk.Toolbar):
         gtk.Toolbar.__init__(self)
 
         self.undo = ToolButton('edit-undo')
+        self.undo.set_tooltip(_('Undo'))
         self.insert(self.undo, -1)
         self.undo.show()
 
         self.redo = ToolButton('edit-redo')
+        self.redo.set_tooltip(_('Redo'))
         self.insert(self.redo, -1)
         self.redo.show()
 
@@ -184,10 +186,12 @@ class EditToolbar(gtk.Toolbar):
         separator.show()
 
         self.copy = ToolButton('edit-copy')
+        self.copy.set_tooltip(_('Copy'))
         self.insert(self.copy, -1)
         self.copy.show()
 
         self.paste = ToolButton('edit-paste')
+        self.copy.set_tooltip(_('Paste'))
         self.insert(self.paste, -1)
         self.paste.show()
 
