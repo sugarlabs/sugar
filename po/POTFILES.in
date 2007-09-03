@@ -1,7 +1,6 @@
 shell/intro/intro.py
 shell/view/BuddyMenu.py
 shell/view/clipboardmenu.py
-shell/view/frame/zoombox.py
 services/shell/objecttypeservice.py
 shell/hardware/keydialog.py
 shell/view/home/activitiesdonut.py
@@ -11,3 +10,6 @@ shell/view/home/HomeBox.py
 shell/view/home/MeshBox.py
 shell/view/devices/battery.py
 sugar/activity/activity.py
+shell/view/devices/network/wireless.py
+shell/view/frame/activitybutton.py
+shell/view/frame/zoomtoolbar.py
