@@ -157,7 +157,7 @@ def run(bundle_path):
 
     bundle = Bundle(bundle_path)
 
-    logger.start(bundle.get_name())
+    logger.start(bundle.get_service_name())
 
     gettext.bindtextdomain(bundle.get_service_name(),
                            bundle.get_locale_path())

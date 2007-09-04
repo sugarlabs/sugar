@@ -104,7 +104,7 @@ def _get_logs_dir():
 
 def start(module_id):
     # Only log if logging is set up for the activity
-    module_key = module_id.upper() + "_DEBUG"
+    module_key = module_id.replace('.', '_').upper() + "_DEBUG"
     if not os.environ.has_key(module_key) and not env.is_emulator():
         return
 
