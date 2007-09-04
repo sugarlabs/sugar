@@ -23,7 +23,6 @@ import gtk
 import hippo
 
 from sugar.activity.bundle import Bundle
-from sugar.date import Date
 from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon
 from sugar.graphics.xocolor import XoColor
