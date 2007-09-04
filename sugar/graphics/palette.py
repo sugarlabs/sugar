@@ -630,7 +630,7 @@ class CanvasInvoker(Invoker):
                      self._motion_notify_event_cb)
 
     def get_default_position(self):
-        return Palette.AT_CURSOR
+        return self.AT_CURSOR
 
     def get_rect(self):
         context = self._item.get_context()
