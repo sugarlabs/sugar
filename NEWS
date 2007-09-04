@@ -1,3 +1,5 @@
+* #2164: Keybindings for buttons in intro sequence (erikos)
+
 Snapshot 0ad6398cf1
 
 * #3025: Make bundlebuilder work even if SUGAR_PREFIX is not set. (marco)
