@@ -42,6 +42,9 @@ class Device:
             iface = string.split(line, ":",1)
             arr = string.split(iface[1])
 
+            if len(arr) < 10:
+                continue
+
             info = {'interface': iface[0].strip(), \
                 'bytes_recv': arr[0],\
                 'bytes_sent': arr[8],\
