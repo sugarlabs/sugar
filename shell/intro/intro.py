@@ -51,6 +51,9 @@ class _Page(hippo.CanvasBox):
         if pspec.name == 'valid':
             return self.valid
 
+    def activate(self):
+        pass
+
 class _NamePage(_Page):
     def __init__(self, intro):
         _Page.__init__(self, xalign=hippo.ALIGNMENT_CENTER,
@@ -69,12 +72,8 @@ class _NamePage(_Page):
 
         widget = self._entry.props.widget
         widget.set_max_length(45)
-        widget.connect('activate', self._entry_activate_cb)
 
         self.append(self._entry)
-
-    def _entry_activate_cb(self, entry):
-        self._intro.next()
 
     def _text_changed_cb(self, entry, pspec):
         valid = len(entry.props.text.strip()) > 0
@@ -82,6 +81,9 @@ class _NamePage(_Page):
 
     def get_name(self):
         return self._entry.props.text
+
+    def activate(self):
+        self._entry.props.widget.grab_focus()
 
 class _ColorPage(_Page):
     def __init__(self, **kwargs):
@@ -127,10 +129,6 @@ class _IntroBox(hippo.CanvasBox):
 
         self._setup_page()
 
-    def next(self):
-        self._page += 1
-        self._setup_page()
-
     def _setup_page(self):
         self.remove_all()
 
@@ -158,12 +156,13 @@ class _IntroBox(hippo.CanvasBox):
             self._next_button = CanvasButton(_('Next'), 'go-right')
             self._next_button.connect('activated', self._next_activated_cb)
 
+        self._current_page.activate()
+
         self._update_next_button()
         button_box.append(self._next_button)
 
         self._current_page.connect('notify::valid',
                                    self._page_valid_changed_cb)
-
         self.append(button_box)
 
     def _update_next_button(self):
@@ -174,19 +173,42 @@ class _IntroBox(hippo.CanvasBox):
         self._update_next_button()
 
     def _back_activated_cb(self, item):
-        self._page -= 1
-        self._setup_page()
+        self.back()
+
+    def back(self):
+        if self._page != self.PAGE_FIRST:
+            self._page -= 1
+            self._setup_page()
 
     def _next_activated_cb(self, item):
         self.next()
 
+    def next(self):
+        if self._page == self.PAGE_LAST:
+            self.done()
+        if self._current_page.props.valid:
+            self._page += 1
+            self._setup_page()
+
     def _done_activated_cb(self, item):
+        self.done()
+
+    def done(self):
         path = os.path.join(os.path.dirname(__file__), 'default-picture.png')
         pixbuf = gtk.gdk.pixbuf_new_from_file(path)
         name = self._name_page.get_name()
         color = self._color_page.get_color()
-        
+
         self.emit('done', pixbuf, name, color)
+
+    def _key_press_cb(self, widget, event):
+        if gtk.gdk.keyval_name(event.keyval) == "Return":
+            self.next()
+            return True
+        elif gtk.gdk.keyval_name(event.keyval) == "Escape":
+            self.back()
+            return True
+        return False
 
 class IntroWindow(gtk.Window):
     def __init__(self):
@@ -199,6 +221,7 @@ class IntroWindow(gtk.Window):
 
         self.add(self._canvas)
         self._canvas.show()
+        self.connect('key-press-event', self._intro_box._key_press_cb)
 
     def _done_cb(self, box, pixbuf, name, color):
         self.hide()
