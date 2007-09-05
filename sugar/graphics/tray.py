@@ -193,23 +193,47 @@ class TrayButton(ToolButton):
     def __init__(self, **kwargs):
         ToolButton.__init__(self, **kwargs)
 
-class TrayIcon(gtk.ToolItem):
-    def __init__(self, icon_name=None, xo_color=None):
-        gtk.ToolItem.__init__(self)
+class _IconWidget(gtk.EventBox):
+    __gtype_name__ = "SugarTrayIconWidget"
 
-        event_box = gtk.EventBox()
+    def __init__(self, icon_name=None, xo_color=None):
+        gtk.EventBox.__init__(self)
+
+        self._palette = None
+
+        self.set_app_paintable(True)
 
         icon = Icon(icon_name=icon_name, xo_color=xo_color,
                     icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
-        event_box.add(icon)
+        self.add(icon)
         icon.show()
 
-        self.add(event_box)
-        event_box.show()
+    def do_expose_event(self, event):
+        if self._palette and self._palette.is_up():
+            invoker = self._palette.props.invoker
+            invoker.draw_rectangle(event, self._palette)
+
+        gtk.EventBox.do_expose_event(self, event)
 
     def set_palette(self, palette):
         self._palette = palette
-        self._palette.props.invoker = ToolInvoker(self.child)
+        self._palette.props.invoker = ToolInvoker(self)
+
+class TrayIcon(gtk.ToolItem):
+    __gtype_name__ = "SugarTrayIcon"
+
+    def __init__(self, icon_name=None, xo_color=None):
+        gtk.ToolItem.__init__(self)
+
+        self._icon_widget = _IconWidget(icon_name, xo_color)
+        self.add(self._icon_widget)
+        self._icon_widget.show()
+
+        self.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
+
+    def set_palette(self, palette):
+        self._icon_widget.set_palette(palette)
 
     def set_tooltip(self, text):
         self.set_palette(Palette(text))
+
