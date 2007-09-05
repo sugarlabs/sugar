@@ -43,7 +43,7 @@ _ICON_NAME = 'network-wireless'
 
 class AccessPointView(PulsingIcon):
     def __init__(self, model):
-        PulsingIcon.__init__(self, size=style.SMALL_ICON_SIZE)
+        PulsingIcon.__init__(self, size=style.MEDIUM_ICON_SIZE)
         self._model = model
 
         self.connect('activated', self._activate_cb)
