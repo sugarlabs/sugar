@@ -17,6 +17,7 @@
 
 import gtk
 import gobject
+import hippo
 
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics import style
@@ -42,10 +43,16 @@ class Toolbox(gtk.VBox):
         self.pack_start(self._notebook)
         self._notebook.show()
 
-        label = gtk.Label('')
-        label.set_size_request(-1, style.TOOLBOX_SEPARATOR_HEIGHT)
-        self.pack_start(label, False)
-        label.show()
+        # FIXME improve gtk.Notebook and do this in the theme
+        canvas = hippo.Canvas()
+        box = hippo.CanvasBox(
+                    border_color=style.COLOR_BUTTON_GREY.get_int(),
+                    background_color=style.COLOR_PANEL_GREY.get_int(),
+                    box_height=style.TOOLBOX_SEPARATOR_HEIGHT,
+                    border_bottom=style.LINE_WIDTH)
+        canvas.set_root(box)
+        self.pack_start(canvas, False)
+        canvas.show()
         
         self._notebook.connect('notify::page', self._notify_page_cb)
 
