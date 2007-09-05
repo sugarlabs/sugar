@@ -23,6 +23,10 @@ import traceback
 from cStringIO import StringIO
 import time
 
+import dbus
+import dbus.service
+import dbus.glib
+
 from sugar import env
 
 _log_writer = None
@@ -31,6 +35,20 @@ STDOUT_LEVEL = 1000
 STDERR_LEVEL = 2000
 
 formatter = logging.Formatter('%(name)s: %(message)s')
+
+_LOGGER_SERVICE_NAME = "org.laptop.Logger"
+_LOGGER_OBJECT_PATH = "/org/laptop/Logger"
+_LOGGER_INTERFACE = "org.laptop.Logger"
+
+class LoggerManagerService(dbus.service.Object):
+    def __init__(self):
+        bus = dbus.SessionBus()
+        bus_name = dbus.service.BusName(_LOGGER_SERVICE_NAME, bus = bus)
+        dbus.service.Object.__init__(self, bus_name, _LOGGER_OBJECT_PATH)
+
+    @dbus.service.method(_LOGGER_INTERFACE)
+    def SetLevel(self, level):
+        set_level(level)
 
 class LogWriter:
     def __init__(self, module_id):
@@ -102,17 +120,24 @@ def _get_logs_dir():
         os.makedirs(logs_dir)
     return logs_dir
 
-def start(module_id):
-    # Only log if logging is set up for the activity
-    module_key = module_id.replace('.', '_').upper() + "_DEBUG"
-    if not os.environ.has_key(module_key) and not env.is_emulator():
-        return
+def set_level(level):
+    levels = { 'error'   : logging.ERROR,
+               'warning' : logging.WARNING,
+               'debug'   : logging.DEBUG,
+               'info'    : logging.INFO }
+    root_logger = logging.getLogger('')
+    if levels.has_key(level):
+        root_logger.setLevel(levels[level])
 
+def start(module_id):
     log_writer = LogWriter(module_id)
 
     root_logger = logging.getLogger('')
-    root_logger.setLevel(logging.DEBUG)
+    root_logger.setLevel(logging.ERROR)
     root_logger.addHandler(Handler(log_writer))
+
+    if os.environ.has_key('SUGAR_LOGGER_LEVEL'):
+        set_level(os.environ['SUGAR_LOGGER_LEVEL'])
 
     sys.stdout = StdoutCatcher()
     sys.stderr = StderrCatcher()
@@ -120,6 +145,8 @@ def start(module_id):
     global _log_writer
     _log_writer = log_writer
     sys.excepthook = __exception_handler
+
+    service = LoggerManagerService()
 
 def cleanup():
     logs_dir = _get_logs_dir()   
