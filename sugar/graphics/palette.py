@@ -67,9 +67,7 @@ class Palette(gtk.Window):
 
     __gproperties__ = {
         'invoker'    : (object, None, None,
-                        gobject.PARAM_READWRITE),
-        'position'   : (gobject.TYPE_INT, None, None, 0, 6,
-                        0, gobject.PARAM_READWRITE)
+                        gobject.PARAM_READWRITE)
     }
 
     __gsignals__ = {
