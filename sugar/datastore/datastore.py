@@ -26,6 +26,7 @@ from sugar import activity
 from sugar.activity.bundle import Bundle
 from sugar.activity import activityfactory
 from sugar.activity.activityhandle import ActivityHandle
+from sugar.bundle.contentbundle import ContentBundle
 
 class DSMetadata(gobject.GObject):
     __gsignals__ = {
@@ -118,6 +119,10 @@ class DSObject(object):
 
         return activities
 
+    def is_content_bundle(self):
+        return self.metadata['mime_type'] == ContentBundle.MIME_TYPE
+
+    # FIXME: should become is_activity_bundle()
     def is_bundle(self):
         return self.metadata['mime_type'] in ['application/vnd.olpc-x-sugar',
                                               'application/vnd.olpc-sugar']

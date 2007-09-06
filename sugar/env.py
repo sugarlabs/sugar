@@ -67,6 +67,9 @@ def get_profile_path(path=None):
 def get_user_activities_path():
     return os.path.expanduser('~/Activities')
 
+def get_user_library_path():
+    return os.path.expanduser('~/Library')
+
 def get_locale_path(path=None):
     return _get_prefix_path('share/locale', path)
 

@@ -29,19 +29,15 @@ import dbus
 
 from sugar import env
 from sugar import activity
+from sugar.bundle.bundle import AlreadyInstalledException, \
+     NotInstalledException, InvalidPathException, ZipExtractException, \
+     RegistrationException, MalformedBundleException
 
 _PYTHON_FACTORY='sugar-activity-factory'
 
 _DBUS_SHELL_SERVICE = "org.laptop.Shell"
 _DBUS_SHELL_PATH = "/org/laptop/Shell"
 _DBUS_ACTIVITY_REGISTRY_IFACE = "org.laptop.Shell.ActivityRegistry"
-
-class AlreadyInstalledException(Exception): pass
-class NotInstalledException(Exception): pass
-class InvalidPathException(Exception): pass
-class ZipExtractException(Exception): pass
-class RegistrationException(Exception): pass
-class MalformedBundleException(Exception): pass
 
 class Bundle:
     """Metadata description of a given application/activity

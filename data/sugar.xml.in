@@ -4,4 +4,8 @@
     <_comment>Sugar activity bundle</_comment>
     <glob pattern="*.xo"/>
   </mime-type>
+  <mime-type type="application/vnd.olpc-content">
+    <_comment>Sugar content bundle</_comment>
+    <glob pattern="*.xol"/>
+  </mime-type>
 </mime-info>

@@ -1,4 +1,4 @@
-SUBDIRS = activity clipboard graphics objects presence datastore
+SUBDIRS = activity bundle clipboard graphics objects presence datastore
 
 sugardir = $(pythondir)/sugar
 sugar_PYTHON =		\
