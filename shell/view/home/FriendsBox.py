@@ -22,9 +22,9 @@ import gobject
 from sugar import profile
 from sugar.graphics.spreadlayout import SpreadLayout
 from sugar.graphics import style
+from sugar.graphics.icon import CanvasIcon
+from sugar.graphics.palette import Palette
 
-from model.BuddyModel import BuddyModel
-from view.BuddyIcon import BuddyIcon
 from view.home.FriendView import FriendView
 
 class FriendsBox(hippo.CanvasBox):
@@ -38,9 +38,11 @@ class FriendsBox(hippo.CanvasBox):
         self._layout = SpreadLayout()
         self.set_layout(self._layout)
 
-        buddy_model = BuddyModel(key=profile.get_pubkey())
-        self._owner_icon = BuddyIcon(shell, buddy_model)
+        self._owner_icon = CanvasIcon(icon_name='computer-xo',
+                                      xo_color=profile.get_color())
         self._owner_icon.props.size = style.LARGE_ICON_SIZE
+        palette = Palette(profile.get_nick_name())
+        self._owner_icon.set_palette(palette)
         self._layout.add_center(self._owner_icon)
 
         friends = self._shell.get_model().get_friends()
