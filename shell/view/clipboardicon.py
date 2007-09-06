@@ -54,15 +54,19 @@ class ClipboardIcon(RadioToolButton):
         cb_service = clipboardservice.get_instance()
         cb_service.connect('object-state-changed', self._object_state_changed_cb)
         obj = cb_service.get_object(self._object_id)
-        formats = obj['FORMATS']
 
         self.palette = ClipboardMenu(self._object_id, self._name, self._percent,
                                      self._preview, self._activity,
-                                     formats and formats[0] == 'application/vnd.olpc-sugar')
+                                     self._is_bundle(obj['FORMATS']))
         self.palette.props.invoker = FrameWidgetInvoker(self)
         
         self.child.connect('drag_data_get', self._drag_data_get_cb)
         self.connect('notify::active', self._notify_active_cb)
+
+    def _is_bundle(self, formats):
+        # A bundle will have only one format.
+        return formats and formats[0] in ['application/vnd.olpc-sugar',
+                                          'application/vnd.olpc-x-sugar']
 
     def get_object_id(self):
         return self._object_id
@@ -110,10 +114,6 @@ class ClipboardIcon(RadioToolButton):
 
         cb_service = clipboardservice.get_instance()
         obj = cb_service.get_object(self._object_id)
-        if obj['FORMATS'] and obj['FORMATS'][0] == 'application/vnd.olpc-sugar':
-            installable = True
-        else:
-            installable = False
 
         if icon_name:
             self._icon.props.icon_name = icon_name
@@ -129,7 +129,8 @@ class ClipboardIcon(RadioToolButton):
         self._percent = percent
         self._preview = preview
         self._activity = activity
-        self.palette.set_state(name, percent, preview, activity, installable)
+        self.palette.set_state(name, percent, preview, activity,
+                               self._is_bundle(obj['FORMATS']))
 
         self.props.sensitive = (percent == 100)
 
