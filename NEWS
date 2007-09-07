@@ -1,3 +1,5 @@
+* Removing activity from donut when not the active and the last one (erikos)
+* Fix when removing an item from the clipboard tray (erikos)
 * #3085: Fixed XO icon in group view (erikos)
 
 Snapshot d9a30c23ff
