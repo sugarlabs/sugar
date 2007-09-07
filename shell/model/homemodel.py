@@ -201,7 +201,9 @@ class HomeModel(gobject.GObject):
     def _remove_activity(self, home_activity):
         if home_activity == self._active_activity:
             self._set_active_activity(None)
-            # Figure out the new _pending_activity.
+
+        if home_activity == self._pending_activity:
+            # Figure out the new _pending_activity
             windows = wnck.screen_get_default().get_windows_stacked()
             windows.reverse()
             for window in windows:
@@ -209,13 +211,13 @@ class HomeModel(gobject.GObject):
                 if new_activity is not None:
                     self._set_pending_activity(new_activity)
                     break
-            else:                
+            else:
                 logging.error('No activities are running')
                 self._set_pending_activity(None)
 
         self.emit('activity-removed', home_activity)
         self._activities.remove(home_activity)
-        
+
     def _remove_activity_by_xid(self, xid):
         home_activity = self._get_activity_by_xid(xid)
         if home_activity:
