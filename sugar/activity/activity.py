@@ -180,10 +180,10 @@ class EditToolbar(gtk.Toolbar):
         self.insert(self.redo, -1)
         self.redo.show()
 
-        separator = gtk.SeparatorToolItem()
-        separator.set_draw(True)
-        self.insert(separator, -1)
-        separator.show()
+        self.separator = gtk.SeparatorToolItem()
+        self.separator.set_draw(True)
+        self.insert(self.separator, -1)
+        self.separator.show()
 
         self.copy = ToolButton('edit-copy')
         self.copy.set_tooltip(_('Copy'))
