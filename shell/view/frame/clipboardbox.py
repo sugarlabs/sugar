@@ -121,9 +121,7 @@ class ClipboardBox(hippo.CanvasBox):
 
     def _object_deleted_cb(self, cb_service, object_id):
         icon = self._icons[object_id]
-        position = self.get_children().index(icon)
-        self.remove(icon)
-
+        self._tray.remove_item(icon)
         del self._icons[object_id]
         logging.debug('ClipboardBox: ' + object_id + ' was deleted.')
 
