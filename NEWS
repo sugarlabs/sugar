@@ -1,3 +1,6 @@
+* Support moving of data files written to the datastore using standard Activity
+  write_file() API (dcbw)
+
 Snapshot c8700feccf
 
 * Removing activity from donut when not the active and the last one (erikos)

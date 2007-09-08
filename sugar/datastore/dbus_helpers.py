@@ -40,20 +40,26 @@ def _get_data_store():
                                      DS_DBUS_INTERFACE)
     return _data_store
 
-def create(properties, filename):
-    object_id = _get_data_store().create(dbus.Dictionary(properties), filename)
+def create(properties, filename, transfer_ownership=False):
+    object_id = _get_data_store().create(dbus.Dictionary(properties), filename,
+                    transfer_ownership)
     logging.debug('dbus_helpers.create: ' + object_id)
     return object_id
 
-def update(uid, properties, filename, reply_handler=None, error_handler=None, timeout=-1):
-    logging.debug('dbus_helpers.update: %s, %s, %s' % (uid, filename, properties))
+def update(uid, properties, filename, transfer_ownership=False,
+        reply_handler=None, error_handler=None, timeout=-1):
+    debug_props = properties.copy()
+    if debug_props.has_key("preview"):
+        debug_props["preview"] = "<omitted>"
+    logging.debug('dbus_helpers.update: %s, %s, %s, %s' % (uid, filename, debug_props, transfer_ownership))
     if reply_handler and error_handler:
         _get_data_store().update(uid, dbus.Dictionary(properties), filename,
+                transfer_ownership,
                 reply_handler=reply_handler,
                 error_handler=error_handler,
                 timeout=timeout)
     else:
-        _get_data_store().update(uid, dbus.Dictionary(properties), filename)
+        _get_data_store().update(uid, dbus.Dictionary(properties), filename, transfer_ownership)
 
 def delete(uid):
     logging.debug('dbus_helpers.delete: %r' % uid)

@@ -186,7 +186,7 @@ def create():
     metadata['mtime'] = metadata['ctime']
     return DSObject(object_id=None, metadata=metadata, file_path=None)
 
-def write(ds_object, update_mtime=True, reply_handler=None, error_handler=None, timeout=-1):
+def write(ds_object, update_mtime=True, transfer_ownership=False, reply_handler=None, error_handler=None, timeout=-1):
     logging.debug('datastore.write')
 
     properties = ds_object.metadata.get_dictionary().copy()
@@ -198,12 +198,14 @@ def write(ds_object, update_mtime=True, reply_handler=None, error_handler=None, 
         dbus_helpers.update(ds_object.object_id,
                             properties,
                             ds_object.file_path,
+                            transfer_ownership,
                             reply_handler=reply_handler,
                             error_handler=error_handler,
                             timeout=timeout)
     else:
         ds_object.object_id = dbus_helpers.create(properties,
-                                                  ds_object.file_path)
+                                                  ds_object.file_path,
+                                                  transfer_ownership)
         # TODO: register the object for updates
     logging.debug('Written object %s to the datastore.' % ds_object.object_id)
 
