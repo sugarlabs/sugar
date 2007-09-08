@@ -487,6 +487,7 @@ class Activity(Window, gtk.Container):
             pass
         self._updating_jobject = True
         datastore.write(self._jobject,
+                transfer_ownership=True,
                 reply_handler=self._internal_save_cb,
                 error_handler=self._internal_save_error_cb)
 
