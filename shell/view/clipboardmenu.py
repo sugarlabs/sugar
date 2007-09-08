@@ -68,8 +68,7 @@ class ClipboardMenu(Palette):
         self._remove_item.show()
 
         self._open_item = MenuItem(_('Open'))
-        self._open_item_activate_sid = self._open_item.connect('activate',
-                self._open_item_activate_cb)
+        self._open_item.connect('activate', self._open_item_activate_cb)
         self.menu.append(self._open_item)
         self._open_item.show()
 
@@ -87,26 +86,20 @@ class ClipboardMenu(Palette):
         self._update_open_submenu()
 
     def _update_open_submenu(self):
-        submenu = self._open_item.get_submenu()
-        if submenu:
-            for item in submenu.get_children():
-                submenu.remove(item)
-
+        logging.debug('_update_open_submenu: %r' % self._activities)
         if self._activities is None or len(self._activities) <= 1:
-            if self._open_item_activate_sid is None:
-                self._open_item_activate_sid = self._open_item.connect(
-                        'activate',
-                        self._open_item_activate_cb)
+            if self._open_item.get_submenu() is not None:
+                self._open_item.remove_submenu()
             return
-        else:
-            if self._open_item_activate_sid is not None:
-                self._open_item.disconnect(self._open_item_activate_sid)
-                self._open_item_activate_sid = None
 
-        if not submenu:
+        submenu = self._open_item.get_submenu()
+        if submenu is None:
             submenu = gtk.Menu()
             self._open_item.set_submenu(submenu)
             submenu.show()
+        else:
+            for item in submenu.get_children():
+                submenu.remove(item)
         
         for service_name in self._activities:
             registry = activity.get_registry()
@@ -158,13 +151,15 @@ class ClipboardMenu(Palette):
         self._update_open_submenu()
 
     def _open_item_activate_cb(self, menu_item):
-        if self._percent < 100:
+        logging.debug('_open_item_activate_cb')
+        if self._percent < 100 or menu_item.get_submenu() is not None:
             return
         jobject = self._copy_to_journal()
         jobject.resume(self._activities[0])
         jobject.destroy()
 
     def _open_submenu_item_activate_cb(self, menu_item, service_name):
+        logging.debug('_open_submenu_item_activate_cb')
         if self._percent < 100:
             return
         jobject = self._copy_to_journal()
@@ -176,6 +171,7 @@ class ClipboardMenu(Palette):
         cb_service.delete_object(self._object_id)
 
     def _journal_item_activate_cb(self, menu_item):
+        logging.debug('_journal_item_activate_cb')
         jobject = self._copy_to_journal()
         jobject.destroy()
 
@@ -186,9 +182,9 @@ class ClipboardMenu(Palette):
         format = mime.choose_most_significant(obj['FORMATS'])
         data = cb_service.get_object_data(self._object_id, format)
 
+        transfer_ownership = False
         if format == 'text/uri-list':
             file_path = urlparse.urlparse(data['DATA']).path
-            mime_type = mime.get_for_file(file_path)
         else:
             if data['ON_DISK']:
                 file_path = urlparse.urlparse(data['DATA']).path
@@ -198,7 +194,7 @@ class ClipboardMenu(Palette):
                     os.write(f, data['DATA'])
                 finally:
                     os.close(f)
-            mime_type = format
+                transfer_ownership = True
 
         jobject = datastore.create()
         jobject.metadata['title'] = _('Clipboard object: %s.') % obj['NAME']
@@ -206,9 +202,9 @@ class ClipboardMenu(Palette):
         jobject.metadata['buddies'] = ''
         jobject.metadata['preview'] = ''
         jobject.metadata['icon-color'] = profile.get_color().to_string()
-        jobject.metadata['mime_type'] = mime_type
+        jobject.metadata['mime_type'] = mime.get_for_file(file_path)
         jobject.file_path = file_path
-        datastore.write(jobject)
+        datastore.write(jobject, transfer_ownership=transfer_ownership)
         
         return jobject
 

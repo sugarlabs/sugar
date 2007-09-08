@@ -40,7 +40,7 @@ class ObjectTypeRegistry(dbus.service.Object):
                             ['image/png', 'image/gif', 'image/jpeg'])
 
         self._add_primitive('Audio', _('Audio'), 'audio-x-generic',
-                            ['audio/ogg'])
+                            ['audio/ogg', 'audio/x-wav', 'audio/wav'])
 
         self._add_primitive('Video', _('Video'), 'video-x-generic',
                             ['video/ogg', 'application/ogg'])

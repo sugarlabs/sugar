@@ -230,7 +230,7 @@ def cmd_genpot(bundle_name, manifest):
     f.close()
 
     args = [ 'xgettext', '--join-existing', '--language=Python',
-             '--keyword=_', '--output=%s' % pot_file ]
+             '--keyword=_', '--add-comments=TRANS:', '--output=%s' % pot_file ]
 
     args += python_files
     retcode = subprocess.call(args)
