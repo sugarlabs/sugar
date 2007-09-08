@@ -284,6 +284,9 @@ class Activity(Window, gtk.Container):
             #del self._jobject.metadata['ctime']
             del self._jobject.metadata['mtime']
 
+            if not self._jobject.metadata.has_key('title'):
+                self._jobject.metadata['title'] = ''
+
             try:
                 share_scope = self._jobject.metadata['share-scope']
                 title = self._jobject.metadata['title']
