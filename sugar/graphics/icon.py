@@ -31,87 +31,30 @@ from sugar.graphics.style import Color
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics import style
 from sugar.graphics.palette import Palette, CanvasInvoker
+from sugar.util import LRU
 
 _BADGE_SIZE = 0.45
 
-_svg_loader = None
-
-def _get_svg_loader():
-    global _svg_loader
-    if _svg_loader == None:
-        _svg_loader = _SVGLoader()
-    return _svg_loader
-
-class _SVGIcon(object):
-    def __init__(self, data):
-        self.data = data
-        self.data_size = len(data)
-        self.last_used = time.time()
-
 class _SVGLoader(object):
-    CACHE_MAX_SIZE = 50000
-    CACHE_MAX_ICON_SIZE = 5000
-
     def __init__(self):
-        self._cache = {}
-        self._cache_size = 0
+        self._cache = LRU(50)
 
-    def load(self, file_name, entities):
-        icon = self._get_icon(file_name)
+    def load(self, file_name, entities, cache):
+        if file_name in self._cache:
+            icon = self._cache[file_name]
+        else:
+            icon_file = open(file_name, 'r')
+            icon = icon_file.read()
+            icon_file.close()
+
+            if cache:
+                self._cache[file_name] = icon
 
         for entity, value in entities.items():
             xml = '<!ENTITY %s "%s">' % (entity, value)
-            icon.data = re.sub('<!ENTITY %s .*>' % entity, xml, icon.data)
+            icon = re.sub('<!ENTITY %s .*>' % entity, xml, icon)
 
-        return rsvg.Handle(data=icon.data)
-
-    def _get_icon(self, file_name):
-        if self._cache.has_key(file_name):
-            data = self._cache[file_name]
-            data.last_used = time.time()
-            return data
-
-        icon_file = open(file_name, 'r')
-        icon = _SVGIcon(icon_file.read())
-        icon_file.close()
-
-        self._cache[file_name] = icon
-        self._cleanup_cache()
-
-        return icon
-
-    def _cleanup_cache(self):
-        now = time.time()
-        while self._cache_size > self.CACHE_MAX_SIZE:
-            evict_key = None
-            oldest_key = None
-            oldest_time = now
-
-            for icon_key, icon in self._cache.items():
-                # evict large icons first
-                if icon.data_size > self.CACHE_MAX_ICON_SIZE:
-                    evict_key = icon_key
-                    break
-
-                # evict older icons next; those used over 2 minutes ago
-                if icon.last_used < now - 120:
-                    evict_key = icon_key
-                    break
-
-                # otherwise, evict the oldest
-                if oldest_time > icon.last_used:
-                    oldest_time = icon.last_used
-                    oldest_key = icon_key
-
-            # If there's nothing specific to evict, try evicting
-            # the oldest thing
-            if not evict_key:
-                if not oldest_key:
-                    break
-                evict_key = oldest_key
-
-            self._cache_size -= self._cache[evict_key].data_size
-            del self._cache[evict_key]
+        return rsvg.Handle(data=icon)
 
 class _IconInfo(object):
     def __init__(self):
@@ -127,11 +70,10 @@ class _BadgeInfo(object):
         self.icon_padding = 0
 
 class _IconBuffer(object):
-    def __init__(self):
-        self._svg_loader = _get_svg_loader()
-        self._surface_cache = {}
-        self._cache_size = 1
+    _surface_cache = LRU(50)
+    _loader = _SVGLoader()
 
+    def __init__(self):
         self.icon_name = None
         self.file_name = None
         self.fill_color = None
@@ -139,6 +81,7 @@ class _IconBuffer(object):
         self.badge_name = None
         self.width = None
         self.height = None
+        self.cache = False
 
     def _get_cache_key(self):
         return (self.icon_name, self.file_name, self.fill_color,
@@ -151,7 +94,7 @@ class _IconBuffer(object):
         if self.stroke_color:
             entities['stroke_color'] = self.stroke_color
 
-        return self._svg_loader.load(file_name, entities)
+        return self._loader.load(file_name, entities, self.cache)
 
     def _get_attach_points(self, info, size_request):
         attach_points = info.get_attach_points()
@@ -184,7 +127,8 @@ class _IconBuffer(object):
                 icon_info.attach_x = attach_x
                 icon_info.attach_y = attach_y
             else:
-                logging.warning('No icon with the name %s was found in the theme.' % self.icon_name)
+                logging.warning('No icon with the name %s '
+                                'was found in the theme.' % self.icon_name)
 
         return icon_info
 
@@ -194,7 +138,7 @@ class _IconBuffer(object):
         if badge_info:
             badge_file_name = badge_info.get_filename()
             if badge_file_name.endswith('.svg'):
-                handle = self._svg_loader.load(badge_file_name, {})
+                handle = self._loader.load(badge_file_name, {}, self.cache)
                 handle.render_cairo(context)
             else:
                 pixbuf = gtk.gdk.pixbuf_new_from_file(badge_file_name)
@@ -233,7 +177,7 @@ class _IconBuffer(object):
 
     def get_surface(self):
         cache_key = self._get_cache_key()
-        if self._surface_cache.has_key(cache_key):
+        if cache_key in self._surface_cache:
             return self._surface_cache[cache_key]
 
         icon_info = self._get_icon_info()
@@ -276,21 +220,9 @@ class _IconBuffer(object):
             context.translate(badge_info.attach_x, badge_info.attach_y)
             self._draw_badge(context, badge_info.size)
 
-        if (len(self._surface_cache) == self._cache_size):
-            self._surface_cache.popitem()
         self._surface_cache[cache_key] = surface
 
         return surface
-
-    def get_cache_size(self):
-        return self._cache_size
-
-    def set_cache_size(self, cache_size):
-        while len(self._surface_cache) > cache_size:
-            self._surface_cache.popitem()
-        self._cache_size = cache_size
-
-    cache_size = property(get_cache_size, set_cache_size)
 
 class Icon(gtk.Image):
     __gtype_name__ = 'SugarIcon'
@@ -416,7 +348,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
                            gobject.PARAM_READWRITE),
         'scale'         : (float, None, None, -1024.0, 1024.0, 1.0,
                            gobject.PARAM_READWRITE),
-        'cache-size'    : (int, None, None, 0, 1024, 0,
+        'cache'         : (bool, None, None, False,
                            gobject.PARAM_READWRITE),
         'badge-name'    : (str, None, None, None,
                            gobject.PARAM_READWRITE)
@@ -460,8 +392,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         elif pspec.name == 'scale':
             self._buffer.scale = value
             self.emit_request_changed()
-        elif pspec.name == 'cache-size':
-            self._buffer.cache_size = value
+        elif pspec.name == 'cache':
+            self._buffer.cache = value
         elif pspec.name == 'badge-name':
             self._buffer.badge_name = value
             self.emit_paint_needed(0, 0, -1, -1)
@@ -477,8 +409,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             return self._buffer.fill_color
         elif pspec.name == 'stroke-color':
             return self._buffer.stroke_color
-        elif pspec.name == 'cache-size':
-            return self._buffer.cache_size
+        elif pspec.name == 'cache':
+            return self._buffer.cache
         elif pspec.name == 'badge-name':
             return self._buffer.badge_name
         elif pspec.name == 'scale':

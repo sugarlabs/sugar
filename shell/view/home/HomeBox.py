@@ -41,7 +41,7 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
     def __init__(self, shell):
         hippo.CanvasBox.__init__(self, background_color=0xe2e2e2ff, yalign=2)
 
-        self._donut = ActivitiesDonut(shell,box_width=style.zoom(450),
+        self._donut = ActivitiesDonut(shell, box_width=style.zoom(450),
                                       box_height=style.zoom(450))
         self.append(self._donut)
 

@@ -73,8 +73,8 @@ class ActivityIcon(CanvasIcon):
         self._level = self._level_max
         color = self._icon_colors[self._level]
 
-        CanvasIcon.__init__(self, file_name=icon_name, xo_color=color,
-                            size=style.MEDIUM_ICON_SIZE)
+        CanvasIcon.__init__(self, file_name=icon_name, xo_color=color, 
+                            size=style.MEDIUM_ICON_SIZE, cache=True)
 
         self._activity = activity
         self._pulse_id = 0
@@ -159,7 +159,6 @@ class ActivityIcon(CanvasIcon):
         if self._pulse_id:
             return
 
-        self.props.cache_size = self._level_max
         self._pulse_id = gobject.timeout_add(self._INTERVAL, self._pulse_cb)
 
     def _stop_pulsing(self):
@@ -168,7 +167,6 @@ class ActivityIcon(CanvasIcon):
 
         self._cleanup()
         self._level = 100.0
-        self.props.cache_size = 1
         self.props.xo_color = self._orig_color
 
     def _resume_activate_cb(self, menuitem):
