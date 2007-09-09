@@ -77,7 +77,7 @@ class Palette(gtk.Window):
                      gobject.TYPE_NONE, ([]))
     }
 
-    def __init__(self, label, accel_path=None):
+    def __init__(self, label, accel_path=None, menu_after_content=False):
         gtk.Window.__init__(self)
 
         self.set_decorated(False)
@@ -117,13 +117,12 @@ class Palette(gtk.Window):
         self._separator = gtk.HSeparator()
         self._secondary_box.pack_start(self._separator)
 
-        self._menu_box = gtk.VBox()
-        self._secondary_box.pack_start(self._menu_box)
-        self._menu_box.show()
-
-        self._content = gtk.VBox()
-        self._secondary_box.pack_start(self._content)
-        self._content.show()
+        if menu_after_content:
+            self._add_content()
+            self._add_menu()
+        else:
+            self._add_menu()
+            self._add_content()
 
         self.action_bar = PaletteActionBar()
         self._secondary_box.pack_start(self.action_bar)
@@ -142,6 +141,16 @@ class Palette(gtk.Window):
 
         self.set_primary_text(label, accel_path)
         self.set_group_id('default')
+
+    def _add_menu(self):
+        self._menu_box = gtk.VBox()
+        self._secondary_box.pack_start(self._menu_box)
+        self._menu_box.show()
+
+    def _add_content(self):
+        self._content = gtk.VBox()
+        self._secondary_box.pack_start(self._content)
+        self._content.show()
 
     def is_up(self):
         return self._up
