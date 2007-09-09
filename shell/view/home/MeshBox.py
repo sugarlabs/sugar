@@ -43,7 +43,7 @@ _ICON_NAME = 'network-wireless'
 
 class AccessPointView(PulsingIcon):
     def __init__(self, model):
-        PulsingIcon.__init__(self, size=style.MEDIUM_ICON_SIZE)
+        PulsingIcon.__init__(self, size=style.MEDIUM_ICON_SIZE, cache=True)
         self._model = model
 
         self.connect('activated', self._activate_cb)
@@ -124,7 +124,7 @@ _MESH_ICON_NAME = 'network-mesh'
 class MeshDeviceView(PulsingIcon):
     def __init__(self, nm_device):
         PulsingIcon.__init__(self, size=style.MEDIUM_ICON_SIZE,
-                             icon_name=_MESH_ICON_NAME)
+                             icon_name=_MESH_ICON_NAME, cache=True)
         self._nm_device = nm_device
         self.set_tooltip(_("Mesh Network"))
 
@@ -180,7 +180,7 @@ class ActivityView(hippo.CanvasBox):
         self._layout = SnowflakeLayout()
         self.set_layout(self._layout)
 
-        self._icon = CanvasIcon(file_name=model.get_icon_name(),
+        self._icon = CanvasIcon(file_name=model.get_icon_name(), cache=True,
                                 xo_color=model.get_color(), box_width=80)
         self._icon.connect('activated', self._clicked_cb)
         self._icon.set_tooltip(self._model.activity.props.name)

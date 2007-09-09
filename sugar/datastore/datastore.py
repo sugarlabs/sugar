@@ -138,6 +138,8 @@ class DSObject(object):
 
             activityfactory.create(bundle.get_service_name())
         else:
+            if not self.get_activities():
+                return
             if service_name is None:
                 service_name = self.get_activities()[0].service_name
 
