@@ -18,6 +18,7 @@ import random
 
 import hippo
 import gobject
+import gtk
 from gettext import gettext as _
 
 from sugar.graphics.spreadlayout import SpreadLayout
@@ -26,10 +27,12 @@ from sugar.graphics import style
 from sugar.graphics import xocolor
 from sugar.graphics.icon import get_icon_state
 from sugar.graphics import style
+from sugar.graphics import palette
 from sugar import profile
 
 from model import accesspointmodel
 from model.devices.network import mesh
+from model.devices.network import wireless
 from hardware import hardwaremanager
 from hardware import nmclient
 from view.BuddyIcon import BuddyIcon
@@ -42,9 +45,11 @@ from hardware.nmclient import NM_802_11_CAP_PROTO_WEP, NM_802_11_CAP_PROTO_WPA, 
 _ICON_NAME = 'network-wireless'
 
 class AccessPointView(PulsingIcon):
-    def __init__(self, model):
+    def __init__(self, model, mesh_device=None):
         PulsingIcon.__init__(self, size=style.MEDIUM_ICON_SIZE, cache=True)
         self._model = model
+        self._meshdev = mesh_device
+        self._disconnect_item = None
 
         self.connect('activated', self._activate_cb)
 
@@ -56,6 +61,9 @@ class AccessPointView(PulsingIcon):
         self._device_stroke = stroke
         self._device_fill = fill
 
+        self._palette = self._create_palette()
+        self.set_palette(self._palette)
+
         self._update_icon()
         self._update_name()
         self._update_state()
@@ -66,6 +74,28 @@ class AccessPointView(PulsingIcon):
             self.props.badge_name = "badge-star"
         elif (caps & NM_802_11_CAP_PROTO_WEP) or (caps & NM_802_11_CAP_PROTO_WPA) or (caps & NM_802_11_CAP_PROTO_WPA2):
             self.props.badge_name = "badge-locked"
+
+    def _create_palette(self):
+        p = palette.Palette(self._model.props.name, menu_after_content=True)
+        if not self._meshdev:
+            return p
+
+        # Only show disconnect when there's a mesh device, because mesh takes
+        # priority over the normal wireless device.  NM doesn't have a "disconnect"
+        # method for a device either (for various reasons) so this doesn't
+        # have a good mapping 
+        self._disconnect_item = gtk.MenuItem(_('Disconnect...'))
+        self._disconnect_item.connect('activate', self._disconnect_activate_cb)
+        p.menu.append(self._disconnect_item)
+        if self._model.props.state == accesspointmodel.STATE_CONNECTED:
+            self._disconnect_item.show()
+        return p
+
+    def _disconnect_activate_cb(self, menuitem):
+        # Disconnection for an AP means activating the default mesh device
+        network_manager = hardwaremanager.get_network_manager()
+        if network_manager and self._meshdev:
+            network_manager.set_active_device(self._meshdev)
 
     def _strength_changed_cb(self, model, pspec):
         self._update_icon()
@@ -84,10 +114,7 @@ class AccessPointView(PulsingIcon):
             network_manager.set_active_device(device, network)
 
     def _update_name(self):
-        if self.palette:
-            self.palette.set_primary_text(self._model.props.name)
-        else:
-            self.set_tooltip(self._model.props.name)
+        self._palette.set_primary_text(self._model.props.name)
 
     def _update_icon(self):
         icon_name = get_icon_state(_ICON_NAME, self._model.props.strength)
@@ -96,6 +123,8 @@ class AccessPointView(PulsingIcon):
 
     def _update_state(self):
         if self._model.props.state == accesspointmodel.STATE_CONNECTING:
+            if self._disconnect_item:
+                self._disconnect_item.hide()
             self.props.pulse_time = 1.0
             self.props.colors = [
                 [ style.Color(self._device_stroke).get_svg(),
@@ -104,6 +133,8 @@ class AccessPointView(PulsingIcon):
                   '#e2e2e2' ]
             ]
         elif self._model.props.state == accesspointmodel.STATE_CONNECTED:
+            if self._disconnect_item:
+                self._disconnect_item.show()
             self.props.pulse_time = 2.0
             self.props.colors = [
                 [ style.Color(self._device_stroke).get_svg(),
@@ -112,6 +143,8 @@ class AccessPointView(PulsingIcon):
                   style.Color(self._device_fill).get_svg() ]
             ]
         elif self._model.props.state == accesspointmodel.STATE_NOTCONNECTED:
+            if self._disconnect_item:
+                self._disconnect_item.hide()
             self.props.pulse_time = 0.0
             self.props.colors = [
                 [ style.Color(self._device_stroke).get_svg(),
@@ -122,11 +155,20 @@ class AccessPointView(PulsingIcon):
 _MESH_ICON_NAME = 'network-mesh'
 
 class MeshDeviceView(PulsingIcon):
-    def __init__(self, nm_device):
+    def __init__(self, nm_device, channel):
+        if not channel in [1, 6, 11]:
+            raise ValueError("Invalid channel %d" % channel)
+
         PulsingIcon.__init__(self, size=style.MEDIUM_ICON_SIZE,
                              icon_name=_MESH_ICON_NAME, cache=True)
+
         self._nm_device = nm_device
-        self.set_tooltip(_("Mesh Network"))
+        self.channel = channel
+        self.props.badge_name = "badge-channel-%d" % self.channel
+
+        self._disconnect_item = None
+        self._palette = self._create_palette()
+        self.set_palette(self._palette)
 
         mycolor = profile.get_color()
         self._device_fill = mycolor.get_fill_color()
@@ -135,39 +177,66 @@ class MeshDeviceView(PulsingIcon):
         self.connect('activated', self._activate_cb)
 
         self._nm_device.connect('state-changed', self._state_changed_cb)
+        self._nm_device.connect('activation-stage-changed', self._state_changed_cb)
         self._update_state()
+
+    def _create_palette(self):
+        p = palette.Palette(_("Mesh Network") + " " + str(self.channel), menu_after_content=True)
+
+        self._disconnect_item = gtk.MenuItem(_('Disconnect...'))
+        self._disconnect_item.connect('activate', self._disconnect_activate_cb)
+        p.menu.append(self._disconnect_item)
+
+        state = self._nm_device.get_state()
+        chan = wireless.freq_to_channel(self._nm_device.get_frequency())
+        if state == nmclient.DEVICE_STATE_ACTIVATED and chan == self.channel:
+            self._disconnect_item.show()
+        return p
+
+    def _disconnect_activate_cb(self, menuitem):
+        network_manager = hardwaremanager.get_network_manager()
+        if network_manager:
+            network_manager.set_active_device(self._nm_device)
 
     def _activate_cb(self, icon):
         network_manager = hardwaremanager.get_network_manager()
-        network_manager.set_active_device(self._nm_device)
+        if network_manager:
+            freq = wireless.channel_to_freq(self.channel)
+            network_manager.set_active_device(self._nm_device, mesh_freq=freq)
 
     def _state_changed_cb(self, model):
         self._update_state()
 
     def _update_state(self):
         state = self._nm_device.get_state()
-        if state == nmclient.DEVICE_STATE_ACTIVATING:
+        chan = wireless.freq_to_channel(self._nm_device.get_frequency())
+        if state == nmclient.DEVICE_STATE_ACTIVATING and chan == self.channel:
+            self._disconnect_item.hide()
             self.props.pulse_time = 0.75
             self.props.colors = [
                 [ style.Color(self._device_stroke).get_svg(),
-                  style.Color(self._device_fill).get_svg() ],
+                    style.Color(self._device_fill).get_svg() ],
                 [ style.Color(self._device_stroke).get_svg(),
-                  '#e2e2e2' ]
+                    '#e2e2e2' ]
             ]
-        elif state == nmclient.DEVICE_STATE_ACTIVATED:
+        elif state == nmclient.DEVICE_STATE_ACTIVATED and chan == self.channel:
+            self._disconnect_item.show()
             self.props.pulse_time = 1.5
             self.props.colors = [
                 [ style.Color(self._device_stroke).get_svg(),
-                  style.Color(self._device_fill).get_svg() ],
+                    style.Color(self._device_fill).get_svg() ],
                 [ '#ffffff',
-                  style.Color(self._device_fill).get_svg() ]
+                    style.Color(self._device_fill).get_svg() ]
             ]
-        elif state == nmclient.DEVICE_STATE_INACTIVE:
+        elif state == nmclient.DEVICE_STATE_INACTIVE or chan != self.channel:
+            self._disconnect_item.hide()
             self.props.pulse_time = 0.0
             self.props.colors = [
                 [ style.Color(self._device_stroke).get_svg(),
                   style.Color(self._device_fill).get_svg() ]
             ]
+        else:
+            raise RuntimeError("Shouldn't get here")
 
 class ActivityView(hippo.CanvasBox):
     def __init__(self, shell, model):
@@ -216,7 +285,7 @@ class MeshBox(hippo.CanvasBox):
         self._buddies = {}
         self._activities = {}
         self._access_points = {}
-        self._mesh = None
+        self._mesh = {}
         self._buddy_to_activity = {}
         self._suspended = True
 
@@ -245,18 +314,22 @@ class MeshBox(hippo.CanvasBox):
                             self._access_point_removed_cb)
 
         if self._model.get_mesh():
-            self._add_mesh_icon(self._model.get_mesh())
+            self._mesh_added_cb(self._model, self._model.get_mesh())
 
         self._model.connect('mesh-added',
                             self._mesh_added_cb)
         self._model.connect('mesh-removed',
                             self._mesh_removed_cb)
 
-    def _mesh_added_cb(self, model, mesh):
-        self._add_mesh_icon(mesh)
+    def _mesh_added_cb(self, model, meshdev):
+        self._add_mesh_icon(meshdev, 1)
+        self._add_mesh_icon(meshdev, 6)
+        self._add_mesh_icon(meshdev, 11)
 
     def _mesh_removed_cb(self, model):
-        self._remove_mesh()
+        self._remove_mesh_icon(1)
+        self._remove_mesh_icon(6)
+        self._remove_mesh_icon(11)
 
     def _buddy_added_cb(self, model, buddy_model):
         self._add_alone_buddy(buddy_model)
@@ -282,19 +355,19 @@ class MeshBox(hippo.CanvasBox):
     def _access_point_removed_cb(self, model, ap_model):
         self._remove_access_point(ap_model) 
 
-    def _add_mesh_icon(self, mesh):
-        if self._mesh:
-            self._remove_mesh()
-        if not mesh:
+    def _add_mesh_icon(self, meshdev, channel):
+        if self._mesh.has_key(channel):
+            self._remove_mesh_icon(channel)
+        if not meshdev:
             return
-        self._mesh = MeshDeviceView(mesh)
-        self._layout.add(self._mesh)
+        self._mesh[channel] = MeshDeviceView(meshdev, channel)
+        self._layout.add(self._mesh[channel])
 
-    def _remove_mesh(self):
-        if not self._mesh:
+    def _remove_mesh_icon(self, channel):
+        if not self._mesh.has_key(channel):
             return
-        self._layout.remove(self._mesh)
-        self._mesh = None
+        self._layout.remove(self._mesh[channel])
+        del self._mesh[channel]
 
     def _add_alone_buddy(self, buddy_model):
         icon = BuddyIcon(self._shell, buddy_model)
@@ -344,7 +417,8 @@ class MeshBox(hippo.CanvasBox):
         del self._activities[activity_model.get_id()]
 
     def _add_access_point(self, ap_model):
-        icon = AccessPointView(ap_model)
+        meshdev = self._model.get_mesh()
+        icon = AccessPointView(ap_model, meshdev)
         self._layout.add(icon)
 
         self._access_points[ap_model.get_id()] = icon

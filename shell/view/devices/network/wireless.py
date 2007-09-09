@@ -27,13 +27,24 @@ from sugar.graphics.palette import Palette
 from model.devices.network import wireless
 from model.devices import device
 
+from hardware import hardwaremanager
+from hardware import nmclient
+
 _ICON_NAME = 'network-wireless'
 
 class DeviceView(CanvasIcon):
     def __init__(self, model):
         CanvasIcon.__init__(self, size=style.MEDIUM_ICON_SIZE)
         self._model = model
-        self._palette = WirelessPalette(self._get_palette_primary_text())
+
+        meshdev = None
+        network_manager = hardwaremanager.get_network_manager()
+        for device in network_manager.get_devices():
+            if device.get_type() == nmclient.DEVICE_TYPE_802_11_MESH_OLPC:
+                meshdev = device
+                break
+
+        self._palette = WirelessPalette(self._get_palette_primary_text(), meshdev)
         self.set_palette(self._palette)
         self._counter = 0
         self._palette.set_frequency(self._model.props.frequency)
@@ -87,8 +98,9 @@ class DeviceView(CanvasIcon):
             self.props.stroke_color = style.COLOR_INACTIVE_STROKE.get_svg()
 
 class WirelessPalette(Palette):
-    def __init__(self, primary_text):
-        Palette.__init__(self, primary_text)
+    def __init__(self, primary_text, meshdev):
+        Palette.__init__(self, primary_text, menu_after_content=True)
+        self._meshdev = meshdev
 
         self._chan_label = gtk.Label()
         self._chan_label.show()
@@ -97,16 +109,23 @@ class WirelessPalette(Palette):
         vbox.pack_start(self._chan_label)
         vbox.show()
 
+        if meshdev:
+            disconnect_item = gtk.MenuItem(_('Disconnect...'))
+            disconnect_item.connect('activate', self._disconnect_activate_cb)
+            self.menu.append(disconnect_item)
+            disconnect_item.show()
+
         self.set_content(vbox)
 
+    def _disconnect_activate_cb(self, menuitem):
+        # Disconnection for an AP means activating the default mesh device
+        network_manager = hardwaremanager.get_network_manager()
+        if network_manager and self._meshdev:
+            network_manager.set_active_device(self._meshdev)
+
     def set_frequency(self, freq):
-        chans = { 2.412: 1, 2.417: 2, 2.422: 3, 2.427: 4,
-                  2.432: 5, 2.437: 6, 2.442: 7, 2.447: 8,
-                  2.452: 9, 2.457: 10, 2.462: 11, 2.467: 12,
-                  2.472: 13
-                }
         try:
-            chan = chans[freq]
+            chan = wireless.freq_to_channel(freq)
         except KeyError:
             chan = 0
         self._chan_label.set_text("%s: %d" % (_("Channel"), chan))

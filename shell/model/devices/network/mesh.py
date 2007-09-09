@@ -25,7 +25,10 @@ class Device(device.Device):
         'strength' : (int, None, None, 0, 100, 0,
                       gobject.PARAM_READABLE),
         'state'    : (int, None, None, device.STATE_ACTIVATING,
-                      device.STATE_INACTIVE, 0, gobject.PARAM_READABLE)
+                      device.STATE_INACTIVE, 0, gobject.PARAM_READABLE),
+        'activation-stage': (int, None, None, 0, 7, 0, gobject.PARAM_READABLE),
+        'frequency': (float, None, None, 0, 2.72, 0, gobject.PARAM_READABLE),
+        'mesh-step': (int, None, None, 0, 4, 0, gobject.PARAM_READABLE),
     }
 
     def __init__(self, nm_device):
@@ -36,6 +39,8 @@ class Device(device.Device):
                                 self._strength_changed_cb)
         self._nm_device.connect('state-changed',
                                 self._state_changed_cb)
+        self._nm_device.connect('activation-stage-changed',
+                                self._activation_stage_changed_cb)
 
     def _strength_changed_cb(self, nm_device):
         self.notify('strength')
@@ -43,15 +48,28 @@ class Device(device.Device):
     def _state_changed_cb(self, nm_device):
         self.notify('state')
 
+    def _activation_stage_changed_cb(self, nm_device):
+        self.notify('activation-stage')
+
     def do_get_property(self, pspec):
         if pspec.name == 'strength':
             return self._nm_device.get_strength()
         elif pspec.name == 'state':
             nm_state = self._nm_device.get_state()
             return device._nm_state_to_state[nm_state]
+        elif pspec.name == 'activation-stage':
+            return self._nm_device.get_activation_stage()
+        elif pspec.name == 'frequency':
+            return self._nm_device.get_frequency()
+        elif pspec.name == 'mesh-step':
+            return self._nm_device.get_mesh_step()
 
     def get_type(self):
         return 'network.mesh'
 
     def get_id(self):
         return str(self._nm_device.get_op())
+
+    def get_nm_device(self):
+        return self._nm_device
+

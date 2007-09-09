@@ -207,6 +207,8 @@ class Device(gobject.GObject):
                                 gobject.TYPE_NONE, ([])),
         'state-changed':       (gobject.SIGNAL_RUN_FIRST,
                                 gobject.TYPE_NONE, ([])),
+        'activation-stage-changed': (gobject.SIGNAL_RUN_FIRST,
+                                gobject.TYPE_NONE, ([])),
         'network-appeared':    (gobject.SIGNAL_RUN_FIRST,
                                 gobject.TYPE_NONE,
                                ([gobject.TYPE_PYOBJECT])),
@@ -332,6 +334,15 @@ class Device(gobject.GObject):
                 ret.append(net.get_op())
         return ret
 
+    def get_mesh_step(self):
+        if self._type !=  DEVICE_TYPE_802_11_MESH_OLPC:
+            raise RuntimeError("Only valid for mesh devices")
+        try:
+            step = self.dev.getMeshStep(timeout=3000)
+        except dbus.DBusException, e:
+            step = 0
+        return step
+
     def get_frequency(self):
         freq = 0.0
         try:
@@ -426,6 +437,9 @@ class Device(gobject.GObject):
         if state == self._state:
             return
 
+        if state == DEVICE_STATE_INACTIVE:
+            self._act_stage = 0
+
         self._state = state
         if self._valid:
             self.emit('state-changed')
@@ -436,6 +450,16 @@ class Device(gobject.GObject):
             else:
                 self.dev.getActiveNetwork(reply_handler=lambda *args: self._get_active_net_cb(state, *args),
                             error_handler=self._get_active_net_error_cb)
+
+    def set_activation_stage(self, stage):
+        if stage == self._act_stage:
+            return
+        self._act_stage = stage
+        if self._valid:
+            self.emit('activation-stage-changed')
+
+    def get_activation_stage(self):
+        return self._act_stage
 
     def get_ssid(self):
         if self._active_network and self._active_network.is_valid():
@@ -586,26 +610,32 @@ class NMClient(gobject.GObject):
         except dbus.DBusException:
             pass
 
-    def set_active_device(self, device, network=None):
+    def set_active_device(self, device, network=None, mesh_freq=None, mesh_start=None):
         ssid = ""
         if network:
             ssid = network.get_ssid()
-        try:
-            # NM 0.6.4 and earlier have a bug which returns an
-            # InvalidArguments error if no security information is passed
-            # for wireless networks
-            self._nm_obj.setActiveDevice(device.get_op(), ssid)
-        except dbus.DBusException, e:
-            if str(e).find("invalid arguments"):
-                pass
+        if device.get_type() == DEVICE_TYPE_802_11_MESH_OLPC:
+            if mesh_freq or mesh_start:
+                if mesh_freq and not mesh_start:
+                    self._nm_obj.setActiveDevice(device.get_op(), dbus.Double(mesh_freq))
+                elif mesh_start and not mesh_freq:
+                    self._nm_obj.setActiveDevice(device.get_op(), dbus.Double(0.0), dbus.UInt32(mesh_start))
+                else:
+                    self._nm_obj.setActiveDevice(device.get_op(), dbus.Double(mesh_freq), dbus.UInt32(mesh_start))
             else:
-                raise dbus.DBusException(e)
+                self._nm_obj.setActiveDevice(device.get_op())
+        else:
+            self._nm_obj.setActiveDevice(device.get_op(), ssid)
 
     def state_changed_sig_handler(self, new_state):
         logging.debug('NM State Changed to %d' % new_state)
 
     def device_activation_stage_sig_handler(self, device, stage):
         logging.debug('Device Activation Stage "%s" for device %s' % (NM_DEVICE_STAGE_STRINGS[stage], device))
+        if not self._devices.has_key(device):
+            logging.debug('DeviceActivationStage, device %s does not exist' % (device))
+            return
+        self._devices[device].set_activation_stage(stage)
 
     def device_activating_sig_handler(self, device):
         logging.debug('DeviceActivating for %s' % (device))
