@@ -1,5 +1,7 @@
+Snapshot 6b6470ebcb
+
 * #1260, #2664, #1542, #2985: Rework network UI bits to be more informative and
-    increase granularity of mesh device control
+    increase granularity of mesh device control (dcbw)
 * #2909: Make python activities more tolerant to missing metadata properties. (tomeu)
 * #2653: Add audio/wav and audio/x-wav as Audio objects. (tomeu)
 * Support moving of data files written to the datastore using standard Activity
