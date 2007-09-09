@@ -81,7 +81,7 @@ def choose_most_significant(mime_types):
         logging.debug('Choosed text/html!')
         return 'text/html'
 
-    if 'text/plain' in mime_types or 'STRING' in mime_types:
+    if 'text/plain' in mime_types:
         logging.debug('Choosed text/plain!')
         return 'text/plain'
 

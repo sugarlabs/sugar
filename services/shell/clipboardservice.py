@@ -80,7 +80,7 @@ class ClipboardService(dbus.service.Object):
             cb_object.add_format(Format(format_type, new_uri, on_disk))
             logging.debug('Added format of type ' + format_type + ' with path at ' + new_uri)
         else:
-            cb_object.add_format(Format(format_type, data, on_disk))        
+            cb_object.add_format(Format(format_type, data, on_disk))
             logging.debug('Added in-memory format of type ' + format_type + '.')
                         
         self.object_state_changed(object_path, {NAME_KEY: cb_object.get_name(),
@@ -112,10 +112,24 @@ class ClipboardService(dbus.service.Object):
         cb_object.set_percent(percent)
 
         if percent == 100:
-            for format_name, format in cb_object.get_formats().iteritems():
+            formats = cb_object.get_formats()
+            for format_name, format in formats.iteritems():
                 if format.is_on_disk():
                     new_uri = self._copy_file(format.get_data())
                     format.set_data(new_uri)
+
+            # Add a text/plain format to objects that are text but lack it
+            if 'text/plain' not in formats.keys():
+                if 'UTF8_STRING' in formats.keys():
+                    self.add_object_format(object_path,
+                                           'text/plain',
+                                           data=formats['UTF8_STRING'].get_data(),
+                                           on_disk=False)
+                elif 'text/unicode' in formats.keys():
+                    self.add_object_format(object_path,
+                                           'text/plain',
+                                           data=formats['UTF8_STRING'].get_data(),
+                                           on_disk=False)
 
         self.object_state_changed(object_path, {NAME_KEY: cb_object.get_name(),
                                     PERCENT_KEY: percent,

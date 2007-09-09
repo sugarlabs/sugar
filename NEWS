@@ -1,3 +1,5 @@
+* Fixed some issues with text objects in the clipboard. (tomeu)
+
 Snapshot a1f5cece18
 
 * Fix traceback on mesh disconnect command (dcbw)
