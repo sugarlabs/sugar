@@ -27,6 +27,8 @@ from model.devices import device
 from sugar.graphics.palette import Palette
 from model.devices.network import wireless
 
+from hardware import hardwaremanager
+
 class DeviceView(CanvasIcon):
     def __init__(self, model):
         CanvasIcon.__init__(self, size=style.MEDIUM_ICON_SIZE,

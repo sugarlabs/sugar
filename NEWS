@@ -1,3 +1,5 @@
+* Fix traceback on mesh disconnect command (dcbw)
+
 Snapshot 6b6470ebcb
 
 * #1260, #2664, #1542, #2985: Rework network UI bits to be more informative and
