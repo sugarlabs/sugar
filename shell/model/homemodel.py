@@ -184,15 +184,17 @@ class HomeModel(gobject.GObject):
 
     def _active_window_changed_cb(self, screen):
         window = screen.get_active_window()
-        if window is None or window.get_window_type() != wnck.WINDOW_NORMAL:
+        if window is None:
             return
 
-        xid = window.get_xid()
-        act = self._get_activity_by_xid(xid)
-        if act is None:
-            logging.error('Model for window %d does not exist.' % xid)
-        self._set_pending_activity(act)
-        self._set_active_activity(act)
+        if window.get_window_type() != wnck.WINDOW_DIALOG:
+            while window.get_transient() is not None:
+                window = window.get_transient()
+
+        activity = self._get_activity_by_xid(window.get_xid())
+        if activity is not None:
+            self._set_pending_activity(activity)
+            self._set_active_activity(activity)
 
     def _add_activity(self, home_activity):
         self._activities.append(home_activity)
