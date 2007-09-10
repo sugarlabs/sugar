@@ -51,8 +51,12 @@ class _SVGLoader(object):
                 self._cache[file_name] = icon
 
         for entity, value in entities.items():
-            xml = '<!ENTITY %s "%s">' % (entity, value)
-            icon = re.sub('<!ENTITY %s .*>' % entity, xml, icon)
+            if isinstance(value, basestring):
+                xml = '<!ENTITY %s "%s">' % (entity, value)
+                icon = re.sub('<!ENTITY %s .*>' % entity, xml, icon)
+            else:
+                logging.error(
+                    'Icon %s, entity %s is invalid.', file_name, entity)
 
         return rsvg.Handle(data=icon)
 
@@ -376,13 +380,9 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
                 self.props.fill_color = value.get_fill_color()
                 self.props.stroke_color = value.get_stroke_color()
         elif pspec.name == 'fill-color':
-            if not isinstance(value, basestring) and value is not None:
-                raise TypeError('fill-color must be a string, not %r' % type(value))
             self._buffer.fill_color = value
             self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'stroke-color':
-            if not isinstance(value, basestring) and value is not None:
-                raise TypeError('stroke-color must be a string, not %r' % type(value))
             self._buffer.stroke_color = value
             self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'size':
