@@ -78,6 +78,8 @@ class _IconBuffer(object):
     _loader = _SVGLoader()
 
     def __init__(self):
+        self._xo_color = None
+
         self.icon_name = None
         self.file_name = None
         self.fill_color = None
@@ -179,13 +181,18 @@ class _IconBuffer(object):
 
         return info
 
-    def set_xo_color(self, xo_color):
+    def _get_xo_color(self):
+        return self._xo_color
+
+    def _set_xo_color(self, xo_color):
         if xo_color:
             self.stroke_color = xo_color.get_stroke_color()
             self.fill_color = xo_color.get_fill_color()
         else:
             self.stroke_color = None
             self.fill_color = None
+
+        self._xo_color = xo_color
 
     def get_surface(self):
         cache_key = self._get_cache_key()
@@ -235,6 +242,8 @@ class _IconBuffer(object):
         self._surface_cache[cache_key] = surface
 
         return surface
+
+    xo_color = property(_get_xo_color, _set_xo_color)
 
 class Icon(gtk.Image):
     __gtype_name__ = 'SugarIcon'
@@ -317,13 +326,21 @@ class Icon(gtk.Image):
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'xo-color':
-            self._buffer.set_xo_color(value)
+            if self._buffer.xo_color != value:
+                self._buffer.xo_color = value
+                self.queue_draw()
         elif pspec.name == 'fill-color':
-            self._buffer.fill_color = value
+            if self._buffer.fill_color != value:
+                self._buffer.fill_color = value
+                self.queue_draw()
         elif pspec.name == 'stroke-color':
-            self._buffer.stroke_color = value
+            if self._buffer.stroke_color != value:
+                self._buffer.stroke_color = value
+                self.queue_draw()
         elif pspec.name == 'badge-name':
-            self._buffer.badge_name = value
+            if self._buffer.badge_name != value:
+                self._buffer.badge_name = value
+                self.queue_resize()
         else:
             gtk.Image.do_set_property(self, pspec, value)
 
@@ -370,32 +387,40 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'file-name':
-            self._buffer.file_name = value
-            self.emit_paint_needed(0, 0, -1, -1)
+            if self._buffer.file_name != value:
+                self._buffer.file_name = value
+                self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'icon-name':
-            self._buffer.icon_name = value
-            self.emit_paint_needed(0, 0, -1, -1)
+            if self._buffer.icon_name != value:
+                self._buffer.icon_name = value
+                self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'xo-color':
-            self._buffer.set_xo_color(value)
-            self.emit_paint_needed(0, 0, -1, -1)
+            if self._buffer.xo_color != value:
+                self._buffer.xo_color = value
+                self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'fill-color':
-            self._buffer.fill_color = value
-            self.emit_paint_needed(0, 0, -1, -1)
+            if self._buffer.fill_color != value:
+                self._buffer.fill_color = value
+                self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'stroke-color':
-            self._buffer.stroke_color = value
-            self.emit_paint_needed(0, 0, -1, -1)
+            if self._buffer.stroke_color != value:
+                self._buffer.stroke_color = value
+                self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'size':
-            self._buffer.width = value
-            self._buffer.height = value
-            self.emit_request_changed()
+            if self._buffer.width != value:
+                self._buffer.width = value
+                self._buffer.height = value
+                self.emit_request_changed()
         elif pspec.name == 'scale':
-            self._buffer.scale = value
-            self.emit_request_changed()
+            if self._buffer.scale != value:
+                self._buffer.scale = value
+                self.emit_request_changed()
         elif pspec.name == 'cache':
             self._buffer.cache = value
         elif pspec.name == 'badge-name':
-            self._buffer.badge_name = value
-            self.emit_paint_needed(0, 0, -1, -1)
+            if self._buffer.badge_name != value:
+                self._buffer.badge_name = value
+                self.emit_paint_needed(0, 0, -1, -1)
 
     def do_get_property(self, pspec):
         if pspec.name == 'size':

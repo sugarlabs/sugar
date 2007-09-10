@@ -223,6 +223,12 @@ class XoColor:
         else:
             [self._stroke, self._fill] = _parse_string(color_string)
 
+    def __cmp__(self, other):
+        if isinstance(other, XoColor):
+            return self._stroke == other._stroke and self._fill == other._fill
+        else:
+            return -1
+
     def get_stroke_color(self):
         return self._stroke
 
