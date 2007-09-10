@@ -225,9 +225,9 @@ class XoColor:
 
     def __cmp__(self, other):
         if isinstance(other, XoColor):
-            return self._stroke == other._stroke and self._fill == other._fill
-        else:
-            return -1
+            if self._stroke == other._stroke and self._fill == other._fill:
+                return 0
+        return -1
 
     def get_stroke_color(self):
         return self._stroke
