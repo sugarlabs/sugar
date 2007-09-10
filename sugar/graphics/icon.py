@@ -179,6 +179,14 @@ class _IconBuffer(object):
 
         return info
 
+    def set_xo_color(self, xo_color):
+        if xo_color:
+            self.stroke_color = xo_color.get_stroke_color()
+            self.fill_color = xo_color.get_fill_color()
+        else:
+            self.stroke_color = None
+            self.fill_color = None
+
     def get_surface(self):
         cache_key = self._get_cache_key()
         if cache_key in self._surface_cache:
@@ -309,12 +317,7 @@ class Icon(gtk.Image):
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'xo-color':
-            if value is None:
-                self.props.fill_color = None
-                self.props.stroke_color = None
-            else:
-                self.props.fill_color = value.get_fill_color()
-                self.props.stroke_color = value.get_stroke_color()
+            self._buffer.set_xo_color(value)
         elif pspec.name == 'fill-color':
             self._buffer.fill_color = value
         elif pspec.name == 'stroke-color':
@@ -373,12 +376,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
             self._buffer.icon_name = value
             self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'xo-color':
-            if value is None:
-                self.props.fill_color = None
-                self.props.stroke_color = None
-            else:
-                self.props.fill_color = value.get_fill_color()
-                self.props.stroke_color = value.get_stroke_color()
+            self._buffer.set_xo_color(value)
+            self.emit_paint_needed(0, 0, -1, -1)
         elif pspec.name == 'fill-color':
             self._buffer.fill_color = value
             self.emit_paint_needed(0, 0, -1, -1)
