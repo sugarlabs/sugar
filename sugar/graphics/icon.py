@@ -78,8 +78,6 @@ class _IconBuffer(object):
     _loader = _SVGLoader()
 
     def __init__(self):
-        self._xo_color = None
-
         self.icon_name = None
         self.file_name = None
         self.fill_color = None
@@ -182,7 +180,10 @@ class _IconBuffer(object):
         return info
 
     def _get_xo_color(self):
-        return self._xo_color
+        if self.stroke_color and self.fill_color:
+            return XoColor('%s,%s' % (self.stroke_color, self.fill_color))
+        else:
+            return None
 
     def _set_xo_color(self, xo_color):
         if xo_color:
@@ -191,8 +192,6 @@ class _IconBuffer(object):
         else:
             self.stroke_color = None
             self.fill_color = None
-
-        self._xo_color = xo_color
 
     def get_surface(self):
         cache_key = self._get_cache_key()
