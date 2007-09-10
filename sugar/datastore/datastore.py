@@ -16,6 +16,7 @@
 # Boston, MA 02111-1307, USA.
 
 import logging
+import time
 from datetime import datetime
 import os
 
@@ -185,8 +186,8 @@ def get(object_id):
 
 def create():
     metadata = DSMetadata()
-    metadata['ctime'] = datetime.now().isoformat()
-    metadata['mtime'] = metadata['ctime']
+    metadata['mtime'] = datetime.now().isoformat()
+    metadata['timestamp'] = int(time.time())
     return DSObject(object_id=None, metadata=metadata, file_path=None)
 
 def write(ds_object, update_mtime=True, transfer_ownership=False, reply_handler=None, error_handler=None, timeout=-1):
@@ -196,6 +197,7 @@ def write(ds_object, update_mtime=True, transfer_ownership=False, reply_handler=
 
     if update_mtime:
         properties['mtime'] = datetime.now().isoformat()
+        properties['timestamp'] = int(time.time())
 
     if ds_object.object_id:
         dbus_helpers.update(ds_object.object_id,
