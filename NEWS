@@ -1,3 +1,4 @@
+* #2026 Fix the active flag when there are multiple toplevels. (marco)
 * Fixed some issues with text objects in the clipboard. (tomeu)
 
 Snapshot a1f5cece18
