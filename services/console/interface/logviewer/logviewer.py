@@ -92,6 +92,10 @@ class MultiLogView(gtk.VBox):
         if os.path.isdir(path):
             return False
 
+        if not os.path.exists(path):
+            print "ERROR: %s don't exists"
+            return False
+
         logfile = self._get_filename_from_path(path)
 
         if not self._activity.has_key(logfile):
