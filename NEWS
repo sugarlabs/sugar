@@ -1,3 +1,5 @@
+Snapshot 79237f3114
+
 * #2582 German translation. (fab)
 * #2026 Fix the active flag when there are multiple toplevels. (marco)
 * Fixed some issues with text objects in the clipboard. (tomeu)
