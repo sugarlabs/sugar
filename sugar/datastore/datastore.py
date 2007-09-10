@@ -158,7 +158,7 @@ class DSObject(object):
     def destroy(self):
         if self._destroyed:
             logging.warning('This DSObject has already been destroyed!.')
-            import pdb;pdb.set_trace()
+            import traceback;traceback.print_stack()
             return
         self._destroyed = True
         if self._file_path and self._owns_file:
@@ -199,17 +199,27 @@ def write(ds_object, update_mtime=True, transfer_ownership=False, reply_handler=
         properties['mtime'] = datetime.now().isoformat()
         properties['timestamp'] = int(time.time())
 
+    if ds_object._file_path is None:
+        file_path = ''
+    else:
+        file_path = ds_object._file_path
+
+    # FIXME: this func will be sync for creates regardless of the handlers
+    # supplied. This is very bad API, need to decide what to do here.
     if ds_object.object_id:
         dbus_helpers.update(ds_object.object_id,
                             properties,
-                            ds_object.file_path,
+                            file_path,
                             transfer_ownership,
                             reply_handler=reply_handler,
                             error_handler=error_handler,
                             timeout=timeout)
     else:
+        if reply_handler or error_handler:
+            logging.warning('datastore.write() cannot currently be called async' \
+                            ' for creates, see https://dev.laptop.org/ticket/3071')
         ds_object.object_id = dbus_helpers.create(properties,
-                                                  ds_object.file_path,
+                                                  file_path,
                                                   transfer_ownership)
         # TODO: register the object for updates
     logging.debug('Written object %s to the datastore.' % ds_object.object_id)
@@ -218,8 +228,8 @@ def delete(object_id):
     logging.debug('datastore.delete')
     dbus_helpers.delete(object_id)
 
-def find(query, sorting=None, limit=None, offset=None, reply_handler=None,
-         error_handler=None):
+def find(query, sorting=None, limit=None, offset=None, properties=[],
+         reply_handler=None, error_handler=None):
 
     query = query.copy()
 
@@ -230,7 +240,7 @@ def find(query, sorting=None, limit=None, offset=None, reply_handler=None,
     if offset:
         query['offset'] = offset
     
-    props_list, total_count = dbus_helpers.find(query, reply_handler, error_handler)
+    props_list, total_count = dbus_helpers.find(query, properties, reply_handler, error_handler)
     
     objects = []
     for props in props_list:
