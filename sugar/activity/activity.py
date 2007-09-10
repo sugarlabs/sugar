@@ -404,12 +404,14 @@ class Activity(Window, gtk.Container):
         raise NotImplementedError
 
     def _internal_save_cb(self):
+        logging.debug('Activity._internal_save_cb')
         self._updating_jobject = False
         if self._closing:
             self._cleanup_jobject()
             self.destroy()
 
     def _internal_save_error_cb(self, err):
+        logging.debug('Activity._internal_save_error_cb')
         self._updating_jobject = False
         if self._closing:
             self._cleanup_jobject()
@@ -466,6 +468,7 @@ class Activity(Window, gtk.Container):
         logging.debug('Activity.save: %r' % self._jobject.object_id)
 
         if self._updating_jobject:
+            logging.info('Activity.save: still processing a previous request.')
             return
 
         buddies_dict = self._get_buddies()
@@ -488,14 +491,20 @@ class Activity(Window, gtk.Container):
                 self._jobject.file_path = file_path
         except NotImplementedError:
             pass
-        self._updating_jobject = True
-        datastore.write(self._jobject,
-                transfer_ownership=True,
-                reply_handler=self._internal_save_cb,
-                error_handler=self._internal_save_error_cb)
+
+        # Cannot call datastore.write async for creates: https://dev.laptop.org/ticket/3071
+        if self._jobject.object_id is None:
+            datastore.write(self._jobject, transfer_ownership=True)
+        else:
+            self._updating_jobject = True
+            datastore.write(self._jobject,
+                    transfer_ownership=True,
+                    reply_handler=self._internal_save_cb,
+                    error_handler=self._internal_save_error_cb)
 
     def copy(self):
         logging.debug('Activity.copy: %r' % self._jobject.object_id)
+        self._preview = self._get_preview()
         self.save()
         self._jobject.object_id = None
 
