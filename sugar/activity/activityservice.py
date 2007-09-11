@@ -59,3 +59,8 @@ class ActivityService(dbus.service.Object):
     def SetActive(self, active):
         logging.debug('ActivityService.set_active: %s.' % active)
         self._activity.props.active = active
+
+    @dbus.service.method(_ACTIVITY_INTERFACE)
+    def Invite(self, buddy_key):
+        self._activity.invite(buddy_key)
+

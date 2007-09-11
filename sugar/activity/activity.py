@@ -543,6 +543,20 @@ class Activity(Window, gtk.Container):
             # FIXME: some way to distinguish between share scopes
             self._jobject.metadata['share-scope'] = SCOPE_NEIGHBORHOOD
 
+    def _invite_response_cb(self, error):
+        if error:
+            logging.error('Invite failed: %s' % error)
+
+    def invite(self, buddy_key):
+        if self._shared_activity is None:
+            return
+
+        buddy = self._pservice.get_buddy(buddy_key)
+        if buddy:
+            self._shared_activity.invite(buddy, '', self._invite_response_cb)
+        else:
+            logging.error('Cannot invite %s, no such buddy.' % buddy_key)
+
     def share(self, private=False):
         """Request that the activity be shared on the network.
         
