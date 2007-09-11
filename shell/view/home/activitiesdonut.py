@@ -30,7 +30,7 @@ from sugar.graphics.palette import Palette
 from sugar.graphics import style
 from sugar.graphics import xocolor
 from sugar import profile
-from proc_smaps import ProcSmaps
+import proc_smaps
 
 # TODO: rgb_to_html and html_to_rgb are useful elsewhere 
 #       we should put this in a common module 
@@ -186,6 +186,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
         self._activities = []
         self._shell = shell
         self._angles = []
+        self._shell_mappings = proc_smaps.get_shared_mapping_names(os.getpid())
 
         self._model = shell.get_model().get_home()
         self._model.connect('activity-added', self._activity_added_cb)
@@ -282,23 +283,11 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
         return True
 
     def _update_activity_sizes(self):
-        # First, get the shell's memory mappings; this memory won't be
-        # counted against the memory used by activities, since it
-        # would still be in use even if all activities exited.
-        shell_mappings = {}
-        try:
-            shell_smaps = ProcSmaps(os.getpid())
-            for mapping in shell_smaps.mappings:
-                if mapping.shared_clean > 0 or mapping.shared_dirty > 0:
-                    shell_mappings[mapping.name] = mapping
-        except Exception, e:
-            logging.warn('ActivitiesDonut: could not read own smaps: %r' % e)
-
         # Get the memory mappings of each process that hosts an
         # activity, and count how many activity instances each
         # activity process hosts, and how many processes are mapping
         # each shared library, etc
-        process_smaps = {}
+        process_mappings = {}
         num_activities = {}
         num_mappings = {}
         unknown_size_activities = 0
@@ -314,15 +303,14 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
                 continue
 
             try:
-                smaps = ProcSmaps(pid)
-                self._subtract_mappings(smaps, shell_mappings)
-                for mapping in smaps.mappings:
-                    if mapping.shared_clean > 0 or mapping.shared_dirty > 0:
+                mappings = proc_smaps.get_mappings(pid, self._shell_mappings)
+                for mapping in mappings:
+                    if mapping.shared > 0:
                         if num_mappings.has_key(mapping.name):
                             num_mappings[mapping.name] += 1
                         else:
                             num_mappings[mapping.name] = 1
-                process_smaps[pid] = smaps
+                process_mappings[pid] = mappings
                 num_activities[pid] = 1
             except Exception, e:
                 logging.warn('ActivitiesDonut: could not read /proc/%s/smaps: %r'
@@ -333,16 +321,16 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
         total_activity_size = 0
         for activity in self._model:
             pid = activity.get_pid()
-            if not process_smaps.has_key(pid):
+            if not process_mappings.has_key(pid):
                 continue
 
-            smaps = process_smaps[pid]
+            mappings = process_mappings[pid]
             size = 0
-            for mapping in smaps.mappings:
-                size += mapping.private_clean + mapping.private_dirty
-                if mapping.shared_clean + mapping.shared_dirty > 0:
+            for mapping in mappings:
+                size += mapping.private
+                if mapping.shared > 0:
                     num = num_mappings[mapping.name]
-                    size += (mapping.shared_clean + mapping.shared_dirty) / num
+                    size += mapping.shared / num
             process_size[pid] = size
             total_activity_size += size / num_activities[pid]
 
@@ -405,12 +393,6 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
                 for icon in self._activities:
                     if icon.size > _MIN_WEDGE_SIZE:
                         icon.size -= (icon.size - _MIN_WEDGE_SIZE) * reduction
-
-    def _subtract_mappings(self, smaps, mappings_to_remove):
-        for mapping in smaps.mappings:
-            if mappings_to_remove.has_key(mapping.name):
-                mapping.shared_clean = 0
-                mapping.shared_dirty = 0
 
     def _compute_angles(self):
         self._angles = []
