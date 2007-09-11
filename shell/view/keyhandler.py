@@ -53,7 +53,6 @@ _actions_table = {
     '0xE0'          : 'overlay',
     '0xEB'          : 'rotate',
     '<alt>r'        : 'rotate',
-    '0xEC'          : 'keyboard_brightness',
     '<alt>Tab'      : 'home',
     '<alt>q'        : 'quit_emulator',
 }
@@ -151,11 +150,6 @@ class KeyHandler(object):
 
     def handle_overlay(self):
         self._shell.toggle_chat_visibility()
-
-    def handle_keyboard_brightness(self):
-        hw_manager = hardwaremanager.get_manager()
-        if hw_manager:
-            hw_manager.toggle_keyboard_brightness()
 
     def handle_rotate(self):
         states = [ 'normal', 'left', 'inverted', 'right']
