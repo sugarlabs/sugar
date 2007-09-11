@@ -1,0 +1,20 @@
+# MIME                                Activity service name
+
+application/pdf                       org.laptop.sugar.ReadActivity
+
+text/rtf                              org.laptop.AbiWordActivity
+text/plain                            org.laptop.AbiWordActivity
+application/x-abiword                 org.laptop.AbiWordActivity
+text/x-xml-abiword                    org.laptop.AbiWordActivity
+application/msword                    org.laptop.AbiWordActivity
+application/rtf                       org.laptop.AbiWordActivity
+
+image/png                             org.laptop.WebActivity
+image/gif                             org.laptop.WebActivity
+image/jpeg                            org.laptop.WebActivity
+text/html                             org.laptop.WebActivity
+application/xhtml+xml                 org.laptop.WebActivity
+application/xml                       org.laptop.WebActivity
+application/rss+xml                   org.laptop.WebActivity
+
+application/ogg                       org.osl.MediaPlayerActivity

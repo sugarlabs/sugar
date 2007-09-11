@@ -8,6 +8,7 @@ sugar-xo.gtkrc: gtkrc.em
 
 sugardir = $(pkgdatadir)/data
 sugar_DATA =		\
+	mime.defaults	\
 	$(GTKRC_FILES)
 
 GTKRC_FILES =		\

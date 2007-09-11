@@ -112,6 +112,7 @@ class DSObject(object):
             activities.append(activity_info)
 
         mime_type = self.metadata['mime_type']
+        print mime_type
         if mime_type:
             activities_info = activity.get_registry().get_activities_for_type(mime_type)
             for activity_info in activities_info:

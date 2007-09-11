@@ -29,6 +29,20 @@ def _get_data_dirs():
     else:
         return [ '/usr/local/share/', '/usr/share/' ]
 
+def _load_mime_defaults():
+    defaults = {}
+
+    f = open(env.get_data_path('mime.defaults'), 'r')
+    for line in f.readlines():
+        line = line.strip()
+        if line and not line.startswith('#'):
+            mime = line[:line.find(' ')]
+            handler = line[line.rfind(' ') + 1:]
+            defaults[mime] = handler
+    f.close()
+
+    return defaults
+
 class _ServiceManager(object):
     """Internal class responsible for creating dbus service files
     
@@ -72,6 +86,7 @@ class BundleRegistry(gobject.GObject):
         self._bundles = []
         self._search_path = []
         self._service_manager = _ServiceManager()
+        self._mime_defaults = _load_mime_defaults()
 
     def get_bundle(self, service_name):
         """Returns an bundle given his service name"""
@@ -120,7 +135,10 @@ class BundleRegistry(gobject.GObject):
         result = []
         for bundle in self._bundles:
             if bundle.get_mime_types() and mime_type in bundle.get_mime_types():
-                result.append(bundle)
+                if self._mime_defaults[mime_type] == bundle.get_service_name():
+                    result.insert(0, bundle)
+                else:
+                    result.append(bundle)
         return result
 
 def get_registry():

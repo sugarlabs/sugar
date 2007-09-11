@@ -1,3 +1,4 @@
+* #3339 Add default mime types handler to the shell. (marco)
 * #3143 Finish up the invite-only mode implementation. (marco)
 
 Snapshot 79237f3114
