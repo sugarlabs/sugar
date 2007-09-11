@@ -101,6 +101,6 @@ class EventArea(gobject.GObject):
         for window in self._windows:
             window.hide()
 
-    def _active_window_changed_cb(self, screen):
+    def _active_window_changed_cb(self, screen, previous_window=None):
         for window in self._windows:
             window.window.raise_()

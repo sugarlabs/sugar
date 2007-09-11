@@ -182,7 +182,7 @@ class HomeModel(gobject.GObject):
     def _set_active_error(self, err):
         logging.error("set_active() failed: %s" % err)
 
-    def _active_window_changed_cb(self, screen):
+    def _active_window_changed_cb(self, screen, previous_window=None):
         window = screen.get_active_window()
         if window is None:
             return
