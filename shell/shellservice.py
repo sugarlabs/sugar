@@ -23,6 +23,8 @@ _DBUS_SHELL_IFACE = "org.laptop.Shell"
 _DBUS_OWNER_IFACE = "org.laptop.Shell.Owner"
 _DBUS_PATH = "/org/laptop/Shell"
 
+_DBUS_RAINBOW_IFACE = "org.laptop.security.Rainbow"
+
 class ShellService(dbus.service.Object):
     """Provides d-bus service to script the shell's operations
     
@@ -105,17 +107,19 @@ class ShellService(dbus.service.Object):
     def _get_rainbow_service(self):
         """Lazily initializes an interface to the Rainbow security daemon."""
         if self._rainbow is None:
-            service = iface = 'org.laptop.security.Rainbow'
             system_bus = dbus.SystemBus()
-            object = system_bus.get_object(service, '/')
-            self._rainbow = dbus.Interface(object, dbus_interface=iface,
-                                                   follow_name_owner_change=True)
+            object = system_bus.get_object(_DBUS_RAINBOW_IFACE, '/',
+                                           follow_name_owner_changes=True)
+            self._rainbow = dbus.Interface(object,
+                                           dbus_interface=_DBUS_RAINBOW_IFACE)
         return self._rainbow
 
     @dbus.service.signal(_DBUS_OWNER_IFACE, signature="s")
     def CurrentActivityChanged(self, activity_id):
         if os.path.exists('/etc/olpc-security'):
-            self._get_rainbow_service().ChangeActivity(activity_id, dbus_interface=iface)
+            self._get_rainbow_service().ChangeActivity(
+                    activity_id,
+                    dbus_interface=_DBUS_RAINBOW_IFACE)
 
     def _cur_activity_changed_cb(self, owner, new_activity):
         new_id = ""
