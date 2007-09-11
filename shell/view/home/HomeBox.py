@@ -111,10 +111,10 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
     _REDRAW_TIMEOUT = 5 * 60 * 1000 # 5 minutes
 
     def resume(self):
-        self._redraw_activity_ring()
         if self._redraw_id is None:
             self._redraw_id = gobject.timeout_add(self._REDRAW_TIMEOUT,
                                                   self._redraw_activity_ring)
+            self._redraw_activity_ring()
 
     def suspend(self):
         if self._redraw_id is not None:

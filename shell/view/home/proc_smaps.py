@@ -1,149 +1,106 @@
-####################################################################
-# This class open the /proc/PID/maps and /proc/PID/smaps files
-# to get useful information about the real memory usage
-####################################################################
+# Copyright (C) 2007 Red Hat, Inc.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+# USA
 
 import os
-import logging
 
-_smaps_has_references = None
+# /proc/PID/maps consists of a number of lines like this:
+# 00400000-004b1000 r-xp 00000000 fd:00 5767206                  /bin/bash
+# 006b1000-006bb000 rw-p 000b1000 fd:00 5767206                  /bin/bash
+# 006bb000-006c0000 rw-p 006bb000 00:00 0 
+# ...
+# The fields are: address, permissions, offset, device, inode, and
+# (for non-anonymous mappings) pathname.
+#
+# /proc/PID/smaps gives additional information for each mapping:
+# 00400000-004b1000 r-xp 00000000 fd:00 5767206                  /bin/bash
+# Size:               708 kB
+# Rss:                476 kB
+# Shared_Clean:       468 kB
+# Shared_Dirty:         0 kB
+# Private_Clean:        8 kB
+# Private_Dirty:        0 kB
+# Referenced:           0 kb
+#
+# The "Referenced" line only appears in kernel 2.6.22 and later.
 
-# Parse the /proc/PID/smaps file
-class ProcSmaps:
-
-    mappings = [] # Devices information
+def get_shared_mapping_names(pid):
+    """Returns a set of the files for which PID has a shared mapping"""
     
-    def __init__(self, pid):
-        global _smaps_has_references
-        if _smaps_has_references is None:
-            _smaps_has_references = os.path.isfile('/proc/%s/clear_refs' %
-                                                   os.getpid())
+    mappings = set()
+    infile = open("/proc/%s/maps" % pid, "r")
+    for line in infile:
+        # sharable mappings are non-anonymous and either read-only
+        # (permissions "r-..") or writable but explicitly marked
+        # shared ("rw.s")
+        fields = line.split()
+        if len(fields) < 6 or not fields[5].startswith('/'):
+            continue
+        if fields[1][0] != 'r' or (fields[1][1] == 'w' and fields[1][3] != 's'):
+            continue
+        mappings.add(fields[5])
+    infile.close()
+    return mappings
 
-        smapfile = "/proc/%s/smaps" % pid
-        self.mappings = []
-        
-        # Coded by Federico Mena (script)
-        infile = open(smapfile, "r")
-        input = infile.read()
-        infile.close()
-        
-        lines = input.splitlines()
+_smaps_lines_per_entry = None
 
-        num_lines = len (lines)
-        line_idx = 0
+def get_mappings(pid, ignored_shared_mappings):
+    """Returns a list of (name, private, shared) tuples describing the
+    memory mappings of PID. Shared mappings named in
+    ignored_shared_mappings are ignored
+    """
+
+    global _smaps_lines_per_entry
+    if _smaps_lines_per_entry is None:
+        if os.path.isfile('/proc/%s/clear_refs' % os.getpid()):
+            _smaps_lines_per_entry = 8
+        else:
+            _smaps_lines_per_entry = 7
+
+    mappings = []
     
-        # 08065000-08067000 rw-p 0001c000 03:01 147613     /opt/gnome/bin/evolution-2.6
-        # Size:                 8 kB
-        # Rss:                  8 kB
-        # Shared_Clean:         0 kB
-        # Shared_Dirty:         0 kB
-        # Private_Clean:        8 kB
-        # Private_Dirty:        0 kB
-        # Referenced:           4 kb -> Introduced in kernel 2.6.22
+    smapfile = "/proc/%s/smaps" % pid
+    infile = open(smapfile, "r")
+    input = infile.read()
+    infile.close()
+    lines = input.splitlines()
 
-        while num_lines > 0:
-            fields = lines[line_idx].split (" ", 5)
-            if len (fields) == 6:
-                (offsets, permissions, bin_permissions, device, inode, name) = fields
-            else:
-                (offsets, permissions, bin_permissions, device, inode) = fields
-                name = ""
+    for line_idx in range(0, len(lines), _smaps_lines_per_entry):
+        name_idx = lines[line_idx].find('/')
+        if name_idx == -1:
+            name = None
+        else:
+            name = lines[line_idx][name_idx:]
     
-            size          = self.parse_smaps_size_line (lines[line_idx + 1])
-            rss           = self.parse_smaps_size_line (lines[line_idx + 2])
-            shared_clean  = self.parse_smaps_size_line (lines[line_idx + 3])
-            shared_dirty  = self.parse_smaps_size_line (lines[line_idx + 4])
-            private_clean = self.parse_smaps_size_line (lines[line_idx + 5])
-            private_dirty = self.parse_smaps_size_line (lines[line_idx + 6])
-            if _smaps_has_references:
-                referenced = self.parse_smaps_size_line (lines[line_idx + 7])
-            else:
-                referenced = None
-            name = name.strip ()
+        private_clean = int(lines[line_idx + 5][14:-3])
+        private_dirty = int(lines[line_idx + 6][14:-3])
+        if name in ignored_shared_mappings:
+            shared_clean = 0
+            shared_dirty = 0
+        else:
+            shared_clean = int(lines[line_idx + 3][14:-3])
+            shared_dirty = int(lines[line_idx + 4][14:-3])
 
-            mapping = Mapping (size, rss, shared_clean, shared_dirty, \
-                private_clean, private_dirty, referenced, permissions, name)
-            self.mappings.append (mapping)
+        mapping = Mapping(name, private, shared)
+        mappings.append (mapping)
 
-            if _smaps_has_references:
-                num_lines -= 8
-                line_idx += 8
-            else:
-                num_lines -= 7
-                line_idx += 7
-        
-        if _smaps_has_references:
-            self._clear_reference(pid)
-
-    def _clear_reference(self, pid):
-      os.system("echo 1 > /proc/%s/clear_refs" % pid)
-
-    # Parses a line of the form "foo: 42 kB" and returns an integer for the "42" field
-    def parse_smaps_size_line (self, line):
-        # Rss:                  8 kB
-        fields = line.split ()
-        return int(fields[1])
+    return mappings
 
 class Mapping:
-    def __init__ (self, size, rss, shared_clean, shared_dirty, \
-            private_clean, private_dirty, referenced, permissions, name):
-        self.size = size
-        self.rss = rss
-        self.shared_clean = shared_clean
-        self.shared_dirty = shared_dirty
-        self.private_clean = private_clean
-        self.private_dirty = private_dirty
-        self.referenced  = referenced
-        self.permissions = permissions
+    def __init__ (self, name, private, shared):
         self.name = name
-
-# Parse /proc/PID/maps file to get the clean memory usage by process,
-# we avoid lines with backed-files
-class ProcMaps:
-    
-    clean_size = 0
-    
-    def __init__(self, pid):
-        mapfile = "/proc/%s/maps" % pid
-
-        try:
-            infile = open(mapfile, "r")
-        except:
-            print "Error trying " + mapfile
-            return None
-            
-        sum = 0
-        to_data_do = {
-            "[anon]": self.parse_size_line,
-            "[heap]": self.parse_size_line
-        }
-        
-        for line in infile:
-            arr = line.split()
-            
-            # Just parse writable mapped areas
-            if arr[1][1] != "w":
-                continue
-            
-            if len(arr) == 6:                
-                # if we got a backed-file we skip this info
-                if os.path.isfile(arr[5]):
-                    continue
-                else:
-                    line_size = to_data_do.get(arr[5], self.skip)(line)
-                    sum += line_size
-            else:
-                line_size = self.parse_size_line(line)
-                sum += line_size
-                    
-        infile.close()
-        self.clean_size = sum
-        
-    def skip(self, line):
-        return 0
-    
-    # Parse a maps line and return the mapped size
-    def parse_size_line(self, line):
-        start, end = line.split()[0].split('-')
-        size = int(end, 16) - int(start, 16)            
-        return size
+        self.private = private
+        self.shared = shared
