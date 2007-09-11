@@ -53,6 +53,8 @@ class ActivityToolbar(gtk.Toolbar):
         gtk.Toolbar.__init__(self)
 
         self._activity = activity
+        self._updating_share = False
+
         activity.connect('shared', self._activity_shared_cb)
         activity.connect('joined', self._activity_shared_cb)
         activity.connect('notify::max_participants',
@@ -99,6 +101,8 @@ class ActivityToolbar(gtk.Toolbar):
         self._update_title_sid = None
 
     def _update_share(self):
+        self._updating_share = True
+
         if self._activity.props.max_participants == 1:
             self.share.hide()
 
@@ -108,19 +112,18 @@ class ActivityToolbar(gtk.Toolbar):
         else:
             self.share.set_sensitive(True)
             self.share.combo.set_active(0)
+
+        self._updating_share = False
     
     def _share_changed_cb(self, combo):
-        if not self.props.sensitive:
-            # Ignore programmatic combo changes, only respond
-            # to user-initiated ones
+        if self._updating_share:
             return
+
         model = self.share.combo.get_model()
         it = self.share.combo.get_active_iter()
         (scope, ) = model.get(it, 0)
         if scope == SCOPE_NEIGHBORHOOD:
             self._activity.share()
-        elif scope == SCOPE_INVITE_ONLY:
-            self._activity.share(private=True)
 
     def _keep_clicked_cb(self, button):
         self._activity.copy()
@@ -270,6 +273,8 @@ class Activity(Window, gtk.Container):
         self._updating_jobject = False
         self._closing = False
         self._max_participants = 0
+        self._share_scope = SCOPE_PRIVATE
+        self._invites_queue = []
 
         self._bus = ActivityService(self)
         self._owns_file = False
@@ -533,29 +538,46 @@ class Activity(Window, gtk.Container):
         if not success:
             logging.debug('Share of activity %s failed: %s.' % (self._activity_id, err))
             return
+
         logging.debug('Share of activity %s successful.' % self._activity_id)
 
         activity.props.name = self._jobject.metadata['title']
 
         self._shared_activity = activity
+
+        if activity.props.private:
+            self._share_scope = SCOPE_INVITE_ONLY
+        else:
+            self._share_scope = SCOPE_NEIGHBORHOOD
+
         self.emit('shared')
+
         if self._jobject:
             # FIXME: some way to distinguish between share scopes
-            self._jobject.metadata['share-scope'] = SCOPE_NEIGHBORHOOD
+            self._jobject.metadata['share-scope'] = self._share_scope
+
+        self._send_invites()
 
     def _invite_response_cb(self, error):
         if error:
             logging.error('Invite failed: %s' % error)
 
-    def invite(self, buddy_key):
-        if self._shared_activity is None:
-            return
+    def _send_invites(self):
+        while self._invites_queue:
+            buddy_key = self._invites_queue.pop()             
+            buddy = self._pservice.get_buddy(buddy_key)
+            if buddy:
+                self._shared_activity.invite(buddy, '', self._invite_response_cb)
+            else:
+                logging.error('Cannot invite %s, no such buddy.' % buddy_key)
 
-        buddy = self._pservice.get_buddy(buddy_key)
-        if buddy:
-            self._shared_activity.invite(buddy, '', self._invite_response_cb)
+    def invite(self, buddy_key):
+        self._invites_queue.append(buddy_key)
+
+        if self._share_scope == SCOPE_PRIVATE:
+            self.share(True)
         else:
-            logging.error('Cannot invite %s, no such buddy.' % buddy_key)
+            self._send_invites()
 
     def share(self, private=False):
         """Request that the activity be shared on the network.
