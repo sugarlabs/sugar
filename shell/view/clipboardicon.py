@@ -48,8 +48,6 @@ class ClipboardIcon(RadioToolButton):
         self._icon.props.xo_color = profile.get_color()
         self.set_icon_widget(self._icon)
         self._icon.show()
-
-        self.props.sensitive = False
         
         cb_service = clipboardservice.get_instance()
         cb_service.connect('object-state-changed', self._object_state_changed_cb)
@@ -131,8 +129,6 @@ class ClipboardIcon(RadioToolButton):
         self._activity = activity
         self.palette.set_state(name, percent, preview, activity,
                                self._is_bundle(obj['FORMATS']))
-
-        self.props.sensitive = (percent == 100)
 
         if self.props.active:
             self._put_in_clipboard()

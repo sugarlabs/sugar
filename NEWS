@@ -1,3 +1,4 @@
+* Don't disable the clipboard icons when they are still incomplete. (tomeu)
 * #3053: Fix the distance between the clustered xos and the activity. (marco)
 * Make the sizes of mesh icons match Eben spec. (marco)
 * #3364: When joining an activity, pick up its sharing scope, so we don't
