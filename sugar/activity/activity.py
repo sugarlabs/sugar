@@ -520,11 +520,15 @@ class Activity(Window, gtk.Container):
         if not success:
             logging.debug("Failed to join activity: %s" % err)
             return
+        if self._shared_activity.props.private:
+            self._share_scope = SCOPE_INVITE_ONLY
+        else:
+            self._share_scope = SCOPE_NEIGHBORHOOD
+
         self.present()
         self.emit('joined')
         if self._jobject:
-            # FIXME: some way to distinguish between share scopes
-            self._jobject.metadata['share-scope'] = SCOPE_NEIGHBORHOOD
+            self._jobject.metadata['share-scope'] = self._share_scope
 
     def get_shared(self):
         """Returns TRUE if the activity is shared on the mesh."""
