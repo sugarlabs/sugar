@@ -1,3 +1,4 @@
+* #3053: Fix the distance between the clustered xos and the activity. (marco)
 * Make the sizes of mesh icons match Eben spec. (marco)
 * #3364: When joining an activity, pick up its sharing scope, so we don't
   try to re-share already shared activities in order to invite someone (smcv)

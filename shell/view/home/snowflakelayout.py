@@ -22,8 +22,8 @@ import hippo
 
 from sugar.graphics import style
 
-_BASE_RADIUS = style.zoom(25)
-_CHILDREN_FACTOR = 1
+_BASE_DISTANCE = style.zoom(15)
+_CHILDREN_FACTOR = style.zoom(3)
 
 class SnowflakeLayout(gobject.GObject,hippo.CanvasLayout):
     __gtype_name__ = 'SugarSnowflakeLayout'
@@ -52,7 +52,7 @@ class SnowflakeLayout(gobject.GObject,hippo.CanvasLayout):
         return (size, size)
 
     def do_get_width_request(self):
-        size = self._calculate_size()        
+        size = self._calculate_size()
         return (size, size)
 
     def do_allocate(self, x, y, width, height,
@@ -86,19 +86,20 @@ class SnowflakeLayout(gobject.GObject,hippo.CanvasLayout):
                 index += 1
 
     def _get_radius(self):
-        return int(_BASE_RADIUS + _CHILDREN_FACTOR * self._nflakes)
+        radius = int(_BASE_DISTANCE + _CHILDREN_FACTOR * self._nflakes)
+        for child in self._box.get_layout_children():
+            if child.is_center:
+                [min_w, child_w] = child.get_width_request()
+                [min_h, child_h] = child.get_height_request(child_w)
+                radius += max(child_w, child_h) / 2
+
+        return radius
 
     def _calculate_size(self):
-        size = 0
+        thickness = 0
         for child in self._box.get_layout_children():
             [min_width, child_width] = child.get_width_request()
             [min_height, child_height] = child.get_height_request(child_width)
+            thickness = max(thickness, max(child_width, child_height))
 
-            new_size = max(child_width, child_height)
-            if not child.is_center:
-                new_size += self._get_radius() * 2
-
-            if new_size > size:
-                size = new_size
-
-        return size
+        return self._get_radius() * 2 + thickness
