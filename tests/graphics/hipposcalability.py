@@ -23,7 +23,9 @@ def idle_cb():
     global countdown
 
     for i in range(0, 100):
-        entry = CanvasRoundBox(padding=10, spacing=10)
+        entry = hippo.CanvasBox(border=2, border_color=0x000000ff,
+                                orientation=hippo.ORIENTATION_HORIZONTAL,
+                                padding=10, spacing=10)
 
         for j in range(0, 3):
             icon = CanvasIcon(icon_name='go-left')
