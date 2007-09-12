@@ -16,12 +16,14 @@
 
 from sugar.graphics.icon import CanvasIcon
 from sugar.graphics.palette import Palette
+from sugar.graphics import style
+
 from view.BuddyMenu import BuddyMenu
 
 class BuddyIcon(CanvasIcon):
-    def __init__(self, shell, buddy):
+    def __init__(self, shell, buddy, size=style.STANDARD_ICON_SIZE):
         CanvasIcon.__init__(self, icon_name='computer-xo',
-                            xo_color=buddy.get_color())
+                            xo_color=buddy.get_color(), size=size)
 
         self._shell = shell
         self._buddy = buddy

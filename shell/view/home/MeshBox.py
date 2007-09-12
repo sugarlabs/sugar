@@ -46,7 +46,7 @@ _ICON_NAME = 'network-wireless'
 
 class AccessPointView(PulsingIcon):
     def __init__(self, model, mesh_device=None):
-        PulsingIcon.__init__(self, size=style.MEDIUM_ICON_SIZE, cache=True)
+        PulsingIcon.__init__(self, size=style.STANDARD_ICON_SIZE, cache=True)
         self._model = model
         self._meshdev = mesh_device
         self._disconnect_item = None
@@ -159,7 +159,7 @@ class MeshDeviceView(PulsingIcon):
         if not channel in [1, 6, 11]:
             raise ValueError("Invalid channel %d" % channel)
 
-        PulsingIcon.__init__(self, size=style.MEDIUM_ICON_SIZE,
+        PulsingIcon.__init__(self, size=style.STANDARD_ICON_SIZE,
                              icon_name=_MESH_ICON_NAME, cache=True)
 
         self._nm_device = nm_device
@@ -249,8 +249,9 @@ class ActivityView(hippo.CanvasBox):
         self._layout = SnowflakeLayout()
         self.set_layout(self._layout)
 
-        self._icon = CanvasIcon(file_name=model.get_icon_name(), cache=True,
-                                xo_color=model.get_color(), box_width=80)
+        self._icon = CanvasIcon(file_name=model.get_icon_name(),
+                                xo_color=model.get_color(), cache=True,
+                                size=style.STANDARD_ICON_SIZE)
         self._icon.connect('activated', self._clicked_cb)
         self._icon.set_tooltip(self._model.activity.props.name)
         self._layout.add_center(self._icon)
@@ -402,7 +403,8 @@ class MeshBox(hippo.CanvasBox):
         else:
             activity = self._activities[activity_model.get_id()]
 
-            icon = BuddyIcon(self._shell, buddy_model)
+            icon = BuddyIcon(self._shell, buddy_model,
+                             style.SMALL_ICON_SIZE)
             activity.add_buddy_icon(buddy_model.get_key(), icon)
 
     def _add_activity(self, activity_model):
