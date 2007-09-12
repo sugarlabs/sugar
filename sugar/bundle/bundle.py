@@ -137,7 +137,7 @@ class Bundle:
                     os.remove(os.path.join(root, name))
                 for name in dirs:
                     os.rmdir(os.path.join(root, name))
-                os.rmdir(self._path)
+                os.rmdir(root)
         else:
             if not os.path.isfile(self._path) or ext != self._zipped_extension:
                 raise InvalidPathException
