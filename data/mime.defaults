@@ -16,5 +16,3 @@ text/html                             org.laptop.WebActivity
 application/xhtml+xml                 org.laptop.WebActivity
 application/xml                       org.laptop.WebActivity
 application/rss+xml                   org.laptop.WebActivity
-
-application/ogg                       org.osl.MediaPlayerActivity
