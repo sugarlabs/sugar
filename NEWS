@@ -1,3 +1,5 @@
+* #2739 Make frame show on corners also after showing palettes. (marco)
+
 Snapshot 47f473189e
 
 * Fix typo so the removal of expanded activity bundles is complete. (tomeu)

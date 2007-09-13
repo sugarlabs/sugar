@@ -48,8 +48,8 @@ class EventArea(gobject.GObject):
         self._windows.append(invisible)
 
         screen = wnck.screen_get_default()
-        screen.connect('active-window-changed',
-                       self._active_window_changed_cb)
+        screen.connect('window-stacking-changed',
+                       self._window_stacking_changed_cb)
 
     def _create_invisible(self, x, y, width, height):
         invisible = gtk.Invisible()
@@ -101,6 +101,6 @@ class EventArea(gobject.GObject):
         for window in self._windows:
             window.hide()
 
-    def _active_window_changed_cb(self, screen, previous_window=None):
+    def _window_stacking_changed_cb(self, screen):
         for window in self._windows:
             window.window.raise_()
