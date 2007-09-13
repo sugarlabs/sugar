@@ -44,15 +44,14 @@ class Toolbox(gtk.VBox):
         self._notebook.show()
 
         # FIXME improve gtk.Notebook and do this in the theme
-        canvas = hippo.Canvas()
+        self._separator = hippo.Canvas()
         box = hippo.CanvasBox(
                     border_color=style.COLOR_BUTTON_GREY.get_int(),
                     background_color=style.COLOR_PANEL_GREY.get_int(),
                     box_height=style.TOOLBOX_SEPARATOR_HEIGHT,
                     border_bottom=style.LINE_WIDTH)
-        canvas.set_root(box)
-        self.pack_start(canvas, False)
-        canvas.show()
+        self._separator.set_root(box)
+        self.pack_start(self._separator, False)
         
         self._notebook.connect('notify::page', self._notify_page_cb)
 
@@ -84,12 +83,14 @@ class Toolbox(gtk.VBox):
 
         if self._notebook.get_n_pages() > 1:
             self._notebook.set_show_tabs(True)
+            self._separator.show()
                     
     def remove_toolbar(self, index):
         self._notebook.remove_page(index)
 
         if self._notebook.get_n_pages() < 2:
             self._notebook.set_show_tabs(False)
+            self._separator.hide()
 
     def set_current_toolbar(self, index):
         self._notebook.set_current_page(index)
