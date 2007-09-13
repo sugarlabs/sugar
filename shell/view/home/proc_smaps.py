@@ -94,7 +94,8 @@ def get_mappings(pid, ignored_shared_mappings):
             shared_clean = int(lines[line_idx + 3][14:-3])
             shared_dirty = int(lines[line_idx + 4][14:-3])
 
-        mapping = Mapping(name, private, shared)
+        mapping = Mapping(name, private_clean + private_dirty,
+                          shared_clean + shared_dirty)
         mappings.append (mapping)
 
     return mappings
