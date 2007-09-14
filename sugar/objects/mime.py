@@ -40,10 +40,13 @@ def get_primary_extension(mime_type):
     f = open('/etc/mime.types')
     while True:
         line = f.readline()
+        if not line:
+            break
         cols = line.replace('\t', ' ').split(' ')
         if mime_type == cols[0]:
             for col in cols[1:]:
                 if col:
+                    col = col.replace('\n', '')
                     _extensions_cache[mime_type] = col
                     return col
 
