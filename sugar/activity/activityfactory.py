@@ -162,7 +162,7 @@ class ActivityCreationHandler(gobject.GObject):
         pass
 
     def _notify_launch_failure_error_handler(self, err):
-        logging.debug('Notify launch failure failed %s' % err)
+        logging.error('Notify launch failure failed %s' % err)
 
     def _notify_launch_error_handler(self, err):
         logging.debug('Notify launch failed %s' % err)
@@ -172,14 +172,14 @@ class ActivityCreationHandler(gobject.GObject):
             self._create_activity()
 
     def _activate_error_handler(self, err):
-        logging.debug("Activity activation request failed %s" % err)
+        logging.error("Activity activation request failed %s" % err)
 
     def _create_reply_handler(self, xid):
         logging.debug("Activity created %s (%s)." % 
             (self._handle.activity_id, self._service_name))
 
     def _create_error_handler(self, err):
-        logging.debug("Couldn't create activity %s (%s): %s" %
+        logging.error("Couldn't create activity %s (%s): %s" %
             (self._handle.activity_id, self._service_name, err))
         self._shell.NotifyLaunchFailure(
             self._handle.activity_id, reply_handler=self._no_reply_handler,
@@ -193,7 +193,8 @@ class ActivityCreationHandler(gobject.GObject):
         self._create_activity()
 
     def _find_object_error_handler(self, err):
-        logging.debug("Datastore find failed %s" % err)
+        logging.error("Datastore find failed %s" % err)
+        self._create_activity()
 
 def create(service_name, activity_handle=None):
     """Create a new activity from its name."""
