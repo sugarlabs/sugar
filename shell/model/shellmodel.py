@@ -52,6 +52,7 @@ class ShellModel(gobject.GObject):
         self._current_activity = None
         self._state = self.STATE_RUNNING
         self._zoom_level = self.ZOOM_HOME
+        self._showing_desktop = True
 
         self._pservice = presenceservice.get_instance()
 
@@ -105,4 +106,7 @@ class ShellModel(gobject.GObject):
         return self._devices
 
     def _showing_desktop_changed_cb(self, screen):
-        self.notify('zoom-level')
+        showing_desktop = self._screen.get_showing_desktop()
+        if self._showing_desktop != showing_desktop:
+            self._showing_desktop = showing_desktop
+            self.notify('zoom-level')
