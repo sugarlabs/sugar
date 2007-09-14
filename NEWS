@@ -1,3 +1,4 @@
+* #2977 Associate activity with his journal object if there is one. (marco)
 * #3045 Fix clipboard palettes behavior. (marco)
 * #2739 Make frame show on corners also after showing palettes. (marco)
 

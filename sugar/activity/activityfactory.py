@@ -24,6 +24,7 @@ import gtk
 
 from sugar.presence import presenceservice
 from sugar.activity.activityhandle import ActivityHandle
+from sugar.datastore import datastore
 from sugar import util
 
 import os
@@ -31,6 +32,10 @@ import os
 _SHELL_SERVICE = "org.laptop.Shell"
 _SHELL_PATH = "/org/laptop/Shell"
 _SHELL_IFACE = "org.laptop.Shell"
+
+_DS_SERVICE = "org.laptop.sugar.DataStore"
+_DS_INTERFACE = "org.laptop.sugar.DataStore"
+_DS_PATH = "/org/laptop/sugar/DataStore"
 
 _ACTIVITY_FACTORY_INTERFACE = "org.laptop.ActivityFactory"
 
@@ -70,7 +75,7 @@ class ActivityCreationHandler(gobject.GObject):
     create call.
     """
 
-    def __init__(self, service_name, activity_handle):
+    def __init__(self, service_name, handle):
         """Initialise the handler
         
         service_name -- the service name of the bundle factory
@@ -96,7 +101,7 @@ class ActivityCreationHandler(gobject.GObject):
         """
         gobject.GObject.__init__(self)
         self._service_name = service_name
-        self._activity_handle = activity_handle
+        self._handle = handle
 
         bus = dbus.SessionBus()
 
@@ -108,21 +113,35 @@ class ActivityCreationHandler(gobject.GObject):
                                    follow_name_owner_changes=True)
         self._factory = dbus.Interface(proxy_obj, _ACTIVITY_FACTORY_INTERFACE)
 
-        if self.get_activity_id() != None:
-            self._shell.ActivateActivity(self.get_activity_id(),
-                        reply_handler=self._activate_reply_handler,
-                        error_handler=self._activate_error_handler)
+        if handle.activity_id is not None and \
+           handle.object_id is None:
+            datastore = dbus.Interface(
+                    bus.get_object(_DS_SERVICE, _DS_PATH), _DS_INTERFACE)
+            datastore.find({ 'activity_id': self._handle.activity_id }, [],
+                           reply_handler=self._find_object_reply_handler,
+                           error_handler=self._find_object_error_handler)
         else:
             self._launch_activity()
 
     def _launch_activity(self):
+        if self._handle.activity_id != None:
+            self._shell.ActivateActivity(self._handle.activity_id,
+                        reply_handler=self._activate_reply_handler,
+                        error_handler=self._activate_error_handler)
+        else:
+            self._create_activity()
+
+    def _create_activity(self):
+        if self._handle.activity_id is None:
+           self._handle.activity_id = create_activity_id()
+
         self._shell.NotifyLaunch(
-                    self._service_name, self.get_activity_id(),
+                    self._service_name, self._handle.activity_id,
                     reply_handler=self._no_reply_handler,
                     error_handler=self._notify_launch_error_handler)
 
         if not os.path.exists('/etc/olpc-security'):
-            handle = self._activity_handle.get_dict() 
+            handle = self._handle.get_dict() 
             self._factory.create(dbus.Dictionary(handle, signature='ss'),
                                  timeout=120 * 1000,
                                  reply_handler=self._no_reply_handler,
@@ -139,10 +158,6 @@ class ActivityCreationHandler(gobject.GObject):
                     error_handler=self._create_error_handler,
                     dbus_interface=_RAINBOW_ACTIVITY_FACTORY_INTERFACE)
 
-    def get_activity_id(self):
-        """Retrieve the unique identity for this activity"""
-        return self._activity_handle.activity_id
-
     def _no_reply_handler(self, *args):
         pass
 
@@ -154,36 +169,44 @@ class ActivityCreationHandler(gobject.GObject):
 
     def _activate_reply_handler(self, activated):
         if not activated:
-            self._launch_activity()
+            self._create_activity()
 
     def _activate_error_handler(self, err):
         logging.debug("Activity activation request failed %s" % err)
 
     def _create_reply_handler(self, xid):
         logging.debug("Activity created %s (%s)." % 
-            (self._activity_handle.activity_id, self._service_name))
+            (self._handle.activity_id, self._service_name))
 
     def _create_error_handler(self, err):
         logging.debug("Couldn't create activity %s (%s): %s" %
-            (self._activity_handle.activity_id, self._service_name, err))
+            (self._handle.activity_id, self._service_name, err))
         self._shell.NotifyLaunchFailure(
-                self.get_activity_id(), reply_handler=self._no_reply_handler,
-                error_handler=self._notify_launch_failure_error_handler)
+            self._handle.activity_id, reply_handler=self._no_reply_handler,
+            error_handler=self._notify_launch_failure_error_handler)
+
+    def _find_object_reply_handler(self, jobjects, count):
+        if count > 0:
+            if count > 1:
+                logging.debug("Multiple objects has the same activity_id.")
+            self._handle.object_id = jobjects[0]['uid']
+        self._create_activity()
+
+    def _find_object_error_handler(self, err):
+        logging.debug("Datastore find failed %s" % err)
 
 def create(service_name, activity_handle=None):
     """Create a new activity from its name."""
     if not activity_handle:
-        activity_handle = ActivityHandle(create_activity_id())
+        activity_handle = ActivityHandle()
     return ActivityCreationHandler(service_name, activity_handle)
 
 def create_with_uri(service_name, uri):
     """Create a new activity and pass the uri as handle."""
-    activity_handle = ActivityHandle(create_activity_id())
-    activity_handle.uri = uri
+    activity_handle = ActivityHandle(uri=uri)
     return ActivityCreationHandler(service_name, activity_handle)
 
 def create_with_object_id(service_name, object_id):
     """Create a new activity and pass the object id as handle."""
-    activity_handle = ActivityHandle(create_activity_id())
-    activity_handle.object_id = object_id
+    activity_handle = ActivityHandle(object_id=object_id)
     return ActivityCreationHandler(service_name, activity_handle)

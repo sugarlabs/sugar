@@ -25,7 +25,6 @@ import gobject
 from sugar.datastore import dbus_helpers
 from sugar import activity
 from sugar.activity.bundle import Bundle
-from sugar.activity import activityfactory
 from sugar.activity.activityhandle import ActivityHandle
 from sugar.bundle.contentbundle import ContentBundle
 
@@ -130,6 +129,8 @@ class DSObject(object):
                                               'application/vnd.olpc-sugar']
 
     def resume(self, service_name=None):
+        from sugar.activity import activityfactory
+
         if self.is_bundle():
             if service_name is not None:
                 raise ValueError('Object is a bundle, cannot be resumed as an activity.')
