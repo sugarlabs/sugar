@@ -1,3 +1,5 @@
+* #3478 Fix handling of non-default types. (bertf)
+
 Snapshot 0a666e23cf
 
 * #2977 Associate activity with his journal object if there is one. (marco)
