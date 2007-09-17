@@ -46,7 +46,7 @@ class ShellOwner(gobject.GObject):
     def __init__(self):
         gobject.GObject.__init__(self)
 
-        self._nick = profile.get_name()
+        self._nick = profile.get_nick_name()
 
         self._icon = None
         self._icon_hash = ""
