@@ -40,8 +40,9 @@ class FriendView(hippo.CanvasBox):
 
         if self._buddy.is_present():
             self._buddy_appeared_cb(buddy)
-
-        self._buddy.connect('current-activity-changed', self._buddy_activity_changed_cb)
+        
+        # FIXME: we have to discuss what we want to display exactly for FRS
+        # self._buddy.connect('current-activity-changed', self._buddy_activity_changed_cb)
         self._buddy.connect('appeared', self._buddy_appeared_cb)
         self._buddy.connect('disappeared', self._buddy_disappeared_cb)
         self._buddy.connect('color-changed', self._buddy_color_changed_cb)
