@@ -192,9 +192,16 @@ class Palette(gtk.Window):
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'invoker':
+            if self._invoker is not None:
+                self._invoker.disconnect(self._enter_invoker_hid)
+                self._invoker.disconnect(self._leave_invoker_hid)                                
+
             self._invoker = value
-            self._invoker.connect('mouse-enter', self._invoker_mouse_enter_cb)
-            self._invoker.connect('mouse-leave', self._invoker_mouse_leave_cb)
+            if value is not None:
+                self._enter_invoker_hid = self._invoker.connect(
+                    'mouse-enter', self._invoker_mouse_enter_cb)
+                self._leave_invoker_hid = self._invoker.connect(
+                    'mouse-leave', self._invoker_mouse_leave_cb)
         else:
             raise AssertionError
 
