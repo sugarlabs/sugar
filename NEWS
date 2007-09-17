@@ -1,5 +1,7 @@
-
 * #3293 Fix that several palettes are not hooked up to the same button (erikos)
+
+Snapshot ed22733941
+
 * #3418 Fix updating of the friends on the frame. (marco)
 * #2719 Use Jabber instead of Server in the config. (marco)
 * #3514 Remove invite when the activiy disappear from the mesh. (cassidy)
