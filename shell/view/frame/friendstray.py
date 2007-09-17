@@ -75,6 +75,7 @@ class FriendsTray(VTray):
             return
 
         self.remove_item(self._buddies[buddy.props.key])
+        del self._buddies[buddy.props.key]
 
     def clear(self):
         for item in self.get_children():
