@@ -480,6 +480,8 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         return self._palette
     
     def set_palette(self, palette):
+        if self._palette is not None:        
+            self._palette.props.invoker = None
         self._palette = palette
         if not self._palette.props.invoker:
             self._palette.props.invoker = CanvasInvoker(self)
