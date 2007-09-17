@@ -26,8 +26,8 @@ import gtk
 import gobject
 
 from sugar import logger
-from sugar import profile
 from sugar import env
+from sugar.profile import get_profile
 
 logger.cleanup()
 logger.start('shell')
@@ -95,11 +95,10 @@ def main():
     _setup_translations()
 
     # Do initial setup if needed
-    if not profile.is_valid():
+    if not get_profile().is_valid():
         win = intro.IntroWindow()
         win.show_all()
         gtk.main()
-        profile.update()
 
     if os.environ.has_key("SUGAR_TP_DEBUG"):
         # Allow the user time to start up telepathy connection managers

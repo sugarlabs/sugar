@@ -41,7 +41,7 @@ class FriendsBox(hippo.CanvasBox):
         self._owner_icon = CanvasIcon(icon_name='computer-xo', cache=True,
                                       xo_color=profile.get_color())
         self._owner_icon.props.size = style.LARGE_ICON_SIZE
-        palette = Palette(profile.get_nick_name())
+        palette = Palette(profile.get_name())
         self._owner_icon.set_palette(palette)
         self._layout.add_center(self._owner_icon)
 

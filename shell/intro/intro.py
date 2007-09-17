@@ -28,6 +28,7 @@ from sugar import env
 from sugar.graphics import style
 from sugar.graphics.button import CanvasButton
 from sugar.graphics.entry import CanvasEntry
+from sugar.profile import get_profile
 
 import colorpicker
 
@@ -233,27 +234,10 @@ class IntroWindow(gtk.Window):
         scaled = pixbuf.scale_simple(200, 200, gtk.gdk.INTERP_BILINEAR)
         pixbuf.save(icon_path, "jpeg", {"quality":"85"})
 
-        cp = ConfigParser()
-        section = 'Buddy'
-        if not cp.has_section(section):
-            cp.add_section(section)
-        # encode nickname to ascii-safe characters
-        cp.set(section, 'NickName', name.encode("utf-8"))
-        cp.set(section, 'Color', color.to_string())
-
-        section = 'Server'
-        if not cp.has_section(section):
-            cp.add_section(section)
-        if env.is_emulator():
-            cp.set(section, 'Server', 'olpc.collabora.co.uk')
-        else:
-            cp.set(section, 'Server', '')
-        cp.set(section, 'Registered', 'False')
-
-        config_path = os.path.join(env.get_profile_path(), 'config')
-        f = open(config_path, 'w')
-        cp.write(f)
-        f.close()
+        profile = get_profile()
+        profile.name = name
+        profile.color = color
+        profile.save()
 
         # Generate keypair
         import commands

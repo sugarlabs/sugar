@@ -149,7 +149,7 @@ class HomeMyIcon(MyIcon):
         self._shell = shell
 
     def enable_palette(self):
-        palette = Palette(profile.get_nick_name())
+        palette = Palette(profile.get_name())
 
         reboot_menu_item = gtk.MenuItem(_('Reboot'))
         reboot_menu_item.connect('activate', self._reboot_activate_cb)
