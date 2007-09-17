@@ -95,17 +95,21 @@ class ClipboardObject:
 
         format = mime.choose_most_significant(self._formats.keys())
 
-        if format == 'text/uri-list':
+        uri = None
+        if format == 'XdndDirectSave0':
+            uri = self._formats['XdndDirectSave0'].get_data()
+        elif format == 'text/uri-list':
             data = self._formats['text/uri-list'].get_data()
-            uris = data.split('\n')
-            if len(uris) == 1 or not uris[1]:
-                uri = urlparse.urlparse(uris[0], 'file')
-                if uri.scheme == 'file':
-                    if os.path.exists(uri.path):
-                        format = mime.get_for_file(uri.path)
-                    else:
-                        format = mime.get_from_file_name(uri.path)                    
-                    logging.debug('Choosed %r!' % format)
+            uri = data.split('\n')[0]
+
+        if uri:
+            uri = urlparse.urlparse(uri, 'file')
+            if uri.scheme == 'file':
+                if os.path.exists(uri.path):
+                    format = mime.get_for_file(uri.path)
+                else:
+                    format = mime.get_from_file_name(uri.path)                    
+                logging.debug('Choosed %r!' % format)
 
         return format
 

@@ -75,7 +75,9 @@ class ClipboardService(dbus.service.Object):
         logging.debug('ClipboardService.add_object_format')
         cb_object = self._objects[str(object_path)]
 
-        if on_disk and cb_object.get_percent() == 100:
+        if format_type == 'XdndDirectSave0':
+            cb_object.add_format(Format(format_type, data, on_disk))
+        elif on_disk and cb_object.get_percent() == 100:
             new_uri = self._copy_file(data)
             cb_object.add_format(Format(format_type, new_uri, on_disk))
             logging.debug('Added format of type ' + format_type + ' with path at ' + new_uri)
@@ -114,7 +116,7 @@ class ClipboardService(dbus.service.Object):
         if percent == 100:
             formats = cb_object.get_formats()
             for format_name, format in formats.iteritems():
-                if format.is_on_disk():
+                if format.is_on_disk() and format_name != 'XdndDirectSave0':
                     new_uri = self._copy_file(format.get_data())
                     format.set_data(new_uri)
 

@@ -16,6 +16,7 @@
 
 import os
 import logging
+import tempfile
 
 import hippo
 import gtk
@@ -137,9 +138,28 @@ class ClipboardBox(hippo.CanvasBox):
 
         self._context_map.add_context(context, object_id, len(context.targets))
         
-        for target in context.targets:
-            if str(target) not in ('TIMESTAMP', 'TARGETS', 'MULTIPLE'):
-                widget.drag_get_data(context, target, time)
+        if 'XdndDirectSave0' in context.targets:
+            window = context.source_window
+            prop_type, format, filename = \
+                window.property_get('XdndDirectSave0','text/plain')
+
+            # FIXME query the clipboard service for a filename?
+            base_dir = tempfile.gettempdir()
+            dest_filename = util.unique_id()
+
+            name, dot, extension = filename.rpartition('.')
+            dest_filename += dot + extension
+
+            dest_uri = 'file://' + os.path.join(base_dir, dest_filename)
+
+            window.property_change('XdndDirectSave0', prop_type, format,
+                                   gtk.gdk.PROP_MODE_REPLACE, dest_uri)
+
+            widget.drag_get_data(context, 'XdndDirectSave0', time)
+        else:
+            for target in context.targets:
+                if str(target) not in ('TIMESTAMP', 'TARGETS', 'MULTIPLE'):
+                    widget.drag_get_data(context, target, time)
 
         cb_service.set_object_percent(object_id, percent=100)
         
@@ -147,12 +167,24 @@ class ClipboardBox(hippo.CanvasBox):
 
     def drag_data_received_cb(self, widget, context, x, y, selection, targetType, time):
         logging.debug('ClipboardBox: got data for target %r' % selection.target)
+
+        object_id = self._context_map.get_object_id(context)
         try:
-            if selection:
-                object_id = self._context_map.get_object_id(context)
-                self._add_selection(object_id, selection)
-            else:
+            if selection is None:
                 logging.warn('ClipboardBox: empty selection for target ' + selection.target)
+            elif selection.target == 'XdndDirectSave0':
+                if selection.data == 'S':
+                    window = context.source_window
+
+                    prop_type, format, dest = \
+                          window.property_get('XdndDirectSave0','text/plain')
+
+                    clipboard = clipboardservice.get_instance()
+                    clipboard.add_object_format(
+                        object_id, 'XdndDirectSave0', dest, on_disk=True)
+            else:
+                self._add_selection(object_id, selection)
+
         finally:
             # If it's the last target to be processed, finish the dnd transaction
             if not self._context_map.has_context(context):
