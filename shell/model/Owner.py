@@ -68,6 +68,8 @@ class ShellOwner(gobject.GObject):
         self._pservice = presenceservice.get_instance()
         self._pservice.connect('activity-invitation',
                                self._activity_invitation_cb)
+        self._pservice.connect('activity-disappeared',
+                              self._activity_disappeared_cb)
 
         self._invites = Invites()
 
@@ -80,3 +82,6 @@ class ShellOwner(gobject.GObject):
     def _activity_invitation_cb(self, pservice, activity, buddy, message):
         self._invites.add_invite(buddy, activity.props.type,
                                  activity.props.id)
+
+    def _activity_disappeared_cb(self, pservice, activity):
+        self._invites.remove_activity(activity.props.id)
