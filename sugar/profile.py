@@ -58,7 +58,7 @@ class Profile(object):
         privkey_hash -- SHA has of the child's public key 
     """
     def __init__(self, path):
-        self.name = None
+        self.nick_name = None
         self.color = None
         self.pubkey = None
         self.privkey_hash = None
@@ -73,7 +73,7 @@ class Profile(object):
         self._hash_private_key()
 
     def is_valid(self):
-        return self.name is not None and \
+        return self.nick_name is not None and \
                self.color is not None and \
                self.pubkey is not None and \
                self.privkey_hash is not None
@@ -82,8 +82,8 @@ class Profile(object):
         cp = ConfigParser()
         parsed = cp.read([self._config_path])
 
-        if self.name:
-            _set_key(cp, 'Buddy', 'NickName', self.name)
+        if self.nick_name:
+            _set_key(cp, 'Buddy', 'NickName', self.nick_name)
         if self.color:
             _set_key(cp, 'Buddy', 'Color', self.color.to_string())
         if self.backup1:
@@ -104,7 +104,7 @@ class Profile(object):
         if cp.has_option('Buddy', 'NickName'):
             name = cp.get('Buddy', 'NickName')
             # decode nickname from ascii-safe chars to unicode
-            self.name = name.decode("utf-8")
+            self.nick_name = name.decode("utf-8")
         if cp.has_option('Buddy', 'Color'):
             self.color = XoColor(cp.get('Buddy', 'Color'))
         if cp.has_option('Jabber', 'Server'):
@@ -179,8 +179,8 @@ def get_profile():
 
 # Convenience methods for frequently used properties
 
-def get_name():
-    return get_profile().name
+def get_nick_name():
+    return get_profile().nick_name
 
 def get_color():
     return get_profile().color
