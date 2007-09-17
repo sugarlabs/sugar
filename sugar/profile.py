@@ -184,3 +184,6 @@ def get_nick_name():
 
 def get_color():
     return get_profile().color
+
+def get_pubkey():
+    return get_profile().pubkey
