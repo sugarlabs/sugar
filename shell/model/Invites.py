@@ -39,16 +39,26 @@ class Invites(gobject.GObject):
     def __init__(self):
         gobject.GObject.__init__(self)
 
-        self._list = []
+        self._dict = {}
 
     def add_invite(self, issuer, bundle_id, activity_id):
+        if activity_id in self._dict:
+            # there is no point to add more than one time
+            # an invite for the same activity
+            return
+
         invite = Invite(issuer, bundle_id, activity_id)
-        self._list.append(invite)
+        self._dict[activity_id] = invite
         self.emit('invite-added', invite)
 
     def remove_invite(self, invite):
-        self._list.remove(invite)
+        self._dict.pop(invite.get_activity_id())
         self.emit('invite-removed', invite)
 
+    def remove_activity(self, activity_id):
+        invite = self._dict.get(activity_id)
+        if invite is not None:
+            self.remove_invite(invite)
+
     def __iter__(self):
-        return self._list.__iter__()
+        return self._dict.values().__iter__()

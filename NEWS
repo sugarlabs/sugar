@@ -1,3 +1,4 @@
+* #3514 Remove invite when the activiy disappear from the mesh. (cassidy)
 * #3003 Make image drags on the clipboard work consistently. (marco)
 
 Snapshot 8ef6c57f8b
