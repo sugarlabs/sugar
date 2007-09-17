@@ -24,7 +24,16 @@ from sugar import env
 from sugar import util
 from sugar.graphics.xocolor import XoColor
 
-class _Profile(object):
+DEFAULT_JABBER_SERVER = 'olpc.collabora.co.uk'
+
+_profile = None
+
+def _set_key(cp, section, key, value):
+    if not cp.has_section(section):
+        cp.add_section(section)
+    cp.set(section, key, value)
+
+class Profile(object):
     """Local user's current options/profile information
     
     User settings are stored in an INI-style configuration
@@ -48,27 +57,45 @@ class _Profile(object):
         pubkey -- public ssh key
         privkey_hash -- SHA has of the child's public key 
     """
-    def __init__(self):
-        self.valid = True
+    def __init__(self, path):
         self.name = None
         self.color = None
         self.pubkey = None
         self.privkey_hash = None
-        self.server = None
-        self.server_registered = False
+        self.jabber_server = DEFAULT_JABBER_SERVER
+        self.jabber_registered = False
         self.backup1 = None
 
-        self._config_path = os.path.join(env.get_profile_path(), 'config')
+        self._config_path = path
 
-        self._load()
-
-    def update(self):
-        self._load()
-
-    def _load(self):
         self._load_config()
         self._load_pubkey()
         self._hash_private_key()
+
+    def is_valid(self):
+        return self.name is not None and \
+               self.color is not None and \
+               self.pubkey is not None and \
+               self.privkey_hash is not None
+
+    def save(self):
+        cp = ConfigParser()
+        parsed = cp.read([self._config_path])
+
+        if self.name:
+            _set_key(cp, 'Buddy', 'NickName', self.name)
+        if self.color:
+            _set_key(cp, 'Buddy', 'Color', self.color.to_string())
+        if self.backup1:
+            _set_key(cp, 'Server', 'Backup1', self.backup1)
+        if self.jabber_server:
+            _set_key(cp, 'Jabber', 'Server', self.jabber_server)
+
+        _set_key(cp, 'Jabber', 'Registered', self.jabber_registered)
+
+        f = open(self._config_path, 'w')
+        cp.write(f)
+        f.close()
 
     def _load_config(self):
         cp = ConfigParser()
@@ -78,20 +105,14 @@ class _Profile(object):
             name = cp.get('Buddy', 'NickName')
             # decode nickname from ascii-safe chars to unicode
             self.name = name.decode("utf-8")
-        else:
-            self.valid = False
-
         if cp.has_option('Buddy', 'Color'):
             self.color = XoColor(cp.get('Buddy', 'Color'))
-
-        if cp.has_option('Server', 'Server'):
-            self.server = cp.get('Server', 'Server')
-
-        if cp.has_option('Server', 'Registered'):
-            registered = cp.get('Server', 'Registered')
+        if cp.has_option('Jabber', 'Server'):
+            self.jabber_server = cp.get('Jabber', 'Server')
+        if cp.has_option('Jabber', 'Registered'):
+            registered = cp.get('Jabber', 'Registered')
             if registered.lower() == "true":
-                self.server_registered = True
-
+                self.jabber_registered = True
         if cp.has_option('Server', 'Backup1'):
             self.backup1 = cp.get('Server', 'Backup1')
 
@@ -147,56 +168,19 @@ class _Profile(object):
         key_hash = util._sha_data(key)
         self.privkey_hash = util.printable_hash(key_hash)
 
-    def set_key(self, section, key, value):
-        cp = ConfigParser()
-        parsed = cp.read([self._config_path])
+def get_profile():
+    global _profile
 
-        if not cp.has_section(section):
-            cp.add_section(section)
-        cp.set(section, key, value)
+    if not _profile:
+        path = os.path.join(env.get_profile_path(), 'config')
+        _profile = Profile(path)
 
-        f = open(self._config_path, 'w')
-        cp.write(f)
-        f.close()
+    return _profile
 
-        del cp
+# Convenience methods for frequently used properties
 
-        self._load_config()
-
-def is_valid():
-    return _profile.valid
-
-def get_nick_name():
-    return _profile.name
+def get_name():
+    return get_profile().name
 
 def get_color():
-    return _profile.color
-
-def get_pubkey():
-    return _profile.pubkey
-
-def get_private_key_hash():
-    return _profile.privkey_hash
-
-def get_server():
-    return _profile.server
-
-def set_server(server):
-    _profile.set_key('Server', 'server', server)
-
-def get_trial2_backup():
-    return _profile.backup1
-
-def set_trial2_backup(backup_info):
-    _profile.set_key('Server', 'backup1', backup_info)
-
-def get_server_registered():
-    return _profile.server_registered
-
-def set_server_registered():
-    _profile.set_key('Server', 'Registered', True)
-
-def update():
-    _profile.update()
-
-_profile = _Profile()
+    return get_profile().color
