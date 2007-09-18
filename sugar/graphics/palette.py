@@ -668,6 +668,9 @@ class CanvasInvoker(Invoker):
         return hippo.get_canvas_for_item(self._item).get_toplevel()
 
 class ToolInvoker(WidgetInvoker):
+    def __init__(self, widget):
+        WidgetInvoker.__init__(self, widget.child)
+
     def _get_alignments(self):
         parent = self._widget.get_parent()
         if parent is None:

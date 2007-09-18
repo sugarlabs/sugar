@@ -40,7 +40,7 @@ class ToggleToolButton(gtk.ToggleToolButton):
         if self._palette is not None:        
             self._palette.props.invoker = None
         self._palette = palette
-        self._palette.props.invoker = ToolInvoker(self.child)
+        self._palette.props.invoker = ToolInvoker(self)
 
     def set_tooltip(self, text):
         self.set_palette(Palette(text))
