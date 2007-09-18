@@ -52,13 +52,9 @@ class Shell(gobject.GObject):
         self._key_handler = KeyHandler(self)
 
         self._frame = Frame(self)
-        self._frame.show()
 
         self._home_window = HomeWindow(self)
         self._home_window.show()
-
-        self._model.connect('notify::zoom-level',
-                            self._zoom_level_changed_cb)
 
         home_model = self._model.get_home()
         home_model.connect('activity-started', self._activity_started_cb)
@@ -146,12 +142,6 @@ class Shell(gobject.GObject):
 
         self._activities_starting.add(activity_type)
         activityfactory.create(activity_type)
-
-    def _zoom_level_changed_cb(self, model, pspec):
-        if model.get_zoom_level() == ShellModel.ZOOM_HOME:
-            self._frame.show()
-        else:
-            self._frame.hide()
 
     def set_zoom_level(self, level):
         if level == self._model.get_zoom_level():
