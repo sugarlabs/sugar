@@ -235,7 +235,7 @@ class IntroWindow(gtk.Window):
         pixbuf.save(icon_path, "jpeg", {"quality":"85"})
 
         profile = get_profile()
-        profile.name = name
+        profile.nick_name = name
         profile.color = color
         profile.save()
 
