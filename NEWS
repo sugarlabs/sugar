@@ -1,5 +1,8 @@
-* Handle the passing of the child of the toolitem to the WidgetInvoker
-  in ToolInvoker, FrameWidgetInvoker (erikos) 
+* #3560 Updated spanish translation. (marco)
+
+Snapshot b8ce5083b7
+
+* Handle the passing of the child of the toolitem to the WidgetInvoker in ToolInvoker, FrameWidgetInvoker (erikos) 
 * #3293 Fix that several palettes are not hooked up to the same button (erikos)
 * #3514 Remove invite when the activiy disappear from the mesh. (cassidy)
 * #3003 Make image drags on the clipboard work consistently. (marco)
