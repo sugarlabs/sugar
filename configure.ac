@@ -82,6 +82,7 @@ services/console/interface/memphis/Makefile
 services/console/interface/network/Makefile
 services/console/interface/logviewer/Makefile
 services/console/interface/terminal/Makefile
+services/console/interface/xserver/Makefile
 sugar/Makefile
 sugar/activity/Makefile
 sugar/bundle/Makefile

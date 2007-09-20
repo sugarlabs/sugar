@@ -1,6 +1,6 @@
 SUBDIRS = procmem graphics net ui
 
-sugardir = $(pkgdatadir)/shell/console/lib
+sugardir = $(pkgdatadir)/services/console/lib
 sugar_PYTHON =                          \
         pyxres.py                     
 
