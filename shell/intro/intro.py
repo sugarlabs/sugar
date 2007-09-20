@@ -26,7 +26,6 @@ import logging
 
 from sugar import env
 from sugar.graphics import style
-from sugar.graphics.button import CanvasButton
 from sugar.graphics.entry import CanvasEntry
 from sugar.profile import get_profile
 
