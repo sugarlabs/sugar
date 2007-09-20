@@ -1,4 +1,4 @@
-SUBDIRS = memphis network logviewer terminal xo
+SUBDIRS = memphis network logviewer terminal xo xserver
 
 sugardir = $(pkgdatadir)/services/console/interface
 sugar_PYTHON =				\
