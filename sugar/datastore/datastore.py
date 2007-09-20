@@ -27,6 +27,7 @@ from sugar import activity
 from sugar.activity.bundle import Bundle
 from sugar.activity.activityhandle import ActivityHandle
 from sugar.bundle.contentbundle import ContentBundle
+from sugar.objects import mime
 
 class DSMetadata(gobject.GObject):
     __gsignals__ = {
@@ -258,6 +259,17 @@ def copy(jobject, mount_point):
 
     new_jobject = jobject.copy()
     new_jobject.metadata['mountpoint'] = mount_point
+
+    if jobject.metadata.has_key('title'):
+        filename = jobject.metadata['title']
+
+        if jobject.metadata.has_key('mime_type'):
+            mime_type = jobject.metadata['mime_type']
+            extension = mime.get_primary_extension(mime_type)
+            if extension:
+                filename += '.' + extension
+
+        new_jobject.metadata['suggested_filename'] = filename
 
     # this will cause the file be retrieved from the DS
     new_jobject.file_path = jobject.file_path
