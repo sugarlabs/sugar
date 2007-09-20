@@ -24,8 +24,9 @@ import gobject
 
 from sugar.datastore import dbus_helpers
 from sugar import activity
-from sugar.activity.bundle import Bundle
 from sugar.activity.activityhandle import ActivityHandle
+from sugar.bundle.contentbundle import ContentBundle
+from sugar.bundle.activitybundle import ActivityBundle
 from sugar.bundle.contentbundle import ContentBundle
 from sugar.objects import mime
 
@@ -121,22 +122,24 @@ class DSObject(object):
 
         return activities
 
+    def is_activity_bundle(self):
+        return self.metadata['mime_type'] in \
+               [ActivityBundle.MIME_TYPE, ActivityBundle.DEPRECATED_MIME_TYPE]
+
     def is_content_bundle(self):
         return self.metadata['mime_type'] == ContentBundle.MIME_TYPE
 
-    # FIXME: should become is_activity_bundle()
     def is_bundle(self):
-        return self.metadata['mime_type'] in ['application/vnd.olpc-x-sugar',
-                                              'application/vnd.olpc-sugar']
+        return self.is_activity_bundle() or self.is_content_bundle()
 
     def resume(self, service_name=None):
         from sugar.activity import activityfactory
 
-        if self.is_bundle():
+        if self.is_activity_bundle():
             if service_name is not None:
                 raise ValueError('Object is a bundle, cannot be resumed as an activity.')
 
-            bundle = Bundle(self.file_path)
+            bundle = ActivityBundle(self.file_path)
             if not bundle.is_installed():
                 bundle.install()
 

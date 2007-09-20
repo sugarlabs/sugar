@@ -26,6 +26,7 @@ from sugar.graphics.xocolor import XoColor
 from sugar.graphics.icon import Icon
 from sugar.graphics import style
 from sugar.clipboard import clipboardservice
+from sugar.bundle.activitybundle import ActivityBundle
 from sugar import util
 from sugar import profile
 
@@ -63,8 +64,8 @@ class ClipboardIcon(RadioToolButton):
 
     def _is_bundle(self, formats):
         # A bundle will have only one format.
-        return formats and formats[0] in ['application/vnd.olpc-sugar',
-                                          'application/vnd.olpc-x-sugar']
+        return formats and formats[0] in [ActivityBundle.MIME_TYPE,
+                                          ActivityBundle.DEPRECATED_MIME_TYPE]
 
     def get_object_id(self):
         return self._object_id

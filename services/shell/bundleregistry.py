@@ -18,7 +18,8 @@ import os
 
 import gobject
 
-from sugar.activity.bundle import Bundle
+from sugar.bundle.activitybundle import ActivityBundle
+from sugar.bundle.bundle import MalformedBundleException
 from sugar import env
 from sugar import util
 
@@ -122,14 +123,15 @@ class BundleRegistry(gobject.GObject):
             self.add_bundle(dir)
 
     def add_bundle(self, bundle_path):
-        bundle = Bundle(bundle_path)
-        if bundle.is_valid():
-            self._bundles.append(bundle)
-            self._service_manager.add(bundle)
-            self.emit('bundle-added', bundle)
-            return True
-        else:
+        try:
+            bundle = ActivityBundle(bundle_path)
+        except MalformedBundleException:
             return False
+
+        self._bundles.append(bundle)
+        self._service_manager.add(bundle)
+        self.emit('bundle-added', bundle)
+        return True
 
     def get_activities_for_type(self, mime_type):
         result = []

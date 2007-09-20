@@ -24,7 +24,7 @@ import re
 import gettext
 
 from sugar import env
-from sugar.activity.bundle import Bundle
+from sugar.bundle.activitybundle import ActivityBundle
 
 class _SvnFileList(list):
     def __init__(self):
@@ -98,7 +98,7 @@ def _get_install_dir(prefix):
     return os.path.join(prefix, 'share/activities')
 
 def _get_package_name(bundle_name):
-    bundle = Bundle(_get_source_path())
+    bundle = ActivityBundle(_get_source_path())
     zipname = '%s-%d.xo' % (bundle_name, bundle.get_activity_version())
     return zipname
 
@@ -108,7 +108,7 @@ def _delete_backups(arg, dirname, names):
             os.remove(os.path.join(dirname, name))
 
 def _get_service_name():
-    bundle = Bundle(_get_source_path())
+    bundle = ActivityBundle(_get_source_path())
     return bundle.get_service_name()
 
 def cmd_help():

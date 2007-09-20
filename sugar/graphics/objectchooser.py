@@ -22,7 +22,7 @@ from gettext import gettext as _
 import gtk
 import hippo
 
-from sugar.activity.bundle import Bundle
+from sugar.bundle.activitybundle import ActivityBundle
 from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon
 from sugar.graphics.xocolor import XoColor
@@ -136,8 +136,8 @@ class CollapsedEntry(CanvasRoundBox):
         if self._icon_name:
             return self._icon_name
 
-        if self.jobject.is_bundle():
-            bundle = Bundle(self.jobject.file_path)
+        if self.jobject.is_activity_bundle():
+            bundle = ActivityBundle(self.jobject.file_path)
             self._icon_name = bundle.get_icon()
 
         if self.jobject.metadata['activity']:

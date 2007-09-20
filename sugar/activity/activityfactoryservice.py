@@ -28,7 +28,7 @@ import dbus
 import dbus.service
 import dbus.glib
 
-from sugar.activity.bundle import Bundle
+from sugar.bundle.activitybundle import ActivityBundle
 from sugar.activity import activityhandle
 from sugar import logger
 from sugar import _sugarext
@@ -155,7 +155,7 @@ def run_with_args(args):
 def run(bundle_path):
     sys.path.append(bundle_path)
 
-    bundle = Bundle(bundle_path)
+    bundle = ActivityBundle(bundle_path)
 
     logger.start(bundle.get_service_name())
 
