@@ -1,3 +1,4 @@
+* #3605 Turn off memory based sizing in the donut for trial-3. (danw)
 * #3649 Human readable file names on USB. (marco)
 
 Snapshot b8ce5083b7
@@ -10,7 +11,8 @@ Snapshot b8ce5083b7
 
 Snapshot b8ce5083b7
 
-* Handle the passing of the child of the toolitem to the WidgetInvoker in ToolInvoker, FrameWidgetInvoker (erikos) 
+* Handle the passing of the child of the toolitem to the WidgetInvoker
+  in ToolInvoker, FrameWidgetInvoker (erikos) 
 
 Snapshot b8ce5083b7
 
