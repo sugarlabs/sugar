@@ -5,56 +5,53 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: olpc-sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-17 17:45-0700\n"
-"PO-Revision-Date: 2007-05-02 15:17-0300\n"
-"Last-Translator: UYLUG Grupo de usuarios Linux en Uruguay <uylug-linux@uylug."
-"org.uy>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2007-09-13 12:00-0700\n"
+"PO-Revision-Date: 2007-09-18 09:49-0300\n"
+"Last-Translator: Domingo Becker <domingobecker@gmail.com>\n"
+"Language-Team: Fedora Spanish <fedora-trans-es@redhat.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Language: Spanish\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Poedit-Country: SPAIN\n"
 "X-Poedit-Basepath: .\n"
 
-#: ../shell/intro/intro.py:61
-#, fuzzy
+#: ../shell/intro/intro.py:66
 msgid "Name:"
 msgstr "Nombre:"
 
-#: ../shell/intro/intro.py:84
+#: ../shell/intro/intro.py:95
 msgid "Click to change color:"
 msgstr "Clic para cambiar de color:"
 
-#: ../shell/intro/intro.py:134
+#: ../shell/intro/intro.py:145
 msgid "Back"
 msgstr "Atrás"
 
-#: ../shell/intro/intro.py:142
+#: ../shell/intro/intro.py:153
 msgid "Done"
-msgstr ""
+msgstr "Hecho"
 
-#: ../shell/intro/intro.py:145
+#: ../shell/intro/intro.py:156
 msgid "Next"
 msgstr "Siguiente"
 
-#: ../shell/view/BuddyMenu.py:82
+#: ../shell/view/BuddyMenu.py:83
 msgid "Remove friend"
 msgstr "Eliminar amigo"
 
-#: ../shell/view/BuddyMenu.py:85
+#: ../shell/view/BuddyMenu.py:86
 msgid "Make friend"
 msgstr "Agregar amigo"
 
-#. FIXME check that the buddy is not in the activity already
-#: ../shell/view/BuddyMenu.py:96
+#: ../shell/view/BuddyMenu.py:92
 msgid "Invite"
 msgstr "Invitar"
 
-#: ../shell/view/clipboardmenu.py:66
+#: ../shell/view/clipboardmenu.py:65
+#: ../shell/view/frame/activitybutton.py:58
 msgid "Remove"
 msgstr "Eliminar"
 
@@ -66,128 +63,193 @@ msgstr "Abrir"
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../shell/view/clipboardmenu.py:79
+#: ../shell/view/clipboardmenu.py:80
 msgid "Add to journal"
 msgstr "Agregar al diario"
 
-#: ../shell/view/clipboardmenu.py:180
+#: ../shell/view/clipboardmenu.py:200
 #, python-format
 msgid "Clipboard object: %s."
 msgstr "Objeto de portapapel: %s"
 
-#: ../shell/view/frame/zoombox.py:42
-msgid "Neighborhood"
-msgstr "Vecindario"
-
-#: ../shell/view/frame/zoombox.py:55
-msgid "Group"
-msgstr "Grupo"
-
-#: ../shell/view/frame/zoombox.py:68
-msgid "Home"
-msgstr "Hogar"
-
-#: ../shell/view/frame/zoombox.py:81
-msgid "Activity"
-msgstr "Actividad"
-
-#: ../services/clipboard/objecttypeservice.py:32
+#: ../services/shell/objecttypeservice.py:33
 msgid "Text"
 msgstr "Texto"
 
-#: ../services/clipboard/objecttypeservice.py:36
+#: ../services/shell/objecttypeservice.py:39
 msgid "Image"
 msgstr "Imagen"
 
-#: ../shell/view/Shell.py:202
-msgid "Screenshot"
-msgstr "Captura de pantalla"
+#: ../services/shell/objecttypeservice.py:42
+msgid "Audio"
+msgstr "Audio"
 
-#: ../shell/view/home/HomeBox.py:140
-msgid "Shutdown"
-msgstr "Apagar"
+#: ../services/shell/objecttypeservice.py:45
+msgid "Video"
+msgstr "Video"
 
-#: ../shell/view/home/MeshBox.py:126
-msgid "Mesh Network"
-msgstr "Red Malla"
+#: ../services/shell/objecttypeservice.py:48
+msgid "Etoys project"
+msgstr "Proyecto Etoys"
 
-#: ../shell/view/devices/battery.py:34
-msgid "My Battery life"
-msgstr "Carga de mi batería"
+#: ../services/shell/objecttypeservice.py:52
+msgid "Link"
+msgstr "Enlace"
 
-#: ../shell/view/devices/battery.py:87
-msgid "Battery charging"
-msgstr "Batería cargandose"
+#: ../shell/hardware/keydialog.py:113
+msgid "Authentication Type:"
+msgstr "Tipo de Autenticación:"
 
-#: ../shell/view/devices/battery.py:89
-msgid "Battery discharging"
-msgstr "Batería descargandose"
+#: ../shell/hardware/keydialog.py:158
+msgid "Encryption Type:"
+msgstr "Tipo de Encriptación:"
 
-#: ../shell/view/devices/battery.py:91
-msgid "Battery fully charged"
-msgstr "Batería totalmente cargada"
+#: ../shell/view/home/activitiesdonut.py:84
+msgid "Starting..."
+msgstr "Iniciando..."
 
-#: ../sugar/activity/activity.py:68
-msgid "Keep"
-msgstr "Guardar"
+#: ../shell/view/home/activitiesdonut.py:98
+msgid "Resume"
+msgstr "Reasumir"
 
-#: ../sugar/activity/activity.py:74
-msgid "Share"
-msgstr "Compartir"
-
-#: ../sugar/activity/activity.py:87
+#: ../shell/view/home/activitiesdonut.py:105
+#: ../sugar/activity/activity.py:96
 msgid "Stop"
 msgstr "Parar"
 
-#: ../sugar/activity/activity.py:248
+#: ../shell/view/Shell.py:207
+msgid "Screenshot"
+msgstr "Captura de pantalla"
+
+#: ../shell/view/home/HomeBox.py:154
+msgid "Reboot"
+msgstr "Reiniciar"
+
+#: ../shell/view/home/HomeBox.py:156
+msgid "Shutdown"
+msgstr "Apagar"
+
+#. Only show disconnect when there's a mesh device, because mesh takes
+#. priority over the normal wireless device.  NM doesn't have a "disconnect"
+#. method for a device either (for various reasons) so this doesn't
+#. have a good mapping
+#: ../shell/view/home/MeshBox.py:87
+#: ../shell/view/home/MeshBox.py:186
+#: ../shell/view/devices/network/wireless.py:113
+msgid "Disconnect..."
+msgstr "Desconectar..."
+
+#: ../shell/view/home/MeshBox.py:184
+msgid "Mesh Network"
+msgstr "Red Malla"
+
+#: ../shell/view/devices/battery.py:38
+msgid "My Battery life"
+msgstr "Carga de mi batería"
+
+#: ../shell/view/devices/battery.py:94
+msgid "Battery charging"
+msgstr "Batería cargandose"
+
+#: ../shell/view/devices/battery.py:96
+msgid "Battery discharging"
+msgstr "Batería descargandose"
+
+#: ../shell/view/devices/battery.py:98
+msgid "Battery fully charged"
+msgstr "Batería totalmente cargada"
+
+#: ../sugar/activity/activity.py:78
+msgid "Share with:"
+msgstr "Compartir con:"
+
+#: ../sugar/activity/activity.py:80
+msgid "Private"
+msgstr "Privado"
+
+#: ../sugar/activity/activity.py:82
+msgid "My Neighborhood"
+msgstr "Mi Vecindario"
+
+#: ../sugar/activity/activity.py:90
+msgid "Keep"
+msgstr "Guardar"
+
+#: ../sugar/activity/activity.py:177
+msgid "Undo"
+msgstr "Deshacer"
+
+#: ../sugar/activity/activity.py:182
+msgid "Redo"
+msgstr "Rehacer"
+
+#: ../sugar/activity/activity.py:192
+msgid "Copy"
+msgstr "Copiar"
+
+#: ../sugar/activity/activity.py:197
+msgid "Paste"
+msgstr "Pegar"
+
+#: ../sugar/activity/activity.py:304
 #, python-format
 msgid "%s Activity"
 msgstr "Actividad %s"
 
+#: ../shell/view/devices/network/wireless.py:61
+msgid "Disconnected"
+msgstr "Desconectado"
+
+#: ../shell/view/devices/network/wireless.py:131
+msgid "Channel"
+msgstr "Canal"
+
+#: ../shell/view/frame/zoomtoolbar.py:42
+msgid "Neighborhood"
+msgstr "Vecindario"
+
+#: ../shell/view/frame/zoomtoolbar.py:54
+msgid "Group"
+msgstr "Grupo"
+
+#: ../shell/view/frame/zoomtoolbar.py:66
+msgid "Home"
+msgstr "Hogar"
+
+#: ../shell/view/frame/zoomtoolbar.py:78
+msgid "Activity"
+msgstr "Actividad"
+
 #~ msgid "Text snippet"
 #~ msgstr "Recorte de texto"
-
 #~ msgid "Web Page"
 #~ msgstr "Página web"
-
 #~ msgid "PDF file"
 #~ msgstr "Archivo PDF"
-
 #~ msgid "MS Word file"
 #~ msgstr "Archivo MS-Word"
-
 #~ msgid "RTF file"
 #~ msgstr "Archivo RTF"
-
 #~ msgid "Abiword file"
 #~ msgstr "Archivo Abiword"
-
 #~ msgid "Squeak project"
 #~ msgstr "Proyecto de Squeak"
-
 #~ msgid "OpenOffice text file"
 #~ msgstr "Archivo de texto de OpenOffice"
-
 #~ msgid "Object"
 #~ msgstr "Objeto"
-
 #~ msgid "Pick a buddy picture"
 #~ msgstr "Elegir la imagen de amigo"
-
 #~ msgid "My Picture:"
 #~ msgstr "Mi imagen:"
-
 #~ msgid "My Color:"
 #~ msgstr "Mi color:"
-
 #~ msgid "Stop download"
 #~ msgstr "Interrumpir la bajada"
-
 #~ msgid "Close"
 #~ msgstr "Cerrar"
-
 #~ msgid "No options"
 #~ msgstr "Ninguna opción"
-
 #~ msgid "Send"
 #~ msgstr "Enviar"
+

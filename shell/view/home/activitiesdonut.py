@@ -283,6 +283,7 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
         return True
 
     def _update_activity_sizes(self):
+        return
         # Get the memory mappings of each process that hosts an
         # activity, and count how many activity instances each
         # activity process hosts, and how many processes are mapping
