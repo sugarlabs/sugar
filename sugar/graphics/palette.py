@@ -82,6 +82,8 @@ class Palette(gtk.Window):
 
         self.set_decorated(False)
         self.set_resizable(False)
+        # Just assume xthickness and ythickness are the same
+        self.set_border_width(self.style.xthickness)
         self.connect('realize', self._realize_cb)
 
         self.palette_state = self.PRIMARY
@@ -106,9 +108,11 @@ class Palette(gtk.Window):
         self._popdown_anim.add(_PopdownAnimation(self))
 
         vbox = gtk.VBox()
-        vbox.set_border_width(style.DEFAULT_PADDING)
 
         self._label = gtk.Label()
+        self._label.set_size_request(-1, style.zoom(style.GRID_CELL_SIZE))
+        self._label.set_alignment(0, 0.5)
+        self._label.set_padding(style.zoom(15), 0)
         vbox.pack_start(self._label, False)
 
         self._secondary_box = gtk.VBox()
@@ -152,6 +156,12 @@ class Palette(gtk.Window):
         self._secondary_box.pack_start(self._content)
         self._content.show()
 
+    def do_style_set(self, previous_style):
+        # Prevent a warning from pygtk
+        if previous_style is not None:
+            gtk.Window.do_style_set(self, previous_style)
+        self.set_border_width(self.style.xthickness)
+
     def is_up(self):
         return self._up
 
@@ -168,7 +178,7 @@ class Palette(gtk.Window):
 
     def set_primary_text(self, label, accel_path=None):
         if label is not None:
-            self._label.set_text(label)
+            self._label.set_markup("<b>"+label+"</b>")
             self._label.show()
 
     def set_content(self, widget):
