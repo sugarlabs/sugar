@@ -211,6 +211,15 @@ class Palette(gtk.Window):
         else:
             raise AssertionError
 
+    def do_size_request(self, requisition):
+        gtk.Window.do_size_request(self, requisition)
+
+        requisition.width = max(requisition.width, self._full_request[0])
+
+        # Minimum width
+        requisition.width = max(requisition.width,
+                                style.zoom(style.GRID_CELL_SIZE*2))
+
     def do_size_allocate(self, allocation):
         gtk.Window.do_size_allocate(self, allocation)
 
@@ -273,12 +282,8 @@ class Palette(gtk.Window):
     def _update_full_request(self):
         state = self.palette_state
 
-        self.set_size_request(-1, -1)
-
         self._set_state(self.SECONDARY)
         self._full_request = self.size_request()
-
-        self.set_size_request(self._full_request[0], -1)
 
         self._set_state(state)
 
