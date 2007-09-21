@@ -194,7 +194,7 @@ class EditToolbar(gtk.Toolbar):
         self.copy.show()
 
         self.paste = ToolButton('edit-paste')
-        self.copy.set_tooltip(_('Paste'))
+        self.paste.set_tooltip(_('Paste'))
         self.insert(self.paste, -1)
         self.paste.show()
 
