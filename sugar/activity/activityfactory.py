@@ -152,7 +152,7 @@ class ActivityCreationHandler(gobject.GObject):
                                             _RAINBOW_ACTIVITY_FACTORY_PATH)
             factory.CreateActivity(
                     self._service_name,
-                    self._activity_handle.get_dict(),
+                    self._handle.get_dict(),
                     timeout=120 * 1000,
                     reply_handler=self._create_reply_handler,
                     error_handler=self._create_error_handler,
