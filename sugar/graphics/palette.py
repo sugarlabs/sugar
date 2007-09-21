@@ -121,11 +121,15 @@ class Palette(gtk.Window):
         self._separator = gtk.HSeparator()
         self._secondary_box.pack_start(self._separator)
 
+        self._menu_content_separator = gtk.HSeparator()
+
         if menu_after_content:
             self._add_content()
+            self._secondary_box.pack_start(self._menu_content_separator)
             self._add_menu()
         else:
             self._add_menu()
+            self._secondary_box.pack_start(self._menu_content_separator)
             self._add_content()
 
         self.action_bar = PaletteActionBar()
@@ -135,8 +139,8 @@ class Palette(gtk.Window):
         self.add(vbox)
         vbox.show()
 
+        # The menu is not shown here until an item is added
         self.menu = _Menu(self)
-        self.menu.show()
 
         self.connect('enter-notify-event',
                      self._enter_notify_event_cb)
@@ -152,9 +156,10 @@ class Palette(gtk.Window):
         self._menu_box.show()
 
     def _add_content(self):
+        # The content is not shown until a widget is added
         self._content = gtk.VBox()
+        self._content.set_border_width(style.zoom(15))
         self._secondary_box.pack_start(self._content)
-        self._content.show()
 
     def do_style_set(self, previous_style):
         # Prevent a warning from pygtk
@@ -187,9 +192,12 @@ class Palette(gtk.Window):
 
         if widget is not None:
             self._content.add(widget)
+            self._content.show()
+        else:
+            self._content.hide()
 
         self._update_accept_focus()
-        self._update_separator()
+        self._update_separators()
 
     def set_group_id(self, group_id):
         if self._group_id:
@@ -275,10 +283,14 @@ class Palette(gtk.Window):
         # (Leaving out the window expose handler which redraws everything)
         gtk.Bin.do_expose_event(self, event)
 
-    def _update_separator(self):
+    def _update_separators(self):
         visible = len(self.menu.get_children()) > 0 or  \
                   len(self._content.get_children()) > 0
         self._separator.props.visible = visible
+
+        visible = len(self.menu.get_children()) > 0 and  \
+                  len(self._content.get_children()) > 0
+        self._menu_content_separator.props.visible = visible
 
     def _update_accept_focus(self):
         accept_focus = len(self._content.get_children())
@@ -432,7 +444,8 @@ class _Menu(_sugaruiext.Menu):
 
     def do_insert(self, item, position):
         _sugaruiext.Menu.do_insert(self, item, position)
-        self._palette._update_separator()
+        self._palette._update_separators()
+        self.show()
 
     def do_expose_event(self, event):
         # Ignore the Menu expose, just do the MenuShell expose to prevent any
