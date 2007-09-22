@@ -23,6 +23,7 @@ from sugar.graphics.icon import Icon
 from sugar.graphics import style
 from sugar import profile
 from sugar import activity
+from sugar import env
 
 from activitybutton import ActivityButton
 
@@ -54,6 +55,7 @@ class ActivitiesTray(hippo.CanvasBox):
         self._shell_model = self._shell.get_model() 
         self._invite_to_item = {}
         self._invites = self._shell_model.get_invites()
+        self._config = self._load_config()
 
         self._tray = HTray()
         self.append(hippo.CanvasWidget(widget=self._tray), hippo.PACK_EXPAND)
@@ -69,10 +71,40 @@ class ActivitiesTray(hippo.CanvasBox):
         self._invites.connect('invite-added', self._invite_added_cb)
         self._invites.connect('invite-removed', self._invite_removed_cb)
 
+    def _load_config(self):
+        config = []
+
+        f = open(env.get_data_path('activities.defaults'), 'r')
+        for line in f.readlines():
+            line = line.strip()
+            if line and not line.startswith('#'):
+                config.append(line)
+        f.close()
+
+        return config
+
     def _get_activities_cb(self, activity_list):
-        for activity_info in activity_list:
-            if activity_info.show_launcher:
-                self.add_activity(activity_info)
+        known_activities = []
+        unknown_activities = []
+        name_to_activity = {}
+
+        while activity_list:
+            info = activity_list.pop()
+            name_to_activity[info.service_name] = info
+
+            if info.service_name in self._config:
+                known_activities.append(info)
+            else:
+                unknown_activities.append(info)
+
+        sorted_activities = []
+        for name in self._config:
+            if name in name_to_activity:
+                sorted_activities.append(name_to_activity[name])
+
+        for info in sorted_activities + unknown_activities:
+            if info.show_launcher:
+                self.add_activity(info)
 
     def _activity_clicked_cb(self, icon):
         self._shell.start_activity(icon.get_bundle_id())
