@@ -43,14 +43,8 @@ class ClipboardMenu(Palette):
 
         self.set_group_id('frame')
 
-        if percent < 100:
-            self._progress_bar = gtk.ProgressBar()
-            self._update_progress_bar()
-
-            self.set_content(self._progress_bar)   
-            self._progress_bar.show()         
-        else:
-            self._progress_bar = None
+        self._progress_bar = None
+        self._update_progress_bar
 
         """
         if preview:
@@ -131,13 +125,19 @@ class ClipboardMenu(Palette):
             #self._stop_item.props.sensitive = True
             self._journal_item.props.sensitive = False
 
-        if self._percent == 100:
-            self._progress_bar.hide()
-        else:
-            self._progress_bar.show()
+        self._update_progress_bar()
 
     def _update_progress_bar(self):
-        if self._progress_bar:
+        if self._percent == 100.0:
+            if self._progress_bar:
+                self._progress_bar = None
+                self.set_content(None)
+        else:
+            if self._progress_bar is None:
+                self._progress_bar = gtk.ProgressBar()
+                self._progress_bar.show()
+                self.set_content(self._progress_bar)
+
             self._progress_bar.props.fraction = self._percent / 100.0
             self._progress_bar.props.text = '%.2f %%' % self._percent
 
@@ -145,8 +145,7 @@ class ClipboardMenu(Palette):
         self.set_primary_text(name)
         self._percent = percent
         self._activities = activities
-        if self._progress_bar:
-            self._update_progress_bar()
+        self._update_progress_bar()
         self._update_items_visibility(installable)
         self._update_open_submenu()
 
