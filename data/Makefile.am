@@ -7,8 +7,9 @@ sugar-xo.gtkrc: gtkrc.em
 		$(top_builddir)/data/sugar-xo.gtkrc
 
 sugardir = $(pkgdatadir)/data
-sugar_DATA =		\
-	mime.defaults	\
+sugar_DATA =			\
+	activities.defaults	\
+	mime.defaults		\
 	$(GTKRC_FILES)
 
 GTKRC_FILES =		\
