@@ -28,6 +28,7 @@ from hardware import hardwaremanager
 from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics.palette import Palette, CanvasInvoker
+from sugar.graphics.icon import CanvasIcon
 from sugar import profile
 from sugar import env
 
@@ -46,24 +47,55 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
 
         shell_model = shell.get_model()
 
-        top_box = hippo.CanvasBox(box_height=style.GRID_CELL_SIZE)
+        top_box = hippo.CanvasBox(yalign=hippo.ALIGNMENT_START,
+                                  box_height=style.GRID_CELL_SIZE,
+                                  orientation=hippo.ORIENTATION_HORIZONTAL)
         self.append(top_box, hippo.PACK_EXPAND)
+
+        nw_arrow = CanvasIcon(icon_name='arrow_NW',
+                              xalign=hippo.ALIGNMENT_START)
+        top_box.append(nw_arrow)
+
+        arrows_separator = hippo.CanvasBox()
+        top_box.append(arrows_separator, hippo.PACK_EXPAND)
+
+        ne_arrow = CanvasIcon(icon_name='arrow_NE',
+                              xalign=hippo.ALIGNMENT_END)
+        top_box.append(ne_arrow)
 
         self._donut = ActivitiesDonut(shell)
         self.append(self._donut)
 
         bottom_box = hippo.CanvasBox(yalign=hippo.ALIGNMENT_END,
-                                     box_height=style.GRID_CELL_SIZE)
+                                     box_height=style.GRID_CELL_SIZE,
+                                     orientation=hippo.ORIENTATION_HORIZONTAL)
         self.append(bottom_box, hippo.PACK_EXPAND)
 
         self._my_icon = _MyIcon(shell, style.XLARGE_ICON_SIZE)
         self.append(self._my_icon, hippo.PACK_FIXED)
 
+        sw_arrow = CanvasIcon(icon_name='arrow_SW',
+                              xalign=hippo.ALIGNMENT_START)
+        bottom_box.append(sw_arrow)
+
         devices_box = _DevicesBox(shell_model.get_devices())
-        bottom_box.append(devices_box)
+        bottom_box.append(devices_box, hippo.PACK_EXPAND)
+
+        se_arrow = CanvasIcon(icon_name='arrow_SE',
+                              xalign=hippo.ALIGNMENT_END)
+        bottom_box.append(se_arrow)
+
+        self._arrows = [ nw_arrow, ne_arrow, sw_arrow, se_arrow ]
 
         shell_model.connect('notify::state',
                             self._shell_state_changed_cb)
+        shell_model.connect('notify::zoom-level',
+                            self._shell_zoom_level_changed_cb)
+
+    def _shell_zoom_level_changed_cb(self, model, pspec):
+        for arrow in self._arrows:
+            arrow.destroy()
+        self._arrows = []
 
     def _shell_state_changed_cb(self, model, pspec):
         # FIXME implement this
