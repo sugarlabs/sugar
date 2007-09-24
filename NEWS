@@ -1,3 +1,4 @@
+* #3378 Support changes in activity scope (incomplete!) (smcv, marco)
 * #3081, #3497, #3485 Fix palette sizing and widget placement (benzea)
 * #2211 New XRestop interface style in Developer Console (edsiper)
 * #3649 Human readable file names on USB. (marco)
