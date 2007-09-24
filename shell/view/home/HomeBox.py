@@ -24,6 +24,7 @@ import gtk
 import hippo
 import dbus
 
+from hardware import hardwaremanager
 from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics.palette import Palette, CanvasInvoker
@@ -167,6 +168,9 @@ class _MyIcon(MyIcon):
 
         pm = self._get_power_manager()
 
+        hw_manager = hardwaremanager.get_manager()
+        hw_manager.shutdown()
+
         if env.is_emulator():
             self._close_emulator()
         else:
@@ -177,6 +181,9 @@ class _MyIcon(MyIcon):
         model.props.state = ShellModel.STATE_SHUTDOWN
 
         pm = self._get_power_manager()
+
+        hw_manager = hardwaremanager.get_manager()
+        hw_manager.shutdown()
 
         if env.is_emulator():
             self._close_emulator()
