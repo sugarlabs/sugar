@@ -138,7 +138,6 @@ class Frame(object):
         self._shell = shell
         self._current_position = 0.0
         self._animator = None
-        self._hover = False
 
         self._event_area = EventArea()
         self._event_area.connect('enter', self._enter_corner_cb)
@@ -289,24 +288,14 @@ class Frame(object):
             gobject.timeout_add(2000, lambda: self.hide())
 
     def _enter_notify_cb(self, window, event):
-        # FIXME clicks cause leave/notify, ignore
-        if event.state == gtk.gdk.BUTTON1_MASK:
-            return
-        if self._hover:
-            return
-
-        self._hover = True
-        self._mouse_listener.mouse_enter()
+        if event.detail != gtk.gdk.NOTIFY_INFERIOR:
+            self._mouse_listener.mouse_enter()
 
     def _leave_notify_cb(self, window, event):
-        # FIXME clicks cause leave/notify, ignore
-        if event.state == gtk.gdk.BUTTON1_MASK:
-            return
-        if not self._hover:
+        if event.detail == gtk.gdk.NOTIFY_INFERIOR:
             return
 
         if not self._is_hover() and not self._palette_group.is_up():
-            self._hover = False
             self._mouse_listener.mouse_leave()
 
     def _palette_group_popdown_cb(self, group):

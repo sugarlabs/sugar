@@ -93,10 +93,12 @@ class FrameWindow(gtk.Window):
         self.window.set_accept_focus(False)
 
     def _enter_notify_cb(self, window, event):
-        self.hover = True
+        if event.detail != gtk.gdk.NOTIFY_INFERIOR:
+            self.hover = True
 
     def _leave_notify_cb(self, window, event):
-        self.hover = False
+        if event.detail != gtk.gdk.NOTIFY_INFERIOR:
+            self.hover = False
         
     def _size_changed_cb(self, screen):
         self._update_size()
