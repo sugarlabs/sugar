@@ -25,6 +25,7 @@ from sugar import util
 from sugar.graphics.xocolor import XoColor
 
 DEFAULT_JABBER_SERVER = 'olpc.collabora.co.uk'
+DEFAULT_VOLUME = 81
 
 _profile = None
 
@@ -93,6 +94,8 @@ class Profile(object):
 
         _set_key(cp, 'Jabber', 'Registered', self.jabber_registered)
 
+        _set_key(cp, 'Sound', 'Volume', self.sound_volume)
+
         f = open(self._config_path, 'w')
         cp.write(f)
         f.close()
@@ -115,6 +118,10 @@ class Profile(object):
                 self.jabber_registered = True
         if cp.has_option('Server', 'Backup1'):
             self.backup1 = cp.get('Server', 'Backup1')
+        if cp.has_option('Sound', 'Volume'):
+            self.sound_volume = float(cp.get('Sound', 'Volume'))
+        else:
+            self.sound_volume = DEFAULT_VOLUME
 
         del cp
 
