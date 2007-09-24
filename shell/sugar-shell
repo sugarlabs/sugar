@@ -140,6 +140,9 @@ if __name__ == '__main__':
 
     main()
 
+    hw_manager = hardwaremanager.get_manager()
+    hw_manager.startup()
+
     try:
         gtk.main()
     except KeyboardInterrupt:

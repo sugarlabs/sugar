@@ -1,3 +1,5 @@
+* Save state of volume when shutdown and reboot fix for #3652 (erikos)
+
 Snapshot 5a595ea04e
 
 * #3655 Specify the order of the Activity taskbar icons. (marco)

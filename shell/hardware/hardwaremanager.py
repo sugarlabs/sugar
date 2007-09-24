@@ -21,6 +21,8 @@ import gst
 import gst.interfaces
 
 from hardware.nmclient import NMClient
+from sugar.profile import get_profile
+from sugar import env
 
 _HARDWARE_MANAGER_INTERFACE = 'org.laptop.HardwareManager'
 _HARDWARE_MANAGER_SERVICE = 'org.laptop.HardwareManager'
@@ -80,6 +82,17 @@ class HardwareManager(object):
             logging.error('Cannot mute the audio channel')
         self._mixer.set_mute(self._master, mute)
 
+    def startup(self):
+        if env.is_emulator() is False:
+            profile = get_profile()
+            self.set_volume(profile.sound_volume)
+
+    def shutdown(self):
+        if env.is_emulator() is False:
+            profile = get_profile()
+            profile.sound_volume = self.get_volume()
+            profile.save()
+    
     def set_dcon_freeze(self, frozen):
         if not self._service:
             return
