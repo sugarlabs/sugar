@@ -26,6 +26,7 @@ import logging
 
 from sugar import env
 from sugar.graphics import style
+from sugar.graphics.icon import Icon
 from sugar.graphics.entry import CanvasEntry
 from sugar.profile import get_profile
 
@@ -142,18 +143,24 @@ class _IntroBox(hippo.CanvasBox):
         button_box = hippo.CanvasBox(orientation=hippo.ORIENTATION_HORIZONTAL)
 
         if self._page != self.PAGE_FIRST:
-            back_button = CanvasButton(_('Back'), 'go-left')
+            back_button = hippo.CanvasButton(text=_('Back'))
+            image = Icon(icon_name='go-left')
+            back_button.props.widget.set_image(image)
             back_button.connect('activated', self._back_activated_cb)
             button_box.append(back_button)
 
         spacer = hippo.CanvasBox()
         button_box.append(spacer, hippo.PACK_EXPAND)
 
+        self._next_button = hippo.CanvasButton()
+        image = Icon(icon_name='go-right')
+        self._next_button.props.widget.set_image(image)
+
         if self._page == self.PAGE_LAST:
-            self._next_button = CanvasButton(_('Done'), 'go-right')
+            self._next_button.props.text = _('Done')
             self._next_button.connect('activated', self._done_activated_cb)
         else:
-            self._next_button = CanvasButton(_('Next'), 'go-right')
+            self._next_button.props.text = _('Next')
             self._next_button.connect('activated', self._next_activated_cb)
 
         self._current_page.activate()
