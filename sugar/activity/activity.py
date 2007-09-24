@@ -273,7 +273,6 @@ class Activity(Window, gtk.Container):
         self._updating_jobject = False
         self._closing = False
         self._max_participants = 0
-        self._share_scope = SCOPE_PRIVATE
         self._invites_queue = []
 
         self._bus = ActivityService(self)
@@ -331,6 +330,8 @@ class Activity(Window, gtk.Container):
             # There's already an instance on the mesh, join it
             logging.debug("*** Act %s joining existing mesh instance" % self._activity_id)
             self._shared_activity = mesh_instance
+            self._shared_activity.connect('notify::private',
+                    self._privacy_changed_cb)
             self._join_id = self._shared_activity.connect("joined", self._internal_joined_cb)
             if not self._shared_activity.props.joined:
                 self._shared_activity.join()
@@ -513,6 +514,12 @@ class Activity(Window, gtk.Container):
         self.save()
         self._jobject.object_id = None
 
+    def _privacy_changed_cb(self, shared_activity, param_spec):
+        if shared_activity.props.private:
+            self._jobject.metadata['share-scope'] = SCOPE_INVITE_ONLY
+        else:
+            self._jobject.metadata['share-scope'] = SCOPE_NEIGHBORHOOD
+
     def _internal_joined_cb(self, activity, success, err):
         """Callback when join has finished"""
         self._shared_activity.disconnect(self._join_id)
@@ -520,15 +527,10 @@ class Activity(Window, gtk.Container):
         if not success:
             logging.debug("Failed to join activity: %s" % err)
             return
-        if self._shared_activity.props.private:
-            self._share_scope = SCOPE_INVITE_ONLY
-        else:
-            self._share_scope = SCOPE_NEIGHBORHOOD
 
         self.present()
         self.emit('joined')
-        if self._jobject:
-            self._jobject.metadata['share-scope'] = self._share_scope
+        self._privacy_changed_cb(self._shared_activity, None)
 
     def get_shared(self):
         """Returns TRUE if the activity is shared on the mesh."""
@@ -548,17 +550,10 @@ class Activity(Window, gtk.Container):
         activity.props.name = self._jobject.metadata['title']
 
         self._shared_activity = activity
-
-        if activity.props.private:
-            self._share_scope = SCOPE_INVITE_ONLY
-        else:
-            self._share_scope = SCOPE_NEIGHBORHOOD
-
+        self._shared_activity.connect('notify::private',
+                self._privacy_changed_cb)
         self.emit('shared')
-
-        if self._jobject:
-            # FIXME: some way to distinguish between share scopes
-            self._jobject.metadata['share-scope'] = self._share_scope
+        self._privacy_changed_cb(self._shared_activity, None)
 
         self._send_invites()
 
@@ -578,7 +573,8 @@ class Activity(Window, gtk.Container):
     def invite(self, buddy_key):
         self._invites_queue.append(buddy_key)
 
-        if self._share_scope == SCOPE_PRIVATE:
+        if (self._shared_activity is None
+            or not self._shared_activity.props.joined):
             self.share(True)
         else:
             self._send_invites()
