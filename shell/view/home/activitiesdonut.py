@@ -32,6 +32,10 @@ from sugar.graphics import xocolor
 from sugar import profile
 import proc_smaps
 
+_MAX_ACTIVITIES = 10
+_MIN_WEDGE_SIZE = 1.0 / _MAX_ACTIVITIES
+_DONUT_SIZE = style.zoom(450)
+
 # TODO: rgb_to_html and html_to_rgb are useful elsewhere 
 #       we should put this in a common module 
 def rgb_to_html(r, g, b):
@@ -49,9 +53,6 @@ def html_to_rgb(html_color):
     r, g, b = [int(n, 16) for n in (r, g, b)]
     r, g, b = (r / 255.0, g / 255.0, b / 255.0)
     return (r, g, b)
-
-_MAX_ACTIVITIES = 10
-_MIN_WEDGE_SIZE = 1.0 / _MAX_ACTIVITIES
 
 class ActivityIcon(CanvasIcon):
     _INTERVAL = 250
@@ -187,6 +188,9 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
         self._shell = shell
         self._angles = []
         self._shell_mappings = proc_smaps.get_shared_mapping_names(os.getpid())
+
+        self._layout = _Layout()
+        self.set_layout(self._layout)
 
         self._model = shell.get_model().get_home()
         self._model.connect('activity-added', self._activity_added_cb)
@@ -495,4 +499,35 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
 
             x = int(radius * math.cos(angle)) - icon_width / 2
             y = int(radius * math.sin(angle)) - icon_height / 2
+
             self.set_position(icon, x + width / 2, y + height / 2)
+
+class _Layout(gobject.GObject,hippo.CanvasLayout):
+    __gtype_name__ = 'SugarDonutLayout'
+    def __init__(self):
+        gobject.GObject.__init__(self)
+
+    def do_set_box(self, box):
+        self._box = box
+
+    def do_get_height_request(self, for_width):
+        return _DONUT_SIZE, _DONUT_SIZE
+
+    def do_get_width_request(self):
+        return _DONUT_SIZE, _DONUT_SIZE
+
+    def do_allocate(self, x, y, width, height,
+                    req_width, req_height, origin_changed):
+        for child in self._box.get_layout_children():
+            min_width, child_width = child.get_width_request()
+            min_height, child_height = child.get_height_request(child_width)
+
+            [angle_start, angle_end] = self._box._get_angles(i)
+            angle = angle_start + (angle_end - angle_start) / 2
+
+            x = int(radius * math.cos(angle)) - icon_width / 2
+            y = int(radius * math.sin(angle)) - icon_height / 2
+
+            child.allocate(x + (width - child_width) / 2,
+                           y + (height - child_height) / 2,
+                           icon_width, icon_height, origin_changed)

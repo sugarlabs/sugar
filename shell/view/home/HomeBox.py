@@ -39,49 +39,30 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarHomeBox'
 
     def __init__(self, shell):
-        hippo.CanvasBox.__init__(self, background_color=0xe2e2e2ff, yalign=2)
-
-        self._donut = ActivitiesDonut(shell, box_width=style.zoom(450),
-                                      box_height=style.zoom(450))
-        self.append(self._donut)
-
-        self._my_icon = HomeMyIcon(shell, style.XLARGE_ICON_SIZE)
-        self.append(self._my_icon, hippo.PACK_FIXED)
-
-        shell_model = shell.get_model()
-        shell_model.connect('notify::state',
-                            self._shell_state_changed_cb)
-
-        self._device_icons = {}
-
-        devices_model = shell_model.get_devices()
-        for device in devices_model:
-            self._add_device(device)
-
-        devices_model.connect('device-appeared',
-                              self._device_appeared_cb)
-        devices_model.connect('device-disappeared',
-                              self._device_disappeared_cb)
+        hippo.CanvasBox.__init__(self, background_color=0xe2e2e2ff)
 
         self._redraw_id = None
 
-    def __del__(self):
-        self.suspend()
+        shell_model = shell.get_model()
 
-    def _add_device(self, device):
-        view = deviceview.create(device)
-        self.append(view, hippo.PACK_FIXED)
-        self._device_icons[device.get_id()] = view
+        top_box = hippo.CanvasBox(box_height=style.GRID_CELL_SIZE)
+        self.append(top_box, hippo.PACK_EXPAND)
 
-    def _remove_device(self, device):
-        self.remove(self._device_icons[device.get_id()])
-        del self._device_icons[device.get_id()]
+        self._donut = ActivitiesDonut(shell)
+        self.append(self._donut)
 
-    def _device_appeared_cb(self, model, device):
-        self._add_device(device)
+        bottom_box = hippo.CanvasBox(yalign=hippo.ALIGNMENT_END,
+                                     box_height=style.GRID_CELL_SIZE)
+        self.append(bottom_box, hippo.PACK_EXPAND)
 
-    def _device_disappeared_cb(self, model, device):
-        self._remove_device(device)
+        self._my_icon = _MyIcon(shell, style.XLARGE_ICON_SIZE)
+        self.append(self._my_icon, hippo.PACK_FIXED)
+
+        devices_box = _DevicesBox(shell_model.get_devices())
+        bottom_box.append(devices_box)
+
+        shell_model.connect('notify::state',
+                            self._shell_state_changed_cb)
 
     def _shell_state_changed_cb(self, model, pspec):
         # FIXME implement this
@@ -94,19 +75,6 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
         [icon_width, icon_height] = self._my_icon.get_allocation()
         self.set_position(self._my_icon, (width - icon_width) / 2,
                           (height - icon_height) / 2)
-
-        i = 0
-        for icon in self._device_icons.values():
-            angle = 2 * math.pi / len(self._device_icons) * i + math.pi / 2
-            radius = style.zoom(300)
-
-            [icon_width, icon_height] = icon.get_allocation()
-
-            x = int(radius * math.cos(angle)) - icon_width / 2
-            y = int(radius * math.sin(angle)) - icon_height / 2
-            self.set_position(icon, x + width / 2, y + height / 2)            
-
-            i += 1
                   
     _REDRAW_TIMEOUT = 5 * 60 * 1000 # 5 minutes
 
@@ -140,8 +108,38 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
     def release(self):
         pass
 
-class HomeMyIcon(MyIcon):
+class _DevicesBox(hippo.CanvasBox):
+    def __init__(self, devices_model):
+        gobject.GObject.__init__(self,
+                orientation=hippo.ORIENTATION_HORIZONTAL,
+                xalign=hippo.ALIGNMENT_CENTER)
 
+        self._device_icons = {}
+
+        for device in devices_model:
+            self._add_device(device)
+
+        devices_model.connect('device-appeared',
+                              self._device_appeared_cb)
+        devices_model.connect('device-disappeared',
+                              self._device_disappeared_cb)
+
+    def _add_device(self, device):
+        view = deviceview.create(device)
+        self.append(view)
+        self._device_icons[device.get_id()] = view
+
+    def _remove_device(self, device):
+        self.remove(self._device_icons[device.get_id()])
+        del self._device_icons[device.get_id()]
+
+    def _device_appeared_cb(self, model, device):
+        self._add_device(device)
+
+    def _device_disappeared_cb(self, model, device):
+        self._remove_device(device)
+
+class _MyIcon(MyIcon):
     def __init__(self, shell, scale):
         MyIcon.__init__(self, scale)
 
