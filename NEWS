@@ -1,3 +1,6 @@
+* #948 Accept ascii passphrases for WEP networks. '$:1a2b3c4d' for hex keys,
+  's:my passphrase' for 5 or 13 characters ascii passphrases, or just the plain
+  key for ascii passphrases of any other length. (tomeu)
 * #2477 Support dbus introspection in sugar-native-factory (bertf)
 * #2674 Add arrows to hint about the frame corner activation (marco)
 * #2665 Re-arrange device icons in a line at the bottom (marco)
