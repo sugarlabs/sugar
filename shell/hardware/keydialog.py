@@ -16,7 +16,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import md5
 from gettext import gettext as _
+
 import gobject, gtk
 
 IW_AUTH_ALG_OPEN_SYSTEM = 0x00000001
@@ -55,6 +57,29 @@ def string_is_hex(key):
             is_hex = False
     return is_hex
 
+def string_is_ascii(string):
+    try:
+        string.encode('ascii')
+        return True
+    except:
+        return False
+
+def string_to_hex(passphrase):
+    key = ''
+    for c in passphrase:
+        key += hex(ord(c))[2:]
+    return key
+
+def hash_passphrase(passphrase):
+    # passphrase must have a length of 64
+    if len(passphrase) > 64:
+        passphrase = passphrase[:64]
+    elif len(passphrase) < 64:
+        while len(passphrase) < 64:
+            passphrase += passphrase[:64 - len(passphrase)]
+    passphrase = md5.new(passphrase).digest()
+    return string_to_hex(passphrase)[:26]
+
 class KeyDialog(gtk.Dialog):
     def __init__(self, net, async_cb, async_err_cb):
         gtk.Dialog.__init__(self, flags=gtk.DIALOG_MODAL)
@@ -73,6 +98,7 @@ class KeyDialog(gtk.Dialog):
         self._entry = gtk.Entry()
         #self._entry.props.visibility = False
         self._entry.connect('changed', self._update_response_sensitivity)
+        self._entry.connect('activate', self._entry_activate_cb)
         self.vbox.pack_start(self._entry)
         self.vbox.set_spacing(6)
         self.vbox.show_all()
@@ -85,6 +111,9 @@ class KeyDialog(gtk.Dialog):
 
         self._entry.grab_focus()
         self.set_has_separator(True)
+
+    def _entry_activate_cb(self, entry):
+        self.response(gtk.RESPONSE_OK)
 
     def create_security(self):
         raise NotImplementedError
@@ -119,6 +148,13 @@ class WEPKeyDialog(KeyDialog):
     def create_security(self):
         key = self._entry.get_text()
 
+        if key.startswith('$:'):
+            key = key[2:]
+        elif key.startswith('s:') and ((len(key) - 2) in [5, 13]):
+            key = string_to_hex(key[2:])
+        else:
+            key = hash_passphrase(key)
+
         it = self.combo.get_active_iter()
         (auth_alg, ) = self.store.get(it, 1)
 
@@ -132,10 +168,9 @@ class WEPKeyDialog(KeyDialog):
         return Security.new_from_args(we_cipher, (key, auth_alg))
 
     def _update_response_sensitivity(self, ignored=None):
-        key = self._entry.get_text()
-        is_hex = string_is_hex(key)
-        valid_len = (len(key) == 10 or len(key) == 26)
-        self.set_response_sensitive(gtk.RESPONSE_OK, is_hex and valid_len)
+        # As the md5 passphrase can be of any length and has no indicator, we
+        # cannot check for the validity of the input.
+        self.set_response_sensitive(gtk.RESPONSE_OK, True)
 
 class WPAKeyDialog(KeyDialog):
     def __init__(self, net, async_cb, async_err_cb):

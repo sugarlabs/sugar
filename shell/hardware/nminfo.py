@@ -506,7 +506,7 @@ class NMInfo(object):
         self._key_dialog = None
         widget.destroy()
 
-        if response_id == gtk.RESPONSE_CANCEL:
+        if response_id in [gtk.RESPONSE_CANCEL, gtk.RESPONSE_NONE]:
             # key dialog dialog was canceled; send the error back to NM
             async_err_cb(CanceledKeyRequestError())
         elif response_id == gtk.RESPONSE_OK:
