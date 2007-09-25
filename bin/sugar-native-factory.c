@@ -137,6 +137,40 @@ create_instance(int argc)
 
 
 
+/* handle dbus Introspect() call */
+
+static DBusHandlerResult
+handle_introspect(DBusConnection *connection, DBusMessage* message)
+{
+  DBusMessage *reply;
+  const char *introspect_xml =
+    DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
+    "<node>\n"
+    "	<interface name=\"org.freedesktop.DBus.Introspectable\">\n"
+    "		<method name=\"Introspect\">\n"
+    "			<arg direction=\"out\" type=\"s\" />\n"
+    "		</method>\n"
+    "	</interface>\n"
+    "	<interface name=\"org.laptop.ActivityFactory\">\n"
+    "		<method name=\"create\">\n"
+    "			<arg direction=\"in\" type=\"a{ss}\" />\n"
+    "		</method>\n"
+    "	</interface>\n"
+    "</node>\n";
+
+  reply = dbus_message_new_method_return(message);
+  dbus_message_append_args(reply,
+			   DBUS_TYPE_STRING, &introspect_xml,
+			   DBUS_TYPE_INVALID);
+
+  dbus_connection_send(connection, reply, NULL);
+  dbus_message_unref(reply);
+
+  return DBUS_HANDLER_RESULT_HANDLED;
+}
+
+
+
 /* handle dbus create() call */
 
 static DBusHandlerResult
@@ -212,8 +246,12 @@ factory_message_func(DBusConnection  *connection,
 		     void            *user_data)
 {
   if (dbus_message_is_method_call(message,
-				  "org.laptop.ActivityFactory",
-				  "create"))
+				  "org.freedesktop.DBus.Introspectable",
+				  "Introspect"))
+    return handle_introspect(connection, message);
+  else if (dbus_message_is_method_call(message,
+				       "org.laptop.ActivityFactory",
+				       "create"))
     return handle_create(connection, message);
   else
     return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
