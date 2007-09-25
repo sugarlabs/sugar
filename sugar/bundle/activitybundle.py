@@ -213,8 +213,6 @@ class ActivityBundle(Bundle):
         self._unzip(install_dir)
 
         install_path = os.path.join(install_dir, self._zip_root_dir)
-        if not activity.get_registry().add_bundle(install_path):
-            raise RegistrationException
 
         xdg_data_home = os.getenv('XDG_DATA_HOME', os.path.expanduser('~/.local/share'))
 
@@ -229,20 +227,54 @@ class ActivityBundle(Bundle):
             os.spawnlp(os.P_WAIT, 'update-mime-database',
                        'update-mime-database', mime_dir)
 
-        icons_dir = os.path.join(install_path, 'activity', 'mime-icons')
-        if os.path.isdir(icons_dir):
-            installed_icons_dir = os.path.join(xdg_data_home, 'icons/sugar/scalable/mimetypes')
+        mime_types = self.get_mime_types()
+        if mime_types is not None:
+            installed_icons_dir = os.path.join(xdg_data_home,
+                                               'icons/sugar/scalable/mimetypes')
             if not os.path.isdir(installed_icons_dir):
                 os.makedirs(installed_icons_dir)
-            for file in os.listdir(icons_dir):
-                if file.endswith('.svg') or file.endswith('.icon'):
-                    os.symlink(os.path.join(icons_dir, file),
-                               os.path.join(installed_icons_dir, file))
+
+            for mime_type in mime_types:
+                mime_icon_base = os.path.join(install_path, 'activity',
+                                              mime_type.replace('/', '-'))
+                svg_file = mime_icon_base + '.svg'
+                info_file = mime_icon_base + '.icon'
+                if os.path.isfile(svg_file):
+                    os.symlink(svg_file,
+                               os.path.join(installed_icons_dir,
+                                            os.path.basename(svg_file)))
+                if os.path.isfile(info_file):
+                    os.symlink(info_file,
+                               os.path.join(installed_icons_dir,
+                                            os.path.basename(info_file)))
+
+        if not activity.get_registry().add_bundle(install_path):
+            raise RegistrationException
 
     def uninstall(self):
         if not self.is_installed():
             raise NotInstalledException
 
+        xdg_data_home = os.getenv('XDG_DATA_HOME', os.path.expanduser('~/.local/share'))
+
+        mime_dir = os.path.join(xdg_data_home, 'mime')
+        installed_mime_path = os.path.join(mime_dir, 'packages', '%s.xml' % self._service_name)
+        if os.path.exists(installed_mime_path):
+            os.remove(installed_mime_path)
+            os.spawnlp(os.P_WAIT, 'update-mime-database',
+                       'update-mime-database', mime_dir)
+
+        mime_types = self.get_mime_types()
+        if mime_types is not None:
+            installed_icons_dir = os.path.join(xdg_data_home,
+                                               'icons/sugar/scalable/mimetypes')
+            for file in os.listdir(installed_icons_dir):
+                path = os.path.join(installed_icons_dir, file)
+                if os.path.islink(path) and \
+                   os.readlink(path).startswith(self._path):
+                    os.remove(path)
+
         self._uninstall()
+
         # FIXME: notify shell
 
