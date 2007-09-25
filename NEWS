@@ -1,3 +1,5 @@
+Snapshot 5a595ea04e
+
 * Open ogg files in the browser by default. (marco)
 * #948 Accept ascii passphrases for WEP networks. '$:1a2b3c4d' for hex keys,
   's:my passphrase' for 5 or 13 characters ascii passphrases, or just the plain
