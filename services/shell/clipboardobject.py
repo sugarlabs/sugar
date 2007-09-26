@@ -94,16 +94,9 @@ class ClipboardObject:
             return ''
 
         format = mime.choose_most_significant(self._formats.keys())
-
-        uri = None
-        if format == 'XdndDirectSave0':
-            uri = self._formats['XdndDirectSave0'].get_data()
-        elif format == 'text/uri-list':
+        if format == 'text/uri-list':
             data = self._formats['text/uri-list'].get_data()
-            uri = data.split('\n')[0]
-
-        if uri:
-            uri = urlparse.urlparse(uri, 'file')
+            uri = urlparse.urlparse(data.split('\n')[0], 'file')
             if uri.scheme == 'file':
                 if os.path.exists(uri.path):
                     format = mime.get_for_file(uri.path)
@@ -116,6 +109,8 @@ class ClipboardObject:
 class Format:
 
     def __init__(self, type, data, on_disk):
+        self.owns_disk_data = False
+
         self._type = type
         self._data = data
         self._on_disk = on_disk

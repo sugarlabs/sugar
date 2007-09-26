@@ -76,7 +76,9 @@ class ClipboardService(dbus.service.Object):
         cb_object = self._objects[str(object_path)]
 
         if format_type == 'XdndDirectSave0':
-            cb_object.add_format(Format(format_type, data, on_disk))
+            format = Format('text/uri-list', data, on_disk)
+            format.owns_disk_data = True
+            cb_object.add_format(format)
         elif on_disk and cb_object.get_percent() == 100:
             new_uri = self._copy_file(data)
             cb_object.add_format(Format(format_type, new_uri, on_disk))
@@ -116,7 +118,7 @@ class ClipboardService(dbus.service.Object):
         if percent == 100:
             formats = cb_object.get_formats()
             for format_name, format in formats.iteritems():
-                if format.is_on_disk() and format_name != 'XdndDirectSave0':
+                if format.is_on_disk() and not format.owns_disk_data:
                     new_uri = self._copy_file(format.get_data())
                     format.set_data(new_uri)
 
