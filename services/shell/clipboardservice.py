@@ -76,7 +76,7 @@ class ClipboardService(dbus.service.Object):
         cb_object = self._objects[str(object_path)]
 
         if format_type == 'XdndDirectSave0':
-            format = Format('text/uri-list', data, on_disk)
+            format = Format('text/uri-list', data + '\r\n', on_disk)
             format.owns_disk_data = True
             cb_object.add_format(format)
         elif on_disk and cb_object.get_percent() == 100:

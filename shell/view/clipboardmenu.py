@@ -183,7 +183,8 @@ class ClipboardMenu(Palette):
 
         transfer_ownership = False
         if format == 'text/uri-list':
-            file_path = urlparse.urlparse(data['DATA']).path
+            uri = mime.split_uri_list(data['DATA'])[0]
+            file_path = urlparse.urlparse(uri).path
         else:
             if data['ON_DISK']:
                 file_path = urlparse.urlparse(data['DATA']).path

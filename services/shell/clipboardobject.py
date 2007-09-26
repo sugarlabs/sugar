@@ -96,7 +96,7 @@ class ClipboardObject:
         format = mime.choose_most_significant(self._formats.keys())
         if format == 'text/uri-list':
             data = self._formats['text/uri-list'].get_data()
-            uri = urlparse.urlparse(data.split('\n')[0], 'file')
+            uri = urlparse.urlparse(mime.split_uri_list(data)[0], 'file')
             if uri.scheme == 'file':
                 if os.path.exists(uri.path):
                     format = mime.get_for_file(uri.path)
