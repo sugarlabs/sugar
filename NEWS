@@ -1,3 +1,4 @@
+* #948 Fix passphrase encoding for some passphrases. (bertf)
 * #948 Accept ascii passphrases for WEP networks. '$:1a2b3c4d' for hex keys,
   's:my passphrase' for 5 or 13 characters ascii passphrases, or just the plain
   key for ascii passphrases of any other length. (tomeu)

@@ -67,7 +67,7 @@ def string_is_ascii(string):
 def string_to_hex(passphrase):
     key = ''
     for c in passphrase:
-        key += hex(ord(c))[2:]
+        key += '%02x' % ord(c)
     return key
 
 def hash_passphrase(passphrase):
