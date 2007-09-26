@@ -1,3 +1,4 @@
+* #948 Fix passphrase encoding for some passphrases. (bertf)
 * #3794 Fix dragging of images from clipboard (marco)
 
 Snapshot 5a595ea04e
