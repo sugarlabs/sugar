@@ -16,8 +16,12 @@
 
 import dbus
 import dbus.service
+import gnomevfs
+import gtk
 
 from gettext import gettext as _
+
+import bundleregistry
 
 _REGISTRY_IFACE = "org.laptop.ObjectTypeRegistry"
 _REGISTRY_PATH = "/org/laptop/ObjectTypeRegistry"
@@ -53,12 +57,41 @@ class ObjectTypeRegistry(dbus.service.Object):
                             'text-uri-list',
                             ['text/x-moz-url', 'text/uri-list'])
 
+        self._activity_registry = bundleregistry.get_registry()
+        for bundle in self._activity_registry:
+            self._add_activity(self._activity_registry, bundle)
+        self._activity_registry.connect('bundle-added', self._add_activity)
+
     def _add_primitive(self, type_id, name, icon, mime_types):
         object_type = {'type_id': type_id, 
                        'name': name,
                        'icon': icon,
                        'mime_types': mime_types}
         self._types[type_id] = object_type
+
+    def _add_activity(self, activity_registry, bundle):
+        mime_types = bundle.get_mime_types()
+        if mime_types is None:
+            return
+
+        icon_theme = gtk.icon_theme_get_default()
+        for mime_type in mime_types:
+            if self._get_type_for_mime(mime_type) is not None:
+                continue
+
+            name = gnomevfs.mime_get_description(mime_type)
+            if name is None:
+                continue
+
+            icon = mime_type.replace('/', '-')
+            if icon_theme.lookup_icon(icon, gtk.ICON_SIZE_BUTTON, 0) is None:
+                continue
+
+            object_type = {'type_id': mime_type, 
+                           'name': name,
+                           'icon': icon,
+                           'mime_types': [mime_type]}
+            self._types[mime_type] = object_type
 
     def _get_type_for_mime(self, mime_type):
         for object_type in self._types.values():

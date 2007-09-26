@@ -127,7 +127,7 @@ class Bundle:
                 zip.write(filename, os.path.join(base_dir, filename))
         zip.close()
 
-    def remove(self):
+    def _uninstall(self):
         ext = os.path.splitext(self._path)[1]
         if self._unpacked:
             if not os.path.isdir(self._path) or ext != self._unzipped_extension:
@@ -137,7 +137,7 @@ class Bundle:
                     os.remove(os.path.join(root, name))
                 for name in dirs:
                     os.rmdir(os.path.join(root, name))
-                os.rmdir(root)
+            os.rmdir(self._path)
         else:
             if not os.path.isfile(self._path) or ext != self._zipped_extension:
                 raise InvalidPathException
