@@ -91,6 +91,15 @@ def choose_most_significant(mime_types):
     logging.debug('Returning first: %r.' % mime_types[0])
     return mime_types[0]
 
+def split_uri_list(uri_list):
+    result = []
+
+    splitted = uri_list.split('\n')
+    for uri in splitted:
+        result.append(uri.strip())
+
+    return result
+
 def _file_looks_like_text(file_name):
     f = open(file_name, 'r')
     try:
