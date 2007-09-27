@@ -338,7 +338,7 @@ class Device(gobject.GObject):
         if self._type !=  DEVICE_TYPE_802_11_MESH_OLPC:
             raise RuntimeError("Only valid for mesh devices")
         try:
-            step = self.dev.getMeshStep(timeout=3000)
+            step = self.dev.getMeshStep(timeout=3)
         except dbus.DBusException, e:
             step = 0
         return step
@@ -346,7 +346,7 @@ class Device(gobject.GObject):
     def get_frequency(self):
         freq = 0.0
         try:
-            freq = self.dev.getFrequency(timeout=3000)
+            freq = self.dev.getFrequency(timeout=3)
         except dbus.DBusException, e:
             pass
         # Hz -> GHz
