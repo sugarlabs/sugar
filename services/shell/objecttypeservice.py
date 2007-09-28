@@ -40,10 +40,13 @@ class ObjectTypeRegistry(dbus.service.Object):
                             ['image/png', 'image/gif', 'image/jpeg'])
 
         self._add_primitive('Audio', _('Audio'), 'audio-x-generic',
-                            ['audio/ogg', 'audio/x-wav', 'audio/wav'])
+                            ['audio/ogg', 'audio/x-wav', 'audio/wav',
+                             'audio/x-vorbis+ogg', 'audio/x-flac+ogg',
+                             'audio/x-speex+ogg'])
 
         self._add_primitive('Video', _('Video'), 'video-x-generic',
-                            ['video/ogg', 'application/ogg'])
+                            ['video/ogg', 'application/ogg',
+                             'video/x-theora+ogg', 'video/x-ogm+ogg'])
 
         self._add_primitive('Etoys project', _('Etoys project'),
                             'application-x-squeak-project',
