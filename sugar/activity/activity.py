@@ -287,16 +287,12 @@ class Activity(Window, gtk.Container):
             #self._jobject.object_id = ''
             #del self._jobject.metadata['ctime']
             del self._jobject.metadata['mtime']
+            
+            self.set_title(self._jobject.metadata['title'])
+                
+            if self._jobject.metadata.has_key('share-scope'):
+                share_scope = self._jobject.metadata['share-scope']                
 
-            if not self._jobject.metadata.has_key('title'):
-                self._jobject.metadata['title'] = ''
-
-            try:
-                share_scope = self._jobject.metadata['share-scope']
-                title = self._jobject.metadata['title']
-                self.set_title(title)
-            except KeyError:
-                pass
         elif create_jobject:
             logging.debug('Creating a jobject.')
             self._jobject = datastore.create()
