@@ -20,6 +20,9 @@ import sys
 import os
 from ConfigParser import ConfigParser
 
+import pygtk
+pygtk.require('2.0')
+
 from sugar import activity
 from sugar import env
 
