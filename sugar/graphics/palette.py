@@ -188,7 +188,7 @@ class Palette(gtk.Window):
 
     def set_content(self, widget):
         if len(self._content.get_children()) > 0:
-            self.remove(self._content.get_children()[0])
+            self._content.remove(self._content.get_children()[0])
 
         if widget is not None:
             self._content.add(widget)
