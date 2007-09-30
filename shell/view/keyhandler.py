@@ -25,7 +25,6 @@ import gtk
 from hardware import hardwaremanager
 from model.shellmodel import ShellModel
 from sugar._sugaruiext import KeyGrabber
-import console
 
 _BRIGHTNESS_STEP = 2
 _VOLUME_STEP = 10
@@ -48,7 +47,6 @@ _actions_table = {
     '<alt>1'        : 'screenshot',
     '<alt>equal'    : 'console',
     '<alt>0'        : 'console',
-    '<alt>9'        : 'new_console',
     '<alt>f'        : 'frame',
     '0x93'          : 'frame',
     '<alt>o'        : 'overlay',
@@ -147,9 +145,6 @@ class KeyHandler(object):
     def handle_console(self):
         gobject.idle_add(self._toggle_console_visibility_cb)
 
-    def handle_new_console(self):
-        self._shell.toggle_console_visibility()
-
     def handle_frame(self):
         self._shell.get_frame().notify_key_press()
 
@@ -222,5 +217,5 @@ class KeyHandler(object):
         bus = dbus.SessionBus()
         proxy = bus.get_object('org.laptop.sugar.Console',
                                '/org/laptop/sugar/Console')
-        console_service = dbus.Interface(proxy, 'org.laptop.sugar.Console')
-        console_service.ToggleVisibility()
+        console = dbus.Interface(proxy, 'org.laptop.sugar.Console')
+        console.ToggleVisibility()
