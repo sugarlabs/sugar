@@ -77,9 +77,7 @@ class LogView(hippo.CanvasBox):
     def _vadj_changed_cb(self, adj):
         adj.props.value = adj.upper - adj.page_size
 
-def get_tags():
-    return [ 'log' ]
-
 def create_view(context):
-    path = os.path.join(env.get_profile_path(), 'logs', context + '.log')
+    name = context.replace('activity:', '')
+    path = os.path.join(env.get_profile_path(), 'logs', name + '.log')
     return LogView(path)
