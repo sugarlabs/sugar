@@ -46,13 +46,15 @@ class Console(gtk.Window):
 
     def _zoom_level_changed_cb(self, shell_model, pspec):
         if shell_model.props.zoom_level == ShellModel.ZOOM_HOME:
-            self.set_context('home')
+            self.context = 'shell'
+            self._update_view()
         elif shell_model.props.zoom_level == ShellModel.ZOOM_ACTIVITY:
             activity = self._home_model.get_active_activity()
             self.context = 'activity:' + activity.get_type()
             self._update_view()
         else:
-            self.set_context('mesh')
+            self.context = 'mesh'
+            self._update_view()
 
     def _realize_cb(self, widget):
         self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
