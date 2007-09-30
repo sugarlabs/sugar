@@ -1,9 +1,12 @@
+import os
+
 import gtk
 import hippo
 import gnomevfs
 from louie import dispatcher
 
 from sugar.graphics.roundbox import CanvasRoundBox
+from sugar import env
 
 class LogEntry(object):
     def __init__(self, text):
@@ -39,20 +42,20 @@ class LogModel(list):
         if event == gnomevfs.MONITOR_EVENT_CHANGED:
             self.read_lines()
 
-class LogView(hippo.Canvas):
-    def __init__(self, model):
-        hippo.Canvas.__init__(self)
+class LogView(hippo.CanvasBox):
+    def __init__(self, path):
+        hippo.CanvasBox.__init__(self)
 
-        self.model = model
+        self.model = LogModel(path)
 
         scrollbars = hippo.CanvasScrollbars()
         scrollbars.set_policy(hippo.ORIENTATION_HORIZONTAL,
                               hippo.SCROLLBAR_NEVER)
         widget = scrollbars.props.widget
         widget.props.vadjustment.connect('changed', self._vadj_changed_cb)
-        self.set_root(scrollbars)
+        self.append(scrollbars, hippo.PACK_EXPAND)
 
-        self.box = hippo.CanvasBox(spacing=5, padding=20)
+        self.box = hippo.CanvasBox(spacing=5)
         scrollbars.set_root(self.box)
 
         for entry_model in self.model:
@@ -74,18 +77,9 @@ class LogView(hippo.Canvas):
     def _vadj_changed_cb(self, adj):
         adj.props.value = adj.upper - adj.page_size
 
-if __name__ == "__main__":
-    import sys
+def get_tags():
+    return [ 'log' ]
 
-    window = gtk.Window()
-    window.set_default_size(800, 600)
-
-    model = LogModel(sys.argv[1])
-
-    log_view = LogView(model)
-    window.add(log_view)
-    log_view.show()
-
-    window.show()    
-
-    gtk.main()
+def create_view(context):
+    path = os.path.join(env.get_profile_path(), 'logs', context + '.log')
+    return LogView(path)
