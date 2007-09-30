@@ -36,6 +36,7 @@ from view.frame.frame import Frame
 from view.keyhandler import KeyHandler
 from view.home.HomeWindow import HomeWindow
 from model.shellmodel import ShellModel
+from console import Console
 
 class Shell(gobject.GObject):
     def __init__(self, model):
@@ -63,6 +64,8 @@ class Shell(gobject.GObject):
                            self._active_activity_changed_cb)
         home_model.connect('pending-activity-changed',
                            self._pending_activity_changed_cb)
+
+        self._console = Console(model)
 
         gobject.idle_add(self._start_journal_idle)
 
@@ -164,6 +167,12 @@ class Shell(gobject.GObject):
             if host.get_id() == activity_id:
                 return host
         return None
+
+    def toggle_console_visibility(self):
+        if self._console.props.visible:
+            self._console.hide()
+        else:
+            self._console.show()
 
     def toggle_chat_visibility(self):
         act = self.get_current_activity()

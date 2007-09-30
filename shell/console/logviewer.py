@@ -5,7 +5,6 @@ import hippo
 import gnomevfs
 from louie import dispatcher
 
-from sugar.graphics.roundbox import CanvasRoundBox
 from sugar import env
 
 class LogEntry(object):
@@ -55,7 +54,7 @@ class LogView(hippo.CanvasBox):
         widget.props.vadjustment.connect('changed', self._vadj_changed_cb)
         self.append(scrollbars, hippo.PACK_EXPAND)
 
-        self.box = hippo.CanvasBox(spacing=5)
+        self.box = hippo.CanvasBox(spacing=5, background_color=0xFFFFFFFF)
         scrollbars.set_root(self.box)
 
         for entry_model in self.model:
@@ -64,10 +63,11 @@ class LogView(hippo.CanvasBox):
         dispatcher.connect(self._entry_added_cb, 'entry-added', self.model)
 
     def add_entry(self, entry_model):
-        entry_box = CanvasRoundBox(background_color=0xffffffff, padding=5)
+        entry_box = hippo.CanvasBox(padding=5)
         self.box.append(entry_box)
 
         entry = hippo.CanvasText(text=entry_model.text,
+                                 xalign=hippo.ALIGNMENT_START,
                                  size_mode=hippo.CANVAS_SIZE_WRAP_WORD)
         entry_box.append(entry)
 

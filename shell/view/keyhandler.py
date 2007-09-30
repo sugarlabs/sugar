@@ -148,7 +148,7 @@ class KeyHandler(object):
         gobject.idle_add(self._toggle_console_visibility_cb)
 
     def handle_new_console(self):
-        console.toggle_visibility()
+        self._shell.toggle_console_visibility()
 
     def handle_frame(self):
         self._shell.get_frame().notify_key_press()

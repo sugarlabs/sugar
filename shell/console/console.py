@@ -3,9 +3,13 @@ import os
 import gtk
 import hippo
 
+from sugar.graphics.roundbox import CanvasRoundBox
+
 class Console(gtk.Window):
-    def __init__(self):
+    def __init__(self, shell_model):
         gtk.Window.__init__(self)
+
+        self._shell_model = shell_model
 
         self.set_default_size(gtk.gdk.screen_width() * 3 / 4,
                               gtk.gdk.screen_height() * 3 / 4)
@@ -17,8 +21,7 @@ class Console(gtk.Window):
         self.add(canvas)
         canvas.show()
 
-        box = hippo.CanvasBox(padding=20, border_color=0x000000FF,
-                              border=3)
+        box = hippo.CanvasBox(padding=20, background_color=0x000000FF)
         canvas.set_root(box)
 
         self.registry = Registry()
