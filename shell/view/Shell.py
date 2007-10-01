@@ -71,7 +71,12 @@ class Shell(gobject.GObject):
         gobject.idle_add(self._start_journal_idle)
 
     def _start_journal_idle(self):
-        self.start_activity('org.laptop.JournalActivity')
+        registry = activity.get_registry()
+
+        # Checking for the bundle existence will also ensure
+        # that the shell service is started up.
+        if registry.get_activity('org.laptop.JournalActivity'):
+            self.start_activity('org.laptop.JournalActivity')
 
     def _activity_started_cb(self, home_model, home_activity):
         activity_host = ActivityHost(home_activity)
