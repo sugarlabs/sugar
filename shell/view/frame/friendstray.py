@@ -47,12 +47,14 @@ class FriendsTray(VTray):
         self._pservice.connect('activity-appeared',
                                self.__activity_appeared_cb)
 
+        self._owner = self._pservice.get_owner()
+        
         # Add initial activities the PS knows about
         self._pservice.get_activities_async(reply_handler=self._get_activities_cb)
 
         home_model = shell.get_model().get_home()
-        home_model.connect('active-activity-changed',
-                           self._active_activity_changed_cb)
+        home_model.connect('pending-activity-changed',
+                           self._pending_activity_changed_cb)
 
     def _get_activities_cb(self, list):
         for activity in list:
@@ -85,9 +87,9 @@ class FriendsTray(VTray):
     def __activity_appeared_cb(self, pservice, activity_ps):
         activity = self._shell.get_current_activity()
         if activity and activity_ps.props.id == activity.get_id():
-            self._set_activity_ps(activity_ps)
+            self._set_activity_ps(activity_ps, True)
 
-    def _set_activity_ps(self, activity_ps):
+    def _set_activity_ps(self, activity_ps, shared_activity):
         if self._activity_ps == activity_ps:
             return
 
@@ -102,7 +104,7 @@ class FriendsTray(VTray):
 
         self.clear()
 
-        if activity_ps != None:
+        if shared_activity is True: 
             for buddy in activity_ps.get_joined_buddies():
                 self.add_buddy(buddy)
 
@@ -110,28 +112,28 @@ class FriendsTray(VTray):
                             'buddy-joined', self.__buddy_joined_cb)
             self._left_hid = activity_ps.connect(
                             'buddy-left', self.__buddy_left_cb)
-
-    def _active_activity_changed_cb(self, home_model, home_activity):
-        if not home_activity:
-            self._set_activity_ps(None)
+        else:
+            # only display myself if not shared
+            self.add_buddy(self._owner)
+            
+    def _pending_activity_changed_cb(self, home_model, home_activity):
+        if home_activity is None:        
             return
 
         activity_id = home_activity.get_activity_id()
-        if not activity_id:
-            self._set_activity_ps(None)
+        if activity_id is None:
             return
         
-        # HACK to suppress warning in logs when activity isn't found
-        # (if it's locally launched and not shared yet)
+        # check if activity is shared
         activity = None
         for act in self._pservice.get_activities():
             if activity_id == act.props.id:
                 activity = act
                 break
         if activity:
-            self._set_activity_ps(activity)
+            self._set_activity_ps(activity, True)
         else:
-            self._set_activity_ps(None)
+            self._set_activity_ps(home_activity, False)
 
     def __buddy_joined_cb(self, activity, buddy):
         self.add_buddy(buddy)
