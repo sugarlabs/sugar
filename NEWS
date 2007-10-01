@@ -1,3 +1,5 @@
+* #3961 Fix crash when starting the journal for the first time (marco)
+
 Snapshot b8ec83c5b8
 
 * Add several ogg subtypes. (marco)
