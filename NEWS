@@ -1,3 +1,6 @@
+* #3905 Wait 3 seconds, rather than 3000, if NetworkManager doesn't respond
+  (smcv)
+* #3909 Cope with both dbus-python both before and after 0.82.2 (smcv)
 * #3181 Show always myself in friendstray (erikos)
 * #948 Fix passphrase encoding for some passphrases. (bertf)
 * #948 Accept ascii passphrases for WEP networks. '$:1a2b3c4d' for hex keys,
