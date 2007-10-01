@@ -60,7 +60,10 @@ class Bundle:
         file_names = zip_file.namelist()
         if len(file_names) == 0:
             raise MalformedBundleException('Empty zip file')
-        
+
+        if file_names[0] == 'mimetype':
+            del file_names[0]
+
         self._zip_root_dir = file_names[0].split('/')[0]
         if self._unzipped_extension is not None:
             (name, ext) = os.path.splitext(self._zip_root_dir)
@@ -113,7 +116,7 @@ class Bundle:
         # features, etc makes it impractical.
         # FIXME: use manifest
         if os.spawnlp(os.P_WAIT, 'unzip', 'unzip', self._path,
-                      '-d', install_dir):
+                      '-x', 'mimetype', '-d', install_dir):
             raise ZipExtractException
 
     def _zip(self, bundle_path):
