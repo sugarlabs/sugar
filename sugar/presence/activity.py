@@ -244,9 +244,13 @@ class Activity(gobject.GObject):
     def get_channels(self):
         """Retrieve communications channel descriptions for the activity 
         
-        Returns (bus name, connection, channels) for the activity
-        
-        XXX what are those values?
+        Returns a tuple containing:
+            - the D-Bus well-known service name of the connection
+              (FIXME: this is redundant; in Telepathy it can be derived
+              from that of the connection)
+            - the D-Bus object path of the connection
+            - a list of D-Bus object paths representing the channels
+              associated with this activity
         """
         (bus_name, connection, channels) = self._activity.GetChannels()
         return bus_name, connection, channels
