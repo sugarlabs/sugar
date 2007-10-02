@@ -256,10 +256,8 @@ class Activity(gobject.GObject):
         self.emit("joined", False, "left activity")
 
     def _leave_error_cb(self, err):
-        """Callback for error in async leaving of shared activity.
-
-        XXX Add logging!"""
-        pass
+        """Callback for error in async leaving of shared activity."""
+        _logger.debug('Failed to leave activity: %s', err)
 
     def leave(self):
         """Leave this shared activity"""
