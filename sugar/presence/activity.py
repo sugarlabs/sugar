@@ -214,6 +214,15 @@ class Activity(gobject.GObject):
             buddies.append(self._ps_new_object(item))
         return buddies
 
+    def get_buddy_by_handle(self, handle):
+        """Retrieve the Buddy object given a telepathy handle."""
+        buddyhandle = self._activity.GetBuddyByHandle(handle)
+        if buddyhandle:
+            buddy = self._ps_new_object(buddyhandle)
+        else:
+            buddy = None
+        return buddy
+
     def invite(self, buddy, message, response_cb):
         """Invite the given buddy to join this activity.
 
