@@ -90,6 +90,8 @@ class Activity(gobject.GObject):
         self._tags = None
         self._private = True
         self._joined = False
+        # Cache for get_buddy_by_handle
+        self._handle_to_buddy = {}
 
     def _get_properties_reply_cb(self, new_props):
         self._properties_changed_cb(new_props)
@@ -215,12 +217,24 @@ class Activity(gobject.GObject):
         return buddies
 
     def get_buddy_by_handle(self, handle):
-        """Retrieve the Buddy object given a telepathy handle."""
-        buddyhandle = self._activity.GetBuddyByHandle(handle)
-        if buddyhandle:
-            buddy = self._ps_new_object(buddyhandle)
-        else:
-            buddy = None
+        """Retrieve the Buddy object given a telepathy handle.
+        
+        buddies are cached in self._handle_to_buddy, so we can
+        still get the buddy after they have left the activity.
+        """
+        buddy = self._handle_to_buddy.get(handle, None)
+        if not buddy:
+            try:
+                buddyhandle = self._activity.GetBuddyByHandle(handle)
+            except:
+                # FIXME: Need to catch NotFoundError but that's defined
+                # in presence-service psutils
+                buddyhandle = None
+            if buddyhandle:
+                buddy = self._ps_new_object(buddyhandle)
+                self._handle_to_buddy[handle] = buddy
+            else:
+                buddy = None
         return buddy
 
     def invite(self, buddy, message, response_cb):
