@@ -75,7 +75,7 @@ def get_filename(uid):
     return filename
 
 def find(query, properties, reply_handler, error_handler):
-    logging.debug('dbus_helpers.find: %r' % query)
+    logging.debug('dbus_helpers.find: %r %r' % (query, properties))
     if reply_handler and error_handler:
         return _get_data_store().find(query, properties,
                 reply_handler=reply_handler, error_handler=error_handler)

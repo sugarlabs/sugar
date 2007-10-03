@@ -75,6 +75,12 @@ class DSMetadata(gobject.GObject):
     def copy(self):
         return DSMetadata(self._props.copy())
 
+    def get(self, key, default=None):
+        if self._props.has_key(key):
+            return self._props[key]
+        else:
+            return default
+
 class DSObject(object):
     def __init__(self, object_id, metadata=None, file_path=None):
         self.object_id = object_id
