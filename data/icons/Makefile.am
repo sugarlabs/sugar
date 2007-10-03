@@ -4,3 +4,6 @@ icons_DATA =		\
 	arrow_NW.svg	\
 	arrow_SE.svg	\
 	arrow_SW.svg
+
+EXTRA_DIST =                    \
+	$(icons_DATA)
