@@ -60,14 +60,26 @@ class DSMetadata(gobject.GObject):
     def __delitem__(self, key):
         del self._props[key]
 
+    def __contains__(self, key):
+        return self._props.__contains__(key)
+    
     def has_key(self, key):
         return self._props.has_key(key)
+
+    def keys(self):
+        return self._props.keys()
     
     def get_dictionary(self):
         return self._props
 
     def copy(self):
         return DSMetadata(self._props.copy())
+
+    def get(self, key, default=None):
+        if self._props.has_key(key):
+            return self._props[key]
+        else:
+            return default
 
 class DSObject(object):
     def __init__(self, object_id, metadata=None, file_path=None):
