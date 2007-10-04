@@ -252,8 +252,13 @@ class ActivityBundle(Bundle):
             raise RegistrationException
 
     def uninstall(self):
-        if not self.is_installed():
-            raise NotInstalledException
+        if self._unpacked:
+            install_path = self._path
+        else:
+            if not self.is_installed():
+                raise NotInstalledException
+            install_path = os.path.join(env.get_user_activities_path(),
+                                        self._zip_root_dir)
 
         xdg_data_home = os.getenv('XDG_DATA_HOME', os.path.expanduser('~/.local/share'))
 
@@ -271,10 +276,10 @@ class ActivityBundle(Bundle):
             for file in os.listdir(installed_icons_dir):
                 path = os.path.join(installed_icons_dir, file)
                 if os.path.islink(path) and \
-                   os.readlink(path).startswith(self._path):
+                   os.readlink(path).startswith(install_path):
                     os.remove(path)
 
-        self._uninstall()
+        self._uninstall(install_path)
 
         # FIXME: notify shell
 

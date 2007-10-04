@@ -130,19 +130,17 @@ class Bundle:
                 zip.write(filename, os.path.join(base_dir, filename))
         zip.close()
 
-    def _uninstall(self):
-        ext = os.path.splitext(self._path)[1]
-        if self._unpacked:
-            if not os.path.isdir(self._path) or ext != self._unzipped_extension:
+    def _uninstall(self, install_path):
+        if not os.path.isdir(install_path):
+            raise InvalidPathException
+        if self._unzipped_extension is not None:
+            ext = os.path.splitext(install_path)[1]
+            if ext != self._unzipped_extension:
                 raise InvalidPathException
-            for root, dirs, files in os.walk(self._path, topdown=False):
-                for name in files:
-                    os.remove(os.path.join(root, name))
-                for name in dirs:
-                    os.rmdir(os.path.join(root, name))
-            os.rmdir(self._path)
-        else:
-            if not os.path.isfile(self._path) or ext != self._zipped_extension:
-                raise InvalidPathException
-            os.remove(self._path)
-            
+
+        for root, dirs, files in os.walk(install_path, topdown=False):
+            for name in files:
+                os.remove(os.path.join(root, name))
+            for name in dirs:
+                os.rmdir(os.path.join(root, name))
+        os.rmdir(install_path)
