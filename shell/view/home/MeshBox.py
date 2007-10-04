@@ -135,9 +135,9 @@ class AccessPointView(PulsingIcon):
         elif self._model.props.state == accesspointmodel.STATE_CONNECTED:
             if self._disconnect_item:
                 self._disconnect_item.show()
-            self.props.pulse_time = 2.0
+            self.props.pulse_time = 0.0
             self.props.colors = [
-                [ style.Color(self._device_stroke).get_svg(),
+                [ '#ffffff',
                   style.Color(self._device_fill).get_svg() ],
                 [ '#ffffff',
                   style.Color(self._device_fill).get_svg() ]
@@ -221,9 +221,9 @@ class MeshDeviceView(PulsingIcon):
             ]
         elif state == nmclient.DEVICE_STATE_ACTIVATED and chan == self.channel:
             self._disconnect_item.show()
-            self.props.pulse_time = 1.5
+            self.props.pulse_time = 0.0
             self.props.colors = [
-                [ style.Color(self._device_stroke).get_svg(),
+                [ '#ffffff',
                     style.Color(self._device_fill).get_svg() ],
                 [ '#ffffff',
                     style.Color(self._device_fill).get_svg() ]
