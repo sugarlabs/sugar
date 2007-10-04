@@ -38,7 +38,7 @@ class ActivityRegistry(dbus.service.Object):
     def AddBundle(self, bundle_path):
         '''Register the activity bundle with the global registry 
         
-        bundle_path -- path to the activity bundle's root directory,
+        bundle_path -- path to the root directory of the activity bundle,
             that is, the directory with activity/activity.info as a 
             child of the directory.
         
