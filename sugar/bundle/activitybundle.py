@@ -280,6 +280,7 @@ class ActivityBundle(Bundle):
                     os.remove(path)
 
         self._uninstall(install_path)
-
-        # FIXME: notify shell
+        
+        if not activity.get_registry().remove_bundle(install_path):
+            raise RegistrationException
 
