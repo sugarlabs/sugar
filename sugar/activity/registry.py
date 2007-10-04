@@ -43,6 +43,8 @@ class ActivityInfo(object):
 class ActivityRegistry(gobject.GObject):
     __gsignals__ = {
         'activity-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([gobject.TYPE_PYOBJECT])),
+        'activity-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                            ([gobject.TYPE_PYOBJECT]))
     }
     def __init__(self):
@@ -60,6 +62,7 @@ class ActivityRegistry(gobject.GObject):
                                     follow_name_owner_changes = True)
         self._registry = dbus.Interface(bus_object, _ACTIVITY_REGISTRY_IFACE)
         self._registry.connect_to_signal('ActivityAdded', self._activity_added_cb)
+        self._registry.connect_to_signal('ActivityRemoved', self._activity_removed_cb)
 
         # Two caches fo saving some travel across dbus.
         self._service_name_to_activity_info = {}
@@ -132,6 +135,15 @@ class ActivityRegistry(gobject.GObject):
         self._service_name_to_activity_info.clear()
         self._mime_type_to_activities.clear()
         self.emit('activity-added', _activity_info_from_dict(info_dict))
+
+    def remove_bundle(self, bundle_path):
+        return self._registry.RemoveBundle(bundle_path)
+
+    def _activity_removed_cb(self, info_dict):
+        logging.debug('ActivityRegistry._activity_removed_cb: flushing caches')
+        self._service_name_to_activity_info.clear()
+        self._mime_type_to_activities.clear()
+        self.emit('activity-removed', _activity_info_from_dict(info_dict))
 
 _registry = None
 

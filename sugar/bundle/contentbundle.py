@@ -21,7 +21,7 @@ from ConfigParser import ConfigParser
 import os
 
 from sugar import env
-from sugar.bundle.bundle import Bundle
+from sugar.bundle.bundle import Bundle, NotInstalledException
 
 class ContentBundle(Bundle):
     """A Sugar content bundle
@@ -178,5 +178,12 @@ class ContentBundle(Bundle):
         self._run_indexer()
 
     def uninstall(self):
-        self._uninstall()
+        if self._unpacked:
+            if not self.is_installed():
+                raise NotInstalledException
+            install_dir = self._path
+        else:
+            install_dir = os.path.join(env.get_user_library_path(),
+                                       self._zip_root_dir)
+        self._uninstall(install_dir)
         self._run_indexer()

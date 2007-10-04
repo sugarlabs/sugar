@@ -73,12 +73,17 @@ class _ServiceManager(object):
         util.write_service(bundle.get_service_name(),
                            bundle.get_command(), self._path)
 
+    def remove(self, bundle):
+        util.delete_service(bundle.get_service_name(), self._path)
+
 class BundleRegistry(gobject.GObject):
     """Service that tracks the available activity bundles"""
 
     __gsignals__ = {
         'bundle-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                        ([gobject.TYPE_PYOBJECT]))
+                        ([gobject.TYPE_PYOBJECT])),
+        'bundle-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([gobject.TYPE_PYOBJECT]))
     }
 
     def __init__(self):
@@ -132,6 +137,15 @@ class BundleRegistry(gobject.GObject):
         self._service_manager.add(bundle)
         self.emit('bundle-added', bundle)
         return True
+
+    def remove_bundle(self, bundle_path):
+        for bundle in self._bundles:
+            if bundle.get_path() == bundle_path:
+                self._bundles.remove(bundle)
+                self._service_manager.remove(bundle)
+                self.emit('bundle-removed', bundle)
+                return True
+        return False
 
     def get_activities_for_type(self, mime_type):
         result = []

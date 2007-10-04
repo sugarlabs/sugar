@@ -65,6 +65,7 @@ class ActivitiesTray(hippo.CanvasBox):
         registry.get_activities_async(reply_handler=self._get_activities_cb)
 
         registry.connect('activity-added', self._activity_added_cb)
+        registry.connect('activity-removed', self._activity_removed_cb)
 
         for invite in self._invites:
             self.add_invite(invite)
@@ -120,16 +121,22 @@ class ActivitiesTray(hippo.CanvasBox):
     def _invite_removed_cb(self, invites, invite):
         self.remove_invite(invite)
 
-    def _activity_removed_cb(self, item):
+    def _remove_activity_cb(self, item):
         self._tray.remove_item(item)
 
     def _activity_added_cb(self, activity_registry, activity_info):
         self.add_activity(activity_info)
 
+    def _activity_removed_cb(self, activity_registry, activity_info):
+        for item in self._tray.get_children():
+            if item.get_bundle_id() == activity_info.service_name:
+                self._tray.remove_item(item)
+                return
+
     def add_activity(self, activity_info):
         item = ActivityButton(activity_info)
         item.connect('clicked', self._activity_clicked_cb)
-        item.connect('remove_activity', self._activity_removed_cb)
+        item.connect('remove_activity', self._remove_activity_cb)
         self._tray.add_item(item, -1)
         item.show()
 

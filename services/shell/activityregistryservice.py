@@ -32,13 +32,14 @@ class ActivityRegistry(dbus.service.Object):
 
         bundle_registry = bundleregistry.get_registry()
         bundle_registry.connect('bundle-added', self._bundle_added_cb)
+        bundle_registry.connect('bundle-removed', self._bundle_removed_cb)
 
     @dbus.service.method(_ACTIVITY_REGISTRY_IFACE,
                          in_signature='s', out_signature='b')
     def AddBundle(self, bundle_path):
         '''Register the activity bundle with the global registry 
         
-        bundle_path -- path to the activity bundle's root directory,
+        bundle_path -- path to the root directory of the activity bundle,
             that is, the directory with activity/activity.info as a 
             child of the directory.
         
@@ -47,6 +48,16 @@ class ActivityRegistry(dbus.service.Object):
         '''
         registry = bundleregistry.get_registry()
         return registry.add_bundle(bundle_path)
+
+    @dbus.service.method(_ACTIVITY_REGISTRY_IFACE,
+                         in_signature='s', out_signature='b')
+    def RemoveBundle(self, bundle_path):
+        '''Unregister the activity bundle with the global registry 
+        
+        bundle_path -- path to the activity bundle root directory
+        '''
+        registry = bundleregistry.get_registry()
+        return registry.remove_bundle(bundle_path)
 
     @dbus.service.method(_ACTIVITY_REGISTRY_IFACE,
                          in_signature='', out_signature='aa{sv}')
@@ -94,6 +105,10 @@ class ActivityRegistry(dbus.service.Object):
     def ActivityAdded(self, activity_info):
         pass
 
+    @dbus.service.signal(_ACTIVITY_REGISTRY_IFACE, signature='a{sv}')
+    def ActivityRemoved(self, activity_info):
+        pass
+
     def _bundle_to_dict(self, bundle):
         return {'name': bundle.get_name(),
                 'icon': bundle.get_icon(),
@@ -103,6 +118,9 @@ class ActivityRegistry(dbus.service.Object):
 
     def _bundle_added_cb(self, bundle_registry, bundle):
         self.ActivityAdded(self._bundle_to_dict(bundle))
+
+    def _bundle_removed_cb(self, bundle_registry, bundle):
+        self.ActivityRemoved(self._bundle_to_dict(bundle))
 
 _instance = None
 
