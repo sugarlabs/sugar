@@ -1,3 +1,5 @@
+Snapshot acca55e861
+
 * #3905 Wait 3 seconds, rather than 3000, if NetworkManager doesn't respond
   (smcv)
 * #3909 Cope with both dbus-python both before and after 0.82.2 (smcv)
