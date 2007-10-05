@@ -30,6 +30,7 @@ from sugar import activity
 from sugar.activity import activityfactory
 from sugar.datastore import datastore
 from sugar import profile
+from sugar import env
 
 from view.ActivityHost import ActivityHost
 from view.frame.frame import Frame
@@ -67,10 +68,12 @@ class Shell(gobject.GObject):
         gobject.idle_add(self._start_journal_idle)
 
     def _start_journal_idle(self):
-        registry = activity.get_registry()
+        # Mount the datastore in internal flash
+        datastore.mount(env.get_profile_path('datastore'), [])
 
         # Checking for the bundle existence will also ensure
         # that the shell service is started up.
+        registry = activity.get_registry()
         if registry.get_activity('org.laptop.JournalActivity'):
             self.start_activity('org.laptop.JournalActivity')
 
