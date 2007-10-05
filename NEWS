@@ -1,3 +1,5 @@
+* Save activity previews to the datastore as binary png images. (tomeu)
+
 Snapshot ed40d65791
 
 * #3961 Fix crash when starting the journal for the first time (marco)
