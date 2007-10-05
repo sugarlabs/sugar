@@ -1,3 +1,5 @@
+* Save activity previews to the datastore as binary png images. (tomeu)
+
 Snapshot acca55e861
 
 * #3905 Wait 3 seconds, rather than 3000, if NetworkManager doesn't respond

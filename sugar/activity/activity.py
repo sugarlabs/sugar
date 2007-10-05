@@ -449,9 +449,7 @@ class Activity(Window, gtk.Container):
             f.close()
             os.remove(file_path)
 
-        # TODO: Take this out when the datastore accepts binary data.        
-        import base64
-        return base64.b64encode(preview_data)
+        return preview_data
 
     def _get_buddies(self):
         if self._shared_activity is not None:
@@ -481,7 +479,7 @@ class Activity(Window, gtk.Container):
         if self._preview is None:
             self.metadata['preview'] = ''
         else:
-            self.metadata['preview'] = self._preview
+            self.metadata['preview'] = dbus.ByteArray(self._preview)
 
         try:
             if self._jobject.file_path:
