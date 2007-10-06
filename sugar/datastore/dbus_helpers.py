@@ -82,8 +82,8 @@ def find(query, properties, reply_handler, error_handler):
     else:
         return _get_data_store().find(query, properties)
 
-def mount(uri, options):
-    return _get_data_store().mount(uri, options)
+def mount(uri, options, timeout=-1):
+    return _get_data_store().mount(uri, options, timeout=timeout)
 
 def unmount(mount_point_id):
     _get_data_store().unmount(mount_point_id)

@@ -24,6 +24,7 @@ import time
 import gobject
 import gtk
 import wnck
+import dbus
 
 from sugar.activity.activityhandle import ActivityHandle
 from sugar import activity
@@ -37,6 +38,13 @@ from view.frame.frame import Frame
 from view.keyhandler import KeyHandler
 from view.home.HomeWindow import HomeWindow
 from model.shellmodel import ShellModel
+
+# #3903 - this constant can be removed and assumed to be 1 when dbus-python
+# 0.82.3 is the only version used
+if dbus.version >= (0, 82, 3):
+    DBUS_PYTHON_TIMEOUT_UNITS_PER_SECOND = 1
+else:
+    DBUS_PYTHON_TIMEOUT_UNITS_PER_SECOND = 1000
 
 class Shell(gobject.GObject):
     def __init__(self, model):
@@ -69,7 +77,8 @@ class Shell(gobject.GObject):
 
     def _start_journal_idle(self):
         # Mount the datastore in internal flash
-        datastore.mount(env.get_profile_path('datastore'), [])
+        datastore.mount(env.get_profile_path('datastore'), [],
+                        timeout=120 * DBUS_PYTHON_TIMEOUT_UNITS_PER_SECOND)
 
         # Checking for the bundle existence will also ensure
         # that the shell service is started up.

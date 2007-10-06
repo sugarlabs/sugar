@@ -291,8 +291,8 @@ def copy(jobject, mount_point):
 
     write(new_jobject)
 
-def mount(uri, options):
-    return dbus_helpers.mount(uri, options)
+def mount(uri, options, timeout=-1):
+    return dbus_helpers.mount(uri, options, timeout=timeout)
 
 def unmount(mount_point_id):
     dbus_helpers.unmount(mount_point_id)
