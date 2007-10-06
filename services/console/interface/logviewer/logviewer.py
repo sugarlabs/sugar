@@ -20,15 +20,16 @@
 import os
 
 import pygtk
-pygtk.require('2.0')
 import gtk
 import gobject
 import pango
+import gnomevfs
 
 from sugar import env
 
 class MultiLogView(gtk.VBox):
     def __init__(self, path, extra_files):
+        self._logs_path = path
         self._active_log = None
         self._extra_files = extra_files
 
@@ -36,7 +37,7 @@ class MultiLogView(gtk.VBox):
         self._tv_menu = gtk.TreeView()
         self._tv_menu.connect('cursor-changed', self._load_log)
         self._tv_menu.set_rules_hint(True)
-        
+
         # Set width
         box_width = gtk.gdk.screen_width() * 80 / 100
         self._tv_menu.set_size_request(box_width*25/100, 0)
@@ -45,22 +46,43 @@ class MultiLogView(gtk.VBox):
         self._tv_menu.set_model(self._store_menu)
 
         self._add_column(self._tv_menu, 'Sugar logs', 0)
-        self._logs_path = os.path.join(env.get_profile_path(), 'logs')
-        self._activity = {}
+        self._logs = {}
 
         # Activities menu
         self.hbox = gtk.HBox(False, 3)
         self.hbox.pack_start(self._tv_menu, True, True, 0)
-        
+
         # Activity log, set width
         self._view = LogView()
         self._view.set_size_request(box_width*75/100, 0)
-        
+
         self.hbox.pack_start(self._view, True, True, 0)		
         self.hbox.show_all()
-        
-        gobject.timeout_add(1000, self._update)
-    
+        self._configure_watcher()
+        self._create_log_view()
+
+    def _configure_watcher(self):
+        # Setting where gnomeVFS will be watching
+        gnomevfs.monitor_add('file://' + self._logs_path,
+                             gnomevfs.MONITOR_DIRECTORY,
+                             self._log_file_changed_cb)
+
+        for f in self._extra_files:
+            gnomevfs.monitor_add('file://' + f,
+                             gnomevfs.MONITOR_FILE,
+                             self._log_file_changed_cb)
+
+    def _log_file_changed_cb(self, monitor_uri, info_uri, event):
+        path = info_uri.split('file://')[-1]
+        filename = self._get_filename_from_path(path)
+
+        if event == gnomevfs.MONITOR_EVENT_CHANGED:
+            self._logs[filename].update()
+        elif event == gnomevfs.MONITOR_EVENT_DELETED:
+            self._delete_log_file_view(filename)
+        elif event == gnomevfs.MONITOR_EVENT_CREATED:
+            self._add_log_file(path)
+
     # Load the log information in View (textview)
     def _load_log(self, treeview):
         treeselection = treeview.get_selection()
@@ -70,11 +92,11 @@ class MultiLogView(gtk.VBox):
         act_log = self._store_menu.get_value(iter, 0)
 
         # Set buffer and scroll down
-        self._view.textview.set_buffer(self._activity[act_log])
-        self._view.textview.scroll_to_mark(self._activity[act_log].get_insert(), 0);
+        self._view.textview.set_buffer(self._logs[act_log])
+        self._view.textview.scroll_to_mark(self._logs[act_log].get_insert(), 0);
         self._active_log = act_log
 
-    def _update(self):
+    def _create_log_view(self):
         # Searching log files
         for logfile in os.listdir(self._logs_path):
             full_log_path = os.path.join(self._logs_path, logfile)
@@ -84,6 +106,10 @@ class MultiLogView(gtk.VBox):
             self._add_log_file(ext)
 
         return True
+
+    def _delete_log_file_view(self, logkey):
+        self._store_menu.remove(self._logs[logkey].iter)
+        del self._logs[logkey]
 
     def _get_filename_from_path(self, path):
         return path.split('/')[-1]
@@ -98,13 +124,13 @@ class MultiLogView(gtk.VBox):
 
         logfile = self._get_filename_from_path(path)
 
-        if not self._activity.has_key(logfile):
-            self._add_activity(logfile)
-            model = LogBuffer(path)
-            self._activity[logfile] = model
+        if not self._logs.has_key(logfile):
+            iter = self._add_log_row(logfile)
+            model = LogBuffer(path, iter)
+            self._logs[logfile] = model
 
-        self._activity[logfile].update()
-        written = self._activity[logfile]._written
+        self._logs[logfile].update()
+        written = self._logs[logfile]._written
 
         # Load the first iter
         if self._active_log == None:
@@ -114,11 +140,11 @@ class MultiLogView(gtk.VBox):
             self._load_log(self._tv_menu)
 
         if written > 0 and self._active_log == logfile:
-            self._view.textview.scroll_to_mark(self._activity[logfile].get_insert(), 0)
+            self._view.textview.scroll_to_mark(self._logs[logfile].get_insert(), 0)
 
 
-    def _add_activity(self, name):
-        self._insert_row(self._store_menu, None, name)
+    def _add_log_row(self, name):
+        return self._insert_row(self._store_menu, None, name)
         
     # Add a new column to the main treeview, (code from Memphis)
     def _add_column(self, treeview, column_name, index):
@@ -141,11 +167,12 @@ class MultiLogView(gtk.VBox):
         return iter
 
 class LogBuffer(gtk.TextBuffer):
-    def __init__(self, logfile):
+    def __init__(self, logfile, iter=None):
         gtk.TextBuffer.__init__(self)
 
         self._logfile = logfile
         self._pos = 0
+        self.iter = iter
         self.update()
 
     def update(self):
@@ -186,21 +213,14 @@ class LogView(gtk.ScrolledWindow):
 
 class Interface:
     def __init__(self):
-        path = None
-        xserver_logfile = self._get_xserver_logfile_path()
-        
-        # Aditional files to watch in logviewer
+        # Main path to watch: ~/.sugar/someuser/logs...
+        main_path = os.path.join(env.get_profile_path(), 'logs')
+
+        # extra files to watch in logviewer
         ext_files = []
-        ext_files.append(xserver_logfile)
+        ext_files.append("/var/log/Xorg.0.log")
         ext_files.append("/var/log/syslog")
         ext_files.append("/var/log/messages")
 
-        viewer = MultiLogView(path, ext_files)
+        viewer = MultiLogView(main_path, ext_files)
         self.widget = viewer.hbox
-
-    # Get the Xorg log file path, we have two ways to get the path: do a system
-    # call and exec a 'xset -q' or just read directly the file that we know 
-    # always be the right one for a XO machine...
-    def _get_xserver_logfile_path(self):
-        path = "/var/log/Xorg.0.log"
-        return path
