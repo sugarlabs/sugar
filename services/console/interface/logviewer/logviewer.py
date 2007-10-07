@@ -61,6 +61,7 @@ class MultiLogView(gtk.VBox):
         self._configure_watcher()
         self._create_log_view()
 
+
     def _configure_watcher(self):
         # Setting where gnomeVFS will be watching
         gnomevfs.monitor_add('file://' + self._logs_path,
@@ -93,7 +94,7 @@ class MultiLogView(gtk.VBox):
 
         # Set buffer and scroll down
         self._view.textview.set_buffer(self._logs[act_log])
-        self._view.textview.scroll_to_mark(self._logs[act_log].get_insert(), 0);
+        self._view.textview.scroll_to_mark(self._logs[act_log].get_insert(), 0)
         self._active_log = act_log
 
     def _create_log_view(self):
@@ -176,18 +177,19 @@ class LogBuffer(gtk.TextBuffer):
         self.update()
 
     def update(self):
-        f = open(self._logfile, 'r')
+        try:
+            f = open(self._logfile, 'r')
+            init_pos = self._pos
 
-        init_pos = self._pos
-    
-        f.seek(self._pos)
-        self.insert(self.get_end_iter(), f.read())
-        self._pos = f.tell()
-    
-        f.close()
-    
-        self._written = (self._pos - init_pos)
-        return True
+            f.seek(self._pos)
+            self.insert(self.get_end_iter(), f.read())
+            self._pos = f.tell()
+            f.close()
+
+            self._written = (self._pos - init_pos)
+        except:
+            self.insert(self.get_end_iter(), "Console error: can't open the file\n")
+            self._written = 0
 
 class LogView(gtk.ScrolledWindow):
     def __init__(self):
