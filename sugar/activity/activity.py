@@ -479,10 +479,7 @@ class Activity(Window, gtk.Container):
             self.metadata['buddies_id'] = json.write(buddies_dict.keys())
             self.metadata['buddies'] = json.write(self._get_buddies())
 
-        if self._preview is None:
-            self.metadata['preview'] = ''
-        else:
-            self.metadata['preview'] = dbus.ByteArray(self._preview)
+        self.metadata['preview'] = ''
 
         try:
             if self._jobject.file_path:

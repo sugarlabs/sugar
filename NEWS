@@ -1,3 +1,5 @@
+* Temporary disable thumbnails. (marco)
+
 Snapshot c74013db1f
 
 * Increase mount timeout to work around jffs2 issues. (marco)
