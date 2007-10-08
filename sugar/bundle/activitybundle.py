@@ -26,8 +26,6 @@ from sugar.bundle.bundle import Bundle, MalformedBundleException
 from sugar import activity
 from sugar import env
 
-_PYTHON_FACTORY='sugar-activity-factory'
-
 class ActivityBundle(Bundle):
     """A Sugar activity bundle
     
@@ -81,6 +79,7 @@ class ActivityBundle(Bundle):
             raise MalformedBundleException(
                 'Activity bundle %s does not specify a name' % self._path)
 
+        # FIXME class is deprecated
         if cp.has_option(section, 'class'):
             self.activity_class = cp.get(section, 'class')
         elif cp.has_option(section, 'exec'):
@@ -181,12 +180,9 @@ class ActivityBundle(Bundle):
     def get_command(self):
         """Get the command to execute to launch the activity factory"""
         if self.bundle_exec:
-            command = os.path.join(self._path, self.bundle_exec)
-            command = command.replace('$SUGAR_BUNDLE_PATH', self._path)
-            command = os.path.expandvars(command)
+            command = os.path.expandvars(self.bundle_exec)
         else:
-            command = '%s --bundle-path="%s"' % (
-                  env.get_bin_path(_PYTHON_FACTORY), self._path)
+            command = 'sugar-activity ' + self.activity_class
 
         return command
 

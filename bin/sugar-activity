@@ -16,67 +16,126 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import sys
 import os
-from ConfigParser import ConfigParser
+import sys
+import gettext
+from optparse import OptionParser
 
 import pygtk
 pygtk.require('2.0')
-
-from sugar import activity
-from sugar import env
-
-# Setup the environment so that we run inside the Sugar shell
-cp = ConfigParser()
-cp.read([env.get_profile_path("session.info")])
-os.environ['DBUS_SESSION_BUS_ADDRESS'] = cp.get('Session', 'dbus_address')
-os.environ['DISPLAY'] = cp.get('Session', 'display')
-del cp
-
 import gtk
 import dbus
 import dbus.glib
 
-from sugar.activity import activityfactory
-from sugar.activity import activityfactoryservice
+from sugar import logger
+from sugar.activity import activityhandle
+from sugar.bundle.activitybundle import ActivityBundle
+from sugar import _sugarext
 
-def _success_cb(handler, exit):
-    if exit:
+activity_instances = []
+
+def activity_destroy_cb(window):
+    activity_instances.remove(window)
+    if len(activity_instances) == 0:
         gtk.main_quit()
 
-def _error_cb(handler, err):
-    print err
-    gtk.main_quit()
+def create_activity_instance(constructor, handle):
+    activity = constructor(handle)
+    activity.connect('destroy', activity_destroy_cb)
+    activity.show()
 
-def print_help(self):
-    sys.exit(0)
-activity_info = None
+    activity_instances.append(activity)
 
-if len(sys.argv) > 1:
-    activities = activity.get_registry().find_activity(sys.argv[1])
-    if len(activities) > 0:
-        activity_info = activities[0]
+def get_single_process_path(service_name):
+    return '/' + service_name.replace('.', '/')
 
-if activity_info == None:
-    print 'Usage:\n\n' \
-          'sugar-activity [bundle]\n\n' \
-          'Bundle can be a part of the service name or of bundle name.'
-    sys.exit(0)
+class SingleProcess(dbus.service.Object):
+    def __init__(self, service_name, constructor):
+        self.constructor = constructor
+    
+        bus = dbus.SessionBus()
+        bus_name = dbus.service.BusName(service_name, bus = bus)
+        object_path = get_single_process_path(service_name)
+        dbus.service.Object.__init__(self, bus_name, object_path)
 
-bus = dbus.SessionBus()
-bus_object = bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
-try:
-    name = bus_object.GetNameOwner(
-        activity_info.service_name, dbus_interface='org.freedesktop.DBus')
-except  dbus.DBusException:
-    name = None
+    @dbus.service.method("org.laptop.SingleProcess", in_signature="a{ss}")
+    def create(self, handle_dict):
+        handle = activityhandle.create_from_dict(handle_dict)
+        create_activity_instance(self.constructor, handle)
 
-if name:
-    service_name = activity_info.service_name
-    print '%s is already running, creating a new instance.' % service_name
-else:
-    activityfactoryservice.run(activity_info.path)
+parser = OptionParser()
+parser.add_option("-a", "--activity-id", dest="activity_id",
+                  help="identifier of the activity instance")
+parser.add_option("-o", "--object-id", dest="object_id",
+                  help="identifier of the associated datastore object")
+parser.add_option("-u", "--uri", dest="uri",
+                  help="URI to load")
+parser.add_option('-s', '--single-process', dest='single_process',
+                  action='store_true',
+                  help='start all the instances in the same process')
+(options, args) = parser.parse_args()
 
-activityfactory.create(activity_info.service_name)
+if 'SUGAR_BUNDLE_PATH' not in os.environ:
+    print 'SUGAR_BUNDLE_PATH is not defined in the environment.'
+    sys.exit(1)
+
+if len(args) == 0:
+    print 'A python class must be specified as first argument.'
+    sys.exit(1)    
+
+bundle_path = os.environ['SUGAR_BUNDLE_PATH']
+sys.path.append(bundle_path)
+
+bundle = ActivityBundle(bundle_path)
+
+logger.start(bundle.get_service_name())
+
+gettext.bindtextdomain(bundle.get_service_name(),
+                       bundle.get_locale_path())
+gettext.textdomain(bundle.get_service_name())
+
+gtk.icon_theme_get_default().append_search_path(bundle.get_icons_path())
+
+_sugarext.set_prgname(bundle.get_service_name())
+_sugarext.set_application_name(bundle.get_name())
+
+splitted_module = args[0].rsplit('.', 1)
+module_name = splitted_module[0]
+class_name = splitted_module[1]
+
+module = __import__(module_name)        
+for comp in module_name.split('.')[1:]:
+    module = getattr(module, comp)
+    if hasattr(module, 'start'):
+        module.start()
+constructor = getattr(module, class_name)
+
+handle = activityhandle.ActivityHandle(
+            activity_id=options.activity_id,
+            object_id=options.object_id, uri=options.uri)
+
+if options.single_process is True:
+    bus = dbus.SessionBus()
+    service_name = bundle.get_service_name()
+
+    bus_object = bus.get_object(
+            'org.freedesktop.DBus', '/org/freedesktop/DBus')
+    try:
+        name = bus_object.GetNameOwner(
+                service_name, dbus_interface='org.freedesktop.DBus')
+    except  dbus.DBusException:
+        name = None
+
+    if not name:
+        service = SingleProcess(service_name, constructor)
+    else:
+        single_process = bus.get_object(
+                service_name, get_single_process_path(service_name))
+        single_process.create(handle.get_dict())
+
+        print 'Created %s in a single process.' % service_name
+        sys.exit(0)
+
+create_activity_instance(constructor, handle)
 
 gtk.main()

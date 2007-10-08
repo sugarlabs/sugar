@@ -114,6 +114,7 @@ class ActivityRegistry(dbus.service.Object):
                 'icon': bundle.get_icon(),
                 'service_name': bundle.get_service_name(),
                 'path': bundle.get_path(),
+                'command': bundle.get_command(),
                 'show_launcher': bundle.get_show_launcher()}
 
     def _bundle_added_cb(self, bundle_registry, bundle):

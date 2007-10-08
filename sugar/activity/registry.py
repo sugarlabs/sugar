@@ -30,14 +30,16 @@ def _activity_info_from_dict(info_dict):
         return None
     return ActivityInfo(info_dict['name'], info_dict['icon'],
                         info_dict['service_name'], info_dict['path'],
-                        info_dict['show_launcher'])
+                        info_dict['show_launcher'], info_dict['command'])
 
 class ActivityInfo(object):
-    def __init__(self, name, icon, service_name, path, show_launcher):
+    def __init__(self, name, icon, service_name,
+                 path, show_launcher, command):
         self.name = name
         self.icon = icon
         self.service_name = service_name
         self.path = path
+        self.command = command
         self.show_launcher = show_launcher
 
 class ActivityRegistry(gobject.GObject):

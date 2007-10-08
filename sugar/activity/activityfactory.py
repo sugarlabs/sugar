@@ -17,6 +17,8 @@
 # Boston, MA 02111-1307, USA.
 
 import logging
+import subprocess
+import signal
 
 import dbus
 import gobject
@@ -24,10 +26,13 @@ import gtk
 
 from sugar.presence import presenceservice
 from sugar.activity.activityhandle import ActivityHandle
+from sugar.activity import registry
 from sugar.datastore import datastore
 from sugar import util
 
 import os
+
+signal.signal(signal.SIGCHLD, signal.SIG_IGN)
 
 # #3903 - this constant can be removed and assumed to be 1 when dbus-python
 # 0.82.3 is the only version used
@@ -148,11 +153,21 @@ class ActivityCreationHandler(gobject.GObject):
                     error_handler=self._notify_launch_error_handler)
 
         if not os.path.exists('/etc/olpc-security'):
-            handle = self._handle.get_dict() 
-            self._factory.create(dbus.Dictionary(handle, signature='ss'),
-                                 timeout=120 * DBUS_PYTHON_TIMEOUT_UNITS_PER_SECOND,
-                                 reply_handler=self._no_reply_handler,
-                                 error_handler=self._create_error_handler)
+            activity_registry = registry.get_registry()
+            activity = activity_registry.get_activity(self._service_name)
+            if activity:
+                env = os.environ.copy()
+                env['SUGAR_BUNDLE_PATH'] = activity.path
+
+                command = activity.command
+                if self._handle.activity_id is not None:
+                    command += ' -a %s' % self._handle.activity_id
+                if self._handle.object_id is not None:
+                    command += ' -o %s' % self._handle.object_id
+                if self._handle.uri is not None:
+                    command += ' -u %s' % self._handle.uri
+
+                process = subprocess.Popen(command, env=env, shell=True)
         else:
             system_bus = dbus.SystemBus()
             factory = system_bus.get_object(_RAINBOW_SERVICE_NAME,
