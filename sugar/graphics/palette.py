@@ -257,7 +257,7 @@ class Palette(gtk.Window):
 
     def do_expose_event(self, event):
         # We want to draw a border with a beautiful gap
-        if self._invoker.has_rectangle_gap():
+        if self._invoker is not None and self._invoker.has_rectangle_gap():
             invoker = self._invoker.get_rect()
             palette = self.get_rect()
 
