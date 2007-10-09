@@ -73,53 +73,6 @@ def validate_activity_id(actid):
         return False
     return True
 
-class _ServiceParser(ConfigParser):
-    def optionxform(self, option):
-        return option
-
-def write_service(name, bin, path):
-    """Write a D-BUS service definition file 
-    
-    These are written by the bundleregistry when 
-    a new activity is registered.  They bind a 
-    D-BUS bus-name with an executable which is 
-    to provide the named service.
-    
-    name -- D-BUS service name, must be a valid 
-        filename/D-BUS name
-    bin -- executable providing named service 
-    path -- directory into which to write the 
-        name.service file
-    
-    The service files themselves are written using 
-    the _ServiceParser class, which is a subclass 
-    of the standard ConfigParser class.
-    """
-    service_cp = _ServiceParser()
-    section = 'D-BUS Service'    
-    service_cp.add_section(section)
-    service_cp.set(section, 'Name', name)
-    service_cp.set(section, 'Exec', bin)
-
-    dest_filename = os.path.join(path, name + '.service')
-    fileobject = open(dest_filename, 'w')
-    service_cp.write(fileobject)
-    fileobject.close()
-
-def delete_service(name, path):
-    """Delete a D-BUS service definition file 
-    
-    Deletes a D-BUS service file previously
-    created by write_service().
-    
-    name -- D-BUS service name, must be a valid 
-        filename/D-BUS name
-    path -- directory containing the name.service
-        file
-    """
-
-    os.remove(os.path.join(path, name + '.service'))
-
 def set_proc_title(title):
     """Sets the process title so ps and top show more
        descriptive names.  This does not modify argv[0]

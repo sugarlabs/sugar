@@ -44,38 +44,6 @@ def _load_mime_defaults():
 
     return defaults
 
-class _ServiceManager(object):
-    """Internal class responsible for creating dbus service files
-    
-    DBUS services are defined in files which bind a service name 
-    to the name of an executable which provides the service name.
-    
-    In Sugar, the service files are automatically generated from 
-    the activity registry (by this class).  When an activity's 
-    dbus launch service is requested, dbus will launch the 
-    specified executable in order to allow it to provide the 
-    requested activity-launching service.
-    
-    In the case of activities which provide a "class", instead of 
-    an "exec" attribute in their activity.info, the 
-    sugar-activity-factory script is used with an appropriate 
-    argument to service that bundle.
-    """
-    SERVICE_DIRECTORY = '~/.local/share/dbus-1/services'
-    def __init__(self):
-        service_dir = os.path.expanduser(self.SERVICE_DIRECTORY)
-        if not os.path.isdir(service_dir):
-            os.makedirs(service_dir)
-
-        self._path = service_dir
-
-    def add(self, bundle):
-        util.write_service(bundle.get_service_name(),
-                           bundle.get_command(), self._path)
-
-    def remove(self, bundle):
-        util.delete_service(bundle.get_service_name(), self._path)
-
 class BundleRegistry(gobject.GObject):
     """Service that tracks the available activity bundles"""
 
@@ -91,7 +59,6 @@ class BundleRegistry(gobject.GObject):
         
         self._bundles = []
         self._search_path = []
-        self._service_manager = _ServiceManager()
         self._mime_defaults = _load_mime_defaults()
 
     def get_bundle(self, service_name):
@@ -134,7 +101,6 @@ class BundleRegistry(gobject.GObject):
             return False
 
         self._bundles.append(bundle)
-        self._service_manager.add(bundle)
         self.emit('bundle-added', bundle)
         return True
 
@@ -142,7 +108,6 @@ class BundleRegistry(gobject.GObject):
         for bundle in self._bundles:
             if bundle.get_path() == bundle_path:
                 self._bundles.remove(bundle)
-                self._service_manager.remove(bundle)
                 self.emit('bundle-removed', bundle)
                 return True
         return False
