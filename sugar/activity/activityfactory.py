@@ -156,8 +156,11 @@ class ActivityCreationHandler(gobject.GObject):
             activity_registry = registry.get_registry()
             activity = activity_registry.get_activity(self._service_name)
             if activity:
+                bin_path = os.path.join(activity.path, 'bin')
+
                 env = os.environ.copy()
                 env['SUGAR_BUNDLE_PATH'] = activity.path
+                env['PATH'] = bin_path + ':' + env['PATH']
 
                 command = activity.command
                 if self._handle.activity_id is not None:
