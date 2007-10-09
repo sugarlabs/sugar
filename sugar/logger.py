@@ -38,6 +38,9 @@ def set_level(level):
         logging.getLogger('').setLevel(levels[level])
 
 def start(log_filename=None):
+    logging.basicConfig(level=logging.WARNING,
+                        format="%(created)f %(levelname)s %(message)s")
+
     if os.environ.has_key('SUGAR_LOGGER_LEVEL'):
         set_level(os.environ['SUGAR_LOGGER_LEVEL'])
 
