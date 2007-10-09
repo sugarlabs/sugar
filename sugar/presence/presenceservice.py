@@ -467,7 +467,7 @@ class PresenceService(gobject.GObject):
                 raise RuntimeError("Activity %s is already shared." %
                                    actid)
 
-        atype = activity.get_service_name()
+        atype = activity.get_bundle_id()
         name = activity.props.title
         self._ps.ShareActivity(actid, atype, name, properties,
                 reply_handler=lambda op: \

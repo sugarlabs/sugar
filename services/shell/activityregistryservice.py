@@ -70,9 +70,9 @@ class ActivityRegistry(dbus.service.Object):
 
     @dbus.service.method(_ACTIVITY_REGISTRY_IFACE,
                          in_signature='s', out_signature='a{sv}')
-    def GetActivity(self, service_name):
+    def GetActivity(self, bundle_id):
         registry = bundleregistry.get_registry()
-        bundle = registry.get_bundle(service_name)
+        bundle = registry.get_bundle(bundle_id)
         if not bundle:
             return {}
         
@@ -86,8 +86,8 @@ class ActivityRegistry(dbus.service.Object):
 
         for bundle in bundleregistry.get_registry():
             name = bundle.get_name().lower()
-            service_name = bundle.get_service_name().lower()
-            if name.find(key) != -1 or service_name.find(key) != -1:
+            bundle_id = bundle.get_bundle_id().lower()
+            if name.find(key) != -1 or bundle_id.find(key) != -1:
                 result.append(self._bundle_to_dict(bundle))
 
         return result
@@ -112,7 +112,7 @@ class ActivityRegistry(dbus.service.Object):
     def _bundle_to_dict(self, bundle):
         return {'name': bundle.get_name(),
                 'icon': bundle.get_icon(),
-                'service_name': bundle.get_service_name(),
+                'bundle_id': bundle.get_bundle_id(),
                 'path': bundle.get_path(),
                 'command': bundle.get_command(),
                 'show_launcher': bundle.get_show_launcher()}

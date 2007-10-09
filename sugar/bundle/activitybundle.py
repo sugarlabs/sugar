@@ -46,7 +46,7 @@ class ActivityBundle(Bundle):
         
         self._name = None
         self._icon = None
-        self._service_name = None
+        self._bundle_id = None
         self._mime_types = None
         self._show_launcher = True
         self._activity_version = 0
@@ -66,11 +66,14 @@ class ActivityBundle(Bundle):
 
         section = 'Activity'
 
-        if cp.has_option(section, 'service_name'):
-            self._service_name = cp.get(section, 'service_name')
+        if cp.has_option(section, 'bundle_id'):
+            self._bundle_id = cp.get(section, 'bundle_id')
+        # FIXME deprecated
+        elif cp.has_option(section, 'service_name'):
+            self._bundle_id = cp.get(section, 'service_name')
         else:
             raise MalformedBundleException(
-                'Activity bundle %s does not specify a service name' %
+                'Activity bundle %s does not specify a bundle id' %
                 self._path)
 
         if cp.has_option(section, 'name'):
@@ -155,9 +158,9 @@ class ActivityBundle(Bundle):
         """Get the activity user visible name."""
         return self._name
 
-    def get_service_name(self):
-        """Get the activity service name"""
-        return self._service_name
+    def get_bundle_id(self):
+        """Get the activity bundle id"""
+        return self._bundle_id
 
     # FIXME: this should return the icon data, not a filename, so that
     # we don't need to create a temp file in the zip case
@@ -196,7 +199,7 @@ class ActivityBundle(Bundle):
         return self._show_launcher
 
     def is_installed(self):
-        if activity.get_registry().get_activity(self._service_name):
+        if activity.get_registry().get_activity(self._bundle_id):
             return True
         else:
             return False
@@ -218,7 +221,7 @@ class ActivityBundle(Bundle):
             mime_pkg_dir = os.path.join(mime_dir, 'packages')
             if not os.path.isdir(mime_pkg_dir):
                 os.makedirs(mime_pkg_dir)
-            installed_mime_path = os.path.join(mime_pkg_dir, '%s.xml' % self._service_name)
+            installed_mime_path = os.path.join(mime_pkg_dir, '%s.xml' % self._bundle_id)
             os.symlink(mime_path, installed_mime_path)
             os.spawnlp(os.P_WAIT, 'update-mime-database',
                        'update-mime-database', mime_dir)
@@ -259,7 +262,7 @@ class ActivityBundle(Bundle):
         xdg_data_home = os.getenv('XDG_DATA_HOME', os.path.expanduser('~/.local/share'))
 
         mime_dir = os.path.join(xdg_data_home, 'mime')
-        installed_mime_path = os.path.join(mime_dir, 'packages', '%s.xml' % self._service_name)
+        installed_mime_path = os.path.join(mime_dir, 'packages', '%s.xml' % self._bundle_id)
         if os.path.exists(installed_mime_path):
             os.remove(installed_mime_path)
             os.spawnlp(os.P_WAIT, 'update-mime-database',

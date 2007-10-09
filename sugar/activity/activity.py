@@ -299,7 +299,7 @@ class Activity(Window, gtk.Container):
             self._jobject.metadata['title'] = _('%s Activity') % get_bundle_name()
             self.set_title(self._jobject.metadata['title'])
             self._jobject.metadata['title_set_by_user'] = '0'
-            self._jobject.metadata['activity'] = self.get_service_name()
+            self._jobject.metadata['activity'] = self.get_bundle_id()
             self._jobject.metadata['activity_id'] = self.get_id()
             self._jobject.metadata['keep'] = '0'
             self._jobject.metadata['preview'] = ''
@@ -362,7 +362,7 @@ class Activity(Window, gtk.Container):
     def get_id(self):
         return self._activity_id
 
-    def get_service_name(self):
+    def get_bundle_id(self):
         return _sugarext.get_prgname()
 
     def set_canvas(self, canvas):
@@ -594,7 +594,7 @@ class Activity(Window, gtk.Container):
         self._pservice.share_activity(self, private=private)
 
     def _realize_cb(self, window):
-        wm.set_bundle_id(window.window, self.get_service_name())
+        wm.set_bundle_id(window.window, self.get_bundle_id())
         wm.set_activity_id(window.window, self._activity_id)
 
     def _delete_event_cb(self, window, event):

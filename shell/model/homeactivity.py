@@ -156,9 +156,9 @@ class HomeActivity(gobject.GObject):
         return self._window
 
     def get_type(self):
-        """Retrieve activity_info's "service_name" for future reference"""
+        """Retrieve the activity bundle id for future reference"""
         if self._activity_info:
-            return self._activity_info.service_name
+            return self._activity_info.bundle_id
         else:
             return None
 

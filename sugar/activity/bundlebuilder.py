@@ -107,9 +107,9 @@ def _delete_backups(arg, dirname, names):
         if name.endswith('~') or name.endswith('pyc'):
             os.remove(os.path.join(dirname, name))
 
-def _get_service_name():
+def _get_bundle_id():
     bundle = ActivityBundle(_get_source_path())
-    return bundle.get_service_name()
+    return bundle.get_bundle_id()
 
 def cmd_help():
     print 'Usage: \n\
@@ -162,7 +162,7 @@ def _get_l10n_list(manifest):
     l10n_list = []
 
     for lang in _get_po_list(manifest).keys():
-        filename = _get_service_name() + '.mo'
+        filename = _get_bundle_id() + '.mo'
         l10n_list.append(os.path.join('locale', lang, 'LC_MESSAGES', filename))
         l10n_list.append(os.path.join('locale', lang, 'activity.linfo'))
 
@@ -256,7 +256,7 @@ def cmd_genl10n(bundle_name, manifest):
         if not os.path.isdir(mo_path):
             os.makedirs(mo_path)
 
-        mo_file = os.path.join(mo_path, "%s.mo" % _get_service_name())
+        mo_file = os.path.join(mo_path, "%s.mo" % _get_bundle_id())
         args = ["msgfmt", "--output-file=%s" % mo_file, file_name]
         retcode = subprocess.call(args)
         if retcode:

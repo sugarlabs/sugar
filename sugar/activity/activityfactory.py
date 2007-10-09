@@ -158,6 +158,7 @@ class ActivityCreationHandler(gobject.GObject):
                 env['PATH'] = bin_path + ':' + env['PATH']
 
                 command = activity.command
+                command += ' -b %s' % activity.bundle_id
                 if self._handle.activity_id is not None:
                     command += ' -a %s' % self._handle.activity_id
                 if self._handle.object_id is not None:
@@ -165,7 +166,8 @@ class ActivityCreationHandler(gobject.GObject):
                 if self._handle.uri is not None:
                     command += ' -u %s' % self._handle.uri
 
-                process = subprocess.Popen(command, env=env, shell=True)
+                process = subprocess.Popen(command, env=env, shell=True,
+                                           cwd=activity.path)
         else:
             system_bus = dbus.SystemBus()
             factory = system_bus.get_object(_RAINBOW_SERVICE_NAME,

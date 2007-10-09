@@ -91,9 +91,9 @@ class ActivitiesTray(hippo.CanvasBox):
 
         while activity_list:
             info = activity_list.pop()
-            name_to_activity[info.service_name] = info
+            name_to_activity[info.bundle_id] = info
 
-            if info.service_name in self._config:
+            if info.bundle_id in self._config:
                 known_activities.append(info)
             else:
                 unknown_activities.append(info)

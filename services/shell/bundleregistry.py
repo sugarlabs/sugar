@@ -61,10 +61,10 @@ class BundleRegistry(gobject.GObject):
         self._search_path = []
         self._mime_defaults = _load_mime_defaults()
 
-    def get_bundle(self, service_name):
+    def get_bundle(self, bundle_id):
         """Returns an bundle given his service name"""
         for bundle in self._bundles:
-            if bundle.get_service_name() == service_name:
+            if bundle.get_bundle_id() == bundle_id:
                 return bundle
         return None
 
@@ -116,7 +116,7 @@ class BundleRegistry(gobject.GObject):
         result = []
         for bundle in self._bundles:
             if bundle.get_mime_types() and mime_type in bundle.get_mime_types():
-                if self.get_default_for_type(mime_type) == bundle.get_service_name():
+                if self.get_default_for_type(mime_type) == bundle.get_bundle_id():
                     result.insert(0, bundle)
                 else:
                     result.append(bundle)

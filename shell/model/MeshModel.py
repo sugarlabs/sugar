@@ -39,8 +39,8 @@ class ActivityModel:
     def get_color(self):
         return XoColor(self.activity.props.color)
 
-    def get_service_name(self):
-        return self.bundle.service_name
+    def get_bundle_id(self):
+        return self.bundle.bundle_id
 
 class MeshModel(gobject.GObject):
     __gsignals__ = {

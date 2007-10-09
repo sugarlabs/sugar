@@ -47,7 +47,7 @@ class ActivityButton(TrayButton, gobject.GObject):
         self.setup_rollover_options()
 
     def get_bundle_id(self):
-        return self._activity_info.service_name
+        return self._activity_info.bundle_id
 
     def setup_rollover_options(self):
         palette = Palette(self._activity_info.name)

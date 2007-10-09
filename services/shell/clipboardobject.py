@@ -73,7 +73,7 @@ class ClipboardObject:
         registry = bundleregistry.get_registry()
         activities = registry.get_activities_for_type(self.get_mime_type())
         if activities:
-            return [activity.get_service_name() for activity in activities]
+            return [activity.get_bundle_id() for activity in activities]
         else:
             return ''
 

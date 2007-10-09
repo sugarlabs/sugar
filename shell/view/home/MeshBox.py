@@ -274,7 +274,7 @@ class ActivityView(hippo.CanvasBox):
         del self._icons[key]
 
     def _clicked_cb(self, item):
-        bundle_id = self._model.get_service_name()
+        bundle_id = self._model.get_bundle_id()
         self._shell.join_activity(bundle_id, self._model.get_id())
 
 class MeshBox(hippo.CanvasBox):

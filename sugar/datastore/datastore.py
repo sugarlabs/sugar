@@ -129,7 +129,7 @@ class DSObject(object):
         if mime_type:
             activities_info = activity.get_registry().get_activities_for_type(mime_type)
             for activity_info in activities_info:
-                if activity_info.service_name != self.metadata['activity']:
+                if activity_info.bundle_id != self.metadata['activity']:
                     activities.append(activity_info)
 
         return activities
@@ -155,7 +155,7 @@ class DSObject(object):
             if not bundle.is_installed():
                 bundle.install()
 
-            activityfactory.create(bundle.get_service_name())
+            activityfactory.create(bundle.get_bundle_id())
         else:
             if not self.get_activities() and service_name is None:
                 logging.warning('No activity can open this object.')
