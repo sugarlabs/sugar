@@ -18,7 +18,7 @@
 
 import logging
 import subprocess
-import signal
+import time
 
 import dbus
 import gobject
@@ -28,12 +28,10 @@ from sugar.presence import presenceservice
 from sugar.activity.activityhandle import ActivityHandle
 from sugar.activity import registry
 from sugar.datastore import datastore
-from sugar import logger
 from sugar import util
+from sugar import env
 
 import os
-
-signal.signal(signal.SIGCHLD, signal.SIG_IGN)
 
 # #3903 - this constant can be removed and assumed to be 1 when dbus-python
 # 0.82.3 is the only version used
@@ -103,9 +101,9 @@ def get_command(activity, activity_id=None, object_id=None, uri=None):
     return command
 
 def open_log_file(activity, activity_id):
-    name = '%s-%s.log' % (activity.bundle_id, activity_id[:5])
-    path = os.path.join(logger.get_logs_dir(), name)
-    return open(path, 'w')
+    timestamp = str(int(time.time()))
+    name = '%s-%s.log' % (activity.bundle_id, timestamp)
+    return open(env.get_logs_path(name), 'w')
 
 class ActivityCreationHandler(gobject.GObject):
     """Sugar-side activity creation interface

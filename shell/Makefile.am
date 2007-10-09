@@ -3,7 +3,8 @@ SUBDIRS = hardware model view intro
 bin_SCRIPTS = sugar-shell
 
 sugardir = $(pkgdatadir)/shell
-sugar_PYTHON =				\
+sugar_PYTHON =			\
+	logsmanager.py		\
 	shellservice.py
 
 confdir = $(pkgdatadir)/shell

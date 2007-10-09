@@ -19,6 +19,7 @@ import sys
 import os
 from ConfigParser import ConfigParser
 import gettext
+import signal
 
 import pygtk
 pygtk.require('2.0')
@@ -37,6 +38,7 @@ from model.shellmodel import ShellModel
 from shellservice import ShellService
 from hardware import hardwaremanager
 from intro import intro
+import logsmanager
 
 def _start_matchbox():
     cmd = ['matchbox-window-manager']
@@ -94,7 +96,7 @@ def _shell_started_cb():
 def main():
     gobject.idle_add(_shell_started_cb)
 
-    logger.setup_logs_dir()
+    logsmanager.setup()
     logger.start('shell')
 
     _save_session_info()
@@ -109,6 +111,9 @@ def main():
         win = intro.IntroWindow()
         win.show_all()
         gtk.main()
+
+    # FIXME avoid zombie activity processes
+    signal.signal(signal.SIGCHLD, signal.SIG_IGN)
 
     if os.environ.has_key("SUGAR_TP_DEBUG"):
         # Allow the user time to start up telepathy connection managers

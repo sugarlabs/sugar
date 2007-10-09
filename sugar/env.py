@@ -64,6 +64,13 @@ def get_profile_path(path=None):
     else:
         return base
 
+def get_logs_path(path=None):
+    base = get_profile_path('logs')
+    if path != None:
+        return os.path.join(base, path)
+    else:
+        return base
+
 def get_user_activities_path():
     return os.path.expanduser('~/Activities')
 
