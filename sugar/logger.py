@@ -1,5 +1,4 @@
-"""Logging module configuration for Sugar"""
-# Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2007 Red Hat, Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -21,37 +20,8 @@ import os
 import logging
 import time
 
-_MAX_BACKUP_DIRS = 3
-
-def setup_logs_dir():
-    logs_dir = get_logs_dir()
-    if not os.path.isdir(logs_dir):
-        os.makedirs(logs_dir)
-
-    backup_logs = []
-    backup_dirs = []
-    for f in os.listdir(logs_dir):
-        path = os.path.join(logs_dir, f)
-        if os.path.isfile(path):
-            backup_logs.append(f)
-        elif os.path.isdir(path):
-            backup_dirs.append(path)    
-
-    if len(backup_dirs) > _MAX_BACKUP_DIRS:
-        backup_dirs.sort()
-        root = backup_dirs[0]
-        for f in os.listdir(root):
-            os.remove(os.path.join(root, f))
-        os.rmdir(root)
-
-    if len(backup_logs) > 0:
-        name = str(int(time.time()))
-        backup_dir = os.path.join(logs_dir, name)
-        os.mkdir(backup_dir)
-        for log in backup_logs:
-            source_path = os.path.join(logs_dir, log)
-            dest_path = os.path.join(backup_dir, log)
-            os.rename(source_path, dest_path)
+# Let's keep this self contained so that it can be easily
+# pasted in external sugar service like the datastore.
 
 def get_logs_dir():
     profile = os.environ.get('SUGAR_PROFILE', 'default')
@@ -67,7 +37,7 @@ def set_level(level):
     if levels.has_key(level):
         logging.getLogger('').setLevel(levels[level])
 
-def start(log_filename=None, redirect_io=False):
+def start(log_filename=None):
     if os.environ.has_key('SUGAR_LOGGER_LEVEL'):
         set_level(os.environ['SUGAR_LOGGER_LEVEL'])
 
@@ -75,9 +45,8 @@ def start(log_filename=None, redirect_io=False):
         log_path = os.path.join(get_logs_dir(), log_filename + '.log')
         log_file = open(log_path, 'w')
 
-        handler = logging.StreamHandler(log_file)
+        handler = logging.StreamHandler()
         logging.getLogger('').addHandler(handler)
 
-        if redirect_io:
-            os.dup2(log_file.fileno(), sys.stdout.fileno())
-            os.dup2(log_file.fileno(), sys.stderr.fileno())
+        os.dup2(log_file.fileno(), sys.stdout.fileno())
+        os.dup2(log_file.fileno(), sys.stderr.fileno())
