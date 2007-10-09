@@ -28,6 +28,7 @@ from sugar.presence import presenceservice
 from sugar.activity.activityhandle import ActivityHandle
 from sugar.activity import registry
 from sugar.datastore import datastore
+from sugar import logger
 from sugar import util
 
 import os
@@ -100,6 +101,11 @@ def get_command(activity, activity_id=None, object_id=None, uri=None):
         command += ' -u %s' % uri
 
     return command
+
+def open_log_file(activity, activity_id):
+    name = '%s-%s.log' % (activity.bundle_id, activity_id[:5])
+    path = os.path.join(logger.get_logs_dir(), name)
+    return open(path, 'w')
 
 class ActivityCreationHandler(gobject.GObject):
     """Sugar-side activity creation interface
@@ -176,12 +182,13 @@ class ActivityCreationHandler(gobject.GObject):
             activity = activity_registry.get_activity(self._service_name)
             if activity:
                 env = get_environment(activity)
-                command = get_command(activity,
-                                      self._handle.activity_id,
+                log_file = open_log_file(activity, self._handle.activity_id)
+                command = get_command(activity, self._handle.activity_id,
                                       self._handle.object_id,
                                       self._handle.uri)
                 process = subprocess.Popen(command, env=env, shell=True,
-                                           cwd=activity.path)
+                                           cwd=activity.path, stdout=log_file,
+                                           stderr=log_file)
         else:
             system_bus = dbus.SystemBus()
             factory = system_bus.get_object(_RAINBOW_SERVICE_NAME,

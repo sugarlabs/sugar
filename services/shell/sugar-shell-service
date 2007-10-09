@@ -22,9 +22,6 @@ import sys
 import os
 import logging
 
-from sugar import logger
-logger.start('shellservice')
-
 import gobject
 import dbus.glib
  

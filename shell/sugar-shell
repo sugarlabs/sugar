@@ -26,12 +26,9 @@ import gtk
 import gobject
 import gst
 
-from sugar import logger
 from sugar import env
+from sugar import logger
 from sugar.profile import get_profile
-
-logger.cleanup()
-logger.start('shell')
 
 sys.path.insert(0, env.get_shell_path())
 
@@ -96,6 +93,9 @@ def _shell_started_cb():
 
 def main():
     gobject.idle_add(_shell_started_cb)
+
+    logger.setup_logs_dir()
+    logger.start('shell')
 
     _save_session_info()
     _start_matchbox()

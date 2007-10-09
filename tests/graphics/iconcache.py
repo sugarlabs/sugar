@@ -23,9 +23,6 @@ import gtk
 
 from sugar.graphics.icon import Icon
 from sugar.graphics.xocolor import XoColor
-from sugar import logger
-
-logger.start('iconcache')
 
 import common
 

@@ -25,12 +25,13 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import dbus
+import dbus.service
 import dbus.glib
 
-from sugar import logger
 from sugar.activity import activityhandle
 from sugar.bundle.activitybundle import ActivityBundle
 from sugar import _sugarext
+from sugar import logger
 
 activity_instances = []
 
@@ -80,6 +81,8 @@ parser.add_option('-s', '--single-process', dest='single_process',
                   help='start all the instances in the same process')
 (options, args) = parser.parse_args()
 
+logger.start()
+
 if 'SUGAR_BUNDLE_PATH' not in os.environ:
     print 'SUGAR_BUNDLE_PATH is not defined in the environment.'
     sys.exit(1)
@@ -92,8 +95,6 @@ bundle_path = os.environ['SUGAR_BUNDLE_PATH']
 sys.path.append(bundle_path)
 
 bundle = ActivityBundle(bundle_path)
-
-logger.start(bundle.get_bundle_id())
 
 gettext.bindtextdomain(bundle.get_bundle_id(),
                        bundle.get_locale_path())
