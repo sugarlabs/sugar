@@ -4,6 +4,6 @@ bin_SCRIPTS = 			\
 	sugar-install-bundle	\
 	sugar-launch
 
-EXTRA_DIST = sugar.in
+EXTRA_DIST = $(bin_SCRIPTS) sugar.in
 
 DISTCLEANFILES = sugar
