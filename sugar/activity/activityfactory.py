@@ -77,6 +77,30 @@ def create_activity_id():
             return act_id
     raise RuntimeError("Cannot generate unique activity id.")
 
+def get_environment(activity):
+    environ = os.environ.copy()
+
+    bin_path = os.path.join(activity.path, 'bin')
+    environ['SUGAR_BUNDLE_PATH'] = activity.path
+    environ['PATH'] = bin_path + ':' + environ['PATH']
+
+    return environ
+
+def get_command(activity, activity_id=None, object_id=None, uri=None):
+    if not activity_id:
+        activity_id = create_activity_id()
+
+    command = activity.command
+    command += ' -b %s' % activity.bundle_id
+    command += ' -a %s' % activity_id
+
+    if object_id is not None:
+        command += ' -o %s' % object_id
+    if uri is not None:
+        command += ' -u %s' % uri
+
+    return command
+
 class ActivityCreationHandler(gobject.GObject):
     """Sugar-side activity creation interface
     
@@ -151,21 +175,11 @@ class ActivityCreationHandler(gobject.GObject):
             activity_registry = registry.get_registry()
             activity = activity_registry.get_activity(self._service_name)
             if activity:
-                bin_path = os.path.join(activity.path, 'bin')
-
-                env = os.environ.copy()
-                env['SUGAR_BUNDLE_PATH'] = activity.path
-                env['PATH'] = bin_path + ':' + env['PATH']
-
-                command = activity.command
-                command += ' -b %s' % activity.bundle_id
-                if self._handle.activity_id is not None:
-                    command += ' -a %s' % self._handle.activity_id
-                if self._handle.object_id is not None:
-                    command += ' -o %s' % self._handle.object_id
-                if self._handle.uri is not None:
-                    command += ' -u %s' % self._handle.uri
-
+                env = get_environment(activity)
+                command = get_command(activity,
+                                      self._handle.activity_id,
+                                      self._handle.object_id,
+                                      self._handle.uri)
                 process = subprocess.Popen(command, env=env, shell=True,
                                            cwd=activity.path)
         else:

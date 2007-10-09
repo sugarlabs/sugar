@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright (C) 2006, Red Hat, Inc.
+# Copyright (C) 2007, Red Hat, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,14 +16,26 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import os
 import sys
+from optparse import OptionParser
 
-import pygtk
-pygtk.require('2.0')
-import gtk
+from sugar.activity import activityfactory
+from sugar.activity.registry import get_registry
 
-from sugar.activity import activityfactoryservice
+usage = "usage: %prog [options] activity"
+parser = OptionParser(usage)
+(options, args) = parser.parse_args()
 
-activityfactoryservice.run_with_args(sys.argv)
+if len(args) == 0:
+    print 'You need to specify the activity name or part of it.'
+    sys.exit(1)
 
-gtk.main()
+registry = get_registry()
+activities = registry.find_activity(args[0])
+if len(activities) == 0:
+    print 'Activity not found.'
+
+activity = activities[0]
+args = activityfactory.get_command(activity).split(' ')
+os.execvpe(args[0], args, activityfactory.get_environment(activity))
