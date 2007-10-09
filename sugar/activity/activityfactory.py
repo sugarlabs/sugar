@@ -120,11 +120,6 @@ class ActivityCreationHandler(gobject.GObject):
         bus_object = bus.get_object(_SHELL_SERVICE, _SHELL_PATH)
         self._shell = dbus.Interface(bus_object, _SHELL_IFACE)
 
-        object_path = '/' + service_name.replace('.', '/')
-        proxy_obj = bus.get_object(service_name, object_path,
-                                   follow_name_owner_changes=True)
-        self._factory = dbus.Interface(proxy_obj, _ACTIVITY_FACTORY_INTERFACE)
-
         if handle.activity_id is not None and \
            handle.object_id is None:
             datastore = dbus.Interface(
