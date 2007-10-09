@@ -144,11 +144,11 @@ class DSObject(object):
     def is_bundle(self):
         return self.is_activity_bundle() or self.is_content_bundle()
 
-    def resume(self, service_name=None):
+    def resume(self, bundle_id=None):
         from sugar.activity import activityfactory
 
         if self.is_activity_bundle():
-            if service_name is not None:
+            if bundle_id is not None:
                 raise ValueError('Object is a bundle, cannot be resumed as an activity.')
 
             bundle = ActivityBundle(self.file_path)
@@ -157,11 +157,11 @@ class DSObject(object):
 
             activityfactory.create(bundle.get_bundle_id())
         else:
-            if not self.get_activities() and service_name is None:
+            if not self.get_activities() and bundle_id is None:
                 logging.warning('No activity can open this object.')
                 return
-            if service_name is None:
-                service_name = self.get_activities()[0].service_name
+            if bundle_id is None:
+                bundle_id = self.get_activities()[0].bundle_id
 
             activity_id = self.metadata['activity_id']
             object_id = self.object_id
@@ -169,9 +169,9 @@ class DSObject(object):
             if activity_id:
                 handle = ActivityHandle(object_id=object_id,
                                         activity_id=activity_id)
-                activityfactory.create(service_name, handle)
+                activityfactory.create(bundle_id, handle)
             else:
-                activityfactory.create_with_object_id(service_name, object_id)
+                activityfactory.create_with_object_id(bundle_id, object_id)
 
     def destroy(self):
         if self._destroyed:
