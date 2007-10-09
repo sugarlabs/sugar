@@ -1,3 +1,6 @@
+* Activity launching refactoring. (marco)
+* Improved logs. (marco)
+
 Snapshot 143f9ac9c6
 
 * Save activity previews to the datastore as binary png images. (tomeu)
