@@ -18,7 +18,6 @@
 
 import logging
 import subprocess
-import time
 
 import dbus
 import gobject
@@ -101,9 +100,10 @@ def get_command(activity, activity_id=None, object_id=None, uri=None):
     return command
 
 def open_log_file(activity, activity_id):
-    timestamp = str(int(time.time()))
-    name = '%s-%s.log' % (activity.bundle_id, timestamp)
-    return open(env.get_logs_path(name), 'w')
+    for i in range(1, 100):
+        path = env.get_logs_path('%s-%s.log' % (activity.bundle_id, i))
+        if not os.path.exists(path):
+            return open(path, 'w')
 
 class ActivityCreationHandler(gobject.GObject):
     """Sugar-side activity creation interface

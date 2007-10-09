@@ -48,8 +48,5 @@ def start(log_filename=None):
         log_path = os.path.join(get_logs_dir(), log_filename + '.log')
         log_file = open(log_path, 'w')
 
-        handler = logging.StreamHandler()
-        logging.getLogger('').addHandler(handler)
-
         os.dup2(log_file.fileno(), sys.stdout.fileno())
         os.dup2(log_file.fileno(), sys.stderr.fileno())
