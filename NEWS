@@ -1,3 +1,5 @@
+* Put toolbars into event boxes so X fills the background correctly (benzea)
+
 Snapshot 6c7c6a503b
 
 * Activity launching refactoring. (marco)

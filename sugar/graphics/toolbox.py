@@ -58,28 +58,23 @@ class Toolbox(gtk.VBox):
     def _notify_page_cb(self, notebook, pspec):
         self.emit('current-toolbar-changed', notebook.props.page)
         
-    def _toolbar_box_expose_cb(self, widget, event):
-        widget.style.paint_flat_box(widget.window,
-                                    gtk.STATE_NORMAL, gtk.SHADOW_NONE,
-                                    event.area, widget, 'toolbox',
-                                    widget.allocation.x,
-                                    widget.allocation.y,
-                                    widget.allocation.width,
-                                    widget.allocation.height)
-        return False
-        
     def add_toolbar(self, name, toolbar):
         label = gtk.Label(name)
         label.set_size_request(style.TOOLBOX_TAB_LABEL_WIDTH, -1)
         label.set_alignment(0.0, 0.5)
 
-        toolbar_box = gtk.HBox()
-        toolbar_box.pack_start(toolbar, True, True,
-                               style.TOOLBOX_HORIZONTAL_PADDING)
-        toolbar_box.connect('expose-event', self._toolbar_box_expose_cb)
+        event_box = gtk.EventBox()
+        
+        alignment = gtk.Alignment(0.0, 0.0, 1.0, 1.0)
+        alignment.set_padding(0, 0, style.TOOLBOX_HORIZONTAL_PADDING,
+                              style.TOOLBOX_HORIZONTAL_PADDING)
 
-        self._notebook.append_page(toolbar_box, label)
-        toolbar_box.show()
+        alignment.add(toolbar)
+        event_box.add(alignment)
+        alignment.show()
+        event_box.show()
+
+        self._notebook.append_page(event_box, label)
 
         if self._notebook.get_n_pages() > 1:
             self._notebook.set_show_tabs(True)
