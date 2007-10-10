@@ -191,9 +191,11 @@ class ActivityCreationHandler(gobject.GObject):
             system_bus = dbus.SystemBus()
             factory = system_bus.get_object(_RAINBOW_SERVICE_NAME,
                                             _RAINBOW_ACTIVITY_FACTORY_PATH)
+            stdio_paths = {'stdout': '/logs/stdout', 'stderr': '/logs/stderr'}
             factory.CreateActivity(
                     self._service_name,
                     self._handle.get_dict(),
+                    stdio_paths,
                     timeout=120 * DBUS_PYTHON_TIMEOUT_UNITS_PER_SECOND,
                     reply_handler=self._create_reply_handler,
                     error_handler=self._create_error_handler,
