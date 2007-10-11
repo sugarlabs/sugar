@@ -12,8 +12,10 @@ class Alert(gtk.EventBox, gobject.GObject):
 
     Alerts are used inside the activity window instead of being a
     separate popup window. They do not hide canvas content. You can
-    use add_alert(widget, position) and remove_alert(widget) inside
-    your activity to add and remove the alert.
+    use add_alert(widget) and remove_alert(widget) inside your activity
+    to add and remove the alert. You can set the position (bottom=-1,
+    top=0,1) for alerts global for the window by changing alert_position,
+    default is bottom. 
 
     Properties:
         'title': the title of the alert,
