@@ -25,10 +25,12 @@ class Window(gtk.Window):
         self.connect('realize', self._window_realize_cb)
 
         self.toolbox = None
+        self._alerts = []
+        self.alert_position = -1
         self.canvas = None
-    
+
         self._vbox = gtk.VBox()
-        self.add(self._vbox)        
+        self.add(self._vbox)
         self._vbox.show()
 
     def set_canvas(self, canvas):
@@ -48,7 +50,21 @@ class Window(gtk.Window):
         self._vbox.reorder_child(toolbox, 0)
         
         self.toolbox = toolbox
-        
+
+    def add_alert(self, alert):
+        self._alerts.append(alert)
+        if len(self._alerts) == 1:
+            self._vbox.pack_start(alert, False)
+            self._vbox.reorder_child(alert, self.alert_position)
+
+    def remove_alert(self, alert):
+        if alert in self._alerts:
+            self._alerts.remove(alert)
+            self._vbox.remove(alert)
+            if len(self._alerts) >= 1:
+                self._vbox.pack_start(self._alerts[0], False)
+                self._vbox.reorder_child(self._alerts[0], self.alert_position)
+
     def _window_realize_cb(self, window):
         group = gtk.Window()
         group.realize()

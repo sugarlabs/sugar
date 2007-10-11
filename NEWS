@@ -1,3 +1,6 @@
+* First implementation of the alert bar #2822 and hooked it up 
+  to the activity window (erikos)
+
 Snapshot 9c5755d85a
 
 * Put toolbars into event boxes so X fills the background correctly (benzea)

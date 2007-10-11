@@ -1,6 +1,7 @@
 sugardir = $(pythondir)/sugar/graphics
 sugar_PYTHON =			\
 	__init__.py		\
+        alert.py                \
 	animator.py		\
 	combobox.py		\
 	entry.py		\
