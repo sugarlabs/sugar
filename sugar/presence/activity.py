@@ -69,8 +69,10 @@ class Activity(gobject.GObject):
         self._ps_del_object = del_obj_cb
         bobj = bus.get_object(self._PRESENCE_SERVICE, object_path)
         self._activity = dbus.Interface(bobj, self._ACTIVITY_DBUS_INTERFACE)
-        self._activity.connect_to_signal('BuddyJoined', self._buddy_joined_cb)
-        self._activity.connect_to_signal('BuddyLeft', self._buddy_left_cb)
+        self._activity.connect_to_signal('BuddyHandleJoined', 
+                                         self._buddy_handle_joined_cb)
+        self._activity.connect_to_signal('BuddyHandleLeft',
+                                         self._buddy_handle_left_cb)
         self._activity.connect_to_signal('NewChannel', self._new_channel_cb)
         self._activity.connect_to_signal('PropertiesChanged',
                                          self._properties_changed_cb,
@@ -180,8 +182,9 @@ class Activity(gobject.GObject):
         self.emit('buddy-joined', self._ps_new_object(object_path))
         return False
 
-    def _buddy_joined_cb(self, object_path):
+    def _buddy_handle_joined_cb(self, object_path, handle):
         gobject.idle_add(self._emit_buddy_joined_signal, object_path)
+        self._handle_to_buddy[handle] = self._ps_new_object(handle)
 
     def _emit_buddy_left_signal(self, object_path):
         """Generate buddy-left GObject signal with presence Buddy object
@@ -191,8 +194,10 @@ class Activity(gobject.GObject):
         self.emit('buddy-left', self._ps_new_object(object_path))
         return False
 
-    def _buddy_left_cb(self, object_path):
+    def _buddy_handle_left_cb(self, object_path, handle):
         gobject.idle_add(self._emit_buddy_left_signal, object_path)
+        # XXX This may still lose the mapping we need:
+        del self._handle_to_buddy[handle]
 
     def _emit_new_channel_signal(self, object_path):
         """Generate new-channel GObject signal with channel object path 
@@ -223,18 +228,6 @@ class Activity(gobject.GObject):
         still get the buddy after they have left the activity.
         """
         buddy = self._handle_to_buddy.get(handle, None)
-        if not buddy:
-            try:
-                buddyhandle = self._activity.GetBuddyByHandle(handle)
-            except:
-                # FIXME: Need to catch NotFoundError but that's defined
-                # in presence-service psutils
-                buddyhandle = None
-            if buddyhandle:
-                buddy = self._ps_new_object(buddyhandle)
-                self._handle_to_buddy[handle] = buddy
-            else:
-                buddy = None
         return buddy
 
     def invite(self, buddy, message, response_cb):
