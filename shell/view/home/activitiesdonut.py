@@ -55,7 +55,7 @@ def html_to_rgb(html_color):
     return (r, g, b)
 
 class ActivityIcon(CanvasIcon):
-    _INTERVAL = 250
+    _INTERVAL = 100
 
     __gsignals__ = {
         'resume': (gobject.SIGNAL_RUN_FIRST,
