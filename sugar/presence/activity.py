@@ -71,8 +71,8 @@ class Activity(gobject.GObject):
         self._activity = dbus.Interface(bobj, self._ACTIVITY_DBUS_INTERFACE)
         self._activity.connect_to_signal('BuddyHandleJoined', 
                                          self._buddy_handle_joined_cb)
-        self._activity.connect_to_signal('BuddyHandleLeft',
-                                         self._buddy_handle_left_cb)
+        self._activity.connect_to_signal('BuddyLeft',
+                                         self._buddy_left_cb)
         self._activity.connect_to_signal('NewChannel', self._new_channel_cb)
         self._activity.connect_to_signal('PropertiesChanged',
                                          self._properties_changed_cb,
@@ -94,6 +94,7 @@ class Activity(gobject.GObject):
         self._joined = False
         # Cache for get_buddy_by_handle
         self._handle_to_buddy = {}
+        self._buddy_to_handle = {}
 
     def _get_properties_reply_cb(self, new_props):
         self._properties_changed_cb(new_props)
@@ -184,7 +185,9 @@ class Activity(gobject.GObject):
 
     def _buddy_handle_joined_cb(self, object_path, handle):
         gobject.idle_add(self._emit_buddy_joined_signal, object_path)
-        self._handle_to_buddy[handle] = self._ps_new_object(object_path)
+        buddy = self._ps_new_object(object_path)
+        self._handle_to_buddy[handle] = buddy
+        self._buddy_to_handle[buddy] = handle
 
     def _emit_buddy_left_signal(self, object_path):
         """Generate buddy-left GObject signal with presence Buddy object
@@ -194,9 +197,11 @@ class Activity(gobject.GObject):
         self.emit('buddy-left', self._ps_new_object(object_path))
         return False
 
-    def _buddy_handle_left_cb(self, object_path, handle):
+    def _buddy_left_cb(self, object_path):
         gobject.idle_add(self._emit_buddy_left_signal, object_path)
-        buddy = self._handle_to_buddy.pop(handle, None)
+        buddy = self._ps_new_object(object_path)
+        handle = self._buddy_to_handle.pop(buddy)
+        self._handle_to_buddy.pop(handle, None)
 
     def _emit_new_channel_signal(self, object_path):
         """Generate new-channel GObject signal with channel object path 
@@ -224,7 +229,7 @@ class Activity(gobject.GObject):
         """Retrieve the Buddy object given a telepathy handle.
         
         buddies are cached in self._handle_to_buddy, so we can
-        still get the buddy after they have left the activity.
+        still get the buddy without calling PS.
         """
         buddy = self._handle_to_buddy.get(handle, None)
         return buddy
