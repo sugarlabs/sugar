@@ -92,9 +92,9 @@ class Activity(gobject.GObject):
         self._tags = None
         self._private = True
         self._joined = False
-        # Cache for get_buddy_by_handle
-        self._handle_to_buddy = {}
-        self._buddy_to_handle = {}
+        # Cache for get_buddy_by_handle, maps handles to buddy object paths
+        self._handle_to_buddy_path = {}
+        self._buddy_path_to_handle = {}
 
     def _get_properties_reply_cb(self, new_props):
         self._properties_changed_cb(new_props)
@@ -185,9 +185,8 @@ class Activity(gobject.GObject):
 
     def _buddy_handle_joined_cb(self, object_path, handle):
         gobject.idle_add(self._emit_buddy_joined_signal, object_path)
-        buddy = self._ps_new_object(object_path)
-        self._handle_to_buddy[handle] = buddy
-        self._buddy_to_handle[buddy] = handle
+        self._handle_to_buddy_path[handle] = object_path
+        self._buddy_path_to_handle[object_path] = handle
 
     def _emit_buddy_left_signal(self, object_path):
         """Generate buddy-left GObject signal with presence Buddy object
@@ -199,9 +198,8 @@ class Activity(gobject.GObject):
 
     def _buddy_left_cb(self, object_path):
         gobject.idle_add(self._emit_buddy_left_signal, object_path)
-        buddy = self._ps_new_object(object_path)
-        handle = self._buddy_to_handle.pop(buddy)
-        self._handle_to_buddy.pop(handle, None)
+        handle = self._buddy_path_to_handle.pop(object_path)
+        self._handle_to_buddy_path.pop(handle, None)
 
     def _emit_new_channel_signal(self, object_path):
         """Generate new-channel GObject signal with channel object path 
@@ -228,10 +226,11 @@ class Activity(gobject.GObject):
     def get_buddy_by_handle(self, handle):
         """Retrieve the Buddy object given a telepathy handle.
         
-        buddies are cached in self._handle_to_buddy, so we can
-        still get the buddy without calling PS.
+        buddy object paths are cached in self._handle_to_buddy_path,
+        so we can get the buddy without calling PS.
         """
-        buddy = self._handle_to_buddy.get(handle, None)
+        object_path = self._handle_to_buddy_path.get(handle, None)
+        buddy = self._ps_new_object(object_path)
         return buddy
 
     def invite(self, buddy, message, response_cb):
