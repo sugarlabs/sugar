@@ -184,7 +184,7 @@ class Activity(gobject.GObject):
 
     def _buddy_handle_joined_cb(self, object_path, handle):
         gobject.idle_add(self._emit_buddy_joined_signal, object_path)
-        self._handle_to_buddy[handle] = self._ps_new_object(handle)
+        self._handle_to_buddy[handle] = self._ps_new_object(object_path)
 
     def _emit_buddy_left_signal(self, object_path):
         """Generate buddy-left GObject signal with presence Buddy object
@@ -196,8 +196,7 @@ class Activity(gobject.GObject):
 
     def _buddy_handle_left_cb(self, object_path, handle):
         gobject.idle_add(self._emit_buddy_left_signal, object_path)
-        # XXX This may still lose the mapping we need:
-        del self._handle_to_buddy[handle]
+        buddy = self._handle_to_buddy.pop(handle, None)
 
     def _emit_new_channel_signal(self, object_path):
         """Generate new-channel GObject signal with channel object path 
