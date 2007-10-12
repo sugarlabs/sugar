@@ -230,8 +230,10 @@ class Activity(gobject.GObject):
         so we can get the buddy without calling PS.
         """
         object_path = self._handle_to_buddy_path.get(handle, None)
-        buddy = self._ps_new_object(object_path)
-        return buddy
+        if object_path:
+            buddy = self._ps_new_object(object_path)
+            return buddy
+        return None
 
     def invite(self, buddy, message, response_cb):
         """Invite the given buddy to join this activity.
