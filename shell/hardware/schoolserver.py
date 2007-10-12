@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-from sugar import profile
+from sugar.profile import get_profile
 from xmlrpclib import ServerProxy, Error
 import sys
 import os
@@ -15,19 +14,18 @@ def register_laptop(url=REGISTER_URL):
     sn = sn or 'SHF00000000'
     uuid = uuid or '00000000-0000-0000-0000-000000000000'
 
-    nick = profile.get_nick_name()
-    pubkey = profile.get_pubkey()
+    profile = get_profile()
 
     try:
         server = ServerProxy(url)
-        data = server.register(sn, nick, uuid, pubkey)
+        data = server.register(sn, profile.nick_name, uuid, profile.pubkey)
         if data['success'] != 'OK':
             print >> sys.stderr, "Error registering laptop: " + data['error']
             return False
-        backupurl = data['backupurl']
-        jserver = data['jabberserver']
-        profile.set_server(jserver)
-        profile.set_trial2_backup(backupurl)
+
+        profile.jabber_server = data['jabberserver']
+        profile.backup1 = data['backupurl']
+        profile.save()
     except Error, e:
         print >> sys.stderr, "Error registering laptop: " + str(e)
         return False
@@ -45,9 +43,3 @@ def read_ofw(path):
     data = fh.read().rstrip('\0\n')
     fh.close()
     return data
-
-if __name__ == "__main__":
-    url = REGISTER_URL
-    if len(sys.argv) > 1:
-        url = sys.argv[1]
-    register_laptop(url)

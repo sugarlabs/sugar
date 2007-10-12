@@ -29,13 +29,14 @@ from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics.palette import Palette, CanvasInvoker
 from sugar.graphics.icon import CanvasIcon
-from sugar import profile
+from sugar.profile import get_profile
 from sugar import env
 
 from view.home.activitiesdonut import ActivitiesDonut
 from view.devices import deviceview
 from view.home.MyIcon import MyIcon
 from model.shellmodel import ShellModel
+from hardware import schoolserver
 
 class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarHomeBox'
@@ -178,20 +179,27 @@ class _MyIcon(MyIcon):
 
         self._power_manager = None
         self._shell = shell
+        self._profile = get_profile()
 
     def enable_palette(self):
-        palette = Palette(profile.get_nick_name())
+        palette = Palette(self._profile.nick_name)
 
-        reboot_menu_item = gtk.MenuItem(_('Reboot'))
-        reboot_menu_item.connect('activate', self._reboot_activate_cb)
-        shutdown_menu_item = gtk.MenuItem(_('Shutdown'))
-        shutdown_menu_item.connect('activate', self._shutdown_activate_cb)
+        item = gtk.MenuItem(_('Reboot'))
+        item.connect('activate', self._reboot_activate_cb)
+        palette.menu.append(item)
+        item.show()
+
+        item = gtk.MenuItem(_('Shutdown'))
+        item.connect('activate', self._shutdown_activate_cb)
+        palette.menu.append(item)
+        item.show()
+
+        if not self._profile.is_registered():
+            item = gtk.MenuItem(_('Register'))
+            item.connect('activate', self._register_activate_cb)
+            palette.menu.append(item)
+            item.show()
         
-        palette.menu.append(reboot_menu_item)
-        palette.menu.append(shutdown_menu_item)
-        reboot_menu_item.show()
-        shutdown_menu_item.show()
-
         self.set_palette(palette)
 
     def _reboot_activate_cb(self, menuitem):
@@ -221,6 +229,11 @@ class _MyIcon(MyIcon):
             self._close_emulator()
         else:
             pm.Shutdown()
+
+    def _register_activate_cb(self, menuitem):
+        schoolserver.register_laptop()
+        if self._profile.is_registered():
+            self.get_palette().menu.remove(menuitem)
 
     def _close_emulator(self):
         if os.environ.has_key('SUGAR_EMULATOR_PID'):

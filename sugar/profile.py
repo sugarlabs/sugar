@@ -79,6 +79,9 @@ class Profile(object):
                self.pubkey is not None and \
                self.privkey_hash is not None
 
+    def is_registered(self):
+        return self.backup1 is not None
+
     def save(self):
         cp = ConfigParser()
         parsed = cp.read([self._config_path])
