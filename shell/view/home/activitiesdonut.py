@@ -65,7 +65,6 @@ class ActivityIcon(CanvasIcon):
     }
 
     def __init__(self, activity):
-        icon_name = activity.get_icon_name()
         self._orig_color = activity.get_icon_color()
         self._icon_colors = self._compute_icon_colors()
 
@@ -74,8 +73,14 @@ class ActivityIcon(CanvasIcon):
         self._level = self._level_max
         color = self._icon_colors[self._level]
 
-        CanvasIcon.__init__(self, file_name=icon_name, xo_color=color, 
-                            size=style.MEDIUM_ICON_SIZE, cache=True)
+        CanvasIcon.__init__(self, xo_color=color, cache=True,
+                            size=style.MEDIUM_ICON_SIZE)
+
+        icon_path = activity.get_icon_path()
+        if icon_path:
+            self.props.file_name = icon_path
+        else:
+            self.props.icon_name = 'image-missing'
 
         self._activity = activity
         self._pulse_id = 0
@@ -85,9 +90,9 @@ class ActivityIcon(CanvasIcon):
         palette = Palette(_('Starting...'))
         self.set_palette(palette)
 
-        activity.connect('notify::launching', self._launching_changed_cb)
         if activity.props.launching:
             self._start_pulsing()
+            activity.connect('notify::launching', self._launching_changed_cb)
         else:
             self._setup_palette()
 

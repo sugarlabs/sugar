@@ -261,6 +261,7 @@ class Activity(Window, gtk.Container):
 
         self.connect('realize', self._realize_cb)
         self.connect('delete-event', self._delete_event_cb)
+        self.connect('window-state-event', self._window_state_event_cb)
 
         self._active = False
         self._activity_id = handle.activity_id
@@ -343,6 +344,9 @@ class Activity(Window, gtk.Container):
                 self.share(private=False)
             else:
                 logging.debug("Unknown share scope %r" % share_scope)
+
+    def _window_state_event_cb(self, window, event):
+        logging.info(event.new_window_state)
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'active':
