@@ -28,7 +28,7 @@ from sugar.activity.activityhandle import ActivityHandle
 from sugar.bundle.contentbundle import ContentBundle
 from sugar.bundle.activitybundle import ActivityBundle
 from sugar.bundle.contentbundle import ContentBundle
-from sugar.objects import mime
+from sugar import mime
 
 class DSMetadata(gobject.GObject):
     __gsignals__ = {

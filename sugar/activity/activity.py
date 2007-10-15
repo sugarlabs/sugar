@@ -42,7 +42,7 @@ from sugar.graphics.toolcombobox import ToolComboBox
 from sugar.datastore import datastore
 from sugar import wm
 from sugar import profile
-from sugar import _sugarext
+from sugar import _sugarbaseext
 
 SCOPE_PRIVATE = "private"
 SCOPE_INVITE_ONLY = "invite"  # shouldn't be shown in UI, it's implicit when you invite somebody
@@ -261,6 +261,7 @@ class Activity(Window, gtk.Container):
 
         self.connect('realize', self._realize_cb)
         self.connect('delete-event', self._delete_event_cb)
+        self.connect('window-state-event', self._window_state_event_cb)
 
         self._active = False
         self._activity_id = handle.activity_id
@@ -344,6 +345,9 @@ class Activity(Window, gtk.Container):
             else:
                 logging.debug("Unknown share scope %r" % share_scope)
 
+    def _window_state_event_cb(self, window, event):
+        logging.info(event.new_window_state)
+
     def do_set_property(self, pspec, value):
         if pspec.name == 'active':
             if self._active != value:
@@ -363,7 +367,7 @@ class Activity(Window, gtk.Container):
         return self._activity_id
 
     def get_bundle_id(self):
-        return _sugarext.get_prgname()
+        return _sugarbaseext.get_prgname()
 
     def set_canvas(self, canvas):
         Window.set_canvas(self, canvas)
@@ -634,7 +638,7 @@ class Activity(Window, gtk.Container):
 def get_bundle_name():
     """Return the bundle name for the current process' bundle
     """
-    return _sugarext.get_application_name()
+    return _sugarbaseext.get_application_name()
     
 def get_bundle_path():
     """Return the bundle path for the current process' bundle

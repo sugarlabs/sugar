@@ -96,14 +96,17 @@ class HomeActivity(gobject.GObject):
 
     def get_title(self):
         """Retrieve the application's root window's suggested title"""
-        return self._window.get_name()
+        if self._window:
+            return self._window.get_name()
+        else:
+            return ''
 
-    def get_icon_name(self):
+    def get_icon_path(self):
         """Retrieve the activity's icon (file) name"""
         if self._activity_info:
             return self._activity_info.icon
         else:
-            return 'image-missing'
+            return None
     
     def get_icon_color(self):
         """Retrieve the appropriate icon colour for this activity

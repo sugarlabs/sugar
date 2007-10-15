@@ -30,7 +30,7 @@ import dbus.glib
 
 from sugar.activity import activityhandle
 from sugar.bundle.activitybundle import ActivityBundle
-from sugar import _sugarext
+from sugar import _sugarbaseext
 from sugar import logger
 
 activity_instances = []
@@ -102,8 +102,8 @@ gettext.textdomain(bundle.get_bundle_id())
 
 gtk.icon_theme_get_default().append_search_path(bundle.get_icons_path())
 
-_sugarext.set_prgname(bundle.get_bundle_id())
-_sugarext.set_application_name(bundle.get_name())
+_sugarbaseext.set_prgname(bundle.get_bundle_id())
+_sugarbaseext.set_application_name(bundle.get_name())
 
 splitted_module = args[0].rsplit('.', 1)
 module_name = splitted_module[0]

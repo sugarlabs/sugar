@@ -52,7 +52,6 @@ bin/Makefile
 data/Makefile
 data/icons/Makefile
 lib/Makefile
-lib/ui/Makefile
 services/Makefile
 services/shell/Makefile
 shell/Makefile
