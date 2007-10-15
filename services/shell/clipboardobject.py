@@ -18,7 +18,7 @@ import os
 import logging
 import urlparse
 
-from sugar.objects import mime
+from sugar import mime
 
 import objecttypeservice
 import bundleregistry

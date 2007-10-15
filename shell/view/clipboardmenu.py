@@ -28,7 +28,7 @@ from sugar.graphics.menuitem import MenuItem
 from sugar.graphics import style
 from sugar.clipboard import clipboardservice
 from sugar.datastore import datastore
-from sugar.objects import mime
+from sugar import mime
 from sugar import profile
 from sugar import activity
 

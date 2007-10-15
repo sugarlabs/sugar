@@ -25,7 +25,7 @@ import dbus.service
 
 from sugar import env
 from sugar import util
-from sugar.objects import mime
+from sugar import mime
 
 from clipboardobject import ClipboardObject, Format
 

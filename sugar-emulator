@@ -103,15 +103,6 @@ def _start_matchbox():
 
 def _setup_env():
     os.environ['SUGAR_EMULATOR'] = 'yes'
-    
-    source_dir = os.path.dirname(os.path.abspath(__file__))
-    if os.path.isfile(os.path.join(source_dir, 'autogen.sh')):
-        os.environ['SUGAR_PATH'] = source_dir
-        if os.environ.has_key('PYTHONPATH'):
-            path = os.environ['PYTHONPATH']
-            os.environ['PYTHONPATH'] = source_dir + ':' + path
-            log.info( 'Set PYTHONPATH=%s', os.environ['PYTHONPATH'] )
-
     os.environ['GABBLE_LOGFILE'] = os.path.join(
             env.get_profile_path(), 'logs', 'telepathy-gabble.log')
     os.environ['SALUT_LOGFILE'] = os.path.join(
