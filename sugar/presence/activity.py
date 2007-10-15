@@ -26,9 +26,8 @@ _logger = logging.getLogger('sugar.presence.activity')
 class Activity(gobject.GObject):
     """UI interface for an Activity in the presence service
     
-    Activities in the presence service represent other user's
-    shared activities and your own activities (XXX shared or 
-    otherwise?)
+    Activities in the presence service represent your and other user's
+    shared activities.
     
     Properties:
         id 
