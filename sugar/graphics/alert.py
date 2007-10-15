@@ -1,8 +1,27 @@
+# Copyright (C) 2007, One Laptop Per Child
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+
 from gettext import gettext as _
 
 import gtk
 import gobject
-
+import hippo
+import math
+        
 from sugar.graphics import style
 from sugar.graphics.icon import Icon
 
@@ -28,7 +47,7 @@ class Alert(gtk.EventBox, gobject.GObject):
 
     __gsignals__ = {
         'response': (gobject.SIGNAL_RUN_FIRST,
-                        gobject.TYPE_NONE, ([int]))
+                        gobject.TYPE_NONE, ([object]))
         }
 
     __gproperties__ = {
@@ -69,7 +88,8 @@ class Alert(gtk.EventBox, gobject.GObject):
         self._hbox.pack_start(self._msg_box)
 
         self._buttons_box = gtk.HButtonBox()
-        self._buttons_box.set_layout(gtk.BUTTONBOX_SPREAD)
+        self._buttons_box.set_layout(gtk.BUTTONBOX_END)
+        self._buttons_box.set_spacing(style.DEFAULT_SPACING)
         self._hbox.pack_start(self._buttons_box)
         self._buttons_box.show()
 
@@ -99,17 +119,20 @@ class Alert(gtk.EventBox, gobject.GObject):
         elif pspec.name == 'msg':
             return self._msg
 
-    def add_button(self, response_id, label, icon, position=-1):
+    def add_button(self, response_id, label, icon=None, position=-1):
         """Add a button to the alert
 
         response_id: will be emitted with the response signal
+                     a response ID should one of the pre-defined
+                     GTK Response Type Constants or a positive number
         label: that will occure right to the buttom
         icon: this can be a SugarIcon or a gtk.Image
         position: the position of the button in the box (optional)
         """
         button = gtk.Button()
         self._buttons[response_id] = button
-        button.set_image(icon)
+        if icon is not None:
+            button.set_image(icon)
         button.set_label(label)
         self._buttons_box.pack_start(button)
         button.show()
@@ -142,11 +165,66 @@ class ConfirmationAlert(Alert):
         Alert.__init__(self, **kwargs)
 
         icon = Icon(icon_name='dialog-cancel')
-        cancel_button = self.add_button(0, _('Cancel'), icon)
+        cancel_button = self.add_button(gtk.RESPONSE_CANCEL, _('Cancel'), icon)
         icon.show()
 
         icon = Icon(icon_name='dialog-ok')
-        ok_button = self.add_button(1, _('Ok'), icon)
+        ok_button = self.add_button(gtk.RESPONSE_OK, _('Ok'), icon)
         icon.show()
 
 
+class _TimeoutIcon(hippo.CanvasText, hippo.CanvasItem):
+    __gtype_name__ = 'AlertTimeoutIcon'
+
+    def __init__(self, **kwargs):
+        hippo.CanvasText.__init__(self, **kwargs)
+        
+        self.props.orientation = hippo.ORIENTATION_HORIZONTAL
+        self.props.border_left = style.DEFAULT_SPACING
+        self.props.border_right = style.DEFAULT_SPACING
+            
+    def do_paint_background(self, cr, damaged_box):
+        [width, height] = self.get_allocation()
+        
+        x = width * 0.5
+        y = height * 0.5
+        radius = min(width * 0.5, height * 0.5)         
+        
+        hippo.cairo_set_source_rgba32(cr, self.props.background_color)
+        cr.arc(x, y, radius, 0, 2*math.pi)        
+        cr.fill_preserve()    
+
+
+class TimeoutAlert(Alert):
+    """This is a ready-made two button (Cancel,Continue) alert
+
+    It times out with a positive reponse after the given amount of seconds.
+    """
+
+    def __init__(self, timeout=5, **kwargs):
+        Alert.__init__(self, **kwargs)
+
+        self._timeout = timeout
+        
+        icon = Icon(icon_name='dialog-cancel')
+        cancel_button = self.add_button(gtk.RESPONSE_CANCEL, _('Cancel'), icon)
+        icon.show()
+        
+        self._timeout_text = _TimeoutIcon(
+            text=self._timeout,
+            color=style.COLOR_BUTTON_GREY.get_int(),
+            background_color=style.COLOR_WHITE.get_int())    
+        canvas = hippo.Canvas()
+        canvas.set_root(self._timeout_text)
+        canvas.show()                       
+        self.add_button(gtk.RESPONSE_OK, _('Continue'), canvas)
+
+        gobject.timeout_add(1000, self.__timeout)
+        
+    def __timeout(self):
+        self._timeout -= 1
+        self._timeout_text.props.text = self._timeout
+        if self._timeout == 0:
+            self._response(gtk.RESPONSE_OK)
+            return False
+        return True

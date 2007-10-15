@@ -26,9 +26,8 @@ _logger = logging.getLogger('sugar.presence.activity')
 class Activity(gobject.GObject):
     """UI interface for an Activity in the presence service
     
-    Activities in the presence service represent other user's
-    shared activities and your own activities (XXX shared or 
-    otherwise?)
+    Activities in the presence service represent your and other user's
+    shared activities.
     
     Properties:
         id 
@@ -69,8 +68,10 @@ class Activity(gobject.GObject):
         self._ps_del_object = del_obj_cb
         bobj = bus.get_object(self._PRESENCE_SERVICE, object_path)
         self._activity = dbus.Interface(bobj, self._ACTIVITY_DBUS_INTERFACE)
-        self._activity.connect_to_signal('BuddyJoined', self._buddy_joined_cb)
-        self._activity.connect_to_signal('BuddyLeft', self._buddy_left_cb)
+        self._activity.connect_to_signal('BuddyHandleJoined', 
+                                         self._buddy_handle_joined_cb)
+        self._activity.connect_to_signal('BuddyLeft',
+                                         self._buddy_left_cb)
         self._activity.connect_to_signal('NewChannel', self._new_channel_cb)
         self._activity.connect_to_signal('PropertiesChanged',
                                          self._properties_changed_cb,
@@ -90,6 +91,9 @@ class Activity(gobject.GObject):
         self._tags = None
         self._private = True
         self._joined = False
+        # Cache for get_buddy_by_handle, maps handles to buddy object paths
+        self._handle_to_buddy_path = {}
+        self._buddy_path_to_handle = {}
 
     def _get_properties_reply_cb(self, new_props):
         self._properties_changed_cb(new_props)
@@ -178,8 +182,10 @@ class Activity(gobject.GObject):
         self.emit('buddy-joined', self._ps_new_object(object_path))
         return False
 
-    def _buddy_joined_cb(self, object_path):
+    def _buddy_handle_joined_cb(self, object_path, handle):
         gobject.idle_add(self._emit_buddy_joined_signal, object_path)
+        self._handle_to_buddy_path[handle] = object_path
+        self._buddy_path_to_handle[object_path] = handle
 
     def _emit_buddy_left_signal(self, object_path):
         """Generate buddy-left GObject signal with presence Buddy object
@@ -191,6 +197,8 @@ class Activity(gobject.GObject):
 
     def _buddy_left_cb(self, object_path):
         gobject.idle_add(self._emit_buddy_left_signal, object_path)
+        handle = self._buddy_path_to_handle.pop(object_path)
+        self._handle_to_buddy_path.pop(handle, None)
 
     def _emit_new_channel_signal(self, object_path):
         """Generate new-channel GObject signal with channel object path 
@@ -213,6 +221,18 @@ class Activity(gobject.GObject):
         for item in resp:
             buddies.append(self._ps_new_object(item))
         return buddies
+
+    def get_buddy_by_handle(self, handle):
+        """Retrieve the Buddy object given a telepathy handle.
+        
+        buddy object paths are cached in self._handle_to_buddy_path,
+        so we can get the buddy without calling PS.
+        """
+        object_path = self._handle_to_buddy_path.get(handle, None)
+        if object_path:
+            buddy = self._ps_new_object(object_path)
+            return buddy
+        return None
 
     def invite(self, buddy, message, response_cb):
         """Invite the given buddy to join this activity.
@@ -244,9 +264,13 @@ class Activity(gobject.GObject):
     def get_channels(self):
         """Retrieve communications channel descriptions for the activity 
         
-        Returns (bus name, connection, channels) for the activity
-        
-        XXX what are those values?
+        Returns a tuple containing:
+            - the D-Bus well-known service name of the connection
+              (FIXME: this is redundant; in Telepathy it can be derived
+              from that of the connection)
+            - the D-Bus object path of the connection
+            - a list of D-Bus object paths representing the channels
+              associated with this activity
         """
         (bus_name, connection, channels) = self._activity.GetChannels()
         return bus_name, connection, channels
@@ -256,10 +280,8 @@ class Activity(gobject.GObject):
         self.emit("joined", False, "left activity")
 
     def _leave_error_cb(self, err):
-        """Callback for error in async leaving of shared activity.
-
-        XXX Add logging!"""
-        pass
+        """Callback for error in async leaving of shared activity."""
+        _logger.debug('Failed to leave activity: %s', err)
 
     def leave(self):
         """Leave this shared activity"""
