@@ -130,7 +130,6 @@ class ActivityToolbar(gtk.Toolbar):
 
     def _stop_clicked_cb(self, button):
         self._activity.close()
-        self._activity.destroy()
 
     def _jobject_updated_cb(self, jobject):
         self.title.set_text(jobject['title'])
@@ -260,8 +259,7 @@ class Activity(Window, gtk.Container):
         util.set_proc_title(proc_title)
 
         self.connect('realize', self._realize_cb)
-        self.connect('delete-event', self._delete_event_cb)
-        self.connect('window-state-event', self._window_state_event_cb)
+        self.connect('delete-event', self.__delete_event_cb)
 
         self._active = False
         self._activity_id = handle.activity_id
@@ -269,10 +267,10 @@ class Activity(Window, gtk.Container):
         self._shared_activity = None
         self._share_id = None
         self._join_id = None
-        self._can_close = True
         self._preview = None
         self._updating_jobject = False
         self._closing = False
+        self._deleting = False
         self._max_participants = 0
         self._invites_queue = []
 
@@ -344,9 +342,6 @@ class Activity(Window, gtk.Container):
                 self.share(private=False)
             else:
                 logging.debug("Unknown share scope %r" % share_scope)
-
-    def _window_state_event_cb(self, window, event):
-        logging.info(event.new_window_state)
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'active':
@@ -597,35 +592,26 @@ class Activity(Window, gtk.Container):
                                                 self._internal_share_cb)
         self._pservice.share_activity(self, private=private)
 
+    def close(self):
+        self._preview = self._get_preview()
+
+        self.save()
+
+        if self._shared_activity:
+            self._shared_activity.leave()
+
+        if self._updating_jobject:
+            self._closing = True
+        else:
+            self.destroy()
+
     def _realize_cb(self, window):
         wm.set_bundle_id(window.window, self.get_bundle_id())
         wm.set_activity_id(window.window, self._activity_id)
 
-    def _delete_event_cb(self, window, event):
-        if self._can_close:
-            self.close()
-            return False
-        else:
-            return True
-
-    def close(self):
-        self._closing = True
-
-        if self._bus:
-            del self._bus
-            self._bus = None
-        if self._shared_activity:
-            self._shared_activity.leave()
-
-        self._preview = self._get_preview()
-        self.save()
-
-    def destroy(self):
-        if self._updating_jobject:
-            # Delay destruction
-            self.hide()
-        else:
-            Window.destroy(self)
+    def __delete_event_cb(self, widget, event):
+        self.close()
+        return True
 
     def get_metadata(self):
         if self._jobject:
