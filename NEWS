@@ -1,9 +1,14 @@
+Snapshot 34e2271833
+
+* Activity launching fixes (marco)
+
 Snapshot 6d2828e54e
 
 * Code cleanups (marco)
 
 Snapshot 1eb9932ab3
 
+* sugar.presence tracking handles of buddies (morgs)
 * Cleanup activity destruction (marco)
 * Added TimeoutAlert (erikos)
 

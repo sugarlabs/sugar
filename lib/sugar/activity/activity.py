@@ -362,7 +362,7 @@ class Activity(Window, gtk.Container):
         return self._activity_id
 
     def get_bundle_id(self):
-        return _sugarbaseext.get_prgname()
+        return os.environ['SUGAR_BUNDLE_ID']
 
     def set_canvas(self, canvas):
         Window.set_canvas(self, canvas)
@@ -607,7 +607,7 @@ class Activity(Window, gtk.Container):
 
     def __realize_cb(self, window):
         wm.set_bundle_id(window.window, self.get_bundle_id())
-        wm.set_activity_id(window.window, self._activity_id)
+        wm.set_activity_id(window.window, str(self._activity_id))
 
     def __delete_event_cb(self, widget, event):
         self.close()
@@ -624,7 +624,7 @@ class Activity(Window, gtk.Container):
 def get_bundle_name():
     """Return the bundle name for the current process' bundle
     """
-    return _sugarbaseext.get_application_name()
+    return os.environ['SUGAR_BUNDLE_NAME']
     
 def get_bundle_path():
     """Return the bundle path for the current process' bundle
