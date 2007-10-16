@@ -55,19 +55,19 @@ class ActivityToolbar(gtk.Toolbar):
         self._activity = activity
         self._updating_share = False
 
-        activity.connect('shared', self._activity_shared_cb)
-        activity.connect('joined', self._activity_shared_cb)
+        activity.connect('shared', self.__activity_shared_cb)
+        activity.connect('joined', self.__activity_shared_cb)
         activity.connect('notify::max_participants',
-                         self._max_participants_changed_cb)
+                         self.__max_participants_changed_cb)
 
         if activity.metadata:
             self.title = gtk.Entry()
             self.title.set_size_request(int(gtk.gdk.screen_width() / 6), -1)
             self.title.set_text(activity.metadata['title'])
-            self.title.connect('changed', self._title_changed_cb)
+            self.title.connect('changed', self.__title_changed_cb)
             self._add_widget(self.title)
 
-            activity.metadata.connect('updated', self._jobject_updated_cb)
+            activity.metadata.connect('updated', self.__jobject_updated_cb)
 
         separator = gtk.SeparatorToolItem()
         separator.props.draw = False
@@ -76,7 +76,7 @@ class ActivityToolbar(gtk.Toolbar):
         separator.show()
 
         self.share = ToolComboBox(label_text=_('Share with:'))
-        self.share.combo.connect('changed', self._share_changed_cb)
+        self.share.combo.connect('changed', self.__share_changed_cb)
         self.share.combo.append_item(SCOPE_PRIVATE, _('Private'),
                                      'zoom-home-mini')
         self.share.combo.append_item(SCOPE_NEIGHBORHOOD, _('My Neighborhood'),
@@ -88,13 +88,13 @@ class ActivityToolbar(gtk.Toolbar):
 
         self.keep = ToolButton('document-save')
         self.keep.set_tooltip(_('Keep'))
-        self.keep.connect('clicked', self._keep_clicked_cb)
+        self.keep.connect('clicked', self.__keep_clicked_cb)
         self.insert(self.keep, -1)
         self.keep.show()
 
         self.stop = ToolButton('activity-stop')
         self.stop.set_tooltip(_('Stop'))
-        self.stop.connect('clicked', self._stop_clicked_cb)
+        self.stop.connect('clicked', self.__stop_clicked_cb)
         self.insert(self.stop, -1)
         self.stop.show()
 
@@ -115,7 +115,7 @@ class ActivityToolbar(gtk.Toolbar):
 
         self._updating_share = False
     
-    def _share_changed_cb(self, combo):
+    def __share_changed_cb(self, combo):
         if self._updating_share:
             return
 
@@ -125,20 +125,20 @@ class ActivityToolbar(gtk.Toolbar):
         if scope == SCOPE_NEIGHBORHOOD:
             self._activity.share()
 
-    def _keep_clicked_cb(self, button):
+    def __keep_clicked_cb(self, button):
         self._activity.copy()
 
-    def _stop_clicked_cb(self, button):
+    def __stop_clicked_cb(self, button):
         self._activity.close()
 
-    def _jobject_updated_cb(self, jobject):
+    def __jobject_updated_cb(self, jobject):
         self.title.set_text(jobject['title'])
 
-    def _title_changed_cb(self, entry):
+    def __title_changed_cb(self, entry):
         if not self._update_title_sid:
-            self._update_title_sid = gobject.timeout_add(1000, self._update_title_cb)
+            self._update_title_sid = gobject.timeout_add(1000, self.__update_title_cb)
 
-    def _update_title_cb(self):
+    def __update_title_cb(self):
         title = self.title.get_text()
 
         self._activity.metadata['title'] = title
@@ -162,10 +162,10 @@ class ActivityToolbar(gtk.Toolbar):
         self.insert(tool_item, -1)
         tool_item.show()
 
-    def _activity_shared_cb(self, activity):
+    def __activity_shared_cb(self, activity):
         self._update_share()
 
-    def _max_participants_changed_cb(self, activity, pspec):
+    def __max_participants_changed_cb(self, activity, pspec):
         self._update_share()
 
 class EditToolbar(gtk.Toolbar):
@@ -258,7 +258,7 @@ class Activity(Window, gtk.Container):
         proc_title = "%s <%s>" % (get_bundle_name(), handle.activity_id)
         util.set_proc_title(proc_title)
 
-        self.connect('realize', self._realize_cb)
+        self.connect('realize', self.__realize_cb)
         self.connect('delete-event', self.__delete_event_cb)
 
         self._active = False
@@ -313,8 +313,8 @@ class Activity(Window, gtk.Container):
 
             self._jobject.file_path = ''
             datastore.write(self._jobject,
-                    reply_handler=self._internal_jobject_create_cb,
-                    error_handler=self._internal_jobject_error_cb)
+                    reply_handler=self.__jobject_create_cb,
+                    error_handler=self.__jobject_error_cb)
         else:
             self._jobject = None
 
@@ -326,12 +326,12 @@ class Activity(Window, gtk.Container):
             logging.debug("*** Act %s joining existing mesh instance" % self._activity_id)
             self._shared_activity = mesh_instance
             self._shared_activity.connect('notify::private',
-                    self._privacy_changed_cb)
-            self._join_id = self._shared_activity.connect("joined", self._internal_joined_cb)
+                    self.__privacy_changed_cb)
+            self._join_id = self._shared_activity.connect("joined", self.__joined_cb)
             if not self._shared_activity.props.joined:
                 self._shared_activity.join()
             else:
-                self._internal_joined_cb(self._shared_activity, True, None)
+                self.__joined_cb(self._shared_activity, True, None)
         elif share_scope != SCOPE_PRIVATE:
             logging.debug("*** Act %s no existing mesh instance, but used to be shared, will share" % self._activity_id)
             # no existing mesh instance, but activity used to be shared, so
@@ -366,16 +366,16 @@ class Activity(Window, gtk.Container):
 
     def set_canvas(self, canvas):
         Window.set_canvas(self, canvas)
-        canvas.connect('map', self._canvas_map_cb)
+        canvas.connect('map', self.__canvas_map_cb)
 
-    def _canvas_map_cb(self, canvas):
+    def __canvas_map_cb(self, canvas):
         if self._jobject and self._jobject.file_path:
             self.read_file(self._jobject.file_path)
 
-    def _internal_jobject_create_cb(self):
+    def __jobject_create_cb(self):
         pass
 
-    def _internal_jobject_error_cb(self, err):
+    def __jobject_error_cb(self, err):
         logging.debug("Error creating activity datastore object: %s" % err)
 
     def get_activity_root(self):
@@ -404,15 +404,15 @@ class Activity(Window, gtk.Container):
         """
         raise NotImplementedError
 
-    def _internal_save_cb(self):
-        logging.debug('Activity._internal_save_cb')
+    def __save_cb(self):
+        logging.debug('Activity.__save_cb')
         self._updating_jobject = False
         if self._closing:
             self._cleanup_jobject()
             self.destroy()
 
-    def _internal_save_error_cb(self, err):
-        logging.debug('Activity._internal_save_error_cb')
+    def __save_error_cb(self, err):
+        logging.debug('Activity.__save_error_cb')
         self._updating_jobject = False
         if self._closing:
             self._cleanup_jobject()
@@ -498,8 +498,8 @@ class Activity(Window, gtk.Container):
             self._updating_jobject = True
             datastore.write(self._jobject,
                     transfer_ownership=True,
-                    reply_handler=self._internal_save_cb,
-                    error_handler=self._internal_save_error_cb)
+                    reply_handler=self.__save_cb,
+                    error_handler=self.__save_error_cb)
 
     def copy(self):
         logging.debug('Activity.copy: %r' % self._jobject.object_id)
@@ -507,13 +507,13 @@ class Activity(Window, gtk.Container):
         self.save()
         self._jobject.object_id = None
 
-    def _privacy_changed_cb(self, shared_activity, param_spec):
+    def __privacy_changed_cb(self, shared_activity, param_spec):
         if shared_activity.props.private:
             self._jobject.metadata['share-scope'] = SCOPE_INVITE_ONLY
         else:
             self._jobject.metadata['share-scope'] = SCOPE_NEIGHBORHOOD
 
-    def _internal_joined_cb(self, activity, success, err):
+    def __joined_cb(self, activity, success, err):
         """Callback when join has finished"""
         self._shared_activity.disconnect(self._join_id)
         self._join_id = None
@@ -523,7 +523,7 @@ class Activity(Window, gtk.Container):
 
         self.present()
         self.emit('joined')
-        self._privacy_changed_cb(self._shared_activity, None)
+        self.__privacy_changed_cb(self._shared_activity, None)
 
     def get_shared(self):
         """Returns TRUE if the activity is shared on the mesh."""
@@ -531,7 +531,7 @@ class Activity(Window, gtk.Container):
             return False
         return self._shared_activity.props.joined
 
-    def _internal_share_cb(self, ps, success, activity, err):
+    def __share_cb(self, ps, success, activity, err):
         self._pservice.disconnect(self._share_id)
         self._share_id = None
         if not success:
@@ -544,9 +544,9 @@ class Activity(Window, gtk.Container):
 
         self._shared_activity = activity
         self._shared_activity.connect('notify::private',
-                self._privacy_changed_cb)
+                self.__privacy_changed_cb)
         self.emit('shared')
-        self._privacy_changed_cb(self._shared_activity, None)
+        self.__privacy_changed_cb(self._shared_activity, None)
 
         self._send_invites()
 
@@ -589,7 +589,7 @@ class Activity(Window, gtk.Container):
         logging.debug('Requesting %s share of activity %s.' %
                       (verb, self._activity_id))
         self._share_id = self._pservice.connect("activity-shared", 
-                                                self._internal_share_cb)
+                                                self.__share_cb)
         self._pservice.share_activity(self, private=private)
 
     def close(self):
@@ -605,7 +605,7 @@ class Activity(Window, gtk.Container):
         else:
             self.destroy()
 
-    def _realize_cb(self, window):
+    def __realize_cb(self, window):
         wm.set_bundle_id(window.window, self.get_bundle_id())
         wm.set_activity_id(window.window, self._activity_id)
 
