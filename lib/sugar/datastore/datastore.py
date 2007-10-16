@@ -117,20 +117,28 @@ class DSObject(object):
 
     file_path = property(get_file_path, set_file_path)
 
+    def _get_activities_for_mime(self, mime_type):
+        registry = activity.get_registry()
+        result = registry.get_activities_for_type(mime_type)
+        if not result:
+            for parent_mime in mime.get_mime_parents(mime_type):
+                 result.extend(registry.get_activities_for_type(parent_type))
+
     def get_activities(self):
         activities = []
 
-        if self.metadata['activity']:
-            activity_info = activity.get_registry().get_activity(self.metadata['activity'])
+        bundle_id = self.metadata['activity']
+        if bundle_id:
+            activity_info = activity.get_registry().get_activity(bundle_id)
             if activity_info:
                 activities.append(activity_info)
 
         mime_type = self.metadata['mime_type']
         if mime_type:
-            activities_info = activity.get_registry().get_activities_for_type(mime_type)
-            for activity_info in activities_info:
-                if activity_info.bundle_id != self.metadata['activity']:
-                    activities.append(activity_info)
+            activities_info = self._get_activities_for_mime(mime_type)
+            for info in activities_info:
+                if activity_info.bundle_id != bundle_id:
+                    activities.append(info)
 
         return activities
 
