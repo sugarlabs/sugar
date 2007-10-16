@@ -137,9 +137,9 @@ class DSObject(object):
         mime_type = self.metadata.get('mime_type', '')
         if mime_type:
             activities_info = self._get_activities_for_mime(mime_type)
-            for info in activities_info:
+            for activity_info in activities_info:
                 if activity_info.bundle_id != bundle_id:
-                    activities.append(info)
+                    activities.append(activity_info)
 
         return activities
 
