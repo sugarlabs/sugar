@@ -123,17 +123,18 @@ class DSObject(object):
         if not result:
             for parent_mime in mime.get_mime_parents(mime_type):
                  result.extend(registry.get_activities_for_type(parent_type))
+        return result
 
     def get_activities(self):
         activities = []
 
-        bundle_id = self.metadata['activity']
+        bundle_id = self.metadata.get('activity', '')
         if bundle_id:
             activity_info = activity.get_registry().get_activity(bundle_id)
             if activity_info:
                 activities.append(activity_info)
 
-        mime_type = self.metadata['mime_type']
+        mime_type = self.metadata.get('mime_type', '')
         if mime_type:
             activities_info = self._get_activities_for_mime(mime_type)
             for info in activities_info:
