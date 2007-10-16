@@ -4,6 +4,7 @@ Snapshot 6d2828e54e
 
 Snapshot 1eb9932ab3
 
+* sugar.presence tracking handles of buddies (morgs)
 * Cleanup activity destruction (marco)
 * Added TimeoutAlert (erikos)
 
