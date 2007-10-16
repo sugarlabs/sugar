@@ -148,10 +148,7 @@ class CollapsedEntry(CanvasRoundBox):
 
         mime_type = self.jobject.metadata['mime_type']
         if not self._icon_name and mime_type:
-            type = objecttype.get_registry().get_type_for_mime(mime_type)
-            if type:
-                self._icon_name = type.icon
-
+            self._icon_name = mime.get_mime_icon(mime_type)
         if not self._icon_name:
             self._icon_name = 'image-missing'
 

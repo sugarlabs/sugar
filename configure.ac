@@ -52,7 +52,6 @@ lib/sugar/activity/Makefile
 lib/sugar/bundle/Makefile
 lib/sugar/clipboard/Makefile
 lib/sugar/graphics/Makefile
-lib/sugar/objects/Makefile
 lib/sugar/presence/Makefile
 lib/sugar/datastore/Makefile
 services/Makefile
