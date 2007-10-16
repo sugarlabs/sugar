@@ -35,7 +35,7 @@ _sugarext_la_SOURCES =			\
 	sugar-x11-util.c		\
 	sugar-x11-util.h
 
-nodist__sugarext_la_SOURCES = 		\
+BUILT_SOURCES = 			\
 	_sugarext.c			\
 	sugar-marshal.c			\
 	sugar-marshal.h
@@ -52,23 +52,13 @@ _sugarext.c: _sugarext.defs _sugarext.override
 	&& cp gen-$*.c $*.c \
 	&& rm -f gen-$*.c
 	
-stamp_files = 			\
-	stamp-sugar-marshal.c	\
-	stamp-sugar-marshal.h
-
-sugar-marshal.c: stamp-sugar-marshal.c
-	@true
-stamp-sugar-marshal.c: sugar-marshal.list
+sugar-marshal.c: sugar-marshal.list
 	$(GLIB_GENMARSHAL) --prefix=sugar_marshal \
-		$(srcdir)/sugar-marshal.list --header --body > \
-		sugar-marshal.c && echo timestamp > $(@F)
+		$(srcdir)/sugar-marshal.list --header --body > sugar-marshal.c
 
-sugar-marshal.h: stamp-sugar-marshal.h
-	@true
-stamp-sugar-marshal.h: sugar-marshal.list
+sugar-marshal.h: sugar-marshal.list
 	$(GLIB_GENMARSHAL) --prefix=sugar_marshal \
-		$(srcdir)/sugar-marshal.list --header > \
-		sugar-marshal.h && echo timestamp > $(@F)
+		$(srcdir)/sugar-marshal.list --header > sugar-marshal.h
 
-CLEANFILES = $(stamp_files)
+CLEANFILES = $(BUILT_SOURCES)
 EXTRA_DIST = sugar-marshal.list _sugarext.defs _sugarext.override
