@@ -11,5 +11,4 @@ shell/view/devices/battery.py
 shell/view/devices/network/wireless.py
 shell/view/frame/activitybutton.py
 shell/view/frame/zoomtoolbar.py
-services/shell/objecttypeservice.py
 lib/sugar/activity/activity.py
