@@ -2,13 +2,11 @@ servicedir = $(datadir)/dbus-1/services
 
 service_in_files =                              \
     org.laptop.ActivityRegistry.service.in      \
-    org.laptop.Clipboard.service.in             \
-    org.laptop.ObjectTypeRegistry.service.in
+    org.laptop.Clipboard.service.in
 
 service_DATA =					\
     org.laptop.ActivityRegistry.service		\
-    org.laptop.Clipboard.service		\
-    org.laptop.ObjectTypeRegistry.service
+    org.laptop.Clipboard.service
 
 org.laptop.ActivityRegistry.service: org.laptop.ActivityRegistry.service.in Makefile
 	@sed -e "s|\@bindir\@|$(bindir)|" $< > $@
@@ -26,8 +24,7 @@ sugar_PYTHON =				\
 	activityregistryservice.py	\
 	bundleregistry.py		\
 	clipboardobject.py      	\
-	clipboardservice.py     	\
-	objecttypeservice.py
+	clipboardservice.py
 
 bin_SCRIPTS = sugar-shell-service
 

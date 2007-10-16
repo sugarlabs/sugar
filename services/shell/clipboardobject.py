@@ -20,7 +20,6 @@ import urlparse
 
 from sugar import mime
 
-import objecttypeservice
 import bundleregistry
 
 class ClipboardObject:
@@ -38,27 +37,16 @@ class ClipboardObject:
     def get_id(self):
         return self._id
 
-    def _get_type_info(self):
-        logging.debug('_get_type_info')
-        type_registry = objecttypeservice.get_instance()
-        return type_registry.GetTypeForMIME(self.get_mime_type())
-    
     def get_name(self):
-        if self._name:
-            return self._name
-        else:
-            type_info = self._get_type_info()
-            if type_info:
-                return type_info['name']
-            else:
-                return ''
+        name = self._name
+        if not name:
+            name = mime.get_mime_description(self.get_mime_type())
+        if not name:
+            name = ''
+        return name
 
     def get_icon(self):
-        type_info = self._get_type_info()
-        if type_info:
-            return type_info['icon']
-        else:
-            return ''
+        return mime.get_mime_icon(self.get_mime_type())
 
     def get_preview(self):
         # TODO: should previews really be here?
