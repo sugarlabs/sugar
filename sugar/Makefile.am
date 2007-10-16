@@ -3,7 +3,6 @@ SUBDIRS = activity bundle clipboard graphics objects presence datastore
 sugardir = $(pythondir)/sugar
 sugar_PYTHON =		\
 	env.py		\
-        ltihooks.py	\
         network.py	\
 	profile.py	\
 	util.py		\

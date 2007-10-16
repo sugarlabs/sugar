@@ -31,7 +31,6 @@ import gtk
 import gobject
 
 from sugar import env
-from sugar import ltihooks
 
 def _get_display_number():
     """Find a free display number trying to connect to 6000+ ports"""
