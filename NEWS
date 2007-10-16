@@ -1,3 +1,5 @@
+* Fix the shell service (marco)
+
 Snapshot fa55b5af09
 
 * Changed default spacing to 15px (from 8px) (benzea)
