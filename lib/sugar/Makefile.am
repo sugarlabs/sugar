@@ -31,9 +31,7 @@ _sugarext_la_SOURCES =			\
 	sugar-key-grabber.c		\
 	sugar-key-grabber.h		\
 	sugar-menu.h			\
-	sugar-menu.c			\
-	sugar-x11-util.c		\
-	sugar-x11-util.h
+	sugar-menu.c
 
 BUILT_SOURCES = 			\
 	_sugarext.c			\

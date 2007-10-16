@@ -7,7 +7,6 @@ headers
 #include "sugar-address-entry.h"
 #include "sugar-key-grabber.h"
 #include "sugar-menu.h"
-#include "sugar-x11-util.h"
 #include "sexy-icon-entry.h"
 
 #include <pygtk/pygtk.h>
