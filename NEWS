@@ -1,3 +1,5 @@
+* Use double leading underscores for callback names to avoid name collisions (erikos)
+ 
 Snapshot 34e2271833
 
 * Activity launching fixes (marco)
