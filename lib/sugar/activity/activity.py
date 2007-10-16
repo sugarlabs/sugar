@@ -312,9 +312,8 @@ class Activity(Window, gtk.Container):
             self._jobject.metadata['icon-color'] = icon_color
 
             self._jobject.file_path = ''
-            datastore.write(self._jobject,
-                    reply_handler=self.__jobject_create_cb,
-                    error_handler=self.__jobject_error_cb)
+            # Cannot call datastore.write async for creates: https://dev.laptop.org/ticket/3071
+            datastore.write(self._jobject)
         else:
             self._jobject = None
 
