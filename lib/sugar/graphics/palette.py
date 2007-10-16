@@ -113,7 +113,7 @@ class Palette(gtk.Window):
         self._label.set_size_request(-1, style.zoom(style.GRID_CELL_SIZE)
                                           - 2*self.get_border_width())
         self._label.set_alignment(0, 0.5)
-        self._label.set_padding(style.zoom(15), 0)
+        self._label.set_padding(style.DEFAULT_SPACING, 0)
         vbox.pack_start(self._label, False)
 
         self._secondary_box = gtk.VBox()
@@ -159,7 +159,7 @@ class Palette(gtk.Window):
     def _add_content(self):
         # The content is not shown until a widget is added
         self._content = gtk.VBox()
-        self._content.set_border_width(style.zoom(15))
+        self._content.set_border_width(style.DEFAULT_SPACING)
         self._secondary_box.pack_start(self._content)
 
     def do_style_set(self, previous_style):

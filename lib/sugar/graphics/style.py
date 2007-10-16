@@ -110,7 +110,7 @@ def zoom(units):
 
 ZOOM_FACTOR = _compute_zoom_factor()
 
-DEFAULT_SPACING = zoom(8)
+DEFAULT_SPACING = zoom(15)
 DEFAULT_PADDING = zoom(6)
 GRID_CELL_SIZE = zoom(75)
 LINE_WIDTH = zoom(2)
