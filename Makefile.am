@@ -1,6 +1,6 @@
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = bin data lib po shell sugar services
+SUBDIRS = bin data lib po shell services
 
 bin_SCRIPTS = 			\
 	sugar-emulator

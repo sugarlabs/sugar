@@ -1,0 +1,74 @@
+SUBDIRS = activity bundle clipboard graphics objects presence datastore
+
+sugardir = $(pythondir)/sugar
+sugar_PYTHON =		\
+	env.py		\
+        network.py	\
+	profile.py	\
+	util.py		\
+	wm.py
+
+pkgpyexecdir = $(pythondir)/sugar
+
+pkgpyexec_LTLIBRARIES = _sugarext.la
+
+_sugarext_la_CFLAGS = 		\
+	$(LIB_CFLAGS)		\
+	$(PYTHON_INCLUDES)
+
+_sugarext_la_LDFLAGS = -module -avoid-version
+_sugarext_la_LIBADD = $(LIB_LIBS)
+
+_sugarext_la_SOURCES =			\
+	$(BUILT_SOURCES)		\
+	_sugarextmodule.c		\
+	eggaccelerators.c		\
+	eggaccelerators.h		\
+	sexy-icon-entry.h		\
+	sexy-icon-entry.c		\
+	sugar-address-entry.c		\
+	sugar-address-entry.h		\
+	sugar-key-grabber.c		\
+	sugar-key-grabber.h		\
+	sugar-menu.h			\
+	sugar-menu.c			\
+	sugar-x11-util.c		\
+	sugar-x11-util.h
+
+nodist__sugarext_la_SOURCES = 		\
+	_sugarext.c			\
+	sugar-marshal.c			\
+	sugar-marshal.h
+
+_sugarext.c: _sugarext.defs _sugarext.override
+
+.defs.c:
+	(cd $(srcdir)\
+	 && $(PYGTK_CODEGEN) \
+	    --register $(PYGTK_DEFSDIR)/gdk-types.defs \
+	    --register $(PYGTK_DEFSDIR)/gtk-types.defs \
+	    --override $*.override \
+	    --prefix py$* $*.defs) > gen-$*.c \
+	&& cp gen-$*.c $*.c \
+	&& rm -f gen-$*.c
+	
+stamp_files = 			\
+	stamp-sugar-marshal.c	\
+	stamp-sugar-marshal.h
+
+sugar-marshal.c: stamp-sugar-marshal.c
+	@true
+stamp-sugar-marshal.c: sugar-marshal.list
+	$(GLIB_GENMARSHAL) --prefix=sugar_marshal \
+		$(srcdir)/sugar-marshal.list --header --body > \
+		sugar-marshal.c && echo timestamp > $(@F)
+
+sugar-marshal.h: stamp-sugar-marshal.h
+	@true
+stamp-sugar-marshal.h: sugar-marshal.list
+	$(GLIB_GENMARSHAL) --prefix=sugar_marshal \
+		$(srcdir)/sugar-marshal.list --header > \
+		sugar-marshal.h && echo timestamp > $(@F)
+
+CLEANFILES = $(stamp_files)
+EXTRA_DIST = sugar-marshal.list _sugarext.defs _sugarext.override

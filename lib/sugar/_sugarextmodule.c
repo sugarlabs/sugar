@@ -24,25 +24,25 @@
 /* include this first, before NO_IMPORT_PYGOBJECT is defined */
 #include <pygobject.h>
 
-extern PyMethodDef py_sugaruiext_functions[];
+extern PyMethodDef py_sugarext_functions[];
 
-void py_sugaruiext_register_classes (PyObject *d);
-void py_sugaruiext_add_constants (PyObject *module, const gchar *strip_prefix);
+void py_sugarext_register_classes (PyObject *d);
+void py_sugarext_add_constants (PyObject *module, const gchar *strip_prefix);
 
 DL_EXPORT(void)
-init_sugaruiext(void)
+init_sugarext(void)
 {
     PyObject *m, *d;
 
     init_pygobject ();
 
-    m = Py_InitModule ("_sugaruiext", py_sugaruiext_functions);
+    m = Py_InitModule ("_sugarext", py_sugarext_functions);
     d = PyModule_GetDict (m);
 
-    py_sugaruiext_register_classes (d);
-    py_sugaruiext_add_constants(m, "SEXY_");
+    py_sugarext_register_classes (d);
+    py_sugarext_add_constants(m, "SEXY_");
 
     if (PyErr_Occurred ()) {
-        Py_FatalError ("can't initialise module _sugaruiext");
+        Py_FatalError ("can't initialise module _sugarext");
     }
 }

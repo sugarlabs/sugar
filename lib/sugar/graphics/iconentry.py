@@ -17,12 +17,12 @@
 
 import gtk
 
-from sugar import _sugaruiext
+from sugar import _sugarext
 
-ICON_ENTRY_PRIMARY = _sugaruiext.ICON_ENTRY_PRIMARY
-ICON_ENTRY_SECONDARY = _sugaruiext.ICON_ENTRY_SECONDARY
+ICON_ENTRY_PRIMARY = _sugarext.ICON_ENTRY_PRIMARY
+ICON_ENTRY_SECONDARY = _sugarext.ICON_ENTRY_SECONDARY
 
-class IconEntry(_sugaruiext.IconEntry):
+class IconEntry(_sugarext.IconEntry):
     def set_icon_from_name(self, position, name):
         icon_theme = gtk.icon_theme_get_default()
         icon_info = icon_theme.lookup_icon(name,
@@ -41,5 +41,5 @@ class IconEntry(_sugaruiext.IconEntry):
         if image.get_storage_type() not in [gtk.IMAGE_PIXBUF, gtk.IMAGE_STOCK]:
             raise ValueError('Image must have a storage type of pixbuf or ' +
                              'stock, not %r.' % image.get_storage_type())
-        _sugaruiext.IconEntry.set_icon(self, position, image)
+        _sugarext.IconEntry.set_icon(self, position, image)
 

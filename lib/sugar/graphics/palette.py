@@ -25,7 +25,7 @@ import hippo
 from sugar.graphics import palettegroup
 from sugar.graphics import animator
 from sugar.graphics import style
-from sugar import _sugaruiext
+from sugar import _sugarext
 
 # Helper function to find the gap position and size of widget a
 def _calculate_gap(a, b):
@@ -435,15 +435,15 @@ class PaletteActionBar(gtk.HButtonBox):
         self.pack_start(button)
         button.show()
 
-class _Menu(_sugaruiext.Menu):
+class _Menu(_sugarext.Menu):
     __gtype_name__ = 'SugarPaletteMenu'
 
     def __init__(self, palette):
-        _sugaruiext.Menu.__init__(self)
+        _sugarext.Menu.__init__(self)
         self._palette = palette
 
     def do_insert(self, item, position):
-        _sugaruiext.Menu.do_insert(self, item, position)
+        _sugarext.Menu.do_insert(self, item, position)
         self._palette._update_separators()
         self.show()
 

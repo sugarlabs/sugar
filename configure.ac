@@ -19,12 +19,7 @@ AC_PATH_PROG(PYGTK_CODEGEN, pygtk-codegen-2.0, no)
 
 PKG_CHECK_MODULES(SHELL, pygtk-2.0 gtk+-2.0)
 
-PKG_CHECK_MODULES(NATIVE_FACTORY, dbus-1)
-
-PKG_CHECK_MODULES(LIBUI, gtk+-2.0)
-PKG_CHECK_MODULES(LIBUI_BINDINGS, pygtk-2.0)
-
-PKG_CHECK_MODULES(LIB_BINDINGS, pygobject-2.0)
+PKG_CHECK_MODULES(LIB, pygtk-2.0 gtk+-2.0)
 
 PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
 AC_SUBST(PYGTK_DEFSDIR)
@@ -52,6 +47,14 @@ bin/Makefile
 data/Makefile
 data/icons/Makefile
 lib/Makefile
+lib/sugar/Makefile
+lib/sugar/activity/Makefile
+lib/sugar/bundle/Makefile
+lib/sugar/clipboard/Makefile
+lib/sugar/graphics/Makefile
+lib/sugar/objects/Makefile
+lib/sugar/presence/Makefile
+lib/sugar/datastore/Makefile
 services/Makefile
 services/shell/Makefile
 shell/Makefile
@@ -83,13 +86,5 @@ services/console/interface/network/Makefile
 services/console/interface/logviewer/Makefile
 services/console/interface/terminal/Makefile
 services/console/interface/xserver/Makefile
-sugar/Makefile
-sugar/activity/Makefile
-sugar/bundle/Makefile
-sugar/clipboard/Makefile
-sugar/graphics/Makefile
-sugar/objects/Makefile
-sugar/presence/Makefile
-sugar/datastore/Makefile
 po/Makefile.in
 ])
