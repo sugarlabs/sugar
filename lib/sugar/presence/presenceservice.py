@@ -156,6 +156,7 @@ class PresenceService(gobject.GObject):
         
         returns presence Buddy or Activity representation
         """
+        _logger.debug('Creating proxy for %s', object_path)
         obj = None
         try:
             obj = self._objcache[object_path]
@@ -174,6 +175,7 @@ class PresenceService(gobject.GObject):
             else:
                 raise RuntimeError("Unknown object type")
             self._objcache[object_path] = obj
+        _logger.debug('Proxy is %r', obj)
         return obj
 
     def _have_object(self, object_path):

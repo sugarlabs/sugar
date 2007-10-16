@@ -322,7 +322,7 @@ class Activity(Window, gtk.Container):
         logging.debug("*** Act %s, mesh instance %r, scope %s" % (self._activity_id, mesh_instance, share_scope))
         if mesh_instance:
             # There's already an instance on the mesh, join it
-            logging.debug("*** Act %s joining existing mesh instance" % self._activity_id)
+            logging.debug("*** Act %s joining existing mesh instance %r", self._activity_id, mesh_instance)
             self._shared_activity = mesh_instance
             self._shared_activity.connect('notify::private',
                     self.__privacy_changed_cb)
@@ -537,7 +537,8 @@ class Activity(Window, gtk.Container):
             logging.debug('Share of activity %s failed: %s.' % (self._activity_id, err))
             return
 
-        logging.debug('Share of activity %s successful.' % self._activity_id)
+        logging.debug('Share of activity %s successful, PS activity is %r.',
+                      self._activity_id, activity)
 
         activity.props.name = self._jobject.metadata['title']
 

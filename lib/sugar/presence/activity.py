@@ -95,17 +95,21 @@ class Activity(gobject.GObject):
         self._handle_to_buddy_path = {}
         self._buddy_path_to_handle = {}
 
+    def __repr__(self):
+        return ('<proxy for %s at %x>' % (self._object_path, id(self)))
+
     def _get_properties_reply_cb(self, new_props):
-        self._properties_changed_cb(new_props)
         self._get_properties_call = None
+        _logger.debug('%r: initial GetProperties returned', self)
+        self._properties_changed_cb(new_props)
 
     def _get_properties_error_cb(self, e):
         self._get_properties_call = None
         # FIXME: do something with the error
-        _logger.warning('Error doing initial GetProperties: %s', e)
+        _logger.warning('%r: Error doing initial GetProperties: %s', self, e)
 
     def _properties_changed_cb(self, new_props):
-        _logger.debug('Activity properties changed to %r', new_props)
+        _logger.debug('%r: Activity properties changed to %r', self, new_props)
         val = new_props.get('name', self._name)
         if isinstance(val, str) and val != self._name:
             self._name = val
@@ -137,14 +141,13 @@ class Activity(gobject.GObject):
 
     def do_get_property(self, pspec):
         """Retrieve a particular property from our property dictionary"""
-        _logger.debug('Looking up property %s', pspec.name)
 
         if pspec.name == "joined":
             return self._joined
 
         if self._get_properties_call is not None:
-            _logger.debug('Blocking on GetProperties() because someone wants '
-                          'property %s', pspec.name)
+            _logger.debug('%r: Blocking on GetProperties() because someone '
+                          'wants property %s', self, pspec.name)
             self._get_properties_call.block()
 
         if pspec.name == "id":
@@ -183,6 +186,8 @@ class Activity(gobject.GObject):
         return False
 
     def _buddy_handle_joined_cb(self, object_path, handle):
+        _logger.debug('%r: buddy %s joined with handle %u', self, object_path,
+                      handle)
         gobject.idle_add(self._emit_buddy_joined_signal, object_path)
         self._handle_to_buddy_path[handle] = object_path
         self._buddy_path_to_handle[object_path] = handle
@@ -196,6 +201,7 @@ class Activity(gobject.GObject):
         return False
 
     def _buddy_left_cb(self, object_path):
+        _logger.debug('%r: buddy %s left', self, object_path)
         gobject.idle_add(self._emit_buddy_left_signal, object_path)
         handle = self._buddy_path_to_handle.pop(object_path)
         self._handle_to_buddy_path.pop(handle, None)
@@ -209,11 +215,12 @@ class Activity(gobject.GObject):
         return False
 
     def _new_channel_cb(self, object_path):
+        _logger.debug('%r: new channel created at %s', self, object_path)
         gobject.idle_add(self._emit_new_channel_signal, object_path)
 
     def get_joined_buddies(self):
         """Retrieve the set of Buddy objects attached to this activity
-        
+
         returns list of presence Buddy objects
         """
         resp = self._activity.GetJoinedBuddies()
@@ -240,7 +247,9 @@ class Activity(gobject.GObject):
         The callback will be called with one parameter: None on success,
         or an exception on failure.
         """
-        self._activity.Invite(buddy.object_path(), message,
+        op = buddy.object_path()
+        _logger.debug('%r: inviting %s', self, op)
+        self._activity.Invite(op, message,
                               reply_handler=lambda: response_cb(None),
                               error_handler=response_cb)
 
@@ -259,6 +268,7 @@ class Activity(gobject.GObject):
         if self._joined:
             self.emit("joined", True, None)
             return
+        _logger.debug('%r: joining', self)
         self._activity.Join(reply_handler=self._join_cb, error_handler=self._join_error_cb)
 
     def get_channels(self):
@@ -273,6 +283,8 @@ class Activity(gobject.GObject):
               associated with this activity
         """
         (bus_name, connection, channels) = self._activity.GetChannels()
+        _logger.debug('%r: bus name is %s, connection is %s, channels are %r',
+                      self, bus_name, connection, channels)
         return bus_name, connection, channels
 
     def _leave_cb(self):
@@ -285,6 +297,7 @@ class Activity(gobject.GObject):
 
     def leave(self):
         """Leave this shared activity"""
+        _logger.debug('%r: leaving', self)
         self._joined = False
         self._activity.Leave(reply_handler=self._leave_cb,
                              error_handler=self._leave_error_cb)
