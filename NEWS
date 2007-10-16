@@ -1,3 +1,4 @@
+* Correct the height of the primary palette (benzea)
 * Use double leading underscores for callback names to avoid name collisions (erikos)
  
 Snapshot 34e2271833

@@ -110,7 +110,8 @@ class Palette(gtk.Window):
         vbox = gtk.VBox()
 
         self._label = gtk.Label()
-        self._label.set_size_request(-1, style.zoom(style.GRID_CELL_SIZE))
+        self._label.set_size_request(-1, style.zoom(style.GRID_CELL_SIZE)
+                                          - 2*self.get_border_width())
         self._label.set_alignment(0, 0.5)
         self._label.set_padding(style.zoom(15), 0)
         vbox.pack_start(self._label, False)
