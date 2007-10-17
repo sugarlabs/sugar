@@ -1,4 +1,15 @@
 * #4027 Try to make sugar.presence log messages less misleading (smcv)
+
+Snapshot 24fbd1ce1c
+
+* Fix the object chooser (marco)
+
+Snapshot 3c7578577d
+
+* Fix the shell service (marco)
+
+Snapshot fa55b5af09
+
 * Changed default spacing to 15px (from 8px) (benzea)
 * Correct the height of the primary palette (benzea)
 * Use double leading underscores for callback names to avoid name collisions (erikos)
