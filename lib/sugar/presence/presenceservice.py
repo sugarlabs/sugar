@@ -302,21 +302,20 @@ class PresenceService(gobject.GObject):
              error_handler=lambda e:self._get_activities_error_cb(error_handler, e))
 
 
-    def get_activity(self, activity_id):
-        """Retrieve single Activity object for the given unique id 
-        
-        activity_id -- unique ID for the activity 
-        
-        returns single Activity object or None if the activity 
+    def get_activity(self, activity_id, warn_if_none=True):
+        """Retrieve single Activity object for the given unique id
+
+        activity_id -- unique ID for the activity
+
+        returns single Activity object or None if the activity
             is not found using GetActivityById on the service
         """
         try:
             act_op = self._ps.GetActivityById(activity_id)
         except dbus.exceptions.DBusException, err:
-            _logger.warn(
-                """Unable to retrieve activity handle for %r from presence service: %s"""
-                % (activity_id, err)
-            )
+            if warn_if_none:
+                _logger.warn("Unable to retrieve activity handle for %r from "
+                             "presence service: %s", activity_id, err)
             return None
         return self._new_object(act_op)
 

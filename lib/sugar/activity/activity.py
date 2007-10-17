@@ -318,9 +318,11 @@ class Activity(Window, gtk.Container):
             self._jobject = None
 
         # handle activity share/join
-        mesh_instance = self._pservice.get_activity(self._activity_id)
-        logging.debug("*** Act %s, mesh instance %r, scope %s" % (self._activity_id, mesh_instance, share_scope))
-        if mesh_instance:
+        mesh_instance = self._pservice.get_activity(self._activity_id,
+                                                    warn_if_none=False)
+        logging.debug("*** Act %s, mesh instance %r, scope %s",
+                      self._activity_id, mesh_instance, share_scope)
+        if mesh_instance is not None:
             # There's already an instance on the mesh, join it
             logging.debug("*** Act %s joining existing mesh instance %r", self._activity_id, mesh_instance)
             self._shared_activity = mesh_instance

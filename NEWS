@@ -1,3 +1,4 @@
+* #4266 Avoid misleading warning every time an activity starts (smcv)
 * #4027 Try to make sugar.presence log messages less misleading (smcv)
 
 Snapshot 24fbd1ce1c
