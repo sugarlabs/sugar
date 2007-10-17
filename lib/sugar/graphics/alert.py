@@ -64,29 +64,27 @@ class Alert(gtk.EventBox, gobject.GObject):
 
         self.set_visible_window(True)
         self._hbox = gtk.HBox()
+        self._hbox.set_border_width(style.DEFAULT_SPACING)
+        self._hbox.set_spacing(style.DEFAULT_SPACING)
         self.add(self._hbox)
 
         self._title = None
         self._msg = None
         self._icon = None
-        self._timeout = 0
         self._buttons = {}
-
+        
         self._msg_box = gtk.VBox()
         self._title_label = gtk.Label()
-        size = style.zoom(style.GRID_CELL_SIZE * 0.5)
         self._title_label.set_alignment(0, 0.5)
-        self._title_label.set_padding(style.DEFAULT_SPACING, 0)
         self._msg_box.pack_start(self._title_label, False)
         self._title_label.show()
 
         self._msg_label = gtk.Label()
         self._msg_label.set_alignment(0, 0.5)
-        self._msg_label.set_padding(style.DEFAULT_SPACING, 0)
         self._msg_box.pack_start(self._msg_label, False)
+        self._hbox.pack_start(self._msg_box, False)
         self._msg_label.show()
-        self._hbox.pack_start(self._msg_box)
-
+        
         self._buttons_box = gtk.HButtonBox()
         self._buttons_box.set_layout(gtk.BUTTONBOX_END)
         self._buttons_box.set_spacing(style.DEFAULT_SPACING)
@@ -94,7 +92,6 @@ class Alert(gtk.EventBox, gobject.GObject):
         self._buttons_box.show()
 
         self._msg_box.show()
-
         self._hbox.show()
         self.show()
 
@@ -110,7 +107,7 @@ class Alert(gtk.EventBox, gobject.GObject):
         elif pspec.name == 'icon':
             if self._icon != value:
                 self._icon = value
-                self._hbox.pack_start(self._icon)
+                self._hbox.pack_start(self._icon, False)
                 self._hbox.reorder_child(self._icon, 0)
 
     def do_get_property(self, pspec):
