@@ -20,11 +20,14 @@ import os
 import sys
 from optparse import OptionParser
 
+from sugar import env
 from sugar.activity import activityfactory
 from sugar.activity.registry import get_registry
 
 usage = "usage: %prog [options] activity"
 parser = OptionParser(usage)
+parser.add_option("-d", "--debug", action="store_true", dest="debug",
+                  help="launch activity inside gdb")
 (options, args) = parser.parse_args()
 
 if len(args) == 0:
@@ -37,5 +40,33 @@ if len(activities) == 0:
     print 'Activity not found.'
 
 activity = activities[0]
-args = activityfactory.get_command(activity).split(' ')
-os.execvpe(args[0], args, activityfactory.get_environment(activity))
+cmd_args = activityfactory.get_command(activity).split(' ')
+print cmd_args
+
+def _get_interpreter(exec_file):
+    if os.path.exists(exec_file):
+        abs_path = exec_file
+    else:
+        abs_path = os.path.join(env.get_bin_path(), exec_file)
+        if not os.path.exists(abs_path):
+            return exec_file
+
+    f = open(abs_path)
+    line = f.readline(100)
+    if line.startswith('#!'):
+        cmds = line[2:].strip().split(' ')
+        cmds.append(abs_path)
+        return cmds
+
+    return exec_file
+
+if options.debug:
+    act_args = cmd_args
+    cmd_args = ['gdb', '--args']
+    cmd_args.extend(_get_interpreter(act_args.pop(0)))
+    cmd_args.extend(act_args)
+
+print cmd_args
+
+os.execvpe(cmd_args[0], cmd_args, activityfactory.get_environment(activity))
+
