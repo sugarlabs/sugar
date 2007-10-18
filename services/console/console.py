@@ -54,7 +54,6 @@ class Console:
         self._load_interface('xserver', 'X Server')
         self._load_interface('memphis', 'Memphis')
         self._load_interface('logviewer', 'Log Viewer')
-        self._load_interface('terminal', 'Terminal')
         self._load_interface('ps_watcher', 'Presence')
         
         main_hbox = gtk.HBox()
@@ -68,7 +67,7 @@ class Console:
         mod = __import__(interface)
         widget = mod.Interface().widget
         widget.show()
-        
+
         self.notebook.append_page(widget, gtk.Label(label))
     
     def _delete_event_cb(self, window, gdkevent):
