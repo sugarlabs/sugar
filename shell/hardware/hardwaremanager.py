@@ -45,7 +45,7 @@ class HardwareManager(object):
         self._mixer = gst.element_factory_make('alsamixer')
         self._mixer.set_state(gst.STATE_PAUSED)
 
-
+        self._master = None
         for track in self._mixer.list_tracks():
             if track.flags & gst.interfaces.MIXER_TRACK_MASTER:
                 self._master = track

@@ -1,6 +1,10 @@
 * Fullscreen support (hide toolbar and tray) and tray support in activity 
 window (erikos)
 
+Snapshot b023dd17a2
+
+* Fix a crash in the emulator (marco)
+
 Snapshot 276e1ee517
 
 * #4266 Avoid misleading warning every time an activity starts (smcv)
