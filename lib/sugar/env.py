@@ -81,7 +81,7 @@ def get_locale_path(path=None):
     return _get_prefix_path('share/locale', path)
 
 def get_bin_path(path=None):
-    return _get_sugar_path('bin', path)
+    return _get_prefix_path('bin', path)
 
 def get_service_path(name):
     return _get_sugar_path('services', name)
