@@ -4,5 +4,6 @@
 
 <Alt>n=next
 <Alt>p=prev
-<Alt>c=close
+<Ctrl>escape=close
+<Ctrl>Q=close
 <Alt>return=fullscreen
