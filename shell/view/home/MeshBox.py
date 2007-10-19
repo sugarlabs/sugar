@@ -71,9 +71,9 @@ class AccessPointView(PulsingIcon):
         # Update badge
         caps = model.props.capabilities
         if model.get_nm_network().is_favorite():
-            self.props.badge_name = "badge-star"
+            self.props.badge_name = "emblem-star"
         elif (caps & NM_802_11_CAP_PROTO_WEP) or (caps & NM_802_11_CAP_PROTO_WPA) or (caps & NM_802_11_CAP_PROTO_WPA2):
-            self.props.badge_name = "badge-locked"
+            self.props.badge_name = "emblem-locked"
 
     def _create_palette(self):
         p = palette.Palette(self._model.props.name, menu_after_content=True)

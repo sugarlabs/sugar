@@ -50,7 +50,7 @@ class DeviceView(CanvasIcon):
         # Update palette
         if self._model.props.charging:
             status = _STATUS_CHARGING
-            self.props.badge_name = 'badge-charging'
+            self.props.badge_name = 'emblem-charging'
         elif self._model.props.discharging:
             status = _STATUS_DISCHARGING
             self.props.badge_name = None
