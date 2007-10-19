@@ -1,3 +1,5 @@
+* Add a keybinding (alt+space) to activity window to hide/show tray (erikos)
+
 Snapshot efd0bbd326
 
 * Add support to be able to remove an alert which is not the top 

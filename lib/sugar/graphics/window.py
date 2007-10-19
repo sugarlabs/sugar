@@ -23,6 +23,7 @@ class Window(gtk.Window):
 
         self.connect('realize', self.__window_realize_cb)
         self.connect('window-state-event', self.__window_state_event_cb)
+        self.connect('key-press-event', self.__key_press_cb)
         
         self.toolbox = None
         self._alerts = []
@@ -106,7 +107,14 @@ class Window(gtk.Window):
                 self.toolbox.show()
             if self.tray is not None:
                 self.tray.show()
-                
+
+    def __key_press_cb(self, widget, event):
+        if event.state & gtk.gdk.MOD1_MASK:
+            if gtk.gdk.keyval_name(event.keyval) == 'space':
+                self.tray.props.visible = not self.tray.props.visible
+                return True
+        return False
+    
     def get_canvas_screenshot(self):
         if not self.canvas:
             return None
