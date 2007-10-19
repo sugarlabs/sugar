@@ -1,3 +1,5 @@
+* Add support to be able to remove an alert which is not the top 
+one on the queue (erikos)
 * Fullscreen support (hide toolbar and tray) and tray support in activity 
 window (erikos)
 

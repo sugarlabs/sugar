@@ -80,13 +80,15 @@ class Window(gtk.Window):
     def remove_alert(self, alert):
         if alert in self._alerts:
             self._alerts.remove(alert)
-            self._vbox.remove(alert)
-            if len(self._alerts) >= 1:
-                self._vbox.pack_start(self._alerts[0], False)
-                if self.toolbox is not None:
-                    self._vbox.reorder_child(self._alerts[0], 1)
-                else:
-                    self._vbox.reorder_child(self._alert[0], 0)
+            # if the alert is the visible one on top of the queue
+            if alert.get_parent() is not None:                            
+                self._vbox.remove(alert)
+                if len(self._alerts) >= 1:
+                    self._vbox.pack_start(self._alerts[0], False)
+                    if self.toolbox is not None:
+                        self._vbox.reorder_child(self._alerts[0], 1)
+                    else:
+                        self._vbox.reorder_child(self._alert[0], 0)
                     
     def __window_realize_cb(self, window):
         group = gtk.Window()
