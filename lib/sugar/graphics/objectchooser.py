@@ -29,6 +29,7 @@ from sugar.graphics.xocolor import XoColor
 from sugar.graphics.roundbox import CanvasRoundBox
 from sugar.datastore import datastore
 from sugar import activity
+from sugar import mime
 
 # TODO: Activities should request the Journal to open objectchooser dialogs. In
 # that way, we'll be able to reuse most of this code inside the Journal.
