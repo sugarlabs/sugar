@@ -32,7 +32,7 @@ class ZoomToolbar(gtk.Toolbar):
 
         self.set_show_arrow(False)
 
-        button = ToolButton(icon_name='zoom-mesh')
+        button = ToolButton(icon_name='zoom-neighborhood')
         button.connect('clicked',
                        self._level_clicked_cb,
                        ShellModel.ZOOM_MESH)
@@ -44,7 +44,7 @@ class ZoomToolbar(gtk.Toolbar):
         palette.set_group_id('frame')
         button.set_palette(palette)
 
-        button = ToolButton(icon_name='zoom-friends')
+        button = ToolButton(icon_name='zoom-groups')
         button.connect('clicked',
                        self._level_clicked_cb,
                        ShellModel.ZOOM_FRIENDS)
