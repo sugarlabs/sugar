@@ -203,8 +203,9 @@ class Activity(gobject.GObject):
     def _buddy_left_cb(self, object_path):
         _logger.debug('%r: buddy %s left', self, object_path)
         gobject.idle_add(self._emit_buddy_left_signal, object_path)
-        handle = self._buddy_path_to_handle.pop(object_path)
-        self._handle_to_buddy_path.pop(handle, None)
+        handle = self._buddy_path_to_handle.pop(object_path, None)
+        if handle:
+            self._handle_to_buddy_path.pop(handle, None)
 
     def _emit_new_channel_signal(self, object_path):
         """Generate new-channel GObject signal with channel object path 
