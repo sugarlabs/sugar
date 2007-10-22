@@ -582,7 +582,6 @@ class Activity(Window, gtk.Container):
         Once the activity is shared, its privacy can be changed by setting
         its 'private' property.
         """
-        # FIXME: Make private=True to turn on the by-invitation-only scope
         if self._shared_activity and self._shared_activity.props.joined:
             raise RuntimeError("Activity %s already shared." %
                                self._activity_id)
