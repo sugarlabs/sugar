@@ -184,6 +184,8 @@ class Frame(object):
         if self._animator:
             self._animator.stop()
 
+        self._shell.take_activity_screenshot()
+
         self._animator = animator.Animator(0.5)
         self._animator.add(_Animation(self, 1.0))
         self._animator.start()

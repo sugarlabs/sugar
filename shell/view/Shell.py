@@ -161,18 +161,22 @@ class Shell(gobject.GObject):
         activityfactory.create(activity_type)
 
     def take_activity_screenshot(self):
+        if self._model.get_zoom_level() != ShellModel.ZOOM_ACTIVITY:
+            return
+        if self.get_frame().visible:
+            return
+
         home_model = self._model.get_home()
-        service = home_model.get_active_activity().get_service()
-        service.TakeScreenshot()
+        activity = home_model.get_active_activity()
+        if activity:
+            activity.get_service().TakeScreenshot()
 
     def set_zoom_level(self, level):
         old_level = self._model.get_zoom_level()
         if level == old_level:
             return
 
-        if old_level == ShellModel.ZOOM_ACTIVITY and \
-           not self.get_frame().visible:
-            self.take_activity_screenshot()
+        self.take_activity_screenshot()
 
         if level == ShellModel.ZOOM_ACTIVITY:
             if self._pending_host is not None:
