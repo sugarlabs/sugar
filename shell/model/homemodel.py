@@ -70,6 +70,20 @@ class HomeModel(gobject.GObject):
         screen.connect('active-window-changed',
                        self._active_window_changed_cb)
 
+    def get_previous_activity(self):
+        i = self._activities.index(self._pending_activity)
+        if i > 0:
+            return self._activities[i - 1]
+        else:
+            return None
+
+    def get_next_activity(self):
+        i = self._activities.index(self._pending_activity)
+        if i < len(self._activities) - 1:
+            return self._activities[i + 1]
+        else:
+            return None
+
     def get_pending_activity(self):
         """Returns the activity that would be seen in the Activity zoom level
 

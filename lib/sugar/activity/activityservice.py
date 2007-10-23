@@ -64,3 +64,7 @@ class ActivityService(dbus.service.Object):
     def Invite(self, buddy_key):
         self._activity.invite(buddy_key)
 
+    @dbus.service.method(_ACTIVITY_INTERFACE)
+    def TakeScreenshot(self):
+        self._activity.take_screenshot()
+

@@ -160,9 +160,19 @@ class Shell(gobject.GObject):
         self._activities_starting.add(activity_type)
         activityfactory.create(activity_type)
 
+    def take_activity_screenshot(self):
+        home_model = self._model.get_home()
+        service = home_model.get_active_activity().get_service()
+        service.TakeScreenshot()
+
     def set_zoom_level(self, level):
-        if level == self._model.get_zoom_level():
+        old_level = self._model.get_zoom_level()
+        if level == old_level:
             return
+
+        if old_level == ShellModel.ZOOM_ACTIVITY and \
+           not self.get_frame().visible:
+            self.take_activity_screenshot()
 
         if level == ShellModel.ZOOM_ACTIVITY:
             if self._pending_host is not None:
@@ -172,6 +182,29 @@ class Shell(gobject.GObject):
             self._model.set_zoom_level(level)
             self._screen.toggle_showing_desktop(True)
             self._home_window.set_zoom_level(level)
+
+    def toggle_activity_fullscreen(self):
+        if self._model.get_zoom_level() == ShellModel.ZOOM_ACTIVITY:
+            self.get_current_activity().toggle_fullscreen()
+
+    def activate_previous_activity(self):
+        home_model = self._model.get_home()
+        activity = home_model.get_previous_activity()
+        if activity:
+            self.take_activity_screenshot()
+            activity.get_window().activate(1)
+
+    def activate_next_activity(self):
+        home_model = self._model.get_home()
+        activity = home_model.get_next_activity()
+        if activity:
+            self.take_activity_screenshot()
+            activity.get_window().activate(1)
+
+    def close_current_activity(self):
+        self.take_activity_screenshot()
+        if self._model.get_zoom_level() == ShellModel.ZOOM_ACTIVITY:
+            self.get_current_activity().close()
 
     def get_current_activity(self):
         return self._current_host

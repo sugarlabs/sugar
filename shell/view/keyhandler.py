@@ -32,29 +32,34 @@ _BRIGHTNESS_MAX = 15
 _VOLUME_MAX = 100
 
 _actions_table = {
-    'F1'            : 'zoom_mesh',
-    'F2'            : 'zoom_friends',
-    'F3'            : 'zoom_home',
-    'F4'            : 'zoom_activity',
-    'F9'            : 'brightness_down',
-    'F10'           : 'brightness_up',
-    '<ctrl>F9'      : 'brightness_min',
-    '<ctrl>F10'     : 'brightness_max',
-    'F11'           : 'volume_down',
-    'F12'           : 'volume_up',
-    '<ctrl>F11'     : 'volume_min',
-    '<ctrl>F12'     : 'volume_max',
-    '<alt>1'        : 'screenshot',
-    '<alt>equal'    : 'console',
-    '<alt>0'        : 'console',
-    '<alt>f'        : 'frame',
-    '0x93'          : 'frame',
-    '<alt>o'        : 'overlay',
-    '0xE0'          : 'overlay',
-    '0xEB'          : 'rotate',
-    '<alt>r'        : 'rotate',
-    '<alt>Tab'      : 'home',
-    '<alt>q'        : 'quit_emulator',
+    'F1'             : 'zoom_mesh',
+    'F2'             : 'zoom_friends',
+    'F3'             : 'zoom_home',
+    'F4'             : 'zoom_activity',
+    'F9'             : 'brightness_down',
+    'F10'            : 'brightness_up',
+    '<ctrl>F9'       : 'brightness_min',
+    '<ctrl>F10'      : 'brightness_max',
+    'F11'            : 'volume_down',
+    'F12'            : 'volume_up',
+    '<ctrl>F11'      : 'volume_min',
+    '<ctrl>F12'      : 'volume_max',
+    '<alt>1'         : 'screenshot',
+    '<alt>equal'     : 'console',
+    '<alt>0'         : 'console',
+    '<alt>f'         : 'frame',
+    '0x93'           : 'frame',
+    '<alt>o'         : 'overlay',
+    '0xE0'           : 'overlay',
+    '0xEB'           : 'rotate',
+    '<alt>r'         : 'rotate',
+    '<alt>q'         : 'quit_emulator',
+    '<alt>tab'       : 'next_window',
+    '<alt>n'         : 'next_window',
+    '<ctrl><alt>tab' : 'previous_window',
+    '<alt>p'         : 'previous_window',
+    '<ctrl>escape'   : 'close_window',
+    '<ctrl>q'        : 'close_window'
 }
 
 class KeyHandler(object):
@@ -102,6 +107,15 @@ class KeyHandler(object):
             hw_manager.set_display_mode(hardwaremanager.B_AND_W_MODE)
         else:
             hw_manager.set_display_mode(hardwaremanager.COLOR_MODE)
+
+    def handle_previous_window(self):
+        self._shell.activate_previous_activity()
+
+    def handle_next_window(self):
+        self._shell.activate_next_activity()
+
+    def handle_close_window(self):
+        self._shell.close_current_activity()
 
     def handle_zoom_mesh(self):
         self._shell.set_zoom_level(ShellModel.ZOOM_MESH)
@@ -165,10 +179,6 @@ class KeyHandler(object):
         if os.environ.has_key('SUGAR_EMULATOR_PID'):
             pid = int(os.environ['SUGAR_EMULATOR_PID'])
             os.kill(pid, signal.SIGTERM)
-
-    def handle_home(self):
-        # FIXME: finish alt+tab support
-        pass
 
     def _key_pressed_cb(self, grabber, keycode, state):
         key = grabber.get_key(keycode, state)

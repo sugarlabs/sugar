@@ -72,6 +72,10 @@ class ActivityHost:
         else:
             logging.error('Invite failed, activity service not ')
 
+    def toggle_fullscreen(self):
+        fullscreen = not self._window.is_fullscreen()
+        self._window.set_fullscreen(fullscreen)
+
     def present(self):
         # wnck.Window.activate() expects a timestamp, but we don't
         # always have one, and libwnck will complain if we pass "0",

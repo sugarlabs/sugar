@@ -128,6 +128,7 @@ class ActivityToolbar(gtk.Toolbar):
         self._activity.copy()
 
     def __stop_clicked_cb(self, button):
+        self._activity.take_screenshot()
         self._activity.close()
 
     def __jobject_updated_cb(self, jobject):
@@ -461,6 +462,9 @@ class Activity(Window, gtk.Container):
         else:
             return {}
 
+    def take_screenshot(self):
+        self._preview = self._get_preview()
+
     def save(self):
         """Request that the activity is saved to the Journal."""
 
@@ -594,8 +598,6 @@ class Activity(Window, gtk.Container):
         self._pservice.share_activity(self, private=private)
 
     def close(self):
-        self._preview = self._get_preview()
-
         self.save()
 
         if self._shared_activity:
