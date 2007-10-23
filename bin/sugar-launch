@@ -40,8 +40,7 @@ if len(activities) == 0:
     print 'Activity not found.'
 
 activity = activities[0]
-cmd_args = activityfactory.get_command(activity).split(' ')
-print cmd_args
+cmd_args = activityfactory.get_command(activity)
 
 def _get_interpreter(exec_file):
     if os.path.exists(exec_file):
@@ -65,8 +64,6 @@ if options.debug:
     cmd_args = ['gdb', '--args']
     cmd_args.extend(_get_interpreter(act_args.pop(0)))
     cmd_args.extend(act_args)
-
-print cmd_args
 
 os.execvpe(cmd_args[0], cmd_args, activityfactory.get_environment(activity))
 

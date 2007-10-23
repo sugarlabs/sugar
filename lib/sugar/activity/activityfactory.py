@@ -88,14 +88,16 @@ def get_command(activity, activity_id=None, object_id=None, uri=None):
     if not activity_id:
         activity_id = create_activity_id()
 
-    command = activity.command
-    command += ' -b %s' % activity.bundle_id
-    command += ' -a %s' % activity_id
+    command = activity.command.split(' ')
+    command.extend(['-b', activity.bundle_id])
+    command.extend(['-a', activity_id])
 
     if object_id is not None:
-        command += ' -o %s' % object_id
+        command.extend(['-o', object_id])
     if uri is not None:
-        command += ' -u %s' % uri
+        command.extend(['-u', uri])
+
+    print command
 
     return command
 
@@ -184,9 +186,8 @@ class ActivityCreationHandler(gobject.GObject):
                 command = get_command(activity, self._handle.activity_id,
                                       self._handle.object_id,
                                       self._handle.uri)
-                process = subprocess.Popen(command, env=env, shell=True,
-                                           cwd=activity.path, stdout=log_file,
-                                           stderr=log_file)
+                process = subprocess.Popen(command, env=env, cwd=activity.path,
+                                           stdout=log_file, stderr=log_file)
         else:
             system_bus = dbus.SystemBus()
             factory = system_bus.get_object(_RAINBOW_SERVICE_NAME,
