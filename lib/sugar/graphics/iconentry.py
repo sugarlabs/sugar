@@ -28,8 +28,8 @@ class IconEntry(_sugarext.IconEntry):
         icon_info = icon_theme.lookup_icon(name,
                                            gtk.ICON_SIZE_SMALL_TOOLBAR,
                                            0)
-
         pixbuf = gtk.gdk.pixbuf_new_from_file(icon_info.get_filename())
+        del icon_info
 
         image = gtk.Image()
         image.set_from_pixbuf(pixbuf)

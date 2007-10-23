@@ -89,3 +89,9 @@ class Toolbox(gtk.VBox):
 
     def set_current_toolbar(self, index):
         self._notebook.set_current_page(index)
+
+    def get_current_toolbar(self):
+        return self._notebook.get_current_page()
+    
+    current_toolbar = property(get_current_toolbar, set_current_toolbar)
+
