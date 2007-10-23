@@ -130,6 +130,8 @@ class _IconBuffer(object):
                 icon_info.file_name = info.get_filename()
                 icon_info.attach_x = attach_x
                 icon_info.attach_y = attach_y
+
+                del info
             else:
                 logging.warning('No icon with the name %s '
                                 'was found in the theme.' % self.icon_name)
