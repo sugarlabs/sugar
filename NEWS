@@ -1,3 +1,5 @@
+* #4238: Handle double BuddyLeft in handle tracking in sugar.presence (morgs)
+
 Snapshot 57402cf309
 
 * Add new keybindings (Ctrl+Q, Ctrl+escape) for close activity (erikos)
