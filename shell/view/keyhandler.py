@@ -54,11 +54,11 @@ _actions_table = {
     '0xEB'           : 'rotate',
     '<alt>r'         : 'rotate',
     '<alt>q'         : 'quit_emulator',
-    '<alt>tab'       : 'next_window',
+    '<alt>Tab'       : 'next_window',
     '<alt>n'         : 'next_window',
-    '<ctrl><alt>tab' : 'previous_window',
+    '<ctrl><alt>Tab' : 'previous_window',
     '<alt>p'         : 'previous_window',
-    '<ctrl>escape'   : 'close_window',
+    '<ctrl>Escape'   : 'close_window',
     '<ctrl>q'        : 'close_window'
 }
 
