@@ -1,3 +1,5 @@
+Snapshot fdb4e49b14
+
 * Save journal files on nand, not tmpfs (tomeu)
 
 Snapshot 3bae39c06c
