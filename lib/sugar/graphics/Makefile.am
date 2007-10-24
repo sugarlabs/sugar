@@ -4,7 +4,6 @@ sugar_PYTHON =			\
         alert.py                \
 	animator.py		\
 	combobox.py		\
-	composite.py		\
 	entry.py		\
 	icon.py			\
 	iconentry.py          	\
@@ -15,7 +14,6 @@ sugar_PYTHON =			\
 	palette.py		\
 	palettegroup.py		\
 	panel.py		\
-	render.py		\
 	roundbox.py		\
 	spreadlayout.py		\
 	style.py		\
@@ -25,5 +23,4 @@ sugar_PYTHON =			\
 	toolcombobox.py		\
 	tray.py			\
 	window.py		\
-	x11.py			\
 	xocolor.py
