@@ -32,9 +32,8 @@ class Alert(gtk.EventBox, gobject.GObject):
     Alerts are used inside the activity window instead of being a
     separate popup window. They do not hide canvas content. You can
     use add_alert(widget) and remove_alert(widget) inside your activity
-    to add and remove the alert. You can set the position (bottom=-1,
-    top=0,1) for alerts global for the window by changing alert_position,
-    default is bottom. 
+    to add and remove the alert. The position of the alert is below the
+    toolbox or top in fullscreen mode.
 
     Properties:
         'title': the title of the alert,
@@ -218,6 +217,34 @@ class TimeoutAlert(Alert):
 
         gobject.timeout_add(1000, self.__timeout)
         
+    def __timeout(self):
+        self._timeout -= 1
+        self._timeout_text.props.text = self._timeout
+        if self._timeout == 0:
+            self._response(gtk.RESPONSE_OK)
+            return False
+        return True
+
+
+class NotifyAlert(Alert):
+    """Timeout alert with only an "OK" button - just for notifications"""
+
+    def __init__(self, timeout=5, **kwargs):
+        Alert.__init__(self, **kwargs)
+
+        self._timeout = timeout
+
+        self._timeout_text = _TimeoutIcon(
+            text=self._timeout,
+            color=style.COLOR_BUTTON_GREY.get_int(),
+            background_color=style.COLOR_WHITE.get_int())
+        canvas = hippo.Canvas()
+        canvas.set_root(self._timeout_text)
+        canvas.show()
+        self.add_button(gtk.RESPONSE_OK, _('OK'), canvas)
+
+        gobject.timeout_add(1000, self.__timeout)
+
     def __timeout(self):
         self._timeout -= 1
         self._timeout_text.props.text = self._timeout

@@ -1,3 +1,5 @@
+* Added morgs NotifyAlert (timed one button alert) to the alert api (erikos)
+
 Snapshot fdb4e49b14
 
 * Save journal files on nand, not tmpfs (tomeu)
