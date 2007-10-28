@@ -1,3 +1,5 @@
+* #4358: pydoc strings for sugar.activity.Activity
+
 Snapshot 176262f2e9
 
 * Added morgs NotifyAlert (timed one button alert) to the alert api (erikos)
