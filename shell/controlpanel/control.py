@@ -232,7 +232,15 @@ def get_color():
     return profile.get_color()    
 
 def print_color():
-    print get_color().to_string()
+    color = get_color().to_string()
+    str = color.split(',')
+
+    for color in _COLORS:
+        for hue in _COLORS[color]:
+            if _COLORS[color][hue] == str[0]:
+                print 'stroke: color=%s hue=%s'%(color, hue)
+            if _COLORS[color][hue] == str[1]:
+                print 'fill:   color=%s hue=%s'%(color, hue)
 
 def set_color(stroke, fill, modstroke='medium', modfill='medium'):
     """Set the system color.
@@ -365,16 +373,6 @@ def _read_zonetab(fn='/usr/share/zoneinfo/zone.tab'):
     timezones.sort()
     return timezones
 
-def _remove_encoding(lang):
-    if '.' in lang:
-        langBase = lang.split('.')
-        return langBase[0]
-    elif '@' in lang:
-        langBase = lang.split('@')
-        return langBase[0]
-    else:
-        return lang
-
 def _writeI18N(lang, sysfont):
     path = '/etc/sysconfig/i18n'
     if os.access(path, os.R_OK) == 0:
@@ -402,15 +400,20 @@ def get_language():
             lang = line[5:].replace('"', '')
             lang = lang.strip()
 
-    if lang:
-        lang = _remove_encoding(lang)
-    else:
+    if not lang:
         lang = "en_US"            
+
     return lang
 
 def print_language():
-    print get_language()
-        
+    code = get_language()
+
+    for lang in _LANGUAGES:
+        if _LANGUAGES[lang][0] == code:
+            print lang
+            return
+    print (_("Language for code=%s could not be determined.")%code)
+    
 def set_language(language):
     """Set the system language.
     languages : 
