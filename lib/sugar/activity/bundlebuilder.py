@@ -348,22 +348,6 @@ def cmd_release(bundle_name, manifest):
     print 'Creating the bundle...'
     cmd_dist(bundle_name, manifest)
 
-    if os.environ.has_key('ACTIVITIES_REPOSITORY'):
-        print 'Uploading to the activities repository...'
-        repo = os.environ['ACTIVITIES_REPOSITORY']
-
-        server, path = repo.split(':')
-        retcode = subprocess.call(['ssh', server, 'rm',
-                                   '%s/%s*' % (path, bundle_name)])
-        if retcode:
-            print 'ERROR - cannot remove old bundles from the repository.'
-
-        bundle_path = os.path.join(_get_source_path(),
-                                   _get_package_name(bundle_name))
-        retcode = subprocess.call(['scp', bundle_path, repo])
-        if retcode:
-            print 'ERROR - cannot upload the bundle to the repository.'
-
     print 'Done.'
 
 def cmd_clean():
