@@ -45,7 +45,6 @@ AC_OUTPUT([
 Makefile
 bin/Makefile
 data/Makefile
-data/icons/Makefile
 lib/Makefile
 lib/sugar/Makefile
 lib/sugar/activity/Makefile

@@ -57,6 +57,7 @@ class Shell(gobject.GObject):
         self._current_host = None
         self._pending_host = None
         self._screen_rotation = 0
+        self._zoom_level = ShellModel.ZOOM_HOME
 
         self._key_handler = KeyHandler(self)
 
@@ -72,6 +73,8 @@ class Shell(gobject.GObject):
                            self._active_activity_changed_cb)
         home_model.connect('pending-activity-changed',
                            self._pending_activity_changed_cb)
+
+        self._model.connect('notify::zoom-level', self._zoom_level_changed_cb)
 
         gobject.idle_add(self._start_journal_idle)
 
@@ -172,8 +175,7 @@ class Shell(gobject.GObject):
             activity.get_service().TakeScreenshot()
 
     def set_zoom_level(self, level):
-        old_level = self._model.get_zoom_level()
-        if level == old_level:
+        if level == self._zoom_level:
             return
 
         self.take_activity_screenshot()
@@ -186,6 +188,17 @@ class Shell(gobject.GObject):
             self._model.set_zoom_level(level)
             self._screen.toggle_showing_desktop(True)
             self._home_window.set_zoom_level(level)
+
+    def _zoom_level_changed_cb(self, model, pspec):
+        new_level = model.props.zoom_level
+
+        if new_level == ShellModel.ZOOM_HOME:
+            self._frame.show(Frame.MODE_HOME)
+
+        if self._zoom_level == ShellModel.ZOOM_HOME:
+            self._frame.hide()
+
+        self._zoom_level = new_level
 
     def toggle_activity_fullscreen(self):
         if self._model.get_zoom_level() == ShellModel.ZOOM_ACTIVITY:
