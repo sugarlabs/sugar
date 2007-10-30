@@ -1,3 +1,5 @@
+Snapshot b72f00e30b
+
 * #4517 Do not require a TakeScreenshot method on the dbus service (marco)
 * Add wep type combo. (dcbw)
 
