@@ -1,3 +1,4 @@
+* #4518: Encode nickname in UTF-8 when writing it out to .sugar/*/config (smcv)
 * #4503: Do some standard Tubes boilerplate in sugar.presence, so activities
   don't have to (smcv)
 * #4428 Revert to the trial-3 frame behavior (marco)
