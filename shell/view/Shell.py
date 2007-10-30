@@ -173,9 +173,9 @@ class Shell(gobject.GObject):
         activity = home_model.get_active_activity()
         if activity:
             try:
-                activity.get_service().TakeScreenshot(timeout=1.0)
+                activity.get_service().TakeScreenshot(timeout=2.0)
             except dbus.DBusException, e:
-                logging.debug('ignoring error raised by TakeScreenshot(): %s', e)
+                logging.debug('Error raised by TakeScreenshot(): %s', e)
 
     def set_zoom_level(self, level):
         if level == self._zoom_level:
