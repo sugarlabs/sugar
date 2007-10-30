@@ -1,1 +1,1 @@
-SUBDIRS = shell console
+SUBDIRS = shell

@@ -1,1 +1,0 @@
-from memphis import Interface
