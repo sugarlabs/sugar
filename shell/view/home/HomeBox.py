@@ -48,55 +48,17 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
 
         shell_model = shell.get_model()
 
-        top_box = hippo.CanvasBox(yalign=hippo.ALIGNMENT_START,
-                                  box_height=style.GRID_CELL_SIZE,
-                                  orientation=hippo.ORIENTATION_HORIZONTAL)
-        self.append(top_box, hippo.PACK_EXPAND)
-
-        nw_arrow = CanvasIcon(icon_name='arrow_NW',
-                              xalign=hippo.ALIGNMENT_START)
-        top_box.append(nw_arrow)
-
-        arrows_separator = hippo.CanvasBox()
-        top_box.append(arrows_separator, hippo.PACK_EXPAND)
-
-        ne_arrow = CanvasIcon(icon_name='arrow_NE',
-                              xalign=hippo.ALIGNMENT_END)
-        top_box.append(ne_arrow)
-
         self._donut = ActivitiesDonut(shell)
-        self.append(self._donut)
-
-        bottom_box = hippo.CanvasBox(yalign=hippo.ALIGNMENT_END,
-                                     box_height=style.GRID_CELL_SIZE,
-                                     orientation=hippo.ORIENTATION_HORIZONTAL)
-        self.append(bottom_box, hippo.PACK_EXPAND)
+        self.append(self._donut, hippo.PACK_FIXED)
 
         self._my_icon = _MyIcon(shell, style.XLARGE_ICON_SIZE)
         self.append(self._my_icon, hippo.PACK_FIXED)
 
-        sw_arrow = CanvasIcon(icon_name='arrow_SW',
-                              xalign=hippo.ALIGNMENT_START)
-        bottom_box.append(sw_arrow)
-
-        devices_box = _DevicesBox(shell_model.get_devices())
-        bottom_box.append(devices_box, hippo.PACK_EXPAND)
-
-        se_arrow = CanvasIcon(icon_name='arrow_SE',
-                              xalign=hippo.ALIGNMENT_END)
-        bottom_box.append(se_arrow)
-
-        self._arrows = [ nw_arrow, ne_arrow, sw_arrow, se_arrow ]
+        self._devices_box = _DevicesBox(shell_model.get_devices())
+        self.append(self._devices_box, hippo.PACK_FIXED)
 
         shell_model.connect('notify::state',
                             self._shell_state_changed_cb)
-        shell_model.connect('notify::zoom-level',
-                            self._shell_zoom_level_changed_cb)
-
-    def _shell_zoom_level_changed_cb(self, model, pspec):
-        for arrow in self._arrows:
-            arrow.destroy()
-        self._arrows = []
 
     def _shell_state_changed_cb(self, model, pspec):
         # FIXME implement this
@@ -106,9 +68,17 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
     def do_allocate(self, width, height, origin_changed):
         hippo.CanvasBox.do_allocate(self, width, height, origin_changed)
 
+        [donut_width, donut_height] = self._donut.get_allocation()
+        self.set_position(self._donut, (width - donut_width) / 2,
+                          (height - donut_height) / 2)
+
         [icon_width, icon_height] = self._my_icon.get_allocation()
         self.set_position(self._my_icon, (width - icon_width) / 2,
                           (height - icon_height) / 2)
+
+        [box_width, box_height] = self._devices_box.get_allocation()
+        self.set_position(self._devices_box, (width - icon_width) / 2,
+                          height - style.GRID_CELL_SIZE * 3)
                   
     _REDRAW_TIMEOUT = 5 * 60 * 1000 # 5 minutes
 

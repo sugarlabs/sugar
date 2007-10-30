@@ -45,8 +45,6 @@ _actions_table = {
     '<ctrl>F11'      : 'volume_min',
     '<ctrl>F12'      : 'volume_max',
     '<alt>1'         : 'screenshot',
-    '<alt>equal'     : 'console',
-    '<alt>0'         : 'console',
     '<alt>f'         : 'frame',
     '0x93'           : 'frame',
     '<alt>o'         : 'overlay',
@@ -156,9 +154,6 @@ class KeyHandler(object):
     def handle_screenshot(self):
         self._shell.take_screenshot()
 
-    def handle_console(self):
-        gobject.idle_add(self._toggle_console_visibility_cb)
-
     def handle_frame(self):
         self._shell.get_frame().notify_key_press()
 
@@ -222,10 +217,3 @@ class KeyHandler(object):
             return True
 
         return False
-
-    def _toggle_console_visibility_cb(self):
-        bus = dbus.SessionBus()
-        proxy = bus.get_object('org.laptop.sugar.Console',
-                               '/org/laptop/sugar/Console')
-        console = dbus.Interface(proxy, 'org.laptop.sugar.Console')
-        console.ToggleVisibility()

@@ -33,16 +33,11 @@ from view.frame.framewindow import FrameWindow
 from view.frame.clipboardpanelwindow import ClipboardPanelWindow
 from model.shellmodel import ShellModel
 
-MODE_NONE     = 0
-MODE_MOUSE    = 1
-MODE_KEYBOARD = 2
-MODE_FORCE    = 3
-
 _FRAME_HIDING_DELAY = 500
 
 class _Animation(animator.Animation):
     def __init__(self, frame, end):
-        start = frame.get_current_position()
+        start = frame.current_position
         animator.Animation.__init__(self, start, end)
         self._frame = frame
 
@@ -55,19 +50,16 @@ class _MouseListener(object):
         self._hide_sid = 0
 
     def mouse_enter(self):
-        if self._frame.mode == MODE_NONE or \
-           self._frame.mode == MODE_MOUSE:
-            self._show_frame()
+        self._show_frame()
 
     def mouse_leave(self):
-        if self._frame.mode == MODE_MOUSE:
+        if self._frame.mode == Frame.MODE_MOUSE:
             self._hide_frame()
 
     def _show_frame(self):
         if self._hide_sid != 0:
             gobject.source_remove(self._hide_sid)
-        self._frame.show()
-        self._frame.mode = MODE_MOUSE
+        self._frame.show(Frame.MODE_MOUSE)
 
     def _hide_frame_timeout_cb(self):
         self._frame.hide()
@@ -80,52 +72,23 @@ class _MouseListener(object):
                   _FRAME_HIDING_DELAY, self._hide_frame_timeout_cb)
 
 class _KeyListener(object):
-    _HIDDEN = 1
-    _SHOWN_PRESSED = 2
-    _SHOWN_REPEAT = 3
-    _SHOWN_RELEASED = 4
-
     def __init__(self, frame):
         self._frame = frame
-        self._state = _KeyListener._HIDDEN
 
     def key_press(self):
-        if self._frame.mode != MODE_NONE and \
-           self._frame.mode != MODE_KEYBOARD:
-            return
-
         if self._frame.visible:
-            self._frame.hide()
+            if self._frame.mode == Frame.MODE_KEYBOARD:
+                self._frame.hide()
         else:
-            self._frame.show()
-            self._frame.mode = MODE_KEYBOARD
-
-        """
-        if self._state == _KeyListener._HIDDEN:
-            self._frame.show()
-            self._frame.mode = MODE_KEYBOARD
-            self._state = _KeyListener._SHOWN_PRESSED
-        elif self._state == _KeyListener._SHOWN_PRESSED:
-            self._state = _KeyListener._SHOWN_REPEAT
-        elif self._state == _KeyListener._SHOWN_RELEASED:
-            self._frame.hide()
-            self._state = _KeyListener._HIDDEN
-        """
-
-    def key_release(self):
-        pass
-        """
-        if self._state == _KeyListener._SHOWN_PRESSED:
-            self._state = _KeyListener._SHOWN_RELEASED
-        elif self._state == _KeyListener._SHOWN_REPEAT:
-            self._frame.hide()
-            self._state = _KeyListener._HIDDEN
-        """
+            self._frame.show(Frame.MODE_KEYBOARD)
 
 class Frame(object):
+    MODE_MOUSE    = 0
+    MODE_KEYBOARD = 1
+    MODE_HOME     = 2
+
     def __init__(self, shell):
-        self.mode = MODE_NONE
-        self.visible = False
+        self.mode = None
 
         self._palette_group = palettegroup.get_group('frame')
         self._palette_group.connect('popdown', self._palette_group_popdown_cb)
@@ -136,7 +99,7 @@ class Frame(object):
         self._bottom_panel = None
 
         self._shell = shell
-        self._current_position = 0.0
+        self.current_position = 0.0
         self._animator = None
 
         self._event_area = EventArea()
@@ -157,9 +120,12 @@ class Frame(object):
         self._key_listener = _KeyListener(self)
         self._mouse_listener = _MouseListener(self)
 
-    def hide(self, force=False):
-        if not self.visible:
-            return
+        self.move(1.0)
+
+    def is_visible(self):
+        return self.current_position != 0.0
+
+    def hide(self):
         if self._animator:
             self._animator.stop()
 
@@ -169,16 +135,9 @@ class Frame(object):
 
         self._event_area.show()
 
-        self.visible = False
-        if force:
-            self.mode = MODE_NONE
-        else:
-            self.mode = MODE_FORCE
-            self._animator.connect('completed', self._hide_completed_cb)
+        self.mode = None
 
-    def show(self):
-        self.mode = MODE_FORCE
-
+    def show(self, mode):
         if self.visible:
             return
         if self._animator:
@@ -186,19 +145,16 @@ class Frame(object):
 
         self._shell.take_activity_screenshot()
 
+        self.mode = mode
+
         self._animator = animator.Animator(0.5)
         self._animator.add(_Animation(self, 1.0))
         self._animator.start()
 
         self._event_area.hide()
 
-        self.visible = True
-
-    def get_current_position(self):
-        return self._current_position
-
     def move(self, pos):
-        self._current_position = pos
+        self.current_position = pos
         self._update_position()
 
     def _is_hover(self):
@@ -266,20 +222,17 @@ class Frame(object):
         screen_h = gtk.gdk.screen_height()
         screen_w = gtk.gdk.screen_width()
 
-        self._move_panel(self._top_panel, self._current_position,
+        self._move_panel(self._top_panel, self.current_position,
                          0, - self._top_panel.size, 0, 0)
 
-        self._move_panel(self._bottom_panel, self._current_position,
+        self._move_panel(self._bottom_panel, self.current_position,
                          0, screen_h, 0, screen_h - self._bottom_panel.size)
 
-        self._move_panel(self._left_panel, self._current_position,
+        self._move_panel(self._left_panel, self.current_position,
                          - self._left_panel.size, 0, 0, 0)
 
-        self._move_panel(self._right_panel, self._current_position,
+        self._move_panel(self._right_panel, self.current_position,
                          screen_w, 0, screen_w - self._right_panel.size, 0)
-
-    def _hide_completed_cb(self, animator):
-        self.mode = MODE_NONE
 
     def _size_changed_cb(self, screen):
        self._update_position()
@@ -316,6 +269,4 @@ class Frame(object):
     def notify_key_press(self):
         self._key_listener.key_press()
 
-    def notify_key_release(self):
-        self._key_listener.key_release()
-
+    visible = property(is_visible, None)

@@ -1,1 +1,0 @@
-from logviewer import Interface

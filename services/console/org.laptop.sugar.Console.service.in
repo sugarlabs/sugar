@@ -1,4 +1,0 @@
-[D-BUS Service]
-Name = org.laptop.sugar.Console
-Exec = @bindir@/sugar-console
-
