@@ -14,6 +14,5 @@ shell/view/frame/zoomtoolbar.py
 lib/sugar/activity/activity.py
 lib/sugar/graphics/alert.py
 lib/sugar/graphics/objectchooser.py
-services/shell/objecttypeservice.py
 shell/controlpanel/control.py
 shell/view/devices/network/mesh.py

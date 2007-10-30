@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-30 21:23+0100\n"
+"POT-Creation-Date: 2007-10-30 23:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,7 +94,7 @@ msgstr ""
 msgid "Stop"
 msgstr ""
 
-#: ../shell/view/Shell.py:264
+#: ../shell/view/Shell.py:267
 msgid "Screenshot"
 msgstr ""
 
@@ -295,30 +295,6 @@ msgstr ""
 
 #: ../lib/sugar/graphics/objectchooser.py:193
 msgid ", "
-msgstr ""
-
-#: ../services/shell/objecttypeservice.py:37
-msgid "Text"
-msgstr ""
-
-#: ../services/shell/objecttypeservice.py:43
-msgid "Image"
-msgstr ""
-
-#: ../services/shell/objecttypeservice.py:46
-msgid "Audio"
-msgstr ""
-
-#: ../services/shell/objecttypeservice.py:49
-msgid "Video"
-msgstr ""
-
-#: ../services/shell/objecttypeservice.py:52
-msgid "Etoys project"
-msgstr ""
-
-#: ../services/shell/objecttypeservice.py:56
-msgid "Link"
 msgstr ""
 
 #: ../shell/controlpanel/control.py:254
