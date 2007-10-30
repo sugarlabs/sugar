@@ -1,6 +1,4 @@
-SUBDIRS = hardware model view intro
-
-bin_SCRIPTS = sugar-shell
+SUBDIRS = controlpanel hardware model view intro
 
 sugardir = $(pkgdatadir)/shell
 sugar_PYTHON =			\
