@@ -79,7 +79,10 @@ def get_environment(activity):
     environ = os.environ.copy()
 
     bin_path = os.path.join(activity.path, 'bin')
+    activity_root = env.get_profile_path(activity.bundle_id)
+
     environ['SUGAR_BUNDLE_PATH'] = activity.path
+    environ['SUGAR_ACTIVITY_ROOT'] = activity_root
     environ['PATH'] = bin_path + ':' + environ['PATH']
 
     return environ
