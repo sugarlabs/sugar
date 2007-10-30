@@ -18,8 +18,9 @@
 
 import logging
 
-import gobject
 import dbus
+import gobject
+import telepathy
 
 _logger = logging.getLogger('sugar.presence.activity')
 
@@ -94,6 +95,12 @@ class Activity(gobject.GObject):
         # Cache for get_buddy_by_handle, maps handles to buddy object paths
         self._handle_to_buddy_path = {}
         self._buddy_path_to_handle = {}
+
+        # Set up by set_up_tubes()
+        self.telepathy_conn = None
+        self.telepathy_tubes_chan = None
+        self.telepathy_text_chan = None
+        self._telepathy_room = None
 
     def __repr__(self):
         return ('<proxy for %s at %x>' % (self._object_path, id(self)))
@@ -180,6 +187,11 @@ class Activity(gobject.GObject):
             self._activity.SetProperties({'private': val})
             self._private = val
 
+    def set_private(self, val, reply_handler, error_handler):
+        self._activity.SetProperties({'private': bool(val)},
+                                     reply_handler=reply_handler,
+                                     error_handler=error_handler)
+
     def _emit_buddy_joined_signal(self, object_path):
         """Generate buddy-joined GObject signal with presence Buddy object"""
         self.emit('buddy-joined', self._ps_new_object(object_path))
@@ -254,23 +266,112 @@ class Activity(gobject.GObject):
                               reply_handler=lambda: response_cb(None),
                               error_handler=response_cb)
 
+    # Joining and sharing (FIXME: sharing is actually done elsewhere)
+
+    def set_up_tubes(self, reply_handler, error_handler):
+
+        cpaths = []
+
+        def tubes_chan_ready(chan):
+            _logger.debug('%r: Tubes channel %r is ready', self, chan)
+            self.telepathy_tubes_chan = chan
+
+            _logger.debug('%r: finished setting up tubes', self)
+            reply_handler()
+
+        def got_tubes_chan(path):
+            _logger.debug('%r: got Tubes channel at %s', self, path)
+            telepathy.client.Channel(self.telepathy_conn.service_name,
+                                     path, ready_handler=tubes_chan_ready,
+                                     error_handler=error_handler)
+
+        def text_chan_ready(chan):
+            _logger.debug('%r: Text channel %r is ready', self, chan)
+            self.telepathy_text_chan = chan
+
+            self.telepathy_conn.RequestChannel(telepathy.CHANNEL_TYPE_TUBES,
+                                               telepathy.HANDLE_TYPE_ROOM,
+                                               self._telepathy_room_handle,
+                                               True,
+                                               reply_handler=got_tubes_chan,
+                                               error_handler=error_handler)
+
+        def got_text_chan(path):
+            _logger.debug('%r: got Text channel at %s', self, path)
+            telepathy.client.Channel(self.telepathy_conn.service_name,
+                                     path, ready_handler=text_chan_ready,
+                                     error_handler=error_handler)
+
+        def conn_ready(conn):
+            _logger.debug('%r: Connection %r is ready', self, conn)
+            self.telepathy_conn = conn
+
+            # For the moment we'll do this synchronously.
+            # If the PS gained a GetRoom method, we could
+            # do this async too
+
+            for channel_path in cpaths:
+                channel = telepathy.client.Channel(conn.service_name,
+                                                   channel_path)
+                handle_type, handle = channel.GetHandle()
+                if handle_type == telepathy.HANDLE_TYPE_ROOM:
+                    room = handle
+                    break
+
+            if room is None:
+                error_handler(AssertionError("Presence Service didn't create "
+                    "a chatroom"))
+            else:
+                self._telepathy_room_handle = room
+
+                conn.RequestChannel(telepathy.CHANNEL_TYPE_TEXT,
+                                    telepathy.HANDLE_TYPE_ROOM,
+                                    room, True,
+                                    reply_handler=got_text_chan,
+                                    error_handler=error_handler)
+
+        def got_channels(bus_name, conn_path, channel_paths):
+            _logger.debug('%r: Connection on %s at %s, channel paths: %r',
+                          self, bus_name, conn_path, channel_paths)
+
+            # can't use assignment for this due to Python scoping
+            cpaths.extend(channel_paths)
+
+            telepathy.client.Connection(bus_name, conn_path,
+                                        ready_handler=conn_ready,
+                                        error_handler=error_handler)
+
+        self._activity.GetChannels(reply_handler=got_channels,
+                                   error_handler=error_handler)
+
     def _join_cb(self):
+        _logger.debug('%r: Join finished', self)
         self._joined = True
         self.emit("joined", True, None)
 
     def _join_error_cb(self, err):
+        _logger.debug('%r: Join failed because: %s', self, err)
         self.emit("joined", False, str(err))
 
     def join(self):
-        """Join this activity 
-        
-        XXX if these are all activities, can I join my own activity?
+        """Join this activity.
+
+        Emits 'joined' and otherwise does nothing if we're already joined.
         """
         if self._joined:
             self.emit("joined", True, None)
             return
+
         _logger.debug('%r: joining', self)
-        self._activity.Join(reply_handler=self._join_cb, error_handler=self._join_error_cb)
+
+        def joined():
+            self.set_up_tubes(reply_handler=self._join_cb,
+                              error_handler=self._join_error_cb)
+
+        self._activity.Join(reply_handler=joined,
+                            error_handler=self._join_error_cb)
+
+    # GetChannels() wrapper
 
     def get_channels(self):
         """Retrieve communications channel descriptions for the activity 
@@ -287,6 +388,8 @@ class Activity(gobject.GObject):
         _logger.debug('%r: bus name is %s, connection is %s, channels are %r',
                       self, bus_name, connection, channels)
         return bus_name, connection, channels
+
+    # Leaving
 
     def _leave_cb(self):
         """Callback for async action of leaving shared activity."""

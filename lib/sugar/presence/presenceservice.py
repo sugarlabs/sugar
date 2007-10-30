@@ -425,20 +425,24 @@ class PresenceService(gobject.GObject):
         return self._new_object(owner_op)
 
     def _share_activity_cb(self, activity, psact):
-        """Notify with GObject event of successful sharing of activity
+        """Finish sharing the activity
         """
         psact._joined = True
-        self.emit("activity-shared", True, psact, None)
+        _logger.debug('%r: Just shared, setting up tubes', activity)
+        psact.set_up_tubes(reply_handler=lambda:
+                            self.emit("activity-shared", True, psact, None),
+                           error_handler=lambda e:
+                            self._share_activity_error_cb(activity, e))
 
     def _share_activity_privacy_cb(self, activity, private, op):
         psact = self._new_object(op)
-        # FIXME: this should be done asynchronously (more API needed)
-        try:
-            psact.props.private = private
-        except Exception, e:
-            self._share_activity_error_cb(activity, e)
-        else:
-            self._share_activity_cb(activity, psact)
+        _logger.debug('%r: Just shared, setting privacy to %r', activity,
+                      private)
+        psact.set_private(private,
+                          reply_handler=lambda:
+                            self._share_activity_cb(activity, psact),
+                          error_handler=lambda e:
+                            self._share_activity_error_cb(activity, e))
 
     def _share_activity_error_cb(self, activity, err):
         """Notify with GObject event of unsuccessful sharing of activity"""
