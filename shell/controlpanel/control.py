@@ -209,6 +209,10 @@ def _initialize():
         if i%3 == 0:
             set_language.__doc__ += '\n'
 
+def _note_restart():
+    print _('To apply your changes you have to restart sugar.\n' +
+            'Hit at the same time ctrl+alt+erase on the keyboard to do this.')
+    
 def get_jabber():
     pro = profile.get_profile()    
     return pro.jabber_server
@@ -223,7 +227,8 @@ def set_jabber(server):
     pro = profile.get_profile()
     pro.jabber_server = server
     pro.save()
-
+    _note_restart()
+    
 def get_color():    
     return profile.get_color()    
 
@@ -254,15 +259,16 @@ def set_color(stroke, fill, modstroke='medium', modfill='medium'):
         return
     
     if modstroke == modfill:
-        if modfill == medium:
-            modfill = light
+        if modfill == 'medium':
+            modfill = 'light'
         else:
-            modfill = medium
+            modfill = 'medium'
             
     color = _COLORS[stroke][modstroke] + ',' + _COLORS[fill][modfill]
     pro = profile.get_profile()
     pro.color = XoColor(color)   
     pro.save()
+    _note_restart()
         
 def get_nick():
     return profile.get_nick_name()
@@ -277,7 +283,8 @@ def set_nick(nick):
     pro = profile.get_profile()
     pro.nick_name = nick    
     pro.save()
-        
+    _note_restart()
+            
 def get_radio():    
     bus = dbus.SystemBus()
     proxy = bus.get_object(NM_SERVICE_NAME, NM_SERVICE_PATH)
@@ -442,6 +449,7 @@ def set_language(language):
         return
     if language in _LANGUAGES:
         _writeI18N(_LANGUAGES[language][0], _LANGUAGES[language][1])
+        _note_restart()
     else:
         print (_("Sorry I do not speak \'%s\'.")%language)
 
