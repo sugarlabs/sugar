@@ -1,3 +1,5 @@
+Snapshot 2df96b9af7
+
 * #4552 Allow to open images in Paint (marco)
 * #4518: Encode nickname in UTF-8 when writing it out to .sugar/*/config (smcv)
 * sugar-control: Use NM for radio on/off, check for superuser (erikos)
