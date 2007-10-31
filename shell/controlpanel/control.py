@@ -27,10 +27,15 @@ import os
 import string
 import shutil
 from gettext import gettext as _
+import dbus
 
 from sugar import profile
 from sugar.graphics.xocolor import XoColor
 
+NM_SERVICE_NAME = 'org.freedesktop.NetworkManager'
+NM_SERVICE_PATH = '/org/freedesktop/NetworkManager'
+NM_SERVICE_IFACE = 'org.freedesktop.NetworkManager'
+NM_ASLEEP = 1
 
 _COLORS = {'red': {'dark':'#b20008', 'medium':'#e6000a', 'light':'#ffadce'},
            'orange': {'dark':'#9a5200', 'medium':'#c97e00', 'light':'#ffc169'},
@@ -184,25 +189,16 @@ _LANGUAGES = {
     'Zulu/South_Africa': ('zu_ZA.UTF-8', 'latarcyrheb-sun16')
     }
 
-_timezones = []
 
 def _initialize():
-    _timezones = _read_zonetab()
+    timezones = _read_zonetab()
+
     j=0
-    for timezone in _timezones:
+    for timezone in timezones:
         set_timezone.__doc__ += timezone+', '
         j+=1
         if j%3 == 0:
             set_timezone.__doc__ += '\n'
-                
-    if not os.access(_TIMEZONE_CONFIG, os.R_OK):
-        #Theres no /etc/sysconfig/clock file, so make one
-        fd = open(_TIMEZONE_CONFIG, 'w')
-        f.write(' The ZONE parameter is only evaluated by sugarcontrol.\n')
-        f.write('The timezone of the system' +
-                ' is defined by the contents of /etc/localtime.\n')
-        f.write('ZONE="America/NEW_York"\n')
-        f.close()                                 
                         
     keys =  _LANGUAGES.keys()
     keys.sort()
@@ -282,30 +278,50 @@ def set_nick(nick):
     pro.nick_name = nick    
     pro.save()
         
-def get_radio(state):
-    return ''
+def get_radio():    
+    bus = dbus.SystemBus()
+    proxy = bus.get_object(NM_SERVICE_NAME, NM_SERVICE_PATH)
+    nm = dbus.Interface(proxy, NM_SERVICE_IFACE)
+    state = nm.state()
+    if state:
+        if state == NM_ASLEEP:
+            return _('Asleep')
+        else:
+            return _('Awake')
+    return _('State is unknown.')
 
-def print_radio(self):
+def print_radio():
     print get_radio()
     
 def set_radio(state):
     """Turn Radio off
     state : 'on/off'
     """
+
+    # TODO: NM 0.6.x does not return a reply yet
+    # so we ignore it for the moment
+    
     if state == 'on':        
-        cmd = '/sbin/iwconfig eth0 txpower on'
-        handle = os.popen(cmd, 'r')
-        print string.join(handle.readlines())
-        handle.close()
+        dbus.SystemBus().call_async(NM_SERVICE_NAME, NM_SERVICE_PATH,
+                                    NM_SERVICE_IFACE, 'wake', '', (),
+                                    None, None)
     elif state == 'off':
-        cmd = '/sbin/iwconfig eth0 txpower off'
-        handle = os.popen(cmd, 'r')
-        print string.join(handle.readlines())
-        handle.close()        
+        dbus.SystemBus().call_async(NM_SERVICE_NAME, NM_SERVICE_PATH,
+                                    NM_SERVICE_IFACE, 'sleep', '', (),
+                                    None, None)
     else:        
         print (_("Error in specified radio argument use on/off."))
-        
+
+def _check_for_superuser():
+    if os.getuid():
+        print _("Permission denied. You need to be root to run this method.")
+        return False
+    return True
+
 def get_timezone():
+    if not os.access(_TIMEZONE_CONFIG, os.R_OK):
+        # this is what the default is for the /etc/localtime
+        return "America/New_York"    
     fd = open(_TIMEZONE_CONFIG, "r")
     lines = fd.readlines()
     fd.close()
@@ -331,12 +347,30 @@ def print_timezone():
         print (_("Error in reading timezone"))
     else:
         print timezone 
-        
+                
+def _read_zonetab(fn='/usr/share/zoneinfo/zone.tab'):
+    fd = open (fn, 'r')
+    lines = fd.readlines()
+    fd.close()
+    timezones = []
+    for line in lines:
+        if line.startswith('#'):
+            continue
+        line = line.split()
+        if len(line) > 1:
+            timezones.append(line[2])
+    timezones.sort()
+    return timezones
+
 def set_timezone(timezone):
     """Set the system timezone
     timezone : 
     """
-    if timezone in _timezones:
+    if not _check_for_superuser():
+        return
+
+    timezones = _read_zonetab()
+    if timezone in timezones:
         fromfile = os.path.join("/usr/share/zoneinfo/", timezone)        
         try:
             shutil.copyfile(fromfile, "/etc/localtime")
@@ -358,20 +392,6 @@ def set_timezone(timezone):
         fd.close()                       
     else:
         print (_("Error timezone does not exist."))
-        
-def _read_zonetab(fn='/usr/share/zoneinfo/zone.tab'):
-    fd = open (fn, 'r')
-    lines = fd.readlines()
-    fd.close()
-    timezones = []
-    for line in lines:
-        if line.startswith('#'):
-            continue
-        line = line.split()
-        if len(line) > 1:
-            timezones.append(line[2])
-    timezones.sort()
-    return timezones
 
 def _writeI18N(lang, sysfont):
     path = '/etc/sysconfig/i18n'
@@ -418,11 +438,13 @@ def set_language(language):
     """Set the system language.
     languages : 
     """
+    if not _check_for_superuser():
+        return
     if language in _LANGUAGES:
         _writeI18N(_LANGUAGES[language][0], _LANGUAGES[language][1])
     else:
         print (_("Sorry I do not speak \'%s\'.")%language)
 
-
 # inilialize the docstrings for the timezone and language
 _initialize()
+

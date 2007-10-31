@@ -1,3 +1,5 @@
+* sugar-control: Use NM for radio on/off, check for superuser (erikos)
+
 Snapshot b72f00e30b
 
 * #4517 Do not require a TakeScreenshot method on the dbus service (marco)
