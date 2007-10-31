@@ -93,8 +93,8 @@ class ActivityBundle(Bundle):
                 self._path)
 
         if cp.has_option(section, 'mime_types'):
-            mime_list = cp.get(section, 'mime_types')
-            self._mime_types = mime_list.strip(';').split(';')
+            mime_list = cp.get(section, 'mime_types').strip(';')
+            self._mime_types = [ mime.strip() for mime in mime_list.split(';') ]
 
         if cp.has_option(section, 'show_launcher'):
             if cp.get(section, 'show_launcher') == 'no':
