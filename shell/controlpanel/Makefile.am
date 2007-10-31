@@ -1,2 +1,4 @@
 sugardir = $(pkgdatadir)/shell/controlpanel
-sugar_PYTHON = control.py
+sugar_PYTHON = 				\
+	__init__.py			\
+	control.py

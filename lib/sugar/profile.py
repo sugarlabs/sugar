@@ -87,7 +87,7 @@ class Profile(object):
         parsed = cp.read([self._config_path])
 
         if self.nick_name:
-            _set_key(cp, 'Buddy', 'NickName', self.nick_name)
+            _set_key(cp, 'Buddy', 'NickName', self.nick_name.encode('utf8'))
         if self.color:
             _set_key(cp, 'Buddy', 'Color', self.color.to_string())
         if self.backup1:
