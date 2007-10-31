@@ -20,6 +20,8 @@
 import sys
 import getopt
 
+from sugar import env
+
 sys.path.insert(0, env.get_shell_path())
  
 import control 
