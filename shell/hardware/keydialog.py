@@ -47,8 +47,8 @@ IW_AUTH_CIPHER_TKIP   = 0x00000004
 IW_AUTH_CIPHER_CCMP   = 0x00000008
 IW_AUTH_CIPHER_WEP104 = 0x00000010
 
-IW_AUTH_KEY_MGMT_802_1X	= 0x1
-IW_AUTH_KEY_MGMT_PSK	= 0x2
+IW_AUTH_KEY_MGMT_802_1X = 0x1
+IW_AUTH_KEY_MGMT_PSK    = 0x2
 
 def string_is_hex(key):
     is_hex = True
@@ -95,6 +95,12 @@ class KeyDialog(gtk.Dialog):
             " the wireless network '%s'." % net.get_ssid())
         self.vbox.pack_start(label)
 
+        self.add_buttons(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+                         gtk.STOCK_OK, gtk.RESPONSE_OK)
+        self.set_default_response(gtk.RESPONSE_OK)
+        self.set_has_separator(True)
+
+    def add_key_entry(self):
         self._entry = gtk.Entry()
         #self._entry.props.visibility = False
         self._entry.connect('changed', self._update_response_sensitivity)
@@ -103,14 +109,8 @@ class KeyDialog(gtk.Dialog):
         self.vbox.set_spacing(6)
         self.vbox.show_all()
 
-        self.add_buttons(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
-                         gtk.STOCK_OK, gtk.RESPONSE_OK)
-        self.set_default_response(gtk.RESPONSE_OK)
-
         self._update_response_sensitivity()
-
         self._entry.grab_focus()
-        self.set_has_separator(True)
 
     def _entry_activate_cb(self, entry):
         self.response(gtk.RESPONSE_OK)
@@ -124,39 +124,70 @@ class KeyDialog(gtk.Dialog):
     def get_callbacks(self):
         return (self._async_cb, self._async_err_cb)
 
+WEP_PASSPHRASE = 1
+WEP_HEX = 2
+WEP_ASCII = 3
+
 class WEPKeyDialog(KeyDialog):
     def __init__(self, net, async_cb, async_err_cb):
         KeyDialog.__init__(self, net, async_cb, async_err_cb)
 
-        self.store = gtk.ListStore(str, int)
-        self.store.append(["Open System", IW_AUTH_ALG_OPEN_SYSTEM])
-        self.store.append(["Shared Key", IW_AUTH_ALG_SHARED_KEY])
+        # WEP key type
+        self.key_store = gtk.ListStore(str, int)
+        self.key_store.append(["Passphrase (128-bit)", WEP_PASSPHRASE])
+        self.key_store.append(["Hex (40/128-bit)", WEP_HEX])
+        self.key_store.append(["ASCII (40/128-bit)", WEP_ASCII])
 
-        self.combo = gtk.ComboBox(self.store)
+        self.key_combo = gtk.ComboBox(self.key_store)
         cell = gtk.CellRendererText()
-        self.combo.pack_start(cell, True)
-        self.combo.add_attribute(cell, 'text', 0)
-        self.combo.set_active(0)
+        self.key_combo.pack_start(cell, True)
+        self.key_combo.add_attribute(cell, 'text', 0)
+        self.key_combo.set_active(0)
+        self.key_combo.connect('changed', self._key_combo_changed_cb)
 
-        self.hbox = gtk.HBox()
-        self.hbox.pack_start(gtk.Label(_("Authentication Type:")))
-        self.hbox.pack_start(self.combo)
-        self.hbox.show_all()
+        hbox = gtk.HBox()
+        hbox.pack_start(gtk.Label(_("Key Type:")))
+        hbox.pack_start(self.key_combo)
+        hbox.show_all()
+        self.vbox.pack_start(hbox)
 
-        self.vbox.pack_start(self.hbox)
+        # Key entry field
+        self.add_key_entry()
 
-    def create_security(self):
+        # WEP authentication mode
+        self.auth_store = gtk.ListStore(str, int)
+        self.auth_store.append(["Open System", IW_AUTH_ALG_OPEN_SYSTEM])
+        self.auth_store.append(["Shared Key", IW_AUTH_ALG_SHARED_KEY])
+
+        self.auth_combo = gtk.ComboBox(self.auth_store)
+        cell = gtk.CellRendererText()
+        self.auth_combo.pack_start(cell, True)
+        self.auth_combo.add_attribute(cell, 'text', 0)
+        self.auth_combo.set_active(0)
+
+        hbox = gtk.HBox()
+        hbox.pack_start(gtk.Label(_("Authentication Type:")))
+        hbox.pack_start(self.auth_combo)
+        hbox.show_all()
+
+        self.vbox.pack_start(hbox)
+
+    def _key_combo_changed_cb(self, widget):
+        self._update_response_sensitivity()
+
+    def _get_security(self):
         key = self._entry.get_text()
 
-        if key.startswith('$:'):
-            key = key[2:]
-        elif key.startswith('s:') and ((len(key) - 2) in [5, 13]):
-            key = string_to_hex(key[2:])
-        else:
-            key = hash_passphrase(key)
+        it = self.key_combo.get_active_iter()
+        (key_type, ) = self.key_store.get(it, 1)
 
-        it = self.combo.get_active_iter()
-        (auth_alg, ) = self.store.get(it, 1)
+        if key_type == WEP_PASSPHRASE:
+            key = hash_passphrase(key)
+        elif key_type == WEP_ASCII:
+            key = string_to_hex(key)
+
+        it = self.auth_combo.get_active_iter()
+        (auth_alg, ) = self.auth_store.get(it, 1)
 
         we_cipher = None
         if len(key) == 26:
@@ -164,17 +195,43 @@ class WEPKeyDialog(KeyDialog):
         elif len(key) == 10:
             we_cipher = IW_AUTH_CIPHER_WEP40
 
+        return (we_cipher, key, auth_alg)
+
+    def print_security(self):
+        (we_cipher, key, auth_alg) = self._get_security()
+        print "Cipher: %d" % we_cipher
+        print "Key: %s" % key
+        print "Auth: %d" % auth_alg
+
+    def create_security(self):
+        (we_cipher, key, auth_alg) = self._get_security()
         from nminfo import Security
         return Security.new_from_args(we_cipher, (key, auth_alg))
 
     def _update_response_sensitivity(self, ignored=None):
-        # As the md5 passphrase can be of any length and has no indicator, we
-        # cannot check for the validity of the input.
-        self.set_response_sensitive(gtk.RESPONSE_OK, True)
+        key = self._entry.get_text()
+        it = self.key_combo.get_active_iter()
+        (key_type, ) = self.key_store.get(it, 1)
+
+        valid = False
+        if key_type == WEP_PASSPHRASE:
+            # As the md5 passphrase can be of any length and has no indicator,
+            # we cannot check for the validity of the input.
+            if len(key) > 0:
+                valid = True
+        elif key_type == WEP_ASCII:
+            if len(key) == 5 or len(key) == 13:
+                valid = string_is_ascii(key)
+        elif key_type == WEP_HEX:
+            if len(key) == 10 or len(key) == 26:
+                valid = string_is_hex(key)
+
+        self.set_response_sensitive(gtk.RESPONSE_OK, valid)
 
 class WPAKeyDialog(KeyDialog):
     def __init__(self, net, async_cb, async_err_cb):
         KeyDialog.__init__(self, net, async_cb, async_err_cb)
+        self.add_key_entry()
 
         self.store = gtk.ListStore(str, int)
         self.store.append(["Automatic", NM_AUTH_TYPE_WPA_PSK_AUTO])
@@ -196,7 +253,7 @@ class WPAKeyDialog(KeyDialog):
 
         self.vbox.pack_start(self.hbox)
 
-    def create_security(self):
+    def _get_security(self):
         ssid = self.get_network().get_ssid()
         key = self._entry.get_text()
         is_hex = string_is_hex(key)
@@ -229,8 +286,18 @@ class WPAKeyDialog(KeyDialog):
         if caps & NM_802_11_CAP_PROTO_WPA2:
             wpa_ver = IW_AUTH_WPA_VERSION_WPA2
 
+        return (we_cipher, real_key, wpa_ver)
+
+    def print_security(self):
+        (we_cipher, key, wpa_ver) = self._get_security()
+        print "Cipher: %d" % we_cipher
+        print "Key: %s" % key
+        print "WPA Ver: %d" % wpa_ver
+
+    def create_security(self):
+        (we_cipher, key, wpa_ver) = self._get_security()
         from nminfo import Security
-        return Security.new_from_args(we_cipher, (real_key, wpa_ver, IW_AUTH_KEY_MGMT_PSK))
+        return Security.new_from_args(we_cipher, (key, wpa_ver, IW_AUTH_KEY_MGMT_PSK))
 
     def _update_response_sensitivity(self, ignored=None):
         key = self._entry.get_text()
@@ -269,7 +336,7 @@ class FakeNet(object):
 
 def response_cb(widget, response_id):
     if response_id == gtk.RESPONSE_OK:
-        print dialog.get_options()
+        print dialog.print_security()
     else:
         print "canceled"
     widget.hide()

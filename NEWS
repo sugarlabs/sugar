@@ -1,4 +1,13 @@
 * #4518: Encode nickname in UTF-8 when writing it out to .sugar/*/config (smcv)
+* sugar-control: Use NM for radio on/off, check for superuser (erikos)
+
+Snapshot b72f00e30b
+
+* #4517 Do not require a TakeScreenshot method on the dbus service (marco)
+* Add wep type combo. (dcbw)
+
+Snapshot 8c89bfaed7
+
 * #4503: Do some standard Tubes boilerplate in sugar.presence, so activities
   don't have to (smcv)
 * #4428 Revert to the trial-3 frame behavior (marco)

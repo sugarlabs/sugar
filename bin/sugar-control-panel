@@ -17,9 +17,14 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-import getopt, sys
-    
-import control 
+import sys
+import getopt
+
+from sugar import env
+
+sys.path.insert(0, env.get_shell_path())
+ 
+from controlpanel import control
         
 def cmd_help():
     print 'Usage: sugar-control [ option ] key [ args ... ] \n\

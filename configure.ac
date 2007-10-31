@@ -56,6 +56,7 @@ lib/sugar/datastore/Makefile
 services/Makefile
 services/shell/Makefile
 shell/Makefile
+shell/controlpanel/Makefile
 shell/intro/Makefile
 shell/hardware/Makefile
 shell/view/Makefile

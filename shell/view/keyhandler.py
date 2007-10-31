@@ -71,8 +71,6 @@ class KeyHandler(object):
         self._key_grabber = KeyGrabber()
         self._key_grabber.connect('key-pressed',
                                   self._key_pressed_cb)
-        self._key_grabber.connect('key-released',
-                                  self._key_released_cb)
 
         for key in _actions_table.keys():
             self._key_grabber.grab(key)            
@@ -193,26 +191,6 @@ class KeyHandler(object):
             action = _actions_table[key]
             method = getattr(self, 'handle_' + action)
             method()
-
-            return True
-
-        return False
-
-    def _key_released_cb(self, grabber, keycode, state):
-        if self._keycode_pressed == keycode:
-            self._keycode_pressed = 0
-
-        if self._keystate_pressed == state:
-            self._keystate_pressed = 0
-
-        if not self._keycode_pressed and not self._keystate_pressed and \
-           self._key_pressed:
-            gtk.gdk.keyboard_ungrab(time=0L)
-
-            if self._key_pressed == '<alt>f':
-                self._shell.get_frame().notify_key_release()
-            elif self._key_pressed == '0x93':
-                self._shell.get_frame().notify_key_release()
 
             return True
 
