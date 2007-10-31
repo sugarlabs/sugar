@@ -78,7 +78,7 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
 
         [box_width, box_height] = self._devices_box.get_allocation()
         self.set_position(self._devices_box, (width - icon_width) / 2,
-                          height - style.GRID_CELL_SIZE * 3)
+                          height - style.GRID_CELL_SIZE * 2.5)
                   
     _REDRAW_TIMEOUT = 5 * 60 * 1000 # 5 minutes
 
