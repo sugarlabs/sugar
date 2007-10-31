@@ -48,14 +48,23 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
 
         shell_model = shell.get_model()
 
+        top_box = hippo.CanvasBox(box_height=style.GRID_CELL_SIZE * 2.5)
+        self.append(top_box)
+
+        center_box = hippo.CanvasBox(yalign=hippo.ALIGNMENT_CENTER)
+        self.append(center_box, hippo.PACK_EXPAND)
+
+        bottom_box = hippo.CanvasBox(box_height=style.GRID_CELL_SIZE * 2.5)
+        self.append(bottom_box)
+
         self._donut = ActivitiesDonut(shell)
-        self.append(self._donut, hippo.PACK_FIXED)
+        center_box.append(self._donut)
 
         self._my_icon = _MyIcon(shell, style.XLARGE_ICON_SIZE)
         self.append(self._my_icon, hippo.PACK_FIXED)
 
         self._devices_box = _DevicesBox(shell_model.get_devices())
-        self.append(self._devices_box, hippo.PACK_FIXED)
+        bottom_box.append(self._devices_box)
 
         shell_model.connect('notify::state',
                             self._shell_state_changed_cb)
@@ -68,17 +77,9 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
     def do_allocate(self, width, height, origin_changed):
         hippo.CanvasBox.do_allocate(self, width, height, origin_changed)
 
-        [donut_width, donut_height] = self._donut.get_allocation()
-        self.set_position(self._donut, (width - donut_width) / 2,
-                          (height - donut_height) / 2)
-
         [icon_width, icon_height] = self._my_icon.get_allocation()
         self.set_position(self._my_icon, (width - icon_width) / 2,
                           (height - icon_height) / 2)
-
-        [box_width, box_height] = self._devices_box.get_allocation()
-        self.set_position(self._devices_box, (width - icon_width) / 2,
-                          height - style.GRID_CELL_SIZE * 2.5)
                   
     _REDRAW_TIMEOUT = 5 * 60 * 1000 # 5 minutes
 
