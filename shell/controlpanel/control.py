@@ -218,7 +218,7 @@ def print_jabber():
 
 def set_jabber(server):
     """Set the jabber server
-    server : 'olpc.collabora.co.uk'
+    server : e.g. 'olpc.collabora.co.uk'
     """
     pro = profile.get_profile()
     pro.jabber_server = server
@@ -239,11 +239,11 @@ def print_color():
                 print 'fill:   color=%s hue=%s'%(color, hue)
 
 def set_color(stroke, fill, modstroke='medium', modfill='medium'):
-    """Set the system color.
-    fill : 'red, orange, yellow, blue, purple'
-    stroke : 'red, orange, yellow, blue, purple'
-    modstroke : 'dark, medium, light'
-    modfill : ''dark, medium, light'
+    """Set the system color by setting a fill and stroke color.
+    fill : [red, orange, yellow, blue, purple]
+    stroke : [red, orange, yellow, blue, purple]
+    hue stroke : [dark, medium, light] (optional)
+    hue fill : [dark, medium, light] (optional)
     """
     
     if modstroke not in _MODIFIERS or modfill not in _MODIFIERS:
@@ -272,7 +272,7 @@ def print_nick():
     
 def set_nick(nick):
     """Set the nickname.
-    nick : 'erikos'
+    nick : e.g. 'walter'
     """
     pro = profile.get_profile()
     pro.nick_name = nick    
@@ -285,16 +285,16 @@ def get_radio():
     state = nm.state()
     if state:
         if state == NM_ASLEEP:
-            return _('Asleep')
+            return _('off')
         else:
-            return _('Awake')
+            return _('on')
     return _('State is unknown.')
 
 def print_radio():
     print get_radio()
     
 def set_radio(state):
-    """Turn Radio off
+    """Turn Radio 'on' or 'off'
     state : 'on/off'
     """
 

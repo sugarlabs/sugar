@@ -24,7 +24,7 @@ from sugar import env
 
 sys.path.insert(0, env.get_shell_path())
  
-import control 
+from controlpanel import control
         
 def cmd_help():
     print 'Usage: sugar-control [ option ] key [ args ... ] \n\
