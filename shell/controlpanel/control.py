@@ -236,13 +236,24 @@ def print_color():
     color = get_color().to_string()
     str = color.split(',')
 
+    stroke = None
+    fill = None
     for color in _COLORS:
         for hue in _COLORS[color]:
             if _COLORS[color][hue] == str[0]:
-                print 'stroke: color=%s hue=%s'%(color, hue)
+                stroke = (color, hue)
             if _COLORS[color][hue] == str[1]:
-                print 'fill:   color=%s hue=%s'%(color, hue)
+                fill = (color, hue)
 
+    if stroke is not None:            
+        print 'stroke:   color=%s hue=%s'%(stroke[0], stroke[1])
+    else:
+        print 'stroke:   %s'%(str[0])        
+    if fill is not None:    
+        print 'fill:     color=%s hue=%s'%(fill[0], fill[1])
+    else:
+        print 'fill:     %s'%(str[1])
+        
 def set_color(stroke, fill, modstroke='medium', modfill='medium'):
     """Set the system color by setting a fill and stroke color.
     fill : [red, orange, yellow, blue, purple]
@@ -343,9 +354,9 @@ def get_timezone():
                     timezone = string.replace(tokens[1], '"', '')
                     return timezone        
             except Exception, e:
-                print (_("get_timezone: %s") % e)
+                print "get_timezone: %s"% e
     except Exception, e:
-        print (_("get_timezone: %s") % e)
+        print "get_timezone: %s"% e
     return None
         
 def print_timezone():

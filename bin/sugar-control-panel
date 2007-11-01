@@ -19,6 +19,7 @@
 
 import sys
 import getopt
+from gettext import gettext as _
 
 from sugar import env
 
@@ -27,18 +28,19 @@ sys.path.insert(0, env.get_shell_path())
 from controlpanel import control
         
 def cmd_help():
-    print 'Usage: sugar-control [ option ] key [ args ... ] \n\
+    print _('Usage: sugar-control-panel [ option ] key [ args ... ] \n\
     Control for the sugar environment. \n\
     Options: \n\
-    -h, --help   show this help message and exit \n\
+    -h           show this help message and exit \n\
+    -l           list all the available options \n\
     -h key       show information about this key \n\
     -g key       get the current value of the key \n\
     -s key       set the current value for the key \n\
-    '
+    ')
 
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "h:s:g:", ["help"])
+        opts, args = getopt.getopt(sys.argv[1:], "h:s:g:l", [])
     except getopt.GetoptError:
         cmd_help()
         sys.exit(2)
@@ -46,31 +48,40 @@ def main():
     output = None
     verbose = False
 
+    if not opts:
+        cmd_help()
+        sys.exit()
+        
     for opt, key in opts:
         if opt in ("-h"):            
             method = getattr(control, 'set_' + key, None)
             if method is None:
-                cmd_help()
+                print _("sugar-control-panel: key=%s not an available option"% key)
                 sys.exit()
             else:    
-                print method.__doc__                
+                print method.__doc__
+        if opt in ("-l"):
+            elems = dir(control)
+            for elem in elems:
+                if elem.startswith('set_'):
+                    print elem[4:]
         if opt in ("-g"):
             method = getattr(control, 'print_' + key, None)
             if method is None:
-                cmd_help()
+                print _("sugar-control-panel: key=%s not an available option"% key)
                 sys.exit()
             else:    
                 method()
         if opt in ("-s"):
             method = getattr(control, 'set_' + key, None)
             if method is None:
-                cmd_help()
+                print _("sugar-control-panel: key=%s not an available option"% key)
                 sys.exit()
             else:
                 try:
                     method(*args)
                 except Exception, e:
-                    print "sugar-control: %s"% e
+                    print _("sugar-control-panel: %s"% e)
 
 if __name__ == '__main__':
     main()
