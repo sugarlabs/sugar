@@ -25,10 +25,10 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import gobject
-import gst
 
 from sugar import env
 from sugar import logger
+from sugar import sound
 from sugar.profile import get_profile
 
 sys.path.insert(0, env.get_shell_path())
@@ -89,9 +89,7 @@ def _shell_started_cb():
 
     startup_sound = os.path.join(env.get_data_path('startup.flac'))
     if os.path.exists(startup_sound):
-        player = gst.element_factory_make("playbin", "player")
-        player.set_property("uri", "file://" + startup_sound)
-        player.set_state(gst.STATE_PLAYING)
+        sound.play(startup_sound)
 
 def main():
     gobject.idle_add(_shell_started_cb)

@@ -5,6 +5,7 @@ sugar_PYTHON =		\
 	env.py		\
         network.py	\
 	profile.py	\
+	sound.py	\
 	util.py		\
 	wm.py
 
