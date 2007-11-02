@@ -57,8 +57,14 @@ _actions_table = {
     '<ctrl><alt>Tab' : 'previous_window',
     '<alt>p'         : 'previous_window',
     '<ctrl>Escape'   : 'close_window',
-    '<ctrl>q'        : 'close_window'
+    '<ctrl>q'        : 'close_window',
+    '0xDC'           : 'open_search',
+    '<ctrl>o'        : 'open_search'
 }
+
+J_DBUS_SERVICE = 'org.laptop.Journal'
+J_DBUS_PATH = '/org/laptop/Journal'
+J_DBUS_INTERFACE = 'org.laptop.Journal'
 
 class KeyHandler(object):
     def __init__(self, shell):
@@ -172,6 +178,15 @@ class KeyHandler(object):
         if os.environ.has_key('SUGAR_EMULATOR_PID'):
             pid = int(os.environ['SUGAR_EMULATOR_PID'])
             os.kill(pid, signal.SIGTERM)
+
+    def focus_journal_search(self):
+        bus = dbus.SessionBus()
+        obj = bus.get_object(J_DBUS_SERVICE, J_DBUS_PATH)
+        journal = dbus.Interface(obj, J_DBUS_INTERFACE)
+        journal.FocusSearch({})
+
+    def handle_open_search(self):
+        self.focus_journal_search()
 
     def _key_pressed_cb(self, grabber, keycode, state):
         key = grabber.get_key(keycode, state)
