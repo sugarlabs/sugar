@@ -1,3 +1,5 @@
+* Get bundle installation to work again. (marco)
+
 Snapshot b6422678e6
 
 * #1941 Call FocusSearch method for popping up the journal. (rwh)
