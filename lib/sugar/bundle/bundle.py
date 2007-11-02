@@ -115,7 +115,7 @@ class Bundle:
         # Windows/UNIX mappings, extension attributes, deprecated
         # features, etc makes it impractical.
         # FIXME: use manifest
-        if os.spawnlp(os.P_WAIT, 'unzip', 'unzip', self._path,
+        if os.spawnlp(os.P_WAIT, 'unzip', 'unzip', '-o', self._path,
                       '-x', 'mimetype', '-d', install_dir):
             raise ZipExtractException
 
