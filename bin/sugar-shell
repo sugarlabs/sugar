@@ -91,6 +91,12 @@ def _shell_started_cb():
     if os.path.exists(startup_sound):
         sound.play(startup_sound)
 
+def _sigchild_handler(signum, frame):
+    try:
+        os.wait()
+    except OSError:
+        pass
+
 def main():
     gobject.idle_add(_shell_started_cb)
 
@@ -110,8 +116,7 @@ def main():
         win.show_all()
         gtk.main()
 
-    # FIXME avoid zombie activity processes
-    signal.signal(signal.SIGCHLD, signal.SIG_IGN)
+    signal.signal(signal.SIGCHLD, _sigchild_handler)
 
     if os.environ.has_key("SUGAR_TP_DEBUG"):
         # Allow the user time to start up telepathy connection managers
