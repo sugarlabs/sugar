@@ -1,3 +1,5 @@
+* #4618: Make the shell service more resilient to failure. (tomeu)
+
 Snapshot 39aca0154d
 
 * Get bundle installation to work again. (marco)

@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
+import logging
 
 import gobject
 
@@ -85,14 +86,22 @@ class BundleRegistry(gobject.GObject):
         for f in os.listdir(path):
             if not f.endswith('.activity'):
                 continue
-            bundle_dir = os.path.join(path, f)
-            if os.path.isdir(bundle_dir):
-                bundles[bundle_dir] = os.stat(bundle_dir).st_mtime
+            try:
+                bundle_dir = os.path.join(path, f)
+                if os.path.isdir(bundle_dir):
+                    bundles[bundle_dir] = os.stat(bundle_dir).st_mtime
+            except Exception, e:
+                logging.error('Error while processing installed activity ' \
+                              'bundle: %s, %s, %s' % (f, e.__class__, e))
 
         bundle_dirs = bundles.keys()
         bundle_dirs.sort(lambda d1,d2: cmp(bundles[d1], bundles[d2]))
         for dir in bundle_dirs:
-            self.add_bundle(dir)
+            try:
+                self.add_bundle(dir)
+            except Exception, e:
+                logging.error('Error while processing installed activity ' \
+                              'bundle: %s, %s, %s' % (dir, e.__class__, e))
 
     def add_bundle(self, bundle_path):
         try:
