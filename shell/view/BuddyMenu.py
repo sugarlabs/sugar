@@ -89,7 +89,7 @@ class BuddyMenu(Palette):
         self.menu.append(menu_item)
         menu_item.show()
 
-        self._invite_menu = MenuItem(_('Invite'), 'stock-invite')
+        self._invite_menu = MenuItem(_('Invite'))
         self._invite_menu.connect('activate', self._invite_friend_cb)
         self.menu.append(self._invite_menu)
         self._invite_menu.show()
