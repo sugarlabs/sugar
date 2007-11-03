@@ -85,7 +85,10 @@ class Bundle:
         if self._unpacked:
             path = os.path.join(self._path, filename)
             if os.path.isfile(path):
-                file = open(path)
+                try:
+                    file = open(path)
+                except IOError:
+                    logging.info('Cannot read %s' % path)
         else:
             zip_file = zipfile.ZipFile(self._path)
             path = os.path.join(self._zip_root_dir, filename)
