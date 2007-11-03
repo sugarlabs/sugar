@@ -86,6 +86,7 @@ class _IconBuffer(object):
         self.width = None
         self.height = None
         self.cache = False
+        self.scale = 1.0
 
     def _get_cache_key(self):
         return (self.icon_name, self.file_name, self.fill_color,
@@ -413,6 +414,7 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
                 self._buffer.height = value
                 self.emit_request_changed()
         elif pspec.name == 'scale':
+            logging.warning('CanvasIcon: the scale parameter is currently unsupported')
             if self._buffer.scale != value:
                 self._buffer.scale = value
                 self.emit_request_changed()
