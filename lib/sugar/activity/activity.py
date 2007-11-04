@@ -67,6 +67,7 @@ from sugar.datastore import datastore
 from sugar import wm
 from sugar import profile
 from sugar import _sugarbaseext
+from sugar import _sugarext
 
 SCOPE_PRIVATE = "private"
 SCOPE_INVITE_ONLY = "invite"  # shouldn't be shown in UI, it's implicit when you invite somebody
@@ -414,7 +415,7 @@ class Activity(Window, gtk.Container):
         self._shared_activity = None
         self._share_id = None
         self._join_id = None
-        self._preview = None
+        self._preview = _sugarext.Preview()
         self._updating_jobject = False
         self._closing = False
         self._deleting = False
@@ -619,24 +620,28 @@ class Activity(Window, gtk.Container):
             self._jobject = None
 
     def _get_preview(self):
-        preview_pixbuf = self.get_canvas_screenshot()
-        if preview_pixbuf is None:
+        pixbuf = self._preview.get_pixbuf()
+        if pixbuf is None:
             return None
-        preview_pixbuf = preview_pixbuf.scale_simple(style.zoom(300),
-                                                     style.zoom(225),
-                                                     gtk.gdk.INTERP_BILINEAR)
 
-        # TODO: Find a way of taking a png out of the pixbuf without saving to a temp file.
-        #       Impementing gtk.gdk.Pixbuf.save_to_buffer in pygtk would solve this.
+        pixbuf = pixbuf.scale_simple(style.zoom(300), style.zoom(225),
+                                     gtk.gdk.INTERP_BILINEAR)
+
+        # TODO: Find a way of taking a png out of the pixbuf without saving
+        # to a temp file. Impementing gtk.gdk.Pixbuf.save_to_buffer in pygtk
+        # would solve this.
         fd, file_path = tempfile.mkstemp('.png')
         del fd
-        preview_pixbuf.save(file_path, 'png')
+
+        pixbuf.save(file_path, 'png')
         f = open(file_path)
         try:
             preview_data = f.read()
         finally:
             f.close()
             os.remove(file_path)
+
+        self._preview.clear()
 
         return preview_data
 
@@ -652,7 +657,8 @@ class Activity(Window, gtk.Container):
             return {}
 
     def take_screenshot(self):
-        self._preview = self._get_preview()
+        if self.canvas and self.canvas.window:
+            self._preview.take_screenshot(self.canvas.window)
 
     def save(self):
         """Request that the activity is saved to the Journal.
@@ -674,10 +680,9 @@ class Activity(Window, gtk.Container):
             self.metadata['buddies_id'] = json.write(buddies_dict.keys())
             self.metadata['buddies'] = json.write(self._get_buddies())
 
-        if self._preview is None:
-            self.metadata['preview'] = ''
-        else:
-            self.metadata['preview'] = dbus.ByteArray(self._preview)
+        preview = self._get_preview()
+        if self._preview:
+            self.metadata['preview'] = dbus.ByteArray(preview)
 
         try:
             if self._jobject.file_path:
@@ -708,7 +713,6 @@ class Activity(Window, gtk.Container):
         copy work that needs to be done in write_file()
         """
         logging.debug('Activity.copy: %r' % self._jobject.object_id)
-        self._preview = self._get_preview()
         self.save()
         self._jobject.object_id = None
 
