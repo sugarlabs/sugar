@@ -27,13 +27,20 @@ static void sugar_preview_init       (SugarPreview *menu);
 
 G_DEFINE_TYPE(SugarPreview, sugar_preview, G_TYPE_OBJECT)
 
-gboolean
-sugar_preview_save(SugarPreview *preview, const char *file_name)
+void
+sugar_preview_set_size(SugarPreview *preview, int width, int height)
+{
+    preview->width = width;
+    preview->height = height;
+}
+
+GdkPixbuf *
+sugar_preview_get_pixbuf(SugarPreview *preview)
 {
     GdkPixbuf *pixbuf;
 
-    if (preview->image != NULL) {
-        return FALSE;
+    if (preview->image == NULL) {
+        return NULL;
     }
 
     pixbuf = gdk_pixbuf_get_from_image(NULL, preview->image, NULL,
@@ -41,14 +48,16 @@ sugar_preview_save(SugarPreview *preview, const char *file_name)
                                        preview->image->width,
                                        preview->image->height);
 
-    gdk_pixbuf_save(pixbuf, file_name, "png", NULL);
+    return pixbuf;
+}
 
+void
+sugar_preview_clear(SugarPreview *preview)
+{
     if (preview->image != NULL) {
         g_object_unref(G_OBJECT(preview->image));
         preview->image = NULL;
     }
-
-    return TRUE;
 }
 
 void
@@ -59,15 +68,13 @@ sugar_preview_take_screenshot(SugarPreview *preview, GdkDrawable *drawable)
     GdkColormap *colormap;
     gint width, height;
 
+    sugar_preview_clear(preview);
+
     gdk_drawable_get_size(drawable, &width, &height);
 
     screen = gdk_drawable_get_screen(drawable);
     visual = gdk_drawable_get_visual(drawable);
     colormap = gdk_drawable_get_colormap(drawable);
-
-    if (preview->image != NULL) {
-        g_object_unref(G_OBJECT(preview->image));
-    }
 
     preview->image = gdk_image_new(GDK_IMAGE_SHARED, visual, width, height);
     gdk_image_set_colormap(preview->image, colormap);
@@ -79,16 +86,11 @@ sugar_preview_take_screenshot(SugarPreview *preview, GdkDrawable *drawable)
 }
 
 static void
-sugar_preview_dispose (GObject *object)
+sugar_preview_dispose(GObject *object)
 {
     SugarPreview *preview = SUGAR_PREVIEW(object);
-
-    if (preview->image != NULL) {
-        g_object_unref(G_OBJECT(preview->image));
-        preview->image = NULL;
-    }
+    sugar_preview_clear(preview);
 }
-
 
 static void
 sugar_preview_class_init(SugarPreviewClass *preview_class)

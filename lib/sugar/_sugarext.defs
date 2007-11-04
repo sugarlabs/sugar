@@ -173,11 +173,24 @@
   )
 )
 
-(define-method save
+(define-method set_size
   (of-object "SugarPreview")
-  (c-name "sugar_preview_save")
-  (return-type "gboolean")
+  (c-name "sugar_preview_set_size")
+  (return-type "none")
   (parameters
-    '("const-char*" "key")
+    '("int" "width")
+    '("int" "height")
   )
+)
+
+(define-method clear
+  (of-object "SugarPreview")
+  (c-name "sugar_preview_clear")
+  (return-type "none")
+)
+
+(define-method get_pixbuf
+  (of-object "SugarPreview")
+  (c-name "sugar_preview_get_pixbuf")
+  (return-type "GdkPixbuf*")
 )

@@ -38,17 +38,22 @@ struct _SugarPreview {
     GObject base_instance;
 
     GdkImage *image;
+    int width;
+    int height;
 };
 
 struct _SugarPreviewClass {
 	GObjectClass base_class;
 };
 
-GType	 sugar_preview_get_type         (void);
-void     sugar_preview_take_screenshot  (SugarPreview *menu,
-                                         GdkDrawable *drawable);
-gboolean sugar_preview_save             (SugarPreview *menu,
-                                         const char *file_name);
+GType	   sugar_preview_get_type        (void);
+void       sugar_preview_take_screenshot (SugarPreview *preview,
+                                          GdkDrawable  *drawable);
+void       sugar_preview_set_size        (SugarPreview *preview,
+                                          int width,
+                                          int height);
+GdkPixbuf *sugar_preview_get_pixbuf      (SugarPreview *preview);
+void       sugar_preview_clear           (SugarPreview *preview);
 
 G_END_DECLS
 

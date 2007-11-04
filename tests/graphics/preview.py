@@ -28,7 +28,8 @@ import common
 def _preview_timeout_cb():
     preview = _sugarext.Preview()
     preview.take_screenshot(button.window)
-    preview.save('/home/marco/test.png')
+    preview.get_pixbuf().save('/home/marco/test.png','png')
+    preview.clear()
 
 test = common.Test()
 
