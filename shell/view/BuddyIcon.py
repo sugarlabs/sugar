@@ -22,9 +22,9 @@ from view.BuddyMenu import BuddyMenu
 
 class BuddyIcon(CanvasIcon):
     def __init__(self, shell, buddy, size=style.STANDARD_ICON_SIZE):
-        CanvasIcon.__init__(self, icon_name='computer-xo',
-                            xo_color=buddy.get_color(), size=size)
+        CanvasIcon.__init__(self, icon_name='computer-xo', size=size)
 
+        self._greyed_out = False
         self._shell = shell
         self._buddy = buddy
         self._buddy.connect('appeared', self._buddy_presence_change_cb)
@@ -34,7 +34,21 @@ class BuddyIcon(CanvasIcon):
         palette = BuddyMenu(shell, buddy)
         self.set_palette(palette)
 
+        self._update_color()
+
     def _buddy_presence_change_cb(self, buddy, color=None):
         # Update the icon's color when the buddy comes and goes
-        self.props.xo_color = buddy.get_color()
+        self._update_color()
+
+    def _update_color(self):
+        if self._greyed_out:
+            self.props.stroke_color = style.COLOR_INACTIVE_STROKE.get_svg()
+            self.props.fill_color = style.COLOR_INACTIVE_FILL.get_svg()
+        else:
+            self.props.xo_color = self._buddy.get_color()
+
+    def set_filter(self, query):
+        self._greyed_out = (self._buddy.get_nick().lower().find(query) == -1) \
+                and not self._buddy.is_owner()
+        self._update_color()
 

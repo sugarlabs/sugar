@@ -19,9 +19,9 @@ import gobject
 
 from sugar.graphics import style
 from sugar.graphics import animator
-from sugar.graphics.spreadlayout import SpreadLayout
 
 from view.home.MyIcon import MyIcon
+from view.home.spreadlayout import SpreadLayout
 
 class _Animation(animator.Animation):
     def __init__(self, icon, start_size, end_size):

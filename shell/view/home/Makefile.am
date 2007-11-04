@@ -10,4 +10,5 @@ sugar_PYTHON =			\
 	MyIcon.py		\
 	proc_smaps.py		\
 	snowflakelayout.py	\
+	spreadlayout.py		\
 	transitionbox.py

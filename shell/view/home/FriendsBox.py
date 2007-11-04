@@ -20,12 +20,12 @@ import hippo
 import gobject
 
 from sugar import profile
-from sugar.graphics.spreadlayout import SpreadLayout
 from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon
 from sugar.graphics.palette import Palette
 
 from view.home.FriendView import FriendView
+from view.home.spreadlayout import SpreadLayout
 
 class FriendsBox(hippo.CanvasBox):
     __gtype_name__ = 'SugarFriendsBox'

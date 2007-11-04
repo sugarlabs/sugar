@@ -15,19 +15,19 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import random
+from gettext import gettext as _
+import logging
 
 import hippo
 import gobject
 import gtk
-from gettext import gettext as _
 
-from sugar.graphics.spreadlayout import SpreadLayout
 from sugar.graphics.icon import CanvasIcon
 from sugar.graphics import style
-from sugar.graphics import xocolor
 from sugar.graphics.icon import get_icon_state
 from sugar.graphics import style
 from sugar.graphics import palette
+from sugar.graphics import iconentry
 from sugar import profile
 
 from model import accesspointmodel
@@ -38,6 +38,7 @@ from hardware import nmclient
 from view.BuddyIcon import BuddyIcon
 from view.pulsingicon import PulsingIcon
 from view.home.snowflakelayout import SnowflakeLayout
+from view.home.spreadlayout import SpreadLayout
 
 from hardware.nmclient import NM_802_11_CAP_PROTO_WEP, NM_802_11_CAP_PROTO_WPA, NM_802_11_CAP_PROTO_WPA2
 
@@ -50,6 +51,7 @@ class AccessPointView(PulsingIcon):
         self._model = model
         self._meshdev = mesh_device
         self._disconnect_item = None
+        self._greyed_out = False
 
         self.connect('activated', self._activate_cb)
 
@@ -146,11 +148,21 @@ class AccessPointView(PulsingIcon):
             if self._disconnect_item:
                 self._disconnect_item.hide()
             self.props.pulse_time = 0.0
-            self.props.colors = [
-                [ style.Color(self._device_stroke).get_svg(),
-                  style.Color(self._device_fill).get_svg() ]
-            ]
 
+            if self._greyed_out:
+                self.props.colors = [
+                    [ style.COLOR_INACTIVE_STROKE.get_svg(),
+                      style.COLOR_INACTIVE_FILL.get_svg() ]
+                ]
+            else:
+                self.props.colors = [
+                    [ style.Color(self._device_stroke).get_svg(),
+                      style.Color(self._device_fill).get_svg() ]
+                ]
+
+    def set_filter(self, query):
+        self._greyed_out = self._model.props.name.lower().find(query) == -1
+        self._update_state()
 
 _MESH_ICON_NAME = 'network-mesh'
 
@@ -277,9 +289,81 @@ class ActivityView(hippo.CanvasBox):
         bundle_id = self._model.get_bundle_id()
         self._shell.join_activity(bundle_id, self._model.get_id())
 
+    def set_filter(self, query):
+        if self._model.activity.props.name.lower().find(query) == -1:
+            self._icon.xo_color = [style.COLOR_INACTIVE_STROKE.get_svg(),
+                                   style.COLOR_INACTIVE_FILL.get_svg()]
+        else:
+            self._icon.xo_color = self._model.get_color()
+
+_AUTOSEARCH_TIMEOUT = 1000
+
+class MeshToolbar(gtk.Toolbar):
+    __gtype_name__ = 'MeshToolbar'
+
+    __gsignals__ = {
+        'query-changed': (gobject.SIGNAL_RUN_FIRST,
+                          gobject.TYPE_NONE,
+                          ([str]))
+    }
+
+    def __init__(self):
+        gtk.Toolbar.__init__(self)
+
+        self._query = None
+        self._autosearch_timer = None
+
+        self._add_separator()
+
+        tool_item = gtk.ToolItem()
+        tool_item.set_expand(True)
+        self.insert(tool_item, -1)
+        tool_item.show()
+
+        self._search_entry = iconentry.IconEntry()
+        self._search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY, 'system-search')
+        self._search_entry.add_clear_button()
+        self._search_entry.connect('activate', self._entry_activated_cb)
+        self._search_entry.connect('changed', self._entry_changed_cb)
+        tool_item.add(self._search_entry)
+        self._search_entry.show()
+
+        self._add_separator()
+
+    def _add_separator(self):
+        separator = gtk.SeparatorToolItem()
+        separator.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
+        separator.props.draw = False
+        self.insert(separator, -1)
+        separator.show()
+
+    def _entry_activated_cb(self, entry):
+        if self._autosearch_timer:
+            gobject.source_remove(self._autosearch_timer)
+        new_query = entry.props.text
+        if self._query != new_query:
+            self._query = new_query
+            self.emit('query-changed', self._query)
+
+    def _entry_changed_cb(self, entry):
+        if not entry.props.text:
+            entry.activate()
+            return
+
+        if self._autosearch_timer:
+            gobject.source_remove(self._autosearch_timer)
+        self._autosearch_timer = gobject.timeout_add(_AUTOSEARCH_TIMEOUT,
+                                                     self._autosearch_timer_cb)
+
+    def _autosearch_timer_cb(self):
+        logging.debug('_autosearch_timer_cb')
+        self._autosearch_timer = None
+        self._search_entry.activate()
+        return False
+
 class MeshBox(hippo.CanvasBox):
     def __init__(self, shell):
-        hippo.CanvasBox.__init__(self, background_color=0xe2e2e2ff)
+        hippo.CanvasBox.__init__(self)
 
         self._shell = shell
         self._model = shell.get_model().get_mesh()
@@ -289,9 +373,18 @@ class MeshBox(hippo.CanvasBox):
         self._mesh = {}
         self._buddy_to_activity = {}
         self._suspended = True
+        self._query = ''
 
-        self._layout = SpreadLayout()
-        self.set_layout(self._layout)
+        self._toolbar = MeshToolbar()
+        self._toolbar.connect('query-changed', self._toolbar_query_changed_cb)
+        self.append(hippo.CanvasWidget(widget=self._toolbar))
+
+        self._layout_box = hippo.CanvasBox(background_color=0xe2e2e2ff)
+        self.append(self._layout_box, hippo.PACK_EXPAND)
+
+        center_vertical_offset = - style.GRID_CELL_SIZE
+        self._layout = SpreadLayout(center_vertical_offset)
+        self._layout_box.set_layout(self._layout)
 
         for buddy_model in self._model.get_buddies():
             self._add_alone_buddy(buddy_model)
@@ -377,6 +470,9 @@ class MeshBox(hippo.CanvasBox):
         else:
             self._layout.add(icon)
 
+        if hasattr(icon, 'set_filter'):
+            icon.set_filter(self._query)
+
         self._buddies[buddy_model.get_key()] = icon
 
     def _remove_alone_buddy(self, buddy_model):
@@ -441,3 +537,10 @@ class MeshBox(hippo.CanvasBox):
             self._suspended = False
             for ap in self._access_points.values():
                 ap.props.paused = False
+
+    def _toolbar_query_changed_cb(self, toolbar, query):
+        self._query = query.lower()
+        for icon in self._layout_box.get_children():
+            if hasattr(icon, 'set_filter'):
+                icon.set_filter(self._query)
+

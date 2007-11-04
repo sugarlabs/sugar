@@ -15,7 +15,6 @@ sugar_PYTHON =			\
 	palettegroup.py		\
 	panel.py		\
 	roundbox.py		\
-	spreadlayout.py		\
 	style.py		\
 	toggletoolbutton.py	\
 	toolbox.py		\

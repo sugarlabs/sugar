@@ -1,3 +1,5 @@
+* #3119: Implement some basic search capabilities in the mesh view. (tomeu)
+
 Snapshot d456f6c633
 
 * New experimental screenshot code. (marco)
