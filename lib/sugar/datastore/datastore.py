@@ -167,7 +167,8 @@ class DSObject(object):
             activityfactory.create(bundle.get_bundle_id())
         else:
             if not self.get_activities() and bundle_id is None:
-                logging.warning('No activity can open this object.')
+                logging.warning('No activity can open this object, %s.' %
+                        self.metadata.get('mime_type', None))
                 return
             if bundle_id is None:
                 bundle_id = self.get_activities()[0].bundle_id
