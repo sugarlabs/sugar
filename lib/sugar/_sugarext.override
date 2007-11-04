@@ -7,6 +7,7 @@ headers
 #include "sugar-address-entry.h"
 #include "sugar-key-grabber.h"
 #include "sugar-menu.h"
+#include "sugar-preview.h"
 #include "sexy-icon-entry.h"
 
 #include <pygtk/pygtk.h>
@@ -20,6 +21,7 @@ import gtk.Entry as PyGtkEntry_Type
 import gtk.Menu as PyGtkMenu_Type
 import gtk.Container as PyGtkContainer_Type
 import gtk.gdk.Window as PyGdkWindow_Type
+import gtk.gdk.Drawable as PyGdkDrawable_Type
 import gtk.Image as PyGtkImage_Type
 %%
 ignore-glob
