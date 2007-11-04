@@ -1,3 +1,5 @@
+* New experimental screenshot code. (marco)
+
 Snapshot e748f756c0
 
 * #4618: Make the shell service more resilient to failure. (tomeu)
