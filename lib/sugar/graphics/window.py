@@ -34,15 +34,20 @@ class Window(gtk.Window):
         self._hbox = gtk.HBox()
         self._vbox.pack_start(self._hbox)
         self._hbox.show()
+
+        self._event_box = gtk.EventBox()
+        self._hbox.pack_start(self._event_box)
+        self._event_box.show()
         
         self.add(self._vbox)
         self._vbox.show()
 
     def set_canvas(self, canvas):
         if self.canvas:
-            self._hbox.remove(self.canvas)
+            self._event_box.remove(self.canvas)
 
-        self._hbox.pack_start(canvas)       
+        if canvas:
+            self._event_box.add(canvas)
         
         self.canvas = canvas
 
