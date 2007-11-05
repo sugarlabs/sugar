@@ -1,3 +1,6 @@
+* Remove the startup sound for now, to not break audio
+  for all the activities. (marco)
+
 Snapshot 0a9676171d
 
 * #4650: Failure to write journal files. (marco)

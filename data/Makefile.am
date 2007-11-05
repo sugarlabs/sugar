@@ -10,7 +10,6 @@ sugardir = $(pkgdatadir)/data
 sugar_DATA =			\
 	activities.defaults	\
 	mime.defaults		\
-	startup.flac		\
 	$(GTKRC_FILES)
 
 GTKRC_FILES =		\
