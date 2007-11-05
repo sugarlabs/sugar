@@ -1,3 +1,5 @@
+Snapshot 73cae198f5
+
 * Remove the startup sound for now, to not break audio
   for all the activities. (marco)
 
