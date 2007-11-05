@@ -84,10 +84,12 @@ def get_environment(activity):
     if not os.path.exists(activity_root):
         os.mkdir(activity_root)
 
-        data_dir = os.path.join(activity_root, 'data')
+    data_dir = os.path.join(activity_root, 'data')
+    if not os.path.exists(data_dir):
         os.mkdir(data_dir)
 
-        tmp_dir = os.path.join(activity_root, 'tmp')
+    tmp_dir = os.path.join(activity_root, 'tmp')
+    if not os.path.exists(tmp_dir):
         os.mkdir(tmp_dir)
 
     environ['SUGAR_BUNDLE_PATH'] = activity.path

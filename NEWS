@@ -1,3 +1,5 @@
+* #4650: Failure to write journal files. (marco)
+
 Snapshot ee8712d1c4
 
 * #3119: Implement some basic search capabilities in the mesh view. (tomeu)
