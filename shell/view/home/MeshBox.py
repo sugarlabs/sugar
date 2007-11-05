@@ -382,8 +382,7 @@ class MeshBox(hippo.CanvasBox):
         self._layout_box = hippo.CanvasBox(background_color=0xe2e2e2ff)
         self.append(self._layout_box, hippo.PACK_EXPAND)
 
-        center_vertical_offset = - style.GRID_CELL_SIZE
-        self._layout = SpreadLayout(center_vertical_offset)
+        self._layout = SpreadLayout()
         self._layout_box.set_layout(self._layout)
 
         for buddy_model in self._model.get_buddies():
@@ -466,7 +465,8 @@ class MeshBox(hippo.CanvasBox):
     def _add_alone_buddy(self, buddy_model):
         icon = BuddyIcon(self._shell, buddy_model)
         if buddy_model.is_owner():
-            self._layout.add_center(icon)
+            vertical_offset = - style.GRID_CELL_SIZE
+            self._layout.add_center(icon, vertical_offset)
         else:
             self._layout.add(icon)
 

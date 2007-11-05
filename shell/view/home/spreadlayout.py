@@ -169,10 +169,8 @@ class _Grid(gobject.GObject):
 
 class SpreadLayout(gobject.GObject, hippo.CanvasLayout):
     __gtype_name__ = 'SugarSpreadLayout'
-    def __init__(self, center_vertical_offset=0):
+    def __init__(self):
         gobject.GObject.__init__(self)
-
-        self._center_vertical_offset = center_vertical_offset
 
         min_width, width = self.do_get_width_request()
         min_height, height = self.do_get_height_request(width)
@@ -180,7 +178,7 @@ class SpreadLayout(gobject.GObject, hippo.CanvasLayout):
         self._grid = _Grid(width / _CELL_SIZE, height / _CELL_SIZE)
         self._grid.connect('child-changed', self._grid_child_changed_cb)
 
-    def add_center(self, child):
+    def add_center(self, child, vertical_offset=0):
         self._box.append(child)
 
         width, height = self._get_child_grid_size(child)
@@ -191,6 +189,7 @@ class SpreadLayout(gobject.GObject, hippo.CanvasLayout):
 
         box_child = self._box.find_box_child(child)
         box_child.grid_rect = None
+        box_child.vertical_offset = vertical_offset
 
     def add(self, child):
         self._box.append(child)
@@ -225,10 +224,11 @@ class SpreadLayout(gobject.GObject, hippo.CanvasLayout):
                                rect.height * _CELL_SIZE,
                                origin_changed)
             else:
+                vertical_offset = child.vertical_offset
                 min_w, child_width = child.get_width_request()
                 min_h, child_height = child.get_height_request(child_width)
                 child_x = x + (width - child_width) / 2
-                child_y = y + (height - child_height + self._center_vertical_offset) / 2
+                child_y = y + (height - child_height + vertical_offset) / 2
                 child.allocate(child_x, child_y, child_width, child_height,
                                origin_changed)
 
