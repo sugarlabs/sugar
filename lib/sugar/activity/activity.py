@@ -408,6 +408,7 @@ class Activity(Window, gtk.Container):
 
         self.connect('realize', self.__realize_cb)
         self.connect('delete-event', self.__delete_event_cb)
+        self.connect("key_press_event", self.__key_press_event_cb)
 
         self._active = False
         self._activity_id = handle.activity_id
@@ -849,6 +850,13 @@ class Activity(Window, gtk.Container):
             return None
 
     metadata = property(get_metadata, None)
+
+    def __key_press_event_cb(self, widget, event):
+        key = gtk.gdk.keyval_name(event.keyval)
+        if key == 's' and (event.state & gtk.gdk.CONTROL_MASK):
+            logging.debug('Keep requested')
+            self.copy()
+            return True
 
 def get_bundle_name():
     """Return the bundle name for the current process' bundle"""
