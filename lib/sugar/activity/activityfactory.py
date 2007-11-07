@@ -82,6 +82,10 @@ def get_environment(activity):
     if not os.path.exists(activity_root):
         os.mkdir(activity_root)
 
+    data_dir = os.path.join(activity_root, 'instance')
+    if not os.path.exists(data_dir):
+        os.mkdir(data_dir)
+
     data_dir = os.path.join(activity_root, 'data')
     if not os.path.exists(data_dir):
         os.mkdir(data_dir)

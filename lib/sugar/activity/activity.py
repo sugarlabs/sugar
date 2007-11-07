@@ -689,7 +689,7 @@ class Activity(Window, gtk.Container):
             if self._jobject.file_path:
                 self.write_file(self._jobject.file_path)
             else:
-                file_path = os.path.join(self.get_activity_root(), 'data',
+                file_path = os.path.join(self.get_activity_root(), 'instance',
                                          '%i' % time.time())
                 self.write_file(file_path)
                 self._owns_file = True
