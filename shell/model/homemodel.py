@@ -71,11 +71,12 @@ class HomeModel(gobject.GObject):
                        self._active_window_changed_cb)
 
     def get_previous_activity(self):
-        i = self._activities.index(self._pending_activity)
+        activities = self._get_started_activities()
+        i = activities.index(self._pending_activity)
         if i > 0:
-            return self._activities[i - 1]
+            return activities[i - 1]
         else:
-            return None
+            return activities[0]
 
     def get_next_activity(self):
         i = self._activities.index(self._pending_activity)
