@@ -1,3 +1,5 @@
+* Use HOME/.i18n in control panel and reset jabber_registered to False (erikos)
+
 Snapshot dae3ebe8d1
 
 Snapshot 306d32832f

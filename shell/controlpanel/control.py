@@ -50,143 +50,143 @@ _MODIFIERS = ('dark', 'medium', 'light')
 _TIMEZONE_CONFIG = '/etc/sysconfig/clock'
 
 _LANGUAGES = {
-    'Afrikaans/South_Africa': ('af_ZA', 'lat0-sun16'),
-    'Albanian': ('sq_AL.UTF-8', 'latarcyrheb-sun16'),
-    'Arabic/Algeria': ('ar_DZ.UTF-8', 'latarcyrheb-sun16'),
-    'Arabic/Bahrain': ('ar_BH.UTF-8', 'latarcyrheb-sun16'),
-    'Arabic/Egypt': ('ar_EG.UTF-8', 'latarcyrheb-sun16'),
-    'Arabic/India': ('ar_IN.UTF-8', 'latarcyrheb-sun16'),
-    'Arabic/Iraq': ('ar_IQ.UTF-8', 'latarcyrheb-sun16'),
-    'Arabic/Jordan': ('ar_JO.UTF-8', 'latarcyrheb-sun16'),
-    'Arabic/Kuwait': ('ar_KW.UTF-8', 'latarcyrheb-sun16'),
-    'Arabic/Lebanon': ('ar_LB.UTF-8', 'latarcyrheb-sun16'),
-    'Arabic/Libyan_Arab_Jamahiriya': ('ar_LY.UTF-8', 'latarcyrheb-sun16'),
-    'Arabic/Morocco': ('ar_MA.UTF-8', 'latarcyrheb-sun16'),
-    'Arabic/Oman': ('ar_OM.UTF-8', 'latarcyrheb-sun16'),
-    'Arabic/Qatar': ('ar_QA.UTF-8', 'latarcyrheb-sun16'),
-    'Arabic/Saudi_Arabia': ('ar_SA.UTF-8', 'latarcyrheb-sun16'),
-    'Arabic/Sudan': ('ar_SD.UTF-8', 'latarcyrheb-sun16'),
-    'Arabic/Syrian_Arab_Republic': ('ar_SY.UTF-8', 'latarcyrheb-sun16'),
-    'Arabic/Tunisia': ('ar_TN.UTF-8', 'latarcyrheb-sun16'),
-    'Arabic/United_Arab_Emirates': ('ar_AE.UTF-8', 'latarcyrheb-sun16'),
-    'Arabic/Yemen': ('ar_YE.UTF-8', 'latarcyrheb-sun16'),
-    'Basque/Spain': ('eu_ES.UTF-8', 'latarcyrheb-sun16'),
-    'Belarusian': ('be_BY.UTF-8', 'latarcyrheb-sun16'),
-    'Bengali/BD': ('bn_BD.UTF-8', 'latarcyrheb-sun16'),
-    'Bengali/India': ('bn_IN.UTF-8', 'latarcyrheb-sun16'),
-    'Bosnian/Bosnia_and_Herzegowina': ('bs_BA', 'lat2-sun16'),
-    'Breton/France': ('br_FR', 'lat0-sun16'),
-    'Bulgarian': ('bg_BG.UTF-8', 'latarcyrheb-sun16'),
-    'Catalan/Spain': ('ca_ES.UTF-8', 'latarcyrheb-sun16'),
-    'Chinese/Hong_Kong': ('zh_HK.UTF-8', 'latarcyrheb-sun16'),
-    'Chinese/P.R._of_China': ('zh_CN.UTF-8', 'lat0-sun16'),
-    'Chinese/Taiwan': ('zh_TW.UTF-8', 'lat0-sun16'),
-    'Cornish/Britain': ('kw_GB.UTF-8', 'latarcyrheb-sun16'),
-    'Croatian': ('hr_HR.UTF-8', 'latarcyrheb-sun16'),
-    'Czech': ('cs_CZ.UTF-8', 'latarcyrheb-sun16'),
-    'Danish': ('da_DK.UTF-8', 'latarcyrheb-sun16'),
-    'Dutch/Belgium': ('nl_BE.UTF-8', 'latarcyrheb-sun16'),
-    'Dutch/Netherlands': ('nl_NL.UTF-8', 'latarcyrheb-sun16'),
-    'English/Australia': ('en_AU.UTF-8', 'latarcyrheb-sun16'),
-    'English/Botswana': ('en_BW.UTF-8', 'latarcyrheb-sun16'),
-    'English/Canada': ('en_CA.UTF-8', 'latarcyrheb-sun16'),
-    'English/Denmark': ('en_DK.UTF-8', 'latarcyrheb-sun16'),
-    'English/Great_Britain': ('en_GB.UTF-8', 'latarcyrheb-sun16'),
-    'English/Hong_Kong': ('en_HK.UTF-8', 'latarcyrheb-sun16'),
-    'English/India': ('en_IN.UTF-8', 'latarcyrheb-sun16'),
-    'English/Ireland': ('en_IE.UTF-8', 'latarcyrheb-sun16'),
-    'English/New_Zealand': ('en_NZ.UTF-8', 'latarcyrheb-sun16'),
-    'English/Philippines': ('en_PH.UTF-8', 'latarcyrheb-sun16'),
-    'English/Singapore': ('en_SG.UTF-8', 'latarcyrheb-sun16'),
-    'English/South_Africa': ('en_ZA.UTF-8', 'latarcyrheb-sun16'),
-    'English/USA': ('en_US.UTF-8', 'latarcyrheb-sun16'),
-    'English/Zimbabwe': ('en_ZW.UTF-8', 'latarcyrheb-sun16'),
-    'Estonian': ('et_EE.UTF-8', 'latarcyrheb-sun16'),
-    'Faroese/Faroe_Islands': ('fo_FO.UTF-8', 'latarcyrheb-sun16'),
-    'Finnish': ('fi_FI.UTF-8', 'latarcyrheb-sun16'),
-    'French/Belgium': ('fr_BE.UTF-8', 'latarcyrheb-sun16'),
-    'French/Canada': ('fr_CA.UTF-8', 'latarcyrheb-sun16'),
-    'French/France': ('fr_FR.UTF-8', 'latarcyrheb-sun16'),
-    'French/Luxemburg': ('fr_LU.UTF-8', 'latarcyrheb-sun16'),
-    'French/Switzerland': ('fr_CH.UTF-8', 'latarcyrheb-sun16'),
-    'Galician/Spain': ('gl_ES.UTF-8', 'latarcyrheb-sun16'),
-    'German/Austria': ('de_AT.UTF-8', 'latarcyrheb-sun16'),
-    'German/Belgium': ('de_BE.UTF-8', 'latarcyrheb-sun16'),
-    'German/Germany': ('de_DE.UTF-8', 'latarcyrheb-sun16'),
-    'German/Luxemburg': ('de_LU.UTF-8', 'latarcyrheb-sun16'),
-    'German/Switzerland': ('de_CH.UTF-8', 'latarcyrheb-sun16'),
-    'Greek': ('el_GR.UTF-8', 'latarcyrheb-sun16'),
-    'Greenlandic/Greenland': ('kl_GL.UTF-8', 'latarcyrheb-sun16'),
-    'Gujarati/India': ('gu_IN.UTF-8', 'latarcyrheb-sun16'),
-    'Hebrew/Israel': ('he_IL.UTF-8', 'latarcyrheb-sun16'),
-    'Hindi/India': ('hi_IN.UTF-8', 'latarcyrheb-sun16'),
-    'Hungarian': ('hu_HU.UTF-8', 'latarcyrheb-sun16'),
-    'Icelandic': ('is_IS.UTF-8', 'latarcyrheb-sun16'),
-    'Indonesian': ('id_ID.UTF-8', 'latarcyrheb-sun16'),
-    'Irish': ('ga_IE.UTF-8', 'latarcyrheb-sun16'),
-    'Italian/Italy': ('it_IT.UTF-8', 'latarcyrheb-sun16'),
-    'Italian/Switzerland': ('it_CH.UTF-8', 'latarcyrheb-sun16'),
-    'Japanese': ('ja_JP.UTF-8', 'lat0-sun16'),
-    'Korean/Republic_of_Korea': ('ko_KR.UTF-8', 'lat0-sun16'),
-    'Lao/Laos': ('lo_LA.UTF-8', 'latarcyrheb-sun16'),
-    'Latvian/Latvia': ('lv_LV.UTF-8', 'latarcyrheb-sun16'),
-    'Lithuanian': ('lt_LT.UTF-8', 'latarcyrheb-sun16'),
-    'Macedonian': ('mk_MK.UTF-8', 'latarcyrheb-sun16'),
-    'Malay/Malaysia': ('ms_MY.UTF-8', 'latarcyrheb-sun16'),
-    'Maltese/malta': ('mt_MT.UTF-8', 'latarcyrheb-sun16'),
-    'Manx/Britain': ('gv_GB.UTF-8', 'latarcyrheb-sun16'),
-    'Marathi/India': ('mr_IN.UTF-8', 'latarcyrheb-sun16'),
-    'Northern/Norway': ('se_NO', 'latarcyrheb-sun16'),
-    'Norwegian': ('nb_NO.UTF-8', 'latarcyrheb-sun16'),
-    'Norwegian,/Norway': ('nn_NO.UTF-8', 'latarcyrheb-sun16'),
-    'Occitan/France': ('oc_FR', 'lat0-sun16'),
-    'Oriya/India': ('or_IN.UTF-8', 'latarcyrheb-sun16'),
-    'Persian/Iran': ('fa_IR.UTF-8', 'latarcyrheb-sun16'),
-    'Polish': ('pl_PL.UTF-8', 'latarcyrheb-sun16'),
-    'Portuguese/Brasil': ('pt_BR.UTF-8', 'latarcyrheb-sun16'),
-    'Portuguese/Portugal': ('pt_PT.UTF-8', 'latarcyrheb-sun16'),
-    'Punjabi/India': ('pa_IN.UTF-8', 'latarcyrheb-sun16'),
-    'Romanian': ('ro_RO.UTF-8', 'latarcyrheb-sun16'),
-    'Russian': ('ru_RU.UTF-8', 'latarcyrheb-sun16'),
-    'Russian/Ukraine': ('ru_UA.UTF-8', 'latarcyrheb-sun16'),
-    'Serbian': ('sr_CS.UTF-8', 'latarcyrheb-sun16'),
-    'Serbian/Latin': ('sr_CS.UTF-8@Latn', 'latarcyrheb-sun16'),
-    'Slovak': ('sk_SK.UTF-8', 'latarcyrheb-sun16'),
-    'Slovenian/Slovenia': ('sl_SI.UTF-8', 'latarcyrheb-sun16'),
-    'Spanish/Argentina': ('es_AR.UTF-8', 'latarcyrheb-sun16'),
-    'Spanish/Bolivia': ('es_BO.UTF-8', 'latarcyrheb-sun16'),
-    'Spanish/Chile': ('es_CL.UTF-8', 'latarcyrheb-sun16'),
-    'Spanish/Colombia': ('es_CO.UTF-8', 'latarcyrheb-sun16'),
-    'Spanish/Costa_Rica': ('es_CR.UTF-8', 'latarcyrheb-sun16'),
-    'Spanish/Dominican_Republic': ('es_DO.UTF-8', 'latarcyrheb-sun16'),
-    'Spanish/El_Salvador': ('es_SV.UTF-8', 'latarcyrheb-sun16'),
-    'Spanish/Equador': ('es_EC.UTF-8', 'latarcyrheb-sun16'),
-    'Spanish/Guatemala': ('es_GT.UTF-8', 'latarcyrheb-sun16'),
-    'Spanish/Honduras': ('es_HN.UTF-8', 'latarcyrheb-sun16'),
-    'Spanish/Mexico': ('es_MX.UTF-8', 'latarcyrheb-sun16'),
-    'Spanish/Nicaragua': ('es_NI.UTF-8', 'latarcyrheb-sun16'),
-    'Spanish/Panama': ('es_PA.UTF-8', 'latarcyrheb-sun16'),
-    'Spanish/Paraguay': ('es_PY.UTF-8', 'latarcyrheb-sun16'),
-    'Spanish/Peru': ('es_PE.UTF-8', 'latarcyrheb-sun16'),
-    'Spanish/Puerto_Rico': ('es_PR.UTF-8', 'latarcyrheb-sun16'),
-    'Spanish/Spain': ('es_ES.UTF-8', 'latarcyrheb-sun16'),
-    'Spanish/USA': ('es_US.UTF-8', 'latarcyrheb-sun16'),
-    'Spanish/Uruguay': ('es_UY.UTF-8', 'latarcyrheb-sun16'),
-    'Spanish/Venezuela': ('es_VE.UTF-8', 'latarcyrheb-sun16'),
-    'Swedish/Finland': ('sv_FI.UTF-8', 'latarcyrheb-sun16'),
-    'Swedish/Sweden': ('sv_SE.UTF-8', 'latarcyrheb-sun16'),
-    'Tagalog/Philippines': ('tl_PH', 'lat0-sun16'),
-    'Tamil/India': ('ta_IN.UTF-8', 'latarcyrheb-sun16'),
-    'Telugu/India': ('te_IN.UTF-8', 'latarcyrheb-sun16'),
-    'Thai': ('th_TH.UTF-8', 'latarcyrheb-sun16'),
-    'Turkish': ('tr_TR.UTF-8', 'latarcyrheb-sun16'),
-    'Ukrainian': ('uk_UA.UTF-8', 'latarcyrheb-sun16'),
-    'Urdu/Pakistan': ('ur_PK', 'latarcyrheb-sun16'),
-    'Uzbek/Uzbekistan': ('uz_UZ', 'lat0-sun16'),
-    'Walloon/Belgium': ('wa_BE@euro', 'lat0-sun16'),
-    'Welsh/Great_Britain': ('cy_GB.UTF-8', 'latarcyrheb-sun16'),
-    'Xhosa/South_Africa': ('xh_ZA.UTF-8', 'latarcyrheb-sun16'),
-    'Zulu/South_Africa': ('zu_ZA.UTF-8', 'latarcyrheb-sun16')
+    'Afrikaans/South_Africa': 'af_ZA',
+    'Albanian': 'sq_AL.UTF-8',
+    'Arabic/Algeria': 'ar_DZ.UTF-8',
+    'Arabic/Bahrain': 'ar_BH.UTF-8',
+    'Arabic/Egypt': 'ar_EG.UTF-8',
+    'Arabic/India': 'ar_IN.UTF-8',
+    'Arabic/Iraq': 'ar_IQ.UTF-8',
+    'Arabic/Jordan': 'ar_JO.UTF-8',  
+    'Arabic/Kuwait': 'ar_KW.UTF-8',  
+    'Arabic/Lebanon': 'ar_LB.UTF-8',  
+    'Arabic/Libyan_Arab_Jamahiriya': 'ar_LY.UTF-8',  
+    'Arabic/Morocco': 'ar_MA.UTF-8',  
+    'Arabic/Oman': 'ar_OM.UTF-8',  
+    'Arabic/Qatar': 'ar_QA.UTF-8',  
+    'Arabic/Saudi_Arabia': 'ar_SA.UTF-8',  
+    'Arabic/Sudan': 'ar_SD.UTF-8',  
+    'Arabic/Syrian_Arab_Republic': 'ar_SY.UTF-8',  
+    'Arabic/Tunisia': 'ar_TN.UTF-8',  
+    'Arabic/United_Arab_Emirates': 'ar_AE.UTF-8',  
+    'Arabic/Yemen': 'ar_YE.UTF-8',  
+    'Basque/Spain': 'eu_ES.UTF-8',  
+    'Belarusian': 'be_BY.UTF-8',  
+    'Bengali/BD': 'bn_BD.UTF-8',  
+    'Bengali/India': 'bn_IN.UTF-8',  
+    'Bosnian/Bosnia_and_Herzegowina': 'bs_BA',
+    'Breton/France': 'br_FR',
+    'Bulgarian': 'bg_BG.UTF-8',  
+    'Catalan/Spain': 'ca_ES.UTF-8',  
+    'Chinese/Hong_Kong': 'zh_HK.UTF-8',  
+    'Chinese/P.R._of_China': 'zh_CN.UTF-8',
+    'Chinese/Taiwan': 'zh_TW.UTF-8',
+    'Cornish/Britain': 'kw_GB.UTF-8',  
+    'Croatian': 'hr_HR.UTF-8',  
+    'Czech': 'cs_CZ.UTF-8',  
+    'Danish': 'da_DK.UTF-8',  
+    'Dutch/Belgium': 'nl_BE.UTF-8',  
+    'Dutch/Netherlands': 'nl_NL.UTF-8',  
+    'English/Australia': 'en_AU.UTF-8',  
+    'English/Botswana': 'en_BW.UTF-8',  
+    'English/Canada': 'en_CA.UTF-8',  
+    'English/Denmark': 'en_DK.UTF-8',  
+    'English/Great_Britain': 'en_GB.UTF-8',  
+    'English/Hong_Kong': 'en_HK.UTF-8',  
+    'English/India': 'en_IN.UTF-8',  
+    'English/Ireland': 'en_IE.UTF-8',  
+    'English/New_Zealand': 'en_NZ.UTF-8',  
+    'English/Philippines': 'en_PH.UTF-8',  
+    'English/Singapore': 'en_SG.UTF-8',  
+    'English/South_Africa': 'en_ZA.UTF-8',  
+    'English/USA': 'en_US.UTF-8',  
+    'English/Zimbabwe': 'en_ZW.UTF-8',  
+    'Estonian': 'et_EE.UTF-8',  
+    'Faroese/Faroe_Islands': 'fo_FO.UTF-8',  
+    'Finnish': 'fi_FI.UTF-8',  
+    'French/Belgium': 'fr_BE.UTF-8',  
+    'French/Canada': 'fr_CA.UTF-8',  
+    'French/France': 'fr_FR.UTF-8',  
+    'French/Luxemburg': 'fr_LU.UTF-8',  
+    'French/Switzerland': 'fr_CH.UTF-8',  
+    'Galician/Spain': 'gl_ES.UTF-8',  
+    'German/Austria': 'de_AT.UTF-8',  
+    'German/Belgium': 'de_BE.UTF-8',  
+    'German/Germany': 'de_DE.UTF-8',  
+    'German/Luxemburg': 'de_LU.UTF-8',  
+    'German/Switzerland': 'de_CH.UTF-8',  
+    'Greek': 'el_GR.UTF-8',  
+    'Greenlandic/Greenland': 'kl_GL.UTF-8',  
+    'Gujarati/India': 'gu_IN.UTF-8',  
+    'Hebrew/Israel': 'he_IL.UTF-8',  
+    'Hindi/India': 'hi_IN.UTF-8',  
+    'Hungarian': 'hu_HU.UTF-8',  
+    'Icelandic': 'is_IS.UTF-8',  
+    'Indonesian': 'id_ID.UTF-8',  
+    'Irish': 'ga_IE.UTF-8',  
+    'Italian/Italy': 'it_IT.UTF-8',  
+    'Italian/Switzerland': 'it_CH.UTF-8',  
+    'Japanese': 'ja_JP.UTF-8',
+    'Korean/Republic_of_Korea': 'ko_KR.UTF-8',
+    'Lao/Laos': 'lo_LA.UTF-8',  
+    'Latvian/Latvia': 'lv_LV.UTF-8',  
+    'Lithuanian': 'lt_LT.UTF-8',  
+    'Macedonian': 'mk_MK.UTF-8',  
+    'Malay/Malaysia': 'ms_MY.UTF-8',  
+    'Maltese/malta': 'mt_MT.UTF-8',  
+    'Manx/Britain': 'gv_GB.UTF-8',  
+    'Marathi/India': 'mr_IN.UTF-8',  
+    'Northern/Norway': 'se_NO',  
+    'Norwegian': 'nb_NO.UTF-8',  
+    'Norwegian,/Norway': 'nn_NO.UTF-8',  
+    'Occitan/France': 'oc_FR',
+    'Oriya/India': 'or_IN.UTF-8',  
+    'Persian/Iran': 'fa_IR.UTF-8',  
+    'Polish': 'pl_PL.UTF-8',  
+    'Portuguese/Brasil': 'pt_BR.UTF-8',  
+    'Portuguese/Portugal': 'pt_PT.UTF-8',  
+    'Punjabi/India': 'pa_IN.UTF-8',  
+    'Romanian': 'ro_RO.UTF-8',  
+    'Russian': 'ru_RU.UTF-8',  
+    'Russian/Ukraine': 'ru_UA.UTF-8',  
+    'Serbian': 'sr_CS.UTF-8',  
+    'Serbian/Latin': 'sr_CS.UTF-8@Latn',  
+    'Slovak': 'sk_SK.UTF-8',  
+    'Slovenian/Slovenia': 'sl_SI.UTF-8',  
+    'Spanish/Argentina': 'es_AR.UTF-8',  
+    'Spanish/Bolivia': 'es_BO.UTF-8',  
+    'Spanish/Chile': 'es_CL.UTF-8',  
+    'Spanish/Colombia': 'es_CO.UTF-8',  
+    'Spanish/Costa_Rica': 'es_CR.UTF-8',  
+    'Spanish/Dominican_Republic': 'es_DO.UTF-8',  
+    'Spanish/El_Salvador': 'es_SV.UTF-8',  
+    'Spanish/Equador': 'es_EC.UTF-8',  
+    'Spanish/Guatemala': 'es_GT.UTF-8',  
+    'Spanish/Honduras': 'es_HN.UTF-8',  
+    'Spanish/Mexico': 'es_MX.UTF-8',  
+    'Spanish/Nicaragua': 'es_NI.UTF-8',  
+    'Spanish/Panama': 'es_PA.UTF-8',  
+    'Spanish/Paraguay': 'es_PY.UTF-8',  
+    'Spanish/Peru': 'es_PE.UTF-8',  
+    'Spanish/Puerto_Rico': 'es_PR.UTF-8',  
+    'Spanish/Spain': 'es_ES.UTF-8',  
+    'Spanish/USA': 'es_US.UTF-8',  
+    'Spanish/Uruguay': 'es_UY.UTF-8',  
+    'Spanish/Venezuela': 'es_VE.UTF-8',  
+    'Swedish/Finland': 'sv_FI.UTF-8',  
+    'Swedish/Sweden': 'sv_SE.UTF-8',  
+    'Tagalog/Philippines': 'tl_PH',
+    'Tamil/India': 'ta_IN.UTF-8',  
+    'Telugu/India': 'te_IN.UTF-8',  
+    'Thai': 'th_TH.UTF-8',  
+    'Turkish': 'tr_TR.UTF-8',  
+    'Ukrainian': 'uk_UA.UTF-8',  
+    'Urdu/Pakistan': 'ur_PK',  
+    'Uzbek/Uzbekistan': 'uz_UZ',
+    'Walloon/Belgium': 'wa_BE@euro',
+    'Welsh/Great_Britain': 'cy_GB.UTF-8',  
+    'Xhosa/South_Africa': 'xh_ZA.UTF-8',  
+    'Zulu/South_Africa': 'zu_ZA.UTF-8'
     }
 
 
@@ -226,6 +226,7 @@ def set_jabber(server):
     """
     pro = profile.get_profile()
     pro.jabber_server = server
+    pro.jabber_registered = False
     pro.save()
     _note_restart()
     
@@ -354,9 +355,9 @@ def get_timezone():
                     timezone = string.replace(tokens[1], '"', '')
                     return timezone        
             except Exception, e:
-                print "get_timezone: %s"% e
+                print "get_timezone: %s" % e
     except Exception, e:
-        print "get_timezone: %s"% e
+        print "get_timezone: %s" % e
     return None
         
 def print_timezone():
@@ -393,7 +394,7 @@ def set_timezone(timezone):
         try:
             shutil.copyfile(fromfile, "/etc/localtime")
         except OSError, (errno, msg):
-            print (_("Error copying timezone (from %s): %s")%(fromfile, msg))
+            print (_("Error copying timezone (from %s): %s") % (fromfile, msg))
             return
         try:
             os.chmod("/etc/localtime", 0644)
@@ -411,35 +412,47 @@ def set_timezone(timezone):
     else:
         print (_("Error timezone does not exist."))
 
-def _writeI18N(lang, sysfont):
-    path = '/etc/sysconfig/i18n'
-    if os.access(path, os.R_OK) == 0:
-        print(_("Could not access %s")%path)
-    else:
+def _writeI18N(lang):
+    path = os.path.join(os.environ.get("HOME"), '.i18n')
+    if os.access(path, os.W_OK) == 0:
+        print(_("Could not access %s. Create standard settings.") % path)
         fd = open(path, 'w')
-        fd.write('LANG="' + lang + '"\n')
-        fd.write('SYSFONT="' + sysfont + '"\n')
+        fd.write('LANG="en_US.UTF-8"\n')
+        fd.write('XKB_LAYOUT="us(olpc)"\n')
         fd.close()
+    else:
+        fd = open(path, 'r')
+        lines = fd.readlines()
+        fd.close()
+        for i in range(len(lines)):
+            if lines[i][:5] == "LANG=":                
+                lines[i] = 'LANG="' + lang + '"\n'
+                fd = open(path, 'w')
+                fd.writelines(lines)
+                fd.close()
 
 def get_language():
     originalFile = None
-    path = '/etc/sysconfig/i18n'
+    path = os.path.join(os.environ.get("HOME"), '.i18n')
     if os.access(path, os.R_OK) == 0:
-        return None
-    else:
-        fd = open(path, "r")
-        originalFile = fd.readlines()
+        print(_("Could not access %s. Create standard settings.") % path)
+        fd = open(path, 'w')
+        default = 'en_US.UTF-8'
+        fd.write('LANG="%s"\n'%default)
+        fd.write('XKB_LAYOUT="us(olpc)"\n')
         fd.close()
+        return default
+    
+    fd = open(path, "r")
+    lines = fd.readlines()
+    fd.close()
 
     lang = None
 
-    for line in originalFile:
+    for line in lines:
         if line[:5] == "LANG=":
             lang = line[5:].replace('"', '')
             lang = lang.strip()
-
-    if not lang:
-        lang = "en_US"            
 
     return lang
 
@@ -447,22 +460,20 @@ def print_language():
     code = get_language()
 
     for lang in _LANGUAGES:
-        if _LANGUAGES[lang][0] == code:
+        if _LANGUAGES[lang] == code:
             print lang
             return
-    print (_("Language for code=%s could not be determined.")%code)
+    print (_("Language for code=%s could not be determined.") % code)
     
 def set_language(language):
     """Set the system language.
     languages : 
     """
-    if not _check_for_superuser():
-        return
     if language in _LANGUAGES:
-        _writeI18N(_LANGUAGES[language][0], _LANGUAGES[language][1])
+        _writeI18N(_LANGUAGES[language])
         _note_restart()
     else:
-        print (_("Sorry I do not speak \'%s\'.")%language)
+        print (_("Sorry I do not speak \'%s\'.") % language)
 
 # inilialize the docstrings for the timezone and language
 _initialize()
