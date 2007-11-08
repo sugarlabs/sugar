@@ -165,8 +165,16 @@ class ActivityCreationHandler(gobject.GObject):
         will be delegated to the prototype 'Rainbow' security service.
         """
         gobject.GObject.__init__(self)
+
         self._service_name = service_name
         self._handle = handle
+
+        self._use_rainbow = os.path.exists('/etc/olpc-security')
+        if handle.activity_id in [ 'org.laptop.JournalActivity',
+                                   'org.laptop.Terminal',
+                                   'org.laptop.LogViewer',
+                                   'org.laptop.Analyze' ]:
+            self._use_rainbow = False
 
         bus = dbus.SessionBus()
 
@@ -209,7 +217,7 @@ class ActivityCreationHandler(gobject.GObject):
                                   self._handle.object_id,
                                   self._handle.uri)
 
-            if not os.path.exists('/etc/olpc-security'):
+            if not self._use_rainbow:
                 process = subprocess.Popen(command, env=environ, cwd=activity.path,
                                            stdout=log_file, stderr=log_file)
             else:
