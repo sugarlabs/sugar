@@ -1,3 +1,4 @@
+* #4715: Filter new items that appear in the mesh view. (tomeu)
 * #4716: Filter correctly activity icons in the mesh view. (tomeu)
 * Use HOME/.i18n in control panel and reset jabber_registered to False (erikos)
 

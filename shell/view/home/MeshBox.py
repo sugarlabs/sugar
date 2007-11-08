@@ -509,6 +509,9 @@ class MeshBox(hippo.CanvasBox):
         icon = ActivityView(self._shell, activity_model)
         self._layout.add(icon)
 
+        if hasattr(icon, 'set_filter'):
+            icon.set_filter(self._query)
+
         self._activities[activity_model.get_id()] = icon
 
     def _remove_activity(self, activity_model):
@@ -520,6 +523,9 @@ class MeshBox(hippo.CanvasBox):
         meshdev = self._model.get_mesh()
         icon = AccessPointView(ap_model, meshdev)
         self._layout.add(icon)
+
+        if hasattr(icon, 'set_filter'):
+            icon.set_filter(self._query)
 
         self._access_points[ap_model.get_id()] = icon
 
