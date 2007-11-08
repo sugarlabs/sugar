@@ -290,11 +290,13 @@ class ActivityView(hippo.CanvasBox):
         self._shell.join_activity(bundle_id, self._model.get_id())
 
     def set_filter(self, query):
-        if self._model.activity.props.name.lower().find(query) == -1:
-            self._icon.xo_color = [style.COLOR_INACTIVE_STROKE.get_svg(),
-                                   style.COLOR_INACTIVE_FILL.get_svg()]
+        text_to_check = self._model.activity.props.name.lower() + \
+                self._model.activity.props.type.lower()
+        if text_to_check.find(query) == -1:
+            self._icon.props.stroke_color = style.COLOR_INACTIVE_STROKE.get_svg()
+            self._icon.props.fill_color = style.COLOR_INACTIVE_FILL.get_svg()
         else:
-            self._icon.xo_color = self._model.get_color()
+            self._icon.props.xo_color = self._model.get_color()
 
 _AUTOSEARCH_TIMEOUT = 1000
 
