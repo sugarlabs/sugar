@@ -170,10 +170,10 @@ class ActivityCreationHandler(gobject.GObject):
         self._handle = handle
 
         self._use_rainbow = os.path.exists('/etc/olpc-security')
-        if handle.activity_id in [ 'org.laptop.JournalActivity',
-                                   'org.laptop.Terminal',
-                                   'org.laptop.LogViewer',
-                                   'org.laptop.Analyze' ]:
+        if service_name in [ 'org.laptop.JournalActivity',
+                             'org.laptop.Terminal',
+                             'org.laptop.LogViewer',
+                             'org.laptop.Analyze' ]:
             self._use_rainbow = False
 
         bus = dbus.SessionBus()
