@@ -1,3 +1,5 @@
+Snapshot c682a5e241
+
 - #4570: Fix alt-tab and ctrl-alt-tab behavior
 - #3605: Make donut activity size fixed
 - #4644: Ctrl-Q does not kill Journal
