@@ -32,7 +32,7 @@ from sugar.graphics import xocolor
 from sugar import profile
 import proc_smaps
 
-_MAX_ACTIVITIES = 10
+_MAX_ACTIVITIES = 6
 _MIN_WEDGE_SIZE = 1.0 / _MAX_ACTIVITIES
 _DONUT_SIZE = style.zoom(450)
 
@@ -291,7 +291,25 @@ class ActivitiesDonut(hippo.CanvasBox, hippo.CanvasItem):
             activity_host.present()
         return True
 
+    def _set_fixed_arc_size(self):
+        """Set fixed arc size"""
+
+        n = len(self._activities)
+        if n > _MAX_ACTIVITIES:
+            size = 1.0 / n
+        else:
+            size = 1.0 / _MAX_ACTIVITIES
+
+        for act in self._activities:
+            act.size = size
+
     def _update_activity_sizes(self):
+        """Currently the size of an activity on the donut does not
+        represent it's memory usage. This is disabled because it was
+        either not working perfectly or a little confusing. See #3605"""
+        self._set_fixed_arc_size()
+        return
+
         # Get the memory mappings of each process that hosts an
         # activity, and count how many activity instances each
         # activity process hosts, and how many processes are mapping
