@@ -222,9 +222,16 @@ class Shell(gobject.GObject):
             activity.get_window().activate(1)
 
     def close_current_activity(self):
+        if self._model.get_zoom_level() != ShellModel.ZOOM_ACTIVITY:
+            return
+
+        home_model = self._model.get_home()
+        activity = home_model.get_active_activity()
+        if activity.get_type() == 'org.laptop.JournalActivity':
+            return
+
         self.take_activity_screenshot()
-        if self._model.get_zoom_level() == ShellModel.ZOOM_ACTIVITY:
-            self.get_current_activity().close()
+        self.get_current_activity().close()
 
     def get_current_activity(self):
         return self._current_host
