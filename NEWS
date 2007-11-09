@@ -1,3 +1,5 @@
+Snapshot d6bac927e1
+
 * #4667 Do not display XO outside the mesh view. (marco)
 * #4687 Use the right free function, fix a crash. (sjoerd)
 * #4724 Display meshbox invite palette menu with colored
