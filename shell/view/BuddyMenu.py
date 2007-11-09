@@ -22,6 +22,7 @@ import hippo
 
 from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
+from sugar.graphics.icon import Icon
 from sugar.presence import presenceservice
 
 class BuddyMenu(Palette):
@@ -89,20 +90,33 @@ class BuddyMenu(Palette):
         self.menu.append(menu_item)
         menu_item.show()
 
-        self._invite_menu = MenuItem(_('Invite'))
+        self._invite_menu = MenuItem('')
         self._invite_menu.connect('activate', self._invite_friend_cb)
         self.menu.append(self._invite_menu)
-        self._invite_menu.show()
-
+        
         home_model = shell_model.get_home()
         home_model.connect('active-activity-changed',
                            self._cur_activity_changed_cb)
-
-    def _cur_activity_changed_cb(self, home_model, activity_model):
-        if activity_model is not None:
-            self._invite_menu.show()
-        else:
+        activity = home_model.get_active_activity()
+        self._update_invite_menu(activity)
+            
+    def _update_invite_menu(self, activity):
+        if activity is None:
             self._invite_menu.hide()
+        else:    
+            title = activity.get_title()
+            label = self._invite_menu.get_children()[0]
+            label.set_text(_('Invite to %s') % title)
+        
+            icon = Icon(file=activity.get_icon_path())
+            icon.props.xo_color = activity.get_icon_color()
+            self._invite_menu.set_image(icon)
+            icon.show()
+
+            self._invite_menu.show()
+                        
+    def _cur_activity_changed_cb(self, home_model, activity_model):
+        self._update_invite_menu(activity_model)
 
     def _buddy_icon_changed_cb(self, buddy):
         pass
