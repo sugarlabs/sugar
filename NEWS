@@ -1,3 +1,5 @@
+* Always checkin to the DS from a new file. (tomeu)
+
 Snapshot c682a5e241
 
 - #4570: Fix alt-tab and ctrl-alt-tab behavior
