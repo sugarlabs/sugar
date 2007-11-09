@@ -28,6 +28,8 @@ from sugar.activity import registry
 from sugar import util
 from sugar import env
 
+from errno import EEXIST
+
 import os
 
 # #3903 - this constant can be removed and assumed to be 1 when dbus-python
@@ -98,6 +100,7 @@ def get_environment(activity):
     environ['SUGAR_BUNDLE_ID']   = activity.bundle_id
     environ['SUGAR_ACTIVITY_ROOT'] = activity_root
     environ['PATH'] = bin_path + ':' + environ['PATH']
+    #environ['RAINBOW_STRACE_LOG'] = '1'
 
     return environ
 
@@ -127,8 +130,11 @@ def open_log_file(activity):
                              | os.O_SYNC | os.O_WRONLY, 0644)
             f = os.fdopen(fd, 'w', 0)
             return (path, f)
-        except:
-            i += 1
+        except OSError, e:
+            if e.errno == EEXIST:
+                i += 1
+            else:
+                raise e
 
 class ActivityCreationHandler(gobject.GObject):
     """Sugar-side activity creation interface
