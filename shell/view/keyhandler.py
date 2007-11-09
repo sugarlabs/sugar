@@ -59,12 +59,17 @@ _actions_table = {
     '<ctrl>Escape'   : 'close_window',
     '<ctrl>q'        : 'close_window',
     '0xDC'           : 'open_search',
-    '<ctrl>o'        : 'open_search'
+    '<ctrl>o'        : 'open_search',
+    '<alt>s'         : 'say_text'
 }
 
 J_DBUS_SERVICE = 'org.laptop.Journal'
 J_DBUS_PATH = '/org/laptop/Journal'
 J_DBUS_INTERFACE = 'org.laptop.Journal'
+
+SPEECH_DBUS_SERVICE = 'org.laptop.Speech'
+SPEECH_DBUS_PATH = '/org/laptop/Speech'
+SPEECH_DBUS_INTERFACE = 'org.laptop.Speech'
 
 class KeyHandler(object):
     def __init__(self, shell):
@@ -73,6 +78,7 @@ class KeyHandler(object):
         self._key_pressed = None
         self._keycode_pressed = 0
         self._keystate_pressed = 0
+        self._speech_proxy = None
 
         self._key_grabber = KeyGrabber()
         self._key_grabber.connect('key-pressed',
@@ -109,6 +115,26 @@ class KeyHandler(object):
             hw_manager.set_display_mode(hardwaremanager.B_AND_W_MODE)
         else:
             hw_manager.set_display_mode(hardwaremanager.COLOR_MODE)
+
+    def _get_speech_proxy(self):
+        if self._speech_proxy is None:
+            bus = dbus.SessionBus()
+            speech_obj = bus.get_object(SPEECH_DBUS_SERVICE, SPEECH_DBUS_PATH)
+            self._speech_proxy = dbus.Interface(speech_obj, SPEECH_DBUS_INTERFACE)
+        return self._speech_proxy
+
+    def _on_speech_err(self, ex):
+        logging.error("An error occurred with the ESpeak service: %r" % (ex, ))
+
+    def _primary_selection_cb(self, clipboard, text, user_data):
+        logging.debug('KeyHandler._primary_selection_cb: %r' % text)
+        if text:    
+            self._get_speech_proxy().SayText(text, reply_handler=lambda: None, \
+                error_handler=self._on_speech_err)
+
+    def handle_say_text(self):
+        clipboard = gtk.clipboard_get(selection="PRIMARY")
+        clipboard.request_text(self._primary_selection_cb)
 
     def handle_previous_window(self):
         self._shell.activate_previous_activity()

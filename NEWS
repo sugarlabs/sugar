@@ -1,3 +1,4 @@
+* Support for the espeak service. (codyl)
 * Fix typo in activity launching code. (marco)
 
 Snapshot e23f012e08
