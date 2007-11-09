@@ -148,17 +148,14 @@ class AccessPointView(PulsingIcon):
             if self._disconnect_item:
                 self._disconnect_item.hide()
             self.props.pulse_time = 0.0
+            self.props.colors = [
+                [ style.Color(self._device_stroke).get_svg(),
+                    style.Color(self._device_fill).get_svg() ]
+            ]
 
-            if self._greyed_out:
-                self.props.colors = [
-                    [ style.COLOR_INACTIVE_STROKE.get_svg(),
-                      style.COLOR_INACTIVE_FILL.get_svg() ]
-                ]
-            else:
-                self.props.colors = [
-                    [ style.Color(self._device_stroke).get_svg(),
-                      style.Color(self._device_fill).get_svg() ]
-                ]
+        if self._greyed_out:
+            self.props.pulse_time = 0.0
+            self.props.colors = [['#D5D5D5', '#D5D5D5']]
 
     def set_filter(self, query):
         self._greyed_out = self._model.props.name.lower().find(query) == -1
@@ -177,6 +174,7 @@ class MeshDeviceView(PulsingIcon):
         self._nm_device = nm_device
         self.channel = channel
         self.props.badge_name = "badge-channel-%d" % self.channel
+        self._greyed_out = False
 
         self._disconnect_item = None
         self._palette = self._create_palette()
@@ -222,7 +220,9 @@ class MeshDeviceView(PulsingIcon):
     def _update_state(self):
         state = self._nm_device.get_state()
         chan = wireless.freq_to_channel(self._nm_device.get_frequency())
-        if state == nmclient.DEVICE_STATE_ACTIVATING and chan == self.channel:
+        if self._greyed_out:
+            self.props.colors = [['#D5D5D5', '#D5D5D5']]
+        elif state == nmclient.DEVICE_STATE_ACTIVATING and chan == self.channel:
             self._disconnect_item.hide()
             self.props.pulse_time = 0.75
             self.props.colors = [
@@ -249,6 +249,10 @@ class MeshDeviceView(PulsingIcon):
             ]
         else:
             raise RuntimeError("Shouldn't get here")
+
+    def set_filter(self, query):
+        self._greyed_out = (query != '')
+        self._update_state()
 
 class ActivityView(hippo.CanvasBox):
     def __init__(self, shell, model):
@@ -293,10 +297,14 @@ class ActivityView(hippo.CanvasBox):
         text_to_check = self._model.activity.props.name.lower() + \
                 self._model.activity.props.type.lower()
         if text_to_check.find(query) == -1:
-            self._icon.props.stroke_color = style.COLOR_INACTIVE_STROKE.get_svg()
-            self._icon.props.fill_color = style.COLOR_INACTIVE_FILL.get_svg()
+            self._icon.props.stroke_color = '#D5D5D5'
+            self._icon.props.fill_color = '#E5E5E5'
         else:
             self._icon.props.xo_color = self._model.get_color()
+
+        for key, icon in self._icons.iteritems():
+            if hasattr(icon, 'set_filter'):
+                icon.set_filter(query)
 
 _AUTOSEARCH_TIMEOUT = 1000
 
@@ -504,6 +512,9 @@ class MeshBox(hippo.CanvasBox):
             icon = BuddyIcon(self._shell, buddy_model,
                              style.SMALL_ICON_SIZE)
             activity.add_buddy_icon(buddy_model.get_key(), icon)
+
+            if hasattr(icon, 'set_filter'):
+                icon.set_filter(self._query)
 
     def _add_activity(self, activity_model):
         icon = ActivityView(self._shell, activity_model)

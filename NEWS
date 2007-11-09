@@ -1,3 +1,5 @@
+* #4728, #4764: Set the correct colors for filtered out mesh view icons. (tomeu)
+
 Snapshot d6bac927e1
 
 * #4667 Do not display XO outside the mesh view. (marco)
