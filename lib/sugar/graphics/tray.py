@@ -132,6 +132,7 @@ class _TrayScrollButton(gtk.Button):
 class HTray(gtk.HBox):
     def __init__(self, **kwargs):
         gobject.GObject.__init__(self, **kwargs)
+        self.set_direction(gtk.TEXT_DIR_LTR)
 
         scroll_left = _TrayScrollButton('go-left', _PREVIOUS_PAGE)
         self.pack_start(scroll_left, False)
