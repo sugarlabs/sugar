@@ -22,6 +22,8 @@ import hippo
 import gobject
 import gtk
 
+from sugar.graphics import style
+
 _PLACE_TRIALS = 20
 _MAX_WEIGHT = 255
 _CELL_SIZE = 4
@@ -208,7 +210,7 @@ class SpreadLayout(gobject.GObject, hippo.CanvasLayout):
         self._box = box
 
     def do_get_height_request(self, for_width):
-        return 0, gtk.gdk.screen_height()
+        return 0, gtk.gdk.screen_height() - style.GRID_CELL_SIZE
 
     def do_get_width_request(self):
         return 0, gtk.gdk.screen_width()
