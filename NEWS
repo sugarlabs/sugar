@@ -1,3 +1,4 @@
+* #4687 Use the right free function, fix a crash. (sjoerd)
 * Always checkin to the DS from a new file. (tomeu)
 
 Snapshot c682a5e241
