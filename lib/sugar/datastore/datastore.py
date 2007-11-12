@@ -122,7 +122,7 @@ class DSObject(object):
         result = registry.get_activities_for_type(mime_type)
         if not result:
             for parent_mime in mime.get_mime_parents(mime_type):
-                 result.extend(registry.get_activities_for_type(parent_type))
+                 result.extend(registry.get_activities_for_type(parent_mime))
         return result
 
     def get_activities(self):
