@@ -1,3 +1,4 @@
+* Do not fail if there is not an activity service. (marco)
 * Alert when an activity cannot be saved. (rwh)
 
 Snapshot 47e231311b
