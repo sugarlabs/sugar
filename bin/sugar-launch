@@ -55,6 +55,10 @@ def _get_interpreter(exec_file):
     if line.startswith('#!'):
         cmds = line[2:].strip().split(' ')
         cmds.append(abs_path)
+
+        if '/usr/bin/env' in cmds:
+            cmds.remove('/usr/bin/env')
+
         return cmds
 
     return exec_file
