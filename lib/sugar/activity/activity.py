@@ -50,6 +50,7 @@ import os
 import time
 import tempfile
 from hashlib import sha1
+import traceback
 
 import gtk, gobject
 import dbus
@@ -63,6 +64,8 @@ from sugar.graphics.window import Window
 from sugar.graphics.toolbox import Toolbox
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.toolcombobox import ToolComboBox
+from sugar.graphics.alert import Alert
+from sugar.graphics.icon import Icon
 from sugar.datastore import datastore
 from sugar import wm
 from sugar import profile
@@ -805,13 +808,38 @@ class Activity(Window, gtk.Container):
                                                 self.__share_cb)
         self._pservice.share_activity(self, private=private)
 
-    def close(self):
+    def _display_keep_failed_dialog(self):
+        alert = Alert()
+        alert.props.title = _('Keep error')
+        alert.props.msg = _('Keep error: all changes will be lost')
+
+        cancel_icon = Icon(icon_name='dialog-cancel')
+        alert.add_button(gtk.RESPONSE_CANCEL, _('Don\'t stop'), cancel_icon)
+
+        stop_icon = Icon(icon_name='dialog-ok')
+        alert.add_button(gtk.RESPONSE_OK, _('Stop anyway'), stop_icon)
+
+        self.add_alert(alert)
+        alert.connect('response', self._keep_failed_dialog_response_cb)
+
+    def _keep_failed_dialog_response_cb(self, alert, response_id):
+        self.remove_alert(alert)
+        if response_id == gtk.RESPONSE_OK:
+            self.close(skip_save=True)
+
+    def close(self, skip_save=False):
         """Request that the activity be stopped and saved to the Journal
         
         Activities should not override this method, but should implement write_file() to
         do any state saving instead.
         """
-        self.save()
+        try:
+            if not skip_save:
+                self.save()
+        except:
+            logging.info(traceback.format_exc())
+            self._display_keep_failed_dialog()
+            return
 
         if self._shared_activity:
             self._shared_activity.leave()
