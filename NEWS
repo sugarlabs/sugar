@@ -1,3 +1,5 @@
+* Get rid of sound competely to be sure we don't block the device. (marco)
+
 Snapshot 1bf6cdaa81
 
 * #4728, #4764: Set the correct colors for filtered out mesh view icons. (tomeu)
