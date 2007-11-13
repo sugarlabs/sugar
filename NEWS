@@ -1,3 +1,5 @@
+Snapshot 9d28557bbd
+
 * Fix randr. (marco)
 * Do not fail if there is not an activity service. (marco)
 * Alert when an activity cannot be saved. (rwh)
