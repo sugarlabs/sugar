@@ -17,9 +17,9 @@
 import os
 import signal
 import logging
+import subprocess
 
 import dbus
-import gobject
 import gtk
 
 from hardware import hardwaremanager
@@ -197,8 +197,7 @@ class KeyHandler(object):
         if self._screen_rotation == len(states):
             self._screen_rotation = 0
 
-        gobject.spawn_async(['xrandr', '-o', states[self._screen_rotation]],
-                            flags=gobject.SPAWN_SEARCH_PATH)
+        subprocess.Popen(['xrandr', '-o', states[self._screen_rotation]])
 
     def handle_quit_emulator(self):
         if os.environ.has_key('SUGAR_EMULATOR_PID'):
