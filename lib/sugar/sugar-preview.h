@@ -38,6 +38,8 @@ struct _SugarPreview {
     GObject base_instance;
 
     GdkImage *image;
+    GdkPixbuf *pixbuf;
+
     int width;
     int height;
 };

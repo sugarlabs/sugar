@@ -39,16 +39,22 @@ sugar_preview_get_pixbuf(SugarPreview *preview)
 {
     GdkPixbuf *pixbuf;
 
+    if (preview->pixbuf != NULL) {
+        return preview->pixbuf;
+    }
+
     if (preview->image == NULL) {
         return NULL;
     }
 
-    pixbuf = gdk_pixbuf_get_from_image(NULL, preview->image, NULL,
-                                       0, 0, 0, 0,
-                                       preview->image->width,
-                                       preview->image->height);
+    preview->pixbuf = gdk_pixbuf_get_from_image(NULL, preview->image, NULL,
+                                                0, 0, 0, 0,
+                                                preview->image->width,
+                                                preview->image->height);
+    g_object_unref(G_OBJECT(preview->image));
+    preview->image = NULL;
 
-    return pixbuf;
+    return preview->pixbuf;
 }
 
 void
@@ -57,6 +63,10 @@ sugar_preview_clear(SugarPreview *preview)
     if (preview->image != NULL) {
         g_object_unref(G_OBJECT(preview->image));
         preview->image = NULL;
+    }
+    if (preview->pixbuf != NULL) {
+        g_object_unref(G_OBJECT(preview->pixbuf));
+        preview->pixbuf = NULL;
     }
 }
 
@@ -104,4 +114,5 @@ static void
 sugar_preview_init(SugarPreview *preview)
 {
     preview->image = NULL;
+    preview->pixbuf = NULL;
 }
