@@ -1,3 +1,5 @@
+Snapshot 411879e9de
+
 * #4768 Fix memory leak when switching between activities. (marco)
 
 Snapshot 9d28557bbd
