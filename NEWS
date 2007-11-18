@@ -1,3 +1,6 @@
+* #5004 Fix race that caused multiple fake icons appear in the activity frame
+  after installing a bundle with Browse. (tomeu)
+
 Snapshot 411879e9de
 
 * #4768 Fix memory leak when switching between activities. (marco)

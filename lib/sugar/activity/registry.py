@@ -130,13 +130,20 @@ class ActivityRegistry(gobject.GObject):
         return activities
 
     def add_bundle(self, bundle_path):
-        return self._registry.AddBundle(bundle_path)
+        result = self._registry.AddBundle(bundle_path)
+        # Need to invalidate here because get_activity could be called after
+        # add_bundle and before we receive activity-added, causing a race.
+        self._invalidate_cache()
+        return result
 
     def _activity_added_cb(self, info_dict):
-        logging.debug('ActivityRegistry._activity_added_cb: flushing caches')
+        logging.debug('ActivityRegistry._activity_added_cb: invalidating cache')
+        self._invalidate_cache()
+        self.emit('activity-added', _activity_info_from_dict(info_dict))
+
+    def _invalidate_cache(self):
         self._service_name_to_activity_info.clear()
         self._mime_type_to_activities.clear()
-        self.emit('activity-added', _activity_info_from_dict(info_dict))
 
     def remove_bundle(self, bundle_path):
         return self._registry.RemoveBundle(bundle_path)
