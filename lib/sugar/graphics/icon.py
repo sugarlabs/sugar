@@ -274,7 +274,7 @@ class Icon(gtk.Image):
             self._buffer.file_name = self.props.file
 
         width, height = gtk.icon_size_lookup(self.props.icon_size)
-        if self._buffer.width != width and self._buffer.height != height:
+        if self._buffer.width != width or self._buffer.height != height:
             self._buffer.width = width
             self._buffer.height = height
 
@@ -314,7 +314,7 @@ class Icon(gtk.Image):
         xpad, ypad = self.get_padding()
         xalign, yalign = self.get_alignment()
         requisition = self.get_child_requisition()
-        if self.get_direction != gtk.TEXT_DIR_LTR:
+        if self.get_direction() != gtk.TEXT_DIR_LTR:
             xalign = 1.0 - xalign
 
         x = math.floor(self.allocation.x + xpad +
