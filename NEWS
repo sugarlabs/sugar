@@ -1,3 +1,5 @@
+* #4660: Use improved PS API which streamlines ShareActivity process (smcv)
+
 0.70.1
 
 * #5004 Fix race that caused multiple fake icons appear in the activity frame
