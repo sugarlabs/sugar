@@ -135,6 +135,7 @@ class HomeWindow(gtk.Window):
             self._canvas.set_root(self._friends_box)
         elif self._level == ShellModel.ZOOM_MESH:
             self._canvas.set_root(self._mesh_box)
+            self._mesh_box.focus_search_entry()
 
     def get_home_box(self):
         return self._home_box   

@@ -563,3 +563,5 @@ class MeshBox(hippo.CanvasBox):
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(self._query)
 
+    def focus_search_entry(self):
+        self._toolbar._search_entry.grab_focus()
