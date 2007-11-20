@@ -424,24 +424,15 @@ class PresenceService(gobject.GObject):
             raise RuntimeError("Could not get owner object from presence service.")
         return self._new_object(owner_op)
 
-    def _share_activity_cb(self, activity, psact):
+    def _share_activity_cb(self, activity, op):
         """Finish sharing the activity
         """
+        psact = self._new_object(op)
         psact._joined = True
         _logger.debug('%r: Just shared, setting up tubes', activity)
         psact.set_up_tubes(reply_handler=lambda:
                             self.emit("activity-shared", True, psact, None),
                            error_handler=lambda e:
-                            self._share_activity_error_cb(activity, e))
-
-    def _share_activity_privacy_cb(self, activity, private, op):
-        psact = self._new_object(op)
-        _logger.debug('%r: Just shared, setting privacy to %r', activity,
-                      private)
-        psact.set_private(private,
-                          reply_handler=lambda:
-                            self._share_activity_cb(activity, psact),
-                          error_handler=lambda e:
                             self._share_activity_error_cb(activity, e))
 
     def _share_activity_error_cb(self, activity, err):
@@ -474,9 +465,10 @@ class PresenceService(gobject.GObject):
 
         atype = activity.get_bundle_id()
         name = activity.props.title
+        properties['private'] = bool(private)
         self._ps.ShareActivity(actid, atype, name, properties,
                 reply_handler=lambda op: \
-                    self._share_activity_privacy_cb(activity, private, op),
+                    self._share_activity_cb(activity, op),
                 error_handler=lambda e: \
                     self._share_activity_error_cb(activity, e))
 
