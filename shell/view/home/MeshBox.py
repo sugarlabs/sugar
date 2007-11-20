@@ -28,6 +28,7 @@ from sugar.graphics.icon import get_icon_state
 from sugar.graphics import style
 from sugar.graphics import palette
 from sugar.graphics import iconentry
+from sugar.graphics.menuitem import MenuItem
 from sugar import profile
 
 from model import accesspointmodel
@@ -265,17 +266,47 @@ class ActivityView(hippo.CanvasBox):
         self._layout = SnowflakeLayout()
         self.set_layout(self._layout)
 
-        self._icon = CanvasIcon(file_name=model.get_icon_name(),
-                                xo_color=model.get_color(), cache=True,
-                                size=style.STANDARD_ICON_SIZE)
-        self._icon.connect('activated', self._clicked_cb)
-        self._icon.set_tooltip(self._model.activity.props.name)
+        self._icon = self._create_icon()
         self._layout.add_center(self._icon)
 
-        self._model.activity.connect('notify::name', self._name_changed_cb)
+        self._update_palette()
 
-    def _name_changed_cb(self, activity, pspec):
-        self._icon.set_tooltip(activity.props.name)
+        activity = self._model.activity
+        activity.connect('notify::name', self._name_changed_cb)
+        activity.connect('notify::color', self._color_changed_cb)
+        activity.connect('notify::private', self._private_changed_cb)
+        activity.connect('joined', self._joined_changed_cb)
+        #FIXME: 'joined' signal not working, see #5032
+
+    def _create_icon(self):
+        icon = CanvasIcon(file_name=self._model.get_icon_name(),
+                    xo_color=self._model.get_color(), cache=True,
+                    size=style.STANDARD_ICON_SIZE)
+        icon.connect('activated', self._clicked_cb)
+        return icon
+
+    def _create_palette(self):
+        p = palette.Palette(self._model.activity.props.name)
+
+        private = self._model.activity.props.private
+        joined = self._model.activity.props.joined
+
+        if joined:
+            item = MenuItem(_('Resume'), 'activity-start')
+            item.connect('activate', self._clicked_cb)
+            item.show()
+            p.menu.append(item)
+        elif not private:
+            item = MenuItem(_('Join'), 'activity-start')
+            item.connect('activate', self._clicked_cb)
+            item.show()
+            p.menu.append(item)
+
+        return p
+
+    def _update_palette(self):
+        self._palette = self._create_palette()
+        self._icon.set_palette(self._palette)
 
     def has_buddy_icon(self, key):
         return self._icons.has_key(key)
@@ -305,6 +336,21 @@ class ActivityView(hippo.CanvasBox):
         for key, icon in self._icons.iteritems():
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(query)
+
+    def _name_changed_cb(self, activity, pspec):
+        self._update_palette()
+
+    def _color_changed_cb(self, activity, pspec):
+        self._layout.remove(self._icon)
+        self._icon = self._create_icon()
+        self._layout.add_center(self._icon)
+        self._icon.set_palette(self._palette)
+
+    def _private_changed_cb(self, activity, pspec):
+        self._update_palette()
+
+    def _joined_changed_cb(self, widget, event):
+        logging.debug('ActivityView._joined_changed_cb: AAAA!!!!')
 
 _AUTOSEARCH_TIMEOUT = 1000
 
@@ -506,7 +552,7 @@ class MeshBox(hippo.CanvasBox):
 
         if activity_model == None:
             self._add_alone_buddy(buddy_model)
-        else:
+        elif activity_model.get_id() in self._activities:
             activity = self._activities[activity_model.get_id()]
 
             icon = BuddyIcon(self._shell, buddy_model,
