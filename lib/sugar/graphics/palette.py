@@ -611,13 +611,14 @@ class WidgetInvoker(Invoker):
         widget.connect('leave-notify-event', self._leave_notify_event_cb)
 
     def get_rect(self):
-        win_x, win_y = self._widget.window.get_origin()
-        rectangle = self._widget.get_allocation()
+        x, y = self._widget.window.get_origin()
+        allocation = self._widget.get_allocation()
 
-        x = win_x + rectangle.x
-        y = win_y + rectangle.y
-        width = rectangle.width
-        height = rectangle.height
+        if self._widget.flags() & gtk.NO_WINDOW:
+           x += allocation.x
+           y += allocation.y
+        width = allocation.width
+        height = allocation.height
 
         return gtk.gdk.Rectangle(x, y, width, height)
 
