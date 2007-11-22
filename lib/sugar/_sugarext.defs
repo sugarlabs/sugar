@@ -119,7 +119,7 @@
   (return-type "none")
   (parameters
     '("SexyIconEntryPosition" "position")
-    '("GtkImage*" "icon")
+    '("GtkImage*" "icon" (null-ok))
   )
 )
 
