@@ -46,11 +46,11 @@ class FriendView(hippo.CanvasBox):
         self._buddy.connect('disappeared', self._buddy_disappeared_cb)
         self._buddy.connect('color-changed', self._buddy_color_changed_cb)
 
-    def _get_new_icon_name(self, home_activity):
+    def _get_new_icon_name(self, ps_activity):
         registry = activity.get_registry()
-        bundle = registry.get_bundle(home_activity.get_type())
-        if bundle:
-            return bundle.get_icon()
+        activity_info = registry.get_activity(ps_activity.props.type)
+        if activity_info:
+            return activity_info.icon
         return None
 
     def _remove_activity_icon(self):
@@ -58,14 +58,14 @@ class FriendView(hippo.CanvasBox):
             self.remove(self._activity_icon)
             self._activity_icon_visible = False
 
-    def _buddy_activity_changed_cb(self, buddy, home_activity=None):
-        if not home_activity:
+    def _buddy_activity_changed_cb(self, buddy, ps_activity=None):
+        if not ps_activity:
             self._remove_activity_icon()
             return
 
         # FIXME: use some sort of "unknown activity" icon rather
         # than hiding the icon?
-        name = self._get_new_icon_name(home_activity)
+        name = self._get_new_icon_name(ps_activity)
         if name:
             self._activity_icon.props.file_name = name
             self._activity_icon.props.xo_color = buddy.get_color()
