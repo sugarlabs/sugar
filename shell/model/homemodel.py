@@ -263,6 +263,10 @@ class HomeModel(gobject.GObject):
         home_activity.props.launching = True
         self._add_activity(home_activity)
 
+        # FIXME: better learn about finishing processes by receiving a signal.
+        # Now just check whether an activity has a window after ~90sec
+        gobject.timeout_add(90000, self._check_activity_launched, activity_id)
+
     def notify_activity_launch_failed(self, activity_id):
         home_activity = self._get_activity_by_id(activity_id)
         if home_activity:
@@ -270,3 +274,9 @@ class HomeModel(gobject.GObject):
             self._remove_activity(home_activity)
         else:
             logging.error('Model for activity id %s does not exist.' % activity_id)
+
+    def _check_activity_launched(self, activity_id):
+        home_activity = self._get_activity_by_id(activity_id)
+        if home_activity and home_activity.props.launching:
+            logging.debug('Activity %s still launching, assuming it failed...', activity_id)
+            self.notify_activity_launch_failed(activity_id)
