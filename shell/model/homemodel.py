@@ -280,3 +280,4 @@ class HomeModel(gobject.GObject):
         if home_activity and home_activity.props.launching:
             logging.debug('Activity %s still launching, assuming it failed...', activity_id)
             self.notify_activity_launch_failed(activity_id)
+        return False
