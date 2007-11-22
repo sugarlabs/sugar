@@ -59,6 +59,69 @@ def _calculate_gap(a, b):
     else:
         return False
 
+class MouseSpeedDetector(gobject.GObject):
+
+    __gsignals__ = {
+        'motion-slow': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'motion-fast': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+    }
+
+    _MOTION_SLOW = 1
+    _MOTION_FAST = 2
+
+    def __init__(self, parent, delay, thresh):
+        """Create MouseSpeedDetector object,
+            delay in msec
+            threshold in pixels (per tick of 'delay' msec)"""
+
+        gobject.GObject.__init__(self)
+
+        self._threshold = thresh
+        self._parent = parent
+        self._delay = delay
+
+        self._state = None
+
+        self._timeout_hid = None
+
+    def start(self):
+        self._state = None
+        self._mouse_pos = self._get_mouse_position()
+
+        self._timeout_hid = gobject.timeout_add(self._delay, self._timer_cb)
+
+    def stop(self):
+        if self._timeout_hid is not None:
+            gobject.source_remove(self._timeout_hid)
+        self._state = None
+
+    def _get_mouse_position(self):
+        display = gtk.gdk.display_get_default()
+        screen, x, y, mask = display.get_pointer()
+        return (x, y)
+
+    def _detect_motion(self):
+        oldx, oldy = self._mouse_pos
+        (x, y) = self._get_mouse_position()
+        self._mouse_pos = (x, y)
+
+        dist2 = (oldx - x)**2 + (oldy - y)**2
+        if dist2 > self._threshold**2:
+            return True
+        else:
+            return False
+
+    def _timer_cb(self):
+        motion = self._detect_motion()
+        if motion and self._state != self._MOTION_FAST:
+            self.emit('motion-fast')
+            self._state = self._MOTION_FAST
+        elif not motion and self._state != self._MOTION_SLOW:
+            self.emit('motion-slow')
+            self._state = self._MOTION_SLOW
+
+        return True
+
 class Palette(gtk.Window):
     PRIMARY = 0
     SECONDARY = 1
@@ -151,6 +214,9 @@ class Palette(gtk.Window):
         self.set_primary_text(label, accel_path)
         self.set_group_id('default')
 
+        self._mouse_detector = MouseSpeedDetector(self, 200, 5)
+        self._mouse_detector.connect('motion-slow', self._mouse_slow_cb)
+
     def _add_menu(self):
         self._menu_box = gtk.VBox()
         self._secondary_box.pack_start(self._menu_box)
@@ -213,7 +279,7 @@ class Palette(gtk.Window):
         if pspec.name == 'invoker':
             if self._invoker is not None:
                 self._invoker.disconnect(self._enter_invoker_hid)
-                self._invoker.disconnect(self._leave_invoker_hid)                                
+                self._invoker.disconnect(self._leave_invoker_hid)
 
             self._invoker = value
             if value is not None:
@@ -392,9 +458,16 @@ class Palette(gtk.Window):
         self.palette_state = state
 
     def _invoker_mouse_enter_cb(self, invoker):
+        self._mouse_detector.start()
+
+    def _mouse_slow_cb(self, widget):
+        self._mouse_detector.stop()
+        self._palette_do_popup()
+
+    def _palette_do_popup(self):
         immediate = False
-        
-        if self.is_up(): 
+
+        if self.is_up():
             self._popdown_anim.stop() 
             return
 
@@ -409,6 +482,8 @@ class Palette(gtk.Window):
         self.popup(immediate=immediate)
 
     def _invoker_mouse_leave_cb(self, invoker):
+        if self._mouse_detector is not None:
+            self._mouse_detector.stop()
         self.popdown()
 
     def _enter_notify_event_cb(self, widget, event):
