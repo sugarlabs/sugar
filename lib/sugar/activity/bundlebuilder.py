@@ -237,11 +237,6 @@ def cmd_genpot(bundle_name, manifest):
     if retcode:
         print 'ERROR - xgettext failed with return code %i.' % retcode
 
-    for file_name in _get_po_list(manifest).values():
-        args = [ 'msgmerge', '-U', file_name, pot_file ]
-        retcode = subprocess.call(args)
-        if retcode:
-            print 'ERROR - msgmerge failed with return code %i.' % retcode    
 
 def cmd_genl10n(bundle_name, manifest):
     source_path = _get_source_path()
