@@ -44,12 +44,14 @@ class ClipboardIcon(RadioToolButton):
         self._preview = None
         self._activity = None
         self.owns_clipboard = False
+        self.props.sensitive = False
+        self.props.active = False
 
         self._icon = Icon()
         self._icon.props.xo_color = profile.get_color()
         self.set_icon_widget(self._icon)
         self._icon.show()
-        
+
         cb_service = clipboardservice.get_instance()
         cb_service.connect('object-state-changed', self._object_state_changed_cb)
         obj = cb_service.get_object(self._object_id)
@@ -80,6 +82,10 @@ class ClipboardIcon(RadioToolButton):
 
     def _put_in_clipboard(self):
         logging.debug('ClipboardIcon._put_in_clipboard')
+
+        if self._percent < 100:
+            raise ValueError('Object is not complete, cannot be put into the clipboard.')
+        
         targets = self._get_targets()
         if targets:
             clipboard = gtk.Clipboard()
@@ -125,14 +131,19 @@ class ClipboardIcon(RadioToolButton):
         self.child.drag_source_set_icon_name(self._icon.props.icon_name)
         
         self._name = name
-        self._percent = percent
         self._preview = preview
         self._activity = activity
         self.palette.set_state(name, percent, preview, activity,
                                self._is_bundle(obj['FORMATS']))
 
-        if self.props.active:
-            self._put_in_clipboard()
+        old_percent = self._percent
+        self._percent = percent
+        if self._percent == 100:
+            self.props.sensitive = True
+
+        # Clipboard object became complete. Make it the active one.
+        if old_percent < 100 and self._percent == 100:
+            self.props.active = True
 
     def _notify_active_cb(self, widget, pspec):
         if self.props.active:
