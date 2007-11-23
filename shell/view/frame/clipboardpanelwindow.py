@@ -59,29 +59,35 @@ class ClipboardPanelWindow(FrameWindow):
         targets = clipboard.wait_for_targets()
         for target in targets:
             if target not in ('TIMESTAMP', 'TARGETS', 'MULTIPLE', 'SAVE_TARGETS'):
+                logging.debug('Asking for target %s.' % target)
                 selection = clipboard.wait_for_contents(target)
-                if selection:
-                    self._add_selection(key, selection)
+                if not selection:
+                    logging.warning('no data for selection target %s.' % target)
+                    continue
+                self._add_selection(key, selection)
 
         cb_service.set_object_percent(key, percent=100)
 
     def _add_selection(self, key, selection):
-        if selection.data:
-            logging.debug('adding type ' + selection.type + '.')
-                        
-            cb_service = clipboardservice.get_instance()
-            if selection.type == 'text/uri-list':
-                uris = selection.data.split('\n')
-                if len(uris) > 1:
-                    raise NotImplementedError('Multiple uris in text/uri-list still not supported.')
+        if not selection.data:
+            logging.warning('no data for selection target %s.' % selection.type)
+            return
+            
+        logging.debug('adding type ' + selection.type + '.')
+                    
+        cb_service = clipboardservice.get_instance()
+        if selection.type == 'text/uri-list':
+            uris = selection.data.split('\n')
+            if len(uris) > 1:
+                raise NotImplementedError('Multiple uris in text/uri-list still not supported.')
 
-                cb_service.add_object_format(key,
-                                             selection.type,
-                                             uris[0],
-                                             on_disk=True)
-            else:
-                cb_service.add_object_format(key, 
-                                             selection.type,
-                                             selection.data,
-                                             on_disk=False)
+            cb_service.add_object_format(key,
+                                            selection.type,
+                                            uris[0],
+                                            on_disk=True)
+        else:
+            cb_service.add_object_format(key, 
+                                            selection.type,
+                                            selection.data,
+                                            on_disk=False)
 
