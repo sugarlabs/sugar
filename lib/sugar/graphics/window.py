@@ -15,11 +15,72 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+import gobject
 import gtk
+import logging
 
-class Window(gtk.Window):
+from sugar.graphics.icon import Icon
+
+class UnfullscreenButton(gtk.Window):
+
     def __init__(self):
         gtk.Window.__init__(self)
+
+        self.set_decorated(False)
+        self.set_resizable(False)
+        self.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
+
+        self.set_border_width(0)
+
+        self.props.accept_focus = False
+
+        #Setup estimate of width, height
+        w, h = gtk.icon_size_lookup(gtk.ICON_SIZE_LARGE_TOOLBAR)
+        self._width = w
+        self._height = h
+
+        self.connect('size-request', self._size_request_cb)
+
+        screen = self.get_screen()
+        screen.connect('size-changed', self._screen_size_changed_cb)
+
+        self._button = gtk.Button()
+        self._button.set_relief(gtk.RELIEF_NONE)
+
+        self._icon = Icon(icon_name='view-return',
+                            icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
+        self._icon.show()
+        self._button.add(self._icon)
+
+        self._button.show()
+        self.add(self._button)
+
+    def connect_button_press(self, cb):
+        self._button.connect('button-press-event', cb)
+
+    def _reposition(self):
+        x = gtk.gdk.screen_width() - self._width
+        self.move(x, 0)
+
+    def _size_request_cb(self, widget, req):
+        self._width = req.width
+        self._height = req.height
+        self._reposition()
+
+    def _screen_size_changed_cb(self, screen):
+        self._reposition()
+
+class Window(gtk.Window):
+
+    __gproperties__ = {
+        'enable-fullscreen-mode': (bool, None, None, True,
+                                    gobject.PARAM_READWRITE),
+    }
+
+    def __init__(self, **args):
+        self._enable_fullscreen_mode = True
+
+        gtk.Window.__init__(self, **args)
 
         self.connect('realize', self.__window_realize_cb)
         self.connect('window-state-event', self.__window_state_event_cb)
@@ -41,6 +102,24 @@ class Window(gtk.Window):
         
         self.add(self._vbox)
         self._vbox.show()
+
+        self._is_fullscreen = False
+        self._unfullscreen_button = UnfullscreenButton()
+        self._unfullscreen_button.set_transient_for(self)
+        self._unfullscreen_button.connect_button_press(
+            self.__unfullscreen_button_pressed)
+
+    def do_get_property(self, prop):
+        if prop.name == 'enable-fullscreen-mode':
+            return self._enable_fullscreen_mode
+        else:
+            return gtk.Window.do_get_property(self, prop)
+
+    def do_set_property(self, prop, val):
+        if prop.name == 'enable-fullscreen-mode':
+            self._enable_fullscreen_mode = val
+        else:
+            gtk.Window.do_set_property(self, prop, val)
 
     def set_canvas(self, canvas):
         if self.canvas:
@@ -102,20 +181,40 @@ class Window(gtk.Window):
         window.window.set_group(group.window)
 
     def __window_state_event_cb(self, window, event):
+        if not (event.changed_mask & gtk.gdk.WINDOW_STATE_FULLSCREEN):
+            return False
+
         if event.new_window_state & gtk.gdk.WINDOW_STATE_FULLSCREEN:
             if self.toolbox is not None:
                 self.toolbox.hide()
             if self.tray is not None:
                 self.tray.hide()
-        elif event.new_window_state == 0:
+
+            self._is_fullscreen = True
+            if self.props.enable_fullscreen_mode:
+                self._unfullscreen_button.show()
+
+        else:
             if self.toolbox is not None:
                 self.toolbox.show()
             if self.tray is not None:
                 self.tray.show()
 
+            self._is_fullscreen = False
+            if self.props.enable_fullscreen_mode:
+                self._unfullscreen_button.hide()
+
     def __key_press_cb(self, widget, event):
+        key = gtk.gdk.keyval_name(event.keyval)
         if event.state & gtk.gdk.MOD1_MASK:
-            if gtk.gdk.keyval_name(event.keyval) == 'space':
+            if key == 'space':
                 self.tray.props.visible = not self.tray.props.visible
                 return True
+        elif key == 'Escape' and self._is_fullscreen and \
+            self.props.enable_fullscreen_mode:
+            self.unfullscreen()
+            return True
         return False
+
+    def __unfullscreen_button_pressed(self, widget, event):
+        self.unfullscreen()
