@@ -686,12 +686,19 @@ class WidgetInvoker(Invoker):
         widget.connect('leave-notify-event', self._leave_notify_event_cb)
 
     def get_rect(self):
-        x, y = self._widget.window.get_origin()
         allocation = self._widget.get_allocation()
+        if self._widget.window is not None:
+            x, y = self._widget.window.get_origin()
+        else:
+            logging.warning(
+                "Trying to position palette with invoker that's not realized.")
+            x = 0
+            y = 0
 
         if self._widget.flags() & gtk.NO_WINDOW:
-           x += allocation.x
-           y += allocation.y
+            x += allocation.x
+            y += allocation.y
+
         width = allocation.width
         height = allocation.height
 
