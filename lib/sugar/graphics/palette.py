@@ -474,7 +474,7 @@ class Palette(gtk.Window):
         if self._group_id:
             group = palettegroup.get_group(self._group_id)
             if group and group.is_up():
-                self._set_state(group.get_state())
+                self._set_state(self.PRIMARY)
 
                 immediate = True
                 group.popdown()
