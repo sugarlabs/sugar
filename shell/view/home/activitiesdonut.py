@@ -101,7 +101,7 @@ class ActivityIcon(CanvasIcon):
 
         palette.set_primary_text(self._activity.get_title())
 
-        resume_menu_item = MenuItem(_('Resume'), 'zoom-activity')
+        resume_menu_item = MenuItem(_('Resume'), 'activity-start')
         resume_menu_item.connect('activate', self._resume_activate_cb)
         palette.menu.append(resume_menu_item)
         resume_menu_item.show()
