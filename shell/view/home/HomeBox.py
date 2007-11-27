@@ -15,9 +15,10 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
+import logging
 import signal
-import math
 from gettext import gettext as _
+import re
 
 import gobject
 import gtk
@@ -26,9 +27,7 @@ import dbus
 
 from hardware import hardwaremanager
 from sugar.graphics import style
-from sugar.graphics.xocolor import XoColor
-from sugar.graphics.palette import Palette, CanvasInvoker
-from sugar.graphics.icon import CanvasIcon
+from sugar.graphics.palette import Palette
 from sugar.profile import get_profile
 from sugar import env
 
@@ -37,6 +36,8 @@ from view.devices import deviceview
 from view.home.MyIcon import MyIcon
 from model.shellmodel import ShellModel
 from hardware import schoolserver
+
+_logger = logging.getLogger('HomeBox')
 
 class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarHomeBox'
@@ -170,7 +171,12 @@ class _MyIcon(MyIcon):
             item.connect('activate', self._register_activate_cb)
             palette.menu.append(item)
             item.show()
-        
+ 
+        item = gtk.MenuItem(_('About this XO'))
+        item.connect('activate', self._about_activate_cb)
+        palette.menu.append(item)
+        item.show()
+       
         self.set_palette(palette)
 
     def _reboot_activate_cb(self, menuitem):
@@ -205,6 +211,65 @@ class _MyIcon(MyIcon):
         schoolserver.register_laptop()
         if self._profile.is_registered():
             self.get_palette().menu.remove(menuitem)
+
+    def _about_activate_cb(self, menuitem):        
+        dialog = gtk.Dialog(_('About this XO'),
+                            self.palette,
+                            gtk.DIALOG_MODAL | 
+                            gtk.DIALOG_DESTROY_WITH_PARENT,
+                            (gtk.STOCK_OK, gtk.RESPONSE_OK))
+
+        not_available = _('Not available')
+        build = self._read_file('/boot/olpc_build')
+        if build is None:
+            build = not_available
+        label_build = gtk.Label('Build: %s' % build)
+        label_build.set_alignment(0, 0.5)
+        label_build.show()
+        dialog.vbox.pack_start(label_build)
+                
+        firmware = self._read_file('/ofw/openprom/model')
+        if firmware is None:
+            firmware = not_available
+        else:
+            firmware = re.split(" +", firmware)
+            if len(firmware) == 3:
+                firmware = firmware[1]
+        label_firmware = gtk.Label('Firmware: %s' % firmware)
+        label_firmware.set_alignment(0, 0.5)
+        label_firmware.show()
+        dialog.vbox.pack_start(label_firmware)
+                
+        serial = self._read_file('/ofw/serial-number')
+        if serial is None:
+            serial = not_available
+        label_serial = gtk.Label('Serial Number: %s' % serial)
+        label_serial.set_alignment(0, 0.5)
+        label_serial.show()
+        dialog.vbox.pack_start(label_serial)
+
+        dialog.set_default_response(gtk.RESPONSE_OK)
+        dialog.connect('response', self._response_cb)
+        dialog.show()
+
+    def _read_file(self, path):
+        if os.access(path, os.R_OK) == 0:
+            _logger.error('read_file() No such file or directory: %s', path)
+            return None
+        
+        fd = open(path, 'r')
+        value = fd.read()
+        fd.close()            
+        if value:
+            value = value.strip('\n')
+            return value
+        else:
+            _logger.error('read_file() No information in file or directory: %s', path)
+            return None
+
+    def _response_cb(self, widget, response_id):
+        if response_id == gtk.RESPONSE_OK:            
+            widget.destroy()
 
     def _close_emulator(self):
         if os.environ.has_key('SUGAR_EMULATOR_PID'):

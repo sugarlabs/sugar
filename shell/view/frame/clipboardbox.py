@@ -62,7 +62,6 @@ class ClipboardBox(hippo.CanvasBox):
         hippo.CanvasBox.__init__(self)
         self._icons = {}
         self._context_map = _ContextMap()
-        self._selected_icon = None
 
         self._tray = VTray()
         self.append(hippo.CanvasWidget(widget=self._tray), hippo.PACK_EXPAND)
@@ -109,16 +108,9 @@ class ClipboardBox(hippo.CanvasBox):
         icon = ClipboardIcon(object_id, name, group)
         self._tray.add_item(icon, 0)
         icon.show()
-
-        self._set_icon_selected(icon)
         self._icons[object_id] = icon
         
         logging.debug('ClipboardBox: ' + object_id + ' was added.')
-
-    def _set_icon_selected(self, icon):
-        logging.debug('_set_icon_selected')
-        icon.props.active = True
-        self._selected_icon = icon
 
     def _object_deleted_cb(self, cb_service, object_id):
         icon = self._icons[object_id]

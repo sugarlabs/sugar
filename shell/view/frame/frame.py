@@ -85,7 +85,7 @@ class _KeyListener(object):
 class Frame(object):
     MODE_MOUSE    = 0
     MODE_KEYBOARD = 1
-    MODE_HOME     = 2
+    MODE_NON_INTERACTIVE = 2
 
     def __init__(self, shell):
         self.mode = None
@@ -239,7 +239,7 @@ class Frame(object):
 
     def _clipboard_object_added_cb(self, cb_service, object_id, name):
         if not self.visible:
-            self.show()
+            self.show(self.MODE_NON_INTERACTIVE)
             gobject.timeout_add(2000, lambda: self.hide())
 
     def _enter_notify_cb(self, window, event):

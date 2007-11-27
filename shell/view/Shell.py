@@ -198,7 +198,7 @@ class Shell(gobject.GObject):
         new_level = model.props.zoom_level
 
         if new_level == ShellModel.ZOOM_HOME:
-            self._frame.show(Frame.MODE_HOME)
+            self._frame.show(Frame.MODE_NON_INTERACTIVE)
 
         if self._zoom_level == ShellModel.ZOOM_HOME:
             self._frame.hide()

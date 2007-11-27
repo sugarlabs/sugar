@@ -504,12 +504,16 @@ class Activity(Window, gtk.Container):
                     self.save()
         elif pspec.name == 'max-participants':
             self._max_participants = value
+        else:
+            Window.do_set_property(self, pspec, value)
 
     def do_get_property(self, pspec):
         if pspec.name == 'active':
             return self._active
         elif pspec.name == 'max-participants':
             return self._max_participants
+        else:
+            return Window.do_get_property(self, pspec)
 
     def get_id(self):
         """Returns the activity id of the current instance of your activity.
