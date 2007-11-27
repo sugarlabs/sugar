@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: olpc-sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-09-13 12:00-0700\n"
-"PO-Revision-Date: 2007-11-27 20:16+0000\n"
+"PO-Revision-Date: 2007-11-27 20:22+0000\n"
 "Last-Translator: Xavier Alvarez <xavi.alvarez@gmail.com>\n"
 "Language-Team: Fedora Spanish <fedora-trans-es@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -20,9 +20,8 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 
 #: ../shell/intro/intro.py:66
-#, fuzzy
 msgid "Name:"
-msgstr "FOO Nombre:"
+msgstr "Nombre:"
 
 #: ../shell/intro/intro.py:95
 msgid "Click to change color:"
