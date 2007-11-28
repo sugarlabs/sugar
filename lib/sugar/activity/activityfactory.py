@@ -18,6 +18,7 @@
 
 import logging
 import subprocess
+import signal
 
 import dbus
 import gobject
@@ -52,6 +53,16 @@ _ACTIVITY_FACTORY_INTERFACE = "org.laptop.ActivityFactory"
 _RAINBOW_SERVICE_NAME = "org.laptop.security.Rainbow"
 _RAINBOW_ACTIVITY_FACTORY_PATH = "/"
 _RAINBOW_ACTIVITY_FACTORY_INTERFACE = "org.laptop.security.Rainbow"
+
+_children_pid = []
+
+def _sigchild_handler(signum, frame):
+    for child_pid in _children_pid:
+        pid, status = os.waitpid(child_pid, os.WNOHANG)
+        if pid > 0:
+            _children_pid.remove(pid)
+
+signal.signal(signal.SIGCHLD, _sigchild_handler)
 
 def create_activity_id():
     """Generate a new, unique ID for this activity"""
@@ -224,8 +235,9 @@ class ActivityCreationHandler(gobject.GObject):
                                   self._handle.uri)
 
             if not self._use_rainbow:
-                process = subprocess.Popen(command, env=environ, cwd=activity.path,
-                                           stdout=log_file, stderr=log_file)
+                p = subprocess.Popen(command, env=environ, cwd=activity.path,
+                                     stdout=log_file, stderr=log_file)
+                _children_pid.append(p.pid)
             else:
                 log_file.close()
                 system_bus = dbus.SystemBus()
