@@ -55,7 +55,7 @@ def get_profile_path(path=None):
     base = os.path.join(os.path.expanduser('~/.sugar'), profile_id)
     if not os.path.isdir(base):
         try:
-            os.makedirs(base)
+            os.makedirs(base, 0770)
         except OSError, exc:
             print "Could not create user directory."
 
