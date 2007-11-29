@@ -21,7 +21,8 @@ from ConfigParser import ConfigParser
 import os
 
 from sugar import env
-from sugar.bundle.bundle import Bundle, NotInstalledException
+from sugar.bundle.bundle import Bundle, NotInstalledException, \
+    MalformedBundleException
 
 class ContentBundle(Bundle):
     """A Sugar content bundle
@@ -162,7 +163,7 @@ class ContentBundle(Bundle):
     def _run_indexer(self):
         os.spawnlp(os.P_WAIT, 'python',
                    'python',
-                   os.path.join(env.get_user_library_path(), 'makeIndex.py'))
+                   env.get_prefix_path('share/library-common/make_index.py'))
 
     def is_installed(self):
         if self._unpacked:
