@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: olpc-sugar.master\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-11-21 00:38+0100\n"
-"PO-Revision-Date: 2007-11-28 10:41+0000\n"
+"PO-Revision-Date: 2007-11-29 14:37+0000\n"
 "Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "MIME-Version: 1.0\n"
@@ -255,72 +255,72 @@ msgstr "حسنا"
 #: ../lib/sugar/graphics/objectchooser.py:175
 #, python-format
 msgid "%d year"
-msgstr ""
+msgstr "%d سنة"
 
 #: ../lib/sugar/graphics/objectchooser.py:175
 #, python-format
 msgid "%d years"
-msgstr ""
+msgstr "%d سنوات"
 
 #: ../lib/sugar/graphics/objectchooser.py:176
 #, python-format
 msgid "%d month"
-msgstr ""
+msgstr "%d شهر"
 
 #: ../lib/sugar/graphics/objectchooser.py:176
 #, python-format
 msgid "%d months"
-msgstr ""
+msgstr "%d شهور"
 
 #: ../lib/sugar/graphics/objectchooser.py:177
 #, python-format
 msgid "%d week"
-msgstr ""
+msgstr "%d أسبوع"
 
 #: ../lib/sugar/graphics/objectchooser.py:177
 #, python-format
 msgid "%d weeks"
-msgstr ""
+msgstr "%d أسابيع"
 
 #: ../lib/sugar/graphics/objectchooser.py:178
 #, python-format
 msgid "%d day"
-msgstr ""
+msgstr "%d يوم"
 
 #: ../lib/sugar/graphics/objectchooser.py:178
 #, python-format
 msgid "%d days"
-msgstr ""
+msgstr "%d أيام"
 
 #: ../lib/sugar/graphics/objectchooser.py:179
 #, python-format
 msgid "%d hour"
-msgstr ""
+msgstr "%d ساعة"
 
 #: ../lib/sugar/graphics/objectchooser.py:179
 #, python-format
 msgid "%d hours"
-msgstr ""
+msgstr "%d ساعات"
 
 #: ../lib/sugar/graphics/objectchooser.py:180
 #, python-format
 msgid "%d minute"
-msgstr ""
+msgstr "%d دقيقة"
 
 #: ../lib/sugar/graphics/objectchooser.py:180
 #, python-format
 msgid "%d minutes"
-msgstr ""
+msgstr "%d دقائق"
 
 #: ../lib/sugar/graphics/objectchooser.py:181
 #, python-format
 msgid "%d second"
-msgstr ""
+msgstr "%d ثانية"
 
 #: ../lib/sugar/graphics/objectchooser.py:181
 #, python-format
 msgid "%d seconds"
-msgstr ""
+msgstr "%d ثوان"
 
 #: ../lib/sugar/graphics/objectchooser.py:191
 msgid " and "
@@ -374,16 +374,16 @@ msgstr "خطأ في نسخ المنطقة الزمنية (من %s): %s"
 #: ../shell/controlpanel/control.py:402
 #, python-format
 msgid "Changing permission of timezone: %s"
-msgstr ""
+msgstr "يجري تغيير صلاحيات المنطقة الزمنية: %s"
 
 #: ../shell/controlpanel/control.py:413
 msgid "Error timezone does not exist."
-msgstr ""
+msgstr "خطأ: المنطقة الزمنية لا وجود لها"
 
 #: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
 #, python-format
 msgid "Could not access %s. Create standard settings."
-msgstr ""
+msgstr "تعذّر الوصول إلى %s. أنشئ إعدادات قياسية."
 
 #: ../shell/controlpanel/control.py:466
 #, python-format
