@@ -18,7 +18,7 @@
 
 import os
 
-def _get_prefix_path(base, path=None):
+def get_prefix_path(base, path=None):
     if os.environ.has_key('SUGAR_PREFIX'):
         prefix = os.environ['SUGAR_PREFIX']
     else:
@@ -55,7 +55,7 @@ def get_profile_path(path=None):
     base = os.path.join(os.path.expanduser('~/.sugar'), profile_id)
     if not os.path.isdir(base):
         try:
-            os.makedirs(base)
+            os.makedirs(base, 0770)
         except OSError, exc:
             print "Could not create user directory."
 
@@ -78,10 +78,10 @@ def get_user_library_path():
     return os.path.expanduser('~/Library')
 
 def get_locale_path(path=None):
-    return _get_prefix_path('share/locale', path)
+    return get_prefix_path('share/locale', path)
 
 def get_bin_path(path=None):
-    return _get_prefix_path('bin', path)
+    return get_prefix_path('bin', path)
 
 def get_service_path(name):
     return _get_sugar_path('services', name)

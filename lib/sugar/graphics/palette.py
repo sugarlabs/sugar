@@ -439,6 +439,8 @@ class Palette(gtk.Window):
     def popdown(self, immediate=False):
         self._popup_anim.stop()
 
+        self._mouse_detector.stop()
+
         if not immediate:
             self._popdown_anim.start()
         else:
@@ -482,8 +484,7 @@ class Palette(gtk.Window):
         self.popup(immediate=immediate)
 
     def _invoker_mouse_leave_cb(self, invoker):
-        if self._mouse_detector is not None:
-            self._mouse_detector.stop()
+        self._mouse_detector.stop()
         self.popdown()
 
     def _enter_notify_event_cb(self, widget, event):

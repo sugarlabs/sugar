@@ -108,7 +108,7 @@ class Bundle:
             raise AlreadyInstalledException
 
         if not os.path.isdir(install_dir):
-            os.mkdir(install_dir)
+            os.mkdir(install_dir, 0775)
 
         # zipfile provides API that in theory would let us do this
         # correctly by hand, but handling all the oddities of
