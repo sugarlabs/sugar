@@ -549,7 +549,10 @@ class Activity(Window, gtk.Container):
         logging.debug("Error creating activity datastore object: %s" % err)
 
     def get_activity_root(self):
-        """Returns a path for saving Activity specific preferences, etc.
+        """ FIXME: Deprecated. This part of the API has been moved 
+        out of this class to the module itself
+
+        Returns a path for saving Activity specific preferences, etc.
         
         Returns a path to the location in the filesystem where the activity can
         store activity related data that doesn't pertain to the current
@@ -895,3 +898,10 @@ def get_bundle_path():
     """Return the bundle path for the current process' bundle"""
     return os.environ['SUGAR_BUNDLE_PATH']
 
+def get_activity_root():
+    """Returns a path for saving Activity specific preferences, etc."""
+    if os.environ.has_key('SUGAR_ACTIVITY_ROOT') and \
+            os.environ['SUGAR_ACTIVITY_ROOT']:
+        return os.environ['SUGAR_ACTIVITY_ROOT']
+    else:
+        raise RuntimeError("No SUGAR_ACTIVITY_ROOT set.")
