@@ -17,190 +17,103 @@
 
 import logging
 import time
-from gettext import gettext as _
 
+import gobject
 import gtk
-import hippo
+import dbus
 
-from sugar.bundle.activitybundle import ActivityBundle
-from sugar.graphics import style
-from sugar.graphics.icon import CanvasIcon
-from sugar.graphics.xocolor import XoColor
-from sugar.graphics.roundbox import CanvasRoundBox
 from sugar.datastore import datastore
-from sugar import activity
-from sugar import mime
 
-# TODO: Activities should request the Journal to open objectchooser dialogs. In
-# that way, we'll be able to reuse most of this code inside the Journal.
+J_DBUS_SERVICE = 'org.laptop.Journal'
+J_DBUS_INTERFACE = 'org.laptop.Journal'
+J_DBUS_PATH = '/org/laptop/Journal'
 
-class ObjectChooser(gtk.Dialog):
-    def __init__(self, title=None, parent=None, flags=0):
-        gtk.Dialog.__init__(self, title, parent, flags, (gtk.STOCK_CANCEL,
-                gtk.RESPONSE_REJECT, gtk.STOCK_OK, gtk.RESPONSE_ACCEPT))
+class ObjectChooser(object):
+    def __init__(self, title=None, parent=None, flags=None, buttons=None):
+        # For backwards compatibility:
+        # - We ignore title, flags and buttons.
+        # - 'parent' can be a xid or a gtk.gdk.Window
+
+        if title is not None or flags is not None or buttons is not None:
+            logging.warning('Invocation of ObjectChooser() has deprecated '
+                            'parameters.')
+
+        if parent is None:
+            parent_xid = 0
+        elif hasattr(parent, 'window') and hasattr(parent.window, 'xid'):
+            parent_xid = parent.window.xid
+        else:
+            parent_xid = parent
+
+        self._parent_xid = parent_xid
+        self._main_loop = None
+        self._object_id = None
+        self._bus = None
+        self._chooser_id = None
+        self._response_code = gtk.RESPONSE_NONE
         
-        self._jobjects = None
-        self._query = {}
-        self._selected_entry = False
+    def run(self):
+        self._object_id = None
 
-        self._box = hippo.CanvasBox()
-        self._box.props.background_color = style.COLOR_PANEL_GREY.get_int()
-        self._box.props.spacing = style.DEFAULT_SPACING
-        self._box.props.padding = style.DEFAULT_SPACING
+        self._main_loop = gobject.MainLoop()
 
-        canvas = hippo.Canvas()
-        canvas.set_root(self._box)
+        self._bus = dbus.SessionBus(mainloop=self._main_loop)
+        self._bus.add_signal_receiver(
+                self.__name_owner_changed_cb,
+                signal_name="NameOwnerChanged",
+                dbus_interface="org.freedesktop.DBus",
+                arg0=J_DBUS_SERVICE)
 
-        scrolled_window = gtk.ScrolledWindow()
-        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        obj = self._bus.get_object(J_DBUS_SERVICE, J_DBUS_PATH)
+        journal = dbus.Interface(obj, J_DBUS_INTERFACE)
+        journal.connect_to_signal('ObjectChooserResponse',
+                                  self.__chooser_response_cb)
+        journal.connect_to_signal('ObjectChooserCancelled',
+                                  self.__chooser_cancelled_cb)
+        self._chooser_id = journal.ChooseObject(self._parent_xid)
 
-        scrolled_window.add_with_viewport(canvas)
-        canvas.show()
+        gtk.gdk.threads_leave()
+        try:
+            self._main_loop.run()
+        finally:
+            gtk.gdk.threads_enter()
+        self._main_loop = None
 
-        self.vbox.add(scrolled_window)
-        scrolled_window.show()
-
-        scrolled_window.props.shadow_type = gtk.SHADOW_NONE
-        scrolled_window.get_child().props.shadow_type = gtk.SHADOW_NONE
-        
-        self.refresh()
-        
-        height = self.get_screen().get_height() * 3 / 4
-        width = self.get_screen().get_width() * 3 / 4
-        self.set_default_size(width, height)
-
-    def update_with_query(self, query):
-        self._query = query
-        self.refresh()
-
-    def refresh(self):
-        logging.debug('ListView.refresh: %r' % self._query)
-        self._jobjects, total_count = datastore.find(self._query, sorting=['-mtime'])
-        self._update()
-
-    def _update(self):
-        self._box.remove_all()
-        for jobject in self._jobjects:
-            entry_view = CollapsedEntry(jobject)
-            entry_view.connect('button-release-event',
-                                self._entry_view_button_release_event_cb)
-            self._box.append(entry_view)
-
-    def _entry_view_button_release_event_cb(self, entry_view, event):
-        if self._selected_entry:
-            self._selected_entry.set_selected(False)
-        entry_view.set_selected(True)
-        self._selected_entry = entry_view
+        return self._response_code
 
     def get_selected_object(self):
-        if self._selected_entry:
-            return self._selected_entry.jobject
-        else:
+        if self._object_id is None:
             return None
-
-class CollapsedEntry(CanvasRoundBox):
-    _DATE_COL_WIDTH    = style.zoom(100)
-    _BUDDIES_COL_WIDTH = style.zoom(50)
-
-    def __init__(self, jobject):
-        CanvasRoundBox.__init__(self)
-        self.props.box_height = style.zoom(75)
-        self.props.spacing = style.DEFAULT_SPACING
-        self.props.border_color = style.COLOR_BLACK.get_int()
-        self.props.background_color = style.COLOR_PANEL_GREY.get_int()
-
-        self.jobject = jobject
-        self._icon_name = None
-
-        date = hippo.CanvasText(text=self._format_date(),
-                                xalign=hippo.ALIGNMENT_START,
-                                font_desc=style.FONT_NORMAL.get_pango_desc(),
-                                box_width=self._DATE_COL_WIDTH)
-        self.append(date)
-
-        icon = CanvasIcon(icon_name=self._get_icon_name(),
-                          box_width=style.zoom(75))
-
-        if self.jobject.metadata.has_key('icon-color'):
-            icon.props.xo_color = XoColor(self.jobject.metadata['icon-color'])
-
-        self.append(icon)
-        
-        title = hippo.CanvasText(text=self._format_title(),
-                                 xalign=hippo.ALIGNMENT_START,
-                                 font_desc=style.FONT_BOLD.get_pango_desc(),
-                                 size_mode=hippo.CANVAS_SIZE_WRAP_WORD)
-        self.append(title)
-
-    def _get_icon_name(self):
-        if self._icon_name:
-            return self._icon_name
-
-        if self.jobject.is_activity_bundle():
-            bundle = ActivityBundle(self.jobject.file_path)
-            self._icon_name = bundle.get_icon()
-
-        if self.jobject.metadata['activity']:
-            service_name = self.jobject.metadata['activity']
-            activity_info = activity.get_registry().get_activity(service_name)
-            if activity_info:
-                self._icon_name = activity_info.icon
-
-        mime_type = self.jobject.metadata['mime_type']
-        if not self._icon_name and mime_type:
-            self._icon_name = mime.get_mime_icon(mime_type)
-        if not self._icon_name:
-            self._icon_name = 'image-missing'
-
-        return self._icon_name
-
-    def _format_date(self):
-        """ Convert from a string in iso format to a more human-like format. """
-        return _get_elapsed_string(self.jobject.metadata['mtime'])
-
-    def _format_title(self):
-        return '"%s"' % self.jobject.metadata['title']
-
-    def set_selected(self, selected):
-        if selected:
-            self.props.border_color = style.COLOR_WHITE.get_int()
-            self.props.background_color = style.COLOR_WHITE.get_int()
         else:
-            self.props.border_color = style.COLOR_BLACK.get_int()
-            self.props.background_color = style.COLOR_PANEL_GREY.get_int()
+            return datastore.get(self._object_id)
 
-def _get_elapsed_string(date_string, max_levels=2):
-    ti = time.strptime(date_string, "%Y-%m-%dT%H:%M:%S")
+    def destroy(self):
+        self._cleanup()
 
-    units = [[_('%d year'),   _('%d years'),   356 * 24 * 60 * 60],
-             [_('%d month'),  _('%d months'),  30 * 24 * 60 * 60],
-             [_('%d week'),   _('%d weeks'),   7 * 24 * 60 * 60],
-             [_('%d day'),    _('%d days'),    24 * 60 * 60],
-             [_('%d hour'),   _('%d hours'),   60 * 60],
-             [_('%d minute'), _('%d minutes'), 60],
-             [_('%d second'), _('%d seconds'), 1]]
-    levels = 0
-    result = ''
-    elapsed_seconds = int(time.time() - time.mktime(ti))
-    for name_singular, name_plural, factor in units:
-        elapsed_units = elapsed_seconds / factor
-        if elapsed_units > 0:
+    def _cleanup(self):
+        if self._main_loop is not None:
+            self._main_loop.quit()
+            self._main_loop = None
+        self._bus = None
 
-            if levels > 0:
-                if max_levels - levels == 1:
-                    result += _(' and ')
-                else:
-                    result += _(', ')
-                
-            if elapsed_units == 1:
-                result += name_singular % elapsed_units
-            else:
-                result += name_plural % elapsed_units
-            elapsed_seconds -= elapsed_units * factor
-            levels += 1
-            
-            if levels == max_levels:
-                break
+    def __chooser_response_cb(self, chooser_id, object_id):
+        if chooser_id != self._chooser_id:
+            return
+        logging.debug('ObjectChooser.__chooser_response_cb: %r' % object_id)
+        self._response_code = gtk.RESPONSE_ACCEPT
+        self._object_id = object_id
+        self._cleanup()
 
-    return result
+    def __chooser_cancelled_cb(self, chooser_id):
+        if chooser_id != self._chooser_id:
+            return
+        logging.debug('ObjectChooser.__chooser_cancelled_cb: %r' % chooser_id)
+        self._response_code = gtk.RESPONSE_CANCEL
+        self._cleanup()
+
+    def __name_owner_changed_cb(self, name, old, new):
+        logging.debug('ObjectChooser.__name_owner_changed_cb')
+        # Journal service disappeared from the bus
+        self._response_code = gtk.RESPONSE_CANCEL
+        self._cleanup()
 
