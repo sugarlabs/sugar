@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
+import urlparse
 
 import gtk
 import hippo
@@ -77,17 +78,22 @@ class ClipboardPanelWindow(FrameWindow):
                     
         cb_service = clipboardservice.get_instance()
         if selection.type == 'text/uri-list':
-            uris = selection.data.split('\n')
+            uris = selection.get_uris()
+
             if len(uris) > 1:
                 raise NotImplementedError('Multiple uris in text/uri-list still not supported.')
+            uri = uris[0]
+
+            scheme, netloc, path, parameters, query, fragment = urlparse.urlparse(uri)
+            on_disk = (scheme == 'file')
 
             cb_service.add_object_format(key,
-                                            selection.type,
-                                            uris[0],
-                                            on_disk=True)
+                                         selection.type,
+                                         uri,
+                                         on_disk)
         else:
             cb_service.add_object_format(key, 
-                                            selection.type,
-                                            selection.data,
-                                            on_disk=False)
+                                         selection.type,
+                                         selection.data,
+                                         on_disk=False)
 
