@@ -44,7 +44,6 @@ class ClipboardMenu(Palette):
         self.set_group_id('frame')
 
         self._progress_bar = None
-        self._update_progress_bar
 
         """
         if preview:
@@ -174,6 +173,14 @@ class ClipboardMenu(Palette):
         jobject = self._copy_to_journal()
         jobject.destroy()
 
+    def _write_to_temp_file(self, data):
+        f, file_path = tempfile.mkstemp()
+        try:
+            os.write(f, data)
+        finally:
+            os.close(f)
+        return file_path
+
     def _copy_to_journal(self):
         cb_service = clipboardservice.get_instance()
         obj = cb_service.get_object(self._object_id)
@@ -183,18 +190,24 @@ class ClipboardMenu(Palette):
 
         transfer_ownership = False
         if format == 'text/uri-list':
-            uri = mime.split_uri_list(data['DATA'])[0]
-            file_path = urlparse.urlparse(uri).path
+            uris = mime.split_uri_list(data['DATA'])
+            if len(uris) == 1 and uris[0].startswith('file://'):
+                file_path = urlparse.urlparse(uris[0]).path
+                transfer_ownership = False
+                mime_type = mime.get_for_file(file_path)
+            else:
+                file_path = self._write_to_temp_file(data['DATA'])
+                transfer_ownership = True
+                mime_type = 'text/uri-list'
         else:
             if data['ON_DISK']:
                 file_path = urlparse.urlparse(data['DATA']).path
+                transfer_ownership = False
+                mime_type = mime.get_for_file(file_path)
             else:
-                f, file_path = tempfile.mkstemp()
-                try:
-                    os.write(f, data['DATA'])
-                finally:
-                    os.close(f)
+                file_path = self._write_to_temp_file(data['DATA'])
                 transfer_ownership = True
+                mime_type = mime.get_for_file(file_path)
 
         jobject = datastore.create()
         jobject.metadata['title'] = _('Clipboard object: %s.') % obj['NAME']
@@ -202,7 +215,7 @@ class ClipboardMenu(Palette):
         jobject.metadata['buddies'] = ''
         jobject.metadata['preview'] = ''
         jobject.metadata['icon-color'] = profile.get_color().to_string()
-        jobject.metadata['mime_type'] = mime.get_for_file(file_path)
+        jobject.metadata['mime_type'] = mime_type
         jobject.file_path = file_path
         datastore.write(jobject, transfer_ownership=transfer_ownership)
         
