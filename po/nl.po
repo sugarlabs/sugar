@@ -1,0 +1,419 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-11-21 00:38+0100\n"
+"PO-Revision-Date: 2007-12-05 09:29+0000\n"
+"Last-Translator: Jeroen ten Berge <jeroen.ten.berge@vialis.nl>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Pootle 1.0.2\n"
+
+#: ../shell/intro/intro.py:67
+msgid "Name:"
+msgstr "Naam:"
+
+# Hm, gezien de doelgroep niet commanderende vertaling toegepast !
+#: ../shell/intro/intro.py:96
+msgid "Click to change color:"
+msgstr "Verander van kleur door muisklik:"
+
+#: ../shell/intro/intro.py:146
+msgid "Back"
+msgstr "Terug"
+
+#: ../shell/intro/intro.py:160
+msgid "Done"
+msgstr "Klaar"
+
+#: ../shell/intro/intro.py:163
+msgid "Next"
+msgstr "Volgende"
+
+#: ../shell/view/BuddyMenu.py:84
+msgid "Remove friend"
+msgstr "Verwijder kennis"
+
+#: ../shell/view/BuddyMenu.py:87
+msgid "Make friend"
+msgstr "Maak kennis"
+
+# Kan context niet terug vinden, dus moet nog kijken wat dit als resultaat geeft !
+#: ../shell/view/BuddyMenu.py:109
+#, python-format
+msgid "Invite to %s"
+msgstr "Voor %s uitnodigen"
+
+#: ../shell/view/clipboardmenu.py:59 ../shell/view/frame/activitybutton.py:58
+msgid "Remove"
+msgstr "Verwijder"
+
+# Context onduidelijk
+#: ../shell/view/clipboardmenu.py:64
+msgid "Open"
+msgstr "Openen"
+
+#. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
+#. TODO: Implement stopping downloads
+#. self._stop_item.connect('activate', self._stop_item_activate_cb)
+#. self.append_menu_item(self._stop_item)
+#: ../shell/view/clipboardmenu.py:74
+msgid "Add to journal"
+msgstr "Toevoegen aan journaal"
+
+# alternatief voor object nodig ?
+#: ../shell/view/clipboardmenu.py:200
+#, python-format
+msgid "Clipboard object: %s."
+msgstr "Kladbord object: %s."
+
+# Lijkt me hier om toetsenbord gerellateerd geneuzel te gaan, maar het zou ook om vercijfering kunnen gaan, en dan is dit een foute keuze !!!
+#: ../shell/hardware/keydialog.py:149
+msgid "Key Type:"
+msgstr "Sleutel soort:"
+
+# Misschien dat Authorisatie type duidelijker is, echter verificatie is beschrijvender.
+#: ../shell/hardware/keydialog.py:169
+msgid "Authentication Type:"
+msgstr "Verificatie soort:"
+
+#: ../shell/hardware/keydialog.py:250
+msgid "Encryption Type:"
+msgstr "Versleutel soort:"
+
+#: ../shell/view/home/activitiesdonut.py:90
+msgid "Starting..."
+msgstr "Starten..."
+
+# Tja, suggestie voor een nettere vertaling is van harte welkom !
+#: ../shell/view/home/activitiesdonut.py:104
+msgid "Resume"
+msgstr "Wakker worden"
+
+#: ../shell/view/home/activitiesdonut.py:111
+#: ../lib/sugar/activity/activity.py:128
+msgid "Stop"
+msgstr "Stoppen"
+
+#: ../shell/view/Shell.py:276
+msgid "Screenshot"
+msgstr "Schermafdruk"
+
+# Kortere suggestie ?
+#: ../shell/view/home/HomeBox.py:158
+msgid "Reboot"
+msgstr "Opnieuw opstarten"
+
+#: ../shell/view/home/HomeBox.py:163
+msgid "Shutdown"
+msgstr "Uitschakelen"
+
+#: ../shell/view/home/HomeBox.py:169
+msgid "Register"
+msgstr "Registreren"
+
+#. Only show disconnect when there's a mesh device, because mesh takes
+#. priority over the normal wireless device.  NM doesn't have a "disconnect"
+#. method for a device either (for various reasons) so this doesn't
+#. have a good mapping
+#: ../shell/view/home/MeshBox.py:89 ../shell/view/home/MeshBox.py:196
+#: ../shell/view/devices/network/wireless.py:113
+#: ../shell/view/devices/network/mesh.py:83
+msgid "Disconnect..."
+msgstr "Afkoppelen..."
+
+# Made it "XO's in the neighbourhood", i think it's more selfexplainatory, but maybe we'll reconsider...
+#: ../shell/view/home/MeshBox.py:194 ../shell/view/devices/network/mesh.py:37
+#: ../shell/view/devices/network/mesh.py:62
+#: ../shell/view/devices/network/mesh.py:66
+msgid "Mesh Network"
+msgstr "XO's in de buurt"
+
+# Context eens bekijken, beetje rare vertaling, maar voor doelgroep wel correct lijkt me.
+#: ../shell/view/devices/battery.py:38
+msgid "My Battery life"
+msgstr "Mijn Accu leven"
+
+#: ../shell/view/devices/battery.py:94
+msgid "Battery charging"
+msgstr "Accu wordt opgeladen"
+
+#: ../shell/view/devices/battery.py:96
+msgid "Battery discharging"
+msgstr "Accu wordt gebruikt"
+
+#: ../shell/view/devices/battery.py:98
+msgid "Battery fully charged"
+msgstr "Accu is vol"
+
+#: ../shell/view/devices/network/wireless.py:61
+msgid "Disconnected"
+msgstr "Niet verbonden"
+
+#: ../shell/view/devices/network/wireless.py:131
+msgid "Channel"
+msgstr "Kanaal"
+
+#: ../shell/view/frame/zoomtoolbar.py:42
+msgid "Neighborhood"
+msgstr "Omgeving"
+
+#: ../shell/view/frame/zoomtoolbar.py:54
+msgid "Group"
+msgstr "Groep"
+
+#: ../shell/view/frame/zoomtoolbar.py:66
+msgid "Home"
+msgstr "Thuis"
+
+#: ../shell/view/frame/zoomtoolbar.py:78
+msgid "Activity"
+msgstr "Activiteit"
+
+#: ../lib/sugar/activity/activity.py:111
+msgid "Share with:"
+msgstr "Delen met:"
+
+#: ../lib/sugar/activity/activity.py:113
+msgid "Private"
+msgstr "Privé"
+
+#: ../lib/sugar/activity/activity.py:114
+msgid "My Neighborhood"
+msgstr "Mijn omgeving"
+
+#: ../lib/sugar/activity/activity.py:122
+msgid "Keep"
+msgstr "Bewaar"
+
+#: ../lib/sugar/activity/activity.py:241
+msgid "Undo"
+msgstr "Ongedaan maken"
+
+#: ../lib/sugar/activity/activity.py:246
+msgid "Redo"
+msgstr "Opnieuw doen"
+
+#: ../lib/sugar/activity/activity.py:256
+msgid "Copy"
+msgstr "Kopieer"
+
+#: ../lib/sugar/activity/activity.py:261
+msgid "Paste"
+msgstr "Plak"
+
+#: ../lib/sugar/activity/activity.py:450
+#, python-format
+msgid "%s Activity"
+msgstr "%s Activiteit"
+
+#: ../lib/sugar/activity/activity.py:813
+msgid "Keep error"
+msgstr "Bewaar fout"
+
+#: ../lib/sugar/activity/activity.py:814
+msgid "Keep error: all changes will be lost"
+msgstr "Bewaar fout: alle wijzigingen zullen verloren gaan"
+
+#: ../lib/sugar/activity/activity.py:817
+msgid "Don't stop"
+msgstr "Niet stoppen"
+
+#: ../lib/sugar/activity/activity.py:820
+msgid "Stop anyway"
+msgstr "Stop alsnog"
+
+#: ../lib/sugar/graphics/alert.py:164 ../lib/sugar/graphics/alert.py:206
+msgid "Cancel"
+msgstr "Annuleren"
+
+#: ../lib/sugar/graphics/alert.py:168
+msgid "Ok"
+msgstr "Oke"
+
+#: ../lib/sugar/graphics/alert.py:216
+msgid "Continue"
+msgstr "Doorgaan"
+
+#: ../lib/sugar/graphics/alert.py:244
+msgid "OK"
+msgstr "Oke"
+
+#: ../lib/sugar/graphics/objectchooser.py:175
+#, python-format
+msgid "%d year"
+msgstr "%d jaar"
+
+#: ../lib/sugar/graphics/objectchooser.py:175
+#, python-format
+msgid "%d years"
+msgstr "%d jaren"
+
+#: ../lib/sugar/graphics/objectchooser.py:176
+#, python-format
+msgid "%d month"
+msgstr "%d maand"
+
+#: ../lib/sugar/graphics/objectchooser.py:176
+#, python-format
+msgid "%d months"
+msgstr "%d maanden"
+
+#: ../lib/sugar/graphics/objectchooser.py:177
+#, python-format
+msgid "%d week"
+msgstr "%d week"
+
+#: ../lib/sugar/graphics/objectchooser.py:177
+#, python-format
+msgid "%d weeks"
+msgstr "%d weken"
+
+#: ../lib/sugar/graphics/objectchooser.py:178
+#, python-format
+msgid "%d day"
+msgstr "%d dag"
+
+#: ../lib/sugar/graphics/objectchooser.py:178
+#, python-format
+msgid "%d days"
+msgstr "%d dagen"
+
+#: ../lib/sugar/graphics/objectchooser.py:179
+#, python-format
+msgid "%d hour"
+msgstr "%d uur"
+
+#: ../lib/sugar/graphics/objectchooser.py:179
+#, python-format
+msgid "%d hours"
+msgstr "%d uren"
+
+#: ../lib/sugar/graphics/objectchooser.py:180
+#, python-format
+msgid "%d minute"
+msgstr "%d minuut"
+
+#: ../lib/sugar/graphics/objectchooser.py:180
+#, python-format
+msgid "%d minutes"
+msgstr "%d minuten"
+
+#: ../lib/sugar/graphics/objectchooser.py:181
+#, python-format
+msgid "%d second"
+msgstr "%d seconde"
+
+#: ../lib/sugar/graphics/objectchooser.py:181
+#, python-format
+msgid "%d seconds"
+msgstr "%d seconden"
+
+#: ../lib/sugar/graphics/objectchooser.py:191
+msgid " and "
+msgstr " en "
+
+#: ../lib/sugar/graphics/objectchooser.py:193
+msgid ", "
+msgstr ", "
+
+#: ../shell/controlpanel/control.py:213
+msgid "To apply your changes you have to restart sugar.\n"
+msgstr "Om je wijzigingen toe te passen moet sugar opnieuw worden gestart.\n"
+
+#: ../shell/controlpanel/control.py:267
+msgid "Error in specified color modifiers."
+msgstr "Fout in opgegeven kleur wijzigers."
+
+#: ../shell/controlpanel/control.py:270
+msgid "Error in specified colors."
+msgstr "Fout in opgegeven kleuren."
+
+#: ../shell/controlpanel/control.py:307
+msgid "off"
+msgstr "uit"
+
+#: ../shell/controlpanel/control.py:309
+msgid "on"
+msgstr "aan"
+
+#: ../shell/controlpanel/control.py:310
+msgid "State is unknown."
+msgstr "Status niet bekend."
+
+#: ../shell/controlpanel/control.py:332
+msgid "Error in specified radio argument use on/off."
+msgstr "Fout in opgegeven knop argument, gebruik aan/uit."
+
+#: ../shell/controlpanel/control.py:336
+msgid "Permission denied. You need to be root to run this method."
+msgstr ""
+"Toegang geweigerd. Je moet root gebruiker zijn om deze methode uit te "
+"voeren."
+
+#: ../shell/controlpanel/control.py:366
+msgid "Error in reading timezone"
+msgstr "Fout in lezen tijdzone"
+
+#: ../shell/controlpanel/control.py:397
+#, python-format
+msgid "Error copying timezone (from %s): %s"
+msgstr "Fout bij het kopiëren van tijdzone (van %s): %s"
+
+#: ../shell/controlpanel/control.py:402
+#, python-format
+msgid "Changing permission of timezone: %s"
+msgstr "Toegang wijzigen van tijdzone: %s"
+
+#: ../shell/controlpanel/control.py:413
+msgid "Error timezone does not exist."
+msgstr "Fout, tijdzone bestaat niet."
+
+#: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
+#, python-format
+msgid "Could not access %s. Create standard settings."
+msgstr "Kan geen toegang krijgen op %s. Maak standaard instellingen."
+
+#: ../shell/controlpanel/control.py:466
+#, python-format
+msgid "Language for code=%s could not be determined."
+msgstr "Taal voor code %s kon niet worden bepaald."
+
+#: ../shell/controlpanel/control.py:476
+#, python-format
+msgid "Sorry I do not speak '%s'."
+msgstr "Sorry, ik spreek geen '%s'."
+
+#: ../shell/view/devices/network/mesh.py:105
+msgid "Connected to a School Mesh Portal"
+msgstr "Verbonden met een school omgeving"
+
+#: ../shell/view/devices/network/mesh.py:107
+msgid "Looking for a School Mesh Portal..."
+msgstr "Zoeken naar een school omgeving..."
+
+#: ../shell/view/devices/network/mesh.py:110
+msgid "Connected to an XO Mesh Portal"
+msgstr "Verbonden met een XO omgeving"
+
+#: ../shell/view/devices/network/mesh.py:112
+msgid "Looking for an XO Mesh Portal..."
+msgstr "Zoeken naar een XO omgeving..."
+
+#: ../shell/view/devices/network/mesh.py:115
+msgid "Connected to a Simple Mesh"
+msgstr "Verbonden met omgeving"
+
+#: ../shell/view/devices/network/mesh.py:117
+msgid "Starting a Simple Mesh"
+msgstr "Starten omgeving"
+
+#: ../shell/view/devices/network/mesh.py:124
+msgid "Unknown Mesh"
+msgstr "Onbekende omgeving"
