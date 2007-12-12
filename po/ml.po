@@ -7,11 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-<<<<<<< HEAD:po/ml.po
 "POT-Creation-Date: 2007-11-21 00:38+0100\n"
-=======
-"POT-Creation-Date: 2007-11-21 00:36+0100\n"
->>>>>>> 5e942edddcc2596192aace300811406dd18d9a81:po/ml.po
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,11 +49,7 @@ msgstr ""
 msgid "Invite to %s"
 msgstr ""
 
-<<<<<<< HEAD:po/ml.po
 #: ../shell/view/clipboardmenu.py:59 ../shell/view/frame/activitybutton.py:58
-=======
-#: ../shell/view/clipboardmenu.py:59
->>>>>>> 5e942edddcc2596192aace300811406dd18d9a81:po/ml.po
 msgid "Remove"
 msgstr ""
 
@@ -94,11 +86,7 @@ msgstr ""
 msgid "Starting..."
 msgstr ""
 
-<<<<<<< HEAD:po/ml.po
 #: ../shell/view/home/activitiesdonut.py:104
-=======
-#: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
->>>>>>> 5e942edddcc2596192aace300811406dd18d9a81:po/ml.po
 msgid "Resume"
 msgstr ""
 
@@ -127,33 +115,22 @@ msgstr ""
 #. priority over the normal wireless device.  NM doesn't have a "disconnect"
 #. method for a device either (for various reasons) so this doesn't
 #. have a good mapping
-<<<<<<< HEAD:po/ml.po
 #: ../shell/view/home/MeshBox.py:89 ../shell/view/home/MeshBox.py:196
-=======
-#: ../shell/view/home/MeshBox.py:90 ../shell/view/home/MeshBox.py:197
->>>>>>> 5e942edddcc2596192aace300811406dd18d9a81:po/ml.po
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
 msgid "Disconnect..."
 msgstr ""
 
-<<<<<<< HEAD:po/ml.po
 #: ../shell/view/home/MeshBox.py:194 ../shell/view/devices/network/mesh.py:37
-=======
-#: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
->>>>>>> 5e942edddcc2596192aace300811406dd18d9a81:po/ml.po
 #: ../shell/view/devices/network/mesh.py:62
 #: ../shell/view/devices/network/mesh.py:66
 msgid "Mesh Network"
 msgstr ""
 
-<<<<<<< HEAD:po/ml.po
-=======
 #: ../shell/view/home/MeshBox.py:300
 msgid "Join"
 msgstr ""
 
->>>>>>> 5e942edddcc2596192aace300811406dd18d9a81:po/ml.po
 #: ../shell/view/devices/battery.py:38
 msgid "My Battery life"
 msgstr ""
