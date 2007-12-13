@@ -20,6 +20,7 @@ import logging
 import tempfile
 import os
 import time
+import shutil
 
 import gobject
 import gtk
@@ -80,8 +81,16 @@ class Shell(gobject.GObject):
 
     def _start_journal_idle(self):
         # Mount the datastore in internal flash
-        datastore.mount(env.get_profile_path('datastore'), [],
-                        timeout=120 * DBUS_PYTHON_TIMEOUT_UNITS_PER_SECOND)
+        ds_path = env.get_profile_path('datastore')
+        try:
+            datastore.mount(ds_path, [], timeout=120 * \
+                                         DBUS_PYTHON_TIMEOUT_UNITS_PER_SECOND)
+        except:
+            # Don't explode if there's corruption; move the data out of the way
+            # and attempt to create a store from scratch.
+            shutil.move(ds_path, os.path.abspath(ds_path) + str(time.time()))
+            datastore.mount(ds_path, [], timeout=120 * \
+                                         DBUS_PYTHON_TIMEOUT_UNITS_PER_SECOND)
 
         # Checking for the bundle existence will also ensure
         # that the shell service is started up.
