@@ -270,7 +270,7 @@ class ActivityCreationHandler(gobject.GObject):
     def _activate_error_handler(self, err):
         logging.error("Activity activation request failed %s" % err)
 
-    def _create_reply_handler(self, xid):
+    def _create_reply_handler(self):
         logging.debug("Activity created %s (%s)." %
             (self._handle.activity_id, self._service_name))
 
