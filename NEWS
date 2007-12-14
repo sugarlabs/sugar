@@ -1,3 +1,4 @@
+* #4892: Use the engine to make sugar icons insensitive (benzea)
 * #4941: Add menu entry with dialog to show About this XO (erikos)
 * #5089: show frame shortly when adding object to clipboard (erikos)
 * #5097: Fix pasting text between activities through the clipboard. (tomeu)
