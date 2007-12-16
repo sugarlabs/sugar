@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-21 00:38+0100\n"
-"PO-Revision-Date: 2007-11-29 23:39+0000\n"
+"POT-Creation-Date: 2007-12-11 21:39+0530\n"
+"PO-Revision-Date: 2007-12-14 16:34+0000\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -43,11 +43,11 @@ msgstr "Ajouter à mes amis"
 msgid "Invite"
 msgstr "Inviter"
 
-#: ../shell/view/clipboardmenu.py:59 ../shell/view/frame/activitybutton.py:58
+#: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
 msgstr "Supprimer"
 
-#: ../shell/view/clipboardmenu.py:64
+#: ../shell/view/clipboardmenu.py:63
 msgid "Open"
 msgstr "Ouvrir"
 
@@ -59,13 +59,14 @@ msgstr "Arrêter de télécharger"
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../shell/view/clipboardmenu.py:74
+#: ../shell/view/clipboardmenu.py:73
 msgid "Add to journal"
 msgstr "Ajouter au journal"
 
-#: ../shell/view/clipboardmenu.py:200
+#: ../shell/view/clipboardmenu.py:213
 #, python-format, 
 #, python-format
+#, python-format,
 msgid "Clipboard object: %s."
 msgstr "Objet du presse-papier : %s."
 
@@ -81,11 +82,11 @@ msgstr "Image"
 msgid "Screenshot"
 msgstr "Capture d'écran"
 
-#: ../shell/view/home/HomeBox.py:163
+#: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
 msgstr "Éteindre"
 
-#: ../shell/view/home/MeshBox.py:194 ../shell/view/devices/network/mesh.py:37
+#: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
 #: ../shell/view/devices/network/mesh.py:62
 #: ../shell/view/devices/network/mesh.py:66
 msgid "Mesh Network"
@@ -149,7 +150,7 @@ msgstr "Type de chiffrement :"
 msgid "Starting..."
 msgstr "Lancement ..."
 
-#: ../shell/view/home/activitiesdonut.py:104
+#: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
 msgid "Resume"
 msgstr "Reprendre"
 
@@ -158,11 +159,11 @@ msgstr "Reprendre"
 msgid "Stop"
 msgstr "Arrêter"
 
-#: ../shell/view/home/HomeBox.py:158
+#: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
 msgstr "Redémarrer"
 
-#: ../shell/view/home/HomeBox.py:169
+#: ../shell/view/home/HomeBox.py:170
 msgid "Register"
 msgstr "Enregistrer"
 
@@ -170,7 +171,7 @@ msgstr "Enregistrer"
 #. priority over the normal wireless device.  NM doesn't have a "disconnect"
 #. method for a device either (for various reasons) so this doesn't
 #. have a good mapping
-#: ../shell/view/home/MeshBox.py:89 ../shell/view/home/MeshBox.py:196
+#: ../shell/view/home/MeshBox.py:90 ../shell/view/home/MeshBox.py:197
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
 msgid "Disconnect..."
@@ -248,19 +249,19 @@ msgstr "Copier"
 msgid "Paste"
 msgstr "Coller"
 
-#: ../lib/sugar/activity/activity.py:813
+#: ../lib/sugar/activity/activity.py:820
 msgid "Keep error"
 msgstr "Erreur d'enregistrement"
 
-#: ../lib/sugar/activity/activity.py:814
+#: ../lib/sugar/activity/activity.py:821
 msgid "Keep error: all changes will be lost"
 msgstr "Erreur d'enregistrement : tous les changements seront perdus"
 
-#: ../lib/sugar/activity/activity.py:817
+#: ../lib/sugar/activity/activity.py:824
 msgid "Don't stop"
 msgstr "Ne pas interrompre"
 
-#: ../lib/sugar/activity/activity.py:820
+#: ../lib/sugar/activity/activity.py:827
 msgid "Stop anyway"
 msgstr "Interrompre quand même"
 
@@ -360,23 +361,23 @@ msgstr ", "
 
 #: ../shell/controlpanel/control.py:213
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr "Vous devez redémarrer sugar pour appliquer les changements.\n"
+msgstr "Redémarrez sugar pour appliquer les changements.\n"
 
 #: ../shell/controlpanel/control.py:267
 msgid "Error in specified color modifiers."
-msgstr "Erreur dans les modifieurs de couleur spécifiés."
+msgstr "Les modifieurs de couleur spécifiés sont incorrects."
 
 #: ../shell/controlpanel/control.py:270
 msgid "Error in specified colors."
-msgstr "Erreur dans les couleurs spécifiées."
+msgstr "Les couleurs spécifiées sont incorrectes."
 
 #: ../shell/controlpanel/control.py:307
 msgid "off"
-msgstr "arrêt"
+msgstr "off (arrêt)"
 
 #: ../shell/controlpanel/control.py:309
 msgid "on"
-msgstr "marche"
+msgstr "on (marche)"
 
 #: ../shell/controlpanel/control.py:310
 msgid "State is unknown."
@@ -384,13 +385,11 @@ msgstr "État inconnu."
 
 #: ../shell/controlpanel/control.py:332
 msgid "Error in specified radio argument use on/off."
-msgstr "Erreur dans l'argument radio spécifié. Utiliser marche/arrêt."
+msgstr "L'argument 'radio' est incorrect. Utiliser 'on' ou 'off'."
 
 #: ../shell/controlpanel/control.py:336
 msgid "Permission denied. You need to be root to run this method."
-msgstr ""
-"Permission refusée. L'exécution de cette méthode est réservée à "
-"l'administrateur root."
+msgstr "Permission refusée. Cette méthode est réservée à l'administrateur root."
 
 #: ../shell/controlpanel/control.py:366
 msgid "Error in reading timezone"
@@ -452,3 +451,15 @@ msgstr "Création d'un réseau maillé simple"
 #: ../shell/view/devices/network/mesh.py:124
 msgid "Unknown Mesh"
 msgstr "Réseau maillé inconnu"
+
+#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
+msgid "About this XO"
+msgstr "À propos de ce XO"
+
+#: ../shell/view/home/HomeBox.py:222
+msgid "Not available"
+msgstr "Indisponible"
+
+#: ../shell/view/home/MeshBox.py:300
+msgid "Join"
+msgstr "Rejoindre"
