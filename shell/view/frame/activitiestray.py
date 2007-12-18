@@ -129,7 +129,7 @@ class ActivitiesTray(hippo.CanvasBox):
 
     def _activity_removed_cb(self, activity_registry, activity_info):
         for item in self._tray.get_children():
-            if item.get_bundle_id() == activity_info.service_name:
+            if item.get_bundle_id() == activity_info.bundle_id:
                 self._tray.remove_item(item)
                 return
 
