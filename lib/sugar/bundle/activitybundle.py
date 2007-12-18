@@ -22,9 +22,14 @@ import locale
 import os
 import tempfile
 
-from sugar.bundle.bundle import Bundle, MalformedBundleException
+from sugar.bundle.bundle import Bundle, MalformedBundleException, \
+    AlreadyInstalledException, RegistrationException, \
+    NotInstalledException
+
 from sugar import activity
 from sugar import env
+
+import logging
 
 class ActivityBundle(Bundle):
     """A Sugar activity bundle
@@ -204,8 +209,16 @@ class ActivityBundle(Bundle):
         else:
             return False
 
+    def need_upgrade(self):
+        act = activity.get_registry().get_activity(self._bundle_id)
+        if act is None or act.version != self._activity_version:
+            return True
+        else:
+            return False
+
     def install(self):
-        if self.is_installed():
+        act = activity.get_registry().get_activity(self._bundle_id)
+        if act is not None and act.path.startswith(env.get_user_activities_path()):
             raise AlreadyInstalledException
 
         install_dir = env.get_user_activities_path()
@@ -250,12 +263,21 @@ class ActivityBundle(Bundle):
         if not activity.get_registry().add_bundle(install_path):
             raise RegistrationException
 
-    def uninstall(self):
+    def uninstall(self, force=False):
         if self._unpacked:
             install_path = self._path
         else:
             if not self.is_installed():
                 raise NotInstalledException
+
+            act = activity.get_registry().get_activity(self._bundle_id)
+            if not force and act.version != self._activity_version:
+                logging.warning('Not uninstalling because different bundle present')
+                return
+            elif not act.path.startswith(env.get_user_activities_path()):
+                logging.warning('Not uninstalling system activity')
+                return
+
             install_path = os.path.join(env.get_user_activities_path(),
                                         self._zip_root_dir)
 
@@ -282,4 +304,18 @@ class ActivityBundle(Bundle):
         
         if not activity.get_registry().remove_bundle(install_path):
             raise RegistrationException
+
+    def upgrade(self):
+        act = activity.get_registry().get_activity(self._bundle_id)
+        if act is None:
+            logging.warning('Activity not installed')
+        elif act.path.startswith(env.get_user_activities_path()):
+            try:
+                self.uninstall(force=True)
+            except Exception, e:
+                logging.warning('Uninstall failed (%s), still trying to install newer bundle', e)
+        else:
+            logging.warning('Unable to uninstall system activity, installing upgraded version in user activities')
+
+        self.install()
 
