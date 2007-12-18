@@ -113,6 +113,7 @@ class ActivityRegistry(dbus.service.Object):
         return {'name': bundle.get_name(),
                 'icon': bundle.get_icon(),
                 'bundle_id': bundle.get_bundle_id(),
+                'version': bundle.get_activity_version(),
                 'path': bundle.get_path(),
                 'command': bundle.get_command(),
                 'show_launcher': bundle.get_show_launcher()}

@@ -29,15 +29,17 @@ def _activity_info_from_dict(info_dict):
     if not info_dict:
         return None
     return ActivityInfo(info_dict['name'], info_dict['icon'],
-                        info_dict['bundle_id'], info_dict['path'],
-                        info_dict['show_launcher'], info_dict['command'])
+                        info_dict['bundle_id'], info_dict['version'],
+                        info_dict['path'], info_dict['show_launcher'],
+                        info_dict['command'])
 
 class ActivityInfo(object):
-    def __init__(self, name, icon, bundle_id,
+    def __init__(self, name, icon, bundle_id, version,
                  path, show_launcher, command):
         self.name = name
         self.icon = icon
         self.bundle_id = bundle_id
+        self.version = version
         self.path = path
         self.command = command
         self.show_launcher = show_launcher
@@ -146,6 +148,8 @@ class ActivityRegistry(gobject.GObject):
         self._mime_type_to_activities.clear()
 
     def remove_bundle(self, bundle_path):
+        self._service_name_to_activity_info.clear()
+        self._mime_type_to_activities.clear()
         return self._registry.RemoveBundle(bundle_path)
 
     def _activity_removed_cb(self, info_dict):
