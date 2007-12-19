@@ -76,6 +76,10 @@ SCOPE_PRIVATE = "private"
 SCOPE_INVITE_ONLY = "invite"  # shouldn't be shown in UI, it's implicit when you invite somebody
 SCOPE_NEIGHBORHOOD = "public"
 
+J_DBUS_SERVICE = 'org.laptop.Journal'
+J_DBUS_PATH = '/org/laptop/Journal'
+J_DBUS_INTERFACE = 'org.laptop.Journal'
+
 class ActivityToolbar(gtk.Toolbar):
     """The Activity toolbar with the Journal entry title, sharing, Keep and Stop buttons
     
@@ -905,3 +909,9 @@ def get_activity_root():
         return os.environ['SUGAR_ACTIVITY_ROOT']
     else:
         raise RuntimeError("No SUGAR_ACTIVITY_ROOT set.")
+
+def show_object_in_journal(object_id):
+    bus = dbus.SessionBus()
+    obj = bus.get_object(J_DBUS_SERVICE, J_DBUS_PATH)
+    journal = dbus.Interface(obj, J_DBUS_INTERFACE)
+    journal.ShowObject(object_id)
