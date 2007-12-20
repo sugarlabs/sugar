@@ -418,7 +418,6 @@ def _writeI18N(lang):
         print(_("Could not access %s. Create standard settings.") % path)
         fd = open(path, 'w')
         fd.write('LANG="en_US.UTF-8"\n')
-        fd.write('XKB_LAYOUT="us(olpc)"\n')
         fd.close()
     else:
         fd = open(path, 'r')
