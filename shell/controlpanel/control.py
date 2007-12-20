@@ -439,7 +439,6 @@ def get_language():
         fd = open(path, 'w')
         default = 'en_US.UTF-8'
         fd.write('LANG="%s"\n'%default)
-        fd.write('XKB_LAYOUT="us(olpc)"\n')
         fd.close()
         return default
     
