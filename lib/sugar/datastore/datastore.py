@@ -160,10 +160,16 @@ class DSObject(object):
             if bundle_id is not None:
                 raise ValueError('Object is a bundle, cannot be resumed as an activity.')
 
+            logging.debug('Creating activity bundle')
             bundle = ActivityBundle(self.file_path)
             if not bundle.is_installed():
+                logging.debug('Installing activity bundle')
                 bundle.install()
+            elif bundle.need_upgrade():
+                logging.debug('Upgrading activity bundle')
+                bundle.upgrade()
 
+            logging.debug('activityfactory.creating bundle with id %r', bundle.get_bundle_id())
             activityfactory.create(bundle.get_bundle_id())
         else:
             if not self.get_activities() and bundle_id is None:

@@ -14,6 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import dbus
 import os
 from ConfigParser import ConfigParser
 
@@ -86,3 +87,28 @@ class Friends(gobject.GObject):
         fileobject = open(self._path, 'w')
         cp.write(fileobject)
         fileobject.close()
+
+        self._sync_friends()
+
+    def _sync_friends(self):
+        # XXX: temporary hack
+        # remove this when the shell service has a D-Bus API for buddies
+
+        def friends_synced():
+            pass
+
+        def friends_synced_error(e):
+            logging.error("Error asking presence service to sync friends: %s"
+                % e)
+
+        keys = []
+        for friend in self:
+            keys.append(friend.get_key())
+
+        bus = dbus.SessionBus()
+        ps = bus.get_object('org.laptop.Sugar.Presence',
+            '/org/laptop/Sugar/Presence')
+        psi = dbus.Interface(ps, 'org.laptop.Sugar.Presence')
+        psi.SyncFriends(keys,
+                reply_handler=friends_synced,
+                error_handler=friends_synced_error)

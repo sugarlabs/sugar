@@ -20,28 +20,28 @@
 import sys
 import unittest
 
-from sugar import objects
+from sugar import mime
 
 class TestMime(unittest.TestCase):
     def test_from_file_name(self):
-        self.assertEqual(objects.mime.get_from_file_name('test.pdf'),
+        self.assertEqual(mime.get_from_file_name('test.pdf'),
                          'application/pdf')
 
     def test_choose_most_significant(self):
         # Mozilla's text in dnd
-        mime_type = objects.mime.choose_most_significant(
+        mime_type = mime.choose_most_significant(
                 ['text/plain', 'text/_moz_htmlcontext', 'text/unicode',
                  'text/html', 'text/_moz_htmlinfo'])
         self.assertEqual(mime_type, 'text/html')
         
         # Mozilla's text in c&v
-        mime_type = objects.mime.choose_most_significant(
+        mime_type = mime.choose_most_significant(
                 ['text/_moz_htmlcontext', 'STRING', 'text/html', 'text/_moz_htmlinfo',
                  'text/x-moz-url-priv', 'UTF8_STRING', 'COMPOUND_TEXT'])
         self.assertEqual(mime_type, 'text/html')
 
         # Mozilla gif in dnd
-        mime_type = objects.mime.choose_most_significant(
+        mime_type = mime.choose_most_significant(
                 ['application/x-moz-file-promise-url',
                  'application/x-moz-file-promise-dest-filename', 'text/_moz_htmlinfo',
                  'text/x-moz-url-desc', 'text/_moz_htmlcontext', 'text/x-moz-url-data',
@@ -49,23 +49,32 @@ class TestMime(unittest.TestCase):
         self.assertEqual(mime_type, 'text/uri-list')
 
         # Mozilla url in dnd
-        mime_type = objects.mime.choose_most_significant(
+        mime_type = mime.choose_most_significant(
                 ['text/_moz_htmlcontext', 'text/html', 'text/_moz_htmlinfo',
                  '_NETSCAPE_URL', 'text/x-moz-url', 'text/x-moz-url-desc',
                  'text/x-moz-url-data', 'text/plain', 'text/unicode'])
         self.assertEqual(mime_type, 'text/x-moz-url')
 
         # Abiword text in dnd
-        mime_type = objects.mime.choose_most_significant(
+        mime_type = mime.choose_most_significant(
                 ['text/rtf', 'text/uri-list'])
         self.assertEqual(mime_type, 'text/uri-list')
 
         # Abiword text in c&v
-        mime_type = objects.mime.choose_most_significant(
+        mime_type = mime.choose_most_significant(
                 ['UTF8_STRING', 'STRING', 'text/html', 'TEXT', 'text/rtf',
                  'COMPOUND_TEXT', 'application/rtf', 'text/plain',
                  'application/xhtml+xml'])
         self.assertEqual(mime_type, 'application/rtf')
+
+        # Abiword text in c&v
+        mime_type = mime.choose_most_significant(
+                ['GTK_TEXT_BUFFER_CONTENTS',
+                 'application/x-gtk-text-buffer-rich-text',
+                 'UTF8_STRING', 'COMPOUND_TEXT', 'TEXT', 'STRING',
+                 'text/plain;charset=utf-8', 'text/plain;charset=UTF-8',
+                 'text/plain'])
+        self.assertEqual(mime_type, 'text/plain')
 
 if __name__ == "__main__":
     unittest.main()

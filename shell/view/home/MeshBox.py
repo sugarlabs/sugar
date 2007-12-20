@@ -74,7 +74,7 @@ class AccessPointView(PulsingIcon):
         # Update badge
         caps = model.props.capabilities
         if model.get_nm_network().is_favorite():
-            self.props.badge_name = "emblem-star"
+            self.props.badge_name = "emblem-favorite"
         elif (caps & NM_802_11_CAP_PROTO_WEP) or (caps & NM_802_11_CAP_PROTO_WPA) or (caps & NM_802_11_CAP_PROTO_WPA2):
             self.props.badge_name = "emblem-locked"
 

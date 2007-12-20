@@ -88,9 +88,10 @@ class _IconBuffer(object):
         self.cache = False
         self.scale = 1.0
 
-    def _get_cache_key(self):
+    def _get_cache_key(self, sensitive):
         return (self.icon_name, self.file_name, self.fill_color,
-                self.stroke_color, self.badge_name, self.width, self.height)
+                self.stroke_color, self.badge_name, self.width, self.height,
+                sensitive)
 
     def _load_svg(self, file_name):
         entities = {}
@@ -139,19 +140,22 @@ class _IconBuffer(object):
 
         return icon_info
 
-    def _draw_badge(self, context, size):
+    def _draw_badge(self, context, size, sensitive, widget):
         theme = gtk.icon_theme_get_default()
         badge_info = theme.lookup_icon(self.badge_name, size, 0)
         if badge_info:
             badge_file_name = badge_info.get_filename()
             if badge_file_name.endswith('.svg'):
                 handle = self._loader.load(badge_file_name, {}, self.cache)
-                handle.render_cairo(context)
+                pixbuf = handle.get_pixbuf()
             else:
                 pixbuf = gtk.gdk.pixbuf_new_from_file(badge_file_name)
-                surface = hippo.cairo_surface_from_gdk_pixbuf(pixbuf)
-                context.set_source_surface(surface, 0, 0)
-                context.paint()
+
+            if not sensitive:
+                pixbuf = self._get_insensitive_pixbuf(pixbuf, widget)
+            surface = hippo.cairo_surface_from_gdk_pixbuf(pixbuf)
+            context.set_source_surface(surface, 0, 0)
+            context.paint()
 
     def _get_size(self, icon_width, icon_height, padding):
         if self.width is not None and self.height is not None:
@@ -196,8 +200,30 @@ class _IconBuffer(object):
             self.stroke_color = None
             self.fill_color = None
 
-    def get_surface(self):
-        cache_key = self._get_cache_key()
+    def _get_insensitive_pixbuf (self, pixbuf, widget):
+        if not (widget and widget.style):
+            return pixbuf
+
+        icon_source = gtk.IconSource()
+        # Special size meaning "don't touch"
+        icon_source.set_size(-1)
+        icon_source.set_pixbuf(pixbuf)
+        icon_source.set_state(gtk.STATE_INSENSITIVE)
+        icon_source.set_direction_wildcarded(False)
+        icon_source.set_size_wildcarded(False)
+
+        # Please note that the pixbuf returned by this function is leaked
+        # with current stable versions of pygtk. The relevant bug is
+        # http://bugzilla.gnome.org/show_bug.cgi?id=502871
+        #   -- 2007-12-14 Benjamin Berg
+        pixbuf = widget.style.render_icon(icon_source, widget.get_direction(),
+                                          gtk.STATE_INSENSITIVE, -1, widget,
+                                          "sugar-icon")
+
+        return pixbuf
+
+    def get_surface(self, sensitive=True, widget=None):
+        cache_key = self._get_cache_key(sensitive)
         if cache_key in self._surface_cache:
             return self._surface_cache[cache_key]
 
@@ -230,8 +256,18 @@ class _IconBuffer(object):
 
         context.translate(padding, padding)
         if is_svg:
-            handle.render_cairo(context)
+            if sensitive:
+                handle.render_cairo(context)
+            else:
+                pixbuf = handle.get_pixbuf()
+                pixbuf = self._get_insensitive_pixbuf(pixbuf, widget)
+
+                pixbuf_surface = hippo.cairo_surface_from_gdk_pixbuf(pixbuf)
+                context.set_source_surface(pixbuf_surface, 0, 0)
+                context.paint()
         else:
+            if not sensitive:
+                pixbuf = self._get_insensitive_pixbuf(pixbuf, widget)
             pixbuf_surface = hippo.cairo_surface_from_gdk_pixbuf(pixbuf)
             context.set_source_surface(pixbuf_surface, 0, 0)
             context.paint()
@@ -239,7 +275,7 @@ class _IconBuffer(object):
         if self.badge_name:
             context.restore()
             context.translate(badge_info.attach_x, badge_info.attach_y)
-            self._draw_badge(context, badge_info.size)
+            self._draw_badge(context, badge_info.size, sensitive, widget)
 
         self._surface_cache[cache_key] = surface
 
@@ -307,7 +343,8 @@ class Icon(gtk.Image):
 
     def do_expose_event(self, event):
         self._sync_image_properties()
-        surface = self._buffer.get_surface()
+        sensitive = (self.state != gtk.STATE_INSENSITIVE)
+        surface = self._buffer.get_surface(sensitive, self)
         if surface is None:
             return
 
