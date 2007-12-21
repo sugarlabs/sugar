@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: Update 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: 2007-12-20 03:09+0600\n"
+"PO-Revision-Date: 2007-12-21 18:58+0000\n"
 "Last-Translator: Khandakar Mujahidul Islam <suzan229@gmail.com>\n"
 "Language-Team: Bengali <core@bengalinux.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.0.1\n"
+"X-Generator: Pootle 1.0.2\n"
 "X-Poedit-Language: Bengali\n"
 "X-Poedit-Country: BANGLADESH\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -24,7 +24,7 @@ msgstr "নাম:"
 
 #: ../shell/intro/intro.py:96
 msgid "Click to change color:"
-msgstr ""
+msgstr "রং পরিবর্তন করতে ক্লিক:"
 
 #: ../shell/intro/intro.py:146
 msgid "Back"
@@ -49,7 +49,7 @@ msgstr "বন্ধু বানাও"
 #: ../shell/view/BuddyMenu.py:109
 #, python-format
 msgid "Invite to %s"
-msgstr ""
+msgstr "%s কে নিমণ্ত্রণ"
 
 #: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
@@ -70,7 +70,7 @@ msgstr "জার্নালে লেখ"
 #: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
-msgstr ""
+msgstr "ক্লীপবোর্ড বস্তু: %s।"
 
 #: ../shell/hardware/keydialog.py:149
 msgid "Key Type:"
@@ -78,20 +78,19 @@ msgstr "কী ধরণ:"
 
 #: ../shell/hardware/keydialog.py:169
 msgid "Authentication Type:"
-msgstr ""
+msgstr "পরিচয় প্রমানের ধরণ:"
 
 #: ../shell/hardware/keydialog.py:250
 msgid "Encryption Type:"
-msgstr ""
+msgstr "এনক্রিপশন ধরণ:"
 
 #: ../shell/view/home/activitiesdonut.py:90
 msgid "Starting..."
 msgstr "শুরু হচ্ছে..."
 
-#: ../shell/view/home/activitiesdonut.py:104
-#: ../shell/view/home/MeshBox.py:295
+#: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
 msgid "Resume"
-msgstr ""
+msgstr "পুনরায় শুরু করুন"
 
 #: ../shell/view/home/activitiesdonut.py:111
 #: ../lib/sugar/activity/activity.py:128
@@ -114,8 +113,7 @@ msgstr "বন্ধ করো"
 msgid "Register"
 msgstr "রেজিস্টার"
 
-#: ../shell/view/home/HomeBox.py:175
-#: ../shell/view/home/HomeBox.py:216
+#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
 msgid "About this XO"
 msgstr "XO সম্বন্ধে"
 
@@ -127,19 +125,17 @@ msgstr "পাওয়া যায় নি"
 #. priority over the normal wireless device.  NM doesn't have a "disconnect"
 #. method for a device either (for various reasons) so this doesn't
 #. have a good mapping
-#: ../shell/view/home/MeshBox.py:90
-#: ../shell/view/home/MeshBox.py:197
+#: ../shell/view/home/MeshBox.py:90 ../shell/view/home/MeshBox.py:197
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
 msgid "Disconnect..."
 msgstr "সংযোগ বিচ্ছিন্ন..."
 
-#: ../shell/view/home/MeshBox.py:195
-#: ../shell/view/devices/network/mesh.py:37
+#: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
 #: ../shell/view/devices/network/mesh.py:62
 #: ../shell/view/devices/network/mesh.py:66
 msgid "Mesh Network"
-msgstr ""
+msgstr "মেশ নেটওয়ার্ক"
 
 #: ../shell/view/home/MeshBox.py:300
 msgid "Join"
@@ -155,7 +151,7 @@ msgstr "ব্যাটারী চার্জ হচ্ছে"
 
 #: ../shell/view/devices/battery.py:96
 msgid "Battery discharging"
-msgstr ""
+msgstr "ব্যাটারী চার্জ কমে যাচ্ছে"
 
 #: ../shell/view/devices/battery.py:98
 msgid "Battery fully charged"
@@ -163,7 +159,7 @@ msgstr "ব্যাটারী পুরোপুরি চার্জ হয়
 
 #: ../shell/view/devices/network/wireless.py:61
 msgid "Disconnected"
-msgstr ""
+msgstr "সংযোগ বিচ্ছিন্ন"
 
 #: ../shell/view/devices/network/wireless.py:131
 msgid "Channel"
@@ -171,7 +167,7 @@ msgstr "চ্যানেল"
 
 #: ../shell/view/frame/zoomtoolbar.py:42
 msgid "Neighborhood"
-msgstr ""
+msgstr "ছোটবেলা"
 
 #: ../shell/view/frame/zoomtoolbar.py:54
 msgid "Group"
@@ -179,7 +175,7 @@ msgstr "দল"
 
 #: ../shell/view/frame/zoomtoolbar.py:66
 msgid "Home"
-msgstr ""
+msgstr "বাড়ি"
 
 #: ../shell/view/frame/zoomtoolbar.py:78
 msgid "Activity"
@@ -187,27 +183,27 @@ msgstr "সক্রিয়তা"
 
 #: ../lib/sugar/activity/activity.py:111
 msgid "Share with:"
-msgstr ""
+msgstr "ভাগাভাগি করো:"
 
 #: ../lib/sugar/activity/activity.py:113
 msgid "Private"
-msgstr ""
+msgstr "ব্যাক্তিগত"
 
 #: ../lib/sugar/activity/activity.py:114
 msgid "My Neighborhood"
-msgstr ""
+msgstr "আমার ছেলেবেলা"
 
 #: ../lib/sugar/activity/activity.py:122
 msgid "Keep"
-msgstr ""
+msgstr "রাখো"
 
 #: ../lib/sugar/activity/activity.py:241
 msgid "Undo"
-msgstr ""
+msgstr "বাতিল করো"
 
 #: ../lib/sugar/activity/activity.py:246
 msgid "Redo"
-msgstr ""
+msgstr "আবার করো"
 
 #: ../lib/sugar/activity/activity.py:256
 msgid "Copy"
@@ -220,15 +216,15 @@ msgstr "সাঁটো"
 #: ../lib/sugar/activity/activity.py:450
 #, python-format
 msgid "%s Activity"
-msgstr ""
+msgstr "%s সক্রিয়তা"
 
 #: ../lib/sugar/activity/activity.py:820
 msgid "Keep error"
-msgstr ""
+msgstr "ত্রুটি রেখে দাও"
 
 #: ../lib/sugar/activity/activity.py:821
 msgid "Keep error: all changes will be lost"
-msgstr ""
+msgstr "ত্রুটি রেখে দাও: সব পরিবর্তন হারিয়ে যাবে"
 
 #: ../lib/sugar/activity/activity.py:824
 msgid "Don't stop"
@@ -236,10 +232,9 @@ msgstr "থামিও না"
 
 #: ../lib/sugar/activity/activity.py:827
 msgid "Stop anyway"
-msgstr ""
+msgstr "যে কোন ভাবে থামো"
 
-#: ../lib/sugar/graphics/alert.py:164
-#: ../lib/sugar/graphics/alert.py:206
+#: ../lib/sugar/graphics/alert.py:164 ../lib/sugar/graphics/alert.py:206
 msgid "Cancel"
 msgstr "বাতিল"
 
@@ -249,7 +244,7 @@ msgstr "ঠিক আছে"
 
 #: ../lib/sugar/graphics/alert.py:216
 msgid "Continue"
-msgstr ""
+msgstr "এগিয়ে যাও"
 
 #: ../lib/sugar/graphics/alert.py:244
 msgid "OK"
@@ -257,15 +252,15 @@ msgstr "ঠিক আছে"
 
 #: ../shell/controlpanel/control.py:213
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr ""
+msgstr "তোমার পরিবর্তন কার্যকর করার জন্য সুগার পুনরায় চালু করতে হবে।\n"
 
 #: ../shell/controlpanel/control.py:267
 msgid "Error in specified color modifiers."
-msgstr ""
+msgstr "উল্লেখিত রং পরিবর্তকে ত্রুটি।"
 
 #: ../shell/controlpanel/control.py:270
 msgid "Error in specified colors."
-msgstr ""
+msgstr "উল্লেখিত রং এ ত্রুটি।"
 
 #: ../shell/controlpanel/control.py:307
 msgid "off"
@@ -277,75 +272,73 @@ msgstr "on"
 
 #: ../shell/controlpanel/control.py:310
 msgid "State is unknown."
-msgstr ""
+msgstr "অবস্থানটি অজানা।"
 
 #: ../shell/controlpanel/control.py:332
 msgid "Error in specified radio argument use on/off."
-msgstr ""
+msgstr "উল্লেখিত রেডিও প্রেরিত মান ব্যবহার on/off তে ত্রুটি।"
 
 #: ../shell/controlpanel/control.py:336
 msgid "Permission denied. You need to be root to run this method."
-msgstr ""
+msgstr "অনুমতি প্রত্যাখ্যাত। এই পন্থাটি চালাতে তোমাকে root হিসেবে কাজ করতে হবে।"
 
 #: ../shell/controlpanel/control.py:366
 msgid "Error in reading timezone"
-msgstr ""
+msgstr "সময় জোন পড়তে ত্রুটি"
 
 #: ../shell/controlpanel/control.py:397
 #, python-format
 msgid "Error copying timezone (from %s): %s"
-msgstr ""
+msgstr "সময় জোন (%s হতে) কপি করায় ত্রুটি: %s"
 
 #: ../shell/controlpanel/control.py:402
 #, python-format
 msgid "Changing permission of timezone: %s"
-msgstr ""
+msgstr "সময় জোনের অনুমতি পরিবর্তন: %s"
 
 #: ../shell/controlpanel/control.py:413
 msgid "Error timezone does not exist."
-msgstr ""
+msgstr "ত্রুটিযুক্ত সময় জোনের অস্তিত্ব নেই।"
 
-#: ../shell/controlpanel/control.py:418
-#: ../shell/controlpanel/control.py:438
+#: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
 #, python-format
 msgid "Could not access %s. Create standard settings."
-msgstr ""
+msgstr "%s এ প্রবেশ করতে পারে নি। প্রমাণ মানসমূহ তৈরি করো।"
 
 #: ../shell/controlpanel/control.py:466
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr ""
+msgstr "কোড=%s এর জন্য কোন ভাষা নির্ধারণ করা যায় নি।"
 
 #: ../shell/controlpanel/control.py:476
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr ""
+msgstr "দুঃখিত আমি '%s' বলতে পারি না।"
 
 #: ../shell/view/devices/network/mesh.py:105
 msgid "Connected to a School Mesh Portal"
-msgstr ""
+msgstr "একটি স্কুলের মেশ পোর্টালে সংযুক্ত"
 
 #: ../shell/view/devices/network/mesh.py:107
 msgid "Looking for a School Mesh Portal..."
-msgstr ""
+msgstr "একটি স্কুল মেশ পোর্টাল খুজছি..."
 
 #: ../shell/view/devices/network/mesh.py:110
 msgid "Connected to an XO Mesh Portal"
-msgstr ""
+msgstr "একটি জো(XO) মেশ পোর্টালে সংযুক্ত"
 
 #: ../shell/view/devices/network/mesh.py:112
 msgid "Looking for an XO Mesh Portal..."
-msgstr ""
+msgstr "একটি জো(XO) মেশ পোর্টাল খুজছি..."
 
 #: ../shell/view/devices/network/mesh.py:115
 msgid "Connected to a Simple Mesh"
-msgstr ""
+msgstr "একটি সাধারণ মেশ এ সংযুক্ত"
 
 #: ../shell/view/devices/network/mesh.py:117
 msgid "Starting a Simple Mesh"
-msgstr ""
+msgstr "একটি সাধারণ মেশ চালু করছি"
 
 #: ../shell/view/devices/network/mesh.py:124
 msgid "Unknown Mesh"
-msgstr ""
-
+msgstr "অজানা মেশ"
