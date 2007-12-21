@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: 2007-12-14 16:34+0000\n"
+"PO-Revision-Date: 2007-12-18 23:20+0000\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,11 +17,11 @@ msgstr ""
 
 #: shell/intro/intro.py:77
 msgid "Pick a buddy picture"
-msgstr "Choisir une image"
+msgstr "Choisir un avatar XO"
 
 #: shell/intro/intro.py:100
 msgid "My Picture:"
-msgstr "Mon image :"
+msgstr "Ma photo :"
 
 #: shell/intro/intro.py:180
 msgid "My Name:"
@@ -68,7 +68,7 @@ msgstr "Ajouter au journal"
 #, python-format
 #, python-format,
 msgid "Clipboard object: %s."
-msgstr "Objet du presse-papier : %s."
+msgstr "Objet dans le presse-papier : %s."
 
 #: services/clipboard/objecttypeservice.py:32
 msgid "Text"
@@ -164,8 +164,9 @@ msgid "Reboot"
 msgstr "Redémarrer"
 
 #: ../shell/view/home/HomeBox.py:170
+#, fuzzy
 msgid "Register"
-msgstr "Enregistrer"
+msgstr "S'enregistrer"
 
 #. Only show disconnect when there's a mesh device, because mesh takes
 #. priority over the normal wireless device.  NM doesn't have a "disconnect"
@@ -237,9 +238,10 @@ msgstr "Conserver"
 msgid "Undo"
 msgstr "Annuler"
 
+# Glossaire
 #: ../lib/sugar/activity/activity.py:246
 msgid "Redo"
-msgstr "Refaire"
+msgstr "Répéter"
 
 #: ../lib/sugar/activity/activity.py:256
 msgid "Copy"
@@ -271,7 +273,7 @@ msgstr "Annuler"
 
 #: ../lib/sugar/graphics/alert.py:168
 msgid "Ok"
-msgstr "Ok"
+msgstr "OK"
 
 #: ../lib/sugar/graphics/alert.py:216
 msgid "Continue"
@@ -361,11 +363,12 @@ msgstr ", "
 
 #: ../shell/controlpanel/control.py:213
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr "Redémarrez sugar pour appliquer les changements.\n"
+msgstr "Redémarrer sugar pour prendre en compte les changements.\n"
 
 #: ../shell/controlpanel/control.py:267
+#, fuzzy
 msgid "Error in specified color modifiers."
-msgstr "Les modifieurs de couleur spécifiés sont incorrects."
+msgstr "Les filtres de couleur spécifiés sont incorrects."
 
 #: ../shell/controlpanel/control.py:270
 msgid "Error in specified colors."
@@ -389,7 +392,8 @@ msgstr "L'argument 'radio' est incorrect. Utiliser 'on' ou 'off'."
 
 #: ../shell/controlpanel/control.py:336
 msgid "Permission denied. You need to be root to run this method."
-msgstr "Permission refusée. Cette méthode est réservée à l'administrateur root."
+msgstr ""
+"Permission refusée. Cette méthode est réservée à l'administrateur 'root'."
 
 #: ../shell/controlpanel/control.py:366
 msgid "Error in reading timezone"
@@ -403,11 +407,11 @@ msgstr "Erreur de copie du fuseau horaire (de %s) : %s"
 #: ../shell/controlpanel/control.py:402
 #, python-format
 msgid "Changing permission of timezone: %s"
-msgstr "Mofication de la permission pour le fuseau horaire : %s"
+msgstr "Modification des permissions du fuseau horaire : %s"
 
 #: ../shell/controlpanel/control.py:413
 msgid "Error timezone does not exist."
-msgstr "Erreur. Fuseau horaire inconnu."
+msgstr "Erreur : fuseau horaire inconnu."
 
 #: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
 #, python-format
@@ -426,31 +430,31 @@ msgstr "Je regrette, je ne parle pas '%s'."
 
 #: ../shell/view/devices/network/mesh.py:105
 msgid "Connected to a School Mesh Portal"
-msgstr "Connecté à un portail maillé de l'école"
+msgstr "Connecté au réseau de l'école"
 
 #: ../shell/view/devices/network/mesh.py:107
 msgid "Looking for a School Mesh Portal..."
-msgstr "Recherche d'un portail maillé de l'école..."
+msgstr "Recherche du réseau de l'école..."
 
 #: ../shell/view/devices/network/mesh.py:110
 msgid "Connected to an XO Mesh Portal"
-msgstr "Connecté à un portail maillé de XO"
+msgstr "Connecté au réseau des XO"
 
 #: ../shell/view/devices/network/mesh.py:112
 msgid "Looking for an XO Mesh Portal..."
-msgstr "Recherche d'un portail maillé de XO..."
+msgstr "Recherche du réseau des XO..."
 
 #: ../shell/view/devices/network/mesh.py:115
 msgid "Connected to a Simple Mesh"
-msgstr "Connecté à un réseau maillé simple"
+msgstr "Connecté au réseau"
 
 #: ../shell/view/devices/network/mesh.py:117
 msgid "Starting a Simple Mesh"
-msgstr "Création d'un réseau maillé simple"
+msgstr "Création d'un point d'accès au réseau"
 
 #: ../shell/view/devices/network/mesh.py:124
 msgid "Unknown Mesh"
-msgstr "Réseau maillé inconnu"
+msgstr "Réseau inconnu"
 
 #: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
 msgid "About this XO"
