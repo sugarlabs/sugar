@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: 2007-12-21 22:31+0000\n"
+"PO-Revision-Date: 2007-12-21 22:35+0000\n"
 "Last-Translator: Huda Sarfraz <huda.sarfraz@nu.edu.pk>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -62,7 +62,7 @@ msgstr "کھوليں"
 #. self.append_menu_item(self._stop_item)
 #: ../shell/view/clipboardmenu.py:73
 msgid "Add to journal"
-msgstr " جریدے ميں شامل کريں"
+msgstr "جریدے ميں شامل کريں"
 
 #: ../shell/view/clipboardmenu.py:213
 #, python-format
