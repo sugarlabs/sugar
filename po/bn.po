@@ -2,23 +2,25 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: Update 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2007-12-20 03:09+0600\n"
+"Last-Translator: Khandakar Mujahidul Islam <suzan229@gmail.com>\n"
+"Language-Team: Bengali <core@bengalinux.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Translate Toolkit 1.0.1\n"
+"X-Poedit-Language: Bengali\n"
+"X-Poedit-Country: BANGLADESH\n"
+"X-Poedit-SourceCharset: utf-8\n"
 
 #: ../shell/intro/intro.py:67
 msgid "Name:"
-msgstr ""
+msgstr "নাম:"
 
 #: ../shell/intro/intro.py:96
 msgid "Click to change color:"
@@ -26,23 +28,23 @@ msgstr ""
 
 #: ../shell/intro/intro.py:146
 msgid "Back"
-msgstr ""
+msgstr "পেছনে"
 
 #: ../shell/intro/intro.py:160
 msgid "Done"
-msgstr ""
+msgstr "করা হয়েছে"
 
 #: ../shell/intro/intro.py:163
 msgid "Next"
-msgstr ""
+msgstr "পরবর্তী"
 
 #: ../shell/view/BuddyMenu.py:84
 msgid "Remove friend"
-msgstr ""
+msgstr "বন্ধু মোছো"
 
 #: ../shell/view/BuddyMenu.py:87
 msgid "Make friend"
-msgstr ""
+msgstr "বন্ধু বানাও"
 
 #: ../shell/view/BuddyMenu.py:109
 #, python-format
@@ -51,11 +53,11 @@ msgstr ""
 
 #: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
-msgstr ""
+msgstr "মোছো"
 
 #: ../shell/view/clipboardmenu.py:63
 msgid "Open"
-msgstr ""
+msgstr "খোলো"
 
 #. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
 #. TODO: Implement stopping downloads
@@ -63,7 +65,7 @@ msgstr ""
 #. self.append_menu_item(self._stop_item)
 #: ../shell/view/clipboardmenu.py:73
 msgid "Add to journal"
-msgstr ""
+msgstr "জার্নালে লেখ"
 
 #: ../shell/view/clipboardmenu.py:213
 #, python-format
@@ -72,7 +74,7 @@ msgstr ""
 
 #: ../shell/hardware/keydialog.py:149
 msgid "Key Type:"
-msgstr ""
+msgstr "কী ধরণ:"
 
 #: ../shell/hardware/keydialog.py:169
 msgid "Authentication Type:"
@@ -84,52 +86,56 @@ msgstr ""
 
 #: ../shell/view/home/activitiesdonut.py:90
 msgid "Starting..."
-msgstr ""
+msgstr "শুরু হচ্ছে..."
 
-#: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
+#: ../shell/view/home/activitiesdonut.py:104
+#: ../shell/view/home/MeshBox.py:295
 msgid "Resume"
 msgstr ""
 
 #: ../shell/view/home/activitiesdonut.py:111
 #: ../lib/sugar/activity/activity.py:128
 msgid "Stop"
-msgstr ""
+msgstr "থামাও"
 
 #: ../shell/view/Shell.py:276
 msgid "Screenshot"
-msgstr ""
+msgstr "স্ক্রীণশট"
 
 #: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
-msgstr ""
+msgstr "পুনরায় চালু"
 
 #: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
-msgstr ""
+msgstr "বন্ধ করো"
 
 #: ../shell/view/home/HomeBox.py:170
 msgid "Register"
-msgstr ""
+msgstr "রেজিস্টার"
 
-#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
+#: ../shell/view/home/HomeBox.py:175
+#: ../shell/view/home/HomeBox.py:216
 msgid "About this XO"
-msgstr ""
+msgstr "XO সম্বন্ধে"
 
 #: ../shell/view/home/HomeBox.py:222
 msgid "Not available"
-msgstr ""
+msgstr "পাওয়া যায় নি"
 
 #. Only show disconnect when there's a mesh device, because mesh takes
 #. priority over the normal wireless device.  NM doesn't have a "disconnect"
 #. method for a device either (for various reasons) so this doesn't
 #. have a good mapping
-#: ../shell/view/home/MeshBox.py:90 ../shell/view/home/MeshBox.py:197
+#: ../shell/view/home/MeshBox.py:90
+#: ../shell/view/home/MeshBox.py:197
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
 msgid "Disconnect..."
-msgstr ""
+msgstr "সংযোগ বিচ্ছিন্ন..."
 
-#: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
+#: ../shell/view/home/MeshBox.py:195
+#: ../shell/view/devices/network/mesh.py:37
 #: ../shell/view/devices/network/mesh.py:62
 #: ../shell/view/devices/network/mesh.py:66
 msgid "Mesh Network"
@@ -137,15 +143,15 @@ msgstr ""
 
 #: ../shell/view/home/MeshBox.py:300
 msgid "Join"
-msgstr ""
+msgstr "যোগ দাও"
 
 #: ../shell/view/devices/battery.py:38
 msgid "My Battery life"
-msgstr ""
+msgstr "আমার ব্যাটারীর জীবনসীমা"
 
 #: ../shell/view/devices/battery.py:94
 msgid "Battery charging"
-msgstr ""
+msgstr "ব্যাটারী চার্জ হচ্ছে"
 
 #: ../shell/view/devices/battery.py:96
 msgid "Battery discharging"
@@ -153,7 +159,7 @@ msgstr ""
 
 #: ../shell/view/devices/battery.py:98
 msgid "Battery fully charged"
-msgstr ""
+msgstr "ব্যাটারী পুরোপুরি চার্জ হয়েছে"
 
 #: ../shell/view/devices/network/wireless.py:61
 msgid "Disconnected"
@@ -161,7 +167,7 @@ msgstr ""
 
 #: ../shell/view/devices/network/wireless.py:131
 msgid "Channel"
-msgstr ""
+msgstr "চ্যানেল"
 
 #: ../shell/view/frame/zoomtoolbar.py:42
 msgid "Neighborhood"
@@ -169,7 +175,7 @@ msgstr ""
 
 #: ../shell/view/frame/zoomtoolbar.py:54
 msgid "Group"
-msgstr ""
+msgstr "দল"
 
 #: ../shell/view/frame/zoomtoolbar.py:66
 msgid "Home"
@@ -177,7 +183,7 @@ msgstr ""
 
 #: ../shell/view/frame/zoomtoolbar.py:78
 msgid "Activity"
-msgstr ""
+msgstr "সক্রিয়তা"
 
 #: ../lib/sugar/activity/activity.py:111
 msgid "Share with:"
@@ -205,11 +211,11 @@ msgstr ""
 
 #: ../lib/sugar/activity/activity.py:256
 msgid "Copy"
-msgstr ""
+msgstr "কপি"
 
 #: ../lib/sugar/activity/activity.py:261
 msgid "Paste"
-msgstr ""
+msgstr "সাঁটো"
 
 #: ../lib/sugar/activity/activity.py:450
 #, python-format
@@ -226,19 +232,20 @@ msgstr ""
 
 #: ../lib/sugar/activity/activity.py:824
 msgid "Don't stop"
-msgstr ""
+msgstr "থামিও না"
 
 #: ../lib/sugar/activity/activity.py:827
 msgid "Stop anyway"
 msgstr ""
 
-#: ../lib/sugar/graphics/alert.py:164 ../lib/sugar/graphics/alert.py:206
+#: ../lib/sugar/graphics/alert.py:164
+#: ../lib/sugar/graphics/alert.py:206
 msgid "Cancel"
-msgstr ""
+msgstr "বাতিল"
 
 #: ../lib/sugar/graphics/alert.py:168
 msgid "Ok"
-msgstr ""
+msgstr "ঠিক আছে"
 
 #: ../lib/sugar/graphics/alert.py:216
 msgid "Continue"
@@ -246,7 +253,7 @@ msgstr ""
 
 #: ../lib/sugar/graphics/alert.py:244
 msgid "OK"
-msgstr ""
+msgstr "ঠিক আছে"
 
 #: ../shell/controlpanel/control.py:213
 msgid "To apply your changes you have to restart sugar.\n"
@@ -262,11 +269,11 @@ msgstr ""
 
 #: ../shell/controlpanel/control.py:307
 msgid "off"
-msgstr ""
+msgstr "off"
 
 #: ../shell/controlpanel/control.py:309
 msgid "on"
-msgstr ""
+msgstr "on"
 
 #: ../shell/controlpanel/control.py:310
 msgid "State is unknown."
@@ -298,7 +305,8 @@ msgstr ""
 msgid "Error timezone does not exist."
 msgstr ""
 
-#: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
+#: ../shell/controlpanel/control.py:418
+#: ../shell/controlpanel/control.py:438
 #, python-format
 msgid "Could not access %s. Create standard settings."
 msgstr ""
@@ -340,3 +348,4 @@ msgstr ""
 #: ../shell/view/devices/network/mesh.py:124
 msgid "Unknown Mesh"
 msgstr ""
+
