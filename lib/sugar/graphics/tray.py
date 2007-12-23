@@ -28,13 +28,19 @@ _NEXT_PAGE = 1
 
 class _TrayViewport(gtk.Viewport):
     __gproperties__ = {
-        'can-scroll' : (bool, None, None, False,
-                        gobject.PARAM_READABLE),
+        'scrollable'      : (bool, None, None, False,
+                             gobject.PARAM_READABLE),
+        'can-scroll-prev' : (bool, None, None, False,
+                             gobject.PARAM_READABLE),
+        'can-scroll-next' : (bool, None, None, False,
+                             gobject.PARAM_READABLE),
     }
 
     def __init__(self, orientation):
         self.orientation = orientation
-        self._can_scroll = False
+        self._scrollable = False
+        self._can_scroll_next = False
+        self._can_scroll_prev = False
 
         gobject.GObject.__init__(self)
 
@@ -48,6 +54,13 @@ class _TrayViewport(gtk.Viewport):
 
         self.connect('size_allocate', self._size_allocate_cb)
 
+        if self.orientation == gtk.ORIENTATION_HORIZONTAL:
+            adj = self.get_hadjustment()
+        else:
+            adj = self.get_vadjustment()
+        adj.connect('changed', self._adjustment_changed_cb)
+        adj.connect('value-changed', self._adjustment_changed_cb)
+            
     def scroll(self, direction):
         if direction == _PREVIOUS_PAGE:
             self._scroll_previous()
@@ -84,45 +97,89 @@ class _TrayViewport(gtk.Viewport):
             requisition[1] = 0
 
     def do_get_property(self, pspec):
-        if pspec.name == 'can-scroll':
-            return self._can_scroll
+        if pspec.name == 'scrollable':
+            return self._scrollable
+        elif pspec.name == 'can-scroll-next':
+            return self._can_scroll_next
+        elif pspec.name == 'can-scroll-prev':
+            return self._can_scroll_prev
 
     def _size_allocate_cb(self, viewport, allocation):
         bar_requisition = self.traybar.get_child_requisition()
         if self.orientation == gtk.ORIENTATION_HORIZONTAL:
-            can_scroll = bar_requisition[0] > allocation.width
+            scrollable = bar_requisition[0] > allocation.width
         else:
-            can_scroll = bar_requisition[1] > allocation.height
+            scrollable = bar_requisition[1] > allocation.height
 
-        if can_scroll != self._can_scroll:
-            self._can_scroll = can_scroll
-            self.notify('can-scroll')
+        if scrollable != self._scrollable:
+            self._scrollable = scrollable
+            self.notify('scrollable')
 
-class _TrayScrollButton(gtk.Button):
+    def _adjustment_changed_cb(self, adjustment):
+        if adjustment.value <= adjustment.lower:
+            can_scroll_prev = False
+        else:
+            can_scroll_prev = True
+
+        if adjustment.value + adjustment.page_size >= adjustment.upper:
+            can_scroll_next = False
+        else:
+            can_scroll_next = True
+
+        if can_scroll_prev != self._can_scroll_prev:
+            self._can_scroll_prev = can_scroll_prev
+            self.notify('can-scroll-prev')
+
+        if can_scroll_next != self._can_scroll_next:
+            self._can_scroll_next = can_scroll_next
+            self.notify('can-scroll-next')
+
+
+class _TrayScrollButton(ToolButton):
     def __init__(self, icon_name, scroll_direction):
-        gobject.GObject.__init__(self)
-
+        ToolButton.__init__(self)
         self._viewport = None
 
         self._scroll_direction = scroll_direction
 
-        self.set_relief(gtk.RELIEF_NONE)
         self.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
 
-        icon = Icon(icon_name = icon_name,
-                    icon_size=gtk.ICON_SIZE_SMALL_TOOLBAR)
-        self.set_image(icon)
-        icon.show()
+        self.icon = Icon(icon_name = icon_name,
+                         icon_size=gtk.ICON_SIZE_SMALL_TOOLBAR)
+        # The alignment is a hack to work around gtk.ToolButton code
+        # that sets the icon_size when the icon_widget is a gtk.Image
+        alignment = gtk.Alignment(0.5, 0.5)
+        alignment.add(self.icon)
+        self.set_icon_widget(alignment)
+        alignment.show_all()
 
         self.connect('clicked', self._clicked_cb)
 
     def set_viewport(self, viewport):
         self._viewport = viewport
-        self._viewport.connect('notify::can-scroll',
-                               self._viewport_can_scroll_changed_cb)
+        self._viewport.connect('notify::scrollable',
+                               self._viewport_scrollable_changed_cb)
 
-    def _viewport_can_scroll_changed_cb(self, viewport, pspec):
-        self.props.visible = self._viewport.props.can_scroll
+        if self._scroll_direction == _PREVIOUS_PAGE:
+            self._viewport.connect('notify::can-scroll-prev',
+                                   self._viewport_can_scroll_dir_changed_cb)
+            self.set_sensitive(self._viewport.props.can_scroll_prev)
+        else:
+            self._viewport.connect('notify::can-scroll-next',
+                                   self._viewport_can_scroll_dir_changed_cb)
+            self.set_sensitive(self._viewport.props.can_scroll_next)
+
+
+    def _viewport_scrollable_changed_cb(self, viewport, pspec):
+        self.props.visible = self._viewport.props.scrollable
+
+    def _viewport_can_scroll_dir_changed_cb(self, viewport, pspec):
+        if self._scroll_direction == _PREVIOUS_PAGE:
+            sensitive = self._viewport.props.can_scroll_prev
+        else:
+            sensitive = self._viewport.props.can_scroll_next
+
+        self.set_sensitive(sensitive)
 
     def _clicked_cb(self, button):
         self._viewport.scroll(self._scroll_direction)
