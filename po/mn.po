@@ -2,60 +2,59 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2007-12-25 06:46+0000\n"
+"Last-Translator: Enkhzul <enkhzul@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.0.1\n"
+"X-Generator: Pootle 1.0.2\n"
 
 #: ../shell/intro/intro.py:67
 msgid "Name:"
-msgstr ""
+msgstr "Нэр:"
 
 #: ../shell/intro/intro.py:96
 msgid "Click to change color:"
-msgstr ""
+msgstr "Өнгийг солихын тулд дарна уу:"
 
 #: ../shell/intro/intro.py:146
 msgid "Back"
-msgstr ""
+msgstr "Буц"
 
 #: ../shell/intro/intro.py:160
 msgid "Done"
-msgstr ""
+msgstr "Дууссан"
 
 #: ../shell/intro/intro.py:163
 msgid "Next"
-msgstr ""
+msgstr "Дараах"
 
 #: ../shell/view/BuddyMenu.py:84
 msgid "Remove friend"
-msgstr ""
+msgstr "Найзыг арилга"
 
 #: ../shell/view/BuddyMenu.py:87
 msgid "Make friend"
-msgstr ""
+msgstr "Найз үүсгэ"
 
 #: ../shell/view/BuddyMenu.py:109
 #, python-format
 msgid "Invite to %s"
-msgstr ""
+msgstr "%-үүдэд урь"
 
 #: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
-msgstr ""
+msgstr "Арилга"
 
 #: ../shell/view/clipboardmenu.py:63
 msgid "Open"
-msgstr ""
+msgstr "Нээ"
 
 #. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
 #. TODO: Implement stopping downloads
@@ -63,61 +62,61 @@ msgstr ""
 #. self.append_menu_item(self._stop_item)
 #: ../shell/view/clipboardmenu.py:73
 msgid "Add to journal"
-msgstr ""
+msgstr "Бүртгэлийн дэвтэрт нэм"
 
 #: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
-msgstr ""
+msgstr "Санадаг самбарын зүйлс: %ууд"
 
 #: ../shell/hardware/keydialog.py:149
 msgid "Key Type:"
-msgstr ""
+msgstr "Гол төрөл:"
 
 #: ../shell/hardware/keydialog.py:169
 msgid "Authentication Type:"
-msgstr ""
+msgstr "Таних төрөл:"
 
 #: ../shell/hardware/keydialog.py:250
 msgid "Encryption Type:"
-msgstr ""
+msgstr "нууцлалын төрөл:"
 
 #: ../shell/view/home/activitiesdonut.py:90
 msgid "Starting..."
-msgstr ""
+msgstr "Эхлэж байна..."
 
 #: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
 msgid "Resume"
-msgstr ""
+msgstr "Сэргээ"
 
 #: ../shell/view/home/activitiesdonut.py:111
 #: ../lib/sugar/activity/activity.py:128
 msgid "Stop"
-msgstr ""
+msgstr "Зогсоо"
 
 #: ../shell/view/Shell.py:276
 msgid "Screenshot"
-msgstr ""
+msgstr "Дэлгэцний зураг "
 
 #: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
-msgstr ""
+msgstr "Дахин ачаала"
 
 #: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
-msgstr ""
+msgstr "Унтраа"
 
 #: ../shell/view/home/HomeBox.py:170
 msgid "Register"
-msgstr ""
+msgstr "Бүртгүүлэх"
 
 #: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
 msgid "About this XO"
-msgstr ""
+msgstr "Энэ XO компьютерийн тухай"
 
 #: ../shell/view/home/HomeBox.py:222
 msgid "Not available"
-msgstr ""
+msgstr "Боломжгүй"
 
 #. Only show disconnect when there's a mesh device, because mesh takes
 #. priority over the normal wireless device.  NM doesn't have a "disconnect"
@@ -127,130 +126,130 @@ msgstr ""
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
 msgid "Disconnect..."
-msgstr ""
+msgstr "Салга..."
 
 #: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
 #: ../shell/view/devices/network/mesh.py:62
 #: ../shell/view/devices/network/mesh.py:66
 msgid "Mesh Network"
-msgstr ""
+msgstr "Тор хэлбэрийн сүлжээ"
 
 #: ../shell/view/home/MeshBox.py:300
 msgid "Join"
-msgstr ""
+msgstr "Нэгдэх"
 
 #: ../shell/view/devices/battery.py:38
 msgid "My Battery life"
-msgstr ""
+msgstr "Миний зайны хугацаа"
 
 #: ../shell/view/devices/battery.py:94
 msgid "Battery charging"
-msgstr ""
+msgstr "Зайг цэнэглэж байна"
 
 #: ../shell/view/devices/battery.py:96
 msgid "Battery discharging"
-msgstr ""
+msgstr "Зай цэнэглэгдэхгүй байна"
 
 #: ../shell/view/devices/battery.py:98
 msgid "Battery fully charged"
-msgstr ""
+msgstr "Зай бүрэн цэнэглэгдсэн"
 
 #: ../shell/view/devices/network/wireless.py:61
 msgid "Disconnected"
-msgstr ""
+msgstr "Салгагдсан"
 
 #: ../shell/view/devices/network/wireless.py:131
 msgid "Channel"
-msgstr ""
+msgstr "Суваг"
 
 #: ../shell/view/frame/zoomtoolbar.py:42
 msgid "Neighborhood"
-msgstr ""
+msgstr "Хөрш"
 
 #: ../shell/view/frame/zoomtoolbar.py:54
 msgid "Group"
-msgstr ""
+msgstr "Бүлэг"
 
 #: ../shell/view/frame/zoomtoolbar.py:66
 msgid "Home"
-msgstr ""
+msgstr "Нүүр"
 
 #: ../shell/view/frame/zoomtoolbar.py:78
 msgid "Activity"
-msgstr ""
+msgstr "Програм"
 
 #: ../lib/sugar/activity/activity.py:111
 msgid "Share with:"
-msgstr ""
+msgstr "Хуваалцах:"
 
 #: ../lib/sugar/activity/activity.py:113
 msgid "Private"
-msgstr ""
+msgstr "Хувийн "
 
 #: ../lib/sugar/activity/activity.py:114
 msgid "My Neighborhood"
-msgstr ""
+msgstr "Миний хөршүүд"
 
 #: ../lib/sugar/activity/activity.py:122
 msgid "Keep"
-msgstr ""
+msgstr "Хадгала"
 
 #: ../lib/sugar/activity/activity.py:241
 msgid "Undo"
-msgstr ""
+msgstr "Цуцла"
 
 #: ../lib/sugar/activity/activity.py:246
 msgid "Redo"
-msgstr ""
+msgstr "Дахин хий"
 
 #: ../lib/sugar/activity/activity.py:256
 msgid "Copy"
-msgstr ""
+msgstr "Сануул"
 
 #: ../lib/sugar/activity/activity.py:261
 msgid "Paste"
-msgstr ""
+msgstr "Хуула"
 
 #: ../lib/sugar/activity/activity.py:450
 #, python-format
 msgid "%s Activity"
-msgstr ""
+msgstr "Програм %ууд"
 
 #: ../lib/sugar/activity/activity.py:820
 msgid "Keep error"
-msgstr ""
+msgstr "Алдааг үргэлжлүүл"
 
 #: ../lib/sugar/activity/activity.py:821
 msgid "Keep error: all changes will be lost"
-msgstr ""
+msgstr "Алдааг үргэлжлүүлэх: бүх өөрчлөлт арилна"
 
 #: ../lib/sugar/activity/activity.py:824
 msgid "Don't stop"
-msgstr ""
+msgstr "Бүү зогс"
 
 #: ../lib/sugar/activity/activity.py:827
 msgid "Stop anyway"
-msgstr ""
+msgstr "Тэгсэн ч зогсоо"
 
 #: ../lib/sugar/graphics/alert.py:164 ../lib/sugar/graphics/alert.py:206
 msgid "Cancel"
-msgstr ""
+msgstr "Цуцал"
 
 #: ../lib/sugar/graphics/alert.py:168
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #: ../lib/sugar/graphics/alert.py:216
 msgid "Continue"
-msgstr ""
+msgstr "Үргэлжлүүл"
 
 #: ../lib/sugar/graphics/alert.py:244
 msgid "OK"
-msgstr ""
+msgstr "Ok"
 
 #: ../shell/controlpanel/control.py:213
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr ""
+msgstr "Өөрчлөлтийг оруулахын тулд та командыг дахин асаах шаардлагатай.\n"
 
 #: ../shell/controlpanel/control.py:267
 msgid "Error in specified color modifiers."
@@ -258,19 +257,19 @@ msgstr ""
 
 #: ../shell/controlpanel/control.py:270
 msgid "Error in specified colors."
-msgstr ""
+msgstr "Алдааг тусгай өнгөөр илэрхийлэв"
 
 #: ../shell/controlpanel/control.py:307
 msgid "off"
-msgstr ""
+msgstr "Хаалттай"
 
 #: ../shell/controlpanel/control.py:309
 msgid "on"
-msgstr ""
+msgstr "Нээлттэй"
 
 #: ../shell/controlpanel/control.py:310
 msgid "State is unknown."
-msgstr ""
+msgstr "Төлөв тодорхойгүй"
 
 #: ../shell/controlpanel/control.py:332
 msgid "Error in specified radio argument use on/off."
@@ -279,64 +278,65 @@ msgstr ""
 #: ../shell/controlpanel/control.py:336
 msgid "Permission denied. You need to be root to run this method."
 msgstr ""
+"Зөвшөөрөл цуцлагдсан. Үүнийг ажиллуулахын тулд та дахин ачаалах шаардлагатай"
 
 #: ../shell/controlpanel/control.py:366
 msgid "Error in reading timezone"
-msgstr ""
+msgstr "Цагийн бүсийг уншихад алдаа гарлаа"
 
 #: ../shell/controlpanel/control.py:397
 #, python-format
 msgid "Error copying timezone (from %s): %s"
-msgstr ""
+msgstr "Алдаа цагийн бүсийг (%-ээс) хуулж байна: %ууд"
 
 #: ../shell/controlpanel/control.py:402
 #, python-format
 msgid "Changing permission of timezone: %s"
-msgstr ""
+msgstr "Цагийн бүсийн зөвшөөрлийг өөрчилж байна:%ууд"
 
 #: ../shell/controlpanel/control.py:413
 msgid "Error timezone does not exist."
-msgstr ""
+msgstr "Цагийн бүсийн алдаа байхгүй боллоо."
 
 #: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
 #, python-format
 msgid "Could not access %s. Create standard settings."
-msgstr ""
+msgstr "% руу хандаж чадахгүй байна. Стандарт тохиргоо үүсгэ."
 
 #: ../shell/controlpanel/control.py:466
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr ""
+msgstr "%=кодтой хэл тодорхойлогдож чадахгүй байна."
 
 #: ../shell/controlpanel/control.py:476
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr ""
+msgstr "Уучлаарай би '%' хэлээр ярьдаггүй."
 
 #: ../shell/view/devices/network/mesh.py:105
 msgid "Connected to a School Mesh Portal"
-msgstr ""
+msgstr "Сургуулийн \"тор\" (mesh) порталд холбогдосон "
 
 #: ../shell/view/devices/network/mesh.py:107
 msgid "Looking for a School Mesh Portal..."
-msgstr ""
+msgstr "Сургуулийн \"тор\" (mesh) порталыг хайж байна..."
 
 #: ../shell/view/devices/network/mesh.py:110
 msgid "Connected to an XO Mesh Portal"
-msgstr ""
+msgstr "XO тор порталд холбогдлоо "
 
 #: ../shell/view/devices/network/mesh.py:112
 msgid "Looking for an XO Mesh Portal..."
-msgstr ""
+msgstr "XO \"тор\" (Mesh) порталыг хайж байна..."
 
 #: ../shell/view/devices/network/mesh.py:115
 msgid "Connected to a Simple Mesh"
-msgstr ""
+msgstr "Энгийн \"тор сүлжээнд\"(mesh) холбогдлоо "
 
 #: ../shell/view/devices/network/mesh.py:117
 msgid "Starting a Simple Mesh"
-msgstr ""
+msgstr "Энгийн тор сүлжээ эхлэж байна"
 
 #: ../shell/view/devices/network/mesh.py:124
 msgid "Unknown Mesh"
-msgstr ""
+msgstr "Үл мэдэгдэх тор сүлжээ"
