@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: 2007-12-21 22:35+0000\n"
+"PO-Revision-Date: 2007-12-30 20:18+0000\n"
 "Last-Translator: Huda Sarfraz <huda.sarfraz@nu.edu.pk>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -87,7 +87,7 @@ msgstr "شروع ہو رہا ہے ..."
 
 #: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
 msgid "Resume"
-msgstr "پھر جاری کری"
+msgstr "پھر جاری کریں"
 
 #: ../shell/view/home/activitiesdonut.py:111
 #: ../lib/sugar/activity/activity.py:128
@@ -118,7 +118,7 @@ msgstr "رجسٹر کريں"
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
 msgid "Disconnect..."
-msgstr "منقطع کریں"
+msgstr "منقطع کریں..."
 
 #: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
 #: ../shell/view/devices/network/mesh.py:62
