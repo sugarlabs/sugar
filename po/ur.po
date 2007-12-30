@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: 2007-12-30 20:18+0000\n"
+"PO-Revision-Date: 2007-12-30 21:59+0000\n"
 "Last-Translator: Huda Sarfraz <huda.sarfraz@nu.edu.pk>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -188,7 +188,7 @@ msgstr "کالعدم کریں"
 
 #: ../lib/sugar/activity/activity.py:246
 msgid "Redo"
-msgstr "دوبارہ کریں"
+msgstr "اعادہ کریں"
 
 #: ../lib/sugar/activity/activity.py:256
 msgid "Copy"
@@ -366,12 +366,12 @@ msgstr "نقص، ٹائیم زون موجود نہیں ہے۔"
 #: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
 #, python-format
 msgid "Could not access %s. Create standard settings."
-msgstr "%s تک رسائی نہیں کر سکا۔  معیاری سیٹنگیں بنائیں۔"
+msgstr "%s تک رسائی نہیں کر سکا۔ معیاری سیٹنگیں بنائیں۔"
 
 #: ../shell/controlpanel/control.py:466
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr "کوڈ=%s کی زبان تعین نہیں کے جا سکی۔"
+msgstr "کوڈ=%s کی زبان تعین نہیں کی جا سکی۔"
 
 #: ../shell/controlpanel/control.py:476
 #, python-format
