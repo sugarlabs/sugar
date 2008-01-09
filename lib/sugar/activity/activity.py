@@ -108,7 +108,7 @@ class ActivityToolbar(gtk.Toolbar):
 
         separator = gtk.SeparatorToolItem()
         separator.props.draw = False
-        separator.set_expand(True);
+        separator.set_expand(True)
         self.insert(separator, -1)
         separator.show()
 
