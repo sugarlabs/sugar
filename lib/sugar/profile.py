@@ -61,17 +61,16 @@ class Profile(object):
     def __init__(self, path):
         self.nick_name = None
         self.color = None
-        self.pubkey = None
-        self.privkey_hash = None
         self.jabber_server = DEFAULT_JABBER_SERVER
         self.jabber_registered = False
         self.backup1 = None
+        self.sound_volume = DEFAULT_VOLUME
 
+        self._pubkey = None
+        self._privkey_hash = None
         self._config_path = path
 
         self._load_config()
-        self._load_pubkey()
-        self._hash_private_key()
 
     def is_valid(self):
         return self.nick_name is not None and \
@@ -84,7 +83,7 @@ class Profile(object):
 
     def save(self):
         cp = ConfigParser()
-        parsed = cp.read([self._config_path])
+        cp.read([self._config_path])
 
         if self.nick_name:
             _set_key(cp, 'Buddy', 'NickName', self.nick_name.encode('utf8'))
@@ -105,7 +104,7 @@ class Profile(object):
 
     def _load_config(self):
         cp = ConfigParser()
-        parsed = cp.read([self._config_path])
+        cp.read([self._config_path])
 
         if cp.has_option('Buddy', 'NickName'):
             name = cp.get('Buddy', 'NickName')
@@ -123,37 +122,36 @@ class Profile(object):
             self.backup1 = cp.get('Server', 'Backup1')
         if cp.has_option('Sound', 'Volume'):
             self.sound_volume = float(cp.get('Sound', 'Volume'))
-        else:
-            self.sound_volume = DEFAULT_VOLUME
 
         del cp
 
     def _load_pubkey(self):
-        self.pubkey = None
-
         key_path = os.path.join(env.get_profile_path(), 'owner.key.pub')
         try:
             f = open(key_path, "r")
             lines = f.readlines()
             f.close()
         except IOError, e:
-            self.valid = False
             logging.error("Error reading public key: %s" % e)
-            return
+            return None
 
         magic = "ssh-dss "
         for l in lines:
             l = l.strip()
             if not l.startswith(magic):
                 continue
-            self.pubkey = l[len(magic):]
-            break
-        if not self.pubkey:
+            return l[len(magic):]
+        else:
             logging.error("Error parsing public key.")
+            return None
+
+    def _get_pubkey(self):
+        # load on-demand.
+        if not self._pubkey:
+            self._pubkey = self._load_pubkey()
+        return self._pubkey
 
     def _hash_private_key(self):
-        self.privkey_hash = None
-        
         key_path = os.path.join(env.get_profile_path(), 'owner.key')
         try:
             f = open(key_path, "r")
@@ -161,7 +159,7 @@ class Profile(object):
             f.close()
         except IOError, e:
             logging.error("Error reading private key: %s" % e)
-            return
+            return None
 
         key = ""
         for l in lines:
@@ -173,10 +171,20 @@ class Profile(object):
             key += l
         if not len(key):
             logging.error("Error parsing public key.")
+            return None
 
         # hash it
         key_hash = util._sha_data(key)
-        self.privkey_hash = util.printable_hash(key_hash)
+        return util.printable_hash(key_hash)
+
+    def _get_privkey_hash(self):
+        # load on-demand.
+        if not self._privkey_hash:
+            self._privkey_hash = self._hash_private_key()
+        return self._privkey_hash
+
+    privkey_hash = property(_get_privkey_hash)
+    pubkey = property(_get_pubkey)
 
 def get_profile():
     global _profile

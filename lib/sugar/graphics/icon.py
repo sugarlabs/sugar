@@ -24,7 +24,6 @@ import logging
 import gobject
 import gtk
 import hippo
-import rsvg
 import cairo
 
 from sugar.graphics.style import Color
@@ -58,6 +57,7 @@ class _SVGLoader(object):
                 logging.error(
                     'Icon %s, entity %s is invalid.', file_name, entity)
 
+        import rsvg # XXX this is very slow!  why?
         return rsvg.Handle(data=icon)
 
 class _IconInfo(object):
