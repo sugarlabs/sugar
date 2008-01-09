@@ -24,6 +24,7 @@ import gtk
 from sugar import util
 from sugar.clipboard import clipboardservice
 from sugar.graphics.tray import VTray
+from sugar.graphics import style
 
 from view.clipboardicon import ClipboardIcon
 
@@ -57,6 +58,8 @@ class _ContextMap:
         return context in self._context_map
  
 class ClipboardBox(hippo.CanvasBox):
+    
+    MAX_ITEMS = gtk.gdk.screen_height() / style.GRID_CELL_SIZE - 2
     
     def __init__(self):
         hippo.CanvasBox.__init__(self)
@@ -109,7 +112,13 @@ class ClipboardBox(hippo.CanvasBox):
         self._tray.add_item(icon, 0)
         icon.show()
         self._icons[object_id] = icon
-        
+
+        objects_to_delete = self._tray.get_children()[ClipboardBox.MAX_ITEMS:]
+        for icon in objects_to_delete:
+            logging.debug('ClipboardBox: deleting surplus object')
+            cb_service = clipboardservice.get_instance()
+            cb_service.delete_object(icon.get_object_id())
+
         logging.debug('ClipboardBox: ' + object_id + ' was added.')
 
     def _object_deleted_cb(self, cb_service, object_id):
