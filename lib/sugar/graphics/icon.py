@@ -423,6 +423,11 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         hippo.CanvasBox.__init__(self, **kwargs)
 
         self._palette = None
+        self.connect('destroy', self.__destroy_cb)
+
+    def __destroy_cb(self, icon):
+        if self._palette is not None:
+            self._palette.destroy()
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'file-name':
