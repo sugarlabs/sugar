@@ -68,6 +68,7 @@ class Group(gobject.GObject):
             palette.disconnect(sid)
 
         self._palettes.remove(palette)
+        del self._sig_ids[palette]
 
     def popdown(self):
         for palette in self._palettes:

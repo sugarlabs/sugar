@@ -317,8 +317,8 @@ class ActivityView(hippo.CanvasBox):
 
     def remove_buddy_icon(self, key):
         icon = self._icons[key]
-        self.remove(icon)
         del self._icons[key]
+        icon.destroy()
 
     def _clicked_cb(self, item):
         bundle_id = self._model.get_bundle_id()
@@ -535,6 +535,7 @@ class MeshBox(hippo.CanvasBox):
         icon = self._buddies[buddy_model.get_key()]
         self._layout.remove(icon)
         del self._buddies[buddy_model.get_key()]
+        icon.destroy()
 
     def _remove_buddy(self, buddy_model):
         key = buddy_model.get_key()
@@ -575,6 +576,7 @@ class MeshBox(hippo.CanvasBox):
         icon = self._activities[activity_model.get_id()]
         self._layout.remove(icon)
         del self._activities[activity_model.get_id()]
+        icon.destroy()
 
     def _add_access_point(self, ap_model):
         meshdev = self._model.get_mesh()

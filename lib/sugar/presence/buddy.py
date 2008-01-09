@@ -78,11 +78,16 @@ class Buddy(gobject.GObject):
 
         bobj = bus.get_object(self._PRESENCE_SERVICE, object_path)
         self._buddy = dbus.Interface(bobj, self._BUDDY_DBUS_INTERFACE)
-        self._buddy.connect_to_signal('IconChanged', self._icon_changed_cb,
-                                      byte_arrays=True)
-        self._buddy.connect_to_signal('JoinedActivity', self._joined_activity_cb)
-        self._buddy.connect_to_signal('LeftActivity', self._left_activity_cb)
-        self._buddy.connect_to_signal('PropertyChanged', self._property_changed_cb)
+
+        self._icon_changed_signal = self._buddy.connect_to_signal(
+                'IconChanged', self._icon_changed_cb, byte_arrays=True)
+        self._joined_activity_signal = self._buddy.connect_to_signal(
+                'JoinedActivity', self._joined_activity_cb)
+        self._left_activity_signal = self._buddy.connect_to_signal(
+                'LeftActivity', self._left_activity_cb)
+        self._property_changed_signal = self._buddy.connect_to_signal(
+                'PropertyChanged', self._property_changed_cb)
+
         self._properties = self._get_properties_helper()
 
         activities = self._buddy.GetJoinedActivities()
@@ -90,6 +95,12 @@ class Buddy(gobject.GObject):
             self._activities[op] = self._ps_new_object(op)
         self._icon = None
 
+    def destroy(self):
+        self._icon_changed_signal.remove()
+        self._joined_activity_signal.remove()
+        self._left_activity_signal.remove()
+        self._property_changed_signal.remove()
+        
     def _get_properties_helper(self):
         """Retrieve the Buddy's property dictionary from the service object
         """

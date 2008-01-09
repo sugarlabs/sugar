@@ -148,6 +148,7 @@ class Palette(gtk.Window):
         # Just assume xthickness and ythickness are the same
         self.set_border_width(self.style.xthickness)
         self.connect('realize', self._realize_cb)
+        self.connect('destroy', self.__destroy_cb)
 
         self.palette_state = self.PRIMARY
 
@@ -217,6 +218,12 @@ class Palette(gtk.Window):
         self._mouse_detector = MouseSpeedDetector(self, 200, 5)
         self._mouse_detector.connect('motion-slow', self._mouse_slow_cb)
 
+    def __destroy_cb(self, palette):        
+        self.set_group_id(None)
+        
+        if self._palette_popup_sid is not None:
+            _palette_observer.disconnect(self._palette_popup_sid)
+        
     def _add_menu(self):
         self._menu_box = gtk.VBox()
         self._secondary_box.pack_start(self._menu_box)

@@ -156,10 +156,10 @@ class PresenceService(gobject.GObject):
         
         returns presence Buddy or Activity representation
         """
-        _logger.debug('Creating proxy for %s', object_path)
         obj = None
         try:
             obj = self._objcache[object_path]
+            _logger.debug('Reused proxy %r', obj)
         except KeyError:
             if object_path.startswith(self._PS_BUDDY_OP):
                 obj = Buddy(self._bus, self._new_object,
@@ -175,7 +175,7 @@ class PresenceService(gobject.GObject):
             else:
                 raise RuntimeError("Unknown object type")
             self._objcache[object_path] = obj
-        _logger.debug('Proxy is %r', obj)
+            _logger.debug('Created proxy %r', obj)
         return obj
 
     def _have_object(self, object_path):
@@ -200,7 +200,17 @@ class PresenceService(gobject.GObject):
         # Don't try to create a new object here if needed; it will probably
         # fail anyway because the object has already been destroyed in the PS
         if self._have_object(object_path):
-            self.emit('buddy-disappeared', self._new_object(object_path))
+            obj = self._objcache[object_path]
+            self.emit('buddy-disappeared', obj)
+
+            # We cannot maintain the object in the cache because that would keep
+            # a lot of objects from being collected. That includes UI objects
+            # due to signals using strong references.
+            # If we want to cache some despite the memory usage increase,
+            # we could use a LRU cache limited to some value.
+            del self._objcache[object_path]
+            obj.destroy()
+            
         return False
 
     def _buddy_disappeared_cb(self, object_path):
