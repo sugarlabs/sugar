@@ -18,11 +18,16 @@
 import gtk
 from sugar.graphics.icon import Icon
 
+import pango
+
 class MenuItem(gtk.ImageMenuItem):
-    def __init__(self, text_label=None, icon_name=None):
+    def __init__(self, text_label=None, icon_name=None, text_maxlen=0):
         gtk.ImageMenuItem.__init__(self, text_label)
         if icon_name:
             icon = Icon(icon_name=icon_name, icon_size=gtk.ICON_SIZE_MENU)
             self.set_image(icon)
             icon.show()
 
+        if text_maxlen > 0:
+            self.child.set_ellipsize(pango.ELLIPSIZE_MIDDLE)
+            self.child.set_max_width_chars(text_maxlen)

@@ -21,6 +21,7 @@ import gtk
 import gobject
 import time
 import hippo
+import pango
 
 from sugar.graphics import palettegroup
 from sugar.graphics import animator
@@ -140,7 +141,8 @@ class Palette(gtk.Window):
                      gobject.TYPE_NONE, ([]))
     }
 
-    def __init__(self, label, accel_path=None, menu_after_content=False):
+    def __init__(self, label, accel_path=None, menu_after_content=False,
+                text_maxlen=0):
         gtk.Window.__init__(self)
 
         self.set_decorated(False)
@@ -178,6 +180,11 @@ class Palette(gtk.Window):
                                           - 2*self.get_border_width())
         self._label.set_alignment(0, 0.5)
         self._label.set_padding(style.DEFAULT_SPACING, 0)
+
+        if text_maxlen > 0:
+            self._label.set_max_width_chars(text_maxlen)
+            self._label.set_ellipsize(pango.ELLIPSIZE_MIDDLE)
+
         vbox.pack_start(self._label, False)
 
         self._secondary_box = gtk.VBox()
