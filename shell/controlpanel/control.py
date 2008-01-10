@@ -404,10 +404,9 @@ def set_timezone(timezone):
                 
         # Write info to the /etc/sysconfig/clock file
         fd = open(_TIMEZONE_CONFIG, "w")
-        fd.write('# The ZONE parameter is only evaluated by sugarcontrol.\n')
-        fd.write('# The timezone of the system ' +
-                 'is defined by the contents of /etc/localtime.\n')
+        fd.write('# use sugar-control-panel to change this\n')
         fd.write('ZONE="%s"\n' % timezone)
+        fd.write('UTC=true\n')
         fd.close()                       
     else:
         print (_("Error timezone does not exist."))
