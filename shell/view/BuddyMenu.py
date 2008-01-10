@@ -37,7 +37,7 @@ class BuddyMenu(Palette):
         self._buddy.connect('nick-changed', self._buddy_nick_changed_cb)
 
         owner = self._get_shell_model().get_owner()
-        if buddy.get_nick() != owner.get_nick():
+        if not buddy.is_owner():
             self._add_items()
 
     def _get_shell_model(self):
