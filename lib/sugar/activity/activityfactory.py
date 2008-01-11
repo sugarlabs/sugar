@@ -113,6 +113,12 @@ def get_environment(activity):
     environ['PATH'] = bin_path + ':' + environ['PATH']
     #environ['RAINBOW_STRACE_LOG'] = '1'
 
+    if activity.bundle_id in [ 'org.laptop.WebActivity', 
+                               'org.laptop.GmailActivity',
+                               'org.laptop.WikiBrowseActivity'
+                               ]:
+        environ['RAINBOW_CONSTANT_UID'] = 'yes'
+
     return environ
 
 def get_command(activity, activity_id=None, object_id=None, uri=None):
@@ -190,10 +196,10 @@ class ActivityCreationHandler(gobject.GObject):
         if service_name in [ 'org.laptop.JournalActivity',
                              'org.laptop.Terminal',
                              'org.laptop.LogViewer',
-                             'org.laptop.Analyze',
-                             'org.laptop.WebActivity' ]:
-            self._use_rainbow = False
-
+                             'org.laptop.Analyze'
+                             ]:
+            self._use_rainbow = False                    
+    
         bus = dbus.SessionBus()
 
         bus_object = bus.get_object(_SHELL_SERVICE, _SHELL_PATH)
