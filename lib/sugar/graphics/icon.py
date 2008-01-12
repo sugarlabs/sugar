@@ -24,7 +24,6 @@ import logging
 import gobject
 import gtk
 import hippo
-import rsvg
 import cairo
 
 from sugar.graphics.style import Color
@@ -58,6 +57,7 @@ class _SVGLoader(object):
                 logging.error(
                     'Icon %s, entity %s is invalid.', file_name, entity)
 
+        import rsvg # XXX this is very slow!  why?
         return rsvg.Handle(data=icon)
 
 class _IconInfo(object):
@@ -386,6 +386,11 @@ class CanvasIcon(hippo.CanvasBox, hippo.CanvasItem):
         hippo.CanvasBox.__init__(self, **kwargs)
 
         self._palette = None
+        self.connect('destroy', self.__destroy_cb)
+
+    def __destroy_cb(self, icon):
+        if self._palette is not None:
+            self._palette.destroy()
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'file-name':

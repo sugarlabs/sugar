@@ -108,7 +108,7 @@ class ActivityToolbar(gtk.Toolbar):
 
         separator = gtk.SeparatorToolItem()
         separator.props.draw = False
-        separator.set_expand(True);
+        separator.set_expand(True)
         self.insert(separator, -1)
         separator.show()
 
@@ -838,12 +838,24 @@ class Activity(Window, gtk.Container):
         if response_id == gtk.RESPONSE_OK:
             self.close(skip_save=True)
 
-    def close(self, skip_save=False):
+    def can_close(self):
+        """Activities should override this function if they want to perform
+        extra checks before actually closing."""
+
+        return True
+
+    def close(self, force=False, skip_save=False):
         """Request that the activity be stopped and saved to the Journal
         
         Activities should not override this method, but should implement write_file() to
-        do any state saving instead.
+        do any state saving instead. If the application wants to control wether it can
+        close, it should override can_close().
         """
+
+        if not force:
+            if not self.can_close():
+                return
+
         try:
             if not skip_save:
                 self.save()

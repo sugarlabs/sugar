@@ -394,15 +394,13 @@ class NMInfo(object):
         config.read(self._cfg_file)
         networks = {}
         for name in config.sections():
-            if not isinstance(name, unicode):
-                name = unicode(name)
-            net = Network(name)
             try:
+                net = Network(name)
                 net.read_from_config(config)
                 networks[name] = net
-            except NetworkInvalidError, e:
-                logging.debug("Error: invalid stored network config: %s" % e)
-                del net
+            except Exception, e:
+                logging.error("Error when processing config for the network %s: %r" % (name, e))
+
         del config
         return networks
 

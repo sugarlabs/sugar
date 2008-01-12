@@ -21,6 +21,7 @@ import gtk
 import gobject
 import time
 import hippo
+import pango
 
 from sugar.graphics import palettegroup
 from sugar.graphics import animator
@@ -140,7 +141,8 @@ class Palette(gtk.Window):
                      gobject.TYPE_NONE, ([]))
     }
 
-    def __init__(self, label, accel_path=None, menu_after_content=False):
+    def __init__(self, label, accel_path=None, menu_after_content=False,
+                text_maxlen=0):
         gtk.Window.__init__(self)
 
         self.set_decorated(False)
@@ -148,6 +150,7 @@ class Palette(gtk.Window):
         # Just assume xthickness and ythickness are the same
         self.set_border_width(self.style.xthickness)
         self.connect('realize', self._realize_cb)
+        self.connect('destroy', self.__destroy_cb)
 
         self.palette_state = self.PRIMARY
 
@@ -177,6 +180,11 @@ class Palette(gtk.Window):
                                           - 2*self.get_border_width())
         self._label.set_alignment(0, 0.5)
         self._label.set_padding(style.DEFAULT_SPACING, 0)
+
+        if text_maxlen > 0:
+            self._label.set_max_width_chars(text_maxlen)
+            self._label.set_ellipsize(pango.ELLIPSIZE_MIDDLE)
+
         vbox.pack_start(self._label, False)
 
         self._secondary_box = gtk.VBox()
@@ -217,6 +225,12 @@ class Palette(gtk.Window):
         self._mouse_detector = MouseSpeedDetector(self, 200, 5)
         self._mouse_detector.connect('motion-slow', self._mouse_slow_cb)
 
+    def __destroy_cb(self, palette):        
+        self.set_group_id(None)
+        
+        if self._palette_popup_sid is not None:
+            _palette_observer.disconnect(self._palette_popup_sid)
+        
     def _add_menu(self):
         self._menu_box = gtk.VBox()
         self._secondary_box.pack_start(self._menu_box)
@@ -633,6 +647,18 @@ class Invoker(gobject.GObject):
                rect.x + rect.width <= self._screen_area.width and \
                rect.y + rect.height <= self._screen_area.height
 
+    def _get_area_in_screen(self, rect):
+        """Return area of rectangle visible in the screen"""
+
+        x1 = max(rect.x, self._screen_area.x)
+        y1 = max(rect.y, self._screen_area.y)
+        x2 = min(rect.x + rect.width,
+                self._screen_area.x + self._screen_area.width)
+        y2 = min(rect.y + rect.height,
+                self._screen_area.y + self._screen_area.height)
+
+        return (x2 - x1) * (y2 - y1)
+
     def _get_alignments(self):
         if self._position_hint is self.AT_CURSOR:
             return [(0.0, 0.0, 1.0, 1.0),
@@ -650,20 +676,64 @@ class Invoker(gobject.GObject):
             return None
 
     def get_position(self, palette_dim):
-        for alignment in self._get_alignments():
-            rect = self._get_position_for_alignment(alignment, palette_dim)
-            if self._in_screen(rect):
-                break
-
-        return rect
+        alignment = self.get_alignment(palette_dim)
+        return self._get_position_for_alignment(alignment, palette_dim)
 
     def get_alignment(self, palette_dim):
+        best_alignment = None
+        best_area = -1
         for alignment in self._get_alignments():
-            rect = self._get_position_for_alignment(alignment, palette_dim)
-            if self._in_screen(rect):
-                break
+            pos = self._get_position_for_alignment(alignment, palette_dim)
+            if self._in_screen(pos):
+                return alignment
 
-        return alignment
+            area = self._get_area_in_screen(pos)
+            if area > best_area:
+                best_alignment = alignment
+                best_area = area
+
+        # Palette horiz/vert alignment
+        ph = best_alignment[0]
+        pv = best_alignment[1]
+
+        # Invoker horiz/vert alignment
+        ih = best_alignment[2]
+        iv = best_alignment[3]
+
+        rect = self.get_rect()
+        screen_area = self._screen_area
+
+        if best_alignment in self.LEFT or best_alignment in self.RIGHT:
+            dtop = rect.y - screen_area.y
+            dbottom = screen_area.y + screen_area.height - rect.y - rect.width
+
+            iv = 0
+
+            # Set palette_valign to align to screen on the top
+            if dtop > dbottom:
+                pv = -float(dtop) / palette_dim[1]
+
+            # Set palette_valign to align to screen on the bottom
+            else:
+                pv = -float(palette_dim[1] - dbottom - rect.height) \
+                        / palette_dim[1]
+
+        else:
+            dleft = rect.x - screen_area.x
+            dright = screen_area.x + screen_area.width - rect.x - rect.width
+
+            ih = 0
+
+            # Set palette_halign to align to screen on left
+            if dleft > dright:
+                ph = -float(dleft) / palette_dim[0]
+
+            # Set palette_halign to align to screen on right
+            else:
+                ph = -float(palette_dim[0] - dright - rect.width) \
+                        / palette_dim[0]
+
+        return (ph, pv, ih, iv)
 
     def has_rectangle_gap(self):
         return False
