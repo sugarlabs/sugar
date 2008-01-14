@@ -1,0 +1,203 @@
+This is sugar packaged for Debian GNU systems.
+
+Upstream source: git://dev.laptop.org
+
+Upstream author: Red Hat, Inc.
+
+Files: debian/*
+Copyright: © 2007 Jonas Smedegaard <dr@jones.dk>
+License: GPL-2+
+ The Debian packaging information is under the GPL, version 2 or later.
+
+Files: shell/*, services/shell/bundleregistry.py
+Copyright: © 2006-2007, Red Hat, Inc.
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+Files: shell/intro/*, shell/model/devices/device*.py,
+ shell/view/frame/eventarea.py, shell/view/home/proc_smaps.py,
+ shell/view/home/transitionbox.py
+Copyright: © 2007, Red Hat, Inc.
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+Files: tests/*, lib/sugar/bundle/* lib/sugar/graphics/*,
+ lib/sugar/presence/*, lib/sugar/sugar-preview.[ch], lib/sugar/wm.py,
+ shell/view/home/*layout.py, shell/logsmanager.py,
+ shell/controlpanel/control.py, shell/view/home/spreadlayout.py
+Copyright: © 2007, Red Hat, Inc.
+License: LGPL-2+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later version.
+
+Files: lib/sugar/activity/*, lib/sugar/_sugarextmodule.c,
+ lib/sugar/bundle/__init__.py, lib/sugar/env.py,
+ lib/sugar/graphics/__init__.py, lib/sugar/graphics/icon.py,
+ lib/sugar/graphics/roundbox.py, lib/sugar/graphics/xocolor.py,
+ lib/sugar/network.py, lib/sugar/presence/__init__.py,
+ lib/sugar/profile.py, lib/sugar/sugar-address-entry.[ch]
+ lib/sugar/sugar-key-grabber.[ch], lib/sugar/sugar-menu.[ch]
+ lib/sugar/util.py, shell/view/home/snowflakelayout.py
+Copyright: © 2006-2007, Red Hat, Inc.
+License: LGPL-2+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later version.
+
+Files: bin/sugar-launch, maint-helper.py
+Copyright: © 2007, Red Hat, Inc.
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+Files: bin/sugar-activity, bin/sugar-shell, sugar-emulator
+ services/shell/clipboardservice.py
+Copyright: © 2006, Red Hat, Inc.
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+Files: services/shell/activityregistryservice.py
+Copyright: © 2007, One Laptop Per Child
+	   © 2006-2007, Red Hat, Inc
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+Files: shell/view/clipboardicon.py
+Copyright: © 2007, One Laptop Per Child
+	   © 2007, Red Hat, Inc
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+Files: services/shell/sugar-shell-service, tests/lib/test_mime.py
+Copyright: © 2007, One Laptop Per Child
+	   © 2006, Red Hat, Inc
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+Files: services/shell/__init__.py, services/shell/clipboardobject.py,
+ shell/view/clipboardmenu.py, shell/view/frame/clipboardbox.py,
+ shell/view/frame/clipboardpanelwindow.py
+Copyright: © 2007, One Laptop Per Child
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+Files: lib/sugar/eggaccelerators.c
+Copyright: © 2002 Red Hat, Inc.
+	   © 1998, 2001 Tim Janik
+License: LGPL-2+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Library General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later version.
+
+Files: lib/sugar/eggaccelerators.h
+Copyright: © 2002 Red Hat, Inc.
+License: LGPL-2+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Library General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later version.
+
+Files: bin/sugar-control-panel, lib/sugar/clipboard/*,
+ lib/sugar/datastore/*, lib/sugar/graphics/alert.py,
+ lib/sugar/graphics/combobox.py, lib/sugar/graphics/iconentry.py,
+ lib/sugar/graphics/objectchooser.py, lib/sugar/graphics/tray.py,
+ shell/controlpanel/control.py, shell/view/frame/activitybutton.py,
+ tests/graphics/ticket2999.py, tests/graphics/ticket3000.py
+Copyright: © 2007, One Laptop Per Child
+License: LGPL-2+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later version.
+
+Files: lib/sugar/graphics/radiotoolbutton.py
+Copyright: © 2007, One Laptop Per Child
+	   © 2007 Red Hat, Inc
+License: LGPL-2+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later version.
+
+Files: lib/sugar/activity/registry.py,
+ lib/sugar/datastore/dbus_helpers.py
+Copyright: © 2007, One Laptop Per Child
+	   © 2006-2007 Red Hat, Inc
+License: LGPL-2+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later version.
+
+Files: data/em.py
+Copyright: © 2002-2003 Erik Max Francis <max@alcyone.com>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+Files: shell/model/homeactivity.py, shell/model/homemodel.py
+Copyright: © 2006-2007 Owen Williams.
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+Files: lib/sugar/presence/tubeconn.py
+Copyright: © 2007 Collabora Ltd. <http://www.collabora.co.uk/>
+License: LGPL-2.1+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published
+ by the Free Software Foundation; either version 2.1 of the License, or
+ (at your option) any later version.
+
+Files: lib/sugar/sexy-icon-entry.[ch]
+Copyright: © 2004-2006 Christian Hammond
+License: LGPL-2+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later version.
+
+Files: lib/sugar/graphics/menuitem.py, lib/sugar/graphics/notebook.py,
+ lib/sugar/graphics/palette.py, shell/view/frame/frameinvoker.py
+Copyright: © 2007, Eduardo Silva <edsiper@gmail.com>
+License: LGPL-2+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later version.
+
+On Debian systems, the complete text of the GNU General Public License
+can be found in file "/usr/share/common-licenses/GPL", and the complete
+text of the GNU Lesser General Public License can be found in file
+"/usr/share/common-licenses/LGPL"..

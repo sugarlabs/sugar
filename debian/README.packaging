@@ -1,0 +1,23 @@
+Packaging hints
+===============
+
+This file contains useful info for (re)building the packaging of the
+source.
+
+Packaged using GIT
+------------------
+
+This packaging is maintained with the use of GIT.
+
+Upstream source is in the "upstream" branch, and Debian-related
+packaging in "master".
+
+The following commands can be used to fetch and build the package:
+
+aptitude install git-buildpackage
+git clone git://git.debian.org/git/collab-maint/sugar
+cd sugar
+git fetch origin upstream:upstream
+git-buildpackage
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 11 Dec 2007 15:40:36 +0100

@@ -1,0 +1,113 @@
+CDBS tweak
+==========
+
+CDBS is great. In some corner cases, however, some parts of CDBS
+sometimes needs a few tweaks to work optimally.
+
+This is a collection of such tweaks. The goal is for these tweaks to be
+absorbed into upstream CDBS. We just haven't found time yet to discuss
+them at the CDBS developers' mailinglist. And possible we do not all
+agree that the tweaks are so great - therefore this "staging area".
+
+If you found this file below debian/ subdir in a source package, most
+probably only a subset of the below mentioned tweaks are relevant and
+have been shipped with the package. The repository of all these tweaks
+is here: svn://svn.debian.org/build-common/people/js/overlay/
+
+Web access: http://svn.debian.org/wsvn/build-common/people/js/overlay/
+
+
+
+Improved support for cdbs-autoupdate
+------------------------------------
+
+CDBS invented a cool way to help keep build-dependencies up-to-date.
+
+It is disabled by default, as messing with debian/rules at build time
+violates Debian Policy: A build must not change conditions for building.
+
+Some consider this CDBS feature evil.
+
+Some enable the feature within a package, and gets smacked by ftp-master
+or others (there's even a lintian check to complain about it now).
+
+This tweak enables the feature when the build environment contains the
+non-default hint "cdbs-autoupdate" in the DEB_BUILD_OPTIONS variable.
+
+
+
+New buildinfo rule
+------------------
+
+See package description for "buildinfo" for more info.
+
+
+
+Improved support for multiple compilations
+------------------------------------------
+
+Create and clean builddir _after_ resolving per-package DEB_BUILDDIR.
+
+Honour per-package DEB_BUILDDIR in makefile class.
+
+
+
+Various improvements to python-distutils class
+----------------------------------------------
+
+Use full path to python interpreter (Python Policy section 1.3.2).
+
+Add CDBS_BUILD_DEPENDS to old policy method.
+
+Fix CDBS_BUILD_DEPENDS in new policy methods to only depend on debhelper
+when actually used.
+
+Fix DEB_PYTHON_SIMPLE_PACKAGES sometimes installed twice (and only one
+of them honouring DEB_PYTHON_COMPILE_VERSION).
+
+Unify install path using new DEB_PYTHON_DESTDIR.
+
+Quote install path.
+
+
+
+New copyright-check rule
+------------------------
+
+Refuse to build if the source is found to contain different copyright
+info than earlier builds.
+
+
+
+New kernelpatches rule
+----------------------
+
+Small wrapper around dh-kpatches, taking care of build-dependencies too.
+
+
+
+New routines for handling upstream tarball
+------------------------------------------
+
+Rules and variables to help downloading, validating and repackaging
+upstream tarball.
+
+Implements the rules print-version and get-orig-source commonly used
+for group-maintained packages with Debian-specific patches maintained in
+SVN or some other VCS, and automated fetching virgin upstream tarball
+(possibly massaged after download e.g. to strip non-DFSG material).
+
+
+
+Support for custom BTS info
+---------------------------
+
+Include BTS control info found in debian/*.bts files, or alternatively
+redirect bug reports to the email address defined in DEB_BTS_EMAIL.
+
+
+
+New dict class
+--------------
+
+Rules for packaging ispell, aspell, myspell and wordlist dictionaries.

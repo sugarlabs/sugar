@@ -1,0 +1,34 @@
+#!/usr/bin/make -f
+# -*- mode: makefile; coding: utf-8 -*-
+# Copyright © 2007 Jonas Smedegaard <dr@jones.dk>
+
+# NB! Local CDBS tweaks in use. More info in README.cdbs-tweaks
+DEB_AUTO_UPDATE_ACLOCAL = 1.10
+DEB_AUTO_UPDATE_AUTOMAKE = 1.10
+DEB_AUTO_UPDATE_AUTOCONF = 2.59
+DEB_AUTO_UPDATE_LIBTOOL = pre
+include /usr/share/cdbs/1/class/autotools.mk
+include /usr/share/cdbs/1/rules/debhelper.mk
+include debian/cdbs/1/rules/copyright-check.mk
+include debian/cdbs/1/rules/buildinfo.mk
+
+# Workaround: can't pass --install to autotools or add extra hooks through CDBS
+pre-build::
+	[ -e py-compile ] || autoreconf -i
+	[ -e m4/intltool.m4 ] || intltoolize -c
+
+# Cleanup automade files
+clean::
+	rm -f m4/intltool.m4 intltool-extract.in intltool-merge.in intltool-update.in po/Makefile.in.in
+	rm -f py-compile
+	rm -f aclocal.m4 compile config.guess config.sub config.log configure depcomp install-sh ltmain.sh missing libtool
+	find -name Makefile.in -exec rm '{}' ';'
+
+binary-install/sugar-base::
+	dh_pycentral
+
+# Needed by upstream build process
+CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, gettext, intltool, shared-mime-info
+
+# Needed for our packaging routines
+CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), python-central
