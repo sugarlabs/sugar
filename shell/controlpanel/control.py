@@ -307,33 +307,31 @@ def get_radio():
     bus = dbus.SystemBus()
     proxy = bus.get_object(NM_SERVICE_NAME, NM_SERVICE_PATH)
     nm = dbus.Interface(proxy, NM_SERVICE_IFACE)
-    state = nm.state()
-    if state:
-        if state == NM_ASLEEP:
-            return _('off')
-        else:
-            return _('on')
-    return _('State is unknown.')
-
+    state = nm.getWirelessEnabled()	
+    if state == 0:
+        return _('off')
+    elif state == 1:
+        return _('on')
+    else:
+        return _('State is unknown.')
+	
 def print_radio():
     print get_radio()
     
 def set_radio(state):
     """Turn Radio 'on' or 'off'
     state : 'on/off'
-    """
-
-    # TODO: NM 0.6.x does not return a reply yet
-    # so we ignore it for the moment
-    
-    if state == 'on':        
-        dbus.SystemBus().call_async(NM_SERVICE_NAME, NM_SERVICE_PATH,
-                                    NM_SERVICE_IFACE, 'wake', '', (),
-                                    None, None)
+    """    
+    if state == 'on':
+        bus = dbus.SystemBus()
+        proxy = bus.get_object(NM_SERVICE_NAME, NM_SERVICE_PATH)
+        nm = dbus.Interface(proxy, NM_SERVICE_IFACE)
+        nm.setWirelessEnabled(True)        
     elif state == 'off':
-        dbus.SystemBus().call_async(NM_SERVICE_NAME, NM_SERVICE_PATH,
-                                    NM_SERVICE_IFACE, 'sleep', '', (),
-                                    None, None)
+        bus = dbus.SystemBus()
+        proxy = bus.get_object(NM_SERVICE_NAME, NM_SERVICE_PATH)
+        nm = dbus.Interface(proxy, NM_SERVICE_IFACE)
+        nm.setWirelessEnabled(False)
     else:        
         print (_("Error in specified radio argument use on/off."))
 
