@@ -253,7 +253,7 @@ msgstr "TAMAM"
 
 #: ../shell/controlpanel/control.py:213
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr "Değişiklikleri kaydetmek için Şekeri yeniden başlatmalısınız"
+msgstr "Değişiklikleri kaydetmek için Şekeri yeniden başlatmalısınız.\n"
 
 #: ../shell/controlpanel/control.py:267
 msgid "Error in specified color modifiers."
