@@ -52,6 +52,7 @@ _TIMEZONE_CONFIG = '/etc/sysconfig/clock'
 _LANGUAGES = {
     'Afrikaans/South_Africa': 'af_ZA',
     'Albanian': 'sq_AL.UTF-8',
+    'Amharic/Ethiopian': 'am_ET.UTF-8',
     'Arabic/Algeria': 'ar_DZ.UTF-8',
     'Arabic/Bahrain': 'ar_BH.UTF-8',
     'Arabic/Egypt': 'ar_EG.UTF-8',
@@ -118,10 +119,12 @@ _LANGUAGES = {
     'Greek': 'el_GR.UTF-8',  
     'Greenlandic/Greenland': 'kl_GL.UTF-8',  
     'Gujarati/India': 'gu_IN.UTF-8',  
+    'Hausa/Nigeria': 'ha_NG.UTF-8',
     'Hebrew/Israel': 'he_IL.UTF-8',  
     'Hindi/India': 'hi_IN.UTF-8',  
     'Hungarian': 'hu_HU.UTF-8',  
     'Icelandic': 'is_IS.UTF-8',  
+    'Igbo/Nigeria': 'ig_NG.UTF-8',
     'Indonesian': 'id_ID.UTF-8',  
     'Irish': 'ga_IE.UTF-8',  
     'Italian/Italy': 'it_IT.UTF-8',  
@@ -135,7 +138,9 @@ _LANGUAGES = {
     'Malay/Malaysia': 'ms_MY.UTF-8',  
     'Maltese/malta': 'mt_MT.UTF-8',  
     'Manx/Britain': 'gv_GB.UTF-8',  
-    'Marathi/India': 'mr_IN.UTF-8',  
+    'Marathi/India': 'mr_IN.UTF-8',
+    'Mongolian': 'mn_MN.UTF-8',
+    'Nepali': 'ne_NP.UTF-8',
     'Northern/Norway': 'se_NO',  
     'Norwegian': 'nb_NO.UTF-8',  
     'Norwegian,/Norway': 'nn_NO.UTF-8',  
@@ -185,7 +190,8 @@ _LANGUAGES = {
     'Uzbek/Uzbekistan': 'uz_UZ',
     'Walloon/Belgium': 'wa_BE@euro',
     'Welsh/Great_Britain': 'cy_GB.UTF-8',  
-    'Xhosa/South_Africa': 'xh_ZA.UTF-8',  
+    'Xhosa/South_Africa': 'xh_ZA.UTF-8',
+    'Yoruba/Nigeria': 'yo_NG.UTF-8',
     'Zulu/South_Africa': 'zu_ZA.UTF-8'
     }
 
