@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-21 00:38+0100\n"
+"POT-Creation-Date: 2007-12-11 21:39+0530\n"
 "PO-Revision-Date: 2007-12-02 14:13+0200\n"
 "Last-Translator: Adi Roiban <adi@roiban.ro>\n"
 "Language-Team: RO <ubuntu-ro@lists.ubuntu.com>\n"
@@ -50,12 +50,11 @@ msgstr "Adaugă prieten"
 msgid "Invite to %s"
 msgstr "Invită la discuţia „%s”"
 
-#: ../shell/view/clipboardmenu.py:59
-#: ../shell/view/frame/activitybutton.py:58
+#: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
 msgstr "Şterge"
 
-#: ../shell/view/clipboardmenu.py:64
+#: ../shell/view/clipboardmenu.py:63
 msgid "Open"
 msgstr "Deschide"
 
@@ -63,11 +62,11 @@ msgstr "Deschide"
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../shell/view/clipboardmenu.py:74
+#: ../shell/view/clipboardmenu.py:73
 msgid "Add to journal"
 msgstr "Adaugă la jurnal"
 
-#: ../shell/view/clipboardmenu.py:200
+#: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
 msgstr "Obiect clipboard: %s."
@@ -88,7 +87,7 @@ msgstr "Tip criptare:"
 msgid "Starting..."
 msgstr "Pornesc..."
 
-#: ../shell/view/home/activitiesdonut.py:104
+#: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
 msgid "Resume"
 msgstr "Reia"
 
@@ -101,15 +100,15 @@ msgstr "Opreşte"
 msgid "Screenshot"
 msgstr "Captură ecran"
 
-#: ../shell/view/home/HomeBox.py:158
+#: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
 msgstr "Reporneşte"
 
-#: ../shell/view/home/HomeBox.py:163
+#: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
 msgstr "Opreşte"
 
-#: ../shell/view/home/HomeBox.py:169
+#: ../shell/view/home/HomeBox.py:170
 msgid "Register"
 msgstr "Înregistrează"
 
@@ -117,15 +116,13 @@ msgstr "Înregistrează"
 #. priority over the normal wireless device.  NM doesn't have a "disconnect"
 #. method for a device either (for various reasons) so this doesn't
 #. have a good mapping
-#: ../shell/view/home/MeshBox.py:89
-#: ../shell/view/home/MeshBox.py:196
+#: ../shell/view/home/MeshBox.py:90 ../shell/view/home/MeshBox.py:197
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
 msgid "Disconnect..."
 msgstr "Deconectează..."
 
-#: ../shell/view/home/MeshBox.py:194
-#: ../shell/view/devices/network/mesh.py:37
+#: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
 #: ../shell/view/devices/network/mesh.py:62
 #: ../shell/view/devices/network/mesh.py:66
 msgid "Mesh Network"
@@ -208,24 +205,23 @@ msgstr "Lipeşte"
 msgid "%s Activity"
 msgstr "Activitatea %s"
 
-#: ../lib/sugar/activity/activity.py:813
+#: ../lib/sugar/activity/activity.py:820
 msgid "Keep error"
 msgstr "Eroare de stocare"
 
-#: ../lib/sugar/activity/activity.py:814
+#: ../lib/sugar/activity/activity.py:821
 msgid "Keep error: all changes will be lost"
 msgstr "Eroare de stocare: toate modificările vor fi pierdute"
 
-#: ../lib/sugar/activity/activity.py:817
+#: ../lib/sugar/activity/activity.py:824
 msgid "Don't stop"
 msgstr "Nu oprii"
 
-#: ../lib/sugar/activity/activity.py:820
+#: ../lib/sugar/activity/activity.py:827
 msgid "Stop anyway"
 msgstr "Opreşte oricum"
 
-#: ../lib/sugar/graphics/alert.py:164
-#: ../lib/sugar/graphics/alert.py:206
+#: ../lib/sugar/graphics/alert.py:164 ../lib/sugar/graphics/alert.py:206
 msgid "Cancel"
 msgstr "Anulează"
 
@@ -371,8 +367,7 @@ msgstr "Se modifică permisiunile pentru fusul orar: %s"
 msgid "Error timezone does not exist."
 msgstr "Eroare, fusul orar nu există."
 
-#: ../shell/controlpanel/control.py:418
-#: ../shell/controlpanel/control.py:438
+#: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
 #, python-format
 msgid "Could not access %s. Create standard settings."
 msgstr "Nu se poate accesa %s. Se crează configurările standard."
@@ -414,3 +409,15 @@ msgstr "Iniţiez o reţea de tip plasă simplă"
 #: ../shell/view/devices/network/mesh.py:124
 msgid "Unknown Mesh"
 msgstr "Reţea de tip plasă necunoscută"
+
+#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
+msgid "About this XO"
+msgstr ""
+
+#: ../shell/view/home/HomeBox.py:222
+msgid "Not available"
+msgstr ""
+
+#: ../shell/view/home/MeshBox.py:300
+msgid "Join"
+msgstr ""

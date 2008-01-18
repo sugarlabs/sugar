@@ -2,39 +2,38 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2007-12-28 09:43+0000\n"
+"Last-Translator: Thomas Hannen <tomhannen@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.0.1\n"
+"X-Generator: Pootle 1.0.2\n"
 
 #: ../shell/intro/intro.py:67
 msgid "Name:"
-msgstr ""
+msgstr "İsim"
 
 #: ../shell/intro/intro.py:96
 msgid "Click to change color:"
-msgstr ""
+msgstr "Rengini değiştirmek için tıklayın"
 
 #: ../shell/intro/intro.py:146
 msgid "Back"
-msgstr ""
+msgstr "Geri"
 
 #: ../shell/intro/intro.py:160
 msgid "Done"
-msgstr ""
+msgstr "Tamam"
 
 #: ../shell/intro/intro.py:163
 msgid "Next"
-msgstr ""
+msgstr "Sonraki"
 
 #: ../shell/view/BuddyMenu.py:84
 msgid "Remove friend"
@@ -51,24 +50,25 @@ msgstr ""
 
 #: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
-msgstr ""
+msgstr "Çıkart"
 
 #: ../shell/view/clipboardmenu.py:63
 msgid "Open"
-msgstr ""
+msgstr "Aç"
 
+# Also "günlüğe ekle" could be used
 #. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
 #: ../shell/view/clipboardmenu.py:73
 msgid "Add to journal"
-msgstr ""
+msgstr "Günceye ekle"
 
 #: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
-msgstr ""
+msgstr "Panodaki nesne"
 
 #: ../shell/hardware/keydialog.py:149
 msgid "Key Type:"
@@ -84,40 +84,41 @@ msgstr ""
 
 #: ../shell/view/home/activitiesdonut.py:90
 msgid "Starting..."
-msgstr ""
+msgstr "Başlıyor..."
 
 #: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
 msgid "Resume"
-msgstr ""
+msgstr "Yeniden başlat"
 
 #: ../shell/view/home/activitiesdonut.py:111
 #: ../lib/sugar/activity/activity.py:128
 msgid "Stop"
-msgstr ""
+msgstr "Durdur"
 
 #: ../shell/view/Shell.py:276
 msgid "Screenshot"
-msgstr ""
+msgstr "Ekran resmi"
 
 #: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
-msgstr ""
+msgstr "Yeniden başlat"
 
 #: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
-msgstr ""
+msgstr "Kapat"
 
 #: ../shell/view/home/HomeBox.py:170
 msgid "Register"
-msgstr ""
+msgstr "Kaydol"
 
+# "Bu xo hakkında" could be used as well
 #: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
 msgid "About this XO"
-msgstr ""
+msgstr "Bilgisayar hakkında"
 
 #: ../shell/view/home/HomeBox.py:222
 msgid "Not available"
-msgstr ""
+msgstr "Kullanılamaz"
 
 #. Only show disconnect when there's a mesh device, because mesh takes
 #. priority over the normal wireless device.  NM doesn't have a "disconnect"
@@ -127,89 +128,91 @@ msgstr ""
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
 msgid "Disconnect..."
-msgstr ""
+msgstr "Bağlantıyı kes"
 
 #: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
 #: ../shell/view/devices/network/mesh.py:62
 #: ../shell/view/devices/network/mesh.py:66
 msgid "Mesh Network"
-msgstr ""
+msgstr "Şebeke bağlantısı"
 
 #: ../shell/view/home/MeshBox.py:300
 msgid "Join"
-msgstr ""
+msgstr "Katıl"
 
 #: ../shell/view/devices/battery.py:38
 msgid "My Battery life"
-msgstr ""
+msgstr "Pil ömrü"
 
 #: ../shell/view/devices/battery.py:94
 msgid "Battery charging"
-msgstr ""
+msgstr "Pil şarj oluyor"
 
 #: ../shell/view/devices/battery.py:96
 msgid "Battery discharging"
-msgstr ""
+msgstr "Pil kullanımda"
 
 #: ../shell/view/devices/battery.py:98
 msgid "Battery fully charged"
-msgstr ""
+msgstr "Pil şarj oldu"
 
 #: ../shell/view/devices/network/wireless.py:61
 msgid "Disconnected"
-msgstr ""
+msgstr "Bağlantı kesildi"
 
 #: ../shell/view/devices/network/wireless.py:131
 msgid "Channel"
-msgstr ""
+msgstr "Kanal"
 
 #: ../shell/view/frame/zoomtoolbar.py:42
 msgid "Neighborhood"
-msgstr ""
+msgstr "Komşular"
 
 #: ../shell/view/frame/zoomtoolbar.py:54
 msgid "Group"
-msgstr ""
+msgstr "Grup"
 
 #: ../shell/view/frame/zoomtoolbar.py:66
 msgid "Home"
-msgstr ""
+msgstr "Ev"
 
 #: ../shell/view/frame/zoomtoolbar.py:78
 msgid "Activity"
-msgstr ""
+msgstr "Etkinlik"
 
+# Name comes before translation eg "John ile paylaş"
 #: ../lib/sugar/activity/activity.py:111
 msgid "Share with:"
-msgstr ""
+msgstr " ....ile paylaş"
 
+# Kişisel can be used as in personal
 #: ../lib/sugar/activity/activity.py:113
 msgid "Private"
-msgstr ""
+msgstr "Özel"
 
 #: ../lib/sugar/activity/activity.py:114
 msgid "My Neighborhood"
-msgstr ""
+msgstr "Komşularım"
 
 #: ../lib/sugar/activity/activity.py:122
 msgid "Keep"
-msgstr ""
+msgstr "Sakla"
 
 #: ../lib/sugar/activity/activity.py:241
 msgid "Undo"
-msgstr ""
+msgstr "Geri al"
 
 #: ../lib/sugar/activity/activity.py:246
 msgid "Redo"
-msgstr ""
+msgstr "Yeniden yap"
 
 #: ../lib/sugar/activity/activity.py:256
 msgid "Copy"
-msgstr ""
+msgstr "Kopyala"
 
 #: ../lib/sugar/activity/activity.py:261
 msgid "Paste"
-msgstr ""
+msgstr "Yapıştır"
 
 #: ../lib/sugar/activity/activity.py:450
 #, python-format
@@ -218,55 +221,55 @@ msgstr ""
 
 #: ../lib/sugar/activity/activity.py:820
 msgid "Keep error"
-msgstr ""
+msgstr "Saklanamadı "
 
 #: ../lib/sugar/activity/activity.py:821
 msgid "Keep error: all changes will be lost"
-msgstr ""
+msgstr "Saklanamadı: Tüm değişiklikler kaybolacak"
 
 #: ../lib/sugar/activity/activity.py:824
 msgid "Don't stop"
-msgstr ""
+msgstr "Durdurma"
 
 #: ../lib/sugar/activity/activity.py:827
 msgid "Stop anyway"
-msgstr ""
+msgstr "Farketmez"
 
 #: ../lib/sugar/graphics/alert.py:164 ../lib/sugar/graphics/alert.py:206
 msgid "Cancel"
-msgstr ""
+msgstr "Vazgeç"
 
 #: ../lib/sugar/graphics/alert.py:168
 msgid "Ok"
-msgstr ""
+msgstr "Tamam"
 
 #: ../lib/sugar/graphics/alert.py:216
 msgid "Continue"
-msgstr ""
+msgstr "Devam et"
 
 #: ../lib/sugar/graphics/alert.py:244
 msgid "OK"
-msgstr ""
+msgstr "TAMAM"
 
 #: ../shell/controlpanel/control.py:213
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr ""
+msgstr "Değişiklikleri kaydetmek için Şekeri yeniden başlatmalısınız"
 
 #: ../shell/controlpanel/control.py:267
 msgid "Error in specified color modifiers."
-msgstr ""
+msgstr "Seçili renk düzenleyicilerinde hata"
 
 #: ../shell/controlpanel/control.py:270
 msgid "Error in specified colors."
-msgstr ""
+msgstr "Seçili renklerde hata"
 
 #: ../shell/controlpanel/control.py:307
 msgid "off"
-msgstr ""
+msgstr "Kapalı"
 
 #: ../shell/controlpanel/control.py:309
 msgid "on"
-msgstr ""
+msgstr "Açık"
 
 #: ../shell/controlpanel/control.py:310
 msgid "State is unknown."

@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-21 00:38+0100\n"
-"PO-Revision-Date: 2007-12-05 09:29+0000\n"
-"Last-Translator: Jeroen ten Berge <jeroen.ten.berge@vialis.nl>\n"
+"POT-Creation-Date: 2007-12-11 21:39+0530\n"
+"PO-Revision-Date: 2007-12-15 18:29+0000\n"
+"Last-Translator: Tom Van Braeckel <tomvanbraeckel@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,12 +50,12 @@ msgstr "Maak kennis"
 msgid "Invite to %s"
 msgstr "Voor %s uitnodigen"
 
-#: ../shell/view/clipboardmenu.py:59 ../shell/view/frame/activitybutton.py:58
+#: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
 msgstr "Verwijder"
 
 # Context onduidelijk
-#: ../shell/view/clipboardmenu.py:64
+#: ../shell/view/clipboardmenu.py:63
 msgid "Open"
 msgstr "Openen"
 
@@ -63,12 +63,12 @@ msgstr "Openen"
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../shell/view/clipboardmenu.py:74
+#: ../shell/view/clipboardmenu.py:73
 msgid "Add to journal"
 msgstr "Toevoegen aan journaal"
 
 # alternatief voor object nodig ?
-#: ../shell/view/clipboardmenu.py:200
+#: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
 msgstr "Kladbord object: %s."
@@ -92,7 +92,7 @@ msgid "Starting..."
 msgstr "Starten..."
 
 # Tja, suggestie voor een nettere vertaling is van harte welkom !
-#: ../shell/view/home/activitiesdonut.py:104
+#: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
 msgid "Resume"
 msgstr "Wakker worden"
 
@@ -106,15 +106,15 @@ msgid "Screenshot"
 msgstr "Schermafdruk"
 
 # Kortere suggestie ?
-#: ../shell/view/home/HomeBox.py:158
+#: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
 msgstr "Opnieuw opstarten"
 
-#: ../shell/view/home/HomeBox.py:163
+#: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
 msgstr "Uitschakelen"
 
-#: ../shell/view/home/HomeBox.py:169
+#: ../shell/view/home/HomeBox.py:170
 msgid "Register"
 msgstr "Registreren"
 
@@ -122,14 +122,14 @@ msgstr "Registreren"
 #. priority over the normal wireless device.  NM doesn't have a "disconnect"
 #. method for a device either (for various reasons) so this doesn't
 #. have a good mapping
-#: ../shell/view/home/MeshBox.py:89 ../shell/view/home/MeshBox.py:196
+#: ../shell/view/home/MeshBox.py:90 ../shell/view/home/MeshBox.py:197
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
 msgid "Disconnect..."
 msgstr "Afkoppelen..."
 
 # Made it "XO's in the neighbourhood", i think it's more selfexplainatory, but maybe we'll reconsider...
-#: ../shell/view/home/MeshBox.py:194 ../shell/view/devices/network/mesh.py:37
+#: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
 #: ../shell/view/devices/network/mesh.py:62
 #: ../shell/view/devices/network/mesh.py:66
 msgid "Mesh Network"
@@ -213,19 +213,19 @@ msgstr "Plak"
 msgid "%s Activity"
 msgstr "%s Activiteit"
 
-#: ../lib/sugar/activity/activity.py:813
+#: ../lib/sugar/activity/activity.py:820
 msgid "Keep error"
 msgstr "Bewaar fout"
 
-#: ../lib/sugar/activity/activity.py:814
+#: ../lib/sugar/activity/activity.py:821
 msgid "Keep error: all changes will be lost"
 msgstr "Bewaar fout: alle wijzigingen zullen verloren gaan"
 
-#: ../lib/sugar/activity/activity.py:817
+#: ../lib/sugar/activity/activity.py:824
 msgid "Don't stop"
 msgstr "Niet stoppen"
 
-#: ../lib/sugar/activity/activity.py:820
+#: ../lib/sugar/activity/activity.py:827
 msgid "Stop anyway"
 msgstr "Stop alsnog"
 
@@ -243,7 +243,7 @@ msgstr "Doorgaan"
 
 #: ../lib/sugar/graphics/alert.py:244
 msgid "OK"
-msgstr "Oke"
+msgstr "OK"
 
 #: ../lib/sugar/graphics/objectchooser.py:175
 #, python-format
@@ -417,3 +417,15 @@ msgstr "Starten omgeving"
 #: ../shell/view/devices/network/mesh.py:124
 msgid "Unknown Mesh"
 msgstr "Onbekende omgeving"
+
+#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
+msgid "About this XO"
+msgstr "Over deze XO"
+
+#: ../shell/view/home/HomeBox.py:222
+msgid "Not available"
+msgstr "Niet beschikbaar"
+
+#: ../shell/view/home/MeshBox.py:300
+msgid "Join"
+msgstr "Meedoen"

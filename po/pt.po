@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-21 00:38+0100\n"
-"PO-Revision-Date: 2007-12-05 18:21+0000\n"
+"POT-Creation-Date: 2007-12-11 21:39+0530\n"
+"PO-Revision-Date: 2007-12-13 05:40+0000\n"
 "Last-Translator: Ivo Emanuel Gonçalves <justivo@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -48,11 +48,11 @@ msgstr "Fazer amigo"
 msgid "Invite to %s"
 msgstr "Convidar para %s"
 
-#: ../shell/view/clipboardmenu.py:59 ../shell/view/frame/activitybutton.py:58
+#: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
 msgstr "Remover"
 
-#: ../shell/view/clipboardmenu.py:64
+#: ../shell/view/clipboardmenu.py:63
 msgid "Open"
 msgstr "Abrir"
 
@@ -60,11 +60,11 @@ msgstr "Abrir"
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../shell/view/clipboardmenu.py:74
+#: ../shell/view/clipboardmenu.py:73
 msgid "Add to journal"
 msgstr "Adicionar ao Diário"
 
-#: ../shell/view/clipboardmenu.py:200
+#: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
 msgstr "Objecto da barra lateral: %s."
@@ -85,7 +85,7 @@ msgstr "Tipo de Encriptação:"
 msgid "Starting..."
 msgstr "A começar..."
 
-#: ../shell/view/home/activitiesdonut.py:104
+#: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
 msgid "Resume"
 msgstr "Continuar"
 
@@ -98,15 +98,15 @@ msgstr "Parar"
 msgid "Screenshot"
 msgstr "Fotografia"
 
-#: ../shell/view/home/HomeBox.py:158
+#: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
 msgstr "Reiniciar"
 
-#: ../shell/view/home/HomeBox.py:163
+#: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
 msgstr "Desligar"
 
-#: ../shell/view/home/HomeBox.py:169
+#: ../shell/view/home/HomeBox.py:170
 msgid "Register"
 msgstr "Registar"
 
@@ -114,13 +114,13 @@ msgstr "Registar"
 #. priority over the normal wireless device.  NM doesn't have a "disconnect"
 #. method for a device either (for various reasons) so this doesn't
 #. have a good mapping
-#: ../shell/view/home/MeshBox.py:89 ../shell/view/home/MeshBox.py:196
+#: ../shell/view/home/MeshBox.py:90 ../shell/view/home/MeshBox.py:197
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
 msgid "Disconnect..."
 msgstr "Disconectar..."
 
-#: ../shell/view/home/MeshBox.py:194 ../shell/view/devices/network/mesh.py:37
+#: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
 #: ../shell/view/devices/network/mesh.py:62
 #: ../shell/view/devices/network/mesh.py:66
 msgid "Mesh Network"
@@ -203,19 +203,19 @@ msgstr "Colar"
 msgid "%s Activity"
 msgstr "%s Actividade"
 
-#: ../lib/sugar/activity/activity.py:813
+#: ../lib/sugar/activity/activity.py:820
 msgid "Keep error"
 msgstr "Guardar erro"
 
-#: ../lib/sugar/activity/activity.py:814
+#: ../lib/sugar/activity/activity.py:821
 msgid "Keep error: all changes will be lost"
 msgstr "Guardar erro: todas as alterações serão perdidas"
 
-#: ../lib/sugar/activity/activity.py:817
+#: ../lib/sugar/activity/activity.py:824
 msgid "Don't stop"
 msgstr "Não parar"
 
-#: ../lib/sugar/activity/activity.py:820
+#: ../lib/sugar/activity/activity.py:827
 msgid "Stop anyway"
 msgstr "Parar à mesma"
 
@@ -389,7 +389,7 @@ msgstr "À procura de uma Rede Mesh de Escola..."
 
 #: ../shell/view/devices/network/mesh.py:110
 msgid "Connected to an XO Mesh Portal"
-msgstr "Conectado a um Portal de Rede Mesh "
+msgstr "Conectado a um Portal de Rede Mesh"
 
 #: ../shell/view/devices/network/mesh.py:112
 msgid "Looking for an XO Mesh Portal..."
@@ -406,3 +406,15 @@ msgstr "A começar uma Rede Simples"
 #: ../shell/view/devices/network/mesh.py:124
 msgid "Unknown Mesh"
 msgstr "Rede Mesh Desconhecida"
+
+#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
+msgid "About this XO"
+msgstr "Acerca deste XO"
+
+#: ../shell/view/home/HomeBox.py:222
+msgid "Not available"
+msgstr "Não disponível"
+
+#: ../shell/view/home/MeshBox.py:300
+msgid "Join"
+msgstr "Unir"

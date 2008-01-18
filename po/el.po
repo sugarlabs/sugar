@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-21 00:38+0100\n"
-"PO-Revision-Date: 2007-12-08 21:56+0000\n"
-"Last-Translator: katerina kranou <katkran@gmail.com>\n"
+"POT-Creation-Date: 2007-12-11 21:39+0530\n"
+"PO-Revision-Date: 2007-12-17 20:30+0000\n"
+"Last-Translator: Γιάννης Κασκαμανίδης <ttnfy17@yahoo.gr>\n"
 "Language-Team: Greek <olpc@grnet.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,11 +48,11 @@ msgstr "Να γίνει φίλος/η"
 msgid "Invite"
 msgstr "Πρόσκληση"
 
-#: ../shell/view/clipboardmenu.py:59 ../shell/view/frame/activitybutton.py:58
+#: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
 msgstr "Διαγραφή"
 
-#: ../shell/view/clipboardmenu.py:64
+#: ../shell/view/clipboardmenu.py:63
 msgid "Open"
 msgstr "Άνοιγμα"
 
@@ -60,11 +60,11 @@ msgstr "Άνοιγμα"
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../shell/view/clipboardmenu.py:74
+#: ../shell/view/clipboardmenu.py:73
 msgid "Add to journal"
 msgstr "Προσθήκη στα πράγματά μου"
 
-#: ../shell/view/clipboardmenu.py:200
+#: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
 msgstr "Αντικείμενο προχείρου: %s."
@@ -95,13 +95,13 @@ msgstr "Εικόνα"
 
 #: ../shell/view/Shell.py:276
 msgid "Screenshot"
-msgstr "Εικόνα οθόνης"
+msgstr "Στιγμιότυπο οθόνης"
 
-#: ../shell/view/home/HomeBox.py:163
+#: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
-msgstr "Παύση λειτουργίας"
+msgstr "Τερματισμός λειτουργίας"
 
-#: ../shell/view/home/MeshBox.py:194 ../shell/view/devices/network/mesh.py:37
+#: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
 #: ../shell/view/devices/network/mesh.py:62
 #: ../shell/view/devices/network/mesh.py:66
 msgid "Mesh Network"
@@ -139,7 +139,7 @@ msgstr "Σταμάτησε"
 #: ../lib/sugar/activity/activity.py:450
 #, python-format
 msgid "%s Activity"
-msgstr "%s Δραστηριότητα"
+msgstr "Δραστηριότητα %s"
 
 #: ../shell/view/BuddyMenu.py:109
 #, python-format
@@ -147,31 +147,30 @@ msgid "Invite to %s"
 msgstr "Πρόσκληση σε %s"
 
 #: ../shell/hardware/keydialog.py:149
-#, fuzzy
 msgid "Key Type:"
-msgstr "Τύπος κλειδιού"
+msgstr "Τύπος κλειδιού:"
 
 #: ../shell/hardware/keydialog.py:169
 msgid "Authentication Type:"
-msgstr "Είδος πιστοποίησης"
+msgstr "Είδος πιστοποίησης:"
 
 #: ../shell/hardware/keydialog.py:250
 msgid "Encryption Type:"
-msgstr "Είδος κρυπτογράφησης"
+msgstr "Είδος κρυπτογράφησης:"
 
 #: ../shell/view/home/activitiesdonut.py:90
 msgid "Starting..."
-msgstr "Αρχή..."
+msgstr "Γίνεται εκκίνηση..."
 
-#: ../shell/view/home/activitiesdonut.py:104
+#: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
 msgid "Resume"
-msgstr "Επανάληψη"
+msgstr "Συνέχιση"
 
-#: ../shell/view/home/HomeBox.py:158
+#: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
 msgstr "Επανεκκίνηση"
 
-#: ../shell/view/home/HomeBox.py:169
+#: ../shell/view/home/HomeBox.py:170
 msgid "Register"
 msgstr "Εγγραφή"
 
@@ -179,7 +178,7 @@ msgstr "Εγγραφή"
 #. priority over the normal wireless device.  NM doesn't have a "disconnect"
 #. method for a device either (for various reasons) so this doesn't
 #. have a good mapping
-#: ../shell/view/home/MeshBox.py:89 ../shell/view/home/MeshBox.py:196
+#: ../shell/view/home/MeshBox.py:90 ../shell/view/home/MeshBox.py:197
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
 msgid "Disconnect..."
@@ -195,16 +194,15 @@ msgstr "Κανάλι"
 
 #: ../lib/sugar/activity/activity.py:111
 msgid "Share with:"
-msgstr "Κοινή χρήση με"
+msgstr "Κοινή χρήση με:"
 
 #: ../lib/sugar/activity/activity.py:113
 msgid "Private"
 msgstr "Προσωπικό"
 
 #: ../lib/sugar/activity/activity.py:114
-#, fuzzy
 msgid "My Neighborhood"
-msgstr "Γειτονιά"
+msgstr "Η γειτονιά μου"
 
 #: ../lib/sugar/activity/activity.py:241
 msgid "Undo"
@@ -222,26 +220,25 @@ msgstr "Αντιγραφή"
 msgid "Paste"
 msgstr "Επικόλληση"
 
-#: ../lib/sugar/activity/activity.py:813
-#, fuzzy
+#: ../lib/sugar/activity/activity.py:820
 msgid "Keep error"
 msgstr "Διατήρηση σφάλματος"
 
-#: ../lib/sugar/activity/activity.py:814
+#: ../lib/sugar/activity/activity.py:821
 msgid "Keep error: all changes will be lost"
 msgstr "Διατήρηση σφάλματος: όλες οι αλλαγές θα χαθούν"
 
-#: ../lib/sugar/activity/activity.py:817
+#: ../lib/sugar/activity/activity.py:824
 msgid "Don't stop"
-msgstr "Μη σταματάτε"
+msgstr "Να μην σταματήσει"
 
-#: ../lib/sugar/activity/activity.py:820
+#: ../lib/sugar/activity/activity.py:827
 msgid "Stop anyway"
-msgstr "Σταματήστε οπωσδήποτε"
+msgstr "Σταμάτησε ούτως ή άλλως"
 
 #: ../lib/sugar/graphics/alert.py:164 ../lib/sugar/graphics/alert.py:206
 msgid "Cancel"
-msgstr "Άκυρο"
+msgstr "Ακύρωση"
 
 #: ../lib/sugar/graphics/alert.py:168
 msgid "Ok"
@@ -249,7 +246,7 @@ msgstr "Εντάξει"
 
 #: ../lib/sugar/graphics/alert.py:216
 msgid "Continue"
-msgstr "Συνεχίστε"
+msgstr "Συνέχιση"
 
 #: ../lib/sugar/graphics/alert.py:244
 msgid "OK"
@@ -326,14 +323,12 @@ msgid "%d seconds"
 msgstr "%d δευτερόλεπτα"
 
 #: ../lib/sugar/graphics/objectchooser.py:191
-#, fuzzy
 msgid " and "
-msgstr "_και_"
+msgstr " και "
 
 #: ../lib/sugar/graphics/objectchooser.py:193
-#, fuzzy
 msgid ", "
-msgstr ",_"
+msgstr ", "
 
 #: ../shell/controlpanel/control.py:213
 msgid "To apply your changes you have to restart sugar.\n"
@@ -348,25 +343,23 @@ msgid "Error in specified colors."
 msgstr "Σφάλμα στα συγκεκριμένα χρώματα."
 
 #: ../shell/controlpanel/control.py:307
-#, fuzzy
 msgid "off"
-msgstr "κλειστό"
+msgstr "ανενεργό"
 
 #: ../shell/controlpanel/control.py:309
-#, fuzzy
 msgid "on"
-msgstr "ανοιχτό"
+msgstr "ενεργό"
 
 #: ../shell/controlpanel/control.py:310
 msgid "State is unknown."
-msgstr "Άγνωστη κατάσταση"
+msgstr "Άγνωστη κατάσταση."
 
 #: ../shell/controlpanel/control.py:332
+#, fuzzy
 msgid "Error in specified radio argument use on/off."
-msgstr ""
+msgstr "Σφάλμα στην προσδιορισμένη παράμετρο ραδίου. Χρησιμοποιείστε το on/off"
 
 #: ../shell/controlpanel/control.py:336
-#, fuzzy
 msgid "Permission denied. You need to be root to run this method."
 msgstr ""
 "Δεν επιτρέπεται η πρόσβαση. Πρέπει να έχετε δικαιώματα υπερχρήστη για να "
@@ -432,3 +425,15 @@ msgstr "Έναρξη Απλού Mesh"
 #: ../shell/view/devices/network/mesh.py:124
 msgid "Unknown Mesh"
 msgstr "Άγνωστο Mesh"
+
+#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
+msgid "About this XO"
+msgstr "Σχετικά με αυτόν τον XO"
+
+#: ../shell/view/home/HomeBox.py:222
+msgid "Not available"
+msgstr "Μη διαθέσιμο"
+
+#: ../shell/view/home/MeshBox.py:300
+msgid "Join"
+msgstr "Συμμετοχή"

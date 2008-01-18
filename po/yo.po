@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-21 00:38+0100\n"
+"POT-Creation-Date: 2007-12-11 21:39+0530\n"
 "PO-Revision-Date: 2006-07-07 09:48+0100\n"
 "Last-Translator: Fajuyitan, Sunday Ayo <ayo@wazobialinux.com>\n"
 "Language-Team: Yoruba\n"
@@ -77,11 +77,11 @@ msgstr ""
 msgid "Invite to %s"
 msgstr ""
 
-#: ../shell/view/clipboardmenu.py:59 ../shell/view/frame/activitybutton.py:58
+#: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
 msgstr ""
 
-#: ../shell/view/clipboardmenu.py:64
+#: ../shell/view/clipboardmenu.py:63
 msgid "Open"
 msgstr ""
 
@@ -89,11 +89,11 @@ msgstr ""
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../shell/view/clipboardmenu.py:74
+#: ../shell/view/clipboardmenu.py:73
 msgid "Add to journal"
 msgstr ""
 
-#: ../shell/view/clipboardmenu.py:200
+#: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
 msgstr ""
@@ -114,7 +114,7 @@ msgstr ""
 msgid "Starting..."
 msgstr ""
 
-#: ../shell/view/home/activitiesdonut.py:104
+#: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
 msgid "Resume"
 msgstr ""
 
@@ -127,15 +127,15 @@ msgstr ""
 msgid "Screenshot"
 msgstr ""
 
-#: ../shell/view/home/HomeBox.py:158
+#: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
 msgstr ""
 
-#: ../shell/view/home/HomeBox.py:163
+#: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
 msgstr ""
 
-#: ../shell/view/home/HomeBox.py:169
+#: ../shell/view/home/HomeBox.py:170
 msgid "Register"
 msgstr ""
 
@@ -143,13 +143,13 @@ msgstr ""
 #. priority over the normal wireless device.  NM doesn't have a "disconnect"
 #. method for a device either (for various reasons) so this doesn't
 #. have a good mapping
-#: ../shell/view/home/MeshBox.py:89 ../shell/view/home/MeshBox.py:196
+#: ../shell/view/home/MeshBox.py:90 ../shell/view/home/MeshBox.py:197
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
 msgid "Disconnect..."
 msgstr ""
 
-#: ../shell/view/home/MeshBox.py:194 ../shell/view/devices/network/mesh.py:37
+#: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
 #: ../shell/view/devices/network/mesh.py:62
 #: ../shell/view/devices/network/mesh.py:66
 msgid "Mesh Network"
@@ -232,19 +232,19 @@ msgstr ""
 msgid "%s Activity"
 msgstr ""
 
-#: ../lib/sugar/activity/activity.py:813
+#: ../lib/sugar/activity/activity.py:820
 msgid "Keep error"
 msgstr ""
 
-#: ../lib/sugar/activity/activity.py:814
+#: ../lib/sugar/activity/activity.py:821
 msgid "Keep error: all changes will be lost"
 msgstr ""
 
-#: ../lib/sugar/activity/activity.py:817
+#: ../lib/sugar/activity/activity.py:824
 msgid "Don't stop"
 msgstr ""
 
-#: ../lib/sugar/activity/activity.py:820
+#: ../lib/sugar/activity/activity.py:827
 msgid "Stop anyway"
 msgstr ""
 
@@ -433,4 +433,16 @@ msgstr ""
 
 #: ../shell/view/devices/network/mesh.py:124
 msgid "Unknown Mesh"
+msgstr ""
+
+#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
+msgid "About this XO"
+msgstr ""
+
+#: ../shell/view/home/HomeBox.py:222
+msgid "Not available"
+msgstr ""
+
+#: ../shell/view/home/MeshBox.py:300
+msgid "Join"
 msgstr ""

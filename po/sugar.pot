@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-21 00:36+0100\n"
+"POT-Creation-Date: 2007-12-11 21:39+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,11 +49,11 @@ msgstr ""
 msgid "Invite to %s"
 msgstr ""
 
-#: ../shell/view/clipboardmenu.py:59
+#: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
 msgstr ""
 
-#: ../shell/view/clipboardmenu.py:64
+#: ../shell/view/clipboardmenu.py:63
 msgid "Open"
 msgstr ""
 
@@ -61,11 +61,11 @@ msgstr ""
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../shell/view/clipboardmenu.py:74
+#: ../shell/view/clipboardmenu.py:73
 msgid "Add to journal"
 msgstr ""
 
-#: ../shell/view/clipboardmenu.py:200
+#: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
 msgstr ""
@@ -99,16 +99,24 @@ msgstr ""
 msgid "Screenshot"
 msgstr ""
 
-#: ../shell/view/home/HomeBox.py:158
+#: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
 msgstr ""
 
-#: ../shell/view/home/HomeBox.py:163
+#: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
 msgstr ""
 
-#: ../shell/view/home/HomeBox.py:169
+#: ../shell/view/home/HomeBox.py:170
 msgid "Register"
+msgstr ""
+
+#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
+msgid "About this XO"
+msgstr ""
+
+#: ../shell/view/home/HomeBox.py:222
+msgid "Not available"
 msgstr ""
 
 #. Only show disconnect when there's a mesh device, because mesh takes
@@ -208,19 +216,19 @@ msgstr ""
 msgid "%s Activity"
 msgstr ""
 
-#: ../lib/sugar/activity/activity.py:813
+#: ../lib/sugar/activity/activity.py:820
 msgid "Keep error"
 msgstr ""
 
-#: ../lib/sugar/activity/activity.py:814
+#: ../lib/sugar/activity/activity.py:821
 msgid "Keep error: all changes will be lost"
 msgstr ""
 
-#: ../lib/sugar/activity/activity.py:817
+#: ../lib/sugar/activity/activity.py:824
 msgid "Don't stop"
 msgstr ""
 
-#: ../lib/sugar/activity/activity.py:820
+#: ../lib/sugar/activity/activity.py:827
 msgid "Stop anyway"
 msgstr ""
 
@@ -238,84 +246,6 @@ msgstr ""
 
 #: ../lib/sugar/graphics/alert.py:244
 msgid "OK"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:175
-#, python-format
-msgid "%d year"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:175
-#, python-format
-msgid "%d years"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:176
-#, python-format
-msgid "%d month"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:176
-#, python-format
-msgid "%d months"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:177
-#, python-format
-msgid "%d week"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:177
-#, python-format
-msgid "%d weeks"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:178
-#, python-format
-msgid "%d day"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:178
-#, python-format
-msgid "%d days"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:179
-#, python-format
-msgid "%d hour"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:179
-#, python-format
-msgid "%d hours"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:180
-#, python-format
-msgid "%d minute"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:180
-#, python-format
-msgid "%d minutes"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:181
-#, python-format
-msgid "%d second"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:181
-#, python-format
-msgid "%d seconds"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:191
-msgid " and "
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:193
-msgid ", "
 msgstr ""
 
 #: ../shell/controlpanel/control.py:213

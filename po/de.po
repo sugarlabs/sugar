@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-21 00:38+0100\n"
-"PO-Revision-Date: 2007-12-10 08:26+0000\n"
+"POT-Creation-Date: 2007-12-11 21:39+0530\n"
+"PO-Revision-Date: 2008-01-08 10:13+0000\n"
 "Last-Translator: Gerhard Steiner <gerhard.steiner@duichwir.at>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -47,11 +47,11 @@ msgstr "Freunde werden"
 msgid "Invite"
 msgstr "Einladen"
 
-#: ../shell/view/clipboardmenu.py:59 ../shell/view/frame/activitybutton.py:58
+#: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
 msgstr "Entfernen"
 
-#: ../shell/view/clipboardmenu.py:64
+#: ../shell/view/clipboardmenu.py:63
 msgid "Open"
 msgstr "Öffnen"
 
@@ -59,14 +59,14 @@ msgstr "Öffnen"
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../shell/view/clipboardmenu.py:74
+#: ../shell/view/clipboardmenu.py:73
 msgid "Add to journal"
 msgstr "Zum Journal hinzufügen"
 
-#: ../shell/view/clipboardmenu.py:200
+#: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
-msgstr "Zwischenablage-Objekte: %s."
+msgstr "Zwischenablage-Objekt: %s."
 
 #: ../shell/view/frame/zoomtoolbar.py:42
 msgid "Neighborhood"
@@ -96,15 +96,15 @@ msgstr "Bild"
 msgid "Screenshot"
 msgstr "Bildschirmfoto"
 
-#: ../shell/view/home/HomeBox.py:163
+#: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
 msgstr "Ausschalten"
 
-#: ../shell/view/home/MeshBox.py:194 ../shell/view/devices/network/mesh.py:37
+#: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
 #: ../shell/view/devices/network/mesh.py:62
 #: ../shell/view/devices/network/mesh.py:66
 msgid "Mesh Network"
-msgstr "Mesh-Netzwerk"
+msgstr "Mesh Netzwerk"
 
 #: ../shell/view/devices/battery.py:38
 msgid "My Battery life"
@@ -164,18 +164,17 @@ msgstr "Verschlüsselungstyp:"
 
 #: ../shell/view/home/activitiesdonut.py:90
 msgid "Starting..."
-msgstr "Starte..."
+msgstr "Starten..."
 
-#: ../shell/view/home/activitiesdonut.py:104
-#, fuzzy
+#: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
 msgid "Resume"
-msgstr "Wiederaufnahme"
+msgstr "Fortsetzen"
 
-#: ../shell/view/home/HomeBox.py:158
+#: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
-msgstr "Neustart"
+msgstr "Neu starten"
 
-#: ../shell/view/home/HomeBox.py:169
+#: ../shell/view/home/HomeBox.py:170
 msgid "Register"
 msgstr "Registrieren"
 
@@ -183,10 +182,9 @@ msgstr "Registrieren"
 #. priority over the normal wireless device.  NM doesn't have a "disconnect"
 #. method for a device either (for various reasons) so this doesn't
 #. have a good mapping
-#: ../shell/view/home/MeshBox.py:89 ../shell/view/home/MeshBox.py:196
+#: ../shell/view/home/MeshBox.py:90 ../shell/view/home/MeshBox.py:197
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
-#, fuzzy
 msgid "Disconnect..."
 msgstr "Verbindung lösen..."
 
@@ -218,21 +216,19 @@ msgstr "Kopieren"
 msgid "Paste"
 msgstr "Einfügen"
 
-#: ../lib/sugar/activity/activity.py:813
+#: ../lib/sugar/activity/activity.py:820
 msgid "Keep error"
 msgstr "Fehler akzeptieren"
 
-#: ../lib/sugar/activity/activity.py:814
+#: ../lib/sugar/activity/activity.py:821
 msgid "Keep error: all changes will be lost"
 msgstr "Fehler akzeptieren: Alle Änderungen gehen verloren"
 
-#: ../lib/sugar/activity/activity.py:817
-#, fuzzy
+#: ../lib/sugar/activity/activity.py:824
 msgid "Don't stop"
 msgstr "Nicht stoppen"
 
-#: ../lib/sugar/activity/activity.py:820
-#, fuzzy
+#: ../lib/sugar/activity/activity.py:827
 msgid "Stop anyway"
 msgstr "Jedenfalls stoppen"
 
@@ -344,11 +340,11 @@ msgstr "Fehler in den definierten Farben."
 
 #: ../shell/controlpanel/control.py:307
 msgid "off"
-msgstr "Aus"
+msgstr "aus"
 
 #: ../shell/controlpanel/control.py:309
 msgid "on"
-msgstr "Ein"
+msgstr "an"
 
 #: ../shell/controlpanel/control.py:310
 msgid "State is unknown."
@@ -356,11 +352,11 @@ msgstr "Status ist unbekannt."
 
 #: ../shell/controlpanel/control.py:332
 msgid "Error in specified radio argument use on/off."
-msgstr "Fehler im angegebenen Funkargument - verwende Ein/Aus."
+msgstr "Fehler im angegebenen 'radio' Argument - Verwendung von  'Ein'/'Aus'."
 
 #: ../shell/controlpanel/control.py:336
 msgid "Permission denied. You need to be root to run this method."
-msgstr "Zugriffsrechte als root notwendig für diese Aktion."
+msgstr "Zugriffsrechte notwendig. Du musst root sein für diese Aktion."
 
 #: ../shell/controlpanel/control.py:366
 msgid "Error in reading timezone"
@@ -397,7 +393,7 @@ msgstr "Entschuldigung, aber ich spreche nicht '%s'."
 
 #: ../shell/view/devices/network/mesh.py:105
 msgid "Connected to a School Mesh Portal"
-msgstr "Verbunden mit einem Schul Mesh Portal"
+msgstr "Verbunden mit einem Schul-Maschennetzwerk-Portal"
 
 #: ../shell/view/devices/network/mesh.py:107
 msgid "Looking for a School Mesh Portal..."
@@ -422,3 +418,15 @@ msgstr "Starte ein einfaches Mesh"
 #: ../shell/view/devices/network/mesh.py:124
 msgid "Unknown Mesh"
 msgstr "Unbekanntes Mesh"
+
+#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
+msgid "About this XO"
+msgstr "Infos zu diesem XO"
+
+#: ../shell/view/home/HomeBox.py:222
+msgid "Not available"
+msgstr "Nicht verfügbar"
+
+#: ../shell/view/home/MeshBox.py:300
+msgid "Join"
+msgstr "Teilnehmen"

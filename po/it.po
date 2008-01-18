@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-21 00:38+0100\n"
-"PO-Revision-Date: 2007-12-04 19:59+0000\n"
+"POT-Creation-Date: 2007-12-11 21:39+0530\n"
+"PO-Revision-Date: 2008-01-14 19:17+0000\n"
 "Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -83,11 +83,11 @@ msgstr "Aggiungi agli amici"
 msgid "Invite"
 msgstr "Invita"
 
-#: ../shell/view/clipboardmenu.py:59 ../shell/view/frame/activitybutton.py:58
+#: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
 msgstr "Rimuovi"
 
-#: ../shell/view/clipboardmenu.py:64
+#: ../shell/view/clipboardmenu.py:63
 msgid "Open"
 msgstr "Apri"
 
@@ -136,12 +136,12 @@ msgstr "Invito per %s"
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../shell/view/clipboardmenu.py:74
+#: ../shell/view/clipboardmenu.py:73
 #, fuzzy
 msgid "Add to journal"
 msgstr "Inserisci nel diario"
 
-#: ../shell/view/clipboardmenu.py:200
+#: ../shell/view/clipboardmenu.py:213
 #, python-format
 #, fuzzy
 msgid "Clipboard object: %s."
@@ -149,21 +149,21 @@ msgstr "oggetto Appunti: %s."
 
 #: ../shell/hardware/keydialog.py:149
 msgid "Key Type:"
-msgstr ""
+msgstr "Digita Chiave:"
 
 #: ../shell/hardware/keydialog.py:169
 msgid "Authentication Type:"
-msgstr ""
+msgstr "Digita Autenticazione:"
 
 #: ../shell/hardware/keydialog.py:250
 msgid "Encryption Type:"
-msgstr ""
+msgstr "Digita Chiave Crittografica:"
 
 #: ../shell/view/home/activitiesdonut.py:90
 msgid "Starting..."
 msgstr "Avvio..."
 
-#: ../shell/view/home/activitiesdonut.py:104
+#: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
 msgid "Resume"
 msgstr "Recupera"
 
@@ -176,15 +176,15 @@ msgstr "Stop"
 msgid "Screenshot"
 msgstr "Cattura schermata"
 
-#: ../shell/view/home/HomeBox.py:158
+#: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
 msgstr "Riavvia"
 
-#: ../shell/view/home/HomeBox.py:163
+#: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
 msgstr "Spegni"
 
-#: ../shell/view/home/HomeBox.py:169
+#: ../shell/view/home/HomeBox.py:170
 #, fuzzy
 msgid "Register"
 msgstr "Registra"
@@ -193,14 +193,14 @@ msgstr "Registra"
 #. priority over the normal wireless device.  NM doesn't have a "disconnect"
 #. method for a device either (for various reasons) so this doesn't
 #. have a good mapping
-#: ../shell/view/home/MeshBox.py:89 ../shell/view/home/MeshBox.py:196
+#: ../shell/view/home/MeshBox.py:90 ../shell/view/home/MeshBox.py:197
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
 #, fuzzy
 msgid "Disconnect..."
 msgstr "Interrompi collegamento..."
 
-#: ../shell/view/home/MeshBox.py:194 ../shell/view/devices/network/mesh.py:37
+#: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
 #: ../shell/view/devices/network/mesh.py:62
 #: ../shell/view/devices/network/mesh.py:66
 #, fuzzy
@@ -287,20 +287,20 @@ msgstr "Incolla"
 msgid "%s Activity"
 msgstr "Attività %s"
 
-#: ../lib/sugar/activity/activity.py:813
+#: ../lib/sugar/activity/activity.py:820
 #, fuzzy
 msgid "Keep error"
 msgstr "Errore nel mantenimento"
 
-#: ../lib/sugar/activity/activity.py:814
+#: ../lib/sugar/activity/activity.py:821
 msgid "Keep error: all changes will be lost"
 msgstr "Errore nel mantenimento: tutte le modifiche effettuate saranno perse"
 
-#: ../lib/sugar/activity/activity.py:817
+#: ../lib/sugar/activity/activity.py:824
 msgid "Don't stop"
 msgstr "Non interrompere"
 
-#: ../lib/sugar/activity/activity.py:820
+#: ../lib/sugar/activity/activity.py:827
 msgid "Stop anyway"
 msgstr "Interrompi comunque"
 
@@ -402,13 +402,17 @@ msgstr ", "
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "Per applicare le modifiche richieste è necessario riavviare sugar.\n"
 
+# To be checked semantically....
 #: ../shell/controlpanel/control.py:267
+#, fuzzy
 msgid "Error in specified color modifiers."
-msgstr ""
+msgstr "Errore nelle alterazioni di colore richieste."
 
+# To be check semantically...
 #: ../shell/controlpanel/control.py:270
+#, fuzzy
 msgid "Error in specified colors."
-msgstr ""
+msgstr "Errore nei colori richiesti."
 
 #: ../shell/controlpanel/control.py:307
 msgid "off"
@@ -424,8 +428,9 @@ msgid "State is unknown."
 msgstr "Lo stato è sconosciuto."
 
 #: ../shell/controlpanel/control.py:332
+#, fuzzy
 msgid "Error in specified radio argument use on/off."
-msgstr ""
+msgstr "Errore nell valore radio impostato, utilizzare on/off."
 
 #: ../shell/controlpanel/control.py:336
 #, fuzzy
@@ -496,3 +501,16 @@ msgstr "Sto Attivando una rete Mesh semplice"
 #: ../shell/view/devices/network/mesh.py:124
 msgid "Unknown Mesh"
 msgstr "Rete Mesh sconosciuta"
+
+#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
+msgid "About this XO"
+msgstr "A proposito di questo XO"
+
+#: ../shell/view/home/HomeBox.py:222
+msgid "Not available"
+msgstr "Non disponibile"
+
+#: ../shell/view/home/MeshBox.py:300
+#, fuzzy
+msgid "Join"
+msgstr "Associa"
