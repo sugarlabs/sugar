@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-21 00:36+0100\n"
+"POT-Creation-Date: 2008-01-18 18:19+0000\n"
 "PO-Revision-Date: 2008-01-11 13:59+0000\n"
 "Last-Translator: Alexander Todorov <atodorov@redhat.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,24 +35,24 @@ msgstr "Затваряне"
 msgid "Next"
 msgstr "Следващ"
 
-#: ../shell/view/BuddyMenu.py:84
+#: ../shell/view/BuddyMenu.py:59
 msgid "Remove friend"
 msgstr "Изтриване на приятел"
 
-#: ../shell/view/BuddyMenu.py:87
+#: ../shell/view/BuddyMenu.py:62
 msgid "Make friend"
 msgstr "Създаване на приятел"
 
-#: ../shell/view/BuddyMenu.py:109
+#: ../shell/view/BuddyMenu.py:84
 #, python-format
 msgid "Invite to %s"
 msgstr "Покани в %s"
 
-#: ../shell/view/clipboardmenu.py:59
+#: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
 msgstr "Премахване"
 
-#: ../shell/view/clipboardmenu.py:64
+#: ../shell/view/clipboardmenu.py:63
 msgid "Open"
 msgstr "Отваряне"
 
@@ -60,11 +60,11 @@ msgstr "Отваряне"
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../shell/view/clipboardmenu.py:74
+#: ../shell/view/clipboardmenu.py:73
 msgid "Add to journal"
 msgstr "Добави към дневника"
 
-#: ../shell/view/clipboardmenu.py:200
+#: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
 msgstr "Обект в паметта: %s."
@@ -90,25 +90,22 @@ msgid "Resume"
 msgstr "Продължаване"
 
 #: ../shell/view/home/activitiesdonut.py:111
-#: ../lib/sugar/activity/activity.py:128
+#: ../lib/sugar/activity/activity.py:132
 msgid "Stop"
 msgstr "Стоп"
 
-#: ../shell/view/Shell.py:276
+#: ../shell/view/Shell.py:285
 msgid "Screenshot"
 msgstr "Снимка на екрана"
 
-#: ../shell/view/home/HomeBox.py:158
 #: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
 msgstr "Рестартиране"
 
-#: ../shell/view/home/HomeBox.py:163
 #: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
 msgstr "Изключване"
 
-#: ../shell/view/home/HomeBox.py:169
 #: ../shell/view/home/HomeBox.py:170
 msgid "Register"
 msgstr "Регистриране"
@@ -175,60 +172,56 @@ msgstr "Начало"
 msgid "Activity"
 msgstr "Дейност"
 
-#: ../lib/sugar/activity/activity.py:111
+#: ../lib/sugar/activity/activity.py:115
 msgid "Share with:"
 msgstr "Сподели с:"
 
-#: ../lib/sugar/activity/activity.py:113
+#: ../lib/sugar/activity/activity.py:117
 msgid "Private"
 msgstr "Личен"
 
-#: ../lib/sugar/activity/activity.py:114
+#: ../lib/sugar/activity/activity.py:118
 msgid "My Neighborhood"
 msgstr "Моите съседи"
 
-#: ../lib/sugar/activity/activity.py:122
+#: ../lib/sugar/activity/activity.py:126
 msgid "Keep"
 msgstr "Запазване"
 
-#: ../lib/sugar/activity/activity.py:241
+#: ../lib/sugar/activity/activity.py:245
 msgid "Undo"
 msgstr "Отмяна"
 
-#: ../lib/sugar/activity/activity.py:246
+#: ../lib/sugar/activity/activity.py:250
 msgid "Redo"
 msgstr "Възстановяване"
 
-#: ../lib/sugar/activity/activity.py:256
+#: ../lib/sugar/activity/activity.py:260
 msgid "Copy"
 msgstr "Копиране"
 
-#: ../lib/sugar/activity/activity.py:261
+#: ../lib/sugar/activity/activity.py:265
 msgid "Paste"
 msgstr "Поставяне"
 
-#: ../lib/sugar/activity/activity.py:450
+#: ../lib/sugar/activity/activity.py:454
 #, python-format
 msgid "%s Activity"
 msgstr "%s дейност"
 
-#: ../lib/sugar/activity/activity.py:813
-#: ../lib/sugar/activity/activity.py:817
+#: ../lib/sugar/activity/activity.py:824
 msgid "Keep error"
 msgstr "Грешка при запис"
 
-#: ../lib/sugar/activity/activity.py:814
-#: ../lib/sugar/activity/activity.py:818
+#: ../lib/sugar/activity/activity.py:825
 msgid "Keep error: all changes will be lost"
 msgstr "Грешка при запис: всички промени ще бъдат изгубени"
 
-#: ../lib/sugar/activity/activity.py:817
-#: ../lib/sugar/activity/activity.py:821
+#: ../lib/sugar/activity/activity.py:828
 msgid "Don't stop"
 msgstr "Без спиране"
 
-#: ../lib/sugar/activity/activity.py:820
-#: ../lib/sugar/activity/activity.py:824
+#: ../lib/sugar/activity/activity.py:831
 msgid "Stop anyway"
 msgstr "Спиране винаги"
 
@@ -374,21 +367,21 @@ msgstr "Грешка при копиране на времева зона (от 
 msgid "Changing permission of timezone: %s"
 msgstr "Замяна на позволенията за времева зона: %s"
 
-#: ../shell/controlpanel/control.py:413
+#: ../shell/controlpanel/control.py:412
 msgid "Error timezone does not exist."
 msgstr "Грешка, времевата зона не съществува."
 
-#: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
+#: ../shell/controlpanel/control.py:417 ../shell/controlpanel/control.py:436
 #, python-format
 msgid "Could not access %s. Create standard settings."
 msgstr "Отказан е достъп до %s. Моля, създайте стандартни настойки."
 
-#: ../shell/controlpanel/control.py:466
+#: ../shell/controlpanel/control.py:463
 #, python-format
 msgid "Language for code=%s could not be determined."
 msgstr "Не може да бъде определен езикът с код=%s."
 
-#: ../shell/controlpanel/control.py:476
+#: ../shell/controlpanel/control.py:473
 #, python-format
 msgid "Sorry I do not speak '%s'."
 msgstr "Съжалявам, но не говоря '%s'."
@@ -425,3 +418,11 @@ msgstr "Стартиране на обикновенна Mesh мрежа"
 #, fuzzy
 msgid "Unknown Mesh"
 msgstr "Непозната Mesh мрежа"
+
+#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
+msgid "About this XO"
+msgstr ""
+
+#: ../shell/view/home/HomeBox.py:222
+msgid "Not available"
+msgstr ""
