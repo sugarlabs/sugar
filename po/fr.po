@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-01-18 18:19+0000\n"
-"PO-Revision-Date: 2008-01-25 14:32-0500\n"
+"PO-Revision-Date: 2008-01-25 14:46-0500\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -389,13 +389,13 @@ msgstr "État inconnu."
 
 #: ../shell/controlpanel/control.py:332
 msgid "Error in specified radio argument use on/off."
-msgstr "Argument 'radio' spécifié incorrect. Utiliser marche/arrêt"
+msgstr "Argument 'radio' spécifié incorrect. Utiliser marche/arrêt."
 
 #: ../shell/controlpanel/control.py:336
 msgid "Permission denied. You need to be root to run this method."
 msgstr ""
 "Permission refusée. Vous devez être administrateur afin de lancer cette "
-"méthode"
+"méthode."
 
 #: ../shell/controlpanel/control.py:366
 msgid "Error in reading timezone"
@@ -413,12 +413,12 @@ msgstr "Changement de la permission de zone temporelle : %s"
 
 #: ../shell/controlpanel/control.py:412
 msgid "Error timezone does not exist."
-msgstr "Erreur : la zone temporelle n'existe pas"
+msgstr "Erreur : la zone temporelle n'existe pas."
 
 #: ../shell/controlpanel/control.py:417 ../shell/controlpanel/control.py:436
 #, python-format
 msgid "Could not access %s. Create standard settings."
-msgstr "Acces impossible à %s. Création de paramètres standards"
+msgstr "Acces impossible à %s. Création de paramètres standards."
 
 #: ../shell/controlpanel/control.py:463
 #, python-format
@@ -428,15 +428,15 @@ msgstr "La langue associée au code = %s n'a pas pu être déterminée."
 #: ../shell/controlpanel/control.py:473
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr "Désolé je ne parle pas '%s'"
+msgstr "Désolé je ne parle pas '%s'."
 
 #: ../shell/view/devices/network/mesh.py:105
 msgid "Connected to a School Mesh Portal"
-msgstr "Connecté au portail du réseau maillé d'Ecole"
+msgstr "Connecté au portail du réseau maillé d'école"
 
 #: ../shell/view/devices/network/mesh.py:107
 msgid "Looking for a School Mesh Portal..."
-msgstr "Cherche un portail de réseau maillé d'Ecole"
+msgstr "Cherche un portail de réseau maillé d'école..."
 
 #: ../shell/view/devices/network/mesh.py:110
 msgid "Connected to an XO Mesh Portal"
