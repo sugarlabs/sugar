@@ -48,6 +48,9 @@ class ToolButton(gtk.ToolButton):
 
     def set_tooltip(self, text):
         self.set_palette(Palette(text))
+
+        # Set label, shows up when toolbar overflows
+        self.set_label(text)
         
     def do_expose_event(self, event):
         if self._palette and self._palette.is_up():
