@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: 2008-01-26 18:23-0500\n"
+"PO-Revision-Date: 2008-01-27 09:57-0500\n"
 "Last-Translator: Yuan Chao <yuanchao@gmail.com>\n"
 "Language-Team: Yuan CHAO <yuanchao@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -92,7 +92,7 @@ msgstr "加密類型:"
 #
 #: ../shell/view/home/activitiesdonut.py:90
 msgid "Starting..."
-msgstr "啟動中..."
+msgstr "啟動中…"
 
 #
 #: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
@@ -133,7 +133,7 @@ msgstr "註冊"
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
 msgid "Disconnect..."
-msgstr "切斷連線..."
+msgstr "切斷連線…"
 
 #
 #: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
@@ -358,11 +358,11 @@ msgstr "需要重新啟動系統使變更生效.\n"
 
 #: ../shell/controlpanel/control.py:267
 msgid "Error in specified color modifiers."
-msgstr "指定修改顏色發生錯誤"
+msgstr "指定顏色變化型時發生錯誤"
 
 #: ../shell/controlpanel/control.py:270
 msgid "Error in specified colors."
-msgstr "指定顏色發生錯誤"
+msgstr "指定顏色時發生錯誤"
 
 #
 #: ../shell/controlpanel/control.py:307
@@ -380,11 +380,11 @@ msgstr "未知狀態"
 
 #: ../shell/controlpanel/control.py:332
 msgid "Error in specified radio argument use on/off."
-msgstr "無線網路信號開關發生錯誤"
+msgstr "設定無線網路信號開關時發生錯誤"
 
 #: ../shell/controlpanel/control.py:336
 msgid "Permission denied. You need to be root to run this method."
-msgstr "權限不足, 只有root可以執行此功能。"
+msgstr "權限不足, 只有系統管理員可以執行此功能。"
 
 #: ../shell/controlpanel/control.py:366
 msgid "Error in reading timezone"
@@ -402,12 +402,12 @@ msgstr "改變時區資料權限: %s"
 
 #: ../shell/controlpanel/control.py:413
 msgid "Error timezone does not exist."
-msgstr "錯誤時區資料不存在."
+msgstr "錯誤：時區資料不存在."
 
 #: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
 #, python-format
 msgid "Could not access %s. Create standard settings."
-msgstr "無法讀取 %s. 建立預設資料."
+msgstr "無法存取 %s. 改為建立預設資料."
 
 #: ../shell/controlpanel/control.py:466
 #, python-format
@@ -417,7 +417,7 @@ msgstr "語系編碼=%s 無法判定"
 #: ../shell/controlpanel/control.py:476
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr "抱歉我不會'%s'."
+msgstr "抱歉我不會‘%s’。"
 
 #: ../shell/view/devices/network/mesh.py:105
 msgid "Connected to a School Mesh Portal"
@@ -425,7 +425,7 @@ msgstr "已連接到校園網入口站"
 
 #: ../shell/view/devices/network/mesh.py:107
 msgid "Looking for a School Mesh Portal..."
-msgstr "尋找校園網入口站..."
+msgstr "尋找校園網狀網路中…"
 
 #: ../shell/view/devices/network/mesh.py:110
 msgid "Connected to an XO Mesh Portal"
@@ -433,7 +433,7 @@ msgstr "已連接到XO網入口站"
 
 #: ../shell/view/devices/network/mesh.py:112
 msgid "Looking for an XO Mesh Portal..."
-msgstr "尋找XO網入口站..."
+msgstr "尋找XO網狀網路中…"
 
 #: ../shell/view/devices/network/mesh.py:115
 msgid "Connected to a Simple Mesh"
