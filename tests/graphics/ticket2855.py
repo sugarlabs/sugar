@@ -37,7 +37,7 @@ box = gtk.HBox()
 
 toggle = gtk.ToggleButton()
 
-icon = Icon('go-previous', icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
+icon = Icon(icon_name='go-previous', icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
 toggle.set_image(icon)
 
 box.pack_start(toggle, False)
@@ -45,7 +45,7 @@ toggle.show()
 
 radio = gtk.RadioButton()
 
-icon = Icon('go-next', icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
+icon = Icon(icon_name='go-next', icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
 radio.set_image(icon)
 
 radio.set_mode(False)
