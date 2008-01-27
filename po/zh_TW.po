@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: 2007-12-12 13:41+0000\n"
+"PO-Revision-Date: 2008-01-26 18:23-0500\n"
 "Last-Translator: Yuan Chao <yuanchao@gmail.com>\n"
 "Language-Team: Yuan CHAO <yuanchao@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -190,7 +190,7 @@ msgstr "我的家"
 #
 #: ../shell/view/frame/zoomtoolbar.py:78
 msgid "Activity"
-msgstr "活動"
+msgstr "我的活動"
 
 #
 #: ../lib/sugar/activity/activity.py:111
@@ -342,10 +342,10 @@ msgstr "%d秒"
 msgid "%d seconds"
 msgstr "%d秒"
 
-#
+# 2 hours and 25 minutes
 #: ../lib/sugar/graphics/objectchooser.py:191
 msgid " and "
-msgstr "和"
+msgstr "又"
 
 #
 #: ../lib/sugar/graphics/objectchooser.py:193
