@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: olpc-sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: 2008-01-15 06:09+0000\n"
+"PO-Revision-Date: 2008-01-23 10:56-0500\n"
 "Last-Translator: Rafael Ortiz <rafael@laptop.org>\n"
 "Language-Team: Fedora Spanish <fedora-trans-es@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -257,14 +257,13 @@ msgstr "Actividad"
 
 #: ../shell/view/BuddyMenu.py:109
 #, python-format
-#, fuzzy
 msgid "Invite to %s"
-msgstr "Invitar para %s"
+msgstr "Invitar a %s"
 
+# keyword = clave , key = llave.
 #: ../shell/hardware/keydialog.py:149
-#, fuzzy
 msgid "Key Type:"
-msgstr "Tipo de clave:"
+msgstr "Tipo de llave:"
 
 #: ../shell/view/home/HomeBox.py:170
 msgid "Register"
@@ -278,13 +277,12 @@ msgstr "Guardar el error"
 msgid "Keep error: all changes will be lost"
 msgstr "Guardar el error: se perderán todos los cambios"
 
+# Right, even without any context.
 #: ../lib/sugar/activity/activity.py:824
-#, fuzzy
 msgid "Don't stop"
 msgstr "No parar"
 
 #: ../lib/sugar/activity/activity.py:827
-#, fuzzy
 msgid "Stop anyway"
 msgstr "Parar igualmente"
 
@@ -292,8 +290,8 @@ msgstr "Parar igualmente"
 msgid "Cancel"
 msgstr "Cancelar"
 
+# Ok has a widely known neaning, I'd say pretty much every Spanish speaker knows its meaning.
 #: ../lib/sugar/graphics/alert.py:168
-#, fuzzy
 msgid "Ok"
 msgstr "Ok"
 
@@ -302,9 +300,8 @@ msgid "Continue"
 msgstr "Continuar"
 
 #: ../lib/sugar/graphics/alert.py:244
-#, fuzzy
 msgid "OK"
-msgstr "Ok"
+msgstr "OK"
 
 #: ../lib/sugar/graphics/objectchooser.py:175
 #, python-format
@@ -409,16 +406,17 @@ msgid "State is unknown."
 msgstr "El estado es desconocido."
 
 # on/off refer to keywords? see also previous msgids referring to the terms
+# 
+# - Eng string seems to be missing a ','. Fill bug?
 #: ../shell/controlpanel/control.py:332
-#, fuzzy
 msgid "Error in specified radio argument use on/off."
-msgstr "Error en el argumento de radio especificado, utilice on/off"
+msgstr "Error en el argumento de radio especificado, utilice apagado/prendido"
 
 # translate root?
+# - no.
 #: ../shell/controlpanel/control.py:336
-#, fuzzy
 msgid "Permission denied. You need to be root to run this method."
-msgstr "Acceso denegado. Se necesita ser root para ejecutar éste método."
+msgstr "Acceso denegado. Se necesita ser root para ejecutar este método."
 
 #: ../shell/controlpanel/control.py:366
 msgid "Error in reading timezone"
@@ -453,40 +451,35 @@ msgstr "Idioma para código=%s no pudo ser determinado."
 msgid "Sorry I do not speak '%s'."
 msgstr "Perdón, no hablo '%s'."
 
+# i think we should translate mesh..for a simple reason, if i say malla kids would have an abstract (geometric) picture  about what a mesh network is
+# 
 #: ../shell/view/devices/network/mesh.py:105
-#, fuzzy
 msgid "Connected to a School Mesh Portal"
-msgstr "Conectado al Portal de Malla Escolar"
+msgstr "Conectado a un portal malla en una escuela"
 
 #: ../shell/view/devices/network/mesh.py:107
-#, fuzzy
 msgid "Looking for a School Mesh Portal..."
-msgstr "Buscando al Portal de Malla Escolar..."
+msgstr "Buscando un portal malla en una escuela..."
 
 #: ../shell/view/devices/network/mesh.py:110
-#, fuzzy
 msgid "Connected to an XO Mesh Portal"
-msgstr "Conectado a un Portal de Malla XO"
+msgstr "Conectado a un portal malla XO"
 
 #: ../shell/view/devices/network/mesh.py:112
-#, fuzzy
 msgid "Looking for an XO Mesh Portal..."
-msgstr "Buscando un Portal de Malla XO..."
+msgstr "Buscando un portal malla XO..."
 
 #: ../shell/view/devices/network/mesh.py:115
-#, fuzzy
 msgid "Connected to a Simple Mesh"
-msgstr "Conectado a una Malla Simple"
+msgstr "Conectado a una red malla simple"
 
 #: ../shell/view/devices/network/mesh.py:117
-#, fuzzy
 msgid "Starting a Simple Mesh"
-msgstr "Iniciando una Malla Simple"
+msgstr "Iniciando una red Malla Simple"
 
 #: ../shell/view/devices/network/mesh.py:124
-#, fuzzy
 msgid "Unknown Mesh"
-msgstr "Malla desconocida"
+msgstr "Red Malla desconocida"
 
 #: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
 msgid "About this XO"

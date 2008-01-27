@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: 2007-12-25 06:46+0000\n"
+"PO-Revision-Date: 2008-01-24 21:50-0500\n"
 "Last-Translator: Enkhzul <enkhzul@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +25,7 @@ msgstr "Өнгийг солихын тулд дарна уу:"
 
 #: ../shell/intro/intro.py:146
 msgid "Back"
-msgstr "Буц"
+msgstr "Буцах"
 
 #: ../shell/intro/intro.py:160
 msgid "Done"
@@ -37,24 +37,24 @@ msgstr "Дараах"
 
 #: ../shell/view/BuddyMenu.py:84
 msgid "Remove friend"
-msgstr "Найзыг арилга"
+msgstr "Найзыг арилгах"
 
 #: ../shell/view/BuddyMenu.py:87
 msgid "Make friend"
-msgstr "Найз үүсгэ"
+msgstr "Найз нэмэх"
 
 #: ../shell/view/BuddyMenu.py:109
 #, python-format
 msgid "Invite to %s"
-msgstr "%-үүдэд урь"
+msgstr "%-үүдэд урих"
 
 #: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
-msgstr "Арилга"
+msgstr "Арилгах"
 
 #: ../shell/view/clipboardmenu.py:63
 msgid "Open"
-msgstr "Нээ"
+msgstr "Нээх"
 
 #. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
 #. TODO: Implement stopping downloads
@@ -62,7 +62,7 @@ msgstr "Нээ"
 #. self.append_menu_item(self._stop_item)
 #: ../shell/view/clipboardmenu.py:73
 msgid "Add to journal"
-msgstr "Бүртгэлийн дэвтэрт нэм"
+msgstr "Бүртгэлийн дэвтэрт нэмэх"
 
 #: ../shell/view/clipboardmenu.py:213
 #, python-format
@@ -100,7 +100,7 @@ msgstr "Дэлгэцний зураг "
 
 #: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
-msgstr "Дахин ачаала"
+msgstr "Дахин ачаалла"
 
 #: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
@@ -192,7 +192,7 @@ msgstr "Миний хөршүүд"
 
 #: ../lib/sugar/activity/activity.py:122
 msgid "Keep"
-msgstr "Хадгала"
+msgstr "Хадгалах"
 
 #: ../lib/sugar/activity/activity.py:241
 msgid "Undo"

@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: 2008-01-21 10:02+0000\n"
+"PO-Revision-Date: 2008-01-22 10:57+0000\n"
 "Last-Translator: Sohaib Obaidi <ebtihaj_obaidi@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -46,7 +46,7 @@ msgstr "دوست بساز"
 #: ../shell/view/BuddyMenu.py:109
 #, python-format
 msgid "Invite to %s"
-msgstr "به % دعوت کن"
+msgstr "دعوت کن به %م"
 
 #: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
@@ -67,7 +67,7 @@ msgstr "به یادداشت اضافه کن"
 #: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
-msgstr "شئ تخته رسم: %"
+msgstr "شئ تخته رسم: %م."
 
 #: ../shell/hardware/keydialog.py:149
 msgid "Key Type:"
@@ -112,7 +112,7 @@ msgstr "ثبت‌ كردن‌"
 
 #: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
 msgid "About this XO"
-msgstr "در باره این XO"
+msgstr "در مورد این XO"
 
 #: ../shell/view/home/HomeBox.py:222
 msgid "Not available"
@@ -213,7 +213,7 @@ msgstr "بچسپان"
 #: ../lib/sugar/activity/activity.py:450
 #, python-format
 msgid "%s Activity"
-msgstr "% فعالیت"
+msgstr "فعالیت %م"
 
 #: ../lib/sugar/activity/activity.py:820
 msgid "Keep error"
@@ -245,19 +245,19 @@ msgstr "ادامه بده"
 
 #: ../lib/sugar/graphics/alert.py:244
 msgid "OK"
-msgstr "درست است"
+msgstr "OK"
 
 #: ../shell/controlpanel/control.py:213
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr "برای عملی نمودن همه تغییرات شما باید شکر را دوباره آغاز کنید."
+msgstr "برای عملی نمودن همه تغیرات شما باید شوگر را دوباره آغاز کنید."
 
 #: ../shell/controlpanel/control.py:267
 msgid "Error in specified color modifiers."
-msgstr "خطا درتعديل کننده رنگ معین"
+msgstr "خطا درتعديل کننده رنگ معین."
 
 #: ../shell/controlpanel/control.py:270
 msgid "Error in specified colors."
-msgstr "خطا در رنگ معین"
+msgstr "خطا در رنگ معین."
 
 #: ../shell/controlpanel/control.py:307
 msgid "off"
@@ -273,7 +273,7 @@ msgstr "وضعیت نامشخص است."
 
 #: ../shell/controlpanel/control.py:332
 msgid "Error in specified radio argument use on/off."
-msgstr "روشن یا خاموش بودن خطا در استدلال مشخص استعمال رادیویی"
+msgstr "روشن یا خاموش بودن خطا در استدلال مشخص استعمال رادیویی."
 
 #: ../shell/controlpanel/control.py:336
 msgid "Permission denied. You need to be root to run this method."
@@ -286,31 +286,31 @@ msgstr "خطا در خوانش منطقه زمانی"
 #: ../shell/controlpanel/control.py:397
 #, python-format
 msgid "Error copying timezone (from %s): %s"
-msgstr "خطا در نقل گیری منطقه زمانی (از%): %"
+msgstr "خطا در نقل گیری منطقه زمانی (از%م): %م"
 
 #: ../shell/controlpanel/control.py:402
 #, python-format
 msgid "Changing permission of timezone: %s"
-msgstr "در حال تغییر دادن اجازت منطقه زمانی: %"
+msgstr "در حال تغییر دادن اجازت منطقه زمانی: %م"
 
 #: ../shell/controlpanel/control.py:413
 msgid "Error timezone does not exist."
-msgstr "خطای منطقه زمانی وجود ندارد"
+msgstr "خطای منطقه زمانی وجود ندارد."
 
 #: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
 #, python-format
 msgid "Could not access %s. Create standard settings."
-msgstr "% دسترسی نمی تواند. زمینه معیاریی بسازید."
+msgstr "دسترسی %م نمی تواند. زمینه معیاریی بسازید."
 
 #: ../shell/controlpanel/control.py:466
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr "زبان برای رمز=% تعیین کرده نمیشود."
+msgstr "زبان برای رمز=%م تعیین کرده نمیشود."
 
 #: ../shell/controlpanel/control.py:476
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr "متأسفم. من سخن گفته نمیتوانم \"%\""
+msgstr "متأسفم من سخن گفته نمیتوانم '%'."
 
 #: ../shell/view/devices/network/mesh.py:105
 msgid "Connected to a School Mesh Portal"
@@ -318,7 +318,7 @@ msgstr "به مدخل شبکه تنیده مکتب وصل گردید"
 
 #: ../shell/view/devices/network/mesh.py:107
 msgid "Looking for a School Mesh Portal..."
-msgstr "در حال تلاش برای یک مدخل شبکه تنیده مکتب"
+msgstr "در حال تلاش برای یک مدخل شبکه تنیده مکتب..."
 
 #: ../shell/view/devices/network/mesh.py:110
 msgid "Connected to an XO Mesh Portal"
@@ -326,7 +326,7 @@ msgstr "به مدخل شبکه تنیده XO در وصل گردید"
 
 #: ../shell/view/devices/network/mesh.py:112
 msgid "Looking for an XO Mesh Portal..."
-msgstr "در حال تلاش برای یک مدخل شبکه تنیده XO"
+msgstr "در حال تلاش برای یک مدخل شبکه تنیده XO..."
 
 #: ../shell/view/devices/network/mesh.py:115
 msgid "Connected to a Simple Mesh"

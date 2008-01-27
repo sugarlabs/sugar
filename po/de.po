@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: 2008-01-08 10:13+0000\n"
+"PO-Revision-Date: 2008-01-25 11:50-0500\n"
 "Last-Translator: Gerhard Steiner <gerhard.steiner@duichwir.at>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -70,7 +70,7 @@ msgstr "Zwischenablage-Objekt: %s."
 
 #: ../shell/view/frame/zoomtoolbar.py:42
 msgid "Neighborhood"
-msgstr "Nachbarschaft"
+msgstr "Umgebung"
 
 #: ../shell/view/frame/zoomtoolbar.py:54
 msgid "Group"
@@ -103,8 +103,9 @@ msgstr "Ausschalten"
 #: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
 #: ../shell/view/devices/network/mesh.py:62
 #: ../shell/view/devices/network/mesh.py:66
+#, fuzzy
 msgid "Mesh Network"
-msgstr "Mesh Netzwerk"
+msgstr "Mesh-Netzwerk"
 
 #: ../shell/view/devices/battery.py:38
 msgid "My Battery life"
@@ -112,7 +113,7 @@ msgstr "Meine Akku-Laufzeit"
 
 #: ../shell/view/devices/battery.py:94
 msgid "Battery charging"
-msgstr "Akku laden"
+msgstr "Akku wird geladen"
 
 # not clear what exactly "discharging" in this context means. Discharging while "using" the Battery or *active* discharging without user benefit. I translated to "Discharging while 'using' the Battery". The other term would be "Akku entladen"
 #: ../shell/view/devices/battery.py:96
@@ -129,7 +130,7 @@ msgstr "Privat"
 
 #: ../lib/sugar/activity/activity.py:114
 msgid "My Neighborhood"
-msgstr "Meine Nachbarschaft"
+msgstr "Meine Umgebung"
 
 #: ../lib/sugar/activity/activity.py:122
 msgid "Keep"
@@ -167,6 +168,7 @@ msgid "Starting..."
 msgstr "Starten..."
 
 #: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
+#, fuzzy
 msgid "Resume"
 msgstr "Fortsetzen"
 
@@ -186,7 +188,7 @@ msgstr "Registrieren"
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
 msgid "Disconnect..."
-msgstr "Verbindung lösen..."
+msgstr "Verbindung trennen..."
 
 #: ../shell/view/devices/network/wireless.py:61
 msgid "Disconnected"
@@ -196,7 +198,9 @@ msgstr "Nicht verbunden"
 msgid "Channel"
 msgstr "Kanal"
 
+# Alternative:  "Teilen mit:"
 #: ../lib/sugar/activity/activity.py:111
+#, fuzzy
 msgid "Share with:"
 msgstr "Gemeinsam mit:"
 
@@ -218,19 +222,20 @@ msgstr "Einfügen"
 
 #: ../lib/sugar/activity/activity.py:820
 msgid "Keep error"
-msgstr "Fehler akzeptieren"
+msgstr "Fehler beim Speichern"
 
 #: ../lib/sugar/activity/activity.py:821
 msgid "Keep error: all changes will be lost"
-msgstr "Fehler akzeptieren: Alle Änderungen gehen verloren"
+msgstr "Fehler beim Speichern: Alle Änderungen gehen verloren"
 
 #: ../lib/sugar/activity/activity.py:824
 msgid "Don't stop"
 msgstr "Nicht stoppen"
 
 #: ../lib/sugar/activity/activity.py:827
+#, fuzzy
 msgid "Stop anyway"
-msgstr "Jedenfalls stoppen"
+msgstr "Trotzdem stoppen"
 
 #: ../lib/sugar/graphics/alert.py:164 ../lib/sugar/graphics/alert.py:206
 msgid "Cancel"
@@ -242,7 +247,7 @@ msgstr "Ok"
 
 #: ../lib/sugar/graphics/alert.py:216
 msgid "Continue"
-msgstr "Fortsetzen"
+msgstr "Weitermachen"
 
 #: ../lib/sugar/graphics/alert.py:244
 msgid "OK"
@@ -328,7 +333,7 @@ msgstr ", "
 
 #: ../shell/controlpanel/control.py:213
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr "Ein Neustart ist erforderlich um die Änderungen wirksam zu machen.\n"
+msgstr "Um die Änderungen zu übernehmen, muss Sugar neu gestartet werden.\n"
 
 #: ../shell/controlpanel/control.py:267
 msgid "Error in specified color modifiers."
@@ -374,22 +379,22 @@ msgstr "Änderung der Berechtigung für Zeitzone: %s"
 
 #: ../shell/controlpanel/control.py:413
 msgid "Error timezone does not exist."
-msgstr "Fehler da Zeitzone unbekannt."
+msgstr "Fehler: unbekannte Zeitzone"
 
 #: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
 #, python-format
 msgid "Could not access %s. Create standard settings."
-msgstr "Zugriff nicht möglich auf %s. Erzeuge daher Standardeinstellungen."
+msgstr "Kann nicht auf %s zugreifen. Erstelle Standardeinstellungen."
 
 #: ../shell/controlpanel/control.py:466
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr "Sprache für den code=%s kann nicht bestimmt werden."
+msgstr "Sprache für Code=%s konnte nicht ermittelt werden."
 
 #: ../shell/controlpanel/control.py:476
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr "Entschuldigung, aber ich spreche nicht '%s'."
+msgstr "Entschuldigung, ich spreche nicht '%s'."
 
 #: ../shell/view/devices/network/mesh.py:105
 msgid "Connected to a School Mesh Portal"
@@ -397,27 +402,27 @@ msgstr "Verbunden mit einem Schul-Maschennetzwerk-Portal"
 
 #: ../shell/view/devices/network/mesh.py:107
 msgid "Looking for a School Mesh Portal..."
-msgstr "Suche Schul Mesh Portal..."
+msgstr "Suche Schul-Maschennetzwerk-Portal..."
 
 #: ../shell/view/devices/network/mesh.py:110
 msgid "Connected to an XO Mesh Portal"
-msgstr "Verbunden mit einem XO Mesh Portal"
+msgstr "Verbunden mit einem XO Maschennetzwerk-Portal"
 
 #: ../shell/view/devices/network/mesh.py:112
 msgid "Looking for an XO Mesh Portal..."
-msgstr "Suche XO Mesh Portal..."
+msgstr "Suche XO Maschennetzwerk-Portal..."
 
 #: ../shell/view/devices/network/mesh.py:115
 msgid "Connected to a Simple Mesh"
-msgstr "Verbunden mit einem einfachen Mesh"
+msgstr "Verbunden mit einem einfachen Maschennetzwerk"
 
 #: ../shell/view/devices/network/mesh.py:117
 msgid "Starting a Simple Mesh"
-msgstr "Starte ein einfaches Mesh"
+msgstr "Starte ein einfaches Maschennetzwerk"
 
 #: ../shell/view/devices/network/mesh.py:124
 msgid "Unknown Mesh"
-msgstr "Unbekanntes Mesh"
+msgstr "Unbekanntes Maschennetzwerk"
 
 #: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
 msgid "About this XO"
@@ -429,4 +434,4 @@ msgstr "Nicht verfügbar"
 
 #: ../shell/view/home/MeshBox.py:300
 msgid "Join"
-msgstr "Teilnehmen"
+msgstr "Mitmachen"

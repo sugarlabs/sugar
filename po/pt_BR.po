@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: olpc-sugar-pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: 2007-12-19 03:31+0000\n"
-"Last-Translator: Juliano Bittencourt <juliano@laptop.org>\n"
+"PO-Revision-Date: 2008-01-27 13:08-0500\n"
+"Last-Translator: Eduardo H. Silva <HoboPrimate@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <fedora-docs-br@redhat.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +29,7 @@ msgstr "Voltar"
 
 #: ../shell/intro/intro.py:160
 msgid "Done"
-msgstr "Terminado"
+msgstr "Pronto"
 
 #: ../shell/intro/intro.py:163
 msgid "Next"
@@ -41,7 +41,7 @@ msgstr "Remover amigo"
 
 #: ../shell/view/BuddyMenu.py:87
 msgid "Make friend"
-msgstr "Adicionar como amigo"
+msgstr "Fazer amigo"
 
 #. FIXME check that the buddy is not in the activity already
 #: ../shell/view/BuddyMenu.py:96
@@ -67,7 +67,7 @@ msgstr "Adicionar ao diário"
 #: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
-msgstr "Objeto da prancheta: %s. "
+msgstr "Objeto da prancheta: %s."
 
 #: ../shell/view/frame/zoomtoolbar.py:42
 msgid "Neighborhood"
@@ -109,7 +109,7 @@ msgstr "Rede Mesh"
 
 #: ../shell/view/devices/battery.py:38
 msgid "My Battery life"
-msgstr "Meu tempo de bateria"
+msgstr "Carga de minha Bateria"
 
 #: ../shell/view/devices/battery.py:94
 msgid "Battery charging"
@@ -117,7 +117,7 @@ msgstr "Carregando a bateria"
 
 #: ../shell/view/devices/battery.py:96
 msgid "Battery discharging"
-msgstr "Descarregando a bateria "
+msgstr "Descarregando a bateria"
 
 #: ../shell/view/devices/battery.py:98
 msgid "Battery fully charged"
@@ -139,7 +139,7 @@ msgstr "Parar"
 #: ../lib/sugar/activity/activity.py:450
 #, python-format
 msgid "%s Activity"
-msgstr "%s Atividades"
+msgstr "Atividade %s"
 
 #: ../shell/view/BuddyMenu.py:109
 #, python-format
@@ -148,7 +148,7 @@ msgstr "Convidar para %s"
 
 #: ../shell/hardware/keydialog.py:149
 msgid "Key Type:"
-msgstr "Tipo da Chave:"
+msgstr "Tipo de chave:"
 
 #: ../shell/hardware/keydialog.py:169
 msgid "Authentication Type:"
@@ -182,7 +182,7 @@ msgstr "Cadastrar"
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
 msgid "Disconnect..."
-msgstr "Desconectando..."
+msgstr "Desconectar..."
 
 #: ../shell/view/devices/network/wireless.py:61
 msgid "Disconnected"
@@ -223,11 +223,11 @@ msgstr "Colar"
 
 #: ../lib/sugar/activity/activity.py:820
 msgid "Keep error"
-msgstr "Erro ao Manter"
+msgstr "Erro ao manter"
 
 #: ../lib/sugar/activity/activity.py:821
 msgid "Keep error: all changes will be lost"
-msgstr "Erro ao Manter: todas as alterações no seu trabalho serão perdidas"
+msgstr "Erro ao manter: todas as alterações serão desfeitas"
 
 #: ../lib/sugar/activity/activity.py:824
 msgid "Don't stop"
@@ -341,7 +341,7 @@ msgstr "Erro nos alteradores de cor selecionados."
 
 #: ../shell/controlpanel/control.py:270
 msgid "Error in specified colors."
-msgstr "Erro na cor especificada."
+msgstr "Erro nas cores especificadas."
 
 #: ../shell/controlpanel/control.py:307
 msgid "off"
@@ -353,11 +353,11 @@ msgstr "ligado"
 
 #: ../shell/controlpanel/control.py:310
 msgid "State is unknown."
-msgstr "O estado é desconhecido."
+msgstr "Estado desconhecido"
 
 #: ../shell/controlpanel/control.py:332
 msgid "Error in specified radio argument use on/off."
-msgstr "Erro no valor do argumento especificado. Use liga/desliga."
+msgstr "Erro no argumento de rádio especificado, use on/off."
 
 #: ../shell/controlpanel/control.py:336
 msgid "Permission denied. You need to be root to run this method."
@@ -366,7 +366,7 @@ msgstr ""
 
 #: ../shell/controlpanel/control.py:366
 msgid "Error in reading timezone"
-msgstr "Erro ao ler sua fuso horário."
+msgstr "Erro ao ler o fuso horário"
 
 #: ../shell/controlpanel/control.py:397
 #, python-format
@@ -385,7 +385,7 @@ msgstr "Erro: fuso horário não existe."
 #: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
 #, python-format
 msgid "Could not access %s. Create standard settings."
-msgstr "Não foi possível acessar %s. Criando configurações padrão."
+msgstr "Não foi possível acessar %s. Crie configurações padrão."
 
 #: ../shell/controlpanel/control.py:466
 #, python-format
@@ -395,7 +395,7 @@ msgstr "Não foi possível determinar a língua para o código=%s."
 #: ../shell/controlpanel/control.py:476
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr "Desculpe, eu não falo %s."
+msgstr "Desculpe, eu não falo '%s'."
 
 #: ../shell/view/devices/network/mesh.py:105
 msgid "Connected to a School Mesh Portal"
@@ -403,7 +403,7 @@ msgstr "Conectado ao Portal Mesh da Escola"
 
 #: ../shell/view/devices/network/mesh.py:107
 msgid "Looking for a School Mesh Portal..."
-msgstr "Procurado por um Portal Mesh da Escola..."
+msgstr "Procurando por um Portal Mesh da Escola..."
 
 #: ../shell/view/devices/network/mesh.py:110
 msgid "Connected to an XO Mesh Portal"
@@ -415,11 +415,11 @@ msgstr "Procurando pelo Portal Mesh de algum XO..."
 
 #: ../shell/view/devices/network/mesh.py:115
 msgid "Connected to a Simple Mesh"
-msgstr "Conectado como Mesh simples"
+msgstr "Conectado a uma Mesh Simples"
 
 #: ../shell/view/devices/network/mesh.py:117
 msgid "Starting a Simple Mesh"
-msgstr "Iniciando uma Mesh simples"
+msgstr "Iniciando uma Mesh Simples"
 
 #: ../shell/view/devices/network/mesh.py:124
 msgid "Unknown Mesh"

@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: 2008-01-21 12:34+0000\n"
+"PO-Revision-Date: 2008-01-22 09:40+0000\n"
 "Last-Translator: usman mansoor ansari <jalalkut@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -21,11 +21,11 @@ msgstr "نوم:"
 
 #: ../shell/intro/intro.py:96
 msgid "Click to change color:"
-msgstr "د رنګ بدلون لپاره ټك كړئ:"
+msgstr "د رنګ بدلون لپاره ټك كړئ"
 
 #: ../shell/intro/intro.py:146
 msgid "Back"
-msgstr "شا"
+msgstr "وروسته"
 
 #: ../shell/intro/intro.py:160
 msgid "Done"
@@ -213,7 +213,7 @@ msgstr "سرېښل"
 #: ../lib/sugar/activity/activity.py:450
 #, python-format
 msgid "%s Activity"
-msgstr "%s چارندتيا"
+msgstr "s% چارندتيا"
 
 #: ../lib/sugar/activity/activity.py:820
 msgid "Keep error"
@@ -249,11 +249,11 @@ msgstr "هوكې"
 
 #: ../shell/controlpanel/control.py:213
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr "د بدلونونو ساتلو لپاره شوګر بيا پيل كړئ "
+msgstr "د بدلونونو ساتلو لپاره بايد شوګر بيا پيل كړئ .\n"
 
 #: ../shell/controlpanel/control.py:267
 msgid "Error in specified color modifiers."
-msgstr "د ځانګړو رنګونو په بدلوونكې كې تېروتنې "
+msgstr "د ځانګړو رنګونو په بدلوونكې كې تېروتنې."
 
 #: ../shell/controlpanel/control.py:270
 msgid "Error in specified colors."
@@ -273,7 +273,7 @@ msgstr "نامالوم حالت"
 
 #: ../shell/controlpanel/control.py:332
 msgid "Error in specified radio argument use on/off."
-msgstr "د ځانګړې راډيو رزښتوړى كارونه كې تېروتنه،  بلول/ګلول"
+msgstr "د ځانګړې راډيو رزښتوړى كارونه كې تېروتنه، بلول/ګلول"
 
 #: ../shell/controlpanel/control.py:336
 msgid "Permission denied. You need to be root to run this method."
@@ -286,7 +286,7 @@ msgstr "د مهال سيمې پېداكونه كې تېروتنه"
 #: ../shell/controlpanel/control.py:397
 #, python-format
 msgid "Error copying timezone (from %s): %s"
-msgstr "د مهال سيمې لمېسلو كې تېروتنه ((له %s): %s"
+msgstr "د مهال سيمې لمېسلو كې تېروتنه (%s له): %s"
 
 #: ../shell/controlpanel/control.py:402
 #, python-format
@@ -300,7 +300,7 @@ msgstr "تېروتنه: مهال سيمه وجود نلري."
 #: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
 #, python-format
 msgid "Could not access %s. Create standard settings."
-msgstr "%s ته لاسرسي نه كېږي. معياري تنظيمات جوړ كړئ."
+msgstr "s% ته لاسرسې نه كېږي. معياري تنظيمات جوړ كړئ."
 
 #: ../shell/controlpanel/control.py:466
 #, python-format
@@ -310,7 +310,7 @@ msgstr "د كوډ ژبه=%s نه څرګندېږي."
 #: ../shell/controlpanel/control.py:476
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr "بښنه غواړم، زه '%s' خبرې نه كوم."
+msgstr "بښنه غواړم زه 's%' خبرې نه كوم."
 
 #: ../shell/view/devices/network/mesh.py:105
 msgid "Connected to a School Mesh Portal"
@@ -322,11 +322,11 @@ msgstr "د ښوونځي مېش دستګاه په لټه كې"
 
 #: ../shell/view/devices/network/mesh.py:110
 msgid "Connected to an XO Mesh Portal"
-msgstr "د اېكس او مېش پورټل سره پيوست شو"
+msgstr "له XO مېش پورټل سره پېوست شو"
 
 #: ../shell/view/devices/network/mesh.py:112
 msgid "Looking for an XO Mesh Portal..."
-msgstr "د اېكس او مېش پورټل په لټه كې"
+msgstr "د XO مېش پورټل په لټه كې"
 
 #: ../shell/view/devices/network/mesh.py:115
 msgid "Connected to a Simple Mesh"
