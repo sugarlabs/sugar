@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-01-18 18:19+0000\n"
-"PO-Revision-Date: 2008-01-25 12:05-0500\n"
+"PO-Revision-Date: 2008-01-28 03:01-0500\n"
 "Last-Translator: Gerhard Steiner <gerhard.steiner@duichwir.at>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -103,9 +103,8 @@ msgstr "Ausschalten"
 #: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
 #: ../shell/view/devices/network/mesh.py:62
 #: ../shell/view/devices/network/mesh.py:66
-#, fuzzy
 msgid "Mesh Network"
-msgstr "Mesh Netzwerk"
+msgstr "Maschennetzwerk"
 
 #: ../shell/view/devices/battery.py:38
 msgid "My Battery life"
@@ -167,9 +166,8 @@ msgid "Starting..."
 msgstr "Starten..."
 
 #: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
-#, fuzzy
 msgid "Resume"
-msgstr "Fortsetzen"
+msgstr "Wiederaufnehmen"
 
 #: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
@@ -203,9 +201,8 @@ msgstr "Kanal"
 
 # Alternative: Gemeinsam mit:
 #: ../lib/sugar/activity/activity.py:115
-#, fuzzy
 msgid "Share with:"
-msgstr "Teilen mit:"
+msgstr "Gemeinsam mit:"
 
 #: ../lib/sugar/activity/activity.py:245
 msgid "Undo"
@@ -236,7 +233,6 @@ msgid "Don't stop"
 msgstr "Nicht stoppen"
 
 #: ../lib/sugar/activity/activity.py:831
-#, fuzzy
 msgid "Stop anyway"
 msgstr "Trotzdem stoppen"
 
@@ -382,7 +378,7 @@ msgstr "Änderung der Berechtigung für Zeitzone: %s"
 
 #: ../shell/controlpanel/control.py:412
 msgid "Error timezone does not exist."
-msgstr "Fehler: unbekannte Zeitzone"
+msgstr "Fehler: unbekannte Zeitzone."
 
 #: ../shell/controlpanel/control.py:417 ../shell/controlpanel/control.py:436
 #, python-format
@@ -409,7 +405,7 @@ msgstr "Suche Schul-Maschennetzwerk-Portal..."
 
 #: ../shell/view/devices/network/mesh.py:110
 msgid "Connected to an XO Mesh Portal"
-msgstr "Verbunden mit einem XO Maschennetzwerk-Portal..."
+msgstr "Verbunden mit einem XO Maschennetzwerk-Portal"
 
 #: ../shell/view/devices/network/mesh.py:112
 msgid "Looking for an XO Mesh Portal..."
