@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: 2008-01-25 11:50-0500\n"
+"PO-Revision-Date: 2008-01-28 02:58-0500\n"
 "Last-Translator: Gerhard Steiner <gerhard.steiner@duichwir.at>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -103,9 +103,8 @@ msgstr "Ausschalten"
 #: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
 #: ../shell/view/devices/network/mesh.py:62
 #: ../shell/view/devices/network/mesh.py:66
-#, fuzzy
 msgid "Mesh Network"
-msgstr "Mesh-Netzwerk"
+msgstr "Maschennetzwerk"
 
 #: ../shell/view/devices/battery.py:38
 msgid "My Battery life"
@@ -200,7 +199,6 @@ msgstr "Kanal"
 
 # Alternative:  "Teilen mit:"
 #: ../lib/sugar/activity/activity.py:111
-#, fuzzy
 msgid "Share with:"
 msgstr "Gemeinsam mit:"
 
@@ -233,7 +231,6 @@ msgid "Don't stop"
 msgstr "Nicht stoppen"
 
 #: ../lib/sugar/activity/activity.py:827
-#, fuzzy
 msgid "Stop anyway"
 msgstr "Trotzdem stoppen"
 
