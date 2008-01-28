@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: 2008-01-28 02:58-0500\n"
+"PO-Revision-Date: 2008-01-28 02:59-0500\n"
 "Last-Translator: Gerhard Steiner <gerhard.steiner@duichwir.at>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -167,9 +167,8 @@ msgid "Starting..."
 msgstr "Starten..."
 
 #: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
-#, fuzzy
 msgid "Resume"
-msgstr "Fortsetzen"
+msgstr "Wiederaufnehmen"
 
 #: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
