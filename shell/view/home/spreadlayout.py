@@ -218,6 +218,10 @@ class SpreadLayout(gobject.GObject, hippo.CanvasLayout):
     def do_allocate(self, x, y, width, height,
                     req_width, req_height, origin_changed):
         for child in self._box.get_layout_children():
+            # We need to always get  requests to not confuse hippo
+            min_w, child_width = child.get_width_request()
+            min_h, child_height = child.get_height_request(child_width)
+
             rect = child.grid_rect
             if child.grid_rect:
                 child.allocate(rect.x * _CELL_SIZE,
@@ -227,8 +231,6 @@ class SpreadLayout(gobject.GObject, hippo.CanvasLayout):
                                origin_changed)
             else:
                 vertical_offset = child.vertical_offset
-                min_w, child_width = child.get_width_request()
-                min_h, child_height = child.get_height_request(child_width)
                 child_x = x + (width - child_width) / 2
                 child_y = y + (height - child_height + vertical_offset) / 2
                 child.allocate(child_x, child_y, child_width, child_height,
