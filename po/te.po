@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-21 00:36+0100\n"
-"PO-Revision-Date: 2008-01-19 23:37+0000\n"
+"POT-Creation-Date: 2008-01-18 18:19+0000\n"
+"PO-Revision-Date: 2008-01-31 05:30-0500\n"
 "Last-Translator: Satyanarayana Murthy Saladi <saladism@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -35,24 +35,24 @@ msgstr "పూర్తి అయినది"
 msgid "Next"
 msgstr "తర్వాత"
 
-#: ../shell/view/BuddyMenu.py:84
+#: ../shell/view/BuddyMenu.py:59
 msgid "Remove friend"
 msgstr "స్నేహం తీసివేయి"
 
-#: ../shell/view/BuddyMenu.py:87
+#: ../shell/view/BuddyMenu.py:62
 msgid "Make friend"
 msgstr "స్నేహం చేయి"
 
-#: ../shell/view/BuddyMenu.py:109
+#: ../shell/view/BuddyMenu.py:84
 #, python-format
 msgid "Invite to %s"
 msgstr "%s కు పిలువు"
 
-#: ../shell/view/clipboardmenu.py:59
+#: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
 msgstr "తీసివేయి"
 
-#: ../shell/view/clipboardmenu.py:64
+#: ../shell/view/clipboardmenu.py:63
 msgid "Open"
 msgstr "తెరువు"
 
@@ -60,11 +60,11 @@ msgstr "తెరువు"
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../shell/view/clipboardmenu.py:74
+#: ../shell/view/clipboardmenu.py:73
 msgid "Add to journal"
 msgstr "పద్దుకి కలుపు"
 
-#: ../shell/view/clipboardmenu.py:200
+#: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
 msgstr "క్లిప్ బోర్డు వస్తువు : %s."
@@ -79,7 +79,7 @@ msgstr "దృడపరచుకొనే రకము"
 
 #: ../shell/hardware/keydialog.py:250
 msgid "Encryption Type:"
-msgstr "గుప్తీకరించే రకము"
+msgstr "గుప్త్తీకరి౦చే రకము"
 
 #: ../shell/view/home/activitiesdonut.py:90
 msgid "Starting..."
@@ -87,26 +87,26 @@ msgstr "మొదలవుతుంది..."
 
 #: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
 msgid "Resume"
-msgstr "పునరారంభించు"
+msgstr "పునరార౦భి౦చు"
 
 #: ../shell/view/home/activitiesdonut.py:111
-#: ../lib/sugar/activity/activity.py:128
+#: ../lib/sugar/activity/activity.py:132
 msgid "Stop"
 msgstr "ఆపు"
 
-#: ../shell/view/Shell.py:276
+#: ../shell/view/Shell.py:285
 msgid "Screenshot"
 msgstr "తెరముద్ర"
 
-#: ../shell/view/home/HomeBox.py:158
+#: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
 msgstr "తిరిగి బూట్ చేయి"
 
-#: ../shell/view/home/HomeBox.py:163
+#: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
 msgstr "ఫూర్తిగా ఆపు"
 
-#: ../shell/view/home/HomeBox.py:169
+#: ../shell/view/home/HomeBox.py:170
 msgid "Register"
 msgstr "దాఖలు చేయి"
 
@@ -152,7 +152,7 @@ msgstr "వేరుచేయబడింది"
 
 #: ../shell/view/devices/network/wireless.py:131
 msgid "Channel"
-msgstr "ఛానలు"
+msgstr "ప్రవాహము"
 
 #: ../shell/view/frame/zoomtoolbar.py:42
 msgid "Neighborhood"
@@ -168,58 +168,58 @@ msgstr "ఇల్లు"
 
 #: ../shell/view/frame/zoomtoolbar.py:78
 msgid "Activity"
-msgstr "వ్యాపకం"
+msgstr "వ్యాపక౦"
 
-#: ../lib/sugar/activity/activity.py:111
+#: ../lib/sugar/activity/activity.py:115
 msgid "Share with:"
 msgstr "తో పంచుకో:"
 
-#: ../lib/sugar/activity/activity.py:113
+#: ../lib/sugar/activity/activity.py:117
 msgid "Private"
 msgstr "సొంతం"
 
-#: ../lib/sugar/activity/activity.py:114
+#: ../lib/sugar/activity/activity.py:118
 msgid "My Neighborhood"
 msgstr "నా చుట్టుపక్కలవారు"
 
-#: ../lib/sugar/activity/activity.py:122
+#: ../lib/sugar/activity/activity.py:126
 msgid "Keep"
 msgstr "ఉంచు"
 
-#: ../lib/sugar/activity/activity.py:241
+#: ../lib/sugar/activity/activity.py:245
 msgid "Undo"
 msgstr "ఆఖరుది రద్దు చేయి"
 
-#: ../lib/sugar/activity/activity.py:246
+#: ../lib/sugar/activity/activity.py:250
 msgid "Redo"
 msgstr "తిరిగి చేయి"
 
-#: ../lib/sugar/activity/activity.py:256
+#: ../lib/sugar/activity/activity.py:260
 msgid "Copy"
 msgstr "నకలు"
 
-#: ../lib/sugar/activity/activity.py:261
+#: ../lib/sugar/activity/activity.py:265
 msgid "Paste"
 msgstr "అతికించు"
 
-#: ../lib/sugar/activity/activity.py:450
+#: ../lib/sugar/activity/activity.py:454
 #, python-format
 msgid "%s Activity"
 msgstr "%s వ్యాపకం"
 
-#: ../lib/sugar/activity/activity.py:813
+#: ../lib/sugar/activity/activity.py:824
 msgid "Keep error"
 msgstr "పొరబాటు జరిగింది"
 
-#: ../lib/sugar/activity/activity.py:814
+#: ../lib/sugar/activity/activity.py:825
 msgid "Keep error: all changes will be lost"
 msgstr "పొరబాటు జరిగింది : అన్ని మార్పులూ పోతాయి"
 
-#: ../lib/sugar/activity/activity.py:817
+#: ../lib/sugar/activity/activity.py:828
 msgid "Don't stop"
 msgstr "ఆపవద్దు"
 
-#: ../lib/sugar/activity/activity.py:820
+#: ../lib/sugar/activity/activity.py:831
 msgid "Stop anyway"
 msgstr "ఏదేమైనా ఆపువేయి"
 
@@ -311,7 +311,7 @@ msgstr "%d సెకనులు"
 
 #: ../lib/sugar/graphics/objectchooser.py:191
 msgid " and "
-msgstr "మరియు"
+msgstr " మరియు "
 
 #: ../lib/sugar/graphics/objectchooser.py:193
 msgid ", "
@@ -351,33 +351,33 @@ msgstr "అనుమతి లేదు. మీరు రూట్ గా మా
 
 #: ../shell/controlpanel/control.py:366
 msgid "Error in reading timezone"
-msgstr "కాలం చదవడంలో పొరబాటు జరిగింది"
+msgstr "కాలమండలం చదవడంలో పొరబాటు జరిగింది"
 
 #: ../shell/controlpanel/control.py:397
 #, python-format
 msgid "Error copying timezone (from %s): %s"
-msgstr "కాలం నకలు చేయడంలో పొరబాటు జరిగింది (%s నుంచి ):  %s"
+msgstr "కాలమండలం నకలు చేయడంలో పొరబాటు జరిగింది (%s నుంచి ): %s"
 
 #: ../shell/controlpanel/control.py:402
 #, python-format
 msgid "Changing permission of timezone: %s"
-msgstr "కాలం అనుమతి మారుతుంది: %s"
+msgstr "కాలమండలం అనుమతి మారుతుంది:%s"
 
-#: ../shell/controlpanel/control.py:413
+#: ../shell/controlpanel/control.py:412
 msgid "Error timezone does not exist."
-msgstr "పొరబాటు. కాలమే లేదు."
+msgstr "పొరబాటు. కాలమండలమే లేదు."
 
-#: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
+#: ../shell/controlpanel/control.py:417 ../shell/controlpanel/control.py:436
 #, python-format
 msgid "Could not access %s. Create standard settings."
 msgstr "%s ప్రవేశము కుదరలేదు. ప్రమాణ మైన సెట్టింగ్ శ్రుష్తించనా."
 
-#: ../shell/controlpanel/control.py:466
+#: ../shell/controlpanel/control.py:463
 #, python-format
 msgid "Language for code=%s could not be determined."
 msgstr "కోడ్=%s కు భాష తెలియ లేదు."
 
-#: ../shell/controlpanel/control.py:476
+#: ../shell/controlpanel/control.py:473
 #, python-format
 msgid "Sorry I do not speak '%s'."
 msgstr "మన్నించాలి నేను '%s'మాట్లాడలేను"
@@ -392,11 +392,11 @@ msgstr "బడి మెష్ పొర్టల్ కోసమై చూస�
 
 #: ../shell/view/devices/network/mesh.py:110
 msgid "Connected to an XO Mesh Portal"
-msgstr "XO మెష్ పొర్టల్ తో జతచేయబడింది"
+msgstr "ఎక్స్ఒ మెష్ పొర్టల్ తో జతచేయబడింది"
 
 #: ../shell/view/devices/network/mesh.py:112
 msgid "Looking for an XO Mesh Portal..."
-msgstr "XO మెష్ పొర్టల్ కోసమై చూస్తున్నా..."
+msgstr "ఎక్స్ఒ మెష్ పొర్టల్ కోసమై చూస్తున్నా..."
 
 #: ../shell/view/devices/network/mesh.py:115
 msgid "Connected to a Simple Mesh"
@@ -409,3 +409,11 @@ msgstr "సరళమైన మెష్ మొదలవుతుంది"
 #: ../shell/view/devices/network/mesh.py:124
 msgid "Unknown Mesh"
 msgstr "తెలియని మెష్"
+
+#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
+msgid "About this XO"
+msgstr "ఈ ఎక్స్ఒ గురించి"
+
+#: ../shell/view/home/HomeBox.py:222
+msgid "Not available"
+msgstr "అందుబాటులో లేదు"
