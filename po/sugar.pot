@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-21 00:36+0100\n"
+"POT-Creation-Date: 2008-01-18 18:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,24 +36,24 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: ../shell/view/BuddyMenu.py:84
+#: ../shell/view/BuddyMenu.py:59
 msgid "Remove friend"
 msgstr ""
 
-#: ../shell/view/BuddyMenu.py:87
+#: ../shell/view/BuddyMenu.py:62
 msgid "Make friend"
 msgstr ""
 
-#: ../shell/view/BuddyMenu.py:109
+#: ../shell/view/BuddyMenu.py:84
 #, python-format
 msgid "Invite to %s"
 msgstr ""
 
-#: ../shell/view/clipboardmenu.py:59
+#: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
 msgstr ""
 
-#: ../shell/view/clipboardmenu.py:64
+#: ../shell/view/clipboardmenu.py:63
 msgid "Open"
 msgstr ""
 
@@ -61,11 +61,11 @@ msgstr ""
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../shell/view/clipboardmenu.py:74
+#: ../shell/view/clipboardmenu.py:73
 msgid "Add to journal"
 msgstr ""
 
-#: ../shell/view/clipboardmenu.py:200
+#: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
 msgstr ""
@@ -91,24 +91,32 @@ msgid "Resume"
 msgstr ""
 
 #: ../shell/view/home/activitiesdonut.py:111
-#: ../lib/sugar/activity/activity.py:128
+#: ../lib/sugar/activity/activity.py:132
 msgid "Stop"
 msgstr ""
 
-#: ../shell/view/Shell.py:276
+#: ../shell/view/Shell.py:285
 msgid "Screenshot"
 msgstr ""
 
-#: ../shell/view/home/HomeBox.py:158
+#: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
 msgstr ""
 
-#: ../shell/view/home/HomeBox.py:163
+#: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
 msgstr ""
 
-#: ../shell/view/home/HomeBox.py:169
+#: ../shell/view/home/HomeBox.py:170
 msgid "Register"
+msgstr ""
+
+#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
+msgid "About this XO"
+msgstr ""
+
+#: ../shell/view/home/HomeBox.py:222
+msgid "Not available"
 msgstr ""
 
 #. Only show disconnect when there's a mesh device, because mesh takes
@@ -171,56 +179,56 @@ msgstr ""
 msgid "Activity"
 msgstr ""
 
-#: ../lib/sugar/activity/activity.py:111
+#: ../lib/sugar/activity/activity.py:115
 msgid "Share with:"
 msgstr ""
 
-#: ../lib/sugar/activity/activity.py:113
+#: ../lib/sugar/activity/activity.py:117
 msgid "Private"
 msgstr ""
 
-#: ../lib/sugar/activity/activity.py:114
+#: ../lib/sugar/activity/activity.py:118
 msgid "My Neighborhood"
 msgstr ""
 
-#: ../lib/sugar/activity/activity.py:122
+#: ../lib/sugar/activity/activity.py:126
 msgid "Keep"
 msgstr ""
 
-#: ../lib/sugar/activity/activity.py:241
+#: ../lib/sugar/activity/activity.py:245
 msgid "Undo"
 msgstr ""
 
-#: ../lib/sugar/activity/activity.py:246
+#: ../lib/sugar/activity/activity.py:250
 msgid "Redo"
 msgstr ""
 
-#: ../lib/sugar/activity/activity.py:256
+#: ../lib/sugar/activity/activity.py:260
 msgid "Copy"
 msgstr ""
 
-#: ../lib/sugar/activity/activity.py:261
+#: ../lib/sugar/activity/activity.py:265
 msgid "Paste"
 msgstr ""
 
-#: ../lib/sugar/activity/activity.py:450
+#: ../lib/sugar/activity/activity.py:454
 #, python-format
 msgid "%s Activity"
 msgstr ""
 
-#: ../lib/sugar/activity/activity.py:813
+#: ../lib/sugar/activity/activity.py:824
 msgid "Keep error"
 msgstr ""
 
-#: ../lib/sugar/activity/activity.py:814
+#: ../lib/sugar/activity/activity.py:825
 msgid "Keep error: all changes will be lost"
 msgstr ""
 
-#: ../lib/sugar/activity/activity.py:817
+#: ../lib/sugar/activity/activity.py:828
 msgid "Don't stop"
 msgstr ""
 
-#: ../lib/sugar/activity/activity.py:820
+#: ../lib/sugar/activity/activity.py:831
 msgid "Stop anyway"
 msgstr ""
 
@@ -238,84 +246,6 @@ msgstr ""
 
 #: ../lib/sugar/graphics/alert.py:244
 msgid "OK"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:175
-#, python-format
-msgid "%d year"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:175
-#, python-format
-msgid "%d years"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:176
-#, python-format
-msgid "%d month"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:176
-#, python-format
-msgid "%d months"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:177
-#, python-format
-msgid "%d week"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:177
-#, python-format
-msgid "%d weeks"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:178
-#, python-format
-msgid "%d day"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:178
-#, python-format
-msgid "%d days"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:179
-#, python-format
-msgid "%d hour"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:179
-#, python-format
-msgid "%d hours"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:180
-#, python-format
-msgid "%d minute"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:180
-#, python-format
-msgid "%d minutes"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:181
-#, python-format
-msgid "%d second"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:181
-#, python-format
-msgid "%d seconds"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:191
-msgid " and "
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:193
-msgid ", "
 msgstr ""
 
 #: ../shell/controlpanel/control.py:213
@@ -364,21 +294,21 @@ msgstr ""
 msgid "Changing permission of timezone: %s"
 msgstr ""
 
-#: ../shell/controlpanel/control.py:413
+#: ../shell/controlpanel/control.py:412
 msgid "Error timezone does not exist."
 msgstr ""
 
-#: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
+#: ../shell/controlpanel/control.py:417 ../shell/controlpanel/control.py:436
 #, python-format
 msgid "Could not access %s. Create standard settings."
 msgstr ""
 
-#: ../shell/controlpanel/control.py:466
+#: ../shell/controlpanel/control.py:463
 #, python-format
 msgid "Language for code=%s could not be determined."
 msgstr ""
 
-#: ../shell/controlpanel/control.py:476
+#: ../shell/controlpanel/control.py:473
 #, python-format
 msgid "Sorry I do not speak '%s'."
 msgstr ""

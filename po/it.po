@@ -2,19 +2,18 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-03-23 14:50+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2008-01-18 18:19+0000\n"
+"PO-Revision-Date: 2008-01-27 19:22-0500\n"
+"Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Pootle 1.0.2\n"
 
 #: ../services/clipboard/typeregistry.py:29
 msgid "Text snippet"
@@ -30,27 +29,27 @@ msgstr "Pagina web"
 
 #: ../services/clipboard/typeregistry.py:103
 msgid "PDF file"
-msgstr ""
+msgstr "File PDF"
 
 #: ../services/clipboard/typeregistry.py:123
 msgid "MS Word file"
-msgstr ""
+msgstr "File MS Word"
 
 #: ../services/clipboard/typeregistry.py:143
 msgid "RTF file"
-msgstr ""
+msgstr "File RTF"
 
 #: ../services/clipboard/typeregistry.py:154
 msgid "Abiword file"
-msgstr ""
+msgstr "File Abiword"
 
 #: ../services/clipboard/typeregistry.py:165
 msgid "Squeak project"
-msgstr ""
+msgstr "Progetto Squeak"
 
 #: ../services/clipboard/typeregistry.py:185
 msgid "OpenOffice text file"
-msgstr ""
+msgstr "File di testo OpenOffice"
 
 #: ../services/clipboard/typeregistry.py:202
 msgid "Object"
@@ -72,11 +71,11 @@ msgstr "Il mio nome:"
 msgid "My Color:"
 msgstr "Il mio color:"
 
-#: ../shell/view/BuddyMenu.py:89
+#: ../shell/view/BuddyMenu.py:59
 msgid "Remove friend"
 msgstr "Rimuovi l'amico"
 
-#: ../shell/view/BuddyMenu.py:93
+#: ../shell/view/BuddyMenu.py:62
 msgid "Make friend"
 msgstr "Aggiungi agli amici"
 
@@ -84,17 +83,17 @@ msgstr "Aggiungi agli amici"
 msgid "Invite"
 msgstr "Invita"
 
-#: ../shell/view/clipboardmenu.py:63 ../shell/view/clipboardmenu.py:79
+#: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
 msgstr "Rimuovi"
 
-#: ../shell/view/clipboardmenu.py:69
+#: ../shell/view/clipboardmenu.py:63
 msgid "Open"
 msgstr "Apri"
 
 #: ../shell/view/clipboardmenu.py:93
 msgid "Stop download"
-msgstr "Ferma lo scaricamento"
+msgstr "Sospendi il trasferimento"
 
 #: ../shell/view/frame/ZoomBox.py:41
 msgid "Close"
@@ -107,3 +106,412 @@ msgstr "Nessuna opzione"
 #: ../sugar/chat/ChatEditor.py:56
 msgid "Send"
 msgstr "Invia"
+
+#: ../shell/intro/intro.py:67
+msgid "Name:"
+msgstr "Nome:"
+
+#: ../shell/intro/intro.py:96
+msgid "Click to change color:"
+msgstr "Seleziona per cambiare colore:"
+
+#: ../shell/intro/intro.py:146
+msgid "Back"
+msgstr "Indietro"
+
+#: ../shell/intro/intro.py:160
+msgid "Done"
+msgstr "Fatto"
+
+#: ../shell/intro/intro.py:163
+msgid "Next"
+msgstr "Prossimo"
+
+#: ../shell/view/BuddyMenu.py:84
+#, python-format
+msgid "Invite to %s"
+msgstr "Invito per %s"
+
+#. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
+#. TODO: Implement stopping downloads
+#. self._stop_item.connect('activate', self._stop_item_activate_cb)
+#. self.append_menu_item(self._stop_item)
+#: ../shell/view/clipboardmenu.py:73
+msgid "Add to journal"
+msgstr "Aggiungi al diario"
+
+#: ../shell/view/clipboardmenu.py:213
+#, python-format
+msgid "Clipboard object: %s."
+msgstr "Oggetto Clipboard: %s."
+
+#: ../shell/hardware/keydialog.py:149
+msgid "Key Type:"
+msgstr "Tipo Chiave:"
+
+#: ../shell/hardware/keydialog.py:169
+msgid "Authentication Type:"
+msgstr "Tipo di Autenticazione:"
+
+#: ../shell/hardware/keydialog.py:250
+msgid "Encryption Type:"
+msgstr "Tipo di Crittografia:"
+
+#: ../shell/view/home/activitiesdonut.py:90
+msgid "Starting..."
+msgstr "Inizio..."
+
+#: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
+msgid "Resume"
+msgstr "Riprendi"
+
+#: ../shell/view/home/activitiesdonut.py:111
+#: ../lib/sugar/activity/activity.py:132
+msgid "Stop"
+msgstr "Stop"
+
+#: ../shell/view/Shell.py:285
+msgid "Screenshot"
+msgstr "Schermata"
+
+#: ../shell/view/home/HomeBox.py:159
+msgid "Reboot"
+msgstr "Riavvia"
+
+#: ../shell/view/home/HomeBox.py:164
+msgid "Shutdown"
+msgstr "Spegni"
+
+#: ../shell/view/home/HomeBox.py:170
+msgid "Register"
+msgstr "Registra"
+
+#. Only show disconnect when there's a mesh device, because mesh takes
+#. priority over the normal wireless device.  NM doesn't have a "disconnect"
+#. method for a device either (for various reasons) so this doesn't
+#. have a good mapping
+#: ../shell/view/home/MeshBox.py:90 ../shell/view/home/MeshBox.py:197
+#: ../shell/view/devices/network/wireless.py:113
+#: ../shell/view/devices/network/mesh.py:83
+msgid "Disconnect..."
+msgstr "Disconnessione..."
+
+# A complete translation in italian: "rete a maglie" becames a tautology
+#: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
+#: ../shell/view/devices/network/mesh.py:62
+#: ../shell/view/devices/network/mesh.py:66
+msgid "Mesh Network"
+msgstr "Rete Mesh"
+
+#: ../shell/view/home/MeshBox.py:300
+#, fuzzy
+msgid "Join"
+msgstr "Associa"
+
+#: ../shell/view/devices/battery.py:38
+msgid "My Battery life"
+msgstr "Durata Batteria"
+
+#: ../shell/view/devices/battery.py:94
+msgid "Battery charging"
+msgstr "Batteria in carica"
+
+#: ../shell/view/devices/battery.py:96
+msgid "Battery discharging"
+msgstr "Batteria in uso"
+
+#: ../shell/view/devices/battery.py:98
+msgid "Battery fully charged"
+msgstr "Batteria caricata completamente"
+
+#: ../shell/view/devices/network/wireless.py:61
+msgid "Disconnected"
+msgstr "Disconnesso"
+
+#: ../shell/view/devices/network/wireless.py:131
+msgid "Channel"
+msgstr "Canale"
+
+#: ../shell/view/frame/zoomtoolbar.py:42
+msgid "Neighborhood"
+msgstr "Vicinato"
+
+#: ../shell/view/frame/zoomtoolbar.py:54
+msgid "Group"
+msgstr "Gruppo"
+
+#: ../shell/view/frame/zoomtoolbar.py:66
+#, fuzzy
+msgid "Home"
+msgstr "Inizio"
+
+#: ../shell/view/frame/zoomtoolbar.py:78
+msgid "Activity"
+msgstr "Attività"
+
+#: ../lib/sugar/activity/activity.py:115
+msgid "Share with:"
+msgstr "Condividi con:"
+
+#: ../lib/sugar/activity/activity.py:117
+msgid "Private"
+msgstr "Privato"
+
+#: ../lib/sugar/activity/activity.py:118
+msgid "My Neighborhood"
+msgstr "Il mio Vicinato"
+
+#: ../lib/sugar/activity/activity.py:126
+#, fuzzy
+msgid "Keep"
+msgstr "Conserva"
+
+#: ../lib/sugar/activity/activity.py:245
+msgid "Undo"
+msgstr "Annulla"
+
+#: ../lib/sugar/activity/activity.py:250
+msgid "Redo"
+msgstr "Ripeti"
+
+#: ../lib/sugar/activity/activity.py:260
+msgid "Copy"
+msgstr "Copia"
+
+#: ../lib/sugar/activity/activity.py:265
+msgid "Paste"
+msgstr "Incolla"
+
+#: ../lib/sugar/activity/activity.py:454
+#, python-format
+msgid "%s Activity"
+msgstr "Attività %s"
+
+#: ../lib/sugar/activity/activity.py:824
+#, fuzzy
+msgid "Keep error"
+msgstr "Errore di scrittura"
+
+#: ../lib/sugar/activity/activity.py:825
+#, fuzzy
+msgid "Keep error: all changes will be lost"
+msgstr "Errore di scrittura: tutte le modifiche verranno perse"
+
+#: ../lib/sugar/activity/activity.py:828
+msgid "Don't stop"
+msgstr "Non interrompere"
+
+#: ../lib/sugar/activity/activity.py:831
+msgid "Stop anyway"
+msgstr "Interrompi comunque"
+
+#: ../lib/sugar/graphics/alert.py:164 ../lib/sugar/graphics/alert.py:206
+msgid "Cancel"
+msgstr "Cancella"
+
+#: ../lib/sugar/graphics/alert.py:168
+msgid "Ok"
+msgstr "Ok"
+
+#: ../lib/sugar/graphics/alert.py:216
+msgid "Continue"
+msgstr "Continua"
+
+#: ../lib/sugar/graphics/alert.py:244
+msgid "OK"
+msgstr "OK"
+
+#: ../lib/sugar/graphics/objectchooser.py:175
+#, python-format
+msgid "%d year"
+msgstr "%d anno"
+
+#: ../lib/sugar/graphics/objectchooser.py:175
+#, python-format
+msgid "%d years"
+msgstr "%d anni"
+
+#: ../lib/sugar/graphics/objectchooser.py:176
+#, python-format
+msgid "%d month"
+msgstr "%d mese"
+
+#: ../lib/sugar/graphics/objectchooser.py:176
+#, python-format
+msgid "%d months"
+msgstr "%d mesi"
+
+#: ../lib/sugar/graphics/objectchooser.py:177
+#, python-format
+msgid "%d week"
+msgstr "%d settimana"
+
+#: ../lib/sugar/graphics/objectchooser.py:177
+#, python-format
+msgid "%d weeks"
+msgstr "%d settimane"
+
+#: ../lib/sugar/graphics/objectchooser.py:178
+#, python-format
+msgid "%d day"
+msgstr "%d giorno"
+
+#: ../lib/sugar/graphics/objectchooser.py:178
+#, python-format
+msgid "%d days"
+msgstr "%d giorni"
+
+#: ../lib/sugar/graphics/objectchooser.py:179
+#, python-format
+msgid "%d hour"
+msgstr "%d ora"
+
+#: ../lib/sugar/graphics/objectchooser.py:179
+#, python-format
+msgid "%d hours"
+msgstr "%d ore"
+
+#: ../lib/sugar/graphics/objectchooser.py:180
+#, python-format
+msgid "%d minute"
+msgstr "%d minuto"
+
+#: ../lib/sugar/graphics/objectchooser.py:180
+#, python-format
+msgid "%d minutes"
+msgstr "%d minuti"
+
+#: ../lib/sugar/graphics/objectchooser.py:181
+#, python-format
+msgid "%d second"
+msgstr "%d secondo"
+
+#: ../lib/sugar/graphics/objectchooser.py:181
+#, python-format
+msgid "%d seconds"
+msgstr "%d secondi"
+
+#: ../lib/sugar/graphics/objectchooser.py:191
+msgid " and "
+msgstr " e "
+
+#: ../lib/sugar/graphics/objectchooser.py:193
+msgid ", "
+msgstr ", "
+
+#: ../shell/controlpanel/control.py:213
+msgid "To apply your changes you have to restart sugar.\n"
+msgstr "Per applicare le modifiche è necessario riavviare sugar.\n"
+
+#: ../shell/controlpanel/control.py:267
+#, fuzzy
+msgid "Error in specified color modifiers."
+msgstr "Errore nell'alterazione dei colori richiesta"
+
+#: ../shell/controlpanel/control.py:270
+#, fuzzy
+msgid "Error in specified colors."
+msgstr "Errore nella definizione dei colori."
+
+#: ../shell/controlpanel/control.py:307
+msgid "off"
+msgstr "spento"
+
+#: ../shell/controlpanel/control.py:309
+msgid "on"
+msgstr "acceso"
+
+#: ../shell/controlpanel/control.py:310
+#, fuzzy
+msgid "State is unknown."
+msgstr "Stato sconosciuto."
+
+#: ../shell/controlpanel/control.py:332
+#, fuzzy
+msgid "Error in specified radio argument use on/off."
+msgstr "Errore nel campo specificato, utilizzare acceso/spento."
+
+#: ../shell/controlpanel/control.py:336
+msgid "Permission denied. You need to be root to run this method."
+msgstr ""
+"Autorizzazione negata. E' necessario essere \"root\" per eseguire questo "
+"metodo."
+
+#: ../shell/controlpanel/control.py:366
+#, fuzzy
+msgid "Error in reading timezone"
+msgstr "Errore nel timezone"
+
+#: ../shell/controlpanel/control.py:397
+#, python-format
+#, fuzzy
+msgid "Error copying timezone (from %s): %s"
+msgstr "Errore nella copia del timezone (da %s): %s"
+
+#: ../shell/controlpanel/control.py:402
+#, python-format
+msgid "Changing permission of timezone: %s"
+msgstr ""
+
+#: ../shell/controlpanel/control.py:412
+msgid "Error timezone does not exist."
+msgstr ""
+
+#: ../shell/controlpanel/control.py:417 ../shell/controlpanel/control.py:436
+#, python-format
+#, fuzzy
+msgid "Could not access %s. Create standard settings."
+msgstr "Impossibile accedere a %s. Creazione configurazione standard. "
+
+#: ../shell/controlpanel/control.py:463
+#, python-format
+msgid "Language for code=%s could not be determined."
+msgstr "Linguaggio con codice=%s sconosciuto."
+
+#: ../shell/controlpanel/control.py:473
+#, python-format
+msgid "Sorry I do not speak '%s'."
+msgstr "Spiacente, ma non parlo '%s'."
+
+#: ../shell/view/devices/network/mesh.py:105
+msgid "Connected to a School Mesh Portal"
+msgstr "Connesso ad un Portale Mesh di scuola"
+
+#: ../shell/view/devices/network/mesh.py:107
+#, fuzzy
+msgid "Looking for a School Mesh Portal..."
+msgstr "Ricerca di un Portale Mesh di scuola..."
+
+#: ../shell/view/devices/network/mesh.py:110
+#, fuzzy
+msgid "Connected to an XO Mesh Portal"
+msgstr "Connesso ad un Portale Mesh XO"
+
+#: ../shell/view/devices/network/mesh.py:112
+#, fuzzy
+msgid "Looking for an XO Mesh Portal..."
+msgstr "Sto cercando un Portale Mesh XO..."
+
+# Diretto?
+#: ../shell/view/devices/network/mesh.py:115
+#, fuzzy
+msgid "Connected to a Simple Mesh"
+msgstr "Connesso ad un Mesh Semplice"
+
+# Diretto?
+#: ../shell/view/devices/network/mesh.py:117
+#, fuzzy
+msgid "Starting a Simple Mesh"
+msgstr "Attivazione Mesh Semplice"
+
+#: ../shell/view/devices/network/mesh.py:124
+msgid "Unknown Mesh"
+msgstr "Mesh sconosciuto"
+
+#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
+msgid "About this XO"
+msgstr "Informazioni su questo XO"
+
+#: ../shell/view/home/HomeBox.py:222
+msgid "Not available"
+msgstr "Non disponibile"

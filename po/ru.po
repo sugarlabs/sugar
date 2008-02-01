@@ -2,114 +2,113 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-21 00:36+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2008-01-18 18:19+0000\n"
+"PO-Revision-Date: 2007-12-23 09:35+0000\n"
+"Last-Translator: Maxim Osipov <maxim.osipov@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.0.1\n"
+"X-Generator: Pootle 1.0.2\n"
 
 #: ../shell/intro/intro.py:67
 msgid "Name:"
-msgstr ""
+msgstr "Имя:"
 
 #: ../shell/intro/intro.py:96
 msgid "Click to change color:"
-msgstr ""
+msgstr "Кликните для изменения цвета:"
 
 #: ../shell/intro/intro.py:146
 msgid "Back"
-msgstr ""
+msgstr "Назад"
 
 #: ../shell/intro/intro.py:160
 msgid "Done"
-msgstr ""
+msgstr "Готово"
 
 #: ../shell/intro/intro.py:163
 msgid "Next"
-msgstr ""
+msgstr "Далее"
+
+#: ../shell/view/BuddyMenu.py:59
+msgid "Remove friend"
+msgstr "Убрать друга"
+
+#: ../shell/view/BuddyMenu.py:62
+msgid "Make friend"
+msgstr "Создать друга"
 
 #: ../shell/view/BuddyMenu.py:84
-msgid "Remove friend"
-msgstr ""
-
-#: ../shell/view/BuddyMenu.py:87
-msgid "Make friend"
-msgstr ""
-
-#: ../shell/view/BuddyMenu.py:109
 #, python-format
 msgid "Invite to %s"
-msgstr ""
+msgstr "Пригласить в %s"
 
-#: ../shell/view/clipboardmenu.py:59
+#: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
-msgstr ""
+msgstr "Удалить"
 
-#: ../shell/view/clipboardmenu.py:64
+#: ../shell/view/clipboardmenu.py:63
 msgid "Open"
-msgstr ""
+msgstr "Открыть"
 
 #. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../shell/view/clipboardmenu.py:74
+#: ../shell/view/clipboardmenu.py:73
 msgid "Add to journal"
-msgstr ""
+msgstr "Добавить в журнал"
 
-#: ../shell/view/clipboardmenu.py:200
+#: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
-msgstr ""
+msgstr "Объект буфера: %s."
 
 #: ../shell/hardware/keydialog.py:149
 msgid "Key Type:"
-msgstr ""
+msgstr "Тип ключа:"
 
 #: ../shell/hardware/keydialog.py:169
 msgid "Authentication Type:"
-msgstr ""
+msgstr "Тип аутентификации:"
 
 #: ../shell/hardware/keydialog.py:250
 msgid "Encryption Type:"
-msgstr ""
+msgstr "Тип шифрования:"
 
 #: ../shell/view/home/activitiesdonut.py:90
 msgid "Starting..."
-msgstr ""
+msgstr "Запуск..."
 
 #: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
 msgid "Resume"
-msgstr ""
+msgstr "Продолжить"
 
 #: ../shell/view/home/activitiesdonut.py:111
-#: ../lib/sugar/activity/activity.py:128
+#: ../lib/sugar/activity/activity.py:132
 msgid "Stop"
-msgstr ""
+msgstr "Стоп"
 
-#: ../shell/view/Shell.py:276
+#: ../shell/view/Shell.py:285
 msgid "Screenshot"
-msgstr ""
+msgstr "Снимок экрана"
 
-#: ../shell/view/home/HomeBox.py:158
+#: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
-msgstr ""
+msgstr "Перезагрузить"
 
-#: ../shell/view/home/HomeBox.py:163
+#: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
-msgstr ""
+msgstr "Выключить"
 
-#: ../shell/view/home/HomeBox.py:169
+#: ../shell/view/home/HomeBox.py:170
 msgid "Register"
-msgstr ""
+msgstr "Зарегистрироваться"
 
 #. Only show disconnect when there's a mesh device, because mesh takes
 #. priority over the normal wireless device.  NM doesn't have a "disconnect"
@@ -119,294 +118,303 @@ msgstr ""
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
 msgid "Disconnect..."
-msgstr ""
+msgstr "Разъединить..."
 
 #: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
 #: ../shell/view/devices/network/mesh.py:62
 #: ../shell/view/devices/network/mesh.py:66
 msgid "Mesh Network"
-msgstr ""
+msgstr "Местная Сеть"
 
 #: ../shell/view/home/MeshBox.py:300
 msgid "Join"
-msgstr ""
+msgstr "Присоединиться"
 
 #: ../shell/view/devices/battery.py:38
 msgid "My Battery life"
-msgstr ""
+msgstr "Моя Батарейка"
 
 #: ../shell/view/devices/battery.py:94
 msgid "Battery charging"
-msgstr ""
+msgstr "Батарейка заряжается"
 
 #: ../shell/view/devices/battery.py:96
 msgid "Battery discharging"
-msgstr ""
+msgstr "Батарейка разряжается"
 
 #: ../shell/view/devices/battery.py:98
 msgid "Battery fully charged"
-msgstr ""
+msgstr "Батарейка полностью заряжена"
 
 #: ../shell/view/devices/network/wireless.py:61
 msgid "Disconnected"
-msgstr ""
+msgstr "Не подключен"
 
 #: ../shell/view/devices/network/wireless.py:131
 msgid "Channel"
-msgstr ""
+msgstr "Канал"
 
 #: ../shell/view/frame/zoomtoolbar.py:42
 msgid "Neighborhood"
-msgstr ""
+msgstr "Соседи"
 
 #: ../shell/view/frame/zoomtoolbar.py:54
 msgid "Group"
-msgstr ""
+msgstr "Группа"
 
 #: ../shell/view/frame/zoomtoolbar.py:66
 msgid "Home"
-msgstr ""
+msgstr "Дом"
 
 #: ../shell/view/frame/zoomtoolbar.py:78
 msgid "Activity"
-msgstr ""
+msgstr "Активность"
 
-#: ../lib/sugar/activity/activity.py:111
+#: ../lib/sugar/activity/activity.py:115
 msgid "Share with:"
-msgstr ""
+msgstr "Разделить с:"
 
-#: ../lib/sugar/activity/activity.py:113
+#: ../lib/sugar/activity/activity.py:117
 msgid "Private"
-msgstr ""
+msgstr "Личное"
 
-#: ../lib/sugar/activity/activity.py:114
+# в русском языке мы не Пишем Каждое Слово с Заглавной Буквы
+#: ../lib/sugar/activity/activity.py:118
 msgid "My Neighborhood"
-msgstr ""
+msgstr "Мои соседи"
 
-#: ../lib/sugar/activity/activity.py:122
+#: ../lib/sugar/activity/activity.py:126
 msgid "Keep"
-msgstr ""
+msgstr "Хранить"
 
-#: ../lib/sugar/activity/activity.py:241
+#: ../lib/sugar/activity/activity.py:245
 msgid "Undo"
-msgstr ""
+msgstr "Отменить"
 
-#: ../lib/sugar/activity/activity.py:246
+#: ../lib/sugar/activity/activity.py:250
 msgid "Redo"
-msgstr ""
+msgstr "Повторить"
 
-#: ../lib/sugar/activity/activity.py:256
+#: ../lib/sugar/activity/activity.py:260
 msgid "Copy"
-msgstr ""
+msgstr "Копировать"
 
-#: ../lib/sugar/activity/activity.py:261
+#: ../lib/sugar/activity/activity.py:265
 msgid "Paste"
-msgstr ""
+msgstr "Вставить"
 
-#: ../lib/sugar/activity/activity.py:450
+#: ../lib/sugar/activity/activity.py:454
 #, python-format
 msgid "%s Activity"
-msgstr ""
+msgstr "%s Активность"
 
-#: ../lib/sugar/activity/activity.py:813
+#: ../lib/sugar/activity/activity.py:824
 msgid "Keep error"
-msgstr ""
+msgstr "Ошибка сохранения"
 
-#: ../lib/sugar/activity/activity.py:814
+#: ../lib/sugar/activity/activity.py:825
 msgid "Keep error: all changes will be lost"
-msgstr ""
+msgstr "Ошибка сохранения: все изменения будут потеряны"
 
-#: ../lib/sugar/activity/activity.py:817
+#: ../lib/sugar/activity/activity.py:828
 msgid "Don't stop"
-msgstr ""
+msgstr "Не останавливаться"
 
-#: ../lib/sugar/activity/activity.py:820
+#: ../lib/sugar/activity/activity.py:831
 msgid "Stop anyway"
-msgstr ""
+msgstr "Все равно остановиться"
 
 #: ../lib/sugar/graphics/alert.py:164 ../lib/sugar/graphics/alert.py:206
 msgid "Cancel"
-msgstr ""
+msgstr "Отмена"
 
 #: ../lib/sugar/graphics/alert.py:168
 msgid "Ok"
-msgstr ""
+msgstr "Ок"
 
 #: ../lib/sugar/graphics/alert.py:216
 msgid "Continue"
-msgstr ""
+msgstr "Продолжить"
 
 #: ../lib/sugar/graphics/alert.py:244
 msgid "OK"
-msgstr ""
+msgstr "ОК"
 
 #: ../lib/sugar/graphics/objectchooser.py:175
 #, python-format
 msgid "%d year"
-msgstr ""
+msgstr "%d год"
 
 #: ../lib/sugar/graphics/objectchooser.py:175
 #, python-format
 msgid "%d years"
-msgstr ""
+msgstr "%d лет"
 
 #: ../lib/sugar/graphics/objectchooser.py:176
 #, python-format
 msgid "%d month"
-msgstr ""
+msgstr "%d месяц"
 
 #: ../lib/sugar/graphics/objectchooser.py:176
 #, python-format
 msgid "%d months"
-msgstr ""
+msgstr "%d месяцев"
 
 #: ../lib/sugar/graphics/objectchooser.py:177
 #, python-format
 msgid "%d week"
-msgstr ""
+msgstr "%d неделя"
 
 #: ../lib/sugar/graphics/objectchooser.py:177
 #, python-format
 msgid "%d weeks"
-msgstr ""
+msgstr "%d недель"
 
 #: ../lib/sugar/graphics/objectchooser.py:178
 #, python-format
 msgid "%d day"
-msgstr ""
+msgstr "%d день"
 
 #: ../lib/sugar/graphics/objectchooser.py:178
 #, python-format
 msgid "%d days"
-msgstr ""
+msgstr "%d дней"
 
 #: ../lib/sugar/graphics/objectchooser.py:179
 #, python-format
 msgid "%d hour"
-msgstr ""
+msgstr "%d час"
 
 #: ../lib/sugar/graphics/objectchooser.py:179
 #, python-format
 msgid "%d hours"
-msgstr ""
+msgstr "%d часов"
 
 #: ../lib/sugar/graphics/objectchooser.py:180
 #, python-format
 msgid "%d minute"
-msgstr ""
+msgstr "%d минута"
 
 #: ../lib/sugar/graphics/objectchooser.py:180
 #, python-format
 msgid "%d minutes"
-msgstr ""
+msgstr "%d минут"
 
 #: ../lib/sugar/graphics/objectchooser.py:181
 #, python-format
 msgid "%d second"
-msgstr ""
+msgstr "%d секунда"
 
 #: ../lib/sugar/graphics/objectchooser.py:181
 #, python-format
 msgid "%d seconds"
-msgstr ""
+msgstr "%d секунд"
 
 #: ../lib/sugar/graphics/objectchooser.py:191
 msgid " and "
-msgstr ""
+msgstr " и "
 
 #: ../lib/sugar/graphics/objectchooser.py:193
 msgid ", "
-msgstr ""
+msgstr ", "
 
 #: ../shell/controlpanel/control.py:213
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr ""
+msgstr "Чтобы применить изменения перезапустите sugar.\n"
 
 #: ../shell/controlpanel/control.py:267
 msgid "Error in specified color modifiers."
-msgstr ""
+msgstr "Ошибка в определении цветов."
 
 #: ../shell/controlpanel/control.py:270
 msgid "Error in specified colors."
-msgstr ""
+msgstr "Ошибка выбора цветов."
 
 #: ../shell/controlpanel/control.py:307
 msgid "off"
-msgstr ""
+msgstr "выкл"
 
 #: ../shell/controlpanel/control.py:309
 msgid "on"
-msgstr ""
+msgstr "вкл"
 
 #: ../shell/controlpanel/control.py:310
 msgid "State is unknown."
-msgstr ""
+msgstr "Состояние неизвестно."
 
 #: ../shell/controlpanel/control.py:332
 msgid "Error in specified radio argument use on/off."
-msgstr ""
+msgstr "Ошибка выбора, используйте вкл/выкл."
 
 #: ../shell/controlpanel/control.py:336
 msgid "Permission denied. You need to be root to run this method."
-msgstr ""
+msgstr "Доступ запрещен. Вы должны быть root-ом чтобы выполнить этот метод."
 
 #: ../shell/controlpanel/control.py:366
 msgid "Error in reading timezone"
-msgstr ""
+msgstr "Ошибка чтения часового пояса."
 
 #: ../shell/controlpanel/control.py:397
 #, python-format
 msgid "Error copying timezone (from %s): %s"
-msgstr ""
+msgstr "Ошибка копирования часового пояса (из %s): %s"
 
 #: ../shell/controlpanel/control.py:402
 #, python-format
 msgid "Changing permission of timezone: %s"
-msgstr ""
+msgstr "Изменяются права доступа часового пояса: %s"
 
-#: ../shell/controlpanel/control.py:413
+#: ../shell/controlpanel/control.py:412
 msgid "Error timezone does not exist."
-msgstr ""
+msgstr "Ошибка - часовой пояс не существует."
 
-#: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
+#: ../shell/controlpanel/control.py:417 ../shell/controlpanel/control.py:436
 #, python-format
 msgid "Could not access %s. Create standard settings."
-msgstr ""
+msgstr "Нет доступа к %s. Создайте стандартные настройки."
 
-#: ../shell/controlpanel/control.py:466
+#: ../shell/controlpanel/control.py:463
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr ""
+msgstr "Язык с кодом=%s не определен."
 
-#: ../shell/controlpanel/control.py:476
+#: ../shell/controlpanel/control.py:473
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr ""
+msgstr "Я не говорю по '%s'."
 
 #: ../shell/view/devices/network/mesh.py:105
 msgid "Connected to a School Mesh Portal"
-msgstr ""
+msgstr "Подключен к Местному Школьному Серверу"
 
 #: ../shell/view/devices/network/mesh.py:107
 msgid "Looking for a School Mesh Portal..."
-msgstr ""
+msgstr "Поиск Местного Школьного Сервера..."
 
 #: ../shell/view/devices/network/mesh.py:110
 msgid "Connected to an XO Mesh Portal"
-msgstr ""
+msgstr "Подключен к Местному Серверу XO"
 
 #: ../shell/view/devices/network/mesh.py:112
 msgid "Looking for an XO Mesh Portal..."
-msgstr ""
+msgstr "Поиск Местного Сервера XO..."
 
 #: ../shell/view/devices/network/mesh.py:115
 msgid "Connected to a Simple Mesh"
-msgstr ""
+msgstr "Подключен к Простой Местной Сети"
 
 #: ../shell/view/devices/network/mesh.py:117
 msgid "Starting a Simple Mesh"
-msgstr ""
+msgstr "Запуск Простой Местной Сети"
 
 #: ../shell/view/devices/network/mesh.py:124
 msgid "Unknown Mesh"
+msgstr "Неизвестная Местная Сеть"
+
+#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
+msgid "About this XO"
+msgstr ""
+
+#: ../shell/view/home/HomeBox.py:222
+msgid "Not available"
 msgstr ""
