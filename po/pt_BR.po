@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: olpc-sugar-pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: 2008-01-27 13:08-0500\n"
+"PO-Revision-Date: 2008-01-27 18:23-0500\n"
 "Last-Translator: Eduardo H. Silva <HoboPrimate@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <fedora-docs-br@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -67,7 +67,7 @@ msgstr "Adicionar ao diário"
 #: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
-msgstr "Objeto da prancheta: %s."
+msgstr "Objeto da prancheta: %s"
 
 #: ../shell/view/frame/zoomtoolbar.py:42
 msgid "Neighborhood"
@@ -182,7 +182,7 @@ msgstr "Cadastrar"
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
 msgid "Disconnect..."
-msgstr "Desconectar..."
+msgstr "Desconectar"
 
 #: ../shell/view/devices/network/wireless.py:61
 msgid "Disconnected"
@@ -194,7 +194,7 @@ msgstr "Canal"
 
 #: ../lib/sugar/activity/activity.py:111
 msgid "Share with:"
-msgstr "Compartilhar com:"
+msgstr "Partilhar com:"
 
 #: ../lib/sugar/activity/activity.py:113
 msgid "Private"
@@ -325,11 +325,11 @@ msgstr "%d segundos"
 
 #: ../lib/sugar/graphics/objectchooser.py:191
 msgid " and "
-msgstr "e"
+msgstr " e "
 
 #: ../lib/sugar/graphics/objectchooser.py:193
 msgid ", "
-msgstr ","
+msgstr ", "
 
 #: ../shell/controlpanel/control.py:213
 msgid "To apply your changes you have to restart sugar.\n"

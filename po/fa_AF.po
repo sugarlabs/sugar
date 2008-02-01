@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: 2008-01-22 10:57+0000\n"
+"PO-Revision-Date: 2008-01-28 08:14-0500\n"
 "Last-Translator: Sohaib Obaidi <ebtihaj_obaidi@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -46,7 +46,7 @@ msgstr "دوست بساز"
 #: ../shell/view/BuddyMenu.py:109
 #, python-format
 msgid "Invite to %s"
-msgstr "دعوت کن به %م"
+msgstr "دعوت کن به %"
 
 #: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
@@ -67,7 +67,7 @@ msgstr "به یادداشت اضافه کن"
 #: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
-msgstr "شئ تخته رسم: %م."
+msgstr "شئ تخته رسم: %."
 
 #: ../shell/hardware/keydialog.py:149
 msgid "Key Type:"
@@ -140,7 +140,7 @@ msgstr "پیوستن"
 
 #: ../shell/view/devices/battery.py:38
 msgid "My Battery life"
-msgstr "حیات باطری من"
+msgstr "شارژ باطری من"
 
 #: ../shell/view/devices/battery.py:94
 msgid "Battery charging"
@@ -213,7 +213,7 @@ msgstr "بچسپان"
 #: ../lib/sugar/activity/activity.py:450
 #, python-format
 msgid "%s Activity"
-msgstr "فعالیت %م"
+msgstr "فعالیت %"
 
 #: ../lib/sugar/activity/activity.py:820
 msgid "Keep error"
@@ -286,12 +286,12 @@ msgstr "خطا در خوانش منطقه زمانی"
 #: ../shell/controlpanel/control.py:397
 #, python-format
 msgid "Error copying timezone (from %s): %s"
-msgstr "خطا در نقل گیری منطقه زمانی (از%م): %م"
+msgstr "خطا در نقل گیری منطقه زمانی (از%): %"
 
 #: ../shell/controlpanel/control.py:402
 #, python-format
 msgid "Changing permission of timezone: %s"
-msgstr "در حال تغییر دادن اجازت منطقه زمانی: %م"
+msgstr "در حال تغییر دادن اجازت منطقه زمانی: %"
 
 #: ../shell/controlpanel/control.py:413
 msgid "Error timezone does not exist."
@@ -300,12 +300,12 @@ msgstr "خطای منطقه زمانی وجود ندارد."
 #: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
 #, python-format
 msgid "Could not access %s. Create standard settings."
-msgstr "دسترسی %م نمی تواند. زمینه معیاریی بسازید."
+msgstr "% دسترسی نمی تواند. زمینه معیاری بسازید."
 
 #: ../shell/controlpanel/control.py:466
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr "زبان برای رمز=%م تعیین کرده نمیشود."
+msgstr "زبان برای رمز% تعیین کرده نمیشود."
 
 #: ../shell/controlpanel/control.py:476
 #, python-format
