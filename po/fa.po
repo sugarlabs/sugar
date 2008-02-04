@@ -319,7 +319,7 @@ msgstr "_ یا _"
 
 #: ../shell/controlpanel/control.py:213
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr "برای اجرا نمودن تغیرات تان شما باید شوگر را دوباره چالان کنید"
+msgstr "برای اجرا نمودن تغیرات تان شما باید شوگر را دوباره چالان کنید\n"
 
 #: ../shell/controlpanel/control.py:267
 msgid "Error in specified color modifiers."
