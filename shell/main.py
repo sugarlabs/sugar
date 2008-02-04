@@ -45,7 +45,7 @@ def _start_matchbox():
 
     cmd.extend(['-use_titlebar', 'no'])
     cmd.extend(['-theme', 'sugar'])
-    cmd.extend(['-kbdconfig', env.get_shell_path('kbdconfig')])
+    cmd.extend(['-kbdconfig', os.path.join(config.data_path, 'kbdconfig')])
 
     gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
 

@@ -80,8 +80,5 @@ def get_user_library_path():
 def get_service_path(name):
     return _get_sugar_path('services', name)
 
-def get_shell_path(path=None):
-    return _get_sugar_path('shell', path)
-
 def get_data_path(path=None):
     return _get_sugar_path('data', path)

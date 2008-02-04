@@ -17,4 +17,4 @@
 
 prefix = '@prefix@'
 bin_path = '@prefix@/bin'
-data_path = '@prefix@/share/sugar'
+data_path = '@prefix@/share/sugar/data'

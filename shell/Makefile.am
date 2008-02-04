@@ -7,7 +7,4 @@ sugar_PYTHON =			\
 	main.py			\
 	shellservice.py
 
-confdir = $(pkgdatadir)/shell
-conf_DATA = kbdconfig
-
 EXTRA_DIST = $(bin_SCRIPTS) $(conf_DATA)
