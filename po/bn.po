@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Update 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-21 00:36+0100\n"
+"POT-Creation-Date: 2008-01-18 18:19+0000\n"
 "PO-Revision-Date: 2007-12-23 10:33+0000\n"
 "Last-Translator: Khandakar Mujahidul Islam <suzan229@gmail.com>\n"
 "Language-Team: Bengali <core@bengalinux.org>\n"
@@ -35,24 +35,24 @@ msgstr "করা হয়েছে"
 msgid "Next"
 msgstr "পরবর্তী"
 
-#: ../shell/view/BuddyMenu.py:84
+#: ../shell/view/BuddyMenu.py:59
 msgid "Remove friend"
 msgstr "বন্ধু মোছো"
 
-#: ../shell/view/BuddyMenu.py:87
+#: ../shell/view/BuddyMenu.py:62
 msgid "Make friend"
 msgstr "বন্ধু বানাও"
 
-#: ../shell/view/BuddyMenu.py:109
+#: ../shell/view/BuddyMenu.py:84
 #, python-format
 msgid "Invite to %s"
 msgstr "%s কে নিমণ্ত্রণ"
 
-#: ../shell/view/clipboardmenu.py:59
+#: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
 msgstr "মোছো"
 
-#: ../shell/view/clipboardmenu.py:64
+#: ../shell/view/clipboardmenu.py:63
 msgid "Open"
 msgstr "খোলো"
 
@@ -60,11 +60,11 @@ msgstr "খোলো"
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../shell/view/clipboardmenu.py:74
+#: ../shell/view/clipboardmenu.py:73
 msgid "Add to journal"
 msgstr "জার্নালে লেখ"
 
-#: ../shell/view/clipboardmenu.py:200
+#: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
 msgstr "ক্লীপবোর্ড বস্তু: %s।"
@@ -90,23 +90,23 @@ msgid "Resume"
 msgstr "পুনরায় শুরু করুন"
 
 #: ../shell/view/home/activitiesdonut.py:111
-#: ../lib/sugar/activity/activity.py:128
+#: ../lib/sugar/activity/activity.py:132
 msgid "Stop"
 msgstr "থামাও"
 
-#: ../shell/view/Shell.py:276
+#: ../shell/view/Shell.py:285
 msgid "Screenshot"
 msgstr "স্ক্রীণশট"
 
-#: ../shell/view/home/HomeBox.py:158
+#: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
 msgstr "পুনরায় চালু"
 
-#: ../shell/view/home/HomeBox.py:163
+#: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
 msgstr "বন্ধ করো"
 
-#: ../shell/view/home/HomeBox.py:169
+#: ../shell/view/home/HomeBox.py:170
 msgid "Register"
 msgstr "রেজিস্টার"
 
@@ -170,56 +170,56 @@ msgstr "বাড়ি"
 msgid "Activity"
 msgstr "সক্রিয়তা"
 
-#: ../lib/sugar/activity/activity.py:111
+#: ../lib/sugar/activity/activity.py:115
 msgid "Share with:"
 msgstr "ভাগাভাগি করো:"
 
-#: ../lib/sugar/activity/activity.py:113
+#: ../lib/sugar/activity/activity.py:117
 msgid "Private"
 msgstr "ব্যাক্তিগত"
 
-#: ../lib/sugar/activity/activity.py:114
+#: ../lib/sugar/activity/activity.py:118
 msgid "My Neighborhood"
 msgstr "আমার ছেলেবেলা"
 
-#: ../lib/sugar/activity/activity.py:122
+#: ../lib/sugar/activity/activity.py:126
 msgid "Keep"
 msgstr "রাখো"
 
-#: ../lib/sugar/activity/activity.py:241
+#: ../lib/sugar/activity/activity.py:245
 msgid "Undo"
 msgstr "বাতিল করো"
 
-#: ../lib/sugar/activity/activity.py:246
+#: ../lib/sugar/activity/activity.py:250
 msgid "Redo"
 msgstr "আবার করো"
 
-#: ../lib/sugar/activity/activity.py:256
+#: ../lib/sugar/activity/activity.py:260
 msgid "Copy"
 msgstr "কপি"
 
-#: ../lib/sugar/activity/activity.py:261
+#: ../lib/sugar/activity/activity.py:265
 msgid "Paste"
 msgstr "সাঁটো"
 
-#: ../lib/sugar/activity/activity.py:450
+#: ../lib/sugar/activity/activity.py:454
 #, python-format
 msgid "%s Activity"
 msgstr "%s সক্রিয়তা"
 
-#: ../lib/sugar/activity/activity.py:813
+#: ../lib/sugar/activity/activity.py:824
 msgid "Keep error"
 msgstr "ত্রুটি রেখে দাও"
 
-#: ../lib/sugar/activity/activity.py:814
+#: ../lib/sugar/activity/activity.py:825
 msgid "Keep error: all changes will be lost"
 msgstr "ত্রুটি রেখে দাও: সব পরিবর্তন হারিয়ে যাবে"
 
-#: ../lib/sugar/activity/activity.py:817
+#: ../lib/sugar/activity/activity.py:828
 msgid "Don't stop"
 msgstr "থামিও না"
 
-#: ../lib/sugar/activity/activity.py:820
+#: ../lib/sugar/activity/activity.py:831
 msgid "Stop anyway"
 msgstr "যে কোন ভাবে থামো"
 
@@ -363,21 +363,21 @@ msgstr "সময় জোন (%s হতে) কপি করায় ত্রু�
 msgid "Changing permission of timezone: %s"
 msgstr "সময় জোনের অনুমতি পরিবর্তন: %s"
 
-#: ../shell/controlpanel/control.py:413
+#: ../shell/controlpanel/control.py:412
 msgid "Error timezone does not exist."
 msgstr "ত্রুটিযুক্ত সময় জোনের অস্তিত্ব নেই।"
 
-#: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
+#: ../shell/controlpanel/control.py:417 ../shell/controlpanel/control.py:436
 #, python-format
 msgid "Could not access %s. Create standard settings."
 msgstr "%s এ প্রবেশ করতে পারে নি। প্রমাণ মানসমূহ তৈরি করো।"
 
-#: ../shell/controlpanel/control.py:466
+#: ../shell/controlpanel/control.py:463
 #, python-format
 msgid "Language for code=%s could not be determined."
 msgstr "কোড=%s এর জন্য কোন ভাষা নির্ধারণ করা যায় নি।"
 
-#: ../shell/controlpanel/control.py:476
+#: ../shell/controlpanel/control.py:473
 #, python-format
 msgid "Sorry I do not speak '%s'."
 msgstr "দুঃখিত আমি '%s' বলতে পারি না।"

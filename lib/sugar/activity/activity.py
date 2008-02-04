@@ -54,6 +54,7 @@ import traceback
 
 import gtk, gobject
 import dbus
+import dbus.service
 import json
 
 from sugar import util        
@@ -871,6 +872,9 @@ class Activity(Window, gtk.Container):
             self._closing = True
         else:
             self.destroy()
+
+        # Make the exported object inaccessible
+        dbus.service.Object.remove_from_connection(self._bus)
 
     def __realize_cb(self, window):
         wm.set_bundle_id(window.window, self.get_bundle_id())

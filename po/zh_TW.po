@@ -2,115 +2,129 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: Sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-21 00:36+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2008-01-18 18:19+0000\n"
+"PO-Revision-Date: 2008-01-27 11:15-0500\n"
+"Last-Translator: Yuan Chao <yuanchao@gmail.com>\n"
+"Language-Team: Yuan CHAO <yuanchao@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.0.1\n"
+"X-Generator: Pootle 1.0.2\n"
 
 #: ../shell/intro/intro.py:67
 msgid "Name:"
-msgstr ""
+msgstr "姓名:"
 
 #: ../shell/intro/intro.py:96
 msgid "Click to change color:"
-msgstr ""
+msgstr "點選改變顏色:"
 
 #: ../shell/intro/intro.py:146
 msgid "Back"
-msgstr ""
+msgstr "上一步"
 
 #: ../shell/intro/intro.py:160
 msgid "Done"
-msgstr ""
+msgstr "完成"
 
 #: ../shell/intro/intro.py:163
 msgid "Next"
-msgstr ""
+msgstr "下一步"
+
+#
+#: ../shell/view/BuddyMenu.py:59
+msgid "Remove friend"
+msgstr "移除好友"
+
+#
+#: ../shell/view/BuddyMenu.py:62
+msgid "Make friend"
+msgstr "結交好友"
 
 #: ../shell/view/BuddyMenu.py:84
-msgid "Remove friend"
-msgstr ""
-
-#: ../shell/view/BuddyMenu.py:87
-msgid "Make friend"
-msgstr ""
-
-#: ../shell/view/BuddyMenu.py:109
 #, python-format
 msgid "Invite to %s"
-msgstr ""
+msgstr "邀請 %s"
 
-#: ../shell/view/clipboardmenu.py:59
+#
+#: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
-msgstr ""
+msgstr "移除"
 
-#: ../shell/view/clipboardmenu.py:64
+#
+#: ../shell/view/clipboardmenu.py:63
 msgid "Open"
-msgstr ""
+msgstr "開啟"
 
+#
 #. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../shell/view/clipboardmenu.py:74
+#: ../shell/view/clipboardmenu.py:73
 msgid "Add to journal"
-msgstr ""
+msgstr "增加到日誌"
 
-#: ../shell/view/clipboardmenu.py:200
+#: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
-msgstr ""
+msgstr "剪貼簿物件: %s."
 
+#
 #: ../shell/hardware/keydialog.py:149
 msgid "Key Type:"
-msgstr ""
+msgstr "金鑰類型:"
 
+#
 #: ../shell/hardware/keydialog.py:169
 msgid "Authentication Type:"
-msgstr ""
+msgstr "認證類型:"
 
+#
 #: ../shell/hardware/keydialog.py:250
 msgid "Encryption Type:"
-msgstr ""
+msgstr "加密類型:"
 
+#
 #: ../shell/view/home/activitiesdonut.py:90
 msgid "Starting..."
-msgstr ""
+msgstr "啟動中..."
 
+#
 #: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
 msgid "Resume"
-msgstr ""
+msgstr "回復"
 
+#
 #: ../shell/view/home/activitiesdonut.py:111
-#: ../lib/sugar/activity/activity.py:128
+#: ../lib/sugar/activity/activity.py:132
 msgid "Stop"
-msgstr ""
+msgstr "停止"
 
-#: ../shell/view/Shell.py:276
+#
+#: ../shell/view/Shell.py:285
 msgid "Screenshot"
-msgstr ""
+msgstr "畫面抓圖"
 
-#: ../shell/view/home/HomeBox.py:158
+#
+#: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
-msgstr ""
+msgstr "重新啟動"
 
-#: ../shell/view/home/HomeBox.py:163
+#
+#: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
-msgstr ""
+msgstr "關機"
 
-#: ../shell/view/home/HomeBox.py:169
+#: ../shell/view/home/HomeBox.py:170
 msgid "Register"
-msgstr ""
+msgstr "註冊"
 
+#
 #. Only show disconnect when there's a mesh device, because mesh takes
 #. priority over the normal wireless device.  NM doesn't have a "disconnect"
 #. method for a device either (for various reasons) so this doesn't
@@ -119,294 +133,329 @@ msgstr ""
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
 msgid "Disconnect..."
-msgstr ""
+msgstr "切斷連線..."
 
+#
 #: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
 #: ../shell/view/devices/network/mesh.py:62
 #: ../shell/view/devices/network/mesh.py:66
 msgid "Mesh Network"
-msgstr ""
+msgstr "網狀網路"
 
 #: ../shell/view/home/MeshBox.py:300
 msgid "Join"
-msgstr ""
+msgstr "加入"
 
+#
 #: ../shell/view/devices/battery.py:38
 msgid "My Battery life"
-msgstr ""
+msgstr "我的電池狀態"
 
+#
 #: ../shell/view/devices/battery.py:94
 msgid "Battery charging"
-msgstr ""
+msgstr "電池充電中"
 
+#
 #: ../shell/view/devices/battery.py:96
 msgid "Battery discharging"
-msgstr ""
+msgstr "電池放電中"
 
+#
 #: ../shell/view/devices/battery.py:98
 msgid "Battery fully charged"
-msgstr ""
+msgstr "電池已充電完成"
 
+#
 #: ../shell/view/devices/network/wireless.py:61
 msgid "Disconnected"
-msgstr ""
+msgstr "已切斷"
 
+#
 #: ../shell/view/devices/network/wireless.py:131
 msgid "Channel"
-msgstr ""
+msgstr "頻道"
 
+#
 #: ../shell/view/frame/zoomtoolbar.py:42
 msgid "Neighborhood"
-msgstr ""
+msgstr "我的鄰居"
 
+#
 #: ../shell/view/frame/zoomtoolbar.py:54
 msgid "Group"
-msgstr ""
+msgstr "我的群組"
 
+#
 #: ../shell/view/frame/zoomtoolbar.py:66
 msgid "Home"
-msgstr ""
+msgstr "我的家"
 
+#
 #: ../shell/view/frame/zoomtoolbar.py:78
 msgid "Activity"
-msgstr ""
+msgstr "活動"
 
-#: ../lib/sugar/activity/activity.py:111
+#
+#: ../lib/sugar/activity/activity.py:115
 msgid "Share with:"
-msgstr ""
+msgstr "分享給:"
 
-#: ../lib/sugar/activity/activity.py:113
+#
+#: ../lib/sugar/activity/activity.py:117
 msgid "Private"
-msgstr ""
+msgstr "私人"
 
-#: ../lib/sugar/activity/activity.py:114
+#
+#: ../lib/sugar/activity/activity.py:118
 msgid "My Neighborhood"
-msgstr ""
+msgstr "我的鄰居"
 
-#: ../lib/sugar/activity/activity.py:122
+#
+#: ../lib/sugar/activity/activity.py:126
 msgid "Keep"
-msgstr ""
+msgstr "保存"
 
-#: ../lib/sugar/activity/activity.py:241
+#
+#: ../lib/sugar/activity/activity.py:245
 msgid "Undo"
-msgstr ""
+msgstr "復原"
 
-#: ../lib/sugar/activity/activity.py:246
+#
+#: ../lib/sugar/activity/activity.py:250
 msgid "Redo"
-msgstr ""
+msgstr "取消復原"
 
-#: ../lib/sugar/activity/activity.py:256
+#
+#: ../lib/sugar/activity/activity.py:260
 msgid "Copy"
-msgstr ""
+msgstr "複製"
 
-#: ../lib/sugar/activity/activity.py:261
+#
+#: ../lib/sugar/activity/activity.py:265
 msgid "Paste"
-msgstr ""
+msgstr "貼上"
 
-#: ../lib/sugar/activity/activity.py:450
+#: ../lib/sugar/activity/activity.py:454
 #, python-format
 msgid "%s Activity"
-msgstr ""
+msgstr "%s活動"
 
-#: ../lib/sugar/activity/activity.py:813
+#: ../lib/sugar/activity/activity.py:824
 msgid "Keep error"
-msgstr ""
+msgstr "保存時發生錯誤"
 
-#: ../lib/sugar/activity/activity.py:814
+#: ../lib/sugar/activity/activity.py:825
 msgid "Keep error: all changes will be lost"
-msgstr ""
+msgstr "保存時發生錯誤: 所有的改變將被取消"
 
-#: ../lib/sugar/activity/activity.py:817
+#: ../lib/sugar/activity/activity.py:828
 msgid "Don't stop"
-msgstr ""
+msgstr "取消關閉"
 
-#: ../lib/sugar/activity/activity.py:820
+#: ../lib/sugar/activity/activity.py:831
 msgid "Stop anyway"
-msgstr ""
+msgstr "直接關閉"
 
+#
 #: ../lib/sugar/graphics/alert.py:164 ../lib/sugar/graphics/alert.py:206
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
+#
 #: ../lib/sugar/graphics/alert.py:168
 msgid "Ok"
-msgstr ""
+msgstr "確定"
 
 #: ../lib/sugar/graphics/alert.py:216
 msgid "Continue"
-msgstr ""
+msgstr "繼續活動"
 
+#
 #: ../lib/sugar/graphics/alert.py:244
 msgid "OK"
-msgstr ""
+msgstr "確定"
 
 #: ../lib/sugar/graphics/objectchooser.py:175
 #, python-format
 msgid "%d year"
-msgstr ""
+msgstr "%d年"
 
 #: ../lib/sugar/graphics/objectchooser.py:175
 #, python-format
 msgid "%d years"
-msgstr ""
+msgstr "%d年"
 
 #: ../lib/sugar/graphics/objectchooser.py:176
 #, python-format
 msgid "%d month"
-msgstr ""
+msgstr "%d月"
 
 #: ../lib/sugar/graphics/objectchooser.py:176
 #, python-format
 msgid "%d months"
-msgstr ""
+msgstr "%d月"
 
 #: ../lib/sugar/graphics/objectchooser.py:177
 #, python-format
 msgid "%d week"
-msgstr ""
+msgstr "%d週"
 
 #: ../lib/sugar/graphics/objectchooser.py:177
 #, python-format
 msgid "%d weeks"
-msgstr ""
+msgstr "%d週"
 
 #: ../lib/sugar/graphics/objectchooser.py:178
 #, python-format
 msgid "%d day"
-msgstr ""
+msgstr "%d日"
 
 #: ../lib/sugar/graphics/objectchooser.py:178
 #, python-format
 msgid "%d days"
-msgstr ""
+msgstr "%d日"
 
 #: ../lib/sugar/graphics/objectchooser.py:179
 #, python-format
 msgid "%d hour"
-msgstr ""
+msgstr "%d時"
 
 #: ../lib/sugar/graphics/objectchooser.py:179
 #, python-format
 msgid "%d hours"
-msgstr ""
+msgstr "%d時"
 
 #: ../lib/sugar/graphics/objectchooser.py:180
 #, python-format
 msgid "%d minute"
-msgstr ""
+msgstr "%d分"
 
 #: ../lib/sugar/graphics/objectchooser.py:180
 #, python-format
 msgid "%d minutes"
-msgstr ""
+msgstr "%d分"
 
 #: ../lib/sugar/graphics/objectchooser.py:181
 #, python-format
 msgid "%d second"
-msgstr ""
+msgstr "%d秒"
 
 #: ../lib/sugar/graphics/objectchooser.py:181
 #, python-format
 msgid "%d seconds"
-msgstr ""
+msgstr "%d秒"
 
+#
 #: ../lib/sugar/graphics/objectchooser.py:191
 msgid " and "
-msgstr ""
+msgstr "和"
 
+#
 #: ../lib/sugar/graphics/objectchooser.py:193
 msgid ", "
-msgstr ""
+msgstr ","
 
 #: ../shell/controlpanel/control.py:213
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr ""
+msgstr "需要重新啟動系統使變更生效.\n"
 
 #: ../shell/controlpanel/control.py:267
 msgid "Error in specified color modifiers."
-msgstr ""
+msgstr "指定增修顏色時發生錯誤"
 
 #: ../shell/controlpanel/control.py:270
 msgid "Error in specified colors."
-msgstr ""
+msgstr "指定顏色時發生錯誤"
 
+#
 #: ../shell/controlpanel/control.py:307
 msgid "off"
-msgstr ""
+msgstr "關閉"
 
+#
 #: ../shell/controlpanel/control.py:309
 msgid "on"
-msgstr ""
+msgstr "開啟"
 
 #: ../shell/controlpanel/control.py:310
 msgid "State is unknown."
-msgstr ""
+msgstr "未知狀態"
 
 #: ../shell/controlpanel/control.py:332
 msgid "Error in specified radio argument use on/off."
-msgstr ""
+msgstr "無線網路信號開關發生錯誤"
 
 #: ../shell/controlpanel/control.py:336
 msgid "Permission denied. You need to be root to run this method."
-msgstr ""
+msgstr "權限不足, 需要有系統管理員權限才可以執行此功能。"
 
 #: ../shell/controlpanel/control.py:366
 msgid "Error in reading timezone"
-msgstr ""
+msgstr "讀取時區資料時發生錯誤"
 
 #: ../shell/controlpanel/control.py:397
 #, python-format
 msgid "Error copying timezone (from %s): %s"
-msgstr ""
+msgstr "複製(%s)時區資料時發生錯誤: %s"
 
 #: ../shell/controlpanel/control.py:402
 #, python-format
 msgid "Changing permission of timezone: %s"
-msgstr ""
+msgstr "改變時區資料權限: %s"
 
-#: ../shell/controlpanel/control.py:413
+#: ../shell/controlpanel/control.py:412
 msgid "Error timezone does not exist."
-msgstr ""
+msgstr "錯誤,時區資料不存在."
 
-#: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
+#: ../shell/controlpanel/control.py:417 ../shell/controlpanel/control.py:436
 #, python-format
 msgid "Could not access %s. Create standard settings."
-msgstr ""
+msgstr "無法讀取 %s. 建立預設資料."
 
-#: ../shell/controlpanel/control.py:466
+#: ../shell/controlpanel/control.py:463
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr ""
+msgstr "語系編碼 %s 無法判定"
 
-#: ../shell/controlpanel/control.py:476
+#: ../shell/controlpanel/control.py:473
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr ""
+msgstr "抱歉我不會說'%s'."
 
 #: ../shell/view/devices/network/mesh.py:105
 msgid "Connected to a School Mesh Portal"
-msgstr ""
+msgstr "已連接到校園網狀網入口"
 
 #: ../shell/view/devices/network/mesh.py:107
 msgid "Looking for a School Mesh Portal..."
-msgstr ""
+msgstr "搜尋校園網狀網路中..."
 
 #: ../shell/view/devices/network/mesh.py:110
 msgid "Connected to an XO Mesh Portal"
-msgstr ""
+msgstr "已連接到XO網狀網入口"
 
 #: ../shell/view/devices/network/mesh.py:112
 msgid "Looking for an XO Mesh Portal..."
-msgstr ""
+msgstr "搜尋XO網狀網路中..."
 
 #: ../shell/view/devices/network/mesh.py:115
 msgid "Connected to a Simple Mesh"
-msgstr ""
+msgstr "已連接上簡易網狀網路"
 
 #: ../shell/view/devices/network/mesh.py:117
 msgid "Starting a Simple Mesh"
-msgstr ""
+msgstr "建立簡易網狀網路"
 
+#
 #: ../shell/view/devices/network/mesh.py:124
 msgid "Unknown Mesh"
-msgstr ""
+msgstr "未知網狀網路"
+
+#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
+msgid "About this XO"
+msgstr "關於ＸＯ"
+
+#: ../shell/view/home/HomeBox.py:222
+msgid "Not available"
+msgstr "不存在"

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-21 00:36+0100\n"
-"PO-Revision-Date: 2008-01-07 12:35+0000\n"
+"POT-Creation-Date: 2008-01-18 18:19+0000\n"
+"PO-Revision-Date: 2008-01-09 11:20+0000\n"
 "Last-Translator: usman mansoor ansari <jalalkut@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -29,30 +29,30 @@ msgstr "شا"
 
 #: ../shell/intro/intro.py:160
 msgid "Done"
-msgstr ""
+msgstr "هوكې"
 
 #: ../shell/intro/intro.py:163
 msgid "Next"
 msgstr "بل"
 
-#: ../shell/view/BuddyMenu.py:84
+#: ../shell/view/BuddyMenu.py:59
 msgid "Remove friend"
 msgstr "ملګرې لرکول"
 
-#: ../shell/view/BuddyMenu.py:87
+#: ../shell/view/BuddyMenu.py:62
 msgid "Make friend"
 msgstr "ملګرې جوړول"
 
-#: ../shell/view/BuddyMenu.py:109
+#: ../shell/view/BuddyMenu.py:84
 #, python-format
 msgid "Invite to %s"
 msgstr "بلون %s ته"
 
-#: ../shell/view/clipboardmenu.py:59
+#: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
 msgstr "لركول"
 
-#: ../shell/view/clipboardmenu.py:64
+#: ../shell/view/clipboardmenu.py:63
 msgid "Open"
 msgstr "پرانېستل"
 
@@ -60,53 +60,54 @@ msgstr "پرانېستل"
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../shell/view/clipboardmenu.py:74
+#: ../shell/view/clipboardmenu.py:73
 msgid "Add to journal"
-msgstr ""
+msgstr "ورځپاڼې ته زياتول"
 
-#: ../shell/view/clipboardmenu.py:200
+#: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
-msgstr ""
+msgstr "د ټوټه دړې څيزونه: %s."
 
 #: ../shell/hardware/keydialog.py:149
 msgid "Key Type:"
-msgstr ""
+msgstr "كلي ځېل:"
 
 #: ../shell/hardware/keydialog.py:169
 msgid "Authentication Type:"
-msgstr ""
+msgstr "د كره توب ځېل:"
 
 #: ../shell/hardware/keydialog.py:250
 msgid "Encryption Type:"
-msgstr ""
+msgstr "د کوډه کښنه ځېل:"
 
 #: ../shell/view/home/activitiesdonut.py:90
 msgid "Starting..."
-msgstr ""
+msgstr "پيلونه..."
 
 #: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
 msgid "Resume"
-msgstr ""
+msgstr "کارمخینه"
 
 #: ../shell/view/home/activitiesdonut.py:111
-#: ../lib/sugar/activity/activity.py:128
+#: ../lib/sugar/activity/activity.py:132
 msgid "Stop"
 msgstr "تمېدل"
 
-#: ../shell/view/Shell.py:276
+#: ../shell/view/Shell.py:285
+#, fuzzy
 msgid "Screenshot"
-msgstr ""
+msgstr "پرده انځور"
 
-#: ../shell/view/home/HomeBox.py:158
+#: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
-msgstr ""
+msgstr "بیاپیلون"
 
-#: ../shell/view/home/HomeBox.py:163
+#: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
-msgstr ""
+msgstr "ګلول-بندول"
 
-#: ../shell/view/home/HomeBox.py:169
+#: ../shell/view/home/HomeBox.py:170
 msgid "Register"
 msgstr "نومکښل"
 
@@ -141,11 +142,11 @@ msgstr "بېټرۍ چارجېږي"
 #: ../shell/view/devices/battery.py:96
 #, fuzzy
 msgid "Battery discharging"
-msgstr "بېټرۍ چارجېږي"
+msgstr "بېټري نه چارجېږي"
 
 #: ../shell/view/devices/battery.py:98
 msgid "Battery fully charged"
-msgstr ""
+msgstr "بېټري بشپړه چارج شوه"
 
 #: ../shell/view/devices/network/wireless.py:61
 #, fuzzy
@@ -154,15 +155,15 @@ msgstr "ناپيوستل"
 
 #: ../shell/view/devices/network/wireless.py:131
 msgid "Channel"
-msgstr ""
+msgstr "چېنل"
 
 #: ../shell/view/frame/zoomtoolbar.py:42
 msgid "Neighborhood"
-msgstr ""
+msgstr "ګاونډېتوب"
 
 #: ../shell/view/frame/zoomtoolbar.py:54
 msgid "Group"
-msgstr ""
+msgstr "ډله"
 
 #: ../shell/view/frame/zoomtoolbar.py:66
 msgid "Home"
@@ -172,242 +173,252 @@ msgstr "کور"
 msgid "Activity"
 msgstr "چارندتیا"
 
-#: ../lib/sugar/activity/activity.py:111
+#: ../lib/sugar/activity/activity.py:115
 msgid "Share with:"
 msgstr "ونډول له:"
 
-#: ../lib/sugar/activity/activity.py:113
+#: ../lib/sugar/activity/activity.py:117
 msgid "Private"
 msgstr "ځاني"
 
-#: ../lib/sugar/activity/activity.py:114
+#: ../lib/sugar/activity/activity.py:118
 msgid "My Neighborhood"
-msgstr ""
+msgstr "زما ګاونډيتوب"
 
-#: ../lib/sugar/activity/activity.py:122
+#: ../lib/sugar/activity/activity.py:126
 msgid "Keep"
-msgstr ""
+msgstr "خوندي كول"
 
-#: ../lib/sugar/activity/activity.py:241
+#: ../lib/sugar/activity/activity.py:245
 msgid "Undo"
 msgstr "ناکړ"
 
-#: ../lib/sugar/activity/activity.py:246
+#: ../lib/sugar/activity/activity.py:250
 msgid "Redo"
 msgstr "بیاکړ"
 
-#: ../lib/sugar/activity/activity.py:256
+#: ../lib/sugar/activity/activity.py:260
 msgid "Copy"
 msgstr "لمېسل"
 
-#: ../lib/sugar/activity/activity.py:261
+#: ../lib/sugar/activity/activity.py:265
 msgid "Paste"
 msgstr "سرېښل"
 
-#: ../lib/sugar/activity/activity.py:450
+#: ../lib/sugar/activity/activity.py:454
 #, python-format
 msgid "%s Activity"
 msgstr "%s چارندتیا"
 
-#: ../lib/sugar/activity/activity.py:813
+#: ../lib/sugar/activity/activity.py:824
 msgid "Keep error"
-msgstr ""
+msgstr "تېروتنې ساتل"
 
-#: ../lib/sugar/activity/activity.py:814
+#: ../lib/sugar/activity/activity.py:825
 msgid "Keep error: all changes will be lost"
-msgstr ""
+msgstr "تېروتنې ساتل: ټول بدلونونه به له لاسه وركړئ"
 
-#: ../lib/sugar/activity/activity.py:817
+#: ../lib/sugar/activity/activity.py:828
 msgid "Don't stop"
-msgstr ""
+msgstr "مه تمېږه"
 
-#: ../lib/sugar/activity/activity.py:820
+#: ../lib/sugar/activity/activity.py:831
 msgid "Stop anyway"
-msgstr ""
+msgstr "پ هره توګه تمېدل"
 
 #: ../lib/sugar/graphics/alert.py:164 ../lib/sugar/graphics/alert.py:206
 msgid "Cancel"
-msgstr ""
+msgstr "رنګول"
 
 #: ../lib/sugar/graphics/alert.py:168
 msgid "Ok"
-msgstr ""
+msgstr "هو"
 
 #: ../lib/sugar/graphics/alert.py:216
 msgid "Continue"
-msgstr ""
+msgstr "ادامه وركول"
 
 #: ../lib/sugar/graphics/alert.py:244
 msgid "OK"
-msgstr ""
+msgstr "هو"
 
 #: ../lib/sugar/graphics/objectchooser.py:175
 #, python-format
 msgid "%d year"
-msgstr ""
+msgstr "%d كال"
 
 #: ../lib/sugar/graphics/objectchooser.py:175
 #, python-format
 msgid "%d years"
-msgstr ""
+msgstr "%d كلونه"
 
 #: ../lib/sugar/graphics/objectchooser.py:176
 #, python-format
 msgid "%d month"
-msgstr ""
+msgstr "%d مياشت"
 
 #: ../lib/sugar/graphics/objectchooser.py:176
 #, python-format
 msgid "%d months"
-msgstr ""
+msgstr "%d مياشتې"
 
 #: ../lib/sugar/graphics/objectchooser.py:177
 #, python-format
 msgid "%d week"
-msgstr ""
+msgstr "%d اونۍ"
 
 #: ../lib/sugar/graphics/objectchooser.py:177
 #, python-format
 msgid "%d weeks"
-msgstr ""
+msgstr "%d اونۍ"
 
 #: ../lib/sugar/graphics/objectchooser.py:178
 #, python-format
 msgid "%d day"
-msgstr ""
+msgstr "%d ورځ"
 
 #: ../lib/sugar/graphics/objectchooser.py:178
 #, python-format
 msgid "%d days"
-msgstr ""
+msgstr "%d ورځې"
 
 #: ../lib/sugar/graphics/objectchooser.py:179
 #, python-format
 msgid "%d hour"
-msgstr ""
+msgstr "%d ساعت"
 
 #: ../lib/sugar/graphics/objectchooser.py:179
 #, python-format
 msgid "%d hours"
-msgstr ""
+msgstr "%d ساعتونه"
 
 #: ../lib/sugar/graphics/objectchooser.py:180
 #, python-format
 msgid "%d minute"
-msgstr ""
+msgstr "%d دقيقه"
 
 #: ../lib/sugar/graphics/objectchooser.py:180
 #, python-format
 msgid "%d minutes"
-msgstr ""
+msgstr "%d دقيقې"
 
 #: ../lib/sugar/graphics/objectchooser.py:181
 #, python-format
 msgid "%d second"
-msgstr ""
+msgstr "%d ثانيه"
 
 #: ../lib/sugar/graphics/objectchooser.py:181
 #, python-format
 msgid "%d seconds"
-msgstr ""
+msgstr "%d ثانيې"
 
 #: ../lib/sugar/graphics/objectchooser.py:191
 msgid " and "
-msgstr ""
+msgstr "_او_"
 
 #: ../lib/sugar/graphics/objectchooser.py:193
 msgid ", "
-msgstr ""
+msgstr "،_"
 
 #: ../shell/controlpanel/control.py:213
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr ""
+msgstr "د بدلونونو كارولو لپاره تاسې بايد شوګر بیاپیل كړئ.\n"
 
 #: ../shell/controlpanel/control.py:267
 msgid "Error in specified color modifiers."
-msgstr ""
+msgstr "د بدلوونې رنګ په ټاكنه كۍ تېروتنه."
 
 #: ../shell/controlpanel/control.py:270
 msgid "Error in specified colors."
-msgstr ""
+msgstr "په مالومو رنګونو كې تېروتنې بدلوونې"
 
 #: ../shell/controlpanel/control.py:307
 msgid "off"
-msgstr ""
+msgstr "بندول"
 
 #: ../shell/controlpanel/control.py:309
 msgid "on"
-msgstr ""
+msgstr "روښانول"
 
 #: ../shell/controlpanel/control.py:310
 msgid "State is unknown."
-msgstr ""
+msgstr "ايالت ناڅرګند دى."
 
 #: ../shell/controlpanel/control.py:332
+#, fuzzy
 msgid "Error in specified radio argument use on/off."
-msgstr ""
+msgstr "په ټاكلي راډيو كې تېروتنې "
 
 #: ../shell/controlpanel/control.py:336
+#, fuzzy
 msgid "Permission denied. You need to be root to run this method."
-msgstr ""
+msgstr "پرېښلې رد شو. ددې لېلې چلولو لپاره بايد تاسې  ريښه اوسـئ"
 
 #: ../shell/controlpanel/control.py:366
 msgid "Error in reading timezone"
-msgstr ""
+msgstr "د مهالزون په لوستتنه كې تېروتنې"
 
 #: ../shell/controlpanel/control.py:397
 #, python-format
 msgid "Error copying timezone (from %s): %s"
-msgstr ""
+msgstr "تېروتنه مهالزون لمېسل (له %s):  %s"
 
 #: ../shell/controlpanel/control.py:402
 #, python-format
 msgid "Changing permission of timezone: %s"
-msgstr ""
+msgstr "مهالزون پرېښلې د بدلون په حال كې: %s"
 
-#: ../shell/controlpanel/control.py:413
+#: ../shell/controlpanel/control.py:412
 msgid "Error timezone does not exist."
-msgstr ""
+msgstr "تېروتنه، مهالزون شتون نلري."
 
-#: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
+#: ../shell/controlpanel/control.py:417 ../shell/controlpanel/control.py:436
 #, python-format
 msgid "Could not access %s. Create standard settings."
-msgstr ""
+msgstr "%s ته لاسرسې نه كېږي. كره امستنې وپنځوئ"
 
-#: ../shell/controlpanel/control.py:466
+#: ../shell/controlpanel/control.py:463
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr ""
+msgstr "د code=%s لپاره ژبه مالومه نكړاى شوه."
 
-#: ../shell/controlpanel/control.py:476
+#: ../shell/controlpanel/control.py:473
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr ""
+msgstr "بښنه غواړم زه خبرې نه كوم '%s'."
 
 #: ../shell/view/devices/network/mesh.py:105
 msgid "Connected to a School Mesh Portal"
-msgstr ""
+msgstr "د ښوونځي مېش ور سره پيوست شو."
 
 #: ../shell/view/devices/network/mesh.py:107
 msgid "Looking for a School Mesh Portal..."
-msgstr ""
+msgstr "د ښوونځي مېش ور لپاره لټون"
 
 #: ../shell/view/devices/network/mesh.py:110
 msgid "Connected to an XO Mesh Portal"
-msgstr ""
+msgstr "د  XO مېش ور سره پيوست شو."
 
 #: ../shell/view/devices/network/mesh.py:112
 msgid "Looking for an XO Mesh Portal..."
-msgstr ""
+msgstr "د XO مېش ور لپاره لټون"
 
 #: ../shell/view/devices/network/mesh.py:115
 msgid "Connected to a Simple Mesh"
-msgstr ""
+msgstr "له ساده مېش سره پيوست شو."
 
 #: ../shell/view/devices/network/mesh.py:117
 msgid "Starting a Simple Mesh"
-msgstr ""
+msgstr "د ساده مېش پيلېدنه"
 
 #: ../shell/view/devices/network/mesh.py:124
 msgid "Unknown Mesh"
+msgstr "ناڅرګنده مېش"
+
+#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
+msgid "About this XO"
+msgstr ""
+
+#: ../shell/view/home/HomeBox.py:222
+msgid "Not available"
 msgstr ""

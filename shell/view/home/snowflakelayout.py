@@ -31,18 +31,21 @@ class SnowflakeLayout(gobject.GObject,hippo.CanvasLayout):
         gobject.GObject.__init__(self)
         self._nflakes = 0
 
-    def add(self, child):
+    def add(self, child, center=False):
+        if not center:
+            self._nflakes += 1
+
         self._box.append(child)
 
         box_child = self._box.find_box_child(child)
-        box_child.is_center = False
+        box_child.is_center = center
 
-        self._nflakes += 1
-
-    def add_center(self, child):
-        self._box.append(child)
+    def remove(self, child):
         box_child = self._box.find_box_child(child)
-        box_child.is_center = True
+        if not box_child.is_center:
+            self._nflakes -= 1
+
+        self._box.remove(child)
 
     def do_set_box(self, box):
         self._box = box
