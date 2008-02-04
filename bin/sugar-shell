@@ -41,6 +41,7 @@ from shellservice import ShellService
 from hardware import hardwaremanager
 from intro import intro
 import logsmanager
+import config
 
 def _start_matchbox():
     cmd = ['matchbox-window-manager']
@@ -68,8 +69,10 @@ def _save_session_info():
     f.close()
 
 def _setup_translations():
+    locale_path = os.path.join(config.prefix, 'share', 'locale')
     domain = 'sugar'
-    gettext.bindtextdomain(domain, env.get_locale_path())
+
+    gettext.bindtextdomain(domain, locale_path)
     gettext.textdomain(domain)
 
 def check_cm(bus_name):

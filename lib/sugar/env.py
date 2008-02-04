@@ -77,9 +77,6 @@ def get_user_activities_path():
 def get_user_library_path():
     return os.path.expanduser('~/Library')
 
-def get_locale_path(path=None):
-    return get_prefix_path('share/locale', path)
-
 def get_service_path(name):
     return _get_sugar_path('services', name)
 
