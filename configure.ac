@@ -41,8 +41,10 @@ AM_CONDITIONAL(ENABLE_UPDATE_MIMEDB, test x$enable_update_mimedb = xyes)
 
 AC_CONFIG_FILES([
 bin/sugar
+bin/sugar-control-panel
+bin/sugar-shell
 shell/config.py
-], [chmod +x sugar])
+])
 
 AC_OUTPUT([
 Makefile

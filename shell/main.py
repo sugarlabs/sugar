@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # Copyright (C) 2006, Red Hat, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -32,8 +31,6 @@ import gobject
 from sugar import env
 from sugar import logger
 from sugar.profile import get_profile
-
-sys.path.insert(0, env.get_shell_path())
 
 from view.Shell import Shell
 from model.shellmodel import ShellModel
@@ -102,6 +99,9 @@ def main():
     _start_matchbox()
     _setup_translations()
 
+    hw_manager = hardwaremanager.get_manager()
+    hw_manager.startup()
+
     icons_path = env.get_data_path('icons')
     gtk.icon_theme_get_default().append_search_path(icons_path)
 
@@ -131,7 +131,8 @@ def main():
                print RuntimeError("%s connection manager not found!" % cm_name)
 
             while not check_cm(cm['busname']):
-                print "Waiting for %s on: DBUS_SESSION_BUS_ADDRESS=%s" %(cm_name, os.environ["DBUS_SESSION_BUS_ADDRESS"])
+                print "Waiting for %s on: DBUS_SESSION_BUS_ADDRESS=%s" % \
+                    (cm_name, os.environ["DBUS_SESSION_BUS_ADDRESS"])
                 try:
                     time.sleep(5)
                 except KeyboardInterrupt:
@@ -141,18 +142,6 @@ def main():
     model = ShellModel()
     shell = Shell(model)
     service = ShellService(shell)
-
-if __name__ == '__main__':
-    # running the gtk.main outside of the main() function allows us to 
-    # profile startup times.  To profile startup times replace the following
-    # call to main with:
-    # import cProfile
-    # cProfile.run('main()', '/home/olpc/sugar-startup.stats')
-
-    main()
-
-    hw_manager = hardwaremanager.get_manager()
-    hw_manager.startup()
 
     try:
         gtk.main()

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright (C) 2007, One Laptop Per Child
 #
 # This library is free software; you can redistribute it and/or
@@ -23,8 +21,6 @@ from gettext import gettext as _
 
 from sugar import env
 
-sys.path.insert(0, env.get_shell_path())
- 
 from controlpanel import control
         
 def cmd_help():
@@ -82,6 +78,3 @@ def main():
                     method(*args)
                 except Exception, e:
                     print _("sugar-control-panel: %s"% e)
-
-if __name__ == '__main__':
-    main()
