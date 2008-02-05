@@ -43,6 +43,7 @@ AC_CONFIG_FILES([
 bin/sugar
 bin/sugar-control-panel
 bin/sugar-shell
+bin/sugar-shell-service
 src/config.py
 ])
 

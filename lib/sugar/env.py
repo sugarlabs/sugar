@@ -77,8 +77,5 @@ def get_user_activities_path():
 def get_user_library_path():
     return os.path.expanduser('~/Library')
 
-def get_service_path(name):
-    return _get_sugar_path('services', name)
-
 def get_data_path(path=None):
     return _get_sugar_path('data', path)

@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# vi: ts=4 ai noet 
-#
 # Copyright (C) 2006, Red Hat, Inc.
 # Copyright (C) 2007, One Laptop Per Child
 #
@@ -28,23 +25,22 @@ import dbus.glib
 from sugar import logger
 from sugar import env
 
-sys.path.append(env.get_service_path('shell'))
-
-import clipboardservice
 import activityregistryservice
+import clipboardservice
 
-logger.start('shellservice')
-logging.info('Starting shell service.')
+def main():
+	logger.start('shellservice')
+	logging.info('Starting shell service.')
 
-gobject.threads_init()
-dbus.glib.threads_init()
+	gobject.threads_init()
+	dbus.glib.threads_init()
 
-clipboard_service = clipboardservice.get_instance()
-activity_registry = activityregistryservice.get_instance()
+	clipboard_service = clipboardservice.get_instance()
+	activity_registry = activityregistryservice.get_instance()
 
-loop = gobject.MainLoop()
-try:
-    loop.run()
-except KeyboardInterrupt:
-    print 'Ctrl+C pressed, exiting...'
+	loop = gobject.MainLoop()
+	try:
+	    loop.run()
+	except KeyboardInterrupt:
+	    print 'Ctrl+C pressed, exiting...'
 

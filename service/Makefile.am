@@ -17,18 +17,16 @@ org.laptop.Clipboard.service: org.laptop.Clipboard.service.in Makefile
 org.laptop.ObjectTypeRegistry.service: org.laptop.ObjectTypeRegistry.service.in Makefile
 	@sed -e "s|\@bindir\@|$(bindir)|" $< > $@
 
-sugardir = $(pkgdatadir)/services/shell
+sugardir = $(pkgdatadir)/service
 
 sugar_PYTHON =				\
 	__init__.py			\
 	activityregistryservice.py	\
 	bundleregistry.py		\
 	clipboardobject.py      	\
-	clipboardservice.py
-
-bin_SCRIPTS = sugar-shell-service
+	clipboardservice.py		\
+	main.py
 
 DISTCLEANFILES = $(service_DATA)
 
-EXTRA_DIST = $(service_in_files) $(bin_SCRIPTS)
-
+EXTRA_DIST = $(service_in_files)
