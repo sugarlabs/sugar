@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright (C) 2006, Red Hat, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -31,6 +29,8 @@ import gtk
 import gobject
 
 from sugar import env
+
+import config
 
 def _get_display_number():
     """Find a free display number trying to connect to 6000+ ports"""
@@ -137,7 +137,8 @@ def main():
         gtkrc_filename = 'sugar.gtkrc'
         os.environ['SUGAR_XO_STYLE'] = 'no'
     
-    os.environ['GTK2_RC_FILES'] = env.get_data_path(gtkrc_filename)
+    gtkrc_path = os.path.join(config.data_path, gtkrc_filename)
+    os.environ['GTK2_RC_FILES'] = gtkrc_path
 
     command = ['dbus-launch', 'dbus-launch', '--exit-with-session']
 
@@ -153,6 +154,3 @@ def main():
     
     log.info( "Attempting to launch sugar to replace this process: %s", " ".join(command))
     os.execlp( *command )
-
-if __name__ == "__main__":
-    main()

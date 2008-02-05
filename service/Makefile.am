@@ -25,6 +25,7 @@ sugar_PYTHON =				\
 	bundleregistry.py		\
 	clipboardobject.py      	\
 	clipboardservice.py		\
+	config.py			\
 	main.py
 
 DISTCLEANFILES = $(service_DATA)

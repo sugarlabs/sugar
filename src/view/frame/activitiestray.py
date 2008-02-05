@@ -14,8 +14,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import hippo
+import os
 import logging
+
+import hippo
 
 from sugar.graphics.tray import TrayButton
 from sugar.graphics.tray import HTray
@@ -26,6 +28,7 @@ from sugar import activity
 from sugar import env
 
 from activitybutton import ActivityButton
+import config
 
 class InviteButton(TrayButton):
     def __init__(self, activity_model, invite):
@@ -73,16 +76,16 @@ class ActivitiesTray(hippo.CanvasBox):
         self._invites.connect('invite-removed', self._invite_removed_cb)
 
     def _load_config(self):
-        config = []
+        cfg = []
 
-        f = open(env.get_data_path('activities.defaults'), 'r')
+        f = open(os.path.join(config.data_path, 'activities.defaults'), 'r')
         for line in f.readlines():
             line = line.strip()
             if line and not line.startswith('#'):
-                config.append(line)
+                cfg.append(line)
         f.close()
 
-        return config
+        return cfg
 
     def _get_activities_cb(self, activity_list):
         known_activities = []

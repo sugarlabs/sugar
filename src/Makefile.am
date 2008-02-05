@@ -3,6 +3,7 @@ SUBDIRS = controlpanel hardware model view intro
 sugardir = $(pkgdatadir)/shell
 sugar_PYTHON =			\
 	config.py           	\
+	emulator.py		\
 	logsmanager.py		\
 	main.py			\
 	shellservice.py

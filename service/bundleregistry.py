@@ -24,6 +24,8 @@ from sugar.bundle.bundle import MalformedBundleException
 from sugar import env
 from sugar import util
 
+import config
+
 # http://standards.freedesktop.org/basedir-spec/basedir-spec-0.6.html
 def _get_data_dirs():
     if os.environ.has_key('XDG_DATA_DIRS'):
@@ -34,7 +36,7 @@ def _get_data_dirs():
 def _load_mime_defaults():
     defaults = {}
 
-    f = open(env.get_data_path('mime.defaults'), 'r')
+    f = open(os.path.join(config.data_path, 'mime.defaults'), 'r')
     for line in f.readlines():
         line = line.strip()
         if line and not line.startswith('#'):

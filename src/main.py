@@ -102,7 +102,7 @@ def main():
     hw_manager = hardwaremanager.get_manager()
     hw_manager.startup()
 
-    icons_path = env.get_data_path('icons')
+    icons_path = os.path.join(config.data_path, 'icons')
     gtk.icon_theme_get_default().append_search_path(icons_path)
 
     # Do initial setup if needed

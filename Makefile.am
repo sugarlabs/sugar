@@ -2,9 +2,6 @@ ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = bin data lib po src service
 
-bin_SCRIPTS = 			\
-	sugar-emulator
-
 DISTCLEANFILES =		\
 	intltool-extract	\
 	intltool-merge		\

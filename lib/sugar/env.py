@@ -18,28 +18,6 @@
 
 import os
 
-def get_prefix_path(base, path=None):
-    if os.environ.has_key('SUGAR_PREFIX'):
-        prefix = os.environ['SUGAR_PREFIX']
-    else:
-        raise RuntimeError("The SUGAR_PREFIX environment variable is not set.")
-
-    if path:
-        return os.path.join(prefix, base, path)
-    else:
-        return os.path.join(prefix, base)
-
-def _get_sugar_path(base, path=None):
-    if os.environ.has_key('SUGAR_PATH'):
-        sugar_path = os.environ['SUGAR_PATH']
-    else:
-        raise RuntimeError("The SUGAR_PATH environment variable is not set.")
-
-    if path:
-        return os.path.join(sugar_path, base, path)
-    else:
-        return os.path.join(sugar_path, base)
-
 def is_emulator():
     if os.environ.has_key('SUGAR_EMULATOR'):
         if os.environ['SUGAR_EMULATOR'] == 'yes':
@@ -76,6 +54,3 @@ def get_user_activities_path():
 
 def get_user_library_path():
     return os.path.expanduser('~/Library')
-
-def get_data_path(path=None):
-    return _get_sugar_path('data', path)

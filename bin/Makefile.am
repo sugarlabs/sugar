@@ -3,6 +3,7 @@ bin_SCRIPTS = 			\
 	sugar-activity		\
 	sugar-backup		\
 	sugar-control-panel	\
+	sugar-emulator		\
 	sugar-install-bundle	\
 	sugar-launch		\
 	sugar-shell		\
