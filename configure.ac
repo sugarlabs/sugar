@@ -7,22 +7,9 @@ AC_CONFIG_SRCDIR([configure.ac])
 
 AM_INIT_AUTOMAKE([1.9 foreign dist-bzip2 no-dist-gzip])
 
-AC_DISABLE_STATIC
-AC_PROG_LIBTOOL
-
-AC_PATH_PROG([GLIB_GENMARSHAL], [glib-genmarshal])
-
 AM_PATH_PYTHON
-AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
-
-AC_PATH_PROG(PYGTK_CODEGEN, pygtk-codegen-2.0, no)
 
 PKG_CHECK_MODULES(SHELL, pygtk-2.0 gtk+-2.0)
-
-PKG_CHECK_MODULES(LIB, pygtk-2.0 gtk+-2.0)
-
-PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
-AC_SUBST(PYGTK_DEFSDIR)
 
 # Setup GETTEXT
 #
@@ -53,14 +40,6 @@ AC_OUTPUT([
 Makefile
 bin/Makefile
 data/Makefile
-lib/Makefile
-lib/sugar/Makefile
-lib/sugar/activity/Makefile
-lib/sugar/bundle/Makefile
-lib/sugar/clipboard/Makefile
-lib/sugar/graphics/Makefile
-lib/sugar/presence/Makefile
-lib/sugar/datastore/Makefile
 service/Makefile
 src/Makefile
 src/controlpanel/Makefile
