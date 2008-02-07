@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-01-18 18:19+0000\n"
-"PO-Revision-Date: 2008-01-11 13:59+0000\n"
+"PO-Revision-Date: 2008-02-07 08:25-0500\n"
 "Last-Translator: Alexander Todorov <atodorov@redhat.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -123,7 +123,6 @@ msgstr "Отделяне..."
 #: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
 #: ../shell/view/devices/network/mesh.py:62
 #: ../shell/view/devices/network/mesh.py:66
-#, fuzzy
 msgid "Mesh Network"
 msgstr "Mesh мрежа"
 
@@ -207,7 +206,7 @@ msgstr "Поставяне"
 #: ../lib/sugar/activity/activity.py:454
 #, python-format
 msgid "%s Activity"
-msgstr "%s дейност"
+msgstr "%s занятие"
 
 #: ../lib/sugar/activity/activity.py:824
 msgid "Keep error"
@@ -239,7 +238,7 @@ msgstr "Продължение"
 
 #: ../lib/sugar/graphics/alert.py:244
 msgid "OK"
-msgstr "ОК"
+msgstr "Добре"
 
 #: ../lib/sugar/graphics/objectchooser.py:175
 #, python-format
@@ -395,34 +394,29 @@ msgid "Looking for a School Mesh Portal..."
 msgstr "Търсене на училищем Mesh портал..."
 
 #: ../shell/view/devices/network/mesh.py:110
-#, fuzzy
 msgid "Connected to an XO Mesh Portal"
 msgstr "Свързан към Mesh мрежа от лаптопи XO"
 
 #: ../shell/view/devices/network/mesh.py:112
-#, fuzzy
 msgid "Looking for an XO Mesh Portal..."
 msgstr "Търсене на Mesh мрежа от лаптопи XO..."
 
 #: ../shell/view/devices/network/mesh.py:115
-#, fuzzy
 msgid "Connected to a Simple Mesh"
 msgstr "Свързан към обикновенна Mesh мрежа"
 
 #: ../shell/view/devices/network/mesh.py:117
-#, fuzzy
 msgid "Starting a Simple Mesh"
 msgstr "Стартиране на обикновенна Mesh мрежа"
 
 #: ../shell/view/devices/network/mesh.py:124
-#, fuzzy
 msgid "Unknown Mesh"
 msgstr "Непозната Mesh мрежа"
 
 #: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
 msgid "About this XO"
-msgstr ""
+msgstr "Относно този лаптоп"
 
 #: ../shell/view/home/HomeBox.py:222
 msgid "Not available"
-msgstr ""
+msgstr "Не е наличен"
