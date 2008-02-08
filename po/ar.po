@@ -1,23 +1,21 @@
-# translation of olpc-sugar.master.po to Arabic
+# translation of sugar.po to Arabic
+# Khaled Hosny <khaledhosny@eglug.org>, 2007, 2008.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Khaled Hosny <khaledhosny@eglug.org>, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: olpc-sugar.master\n"
+"Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-01-18 18:19+0000\n"
-"PO-Revision-Date: 2007-08-16 00:17+0300\n"
+"PO-Revision-Date: 2008-02-08 17:31+0200\n"
 "Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n>=3 && n<=10 ? 3 : n>=11 && n<=99 ? 4 : 5;\n"
 "X-Generator: KBabel 1.11.4\n"
-"nplurals=6; plural=n==0 ? 0: n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 "
-": n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"nplurals=6; plural=n==0 ? 0: n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #: ../shell/intro/intro.py:67
 msgid "Name:"
@@ -66,7 +64,7 @@ msgstr "افتح"
 #. self.append_menu_item(self._stop_item)
 #: ../shell/view/clipboardmenu.py:73
 msgid "Add to journal"
-msgstr "أضف يوميّة"
+msgstr "ضِف يوميّة"
 
 #: ../shell/view/clipboardmenu.py:213
 #, python-format
@@ -79,11 +77,11 @@ msgstr "الجِوَار"
 
 #: ../shell/view/frame/zoomtoolbar.py:54
 msgid "Group"
-msgstr "مجموعة"
+msgstr "المجموعة"
 
 #: ../shell/view/frame/zoomtoolbar.py:66
 msgid "Home"
-msgstr "منزل"
+msgstr "المنزل"
 
 #: ../shell/view/frame/zoomtoolbar.py:78
 msgid "Activity"
@@ -124,7 +122,7 @@ msgstr "لقطة شاشة"
 
 #: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
-msgstr "أطفيء"
+msgstr "أطفئ"
 
 #: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
 #: ../shell/view/devices/network/mesh.py:62
@@ -138,15 +136,15 @@ msgstr "عمر بطاريتي"
 
 #: ../shell/view/devices/battery.py:94
 msgid "Battery charging"
-msgstr "شحن البطاريّة"
+msgstr "البطاريّة تشحن"
 
 #: ../shell/view/devices/battery.py:96
 msgid "Battery discharging"
-msgstr "تفريغ البطاريّة"
+msgstr "البطاريّة تُفرّغ"
 
 #: ../shell/view/devices/battery.py:98
 msgid "Battery fully charged"
-msgstr "البطارية مشحونة بالكامل"
+msgstr "البطارية مشحونة تماما"
 
 #: ../lib/sugar/activity/activity.py:117
 msgid "Private"
@@ -158,7 +156,7 @@ msgstr "جِوارِي"
 
 #: ../lib/sugar/activity/activity.py:126
 msgid "Keep"
-msgstr "ابقِ"
+msgstr "احفظ"
 
 #: ../lib/sugar/activity/activity.py:454
 #, python-format
@@ -168,19 +166,19 @@ msgstr "نشاط %s"
 #: ../shell/view/BuddyMenu.py:84
 #, python-format
 msgid "Invite to %s"
-msgstr ""
+msgstr "ادعُ إلى %s"
 
 #: ../shell/hardware/keydialog.py:149
 msgid "Key Type:"
-msgstr ""
+msgstr "نوع المفتاح:"
 
 #: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
-msgstr ""
+msgstr "أعِد التشغيل"
 
 #: ../shell/view/home/HomeBox.py:170
 msgid "Register"
-msgstr ""
+msgstr "سجّل"
 
 #. Only show disconnect when there's a mesh device, because mesh takes
 #. priority over the normal wireless device.  NM doesn't have a "disconnect"
@@ -190,247 +188,248 @@ msgstr ""
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
 msgid "Disconnect..."
-msgstr ""
+msgstr "افصِل..."
 
 #: ../shell/view/home/MeshBox.py:300
 msgid "Join"
-msgstr ""
+msgstr "التحق"
 
 #: ../shell/view/devices/network/wireless.py:61
 msgid "Disconnected"
-msgstr ""
+msgstr "مفصول"
 
 #: ../shell/view/devices/network/wireless.py:131
 msgid "Channel"
-msgstr ""
+msgstr "قناة"
 
 #: ../lib/sugar/activity/activity.py:115
 msgid "Share with:"
-msgstr ""
+msgstr "شارِك مع:"
 
 #: ../lib/sugar/activity/activity.py:245
 msgid "Undo"
-msgstr ""
+msgstr "تراجع"
 
 #: ../lib/sugar/activity/activity.py:250
 msgid "Redo"
-msgstr ""
+msgstr "أعِد"
 
 #: ../lib/sugar/activity/activity.py:260
 msgid "Copy"
-msgstr ""
+msgstr "انسخ"
 
 #: ../lib/sugar/activity/activity.py:265
 msgid "Paste"
-msgstr ""
+msgstr "الصق"
 
 #: ../lib/sugar/activity/activity.py:824
 msgid "Keep error"
-msgstr ""
+msgstr "خطأ في الحفظ"
 
 #: ../lib/sugar/activity/activity.py:825
 msgid "Keep error: all changes will be lost"
-msgstr ""
+msgstr "خطأ في الحفظ: ستُفقد كل التغييرات"
 
 #: ../lib/sugar/activity/activity.py:828
 msgid "Don't stop"
-msgstr ""
+msgstr "لا تتوقف"
 
 #: ../lib/sugar/activity/activity.py:831
 msgid "Stop anyway"
-msgstr ""
+msgstr "توقف على أي حال"
 
 #: ../lib/sugar/graphics/alert.py:164 ../lib/sugar/graphics/alert.py:206
 msgid "Cancel"
-msgstr ""
+msgstr "الغِ"
 
 #: ../lib/sugar/graphics/alert.py:168
 msgid "Ok"
-msgstr ""
+msgstr "حسنا"
 
 #: ../lib/sugar/graphics/alert.py:216
 msgid "Continue"
-msgstr ""
+msgstr "واصِل"
 
 #: ../lib/sugar/graphics/alert.py:244
 msgid "OK"
-msgstr ""
+msgstr "حسنا"
 
 #: ../lib/sugar/graphics/objectchooser.py:175
 #, python-format
 msgid "%d year"
-msgstr ""
+msgstr "%d سنة"
 
 #: ../lib/sugar/graphics/objectchooser.py:175
 #, python-format
 msgid "%d years"
-msgstr ""
+msgstr "%d سنوات"
 
 #: ../lib/sugar/graphics/objectchooser.py:176
 #, python-format
 msgid "%d month"
-msgstr ""
+msgstr "%d شهر"
 
 #: ../lib/sugar/graphics/objectchooser.py:176
 #, python-format
 msgid "%d months"
-msgstr ""
+msgstr "%d شهور"
 
 #: ../lib/sugar/graphics/objectchooser.py:177
 #, python-format
 msgid "%d week"
-msgstr ""
+msgstr "%d أسبوع"
 
 #: ../lib/sugar/graphics/objectchooser.py:177
 #, python-format
 msgid "%d weeks"
-msgstr ""
+msgstr "%d أسابيع"
 
 #: ../lib/sugar/graphics/objectchooser.py:178
 #, python-format
 msgid "%d day"
-msgstr ""
+msgstr "%d يوم"
 
 #: ../lib/sugar/graphics/objectchooser.py:178
 #, python-format
 msgid "%d days"
-msgstr ""
+msgstr "%d أيام"
 
 #: ../lib/sugar/graphics/objectchooser.py:179
 #, python-format
 msgid "%d hour"
-msgstr ""
+msgstr "%d ساعة"
 
 #: ../lib/sugar/graphics/objectchooser.py:179
 #, python-format
 msgid "%d hours"
-msgstr ""
+msgstr "%d ساعات"
 
 #: ../lib/sugar/graphics/objectchooser.py:180
 #, python-format
 msgid "%d minute"
-msgstr ""
+msgstr "%d دقيقة"
 
 #: ../lib/sugar/graphics/objectchooser.py:180
 #, python-format
 msgid "%d minutes"
-msgstr ""
+msgstr "%d دقائق"
 
 #: ../lib/sugar/graphics/objectchooser.py:181
 #, python-format
 msgid "%d second"
-msgstr ""
+msgstr "%d ثانية"
 
 #: ../lib/sugar/graphics/objectchooser.py:181
 #, python-format
 msgid "%d seconds"
-msgstr ""
+msgstr "%d ثوان"
 
 #: ../lib/sugar/graphics/objectchooser.py:191
 msgid " and "
-msgstr ""
+msgstr " و "
 
 #: ../lib/sugar/graphics/objectchooser.py:193
 msgid ", "
-msgstr ""
+msgstr "، "
 
 #: ../shell/controlpanel/control.py:213
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr ""
+msgstr "تحتاج لإعادة تشغيل \"سُكّر\" لتُطبق التغييرات.\n"
 
 #: ../shell/controlpanel/control.py:267
 msgid "Error in specified color modifiers."
-msgstr ""
+msgstr "خطأ في مُغيّرات الألوان المحددة."
 
 #: ../shell/controlpanel/control.py:270
 msgid "Error in specified colors."
-msgstr ""
+msgstr "خطأ في الألوان المحددة."
 
 #: ../shell/controlpanel/control.py:307
 msgid "off"
-msgstr ""
+msgstr "معطّل"
 
 #: ../shell/controlpanel/control.py:309
 msgid "on"
-msgstr ""
+msgstr "مفعّل"
 
 #: ../shell/controlpanel/control.py:310
 msgid "State is unknown."
-msgstr ""
+msgstr "الحالة مجهولة."
 
 #: ../shell/controlpanel/control.py:332
 msgid "Error in specified radio argument use on/off."
-msgstr ""
+msgstr "خطأ في معامل الإذاعة المحدد، استخدم مُفعّل/مُعطّل."
 
 #: ../shell/controlpanel/control.py:336
 msgid "Permission denied. You need to be root to run this method."
-msgstr ""
+msgstr "الصلاحية ممنوعة. تحتاج أن تكون الجذر لتشغل الوظيفة المطلوبة."
 
 #: ../shell/controlpanel/control.py:366
 msgid "Error in reading timezone"
-msgstr ""
+msgstr "خطأ في قراءة المنطقة الزمنية"
 
 #: ../shell/controlpanel/control.py:397
 #, python-format
 msgid "Error copying timezone (from %s): %s"
-msgstr ""
+msgstr "خطأ في نسخ المنطقة الزمنية (من %s): %s"
 
 #: ../shell/controlpanel/control.py:402
 #, python-format
 msgid "Changing permission of timezone: %s"
-msgstr ""
+msgstr "يجري تغيير صلاحيات المنطقة الزمنية: %s"
 
 #: ../shell/controlpanel/control.py:412
 msgid "Error timezone does not exist."
-msgstr ""
+msgstr "خطأ: المنطقة الزمنية لا وجود لها."
 
 #: ../shell/controlpanel/control.py:417 ../shell/controlpanel/control.py:436
 #, python-format
 msgid "Could not access %s. Create standard settings."
-msgstr ""
+msgstr "تعذّر الوصول إلى %s. أنشئ إعدادات قياسية."
 
 #: ../shell/controlpanel/control.py:463
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr ""
+msgstr "لا يمكن تحديد لغة الرمز=%s."
 
 #: ../shell/controlpanel/control.py:473
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr ""
+msgstr "آسف، لا أتحدث '%s'."
 
 #: ../shell/view/devices/network/mesh.py:105
 msgid "Connected to a School Mesh Portal"
-msgstr ""
+msgstr "اتصل ببوابة شبكة مدرسة"
 
 #: ../shell/view/devices/network/mesh.py:107
 msgid "Looking for a School Mesh Portal..."
-msgstr ""
+msgstr "يبحث عن بوابة شبكة مدرسة..."
 
 #: ../shell/view/devices/network/mesh.py:110
 msgid "Connected to an XO Mesh Portal"
-msgstr ""
+msgstr "اتصل ببوابة شبكة XO"
 
 #: ../shell/view/devices/network/mesh.py:112
 msgid "Looking for an XO Mesh Portal..."
-msgstr ""
+msgstr "يبحث عن بوابة شبكة XO..."
 
 #: ../shell/view/devices/network/mesh.py:115
 msgid "Connected to a Simple Mesh"
-msgstr ""
+msgstr "اتصل بشبكة بسيطة"
 
 #: ../shell/view/devices/network/mesh.py:117
 msgid "Starting a Simple Mesh"
-msgstr ""
+msgstr "يبدأ شبكة بسيطة"
 
 #: ../shell/view/devices/network/mesh.py:124
 msgid "Unknown Mesh"
-msgstr ""
+msgstr "شبكة مجهولة"
 
 #: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
 msgid "About this XO"
-msgstr ""
+msgstr "عَنْ XO هذا"
 
 #: ../shell/view/home/HomeBox.py:222
 msgid "Not available"
-msgstr ""
+msgstr "غير مُتاح"
+
