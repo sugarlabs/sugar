@@ -15,7 +15,7 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-from gettext import gettext as _
+import gettext
 
 import gtk
 import gobject
@@ -25,6 +25,7 @@ import math
 from sugar.graphics import style
 from sugar.graphics.icon import Icon
 
+_ = lambda msg: gettext.dgettext('sugar', msg)
 
 class Alert(gtk.EventBox, gobject.GObject):
     """UI interface for Alerts
