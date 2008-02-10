@@ -267,7 +267,7 @@ class ActivityView(hippo.CanvasBox):
         self.set_layout(self._layout)
 
         self._icon = self._create_icon()
-        self._layout.add(self._icon, center=True)
+        self._layout.add_center(self._icon)
 
         self._update_palette()
 
@@ -343,7 +343,7 @@ class ActivityView(hippo.CanvasBox):
     def _color_changed_cb(self, activity, pspec):
         self._layout.remove(self._icon)
         self._icon = self._create_icon()
-        self._layout.add(self._icon, center=True)
+        self._layout.add_center(self._icon)
         self._icon.set_palette(self._palette)
 
     def _private_changed_cb(self, activity, pspec):

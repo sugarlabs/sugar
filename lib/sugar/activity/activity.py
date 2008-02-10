@@ -44,7 +44,7 @@ will need for a real activity.
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-from gettext import gettext as _
+import gettext
 import logging
 import os
 import time
@@ -71,6 +71,8 @@ from sugar import wm
 from sugar import profile
 from sugar import _sugarbaseext
 from sugar import _sugarext
+
+_ = lambda msg: gettext.dgettext('sugar', msg)
 
 SCOPE_PRIVATE = "private"
 SCOPE_INVITE_ONLY = "invite"  # shouldn't be shown in UI, it's implicit when you invite somebody
@@ -288,7 +290,7 @@ class ActivityToolbox(Toolbox):
         Toolbox.__init__(self)
         
         self._activity_toolbar = ActivityToolbar(activity)
-        self.add_toolbar('Activity', self._activity_toolbar)
+        self.add_toolbar(_('Activity'), self._activity_toolbar)
         self._activity_toolbar.show()
 
     def get_activity_toolbar(self):
