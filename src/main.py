@@ -41,10 +41,11 @@ import logsmanager
 import config
 
 def _start_matchbox():
-    cmd = ['matchbox-window-manager-2-maemo']
+    cmd = ['matchbox-window-manager']
 
-    #cmd.extend(['-theme', 'sugar'])
-    #cmd.extend(['-kbdconfig', os.path.join(config.data_path, 'kbdconfig')])
+    cmd.extend(['-use_titlebar', 'no'])
+    cmd.extend(['-theme', 'sugar'])
+    cmd.extend(['-kbdconfig', os.path.join(config.data_path, 'kbdconfig')])
 
     gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
 
