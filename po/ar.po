@@ -432,4 +432,3 @@ msgstr "عَنْ XO هذا"
 #: ../shell/view/home/HomeBox.py:222
 msgid "Not available"
 msgstr "غير مُتاح"
-

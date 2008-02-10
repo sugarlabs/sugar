@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-01-18 18:19+0000\n"
-"PO-Revision-Date: 2008-01-28 06:24-0500\n"
+"PO-Revision-Date: 2008-02-06 06:09-0500\n"
 "Last-Translator: Sohaib Obaidi <ebtihaj_obaidi@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -46,7 +46,7 @@ msgstr "دوست بسازید"
 #: ../shell/view/BuddyMenu.py:84
 #, python-format
 msgid "Invite to %s"
-msgstr "دعوت به %"
+msgstr "دعوت به %s"
 
 #: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
@@ -67,7 +67,7 @@ msgstr "به یادداشت اضافه کن"
 #: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
-msgstr "شیی تخته رسم : %."
+msgstr "شیی تخته رسم : %s."
 
 #: ../shell/hardware/keydialog.py:149
 msgid "Key Type:"
@@ -205,7 +205,7 @@ msgstr "بچسپان"
 #: ../lib/sugar/activity/activity.py:454
 #, python-format
 msgid "%s Activity"
-msgstr "فعالیت %"
+msgstr "فعالیت %s"
 
 #: ../lib/sugar/activity/activity.py:824
 msgid "Keep error"
@@ -242,72 +242,72 @@ msgstr "OK"
 #: ../lib/sugar/graphics/objectchooser.py:175
 #, python-format
 msgid "%d year"
-msgstr "سال %"
+msgstr "%d سال"
 
 #: ../lib/sugar/graphics/objectchooser.py:175
 #, python-format
 msgid "%d years"
-msgstr "سال های %"
+msgstr "%d سال"
 
 #: ../lib/sugar/graphics/objectchooser.py:176
 #, python-format
 msgid "%d month"
-msgstr "ماه %"
+msgstr "%d ماه"
 
 #: ../lib/sugar/graphics/objectchooser.py:176
 #, python-format
 msgid "%d months"
-msgstr "ماه های %"
+msgstr "%d ماه"
 
 #: ../lib/sugar/graphics/objectchooser.py:177
 #, python-format
 msgid "%d week"
-msgstr "هفته %"
+msgstr "%d هفته"
 
 #: ../lib/sugar/graphics/objectchooser.py:177
 #, python-format
 msgid "%d weeks"
-msgstr "هفته های %"
+msgstr "%d هفته ها"
 
 #: ../lib/sugar/graphics/objectchooser.py:178
 #, python-format
 msgid "%d day"
-msgstr "روز %"
+msgstr "%d روز"
 
 #: ../lib/sugar/graphics/objectchooser.py:178
 #, python-format
 msgid "%d days"
-msgstr "روزهای %"
+msgstr "%d روزها"
 
 #: ../lib/sugar/graphics/objectchooser.py:179
 #, python-format
 msgid "%d hour"
-msgstr "ساعت %"
+msgstr "%d ساعت"
 
 #: ../lib/sugar/graphics/objectchooser.py:179
 #, python-format
 msgid "%d hours"
-msgstr "ساعت های %"
+msgstr "%d ساعت ها"
 
 #: ../lib/sugar/graphics/objectchooser.py:180
 #, python-format
 msgid "%d minute"
-msgstr "دقیقه %"
+msgstr "%d دقیقه"
 
 #: ../lib/sugar/graphics/objectchooser.py:180
 #, python-format
 msgid "%d minutes"
-msgstr "دقیقه های %"
+msgstr "%d دقیقه ها"
 
 #: ../lib/sugar/graphics/objectchooser.py:181
 #, python-format
 msgid "%d second"
-msgstr "ثانیه %"
+msgstr "%d ثانیه"
 
 #: ../lib/sugar/graphics/objectchooser.py:181
 #, python-format
 msgid "%d seconds"
-msgstr "ثانیه های %"
+msgstr "%d ثانیه ها"
 
 #: ../lib/sugar/graphics/objectchooser.py:191
 msgid " and "
@@ -356,12 +356,12 @@ msgstr "خطا در خوانش منطقه زمانی"
 #: ../shell/controlpanel/control.py:397
 #, python-format
 msgid "Error copying timezone (from %s): %s"
-msgstr "خطا در خوانش منطقه زمانی (از %): %"
+msgstr "خطا در خوانش منطقه زمانی (از %s): %s"
 
 #: ../shell/controlpanel/control.py:402
 #, python-format
 msgid "Changing permission of timezone: %s"
-msgstr "در حال تغییر دادن اجازت منطقه زمانی: %"
+msgstr "در حال تغییر دادن اجازت منطقه زمانی: %s"
 
 #: ../shell/controlpanel/control.py:412
 msgid "Error timezone does not exist."
@@ -370,17 +370,17 @@ msgstr "خطای منطقه زمانی وجود ندارد."
 #: ../shell/controlpanel/control.py:417 ../shell/controlpanel/control.py:436
 #, python-format
 msgid "Could not access %s. Create standard settings."
-msgstr "به % دسترسی نمی تواند. زمینه معیاریی بسازید."
+msgstr "به %s دسترسی نمی تواند. زمینه معیاریی بسازید."
 
 #: ../shell/controlpanel/control.py:463
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr "زبان برای رمز=% تعیین کرده نمیشود."
+msgstr "زبان برای رمز=%s تعیین کرده نمیشود."
 
 #: ../shell/controlpanel/control.py:473
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr "متأسفم من سخن گفته نمیتوانم '%'."
+msgstr "متأسفم من '%s' گفته نمیتوانم."
 
 #: ../shell/view/devices/network/mesh.py:105
 msgid "Connected to a School Mesh Portal"

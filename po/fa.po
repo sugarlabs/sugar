@@ -46,7 +46,7 @@ msgstr "دوست بسازید"
 #: ../shell/view/BuddyMenu.py:84
 #, python-format
 msgid "Invite to %s"
-msgstr "دعوت به ( ) %"
+msgstr "دعوت به ( ) %s"
 
 #: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
@@ -67,7 +67,7 @@ msgstr "به یادداشت اضافه کردن"
 #: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
-msgstr "شی در حافظه : %"
+msgstr "شی در حافظه : %s"
 
 #: ../shell/hardware/keydialog.py:149
 msgid "Key Type:"
@@ -205,7 +205,7 @@ msgstr "بچسپان"
 #: ../lib/sugar/activity/activity.py:454
 #, python-format
 msgid "%s Activity"
-msgstr "% فعالیت"
+msgstr "%s فعالیت"
 
 #: ../lib/sugar/activity/activity.py:824
 msgid "Keep error"
@@ -356,12 +356,12 @@ msgstr "اشتباه در خواندن منطقه جغرافیایی ساعات"
 #: ../shell/controlpanel/control.py:397
 #, python-format
 msgid "Error copying timezone (from %s): %s"
-msgstr "اشتباه در نقل برداری منطقه جغرافیایی ساعات (از %): %"
+msgstr "اشتباه در نقل برداری منطقه جغرافیایی ساعات (از %s): %s"
 
 #: ../shell/controlpanel/control.py:402
 #, python-format
 msgid "Changing permission of timezone: %s"
-msgstr "تبدیلی اجازت منطقه جغرافیایی ساعات: %"
+msgstr "تبدیلی اجازت منطقه جغرافیایی ساعات: %s"
 
 #: ../shell/controlpanel/control.py:412
 msgid "Error timezone does not exist."
@@ -370,17 +370,17 @@ msgstr "اشتباه منطقه جغرافیایی ساعات وجود ندار�
 #: ../shell/controlpanel/control.py:417 ../shell/controlpanel/control.py:436
 #, python-format
 msgid "Could not access %s. Create standard settings."
-msgstr "دسترسی نمیتواند %. زمینه معیاری بسازید"
+msgstr "دسترسی نمیتواند %s. زمینه معیاری بسازید"
 
 #: ../shell/controlpanel/control.py:463
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr "زبان برای رمز= % تعین نمی گردد"
+msgstr "زبان برای رمز=%s تعین نمی گردد"
 
 #: ../shell/controlpanel/control.py:473
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr "ببخشید من سخن گفته نمیتوانم \"%\""
+msgstr "ببخشید من سخن گفته نمیتوانم \"%s\""
 
 #: ../shell/view/devices/network/mesh.py:105
 msgid "Connected to a School Mesh Portal"

@@ -46,7 +46,7 @@ msgstr "Найз болох"
 #: ../shell/view/BuddyMenu.py:84
 #, python-format
 msgid "Invite to %s"
-msgstr "% урих"
+msgstr "%s урих"
 
 #: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
@@ -67,7 +67,7 @@ msgstr "Бүртгэлийн дэвтэрт нэмэх"
 #: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
-msgstr "Санасан зүйлс: %."
+msgstr "Санасан зүйлс: %s."
 
 #: ../shell/hardware/keydialog.py:149
 msgid "Key Type:"
@@ -242,80 +242,80 @@ msgstr "OK"
 #: ../lib/sugar/graphics/objectchooser.py:175
 #, python-format
 msgid "%d year"
-msgstr "% жил"
+msgstr "%d жил"
 
 #: ../lib/sugar/graphics/objectchooser.py:175
 #, python-format
 msgid "%d years"
-msgstr "% жилүүд"
+msgstr "%d жилүүд"
 
 #: ../lib/sugar/graphics/objectchooser.py:176
 #, python-format
 msgid "%d month"
-msgstr "% сар"
+msgstr "%d сар"
 
 #: ../lib/sugar/graphics/objectchooser.py:176
 #, python-format
 msgid "%d months"
-msgstr "% сарууд"
+msgstr "%d сарууд"
 
 #: ../lib/sugar/graphics/objectchooser.py:177
 #, python-format
 msgid "%d week"
-msgstr "% долоо хоног"
+msgstr "%d долоо хоног"
 
 #: ../lib/sugar/graphics/objectchooser.py:177
 #, python-format
 msgid "%d weeks"
-msgstr "% долоо хоногууд"
+msgstr "%d долоо хоногууд"
 
 #: ../lib/sugar/graphics/objectchooser.py:178
 #, python-format
 msgid "%d day"
-msgstr "% өдөр "
+msgstr "%d өдөр "
 
 #: ../lib/sugar/graphics/objectchooser.py:178
 #, python-format
 msgid "%d days"
-msgstr "% өдрүүд"
+msgstr "%d өдрүүд"
 
 #: ../lib/sugar/graphics/objectchooser.py:179
 #, python-format
 msgid "%d hour"
-msgstr "% цаг"
+msgstr "%d цаг"
 
 #: ../lib/sugar/graphics/objectchooser.py:179
 #, python-format
 msgid "%d hours"
-msgstr "% цаг "
+msgstr "%d цаг "
 
 #: ../lib/sugar/graphics/objectchooser.py:180
 #, python-format
 msgid "%d minute"
-msgstr "% минут"
+msgstr "%d минут"
 
 #: ../lib/sugar/graphics/objectchooser.py:180
 #, python-format
 msgid "%d minutes"
-msgstr "% минут"
+msgstr "%d минут"
 
 #: ../lib/sugar/graphics/objectchooser.py:181
 #, python-format
 msgid "%d second"
-msgstr "% секунд"
+msgstr "%d секунд"
 
 #: ../lib/sugar/graphics/objectchooser.py:181
 #, python-format
 msgid "%d seconds"
-msgstr "% секунд"
+msgstr "%d секунд"
 
 #: ../lib/sugar/graphics/objectchooser.py:191
 msgid " and "
-msgstr "ба"
+msgstr " ба "
 
 #: ../lib/sugar/graphics/objectchooser.py:193
 msgid ", "
-msgstr ","
+msgstr ", "
 
 #: ../shell/controlpanel/control.py:213
 msgid "To apply your changes you have to restart sugar.\n"
