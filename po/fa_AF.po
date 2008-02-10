@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: 2008-01-28 08:14-0500\n"
+"PO-Revision-Date: 2008-02-06 05:36-0500\n"
 "Last-Translator: Sohaib Obaidi <ebtihaj_obaidi@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -46,7 +46,7 @@ msgstr "دوست بساز"
 #: ../shell/view/BuddyMenu.py:109
 #, python-format
 msgid "Invite to %s"
-msgstr "دعوت کن به %"
+msgstr "دعوت کن به %s"
 
 #: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
@@ -67,7 +67,7 @@ msgstr "به یادداشت اضافه کن"
 #: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
-msgstr "شئ تخته رسم: %."
+msgstr "شئ تخته رسم: %s."
 
 #: ../shell/hardware/keydialog.py:149
 msgid "Key Type:"
@@ -213,7 +213,7 @@ msgstr "بچسپان"
 #: ../lib/sugar/activity/activity.py:450
 #, python-format
 msgid "%s Activity"
-msgstr "فعالیت %"
+msgstr "فعالیت %s"
 
 #: ../lib/sugar/activity/activity.py:820
 msgid "Keep error"
@@ -249,7 +249,7 @@ msgstr "OK"
 
 #: ../shell/controlpanel/control.py:213
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr "برای عملی نمودن همه تغیرات شما باید شوگر را دوباره آغاز کنید."
+msgstr "برای عملی نمودن همه تغیرات شما باید شوگر را دوباره آغاز کنید.\n"
 
 #: ../shell/controlpanel/control.py:267
 msgid "Error in specified color modifiers."
@@ -286,12 +286,12 @@ msgstr "خطا در خوانش منطقه زمانی"
 #: ../shell/controlpanel/control.py:397
 #, python-format
 msgid "Error copying timezone (from %s): %s"
-msgstr "خطا در نقل گیری منطقه زمانی (از%): %"
+msgstr "خطا در نقل گیری منطقه زمانی (از %s): %s"
 
 #: ../shell/controlpanel/control.py:402
 #, python-format
 msgid "Changing permission of timezone: %s"
-msgstr "در حال تغییر دادن اجازت منطقه زمانی: %"
+msgstr "در حال تغییر دادن اجازت منطقه زمانی: %s"
 
 #: ../shell/controlpanel/control.py:413
 msgid "Error timezone does not exist."
@@ -300,17 +300,17 @@ msgstr "خطای منطقه زمانی وجود ندارد."
 #: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
 #, python-format
 msgid "Could not access %s. Create standard settings."
-msgstr "% دسترسی نمی تواند. زمینه معیاری بسازید."
+msgstr "%s دسترسی نمی تواند. زمینه معیاری بسازید."
 
 #: ../shell/controlpanel/control.py:466
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr "زبان برای رمز% تعیین کرده نمیشود."
+msgstr "زبان برای رمز=%s تعیین کرده نمیشود."
 
 #: ../shell/controlpanel/control.py:476
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr "متأسفم من سخن گفته نمیتوانم '%'."
+msgstr "متأسفم من سخن گفته نمیتوانم '%s'."
 
 #: ../shell/view/devices/network/mesh.py:105
 msgid "Connected to a School Mesh Portal"

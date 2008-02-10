@@ -46,7 +46,7 @@ msgstr "Найз нэмэх"
 #: ../shell/view/BuddyMenu.py:109
 #, python-format
 msgid "Invite to %s"
-msgstr "%-үүдэд урих"
+msgstr "%s-эд урих"
 
 #: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
@@ -67,7 +67,7 @@ msgstr "Бүртгэлийн дэвтэрт нэмэх"
 #: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
-msgstr "Санадаг самбарын зүйлс: %ууд"
+msgstr "Санадаг самбарын зүйлс: %s"
 
 #: ../shell/hardware/keydialog.py:149
 msgid "Key Type:"
@@ -213,7 +213,7 @@ msgstr "Хуула"
 #: ../lib/sugar/activity/activity.py:450
 #, python-format
 msgid "%s Activity"
-msgstr "Програм %ууд"
+msgstr "Програм %s"
 
 #: ../lib/sugar/activity/activity.py:820
 msgid "Keep error"
@@ -287,12 +287,12 @@ msgstr "Цагийн бүсийг уншихад алдаа гарлаа"
 #: ../shell/controlpanel/control.py:397
 #, python-format
 msgid "Error copying timezone (from %s): %s"
-msgstr "Алдаа цагийн бүсийг (%-ээс) хуулж байна: %ууд"
+msgstr "Алдаа цагийн бүсийг (%s-ээс) хуулж байна: %s"
 
 #: ../shell/controlpanel/control.py:402
 #, python-format
 msgid "Changing permission of timezone: %s"
-msgstr "Цагийн бүсийн зөвшөөрлийг өөрчилж байна:%ууд"
+msgstr "Цагийн бүсийн зөвшөөрлийг өөрчилж байна:%s"
 
 #: ../shell/controlpanel/control.py:413
 msgid "Error timezone does not exist."
@@ -301,17 +301,17 @@ msgstr "Цагийн бүсийн алдаа байхгүй боллоо."
 #: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
 #, python-format
 msgid "Could not access %s. Create standard settings."
-msgstr "% руу хандаж чадахгүй байна. Стандарт тохиргоо үүсгэ."
+msgstr "%s руу хандаж чадахгүй байна. Стандарт тохиргоо үүсгэ."
 
 #: ../shell/controlpanel/control.py:466
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr "%=кодтой хэл тодорхойлогдож чадахгүй байна."
+msgstr "%s=кодтой хэл тодорхойлогдож чадахгүй байна."
 
 #: ../shell/controlpanel/control.py:476
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr "Уучлаарай би '%' хэлээр ярьдаггүй."
+msgstr "Уучлаарай би '%s' хэлээр ярьдаггүй."
 
 #: ../shell/view/devices/network/mesh.py:105
 msgid "Connected to a School Mesh Portal"

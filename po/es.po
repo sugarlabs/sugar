@@ -408,6 +408,7 @@ msgstr "El estado es desconocido."
 # on/off refer to keywords? see also previous msgids referring to the terms
 # 
 # - Eng string seems to be missing a ','. Fill bug?
+#
 #: ../shell/controlpanel/control.py:332
 msgid "Error in specified radio argument use on/off."
 msgstr "Error en el argumento de radio especificado, utilice apagado/prendido."
@@ -453,6 +454,7 @@ msgstr "Perdón, no hablo '%s'."
 
 # i think we should translate mesh..for a simple reason, if i say malla kids would have an abstract (geometric) picture  about what a mesh network is
 # 
+#
 #: ../shell/view/devices/network/mesh.py:105
 msgid "Connected to a School Mesh Portal"
 msgstr "Conectado a un portal malla en una escuela"

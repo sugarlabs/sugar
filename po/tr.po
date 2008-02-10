@@ -68,7 +68,7 @@ msgstr "Günceye ekle"
 #: ../shell/view/clipboardmenu.py:213
 #, python-format
 msgid "Clipboard object: %s."
-msgstr "Panodaki nesne"
+msgstr "Panodaki nesne: %s."
 
 #: ../shell/hardware/keydialog.py:149
 msgid "Key Type:"

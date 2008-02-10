@@ -213,7 +213,7 @@ msgstr "سرېښل"
 #: ../lib/sugar/activity/activity.py:450
 #, python-format
 msgid "%s Activity"
-msgstr "s% چارندتيا"
+msgstr "%s چارندتيا"
 
 #: ../lib/sugar/activity/activity.py:820
 msgid "Keep error"
@@ -300,7 +300,7 @@ msgstr "تېروتنه: مهال سيمه وجود نلري."
 #: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
 #, python-format
 msgid "Could not access %s. Create standard settings."
-msgstr "s% ته لاسرسې نه كېږي. معياري تنظيمات جوړ كړئ."
+msgstr "%s ته لاسرسې نه كېږي. معياري تنظيمات جوړ كړئ."
 
 #: ../shell/controlpanel/control.py:466
 #, python-format
@@ -310,7 +310,7 @@ msgstr "د كوډ ژبه=%s نه څرګندېږي."
 #: ../shell/controlpanel/control.py:476
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr "بښنه غواړم زه 's%' خبرې نه كوم."
+msgstr "بښنه غواړم زه '%s' خبرې نه كوم."
 
 #: ../shell/view/devices/network/mesh.py:105
 msgid "Connected to a School Mesh Portal"
