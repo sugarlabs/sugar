@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-01-18 18:19+0000\n"
-"PO-Revision-Date: 2008-02-07 09:44+0100\n"
+"PO-Revision-Date: 2008-02-11 06:56+0100\n"
 "Last-Translator: Satyanarayana Murthy Saladi <saladism@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -71,15 +71,15 @@ msgstr "క్లిప్ బోర్డు వస్తువు : %s."
 
 #: ../shell/hardware/keydialog.py:149
 msgid "Key Type:"
-msgstr "తాళం రకము"
+msgstr "తాళం రకము:"
 
 #: ../shell/hardware/keydialog.py:169
 msgid "Authentication Type:"
-msgstr "దృడపరచుకొనే రకము"
+msgstr "దృడపరచుకొనే రకము:"
 
 #: ../shell/hardware/keydialog.py:250
 msgid "Encryption Type:"
-msgstr "గుప్త్తీకరించే రకము"
+msgstr "గుప్త్తీకరించే రకము:"
 
 #: ../shell/view/home/activitiesdonut.py:90
 msgid "Starting..."
@@ -155,7 +155,7 @@ msgstr "వేరుచేయబడింది"
 
 #: ../shell/view/devices/network/wireless.py:131
 msgid "Channel"
-msgstr "ప్రవాహము"
+msgstr "ప్రసారమార్గం"
 
 #: ../shell/view/frame/zoomtoolbar.py:42
 msgid "Neighborhood"
@@ -224,7 +224,7 @@ msgstr "ఆపవద్దు"
 
 #: ../lib/sugar/activity/activity.py:831
 msgid "Stop anyway"
-msgstr "ఏదేమైనా ఆపువేయి"
+msgstr "ఎలాగైనా ఆపువేయి"
 
 #: ../lib/sugar/graphics/alert.py:164
 #: ../lib/sugar/graphics/alert.py:206
