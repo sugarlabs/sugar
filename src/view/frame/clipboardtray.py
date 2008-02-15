@@ -104,7 +104,7 @@ class ClipboardTray(VTray):
             group = None
 
         icon = ClipboardIcon(object_id, name, group)
-        self.add_item(icon, 0)
+        self.pack_end(icon, expand=False, fill=False, padding=0)
         icon.show()
         self._icons[object_id] = icon
 
