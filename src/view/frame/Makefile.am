@@ -3,8 +3,8 @@ sugar_PYTHON =				\
 	__init__.py			\
 	activitiestray.py		\
 	activitybutton.py		\
-	clipboardbox.py			\
 	clipboardpanelwindow.py		\
+	clipboardtray.py		\
 	frameinvoker.py			\
 	friendstray.py			\
 	eventarea.py			\
