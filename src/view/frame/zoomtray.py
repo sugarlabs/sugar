@@ -16,69 +16,61 @@
 
 from gettext import gettext as _
 
-import gtk
-
 from sugar.graphics.palette import Palette
-from sugar.graphics.toolbutton import ToolButton
+from sugar.graphics.radiotoolbutton import RadioToolButton
+from sugar.graphics.tray import HTray
 
 from view.frame.frameinvoker import FrameWidgetInvoker
 from model.shellmodel import ShellModel
 
-class ZoomTray(gtk.Toolbar):
+class ZoomTray(HTray):
     def __init__(self, shell):
-        gtk.Toolbar.__init__(self)
+        HTray.__init__(self)
 
         self._shell = shell
 
-        self.set_show_arrow(False)
+        shell_model = shell.get_model()
+        shell_model.connect('notify::zoom-level', self.__notify_zoom_level_cb)
 
-        button = ToolButton(icon_name='zoom-neighborhood')
-        button.connect('clicked',
-                       self._level_clicked_cb,
-                       ShellModel.ZOOM_MESH)
-        self.insert(button, -1)
+        self._mesh_button = self._add_button('zoom-neighborhood',
+                _('Neighborhood'), ShellModel.ZOOM_MESH)
+        self._groups_button = self._add_button('zoom-groups',
+                _('Group'), ShellModel.ZOOM_FRIENDS)
+        self._home_button = self._add_button('zoom-home',
+                _('Home'), ShellModel.ZOOM_HOME)
+        self._activity_button = self._add_button('zoom-activity',
+                _('Activity'), ShellModel.ZOOM_ACTIVITY)
+
+    def _add_button(self, icon_name, label, zoom_level):
+        if self.get_children():
+            group = self.get_children()[0]
+        else:
+            group = None
+
+        button = RadioToolButton(named_icon=icon_name, group=group)
+        button.connect('clicked', self._level_clicked_cb, zoom_level)
+        self.add_item(button)
         button.show()
 
-        palette = Palette(_('Neighborhood'))
+        palette = Palette(label)
         palette.props.invoker = FrameWidgetInvoker(button)
         palette.set_group_id('frame')
         button.set_palette(palette)
-
-        button = ToolButton(icon_name='zoom-groups')
-        button.connect('clicked',
-                       self._level_clicked_cb,
-                       ShellModel.ZOOM_FRIENDS)
-        self.insert(button, -1)
-        button.show()
-
-        palette = Palette(_('Group'))
-        palette.props.invoker = FrameWidgetInvoker(button)
-        palette.set_group_id('frame')
-        button.set_palette(palette)
-
-        button = ToolButton(icon_name='zoom-home')
-        button.connect('clicked',
-                       self._level_clicked_cb,
-                       ShellModel.ZOOM_HOME)
-        self.insert(button, -1)
-        button.show()
-
-        palette = Palette(_('Home'))
-        palette.props.invoker = FrameWidgetInvoker(button)
-        palette.set_group_id('frame')
-        button.set_palette(palette)
-
-        button = ToolButton(icon_name='zoom-activity')
-        button.connect('clicked',
-                       self._level_clicked_cb,
-                       ShellModel.ZOOM_ACTIVITY)
-        self.insert(button, -1)
-        button.show()
-
-        palette = Palette(_('Activity'))
-        palette.props.invoker = FrameWidgetInvoker(button)
-        palette.set_group_id('frame')
-        button.set_palette(palette)
+        
+        return button
 
     def _level_clicked_cb(self, button, level):
         self._shell.set_zoom_level(level)
+
+    def __notify_zoom_level_cb(self, model, pspec):
+        new_level = model.props.zoom_level
+
+        if new_level == ShellModel.ZOOM_MESH:
+            self._mesh_button.props.active = True
+        elif new_level == ShellModel.ZOOM_FRIENDS:
+            self._groups_button.props.active = True
+        elif new_level == ShellModel.ZOOM_HOME:
+            self._home_button.props.active = True
+        elif new_level == ShellModel.ZOOM_ACTIVITY:
+            self._activity_button.props.active = True
+

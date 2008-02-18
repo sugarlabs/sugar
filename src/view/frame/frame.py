@@ -166,9 +166,9 @@ class Frame(object):
     def _create_top_panel(self):
         panel = self._create_panel(gtk.POS_TOP)
 
-        tray = ZoomTray(self._shell)
-        panel.append(hippo.CanvasWidget(widget=tray))
-        tray.show()
+        zoom_tray = ZoomTray(self._shell)
+        panel.append(hippo.CanvasWidget(widget=zoom_tray), hippo.PACK_EXPAND)
+        zoom_tray.show()
 
         return panel
 
