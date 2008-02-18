@@ -27,7 +27,7 @@ from sugar.clipboard import clipboardservice
 
 from view.frame.eventarea import EventArea
 from view.frame.activitiestray import ActivitiesTray
-from view.frame.zoomtoolbar import ZoomToolbar
+from view.frame.zoomtray import ZoomTray
 from view.frame.friendstray import FriendsTray
 from view.frame.framewindow import FrameWindow
 from view.frame.clipboardpanelwindow import ClipboardPanelWindow
@@ -166,9 +166,9 @@ class Frame(object):
     def _create_top_panel(self):
         panel = self._create_panel(gtk.POS_TOP)
 
-        toolbar = ZoomToolbar(self._shell)
-        panel.append(hippo.CanvasWidget(widget=toolbar))
-        toolbar.show()
+        tray = ZoomTray(self._shell)
+        panel.append(hippo.CanvasWidget(widget=tray))
+        tray.show()
 
         return panel
 

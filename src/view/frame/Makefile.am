@@ -11,4 +11,4 @@ sugar_PYTHON =				\
 	frame.py			\
 	overlaybox.py			\
 	framewindow.py			\
-	zoomtoolbar.py
+	zoomtray.py

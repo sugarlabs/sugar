@@ -24,7 +24,7 @@ from sugar.graphics.toolbutton import ToolButton
 from view.frame.frameinvoker import FrameWidgetInvoker
 from model.shellmodel import ShellModel
 
-class ZoomToolbar(gtk.Toolbar):
+class ZoomTray(gtk.Toolbar):
     def __init__(self, shell):
         gtk.Toolbar.__init__(self)
 
