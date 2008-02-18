@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from gettext import gettext as _
+import logging
 
 from sugar.graphics.palette import Palette
 from sugar.graphics.radiotoolbutton import RadioToolButton
@@ -29,9 +30,6 @@ class ZoomTray(HTray):
 
         self._shell = shell
 
-        shell_model = shell.get_model()
-        shell_model.connect('notify::zoom-level', self.__notify_zoom_level_cb)
-
         self._mesh_button = self._add_button('zoom-neighborhood',
                 _('Neighborhood'), ShellModel.ZOOM_MESH)
         self._groups_button = self._add_button('zoom-groups',
@@ -40,6 +38,10 @@ class ZoomTray(HTray):
                 _('Home'), ShellModel.ZOOM_HOME)
         self._activity_button = self._add_button('zoom-activity',
                 _('Activity'), ShellModel.ZOOM_ACTIVITY)
+
+        shell_model = shell.get_model()
+        self._set_zoom_level(shell_model.props.zoom_level)
+        shell_model.connect('notify::zoom-level', self.__notify_zoom_level_cb)
 
     def _add_button(self, icon_name, label, zoom_level):
         if self.get_children():
@@ -60,11 +62,14 @@ class ZoomTray(HTray):
         return button
 
     def _level_clicked_cb(self, button, level):
-        self._shell.set_zoom_level(level)
+        if self._shell.get_model().props.zoom_level != level:
+            self._shell.set_zoom_level(level)
 
     def __notify_zoom_level_cb(self, model, pspec):
-        new_level = model.props.zoom_level
+        self._set_zoom_level(model.props.zoom_level)
 
+    def _set_zoom_level(self, new_level):
+        logging.debug('new zoom level: %r' % new_level)
         if new_level == ShellModel.ZOOM_MESH:
             self._mesh_button.props.active = True
         elif new_level == ShellModel.ZOOM_FRIENDS:
@@ -73,4 +78,6 @@ class ZoomTray(HTray):
             self._home_button.props.active = True
         elif new_level == ShellModel.ZOOM_ACTIVITY:
             self._activity_button.props.active = True
+        else:
+            raise ValueError('Invalid zoom level: %r' % (new_level))
 
