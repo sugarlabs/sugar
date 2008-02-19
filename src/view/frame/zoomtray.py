@@ -44,13 +44,14 @@ class ZoomTray(HTray):
         shell_model.connect('notify::zoom-level', self.__notify_zoom_level_cb)
 
     def _add_button(self, icon_name, label, zoom_level):
+        logging.debug('ZoomTray._add_button: %r %r %r' % (icon_name, label, zoom_level))
         if self.get_children():
             group = self.get_children()[0]
         else:
             group = None
 
         button = RadioToolButton(named_icon=icon_name, group=group)
-        button.connect('clicked', self._level_clicked_cb, zoom_level)
+        button.connect('toggled', self.__level_toggled_cb, zoom_level)
         self.add_item(button)
         button.show()
 
@@ -61,11 +62,15 @@ class ZoomTray(HTray):
         
         return button
 
-    def _level_clicked_cb(self, button, level):
-        if self._shell.get_model().props.zoom_level != level:
-            self._shell.set_zoom_level(level)
+    def __level_toggled_cb(self, button, zoom_level):
+        if not button.get_active():
+            return
+        logging.debug('ZoomTray.__level_clicked_cb: %r' % zoom_level)
+        if self._shell.get_model().props.zoom_level != zoom_level:
+            self._shell.set_zoom_level(zoom_level)
 
     def __notify_zoom_level_cb(self, model, pspec):
+        logging.debug('ZoomTray.__notify_zoom_level_cb: %r' % model.props.zoom_level)
         self._set_zoom_level(model.props.zoom_level)
 
     def _set_zoom_level(self, new_level):
