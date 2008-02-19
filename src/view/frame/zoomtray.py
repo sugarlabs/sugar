@@ -17,16 +17,17 @@
 from gettext import gettext as _
 import logging
 
+import gtk
+
 from sugar.graphics.palette import Palette
 from sugar.graphics.radiotoolbutton import RadioToolButton
-from sugar.graphics.tray import HTray
 
 from view.frame.frameinvoker import FrameWidgetInvoker
 from model.shellmodel import ShellModel
 
-class ZoomTray(HTray):
+class ZoomTray(gtk.HBox):
     def __init__(self, shell):
-        HTray.__init__(self)
+        gtk.HBox.__init__(self)
 
         self._shell = shell
 
@@ -52,7 +53,7 @@ class ZoomTray(HTray):
 
         button = RadioToolButton(named_icon=icon_name, group=group)
         button.connect('toggled', self.__level_toggled_cb, zoom_level)
-        self.add_item(button)
+        self.pack_start(button)
         button.show()
 
         palette = Palette(label)

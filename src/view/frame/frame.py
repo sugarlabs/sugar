@@ -27,6 +27,7 @@ from sugar.clipboard import clipboardservice
 
 from view.frame.eventarea import EventArea
 from view.frame.activitiestray import ActivitiesTray
+from view.frame import activitiestray2
 from view.frame.zoomtray import ZoomTray
 from view.frame.friendstray import FriendsTray
 from view.frame.framewindow import FrameWindow
@@ -167,16 +168,20 @@ class Frame(object):
         panel = self._create_panel(gtk.POS_TOP)
 
         zoom_tray = ZoomTray(self._shell)
-        panel.append(hippo.CanvasWidget(widget=zoom_tray), hippo.PACK_EXPAND)
+        panel.append(hippo.CanvasWidget(widget=zoom_tray))
         zoom_tray.show()
+
+        activities_tray = ActivitiesTray(self._shell)
+        panel.append(hippo.CanvasWidget(widget=activities_tray), hippo.PACK_EXPAND)
+        activities_tray.show()
 
         return panel
 
     def _create_bottom_panel(self):
         panel = self._create_panel(gtk.POS_BOTTOM)
 
-        box = ActivitiesTray(self._shell)
-        panel.append(box, hippo.PACK_EXPAND)
+        activities_tray = activitiestray2.ActivitiesTray(self._shell)
+        panel.append(hippo.CanvasWidget(widget=activities_tray), hippo.PACK_EXPAND)
 
         return panel
 
