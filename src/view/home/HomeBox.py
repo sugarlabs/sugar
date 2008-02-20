@@ -32,7 +32,6 @@ from sugar.profile import get_profile
 from sugar import env
 
 from view.home.activitiesdonut import ActivitiesDonut
-from view.devices import deviceview
 from view.home.MyIcon import MyIcon
 from model.shellmodel import ShellModel
 from hardware import schoolserver
@@ -63,9 +62,6 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
 
         self._my_icon = _MyIcon(shell, style.XLARGE_ICON_SIZE)
         self.append(self._my_icon, hippo.PACK_FIXED)
-
-        self._devices_box = _DevicesBox(shell_model.get_devices())
-        bottom_box.append(self._devices_box)
 
         shell_model.connect('notify::state',
                             self._shell_state_changed_cb)
@@ -113,37 +109,6 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
 
     def release(self):
         pass
-
-class _DevicesBox(hippo.CanvasBox):
-    def __init__(self, devices_model):
-        gobject.GObject.__init__(self,
-                orientation=hippo.ORIENTATION_HORIZONTAL,
-                xalign=hippo.ALIGNMENT_CENTER)
-
-        self._device_icons = {}
-
-        for device in devices_model:
-            self._add_device(device)
-
-        devices_model.connect('device-appeared',
-                              self._device_appeared_cb)
-        devices_model.connect('device-disappeared',
-                              self._device_disappeared_cb)
-
-    def _add_device(self, device):
-        view = deviceview.create(device)
-        self.append(view)
-        self._device_icons[device.get_id()] = view
-
-    def _remove_device(self, device):
-        self.remove(self._device_icons[device.get_id()])
-        del self._device_icons[device.get_id()]
-
-    def _device_appeared_cb(self, model, device):
-        self._add_device(device)
-
-    def _device_disappeared_cb(self, model, device):
-        self._remove_device(device)
 
 class _MyIcon(MyIcon):
     def __init__(self, shell, scale):

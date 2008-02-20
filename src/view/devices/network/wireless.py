@@ -20,21 +20,21 @@ from gettext import gettext as _
 import gtk
 
 from sugar.graphics.icon import get_icon_state
-from sugar.graphics.icon import CanvasIcon
+from sugar.graphics.tray import TrayIcon
 from sugar.graphics import style
 from sugar.graphics.palette import Palette
 
 from model.devices.network import wireless
 from model.devices import device
-
 from hardware import hardwaremanager
 from hardware import nmclient
+from view.frame.frameinvoker import FrameWidgetInvoker
 
 _ICON_NAME = 'network-wireless'
 
-class DeviceView(CanvasIcon):
+class DeviceView(TrayIcon):
     def __init__(self, model):
-        CanvasIcon.__init__(self, size=style.MEDIUM_ICON_SIZE)
+        TrayIcon.__init__(self)
         self._model = model
 
         meshdev = None
@@ -44,10 +44,11 @@ class DeviceView(CanvasIcon):
                 meshdev = device
                 break
 
-        self._palette = WirelessPalette(self._get_palette_primary_text(), meshdev)
-        self.set_palette(self._palette)
         self._counter = 0
-        self._palette.set_frequency(self._model.props.frequency)
+        self.palette = WirelessPalette(self._get_palette_primary_text(), meshdev)
+        self.palette.props.invoker = FrameWidgetInvoker(self)
+        self.palette.set_group_id('frame')
+        self.palette.set_frequency(self._model.props.frequency)
 
         model.connect('notify::name', self._name_changed_cb)
         model.connect('notify::strength', self._strength_changed_cb)
@@ -65,7 +66,7 @@ class DeviceView(CanvasIcon):
         self._update_icon()
         # Only update frequency periodically
         if self._counter % 4 == 0:
-            self._palette.set_frequency(self._model.props.frequency)
+            self.palette.set_frequency(self._model.props.frequency)
         self._counter += 1
 
     def _name_changed_cb(self, model, pspec):
@@ -81,21 +82,22 @@ class DeviceView(CanvasIcon):
             strength = 0
         icon_name = get_icon_state(_ICON_NAME, strength)
         if icon_name:
-            self.props.icon_name = icon_name
+            self.get_icon().props.icon_name = icon_name
 
     def _update_state(self):
         # FIXME Change icon colors once we have real icons
         state = self._model.props.state
+        icon = self.get_icon()
         if state == device.STATE_ACTIVATING:
-            self.props.fill_color = style.COLOR_INACTIVE_FILL.get_svg()
-            self.props.stroke_color = style.COLOR_INACTIVE_STROKE.get_svg()
+            icon.props.fill_color = style.COLOR_INACTIVE_FILL.get_svg()
+            icon.props.stroke_color = style.COLOR_INACTIVE_STROKE.get_svg()
         elif state == device.STATE_ACTIVATED:
             (stroke, fill) = self._model.get_active_network_colors()
-            self.props.stroke_color = stroke
-            self.props.fill_color = fill
+            icon.props.stroke_color = stroke
+            icon.props.fill_color = fill
         elif state == device.STATE_INACTIVE:
-            self.props.fill_color = style.COLOR_INACTIVE_FILL.get_svg()
-            self.props.stroke_color = style.COLOR_INACTIVE_STROKE.get_svg()
+            icon.props.fill_color = style.COLOR_INACTIVE_FILL.get_svg()
+            icon.props.stroke_color = style.COLOR_INACTIVE_STROKE.get_svg()
 
 class WirelessPalette(Palette):
     def __init__(self, primary_text, meshdev):

@@ -1,5 +1,5 @@
-#
 # Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2008 One Laptop Per Child
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,22 +20,24 @@ from gettext import gettext as _
 import gtk
 
 from sugar import profile
-from sugar.graphics.icon import CanvasIcon
+from sugar.graphics.tray import TrayIcon
 from sugar.graphics import style
-from model.devices import device
-
 from sugar.graphics.palette import Palette
+
+from model.devices import device
 from model.devices.network import wireless
-
 from hardware import hardwaremanager
+from view.frame.frameinvoker import FrameWidgetInvoker
 
-class DeviceView(CanvasIcon):
+class DeviceView(TrayIcon):
     def __init__(self, model):
-        CanvasIcon.__init__(self, size=style.MEDIUM_ICON_SIZE,
-                            icon_name='network-mesh')
+        TrayIcon.__init__(self, icon_name='network-mesh')
+
         self._model = model
-        self._palette = MeshPalette(_("Mesh Network"), model)
-        self.set_palette(self._palette)
+
+        self.palette = MeshPalette(_("Mesh Network"), model)
+        self.palette.props.invoker = FrameWidgetInvoker(self)
+        self.palette.set_group_id('frame')
 
         model.connect('notify::state', self._state_changed_cb)
         model.connect('notify::activation-stage', self._state_changed_cb)
@@ -47,24 +49,24 @@ class DeviceView(CanvasIcon):
     def _update_state(self):
         # FIXME Change icon colors once we have real icons
         state = self._model.props.state
-        self._palette.update_state(state)
+        self.palette.update_state(state)
 
         if state == device.STATE_ACTIVATING:
-            self.props.fill_color = style.COLOR_INACTIVE_FILL.get_svg()
-            self.props.stroke_color = style.COLOR_INACTIVE_STROKE.get_svg()
+            self.get_icon().props.fill_color = style.COLOR_INACTIVE_FILL.get_svg()
+            self.get_icon().props.stroke_color = style.COLOR_INACTIVE_STROKE.get_svg()
         elif state == device.STATE_ACTIVATED:
-            self.props.xo_color = profile.get_color()
+            self.get_icon().props.xo_color = profile.get_color()
         elif state == device.STATE_INACTIVE:
-            self.props.fill_color = style.COLOR_INACTIVE_FILL.get_svg()
-            self.props.stroke_color = style.COLOR_INACTIVE_STROKE.get_svg()
+            self.get_icon().props.fill_color = style.COLOR_INACTIVE_FILL.get_svg()
+            self.get_icon().props.stroke_color = style.COLOR_INACTIVE_STROKE.get_svg()
 
         if state == device.STATE_INACTIVE:
-            self._palette.set_primary_text(_("Mesh Network"))
+            self.palette.set_primary_text(_("Mesh Network"))
         else:
             chan = wireless.freq_to_channel(self._model.props.frequency)
             if chan > 0:
-                self._palette.set_primary_text(_("Mesh Network") + " %d" % chan)
-            self._palette.set_mesh_step(self._model.props.mesh_step, state)
+                self.palette.set_primary_text(_("Mesh Network") + " %d" % chan)
+            self.palette.set_mesh_step(self._model.props.mesh_step, state)
 
 class MeshPalette(Palette):
     def __init__(self, primary_text, model):

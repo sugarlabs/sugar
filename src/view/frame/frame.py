@@ -30,6 +30,7 @@ from view.frame.activitiestray import ActivitiesTray
 from view.frame import activitiestray2
 from view.frame.zoomtray import ZoomTray
 from view.frame.friendstray import FriendsTray
+from view.frame.devicestray import DevicesTray
 from view.frame.framewindow import FrameWindow
 from view.frame.clipboardpanelwindow import ClipboardPanelWindow
 from model.shellmodel import ShellModel
@@ -180,8 +181,14 @@ class Frame(object):
     def _create_bottom_panel(self):
         panel = self._create_panel(gtk.POS_BOTTOM)
 
+        """
         activities_tray = activitiestray2.ActivitiesTray(self._shell)
         panel.append(hippo.CanvasWidget(widget=activities_tray), hippo.PACK_EXPAND)
+        """
+
+        devices_tray = DevicesTray(self._shell)
+        panel.append(hippo.CanvasWidget(widget=devices_tray), hippo.PACK_EXPAND)
+        devices_tray.show()
 
         return panel
 
