@@ -19,6 +19,7 @@ import hippo
 import cairo
 
 from sugar.graphics import style
+from sugar.graphics import palettegroup
 
 from view.home.MeshBox import MeshBox
 from view.home.HomeBox import HomeBox
@@ -49,8 +50,7 @@ class HomeWindow(gtk.Window):
         self.realize()
         self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
         self.connect("key-release-event", self._key_release_cb)
-        self.connect('focus-in-event', self._focus_in_cb)
-        self.connect('focus-out-event', self._focus_out_cb)
+        self.connect('visibility-notify-event', self._visibility_notify_event_cb)
 
         self._enter_sid = self.connect('enter-notify-event',
                                        self._enter_notify_event_cb)
@@ -95,6 +95,8 @@ class HomeWindow(gtk.Window):
             self._home_box.release()
 
     def _deactivate_view(self):
+        group = palettegroup.get_group("default")
+        group.popdown()
         if self._level == ShellModel.ZOOM_HOME:
             self._home_box.suspend()
         elif self._level == ShellModel.ZOOM_MESH:
@@ -106,11 +108,11 @@ class HomeWindow(gtk.Window):
         elif self._level == ShellModel.ZOOM_MESH:
             self._mesh_box.resume()
 
-    def _focus_in_cb(self, widget, event):
-        self._activate_view()
-
-    def _focus_out_cb(self, widget, event):
-        self._deactivate_view()
+    def _visibility_notify_event_cb(self, window, event):
+       	if event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED:
+            self._deactivate_view()
+        else:
+            self._activate_view()
 
     def set_zoom_level(self, level):
         self._deactivate_view()
