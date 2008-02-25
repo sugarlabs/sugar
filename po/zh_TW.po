@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: 2008-01-27 09:57-0500\n"
+"PO-Revision-Date: 2008-02-24 23:51-0500\n"
 "Last-Translator: Yuan Chao <yuanchao@gmail.com>\n"
 "Language-Team: Yuan CHAO <yuanchao@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -454,7 +454,7 @@ msgstr "關於"
 
 #: ../shell/view/home/HomeBox.py:222
 msgid "Not available"
-msgstr "未知"
+msgstr "無資料"
 
 #: ../shell/view/home/MeshBox.py:300
 msgid "Join"
