@@ -415,6 +415,7 @@ class Palette(gtk.Window):
             self._update_full_request()
             self._alignment = self._invoker.get_alignment(self._full_request)
             self._update_position()
+            self.set_transient_for(self._invoker.get_toplevel())
 
         self.menu.set_active(True)
         self.show()
