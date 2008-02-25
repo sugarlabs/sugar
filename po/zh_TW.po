@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-01-18 18:19+0000\n"
-"PO-Revision-Date: 2008-01-27 11:15-0500\n"
+"PO-Revision-Date: 2008-02-24 23:55-0500\n"
 "Last-Translator: Yuan Chao <yuanchao@gmail.com>\n"
 "Language-Team: Yuan CHAO <yuanchao@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -92,7 +92,7 @@ msgstr "加密類型:"
 #
 #: ../shell/view/home/activitiesdonut.py:90
 msgid "Starting..."
-msgstr "啟動中..."
+msgstr "啟動中…"
 
 #
 #: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
@@ -133,7 +133,7 @@ msgstr "註冊"
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
 msgid "Disconnect..."
-msgstr "切斷連線..."
+msgstr "切斷連線…"
 
 #
 #: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
@@ -349,7 +349,7 @@ msgstr "%d秒"
 #
 #: ../lib/sugar/graphics/objectchooser.py:191
 msgid " and "
-msgstr "和"
+msgstr "又"
 
 #
 #: ../lib/sugar/graphics/objectchooser.py:193
