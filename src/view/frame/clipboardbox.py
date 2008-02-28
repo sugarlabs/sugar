@@ -18,6 +18,7 @@ import os
 import logging
 import tempfile
 
+import hippo
 import gtk
  
 from sugar import util
@@ -56,14 +57,18 @@ class _ContextMap:
     def has_context(self, context):
         return context in self._context_map
  
-class ClipboardTray(VTray):
+class ClipboardBox(hippo.CanvasBox):
     
     MAX_ITEMS = gtk.gdk.screen_height() / style.GRID_CELL_SIZE - 2
     
     def __init__(self):
-        VTray.__init__(self)
+        hippo.CanvasBox.__init__(self)
         self._icons = {}
         self._context_map = _ContextMap()
+
+        self._tray = VTray()
+        self.append(hippo.CanvasWidget(widget=self._tray), hippo.PACK_EXPAND)
+        self._tray.show()
 
         cb_service = clipboardservice.get_instance()
         cb_service.connect('object-added', self._object_added_cb)
@@ -104,11 +109,11 @@ class ClipboardTray(VTray):
             group = None
 
         icon = ClipboardIcon(object_id, name, group)
-        self.pack_end(icon, expand=False, fill=False, padding=0)
+        self._tray.add_item(icon, 0)
         icon.show()
         self._icons[object_id] = icon
 
-        objects_to_delete = self.get_children()[ClipboardBox.MAX_ITEMS:]
+        objects_to_delete = self._tray.get_children()[ClipboardBox.MAX_ITEMS:]
         for icon in objects_to_delete:
             logging.debug('ClipboardBox: deleting surplus object')
             cb_service = clipboardservice.get_instance()
@@ -118,7 +123,7 @@ class ClipboardTray(VTray):
 
     def _object_deleted_cb(self, cb_service, object_id):
         icon = self._icons[object_id]
-        self.remove_item(icon)
+        self._tray.remove_item(icon)
         del self._icons[object_id]
         logging.debug('ClipboardBox: ' + object_id + ' was deleted.')
 

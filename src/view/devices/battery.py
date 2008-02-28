@@ -19,11 +19,10 @@ from gettext import gettext as _
 import gtk
 
 from sugar import profile
+from sugar.graphics.icon import CanvasIcon
 from sugar.graphics.icon import get_icon_state
-from sugar.graphics.tray import TrayIcon
+from sugar.graphics import style
 from sugar.graphics.palette import Palette
-
-from view.frame.frameinvoker import FrameWidgetInvoker
 
 _ICON_NAME = 'battery'
 
@@ -31,14 +30,13 @@ _STATUS_CHARGING = 0
 _STATUS_DISCHARGING = 1
 _STATUS_FULLY_CHARGED = 2
 
-class DeviceView(TrayIcon):
+class DeviceView(CanvasIcon):
     def __init__(self, model):
-        TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=profile.get_color())
-
+        CanvasIcon.__init__(self, size=style.MEDIUM_ICON_SIZE,
+                            xo_color=profile.get_color())
         self._model = model
-        self.palette = BatteryPalette(_('My Battery life'))
-        self.palette.props.invoker = FrameWidgetInvoker(self)
-        self.palette.set_group_id('frame')
+        self._palette = BatteryPalette(_('My Battery life'))
+        self.set_palette(self._palette)
 
         model.connect('notify::level', self._battery_status_changed_cb)
         model.connect('notify::charging', self._battery_status_changed_cb)
@@ -47,21 +45,21 @@ class DeviceView(TrayIcon):
 
     def _update_info(self):
         name = get_icon_state(_ICON_NAME, self._model.props.level)
-        self.get_icon().props.icon_name = name
+        self.props.icon_name = name
 
         # Update palette
         if self._model.props.charging:
             status = _STATUS_CHARGING
-            self.get_icon().props.badge_name = 'emblem-charging'
+            self.props.badge_name = 'emblem-charging'
         elif self._model.props.discharging:
             status = _STATUS_DISCHARGING
-            self.get_icon().props.badge_name = None
+            self.props.badge_name = None
         else:
             status = _STATUS_FULLY_CHARGED
-            self.get_icon().props.badge_name = None
+            self.props.badge_name = None
 
-        self.palette.set_level(self._model.props.level)
-        self.palette.set_status(status)
+        self._palette.set_level(self._model.props.level)
+        self._palette.set_status(status)
 
     def _battery_status_changed_cb(self, pspec, param):
         self._update_info()

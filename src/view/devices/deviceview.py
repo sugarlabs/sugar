@@ -14,6 +14,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+from sugar.graphics.icon import CanvasIcon
+
 def create(model):
     name = 'view.devices.' + model.get_type()
 
@@ -23,4 +25,3 @@ def create(model):
         mod = getattr(mod, comp)
 
     return mod.DeviceView(model)
-
