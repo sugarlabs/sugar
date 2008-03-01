@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-02-09 00:30-0500\n"
-"PO-Revision-Date: 2008-02-07 08:25-0500\n"
+"PO-Revision-Date: 2008-03-01 13:14-0500\n"
 "Last-Translator: Alexander Todorov <atodorov@redhat.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -432,14 +432,23 @@ msgid ""
 "    -s key       set the current value for the key \n"
 "    "
 msgstr ""
+"Използване: sugar-control-panel [ опции ] ключ [ аргументи ... ] \n"
+"    Управление на работната среда. \n"
+"    Опции: \n"
+"    -h           показване на помоща \n"
+"    -l           списък на всички опции \n"
+"    -h ключ       показване на информация за ключа \n"
+"    -g ключ       прочитане на текущата стойност на ключа \n"
+"    -s ключ       задаване на нова стойност на ключа \n"
+"    "
 
 #: ../src/controlpanel/cmd.py:55 ../src/controlpanel/cmd.py:67
 #: ../src/controlpanel/cmd.py:74
 #, python-format
 msgid "sugar-control-panel: key=%s not an available option"
-msgstr ""
+msgstr "sugar-control-panel: ключ=%s - непозволена опция"
 
 #: ../src/controlpanel/cmd.py:80
 #, python-format
 msgid "sugar-control-panel: %s"
-msgstr ""
+msgstr "sugar-control-panel: %s"
