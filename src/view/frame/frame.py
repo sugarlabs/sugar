@@ -121,8 +121,6 @@ class Frame(object):
         self._key_listener = _KeyListener(self)
         self._mouse_listener = _MouseListener(self)
 
-        self.move(1.0)
-
     def is_visible(self):
         return self.current_position != 0.0
 
