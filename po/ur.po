@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-11 21:39+0530\n"
+"POT-Creation-Date: 2008-01-18 18:19+0000\n"
 "PO-Revision-Date: 2008-01-03 09:33+0000\n"
 "Last-Translator: Huda Sarfraz <huda.sarfraz@nu.edu.pk>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,15 +35,15 @@ msgstr "مکمل"
 msgid "Next"
 msgstr "آگے"
 
-#: ../shell/view/BuddyMenu.py:84
+#: ../shell/view/BuddyMenu.py:59
 msgid "Remove friend"
 msgstr "دوست کو ہٹائيں"
 
-#: ../shell/view/BuddyMenu.py:87
+#: ../shell/view/BuddyMenu.py:62
 msgid "Make friend"
 msgstr "دوست بنائيں"
 
-#: ../shell/view/BuddyMenu.py:109
+#: ../shell/view/BuddyMenu.py:84
 #, python-format
 msgid "Invite to %s"
 msgstr "%s کی دعوت دیں"
@@ -90,11 +90,11 @@ msgid "Resume"
 msgstr "پھر جاری کریں"
 
 #: ../shell/view/home/activitiesdonut.py:111
-#: ../lib/sugar/activity/activity.py:128
+#: ../lib/sugar/activity/activity.py:132
 msgid "Stop"
 msgstr "روکیں"
 
-#: ../shell/view/Shell.py:276
+#: ../shell/view/Shell.py:285
 msgid "Screenshot"
 msgstr "سکرين شاٹ"
 
@@ -170,56 +170,56 @@ msgstr "گھر"
 msgid "Activity"
 msgstr "سرگرمی"
 
-#: ../lib/sugar/activity/activity.py:111
+#: ../lib/sugar/activity/activity.py:115
 msgid "Share with:"
 msgstr "حصہ داری کریں از:"
 
-#: ../lib/sugar/activity/activity.py:113
+#: ../lib/sugar/activity/activity.py:117
 msgid "Private"
 msgstr "ذاتی"
 
-#: ../lib/sugar/activity/activity.py:114
+#: ../lib/sugar/activity/activity.py:118
 msgid "My Neighborhood"
 msgstr "ميرا گرد و نواح"
 
-#: ../lib/sugar/activity/activity.py:122
+#: ../lib/sugar/activity/activity.py:126
 msgid "Keep"
 msgstr "رکھيں"
 
-#: ../lib/sugar/activity/activity.py:241
+#: ../lib/sugar/activity/activity.py:245
 msgid "Undo"
 msgstr "کالعدم کريں"
 
-#: ../lib/sugar/activity/activity.py:246
+#: ../lib/sugar/activity/activity.py:250
 msgid "Redo"
 msgstr "اعادہ کريں"
 
-#: ../lib/sugar/activity/activity.py:256
+#: ../lib/sugar/activity/activity.py:260
 msgid "Copy"
 msgstr "نفل کريں"
 
-#: ../lib/sugar/activity/activity.py:261
+#: ../lib/sugar/activity/activity.py:265
 msgid "Paste"
 msgstr "جوڑيں"
 
-#: ../lib/sugar/activity/activity.py:450
+#: ../lib/sugar/activity/activity.py:454
 #, python-format
 msgid "%s Activity"
 msgstr "%s سرگرمی"
 
-#: ../lib/sugar/activity/activity.py:820
+#: ../lib/sugar/activity/activity.py:824
 msgid "Keep error"
 msgstr "رکھنے میں نقص"
 
-#: ../lib/sugar/activity/activity.py:821
+#: ../lib/sugar/activity/activity.py:825
 msgid "Keep error: all changes will be lost"
 msgstr "رکھنے میں نقص: تمام تبديلياں ضائع ہو جائیں گی"
 
-#: ../lib/sugar/activity/activity.py:824
+#: ../lib/sugar/activity/activity.py:828
 msgid "Don't stop"
 msgstr "نہیں روکیں"
 
-#: ../lib/sugar/activity/activity.py:827
+#: ../lib/sugar/activity/activity.py:831
 msgid "Stop anyway"
 msgstr "پھر بھی روکيں"
 
@@ -363,21 +363,21 @@ msgstr "ٹائیم زون نقل کرنے میں (%s سے) نقص: %s"
 msgid "Changing permission of timezone: %s"
 msgstr "ٹائیم زون کی اجازت بدل رہا ہے: %s"
 
-#: ../shell/controlpanel/control.py:413
+#: ../shell/controlpanel/control.py:412
 msgid "Error timezone does not exist."
 msgstr "نقص، ٹائیم زون موجود نہیں ہے۔"
 
-#: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
+#: ../shell/controlpanel/control.py:417 ../shell/controlpanel/control.py:436
 #, python-format
 msgid "Could not access %s. Create standard settings."
 msgstr "%s تک رسائی نہیں کر سکا۔ معیاری سیٹنگیں بنائیں۔"
 
-#: ../shell/controlpanel/control.py:466
+#: ../shell/controlpanel/control.py:463
 #, python-format
 msgid "Language for code=%s could not be determined."
 msgstr "کوڈ=%s کی زبان تعین نہیں کی جا سکی۔"
 
-#: ../shell/controlpanel/control.py:476
+#: ../shell/controlpanel/control.py:473
 #, python-format
 msgid "Sorry I do not speak '%s'."
 msgstr "معاف کيجيے ميں '%s' نہيں بولتا/بولتی۔"
