@@ -1,28 +1,19 @@
 #!/usr/bin/make -f
 # -*- mode: makefile; coding: utf-8 -*-
-# Copyright © 2007 Jonas Smedegaard <dr@jones.dk>
+# Copyright © 2007-2008 Jonas Smedegaard <dr@jones.dk>
 
 # NB! Local CDBS tweaks in use. More info in README.cdbs-tweaks
-DEB_AUTO_UPDATE_ACLOCAL = 1.10
-DEB_AUTO_UPDATE_AUTOMAKE = 1.10
-DEB_AUTO_UPDATE_AUTOCONF = 2.59
-DEB_AUTO_UPDATE_LIBTOOL = pre
+#DEB_AUTO_UPDATE_ACLOCAL = 1.10
+#DEB_AUTO_UPDATE_LIBTOOL = pre
+include debian/cdbs/1/rules/upstream-tarball.mk
 include /usr/share/cdbs/1/class/autotools.mk
 include /usr/share/cdbs/1/rules/debhelper.mk
 include debian/cdbs/1/rules/copyright-check.mk
 include debian/cdbs/1/rules/buildinfo.mk
 
-# Workaround: can't pass --install to autotools or add extra hooks through CDBS
-pre-build::
-	[ -e py-compile ] || autoreconf -i
-	[ -e m4/intltool.m4 ] || intltoolize -c
-
-# Cleanup automade files
-clean::
-	rm -f m4/intltool.m4 intltool-extract.in intltool-merge.in intltool-update.in po/Makefile.in.in
-	rm -f py-compile
-	rm -f aclocal.m4 compile config.guess config.sub config.log configure depcomp install-sh ltmain.sh missing libtool
-	find -name Makefile.in -exec rm '{}' ';'
+DEB_UPSTREAM_URL = http://dev.laptop.org/pub/sugar/sources/sugar
+DEB_UPSTREAM_TARBALL_EXTENSION = tar.bz2
+DEB_UPSTREAM_TARBALL_MD5 = e10b794279af18fc4fd0d7de04c76bc8
 
 binary-install/sugar-base::
 	dh_pycentral
@@ -32,3 +23,6 @@ CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, ge
 
 # Needed for our packaging routines
 CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), python-central
+
+# Merge duplicate build-dependencies
+CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bcdbs (>= 0.4.39)/ s/ *,* *\bcdbs (>= \(0.4.23-1.1\)) *,* */, /g' -e 's/^ *, *//' -e 's/ *, *$$//')

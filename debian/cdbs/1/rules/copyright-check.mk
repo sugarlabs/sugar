@@ -32,24 +32,46 @@ CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), devscripts (>= 2.10.7)
 DEB_COPYRIGHT_CHECK_REGEX = .*
 DEB_COPYRIGHT_CHECK_IGNORE_REGEX = ^(debian/.*|(.*/)?config\.(guess|sub|rpath)(\..*)?)$
 
-# By default sort by license and then by filename
-DEB_COPYRIGHT_CHECK_SORT_OPTS = -k2,2 -k1
-
 pre-build:: debian/stamp-copyright-check
 
 debian/stamp-copyright-check:
 	@echo 'Scanning upstream source for new/changed copyright notices (except debian subdir!)...'
 
+# Perl in shell in make requires extra care:
+#  * Single-quoting ('...') protects against shell expansion
+#  * Double-dollar ($$) expands to plain dollar ($) in make
 	licensecheck -c '$(DEB_COPYRIGHT_CHECK_REGEX)' -r --copyright -i '$(DEB_COPYRIGHT_CHECK_IGNORE_REGEX)' * \
-		| grep -v '^\(\|.*: \*No copyright\* UNKNOWN\)$$' \
-		| sed 's/\s*(with incorrect FSF address)\s*$$//; s/\s(\+v\(.\+\) or later)/-\1\+/; s/^\s*\[Copyright:\s*/ \[/' \
-		| awk '/^[^ ]/{printf "%s",$$0;next}{print}' \
-		| LC_ALL=C sort $(DEB_COPYRIGHT_CHECK_SORT_OPTS) \
+		| LC_ALL=C perl -e \
+	'$$n=0; while (<>) {'\
+	'	if (/^([^:\s][^:]+):[\s]+(\S.*?)\s*$$/) {'\
+	'		$$files[$$n]{name}=$$1;'\
+	'		$$files[$$n]{license}=$$2;'\
+	'	};'\
+	'	if (/^\s*\[Copyright:\s*(\S.*?)\s*\]/) {'\
+	'		$$files[$$n]{copyright}=$$1;'\
+	'	};'\
+	'	/^$$/ and $$n++;'\
+	'};'\
+	'foreach $$file (@files) {'\
+	'	$$file->{license} =~ s/\s*\(with incorrect FSF address\)//;'\
+	'	$$file->{license} =~ s/\s+\(v([^)]+) or later\)/-$$1+/;'\
+	'	$$file->{copyright} =~ s/(?<=(\b\d{4}))(?{$$y=$$^N})\s*[,-]\s*((??{$$y+1}))\b/-$$2/g;'\
+	'	$$file->{copyright} =~ s/(?<=\b\d{4})\s*-\s*\d{4}(?=\s*-\s*(\d{4})\b)//g;'\
+	'	$$pattern = "$$file->{license} [$$file->{copyright}]";'\
+	'	push @{ $$patternfiles{"$$pattern"} }, $$file->{name};'\
+	'};'\
+	'foreach $$pattern ( sort {'\
+	'			@{$$patternfiles{$$b}} <=> @{$$patternfiles{$$a}}'\
+	'			||'\
+	'			$$a cmp $$b'\
+	'		} keys %patternfiles ) {'\
+	'	print "$$pattern: ", join(", ", sort @{ $$patternfiles{$$pattern} }), "\n";'\
+	'};'\
 		> debian/copyright_newhints
-	@patterncount="`cat debian/copyright_newhints | sed 's/^[^:]*://' | LANG=C sort -u | grep . -c`"; \
+	@patterncount="`cat debian/copyright_newhints | sed 's/^[^:]*://' | LANG=C sort -u | grep . -c -`"; \
 		echo "Found $$patterncount different copyright and licensing combinations."
 	@if [ ! -f debian/copyright_hints ]; then touch debian/copyright_hints; fi
-	@newstrings=`diff -u debian/copyright_hints debian/copyright_newhints | sed '1,2d' | egrep '^\+' | sed 's/^\+//'`; \
+	@newstrings=`diff -u debian/copyright_hints debian/copyright_newhints | sed '1,2d' | egrep '^\+' - | sed 's/^\+//'`; \
 		if [ -n "$$newstrings" ]; then \
 			echo "ERROR: The following new or changed copyright notices discovered:"; \
 			echo; \

@@ -1,3 +1,24 @@
+sugar (0.79.0-1) UNRELEASED; urgency=low
+
+  * New Upstream Version
+  * Update CDBS tweaks:
+    + Add upstream-tarball.mk to implement get-orig-source target.
+      Pristine-tar Git branch is maintained too, but git-buildpackage
+      does not yet support recreating the bz2 tarball
+    + Update copyright-check.mk to parse licensecheck using perl:
+      + No longer randomly drops newlines
+      + More compact hint file (and ordered more like wiki-proposed new
+        copyright syntax).
+      + No longer ignore files without copyright.
+  * Fix duplicate build-dependency cleanup in debian/rules
+    (upstream-tarball.mk needs tightened cdbs dependency).
+  * Stop generating autotools now included in upstream tarball.
+  * Relibtoolize to avoid hardcoded rpath.
+  * Semi-auto-update debian/control to update build-dependencies:
+    DEB_AUTO_UPDATE_DEBIAN_CONTROL=yes fakeroot debian/rules clean
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 08 Mar 2008 00:36:21 +0100
+
 sugar (0.2~git20080111-0~0jones1) jones; urgency=low
 
   * Initial unofficial release.
