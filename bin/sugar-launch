@@ -42,12 +42,25 @@ if len(activities) == 0:
 activity = activities[0]
 cmd_args = activityfactory.get_command(activity)
 
+def _which(exec_file):
+    if 'PATH' in os.environ:
+        envpath = os.environ['PATH']
+    else:
+        envpath = defpath
+
+    for path in envpath.split(os.pathsep):
+        fullname = os.path.join(path, exec_file)
+        if os.path.exists(fullname):
+            return fullname
+
+    return None
+
 def _get_interpreter(exec_file):
     if os.path.exists(exec_file):
         abs_path = exec_file
     else:
-        abs_path = os.path.join(env.get_bin_path(), exec_file)
-        if not os.path.exists(abs_path):
+        abs_path = _which(exec_file)
+        if not abs_path:
             return exec_file
 
     f = open(abs_path)
