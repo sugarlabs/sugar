@@ -3,7 +3,10 @@ sugar (0.79.0-2) UNRELEASED; urgency=low
   * Drop commented out relibtoolize rules from debian/control (claiming
     relibtoolizing in 0.79.0-1 was a lie).
   * Fix Git commands in README.packaging: Cannot push all+tags in 1 go.
-  * Bump copyright years for debian/* files.
+  * Update dbian/copyright:
+    + Bump copyright years for debian/* files.
+    + Drop copyright and licensing info for files moved to sugar-toolkit
+    + Adjust changed paths: services/shell -> service, shell/ -> src
   * Add watch file.
   * Use (and build-depend on) separately packaged python-empy. Borrow
     timestamps from similar files at build time to avoid triggering
