@@ -65,7 +65,8 @@ it, push Git sources and release the package:
 
 git-buildpackage --git-tag --git-sign-tags
 [test package...]
-git push --tags --all
+git push --all
+git push --tags
 cd ..
 dput sugar-base_0.79.0-1_amd64.changes
 
@@ -89,7 +90,8 @@ debcommit -r -a
 git-buildpackage
 [test package...]
 git tag -s -m "Tag package release." debian/0.2.git20080130-0.0jones1
-git push --tags --all
+git push --all
+git push --tags
 cd ..
 dput sugar-base_0.2~git20080130-0~0jones1_amd64.changes
 
