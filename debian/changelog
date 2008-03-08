@@ -4,6 +4,7 @@ sugar (0.79.0-2) UNRELEASED; urgency=low
     relibtoolizing in 0.79.0-1 was a lie).
   * Fix Git commands in README.packaging: Cannot push all+tags in 1 go.
   * Bump copyright years for debian/* files.
+  * Add watch file.
 
  -- Jonas Smedegaard <dr@jones.dk>  Sat, 08 Mar 2008 02:11:16 +0100
 
