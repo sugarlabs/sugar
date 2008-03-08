@@ -1,5 +1,6 @@
-sugar (0.79.0-1) UNRELEASED; urgency=low
+sugar (0.79.0-1) unstable; urgency=low
 
+  * First official release. Closes: bug#444021.
   * New Upstream Version
   * Update CDBS tweaks:
     + Add upstream-tarball.mk to implement get-orig-source target.
@@ -12,6 +13,7 @@ sugar (0.79.0-1) UNRELEASED; urgency=low
       + No longer ignore files without copyright.
     + Strip no longer relevant notes on cdbs-autoupdate.mk from
       README.cdbs-tweaks
+  * Fix invoking dh_pycentral.
   * Add sections on packaging to README.packaging.
   * Cleanup duplicate build-dependencies in debian/rules
     (upstream-tarball.mk needs tightened cdbs dependency).
@@ -23,7 +25,7 @@ sugar (0.79.0-1) UNRELEASED; urgency=low
   * Semi-auto-update debian/control to update build-dependencies:
     DEB_AUTO_UPDATE_DEBIAN_CONTROL=yes fakeroot debian/rules clean
 
- -- Jonas Smedegaard <dr@jones.dk>  Sat, 08 Mar 2008 00:36:21 +0100
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 08 Mar 2008 02:04:11 +0100
 
 sugar (0.2~git20080111-0~0jones1) jones; urgency=low
 

@@ -15,7 +15,7 @@ DEB_UPSTREAM_URL = http://dev.laptop.org/pub/sugar/sources/sugar
 DEB_UPSTREAM_TARBALL_EXTENSION = tar.bz2
 DEB_UPSTREAM_TARBALL_MD5 = e10b794279af18fc4fd0d7de04c76bc8
 
-binary-install/sugar-base::
+binary-install/sugar::
 	dh_pycentral
 
 # Needed by upstream build process
