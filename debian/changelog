@@ -5,6 +5,9 @@ sugar (0.79.0-2) UNRELEASED; urgency=low
   * Fix Git commands in README.packaging: Cannot push all+tags in 1 go.
   * Bump copyright years for debian/* files.
   * Add watch file.
+  * Use (and build-depend on) separately packaged python-empy. Borrow
+    timestamps from similar files at build time to avoid triggering
+    automake.
 
  -- Jonas Smedegaard <dr@jones.dk>  Sat, 08 Mar 2008 02:11:16 +0100
 

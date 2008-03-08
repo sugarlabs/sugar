@@ -16,11 +16,16 @@ DEB_UPSTREAM_TARBALL_MD5 = e10b794279af18fc4fd0d7de04c76bc8
 binary-install/sugar::
 	dh_pycentral
 
+# Avoid patched files triggering autotools regeneration
+post-patches::
+	touch -r Makefile.am data/Makefile.am
+	[ ! -f Makefile.in ] || touch -r Makefile.in data/Makefile.in
+
 # Needed by upstream build process
 CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, gettext, intltool, shared-mime-info
 
 # Needed for our packaging routines
-CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), python-central
+CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), python-central, python-empy
 
 # Merge duplicate build-dependencies
 CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bcdbs (>= 0.4.39)/ s/ *,* *\bcdbs (>= \(0.4.23-1.1\)) *,* */, /g' -e 's/^ *, *//' -e 's/ *, *$$//')

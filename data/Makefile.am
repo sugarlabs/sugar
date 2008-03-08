@@ -1,9 +1,9 @@
 sugar.gtkrc: gtkrc.em
-	$(srcdir)/em.py -D theme=\'sugar\' $(srcdir)/gtkrc.em > \
+	empy -D theme=\'sugar\' $(srcdir)/gtkrc.em > \
 		$(top_builddir)/data/sugar.gtkrc
 
 sugar-xo.gtkrc: gtkrc.em
-	$(srcdir)/em.py -D theme=\'sugar-xo\' $(srcdir)/gtkrc.em > \
+	empy -D theme=\'sugar-xo\' $(srcdir)/gtkrc.em > \
 		$(top_builddir)/data/sugar-xo.gtkrc
 
 sugardir = $(pkgdatadir)/data
