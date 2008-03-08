@@ -1,17 +1,31 @@
 Packaging hints
 ===============
 
-This packaging is maintained with the use of Git.
+This packaging is maintained with the use of Git, using the following
+branches:
 
-Upstream source is in the "upstream" branch, and Debian-related
-packaging in "master".
+    upstream-git  - master branch of upstream Git source
+    upstream      - unpackaged upstream tarballs
+    pristine-tar  - binary deltas to recreate pristine tarballs
+    master        - Debian packaging
+
+With the above, we can switch between working from upstream released
+tarballs and syncing directly with upstream development, both using
+git-buildpackage (with its default branch names).
+
+
+Package sugar-base as example
+-----------------------------
+
+The rest of this document uses sugar-base as sample package, and some
+old actual version numbers from that package - replace with your actual
+package as needed...
 
 
 Getting packaging source from Git repository
 --------------------------------------------
 
-The following commands (in an empty dir) can be used to fetch and build
-the package:
+The following commands (in an empty dir) fetch and build the package:
 
 aptitude install git-buildpackage
 git clone git://git.debian.org/git/collab-maint/sugar-base
@@ -23,29 +37,41 @@ git-buildpackage
 Merging with newer upstream Git tree
 ------------------------------------
 
-The following commands updates the local mirror of upstream source, and
-merges with our packaging branch:
+The following commands (inside Git repository) updates the local mirror
+of upstream source, and merges with our packaging branch:
 
 cd sugar-base
-git checkout upstream
+git checkout upstream-git
 git pull -t
 git checkout master
-git pull . upstream
+git pull . upstream-git
+
+The following command shows upstream changes possibly relevant to
+mention in changelog (replace "HEAD^" with a reference to actual sync
+commit if not invoked right after sync'ing):
+
+git log --pretty="format:%h %s" HEAD^..upstream-git
 
 
 Doing a package release from upstream tarball
 ---------------------------------------------
 
-Download tarball, rename to Debian naming scheme and import:
+The following command (inside Git repository) imports a downloaded
+tarball into the "upstream" and pristine-tarball Git branches (taball
+name is recorded too and used later, so make sure to first rename the
+tarball to follow Debian naming convention {name}_{version}.orig.{ext}):
 
 git-import-orig --pristine-tar --sign-tags path/to/sugar-base_0.79.0.orig.tar.gz
 
-Check that all is included (don't know why this fails sometimes):
+Check that all files are included in "upstream" branch (don't know why
+this fails sometimes):
 
 git status
 
-If some files are "untracked", then stash changelog change, manually add
-untracked files to upstream branch and merge them with master branch:
+If some files are "untracked", then do the following to manually add
+untracked files to upstream branch and merge them with master branch
+(the stash commands puts changelog update aside and restore it again
+afterwards):
 
 git stash
 git checkout upstream
@@ -79,7 +105,7 @@ by its date, replacing "~" with ".".  Normally just tag the latest
 upstream commit, to avoid simply including later upstream work in the
 debian diff:
 
-git log --abbrev-commit upstream
+git log --abbrev-commit upstream-git
 git tag -s -m "Tag upstream for package release." upstream/0.2.git20080130 61279f8
 
 Adjust changelog and package, and if satisfied with the result then tag
