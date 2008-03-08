@@ -1,3 +1,10 @@
+sugar (0.79.0-2) UNRELEASED; urgency=low
+
+  * Drop commented out relibtoolize rules from debian/control (claiming
+    relibtoolizing in 0.79.0-1 was a lie).
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 08 Mar 2008 02:11:16 +0100
+
 sugar (0.79.0-1) unstable; urgency=low
 
   * First official release. Closes: bug#444021.

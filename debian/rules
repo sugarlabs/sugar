@@ -3,8 +3,6 @@
 # Copyright © 2007-2008 Jonas Smedegaard <dr@jones.dk>
 
 # NB! Local CDBS tweaks in use. More info in README.cdbs-tweaks
-#DEB_AUTO_UPDATE_ACLOCAL = 1.10
-#DEB_AUTO_UPDATE_LIBTOOL = pre
 include debian/cdbs/1/rules/upstream-tarball.mk
 include /usr/share/cdbs/1/class/autotools.mk
 include /usr/share/cdbs/1/rules/debhelper.mk
