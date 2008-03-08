@@ -17,7 +17,7 @@ XB-Python-Version: ${python:Versions}
 Description: Sugar graphical shell - core functionality
  Sugar is a graphical user interface aimed at children.
  .
- Sugar is mainly used as the interfaced for One Laptop Per Child (OLPC)
- machines.
+ Sugar is mainly used as the interface for One Laptop Per Child (OLPC)
+ XO machines.
  .
  This package contains the base modules for Sugar.

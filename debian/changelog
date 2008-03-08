@@ -19,6 +19,7 @@ sugar (0.79.0-1) UNRELEASED; urgency=low
   * Relibtoolize to avoid hardcoded rpath.
   * Add upstream source (in addition to Git source) to debian/copyright.
   * Add Vcs-* and Homepage fields to debian/control.
+  * Fix typo and mention XO in long description.
   * Semi-auto-update debian/control to update build-dependencies:
     DEB_AUTO_UPDATE_DEBIAN_CONTROL=yes fakeroot debian/rules clean
 
