@@ -7,7 +7,7 @@ Upstream Git source: git://dev.laptop.org
 Upstream author: Red Hat, Inc.
 
 Files: debian/*
-Copyright: © 2007 Jonas Smedegaard <dr@jones.dk>
+Copyright: © 2007-2008 Jonas Smedegaard <dr@jones.dk>
 License: GPL-2+
  The Debian packaging information is under the GPL, version 2 or later.
 
