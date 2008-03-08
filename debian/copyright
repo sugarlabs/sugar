@@ -1,6 +1,8 @@
 This is sugar packaged for Debian GNU systems.
 
-Upstream source: git://dev.laptop.org
+Upstream source: http://dev.laptop.org/pub/sugar/sources/sugar/
+
+Upstream Git source: git://dev.laptop.org
 
 Upstream author: Red Hat, Inc.
 
