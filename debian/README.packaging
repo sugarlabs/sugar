@@ -1,23 +1,97 @@
 Packaging hints
 ===============
 
-This file contains useful info for (re)building the packaging of the
-source.
-
-Packaged using GIT
-------------------
-
-This packaging is maintained with the use of GIT.
+This packaging is maintained with the use of Git.
 
 Upstream source is in the "upstream" branch, and Debian-related
 packaging in "master".
 
-The following commands can be used to fetch and build the package:
+
+Getting packaging source from Git repository
+--------------------------------------------
+
+The following commands (in an empty dir) can be used to fetch and build
+the package:
 
 aptitude install git-buildpackage
-git clone git://git.debian.org/git/collab-maint/sugar
-cd sugar
+git clone git://git.debian.org/git/collab-maint/sugar-base
+cd sugar-base
 git fetch origin upstream:upstream
 git-buildpackage
 
- -- Jonas Smedegaard <dr@jones.dk>  Tue, 11 Dec 2007 15:40:36 +0100
+
+Merging with newer upstream Git tree
+------------------------------------
+
+The following commands updates the local mirror of upstream source, and
+merges with our packaging branch:
+
+cd sugar-base
+git checkout upstream
+git pull -t
+git checkout master
+git pull . upstream
+
+
+Doing a package release from upstream tarball
+---------------------------------------------
+
+Download tarball, rename to Debian naming scheme and import:
+
+git-import-orig --pristine-tar --sign-tags path/to/sugar-base_0.79.0.orig.tar.gz
+
+Check that all is included (don't know why this fails sometimes):
+
+git status
+
+If some files are "untracked", then stash changelog change, manually add
+untracked files to upstream branch and merge them with master branch:
+
+git stash
+git checkout upstream
+git add *
+git commit -m "Add files mysteriously skipped by git-import-orig."
+git checkout master
+git pull . upstream
+git stash apply
+
+Comment out tarball hash in debian/control, test get-orig-source, and
+enable hash line with new hash:
+
+fakeroot debian/rules get-orig-source
+
+Adjust changelog and package, and if satisfied with the result then tag
+it, push Git sources and release the package:
+
+git-buildpackage --git-tag --git-sign-tags
+[test package...]
+git push --tags --all
+cd ..
+dput sugar-base_0.79.0-1_amd64.changes
+
+
+Doing a package release from upstream Git snapshot
+--------------------------------------------------
+
+First, look at upstream development for a good place to release, and tag
+by its date, replacing "~" with ".".  Normally just tag the latest
+upstream commit, to avoid simply including later upstream work in the
+debian diff:
+
+git log --abbrev-commit upstream
+git tag -s -m "Tag upstream for package release." upstream/0.2.git20080130 61279f8
+
+Adjust changelog and package, and if satisfied with the result then tag
+it, push Git sources and release the package:
+
+dch -r -v "0.2~git20080130-0~0jones1" "New upstream Git snapshot."
+debcommit -r -a
+git-buildpackage
+[test package...]
+git tag -s -m "Tag package release." debian/0.2.git20080130-0.0jones1
+git push --tags --all
+cd ..
+dput sugar-base_0.2~git20080130-0~0jones1_amd64.changes
+
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 08 Mar 2008 01:08:36 +0100

@@ -4,6 +4,9 @@ Priority: optional
 Maintainer: Jonas Smedegaard <dr@jones.dk>
 Build-Depends: @cdbs@
 Standards-Version: 3.7.3
+Vcs-Git: git://git.debian.org/git/collab-maint/sugar.git
+Vcs-Browser: http://git.debian.org/?p=collab-maint/sugar.git;a=summary
+Homepage: http://wiki.laptop.org/go/Sugar
 XS-Python-Version: all
 
 Package: sugar

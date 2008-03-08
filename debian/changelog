@@ -10,10 +10,14 @@ sugar (0.79.0-1) UNRELEASED; urgency=low
       + More compact hint file (and ordered more like wiki-proposed new
         copyright syntax).
       + No longer ignore files without copyright.
-  * Fix duplicate build-dependency cleanup in debian/rules
+    + Strip no longer relevant notes on cdbs-autoupdate.mk from
+      README.cdbs-tweaks
+  * Add sections on packaging to README.packaging.
+  * Cleanup duplicate build-dependencies in debian/rules
     (upstream-tarball.mk needs tightened cdbs dependency).
   * Stop generating autotools now included in upstream tarball.
   * Relibtoolize to avoid hardcoded rpath.
+  * Add Vcs-* and Homepage fields to debian/control.
   * Semi-auto-update debian/control to update build-dependencies:
     DEB_AUTO_UPDATE_DEBIAN_CONTROL=yes fakeroot debian/rules clean
 

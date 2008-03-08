@@ -18,24 +18,6 @@ Web access: http://svn.debian.org/wsvn/build-common/people/js/overlay/
 
 
 
-Improved support for cdbs-autoupdate
-------------------------------------
-
-CDBS invented a cool way to help keep build-dependencies up-to-date.
-
-It is disabled by default, as messing with debian/rules at build time
-violates Debian Policy: A build must not change conditions for building.
-
-Some consider this CDBS feature evil.
-
-Some enable the feature within a package, and gets smacked by ftp-master
-or others (there's even a lintian check to complain about it now).
-
-This tweak enables the feature when the build environment contains the
-non-default hint "cdbs-autoupdate" in the DEB_BUILD_OPTIONS variable.
-
-
-
 New buildinfo rule
 ------------------
 
