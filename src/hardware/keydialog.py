@@ -265,7 +265,7 @@ class WPAKeyDialog(KeyDialog):
         elif len(key) >= 8 and len(key) <= 63:
             # passphrase
             import commands
-            (s, o) = commands.getstatusoutput("/usr/sbin/wpa_passphrase '%s' '%s'" % (ssid, key))
+            (s, o) = commands.getstatusoutput("/usr/bin/wpa_passphrase '%s' '%s'" % (ssid, key))
             if s != 0:
                 raise RuntimeError("Error hashing passphrase: %s" % o)
             lines = o.split("\n")
