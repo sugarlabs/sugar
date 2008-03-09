@@ -11,7 +11,7 @@ XS-Python-Version: all
 
 Package: sugar
 Architecture: any
-Depends: ${shlibs:Depends}, ${python:Depends}, python-gst0.10, python-hippocanvas, pyhon-gobject, python-gtk2, python-cairo, python-dbus, python-telepathy, sugar-base, sugar-toolkit, matchbox-window-manager, dbus-x11, telepathy-gabble, telepathy-salut
+Depends: ${shlibs:Depends}, ${python:Depends}, python-gst0.10, python-hippocanvas, pyhon-gobject, python-gtk2, python-cairo, python-dbus, python-telepathy, sugar-base, sugar-toolkit, matchbox-window-manager, dbus-x11, telepathy-gabble, telepathy-salut, telepathy-stream-engine
 Recommends: sugar-artwork, network-manager, net-tools, gstreamer0.10-plugins-good, xephyr
 Suggests: openssh-client
 Provides: ${python:Provides}
