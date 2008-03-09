@@ -13,14 +13,14 @@ sugar (0.79.0-2) UNRELEASED; urgency=low
     automake.
   * Depend on sugar-base, sugar-toolkit, matchbox-window-manager,
     dbus-x11, telepathy-gabble, telepathy-salut,
-    telepathy-stream-engine, python-dbus, python-gst0.10,
+    telepathy-stream-engine, python-dbus, python-gst0.10, python-numpy,
     python-gobject, python-gtk2, python-telepathy, python-cairo and
     python-hippocanvas.
   * Recommend sugar-artwork, gstreamer0.10-plugins-good, xephyr,
     network-manager and net-tools.
   * Suggest openssh-client.
 
- -- Jonas Smedegaard <dr@jones.dk>  Sat, 08 Mar 2008 02:11:16 +0100
+ -- Jonas Smedegaard <dr@jones.dk>  Sun, 09 Mar 2008 11:02:28 +0100
 
 sugar (0.79.0-1) unstable; urgency=low
 
