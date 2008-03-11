@@ -5,7 +5,7 @@ sugar (0.79.0-2) UNRELEASED; urgency=low
   * Patch src/hardware/keydialog.py to use /usr/bin/wpa_passphrase (not
     /usr/sbin/wpa_passphrase).
   * Fix Git commands in README.packaging: Cannot push all+tags in 1 go.
-  * Update dbian/copyright:
+  * Update debian/copyright:
     + Bump copyright years for debian/* files.
     + Drop copyright and licensing info for files moved to sugar-toolkit
     + Adjust changed paths: services/shell -> service, shell/ -> src
