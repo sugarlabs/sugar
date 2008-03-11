@@ -5,6 +5,7 @@ sugar (0.79.0-3) UNRELEASED; urgency=low
   * Build-depend on python-all-dev.
   * Build as arch-all.
   * Fix README.packaging to use "pull; fetch --tags" (not "pull -t").
+  * Recommend xserver-xephyr (not xephyr). Closes: bug#470502.
 
  -- Jonas Smedegaard <dr@jones.dk>  Tue, 11 Mar 2008 09:42:18 +0100
 
