@@ -4,8 +4,9 @@ sugar (0.79.0-3) UNRELEASED; urgency=low
     Maintainer, and add myself to Uploaders.
   * Build-depend on python-all-dev.
   * Build as arch-all.
+  * Fix README.packaging to use "pull; fetch --tags" (not "pull -t").
 
- -- Jonas Smedegaard <dr@jones.dk>  Tue, 11 Mar 2008 03:16:26 +0100
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 11 Mar 2008 09:42:18 +0100
 
 sugar (0.79.0-2) unstable; urgency=low
 

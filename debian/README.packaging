@@ -42,7 +42,8 @@ of upstream source, and merges with our packaging branch:
 
 cd sugar-base
 git checkout upstream-git
-git pull -t
+git pull
+git fetch  --tags
 git checkout master
 git pull . upstream-git
 
