@@ -1,4 +1,4 @@
-sugar (0.79.0-2) UNRELEASED; urgency=low
+sugar (0.79.0-2) unstable; urgency=low
 
   * Drop commented out relibtoolize rules from debian/control (claiming
     relibtoolizing in 0.79.0-1 was a lie).
@@ -22,7 +22,7 @@ sugar (0.79.0-2) UNRELEASED; urgency=low
     network-manager and net-tools.
   * Suggest openssh-client.
 
- -- Jonas Smedegaard <dr@jones.dk>  Sun, 09 Mar 2008 11:02:28 +0100
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 11 Mar 2008 02:30:07 +0100
 
 sugar (0.79.0-1) unstable; urgency=low
 
