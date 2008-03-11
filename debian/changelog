@@ -1,5 +1,7 @@
 sugar (0.79.0-3) UNRELEASED; urgency=low
 
+  * Pass over maintenance of the package to the OLPC team: Change
+    Maintainer, and add myself to Uploaders.
   * Build-depend on python-all-dev.
   * Build as arch-all.
 
