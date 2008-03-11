@@ -22,7 +22,7 @@ post-patches::
 	[ ! -f Makefile.in ] || touch -r Makefile.in data/Makefile.in
 
 # Needed by upstream build process
-CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, gettext, intltool, shared-mime-info
+CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-all-dev, python-gtk2-dev, gettext, intltool, shared-mime-info
 
 # Needed for our packaging routines
 CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), python-central, python-empy

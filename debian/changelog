@@ -1,3 +1,10 @@
+sugar (0.79.0-3) UNRELEASED; urgency=low
+
+  * Build-depend on python-all-dev.
+  * Build as arch-all.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 11 Mar 2008 03:16:26 +0100
+
 sugar (0.79.0-2) unstable; urgency=low
 
   * Drop commented out relibtoolize rules from debian/control (claiming
