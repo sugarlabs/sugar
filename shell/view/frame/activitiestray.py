@@ -75,12 +75,27 @@ class ActivitiesTray(hippo.CanvasBox):
     def _load_config(self):
         config = []
 
-        f = open(env.get_data_path('activities.defaults'), 'r')
-        for line in f.readlines():
-            line = line.strip()
-            if line and not line.startswith('#'):
-                config.append(line)
-        f.close()
+        def read_one(filename):
+            f = open(filename, 'r')
+            for line in f.readlines():
+                line = line.strip()
+                if not line.startswith('#') and not line in config:
+                    config.append(line)
+                f.close()
+
+        # first try to read local customizations in /home
+        try:
+            read_one('/home/olpc/Activities/.defaults')
+        except IOError:
+            # the customization file is optional
+            pass
+
+        # fallback to system ordering
+        config_path = env.get_data_path('activities.defaults')
+        try:
+            read_one(config_path)
+        except IOError:
+            logging.error('Cannot read %s' % config_path)
 
         return config
 
