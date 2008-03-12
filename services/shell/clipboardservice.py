@@ -200,6 +200,7 @@ class ClipboardService(dbus.service.Object):
         f, new_file_path = tempfile.mkstemp(ext, root)
         del f
         shutil.copyfile(uri.path, new_file_path)
+        os.chmod(new_file_path, 0644)
 
         return 'file://' + new_file_path
 
