@@ -419,11 +419,11 @@ uninstall-am: uninstall-mimeDATA uninstall-sugarDATA
 	uninstall-hook uninstall-mimeDATA uninstall-sugarDATA
 
 sugar.gtkrc: gtkrc.em
-	empy -D theme=\'sugar\' $(srcdir)/gtkrc.em > \
+	$(srcdir)/em.py -D theme=\'sugar\' $(srcdir)/gtkrc.em > \
 		$(top_builddir)/data/sugar.gtkrc
 
 sugar-xo.gtkrc: gtkrc.em
-	empy -D theme=\'sugar-xo\' $(srcdir)/gtkrc.em > \
+	$(srcdir)/em.py -D theme=\'sugar-xo\' $(srcdir)/gtkrc.em > \
 		$(top_builddir)/data/sugar-xo.gtkrc
 @INTLTOOL_XML_RULE@
 

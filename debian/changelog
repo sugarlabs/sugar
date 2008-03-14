@@ -13,6 +13,10 @@ sugar (0.79.0-3) UNRELEASED; urgency=low
       makefile-vars.mk providing multi-flavor build support needed by
       py-compile.mk.
     + README.cdbs-tweaks updated to mention the above.
+    + Add patchsys-quilt.mk.
+  * Add already applied patch 2001 to use empy from system.
+  * Add already applied patch 2991 to apply empy patch to automade file.
+  * Add already applied patch 2002 to invoke wpa_passphrase in /usr/bin.
   * Semi-auto-update debian/control to update build-dependencies:
       DEB_AUTO_UPDATE_DEBIAN_CONTROL=yes fakeroot debian/rules clean
 

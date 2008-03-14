@@ -1,0 +1,16 @@
+--- sugar-0.79.0.orig/data/Makefile.in
++++ sugar-0.79.0/data/Makefile.in
+@@ -419,11 +419,11 @@
+ 	uninstall-hook uninstall-mimeDATA uninstall-sugarDATA
+ 
+ sugar.gtkrc: gtkrc.em
+-	$(srcdir)/em.py -D theme=\'sugar\' $(srcdir)/gtkrc.em > \
++	empy -D theme=\'sugar\' $(srcdir)/gtkrc.em > \
+ 		$(top_builddir)/data/sugar.gtkrc
+ 
+ sugar-xo.gtkrc: gtkrc.em
+-	$(srcdir)/em.py -D theme=\'sugar-xo\' $(srcdir)/gtkrc.em > \
++	empy -D theme=\'sugar-xo\' $(srcdir)/gtkrc.em > \
+ 		$(top_builddir)/data/sugar-xo.gtkrc
+ @INTLTOOL_XML_RULE@
+ 
