@@ -1,4 +1,4 @@
-sugar (0.79.0-3) UNRELEASED; urgency=low
+sugar (0.79.0-3) unstable; urgency=low
 
   * Pass over maintenance of the package to the OLPC team: Change
     Maintainer, and add myself to Uploaders.
@@ -20,7 +20,7 @@ sugar (0.79.0-3) UNRELEASED; urgency=low
   * Semi-auto-update debian/control to update build-dependencies:
       DEB_AUTO_UPDATE_DEBIAN_CONTROL=yes fakeroot debian/rules clean
 
- -- Jonas Smedegaard <dr@jones.dk>  Tue, 11 Mar 2008 09:42:18 +0100
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 14 Mar 2008 16:13:13 +0100
 
 sugar (0.79.0-2) unstable; urgency=low
 
