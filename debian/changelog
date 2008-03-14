@@ -6,6 +6,15 @@ sugar (0.79.0-3) UNRELEASED; urgency=low
   * Build as arch-all.
   * Fix README.packaging to use "pull; fetch --tags" (not "pull -t").
   * Recommend xserver-xephyr (not xephyr). Closes: bug#470502.
+  * Update CDBS tweaks:
+    + Add local py-compile.mk and python-vars.mk to handle autotools-
+      based Python compilation.
+    + Add local autotools.mk, autotools-vars.mk, makefile.mk and
+      makefile-vars.mk providing multi-flavor build support needed by
+      py-compile.mk.
+    + README.cdbs-tweaks updated to mention the above.
+  * Semi-auto-update debian/control to update build-dependencies:
+      DEB_AUTO_UPDATE_DEBIAN_CONTROL=yes fakeroot debian/rules clean
 
  -- Jonas Smedegaard <dr@jones.dk>  Tue, 11 Mar 2008 09:42:18 +0100
 

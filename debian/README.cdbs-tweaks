@@ -30,7 +30,9 @@ Improved support for multiple compilations
 
 Create and clean builddir _after_ resolving per-package DEB_BUILDDIR.
 
-Honour per-package DEB_BUILDDIR in makefile class.
+Honour per-package DEB_BUILDDIR in makefile and autotools classes.
+
+Support multiple build flavors in makefile and autotools classes.
 
 
 
@@ -51,6 +53,12 @@ Unify install path using new DEB_PYTHON_DESTDIR.
 
 Quote install path.
 
+
+
+New py-compile class
+--------------------
+
+Handle autotools-based python packaging.
 
 
 New copyright-check rule
