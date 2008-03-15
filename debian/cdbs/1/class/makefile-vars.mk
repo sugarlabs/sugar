@@ -29,7 +29,7 @@ include $(_cdbs_class_path)/langcore.mk$(_cdbs_makefile_suffix)
 
 DEB_MAKE_MAKEFILE =
 DEB_MAKE_ENVVARS = 
-DEB_MAKE_INVOKE = $(DEB_MAKE_ENVVARS) $(MAKE) $(if $(DEB_MAKE_MAKEFILE), -f $(DEB_MAKE_MAKEFILE),) -C $(cdbs_make_curbuilddir) CFLAGS=$(if $(CFLAGS_$(cdbs_curpkg)),"$(CFLAGS_$(cdbs_curpkg))","$(CFLAGS)") CXXFLAGS=$(if $(CXXFLAGS_$(cdbs_curpkg)),"$(CXXFLAGS_$(cdbs_curpkg))","$(CXXFLAGS)") CPPFLAGS=$(if $(CPPFLAGS_$(cdbs_curpkg)),"$(CPPFLAGS_$(cdbs_curpkg))","$(CPPFLAGS)") LDFLAGS=$(if $(LDFLAGS_$(cdbs_curpkg)),"$(LDFLAGS_$(cdbs_curpkg))","$(LDFLAGS)") 
+DEB_MAKE_INVOKE = $(DEB_MAKE_ENVVARS) $(MAKE) $(if $(DEB_MAKE_MAKEFILE), -f $(DEB_MAKE_MAKEFILE),) -C $(cdbs_make_curbuilddir) CFLAGS=$(if $(CFLAGS_$(cdbs_curpkg)),"$(CFLAGS_$(cdbs_curpkg))","$(CFLAGS)") CXXFLAGS=$(if $(CXXFLAGS_$(cdbs_curpkg)),"$(CXXFLAGS_$(cdbs_curpkg))","$(CXXFLAGS)") CPPFLAGS=$(if $(CPPFLAGS_$(cdbs_curpkg)),"$(CPPFLAGS_$(cdbs_curpkg))","$(CPPFLAGS)") LDFLAGS=$(if $(LDFLAGS_$(cdbs_curpkg)),"$(LDFLAGS_$(cdbs_curpkg))","$(LDFLAGS)")
 
 # This variable is deprecated.
 DEB_BUILD_MAKE_TARGET = 
