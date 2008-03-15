@@ -2,6 +2,8 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# revisar
+#, python-format
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -120,11 +122,17 @@ msgstr "Registre"
 msgid "Disconnect..."
 msgstr "Desconnecta ..."
 
+# Aquí he agafat l'original "mesh", en comptes de fer-ne una traducció
 #: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
 #: ../shell/view/devices/network/mesh.py:62
 #: ../shell/view/devices/network/mesh.py:66
+#: ../src/view/home/MeshBox.py:195
+#: ../src/view/devices/network/mesh.py:37
+#: ../src/view/devices/network/mesh.py:62
+#: ../src/view/devices/network/mesh.py:66
+#, fuzzy
 msgid "Mesh Network"
-msgstr ""
+msgstr "Xarxa Mesh"
 
 # mmm, potser més simple?
 #: ../shell/view/home/MeshBox.py:300
@@ -344,9 +352,14 @@ msgstr "arrancar"
 msgid "State is unknown."
 msgstr "Status deconegut"
 
+#  dubtes:
+# 1- manca una coma al text original
+# 2- He posat on/off
 #: ../shell/controlpanel/control.py:332
+#: ../src/controlpanel/control.py:336
+#, fuzzy
 msgid "Error in specified radio argument use on/off."
-msgstr ""
+msgstr "Error en l'argument de ràdio especificat, useu on/off"
 
 #: ../shell/controlpanel/control.py:336
 msgid "Permission denied. You need to be root to run this method."
@@ -414,9 +427,12 @@ msgid "Unknown Mesh"
 msgstr "Xarxa desconeguda"
 
 #: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
+#: ../src/view/home/HomeBox.py:175
+#: ../src/view/home/HomeBox.py:216
 msgid "About this XO"
-msgstr ""
+msgstr "Sobre aquest XO"
 
 #: ../shell/view/home/HomeBox.py:222
+#: ../src/view/home/HomeBox.py:222
 msgid "Not available"
-msgstr ""
+msgstr "No disponible"
