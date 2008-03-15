@@ -27,20 +27,26 @@ _cdbs_class_path ?= /usr/share/cdbs/1/class
 ifndef _cdbs_class_python_vars
 _cdbs_class_python_vars = 1
 
+include $(_cdbs_rules_path)/buildvars.mk$(_cdbs_makefile_suffix)
+
 DEB_PYTHON_PACKAGES = $(filter-out %-doc %-dev %-common, $(DEB_PACKAGES))
-## FIXME: Support multiple binary python packages per source package
-## TODO: Check and bail out if pultiple packages are declared/resolved
 
 DEB_PYTHON_ARCH_PACKAGES = $(filter $(DEB_PYTHON_PACKAGES), $(DEB_ARCH_PACKAGES))
 DEB_PYTHON_INDEP_PACKAGES = $(filter $(DEB_PYTHON_PACKAGES), $(DEB_INDEP_PACKAGES))
+
+## FIXME: Resolve DEB_PYTHON_PACKAGES in build targets only
+# Avoid including buildcore.mk to not risk breaking when hopefully removing again
+cdbs_python_streq = $(if $(filter-out xx,x$(subst $1,,$2)$(subst $2,,$1)x),,yes)
+cdbs_python_packages_pre := $(DEB_PYTHON_ARCH_PACKAGES)$(DEB_PYTHON_INDEP_PACKAGES)
+cdbs_python_pkgresolve_check = $(if $(call cdbs_python_streq,$(DEB_PYTHON_ARCH_PACKAGES)$(DEB_PYTHON_INDEP_PACKAGES),$(cdbs_python_packages_pre)),, $(warning Setting DEB_PYTHON_*PACKAGES after python-vars in included is currently unsupported))
+## TODO: Rephrase when DEB_PYTHON_PACKAGES is only resolved in build targets
+cdbs_python_pkg_check = $(if $(DEB_PYTHON_ARCH_PACKAGES)$(DEB_PYTHON_INDEP_PACKAGES),, $(warning No Python packages found or declared - either rename binary packages or set DEB_PYTHON_PACKAGES (or one or both of DEB_PYTHON_ARCH_PACKAGES and DEB_PYTHON_INDEP_PACKAGES) before including python-vars.mk))
 
 # check python system
 cdbs_use_xs_field := $(shell grep -q "^XS-Python-Version:" debian/control && echo yes)
 cdbs_selected_pycompat := $(shell if [ -e debian/pycompat ]; then cat debian/pycompat; fi)
 cdbs_pycompat = $(cdbs_selected_pycompat)
 ifeq (pysupport, $(DEB_PYTHON_SYSTEM))
-## FIXME: Support multiple binary python packages per source package
-  cdbs_python_support_path = usr/share/python-support/$(DEB_PYTHON_PACKAGES)
   ifeq (, $(cdbs_selected_pycompat))
     cdbs_pycompat = 2
   endif # use pycompat
@@ -70,9 +76,9 @@ else
 endif # pysupport
 
 # Calculate cdbs_python_build_versions
-## FIXME: Support multiple binary python packages per source package
 cdbs_python_current_version := $(shell pyversions -vd)
-ifeq (,$(DEB_PYTHON_ARCH_PACKAGES))
+## FIXME: Resolve DEB_PYTHON_PACKAGES in build targets only
+ifeq (,$(cdbs_python_pkg_check)$(DEB_PYTHON_ARCH_PACKAGES))
   # check if current is in build versions
   ifneq ($(cdbs_python_current_version), $(filter $(cdbs_python_current_version), $(shell pyversions -vr)))
     cdbs_python_compile_version := $(firstword $(strip $(sort $(shell pyversions -vr))))
@@ -93,25 +99,12 @@ $(error invalid setting for XS-Python-Version)
 endif # system selected
 endif # build versions empty
 
-
-# Declare Build-Deps for packages using this file
-ifeq (,$(DEB_PYTHON_ARCH_PACKAGES))
-  ifneq (, $(cdbs_python_compile_version))
-    CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), python$(cdbs_python_compile_version)-dev, python (>= 2.3.5-11)
-  else
-    CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), python-dev (>= 2.3.5-11)
-  endif
-else
-CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), python-all-dev (>= 2.3.5-11)
-endif
-ifeq (pysupport, $(DEB_PYTHON_SYSTEM))
-CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), python-support (>= 0.6)
-else
-CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), python-central (>= 0.6)
-endif
-
 # TODO: Support multiple python programs built for different python versions
 # FIXME: Understand the above sentence and rephrase it
 cdbs_python_curpkg_build_versions = $(cdbs_python_build_versions)
+
+## TODO: Drop this when DEB_PYTHON_PACKAGES is only resolved in build targets
+pre-build clean::
+	$(cdbs_python_pkgresolve_check)
 
 endif

@@ -39,7 +39,7 @@ Support multiple build flavors in makefile and autotools classes.
 Various improvements to python-distutils class
 ----------------------------------------------
 
-Use full path to python interpreter (Python Policy section 1.3.2).
+Use full path to Python interpreter (Python Policy section 1.3.2).
 
 Add CDBS_BUILD_DEPENDS to old policy method.
 
@@ -55,10 +55,18 @@ Quote install path.
 
 
 
-New py-compile class
---------------------
+New python-autotools class
+--------------------------
 
-Handle autotools-based python packaging.
+Handle autotools-based Python packaging.
+
+
+
+New python-sugar class
+----------------------
+
+Handle packaging of Sugar activities.
+
 
 
 New copyright-check rule

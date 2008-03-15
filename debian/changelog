@@ -1,3 +1,13 @@
+sugar (0.79.0-4) UNRELEASED; urgency=low
+
+  * Update CDBS tweaks:
+    + Add local python-autotools.mk (and drop py-compile.mk).
+    + Update python-vars.mk and makefile.mk for improved DEB_*PACKAGES
+      and build-dependency resolving.
+    + Cosmetic updates to README.cdbs-tweaks.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 15 Mar 2008 21:04:45 +0100
+
 sugar (0.79.0-3) unstable; urgency=low
 
   * Pass over maintenance of the package to the OLPC team: Change
