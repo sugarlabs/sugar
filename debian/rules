@@ -3,6 +3,7 @@
 # Copyright © 2007-2008 Jonas Smedegaard <dr@jones.dk>
 
 # NB! Local CDBS tweaks in use. More info in README.cdbs-tweaks
+DEB_BUILDDIR = build
 DEB_PYTHON_SYSTEM = pycentral
 include debian/cdbs/1/rules/upstream-tarball.mk
 include debian/cdbs/1/rules/copyright-check.mk
