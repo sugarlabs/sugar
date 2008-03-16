@@ -1,12 +1,13 @@
-sugar (0.79.0-4) UNRELEASED; urgency=low
+sugar (0.79.0-4) unstable; urgency=low
 
   * Update CDBS tweaks:
     + Add local python-autotools.mk (and drop py-compile.mk).
     + Update python-vars.mk and makefile.mk for improved DEB_*PACKAGES
       and build-dependency resolving.
     + Cosmetic updates to README.cdbs-tweaks.
+  * Fix email address of OLPC Alioth team.
 
- -- Jonas Smedegaard <dr@jones.dk>  Sat, 15 Mar 2008 21:04:45 +0100
+ -- Jonas Smedegaard <dr@jones.dk>  Sun, 16 Mar 2008 14:22:24 +0100
 
 sugar (0.79.0-3) unstable; urgency=low
 
