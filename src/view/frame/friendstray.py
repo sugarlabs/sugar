@@ -103,6 +103,9 @@ class FriendsTray(VTray):
         self._activity_ps = activity_ps
 
         self.clear()
+	
+	#always display ourselves
+	self.add_buddy(self._owner)
 
         if shared_activity is True: 
             for buddy in activity_ps.get_joined_buddies():
@@ -112,9 +115,6 @@ class FriendsTray(VTray):
                             'buddy-joined', self.__buddy_joined_cb)
             self._left_hid = activity_ps.connect(
                             'buddy-left', self.__buddy_left_cb)
-        else:
-            # only display myself if not shared
-            self.add_buddy(self._owner)
             
     def _pending_activity_changed_cb(self, home_model, home_activity):
         if home_activity is None:        
