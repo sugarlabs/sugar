@@ -39,7 +39,7 @@ class ActivityButton(RadioToolButton):
         self._icon.props.base_color = home_activity.get_icon_color()
         self._icon.props.pulse_color = \
                 XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
-                                   style.COLOR_TRANSPARENT.get_svg()))
+                                   style.COLOR_TOOLBAR_GREY.get_svg()))
         if home_activity.get_icon_path():
             self._icon.props.file = home_activity.get_icon_path()
         else:
