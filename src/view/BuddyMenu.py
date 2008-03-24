@@ -18,6 +18,7 @@ import logging
 
 import gobject
 import hippo
+import gtk
 
 from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
@@ -31,7 +32,11 @@ class BuddyMenu(Palette):
     def __init__(self, buddy):
         self._buddy = buddy
 
-        Palette.__init__(self, buddy.get_nick())
+        buddy_icon = Icon(icon_name='computer-xo',
+                          xo_color=buddy.get_color(),
+                          icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
+        Palette.__init__(self, None, primary_text=buddy.get_nick(),
+                         icon=buddy_icon)
         self._active_activity_changed_hid = None
         self.connect('destroy', self.__destroy_cb)
 

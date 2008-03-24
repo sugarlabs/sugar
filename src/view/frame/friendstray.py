@@ -31,6 +31,7 @@ class FriendIcon(TrayIcon):
                           xo_color=buddy.get_color())
 
         palette = BuddyMenu(buddy)
+        palette.props.icon_visible = False
         self.set_palette(palette)
         palette.set_group_id('frame')
         palette.props.invoker = FrameWidgetInvoker(self)

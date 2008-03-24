@@ -83,4 +83,5 @@ class FriendView(hippo.CanvasBox):
         self._buddy_activity_changed_cb(buddy, None)
 
     def _buddy_color_changed_cb(self, buddy, color):
+        # TODO: shouldn't this change self._buddy_icon instead?
         self._activity_icon.props.xo_color = buddy.get_color()

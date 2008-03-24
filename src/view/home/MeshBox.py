@@ -22,7 +22,7 @@ import hippo
 import gobject
 import gtk
 
-from sugar.graphics.icon import CanvasIcon
+from sugar.graphics.icon import CanvasIcon, Icon
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics import style
 from sugar.graphics.icon import get_icon_state
@@ -261,7 +261,11 @@ class ActivityView(hippo.CanvasBox):
         return icon
 
     def _create_palette(self):
-        p = palette.Palette(self._model.activity.props.name)
+        p_icon = Icon(file=self._model.get_icon_name(),
+                      xo_color=self._model.get_color())
+        p_icon.props.icon_size = gtk.ICON_SIZE_LARGE_TOOLBAR
+        p = palette.Palette(None, primary_text=self._model.activity.props.name,
+                            icon=p_icon)
 
         private = self._model.activity.props.private
         joined = self._model.activity.props.joined

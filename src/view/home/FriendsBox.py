@@ -16,12 +16,13 @@
 
 import random
 
+import gtk
 import hippo
 import gobject
 
 from sugar import profile
 from sugar.graphics import style
-from sugar.graphics.icon import CanvasIcon
+from sugar.graphics.icon import CanvasIcon, Icon
 from sugar.graphics.palette import Palette
 
 from model import shellmodel
@@ -42,7 +43,11 @@ class FriendsBox(hippo.CanvasBox):
         self._owner_icon = CanvasIcon(icon_name='computer-xo', cache=True,
                                       xo_color=profile.get_color())
         self._owner_icon.props.size = style.LARGE_ICON_SIZE
-        palette = Palette(profile.get_nick_name())
+        palette_icon = Icon(icon_name='computer-xo',
+                            xo_color=profile.get_color())
+        palette_icon.props.icon_size = gtk.ICON_SIZE_LARGE_TOOLBAR
+        palette = Palette(None, primary_text=profile.get_nick_name(),
+                          icon=palette_icon)
         self._owner_icon.set_palette(palette)
         self._layout.add_center(self._owner_icon)
 

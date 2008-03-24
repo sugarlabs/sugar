@@ -40,11 +40,19 @@ class BuddyIcon(CanvasIcon):
         self._update_color()
 
     def _update_color(self):
+
+        # keep the icon in the palette in sync with the view
+        palette = self.get_palette()
+        palette_icon = palette.props.icon
+
         if self._greyed_out:
             self.props.stroke_color = '#D5D5D5'
             self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+            palette_icon.props.stroke_color = '#D5D5D5'
+            palette_icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
         else:
             self.props.xo_color = self._buddy.get_color()
+            palette_icon.props.xo_color = self._buddy.get_color()
 
     def set_filter(self, query):
         self._greyed_out = (self._buddy.get_nick().lower().find(query) == -1) \
