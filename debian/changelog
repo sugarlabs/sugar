@@ -1,3 +1,9 @@
+sugar (0.79.0-5) UNRELEASED; urgency=low
+
+  * Add patch 1001 adding danish l10n.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 25 Mar 2008 16:58:57 +0100
+
 sugar (0.79.0-4) unstable; urgency=low
 
   * Update CDBS tweaks:
