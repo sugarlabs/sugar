@@ -1,8 +1,14 @@
-sugar (0.79.0-5) UNRELEASED; urgency=low
+sugar (0.79.0-5) unstable; urgency=low
 
   * Add patch 1001 adding danish l10n.
+  * Sync with upstream Git as of today.
+    Main changes:
+    + Lots of l10n updates
+    + Move some LGPL files to GPL
+    + Fix access rights of clipboardservice
+    + Hide palettes when switching zoom levels
 
- -- Jonas Smedegaard <dr@jones.dk>  Tue, 25 Mar 2008 16:58:57 +0100
+ -- Jonas Smedegaard <dr@jones.dk>  Wed, 26 Mar 2008 12:07:25 +0100
 
 sugar (0.79.0-4) unstable; urgency=low
 
