@@ -41,5 +41,5 @@ if ENABLE_UPDATE_MIMEDB
 	fi
 endif
 
-EXTRA_DIST = $(sugar_DATA) $(mime_xml_in_files) em.py gtkrc.em
+EXTRA_DIST = $(sugar_DATA) $(xsessions_DATA) $(mime_xml_in_files) em.py gtkrc.em
 CLEANFILES = $(GTKRC_FILES) $(mime_xml_files)
