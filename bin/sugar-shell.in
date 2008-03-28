@@ -15,7 +15,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import os
 import sys
+
+os.environ['GTK2_RC_FILES'] = '@prefix@/share/sugar/data/sugar-xo.gtkrc'
 
 sys.path.insert(0, '@prefix@/share/sugar/shell')
 
