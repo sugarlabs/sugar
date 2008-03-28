@@ -17,6 +17,8 @@ GTKRC_FILES =		\
 	sugar.gtkrc	\
 	sugar-xo.gtkrc
 
+xsessionsdir = $(datadir)/xsessions
+xsessions_DATA = sugar.desktop
 
 mime_xml_in_files = sugar.xml.in
 mime_xml_files = $(mime_xml_in_files:.xml.in=.xml)
