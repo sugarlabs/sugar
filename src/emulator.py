@@ -131,15 +131,6 @@ def main():
     else:
         os.environ['SUGAR_XO_STYLE'] = 'no'
     
-    if options.xo_style:
-        gtkrc_filename = 'sugar-xo.gtkrc'
-    else:
-        gtkrc_filename = 'sugar.gtkrc'
-        os.environ['SUGAR_XO_STYLE'] = 'no'
-    
-    gtkrc_path = os.path.join(config.data_path, gtkrc_filename)
-    os.environ['GTK2_RC_FILES'] = gtkrc_path
-
     command = ['dbus-launch', 'dbus-launch', '--exit-with-session']
 
     if not args:

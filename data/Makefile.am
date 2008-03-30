@@ -1,21 +1,8 @@
-sugar.gtkrc: gtkrc.em
-	$(srcdir)/em.py -D theme=\'sugar\' $(srcdir)/gtkrc.em > \
-		$(top_builddir)/data/sugar.gtkrc
-
-sugar-xo.gtkrc: gtkrc.em
-	$(srcdir)/em.py -D theme=\'sugar-xo\' $(srcdir)/gtkrc.em > \
-		$(top_builddir)/data/sugar-xo.gtkrc
-
 sugardir = $(pkgdatadir)/data
 sugar_DATA =			\
 	activities.defaults	\
 	kbdconfig		\
-	mime.defaults		\
-	$(GTKRC_FILES)
-
-GTKRC_FILES =		\
-	sugar.gtkrc	\
-	sugar-xo.gtkrc
+	mime.defaults
 
 xsessionsdir = $(datadir)/xsessions
 xsessions_DATA = sugar.desktop
@@ -41,5 +28,5 @@ if ENABLE_UPDATE_MIMEDB
 	fi
 endif
 
-EXTRA_DIST = $(sugar_DATA) $(xsessions_DATA) $(mime_xml_in_files) em.py gtkrc.em
-CLEANFILES = $(GTKRC_FILES) $(mime_xml_files)
+EXTRA_DIST = $(sugar_DATA) $(xsessions_DATA) $(mime_xml_in_files)
+CLEANFILES = $(mime_xml_files)
