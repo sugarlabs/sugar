@@ -31,7 +31,6 @@ import gobject
 from sugar import env
 from sugar import logger
 from sugar.profile import get_profile
-from sugar.graphics import style
 
 from view.Shell import Shell
 from model.shellmodel import ShellModel
@@ -66,23 +65,6 @@ def _save_session_info():
 
     f.close()
 
-def _setup_screen_settings():
-    settings = gtk.settings_get_default()
-    ctx = 'sugar-shell'
-
-    if gtk.gdk.screen_width() > 1024:
-        theme = 'sugar-xo'
-    else:
-        theme = 'sugar'
-    settings.set_string_property('gtk-theme-name', 'sugar', ctx)
-
-    font = 'Sans Serif %d' % style.FONT_SIZE
-    settings.set_string_property('gtk-font-name', font, ctx)
-
-    settings.set_string_property('gtk-icon-theme-name', 'sugar', ctx)
-    settings.set_string_property('gtk-cursor-theme-name', 'sugar', ctx)
-    settings.set_long_property('gtk-toolbar-style', gtk.TOOLBAR_ICONS, ctx)
-
 def _setup_translations():
     locale_path = os.path.join(config.prefix, 'share', 'locale')
     domain = 'sugar'
@@ -116,7 +98,6 @@ def main():
     _save_session_info()
     _start_matchbox()
     _setup_translations()
-    _setup_screen_settings()
 
     hw_manager = hardwaremanager.get_manager()
     hw_manager.startup()
