@@ -29,6 +29,7 @@ from view.frame.eventarea import EventArea
 from view.frame.activitiestray import ActivitiesTray
 from view.frame.zoomtoolbar import ZoomToolbar
 from view.frame.friendstray import FriendsTray
+from view.frame.devicestray import DevicesTray
 from view.frame.framewindow import FrameWindow
 from view.frame.clipboardpanelwindow import ClipboardPanelWindow
 from model.shellmodel import ShellModel
@@ -184,7 +185,10 @@ class Frame(object):
     def _create_bottom_panel(self):
         panel = self._create_panel(gtk.POS_BOTTOM)
 
-        # Append devices tray.
+        # TODO: same issue as in _create_top_panel()
+        devices_tray = DevicesTray(self._shell)
+        panel.append(hippo.CanvasWidget(widget=devices_tray), hippo.PACK_EXPAND)
+        devices_tray.show()
 
         return panel
 

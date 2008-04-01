@@ -5,6 +5,7 @@ sugar_PYTHON =				\
 	activitybutton.py		\
 	clipboardpanelwindow.py		\
 	clipboardtray.py		\
+	devicestray.py			\
 	frameinvoker.py			\
 	friendstray.py			\
 	eventarea.py			\
