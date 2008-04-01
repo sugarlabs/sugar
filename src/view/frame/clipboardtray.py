@@ -18,7 +18,6 @@ import os
 import logging
 import tempfile
 
-import hippo
 import gtk
  
 from sugar import util
@@ -57,18 +56,14 @@ class _ContextMap:
     def has_context(self, context):
         return context in self._context_map
  
-class ClipboardBox(hippo.CanvasBox):
+class ClipboardTray(VTray):
     
     MAX_ITEMS = gtk.gdk.screen_height() / style.GRID_CELL_SIZE - 2
     
     def __init__(self):
-        hippo.CanvasBox.__init__(self)
+        VTray.__init__(self)
         self._icons = {}
         self._context_map = _ContextMap()
-
-        self._tray = VTray()
-        self.append(hippo.CanvasWidget(widget=self._tray), hippo.PACK_EXPAND)
-        self._tray.show()
 
         cb_service = clipboardservice.get_instance()
         cb_service.connect('object-added', self._object_added_cb)
@@ -84,7 +79,7 @@ class ClipboardBox(hippo.CanvasBox):
         if not selection.data:
             return
 
-        logging.debug('ClipboardBox: adding type ' + selection.type)
+        logging.debug('ClipboardTray: adding type ' + selection.type)
 
         cb_service = clipboardservice.get_instance()
         if selection.type == 'text/uri-list':
@@ -109,31 +104,31 @@ class ClipboardBox(hippo.CanvasBox):
             group = None
 
         icon = ClipboardIcon(object_id, name, group)
-        self._tray.add_item(icon, 0)
+        self.add_item(icon)
         icon.show()
         self._icons[object_id] = icon
 
-        objects_to_delete = self._tray.get_children()[ClipboardBox.MAX_ITEMS:]
+        objects_to_delete = self.get_children()[self.MAX_ITEMS:]
         for icon in objects_to_delete:
-            logging.debug('ClipboardBox: deleting surplus object')
+            logging.debug('ClipboardTray: deleting surplus object')
             cb_service = clipboardservice.get_instance()
             cb_service.delete_object(icon.get_object_id())
 
-        logging.debug('ClipboardBox: ' + object_id + ' was added.')
+        logging.debug('ClipboardTray: ' + object_id + ' was added.')
 
     def _object_deleted_cb(self, cb_service, object_id):
         icon = self._icons[object_id]
-        self._tray.remove_item(icon)
+        self.remove_item(icon)
         del self._icons[object_id]
-        logging.debug('ClipboardBox: ' + object_id + ' was deleted.')
+        logging.debug('ClipboardTray: ' + object_id + ' was deleted.')
 
     def drag_motion_cb(self, widget, context, x, y, time):
-        logging.debug('ClipboardBox._drag_motion_cb')
+        logging.debug('ClipboardTray._drag_motion_cb')
         context.drag_status(gtk.gdk.ACTION_COPY, time)
-        return True;
+        return True
 
     def drag_drop_cb(self, widget, context, x, y, time):
-        logging.debug('ClipboardBox._drag_drop_cb')
+        logging.debug('ClipboardTray._drag_drop_cb')
         cb_service = clipboardservice.get_instance()
         object_id = cb_service.add_object(name="")
 
@@ -167,12 +162,12 @@ class ClipboardBox(hippo.CanvasBox):
         return True
 
     def drag_data_received_cb(self, widget, context, x, y, selection, targetType, time):
-        logging.debug('ClipboardBox: got data for target %r' % selection.target)
+        logging.debug('ClipboardTray: got data for target %r' % selection.target)
 
         object_id = self._context_map.get_object_id(context)
         try:
             if selection is None:
-                logging.warn('ClipboardBox: empty selection for target ' + selection.target)
+                logging.warn('ClipboardTray: empty selection for target ' + selection.target)
             elif selection.target == 'XdndDirectSave0':
                 if selection.data == 'S':
                     window = context.source_window

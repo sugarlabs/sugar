@@ -21,7 +21,7 @@ import gtk
 import hippo
 
 from view.frame.framewindow import FrameWindow
-from view.frame.clipboardbox import ClipboardBox
+from view.frame.clipboardtray import ClipboardTray
 from sugar.clipboard import clipboardservice
 from sugar import util
 
@@ -37,20 +37,21 @@ class ClipboardPanelWindow(FrameWindow):
         self._clipboard = gtk.Clipboard()
         self._clipboard.connect("owner-change", self._owner_change_cb)
 
-        self._clipboard_box = ClipboardBox()
-        self.append(self._clipboard_box, hippo.PACK_EXPAND)
+        self._clipboard_tray = ClipboardTray()
+        canvas_widget = hippo.CanvasWidget(widget=self._clipboard_tray)
+        self.append(canvas_widget, hippo.PACK_EXPAND)
 
         # Receiving dnd drops
         self.drag_dest_set(0, [], 0)
-        self.connect("drag_motion", self._clipboard_box.drag_motion_cb)
-        self.connect("drag_drop", self._clipboard_box.drag_drop_cb)
+        self.connect("drag_motion", self._clipboard_tray.drag_motion_cb)
+        self.connect("drag_drop", self._clipboard_tray.drag_drop_cb)
         self.connect("drag_data_received",
-                     self._clipboard_box.drag_data_received_cb)
+                     self._clipboard_tray.drag_data_received_cb)
 
     def _owner_change_cb(self, clipboard, event):
         logging.debug("owner_change_cb")
 
-        if self._clipboard_box.owns_clipboard():
+        if self._clipboard_tray.owns_clipboard():
             return
 
         cb_service = clipboardservice.get_instance()
