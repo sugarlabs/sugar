@@ -27,6 +27,8 @@ from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
 
+import view.Shell
+
 class BasePalette(Palette):
     def __init__(self, home_activity):
         Palette.__init__(self, '', menu_after_content=True)
@@ -87,6 +89,35 @@ class CurrentActivityPalette(BasePalette):
 
     def __stop_activate_cb(self, menu_item):
         self._home_activity.get_window().close(1)
+
+
+class ActivityPalette(Palette):
+    def __init__(self, activity_info):
+        activity_icon = Icon(file=activity_info.icon,
+                             xo_color=profile.get_color(),
+                             icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
+
+        Palette.__init__(self, None, None, primary_text=activity_info.name,
+                         icon=activity_icon)
+
+        self._activity_info = activity_info
+
+        menu_item = MenuItem(_('Start'), 'activity-start')
+        menu_item.connect('activate', self.__start_activate_cb)
+        self.menu.append(menu_item)
+        menu_item.show()
+
+        """
+        menu_item = MenuItem(_('Start with'), 'activity-start')
+        menu_item.props.sensitive = False
+        #menu_item.connect('activate', self.__start_with_activate_cb)
+        self.menu.append(menu_item)
+        menu_item.show()
+        """
+
+    def __start_activate_cb(self, menu_item):
+        view.Shell.get_instance().start_activity(self._activity_info.bundle_id)
+
 
 class JournalPalette(BasePalette):
     def __init__(self, home_activity):
