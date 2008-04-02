@@ -21,10 +21,11 @@ import gtk
 
 from sugar.graphics import style
 from sugar.graphics.tray import HTray
+from sugar.graphics.xocolor import XoColor
 from sugar.graphics.radiotoolbutton import RadioToolButton
-from sugar.graphics.icon import Icon
 
 from view.palettes import JournalPalette, CurrentActivityPalette
+from view.pulsingicon import PulsingIcon
 from view.frame.frameinvoker import FrameWidgetInvoker
 
 class ActivityButton(RadioToolButton):
@@ -33,13 +34,17 @@ class ActivityButton(RadioToolButton):
 
         self._home_activity = home_activity
 
-        icon = Icon(xo_color=home_activity.get_icon_color())
+        self._icon = PulsingIcon()
+        self._icon.props.base_color = home_activity.get_icon_color()
+        self._icon.props.pulse_color = \
+                XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
+                                   style.COLOR_TRANSPARENT.get_svg()))
         if home_activity.get_icon_path():
-            icon.props.file = home_activity.get_icon_path()
+            self._icon.props.file = home_activity.get_icon_path()
         else:
-            icon.props.icon_name = 'image-missing'
-        self.set_icon_widget(icon)
-        icon.show()
+            self._icon.props.icon_name = 'image-missing'
+        self.set_icon_widget(self._icon)
+        self._icon.show()
 
         if self._home_activity.get_type() == "org.laptop.JournalActivity":
             palette = JournalPalette(self, self._home_activity)
@@ -48,6 +53,17 @@ class ActivityButton(RadioToolButton):
         palette.props.invoker = FrameWidgetInvoker(self)
         palette.set_group_id('frame')
         self.set_palette(palette)
+
+        if home_activity.props.launching:
+            self._icon.props.pulsing = True
+            self._notify_launching_hid = home_activity.connect('notify::launching',
+                    self.__notify_launching_cb)
+        else:
+            self._notify_launching_hid = None
+
+    def __notify_launching_cb(self, home_activity, pspec):
+        self._icon.props.pulsing = False
+        home_activity.disconnect(self._notify_launching_hid)
 
 class ActivitiesTray(HTray):
     def __init__(self, shell):
