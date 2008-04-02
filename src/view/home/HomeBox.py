@@ -46,7 +46,7 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
         self._toolbar.connect('view-changed', self.__toolbar_view_changed_cb)
         self.append(hippo.CanvasWidget(widget=self._toolbar))
 
-        self._set_view(_LIST_VIEW)
+        self._set_view(_RING_VIEW)
 
     def __toolbar_view_changed_cb(self, toolbar, view):
         self._set_view(view)
@@ -153,7 +153,6 @@ class HomeToolbar(gtk.Toolbar):
         list_button.connect('toggled', self.__view_button_toggled_cb, _LIST_VIEW)
         self.insert(list_button, -1)
         list_button.show()
-        list_button.props.active = True
 
         self._add_separator()
 

@@ -11,4 +11,5 @@ sugar_PYTHON =				\
 	keyhandler.py			\
 	pulsingicon.py			\
 	OverlayWindow.py		\
+	palettes.py			\
 	Shell.py

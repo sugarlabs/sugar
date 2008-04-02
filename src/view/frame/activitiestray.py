@@ -14,139 +14,18 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import os
-import statvfs
 import logging
 from gettext import gettext as _
 
 import gtk
 
-from sugar import env
-from sugar import profile
 from sugar.graphics import style
 from sugar.graphics.tray import HTray
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.icon import Icon
-from sugar.graphics.palette import Palette
-from sugar.graphics.menuitem import MenuItem
 
+from view.palettes import JournalPalette, CurrentActivityPalette
 from view.frame.frameinvoker import FrameWidgetInvoker
-
-class _Palette(Palette):
-    def __init__(self, widget, home_activity):
-        Palette.__init__(self, '', menu_after_content=True)
-
-        self.props.invoker = FrameWidgetInvoker(widget)
-        self.set_group_id('frame')
-
-        if home_activity.props.launching:
-            home_activity.connect('notify::launching', self._launching_changed_cb)
-            self.set_primary_text(_('Starting...'))
-        else:
-            self.setup_palette()
-
-    def _launching_changed_cb(self, home_activity, pspec):
-        if not home_activity.props.launching:
-            self.setup_palette()
-
-    def setup_palette(self):
-        raise NotImplementedError
-
-class ActivityPalette(_Palette):
-    def __init__(self, widget, home_activity):
-        _Palette.__init__(self, widget, home_activity)
-        self._home_activity = home_activity
-
-    def setup_palette(self):
-        self.set_primary_text(self._home_activity.get_title())
-
-        menu_item = MenuItem(_('Resume'), 'activity-start')
-        menu_item.connect('activate', self.__resume_activate_cb)
-        self.menu.append(menu_item)
-        menu_item.show()
-
-        """ Not implemented yet
-        menu_item = MenuItem(_('Share with'), 'zoom-neighborhood')
-        #menu_item.connect('activate', self.__share_activate_cb)
-        self.menu.append(menu_item)
-        menu_item.show()
-
-        menu_item = MenuItem(_('Keep'))
-        icon = Icon(icon_name='document-save', icon_size=gtk.ICON_SIZE_MENU,
-                xo_color=profile.get_color())
-        menu_item.set_image(icon)
-        icon.show()
-        #menu_item.connect('activate', self.__keep_activate_cb)
-        self.menu.append(menu_item)
-        menu_item.show()
-        """
-        
-        separator = gtk.SeparatorMenuItem()
-        self.menu.append(separator)
-        separator.show()
-
-        menu_item = MenuItem(_('Stop'), 'activity-stop')
-        menu_item.connect('activate', self.__stop_activate_cb)
-        self.menu.append(menu_item)
-        menu_item.show()
-
-    def __resume_activate_cb(self, menu_item):
-        self._home_activity.get_window().activate(1)
-
-    def __stop_activate_cb(self, menu_item):
-        self._home_activity.get_window().close(1)
-
-class JournalPalette(_Palette):
-    def __init__(self, widget, home_activity):
-        _Palette.__init__(self, widget, home_activity)
-        self._home_activity = home_activity
-        self._progress_bar = None
-        self._free_space_label = None
-
-    def setup_palette(self):
-        self.set_primary_text(self._home_activity.get_title())
-
-        vbox = gtk.VBox()
-        self.set_content(vbox)
-        vbox.show()
-
-        self._progress_bar = gtk.ProgressBar()
-        vbox.add(self._progress_bar)
-        self._progress_bar.show()
-
-        self._free_space_label = gtk.Label()
-        self._free_space_label.set_alignment(0.5, 0.5)
-        vbox.add(self._free_space_label)
-        self._free_space_label.show()
-
-        self.connect('popup', self.__popup_cb)
-
-        menu_item = MenuItem(_('Show contents'))
-
-        icon = Icon(file=self._home_activity.get_icon_path(),
-                icon_size=gtk.ICON_SIZE_MENU,
-                xo_color=self._home_activity.get_icon_color())
-        menu_item.set_image(icon)
-        icon.show()
-
-        menu_item.connect('activate', self.__open_activate_cb)
-        self.menu.append(menu_item)
-        menu_item.show()
-
-    def __open_activate_cb(self, menu_item):
-        self._home_activity.get_window().activate(1)
-
-    def __popup_cb(self, palette):
-        # TODO: we should be able to ask the datastore this info, as that's the
-        # component that knows about mount points.
-        stat = os.statvfs(env.get_profile_path())
-        free_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BAVAIL]
-        total_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BLOCKS]
-
-        fraction = (total_space - free_space) / float(total_space)
-        self._progress_bar.props.fraction = fraction
-        self._free_space_label.props.label = _('%(free_space)d MB Free') % \
-                {'free_space': free_space / (1024 * 1024)}
 
 class ActivityButton(RadioToolButton):
     def __init__(self, home_activity, group):
@@ -165,7 +44,9 @@ class ActivityButton(RadioToolButton):
         if self._home_activity.get_type() == "org.laptop.JournalActivity":
             palette = JournalPalette(self, self._home_activity)
         else:
-            palette = ActivityPalette(self, self._home_activity)
+            palette = CurrentActivityPalette(self, self._home_activity)
+        palette.props.invoker = FrameWidgetInvoker(self)
+        palette.set_group_id('frame')
         self.set_palette(palette)
 
 class ActivitiesTray(HTray):

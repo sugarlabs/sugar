@@ -17,7 +17,6 @@
 import logging
 
 import gobject
-import gtk
 import hippo
 
 from sugar import profile
@@ -38,33 +37,25 @@ class ActivitiesList(hippo.CanvasScrollbars):
 
         registry = activity.get_registry()
         registry.get_activities_async(reply_handler=self._get_activities_cb)
-
-        registry.connect('activity-added', self._activity_added_cb)
-        registry.connect('activity-removed', self._activity_removed_cb)
+        registry.connect('activity-added', self.__activity_added_cb)
+        registry.connect('activity-removed', self.__activity_removed_cb)
 
     def _get_activities_cb(self, activity_list):
         for info in activity_list:
             if info.bundle_id != 'org.laptop.JournalActivity':
                 self._add_activity(info)
 
-    def _activity_added_cb(self, activity_registry, activity_info):
+    def __activity_added_cb(self, activity_registry, activity_info):
         self._add_activity(activity_info)
 
-    def _activity_removed_cb(self, activity_registry, activity_info):
-        """
-        for item in self._tray.get_children():
-            if item.get_bundle_id() == activity_info.bundle_id:
-                self._tray.remove_item(item)
+    def __activity_removed_cb(self, activity_registry, activity_info):
+        for entry in self.get_children():
+            if entry.get_bundle_id() == activity_info.bundle_id:
+                self.remove(entry)
                 return
-        """
-        # TODO: Implement activity removal.
-        pass
 
     def _add_activity(self, activity_info):
-        entry = ActivityEntry(self._shell, activity_info)
-        #item.connect('clicked', self._activity_clicked_cb)
-        #item.connect('remove_activity', self._remove_activity_cb)
-        self._box.append(entry)
+        self._box.append(ActivityEntry(self._shell, activity_info))
 
 class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarActivityEntry'
@@ -85,18 +76,20 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
         self._shell = shell
         self._activity_info = activity_info
 
-        favorite_icon = FavoriteIcon(False)
-        #favorite_icon.connect('button-release-event',
-        #                  self._favorite_icon_button_release_event_cb)
+        favorite_icon = FavoriteIcon(self._activity_info.favorite)
+        favorite_icon.connect('notify::favorite', self.__favorite_changed_cb)
         self.append(favorite_icon)
 
-        icon = CanvasIcon(size=style.STANDARD_ICON_SIZE, cache=True,
+        self.icon = CanvasIcon(size=style.STANDARD_ICON_SIZE, cache=True,
                 file_name=activity_info.icon,
                 stroke_color=style.COLOR_BUTTON_GREY.get_svg(),
                 fill_color=style.COLOR_TRANSPARENT.get_svg())
-        icon.connect_after('button-release-event',
-                           self.__icon_button_release_event_cb)
-        self.append(icon)
+        self.icon.connect('hovering-changed',
+                          self.__icon_hovering_changed_event_cb)
+        self.icon.connect('button-release-event',
+                          self.__icon_button_release_event_cb)
+
+        self.append(self.icon)
 
         title = hippo.CanvasText(text=activity_info.name,
                                  xalign=hippo.ALIGNMENT_START,
@@ -119,8 +112,23 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
                                 box_width=ActivityEntry._DATE_COL_WIDTH)
         self.append(date)
 
+    def __favorite_changed_cb(self, favorite_icon, pspec):
+        registry = activity.get_registry()
+        registry.set_activity_favorite(self._activity_info.bundle_id,
+                self._activity_info.version, favorite_icon.props.favorite)
+
+    def __icon_hovering_changed_event_cb(self, icon, event):
+        if event:
+            self.icon.props.xo_color = profile.get_color()
+        else:
+            self.icon.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
+            self.icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+
     def __icon_button_release_event_cb(self, icon, event):
         self._shell.start_activity(self._activity_info.bundle_id)
+
+    def get_bundle_id(self):
+        return self._activity_info.bundle_id
 
 class FavoriteIcon(CanvasIcon):
     __gproperties__ = {
@@ -134,6 +142,7 @@ class FavoriteIcon(CanvasIcon):
                             size=style.SMALL_ICON_SIZE)
         self._favorite = None
         self._set_favorite(favorite)
+        self.connect('button-release-event', self.__release_event_cb)
 
     def _set_favorite(self, favorite):
         if favorite == self._favorite:
@@ -157,4 +166,7 @@ class FavoriteIcon(CanvasIcon):
             return self._favorite
         else:
             return CanvasIcon.do_get_property(self, pspec)
+
+    def __release_event_cb(self, icon, event):
+        self.props.favorite = not self.props.favorite
 

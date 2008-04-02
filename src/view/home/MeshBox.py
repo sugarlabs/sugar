@@ -23,6 +23,7 @@ import gobject
 import gtk
 
 from sugar.graphics.icon import CanvasIcon
+from sugar.graphics.xocolor import XoColor
 from sugar.graphics import style
 from sugar.graphics.icon import get_icon_state
 from sugar.graphics import style
@@ -37,7 +38,7 @@ from model.devices.network import wireless
 from hardware import hardwaremanager
 from hardware import nmclient
 from view.BuddyIcon import BuddyIcon
-from view.pulsingicon import PulsingIcon
+from view.pulsingicon import CanvasPulsingIcon
 from view.home.snowflakelayout import SnowflakeLayout
 from view.home.spreadlayout import SpreadLayout
 
@@ -46,9 +47,9 @@ from hardware.nmclient import NM_802_11_CAP_PROTO_WEP, NM_802_11_CAP_PROTO_WPA, 
 
 _ICON_NAME = 'network-wireless'
 
-class AccessPointView(PulsingIcon):
+class AccessPointView(CanvasPulsingIcon):
     def __init__(self, model, mesh_device=None):
-        PulsingIcon.__init__(self, size=style.STANDARD_ICON_SIZE, cache=True)
+        CanvasPulsingIcon.__init__(self, size=style.STANDARD_ICON_SIZE, cache=True)
         self._model = model
         self._meshdev = mesh_device
         self._disconnect_item = None
@@ -60,9 +61,9 @@ class AccessPointView(PulsingIcon):
         model.connect('notify::name', self._name_changed_cb)
         model.connect('notify::state', self._state_changed_cb)
 
-        (stroke, fill) = model.get_nm_network().get_colors()
-        self._device_stroke = stroke
-        self._device_fill = fill
+        pulse_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
+                                         style.COLOR_TRANSPARENT.get_svg()))
+        self.props.pulse_color = pulse_color
 
         self._palette = self._create_palette()
         self.set_palette(self._palette)
@@ -128,35 +129,22 @@ class AccessPointView(PulsingIcon):
         if self._model.props.state == accesspointmodel.STATE_CONNECTING:
             if self._disconnect_item:
                 self._disconnect_item.hide()
-            self.props.pulse_time = 1.0
-            self.props.colors = [
-                [ style.Color(self._device_stroke).get_svg(),
-                  style.Color(self._device_fill).get_svg() ],
-                [ style.Color(self._device_stroke).get_svg(),
-                  '#e2e2e2' ]
-            ]
+            self.props.pulsing = True
         elif self._model.props.state == accesspointmodel.STATE_CONNECTED:
             if self._disconnect_item:
                 self._disconnect_item.show()
-            self.props.pulse_time = 0.0
-            self.props.colors = [
-                [ '#ffffff',
-                  style.Color(self._device_fill).get_svg() ],
-                [ '#ffffff',
-                  style.Color(self._device_fill).get_svg() ]
-            ]
+            self.props.pulsing = False
         elif self._model.props.state == accesspointmodel.STATE_NOTCONNECTED:
             if self._disconnect_item:
                 self._disconnect_item.hide()
-            self.props.pulse_time = 0.0
-            self.props.colors = [
-                [ style.Color(self._device_stroke).get_svg(),
-                    style.Color(self._device_fill).get_svg() ]
-            ]
+            self.props.pulsing = False
 
         if self._greyed_out:
-            self.props.pulse_time = 0.0
-            self.props.colors = [['#D5D5D5', '#D5D5D5']]
+            self.props.pulsing = False
+            self.props.base_color = XoColor('#D5D5D5,#D5D5D5')
+        else:
+            self.props.base_color = XoColor('%s,%s' % \
+                    self._model.get_nm_network().get_colors())
 
     def set_filter(self, query):
         self._greyed_out = self._model.props.name.lower().find(query) == -1
@@ -164,7 +152,7 @@ class AccessPointView(PulsingIcon):
 
 _MESH_ICON_NAME = 'network-mesh'
 
-class MeshDeviceView(PulsingIcon):
+class MeshDeviceView(CanvasPulsingIcon):
     def __init__(self, nm_device, channel):
         if not channel in [1, 6, 11]:
             raise ValueError("Invalid channel %d" % channel)
@@ -181,9 +169,9 @@ class MeshDeviceView(PulsingIcon):
         self._palette = self._create_palette()
         self.set_palette(self._palette)
 
-        mycolor = profile.get_color()
-        self._device_fill = mycolor.get_fill_color()
-        self._device_stroke = mycolor.get_stroke_color()
+        pulse_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
+                                         style.COLOR_TRANSPARENT.get_svg()))
+        self.props.pulse_color = pulse_color
 
         self.connect('activated', self._activate_cb)
 
@@ -221,35 +209,21 @@ class MeshDeviceView(PulsingIcon):
     def _update_state(self):
         state = self._nm_device.get_state()
         chan = wireless.freq_to_channel(self._nm_device.get_frequency())
-        if self._greyed_out:
-            self.props.colors = [['#D5D5D5', '#D5D5D5']]
-        elif state == nmclient.DEVICE_STATE_ACTIVATING and chan == self.channel:
+        if state == nmclient.DEVICE_STATE_ACTIVATING and chan == self.channel:
             self._disconnect_item.hide()
-            self.props.pulse_time = 0.75
-            self.props.colors = [
-                [ style.Color(self._device_stroke).get_svg(),
-                    style.Color(self._device_fill).get_svg() ],
-                [ style.Color(self._device_stroke).get_svg(),
-                    '#e2e2e2' ]
-            ]
+            self.props.pulsing = True
         elif state == nmclient.DEVICE_STATE_ACTIVATED and chan == self.channel:
             self._disconnect_item.show()
-            self.props.pulse_time = 0.0
-            self.props.colors = [
-                [ '#ffffff',
-                    style.Color(self._device_fill).get_svg() ],
-                [ '#ffffff',
-                    style.Color(self._device_fill).get_svg() ]
-            ]
+            self.props.pulsing = False
         elif state == nmclient.DEVICE_STATE_INACTIVE or chan != self.channel:
             self._disconnect_item.hide()
-            self.props.pulse_time = 0.0
-            self.props.colors = [
-                [ style.Color(self._device_stroke).get_svg(),
-                  style.Color(self._device_fill).get_svg() ]
-            ]
+            self.props.pulsing = False
+
+        if self._greyed_out:
+            self.props.pulsing = False
+            self.props.base_color = XoColor('#D5D5D5,#D5D5D5')
         else:
-            raise RuntimeError("Shouldn't get here")
+            self.props.base_color = profile.get_color()
 
     def set_filter(self, query):
         self._greyed_out = (query != '')
