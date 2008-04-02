@@ -46,7 +46,7 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
         self._toolbar.connect('view-changed', self.__toolbar_view_changed_cb)
         self.append(hippo.CanvasWidget(widget=self._toolbar))
 
-        self._set_view(_RING_VIEW)
+        self._set_view(_LIST_VIEW)
 
     def __toolbar_view_changed_cb(self, toolbar, view):
         self._set_view(view)
@@ -68,7 +68,7 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
                 self.remove(self._ring_view)
 
             if self._list_view is None:
-                self._list_view = ActivitiesList()
+                self._list_view = ActivitiesList(self._shell)
 
             self.append(self._list_view, hippo.PACK_EXPAND)
         else:
@@ -105,15 +105,6 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
         self._enable_xo_palette = True
         if self._ring_view is not None:
             self._ring_view.enable_xo_palette()
-
-    def grab_and_rotate(self):
-        pass
-            
-    def rotate(self):
-        pass
-
-    def release(self):
-        pass
 
 class HomeToolbar(gtk.Toolbar):
     __gtype_name__ = 'SugarHomeToolbar'
@@ -162,6 +153,7 @@ class HomeToolbar(gtk.Toolbar):
         list_button.connect('toggled', self.__view_button_toggled_cb, _LIST_VIEW)
         self.insert(list_button, -1)
         list_button.show()
+        list_button.props.active = True
 
         self._add_separator()
 

@@ -51,7 +51,6 @@ class HomeWindow(gtk.Window):
 
         self.realize()
         self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
-        self.connect("key-release-event", self._key_release_cb)
         self.connect('visibility-notify-event', self._visibility_notify_event_cb)
 
         self._enter_sid = self.connect('enter-notify-event',
@@ -90,11 +89,6 @@ class HomeWindow(gtk.Window):
         self.disconnect(self._leave_sid)
         self.disconnect(self._motion_sid)
         self.disconnect(self._enter_sid)
-
-    def _key_release_cb(self, widget, event):
-        keyname = gtk.gdk.keyval_name(event.keyval)
-        if keyname == "Alt_L":
-            self._home_box.release()
 
     def _deactivate_view(self):
         group = palettegroup.get_group("default")
