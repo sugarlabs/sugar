@@ -9,6 +9,7 @@ sugar_PYTHON =				\
 	friendstray.py			\
 	eventarea.py			\
 	frame.py			\
+	notification.py			\
 	overlaybox.py			\
 	framewindow.py			\
 	zoomtoolbar.py

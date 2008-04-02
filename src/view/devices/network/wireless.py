@@ -46,6 +46,7 @@ class DeviceView(TrayIcon):
 
         self._counter = 0
         self.palette = WirelessPalette(self._get_palette_primary_text(), meshdev)
+        self.set_palette(self.palette)
         self.palette.props.invoker = FrameWidgetInvoker(self)
         self.palette.set_group_id('frame')
         self.palette.set_frequency(self._model.props.frequency)

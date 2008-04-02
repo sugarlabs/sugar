@@ -202,9 +202,9 @@ class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
         self.props.size = style.STANDARD_ICON_SIZE
 
         if home_activity.get_type() == "org.laptop.JournalActivity":
-            palette = JournalPalette(self, home_activity)
+            palette = JournalPalette(home_activity)
         else:
-            palette = CurrentActivityPalette(self, home_activity)
+            palette = CurrentActivityPalette(home_activity)
         self.set_palette(palette)
 
     def __pending_activity_changed_cb(self, home_model, home_activity):

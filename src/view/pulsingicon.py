@@ -75,6 +75,13 @@ class PulsingIcon(Icon):
 
         Icon.__init__(self, **kwargs)
 
+        self._palette = None
+        self.connect('destroy', self.__destroy_cb)
+
+    def __destroy_cb(self, icon):
+        if self._palette is not None:
+            self._palette.destroy()
+
     # Hack for sharing code between CanvasPulsingIcon and PulsingIcon
     _get_as_rgba = _get_as_rgba
     _update_colors = _update_colors
@@ -135,6 +142,16 @@ class PulsingIcon(Icon):
             return self._paused
         else:
             return Icon.do_get_property(self, pspec)
+
+    def _get_palette(self):
+        return self._palette
+    
+    def _set_palette(self, palette):
+        if self._palette is not None:        
+            self._palette.props.invoker = None
+        self._palette = palette
+    
+    palette = property(_get_palette, _set_palette)
 
 class CanvasPulsingIcon(CanvasIcon):
     __gtype_name__ = 'SugarCanvasPulsingIcon'

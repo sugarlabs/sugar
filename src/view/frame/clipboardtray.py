@@ -108,7 +108,7 @@ class ClipboardTray(VTray):
         icon.show()
         self._icons[object_id] = icon
 
-        objects_to_delete = self.get_children()[self.MAX_ITEMS:]
+        objects_to_delete = self.get_children()[:-self.MAX_ITEMS]
         for icon in objects_to_delete:
             logging.debug('ClipboardTray: deleting surplus object')
             cb_service = clipboardservice.get_instance()

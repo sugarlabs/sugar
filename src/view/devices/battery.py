@@ -38,6 +38,7 @@ class DeviceView(TrayIcon):
 
         self._model = model
         self.palette = BatteryPalette(_('My Battery life'))
+        self.set_palette(self.palette)
         self.palette.props.invoker = FrameWidgetInvoker(self)
         self.palette.set_group_id('frame')
 

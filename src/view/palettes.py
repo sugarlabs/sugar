@@ -28,7 +28,7 @@ from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
 
 class BasePalette(Palette):
-    def __init__(self, widget, home_activity):
+    def __init__(self, home_activity):
         Palette.__init__(self, '', menu_after_content=True)
 
         if home_activity.props.launching:
@@ -45,9 +45,9 @@ class BasePalette(Palette):
         raise NotImplementedError
 
 class CurrentActivityPalette(BasePalette):
-    def __init__(self, widget, home_activity):
+    def __init__(self, home_activity):
         self._home_activity = home_activity
-        BasePalette.__init__(self, widget, home_activity)
+        BasePalette.__init__(self, home_activity)
 
     def setup_palette(self):
         self.set_primary_text(self._home_activity.get_title())
@@ -89,12 +89,12 @@ class CurrentActivityPalette(BasePalette):
         self._home_activity.get_window().close(1)
 
 class JournalPalette(BasePalette):
-    def __init__(self, widget, home_activity):
+    def __init__(self, home_activity):
         self._home_activity = home_activity
         self._progress_bar = None
         self._free_space_label = None
 
-        BasePalette.__init__(self, widget, home_activity)
+        BasePalette.__init__(self, home_activity)
 
     def setup_palette(self):
         self.set_primary_text(self._home_activity.get_title())

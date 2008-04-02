@@ -33,9 +33,11 @@ from view.frame.friendstray import FriendsTray
 from view.frame.devicestray import DevicesTray
 from view.frame.framewindow import FrameWindow
 from view.frame.clipboardpanelwindow import ClipboardPanelWindow
+from view.frame.notification import NotificationIcon, NotificationWindow
 from model.shellmodel import ShellModel
 
 _FRAME_HIDING_DELAY = 500
+_NOTIFICATION_DURATION = 5000
 
 class _Animation(animator.Animation):
     def __init__(self, frame, end):
@@ -120,6 +122,8 @@ class Frame(object):
 
         self._key_listener = _KeyListener(self)
         self._mouse_listener = _MouseListener(self)
+
+        self._notif_by_icon = {}
 
     def is_visible(self):
         return self.current_position != 0.0
@@ -278,6 +282,33 @@ class Frame(object):
         
     def notify_key_press(self):
         self._key_listener.key_press()
+
+    def add_notification(self, icon):
+        if not isinstance(icon, NotificationIcon):
+            raise TypeError('icon must be a NotificationIcon.')
+        
+        window = NotificationWindow()
+        window.move(0, 0)
+        window.add(icon)
+        icon.show()
+        window.show()
+        
+        self._notif_by_icon[icon] = window
+
+        gobject.timeout_add(_NOTIFICATION_DURATION,
+                        lambda: self.remove_notification(icon))
+
+    def remove_notification(self, icon):
+        if not isinstance(icon, NotificationIcon):
+            raise TypeError('icon must be a NotificationIcon.')
+
+        if icon not in self._notif_by_icon:
+            logging.debug('icon %r not in list of notifications.' % icon)
+            return
+
+        window = self._notif_by_icon[icon]
+        window.destroy()
+        del self._notif_by_icon[icon]
 
     visible = property(is_visible, None)
 

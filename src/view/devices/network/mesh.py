@@ -36,6 +36,7 @@ class DeviceView(TrayIcon):
         self._model = model
 
         self.palette = MeshPalette(_("Mesh Network"), model)
+        self.set_palette(self.palette)
         self.palette.props.invoker = FrameWidgetInvoker(self)
         self.palette.set_group_id('frame')
 
