@@ -22,9 +22,11 @@ import subprocess
 import dbus
 import gtk
 
-from hardware import hardwaremanager
-from model.shellmodel import ShellModel
 from sugar._sugarext import KeyGrabber
+
+from hardware import hardwaremanager
+import view.Shell
+from model.shellmodel import ShellModel
 
 _BRIGHTNESS_STEP = 2
 _VOLUME_STEP = 10
@@ -72,8 +74,7 @@ SPEECH_DBUS_PATH = '/org/laptop/Speech'
 SPEECH_DBUS_INTERFACE = 'org.laptop.Speech'
 
 class KeyHandler(object):
-    def __init__(self, shell):
-        self._shell = shell
+    def __init__(self):
         self._screen_rotation = 0
         self._key_pressed = None
         self._keycode_pressed = 0
@@ -137,25 +138,25 @@ class KeyHandler(object):
         clipboard.request_text(self._primary_selection_cb)
 
     def handle_previous_window(self):
-        self._shell.activate_previous_activity()
+        view.Shell.get_instance().activate_previous_activity()
 
     def handle_next_window(self):
-        self._shell.activate_next_activity()
+        view.Shell.get_instance().activate_next_activity()
 
     def handle_close_window(self):
-        self._shell.close_current_activity()
+        view.Shell.get_instance().close_current_activity()
 
     def handle_zoom_mesh(self):
-        self._shell.set_zoom_level(ShellModel.ZOOM_MESH)
+        view.Shell.get_instance().set_zoom_level(ShellModel.ZOOM_MESH)
 
     def handle_zoom_friends(self):
-        self._shell.set_zoom_level(ShellModel.ZOOM_FRIENDS)
+        view.Shell.get_instance().set_zoom_level(ShellModel.ZOOM_FRIENDS)
 
     def handle_zoom_home(self):
-        self._shell.set_zoom_level(ShellModel.ZOOM_HOME)
+        view.Shell.get_instance().set_zoom_level(ShellModel.ZOOM_HOME)
 
     def handle_zoom_activity(self):
-        self._shell.set_zoom_level(ShellModel.ZOOM_ACTIVITY)
+        view.Shell.get_instance().set_zoom_level(ShellModel.ZOOM_ACTIVITY)
 
     def handle_brightness_max(self):
         self._change_brightness(value=_BRIGHTNESS_MAX)
@@ -182,13 +183,13 @@ class KeyHandler(object):
         self._change_volume(step=-_VOLUME_STEP)
 
     def handle_screenshot(self):
-        self._shell.take_screenshot()
+        view.Shell.get_instance().take_screenshot()
 
     def handle_frame(self):
-        self._shell.get_frame().notify_key_press()
+        view.Shell.get_instance().get_frame().notify_key_press()
 
     def handle_overlay(self):
-        self._shell.toggle_chat_visibility()
+        view.Shell.get_instance().toggle_chat_visibility()
 
     def handle_rotate(self):
         states = [ 'normal', 'left', 'inverted', 'right']

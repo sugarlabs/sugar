@@ -32,8 +32,7 @@ from sugar import env
 from sugar import logger
 from sugar.profile import get_profile
 
-from view.Shell import Shell
-from model.shellmodel import ShellModel
+import view.Shell
 from shellservice import ShellService
 from hardware import hardwaremanager
 from intro import intro
@@ -139,9 +138,9 @@ def main():
                     print "Got Ctrl+C, continuing..."
                     break
 
-    model = ShellModel()
-    shell = Shell(model)
-    service = ShellService(shell)
+    # TODO: move initializations from the Shell constructor to a start() method
+    shell = view.Shell.get_instance()
+    service = ShellService()
 
     try:
         gtk.main()

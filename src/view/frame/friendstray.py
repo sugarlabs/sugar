@@ -19,25 +19,26 @@ import hippo
 from sugar.presence import presenceservice
 from sugar.graphics.tray import VTray, TrayIcon
 
+import view.Shell
 from view.BuddyMenu import BuddyMenu
 from view.frame.frameinvoker import FrameWidgetInvoker
+from model import shellmodel
 from model.BuddyModel import BuddyModel
 
 class FriendIcon(TrayIcon):
-    def __init__(self, shell, buddy):
+    def __init__(self, buddy):
         TrayIcon.__init__(self, icon_name='computer-xo',
                           xo_color=buddy.get_color())
 
-        palette = BuddyMenu(shell, buddy)
+        palette = BuddyMenu(buddy)
         self.set_palette(palette)
         palette.set_group_id('frame')
         palette.props.invoker = FrameWidgetInvoker(self)
 
 class FriendsTray(VTray):
-    def __init__(self, shell):
+    def __init__(self):
         VTray.__init__(self)
 
-        self._shell = shell
         self._activity_ps = None
         self._joined_hid = -1
         self._left_hid = -1
@@ -52,7 +53,7 @@ class FriendsTray(VTray):
         # Add initial activities the PS knows about
         self._pservice.get_activities_async(reply_handler=self._get_activities_cb)
 
-        home_model = shell.get_model().get_home()
+        home_model = shellmodel.get_instance().get_home()
         home_model.connect('pending-activity-changed',
                            self._pending_activity_changed_cb)
 
@@ -66,7 +67,7 @@ class FriendsTray(VTray):
 
         model = BuddyModel(buddy=buddy)
  
-        icon = FriendIcon(self._shell, model)
+        icon = FriendIcon(model)
         self.add_item(icon)
         icon.show()
 
@@ -85,7 +86,7 @@ class FriendsTray(VTray):
         self._buddies = {}
 
     def __activity_appeared_cb(self, pservice, activity_ps):
-        activity = self._shell.get_current_activity()
+        activity = view.Shell.get_instance().get_current_activity()
         if activity and activity_ps.props.id == activity.get_id():
             self._set_activity_ps(activity_ps, True)
 

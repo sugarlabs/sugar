@@ -24,6 +24,7 @@ from sugar.graphics.tray import HTray
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics.radiotoolbutton import RadioToolButton
 
+from model import shellmodel
 from view.palettes import JournalPalette, CurrentActivityPalette
 from view.pulsingicon import PulsingIcon
 from view.frame.frameinvoker import FrameWidgetInvoker
@@ -66,12 +67,11 @@ class ActivityButton(RadioToolButton):
         home_activity.disconnect(self._notify_launching_hid)
 
 class ActivitiesTray(HTray):
-    def __init__(self, shell):
+    def __init__(self):
         HTray.__init__(self)
 
         self._buttons = {}
-        self._shell = shell
-        self._home_model = shell.get_model().get_home()
+        self._home_model = shellmodel.get_instance().get_home()
         self._home_model.connect('activity-added', self.__activity_added_cb)
         self._home_model.connect('activity-removed', self.__activity_removed_cb)
         self._home_model.connect('pending-activity-changed', self.__activity_changed_cb)

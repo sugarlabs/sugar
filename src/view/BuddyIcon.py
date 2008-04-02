@@ -21,17 +21,16 @@ from sugar.graphics import style
 from view.BuddyMenu import BuddyMenu
 
 class BuddyIcon(CanvasIcon):
-    def __init__(self, shell, buddy, size=style.STANDARD_ICON_SIZE):
+    def __init__(self, buddy, size=style.STANDARD_ICON_SIZE):
         CanvasIcon.__init__(self, icon_name='computer-xo', size=size)
 
         self._greyed_out = False
-        self._shell = shell
         self._buddy = buddy
         self._buddy.connect('appeared', self._buddy_presence_change_cb)
         self._buddy.connect('disappeared', self._buddy_presence_change_cb)
         self._buddy.connect('color-changed', self._buddy_presence_change_cb)
 
-        palette = BuddyMenu(shell, buddy)
+        palette = BuddyMenu(buddy)
         self.set_palette(palette)
 
         self._update_color()

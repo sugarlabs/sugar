@@ -33,10 +33,9 @@ _LIST_VIEW = 1
 class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarHomeBox'
 
-    def __init__(self, shell):
+    def __init__(self):
         hippo.CanvasBox.__init__(self)
 
-        self._shell = shell
         self._ring_view = None
         self._list_view = None
         self._enable_xo_palette = False
@@ -57,7 +56,7 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
                 self.remove(self._list_view)
 
             if self._ring_view is None:
-                self._ring_view = ActivitiesRing(self._shell)
+                self._ring_view = ActivitiesRing()
                 if self._enable_xo_palette:
                     self._ring_view.enable_xo_palette()
 
@@ -68,7 +67,7 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
                 self.remove(self._ring_view)
 
             if self._list_view is None:
-                self._list_view = ActivitiesList(self._shell)
+                self._list_view = ActivitiesList()
 
             self.append(self._list_view, hippo.PACK_EXPAND)
         else:

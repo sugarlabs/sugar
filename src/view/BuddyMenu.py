@@ -24,10 +24,12 @@ from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
 from sugar.presence import presenceservice
 
+from model import shellmodel
+import view.Shell
+
 class BuddyMenu(Palette):
-    def __init__(self, shell, buddy):
+    def __init__(self, buddy):
         self._buddy = buddy
-        self._shell = shell
 
         Palette.__init__(self, buddy.get_nick())
         self._active_activity_changed_hid = None
@@ -36,15 +38,12 @@ class BuddyMenu(Palette):
         self._buddy.connect('icon-changed', self._buddy_icon_changed_cb)
         self._buddy.connect('nick-changed', self._buddy_nick_changed_cb)
 
-        owner = self._get_shell_model().get_owner()
+        owner = shellmodel.get_instance().get_owner()
         if not buddy.is_owner():
             self._add_items()
 
-    def _get_shell_model(self):
-        return self._shell.get_model()
-
     def _get_home_model(self):
-        return self._get_shell_model().get_home()
+        return shellmodel.get_instance().get_home()
 
     def __destroy_cb(self, menu):
         if self._active_activity_changed_hid is not None:
@@ -54,7 +53,7 @@ class BuddyMenu(Palette):
     def _add_items(self):
         pservice = presenceservice.get_instance()
 
-        friends = self._get_shell_model().get_friends()
+        friends = shellmodel.get_instance().get_friends()
         if friends.has_buddy(self._buddy):
             menu_item = MenuItem(_('Remove friend'), 'list-remove')
             menu_item.connect('activate', self._remove_friend_cb)
@@ -108,14 +107,14 @@ class BuddyMenu(Palette):
         self.set_primary_text(nick)
 
     def _make_friend_cb(self, menuitem):
-        friends = self._get_shell_model().get_friends()
+        friends = shellmodel.get_instance().get_friends()
         friends.make_friend(self._buddy)    
 
     def _remove_friend_cb(self, menuitem):
-        friends = self._get_shell_model().get_friends()
+        friends = shellmodel.get_instance().get_friends()
         friends.remove(self._buddy)
 
     def _invite_friend_cb(self, menuitem):
-        activity = self._shell.get_current_activity()
+        activity = view.Shell.get_instance().get_current_activity()
         activity.invite(self._buddy)
 

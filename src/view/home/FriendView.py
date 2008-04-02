@@ -25,13 +25,13 @@ from sugar import activity
 from view.BuddyIcon import BuddyIcon
 
 class FriendView(hippo.CanvasBox):
-    def __init__(self, shell, buddy, **kwargs):
+    def __init__(self, buddy, **kwargs):
         hippo.CanvasBox.__init__(self, **kwargs)
 
         self._pservice = presenceservice.get_instance()
 
         self._buddy = buddy
-        self._buddy_icon = BuddyIcon(shell, buddy)
+        self._buddy_icon = BuddyIcon(buddy)
         self._buddy_icon.props.size = style.LARGE_ICON_SIZE
         self.append(self._buddy_icon)
 

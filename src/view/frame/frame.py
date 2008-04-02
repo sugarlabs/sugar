@@ -25,6 +25,7 @@ from sugar.graphics import style
 from sugar.graphics import palettegroup
 from sugar.clipboard import clipboardservice
 
+import view.Shell
 from view.frame.eventarea import EventArea
 from view.frame.activitiestray import ActivitiesTray
 from view.frame.zoomtoolbar import ZoomToolbar
@@ -88,7 +89,7 @@ class Frame(object):
     MODE_KEYBOARD = 1
     MODE_NON_INTERACTIVE = 2
 
-    def __init__(self, shell):
+    def __init__(self):
         self.mode = None
 
         self._palette_group = palettegroup.get_group('frame')
@@ -99,7 +100,6 @@ class Frame(object):
         self._top_panel = None
         self._bottom_panel = None
 
-        self._shell = shell
         self.current_position = 0.0
         self._animator = None
 
@@ -142,7 +142,7 @@ class Frame(object):
         if self._animator:
             self._animator.stop()
 
-        self._shell.take_activity_screenshot()
+        view.Shell.get_instance().take_activity_screenshot()
 
         self.mode = mode
 
@@ -168,12 +168,12 @@ class Frame(object):
         # TODO: setting box_width and hippo.PACK_EXPAND looks like a hack to me.
         # Why hippo isn't respecting the request size of these controls?
 
-        zoom_toolbar = ZoomToolbar(self._shell)
+        zoom_toolbar = ZoomToolbar()
         panel.append(hippo.CanvasWidget(widget=zoom_toolbar,
                 box_width=4*style.GRID_CELL_SIZE))
         zoom_toolbar.show()
 
-        activities_tray = ActivitiesTray(self._shell)
+        activities_tray = ActivitiesTray()
         panel.append(hippo.CanvasWidget(widget=activities_tray),
                 hippo.PACK_EXPAND)
         activities_tray.show()
@@ -184,7 +184,7 @@ class Frame(object):
         panel = self._create_panel(gtk.POS_BOTTOM)
 
         # TODO: same issue as in _create_top_panel()
-        devices_tray = DevicesTray(self._shell)
+        devices_tray = DevicesTray()
         panel.append(hippo.CanvasWidget(widget=devices_tray), hippo.PACK_EXPAND)
         devices_tray.show()
 
@@ -193,7 +193,7 @@ class Frame(object):
     def _create_right_panel(self):
         panel = self._create_panel(gtk.POS_RIGHT)
 
-        tray = FriendsTray(self._shell)
+        tray = FriendsTray()
         panel.append(hippo.CanvasWidget(widget=tray), hippo.PACK_EXPAND)
         tray.show()
 
@@ -280,3 +280,12 @@ class Frame(object):
         self._key_listener.key_press()
 
     visible = property(is_visible, None)
+
+_instance = None
+
+def get_instance():
+    global _instance
+    if not _instance:
+        _instance = Frame()
+    return _instance
+

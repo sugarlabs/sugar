@@ -110,3 +110,12 @@ class ShellModel(gobject.GObject):
         if self._showing_desktop != showing_desktop:
             self._showing_desktop = showing_desktop
             self.notify('zoom-level')
+
+_instance = None
+
+def get_instance():
+    global _instance
+    if not _instance:
+        _instance = ShellModel()
+    return _instance
+

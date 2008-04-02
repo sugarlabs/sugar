@@ -26,13 +26,14 @@ from sugar.graphics.menuitem import MenuItem
 
 from view.frame.frameinvoker import FrameWidgetInvoker
 from view.devices import deviceview
+from model import shellmodel
 
 class DevicesTray(HTray):
-    def __init__(self, shell):
+    def __init__(self):
         HTray.__init__(self)
         self._device_icons = {}
 
-        devices_model = shell.get_model().get_devices()
+        devices_model = shellmodel.get_instance().get_devices()
 
         for device in devices_model:
             self._add_device(device)

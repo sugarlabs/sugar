@@ -24,14 +24,15 @@ from sugar import activity
 from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon
 
+import view.Shell
+
 class ActivitiesList(hippo.CanvasScrollbars):
     __gtype_name__ = 'SugarActivitiesList'
 
-    def __init__(self, shell):
+    def __init__(self):
         hippo.CanvasScrollbars.__init__(self)
         self.set_policy(hippo.ORIENTATION_HORIZONTAL, hippo.SCROLLBAR_NEVER)
         
-        self._shell = shell
         self._box = hippo.CanvasBox(background_color=style.COLOR_WHITE.get_int())
         self.set_root(self._box)
 
@@ -55,7 +56,7 @@ class ActivitiesList(hippo.CanvasScrollbars):
                 return
 
     def _add_activity(self, activity_info):
-        self._box.append(ActivityEntry(self._shell, activity_info))
+        self._box.append(ActivityEntry(activity_info))
 
 class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarActivityEntry'
@@ -64,7 +65,7 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
     _VERSION_COL_WIDTH = style.GRID_CELL_SIZE * 1
     _DATE_COL_WIDTH    = style.GRID_CELL_SIZE * 5
 
-    def __init__(self, shell, activity_info):
+    def __init__(self, activity_info):
         hippo.CanvasBox.__init__(self, spacing=style.DEFAULT_SPACING,
                                  padding_top=style.DEFAULT_PADDING,
                                  padding_bottom=style.DEFAULT_PADDING,
@@ -73,7 +74,6 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
                                  box_height=style.GRID_CELL_SIZE,
                                  orientation=hippo.ORIENTATION_HORIZONTAL)
 
-        self._shell = shell
         self._activity_info = activity_info
 
         favorite_icon = FavoriteIcon(self._activity_info.favorite)
@@ -125,7 +125,7 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
             self.icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
 
     def __icon_button_release_event_cb(self, icon, event):
-        self._shell.start_activity(self._activity_info.bundle_id)
+        view.Shell.get_instance().start_activity(self._activity_info.bundle_id)
 
     def get_bundle_id(self):
         return self._activity_info.bundle_id

@@ -37,8 +37,10 @@ from sugar.profile import get_profile
 from sugar import env
 from sugar import activity
 
+import view.Shell
 from view.palettes import JournalPalette, CurrentActivityPalette
 from view.home.MyIcon import MyIcon
+from model import shellmodel
 from model.shellmodel import ShellModel
 from hardware import schoolserver
 
@@ -47,16 +49,16 @@ _logger = logging.getLogger('ActivitiesRing')
 class ActivitiesRing(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarActivitiesRing'
 
-    def __init__(self, shell):
+    def __init__(self):
         hippo.CanvasBox.__init__(self, background_color=style.COLOR_WHITE.get_int())
 
-        self._shell = shell
-        shell.get_model().connect('notify::state', self._shell_state_changed_cb)
+        shell_model = shellmodel.get_instance()
+        shell_model.connect('notify::state', self._shell_state_changed_cb)
 
-        self._my_icon = _MyIcon(shell, style.XLARGE_ICON_SIZE)
+        self._my_icon = _MyIcon(style.XLARGE_ICON_SIZE)
         self.append(self._my_icon, hippo.PACK_FIXED)
 
-        self._current_activity = CurrentActivityIcon(shell)
+        self._current_activity = CurrentActivityIcon()
         self.append(self._current_activity, hippo.PACK_FIXED)
 
         self.set_layout(RingLayout())
@@ -70,12 +72,12 @@ class ActivitiesRing(hippo.CanvasBox, hippo.CanvasItem):
     def _get_activities_cb(self, activity_list):
         for info in activity_list:
             if info.favorite and info.bundle_id != "org.laptop.JournalActivity":
-                self.append(ActivityIcon(self._shell, info))
+                self.append(ActivityIcon(info))
 
     def __activity_added_cb(self, activity_registry, activity_info):
         if activity_info.favorite and \
                 activity_info.bundle_id != "org.laptop.JournalActivity":
-            self.append(ActivityIcon(self._shell, activity_info))
+            self.append(ActivityIcon(activity_info))
 
     def _find_activity_icon(self, bundle_id, version):
         for icon in self.get_children():
@@ -98,7 +100,7 @@ class ActivitiesRing(hippo.CanvasBox, hippo.CanvasItem):
         if icon is not None and not activity_info.favorite:
             self.remove(icon)
         elif icon is None and activity_info.favorite:
-            self.append(ActivityIcon(self._shell, activity_info))
+            self.append(ActivityIcon(activity_info))
 
     def _shell_state_changed_cb(self, model, pspec):
         # FIXME implement this
@@ -122,11 +124,10 @@ class ActivitiesRing(hippo.CanvasBox, hippo.CanvasItem):
         self._my_icon.enable_palette()
 
 class ActivityIcon(CanvasIcon):
-    def __init__(self, shell, activity_info):
+    def __init__(self, activity_info):
         CanvasIcon.__init__(self, cache=True, file_name=activity_info.icon)
-        self._shell = shell
         self._activity_info = activity_info
-        self.set_palette(ActivityPalette(shell, activity_info))
+        self.set_palette(ActivityPalette(activity_info))
         self.connect('hovering-changed', self.__hovering_changed_event_cb)
         self.connect('button-release-event', self.__button_release_event_cb)
 
@@ -141,7 +142,7 @@ class ActivityIcon(CanvasIcon):
             self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
 
     def __button_release_event_cb(self, icon, event):
-        self._shell.start_activity(self._activity_info.bundle_id)
+        view.Shell.get_instance().start_activity(self._activity_info.bundle_id)
 
     def get_bundle_id(self):
         return self._activity_info.bundle_id
@@ -152,7 +153,7 @@ class ActivityIcon(CanvasIcon):
     version = property(get_version, None)
 
 class ActivityPalette(Palette):
-    def __init__(self, shell, activity_info):
+    def __init__(self, activity_info):
         activity_icon = Icon(file=activity_info.icon,
                              xo_color=get_profile().color,
                              icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
@@ -160,7 +161,6 @@ class ActivityPalette(Palette):
         Palette.__init__(self, None, None, primary_text=activity_info.name,
                          icon=activity_icon)
 
-        self._shell = shell
         self._activity_info = activity_info
 
         menu_item = MenuItem(_('Start'), 'activity-start')
@@ -168,19 +168,21 @@ class ActivityPalette(Palette):
         self.menu.append(menu_item)
         menu_item.show()
 
+        """
         menu_item = MenuItem(_('Start with'), 'activity-start')
         menu_item.props.sensitive = False
         #menu_item.connect('activate', self.__start_with_activate_cb)
         self.menu.append(menu_item)
         menu_item.show()
+        """
 
     def __start_activate_cb(self, menu_item):
-        self._shell.start_activity(self._activity_info.bundle_id)
+        view.Shell.get_instance().start_activity(self._activity_info.bundle_id)
 
 class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
-    def __init__(self, shell):
+    def __init__(self):
         CanvasIcon.__init__(self, cache=True)
-        self._home_model = shell.get_model().get_home()
+        self._home_model = shellmodel.get_instance().get_home()
 
         if self._home_model.get_pending_activity() is not None:
             self._update(self._home_model.get_pending_activity())
@@ -297,11 +299,10 @@ class RingLayout(gobject.GObject, hippo.CanvasLayout):
                            origin_changed)
 
 class _MyIcon(MyIcon):
-    def __init__(self, shell, scale):
+    def __init__(self, scale):
         MyIcon.__init__(self, scale)
 
         self._power_manager = None
-        self._shell = shell
         self._profile = get_profile()
 
     def enable_palette(self):
@@ -342,7 +343,7 @@ class _MyIcon(MyIcon):
         self.set_palette(palette)
 
     def _reboot_activate_cb(self, menuitem):
-        model = self._shell.get_model()
+        model = shellmodel.get_instance()
         model.props.state = ShellModel.STATE_SHUTDOWN
 
         pm = self._get_power_manager()
@@ -356,7 +357,7 @@ class _MyIcon(MyIcon):
             pm.Reboot()
 
     def _shutdown_activate_cb(self, menuitem):
-        model = self._shell.get_model()
+        model = shellmodel.get_instance()
         model.props.state = ShellModel.STATE_SHUTDOWN
 
         pm = self._get_power_manager()

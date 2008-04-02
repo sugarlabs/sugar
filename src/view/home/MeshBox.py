@@ -35,12 +35,14 @@ from sugar import profile
 from model import accesspointmodel
 from model.devices.network import mesh
 from model.devices.network import wireless
+from model import shellmodel
 from hardware import hardwaremanager
 from hardware import nmclient
 from view.BuddyIcon import BuddyIcon
 from view.pulsingicon import CanvasPulsingIcon
 from view.home.snowflakelayout import SnowflakeLayout
 from view.home.spreadlayout import SpreadLayout
+import view.Shell
 
 from hardware.nmclient import NM_802_11_CAP_PROTO_WEP, NM_802_11_CAP_PROTO_WPA, NM_802_11_CAP_PROTO_WPA2
 
@@ -230,10 +232,9 @@ class MeshDeviceView(CanvasPulsingIcon):
         self._update_state()
 
 class ActivityView(hippo.CanvasBox):
-    def __init__(self, shell, model):
+    def __init__(self, model):
         hippo.CanvasBox.__init__(self)
 
-        self._shell = shell
         self._model = model
         self._icons = {}
 
@@ -296,7 +297,7 @@ class ActivityView(hippo.CanvasBox):
 
     def _clicked_cb(self, item):
         bundle_id = self._model.get_bundle_id()
-        self._shell.join_activity(bundle_id, self._model.get_id())
+        view.Shell.get_instance().join_activity(bundle_id, self._model.get_id())
 
     def set_filter(self, query):
         text_to_check = self._model.activity.props.name.lower() + \
@@ -395,11 +396,10 @@ class MeshToolbar(gtk.Toolbar):
         return False
 
 class MeshBox(hippo.CanvasBox):
-    def __init__(self, shell):
+    def __init__(self):
         hippo.CanvasBox.__init__(self)
 
-        self._shell = shell
-        self._model = shell.get_model().get_mesh()
+        self._model = shellmodel.get_instance().get_mesh()
         self._buddies = {}
         self._activities = {}
         self._access_points = {}
@@ -496,7 +496,7 @@ class MeshBox(hippo.CanvasBox):
         del self._mesh[channel]
 
     def _add_alone_buddy(self, buddy_model):
-        icon = BuddyIcon(self._shell, buddy_model)
+        icon = BuddyIcon(buddy_model)
         if buddy_model.is_owner():
             vertical_offset = - style.GRID_CELL_SIZE
             self._layout.add_center(icon, vertical_offset)
@@ -533,15 +533,14 @@ class MeshBox(hippo.CanvasBox):
         elif activity_model.get_id() in self._activities:
             activity = self._activities[activity_model.get_id()]
 
-            icon = BuddyIcon(self._shell, buddy_model,
-                             style.STANDARD_ICON_SIZE)
+            icon = BuddyIcon(buddy_model, style.STANDARD_ICON_SIZE)
             activity.add_buddy_icon(buddy_model.get_key(), icon)
 
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(self._query)
 
     def _add_activity(self, activity_model):
-        icon = ActivityView(self._shell, activity_model)
+        icon = ActivityView(activity_model)
         self._layout.add(icon)
 
         if hasattr(icon, 'set_filter'):

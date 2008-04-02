@@ -33,12 +33,11 @@ _MESH_PAGE       = 2
 _TRANSITION_PAGE = 3
 
 class HomeWindow(gtk.Window):
-    def __init__(self, shell):
+    def __init__(self):
         gtk.Window.__init__(self)
 
         self.add_accel_group(gtk.AccelGroup())
 
-        self._shell = shell
         self._active = False
         self._level = ShellModel.ZOOM_HOME
 
@@ -60,9 +59,9 @@ class HomeWindow(gtk.Window):
         self._motion_sid = self.connect('motion-notify-event',
                                         self._motion_notify_event_cb)
 
-        self._home_box = HomeBox(shell)
-        self._friends_box = FriendsBox(shell)
-        self._mesh_box = MeshBox(shell)
+        self._home_box = HomeBox()
+        self._friends_box = FriendsBox()
+        self._mesh_box = MeshBox()
         self._transition_box = TransitionBox()
 
         self._activate_view()

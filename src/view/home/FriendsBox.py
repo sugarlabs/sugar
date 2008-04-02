@@ -24,16 +24,16 @@ from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon
 from sugar.graphics.palette import Palette
 
+from model import shellmodel
 from view.home.FriendView import FriendView
 from view.home.spreadlayout import SpreadLayout
 
 class FriendsBox(hippo.CanvasBox):
     __gtype_name__ = 'SugarFriendsBox'
-    def __init__(self, shell):
+    def __init__(self):
         hippo.CanvasBox.__init__(self,
                                  background_color=style.COLOR_WHITE.get_int())
 
-        self._shell = shell
         self._friends = {}
 
         self._layout = SpreadLayout()
@@ -46,7 +46,7 @@ class FriendsBox(hippo.CanvasBox):
         self._owner_icon.set_palette(palette)
         self._layout.add_center(self._owner_icon)
 
-        friends = self._shell.get_model().get_friends()
+        friends = shellmodel.get_instance().get_friends()
 
         for friend in friends:
             self.add_friend(friend)
@@ -55,7 +55,7 @@ class FriendsBox(hippo.CanvasBox):
         friends.connect('friend-removed', self._friend_removed_cb)
 
     def add_friend(self, buddy_info):
-        icon = FriendView(self._shell, buddy_info)
+        icon = FriendView(buddy_info)
         self._layout.add(icon)
 
         self._friends[buddy_info.get_key()] = icon
