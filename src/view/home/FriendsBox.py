@@ -30,7 +30,8 @@ from view.home.spreadlayout import SpreadLayout
 class FriendsBox(hippo.CanvasBox):
     __gtype_name__ = 'SugarFriendsBox'
     def __init__(self, shell):
-        hippo.CanvasBox.__init__(self, background_color=0xe2e2e2ff)
+        hippo.CanvasBox.__init__(self,
+                                 background_color=style.COLOR_WHITE.get_int())
 
         self._shell = shell
         self._friends = {}

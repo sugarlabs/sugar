@@ -20,7 +20,7 @@ from sugar.presence import presenceservice
 from sugar.graphics.xocolor import XoColor
 import gobject
 
-_NOT_PRESENT_COLOR = "#888888,#BBBBBB"
+_NOT_PRESENT_COLOR = "#d5d5d5,#FFFFFF"
 
 class BuddyModel(gobject.GObject):
     __gsignals__ = {

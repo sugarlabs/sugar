@@ -76,7 +76,15 @@ class BuddyMenu(Palette):
         self._update_invite_menu(activity)
             
     def _update_invite_menu(self, activity):
-        if activity is None:
+        buddy_activity = self._buddy.get_current_activity()
+        if buddy_activity is not None:
+            buddy_activity_id = buddy_activity.props.id
+        else:
+            buddy_activity_id = None
+
+        if activity is None or \
+           activity.get_type() == 'org.laptop.JournalActivity' or \
+           activity.get_activity_id() == buddy_activity_id:
             self._invite_menu.hide()
         else:    
             title = activity.get_title()

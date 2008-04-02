@@ -329,7 +329,7 @@ class ActivityView(hippo.CanvasBox):
                 self._model.activity.props.type.lower()
         if text_to_check.find(query) == -1:
             self._icon.props.stroke_color = '#D5D5D5'
-            self._icon.props.fill_color = '#E5E5E5'
+            self._icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
         else:
             self._icon.props.xo_color = self._model.get_color()
 
@@ -372,24 +372,27 @@ class MeshToolbar(gtk.Toolbar):
         self._add_separator()
 
         tool_item = gtk.ToolItem()
-        tool_item.set_expand(True)
         self.insert(tool_item, -1)
         tool_item.show()
 
         self._search_entry = iconentry.IconEntry()
         self._search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY, 'system-search')
         self._search_entry.add_clear_button()
+        self._search_entry.set_width_chars(25)
         self._search_entry.connect('activate', self._entry_activated_cb)
         self._search_entry.connect('changed', self._entry_changed_cb)
         tool_item.add(self._search_entry)
         self._search_entry.show()
 
-        self._add_separator()
+        self._add_separator(expand=True)
 
-    def _add_separator(self):
+    def _add_separator(self, expand=False):
         separator = gtk.SeparatorToolItem()
-        separator.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
         separator.props.draw = False
+        if expand:
+            separator.set_expand(True)
+        else:
+            separator.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
         self.insert(separator, -1)
         separator.show()
 
@@ -435,7 +438,7 @@ class MeshBox(hippo.CanvasBox):
         self._toolbar.connect('query-changed', self._toolbar_query_changed_cb)
         self.append(hippo.CanvasWidget(widget=self._toolbar))
 
-        self._layout_box = hippo.CanvasBox(background_color=0xe2e2e2ff)
+        self._layout_box = hippo.CanvasBox(background_color=style.COLOR_WHITE.get_int())
         self.append(self._layout_box, hippo.PACK_EXPAND)
 
         self._layout = SpreadLayout()
@@ -557,7 +560,7 @@ class MeshBox(hippo.CanvasBox):
             activity = self._activities[activity_model.get_id()]
 
             icon = BuddyIcon(self._shell, buddy_model,
-                             style.SMALL_ICON_SIZE)
+                             style.STANDARD_ICON_SIZE)
             activity.add_buddy_icon(buddy_model.get_key(), icon)
 
             if hasattr(icon, 'set_filter'):

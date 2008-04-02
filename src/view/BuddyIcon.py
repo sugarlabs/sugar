@@ -43,7 +43,7 @@ class BuddyIcon(CanvasIcon):
     def _update_color(self):
         if self._greyed_out:
             self.props.stroke_color = '#D5D5D5'
-            self.props.fill_color = '#E5E5E5'
+            self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
         else:
             self.props.xo_color = self._buddy.get_color()
 

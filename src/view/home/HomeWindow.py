@@ -36,6 +36,8 @@ class HomeWindow(gtk.Window):
     def __init__(self, shell):
         gtk.Window.__init__(self)
 
+        self.add_accel_group(gtk.AccelGroup())
+
         self._shell = shell
         self._active = False
         self._level = ShellModel.ZOOM_HOME

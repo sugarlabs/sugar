@@ -21,7 +21,7 @@ import hippo
 
 from sugar.graphics import style
 
-_BASE_DISTANCE = style.zoom(15)
+_BASE_DISTANCE = style.zoom(25)
 _CHILDREN_FACTOR = style.zoom(3)
 
 class SnowflakeLayout(gobject.GObject,hippo.CanvasLayout):
@@ -75,6 +75,9 @@ class SnowflakeLayout(gobject.GObject,hippo.CanvasLayout):
                                child_width, child_height, origin_changed)
             else:
                 angle = 2 * math.pi * index / self._nflakes
+
+                if self._nflakes != 2:
+                    angle -= math.pi / 2
 
                 dx = math.cos(angle) * r
                 dy = math.sin(angle) * r

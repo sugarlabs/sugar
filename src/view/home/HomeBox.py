@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2008 One Laptop Per Child
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,92 +14,97 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import os
-import logging
-import signal
 from gettext import gettext as _
-import re
 
-import gobject
 import gtk
+import gobject
 import hippo
-import dbus
 
-from hardware import hardwaremanager
 from sugar.graphics import style
-from sugar.graphics.palette import Palette
-from sugar.profile import get_profile
-from sugar import env
+from sugar.graphics import iconentry
+from sugar.graphics.radiotoolbutton import RadioToolButton
 
-from view.home.activitiesdonut import ActivitiesDonut
-from view.home.MyIcon import MyIcon
-from model.shellmodel import ShellModel
-from hardware import schoolserver
+from view.home.activitiesring import ActivitiesRing
+from view.home.activitieslist import ActivitiesList
 
-_logger = logging.getLogger('HomeBox')
+_RING_VIEW = 0
+_LIST_VIEW = 1
 
 class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarHomeBox'
 
     def __init__(self, shell):
-        hippo.CanvasBox.__init__(self, background_color=0xe2e2e2ff)
+        hippo.CanvasBox.__init__(self)
 
-        self._redraw_id = None
+        self._shell = shell
+        self._ring_view = None
+        self._list_view = None
+        self._enable_xo_palette = False
 
-        shell_model = shell.get_model()
+        self._toolbar = HomeToolbar()
+        #self._toolbar.connect('query-changed', self.__toolbar_query_changed_cb)
+        self._toolbar.connect('view-changed', self.__toolbar_view_changed_cb)
+        self.append(hippo.CanvasWidget(widget=self._toolbar))
 
-        top_box = hippo.CanvasBox(box_height=style.GRID_CELL_SIZE * 2.5)
-        self.append(top_box)
+        self._set_view(_RING_VIEW)
 
-        center_box = hippo.CanvasBox(yalign=hippo.ALIGNMENT_CENTER)
-        self.append(center_box, hippo.PACK_EXPAND)
+    def __toolbar_view_changed_cb(self, toolbar, view):
+        self._set_view(view)
 
-        bottom_box = hippo.CanvasBox(box_height=style.GRID_CELL_SIZE * 2.5)
-        self.append(bottom_box)
+    def _set_view(self, view):
+        if view == _RING_VIEW:
+            if self._list_view in self.get_children():
+                self.remove(self._list_view)
 
-        self._donut = ActivitiesDonut(shell)
-        center_box.append(self._donut)
+            if self._ring_view is None:
+                self._ring_view = ActivitiesRing(self._shell)
+                if self._enable_xo_palette:
+                    self._ring_view.enable_xo_palette()
 
-        self._my_icon = _MyIcon(shell, style.XLARGE_ICON_SIZE)
-        self.append(self._my_icon, hippo.PACK_FIXED)
+            self.append(self._ring_view, hippo.PACK_EXPAND)
 
-        shell_model.connect('notify::state',
-                            self._shell_state_changed_cb)
+        elif view == _LIST_VIEW:
+            if self._ring_view in self.get_children():
+                self.remove(self._ring_view)
 
-    def _shell_state_changed_cb(self, model, pspec):
-        # FIXME implement this
-        if model.props.state == ShellModel.STATE_SHUTDOWN:
-            pass
+            if self._list_view is None:
+                self._list_view = ActivitiesList()
 
-    def do_allocate(self, width, height, origin_changed):
-        hippo.CanvasBox.do_allocate(self, width, height, origin_changed)
+            self.append(self._list_view, hippo.PACK_EXPAND)
+        else:
+            raise ValueError('Invalid view: %r' % view)
 
-        [icon_width, icon_height] = self._my_icon.get_allocation()
-        self.set_position(self._my_icon, (width - icon_width) / 2,
-                          (height - icon_height) / 2)
-                  
     _REDRAW_TIMEOUT = 5 * 60 * 1000 # 5 minutes
 
     def resume(self):
-        if self._redraw_id is None:
-            self._redraw_id = gobject.timeout_add(self._REDRAW_TIMEOUT,
-                                                  self._redraw_activity_ring)
-            self._redraw_activity_ring()
+        # TODO: Do we need this?
+        #if self._redraw_id is None:
+        #    self._redraw_id = gobject.timeout_add(self._REDRAW_TIMEOUT,
+        #                                          self._redraw_activity_ring)
+        #    self._redraw_activity_ring()
+        pass
 
     def suspend(self):
-        if self._redraw_id is not None:
-            gobject.source_remove(self._redraw_id)
-            self._redraw_id = None
+        # TODO: Do we need this?
+        #if self._redraw_id is not None:
+        #    gobject.source_remove(self._redraw_id)
+        #    self._redraw_id = None
+        pass
 
     def _redraw_activity_ring(self):
-        self._donut.redraw()
+        # TODO: Do we need this?
+        #self._donut.redraw()
         return True
 
     def has_activities(self):
-        return self._donut.has_activities()
+        # TODO: Do we need this?
+        #return self._donut.has_activities()
+        return False
 
     def enable_xo_palette(self):
-        self._my_icon.enable_palette()
+        self._enable_xo_palette = True
+        if self._ring_view is not None:
+            self._ring_view.enable_xo_palette()
 
     def grab_and_rotate(self):
         pass
@@ -110,143 +115,67 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
     def release(self):
         pass
 
-class _MyIcon(MyIcon):
-    def __init__(self, shell, scale):
-        MyIcon.__init__(self, scale)
+class HomeToolbar(gtk.Toolbar):
+    __gtype_name__ = 'SugarHomeToolbar'
 
-        self._power_manager = None
-        self._shell = shell
-        self._profile = get_profile()
+    __gsignals__ = {
+        'query-changed': (gobject.SIGNAL_RUN_FIRST,
+                          gobject.TYPE_NONE,
+                          ([str])),
+        'view-changed':  (gobject.SIGNAL_RUN_FIRST,
+                          gobject.TYPE_NONE,
+                          ([int]))
+    }
 
-    def enable_palette(self):
-        palette = Palette(self._profile.nick_name)
+    def __init__(self):
+        gtk.Toolbar.__init__(self)
 
-        item = gtk.MenuItem(_('Reboot'))
-        item.connect('activate', self._reboot_activate_cb)
-        palette.menu.append(item)
-        item.show()
+        self._add_separator()
 
-        item = gtk.MenuItem(_('Shutdown'))
-        item.connect('activate', self._shutdown_activate_cb)
-        palette.menu.append(item)
-        item.show()
+        tool_item = gtk.ToolItem()
+        self.insert(tool_item, -1)
+        tool_item.show()
 
-        if not self._profile.is_registered():
-            item = gtk.MenuItem(_('Register'))
-            item.connect('activate', self._register_activate_cb)
-            palette.menu.append(item)
-            item.show()
- 
-        item = gtk.MenuItem(_('About this XO'))
-        item.connect('activate', self._about_activate_cb)
-        palette.menu.append(item)
-        item.show()
-       
-        self.set_palette(palette)
+        self._search_entry = iconentry.IconEntry()
+        self._search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
+                                              'system-search')
+        self._search_entry.add_clear_button()
+        self._search_entry.set_width_chars(25)
+        #self._search_entry.connect('activate', self._entry_activated_cb)
+        #self._search_entry.connect('changed', self._entry_changed_cb)
+        tool_item.add(self._search_entry)
+        self._search_entry.show()
 
-    def _reboot_activate_cb(self, menuitem):
-        model = self._shell.get_model()
-        model.props.state = ShellModel.STATE_SHUTDOWN
+        self._add_separator(expand=True)
 
-        pm = self._get_power_manager()
+        ring_button = RadioToolButton(named_icon='view-radial', group=None)
+        ring_button.props.label = _('Ring view')
+        ring_button.props.accelerator = _('<Ctrl>R')
+        ring_button.connect('toggled', self.__view_button_toggled_cb, _RING_VIEW)
+        self.insert(ring_button, -1)
+        ring_button.show()
 
-        hw_manager = hardwaremanager.get_manager()
-        hw_manager.shutdown()
+        list_button = RadioToolButton(named_icon='view-list')
+        list_button.props.group = ring_button
+        list_button.props.label = _('List view')
+        list_button.props.accelerator = _('<Ctrl>L')
+        list_button.connect('toggled', self.__view_button_toggled_cb, _LIST_VIEW)
+        self.insert(list_button, -1)
+        list_button.show()
 
-        if env.is_emulator():
-            self._close_emulator()
+        self._add_separator()
+
+    def __view_button_toggled_cb(self, button, view):
+        if button.props.active:
+            self.emit('view-changed', view)
+
+    def _add_separator(self, expand=False):
+        separator = gtk.SeparatorToolItem()
+        separator.props.draw = False
+        if expand:
+            separator.set_expand(True)
         else:
-            pm.Reboot()
+            separator.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
+        self.insert(separator, -1)
+        separator.show()
 
-    def _shutdown_activate_cb(self, menuitem):
-        model = self._shell.get_model()
-        model.props.state = ShellModel.STATE_SHUTDOWN
-
-        pm = self._get_power_manager()
-
-        hw_manager = hardwaremanager.get_manager()
-        hw_manager.shutdown()
-
-        if env.is_emulator():
-            self._close_emulator()
-        else:
-            pm.Shutdown()
-
-    def _register_activate_cb(self, menuitem):
-        schoolserver.register_laptop()
-        if self._profile.is_registered():
-            self.get_palette().menu.remove(menuitem)
-
-    def _about_activate_cb(self, menuitem):        
-        dialog = gtk.Dialog(_('About this XO'),
-                            self.palette,
-                            gtk.DIALOG_MODAL | 
-                            gtk.DIALOG_DESTROY_WITH_PARENT,
-                            (gtk.STOCK_OK, gtk.RESPONSE_OK))
-
-        not_available = _('Not available')
-        build = self._read_file('/boot/olpc_build')
-        if build is None:
-            build = not_available
-        label_build = gtk.Label('Build: %s' % build)
-        label_build.set_alignment(0, 0.5)
-        label_build.show()
-        dialog.vbox.pack_start(label_build)
-                
-        firmware = self._read_file('/ofw/openprom/model')
-        if firmware is None:
-            firmware = not_available
-        else:
-            firmware = re.split(" +", firmware)
-            if len(firmware) == 3:
-                firmware = firmware[1]
-        label_firmware = gtk.Label('Firmware: %s' % firmware)
-        label_firmware.set_alignment(0, 0.5)
-        label_firmware.show()
-        dialog.vbox.pack_start(label_firmware)
-                
-        serial = self._read_file('/ofw/serial-number')
-        if serial is None:
-            serial = not_available
-        label_serial = gtk.Label('Serial Number: %s' % serial)
-        label_serial.set_alignment(0, 0.5)
-        label_serial.show()
-        dialog.vbox.pack_start(label_serial)
-
-        dialog.set_default_response(gtk.RESPONSE_OK)
-        dialog.connect('response', self._response_cb)
-        dialog.show()
-
-    def _read_file(self, path):
-        if os.access(path, os.R_OK) == 0:
-            _logger.error('read_file() No such file or directory: %s', path)
-            return None
-        
-        fd = open(path, 'r')
-        value = fd.read()
-        fd.close()            
-        if value:
-            value = value.strip('\n')
-            return value
-        else:
-            _logger.error('read_file() No information in file or directory: %s', path)
-            return None
-
-    def _response_cb(self, widget, response_id):
-        if response_id == gtk.RESPONSE_OK:            
-            widget.destroy()
-
-    def _close_emulator(self):
-        if os.environ.has_key('SUGAR_EMULATOR_PID'):
-            pid = int(os.environ['SUGAR_EMULATOR_PID'])
-            os.kill(pid, signal.SIGTERM)
-
-    def _get_power_manager(self):
-        if self._power_manager is None:
-            bus = dbus.SystemBus()
-            proxy = bus.get_object('org.freedesktop.Hal', 
-                                '/org/freedesktop/Hal/devices/computer')
-            self._power_manager = dbus.Interface(proxy, \
-                            'org.freedesktop.Hal.Device.SystemPowerManagement') 
-
-        return self._power_manager
