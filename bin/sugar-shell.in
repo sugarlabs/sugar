@@ -18,7 +18,12 @@
 import os
 import sys
 
-os.environ['GTK2_RC_FILES'] = '@prefix@/share/sugar/data/sugar-xo.gtkrc'
+if os.environ.has_key('SUGAR_THEME'):
+    theme = os.environ['SUGAR_THEME']
+else:
+    theme = 'sugar'
+
+os.environ['GTK2_RC_FILES'] = '@prefix@/share/sugar/data/%s.gtkrc' % theme
 
 sys.path.insert(0, '@prefix@/share/sugar/shell')
 
