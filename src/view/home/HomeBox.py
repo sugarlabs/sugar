@@ -139,7 +139,7 @@ class HomeToolbar(gtk.Toolbar):
         self._add_separator(expand=True)
 
         ring_button = RadioToolButton(named_icon='view-radial', group=None)
-        ring_button.props.label = _('Ring view')
+        ring_button.props.tooltip = _('Ring view')
         ring_button.props.accelerator = _('<Ctrl>R')
         ring_button.connect('toggled', self.__view_button_toggled_cb, _RING_VIEW)
         self.insert(ring_button, -1)
@@ -147,7 +147,7 @@ class HomeToolbar(gtk.Toolbar):
 
         list_button = RadioToolButton(named_icon='view-list')
         list_button.props.group = ring_button
-        list_button.props.label = _('List view')
+        list_button.props.tooltip = _('List view')
         list_button.props.accelerator = _('<Ctrl>L')
         list_button.connect('toggled', self.__view_button_toggled_cb, _LIST_VIEW)
         self.insert(list_button, -1)
