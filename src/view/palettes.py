@@ -31,7 +31,7 @@ import view.Shell
 
 class BasePalette(Palette):
     def __init__(self, home_activity):
-        Palette.__init__(self, '', menu_after_content=True)
+        Palette.__init__(self)
 
         if home_activity.props.launching:
             home_activity.connect('notify::launching', self._launching_changed_cb)
@@ -97,7 +97,7 @@ class ActivityPalette(Palette):
                              xo_color=profile.get_color(),
                              icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
 
-        Palette.__init__(self, None, None, primary_text=activity_info.name,
+        Palette.__init__(self, primary_text=activity_info.name,
                          icon=activity_icon)
 
         self._activity_info = activity_info
