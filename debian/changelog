@@ -1,3 +1,15 @@
+sugar (0.79.2~git-1) unstable; urgency=low
+
+  * New upstream release (or actually: release-tag in upstream Git).
+    Highlights:
+    + New Frame and Home design.
+  * Replace patch 0001 syncing with Git as of today.
+    + Fix home view accelerators
+    + Don't traceback when stopping an already stopped PulsingIcon
+    + Fix the mesh-device pulsing icon
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 05 Apr 2008 10:54:56 +0200
+
 sugar (0.79.0-5) unstable; urgency=low
 
   * Add patch 1001 adding danish l10n.
