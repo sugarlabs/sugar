@@ -1,15 +1,177 @@
-*No copyright* UNKNOWN []: AUTHORS, Makefile.am, README, bin/Makefile.am, bin/sugar, bin/sugar-backup, bin/sugar-install-bundle, bin/sugar.in, configure.ac, data/Makefile.am, data/activities.defaults, data/gtkrc.em, data/kbdconfig, data/mime.defaults, data/sugar-xo.gtkrc, data/sugar.gtkrc, data/sugar.xml.in, po/ChangeLog, po/POTFILES.in, po/POTFILES.skip, po/de.po, po/pl.po, service/Makefile.am, service/org.laptop.ActivityRegistry.service.in, service/org.laptop.Clipboard.service.in, src/Makefile.am, src/controlpanel/Makefile.am, src/hardware/Makefile.am, src/hardware/NetworkManagerInfo.conf, src/hardware/schoolserver.py, src/intro/Makefile.am, src/intro/__init__.py, src/intro/default-picture.png, src/intro/glive.py, src/model/Makefile.am, src/model/devices/Makefile.am, src/model/devices/network/Makefile.am, src/view/Makefile.am, src/view/devices/Makefile.am, src/view/devices/network/Makefile.am, src/view/frame/Makefile.am, src/view/home/Makefile.am
-GPL-2+ [2006-2007 Red Hat, Inc]: service/bundleregistry.py, src/hardware/hardwaremanager.py, src/hardware/keydialog.py, src/hardware/nmclient.py, src/hardware/nminfo.py, src/model/BuddyModel.py, src/model/Friends.py, src/model/Invites.py, src/model/MeshModel.py, src/model/Owner.py, src/model/accesspointmodel.py, src/model/devices/network/mesh.py, src/model/devices/network/wireless.py, src/model/shellmodel.py, src/shellservice.py, src/view/ActivityHost.py, src/view/BuddyIcon.py, src/view/BuddyMenu.py, src/view/OverlayWindow.py, src/view/Shell.py, src/view/devices/network/mesh.py, src/view/devices/network/wireless.py, src/view/frame/activitiestray.py, src/view/frame/frame.py, src/view/frame/framewindow.py, src/view/frame/friendstray.py, src/view/frame/zoomtoolbar.py, src/view/home/FriendView.py, src/view/home/FriendsBox.py, src/view/home/HomeBox.py, src/view/home/HomeWindow.py, src/view/home/MeshBox.py, src/view/home/MyIcon.py, src/view/home/activitiesdonut.py, src/view/pulsingicon.py
-UNKNOWN [YEAR THE PACKAGE'S COPYRIGHT HOLDER]: po/am.po, po/ar.po, po/ay.po, po/bn.po, po/dz.po, po/el.po, po/en.po, po/es.po, po/fa.po, po/ha.po, po/hi.po, po/is.po, po/it.po, po/ja.po, po/ko.po, po/mk.po, po/ml.po, po/ne.po, po/nl.po, po/pa.po, po/pt.po, po/pt_BR.po, po/qu.po, po/ro.po, po/ru.po, po/rw.po, po/th.po, po/ur.po, po/yo.po, po/zh_CN.po, po/zh_TW.po
-GPL-2+ [2006-2007, Red Hat, Inc]: src/controlpanel/__init__.py, src/hardware/__init__.py, src/model/__init__.py, src/model/devices/__init__.py, src/model/devices/battery.py, src/model/devices/network/__init__.py, src/model/devices/network/wired.py, src/view/__init__.py, src/view/devices/__init__.py, src/view/devices/battery.py, src/view/devices/deviceview.py, src/view/devices/network/__init__.py, src/view/devices/network/wired.py, src/view/frame/__init__.py, src/view/frame/overlaybox.py, src/view/home/__init__.py, src/view/keyhandler.py
-GENERATED FILE [1994-2002]: Makefile.in, bin/Makefile.in, data/Makefile.in, service/Makefile.in, src/Makefile.in, src/controlpanel/Makefile.in, src/hardware/Makefile.in, src/intro/Makefile.in, src/model/Makefile.in, src/model/devices/Makefile.in, src/model/devices/network/Makefile.in, src/view/Makefile.in, src/view/devices/Makefile.in, src/view/devices/network/Makefile.in, src/view/frame/Makefile.in, src/view/home/Makefile.in
-GPL-2+ [2008, Red Hat, Inc]: bin/sugar-control-panel, bin/sugar-control-panel.in, bin/sugar-emulator, bin/sugar-emulator.in, bin/sugar-shell, bin/sugar-shell-service, bin/sugar-shell-service.in, bin/sugar-shell.in
-GPL-2+ [2007, Red Hat, Inc]: bin/sugar-launch, src/intro/colorpicker.py, src/intro/intro.py, src/model/devices/device.py, src/model/devices/devicesmodel.py, src/view/frame/eventarea.py, src/view/home/transitionbox.py
-GPL-2+ [2007, One Laptop Per Child]: service/__init__.py, service/clipboardobject.py, src/view/clipboardmenu.py, src/view/frame/clipboardbox.py, src/view/frame/clipboardpanelwindow.py
-GPL-2+ [2006, Red Hat, Inc]: bin/sugar-activity, service/clipboardservice.py, src/emulator.py, src/main.py
-GPL-2+ [2008 Red Hat, Inc]: service/config.py, service/config.py.in, src/config.py, src/config.py.in
-LGPL-2+ [2007, One Laptop Per Child]: src/controlpanel/cmd.py, src/controlpanel/control.py, src/view/frame/activitybutton.py
-LGPL-2+ [2007 Red Hat, Inc]: src/logsmanager.py, src/view/home/spreadlayout.py
+*No copyright* UNKNOWN []: AUTHORS
+	Makefile.am
+	README
+	bin/Makefile.am
+	bin/sugar
+	bin/sugar-backup
+	bin/sugar-install-bundle
+	bin/sugar.in
+	configure.ac
+	data/Makefile.am
+	data/activities.defaults
+	data/gtkrc.em
+	data/kbdconfig
+	data/mime.defaults
+	data/sugar-xo.gtkrc
+	data/sugar.gtkrc
+	data/sugar.xml.in
+	po/ChangeLog
+	po/POTFILES.in
+	po/POTFILES.skip
+	po/de.po
+	po/pl.po
+	service/Makefile.am
+	service/org.laptop.ActivityRegistry.service.in
+	service/org.laptop.Clipboard.service.in
+	src/Makefile.am
+	src/controlpanel/Makefile.am
+	src/hardware/Makefile.am
+	src/hardware/NetworkManagerInfo.conf
+	src/hardware/schoolserver.py
+	src/intro/Makefile.am
+	src/intro/__init__.py
+	src/intro/default-picture.png
+	src/intro/glive.py
+	src/model/Makefile.am
+	src/model/devices/Makefile.am
+	src/model/devices/network/Makefile.am
+	src/view/Makefile.am
+	src/view/devices/Makefile.am
+	src/view/devices/network/Makefile.am
+	src/view/frame/Makefile.am
+	src/view/home/Makefile.am
+GPL-2+ [2006-2007 Red Hat, Inc]: service/bundleregistry.py
+	src/hardware/hardwaremanager.py
+	src/hardware/keydialog.py
+	src/hardware/nmclient.py
+	src/hardware/nminfo.py
+	src/model/BuddyModel.py
+	src/model/Friends.py
+	src/model/Invites.py
+	src/model/MeshModel.py
+	src/model/Owner.py
+	src/model/accesspointmodel.py
+	src/model/devices/network/mesh.py
+	src/model/devices/network/wireless.py
+	src/model/shellmodel.py
+	src/shellservice.py
+	src/view/ActivityHost.py
+	src/view/BuddyIcon.py
+	src/view/BuddyMenu.py
+	src/view/OverlayWindow.py
+	src/view/Shell.py
+	src/view/devices/network/mesh.py
+	src/view/devices/network/wireless.py
+	src/view/frame/activitiestray.py
+	src/view/frame/frame.py
+	src/view/frame/framewindow.py
+	src/view/frame/friendstray.py
+	src/view/frame/zoomtoolbar.py
+	src/view/home/FriendView.py
+	src/view/home/FriendsBox.py
+	src/view/home/HomeBox.py
+	src/view/home/HomeWindow.py
+	src/view/home/MeshBox.py
+	src/view/home/MyIcon.py
+	src/view/home/activitiesdonut.py
+	src/view/pulsingicon.py
+UNKNOWN [YEAR THE PACKAGE'S COPYRIGHT HOLDER]: po/am.po
+	po/ar.po
+	po/ay.po
+	po/bn.po
+	po/dz.po
+	po/el.po
+	po/en.po
+	po/es.po
+	po/fa.po
+	po/ha.po
+	po/hi.po
+	po/is.po
+	po/it.po
+	po/ja.po
+	po/ko.po
+	po/mk.po
+	po/ml.po
+	po/ne.po
+	po/nl.po
+	po/pa.po
+	po/pt.po
+	po/pt_BR.po
+	po/qu.po
+	po/ro.po
+	po/ru.po
+	po/rw.po
+	po/th.po
+	po/ur.po
+	po/yo.po
+	po/zh_CN.po
+	po/zh_TW.po
+GPL-2+ [2006-2007, Red Hat, Inc]: src/controlpanel/__init__.py
+	src/hardware/__init__.py
+	src/model/__init__.py
+	src/model/devices/__init__.py
+	src/model/devices/battery.py
+	src/model/devices/network/__init__.py
+	src/model/devices/network/wired.py
+	src/view/__init__.py
+	src/view/devices/__init__.py
+	src/view/devices/battery.py
+	src/view/devices/deviceview.py
+	src/view/devices/network/__init__.py
+	src/view/devices/network/wired.py
+	src/view/frame/__init__.py
+	src/view/frame/overlaybox.py
+	src/view/home/__init__.py
+	src/view/keyhandler.py
+GENERATED FILE [1994-2002]: Makefile.in
+	bin/Makefile.in
+	data/Makefile.in
+	service/Makefile.in
+	src/Makefile.in
+	src/controlpanel/Makefile.in
+	src/hardware/Makefile.in
+	src/intro/Makefile.in
+	src/model/Makefile.in
+	src/model/devices/Makefile.in
+	src/model/devices/network/Makefile.in
+	src/view/Makefile.in
+	src/view/devices/Makefile.in
+	src/view/devices/network/Makefile.in
+	src/view/frame/Makefile.in
+	src/view/home/Makefile.in
+GPL-2+ [2008, Red Hat, Inc]: bin/sugar-control-panel
+	bin/sugar-control-panel.in
+	bin/sugar-emulator
+	bin/sugar-emulator.in
+	bin/sugar-shell
+	bin/sugar-shell-service
+	bin/sugar-shell-service.in
+	bin/sugar-shell.in
+GPL-2+ [2007, Red Hat, Inc]: bin/sugar-launch
+	src/intro/colorpicker.py
+	src/intro/intro.py
+	src/model/devices/device.py
+	src/model/devices/devicesmodel.py
+	src/view/frame/eventarea.py
+	src/view/home/transitionbox.py
+GPL-2+ [2007, One Laptop Per Child]: service/__init__.py
+	service/clipboardobject.py
+	src/view/clipboardmenu.py
+	src/view/frame/clipboardbox.py
+	src/view/frame/clipboardpanelwindow.py
+GPL-2+ [2006, Red Hat, Inc]: bin/sugar-activity
+	service/clipboardservice.py
+	src/emulator.py
+	src/main.py
+GPL-2+ [2008 Red Hat, Inc]: service/config.py
+	service/config.py.in
+	src/config.py
+	src/config.py.in
+LGPL-2+ [2007, One Laptop Per Child]: src/controlpanel/cmd.py
+	src/controlpanel/control.py
+	src/view/frame/activitybutton.py
+LGPL-2+ [2007 Red Hat, Inc]: src/logsmanager.py
+	src/view/home/spreadlayout.py
 GENERATED FILE [1992-1996, 1998-2001]: configure
 GENERATED FILE [1995-2002 Free Software Foundation, Inc / 2001-2004 Red Hat, Inc / 1996-2004]: aclocal.m4
 GPL GENERATED FILE [1996-1997, 1999-2000, 2002-2006]: missing

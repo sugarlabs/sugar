@@ -65,7 +65,7 @@ debian/stamp-copyright-check:
 	'			||'\
 	'			$$a cmp $$b'\
 	'		} keys %patternfiles ) {'\
-	'	print "$$pattern: ", join(", ", sort @{ $$patternfiles{$$pattern} }), "\n";'\
+	'	print "$$pattern: ", join("\n\t", sort @{ $$patternfiles{$$pattern} }), "\n";'\
 	'};'\
 		> debian/copyright_newhints
 	@patterncount="`cat debian/copyright_newhints | sed 's/^[^:]*://' | LANG=C sort -u | grep . -c -`"; \
