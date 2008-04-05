@@ -8,7 +8,7 @@ sugar (0.79.2~git-1) unstable; urgency=low
     + Don't traceback when stopping an already stopped PulsingIcon
     + Fix the mesh-device pulsing icon
   * Update copyright-check cdbs snippet to store newline-delimited
-    hints.
+    hints.  Update hints.
 
  -- Jonas Smedegaard <dr@jones.dk>  Sat, 05 Apr 2008 10:54:56 +0200
 
