@@ -25,6 +25,7 @@ import hippo
 
 from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
+from sugar.graphics.icon import Icon
 from sugar.graphics import style
 from sugar.clipboard import clipboardservice
 from sugar.datastore import datastore
@@ -60,7 +61,7 @@ class ClipboardMenu(Palette):
         self.menu.append(self._remove_item)
         self._remove_item.show()
 
-        self._open_item = MenuItem(_('Open'))
+        self._open_item = MenuItem(_('Open'), 'zoom-activity')
         self._open_item.connect('activate', self._open_item_activate_cb)
         self.menu.append(self._open_item)
         self._open_item.show()
@@ -70,7 +71,11 @@ class ClipboardMenu(Palette):
         #self._stop_item.connect('activate', self._stop_item_activate_cb)
         #self.append_menu_item(self._stop_item)
 
-        self._journal_item = MenuItem(_('Add to journal'), 'document-save')
+        self._journal_item = MenuItem(_('Keep'))
+        icon = Icon(icon_name='document-save', icon_size=gtk.ICON_SIZE_MENU,
+                xo_color=profile.get_color())
+        self._journal_item.set_image(icon)
+
         self._journal_item.connect('activate', self._journal_item_activate_cb)
         self.menu.append(self._journal_item)
         self._journal_item.show()
@@ -81,10 +86,12 @@ class ClipboardMenu(Palette):
     def _update_open_submenu(self):
         logging.debug('_update_open_submenu: %r' % self._activities)
         if self._activities is None or len(self._activities) <= 1:
+            self._open_item.child.set_text(_('Open'))
             if self._open_item.get_submenu() is not None:
                 self._open_item.remove_submenu()
             return
 
+        self._open_item.child.set_text(_('Open with'))
         submenu = self._open_item.get_submenu()
         if submenu is None:
             submenu = gtk.Menu()

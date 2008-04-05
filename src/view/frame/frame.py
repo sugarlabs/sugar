@@ -25,15 +25,19 @@ from sugar.graphics import style
 from sugar.graphics import palettegroup
 from sugar.clipboard import clipboardservice
 
+import view.Shell
 from view.frame.eventarea import EventArea
 from view.frame.activitiestray import ActivitiesTray
 from view.frame.zoomtoolbar import ZoomToolbar
 from view.frame.friendstray import FriendsTray
+from view.frame.devicestray import DevicesTray
 from view.frame.framewindow import FrameWindow
 from view.frame.clipboardpanelwindow import ClipboardPanelWindow
+from view.frame.notification import NotificationIcon, NotificationWindow
 from model.shellmodel import ShellModel
 
 _FRAME_HIDING_DELAY = 500
+_NOTIFICATION_DURATION = 5000
 
 class _Animation(animator.Animation):
     def __init__(self, frame, end):
@@ -87,7 +91,7 @@ class Frame(object):
     MODE_KEYBOARD = 1
     MODE_NON_INTERACTIVE = 2
 
-    def __init__(self, shell):
+    def __init__(self):
         self.mode = None
 
         self._palette_group = palettegroup.get_group('frame')
@@ -98,7 +102,6 @@ class Frame(object):
         self._top_panel = None
         self._bottom_panel = None
 
-        self._shell = shell
         self.current_position = 0.0
         self._animator = None
 
@@ -120,7 +123,7 @@ class Frame(object):
         self._key_listener = _KeyListener(self)
         self._mouse_listener = _MouseListener(self)
 
-        self.move(1.0)
+        self._notif_by_icon = {}
 
     def is_visible(self):
         return self.current_position != 0.0
@@ -143,7 +146,7 @@ class Frame(object):
         if self._animator:
             self._animator.stop()
 
-        self._shell.take_activity_screenshot()
+        view.Shell.get_instance().take_activity_screenshot()
 
         self.mode = mode
 
@@ -166,24 +169,35 @@ class Frame(object):
     def _create_top_panel(self):
         panel = self._create_panel(gtk.POS_TOP)
 
-        toolbar = ZoomToolbar(self._shell)
-        panel.append(hippo.CanvasWidget(widget=toolbar))
-        toolbar.show()
+        # TODO: setting box_width and hippo.PACK_EXPAND looks like a hack to me.
+        # Why hippo isn't respecting the request size of these controls?
+
+        zoom_toolbar = ZoomToolbar()
+        panel.append(hippo.CanvasWidget(widget=zoom_toolbar,
+                box_width=4*style.GRID_CELL_SIZE))
+        zoom_toolbar.show()
+
+        activities_tray = ActivitiesTray()
+        panel.append(hippo.CanvasWidget(widget=activities_tray),
+                hippo.PACK_EXPAND)
+        activities_tray.show()
 
         return panel
 
     def _create_bottom_panel(self):
         panel = self._create_panel(gtk.POS_BOTTOM)
 
-        box = ActivitiesTray(self._shell)
-        panel.append(box, hippo.PACK_EXPAND)
+        # TODO: same issue as in _create_top_panel()
+        devices_tray = DevicesTray()
+        panel.append(hippo.CanvasWidget(widget=devices_tray), hippo.PACK_EXPAND)
+        devices_tray.show()
 
         return panel
 
     def _create_right_panel(self):
         panel = self._create_panel(gtk.POS_RIGHT)
 
-        tray = FriendsTray(self._shell)
+        tray = FriendsTray()
         panel.append(hippo.CanvasWidget(widget=tray), hippo.PACK_EXPAND)
         tray.show()
 
@@ -269,4 +283,40 @@ class Frame(object):
     def notify_key_press(self):
         self._key_listener.key_press()
 
+    def add_notification(self, icon):
+        if not isinstance(icon, NotificationIcon):
+            raise TypeError('icon must be a NotificationIcon.')
+        
+        window = NotificationWindow()
+        window.move(0, 0)
+        window.add(icon)
+        icon.show()
+        window.show()
+        
+        self._notif_by_icon[icon] = window
+
+        gobject.timeout_add(_NOTIFICATION_DURATION,
+                        lambda: self.remove_notification(icon))
+
+    def remove_notification(self, icon):
+        if not isinstance(icon, NotificationIcon):
+            raise TypeError('icon must be a NotificationIcon.')
+
+        if icon not in self._notif_by_icon:
+            logging.debug('icon %r not in list of notifications.' % icon)
+            return
+
+        window = self._notif_by_icon[icon]
+        window.destroy()
+        del self._notif_by_icon[icon]
+
     visible = property(is_visible, None)
+
+_instance = None
+
+def get_instance():
+    global _instance
+    if not _instance:
+        _instance = Frame()
+    return _instance
+

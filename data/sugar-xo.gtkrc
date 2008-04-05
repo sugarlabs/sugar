@@ -1,6 +1,0 @@
-gtk-theme-name = "sugar-xo"
-gtk-icon-theme-name = "sugar"
-gtk-font-name = "Sans Serif 7"
-gtk-cursor-theme-name = "sugar"
-gtk-toolbar-style = GTK_TOOLBAR_ICONS
-gtk-icon-sizes = "gtk-large-toolbar=55,55"

@@ -18,6 +18,7 @@ import os
 import logging
 
 import gobject
+import simplejson
 
 from sugar.bundle.activitybundle import ActivityBundle
 from sugar.bundle.bundle import MalformedBundleException
@@ -51,9 +52,11 @@ class BundleRegistry(gobject.GObject):
     """Service that tracks the available activity bundles"""
 
     __gsignals__ = {
-        'bundle-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                        ([gobject.TYPE_PYOBJECT])),
+        'bundle-added':   (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([gobject.TYPE_PYOBJECT])),
         'bundle-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([gobject.TYPE_PYOBJECT])),
+        'bundle-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                            ([gobject.TYPE_PYOBJECT]))
     }
 
@@ -63,6 +66,17 @@ class BundleRegistry(gobject.GObject):
         self._bundles = []
         self._search_path = []
         self._mime_defaults = _load_mime_defaults()
+
+        path = env.get_profile_path('favorite_activities')
+        if os.path.exists(path):
+            try:
+                self._favorite_bundles = simplejson.load(open(path))
+                print 'loaded %r' % self._favorite_bundles 
+            except ValueError, e:
+                logging.error('Error while loading favorite_activities: %r.' % e)
+                self._favorite_bundles = []
+        else:
+            self._favorite_bundles = []
 
     def get_bundle(self, bundle_id):
         """Returns an bundle given his service name"""
@@ -138,6 +152,32 @@ class BundleRegistry(gobject.GObject):
             return self._mime_defaults[mime_type]
         else:
             return None
+
+    def _find_bundle(self, bundle_id, version):
+        for bundle in self._bundles:
+            if bundle.get_bundle_id() == bundle_id and \
+                    bundle.get_activity_version() == version:
+                return bundle
+        raise ValueError('No bundle %r with version %r exists.' % \
+                (bundle_id, version))
+
+    def set_bundle_favorite(self, bundle_id, version, favorite):
+        bundle = self._find_bundle(bundle_id, version)
+        if favorite and not [bundle_id, version] in self._favorite_bundles:
+            self._favorite_bundles.append([bundle_id, version])
+            self.emit('bundle-changed', bundle)
+            self._write_favorites_file()
+        elif not favorite and [bundle_id, version] in self._favorite_bundles:
+            self._favorite_bundles.remove([bundle_id, version])
+            self.emit('bundle-changed', bundle)
+            self._write_favorites_file()
+
+    def is_bundle_favorite(self, bundle_id, version):
+        return [bundle_id, version] in self._favorite_bundles
+
+    def _write_favorites_file(self):
+        path = env.get_profile_path('favorite_activities')
+        simplejson.dump(self._favorite_bundles, open(path, 'w'))
 
 def get_registry():
     return _bundle_registry

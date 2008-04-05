@@ -22,7 +22,8 @@ import hippo
 import gobject
 import gtk
 
-from sugar.graphics.icon import CanvasIcon
+from sugar.graphics.icon import CanvasIcon, Icon
+from sugar.graphics.xocolor import XoColor
 from sugar.graphics import style
 from sugar.graphics.icon import get_icon_state
 from sugar.graphics import style
@@ -34,21 +35,23 @@ from sugar import profile
 from model import accesspointmodel
 from model.devices.network import mesh
 from model.devices.network import wireless
+from model import shellmodel
 from hardware import hardwaremanager
 from hardware import nmclient
 from view.BuddyIcon import BuddyIcon
-from view.pulsingicon import PulsingIcon
+from view.pulsingicon import CanvasPulsingIcon
 from view.home.snowflakelayout import SnowflakeLayout
 from view.home.spreadlayout import SpreadLayout
+import view.Shell
 
 from hardware.nmclient import NM_802_11_CAP_PROTO_WEP, NM_802_11_CAP_PROTO_WPA, NM_802_11_CAP_PROTO_WPA2
 
 
 _ICON_NAME = 'network-wireless'
 
-class AccessPointView(PulsingIcon):
+class AccessPointView(CanvasPulsingIcon):
     def __init__(self, model, mesh_device=None):
-        PulsingIcon.__init__(self, size=style.STANDARD_ICON_SIZE, cache=True)
+        CanvasPulsingIcon.__init__(self, size=style.STANDARD_ICON_SIZE, cache=True)
         self._model = model
         self._meshdev = mesh_device
         self._disconnect_item = None
@@ -60,9 +63,9 @@ class AccessPointView(PulsingIcon):
         model.connect('notify::name', self._name_changed_cb)
         model.connect('notify::state', self._state_changed_cb)
 
-        (stroke, fill) = model.get_nm_network().get_colors()
-        self._device_stroke = stroke
-        self._device_fill = fill
+        pulse_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
+                                         style.COLOR_TRANSPARENT.get_svg()))
+        self.props.pulse_color = pulse_color
 
         self._palette = self._create_palette()
         self.set_palette(self._palette)
@@ -128,35 +131,22 @@ class AccessPointView(PulsingIcon):
         if self._model.props.state == accesspointmodel.STATE_CONNECTING:
             if self._disconnect_item:
                 self._disconnect_item.hide()
-            self.props.pulse_time = 1.0
-            self.props.colors = [
-                [ style.Color(self._device_stroke).get_svg(),
-                  style.Color(self._device_fill).get_svg() ],
-                [ style.Color(self._device_stroke).get_svg(),
-                  '#e2e2e2' ]
-            ]
+            self.props.pulsing = True
         elif self._model.props.state == accesspointmodel.STATE_CONNECTED:
             if self._disconnect_item:
                 self._disconnect_item.show()
-            self.props.pulse_time = 0.0
-            self.props.colors = [
-                [ '#ffffff',
-                  style.Color(self._device_fill).get_svg() ],
-                [ '#ffffff',
-                  style.Color(self._device_fill).get_svg() ]
-            ]
+            self.props.pulsing = False
         elif self._model.props.state == accesspointmodel.STATE_NOTCONNECTED:
             if self._disconnect_item:
                 self._disconnect_item.hide()
-            self.props.pulse_time = 0.0
-            self.props.colors = [
-                [ style.Color(self._device_stroke).get_svg(),
-                    style.Color(self._device_fill).get_svg() ]
-            ]
+            self.props.pulsing = False
 
         if self._greyed_out:
-            self.props.pulse_time = 0.0
-            self.props.colors = [['#D5D5D5', '#D5D5D5']]
+            self.props.pulsing = False
+            self.props.base_color = XoColor('#D5D5D5,#D5D5D5')
+        else:
+            self.props.base_color = XoColor('%s,%s' % \
+                    self._model.get_nm_network().get_colors())
 
     def set_filter(self, query):
         self._greyed_out = self._model.props.name.lower().find(query) == -1
@@ -164,7 +154,7 @@ class AccessPointView(PulsingIcon):
 
 _MESH_ICON_NAME = 'network-mesh'
 
-class MeshDeviceView(PulsingIcon):
+class MeshDeviceView(CanvasPulsingIcon):
     def __init__(self, nm_device, channel):
         if not channel in [1, 6, 11]:
             raise ValueError("Invalid channel %d" % channel)
@@ -181,9 +171,9 @@ class MeshDeviceView(PulsingIcon):
         self._palette = self._create_palette()
         self.set_palette(self._palette)
 
-        mycolor = profile.get_color()
-        self._device_fill = mycolor.get_fill_color()
-        self._device_stroke = mycolor.get_stroke_color()
+        pulse_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
+                                         style.COLOR_TRANSPARENT.get_svg()))
+        self.props.pulse_color = pulse_color
 
         self.connect('activated', self._activate_cb)
 
@@ -221,45 +211,30 @@ class MeshDeviceView(PulsingIcon):
     def _update_state(self):
         state = self._nm_device.get_state()
         chan = wireless.freq_to_channel(self._nm_device.get_frequency())
-        if self._greyed_out:
-            self.props.colors = [['#D5D5D5', '#D5D5D5']]
-        elif state == nmclient.DEVICE_STATE_ACTIVATING and chan == self.channel:
+        if state == nmclient.DEVICE_STATE_ACTIVATING and chan == self.channel:
             self._disconnect_item.hide()
-            self.props.pulse_time = 0.75
-            self.props.colors = [
-                [ style.Color(self._device_stroke).get_svg(),
-                    style.Color(self._device_fill).get_svg() ],
-                [ style.Color(self._device_stroke).get_svg(),
-                    '#e2e2e2' ]
-            ]
+            self.props.pulsing = True
         elif state == nmclient.DEVICE_STATE_ACTIVATED and chan == self.channel:
             self._disconnect_item.show()
-            self.props.pulse_time = 0.0
-            self.props.colors = [
-                [ '#ffffff',
-                    style.Color(self._device_fill).get_svg() ],
-                [ '#ffffff',
-                    style.Color(self._device_fill).get_svg() ]
-            ]
+            self.props.pulsing = False
         elif state == nmclient.DEVICE_STATE_INACTIVE or chan != self.channel:
             self._disconnect_item.hide()
-            self.props.pulse_time = 0.0
-            self.props.colors = [
-                [ style.Color(self._device_stroke).get_svg(),
-                  style.Color(self._device_fill).get_svg() ]
-            ]
+            self.props.pulsing = False
+
+        if self._greyed_out:
+            self.props.pulsing = False
+            self.props.base_color = XoColor('#D5D5D5,#D5D5D5')
         else:
-            raise RuntimeError("Shouldn't get here")
+            self.props.base_color = profile.get_color()
 
     def set_filter(self, query):
         self._greyed_out = (query != '')
         self._update_state()
 
 class ActivityView(hippo.CanvasBox):
-    def __init__(self, shell, model):
+    def __init__(self, model):
         hippo.CanvasBox.__init__(self)
 
-        self._shell = shell
         self._model = model
         self._icons = {}
 
@@ -286,7 +261,11 @@ class ActivityView(hippo.CanvasBox):
         return icon
 
     def _create_palette(self):
-        p = palette.Palette(self._model.activity.props.name)
+        p_icon = Icon(file=self._model.get_icon_name(),
+                      xo_color=self._model.get_color())
+        p_icon.props.icon_size = gtk.ICON_SIZE_LARGE_TOOLBAR
+        p = palette.Palette(None, primary_text=self._model.activity.props.name,
+                            icon=p_icon)
 
         private = self._model.activity.props.private
         joined = self._model.activity.props.joined
@@ -322,14 +301,14 @@ class ActivityView(hippo.CanvasBox):
 
     def _clicked_cb(self, item):
         bundle_id = self._model.get_bundle_id()
-        self._shell.join_activity(bundle_id, self._model.get_id())
+        view.Shell.get_instance().join_activity(bundle_id, self._model.get_id())
 
     def set_filter(self, query):
         text_to_check = self._model.activity.props.name.lower() + \
                 self._model.activity.props.type.lower()
         if text_to_check.find(query) == -1:
             self._icon.props.stroke_color = '#D5D5D5'
-            self._icon.props.fill_color = '#E5E5E5'
+            self._icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
         else:
             self._icon.props.xo_color = self._model.get_color()
 
@@ -372,24 +351,27 @@ class MeshToolbar(gtk.Toolbar):
         self._add_separator()
 
         tool_item = gtk.ToolItem()
-        tool_item.set_expand(True)
         self.insert(tool_item, -1)
         tool_item.show()
 
         self._search_entry = iconentry.IconEntry()
         self._search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY, 'system-search')
         self._search_entry.add_clear_button()
+        self._search_entry.set_width_chars(25)
         self._search_entry.connect('activate', self._entry_activated_cb)
         self._search_entry.connect('changed', self._entry_changed_cb)
         tool_item.add(self._search_entry)
         self._search_entry.show()
 
-        self._add_separator()
+        self._add_separator(expand=True)
 
-    def _add_separator(self):
+    def _add_separator(self, expand=False):
         separator = gtk.SeparatorToolItem()
-        separator.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
         separator.props.draw = False
+        if expand:
+            separator.set_expand(True)
+        else:
+            separator.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
         self.insert(separator, -1)
         separator.show()
 
@@ -418,11 +400,10 @@ class MeshToolbar(gtk.Toolbar):
         return False
 
 class MeshBox(hippo.CanvasBox):
-    def __init__(self, shell):
+    def __init__(self):
         hippo.CanvasBox.__init__(self)
 
-        self._shell = shell
-        self._model = shell.get_model().get_mesh()
+        self._model = shellmodel.get_instance().get_mesh()
         self._buddies = {}
         self._activities = {}
         self._access_points = {}
@@ -435,7 +416,7 @@ class MeshBox(hippo.CanvasBox):
         self._toolbar.connect('query-changed', self._toolbar_query_changed_cb)
         self.append(hippo.CanvasWidget(widget=self._toolbar))
 
-        self._layout_box = hippo.CanvasBox(background_color=0xe2e2e2ff)
+        self._layout_box = hippo.CanvasBox(background_color=style.COLOR_WHITE.get_int())
         self.append(self._layout_box, hippo.PACK_EXPAND)
 
         self._layout = SpreadLayout()
@@ -519,7 +500,7 @@ class MeshBox(hippo.CanvasBox):
         del self._mesh[channel]
 
     def _add_alone_buddy(self, buddy_model):
-        icon = BuddyIcon(self._shell, buddy_model)
+        icon = BuddyIcon(buddy_model)
         if buddy_model.is_owner():
             vertical_offset = - style.GRID_CELL_SIZE
             self._layout.add_center(icon, vertical_offset)
@@ -556,15 +537,14 @@ class MeshBox(hippo.CanvasBox):
         elif activity_model.get_id() in self._activities:
             activity = self._activities[activity_model.get_id()]
 
-            icon = BuddyIcon(self._shell, buddy_model,
-                             style.SMALL_ICON_SIZE)
+            icon = BuddyIcon(buddy_model, style.STANDARD_ICON_SIZE)
             activity.add_buddy_icon(buddy_model.get_key(), icon)
 
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(self._query)
 
     def _add_activity(self, activity_model):
-        icon = ActivityView(self._shell, activity_model)
+        icon = ActivityView(activity_model)
         self._layout.add(icon)
 
         if hasattr(icon, 'set_filter'):

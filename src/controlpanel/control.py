@@ -1,19 +1,18 @@
 # Copyright (C) 2007, One Laptop Per Child
 #
-# This library is free software; you can redistribute it and/or
-# modify it under the terms of the GNU Lesser General Public
-# License as published by the Free Software Foundation; either
-# version 2 of the License, or (at your option) any later version.
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
 #
-# This library is distributed in the hope that it will be useful,
+# This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# Lesser General Public License for more details.
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-# You should have received a copy of the GNU Lesser General Public
-# License along with this library; if not, write to the
-# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# Boston, MA 02111-1307, USA.
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 #
 # The language config is based on the system-config-language
@@ -24,7 +23,6 @@
 #
 
 import os
-import string
 import shutil
 from gettext import gettext as _
 import dbus
@@ -199,20 +197,20 @@ _LANGUAGES = {
 def _initialize():
     timezones = _read_zonetab()
 
-    j=0
+    j = 0
     for timezone in timezones:
         set_timezone.__doc__ += timezone+', '
-        j+=1
-        if j%3 == 0:
+        j += 1
+        if j % 3 == 0:
             set_timezone.__doc__ += '\n'
                         
     keys =  _LANGUAGES.keys()
     keys.sort()
     i = 0
     for key in keys:
-        set_language.__doc__ += key+', '
-        i+=1
-        if i%3 == 0:
+        set_language.__doc__ += key + ', '
+        i += 1
+        if i % 3 == 0:
             set_language.__doc__ += '\n'
 
 def _note_restart():
@@ -241,25 +239,25 @@ def get_color():
 
 def print_color():
     color = get_color().to_string()
-    str = color.split(',')
+    tmp = color.split(',')
 
     stroke = None
     fill = None
     for color in _COLORS:
         for hue in _COLORS[color]:
-            if _COLORS[color][hue] == str[0]:
+            if _COLORS[color][hue] == tmp[0]:
                 stroke = (color, hue)
-            if _COLORS[color][hue] == str[1]:
+            if _COLORS[color][hue] == tmp[1]:
                 fill = (color, hue)
 
     if stroke is not None:            
-        print 'stroke:   color=%s hue=%s'%(stroke[0], stroke[1])
+        print 'stroke:   color=%s hue=%s' % (stroke[0], stroke[1])
     else:
-        print 'stroke:   %s'%(str[0])        
+        print 'stroke:   %s' % (tmp[0])        
     if fill is not None:    
-        print 'fill:     color=%s hue=%s'%(fill[0], fill[1])
+        print 'fill:     color=%s hue=%s' % (fill[0], fill[1])
     else:
-        print 'fill:     %s'%(str[1])
+        print 'fill:     %s' % (tmp[1])
         
 def set_color(stroke, fill, modstroke='medium', modfill='medium'):
     """Set the system color by setting a fill and stroke color.
@@ -350,13 +348,13 @@ def get_timezone():
     fd.close()
     try:
         for line in lines:
-            line = string.strip(line)
+            line = line.strip()
             if len (line) and line[0] == '#':
                 continue
             try:
-                tokens = string.split(line, "=")
+                tokens = line.split("=")
                 if tokens[0] == "ZONE":
-                    timezone = string.replace(tokens[1], '"', '')
+                    timezone = tokens[1].replace('"', '')
                     return timezone        
             except Exception, e:
                 print "get_timezone: %s" % e
@@ -415,7 +413,7 @@ def set_timezone(timezone):
     else:
         print (_("Error timezone does not exist."))
 
-def _writeI18N(lang):
+def _write_i18n(lang):
     path = os.path.join(os.environ.get("HOME"), '.i18n')
     if os.access(path, os.W_OK) == 0:
         print(_("Could not access %s. Create standard settings.") % path)
@@ -434,13 +432,12 @@ def _writeI18N(lang):
                 fd.close()
 
 def get_language():
-    originalFile = None
     path = os.path.join(os.environ.get("HOME"), '.i18n')
     if os.access(path, os.R_OK) == 0:
         print(_("Could not access %s. Create standard settings.") % path)
         fd = open(path, 'w')
         default = 'en_US.UTF-8'
-        fd.write('LANG="%s"\n'%default)
+        fd.write('LANG="%s"\n' % default)
         fd.close()
         return default
     
@@ -471,7 +468,7 @@ def set_language(language):
     languages : 
     """
     if language in _LANGUAGES:
-        _writeI18N(_LANGUAGES[language])
+        _write_i18n(_LANGUAGES[language])
         _note_restart()
     else:
         print (_("Sorry I do not speak \'%s\'.") % language)

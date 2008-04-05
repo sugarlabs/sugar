@@ -1,8 +1,0 @@
-#!/bin/sh
-
-export GTK2_RC_FILES=/home/marco/sugar-jhbuild/build/share/sugar/data/sugar-xo.gtkrc
-if [ -f /etc/olpc-security ] ; then
-  exec dbus-launch --exit-with-session --config-file=/etc/dbus-1/session-olpc.conf sugar-shell
-else
-  exec dbus-launch --exit-with-session sugar-shell
-fi

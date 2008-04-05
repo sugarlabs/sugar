@@ -35,10 +35,10 @@ from sugar import profile
 from sugar import env
 
 from view.ActivityHost import ActivityHost
-from view.frame.frame import Frame
+from view.frame import frame
 from view.keyhandler import KeyHandler
 from view.home.HomeWindow import HomeWindow
-from model.shellmodel import ShellModel
+from model import shellmodel
 
 # #3903 - this constant can be removed and assumed to be 1 when dbus-python
 # 0.82.3 is the only version used
@@ -48,23 +48,22 @@ else:
     DBUS_PYTHON_TIMEOUT_UNITS_PER_SECOND = 1000
 
 class Shell(gobject.GObject):
-    def __init__(self, model):
+    def __init__(self):
         gobject.GObject.__init__(self)
 
         self._activities_starting = Set()
-        self._model = model
+        self._model = shellmodel.get_instance()
         self._hosts = {}
         self._screen = wnck.screen_get_default()
         self._current_host = None
         self._pending_host = None
         self._screen_rotation = 0
-        self._zoom_level = ShellModel.ZOOM_HOME
 
-        self._key_handler = KeyHandler(self)
+        self._key_handler = KeyHandler()
 
-        self._frame = Frame(self)
+        self._frame = frame.get_instance()
 
-        self._home_window = HomeWindow(self)
+        self._home_window = HomeWindow()
         self._home_window.show()
 
         home_model = self._model.get_home()
@@ -74,8 +73,6 @@ class Shell(gobject.GObject):
                            self._active_activity_changed_cb)
         home_model.connect('pending-activity-changed',
                            self._pending_activity_changed_cb)
-
-        self._model.connect('notify::zoom-level', self._zoom_level_changed_cb)
 
         gobject.idle_add(self._start_journal_idle)
 
@@ -155,7 +152,7 @@ class Shell(gobject.GObject):
 
     def notify_launch(self, bundle_id, activity_id):
         # Zoom to Home for launch feedback
-        self.set_zoom_level(ShellModel.ZOOM_HOME)
+        self.set_zoom_level(shellmodel.ShellModel.ZOOM_HOME)
 
         home_model = self._model.get_home()
         home_model.notify_activity_launch(activity_id, bundle_id)
@@ -173,7 +170,7 @@ class Shell(gobject.GObject):
         activityfactory.create(activity_type)
 
     def take_activity_screenshot(self):
-        if self._model.get_zoom_level() != ShellModel.ZOOM_ACTIVITY:
+        if self._model.get_zoom_level() != shellmodel.ShellModel.ZOOM_ACTIVITY:
             return
         if self.get_frame().visible:
             return
@@ -189,12 +186,12 @@ class Shell(gobject.GObject):
                     logging.debug('Error raised by TakeScreenshot(): %s', e)
 
     def set_zoom_level(self, level):
-        if level == self._zoom_level:
+        if level == self._model.get_zoom_level():
             return
 
         self.take_activity_screenshot()
 
-        if level == ShellModel.ZOOM_ACTIVITY:
+        if level == shellmodel.ShellModel.ZOOM_ACTIVITY:
             if self._pending_host is not None:
                 self._pending_host.present()
             self._screen.toggle_showing_desktop(False)
@@ -202,17 +199,6 @@ class Shell(gobject.GObject):
             self._model.set_zoom_level(level)
             self._screen.toggle_showing_desktop(True)
             self._home_window.set_zoom_level(level)
-
-    def _zoom_level_changed_cb(self, model, pspec):
-        new_level = model.props.zoom_level
-
-        if new_level == ShellModel.ZOOM_HOME:
-            self._frame.show(Frame.MODE_NON_INTERACTIVE)
-
-        if self._zoom_level == ShellModel.ZOOM_HOME:
-            self._frame.hide()
-
-        self._zoom_level = new_level
 
     def toggle_activity_fullscreen(self):
         if self._model.get_zoom_level() == ShellModel.ZOOM_ACTIVITY:
@@ -233,7 +219,7 @@ class Shell(gobject.GObject):
             activity.get_window().activate(1)
 
     def close_current_activity(self):
-        if self._model.get_zoom_level() != ShellModel.ZOOM_ACTIVITY:
+        if self._model.get_zoom_level() != shellmodel.ShellModel.ZOOM_ACTIVITY:
             return
 
         home_model = self._model.get_home()
@@ -295,4 +281,12 @@ class Shell(gobject.GObject):
                 del jobject
         finally:
             os.remove(file_path)
+
+_instance = None
+
+def get_instance():
+    global _instance
+    if not _instance:
+        _instance = Shell()
+    return _instance
 

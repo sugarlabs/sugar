@@ -1,4 +1,5 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2008 One Laptop Per Child
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,146 +15,237 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import os
 import logging
+from gettext import gettext as _
 
-import hippo
+import gtk
 
-from sugar.graphics.tray import TrayButton
-from sugar.graphics.tray import HTray
-from sugar.graphics.icon import Icon
 from sugar.graphics import style
-from sugar import profile
+from sugar.graphics.tray import HTray
+from sugar.graphics.xocolor import XoColor
+from sugar.graphics.radiotoolbutton import RadioToolButton
+from sugar.graphics.toolbutton import ToolButton
+from sugar.graphics.icon import Icon
+from sugar.graphics.palette import Palette, WidgetInvoker
+from sugar.graphics.menuitem import MenuItem
 from sugar import activity
-from sugar import env
 
-from activitybutton import ActivityButton
-import config
+from model import shellmodel
+from view.palettes import JournalPalette, CurrentActivityPalette
+from view.pulsingicon import PulsingIcon
+from view.frame.frameinvoker import FrameWidgetInvoker
+from view.frame.notification import NotificationIcon
+import view.frame.frame
 
-class InviteButton(TrayButton):
-    def __init__(self, activity_model, invite):
-        TrayButton.__init__(self)
+class ActivityButton(RadioToolButton):
+    def __init__(self, home_activity, group):
+        RadioToolButton.__init__(self, group=group)
 
-        icon = Icon(file=activity_model.get_icon_name(),
-                    xo_color=activity_model.get_color())
-        self.set_icon_widget(icon)
-        icon.show()
+        self._home_activity = home_activity
 
-        self._invite = invite
+        self._icon = PulsingIcon()
+        self._icon.props.base_color = home_activity.get_icon_color()
+        self._icon.props.pulse_color = \
+                XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
+                                   style.COLOR_TOOLBAR_GREY.get_svg()))
+        if home_activity.get_icon_path():
+            self._icon.props.file = home_activity.get_icon_path()
+        else:
+            self._icon.props.icon_name = 'image-missing'
+        self.set_icon_widget(self._icon)
+        self._icon.show()
 
-    def get_activity_id(self):
-        return self._invite.get_activity_id()
+        if self._home_activity.get_type() == "org.laptop.JournalActivity":
+            palette = JournalPalette(self._home_activity)
+        else:
+            palette = CurrentActivityPalette(self._home_activity)
+        palette.props.invoker = FrameWidgetInvoker(self)
+        palette.set_group_id('frame')
+        self.set_palette(palette)
 
-    def get_bundle_id(self):
-        return self._invite.get_bundle_id()
+        if home_activity.props.launching:
+            self._icon.props.pulsing = True
+            self._notify_launching_hid = home_activity.connect('notify::launching',
+                    self.__notify_launching_cb)
 
-    def get_invite(self):
-        return self._invite
+            self._notif_icon = NotificationIcon()
+            self._notif_icon.props.xo_color = home_activity.get_icon_color()
+            if home_activity.get_icon_path():
+                self._notif_icon.props.icon_filename = home_activity.get_icon_path()
+            else:
+                self._notif_icon.props.icon_name = 'image-missing'
+            view.frame.frame.get_instance().add_notification(self._notif_icon)
+        else:
+            self._notify_launching_hid = None
+            self._notif_icon = None
 
-class ActivitiesTray(hippo.CanvasBox):
-    def __init__(self, shell):
-        hippo.CanvasBox.__init__(self, orientation=hippo.ORIENTATION_HORIZONTAL)
+    def __notify_launching_cb(self, home_activity, pspec):
+        if not home_activity.props.launching:
+            if self._notif_icon is not None:
+                frame = view.frame.frame.get_instance()
+                frame.remove_notification(self._notif_icon)
+                self._notif_icon = None
+            self._icon.props.pulsing = False
+            home_activity.disconnect(self._notify_launching_hid)
 
-        self._shell = shell
-        self._shell_model = self._shell.get_model() 
-        self._invite_to_item = {}
-        self._invites = self._shell_model.get_invites()
-        self._config = self._load_config()
+class InviteButton(ToolButton):
+    def __init__(self, activity_model):
+        ToolButton.__init__(self)
 
-        self._tray = HTray()
-        self.append(hippo.CanvasWidget(widget=self._tray), hippo.PACK_EXPAND)
-        self._tray.show()
+        self._activity_model = activity_model
+
+        self._icon = Icon()
+        self._icon.props.xo_color = activity_model.get_color()
+        if activity_model.get_icon_name():
+            self._icon.props.file = activity_model.get_icon_name()
+        else:
+            self._icon.props.icon_name = 'image-missing'
+        self.set_icon_widget(self._icon)
+        self._icon.show()
+
+        palette = InvitePalette(activity_model)
+        palette.props.invoker = FrameWidgetInvoker(self)
+        palette.set_group_id('frame')
+        self.set_palette(palette)
+
+        self.connect('clicked', self.__clicked_cb)
+        self.connect('destroy', self.__destroy_cb)
+
+        self._notif_icon = NotificationIcon()
+        self._notif_icon.props.xo_color = activity_model.get_color()
+        if activity_model.get_icon_name():
+            self._notif_icon.props.icon_filename = activity_model.get_icon_name()
+        else:
+            self._notif_icon.props.icon_name = 'image-missing'
+        self._notif_icon.connect('button-release-event',
+                                 self.__button_release_event_cb)
+
+        palette = InvitePalette(activity_model)
+        palette.props.invoker = WidgetInvoker(self._notif_icon)
+        palette.set_group_id('frame')
+        self._notif_icon.palette = palette
+
+        view.frame.frame.get_instance().add_notification(self._notif_icon)
+
+    def __button_release_event_cb(self, icon, event):
+        self.emit('clicked')
+
+    def __clicked_cb(self, button):
+        if self._notif_icon is not None:
+            frame = view.frame.frame.get_instance()
+            frame.remove_notification(self._notif_icon)
+            self._notif_icon = None
+
+        shell = view.Shell.get_instance()
+        shell.join_activity(self._activity_model.get_bundle_id(),
+                            self._activity_model.get_id())
+
+    def __destroy_cb(self, button):
+            frame = view.frame.frame.get_instance()
+            frame.remove_notification(self._notif_icon)
+    
+class InvitePalette(Palette):
+    def __init__(self, activity_model):
+        self._activity_model = activity_model
+
+        Palette.__init__(self, '')
 
         registry = activity.get_registry()
-        registry.get_activities_async(reply_handler=self._get_activities_cb)
+        activity_info = registry.get_activity(activity_model.get_bundle_id())
+        if activity_info:
+            self.set_primary_text(activity_info.name)
+        else:
+            self.set_primary_text(activity_model.get_bundle_id())
 
-        registry.connect('activity-added', self._activity_added_cb)
-        registry.connect('activity-removed', self._activity_removed_cb)
+        menu_item = MenuItem(_('Join'), icon_name='dialog-ok')
+        menu_item.connect('activate', self.__join_activate_cb)
+        self.menu.append(menu_item)
+        menu_item.show()
 
-        for invite in self._invites:
-            self.add_invite(invite)
-        self._invites.connect('invite-added', self._invite_added_cb)
-        self._invites.connect('invite-removed', self._invite_removed_cb)
+        menu_item = MenuItem(_('Decline'), icon_name='dialog-cancel')
+        menu_item.connect('activate', self.__decline_activate_cb)
+        self.menu.append(menu_item)
+        menu_item.show()
 
-    def _load_config(self):
-        cfg = []
+    def __join_activate_cb(self, menu_item):
+        shell = view.Shell.get_instance()
+        shell.join_activity(self._activity_model.get_bundle_id(),
+                            self._activity_model.get_id())
 
-        f = open(os.path.join(config.data_path, 'activities.defaults'), 'r')
-        for line in f.readlines():
-            line = line.strip()
-            if line and not line.startswith('#'):
-                cfg.append(line)
-        f.close()
-
-        return cfg
-
-    def _get_activities_cb(self, activity_list):
-        known_activities = []
-        unknown_activities = []
-        name_to_activity = {}
-
-        while activity_list:
-            info = activity_list.pop()
-            name_to_activity[info.bundle_id] = info
-
-            if info.bundle_id in self._config:
-                known_activities.append(info)
-            else:
-                unknown_activities.append(info)
-
-        sorted_activities = []
-        for name in self._config:
-            if name in name_to_activity:
-                sorted_activities.append(name_to_activity[name])
-
-        for info in sorted_activities + unknown_activities:
-            if info.show_launcher:
-                self.add_activity(info)
-
-    def _activity_clicked_cb(self, icon):
-        self._shell.start_activity(icon.get_bundle_id())
-
-    def _invite_clicked_cb(self, icon):
-        self._invites.remove_invite(icon.get_invite())
-        self._shell.join_activity(icon.get_bundle_id(),
-                                  icon.get_activity_id())
-    
-    def _invite_added_cb(self, invites, invite):
-        self.add_invite(invite)
-
-    def _invite_removed_cb(self, invites, invite):
-        self.remove_invite(invite)
-
-    def _remove_activity_cb(self, item):
-        self._tray.remove_item(item)
-
-    def _activity_added_cb(self, activity_registry, activity_info):
-        self.add_activity(activity_info)
-
-    def _activity_removed_cb(self, activity_registry, activity_info):
-        for item in self._tray.get_children():
-            if item.get_bundle_id() == activity_info.bundle_id:
-                self._tray.remove_item(item)
+    def __decline_activate_cb(self, menu_item):
+        invites = shellmodel.get_instance().get_invites()
+        for invite in invites:
+            if invite.get_activity_id() == self._activity_model.get_id():
+                invites.remove_invite(invite)
                 return
 
-    def add_activity(self, activity_info):
-        item = ActivityButton(activity_info)
-        item.connect('clicked', self._activity_clicked_cb)
-        item.connect('remove_activity', self._remove_activity_cb)
-        self._tray.add_item(item, -1)
-        item.show()
+class ActivitiesTray(HTray):
+    def __init__(self):
+        HTray.__init__(self)
 
-    def add_invite(self, invite):
-        mesh = self._shell_model.get_mesh()
+        self._buttons = {}
+        self._invite_to_item = {}
+
+        self._home_model = shellmodel.get_instance().get_home()
+        self._home_model.connect('activity-added', self.__activity_added_cb)
+        self._home_model.connect('activity-removed', self.__activity_removed_cb)
+        self._home_model.connect('pending-activity-changed', self.__activity_changed_cb)
+
+        self._invites = shellmodel.get_instance().get_invites()
+        for invite in self._invites:
+            self._add_invite(invite)
+        self._invites.connect('invite-added', self.__invite_added_cb)
+        self._invites.connect('invite-removed', self.__invite_removed_cb)
+
+    def __activity_added_cb(self, home_model, home_activity):
+        logging.debug('__activity_added_cb: %r' % home_activity)
+        if self.get_children():
+            group = self.get_children()[0]
+        else:
+            group = None
+
+        button = ActivityButton(home_activity, group)
+        self.add_item(button)
+        self._buttons[home_activity.get_activity_id()] = button
+        button.connect('toggled', self.__activity_toggled_cb, home_activity)
+        button.show()
+
+    def __activity_removed_cb(self, home_model, home_activity):
+        logging.debug('__activity_removed_cb: %r' % home_activity)
+        button = self._buttons[home_activity.get_activity_id()]
+        self.remove_item(button)
+        del self._buttons[home_activity.get_activity_id()]
+
+    def __activity_changed_cb(self, home_model, home_activity):
+        logging.debug('__activity_changed_cb: %r' % home_activity)
+        button = self._buttons[home_activity.get_activity_id()]
+        button.props.active = True
+
+    def __activity_toggled_cb(self, button, home_activity):
+        home_activity.get_window().activate(1)
+
+    def __invite_clicked_cb(self, icon, invite):
+        self._invites.remove_invite(invite)
+    
+    def __invite_added_cb(self, invites, invite):
+        self._add_invite(invite)
+
+    def __invite_removed_cb(self, invites, invite):
+        self._remove_invite(invite)
+
+    def _add_invite(self, invite):
+        mesh = shellmodel.get_instance().get_mesh()
         activity_model = mesh.get_activity(invite.get_activity_id())
-        if activity:
-            item = InviteButton(activity_model, invite)
-            item.connect('clicked', self._invite_clicked_cb)
-            self._tray.add_item(item, 0)
+        if activity_model:
+            item = InviteButton(activity_model)
+            item.connect('clicked', self.__invite_clicked_cb, invite)
+            self.add_item(item)
             item.show()
 
             self._invite_to_item[invite] = item
 
-    def remove_invite(self, invite):
-        self._tray.remove_item(self._invite_to_item[invite])
+    def _remove_invite(self, invite):
+        self.remove_item(self._invite_to_item[invite])
+        self._invite_to_item[invite].destroy()
         del self._invite_to_item[invite]
+

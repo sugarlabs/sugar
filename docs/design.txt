@@ -1,0 +1,126 @@
+= Frame =
+
+== Activation and deactivation ==
+
+* Immediately access the frame by hitting any corner pixel (the exact corner point)
+* Hitting any of the screen edges activate the frame after 0.5s delay
+* Pressing and holding the frame key activate the frame until the key is released.
+* Pressing the frame key momentarily toggle the frame. To deactivate it another key press is necessary.
+
+= IRC logs =
+
+Frame
+
+eliason marcopg:  First, you can immediately access the frame by hitting any corner pixel.
+dcbw marcopg: I think that's the issue, yes
+eliason Second, you can activate it from any edge, but there is a half second delay.  In addition to the delay, the timer on the delay only ticks when the mouse is on an edge pixel and also below some threshold velocity, so if the mouse is moving it will not show up.
+eliason marcopg: Third, there will be a frame key.  Pressing and holding this key will invoke the frame until the key is released.  Pressing this key momentarily, however, will toggle the frame and keep it in view until the key is pressed again.
+eliason marcopg:  All of these things are implemented in Flash (The frame key is 8, I think...), with the exception of the mouse velocity threshold on the edges.
+eliason marcopg:  The only other minor usability issue I could see is adding a hit area in the corners.  That is, once the frame is out, have an invisible triangle in each corner that is still considered part of the frame, so that rolling out of the frame to get from one edge to another doesn't hide the frame, by accident.  In fact, doing this would make the delay on hide unnecessary.
+eliason marcopg:  Oh, and other important edges case to think about on the frame:  1)  When someone is dragginan object (XO, file, image, etc) the frame should come out prematurely and without delay (maybe once within a large grid cell of the edge) and highlight to indicate where the object could be dropped.  2)  When the search field is active, the frame should remain out even if the mouse isn't over it.  Only when the search is cleared should it hide again.
+eliason marcopg:  The rollover states are as follows:  1)  Immediate rollover is a black square in the frame cell itself.  2)  Very shortly thereafter (about 1/4 sec) Is the Primary information label and 3) a bit longer after that (about 1/2 sec) the extended panel appears with additional info.
+
+Menu
+
+eliason marcopg:  Deactivation is instantaneous at the moment, but again, based on testing with the software we may want to add a very short delay.  Also, we may want again to have a invisible triangles between the grid cell in the frame and the extended panel.
+eliason Delay between mouse rollover and showing black square:  0
+eliason Delay before primary info animation begins: 1/10 sec
+eliason Duration of primary info extension animation:  1/5 sec
+eliason Delay from end of primary info animation until secondary info:  1/2 sec
+Duration of secondary info animation: 1/5 sec
+
+Text layout
+
+eliason marcopg:  Well, first of all, in the latest screens which we haven't sent out yet, the primary info rollover is designed to fit the text to the nearest microgrid, regardless of the size of the secondary info panel.  The second animation segment will both extend the width and height to fit.
+eliason marcopg:  As far as cutoff goes, I think that's a reasonable solution.  We should allow the primary info text to be as long as the secondary info panel, and beyond that an ellipsis would be a good way to go, though hopefully designers are strongly encouraged NOT to let that happen.
+eliason marcopg:  However, there may be cases when we don't want that to happen. I can think of one, which you haven't seen yet:  "Invite with X X X X X."  The new activity/invite rollover might have the XOs who you are implicitly inviting to start an activity with listed, and we couldn't cut that off (Though we CANget around it and list, say, a max of three people and then indicate that there are 5 more not shown, etc.)
+eliason marcopg:  Right.  I think that, in most cases, there should be some template for it.  If the designer is creating a GUI for an application and making toolsets (such as the color chooser), then we know how big all of those are.  Things like "just text" will mostly show up in OS applications like the clippings and such, so we can just pick a preferred size that shows enough text to be meaningful without compromising too much of the screen.
+
+Mesh view
+
+eliason marcopg:  also important regarding the results:  the fill color should be the background color, so they look like outlines, and the line color should be near enough to the background to make them less contrasty.  Also, all XOs in the result set should be z-sorted to the front of their groups.  That's key.
+eliason marcopg:  The activity icons and XOs are treated separately, so it may be the case that several XOs in a group match the search but the activity their in doesn't, and they would be grayed out independently.
+eliason marcopg:  yes, only the color change.  Colored stuff is the result.  We don't want to actually make things disappear.
+
+
+Mesh discussion
+
+eliason marcopg:  Well, the terminology we're now using for the zoom level labels is:  My Activities, My Friends, My Neighbors.
+eliason marcopg:  Alright, true, so the working terminology (not the labels for the search field, but still used by all of us) is: home, friends, mesh
+eliason marcopg:  If you treat each frieeliason marcopg:  If you treat each friend or group as a node in a graph, and each edge in the graph as a spring, you can let the system reach an equilibrium using a basic physics simulation that will spread the nodes out evenly.nd or group as a node in a graph, and each edge in the graph as a spring, you can let the system reach an equilibrium using a basic physics simulation that will spread the nodes out evenly.
+eliason marcopg:  If you treat each friend or group as a node in a graph, and each edge in the graph as a spring, you can let the system reach an equilibrium using a basic physics simulation that will spread the nodes out evenly.
+eliason marcopg:  There's lots of info on this type of thing online.  To do it right within a given box, you also have to add anchored springs at the corners and such to stretch the whole thing out to fill the space.
+eliason OK, so another basic idea is to keep a very rough downsampled grayscale image around....
+eliason The grayscale value would map to the number of XOs within the grid cell on screen.
+eliason marcopg:  Then, when placing a new one you could just find the best place to place it , though now that I think about it that would probably require a simulated annealing algorithm or something else clever to do...
+marcopg eliason, do you mean macro cell here?
+marcopg i.e. every buddy would be placed in one macro cell
+eliason marcopg:  Well, actually I guess you'd kind of want a blurred brayscale image, where each object placed represents a white circle, but with a gaussian blur so that it acts like a topographic map of the mesh.
+eliason marcopg:  The white spots would be dense, like hills, the black spots would be void of people, like holes.  Then to place a new one, you kind of roll a simulated marble around until you find a good hole to place it in...
+eliason marcopg:  And, yet another idea, which could be used in conjunction with or independent of the above.  You could simply place a small repulsive force between the objects, so that they push each other apart slightly.  You could just place at random and have them adjust accordingly.  This works very much like the spring model, though.
+eliason Of course, the drawback of the third idea is that it's n^2 in the number of groups on the mesh, but that number should never be that large.
+eliason The spring model is a little more complicated, but you only have to place springs between nearby objects, which reduces that somewhat.
+eliason marcopg:  But actually, I think #3 might be the easiest to implement, and work just as well.  It works nicely since it could still allow you to drag them around and the rest of the mesh would react naturally.  In the spring model, you'd have to dynamically add and break spring connections when a node is moved around.
+marcopg eliason, mm was just thinking about this would interact with custom placed nodes...
+marcopg eliason, I never done something similar before so I will really need to play a bit with it...
+eliason marcopg:  Also, #3 is more forgiving:  In the spring model, placing one new node will move EVERY node in the mesh somewhat, if even just a small amount, since the whole system adjusts.  With the repulsion force, only nearby nodes would be affected, except of course through a chain reaction...
+eliason marcopg:  I'm sure we can find documentation.  Basically, you calculate the distance between the two nodes (pythag) and if that distance is less than some threshold you compute the angle between them (atan2) and then you give each one a small repulsive acceleration, and update each frame by treating each with its own acceleration, velocity, and position.
+eliason marcopg:  radiusConstant + (numXos*radiusScale) + ((index%3)*offsetScale)  <-- that gets pretty close to what I'm working with now.
+eliason marcopg:  One addition:  When the groups are small, we don't want to add the snowflake effect, since they fit in neat geometric shapes around the ring.  So we get....actually, here's the ugly line of code:     radius = 25 + .3*(Math.max(participants.length-10,0)) + (i%3)*.5*(Math.max(participants.length-10,0));
+eliason marcopg:  The added ugliness is a bit of code that zeros out the 2nd two quantities if there are less than 10 people in the group.  You could just place them in an if block actually, but I'd done it this way in case I wanted to change the thresholds independently...eliason marcopg:  The added ugliness is a bit of code that zeros out the 2nd two quantities if there are less than 10 people in the group.  You could just place them in an if block actually, but I'd done it this way in case I wanted to change the thresholds independently...
+eliason marcopg:  OK, cool.  The animation is a simple easing algorithm:   position += (targetPostition - position)*percentage.
+eliason marcopg:  Well, that's a function of the radius and the angle computed from above.  targetX = radius*cos(angle), targetY = radius*sin(angle), for each XO.
+marcopg eliason, aaah I see now
+
+eliason marcopg:  The basic problem is that people are crossing an index that is a multiple of the mod, so everyone shifts in and out.  What if, instead, we adjusted the indeces of every XO with an index of  modValue*c greater than the XO that left, and subtract modValue from each of their indices?
+eliason With mod 3, we basically have 3 levels of the ring.  This solution would just shift ONE of those rings couter-clockwise one XO position, leaving the other two rings intact as is.  We move many fewer XOs than before, but we minimize the movement any given XO has to make by spreading it across the ring level instead of moving the last XO all the way across the circle...eliason marcopg:  The basic problem is that people are crossing an index that is a multiple of the mod, so everyone shifts in and out.  What if, instead, we adjusted the indeces of every XO with an index of  modValue*c greater than the XO that left, and subtract modValue from each of their indices?
+eliason With mod 3, we basically have 3 levels of the ring.  This solution would just shift ONE of those rings couter-clockwise one XO position, leaving the other two rings intact as is.  We move many fewer XOs than before, but we minimize the movement any given XO has to make by spreading it across the ring level instead of moving the last XO all the way across the circle...
+eliason marcopg:  The final detail of that, beyond shifting each index down by the mod value, is to shift the very last group of people in the ring down to fill all the holes, if you get my meaning...
+
+Activity startup feedback
+
+I agree we certainly need feedback for this sort of thing.  For
+starters, the icon of the selected activity should immediately appear
+in the ring.  Perhaps we can apply some small animation to this
+activity icon to indicate that it is starting up.  Marco, could you
+use HSV for the icon color, and modulate the S(aturation) on a sin
+curve so the color pulses betwen, say, 0 and 192 until the activity
+starts, at which point it slides up to 255?
+
+Clipboard
+
+<marcopg> eliason, when should the frame be automatically showed? when
+starting the drag or when hitting the corner
+<marcopg> eliason, (the first one would be tricky to implement)
+<eliason> marcopg:  Initially we wanted it to happen on drag, but after
+thinking about this more, it's a bad idea, since it would hide the toolbars,
+and some activities may have toolbars that support drag and drop also.  As
+such, we probably just keep the hot corners as is, and perhaps implement the
+"warm edges" too, but only when dragging...
+<marcopg> eliason, which reminds me... the plan is to completely drop edges at
+this point? or at least give it a try? (for the not dragging case)
+<eliason> I still think it's worth trying, but I think the general consensus
+was that we should drop it.  That's also the easier option, so for now, I
+guess it's fine.
+<marcopg> ok
+<marcopg> eliason, what should be the title of the clipboard rollover? (we are
+trying to get text objects right for now, but if you have general ideas...)
+<eliason> marcopg: Well, it would depend on what is in the clipboard.  For
+instance, if I copy some text, it should say "text clipping", or if I copy an
+image it should say "picture clipping"
+<marcopg> eliason, so [name of the object] + clipping?
+<eliason> marcopg:  If it is an activity object, it should be the name of the
+object i.e. "Eben's Shark Drawing", etc.
+<marcopg> oh ok
+<eliason> It's only a clipping if it is part of another larger context.
+<eliason> If the whole thing is an object itself, we use the object's name.
+<marcopg> eliason, I see now
+<marcopg> eliason, we want a preview of the objectm right? For text, should we
+show part of the text in the rollover?
+<eliason> marcopg: yeah, probably the first n characters of it, with an
+ellipsis at the end.
+<marcopg> eliason, on multiple lines I guess?
+<marcopg> something like, 4 lines of text on a 2 grid cells large menu, and
+ellipsize after that
+<marcopg> (the exact numbers doesn't matter, just the logic
+<eliason> marcopg:  Right.
