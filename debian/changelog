@@ -9,6 +9,7 @@ sugar (0.79.2~git-1) unstable; urgency=low
     + Fix the mesh-device pulsing icon
   * Update copyright-check cdbs snippet to store newline-delimited
     hints.  Update hints.
+  * Drop patch 2991 against no longer provided upstream automade files.
 
  -- Jonas Smedegaard <dr@jones.dk>  Sat, 05 Apr 2008 10:54:56 +0200
 
