@@ -1,6 +1,6 @@
-sugar (0.79.2~git-1) unstable; urgency=low
+sugar (0.79.2-1) unstable; urgency=low
 
-  * New upstream release (or actually: release-tag in upstream Git).
+  * New upstream release.
     Highlights:
     + New Frame and Home design.
   * Replace patch 0001 syncing with Git as of today.
