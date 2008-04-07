@@ -7,6 +7,7 @@ sugar (0.79.2~git-1) unstable; urgency=low
     + Fix home view accelerators
     + Don't traceback when stopping an already stopped PulsingIcon
     + Fix the mesh-device pulsing icon
+  * Tighten dependency on python-sugar-toolkit.
   * Update copyright-check cdbs snippet to store newline-delimited
     hints.  Update hints.
   * Drop patch 2991 against no longer provided upstream automade files.
