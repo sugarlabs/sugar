@@ -10,6 +10,10 @@ sugar (0.79.2~git-1) unstable; urgency=low
   * Update copyright-check cdbs snippet to store newline-delimited
     hints.  Update hints.
   * Drop patch 2991 against no longer provided upstream automade files.
+  * Enable cdbs autotools reconfiguration.  Merge yet another duplicate
+    cdbs build-dependency.
+  * Semi-auto-update debian/control to update build-dependencies:
+      DEB_AUTO_UPDATE_DEBIAN_CONTROL=yes fakeroot debian/rules clean
 
  -- Jonas Smedegaard <dr@jones.dk>  Sat, 05 Apr 2008 10:54:56 +0200
 
