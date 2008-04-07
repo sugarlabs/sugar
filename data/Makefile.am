@@ -8,7 +8,6 @@ sugar-xo.gtkrc: gtkrc.em
 
 sugardir = $(pkgdatadir)/data
 sugar_DATA =			\
-	activities.defaults	\
 	kbdconfig		\
 	mime.defaults		\
 	$(GTKRC_FILES)
@@ -17,6 +16,8 @@ GTKRC_FILES =		\
 	sugar.gtkrc	\
 	sugar-xo.gtkrc
 
+xsessionsdir = $(datadir)/xsessions
+xsessions_DATA = sugar.desktop
 
 mime_xml_in_files = sugar.xml.in
 mime_xml_files = $(mime_xml_in_files:.xml.in=.xml)
@@ -39,5 +40,5 @@ if ENABLE_UPDATE_MIMEDB
 	fi
 endif
 
-EXTRA_DIST = $(sugar_DATA) $(mime_xml_in_files) em.py gtkrc.em
+EXTRA_DIST = $(sugar_DATA) $(xsessions_DATA) $(mime_xml_in_files) em.py gtkrc.em
 CLEANFILES = $(GTKRC_FILES) $(mime_xml_files)

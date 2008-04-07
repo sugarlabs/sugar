@@ -15,9 +15,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import os
 import sys
 
-sys.path.insert(0, '/home/marco/sugar-jhbuild/build/share/sugar/shell')
+os.environ['GTK2_RC_FILES'] = '/home/erikos/sugar-jhbuild/build/share/sugar/data/sugar-xo.gtkrc'
+
+sys.path.insert(0, '/home/erikos/sugar-jhbuild/build/share/sugar/shell')
 
 from main import main
 

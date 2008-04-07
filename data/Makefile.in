@@ -48,10 +48,12 @@ am__vpath_adj = case $$p in \
     *) f=$$p;; \
   esac;
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
-am__installdirs = "$(DESTDIR)$(mimedir)" "$(DESTDIR)$(sugardir)"
+am__installdirs = "$(DESTDIR)$(mimedir)" "$(DESTDIR)$(sugardir)" \
+	"$(DESTDIR)$(xsessionsdir)"
 mimeDATA_INSTALL = $(INSTALL_DATA)
 sugarDATA_INSTALL = $(INSTALL_DATA)
-DATA = $(mime_DATA) $(sugar_DATA)
+xsessionsDATA_INSTALL = $(INSTALL_DATA)
+DATA = $(mime_DATA) $(sugar_DATA) $(xsessions_DATA)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 ALL_LINGUAS = @ALL_LINGUAS@
@@ -200,7 +202,6 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 sugardir = $(pkgdatadir)/data
 sugar_DATA = \
-	activities.defaults	\
 	kbdconfig		\
 	mime.defaults		\
 	$(GTKRC_FILES)
@@ -209,11 +210,13 @@ GTKRC_FILES = \
 	sugar.gtkrc	\
 	sugar-xo.gtkrc
 
+xsessionsdir = $(datadir)/xsessions
+xsessions_DATA = sugar.desktop
 mime_xml_in_files = sugar.xml.in
 mime_xml_files = $(mime_xml_in_files:.xml.in=.xml)
 mimedir = $(datadir)/mime/packages
 mime_DATA = $(mime_xml_files)
-EXTRA_DIST = $(sugar_DATA) $(mime_xml_in_files) em.py gtkrc.em
+EXTRA_DIST = $(sugar_DATA) $(xsessions_DATA) $(mime_xml_in_files) em.py gtkrc.em
 CLEANFILES = $(GTKRC_FILES) $(mime_xml_files)
 all: all-am
 
@@ -281,6 +284,23 @@ uninstall-sugarDATA:
 	  echo " rm -f '$(DESTDIR)$(sugardir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(sugardir)/$$f"; \
 	done
+install-xsessionsDATA: $(xsessions_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(xsessionsdir)" || $(MKDIR_P) "$(DESTDIR)$(xsessionsdir)"
+	@list='$(xsessions_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(xsessionsDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(xsessionsdir)/$$f'"; \
+	  $(xsessionsDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(xsessionsdir)/$$f"; \
+	done
+
+uninstall-xsessionsDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(xsessions_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(xsessionsdir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(xsessionsdir)/$$f"; \
+	done
 tags: TAGS
 TAGS:
 
@@ -318,7 +338,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(mimedir)" "$(DESTDIR)$(sugardir)"; do \
+	for dir in "$(DESTDIR)$(mimedir)" "$(DESTDIR)$(sugardir)" "$(DESTDIR)$(xsessionsdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -364,7 +384,8 @@ info: info-am
 
 info-am:
 
-install-data-am: install-mimeDATA install-sugarDATA
+install-data-am: install-mimeDATA install-sugarDATA \
+	install-xsessionsDATA
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) install-data-hook
 
@@ -400,7 +421,8 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-mimeDATA uninstall-sugarDATA
+uninstall-am: uninstall-mimeDATA uninstall-sugarDATA \
+	uninstall-xsessionsDATA
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) uninstall-hook
 
@@ -413,10 +435,11 @@ uninstall-am: uninstall-mimeDATA uninstall-sugarDATA
 	install-exec-am install-html install-html-am install-info \
 	install-info-am install-man install-mimeDATA install-pdf \
 	install-pdf-am install-ps install-ps-am install-strip \
-	install-sugarDATA installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-generic pdf pdf-am ps ps-am uninstall uninstall-am \
-	uninstall-hook uninstall-mimeDATA uninstall-sugarDATA
+	install-sugarDATA install-xsessionsDATA installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
+	pdf-am ps ps-am uninstall uninstall-am uninstall-hook \
+	uninstall-mimeDATA uninstall-sugarDATA uninstall-xsessionsDATA
 
 sugar.gtkrc: gtkrc.em
 	$(srcdir)/em.py -D theme=\'sugar\' $(srcdir)/gtkrc.em > \

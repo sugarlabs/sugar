@@ -32,7 +32,7 @@ from sugar.profile import get_profile
 
 import colorpicker
 
-_BACKGROUND_COLOR = style.COLOR_PANEL_GREY
+_BACKGROUND_COLOR = style.COLOR_WHITE
 
 class _Page(hippo.CanvasBox):
     __gproperties__ = {

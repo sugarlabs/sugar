@@ -14,5 +14,5 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-prefix = '/home/marco/sugar-jhbuild/build'
-data_path = '/home/marco/sugar-jhbuild/build/share/sugar/data'
+prefix = '/home/erikos/sugar-jhbuild/build'
+data_path = '/home/erikos/sugar-jhbuild/build/share/sugar/data'

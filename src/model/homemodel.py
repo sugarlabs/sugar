@@ -18,7 +18,6 @@ import logging
 
 import gobject
 import wnck
-import dbus
 
 from sugar import wm
 from sugar import activity
@@ -270,7 +269,9 @@ class HomeModel(gobject.GObject):
     def notify_activity_launch_failed(self, activity_id):
         home_activity = self._get_activity_by_id(activity_id)
         if home_activity:
-            logging.debug("Activity %s (%s) launch failed" % (activity_id, home_activity.get_type()))
+            logging.debug("Activity %s (%s) launch failed" % \
+                          (activity_id, home_activity.get_type()))
+            home_activity.props.launching = False
             self._remove_activity(home_activity)
         else:
             logging.error('Model for activity id %s does not exist.' % activity_id)
@@ -278,6 +279,7 @@ class HomeModel(gobject.GObject):
     def _check_activity_launched(self, activity_id):
         home_activity = self._get_activity_by_id(activity_id)
         if home_activity and home_activity.props.launching:
-            logging.debug('Activity %s still launching, assuming it failed...', activity_id)
+            logging.debug('Activity %s still launching, assuming it failed...',
+                          activity_id)
             self.notify_activity_launch_failed(activity_id)
         return False

@@ -18,6 +18,9 @@
 import dbus
 import os
 
+from view import Shell
+from model import shellmodel
+
 _DBUS_SERVICE = "org.laptop.Shell"
 _DBUS_SHELL_IFACE = "org.laptop.Shell"
 _DBUS_OWNER_IFACE = "org.laptop.Shell.Owner"
@@ -46,9 +49,9 @@ class ShellService(dbus.service.Object):
 
     _rainbow = None
 
-    def __init__(self, shell):
-        self._shell = shell
-        self._shell_model = shell.get_model()
+    def __init__(self):
+        self._shell = Shell.get_instance()
+        self._shell_model = shellmodel.get_instance()
 
         self._owner = self._shell_model.get_owner()
         self._owner.connect('nick-changed', self._owner_nick_changed_cb)

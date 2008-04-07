@@ -64,6 +64,7 @@ class HardwareManager(object):
     def set_volume(self, volume):
         if not self._mixer or not self._master:
             logging.error('Cannot set the volume')
+            return
 
         if volume < 0 or volume > 100:
             logging.error('Trying to set an invalid volume value.')

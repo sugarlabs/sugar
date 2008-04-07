@@ -33,6 +33,7 @@ class ActivityRegistry(dbus.service.Object):
         bundle_registry = bundleregistry.get_registry()
         bundle_registry.connect('bundle-added', self._bundle_added_cb)
         bundle_registry.connect('bundle-removed', self._bundle_removed_cb)
+        bundle_registry.connect('bundle-changed', self._bundle_changed_cb)
 
     @dbus.service.method(_ACTIVITY_REGISTRY_IFACE,
                          in_signature='s', out_signature='b')
@@ -101,6 +102,12 @@ class ActivityRegistry(dbus.service.Object):
             result.append(self._bundle_to_dict(bundle))
         return result
 
+    @dbus.service.method(_ACTIVITY_REGISTRY_IFACE,
+                         in_signature='sib', out_signature='')
+    def SetActivityFavorite(self, bundle_id, version, favorite):
+        registry = bundleregistry.get_registry()
+        registry.set_bundle_favorite(bundle_id, version, favorite)
+
     @dbus.service.signal(_ACTIVITY_REGISTRY_IFACE, signature='a{sv}')
     def ActivityAdded(self, activity_info):
         pass
@@ -109,20 +116,31 @@ class ActivityRegistry(dbus.service.Object):
     def ActivityRemoved(self, activity_info):
         pass
 
+    @dbus.service.signal(_ACTIVITY_REGISTRY_IFACE, signature='a{sv}')
+    def ActivityChanged(self, activity_info):
+        pass
+
     def _bundle_to_dict(self, bundle):
+        registry = bundleregistry.get_registry()
+        favorite = registry.is_bundle_favorite(bundle.get_bundle_id(),
+                                               bundle.get_activity_version())
         return {'name': bundle.get_name(),
                 'icon': bundle.get_icon(),
                 'bundle_id': bundle.get_bundle_id(),
                 'version': bundle.get_activity_version(),
                 'path': bundle.get_path(),
                 'command': bundle.get_command(),
-                'show_launcher': bundle.get_show_launcher()}
+                'show_launcher': bundle.get_show_launcher(),
+                'favorite': favorite}
 
     def _bundle_added_cb(self, bundle_registry, bundle):
         self.ActivityAdded(self._bundle_to_dict(bundle))
 
     def _bundle_removed_cb(self, bundle_registry, bundle):
         self.ActivityRemoved(self._bundle_to_dict(bundle))
+
+    def _bundle_changed_cb(self, bundle_registry, bundle):
+        self.ActivityChanged(self._bundle_to_dict(bundle))
 
 _instance = None
 

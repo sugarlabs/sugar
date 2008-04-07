@@ -1,0 +1,6 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Sugar
+GenericName=Sugar
+Exec=sugar-shell
+Type=Application
