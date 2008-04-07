@@ -8,8 +8,11 @@ sugar (0.79.2~git-1) unstable; urgency=low
     + Don't traceback when stopping an already stopped PulsingIcon
     + Fix the mesh-device pulsing icon
   * Tighten dependency on python-sugar-toolkit.
-  * Update copyright-check cdbs snippet to store newline-delimited
-    hints.  Update hints.
+  * Update local cdbs snippets:
+    + Update copyright-check cdbs snippet to store newline-delimited
+      hints.  Update hints.
+    + Drop wget options broken with recent versions of wget in
+      update-tarball.mk.
   * Drop patch 2991 against no longer provided upstream automade files.
   * Enable cdbs autotools reconfiguration.  Merge yet another duplicate
     cdbs build-dependency.
