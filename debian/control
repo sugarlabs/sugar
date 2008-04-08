@@ -3,7 +3,7 @@ Section: x11
 Priority: optional
 Maintainer: Debian OLPC <debian-olpc-devel@lists.alioth.debian.org>
 Uploaders: Jonas Smedegaard <dr@jones.dk>
-Build-Depends: cdbs (>= 0.4.39), devscripts (>= 2.10.7), quilt, patchutils (>= 0.2.25), automake1.10, autoconf, python-dev (>= 2.3.5-11), python-central (>= 0.6), debhelper (>= 5), dh-buildinfo, libglib2.0-dev, python-gtk2-dev, gettext, intltool, shared-mime-info, python-empy
+Build-Depends: cdbs (>= 0.4.39), autotools-dev, devscripts (>= 2.10.7), quilt, patchutils (>= 0.2.25), python-dev (>= 2.3.5-11), python-central (>= 0.6), debhelper (>= 5), dh-buildinfo, libglib2.0-dev, python-gtk2-dev, gettext, intltool, shared-mime-info, python-empy
 Standards-Version: 3.7.3
 Vcs-Git: git://git.debian.org/git/collab-maint/sugar.git
 Vcs-Browser: http://git.debian.org/?p=collab-maint/sugar.git;a=summary

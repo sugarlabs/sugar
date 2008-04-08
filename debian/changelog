@@ -17,8 +17,7 @@ sugar (0.79.2-1) unstable; urgency=low
     Adjust some copyright years.
     Add Makefile.in and Makefile.in.in (GNU all-permissive license).
   * Drop patch 2991 against no longer provided upstream automade files.
-  * Enable cdbs autotools reconfiguration.  Merge yet another duplicate
-    cdbs build-dependency.
+  * Merge yet another duplicate cdbs build-dependency.
   * Semi-auto-update debian/control to update build-dependencies:
       DEB_AUTO_UPDATE_DEBIAN_CONTROL=yes fakeroot debian/rules clean
 
