@@ -13,6 +13,9 @@ sugar (0.79.2-1) unstable; urgency=low
       hints.  Update hints.
     + Drop wget options broken with recent versions of wget in
       update-tarball.mk.
+  * Update debian/copyright:
+    Adjust some copyright years.
+    Add Makefile.in and Makefile.in.in (GNU all-permissive license).
   * Drop patch 2991 against no longer provided upstream automade files.
   * Enable cdbs autotools reconfiguration.  Merge yet another duplicate
     cdbs build-dependency.

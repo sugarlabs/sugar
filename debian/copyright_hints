@@ -1,56 +1,8 @@
-UNKNOWN [YEAR THE PACKAGE'S COPYRIGHT HOLDER]: po/am.po
-	po/ar.po
-	po/ay.po
-	po/bg.po
-	po/bn.po
-	po/bn_IN.po
-	po/ca.po
-	po/dz.po
-	po/el.po
-	po/en.po
-	po/es.po
-	po/fa.po
-	po/fa_AF.po
-	po/ff.po
-	po/gu.po
-	po/ha.po
-	po/hi.po
-	po/ht.po
-	po/is.po
-	po/it.po
-	po/ja.po
-	po/km.po
-	po/ko.po
-	po/mk.po
-	po/ml.po
-	po/mn.po
-	po/mr.po
-	po/ne.po
-	po/nl.po
-	po/pa.po
-	po/ps.po
-	po/pt.po
-	po/pt_BR.po
-	po/qu.po
-	po/ro.po
-	po/ru.po
-	po/rw.po
-	po/si.po
-	po/sugar.pot
-	po/te.po
-	po/th.po
-	po/tr.po
-	po/ur.po
-	po/vi.po
-	po/yo.po
-	po/zh_CN.po
-	po/zh_TW.po
 *No copyright* UNKNOWN []: AUTHORS
 	Makefile.am
 	README
-	autogen.sh
-	bin/.gitignore
 	bin/Makefile.am
+	bin/sugar
 	bin/sugar-backup
 	bin/sugar-install-bundle
 	bin/sugar.in
@@ -59,21 +11,18 @@ UNKNOWN [YEAR THE PACKAGE'S COPYRIGHT HOLDER]: po/am.po
 	data/gtkrc.em
 	data/kbdconfig
 	data/mime.defaults
+	data/sugar-xo.gtkrc
 	data/sugar.desktop
+	data/sugar.gtkrc
 	data/sugar.xml.in
-	docs/controls.txt
-	docs/design.txt
 	po/ChangeLog
 	po/POTFILES.in
 	po/POTFILES.skip
 	po/de.po
 	po/pl.po
-	service/.gitignore
 	service/Makefile.am
 	service/org.laptop.ActivityRegistry.service.in
 	service/org.laptop.Clipboard.service.in
-	service/org.laptop.ObjectTypeRegistry.service.in
-	src/.gitignore
 	src/Makefile.am
 	src/controlpanel/Makefile.am
 	src/hardware/Makefile.am
@@ -122,8 +71,38 @@ GPL-2+ [2006-2007 Red Hat, Inc]: service/bundleregistry.py
 	src/view/home/MeshBox.py
 	src/view/home/MyIcon.py
 	src/view/home/snowflakelayout.py
-GPL-2+ [2006-2007, Red Hat, Inc]: src/__init__.py
-	src/controlpanel/__init__.py
+UNKNOWN [YEAR THE PACKAGE'S COPYRIGHT HOLDER]: po/am.po
+	po/ar.po
+	po/ay.po
+	po/bn.po
+	po/dz.po
+	po/el.po
+	po/en.po
+	po/es.po
+	po/fa.po
+	po/ha.po
+	po/hi.po
+	po/is.po
+	po/it.po
+	po/ja.po
+	po/ko.po
+	po/mk.po
+	po/ml.po
+	po/ne.po
+	po/nl.po
+	po/pa.po
+	po/pt.po
+	po/pt_BR.po
+	po/qu.po
+	po/ro.po
+	po/ru.po
+	po/rw.po
+	po/th.po
+	po/ur.po
+	po/yo.po
+	po/zh_CN.po
+	po/zh_TW.po
+GPL-2+ [2006-2007, Red Hat, Inc]: src/controlpanel/__init__.py
 	src/hardware/__init__.py
 	src/model/__init__.py
 	src/model/devices/__init__.py
@@ -140,6 +119,30 @@ GPL-2+ [2006-2007, Red Hat, Inc]: src/__init__.py
 	src/view/frame/overlaybox.py
 	src/view/home/__init__.py
 	src/view/keyhandler.py
+GENERATED FILE [1994-2002]: Makefile.in
+	bin/Makefile.in
+	data/Makefile.in
+	service/Makefile.in
+	src/Makefile.in
+	src/controlpanel/Makefile.in
+	src/hardware/Makefile.in
+	src/intro/Makefile.in
+	src/model/Makefile.in
+	src/model/devices/Makefile.in
+	src/model/devices/network/Makefile.in
+	src/view/Makefile.in
+	src/view/devices/Makefile.in
+	src/view/devices/network/Makefile.in
+	src/view/frame/Makefile.in
+	src/view/home/Makefile.in
+GPL-2+ [2008, Red Hat, Inc]: bin/sugar-control-panel
+	bin/sugar-control-panel.in
+	bin/sugar-emulator
+	bin/sugar-emulator.in
+	bin/sugar-shell
+	bin/sugar-shell-service
+	bin/sugar-shell-service.in
+	bin/sugar-shell.in
 GPL-2+ [2007, One Laptop Per Child]: service/__init__.py
 	service/clipboardobject.py
 	src/controlpanel/cmd.py
@@ -154,32 +157,33 @@ GPL-2+ [2007, Red Hat, Inc]: bin/sugar-launch
 	src/model/devices/devicesmodel.py
 	src/view/frame/eventarea.py
 	src/view/home/transitionbox.py
-GPL-2+ [2006, Red Hat, Inc]: bin/sugar-activity
-	docs/GPL-C.txt
-	docs/GPL-python.txt
-	service/clipboardservice.py
-	src/emulator.py
-	src/main.py
 GPL-2+ [2008 One Laptop Per Child]: src/view/frame/devicestray.py
 	src/view/frame/notification.py
 	src/view/home/HomeBox.py
 	src/view/home/activitieslist.py
 	src/view/palettes.py
 	src/view/pulsingicon.py
-GPL-2+ [2008, Red Hat, Inc]: bin/sugar-control-panel.in
-	bin/sugar-emulator.in
-	bin/sugar-shell-service.in
-	bin/sugar-shell.in
+GPL-2+ [2006, Red Hat, Inc]: bin/sugar-activity
+	service/clipboardservice.py
+	src/emulator.py
+	src/main.py
+GPL-2+ [2008 Red Hat, Inc]: service/config.py
+	service/config.py.in
+	src/config.py
+	src/config.py.in
 GPL-2+ [2007 Red Hat, Inc]: src/logsmanager.py
 	src/view/home/proc_smaps.py
 	src/view/home/spreadlayout.py
 GPL-2+ [2008 One Laptop Per Child / 2006-2007 Red Hat, Inc]: src/view/devices/network/mesh.py
 	src/view/frame/activitiestray.py
 	src/view/home/activitiesring.py
-GPL-2+ [2008 Red Hat, Inc]: service/config.py.in
-	src/config.py.in
-LGPL-2+ [2006, Red Hat, Inc]: docs/LGPL-C.txt
-	docs/LGPL-python.txt
+GENERATED FILE [1992-1996, 1998-2001]: configure
+GENERATED FILE [1995-2002 Free Software Foundation, Inc / 2001-2004 Red Hat, Inc / 1996-2004]: aclocal.m4
+GPL GENERATED FILE [1996-1997, 1999-2000, 2002-2006]: missing
+GPL GENERATED FILE [2000-2001 Eazel, Inc / 2000, 2003 Free Software Foundation]: intltool-merge.in
+GPL GENERATED FILE [2000-2001, 2003-2005 Free Software Foundation, Inc]: py-compile
+GPL GENERATED FILE [2000-2003 Free Software Foundation]: intltool-update.in
+GPL-2+ GENERATED FILE [2000-2001, 2003 Free Software Foundation]: intltool-extract.in
 GPL-2+ GENERATED FILE [2006-2007 Owen Williams]: src/model/homemodel.py
 GPL-2+ [2002-2003 Erik Max Francis']: data/em.py
 GPL-2+ [2006-2007 Owen Williams]: src/model/homeactivity.py
@@ -187,6 +191,8 @@ GPL-2+ [2007 One Laptop Per Child / 2006-2007 Red Hat, Inc]: service/activityreg
 GPL-2+ [2007, Eduardo Silva <edsiper@gmail.com>]: src/view/frame/frameinvoker.py
 GPL-2+ [2007, One Laptop Per Child / 2006, Red Hat, Inc]: service/main.py
 GPL-2+ [2007, Red Hat, Inc / 2007, One Laptop Per Child]: src/view/clipboardicon.py
+MIT/X11 (BSD like) [and license / notice and this permission notice shall be included in / 1994 X Consortium]: install-sh
 UNKNOWN [1989, 1991 Free Software Foundation, Inc. / the software, and]: COPYING
+UNKNOWN [1995-1997 by Ulrich Drepper <drepper@gnu.ai.mit.edu>]: po/Makefile.in.in
 UNKNOWN [2007 the Package Owner]: po/fr.po
 UNKNOWN [YEAR THE PACKAGE'S COPYRIGHT HOLDER, 2006]: po/ig.po

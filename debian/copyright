@@ -19,6 +19,14 @@ License: GPL-2+
  the Free Software Foundation; either version 2 of the License, or
  (at your option) any later version.
 
+Files: config.py, config.py.in, bin/*
+Copyright: © 2008, Red Hat, Inc.
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
 Files: src/intro/*, src/model/devices/device*.py,
  src/view/frame/eventarea.py, src/view/home/proc_smaps.py,
  src/view/home/transitionbox.py
@@ -54,8 +62,7 @@ License: GPL-2+
  the Free Software Foundation; either version 2 of the License, or
  (at your option) any later version.
 
-Files: bin/sugar-activity, bin/sugar-shell, sugar-emulator
- service/clipboardservice.py
+Files: bin/sugar-activity, sugar-emulator service/clipboardservice.py
 Copyright: © 2006, Red Hat, Inc.
 License: GPL-2+
  This program is free software; you can redistribute it and/or modify
@@ -100,8 +107,7 @@ License: GPL-2+
  the Free Software Foundation; either version 2 of the License, or
  (at your option) any later version.
 
-Files: bin/sugar-control-panel, src/controlpanel/control.py,
- src/view/frame/activitybutton.py,
+Files: src/controlpanel/control.py, src/view/frame/activitybutton.py
 Copyright: © 2007, One Laptop Per Child
 License: LGPL-2+
  This library is free software; you can redistribute it and/or
@@ -132,6 +138,21 @@ License: LGPL-2+
  modify it under the terms of the GNU Lesser General Public
  License as published by the Free Software Foundation; either
  version 2 of the License, or (at your option) any later version.
+
+Files: po/Makefile.in.in
+Copyright: © 1995-1997 by Ulrich Drepper <drepper@gnu.ai.mit.edu>
+License: GAP
+ This file file be copied and used freely without restrictions.  It can
+ be used in projects which are not available under the GNU Public License
+ but which still want to provide support for the GNU gettext functionality.
+ Please note that the actual code is *not* freely available.
+
+Files: Makefile.in
+Copyright © 1994-2006  Free Software Foundation, Inc.
+License: GAP
+ This Makefile.in is free software; the Free Software Foundation
+ gives unlimited permission to copy and/or distribute it,
+ with or without modifications, as long as this notice is preserved.
 
 On Debian systems, the complete text of the GNU General Public License
 can be found in file "/usr/share/common-licenses/GPL", and the complete
