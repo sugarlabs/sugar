@@ -201,7 +201,7 @@ class Shell(gobject.GObject):
             self._home_window.set_zoom_level(level)
 
     def toggle_activity_fullscreen(self):
-        if self._model.get_zoom_level() == ShellModel.ZOOM_ACTIVITY:
+        if self._model.get_zoom_level() == shellmodel.ShellModel.ZOOM_ACTIVITY:
             self.get_current_activity().toggle_fullscreen()
 
     def activate_previous_activity(self):
