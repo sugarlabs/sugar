@@ -61,7 +61,6 @@ _actions_table = {
     '<ctrl>Escape'   : 'close_window',
     '<ctrl>q'        : 'close_window',
     '0xDC'           : 'open_search',
-    '<ctrl>o'        : 'open_search',
     '<alt>s'         : 'say_text'
 }
 
