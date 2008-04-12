@@ -25,6 +25,7 @@ from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon
 
 import view.Shell
+from view.palettes import ActivityPalette
 
 class ActivitiesList(hippo.CanvasScrollbars):
     __gtype_name__ = 'SugarActivitiesList'
@@ -84,6 +85,7 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
                 file_name=activity_info.icon,
                 stroke_color=style.COLOR_BUTTON_GREY.get_svg(),
                 fill_color=style.COLOR_TRANSPARENT.get_svg())
+        self.icon.set_palette(ActivityPalette(self._activity_info))
         self.icon.connect('hovering-changed',
                           self.__icon_hovering_changed_event_cb)
         self.icon.connect('button-release-event',

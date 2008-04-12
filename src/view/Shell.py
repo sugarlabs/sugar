@@ -201,7 +201,7 @@ class Shell(gobject.GObject):
             self._home_window.set_zoom_level(level)
 
     def toggle_activity_fullscreen(self):
-        if self._model.get_zoom_level() == ShellModel.ZOOM_ACTIVITY:
+        if self._model.get_zoom_level() == shellmodel.ShellModel.ZOOM_ACTIVITY:
             self.get_current_activity().toggle_fullscreen()
 
     def activate_previous_activity(self):
@@ -238,20 +238,6 @@ class Shell(gobject.GObject):
             if host.get_id() == activity_id:
                 return host
         return None
-
-    def toggle_chat_visibility(self):
-        act = self.get_current_activity()
-        if not act:
-            return
-        is_visible = self._frame.is_visible()
-        if act.is_chat_visible():
-            frame_was_visible = act.chat_hide()
-            if not frame_was_visible:
-                self._frame.do_slide_out()
-        else:
-            if not is_visible:
-                self._frame.do_slide_in()
-            act.chat_show(is_visible)
 
     def take_screenshot(self):
         file_path = os.path.join(tempfile.gettempdir(), '%i' % time.time())

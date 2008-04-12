@@ -17,7 +17,7 @@
 
 import sys
 
-sys.path.insert(0, '/home/erikos/sugar-jhbuild/build/share/sugar/service')
+sys.path.insert(0, '/home/tomeu/sugar-jhbuild/build/share/sugar/service')
 
 from main import main
 
