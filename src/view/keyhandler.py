@@ -49,8 +49,6 @@ _actions_table = {
     '<alt>1'         : 'screenshot',
     '<alt>f'         : 'frame',
     '0x93'           : 'frame',
-    '<alt>o'         : 'overlay',
-    '0xE0'           : 'overlay',
     '0xEB'           : 'rotate',
     '<alt>r'         : 'rotate',
     '<alt>q'         : 'quit_emulator',
@@ -61,7 +59,6 @@ _actions_table = {
     '<ctrl>Escape'   : 'close_window',
     '<ctrl>q'        : 'close_window',
     '0xDC'           : 'open_search',
-    '<ctrl>o'        : 'open_search',
     '<alt>s'         : 'say_text'
 }
 
@@ -187,9 +184,6 @@ class KeyHandler(object):
 
     def handle_frame(self):
         view.Shell.get_instance().get_frame().notify_key_press()
-
-    def handle_overlay(self):
-        view.Shell.get_instance().toggle_chat_visibility()
 
     def handle_rotate(self):
         states = [ 'normal', 'left', 'inverted', 'right']

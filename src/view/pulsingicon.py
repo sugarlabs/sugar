@@ -185,8 +185,9 @@ class CanvasPulsingIcon(CanvasIcon):
         self._pulse_hid = gobject.timeout_add(_INTERVAL, self.__pulse_cb)
 
     def _stop_pulsing(self):
-        gobject.source_remove(self._pulse_hid)
-        self._pulse_hid = None
+        if self._pulse_hid is not None:
+            gobject.source_remove(self._pulse_hid)
+            self._pulse_hid = None
         self.props.xo_color = self._base_color
 
     def __pulse_cb(self):

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+export SUGAR_THEME=sugar-xo
+
 if [ -f /etc/olpc-security ] ; then
   exec dbus-launch --exit-with-session --config-file=/etc/dbus-1/session-olpc.conf sugar-shell
 else

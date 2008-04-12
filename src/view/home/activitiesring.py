@@ -38,7 +38,8 @@ from sugar import env
 from sugar import activity
 
 import view.Shell
-from view.palettes import JournalPalette, CurrentActivityPalette
+from view.palettes import JournalPalette
+from view.palettes import CurrentActivityPalette, ActivityPalette
 from view.home.MyIcon import MyIcon
 from model import shellmodel
 from model.shellmodel import ShellModel
@@ -152,32 +153,6 @@ class ActivityIcon(CanvasIcon):
         return self._activity_info.version
     version = property(get_version, None)
 
-class ActivityPalette(Palette):
-    def __init__(self, activity_info):
-        activity_icon = Icon(file=activity_info.icon,
-                             xo_color=get_profile().color,
-                             icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
-        
-        Palette.__init__(self, None, None, primary_text=activity_info.name,
-                         icon=activity_icon)
-
-        self._activity_info = activity_info
-
-        menu_item = MenuItem(_('Start'), 'activity-start')
-        menu_item.connect('activate', self.__start_activate_cb)
-        self.menu.append(menu_item)
-        menu_item.show()
-
-        """
-        menu_item = MenuItem(_('Start with'), 'activity-start')
-        menu_item.props.sensitive = False
-        #menu_item.connect('activate', self.__start_with_activate_cb)
-        self.menu.append(menu_item)
-        menu_item.show()
-        """
-
-    def __start_activate_cb(self, menu_item):
-        view.Shell.get_instance().start_activity(self._activity_info.bundle_id)
 
 class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
     def __init__(self):

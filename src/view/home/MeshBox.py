@@ -159,7 +159,7 @@ class MeshDeviceView(CanvasPulsingIcon):
         if not channel in [1, 6, 11]:
             raise ValueError("Invalid channel %d" % channel)
 
-        PulsingIcon.__init__(self, size=style.STANDARD_ICON_SIZE,
+        CanvasPulsingIcon.__init__(self, size=style.STANDARD_ICON_SIZE,
                              icon_name=_MESH_ICON_NAME, cache=True)
 
         self._nm_device = nm_device
