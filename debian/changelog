@@ -1,3 +1,10 @@
+sugar (0.79.2-2) unstable; urgency=low
+
+  * Tighten dependency on python-gst0.10 (we need the set_volume
+    attribute). Closes: bug#475787.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sun, 13 Apr 2008 01:43:36 +0200
+
 sugar (0.79.2-1) unstable; urgency=low
 
   * New upstream release.
