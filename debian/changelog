@@ -1,4 +1,4 @@
-sugar (0.79.3-2~1) UNRELEASED; urgency=low
+sugar (0.79.3-2) unstable; urgency=low
 
   [Santiago Ruano Rincón]
   * Added sugar and sugar-emulator .desktop files. Taken from ubuntu
