@@ -6,6 +6,7 @@ sugar (0.79.3-2~1) UNRELEASED; urgency=low
 
   [ Jonas Smedegaard ]
   * Install both .desktop files in sugar package.
+  * Tighten dependency on python-sugar-toolkit.
 
  -- Jonas Smedegaard <dr@jones.dk>  Sun, 13 Apr 2008 02:38:41 +0200
 
