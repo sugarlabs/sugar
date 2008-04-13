@@ -1,9 +1,20 @@
-sugar (0.79.2-2) unstable; urgency=low
+sugar (0.79.3-1) unstable; urgency=low
 
+  * New upstream release.
+    Highlights:
+    + Remove <ctrl>o shortcut
+    + Clean up calls to palette constructor
+    + Use the sugar-xo theme only on the XO
+    + Fix home view accelerators.
+    + Don't traceback when stopping an already stopped PulsingIcon.
+    + Fix the mesh-device pulsing icon
+    + Add palettes to activities in list view
+  * Replace patch 0001 syncing with Git as of today.
+    + Display current activity when its frame icon is clicked.
   * Tighten dependency on python-gst0.10 (we need the set_volume
     attribute). Closes: bug#475787.
 
- -- Jonas Smedegaard <dr@jones.dk>  Sun, 13 Apr 2008 01:43:36 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Sun, 13 Apr 2008 01:51:47 +0200
 
 sugar (0.79.2-1) unstable; urgency=low
 
