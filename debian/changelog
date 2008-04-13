@@ -4,7 +4,10 @@ sugar (0.79.3-2~1) UNRELEASED; urgency=low
   * Added sugar and sugar-emulator .desktop files. Taken from ubuntu
     package.
 
- -- Jonas Smedegaard <dr@jones.dk>  Tue, 08 Apr 2008 21:30:52 +0200
+  [ Jonas Smedegaard ]
+  * Install both .desktop files in sugar package.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sun, 13 Apr 2008 02:38:41 +0200
 
 sugar (0.79.3-1) unstable; urgency=low
 

@@ -1,1 +1,2 @@
+debian/sugar.desktop usr/share/applications/
 debian/sugar-emulator.desktop usr/share/applications/
