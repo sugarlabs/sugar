@@ -1,2 +1,2 @@
-debian/sugar.desktop usr/share/applications/
+debian/sugar.desktop usr/share/xsessions/
 debian/sugar-emulator.desktop usr/share/applications/
