@@ -1,8 +1,12 @@
 sugar (0.79.3-3) UNRELEASED; urgency=low
 
+  [ Santiago Ruano Rincón ]
   * Fixed sugar.desktop location
 
- -- Santiago Ruano Rincón <santiago@debian.org>  Tue, 15 Apr 2008 02:03:23 +0200
+  [ Jonas Smedegaard ]
+  * Depend on python-simplejson.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Thu, 17 Apr 2008 20:01:43 +0200
 
 sugar (0.79.3-2) unstable; urgency=low
 
