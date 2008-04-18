@@ -1,5 +1,5 @@
 diff --git a/src/controlpanel/control.py b/src/controlpanel/control.py
-index faac689..e30403d 100644
+index faac689..a6d9d04 100644
 --- a/src/controlpanel/control.py
 +++ b/src/controlpanel/control.py
 @@ -45,7 +45,7 @@ _COLORS = {'red': {'dark':'#b20008', 'medium':'#e6000a', 'light':'#ffadce'},
@@ -27,3 +27,14 @@ index faac689..e30403d 100644
      except Exception, e:
          print "get_timezone: %s" % e
      return None
+@@ -406,9 +401,7 @@ def set_timezone(timezone):
+                 
+         # Write info to the /etc/sysconfig/clock file
+         fd = open(_TIMEZONE_CONFIG, "w")
+-        fd.write('# use sugar-control-panel to change this\n')
+-        fd.write('ZONE="%s"\n' % timezone)
+-        fd.write('UTC=true\n')
++        fd.write(timezone)
+         fd.close()                       
+     else:
+         print (_("Error timezone does not exist."))
