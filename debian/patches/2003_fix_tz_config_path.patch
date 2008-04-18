@@ -1,0 +1,29 @@
+diff --git a/src/controlpanel/control.py b/src/controlpanel/control.py
+index faac689..e30403d 100644
+--- a/src/controlpanel/control.py
++++ b/src/controlpanel/control.py
+@@ -45,7 +45,7 @@ _COLORS = {'red': {'dark':'#b20008', 'medium':'#e6000a', 'light':'#ffadce'},
+ 
+ _MODIFIERS = ('dark', 'medium', 'light')
+ 
+-_TIMEZONE_CONFIG = '/etc/sysconfig/clock'
++_TIMEZONE_CONFIG = '/etc/timezone'
+ 
+ _LANGUAGES = {
+     'Afrikaans/South_Africa': 'af_ZA',
+@@ -351,13 +351,8 @@ def get_timezone():
+             line = line.strip()
+             if len (line) and line[0] == '#':
+                 continue
+-            try:
+-                tokens = line.split("=")
+-                if tokens[0] == "ZONE":
+-                    timezone = tokens[1].replace('"', '')
+-                    return timezone        
+-            except Exception, e:
+-                print "get_timezone: %s" % e
++            timezone = line
++            return timezone
+     except Exception, e:
+         print "get_timezone: %s" % e
+     return None
