@@ -4,7 +4,8 @@ sugar (0.79.3-3) UNRELEASED; urgency=low
   * Fixed sugar.desktop location
 
   [ Jonas Smedegaard ]
-  * Depend on python-simplejson.
+  * Depend on python-simplejson (crucial for dbus interaction - possibly
+    only since 0.79.2).
   * Depend on x11-xserver-utils (xrandr needed for rotation: <alt>r).
   * Add patch 2003 to resolve Debian-style timezone config in
     sugar-control-panel.
