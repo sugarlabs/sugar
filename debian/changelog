@@ -5,6 +5,7 @@ sugar (0.79.3-3) UNRELEASED; urgency=low
 
   [ Jonas Smedegaard ]
   * Depend on python-simplejson.
+  * Depend on x11-xserver-utils (xrandr needed for rotation: <alt>r).
   * Add patch 2003 to resolve Debian-style timezone config in
     sugar-control-panel.
 
