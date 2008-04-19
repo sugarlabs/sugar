@@ -46,9 +46,9 @@ else
 CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), python-all-dev (>= 2.3.5-11)
 endif
 ifeq (pysupport, $(DEB_PYTHON_SYSTEM))
-CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), python-support (>= 0.6)
+CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), python-support (>= 0.3.2)
 else
-CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), python-central (>= 0.6)
+CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), python-central (>= 0.5.6)
 endif
 
 DEB_CONFIGURE_SCRIPT_ENV += PYTHON="python$(cdbs_make_curflavor)"
