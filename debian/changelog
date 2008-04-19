@@ -10,6 +10,7 @@ sugar (0.79.3-3) UNRELEASED; urgency=low
   * Add patch 2003 to resolve Debian-style timezone config in
     sugar-control-panel.
   * Add patch 2991 to enable danish l10n in configure.
+  * Use XO-style in sugar-emulator.desktop (why not?).
 
  -- Jonas Smedegaard <dr@jones.dk>  Thu, 17 Apr 2008 20:01:43 +0200
 
