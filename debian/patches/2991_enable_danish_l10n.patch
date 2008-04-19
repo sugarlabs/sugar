@@ -1,0 +1,13 @@
+diff --git a/configure b/configure
+index dbc7864..26f52c6 100755
+--- a/configure
++++ b/configure
+@@ -2635,7 +2635,7 @@ fi
+ 
+ # Setup GETTEXT
+ #
+-ALL_LINGUAS="am ar ay bn de dz el en es fa fr ha hi ig is it ja ko mk ml ne nl pa pl pt pt_BR qu ro ru rw th ur yo zh_CN zh_TW"
++ALL_LINGUAS="am ar ay bn da de dz el en es fa fr ha hi ig is it ja ko mk ml ne nl pa pl pt pt_BR qu ro ru rw th ur yo zh_CN zh_TW"
+ GETTEXT_PACKAGE=sugar
+ DEPDIR="${am__leading_dot}deps"
+ 
