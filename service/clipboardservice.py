@@ -23,8 +23,6 @@ import tempfile
 import dbus
 import dbus.service
 
-from sugar import env
-from sugar import util
 from sugar import mime
 
 from clipboardobject import ClipboardObject, Format
@@ -40,19 +38,20 @@ TYPE_KEY = 'TYPE'
 DATA_KEY = 'DATA'
 ON_DISK_KEY = 'ON_DISK'
 
-class ClipboardService(dbus.service.Object):
+_CLIPBOARD_DBUS_INTERFACE = "org.laptop.Clipboard"
+_CLIPBOARD_OBJECT_PATH = "/org/laptop/Clipboard"
+_CLIPBOARD_OBJECTS_PATH = _CLIPBOARD_OBJECT_PATH + "/Objects/"
 
-    _CLIPBOARD_DBUS_INTERFACE = "org.laptop.Clipboard"
-    _CLIPBOARD_OBJECT_PATH = "/org/laptop/Clipboard"
-    _CLIPBOARD_OBJECTS_PATH = _CLIPBOARD_OBJECT_PATH + "/Objects/"
+class ClipboardService(dbus.service.Object):
 
     def __init__(self):
         self._objects = {}
         self._next_id = 0
 
         bus = dbus.SessionBus()
-        bus_name = dbus.service.BusName(self._CLIPBOARD_DBUS_INTERFACE, bus=bus)
-        dbus.service.Object.__init__(self, bus_name, self._CLIPBOARD_OBJECT_PATH)
+        bus_name = dbus.service.BusName(_CLIPBOARD_DBUS_INTERFACE, bus=bus)
+        dbus.service.Object.__init__(self, bus_name, 
+                                     _CLIPBOARD_OBJECT_PATH)
 
     def _get_next_object_id(self):
         self._next_id += 1
@@ -63,14 +62,15 @@ class ClipboardService(dbus.service.Object):
                          in_signature="s", out_signature="o")
     def add_object(self, name):
         logging.debug('ClipboardService.add_object')
-        op = self._CLIPBOARD_OBJECTS_PATH + "%d" % self._get_next_object_id()
+        op = _CLIPBOARD_OBJECTS_PATH + "%d" % self._get_next_object_id()
         self._objects[op] = ClipboardObject(op, name)
         self.object_added(dbus.ObjectPath(op), name)
         logging.debug('Added object ' + op + ' with name ' + name)
         return dbus.ObjectPath(op)
 
     @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
-                         in_signature="ssayb", out_signature="", byte_arrays=True)
+                         in_signature="ssayb", out_signature="", 
+                         byte_arrays=True)
     def add_object_format(self, object_path, format_type, data, on_disk):
         logging.debug('ClipboardService.add_object_format')
         cb_object = self._objects[str(object_path)]
@@ -82,7 +82,8 @@ class ClipboardService(dbus.service.Object):
         elif on_disk and cb_object.get_percent() == 100:
             new_uri = self._copy_file(data)
             cb_object.add_format(Format(format_type, new_uri, on_disk))
-            logging.debug('Added format of type ' + format_type + ' with path at ' + new_uri)
+            logging.debug('Added format of type ' + format_type 
+                          + ' with path at ' + new_uri)
         else:
             cb_object.add_format(Format(format_type, data, on_disk))
             logging.debug('Added in-memory format of type ' + format_type + '.')
@@ -125,15 +126,13 @@ class ClipboardService(dbus.service.Object):
             # Add a text/plain format to objects that are text but lack it
             if 'text/plain' not in formats.keys():
                 if 'UTF8_STRING' in formats.keys():
-                    self.add_object_format(object_path,
-                                           'text/plain',
-                                           data=formats['UTF8_STRING'].get_data(),
-                                           on_disk=False)
+                    self.add_object_format(
+                        object_path, 'text/plain',
+                        data=formats['UTF8_STRING'].get_data(), on_disk=False)
                 elif 'text/unicode' in formats.keys():
-                    self.add_object_format(object_path,
-                                           'text/plain',
-                                           data=formats['UTF8_STRING'].get_data(),
-                                           on_disk=False)
+                    self.add_object_format(
+                        object_path, 'text/plain',
+                        data=formats['UTF8_STRING'].get_data(), on_disk=False)
 
         self.object_state_changed(object_path, {NAME_KEY: cb_object.get_name(),
                                     PERCENT_KEY: percent,
@@ -153,8 +152,8 @@ class ClipboardService(dbus.service.Object):
         formats = cb_object.get_formats()
         format_types = dbus.Array([], signature='s')
         
-        for type, format in formats.iteritems():
-            format_types.append(type)
+        for key in formats.keys():
+            format_types.append(key)
         
         result_dict = {NAME_KEY: cb_object.get_name(),
                 PERCENT_KEY: cb_object.get_percent(),

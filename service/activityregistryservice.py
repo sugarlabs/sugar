@@ -27,7 +27,8 @@ _ACTIVITY_REGISTRY_PATH = '/org/laptop/ActivityRegistry'
 class ActivityRegistry(dbus.service.Object):
     def __init__(self):
         bus = dbus.SessionBus()
-        bus_name = dbus.service.BusName(_ACTIVITY_REGISTRY_SERVICE_NAME, bus=bus)
+        bus_name = dbus.service.BusName(_ACTIVITY_REGISTRY_SERVICE_NAME, 
+                                        bus=bus)
         dbus.service.Object.__init__(self, bus_name, _ACTIVITY_REGISTRY_PATH)
 
         bundle_registry = bundleregistry.get_registry()
