@@ -1,4 +1,4 @@
-sugar (0.79.3-3) UNRELEASED; urgency=low
+sugar (0.79.3-3) unstable; urgency=low
 
   [ Santiago Ruano Rincón ]
   * Fixed sugar.desktop location
@@ -26,7 +26,7 @@ sugar (0.79.3-3) UNRELEASED; urgency=low
   * Semi-auto-update debian/control to update build-dependencies:
       DEB_AUTO_UPDATE_DEBIAN_CONTROL=yes fakeroot debian/rules clean
 
- -- Jonas Smedegaard <dr@jones.dk>  Thu, 17 Apr 2008 20:01:43 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 22 Apr 2008 15:30:34 +0200
 
 sugar (0.79.3-2) unstable; urgency=low
 
