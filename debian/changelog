@@ -22,6 +22,7 @@ sugar (0.79.3-3) unstable; urgency=low
   * Register sugar and sugar-emulator with the Debian menu system.
   * Bump debhelper compatibility level to 6.
   * Rewrite short description to not mention sugar, thanks to lintian.
+  * Mention exact upstream Git source in debian/copyright.
   * Update local cdbs snippets:
     + Relax python-central and python-support build-dependencies in
       python-autotools.mk.
