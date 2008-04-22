@@ -6,7 +6,7 @@ sugar (0.79.3-3) unstable; urgency=low
   [ Jonas Smedegaard ]
   * Replace patch 0001 to sync with Git as of today:
     + Display current activity when its frame icon is clicked
-    + Add suport for adding/removing activities to/from ring
+    + Add support for adding/removing activities to/from ring
     + Coding improvements thanks to pylint
   * Depend on python-simplejson (crucial for dbus interaction - possibly
     only since 0.79.2).
