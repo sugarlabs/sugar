@@ -1,4 +1,4 @@
 ?package(sugar):needs="wm" section="Window Managers" \
   title="Sugar" command="/usr/bin/sugar"
-?package(sugar-emulator):needs="X11" section="Applications/Emulators" \
+?package(sugar):needs="X11" section="Applications/Emulators" \
   title="Sugar Emulator" command="/usr/bin/sugar-emulator -x"
