@@ -1,0 +1,669 @@
+commit 39c5a2f28e498e2a54985ae441e9cc855014135c
+Author: Simon Schampijer <simon@schampijer.de>
+Date:   Tue Apr 22 00:49:28 2008 +0200
+
+    pylint services
+
+diff --git a/service/activityregistryservice.py b/service/activityregistryservice.py
+index 9ead767..7746877 100644
+--- a/service/activityregistryservice.py
++++ b/service/activityregistryservice.py
+@@ -27,7 +27,8 @@ _ACTIVITY_REGISTRY_PATH = '/org/laptop/ActivityRegistry'
+ class ActivityRegistry(dbus.service.Object):
+     def __init__(self):
+         bus = dbus.SessionBus()
+-        bus_name = dbus.service.BusName(_ACTIVITY_REGISTRY_SERVICE_NAME, bus=bus)
++        bus_name = dbus.service.BusName(_ACTIVITY_REGISTRY_SERVICE_NAME, 
++                                        bus=bus)
+         dbus.service.Object.__init__(self, bus_name, _ACTIVITY_REGISTRY_PATH)
+ 
+         bundle_registry = bundleregistry.get_registry()
+diff --git a/service/bundleregistry.py b/service/bundleregistry.py
+index 9cf81cc..5b12625 100644
+--- a/service/bundleregistry.py
++++ b/service/bundleregistry.py
+@@ -23,7 +23,6 @@ import simplejson
+ from sugar.bundle.activitybundle import ActivityBundle
+ from sugar.bundle.bundle import MalformedBundleException
+ from sugar import env
+-from sugar import util
+ 
+ import config
+ 
+@@ -73,7 +72,8 @@ class BundleRegistry(gobject.GObject):
+                 self._favorite_bundles = simplejson.load(open(path))
+                 print 'loaded %r' % self._favorite_bundles 
+             except ValueError, e:
+-                logging.error('Error while loading favorite_activities: %r.' % e)
++                logging.error('Error while loading favorite_activities: %r.' 
++                              % e)
+                 self._favorite_bundles = []
+         else:
+             self._favorite_bundles = []
+@@ -111,13 +111,13 @@ class BundleRegistry(gobject.GObject):
+                               'bundle: %s, %s, %s' % (f, e.__class__, e))
+ 
+         bundle_dirs = bundles.keys()
+-        bundle_dirs.sort(lambda d1,d2: cmp(bundles[d1], bundles[d2]))
+-        for dir in bundle_dirs:
++        bundle_dirs.sort(lambda d1, d2: cmp(bundles[d1], bundles[d2]))
++        for folder in bundle_dirs:
+             try:
+-                self.add_bundle(dir)
++                self.add_bundle(folder)
+             except Exception, e:
+                 logging.error('Error while processing installed activity ' \
+-                              'bundle: %s, %s, %s' % (dir, e.__class__, e))
++                              'bundle: %s, %s, %s' % (folder, e.__class__, e))
+ 
+     def add_bundle(self, bundle_path):
+         try:
+@@ -141,7 +141,8 @@ class BundleRegistry(gobject.GObject):
+         result = []
+         for bundle in self._bundles:
+             if bundle.get_mime_types() and mime_type in bundle.get_mime_types():
+-                if self.get_default_for_type(mime_type) == bundle.get_bundle_id():
++                if self.get_default_for_type(mime_type) == \
++                        bundle.get_bundle_id():
+                     result.insert(0, bundle)
+                 else:
+                     result.append(bundle)
+@@ -184,8 +185,8 @@ def get_registry():
+ 
+ _bundle_registry = BundleRegistry()
+ 
+-for path in _get_data_dirs():
+-    bundles_path = os.path.join(path, 'activities')
++for data_dir in _get_data_dirs():
++    bundles_path = os.path.join(data_dir, 'activities')
+     _bundle_registry.add_search_path(bundles_path)
+ 
+ _bundle_registry.add_search_path(env.get_user_activities_path())
+diff --git a/service/clipboardobject.py b/service/clipboardobject.py
+index 70c21a0..06b606c 100644
+--- a/service/clipboardobject.py
++++ b/service/clipboardobject.py
+@@ -31,7 +31,7 @@ class ClipboardObject:
+         self._formats = {}
+ 
+     def destroy(self):
+-        for type, format in self._formats.iteritems():
++        for format in self._formats.itervalues():
+             format.destroy()
+ 
+     def get_id(self):
+@@ -54,8 +54,8 @@ class ClipboardObject:
+         return ''
+ 
+     def get_activities(self):
+-        mime = self.get_mime_type()
+-        if not mime:
++        mime_type = self.get_mime_type()
++        if not mime_type:
+             return ''
+ 
+         registry = bundleregistry.get_registry()
+@@ -89,17 +89,17 @@ class ClipboardObject:
+                 if os.path.exists(uri.path):
+                     format = mime.get_for_file(uri.path)
+                 else:
+-                    format = mime.get_from_file_name(uri.path)                    
++                    format = mime.get_from_file_name(uri.path)
+                 logging.debug('Choosed %r!' % format)
+ 
+         return format
+ 
+ class Format:
+ 
+-    def __init__(self, type, data, on_disk):
++    def __init__(self, mime_type, data, on_disk):
+         self.owns_disk_data = False
+ 
+-        self._type = type
++        self._type = mime_type
+         self._data = data
+         self._on_disk = on_disk
+ 
+diff --git a/service/clipboardservice.py b/service/clipboardservice.py
+index d69fbaf..4378db0 100644
+--- a/service/clipboardservice.py
++++ b/service/clipboardservice.py
+@@ -23,8 +23,6 @@ import tempfile
+ import dbus
+ import dbus.service
+ 
+-from sugar import env
+-from sugar import util
+ from sugar import mime
+ 
+ from clipboardobject import ClipboardObject, Format
+@@ -40,19 +38,20 @@ TYPE_KEY = 'TYPE'
+ DATA_KEY = 'DATA'
+ ON_DISK_KEY = 'ON_DISK'
+ 
+-class ClipboardService(dbus.service.Object):
++_CLIPBOARD_DBUS_INTERFACE = "org.laptop.Clipboard"
++_CLIPBOARD_OBJECT_PATH = "/org/laptop/Clipboard"
++_CLIPBOARD_OBJECTS_PATH = _CLIPBOARD_OBJECT_PATH + "/Objects/"
+ 
+-    _CLIPBOARD_DBUS_INTERFACE = "org.laptop.Clipboard"
+-    _CLIPBOARD_OBJECT_PATH = "/org/laptop/Clipboard"
+-    _CLIPBOARD_OBJECTS_PATH = _CLIPBOARD_OBJECT_PATH + "/Objects/"
++class ClipboardService(dbus.service.Object):
+ 
+     def __init__(self):
+         self._objects = {}
+         self._next_id = 0
+ 
+         bus = dbus.SessionBus()
+-        bus_name = dbus.service.BusName(self._CLIPBOARD_DBUS_INTERFACE, bus=bus)
+-        dbus.service.Object.__init__(self, bus_name, self._CLIPBOARD_OBJECT_PATH)
++        bus_name = dbus.service.BusName(_CLIPBOARD_DBUS_INTERFACE, bus=bus)
++        dbus.service.Object.__init__(self, bus_name, 
++                                     _CLIPBOARD_OBJECT_PATH)
+ 
+     def _get_next_object_id(self):
+         self._next_id += 1
+@@ -63,14 +62,15 @@ class ClipboardService(dbus.service.Object):
+                          in_signature="s", out_signature="o")
+     def add_object(self, name):
+         logging.debug('ClipboardService.add_object')
+-        op = self._CLIPBOARD_OBJECTS_PATH + "%d" % self._get_next_object_id()
++        op = _CLIPBOARD_OBJECTS_PATH + "%d" % self._get_next_object_id()
+         self._objects[op] = ClipboardObject(op, name)
+         self.object_added(dbus.ObjectPath(op), name)
+         logging.debug('Added object ' + op + ' with name ' + name)
+         return dbus.ObjectPath(op)
+ 
+     @dbus.service.method(_CLIPBOARD_DBUS_INTERFACE,
+-                         in_signature="ssayb", out_signature="", byte_arrays=True)
++                         in_signature="ssayb", out_signature="", 
++                         byte_arrays=True)
+     def add_object_format(self, object_path, format_type, data, on_disk):
+         logging.debug('ClipboardService.add_object_format')
+         cb_object = self._objects[str(object_path)]
+@@ -82,7 +82,8 @@ class ClipboardService(dbus.service.Object):
+         elif on_disk and cb_object.get_percent() == 100:
+             new_uri = self._copy_file(data)
+             cb_object.add_format(Format(format_type, new_uri, on_disk))
+-            logging.debug('Added format of type ' + format_type + ' with path at ' + new_uri)
++            logging.debug('Added format of type ' + format_type 
++                          + ' with path at ' + new_uri)
+         else:
+             cb_object.add_format(Format(format_type, data, on_disk))
+             logging.debug('Added in-memory format of type ' + format_type + '.')
+@@ -125,15 +126,13 @@ class ClipboardService(dbus.service.Object):
+             # Add a text/plain format to objects that are text but lack it
+             if 'text/plain' not in formats.keys():
+                 if 'UTF8_STRING' in formats.keys():
+-                    self.add_object_format(object_path,
+-                                           'text/plain',
+-                                           data=formats['UTF8_STRING'].get_data(),
+-                                           on_disk=False)
++                    self.add_object_format(
++                        object_path, 'text/plain',
++                        data=formats['UTF8_STRING'].get_data(), on_disk=False)
+                 elif 'text/unicode' in formats.keys():
+-                    self.add_object_format(object_path,
+-                                           'text/plain',
+-                                           data=formats['UTF8_STRING'].get_data(),
+-                                           on_disk=False)
++                    self.add_object_format(
++                        object_path, 'text/plain',
++                        data=formats['UTF8_STRING'].get_data(), on_disk=False)
+ 
+         self.object_state_changed(object_path, {NAME_KEY: cb_object.get_name(),
+                                     PERCENT_KEY: percent,
+@@ -153,8 +152,8 @@ class ClipboardService(dbus.service.Object):
+         formats = cb_object.get_formats()
+         format_types = dbus.Array([], signature='s')
+         
+-        for type, format in formats.iteritems():
+-            format_types.append(type)
++        for key in formats.keys():
++            format_types.append(key)
+         
+         result_dict = {NAME_KEY: cb_object.get_name(),
+                 PERCENT_KEY: cb_object.get_percent(),
+diff --git a/service/main.py b/service/main.py
+index 679cc09..4883f82 100755
+--- a/service/main.py
++++ b/service/main.py
+@@ -15,32 +15,29 @@
+ # along with this program; if not, write to the Free Software
+ # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ 
+-import sys
+-import os
+ import logging
+ 
+ import gobject
+ import dbus.glib
+  
+ from sugar import logger
+-from sugar import env
+ 
+ import activityregistryservice
+ import clipboardservice
+ 
+ def main():
+-	logger.start('shellservice')
+-	logging.info('Starting shell service.')
+-
+-	gobject.threads_init()
+-	dbus.glib.threads_init()
+-
+-	clipboard_service = clipboardservice.get_instance()
+-	activity_registry = activityregistryservice.get_instance()
+-
+-	loop = gobject.MainLoop()
+-	try:
+-	    loop.run()
+-	except KeyboardInterrupt:
+-	    print 'Ctrl+C pressed, exiting...'
++    logger.start('shellservice')
++    logging.info('Starting shell service.')
++
++    gobject.threads_init()
++    dbus.glib.threads_init()
++    
++    clipboardservice.get_instance()
++    activityregistryservice.get_instance()
++    
++    loop = gobject.MainLoop()
++    try:
++        loop.run()
++    except KeyboardInterrupt:
++        print 'Ctrl+C pressed, exiting...'
+ 
+
+commit 7db9f0e3affb67b642302cb60de9d9d202986499
+Author: Simon Schampijer <simon@schampijer.de>
+Date:   Tue Apr 22 00:45:59 2008 +0200
+
+    pylint controlpanel
+
+diff --git a/src/controlpanel/cmd.py b/src/controlpanel/cmd.py
+index ee1fcd7..24653b2 100644
+--- a/src/controlpanel/cmd.py
++++ b/src/controlpanel/cmd.py
+@@ -18,8 +18,6 @@ import sys
+ import getopt
+ from gettext import gettext as _
+ 
+-from sugar import env
+-
+ from controlpanel import control
+         
+ def cmd_help():
+@@ -40,9 +38,6 @@ def main():
+         cmd_help()
+         sys.exit(2)
+ 
+-    output = None
+-    verbose = False
+-
+     if not opts:
+         cmd_help()
+         sys.exit()
+@@ -51,7 +46,8 @@ def main():
+         if opt in ("-h"):            
+             method = getattr(control, 'set_' + key, None)
+             if method is None:
+-                print _("sugar-control-panel: key=%s not an available option"% key)
++                print _("sugar-control-panel: key=%s not an available option" 
++                        % key)
+                 sys.exit()
+             else:    
+                 print method.__doc__
+@@ -63,14 +59,16 @@ def main():
+         if opt in ("-g"):
+             method = getattr(control, 'print_' + key, None)
+             if method is None:
+-                print _("sugar-control-panel: key=%s not an available option"% key)
++                print _("sugar-control-panel: key=%s not an available option" 
++                        % key)
+                 sys.exit()
+             else:    
+                 method()
+         if opt in ("-s"):
+             method = getattr(control, 'set_' + key, None)
+             if method is None:
+-                print _("sugar-control-panel: key=%s not an available option"% key)
++                print _("sugar-control-panel: key=%s not an available option"
++                        % key)
+                 sys.exit()
+             else:
+                 try:
+diff --git a/src/controlpanel/control.py b/src/controlpanel/control.py
+index faac689..bf3e681 100644
+--- a/src/controlpanel/control.py
++++ b/src/controlpanel/control.py
+@@ -395,13 +395,14 @@ def set_timezone(timezone):
+         fromfile = os.path.join("/usr/share/zoneinfo/", timezone)        
+         try:
+             shutil.copyfile(fromfile, "/etc/localtime")
+-        except OSError, (errno, msg):
+-            print (_("Error copying timezone (from %s): %s") % (fromfile, msg))
++        except OSError, detail:
++            print (_("Error copying timezone (from %s): %s") % 
++                   (fromfile, detail))
+             return
+         try:
+             os.chmod("/etc/localtime", 0644)
+-        except OSError, (errno, msg):
+-            print (_("Changing permission of timezone: %s") % (msg))
++        except OSError, detail:
++            print (_("Changing permission of timezone: %s") % detail)
+             return
+                 
+         # Write info to the /etc/sysconfig/clock file
+
+commit ec0d0c0c0d1b37b2b1967bdfd29f7b63927d5f4a
+Merge: bf82033... 0c06ef0...
+Author: Simon Schampijer <simon@schampijer.de>
+Date:   Tue Apr 22 00:34:56 2008 +0200
+
+    Merge branch 'master' of ssh+git://dev.laptop.org/git/sugar
+
+commit bf82033a6c1173565ae0a2e4d250a375b0b8a260
+Author: Simon Schampijer <simon@schampijer.de>
+Date:   Tue Apr 22 00:34:18 2008 +0200
+
+    pylint bin
+
+diff --git a/bin/sugar-activity b/bin/sugar-activity
+index c01b263..22c4e59 100644
+--- a/bin/sugar-activity
++++ b/bin/sugar-activity
+@@ -30,7 +30,6 @@ import dbus.glib
+ 
+ from sugar.activity import activityhandle
+ from sugar.bundle.activitybundle import ActivityBundle
+-from sugar import _sugarbaseext
+ from sugar import logger
+ 
+ activity_instances = []
+@@ -54,12 +53,12 @@ def get_single_process_path(bundle_id):
+     return '/' + bundle_id.replace('.', '/')
+ 
+ class SingleProcess(dbus.service.Object):
+-    def __init__(self, service_name, constructor):
++    def __init__(self, name_service, constructor):
+         self.constructor = constructor
+     
+         bus = dbus.SessionBus()
+-        bus_name = dbus.service.BusName(service_name, bus = bus)
+-        object_path = get_single_process_path(service_name)
++        bus_name = dbus.service.BusName(name_service, bus=bus)
++        object_path = get_single_process_path(name_service)
+         dbus.service.Object.__init__(self, bus_name, object_path)
+ 
+     @dbus.service.method("org.laptop.SingleProcess", in_signature="a{ss}")
+@@ -113,18 +112,18 @@ module = __import__(module_name)
+ for comp in module_name.split('.')[1:]:
+     module = getattr(module, comp)
+ 
+-constructor = getattr(module, class_name)
+-handle = activityhandle.ActivityHandle(
+-            activity_id=options.activity_id,
+-            object_id=options.object_id, uri=options.uri)
++activity_constructor = getattr(module, class_name)
++activity_handle = activityhandle.ActivityHandle(
++        activity_id=options.activity_id,
++        object_id=options.object_id, uri=options.uri)
+ 
+ if options.single_process is True:
+-    bus = dbus.SessionBus()
++    sessionbus = dbus.SessionBus()
+ 
+     service_name = get_single_process_name(options.bundle_id)
+     service_path = get_single_process_path(options.bundle_id)
+ 
+-    bus_object = bus.get_object(
++    bus_object = sessionbus.get_object(
+             'org.freedesktop.DBus', '/org/freedesktop/DBus')
+     try:
+         name = bus_object.GetNameOwner(
+@@ -133,10 +132,10 @@ if options.single_process is True:
+         name = None
+ 
+     if not name:
+-        service = SingleProcess(service_name, constructor)
++        service = SingleProcess(service_name, activity_constructor)
+     else:
+-        single_process = bus.get_object(service_name, service_path)
+-        single_process.create(handle.get_dict())
++        single_process = sessionbus.get_object(service_name, service_path)
++        single_process.create(activity_handle.get_dict())
+ 
+         print 'Created %s in a single process.' % service_name
+         sys.exit(0)
+@@ -144,6 +143,6 @@ if options.single_process is True:
+ if hasattr(module, 'start'):
+     module.start()
+ 
+-create_activity_instance(constructor, handle)
++create_activity_instance(activity_constructor, activity_handle)
+ 
+ gtk.main()
+diff --git a/bin/sugar-launch b/bin/sugar-launch
+index a0a5387..7765ff1 100644
+--- a/bin/sugar-launch
++++ b/bin/sugar-launch
+@@ -20,7 +20,6 @@ import os
+ import sys
+ from optparse import OptionParser
+ 
+-from sugar import env
+ from sugar.activity import activityfactory
+ from sugar.activity.registry import get_registry
+ 
+@@ -46,7 +45,7 @@ def _which(exec_file):
+     if 'PATH' in os.environ:
+         envpath = os.environ['PATH']
+     else:
+-        envpath = defpath
++        return None
+ 
+     for path in envpath.split(os.pathsep):
+         fullname = os.path.join(path, exec_file)
+
+commit 0c06ef0220bebb609f0d175eeedd15035ae13449
+Merge: f65fa1c... a327959...
+Author: Eben Eliason <eben@localhost.localdomain>
+Date:   Sat Apr 19 06:47:22 2008 -0400
+
+    Merge git+ssh://dev.laptop.org/git/sugar
+
+commit f65fa1ccca7df15ad0ace37ad6983cf0bb49e89d
+Author: Eben Eliason <eben@localhost.localdomain>
+Date:   Thu Apr 17 00:58:42 2008 -0400
+
+    Add suport for adding/removing activities to/from ring
+
+diff --git a/src/view/home/activitieslist.py b/src/view/home/activitieslist.py
+index 3b4c9d2..7f2b428 100644
+--- a/src/view/home/activitieslist.py
++++ b/src/view/home/activitieslist.py
+@@ -52,7 +52,8 @@ class ActivitiesList(hippo.CanvasScrollbars):
+ 
+     def __activity_removed_cb(self, activity_registry, activity_info):
+         for entry in self.get_children():
+-            if entry.get_bundle_id() == activity_info.bundle_id:
++            if entry.get_bundle_id() == activity_info.bundle_id and \
++                    entry.get_version() == activity_info.version:
+                 self.remove(entry)
+                 return
+ 
+@@ -75,17 +76,23 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
+                                  box_height=style.GRID_CELL_SIZE,
+                                  orientation=hippo.ORIENTATION_HORIZONTAL)
+ 
+-        self._activity_info = activity_info
++        registry = activity.get_registry()
++        registry.connect('activity-changed', self.__activity_changed_cb)
++
++        self._bundle_id = activity_info.bundle_id
++        self._version = activity_info.version
++        self._favorite = activity_info.favorite
+ 
+-        favorite_icon = FavoriteIcon(self._activity_info.favorite)
+-        favorite_icon.connect('notify::favorite', self.__favorite_changed_cb)
+-        self.append(favorite_icon)
++        self._favorite_icon = FavoriteIcon(self._favorite)
++        self._favorite_icon.connect('notify::favorite',
++                                    self.__favorite_changed_cb)
++        self.append(self._favorite_icon)
+ 
+         self.icon = CanvasIcon(size=style.STANDARD_ICON_SIZE, cache=True,
+                 file_name=activity_info.icon,
+                 stroke_color=style.COLOR_BUTTON_GREY.get_svg(),
+                 fill_color=style.COLOR_TRANSPARENT.get_svg())
+-        self.icon.set_palette(ActivityPalette(self._activity_info))
++        self.icon.set_palette(ActivityPalette(activity_info))
+         self.icon.connect('hovering-changed',
+                           self.__icon_hovering_changed_event_cb)
+         self.icon.connect('button-release-event',
+@@ -116,8 +123,14 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
+ 
+     def __favorite_changed_cb(self, favorite_icon, pspec):
+         registry = activity.get_registry()
+-        registry.set_activity_favorite(self._activity_info.bundle_id,
+-                self._activity_info.version, favorite_icon.props.favorite)
++        registry.set_activity_favorite(self._bundle_id, self._version,
++                                       favorite_icon.props.favorite)
++
++    def __activity_changed_cb(self, activity_registry, activity_info):
++        if self._bundle_id == activity_info.bundle_id and \
++                self._version == activity_info.version:
++            self._favorite = activity_info.favorite
++            self._favorite_icon.props.favorite = self._favorite
+ 
+     def __icon_hovering_changed_event_cb(self, icon, event):
+         if event:
+@@ -127,10 +140,13 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
+             self.icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+ 
+     def __icon_button_release_event_cb(self, icon, event):
+-        view.Shell.get_instance().start_activity(self._activity_info.bundle_id)
++        view.Shell.get_instance().start_activity(self._bundle_id)
+ 
+     def get_bundle_id(self):
+-        return self._activity_info.bundle_id
++        return self._bundle_id
++
++    def get_version(self):
++        return self._version
+ 
+ class FavoriteIcon(CanvasIcon):
+     __gproperties__ = {
+diff --git a/src/view/palettes.py b/src/view/palettes.py
+index 467eda0..799f6ed 100644
+--- a/src/view/palettes.py
++++ b/src/view/palettes.py
+@@ -23,9 +23,12 @@ import gtk
+ 
+ from sugar import env
+ from sugar import profile
++from sugar import activity
+ from sugar.graphics.palette import Palette
+ from sugar.graphics.menuitem import MenuItem
+ from sugar.graphics.icon import Icon
++from sugar.graphics import style
++from sugar.graphics.xocolor import XoColor
+ 
+ import view.Shell
+ 
+@@ -100,7 +103,9 @@ class ActivityPalette(Palette):
+         Palette.__init__(self, primary_text=activity_info.name,
+                          icon=activity_icon)
+ 
+-        self._activity_info = activity_info
++        self._bundle_id = activity_info.bundle_id
++        self._version = activity_info.version
++        self._favorite = activity_info.favorite
+ 
+         menu_item = MenuItem(_('Start'), 'activity-start')
+         menu_item.connect('activate', self.__start_activate_cb)
+@@ -115,9 +120,45 @@ class ActivityPalette(Palette):
+         menu_item.show()
+         """
+ 
+-    def __start_activate_cb(self, menu_item):
+-        view.Shell.get_instance().start_activity(self._activity_info.bundle_id)
++        self._favorite_item = MenuItem('')
++        self._favorite_icon = Icon(icon_name='emblem-favorite',
++                icon_size=gtk.ICON_SIZE_MENU)
++        self._favorite_item.set_image(self._favorite_icon)
++        self._favorite_item.connect('activate',
++                                    self.__change_favorite_activate_cb)
++        self.menu.append(self._favorite_item)
++        self._favorite_item.show()
++
++        registry = activity.get_registry()
++        registry.connect('activity_changed', self.__activity_changed_cb)
++        self._update_favorite_item()
++
++    def _update_favorite_item(self):
++        label = self._favorite_item.child
++        if self._favorite:
++            label.set_text(_('Remove from ring'))
++            xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
++                                         style.COLOR_TRANSPARENT.get_svg()))
++        else:
++	    label.set_text(_('Add to ring'))
++            xo_color = profile.get_color()
+ 
++        self._favorite_icon.props.xo_color = xo_color
++
++    def __start_activate_cb(self, menu_item):
++        view.Shell.get_instance().start_activity(self._bundle_id)
++
++    def __change_favorite_activate_cb(self, menu_item):
++        registry = activity.get_registry()
++        registry.set_activity_favorite(self._bundle_id,
++                                       self._version,
++                                       not self._favorite)
++
++    def __activity_changed_cb(self, activity_registry, activity_info):
++        if activity_info.bundle_id == self._bundle_id and \
++               activity_info.version == self._version:
++           self._favorite = activity_info.favorite
++           self._update_favorite_item()
+ 
+ class JournalPalette(BasePalette):
+     def __init__(self, home_activity):
+
+commit a32795971290beadc9f44e4a6a5645a8fa6ad761
+Author: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Date:   Thu Apr 10 19:23:03 2008 +0200
+
+    Display current activity when its frame icon is clicked.
+
+diff --git a/src/view/frame/activitiestray.py b/src/view/frame/activitiestray.py
+index 4fbd5f6..f50a308 100644
+--- a/src/view/frame/activitiestray.py
++++ b/src/view/frame/activitiestray.py
+@@ -207,7 +207,7 @@ class ActivitiesTray(HTray):
+         button = ActivityButton(home_activity, group)
+         self.add_item(button)
+         self._buttons[home_activity.get_activity_id()] = button
+-        button.connect('toggled', self.__activity_toggled_cb, home_activity)
++        button.connect('clicked', self.__activity_clicked_cb, home_activity)
+         button.show()
+ 
+     def __activity_removed_cb(self, home_model, home_activity):
+@@ -221,8 +221,10 @@ class ActivitiesTray(HTray):
+         button = self._buttons[home_activity.get_activity_id()]
+         button.props.active = True
+ 
+-    def __activity_toggled_cb(self, button, home_activity):
+-        home_activity.get_window().activate(1)
++    def __activity_clicked_cb(self, button, home_activity):
++        if button.props.active:
++            logging.debug('ActivitiesTray.__activity_clicked_cb')
++            home_activity.get_window().activate(1)
+ 
+     def __invite_clicked_cb(self, icon, invite):
+         self._invites.remove_invite(invite)
