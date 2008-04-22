@@ -9,6 +9,8 @@ sugar (0.79.3-3) UNRELEASED; urgency=low
   * Depend on librsvg2-common (SVG support in python-gnome2-desktop is
     not enough).  Closes: bug#476789, thanks to Shaun Jackman.
   * Depend on x11-xserver-utils (xrandr needed for rotation: <alt>r).
+  * Tighten python-artwork recommendation to versions supporting new UI.
+    Closes: bug#477275, thanks to Ivan Vucica.
   * Add patch 2003 to resolve Debian-style timezone config in
     sugar-control-panel.
   * Add patch 2991 to enable danish l10n in configure.
