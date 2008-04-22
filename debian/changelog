@@ -20,6 +20,7 @@ sugar (0.79.3-3) unstable; urgency=low
   * Add patch 2991 to enable danish l10n in configure.
   * Use XO-style in sugar-emulator.desktop (why not?).
   * Register sugar and sugar-emulator with the Debian menu system.
+  * Bump debhelper compatibility level to 6.
   * Update local cdbs snippets:
     + Relax python-central and python-support build-dependencies in
       python-autotools.mk.
