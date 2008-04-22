@@ -31,7 +31,7 @@ class ClipboardObject:
         self._formats = {}
 
     def destroy(self):
-        for type, format in self._formats.iteritems():
+        for format in self._formats.itervalues():
             format.destroy()
 
     def get_id(self):
@@ -54,8 +54,8 @@ class ClipboardObject:
         return ''
 
     def get_activities(self):
-        mime = self.get_mime_type()
-        if not mime:
+        mime_type = self.get_mime_type()
+        if not mime_type:
             return ''
 
         registry = bundleregistry.get_registry()
@@ -89,17 +89,17 @@ class ClipboardObject:
                 if os.path.exists(uri.path):
                     format = mime.get_for_file(uri.path)
                 else:
-                    format = mime.get_from_file_name(uri.path)                    
+                    format = mime.get_from_file_name(uri.path)
                 logging.debug('Choosed %r!' % format)
 
         return format
 
 class Format:
 
-    def __init__(self, type, data, on_disk):
+    def __init__(self, mime_type, data, on_disk):
         self.owns_disk_data = False
 
-        self._type = type
+        self._type = mime_type
         self._data = data
         self._on_disk = on_disk
 

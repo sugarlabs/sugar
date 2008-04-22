@@ -23,7 +23,6 @@ import simplejson
 from sugar.bundle.activitybundle import ActivityBundle
 from sugar.bundle.bundle import MalformedBundleException
 from sugar import env
-from sugar import util
 
 import config
 
@@ -73,7 +72,8 @@ class BundleRegistry(gobject.GObject):
                 self._favorite_bundles = simplejson.load(open(path))
                 print 'loaded %r' % self._favorite_bundles 
             except ValueError, e:
-                logging.error('Error while loading favorite_activities: %r.' % e)
+                logging.error('Error while loading favorite_activities: %r.' 
+                              % e)
                 self._favorite_bundles = []
         else:
             self._favorite_bundles = []
@@ -111,13 +111,13 @@ class BundleRegistry(gobject.GObject):
                               'bundle: %s, %s, %s' % (f, e.__class__, e))
 
         bundle_dirs = bundles.keys()
-        bundle_dirs.sort(lambda d1,d2: cmp(bundles[d1], bundles[d2]))
-        for dir in bundle_dirs:
+        bundle_dirs.sort(lambda d1, d2: cmp(bundles[d1], bundles[d2]))
+        for folder in bundle_dirs:
             try:
-                self.add_bundle(dir)
+                self.add_bundle(folder)
             except Exception, e:
                 logging.error('Error while processing installed activity ' \
-                              'bundle: %s, %s, %s' % (dir, e.__class__, e))
+                              'bundle: %s, %s, %s' % (folder, e.__class__, e))
 
     def add_bundle(self, bundle_path):
         try:
@@ -141,7 +141,8 @@ class BundleRegistry(gobject.GObject):
         result = []
         for bundle in self._bundles:
             if bundle.get_mime_types() and mime_type in bundle.get_mime_types():
-                if self.get_default_for_type(mime_type) == bundle.get_bundle_id():
+                if self.get_default_for_type(mime_type) == \
+                        bundle.get_bundle_id():
                     result.insert(0, bundle)
                 else:
                     result.append(bundle)
@@ -184,8 +185,8 @@ def get_registry():
 
 _bundle_registry = BundleRegistry()
 
-for path in _get_data_dirs():
-    bundles_path = os.path.join(path, 'activities')
+for data_dir in _get_data_dirs():
+    bundles_path = os.path.join(data_dir, 'activities')
     _bundle_registry.add_search_path(bundles_path)
 
 _bundle_registry.add_search_path(env.get_user_activities_path())

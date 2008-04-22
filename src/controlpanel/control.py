@@ -395,13 +395,14 @@ def set_timezone(timezone):
         fromfile = os.path.join("/usr/share/zoneinfo/", timezone)        
         try:
             shutil.copyfile(fromfile, "/etc/localtime")
-        except OSError, (errno, msg):
-            print (_("Error copying timezone (from %s): %s") % (fromfile, msg))
+        except OSError, detail:
+            print (_("Error copying timezone (from %s): %s") % 
+                   (fromfile, detail))
             return
         try:
             os.chmod("/etc/localtime", 0644)
-        except OSError, (errno, msg):
-            print (_("Changing permission of timezone: %s") % (msg))
+        except OSError, detail:
+            print (_("Changing permission of timezone: %s") % detail)
             return
                 
         # Write info to the /etc/sysconfig/clock file

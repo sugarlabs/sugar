@@ -23,9 +23,12 @@ import gtk
 
 from sugar import env
 from sugar import profile
+from sugar import activity
 from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
+from sugar.graphics import style
+from sugar.graphics.xocolor import XoColor
 
 import view.Shell
 
@@ -100,7 +103,9 @@ class ActivityPalette(Palette):
         Palette.__init__(self, primary_text=activity_info.name,
                          icon=activity_icon)
 
-        self._activity_info = activity_info
+        self._bundle_id = activity_info.bundle_id
+        self._version = activity_info.version
+        self._favorite = activity_info.favorite
 
         menu_item = MenuItem(_('Start'), 'activity-start')
         menu_item.connect('activate', self.__start_activate_cb)
@@ -115,9 +120,45 @@ class ActivityPalette(Palette):
         menu_item.show()
         """
 
-    def __start_activate_cb(self, menu_item):
-        view.Shell.get_instance().start_activity(self._activity_info.bundle_id)
+        self._favorite_item = MenuItem('')
+        self._favorite_icon = Icon(icon_name='emblem-favorite',
+                icon_size=gtk.ICON_SIZE_MENU)
+        self._favorite_item.set_image(self._favorite_icon)
+        self._favorite_item.connect('activate',
+                                    self.__change_favorite_activate_cb)
+        self.menu.append(self._favorite_item)
+        self._favorite_item.show()
 
+        registry = activity.get_registry()
+        registry.connect('activity_changed', self.__activity_changed_cb)
+        self._update_favorite_item()
+
+    def _update_favorite_item(self):
+        label = self._favorite_item.child
+        if self._favorite:
+            label.set_text(_('Remove from ring'))
+            xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
+                                         style.COLOR_TRANSPARENT.get_svg()))
+        else:
+	    label.set_text(_('Add to ring'))
+            xo_color = profile.get_color()
+
+        self._favorite_icon.props.xo_color = xo_color
+
+    def __start_activate_cb(self, menu_item):
+        view.Shell.get_instance().start_activity(self._bundle_id)
+
+    def __change_favorite_activate_cb(self, menu_item):
+        registry = activity.get_registry()
+        registry.set_activity_favorite(self._bundle_id,
+                                       self._version,
+                                       not self._favorite)
+
+    def __activity_changed_cb(self, activity_registry, activity_info):
+        if activity_info.bundle_id == self._bundle_id and \
+               activity_info.version == self._version:
+           self._favorite = activity_info.favorite
+           self._update_favorite_item()
 
 class JournalPalette(BasePalette):
     def __init__(self, home_activity):

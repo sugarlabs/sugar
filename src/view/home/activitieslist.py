@@ -52,7 +52,8 @@ class ActivitiesList(hippo.CanvasScrollbars):
 
     def __activity_removed_cb(self, activity_registry, activity_info):
         for entry in self.get_children():
-            if entry.get_bundle_id() == activity_info.bundle_id:
+            if entry.get_bundle_id() == activity_info.bundle_id and \
+                    entry.get_version() == activity_info.version:
                 self.remove(entry)
                 return
 
@@ -75,17 +76,23 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
                                  box_height=style.GRID_CELL_SIZE,
                                  orientation=hippo.ORIENTATION_HORIZONTAL)
 
-        self._activity_info = activity_info
+        registry = activity.get_registry()
+        registry.connect('activity-changed', self.__activity_changed_cb)
 
-        favorite_icon = FavoriteIcon(self._activity_info.favorite)
-        favorite_icon.connect('notify::favorite', self.__favorite_changed_cb)
-        self.append(favorite_icon)
+        self._bundle_id = activity_info.bundle_id
+        self._version = activity_info.version
+        self._favorite = activity_info.favorite
+
+        self._favorite_icon = FavoriteIcon(self._favorite)
+        self._favorite_icon.connect('notify::favorite',
+                                    self.__favorite_changed_cb)
+        self.append(self._favorite_icon)
 
         self.icon = CanvasIcon(size=style.STANDARD_ICON_SIZE, cache=True,
                 file_name=activity_info.icon,
                 stroke_color=style.COLOR_BUTTON_GREY.get_svg(),
                 fill_color=style.COLOR_TRANSPARENT.get_svg())
-        self.icon.set_palette(ActivityPalette(self._activity_info))
+        self.icon.set_palette(ActivityPalette(activity_info))
         self.icon.connect('hovering-changed',
                           self.__icon_hovering_changed_event_cb)
         self.icon.connect('button-release-event',
@@ -116,8 +123,14 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
 
     def __favorite_changed_cb(self, favorite_icon, pspec):
         registry = activity.get_registry()
-        registry.set_activity_favorite(self._activity_info.bundle_id,
-                self._activity_info.version, favorite_icon.props.favorite)
+        registry.set_activity_favorite(self._bundle_id, self._version,
+                                       favorite_icon.props.favorite)
+
+    def __activity_changed_cb(self, activity_registry, activity_info):
+        if self._bundle_id == activity_info.bundle_id and \
+                self._version == activity_info.version:
+            self._favorite = activity_info.favorite
+            self._favorite_icon.props.favorite = self._favorite
 
     def __icon_hovering_changed_event_cb(self, icon, event):
         if event:
@@ -127,10 +140,13 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
             self.icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
 
     def __icon_button_release_event_cb(self, icon, event):
-        view.Shell.get_instance().start_activity(self._activity_info.bundle_id)
+        view.Shell.get_instance().start_activity(self._bundle_id)
 
     def get_bundle_id(self):
-        return self._activity_info.bundle_id
+        return self._bundle_id
+
+    def get_version(self):
+        return self._version
 
 class FavoriteIcon(CanvasIcon):
     __gproperties__ = {

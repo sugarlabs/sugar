@@ -55,6 +55,7 @@ class AccessPointView(CanvasPulsingIcon):
         self._model = model
         self._meshdev = mesh_device
         self._disconnect_item = None
+        self._connect_item = None
         self._greyed_out = False
 
         self.connect('activated', self._activate_cb)
@@ -67,13 +68,6 @@ class AccessPointView(CanvasPulsingIcon):
                                          style.COLOR_TRANSPARENT.get_svg()))
         self.props.pulse_color = pulse_color
 
-        self._palette = self._create_palette()
-        self.set_palette(self._palette)
-
-        self._update_icon()
-        self._update_name()
-        self._update_state()
-
         # Update badge
         caps = model.props.capabilities
         if model.get_nm_network().is_favorite():
@@ -81,20 +75,38 @@ class AccessPointView(CanvasPulsingIcon):
         elif (caps & NM_802_11_CAP_PROTO_WEP) or (caps & NM_802_11_CAP_PROTO_WPA) or (caps & NM_802_11_CAP_PROTO_WPA2):
             self.props.badge_name = "emblem-locked"
 
+        self._palette = self._create_palette()
+        self.set_palette(self._palette)
+
+        self._update_icon()
+        self._update_name()
+        self._update_state()
+
     def _create_palette(self):
-        p = palette.Palette(self._model.props.name, menu_after_content=True)
-        if not self._meshdev:
-            return p
+        icon_name = get_icon_state(_ICON_NAME, self._model.props.strength)        
+        palette_icon = Icon(icon_name=icon_name,
+                            icon_size=style.STANDARD_ICON_SIZE,
+                            badge_name=self.props.badge_name)
+        ap_color = self._model.get_nm_network().get_colors()
+        palette_icon.props.xo_color = XoColor('%s,%s' % ap_color)
+                                              
+        p = palette.Palette(primary_text=self._model.props.name,
+                            icon=palette_icon)
+
+        self._connect_item = MenuItem(_('Connect'), 'dialog-ok')
+        self._connect_item.connect('activate', self._activate_cb)
+        p.menu.append(self._connect_item)
 
         # Only show disconnect when there's a mesh device, because mesh takes
         # priority over the normal wireless device.  NM doesn't have a "disconnect"
         # method for a device either (for various reasons) so this doesn't
-        # have a good mapping 
-        self._disconnect_item = gtk.MenuItem(_('Disconnect...'))
-        self._disconnect_item.connect('activate', self._disconnect_activate_cb)
-        p.menu.append(self._disconnect_item)
-        if self._model.props.state == accesspointmodel.STATE_CONNECTED:
-            self._disconnect_item.show()
+        # have a good mapping
+        if self._meshdev:
+            self._disconnect_item = MenuItem(_('Disconnect'), 'media-eject')
+            self._disconnect_item.connect('activate',
+                                          self._disconnect_activate_cb)
+            p.menu.append(self._disconnect_item)
+
         return p
 
     def _disconnect_activate_cb(self, menuitem):
@@ -120,25 +132,33 @@ class AccessPointView(CanvasPulsingIcon):
             network_manager.set_active_device(device, network)
 
     def _update_name(self):
-        self._palette.set_primary_text(self._model.props.name)
+        self._palette.props.primary_text = self._model.props.name
 
     def _update_icon(self):
         icon_name = get_icon_state(_ICON_NAME, self._model.props.strength)
         if icon_name:
-            self.props.icon_name = icon_name        
+            self.props.icon_name = icon_name
+            icon = self._palette.props.icon
+            icon.props.icon_name = icon_name
 
     def _update_state(self):
         if self._model.props.state == accesspointmodel.STATE_CONNECTING:
             if self._disconnect_item:
-                self._disconnect_item.hide()
+                self._disconnect_item.show()
+            self._connect_item.hide()
+            self._palette.props.secondary_text = _('Connecting...')
             self.props.pulsing = True
         elif self._model.props.state == accesspointmodel.STATE_CONNECTED:
             if self._disconnect_item:
                 self._disconnect_item.show()
+            self._connect_item.hide()
+            # TODO: show the channel number
             self.props.pulsing = False
         elif self._model.props.state == accesspointmodel.STATE_NOTCONNECTED:
             if self._disconnect_item:
                 self._disconnect_item.hide()
+            self._connect_item.show()
+            # TODO: show the channel number
             self.props.pulsing = False
 
         if self._greyed_out:
