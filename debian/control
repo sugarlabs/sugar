@@ -17,7 +17,7 @@ Recommends: sugar-artwork (>= 0.79.2) | sugar-artwork, network-manager, net-tool
 Suggests: openssh-client
 Provides: ${python:Provides}
 XB-Python-Version: ${python:Versions}
-Description: Sugar graphical shell - core functionality
+Description: window manager from the OLPC project
  Sugar is a graphical user interface aimed at children.
  .
  Sugar is mainly used as the interface for One Laptop Per Child (OLPC)
