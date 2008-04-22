@@ -18,8 +18,6 @@ import sys
 import getopt
 from gettext import gettext as _
 
-from sugar import env
-
 from controlpanel import control
         
 def cmd_help():
@@ -40,9 +38,6 @@ def main():
         cmd_help()
         sys.exit(2)
 
-    output = None
-    verbose = False
-
     if not opts:
         cmd_help()
         sys.exit()
@@ -51,7 +46,8 @@ def main():
         if opt in ("-h"):            
             method = getattr(control, 'set_' + key, None)
             if method is None:
-                print _("sugar-control-panel: key=%s not an available option"% key)
+                print _("sugar-control-panel: key=%s not an available option" 
+                        % key)
                 sys.exit()
             else:    
                 print method.__doc__
@@ -63,14 +59,16 @@ def main():
         if opt in ("-g"):
             method = getattr(control, 'print_' + key, None)
             if method is None:
-                print _("sugar-control-panel: key=%s not an available option"% key)
+                print _("sugar-control-panel: key=%s not an available option" 
+                        % key)
                 sys.exit()
             else:    
                 method()
         if opt in ("-s"):
             method = getattr(control, 'set_' + key, None)
             if method is None:
-                print _("sugar-control-panel: key=%s not an available option"% key)
+                print _("sugar-control-panel: key=%s not an available option"
+                        % key)
                 sys.exit()
             else:
                 try:

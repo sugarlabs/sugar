@@ -15,32 +15,29 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import sys
-import os
 import logging
 
 import gobject
 import dbus.glib
  
 from sugar import logger
-from sugar import env
 
 import activityregistryservice
 import clipboardservice
 
 def main():
-	logger.start('shellservice')
-	logging.info('Starting shell service.')
+    logger.start('shellservice')
+    logging.info('Starting shell service.')
 
-	gobject.threads_init()
-	dbus.glib.threads_init()
-
-	clipboard_service = clipboardservice.get_instance()
-	activity_registry = activityregistryservice.get_instance()
-
-	loop = gobject.MainLoop()
-	try:
-	    loop.run()
-	except KeyboardInterrupt:
-	    print 'Ctrl+C pressed, exiting...'
+    gobject.threads_init()
+    dbus.glib.threads_init()
+    
+    clipboardservice.get_instance()
+    activityregistryservice.get_instance()
+    
+    loop = gobject.MainLoop()
+    try:
+        loop.run()
+    except KeyboardInterrupt:
+        print 'Ctrl+C pressed, exiting...'
 

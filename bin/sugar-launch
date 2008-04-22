@@ -20,7 +20,6 @@ import os
 import sys
 from optparse import OptionParser
 
-from sugar import env
 from sugar.activity import activityfactory
 from sugar.activity.registry import get_registry
 
@@ -46,7 +45,7 @@ def _which(exec_file):
     if 'PATH' in os.environ:
         envpath = os.environ['PATH']
     else:
-        envpath = defpath
+        return None
 
     for path in envpath.split(os.pathsep):
         fullname = os.path.join(path, exec_file)

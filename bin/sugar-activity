@@ -30,7 +30,6 @@ import dbus.glib
 
 from sugar.activity import activityhandle
 from sugar.bundle.activitybundle import ActivityBundle
-from sugar import _sugarbaseext
 from sugar import logger
 
 activity_instances = []
@@ -54,12 +53,12 @@ def get_single_process_path(bundle_id):
     return '/' + bundle_id.replace('.', '/')
 
 class SingleProcess(dbus.service.Object):
-    def __init__(self, service_name, constructor):
+    def __init__(self, name_service, constructor):
         self.constructor = constructor
     
         bus = dbus.SessionBus()
-        bus_name = dbus.service.BusName(service_name, bus = bus)
-        object_path = get_single_process_path(service_name)
+        bus_name = dbus.service.BusName(name_service, bus=bus)
+        object_path = get_single_process_path(name_service)
         dbus.service.Object.__init__(self, bus_name, object_path)
 
     @dbus.service.method("org.laptop.SingleProcess", in_signature="a{ss}")
@@ -113,18 +112,18 @@ module = __import__(module_name)
 for comp in module_name.split('.')[1:]:
     module = getattr(module, comp)
 
-constructor = getattr(module, class_name)
-handle = activityhandle.ActivityHandle(
-            activity_id=options.activity_id,
-            object_id=options.object_id, uri=options.uri)
+activity_constructor = getattr(module, class_name)
+activity_handle = activityhandle.ActivityHandle(
+        activity_id=options.activity_id,
+        object_id=options.object_id, uri=options.uri)
 
 if options.single_process is True:
-    bus = dbus.SessionBus()
+    sessionbus = dbus.SessionBus()
 
     service_name = get_single_process_name(options.bundle_id)
     service_path = get_single_process_path(options.bundle_id)
 
-    bus_object = bus.get_object(
+    bus_object = sessionbus.get_object(
             'org.freedesktop.DBus', '/org/freedesktop/DBus')
     try:
         name = bus_object.GetNameOwner(
@@ -133,10 +132,10 @@ if options.single_process is True:
         name = None
 
     if not name:
-        service = SingleProcess(service_name, constructor)
+        service = SingleProcess(service_name, activity_constructor)
     else:
-        single_process = bus.get_object(service_name, service_path)
-        single_process.create(handle.get_dict())
+        single_process = sessionbus.get_object(service_name, service_path)
+        single_process.create(activity_handle.get_dict())
 
         print 'Created %s in a single process.' % service_name
         sys.exit(0)
@@ -144,6 +143,6 @@ if options.single_process is True:
 if hasattr(module, 'start'):
     module.start()
 
-create_activity_instance(constructor, handle)
+create_activity_instance(activity_constructor, activity_handle)
 
 gtk.main()

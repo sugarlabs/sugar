@@ -207,7 +207,7 @@ class ActivitiesTray(HTray):
         button = ActivityButton(home_activity, group)
         self.add_item(button)
         self._buttons[home_activity.get_activity_id()] = button
-        button.connect('toggled', self.__activity_toggled_cb, home_activity)
+        button.connect('clicked', self.__activity_clicked_cb, home_activity)
         button.show()
 
     def __activity_removed_cb(self, home_model, home_activity):
@@ -221,8 +221,10 @@ class ActivitiesTray(HTray):
         button = self._buttons[home_activity.get_activity_id()]
         button.props.active = True
 
-    def __activity_toggled_cb(self, button, home_activity):
-        home_activity.get_window().activate(1)
+    def __activity_clicked_cb(self, button, home_activity):
+        if button.props.active:
+            logging.debug('ActivitiesTray.__activity_clicked_cb')
+            home_activity.get_window().activate(1)
 
     def __invite_clicked_cb(self, icon, invite):
         self._invites.remove_invite(invite)
