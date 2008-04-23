@@ -114,6 +114,8 @@ class AccessPointView(CanvasPulsingIcon):
         network_manager = hardwaremanager.get_network_manager()
         if network_manager and self._meshdev:
             network_manager.set_active_device(self._meshdev)
+            self._palette.props.secondary_text = _('Disconnecting...')
+            self.props.pulsing = False
 
     def _strength_changed_cb(self, model, pspec):
         self._update_icon()
@@ -153,12 +155,14 @@ class AccessPointView(CanvasPulsingIcon):
                 self._disconnect_item.show()
             self._connect_item.hide()
             # TODO: show the channel number
+            self._palette.props.secondary_text = _('Connected')
             self.props.pulsing = False
         elif self._model.props.state == accesspointmodel.STATE_NOTCONNECTED:
             if self._disconnect_item:
                 self._disconnect_item.hide()
             self._connect_item.show()
             # TODO: show the channel number
+            self._palette.props.secondary_text = None
             self.props.pulsing = False
 
         if self._greyed_out:
