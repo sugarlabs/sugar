@@ -20,7 +20,6 @@ import gobject
 import dbus
 
 from model.devices import device
-from model.devices.network import wired
 from model.devices.network import wireless
 from model.devices.network import mesh
 from model.devices import battery
@@ -60,8 +59,8 @@ class DevicesModel(gobject.GObject):
         if not network_manager:
             return
 
-        for device in network_manager.get_devices():
-            self._check_network_device(device)
+        for dev in network_manager.get_devices():
+            self._check_network_device(dev)
 
         network_manager.connect('device-added',
                                 self._network_device_added_cb)
@@ -114,23 +113,25 @@ class DevicesModel(gobject.GObject):
         if dtype == nmclient.DEVICE_TYPE_802_11_WIRELESS:
             dev = wireless.Device(nm_device)
             self.add_device(dev)
-            sigid = dev.connect('notify::state', self._network_device_state_changed_cb)
+            sigid = dev.connect('notify::state',
+                                self._network_device_state_changed_cb)
             self._sigids[dev] = sigid
         if dtype == nmclient.DEVICE_TYPE_802_11_MESH_OLPC:
             dev = mesh.Device(nm_device)
             self.add_device(dev)
-            sigid = dev.connect('notify::state', self._network_device_state_changed_cb)
+            sigid = dev.connect('notify::state',
+                                self._network_device_state_changed_cb)
             self._sigids[dev] = sigid
 
     def __iter__(self):
         return iter(self._devices.values())
 
-    def add_device(self, device):
-        self._devices[device.get_id()] = device
-        self.emit('device-appeared', device)
+    def add_device(self, dev):
+        self._devices[dev.get_id()] = dev
+        self.emit('device-appeared', dev)
 
-    def remove_device(self, device):
-        self.emit('device-disappeared', self._devices[device.get_id()])
-        device.disconnect(self._sigids[device])
-        del self._sigids[device]
-        del self._devices[device.get_id()]
+    def remove_device(self, dev):
+        self.emit('device-disappeared', self._devices[dev.get_id()])
+        dev.disconnect(self._sigids[dev])
+        del self._sigids[dev]
+        del self._devices[dev.get_id()]

@@ -16,11 +16,6 @@
 
 import gobject
 import os
-import random
-import base64
-import time
-import logging
-import dbus
 
 from sugar import env
 from sugar import profile
@@ -29,20 +24,21 @@ from sugar import util
 from model.Invites import Invites
 
 class ShellOwner(gobject.GObject):
+    """Class representing the owner of this machine/instance. This class
+    runs in the shell and serves up the buddy icon and other stuff. It's the
+    server portion of the Owner, paired with the client portion in Buddy.py.
+    """
     __gtype_name__ = "ShellOwner"
 
     __gsignals__ = {
-        'nick-changed'                : (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                                        ([gobject.TYPE_STRING])),
-        'color-changed'               : (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                                        ([gobject.TYPE_PYOBJECT])),
-        'icon-changed'                : (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                                        ([gobject.TYPE_PYOBJECT]))
+        'nick-changed'  : (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([gobject.TYPE_STRING])),
+        'color-changed' : (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([gobject.TYPE_PYOBJECT])),
+        'icon-changed'  : (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([gobject.TYPE_PYOBJECT]))
     }
 
-    """Class representing the owner of this machine/instance.  This class
-    runs in the shell and serves up the buddy icon and other stuff.  It's the
-    server portion of the Owner, paired with the client portion in Buddy.py."""
     def __init__(self):
         gobject.GObject.__init__(self)
 

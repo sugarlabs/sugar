@@ -73,14 +73,14 @@ class HomeModel(gobject.GObject):
         ret = []
         for i in self._activities:
             if i.get_window() is not None:
-               ret.append(i)
+                ret.append(i)
         return ret
 
     def get_previous_activity(self):
         activities = self._get_activities_with_window()
         i = activities.index(self._pending_activity)
         if len(activities) == 0:
-             return None
+            return None
         elif i - 1 >= 0:
             return activities[i - 1]
         else:
@@ -90,7 +90,7 @@ class HomeModel(gobject.GObject):
         activities = self._get_activities_with_window()
         i = activities.index(self._pending_activity)
         if len(activities) == 0:
-             return None
+            return None
         elif i + 1 < len(activities):
             return activities[i + 1]
         else:
@@ -217,10 +217,10 @@ class HomeModel(gobject.GObject):
             while window.get_transient() is not None:
                 window = window.get_transient()
 
-        activity = self._get_activity_by_xid(window.get_xid())
-        if activity is not None:
-            self._set_pending_activity(activity)
-            self._set_active_activity(activity)
+        act = self._get_activity_by_xid(window.get_xid())
+        if act is not None:
+            self._set_pending_activity(act)
+            self._set_active_activity(act)
 
     def _add_activity(self, home_activity):
         self._activities.append(home_activity)
@@ -257,7 +257,9 @@ class HomeModel(gobject.GObject):
         registry = activity.get_registry()
         activity_info = registry.get_activity(service_name)
         if not activity_info:
-            raise ValueError("Activity service name '%s' was not found in the bundle registry." % service_name)
+            raise ValueError("Activity service name '%s'" \
+                             " was not found in the bundle registry."
+                             % service_name)
         home_activity = HomeActivity(activity_info, activity_id)
         home_activity.props.launching = True
         self._add_activity(home_activity)
@@ -274,12 +276,13 @@ class HomeModel(gobject.GObject):
             home_activity.props.launching = False
             self._remove_activity(home_activity)
         else:
-            logging.error('Model for activity id %s does not exist.' % activity_id)
+            logging.error('Model for activity id %s does not exist.'
+                          % activity_id)
 
     def _check_activity_launched(self, activity_id):
         home_activity = self._get_activity_by_id(activity_id)
         if home_activity and home_activity.props.launching:
-            logging.debug('Activity %s still launching, assuming it failed...',
-                          activity_id)
+            logging.debug('Activity %s still launching, assuming it failed...'
+                          % activity_id)
             self.notify_activity_launch_failed(activity_id)
         return False
