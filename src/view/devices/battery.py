@@ -19,9 +19,11 @@ from gettext import gettext as _
 import gtk
 
 from sugar import profile
+from sugar.graphics import style
 from sugar.graphics.icon import get_icon_state
 from sugar.graphics.tray import TrayIcon
 from sugar.graphics.palette import Palette
+from sugar.graphics.xocolor import XoColor
 
 from view.frame.frameinvoker import FrameWidgetInvoker
 
@@ -37,7 +39,7 @@ class DeviceView(TrayIcon):
                           xo_color=profile.get_color())
 
         self._model = model
-        self.palette = BatteryPalette(_('My Battery life'))
+        self.palette = BatteryPalette(_('My Battery'))
         self.set_palette(self.palette)
         self.palette.props.invoker = FrameWidgetInvoker(self)
         self.palette.set_group_id('frame')
@@ -48,21 +50,28 @@ class DeviceView(TrayIcon):
         self._update_info()
 
     def _update_info(self):
-        name = get_icon_state(_ICON_NAME, self._model.props.level)
-        self.icon.props.icon_name = name
+        name = _ICON_NAME
+        current_level = self._model.props.level
+        xo_color = profile.get_color()
+        badge_name = None
 
-        # Update palette
         if self._model.props.charging:
             status = _STATUS_CHARGING
-            self.icon.props.badge_name = 'emblem-charging'
+            name += '-charging'
+            xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
+                                          style.COLOR_WHITE.get_svg()))
         elif self._model.props.discharging:
             status = _STATUS_DISCHARGING
-            self.icon.props.badge_name = None
+            if current_level <= 15:
+                badge_name = 'emblem-warning'
         else:
             status = _STATUS_FULLY_CHARGED
-            self.icon.props.badge_name = None
 
-        self.palette.set_level(self._model.props.level)
+        self.icon.props.icon_name = get_icon_state(name, current_level)
+        self.icon.props.xo_color = xo_color
+        self.icon.props.badge_name = badge_name
+
+        self.palette.set_level(current_level)
         self.palette.set_status(status)
 
     def _battery_status_changed_cb(self, pspec, param):
@@ -92,13 +101,26 @@ class BatteryPalette(Palette):
         self._progress_bar.set_fraction(fraction)
 
     def set_status(self, status):
-        percent_string = ' (%s%%)' % self._level
+        current_level = self._level
+        secondary_text = ''
+        status_text = '%s%%' % current_level
 
         if status == _STATUS_CHARGING:
-            charge_text = _('Battery charging') + percent_string
+            secondary_text = _('Charging')
         elif status == _STATUS_DISCHARGING:
-            charge_text = _('Battery discharging') + percent_string
-        elif status == _STATUS_FULLY_CHARGED:
-            charge_text = _('Battery fully charged')
+            if current_level <= 15:
+                secondary_text = _('Very little power remaining')
+            else:
+                #TODO: make this less of an wild/educated guess
+                minutes_remaining = int(current_level / 0.59)
+                remaining_hourpart = minutes_remaining / 60
+                remaining_minpart = minutes_remaining % 60
+                secondary_text = _('%(hour)d:%(min).2d remaining'
+                                   % { 'hour': remaining_hourpart,
+                                       'min': remaining_minpart})
+        else:
+            secondary_text = _('Charged')
+            status_text = ''
 
-        self._status_label.set_text(charge_text)
+        self.props.secondary_text = secondary_text
+        self._status_label.set_text(status_text)
