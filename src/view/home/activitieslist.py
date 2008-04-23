@@ -161,6 +161,7 @@ class FavoriteIcon(CanvasIcon):
         self._favorite = None
         self._set_favorite(favorite)
         self.connect('button-release-event', self.__release_event_cb)
+        self.connect('motion-notify-event', self.__motion_notify_event_cb)
 
     def _set_favorite(self, favorite):
         if favorite == self._favorite:
@@ -188,3 +189,9 @@ class FavoriteIcon(CanvasIcon):
     def __release_event_cb(self, icon, event):
         self.props.favorite = not self.props.favorite
 
+    def __motion_notify_event_cb(self, icon, event):
+        if not self._favorite:
+            if event.detail == hippo.MOTION_DETAIL_ENTER:
+                icon.props.fill_color = style.COLOR_BUTTON_GREY.get_svg()
+            elif event.detail == hippo.MOTION_DETAIL_LEAVE:
+                icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
