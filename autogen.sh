@@ -1,4 +1,4 @@
 #!/bin/sh
-autoreconf -i
 intltoolize
+autoreconf -i
 ./configure "$@"
