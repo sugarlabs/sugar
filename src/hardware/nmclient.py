@@ -512,10 +512,8 @@ class NMClient(gobject.GObject):
         self._update_timer = 0
         self._devices = {}
 
-        try:
-            self.nminfo = nminfo.NMInfo(self)
-        except RuntimeError:
-            pass
+        self.nminfo = nminfo.NMInfo(self)
+        
         self._setup_dbus()
         if self._nm_present:
             self._get_initial_devices()

@@ -359,11 +359,10 @@ class NMInfoDBusServiceHelper(dbus.service.Object):
                     "org.freedesktop.NetworkManagerInfo",
                     dbus_interface='org.freedesktop.DBus')
         except dbus.DBusException:
-            pass
+            logging.debug("Error getting owner of NMI")
         if name:
-            logging.debug("NMI service already owned by %s, won't claim it."
+            logging.info("NMI service already owned by %s, won't claim it."
                           % name)
-            raise RuntimeError
 
         bus_name = dbus.service.BusName(NM_INFO_IFACE, bus=bus)
         dbus.service.Object.__init__(self, bus_name, NM_INFO_PATH)
