@@ -16,7 +16,6 @@
 
 import os
 import statvfs
-import logging
 from gettext import gettext as _
 
 import gtk
@@ -37,7 +36,8 @@ class BasePalette(Palette):
         Palette.__init__(self)
 
         if home_activity.props.launching:
-            home_activity.connect('notify::launching', self._launching_changed_cb)
+            home_activity.connect('notify::launching',
+                                  self._launching_changed_cb)
             self.set_primary_text(_('Starting...'))
         else:
             self.setup_palette()
@@ -62,21 +62,7 @@ class CurrentActivityPalette(BasePalette):
         self.menu.append(menu_item)
         menu_item.show()
 
-        """ TODO
-        menu_item = MenuItem(_('Share with'), 'zoom-neighborhood')
-        #menu_item.connect('activate', self.__share_activate_cb)
-        self.menu.append(menu_item)
-        menu_item.show()
-
-        menu_item = MenuItem(_('Keep'))
-        icon = Icon(icon_name='document-save', icon_size=gtk.ICON_SIZE_MENU,
-                xo_color=profile.get_color())
-        menu_item.set_image(icon)
-        icon.show()
-        #menu_item.connect('activate', self.__keep_activate_cb)
-        self.menu.append(menu_item)
-        menu_item.show()
-        """
+        # TODO: share-with, keep
 
         separator = gtk.SeparatorMenuItem()
         self.menu.append(separator)
@@ -112,13 +98,7 @@ class ActivityPalette(Palette):
         self.menu.append(menu_item)
         menu_item.show()
 
-        """
-        menu_item = MenuItem(_('Start with'), 'activity-start')
-        menu_item.props.sensitive = False
-        #menu_item.connect('activate', self.__start_with_activate_cb)
-        self.menu.append(menu_item)
-        menu_item.show()
-        """
+        # TODO: start-with
 
         self._favorite_item = MenuItem('')
         self._favorite_icon = Icon(icon_name='emblem-favorite',
@@ -140,7 +120,7 @@ class ActivityPalette(Palette):
             xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
                                          style.COLOR_TRANSPARENT.get_svg()))
         else:
-	    label.set_text(_('Add to ring'))
+            label.set_text(_('Add to ring'))
             xo_color = profile.get_color()
 
         self._favorite_icon.props.xo_color = xo_color
@@ -157,8 +137,8 @@ class ActivityPalette(Palette):
     def __activity_changed_cb(self, activity_registry, activity_info):
         if activity_info.bundle_id == self._bundle_id and \
                activity_info.version == self._version:
-           self._favorite = activity_info.favorite
-           self._update_favorite_item()
+            self._favorite = activity_info.favorite
+            self._update_favorite_item()
 
 class JournalPalette(BasePalette):
     def __init__(self, home_activity):

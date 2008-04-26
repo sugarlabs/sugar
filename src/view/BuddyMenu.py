@@ -13,17 +13,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-from gettext import gettext as _
-import logging
 
-import gobject
-import hippo
+from gettext import gettext as _
+
 import gtk
 
 from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
-from sugar.presence import presenceservice
 
 from model import shellmodel
 import view.Shell
@@ -37,13 +34,13 @@ class BuddyMenu(Palette):
                           icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
         Palette.__init__(self, None, primary_text=buddy.get_nick(),
                          icon=buddy_icon)
+        self._invite_menu = None
         self._active_activity_changed_hid = None
         self.connect('destroy', self.__destroy_cb)
 
         self._buddy.connect('icon-changed', self._buddy_icon_changed_cb)
         self._buddy.connect('nick-changed', self._buddy_nick_changed_cb)
 
-        owner = shellmodel.get_instance().get_owner()
         if not buddy.is_owner():
             self._add_items()
 
@@ -56,8 +53,6 @@ class BuddyMenu(Palette):
             home_model.disconnect(self._active_activity_changed_hid)
 
     def _add_items(self):
-        pservice = presenceservice.get_instance()
-
         friends = shellmodel.get_instance().get_friends()
         if friends.has_buddy(self._buddy):
             menu_item = MenuItem(_('Remove friend'), 'list-remove')

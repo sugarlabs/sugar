@@ -82,7 +82,7 @@ class Shell(gobject.GObject):
         try:
             datastore.mount(ds_path, [], timeout=120 * \
                                          DBUS_PYTHON_TIMEOUT_UNITS_PER_SECOND)
-        except:
+        except Exception:
             # Don't explode if there's corruption; move the data out of the way
             # and attempt to create a store from scratch.
             shutil.move(ds_path, os.path.abspath(ds_path) + str(time.time()))
@@ -176,9 +176,9 @@ class Shell(gobject.GObject):
             return
 
         home_model = self._model.get_home()
-        activity = home_model.get_active_activity()
-        if activity is not None:
-            service = activity.get_service()
+        active_activity = home_model.get_active_activity()
+        if active_activity is not None:
+            service = active_activity.get_service()
             if service is not None:
                 try:
                     service.TakeScreenshot(timeout=2.0)
@@ -206,25 +206,25 @@ class Shell(gobject.GObject):
 
     def activate_previous_activity(self):
         home_model = self._model.get_home()
-        activity = home_model.get_previous_activity()
-        if activity:
+        previous_activity = home_model.get_previous_activity()
+        if previous_activity:
             self.take_activity_screenshot()
-            activity.get_window().activate(1)
+            previous_activity.get_window().activate(1)
 
     def activate_next_activity(self):
         home_model = self._model.get_home()
-        activity = home_model.get_next_activity()
-        if activity:
+        next_activity = home_model.get_next_activity()
+        if next_activity:
             self.take_activity_screenshot()
-            activity.get_window().activate(1)
+            next_activity.get_window().activate(1)
 
     def close_current_activity(self):
         if self._model.get_zoom_level() != shellmodel.ShellModel.ZOOM_ACTIVITY:
             return
 
         home_model = self._model.get_home()
-        activity = home_model.get_active_activity()
-        if activity.get_type() == 'org.laptop.JournalActivity':
+        active_activity = home_model.get_active_activity()
+        if active_activity.get_type() == 'org.laptop.JournalActivity':
             return
 
         self.take_activity_screenshot()
@@ -247,9 +247,10 @@ class Shell(gobject.GObject):
         x_orig, y_orig = window.get_origin()
 
         screenshot = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, has_alpha=False,
-                                    bits_per_sample=8, width=width, height=height)
-        screenshot.get_from_drawable(window, window.get_colormap(), x_orig, y_orig, 0, 0,
-                                     width, height)
+                                    bits_per_sample=8, width=width,
+                                    height=height)
+        screenshot.get_from_drawable(window, window.get_colormap(), x_orig,
+                                     y_orig, 0, 0, width, height)
         screenshot.save(file_path, "png")
         try:
             jobject = datastore.create()

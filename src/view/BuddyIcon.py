@@ -15,7 +15,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from sugar.graphics.icon import CanvasIcon
-from sugar.graphics.palette import Palette
 from sugar.graphics import style
 
 from view.BuddyMenu import BuddyMenu
