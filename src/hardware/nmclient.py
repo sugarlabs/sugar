@@ -153,9 +153,9 @@ class Network(gobject.GObject):
         data = self._ssid + hex(self._caps) + hex(self._mode)
         sh.update(data)
         h = hash(sh.digest())
-        idx = h % len(xocolor._colors)
+        idx = h % len(xocolor.colors)
         # stroke, fill
-        return (xocolor._colors[idx][0], xocolor._colors[idx][1])
+        return (xocolor.colors[idx][0], xocolor.colors[idx][1])
 
     def get_ssid(self):
         return self._ssid
