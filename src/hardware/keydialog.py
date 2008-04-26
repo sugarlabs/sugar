@@ -19,7 +19,7 @@
 import md5
 from gettext import gettext as _
 
-import gobject, gtk
+import gtk
 
 IW_AUTH_ALG_OPEN_SYSTEM = 0x00000001
 IW_AUTH_ALG_SHARED_KEY  = 0x00000002
@@ -61,7 +61,7 @@ def string_is_ascii(string):
     try:
         string.encode('ascii')
         return True
-    except:
+    except UnicodeEncodeError:
         return False
 
 def string_to_hex(passphrase):
@@ -88,11 +88,12 @@ class KeyDialog(gtk.Dialog):
         self._net = net
         self._async_cb = async_cb
         self._async_err_cb = async_err_cb
+        self._entry = None
 
         self.set_has_separator(False)        
 
         label = gtk.Label("A wireless encryption key is required for\n" \
-            " the wireless network '%s'." % net.get_ssid())
+                          " the wireless network '%s'." % net.get_ssid())
         self.vbox.pack_start(label)
 
         self.add_buttons(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
@@ -265,7 +266,8 @@ class WPAKeyDialog(KeyDialog):
         elif len(key) >= 8 and len(key) <= 63:
             # passphrase
             import commands
-            (s, o) = commands.getstatusoutput("/usr/sbin/wpa_passphrase '%s' '%s'" % (ssid, key))
+            command = "/usr/sbin/wpa_passphrase '%s' '%s'" % (ssid, key)
+            (s, o) = commands.getstatusoutput(command)
             if s != 0:
                 raise RuntimeError("Error hashing passphrase: %s" % o)
             lines = o.split("\n")
@@ -297,7 +299,8 @@ class WPAKeyDialog(KeyDialog):
     def create_security(self):
         (we_cipher, key, wpa_ver) = self._get_security()
         from nminfo import Security
-        return Security.new_from_args(we_cipher, (key, wpa_ver, IW_AUTH_KEY_MGMT_PSK))
+        return Security.new_from_args(we_cipher,
+                                      (key, wpa_ver, IW_AUTH_KEY_MGMT_PSK))
 
     def _update_response_sensitivity(self, ignored=None):
         key = self._entry.get_text()
@@ -315,10 +318,12 @@ class WPAKeyDialog(KeyDialog):
 
 def new_key_dialog(net, async_cb, async_err_cb):
     caps = net.get_caps()
-    if (caps & NM_802_11_CAP_CIPHER_TKIP or caps & NM_802_11_CAP_CIPHER_CCMP) and \
-            (caps & NM_802_11_CAP_PROTO_WPA or caps & NM_802_11_CAP_PROTO_WPA2):
+    if (caps & NM_802_11_CAP_CIPHER_TKIP or caps & NM_802_11_CAP_CIPHER_CCMP) \
+            and (caps & NM_802_11_CAP_PROTO_WPA or \
+                caps & NM_802_11_CAP_PROTO_WPA2):
         return WPAKeyDialog(net, async_cb, async_err_cb)
-    elif (caps & NM_802_11_CAP_CIPHER_WEP40 or caps & NM_802_11_CAP_CIPHER_WEP104) and \
+    elif (caps & NM_802_11_CAP_CIPHER_WEP40 or \
+            caps & NM_802_11_CAP_CIPHER_WEP104) and \
             (caps & NM_802_11_CAP_PROTO_WEP):
         return WEPKeyDialog(net, async_cb, async_err_cb)
     else:
@@ -331,8 +336,8 @@ class FakeNet(object):
         return "olpcwpa"
 
     def get_caps(self):
-#        return NM_802_11_CAP_CIPHER_WEP104 | NM_802_11_CAP_PROTO_WEP
-        return NM_802_11_CAP_CIPHER_CCMP | NM_802_11_CAP_CIPHER_TKIP | NM_802_11_CAP_PROTO_WPA
+        return NM_802_11_CAP_CIPHER_CCMP | NM_802_11_CAP_CIPHER_TKIP | \
+                NM_802_11_CAP_PROTO_WPA
 
 def response_cb(widget, response_id):
     if response_id == gtk.RESPONSE_OK:
@@ -344,8 +349,8 @@ def response_cb(widget, response_id):
 
 
 if __name__ == "__main__":
-    net = FakeNet()
-    dialog = new_key_dialog(net, None, None)
+    fake_net = FakeNet()
+    dialog = new_key_dialog(fake_net, None, None)
     dialog.connect("response", response_cb)
     dialog.run()
 
