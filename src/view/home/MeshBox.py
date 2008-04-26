@@ -14,7 +14,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import random
 from gettext import gettext as _
 import logging
 
@@ -26,14 +25,12 @@ from sugar.graphics.icon import CanvasIcon, Icon
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics import style
 from sugar.graphics.icon import get_icon_state
-from sugar.graphics import style
 from sugar.graphics import palette
 from sugar.graphics import iconentry
 from sugar.graphics.menuitem import MenuItem
 from sugar import profile
 
 from model import accesspointmodel
-from model.devices.network import mesh
 from model.devices.network import wireless
 from model import shellmodel
 from hardware import hardwaremanager
@@ -44,14 +41,16 @@ from view.home.snowflakelayout import SnowflakeLayout
 from view.home.spreadlayout import SpreadLayout
 import view.Shell
 
-from hardware.nmclient import NM_802_11_CAP_PROTO_WEP, NM_802_11_CAP_PROTO_WPA, NM_802_11_CAP_PROTO_WPA2
+from hardware.nmclient import NM_802_11_CAP_PROTO_WEP, \
+    NM_802_11_CAP_PROTO_WPA, NM_802_11_CAP_PROTO_WPA2
 
 
 _ICON_NAME = 'network-wireless'
 
 class AccessPointView(CanvasPulsingIcon):
     def __init__(self, model, mesh_device=None):
-        CanvasPulsingIcon.__init__(self, size=style.STANDARD_ICON_SIZE, cache=True)
+        CanvasPulsingIcon.__init__(self, size=style.STANDARD_ICON_SIZE,
+                                   cache=True)
         self._model = model
         self._meshdev = mesh_device
         self._disconnect_item = None
@@ -72,7 +71,9 @@ class AccessPointView(CanvasPulsingIcon):
         caps = model.props.capabilities
         if model.get_nm_network().is_favorite():
             self.props.badge_name = "emblem-favorite"
-        elif (caps & NM_802_11_CAP_PROTO_WEP) or (caps & NM_802_11_CAP_PROTO_WPA) or (caps & NM_802_11_CAP_PROTO_WPA2):
+        elif (caps & NM_802_11_CAP_PROTO_WEP) or \
+                (caps & NM_802_11_CAP_PROTO_WPA) or \
+                (caps & NM_802_11_CAP_PROTO_WPA2):
             self.props.badge_name = "emblem-locked"
 
         self._palette = self._create_palette()
@@ -83,7 +84,7 @@ class AccessPointView(CanvasPulsingIcon):
         self._update_state()
 
     def _create_palette(self):
-        icon_name = get_icon_state(_ICON_NAME, self._model.props.strength)        
+        icon_name = get_icon_state(_ICON_NAME, self._model.props.strength)
         palette_icon = Icon(icon_name=icon_name,
                             icon_size=style.STANDARD_ICON_SIZE,
                             badge_name=self.props.badge_name)
@@ -98,9 +99,9 @@ class AccessPointView(CanvasPulsingIcon):
         p.menu.append(self._connect_item)
 
         # Only show disconnect when there's a mesh device, because mesh takes
-        # priority over the normal wireless device.  NM doesn't have a "disconnect"
-        # method for a device either (for various reasons) so this doesn't
-        # have a good mapping
+        # priority over the normal wireless device. NM doesn't have a
+        # "disconnect" method for a device either (for various reasons)
+        # so this doesn't have a good mapping
         if self._meshdev:
             self._disconnect_item = MenuItem(_('Disconnect'), 'media-eject')
             self._disconnect_item.connect('activate',
@@ -202,11 +203,13 @@ class MeshDeviceView(CanvasPulsingIcon):
         self.connect('activated', self._activate_cb)
 
         self._nm_device.connect('state-changed', self._state_changed_cb)
-        self._nm_device.connect('activation-stage-changed', self._state_changed_cb)
+        self._nm_device.connect('activation-stage-changed',
+                                self._state_changed_cb)
         self._update_state()
 
     def _create_palette(self):
-        p = palette.Palette(_("Mesh Network") + " " + str(self.channel), menu_after_content=True)
+        p = palette.Palette(_("Mesh Network") + " " + str(self.channel),
+                            menu_after_content=True)
 
         self._disconnect_item = gtk.MenuItem(_('Disconnect...'))
         self._disconnect_item.connect('activate', self._disconnect_activate_cb)
@@ -261,6 +264,7 @@ class ActivityView(hippo.CanvasBox):
 
         self._model = model
         self._icons = {}
+        self._palette = None
 
         self._layout = SnowflakeLayout()
         self.set_layout(self._layout)
@@ -336,7 +340,7 @@ class ActivityView(hippo.CanvasBox):
         else:
             self._icon.props.xo_color = self._model.get_color()
 
-        for key, icon in self._icons.iteritems():
+        for icon in self._icons.itervalues():
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(query)
 
@@ -378,14 +382,15 @@ class MeshToolbar(gtk.Toolbar):
         self.insert(tool_item, -1)
         tool_item.show()
 
-        self._search_entry = iconentry.IconEntry()
-        self._search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY, 'system-search')
-        self._search_entry.add_clear_button()
-        self._search_entry.set_width_chars(25)
-        self._search_entry.connect('activate', self._entry_activated_cb)
-        self._search_entry.connect('changed', self._entry_changed_cb)
-        tool_item.add(self._search_entry)
-        self._search_entry.show()
+        self.search_entry = iconentry.IconEntry()
+        self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
+                                             'system-search')
+        self.search_entry.add_clear_button()
+        self.search_entry.set_width_chars(25)
+        self.search_entry.connect('activate', self._entry_activated_cb)
+        self.search_entry.connect('changed', self._entry_changed_cb)
+        tool_item.add(self.search_entry)
+        self.search_entry.show()
 
         self._add_separator(expand=True)
 
@@ -395,7 +400,8 @@ class MeshToolbar(gtk.Toolbar):
         if expand:
             separator.set_expand(True)
         else:
-            separator.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
+            separator.set_size_request(style.GRID_CELL_SIZE,
+                                       style.GRID_CELL_SIZE)
         self.insert(separator, -1)
         separator.show()
 
@@ -420,7 +426,7 @@ class MeshToolbar(gtk.Toolbar):
     def _autosearch_timer_cb(self):
         logging.debug('_autosearch_timer_cb')
         self._autosearch_timer = None
-        self._search_entry.activate()
+        self.search_entry.activate()
         return False
 
 class MeshBox(hippo.CanvasBox):
@@ -440,7 +446,8 @@ class MeshBox(hippo.CanvasBox):
         self._toolbar.connect('query-changed', self._toolbar_query_changed_cb)
         self.append(hippo.CanvasWidget(widget=self._toolbar))
 
-        self._layout_box = hippo.CanvasBox(background_color=style.COLOR_WHITE.get_int())
+        self._layout_box = hippo.CanvasBox( \
+                background_color=style.COLOR_WHITE.get_int())
         self.append(self._layout_box, hippo.PACK_EXPAND)
 
         self._layout = SpreadLayout()
@@ -552,8 +559,6 @@ class MeshBox(hippo.CanvasBox):
                     activity.remove_buddy_icon(key)
 
     def _move_buddy(self, buddy_model, activity_model):
-        key = buddy_model.get_key()
-
         self._remove_buddy(buddy_model)
 
         if activity_model == None:
@@ -616,4 +621,4 @@ class MeshBox(hippo.CanvasBox):
                 icon.set_filter(self._query)
 
     def focus_search_entry(self):
-        self._toolbar._search_entry.grab_focus()
+        self._toolbar.search_entry.grab_focus()

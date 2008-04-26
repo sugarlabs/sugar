@@ -24,11 +24,12 @@ from sugar.graphics import style
 _BASE_DISTANCE = style.zoom(25)
 _CHILDREN_FACTOR = style.zoom(3)
 
-class SnowflakeLayout(gobject.GObject,hippo.CanvasLayout):
+class SnowflakeLayout(gobject.GObject, hippo.CanvasLayout):
     __gtype_name__ = 'SugarSnowflakeLayout'
     def __init__(self):
         gobject.GObject.__init__(self)
         self._nflakes = 0
+        self._box = None
 
     def add(self, child, center=False):
         if not center:
@@ -63,9 +64,6 @@ class SnowflakeLayout(gobject.GObject,hippo.CanvasLayout):
         index = 0
 
         for child in self._box.get_layout_children():
-            cx = x + width / 2
-            cy = x + height / 2
-
             min_width, child_width = child.get_width_request()
             min_height, child_height = child.get_height_request(child_width)
 

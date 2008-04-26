@@ -14,8 +14,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import logging
-
 import gobject
 import hippo
 
@@ -34,7 +32,8 @@ class ActivitiesList(hippo.CanvasScrollbars):
         hippo.CanvasScrollbars.__init__(self)
         self.set_policy(hippo.ORIENTATION_HORIZONTAL, hippo.SCROLLBAR_NEVER)
         
-        self._box = hippo.CanvasBox(background_color=style.COLOR_WHITE.get_int())
+        self._box = hippo.CanvasBox( \
+                background_color=style.COLOR_WHITE.get_int())
         self.set_root(self._box)
 
         registry = activity.get_registry()
