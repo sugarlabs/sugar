@@ -14,17 +14,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import logging
-from gettext import gettext as _
-
-import gtk
-
 from sugar.graphics.tray import HTray
-from sugar.graphics.icon import Icon
-from sugar.graphics.palette import Palette
-from sugar.graphics.menuitem import MenuItem
 
-from view.frame.frameinvoker import FrameWidgetInvoker
 from view.devices import deviceview
 from model import shellmodel
 

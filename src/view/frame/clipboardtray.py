@@ -85,7 +85,8 @@ class ClipboardTray(VTray):
         if selection.type == 'text/uri-list':
             uris = selection.data.split('\n')
             if len(uris) > 1:
-                raise NotImplementedError('Multiple uris in text/uri-list still not supported.')
+                raise NotImplementedError('Multiple uris in text/uri-list' \
+                                          ' still not supported.')
 
             cb_service.add_object_format(object_id, 
                                          selection.type,
@@ -143,7 +144,7 @@ class ClipboardTray(VTray):
             base_dir = tempfile.gettempdir()
             dest_filename = util.unique_id()
 
-            name, dot, extension = filename.rpartition('.')
+            name_, dot, extension = filename.rpartition('.')
             dest_filename += dot + extension
 
             dest_uri = 'file://' + os.path.join(base_dir, dest_filename)
@@ -161,28 +162,32 @@ class ClipboardTray(VTray):
         
         return True
 
-    def drag_data_received_cb(self, widget, context, x, y, selection, targetType, time):
-        logging.debug('ClipboardTray: got data for target %r' % selection.target)
+    def drag_data_received_cb(self, widget, context, x, y, selection,
+                              targetType, time):
+        logging.debug('ClipboardTray: got data for target %r'
+                      % selection.target)
 
         object_id = self._context_map.get_object_id(context)
         try:
             if selection is None:
-                logging.warn('ClipboardTray: empty selection for target ' + selection.target)
+                logging.warn('ClipboardTray: empty selection for target %s'
+                             % selection.target)
             elif selection.target == 'XdndDirectSave0':
                 if selection.data == 'S':
                     window = context.source_window
 
-                    prop_type, format, dest = \
-                          window.property_get('XdndDirectSave0','text/plain')
+                    prop_type, format_, dest = \
+                            window.property_get('XdndDirectSave0', 'text/plain')
 
                     clipboard = clipboardservice.get_instance()
-                    clipboard.add_object_format(
-                        object_id, 'XdndDirectSave0', dest, on_disk=True)
+                    clipboard.add_object_format( \
+                            object_id, 'XdndDirectSave0', dest, on_disk=True)
             else:
                 self._add_selection(object_id, selection)
 
         finally:
-            # If it's the last target to be processed, finish the dnd transaction
+            # If it's the last target to be processed, finish
+            # the dnd transaction
             if not self._context_map.has_context(context):
                 context.drop_finish(True, gtk.get_current_event_time())
 

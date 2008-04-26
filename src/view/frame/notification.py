@@ -14,13 +14,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import math
-
 import gobject
 import gtk
 
 from sugar.graphics import style
-from sugar.graphics.style import Color
 from sugar.graphics.xocolor import XoColor
 
 from view.pulsingicon import PulsingIcon
@@ -66,8 +63,6 @@ class NotificationIcon(gtk.EventBox):
         elif pspec.name == 'icon-filename':
             if self._icon.props.file != value:
                 self._icon.props.file = value
-        else:
-            gtk.HBox.do_set_property(self, pspec, value)
 
     def do_get_property(self, pspec):
         if pspec.name == 'xo-color':
@@ -76,8 +71,6 @@ class NotificationIcon(gtk.EventBox):
             return self._icon.props.icon_name
         elif pspec.name == 'icon-filename':
             return self._icon.props.file
-        else:
-            return gtk.HBox.do_get_property(self, pspec)
 
     def _set_palette(self, palette):
         self._icon.palette = palette

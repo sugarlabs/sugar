@@ -10,6 +10,5 @@ sugar_PYTHON =				\
 	eventarea.py			\
 	frame.py			\
 	notification.py			\
-	overlaybox.py			\
 	framewindow.py			\
 	zoomtoolbar.py

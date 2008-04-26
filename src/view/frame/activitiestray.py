@@ -18,8 +18,6 @@
 import logging
 from gettext import gettext as _
 
-import gtk
-
 from sugar.graphics import style
 from sugar.graphics.tray import HTray
 from sugar.graphics.xocolor import XoColor
@@ -65,13 +63,14 @@ class ActivityButton(RadioToolButton):
 
         if home_activity.props.launching:
             self._icon.props.pulsing = True
-            self._notify_launching_hid = home_activity.connect('notify::launching',
-                    self.__notify_launching_cb)
+            self._notify_launching_hid = home_activity.connect( \
+                    'notify::launching', self.__notify_launching_cb)
 
             self._notif_icon = NotificationIcon()
             self._notif_icon.props.xo_color = home_activity.get_icon_color()
             if home_activity.get_icon_path():
-                self._notif_icon.props.icon_filename = home_activity.get_icon_path()
+                icon_path = home_activity.get_icon_path()
+                self._notif_icon.props.icon_filename = icon_path
             else:
                 self._notif_icon.props.icon_name = 'image-missing'
             view.frame.frame.get_instance().add_notification(self._notif_icon)
@@ -114,7 +113,8 @@ class InviteButton(ToolButton):
         self._notif_icon = NotificationIcon()
         self._notif_icon.props.xo_color = activity_model.get_color()
         if activity_model.get_icon_name():
-            self._notif_icon.props.icon_filename = activity_model.get_icon_name()
+            icon_name = activity_model.get_icon_name()
+            self._notif_icon.props.icon_filename = icon_name
         else:
             self._notif_icon.props.icon_name = 'image-missing'
         self._notif_icon.connect('button-release-event',
@@ -141,8 +141,8 @@ class InviteButton(ToolButton):
                             self._activity_model.get_id())
 
     def __destroy_cb(self, button):
-            frame = view.frame.frame.get_instance()
-            frame.remove_notification(self._notif_icon)
+        frame = view.frame.frame.get_instance()
+        frame.remove_notification(self._notif_icon)
     
 class InvitePalette(Palette):
     def __init__(self, activity_model):
@@ -189,7 +189,8 @@ class ActivitiesTray(HTray):
         self._home_model = shellmodel.get_instance().get_home()
         self._home_model.connect('activity-added', self.__activity_added_cb)
         self._home_model.connect('activity-removed', self.__activity_removed_cb)
-        self._home_model.connect('pending-activity-changed', self.__activity_changed_cb)
+        self._home_model.connect('pending-activity-changed',
+                                 self.__activity_changed_cb)
 
         self._invites = shellmodel.get_instance().get_invites()
         for invite in self._invites:
