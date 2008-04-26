@@ -14,7 +14,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import sys
 import os
 from ConfigParser import ConfigParser
 import gettext
@@ -51,7 +50,8 @@ def _start_matchbox():
 def _save_session_info():
     # Save our DBus Session Bus address somewhere it can be found
     #
-    # WARNING!!! this is going away at some near future point, do not rely on it
+    # WARNING!!! this is going away at some near future point, 
+    #            do not rely on it
     #
     session_info_file = os.path.join(env.get_profile_path(), "session.info")
     f = open(session_info_file, "w")
@@ -75,13 +75,13 @@ def check_cm(bus_name):
     try:
         import dbus
         bus = dbus.SessionBus()
-        bus_object = bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
-        name = bus_object.GetNameOwner(bus_name, dbus_interface='org.freedesktop.DBus')
-        if name:
-            return True
+        bus_object = bus.get_object('org.freedesktop.DBus', 
+                                    '/org/freedesktop/DBus')
+        name_ = bus_object.GetNameOwner(bus_name, 
+                                        dbus_interface='org.freedesktop.DBus')
     except dbus.DBusException:
-        pass
-    return False
+        return False
+    return True
 
 def _shell_started_cb():
     # Unfreeze the display
@@ -127,7 +127,7 @@ def main():
             try:
                 cm = registry.services[cm_name]
             except KeyError:
-               print RuntimeError("%s connection manager not found!" % cm_name)
+                print RuntimeError("%s connection manager not found!" % cm_name)
 
             while not check_cm(cm['busname']):
                 print "Waiting for %s on: DBUS_SESSION_BUS_ADDRESS=%s" % \
@@ -139,8 +139,8 @@ def main():
                     break
 
     # TODO: move initializations from the Shell constructor to a start() method
-    shell = view.Shell.get_instance()
-    service = ShellService()
+    view.Shell.get_instance()
+    ShellService()
 
     try:
         gtk.main()
