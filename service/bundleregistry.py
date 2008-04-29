@@ -26,13 +26,6 @@ from sugar import env
 
 import config
 
-# http://standards.freedesktop.org/basedir-spec/basedir-spec-0.6.html
-def _get_data_dirs():
-    if os.environ.has_key('XDG_DATA_DIRS'):
-        return os.environ['XDG_DATA_DIRS'].split(':')
-    else:
-        return [ '/usr/local/share/', '/usr/share/' ]
-
 def _load_mime_defaults():
     defaults = {}
 
@@ -185,8 +178,8 @@ def get_registry():
 
 _bundle_registry = BundleRegistry()
 
-for data_dir in _get_data_dirs():
-    bundles_path = os.path.join(data_dir, 'activities')
-    _bundle_registry.add_search_path(bundles_path)
+if os.environ.has_key('SUGAR_ACTIVITIES'):
+    for path in os.environ['SUGAR_ACTIVITIES'].split(':'):
+        _bundle_registry.add_search_path(path)
 
 _bundle_registry.add_search_path(env.get_user_activities_path())
