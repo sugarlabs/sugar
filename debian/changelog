@@ -2,6 +2,7 @@ sugar (0.79.4-2) UNRELEASED; urgency=low
 
   * Update cdbs tweaks:
     + Strip any non-printable characters in copyright-check.mk.
+  * Update danish l10n.
 
  -- Jonas Smedegaard <dr@jones.dk>  Wed, 23 Apr 2008 11:14:23 +0200
 
