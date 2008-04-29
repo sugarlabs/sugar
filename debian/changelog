@@ -1,10 +1,12 @@
-sugar (0.79.4-2) UNRELEASED; urgency=low
+sugar (0.79.4-2) unstable; urgency=medium
 
   * Update cdbs tweaks:
     + Strip any non-printable characters in copyright-check.mk.
   * Update danish l10n.
+  * Raise to urgency=medium, as these are small changes that shouldn't
+    delay the earlier large changes reaching Lenny.
 
- -- Jonas Smedegaard <dr@jones.dk>  Wed, 23 Apr 2008 11:14:23 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 29 Apr 2008 15:29:41 +0200
 
 sugar (0.79.4-1) unstable; urgency=low
 
