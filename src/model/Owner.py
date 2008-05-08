@@ -18,6 +18,8 @@
 import gobject
 import os
 
+from telepathy.interfaces import CHANNEL_TYPE_TEXT
+
 from sugar import env
 from sugar import profile
 from sugar.presence import presenceservice
@@ -83,7 +85,7 @@ class ShellOwner(gobject.GObject):
                                  activity.props.id)
 
     def _private_invitation_cb(self, pservice, bus_name, connection,
-                               channel):
+                               channel, channel_type):
         """Handle a private-invitation from Presence Service.
 
         This is a connection by a non-Sugar XMPP client, so
@@ -95,7 +97,7 @@ class ShellOwner(gobject.GObject):
         tp_channel = json.write([str(bus_name), str(connection),
                                  str(channel)])
         registry = activity.get_registry()
-        if registry.get_activity('org.laptop.Chat'):
+        if registry.get_activity('org.laptop.Chat') and channel_type == CHANNEL_TYPE_TEXT:
             activityfactory.create_with_uri('org.laptop.Chat', tp_channel)
 
     def _activity_disappeared_cb(self, pservice, activity):
