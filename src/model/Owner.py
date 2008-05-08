@@ -1,4 +1,5 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2008 One Laptop Per Child
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -64,6 +65,8 @@ class ShellOwner(gobject.GObject):
         self._pservice = presenceservice.get_instance()
         self._pservice.connect('activity-invitation',
                                self._activity_invitation_cb)
+        self._pservice.connect('private-invitation',
+                               self._private_invitation_cb)
         self._pservice.connect('activity-disappeared',
                               self._activity_disappeared_cb)
 
@@ -78,6 +81,22 @@ class ShellOwner(gobject.GObject):
     def _activity_invitation_cb(self, pservice, activity, buddy, message):
         self._invites.add_invite(buddy, activity.props.type,
                                  activity.props.id)
+
+    def _private_invitation_cb(self, pservice, bus_name, connection,
+                               channel):
+        """Handle a private-invitation from Presence Service.
+
+        This is a connection by a non-Sugar XMPP client, so
+        launch Chat with the Telepathy connection and channel.
+        """
+        import json
+        from sugar import activity
+        from sugar.activity import activityfactory
+        tp_channel = json.write([str(bus_name), str(connection),
+                                 str(channel)])
+        registry = activity.get_registry()
+        if registry.get_activity('org.laptop.Chat'):
+            activityfactory.create_with_uri('org.laptop.Chat', tp_channel)
 
     def _activity_disappeared_cb(self, pservice, activity):
         self._invites.remove_activity(activity.props.id)
