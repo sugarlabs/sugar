@@ -43,7 +43,9 @@ data/Makefile
 service/Makefile
 src/Makefile
 src/controlpanel/Makefile
+src/controlpanel/icons/Makefile
 src/controlpanel/model/Makefile
+src/controlpanel/view/Makefile
 src/intro/Makefile
 src/hardware/Makefile
 src/view/Makefile

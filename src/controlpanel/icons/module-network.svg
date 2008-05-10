@@ -1,0 +1,32 @@
+<?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd' [
+	<!ENTITY stroke_color "#666666">
+	<!ENTITY fill_color "#ffffff">
+]><svg enable-background="new 0 0 55 55" height="55px" id="Layer_1" version="1.1" viewBox="0 0 55 55" width="55px" x="0px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0px"><g display="block" id="module-network">
+	<g display="inline">
+		<defs>
+			<path d="M14.897,34.339c0-10.144,8.224-18.367,18.367-18.367c3.929,0,7.562,1.244,10.549,3.345V0H0v43.812h17.55     C15.877,41.044,14.897,37.81,14.897,34.339z" id="SVGID_1_"/>
+		</defs>
+		<clipPath id="SVGID_2_">
+			<use overflow="visible" xlink:href="#SVGID_1_"/>
+		</clipPath>
+		<g clip-path="url(#SVGID_2_)">
+			
+				<circle cx="21.47" cy="21.073" fill="none" r="18.368" stroke="&fill_color;" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+			
+				<circle cx="21.469" cy="21.073" fill="none" r="10.476" stroke="&fill_color;" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+			<circle cx="21.469" cy="21.073" fill="&fill_color;" r="3.966"/>
+		</g>
+	</g>
+	<g display="inline">
+		<g>
+			<defs>
+				<rect height="18.367" id="SVGID_3_" width="36.736" x="14.897" y="34.339"/>
+			</defs>
+			<clipPath id="SVGID_4_">
+				<use overflow="visible" xlink:href="#SVGID_3_"/>
+			</clipPath>
+			<circle clip-path="url(#SVGID_4_)" cx="33.265" cy="34.339" fill="&fill_color;" r="18.368"/>
+		</g>
+		<circle cx="33.265" cy="34.339" fill="none" r="18.368" stroke="&fill_color;" stroke-width="3.5"/>
+	</g>
+</g></svg>
