@@ -74,8 +74,8 @@ def print_color():
         
 def set_color(stroke, fill, modstroke='medium', modfill='medium'):
     """Set the system color by setting a fill and stroke color.
-    fill : [red, orange, yellow, blue, purple]
-    stroke : [red, orange, yellow, blue, purple]
+    fill : [red, orange, yellow, blue, green, purple]
+    stroke : [red, orange, yellow, blue, green, purple]
     hue stroke : [dark, medium, light] (optional)
     hue fill : [dark, medium, light] (optional)
     """
