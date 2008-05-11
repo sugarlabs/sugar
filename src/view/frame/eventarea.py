@@ -31,6 +31,8 @@ class EventArea(gobject.GObject):
 
         self._windows = []
         self._hover = False
+        self._sids = {}
+        self._timeout = 1000
 
         right = gtk.gdk.screen_width() - 1
         bottom = gtk.gdk.screen_height() -1
@@ -53,8 +55,9 @@ class EventArea(gobject.GObject):
 
     def _create_invisible(self, x, y, width, height):
         invisible = gtk.Invisible()
-        invisible.connect('enter-notify-event', self._enter_notify_cb)
-        invisible.connect('leave-notify-event', self._leave_notify_cb)
+        if self._timeout >= 0:
+            invisible.connect('enter-notify-event', self._enter_notify_cb)
+            invisible.connect('leave-notify-event', self._leave_notify_cb)
         
         invisible.drag_dest_set(0, [], 0)
         invisible.connect('drag_motion', self._drag_motion_cb)
@@ -79,9 +82,21 @@ class EventArea(gobject.GObject):
             self.emit('leave')
 
     def _enter_notify_cb(self, widget, event):
+        if widget in self._sids:
+            gobject.source_remove(self._sids[widget])
+        self._sids[widget] = gobject.timeout_add(self._timeout, 
+                                                 self.__timeout_cb, 
+                                                 widget)
+
+    def __timeout_cb(self, widget):        
+        del self._sids[widget] 
         self._notify_enter()
+        return False
 
     def _leave_notify_cb(self, widget, event):
+        if widget in self._sids:
+            gobject.source_remove(self._sids[widget])
+            del self._sids[widget] 
         self._notify_leave()
 
     def _drag_motion_cb(self, widget, drag_context, x, y, timestamp):
