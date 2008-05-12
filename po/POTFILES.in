@@ -14,6 +14,7 @@ src/controlpanel/controltoolbar.py
 src/controlpanel/detailview.py
 src/controlpanel/gui.py
 src/controlpanel/model/aboutme.py
+src/controlpanel/model/frame.py
 src/controlpanel/model/language.py
 src/controlpanel/model/network.py
 src/controlpanel/model/timezone.py

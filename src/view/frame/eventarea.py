@@ -18,6 +18,8 @@ import gtk
 import gobject
 import wnck
 
+from sugar import profile
+
 class EventArea(gobject.GObject):
     __gsignals__ = {
         'enter': (gobject.SIGNAL_RUN_FIRST,
@@ -32,7 +34,8 @@ class EventArea(gobject.GObject):
         self._windows = []
         self._hover = False
         self._sids = {}
-        self._timeout = 1000
+        pro = profile.get_profile()            
+        self._delay = pro.frame_delay
 
         right = gtk.gdk.screen_width() - 1
         bottom = gtk.gdk.screen_height() -1
@@ -55,7 +58,7 @@ class EventArea(gobject.GObject):
 
     def _create_invisible(self, x, y, width, height):
         invisible = gtk.Invisible()
-        if self._timeout >= 0:
+        if self._delay >= 0:
             invisible.connect('enter-notify-event', self._enter_notify_cb)
             invisible.connect('leave-notify-event', self._leave_notify_cb)
         
@@ -84,11 +87,11 @@ class EventArea(gobject.GObject):
     def _enter_notify_cb(self, widget, event):
         if widget in self._sids:
             gobject.source_remove(self._sids[widget])
-        self._sids[widget] = gobject.timeout_add(self._timeout, 
-                                                 self.__timeout_cb, 
+        self._sids[widget] = gobject.timeout_add(self._delay, 
+                                                 self.__delay_cb, 
                                                  widget)
 
-    def __timeout_cb(self, widget):        
+    def __delay_cb(self, widget):        
         del self._sids[widget] 
         self._notify_enter()
         return False
