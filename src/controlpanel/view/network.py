@@ -6,15 +6,15 @@ _ = lambda msg: gettext.dgettext('sugar', msg)
 from sugar.graphics import style
 from sugar.graphics.icon import Icon
 
-from controlpanel.detailview import DetailView
+from controlpanel.sectionview import SectionView
 from controlpanel.inlinealert import InlineAlert
 
 ICON = 'module-network'
 TITLE = _('Network')
 
-class Network(DetailView):
+class Network(SectionView):
     def __init__(self, model, alerts):
-        DetailView.__init__(self)
+        SectionView.__init__(self)
 
         self.emit('valid_section', True)
                 

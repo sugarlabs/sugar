@@ -25,7 +25,7 @@ from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
 from sugar import profile
 
-from controlpanel.detailview import DetailView
+from controlpanel.sectionview import SectionView
 from controlpanel.inlinealert import InlineAlert
 
 ICON = 'module-about_me'
@@ -67,9 +67,9 @@ class ColorPicker(EventIcon):
         self.icon.props.xo_color = xocolor
         self.emit('color-changed', xocolor)
 
-class Aboutme(DetailView):
+class Aboutme(SectionView):
     def __init__(self, model, alerts):
-        DetailView.__init__(self)
+        SectionView.__init__(self)
 
         self.emit('valid_section', True)
 

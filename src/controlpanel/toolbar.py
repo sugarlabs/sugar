@@ -26,7 +26,7 @@ from sugar.graphics import iconentry
 from sugar.graphics import style
 
 class MainToolbar(gtk.Toolbar):
-    """ Main
+    """ Main toolbar of the control panel
     """
     __gtype_name__ = 'MainToolbar'
 
@@ -83,10 +83,10 @@ class MainToolbar(gtk.Toolbar):
     def __stop_clicked_cb(self, button):
         self.emit('stop-clicked')
 
-class DetailToolbar(gtk.Toolbar):
-    """ Detail
+class SectionToolbar(gtk.Toolbar):
+    """ Toolbar of the sections of the control panel
     """
-    __gtype_name__ = 'DetailToolbar'
+    __gtype_name__ = 'SectionToolbar'
 
     __gsignals__ = {
         'cancel-clicked': (gobject.SIGNAL_RUN_FIRST,

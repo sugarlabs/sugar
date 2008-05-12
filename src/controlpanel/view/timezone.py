@@ -6,14 +6,14 @@ _ = lambda msg: gettext.dgettext('sugar', msg)
 from sugar.graphics import style
 from sugar.graphics import iconentry
 
-from controlpanel.detailview import DetailView
+from controlpanel.sectionview import SectionView
 
 ICON = 'module-date_and_time'
 TITLE = _('Date & Time')
 
-class Timezone(DetailView):
+class Timezone(SectionView):
     def __init__(self, model, alerts):
-        DetailView.__init__(self)
+        SectionView.__init__(self)
         self._model = model
 
         self.set_border_width(style.DEFAULT_SPACING * 2)

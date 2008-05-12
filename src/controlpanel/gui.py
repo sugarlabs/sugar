@@ -25,8 +25,8 @@ from sugar.graphics import style
 from sugar.graphics.alert import Alert
 import config 
 
-from controlpanel.controltoolbar import MainToolbar
-from controlpanel.controltoolbar import DetailToolbar
+from controlpanel.toolbar import MainToolbar
+from controlpanel.toolbar import SectionToolbar
 
 _ = lambda msg: gettext.dgettext('sugar', msg)
 
@@ -51,8 +51,8 @@ class ControlPanel(gtk.Window):
         self._canvas = None
         self._table = None
         self._separator = None
-        self._detail_view = None
-        self._detail_toolbar = None
+        self._section_view = None
+        self._section_toolbar = None
         self._main_toolbar = None
         
         self._vbox = gtk.VBox()
@@ -75,7 +75,7 @@ class ControlPanel(gtk.Window):
         self._current_option = None
         self._get_options()
         self._setup_main()
-        self._setup_detail()
+        self._setup_section()
         self._show_main_view()
 
     def _update_accept_focus(self):
@@ -160,33 +160,33 @@ class ControlPanel(gtk.Window):
             if not found:
                 self._options[option]['button'].set_sensitive(False)
 
-    def _setup_detail(self):
-        self._detail_toolbar = DetailToolbar()
-        self._detail_toolbar.connect('cancel-clicked', 
+    def _setup_section(self):
+        self._section_toolbar = SectionToolbar()
+        self._section_toolbar.connect('cancel-clicked', 
                                      self.__cancel_clicked_cb)
-        self._detail_toolbar.connect('accept-clicked', 
+        self._section_toolbar.connect('accept-clicked', 
                                      self.__accept_clicked_cb)
 
-    def _show_detail_view(self, option):
-        self._set_toolbar(self._detail_toolbar)
+    def _show_section_view(self, option):
+        self._set_toolbar(self._section_toolbar)
 
-        icon = self._detail_toolbar.get_icon()
+        icon = self._section_toolbar.get_icon()
         icon.set_from_icon_name(self._options[option]['icon'], 
                                 gtk.ICON_SIZE_LARGE_TOOLBAR)
         icon.props.xo_color = self._options[option]['color']
-        title = self._detail_toolbar.get_title()
+        title = self._section_toolbar.get_title()
         title.set_text(self._options[option]['title'])
-        self._detail_toolbar.show()
-        self._detail_toolbar.accept_button.set_sensitive(True)
+        self._section_toolbar.show()
+        self._section_toolbar.accept_button.set_sensitive(True)
 
         self._current_option = option
         class_pointer =  self._options[option]['view']
         model = self._options[option]['model']
-        self._detail_view = class_pointer(model, 
+        self._section_view = class_pointer(model, 
                                           self._options[option]['alerts'])
-        self._set_canvas(self._detail_view)        
-        self._detail_view.show()
-        self._detail_view.connect('valid-section', self.__valid_section_cb)
+        self._set_canvas(self._section_view)        
+        self._section_view.show()
+        self._section_view.connect('valid-section', self.__valid_section_cb)
         self._main_view.modify_bg(gtk.STATE_NORMAL, 
                                   style.COLOR_WHITE.get_gdk_color())
 
@@ -230,12 +230,12 @@ class ControlPanel(gtk.Window):
                     self._options[tmp]['keywords'] = keywords
 
     def __cancel_clicked_cb(self, widget, data=None):
-        self._detail_view.undo()
+        self._section_view.undo()
         self._show_main_view()
 
     def __accept_clicked_cb(self, widget, data=None):
-        if self._detail_view.restart:
-            self._detail_toolbar.accept_button.set_sensitive(False)
+        if self._section_view.restart:
+            self._section_toolbar.accept_button.set_sensitive(False)
             alert = Alert()
             alert.props.title = _('Warning') 
             alert.props.msg = _('Changes require restart to take effect') 
@@ -262,18 +262,18 @@ class ControlPanel(gtk.Window):
         self._vbox.remove(alert)        
         if response_id is gtk.RESPONSE_CANCEL:             
             logging.debug('Cancel...')        
-            self._detail_view.undo()
-            self._detail_toolbar.accept_button.set_sensitive(True)
+            self._section_view.undo()
+            self._section_toolbar.accept_button.set_sensitive(True)
         elif response_id is gtk.RESPONSE_ACCEPT:             
             logging.debug('Later...')
             self._options[self._current_option]['alerts'] = \
-                self._detail_view.restart_alerts
+                self._section_view.restart_alerts
             self._show_main_view()
         elif response_id is gtk.RESPONSE_APPLY:             
             logging.debug('Restart...')
 
     def __select_option_cb(self, button, event, option=None):
-        self._show_detail_view(option)
+        self._show_section_view(option)
 
     def __search_changed_cb(self, maintoolbar, query):
         self._update(query)            
@@ -282,7 +282,7 @@ class ControlPanel(gtk.Window):
         self.destroy()
     
     def __valid_section_cb(self, widget, valid):
-        self._detail_toolbar.accept_button.set_sensitive(valid)
+        self._section_toolbar.accept_button.set_sensitive(valid)
 
 class _GridWidget(gtk.EventBox):
     __gtype_name__ = "SugarGridWidget"

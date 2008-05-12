@@ -10,8 +10,8 @@ src/view/devices/battery.py
 src/view/devices/network/wireless.py
 src/view/frame/zoomtoolbar.py
 src/controlpanel/cmd.py
-src/controlpanel/controltoolbar.py
-src/controlpanel/detailview.py
+src/controlpanel/toolbar.py
+src/controlpanel/sectionview.py
 src/controlpanel/gui.py
 src/controlpanel/model/aboutme.py
 src/controlpanel/model/frame.py
