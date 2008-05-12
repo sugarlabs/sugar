@@ -1,4 +1,4 @@
-sugardir = $(pkgdatadir)/shell/controlpanel/icons
+sugardir = $(pkgdatadir)/data/icons
 
 sugar_DATA =			 \
 	module-about_me.svg      \
