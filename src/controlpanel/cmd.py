@@ -19,6 +19,7 @@ import getopt
 import os
 from gettext import gettext as _
 
+import config
 
 def cmd_help():
     '''Print the help to the screen'''
@@ -37,12 +38,12 @@ def note_restart():
     print _('To apply your changes you have to restart sugar.\n' +
             'Hit ctrl+alt+erase on the keyboard to trigger a restart.')
 
-def load_modules(path):    
+def load_modules():    
     '''Build a list of pointers to available modules in the model directory
     and load them.
     '''
     subpath = ['controlpanel', 'model']
-    names = os.listdir(os.path.join(path, '/'.join(subpath)))
+    names = os.listdir(os.path.join(config.shell_path, '/'.join(subpath)))
     
     modules = []
     for name in names:
@@ -53,7 +54,7 @@ def load_modules(path):
             modules.append(mod)
     return modules        
 
-def main(path):
+def main():
     try:
         opts, args = getopt.getopt(sys.argv[1:], "h:s:g:l", [])
     except getopt.GetoptError:
@@ -64,7 +65,7 @@ def main(path):
         cmd_help()
         sys.exit()
 
-    modules = load_modules(path)
+    modules = load_modules()
 
     for opt, key in opts:
         if opt in ("-h"):
