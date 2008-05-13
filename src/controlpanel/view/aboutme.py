@@ -71,8 +71,6 @@ class Aboutme(SectionView):
     def __init__(self, model, alerts):
         SectionView.__init__(self)
 
-        self.emit('valid_section', True)
-
         self._model = model
         self.restart_alerts = alerts
         self._nick = self._model.get_nick()                
@@ -197,9 +195,9 @@ class Aboutme(SectionView):
                 self.restart = False
 
         if self._nick_valid and self._color_valid:
-            self.emit('valid_section', True)
+            self.props.valid_section = True
         else:    
-            self.emit('valid_section', False)
+            self.props.valid_section = False
 
         if not self._nick_alert.props.visible or \
                 widget.get_text() != self._nick:                
@@ -217,9 +215,9 @@ class Aboutme(SectionView):
         self.restart_alerts.append('color')
 
         if self._nick_valid and self._color_valid:
-            self.emit('valid_section', True)
+            self.props.valid_section = True            
         else:    
-            self.emit('valid_section', False)
+            self.props.valid_section = False
         
         if not self._color_alert.props.visible:    
             self._color_alert.show()
