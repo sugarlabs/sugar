@@ -21,7 +21,7 @@ from gettext import gettext as _
 
 
 def cmd_help():
-    '''Print the help to the screen'''
+    '''Print the help for to the screen'''
     print _('Usage: sugar-control-panel [ option ] key [ args ... ] \n\
     Control for the sugar environment. \n\
     Options: \n\
