@@ -39,6 +39,11 @@ class EventArea(gobject.GObject):
 
         right = gtk.gdk.screen_width() - 1
         bottom = gtk.gdk.screen_height() -1
+        top = gtk.gdk.screen_width() - 2
+        
+        if pro.frame_top_active:
+            invisible = self._create_invisible(0, top, 1, 1)
+            self._windows.append(invisible)
 
         invisible = self._create_invisible(0, 0, 1, 1)
         self._windows.append(invisible)

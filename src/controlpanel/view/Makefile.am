@@ -5,5 +5,6 @@ sugar_PYTHON = 				\
 	aboutme.py			\
 	language.py			\
 	timezone.py			\
-	aboutxo.py
+	aboutxo.py			\
+	frame.py
 
