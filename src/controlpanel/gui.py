@@ -37,6 +37,10 @@ class ControlPanel(gtk.Window):
     def __init__(self):
         gtk.Window.__init__(self)
 
+        icons_path = os.path.join(config.prefix, 
+                                  'share/sugar/shell/controlpanel/icons')
+        gtk.icon_theme_get_default().append_search_path(icons_path)
+
         self.set_border_width(style.LINE_WIDTH)
         offset = style.GRID_CELL_SIZE
         width = gtk.gdk.screen_width() - offset * 2
@@ -196,9 +200,10 @@ class ControlPanel(gtk.Window):
         structure: 
             {'optionname': {'view', 'model', 'button', 'keywords', 'icon'} }
         '''
-
+        path = os.path.join(config.prefix, 'share/sugar/shell')
+    
         subpath = ['controlpanel', 'view']
-        names = os.listdir(os.path.join(config.shell_path, '/'.join(subpath)))        
+        names = os.listdir(os.path.join(path, '/'.join(subpath)))        
         for name in names:
             if name.endswith('.py') and name != '__init__.py':
                 tmp = name.strip('.py')
@@ -215,7 +220,7 @@ class ControlPanel(gtk.Window):
                     self._options[tmp]['color'] = getattr(mod, 'COLOR', None)
 
         subpath = ['controlpanel', 'model']
-        names = os.listdir(os.path.join(config.shell_path, '/'.join(subpath)))        
+        names = os.listdir(os.path.join(path, '/'.join(subpath)))        
         for name in names:
             if name.endswith('.py') and name != '__init__.py':
                 tmp = name.strip('.py')

@@ -1,4 +1,4 @@
-SUBDIRS = model view
+SUBDIRS = model view icons
 
 sugardir = $(pkgdatadir)/shell/controlpanel
 sugar_PYTHON = 				\
