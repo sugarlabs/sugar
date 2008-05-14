@@ -23,8 +23,11 @@ from sugar.graphics import style
 class InlineAlert(gtk.EventBox):
     """UI interface for Inline alerts
 
-    Inline alerts are different from the other alerts beause they are 
-    no dialogs, they only inform about a current event.
+    Alerts are used inside the activity window instead of being a
+    separate popup window. They do not hide canvas content. You can
+    use add_alert(widget) and remove_alert(widget) inside your activity
+    to add and remove the alert. The position of the alert is below the
+    toolbox or top in fullscreen mode.
 
     Properties:
         'message': the message of the alert,
@@ -35,6 +38,8 @@ class InlineAlert(gtk.EventBox):
     __gtype_name__ = 'SugarInlineAlert'
 
     __gproperties__ = {
+        'msg'    : (str, None, None, None,
+                    gobject.PARAM_READWRITE),
         'msg'    : (str, None, None, None,
                     gobject.PARAM_READWRITE),
         'icon'   : (object, None, None,
