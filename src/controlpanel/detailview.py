@@ -4,7 +4,7 @@ import gettext
 
 _ = lambda msg: gettext.dgettext('sugar', msg)
 
-class SectionView(gtk.VBox):
+class DetailView(gtk.VBox):
     __gsignals__ = {
         'valid-section': (gobject.SIGNAL_RUN_FIRST,
                           gobject.TYPE_NONE,

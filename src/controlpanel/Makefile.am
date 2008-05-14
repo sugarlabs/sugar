@@ -5,6 +5,6 @@ sugar_PYTHON = 				\
 	__init__.py			\
 	cmd.py				\
 	gui.py				\
-	toolbar.py			\
-	sectionview.py			\
+	controltoolbar.py		\
+	detailview.py			\
 	inlinealert.py

@@ -7,14 +7,14 @@ _ = lambda msg: gettext.dgettext('sugar', msg)
 
 from sugar.graphics import style
 
-from controlpanel.sectionview import SectionView
+from controlpanel.detailview import DetailView
 
 ICON = 'module-about_my_xo'
 TITLE = _('About my XO')
 
-class Aboutxo(SectionView):
+class Aboutxo(DetailView):
     def __init__(self, model=None, alerts=None):
-        SectionView.__init__(self)
+        DetailView.__init__(self)
 
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
