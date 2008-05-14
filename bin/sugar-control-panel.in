@@ -17,10 +17,12 @@
 
 import sys
 
-sys.path.insert(0, '@prefix@/share/sugar/shell')
+path = '@prefix@/share/sugar/shell'
+
+sys.path.insert(0, path) 
 
 from controlpanel.cmd import main
 
-main()
+main(path)
 
 
