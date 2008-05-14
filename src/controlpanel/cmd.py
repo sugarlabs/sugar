@@ -1,4 +1,4 @@
-# Copyright (C) 2007, 2008 One Laptop Per Child
+# Copyright (C) 2007, One Laptop Per Child
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,12 +16,11 @@
 
 import sys
 import getopt
-import os
 from gettext import gettext as _
 
-
+from controlpanel import control
+        
 def cmd_help():
-    '''Print the help for to the screen'''
     print _('Usage: sugar-control-panel [ option ] key [ args ... ] \n\
     Control for the sugar environment. \n\
     Options: \n\
@@ -32,28 +31,7 @@ def cmd_help():
     -s key       set the current value for the key \n\
     ')
 
-def note_restart():
-    '''Instructions how to restart sugar'''
-    print _('To apply your changes you have to restart sugar.\n' +
-            'Hit ctrl+alt+erase on the keyboard to trigger a restart.')
-
-def load_modules(path):    
-    '''Build a list of pointers to available modules in the model directory
-    and load them.
-    '''
-    subpath = ['controlpanel', 'model']
-    names = os.listdir(os.path.join(path, '/'.join(subpath)))
-    
-    modules = []
-    for name in names:
-        if name.endswith('.py') and name != '__init__.py':
-            tmp = name.strip('.py')
-            mod = __import__('.'.join(subpath) + '.' + 
-                             tmp, globals(), locals(), [tmp])
-            modules.append(mod)
-    return modules        
-
-def main(path):
+def main():
     try:
         opts, args = getopt.getopt(sys.argv[1:], "h:s:g:l", [])
     except getopt.GetoptError:
@@ -63,49 +41,37 @@ def main(path):
     if not opts:
         cmd_help()
         sys.exit()
-
-    modules = load_modules(path)
-
+        
     for opt, key in opts:
-        if opt in ("-h"):
-            for module in modules:
-                method = getattr(module, 'set_' + key, None)
-                if method:
-                    print method.__doc__                              
-                    sys.exit()                    
-            print _("sugar-control-panel: key=%s not an available option"
-                    % key)                                                    
-        if opt in ("-l"):            
-            for module in modules:
-                methods = dir(module)
-                print '%s:' % module.__name__.split('.')[-1]
-                for method in methods:
-                    if method.startswith('get_'):
-                        print '    %s' % method[4:]
+        if opt in ("-h"):            
+            method = getattr(control, 'set_' + key, None)
+            if method is None:
+                print _("sugar-control-panel: key=%s not an available option" 
+                        % key)
+                sys.exit()
+            else:    
+                print method.__doc__
+        if opt in ("-l"):
+            elems = dir(control)
+            for elem in elems:
+                if elem.startswith('set_'):
+                    print elem[4:]
         if opt in ("-g"):
-            for module in modules:
-                method = getattr(module, 'print_' + key, None)
-                if method:
-                    try:
-                        method()
-                    except Exception, detail:
-                        print _("sugar-control-panel: %s"
-                                % detail)                    
-                    sys.exit()
-            print _("sugar-control-panel: key=%s not an available option"
-                    % key)
+            method = getattr(control, 'print_' + key, None)
+            if method is None:
+                print _("sugar-control-panel: key=%s not an available option" 
+                        % key)
+                sys.exit()
+            else:    
+                method()
         if opt in ("-s"):
-            for module in modules:
-                method = getattr(module, 'set_' + key, None)
-                if method:
-                    note = 0
-                    try:
-                        note = method(*args)
-                    except Exception, detail:
-                        print _("sugar-control-panel: %s"
-                                % detail)
-                    if note == 'RESTART':
-                        note_restart()
-                    sys.exit()
-            print _("sugar-control-panel: key=%s not an available option"
-                    % key)
+            method = getattr(control, 'set_' + key, None)
+            if method is None:
+                print _("sugar-control-panel: key=%s not an available option"
+                        % key)
+                sys.exit()
+            else:
+                try:
+                    method(*args)
+                except Exception, e:
+                    print _("sugar-control-panel: %s"% e)
