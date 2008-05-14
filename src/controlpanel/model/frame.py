@@ -35,29 +35,8 @@ def set_delay(value):
     try:
         int(value)
     except ValueError:        
-        raise ValueError(_("Value must be an int."))        
+        raise ValueError(_("Value must be an integer."))        
     pro = profile.get_profile()
     pro.frame_delay = int(value) 
-    pro.save()
-    return 'RESTART'
-
-def get_top_active():
-    pro = profile.get_profile()
-    return pro.frame_top_active
-
-def print_top_active():
-    print get_top_active()
-
-def set_top_active(state):
-    """Toggle if the frame can be revealed at the top of the screen
-    state : on/off
-    """
-    pro = profile.get_profile()
-    if state == 'on' or state == True:
-        pro.frame_top_active = True 
-    elif state == 'off' or state == False:
-        pro.frame_top_active = False
-    else:
-        raise ValueError(_("Error in specified argument use on/off."))
     pro.save()
     return 'RESTART'

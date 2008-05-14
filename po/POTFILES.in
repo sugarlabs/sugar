@@ -20,7 +20,6 @@ src/controlpanel/model/network.py
 src/controlpanel/model/timezone.py
 src/controlpanel/view/aboutme.py
 src/controlpanel/view/aboutxo.py
-src/controlpanel/view/frame.py
 src/controlpanel/view/language.py
 src/controlpanel/view/network.py
 src/controlpanel/view/timezone.py
