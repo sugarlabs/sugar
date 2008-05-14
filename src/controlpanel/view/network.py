@@ -31,6 +31,8 @@ TITLE = _('Network')
 class Network(SectionView):
     def __init__(self, model, alerts):
         SectionView.__init__(self)
+
+        self.emit('valid_section', True)
                 
         self._jabber_sid = 0
         self._jabber_valid = True
@@ -178,9 +180,9 @@ class Network(SectionView):
                 self.restart = False
 
         if self._radio_valid and self._jabber_valid:
-            self.props.valid_section = True
+            self.emit('valid_section', True)
         else:    
-            self.props.valid_section = False
+            self.emit('valid_section', False)
 
         if not self._radio_alert.props.visible or \
                 radio_state != self._jabber:                
@@ -213,9 +215,9 @@ class Network(SectionView):
                 self.restart = False
 
         if self._jabber_valid and self._radio_valid:
-            self.props.valid_section = True
+            self.emit('valid_section', True)
         else:    
-            self.props.valid_section = False
+            self.emit('valid_section', False)
 
         if not self._jabber_alert.props.visible or \
                 widget.get_text() != self._jabber:                

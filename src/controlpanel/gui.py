@@ -186,8 +186,7 @@ class ControlPanel(gtk.Window):
                                           self._options[option]['alerts'])
         self._set_canvas(self._section_view)        
         self._section_view.show()
-        self._section_view.connect('notify::valid-section', 
-                                   self.__valid_section_cb)
+        self._section_view.connect('valid-section', self.__valid_section_cb)
         self._main_view.modify_bg(gtk.STATE_NORMAL, 
                                   style.COLOR_WHITE.get_gdk_color())
 
@@ -282,9 +281,8 @@ class ControlPanel(gtk.Window):
     def __stop_clicked_cb(self, widget, data=None):
         self.destroy()
     
-    def __valid_section_cb(self, section_view, pspec):
-        self._section_toolbar.accept_button.set_sensitive( \
-                section_view.props.valid_section)
+    def __valid_section_cb(self, widget, valid):
+        self._section_toolbar.accept_button.set_sensitive(valid)
 
 class _GridWidget(gtk.EventBox):
     __gtype_name__ = "SugarGridWidget"

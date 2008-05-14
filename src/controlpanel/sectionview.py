@@ -21,26 +21,16 @@ import gettext
 _ = lambda msg: gettext.dgettext('sugar', msg)
 
 class SectionView(gtk.VBox):
-    __gproperties__ = {
-        'valid-section' : (bool, None, None, True,
-                           gobject.PARAM_READWRITE)
-        }
-
+    __gsignals__ = {
+        'valid-section': (gobject.SIGNAL_RUN_FIRST,
+                          gobject.TYPE_NONE,
+                          ([bool]))
+    }
     def __init__(self):
         gtk.VBox.__init__(self)
-        self.valid_section = True
         self.restart = False
         self.restart_alerts = []
         self._restart_msg = _('Changes require a sugar restart to take effect.')
-
-    def do_set_property(self, pspec, value):
-        if pspec.name == 'valid-section':
-            if self.valid_section != value:
-                self.valid_section = value
-
-    def do_get_property(self, pspec):
-        if pspec.name == 'valid-section':
-            return self.valid_section
 
     def undo(self):
         '''Undo here the changes that have been made in this section.'''
