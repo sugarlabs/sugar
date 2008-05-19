@@ -26,20 +26,6 @@ from sugar import env
 
 import config
 
-def _load_mime_defaults():
-    defaults = {}
-
-    f = open(os.path.join(config.data_path, 'mime.defaults'), 'r')
-    for line in f.readlines():
-        line = line.strip()
-        if line and not line.startswith('#'):
-            mime = line[:line.find(' ')]
-            handler = line[line.rfind(' ') + 1:]
-            defaults[mime] = handler
-    f.close()
-
-    return defaults
-
 class BundleRegistry(gobject.GObject):
     """Service that tracks the available activity bundles"""
 
@@ -54,22 +40,90 @@ class BundleRegistry(gobject.GObject):
 
     def __init__(self):
         gobject.GObject.__init__(self)
-        
-        self._bundles = []
-        self._search_path = []
-        self._mime_defaults = _load_mime_defaults()
 
-        path = env.get_profile_path('favorite_activities')
-        if os.path.exists(path):
+        self._mime_defaults = self._load_mime_defaults()
+
+        self._bundles = []
+        for activity_dir in self._get_activity_directories():
+            self._scan_directory(activity_dir)
+
+        self._last_defaults_mtime = -1
+        self._favorite_bundles = self._load_favorites()
+        self._merge_default_favorites()
+
+    def _get_activity_directories(self):
+        directories = []
+        if os.environ.has_key('SUGAR_ACTIVITIES'):
+            directories.extend(os.environ['SUGAR_ACTIVITIES'].split(':'))
+
+        directories.append(env.get_user_activities_path())
+
+        return directories
+
+    def _load_mime_defaults(self):
+        defaults = {}
+
+        f = open(os.path.join(config.data_path, 'mime.defaults'), 'r')
+        for line in f.readlines():
+            line = line.strip()
+            if line and not line.startswith('#'):
+                mime = line[:line.find(' ')]
+                handler = line[line.rfind(' ') + 1:]
+                defaults[mime] = handler
+        f.close()
+
+        return defaults
+
+    def _load_favorites(self):
+        favorite_bundles = []
+        favorites_path = env.get_profile_path('favorite_activities')
+        if os.path.exists(favorites_path):
             try:
-                self._favorite_bundles = simplejson.load(open(path))
-                print 'loaded %r' % self._favorite_bundles 
+                favorites_data = simplejson.load(open(favorites_path))
             except ValueError, e:
-                logging.error('Error while loading favorite_activities: %r.' 
-                              % e)
-                self._favorite_bundles = []
-        else:
-            self._favorite_bundles = []
+                logging.error('Error while loading favorite_activities: %r.' %
+                              e)
+            else:
+                # Old structure used to be a list, instead of a dictionary.
+                if isinstance(favorites_data, list):
+                    favorite_bundles = favorites_data
+                else:
+                    favorite_bundles = favorites_data['favorites']
+                    self._last_defaults_mtime = favorites_data['defaults-mtime']
+
+        return favorite_bundles
+
+    def _merge_default_favorites(self):
+        default_activities = []
+        defaults_path = os.path.join(config.data_path, 'activities.defaults')
+        if os.path.exists(defaults_path):
+            file_mtime = os.stat(defaults_path).st_mtime
+            if file_mtime > self._last_defaults_mtime:
+                f = open(defaults_path, 'r')
+                for line in f.readlines():
+                    line = line.strip()
+                    if line and not line.startswith('#'):
+                        default_activities.append(line)
+                f.close()
+                self._last_defaults_mtime = file_mtime
+
+        if not default_activities:
+            return
+
+        for bundle_id in default_activities:
+            max_version = -1
+            for bundle in self._bundles:
+                if bundle.get_bundle_id() == bundle_id and \
+                        max_version < bundle.get_activity_version():
+                    max_version = bundle.get_activity_version()
+
+            if max_version > -1 and \
+                    (bundle_id, max_version) not in self._favorite_bundles:
+                self._favorite_bundles.append([bundle_id, max_version])
+
+        logging.debug('After merging: %r' % self._favorite_bundles)
+
+        self._write_favorites_file()
 
     def get_bundle(self, bundle_id):
         """Returns an bundle given his service name"""
@@ -77,11 +131,6 @@ class BundleRegistry(gobject.GObject):
             if bundle.get_bundle_id() == bundle_id:
                 return bundle
         return None
-
-    def add_search_path(self, path):
-        """Add a directory to the bundles search path"""
-        self._search_path.append(path)
-        self._scan_directory(path)
     
     def __iter__(self):
         return self._bundles.__iter__()
@@ -171,15 +220,15 @@ class BundleRegistry(gobject.GObject):
 
     def _write_favorites_file(self):
         path = env.get_profile_path('favorite_activities')
-        simplejson.dump(self._favorite_bundles, open(path, 'w'))
+        favorites_data = {'defaults-mtime': self._last_defaults_mtime,
+                          'favorites': self._favorite_bundles}
+        simplejson.dump(favorites_data, open(path, 'w'))
+
+_instance = None
 
 def get_registry():
-    return _bundle_registry
+    global _instance
+    if not _instance:
+        _instance = BundleRegistry()
+    return _instance
 
-_bundle_registry = BundleRegistry()
-
-if os.environ.has_key('SUGAR_ACTIVITIES'):
-    for path in os.environ['SUGAR_ACTIVITIES'].split(':'):
-        _bundle_registry.add_search_path(path)
-
-_bundle_registry.add_search_path(env.get_user_activities_path())
