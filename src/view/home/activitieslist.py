@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import gobject
+import gtk
 import hippo
 
 from sugar import profile
@@ -31,7 +32,8 @@ class ActivitiesList(hippo.CanvasScrollbars):
     def __init__(self):
         hippo.CanvasScrollbars.__init__(self)
         self.set_policy(hippo.ORIENTATION_HORIZONTAL, hippo.SCROLLBAR_NEVER)
-        
+        self.props.widget.connect('key-press-event', self.__key_press_event_cb)
+
         self._box = hippo.CanvasBox( \
                 background_color=style.COLOR_WHITE.get_int())
         self.set_root(self._box)
@@ -58,6 +60,24 @@ class ActivitiesList(hippo.CanvasScrollbars):
 
     def _add_activity(self, activity_info):
         self._box.append(ActivityEntry(activity_info))
+
+    def __key_press_event_cb(self, widget, event):
+        keyname = gtk.gdk.keyval_name(event.keyval)
+
+        vadjustment = self.props.widget.props.vadjustment
+        if keyname == 'Up':
+            if vadjustment.props.value > vadjustment.props.lower:
+                vadjustment.props.value -= vadjustment.props.step_increment
+        elif keyname == 'Down':
+            max_value = vadjustment.props.upper - vadjustment.props.page_size
+            if vadjustment.props.value < max_value:
+                vadjustment.props.value = min(
+                    vadjustment.props.value + vadjustment.props.step_increment,
+                    max_value)
+        else:
+            return False
+
+        return True
 
 class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarActivityEntry'
