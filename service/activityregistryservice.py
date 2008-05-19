@@ -132,7 +132,8 @@ class ActivityRegistry(dbus.service.Object):
                 'path': bundle.get_path(),
                 'command': bundle.get_command(),
                 'show_launcher': bundle.get_show_launcher(),
-                'favorite': favorite}
+                'favorite': favorite,
+                'installation_time': bundle.get_installation_time()}
 
     def _bundle_added_cb(self, bundle_registry, bundle):
         self.ActivityAdded(self._bundle_to_dict(bundle))

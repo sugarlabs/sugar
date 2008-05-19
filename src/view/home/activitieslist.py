@@ -20,6 +20,7 @@ import hippo
 
 from sugar import profile
 from sugar import activity
+from sugar import util
 from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon
 
@@ -143,7 +144,8 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
         expander = hippo.CanvasBox()
         self.append(expander, hippo.PACK_EXPAND)
 
-        date = hippo.CanvasText(text='3 weeks ago',
+        timestamp = activity_info.installation_time
+        date = hippo.CanvasText(text=util.timestamp_to_elapsed_string(timestamp),
                                 xalign=hippo.ALIGNMENT_START,
                                 font_desc=style.FONT_NORMAL.get_pango_desc(),
                                 box_width=ActivityEntry._DATE_COL_WIDTH)
