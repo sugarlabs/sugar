@@ -34,6 +34,7 @@ class ActivitiesList(hippo.CanvasScrollbars):
         self.set_policy(hippo.ORIENTATION_HORIZONTAL, hippo.SCROLLBAR_NEVER)
         self.props.widget.connect('key-press-event', self.__key_press_event_cb)
 
+        self._query = ''
         self._box = hippo.CanvasBox( \
                 background_color=style.COLOR_WHITE.get_int())
         self.set_root(self._box)
@@ -59,7 +60,14 @@ class ActivitiesList(hippo.CanvasScrollbars):
                 return
 
     def _add_activity(self, activity_info):
-        self._box.append(ActivityEntry(activity_info))
+        entry = ActivityEntry(activity_info)
+        self._box.append(entry)
+        entry.set_visible(entry.matches(self._query))
+
+    def set_filter(self, query):
+        self._query = query
+        for entry in self._box.get_children():
+            entry.set_visible(entry.matches(query))
 
     def __key_press_event_cb(self, widget, event):
         keyname = gtk.gdk.keyval_name(event.keyval)
@@ -101,6 +109,7 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
         self._bundle_id = activity_info.bundle_id
         self._version = activity_info.version
         self._favorite = activity_info.favorite
+        self._title = activity_info.name
 
         self._favorite_icon = FavoriteIcon(self._favorite)
         self._favorite_icon.connect('notify::favorite',
@@ -148,6 +157,7 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
     def __activity_changed_cb(self, activity_registry, activity_info):
         if self._bundle_id == activity_info.bundle_id and \
                 self._version == activity_info.version:
+            self._title = activity_info.name
             self._favorite = activity_info.favorite
             self._favorite_icon.props.favorite = self._favorite
 
@@ -166,6 +176,11 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
 
     def get_version(self):
         return self._version
+
+    def matches(self, query):
+        if not query:
+            return True
+        return self._title.lower().find(query) > -1
 
 class FavoriteIcon(CanvasIcon):
     __gproperties__ = {

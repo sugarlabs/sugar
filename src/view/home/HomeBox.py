@@ -15,9 +15,10 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from gettext import gettext as _
+import logging
 
-import gtk
 import gobject
+import gtk
 import hippo
 
 from sugar.graphics import style
@@ -30,6 +31,8 @@ from view.home.activitieslist import ActivitiesList
 _RING_VIEW = 0
 _LIST_VIEW = 1
 
+_AUTOSEARCH_TIMEOUT = 1000
+
 class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarHomeBox'
 
@@ -41,11 +44,17 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
         self._enable_xo_palette = False
 
         self._toolbar = HomeToolbar()
-        #self._toolbar.connect('query-changed', self.__toolbar_query_changed_cb)
+        self._toolbar.connect('query-changed', self.__toolbar_query_changed_cb)
         self._toolbar.connect('view-changed', self.__toolbar_view_changed_cb)
         self.append(hippo.CanvasWidget(widget=self._toolbar))
 
         self._set_view(_RING_VIEW)
+
+    def __toolbar_query_changed_cb(self, toolbar, query):
+        if self._list_view is None:
+            return
+        query = query.lower()
+        self._list_view.set_filter(query)
 
     def __toolbar_view_changed_cb(self, toolbar, view):
         self._set_view(view)
@@ -120,6 +129,9 @@ class HomeToolbar(gtk.Toolbar):
     def __init__(self):
         gtk.Toolbar.__init__(self)
 
+        self._query = None
+        self._autosearch_timer = None
+
         self._add_separator()
 
         tool_item = gtk.ToolItem()
@@ -131,8 +143,8 @@ class HomeToolbar(gtk.Toolbar):
                                               'system-search')
         self._search_entry.add_clear_button()
         self._search_entry.set_width_chars(25)
-        #self._search_entry.connect('activate', self._entry_activated_cb)
-        #self._search_entry.connect('changed', self._entry_changed_cb)
+        self._search_entry.connect('activate', self.__entry_activated_cb)
+        self._search_entry.connect('changed', self.__entry_changed_cb)
         tool_item.add(self._search_entry)
         self._search_entry.show()
 
@@ -171,4 +183,27 @@ class HomeToolbar(gtk.Toolbar):
                                        style.GRID_CELL_SIZE)
         self.insert(separator, -1)
         separator.show()
+
+    def __entry_activated_cb(self, entry):
+        if self._autosearch_timer:
+            gobject.source_remove(self._autosearch_timer)
+        new_query = entry.props.text
+        if self._query != new_query:
+            self._query = new_query
+            self.emit('query-changed', self._query)
+
+    def __entry_changed_cb(self, entry):
+        if not entry.props.text:
+            entry.activate()
+            return
+
+        if self._autosearch_timer:
+            gobject.source_remove(self._autosearch_timer)
+        self._autosearch_timer = gobject.timeout_add(_AUTOSEARCH_TIMEOUT,
+                                                     self.__autosearch_timer_cb)
+
+    def __autosearch_timer_cb(self):
+        self._autosearch_timer = None
+        self._search_entry.activate()
+        return False
 
