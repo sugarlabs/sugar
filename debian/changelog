@@ -1,6 +1,7 @@
 sugar (0.81.1-1) unstable; urgency=low
 
   * New upstream release.
+    + Merge activities.default into favorites. Closes: bug#480856.
   * Update debian/copyright and debian/copyright-hints (new owners but
     same licenses).
   * Rewrite debian/copyright to only mention each licensing string once.
