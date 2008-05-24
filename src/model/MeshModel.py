@@ -26,8 +26,8 @@ from hardware import hardwaremanager
 from hardware import nmclient
 
 class ActivityModel:
-    def __init__(self, activity, bundle):
-        self.activity = activity
+    def __init__(self, act, bundle):
+        self.activity = act
         self.bundle = bundle
 
     def get_id(self):
@@ -62,7 +62,8 @@ class MeshModel(gobject.GObject):
                                  gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
         'mesh-added':           (gobject.SIGNAL_RUN_FIRST,
                                  gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
-        'mesh-removed':         (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
+        'mesh-removed':         (gobject.SIGNAL_RUN_FIRST,
+                                 gobject.TYPE_NONE, ([]))
     }
 
     def __init__(self):
@@ -86,7 +87,8 @@ class MeshModel(gobject.GObject):
         # Add any buddies the PS knows about already
         self._pservice.get_buddies_async(reply_handler=self._get_buddies_cb)
 
-        self._pservice.get_activities_async(reply_handler=self._get_activities_cb)
+        self._pservice.get_activities_async(
+                reply_handler=self._get_activities_cb)
 
         network_manager = hardwaremanager.get_network_manager()
         if network_manager:
@@ -97,13 +99,13 @@ class MeshModel(gobject.GObject):
             network_manager.connect('device-removed',
                                     self._nm_device_removed_cb)
 
-    def _get_buddies_cb(self, list):
-        for buddy in list:
+    def _get_buddies_cb(self, buddy_list):
+        for buddy in buddy_list:
             self._buddy_appeared_cb(self._pservice, buddy)
 
-    def _get_activities_cb(self, list):
-        for activity in list:
-            self._check_activity(activity)            
+    def _get_activities_cb(self, activity_list):
+        for act in activity_list:
+            self._check_activity(act)
 
     def _nm_device_added_cb(self, manager, nm_device):
         self._add_network_device(nm_device)
@@ -195,8 +197,8 @@ class MeshModel(gobject.GObject):
         self.emit('buddy-removed', self._buddies[buddy.props.key])
         del self._buddies[buddy.props.key]
 
-    def _activity_appeared_cb(self, pservice, activity):
-        self._check_activity(activity)
+    def _activity_appeared_cb(self, pservice, act):
+        self._check_activity(act)
 
     def _check_activity(self, presence_activity):
         registry = activity.get_registry()
@@ -216,8 +218,8 @@ class MeshModel(gobject.GObject):
         else:
             return None
 
-    def add_activity(self, bundle, activity):
-        model = ActivityModel(activity, bundle)
+    def add_activity(self, bundle, act):
+        model = ActivityModel(act, bundle)
         self._activities[model.get_id()] = model
         self.emit('activity-added', model)
 
@@ -228,8 +230,8 @@ class MeshModel(gobject.GObject):
                 buddy_model = self._buddies[key]
                 self.emit('buddy-moved', buddy_model, model)
 
-    def _activity_disappeared_cb(self, pservice, activity):
-        if self._activities.has_key(activity.props.id):
-            activity_model = self._activities[activity.props.id]
+    def _activity_disappeared_cb(self, pservice, act):
+        if self._activities.has_key(act.props.id):
+            activity_model = self._activities[act.props.id]
             self.emit('activity-removed', activity_model)
-            del self._activities[activity.props.id]
+            del self._activities[act.props.id]

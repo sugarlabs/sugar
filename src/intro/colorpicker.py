@@ -24,6 +24,7 @@ class ColorPicker(hippo.CanvasBox, hippo.CanvasItem):
     def __init__(self, **kwargs):
         hippo.CanvasBox.__init__(self, **kwargs)
         self.props.orientation = hippo.ORIENTATION_HORIZONTAL
+        self._xo_color = None
 
         self._xo = CanvasIcon(size=style.XLARGE_ICON_SIZE,
                               icon_name='computer-xo')

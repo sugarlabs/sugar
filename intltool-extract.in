@@ -32,7 +32,7 @@
 ## Release information
 my $PROGRAM      = "intltool-extract";
 my $PACKAGE      = "intltool";
-my $VERSION      = "0.36.2";
+my $VERSION      = "0.37.1";
 
 ## Loaded modules
 use strict; 
@@ -161,7 +161,8 @@ XML files. Read manpage (man ${PROGRAM}) for more info.
       --type=TYPE   Specify the file type of FILENAME. Currently supports:
                     "gettext/glade", "gettext/ini", "gettext/keys"
                     "gettext/rfc822deb", "gettext/schemas",
-                    "gettext/scheme", "gettext/xml", "gettext/quoted"
+                    "gettext/scheme", "gettext/xml", "gettext/quoted",
+                    "gettext/quotedxml"
   -l, --local       Writes output into current working directory
                     (conflicts with --update)
       --update      Writes output into the same directory the source file 
@@ -218,6 +219,7 @@ sub convert {
     &type_schemas  if $gettext_type eq "schemas";
     &type_rfc822deb  if $gettext_type eq "rfc822deb";
     &type_quoted if $gettext_type eq "quoted";
+    &type_quotedxml if $gettext_type eq "quotedxml";
 }
 
 sub entity_decode_minimal
@@ -725,6 +727,18 @@ sub type_quoted {
         my $message = $1;
         my $before = $`;
         $message =~ s/\\\"/\"/g;
+        $before =~ s/[^\n]//g;
+        $messages{$message} = [];
+        $loc{$message} = length ($before) + 2;
+    }
+}
+
+sub type_quotedxml {
+    while ($input =~ /\"(([^\"]|\\\")*[^\\\"])\"/g) {
+        my $message = $1;
+        my $before = $`;
+        $message =~ s/\\\"/\"/g;
+        $message = entity_decode($message);
         $before =~ s/[^\n]//g;
         $messages{$message} = [];
         $loc{$message} = length ($before) + 2;

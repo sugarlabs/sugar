@@ -31,7 +31,6 @@ from hardware import hardwaremanager
 from sugar.graphics import style
 from sugar.graphics.palette import Palette
 from sugar.graphics.icon import Icon, CanvasIcon
-from sugar.graphics.xocolor import XoColor
 from sugar.graphics.menuitem import MenuItem
 from sugar.profile import get_profile
 from sugar import env
@@ -51,7 +50,8 @@ class ActivitiesRing(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarActivitiesRing'
 
     def __init__(self):
-        hippo.CanvasBox.__init__(self, background_color=style.COLOR_WHITE.get_int())
+        hippo.CanvasBox.__init__(self, 
+                                 background_color=style.COLOR_WHITE.get_int())
 
         shell_model = shellmodel.get_instance()
         shell_model.connect('notify::state', self._shell_state_changed_cb)
@@ -118,7 +118,8 @@ class ActivitiesRing(hippo.CanvasBox, hippo.CanvasItem):
 
         [icon_width, icon_height] = self._current_activity.get_allocation()
         x = (width - icon_width) / 2
-        y = (height + my_icon_height + style.DEFAULT_PADDING - style.GRID_CELL_SIZE) / 2
+        y = (height + my_icon_height + style.DEFAULT_PADDING \
+                 - style.GRID_CELL_SIZE) / 2
         self.set_position(self._current_activity, x, y)
 
     def enable_xo_palette(self):
@@ -203,8 +204,8 @@ class RingLayout(gobject.GObject, hippo.CanvasLayout):
     def _calculate_radius_and_icon_size(self, children_count):
         minimum_radius = style.XLARGE_ICON_SIZE / 2 + style.DEFAULT_SPACING + \
                 style.STANDARD_ICON_SIZE * 2
-        maximum_radius = (gtk.gdk.screen_height() - style.GRID_CELL_SIZE) / 2 - \
-                style.STANDARD_ICON_SIZE - style.DEFAULT_SPACING
+        maximum_radius = (gtk.gdk.screen_height() - style.GRID_CELL_SIZE) \
+                / 2 - style.STANDARD_ICON_SIZE - style.DEFAULT_SPACING
         angle = 2 * math.pi / children_count
 
         _logger.debug('minimum_radius %r maximum_radius %r angle %r' % \
@@ -242,7 +243,8 @@ class RingLayout(gobject.GObject, hippo.CanvasLayout):
         width, height = self._box.get_allocation()
         angle = index * (2 * math.pi / children_count) - math.pi/2
         x = radius * math.cos(angle) + (width - icon_size) / 2
-        y = radius * math.sin(angle) + (height - icon_size - style.GRID_CELL_SIZE) / 2
+        y = radius * math.sin(angle) + (height - icon_size -
+                                        style.GRID_CELL_SIZE) / 2
         return x, y
 
     def do_allocate(self, x, y, width, height, req_width, req_height,
@@ -364,7 +366,8 @@ class _MyIcon(MyIcon):
         label_build = gtk.Label('Build: %s' % build)
         label_build.set_alignment(0, 0.5)
         label_build.show()
-        dialog.vbox.pack_start(label_build)
+        vbox = dialog.get_child()
+        vbox.pack_start(label_build)
                 
         firmware = self._read_file('/ofw/openprom/model')
         if firmware is None:
@@ -376,7 +379,7 @@ class _MyIcon(MyIcon):
         label_firmware = gtk.Label('Firmware: %s' % firmware)
         label_firmware.set_alignment(0, 0.5)
         label_firmware.show()
-        dialog.vbox.pack_start(label_firmware)
+        vbox.pack_start(label_firmware)
                 
         serial = self._read_file('/ofw/serial-number')
         if serial is None:
@@ -384,7 +387,7 @@ class _MyIcon(MyIcon):
         label_serial = gtk.Label('Serial Number: %s' % serial)
         label_serial.set_alignment(0, 0.5)
         label_serial.show()
-        dialog.vbox.pack_start(label_serial)
+        vbox.pack_start(label_serial)
 
         dialog.set_default_response(gtk.RESPONSE_OK)
         dialog.connect('response', self._response_cb)
@@ -392,7 +395,7 @@ class _MyIcon(MyIcon):
 
     def _read_file(self, path):
         if os.access(path, os.R_OK) == 0:
-            _logger.error('read_file() No such file or directory: %s', path)
+            _logger.error('read_file() No such file or directory: %s' % path)
             return None
         
         fd = open(path, 'r')
@@ -402,7 +405,8 @@ class _MyIcon(MyIcon):
             value = value.strip('\n')
             return value
         else:
-            _logger.error('read_file() No information in file or directory: %s', path)
+            _logger.error('read_file() No information in file or directory: %s'
+                          % path)
             return None
 
     def _response_cb(self, widget, response_id):

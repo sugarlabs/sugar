@@ -30,11 +30,9 @@ import gobject
 
 from sugar import env
 
-import config
-
 def _get_display_number():
     """Find a free display number trying to connect to 6000+ ports"""
-    log.info( "Attempting to find free port for X11 (Xephyr)" )
+    log.info("Attempting to find free port for X11 (Xephyr)")
     retries = 20
     display_number = 1
     display_is_free = False
@@ -46,7 +44,7 @@ def _get_display_number():
             try:
                 s.connect(('127.0.0.1', 6000 + display_number))
                 s.close()
-            except:
+            except socket.error:
                 display_is_free = True
                 break
 
@@ -65,7 +63,7 @@ def _get_display_number():
 
 def _start_xephyr(dpi=None):
     display = _get_display_number()
-    log.info( 'Starting the Xephyr nested X display on display %s', display )
+    log.info('Starting the Xephyr nested X display on display %s', display)
 
     cmd = [ 'Xephyr' ]
     cmd.append(':%d' % display)
@@ -83,7 +81,7 @@ def _start_xephyr(dpi=None):
         cmd.append('-dpi')
         cmd.append('%d' % dpi)
 
-    log.debug( 'Xephyr command: %s', " ".join( cmd ) )
+    log.debug('Xephyr command: %s', " ".join( cmd ))
     result = gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
     pid = result[0]
 
@@ -91,13 +89,13 @@ def _start_xephyr(dpi=None):
     os.environ['SUGAR_EMULATOR_PID'] = str(pid)
 
 def _start_matchbox():
-    log.info( 'Starting the matchbox window manager' )
+    log.info('Starting the matchbox window manager')
     cmd = ['matchbox-window-manager']
 
     cmd.extend(['-use_titlebar', 'no'])
     cmd.extend(['-theme', 'sugar'])
 
-    log.debug( 'Matchbox command: %s', " ".join( cmd) )
+    log.debug('Matchbox command: %s', " ".join( cmd))
     gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
 
 def _setup_env():
@@ -144,5 +142,6 @@ def main():
 
         command.append(args[0])
     
-    log.info( "Attempting to launch sugar to replace this process: %s", " ".join(command))
+    log.info("Attempting to launch sugar to replace this process: %s"
+             % " ".join(command))
     os.execlp( *command )

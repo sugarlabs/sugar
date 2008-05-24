@@ -30,7 +30,7 @@
 
 ## Release information
 my $PROGRAM = "intltool-update";
-my $VERSION = "0.36.2";
+my $VERSION = "0.37.1";
 my $PACKAGE = "intltool";
 
 ## Loaded modules
@@ -334,7 +334,7 @@ sub FindLeftoutFiles
 	push @buf_i18n_xml,          "$File::Find::name" if /\.($xml_support)$/;
 	push @buf_i18n_ini,          "$File::Find::name" if /\.($ini_support)$/;
 	push @buf_i18n_xml_unmarked, "$File::Find::name" if /\.(schemas(\.in)+)$/;
-	}, "$SRCDIR/..";
+	}, "$SRCDIR/.." if "$SRCDIR" ne ".";
 
     open POTFILES, $POTFILES_in or die "$PROGRAM:  there's no POTFILES.in!\n";
     @buf_potfiles = grep !/^(#|\s*$)/, <POTFILES>;
@@ -434,8 +434,8 @@ sub FindLeftoutFiles
 		last;
 	    }
 
-            ## N_ Q_ and _ are the three macros defined in gi8n.h
-	    if (/[NQ]?_ *\(QUOTEDTEXT/)
+            ## C_ N_ Q_ and _ are the macros defined in gi8n.h
+	    if (/[CNQ]?_ *\(QUOTEDTEXT/)
 	    {
                 if (defined isNotValidMissing (unpack("x3 A*", $file))) {
                     ## Remove the first 3 chars and add newline
@@ -777,7 +777,7 @@ sub GeneratePOTemplate
     my $XGETTEXT_KEYWORDS = &FindPOTKeywords;
     push @xgettext_argument, $XGETTEXT_KEYWORDS;
     my $MSGID_BUGS_ADDRESS = &FindMakevarsBugAddress;
-    push @xgettext_argument, "--msgid-bugs-address\=$MSGID_BUGS_ADDRESS" if $MSGID_BUGS_ADDRESS;
+    push @xgettext_argument, "--msgid-bugs-address\=\"$MSGID_BUGS_ADDRESS\"" if $MSGID_BUGS_ADDRESS;
     push @xgettext_argument, "--from-code\=$encoding" if ($gettext_support_nonascii);
     push @xgettext_argument, $XGETTEXT_ARGS if $XGETTEXT_ARGS;
     my $xgettext_command = join ' ', @xgettext_argument;
@@ -1118,6 +1118,8 @@ sub FindPOTKeywords
 	close IN;
     }
 
+    # unwrap lines split with a trailing \
+    $make_source =~  s/\\ $ \n/ /mxg;
     $keywords = $1 if $make_source =~ /^$varname[ ]*=\[?([^\n\]]+)/m;
     
     return $keywords;

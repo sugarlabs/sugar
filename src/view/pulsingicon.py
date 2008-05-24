@@ -17,11 +17,9 @@
 import math
 
 import gobject
-import gtk
 
 from sugar.graphics.icon import Icon, CanvasIcon
 from sugar.graphics.style import Color
-from sugar.graphics.xocolor import XoColor
 
 _INTERVAL = 100
 _STEP = math.pi / 10  # must be a fraction of pi, for clean caching
@@ -47,9 +45,12 @@ def _update_colors(self):
         self.props.xo_color = self._base_color
 
 def _get_color(self, orig_color, target_color):
-    next_point = (orig_color[0] + self._level * (target_color[0] - orig_color[0]),
-            orig_color[1] + self._level * (target_color[1] - orig_color[1]),
-            orig_color[2] + self._level * (target_color[2] - orig_color[2]))
+    next_point = (orig_color[0] +
+                  self._level * (target_color[0] - orig_color[0]),
+                  orig_color[1] +
+                  self._level * (target_color[1] - orig_color[1]),
+                  orig_color[2] +
+                  self._level * (target_color[2] - orig_color[2]))
     return Color('#%02x%02x%02x' % (int(next_point[0] * 255),
                                     int(next_point[1] * 255),
                                     int(next_point[2] * 255)))
@@ -145,12 +146,12 @@ class PulsingIcon(Icon):
 
     def _get_palette(self):
         return self._palette
-    
+
     def _set_palette(self, palette):
-        if self._palette is not None:        
+        if self._palette is not None:
             self._palette.props.invoker = None
         self._palette = palette
-    
+
     palette = property(_get_palette, _set_palette)
 
 class CanvasPulsingIcon(CanvasIcon):
@@ -234,37 +235,3 @@ class CanvasPulsingIcon(CanvasIcon):
             return self._paused
         else:
             return CanvasIcon.do_get_property(self, pspec)
-
-    """
-    def set_base_color(self, base_color):
-        self._base_color = base_color
-
-    def get_base_color(self):
-        return self._base_color
-    base_color = gobject.property(type=object, setter=set_base_color,
-            getter=get_base_color)
-
-    def set_pulse_color(self, pulse_color):
-        self._pulse_color = pulse_color
-
-    def get_pulse_color(self):
-        return self._pulse_color
-    pulse_color = gobject.property(type=object, setter=set_pulse_color,
-            getter=get_pulse_color)
-
-    def set_pulsing(self, pulsing):
-        pass
-
-    def get_pulsing(self):
-        return self._pulse_hid != None
-    pulsing = gobject.property(type=bool, default=False, setter=set_pulsing,
-            getter=get_pulsing)
-
-    def set_paused(self, paused):
-        self._paused = paused
-
-    def get_paused(self):
-        return self._paused
-    paused = gobject.property(type=bool, default=False, setter=set_paused,
-            getter=get_paused)
-    """

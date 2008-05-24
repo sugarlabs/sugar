@@ -83,7 +83,7 @@ class KeyHandler(object):
                                   self._key_pressed_cb)
 
         for key in _actions_table.keys():
-            self._key_grabber.grab(key)            
+            self._key_grabber.grab(key)
 
     def _change_volume(self, step=None, value=None):
         hw_manager = hardwaremanager.get_manager()
@@ -118,7 +118,8 @@ class KeyHandler(object):
         if self._speech_proxy is None:
             bus = dbus.SessionBus()
             speech_obj = bus.get_object(SPEECH_DBUS_SERVICE, SPEECH_DBUS_PATH)
-            self._speech_proxy = dbus.Interface(speech_obj, SPEECH_DBUS_INTERFACE)
+            self._speech_proxy = dbus.Interface(speech_obj,
+                                                SPEECH_DBUS_INTERFACE)
         return self._speech_proxy
 
     def _on_speech_err(self, ex):
@@ -126,7 +127,7 @@ class KeyHandler(object):
 
     def _primary_selection_cb(self, clipboard, text, user_data):
         logging.debug('KeyHandler._primary_selection_cb: %r' % text)
-        if text:    
+        if text:
             self._get_speech_proxy().SayText(text, reply_handler=lambda: None, \
                 error_handler=self._on_speech_err)
 
@@ -215,13 +216,6 @@ class KeyHandler(object):
             self._key_pressed = key
             self._keycode_pressed = keycode
             self._keystate_pressed = state
-
-            """
-            status = gtk.gdk.keyboard_grab(gtk.gdk.get_default_root_window(),
-                                           owner_events=False, time=0L)
-            if status != gtk.gdk.GRAB_SUCCESS:
-                logging.error("KeyHandler._key_pressed_cb(): keyboard grab failed: " + status)
-            """
 
             action = _actions_table[key]
             method = getattr(self, 'handle_' + action)

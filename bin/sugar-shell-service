@@ -16,8 +16,14 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import sys
+from os import environ
 
-sys.path.insert(0, '/home/tomeu/sugar-jhbuild/build/share/sugar/service')
+if not environ.has_key('SUGAR_ACTIVITIES'):
+    environ['SUGAR_ACTIVITIES'] = '/home/marco/sugar-jhbuild/install/share/sugar/activities:' \
+                                  '/home/marco/sugar-jhbuild/install/lib64/sugar/activities:' \
+                                  '/home/marco/sugar-jhbuild/install/lib/sugar/activities'
+
+sys.path.insert(0, '/home/marco/sugar-jhbuild/install/share/sugar/service')
 
 from main import main
 

@@ -16,7 +16,6 @@
 
 import gtk
 import hippo
-import cairo
 
 from sugar.graphics import style
 from sugar.graphics import palettegroup
@@ -52,7 +51,8 @@ class HomeWindow(gtk.Window):
 
         self.realize()
         self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
-        self.connect('visibility-notify-event', self._visibility_notify_event_cb)
+        self.connect('visibility-notify-event',
+                     self._visibility_notify_event_cb)
 
         self._enter_sid = self.connect('enter-notify-event',
                                        self._enter_notify_event_cb)
@@ -106,7 +106,7 @@ class HomeWindow(gtk.Window):
             self._mesh_box.resume()
 
     def _visibility_notify_event_cb(self, window, event):
-       	if event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED:
+        if event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED:
             self._deactivate_view()
         else:
             self._activate_view()

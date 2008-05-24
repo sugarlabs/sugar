@@ -141,7 +141,8 @@ class HomeToolbar(gtk.Toolbar):
         ring_button = RadioToolButton(named_icon='view-radial', group=None)
         ring_button.props.tooltip = _('Ring view')
         ring_button.props.accelerator = _('<Ctrl>R')
-        ring_button.connect('toggled', self.__view_button_toggled_cb, _RING_VIEW)
+        ring_button.connect('toggled', self.__view_button_toggled_cb,
+                            _RING_VIEW)
         self.insert(ring_button, -1)
         ring_button.show()
 
@@ -149,7 +150,8 @@ class HomeToolbar(gtk.Toolbar):
         list_button.props.group = ring_button
         list_button.props.tooltip = _('List view')
         list_button.props.accelerator = _('<Ctrl>L')
-        list_button.connect('toggled', self.__view_button_toggled_cb, _LIST_VIEW)
+        list_button.connect('toggled', self.__view_button_toggled_cb,
+                            _LIST_VIEW)
         self.insert(list_button, -1)
         list_button.show()
 
@@ -165,7 +167,8 @@ class HomeToolbar(gtk.Toolbar):
         if expand:
             separator.set_expand(True)
         else:
-            separator.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
+            separator.set_size_request(style.GRID_CELL_SIZE,
+                                       style.GRID_CELL_SIZE)
         self.insert(separator, -1)
         separator.show()
 

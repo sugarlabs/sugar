@@ -35,7 +35,7 @@
 ## Release information
 my $PROGRAM = "intltool-merge";
 my $PACKAGE = "intltool";
-my $VERSION = "0.36.2";
+my $VERSION = "0.37.1";
 
 ## Loaded modules
 use strict; 
@@ -61,6 +61,7 @@ my $DESKTOP_STYLE_ARG = 0;
 my $SCHEMAS_STYLE_ARG = 0;
 my $RFC822DEB_STYLE_ARG = 0;
 my $QUOTED_STYLE_ARG = 0;
+my $QUOTEDXML_STYLE_ARG = 0;
 my $QUIET_ARG = 0;
 my $PASS_THROUGH_ARG = 0;
 my $UTF8_ARG = 0;
@@ -81,6 +82,7 @@ GetOptions
  "schemas-style|s" => \$SCHEMAS_STYLE_ARG,
  "rfc822deb-style|r" => \$RFC822DEB_STYLE_ARG,
  "quoted-style" => \$QUOTED_STYLE_ARG,
+ "quotedxml-style" => \$QUOTEDXML_STYLE_ARG,
  "pass-through|p" => \$PASS_THROUGH_ARG,
  "utf8|u" => \$UTF8_ARG,
  "multiple-output|m" => \$MULTIPLE_OUTPUT,
@@ -148,7 +150,7 @@ elsif ($KEYS_STYLE_ARG && @ARGV > 2)
 	&utf8_sanity_check;
 	&preparation;
 	&print_message;
-	&keys_merge_translations;
+        &keys_merge_translations;
 	&finalize;
 } 
 elsif ($DESKTOP_STYLE_ARG && @ARGV > 2) 
@@ -174,12 +176,12 @@ elsif ($RFC822DEB_STYLE_ARG && @ARGV > 2)
 	&rfc822deb_merge_translations;
 	&finalize;
 } 
-elsif ($QUOTED_STYLE_ARG && @ARGV > 2) 
+elsif (($QUOTED_STYLE_ARG || $QUOTEDXML_STYLE_ARG) && @ARGV > 2)
 {
 	&utf8_sanity_check;
 	&preparation;
 	&print_message;
-	&quoted_merge_translations;
+	&quoted_merge_translations($QUOTEDXML_STYLE_ARG);
 	&finalize;
 } 
 else 
@@ -219,6 +221,7 @@ Mandatory options: (exactly one must be specified)
   -s, --schemas-style    includes translations in the schemas style
   -r, --rfc822deb-style  includes translations in the RFC822 style
       --quoted-style     includes translations in the quoted string style
+      --quotedxml-style  includes translations in the quoted xml string style
   -x, --xml-style        includes translations in the standard xml style
 
 Other options:
@@ -292,10 +295,9 @@ sub gather_po_files
             {
                 next if /^#/;
 
-                if (/([-a-zA-Z_@.]+)\n/)
+                for my $lang (split)
                 {
-                    my $lang = $1;
-
+                    chomp ($lang);
                     my $po_file = $PO_DIR . "/" . $lang . ".po";
                     if (-e $po_file) {
                         $po_files_by_lang{$lang} = $po_file;
@@ -576,6 +578,7 @@ sub entity_encode_int_minimalist
     return "&amp;" if $_ == 38;
     return "&apos;" if $_ == 39;
     return "&lt;" if $_ == 60;
+    return "&gt;" if $_ == 62;
     return chr $_;
 }
 
@@ -1076,43 +1079,74 @@ sub xml_merge_output
             close OUTPUT;
             print "CREATED $lang/$OUTFILE\n" unless $QUIET_ARG;
         }
-    } 
-    open OUTPUT, ">$OUTFILE" or die "Cannot open $OUTFILE: $!\n";
-    binmode (OUTPUT) if $^O eq 'MSWin32';
-    my $tree = readXml($FILE);
-    print_header($FILE, \*OUTPUT);
-    parseTree(\*OUTPUT, $tree);
-    close OUTPUT;
-    print "CREATED $OUTFILE\n" unless $QUIET_ARG;
+        if ( ! -d "C" ) {
+            mkdir "C" or -d "C" or die "Cannot create subdirectory C: $!\n";
+        }
+        open OUTPUT, ">C/$OUTFILE" or die "Cannot open C/$OUTFILE: $!\n";
+        binmode (OUTPUT) if $^O eq 'MSWin32';
+        my $tree = readXml($FILE);
+        print_header($FILE, \*OUTPUT);
+        parseTree(\*OUTPUT, $tree);
+        close OUTPUT;
+        print "CREATED C/$OUTFILE\n" unless $QUIET_ARG;
+    } else {
+        open OUTPUT, ">$OUTFILE" or die "Cannot open $OUTFILE: $!\n";
+        binmode (OUTPUT) if $^O eq 'MSWin32';
+        my $tree = readXml($FILE);
+        print_header($FILE, \*OUTPUT);
+        parseTree(\*OUTPUT, $tree);
+        close OUTPUT;
+        print "CREATED $OUTFILE\n" unless $QUIET_ARG;
+    }
 }
 
-sub keys_merge_translations
+sub keys_merge_translation
 {
-    open INPUT, "<${FILE}" or die;
-    open OUTPUT, ">${OUTFILE}" or die;
+    my ($lang) = @_;
+
+    if ( ! -d $lang && $MULTIPLE_OUTPUT)
+    {
+        mkdir $lang or -d $lang or die "Cannot create subdirectory $lang: $!\n";
+    }
+
+    open INPUT, "<${FILE}" or die "Cannot open ${FILE}: $!\n";
+    open OUTPUT, ">$lang/$OUTFILE" or die "Cannot open $lang/$OUTFILE: $!\n";
     binmode (OUTPUT) if $^O eq 'MSWin32';
 
-    while (<INPUT>) 
+    while (<INPUT>)
     {
-        if (s/^(\s*)_(\w+=(.*))/$1$2/)  
+        if (s/^(\s*)_(\w+=(.*))/$1$2/)
         {
-	    my $string = $3;
+            my $string = $3;
 
-            print OUTPUT;
-
-	    my $non_translated_line = $_;
-
-            for my $lang (sort keys %po_files_by_lang) 
+            if (!$MULTIPLE_OUTPUT)
             {
-		my $translation = $translations{$lang, $string};
-                next if !$translation;
+                print OUTPUT;
+
+                my $non_translated_line = $_;
+
+                for my $lang (sort keys %po_files_by_lang)
+                {
+                    my $translation = $translations{$lang, $string};
+                    next if !$translation;
+
+                    $_ = $non_translated_line;
+                    s/(\w+)=.*/[$lang]$1=$translation/;
+                    print OUTPUT;
+                }
+            }
+            else
+            {
+                my $non_translated_line = $_;
+                my $translation = $translations{$lang, $string};
+                $translation = $string if !$translation;
 
                 $_ = $non_translated_line;
-		s/(\w+)=.*/[$lang]$1=$translation/;
+                s/(\w+)=.*/$1=$translation/;
                 print OUTPUT;
             }
-	} 
-        else 
+        }
+        else
         {
             print OUTPUT;
         }
@@ -1120,6 +1154,24 @@ sub keys_merge_translations
 
     close OUTPUT;
     close INPUT;
+
+    print "CREATED $lang/$OUTFILE\n" unless $QUIET_ARG;
+}
+
+sub keys_merge_translations
+{
+    if ($MULTIPLE_OUTPUT)
+    {
+        for my $lang (sort keys %po_files_by_lang)
+        {
+            keys_merge_translation ($lang);
+        }
+        keys_merge_translation ("C");
+    }
+    else
+    {
+        keys_merge_translation (".");
+    }
 }
 
 sub desktop_merge_translations
@@ -1415,19 +1467,22 @@ sub rfc822deb_split
 
 sub quoted_translation
 {
-    my ($lang, $string) = @_;
+    my ($xml_mode, $lang, $string) = @_;
 
+    $string = entity_decode($string) if $xml_mode;
     $string =~ s/\\\"/\"/g;
 
     my $translation = $translations{$lang, $string};
     $translation = $string if !$translation;
-
+    $translation = entity_encode($translation) if $xml_mode;
     $translation =~ s/\"/\\\"/g;
     return $translation
 }
 
 sub quoted_merge_translations
 {
+    my ($xml_mode) = @_;
+
     if (!$MULTIPLE_OUTPUT) {
         print "Quoted only supports Multiple Output.\n";
         exit(1);
@@ -1442,7 +1497,7 @@ sub quoted_merge_translations
         binmode (OUTPUT) if $^O eq 'MSWin32';
         while (<INPUT>) 
         {
-            s/\"(([^\"]|\\\")*[^\\\"])\"/"\"" . &quoted_translation($lang, $1) . "\""/ge;
+            s/\"(([^\"]|\\\")*[^\\\"])\"/"\"" . &quoted_translation($xml_mode, $lang, $1) . "\""/ge;
             print OUTPUT;
         }
         close OUTPUT;

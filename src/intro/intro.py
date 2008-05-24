@@ -15,12 +15,10 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
-from ConfigParser import ConfigParser
 from gettext import gettext as _
 
 import gtk
 import gobject
-import dbus
 import hippo
 import logging
 
@@ -127,6 +125,7 @@ class _IntroBox(hippo.CanvasBox):
         self._name_page = _NamePage(self)
         self._color_page = _ColorPage()
         self._current_page = None
+        self._next_button = None
 
         self._setup_page()
 
@@ -208,15 +207,6 @@ class _IntroBox(hippo.CanvasBox):
 
         self.emit('done', pixbuf, name, color)
 
-    def _key_press_cb(self, widget, event):
-        if gtk.gdk.keyval_name(event.keyval) == "Return":
-            self.next()
-            return True
-        elif gtk.gdk.keyval_name(event.keyval) == "Escape":
-            self.back()
-            return True
-        return False
-
 class IntroWindow(gtk.Window):
     def __init__(self):
         gtk.Window.__init__(self)
@@ -228,7 +218,7 @@ class IntroWindow(gtk.Window):
 
         self.add(self._canvas)
         self._canvas.show()
-        self.connect('key-press-event', self._intro_box._key_press_cb)
+        self.connect('key-press-event', self.__key_press_cb)
 
     def _done_cb(self, box, pixbuf, name, color):
         self.hide()
@@ -237,7 +227,6 @@ class IntroWindow(gtk.Window):
     def _create_profile(self, pixbuf, name, color):
         # Save the buddy icon
         icon_path = os.path.join(env.get_profile_path(), "buddy-icon.jpg")
-        scaled = pixbuf.scale_simple(200, 200, gtk.gdk.INTERP_BILINEAR)
         pixbuf.save(icon_path, "jpeg", {"quality":"85"})
 
         profile = get_profile()
@@ -252,11 +241,20 @@ class IntroWindow(gtk.Window):
             cmd = "ssh-keygen -q -t dsa -f %s -C '' -N ''" % keypath
             (s, o) = commands.getstatusoutput(cmd)
             if s != 0:
-                logging.error("Could not generate key pair: %d" % s)
+                logging.error("Could not generate key pair: %d %s" % (s, o))
         else:
             logging.error("Keypair exists, skip generation.")
 
         gtk.main_quit()
+        return False
+
+    def __key_press_cb(self, widget, event):
+        if gtk.gdk.keyval_name(event.keyval) == "Return":
+            self._intro_box.next()
+            return True
+        elif gtk.gdk.keyval_name(event.keyval) == "Escape":
+            self._intro_box.back()
+            return True
         return False
 
 

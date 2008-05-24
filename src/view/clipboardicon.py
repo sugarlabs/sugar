@@ -16,18 +16,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
-from gettext import gettext as _
-
-import gobject
 import gtk
 
 from sugar.graphics.radiotoolbutton import RadioToolButton
-from sugar.graphics.xocolor import XoColor
 from sugar.graphics.icon import Icon
-from sugar.graphics import style
 from sugar.clipboard import clipboardservice
 from sugar.bundle.activitybundle import ActivityBundle
-from sugar import util
 from sugar import profile
 
 from view.clipboardmenu import ClipboardMenu
@@ -53,15 +47,17 @@ class ClipboardIcon(RadioToolButton):
         self._icon.show()
 
         cb_service = clipboardservice.get_instance()
-        cb_service.connect('object-state-changed', self._object_state_changed_cb)
+        cb_service.connect('object-state-changed',
+                           self._object_state_changed_cb)
         obj = cb_service.get_object(self._object_id)
 
         self.palette = ClipboardMenu(self._object_id, self._name, self._percent,
                                      self._preview, self._activity,
                                      self._is_bundle(obj['FORMATS']))
         self.palette.props.invoker = FrameWidgetInvoker(self)
-        
-        self.child.connect('drag_data_get', self._drag_data_get_cb)
+
+        child = self.get_child()
+        child.connect('drag_data_get', self._drag_data_get_cb)
         self.connect('notify::active', self._notify_active_cb)
 
     def _is_bundle(self, formats):
@@ -72,20 +68,23 @@ class ClipboardIcon(RadioToolButton):
     def get_object_id(self):
         return self._object_id
 
-    def _drag_data_get_cb(self, widget, context, selection, targetType, eventTime):
+    def _drag_data_get_cb(self, widget, context, selection,
+                          targetType, eventTime):
         logging.debug('_drag_data_get_cb: requested target ' + selection.target)
-        
+
         cb_service = clipboardservice.get_instance()
-        data = cb_service.get_object_data(self._object_id, selection.target)['DATA']
-        
+        data = cb_service.get_object_data(self._object_id,
+                                          selection.target)['DATA']
+
         selection.set(selection.target, 8, data)
 
     def _put_in_clipboard(self):
         logging.debug('ClipboardIcon._put_in_clipboard')
 
         if self._percent < 100:
-            raise ValueError('Object is not complete, cannot be put into the clipboard.')
-        
+            raise ValueError('Object is not complete,' \
+                             ' cannot be put into the clipboard.')
+
         targets = self._get_targets()
         if targets:
             clipboard = gtk.Clipboard()
@@ -99,12 +98,13 @@ class ClipboardIcon(RadioToolButton):
 
     def _clipboard_data_get_cb(self, clipboard, selection, info, targets):
         if not selection.target in [target[0] for target in targets]:
-            logging.warning('ClipboardIcon._clipboard_data_get_cb: asked %s but' \
-                            ' only have %r.' % (selection.target, targets))
+            logging.warning('ClipboardIcon._clipboard_data_get_cb: asked %s' \
+                            ' but only have %r.' % (selection.target, targets))
             return
         cb_service = clipboardservice.get_instance()
-        data = cb_service.get_object_data(self._object_id, selection.target)['DATA']
-        
+        data = cb_service.get_object_data(self._object_id,
+                                          selection.target)['DATA']
+
         selection.set(selection.target, 8, data)
 
     def _clipboard_clear_cb(self, clipboard, targets):
@@ -125,11 +125,12 @@ class ClipboardIcon(RadioToolButton):
         else:
             self._icon.props.icon_name = 'application-octet-stream'
 
-        self.child.drag_source_set(gtk.gdk.BUTTON1_MASK,
-                                         self._get_targets(),
-                                         gtk.gdk.ACTION_COPY)
-        self.child.drag_source_set_icon_name(self._icon.props.icon_name)
-        
+        child = self.get_child()
+        child.drag_source_set(gtk.gdk.BUTTON1_MASK,
+                              self._get_targets(),
+                              gtk.gdk.ACTION_COPY)
+        child.drag_source_set_icon_name(self._icon.props.icon_name)
+
         self._name = name
         self._preview = preview
         self._activity = activity
@@ -156,10 +157,10 @@ class ClipboardIcon(RadioToolButton):
 
         attrs = cb_service.get_object(self._object_id)
         format_types = attrs[clipboardservice.FORMATS_KEY]
-        
-        targets = []        
+
+        targets = []
         for format_type in format_types:
             targets.append((format_type, 0, 0))
-        
+
         return targets
 

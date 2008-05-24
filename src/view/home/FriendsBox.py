@@ -14,11 +14,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import random
-
 import gtk
 import hippo
-import gobject
 
 from sugar import profile
 from sugar.graphics import style

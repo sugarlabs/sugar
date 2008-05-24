@@ -17,7 +17,6 @@
 import gtk
 
 from sugar.graphics import style
-from sugar.graphics.palette import Palette
 from sugar.graphics.palette import WidgetInvoker
 
 def _get_screen_area():

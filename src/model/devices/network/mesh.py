@@ -18,7 +18,6 @@
 import gobject
 
 from model.devices import device
-from hardware import nmclient
 
 class Device(device.Device):
     __gproperties__ = {
@@ -56,7 +55,7 @@ class Device(device.Device):
             return self._nm_device.get_strength()
         elif pspec.name == 'state':
             nm_state = self._nm_device.get_state()
-            return device._nm_state_to_state[nm_state]
+            return device.nm_state_to_state[nm_state]
         elif pspec.name == 'activation-stage':
             return self._nm_device.get_activation_stage()
         elif pspec.name == 'frequency':

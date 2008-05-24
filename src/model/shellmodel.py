@@ -14,8 +14,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import os
-
 import wnck
 import gobject
 
@@ -25,7 +23,6 @@ from model.MeshModel import MeshModel
 from model.homemodel import HomeModel
 from model.Owner import ShellOwner
 from model.devices.devicesmodel import DevicesModel
-from sugar import env
 
 class ShellModel(gobject.GObject):
     STATE_STARTUP = 0
