@@ -20,12 +20,15 @@ import gtk
 
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.icon import Icon
+from sugar.graphics.xocolor import XoColor
 from sugar.clipboard import clipboardservice
 from sugar.bundle.activitybundle import ActivityBundle
 from sugar import profile
 
 from view.clipboardmenu import ClipboardMenu
 from view.frame.frameinvoker import FrameWidgetInvoker
+from view.frame.notification import NotificationIcon
+import view.frame.frame
 
 class ClipboardIcon(RadioToolButton):
     __gtype_name__ = 'SugarClipboardIcon'
@@ -145,6 +148,14 @@ class ClipboardIcon(RadioToolButton):
         # Clipboard object became complete. Make it the active one.
         if old_percent < 100 and self._percent == 100:
             self.props.active = True
+
+            self._notif_icon = NotificationIcon()
+            self._notif_icon.props.icon_name = self._icon.props.icon_name
+            self._notif_icon.props.xo_color = \
+                    XoColor('%s,%s' % (self._icon.props.stroke_color,
+                                       self._icon.props.fill_color))
+            frame = view.frame.frame.get_instance()
+            frame.add_notification(self._notif_icon, view.frame.frame.BOTTOM_LEFT)
 
     def _notify_active_cb(self, widget, pspec):
         if self.props.active:
