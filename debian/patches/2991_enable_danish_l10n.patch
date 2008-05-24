@@ -2,7 +2,7 @@ diff --git a/configure b/configure
 index dbc7864..26f52c6 100755
 --- a/configure
 +++ b/configure
-@@ -2635,7 +2635,7 @@ fi
+@@ -2641,7 +2641,7 @@ fi
  
  # Setup GETTEXT
  #

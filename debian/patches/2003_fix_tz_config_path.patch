@@ -27,7 +27,7 @@ index faac689..a6d9d04 100644
      except Exception, e:
          print "get_timezone: %s" % e
      return None
-@@ -406,9 +401,7 @@ def set_timezone(timezone):
+@@ -407,9 +402,7 @@ def set_timezone(timezone):
                  
          # Write info to the /etc/sysconfig/clock file
          fd = open(_TIMEZONE_CONFIG, "w")
