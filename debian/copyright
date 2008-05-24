@@ -9,146 +9,96 @@ Upstream author: Red Hat, Inc.
 Files: debian/*
 Copyright: © 2007-2008 Jonas Smedegaard <dr@jones.dk>
 License: GPL-2+
- The Debian packaging information is under the GPL, version 2 or later.
 
 Files: src/*, service/bundleregistry.py
 Copyright: © 2006-2007, Red Hat, Inc.
 License: GPL-2+
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
 
 Files: config.py, config.py.in, bin/*
 Copyright: © 2008, Red Hat, Inc.
 License: GPL-2+
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
 
 Files: src/intro/*, src/model/devices/device*.py,
  src/view/frame/eventarea.py, src/view/home/proc_smaps.py,
  src/view/home/transitionbox.py
 Copyright: © 2007, Red Hat, Inc.
 License: GPL-2+
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
 
 Files: tests/*, src/view/home/*layout.py, src/logsmanager.py,
  src/controlpanel/control.py, src/view/home/spreadlayout.py
 Copyright: © 2007, Red Hat, Inc.
 License: LGPL-2+
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2 of the License, or (at your option) any later version.
 
 Files: src/view/home/snowflakelayout.py
 Copyright: © 2006-2007, Red Hat, Inc.
 License: LGPL-2+
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2 of the License, or (at your option) any later version.
 
 Files: bin/sugar-launch, maint-helper.py
 Copyright: © 2007, Red Hat, Inc.
 License: GPL-2+
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
 
 Files: bin/sugar-activity, sugar-emulator service/clipboardservice.py
 Copyright: © 2006, Red Hat, Inc.
 License: GPL-2+
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
 
 Files: service/activityregistryservice.py
 Copyright: © 2007, One Laptop Per Child
 	   © 2006-2007, Red Hat, Inc
 License: GPL-2+
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
 
 Files: src/view/clipboardicon.py
 Copyright: © 2007, One Laptop Per Child
 	   © 2007, Red Hat, Inc
 License: GPL-2+
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
 
 Files: service/sugar-shell-service
 Copyright: © 2007, One Laptop Per Child
 	   © 2006, Red Hat, Inc
 License: GPL-2+
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
 
 Files: service/__init__.py, service/clipboardobject.py,
  src/view/clipboardmenu.py, src/view/frame/clipboardbox.py,
  src/view/frame/clipboardpanelwindow.py
 Copyright: © 2007, One Laptop Per Child
 License: GPL-2+
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
 
 Files: src/controlpanel/control.py, src/view/frame/activitybutton.py
 Copyright: © 2007, One Laptop Per Child
 License: LGPL-2+
- This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2 of the License, or (at your option) any later version.
 
 Files: data/em.py
 Copyright: © 2002-2003 Erik Max Francis <max@alcyone.com>
 License: GPL-2+
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
 
 Files: src/model/homeactivity.py, src/model/homemodel.py
 Copyright: © 2006-2007 Owen Williams.
+License: GPL-2+
+
+Files: src/view/frame/frameinvoker.py
+Copyright: © 2007, Eduardo Silva <edsiper@gmail.com>
+License: LGPL-2+
+
+Files: po/Makefile.in.in
+Copyright: © 1995-1997 by Ulrich Drepper <drepper@gnu.ai.mit.edu>
+	   © 2004-2008 Rodney Dawes <dobey.pwns@gmail.com>
+License: GAP
+
+Files: Makefile.in
+Copyright © 1994-2006  Free Software Foundation, Inc.
+License: GAP
+
 License: GPL-2+
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or
  (at your option) any later version.
 
-Files: src/view/frame/frameinvoker.py
-Copyright: © 2007, Eduardo Silva <edsiper@gmail.com>
 License: LGPL-2+
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
  License as published by the Free Software Foundation; either
  version 2 of the License, or (at your option) any later version.
 
-Files: po/Makefile.in.in
-Copyright: © 1995-1997 by Ulrich Drepper <drepper@gnu.ai.mit.edu>
-License: GAP
- This file file be copied and used freely without restrictions.  It can
- be used in projects which are not available under the GNU Public License
- but which still want to provide support for the GNU gettext functionality.
- Please note that the actual code is *not* freely available.
-
-Files: Makefile.in
-Copyright © 1994-2006  Free Software Foundation, Inc.
 License: GAP
  This Makefile.in is free software; the Free Software Foundation
  gives unlimited permission to copy and/or distribute it,

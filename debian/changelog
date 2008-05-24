@@ -1,6 +1,9 @@
 sugar (0.81.1-1) unstable; urgency=low
 
   * New upstream release.
+  * Update debian/copyright and debian/copyright-hints (new owners but
+    same licenses).
+  * Rewrite debian/copyright to only mention each licensing string once.
 
  -- Jonas Smedegaard <dr@jones.dk>  Sat, 24 May 2008 22:31:14 +0200
 

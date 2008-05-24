@@ -8,6 +8,7 @@
 	bin/sugar.in
 	configure.ac
 	data/Makefile.am
+	data/activities.defaults
 	data/gtkrc.em
 	data/kbdconfig
 	data/mime.defaults
@@ -102,23 +103,6 @@ UNKNOWN [YEAR THE PACKAGE'S COPYRIGHT HOLDER]: po/am.po
 	po/yo.po
 	po/zh_CN.po
 	po/zh_TW.po
-GPL-2+ [2006-2007, Red Hat, Inc]: src/controlpanel/__init__.py
-	src/hardware/__init__.py
-	src/model/__init__.py
-	src/model/devices/__init__.py
-	src/model/devices/battery.py
-	src/model/devices/network/__init__.py
-	src/model/devices/network/wired.py
-	src/view/__init__.py
-	src/view/devices/__init__.py
-	src/view/devices/battery.py
-	src/view/devices/deviceview.py
-	src/view/devices/network/__init__.py
-	src/view/devices/network/wired.py
-	src/view/frame/__init__.py
-	src/view/frame/overlaybox.py
-	src/view/home/__init__.py
-	src/view/keyhandler.py
 GENERATED FILE [1994-2002]: Makefile.in
 	bin/Makefile.in
 	data/Makefile.in
@@ -135,6 +119,22 @@ GENERATED FILE [1994-2002]: Makefile.in
 	src/view/devices/network/Makefile.in
 	src/view/frame/Makefile.in
 	src/view/home/Makefile.in
+GPL-2+ [2006-2007, Red Hat, Inc]: src/controlpanel/__init__.py
+	src/hardware/__init__.py
+	src/model/__init__.py
+	src/model/devices/__init__.py
+	src/model/devices/battery.py
+	src/model/devices/network/__init__.py
+	src/model/devices/network/wired.py
+	src/view/__init__.py
+	src/view/devices/__init__.py
+	src/view/devices/battery.py
+	src/view/devices/deviceview.py
+	src/view/devices/network/__init__.py
+	src/view/devices/network/wired.py
+	src/view/frame/__init__.py
+	src/view/home/__init__.py
+	src/view/keyhandler.py
 GPL-2+ [2008, Red Hat, Inc]: bin/sugar-control-panel
 	bin/sugar-control-panel.in
 	bin/sugar-emulator
@@ -177,15 +177,12 @@ GPL-2+ [2007 Red Hat, Inc]: src/logsmanager.py
 GPL-2+ [2008 One Laptop Per Child / 2006-2007 Red Hat, Inc]: src/view/devices/network/mesh.py
 	src/view/frame/activitiestray.py
 	src/view/home/activitiesring.py
-GPL GENERATED FILE [1999-2000, 2003-2005 Free Software Foundation, Inc]: compile
-	depcomp
 GENERATED FILE [1992-1996, 1998-2001]: configure
 GENERATED FILE [1995-2002 Free Software Foundation, Inc / 2001-2004 Red Hat, Inc / 1996-2004]: aclocal.m4
-GPL GENERATED FILE [1996-1997, 1999-2000, 2002-2005]: missing
+GPL GENERATED FILE [1996-1997, 1999-2000, 2002-2006]: missing
 GPL GENERATED FILE [2000-2001 Eazel, Inc / 2000, 2003 Free Software Foundation]: intltool-merge.in
 GPL GENERATED FILE [2000-2001, 2003-2005 Free Software Foundation, Inc]: py-compile
 GPL GENERATED FILE [2000-2003 Free Software Foundation]: intltool-update.in
-GPL-2+ GENERATED FILE [1996-2001, 2003-2005]: ltmain.sh
 GPL-2+ GENERATED FILE [2000-2001, 2003 Free Software Foundation]: intltool-extract.in
 GPL-2+ GENERATED FILE [2006-2007 Owen Williams]: src/model/homemodel.py
 GPL-2+ [2002-2003 Erik Max Francis']: data/em.py
@@ -196,6 +193,6 @@ GPL-2+ [2007, One Laptop Per Child / 2006, Red Hat, Inc]: service/main.py
 GPL-2+ [2007, Red Hat, Inc / 2007, One Laptop Per Child]: src/view/clipboardicon.py
 MIT/X11 (BSD like) [and license / notice and this permission notice shall be included in / 1994 X Consortium]: install-sh
 UNKNOWN [1989, 1991 Free Software Foundation, Inc. / the software, and]: COPYING
-UNKNOWN [1995-1997 by Ulrich Drepper <drepper@gnu.ai.mit.edu>]: po/Makefile.in.in
+UNKNOWN [1995-1997 by Ulrich Drepper <drepper@gnu.ai.mit.edu> / 2004-2008 Rodney Dawes <dobey.pwns@gmail.com>]: po/Makefile.in.in
 UNKNOWN [2007 the Package Owner]: po/fr.po
 UNKNOWN [YEAR THE PACKAGE'S COPYRIGHT HOLDER, 2006]: po/ig.po
