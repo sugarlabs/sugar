@@ -21,7 +21,6 @@ from sugar.graphics import style
 from sugar.graphics import animator
 
 from view.home.MyIcon import MyIcon
-from view.home.spreadlayout import SpreadLayout
 
 class _Animation(animator.Animation):
     def __init__(self, icon, start_size, end_size):
@@ -35,10 +34,11 @@ class _Animation(animator.Animation):
         d = (self.end_size - self.start_size) * current
         self._icon.props.size = self.start_size + d
 
-class _Layout(gobject.GObject,hippo.CanvasLayout):
+class _Layout(gobject.GObject, hippo.CanvasLayout):
     __gtype_name__ = 'SugarTransitionBoxLayout'
     def __init__(self):
         gobject.GObject.__init__(self)
+        self._box = None
 
     def do_set_box(self, box):
         self._box = box
@@ -68,7 +68,8 @@ class TransitionBox(hippo.CanvasBox):
     }
     
     def __init__(self):
-        hippo.CanvasBox.__init__(self, background_color=style.COLOR_WHITE.get_int())
+        hippo.CanvasBox.__init__(self, 
+                                 background_color=style.COLOR_WHITE.get_int())
 
         self._size = style.XLARGE_ICON_SIZE
 

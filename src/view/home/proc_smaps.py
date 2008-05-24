@@ -74,9 +74,9 @@ def get_mappings(pid, ignored_shared_mappings):
     
     smapfile = "/proc/%s/smaps" % pid
     infile = open(smapfile, "r")
-    input = infile.read()
+    data = infile.read()
     infile.close()
-    lines = input.splitlines()
+    lines = data.splitlines()
 
     for line_idx in range(0, len(lines), _smaps_lines_per_entry):
         name_idx = lines[line_idx].find('/')

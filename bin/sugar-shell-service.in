@@ -16,6 +16,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import sys
+from os import environ
+
+if not environ.has_key('SUGAR_ACTIVITIES'):
+    environ['SUGAR_ACTIVITIES'] = '@prefix@/share/sugar/activities:' \
+                                  '@prefix@/lib64/sugar/activities:' \
+                                  '@prefix@/lib/sugar/activities'
 
 sys.path.insert(0, '@prefix@/share/sugar/service')
 

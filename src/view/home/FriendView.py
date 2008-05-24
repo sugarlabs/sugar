@@ -15,7 +15,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import hippo
-import gobject
 
 from sugar.graphics.icon import CanvasIcon
 from sugar.graphics import style
@@ -41,7 +40,8 @@ class FriendView(hippo.CanvasBox):
         if self._buddy.is_present():
             self._buddy_appeared_cb(buddy)
 
-        self._buddy.connect('current-activity-changed', self._buddy_activity_changed_cb)
+        self._buddy.connect('current-activity-changed',
+                            self._buddy_activity_changed_cb)
         self._buddy.connect('appeared', self._buddy_appeared_cb)
         self._buddy.connect('disappeared', self._buddy_disappeared_cb)
         self._buddy.connect('color-changed', self._buddy_color_changed_cb)

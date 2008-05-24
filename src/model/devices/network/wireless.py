@@ -18,24 +18,22 @@
 import gobject
 
 from model.devices import device
-from hardware import nmclient
 
 def freq_to_channel(freq):
-        ftoc = { 2.412: 1, 2.417: 2, 2.422: 3, 2.427: 4,
-                  2.432: 5, 2.437: 6, 2.442: 7, 2.447: 8,
-                  2.452: 9, 2.457: 10, 2.462: 11, 2.467: 12,
-                  2.472: 13
-                }
-        return ftoc[freq]
+    ftoc = { 2.412: 1, 2.417: 2, 2.422: 3, 2.427: 4,
+	     2.432: 5, 2.437: 6, 2.442: 7, 2.447: 8,
+	     2.452: 9, 2.457: 10, 2.462: 11, 2.467: 12,
+	     2.472: 13
+	     }
+    return ftoc[freq]
 
 def channel_to_freq(channel):
-        ctof = { 1: 2.412, 2: 2.417, 3: 2.422, 4: 2.427,
-                 5: 2.432, 6: 2.437, 7: 2.442, 8: 2.447,
-                 9: 2.452, 10: 2.457, 11: 2.462, 12: 2.467,
-                 13: 2.472
-               }
-        return ctof[channel]
-
+    ctof = { 1: 2.412, 2: 2.417, 3: 2.422, 4: 2.427,
+	     5: 2.432, 6: 2.437, 7: 2.442, 8: 2.447,
+	     9: 2.452, 10: 2.457, 11: 2.462, 12: 2.467,
+	     13: 2.472
+	     }
+    return ctof[channel]
 
 class Device(device.Device):
     __gproperties__ = {
@@ -74,11 +72,12 @@ class Device(device.Device):
             return self._nm_device.get_strength()
         elif pspec.name == 'name':
             import logging
-            logging.debug('wireless.Device.props.name: %s' % self._nm_device.get_ssid())
+            logging.debug('wireless.Device.props.name: %s' %
+                    self._nm_device.get_ssid())
             return self._nm_device.get_ssid()
         elif pspec.name == 'state':
             nm_state = self._nm_device.get_state()
-            return device._nm_state_to_state[nm_state]
+            return device.nm_state_to_state[nm_state]
         elif pspec.name == 'frequency':
             return self._nm_device.get_frequency()
 

@@ -22,8 +22,9 @@ def _grab_pixbuf(window=None):
         screen = gtk.gdk.screen_get_default()
         window = screen.get_root_window()
     color_map = gtk.gdk.colormap_get_system()
-    (x, y, w, h, bpp) = window.get_geometry()
-    return gtk.gdk.pixbuf_get_from_drawable(None, window, color_map, x, y, 0, 0, w, h)
+    (x, y, w, h, bpp_) = window.get_geometry()
+    return gtk.gdk.pixbuf_get_from_drawable(None, window, color_map,
+                                            x, y, 0, 0, w, h)
 
 class OverlayWindow(gtk.Window):
     def __init__(self, lower_window):
@@ -44,14 +45,15 @@ class OverlayWindow(gtk.Window):
         self.set_default_size(gtk.gdk.screen_width(), gtk.gdk.screen_height())
         self.set_app_paintable(True)
 
-#        self.connect('expose-event', self._expose_cb)
+        # self.connect('expose-event', self._expose_cb)
 
     def appear(self):
         pbuf = _grab_pixbuf(self._lower_window)
         #pbuf.saturate_and_pixelate(pbuf, 0.5, False)
         w = pbuf.get_width()
         h = pbuf.get_height()
-        pbuf2 = pbuf.composite_color_simple(w, h, gtk.gdk.INTERP_NEAREST, 100, 1024, 0, 0)
+        pbuf2 = pbuf.composite_color_simple(w, h, gtk.gdk.INTERP_NEAREST,
+                                            100, 1024, 0, 0)
         self._img.set_from_pixbuf(pbuf2)
         self.show_all()
 

@@ -16,13 +16,11 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
-import os
 
 import dbus
 import dbus.glib
 import dbus.decorators
 import gobject
-import gtk
 
 from hardware import nminfo
 from sugar.graphics import xocolor
@@ -30,17 +28,17 @@ from sugar.graphics import xocolor
 IW_AUTH_ALG_OPEN_SYSTEM = 0x00000001
 IW_AUTH_ALG_SHARED_KEY  = 0x00000002
 
-NM_DEVICE_STAGE_STRINGS=("Unknown",
-    "Prepare",
-    "Config",
-    "Need Users Key",
-    "IP Config",
-    "IP Config Get",
-    "IP Config Commit",
-    "Activated",
-    "Failed",
-    "Canceled"
-)
+NM_DEVICE_STAGE_STRINGS = ("Unknown",
+                           "Prepare",
+                           "Config",
+                           "Need Users Key",
+                           "IP Config",
+                           "IP Config Get",
+                           "IP Config Commit",
+                           "Activated",
+                           "Failed",
+                           "Canceled"
+                           )
 
 NM_SERVICE = 'org.freedesktop.NetworkManager'
 NM_IFACE = 'org.freedesktop.NetworkManager'
@@ -114,27 +112,29 @@ class Network(gobject.GObject):
         self._strength = props[3]
         self._mode = props[6]
         self._caps = props[7]
-        if self._caps & NM_802_11_CAP_PROTO_WPA or self._caps & NM_802_11_CAP_PROTO_WPA2:
+        if self._caps & NM_802_11_CAP_PROTO_WPA or \
+                self._caps & NM_802_11_CAP_PROTO_WPA2:
             if not (self._caps & NM_802_11_CAP_KEY_MGMT_PSK):
                 # 802.1x is not supported at this time
-                logging.debug("Net(%s): ssid '%s' dropping because 802.1x is unsupported" % (self._op,
-                        self._ssid))
+                logging.debug("Net(%s): ssid '%s' dropping because 802.1x" \
+                              "is unsupported" % (self._op, self._ssid))
                 self._valid = False
                 self.emit('initialized', self._valid)
                 return
         if self._mode != IW_MODE_INFRA:
             # Don't show Ad-Hoc networks; they usually don't DHCP and therefore
-            # won't work well here.  This also works around the bug where we show
-            # our own mesh SSID on the Mesh view when in mesh mode
-            logging.debug("Net(%s): ssid '%s' is adhoc; not showing" % (self._op,
-                    self._ssid))
+            # won't work well here.  This also works around the bug where
+            # we show our own mesh SSID on the Mesh view when in mesh mode
+            logging.debug("Net(%s): ssid '%s' is adhoc; not showing" %
+                          (self._op, self._ssid))
             self._valid = False
             self.emit('initialized', self._valid)
             return
 
         fav_nets = []
         if self._client.nminfo:
-            fav_nets = self._client.nminfo.get_networks(nminfo.NETWORK_TYPE_ALLOWED)
+            fav_nets = self._client.nminfo.get_networks(
+                    nminfo.NETWORK_TYPE_ALLOWED)
         if self._ssid in fav_nets:
             self._favorite = True
 
@@ -153,9 +153,9 @@ class Network(gobject.GObject):
         data = self._ssid + hex(self._caps) + hex(self._mode)
         sh.update(data)
         h = hash(sh.digest())
-        idx = h % len(xocolor._colors)
+        idx = h % len(xocolor.colors)
         # stroke, fill
-        return (xocolor._colors[idx][0], xocolor._colors[idx][1])
+        return (xocolor.colors[idx][0], xocolor.colors[idx][1])
 
     def get_ssid(self):
         return self._ssid
@@ -197,24 +197,24 @@ class Network(gobject.GObject):
 
 class Device(gobject.GObject):
     __gsignals__ = {
-        'initialized':         (gobject.SIGNAL_RUN_FIRST,
-                                gobject.TYPE_NONE, ([])),
-        'init-failed':         (gobject.SIGNAL_RUN_FIRST,
-                                gobject.TYPE_NONE, ([])),
-        'ssid-changed':        (gobject.SIGNAL_RUN_FIRST,
-                                gobject.TYPE_NONE, ([])),
-        'strength-changed':    (gobject.SIGNAL_RUN_FIRST,
-                                gobject.TYPE_NONE, ([])),
-        'state-changed':       (gobject.SIGNAL_RUN_FIRST,
-                                gobject.TYPE_NONE, ([])),
+        'initialized':              (gobject.SIGNAL_RUN_FIRST,
+                                     gobject.TYPE_NONE, ([])),
+        'init-failed':              (gobject.SIGNAL_RUN_FIRST,
+                                     gobject.TYPE_NONE, ([])),
+        'ssid-changed':             (gobject.SIGNAL_RUN_FIRST,
+                                     gobject.TYPE_NONE, ([])),
+        'strength-changed':         (gobject.SIGNAL_RUN_FIRST,
+                                     gobject.TYPE_NONE, ([])),
+        'state-changed':            (gobject.SIGNAL_RUN_FIRST,
+                                     gobject.TYPE_NONE, ([])),
         'activation-stage-changed': (gobject.SIGNAL_RUN_FIRST,
-                                gobject.TYPE_NONE, ([])),
-        'network-appeared':    (gobject.SIGNAL_RUN_FIRST,
-                                gobject.TYPE_NONE,
-                               ([gobject.TYPE_PYOBJECT])),
-        'network-disappeared': (gobject.SIGNAL_RUN_FIRST,
-                                gobject.TYPE_NONE,
-                               ([gobject.TYPE_PYOBJECT]))
+                                     gobject.TYPE_NONE, ([])),
+        'network-appeared':         (gobject.SIGNAL_RUN_FIRST,
+                                     gobject.TYPE_NONE,
+                                     ([gobject.TYPE_PYOBJECT])),
+        'network-disappeared':      (gobject.SIGNAL_RUN_FIRST,
+                                     gobject.TYPE_NONE,
+                                     ([gobject.TYPE_PYOBJECT]))
     }
 
     def __init__(self, client, op):
@@ -289,7 +289,8 @@ class Device(gobject.GObject):
         for op in net_ops:
             net = Network(self._client, op)
             self._networks[op] = net
-            net.connect('initialized', lambda *args: self._net_initialized_cb(active_op, *args))
+            net.connect('initialized', lambda *args:
+                        self._net_initialized_cb(active_op, *args))
 
     def _update_error_cb(self, err):
         logging.debug("Device(%s): failed to update. (%s)" % (self._op, err))
@@ -339,16 +340,15 @@ class Device(gobject.GObject):
             raise RuntimeError("Only valid for mesh devices")
         try:
             step = self.dev.getMeshStep(timeout=3)
-        except dbus.DBusException, e:
+        except dbus.DBusException:
             step = 0
         return step
 
     def get_frequency(self):
-        freq = 0.0
         try:
             freq = self.dev.getFrequency(timeout=3)
-        except dbus.DBusException, e:
-            pass
+        except dbus.DBusException:
+            freq = 0.0
         # Hz -> GHz
         self._freq = freq / 1000000000.0
         return self._freq
@@ -373,7 +373,8 @@ class Device(gobject.GObject):
             return
         net = Network(self._client, network)
         self._networks[network] = net
-        net.connect('initialized', lambda *args: self._net_initialized_cb(None, *args))
+        net.connect('initialized', lambda *args:
+                    self._net_initialized_cb(None, *args))
 
     def network_disappeared(self, network):
         if not self._networks.has_key(network):
@@ -396,8 +397,8 @@ class Device(gobject.GObject):
         self._active_network = network
 
         if self._active_network:
-            self._active_net_sigid = self._active_network.connect("initialized",
-                    self._active_net_initialized);
+            self._active_net_sigid = self._active_network.connect(
+                    "initialized", self._active_net_initialized)
 
         # don't emit ssid-changed for networks that are not yet valid
         if self._valid:
@@ -448,8 +449,10 @@ class Device(gobject.GObject):
             if state == DEVICE_STATE_INACTIVE:
                 self.set_active_network(None)
             else:
-                self.dev.getActiveNetwork(reply_handler=lambda *args: self._get_active_net_cb(state, *args),
-                            error_handler=self._get_active_net_error_cb)
+                self.dev.getActiveNetwork(
+                    reply_handler=lambda *args:
+                    self._get_active_net_cb(state, *args),
+                    error_handler=self._get_active_net_error_cb)
 
     def set_activation_stage(self, stage):
         if stage == self._act_stage:
@@ -485,16 +488,16 @@ class Device(gobject.GObject):
 class NMClient(gobject.GObject):
     __gsignals__ = {
         'device-added'     : (gobject.SIGNAL_RUN_FIRST,
-                              gobject.TYPE_NONE, 
+                              gobject.TYPE_NONE,
                              ([gobject.TYPE_PYOBJECT])),
         'device-activated' : (gobject.SIGNAL_RUN_FIRST,
-                              gobject.TYPE_NONE, 
+                              gobject.TYPE_NONE,
                              ([gobject.TYPE_PYOBJECT])),
         'device-activating': (gobject.SIGNAL_RUN_FIRST,
-                              gobject.TYPE_NONE, 
+                              gobject.TYPE_NONE,
                              ([gobject.TYPE_PYOBJECT])),
         'device-removed'   : (gobject.SIGNAL_RUN_FIRST,
-                              gobject.TYPE_NONE, 
+                              gobject.TYPE_NONE,
                              ([gobject.TYPE_PYOBJECT]))
     }
 
@@ -503,13 +506,14 @@ class NMClient(gobject.GObject):
 
         self.nminfo = None
         self._nm_present = False
+        self._nm_proxy = None
+        self._nm_obj = None
+        self._sig_handlers = None
         self._update_timer = 0
         self._devices = {}
 
-        try:
-            self.nminfo = nminfo.NMInfo(self)
-        except RuntimeError:
-            pass
+        self.nminfo = nminfo.NMInfo(self)
+        
         self._setup_dbus()
         if self._nm_present:
             self._get_initial_devices()
@@ -533,8 +537,9 @@ class NMClient(gobject.GObject):
         logging.debug("Error updating devices (%s)" % err)
 
     def _get_initial_devices(self):
-        self._nm_obj.getDevices(reply_handler=self._get_initial_devices_reply_cb, \
-                error_handler=self._get_initial_devices_error_cb)
+        self._nm_obj.getDevices(
+            reply_handler=self._get_initial_devices_reply_cb,
+            error_handler=self._get_initial_devices_error_cb)
 
     def _add_device(self, dev_op):
         if self._devices.has_key(dev_op):
@@ -576,20 +581,25 @@ class NMClient(gobject.GObject):
             'DeviceActivating': self.device_activating_sig_handler,
             'DeviceNowActive': self.device_now_active_sig_handler,
             'DeviceNoLongerActive': self.device_no_longer_active_sig_handler,
-            'DeviceActivationFailed': self.device_activation_failed_sig_handler,
+            'DeviceActivationFailed': \
+                self.device_activation_failed_sig_handler,
             'DeviceCarrierOn': self.device_carrier_on_sig_handler,
             'DeviceCarrierOff': self.device_carrier_off_sig_handler,
-            'DeviceStrengthChanged': self.wireless_device_strength_changed_sig_handler,
-            'WirelessNetworkAppeared': self.wireless_network_appeared_sig_handler,
-            'WirelessNetworkDisappeared': self.wireless_network_disappeared_sig_handler,
-            'WirelessNetworkStrengthChanged': self.wireless_network_strength_changed_sig_handler
+            'DeviceStrengthChanged': \
+                self.wireless_device_strength_changed_sig_handler,
+            'WirelessNetworkAppeared': \
+                self.wireless_network_appeared_sig_handler,
+            'WirelessNetworkDisappeared': \
+                self.wireless_network_disappeared_sig_handler,
+            'WirelessNetworkStrengthChanged': \
+                self.wireless_network_strength_changed_sig_handler
         }
 
         try:
             self._nm_proxy = sys_bus.get_object(NM_SERVICE, NM_PATH)
             self._nm_obj = dbus.Interface(self._nm_proxy, NM_IFACE)
         except dbus.DBusException, e:
-            logging.debug("Could not connect to NetworkManager!")
+            logging.debug("Could not connect to NetworkManager: %s" % e)
             self._nm_present = False
             return
 
@@ -598,30 +608,38 @@ class NMClient(gobject.GObject):
                                          dbus_interface="org.freedesktop.DBus")
 
         for (signal, handler) in self._sig_handlers.items():
-            sys_bus.add_signal_receiver(handler, signal_name=signal, dbus_interface=NM_IFACE)
+            sys_bus.add_signal_receiver(handler, signal_name=signal,
+                                        dbus_interface=NM_IFACE)
 
         # Find out whether or not NMI is running
         try:
-            bus_object = sys_bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
-            name = bus_object.GetNameOwner("org.freedesktop.NetworkManagerInfo", \
+            bus_object = sys_bus.get_object('org.freedesktop.DBus',
+                                            '/org/freedesktop/DBus')
+            name_ = bus_object.GetNameOwner( \
+                    "org.freedesktop.NetworkManagerInfo",
                     dbus_interface='org.freedesktop.DBus')
-            if name:
-                self._nm_present = True
+            self._nm_present = True
         except dbus.DBusException:
-            pass
+            self._nm_present = False
 
-    def set_active_device(self, device, network=None, mesh_freq=None, mesh_start=None):
+    def set_active_device(self, device, network=None,
+                          mesh_freq=None, mesh_start=None):
         ssid = ""
         if network:
             ssid = network.get_ssid()
         if device.get_type() == DEVICE_TYPE_802_11_MESH_OLPC:
             if mesh_freq or mesh_start:
                 if mesh_freq and not mesh_start:
-                    self._nm_obj.setActiveDevice(device.get_op(), dbus.Double(mesh_freq))
+                    self._nm_obj.setActiveDevice(device.get_op(),
+                                                 dbus.Double(mesh_freq))
                 elif mesh_start and not mesh_freq:
-                    self._nm_obj.setActiveDevice(device.get_op(), dbus.Double(0.0), dbus.UInt32(mesh_start))
+                    self._nm_obj.setActiveDevice(device.get_op(),
+                                                 dbus.Double(0.0),
+                                                 dbus.UInt32(mesh_start))
                 else:
-                    self._nm_obj.setActiveDevice(device.get_op(), dbus.Double(mesh_freq), dbus.UInt32(mesh_start))
+                    self._nm_obj.setActiveDevice(device.get_op(),
+                                                 dbus.Double(mesh_freq),
+                                                 dbus.UInt32(mesh_start))
             else:
                 self._nm_obj.setActiveDevice(device.get_op())
         else:
@@ -631,37 +649,43 @@ class NMClient(gobject.GObject):
         logging.debug('NM State Changed to %d' % new_state)
 
     def device_activation_stage_sig_handler(self, device, stage):
-        logging.debug('Device Activation Stage "%s" for device %s' % (NM_DEVICE_STAGE_STRINGS[stage], device))
+        logging.debug('Device Activation Stage "%s" for device %s'
+                      % (NM_DEVICE_STAGE_STRINGS[stage], device))
         if not self._devices.has_key(device):
-            logging.debug('DeviceActivationStage, device %s does not exist' % (device))
+            logging.debug('DeviceActivationStage, device %s does not exist'
+                          % (device))
             return
         self._devices[device].set_activation_stage(stage)
 
     def device_activating_sig_handler(self, device):
         logging.debug('DeviceActivating for %s' % (device))
         if not self._devices.has_key(device):
-            logging.debug('DeviceActivating, device %s does not exist' % (device))
+            logging.debug('DeviceActivating, device %s does not exist'
+                          % (device))
             return
         self._devices[device].set_state(DEVICE_STATE_ACTIVATING)
 
     def device_now_active_sig_handler(self, device, ssid=None):
         logging.debug('DeviceNowActive for %s' % (device))
         if not self._devices.has_key(device):
-            logging.debug('DeviceNowActive, device %s does not exist' % (device))
+            logging.debug('DeviceNowActive, device %s does not exist'
+                          % (device))
             return
         self._devices[device].set_state(DEVICE_STATE_ACTIVATED)
 
     def device_no_longer_active_sig_handler(self, device):
         logging.debug('DeviceNoLongerActive for %s' % (device))
         if not self._devices.has_key(device):
-            logging.debug('DeviceNoLongerActive, device %s does not exist' % (device))
+            logging.debug('DeviceNoLongerActive, device %s does not exist'
+                          % (device))
             return
         self._devices[device].set_state(DEVICE_STATE_INACTIVE)
 
     def device_activation_failed_sig_handler(self, device, ssid=None):
         logging.debug('DeviceActivationFailed for %s' % (device))
         if not self._devices.has_key(device):
-            logging.debug('DeviceActivationFailed, device %s does not exist' % (device))
+            logging.debug('DeviceActivationFailed, device %s does not exist'
+                          % (device))
             return
         self._devices[device].set_state(DEVICE_STATE_INACTIVE)
 
@@ -703,7 +727,8 @@ class NMClient(gobject.GObject):
             return
         self._devices[device].set_strength(strength)
 
-    def wireless_network_strength_changed_sig_handler(self, device, network, strength):
+    def wireless_network_strength_changed_sig_handler(self, device,
+                                                      network, strength):
         if not self._devices.has_key(device):
             return
         net = self._devices[device].get_network(network)

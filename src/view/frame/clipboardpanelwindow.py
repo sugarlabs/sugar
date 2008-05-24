@@ -15,7 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
-import urlparse
+from urlparse import urlparse
 
 import gtk
 import hippo
@@ -23,7 +23,6 @@ import hippo
 from view.frame.framewindow import FrameWindow
 from view.frame.clipboardtray import ClipboardTray
 from sugar.clipboard import clipboardservice
-from sugar import util
 
 class ClipboardPanelWindow(FrameWindow):
     def __init__(self, frame, orientation):
@@ -60,7 +59,8 @@ class ClipboardPanelWindow(FrameWindow):
         
         targets = clipboard.wait_for_targets()
         for target in targets:
-            if target not in ('TIMESTAMP', 'TARGETS', 'MULTIPLE', 'SAVE_TARGETS'):
+            if target not in ('TIMESTAMP', 'TARGETS',
+                              'MULTIPLE', 'SAVE_TARGETS'):
                 logging.debug('Asking for target %s.' % target)
                 selection = clipboard.wait_for_contents(target)
                 if not selection:
@@ -82,10 +82,11 @@ class ClipboardPanelWindow(FrameWindow):
             uris = selection.get_uris()
 
             if len(uris) > 1:
-                raise NotImplementedError('Multiple uris in text/uri-list still not supported.')
+                raise NotImplementedError('Multiple uris in text/uri-list' \
+                                          ' still not supported.')
             uri = uris[0]
-
-            scheme, netloc, path, parameters, query, fragment = urlparse.urlparse(uri)
+            scheme, netloc_, path_, parameters_, query_, fragment_ = \
+                    urlparse(uri)
             on_disk = (scheme == 'file')
 
             cb_service.add_object_format(key,

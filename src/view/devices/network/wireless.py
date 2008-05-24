@@ -39,13 +39,14 @@ class DeviceView(TrayIcon):
 
         meshdev = None
         network_manager = hardwaremanager.get_network_manager()
-        for device in network_manager.get_devices():
-            if device.get_type() == nmclient.DEVICE_TYPE_802_11_MESH_OLPC:
-                meshdev = device
+        for dev in network_manager.get_devices():
+            if dev.get_type() == nmclient.DEVICE_TYPE_802_11_MESH_OLPC:
+                meshdev = dev
                 break
 
         self._counter = 0
-        self.palette = WirelessPalette(self._get_palette_primary_text(), meshdev)
+        self.palette = WirelessPalette(self._get_palette_primary_text(),
+                                       meshdev)
         self.set_palette(self.palette)
         self.palette.props.invoker = FrameWidgetInvoker(self)
         self.palette.set_group_id('frame')

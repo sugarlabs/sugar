@@ -4,7 +4,6 @@
 import gtk
 import pygtk
 pygtk.require('2.0')
-import sys
 
 import pygst
 pygst.require('0.10')
@@ -16,8 +15,12 @@ gobject.threads_init()
 
 class Glive(gobject.GObject):
     __gsignals__ = {
-        'new-picture': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
-        'sink': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT]))
+        'new-picture': (gobject.SIGNAL_RUN_FIRST,
+                        gobject.TYPE_NONE,
+                        ([gobject.TYPE_PYOBJECT])),
+        'sink'       : (gobject.SIGNAL_RUN_FIRST,
+                        gobject.TYPE_NONE,
+                        ([gobject.TYPE_PYOBJECT]))
     }
 
     def __init__(self, parent, width, height):
@@ -55,7 +58,8 @@ class Glive(gobject.GObject):
         self.queue.set_property("max-size-buffers", 1)
         self.qsrc = self.queue.get_pad( "src" )
         self.qsink = self.queue.get_pad("sink")
-        self.ffmpeg = gst.element_factory_make("ffmpegcolorspace", "ffmpegcolorspace")
+        self.ffmpeg = gst.element_factory_make( \
+                "ffmpegcolorspace", "ffmpegcolorspace")
         self.jpgenc = gst.element_factory_make("jpegenc", "jpegenc")
         self.filesink = gst.element_factory_make("fakesink", "fakesink")
         self.filesink.connect( "handoff", self.copyframe )
@@ -74,13 +78,13 @@ class Glive(gobject.GObject):
         self._CONNECT_MSG = -1
         self.doPostBusStuff()
 
-    def copyframe(self, fsink, buffer, pad, user_data=None):
+    def copyframe(self, fsink, buf, pad, user_data=None):
         #for some reason, we get two back to back buffers, even though we
         #ask for only one.
         if (self.exposureOpen):
             self.exposureOpen = False
             piccy = gtk.gdk.pixbuf_loader_new_with_mime_type("image/jpeg")
-            piccy.write( buffer )
+            piccy.write(buf)
             piccy.close()
             pixbuf = piccy.get_pixbuf()
             del piccy
@@ -103,7 +107,8 @@ class Glive(gobject.GObject):
     def doPostBusStuff(self):
         self._bus.enable_sync_message_emission()
         self._bus.add_signal_watch()
-        self._CONNECT_SYNC = self._bus.connect('sync-message::element', self.on_sync_message)
+        self._CONNECT_SYNC = self._bus.connect('sync-message::element',
+                                               self.on_sync_message)
         self._CONNECT_MSG = self._bus.connect('message', self.on_message)
 
     def on_sync_message(self, bus, message):
@@ -116,14 +121,11 @@ class Glive(gobject.GObject):
     def on_message(self, bus, message):
         t = message.type
         if (t == gst.MESSAGE_ERROR):
-            err, debug = message.parse_error()
             if (self.on_eos):
                 self.on_eos()
-                self._playing = False
         elif (t == gst.MESSAGE_EOS):
             if (self.on_eos):
                 self.on_eos()
-                self._playing = False
 
     def on_eos( self ):
         pass
@@ -140,7 +142,9 @@ class Glive(gobject.GObject):
 
 class LiveVideoSlot(gtk.EventBox):
     __gsignals__ = {
-        'pixbuf': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
+        'pixbuf': (gobject.SIGNAL_RUN_FIRST,
+                   gobject.TYPE_NONE,
+                   ([gobject.TYPE_PYOBJECT]))
     }
 
     def __init__(self, width, height):

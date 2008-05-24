@@ -111,9 +111,9 @@ class ShellService(dbus.service.Object):
         """Lazily initializes an interface to the Rainbow security daemon."""
         if self._rainbow is None:
             system_bus = dbus.SystemBus()
-            object = system_bus.get_object(_DBUS_RAINBOW_IFACE, '/',
-                                           follow_name_owner_changes=True)
-            self._rainbow = dbus.Interface(object,
+            obj = system_bus.get_object(_DBUS_RAINBOW_IFACE, '/',
+                                        follow_name_owner_changes=True)
+            self._rainbow = dbus.Interface(obj,
                                            dbus_interface=_DBUS_RAINBOW_IFACE)
         return self._rainbow
 

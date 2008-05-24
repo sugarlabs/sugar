@@ -14,8 +14,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import logging
-
 from sugar.presence import presenceservice
 from sugar.graphics.xocolor import XoColor
 import gobject
@@ -24,16 +22,22 @@ _NOT_PRESENT_COLOR = "#d5d5d5,#FFFFFF"
 
 class BuddyModel(gobject.GObject):
     __gsignals__ = {
-        'appeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
-        'disappeared': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
-        'nick-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                         ([gobject.TYPE_PYOBJECT])),
-        'color-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                         ([gobject.TYPE_PYOBJECT])),
-        'icon-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                         ([])),
-        'current-activity-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                                    ([gobject.TYPE_PYOBJECT]))
+        'appeared':                 (gobject.SIGNAL_RUN_FIRST,
+                                     gobject.TYPE_NONE, ([])),
+        'disappeared':              (gobject.SIGNAL_RUN_FIRST,
+                                     gobject.TYPE_NONE, ([])),
+        'nick-changed':             (gobject.SIGNAL_RUN_FIRST,
+                                     gobject.TYPE_NONE,
+                                     ([gobject.TYPE_PYOBJECT])),
+        'color-changed':            (gobject.SIGNAL_RUN_FIRST,
+                                     gobject.TYPE_NONE,
+                                     ([gobject.TYPE_PYOBJECT])),
+        'icon-changed':             (gobject.SIGNAL_RUN_FIRST,
+                                     gobject.TYPE_NONE,
+                                     ([])),
+        'current-activity-changed': (gobject.SIGNAL_RUN_FIRST,
+                                     gobject.TYPE_NONE,
+                                     ([gobject.TYPE_PYOBJECT]))
     }
 
     def __init__(self, key=None, buddy=None, nick=None):
@@ -42,6 +46,7 @@ class BuddyModel(gobject.GObject):
 
         gobject.GObject.__init__(self)
 
+        self._color = None
         self._ba_handler = None
         self._pc_handler = None
         self._dis_handler = None
@@ -66,9 +71,9 @@ class BuddyModel(gobject.GObject):
         else:
             self._update_buddy(buddy)
 
-    def _get_buddies_cb(self, list):
+    def _get_buddies_cb(self, buddy_list):
         buddy = None
-        for iter_buddy in list:
+        for iter_buddy in buddy_list:
             if iter_buddy.props.key == self._key:
                 buddy = iter_buddy
                 break
@@ -121,8 +126,10 @@ class BuddyModel(gobject.GObject):
         self._nick = self._buddy.props.nick
         self._set_color_from_string(self._buddy.props.color)
 
-        self._pc_handler = self._buddy.connect('property-changed', self._buddy_property_changed_cb)
-        self._bic_handler = self._buddy.connect('icon-changed', self._buddy_icon_changed_cb)
+        self._pc_handler = self._buddy.connect('property-changed',
+                                               self._buddy_property_changed_cb)
+        self._bic_handler = self._buddy.connect('icon-changed',
+                                                self._buddy_icon_changed_cb)
 
     def _buddy_appeared_cb(self, pservice, buddy):
         if self._buddy or buddy.props.key != self._key:

@@ -34,7 +34,6 @@ from view.frame.devicestray import DevicesTray
 from view.frame.framewindow import FrameWindow
 from view.frame.clipboardpanelwindow import ClipboardPanelWindow
 from view.frame.notification import NotificationIcon, NotificationWindow
-from model.shellmodel import ShellModel
 
 _FRAME_HIDING_DELAY = 500
 _NOTIFICATION_DURATION = 5000
@@ -118,7 +117,8 @@ class Frame(object):
         screen.connect('size-changed', self._size_changed_cb)
 
         cb_service = clipboardservice.get_instance()
-        cb_service.connect_after('object-added', self._clipboard_object_added_cb)
+        cb_service.connect_after('object-added',
+                                 self._clipboard_object_added_cb)
 
         self._key_listener = _KeyListener(self)
         self._mouse_listener = _MouseListener(self)
@@ -249,7 +249,7 @@ class Frame(object):
                          screen_w, 0, screen_w - self._right_panel.size, 0)
 
     def _size_changed_cb(self, screen):
-       self._update_position()
+        self._update_position()
 
     def _clipboard_object_added_cb(self, cb_service, object_id, name):
         if not self.visible:

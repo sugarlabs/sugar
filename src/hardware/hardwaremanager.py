@@ -38,9 +38,9 @@ class HardwareManager(object):
             proxy = bus.get_object(_HARDWARE_MANAGER_SERVICE,
                                    _HARDWARE_MANAGER_OBJECT_PATH)
             self._service = dbus.Interface(proxy, _HARDWARE_MANAGER_INTERFACE)
-        except dbus.DBusException, e:
+        except dbus.DBusException, err:
             self._service = None
-            logging.info('Hardware manager service not found.')
+            logging.info('Hardware manager service not found: %s' % err)
 
         self._mixer = gst.element_factory_make('alsamixer')
         self._mixer.set_state(gst.STATE_PAUSED)
@@ -53,7 +53,7 @@ class HardwareManager(object):
     def get_volume(self):
         if not self._mixer or not self._master:
             logging.error('Cannot get the volume')
-            return self._convert_volume(0)
+            return None
 
         max_volume = self._master.max_volume
         min_volume = self._master.min_volume

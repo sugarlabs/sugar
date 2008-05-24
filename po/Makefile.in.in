@@ -1,10 +1,10 @@
 # Makefile for program source directory in GNU NLS utilities package.
 # Copyright (C) 1995, 1996, 1997 by Ulrich Drepper <drepper@gnu.ai.mit.edu>
+# Copyright (C) 2004-2008 Rodney Dawes <dobey.pwns@gmail.com>
 #
-# This file file be copied and used freely without restrictions.  It can
-# be used in projects which are not available under the GNU Public License
+# This file may be copied and used freely without restrictions.  It may
+# be used in projects which are not available under a GNU Public License,
 # but which still want to provide support for the GNU gettext functionality.
-# Please note that the actual code is *not* freely available.
 #
 # - Modified by Owen Taylor <otaylor@redhat.com> to use GETTEXT_PACKAGE
 #   instead of PACKAGE and to look for po2tbl in ./ not in intl/
@@ -12,7 +12,7 @@
 # - Modified by jacob berkman <jacob@ximian.com> to install
 #   Makefile.in.in and po2tbl.sed.in for use with glib-gettextize
 #
-# - Modified by Rodney Dawes <dobey@novell.com> for use with intltool
+# - Modified by Rodney Dawes <dobey.pwns@gmail.com> for use with intltool
 #
 # We have the following line for use by intltoolize:
 # INTLTOOL_MAKEFILE

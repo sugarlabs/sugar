@@ -172,6 +172,7 @@ class SpreadLayout(gobject.GObject, hippo.CanvasLayout):
     __gtype_name__ = 'SugarSpreadLayout'
     def __init__(self):
         gobject.GObject.__init__(self)
+        self._box = None
 
         min_width, width = self.do_get_width_request()
         min_height, height = self.do_get_height_request(width)

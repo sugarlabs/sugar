@@ -21,12 +21,10 @@ import os
 import logging
 
 import gtk
-import hippo
 
 from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
-from sugar.graphics import style
 from sugar.clipboard import clipboardservice
 from sugar.datastore import datastore
 from sugar import mime
@@ -34,8 +32,9 @@ from sugar import profile
 from sugar import activity
 
 class ClipboardMenu(Palette):
-    
-    def __init__(self, object_id, name, percent, preview, activities, installable):
+
+    def __init__(self, object_id, name, percent, preview,
+                 activities, installable):
         Palette.__init__(self, name)
 
         self._object_id = object_id
@@ -45,16 +44,6 @@ class ClipboardMenu(Palette):
         self.set_group_id('frame')
 
         self._progress_bar = None
-
-        """
-        if preview:
-            self._preview_text = hippo.CanvasText(text=preview,
-                    size_mode=hippo.CANVAS_SIZE_WRAP_WORD)
-            self._preview_text.props.color = color.LABEL_TEXT.get_int()
-            self._preview_text.props.font_desc = \
-                style.FONT_NORMAL.get_pango_desc()
-            self.append(self._preview_text)
-        """
 
         self._remove_item = MenuItem(_('Remove'), 'list-remove')
         self._remove_item.connect('activate', self._remove_item_activate_cb)
@@ -85,13 +74,14 @@ class ClipboardMenu(Palette):
 
     def _update_open_submenu(self):
         logging.debug('_update_open_submenu: %r' % self._activities)
+        child = self._open_item.get_child()
         if self._activities is None or len(self._activities) <= 1:
-            self._open_item.child.set_text(_('Open'))
+            child.set_text(_('Open'))
             if self._open_item.get_submenu() is not None:
                 self._open_item.remove_submenu()
             return
 
-        self._open_item.child.set_text(_('Open with'))
+        child.set_text(_('Open with'))
         submenu = self._open_item.get_submenu()
         if submenu is None:
             submenu = gtk.Menu()
@@ -100,16 +90,17 @@ class ClipboardMenu(Palette):
         else:
             for item in submenu.get_children():
                 submenu.remove(item)
-        
+
         for service_name in self._activities:
             registry = activity.get_registry()
             activity_info = registry.get_activity(service_name)
-            
+
             if not activity_info:
                 logging.warning('Activity %s is unknown.' % service_name)
-            
+
             item = gtk.MenuItem(activity_info.name)
-            item.connect('activate', self._open_submenu_item_activate_cb, service_name)
+            item.connect('activate', self._open_submenu_item_activate_cb,
+                         service_name)
             submenu.append(item)
             item.show()
 
@@ -119,7 +110,8 @@ class ClipboardMenu(Palette):
             self._open_item.props.sensitive = True
             #self._stop_item.props.sensitive = False
             self._journal_item.props.sensitive = True
-        elif self._percent == 100 and (not self._activities and not installable):
+        elif self._percent == 100 and \
+                    (not self._activities and not installable):
             self._remove_item.props.sensitive = True
             self._open_item.props.sensitive = False
             #self._stop_item.props.sensitive = False
@@ -225,6 +217,6 @@ class ClipboardMenu(Palette):
         jobject.metadata['mime_type'] = mime_type
         jobject.file_path = file_path
         datastore.write(jobject, transfer_ownership=transfer_ownership)
-        
+
         return jobject
 

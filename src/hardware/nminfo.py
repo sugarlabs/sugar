@@ -29,8 +29,8 @@ import keydialog
 import gtk
 from sugar import env
 
-IW_AUTH_KEY_MGMT_802_1X	= 0x1
-IW_AUTH_KEY_MGMT_PSK	= 0x2
+IW_AUTH_KEY_MGMT_802_1X = 0x1
+IW_AUTH_KEY_MGMT_PSK = 0x2
 
 IW_AUTH_WPA_VERSION_DISABLED = 0x00000001
 IW_AUTH_WPA_VERSION_WPA      = 0x00000002
@@ -46,8 +46,8 @@ IW_AUTH_CIPHER_WEP104 = 0x00000010
 IW_AUTH_ALG_OPEN_SYSTEM = 0x00000001
 IW_AUTH_ALG_SHARED_KEY  = 0x00000002
 
-NM_INFO_IFACE='org.freedesktop.NetworkManagerInfo'
-NM_INFO_PATH='/org/freedesktop/NetworkManagerInfo'
+NM_INFO_IFACE = 'org.freedesktop.NetworkManagerInfo'
+NM_INFO_PATH = '/org/freedesktop/NetworkManagerInfo'
 
 
 class NoNetworks(dbus.DBusException):
@@ -68,39 +68,39 @@ class NetworkInvalidError(Exception):
 class NMConfig(ConfigParser.ConfigParser):
     def get_bool(self, section, name):
         opt = self.get(section, name)
-        if type(opt) == type(""):
+        if type(opt) == str:
             if opt.lower() == 'yes' or opt.lower() == 'true':
                 return True
             elif opt.lower() == 'no' or opt.lower() == 'false':
                 return False
-        raise ValueError("Invalid format for %s/%s.  Should be one of [yes, no, true, false]." % (section, name))
+        raise ValueError("Invalid format for %s/%s.  Should be one of" \
+                         " [yes, no, true, false]." % (section, name))
 
     def get_list(self, section, name):
         opt = self.get(section, name)
-        if type(opt) == type(""):
-            if not len(opt):
-                return []
-            try:
-                return opt.split()
-            except Exception:
-                pass
-        raise ValueError("Invalid format for %s/%s.  Should be a space-separate list." % (section, name))
+        if type(opt) != str or not len(opt):
+            return []
+        try:
+            return opt.split()
+        except Exception:
+            raise ValueError("Invalid format for %s/%s.  Should be a" \
+                             " space-separate list." % (section, name))
 
     def get_int(self, section, name):
         opt = self.get(section, name)
         try:
             return int(opt)
-        except Exception:
-            pass
-        raise ValueError("Invalid format for %s/%s.  Should be a valid integer." % (section, name))
+        except ValueError:
+            raise ValueError("Invalid format for %s/%s.  Should be a" \
+                             " valid integer." % (section, name))
 
     def get_float(self, section, name):
         opt = self.get(section, name)
         try:
             return float(opt)
-        except Exception:
-            pass
-        raise ValueError("Invalid format for %s/%s.  Should be a valid float." % (section, name))
+        except ValueError:
+            raise ValueError("Invalid format for %s/%s.  Should be a" \
+                             " valid float." % (section, name))
 
 
 NETWORK_TYPE_UNKNOWN = 0
@@ -111,6 +111,8 @@ NETWORK_TYPE_INVALID = 2
 class Security(object):
     def __init__(self, we_cipher):
         self._we_cipher = we_cipher
+        self._key = None
+        self._auth_alg = None
 
     def read_from_config(self, cfg, name):
         pass
@@ -123,9 +125,12 @@ class Security(object):
         we_cipher = cfg.get_int(name, "we_cipher")
         if we_cipher == IW_AUTH_CIPHER_NONE:
             security = Security(we_cipher)
-        elif we_cipher == IW_AUTH_CIPHER_WEP40 or we_cipher == IW_AUTH_CIPHER_WEP104:
+        elif we_cipher == IW_AUTH_CIPHER_WEP40 or \
+                        we_cipher == IW_AUTH_CIPHER_WEP104:
             security = WEPSecurity(we_cipher)
-        elif we_cipher == NM_AUTH_TYPE_WPA_PSK_AUTO or we_cipher == IW_AUTH_CIPHER_CCMP or we_cipher == IW_AUTH_CIPHER_TKIP:
+        elif we_cipher == NM_AUTH_TYPE_WPA_PSK_AUTO or \
+                        we_cipher == IW_AUTH_CIPHER_CCMP or \
+                        we_cipher == IW_AUTH_CIPHER_TKIP:
             security = WPASecurity(we_cipher)
         else:
             raise ValueError("Unsupported security combo")
@@ -138,9 +143,12 @@ class Security(object):
         try:
             if we_cipher == IW_AUTH_CIPHER_NONE:
                 security = Security(we_cipher)
-            elif we_cipher == IW_AUTH_CIPHER_WEP40 or we_cipher == IW_AUTH_CIPHER_WEP104:
+            elif we_cipher == IW_AUTH_CIPHER_WEP40 or \
+                            we_cipher == IW_AUTH_CIPHER_WEP104:
                 security = WEPSecurity(we_cipher)
-            elif we_cipher == NM_AUTH_TYPE_WPA_PSK_AUTO or we_cipher == IW_AUTH_CIPHER_CCMP or we_cipher == IW_AUTH_CIPHER_TKIP:
+            elif we_cipher == NM_AUTH_TYPE_WPA_PSK_AUTO or \
+                            we_cipher == IW_AUTH_CIPHER_CCMP or \
+                            we_cipher == IW_AUTH_CIPHER_TKIP:
                 security = WPASecurity(we_cipher)
             else:
                 raise ValueError("Unsupported security combo")
@@ -183,13 +191,15 @@ class WEPSecurity(Security):
             raise ValueError("Key length not right for 104-bit WEP")
 
         try:
-            a = binascii.a2b_hex(self._key)
+            binascii.a2b_hex(self._key)
         except TypeError:
             raise ValueError("Key was not a hexadecimal string.")
             
         self._auth_alg = cfg.get_int(name, "auth_alg")
-        if self._auth_alg != IW_AUTH_ALG_OPEN_SYSTEM and self._auth_alg != IW_AUTH_ALG_SHARED_KEY:
-            raise ValueError("Invalid authentication algorithm %d" % self._auth_alg)
+        if self._auth_alg != IW_AUTH_ALG_OPEN_SYSTEM and \
+                self._auth_alg != IW_AUTH_ALG_SHARED_KEY:
+            raise ValueError("Invalid authentication algorithm %d"
+                             % self._auth_alg)
 
     def get_properties(self):
         args = Security.get_properties(self)
@@ -203,6 +213,11 @@ class WEPSecurity(Security):
         config.set(section, "auth_alg", self._auth_alg)
 
 class WPASecurity(Security):
+    def __init__(self, we_cipher):
+        Security.__init__(self, we_cipher)
+        self._wpa_ver = None
+        self._key_mgmt = None
+
     def read_from_args(self, args):
         if len(args) != 3:
             raise ValueError("not enough arguments")
@@ -220,7 +235,8 @@ class WPASecurity(Security):
         if not isinstance(key_mgmt, int):
             raise ValueError("wrong argument type for WPA key management")
         if not key_mgmt & IW_AUTH_KEY_MGMT_PSK:
-            raise ValueError("Key management types other than PSK are not supported")
+            raise ValueError("Key management types other than" \
+                             " PSK are not supported")
 
         self._key = key
         self._wpa_ver = wpa_ver
@@ -233,17 +249,19 @@ class WPASecurity(Security):
             raise ValueError("Key length not right for WPA-PSK")
 
         try:
-            a = binascii.a2b_hex(self._key)
+            binascii.a2b_hex(self._key)
         except TypeError:
             raise ValueError("Key was not a hexadecimal string.")
             
         self._wpa_ver = cfg.get_int(name, "wpa_ver")
-        if self._wpa_ver != IW_AUTH_WPA_VERSION_WPA and self._wpa_ver != IW_AUTH_WPA_VERSION_WPA2:
+        if self._wpa_ver != IW_AUTH_WPA_VERSION_WPA and \
+                self._wpa_ver != IW_AUTH_WPA_VERSION_WPA2:
             raise ValueError("Invalid WPA version %d" % self._wpa_ver)
 
         self._key_mgmt = cfg.get_int(name, "key_mgmt")
         if not self._key_mgmt & IW_AUTH_KEY_MGMT_PSK:
-            raise ValueError("Invalid WPA key management option %d" % self._key_mgmt)
+            raise ValueError("Invalid WPA key management option %d"
+                             % self._key_mgmt)
 
     def get_properties(self):
         args = Security.get_properties(self)
@@ -271,7 +289,8 @@ class Network:
         bssid_list = dbus.Array([], signature="s")
         for item in self.bssids:
             bssid_list.append(dbus.String(item))
-        args = [dbus.String(self.ssid), dbus.Int32(self.timestamp), dbus.Boolean(True), bssid_list]
+        args = [dbus.String(self.ssid), dbus.Int32(self.timestamp),
+                dbus.Boolean(True), bssid_list]
         args += self._security.get_properties()
         return tuple(args)
 
@@ -306,7 +325,7 @@ class Network:
         try:
             self.bssids = config.get_list(self.ssid, "bssids")
         except (ConfigParser.NoOptionError, ValueError), e:
-            pass
+            logging.debug("Error reading bssids: %s" % e)
 
     def write_to_config(self, config):
         try:
@@ -332,16 +351,18 @@ class NMInfoDBusServiceHelper(dbus.service.Object):
         bus = dbus.SystemBus()
 
         # If NMI is already around, don't grab the NMI service
-        bus_object = bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
+        bus_object = bus.get_object('org.freedesktop.DBus',
+                                    '/org/freedesktop/DBus')
         name = None
         try:
-            name = bus_object.GetNameOwner("org.freedesktop.NetworkManagerInfo", \
+            name = bus_object.GetNameOwner( \
+                    "org.freedesktop.NetworkManagerInfo",
                     dbus_interface='org.freedesktop.DBus')
         except dbus.DBusException:
-            pass
+            logging.debug("Error getting owner of NMI")
         if name:
-            logging.debug("NMI service already owned by %s, won't claim it." % name)
-            raise RuntimeError
+            logging.info("NMI service already owned by %s, won't claim it."
+                          % name)
 
         bus_name = dbus.service.BusName(NM_INFO_IFACE, bus=bus)
         dbus.service.Object.__init__(self, bus_name, NM_INFO_PATH)
@@ -354,16 +375,20 @@ class NMInfoDBusServiceHelper(dbus.service.Object):
 
         raise NoNetworks()
 
-    @dbus.service.method(NM_INFO_IFACE, in_signature='si', async_callbacks=('async_cb', 'async_err_cb'))
+    @dbus.service.method(NM_INFO_IFACE, in_signature='si',
+                         async_callbacks=('async_cb', 'async_err_cb'))
     def getNetworkProperties(self, ssid, net_type, async_cb, async_err_cb):
-        self._parent.get_network_properties(ssid, net_type, async_cb, async_err_cb)
+        self._parent.get_network_properties(ssid, net_type,
+                                            async_cb, async_err_cb)
 
     @dbus.service.method(NM_INFO_IFACE)
     def updateNetworkInfo(self, ssid, bauto, bssid, cipher, *args):
         self._parent.update_network_info(ssid, bauto, bssid, cipher, args)
 
-    @dbus.service.method(NM_INFO_IFACE, async_callbacks=('async_cb', 'async_err_cb'))
-    def getKeyForNetwork(self, dev_path, net_path, ssid, attempt, new_key, async_cb, async_err_cb):
+    @dbus.service.method(NM_INFO_IFACE,
+                         async_callbacks=('async_cb', 'async_err_cb'))
+    def getKeyForNetwork(self, dev_path, net_path, ssid, attempt,
+                         new_key, async_cb, async_err_cb):
         self._parent.get_key_for_network(dev_path, net_path, ssid,
                 attempt, new_key, async_cb, async_err_cb)
 
@@ -399,7 +424,8 @@ class NMInfo(object):
                 net.read_from_config(config)
                 networks[name] = net
             except Exception, e:
-                logging.error("Error when processing config for the network %s: %r" % (name, e))
+                logging.error("Error when processing config for" \
+                              " the network %s: %r" % (name, e))
 
         del config
         return networks
@@ -456,7 +482,8 @@ class NMInfo(object):
             logging.debug("Error updating network information: %s" % e)
             del net
 
-    def get_key_for_network(self, dev_op, net_op, ssid, attempt, new_key, async_cb, async_err_cb):
+    def get_key_for_network(self, dev_op, net_op, ssid, attempt,
+                            new_key, async_cb, async_err_cb):
         if not isinstance(ssid, unicode):
             raise ValueError("Invalid arguments; ssid must be unicode.")
         if self._allowed_networks.has_key(ssid) and not new_key:
@@ -487,7 +514,7 @@ class NMInfo(object):
         self._key_dialog.connect("destroy", self._key_dialog_destroy_cb)
         self._key_dialog.show_all()
 
-    def _key_dialog_destroy_cb(self, widget, foo=None):
+    def _key_dialog_destroy_cb(self, widget, data=None):
         if widget != self._key_dialog:
             return
         self._key_dialog_response_cb(widget, gtk.RESPONSE_CANCEL)
@@ -497,7 +524,6 @@ class NMInfo(object):
             return
 
         (async_cb, async_err_cb) = self._key_dialog.get_callbacks()
-        net = self._key_dialog.get_network()
         security = None
         if response_id == gtk.RESPONSE_OK:
             security = self._key_dialog.create_security()

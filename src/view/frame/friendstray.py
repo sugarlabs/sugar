@@ -14,8 +14,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import hippo
-
 from sugar.presence import presenceservice
 from sugar.graphics.tray import VTray, TrayIcon
 
@@ -52,15 +50,16 @@ class FriendsTray(VTray):
         self._owner = self._pservice.get_owner()
         
         # Add initial activities the PS knows about
-        self._pservice.get_activities_async(reply_handler=self._get_activities_cb)
+        self._pservice.get_activities_async( \
+                reply_handler=self._get_activities_cb)
 
         home_model = shellmodel.get_instance().get_home()
         home_model.connect('pending-activity-changed',
                            self._pending_activity_changed_cb)
 
-    def _get_activities_cb(self, list):
-        for activity in list:
-            self.__activity_appeared_cb(self._pservice, activity)
+    def _get_activities_cb(self, activities_list):
+        for act in activities_list:
+            self.__activity_appeared_cb(self._pservice, act)
 
     def add_buddy(self, buddy):
         if self._buddies.has_key(buddy.props.key):
@@ -106,8 +105,8 @@ class FriendsTray(VTray):
 
         self.clear()
 	
-	#always display ourselves
-	self.add_buddy(self._owner)
+        # always display ourselves
+        self.add_buddy(self._owner)
 
         if shared_activity is True: 
             for buddy in activity_ps.get_joined_buddies():
