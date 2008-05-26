@@ -32,6 +32,7 @@ class ActivitiesList(hippo.CanvasScrollbars):
 
     def __init__(self):
         hippo.CanvasScrollbars.__init__(self)
+
         self.set_policy(hippo.ORIENTATION_HORIZONTAL, hippo.SCROLLBAR_NEVER)
         self.props.widget.connect('key-press-event', self.__key_press_event_cb)
 
@@ -46,9 +47,13 @@ class ActivitiesList(hippo.CanvasScrollbars):
         registry.connect('activity-removed', self.__activity_removed_cb)
 
     def _get_activities_cb(self, activity_list):
-        for info in activity_list:
-            if info.bundle_id != 'org.laptop.JournalActivity':
-                self._add_activity(info)
+        gobject.idle_add(self._add_activity_list, activity_list)
+
+    def _add_activity_list(self, activity_list):
+        info = activity_list.pop()
+        if info.bundle_id != 'org.laptop.JournalActivity':
+            self._add_activity(info)
+        return len(activity_list) > 0
 
     def __activity_added_cb(self, activity_registry, activity_info):
         self._add_activity(activity_info)
@@ -121,6 +126,7 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
                 file_name=activity_info.icon,
                 stroke_color=style.COLOR_BUTTON_GREY.get_svg(),
                 fill_color=style.COLOR_TRANSPARENT.get_svg())
+        
         self.icon.set_palette(ActivityPalette(activity_info))
         self.icon.connect('hovering-changed',
                           self.__icon_hovering_changed_event_cb)
@@ -145,10 +151,11 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
         self.append(expander, hippo.PACK_EXPAND)
 
         timestamp = activity_info.installation_time
-        date = hippo.CanvasText(text=util.timestamp_to_elapsed_string(timestamp),
-                                xalign=hippo.ALIGNMENT_START,
-                                font_desc=style.FONT_NORMAL.get_pango_desc(),
-                                box_width=ActivityEntry._DATE_COL_WIDTH)
+        date = hippo.CanvasText(
+                text=util.timestamp_to_elapsed_string(timestamp),
+                xalign=hippo.ALIGNMENT_START,
+                font_desc=style.FONT_NORMAL.get_pango_desc(),
+                box_width=ActivityEntry._DATE_COL_WIDTH)
         self.append(date)
 
     def __favorite_changed_cb(self, favorite_icon, pspec):

@@ -39,8 +39,8 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
     def __init__(self):
         hippo.CanvasBox.__init__(self)
 
-        self._ring_view = None
-        self._list_view = None
+        self._ring_view = ActivitiesRing()
+        self._list_view = ActivitiesList()
         self._enable_xo_palette = False
 
         self._toolbar = HomeToolbar()
@@ -64,19 +64,14 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
             if self._list_view in self.get_children():
                 self.remove(self._list_view)
 
-            if self._ring_view is None:
-                self._ring_view = ActivitiesRing()
-                if self._enable_xo_palette:
-                    self._ring_view.enable_xo_palette()
+            if self._enable_xo_palette:
+                self._ring_view.enable_xo_palette()
 
             self.append(self._ring_view, hippo.PACK_EXPAND)
 
         elif view == _LIST_VIEW:
             if self._ring_view in self.get_children():
                 self.remove(self._ring_view)
-
-            if self._list_view is None:
-                self._list_view = ActivitiesList()
 
             self.append(self._list_view, hippo.PACK_EXPAND)
         else:
