@@ -84,6 +84,8 @@ class BatteryPalette(Palette):
             
         self._level = 0
         self._progress_bar = gtk.ProgressBar()
+        self._progress_bar.set_size_request(
+            style.zoom(style.GRID_CELL_SIZE * 4), -1)
         self._progress_bar.show()
         self._status_label = gtk.Label()
         self._status_label.show()
@@ -120,7 +122,6 @@ class BatteryPalette(Palette):
                                        'min': remaining_minpart})
         else:
             secondary_text = _('Charged')
-            status_text = ''
 
         self.props.secondary_text = secondary_text
         self._status_label.set_text(status_text)

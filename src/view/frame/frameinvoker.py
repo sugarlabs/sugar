@@ -30,7 +30,7 @@ def _get_screen_area():
 
 class FrameWidgetInvoker(WidgetInvoker):
     def __init__(self, widget):
-        WidgetInvoker.__init__(self, widget.child)
+        WidgetInvoker.__init__(self, widget, widget.child)
 
         self._position_hint = self.ANCHORED
         self._screen_area = _get_screen_area()
