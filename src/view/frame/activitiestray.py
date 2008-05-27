@@ -73,7 +73,8 @@ class ActivityButton(RadioToolButton):
                 self._notif_icon.props.icon_filename = icon_path
             else:
                 self._notif_icon.props.icon_name = 'image-missing'
-            view.frame.frame.get_instance().add_notification(self._notif_icon)
+            frame = view.frame.frame.get_instance()
+            frame.add_notification(self._notif_icon, view.frame.frame.TOP_LEFT)
         else:
             self._notify_launching_hid = None
             self._notif_icon = None
