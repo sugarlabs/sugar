@@ -93,6 +93,25 @@ class ActivitiesList(hippo.CanvasScrollbars):
 
         return True
 
+class ActivityIcon(CanvasIcon):
+    def __init__(self, activity_info):
+        CanvasIcon.__init__(self, size=style.STANDARD_ICON_SIZE, cache=True,
+                            file_name=activity_info.icon,
+                            stroke_color=style.COLOR_BUTTON_GREY.get_svg(),
+                            fill_color=style.COLOR_TRANSPARENT.get_svg())
+        self._activity_info = activity_info
+        self.connect('hovering-changed', self.__hovering_changed_event_cb)
+
+    def __hovering_changed_event_cb(self, icon, event):
+        if event:
+            self.props.xo_color = profile.get_color()
+        else:
+            self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
+            self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+
+    def create_palette(self):
+        return ActivityPalette(self._activity_info)
+
 class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarActivityEntry'
 
@@ -122,17 +141,9 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
                                     self.__favorite_changed_cb)
         self.append(self._favorite_icon)
 
-        self.icon = CanvasIcon(size=style.STANDARD_ICON_SIZE, cache=True,
-                file_name=activity_info.icon,
-                stroke_color=style.COLOR_BUTTON_GREY.get_svg(),
-                fill_color=style.COLOR_TRANSPARENT.get_svg())
-        
-        self.icon.set_palette(ActivityPalette(activity_info))
-        self.icon.connect('hovering-changed',
-                          self.__icon_hovering_changed_event_cb)
+        self.icon = ActivityIcon(activity_info)
         self.icon.connect('button-release-event',
                           self.__icon_button_release_event_cb)
-
         self.append(self.icon)
 
         title = hippo.CanvasText(text=activity_info.name,
@@ -169,13 +180,6 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
             self._title = activity_info.name
             self._favorite = activity_info.favorite
             self._favorite_icon.props.favorite = self._favorite
-
-    def __icon_hovering_changed_event_cb(self, icon, event):
-        if event:
-            self.icon.props.xo_color = profile.get_color()
-        else:
-            self.icon.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
-            self.icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
 
     def __icon_button_release_event_cb(self, icon, event):
         view.Shell.get_instance().start_activity(self._bundle_id)
