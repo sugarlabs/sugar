@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-02-09 00:30-0500\n"
-"PO-Revision-Date: 2008-05-23 08:22-0400\n"
+"POT-Creation-Date: 2008-04-24 00:30-0400\n"
+"PO-Revision-Date: 2008-05-27 05:46-0400\n"
 "Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -15,44 +15,44 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Pootle 1.1.0rc2\n"
 
-#: ../src/intro/intro.py:67
+#: ../src/intro/intro.py:65
 msgid "Name:"
 msgstr "Nome:"
 
-#: ../src/intro/intro.py:96
+#: ../src/intro/intro.py:94
 msgid "Click to change color:"
 msgstr "Seleziona per cambiare colore:"
 
-#: ../src/intro/intro.py:146
+#: ../src/intro/intro.py:145
 msgid "Back"
 msgstr "Indietro"
 
-#: ../src/intro/intro.py:160
+#: ../src/intro/intro.py:159
 msgid "Done"
 msgstr "Fatto"
 
-#: ../src/intro/intro.py:163
+#: ../src/intro/intro.py:162
 msgid "Next"
 msgstr "Prossimo"
 
-#: ../src/view/BuddyMenu.py:59
+#: ../src/view/BuddyMenu.py:63
 msgid "Remove friend"
 msgstr "Rimuovi l'amico"
 
-#: ../src/view/BuddyMenu.py:62
+#: ../src/view/BuddyMenu.py:66
 msgid "Make friend"
 msgstr "Aggiungi agli amici"
 
-#: ../src/view/BuddyMenu.py:84
+#: ../src/view/BuddyMenu.py:96
 #, python-format
 msgid "Invite to %s"
 msgstr "Invito per %s"
 
-#: ../src/view/clipboardmenu.py:58
+#: ../src/view/clipboardmenu.py:59
 msgid "Remove"
 msgstr "Rimuovi"
 
-#: ../src/view/clipboardmenu.py:63
+#: ../src/view/clipboardmenu.py:64 ../src/view/clipboardmenu.py:89
 msgid "Open"
 msgstr "Apri"
 
@@ -60,11 +60,16 @@ msgstr "Apri"
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../src/view/clipboardmenu.py:73
-msgid "Add to journal"
-msgstr "Aggiungi al diario"
+#: ../src/view/clipboardmenu.py:74
+#, fuzzy
+msgid "Keep"
+msgstr "Conserva"
 
-#: ../src/view/clipboardmenu.py:213
+#: ../src/view/clipboardmenu.py:94
+msgid "Open with"
+msgstr "Apri con"
+
+#: ../src/view/clipboardmenu.py:220
 #, python-format
 msgid "Clipboard object: %s."
 msgstr "Oggetto Clipboard: %s."
@@ -81,180 +86,199 @@ msgstr "Tipo di Autenticazione:"
 msgid "Encryption Type:"
 msgstr "Tipo di Crittografia:"
 
-#: ../src/view/home/activitiesdonut.py:90
-msgid "Starting..."
-msgstr "Inizio..."
-
-#: ../src/view/home/activitiesdonut.py:104 ../src/view/home/MeshBox.py:295
-msgid "Resume"
-msgstr "Riprendi"
-
-#: ../src/view/home/activitiesdonut.py:111
-msgid "Stop"
-msgstr "Stop"
-
-#: ../src/view/Shell.py:285
+#: ../src/view/Shell.py:257
 msgid "Screenshot"
 msgstr "Schermata"
 
-#: ../src/view/home/HomeBox.py:159
-msgid "Reboot"
-msgstr "Riavvia"
+# Ruota, piuttosto che anello per mantenere consistenza con lo shortcut da tastiera... cf 27_05_08
+#: ../src/view/home/HomeBox.py:142
+msgid "Ring view"
+msgstr "Vista Ruota"
 
-#: ../src/view/home/HomeBox.py:164
-msgid "Shutdown"
-msgstr "Spegni"
+#: ../src/view/home/HomeBox.py:143
+msgid "<Ctrl>R"
+msgstr "<Ctrl>R"
 
-#: ../src/view/home/HomeBox.py:170
-msgid "Register"
-msgstr "Registra"
+#: ../src/view/home/HomeBox.py:150
+msgid "List view"
+msgstr "Vista Lista"
 
-#: ../src/view/home/HomeBox.py:175 ../src/view/home/HomeBox.py:216
-msgid "About this XO"
-msgstr "Informazioni su questo XO"
+#: ../src/view/home/HomeBox.py:151
+msgid "<Ctrl>L"
+msgstr "<Ctrl>L"
 
-#: ../src/view/home/HomeBox.py:222
-msgid "Not available"
-msgstr "Non disponibile"
+#: ../src/view/home/MeshBox.py:96
+msgid "Connect"
+msgstr "Connetti"
 
-#. Only show disconnect when there's a mesh device, because mesh takes
-#. priority over the normal wireless device.  NM doesn't have a "disconnect"
-#. method for a device either (for various reasons) so this doesn't
-#. have a good mapping
-#: ../src/view/home/MeshBox.py:90 ../src/view/home/MeshBox.py:197
-#: ../src/view/devices/network/wireless.py:113
-#: ../src/view/devices/network/mesh.py:83
-msgid "Disconnect..."
+#: ../src/view/home/MeshBox.py:105
+msgid "Disconnect"
+msgstr "Disconnetti"
+
+# Only show disconnect when there's a mesh device, because mesh takes
+# priority over the normal wireless device.  NM doesn't have a "disconnect"
+# method for a device either (for various reasons) so this doesn't
+# have a good mapping
+#: ../src/view/home/MeshBox.py:117
+#, fuzzy
+msgid "Disconnecting..."
 msgstr "Disconnessione..."
 
+#: ../src/view/home/MeshBox.py:151
+msgid "Connecting..."
+msgstr "Connessione..."
+
+#. TODO: show the channel number
+#: ../src/view/home/MeshBox.py:158
+msgid "Connected"
+msgstr "Connesso"
+
 # A complete translation in italian: "rete a maglie" becames a tautology
-#: ../src/view/home/MeshBox.py:195 ../src/view/devices/network/mesh.py:37
-#: ../src/view/devices/network/mesh.py:62
-#: ../src/view/devices/network/mesh.py:66
+#: ../src/view/home/MeshBox.py:209 ../src/view/devices/network/mesh.py:38
+#: ../src/view/devices/network/mesh.py:65
+#: ../src/view/devices/network/mesh.py:69
 msgid "Mesh Network"
 msgstr "Rete Mesh"
 
-#: ../src/view/home/MeshBox.py:300
+# Only show disconnect when there's a mesh device, because mesh takes
+# priority over the normal wireless device.  NM doesn't have a "disconnect"
+# method for a device either (for various reasons) so this doesn't
+# have a good mapping
+#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/wireless.py:115
+#: ../src/view/devices/network/mesh.py:86
+msgid "Disconnect..."
+msgstr "Disconnessione..."
+
+#: ../src/view/home/MeshBox.py:298 ../src/view/palettes.py:60
+msgid "Resume"
+msgstr "Riprendi"
+
+#: ../src/view/home/MeshBox.py:303 ../src/view/frame/activitiestray.py:160
 #, fuzzy
 msgid "Join"
 msgstr "Associa"
 
-#: ../src/view/devices/battery.py:38
-msgid "My Battery life"
-msgstr "Durata Batteria"
+#: ../src/view/devices/battery.py:42
+msgid "My Battery"
+msgstr "La mia Batteria"
 
-#: ../src/view/devices/battery.py:94
-msgid "Battery charging"
-msgstr "Batteria in carica"
+#: ../src/view/devices/battery.py:109
+msgid "Charging"
+msgstr "Caricando"
 
-#: ../src/view/devices/battery.py:96
-msgid "Battery discharging"
-msgstr "Batteria in uso"
+#: ../src/view/devices/battery.py:112
+msgid "Very little power remaining"
+msgstr "Pochissima carica rimanente"
 
-#: ../src/view/devices/battery.py:98
-msgid "Battery fully charged"
-msgstr "Batteria caricata completamente"
+#: ../src/view/devices/battery.py:118
+#, python-format
+msgid "%(hour)d:%(min).2d remaining"
+msgstr "%(ore)d:%(min).2d rimanenti"
 
-#: ../src/view/devices/network/wireless.py:61
+#: ../src/view/devices/battery.py:122
+msgid "Charged"
+msgstr "Carica"
+
+#: ../src/view/devices/network/wireless.py:63
 msgid "Disconnected"
 msgstr "Disconnesso"
 
-#: ../src/view/devices/network/wireless.py:131
+#: ../src/view/devices/network/wireless.py:133
 msgid "Channel"
 msgstr "Canale"
 
 # Letterale "Vicinato",  sperimentale: I miei vicini
-#: ../src/view/frame/zoomtoolbar.py:42
+#: ../src/view/frame/zoomtoolbar.py:34
 msgid "Neighborhood"
 msgstr "I miei vicini"
 
-#: ../src/view/frame/zoomtoolbar.py:54
+#: ../src/view/frame/zoomtoolbar.py:36
 msgid "Group"
 msgstr "Gruppo"
 
-#: ../src/view/frame/zoomtoolbar.py:66
+#: ../src/view/frame/zoomtoolbar.py:38
 #, fuzzy
 msgid "Home"
 msgstr "Inizio"
 
-#: ../src/view/frame/zoomtoolbar.py:78
+#: ../src/view/frame/zoomtoolbar.py:40
 msgid "Activity"
 msgstr "Attività"
 
-#: ../src/controlpanel/control.py:219
+#: ../src/controlpanel/control.py:217
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "Per applicare le modifiche è necessario riavviare sugar.\n"
 
-#: ../src/controlpanel/control.py:273
+#: ../src/controlpanel/control.py:271
 msgid "Error in specified color modifiers."
 msgstr "Errore nella variazione dei colori richiesta"
 
-#: ../src/controlpanel/control.py:276
+#: ../src/controlpanel/control.py:274
 msgid "Error in specified colors."
 msgstr "Errore nella definizione dei colori."
 
-#: ../src/controlpanel/control.py:312
+#: ../src/controlpanel/control.py:310
 msgid "off"
 msgstr "spento"
 
-#: ../src/controlpanel/control.py:314
+#: ../src/controlpanel/control.py:312
 msgid "on"
 msgstr "acceso"
 
-#: ../src/controlpanel/control.py:316
+#: ../src/controlpanel/control.py:314
 #, fuzzy
 msgid "State is unknown."
 msgstr "Stato sconosciuto."
 
-#: ../src/controlpanel/control.py:336
+#: ../src/controlpanel/control.py:334
 #, fuzzy
 msgid "Error in specified radio argument use on/off."
 msgstr "Errore nel campo specificato, utilizzare acceso/spento."
 
-#: ../src/controlpanel/control.py:340
+#: ../src/controlpanel/control.py:338
 msgid "Permission denied. You need to be root to run this method."
 msgstr ""
 "Autorizzazione negata. E' necessario essere \"root\" per eseguire questo "
 "metodo."
 
-#: ../src/controlpanel/control.py:370
+#: ../src/controlpanel/control.py:368
 #, fuzzy
 msgid "Error in reading timezone"
 msgstr "Errore nel timezone"
 
-#: ../src/controlpanel/control.py:401
+#: ../src/controlpanel/control.py:399
 #, python-format
 #, fuzzy
 msgid "Error copying timezone (from %s): %s"
 msgstr "Errore nella copia del timezone (da %s): %s"
 
-#: ../src/controlpanel/control.py:406
+#: ../src/controlpanel/control.py:405
 #, python-format
 #, fuzzy
 msgid "Changing permission of timezone: %s"
 msgstr "Modifica i permessi del timezone: %s"
 
-#: ../src/controlpanel/control.py:416
+#: ../src/controlpanel/control.py:415
 msgid "Error timezone does not exist."
 msgstr "Errore, timezone non esistente."
 
-#: ../src/controlpanel/control.py:421 ../src/controlpanel/control.py:440
+#: ../src/controlpanel/control.py:420 ../src/controlpanel/control.py:438
 #, python-format
 #, fuzzy
 msgid "Could not access %s. Create standard settings."
 msgstr "Impossibile accedere a %s. Creazione configurazione standard. "
 
-#: ../src/controlpanel/control.py:467
+#: ../src/controlpanel/control.py:465
 #, python-format
 msgid "Language for code=%s could not be determined."
 msgstr "Linguaggio con codice=%s sconosciuto."
 
-#: ../src/controlpanel/control.py:477
+#: ../src/controlpanel/control.py:475
 #, python-format
 msgid "Sorry I do not speak '%s'."
 msgstr "Spiacente, ma non parlo '%s'."
 
-#: ../src/controlpanel/cmd.py:27
+#: ../src/controlpanel/cmd.py:24
 #, fuzzy
 msgid ""
 "Usage: sugar-control-panel [ option ] key [ args ... ] \n"
@@ -277,52 +301,124 @@ msgstr ""
 "    -s key       assegna il valore corrente alla \"key\" \n"
 "    "
 
-#: ../src/controlpanel/cmd.py:55 ../src/controlpanel/cmd.py:67
-#: ../src/controlpanel/cmd.py:74
+#: ../src/controlpanel/cmd.py:49 ../src/controlpanel/cmd.py:62
+#: ../src/controlpanel/cmd.py:70
 #, python-format
 msgid "sugar-control-panel: key=%s not an available option"
 msgstr "sugar-control-panel: key=%s non è una opzione disponibile"
 
 # non credo sia da tradurre....
-#: ../src/controlpanel/cmd.py:80
+#: ../src/controlpanel/cmd.py:77
 #, python-format
 msgid "sugar-control-panel: %s"
 msgstr "sugar-control-panel: %s"
 
-#: ../src/view/devices/network/mesh.py:105
+#: ../src/view/devices/network/mesh.py:108
 msgid "Connected to a School Mesh Portal"
 msgstr "Connesso ad un Portale Mesh di scuola"
 
-#: ../src/view/devices/network/mesh.py:107
+#: ../src/view/devices/network/mesh.py:110
 #, fuzzy
 msgid "Looking for a School Mesh Portal..."
 msgstr "Ricerca di un Portale Mesh di scuola..."
 
-#: ../src/view/devices/network/mesh.py:110
+#: ../src/view/devices/network/mesh.py:113
 #, fuzzy
 msgid "Connected to an XO Mesh Portal"
 msgstr "Connesso ad un Portale Mesh XO"
 
-#: ../src/view/devices/network/mesh.py:112
+#: ../src/view/devices/network/mesh.py:115
 #, fuzzy
 msgid "Looking for an XO Mesh Portal..."
 msgstr "Sto cercando un Portale Mesh XO..."
 
 # Diretto?
-#: ../src/view/devices/network/mesh.py:115
+#: ../src/view/devices/network/mesh.py:118
 #, fuzzy
 msgid "Connected to a Simple Mesh"
 msgstr "Connesso ad un Mesh Semplice"
 
 # Diretto?
-#: ../src/view/devices/network/mesh.py:117
+#: ../src/view/devices/network/mesh.py:120
 #, fuzzy
 msgid "Starting a Simple Mesh"
 msgstr "Attivazione Mesh Semplice"
 
-#: ../src/view/devices/network/mesh.py:124
+#: ../src/view/devices/network/mesh.py:127
 msgid "Unknown Mesh"
 msgstr "Mesh sconosciuto"
+
+#: ../src/view/frame/activitiestray.py:165
+msgid "Decline"
+msgstr "Rinuncia"
+
+#: ../src/view/home/activitiesring.py:291
+#: ../src/view/home/activitiesring.py:354
+msgid "About this XO"
+msgstr "Informazioni su questo XO"
+
+#: ../src/view/home/activitiesring.py:302
+msgid "Restart"
+msgstr "Riavvia"
+
+#: ../src/view/home/activitiesring.py:307
+msgid "Shutdown"
+msgstr "Spegni"
+
+#: ../src/view/home/activitiesring.py:313
+msgid "Register"
+msgstr "Registra"
+
+#: ../src/view/home/activitiesring.py:360
+msgid "Not available"
+msgstr "Non disponibile"
+
+#: ../src/view/palettes.py:41
+msgid "Starting..."
+msgstr "Inizio..."
+
+#: ../src/view/palettes.py:85
+msgid "Stop"
+msgstr "Chiudi"
+
+#: ../src/view/palettes.py:110
+msgid "Start"
+msgstr "Avvia"
+
+#: ../src/view/palettes.py:139
+msgid "Remove from ring"
+msgstr "Rimuovi dalla ruota"
+
+#: ../src/view/palettes.py:143
+msgid "Add to ring"
+msgstr "Aggiungi alla ruota"
+
+#: ../src/view/palettes.py:189
+msgid "Show contents"
+msgstr "Mostra i contenuti"
+
+#: ../src/view/palettes.py:213
+#, python-format
+msgid "%(free_space)d MB Free"
+msgstr "%(free_space)d MB Liberi"
+
+#~ msgid "Add to journal"
+#~ msgstr "Aggiungi al diario"
+
+#~ msgid "Reboot"
+#~ msgstr "Riavvia"
+
+#~ msgid "My Battery life"
+#~ msgstr "Durata Batteria"
+
+#~ msgid "Battery charging"
+#~ msgstr "Batteria in carica"
+
+#~ msgid "Battery discharging"
+#~ msgstr "Batteria in uso"
+
+#~ msgid "Battery fully charged"
+#~ msgstr "Batteria caricata completamente"
 
 #~ msgid "Text snippet"
 #~ msgstr "Parte di testo"
@@ -389,10 +485,6 @@ msgstr "Mesh sconosciuto"
 
 #~ msgid "My Neighborhood"
 #~ msgstr "Il mio Vicinato"
-
-#, fuzzy
-#~ msgid "Keep"
-#~ msgstr "Conserva"
 
 #~ msgid "Undo"
 #~ msgstr "Annulla"
