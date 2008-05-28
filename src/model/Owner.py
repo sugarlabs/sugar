@@ -17,6 +17,7 @@
 
 import gobject
 import os
+import simplejson
 
 from telepathy.interfaces import CHANNEL_TYPE_TEXT
 
@@ -81,7 +82,7 @@ class ShellOwner(gobject.GObject):
         return self._nick
 
     def _activity_invitation_cb(self, pservice, activity, buddy, message):
-        self._invites.add_invite(buddy, activity.props.type,
+        self._invites.add_invite(activity.props.type,
                                  activity.props.id)
 
     def _private_invitation_cb(self, pservice, bus_name, connection,
@@ -89,16 +90,16 @@ class ShellOwner(gobject.GObject):
         """Handle a private-invitation from Presence Service.
 
         This is a connection by a non-Sugar XMPP client, so
-        launch Chat with the Telepathy connection and channel.
+        launch Chat or VideoChat with the Telepathy connection and
+        channel.
         """
-        import json
-        from sugar import activity
-        from sugar.activity import activityfactory
-        tp_channel = json.write([str(bus_name), str(connection),
-                                 str(channel)])
-        registry = activity.get_registry()
-        if registry.get_activity('org.laptop.Chat') and channel_type == CHANNEL_TYPE_TEXT:
-            activityfactory.create_with_uri('org.laptop.Chat', tp_channel)
+        if channel_type == CHANNEL_TYPE_TEXT:
+            bundle_id = 'org.laptop.Chat'
+        else:
+            bundle_id = 'org.laptop.VideoChat'
+        tp_channel = simplejson.dumps([str(bus_name), str(connection),
+                                       str(channel)])
+        self._invites.add_private_invite(tp_channel, bundle_id)
 
     def _activity_disappeared_cb(self, pservice, activity):
         self._invites.remove_activity(activity.props.id)

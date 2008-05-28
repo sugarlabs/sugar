@@ -164,6 +164,14 @@ class Shell(gobject.GObject):
         self._activities_starting.add(activity_type)
         activityfactory.create(activity_type)
 
+    def start_activity_with_uri(self, activity_type, uri):
+        if activity_type in self._activities_starting:
+            logging.debug("This activity is still launching.")
+            return
+
+        self._activities_starting.add(activity_type)
+        activityfactory.create_with_uri(activity_type, uri)
+
     def take_activity_screenshot(self):
         if self._model.get_zoom_level() != shellmodel.ShellModel.ZOOM_ACTIVITY:
             return
