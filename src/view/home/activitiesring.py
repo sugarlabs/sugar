@@ -70,15 +70,26 @@ class ActivitiesRing(hippo.CanvasBox, hippo.CanvasItem):
         registry.connect('activity-removed', self.__activity_removed_cb)
         registry.connect('activity-changed', self.__activity_changed_cb)
 
+    def _compare_activities(self, icon_a, icon_b):
+        if hasattr(icon_a, 'installation_time') and \
+                hasattr(icon_b, 'installation_time'):
+            return icon_b.installation_time - icon_a.installation_time
+        else:
+            return 0
+
+    def _add_activity(self, activity_info):
+        icon = ActivityIcon(activity_info)
+        self.insert_sorted(icon, 0, self._compare_activities)
+
     def _get_activities_cb(self, activity_list):
         for info in activity_list:
             if info.favorite and info.bundle_id != "org.laptop.JournalActivity":
-                self.append(ActivityIcon(info))
+                self._add_activity(info)
 
     def __activity_added_cb(self, activity_registry, activity_info):
         if activity_info.favorite and \
                 activity_info.bundle_id != "org.laptop.JournalActivity":
-            self.append(ActivityIcon(activity_info))
+            self._add_activity(activity_info)
 
     def _find_activity_icon(self, bundle_id, version):
         for icon in self.get_children():
@@ -101,7 +112,7 @@ class ActivitiesRing(hippo.CanvasBox, hippo.CanvasItem):
         if icon is not None and not activity_info.favorite:
             self.remove(icon)
         elif icon is None and activity_info.favorite:
-            self.append(ActivityIcon(activity_info))
+            self._add_activity(activity_info)
 
     def _shell_state_changed_cb(self, model, pspec):
         # FIXME implement this
@@ -156,6 +167,9 @@ class ActivityIcon(CanvasIcon):
         return self._activity_info.version
     version = property(get_version, None)
 
+    def _get_installation_time(self):
+        return self._activity_info.installation_time
+    installation_time = property(_get_installation_time, None)
 
 class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
     def __init__(self):

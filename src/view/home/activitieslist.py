@@ -65,9 +65,12 @@ class ActivitiesList(hippo.CanvasScrollbars):
                 self.remove(entry)
                 return
 
+    def _compare_activities(self, entry_a, entry_b):
+        return entry_b.get_installation_time() - entry_a.get_installation_time()
+
     def _add_activity(self, activity_info):
         entry = ActivityEntry(activity_info)
-        self._box.append(entry)
+        self._box.insert_sorted(entry, 0, self._compare_activities)
         entry.set_visible(entry.matches(self._query))
 
     def set_filter(self, query):
@@ -135,6 +138,7 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
         self._version = activity_info.version
         self._favorite = activity_info.favorite
         self._title = activity_info.name
+        self._installation_time = activity_info.installation_time
 
         self._favorite_icon = FavoriteIcon(self._favorite)
         self._favorite_icon.connect('notify::favorite',
@@ -189,6 +193,9 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
 
     def get_version(self):
         return self._version
+
+    def get_installation_time(self):
+        return self._installation_time
 
     def matches(self, query):
         if not query:
