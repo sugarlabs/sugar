@@ -66,5 +66,8 @@ class FriendsBox(hippo.CanvasBox):
         self.add_friend(buddy_info)
 
     def _friend_removed_cb(self, data_model, key):
-        self._layout.remove(self._friends[key])
+        icon = self._friends[key]
+        self._layout.remove(icon)
         del self._friends[key]
+        icon.destroy()
+
