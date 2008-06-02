@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-04-24 00:30-0400\n"
-"PO-Revision-Date: 2008-05-27 05:46-0400\n"
+"PO-Revision-Date: 2008-05-29 05:51-0400\n"
 "Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -231,7 +231,6 @@ msgid "State is unknown."
 msgstr "Stato sconosciuto."
 
 #: ../src/controlpanel/control.py:334
-#, fuzzy
 msgid "Error in specified radio argument use on/off."
 msgstr "Errore nel campo specificato, utilizzare acceso/spento."
 
@@ -264,9 +263,8 @@ msgstr "Errore, timezone non esistente."
 
 #: ../src/controlpanel/control.py:420 ../src/controlpanel/control.py:438
 #, python-format
-#, fuzzy
 msgid "Could not access %s. Create standard settings."
-msgstr "Impossibile accedere a %s. Creazione configurazione standard. "
+msgstr "Impossibile accedere a %s. Creazione configurazione standard."
 
 #: ../src/controlpanel/control.py:465
 #, python-format
@@ -279,7 +277,6 @@ msgid "Sorry I do not speak '%s'."
 msgstr "Spiacente, ma non parlo '%s'."
 
 #: ../src/controlpanel/cmd.py:24
-#, fuzzy
 msgid ""
 "Usage: sugar-control-panel [ option ] key [ args ... ] \n"
 "    Control for the sugar environment. \n"
