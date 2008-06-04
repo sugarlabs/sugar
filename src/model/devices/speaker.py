@@ -40,7 +40,7 @@ class Device(device.Device):
         return self._manager.get_muted()
 
     def _set_muted(self, mute):
-        self._manager.set_mute(mute)
+        self._manager.set_muted(mute)
         self.notify('muted')
 
     def get_type(self):

@@ -60,7 +60,7 @@ class HardwareManager(object):
     def get_volume(self):
         if not self._mixer or not self._master:
             logging.error('Cannot get the volume')
-            return None
+            return 0
 
         max_volume = self._master.max_volume
         min_volume = self._master.min_volume
@@ -103,10 +103,11 @@ class HardwareManager(object):
             last_volumes_read = self._mixer.get_volume(self._master)
             read_count += 1
 
-    def set_mute(self, mute):
+    def set_muted(self, mute):
         if not self._mixer or not self._master:
             logging.error('Cannot mute the audio channel')
-        self._mixer.set_mute(self._master, mute)
+        else:
+            self._mixer.set_mute(self._master, mute)
 
     def startup(self):
         if env.is_emulator() is False:

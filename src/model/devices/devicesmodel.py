@@ -18,7 +18,6 @@
 import logging
 import gobject
 import dbus
-import traceback
 
 from model.devices import device
 from model.devices.network import wireless
@@ -52,7 +51,6 @@ class DevicesModel(gobject.GObject):
         except Exception, speaker_fail_msg:
             logging.error("could not initialize speaker device: %s" %
                           speaker_fail_msg)
-            logging.debug(traceback.format_exc())
 
     def _observe_hal_manager(self):
         bus = dbus.Bus(dbus.Bus.TYPE_SYSTEM)
