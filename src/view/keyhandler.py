@@ -18,6 +18,7 @@ import os
 import signal
 import logging
 import subprocess
+import errno
 
 import dbus
 import gtk
@@ -186,14 +187,45 @@ class KeyHandler(object):
     def handle_frame(self):
         view.Shell.get_instance().get_frame().notify_key_press()
 
+
     def handle_rotate(self):
+        """
+        Handles rotation of the display (using xrandr) and of the d-pad.
+
+        Notes: default mappings for keypad on MP
+        KP_Up 80
+        KP_Right 85
+        KP_Down 88
+        KP_Left 83
+        """
+
         states = [ 'normal', 'left', 'inverted', 'right']
+        keycodes = (80, 85, 88, 83, 80, 85, 88, 83)
+        keysyms = ("KP_Up", "KP_Right", "KP_Down", "KP_Left")
 
         self._screen_rotation += 1
-        if self._screen_rotation == len(states):
-            self._screen_rotation = 0
+        self._screen_rotation %= 4
 
-        subprocess.Popen(['xrandr', '-o', states[self._screen_rotation]])
+        actual_keycodes = keycodes[self._screen_rotation:self._screen_rotation + 4]
+        # code_pairs now contains a mapping of keycode -> keysym in the current
+        # orientation
+        code_pairs = zip(actual_keycodes, keysyms)
+
+        # Using the mappings in code_pairs, we dynamically build up an xmodmap
+        # command to rotate the dpad keys.
+        argv = ['xmodmap']
+        for arg in [('-e', 'keycode %i = %s' % p) for p in code_pairs]:
+            argv.extend(arg)
+
+        # If either the xmodmap or xrandr command fails, check_call will fail
+        # with CalledProcessError, which we raise.
+        try:
+            subprocess.check_call(argv)
+            subprocess.check_call(['xrandr', '-o', states[self._screen_rotation]])
+        except OSError, e:
+            if e.errno != errno.EINTR:
+                raise
+
 
     def handle_quit_emulator(self):
         if os.environ.has_key('SUGAR_EMULATOR_PID'):
