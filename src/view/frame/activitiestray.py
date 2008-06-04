@@ -17,6 +17,7 @@
 
 import logging
 from gettext import gettext as _
+import gtk
 
 from sugar.graphics import style
 from sugar.graphics.tray import HTray
@@ -226,7 +227,7 @@ class ActivitiesTray(HTray):
     def __activity_clicked_cb(self, button, home_activity):
         if button.props.active:
             logging.debug('ActivitiesTray.__activity_clicked_cb')
-            home_activity.get_window().activate(1)
+            home_activity.get_window().activate(gtk.get_current_event_time())
 
     def __invite_clicked_cb(self, icon, invite):
         self._invites.remove_invite(invite)

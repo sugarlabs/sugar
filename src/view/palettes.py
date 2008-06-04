@@ -74,7 +74,7 @@ class CurrentActivityPalette(BasePalette):
         menu_item.show()
 
     def __resume_activate_cb(self, menu_item):
-        self._home_activity.get_window().activate(1)
+        self._home_activity.get_window().activate(gtk.get_current_event_time())
 
     def __stop_activate_cb(self, menu_item):
         self._home_activity.get_window().close(1)
@@ -179,7 +179,7 @@ class JournalPalette(BasePalette):
         menu_item.show()
 
     def __open_activate_cb(self, menu_item):
-        self._home_activity.get_window().activate(1)
+        self._home_activity.get_window().activate(gtk.get_current_event_time())
 
     def __popup_cb(self, palette):
         # TODO: we should be able to ask the datastore this info, as that's the

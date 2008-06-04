@@ -209,14 +209,15 @@ class Shell(gobject.GObject):
         previous_activity = home_model.get_previous_activity()
         if previous_activity:
             self.take_activity_screenshot()
-            previous_activity.get_window().activate(1)
+            previous_activity.get_window().activate(
+						gtk.get_current_event_time())
 
     def activate_next_activity(self):
         home_model = self._model.get_home()
         next_activity = home_model.get_next_activity()
         if next_activity:
             self.take_activity_screenshot()
-            next_activity.get_window().activate(1)
+            next_activity.get_window().activate(gtk.get_current_event_time())
 
     def close_current_activity(self):
         if self._model.get_zoom_level() != shellmodel.ShellModel.ZOOM_ACTIVITY:
