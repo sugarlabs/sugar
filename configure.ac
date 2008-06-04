@@ -40,9 +40,12 @@ AC_OUTPUT([
 Makefile
 bin/Makefile
 data/Makefile
+data/icons/Makefile
 service/Makefile
 src/Makefile
 src/controlpanel/Makefile
+src/controlpanel/model/Makefile
+src/controlpanel/view/Makefile
 src/intro/Makefile
 src/hardware/Makefile
 src/view/Makefile

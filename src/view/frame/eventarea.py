@@ -18,6 +18,10 @@ import gtk
 import gobject
 import wnck
 
+from sugar import profile
+
+_MAX_DELAY = 1000
+
 class EventArea(gobject.GObject):
     __gsignals__ = {
         'enter': (gobject.SIGNAL_RUN_FIRST,
@@ -31,30 +35,56 @@ class EventArea(gobject.GObject):
 
         self._windows = []
         self._hover = False
+        self._sids = {}
+        pro = profile.get_profile()            
+        self._hot_delay = int(pro.hot_corners_delay)
+        self._warm_delay = int(pro.warm_edges_delay)
 
         right = gtk.gdk.screen_width() - 1
         bottom = gtk.gdk.screen_height() -1
+        width = gtk.gdk.screen_width() - 2
+        height = gtk.gdk.screen_height() - 2
+        
+        if self._warm_delay != _MAX_DELAY:    
+            invisible = self._create_invisible(1, 0, width, 1, self._warm_delay)
+            self._windows.append(invisible)
 
-        invisible = self._create_invisible(0, 0, 1, 1)
-        self._windows.append(invisible)
+            invisible = self._create_invisible(1, bottom, width, 1, 
+                                               self._warm_delay)
+            self._windows.append(invisible)
 
-        invisible = self._create_invisible(right, 0, 1, 1)
-        self._windows.append(invisible)
+            invisible = self._create_invisible(0, 1, 1, height, 
+                                               self._warm_delay)
+            self._windows.append(invisible)
 
-        invisible = self._create_invisible(0, bottom, 1, 1)
-        self._windows.append(invisible)
+            invisible = self._create_invisible(right, 1, 1, height, 
+                                               self._warm_delay)
+            self._windows.append(invisible)
 
-        invisible = self._create_invisible(right, bottom, 1, 1)
-        self._windows.append(invisible)
+        if self._hot_delay != _MAX_DELAY:    
+            invisible = self._create_invisible(0, 0, 1, 1, self._hot_delay)
+            self._windows.append(invisible)
+
+            invisible = self._create_invisible(right, 0, 1, 1, self._hot_delay)
+            self._windows.append(invisible)
+
+            invisible = self._create_invisible(0, bottom, 1, 1, self._hot_delay)
+            self._windows.append(invisible)
+
+            invisible = self._create_invisible(right, bottom, 1, 1, 
+                                               self._hot_delay)
+            self._windows.append(invisible)
 
         screen = wnck.screen_get_default()
         screen.connect('window-stacking-changed',
                        self._window_stacking_changed_cb)
 
-    def _create_invisible(self, x, y, width, height):
+    def _create_invisible(self, x, y, width, height, delay):
         invisible = gtk.Invisible()
-        invisible.connect('enter-notify-event', self._enter_notify_cb)
-        invisible.connect('leave-notify-event', self._leave_notify_cb)
+        if delay >= 0:
+            invisible.connect('enter-notify-event', self._enter_notify_cb, 
+                              delay)
+            invisible.connect('leave-notify-event', self._leave_notify_cb)
         
         invisible.drag_dest_set(0, [], 0)
         invisible.connect('drag_motion', self._drag_motion_cb)
@@ -78,10 +108,22 @@ class EventArea(gobject.GObject):
             self._hover = False
             self.emit('leave')
 
-    def _enter_notify_cb(self, widget, event):
+    def _enter_notify_cb(self, widget, event, delay):
+        if widget in self._sids:
+            gobject.source_remove(self._sids[widget])
+        self._sids[widget] = gobject.timeout_add(delay, 
+                                                 self.__delay_cb, 
+                                                 widget)
+
+    def __delay_cb(self, widget):        
+        del self._sids[widget] 
         self._notify_enter()
+        return False
 
     def _leave_notify_cb(self, widget, event):
+        if widget in self._sids:
+            gobject.source_remove(self._sids[widget])
+            del self._sids[widget] 
         self._notify_leave()
 
     def _drag_motion_cb(self, widget, drag_context, x, y, timestamp):

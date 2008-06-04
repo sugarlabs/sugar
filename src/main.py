@@ -110,6 +110,10 @@ def main():
         win.show_all()
         gtk.main()
 
+    # set timezone    
+    if os.environ.has_key('TZ'):    
+        os.environ['TZ'] = get_profile().timezone
+
     if os.environ.has_key("SUGAR_TP_DEBUG"):
         # Allow the user time to start up telepathy connection managers
         # using the Sugar DBus bus address
