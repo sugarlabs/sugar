@@ -206,7 +206,8 @@ class KeyHandler(object):
         self._screen_rotation += 1
         self._screen_rotation %= 4
 
-        actual_keycodes = keycodes[self._screen_rotation:self._screen_rotation + 4]
+        actual_keycodes = keycodes[self._screen_rotation:self._screen_rotation 
+                                   + 4]
         # code_pairs now contains a mapping of keycode -> keysym in the current
         # orientation
         code_pairs = zip(actual_keycodes, keysyms)
@@ -221,7 +222,8 @@ class KeyHandler(object):
         # with CalledProcessError, which we raise.
         try:
             subprocess.check_call(argv)
-            subprocess.check_call(['xrandr', '-o', states[self._screen_rotation]])
+            subprocess.check_call(['xrandr', '-o', 
+                                   states[self._screen_rotation]])
         except OSError, e:
             if e.errno != errno.EINTR:
                 raise

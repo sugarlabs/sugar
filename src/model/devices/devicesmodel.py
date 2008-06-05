@@ -18,6 +18,7 @@
 import logging
 import gobject
 import dbus
+import traceback
 
 from model.devices import device
 from model.devices.network import wireless

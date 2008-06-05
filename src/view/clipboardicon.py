@@ -43,6 +43,7 @@ class ClipboardIcon(RadioToolButton):
         self.owns_clipboard = False
         self.props.sensitive = False
         self.props.active = False
+        self._notif_icon = None
 
         self._icon = Icon()
         self._icon.props.xo_color = profile.get_color()
@@ -155,7 +156,8 @@ class ClipboardIcon(RadioToolButton):
                     XoColor('%s,%s' % (self._icon.props.stroke_color,
                                        self._icon.props.fill_color))
             frame = view.frame.frame.get_instance()
-            frame.add_notification(self._notif_icon, view.frame.frame.BOTTOM_LEFT)
+            frame.add_notification(self._notif_icon, 
+                                   view.frame.frame.BOTTOM_LEFT)
 
     def _notify_active_cb(self, widget, pspec):
         if self.props.active:

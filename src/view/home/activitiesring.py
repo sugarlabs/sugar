@@ -19,7 +19,6 @@ import os
 import logging
 import signal
 from gettext import gettext as _
-import re
 import math
 
 import gobject
