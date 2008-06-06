@@ -22,9 +22,9 @@ from sugar import env
 
 from hardware import hardwaremanager
 
-_session = None
+_session_manager = None
 
-class Session(session.Session):
+class SessionManager(session.SessionManager):
     MODE_LOGOUT = 0
     MODE_SHUTDOWN = 1
     MODE_REBOOT = 2
@@ -71,9 +71,9 @@ class Session(session.Session):
             pid = int(os.environ['SUGAR_EMULATOR_PID'])
             os.kill(pid, signal.SIGTERM)
 
-def get_session():
-    global _session
+def get_session_manager():
+    global _session_manager
 
-    if _session == None:
-        _session = Session()
-    return _session
+    if _session_manager == None:
+        _session_manager = SessionManager()
+    return _session_manager

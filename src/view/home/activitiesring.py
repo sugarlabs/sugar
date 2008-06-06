@@ -42,7 +42,7 @@ from model import shellmodel
 from model.shellmodel import ShellModel
 from hardware import schoolserver
 from controlpanel.gui import ControlPanel
-from session import get_session
+from session import get_session_manager
 
 _logger = logging.getLogger('ActivitiesRing')
 
@@ -339,15 +339,15 @@ class _MyIcon(MyIcon):
         model = shellmodel.get_instance()
         model.props.state = ShellModel.STATE_SHUTDOWN
 
-        session = get_session()
-        session.shutdown()
+        session_manager = get_session_manager()
+        session_manager.shutdown()
 
     def _shutdown_activate_cb(self, menuitem):
         model = shellmodel.get_instance()
         model.props.state = ShellModel.STATE_SHUTDOWN
 
-        session = get_session()
-        session.shutdown()
+        session_manager = get_session_manager()
+        session_manager.shutdown()
 
     def _register_activate_cb(self, menuitem):
         schoolserver.register_laptop()

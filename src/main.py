@@ -35,7 +35,7 @@ import view.Shell
 from shellservice import ShellService
 from hardware import hardwaremanager
 from intro import intro
-from session import get_session
+from session import get_session_manager
 import logsmanager
 import config
 
@@ -147,8 +147,8 @@ def main():
     view.Shell.get_instance()
     ShellService()
 
-    session = get_session()
-    session.start()
+    session_manager = get_session_manager()
+    session_manager.start()
 
     try:
         gtk.main()
