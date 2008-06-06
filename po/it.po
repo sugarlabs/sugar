@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-04-24 00:30-0400\n"
-"PO-Revision-Date: 2008-05-29 05:51-0400\n"
+"POT-Creation-Date: 2008-06-05 00:30-0400\n"
+"PO-Revision-Date: 2008-06-06 11:16-0400\n"
 "Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Pootle 1.1.0rc2\n"
 
-#: ../src/intro/intro.py:65
+#: ../src/intro/intro.py:65 ../src/controlpanel/view/aboutme.py:100
 msgid "Name:"
 msgstr "Nome:"
 
@@ -27,7 +27,7 @@ msgstr "Seleziona per cambiare colore:"
 msgid "Back"
 msgstr "Indietro"
 
-#: ../src/intro/intro.py:159
+#: ../src/intro/intro.py:159 ../src/controlpanel/toolbar.py:61
 msgid "Done"
 msgstr "Fatto"
 
@@ -35,83 +35,87 @@ msgstr "Fatto"
 msgid "Next"
 msgstr "Prossimo"
 
-#: ../src/view/BuddyMenu.py:63
+#: ../src/view/BuddyMenu.py:58
 msgid "Remove friend"
 msgstr "Rimuovi l'amico"
 
-#: ../src/view/BuddyMenu.py:66
+#: ../src/view/BuddyMenu.py:61
 msgid "Make friend"
 msgstr "Aggiungi agli amici"
 
-#: ../src/view/BuddyMenu.py:96
+#: ../src/view/BuddyMenu.py:91
 #, python-format
 msgid "Invite to %s"
 msgstr "Invito per %s"
 
-#: ../src/view/clipboardmenu.py:59
+#: ../src/view/clipboardmenu.py:48
 msgid "Remove"
 msgstr "Rimuovi"
 
-#: ../src/view/clipboardmenu.py:64 ../src/view/clipboardmenu.py:89
+#: ../src/view/clipboardmenu.py:53 ../src/view/clipboardmenu.py:79
 msgid "Open"
 msgstr "Apri"
 
+# self._stop_item = MenuItem(_('Stop download'), 'stock-close')
+# TODO: Implement stopping downloads
+# self._stop_item.connect('activate', self._stop_item_activate_cb)
+# self.append_menu_item(self._stop_item)
 #. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../src/view/clipboardmenu.py:74
+#: ../src/view/clipboardmenu.py:63
 #, fuzzy
 msgid "Keep"
 msgstr "Conserva"
 
-#: ../src/view/clipboardmenu.py:94
+#: ../src/view/clipboardmenu.py:84
 msgid "Open with"
 msgstr "Apri con"
 
-#: ../src/view/clipboardmenu.py:220
+#: ../src/view/clipboardmenu.py:212
 #, python-format
 msgid "Clipboard object: %s."
 msgstr "Oggetto Clipboard: %s."
 
-#: ../src/hardware/keydialog.py:149
+#: ../src/hardware/keydialog.py:150
 msgid "Key Type:"
 msgstr "Tipo Chiave:"
 
-#: ../src/hardware/keydialog.py:169
+#: ../src/hardware/keydialog.py:170
 msgid "Authentication Type:"
 msgstr "Tipo di Autenticazione:"
 
-#: ../src/hardware/keydialog.py:250
+#: ../src/hardware/keydialog.py:251
 msgid "Encryption Type:"
 msgstr "Tipo di Crittografia:"
 
-#: ../src/view/Shell.py:257
+#: ../src/view/Shell.py:259
 msgid "Screenshot"
 msgstr "Schermata"
 
 # Ruota, piuttosto che anello per mantenere consistenza con lo shortcut da tastiera... cf 27_05_08
-#: ../src/view/home/HomeBox.py:142
+#: ../src/view/home/HomeBox.py:149
 msgid "Ring view"
 msgstr "Vista Ruota"
 
-#: ../src/view/home/HomeBox.py:143
+#: ../src/view/home/HomeBox.py:150
 msgid "<Ctrl>R"
 msgstr "<Ctrl>R"
 
-#: ../src/view/home/HomeBox.py:150
+#: ../src/view/home/HomeBox.py:158
 msgid "List view"
 msgstr "Vista Lista"
 
-#: ../src/view/home/HomeBox.py:151
+#: ../src/view/home/HomeBox.py:159
 msgid "<Ctrl>L"
 msgstr "<Ctrl>L"
 
-#: ../src/view/home/MeshBox.py:96
+#: ../src/view/home/MeshBox.py:97
 msgid "Connect"
 msgstr "Connetti"
 
-#: ../src/view/home/MeshBox.py:105
+#: ../src/view/home/MeshBox.py:106
 msgid "Disconnect"
 msgstr "Disconnetti"
 
@@ -119,22 +123,22 @@ msgstr "Disconnetti"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../src/view/home/MeshBox.py:117
-#, fuzzy
+#: ../src/view/home/MeshBox.py:118
 msgid "Disconnecting..."
 msgstr "Disconnessione..."
 
-#: ../src/view/home/MeshBox.py:151
+#: ../src/view/home/MeshBox.py:152
 msgid "Connecting..."
 msgstr "Connessione..."
 
+# TODO: show the channel number
 #. TODO: show the channel number
-#: ../src/view/home/MeshBox.py:158
+#: ../src/view/home/MeshBox.py:159
 msgid "Connected"
 msgstr "Connesso"
 
 # A complete translation in italian: "rete a maglie" becames a tautology
-#: ../src/view/home/MeshBox.py:209 ../src/view/devices/network/mesh.py:38
+#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:38
 #: ../src/view/devices/network/mesh.py:65
 #: ../src/view/devices/network/mesh.py:69
 msgid "Mesh Network"
@@ -144,16 +148,16 @@ msgstr "Rete Mesh"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/wireless.py:115
+#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:116
 #: ../src/view/devices/network/mesh.py:86
 msgid "Disconnect..."
 msgstr "Disconnessione..."
 
-#: ../src/view/home/MeshBox.py:298 ../src/view/palettes.py:60
+#: ../src/view/home/MeshBox.py:302 ../src/view/palettes.py:60
 msgid "Resume"
 msgstr "Riprendi"
 
-#: ../src/view/home/MeshBox.py:303 ../src/view/frame/activitiestray.py:160
+#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:162
 #, fuzzy
 msgid "Join"
 msgstr "Associa"
@@ -162,28 +166,41 @@ msgstr "Associa"
 msgid "My Battery"
 msgstr "La mia Batteria"
 
-#: ../src/view/devices/battery.py:109
+#: ../src/view/devices/battery.py:111
 msgid "Charging"
 msgstr "Caricando"
 
-#: ../src/view/devices/battery.py:112
+#: ../src/view/devices/battery.py:114
 msgid "Very little power remaining"
 msgstr "Pochissima carica rimanente"
 
-#: ../src/view/devices/battery.py:118
+#: ../src/view/devices/battery.py:120
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
 msgstr "%(ore)d:%(min).2d rimanenti"
 
-#: ../src/view/devices/battery.py:122
+#: ../src/view/devices/battery.py:124
 msgid "Charged"
 msgstr "Carica"
 
-#: ../src/view/devices/network/wireless.py:63
+#: ../src/view/devices/speaker.py:40
+msgid "My Speakers"
+msgstr "I miei Altoparlanti"
+
+#: ../src/view/devices/speaker.py:104
+msgid "Unmute"
+msgstr "riAttiva"
+
+#: ../src/view/devices/speaker.py:107
+#, fuzzy
+msgid "Mute"
+msgstr "Silenzia"
+
+#: ../src/view/devices/network/wireless.py:64
 msgid "Disconnected"
 msgstr "Disconnesso"
 
-#: ../src/view/devices/network/wireless.py:133
+#: ../src/view/devices/network/wireless.py:134
 msgid "Channel"
 msgstr "Canale"
 
@@ -205,78 +222,27 @@ msgstr "Inizio"
 msgid "Activity"
 msgstr "Attività"
 
-#: ../src/controlpanel/control.py:217
-msgid "To apply your changes you have to restart sugar.\n"
-msgstr "Per applicare le modifiche è necessario riavviare sugar.\n"
-
-#: ../src/controlpanel/control.py:271
-msgid "Error in specified color modifiers."
-msgstr "Errore nella variazione dei colori richiesta"
-
-#: ../src/controlpanel/control.py:274
-msgid "Error in specified colors."
-msgstr "Errore nella definizione dei colori."
-
-#: ../src/controlpanel/control.py:310
-msgid "off"
-msgstr "spento"
-
-#: ../src/controlpanel/control.py:312
-msgid "on"
-msgstr "acceso"
-
-#: ../src/controlpanel/control.py:314
-#, fuzzy
-msgid "State is unknown."
-msgstr "Stato sconosciuto."
-
-#: ../src/controlpanel/control.py:334
-msgid "Error in specified radio argument use on/off."
-msgstr "Errore nel campo specificato, utilizzare acceso/spento."
-
-#: ../src/controlpanel/control.py:338
-msgid "Permission denied. You need to be root to run this method."
+#: ../src/controlpanel/cmd.py:26
+#, python-format
+msgid ""
+"sugar-control-panel: WARNING, found more than one option with the same name: "
+"%s module: %r"
 msgstr ""
-"Autorizzazione negata. E' necessario essere \"root\" per eseguire questo "
-"metodo."
+"sugar-control-panel: ATTENZIONE, trovatapiù di una opzione avente lo stesso "
+"nome: %s modulo: %r"
 
-#: ../src/controlpanel/control.py:368
-#, fuzzy
-msgid "Error in reading timezone"
-msgstr "Errore nel timezone"
-
-#: ../src/controlpanel/control.py:399
+#: ../src/controlpanel/cmd.py:28
 #, python-format
-#, fuzzy
-msgid "Error copying timezone (from %s): %s"
-msgstr "Errore nella copia del timezone (da %s): %s"
+msgid "sugar-control-panel: key=%s not an available option"
+msgstr "sugar-control-panel: key=%s non è una opzione disponibile"
 
-#: ../src/controlpanel/control.py:405
+# non credo sia da tradurre....
+#: ../src/controlpanel/cmd.py:29
 #, python-format
-#, fuzzy
-msgid "Changing permission of timezone: %s"
-msgstr "Modifica i permessi del timezone: %s"
+msgid "sugar-control-panel: %s"
+msgstr "sugar-control-panel: %s"
 
-#: ../src/controlpanel/control.py:415
-msgid "Error timezone does not exist."
-msgstr "Errore, timezone non esistente."
-
-#: ../src/controlpanel/control.py:420 ../src/controlpanel/control.py:438
-#, python-format
-msgid "Could not access %s. Create standard settings."
-msgstr "Impossibile accedere a %s. Creazione configurazione standard."
-
-#: ../src/controlpanel/control.py:465
-#, python-format
-msgid "Language for code=%s could not be determined."
-msgstr "Linguaggio con codice=%s sconosciuto."
-
-#: ../src/controlpanel/control.py:475
-#, python-format
-msgid "Sorry I do not speak '%s'."
-msgstr "Spiacente, ma non parlo '%s'."
-
-#: ../src/controlpanel/cmd.py:24
+#: ../src/controlpanel/cmd.py:33
 msgid ""
 "Usage: sugar-control-panel [ option ] key [ args ... ] \n"
 "    Control for the sugar environment. \n"
@@ -298,17 +264,202 @@ msgstr ""
 "    -s key       assegna il valore corrente alla \"key\" \n"
 "    "
 
-#: ../src/controlpanel/cmd.py:49 ../src/controlpanel/cmd.py:62
-#: ../src/controlpanel/cmd.py:70
-#, python-format
-msgid "sugar-control-panel: key=%s not an available option"
-msgstr "sugar-control-panel: key=%s non è una opzione disponibile"
+#: ../src/controlpanel/cmd.py:45
+msgid "To apply your changes you have to restart sugar.\n"
+msgstr "Per applicare le modifiche è necessario riavviare sugar.\n"
 
-# non credo sia da tradurre....
-#: ../src/controlpanel/cmd.py:77
+#: ../src/controlpanel/toolbar.py:115
+msgid "Cancel"
+msgstr "Cancella"
+
+#: ../src/controlpanel/toolbar.py:121
+msgid "Ok"
+msgstr "Ok"
+
+#: ../src/controlpanel/sectionview.py:34
+msgid "Changes require a sugar restart to take effect."
+msgstr ""
+"Le modifiche effettuate necessitano di un riavvio di Sugar per avere "
+"effetto."
+
+#: ../src/controlpanel/gui.py:248
+msgid "Warning"
+msgstr "Attenzione"
+
+#: ../src/controlpanel/gui.py:249
+msgid "Changes require restart to take effect"
+msgstr "Le modifiche effettuate necessitano di un riavvio per avere effetto"
+
+#: ../src/controlpanel/gui.py:252
+msgid "Cancel changes"
+msgstr "Annulla modifiche"
+
+#: ../src/controlpanel/gui.py:257
+msgid "Later"
+msgstr "Dopo"
+
+#: ../src/controlpanel/model/aboutme.py:44
+msgid "You must enter a name."
+msgstr "Devi inserire un nome."
+
+#: ../src/controlpanel/model/aboutme.py:67
 #, python-format
-msgid "sugar-control-panel: %s"
-msgstr "sugar-control-panel: %s"
+msgid "stroke:   color=%s hue=%s"
+msgstr "linea:   colore=%s tinta=%s"
+
+#: ../src/controlpanel/model/aboutme.py:70
+#, python-format
+msgid "stroke:   %s"
+msgstr "linea:   %s"
+
+#: ../src/controlpanel/model/aboutme.py:72
+#, python-format
+msgid "fill:     color=%s hue=%s"
+msgstr "riempimento:     colore=%s tinta=%s"
+
+#: ../src/controlpanel/model/aboutme.py:74
+#, python-format
+msgid "fill:     %s"
+msgstr "riempimento:     %s"
+
+#: ../src/controlpanel/model/aboutme.py:85
+msgid "Error in specified color modifiers."
+msgstr "Errore nella variazione dei colori richiesta"
+
+#: ../src/controlpanel/model/aboutme.py:88
+msgid "Error in specified colors."
+msgstr "Errore nella definizione dei colori."
+
+#: ../src/controlpanel/model/aboutxo.py:24
+msgid "Not available"
+msgstr "Non disponibile"
+
+#: ../src/controlpanel/model/datetime.py:85
+msgid "Error timezone does not exist."
+msgstr "Errore, timezone non esistente."
+
+#: ../src/controlpanel/model/frame.py:38 ../src/controlpanel/model/frame.py:60
+msgid "Value must be an int."
+msgstr "Valore deve essere un intero."
+
+#: ../src/controlpanel/model/language.py:28
+#, fuzzy
+msgid "Could not access ~/.i18n. Create standard settings."
+msgstr "Impossibile accedere a %s. Creazione configurazione standard."
+
+#: ../src/controlpanel/model/language.py:104
+#, python-format
+msgid "Language for code=%s could not be determined."
+msgstr "Linguaggio con codice=%s sconosciuto."
+
+#: ../src/controlpanel/model/language.py:121
+#, python-format
+msgid "Sorry I do not speak '%s'."
+msgstr "Spiacente, ma non parlo '%s'."
+
+#: ../src/controlpanel/model/network.py:48
+msgid "You must enter a server."
+msgstr "Devi inserire un server."
+
+#: ../src/controlpanel/model/network.py:63
+#, fuzzy
+msgid "State is unknown."
+msgstr "Stato sconosciuto."
+
+#: ../src/controlpanel/model/network.py:83
+msgid "Error in specified radio argument use on/off."
+msgstr "Errore nel campo specificato, utilizzare acceso/spento."
+
+#: ../src/controlpanel/view/aboutme.py:32
+msgid "About Me"
+msgstr "Informazioni su"
+
+#: ../src/controlpanel/view/aboutme.py:134
+#, fuzzy
+msgid "Click to change your color:"
+msgstr "Seleziona per cambiare colore:"
+
+#: ../src/controlpanel/view/aboutxo.py:26
+msgid "About my XO"
+msgstr "Informazioni sul mio XO"
+
+#: ../src/controlpanel/view/aboutxo.py:47
+msgid "Identity"
+msgstr "Identità"
+
+#: ../src/controlpanel/view/aboutxo.py:56
+msgid "Serial Number:"
+msgstr "Numero di Serie:"
+
+#: ../src/controlpanel/view/aboutxo.py:79
+msgid "Software"
+msgstr "Software"
+
+#: ../src/controlpanel/view/aboutxo.py:88
+msgid "Build:"
+msgstr "Build:"
+
+#: ../src/controlpanel/view/aboutxo.py:103
+msgid "Firmware:"
+msgstr "Firmware:"
+
+#: ../src/controlpanel/view/datetime.py:29
+msgid "Date & Time"
+msgstr "Data e Ora"
+
+#: ../src/controlpanel/view/datetime.py:72
+msgid "Timezone"
+msgstr "Timezone"
+
+#: ../src/controlpanel/view/frame.py:28
+msgid "Frame"
+msgstr "Cornice"
+
+#: ../src/controlpanel/view/frame.py:30
+msgid "never"
+msgstr "mai"
+
+#: ../src/controlpanel/view/frame.py:31
+msgid "instantaneous"
+msgstr "istantaneamente"
+
+#: ../src/controlpanel/view/frame.py:32
+msgid "Delay in milliseconds:"
+msgstr "Ritardo in millisecondi:"
+
+#: ../src/controlpanel/view/frame.py:66
+msgid "Hot Corners"
+msgstr "Angoli sensibili"
+
+#: ../src/controlpanel/view/frame.py:117
+#, fuzzy
+msgid "Warm Edges"
+msgstr "Bordi Attivi"
+
+#: ../src/controlpanel/view/language.py:29
+#: ../src/controlpanel/view/language.py:74
+msgid "Language"
+msgstr "Lingua"
+
+#: ../src/controlpanel/view/network.py:28
+msgid "Network"
+msgstr "Network"
+
+#: ../src/controlpanel/view/network.py:53
+msgid "Wireless"
+msgstr "Wireless"
+
+#: ../src/controlpanel/view/network.py:61
+msgid "Radio:"
+msgstr "Radio:"
+
+#: ../src/controlpanel/view/network.py:94
+msgid "Mesh"
+msgstr "Mesh"
+
+#: ../src/controlpanel/view/network.py:103
+msgid "Server:"
+msgstr "Server:"
 
 #: ../src/view/devices/network/mesh.py:108
 msgid "Connected to a School Mesh Portal"
@@ -345,59 +496,82 @@ msgstr "Attivazione Mesh Semplice"
 msgid "Unknown Mesh"
 msgstr "Mesh sconosciuto"
 
-#: ../src/view/frame/activitiestray.py:165
+#: ../src/view/frame/activitiestray.py:167
 msgid "Decline"
 msgstr "Rinuncia"
 
-#: ../src/view/home/activitiesring.py:291
-#: ../src/view/home/activitiesring.py:354
-msgid "About this XO"
-msgstr "Informazioni su questo XO"
+#: ../src/view/home/activitiesring.py:310
+msgid "Control Panel"
+msgstr "Pannello di Controllo"
 
-#: ../src/view/home/activitiesring.py:302
+#: ../src/view/home/activitiesring.py:321
 msgid "Restart"
 msgstr "Riavvia"
 
-#: ../src/view/home/activitiesring.py:307
+#: ../src/view/home/activitiesring.py:326
 msgid "Shutdown"
 msgstr "Spegni"
 
-#: ../src/view/home/activitiesring.py:313
+#: ../src/view/home/activitiesring.py:332
 msgid "Register"
 msgstr "Registra"
-
-#: ../src/view/home/activitiesring.py:360
-msgid "Not available"
-msgstr "Non disponibile"
 
 #: ../src/view/palettes.py:41
 msgid "Starting..."
 msgstr "Inizio..."
 
-#: ../src/view/palettes.py:85
+#: ../src/view/palettes.py:71
 msgid "Stop"
 msgstr "Chiudi"
 
-#: ../src/view/palettes.py:110
+#: ../src/view/palettes.py:96
 msgid "Start"
 msgstr "Avvia"
 
-#: ../src/view/palettes.py:139
+#: ../src/view/palettes.py:119
 msgid "Remove from ring"
 msgstr "Rimuovi dalla ruota"
 
-#: ../src/view/palettes.py:143
+#: ../src/view/palettes.py:123
 msgid "Add to ring"
 msgstr "Aggiungi alla ruota"
 
-#: ../src/view/palettes.py:189
+#: ../src/view/palettes.py:169
 msgid "Show contents"
 msgstr "Mostra i contenuti"
 
-#: ../src/view/palettes.py:213
+#: ../src/view/palettes.py:193
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB Liberi"
+
+#~ msgid "off"
+#~ msgstr "spento"
+
+#~ msgid "on"
+#~ msgstr "acceso"
+
+#~ msgid "Permission denied. You need to be root to run this method."
+#~ msgstr ""
+#~ "Autorizzazione negata. E' necessario essere \"root\" per eseguire questo "
+#~ "metodo."
+
+#, fuzzy
+#~ msgid "Error in reading timezone"
+#~ msgstr "Errore nel timezone"
+
+#, python-format
+#, fuzzy
+#~ msgid "Error copying timezone (from %s): %s"
+#~ msgstr "Errore nella copia del timezone (da %s): %s"
+
+#, python-format
+#, fuzzy
+#~ msgid "Changing permission of timezone: %s"
+#~ msgstr "Modifica i permessi del timezone: %s"
+
+#~ msgid "About this XO"
+#~ msgstr "Informazioni su questo XO"
 
 #~ msgid "Add to journal"
 #~ msgstr "Aggiungi al diario"
@@ -512,12 +686,6 @@ msgstr "%(free_space)d MB Liberi"
 
 #~ msgid "Stop anyway"
 #~ msgstr "Interrompi comunque"
-
-#~ msgid "Cancel"
-#~ msgstr "Cancella"
-
-#~ msgid "Ok"
-#~ msgstr "Ok"
 
 #~ msgid "Continue"
 #~ msgstr "Continua"
