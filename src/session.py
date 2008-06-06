@@ -30,7 +30,7 @@ class SessionManager(session.SessionManager):
     MODE_REBOOT = 2
 
     def __init__(self):
-        session.Session.__init__(self)
+        session.SessionManager.__init__(self)
         self._logout_mode = None
 
     def logout(self):
