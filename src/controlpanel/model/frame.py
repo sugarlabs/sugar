@@ -19,15 +19,15 @@ from gettext import gettext as _
 
 from sugar import profile
         
-def get_hot_corners_delay():
+def get_corner_delay():
     pro = profile.get_profile()    
     return pro.hot_corners_delay
 
-def print_hot_corners_delay():
-    print get_hot_corners_delay()
+def print_corner_delay():
+    print get_corner_delay()
     
-def set_hot_corners_delay(delay):
-    """Set a delay for the revealing of the frame using hot corners.
+def set_corner_delay(delay):
+    """Set a delay for the activation of the frame using hot corners.
     instantaneous: 0 (0 milliseconds)
     delay: 100 (100 milliseconds) 
     never: 1000 (disable activation)
@@ -35,21 +35,21 @@ def set_hot_corners_delay(delay):
     try:
         int(delay)
     except ValueError:        
-        raise ValueError(_("Value must be an int."))        
+        raise ValueError(_("Value must be an integer."))        
     pro = profile.get_profile()
     pro.hot_corners_delay = int(delay) 
     pro.save()
     return 1
         
-def get_warm_edges_delay():
+def get_edge_delay():
     pro = profile.get_profile()    
     return pro.warm_edges_delay
 
-def print_warm_edges_delay():
-    print get_warm_edges_delay()
+def print_edge_delay():
+    print get_edge_delay()
     
-def set_warm_edges_delay(delay):
-    """Set a delay for the revealing of the frame using warm edges. 
+def set_edge_delay(delay):
+    """Set a delay for the activation of the frame using warm edges. 
     instantaneous: 0 (0 milliseconds)
     delay: 100 (100 milliseconds) 
     never: 1000 (disable activation)
@@ -57,7 +57,7 @@ def set_warm_edges_delay(delay):
     try:
         int(delay)
     except ValueError:        
-        raise ValueError(_("Value must be an int."))        
+        raise ValueError(_("Value must be an integer."))        
     pro = profile.get_profile()
     pro.warm_edges_delay = int(delay) 
     pro.save()

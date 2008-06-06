@@ -29,51 +29,55 @@ TITLE = _('Frame')
 
 _never =  _('never')
 _instantaneous = _('instantaneous')
-_delay_label = _('Delay in milliseconds:')
+_seconds_label = _('%s seconds')
+_MAX_DELAY = 1000.0
 
 class Frame(SectionView):
     def __init__(self, model, alerts):
         SectionView.__init__(self)
 
         self._model = model
-        self._hot_delay_sid = 0
-        self._hot_delay_is_valid = True
-        self._hot_delay_change_handler = None
-        self._warm_delay_sid = 0
-        self._warm_delay_is_valid = True
-        self._warm_delay_change_handler = None
+        self._corner_delay_sid = 0
+        self._corner_delay_is_valid = True
+        self._corner_delay_change_handler = None
+        self._edge_delay_sid = 0
+        self._edge_delay_is_valid = True
+        self._edge_delay_change_handler = None
         self.restart_alerts = alerts
 
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
         self._group = gtk.SizeGroup(gtk.SIZE_GROUP_HORIZONTAL)        
 
-        self._hot_delay_slider = None
-        self._hot_delay_alert = None
-        self._setup_hot_corners()
+        separator = gtk.HSeparator()
+        self.pack_start(separator, expand=False)
+        separator.show()
 
-        self._warm_delay_slider = None
-        self._warm_delay_alert = None
-        self._setup_warm_edges()
+        label_activation = gtk.Label(_('Activation Delay'))
+        label_activation.set_alignment(0, 0)
+        self.pack_start(label_activation, expand=False)
+        label_activation.show()
+
+        self._box_sliders = gtk.VBox()
+        self._box_sliders.set_border_width(style.DEFAULT_SPACING * 2)
+        self._box_sliders.set_spacing(style.DEFAULT_SPACING)
+
+        self._corner_delay_slider = None
+        self._corner_delay_alert = None
+        self._setup_corner()
+
+        self._edge_delay_slider = None
+        self._edge_delay_alert = None
+        self._setup_edge()
+
+        self.pack_start(self._box_sliders, expand=False)
+        self._box_sliders.show()                
 
         self.setup()
 
-    def _setup_hot_corners(self):   
-        separator_hot = gtk.HSeparator()
-        self.pack_start(separator_hot, expand=False)
-        separator_hot.show()
-
-        label_hot_corners = gtk.Label(_('Hot Corners'))
-        label_hot_corners.set_alignment(0, 0)
-        self.pack_start(label_hot_corners, expand=False)
-        label_hot_corners.show()
-
-        box_hot_corners = gtk.VBox()
-        box_hot_corners.set_border_width(style.DEFAULT_SPACING * 2)
-        box_hot_corners.set_spacing(style.DEFAULT_SPACING)
-
+    def _setup_corner(self):   
         box_delay = gtk.HBox(spacing=style.DEFAULT_SPACING)
-        label_delay = gtk.Label(_delay_label)
+        label_delay = gtk.Label(_('Corner'))
         label_delay.set_alignment(1, 0.75)
         label_delay.modify_fg(gtk.STATE_NORMAL, 
                               style.COLOR_SELECTION_GREY.get_gdk_color())
@@ -81,50 +85,34 @@ class Frame(SectionView):
         self._group.add_widget(label_delay)
         label_delay.show()        
           
-        adj = gtk.Adjustment(value=100, lower=0, upper=1000, step_incr=100, 
-                             page_incr=100, page_size=0)
-        self._hot_delay_slider = gtk.HScale(adj)
-        self._hot_delay_slider.set_digits(0)
-        self._hot_delay_slider.connect('format-value', 
-                                       self.__hot_delay_format_cb)
-        box_delay.pack_start(self._hot_delay_slider)
-        self._hot_delay_slider.show()
-        box_hot_corners.pack_start(box_delay, expand=False)
+        adj = gtk.Adjustment(value=100, lower=0, upper=_MAX_DELAY, 
+                             step_incr=100, page_incr=100, page_size=0)
+        self._corner_delay_slider = gtk.HScale(adj)
+        self._corner_delay_slider.set_digits(0)
+        self._corner_delay_slider.connect('format-value', 
+                                          self.__corner_delay_format_cb)
+        box_delay.pack_start(self._corner_delay_slider)
+        self._corner_delay_slider.show()
+        self._box_sliders.pack_start(box_delay, expand=False)
         box_delay.show()
 
-        self._hot_delay_alert = InlineAlert()
+        self._corner_delay_alert = InlineAlert()
         label_delay_error = gtk.Label()
         self._group.add_widget(label_delay_error)
 
         delay_alert_box = gtk.HBox(spacing=style.DEFAULT_SPACING)
         delay_alert_box.pack_start(label_delay_error, expand=False)
         label_delay_error.show()
-        delay_alert_box.pack_start(self._hot_delay_alert, expand=False)
-        box_hot_corners.pack_start(delay_alert_box, expand=False)
+        delay_alert_box.pack_start(self._corner_delay_alert, expand=False)
+        self._box_sliders.pack_start(delay_alert_box, expand=False)
         delay_alert_box.show()
-        if 'hot_delay' in self.restart_alerts:
-            self._hot_delay_alert.props.msg = self.restart_msg
-            self._hot_delay_alert.show()
+        if 'corner_delay' in self.restart_alerts:
+            self._corner_delay_alert.props.msg = self.restart_msg
+            self._corner_delay_alert.show()
         
-        self.pack_start(box_hot_corners, expand=False)
-        box_hot_corners.show()                
-
-    def _setup_warm_edges(self):   
-        separator_warm = gtk.HSeparator()
-        self.pack_start(separator_warm, expand=False)
-        separator_warm.show()
-
-        label_warm_edges = gtk.Label(_('Warm Edges'))
-        label_warm_edges.set_alignment(0, 0)
-        self.pack_start(label_warm_edges, expand=False)
-        label_warm_edges.show()
-
-        box_warm_edges = gtk.VBox()
-        box_warm_edges.set_border_width(style.DEFAULT_SPACING * 2)
-        box_warm_edges.set_spacing(style.DEFAULT_SPACING)
-
+    def _setup_edge(self):           
         box_delay = gtk.HBox(spacing=style.DEFAULT_SPACING)
-        label_delay = gtk.Label(_delay_label)
+        label_delay = gtk.Label(_('Edge'))
         label_delay.set_alignment(1, 0.75)
         label_delay.modify_fg(gtk.STATE_NORMAL, 
                               style.COLOR_SELECTION_GREY.get_gdk_color())
@@ -132,125 +120,121 @@ class Frame(SectionView):
         self._group.add_widget(label_delay)
         label_delay.show()        
           
-        adj = gtk.Adjustment(value=100, lower=0, upper=1000, step_incr=100, 
-                             page_incr=100, page_size=0)
-        self._warm_delay_slider = gtk.HScale(adj)
-        self._warm_delay_slider.set_digits(0)
-        self._warm_delay_slider.connect('format-value', 
-                                       self.__warm_delay_format_cb)
-        box_delay.pack_start(self._warm_delay_slider)
-        self._warm_delay_slider.show()
-        box_warm_edges.pack_start(box_delay, expand=False)
+        adj = gtk.Adjustment(value=100, lower=0, upper=_MAX_DELAY, 
+                             step_incr=100, page_incr=100, page_size=0)
+        self._edge_delay_slider = gtk.HScale(adj)
+        self._edge_delay_slider.set_digits(0)
+        self._edge_delay_slider.connect('format-value', 
+                                        self.__edge_delay_format_cb)
+        box_delay.pack_start(self._edge_delay_slider)
+        self._edge_delay_slider.show()
+        self._box_sliders.pack_start(box_delay, expand=False)
         box_delay.show()
 
-        self._warm_delay_alert = InlineAlert()
+        self._edge_delay_alert = InlineAlert()
         label_delay_error = gtk.Label()
         self._group.add_widget(label_delay_error)
 
         delay_alert_box = gtk.HBox(spacing=style.DEFAULT_SPACING)
         delay_alert_box.pack_start(label_delay_error, expand=False)
         label_delay_error.show()
-        delay_alert_box.pack_start(self._warm_delay_alert, expand=False)
-        box_warm_edges.pack_start(delay_alert_box, expand=False)
+        delay_alert_box.pack_start(self._edge_delay_alert, expand=False)
+        self._box_sliders.pack_start(delay_alert_box, expand=False)
         delay_alert_box.show()
-        if 'warm_delay' in self.restart_alerts:
-            self._warm_delay_alert.props.msg = self.restart_msg
-            self._warm_delay_alert.show()
-        
-        self.pack_start(box_warm_edges, expand=False)
-        box_warm_edges.show()                
+        if 'edge_delay' in self.restart_alerts:
+            self._edge_delay_alert.props.msg = self.restart_msg
+            self._edge_delay_alert.show()
         
     def setup(self):
-        self._hot_delay_slider.set_value(self._model.get_hot_corners_delay())
-        self._warm_delay_slider.set_value(self._model.get_warm_edges_delay())
-        self._hot_delay_is_valid = True
-        self._warm_delay_is_valid = True
+        self._corner_delay_slider.set_value(self._model.get_corner_delay())
+        self._edge_delay_slider.set_value(self._model.get_edge_delay())
+        self._corner_delay_is_valid = True
+        self._edge_delay_is_valid = True
         self.needs_restart = False
-        self._hot_delay_change_handler = self._hot_delay_slider.connect( \
-                'value-changed', self.__hot_delay_changed_cb)
-        self._warm_delay_change_handler = self._warm_delay_slider.connect( \
-                'value-changed', self.__warm_delay_changed_cb)
+        self._corner_delay_change_handler = self._corner_delay_slider.connect( \
+                'value-changed', self.__corner_delay_changed_cb)
+        self._edge_delay_change_handler = self._edge_delay_slider.connect( \
+                'value-changed', self.__edge_delay_changed_cb)
             
     def undo(self):        
-        self._hot_delay_slider.disconnect(self._hot_delay_change_handler)
-        self._warm_delay_slider.disconnect(self._warm_delay_change_handler)
+        self._corner_delay_slider.disconnect(self._corner_delay_change_handler)
+        self._edge_delay_slider.disconnect(self._edge_delay_change_handler)
         self._model.undo()
-        self._hot_delay_alert.hide()        
-        self._warm_delay_alert.hide()        
+        self._corner_delay_alert.hide()        
+        self._edge_delay_alert.hide()        
 
-    def __hot_delay_changed_cb(self, scale, data=None):        
-        if self._hot_delay_sid:
-            gobject.source_remove(self._hot_delay_sid)
-        self._hot_delay_sid = gobject.timeout_add(self._APPLY_TIMEOUT, 
-                                              self.__hot_delay_timeout_cb, 
-                                              scale)
+    def __corner_delay_changed_cb(self, scale, data=None):        
+        if self._corner_delay_sid:
+            gobject.source_remove(self._corner_delay_sid)
+        self._corner_delay_sid = gobject.timeout_add( \
+                self._APPLY_TIMEOUT, self.__corner_delay_timeout_cb, scale)
                 
-    def __hot_delay_timeout_cb(self, scale):        
-        self._hot_delay_sid = 0
-        if scale.get_value() == self._model.get_hot_corners_delay():       
+    def __corner_delay_timeout_cb(self, scale):        
+        self._corner_delay_sid = 0
+        if scale.get_value() == self._model.get_corner_delay():       
             return
         try:
-            self._model.set_hot_corners_delay(scale.get_value())
+            self._model.set_corner_delay(scale.get_value())
         except ValueError, detail:
-            self._hot_delay_alert.props.msg = detail
-            self._hot_delay_is_valid = False
+            self._corner_delay_alert.props.msg = detail
+            self._corner_delay_is_valid = False
             self.needs_restart = False
         else:
-            self._hot_delay_alert.props.msg = self.restart_msg
-            self._hot_delay_is_valid = True            
+            self._corner_delay_alert.props.msg = self.restart_msg
+            self._corner_delay_is_valid = True            
             self.needs_restart = True
-            self.restart_alerts.append('hot_delay')
+            self.restart_alerts.append('corner_delay')
                         
-        if self._hot_delay_is_valid:
+        if self._corner_delay_is_valid:
             self.props.is_valid = True
         else:    
             self.props.is_valid = False
 
-        self._hot_delay_alert.show()        
+        self._corner_delay_alert.show()        
         return False
 
-    def __hot_delay_format_cb(self, scale, value):
-        if value == 1000.0:
+    def __corner_delay_format_cb(self, scale, value):
+        if value == _MAX_DELAY:
             return _never
         elif value == 0.0:
             return _instantaneous
         else:
-            return '%s ms' % value
+            return _seconds_label % (value / _MAX_DELAY)
 
-    def __warm_delay_changed_cb(self, scale, data=None):        
-        if self._warm_delay_sid:
-            gobject.source_remove(self._warm_delay_sid)
-        self._warm_delay_sid = gobject.timeout_add( \
-                self._APPLY_TIMEOUT, self.__warm_delay_timeout_cb, scale)
+    def __edge_delay_changed_cb(self, scale, data=None):        
+        if self._edge_delay_sid:
+            gobject.source_remove(self._edge_delay_sid)
+        self._edge_delay_sid = gobject.timeout_add( \
+                self._APPLY_TIMEOUT, self.__edge_delay_timeout_cb, scale)
                 
-    def __warm_delay_timeout_cb(self, scale):        
-        self._warm_delay_sid = 0
-        if scale.get_value() == self._model.get_warm_edges_delay():       
+    def __edge_delay_timeout_cb(self, scale):        
+        self._edge_delay_sid = 0
+        if scale.get_value() == self._model.get_edge_delay():       
             return
         try:
-            self._model.set_warm_edges_delay(scale.get_value())
+            self._model.set_edge_delay(scale.get_value())
         except ValueError, detail:
-            self._warm_delay_alert.props.msg = detail
-            self._warm_delay_is_valid = False
+            self._edge_delay_alert.props.msg = detail
+            self._edge_delay_is_valid = False
             self.needs_restart = False
         else:
-            self._warm_delay_alert.props.msg = self.restart_msg
-            self._warm_delay_is_valid = True            
+            self._edge_delay_alert.props.msg = self.restart_msg
+            self._edge_delay_is_valid = True            
             self.needs_restart = True
-            self.restart_alerts.append('warm_delay')
+            self.restart_alerts.append('edge_delay')
                         
-        if self._warm_delay_is_valid:
+        if self._edge_delay_is_valid:
             self.props.is_valid = True
         else:    
             self.props.is_valid = False
 
-        self._warm_delay_alert.show()        
+        self._edge_delay_alert.show()        
         return False
 
-    def __warm_delay_format_cb(self, scale, value):
-        if value == 1000.0:
+    def __edge_delay_format_cb(self, scale, value):
+        if value == _MAX_DELAY:
             return _never
         elif value == 0.0:
             return _instantaneous
         else:
-            return '%s ms' % value
+            return _seconds_label % (value / _MAX_DELAY)
