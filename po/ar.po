@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-04-24 00:30-0400\n"
-"PO-Revision-Date: 2008-05-30 08:32-0400\n"
+"POT-Creation-Date: 2008-06-05 00:30-0400\n"
+"PO-Revision-Date: 2008-06-06 12:36-0400\n"
 "Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Nplurals=6; Plural=N==0 ? 0: n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 "
 ": n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: ../src/intro/intro.py:65
+#: ../src/intro/intro.py:65 ../src/controlpanel/view/aboutme.py:100
 msgid "Name:"
 msgstr "الاسم:"
 
@@ -31,7 +31,7 @@ msgstr "انقر لتغيير اللون:"
 msgid "Back"
 msgstr "السابق"
 
-#: ../src/intro/intro.py:159
+#: ../src/intro/intro.py:159 ../src/controlpanel/toolbar.py:61
 msgid "Done"
 msgstr "تمّ"
 
@@ -39,81 +39,85 @@ msgstr "تمّ"
 msgid "Next"
 msgstr "التالي"
 
-#: ../src/view/BuddyMenu.py:63
+#: ../src/view/BuddyMenu.py:58
 msgid "Remove friend"
 msgstr "أزل صديق"
 
-#: ../src/view/BuddyMenu.py:66
+#: ../src/view/BuddyMenu.py:61
 msgid "Make friend"
 msgstr "اصنع صديق"
 
-#: ../src/view/BuddyMenu.py:96
+#: ../src/view/BuddyMenu.py:91
 #, python-format
 msgid "Invite to %s"
 msgstr "ادعُ إلى %s"
 
-#: ../src/view/clipboardmenu.py:59
+#: ../src/view/clipboardmenu.py:48
 msgid "Remove"
 msgstr "أزل"
 
-#: ../src/view/clipboardmenu.py:64 ../src/view/clipboardmenu.py:89
+#: ../src/view/clipboardmenu.py:53 ../src/view/clipboardmenu.py:79
 msgid "Open"
 msgstr "افتح"
 
+# self._stop_item = MenuItem(_('Stop download'), 'stock-close')
+# TODO: Implement stopping downloads
+# self._stop_item.connect('activate', self._stop_item_activate_cb)
+# self.append_menu_item(self._stop_item)
 #. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../src/view/clipboardmenu.py:74
+#: ../src/view/clipboardmenu.py:63
 msgid "Keep"
 msgstr "احفظ"
 
-#: ../src/view/clipboardmenu.py:94
+#: ../src/view/clipboardmenu.py:84
 msgid "Open with"
 msgstr "افتح باستخدام"
 
-#: ../src/view/clipboardmenu.py:220
+#: ../src/view/clipboardmenu.py:212
 #, python-format
 msgid "Clipboard object: %s."
 msgstr "عنصر الحافظة: %s."
 
-#: ../src/hardware/keydialog.py:149
+#: ../src/hardware/keydialog.py:150
 msgid "Key Type:"
 msgstr "نوع المفتاح:"
 
-#: ../src/hardware/keydialog.py:169
+#: ../src/hardware/keydialog.py:170
 msgid "Authentication Type:"
 msgstr "نوع الاستيثاق:"
 
-#: ../src/hardware/keydialog.py:250
+#: ../src/hardware/keydialog.py:251
 msgid "Encryption Type:"
 msgstr "نوع التعمية:"
 
-#: ../src/view/Shell.py:257
+#: ../src/view/Shell.py:259
 msgid "Screenshot"
 msgstr "لقطة شاشة"
 
-#: ../src/view/home/HomeBox.py:142
+#: ../src/view/home/HomeBox.py:149
 msgid "Ring view"
 msgstr "منظور الحلقة"
 
-#: ../src/view/home/HomeBox.py:143
+#: ../src/view/home/HomeBox.py:150
 msgid "<Ctrl>R"
 msgstr "<Ctrl>ح"
 
-#: ../src/view/home/HomeBox.py:150
+#: ../src/view/home/HomeBox.py:158
 msgid "List view"
-msgstr "مشهد القائمة"
+msgstr "منظور القائمة"
 
-#: ../src/view/home/HomeBox.py:151
+#: ../src/view/home/HomeBox.py:159
 msgid "<Ctrl>L"
 msgstr "<Ctrl>ق"
 
-#: ../src/view/home/MeshBox.py:96
+#: ../src/view/home/MeshBox.py:97
 msgid "Connect"
 msgstr "اتصل"
 
-#: ../src/view/home/MeshBox.py:105
+#: ../src/view/home/MeshBox.py:106
 msgid "Disconnect"
 msgstr "اقطع الاتصال"
 
@@ -121,20 +125,21 @@ msgstr "اقطع الاتصال"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../src/view/home/MeshBox.py:117
+#: ../src/view/home/MeshBox.py:118
 msgid "Disconnecting..."
 msgstr "يجري قطع الاتصال..."
 
-#: ../src/view/home/MeshBox.py:151
+#: ../src/view/home/MeshBox.py:152
 msgid "Connecting..."
 msgstr "يجري الاتصال..."
 
+# TODO: show the channel number
 #. TODO: show the channel number
-#: ../src/view/home/MeshBox.py:158
+#: ../src/view/home/MeshBox.py:159
 msgid "Connected"
 msgstr "مُتّصل"
 
-#: ../src/view/home/MeshBox.py:209 ../src/view/devices/network/mesh.py:38
+#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:38
 #: ../src/view/devices/network/mesh.py:65
 #: ../src/view/devices/network/mesh.py:69
 msgid "Mesh Network"
@@ -144,16 +149,16 @@ msgstr "شبكة عُروِيّة"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/wireless.py:115
+#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:116
 #: ../src/view/devices/network/mesh.py:86
 msgid "Disconnect..."
 msgstr "افصِل..."
 
-#: ../src/view/home/MeshBox.py:298 ../src/view/palettes.py:60
+#: ../src/view/home/MeshBox.py:302 ../src/view/palettes.py:60
 msgid "Resume"
 msgstr "استكمل"
 
-#: ../src/view/home/MeshBox.py:303 ../src/view/frame/activitiestray.py:160
+#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:162
 msgid "Join"
 msgstr "التحق"
 
@@ -161,28 +166,40 @@ msgstr "التحق"
 msgid "My Battery"
 msgstr "بطاريتي"
 
-#: ../src/view/devices/battery.py:109
+#: ../src/view/devices/battery.py:111
 msgid "Charging"
 msgstr "يشحن"
 
-#: ../src/view/devices/battery.py:112
+#: ../src/view/devices/battery.py:114
 msgid "Very little power remaining"
 msgstr "بقي القليل جدا من الطاقة"
 
-#: ../src/view/devices/battery.py:118
+#: ../src/view/devices/battery.py:120
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
 msgstr "باقي %(hour)d:%(min).2d"
 
-#: ../src/view/devices/battery.py:122
+#: ../src/view/devices/battery.py:124
 msgid "Charged"
 msgstr "مشحون"
 
-#: ../src/view/devices/network/wireless.py:63
+#: ../src/view/devices/speaker.py:40
+msgid "My Speakers"
+msgstr "سماعاتي"
+
+#: ../src/view/devices/speaker.py:104
+msgid "Unmute"
+msgstr "افتح"
+
+#: ../src/view/devices/speaker.py:107
+msgid "Mute"
+msgstr "أصمِت"
+
+#: ../src/view/devices/network/wireless.py:64
 msgid "Disconnected"
 msgstr "مفصول"
 
-#: ../src/view/devices/network/wireless.py:133
+#: ../src/view/devices/network/wireless.py:134
 msgid "Channel"
 msgstr "قناة"
 
@@ -202,72 +219,24 @@ msgstr "المنزل"
 msgid "Activity"
 msgstr "النشاط"
 
-#: ../src/controlpanel/control.py:217
-msgid "To apply your changes you have to restart sugar.\n"
-msgstr "تحتاج لإعادة تشغيل \"سُكّر\" لتُطبق التغييرات.\n"
-
-#: ../src/controlpanel/control.py:271
-msgid "Error in specified color modifiers."
-msgstr "خطأ في مُغيّرات الألوان المحددة."
-
-#: ../src/controlpanel/control.py:274
-msgid "Error in specified colors."
-msgstr "خطأ في الألوان المحددة."
-
-#: ../src/controlpanel/control.py:310
-msgid "off"
-msgstr "معطّل"
-
-#: ../src/controlpanel/control.py:312
-msgid "on"
-msgstr "مفعّل"
-
-#: ../src/controlpanel/control.py:314
-msgid "State is unknown."
-msgstr "الحالة مجهولة."
-
-#: ../src/controlpanel/control.py:334
-msgid "Error in specified radio argument use on/off."
-msgstr "خطأ في معامل الإذاعة المحدد، استخدم مُفعّل/مُعطّل."
-
-#: ../src/controlpanel/control.py:338
-msgid "Permission denied. You need to be root to run this method."
-msgstr "الصلاحية ممنوعة. تحتاج أن تكون الجذر لتشغل الوظيفة المطلوبة."
-
-#: ../src/controlpanel/control.py:368
-msgid "Error in reading timezone"
-msgstr "خطأ في قراءة المنطقة الزمنية"
-
-#: ../src/controlpanel/control.py:399
+#: ../src/controlpanel/cmd.py:26
 #, python-format
-msgid "Error copying timezone (from %s): %s"
-msgstr "خطأ في نسخ المنطقة الزمنية (من %s): %s"
+msgid ""
+"sugar-control-panel: WARNING, found more than one option with the same name: "
+"%s module: %r"
+msgstr ""
 
-#: ../src/controlpanel/control.py:405
+#: ../src/controlpanel/cmd.py:28
 #, python-format
-msgid "Changing permission of timezone: %s"
-msgstr "يجري تغيير صلاحيات المنطقة الزمنية: %s"
+msgid "sugar-control-panel: key=%s not an available option"
+msgstr ""
 
-#: ../src/controlpanel/control.py:415
-msgid "Error timezone does not exist."
-msgstr "خطأ: المنطقة الزمنية لا وجود لها."
-
-#: ../src/controlpanel/control.py:420 ../src/controlpanel/control.py:438
+#: ../src/controlpanel/cmd.py:29
 #, python-format
-msgid "Could not access %s. Create standard settings."
-msgstr "تعذّر الوصول إلى %s. أنشئ إعدادات قياسية."
+msgid "sugar-control-panel: %s"
+msgstr ""
 
-#: ../src/controlpanel/control.py:465
-#, python-format
-msgid "Language for code=%s could not be determined."
-msgstr "لا يمكن تحديد لغة الرمز=%s."
-
-#: ../src/controlpanel/control.py:475
-#, python-format
-msgid "Sorry I do not speak '%s'."
-msgstr "آسف، لا أتحدث '%s'."
-
-#: ../src/controlpanel/cmd.py:24
+#: ../src/controlpanel/cmd.py:33
 msgid ""
 "Usage: sugar-control-panel [ option ] key [ args ... ] \n"
 "    Control for the sugar environment. \n"
@@ -280,16 +249,196 @@ msgid ""
 "    "
 msgstr ""
 
-#: ../src/controlpanel/cmd.py:49 ../src/controlpanel/cmd.py:62
-#: ../src/controlpanel/cmd.py:70
-#, python-format
-msgid "sugar-control-panel: key=%s not an available option"
-msgstr ""
+#: ../src/controlpanel/cmd.py:45
+msgid "To apply your changes you have to restart sugar.\n"
+msgstr "تحتاج لإعادة تشغيل «سُكّر» لتُطبق التغييرات.\n"
 
-#: ../src/controlpanel/cmd.py:77
+#: ../src/controlpanel/toolbar.py:115
+msgid "Cancel"
+msgstr "ألغِ"
+
+#: ../src/controlpanel/toolbar.py:121
+msgid "Ok"
+msgstr "حسنا"
+
+#: ../src/controlpanel/sectionview.py:34
+msgid "Changes require a sugar restart to take effect."
+msgstr "يتطلب نفاذ التغييرات إعادة تشغيل «سُكّر»."
+
+#: ../src/controlpanel/gui.py:248
+msgid "Warning"
+msgstr "تحذير"
+
+#: ../src/controlpanel/gui.py:249
+msgid "Changes require restart to take effect"
+msgstr "يتطلب نفاذ التغييرات إعادة التشغيل."
+
+#: ../src/controlpanel/gui.py:252
+msgid "Cancel changes"
+msgstr "ألغِ التغييرات"
+
+#: ../src/controlpanel/gui.py:257
+msgid "Later"
+msgstr "لاحقا"
+
+#: ../src/controlpanel/model/aboutme.py:44
+msgid "You must enter a name."
+msgstr "يجب أن تُدخِل اسما."
+
+#: ../src/controlpanel/model/aboutme.py:67
 #, python-format
-msgid "sugar-control-panel: %s"
-msgstr ""
+msgid "stroke:   color=%s hue=%s"
+msgstr "الحواف:   اللون=%s التشبع=%s"
+
+#: ../src/controlpanel/model/aboutme.py:70
+#, python-format
+msgid "stroke:   %s"
+msgstr "الحواف:   %s"
+
+#: ../src/controlpanel/model/aboutme.py:72
+#, python-format
+msgid "fill:     color=%s hue=%s"
+msgstr "الملء:     اللون=%s التشبع=%s"
+
+#: ../src/controlpanel/model/aboutme.py:74
+#, python-format
+msgid "fill:     %s"
+msgstr "الملء:     %s"
+
+#: ../src/controlpanel/model/aboutme.py:85
+msgid "Error in specified color modifiers."
+msgstr "خطأ في مُغيّرات الألوان المحددة."
+
+#: ../src/controlpanel/model/aboutme.py:88
+msgid "Error in specified colors."
+msgstr "خطأ في الألوان المحددة."
+
+#: ../src/controlpanel/model/aboutxo.py:24
+msgid "Not available"
+msgstr "غير مُتاح"
+
+#: ../src/controlpanel/model/datetime.py:85
+msgid "Error timezone does not exist."
+msgstr "خطأ: المنطقة الزمنية لا وجود لها."
+
+#: ../src/controlpanel/model/frame.py:38 ../src/controlpanel/model/frame.py:60
+msgid "Value must be an int."
+msgstr "يجب أن تكون القيمة عددا صحيحا."
+
+#: ../src/controlpanel/model/language.py:28
+msgid "Could not access ~/.i18n. Create standard settings."
+msgstr "تعذّر الوصول إلى ‭~/.i18n‬. سأنشئ إعدادات قياسية."
+
+#: ../src/controlpanel/model/language.py:104
+#, python-format
+msgid "Language for code=%s could not be determined."
+msgstr "لا يمكن تحديد لغة الرمز=%s."
+
+#: ../src/controlpanel/model/language.py:121
+#, python-format
+msgid "Sorry I do not speak '%s'."
+msgstr "آسف، لا أتحدث '%s'."
+
+#: ../src/controlpanel/model/network.py:48
+msgid "You must enter a server."
+msgstr "يجب أن تُدخِل خادوما."
+
+#: ../src/controlpanel/model/network.py:63
+msgid "State is unknown."
+msgstr "الحالة مجهولة."
+
+#: ../src/controlpanel/model/network.py:83
+msgid "Error in specified radio argument use on/off."
+msgstr "خطأ في معامل الإذاعة المحدد، استخدم مُفعّل/مُعطّل."
+
+#: ../src/controlpanel/view/aboutme.py:32
+msgid "About Me"
+msgstr "عنّي"
+
+#: ../src/controlpanel/view/aboutme.py:134
+msgid "Click to change your color:"
+msgstr "انقر لتغيير اللون:"
+
+#: ../src/controlpanel/view/aboutxo.py:26
+msgid "About my XO"
+msgstr "عن حاسوبي"
+
+#: ../src/controlpanel/view/aboutxo.py:47
+msgid "Identity"
+msgstr "المعرّف"
+
+#: ../src/controlpanel/view/aboutxo.py:56
+msgid "Serial Number:"
+msgstr "الرقم التسلسلي"
+
+#: ../src/controlpanel/view/aboutxo.py:79
+msgid "Software"
+msgstr "البرمجيات"
+
+#: ../src/controlpanel/view/aboutxo.py:88
+msgid "Build:"
+msgstr "البناء:"
+
+#: ../src/controlpanel/view/aboutxo.py:103
+msgid "Firmware:"
+msgstr "البرمجيات الثابتة (Firmware):"
+
+#: ../src/controlpanel/view/datetime.py:29
+msgid "Date & Time"
+msgstr "التاريخ والوقت"
+
+#: ../src/controlpanel/view/datetime.py:72
+msgid "Timezone"
+msgstr "المنطقة الزمنية"
+
+#: ../src/controlpanel/view/frame.py:28
+msgid "Frame"
+msgstr "الإطار"
+
+#: ../src/controlpanel/view/frame.py:30
+msgid "never"
+msgstr "أبدا"
+
+#: ../src/controlpanel/view/frame.py:31
+msgid "instantaneous"
+msgstr "آني"
+
+#: ../src/controlpanel/view/frame.py:32
+msgid "Delay in milliseconds:"
+msgstr "التأخير بالملي ثانية:"
+
+#: ../src/controlpanel/view/frame.py:66
+msgid "Hot Corners"
+msgstr "الزوايا النشطة"
+
+#: ../src/controlpanel/view/frame.py:117
+msgid "Warm Edges"
+msgstr "الحواف المتفاعلة"
+
+#: ../src/controlpanel/view/language.py:29
+#: ../src/controlpanel/view/language.py:74
+msgid "Language"
+msgstr "اللغة"
+
+#: ../src/controlpanel/view/network.py:28
+msgid "Network"
+msgstr "الشبكة"
+
+#: ../src/controlpanel/view/network.py:53
+msgid "Wireless"
+msgstr "اللاسلكي"
+
+#: ../src/controlpanel/view/network.py:61
+msgid "Radio:"
+msgstr "الإذاعة:"
+
+#: ../src/controlpanel/view/network.py:94
+msgid "Mesh"
+msgstr "الشبكة العروية"
+
+#: ../src/controlpanel/view/network.py:103
+msgid "Server:"
+msgstr "الخادوم"
 
 #: ../src/view/devices/network/mesh.py:108
 msgid "Connected to a School Mesh Portal"
@@ -319,59 +468,77 @@ msgstr "يبدأ شبكة بسيطة"
 msgid "Unknown Mesh"
 msgstr "شبكة مجهولة"
 
-#: ../src/view/frame/activitiestray.py:165
+#: ../src/view/frame/activitiestray.py:167
 msgid "Decline"
 msgstr "ارفض"
 
-#: ../src/view/home/activitiesring.py:291
-#: ../src/view/home/activitiesring.py:354
-msgid "About this XO"
-msgstr "عَنْ XO هذا"
+#: ../src/view/home/activitiesring.py:310
+msgid "Control Panel"
+msgstr "لوحة التحكم"
 
-#: ../src/view/home/activitiesring.py:302
+#: ../src/view/home/activitiesring.py:321
 msgid "Restart"
-msgstr ""
+msgstr "أعد التشغيل"
 
-#: ../src/view/home/activitiesring.py:307
+#: ../src/view/home/activitiesring.py:326
 msgid "Shutdown"
 msgstr "أطفئ"
 
-#: ../src/view/home/activitiesring.py:313
+#: ../src/view/home/activitiesring.py:332
 msgid "Register"
 msgstr "سجّل"
-
-#: ../src/view/home/activitiesring.py:360
-msgid "Not available"
-msgstr "غير مُتاح"
 
 #: ../src/view/palettes.py:41
 msgid "Starting..."
 msgstr "يبدأ..."
 
-#: ../src/view/palettes.py:85
+#: ../src/view/palettes.py:71
 msgid "Stop"
 msgstr "قف"
 
-#: ../src/view/palettes.py:110
+#: ../src/view/palettes.py:96
 msgid "Start"
-msgstr ""
+msgstr "ابدأ"
 
-#: ../src/view/palettes.py:139
+#: ../src/view/palettes.py:119
 msgid "Remove from ring"
-msgstr ""
+msgstr "أزِل من الحلقة"
 
-#: ../src/view/palettes.py:143
+#: ../src/view/palettes.py:123
 msgid "Add to ring"
-msgstr ""
+msgstr "أضِف للحلقة"
 
-#: ../src/view/palettes.py:189
+#: ../src/view/palettes.py:169
 msgid "Show contents"
-msgstr ""
+msgstr "أظهر المحتويات"
 
-#: ../src/view/palettes.py:213
+#: ../src/view/palettes.py:193
 #, python-format
 msgid "%(free_space)d MB Free"
-msgstr ""
+msgstr "%(free_space)d م.بايت خالية"
+
+#~ msgid "off"
+#~ msgstr "معطّل"
+
+#~ msgid "on"
+#~ msgstr "مفعّل"
+
+#~ msgid "Permission denied. You need to be root to run this method."
+#~ msgstr "الصلاحية ممنوعة. تحتاج أن تكون الجذر لتشغل الوظيفة المطلوبة."
+
+#~ msgid "Error in reading timezone"
+#~ msgstr "خطأ في قراءة المنطقة الزمنية"
+
+#, python-format
+#~ msgid "Error copying timezone (from %s): %s"
+#~ msgstr "خطأ في نسخ المنطقة الزمنية (من %s): %s"
+
+#, python-format
+#~ msgid "Changing permission of timezone: %s"
+#~ msgstr "يجري تغيير صلاحيات المنطقة الزمنية: %s"
+
+#~ msgid "About this XO"
+#~ msgstr "عَنْ XO هذا"
 
 #~ msgid "Add to journal"
 #~ msgstr "أضِف إلى اليوميات"
@@ -436,12 +603,6 @@ msgstr ""
 
 #~ msgid "Stop anyway"
 #~ msgstr "توقف على أي حال"
-
-#~ msgid "Cancel"
-#~ msgstr "الغِ"
-
-#~ msgid "Ok"
-#~ msgstr "حسنا"
 
 #~ msgid "Continue"
 #~ msgstr "واصِل"

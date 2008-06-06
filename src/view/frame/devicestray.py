@@ -14,10 +14,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
+
 from sugar.graphics.tray import HTray
 
 from view.devices import deviceview
 from model import shellmodel
+
+_logger = logging.getLogger('DevicesTray')
 
 class DevicesTray(HTray):
     def __init__(self):
@@ -35,11 +39,15 @@ class DevicesTray(HTray):
                               self.__device_disappeared_cb)
 
     def _add_device(self, device):
-        view = deviceview.create(device)
-        # TODO: *Tray classes don't allow yet to set the alignment.
-        self.add_item(view)
-        view.show()
-        self._device_icons[device.get_id()] = view
+        try:
+            view = deviceview.create(device)
+            # TODO: *Tray classes don't allow yet to set the alignment.
+            self.add_item(view)
+            view.show()
+            self._device_icons[device.get_id()] = view
+        except Exception, message:
+            _logger.warn("Not able to add icon for device [%r], because of "
+                         "an error (%s). Continuing." % (device, message))
 
     def _remove_device(self, device):
         self.remove_item(self._device_icons[device.get_id()])
