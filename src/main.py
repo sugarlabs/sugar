@@ -35,6 +35,7 @@ import view.Shell
 from shellservice import ShellService
 from hardware import hardwaremanager
 from intro import intro
+from session import get_session
 import logsmanager
 import config
 
@@ -145,6 +146,9 @@ def main():
     # TODO: move initializations from the Shell constructor to a start() method
     view.Shell.get_instance()
     ShellService()
+
+    session = get_session()
+    session.start()
 
     try:
         gtk.main()

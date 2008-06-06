@@ -26,7 +26,6 @@ import gtk
 import hippo
 import dbus
 
-from hardware import hardwaremanager
 from sugar.graphics import style
 from sugar.graphics.palette import Palette
 from sugar.graphics.icon import Icon, CanvasIcon
@@ -43,6 +42,7 @@ from model import shellmodel
 from model.shellmodel import ShellModel
 from hardware import schoolserver
 from controlpanel.gui import ControlPanel
+from session import get_session
 
 _logger = logging.getLogger('ActivitiesRing')
 
@@ -339,29 +339,15 @@ class _MyIcon(MyIcon):
         model = shellmodel.get_instance()
         model.props.state = ShellModel.STATE_SHUTDOWN
 
-        pm = self._get_power_manager()
-
-        hw_manager = hardwaremanager.get_manager()
-        hw_manager.shutdown()
-
-        if env.is_emulator():
-            self._close_emulator()
-        else:
-            pm.Reboot()
+        session = get_session()
+        session.shutdown()
 
     def _shutdown_activate_cb(self, menuitem):
         model = shellmodel.get_instance()
         model.props.state = ShellModel.STATE_SHUTDOWN
 
-        pm = self._get_power_manager()
-
-        hw_manager = hardwaremanager.get_manager()
-        hw_manager.shutdown()
-
-        if env.is_emulator():
-            self._close_emulator()
-        else:
-            pm.Shutdown()
+        session = get_session()
+        session.shutdown()
 
     def _register_activate_cb(self, menuitem):
         schoolserver.register_laptop()
@@ -379,19 +365,3 @@ class _MyIcon(MyIcon):
     def _response_cb(self, widget, response_id):
         if response_id == gtk.RESPONSE_OK:            
             widget.destroy()
-
-    def _close_emulator(self):
-        if os.environ.has_key('SUGAR_EMULATOR_PID'):
-            pid = int(os.environ['SUGAR_EMULATOR_PID'])
-            os.kill(pid, signal.SIGTERM)
-
-    def _get_power_manager(self):
-        if self._power_manager is None:
-            bus = dbus.SystemBus()
-            proxy = bus.get_object('org.freedesktop.Hal', 
-                                '/org/freedesktop/Hal/devices/computer')
-            self._power_manager = dbus.Interface(proxy, \
-                            'org.freedesktop.Hal.Device.SystemPowerManagement') 
-
-        return self._power_manager
-
