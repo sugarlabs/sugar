@@ -227,7 +227,9 @@ class ActivitiesTray(HTray):
     def __activity_clicked_cb(self, button, home_activity):
         if button.props.active:
             logging.debug('ActivitiesTray.__activity_clicked_cb')
-            home_activity.get_window().activate(gtk.get_current_event_time())
+            window = home_activity.get_window()
+            if window:
+                window.activate(gtk.get_current_event_time())
 
     def __invite_clicked_cb(self, icon, invite):
         self._invites.remove_invite(invite)

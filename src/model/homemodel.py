@@ -235,6 +235,8 @@ class HomeModel(gobject.GObject):
         home_activity.props.launching = True
         self._add_activity(home_activity)
 
+        self._set_active_activity(home_activity)
+
         self.emit('launch-started', home_activity)
 
         # FIXME: better learn about finishing processes by receiving a signal.
