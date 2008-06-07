@@ -50,10 +50,7 @@ class HomeModel(gobject.GObject):
                                    ([gobject.TYPE_PYOBJECT])),
         'active-activity-changed': (gobject.SIGNAL_RUN_FIRST,
                                     gobject.TYPE_NONE,
-                                   ([gobject.TYPE_PYOBJECT])),
-        'pending-activity-changed': (gobject.SIGNAL_RUN_FIRST,
-                                     gobject.TYPE_NONE,
-                                     ([gobject.TYPE_PYOBJECT]))
+                                   ([gobject.TYPE_PYOBJECT]))
     }
     
     def __init__(self):
@@ -61,7 +58,6 @@ class HomeModel(gobject.GObject):
 
         self._activities = []
         self._active_activity = None
-        self._pending_activity = None
 
         screen = wnck.screen_get_default()
         screen.connect('window-opened', self._window_opened_cb)
@@ -78,7 +74,7 @@ class HomeModel(gobject.GObject):
 
     def get_previous_activity(self):
         activities = self._get_activities_with_window()
-        i = activities.index(self._pending_activity)
+        i = activities.index(self._active_activity)
         if len(activities) == 0:
             return None
         elif i - 1 >= 0:
@@ -88,7 +84,7 @@ class HomeModel(gobject.GObject):
 
     def get_next_activity(self):
         activities = self._get_activities_with_window()
-        i = activities.index(self._pending_activity)
+        i = activities.index(self._active_activity)
         if len(activities) == 0:
             return None
         elif i + 1 < len(activities):
@@ -96,34 +92,8 @@ class HomeModel(gobject.GObject):
         else:
             return activities[0]
 
-    def get_pending_activity(self):
-        """Returns the activity that would be seen in the Activity zoom level
-
-        In the Home (or Neighborhood or Groups) zoom level, this
-        indicates the activity that would become active if the user
-        switched to the Activity zoom level. (In the Activity zoom
-        level, this just returns the currently-active activity.)
-        Unlike get_active_activity(), this never returns None as long
-        as there is any activity running.
-        """
-        return self._pending_activity
-
-    def _set_pending_activity(self, home_activity):
-        if self._pending_activity == home_activity:
-            return
-
-        self._pending_activity = home_activity
-        self.emit('pending-activity-changed', self._pending_activity)
-
     def get_active_activity(self):
-        """Returns the activity that the user is currently working in
-
-        In the Activity zoom level, this returns the currently-active
-        activity. In the other zoom levels, it returns the activity
-        that was most-recently active in the Activity zoom level, or
-        None if the most-recently-active activity is no longer
-        running.
-        """
+        """Returns the activity that the user is currently working in"""
         return self._active_activity
 
     def _set_active_activity(self, home_activity):
@@ -183,8 +153,8 @@ class HomeModel(gobject.GObject):
             home_activity.props.launching = False
             self.emit('activity-started', home_activity)
 
-            if self._pending_activity is None:
-                self._set_pending_activity(home_activity)
+            if self._active_activity is None:
+                self._set_active_activity(home_activity)
 
     def _window_closed_cb(self, screen, window):
         if window.get_window_type() == wnck.WINDOW_NORMAL:
@@ -219,7 +189,6 @@ class HomeModel(gobject.GObject):
 
         act = self._get_activity_by_xid(window.get_xid())
         if act is not None:
-            self._set_pending_activity(act)
             self._set_active_activity(act)
 
     def _add_activity(self, home_activity):
@@ -228,20 +197,16 @@ class HomeModel(gobject.GObject):
 
     def _remove_activity(self, home_activity):
         if home_activity == self._active_activity:
-            self._set_active_activity(None)
-
-        if home_activity == self._pending_activity:
-            # Figure out the new _pending_activity
             windows = wnck.screen_get_default().get_windows_stacked()
             windows.reverse()
             for window in windows:
                 new_activity = self._get_activity_by_xid(window.get_xid())
                 if new_activity is not None:
-                    self._set_pending_activity(new_activity)
+                    self._set_active_activity(new_activity)
                     break
             else:
                 logging.error('No activities are running')
-                self._set_pending_activity(None)
+                self._set_active_activity(None)
 
         self.emit('activity-removed', home_activity)
         self._activities.remove(home_activity)

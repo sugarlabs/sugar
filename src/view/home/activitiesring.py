@@ -176,16 +176,16 @@ class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
         CanvasIcon.__init__(self, cache=True)
         self._home_model = shellmodel.get_instance().get_home()
 
-        if self._home_model.get_pending_activity() is not None:
-            self._update(self._home_model.get_pending_activity())
+        if self._home_model.get_active_activity() is not None:
+            self._update(self._home_model.get_active_activity())
 
-        self._home_model.connect('pending-activity-changed',
-                self.__pending_activity_changed_cb)
+        self._home_model.connect('active-activity-changed',
+                                 self.__active_activity_changed_cb)
 
         self.connect('button-release-event', self.__button_release_event_cb)
 
     def __button_release_event_cb(self, icon, event):
-        self._home_model.get_pending_activity().get_window().activate(1)
+        self._home_model.get_active_activity().get_window().activate(1)
 
     def _update(self, home_activity):
         _logger.debug('CurrentActivityIcon._update')
@@ -199,7 +199,7 @@ class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
             palette = CurrentActivityPalette(home_activity)
         self.set_palette(palette)
 
-    def __pending_activity_changed_cb(self, home_model, home_activity):
+    def __active_activity_changed_cb(self, home_model, home_activity):
         self._update(home_activity)
 
 class RingLayout(gobject.GObject, hippo.CanvasLayout):
