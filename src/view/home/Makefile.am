@@ -5,6 +5,7 @@ sugar_PYTHON =			\
 	activitiesring.py	\
 	FriendView.py		\
 	FriendsBox.py		\
+	launchbox.py		\
 	HomeBox.py		\
 	HomeWindow.py		\
 	MeshBox.py		\
