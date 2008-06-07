@@ -66,7 +66,7 @@ class Shell(gobject.GObject):
         self._home_window.show()
 
         home_model = self._model.get_home()
-        home_model.connect('activity-started', self._activity_started_cb)
+        home_model.connect('launch-completed', self._launch_completed_cb)
         home_model.connect('activity-removed', self._activity_removed_cb)
         home_model.connect('active-activity-changed',
                            self._active_activity_changed_cb)
@@ -92,7 +92,7 @@ class Shell(gobject.GObject):
         if registry.get_activity('org.laptop.JournalActivity'):
             self.start_activity('org.laptop.JournalActivity')
 
-    def _activity_started_cb(self, home_model, home_activity):
+    def _launch_completed_cb(self, home_model, home_activity):
         activity_host = ActivityHost(home_activity)
         self._hosts[activity_host.get_xid()] = activity_host
         if home_activity.get_type() in self._activities_starting:

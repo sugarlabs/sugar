@@ -42,14 +42,20 @@ class HomeModel(gobject.GObject):
         'activity-added':          (gobject.SIGNAL_RUN_FIRST,
                                     gobject.TYPE_NONE, 
                                    ([gobject.TYPE_PYOBJECT])),
-        'activity-started':         (gobject.SIGNAL_RUN_FIRST,
-                                    gobject.TYPE_NONE, 
-                                   ([gobject.TYPE_PYOBJECT])),
         'activity-removed':        (gobject.SIGNAL_RUN_FIRST,
                                     gobject.TYPE_NONE,
                                    ([gobject.TYPE_PYOBJECT])),
         'active-activity-changed': (gobject.SIGNAL_RUN_FIRST,
                                     gobject.TYPE_NONE,
+                                   ([gobject.TYPE_PYOBJECT])),
+        'launch-started':          (gobject.SIGNAL_RUN_FIRST,
+                                    gobject.TYPE_NONE, 
+                                   ([gobject.TYPE_PYOBJECT])),
+        'launch-completed':        (gobject.SIGNAL_RUN_FIRST,
+                                    gobject.TYPE_NONE, 
+                                   ([gobject.TYPE_PYOBJECT])),
+        'launch-failed':           (gobject.SIGNAL_RUN_FIRST,
+                                    gobject.TYPE_NONE, 
                                    ([gobject.TYPE_PYOBJECT]))
     }
     
@@ -151,7 +157,7 @@ class HomeModel(gobject.GObject):
             home_activity.set_window(window)
 
             home_activity.props.launching = False
-            self.emit('activity-started', home_activity)
+            self.emit('launch-completed', home_activity)
 
             if self._active_activity is None:
                 self._set_active_activity(home_activity)
@@ -229,6 +235,8 @@ class HomeModel(gobject.GObject):
         home_activity.props.launching = True
         self._add_activity(home_activity)
 
+        self.emit('launch-started', home_activity)
+
         # FIXME: better learn about finishing processes by receiving a signal.
         # Now just check whether an activity has a window after ~90sec
         gobject.timeout_add(90000, self._check_activity_launched, activity_id)
@@ -243,6 +251,8 @@ class HomeModel(gobject.GObject):
         else:
             logging.error('Model for activity id %s does not exist.'
                           % activity_id)
+
+        self.emit('launch-failed', home_activity)
 
     def _check_activity_launched(self, activity_id):
         home_activity = self._get_activity_by_id(activity_id)
