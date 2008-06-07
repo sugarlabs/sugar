@@ -131,7 +131,7 @@ class HomeWindow(gtk.Window):
             size = style.LARGE_ICON_SIZE
         elif level == ShellModel.ZOOM_MESH:
             size = style.STANDARD_ICON_SIZE
-        elif level == ShellModel.ZOOM_ACTIVIY:
+        elif level == ShellModel.ZOOM_ACTIVITY:
             size = style.XLARGE_ICON_SIZE
             
         self._transition_box.set_size(size)

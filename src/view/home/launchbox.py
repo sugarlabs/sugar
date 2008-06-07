@@ -24,3 +24,8 @@ class LaunchBox(hippo.CanvasBox):
         gobject.GObject.__init__(
                 self, background_color=style.COLOR_WHITE.get_int())
 
+    def suspend(self):
+        pass
+
+    def resume(self):
+        pass

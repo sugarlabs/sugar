@@ -67,6 +67,7 @@ class Shell(gobject.GObject):
 
         home_model = self._model.get_home()
         home_model.connect('launch-started', self.__launch_started_cb)
+        home_model.connect('launch-failed', self.__launch_failed_cb)
         home_model.connect('launch-completed', self.__launch_completed_cb)
         home_model.connect('activity-removed', self._activity_removed_cb)
         home_model.connect('active-activity-changed',
@@ -94,8 +95,15 @@ class Shell(gobject.GObject):
             self.start_activity('org.laptop.JournalActivity')
 
     def __launch_started_cb(self, home_model, home_activity):
-        # Zoom to Home for launch feedback
-        self.set_zoom_level(shellmodel.ShellModel.ZOOM_HOME)
+        if home_activity.get_type() == 'org.laptop.JournalActivity':
+            return
+
+        self._screen.toggle_showing_desktop(True)
+        self._home_window.set_zoom_level(shellmodel.ShellModel.ZOOM_ACTIVITY)
+
+    def __launch_failed_cb(self, home_model, home_activity):
+        if self._screen.get_showing_desktop():
+            self._home_window.set_zoom_level(shellmodel.ShellModel.ZOOM_HOME)
 
     def __launch_completed_cb(self, home_model, home_activity):
         activity_host = ActivityHost(home_activity)
