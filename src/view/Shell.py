@@ -66,7 +66,8 @@ class Shell(gobject.GObject):
         self._home_window.show()
 
         home_model = self._model.get_home()
-        home_model.connect('launch-completed', self._launch_completed_cb)
+        home_model.connect('launch-started', self.__launch_started_cb)
+        home_model.connect('launch-completed', self.__launch_completed_cb)
         home_model.connect('activity-removed', self._activity_removed_cb)
         home_model.connect('active-activity-changed',
                            self._active_activity_changed_cb)
@@ -92,7 +93,11 @@ class Shell(gobject.GObject):
         if registry.get_activity('org.laptop.JournalActivity'):
             self.start_activity('org.laptop.JournalActivity')
 
-    def _launch_completed_cb(self, home_model, home_activity):
+    def __launch_started_cb(self, home_model, home_activity):
+        # Zoom to Home for launch feedback
+        self.set_zoom_level(shellmodel.ShellModel.ZOOM_HOME)
+
+    def __launch_completed_cb(self, home_model, home_activity):
         activity_host = ActivityHost(home_activity)
         self._hosts[activity_host.get_xid()] = activity_host
         if home_activity.get_type() in self._activities_starting:
@@ -140,17 +145,6 @@ class Shell(gobject.GObject):
 
         handle = ActivityHandle(activity_id)
         activityfactory.create(bundle_id, handle)
-
-    def notify_launch(self, bundle_id, activity_id):
-        # Zoom to Home for launch feedback
-        self.set_zoom_level(shellmodel.ShellModel.ZOOM_HOME)
-
-        home_model = self._model.get_home()
-        home_model.notify_activity_launch(activity_id, bundle_id)
-
-    def notify_launch_failure(self, activity_id):
-        home_model = self._model.get_home()
-        home_model.notify_activity_launch_failed(activity_id)
 
     def start_activity(self, activity_type):
         if activity_type in self._activities_starting:

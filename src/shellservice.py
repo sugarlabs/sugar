@@ -79,12 +79,14 @@ class ShellService(dbus.service.Object):
     @dbus.service.method(_DBUS_SHELL_IFACE,
                          in_signature="ss", out_signature="")
     def NotifyLaunch(self, bundle_id, activity_id):
-        self._shell.notify_launch(bundle_id, activity_id)
+        home = self._shell.get_model().get_home()
+        home.notify_launch(activity_id, bundle_id)
 
     @dbus.service.method(_DBUS_SHELL_IFACE,
                          in_signature="s", out_signature="")
     def NotifyLaunchFailure(self, activity_id):
-        self._shell.notify_launch_failure(activity_id)
+        home = self._shell.get_model().get_home()
+        home.notify_launch_failed(activity_id)
 
     @dbus.service.signal(_DBUS_OWNER_IFACE, signature="s")
     def ColorChanged(self, color):

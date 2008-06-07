@@ -224,7 +224,7 @@ class HomeModel(gobject.GObject):
         else:
             logging.error('Model for window %d does not exist.' % xid)
 
-    def notify_activity_launch(self, activity_id, service_name):
+    def notify_launch(self, activity_id, service_name):
         registry = activity.get_registry()
         activity_info = registry.get_activity(service_name)
         if not activity_info:
@@ -241,7 +241,7 @@ class HomeModel(gobject.GObject):
         # Now just check whether an activity has a window after ~90sec
         gobject.timeout_add(90000, self._check_activity_launched, activity_id)
 
-    def notify_activity_launch_failed(self, activity_id):
+    def notify_launch_failed(self, activity_id):
         home_activity = self._get_activity_by_id(activity_id)
         if home_activity:
             logging.debug("Activity %s (%s) launch failed" % \
@@ -259,5 +259,5 @@ class HomeModel(gobject.GObject):
         if home_activity and home_activity.props.launching:
             logging.debug('Activity %s still launching, assuming it failed...'
                           % activity_id)
-            self.notify_activity_launch_failed(activity_id)
+            self.notify_launch_failed(activity_id)
         return False
