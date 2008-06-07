@@ -100,6 +100,7 @@ class Shell(gobject.GObject):
 
         self._screen.toggle_showing_desktop(True)
         self._home_window.set_zoom_level(shellmodel.ShellModel.ZOOM_ACTIVITY)
+        self._home_window.launch_box.zoom_in()
 
     def __launch_failed_cb(self, home_model, home_activity):
         if self._screen.get_showing_desktop():

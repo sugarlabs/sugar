@@ -67,7 +67,7 @@ class HomeWindow(gtk.Window):
         self._friends_box = FriendsBox()
         self._mesh_box = MeshBox()
         self._transition_box = TransitionBox()
-        self._launch_box = LaunchBox()
+        self.launch_box = LaunchBox()
 
         self._activate_view()
         self._canvas.set_root(self._home_box)
@@ -102,7 +102,7 @@ class HomeWindow(gtk.Window):
         elif self._level == ShellModel.ZOOM_MESH:
             self._mesh_box.suspend()
         elif self._level == ShellModel.ZOOM_ACTIVITY:
-            self._launch_box.suspend()
+            self.launch_box.suspend()
 
     def _activate_view(self):
         if self._level == ShellModel.ZOOM_HOME:
@@ -110,7 +110,7 @@ class HomeWindow(gtk.Window):
         elif self._level == ShellModel.ZOOM_MESH:
             self._mesh_box.resume()
         elif self._level == ShellModel.ZOOM_ACTIVITY:
-            self._launch_box.resume()
+            self.launch_box.resume()
 
     def _visibility_notify_event_cb(self, window, event):
         if event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED:
@@ -145,7 +145,7 @@ class HomeWindow(gtk.Window):
             self._canvas.set_root(self._mesh_box)
             self._mesh_box.focus_search_entry()
         elif self._level == ShellModel.ZOOM_ACTIVITY:
-            self._canvas.set_root(self._launch_box)
+            self._canvas.set_root(self.launch_box)
 
     def get_home_box(self):
         return self._home_box   

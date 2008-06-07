@@ -16,6 +16,7 @@
 
 import hippo
 import gobject
+import logging
 
 from sugar.graphics import style
 from sugar.graphics import animator
@@ -31,11 +32,16 @@ class LaunchBox(hippo.CanvasBox):
 
         self._activity_icon = CanvasPulsingIcon()
 
+        # FIXME support non-xo colors in CanvasPulsingIcon
+        self._activity_icon.props.base_color = \
+            XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
+                               style.COLOR_TRANSPARENT.get_svg()))
+
         vbox = hippo.CanvasBox(orientation=hippo.ORIENTATION_VERTICAL)
         vbox.append(self._activity_icon, hippo.PACK_EXPAND)
         self.append(vbox, hippo.PACK_EXPAND)
 
-        self._animator = animator.Animator(0.3)
+        self._animator = animator.Animator(1.0)
 
         self._home = shellmodel.get_instance().get_home()
         self._home.connect('active-activity-changed',
