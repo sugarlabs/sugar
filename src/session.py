@@ -16,6 +16,8 @@
 
 import gtk
 import dbus
+import os
+import signal
 
 from sugar import session
 from sugar import env

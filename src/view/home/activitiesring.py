@@ -15,23 +15,19 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import os
 import logging
-import signal
 from gettext import gettext as _
 import math
 
 import gobject
 import gtk
 import hippo
-import dbus
 
 from sugar.graphics import style
 from sugar.graphics.palette import Palette
 from sugar.graphics.icon import Icon, CanvasIcon
 from sugar.graphics.menuitem import MenuItem
 from sugar.profile import get_profile
-from sugar import env
 from sugar import activity
 
 import view.Shell
