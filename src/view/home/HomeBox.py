@@ -18,7 +18,6 @@ from gettext import gettext as _
 
 import gobject
 import gtk
-import hippo
 
 from sugar.graphics import style
 from sugar.graphics import iconentry
@@ -32,11 +31,11 @@ _LIST_VIEW = 1
 
 _AUTOSEARCH_TIMEOUT = 1000
 
-class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
+class HomeBox(gtk.VBox):
     __gtype_name__ = 'SugarHomeBox'
 
     def __init__(self):
-        hippo.CanvasBox.__init__(self)
+        gobject.GObject.__init__(self)
 
         self._ring_view = ActivitiesRing()
         self._list_view = ActivitiesList()
@@ -45,7 +44,8 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
         self._toolbar = HomeToolbar()
         self._toolbar.connect('query-changed', self.__toolbar_query_changed_cb)
         self._toolbar.connect('view-changed', self.__toolbar_view_changed_cb)
-        self.append(hippo.CanvasWidget(widget=self._toolbar))
+        self.pack_start(self._toolbar, expand=False)
+        self._toolbar.show()
 
         self._set_view(_RING_VIEW)
 
@@ -66,13 +66,14 @@ class HomeBox(hippo.CanvasBox, hippo.CanvasItem):
             if self._enable_xo_palette:
                 self._ring_view.enable_xo_palette()
 
-            self.append(self._ring_view, hippo.PACK_EXPAND)
-
+            self.add(self._ring_view)
+            self._ring_view.show()
         elif view == _LIST_VIEW:
             if self._ring_view in self.get_children():
                 self.remove(self._ring_view)
 
-            self.append(self._list_view, hippo.PACK_EXPAND)
+            self.add(self._list_view)
+            self._list_view.show()
         else:
             raise ValueError('Invalid view: %r' % view)
 

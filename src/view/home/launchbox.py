@@ -25,10 +25,9 @@ from sugar.graphics.xocolor import XoColor
 from model import shellmodel
 from view.pulsingicon import CanvasPulsingIcon
 
-class LaunchBox(hippo.CanvasBox):
+class LaunchBox(hippo.Canvas):
     def __init__(self):
-        gobject.GObject.__init__(
-                self, background_color=style.COLOR_WHITE.get_int())
+        gobject.GObject.__init__(self)
 
         self._activity_icon = CanvasPulsingIcon()
 
@@ -38,8 +37,9 @@ class LaunchBox(hippo.CanvasBox):
                                style.COLOR_TRANSPARENT.get_svg()))
 
         vbox = hippo.CanvasBox(orientation=hippo.ORIENTATION_VERTICAL)
+        vbox.props.background_color = style.COLOR_WHITE.get_int()
         vbox.append(self._activity_icon, hippo.PACK_EXPAND)
-        self.append(vbox, hippo.PACK_EXPAND)
+        self.set_root(vbox)
 
         self._animator = animator.Animator(1.0)
 

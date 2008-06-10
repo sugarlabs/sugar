@@ -15,7 +15,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import gtk
-import hippo
 
 from sugar.graphics import style
 from sugar.graphics import palettegroup
@@ -44,10 +43,6 @@ class HomeWindow(gtk.Window):
         self._active = False
         self._level = ShellModel.ZOOM_HOME
 
-        self._canvas = hippo.Canvas()
-        self.add(self._canvas)
-        self._canvas.show()
-
         self.set_default_size(gtk.gdk.screen_width(),
                               gtk.gdk.screen_height())
 
@@ -70,8 +65,9 @@ class HomeWindow(gtk.Window):
         self.launch_box = LaunchBox()
 
         self._activate_view()
-        self._canvas.set_root(self._home_box)
-        
+        self.add(self._home_box)
+        self._home_box.show()
+
         self._transition_box.connect('completed',
                                      self._transition_completed_cb)
 
@@ -122,8 +118,9 @@ class HomeWindow(gtk.Window):
         self._deactivate_view()
         self._level = level
         self._activate_view()
-    
-        self._canvas.set_root(self._transition_box)
+
+        self.remove(self.get_child())    
+        self.add(self._transition_box)
 
         if level == ShellModel.ZOOM_HOME:
             size = style.XLARGE_ICON_SIZE
@@ -138,14 +135,22 @@ class HomeWindow(gtk.Window):
     
     def _transition_completed_cb(self, transition_box):
         if self._level == ShellModel.ZOOM_HOME:
-            self._canvas.set_root(self._home_box)
+            self.remove(self.get_child())    
+            self.add(self._home_box)
+            self._home_box.show()
         elif self._level == ShellModel.ZOOM_FRIENDS:
-            self._canvas.set_root(self._friends_box)
+            self.remove(self.get_child())    
+            self.add(self._friends_box)
+            self._friends_box.show()
         elif self._level == ShellModel.ZOOM_MESH:
-            self._canvas.set_root(self._mesh_box)
+            self.remove(self.get_child())    
+            self.add(self._mesh_box)
+            self._mesh_box.show()
             self._mesh_box.focus_search_entry()
         elif self._level == ShellModel.ZOOM_ACTIVITY:
-            self._canvas.set_root(self.launch_box)
+            self.remove(self.get_child())    
+            self.add(self.launch_box)
+            self.launch_box.show()
 
     def get_home_box(self):
         return self._home_box   

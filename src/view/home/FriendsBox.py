@@ -14,6 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import gobject
 import gtk
 import hippo
 
@@ -26,16 +27,19 @@ from model import shellmodel
 from view.home.FriendView import FriendView
 from view.home.spreadlayout import SpreadLayout
 
-class FriendsBox(hippo.CanvasBox):
+class FriendsBox(hippo.Canvas):
     __gtype_name__ = 'SugarFriendsBox'
     def __init__(self):
-        hippo.CanvasBox.__init__(self,
-                                 background_color=style.COLOR_WHITE.get_int())
+        gobject.GObject.__init__(self)
+
+        self._box = hippo.CanvasBox()
+        self._box.props.background_color = style.COLOR_WHITE.get_int()
+        self.set_root(self._box)
 
         self._friends = {}
 
         self._layout = SpreadLayout()
-        self.set_layout(self._layout)
+        self._box.set_layout(self._layout)
 
         self._owner_icon = CanvasIcon(icon_name='computer-xo', cache=True,
                                       xo_color=profile.get_color())

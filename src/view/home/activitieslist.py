@@ -27,19 +27,25 @@ from sugar.graphics.icon import CanvasIcon
 import view.Shell
 from view.palettes import ActivityPalette
 
-class ActivitiesList(hippo.CanvasScrollbars):
+class ActivitiesList(gtk.ScrolledWindow):
     __gtype_name__ = 'SugarActivitiesList'
 
     def __init__(self):
-        hippo.CanvasScrollbars.__init__(self)
+        gobject.GObject.__init__(self)
 
-        self.set_policy(hippo.ORIENTATION_HORIZONTAL, hippo.SCROLLBAR_NEVER)
-        self.props.widget.connect('key-press-event', self.__key_press_event_cb)
+        self.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        self.set_shadow_type(gtk.SHADOW_NONE)
+        self.connect('key-press-event', self.__key_press_event_cb)
+
+        canvas = hippo.Canvas()
+        self.add_with_viewport(canvas)
+        self.child.set_shadow_type(gtk.SHADOW_NONE)
+        canvas.show()
 
         self._query = ''
-        self._box = hippo.CanvasBox( \
-                background_color=style.COLOR_WHITE.get_int())
-        self.set_root(self._box)
+        self._box = hippo.CanvasBox()
+        self._box.props.background_color = style.COLOR_WHITE.get_int()
+        canvas.set_root(self._box)
 
         registry = activity.get_registry()
         registry.get_activities_async(reply_handler=self._get_activities_cb)
@@ -81,7 +87,7 @@ class ActivitiesList(hippo.CanvasScrollbars):
     def __key_press_event_cb(self, widget, event):
         keyname = gtk.gdk.keyval_name(event.keyval)
 
-        vadjustment = self.props.widget.props.vadjustment
+        vadjustment = self.props.vadjustment
         if keyname == 'Up':
             if vadjustment.props.value > vadjustment.props.lower:
                 vadjustment.props.value -= vadjustment.props.step_increment

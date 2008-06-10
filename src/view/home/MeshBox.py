@@ -429,9 +429,9 @@ class MeshToolbar(gtk.Toolbar):
         self.search_entry.activate()
         return False
 
-class MeshBox(hippo.CanvasBox):
+class MeshBox(gtk.VBox):
     def __init__(self):
-        hippo.CanvasBox.__init__(self)
+        gobject.GObject.__init__(self)
 
         self._model = shellmodel.get_instance().get_mesh()
         self._buddies = {}
@@ -444,11 +444,15 @@ class MeshBox(hippo.CanvasBox):
 
         self._toolbar = MeshToolbar()
         self._toolbar.connect('query-changed', self._toolbar_query_changed_cb)
-        self.append(hippo.CanvasWidget(widget=self._toolbar))
+        self.add(self._toolbar)
+        
+        canvas = hippo.Canvas()
+        self.add(canvas)
+        canvas.show()
 
         self._layout_box = hippo.CanvasBox( \
                 background_color=style.COLOR_WHITE.get_int())
-        self.append(self._layout_box, hippo.PACK_EXPAND)
+        canvas.set_root(self._layout_box)
 
         self._layout = SpreadLayout()
         self._layout_box.set_layout(self._layout)

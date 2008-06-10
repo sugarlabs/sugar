@@ -59,7 +59,7 @@ class _Layout(gobject.GObject, hippo.CanvasLayout):
                            y + (height - child_height) / 2,
                            child_width, child_height, origin_changed)
 
-class TransitionBox(hippo.CanvasBox):
+class TransitionBox(hippo.Canvas):
     __gtype_name__ = 'SugarTransitionBox'
     
     __gsignals__ = {
@@ -68,16 +68,19 @@ class TransitionBox(hippo.CanvasBox):
     }
     
     def __init__(self):
-        hippo.CanvasBox.__init__(self, 
-                                 background_color=style.COLOR_WHITE.get_int())
+        gobject.GObject.__init__(self)
+
+        self._box = hippo.CanvasBox()
+        self._box.props.background_color = style.COLOR_WHITE.get_int()
+        self.set_root(self._box)
 
         self._size = style.XLARGE_ICON_SIZE
 
         self._layout = _Layout()
-        self.set_layout(self._layout)
+        self._box.set_layout(self._layout)
 
         self._my_icon = MyIcon(self._size)
-        self.append(self._my_icon)
+        self._box.append(self._my_icon)
 
         self._animator = animator.Animator(0.3)
         self._animator.connect('completed', self._animation_completed_cb)
