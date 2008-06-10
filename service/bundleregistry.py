@@ -118,7 +118,7 @@ class BundleRegistry(gobject.GObject):
                     max_version = bundle.get_activity_version()
 
             if max_version > -1 and \
-                    (bundle_id, max_version) not in self._favorite_bundles:
+                    [bundle_id, max_version] not in self._favorite_bundles:
                 self._favorite_bundles.append([bundle_id, max_version])
 
         logging.debug('After merging: %r' % self._favorite_bundles)
