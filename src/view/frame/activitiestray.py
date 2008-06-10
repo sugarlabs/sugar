@@ -191,7 +191,7 @@ class ActivitiesTray(HTray):
         self._home_model = shellmodel.get_instance().get_home()
         self._home_model.connect('activity-added', self.__activity_added_cb)
         self._home_model.connect('activity-removed', self.__activity_removed_cb)
-        self._home_model.connect('pending-activity-changed',
+        self._home_model.connect('active-activity-changed',
                                  self.__activity_changed_cb)
 
         self._invites = shellmodel.get_instance().get_invites()
@@ -227,7 +227,9 @@ class ActivitiesTray(HTray):
     def __activity_clicked_cb(self, button, home_activity):
         if button.props.active:
             logging.debug('ActivitiesTray.__activity_clicked_cb')
-            home_activity.get_window().activate(gtk.get_current_event_time())
+            window = home_activity.get_window()
+            if window:
+                window.activate(gtk.get_current_event_time())
 
     def __invite_clicked_cb(self, icon, invite):
         self._invites.remove_invite(invite)

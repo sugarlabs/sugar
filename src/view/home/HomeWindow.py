@@ -24,12 +24,14 @@ from view.home.MeshBox import MeshBox
 from view.home.HomeBox import HomeBox
 from view.home.FriendsBox import FriendsBox
 from view.home.transitionbox import TransitionBox
+from view.home.launchbox import LaunchBox
 from model.shellmodel import ShellModel
 
 _HOME_PAGE       = 0
 _FRIENDS_PAGE    = 1
 _MESH_PAGE       = 2
 _TRANSITION_PAGE = 3
+_LAUNCH_PAGE     = 4
 
 class HomeWindow(gtk.Window):
     def __init__(self):
@@ -65,6 +67,7 @@ class HomeWindow(gtk.Window):
         self._friends_box = FriendsBox()
         self._mesh_box = MeshBox()
         self._transition_box = TransitionBox()
+        self.launch_box = LaunchBox()
 
         self._activate_view()
         self._canvas.set_root(self._home_box)
@@ -98,12 +101,16 @@ class HomeWindow(gtk.Window):
             self._home_box.suspend()
         elif self._level == ShellModel.ZOOM_MESH:
             self._mesh_box.suspend()
+        elif self._level == ShellModel.ZOOM_ACTIVITY:
+            self.launch_box.suspend()
 
     def _activate_view(self):
         if self._level == ShellModel.ZOOM_HOME:
             self._home_box.resume()
         elif self._level == ShellModel.ZOOM_MESH:
             self._mesh_box.resume()
+        elif self._level == ShellModel.ZOOM_ACTIVITY:
+            self.launch_box.resume()
 
     def _visibility_notify_event_cb(self, window, event):
         if event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED:
@@ -124,6 +131,8 @@ class HomeWindow(gtk.Window):
             size = style.LARGE_ICON_SIZE
         elif level == ShellModel.ZOOM_MESH:
             size = style.STANDARD_ICON_SIZE
+        elif level == ShellModel.ZOOM_ACTIVITY:
+            size = style.XLARGE_ICON_SIZE
             
         self._transition_box.set_size(size)
     
@@ -135,6 +144,8 @@ class HomeWindow(gtk.Window):
         elif self._level == ShellModel.ZOOM_MESH:
             self._canvas.set_root(self._mesh_box)
             self._mesh_box.focus_search_entry()
+        elif self._level == ShellModel.ZOOM_ACTIVITY:
+            self._canvas.set_root(self.launch_box)
 
     def get_home_box(self):
         return self._home_box   
