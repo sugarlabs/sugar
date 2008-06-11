@@ -203,7 +203,9 @@ class ActivitiesRing(hippo.Canvas):
         icon_file_name = self._last_clicked_icon.props.file_name
         # TODO: we should get the pixbuf from the widget, so it has colors, etc
         pixbuf = gtk.gdk.pixbuf_new_from_file(icon_file_name)
-        context.set_icon_pixbuf(pixbuf, 0, 0)        
+        
+        hot_spot = style.zoom(10)
+        context.set_icon_pixbuf(pixbuf, hot_spot, hot_spot)
 
     def __drag_motion_cb(self, widget, context, x, y, time):
         if self._last_clicked_icon is not None:
@@ -265,6 +267,10 @@ class ActivityIcon(CanvasIcon):
     def _get_installation_time(self):
         return self._activity_info.installation_time
     installation_time = property(_get_installation_time, None)
+
+    def _get_fixed_position(self):
+        return self._activity_info.position
+    fixed_position = property(_get_fixed_position, None)
 
 class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
     def __init__(self):
@@ -389,18 +395,32 @@ class RingLayout(gobject.GObject, hippo.CanvasLayout):
         else:
             return 0
 
-    def append(self, child):
-        self._box.insert_sorted(child, 0, self._compare_activities)
+    def append(self, icon):
+        self._box.insert_sorted(icon, 0, self._compare_activities)
+        relative_x, relative_y = icon.fixed_position
+        if relative_x >= 0 and relative_y >= 0:
+            width = gtk.gdk.screen_width()
+            height = gtk.gdk.screen_height() - style.GRID_CELL_SIZE
+            self._fixed_positions[icon] = (relative_x * 1000 / width,
+                                           relative_y * 1000 / height)
         self._update_icon_sizes()
 
-    def remove(self, child):
-        self._box.remove(child)
+    def remove(self, icon):
+        del self._fixed_positions[icon]
+        self._box.remove(icon)
         self._update_icon_sizes()
 
-    def move_icon(self, child, x, y):
-        if child not in self._box.get_children():
+    def move_icon(self, icon, x, y):
+        if icon not in self._box.get_children():
             raise ValueError('Child not in box.')
-        self._fixed_positions[child] = (x, y)
+
+        width = gtk.gdk.screen_width()
+        height = gtk.gdk.screen_height() - style.GRID_CELL_SIZE
+        registry = activity.get_registry()
+        registry.set_activity_position(icon.get_bundle_id(), icon.get_version(),
+                                       x * width / 1000, y * height / 1000)
+
+        self._fixed_positions[icon] = (x, y)
         self._box.emit_request_changed()
 
     def do_allocate(self, x, y, width, height, req_width, req_height,

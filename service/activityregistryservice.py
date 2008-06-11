@@ -109,6 +109,12 @@ class ActivityRegistry(dbus.service.Object):
         registry = bundleregistry.get_registry()
         registry.set_bundle_favorite(bundle_id, version, favorite)
 
+    @dbus.service.method(_ACTIVITY_REGISTRY_IFACE,
+                         in_signature='siii', out_signature='')
+    def SetActivityPosition(self, bundle_id, version, x, y):
+        registry = bundleregistry.get_registry()
+        registry.set_bundle_position(bundle_id, version, x, y)
+
     @dbus.service.signal(_ACTIVITY_REGISTRY_IFACE, signature='a{sv}')
     def ActivityAdded(self, activity_info):
         pass
@@ -125,6 +131,8 @@ class ActivityRegistry(dbus.service.Object):
         registry = bundleregistry.get_registry()
         favorite = registry.is_bundle_favorite(bundle.get_bundle_id(),
                                                bundle.get_activity_version())
+        x, y = registry.get_bundle_position(bundle.get_bundle_id(),
+                                            bundle.get_activity_version())
         return {'name': bundle.get_name(),
                 'icon': bundle.get_icon(),
                 'bundle_id': bundle.get_bundle_id(),
@@ -133,7 +141,9 @@ class ActivityRegistry(dbus.service.Object):
                 'command': bundle.get_command(),
                 'show_launcher': bundle.get_show_launcher(),
                 'favorite': favorite,
-                'installation_time': bundle.get_installation_time()}
+                'installation_time': bundle.get_installation_time(),
+                'position_x': x,
+                'position_y': y}
 
     def _bundle_added_cb(self, bundle_registry, bundle):
         self.ActivityAdded(self._bundle_to_dict(bundle))
