@@ -28,6 +28,6 @@ src/controlpanel/view/language.py
 src/controlpanel/view/network.py
 src/view/devices/network/mesh.py
 src/view/frame/activitiestray.py
-src/view/home/activitiesring.py
+src/view/home/favoritesview.py
 src/view/palettes.py
 

@@ -116,11 +116,11 @@ class ActivityPalette(Palette):
     def _update_favorite_item(self):
         label = self._favorite_item.child
         if self._favorite:
-            label.set_text(_('Remove from ring'))
+            label.set_text(_('Remove favorite'))
             xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
                                          style.COLOR_TRANSPARENT.get_svg()))
         else:
-            label.set_text(_('Add to ring'))
+            label.set_text(_('Make favorite'))
             xo_color = profile.get_color()
 
         self._favorite_icon.props.xo_color = xo_color

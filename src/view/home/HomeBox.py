@@ -23,10 +23,10 @@ from sugar.graphics import style
 from sugar.graphics import iconentry
 from sugar.graphics.radiotoolbutton import RadioToolButton
 
-from view.home.activitiesring import ActivitiesRing
+from view.home.favoritesview import FavoritesView
 from view.home.activitieslist import ActivitiesList
 
-_RING_VIEW = 0
+_FAVORITES_VIEW = 0
 _LIST_VIEW = 1
 
 _AUTOSEARCH_TIMEOUT = 1000
@@ -37,7 +37,7 @@ class HomeBox(gtk.VBox):
     def __init__(self):
         gobject.GObject.__init__(self)
 
-        self._ring_view = ActivitiesRing()
+        self._favorites_view = FavoritesView()
         self._list_view = ActivitiesList()
         self._enable_xo_palette = False
 
@@ -47,7 +47,7 @@ class HomeBox(gtk.VBox):
         self.pack_start(self._toolbar, expand=False)
         self._toolbar.show()
 
-        self._set_view(_RING_VIEW)
+        self._set_view(_FAVORITES_VIEW)
 
     def __toolbar_query_changed_cb(self, toolbar, query):
         if self._list_view is None:
@@ -59,18 +59,18 @@ class HomeBox(gtk.VBox):
         self._set_view(view)
 
     def _set_view(self, view):
-        if view == _RING_VIEW:
+        if view == _FAVORITES_VIEW:
             if self._list_view in self.get_children():
                 self.remove(self._list_view)
 
             if self._enable_xo_palette:
-                self._ring_view.enable_xo_palette()
+                self._favorites_view.enable_xo_palette()
 
-            self.add(self._ring_view)
-            self._ring_view.show()
+            self.add(self._favorites_view)
+            self._favorites_view.show()
         elif view == _LIST_VIEW:
-            if self._ring_view in self.get_children():
-                self.remove(self._ring_view)
+            if self._favorites_view in self.get_children():
+                self.remove(self._favorites_view)
 
             self.add(self._list_view)
             self._list_view.show()
@@ -80,24 +80,10 @@ class HomeBox(gtk.VBox):
     _REDRAW_TIMEOUT = 5 * 60 * 1000 # 5 minutes
 
     def resume(self):
-        # TODO: Do we need this?
-        #if self._redraw_id is None:
-        #    self._redraw_id = gobject.timeout_add(self._REDRAW_TIMEOUT,
-        #                                          self._redraw_activity_ring)
-        #    self._redraw_activity_ring()
         pass
 
     def suspend(self):
-        # TODO: Do we need this?
-        #if self._redraw_id is not None:
-        #    gobject.source_remove(self._redraw_id)
-        #    self._redraw_id = None
         pass
-
-    def _redraw_activity_ring(self):
-        # TODO: Do we need this?
-        #self._donut.redraw()
-        return True
 
     def has_activities(self):
         # TODO: Do we need this?
@@ -106,8 +92,8 @@ class HomeBox(gtk.VBox):
 
     def enable_xo_palette(self):
         self._enable_xo_palette = True
-        if self._ring_view is not None:
-            self._ring_view.enable_xo_palette()
+        if self._favorites_view is not None:
+            self._favorites_view.enable_xo_palette()
 
 class HomeToolbar(gtk.Toolbar):
     __gtype_name__ = 'SugarHomeToolbar'
@@ -145,16 +131,16 @@ class HomeToolbar(gtk.Toolbar):
 
         self._add_separator(expand=True)
 
-        ring_button = RadioToolButton(named_icon='view-radial', group=None)
-        ring_button.props.tooltip = _('Ring view')
-        ring_button.props.accelerator = _('<Ctrl>R')
-        ring_button.connect('toggled', self.__view_button_toggled_cb,
-                            _RING_VIEW)
-        self.insert(ring_button, -1)
-        ring_button.show()
+        favorites_button = RadioToolButton(named_icon='view-radial', group=None)
+        favorites_button.props.tooltip = _('Favorites view')
+        favorites_button.props.accelerator = _('<Ctrl>R')
+        favorites_button.connect('toggled', self.__view_button_toggled_cb,
+                                 _FAVORITES_VIEW)
+        self.insert(favorites_button, -1)
+        favorites_button.show()
 
         list_button = RadioToolButton(named_icon='view-list')
-        list_button.props.group = ring_button
+        list_button.props.group = favorites_button
         list_button.props.tooltip = _('List view')
         list_button.props.accelerator = _('<Ctrl>L')
         list_button.connect('toggled', self.__view_button_toggled_cb,
