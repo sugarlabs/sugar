@@ -97,7 +97,7 @@ class KeyHandler(object):
         volume = min(max(0, volume), _VOLUME_MAX)
 
         hw_manager.set_volume(volume)
-        hw_manager.set_mute(volume == 0)
+        hw_manager.set_muted(volume == 0)
 
     def _change_brightness(self, step=None, value=None):
         hw_manager = hardwaremanager.get_manager()
