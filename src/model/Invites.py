@@ -20,11 +20,12 @@ from sugar.presence import presenceservice
 
 class BaseInvite:
     """Invitation to shared activity or private 1-1 Telepathy channel"""
-    def __init__(self):
-        self._activity_id = None
+    def __init__(self, bundle_id):
+        """init for BaseInvite.
 
-    def get_activity_id(self):
-        return self._activity_id
+        bundle_id: string, e.g. 'org.laptop.Chat'
+        """
+        self._bundle_id = bundle_id
 
     def get_bundle_id(self):
         return self._bundle_id
@@ -33,8 +34,11 @@ class BaseInvite:
 class ActivityInvite(BaseInvite):
     """Invitation to a shared activity."""
     def __init__(self, bundle_id, activity_id):
+        BaseInvite.__init__(self, bundle_id)
         self._activity_id = activity_id
-        self._bundle_id = bundle_id
+
+    def get_activity_id(self):
+        return self._activity_id
 
 
 class PrivateInvite(BaseInvite):
@@ -48,12 +52,8 @@ class PrivateInvite(BaseInvite):
         bundle_id: string, e.g. 'org.laptop.Chat'
         private_channel: string containing simplejson dump of Telepathy
             bus, connection and channel
-
-        Note: self_activity_id is set to None to differentiate between
-            PrivateInvites and ActivityInvites
         """
-        self._activity_id = None
-        self._bundle_id = bundle_id
+        BaseInvite.__init__(self, bundle_id)
         self._private_channel = private_channel
 
     def get_private_channel(self):

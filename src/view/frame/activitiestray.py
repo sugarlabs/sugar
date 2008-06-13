@@ -217,19 +217,25 @@ class BaseInvitePalette(Palette):
         Palette.__init__(self, '')
 
         menu_item = MenuItem(_('Join'), icon_name='dialog-ok')
-        menu_item.connect('activate', self._join_activate_cb)
+        menu_item.connect('activate', self.__join_activate_cb)
         self.menu.append(menu_item)
         menu_item.show()
 
         menu_item = MenuItem(_('Decline'), icon_name='dialog-cancel')
-        menu_item.connect('activate', self._decline_activate_cb)
+        menu_item.connect('activate', self.__decline_activate_cb)
         self.menu.append(menu_item)
         menu_item.show()
 
-    def _join_activate_cb(self, menu_item):
+    def __join_activate_cb(self, menu_item):
+        self._join()
+
+    def __decline_activate_cb(self, menu_item):
+        self._decline()
+
+    def _join(self):
         raise NotImplementedError
 
-    def _decline_activate_cb(self, menu_item):
+    def _decline(self):
         raise NotImplementedError
 
 
@@ -251,12 +257,12 @@ class ActivityInvitePalette(BaseInvitePalette):
         else:
             self.set_primary_text(self._bundle_id)
 
-    def _join_activate_cb(self, menu_item):
+    def _join(self):
         shell = view.Shell.get_instance()
         shell.join_activity(self._activity_model.get_bundle_id(),
                             self._activity_model.get_id())
 
-    def _decline_activate_cb(self, menu_item):
+    def _decline(self):
         invites = shellmodel.get_instance().get_invites()
         activity_id = self._activity_model.get_id()
         invites.remove_activity(activity_id)
@@ -278,14 +284,14 @@ class PrivateInvitePalette(BaseInvitePalette):
         else:
             self.set_primary_text(self._bundle_id)
 
-    def _join_activate_cb(self, menu_item):
+    def _join(self):
         shell = view.Shell.get_instance()
         shell.start_activity_with_uri(self._bundle_id,
                                       self._private_channel)
         invites = shellmodel.get_instance().get_invites()
         invites.remove_private_channel(self._private_channel)
 
-    def _decline_activate_cb(self, menu_item):
+    def _decline(self):
         invites = shellmodel.get_instance().get_invites()
         invites.remove_private_channel(self._private_channel)
 
@@ -341,7 +347,7 @@ class ActivitiesTray(HTray):
                 window.activate(gtk.get_current_event_time())
 
     def __invite_clicked_cb(self, icon, invite):
-        if invite.get_activity_id():
+        if hasattr(invite, 'get_activity_id'):
             self._invites.remove_invite(invite)
         else:
             self._invites.remove_private_invite(invite)
@@ -355,10 +361,10 @@ class ActivitiesTray(HTray):
     def _add_invite(self, invite):
         """Add an invite (SugarInvite or PrivateInvite)"""
         item = None
-        if invite.get_activity_id():
+        if hasattr(invite, 'get_activity_id'):
             mesh = shellmodel.get_instance().get_mesh()
             activity_model = mesh.get_activity(invite.get_activity_id())
-            if activity_model:
+            if activity_model is not None:
                 item = ActivityInviteButton(invite)
         else:
             item = PrivateInviteButton(invite)
