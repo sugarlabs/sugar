@@ -31,7 +31,7 @@ class SectionView(gtk.VBox):
         self._is_valid = True
         self.needs_restart = False
         self.restart_alerts = []
-        self.restart_msg = _('Changes require a sugar restart to take effect.')
+        self.restart_msg = _('Changes require restart')
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'is-valid':

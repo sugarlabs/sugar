@@ -24,6 +24,7 @@ from sugar.graphics.icon import Icon
 from sugar.graphics import style
 from sugar.graphics.alert import Alert
 import config 
+from session import get_session_manager
 
 from controlpanel.toolbar import MainToolbar
 from controlpanel.toolbar import SectionToolbar
@@ -246,19 +247,19 @@ class ControlPanel(gtk.Window):
             self._section_toolbar.accept_button.set_sensitive(False)
             alert = Alert()
             alert.props.title = _('Warning') 
-            alert.props.msg = _('Changes require restart to take effect') 
+            alert.props.msg = _('Changes require restart') 
                 
-            cancel_icon = Icon(icon_name='dialog-cancel')
-            alert.add_button(gtk.RESPONSE_CANCEL, _('Cancel changes'), 
-                             cancel_icon) 
-            cancel_icon.show() 
+            icon = Icon(icon_name='dialog-cancel')
+            alert.add_button(gtk.RESPONSE_CANCEL, _('Cancel changes'), icon) 
+            icon.show() 
 
-            later_icon = Icon(icon_name='dialog-ok') 
-            alert.add_button(gtk.RESPONSE_ACCEPT, _('Later'), later_icon) 
-            later_icon.show() 
+            icon = Icon(icon_name='dialog-ok') 
+            alert.add_button(gtk.RESPONSE_ACCEPT, _('Later'), icon) 
+            icon.show() 
 
-            # TODO
-            # Handle restart
+            icon = Icon(icon_name='system-restart') 
+            alert.add_button(gtk.RESPONSE_APPLY, _('Restart now'), icon) 
+            icon.show() 
 
             self._vbox.pack_start(alert, False)
             self._vbox.reorder_child(alert, 2) 
@@ -278,8 +279,9 @@ class ControlPanel(gtk.Window):
             self._options[self._current_option]['alerts'] = \
                 self._section_view.restart_alerts
             self._show_main_view()
-        elif response_id is gtk.RESPONSE_APPLY:             
-            _logger.debug('Restart...')
+        elif response_id is gtk.RESPONSE_APPLY:                         
+            session_manager = get_session_manager()
+            session_manager.logout()
 
     def __select_option_cb(self, button, event, option):
         self._show_section_view(option)
