@@ -15,7 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from numpy import array
-from random import random
+import random
 
 import hippo
 import gobject
@@ -26,6 +26,8 @@ from sugar.graphics import style
 _PLACE_TRIALS = 20
 _MAX_WEIGHT = 255
 _CELL_SIZE = 4
+_REFRESH_RATE = 200
+_MAX_COLLISIONS_PER_REFRESH = 20
 
 class _Grid(gobject.GObject):
     __gsignals__ = {
@@ -49,8 +51,8 @@ class _Grid(gobject.GObject):
         trials = _PLACE_TRIALS
         weight = _MAX_WEIGHT
         while trials > 0 and weight:
-            x = int(random() * (self.width - width))
-            y = int(random() * (self.height - height))
+            x = int(random.random() * (self.width - width))
+            y = int(random.random() * (self.height - height))
 
             rect = gtk.gdk.Rectangle(x, y, width, height)
             new_weight = self._compute_weight(rect)
@@ -76,17 +78,9 @@ class _Grid(gobject.GObject):
         self._children.append(child)
         self.add_weight(child.grid_rect)
 
-    def _move_child(self, child, new_rect):
-        self._remove_weight(child.grid_rect)
-        self.add_weight(new_rect)
-
-        child.grid_rect = new_rect
-
-        self.emit('child-changed', child)
-
-    def _shift_child(self, child):
+    def _shift_child(self, child, weight):
         rect = child.grid_rect
-        weight = self._compute_weight(rect)
+        
         new_rects = []
 
         if (rect.x + rect.width < self.width - 1):
@@ -105,6 +99,25 @@ class _Grid(gobject.GObject):
             new_rects.append(gtk.gdk.Rectangle(rect.x, rect.y - 1,
                                                rect.width, rect.height))
 
+        if rect.x + rect.width < self.width - 1 and \
+                rect.y + rect.height < self.height - 1:
+            new_rects.append(gtk.gdk.Rectangle(rect.x + 1, rect.y + 1,
+                                               rect.width, rect.height))
+
+        if rect.x - 1 > 0 and rect.y + rect.height < self.height - 1:
+            new_rects.append(gtk.gdk.Rectangle(rect.x - 1, rect.y + 1,
+                                               rect.width, rect.height))
+
+        if rect.x + rect.width < self.width - 1 and rect.y - 1 > 0:
+            new_rects.append(gtk.gdk.Rectangle(rect.x + 1, rect.y - 1,
+                                               rect.width, rect.height))
+
+        if rect.x - 1 > 0 and rect.y - 1 > 0:
+            new_rects.append(gtk.gdk.Rectangle(rect.x - 1, rect.y - 1,
+                                               rect.width, rect.height))
+
+        random.shuffle(new_rects)
+
         best_rect = None
         for new_rect in new_rects:
             new_weight = self._compute_weight(new_rect)
@@ -113,18 +126,33 @@ class _Grid(gobject.GObject):
                 weight = new_weight
         
         if best_rect:
-            self._move_child(child, best_rect)
+            child.grid_rect = best_rect
+            weight = self._shift_child(child, weight)
 
         return weight
-            
 
-    def _solve_collisions(self):
-        for collision in self._collisions[:]:
-            weight = self._shift_child(collision)
-            if not weight:
-                self._collisions.remove(collision)
+    def __solve_collisions_cb(self):
+        for i in range(_MAX_COLLISIONS_PER_REFRESH):
+            collision = self._collisions.pop(0)
 
-        return (len(self._collisions) > 0)
+            old_rect = collision.grid_rect
+            self._remove_weight(collision.grid_rect)
+            weight = self._compute_weight(collision.grid_rect)
+            weight = self._shift_child(collision, weight)
+            self.add_weight(collision.grid_rect)
+
+            # TODO: we shouldn't give up the first time we failed to find a
+            # better position.
+            if old_rect != collision.grid_rect:
+                self._detect_collisions(collision)
+                self.emit('child-changed', collision)
+                if weight > 0:
+                    self._collisions.append(collision)
+
+            if not self._collisions:
+                return False
+
+        return True
 
     def _detect_collisions(self, child):
         collision_found = False
@@ -139,8 +167,9 @@ class _Grid(gobject.GObject):
             if child not in self._collisions:
                 self._collisions.append(child)
 
-#        if len(self._collisions) and not self._collisions_sid:
-#            self._collisions_sid = gobject.idle_add(self._solve_collisions)
+        if len(self._collisions) and not self._collisions_sid:
+            self._collisions_sid = gobject.timeout_add(_REFRESH_RATE,
+                    self.__solve_collisions_cb, priority=gobject.PRIORITY_LOW)
 
     def add_weight(self, rect):
         for i in range(rect.x, rect.x + rect.width):
