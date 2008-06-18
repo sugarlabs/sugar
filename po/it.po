@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-05 00:30-0400\n"
-"PO-Revision-Date: 2008-06-06 11:16-0400\n"
+"POT-Creation-Date: 2008-06-14 00:30-0400\n"
+"PO-Revision-Date: 2008-06-18 04:33-0400\n"
 "Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -65,9 +65,8 @@ msgstr "Apri"
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
 #: ../src/view/clipboardmenu.py:63
-#, fuzzy
 msgid "Keep"
-msgstr "Conserva"
+msgstr "Memorizza"
 
 #: ../src/view/clipboardmenu.py:84
 msgid "Open with"
@@ -90,24 +89,24 @@ msgstr "Tipo di Autenticazione:"
 msgid "Encryption Type:"
 msgstr "Tipo di Crittografia:"
 
-#: ../src/view/Shell.py:259
+#: ../src/view/Shell.py:262
 msgid "Screenshot"
 msgstr "Schermata"
 
 # Ruota, piuttosto che anello per mantenere consistenza con lo shortcut da tastiera... cf 27_05_08
-#: ../src/view/home/HomeBox.py:149
+#: ../src/view/home/HomeBox.py:148
 msgid "Ring view"
 msgstr "Vista Ruota"
 
-#: ../src/view/home/HomeBox.py:150
+#: ../src/view/home/HomeBox.py:149
 msgid "<Ctrl>R"
 msgstr "<Ctrl>R"
 
-#: ../src/view/home/HomeBox.py:158
+#: ../src/view/home/HomeBox.py:157
 msgid "List view"
 msgstr "Vista Lista"
 
-#: ../src/view/home/HomeBox.py:159
+#: ../src/view/home/HomeBox.py:158
 msgid "<Ctrl>L"
 msgstr "<Ctrl>L"
 
@@ -157,7 +156,7 @@ msgstr "Disconnessione..."
 msgid "Resume"
 msgstr "Riprendi"
 
-#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:162
+#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:219
 #, fuzzy
 msgid "Join"
 msgstr "Associa"
@@ -276,27 +275,25 @@ msgstr "Cancella"
 msgid "Ok"
 msgstr "Ok"
 
-#: ../src/controlpanel/sectionview.py:34
-msgid "Changes require a sugar restart to take effect."
-msgstr ""
-"Le modifiche effettuate necessitano di un riavvio di Sugar per avere "
-"effetto."
+#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:250
+msgid "Changes require restart"
+msgstr "Le modifiche rendono necessario un riavvio"
 
-#: ../src/controlpanel/gui.py:248
+#: ../src/controlpanel/gui.py:249
 msgid "Warning"
 msgstr "Attenzione"
 
-#: ../src/controlpanel/gui.py:249
-msgid "Changes require restart to take effect"
-msgstr "Le modifiche effettuate necessitano di un riavvio per avere effetto"
-
-#: ../src/controlpanel/gui.py:252
+#: ../src/controlpanel/gui.py:253
 msgid "Cancel changes"
 msgstr "Annulla modifiche"
 
 #: ../src/controlpanel/gui.py:257
 msgid "Later"
 msgstr "Dopo"
+
+#: ../src/controlpanel/gui.py:261
+msgid "Restart now"
+msgstr "Riavvia adesso"
 
 #: ../src/controlpanel/model/aboutme.py:44
 msgid "You must enter a name."
@@ -339,7 +336,8 @@ msgid "Error timezone does not exist."
 msgstr "Errore, timezone non esistente."
 
 #: ../src/controlpanel/model/frame.py:38 ../src/controlpanel/model/frame.py:60
-msgid "Value must be an int."
+#, fuzzy
+msgid "Value must be an integer."
 msgstr "Valore deve essere un intero."
 
 #: ../src/controlpanel/model/language.py:28
@@ -424,17 +422,22 @@ msgid "instantaneous"
 msgstr "istantaneamente"
 
 #: ../src/controlpanel/view/frame.py:32
-msgid "Delay in milliseconds:"
-msgstr "Ritardo in millisecondi:"
-
-#: ../src/controlpanel/view/frame.py:66
-msgid "Hot Corners"
-msgstr "Angoli sensibili"
-
-#: ../src/controlpanel/view/frame.py:117
+#, python-format
 #, fuzzy
-msgid "Warm Edges"
-msgstr "Bordi Attivi"
+msgid "%s seconds"
+msgstr "%d secondi"
+
+#: ../src/controlpanel/view/frame.py:56
+msgid "Activation Delay"
+msgstr "Ritardo attivazione"
+
+#: ../src/controlpanel/view/frame.py:80
+msgid "Corner"
+msgstr "Angolo"
+
+#: ../src/controlpanel/view/frame.py:115
+msgid "Edge"
+msgstr "Margine"
 
 #: ../src/controlpanel/view/language.py:29
 #: ../src/controlpanel/view/language.py:74
@@ -466,29 +469,24 @@ msgid "Connected to a School Mesh Portal"
 msgstr "Connesso ad un Portale Mesh di scuola"
 
 #: ../src/view/devices/network/mesh.py:110
-#, fuzzy
 msgid "Looking for a School Mesh Portal..."
 msgstr "Ricerca di un Portale Mesh di scuola..."
 
 #: ../src/view/devices/network/mesh.py:113
-#, fuzzy
 msgid "Connected to an XO Mesh Portal"
 msgstr "Connesso ad un Portale Mesh XO"
 
 #: ../src/view/devices/network/mesh.py:115
-#, fuzzy
 msgid "Looking for an XO Mesh Portal..."
 msgstr "Sto cercando un Portale Mesh XO..."
 
 # Diretto?
 #: ../src/view/devices/network/mesh.py:118
-#, fuzzy
 msgid "Connected to a Simple Mesh"
 msgstr "Connesso ad un Mesh Semplice"
 
 # Diretto?
 #: ../src/view/devices/network/mesh.py:120
-#, fuzzy
 msgid "Starting a Simple Mesh"
 msgstr "Attivazione Mesh Semplice"
 
@@ -496,23 +494,23 @@ msgstr "Attivazione Mesh Semplice"
 msgid "Unknown Mesh"
 msgstr "Mesh sconosciuto"
 
-#: ../src/view/frame/activitiestray.py:167
+#: ../src/view/frame/activitiestray.py:224
 msgid "Decline"
 msgstr "Rinuncia"
 
-#: ../src/view/home/activitiesring.py:310
+#: ../src/view/home/activitiesring.py:305
 msgid "Control Panel"
 msgstr "Pannello di Controllo"
 
-#: ../src/view/home/activitiesring.py:321
+#: ../src/view/home/activitiesring.py:316
 msgid "Restart"
 msgstr "Riavvia"
 
-#: ../src/view/home/activitiesring.py:326
+#: ../src/view/home/activitiesring.py:321
 msgid "Shutdown"
 msgstr "Spegni"
 
-#: ../src/view/home/activitiesring.py:332
+#: ../src/view/home/activitiesring.py:327
 msgid "Register"
 msgstr "Registra"
 
@@ -544,6 +542,24 @@ msgstr "Mostra i contenuti"
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB Liberi"
+
+#~ msgid "Changes require a sugar restart to take effect."
+#~ msgstr ""
+#~ "Le modifiche effettuate necessitano di un riavvio di Sugar per avere "
+#~ "effetto."
+
+#~ msgid "Changes require restart to take effect"
+#~ msgstr "Le modifiche effettuate necessitano di un riavvio per avere effetto"
+
+#~ msgid "Delay in milliseconds:"
+#~ msgstr "Ritardo in millisecondi:"
+
+#~ msgid "Hot Corners"
+#~ msgstr "Angoli sensibili"
+
+#, fuzzy
+#~ msgid "Warm Edges"
+#~ msgstr "Bordi Attivi"
 
 #~ msgid "off"
 #~ msgstr "spento"
@@ -744,10 +760,6 @@ msgstr "%(free_space)d MB Liberi"
 #, python-format
 #~ msgid "%d second"
 #~ msgstr "%d secondo"
-
-#, python-format
-#~ msgid "%d seconds"
-#~ msgstr "%d secondi"
 
 #~ msgid " and "
 #~ msgstr " e "
