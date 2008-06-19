@@ -52,7 +52,7 @@ class FavoritesLayout(gobject.GObject, hippo.CanvasLayout):
     def compare_activities(self, icon_a, icon_b):
         return 0
 
-    def append(self, icon):
+    def append(self, icon, locked=False):
         self.box.insert_sorted(icon, 0, self.compare_activities)
         if hasattr(icon, 'fixed_position'):
             relative_x, relative_y = icon.fixed_position
@@ -62,12 +62,10 @@ class FavoritesLayout(gobject.GObject, hippo.CanvasLayout):
                 self.fixed_positions[icon] = \
                         (int(relative_x * _BASE_SCALE / float(width)),
                          int(relative_y * _BASE_SCALE / float(height)))
-            self.update_icon_sizes()
 
     def remove(self, icon):
         del self.fixed_positions[icon]
         self.box.remove(icon)
-        self.update_icon_sizes()
 
     def move_icon(self, icon, x, y, locked=False):
         if icon not in self.box.get_children():
@@ -82,9 +80,6 @@ class FavoritesLayout(gobject.GObject, hippo.CanvasLayout):
                     x * width / float(_BASE_SCALE),
                     y * height / float(_BASE_SCALE))
             self.fixed_positions[icon] = (x, y)
-
-    def update_icon_sizes(self):
-        pass
 
     def do_allocate(self, x, y, width, height, req_width, req_height,
                     origin_changed):
@@ -108,8 +103,8 @@ class RandomLayout(FavoritesLayout):
     def __grid_child_changed_cb(self, grid, child):
         child.emit_request_changed()
 
-    def append(self, icon):
-        FavoritesLayout.append(self, icon)
+    def append(self, icon, locked=False):
+        FavoritesLayout.append(self, icon, locked)
 
         min_width_, child_width = icon.get_width_request()
         min_height_, child_height = icon.get_height_request(child_width)
@@ -173,6 +168,18 @@ class RingLayout(FavoritesLayout):
         FavoritesLayout.__init__(self)
         self._locked_children = {}
 
+    def append(self, icon, locked=False):
+        FavoritesLayout.append(self, icon, locked)
+        if locked:
+            child = self.box.find_box_child(icon)
+            self._locked_children[child] = (0, 0)
+
+    def remove(self, icon):
+        child = self.box.find_box_child(icon)
+        if child in self._locked_children:
+            del self._locked_children[child]
+        FavoritesLayout.remove(self, icon)
+
     def move_icon(self, icon, x, y, locked=False):
         FavoritesLayout.move_icon(self, icon, x, y, locked)
         if locked:
@@ -219,7 +226,7 @@ class RingLayout(FavoritesLayout):
                 if child not in self._locked_children]
         return children_in_ring
 
-    def update_icon_sizes(self):
+    def _update_icon_sizes(self):
         children_in_ring = self._get_children_in_ring()
         radius_, icon_size = \
                 self._calculate_radius_and_icon_size(len(children_in_ring))

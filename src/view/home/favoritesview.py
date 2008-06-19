@@ -34,7 +34,7 @@ import view.Shell
 from view.palettes import JournalPalette
 from view.palettes import CurrentActivityPalette, ActivityPalette
 from view.home.MyIcon import MyIcon
-from view.home.favoriteslayout import RandomLayout
+from view.home import favoriteslayout
 from model import shellmodel
 from model.shellmodel import ShellModel
 from hardware import schoolserver
@@ -45,33 +45,17 @@ _logger = logging.getLogger('FavoritesView')
 
 _ICON_DND_TARGET = ('activity-icon', gtk.TARGET_SAME_WIDGET, 0)
 
+RING_LAYOUT = 0
+RANDOM_LAYOUT = 1
+
+_LAYOUT_MAP = {RING_LAYOUT: favoriteslayout.RingLayout,
+               RANDOM_LAYOUT: favoriteslayout.RandomLayout}
+
 class FavoritesView(hippo.Canvas):
     __gtype_name__ = 'SugarFavoritesView'
 
     def __init__(self, **kwargs):
         gobject.GObject.__init__(self, **kwargs)
-
-        self._box = hippo.CanvasBox()
-        self._box.props.background_color = style.COLOR_WHITE.get_int()
-        self.set_root(self._box)
-
-        shell_model = shellmodel.get_instance()
-        shell_model.connect('notify::state', self._shell_state_changed_cb)
-
-        self._layout = RandomLayout()
-        self._box.set_layout(self._layout)
-
-        self._my_icon = _MyIcon(style.XLARGE_ICON_SIZE)
-        self._layout.append(self._my_icon)
-
-        self._current_activity = CurrentActivityIcon()
-        self._layout.append(self._current_activity)
-
-        registry = activity.get_registry()
-        registry.get_activities_async(reply_handler=self._get_activities_cb)
-        registry.connect('activity-added', self.__activity_added_cb)
-        registry.connect('activity-removed', self.__activity_removed_cb)
-        registry.connect('activity-changed', self.__activity_changed_cb)
 
         # DND stuff
         self._pressed_button = None
@@ -79,18 +63,32 @@ class FavoritesView(hippo.Canvas):
         self._press_start_y = None
         self._last_clicked_icon = None
 
-        if self._layout.allow_dnd():
-            self.drag_source_set(0, [], 0)
-            self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
-                            gtk.gdk.POINTER_MOTION_HINT_MASK)
-            self.connect('motion-notify-event', self.__motion_notify_event_cb)
-            self.connect('button-press-event', self.__button_press_event_cb)
-            self.connect('drag-begin', self.__drag_begin_cb)
+        self._box = hippo.CanvasBox()
+        self._box.props.background_color = style.COLOR_WHITE.get_int()
+        self.set_root(self._box)
 
-            self.drag_dest_set(0, [], 0)
-            self.connect('drag-motion', self.__drag_motion_cb)
-            self.connect('drag-drop', self.__drag_drop_cb)
-            self.connect('drag-data-received', self.__drag_data_received_cb)
+        self._my_icon = None
+        self._current_activity = None
+        self._layout = None
+        self._set_layout(RANDOM_LAYOUT)
+
+        registry = activity.get_registry()
+        registry.connect('activity-added', self.__activity_added_cb)
+        registry.connect('activity-removed', self.__activity_removed_cb)
+        registry.connect('activity-changed', self.__activity_changed_cb)
+
+        shell_model = shellmodel.get_instance()
+        shell_model.connect('notify::state', self._shell_state_changed_cb)
+
+        # More DND stuff
+        self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
+                        gtk.gdk.POINTER_MOTION_HINT_MASK)
+        self.connect('motion-notify-event', self.__motion_notify_event_cb)
+        self.connect('button-press-event', self.__button_press_event_cb)
+        self.connect('drag-begin', self.__drag_begin_cb)
+        self.connect('drag-motion', self.__drag_motion_cb)
+        self.connect('drag-drop', self.__drag_drop_cb)
+        self.connect('drag-data-received', self.__drag_data_received_cb)
 
     def _add_activity(self, activity_info):
         icon = ActivityIcon(activity_info)
@@ -121,7 +119,7 @@ class FavoritesView(hippo.Canvas):
             self._layout.remove(icon)
 
     def __activity_changed_cb(self, activity_registry, activity_info):
-        if activity_info.bundle_id == "org.laptop.JournalActivity":
+        if activity_info.bundle_id == 'org.laptop.JournalActivity':
             return
         icon = self._find_activity_icon(activity_info.bundle_id,
                 activity_info.version)
@@ -239,6 +237,33 @@ class FavoritesView(hippo.Canvas):
                                 info, time):
         context.drop_finish(success=True, time=time)
 
+    def _set_layout(self, layout):
+        if layout not in _LAYOUT_MAP:
+            raise ValueError('Unknown favorites layout: %r' % layout)
+        if type(self._layout) != _LAYOUT_MAP[layout]:
+            self._box.clear()
+            self._layout = _LAYOUT_MAP[layout]()
+            self._box.set_layout(self._layout)
+
+            self._my_icon = _MyIcon(style.XLARGE_ICON_SIZE)
+            self._my_icon.log = True
+            self._layout.append(self._my_icon, locked=True)
+
+            self._current_activity = CurrentActivityIcon()
+            self._layout.append(self._current_activity, locked=True)
+
+            registry = activity.get_registry()
+            registry.get_activities_async(reply_handler=self._get_activities_cb)
+
+            if self._layout.allow_dnd():
+                self.drag_source_set(0, [], 0)
+                self.drag_dest_set(0, [], 0)
+            else:
+                self.drag_source_unset()
+                self.drag_dest_unset()
+
+    layout = property(None, _set_layout)
+
 class ActivityIcon(CanvasIcon):
     def __init__(self, activity_info):
         CanvasIcon.__init__(self, cache=True, file_name=activity_info.icon)
@@ -295,12 +320,11 @@ class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
         self._home_model.get_active_activity().get_window().activate(1)
 
     def _update(self, home_activity):
-        _logger.debug('CurrentActivityIcon._update')
         self.props.file_name = home_activity.get_icon_path()
         self.props.xo_color = home_activity.get_icon_color()
         self.props.size = style.STANDARD_ICON_SIZE
 
-        if home_activity.get_type() == "org.laptop.JournalActivity":
+        if home_activity.get_type() == 'org.laptop.JournalActivity':
             palette = JournalPalette(home_activity)
         else:
             palette = CurrentActivityPalette(home_activity)

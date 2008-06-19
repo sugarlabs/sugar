@@ -446,8 +446,9 @@ class MeshBox(gtk.VBox):
             
         self._toolbar = MeshToolbar()
         self._toolbar.connect('query-changed', self._toolbar_query_changed_cb)
-        self.add(self._toolbar)
-        
+        self.pack_start(self._toolbar, expand=False)
+        self._toolbar.show()
+
         canvas = hippo.Canvas()
         self.add(canvas)
         canvas.show()

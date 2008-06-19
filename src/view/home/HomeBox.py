@@ -21,9 +21,11 @@ import gtk
 
 from sugar.graphics import style
 from sugar.graphics import iconentry
+from sugar.graphics.palette import Palette
+from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.radiotoolbutton import RadioToolButton
 
-from view.home.favoritesview import FavoritesView
+from view.home import favoritesview
 from view.home.activitieslist import ActivitiesList
 
 _FAVORITES_VIEW = 0
@@ -37,7 +39,7 @@ class HomeBox(gtk.VBox):
     def __init__(self):
         gobject.GObject.__init__(self)
 
-        self._favorites_view = FavoritesView()
+        self._favorites_view = favoritesview.FavoritesView()
         self._list_view = ActivitiesList()
         self._enable_xo_palette = False
 
@@ -47,7 +49,7 @@ class HomeBox(gtk.VBox):
         self.pack_start(self._toolbar, expand=False)
         self._toolbar.show()
 
-        self._set_view(_FAVORITES_VIEW)
+        self._set_view(_FAVORITES_VIEW, favoritesview.RANDOM_LAYOUT)
 
     def __toolbar_query_changed_cb(self, toolbar, query):
         if self._list_view is None:
@@ -55,19 +57,22 @@ class HomeBox(gtk.VBox):
         query = query.lower()
         self._list_view.set_filter(query)
 
-    def __toolbar_view_changed_cb(self, toolbar, view):
-        self._set_view(view)
+    def __toolbar_view_changed_cb(self, toolbar, view, layout):
+        self._set_view(view, layout)
 
-    def _set_view(self, view):
+    def _set_view(self, view, layout):
         if view == _FAVORITES_VIEW:
             if self._list_view in self.get_children():
                 self.remove(self._list_view)
 
+            self._favorites_view.layout = layout
+
             if self._enable_xo_palette:
                 self._favorites_view.enable_xo_palette()
 
-            self.add(self._favorites_view)
-            self._favorites_view.show()
+            if self._favorites_view not in self.get_children():
+                self.add(self._favorites_view)
+                self._favorites_view.show()
         elif view == _LIST_VIEW:
             if self._favorites_view in self.get_children():
                 self.remove(self._favorites_view)
@@ -104,7 +109,7 @@ class HomeToolbar(gtk.Toolbar):
                           ([str])),
         'view-changed':  (gobject.SIGNAL_RUN_FIRST,
                           gobject.TYPE_NONE,
-                          ([int]))
+                          ([object, object]))
     }
 
     def __init__(self):
@@ -131,9 +136,7 @@ class HomeToolbar(gtk.Toolbar):
 
         self._add_separator(expand=True)
 
-        favorites_button = RadioToolButton(named_icon='view-radial', group=None)
-        favorites_button.props.tooltip = _('Favorites view')
-        favorites_button.props.accelerator = _('<Ctrl>R')
+        favorites_button = FavoritesButton()
         favorites_button.connect('toggled', self.__view_button_toggled_cb,
                                  _FAVORITES_VIEW)
         self.insert(favorites_button, -1)
@@ -152,8 +155,11 @@ class HomeToolbar(gtk.Toolbar):
 
     def __view_button_toggled_cb(self, button, view):
         if button.props.active:
-            self.emit('view-changed', view)
-
+            if view == _FAVORITES_VIEW:
+                self.emit('view-changed', view, button.layout)
+            else:
+                self.emit('view-changed', view, None)
+            
     def _add_separator(self, expand=False):
         separator = gtk.SeparatorToolItem()
         separator.props.draw = False
@@ -187,4 +193,51 @@ class HomeToolbar(gtk.Toolbar):
         self._autosearch_timer = None
         self._search_entry.activate()
         return False
+
+class FavoritesButton(RadioToolButton):
+    __gtype_name__ = 'SugarFavoritesButton'
+    
+    def __init__(self):
+        RadioToolButton.__init__(self)
+
+        self.props.named_icon = 'view-radial'
+        self.props.tooltip = _('Favorites view')
+        self.props.accelerator = _('<Ctrl>R')
+        self.props.group = None
+
+        self._layout = favoritesview.RANDOM_LAYOUT
+
+        # TRANS: label for the free layout in the favorites view
+        menu_item = MenuItem(_('Free'), 'activity-start')
+        menu_item.connect('activate', self.__layout_activate_cb,
+                          favoritesview.RANDOM_LAYOUT)
+        self.props.palette.menu.append(menu_item)
+        menu_item.show()
+
+        # TRANS: label for the ring layout in the favorites view
+        menu_item = MenuItem(_('Ring'), 'view-radial')
+        menu_item.connect('activate', self.__layout_activate_cb,
+                          favoritesview.RING_LAYOUT)
+        self.props.palette.menu.append(menu_item)
+        menu_item.show()
+
+    def __layout_activate_cb(self, menu_item, layout):
+        if self._layout == layout and self.props.active:
+            return
+        elif self._layout != layout:
+            if layout == favoritesview.RANDOM_LAYOUT:
+                self.props.named_icon = 'activity-start'
+            elif layout == favoritesview.RING_LAYOUT:
+                self.props.named_icon = 'view-radial'
+            else:
+                raise ValueError('Invalid layout: %r' % layout)
+            self._layout = layout
+        if not self.props.active:
+            self.props.active = True
+        else:
+            self.emit('toggled')
+
+    def _get_layout(self):
+        return self._layout
+    layout = property(_get_layout, None)
 
