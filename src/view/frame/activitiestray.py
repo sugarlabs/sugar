@@ -302,6 +302,7 @@ class ActivitiesTray(HTray):
 
         self._buttons = {}
         self._invite_to_item = {}
+        self._freeze_button_clicks = False
 
         self._home_model = shellmodel.get_instance().get_home()
         self._home_model.connect('activity-added', self.__activity_added_cb)
@@ -336,11 +337,14 @@ class ActivitiesTray(HTray):
 
     def __activity_changed_cb(self, home_model, home_activity):
         logging.debug('__activity_changed_cb: %r' % home_activity)
+
         button = self._buttons[home_activity.get_activity_id()]
+        self._freeze_button_clicks = True
         button.props.active = True
+        self._freeze_button_clicks = True
 
     def __activity_clicked_cb(self, button, home_activity):
-        if button.props.active:
+        if not self._freeze_button_clicks and button.props.active:
             logging.debug('ActivitiesTray.__activity_clicked_cb')
             window = home_activity.get_window()
             if window:
