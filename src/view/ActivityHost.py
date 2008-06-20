@@ -54,11 +54,7 @@ class ActivityHost:
         self._window.set_fullscreen(fullscreen)
 
     def present(self):
-        # wnck.Window.activate() expects a timestamp, but we don't
-        # always have one, and libwnck will complain if we pass "0",
-        # and matchbox doesn't look at the timestamp anyway. So we
-        # just always pass "1".
-        self._window.activate(1)
+        self._window.activate(gtk.get_current_event_time())
 
     def close(self):
         # The "1" is a fake timestamp as with present()

@@ -35,6 +35,7 @@ import view.Shell
 from shellservice import ShellService
 from hardware import hardwaremanager
 from intro import intro
+from session import get_session_manager
 import logsmanager
 import config
 
@@ -110,6 +111,10 @@ def main():
         win.show_all()
         gtk.main()
 
+    # set timezone    
+    if os.environ.has_key('TZ'):    
+        os.environ['TZ'] = get_profile().timezone
+
     if os.environ.has_key("SUGAR_TP_DEBUG"):
         # Allow the user time to start up telepathy connection managers
         # using the Sugar DBus bus address
@@ -141,6 +146,9 @@ def main():
     # TODO: move initializations from the Shell constructor to a start() method
     view.Shell.get_instance()
     ShellService()
+
+    session_manager = get_session_manager()
+    session_manager.start()
 
     try:
         gtk.main()

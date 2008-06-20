@@ -23,7 +23,6 @@ import hippo
 from sugar.graphics import animator
 from sugar.graphics import style
 from sugar.graphics import palettegroup
-from sugar.clipboard import clipboardservice
 
 import view.Shell
 from view.frame.eventarea import EventArea
@@ -34,6 +33,11 @@ from view.frame.devicestray import DevicesTray
 from view.frame.framewindow import FrameWindow
 from view.frame.clipboardpanelwindow import ClipboardPanelWindow
 from view.frame.notification import NotificationIcon, NotificationWindow
+
+TOP_RIGHT = 0
+TOP_LEFT = 1
+BOTTOM_RIGHT = 2
+BOTTOM_LEFT = 3
 
 _FRAME_HIDING_DELAY = 500
 _NOTIFICATION_DURATION = 5000
@@ -115,10 +119,6 @@ class Frame(object):
 
         screen = gtk.gdk.screen_get_default()
         screen.connect('size-changed', self._size_changed_cb)
-
-        cb_service = clipboardservice.get_instance()
-        cb_service.connect_after('object-added',
-                                 self._clipboard_object_added_cb)
 
         self._key_listener = _KeyListener(self)
         self._mouse_listener = _MouseListener(self)
@@ -251,11 +251,6 @@ class Frame(object):
     def _size_changed_cb(self, screen):
         self._update_position()
 
-    def _clipboard_object_added_cb(self, cb_service, object_id, name):
-        if not self.visible:
-            self.show(self.MODE_NON_INTERACTIVE)
-            gobject.timeout_add(2000, lambda: self.hide())
-
     def _enter_notify_cb(self, window, event):
         if event.detail != gtk.gdk.NOTIFY_INFERIOR:
             self._mouse_listener.mouse_enter()
@@ -283,16 +278,29 @@ class Frame(object):
     def notify_key_press(self):
         self._key_listener.key_press()
 
-    def add_notification(self, icon):
+    def add_notification(self, icon, corner=TOP_LEFT):
         if not isinstance(icon, NotificationIcon):
             raise TypeError('icon must be a NotificationIcon.')
-        
+
         window = NotificationWindow()
-        window.move(0, 0)
+
+        screen = gtk.gdk.screen_get_default()
+        if corner == TOP_LEFT:
+            window.move(0, 0)
+        elif corner == TOP_RIGHT:
+            window.move(screen.get_width() - style.GRID_CELL_SIZE, 0)
+        elif corner == BOTTOM_LEFT:
+            window.move(0, screen.get_height() - style.GRID_CELL_SIZE)
+        elif corner == BOTTOM_RIGHT:
+            window.move(screen.get_width() - style.GRID_CELL_SIZE,
+                        screen.get_height() - style.GRID_CELL_SIZE)
+        else:
+            raise ValueError('Inalid corner: %r' % corner)
+
         window.add(icon)
         icon.show()
         window.show()
-        
+
         self._notif_by_icon[icon] = window
 
         gobject.timeout_add(_NOTIFICATION_DURATION,

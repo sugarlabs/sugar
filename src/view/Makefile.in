@@ -211,6 +211,7 @@ sugar_PYTHON = \
 	clipboardmenu.py		\
 	keyhandler.py			\
 	pulsingicon.py			\
+	tabbinghandler.py		\
 	OverlayWindow.py		\
 	palettes.py			\
 	Shell.py

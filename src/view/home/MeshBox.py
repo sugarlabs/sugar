@@ -429,9 +429,10 @@ class MeshToolbar(gtk.Toolbar):
         self.search_entry.activate()
         return False
 
-class MeshBox(hippo.CanvasBox):
+class MeshBox(gtk.VBox):
+    __gtype_name__ = 'SugarMeshBox'
     def __init__(self):
-        hippo.CanvasBox.__init__(self)
+        gobject.GObject.__init__(self)
 
         self._model = shellmodel.get_instance().get_mesh()
         self._buddies = {}
@@ -441,14 +442,20 @@ class MeshBox(hippo.CanvasBox):
         self._buddy_to_activity = {}
         self._suspended = True
         self._query = ''
-
+        self._owner_icon = None
+            
         self._toolbar = MeshToolbar()
         self._toolbar.connect('query-changed', self._toolbar_query_changed_cb)
-        self.append(hippo.CanvasWidget(widget=self._toolbar))
+        self.pack_start(self._toolbar, expand=False)
+        self._toolbar.show()
+
+        canvas = hippo.Canvas()
+        self.add(canvas)
+        canvas.show()
 
         self._layout_box = hippo.CanvasBox( \
                 background_color=style.COLOR_WHITE.get_int())
-        self.append(self._layout_box, hippo.PACK_EXPAND)
+        canvas.set_root(self._layout_box)
 
         self._layout = SpreadLayout()
         self._layout_box.set_layout(self._layout)
@@ -477,20 +484,30 @@ class MeshBox(hippo.CanvasBox):
         if self._model.get_mesh():
             self._mesh_added_cb(self._model, self._model.get_mesh())
 
-        self._model.connect('mesh-added',
-                            self._mesh_added_cb)
-        self._model.connect('mesh-removed',
-                            self._mesh_removed_cb)
+        self._model.connect('mesh-added', self.__mesh_added_cb)
+        self._model.connect('mesh-removed', self.__mesh_removed_cb)
 
-    def _mesh_added_cb(self, model, meshdev):
+    def __mesh_added_cb(self, model, meshdev):
         self._add_mesh_icon(meshdev, 1)
         self._add_mesh_icon(meshdev, 6)
         self._add_mesh_icon(meshdev, 11)
 
-    def _mesh_removed_cb(self, model):
+    def __mesh_removed_cb(self, model):
         self._remove_mesh_icon(1)
         self._remove_mesh_icon(6)
         self._remove_mesh_icon(11)
+
+    def do_size_allocate(self, allocation):
+        width = allocation.width        
+        height = allocation.height
+
+        min_w_, icon_width = self._owner_icon.get_width_request()
+        min_h_, icon_height = self._owner_icon.get_height_request(icon_width)
+        x = (width - icon_width) / 2
+        y = (height - icon_height) / 2 - style.GRID_CELL_SIZE
+        self._layout.move(self._owner_icon, x, y)
+
+        gtk.VBox.do_size_allocate(self, allocation)
 
     def _buddy_added_cb(self, model, buddy_model):
         self._add_alone_buddy(buddy_model)
@@ -533,10 +550,8 @@ class MeshBox(hippo.CanvasBox):
     def _add_alone_buddy(self, buddy_model):
         icon = BuddyIcon(buddy_model)
         if buddy_model.is_owner():
-            vertical_offset = - style.GRID_CELL_SIZE
-            self._layout.add_center(icon, vertical_offset)
-        else:
-            self._layout.add(icon)
+            self._owner_icon = icon
+        self._layout.add(icon)
 
         if hasattr(icon, 'set_filter'):
             icon.set_filter(self._query)

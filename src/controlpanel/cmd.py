@@ -1,4 +1,4 @@
-# Copyright (C) 2007, One Laptop Per Child
+# Copyright (C) 2007, 2008 One Laptop Per Child
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,11 +16,20 @@
 
 import sys
 import getopt
+import os
 from gettext import gettext as _
 
-from controlpanel import control
-        
+import config
+
+_RESTART = 1
+
+_same_option_warning = _("sugar-control-panel: WARNING, found more than" 
+                         " one option with the same name: %s module: %r") 
+_no_option_error = _("sugar-control-panel: key=%s not an available option")
+_general_error = _("sugar-control-panel: %s")
+
 def cmd_help():
+    '''Print the help to the screen'''
     print _('Usage: sugar-control-panel [ option ] key [ args ... ] \n\
     Control for the sugar environment. \n\
     Options: \n\
@@ -31,47 +40,89 @@ def cmd_help():
     -s key       set the current value for the key \n\
     ')
 
+def note_restart():
+    '''Instructions how to restart sugar'''
+    print _('To apply your changes you have to restart sugar.\n' +
+            'Hit ctrl+alt+erase on the keyboard to trigger a restart.')
+
+def load_modules():    
+    '''Build a list of pointers to available modules in the model directory
+    and load them.
+    '''
+    subpath = ['controlpanel', 'model']
+    file_names = os.listdir(os.path.join(config.shell_path, '/'.join(subpath)))
+    
+    modules = []
+    for file_name in file_names:
+        if file_name.endswith('.py') and file_name != '__init__.py':
+            module_name = file_name.strip('.py')
+            module = __import__('.'.join(subpath) + '.' + 
+                                module_name, globals(), locals(), 
+                                [module_name])
+            modules.append(module)
+    return modules        
+
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "h:s:g:l", [])
+        options, args = getopt.getopt(sys.argv[1:], "h:s:g:l", [])
     except getopt.GetoptError:
         cmd_help()
         sys.exit(2)
 
-    if not opts:
+    if not options:
         cmd_help()
-        sys.exit()
-        
-    for opt, key in opts:
-        if opt in ("-h"):            
-            method = getattr(control, 'set_' + key, None)
-            if method is None:
-                print _("sugar-control-panel: key=%s not an available option" 
-                        % key)
-                sys.exit()
-            else:    
-                print method.__doc__
-        if opt in ("-l"):
-            elems = dir(control)
-            for elem in elems:
-                if elem.startswith('set_'):
-                    print elem[4:]
-        if opt in ("-g"):
-            method = getattr(control, 'print_' + key, None)
-            if method is None:
-                print _("sugar-control-panel: key=%s not an available option" 
-                        % key)
-                sys.exit()
-            else:    
-                method()
-        if opt in ("-s"):
-            method = getattr(control, 'set_' + key, None)
-            if method is None:
-                print _("sugar-control-panel: key=%s not an available option"
-                        % key)
-                sys.exit()
-            else:
-                try:
-                    method(*args)
-                except Exception, e:
-                    print _("sugar-control-panel: %s"% e)
+        sys.exit(2)
+
+    modules = load_modules()
+
+    for option, key in options:
+        found = 0
+        if option in ("-h"):
+            for module in modules:
+                method = getattr(module, 'set_' + key, None)
+                if method:
+                    found += 1
+                    if found == 1:
+                        print method.__doc__ 
+                    else:
+                        print _(_same_option_warning % (key, module))
+            if found == 0:            
+                print _(_no_option_error % key)  
+        if option in ("-l"):            
+            for module in modules:
+                methods = dir(module)
+                print '%s:' % module.__name__.split('.')[-1]
+                for method in methods:
+                    if method.startswith('get_'):
+                        print '    %s' % method[4:]
+        if option in ("-g"):
+            for module in modules:
+                method = getattr(module, 'print_' + key, None)
+                if method:
+                    found += 1
+                    if found == 1:
+                        try:
+                            method()
+                        except Exception, detail:
+                            print _(_general_error % detail)
+                    else:
+                        print _(_same_option_warning % (key, module))
+            if found == 0:            
+                print _(_no_option_error % key)  
+        if option in ("-s"):
+            for module in modules:
+                method = getattr(module, 'set_' + key, None)
+                if method:
+                    note = 0
+                    found += 1
+                    if found == 1:
+                        try:
+                            note = method(*args)
+                        except Exception, detail:
+                            print _(_general_error % detail)
+                        if note == _RESTART:
+                            note_restart()
+                    else:
+                        print _(_same_option_warning % (key, module))
+            if found == 0:            
+                print _(_no_option_error % key)  

@@ -17,6 +17,7 @@
 
 import logging
 from gettext import gettext as _
+import gtk
 
 from sugar.graphics import style
 from sugar.graphics.tray import HTray
@@ -27,6 +28,7 @@ from sugar.graphics.icon import Icon
 from sugar.graphics.palette import Palette, WidgetInvoker
 from sugar.graphics.menuitem import MenuItem
 from sugar import activity
+from sugar import profile
 
 from model import shellmodel
 from view.palettes import JournalPalette, CurrentActivityPalette
@@ -73,7 +75,8 @@ class ActivityButton(RadioToolButton):
                 self._notif_icon.props.icon_filename = icon_path
             else:
                 self._notif_icon.props.icon_name = 'image-missing'
-            view.frame.frame.get_instance().add_notification(self._notif_icon)
+            frame = view.frame.frame.get_instance()
+            frame.add_notification(self._notif_icon, view.frame.frame.TOP_LEFT)
         else:
             self._notify_launching_hid = None
             self._notif_icon = None
@@ -87,45 +90,17 @@ class ActivityButton(RadioToolButton):
             self._icon.props.pulsing = False
             home_activity.disconnect(self._notify_launching_hid)
 
-class InviteButton(ToolButton):
-    def __init__(self, activity_model):
+
+class BaseInviteButton(ToolButton):
+    def __init__(self, invite):
         ToolButton.__init__(self)
-
-        self._activity_model = activity_model
-
+        self._invite = invite
         self._icon = Icon()
-        self._icon.props.xo_color = activity_model.get_color()
-        if activity_model.get_icon_name():
-            self._icon.props.file = activity_model.get_icon_name()
-        else:
-            self._icon.props.icon_name = 'image-missing'
-        self.set_icon_widget(self._icon)
-        self._icon.show()
-
-        palette = InvitePalette(activity_model)
-        palette.props.invoker = FrameWidgetInvoker(self)
-        palette.set_group_id('frame')
-        self.set_palette(palette)
-
         self.connect('clicked', self.__clicked_cb)
         self.connect('destroy', self.__destroy_cb)
-
         self._notif_icon = NotificationIcon()
-        self._notif_icon.props.xo_color = activity_model.get_color()
-        if activity_model.get_icon_name():
-            icon_name = activity_model.get_icon_name()
-            self._notif_icon.props.icon_filename = icon_name
-        else:
-            self._notif_icon.props.icon_name = 'image-missing'
         self._notif_icon.connect('button-release-event',
                                  self.__button_release_event_cb)
-
-        palette = InvitePalette(activity_model)
-        palette.props.invoker = WidgetInvoker(self._notif_icon)
-        palette.set_group_id('frame')
-        self._notif_icon.palette = palette
-
-        view.frame.frame.get_instance().add_notification(self._notif_icon)
 
     def __button_release_event_cb(self, icon, event):
         self.emit('clicked')
@@ -135,27 +110,111 @@ class InviteButton(ToolButton):
             frame = view.frame.frame.get_instance()
             frame.remove_notification(self._notif_icon)
             self._notif_icon = None
+            self._launch()
 
-        shell = view.Shell.get_instance()
-        shell.join_activity(self._activity_model.get_bundle_id(),
-                            self._activity_model.get_id())
+    def _launch(self):
+        """Launch the target of the invite"""
+        raise NotImplementedError
 
     def __destroy_cb(self, button):
         frame = view.frame.frame.get_instance()
         frame.remove_notification(self._notif_icon)
-    
-class InvitePalette(Palette):
-    def __init__(self, activity_model):
+
+class ActivityInviteButton(BaseInviteButton):
+    """Invite to shared activity"""
+    def __init__(self, invite):
+        BaseInviteButton.__init__(self, invite)
+        mesh = shellmodel.get_instance().get_mesh()
+        activity_model = mesh.get_activity(invite.get_activity_id())
         self._activity_model = activity_model
+        self._bundle_id = activity_model.get_bundle_id()
 
-        Palette.__init__(self, '')
-
-        registry = activity.get_registry()
-        activity_info = registry.get_activity(activity_model.get_bundle_id())
-        if activity_info:
-            self.set_primary_text(activity_info.name)
+        self._icon.props.xo_color = activity_model.get_color()
+        if activity_model.get_icon_name():
+            self._icon.props.file = activity_model.get_icon_name()
         else:
-            self.set_primary_text(activity_model.get_bundle_id())
+            self._icon.props.icon_name = 'image-missing'
+        self.set_icon_widget(self._icon)
+        self._icon.show()
+
+        palette = ActivityInvitePalette(invite)
+        palette.props.invoker = FrameWidgetInvoker(self)
+        palette.set_group_id('frame')
+        self.set_palette(palette)
+
+        self._notif_icon.props.xo_color = activity_model.get_color()
+        if activity_model.get_icon_name():
+            icon_name = activity_model.get_icon_name()
+            self._notif_icon.props.icon_filename = icon_name
+        else:
+            self._notif_icon.props.icon_name = 'image-missing'
+
+        palette = ActivityInvitePalette(invite)
+        palette.props.invoker = WidgetInvoker(self._notif_icon)
+        palette.set_group_id('frame')
+        self._notif_icon.palette = palette
+
+        frame = view.frame.frame.get_instance()
+        frame.add_notification(self._notif_icon,
+                               view.frame.frame.TOP_LEFT)
+
+    def _launch(self):
+        """Join the activity in the invite."""
+        shell = view.Shell.get_instance()
+        shell.join_activity(self._activity_model.get_bundle_id(),
+                            self._activity_model.get_id())
+
+
+class PrivateInviteButton(BaseInviteButton):
+    """Invite to a private one to one channel"""
+    def __init__(self, invite):
+        BaseInviteButton.__init__(self, invite)
+        self._private_channel = invite.get_private_channel()
+        self._bundle_id = invite.get_bundle_id()
+
+        self._icon.props.xo_color = profile.get_color()
+        registry = activity.get_registry()
+        activity_info = registry.get_activity(self._bundle_id)
+        if activity_info:
+            self._icon.props.file = activity_info.icon
+        else:
+            self._icon.props.icon_name = 'image-missing'
+        self.set_icon_widget(self._icon)
+        self._icon.show()
+
+        palette = PrivateInvitePalette(invite)
+        palette.props.invoker = FrameWidgetInvoker(self)
+        palette.set_group_id('frame')
+        self.set_palette(palette)
+
+        self._notif_icon.props.xo_color = profile.get_color()
+        registry = activity.get_registry()
+        activity_info = registry.get_activity(self._bundle_id)
+        if activity_info:
+            self._notif_icon.props.icon_filename = activity_info.icon
+        else:
+            self._notif_icon.props.icon_name = 'image-missing'
+
+        palette = PrivateInvitePalette(invite)
+        palette.props.invoker = WidgetInvoker(self._notif_icon)
+        palette.set_group_id('frame')
+        self._notif_icon.palette = palette
+
+        frame = view.frame.frame.get_instance()
+        frame.add_notification(self._notif_icon,
+                               view.frame.frame.TOP_LEFT)
+
+    def _launch(self):
+        """Start the activity with private channel."""
+        shell = view.Shell.get_instance()
+        shell.start_activity_with_uri(self._bundle_id,
+                                      self._private_channel)
+
+
+class BaseInvitePalette(Palette):
+    """Palette for frame or notification icon for invites."""
+    def __init__(self):
+        Palette.__init__(self, '')
 
         menu_item = MenuItem(_('Join'), icon_name='dialog-ok')
         menu_item.connect('activate', self.__join_activate_cb)
@@ -168,16 +227,74 @@ class InvitePalette(Palette):
         menu_item.show()
 
     def __join_activate_cb(self, menu_item):
+        self._join()
+
+    def __decline_activate_cb(self, menu_item):
+        self._decline()
+
+    def _join(self):
+        raise NotImplementedError
+
+    def _decline(self):
+        raise NotImplementedError
+
+
+class ActivityInvitePalette(BaseInvitePalette):
+    """Palette for shared activity invites."""
+
+    def __init__(self, invite):
+        BaseInvitePalette.__init__(self)
+
+        mesh = shellmodel.get_instance().get_mesh()
+        activity_model = mesh.get_activity(invite.get_activity_id())
+        self._activity_model = activity_model
+        self._bundle_id = activity_model.get_bundle_id()
+
+        registry = activity.get_registry()
+        activity_info = registry.get_activity(self._bundle_id)
+        if activity_info:
+            self.set_primary_text(activity_info.name)
+        else:
+            self.set_primary_text(self._bundle_id)
+
+    def _join(self):
         shell = view.Shell.get_instance()
         shell.join_activity(self._activity_model.get_bundle_id(),
                             self._activity_model.get_id())
 
-    def __decline_activate_cb(self, menu_item):
+    def _decline(self):
         invites = shellmodel.get_instance().get_invites()
-        for invite in invites:
-            if invite.get_activity_id() == self._activity_model.get_id():
-                invites.remove_invite(invite)
-                return
+        activity_id = self._activity_model.get_id()
+        invites.remove_activity(activity_id)
+
+
+class PrivateInvitePalette(BaseInvitePalette):
+    """Palette for private channel invites."""
+
+    def __init__(self, invite):
+        BaseInvitePalette.__init__(self)
+
+        self._private_channel = invite.get_private_channel()
+        self._bundle_id = invite.get_bundle_id()
+
+        registry = activity.get_registry()
+        activity_info = registry.get_activity(self._bundle_id)
+        if activity_info:
+            self.set_primary_text(activity_info.name)
+        else:
+            self.set_primary_text(self._bundle_id)
+
+    def _join(self):
+        shell = view.Shell.get_instance()
+        shell.start_activity_with_uri(self._bundle_id,
+                                      self._private_channel)
+        invites = shellmodel.get_instance().get_invites()
+        invites.remove_private_channel(self._private_channel)
+
+    def _decline(self):
+        invites = shellmodel.get_instance().get_invites()
+        invites.remove_private_channel(self._private_channel)
+
 
 class ActivitiesTray(HTray):
     def __init__(self):
@@ -185,11 +302,12 @@ class ActivitiesTray(HTray):
 
         self._buttons = {}
         self._invite_to_item = {}
+        self._freeze_button_clicks = False
 
         self._home_model = shellmodel.get_instance().get_home()
         self._home_model.connect('activity-added', self.__activity_added_cb)
         self._home_model.connect('activity-removed', self.__activity_removed_cb)
-        self._home_model.connect('pending-activity-changed',
+        self._home_model.connect('active-activity-changed',
                                  self.__activity_changed_cb)
 
         self._invites = shellmodel.get_instance().get_invites()
@@ -219,16 +337,26 @@ class ActivitiesTray(HTray):
 
     def __activity_changed_cb(self, home_model, home_activity):
         logging.debug('__activity_changed_cb: %r' % home_activity)
+
         button = self._buttons[home_activity.get_activity_id()]
+        self._freeze_button_clicks = True
         button.props.active = True
+        self._freeze_button_clicks = True
+        
+        self.scroll_to_item(button)
 
     def __activity_clicked_cb(self, button, home_activity):
-        if button.props.active:
+        if not self._freeze_button_clicks and button.props.active:
             logging.debug('ActivitiesTray.__activity_clicked_cb')
-            home_activity.get_window().activate(1)
+            window = home_activity.get_window()
+            if window:
+                window.activate(gtk.get_current_event_time())
 
     def __invite_clicked_cb(self, icon, invite):
-        self._invites.remove_invite(invite)
+        if hasattr(invite, 'get_activity_id'):
+            self._invites.remove_invite(invite)
+        else:
+            self._invites.remove_private_invite(invite)
     
     def __invite_added_cb(self, invites, invite):
         self._add_invite(invite)
@@ -237,14 +365,19 @@ class ActivitiesTray(HTray):
         self._remove_invite(invite)
 
     def _add_invite(self, invite):
-        mesh = shellmodel.get_instance().get_mesh()
-        activity_model = mesh.get_activity(invite.get_activity_id())
-        if activity_model:
-            item = InviteButton(activity_model)
+        """Add an invite (SugarInvite or PrivateInvite)"""
+        item = None
+        if hasattr(invite, 'get_activity_id'):
+            mesh = shellmodel.get_instance().get_mesh()
+            activity_model = mesh.get_activity(invite.get_activity_id())
+            if activity_model is not None:
+                item = ActivityInviteButton(invite)
+        else:
+            item = PrivateInviteButton(invite)
+        if item is not None:
             item.connect('clicked', self.__invite_clicked_cb, invite)
             self.add_item(item)
             item.show()
-
             self._invite_to_item[invite] = item
 
     def _remove_invite(self, invite):

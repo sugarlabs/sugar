@@ -20,23 +20,32 @@ import hippo
 
 from sugar import profile
 from sugar import activity
+from sugar import util
 from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon
 
 import view.Shell
 from view.palettes import ActivityPalette
 
-class ActivitiesList(hippo.CanvasScrollbars):
+class ActivitiesList(gtk.ScrolledWindow):
     __gtype_name__ = 'SugarActivitiesList'
 
     def __init__(self):
-        hippo.CanvasScrollbars.__init__(self)
-        self.set_policy(hippo.ORIENTATION_HORIZONTAL, hippo.SCROLLBAR_NEVER)
-        self.props.widget.connect('key-press-event', self.__key_press_event_cb)
+        gobject.GObject.__init__(self)
 
-        self._box = hippo.CanvasBox( \
-                background_color=style.COLOR_WHITE.get_int())
-        self.set_root(self._box)
+        self.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        self.set_shadow_type(gtk.SHADOW_NONE)
+        self.connect('key-press-event', self.__key_press_event_cb)
+
+        canvas = hippo.Canvas()
+        self.add_with_viewport(canvas)
+        self.child.set_shadow_type(gtk.SHADOW_NONE)
+        canvas.show()
+
+        self._query = ''
+        self._box = hippo.CanvasBox()
+        self._box.props.background_color = style.COLOR_WHITE.get_int()
+        canvas.set_root(self._box)
 
         registry = activity.get_registry()
         registry.get_activities_async(reply_handler=self._get_activities_cb)
@@ -44,9 +53,13 @@ class ActivitiesList(hippo.CanvasScrollbars):
         registry.connect('activity-removed', self.__activity_removed_cb)
 
     def _get_activities_cb(self, activity_list):
-        for info in activity_list:
-            if info.bundle_id != 'org.laptop.JournalActivity':
-                self._add_activity(info)
+        gobject.idle_add(self._add_activity_list, activity_list)
+
+    def _add_activity_list(self, activity_list):
+        info = activity_list.pop()
+        if info.bundle_id != 'org.laptop.JournalActivity':
+            self._add_activity(info)
+        return len(activity_list) > 0
 
     def __activity_added_cb(self, activity_registry, activity_info):
         self._add_activity(activity_info)
@@ -58,13 +71,23 @@ class ActivitiesList(hippo.CanvasScrollbars):
                 self.remove(entry)
                 return
 
+    def _compare_activities(self, entry_a, entry_b):
+        return entry_b.get_installation_time() - entry_a.get_installation_time()
+
     def _add_activity(self, activity_info):
-        self._box.append(ActivityEntry(activity_info))
+        entry = ActivityEntry(activity_info)
+        self._box.insert_sorted(entry, 0, self._compare_activities)
+        entry.set_visible(entry.matches(self._query))
+
+    def set_filter(self, query):
+        self._query = query
+        for entry in self._box.get_children():
+            entry.set_visible(entry.matches(query))
 
     def __key_press_event_cb(self, widget, event):
         keyname = gtk.gdk.keyval_name(event.keyval)
 
-        vadjustment = self.props.widget.props.vadjustment
+        vadjustment = self.props.vadjustment
         if keyname == 'Up':
             if vadjustment.props.value > vadjustment.props.lower:
                 vadjustment.props.value -= vadjustment.props.step_increment
@@ -78,6 +101,25 @@ class ActivitiesList(hippo.CanvasScrollbars):
             return False
 
         return True
+
+class ActivityIcon(CanvasIcon):
+    def __init__(self, activity_info):
+        CanvasIcon.__init__(self, size=style.STANDARD_ICON_SIZE, cache=True,
+                            file_name=activity_info.icon,
+                            stroke_color=style.COLOR_BUTTON_GREY.get_svg(),
+                            fill_color=style.COLOR_TRANSPARENT.get_svg())
+        self._activity_info = activity_info
+        self.connect('hovering-changed', self.__hovering_changed_event_cb)
+
+    def __hovering_changed_event_cb(self, icon, event):
+        if event:
+            self.props.xo_color = profile.get_color()
+        else:
+            self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
+            self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+
+    def create_palette(self):
+        return ActivityPalette(self._activity_info)
 
 class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarActivityEntry'
@@ -101,22 +143,17 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
         self._bundle_id = activity_info.bundle_id
         self._version = activity_info.version
         self._favorite = activity_info.favorite
+        self._title = activity_info.name
+        self._installation_time = activity_info.installation_time
 
         self._favorite_icon = FavoriteIcon(self._favorite)
         self._favorite_icon.connect('notify::favorite',
                                     self.__favorite_changed_cb)
         self.append(self._favorite_icon)
 
-        self.icon = CanvasIcon(size=style.STANDARD_ICON_SIZE, cache=True,
-                file_name=activity_info.icon,
-                stroke_color=style.COLOR_BUTTON_GREY.get_svg(),
-                fill_color=style.COLOR_TRANSPARENT.get_svg())
-        self.icon.set_palette(ActivityPalette(activity_info))
-        self.icon.connect('hovering-changed',
-                          self.__icon_hovering_changed_event_cb)
+        self.icon = ActivityIcon(activity_info)
         self.icon.connect('button-release-event',
                           self.__icon_button_release_event_cb)
-
         self.append(self.icon)
 
         title = hippo.CanvasText(text=activity_info.name,
@@ -134,10 +171,12 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
         expander = hippo.CanvasBox()
         self.append(expander, hippo.PACK_EXPAND)
 
-        date = hippo.CanvasText(text='3 weeks ago',
-                                xalign=hippo.ALIGNMENT_START,
-                                font_desc=style.FONT_NORMAL.get_pango_desc(),
-                                box_width=ActivityEntry._DATE_COL_WIDTH)
+        timestamp = activity_info.installation_time
+        date = hippo.CanvasText(
+                text=util.timestamp_to_elapsed_string(timestamp),
+                xalign=hippo.ALIGNMENT_START,
+                font_desc=style.FONT_NORMAL.get_pango_desc(),
+                box_width=ActivityEntry._DATE_COL_WIDTH)
         self.append(date)
 
     def __favorite_changed_cb(self, favorite_icon, pspec):
@@ -148,15 +187,9 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
     def __activity_changed_cb(self, activity_registry, activity_info):
         if self._bundle_id == activity_info.bundle_id and \
                 self._version == activity_info.version:
+            self._title = activity_info.name
             self._favorite = activity_info.favorite
             self._favorite_icon.props.favorite = self._favorite
-
-    def __icon_hovering_changed_event_cb(self, icon, event):
-        if event:
-            self.icon.props.xo_color = profile.get_color()
-        else:
-            self.icon.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
-            self.icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
 
     def __icon_button_release_event_cb(self, icon, event):
         view.Shell.get_instance().start_activity(self._bundle_id)
@@ -166,6 +199,14 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
 
     def get_version(self):
         return self._version
+
+    def get_installation_time(self):
+        return self._installation_time
+
+    def matches(self, query):
+        if not query:
+            return True
+        return self._title.lower().find(query) > -1
 
 class FavoriteIcon(CanvasIcon):
     __gproperties__ = {

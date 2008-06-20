@@ -56,7 +56,6 @@ class Shell(gobject.GObject):
         self._hosts = {}
         self._screen = wnck.screen_get_default()
         self._current_host = None
-        self._pending_host = None
         self._screen_rotation = 0
 
         self._key_handler = KeyHandler()
@@ -67,12 +66,12 @@ class Shell(gobject.GObject):
         self._home_window.show()
 
         home_model = self._model.get_home()
-        home_model.connect('activity-started', self._activity_started_cb)
+        home_model.connect('launch-started', self.__launch_started_cb)
+        home_model.connect('launch-failed', self.__launch_failed_cb)
+        home_model.connect('launch-completed', self.__launch_completed_cb)
         home_model.connect('activity-removed', self._activity_removed_cb)
         home_model.connect('active-activity-changed',
                            self._active_activity_changed_cb)
-        home_model.connect('pending-activity-changed',
-                           self._pending_activity_changed_cb)
 
         gobject.idle_add(self._start_journal_idle)
 
@@ -95,7 +94,19 @@ class Shell(gobject.GObject):
         if registry.get_activity('org.laptop.JournalActivity'):
             self.start_activity('org.laptop.JournalActivity')
 
-    def _activity_started_cb(self, home_model, home_activity):
+    def __launch_started_cb(self, home_model, home_activity):
+        if home_activity.get_type() == 'org.laptop.JournalActivity':
+            return
+
+        self._screen.toggle_showing_desktop(True)
+        self._home_window.set_zoom_level(shellmodel.ShellModel.ZOOM_ACTIVITY)
+        self._home_window.launch_box.zoom_in()
+
+    def __launch_failed_cb(self, home_model, home_activity):
+        if self._screen.get_showing_desktop():
+            self._home_window.set_zoom_level(shellmodel.ShellModel.ZOOM_HOME)
+
+    def __launch_completed_cb(self, home_model, home_activity):
         activity_host = ActivityHost(home_activity)
         self._hosts[activity_host.get_xid()] = activity_host
         if home_activity.get_type() in self._activities_starting:
@@ -110,21 +121,16 @@ class Shell(gobject.GObject):
             del self._hosts[xid]
 
     def _active_activity_changed_cb(self, home_model, home_activity):
+        host = None
         if home_activity:
-            host = self._hosts[home_activity.get_xid()]
-        else:
-            host = None
+            xid = home_activity.get_xid()
+            if xid:
+                host = self._hosts[home_activity.get_xid()]
 
         if self._current_host:
             self._current_host.set_active(False)
 
         self._current_host = host
-
-    def _pending_activity_changed_cb(self, home_model, home_activity):
-        if home_activity:
-            self._pending_host = self._hosts[home_activity.get_xid()]
-        else:
-            self._pending_host = None
 
     def get_model(self):
         return self._model
@@ -150,17 +156,6 @@ class Shell(gobject.GObject):
         handle = ActivityHandle(activity_id)
         activityfactory.create(bundle_id, handle)
 
-    def notify_launch(self, bundle_id, activity_id):
-        # Zoom to Home for launch feedback
-        self.set_zoom_level(shellmodel.ShellModel.ZOOM_HOME)
-
-        home_model = self._model.get_home()
-        home_model.notify_activity_launch(activity_id, bundle_id)
-
-    def notify_launch_failure(self, activity_id):
-        home_model = self._model.get_home()
-        home_model.notify_activity_launch_failed(activity_id)
-
     def start_activity(self, activity_type):
         if activity_type in self._activities_starting:
             logging.debug("This activity is still launching.")
@@ -168,6 +163,14 @@ class Shell(gobject.GObject):
 
         self._activities_starting.add(activity_type)
         activityfactory.create(activity_type)
+
+    def start_activity_with_uri(self, activity_type, uri):
+        if activity_type in self._activities_starting:
+            logging.debug("This activity is still launching.")
+            return
+
+        self._activities_starting.add(activity_type)
+        activityfactory.create_with_uri(activity_type, uri)
 
     def take_activity_screenshot(self):
         if self._model.get_zoom_level() != shellmodel.ShellModel.ZOOM_ACTIVITY:
@@ -192,8 +195,8 @@ class Shell(gobject.GObject):
         self.take_activity_screenshot()
 
         if level == shellmodel.ShellModel.ZOOM_ACTIVITY:
-            if self._pending_host is not None:
-                self._pending_host.present()
+            if self._current_host is not None:
+                self._current_host.present()
             self._screen.toggle_showing_desktop(False)
         else:
             self._model.set_zoom_level(level)
@@ -209,14 +212,15 @@ class Shell(gobject.GObject):
         previous_activity = home_model.get_previous_activity()
         if previous_activity:
             self.take_activity_screenshot()
-            previous_activity.get_window().activate(1)
+            previous_activity.get_window().activate(
+						gtk.get_current_event_time())
 
     def activate_next_activity(self):
         home_model = self._model.get_home()
         next_activity = home_model.get_next_activity()
         if next_activity:
             self.take_activity_screenshot()
-            next_activity.get_window().activate(1)
+            next_activity.get_window().activate(gtk.get_current_event_time())
 
     def close_current_activity(self):
         if self._model.get_zoom_level() != shellmodel.ShellModel.ZOOM_ACTIVITY:

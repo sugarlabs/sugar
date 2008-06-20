@@ -18,6 +18,7 @@ import os
 import signal
 import logging
 import subprocess
+import errno
 
 import dbus
 import gtk
@@ -26,12 +27,14 @@ from sugar._sugarext import KeyGrabber
 
 from hardware import hardwaremanager
 import view.Shell
+from view.tabbinghandler import TabbingHandler
 from model.shellmodel import ShellModel
 
 _BRIGHTNESS_STEP = 2
 _VOLUME_STEP = 10
 _BRIGHTNESS_MAX = 15
 _VOLUME_MAX = 100
+_TABBING_MODIFIER = gtk.gdk.MOD1_MASK
 
 _actions_table = {
     'F1'             : 'zoom_mesh',
@@ -40,26 +43,25 @@ _actions_table = {
     'F4'             : 'zoom_activity',
     'F9'             : 'brightness_down',
     'F10'            : 'brightness_up',
-    '<ctrl>F9'       : 'brightness_min',
-    '<ctrl>F10'      : 'brightness_max',
+    '<alt>F9'        : 'brightness_min',
+    '<alt>F10'       : 'brightness_max',
     'F11'            : 'volume_down',
     'F12'            : 'volume_up',
-    '<ctrl>F11'      : 'volume_min',
-    '<ctrl>F12'      : 'volume_max',
+    '<alt>F11'       : 'volume_min',
+    '<alt>F12'       : 'volume_max',
     '<alt>1'         : 'screenshot',
-    '<alt>f'         : 'frame',
     '0x93'           : 'frame',
     '0xEB'           : 'rotate',
-    '<alt>r'         : 'rotate',
-    '<alt>q'         : 'quit_emulator',
     '<alt>Tab'       : 'next_window',
-    '<alt>n'         : 'next_window',
-    '<ctrl><alt>Tab' : 'previous_window',
-    '<alt>p'         : 'previous_window',
-    '<ctrl>Escape'   : 'close_window',
-    '<ctrl>q'        : 'close_window',
+    '<alt><shift>Tab': 'previous_window',
+    '<alt>Escape'    : 'close_window',
     '0xDC'           : 'open_search',
-    '<alt>s'         : 'say_text'
+# the following are intended for emulator users
+    '<alt><shift>f'  : 'frame',
+    '<alt><shift>q'  : 'quit_emulator',
+    '<alt><shift>o'  : 'open_search',
+    '<alt><shift>r'  : 'rotate',
+    '<alt><shift>s'  : 'say_text',
 }
 
 J_DBUS_SERVICE = 'org.laptop.Journal'
@@ -81,6 +83,10 @@ class KeyHandler(object):
         self._key_grabber = KeyGrabber()
         self._key_grabber.connect('key-pressed',
                                   self._key_pressed_cb)
+        self._key_grabber.connect('key-released',
+                                  self._key_released_cb)
+
+        self._tabbing_handler = TabbingHandler(_TABBING_MODIFIER)
 
         for key in _actions_table.keys():
             self._key_grabber.grab(key)
@@ -96,7 +102,7 @@ class KeyHandler(object):
         volume = min(max(0, volume), _VOLUME_MAX)
 
         hw_manager.set_volume(volume)
-        hw_manager.set_mute(volume == 0)
+        hw_manager.set_muted(volume == 0)
 
     def _change_brightness(self, step=None, value=None):
         hw_manager = hardwaremanager.get_manager()
@@ -136,10 +142,10 @@ class KeyHandler(object):
         clipboard.request_text(self._primary_selection_cb)
 
     def handle_previous_window(self):
-        view.Shell.get_instance().activate_previous_activity()
+        self._tabbing_handler.previous_activity()
 
     def handle_next_window(self):
-        view.Shell.get_instance().activate_next_activity()
+        self._tabbing_handler.next_activity()
 
     def handle_close_window(self):
         view.Shell.get_instance().close_current_activity()
@@ -186,14 +192,47 @@ class KeyHandler(object):
     def handle_frame(self):
         view.Shell.get_instance().get_frame().notify_key_press()
 
+
     def handle_rotate(self):
+        """
+        Handles rotation of the display (using xrandr) and of the d-pad.
+
+        Notes: default mappings for keypad on MP
+        KP_Up 80
+        KP_Right 85
+        KP_Down 88
+        KP_Left 83
+        """
+
         states = [ 'normal', 'left', 'inverted', 'right']
+        keycodes = (80, 85, 88, 83, 80, 85, 88, 83)
+        keysyms = ("KP_Up", "KP_Right", "KP_Down", "KP_Left")
 
         self._screen_rotation += 1
-        if self._screen_rotation == len(states):
-            self._screen_rotation = 0
+        self._screen_rotation %= 4
 
-        subprocess.Popen(['xrandr', '-o', states[self._screen_rotation]])
+        actual_keycodes = keycodes[self._screen_rotation:self._screen_rotation 
+                                   + 4]
+        # code_pairs now contains a mapping of keycode -> keysym in the current
+        # orientation
+        code_pairs = zip(actual_keycodes, keysyms)
+
+        # Using the mappings in code_pairs, we dynamically build up an xmodmap
+        # command to rotate the dpad keys.
+        argv = ['xmodmap']
+        for arg in [('-e', 'keycode %i = %s' % p) for p in code_pairs]:
+            argv.extend(arg)
+
+        # If either the xmodmap or xrandr command fails, check_call will fail
+        # with CalledProcessError, which we raise.
+        try:
+            subprocess.check_call(argv)
+            subprocess.check_call(['xrandr', '-o', 
+                                   states[self._screen_rotation]])
+        except OSError, e:
+            if e.errno != errno.EINTR:
+                raise
+
 
     def handle_quit_emulator(self):
         if os.environ.has_key('SUGAR_EMULATOR_PID'):
@@ -218,9 +257,33 @@ class KeyHandler(object):
             self._keystate_pressed = state
 
             action = _actions_table[key]
+            if self._tabbing_handler.is_tabbing():
+                # Only accept window tabbing events, everything else
+                # cancels the tabbing operation.
+                if not action in ["next_window", "previous_window"]:
+                    self._tabbing_handler.stop()
+                    return True
+
             method = getattr(self, 'handle_' + action)
             method()
 
             return True
+        else:
+            # If this is not a registered key, then cancel tabbing.
+            if self._tabbing_handler.is_tabbing():
+                if not grabber.is_modifier(keycode):
+                    self._tabbing_handler.stop()
+                return True
 
         return False
+
+    def _key_released_cb(self, grabber, keycode, state):
+        if self._tabbing_handler.is_tabbing():
+            # We stop tabbing and switch to the new window as soon as the
+            # modifier key is raised again.
+            if grabber.is_modifier(keycode, mask=_TABBING_MODIFIER):
+                self._tabbing_handler.stop()
+
+            return True
+        return False
+
