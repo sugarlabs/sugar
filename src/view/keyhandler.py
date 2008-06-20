@@ -27,12 +27,14 @@ from sugar._sugarext import KeyGrabber
 
 from hardware import hardwaremanager
 import view.Shell
+from view.tabbinghandler import TabbingHandler
 from model.shellmodel import ShellModel
 
 _BRIGHTNESS_STEP = 2
 _VOLUME_STEP = 10
 _BRIGHTNESS_MAX = 15
 _VOLUME_MAX = 100
+_TABBING_MODIFIER = gtk.gdk.MOD1_MASK
 
 _actions_table = {
     'F1'             : 'zoom_mesh',
@@ -81,6 +83,10 @@ class KeyHandler(object):
         self._key_grabber = KeyGrabber()
         self._key_grabber.connect('key-pressed',
                                   self._key_pressed_cb)
+        self._key_grabber.connect('key-released',
+                                  self._key_released_cb)
+
+        self._tabbing_handler = TabbingHandler(_TABBING_MODIFIER)
 
         for key in _actions_table.keys():
             self._key_grabber.grab(key)
@@ -136,10 +142,10 @@ class KeyHandler(object):
         clipboard.request_text(self._primary_selection_cb)
 
     def handle_previous_window(self):
-        view.Shell.get_instance().activate_previous_activity()
+        self._tabbing_handler.previous_activity()
 
     def handle_next_window(self):
-        view.Shell.get_instance().activate_next_activity()
+        self._tabbing_handler.next_activity()
 
     def handle_close_window(self):
         view.Shell.get_instance().close_current_activity()
@@ -251,9 +257,33 @@ class KeyHandler(object):
             self._keystate_pressed = state
 
             action = _actions_table[key]
+            if self._tabbing_handler.is_tabbing():
+                # Only accept window tabbing events, everything else
+                # cancels the tabbing operation.
+                if not action in ["next_window", "previous_window"]:
+                    self._tabbing_handler.stop()
+                    return True
+
             method = getattr(self, 'handle_' + action)
             method()
 
             return True
+        else:
+            # If this is not a registered key, then cancel tabbing.
+            if self._tabbing_handler.is_tabbing():
+                if not grabber.is_modifier(keycode):
+                    self._tabbing_handler.stop()
+                return True
 
         return False
+
+    def _key_released_cb(self, grabber, keycode, state):
+        if self._tabbing_handler.is_tabbing():
+            # We stop tabbing and switch to the new window as soon as the
+            # modifier key is raised again.
+            if grabber.is_modifier(keycode, mask=_TABBING_MODIFIER):
+                self._tabbing_handler.stop()
+
+            return True
+        return False
+

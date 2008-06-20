@@ -64,6 +64,7 @@ class HomeModel(gobject.GObject):
 
         self._activities = []
         self._active_activity = None
+        self._tabbing = False
 
         screen = wnck.screen_get_default()
         screen.connect('window-opened', self._window_opened_cb)
@@ -101,6 +102,13 @@ class HomeModel(gobject.GObject):
     def get_active_activity(self):
         """Returns the activity that the user is currently working in"""
         return self._active_activity
+
+    def tabbing_set_activity(self, activity):
+    	if activity:
+	        self._tabbing = True
+        	self._set_active_activity(activity)
+        else:
+        	self._tabbing = False
 
     def _set_active_activity(self, home_activity):
         if self._active_activity == home_activity:
@@ -185,6 +193,11 @@ class HomeModel(gobject.GObject):
         logging.error("set_active() failed: %s" % err)
 
     def _active_window_changed_cb(self, screen, previous_window=None):
+        if self._tabbing:
+            # Ignore any window changes when tabbing, as these are comming
+            # in delayed.
+            return    
+
         window = screen.get_active_window()
         if window is None:
             return
