@@ -74,7 +74,7 @@ class CurrentActivityPalette(BasePalette):
         menu_item.show()
 
     def __resume_activate_cb(self, menu_item):
-        self._home_activity.get_window().activate(1)
+        self._home_activity.get_window().activate(gtk.get_current_event_time())
 
     def __stop_activate_cb(self, menu_item):
         self._home_activity.get_window().close(1)
@@ -116,11 +116,11 @@ class ActivityPalette(Palette):
     def _update_favorite_item(self):
         label = self._favorite_item.child
         if self._favorite:
-            label.set_text(_('Remove from ring'))
+            label.set_text(_('Remove favorite'))
             xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
                                          style.COLOR_TRANSPARENT.get_svg()))
         else:
-            label.set_text(_('Add to ring'))
+            label.set_text(_('Make favorite'))
             xo_color = profile.get_color()
 
         self._favorite_icon.props.xo_color = xo_color
@@ -179,7 +179,7 @@ class JournalPalette(BasePalette):
         menu_item.show()
 
     def __open_activate_cb(self, menu_item):
-        self._home_activity.get_window().activate(1)
+        self._home_activity.get_window().activate(gtk.get_current_event_time())
 
     def __popup_cb(self, palette):
         # TODO: we should be able to ask the datastore this info, as that's the

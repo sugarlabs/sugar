@@ -14,6 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import gobject
 import gtk
 import hippo
 
@@ -26,16 +27,19 @@ from model import shellmodel
 from view.home.FriendView import FriendView
 from view.home.spreadlayout import SpreadLayout
 
-class FriendsBox(hippo.CanvasBox):
+class FriendsBox(hippo.Canvas):
     __gtype_name__ = 'SugarFriendsBox'
     def __init__(self):
-        hippo.CanvasBox.__init__(self,
-                                 background_color=style.COLOR_WHITE.get_int())
+        gobject.GObject.__init__(self)
+
+        self._box = hippo.CanvasBox()
+        self._box.props.background_color = style.COLOR_WHITE.get_int()
+        self.set_root(self._box)
 
         self._friends = {}
 
         self._layout = SpreadLayout()
-        self.set_layout(self._layout)
+        self._box.set_layout(self._layout)
 
         self._owner_icon = CanvasIcon(icon_name='computer-xo', cache=True,
                                       xo_color=profile.get_color())
@@ -46,7 +50,7 @@ class FriendsBox(hippo.CanvasBox):
         palette = Palette(None, primary_text=profile.get_nick_name(),
                           icon=palette_icon)
         self._owner_icon.set_palette(palette)
-        self._layout.add_center(self._owner_icon)
+        self._layout.add(self._owner_icon)
 
         friends = shellmodel.get_instance().get_friends()
 
@@ -66,5 +70,20 @@ class FriendsBox(hippo.CanvasBox):
         self.add_friend(buddy_info)
 
     def _friend_removed_cb(self, data_model, key):
-        self._layout.remove(self._friends[key])
+        icon = self._friends[key]
+        self._layout.remove(icon)
         del self._friends[key]
+        icon.destroy()
+
+    def do_size_allocate(self, allocation):
+        width = allocation.width        
+        height = allocation.height
+
+        min_w_, icon_width = self._owner_icon.get_width_request()
+        min_h_, icon_height = self._owner_icon.get_height_request(icon_width)
+        x = (width - icon_width) / 2
+        y = (height - icon_height) / 2
+        self._layout.move(self._owner_icon, x, y)
+
+        hippo.Canvas.do_size_allocate(self, allocation)
+

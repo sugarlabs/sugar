@@ -1,4 +1,5 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2008 One Laptop Per Child
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,6 +17,9 @@
 
 import gobject
 import os
+import simplejson
+
+from telepathy.interfaces import CHANNEL_TYPE_TEXT
 
 from sugar import env
 from sugar import profile
@@ -64,6 +68,8 @@ class ShellOwner(gobject.GObject):
         self._pservice = presenceservice.get_instance()
         self._pservice.connect('activity-invitation',
                                self._activity_invitation_cb)
+        self._pservice.connect('private-invitation',
+                               self._private_invitation_cb)
         self._pservice.connect('activity-disappeared',
                               self._activity_disappeared_cb)
 
@@ -76,8 +82,23 @@ class ShellOwner(gobject.GObject):
         return self._nick
 
     def _activity_invitation_cb(self, pservice, activity, buddy, message):
-        self._invites.add_invite(buddy, activity.props.type,
+        self._invites.add_invite(activity.props.type,
                                  activity.props.id)
+
+    def _private_invitation_cb(self, pservice, bus_name, connection,
+                               channel, channel_type):
+        """Handle a private-invitation from Presence Service.
+
+        This is a connection by a non-Sugar XMPP client, so
+        launch Chat or VideoChat with the Telepathy connection and
+        channel.
+        """
+        if channel_type == CHANNEL_TYPE_TEXT:
+            bundle_id = 'org.laptop.Chat'
+        else:
+            bundle_id = 'org.laptop.VideoChat'
+        tp_channel = simplejson.dumps([bus_name, connection, channel])
+        self._invites.add_private_invite(tp_channel, bundle_id)
 
     def _activity_disappeared_cb(self, pservice, activity):
         self._invites.remove_activity(activity.props.id)

@@ -17,17 +17,49 @@
 import gobject
 from sugar.presence import presenceservice
 
-class Invite:
-    def __init__(self, issuer, bundle_id, activity_id):
-        self._issuer = issuer
-        self._activity_id = activity_id
+
+class BaseInvite:
+    """Invitation to shared activity or private 1-1 Telepathy channel"""
+    def __init__(self, bundle_id):
+        """init for BaseInvite.
+
+        bundle_id: string, e.g. 'org.laptop.Chat'
+        """
         self._bundle_id = bundle_id
+
+    def get_bundle_id(self):
+        return self._bundle_id
+
+
+class ActivityInvite(BaseInvite):
+    """Invitation to a shared activity."""
+    def __init__(self, bundle_id, activity_id):
+        BaseInvite.__init__(self, bundle_id)
+        self._activity_id = activity_id
 
     def get_activity_id(self):
         return self._activity_id
 
-    def get_bundle_id(self):
-        return self._bundle_id
+
+class PrivateInvite(BaseInvite):
+    """Invitation to a private 1-1 Telepathy channel.
+    
+    This includes text chat or streaming media.
+    """
+    def __init__(self, bundle_id, private_channel):
+        """init for PrivateInvite.
+
+        bundle_id: string, e.g. 'org.laptop.Chat'
+        private_channel: string containing simplejson dump of Telepathy
+            bus, connection and channel
+        """
+        BaseInvite.__init__(self, bundle_id)
+        self._private_channel = private_channel
+
+    def get_private_channel(self):
+        """Telepathy channel info from private invitation"""
+        return self._private_channel
+
 
 class Invites(gobject.GObject):
     __gsignals__ = {
@@ -46,24 +78,43 @@ class Invites(gobject.GObject):
         owner = ps.get_owner()
         owner.connect('joined-activity', self._owner_joined_cb)
 
-    def add_invite(self, issuer, bundle_id, activity_id):
+    def add_invite(self, bundle_id, activity_id):
         if activity_id in self._dict:
             # there is no point to add more than one time
             # an invite for the same activity
             return
 
-        invite = Invite(issuer, bundle_id, activity_id)
+        invite = ActivityInvite(bundle_id, activity_id)
         self._dict[activity_id] = invite
         self.emit('invite-added', invite)
 
+    def add_private_invite(self, private_channel, bundle_id):
+        if private_channel in self._dict:
+            # there is no point to add more than one invite for the
+            # same incoming connection
+            return
+
+        invite = PrivateInvite(bundle_id, private_channel)
+        self._dict[private_channel] = invite
+        self.emit('invite-added', invite)
+
     def remove_invite(self, invite):
-        self._dict.pop(invite.get_activity_id())
+        del self._dict[invite.get_activity_id()]
+        self.emit('invite-removed', invite)
+
+    def remove_private_invite(self, invite):
+        del self._dict[invite.get_private_channel()]
         self.emit('invite-removed', invite)
 
     def remove_activity(self, activity_id):
         invite = self._dict.get(activity_id)
         if invite is not None:
             self.remove_invite(invite)
+
+    def remove_private_channel(self, private_channel):
+        invite = self._dict.get(private_channel)
+        if invite is not None:
+            self.remove_private_invite(invite)
 
     def _owner_joined_cb(self, owner, activity):
         self.remove_activity(activity.props.id)

@@ -23,6 +23,7 @@ from model.devices import device
 from model.devices.network import wireless
 from model.devices.network import mesh
 from model.devices import battery
+from model.devices import speaker
 from hardware import hardwaremanager
 from hardware import nmclient
 
@@ -44,6 +45,12 @@ class DevicesModel(gobject.GObject):
 
         self._observe_hal_manager()
         self._observe_network_manager()
+
+        try:
+            self.add_device(speaker.Device())
+        except Exception, speaker_fail_msg:
+            logging.error("could not initialize speaker device: %s" %
+                          speaker_fail_msg)
 
     def _observe_hal_manager(self):
         bus = dbus.Bus(dbus.Bus.TYPE_SYSTEM)

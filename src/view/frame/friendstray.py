@@ -54,8 +54,8 @@ class FriendsTray(VTray):
                 reply_handler=self._get_activities_cb)
 
         home_model = shellmodel.get_instance().get_home()
-        home_model.connect('pending-activity-changed',
-                           self._pending_activity_changed_cb)
+        home_model.connect('active-activity-changed',
+                           self._active_activity_changed_cb)
 
     def _get_activities_cb(self, activities_list):
         for act in activities_list:
@@ -117,7 +117,7 @@ class FriendsTray(VTray):
             self._left_hid = activity_ps.connect(
                             'buddy-left', self.__buddy_left_cb)
             
-    def _pending_activity_changed_cb(self, home_model, home_activity):
+    def _active_activity_changed_cb(self, home_model, home_activity):
         if home_activity is None:        
             return
 

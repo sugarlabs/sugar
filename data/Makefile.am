@@ -1,3 +1,5 @@
+SUBDIRS = icons
+
 sugar.gtkrc: gtkrc.em
 	$(srcdir)/em.py -D theme=\'sugar\' $(srcdir)/gtkrc.em > \
 		$(top_builddir)/data/sugar.gtkrc

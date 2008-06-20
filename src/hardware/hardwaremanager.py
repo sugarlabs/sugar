@@ -50,16 +50,33 @@ class HardwareManager(object):
             if track.flags & gst.interfaces.MIXER_TRACK_MASTER:
                 self._master = track
 
+    def get_muted(self):
+        if not self._mixer or not self._master:
+            logging.error('Cannot get the mute status')
+            return True
+        return self._master.flags & gst.interfaces.MIXER_TRACK_MUTE \
+                 == gst.interfaces.MIXER_TRACK_MUTE
+
     def get_volume(self):
         if not self._mixer or not self._master:
             logging.error('Cannot get the volume')
-            return None
+            return 0
 
         max_volume = self._master.max_volume
         min_volume = self._master.min_volume
-        volume = self._mixer.get_volume(self._master)[0]
 
-        return volume * 100.0 / (max_volume - min_volume) + min_volume
+        volumes = self._mixer.get_volume(self._master)
+
+        #sometimes we get a spurious zero from one/more channel(s)
+        #TODO: consider removing this when trac #6933 is resolved
+        nonzero_volumes = [v for v in volumes if v > 0]
+        
+        if len(nonzero_volumes) > 0:
+            #we could just pick the first nonzero volume, but this converges
+            volume = sum(nonzero_volumes) / len(nonzero_volumes)
+            return volume * 100.0 / (max_volume - min_volume) + min_volume
+        else:
+            return 0
 
     def set_volume(self, volume):
         if not self._mixer or not self._master:
@@ -76,12 +93,21 @@ class HardwareManager(object):
         volume = volume * (max_volume - min_volume) / 100.0 + min_volume
         volume_list = [ volume ] * self._master.num_channels
 
-        self._mixer.set_volume(self._master, tuple(volume_list))
+        #sometimes alsa sets one/more channels' volume to zero instead
+        # of what we asked for, so try a few times
+        #TODO: consider removing this loop when trac #6934 is resolved
+        last_volumes_read = [0]
+        read_count = 0
+        while (0 in last_volumes_read) and (read_count < 3):
+            self._mixer.set_volume(self._master, tuple(volume_list))
+            last_volumes_read = self._mixer.get_volume(self._master)
+            read_count += 1
 
-    def set_mute(self, mute):
+    def set_muted(self, mute):
         if not self._mixer or not self._master:
             logging.error('Cannot mute the audio channel')
-        self._mixer.set_mute(self._master, mute)
+        else:
+            self._mixer.set_mute(self._master, mute)
 
     def startup(self):
         if env.is_emulator() is False:

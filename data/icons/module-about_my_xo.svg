@@ -1,0 +1,6 @@
+<?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd' [
+	<!ENTITY stroke_color "#666666">
+	<!ENTITY fill_color "#ffffff">
+]><svg enable-background="new 0 0 55 55" height="55px" id="Layer_1" version="1.1" viewBox="0 0 55 55" width="55px" x="0px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0px"><g display="block" id="module-about_x5F_my_x5F_xo_1_">
+	<path d="M52.957,40.602h0.002l-0.025-0.017   c-0.152-0.11-0.315-0.21-0.483-0.302l-12.204-7.605V8.667c0-1.624-1.316-2.943-2.941-2.943H6.291c-1.625,0-2.942,1.319-2.942,2.943   V35.08c0,1.1,0.61,2.045,1.503,2.551l-0.019,0.004L19.49,46.77c0.694,0.436,1.534,0.691,2.438,0.691h28.319   c2.362,0,4.296-1.74,4.296-3.865C54.543,42.391,53.923,41.312,52.957,40.602z M9.072,12.392c0-0.619,0.506-1.124,1.124-1.124H33.4   c0.617,0,1.123,0.505,1.123,1.124v16.561c0,0.617-0.506,1.126-1.123,1.126H10.196c-0.617,0-1.124-0.509-1.124-1.126V12.392z" display="inline" fill="&fill_color;" id="module-about_x5F_my_x5F_xo"/>
+</g></svg>

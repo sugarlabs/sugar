@@ -1,0 +1,13 @@
+<?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd' [
+	<!ENTITY stroke_color "#666666">
+	<!ENTITY fill_color "#ffffff">
+]><svg enable-background="new 0 0 55 55" height="55px" id="Layer_1" version="1.1" viewBox="0 0 55 55" width="55px" x="0px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0px"><g display="block" id="module-frame">
+	<g display="inline">
+		<g>
+			<path d="M2.934,8.664v38.209h49.391V8.664H2.934z M49.115,43.833H6.144V11.704h42.971V43.833z" fill="&fill_color;"/>
+		</g>
+	</g>
+	<g display="inline" id="Left_Pointer_1_">
+		<path d="M12.533,16.981l-2.359-2.359h1.597c0.2,0,0.401-0.077,0.555-0.23c0.307-0.306,0.307-0.804,0-1.11    c-0.153-0.154-0.355-0.23-0.555-0.231H7.49l0.001,4.28c0,0.201,0.076,0.401,0.23,0.555c0.306,0.307,0.804,0.307,1.111,0    c0.154-0.153,0.229-0.354,0.229-0.555v-1.597l2.36,2.358c0.142,0.142,0.338,0.23,0.556,0.23c0.434,0,0.785-0.353,0.785-0.786    C12.763,17.319,12.674,17.123,12.533,16.981z" fill="&fill_color;"/>
+	</g>
+</g></svg>
