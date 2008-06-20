@@ -13,6 +13,7 @@
 # PARTICULAR PURPOSE.
 
 @SET_MAKE@
+
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
@@ -29,9 +30,8 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-subdir = src/view/home
-DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	$(sugar_PYTHON)
+subdir = data/icons
+DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -47,8 +47,8 @@ am__vpath_adj = case $$p in \
   esac;
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
 am__installdirs = "$(DESTDIR)$(sugardir)"
-sugarPYTHON_INSTALL = $(INSTALL_DATA)
-py_compile = $(top_srcdir)/py-compile
+sugarDATA_INSTALL = $(INSTALL_DATA)
+DATA = $(sugar_DATA)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 ALL_LINGUAS = @ALL_LINGUAS@
@@ -188,25 +188,16 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-sugardir = $(pkgdatadir)/shell/view/home
-sugar_PYTHON = \
-	__init__.py		\
-	activitieslist.py	\
-	favoritesview.py	\
-	favoriteslayout.py	\
-	grid.py			\
-	FriendView.py		\
-	FriendsBox.py		\
-	launchbox.py		\
-	HomeBox.py		\
-	HomeWindow.py		\
-	MeshBox.py		\
-	MyIcon.py		\
-	proc_smaps.py		\
-	snowflakelayout.py	\
-	spreadlayout.py		\
-	transitionbox.py
+sugardir = $(pkgdatadir)/data/icons
+sugar_DATA = \
+	module-about_me.svg      \
+	module-about_my_xo.svg   \
+	module-date_and_time.svg \
+	module-frame.svg	 \
+	module-language.svg      \
+	module-network.svg	 
 
+EXTRA_DIST = $(sugar_DATA)
 all: all-am
 
 .SUFFIXES:
@@ -219,9 +210,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign  src/view/home/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign  data/icons/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign  src/view/home/Makefile
+	  $(AUTOMAKE) --foreign  data/icons/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -239,33 +230,22 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
-install-sugarPYTHON: $(sugar_PYTHON)
+install-sugarDATA: $(sugar_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(sugardir)" || $(MKDIR_P) "$(DESTDIR)$(sugardir)"
-	@list='$(sugar_PYTHON)'; dlist=''; for p in $$list; do\
-	  if test -f "$$p"; then b=; else b="$(srcdir)/"; fi; \
-	  if test -f $$b$$p; then \
-	    f=$(am__strip_dir) \
-	    dlist="$$dlist $$f"; \
-	    echo " $(sugarPYTHON_INSTALL) '$$b$$p' '$(DESTDIR)$(sugardir)/$$f'"; \
-	    $(sugarPYTHON_INSTALL) "$$b$$p" "$(DESTDIR)$(sugardir)/$$f"; \
-	  else :; fi; \
-	done; \
-	if test -n "$$dlist"; then \
-	  if test -z "$(DESTDIR)"; then \
-	    PYTHON=$(PYTHON) $(py_compile) --basedir "$(sugardir)" $$dlist; \
-	  else \
-	    PYTHON=$(PYTHON) $(py_compile) --destdir "$(DESTDIR)" --basedir "$(sugardir)" $$dlist; \
-	  fi; \
-	else :; fi
-
-uninstall-sugarPYTHON:
-	@$(NORMAL_UNINSTALL)
-	@list='$(sugar_PYTHON)'; dlist=''; for p in $$list; do\
+	@list='$(sugar_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  f=$(am__strip_dir) \
+	  echo " $(sugarDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(sugardir)/$$f'"; \
+	  $(sugarDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(sugardir)/$$f"; \
+	done
+
+uninstall-sugarDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(sugar_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(sugardir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(sugardir)/$$f"; \
-	  rm -f "$(DESTDIR)$(sugardir)/$${f}c"; \
-	  rm -f "$(DESTDIR)$(sugardir)/$${f}o"; \
 	done
 tags: TAGS
 TAGS:
@@ -302,7 +282,7 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile
+all-am: Makefile $(DATA)
 installdirs:
 	for dir in "$(DESTDIR)$(sugardir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
@@ -349,7 +329,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-sugarPYTHON
+install-data-am: install-sugarDATA
 
 install-dvi: install-dvi-am
 
@@ -383,7 +363,7 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-sugarPYTHON
+uninstall-am: uninstall-sugarDATA
 
 .MAKE: install-am install-strip
 
@@ -393,10 +373,10 @@ uninstall-am: uninstall-sugarPYTHON
 	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-info install-info-am install-man \
 	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip install-sugarPYTHON installcheck installcheck-am \
+	install-strip install-sugarDATA installcheck installcheck-am \
 	installdirs maintainer-clean maintainer-clean-generic \
 	mostlyclean mostlyclean-generic pdf pdf-am ps ps-am uninstall \
-	uninstall-am uninstall-sugarPYTHON
+	uninstall-am uninstall-sugarDATA
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

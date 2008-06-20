@@ -16,3 +16,4 @@
 
 prefix = '/home/marco/sugar-jhbuild/install'
 data_path = '/home/marco/sugar-jhbuild/install/share/sugar/data'
+shell_path = '/home/marco/sugar-jhbuild/install/share/sugar/shell'

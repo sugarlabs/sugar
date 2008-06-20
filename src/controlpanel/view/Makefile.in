@@ -29,7 +29,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-subdir = src/view/home
+subdir = src/controlpanel/view
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(sugar_PYTHON)
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -188,24 +188,15 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-sugardir = $(pkgdatadir)/shell/view/home
+sugardir = $(pkgdatadir)/shell/controlpanel/view
 sugar_PYTHON = \
-	__init__.py		\
-	activitieslist.py	\
-	favoritesview.py	\
-	favoriteslayout.py	\
-	grid.py			\
-	FriendView.py		\
-	FriendsBox.py		\
-	launchbox.py		\
-	HomeBox.py		\
-	HomeWindow.py		\
-	MeshBox.py		\
-	MyIcon.py		\
-	proc_smaps.py		\
-	snowflakelayout.py	\
-	spreadlayout.py		\
-	transitionbox.py
+	__init__.py			\
+	aboutme.py			\
+	aboutxo.py			\
+	datetime.py			\
+	frame.py			\
+	language.py			\
+	network.py			
 
 all: all-am
 
@@ -219,9 +210,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign  src/view/home/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign  src/controlpanel/view/Makefile'; \
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign  src/view/home/Makefile
+	  $(AUTOMAKE) --foreign  src/controlpanel/view/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \

@@ -150,6 +150,11 @@ def main():
     session_manager = get_session_manager()
     session_manager.start()
 
-main()
+    try:
+        gtk.main()
+    except KeyboardInterrupt:
+        print 'Ctrl+C pressed, exiting...'
 
+    session_info_file = os.path.join(env.get_profile_path(), "session.info")
+    os.remove(session_info_file)
 
