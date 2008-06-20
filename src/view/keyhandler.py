@@ -57,7 +57,7 @@ _actions_table = {
     '<alt>q'         : 'quit_emulator',
     '<alt>Tab'       : 'next_window',
     '<alt>n'         : 'next_window',
-    '<ctrl><alt>Tab' : 'previous_window',
+    '<alt><shift>Tab': 'previous_window',
     '<alt>p'         : 'previous_window',
     '<ctrl>Escape'   : 'close_window',
     '<ctrl>q'        : 'close_window',
