@@ -342,6 +342,8 @@ class ActivitiesTray(HTray):
         self._freeze_button_clicks = True
         button.props.active = True
         self._freeze_button_clicks = True
+        
+        self.scroll_to_item(button)
 
     def __activity_clicked_cb(self, button, home_activity):
         if not self._freeze_button_clicks and button.props.active:
