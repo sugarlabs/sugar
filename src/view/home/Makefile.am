@@ -4,6 +4,7 @@ sugar_PYTHON =			\
 	activitieslist.py	\
 	favoritesview.py	\
 	favoriteslayout.py	\
+	grid.py			\
 	FriendView.py		\
 	FriendsBox.py		\
 	launchbox.py		\

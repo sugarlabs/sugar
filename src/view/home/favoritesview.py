@@ -58,14 +58,14 @@ class FavoritesView(hippo.Canvas):
         shell_model = shellmodel.get_instance()
         shell_model.connect('notify::state', self._shell_state_changed_cb)
 
-        self._my_icon = _MyIcon(style.XLARGE_ICON_SIZE)
-        self._box.append(self._my_icon, hippo.PACK_FIXED)
-
-        self._current_activity = CurrentActivityIcon()
-        self._box.append(self._current_activity, hippo.PACK_FIXED)
-
         self._layout = RandomLayout()
         self._box.set_layout(self._layout)
+
+        self._my_icon = _MyIcon(style.XLARGE_ICON_SIZE)
+        self._layout.append(self._my_icon)
+
+        self._current_activity = CurrentActivityIcon()
+        self._layout.append(self._current_activity)
 
         registry = activity.get_registry()
         registry.get_activities_async(reply_handler=self._get_activities_cb)
@@ -79,20 +79,22 @@ class FavoritesView(hippo.Canvas):
         self._press_start_y = None
         self._last_clicked_icon = None
 
-        self.drag_source_set(0, [], 0)
-        self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
-                        gtk.gdk.POINTER_MOTION_HINT_MASK)
-        self.connect('motion-notify-event', self.__motion_notify_event_cb)
-        self.connect('button-press-event', self.__button_press_event_cb)
-        self.connect('drag-begin', self.__drag_begin_cb)
+        if self._layout.allow_dnd():
+            self.drag_source_set(0, [], 0)
+            self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
+                            gtk.gdk.POINTER_MOTION_HINT_MASK)
+            self.connect('motion-notify-event', self.__motion_notify_event_cb)
+            self.connect('button-press-event', self.__button_press_event_cb)
+            self.connect('drag-begin', self.__drag_begin_cb)
 
-        self.drag_dest_set(0, [], 0)
-        self.connect('drag-motion', self.__drag_motion_cb)
-        self.connect('drag-drop', self.__drag_drop_cb)
-        self.connect('drag-data-received', self.__drag_data_received_cb)
+            self.drag_dest_set(0, [], 0)
+            self.connect('drag-motion', self.__drag_motion_cb)
+            self.connect('drag-drop', self.__drag_drop_cb)
+            self.connect('drag-data-received', self.__drag_data_received_cb)
 
     def _add_activity(self, activity_info):
         icon = ActivityIcon(activity_info)
+        icon.props.size = style.STANDARD_ICON_SIZE
         self._layout.append(icon)
 
     def _get_activities_cb(self, activity_list):
@@ -123,9 +125,9 @@ class FavoritesView(hippo.Canvas):
             return
         icon = self._find_activity_icon(activity_info.bundle_id,
                 activity_info.version)
-        if icon is not None and not activity_info.favorite:
+        if icon is not None:
             self._box.remove(icon)
-        elif icon is None and activity_info.favorite:
+        if activity_info.favorite:
             self._add_activity(activity_info)
 
     def _shell_state_changed_cb(self, model, pspec):
@@ -134,21 +136,24 @@ class FavoritesView(hippo.Canvas):
             pass
 
     def do_size_allocate(self, allocation):
-        hippo.Canvas.do_size_allocate(self, allocation)
-        
         width = allocation.width        
         height = allocation.height
 
-        [my_icon_width, my_icon_height] = self._my_icon.get_allocation()
+        min_w_, my_icon_width = self._my_icon.get_width_request()
+        min_h_, my_icon_height = self._my_icon.get_height_request(my_icon_width)
         x = (width - my_icon_width) / 2
         y = (height - my_icon_height - style.GRID_CELL_SIZE) / 2
-        self._box.set_position(self._my_icon, x, y)
+        self._layout.move_icon(self._my_icon, x, y, locked=True)
 
-        [icon_width, icon_height] = self._current_activity.get_allocation()
+        min_w_, icon_width = self._current_activity.get_width_request()
+        min_h_, icon_height = \
+                self._current_activity.get_height_request(icon_width)
         x = (width - icon_width) / 2
-        y = (height + my_icon_height + style.DEFAULT_PADDING \
-                 - style.GRID_CELL_SIZE) / 2
-        self._box.set_position(self._current_activity, x, y)
+        y = (height - my_icon_height - style.GRID_CELL_SIZE) / 2 + \
+                my_icon_height + style.DEFAULT_PADDING
+        self._layout.move_icon(self._current_activity, x, y, locked=True)
+
+        hippo.Canvas.do_size_allocate(self, allocation)
 
     def enable_xo_palette(self):
         self._my_icon.enable_palette()

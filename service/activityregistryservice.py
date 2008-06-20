@@ -110,10 +110,10 @@ class ActivityRegistry(dbus.service.Object):
         registry.set_bundle_favorite(bundle_id, version, favorite)
 
     @dbus.service.method(_ACTIVITY_REGISTRY_IFACE,
-                         in_signature='siii', out_signature='')
+                         in_signature='sidd', out_signature='')
     def SetActivityPosition(self, bundle_id, version, x, y):
         registry = bundleregistry.get_registry()
-        registry.set_bundle_position(bundle_id, version, x, y)
+        registry.set_bundle_position(bundle_id, version, float(x), float(y))
 
     @dbus.service.signal(_ACTIVITY_REGISTRY_IFACE, signature='a{sv}')
     def ActivityAdded(self, activity_info):

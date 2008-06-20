@@ -50,7 +50,7 @@ class FriendsBox(hippo.Canvas):
         palette = Palette(None, primary_text=profile.get_nick_name(),
                           icon=palette_icon)
         self._owner_icon.set_palette(palette)
-        self._layout.add_center(self._owner_icon)
+        self._layout.add(self._owner_icon)
 
         friends = shellmodel.get_instance().get_friends()
 
@@ -74,4 +74,16 @@ class FriendsBox(hippo.Canvas):
         self._layout.remove(icon)
         del self._friends[key]
         icon.destroy()
+
+    def do_size_allocate(self, allocation):
+        width = allocation.width        
+        height = allocation.height
+
+        min_w_, icon_width = self._owner_icon.get_width_request()
+        min_h_, icon_height = self._owner_icon.get_height_request(icon_width)
+        x = (width - icon_width) / 2
+        y = (height - icon_height) / 2
+        self._layout.move(self._owner_icon, x, y)
+
+        hippo.Canvas.do_size_allocate(self, allocation)
 
