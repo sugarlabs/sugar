@@ -74,18 +74,17 @@ debian/stamp-copyright-check:
 	@if [ ! -f debian/copyright_hints ]; then touch debian/copyright_hints; fi
 	@newstrings=`diff -u debian/copyright_hints debian/copyright_newhints | sed '1,2d' | egrep '^\+' - | sed 's/^\+//'`; \
 		if [ -n "$$newstrings" ]; then \
-			echo "ERROR: The following new or changed copyright notices discovered:"; \
+			echo "WARNING: The following new or changed copyright notices discovered:"; \
 			echo; \
 			echo "$$newstrings"; \
 			echo; \
 			echo "To fix the situation please do the following:"; \
 			echo "  1) Investigate the above changes and update debian/copyright as needed"; \
 			echo "  2) Replace debian/copyright_hints with debian/copyright_newhints"; \
-			exit 1; \
+		else \
+			echo 'No new copyright notices found - assuming no news is good news...'; \
+			rm -f debian/copyright_newhints; \
 		fi
-	
-	@echo 'No new copyright notices found - assuming no news is good news...'
-	rm -f debian/copyright_newhints
 	touch $@
 
 clean::

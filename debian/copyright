@@ -14,7 +14,19 @@ Files: src/*, service/bundleregistry.py
 Copyright: © 2006-2007, Red Hat, Inc.
 License: GPL-2+
 
-Files: config.py, config.py.in, bin/*
+Files: src/controlpanel/cmd.py, src/controlpanel/model/datetime.py,
+ src/controlpanel/model/language.py, src/controlpanel/toolbar.py
+Copyright: © 2007-2008 One Laptop Per Child
+License: GPL-2+
+
+Files: src/model/Owner.py, src/view/devices/network/mesh.py,
+ src/view/frame/activitiestray.py, src/view/home/favoritesview.py
+Copyright: © 2008 One Laptop Per Child
+	   © 2006-2007, Red Hat, Inc.
+License: GPL-2+
+
+Files: config.py, config.py.in, bin/*, src/session.py,
+ src/view/home/launchbox.py
 Copyright: © 2008, Red Hat, Inc.
 License: GPL-2+
 
@@ -32,6 +44,19 @@ License: LGPL-2+
 Files: src/view/home/snowflakelayout.py
 Copyright: © 2006-2007, Red Hat, Inc.
 License: LGPL-2+
+
+Files: src/view/home/grid.py
+Copyright: © 2008 One Laptop Per Child
+	   © 2007 Red Hat, Inc
+License: GPL-2+
+
+Files: src/model/devices/speaker.py, src/view/devices/speaker.py
+Copyright: © 2008 Martin Dengler
+License: GPL-2+
+
+Files: src/view/tabbinghandler.py
+Copyright: © 2008, Benjamin Berg <benjamin@sipsolutions.net>
+License: GPL-2+
 
 Files: bin/sugar-launch, maint-helper.py
 Copyright: © 2007, Red Hat, Inc.
@@ -56,9 +81,16 @@ Copyright: © 2007, One Laptop Per Child
 	   © 2006, Red Hat, Inc
 License: GPL-2+
 
+Files: src/controlpanel/inlinealert.py, src/controlpanel/sectionview.py,
+ src/controlpanel/view/aboutme.py, src/controlpanel/view/aboutxo.py,
+ src/controlpanel/view/datetime.py, src/controlpanel/view/frame.py,
+ src/controlpanel/view/language.py, src/controlpanel/view/network.py
+Copyright: © 2008, OLPC
+License: GPL-2+
+
 Files: service/__init__.py, service/clipboardobject.py,
- src/view/clipboardmenu.py, src/view/frame/clipboardbox.py,
- src/view/frame/clipboardpanelwindow.py
+ src/view/clipboardmenu.py, src/view/frame/clipboardpanelwindow.py,
+ src/view/frame/clipboardtray.py
 Copyright: © 2007, One Laptop Per Child
 License: GPL-2+
 

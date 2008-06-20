@@ -1,6 +1,8 @@
 --- sugar-0.79.0.orig/data/Makefile.am
 +++ sugar-0.79.0/data/Makefile.am
-@@ -1,9 +1,9 @@
+@@ -1,11 +1,11 @@
+ SUBDIRS = icons
+ 
  sugar.gtkrc: gtkrc.em
 -	$(srcdir)/em.py -D theme=\'sugar\' $(srcdir)/gtkrc.em > \
 +	empy -D theme=\'sugar\' $(srcdir)/gtkrc.em > \

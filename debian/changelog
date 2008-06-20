@@ -1,3 +1,20 @@
+sugar (0.81.4-1) unstable; urgency=low
+
+  * New upstream release.
+  * Disable (but keep in source) patch 2003 (refactored upstream).
+  * Tighten dependency on python-sugar-toolkit (control panel items
+    moved).
+  * Update local cdbs snippets:
+    + Relax copyright-check to only warn about its discoveries.  Closes:
+      bug#486984.
+    + Update dependency cleanup to strip cdbs 0.4.27 (not 0.4.27-1).
+  * Update debian/copyright (new files, same owners and licenses).
+    Update debian/copyright-hints.
+  * Semi-auto-update debian/control to update build-dependencies:
+      DEB_AUTO_UPDATE_DEBIAN_CONTROL=yes fakeroot debian/rules clean
+
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 20 Jun 2008 23:11:55 +0200
+
 sugar (0.81.2-1) unstable; urgency=low
 
   * New upstream Release.

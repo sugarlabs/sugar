@@ -10,6 +10,13 @@
 	data/Makefile.am
 	data/activities.defaults
 	data/gtkrc.em
+	data/icons/Makefile.am
+	data/icons/module-about_me.svg
+	data/icons/module-about_my_xo.svg
+	data/icons/module-date_and_time.svg
+	data/icons/module-frame.svg
+	data/icons/module-language.svg
+	data/icons/module-network.svg
 	data/kbdconfig
 	data/mime.defaults
 	data/sugar-xo.gtkrc
@@ -26,6 +33,8 @@
 	service/org.laptop.Clipboard.service.in
 	src/Makefile.am
 	src/controlpanel/Makefile.am
+	src/controlpanel/model/Makefile.am
+	src/controlpanel/view/Makefile.am
 	src/hardware/Makefile.am
 	src/hardware/NetworkManagerInfo.conf
 	src/hardware/schoolserver.py
@@ -50,7 +59,6 @@ GPL-2+ [2006-2007 Red Hat, Inc]: service/bundleregistry.py
 	src/model/Friends.py
 	src/model/Invites.py
 	src/model/MeshModel.py
-	src/model/Owner.py
 	src/model/accesspointmodel.py
 	src/model/devices/network/mesh.py
 	src/model/devices/network/wireless.py
@@ -72,7 +80,7 @@ GPL-2+ [2006-2007 Red Hat, Inc]: service/bundleregistry.py
 	src/view/home/MeshBox.py
 	src/view/home/MyIcon.py
 	src/view/home/snowflakelayout.py
-UNKNOWN [YEAR THE PACKAGE'S COPYRIGHT HOLDER]: po/am.po
+UNKNOWN [YEAR THE PACKAGE'S HOLDER]: po/am.po
 	po/ar.po
 	po/ay.po
 	po/bn.po
@@ -80,7 +88,6 @@ UNKNOWN [YEAR THE PACKAGE'S COPYRIGHT HOLDER]: po/am.po
 	po/el.po
 	po/en.po
 	po/es.po
-	po/fa.po
 	po/ha.po
 	po/hi.po
 	po/is.po
@@ -99,16 +106,18 @@ UNKNOWN [YEAR THE PACKAGE'S COPYRIGHT HOLDER]: po/am.po
 	po/ru.po
 	po/rw.po
 	po/th.po
-	po/ur.po
 	po/yo.po
 	po/zh_CN.po
 	po/zh_TW.po
 GENERATED FILE [1994-2002]: Makefile.in
 	bin/Makefile.in
 	data/Makefile.in
+	data/icons/Makefile.in
 	service/Makefile.in
 	src/Makefile.in
 	src/controlpanel/Makefile.in
+	src/controlpanel/model/Makefile.in
+	src/controlpanel/view/Makefile.in
 	src/hardware/Makefile.in
 	src/intro/Makefile.in
 	src/model/Makefile.in
@@ -135,6 +144,20 @@ GPL-2+ [2006-2007, Red Hat, Inc]: src/controlpanel/__init__.py
 	src/view/frame/__init__.py
 	src/view/home/__init__.py
 	src/view/keyhandler.py
+GPL-2+ [2008 One Laptop Per Child]: src/controlpanel/gui.py
+	src/controlpanel/model/__init__.py
+	src/controlpanel/model/aboutme.py
+	src/controlpanel/model/aboutxo.py
+	src/controlpanel/model/frame.py
+	src/controlpanel/model/network.py
+	src/controlpanel/view/__init__.py
+	src/view/frame/devicestray.py
+	src/view/frame/notification.py
+	src/view/home/HomeBox.py
+	src/view/home/activitieslist.py
+	src/view/home/favoriteslayout.py
+	src/view/palettes.py
+	src/view/pulsingicon.py
 GPL-2+ [2008, Red Hat, Inc]: bin/sugar-control-panel
 	bin/sugar-control-panel.in
 	bin/sugar-emulator
@@ -143,13 +166,16 @@ GPL-2+ [2008, Red Hat, Inc]: bin/sugar-control-panel
 	bin/sugar-shell-service
 	bin/sugar-shell-service.in
 	bin/sugar-shell.in
-GPL-2+ [2007, One Laptop Per Child]: service/__init__.py
-	service/clipboardobject.py
-	src/controlpanel/cmd.py
-	src/controlpanel/control.py
-	src/view/clipboardmenu.py
-	src/view/frame/clipboardpanelwindow.py
-	src/view/frame/clipboardtray.py
+	src/session.py
+	src/view/home/launchbox.py
+GPL-2+ [2008, OLPC]: src/controlpanel/inlinealert.py
+	src/controlpanel/sectionview.py
+	src/controlpanel/view/aboutme.py
+	src/controlpanel/view/aboutxo.py
+	src/controlpanel/view/datetime.py
+	src/controlpanel/view/frame.py
+	src/controlpanel/view/language.py
+	src/controlpanel/view/network.py
 GPL-2+ [2007, Red Hat, Inc]: bin/sugar-launch
 	src/intro/colorpicker.py
 	src/intro/intro.py
@@ -157,16 +183,23 @@ GPL-2+ [2007, Red Hat, Inc]: bin/sugar-launch
 	src/model/devices/devicesmodel.py
 	src/view/frame/eventarea.py
 	src/view/home/transitionbox.py
-GPL-2+ [2008 One Laptop Per Child]: src/view/frame/devicestray.py
-	src/view/frame/notification.py
-	src/view/home/HomeBox.py
-	src/view/home/activitieslist.py
-	src/view/palettes.py
-	src/view/pulsingicon.py
+GPL-2+ [2007, One Laptop Per Child]: service/__init__.py
+	service/clipboardobject.py
+	src/view/clipboardmenu.py
+	src/view/frame/clipboardpanelwindow.py
+	src/view/frame/clipboardtray.py
 GPL-2+ [2006, Red Hat, Inc]: bin/sugar-activity
 	service/clipboardservice.py
 	src/emulator.py
 	src/main.py
+GPL-2+ [2007-2008 One Laptop Per Child]: src/controlpanel/cmd.py
+	src/controlpanel/model/datetime.py
+	src/controlpanel/model/language.py
+	src/controlpanel/toolbar.py
+GPL-2+ [2008 One Laptop Per Child / 2006-2007 Red Hat, Inc]: src/model/Owner.py
+	src/view/devices/network/mesh.py
+	src/view/frame/activitiestray.py
+	src/view/home/favoritesview.py
 GPL-2+ [2008 Red Hat, Inc]: service/config.py
 	service/config.py.in
 	src/config.py
@@ -174,9 +207,8 @@ GPL-2+ [2008 Red Hat, Inc]: service/config.py
 GPL-2+ [2007 Red Hat, Inc]: src/logsmanager.py
 	src/view/home/proc_smaps.py
 	src/view/home/spreadlayout.py
-GPL-2+ [2008 One Laptop Per Child / 2006-2007 Red Hat, Inc]: src/view/devices/network/mesh.py
-	src/view/frame/activitiestray.py
-	src/view/home/activitiesring.py
+GPL-2+ [2008 Martin Dengler]: src/model/devices/speaker.py
+	src/view/devices/speaker.py
 GENERATED FILE [1992-1996, 1998-2001]: configure
 GENERATED FILE [1995-2002 Free Software Foundation, Inc / 2001-2004 Red Hat, Inc / 1996-2004]: aclocal.m4
 GPL GENERATED FILE [1996-1997, 1999-2000, 2002-2006]: missing
@@ -191,8 +223,12 @@ GPL-2+ [2007 One Laptop Per Child / 2006-2007 Red Hat, Inc]: service/activityreg
 GPL-2+ [2007, Eduardo Silva <edsiper@gmail.com>]: src/view/frame/frameinvoker.py
 GPL-2+ [2007, One Laptop Per Child / 2006, Red Hat, Inc]: service/main.py
 GPL-2+ [2007, Red Hat, Inc / 2007, One Laptop Per Child]: src/view/clipboardicon.py
-MIT/X11 (BSD like) [and license / notice and this permission notice shall be included in / 1994 X Consortium]: install-sh
+GPL-2+ [2008 One Laptop Per Child / 2007 Red Hat, Inc]: src/view/home/grid.py
+GPL-2+ [2008, Benjamin Berg <benjamin@sipsolutions.net>]: src/view/tabbinghandler.py
+MIT/X11 (BSD like) [1994 X Consortium]: install-sh
 UNKNOWN [1989, 1991 Free Software Foundation, Inc. / the software, and]: COPYING
 UNKNOWN [1995-1997 by Ulrich Drepper <drepper@gnu.ai.mit.edu> / 2004-2008 Rodney Dawes <dobey.pwns@gmail.com>]: po/Makefile.in.in
 UNKNOWN [2007 the Package Owner]: po/fr.po
-UNKNOWN [YEAR THE PACKAGE'S COPYRIGHT HOLDER, 2006]: po/ig.po
+UNKNOWN [YEAR THE PACKAGE'S HOLDER / " / " / :"]: po/fa.po
+UNKNOWN [YEAR THE PACKAGE'S HOLDER / :"]: po/ur.po
+UNKNOWN [YEAR THE PACKAGE'S HOLDER, 2006]: po/ig.po
