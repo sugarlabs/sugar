@@ -207,8 +207,8 @@ class FavoritesButton(RadioToolButton):
 
         self._layout = favoritesview.RANDOM_LAYOUT
 
-        # TRANS: label for the free layout in the favorites view
-        menu_item = MenuItem(_('Free'), 'activity-start')
+        # TRANS: label for the freeform layout in the favorites view
+        menu_item = MenuItem(_('Freeform'), 'activity-start')
         menu_item.connect('activate', self.__layout_activate_cb,
                           favoritesview.RANDOM_LAYOUT)
         self.props.palette.menu.append(menu_item)
