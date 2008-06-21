@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-05 00:30-0400\n"
-"PO-Revision-Date: 2008-06-12 09:25-0400\n"
+"POT-Creation-Date: 2008-06-14 00:30-0400\n"
+"PO-Revision-Date: 2008-06-21 06:36-0400\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -89,24 +89,23 @@ msgstr "Type d'authentification :"
 msgid "Encryption Type:"
 msgstr "Type d'encryptage :"
 
-#: ../src/view/Shell.py:259
+#: ../src/view/Shell.py:262
 msgid "Screenshot"
 msgstr "Capture d'écran"
 
-#: ../src/view/home/HomeBox.py:149
-#, fuzzy
+#: ../src/view/home/HomeBox.py:148
 msgid "Ring view"
 msgstr "Vue concentrique"
 
-#: ../src/view/home/HomeBox.py:150
+#: ../src/view/home/HomeBox.py:149
 msgid "<Ctrl>R"
 msgstr "<Ctrl>R"
 
-#: ../src/view/home/HomeBox.py:158
+#: ../src/view/home/HomeBox.py:157
 msgid "List view"
 msgstr "Vue liste"
 
-#: ../src/view/home/HomeBox.py:159
+#: ../src/view/home/HomeBox.py:158
 msgid "<Ctrl>L"
 msgstr "<Ctrl>L"
 
@@ -155,7 +154,7 @@ msgstr "Déconnexion..."
 msgid "Resume"
 msgstr "Reprendre"
 
-#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:162
+#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:219
 msgid "Join"
 msgstr "Rejoindre"
 
@@ -269,25 +268,25 @@ msgstr "Annuler"
 msgid "Ok"
 msgstr "Ok"
 
-#: ../src/controlpanel/sectionview.py:34
-msgid "Changes require a sugar restart to take effect."
-msgstr "Pour appliquer les changements, sugar doit être redémarré."
+#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:250
+msgid "Changes require restart"
+msgstr "Redémarrer pour appliquer les changements"
 
-#: ../src/controlpanel/gui.py:248
+#: ../src/controlpanel/gui.py:249
 msgid "Warning"
 msgstr "Attention"
 
-#: ../src/controlpanel/gui.py:249
-msgid "Changes require restart to take effect"
-msgstr "Redémarrer pour appliquer les changements"
-
-#: ../src/controlpanel/gui.py:252
+#: ../src/controlpanel/gui.py:253
 msgid "Cancel changes"
 msgstr "Annuler les changements"
 
 #: ../src/controlpanel/gui.py:257
 msgid "Later"
 msgstr "Plus tard"
+
+#: ../src/controlpanel/gui.py:261
+msgid "Restart now"
+msgstr "Redémarrer maintenant"
 
 #: ../src/controlpanel/model/aboutme.py:44
 msgid "You must enter a name."
@@ -301,21 +300,18 @@ msgstr "stroke:   color=%s hue=%s"
 
 #: ../src/controlpanel/model/aboutme.py:70
 #, python-format
-#, fuzzy
 msgid "stroke:   %s"
-msgstr ""
+msgstr "stroke:   %s"
 
 #: ../src/controlpanel/model/aboutme.py:72
 #, python-format
-#, fuzzy
 msgid "fill:     color=%s hue=%s"
-msgstr ""
+msgstr "fill:     color=%s hue=%s"
 
 #: ../src/controlpanel/model/aboutme.py:74
 #, python-format
-#, fuzzy
 msgid "fill:     %s"
-msgstr ""
+msgstr "fill:     %s"
 
 #: ../src/controlpanel/model/aboutme.py:85
 msgid "Error in specified color modifiers."
@@ -334,13 +330,14 @@ msgid "Error timezone does not exist."
 msgstr "Erreur : la zone temporelle n'existe pas."
 
 #: ../src/controlpanel/model/frame.py:38 ../src/controlpanel/model/frame.py:60
-msgid "Value must be an int."
+#, fuzzy
+msgid "Value must be an integer."
 msgstr "La valeur doit être un entier."
 
 #: ../src/controlpanel/model/language.py:28
 #, fuzzy
 msgid "Could not access ~/.i18n. Create standard settings."
-msgstr "Acces impossible à ~/.i18n. Création de paramètres par défaut."
+msgstr "Accès impossible à ~/.i18n. Création de paramètres par défaut."
 
 #: ../src/controlpanel/model/language.py:104
 #, python-format
@@ -418,18 +415,22 @@ msgid "instantaneous"
 msgstr "immédiat"
 
 #: ../src/controlpanel/view/frame.py:32
-msgid "Delay in milliseconds:"
-msgstr "Délai en millisecondes :"
-
-#: ../src/controlpanel/view/frame.py:66
+#, python-format
 #, fuzzy
-msgid "Hot Corners"
-msgstr "Coins activables"
+msgid "%s seconds"
+msgstr "%s secondes"
 
-#: ../src/controlpanel/view/frame.py:117
-#, fuzzy
-msgid "Warm Edges"
-msgstr "Bords dynamiques"
+#: ../src/controlpanel/view/frame.py:56
+msgid "Activation Delay"
+msgstr "Délai d'activation"
+
+#: ../src/controlpanel/view/frame.py:80
+msgid "Corner"
+msgstr "Coin"
+
+#: ../src/controlpanel/view/frame.py:115
+msgid "Edge"
+msgstr "Bord"
 
 #: ../src/controlpanel/view/language.py:29
 #: ../src/controlpanel/view/language.py:74
@@ -484,23 +485,23 @@ msgstr "Démarre un réseau maillé simple"
 msgid "Unknown Mesh"
 msgstr "Réseau maillé inconnu"
 
-#: ../src/view/frame/activitiestray.py:167
+#: ../src/view/frame/activitiestray.py:224
 msgid "Decline"
 msgstr "Refuser"
 
-#: ../src/view/home/activitiesring.py:310
+#: ../src/view/home/activitiesring.py:305
 msgid "Control Panel"
 msgstr "Panneau de contrôle"
 
-#: ../src/view/home/activitiesring.py:321
+#: ../src/view/home/activitiesring.py:316
 msgid "Restart"
 msgstr "Redémarrer"
 
-#: ../src/view/home/activitiesring.py:326
+#: ../src/view/home/activitiesring.py:321
 msgid "Shutdown"
 msgstr "Éteindre"
 
-#: ../src/view/home/activitiesring.py:332
+#: ../src/view/home/activitiesring.py:327
 msgid "Register"
 msgstr "S'enregistrer"
 
@@ -533,6 +534,23 @@ msgstr "Afficher les contenus"
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d Mo de libre"
+
+#~ msgid "Changes require a sugar restart to take effect."
+#~ msgstr "Pour appliquer les changements, sugar doit être redémarré."
+
+#~ msgid "Changes require restart to take effect"
+#~ msgstr "Redémarrer pour appliquer les changements"
+
+#~ msgid "Delay in milliseconds:"
+#~ msgstr "Délai en millisecondes :"
+
+#, fuzzy
+#~ msgid "Hot Corners"
+#~ msgstr "Coins activables"
+
+#, fuzzy
+#~ msgid "Warm Edges"
+#~ msgstr "Bords dynamiques"
 
 #~ msgid "off"
 #~ msgstr "arrêt"
@@ -704,10 +722,6 @@ msgstr "%(free_space)d Mo de libre"
 #, python-format
 #~ msgid "%d second"
 #~ msgstr "%d seconde"
-
-#, python-format
-#~ msgid "%d seconds"
-#~ msgstr "%d secondes"
 
 #~ msgid " and "
 #~ msgstr "_et_"
