@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-14 00:30-0400\n"
-"PO-Revision-Date: 2008-06-21 06:36-0400\n"
+"PO-Revision-Date: 2008-06-21 07:09-0400\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -366,7 +366,6 @@ msgid "About Me"
 msgstr "Informations personnelles"
 
 #: ../src/controlpanel/view/aboutme.py:134
-#, fuzzy
 msgid "Click to change your color:"
 msgstr "Cliquer pour changer de couleur :"
 
