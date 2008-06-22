@@ -268,23 +268,29 @@ class ActivityIcon(CanvasIcon):
     def __init__(self, activity_info):
         CanvasIcon.__init__(self, cache=True, file_name=activity_info.icon)
         self._activity_info = activity_info
+        self._uncolor()
         self.connect('hovering-changed', self.__hovering_changed_event_cb)
         self.connect('button-release-event', self.__button_release_event_cb)
-
-        self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
-        self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
 
     def create_palette(self):
         return ActivityPalette(self._activity_info)
 
-    def __hovering_changed_event_cb(self, icon, event):
-        if event:
-            self.props.xo_color = get_profile().color
+    def _color(self):
+        self.props.xo_color = get_profile().color
+
+    def _uncolor(self):
+        self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
+        self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+
+    def __hovering_changed_event_cb(self, icon, hovering):
+        if hovering:
+            self._color()
         else:
-            self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
-            self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+            self._uncolor()
 
     def __button_release_event_cb(self, icon, event):
+        self.palette.popdown(immediate=True)
+        self._uncolor()
         view.Shell.get_instance().start_activity(self._activity_info.bundle_id)
 
     def get_bundle_id(self):

@@ -105,21 +105,32 @@ class ActivitiesList(gtk.ScrolledWindow):
 class ActivityIcon(CanvasIcon):
     def __init__(self, activity_info):
         CanvasIcon.__init__(self, size=style.STANDARD_ICON_SIZE, cache=True,
-                            file_name=activity_info.icon,
-                            stroke_color=style.COLOR_BUTTON_GREY.get_svg(),
-                            fill_color=style.COLOR_TRANSPARENT.get_svg())
+                            file_name=activity_info.icon)
         self._activity_info = activity_info
+        self._uncolor()
         self.connect('hovering-changed', self.__hovering_changed_event_cb)
-
-    def __hovering_changed_event_cb(self, icon, event):
-        if event:
-            self.props.xo_color = profile.get_color()
-        else:
-            self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
-            self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+        self.connect('button-release-event', self.__button_release_event_cb)
 
     def create_palette(self):
         return ActivityPalette(self._activity_info)
+
+    def _color(self):
+        self.props.xo_color = profile.get_color()
+
+    def _uncolor(self):
+        self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
+        self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+
+    def __hovering_changed_event_cb(self, icon, hovering):
+        if hovering:
+            self._color()
+        else:
+            self._uncolor()
+
+    def __button_release_event_cb(self, icon, event):
+        self.palette.popdown(immediate=True)
+        self._uncolor()
+
 
 class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarActivityEntry'
