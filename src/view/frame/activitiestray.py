@@ -67,26 +67,12 @@ class ActivityButton(RadioToolButton):
             self._icon.props.pulsing = True
             self._notify_launching_hid = home_activity.connect( \
                     'notify::launching', self.__notify_launching_cb)
-
-            self._notif_icon = NotificationIcon()
-            self._notif_icon.props.xo_color = home_activity.get_icon_color()
-            if home_activity.get_icon_path():
-                icon_path = home_activity.get_icon_path()
-                self._notif_icon.props.icon_filename = icon_path
-            else:
-                self._notif_icon.props.icon_name = 'image-missing'
-            frame = view.frame.frame.get_instance()
-            frame.add_notification(self._notif_icon, view.frame.frame.TOP_LEFT)
         else:
             self._notify_launching_hid = None
             self._notif_icon = None
 
     def __notify_launching_cb(self, home_activity, pspec):
         if not home_activity.props.launching:
-            if self._notif_icon is not None:
-                frame = view.frame.frame.get_instance()
-                frame.remove_notification(self._notif_icon)
-                self._notif_icon = None
             self._icon.props.pulsing = False
             home_activity.disconnect(self._notify_launching_hid)
 
