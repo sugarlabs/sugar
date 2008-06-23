@@ -43,7 +43,7 @@ for package in [sugar, sugar-toolkit, sugar-base, sugar-artwork]:
         cd cvs_package
         cvs update
 
-    cd OLPC-2
+    cd OLPC-3
     make new-sources FILES="[tarball-created-with-make_distcheck]"
 
     # Change the version in the spec
@@ -54,8 +54,7 @@ for package in [sugar, sugar-toolkit, sugar-base, sugar-artwork]:
     make srpm
 
     make clog
-    cvs commit
-    # and put the output of 'make clog' as message
+    cvs commit -F clog
 
     make tag
     make build
