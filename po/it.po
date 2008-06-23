@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-21 00:30-0400\n"
-"PO-Revision-Date: 2008-06-18 04:33-0400\n"
+"PO-Revision-Date: 2008-06-23 18:07-0400\n"
 "Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -103,7 +103,7 @@ msgstr "<Ctrl>L"
 
 #: ../src/view/home/HomeBox.py:204
 msgid "Favorites view"
-msgstr ""
+msgstr "Visualizza i Preferiti"
 
 #: ../src/view/home/HomeBox.py:205
 msgid "<Ctrl>R"
@@ -112,12 +112,12 @@ msgstr "<Ctrl>R"
 #. TRANS: label for the freeform layout in the favorites view
 #: ../src/view/home/HomeBox.py:211
 msgid "Freeform"
-msgstr ""
+msgstr "Formato libero"
 
 #. TRANS: label for the ring layout in the favorites view
 #: ../src/view/home/HomeBox.py:218
 msgid "Ring"
-msgstr ""
+msgstr "Anello"
 
 #: ../src/view/home/MeshBox.py:97
 msgid "Connect"
@@ -166,7 +166,6 @@ msgid "Resume"
 msgstr "Riprendi"
 
 #: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:219
-#, fuzzy
 msgid "Join"
 msgstr "Associa"
 
@@ -200,7 +199,6 @@ msgid "Unmute"
 msgstr "riAttiva"
 
 #: ../src/view/devices/speaker.py:107
-#, fuzzy
 msgid "Mute"
 msgstr "Silenzia"
 
@@ -345,14 +343,12 @@ msgid "Error timezone does not exist."
 msgstr "Errore, timezone non esistente."
 
 #: ../src/controlpanel/model/frame.py:38 ../src/controlpanel/model/frame.py:60
-#, fuzzy
 msgid "Value must be an integer."
 msgstr "Valore deve essere un intero."
 
 #: ../src/controlpanel/model/language.py:28
-#, fuzzy
 msgid "Could not access ~/.i18n. Create standard settings."
-msgstr "Impossibile accedere a %s. Creazione configurazione standard."
+msgstr "Impossibile accedere a ~/.i18n. Creazione configurazione standard."
 
 #: ../src/controlpanel/model/language.py:104
 #, python-format
@@ -369,7 +365,6 @@ msgid "You must enter a server."
 msgstr "Devi inserire un server."
 
 #: ../src/controlpanel/model/network.py:63
-#, fuzzy
 msgid "State is unknown."
 msgstr "Stato sconosciuto."
 
@@ -382,9 +377,8 @@ msgid "About Me"
 msgstr "Informazioni su"
 
 #: ../src/controlpanel/view/aboutme.py:134
-#, fuzzy
 msgid "Click to change your color:"
-msgstr "Seleziona per cambiare colore:"
+msgstr "Seleziona per cambiare il tuo colore:"
 
 #: ../src/controlpanel/view/aboutxo.py:26
 msgid "About my XO"
@@ -432,7 +426,6 @@ msgstr "istantaneamente"
 
 #: ../src/controlpanel/view/frame.py:32
 #, python-format
-#, fuzzy
 msgid "%s seconds"
 msgstr "%d secondi"
 
@@ -537,11 +530,11 @@ msgstr "Avvia"
 
 #: ../src/view/palettes.py:119
 msgid "Remove favorite"
-msgstr ""
+msgstr "Rimuovi preferito"
 
 #: ../src/view/palettes.py:123
 msgid "Make favorite"
-msgstr ""
+msgstr "Definisci preferito"
 
 #: ../src/view/palettes.py:169
 msgid "Show contents"
