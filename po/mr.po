@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-05 00:30-0400\n"
-"PO-Revision-Date: 2008-05-03 03:23-0400\n"
-"Last-Translator: Sandip Gawas <sandip.gawas@gmail.com>\n"
+"POT-Creation-Date: 2008-06-21 00:30-0400\n"
+"PO-Revision-Date: 2008-06-21 02:24-0400\n"
+"Last-Translator: Rupali Sarode <rups23in@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,11 +62,11 @@ msgstr "उघडणे"
 #. self.append_menu_item(self._stop_item)
 #: ../src/view/clipboardmenu.py:63
 msgid "Keep"
-msgstr ""
+msgstr "संभाला"
 
 #: ../src/view/clipboardmenu.py:84
 msgid "Open with"
-msgstr ""
+msgstr "ने उघडा"
 
 #: ../src/view/clipboardmenu.py:212
 #, python-format
@@ -85,57 +85,64 @@ msgstr "पमाणिकरणचा प्रकार"
 msgid "Encryption Type:"
 msgstr "गोपीनियचे प्रकार"
 
-#: ../src/view/Shell.py:259
+#: ../src/view/Shell.py:262
 msgid "Screenshot"
 msgstr "पडदा चित्रा"
 
-#: ../src/view/home/HomeBox.py:149
-msgid "Ring view"
-msgstr ""
-
-#: ../src/view/home/HomeBox.py:150
-msgid "<Ctrl>R"
-msgstr ""
-
-#: ../src/view/home/HomeBox.py:158
+#: ../src/view/home/HomeBox.py:147
 msgid "List view"
+msgstr "यादी दृष्य"
+
+#: ../src/view/home/HomeBox.py:148
+msgid "<Ctrl>L"
+msgstr "<ctr>L"
+
+#: ../src/view/home/HomeBox.py:204
+msgid "Favorites view"
 msgstr ""
 
-#: ../src/view/home/HomeBox.py:159
-msgid "<Ctrl>L"
+#: ../src/view/home/HomeBox.py:205
+msgid "<Ctrl>R"
+msgstr "<ctr>R"
+
+#. TRANS: label for the freeform layout in the favorites view
+#: ../src/view/home/HomeBox.py:211
+msgid "Freeform"
+msgstr ""
+
+#. TRANS: label for the ring layout in the favorites view
+#: ../src/view/home/HomeBox.py:218
+msgid "Ring"
 msgstr ""
 
 #: ../src/view/home/MeshBox.py:97
 msgid "Connect"
-msgstr ""
+msgstr "संपर्क साधा"
 
 #: ../src/view/home/MeshBox.py:106
-#, fuzzy
 msgid "Disconnect"
-msgstr "संपर्क तुटणे"
+msgstr "संपर्क तोडा"
 
 # Only show disconnect when there's a mesh device, because mesh takes
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
 #: ../src/view/home/MeshBox.py:118
-#, fuzzy
 msgid "Disconnecting..."
-msgstr "संपर्क तोडने"
+msgstr "संपर्क तुटत आहे"
 
 # Only show disconnect when there's a mesh device, because mesh takes
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
 #: ../src/view/home/MeshBox.py:152
-#, fuzzy
 msgid "Connecting..."
-msgstr "संपर्क तोडने"
+msgstr "संपर्क होत आहे"
 
 #. TODO: show the channel number
 #: ../src/view/home/MeshBox.py:159
 msgid "Connected"
-msgstr ""
+msgstr "संपर्क जुळले"
 
 #: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:38
 #: ../src/view/devices/network/mesh.py:65
@@ -156,42 +163,42 @@ msgstr "संपर्क तोडने"
 msgid "Resume"
 msgstr "पुन्हा आरंभ करणे"
 
-#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:162
+#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:219
 msgid "Join"
 msgstr "सामील व्हा"
 
 #: ../src/view/devices/battery.py:42
 msgid "My Battery"
-msgstr ""
+msgstr "माज़ी बॅटरी"
 
 #: ../src/view/devices/battery.py:111
 msgid "Charging"
-msgstr ""
+msgstr "चार्ज होत आहे"
 
 #: ../src/view/devices/battery.py:114
 msgid "Very little power remaining"
-msgstr ""
+msgstr "थोडाकाच पावर उरला आहे"
 
 #: ../src/view/devices/battery.py:120
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
-msgstr ""
+msgstr "%(hour)d:%(min).2d उरले आहे"
 
 #: ../src/view/devices/battery.py:124
 msgid "Charged"
-msgstr ""
+msgstr "चार्ज झाले"
 
 #: ../src/view/devices/speaker.py:40
 msgid "My Speakers"
-msgstr ""
+msgstr "माझे स्पीकर"
 
 #: ../src/view/devices/speaker.py:104
 msgid "Unmute"
-msgstr ""
+msgstr "आवज़ चालू"
 
 #: ../src/view/devices/speaker.py:107
 msgid "Mute"
-msgstr ""
+msgstr "आवज़ बंद"
 
 #: ../src/view/devices/network/wireless.py:64
 msgid "Disconnected"
@@ -223,6 +230,8 @@ msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
 msgstr ""
+"शुगर - कंट्रोल - पॅनेल: सूचना, एकनावाचे एकापेक्षा जास्त विकल्प मिळाले: %s "
+"मॉडयुल: %r"
 
 #: ../src/controlpanel/cmd.py:28
 #, python-format
@@ -254,6 +263,7 @@ msgstr ""
 "                         -h_ ह्या किल्लीबद्दल माहिती दाखवा       -g किल्ली_ "
 " किल्लीची सध्याची किंमत घ्या \n"
 "          -s किल्ली_  किल्लीला  सध्याची किंमत द्या \n"
+"	"
 
 #: ../src/controlpanel/cmd.py:45
 msgid "To apply your changes you have to restart sugar.\n"
@@ -261,55 +271,55 @@ msgstr "तुम्ही केलेले बदल लागू करण�
 
 #: ../src/controlpanel/toolbar.py:115
 msgid "Cancel"
-msgstr ""
+msgstr "रद्द करणे"
 
 #: ../src/controlpanel/toolbar.py:121
 msgid "Ok"
-msgstr ""
+msgstr "ठीक"
 
-#: ../src/controlpanel/sectionview.py:34
-msgid "Changes require a sugar restart to take effect."
-msgstr ""
-
-#: ../src/controlpanel/gui.py:248
-msgid "Warning"
-msgstr ""
+#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:250
+msgid "Changes require restart"
+msgstr "बदली लागू करण्यासाठी परत सुरू करा"
 
 #: ../src/controlpanel/gui.py:249
-msgid "Changes require restart to take effect"
-msgstr ""
+msgid "Warning"
+msgstr "सूचना"
 
-#: ../src/controlpanel/gui.py:252
+#: ../src/controlpanel/gui.py:253
 msgid "Cancel changes"
-msgstr ""
+msgstr "बदली रद्द करा"
 
 #: ../src/controlpanel/gui.py:257
 msgid "Later"
-msgstr ""
+msgstr "नंतर"
+
+#: ../src/controlpanel/gui.py:261
+msgid "Restart now"
+msgstr "परत सुरू करा"
 
 #: ../src/controlpanel/model/aboutme.py:44
 msgid "You must enter a name."
-msgstr ""
+msgstr "तुम्ही नाव टाकला पाहिजे"
 
 #: ../src/controlpanel/model/aboutme.py:67
 #, python-format
 msgid "stroke:   color=%s hue=%s"
-msgstr ""
+msgstr "stroke: color=%s hue=%s"
 
 #: ../src/controlpanel/model/aboutme.py:70
 #, python-format
 msgid "stroke:   %s"
-msgstr ""
+msgstr "stroke: %s"
 
 #: ../src/controlpanel/model/aboutme.py:72
 #, python-format
 msgid "fill:     color=%s hue=%s"
-msgstr ""
+msgstr "fill: color=%s hue=%s"
 
 #: ../src/controlpanel/model/aboutme.py:74
 #, python-format
 msgid "fill:     %s"
-msgstr ""
+msgstr "fill: %s"
 
 #: ../src/controlpanel/model/aboutme.py:85
 msgid "Error in specified color modifiers."
@@ -328,11 +338,10 @@ msgid "Error timezone does not exist."
 msgstr "चुक:वेळक्षेत्र अस्तित्वात नाही"
 
 #: ../src/controlpanel/model/frame.py:38 ../src/controlpanel/model/frame.py:60
-msgid "Value must be an int."
-msgstr ""
+msgid "Value must be an integer."
+msgstr "किमान पूर्णांक असला पाहिजे"
 
 #: ../src/controlpanel/model/language.py:28
-#, fuzzy
 msgid "Could not access ~/.i18n. Create standard settings."
 msgstr "प्रवेश नाही %s.योग्य सेटिंग बनवा."
 
@@ -348,7 +357,7 @@ msgstr "माफ करा मी %s बोलू शकत नाही"
 
 #: ../src/controlpanel/model/network.py:48
 msgid "You must enter a server."
-msgstr ""
+msgstr "तुम्ही सर्वर टाकला पाहिजे"
 
 #: ../src/controlpanel/model/network.py:63
 msgid "State is unknown."
@@ -360,93 +369,97 @@ msgstr "दिलेल्या रेडिओ सारांशमध्य�
 
 #: ../src/controlpanel/view/aboutme.py:32
 msgid "About Me"
-msgstr ""
+msgstr "माज़ा बद्दल"
 
 #: ../src/controlpanel/view/aboutme.py:134
-#, fuzzy
 msgid "Click to change your color:"
 msgstr "रंग बदलण्यासाठी क्लिक करा"
 
 #: ../src/controlpanel/view/aboutxo.py:26
 msgid "About my XO"
-msgstr ""
+msgstr "माज़ा एक्सओ बद्दल"
 
 #: ../src/controlpanel/view/aboutxo.py:47
 msgid "Identity"
-msgstr ""
+msgstr "ओळख"
 
 #: ../src/controlpanel/view/aboutxo.py:56
 msgid "Serial Number:"
-msgstr ""
+msgstr "क्रमशः क्रमांक"
 
 #: ../src/controlpanel/view/aboutxo.py:79
 msgid "Software"
-msgstr ""
+msgstr "सॉफ्टवेर"
 
 #: ../src/controlpanel/view/aboutxo.py:88
 msgid "Build:"
-msgstr ""
+msgstr "बिल्ड :"
 
 #: ../src/controlpanel/view/aboutxo.py:103
 msgid "Firmware:"
-msgstr ""
+msgstr "फर्मवेर :"
 
 #: ../src/controlpanel/view/datetime.py:29
 msgid "Date & Time"
-msgstr ""
+msgstr "तारीख आणि वेळ"
 
 #: ../src/controlpanel/view/datetime.py:72
 msgid "Timezone"
-msgstr ""
+msgstr "समयक्षेत्र"
 
 #: ../src/controlpanel/view/frame.py:28
 msgid "Frame"
-msgstr ""
+msgstr "रचना"
 
 #: ../src/controlpanel/view/frame.py:30
 msgid "never"
-msgstr ""
+msgstr "कधीच नाही"
 
 #: ../src/controlpanel/view/frame.py:31
 msgid "instantaneous"
-msgstr ""
+msgstr "एकाच वेळी घडणारा"
 
 #: ../src/controlpanel/view/frame.py:32
-msgid "Delay in milliseconds:"
-msgstr ""
+#, python-format
+msgid "%s seconds"
+msgstr "%s सेकेंड"
 
-#: ../src/controlpanel/view/frame.py:66
-msgid "Hot Corners"
-msgstr ""
+#: ../src/controlpanel/view/frame.py:56
+msgid "Activation Delay"
+msgstr "चालू करण्यात होणारा उशीर"
 
-#: ../src/controlpanel/view/frame.py:117
-msgid "Warm Edges"
-msgstr ""
+#: ../src/controlpanel/view/frame.py:80
+msgid "Corner"
+msgstr "कोपरा"
+
+#: ../src/controlpanel/view/frame.py:115
+msgid "Edge"
+msgstr "धार"
 
 #: ../src/controlpanel/view/language.py:29
 #: ../src/controlpanel/view/language.py:74
 msgid "Language"
-msgstr ""
+msgstr "भाषा"
 
 #: ../src/controlpanel/view/network.py:28
 msgid "Network"
-msgstr ""
+msgstr "जाळ"
 
 #: ../src/controlpanel/view/network.py:53
 msgid "Wireless"
-msgstr ""
+msgstr "विनतार "
 
 #: ../src/controlpanel/view/network.py:61
 msgid "Radio:"
-msgstr ""
+msgstr "रेडियो"
 
 #: ../src/controlpanel/view/network.py:94
 msgid "Mesh"
-msgstr ""
+msgstr "मेष"
 
 #: ../src/controlpanel/view/network.py:103
 msgid "Server:"
-msgstr ""
+msgstr "सर्वर :"
 
 #: ../src/view/devices/network/mesh.py:108
 msgid "Connected to a School Mesh Portal"
@@ -476,23 +489,23 @@ msgstr "साधारण मेष चालू होत आहे"
 msgid "Unknown Mesh"
 msgstr "अनोळखी मेष"
 
-#: ../src/view/frame/activitiestray.py:167
+#: ../src/view/frame/activitiestray.py:224
 msgid "Decline"
-msgstr ""
+msgstr "अस्वीकार"
 
-#: ../src/view/home/activitiesring.py:310
+#: ../src/view/home/favoritesview.py:351
 msgid "Control Panel"
-msgstr ""
+msgstr "कंट्रोल पॅनेल "
 
-#: ../src/view/home/activitiesring.py:321
+#: ../src/view/home/favoritesview.py:362
 msgid "Restart"
-msgstr ""
+msgstr "पुन्हा चालू करा"
 
-#: ../src/view/home/activitiesring.py:326
+#: ../src/view/home/favoritesview.py:367
 msgid "Shutdown"
 msgstr "बंद करा"
 
-#: ../src/view/home/activitiesring.py:332
+#: ../src/view/home/favoritesview.py:373
 msgid "Register"
 msgstr "नोंद"
 
@@ -506,24 +519,33 @@ msgstr "थांबा"
 
 #: ../src/view/palettes.py:96
 msgid "Start"
-msgstr ""
+msgstr "चालू करा"
 
 #: ../src/view/palettes.py:119
-msgid "Remove from ring"
+msgid "Remove favorite"
 msgstr ""
 
 #: ../src/view/palettes.py:123
-msgid "Add to ring"
+msgid "Make favorite"
 msgstr ""
 
 #: ../src/view/palettes.py:169
 msgid "Show contents"
-msgstr ""
+msgstr "आतला दाखवा"
 
 #: ../src/view/palettes.py:193
 #, python-format
 msgid "%(free_space)d MB Free"
-msgstr ""
+msgstr "%(free_space)d MB फ्री"
+
+#~ msgid "Ring view"
+#~ msgstr "वर्तुळ दृष्य"
+
+#~ msgid "Remove from ring"
+#~ msgstr "वर्तुळा मधून काढा"
+
+#~ msgid "Add to ring"
+#~ msgstr "वर्तुळा  मधे जोडा "
 
 #~ msgid "off"
 #~ msgstr "बंद"

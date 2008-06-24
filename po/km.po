@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-05 00:30-0400\n"
+"POT-Creation-Date: 2008-06-21 00:30-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -86,24 +86,34 @@ msgstr "ប្រភេទផ្ទៀង: "
 msgid "Encryption Type:"
 msgstr "ប្រភេទ​អ៊ិនគ្រីប: "
 
-#: ../src/view/Shell.py:259
+#: ../src/view/Shell.py:262
 msgid "Screenshot"
 msgstr "រូបថត​អេក្រង់​"
 
-#: ../src/view/home/HomeBox.py:149
-msgid "Ring view"
-msgstr ""
-
-#: ../src/view/home/HomeBox.py:150
-msgid "<Ctrl>R"
-msgstr ""
-
-#: ../src/view/home/HomeBox.py:158
+#: ../src/view/home/HomeBox.py:147
 msgid "List view"
 msgstr ""
 
-#: ../src/view/home/HomeBox.py:159
+#: ../src/view/home/HomeBox.py:148
 msgid "<Ctrl>L"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:204
+msgid "Favorites view"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:205
+msgid "<Ctrl>R"
+msgstr ""
+
+#. TRANS: label for the freeform layout in the favorites view
+#: ../src/view/home/HomeBox.py:211
+msgid "Freeform"
+msgstr ""
+
+#. TRANS: label for the ring layout in the favorites view
+#: ../src/view/home/HomeBox.py:218
+msgid "Ring"
 msgstr ""
 
 #: ../src/view/home/MeshBox.py:97
@@ -157,7 +167,7 @@ msgstr "ផ្ដាច់បណ្ដាញ"
 msgid "Resume"
 msgstr "បន្ត"
 
-#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:162
+#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:219
 msgid "Join"
 msgstr "ចូល​រួម"
 
@@ -255,10 +265,11 @@ msgstr ""
 "-h key show information about this key \n"
 "-g key get the current value of the key \n"
 "-s key set the current value for the key \n"
+"	"
 
 #: ../src/controlpanel/cmd.py:45
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr "អក្ន​ត្រូវ​តែ​ចាប់​ផ្ដើម XO សារ​ឡើង​វិញ"
+msgstr ""
 
 #: ../src/controlpanel/toolbar.py:115
 msgid "Cancel"
@@ -268,24 +279,24 @@ msgstr ""
 msgid "Ok"
 msgstr ""
 
-#: ../src/controlpanel/sectionview.py:34
-msgid "Changes require a sugar restart to take effect."
-msgstr ""
-
-#: ../src/controlpanel/gui.py:248
-msgid "Warning"
+#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:250
+msgid "Changes require restart"
 msgstr ""
 
 #: ../src/controlpanel/gui.py:249
-msgid "Changes require restart to take effect"
+msgid "Warning"
 msgstr ""
 
-#: ../src/controlpanel/gui.py:252
+#: ../src/controlpanel/gui.py:253
 msgid "Cancel changes"
 msgstr ""
 
 #: ../src/controlpanel/gui.py:257
 msgid "Later"
+msgstr ""
+
+#: ../src/controlpanel/gui.py:261
+msgid "Restart now"
 msgstr ""
 
 #: ../src/controlpanel/model/aboutme.py:44
@@ -329,7 +340,7 @@ msgid "Error timezone does not exist."
 msgstr "មានបញ្ហា ។ ដំបន់​ម៉ោង​នេះ​អត់​មាន​ទេ"
 
 #: ../src/controlpanel/model/frame.py:38 ../src/controlpanel/model/frame.py:60
-msgid "Value must be an int."
+msgid "Value must be an integer."
 msgstr ""
 
 #: ../src/controlpanel/model/language.py:28
@@ -413,15 +424,20 @@ msgid "instantaneous"
 msgstr ""
 
 #: ../src/controlpanel/view/frame.py:32
-msgid "Delay in milliseconds:"
+#, python-format
+msgid "%s seconds"
 msgstr ""
 
-#: ../src/controlpanel/view/frame.py:66
-msgid "Hot Corners"
+#: ../src/controlpanel/view/frame.py:56
+msgid "Activation Delay"
 msgstr ""
 
-#: ../src/controlpanel/view/frame.py:117
-msgid "Warm Edges"
+#: ../src/controlpanel/view/frame.py:80
+msgid "Corner"
+msgstr ""
+
+#: ../src/controlpanel/view/frame.py:115
+msgid "Edge"
 msgstr ""
 
 #: ../src/controlpanel/view/language.py:29
@@ -477,23 +493,23 @@ msgstr "ចាប់​ផ្ដើម​បណ្ដាញ​ស៊ីមផល
 msgid "Unknown Mesh"
 msgstr "បណ្ដាញ​គ្មាន​សំគាល់"
 
-#: ../src/view/frame/activitiestray.py:167
+#: ../src/view/frame/activitiestray.py:224
 msgid "Decline"
 msgstr ""
 
-#: ../src/view/home/activitiesring.py:310
+#: ../src/view/home/favoritesview.py:351
 msgid "Control Panel"
 msgstr ""
 
-#: ../src/view/home/activitiesring.py:321
+#: ../src/view/home/favoritesview.py:362
 msgid "Restart"
 msgstr ""
 
-#: ../src/view/home/activitiesring.py:326
+#: ../src/view/home/favoritesview.py:367
 msgid "Shutdown"
 msgstr "បិទ"
 
-#: ../src/view/home/activitiesring.py:332
+#: ../src/view/home/favoritesview.py:373
 msgid "Register"
 msgstr "ចុះ​ឈ្មោះ"
 
@@ -510,11 +526,11 @@ msgid "Start"
 msgstr ""
 
 #: ../src/view/palettes.py:119
-msgid "Remove from ring"
+msgid "Remove favorite"
 msgstr ""
 
 #: ../src/view/palettes.py:123
-msgid "Add to ring"
+msgid "Make favorite"
 msgstr ""
 
 #: ../src/view/palettes.py:169

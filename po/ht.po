@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-05 00:30-0400\n"
+"POT-Creation-Date: 2008-06-21 00:30-0400\n"
 "PO-Revision-Date: 2008-03-12 09:14-0400\n"
 "Last-Translator: Jude Augusma <jayme2901@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,7 +71,7 @@ msgstr ""
 #: ../src/view/clipboardmenu.py:212
 #, python-format
 msgid "Clipboard object: %s."
-msgstr "Objè ekritwa"
+msgstr "Objè ekritwa: %s."
 
 #: ../src/hardware/keydialog.py:150
 msgid "Key Type:"
@@ -85,24 +85,34 @@ msgstr "Tip otantifikasyon:"
 msgid "Encryption Type:"
 msgstr "Tip kod sekrè"
 
-#: ../src/view/Shell.py:259
+#: ../src/view/Shell.py:262
 msgid "Screenshot"
 msgstr "Ekran projektwa"
 
-#: ../src/view/home/HomeBox.py:149
-msgid "Ring view"
-msgstr ""
-
-#: ../src/view/home/HomeBox.py:150
-msgid "<Ctrl>R"
-msgstr ""
-
-#: ../src/view/home/HomeBox.py:158
+#: ../src/view/home/HomeBox.py:147
 msgid "List view"
 msgstr ""
 
-#: ../src/view/home/HomeBox.py:159
+#: ../src/view/home/HomeBox.py:148
 msgid "<Ctrl>L"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:204
+msgid "Favorites view"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:205
+msgid "<Ctrl>R"
+msgstr ""
+
+#. TRANS: label for the freeform layout in the favorites view
+#: ../src/view/home/HomeBox.py:211
+msgid "Freeform"
+msgstr ""
+
+#. TRANS: label for the ring layout in the favorites view
+#: ../src/view/home/HomeBox.py:218
+msgid "Ring"
 msgstr ""
 
 #: ../src/view/home/MeshBox.py:97
@@ -156,7 +166,7 @@ msgstr "Dekonekte..."
 msgid "Resume"
 msgstr "Repwann"
 
-#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:162
+#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:219
 msgid "Join"
 msgstr "Rankontre"
 
@@ -247,13 +257,14 @@ msgid ""
 "    "
 msgstr ""
 "Sèvi: Sugar-Kontwòl-panèl [opsyon] kle [args ... ]\n"
-"_ _ _ Kontwòl pou anvironman sugar. \n"
-"_ _ _ opsyon: \n"
-"_ _ _ _ -h_ _ _ _ _ _ _ _ montre mesaj èd sa epi soti \n"
-"_ _ _ _-l_ _ _ _ _ _ _ _ _ fè lis tout opsyon disponib yo \n"
-"_ _ _ _ -h kle_ _ _ _ _ _montre enfòmasyon sou kle sa \n"
-"_ _ _ _ -g kle_ _ _ _ _pwan valè kouran kle-a \n"
-"_ _ _ _ -s kle_ _ _ _ _fikse valè Kouran pou kle-a \n"
+"	Kontwòl pou anvironman sugar. \n"
+"	opsyon: \n"
+"	-h	montre mesaj èd sa epi soti \n"
+"	-l	fè lis tout opsyon disponib yo \n"
+"	-h kle	montre enfòmasyon sou kle sa \n"
+"	-g kle	pwan valè kouran kle-a \n"
+"	-s kle	fikse valè Kouran pou kle-a \n"
+"	"
 
 #: ../src/controlpanel/cmd.py:45
 msgid "To apply your changes you have to restart sugar.\n"
@@ -267,24 +278,24 @@ msgstr ""
 msgid "Ok"
 msgstr ""
 
-#: ../src/controlpanel/sectionview.py:34
-msgid "Changes require a sugar restart to take effect."
-msgstr ""
-
-#: ../src/controlpanel/gui.py:248
-msgid "Warning"
+#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:250
+msgid "Changes require restart"
 msgstr ""
 
 #: ../src/controlpanel/gui.py:249
-msgid "Changes require restart to take effect"
+msgid "Warning"
 msgstr ""
 
-#: ../src/controlpanel/gui.py:252
+#: ../src/controlpanel/gui.py:253
 msgid "Cancel changes"
 msgstr ""
 
 #: ../src/controlpanel/gui.py:257
 msgid "Later"
+msgstr ""
+
+#: ../src/controlpanel/gui.py:261
+msgid "Restart now"
 msgstr ""
 
 #: ../src/controlpanel/model/aboutme.py:44
@@ -328,7 +339,7 @@ msgid "Error timezone does not exist."
 msgstr "Erè lè lokal pa egziste."
 
 #: ../src/controlpanel/model/frame.py:38 ../src/controlpanel/model/frame.py:60
-msgid "Value must be an int."
+msgid "Value must be an integer."
 msgstr ""
 
 #: ../src/controlpanel/model/language.py:28
@@ -412,15 +423,20 @@ msgid "instantaneous"
 msgstr ""
 
 #: ../src/controlpanel/view/frame.py:32
-msgid "Delay in milliseconds:"
+#, python-format
+msgid "%s seconds"
 msgstr ""
 
-#: ../src/controlpanel/view/frame.py:66
-msgid "Hot Corners"
+#: ../src/controlpanel/view/frame.py:56
+msgid "Activation Delay"
 msgstr ""
 
-#: ../src/controlpanel/view/frame.py:117
-msgid "Warm Edges"
+#: ../src/controlpanel/view/frame.py:80
+msgid "Corner"
+msgstr ""
+
+#: ../src/controlpanel/view/frame.py:115
+msgid "Edge"
 msgstr ""
 
 #: ../src/controlpanel/view/language.py:29
@@ -476,23 +492,23 @@ msgstr "Kòmanse yon senp rezo"
 msgid "Unknown Mesh"
 msgstr "Rezo non idantifye"
 
-#: ../src/view/frame/activitiestray.py:167
+#: ../src/view/frame/activitiestray.py:224
 msgid "Decline"
 msgstr ""
 
-#: ../src/view/home/activitiesring.py:310
+#: ../src/view/home/favoritesview.py:351
 msgid "Control Panel"
 msgstr ""
 
-#: ../src/view/home/activitiesring.py:321
+#: ../src/view/home/favoritesview.py:362
 msgid "Restart"
 msgstr ""
 
-#: ../src/view/home/activitiesring.py:326
+#: ../src/view/home/favoritesview.py:367
 msgid "Shutdown"
 msgstr "Fèmen"
 
-#: ../src/view/home/activitiesring.py:332
+#: ../src/view/home/favoritesview.py:373
 msgid "Register"
 msgstr "Enskri"
 
@@ -509,11 +525,11 @@ msgid "Start"
 msgstr ""
 
 #: ../src/view/palettes.py:119
-msgid "Remove from ring"
+msgid "Remove favorite"
 msgstr ""
 
 #: ../src/view/palettes.py:123
-msgid "Add to ring"
+msgid "Make favorite"
 msgstr ""
 
 #: ../src/view/palettes.py:169
