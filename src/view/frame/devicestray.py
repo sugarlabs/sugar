@@ -16,16 +16,16 @@
 
 import logging
 
-from sugar.graphics.tray import HTray
+from sugar.graphics import tray
 
 from view.devices import deviceview
 from model import shellmodel
 
 _logger = logging.getLogger('DevicesTray')
 
-class DevicesTray(HTray):
+class DevicesTray(tray.HTray):
     def __init__(self):
-        HTray.__init__(self)
+        tray.HTray.__init__(self, align=tray.ALIGN_TO_END)
         self._device_icons = {}
 
         devices_model = shellmodel.get_instance().get_devices()
@@ -41,7 +41,6 @@ class DevicesTray(HTray):
     def _add_device(self, device):
         try:
             view = deviceview.create(device)
-            # TODO: *Tray classes don't allow yet to set the alignment.
             self.add_item(view)
             view.show()
             self._device_icons[device.get_id()] = view
