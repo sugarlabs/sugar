@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-21 00:30-0400\n"
-"PO-Revision-Date: 2008-06-23 18:07-0400\n"
+"PO-Revision-Date: 2008-06-25 04:47-0400\n"
 "Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -220,9 +220,8 @@ msgid "Group"
 msgstr "Gruppo"
 
 #: ../src/view/frame/zoomtoolbar.py:38
-#, fuzzy
 msgid "Home"
-msgstr "Inizio"
+msgstr "Casa"
 
 #: ../src/view/frame/zoomtoolbar.py:40
 msgid "Activity"
@@ -234,7 +233,7 @@ msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
 msgstr ""
-"sugar-control-panel: ATTENZIONE, trovatapiù di una opzione avente lo stesso "
+"sugar-control-panel: ATTENZIONE, trovata più di una opzione avente lo stesso "
 "nome: %s modulo: %r"
 
 #: ../src/controlpanel/cmd.py:28
@@ -276,7 +275,7 @@ msgstr "Per applicare le modifiche è necessario riavviare sugar.\n"
 
 #: ../src/controlpanel/toolbar.py:115
 msgid "Cancel"
-msgstr "Cancella"
+msgstr "Annulla"
 
 #: ../src/controlpanel/toolbar.py:121
 msgid "Ok"
