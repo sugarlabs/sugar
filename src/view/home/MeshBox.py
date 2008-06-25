@@ -482,7 +482,7 @@ class MeshBox(gtk.VBox):
                             self._access_point_removed_cb)
 
         if self._model.get_mesh():
-            self._mesh_added_cb(self._model, self._model.get_mesh())
+            self.__mesh_added_cb(self._model, self._model.get_mesh())
 
         self._model.connect('mesh-added', self.__mesh_added_cb)
         self._model.connect('mesh-removed', self.__mesh_removed_cb)
