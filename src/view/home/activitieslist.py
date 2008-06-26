@@ -65,10 +65,10 @@ class ActivitiesList(gtk.ScrolledWindow):
         self._add_activity(activity_info)
 
     def __activity_removed_cb(self, activity_registry, activity_info):
-        for entry in self.get_children():
+        for entry in self._box.get_children():
             if entry.get_bundle_id() == activity_info.bundle_id and \
                     entry.get_version() == activity_info.version:
-                self.remove(entry)
+                self._box.remove(entry)
                 return
 
     def _compare_activities(self, entry_a, entry_b):

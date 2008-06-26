@@ -64,7 +64,8 @@ class FavoritesLayout(gobject.GObject, hippo.CanvasLayout):
                          int(relative_y * _BASE_SCALE / float(height)))
 
     def remove(self, icon):
-        del self.fixed_positions[icon]
+        if icon in self.fixed_positions:
+            del self.fixed_positions[icon]
         self.box.remove(icon)
 
     def move_icon(self, icon, x, y, locked=False):
