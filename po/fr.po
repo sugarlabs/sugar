@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-14 00:30-0400\n"
-"PO-Revision-Date: 2008-06-21 07:09-0400\n"
+"POT-Creation-Date: 2008-06-21 00:30-0400\n"
+"PO-Revision-Date: 2008-06-26 12:15-0400\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -93,21 +93,32 @@ msgstr "Type d'encryptage :"
 msgid "Screenshot"
 msgstr "Capture d'écran"
 
-#: ../src/view/home/HomeBox.py:148
-msgid "Ring view"
-msgstr "Vue concentrique"
-
-#: ../src/view/home/HomeBox.py:149
-msgid "<Ctrl>R"
-msgstr "<Ctrl>R"
-
-#: ../src/view/home/HomeBox.py:157
+#: ../src/view/home/HomeBox.py:147
 msgid "List view"
 msgstr "Vue liste"
 
-#: ../src/view/home/HomeBox.py:158
+#: ../src/view/home/HomeBox.py:148
 msgid "<Ctrl>L"
 msgstr "<Ctrl>L"
+
+#: ../src/view/home/HomeBox.py:204
+msgid "Favorites view"
+msgstr "Vue des favoris"
+
+#: ../src/view/home/HomeBox.py:205
+msgid "<Ctrl>R"
+msgstr "<Ctrl>R"
+
+#. TRANS: label for the freeform layout in the favorites view
+#: ../src/view/home/HomeBox.py:211
+#, fuzzy
+msgid "Freeform"
+msgstr "Forme libre"
+
+#. TRANS: label for the ring layout in the favorites view
+#: ../src/view/home/HomeBox.py:218
+msgid "Ring"
+msgstr "Anneau"
 
 #: ../src/view/home/MeshBox.py:97
 msgid "Connect"
@@ -189,7 +200,7 @@ msgstr "Activer le son"
 
 #: ../src/view/devices/speaker.py:107
 msgid "Mute"
-msgstr "Son désactivé"
+msgstr "Mettre en sourdine"
 
 #: ../src/view/devices/network/wireless.py:64
 msgid "Disconnected"
@@ -330,12 +341,10 @@ msgid "Error timezone does not exist."
 msgstr "Erreur : la zone temporelle n'existe pas."
 
 #: ../src/controlpanel/model/frame.py:38 ../src/controlpanel/model/frame.py:60
-#, fuzzy
 msgid "Value must be an integer."
 msgstr "La valeur doit être un entier."
 
 #: ../src/controlpanel/model/language.py:28
-#, fuzzy
 msgid "Could not access ~/.i18n. Create standard settings."
 msgstr "Accès impossible à ~/.i18n. Création de paramètres par défaut."
 
@@ -488,19 +497,19 @@ msgstr "Réseau maillé inconnu"
 msgid "Decline"
 msgstr "Refuser"
 
-#: ../src/view/home/activitiesring.py:305
+#: ../src/view/home/favoritesview.py:351
 msgid "Control Panel"
 msgstr "Panneau de contrôle"
 
-#: ../src/view/home/activitiesring.py:316
+#: ../src/view/home/favoritesview.py:362
 msgid "Restart"
 msgstr "Redémarrer"
 
-#: ../src/view/home/activitiesring.py:321
+#: ../src/view/home/favoritesview.py:367
 msgid "Shutdown"
 msgstr "Éteindre"
 
-#: ../src/view/home/activitiesring.py:327
+#: ../src/view/home/favoritesview.py:373
 msgid "Register"
 msgstr "S'enregistrer"
 
@@ -517,13 +526,12 @@ msgid "Start"
 msgstr "Lancer"
 
 #: ../src/view/palettes.py:119
-#, fuzzy
-msgid "Remove from ring"
-msgstr "Retirer de l'anneau"
+msgid "Remove favorite"
+msgstr "Supprimer le favori"
 
 #: ../src/view/palettes.py:123
-msgid "Add to ring"
-msgstr "Ajouter à l'anneau"
+msgid "Make favorite"
+msgstr "Ajouter aux favoris"
 
 #: ../src/view/palettes.py:169
 msgid "Show contents"
@@ -533,6 +541,16 @@ msgstr "Afficher les contenus"
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d Mo de libre"
+
+#~ msgid "Ring view"
+#~ msgstr "Vue concentrique"
+
+#, fuzzy
+#~ msgid "Remove from ring"
+#~ msgstr "Retirer de l'anneau"
+
+#~ msgid "Add to ring"
+#~ msgstr "Ajouter à l'anneau"
 
 #~ msgid "Changes require a sugar restart to take effect."
 #~ msgstr "Pour appliquer les changements, sugar doit être redémarré."
