@@ -197,7 +197,7 @@ class ControlPanel(gtk.Window):
 
         for name in names:
             if name.endswith('.py') and name != '__init__.py':
-                tmp = name.strip('.py')
+                tmp = os.path.splitext(name)[0]
                 mod = __import__('.'.join(subpath) + '.' + tmp, globals(), 
                                  locals(), [tmp]) 
                 view_class_str = getattr(mod, 'CLASS', None)
@@ -224,7 +224,7 @@ class ControlPanel(gtk.Window):
      
         for name in names:
             if name.endswith('.py') and name != '__init__.py':
-                tmp = name.strip('.py')
+                tmp = os.path.splitext(name)[0]
                 if tmp in options:
                     mod = __import__('.'.join(subpath) + '.' + tmp, 
                                      globals(), locals(), [tmp])            
