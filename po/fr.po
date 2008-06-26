@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-21 00:30-0400\n"
-"PO-Revision-Date: 2008-06-26 12:25-0400\n"
+"PO-Revision-Date: 2008-06-26 12:29-0400\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -111,7 +111,6 @@ msgstr "<Ctrl>R"
 
 #. TRANS: label for the freeform layout in the favorites view
 #: ../src/view/home/HomeBox.py:211
-#, fuzzy
 msgid "Freeform"
 msgstr "Forme libre"
 
@@ -305,7 +304,6 @@ msgstr "Vous devez indiquer un nom."
 
 #: ../src/controlpanel/model/aboutme.py:67
 #, python-format
-#, fuzzy
 msgid "stroke:   color=%s hue=%s"
 msgstr "stroke:   color=%s hue=%s"
 
@@ -424,7 +422,6 @@ msgstr "immédiat"
 
 #: ../src/controlpanel/view/frame.py:32
 #, python-format
-#, fuzzy
 msgid "%s seconds"
 msgstr "%s secondes"
 
