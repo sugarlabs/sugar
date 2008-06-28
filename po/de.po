@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-05 00:30-0400\n"
-"PO-Revision-Date: 2008-06-14 18:03-0400\n"
+"POT-Creation-Date: 2008-06-21 00:30-0400\n"
+"PO-Revision-Date: 2008-06-28 09:22-0400\n"
 "Last-Translator: Markus Schlager <m.slg@gmx.de>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -88,26 +88,38 @@ msgstr "Authentifizierungstyp"
 msgid "Encryption Type:"
 msgstr "Verschlüsselungstyp"
 
-#: ../src/view/Shell.py:259
+#: ../src/view/Shell.py:262
 msgid "Screenshot"
 msgstr "Bildschirmfoto"
 
-# (Markus S.) Es geht offenbar um den Ring der gerade genutzten Aktivitäten unter Home
-#: ../src/view/home/HomeBox.py:149
-msgid "Ring view"
-msgstr "Ringansicht"
-
-#: ../src/view/home/HomeBox.py:150
-msgid "<Ctrl>R"
-msgstr "<Ctrl>R"
-
-#: ../src/view/home/HomeBox.py:158
+#: ../src/view/home/HomeBox.py:147
 msgid "List view"
 msgstr "Listenansicht"
 
-#: ../src/view/home/HomeBox.py:159
+#: ../src/view/home/HomeBox.py:148
 msgid "<Ctrl>L"
 msgstr "<Ctrl>L"
+
+#: ../src/view/home/HomeBox.py:204
+#, fuzzy
+msgid "Favorites view"
+msgstr "Favoritenansicht"
+
+#: ../src/view/home/HomeBox.py:205
+msgid "<Ctrl>R"
+msgstr "<Ctrl>R"
+
+#. TRANS: label for the freeform layout in the favorites view
+#: ../src/view/home/HomeBox.py:211
+#, fuzzy
+msgid "Freeform"
+msgstr "Freie Form"
+
+#. TRANS: label for the ring layout in the favorites view
+#: ../src/view/home/HomeBox.py:218
+#, fuzzy
+msgid "Ring"
+msgstr "Ring"
 
 #: ../src/view/home/MeshBox.py:97
 msgid "Connect"
@@ -159,7 +171,7 @@ msgstr "Verbindung trennen..."
 msgid "Resume"
 msgstr "Wiederaufnehmen"
 
-#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:162
+#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:219
 msgid "Join"
 msgstr "Mitmachen"
 
@@ -273,25 +285,25 @@ msgstr "Abbrechen"
 msgid "Ok"
 msgstr "Ok"
 
-#: ../src/controlpanel/sectionview.py:34
-msgid "Changes require a sugar restart to take effect."
-msgstr "Neustart von Sugar erforderlich, um die Änderungen zu übernehmen"
+#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:250
+msgid "Changes require restart"
+msgstr "Neustart zur Übernahme der Änderungen notwendig"
 
-#: ../src/controlpanel/gui.py:248
+#: ../src/controlpanel/gui.py:249
 msgid "Warning"
 msgstr "Warnung"
 
-#: ../src/controlpanel/gui.py:249
-msgid "Changes require restart to take effect"
-msgstr "Neustart erforderlich, um die Änderungen zu übernehmen"
-
-#: ../src/controlpanel/gui.py:252
+#: ../src/controlpanel/gui.py:253
 msgid "Cancel changes"
 msgstr "Änderungen aufheben"
 
 #: ../src/controlpanel/gui.py:257
 msgid "Later"
 msgstr "Später"
+
+#: ../src/controlpanel/gui.py:261
+msgid "Restart now"
+msgstr "Jetzt neustarten"
 
 #: ../src/controlpanel/model/aboutme.py:44
 msgid "You must enter a name."
@@ -334,7 +346,7 @@ msgid "Error timezone does not exist."
 msgstr "Fehler: unbekannte Zeitzone."
 
 #: ../src/controlpanel/model/frame.py:38 ../src/controlpanel/model/frame.py:60
-msgid "Value must be an int."
+msgid "Value must be an integer."
 msgstr "Der Wert muss ganzzahlig sein."
 
 #: ../src/controlpanel/model/language.py:28
@@ -418,18 +430,21 @@ msgid "instantaneous"
 msgstr "sofort"
 
 #: ../src/controlpanel/view/frame.py:32
-msgid "Delay in milliseconds:"
-msgstr "Verzögerung in Millisekunden:"
+#, python-format
+msgid "%s seconds"
+msgstr "%s Sekunden"
 
-#: ../src/controlpanel/view/frame.py:66
-#, fuzzy
-msgid "Hot Corners"
-msgstr "Heiße Ecken"
+#: ../src/controlpanel/view/frame.py:56
+msgid "Activation Delay"
+msgstr "Aktivierungsverzögerung"
 
-#: ../src/controlpanel/view/frame.py:117
-#, fuzzy
-msgid "Warm Edges"
-msgstr "Warme Kanten"
+#: ../src/controlpanel/view/frame.py:80
+msgid "Corner"
+msgstr "Ecke"
+
+#: ../src/controlpanel/view/frame.py:115
+msgid "Edge"
+msgstr "Kante"
 
 #: ../src/controlpanel/view/language.py:29
 #: ../src/controlpanel/view/language.py:74
@@ -486,24 +501,24 @@ msgstr "Starte ein einfaches Maschennetzwerk"
 msgid "Unknown Mesh"
 msgstr "Unbekanntes Maschennetzwerk"
 
-#: ../src/view/frame/activitiestray.py:167
+#: ../src/view/frame/activitiestray.py:224
 msgid "Decline"
 msgstr "Ablehnen"
 
 # (Markus S.) war 'Kontrollfeld'
-#: ../src/view/home/activitiesring.py:310
+#: ../src/view/home/favoritesview.py:351
 msgid "Control Panel"
 msgstr "Kontrollleiste"
 
-#: ../src/view/home/activitiesring.py:321
+#: ../src/view/home/favoritesview.py:362
 msgid "Restart"
 msgstr "Neustart"
 
-#: ../src/view/home/activitiesring.py:326
+#: ../src/view/home/favoritesview.py:367
 msgid "Shutdown"
 msgstr "Ausschalten"
 
-#: ../src/view/home/activitiesring.py:332
+#: ../src/view/home/favoritesview.py:373
 msgid "Register"
 msgstr "Registrieren"
 
@@ -519,14 +534,15 @@ msgstr "Stopp"
 msgid "Start"
 msgstr "Start"
 
-# (Markus S.) es scheint um den Ring der gerade genutzten Aktivitäten in Home zu gehen
 #: ../src/view/palettes.py:119
-msgid "Remove from ring"
-msgstr "Aus dem Ring entfernen"
+#, fuzzy
+msgid "Remove favorite"
+msgstr "Favorit entfernen"
 
 #: ../src/view/palettes.py:123
-msgid "Add to ring"
-msgstr "Zum Ring hinzufügen"
+#, fuzzy
+msgid "Make favorite"
+msgstr "Zum Favorit machen"
 
 #: ../src/view/palettes.py:169
 msgid "Show contents"
@@ -536,6 +552,34 @@ msgstr "Inhalte anzeigen"
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB frei"
+
+# (Markus S.) Es geht offenbar um den Ring der gerade genutzten Aktivitäten unter Home
+#~ msgid "Ring view"
+#~ msgstr "Ringansicht"
+
+# (Markus S.) es scheint um den Ring der gerade genutzten Aktivitäten in Home zu gehen
+#~ msgid "Remove from ring"
+#~ msgstr "Aus dem Ring entfernen"
+
+#~ msgid "Add to ring"
+#~ msgstr "Zum Ring hinzufügen"
+
+#~ msgid "Changes require a sugar restart to take effect."
+#~ msgstr "Neustart von Sugar erforderlich, um die Änderungen zu übernehmen"
+
+#~ msgid "Changes require restart to take effect"
+#~ msgstr "Neustart erforderlich, um die Änderungen zu übernehmen"
+
+#~ msgid "Delay in milliseconds:"
+#~ msgstr "Verzögerung in Millisekunden:"
+
+#, fuzzy
+#~ msgid "Hot Corners"
+#~ msgstr "Heiße Ecken"
+
+#, fuzzy
+#~ msgid "Warm Edges"
+#~ msgstr "Warme Kanten"
 
 #~ msgid "off"
 #~ msgstr "Aus"
@@ -682,10 +726,6 @@ msgstr "%(free_space)d MB frei"
 #, python-format
 #~ msgid "%d second"
 #~ msgstr "%d Sekunde"
-
-#, python-format
-#~ msgid "%d seconds"
-#~ msgstr "%d Sekunden"
 
 #~ msgid " and "
 #~ msgstr " und "
