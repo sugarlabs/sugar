@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-21 00:30-0400\n"
-"PO-Revision-Date: 2008-06-28 09:22-0400\n"
+"PO-Revision-Date: 2008-06-28 09:24-0400\n"
 "Last-Translator: Markus Schlager <m.slg@gmx.de>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -331,11 +331,11 @@ msgstr "Füllung:     %s"
 
 #: ../src/controlpanel/model/aboutme.py:85
 msgid "Error in specified color modifiers."
-msgstr "Fehler in den definierten Farbänderungen."
+msgstr "Fehler in den angegebenen Farbänderungen."
 
 #: ../src/controlpanel/model/aboutme.py:88
 msgid "Error in specified colors."
-msgstr "Fehler in den definierten Farben."
+msgstr "Fehler in den angegebenen Farben."
 
 #: ../src/controlpanel/model/aboutxo.py:24
 msgid "Not available"
