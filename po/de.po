@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-21 00:30-0400\n"
-"PO-Revision-Date: 2008-06-28 09:24-0400\n"
+"PO-Revision-Date: 2008-06-28 10:20-0400\n"
 "Last-Translator: Markus Schlager <m.slg@gmx.de>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -101,7 +101,6 @@ msgid "<Ctrl>L"
 msgstr "<Ctrl>L"
 
 #: ../src/view/home/HomeBox.py:204
-#, fuzzy
 msgid "Favorites view"
 msgstr "Favoritenansicht"
 
@@ -111,13 +110,11 @@ msgstr "<Ctrl>R"
 
 #. TRANS: label for the freeform layout in the favorites view
 #: ../src/view/home/HomeBox.py:211
-#, fuzzy
 msgid "Freeform"
 msgstr "Freie Form"
 
 #. TRANS: label for the ring layout in the favorites view
 #: ../src/view/home/HomeBox.py:218
-#, fuzzy
 msgid "Ring"
 msgstr "Ring"
 
