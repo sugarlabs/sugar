@@ -28,20 +28,26 @@ class Device(device.Device):
     def __init__(self):
         device.Device.__init__(self)
         self._manager = hardwaremanager.get_manager()
+        self._manager.connect('muted-changed', self.__muted_changed_cb)
+        self._manager.connect('volume-changed', self.__volume_changed_cb)
+
+    def __muted_changed_cb(self, sender_, old_state_, new_state_):
+        self.notify('muted')
+
+    def __volume_changed_cb(self, sender_, old_volume_, new_volume_):
+        self.notify('level')
 
     def _get_level(self):
         return self._manager.get_volume()
 
     def _set_level(self, new_volume):
         self._manager.set_volume(new_volume)
-        self.notify('level')
 
     def _get_muted(self):
         return self._manager.get_muted()
 
     def _set_muted(self, mute):
         self._manager.set_muted(mute)
-        self.notify('muted')
 
     def get_type(self):
         return 'speaker'

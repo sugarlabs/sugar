@@ -17,6 +17,7 @@
 import logging
 
 import dbus
+import gobject
 import gst
 import gst.interfaces
 
@@ -31,8 +32,21 @@ _HARDWARE_MANAGER_OBJECT_PATH = '/org/laptop/HardwareManager'
 COLOR_MODE = 0
 B_AND_W_MODE = 1
 
-class HardwareManager(object):
+VOL_CHANGE_INCREMENT_RECOMMENDATION = 10
+
+class HardwareManager(gobject.GObject):
+    __gsignals__ = {
+        'muted-changed' : (gobject.SIGNAL_RUN_FIRST,
+                           gobject.TYPE_NONE,
+                           ([gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN])),
+        'volume-changed': (gobject.SIGNAL_RUN_FIRST,
+                           gobject.TYPE_NONE,
+                           ([gobject.TYPE_INT, gobject.TYPE_INT])),
+    }
+
     def __init__(self):
+        gobject.GObject.__init__(self)
+
         try:
             bus = dbus.SystemBus()
             proxy = bus.get_object(_HARDWARE_MANAGER_SERVICE,
@@ -49,6 +63,14 @@ class HardwareManager(object):
         for track in self._mixer.list_tracks():
             if track.flags & gst.interfaces.MIXER_TRACK_MASTER:
                 self._master = track
+
+    def __muted_changed_cb(self, old_state, new_state):
+        if old_state != new_state:
+            self.emit('muted-changed', old_state, new_state)
+
+    def __volume_changed_cb(self, old_volume, new_volume):
+        if old_volume != new_volume:
+            self.emit('volume-changed', old_volume, new_volume)
 
     def get_muted(self):
         if not self._mixer or not self._master:
@@ -70,7 +92,7 @@ class HardwareManager(object):
         #sometimes we get a spurious zero from one/more channel(s)
         #TODO: consider removing this when trac #6933 is resolved
         nonzero_volumes = [v for v in volumes if v > 0]
-        
+
         if len(nonzero_volumes) > 0:
             #we could just pick the first nonzero volume, but this converges
             volume = sum(nonzero_volumes) / len(nonzero_volumes)
@@ -78,20 +100,22 @@ class HardwareManager(object):
         else:
             return 0
 
-    def set_volume(self, volume):
+    def set_volume(self, new_volume):
         if not self._mixer or not self._master:
             logging.error('Cannot set the volume')
             return
 
-        if volume < 0 or volume > 100:
+        if new_volume < 0 or new_volume > 100:
             logging.error('Trying to set an invalid volume value.')
             return
 
+        old_volume = self.get_volume()
         max_volume = self._master.max_volume
         min_volume = self._master.min_volume
 
-        volume = volume * (max_volume - min_volume) / 100.0 + min_volume
-        volume_list = [ volume ] * self._master.num_channels
+        new_volume_mixer_range = min_volume + \
+            (new_volume * ((max_volume - min_volume) / 100.0))
+        volume_list = [ new_volume_mixer_range ] * self._master.num_channels
 
         #sometimes alsa sets one/more channels' volume to zero instead
         # of what we asked for, so try a few times
@@ -103,11 +127,15 @@ class HardwareManager(object):
             last_volumes_read = self._mixer.get_volume(self._master)
             read_count += 1
 
-    def set_muted(self, mute):
+        self.emit('volume-changed', old_volume, new_volume)
+
+    def set_muted(self, new_state):
         if not self._mixer or not self._master:
             logging.error('Cannot mute the audio channel')
-        else:
-            self._mixer.set_mute(self._master, mute)
+            return
+        old_state = self.get_muted()
+        self._mixer.set_mute(self._master, new_state)
+        self.emit('muted-changed', old_state, new_state)
 
     def startup(self):
         if env.is_emulator() is False:
@@ -119,7 +147,7 @@ class HardwareManager(object):
             profile = get_profile()
             profile.sound_volume = self.get_volume()
             profile.save()
-    
+
     def set_dcon_freeze(self, frozen):
         if not self._service:
             return
@@ -153,7 +181,7 @@ class HardwareManager(object):
         if self._service.get_keyboard_brightness():
             self._service.set_keyboard_brightness(False)
         else:
-            self._service.set_keyboard_brightness(True)            
+            self._service.set_keyboard_brightness(True)
 
 def get_manager():
     return _manager

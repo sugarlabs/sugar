@@ -31,7 +31,7 @@ from view.tabbinghandler import TabbingHandler
 from model.shellmodel import ShellModel
 
 _BRIGHTNESS_STEP = 2
-_VOLUME_STEP = 10
+_VOLUME_STEP = hardwaremanager.VOL_CHANGE_INCREMENT_RECOMMENDATION
 _BRIGHTNESS_MAX = 15
 _VOLUME_MAX = 100
 _TABBING_MODIFIER = gtk.gdk.MOD1_MASK
