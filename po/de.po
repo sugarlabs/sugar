@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-21 00:30-0400\n"
-"PO-Revision-Date: 2008-06-28 10:20-0400\n"
+"PO-Revision-Date: 2008-07-01 17:31-0400\n"
 "Last-Translator: Markus Schlager <m.slg@gmx.de>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -532,12 +532,10 @@ msgid "Start"
 msgstr "Start"
 
 #: ../src/view/palettes.py:119
-#, fuzzy
 msgid "Remove favorite"
 msgstr "Favorit entfernen"
 
 #: ../src/view/palettes.py:123
-#, fuzzy
 msgid "Make favorite"
 msgstr "Zum Favorit machen"
 
