@@ -52,8 +52,6 @@ class HomeBox(gtk.VBox):
         self._set_view(_FAVORITES_VIEW, favoritesview.RANDOM_LAYOUT)
 
     def __toolbar_query_changed_cb(self, toolbar, query):
-        if self._list_view is None:
-            return
         query = query.lower()
         self._list_view.set_filter(query)
 
@@ -77,8 +75,9 @@ class HomeBox(gtk.VBox):
             if self._favorites_view in self.get_children():
                 self.remove(self._favorites_view)
 
-            self.add(self._list_view)
-            self._list_view.show()
+            if self._list_view not in self.get_children():
+                self.add(self._list_view)
+                self._list_view.show()
         else:
             raise ValueError('Invalid view: %r' % view)
 
@@ -142,14 +141,14 @@ class HomeToolbar(gtk.Toolbar):
         self.insert(favorites_button, -1)
         favorites_button.show()
 
-        list_button = RadioToolButton(named_icon='view-list')
-        list_button.props.group = favorites_button
-        list_button.props.tooltip = _('List view')
-        list_button.props.accelerator = _('<Ctrl>L')
-        list_button.connect('toggled', self.__view_button_toggled_cb,
+        self._list_button = RadioToolButton(named_icon='view-list')
+        self._list_button.props.group = favorites_button
+        self._list_button.props.tooltip = _('List view')
+        self._list_button.props.accelerator = _('<Ctrl>L')
+        self._list_button.connect('toggled', self.__view_button_toggled_cb,
                             _LIST_VIEW)
-        self.insert(list_button, -1)
-        list_button.show()
+        self.insert(self._list_button, -1)
+        self._list_button.show()
 
         self._add_separator()
 
@@ -177,6 +176,8 @@ class HomeToolbar(gtk.Toolbar):
         new_query = entry.props.text
         if self._query != new_query:
             self._query = new_query
+
+            self._list_button.props.active = True
             self.emit('query-changed', self._query)
 
     def __entry_changed_cb(self, entry):
