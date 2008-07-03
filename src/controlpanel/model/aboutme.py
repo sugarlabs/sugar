@@ -43,7 +43,7 @@ def set_nick(nick):
     if not nick:
         raise ValueError(_("You must enter a name."))
     pro = profile.get_profile()
-    pro.nick_name = nick    
+    pro.nick_name = unicode(nick, "utf-8")    
     pro.save()
     return 1
 
