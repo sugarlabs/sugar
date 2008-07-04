@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-21 00:30-0400\n"
-"PO-Revision-Date: 2008-06-27 08:44-0400\n"
+"PO-Revision-Date: 2008-07-04 06:44-0400\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -95,7 +95,7 @@ msgstr "Capture d'écran"
 
 #: ../src/view/home/HomeBox.py:147
 msgid "List view"
-msgstr "Vue liste"
+msgstr "Écran liste"
 
 #: ../src/view/home/HomeBox.py:148
 msgid "<Ctrl>L"
@@ -103,7 +103,7 @@ msgstr "<Ctrl>L"
 
 #: ../src/view/home/HomeBox.py:204
 msgid "Favorites view"
-msgstr "Vue des favoris"
+msgstr "Écran favoris"
 
 #: ../src/view/home/HomeBox.py:205
 msgid "<Ctrl>R"
@@ -112,12 +112,12 @@ msgstr "<Ctrl>R"
 #. TRANS: label for the freeform layout in the favorites view
 #: ../src/view/home/HomeBox.py:211
 msgid "Freeform"
-msgstr "Forme libre"
+msgstr "Libre"
 
 #. TRANS: label for the ring layout in the favorites view
 #: ../src/view/home/HomeBox.py:218
 msgid "Ring"
-msgstr "Anneau"
+msgstr "Concentrique"
 
 #: ../src/view/home/MeshBox.py:97
 msgid "Connect"
