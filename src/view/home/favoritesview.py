@@ -17,7 +17,6 @@
 
 import logging
 from gettext import gettext as _
-import math
 
 import gobject
 import gtk
@@ -246,7 +245,6 @@ class FavoritesView(hippo.Canvas):
             self._box.set_layout(self._layout)
 
             self._my_icon = _MyIcon(style.XLARGE_ICON_SIZE)
-            self._my_icon.log = True
             self._layout.append(self._my_icon, locked=True)
 
             self._current_activity = CurrentActivityIcon()
