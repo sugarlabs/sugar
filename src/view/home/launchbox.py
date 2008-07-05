@@ -46,6 +46,8 @@ class LaunchBox(hippo.Canvas):
         self._home = shellmodel.get_instance().get_home()
         self._home.connect('active-activity-changed',
                            self.__active_activity_changed_cb)
+        self._home.connect('launch-failed', self.__launch_ended_cb)
+        self._home.connect('launch-completed', self.__launch_ended_cb)
 
         self._update_icon()
 
@@ -72,13 +74,21 @@ class LaunchBox(hippo.Canvas):
 
     def _update_icon(self):
         activity = self._home.get_active_activity()
-        if activity:
+        if activity is not None:
             self._activity_icon.props.file_name = activity.get_icon_path()
             self._activity_icon.props.pulse_color = activity.get_icon_color()
         else:
             self._activity_icon.props.file_name = None
 
+        if activity is not None and activity.props.launching:
+            self.resume()
+        else:
+            self.suspend()
+
     def __active_activity_changed_cb(self, model, activity):
+        self._update_icon()
+
+    def __launch_ended_cb(self, model, activity):
         self._update_icon()
 
 class _Animation(animator.Animation):
