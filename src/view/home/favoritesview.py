@@ -386,7 +386,7 @@ class _MyIcon(MyIcon):
         model.props.state = ShellModel.STATE_SHUTDOWN
 
         session_manager = get_session_manager()
-        session_manager.shutdown()
+        session_manager.reboot()
 
     def _shutdown_activate_cb(self, menuitem):
         model = shellmodel.get_instance()
