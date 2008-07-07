@@ -55,7 +55,6 @@ class Shell(gobject.GObject):
         self._model = shellmodel.get_instance()
         self._hosts = {}
         self._screen = wnck.screen_get_default()
-        self._current_host = None
         self._screen_rotation = 0
 
         self._key_handler = KeyHandler()
@@ -70,8 +69,6 @@ class Shell(gobject.GObject):
         home_model.connect('launch-failed', self.__launch_failed_cb)
         home_model.connect('launch-completed', self.__launch_completed_cb)
         home_model.connect('activity-removed', self._activity_removed_cb)
-        home_model.connect('active-activity-changed',
-                           self._active_activity_changed_cb)
 
         gobject.idle_add(self._start_journal_idle)
 
@@ -117,20 +114,15 @@ class Shell(gobject.GObject):
             self._activities_starting.remove(home_activity.get_type())
         xid = home_activity.get_xid()
         if self._hosts.has_key(xid):
-            self._hosts[xid].destroy()
             del self._hosts[xid]
 
-    def _active_activity_changed_cb(self, home_model, home_activity):
+    def _get_host_from_activity_model(self, activity_model):
         host = None
-        if home_activity:
-            xid = home_activity.get_xid()
+        if activity_model is not None:
+            xid = activity_model.get_xid()
             if xid:
-                host = self._hosts[home_activity.get_xid()]
-
-        if self._current_host:
-            self._current_host.set_active(False)
-
-        self._current_host = host
+                host = self._hosts[activity_model.get_xid()]
+        return host
 
     def get_model(self):
         return self._model
@@ -195,8 +187,9 @@ class Shell(gobject.GObject):
         self.take_activity_screenshot()
 
         if level == shellmodel.ShellModel.ZOOM_ACTIVITY:
-            if self._current_host is not None:
-                self._current_host.present()
+            host = self.get_current_activity()
+            if host is not None:
+                host.present()
             self._screen.toggle_showing_desktop(False)
         else:
             self._model.set_zoom_level(level)
@@ -235,7 +228,9 @@ class Shell(gobject.GObject):
         self.get_current_activity().close()
 
     def get_current_activity(self):
-        return self._current_host
+        home_model = self._model.get_home()
+        active_activity = home_model.get_active_activity()
+        return self._get_host_from_activity_model(active_activity)
 
     def get_activity(self, activity_id):
         for host in self._hosts.values():

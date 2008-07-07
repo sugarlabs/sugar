@@ -30,8 +30,6 @@ class ActivityHost:
         except RuntimeError:
             self._overlay_window = None
 
-        self._frame_was_visible = False
-
     def get_id(self):
         return self._model.get_activity_id()
 
@@ -63,10 +61,3 @@ class ActivityHost:
     def show_dialog(self, dialog):
         dialog.show()
         dialog.window.set_transient_for(self._gdk_window)
-
-    def set_active(self, active):
-        if not active:
-            self._frame_was_visible = False
-
-    def destroy(self):
-        self._frame_was_visible = False
