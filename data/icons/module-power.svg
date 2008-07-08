@@ -1,0 +1,13 @@
+<?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd' [
+	<!ENTITY stroke_color "#666666">
+	<!ENTITY fill_color "#ffffff">
+]><svg enable-background="new 0 0 55 55" height="55px" id="Layer_1" version="1.1" viewBox="0 0 55 55" width="55px" x="0px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0px"><g display="block" id="module-energy">
+	<g display="inline" id="device-battery-charging-050">
+		<g>
+			<g>
+				<path d="M2.215,15.271v24.833l33.094,0.002V15.271H2.215z M20.817,26.089l-6.599,9.903l2.339-8.285h-2.472      l1.85-7.121h5.411l-2.773,5.503H20.817z" fill="&fill_color;"/>
+			</g>
+		</g>
+		<polygon fill="none" points="2.215,39.896     47.602,39.896 47.602,34.607 52.611,34.607 52.611,20.565 47.602,20.565 47.602,15.271 2.215,15.271   " stroke="&fill_color;" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5"/>
+	</g>
+</g></svg>

@@ -6,7 +6,8 @@ sugar_PYTHON = 				\
 	datetime.py			\
 	frame.py			\
 	language.py			\
-	network.py			
+	network.py			\
+	power.py
 
 
 
