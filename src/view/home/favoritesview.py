@@ -69,7 +69,6 @@ class FavoritesView(hippo.Canvas):
         self._my_icon = None
         self._current_activity = None
         self._layout = None
-        self._set_layout(RANDOM_LAYOUT)
 
         registry = activity.get_registry()
         registry.connect('activity-added', self.__activity_added_cb)
