@@ -121,6 +121,7 @@ class HomeWindow(gtk.Window):
 
         self.remove(self.get_child())    
         self.add(self._transition_box)
+        self._transition_box.show()
 
         if level == ShellModel.ZOOM_HOME:
             size = style.XLARGE_ICON_SIZE
