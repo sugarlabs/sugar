@@ -75,9 +75,6 @@ class FavoritesView(hippo.Canvas):
         registry.connect('activity-removed', self.__activity_removed_cb)
         registry.connect('activity-changed', self.__activity_changed_cb)
 
-        shell_model = shellmodel.get_instance()
-        shell_model.connect('notify::state', self._shell_state_changed_cb)
-
         # More DND stuff
         self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
                         gtk.gdk.POINTER_MOTION_HINT_MASK)
@@ -125,11 +122,6 @@ class FavoritesView(hippo.Canvas):
             self._box.remove(icon)
         if activity_info.favorite:
             self._add_activity(activity_info)
-
-    def _shell_state_changed_cb(self, model, pspec):
-        # FIXME implement this
-        if model.props.state == ShellModel.STATE_SHUTDOWN:
-            pass
 
     def do_size_allocate(self, allocation):
         width = allocation.width        
@@ -381,16 +373,10 @@ class _MyIcon(MyIcon):
         self.set_palette(palette)
 
     def _reboot_activate_cb(self, menuitem):
-        model = shellmodel.get_instance()
-        model.props.state = ShellModel.STATE_SHUTDOWN
-
         session_manager = get_session_manager()
         session_manager.reboot()
 
     def _shutdown_activate_cb(self, menuitem):
-        model = shellmodel.get_instance()
-        model.props.state = ShellModel.STATE_SHUTDOWN
-
         session_manager = get_session_manager()
         session_manager.shutdown()
 
