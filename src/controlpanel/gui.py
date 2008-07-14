@@ -115,8 +115,11 @@ class ControlPanel(gtk.Window):
 
     def _setup_options(self):
         row = 0
-        column = 0
-        for option in self._options:
+        column = 2
+        options = self._options.keys()
+        options.sort()
+
+        for option in options:
             sectionicon = _SectionIcon(icon_name=self._options[option]['icon'],
                                        title=self._options[option]['title'],
                                        xo_color=self._options[option]['color'],
@@ -125,13 +128,20 @@ class ControlPanel(gtk.Window):
                                self.__select_option_cb, option)
             sectionicon.show()
             
-            self._table.attach(sectionicon, column, column + 1, row, row + 1) 
-            self._options[option]['button'] = sectionicon
+            if option == 'aboutme':
+                self._table.attach(sectionicon, 0, 1, 0, 1)
+            elif option == 'aboutxo':
+                self._table.attach(sectionicon, 1, 2, 0, 1)
+            else:
+                self._table.attach(sectionicon,
+                                   column, column + 1,
+                                   row, row + 1)
+                column += 1
+                if column == _MAX_COLUMNS:
+                    column = 0
+                    row += 1
 
-            column += 1
-            if column == _MAX_COLUMNS:
-                column = 0
-                row += 1        
+            self._options[option]['button'] = sectionicon
 
     def _show_main_view(self):
         self._set_toolbar(self._main_toolbar)
