@@ -25,6 +25,7 @@ from view.home.FriendsBox import FriendsBox
 from view.home.transitionbox import TransitionBox
 from view.home.launchbox import LaunchBox
 from model.shellmodel import ShellModel
+from model import shellmodel
 
 _HOME_PAGE       = 0
 _FRIENDS_PAGE    = 1
@@ -62,7 +63,7 @@ class HomeWindow(gtk.Window):
         self._friends_box = FriendsBox()
         self._mesh_box = MeshBox()
         self._transition_box = TransitionBox()
-        self.launch_box = LaunchBox()
+        self._launch_box = LaunchBox()
 
         self._activate_view()
         self.add(self._home_box)
@@ -70,6 +71,9 @@ class HomeWindow(gtk.Window):
 
         self._transition_box.connect('completed',
                                      self._transition_completed_cb)
+
+        model = shellmodel.get_instance()
+        model.connect('notify::zoom-level', self.__zoom_level_changed_cb)
 
     def _enter_notify_event_cb(self, window, event):
         if event.x != gtk.gdk.screen_width() / 2 or \
@@ -97,16 +101,12 @@ class HomeWindow(gtk.Window):
             self._home_box.suspend()
         elif self._level == ShellModel.ZOOM_MESH:
             self._mesh_box.suspend()
-        elif self._level == ShellModel.ZOOM_ACTIVITY:
-            self.launch_box.suspend()
 
     def _activate_view(self):
         if self._level == ShellModel.ZOOM_HOME:
             self._home_box.resume()
         elif self._level == ShellModel.ZOOM_MESH:
             self._mesh_box.resume()
-        elif self._level == ShellModel.ZOOM_ACTIVITY:
-            self.launch_box.resume()
 
     def _visibility_notify_event_cb(self, window, event):
         if event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED:
@@ -114,7 +114,11 @@ class HomeWindow(gtk.Window):
         else:
             self._activate_view()
 
-    def set_zoom_level(self, level):
+    def __zoom_level_changed_cb(self, model, pspec):
+        level = model.props.zoom_level
+        if level == ShellModel.ZOOM_ACTIVITY:
+            return
+
         self._deactivate_view()
         self._level = level
         self._activate_view()
@@ -123,35 +127,42 @@ class HomeWindow(gtk.Window):
         self.add(self._transition_box)
         self._transition_box.show()
 
-        if level == ShellModel.ZOOM_HOME:
+        if self._level == ShellModel.ZOOM_HOME:
             size = style.XLARGE_ICON_SIZE
-        elif level == ShellModel.ZOOM_FRIENDS:
+        elif self._level == ShellModel.ZOOM_FRIENDS:
             size = style.LARGE_ICON_SIZE
-        elif level == ShellModel.ZOOM_MESH:
+        elif self._level == ShellModel.ZOOM_MESH:
             size = style.STANDARD_ICON_SIZE
-        elif level == ShellModel.ZOOM_ACTIVITY:
-            size = style.XLARGE_ICON_SIZE
             
         self._transition_box.set_size(size)
     
     def _transition_completed_cb(self, transition_box):
+        self._sync_view()
+
+    def _sync_view(self):
+        current_child = self.get_child()
+        self.remove(current_child)
+
         if self._level == ShellModel.ZOOM_HOME:
-            self.remove(self.get_child())    
             self.add(self._home_box)
             self._home_box.show()
         elif self._level == ShellModel.ZOOM_FRIENDS:
-            self.remove(self.get_child())    
             self.add(self._friends_box)
             self._friends_box.show()
         elif self._level == ShellModel.ZOOM_MESH:
-            self.remove(self.get_child())    
             self.add(self._mesh_box)
             self._mesh_box.show()
             self._mesh_box.focus_search_entry()
-        elif self._level == ShellModel.ZOOM_ACTIVITY:
-            self.remove(self.get_child())    
-            self.add(self.launch_box)
-            self.launch_box.show()
 
     def get_home_box(self):
-        return self._home_box   
+        return self._home_box
+
+    def show_launcher(self):
+        self.remove(self.get_child())    
+        self.add(self._launch_box)
+        self._launch_box.show()
+
+        self._launch_box.zoom_in()
+
+    def hide_launcher(self):
+        self._sync_view()

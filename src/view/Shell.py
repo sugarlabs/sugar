@@ -51,7 +51,6 @@ class Shell(gobject.GObject):
     def __init__(self):
         gobject.GObject.__init__(self)
 
-        self._activities_starting = Set()
         self._model = shellmodel.get_instance()
         self._hosts = {}
         self._screen = wnck.screen_get_default()
@@ -92,26 +91,17 @@ class Shell(gobject.GObject):
             self.start_activity('org.laptop.JournalActivity')
 
     def __launch_started_cb(self, home_model, home_activity):
-        if home_activity.get_type() == 'org.laptop.JournalActivity':
-            return
-
-        self._screen.toggle_showing_desktop(True)
-        self._home_window.set_zoom_level(shellmodel.ShellModel.ZOOM_ACTIVITY)
-        self._home_window.launch_box.zoom_in()
+        if home_activity.get_type() != 'org.laptop.JournalActivity':
+            self._home_window.show_launcher()
 
     def __launch_failed_cb(self, home_model, home_activity):
-        if self._screen.get_showing_desktop():
-            self._home_window.set_zoom_level(shellmodel.ShellModel.ZOOM_HOME)
+        self._home_window.hide_launcher()
 
     def __launch_completed_cb(self, home_model, home_activity):
         activity_host = ActivityHost(home_activity)
         self._hosts[activity_host.get_xid()] = activity_host
-        if home_activity.get_type() in self._activities_starting:
-            self._activities_starting.remove(home_activity.get_type())
 
     def _activity_removed_cb(self, home_model, home_activity):
-        if home_activity.get_type() in self._activities_starting:
-            self._activities_starting.remove(home_activity.get_type())
         xid = home_activity.get_xid()
         if self._hosts.has_key(xid):
             del self._hosts[xid]
@@ -149,19 +139,9 @@ class Shell(gobject.GObject):
         activityfactory.create(bundle_id, handle)
 
     def start_activity(self, activity_type):
-        if activity_type in self._activities_starting:
-            logging.debug("This activity is still launching.")
-            return
-
-        self._activities_starting.add(activity_type)
         activityfactory.create(activity_type)
 
     def start_activity_with_uri(self, activity_type, uri):
-        if activity_type in self._activities_starting:
-            logging.debug("This activity is still launching.")
-            return
-
-        self._activities_starting.add(activity_type)
         activityfactory.create_with_uri(activity_type, uri)
 
     def take_activity_screenshot(self):
@@ -190,11 +170,9 @@ class Shell(gobject.GObject):
             host = self.get_current_activity()
             if host is not None:
                 host.present()
-            self._screen.toggle_showing_desktop(False)
         else:
             self._model.set_zoom_level(level)
             self._screen.toggle_showing_desktop(True)
-            self._home_window.set_zoom_level(level)
 
     def toggle_activity_fullscreen(self):
         if self._model.get_zoom_level() == shellmodel.ShellModel.ZOOM_ACTIVITY:
