@@ -67,7 +67,7 @@ class DeviceView(TrayIcon):
         else:
             status = _STATUS_FULLY_CHARGED
 
-        self.icon.props.icon_name = get_icon_state(name, current_level)
+        self.icon.props.icon_name = get_icon_state(name, current_level, step=-5)
         self.icon.props.xo_color = xo_color
         self.icon.props.badge_name = badge_name
 
