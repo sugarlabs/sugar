@@ -53,6 +53,11 @@ _LAYOUT_MAP = {RING_LAYOUT: favoriteslayout.RingLayout,
 class FavoritesView(hippo.Canvas):
     __gtype_name__ = 'SugarFavoritesView'
 
+    __gsignals__ = {
+        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
+                             gobject.TYPE_NONE, ([str])),
+    }
+
     def __init__(self, **kwargs):
         gobject.GObject.__init__(self, **kwargs)
 
@@ -69,6 +74,7 @@ class FavoritesView(hippo.Canvas):
         self._my_icon = None
         self._current_activity = None
         self._layout = None
+        self._alert = None
 
         registry = activity.get_registry()
         registry.connect('activity-added', self.__activity_added_cb)
@@ -87,8 +93,12 @@ class FavoritesView(hippo.Canvas):
 
     def _add_activity(self, activity_info):
         icon = ActivityIcon(activity_info)
+        icon.connect('erase-activated', self.__erase_activated_cb)
         icon.props.size = style.STANDARD_ICON_SIZE
         self._layout.append(icon)
+
+    def __erase_activated_cb(self, activity_icon, bundle_id):
+        self.emit('erase-activated', bundle_id)
 
     def _get_activities_cb(self, activity_list):
         for info in activity_list:
@@ -253,7 +263,25 @@ class FavoritesView(hippo.Canvas):
 
     layout = property(None, _set_layout)
 
+    def add_alert(self, alert):
+        if self._alert is not None:
+            self.remove_alert()
+        alert.set_size_request(gtk.gdk.screen_width(), -1)
+        self._alert = hippo.CanvasWidget(widget=alert)
+        self._box.append(self._alert, hippo.PACK_FIXED)
+
+    def remove_alert(self):
+        self._box.remove(self._alert)
+        self._alert = None
+
 class ActivityIcon(CanvasIcon):
+    __gtype_name__ = 'SugarFavoriteActivityIcon'
+
+    __gsignals__ = {
+        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
+                             gobject.TYPE_NONE, ([str])),
+    }
+
     def __init__(self, activity_info):
         CanvasIcon.__init__(self, cache=True, file_name=activity_info.icon)
         self._activity_info = activity_info
@@ -262,7 +290,12 @@ class ActivityIcon(CanvasIcon):
         self.connect('button-release-event', self.__button_release_event_cb)
 
     def create_palette(self):
-        return ActivityPalette(self._activity_info)
+        palette = ActivityPalette(self._activity_info)
+        palette.connect('erase-activated', self.__erase_activated_cb)
+        return palette
+
+    def __erase_activated_cb(self, palette):
+        self.emit('erase-activated', self._activity_info.bundle_id)
 
     def _color(self):
         self.props.xo_color = get_profile().color
