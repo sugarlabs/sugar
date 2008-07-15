@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-21 00:30-0400\n"
-"PO-Revision-Date: 2008-07-04 06:44-0400\n"
+"PO-Revision-Date: 2008-07-15 17:02-0400\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -280,7 +280,7 @@ msgstr "Ok"
 
 #: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:250
 msgid "Changes require restart"
-msgstr "Redémarrer pour appliquer les changements"
+msgstr "Relancer pour valider"
 
 #: ../src/controlpanel/gui.py:249
 msgid "Warning"
@@ -288,7 +288,7 @@ msgstr "Attention"
 
 #: ../src/controlpanel/gui.py:253
 msgid "Cancel changes"
-msgstr "Annuler les changements"
+msgstr "Abandonner"
 
 #: ../src/controlpanel/gui.py:257
 msgid "Later"
@@ -296,7 +296,7 @@ msgstr "Plus tard"
 
 #: ../src/controlpanel/gui.py:261
 msgid "Restart now"
-msgstr "Redémarrer maintenant"
+msgstr "Maintenant"
 
 #: ../src/controlpanel/model/aboutme.py:44
 msgid "You must enter a name."
