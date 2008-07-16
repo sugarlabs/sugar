@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-05 00:30-0400\n"
-"PO-Revision-Date: 2008-06-06 12:36-0400\n"
+"POT-Creation-Date: 2008-06-21 00:30-0400\n"
+"PO-Revision-Date: 2008-07-16 09:48-0400\n"
 "Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "MIME-Version: 1.0\n"
@@ -93,25 +93,35 @@ msgstr "نوع الاستيثاق:"
 msgid "Encryption Type:"
 msgstr "نوع التعمية:"
 
-#: ../src/view/Shell.py:259
+#: ../src/view/Shell.py:262
 msgid "Screenshot"
 msgstr "لقطة شاشة"
 
-#: ../src/view/home/HomeBox.py:149
-msgid "Ring view"
-msgstr "منظور الحلقة"
-
-#: ../src/view/home/HomeBox.py:150
-msgid "<Ctrl>R"
-msgstr "<Ctrl>ح"
-
-#: ../src/view/home/HomeBox.py:158
+#: ../src/view/home/HomeBox.py:147
 msgid "List view"
 msgstr "منظور القائمة"
 
-#: ../src/view/home/HomeBox.py:159
+#: ../src/view/home/HomeBox.py:148
 msgid "<Ctrl>L"
 msgstr "<Ctrl>ق"
+
+#: ../src/view/home/HomeBox.py:204
+msgid "Favorites view"
+msgstr "المنظور المفضل"
+
+#: ../src/view/home/HomeBox.py:205
+msgid "<Ctrl>R"
+msgstr "<Ctrl>ح"
+
+#. TRANS: label for the freeform layout in the favorites view
+#: ../src/view/home/HomeBox.py:211
+msgid "Freeform"
+msgstr "حُر"
+
+#. TRANS: label for the ring layout in the favorites view
+#: ../src/view/home/HomeBox.py:218
+msgid "Ring"
+msgstr "حلقة"
 
 #: ../src/view/home/MeshBox.py:97
 msgid "Connect"
@@ -158,7 +168,7 @@ msgstr "افصِل..."
 msgid "Resume"
 msgstr "استكمل"
 
-#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:162
+#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:219
 msgid "Join"
 msgstr "التحق"
 
@@ -261,25 +271,25 @@ msgstr "ألغِ"
 msgid "Ok"
 msgstr "حسنا"
 
-#: ../src/controlpanel/sectionview.py:34
-msgid "Changes require a sugar restart to take effect."
-msgstr "يتطلب نفاذ التغييرات إعادة تشغيل «سُكّر»."
+#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:250
+msgid "Changes require restart"
+msgstr "تتطلب التغييرات إعادة التشغيل"
 
-#: ../src/controlpanel/gui.py:248
+#: ../src/controlpanel/gui.py:249
 msgid "Warning"
 msgstr "تحذير"
 
-#: ../src/controlpanel/gui.py:249
-msgid "Changes require restart to take effect"
-msgstr "يتطلب نفاذ التغييرات إعادة التشغيل."
-
-#: ../src/controlpanel/gui.py:252
+#: ../src/controlpanel/gui.py:253
 msgid "Cancel changes"
 msgstr "ألغِ التغييرات"
 
 #: ../src/controlpanel/gui.py:257
 msgid "Later"
 msgstr "لاحقا"
+
+#: ../src/controlpanel/gui.py:261
+msgid "Restart now"
+msgstr "أعِد التشغيل الآن"
 
 #: ../src/controlpanel/model/aboutme.py:44
 msgid "You must enter a name."
@@ -322,7 +332,7 @@ msgid "Error timezone does not exist."
 msgstr "خطأ: المنطقة الزمنية لا وجود لها."
 
 #: ../src/controlpanel/model/frame.py:38 ../src/controlpanel/model/frame.py:60
-msgid "Value must be an int."
+msgid "Value must be an integer."
 msgstr "يجب أن تكون القيمة عددا صحيحا."
 
 #: ../src/controlpanel/model/language.py:28
@@ -404,16 +414,21 @@ msgid "instantaneous"
 msgstr "آني"
 
 #: ../src/controlpanel/view/frame.py:32
-msgid "Delay in milliseconds:"
-msgstr "التأخير بالملي ثانية:"
+#, python-format
+msgid "%s seconds"
+msgstr "%d ثوان"
 
-#: ../src/controlpanel/view/frame.py:66
-msgid "Hot Corners"
-msgstr "الزوايا النشطة"
+#: ../src/controlpanel/view/frame.py:56
+msgid "Activation Delay"
+msgstr "تأخير التفعيل"
 
-#: ../src/controlpanel/view/frame.py:117
-msgid "Warm Edges"
-msgstr "الحواف المتفاعلة"
+#: ../src/controlpanel/view/frame.py:80
+msgid "Corner"
+msgstr "الزاوية"
+
+#: ../src/controlpanel/view/frame.py:115
+msgid "Edge"
+msgstr "الحافة"
 
 #: ../src/controlpanel/view/language.py:29
 #: ../src/controlpanel/view/language.py:74
@@ -468,23 +483,23 @@ msgstr "يبدأ شبكة بسيطة"
 msgid "Unknown Mesh"
 msgstr "شبكة مجهولة"
 
-#: ../src/view/frame/activitiestray.py:167
+#: ../src/view/frame/activitiestray.py:224
 msgid "Decline"
 msgstr "ارفض"
 
-#: ../src/view/home/activitiesring.py:310
+#: ../src/view/home/favoritesview.py:351
 msgid "Control Panel"
 msgstr "لوحة التحكم"
 
-#: ../src/view/home/activitiesring.py:321
+#: ../src/view/home/favoritesview.py:362
 msgid "Restart"
 msgstr "أعد التشغيل"
 
-#: ../src/view/home/activitiesring.py:326
+#: ../src/view/home/favoritesview.py:367
 msgid "Shutdown"
 msgstr "أطفئ"
 
-#: ../src/view/home/activitiesring.py:332
+#: ../src/view/home/favoritesview.py:373
 msgid "Register"
 msgstr "سجّل"
 
@@ -501,12 +516,12 @@ msgid "Start"
 msgstr "ابدأ"
 
 #: ../src/view/palettes.py:119
-msgid "Remove from ring"
-msgstr "أزِل من الحلقة"
+msgid "Remove favorite"
+msgstr "احذف المفضلة"
 
 #: ../src/view/palettes.py:123
-msgid "Add to ring"
-msgstr "أضِف للحلقة"
+msgid "Make favorite"
+msgstr "اصنع مفضلة"
 
 #: ../src/view/palettes.py:169
 msgid "Show contents"
@@ -516,6 +531,30 @@ msgstr "أظهر المحتويات"
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d م.بايت خالية"
+
+#~ msgid "Ring view"
+#~ msgstr "منظور الحلقة"
+
+#~ msgid "Remove from ring"
+#~ msgstr "أزِل من الحلقة"
+
+#~ msgid "Add to ring"
+#~ msgstr "أضِف للحلقة"
+
+#~ msgid "Changes require a sugar restart to take effect."
+#~ msgstr "يتطلب نفاذ التغييرات إعادة تشغيل «سُكّر»."
+
+#~ msgid "Changes require restart to take effect"
+#~ msgstr "يتطلب نفاذ التغييرات إعادة التشغيل."
+
+#~ msgid "Delay in milliseconds:"
+#~ msgstr "التأخير بالملي ثانية:"
+
+#~ msgid "Hot Corners"
+#~ msgstr "الزوايا النشطة"
+
+#~ msgid "Warm Edges"
+#~ msgstr "الحواف المتفاعلة"
 
 #~ msgid "off"
 #~ msgstr "معطّل"
@@ -661,10 +700,6 @@ msgstr "%(free_space)d م.بايت خالية"
 #, python-format
 #~ msgid "%d second"
 #~ msgstr "%d ثانية"
-
-#, python-format
-#~ msgid "%d seconds"
-#~ msgstr "%d ثوان"
 
 #~ msgid " and "
 #~ msgstr " و "
