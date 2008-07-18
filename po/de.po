@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-21 00:30-0400\n"
-"PO-Revision-Date: 2008-07-01 17:31-0400\n"
+"POT-Creation-Date: 2008-07-16 00:30-0400\n"
+"PO-Revision-Date: 2008-07-18 17:45-0400\n"
 "Last-Translator: Markus Schlager <m.slg@gmx.de>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -63,7 +63,7 @@ msgstr "Öffnen"
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../src/view/clipboardmenu.py:63
+#: ../src/view/clipboardmenu.py:63 ../src/view/home/HomeBox.py:86
 msgid "Keep"
 msgstr "Behalten"
 
@@ -78,43 +78,61 @@ msgstr "Zwischenablage-Objekt: %s."
 
 #: ../src/hardware/keydialog.py:150
 msgid "Key Type:"
-msgstr "Schlüsseltyp"
+msgstr "Schlüsseltyp:"
 
 #: ../src/hardware/keydialog.py:170
 msgid "Authentication Type:"
-msgstr "Authentifizierungstyp"
+msgstr "Authentifizierungstyp:"
 
 #: ../src/hardware/keydialog.py:251
 msgid "Encryption Type:"
-msgstr "Verschlüsselungstyp"
+msgstr "Verschlüsselungstyp:"
 
-#: ../src/view/Shell.py:262
+#: ../src/view/Shell.py:235
 msgid "Screenshot"
 msgstr "Bildschirmfoto"
 
-#: ../src/view/home/HomeBox.py:147
+#: ../src/view/home/HomeBox.py:80
+#, fuzzy
+msgid "Confirm erase"
+msgstr "Löschen bestätigen"
+
+#: ../src/view/home/HomeBox.py:82
+#, python-format
+#, fuzzy
+msgid "Confirm erase: Do you want to permanently erase %s?"
+msgstr "Löschen bestätigen: Willst du %s wirklich dauerhaft löschen?"
+
+#: ../src/view/home/HomeBox.py:89 ../src/view/palettes.py:120
+#, fuzzy
+msgid "Erase"
+msgstr "Löschen"
+
+#: ../src/view/home/HomeBox.py:215
 msgid "List view"
 msgstr "Listenansicht"
 
-#: ../src/view/home/HomeBox.py:148
+#: ../src/view/home/HomeBox.py:216
 msgid "<Ctrl>L"
 msgstr "<Ctrl>L"
 
-#: ../src/view/home/HomeBox.py:204
+#: ../src/view/home/HomeBox.py:273
 msgid "Favorites view"
 msgstr "Favoritenansicht"
 
-#: ../src/view/home/HomeBox.py:205
+#: ../src/view/home/HomeBox.py:274
 msgid "<Ctrl>R"
 msgstr "<Ctrl>R"
 
+# TRANS: label for the freeform layout in the favorites view
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/view/home/HomeBox.py:211
+#: ../src/view/home/HomeBox.py:282
 msgid "Freeform"
 msgstr "Freie Form"
 
+# TRANS: label for the ring layout in the favorites view
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/view/home/HomeBox.py:218
+#: ../src/view/home/HomeBox.py:289
 msgid "Ring"
 msgstr "Ring"
 
@@ -164,11 +182,11 @@ msgstr "Maschennetzwerk"
 msgid "Disconnect..."
 msgstr "Verbindung trennen..."
 
-#: ../src/view/home/MeshBox.py:302 ../src/view/palettes.py:60
+#: ../src/view/home/MeshBox.py:302 ../src/view/palettes.py:61
 msgid "Resume"
 msgstr "Wiederaufnehmen"
 
-#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:219
+#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:205
 msgid "Join"
 msgstr "Mitmachen"
 
@@ -193,15 +211,15 @@ msgstr "%(hour)d:%(min).2d verbleibend"
 msgid "Charged"
 msgstr "Aufgeladen"
 
-#: ../src/view/devices/speaker.py:40
+#: ../src/view/devices/speaker.py:41
 msgid "My Speakers"
 msgstr "Meine Lautsprecher"
 
-#: ../src/view/devices/speaker.py:104
+#: ../src/view/devices/speaker.py:116
 msgid "Unmute"
 msgstr "Laut schalten"
 
-#: ../src/view/devices/speaker.py:107
+#: ../src/view/devices/speaker.py:119
 msgid "Mute"
 msgstr "Stumm schalten"
 
@@ -282,23 +300,23 @@ msgstr "Abbrechen"
 msgid "Ok"
 msgstr "Ok"
 
-#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:250
+#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:260
 msgid "Changes require restart"
 msgstr "Neustart zur Übernahme der Änderungen notwendig"
 
-#: ../src/controlpanel/gui.py:249
+#: ../src/controlpanel/gui.py:259
 msgid "Warning"
 msgstr "Warnung"
 
-#: ../src/controlpanel/gui.py:253
+#: ../src/controlpanel/gui.py:263
 msgid "Cancel changes"
 msgstr "Änderungen aufheben"
 
-#: ../src/controlpanel/gui.py:257
+#: ../src/controlpanel/gui.py:267
 msgid "Later"
 msgstr "Später"
 
-#: ../src/controlpanel/gui.py:261
+#: ../src/controlpanel/gui.py:271
 msgid "Restart now"
 msgstr "Jetzt neustarten"
 
@@ -368,9 +386,24 @@ msgstr "Bitte einen Server angeben"
 msgid "State is unknown."
 msgstr "Status ist nicht bekannt."
 
+# (Markus S.) vgl. http://lists.laptop.org/pipermail/localization/2008-July/001232.html
 #: ../src/controlpanel/model/network.py:83
+#, fuzzy
 msgid "Error in specified radio argument use on/off."
-msgstr "Fehler im angegebenen 'radio' Argument - Verwendung von An/Aus."
+msgstr "Fehler im angegebenen radio-Parameter (Funknetz) -- on/off verwenden."
+
+# (Markus S.) vgl. http://lists.laptop.org/pipermail/localization/2008-July/001232.html
+#: ../src/controlpanel/model/power.py:57
+#, fuzzy
+msgid "Error in automatic pm argument, use on/off."
+msgstr ""
+"Fehler im automatischen pm-Parameter (Energieverwaltung) --on/off verwenden."
+
+# (Markus S.) vgl. http://lists.laptop.org/pipermail/localization/2008-July/001232.html
+#: ../src/controlpanel/model/power.py:86
+#, fuzzy
+msgid "Error in extreme pm argument, use on/off."
+msgstr "Fehler im extremen pm-Parameter (Energieverwaltung) -- on/off benutzen."
 
 #: ../src/controlpanel/view/aboutme.py:32
 msgid "About Me"
@@ -456,10 +489,11 @@ msgstr "Netzwerk"
 msgid "Wireless"
 msgstr "Drahtlosnetzwerk"
 
+# (Markus S,) war 'Radio:'
 #: ../src/controlpanel/view/network.py:61
 #, fuzzy
 msgid "Radio:"
-msgstr "Radio:"
+msgstr "Funknetz:"
 
 # (Markus S.) 'Zelle'?
 #: ../src/controlpanel/view/network.py:94
@@ -469,6 +503,29 @@ msgstr "Masche"
 #: ../src/controlpanel/view/network.py:103
 msgid "Server:"
 msgstr "Server:"
+
+#: ../src/controlpanel/view/power.py:27
+#, fuzzy
+msgid "Power"
+msgstr "Energieversorgung"
+
+#: ../src/controlpanel/view/power.py:51
+#, fuzzy
+msgid "Power management"
+msgstr "Energieverwaltung"
+
+#: ../src/controlpanel/view/power.py:61
+#, fuzzy
+msgid "Automatic power management (increases battery life)"
+msgstr "Automatische Energieverwaltung (erhöht die Lebensdauer der Batterie)"
+
+#: ../src/controlpanel/view/power.py:89
+#, fuzzy
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+"Extreme Energieverwaltung (deaktiviert das Funknetz, erhöht die Lebensdauer "
+"der Batterie"
 
 #: ../src/view/devices/network/mesh.py:108
 msgid "Connected to a School Mesh Portal"
@@ -498,52 +555,52 @@ msgstr "Starte ein einfaches Maschennetzwerk"
 msgid "Unknown Mesh"
 msgstr "Unbekanntes Maschennetzwerk"
 
-#: ../src/view/frame/activitiestray.py:224
+#: ../src/view/frame/activitiestray.py:210
 msgid "Decline"
 msgstr "Ablehnen"
 
 # (Markus S.) war 'Kontrollfeld'
-#: ../src/view/home/favoritesview.py:351
+#: ../src/view/home/favoritesview.py:379
 msgid "Control Panel"
 msgstr "Kontrollleiste"
 
-#: ../src/view/home/favoritesview.py:362
+#: ../src/view/home/favoritesview.py:390
 msgid "Restart"
 msgstr "Neustart"
 
-#: ../src/view/home/favoritesview.py:367
+#: ../src/view/home/favoritesview.py:395
 msgid "Shutdown"
 msgstr "Ausschalten"
 
-#: ../src/view/home/favoritesview.py:373
+#: ../src/view/home/favoritesview.py:401
 msgid "Register"
 msgstr "Registrieren"
 
-#: ../src/view/palettes.py:41
+#: ../src/view/palettes.py:42
 msgid "Starting..."
 msgstr "Starte..."
 
-#: ../src/view/palettes.py:71
+#: ../src/view/palettes.py:72
 msgid "Stop"
 msgstr "Stopp"
 
-#: ../src/view/palettes.py:96
+#: ../src/view/palettes.py:104
 msgid "Start"
 msgstr "Start"
 
-#: ../src/view/palettes.py:119
+#: ../src/view/palettes.py:132
 msgid "Remove favorite"
 msgstr "Favorit entfernen"
 
-#: ../src/view/palettes.py:123
+#: ../src/view/palettes.py:136
 msgid "Make favorite"
 msgstr "Zum Favorit machen"
 
-#: ../src/view/palettes.py:169
+#: ../src/view/palettes.py:185
 msgid "Show contents"
 msgstr "Inhalte anzeigen"
 
-#: ../src/view/palettes.py:193
+#: ../src/view/palettes.py:209
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB frei"
