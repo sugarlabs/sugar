@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-21 00:30-0400\n"
-"PO-Revision-Date: 2008-06-25 04:47-0400\n"
+"POT-Creation-Date: 2008-07-16 00:30-0400\n"
+"PO-Revision-Date: 2008-07-18 04:57-0400\n"
 "Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -64,7 +64,7 @@ msgstr "Apri"
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../src/view/clipboardmenu.py:63
+#: ../src/view/clipboardmenu.py:63 ../src/view/home/HomeBox.py:86
 msgid "Keep"
 msgstr "Memorizza"
 
@@ -89,33 +89,49 @@ msgstr "Tipo di Autenticazione:"
 msgid "Encryption Type:"
 msgstr "Tipo di Crittografia:"
 
-#: ../src/view/Shell.py:262
+#: ../src/view/Shell.py:235
 msgid "Screenshot"
 msgstr "Schermata"
 
-#: ../src/view/home/HomeBox.py:147
-msgid "List view"
-msgstr "Vista Lista"
+#: ../src/view/home/HomeBox.py:80
+msgid "Confirm erase"
+msgstr "Conferma cancellazione"
 
-#: ../src/view/home/HomeBox.py:148
+#: ../src/view/home/HomeBox.py:82
+#, python-format
+msgid "Confirm erase: Do you want to permanently erase %s?"
+msgstr ""
+"Conferma cancellazione: Sei sicuro di voler eliminare definitivamente %s?"
+
+#: ../src/view/home/HomeBox.py:89 ../src/view/palettes.py:120
+msgid "Erase"
+msgstr "Cancella"
+
+#: ../src/view/home/HomeBox.py:215
+msgid "List view"
+msgstr "Vista Elenco"
+
+#: ../src/view/home/HomeBox.py:216
 msgid "<Ctrl>L"
 msgstr "<Ctrl>L"
 
-#: ../src/view/home/HomeBox.py:204
+#: ../src/view/home/HomeBox.py:273
 msgid "Favorites view"
 msgstr "Visualizza i Preferiti"
 
-#: ../src/view/home/HomeBox.py:205
+#: ../src/view/home/HomeBox.py:274
 msgid "<Ctrl>R"
 msgstr "<Ctrl>R"
 
+# TRANS: label for the freeform layout in the favorites view
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/view/home/HomeBox.py:211
+#: ../src/view/home/HomeBox.py:282
 msgid "Freeform"
 msgstr "Formato libero"
 
+# TRANS: label for the ring layout in the favorites view
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/view/home/HomeBox.py:218
+#: ../src/view/home/HomeBox.py:289
 msgid "Ring"
 msgstr "Anello"
 
@@ -161,11 +177,11 @@ msgstr "Rete Mesh"
 msgid "Disconnect..."
 msgstr "Disconnessione..."
 
-#: ../src/view/home/MeshBox.py:302 ../src/view/palettes.py:60
+#: ../src/view/home/MeshBox.py:302 ../src/view/palettes.py:61
 msgid "Resume"
 msgstr "Riprendi"
 
-#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:219
+#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:205
 msgid "Join"
 msgstr "Associa"
 
@@ -190,15 +206,15 @@ msgstr "%(ore)d:%(min).2d rimanenti"
 msgid "Charged"
 msgstr "Carica"
 
-#: ../src/view/devices/speaker.py:40
+#: ../src/view/devices/speaker.py:41
 msgid "My Speakers"
 msgstr "I miei Altoparlanti"
 
-#: ../src/view/devices/speaker.py:104
+#: ../src/view/devices/speaker.py:116
 msgid "Unmute"
 msgstr "riAttiva"
 
-#: ../src/view/devices/speaker.py:107
+#: ../src/view/devices/speaker.py:119
 msgid "Mute"
 msgstr "Silenzia"
 
@@ -281,23 +297,23 @@ msgstr "Annulla"
 msgid "Ok"
 msgstr "Ok"
 
-#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:250
+#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:260
 msgid "Changes require restart"
 msgstr "Le modifiche rendono necessario un riavvio"
 
-#: ../src/controlpanel/gui.py:249
+#: ../src/controlpanel/gui.py:259
 msgid "Warning"
 msgstr "Attenzione"
 
-#: ../src/controlpanel/gui.py:253
+#: ../src/controlpanel/gui.py:263
 msgid "Cancel changes"
 msgstr "Annulla modifiche"
 
-#: ../src/controlpanel/gui.py:257
+#: ../src/controlpanel/gui.py:267
 msgid "Later"
 msgstr "Dopo"
 
-#: ../src/controlpanel/gui.py:261
+#: ../src/controlpanel/gui.py:271
 msgid "Restart now"
 msgstr "Riavvia adesso"
 
@@ -369,7 +385,15 @@ msgstr "Stato sconosciuto."
 
 #: ../src/controlpanel/model/network.py:83
 msgid "Error in specified radio argument use on/off."
-msgstr "Errore nel campo specificato, utilizzare acceso/spento."
+msgstr "Errore nel campo specificato, utilizzare on/off."
+
+#: ../src/controlpanel/model/power.py:57
+msgid "Error in automatic pm argument, use on/off."
+msgstr "Errore nel campo Gestione Energetica Automatica, utilizza on/off"
+
+#: ../src/controlpanel/model/power.py:86
+msgid "Error in extreme pm argument, use on/off."
+msgstr "Errore nel campo Gestione Energetica Estrema, utilizza on/off"
 
 #: ../src/controlpanel/view/aboutme.py:32
 msgid "About Me"
@@ -465,6 +489,25 @@ msgstr "Mesh"
 msgid "Server:"
 msgstr "Server:"
 
+#: ../src/controlpanel/view/power.py:27
+msgid "Power"
+msgstr "Energia"
+
+#: ../src/controlpanel/view/power.py:51
+msgid "Power management"
+msgstr "Gestione Energetica (power management)"
+
+#: ../src/controlpanel/view/power.py:61
+msgid "Automatic power management (increases battery life)"
+msgstr "Gestione Energetica Automatica (incrementa la durata delle batterie)"
+
+#: ../src/controlpanel/view/power.py:89
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+"Gestione Energetica Estrema (spegne la connessione radio wireless, "
+"incrementa la durata delle batterie)"
+
 #: ../src/view/devices/network/mesh.py:108
 msgid "Connected to a School Mesh Portal"
 msgstr "Connesso ad un Portale Mesh di scuola"
@@ -495,51 +538,51 @@ msgstr "Attivazione Mesh Semplice"
 msgid "Unknown Mesh"
 msgstr "Mesh sconosciuto"
 
-#: ../src/view/frame/activitiestray.py:224
+#: ../src/view/frame/activitiestray.py:210
 msgid "Decline"
 msgstr "Rinuncia"
 
-#: ../src/view/home/favoritesview.py:351
+#: ../src/view/home/favoritesview.py:379
 msgid "Control Panel"
 msgstr "Pannello di Controllo"
 
-#: ../src/view/home/favoritesview.py:362
+#: ../src/view/home/favoritesview.py:390
 msgid "Restart"
 msgstr "Riavvia"
 
-#: ../src/view/home/favoritesview.py:367
+#: ../src/view/home/favoritesview.py:395
 msgid "Shutdown"
 msgstr "Spegni"
 
-#: ../src/view/home/favoritesview.py:373
+#: ../src/view/home/favoritesview.py:401
 msgid "Register"
 msgstr "Registra"
 
-#: ../src/view/palettes.py:41
+#: ../src/view/palettes.py:42
 msgid "Starting..."
 msgstr "Inizio..."
 
-#: ../src/view/palettes.py:71
+#: ../src/view/palettes.py:72
 msgid "Stop"
 msgstr "Chiudi"
 
-#: ../src/view/palettes.py:96
+#: ../src/view/palettes.py:104
 msgid "Start"
 msgstr "Avvia"
 
-#: ../src/view/palettes.py:119
+#: ../src/view/palettes.py:132
 msgid "Remove favorite"
 msgstr "Rimuovi preferito"
 
-#: ../src/view/palettes.py:123
+#: ../src/view/palettes.py:136
 msgid "Make favorite"
 msgstr "Definisci preferito"
 
-#: ../src/view/palettes.py:169
+#: ../src/view/palettes.py:185
 msgid "Show contents"
 msgstr "Mostra i contenuti"
 
-#: ../src/view/palettes.py:193
+#: ../src/view/palettes.py:209
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB Liberi"
