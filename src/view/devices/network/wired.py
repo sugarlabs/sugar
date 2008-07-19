@@ -17,6 +17,9 @@
 from view.devices import deviceview
 
 class DeviceView(deviceview.DeviceView):
+
+    FRAME_POSITION_RELATIVE = 300
+
     def __init__(self, model):
         deviceview.DeviceView.__init__(self, model)
         self.props.icon_name = 'network-wired'

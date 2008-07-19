@@ -34,6 +34,9 @@ _STATUS_DISCHARGING = 1
 _STATUS_FULLY_CHARGED = 2
 
 class DeviceView(TrayIcon):
+
+    FRAME_POSITION_RELATIVE = 1000
+
     def __init__(self, model):
         TrayIcon.__init__(self, icon_name=_ICON_NAME,
                           xo_color=profile.get_color())

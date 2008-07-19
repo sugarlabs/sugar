@@ -30,6 +30,9 @@ from hardware import hardwaremanager
 from view.frame.frameinvoker import FrameWidgetInvoker
 
 class DeviceView(TrayIcon):
+
+    FRAME_POSITION_RELATIVE = 400
+
     def __init__(self, model):
         TrayIcon.__init__(self, icon_name='network-mesh')
 
