@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-07-16 00:30-0400\n"
-"PO-Revision-Date: 2008-07-18 17:45-0400\n"
+"PO-Revision-Date: 2008-07-20 08:41-0400\n"
 "Last-Translator: Markus Schlager <m.slg@gmx.de>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -93,18 +93,15 @@ msgid "Screenshot"
 msgstr "Bildschirmfoto"
 
 #: ../src/view/home/HomeBox.py:80
-#, fuzzy
 msgid "Confirm erase"
 msgstr "Löschen bestätigen"
 
 #: ../src/view/home/HomeBox.py:82
 #, python-format
-#, fuzzy
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "Löschen bestätigen: Willst du %s wirklich dauerhaft löschen?"
 
 #: ../src/view/home/HomeBox.py:89 ../src/view/palettes.py:120
-#, fuzzy
 msgid "Erase"
 msgstr "Löschen"
 
@@ -394,14 +391,12 @@ msgstr "Fehler im angegebenen radio-Parameter (Funknetz) -- on/off verwenden."
 
 # (Markus S.) vgl. http://lists.laptop.org/pipermail/localization/2008-July/001232.html
 #: ../src/controlpanel/model/power.py:57
-#, fuzzy
 msgid "Error in automatic pm argument, use on/off."
 msgstr ""
 "Fehler im automatischen pm-Parameter (Energieverwaltung) --on/off verwenden."
 
 # (Markus S.) vgl. http://lists.laptop.org/pipermail/localization/2008-July/001232.html
 #: ../src/controlpanel/model/power.py:86
-#, fuzzy
 msgid "Error in extreme pm argument, use on/off."
 msgstr "Fehler im extremen pm-Parameter (Energieverwaltung) -- on/off benutzen."
 
@@ -505,27 +500,23 @@ msgid "Server:"
 msgstr "Server:"
 
 #: ../src/controlpanel/view/power.py:27
-#, fuzzy
 msgid "Power"
 msgstr "Energieversorgung"
 
 #: ../src/controlpanel/view/power.py:51
-#, fuzzy
 msgid "Power management"
 msgstr "Energieverwaltung"
 
 #: ../src/controlpanel/view/power.py:61
-#, fuzzy
 msgid "Automatic power management (increases battery life)"
 msgstr "Automatische Energieverwaltung (erhöht die Lebensdauer der Batterie)"
 
 #: ../src/controlpanel/view/power.py:89
-#, fuzzy
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
 "Extreme Energieverwaltung (deaktiviert das Funknetz, erhöht die Lebensdauer "
-"der Batterie"
+"der Batterie)"
 
 #: ../src/view/devices/network/mesh.py:108
 msgid "Connected to a School Mesh Portal"
