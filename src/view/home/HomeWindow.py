@@ -23,7 +23,6 @@ from view.home.MeshBox import MeshBox
 from view.home.HomeBox import HomeBox
 from view.home.FriendsBox import FriendsBox
 from view.home.transitionbox import TransitionBox
-from view.home.launchbox import LaunchBox
 from model.shellmodel import ShellModel
 from model import shellmodel
 
@@ -31,7 +30,6 @@ _HOME_PAGE       = 0
 _FRIENDS_PAGE    = 1
 _MESH_PAGE       = 2
 _TRANSITION_PAGE = 3
-_LAUNCH_PAGE     = 4
 
 class HomeWindow(gtk.Window):
     def __init__(self):
@@ -63,7 +61,6 @@ class HomeWindow(gtk.Window):
         self._friends_box = FriendsBox()
         self._mesh_box = MeshBox()
         self._transition_box = TransitionBox()
-        self._launch_box = LaunchBox()
 
         self._activate_view()
         self.add(self._home_box)
@@ -137,9 +134,6 @@ class HomeWindow(gtk.Window):
         self._transition_box.set_size(size)
     
     def _transition_completed_cb(self, transition_box):
-        self._sync_view()
-
-    def _sync_view(self):
         current_child = self.get_child()
         self.remove(current_child)
 
@@ -156,13 +150,3 @@ class HomeWindow(gtk.Window):
 
     def get_home_box(self):
         return self._home_box
-
-    def show_launcher(self):
-        self.remove(self.get_child())    
-        self.add(self._launch_box)
-        self._launch_box.show()
-
-        self._launch_box.zoom_in()
-
-    def hide_launcher(self):
-        self._sync_view()

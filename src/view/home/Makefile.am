@@ -7,7 +7,6 @@ sugar_PYTHON =			\
 	grid.py			\
 	FriendView.py		\
 	FriendsBox.py		\
-	launchbox.py		\
 	HomeBox.py		\
 	HomeWindow.py		\
 	MeshBox.py		\
