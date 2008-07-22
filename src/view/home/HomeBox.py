@@ -213,7 +213,7 @@ class HomeToolbar(gtk.Toolbar):
         self._list_button = RadioToolButton(named_icon='view-list')
         self._list_button.props.group = favorites_button
         self._list_button.props.tooltip = _('List view')
-        self._list_button.props.accelerator = _('<Ctrl>L')
+        self._list_button.props.accelerator = _('<Ctrl>2')
         self._list_button.connect('toggled', self.__view_button_toggled_cb,
                             _LIST_VIEW)
         self.insert(self._list_button, -1)
@@ -271,7 +271,7 @@ class FavoritesButton(RadioToolButton):
         RadioToolButton.__init__(self)
 
         self.props.tooltip = _('Favorites view')
-        self.props.accelerator = _('<Ctrl>R')
+        self.props.accelerator = _('<Ctrl>1')
         self.props.group = None
 
         profile_layout_constant = profile.get_profile().favorites_layout
