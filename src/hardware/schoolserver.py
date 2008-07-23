@@ -1,13 +1,20 @@
-from sugar.profile import get_profile
+import logging
+from gettext import gettext as _
 from xmlrpclib import ServerProxy, Error
-import sys
+import socket
 import os
+
+from sugar.profile import get_profile
 
 REGISTER_URL = 'http://schoolserver:8080/'
 
+class RegisterError(Exception):
+    pass
+
 def register_laptop(url=REGISTER_URL):
     if not have_ofw_tree():
-        return False
+        logging.error('Registration: Cannot obtain data needed to register.')
+        raise RegisterError(_('Cannot obtain data needed for registration.'))
 
     sn = read_ofw('mfg-data/SN')
     uuid = read_ofw('mfg-data/U#')
@@ -16,19 +23,21 @@ def register_laptop(url=REGISTER_URL):
 
     profile = get_profile()
 
+    server = ServerProxy(url)
     try:
-        server = ServerProxy(url)
         data = server.register(sn, profile.nick_name, uuid, profile.pubkey)
-        if data['success'] != 'OK':
-            print >> sys.stderr, "Error registering laptop: " + data['error']
-            return False
+    except (Error, socket.error), e:
+        logging.error('Registration: cannot connect to server: %s' % e)
+        raise RegisterError(_('Cannot connect to the server.'))        
+        
+    if data['success'] != 'OK':
+        logging.error('Registration: server could not complete request: %s' % 
+                      data['error'])
+        raise RegisterError(_('The server could not complete the request.'))
 
-        profile.jabber_server = data['jabberserver']
-        profile.backup1 = data['backupurl']
-        profile.save()
-    except Error, e:
-        print >> sys.stderr, "Error registering laptop: " + str(e)
-        return False
+    profile.jabber_server = data['jabberserver']
+    profile.backup1 = data['backupurl']
+    profile.save()
 
     return True
 

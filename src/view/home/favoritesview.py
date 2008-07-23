@@ -26,6 +26,7 @@ from sugar.graphics import style
 from sugar.graphics.palette import Palette
 from sugar.graphics.icon import Icon, CanvasIcon
 from sugar.graphics.menuitem import MenuItem
+from sugar.graphics.alert import Alert
 from sugar.profile import get_profile
 from sugar import activity
 
@@ -37,6 +38,7 @@ from view.home import favoriteslayout
 from model import shellmodel
 from model.shellmodel import ShellModel
 from hardware import schoolserver
+from hardware.schoolserver import RegisterError
 from controlpanel.gui import ControlPanel
 from session import get_session_manager
 
@@ -155,6 +157,7 @@ class FavoritesView(hippo.Canvas):
 
     def enable_xo_palette(self):
         self._my_icon.enable_palette()
+        self._my_icon.register_menu.connect('activate', self.__register_activate_cb)
 
     # TODO: Dnd methods. This should be merged somehow inside hippo-canvas.
     def __button_press_event_cb(self, widget, event):
@@ -274,6 +277,28 @@ class FavoritesView(hippo.Canvas):
         self._box.remove(self._alert)
         self._alert = None
 
+    def __register_activate_cb(self, menuitem):
+        alert = Alert()
+        try:
+            schoolserver.register_laptop()
+        except RegisterError, e:
+            alert.props.title = _('Registration Failed')
+            alert.props.msg = _('%s') % e
+        else:    
+            alert.props.title = _('Registration Successful')
+            alert.props.msg = _('You are now registered with your school server.') 
+            palette = self._my_icon.get_palette()
+            palette.menu.remove(menuitem)
+
+        ok_icon = Icon(icon_name='dialog-ok')
+        alert.add_button(gtk.RESPONSE_OK, _('Ok'), ok_icon)
+
+        self.add_alert(alert)
+        alert.connect('response', self.__register_alert_response_cb)            
+            
+    def __register_alert_response_cb(self, alert, response_id):
+        self.remove_alert()
+
 class ActivityIcon(CanvasIcon):
     __gtype_name__ = 'SugarFavoriteActivityIcon'
 
@@ -367,6 +392,7 @@ class _MyIcon(MyIcon):
 
         self._power_manager = None
         self._profile = get_profile()
+        self.register_menu = None
 
     def enable_palette(self):
         palette_icon = Icon(icon_name='computer-xo', 
@@ -398,10 +424,9 @@ class _MyIcon(MyIcon):
         item.show()
 
         if not self._profile.is_registered():
-            item = MenuItem(_('Register'), 'media-record')
-            item.connect('activate', self._register_activate_cb)
-            palette.menu.append(item)
-            item.show()
+            self.register_menu = MenuItem(_('Register'), 'media-record')
+            palette.menu.append(self.register_menu)
+            self.register_menu.show()
  
         self.set_palette(palette)
 
@@ -412,12 +437,7 @@ class _MyIcon(MyIcon):
     def _shutdown_activate_cb(self, menuitem):
         session_manager = get_session_manager()
         session_manager.shutdown()
-
-    def _register_activate_cb(self, menuitem):
-        schoolserver.register_laptop()
-        if self._profile.is_registered():
-            self.get_palette().menu.remove(menuitem)
-
+        
     def get_toplevel(self):
         return hippo.get_canvas_for_item(self).get_toplevel()
 
@@ -425,7 +445,3 @@ class _MyIcon(MyIcon):
         panel = ControlPanel()
         panel.set_transient_for(self.get_toplevel())
         panel.show()
-
-    def _response_cb(self, widget, response_id):
-        if response_id == gtk.RESPONSE_OK:            
-            widget.destroy()
