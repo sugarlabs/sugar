@@ -38,6 +38,7 @@ from view.ActivityHost import ActivityHost
 from view.frame import frame
 from view.keyhandler import KeyHandler
 from view.home.HomeWindow import HomeWindow
+from view.launchwindow import LaunchWindow
 from model import shellmodel
 
 # #3903 - this constant can be removed and assumed to be 1 when dbus-python
@@ -62,6 +63,8 @@ class Shell(gobject.GObject):
 
         self._home_window = HomeWindow()
         self._home_window.show()
+
+        self._launch_window = LaunchWindow()
 
         home_model = self._model.get_home()
         home_model.connect('launch-started', self.__launch_started_cb)
@@ -92,12 +95,14 @@ class Shell(gobject.GObject):
 
     def __launch_started_cb(self, home_model, home_activity):
         if home_activity.get_type() != 'org.laptop.JournalActivity':
-            self._home_window.show_launcher()
+            self._launch_window.show()
 
     def __launch_failed_cb(self, home_model, home_activity):
-        self._home_window.hide_launcher()
+        self._launch_window.hide()
 
     def __launch_completed_cb(self, home_model, home_activity):
+        self._launch_window.hide()
+
         activity_host = ActivityHost(home_activity)
         self._hosts[activity_host.get_xid()] = activity_host
 

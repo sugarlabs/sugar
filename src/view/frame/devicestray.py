@@ -41,7 +41,14 @@ class DevicesTray(tray.HTray):
     def _add_device(self, device):
         try:
             view = deviceview.create(device)
-            self.add_item(view)
+            index = 0
+            for item in self.get_children():
+                index = self.get_item_index(item)
+                view_pos = getattr(view, "FRAME_POSITION_RELATIVE", -1)
+                item_pos = getattr(item, "FRAME_POSITION_RELATIVE", 0)
+                if view_pos < item_pos:
+                    break
+            self.add_item(view, index=index)
             view.show()
             self._device_icons[device.get_id()] = view
         except Exception, message:
@@ -57,4 +64,3 @@ class DevicesTray(tray.HTray):
 
     def __device_disappeared_cb(self, model, device):
         self._remove_device(device)
-
