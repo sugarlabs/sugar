@@ -48,6 +48,8 @@ class SessionManager(session.SessionManager):
         self.initiate_shutdown()
 
     def shutdown_completed(self):
+        session.SessionManager.shutdown_completed(self)
+
         hw_manager = hardwaremanager.get_manager()
         hw_manager.shutdown()
 
@@ -58,15 +60,14 @@ class SessionManager(session.SessionManager):
                             'org.freedesktop.Hal.Device.SystemPowerManagement') 
 
         if env.is_emulator():
-            pass
-            #self._close_emulator()
+            self._close_emulator()
         else:
-            if self._logout_mode == self.MODE_LOGOUT:
-                gtk.main_quit()
-            elif self._logout_mode == self.MODE_SHUTDOWN:
+            if self._logout_mode == self.MODE_SHUTDOWN:
                 pm.Shutdown()
             elif self._logout_mode == self.MODE_REBOOT:
                 pm.Reboot()
+
+            gtk.main_quit()
 
     def _close_emulator(self):
         if os.environ.has_key('SUGAR_EMULATOR_PID'):
