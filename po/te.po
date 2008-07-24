@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-07-23 07:44-0400\n"
-"PO-Revision-Date: 2008-07-24 14:17+0100\n"
-"Last-Translator: Satyanarayana Murthy Saladi <saladism@gmail.com>\n"
+"PO-Revision-Date: 2008-07-24 12:16-0400\n"
+"Last-Translator: Sayamindu Dasgupta <sayamindu@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 1.1.0rc2\n"
 
 #: ../src/intro/intro.py:65
 #: ../src/controlpanel/view/aboutme.py:100
@@ -213,7 +213,7 @@ msgstr "చాలా తక్కువ చార్జీ మిగిలిఉ
 #: ../src/view/devices/battery.py:123
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
-msgstr "%(గంట)d:%(నిమిషములు).2d మిగిలిఉంది"
+msgstr "%(hour)d:%(min).2d మిగిలిఉంది"
 
 #: ../src/view/devices/battery.py:127
 msgid "Charged"
@@ -459,7 +459,7 @@ msgstr "వెంటనే"
 #: ../src/controlpanel/view/frame.py:32
 #, python-format
 msgid "%s seconds"
-msgstr "%d సెకనులు"
+msgstr "%s సెకనులు"
 
 #: ../src/controlpanel/view/frame.py:56
 msgid "Activation Delay"
@@ -761,48 +761,3 @@ msgstr "%(free_space)d MB ఖాళీ"
 #, python-format
 #~ msgid ", "
 #~ msgstr ", "
-
-#~ msgid "Add to journal"
-#~ msgstr "పద్దుకి కలుపు"
-
-#~ msgid "Reboot"
-#~ msgstr "తిరిగి బూట్ చేయి"
-
-#~ msgid "About this XO"
-#~ msgstr "ఈ ఎక్స్ఒ గురించి"
-
-#~ msgid "My Battery life"
-#~ msgstr "నా బేటరీ ఆయువు"
-
-#~ msgid "Battery charging"
-#~ msgstr "బేటరీ చార్జి అవుతుంది"
-
-#~ msgid "Battery discharging"
-#~ msgstr "బేటరీ డిచ్చార్జి అవుతుంది"
-
-#~ msgid "Battery fully charged"
-#~ msgstr "బేటరీ పుర్తిగా చార్జి అయింది"
-
-#~ msgid "off"
-#~ msgstr "లేదు"
-
-#~ msgid "on"
-#~ msgstr "ఉంది"
-
-#~ msgid "Permission denied. You need to be root to run this method."
-#~ msgstr "అనుమతి లేదు. మీరు రూట్ గా మారి ప్రయత్నించాలి"
-
-#~ msgid "Error in reading timezone"
-#~ msgstr "కాలమండలం చదవడంలో పొరబాటు జరిగింది"
-
-#, python-format
-#~ msgid "Error copying timezone (from %s): %s"
-#~ msgstr "కాలమండలం నకలు చేయడంలో పొరబాటు జరిగింది (%s నుంచి ): %s"
-
-#, python-format
-#~ msgid "Changing permission of timezone: %s"
-#~ msgstr "కాలమండలం అనుమతి మారుతుంది:%s"
-
-#, python-format
-#~ msgid "Could not access %s. Create standard settings."
-#~ msgstr "%s ప్రవేశము కుదరలేదు. ప్రమాణ మైన సెట్టింగ్ శ్రుష్తించనా."
