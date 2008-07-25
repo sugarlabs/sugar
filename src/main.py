@@ -48,23 +48,6 @@ def _start_matchbox():
 
     gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
 
-def _save_session_info():
-    # Save our DBus Session Bus address somewhere it can be found
-    #
-    # WARNING!!! this is going away at some near future point, 
-    #            do not rely on it
-    #
-    session_info_file = os.path.join(env.get_profile_path(), "session.info")
-    f = open(session_info_file, "w")
-
-    cp = ConfigParser()
-    cp.add_section('Session')
-    cp.set('Session', 'dbus_address', os.environ['DBUS_SESSION_BUS_ADDRESS'])
-    cp.set('Session', 'display', gtk.gdk.display_get_default().get_name())
-    cp.write(f)
-
-    f.close()
-
 def _setup_translations():
     locale_path = os.path.join(config.prefix, 'share', 'locale')
     domain = 'sugar'
@@ -92,10 +75,15 @@ def _shell_started_cb():
 def main():
     gobject.idle_add(_shell_started_cb)
 
-    logsmanager.setup()
+    try:
+        logsmanager.setupa()
+    except Exception, e:
+        # logs setup is not critical; it should not prevent sugar from
+        # starting if (for example) the disk is full or read-only.
+        print 'Log setup failed: %s' % e
+
     logger.start('shell')
 
-    _save_session_info()
     _start_matchbox()
     _setup_translations()
 
@@ -154,7 +142,3 @@ def main():
         gtk.main()
     except KeyboardInterrupt:
         print 'Ctrl+C pressed, exiting...'
-
-    session_info_file = os.path.join(env.get_profile_path(), "session.info")
-    os.remove(session_info_file)
-
