@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-07-23 07:44-0400\n"
-"PO-Revision-Date: 2008-07-23 11:08-0400\n"
+"PO-Revision-Date: 2008-07-25 11:08-0400\n"
 "Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -389,11 +389,12 @@ msgstr "Errore nel campo specificato, utilizzare on/off."
 
 #: ../src/controlpanel/model/power.py:57
 msgid "Error in automatic pm argument, use on/off."
-msgstr "Errore nel campo Gestione Energetica Automatica, utilizza on/off"
+msgstr ""
+"Errore nel campo Gestione Automatica Risparmio Energetico, utilizza on/off"
 
 #: ../src/controlpanel/model/power.py:86
 msgid "Error in extreme pm argument, use on/off."
-msgstr "Errore nel campo Gestione Energetica Estrema, utilizza on/off"
+msgstr "Errore nel campo Gestione Estrema Risparmio Energetico, utilizza on/off"
 
 #: ../src/controlpanel/view/aboutme.py:32
 msgid "About Me"
@@ -495,17 +496,19 @@ msgstr "Energia"
 
 #: ../src/controlpanel/view/power.py:51
 msgid "Power management"
-msgstr "Gestione Energetica (power management)"
+msgstr "Gestione Risparmio Energetico (power management)"
 
 #: ../src/controlpanel/view/power.py:61
 msgid "Automatic power management (increases battery life)"
-msgstr "Gestione Energetica Automatica (incrementa la durata delle batterie)"
+msgstr ""
+"Gestione Automatica Risparmio Energetico (incrementa la durata delle "
+"batterie)"
 
 #: ../src/controlpanel/view/power.py:89
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
-"Gestione Energetica Estrema (spegne la connessione radio wireless, "
+"Gestione Risparmio Energetico Estrema (spegne la connessione radio wireless, "
 "incrementa la durata delle batterie)"
 
 #: ../src/view/devices/network/mesh.py:111
