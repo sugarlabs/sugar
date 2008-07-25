@@ -76,7 +76,7 @@ def main():
     gobject.idle_add(_shell_started_cb)
 
     try:
-        logsmanager.setupa()
+        logsmanager.setup()
     except Exception, e:
         # logs setup is not critical; it should not prevent sugar from
         # starting if (for example) the disk is full or read-only.
