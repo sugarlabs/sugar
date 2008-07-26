@@ -40,14 +40,12 @@ _LIST_VIEW = 1
 _AUTOSEARCH_TIMEOUT = 1000
 
 def _convert_layout_constant(profile_constant):
-    if profile_constant == profile.RANDOM_LAYOUT:
-        return favoritesview.RANDOM_LAYOUT
-    elif profile_constant == profile.RING_LAYOUT:
-        return favoritesview.RING_LAYOUT
-    else:
-        logging.warning('Incorrect favorites_layout value: %r' % \
-                profile_constant)
-        return favoritesview.RING_LAYOUT
+    for layoutid, layoutclass in favoritesview._LAYOUT_MAP.items():
+        if profile_constant == layoutclass.profile_key:
+            return layoutid
+    logging.warning('Incorrect favorites_layout value: %r' % \
+                    profile_constant)
+    return favoritesview.RING_LAYOUT
 
 class HomeBox(gtk.VBox):
     __gtype_name__ = 'SugarHomeBox'
@@ -165,11 +163,9 @@ class HomeBox(gtk.VBox):
         self._set_view(view, layout)
         if layout is not None:
             current_profile = profile.get_profile()
-            if layout == favoritesview.RANDOM_LAYOUT:
-                current_profile.favorites_layout = profile.RANDOM_LAYOUT
-                current_profile.save()
-            elif layout == favoritesview.RING_LAYOUT:
-                current_profile.favorites_layout = profile.RING_LAYOUT
+            profile_key = favoritesview._LAYOUT_MAP[layout].profile_key
+            if profile_key != current_profile.favorites_layout:
+                current_profile.favorites_layout = profile_key
                 current_profile.save()
             else:
                 logging.warning('Incorrect layout requested: %r' % layout)
@@ -330,19 +326,14 @@ class FavoritesButton(RadioToolButton):
         self._layout = _convert_layout_constant(profile_layout_constant)
         self._update_icon()
 
-        # TRANS: label for the freeform layout in the favorites view
-        menu_item = MenuItem(_('Freeform'), 'view-freeform')
-        menu_item.connect('activate', self.__layout_activate_cb,
-                          favoritesview.RANDOM_LAYOUT)
-        self.props.palette.menu.append(menu_item)
-        menu_item.show()
+        for layoutid, layoutclass in sorted(favoritesview._LAYOUT_MAP.items()):
+            menu_item = MenuItem(layoutclass.palette_name,
+                                 layoutclass.icon_name)
+            menu_item.connect('activate', self.__layout_activate_cb,
+                              layoutid)
+            self.props.palette.menu.append(menu_item)
+            menu_item.show()
 
-        # TRANS: label for the ring layout in the favorites view
-        menu_item = MenuItem(_('Ring'), 'view-radial')
-        menu_item.connect('activate', self.__layout_activate_cb,
-                          favoritesview.RING_LAYOUT)
-        self.props.palette.menu.append(menu_item)
-        menu_item.show()
 
     def __layout_activate_cb(self, menu_item, layout):
         if self._layout == layout and self.props.active:
@@ -356,12 +347,8 @@ class FavoritesButton(RadioToolButton):
             self.emit('toggled')
 
     def _update_icon(self):
-        if self._layout == favoritesview.RANDOM_LAYOUT:
-            self.props.named_icon = 'view-freeform'
-        elif self._layout == favoritesview.RING_LAYOUT:
-            self.props.named_icon = 'view-radial'
-        else:
-            raise ValueError('Invalid layout: %r' % self._layout)
+        self.props.named_icon = favoritesview._LAYOUT_MAP[self._layout]\
+                                .icon_name
 
     def _get_layout(self):
         return self._layout
