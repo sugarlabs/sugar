@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-07-23 07:44-0400\n"
-"PO-Revision-Date: 2008-07-27 02:20-0400\n"
+"PO-Revision-Date: 2008-07-27 10:08-0400\n"
 "Last-Translator: korakurider <korakurider@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -66,7 +66,7 @@ msgstr "開く"
 #. self.append_menu_item(self._stop_item)
 #: ../src/view/clipboardmenu.py:63 ../src/view/home/HomeBox.py:86
 msgid "Keep"
-msgstr "残しておく"
+msgstr "ジャーナルに保存"
 
 #: ../src/view/clipboardmenu.py:84
 msgid "Open with"
