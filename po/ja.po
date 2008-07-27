@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-16 00:30-0400\n"
-"PO-Revision-Date: 2008-07-21 08:14-0400\n"
+"POT-Creation-Date: 2008-07-23 07:44-0400\n"
+"PO-Revision-Date: 2008-07-27 02:20-0400\n"
 "Last-Translator: korakurider <korakurider@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -72,15 +72,14 @@ msgstr "残しておく"
 msgid "Open with"
 msgstr "次のもので開く："
 
-#: ../src/view/clipboardmenu.py:212
+#: ../src/view/clipboardmenu.py:216
 #, python-format
 msgid "Clipboard object: %s."
 msgstr "クリップボードのオブジェクト: %s."
 
 #: ../src/hardware/keydialog.py:150
-#, fuzzy
 msgid "Key Type:"
-msgstr "キータイプ:"
+msgstr "キーのタイプ:"
 
 #: ../src/hardware/keydialog.py:170
 msgid "Authentication Type:"
@@ -90,7 +89,7 @@ msgstr "認証タイプ:"
 msgid "Encryption Type:"
 msgstr "暗号タイプ:"
 
-#: ../src/view/Shell.py:235
+#: ../src/view/Shell.py:240
 msgid "Screenshot"
 msgstr "スクリーンショット"
 
@@ -112,16 +111,16 @@ msgid "List view"
 msgstr "リスト表示"
 
 #: ../src/view/home/HomeBox.py:216
-msgid "<Ctrl>L"
-msgstr ""
+msgid "<Ctrl>2"
+msgstr "<Ctrl>2"
 
 #: ../src/view/home/HomeBox.py:273
 msgid "Favorites view"
-msgstr ""
+msgstr "お気に入り"
 
 #: ../src/view/home/HomeBox.py:274
-msgid "<Ctrl>R"
-msgstr ""
+msgid "<Ctrl>1"
+msgstr "<Ctrl>1"
 
 #. TRANS: label for the freeform layout in the favorites view
 #: ../src/view/home/HomeBox.py:282
@@ -162,9 +161,9 @@ msgstr "接続しています..."
 msgid "Connected"
 msgstr "接続しました"
 
-#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:38
-#: ../src/view/devices/network/mesh.py:65
-#: ../src/view/devices/network/mesh.py:69
+#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:41
+#: ../src/view/devices/network/mesh.py:68
+#: ../src/view/devices/network/mesh.py:72
 msgid "Mesh Network"
 msgstr "メッシュネットワーク"
 
@@ -172,8 +171,8 @@ msgstr "メッシュネットワーク"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:116
-#: ../src/view/devices/network/mesh.py:86
+#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:119
+#: ../src/view/devices/network/mesh.py:89
 msgid "Disconnect..."
 msgstr "切断..."
 
@@ -185,44 +184,44 @@ msgstr "再開"
 msgid "Join"
 msgstr "参加"
 
-#: ../src/view/devices/battery.py:42
+#: ../src/view/devices/battery.py:45
 msgid "My Battery"
 msgstr "私の電池"
 
-#: ../src/view/devices/battery.py:111
+#: ../src/view/devices/battery.py:114
 msgid "Charging"
 msgstr "充電中"
 
-#: ../src/view/devices/battery.py:114
+#: ../src/view/devices/battery.py:117
 msgid "Very little power remaining"
 msgstr "電池が残りわずかです"
 
-#: ../src/view/devices/battery.py:120
+#: ../src/view/devices/battery.py:123
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
 msgstr "残り %(hour)d:%(min).2d"
 
-#: ../src/view/devices/battery.py:124
+#: ../src/view/devices/battery.py:127
 msgid "Charged"
 msgstr "充電済み"
 
-#: ../src/view/devices/speaker.py:41
+#: ../src/view/devices/speaker.py:44
 msgid "My Speakers"
 msgstr "私のスピーカー"
 
-#: ../src/view/devices/speaker.py:116
+#: ../src/view/devices/speaker.py:119
 msgid "Unmute"
 msgstr "音を出す"
 
-#: ../src/view/devices/speaker.py:119
+#: ../src/view/devices/speaker.py:122
 msgid "Mute"
 msgstr "音を消す"
 
-#: ../src/view/devices/network/wireless.py:64
+#: ../src/view/devices/network/wireless.py:67
 msgid "Disconnected"
 msgstr "切断されました"
 
-#: ../src/view/devices/network/wireless.py:134
+#: ../src/view/devices/network/wireless.py:137
 msgid "Channel"
 msgstr "チャンネル"
 
@@ -289,7 +288,7 @@ msgstr "変更を適用するにはsugarを再起動しなければいけませ�
 msgid "Cancel"
 msgstr "中止"
 
-#: ../src/controlpanel/toolbar.py:121
+#: ../src/controlpanel/toolbar.py:121 ../src/view/home/favoritesview.py:294
 msgid "Ok"
 msgstr "了解"
 
@@ -317,38 +316,37 @@ msgstr "今すぐ再起動"
 msgid "You must enter a name."
 msgstr "名前の入力が必要です"
 
-#: ../src/controlpanel/model/aboutme.py:67
+#: ../src/controlpanel/model/aboutme.py:69
 #, python-format
 msgid "stroke:   color=%s hue=%s"
-msgstr ""
-
-#: ../src/controlpanel/model/aboutme.py:70
-#, python-format
-msgid "stroke:   %s"
-msgstr ""
+msgstr "線:   色=%s 色相=%s"
 
 #: ../src/controlpanel/model/aboutme.py:72
 #, python-format
-msgid "fill:     color=%s hue=%s"
-msgstr ""
+msgid "stroke:   %s"
+msgstr "線:   %s"
 
 #: ../src/controlpanel/model/aboutme.py:74
 #, python-format
+msgid "fill:     color=%s hue=%s"
+msgstr "塗りつぶし:   色=%s 色相=%s"
+
+#: ../src/controlpanel/model/aboutme.py:76
+#, python-format
 msgid "fill:     %s"
-msgstr ""
+msgstr "塗りつぶし:     %s"
 
-#: ../src/controlpanel/model/aboutme.py:85
-#, fuzzy
+#: ../src/controlpanel/model/aboutme.py:87
 msgid "Error in specified color modifiers."
-msgstr "指定されたカラーモディファイアでエラー"
+msgstr "カラーモディファイアの指定でエラー"
 
-#: ../src/controlpanel/model/aboutme.py:88
+#: ../src/controlpanel/model/aboutme.py:90
 msgid "Error in specified colors."
 msgstr "色の指定でエラー"
 
 #: ../src/controlpanel/model/aboutxo.py:24
 msgid "Not available"
-msgstr ""
+msgstr "不明です"
 
 #: ../src/controlpanel/model/datetime.py:85
 msgid "Error timezone does not exist."
@@ -374,7 +372,7 @@ msgstr "ごめんなさい。'%s'は話せません。"
 
 #: ../src/controlpanel/model/network.py:48
 msgid "You must enter a server."
-msgstr "サーバーの入力が必要です"
+msgstr "サーバーの指定が必要です"
 
 #: ../src/controlpanel/model/network.py:63
 msgid "State is unknown."
@@ -382,15 +380,15 @@ msgstr "状態が不明です"
 
 #: ../src/controlpanel/model/network.py:83
 msgid "Error in specified radio argument use on/off."
-msgstr "radio引数のエラー。on/offを使ってください。"
+msgstr "radio引数指定でエラー、on/offを使ってください。"
 
 #: ../src/controlpanel/model/power.py:57
 msgid "Error in automatic pm argument, use on/off."
-msgstr ""
+msgstr "automatic_pm 引数指定でエラー、 on/offを指定してください"
 
 #: ../src/controlpanel/model/power.py:86
 msgid "Error in extreme pm argument, use on/off."
-msgstr ""
+msgstr "extreme_pm 引数指定のエラー、 on/offを指定してください。"
 
 #: ../src/controlpanel/view/aboutme.py:32
 msgid "About Me"
@@ -406,7 +404,7 @@ msgstr "私のXOについて"
 
 #: ../src/controlpanel/view/aboutxo.py:47
 msgid "Identity"
-msgstr ""
+msgstr "個体の識別"
 
 #: ../src/controlpanel/view/aboutxo.py:56
 msgid "Serial Number:"
@@ -438,11 +436,11 @@ msgstr "フレーム"
 
 #: ../src/controlpanel/view/frame.py:30
 msgid "never"
-msgstr ""
+msgstr "表示しない"
 
 #: ../src/controlpanel/view/frame.py:31
 msgid "instantaneous"
-msgstr ""
+msgstr "すぐに表示"
 
 #: ../src/controlpanel/view/frame.py:32
 #, python-format
@@ -451,15 +449,15 @@ msgstr "%s 秒"
 
 #: ../src/controlpanel/view/frame.py:56
 msgid "Activation Delay"
-msgstr ""
+msgstr "表示するまでの時間"
 
 #: ../src/controlpanel/view/frame.py:80
 msgid "Corner"
-msgstr ""
+msgstr "画面の４すみ"
 
 #: ../src/controlpanel/view/frame.py:115
 msgid "Edge"
-msgstr ""
+msgstr "画面のふち"
 
 #: ../src/controlpanel/view/language.py:29
 #: ../src/controlpanel/view/language.py:74
@@ -503,51 +501,68 @@ msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr "最大の電源管理（無線の電波を停めて、電池を長持ちさせます）"
 
-#: ../src/view/devices/network/mesh.py:108
+#: ../src/view/devices/network/mesh.py:111
 msgid "Connected to a School Mesh Portal"
 msgstr "スクールメッシュポータルに接続しました。"
 
-#: ../src/view/devices/network/mesh.py:110
+#: ../src/view/devices/network/mesh.py:113
 msgid "Looking for a School Mesh Portal..."
 msgstr "スクールメッシュポータルを探しています..."
 
-#: ../src/view/devices/network/mesh.py:113
+#: ../src/view/devices/network/mesh.py:116
 msgid "Connected to an XO Mesh Portal"
 msgstr "XOメッシュポータルに接続しました"
 
-#: ../src/view/devices/network/mesh.py:115
+#: ../src/view/devices/network/mesh.py:118
 msgid "Looking for an XO Mesh Portal..."
 msgstr "XOメッシュポータルを探しています..."
 
-#: ../src/view/devices/network/mesh.py:118
+#: ../src/view/devices/network/mesh.py:121
 msgid "Connected to a Simple Mesh"
 msgstr "シンプルメッシュに接続しました"
 
-#: ../src/view/devices/network/mesh.py:120
+#: ../src/view/devices/network/mesh.py:123
 msgid "Starting a Simple Mesh"
 msgstr "シンプルメッシュを開始しています"
 
-#: ../src/view/devices/network/mesh.py:127
+#: ../src/view/devices/network/mesh.py:130
 msgid "Unknown Mesh"
 msgstr "不明なメッシュ"
 
 #: ../src/view/frame/activitiestray.py:210
 msgid "Decline"
-msgstr ""
+msgstr "断る"
 
-#: ../src/view/home/favoritesview.py:379
+#: ../src/view/home/favoritesview.py:285
+msgid "Registration Failed"
+msgstr "登録失敗"
+
+#: ../src/view/home/favoritesview.py:286
+#, python-format
+msgid "%s"
+msgstr "%s"
+
+#: ../src/view/home/favoritesview.py:288
+msgid "Registration Successful"
+msgstr "登録成功"
+
+#: ../src/view/home/favoritesview.py:289
+msgid "You are now registered with your school server."
+msgstr "あなたはスクールサーバーに登録されました"
+
+#: ../src/view/home/favoritesview.py:405
 msgid "Control Panel"
 msgstr "コントロールパネル"
 
-#: ../src/view/home/favoritesview.py:390
+#: ../src/view/home/favoritesview.py:416
 msgid "Restart"
 msgstr "再起動"
 
-#: ../src/view/home/favoritesview.py:395
+#: ../src/view/home/favoritesview.py:421
 msgid "Shutdown"
 msgstr "シャットダウン"
 
-#: ../src/view/home/favoritesview.py:401
+#: ../src/view/home/favoritesview.py:427
 msgid "Register"
 msgstr "登録"
 
@@ -569,7 +584,7 @@ msgstr "お気に入りから削除"
 
 #: ../src/view/palettes.py:136
 msgid "Make favorite"
-msgstr "お気に入りにする"
+msgstr "お気に入りに登録"
 
 #: ../src/view/palettes.py:185
 msgid "Show contents"
