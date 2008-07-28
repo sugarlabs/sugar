@@ -61,7 +61,7 @@ class DeviceView(TrayIcon):
             xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
                                           style.COLOR_WHITE.get_svg()))
 
-        self.icon.props.icon_name = get_icon_state(name, current_level, step=1)
+        self.icon.props.icon_name = get_icon_state(name, current_level, step=-1)
         self.icon.props.xo_color = xo_color
 
     def __expose_event_cb(self, *args):
