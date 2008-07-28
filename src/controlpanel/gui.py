@@ -263,9 +263,10 @@ class ControlPanel(gtk.Window):
             alert.add_button(gtk.RESPONSE_CANCEL, _('Cancel changes'), icon) 
             icon.show() 
 
-            icon = Icon(icon_name='dialog-ok') 
-            alert.add_button(gtk.RESPONSE_ACCEPT, _('Later'), icon) 
-            icon.show() 
+            if self._current_option != 'aboutme':
+                icon = Icon(icon_name='dialog-ok') 
+                alert.add_button(gtk.RESPONSE_ACCEPT, _('Later'), icon) 
+                icon.show()
 
             icon = Icon(icon_name='system-restart') 
             alert.add_button(gtk.RESPONSE_APPLY, _('Restart now'), icon) 
