@@ -295,6 +295,8 @@ class ActivitiesTray(HTray):
         self._home_model.connect('activity-removed', self.__activity_removed_cb)
         self._home_model.connect('active-activity-changed',
                                  self.__activity_changed_cb)
+        self._home_model.connect('tabbing-activity-changed',
+                                 self.__tabbing_activity_changed_cb)
 
         self._invites = shellmodel.get_instance().get_invites()
         for invite in self._invites:
@@ -321,15 +323,34 @@ class ActivitiesTray(HTray):
         self.remove_item(button)
         del self._buttons[home_activity.get_activity_id()]
 
-    def __activity_changed_cb(self, home_model, home_activity):
-        logging.debug('__activity_changed_cb: %r' % home_activity)
-
+    def _activate_activity(self, home_activity):
         button = self._buttons[home_activity.get_activity_id()]
         self._freeze_button_clicks = True
         button.props.active = True
         self._freeze_button_clicks = False
-        
+
         self.scroll_to_item(button)
+        # Redraw immediately.
+        # The widget may not be realized yet, and then there is no window.
+        if self.window:
+            self.window.process_updates(True)
+
+    def __activity_changed_cb(self, home_model, home_activity):
+        logging.debug('__activity_changed_cb: %r' % home_activity)
+
+        # Only select the new activity, if there is no tabbing activity.
+        if home_model.get_tabbing_activity() is None:
+            self._activate_activity(home_activity)
+
+    def __tabbing_activity_changed_cb(self, home_model, home_activity):
+        logging.debug('__tabbing_activity_changed_cb: %r' % home_activity)
+        # If the tabbing_activity is set to None just do nothing.
+        # The active activity will be updated a bit later (and it will
+        # be set to the activity that is currently selected).
+        if home_activity is None:
+            return
+
+        self._activate_activity(home_activity)
 
     def __activity_clicked_cb(self, button, home_activity):
         if not self._freeze_button_clicks and button.props.active:
