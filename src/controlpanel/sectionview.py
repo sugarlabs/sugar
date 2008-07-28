@@ -19,6 +19,8 @@ import gtk
 from gettext import gettext as _
 
 class SectionView(gtk.VBox):
+    __gtype_name__ = 'SugarSectionView'
+
     __gproperties__ = {
         'is_valid' : (bool, None, None, True,
                            gobject.PARAM_READWRITE)
