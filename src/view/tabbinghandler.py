@@ -79,7 +79,7 @@ class TabbingHandler(object):
     def _activate_current(self):
         shell_model = shellmodel.get_instance()
         home_model = shell_model.get_home()
-        activity = home_model.get_active_activity()
+        activity = home_model.get_tabbing_activity()
         if activity and activity.get_window():
             activity.get_window().activate(1)
 
@@ -99,9 +99,10 @@ class TabbingHandler(object):
             if not zoom_activity and first_switch:
                 activity = home_model.get_active_activity()
             else:
-                activity = home_model.get_next_activity()
+                activity = home_model.get_tabbing_activity()
+                activity = home_model.get_next_activity(current=activity)
 
-            home_model.tabbing_set_activity(activity)
+            home_model.set_tabbing_activity(activity)
             self._start_timeout()
         else:
             view.Shell.get_instance().activate_next_activity()
@@ -122,9 +123,10 @@ class TabbingHandler(object):
             if not zoom_activity and first_switch:
                 activity = home_model.get_active_activity()
             else:
-                activity = home_model.get_previous_activity()
+                activity = home_model.get_tabbing_activity()
+                activity = home_model.get_previous_activity(current=activity)
 
-            home_model.tabbing_set_activity(activity)
+            home_model.set_tabbing_activity(activity)
             self._start_timeout()
         else:
             view.Shell.get_instance().activate_next_activity()
@@ -138,6 +140,9 @@ class TabbingHandler(object):
 
         self._cancel_timeout()
         self._activate_current()
+
+        home_model = shellmodel.get_instance().get_home()
+        home_model.set_tabbing_activity(None)
 
     def is_tabbing(self):
         return self._tabbing
