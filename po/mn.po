@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: 2008-07-30 23:52-0400\n"
+"PO-Revision-Date: 2008-07-31 02:22-0400\n"
 "Last-Translator: Odontsetseg Bat-Erdene <obat-erdene@suffolk.edu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -288,21 +288,21 @@ msgstr "Цагийн бүсийг уншихад алдаа гарлаа"
 #: ../shell/controlpanel/control.py:397
 #, python-format
 msgid "Error copying timezone (from %s): %s"
-msgstr "Алдаа цагийн бүсийг (%s-ээс) хуулж байна: %s"
+msgstr "Цагийн бүсийг (%s-ээс) хуулахын алдаа: %s"
 
 #: ../shell/controlpanel/control.py:402
 #, python-format
 msgid "Changing permission of timezone: %s"
-msgstr "Цагийн бүсийн зөвшөөрлийг өөрчилж байна:%s"
+msgstr "Цагийн бүсийн зөвшөөрлийг өөрчилж байна: %s"
 
 #: ../shell/controlpanel/control.py:413
 msgid "Error timezone does not exist."
-msgstr "Цагийн бүсийн алдаа байхгүй боллоо."
+msgstr "Алдаа, цагийн бүс байхгүй."
 
 #: ../shell/controlpanel/control.py:418 ../shell/controlpanel/control.py:438
 #, python-format
 msgid "Could not access %s. Create standard settings."
-msgstr "%s руу хандаж чадахгүй байна. Стандарт тохиргоо үүсгэ."
+msgstr "%s руу хандаж чадахгүй байна. Стандарт тохиргоог үүсгэ."
 
 #: ../shell/controlpanel/control.py:466
 #, python-format
@@ -316,28 +316,28 @@ msgstr "Уучлаарай би '%s' хэлээр ярьдаггүй."
 
 #: ../shell/view/devices/network/mesh.py:105
 msgid "Connected to a School Mesh Portal"
-msgstr "Сургуулийн \"тор\" (mesh) порталд холбогдосон "
+msgstr "Сургуулийн тархалтын порталд холбогдлоо"
 
 #: ../shell/view/devices/network/mesh.py:107
 msgid "Looking for a School Mesh Portal..."
-msgstr "Сургуулийн \"тор\" (mesh) порталыг хайж байна..."
+msgstr "Сургуулийн тархалтын порталыг хайж байна..."
 
 #: ../shell/view/devices/network/mesh.py:110
 msgid "Connected to an XO Mesh Portal"
-msgstr "XO тор порталд холбогдлоо "
+msgstr "XO тархалтын порталд холбогдлоо"
 
 #: ../shell/view/devices/network/mesh.py:112
 msgid "Looking for an XO Mesh Portal..."
-msgstr "XO \"тор\" (Mesh) порталыг хайж байна..."
+msgstr "XO тархалтын порталыг хайж байна..."
 
 #: ../shell/view/devices/network/mesh.py:115
 msgid "Connected to a Simple Mesh"
-msgstr "Энгийн \"тор сүлжээнд\"(mesh) холбогдлоо "
+msgstr "Энгийн тархалтын сүлжээнд холбогдлоо"
 
 #: ../shell/view/devices/network/mesh.py:117
 msgid "Starting a Simple Mesh"
-msgstr "Энгийн тор сүлжээ эхлэж байна"
+msgstr "Энгийн тархалтын сүлжээг эхлүүлж байна"
 
 #: ../shell/view/devices/network/mesh.py:124
 msgid "Unknown Mesh"
-msgstr "Үл мэдэгдэх тор сүлжээ"
+msgstr "Үл мэдэгдэх тархалтын сүлжээ"
