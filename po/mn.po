@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: 2008-07-30 02:50-0400\n"
+"PO-Revision-Date: 2008-07-30 23:52-0400\n"
 "Last-Translator: Odontsetseg Bat-Erdene <obat-erdene@suffolk.edu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -79,32 +79,32 @@ msgstr "Таних төрөл:"
 
 #: ../shell/hardware/keydialog.py:250
 msgid "Encryption Type:"
-msgstr "нууцлалын төрөл:"
+msgstr "Нууцлалын төрөл:"
 
 #: ../shell/view/home/activitiesdonut.py:90
 msgid "Starting..."
-msgstr "Эхлэж байна..."
+msgstr "Эхэлж байна..."
 
 #: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
 msgid "Resume"
-msgstr "Сэргээ"
+msgstr "Эргэж орох"
 
 #: ../shell/view/home/activitiesdonut.py:111
 #: ../lib/sugar/activity/activity.py:128
 msgid "Stop"
-msgstr "Зогсоо"
+msgstr "Зогсоох"
 
 #: ../shell/view/Shell.py:276
 msgid "Screenshot"
-msgstr "Дэлгэцний зураг "
+msgstr "Дэлгэцний зураг"
 
 #: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
-msgstr "Дахин ачаалла"
+msgstr "Дахин эхлүүлэх"
 
 #: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
-msgstr "Унтраа"
+msgstr "Унтраах"
 
 #: ../shell/view/home/HomeBox.py:170
 msgid "Register"
@@ -126,13 +126,13 @@ msgstr "Боломжгүй"
 #: ../shell/view/devices/network/wireless.py:113
 #: ../shell/view/devices/network/mesh.py:83
 msgid "Disconnect..."
-msgstr "Салга..."
+msgstr "Салгах..."
 
 #: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
 #: ../shell/view/devices/network/mesh.py:62
 #: ../shell/view/devices/network/mesh.py:66
 msgid "Mesh Network"
-msgstr "Тор хэлбэрийн сүлжээ"
+msgstr "Тархалтын сүлжээ"
 
 #: ../shell/view/home/MeshBox.py:300
 msgid "Join"
@@ -172,11 +172,11 @@ msgstr "Бүлэг"
 
 #: ../shell/view/frame/zoomtoolbar.py:66
 msgid "Home"
-msgstr "Нүүр"
+msgstr "Нүүр хуудас"
 
 #: ../shell/view/frame/zoomtoolbar.py:78
 msgid "Activity"
-msgstr "Програм"
+msgstr "Үйл ажиллагаа"
 
 #: ../lib/sugar/activity/activity.py:111
 msgid "Share with:"
@@ -184,7 +184,7 @@ msgstr "Хуваалцах:"
 
 #: ../lib/sugar/activity/activity.py:113
 msgid "Private"
-msgstr "Хувийн "
+msgstr "Хувийн"
 
 #: ../lib/sugar/activity/activity.py:114
 msgid "My Neighborhood"
@@ -196,32 +196,32 @@ msgstr "Хадгалах"
 
 #: ../lib/sugar/activity/activity.py:241
 msgid "Undo"
-msgstr "Цуцла"
+msgstr "Буцаах"
 
 #: ../lib/sugar/activity/activity.py:246
 msgid "Redo"
-msgstr "Дахин хий"
+msgstr "Дахин үйлдэх"
 
 #: ../lib/sugar/activity/activity.py:256
 msgid "Copy"
-msgstr "Сануул"
+msgstr "Сануулах"
 
 #: ../lib/sugar/activity/activity.py:261
 msgid "Paste"
-msgstr "Хуула"
+msgstr "Санамж буулгах"
 
 #: ../lib/sugar/activity/activity.py:450
 #, python-format
 msgid "%s Activity"
-msgstr "Програм %s"
+msgstr "%s үйл ажиллагаа"
 
 #: ../lib/sugar/activity/activity.py:820
 msgid "Keep error"
-msgstr "Алдааг үргэлжлүүл"
+msgstr "Хадгалахын алдаа"
 
 #: ../lib/sugar/activity/activity.py:821
 msgid "Keep error: all changes will be lost"
-msgstr "Алдааг үргэлжлүүлэх: бүх өөрчлөлт арилна"
+msgstr "Хадгалахын йлдаа: бүх өөрчлөлт арилна"
 
 #: ../lib/sugar/activity/activity.py:824
 msgid "Don't stop"
@@ -233,7 +233,7 @@ msgstr "Тэгсэн ч зогсоо"
 
 #: ../lib/sugar/graphics/alert.py:164 ../lib/sugar/graphics/alert.py:206
 msgid "Cancel"
-msgstr "Цуцал"
+msgstr "Цуцлах"
 
 #: ../lib/sugar/graphics/alert.py:168
 msgid "Ok"
@@ -241,7 +241,7 @@ msgstr "Ok"
 
 #: ../lib/sugar/graphics/alert.py:216
 msgid "Continue"
-msgstr "Үргэлжлүүл"
+msgstr "Үргэлжлүүлэх"
 
 #: ../lib/sugar/graphics/alert.py:244
 msgid "OK"
@@ -249,36 +249,37 @@ msgstr "Ok"
 
 #: ../shell/controlpanel/control.py:213
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr "Өөрчлөлтийг оруулахын тулд та командыг дахин асаах шаардлагатай.\n"
+msgstr "Өөрчлөлтийг оруулахын тулд та sugar-ыг дахин эхлүүлэх шаардлагатай.\n"
 
 #: ../shell/controlpanel/control.py:267
 msgid "Error in specified color modifiers."
-msgstr ""
+msgstr "Сонгосон өнгө өөрчлөгчид алдаа гарлаа."
 
 #: ../shell/controlpanel/control.py:270
 msgid "Error in specified colors."
-msgstr "Алдааг тусгай өнгөөр илэрхийлэв"
+msgstr "Сонгосон өнгөний алдаа."
 
 #: ../shell/controlpanel/control.py:307
 msgid "off"
-msgstr "Хаалттай"
+msgstr "off"
 
 #: ../shell/controlpanel/control.py:309
 msgid "on"
-msgstr "Нээлттэй"
+msgstr "on"
 
 #: ../shell/controlpanel/control.py:310
 msgid "State is unknown."
-msgstr "Төлөв тодорхойгүй"
+msgstr "Төлөв тодорхойгүй."
 
 #: ../shell/controlpanel/control.py:332
 msgid "Error in specified radio argument use on/off."
-msgstr ""
+msgstr "Сонгосон тохиргооны төлөвд алдаа гарлаа- on/off."
 
 #: ../shell/controlpanel/control.py:336
 msgid "Permission denied. You need to be root to run this method."
 msgstr ""
-"Зөвшөөрөл цуцлагдсан. Үүнийг ажиллуулахын тулд та дахин ачаалах шаардлагатай"
+"Зөвшөөрөл цуцлагдсан. Үүнийг ажиллуулахын тулд та үндсэн хэрэглэгч болох "
+"шаардлагатай."
 
 #: ../shell/controlpanel/control.py:366
 msgid "Error in reading timezone"
