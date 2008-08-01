@@ -50,7 +50,8 @@ class HardwareManager(gobject.GObject):
         try:
             bus = dbus.SystemBus()
             proxy = bus.get_object(_HARDWARE_MANAGER_SERVICE,
-                                   _HARDWARE_MANAGER_OBJECT_PATH)
+                                   _HARDWARE_MANAGER_OBJECT_PATH,
+                                   follow_name_owner_changes=True)
             self._service = dbus.Interface(proxy, _HARDWARE_MANAGER_INTERFACE)
         except dbus.DBusException, err:
             self._service = None

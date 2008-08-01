@@ -596,7 +596,8 @@ class NMClient(gobject.GObject):
         }
 
         try:
-            self._nm_proxy = sys_bus.get_object(NM_SERVICE, NM_PATH)
+            self._nm_proxy = sys_bus.get_object(NM_SERVICE, NM_PATH,
+                                                follow_name_owner_changes=True)
             self._nm_obj = dbus.Interface(self._nm_proxy, NM_IFACE)
         except dbus.DBusException, e:
             logging.debug("Could not connect to NetworkManager: %s" % e)
