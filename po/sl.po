@@ -1,0 +1,594 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-07-23 07:44-0400\n"
+"PO-Revision-Date: 2008-07-18 00:32-0400\n"
+"Last-Translator: Denis Oštir <denis.ostir@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Pootle 1.1.0rc2\n"
+
+#: ../src/intro/intro.py:65 ../src/controlpanel/view/aboutme.py:100
+msgid "Name:"
+msgstr "Ime:"
+
+#: ../src/intro/intro.py:94
+msgid "Click to change color:"
+msgstr "Klikni za spremembo barve:"
+
+#: ../src/intro/intro.py:145
+msgid "Back"
+msgstr "Nazaj"
+
+#: ../src/intro/intro.py:159 ../src/controlpanel/toolbar.py:61
+msgid "Done"
+msgstr "Končano"
+
+#: ../src/intro/intro.py:162
+msgid "Next"
+msgstr "Naslednji"
+
+#: ../src/view/BuddyMenu.py:58
+msgid "Remove friend"
+msgstr "Odstrani prijatelja"
+
+#: ../src/view/BuddyMenu.py:61
+msgid "Make friend"
+msgstr "Dodaj prijatelja"
+
+#: ../src/view/BuddyMenu.py:91
+#, python-format
+msgid "Invite to %s"
+msgstr "Povabi na %s"
+
+#: ../src/view/clipboardmenu.py:48
+msgid "Remove"
+msgstr "Odstrani"
+
+#: ../src/view/clipboardmenu.py:53 ../src/view/clipboardmenu.py:79
+msgid "Open"
+msgstr "Odpri"
+
+#. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
+#. TODO: Implement stopping downloads
+#. self._stop_item.connect('activate', self._stop_item_activate_cb)
+#. self.append_menu_item(self._stop_item)
+#: ../src/view/clipboardmenu.py:63 ../src/view/home/HomeBox.py:86
+msgid "Keep"
+msgstr "Obdrži"
+
+#: ../src/view/clipboardmenu.py:84
+msgid "Open with"
+msgstr "Odpri z"
+
+#: ../src/view/clipboardmenu.py:216
+#, python-format
+msgid "Clipboard object: %s."
+msgstr "Predmet na odložišču: %s."
+
+#: ../src/hardware/keydialog.py:150
+msgid "Key Type:"
+msgstr "Tip ključa:"
+
+#: ../src/hardware/keydialog.py:170
+msgid "Authentication Type:"
+msgstr "Tip prepoznave:"
+
+#: ../src/hardware/keydialog.py:251
+msgid "Encryption Type:"
+msgstr "Tip kodiranja:"
+
+#: ../src/view/Shell.py:240
+msgid "Screenshot"
+msgstr "Slika zaslona"
+
+#: ../src/view/home/HomeBox.py:80
+msgid "Confirm erase"
+msgstr "Potrdi brisanje"
+
+#: ../src/view/home/HomeBox.py:82
+#, python-format
+msgid "Confirm erase: Do you want to permanently erase %s?"
+msgstr "Potrdi brisanje: Želiš dokočno izbrisati %s?"
+
+#: ../src/view/home/HomeBox.py:89 ../src/view/palettes.py:120
+msgid "Erase"
+msgstr "Izbriši"
+
+#: ../src/view/home/HomeBox.py:215
+msgid "List view"
+msgstr "Seznam"
+
+#: ../src/view/home/HomeBox.py:216
+#, fuzzy
+msgid "<Ctrl>2"
+msgstr "<Ctrl>L"
+
+#: ../src/view/home/HomeBox.py:273
+msgid "Favorites view"
+msgstr "Priljubljene"
+
+#: ../src/view/home/HomeBox.py:274
+#, fuzzy
+msgid "<Ctrl>1"
+msgstr "<Ctrl>L"
+
+# TRANS: label for the freeform layout in the favorites view
+#. TRANS: label for the freeform layout in the favorites view
+#: ../src/view/home/HomeBox.py:282
+msgid "Freeform"
+msgstr "Prostoročno"
+
+# TRANS: label for the ring layout in the favorites view
+#. TRANS: label for the ring layout in the favorites view
+#: ../src/view/home/HomeBox.py:289
+msgid "Ring"
+msgstr "Obroč"
+
+#: ../src/view/home/MeshBox.py:97
+msgid "Connect"
+msgstr "Poveži"
+
+#: ../src/view/home/MeshBox.py:106
+msgid "Disconnect"
+msgstr "Prekini"
+
+#: ../src/view/home/MeshBox.py:118
+msgid "Disconnecting..."
+msgstr "Prekinjam ..."
+
+#: ../src/view/home/MeshBox.py:152
+msgid "Connecting..."
+msgstr "Povezujem ..."
+
+#. TODO: show the channel number
+#: ../src/view/home/MeshBox.py:159
+msgid "Connected"
+msgstr "Povezan"
+
+#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:41
+#: ../src/view/devices/network/mesh.py:68
+#: ../src/view/devices/network/mesh.py:72
+msgid "Mesh Network"
+msgstr "Omrežje Mesh"
+
+#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:119
+#: ../src/view/devices/network/mesh.py:89
+msgid "Disconnect..."
+msgstr "Prekini ... "
+
+#: ../src/view/home/MeshBox.py:302 ../src/view/palettes.py:61
+msgid "Resume"
+msgstr "Nadaljuj"
+
+#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:205
+msgid "Join"
+msgstr "Pridruži se"
+
+#: ../src/view/devices/battery.py:45
+msgid "My Battery"
+msgstr "Moja baterija"
+
+#: ../src/view/devices/battery.py:114
+msgid "Charging"
+msgstr "Polnjenje"
+
+#: ../src/view/devices/battery.py:117
+msgid "Very little power remaining"
+msgstr "Baterija je skoraj prazna"
+
+#: ../src/view/devices/battery.py:123
+#, python-format
+msgid "%(hour)d:%(min).2d remaining"
+msgstr "Ostaja %(hour)d:%(min).2d"
+
+#: ../src/view/devices/battery.py:127
+msgid "Charged"
+msgstr "Polno"
+
+#: ../src/view/devices/speaker.py:44
+msgid "My Speakers"
+msgstr "Moji zvočniki"
+
+# malo težko je UNMUTE prevest drugače
+#: ../src/view/devices/speaker.py:119
+msgid "Unmute"
+msgstr "Glasno"
+
+#: ../src/view/devices/speaker.py:122
+msgid "Mute"
+msgstr "Tiho"
+
+#: ../src/view/devices/network/wireless.py:67
+msgid "Disconnected"
+msgstr "Odklopljen"
+
+#: ../src/view/devices/network/wireless.py:137
+msgid "Channel"
+msgstr "Kanal"
+
+#: ../src/view/frame/zoomtoolbar.py:34
+msgid "Neighborhood"
+msgstr "Soseščina"
+
+#: ../src/view/frame/zoomtoolbar.py:36
+msgid "Group"
+msgstr "Skupina"
+
+#: ../src/view/frame/zoomtoolbar.py:38
+msgid "Home"
+msgstr "Domov"
+
+#: ../src/view/frame/zoomtoolbar.py:40
+msgid "Activity"
+msgstr "Aktivnost"
+
+#: ../src/controlpanel/cmd.py:26
+#, python-format
+msgid ""
+"sugar-control-panel: WARNING, found more than one option with the same name: "
+"%s module: %r"
+msgstr ""
+"nadzorna plošča programa sugar: OPOZORILO, najdena je več kot ena možnost z "
+"enakim imenom: %s modul: %r"
+
+#: ../src/controlpanel/cmd.py:28
+#, python-format
+msgid "sugar-control-panel: key=%s not an available option"
+msgstr "nadzorna plošča programa sugar: ključ=%s ni veljavna možnost"
+
+#: ../src/controlpanel/cmd.py:29
+#, python-format
+msgid "sugar-control-panel: %s"
+msgstr "nadzorna plošča programa sugar: %s"
+
+#: ../src/controlpanel/cmd.py:33
+msgid ""
+"Usage: sugar-control-panel [ option ] key [ args ... ] \n"
+"    Control for the sugar environment. \n"
+"    Options: \n"
+"    -h           show this help message and exit \n"
+"    -l           list all the available options \n"
+"    -h key       show information about this key \n"
+"    -g key       get the current value of the key \n"
+"    -s key       set the current value for the key \n"
+"    "
+msgstr ""
+"Uporaba: nadzorna plošča programa sugar [ možnost ] key [ ukaz ... ] \n"
+"    Nadzor v okolju sugar. \n"
+"    Možnosti: \n"
+"    -h                    prikaži to sporočilo in končaj \n"
+"    -l                     prikaži vse možnosti, ki so na voljo \n"
+"    -h key               prikaži informacije za posamezen ključ \n"
+"    -g key               pridobi trenutno vrednost ključa \n"
+"    -s key               nastavi trenutno vrednost za ključ \n"
+
+#: ../src/controlpanel/cmd.py:45
+msgid "To apply your changes you have to restart sugar.\n"
+msgstr "Za uveljavitev sprememb je potreben ponovni zagon programa sugar.\n"
+
+#: ../src/controlpanel/toolbar.py:115
+msgid "Cancel"
+msgstr "Prekliči"
+
+#: ../src/controlpanel/toolbar.py:121 ../src/view/home/favoritesview.py:294
+msgid "Ok"
+msgstr "V redu"
+
+#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:260
+msgid "Changes require restart"
+msgstr "Sprembe zahtevajo ponovni zagon"
+
+#: ../src/controlpanel/gui.py:259
+msgid "Warning"
+msgstr "Opozorilo"
+
+#: ../src/controlpanel/gui.py:263
+msgid "Cancel changes"
+msgstr "Prekliči spremembe"
+
+#: ../src/controlpanel/gui.py:267
+msgid "Later"
+msgstr "Kasneje"
+
+#: ../src/controlpanel/gui.py:271
+msgid "Restart now"
+msgstr "Ponovni zagon"
+
+#: ../src/controlpanel/model/aboutme.py:44
+msgid "You must enter a name."
+msgstr "Vpisati morat ime."
+
+#: ../src/controlpanel/model/aboutme.py:69
+#, python-format
+msgid "stroke:   color=%s hue=%s"
+msgstr "pisalo:   barva=%s odtenek=%s"
+
+#: ../src/controlpanel/model/aboutme.py:72
+#, python-format
+msgid "stroke:   %s"
+msgstr "pisalo:   %s"
+
+#: ../src/controlpanel/model/aboutme.py:74
+#, python-format
+msgid "fill:     color=%s hue=%s"
+msgstr "zapolni:     barva=%s odtenek=%s"
+
+#: ../src/controlpanel/model/aboutme.py:76
+#, python-format
+msgid "fill:     %s"
+msgstr "zapolni:     %s"
+
+#: ../src/controlpanel/model/aboutme.py:87
+msgid "Error in specified color modifiers."
+msgstr "Napačno določena sprememba barve"
+
+#: ../src/controlpanel/model/aboutme.py:90
+msgid "Error in specified colors."
+msgstr "Napačno določena barva"
+
+#: ../src/controlpanel/model/aboutxo.py:24
+msgid "Not available"
+msgstr "Ni na voljo"
+
+#: ../src/controlpanel/model/datetime.py:85
+msgid "Error timezone does not exist."
+msgstr "Napaka: časovno območje ne obstaja."
+
+#: ../src/controlpanel/model/frame.py:38 ../src/controlpanel/model/frame.py:60
+msgid "Value must be an integer."
+msgstr "Vrednost mora biti številka."
+
+#: ../src/controlpanel/model/language.py:28
+msgid "Could not access ~/.i18n. Create standard settings."
+msgstr "Dostop do ~/.i18n ni mogoče. Ustvari standardne nastavitve."
+
+#: ../src/controlpanel/model/language.py:104
+#, python-format
+msgid "Language for code=%s could not be determined."
+msgstr "Jezika za kodo=%s ni bilo mogoče določiti."
+
+#: ../src/controlpanel/model/language.py:121
+#, python-format
+msgid "Sorry I do not speak '%s'."
+msgstr "Oprosti, ne govorim '%s'."
+
+#: ../src/controlpanel/model/network.py:48
+msgid "You must enter a server."
+msgstr "Vpisati moraš strežnik."
+
+#: ../src/controlpanel/model/network.py:63
+msgid "State is unknown."
+msgstr "Neznana država."
+
+#: ../src/controlpanel/model/network.py:83
+msgid "Error in specified radio argument use on/off."
+msgstr "Napaka pri določanju stanja radijske povezave (vključen/izključen)."
+
+#: ../src/controlpanel/model/power.py:57
+#, fuzzy
+msgid "Error in automatic pm argument, use on/off."
+msgstr "Napaka pri samodejni rabi ukaza pm, uporabi izklop/vklop."
+
+#: ../src/controlpanel/model/power.py:86
+msgid "Error in extreme pm argument, use on/off."
+msgstr "Napaka pri ekstremni vrednosti ukaza pm, uporabi izklop/vklop."
+
+#: ../src/controlpanel/view/aboutme.py:32
+msgid "About Me"
+msgstr "O meni"
+
+#: ../src/controlpanel/view/aboutme.py:134
+msgid "Click to change your color:"
+msgstr "Klikni za spremembo barve:"
+
+#: ../src/controlpanel/view/aboutxo.py:26
+msgid "About my XO"
+msgstr "O mojem XO"
+
+#: ../src/controlpanel/view/aboutxo.py:47
+msgid "Identity"
+msgstr "Identiteta"
+
+#: ../src/controlpanel/view/aboutxo.py:56
+msgid "Serial Number:"
+msgstr "Serijska številka:"
+
+#: ../src/controlpanel/view/aboutxo.py:79
+msgid "Software"
+msgstr "Program"
+
+#: ../src/controlpanel/view/aboutxo.py:88
+msgid "Build:"
+msgstr "Različica:"
+
+#: ../src/controlpanel/view/aboutxo.py:103
+msgid "Firmware:"
+msgstr "Firmware:"
+
+#: ../src/controlpanel/view/datetime.py:29
+msgid "Date & Time"
+msgstr "Datum in ura"
+
+#: ../src/controlpanel/view/datetime.py:72
+msgid "Timezone"
+msgstr "Časovno območje"
+
+#: ../src/controlpanel/view/frame.py:28
+msgid "Frame"
+msgstr "Okvir"
+
+#: ../src/controlpanel/view/frame.py:30
+msgid "never"
+msgstr "nikoli"
+
+#: ../src/controlpanel/view/frame.py:31
+msgid "instantaneous"
+msgstr "takojšnji"
+
+#: ../src/controlpanel/view/frame.py:32
+#, python-format
+msgid "%s seconds"
+msgstr "%s sekund"
+
+#: ../src/controlpanel/view/frame.py:56
+msgid "Activation Delay"
+msgstr "Zamik aktivacije"
+
+#: ../src/controlpanel/view/frame.py:80
+msgid "Corner"
+msgstr "Kot"
+
+#: ../src/controlpanel/view/frame.py:115
+msgid "Edge"
+msgstr "Rob"
+
+#: ../src/controlpanel/view/language.py:29
+#: ../src/controlpanel/view/language.py:74
+msgid "Language"
+msgstr "Jezik"
+
+#: ../src/controlpanel/view/network.py:28
+msgid "Network"
+msgstr "Omrežje"
+
+#: ../src/controlpanel/view/network.py:53
+msgid "Wireless"
+msgstr "Brezžično"
+
+#: ../src/controlpanel/view/network.py:61
+msgid "Radio:"
+msgstr "Radijska povezava:"
+
+#: ../src/controlpanel/view/network.py:94
+msgid "Mesh"
+msgstr "Mesh"
+
+#: ../src/controlpanel/view/network.py:103
+msgid "Server:"
+msgstr "Strežnik:"
+
+#: ../src/controlpanel/view/power.py:27
+msgid "Power"
+msgstr "Energija"
+
+#: ../src/controlpanel/view/power.py:51
+msgid "Power management"
+msgstr "Nazdor porabe električne energije"
+
+#: ../src/controlpanel/view/power.py:61
+msgid "Automatic power management (increases battery life)"
+msgstr ""
+"Samodejni nadzor porabe električne energije (podalšuje življenjsko dobo "
+"baterije)"
+
+#: ../src/controlpanel/view/power.py:89
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+"Ekstremni nadzor porabe električne energije (ugasnjen radijski del, podaljša "
+"življenjsko dobo baterije)"
+
+#: ../src/view/devices/network/mesh.py:111
+msgid "Connected to a School Mesh Portal"
+msgstr "Povezan na šolski Mesh portal"
+
+#: ../src/view/devices/network/mesh.py:113
+msgid "Looking for a School Mesh Portal..."
+msgstr "Iskanje šolskega Mesh portala ..."
+
+#: ../src/view/devices/network/mesh.py:116
+msgid "Connected to an XO Mesh Portal"
+msgstr "Povezan na XO Mesh portal"
+
+#: ../src/view/devices/network/mesh.py:118
+msgid "Looking for an XO Mesh Portal..."
+msgstr "Iskanje XO Mesh portala"
+
+#: ../src/view/devices/network/mesh.py:121
+msgid "Connected to a Simple Mesh"
+msgstr "Povezan v enostavno Mesh omrežje"
+
+#: ../src/view/devices/network/mesh.py:123
+msgid "Starting a Simple Mesh"
+msgstr "Ustvarjam enostavno Mesh omrežje"
+
+#: ../src/view/devices/network/mesh.py:130
+msgid "Unknown Mesh"
+msgstr "Neznano Mesh omrežje"
+
+#: ../src/view/frame/activitiestray.py:210
+msgid "Decline"
+msgstr "Zavrni"
+
+#: ../src/view/home/favoritesview.py:285
+msgid "Registration Failed"
+msgstr ""
+
+#: ../src/view/home/favoritesview.py:286
+#, python-format
+msgid "%s"
+msgstr ""
+
+#: ../src/view/home/favoritesview.py:288
+msgid "Registration Successful"
+msgstr ""
+
+#: ../src/view/home/favoritesview.py:289
+msgid "You are now registered with your school server."
+msgstr ""
+
+#: ../src/view/home/favoritesview.py:405
+msgid "Control Panel"
+msgstr "Nadzorna plošča"
+
+#: ../src/view/home/favoritesview.py:416
+msgid "Restart"
+msgstr "Ponovni zagon"
+
+#: ../src/view/home/favoritesview.py:421
+msgid "Shutdown"
+msgstr "Zaustavitev"
+
+#: ../src/view/home/favoritesview.py:427
+msgid "Register"
+msgstr "Registracija"
+
+#: ../src/view/palettes.py:42
+msgid "Starting..."
+msgstr "Zaganjam ..."
+
+#: ../src/view/palettes.py:72
+msgid "Stop"
+msgstr "Ustavi"
+
+#: ../src/view/palettes.py:104
+msgid "Start"
+msgstr "Zaženi"
+
+#: ../src/view/palettes.py:132
+msgid "Remove favorite"
+msgstr "Odstrani priljubljeno"
+
+#: ../src/view/palettes.py:136
+msgid "Make favorite"
+msgstr "Nastavi priljubljeno"
+
+#: ../src/view/palettes.py:185
+msgid "Show contents"
+msgstr "Prikaži vsebino"
+
+#: ../src/view/palettes.py:209
+#, python-format
+msgid "%(free_space)d MB Free"
+msgstr "%(free_space)d MB prosto"
+
+#~ msgid "<Ctrl>R"
+#~ msgstr "<Ctrl>R"
