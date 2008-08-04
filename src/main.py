@@ -27,6 +27,8 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
+gtk.gdk.threads_init()
+
 from sugar import env
 from sugar import logger
 from sugar.profile import get_profile
