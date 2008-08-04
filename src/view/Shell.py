@@ -61,8 +61,8 @@ class Shell(gobject.GObject):
 
         self._frame = frame.get_instance()
 
-        self._home_window = HomeWindow()
-        self._home_window.show()
+        self.home_window = HomeWindow()
+        self.home_window.show()
 
         self._launch_window = LaunchWindow()
 

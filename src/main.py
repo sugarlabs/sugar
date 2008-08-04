@@ -15,8 +15,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
-from ConfigParser import ConfigParser
 import gettext
+import logging
 
 # HACK we need to import numpy before gtk otherwise we traceback in
 # some locales. See http://dev.laptop.org/ticket/5559.
@@ -29,7 +29,6 @@ import gobject
 
 gtk.gdk.threads_init()
 
-from sugar import env
 from sugar import logger
 from sugar.profile import get_profile
 
@@ -73,6 +72,23 @@ def _shell_started_cb():
     # Unfreeze the display
     hw_manager = hardwaremanager.get_manager()
     hw_manager.set_dcon_freeze(0)
+
+def _open_control_panel_cb(cp_section_name):
+    '''Open the `cp_section_name` control panel module and enable
+    auto-close 
+    '''
+    
+    # FIXME: should be replaced by a mechanism based on the notification system,
+    #        once the notification system is in place; clicking on a button
+    #        in the notification window would do the actual control panel open.
+    
+    from controlpanel.gui import ControlPanel
+    shell = view.Shell.get_instance()
+    panel = ControlPanel()
+    panel.set_transient_for(shell.home_window)
+    panel.show()
+    panel.show_section_view(cp_section_name)
+    panel.set_section_view_auto_close()
 
 def main():
     gobject.idle_add(_shell_started_cb)
@@ -139,6 +155,17 @@ def main():
 
     session_manager = get_session_manager()
     session_manager.start()
+
+    # dlo trac #7495: open 'software update' control panel after an upgrade
+    # to update activities.
+    update_trigger_file = os.path.expanduser('~/.sugar-update')
+    if os.path.isfile(update_trigger_file):
+        gobject.idle_add(_open_control_panel_cb, 'updater')
+        try:
+            os.unlink(update_trigger_file)
+        except OSError:
+            logging.error('Software-update: Can not remove file %s' % 
+                          update_trigger_file)
 
     try:
         gtk.main()

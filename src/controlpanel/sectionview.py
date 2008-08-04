@@ -21,8 +21,13 @@ from gettext import gettext as _
 class SectionView(gtk.VBox):
     __gtype_name__ = 'SugarSectionView'
 
+    __gsignals__ = {
+        'request-close': (gobject.SIGNAL_RUN_FIRST,
+                           gobject.TYPE_NONE, ([]))
+        }
+
     __gproperties__ = {
-        'is_valid' : (bool, None, None, True,
+        'is_valid'      : (bool, None, None, True,
                            gobject.PARAM_READWRITE)
         }
     
@@ -31,6 +36,7 @@ class SectionView(gtk.VBox):
     def __init__(self):
         gtk.VBox.__init__(self)
         self._is_valid = True
+        self.auto_close = False
         self.needs_restart = False
         self.restart_alerts = []
         self.restart_msg = _('Changes require restart')

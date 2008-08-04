@@ -172,7 +172,7 @@ class ControlPanel(gtk.Window):
         self._section_toolbar.connect('accept-clicked', 
                                      self.__accept_clicked_cb)
 
-    def _show_section_view(self, option):
+    def show_section_view(self, option):
         self._set_toolbar(self._section_toolbar)
 
         icon = self._section_toolbar.get_icon()
@@ -193,9 +193,16 @@ class ControlPanel(gtk.Window):
         self._section_view.show()
         self._section_view.connect('notify::is-valid', 
                                    self.__valid_section_cb)
+        self._section_view.connect('request-close',
+                                   self.__close_request_cb)
         self._main_view.modify_bg(gtk.STATE_NORMAL, 
                                   style.COLOR_WHITE.get_gdk_color())
 
+    def set_section_view_auto_close(self):
+        '''Automatically close the control panel if there is "nothing to do"
+        '''
+        self._section_view.auto_close = True
+    
     def _get_options(self):    
         '''Get the available option information from the subfolders 
         model and view.
@@ -295,12 +302,15 @@ class ControlPanel(gtk.Window):
             session_manager.logout()
 
     def __select_option_cb(self, button, event, option):
-        self._show_section_view(option)
+        self.show_section_view(option)
 
     def __search_changed_cb(self, maintoolbar, query):
         self._update(query)            
 
     def __stop_clicked_cb(self, widget):
+        self.destroy()
+
+    def __close_request_cb(self, widget, event=None):
         self.destroy()
     
     def __valid_section_cb(self, section_view, pspec):
