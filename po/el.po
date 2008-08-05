@@ -6,432 +6,772 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-18 18:19+0000\n"
-"PO-Revision-Date: 2007-07-25 23:17+0100\n"
-"Last-Translator: Simos Xenitellis <simos.lists@googlemail.com>\n"
+"POT-Creation-Date: 2008-07-23 07:44-0400\n"
+"PO-Revision-Date: 2008-08-05 08:05-0400\n"
+"Last-Translator: Γιάννης Κασκαμανίδης <ttnfy17@yahoo.gr>\n"
 "Language-Team: Greek <olpc@grnet.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.0.1\n"
+"X-Generator: Pootle 1.1.0rc2\n"
 
-#: ../shell/intro/intro.py:67
+#: ../src/intro/intro.py:65 ../src/controlpanel/view/aboutme.py:100
 msgid "Name:"
 msgstr "Όνομα:"
 
-#: ../shell/intro/intro.py:96
+#: ../src/intro/intro.py:94
 msgid "Click to change color:"
 msgstr "Πατήστε για να αλλάξτε χρώμα:"
 
-#: ../shell/intro/intro.py:146
+#: ../src/intro/intro.py:145
 msgid "Back"
 msgstr "Πίσω"
 
-#: ../shell/intro/intro.py:160
+#: ../src/intro/intro.py:159 ../src/controlpanel/toolbar.py:61
 msgid "Done"
 msgstr "Ολοκληρώθηκε"
 
-#: ../shell/intro/intro.py:163
+#: ../src/intro/intro.py:162
 msgid "Next"
 msgstr "Επόμενο"
 
-#: ../shell/view/BuddyMenu.py:59
+#: ../src/view/BuddyMenu.py:58
 msgid "Remove friend"
 msgstr "Διαγραφή φίλου/ης"
 
-#: ../shell/view/BuddyMenu.py:62
+#: ../src/view/BuddyMenu.py:61
 msgid "Make friend"
 msgstr "Να γίνει φίλος/η"
 
-#. FIXME check that the buddy is not in the activity already
-#: ../shell/view/BuddyMenu.py:96
-msgid "Invite"
-msgstr "Πρόσκληση"
+#: ../src/view/BuddyMenu.py:91
+#, python-format
+msgid "Invite to %s"
+msgstr "Προσκάλεσε στο %s"
 
-#: ../shell/view/clipboardmenu.py:58
+#: ../src/view/clipboardmenu.py:48
 msgid "Remove"
 msgstr "Διαγραφή"
 
-#: ../shell/view/clipboardmenu.py:63
+#: ../src/view/clipboardmenu.py:53 ../src/view/clipboardmenu.py:79
 msgid "Open"
 msgstr "Άνοιγμα"
 
+# self._stop_item = MenuItem(_('Stop download'), 'stock-close')
+# TODO: Implement stopping downloads
+# self._stop_item.connect('activate', self._stop_item_activate_cb)
+# self.append_menu_item(self._stop_item)
 #. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../shell/view/clipboardmenu.py:73
-msgid "Add to journal"
-msgstr "Προσθήκη στα πράγματά μου"
+#: ../src/view/clipboardmenu.py:63 ../src/view/home/HomeBox.py:86
+msgid "Keep"
+msgstr "Διατήρησε"
 
-#: ../shell/view/clipboardmenu.py:213
+#: ../src/view/clipboardmenu.py:84
+msgid "Open with"
+msgstr "Άνοιγμα με"
+
+#: ../src/view/clipboardmenu.py:216
 #, python-format
 msgid "Clipboard object: %s."
 msgstr "Αντικείμενο προχείρου: %s."
 
-#: ../shell/view/frame/zoomtoolbar.py:42
+#: ../src/hardware/keydialog.py:150
+msgid "Key Type:"
+msgstr "Τύπος Κλειδιού"
+
+#: ../src/hardware/keydialog.py:170
+msgid "Authentication Type:"
+msgstr "Τύπος Πιστοποίησης"
+
+#: ../src/hardware/keydialog.py:251
+msgid "Encryption Type:"
+msgstr "Τύπος Κρυπτογράφησης"
+
+#: ../src/view/Shell.py:240
+msgid "Screenshot"
+msgstr "Στιγμιότυπο οθόνης"
+
+#: ../src/view/home/HomeBox.py:80
+msgid "Confirm erase"
+msgstr "Επιβεβαίωση διαγραφής"
+
+#: ../src/view/home/HomeBox.py:82
+#, python-format
+msgid "Confirm erase: Do you want to permanently erase %s?"
+msgstr "Επιβεβαίωση διαγραφής: Θέλετε να διαγράψετε μόνιμα %s?"
+
+#: ../src/view/home/HomeBox.py:89 ../src/view/palettes.py:120
+msgid "Erase"
+msgstr "Διαγραφή"
+
+#: ../src/view/home/HomeBox.py:215
+msgid "List view"
+msgstr "Προβολή λίστας"
+
+#: ../src/view/home/HomeBox.py:216
+msgid "<Ctrl>2"
+msgstr "<Ctrl>2"
+
+#: ../src/view/home/HomeBox.py:273
+msgid "Favorites view"
+msgstr "Προβολή αγαπημένων"
+
+#: ../src/view/home/HomeBox.py:274
+msgid "<Ctrl>1"
+msgstr "<Ctrl>1"
+
+# TRANS: label for the freeform layout in the favorites view
+#. TRANS: label for the freeform layout in the favorites view
+#: ../src/view/home/HomeBox.py:282
+msgid "Freeform"
+msgstr "Ελεύθερο σχήμα"
+
+# TRANS: label for the ring layout in the favorites view
+#. TRANS: label for the ring layout in the favorites view
+#: ../src/view/home/HomeBox.py:289
+msgid "Ring"
+msgstr "Δακτύλιος"
+
+#: ../src/view/home/MeshBox.py:97
+msgid "Connect"
+msgstr "Σύνδεση"
+
+#: ../src/view/home/MeshBox.py:106
+msgid "Disconnect"
+msgstr "Αποσύνδεση"
+
+# Only show disconnect when there's a mesh device, because mesh takes
+# priority over the normal wireless device.  NM doesn't have a "disconnect"
+# method for a device either (for various reasons) so this doesn't
+# have a good mapping
+#: ../src/view/home/MeshBox.py:118
+msgid "Disconnecting..."
+msgstr "Αποσύνδεση..."
+
+#: ../src/view/home/MeshBox.py:152
+msgid "Connecting..."
+msgstr "Σύνδεση..."
+
+# TODO: show the channel number
+#. TODO: show the channel number
+#: ../src/view/home/MeshBox.py:159
+msgid "Connected"
+msgstr "Συνδέθηκε"
+
+#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:41
+#: ../src/view/devices/network/mesh.py:68
+#: ../src/view/devices/network/mesh.py:72
+msgid "Mesh Network"
+msgstr "Δίκτυο πλέγματος"
+
+# Only show disconnect when there's a mesh device, because mesh takes
+# priority over the normal wireless device.  NM doesn't have a "disconnect"
+# method for a device either (for various reasons) so this doesn't
+# have a good mapping
+#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:119
+#: ../src/view/devices/network/mesh.py:89
+msgid "Disconnect..."
+msgstr "Αποσύνδεση..."
+
+#: ../src/view/home/MeshBox.py:302 ../src/view/palettes.py:61
+msgid "Resume"
+msgstr "Συνέχιση"
+
+#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:205
+msgid "Join"
+msgstr "Σύνδεση"
+
+#: ../src/view/devices/battery.py:45
+msgid "My Battery"
+msgstr "Η μπαταρία μου"
+
+#: ../src/view/devices/battery.py:114
+msgid "Charging"
+msgstr "Φόρτιση"
+
+#: ../src/view/devices/battery.py:117
+msgid "Very little power remaining"
+msgstr "Απομένει ελάχιστη ενέργεια"
+
+#: ../src/view/devices/battery.py:123
+#, python-format
+msgid "%(hour)d:%(min).2d remaining"
+msgstr "%(ώρες)d:%(λεπτά).2d απομένουν"
+
+#: ../src/view/devices/battery.py:127
+msgid "Charged"
+msgstr "Φορτισμένη"
+
+#: ../src/view/devices/speaker.py:44
+msgid "My Speakers"
+msgstr "Τα ηχεία μου"
+
+#: ../src/view/devices/speaker.py:119
+msgid "Unmute"
+msgstr "Άρση σίγασης"
+
+#: ../src/view/devices/speaker.py:122
+msgid "Mute"
+msgstr "Σίγαση"
+
+#: ../src/view/devices/network/wireless.py:67
+msgid "Disconnected"
+msgstr "Αποσυνδέθηκε"
+
+#: ../src/view/devices/network/wireless.py:137
+msgid "Channel"
+msgstr "Κανάλι"
+
+#: ../src/view/frame/zoomtoolbar.py:34
 msgid "Neighborhood"
 msgstr "Γειτονιά"
 
-#: ../shell/view/frame/zoomtoolbar.py:54
+#: ../src/view/frame/zoomtoolbar.py:36
 msgid "Group"
 msgstr "Ομάδα"
 
-#: ../shell/view/frame/zoomtoolbar.py:66
+#: ../src/view/frame/zoomtoolbar.py:38
 msgid "Home"
 msgstr "Αρχή"
 
-#: ../shell/view/frame/zoomtoolbar.py:78
+#: ../src/view/frame/zoomtoolbar.py:40
 msgid "Activity"
 msgstr "Δραστηριότητα"
 
-#: ../services/clipboard/objecttypeservice.py:32
-msgid "Text"
-msgstr "Κείμενο"
-
-#: ../services/clipboard/objecttypeservice.py:36
-msgid "Image"
-msgstr "Εικόνα"
-
-#: ../shell/view/Shell.py:285
-msgid "Screenshot"
-msgstr "Εικόνα οθόνης"
-
-#: ../shell/view/home/HomeBox.py:164
-msgid "Shutdown"
-msgstr "Παύση λειτουργίας"
-
-#: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
-#: ../shell/view/devices/network/mesh.py:62
-#: ../shell/view/devices/network/mesh.py:66
-msgid "Mesh Network"
-msgstr "ΧΟ-δίκτυο"
-
-#: ../shell/view/devices/battery.py:38
-msgid "My Battery life"
-msgstr "Η διάρκεια της μπαταρίας μου"
-
-#: ../shell/view/devices/battery.py:94
-msgid "Battery charging"
-msgstr "Η μπαταρία φορτίζεται"
-
-#: ../shell/view/devices/battery.py:96
-msgid "Battery discharging"
-msgstr "Η μπαταρία αποφορτίζεται"
-
-#: ../shell/view/devices/battery.py:98
-msgid "Battery fully charged"
-msgstr "Η μπαταρία έχει φορτιστεί πλήρως"
-
-#: ../lib/sugar/activity/activity.py:126
-msgid "Keep"
-msgstr "Διατήρησε"
-
-#: ../sugar/activity/activity.py:74
-msgid "Share"
-msgstr "Μοίρασε"
-
-#: ../shell/view/home/activitiesdonut.py:111
-#: ../lib/sugar/activity/activity.py:132
-msgid "Stop"
-msgstr "Σταμάτησε"
-
-#: ../lib/sugar/activity/activity.py:454
+#: ../src/controlpanel/cmd.py:26
 #, python-format
-msgid "%s Activity"
-msgstr "Δραστηριότητα %s"
+msgid ""
+"sugar-control-panel: WARNING, found more than one option with the same name: "
+"%s module: %r"
+msgstr ""
+"sugar-πίνακας ελέγχου: Προειδοποίηση, βρέθηκαν περισσότερες από μία επιλογές "
+"με το ίδιο όνομα: %s άρθρωμα: %r"
 
-#: ../shell/view/BuddyMenu.py:84
+#: ../src/controlpanel/cmd.py:28
 #, python-format
-msgid "Invite to %s"
-msgstr ""
+msgid "sugar-control-panel: key=%s not an available option"
+msgstr "sugar-πίνακας ελέγχου: κλειδί=%s μη διαθέσιμη επιλογή"
 
-#: ../shell/hardware/keydialog.py:149
-msgid "Key Type:"
-msgstr ""
-
-#: ../shell/hardware/keydialog.py:169
-msgid "Authentication Type:"
-msgstr ""
-
-#: ../shell/hardware/keydialog.py:250
-msgid "Encryption Type:"
-msgstr ""
-
-#: ../shell/view/home/activitiesdonut.py:90
-msgid "Starting..."
-msgstr ""
-
-#: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
-msgid "Resume"
-msgstr ""
-
-#: ../shell/view/home/HomeBox.py:159
-msgid "Reboot"
-msgstr ""
-
-#: ../shell/view/home/HomeBox.py:170
-msgid "Register"
-msgstr ""
-
-#. Only show disconnect when there's a mesh device, because mesh takes
-#. priority over the normal wireless device.  NM doesn't have a "disconnect"
-#. method for a device either (for various reasons) so this doesn't
-#. have a good mapping
-#: ../shell/view/home/MeshBox.py:90 ../shell/view/home/MeshBox.py:197
-#: ../shell/view/devices/network/wireless.py:113
-#: ../shell/view/devices/network/mesh.py:83
-msgid "Disconnect..."
-msgstr ""
-
-#: ../shell/view/home/MeshBox.py:300
-msgid "Join"
-msgstr ""
-
-#: ../shell/view/devices/network/wireless.py:61
-msgid "Disconnected"
-msgstr ""
-
-#: ../shell/view/devices/network/wireless.py:131
-msgid "Channel"
-msgstr ""
-
-#: ../lib/sugar/activity/activity.py:115
-msgid "Share with:"
-msgstr ""
-
-#: ../lib/sugar/activity/activity.py:117
-msgid "Private"
-msgstr ""
-
-#: ../lib/sugar/activity/activity.py:118
-#, fuzzy
-msgid "My Neighborhood"
-msgstr "Γειτονιά"
-
-#: ../lib/sugar/activity/activity.py:245
-msgid "Undo"
-msgstr ""
-
-#: ../lib/sugar/activity/activity.py:250
-msgid "Redo"
-msgstr ""
-
-#: ../lib/sugar/activity/activity.py:260
-msgid "Copy"
-msgstr ""
-
-#: ../lib/sugar/activity/activity.py:265
-msgid "Paste"
-msgstr ""
-
-#: ../lib/sugar/activity/activity.py:824
-msgid "Keep error"
-msgstr ""
-
-#: ../lib/sugar/activity/activity.py:825
-msgid "Keep error: all changes will be lost"
-msgstr ""
-
-#: ../lib/sugar/activity/activity.py:828
-msgid "Don't stop"
-msgstr ""
-
-#: ../lib/sugar/activity/activity.py:831
-msgid "Stop anyway"
-msgstr ""
-
-#: ../lib/sugar/graphics/alert.py:164 ../lib/sugar/graphics/alert.py:206
-msgid "Cancel"
-msgstr ""
-
-#: ../lib/sugar/graphics/alert.py:168
-msgid "Ok"
-msgstr ""
-
-#: ../lib/sugar/graphics/alert.py:216
-msgid "Continue"
-msgstr ""
-
-#: ../lib/sugar/graphics/alert.py:244
-msgid "OK"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:175
+#: ../src/controlpanel/cmd.py:29
 #, python-format
-msgid "%d year"
-msgstr ""
+msgid "sugar-control-panel: %s"
+msgstr "sugar-πίνακας ελέγχου: %s"
 
-#: ../lib/sugar/graphics/objectchooser.py:175
-#, python-format
-msgid "%d years"
+#: ../src/controlpanel/cmd.py:33
+msgid ""
+"Usage: sugar-control-panel [ option ] key [ args ... ] \n"
+"    Control for the sugar environment. \n"
+"    Options: \n"
+"    -h           show this help message and exit \n"
+"    -l           list all the available options \n"
+"    -h key       show information about this key \n"
+"    -g key       get the current value of the key \n"
+"    -s key       set the current value for the key \n"
+"    "
 msgstr ""
+"Χρήση: sugar-πίνακας ελέγχου [ επιλογή ] κλειδί [ ορίσματα ... ] \n"
+"Έλεγχος περιβάλλοντος εργασίας sugar. \n"
+"Επιλογές: \n"
+"-h εμφάνιση αυτού του μηνύματος βοήθειας και έξοδος \n"
+"-l καταλογογράφηση όλων των διαθέσιμων επιλογών \n"
+"-h κλειδί εμφάνισης πληροφοριών γι' αυτό το κλειδί \n"
+"-g κλειδί που παίρνει την τρέχουσα τιμή του κλειδιού \n"
+"-s κλειδί που καθορίζει την τρέχουσα τιμή του κλειδιού \n"
 
-#: ../lib/sugar/graphics/objectchooser.py:176
-#, python-format
-msgid "%d month"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:176
-#, python-format
-msgid "%d months"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:177
-#, python-format
-msgid "%d week"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:177
-#, python-format
-msgid "%d weeks"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:178
-#, python-format
-msgid "%d day"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:178
-#, python-format
-msgid "%d days"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:179
-#, python-format
-msgid "%d hour"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:179
-#, python-format
-msgid "%d hours"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:180
-#, python-format
-msgid "%d minute"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:180
-#, python-format
-msgid "%d minutes"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:181
-#, python-format
-msgid "%d second"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:181
-#, python-format
-msgid "%d seconds"
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:191
-msgid " and "
-msgstr ""
-
-#: ../lib/sugar/graphics/objectchooser.py:193
-msgid ", "
-msgstr ""
-
-#: ../shell/controlpanel/control.py:213
+#: ../src/controlpanel/cmd.py:45
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr ""
+msgstr "Για να εφαρμοστούν οι αλλαγές σου θα πρέπει να επανεκκινήσεις το sugar"
 
-#: ../shell/controlpanel/control.py:267
+#: ../src/controlpanel/toolbar.py:115
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+#: ../src/controlpanel/toolbar.py:121 ../src/view/home/favoritesview.py:294
+msgid "Ok"
+msgstr "Οκ"
+
+#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:260
+msgid "Changes require restart"
+msgstr "Οι αλλαγές απαιτούν επανεκκίνηση"
+
+#: ../src/controlpanel/gui.py:259
+msgid "Warning"
+msgstr "Προειδοποίηση"
+
+#: ../src/controlpanel/gui.py:263
+msgid "Cancel changes"
+msgstr "Ακύρωση αλλαγών"
+
+#: ../src/controlpanel/gui.py:267
+msgid "Later"
+msgstr "Αργότερα"
+
+#: ../src/controlpanel/gui.py:271
+msgid "Restart now"
+msgstr "Επανεκκίνηση τώρα"
+
+#: ../src/controlpanel/model/aboutme.py:44
+msgid "You must enter a name."
+msgstr "Πρέπει να εισαχθεί ένα όνομα."
+
+#: ../src/controlpanel/model/aboutme.py:69
+#, python-format
+msgid "stroke:   color=%s hue=%s"
+msgstr "πινελιά:   χρώμα=%s απόχρωση=%s"
+
+#: ../src/controlpanel/model/aboutme.py:72
+#, python-format
+msgid "stroke:   %s"
+msgstr "πινελιά:   %s"
+
+#: ../src/controlpanel/model/aboutme.py:74
+#, python-format
+msgid "fill:     color=%s hue=%s"
+msgstr "γέμισμα:     χρώμα=%s απόχρωση=%s"
+
+#: ../src/controlpanel/model/aboutme.py:76
+#, python-format
+msgid "fill:     %s"
+msgstr "γέμισμα:     %s"
+
+#: ../src/controlpanel/model/aboutme.py:87
 msgid "Error in specified color modifiers."
-msgstr ""
+msgstr "Λάθος στους διαμορφωτές καθορισμένου χρώματος"
 
-#: ../shell/controlpanel/control.py:270
+#: ../src/controlpanel/model/aboutme.py:90
 msgid "Error in specified colors."
-msgstr ""
+msgstr "Λάθος στα καθορισμένα χρώματα"
 
-#: ../shell/controlpanel/control.py:307
-msgid "off"
-msgstr ""
+#: ../src/controlpanel/model/aboutxo.py:24
+msgid "Not available"
+msgstr "Δεν είναι διαθέσιμο"
 
-#: ../shell/controlpanel/control.py:309
-msgid "on"
-msgstr ""
-
-#: ../shell/controlpanel/control.py:310
-msgid "State is unknown."
-msgstr ""
-
-#: ../shell/controlpanel/control.py:332
-msgid "Error in specified radio argument use on/off."
-msgstr ""
-
-#: ../shell/controlpanel/control.py:336
-msgid "Permission denied. You need to be root to run this method."
-msgstr ""
-
-#: ../shell/controlpanel/control.py:366
-msgid "Error in reading timezone"
-msgstr ""
-
-#: ../shell/controlpanel/control.py:397
-#, python-format
-msgid "Error copying timezone (from %s): %s"
-msgstr ""
-
-#: ../shell/controlpanel/control.py:402
-#, python-format
-msgid "Changing permission of timezone: %s"
-msgstr ""
-
-#: ../shell/controlpanel/control.py:412
+#: ../src/controlpanel/model/datetime.py:85
 msgid "Error timezone does not exist."
-msgstr ""
+msgstr "Λάθος η ζώνη ώρας δεν υπάρχει"
 
-#: ../shell/controlpanel/control.py:417 ../shell/controlpanel/control.py:436
-#, python-format
-msgid "Could not access %s. Create standard settings."
-msgstr ""
+#: ../src/controlpanel/model/frame.py:38 ../src/controlpanel/model/frame.py:60
+msgid "Value must be an integer."
+msgstr "Η τιμή πρέπει να είναι ακέραιος αριθμός."
 
-#: ../shell/controlpanel/control.py:463
+#: ../src/controlpanel/model/language.py:28
+msgid "Could not access ~/.i18n. Create standard settings."
+msgstr ""
+"Δεν είναι δυνατή η πρόσβαση ~/.i18n. Δημιουργία προκαθορισμένων ρυθμίσεων."
+
+#: ../src/controlpanel/model/language.py:104
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr ""
+msgstr "Γλώσσα για τον κωδικό=%s δεν μπορεί να καθοριστεί."
 
-#: ../shell/controlpanel/control.py:473
+#: ../src/controlpanel/model/language.py:121
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr ""
+msgstr "Συγνώμη αλλά δεν μιλάω '%s'."
 
-#: ../shell/view/devices/network/mesh.py:105
+#: ../src/controlpanel/model/network.py:48
+msgid "You must enter a server."
+msgstr "Πρέπει να εισαχθεί ένα όνομα."
+
+#: ../src/controlpanel/model/network.py:63
+msgid "State is unknown."
+msgstr "Η κατάσταση είναι άγνωστη."
+
+#: ../src/controlpanel/model/network.py:83
+msgid "Error in specified radio argument use on/off."
+msgstr ""
+"Λάθος σε καθορισμένη παράμετρο κουμπιού επιλογής χρήση κλειστού/ανοικτού."
+
+#: ../src/controlpanel/model/power.py:57
+msgid "Error in automatic pm argument, use on/off."
+msgstr "Σφάλμα στην αυτόματη παράμετρο pm, χρησιμοποιήστε το on/off."
+
+#: ../src/controlpanel/model/power.py:86
+msgid "Error in extreme pm argument, use on/off."
+msgstr "Σφάλμα στην ακραία παράμετρο pm, χρησιμοποιήστε το on/off."
+
+#: ../src/controlpanel/view/aboutme.py:32
+msgid "About Me"
+msgstr "Σχετικά με μένα"
+
+#: ../src/controlpanel/view/aboutme.py:134
+msgid "Click to change your color:"
+msgstr "Πατήστε για να αλλάξετε χρώμα:"
+
+#: ../src/controlpanel/view/aboutxo.py:26
+msgid "About my XO"
+msgstr "Σχετικά με τον XO μου"
+
+#: ../src/controlpanel/view/aboutxo.py:47
+msgid "Identity"
+msgstr "Ταυτότητα"
+
+#: ../src/controlpanel/view/aboutxo.py:56
+msgid "Serial Number:"
+msgstr "Σειριακός αριθμός:"
+
+#: ../src/controlpanel/view/aboutxo.py:79
+msgid "Software"
+msgstr "Λογισμικό"
+
+#: ../src/controlpanel/view/aboutxo.py:88
+msgid "Build:"
+msgstr "Αναγνωριστικό έκδοσης:"
+
+#: ../src/controlpanel/view/aboutxo.py:103
+msgid "Firmware:"
+msgstr "Firmware:"
+
+#: ../src/controlpanel/view/datetime.py:29
+msgid "Date & Time"
+msgstr "Ημερομηνία & ώρα"
+
+#: ../src/controlpanel/view/datetime.py:72
+msgid "Timezone"
+msgstr "Ζώνη ώρας"
+
+#: ../src/controlpanel/view/frame.py:28
+msgid "Frame"
+msgstr "Πλαίσιο"
+
+#: ../src/controlpanel/view/frame.py:30
+msgid "never"
+msgstr "ποτέ"
+
+#: ../src/controlpanel/view/frame.py:31
+msgid "instantaneous"
+msgstr "στιγμιαίος"
+
+#: ../src/controlpanel/view/frame.py:32
+#, python-format
+msgid "%s seconds"
+msgstr "%d δεπτερόλεπτα"
+
+#: ../src/controlpanel/view/frame.py:56
+msgid "Activation Delay"
+msgstr "Καθυστέρηση ενεργοποίησης"
+
+#: ../src/controlpanel/view/frame.py:80
+msgid "Corner"
+msgstr "Γωνία"
+
+#: ../src/controlpanel/view/frame.py:115
+msgid "Edge"
+msgstr "Άκρη"
+
+#: ../src/controlpanel/view/language.py:29
+#: ../src/controlpanel/view/language.py:74
+msgid "Language"
+msgstr "Γλώσσα"
+
+#: ../src/controlpanel/view/network.py:28
+msgid "Network"
+msgstr "Δίκτυο"
+
+#: ../src/controlpanel/view/network.py:53
+msgid "Wireless"
+msgstr "Ασύρματο"
+
+#: ../src/controlpanel/view/network.py:61
+#, fuzzy
+msgid "Radio:"
+msgstr "Ραδιοκύματα:"
+
+#: ../src/controlpanel/view/network.py:94
+msgid "Mesh"
+msgstr "Πλεγματοειδές δίκτυο"
+
+#: ../src/controlpanel/view/network.py:103
+msgid "Server:"
+msgstr "Διακομιστής:"
+
+#: ../src/controlpanel/view/power.py:27
+msgid "Power"
+msgstr "Ενέργεια"
+
+#: ../src/controlpanel/view/power.py:51
+msgid "Power management"
+msgstr "Διαχείριση ενέργειας"
+
+#: ../src/controlpanel/view/power.py:61
+msgid "Automatic power management (increases battery life)"
+msgstr "Αυτόματα διαχείριση ενέργειας (αυξάνει τη διάρκεια της μπαταρίας)"
+
+#: ../src/controlpanel/view/power.py:89
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+"Ακραία διαχείριση ενέργειας (απενεργοποιεί το ασύρματο ραδιόφωνο, αυξάνει τη "
+"διάρκεια της μπαταρίας)"
+
+#: ../src/view/devices/network/mesh.py:111
 msgid "Connected to a School Mesh Portal"
-msgstr ""
+msgstr "Συνδέθηκα σε μια Σχολική Πύλη Δικτυακού Πλέγματος"
 
-#: ../shell/view/devices/network/mesh.py:107
+#: ../src/view/devices/network/mesh.py:113
 msgid "Looking for a School Mesh Portal..."
-msgstr ""
+msgstr "Αναζητώ μια Σχολική Πύλη Δικτυακού Πλέγματος..."
 
-#: ../shell/view/devices/network/mesh.py:110
+#: ../src/view/devices/network/mesh.py:116
 msgid "Connected to an XO Mesh Portal"
-msgstr ""
+msgstr "Συνδέθηκα σε μια Πύλη Δικτυακού Πλέγματος XO"
 
-#: ../shell/view/devices/network/mesh.py:112
+#: ../src/view/devices/network/mesh.py:118
 msgid "Looking for an XO Mesh Portal..."
-msgstr ""
+msgstr "Αναζητώ μια Πύλη Δικτυακού Πλέγματος XO..."
 
-#: ../shell/view/devices/network/mesh.py:115
+#: ../src/view/devices/network/mesh.py:121
 msgid "Connected to a Simple Mesh"
-msgstr ""
+msgstr "Συνδέθηκα σε ένα Απλό Δικτυακό Πλέγμα"
 
-#: ../shell/view/devices/network/mesh.py:117
+#: ../src/view/devices/network/mesh.py:123
 msgid "Starting a Simple Mesh"
-msgstr ""
+msgstr "Ξεκινώ ένα Απλό Δικτυακό Πλέγμα"
 
-#: ../shell/view/devices/network/mesh.py:124
+#: ../src/view/devices/network/mesh.py:130
 msgid "Unknown Mesh"
-msgstr ""
+msgstr "Άγνωστο Δικτυακό Πλέγμα"
 
-#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
-msgid "About this XO"
-msgstr ""
+#: ../src/view/frame/activitiestray.py:210
+#, fuzzy
+msgid "Decline"
+msgstr "Πτώση"
 
-#: ../shell/view/home/HomeBox.py:222
-msgid "Not available"
-msgstr ""
+#: ../src/view/home/favoritesview.py:285
+msgid "Registration Failed"
+msgstr "Η καταχώρηση απέτυχε"
+
+#: ../src/view/home/favoritesview.py:286
+#, python-format
+msgid "%s"
+msgstr "%s"
+
+#: ../src/view/home/favoritesview.py:288
+msgid "Registration Successful"
+msgstr "Η καταχώρηση πέτυχε"
+
+#: ../src/view/home/favoritesview.py:289
+msgid "You are now registered with your school server."
+msgstr "Είστε καταχωρημένος στον διακομιστή του σχολείου."
+
+#: ../src/view/home/favoritesview.py:405
+msgid "Control Panel"
+msgstr "Πίνακας ελέγχου"
+
+#: ../src/view/home/favoritesview.py:416
+msgid "Restart"
+msgstr "Επανεκκίνηση"
+
+#: ../src/view/home/favoritesview.py:421
+msgid "Shutdown"
+msgstr "Τερματισμός"
+
+#: ../src/view/home/favoritesview.py:427
+msgid "Register"
+msgstr "Καταχώρηση"
+
+#: ../src/view/palettes.py:42
+msgid "Starting..."
+msgstr "Εκκίνηση..."
+
+#: ../src/view/palettes.py:72
+msgid "Stop"
+msgstr "Διακοπή"
+
+#: ../src/view/palettes.py:104
+msgid "Start"
+msgstr "Έναρξη"
+
+#: ../src/view/palettes.py:132
+msgid "Remove favorite"
+msgstr "Αφαίρεση αγαπημένου"
+
+#: ../src/view/palettes.py:136
+msgid "Make favorite"
+msgstr "Δημιουργία αγαπημένου"
+
+#: ../src/view/palettes.py:185
+msgid "Show contents"
+msgstr "Προβολή περιεχομένων"
+
+#: ../src/view/palettes.py:209
+#, python-format
+msgid "%(free_space)d MB Free"
+msgstr "%(ελεύθερος_χώρος)d MB ελεύθερα"
+
+#~ msgid "<Ctrl>R"
+#~ msgstr "<Ctrl>R"
+
+#~ msgid "Ring view"
+#~ msgstr "Προβολή δακτυλίου"
+
+#~ msgid "Remove from ring"
+#~ msgstr "Αφαίρεση από τον δακτύλιο"
+
+#~ msgid "Add to ring"
+#~ msgstr "Προσθήκη στον δακτύλιο"
+
+#~ msgid "Changes require a sugar restart to take effect."
+#~ msgstr ""
+#~ "Οι αλλαγές απαιτούν επανεκκίνηση του sugar προκειμένου να τεθούν σε ισχύ."
+
+#~ msgid "Changes require restart to take effect"
+#~ msgstr "Οι αλλαγές απαιτούν επανεκκίνηση προκειμένου να τεθούν σε ισχύ."
+
+#~ msgid "off"
+#~ msgstr "κλειστό"
+
+#~ msgid "on"
+#~ msgstr "ανοικτό"
+
+#~ msgid "Permission denied. You need to be root to run this method."
+#~ msgstr ""
+#~ "Δεν επιτρέπεται η πρόσβαση. Πρέπει να είσαι διαχειριστής για να τρέξεις αυτή "
+#~ "τη μέθοδο."
+
+#~ msgid "Error in reading timezone"
+#~ msgstr "Λάθος στην ανάγνωση της ζώνης ώρας"
+
+#, python-format
+#~ msgid "Error copying timezone (from %s): %s"
+#~ msgstr "Λάθος αντιγραφής ζώνης ώρας (από %s): %s"
+
+#, python-format
+#~ msgid "Changing permission of timezone: %s"
+#~ msgstr "Άλλαξε την πρόσβαση της ζώνης ώρας: %s"
+
+#~ msgid "About this XO"
+#~ msgstr "Σχετικά με αυτόν τον XO"
+
+#~ msgid "Add to journal"
+#~ msgstr "Προσθήκη στο χρονικό"
+
+#~ msgid "Reboot"
+#~ msgstr "Επανεκκίνηση"
+
+#~ msgid "My Battery life"
+#~ msgstr "Διάρκεια μπαταρίας"
+
+#~ msgid "Battery charging"
+#~ msgstr "Μπαταρία φορτίζει"
+
+#~ msgid "Battery discharging"
+#~ msgstr "Μπαταρία ξεφορτίζει"
+
+#~ msgid "Battery fully charged"
+#~ msgstr "Μπαταρία πλήρως φορτισμένη"
+
+#~ msgid "Invite"
+#~ msgstr "Πρόσκληση"
+
+#~ msgid "Text"
+#~ msgstr "Κείμενο"
+
+#~ msgid "Image"
+#~ msgstr "Εικόνα"
+
+#~ msgid "Share"
+#~ msgstr "Μοίρασε"
+
+#, python-format
+#~ msgid "%s Activity"
+#~ msgstr "Δραστηριότητα %s"
+
+#~ msgid "Share with:"
+#~ msgstr "Μοιράσου με:"
+
+#~ msgid "Private"
+#~ msgstr "Ιδιωτικό"
+
+#~ msgid "My Neighborhood"
+#~ msgstr "Η Γειτονιά μου"
+
+#~ msgid "Undo"
+#~ msgstr "Αναίρεση"
+
+#~ msgid "Redo"
+#~ msgstr "Επανάληψη"
+
+#~ msgid "Copy"
+#~ msgstr "Αντιγραφή"
+
+#~ msgid "Paste"
+#~ msgstr "Επικόλληση"
+
+#~ msgid "Keep error"
+#~ msgstr "Λάθος διατήρησης"
+
+#~ msgid "Keep error: all changes will be lost"
+#~ msgstr "Λάθος διατήρησης: όλες οι αλλαγές θα χαθούν"
+
+#~ msgid "Don't stop"
+#~ msgstr "Μη σταματάς"
+
+#~ msgid "Stop anyway"
+#~ msgstr "Σταμάτα οπωσδήποτε"
+
+#~ msgid "Continue"
+#~ msgstr "Συνέχισε"
+
+#~ msgid "OK"
+#~ msgstr "ΟΚ"
+
+#, python-format
+#~ msgid "%d year"
+#~ msgstr "%d χρόνος"
+
+#, python-format
+#~ msgid "%d years"
+#~ msgstr "%d χρόνια"
+
+#, python-format
+#~ msgid "%d month"
+#~ msgstr "%d μήνας"
+
+#, python-format
+#~ msgid "%d months"
+#~ msgstr "%d μήνες"
+
+#, python-format
+#~ msgid "%d week"
+#~ msgstr "%d βδομάδα"
+
+#, python-format
+#~ msgid "%d weeks"
+#~ msgstr "%d βδομάδες"
+
+#, python-format
+#~ msgid "%d day"
+#~ msgstr "%d ημέρα"
+
+#, python-format
+#~ msgid "%d days"
+#~ msgstr "%d ημέρες"
+
+#, python-format
+#~ msgid "%d hour"
+#~ msgstr "%d ώρα"
+
+#, python-format
+#~ msgid "%d hours"
+#~ msgstr "%d ώρες"
+
+#, python-format
+#~ msgid "%d minute"
+#~ msgstr "%d λεπτό"
+
+#, python-format
+#~ msgid "%d minutes"
+#~ msgstr "%d λεπτά"
+
+#, python-format
+#~ msgid "%d second"
+#~ msgstr "%d δεπτερόλεπτο"
+
+#~ msgid " and "
+#~ msgstr " και "
+
+#~ msgid ", "
+#~ msgstr ", "
