@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-21 00:30-0400\n"
-"PO-Revision-Date: 2008-06-21 02:24-0400\n"
-"Last-Translator: Rupali Sarode <rups23in@gmail.com>\n"
+"POT-Creation-Date: 2008-07-23 07:44-0400\n"
+"PO-Revision-Date: 2008-07-07 03:15-0400\n"
+"Last-Translator: Sandesh Patil <patil.sandesh@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,7 +60,7 @@ msgstr "उघडणे"
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../src/view/clipboardmenu.py:63
+#: ../src/view/clipboardmenu.py:63 ../src/view/home/HomeBox.py:86
 msgid "Keep"
 msgstr "संभाला"
 
@@ -68,7 +68,7 @@ msgstr "संभाला"
 msgid "Open with"
 msgstr "ने उघडा"
 
-#: ../src/view/clipboardmenu.py:212
+#: ../src/view/clipboardmenu.py:216
 #, python-format
 msgid "Clipboard object: %s."
 msgstr "क्‍लिपबॉअर्डची वस्तू:%s"
@@ -85,35 +85,52 @@ msgstr "पमाणिकरणचा प्रकार"
 msgid "Encryption Type:"
 msgstr "गोपीनियचे प्रकार"
 
-#: ../src/view/Shell.py:262
+#: ../src/view/Shell.py:240
 msgid "Screenshot"
 msgstr "पडदा चित्रा"
 
-#: ../src/view/home/HomeBox.py:147
+#: ../src/view/home/HomeBox.py:80
+msgid "Confirm erase"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:82
+#, python-format
+msgid "Confirm erase: Do you want to permanently erase %s?"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:89 ../src/view/palettes.py:120
+msgid "Erase"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:215
 msgid "List view"
 msgstr "यादी दृष्य"
 
-#: ../src/view/home/HomeBox.py:148
-msgid "<Ctrl>L"
+#: ../src/view/home/HomeBox.py:216
+#, fuzzy
+msgid "<Ctrl>2"
 msgstr "<ctr>L"
 
-#: ../src/view/home/HomeBox.py:204
+#: ../src/view/home/HomeBox.py:273
 msgid "Favorites view"
-msgstr ""
+msgstr "आवडते दृश्‍ा"
 
-#: ../src/view/home/HomeBox.py:205
-msgid "<Ctrl>R"
-msgstr "<ctr>R"
+#: ../src/view/home/HomeBox.py:274
+#, fuzzy
+msgid "<Ctrl>1"
+msgstr "<ctr>L"
 
+# TRANS: label for the freeform layout in the favorites view
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/view/home/HomeBox.py:211
+#: ../src/view/home/HomeBox.py:282
 msgid "Freeform"
-msgstr ""
+msgstr "पासून मुक्त"
 
+# TRANS: label for the ring layout in the favorites view
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/view/home/HomeBox.py:218
+#: ../src/view/home/HomeBox.py:289
 msgid "Ring"
-msgstr ""
+msgstr "रिंग"
 
 #: ../src/view/home/MeshBox.py:97
 msgid "Connect"
@@ -144,9 +161,9 @@ msgstr "संपर्क होत आहे"
 msgid "Connected"
 msgstr "संपर्क जुळले"
 
-#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:38
-#: ../src/view/devices/network/mesh.py:65
-#: ../src/view/devices/network/mesh.py:69
+#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:41
+#: ../src/view/devices/network/mesh.py:68
+#: ../src/view/devices/network/mesh.py:72
 msgid "Mesh Network"
 msgstr "मेष जाळे"
 
@@ -154,57 +171,57 @@ msgstr "मेष जाळे"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:116
-#: ../src/view/devices/network/mesh.py:86
+#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:119
+#: ../src/view/devices/network/mesh.py:89
 msgid "Disconnect..."
 msgstr "संपर्क तोडने"
 
-#: ../src/view/home/MeshBox.py:302 ../src/view/palettes.py:60
+#: ../src/view/home/MeshBox.py:302 ../src/view/palettes.py:61
 msgid "Resume"
 msgstr "पुन्हा आरंभ करणे"
 
-#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:219
+#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:205
 msgid "Join"
 msgstr "सामील व्हा"
 
-#: ../src/view/devices/battery.py:42
+#: ../src/view/devices/battery.py:45
 msgid "My Battery"
 msgstr "माज़ी बॅटरी"
 
-#: ../src/view/devices/battery.py:111
+#: ../src/view/devices/battery.py:114
 msgid "Charging"
 msgstr "चार्ज होत आहे"
 
-#: ../src/view/devices/battery.py:114
+#: ../src/view/devices/battery.py:117
 msgid "Very little power remaining"
 msgstr "थोडाकाच पावर उरला आहे"
 
-#: ../src/view/devices/battery.py:120
+#: ../src/view/devices/battery.py:123
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
 msgstr "%(hour)d:%(min).2d उरले आहे"
 
-#: ../src/view/devices/battery.py:124
+#: ../src/view/devices/battery.py:127
 msgid "Charged"
 msgstr "चार्ज झाले"
 
-#: ../src/view/devices/speaker.py:40
+#: ../src/view/devices/speaker.py:44
 msgid "My Speakers"
 msgstr "माझे स्पीकर"
 
-#: ../src/view/devices/speaker.py:104
+#: ../src/view/devices/speaker.py:119
 msgid "Unmute"
 msgstr "आवज़ चालू"
 
-#: ../src/view/devices/speaker.py:107
+#: ../src/view/devices/speaker.py:122
 msgid "Mute"
 msgstr "आवज़ बंद"
 
-#: ../src/view/devices/network/wireless.py:64
+#: ../src/view/devices/network/wireless.py:67
 msgid "Disconnected"
 msgstr "संपर्क तुटणे"
 
-#: ../src/view/devices/network/wireless.py:134
+#: ../src/view/devices/network/wireless.py:137
 msgid "Channel"
 msgstr "मार्ग"
 
@@ -263,7 +280,7 @@ msgstr ""
 "                         -h_ ह्या किल्लीबद्दल माहिती दाखवा       -g किल्ली_ "
 " किल्लीची सध्याची किंमत घ्या \n"
 "          -s किल्ली_  किल्लीला  सध्याची किंमत द्या \n"
-"	"
+"\t"
 
 #: ../src/controlpanel/cmd.py:45
 msgid "To apply your changes you have to restart sugar.\n"
@@ -273,27 +290,27 @@ msgstr "तुम्ही केलेले बदल लागू करण�
 msgid "Cancel"
 msgstr "रद्द करणे"
 
-#: ../src/controlpanel/toolbar.py:121
+#: ../src/controlpanel/toolbar.py:121 ../src/view/home/favoritesview.py:294
 msgid "Ok"
 msgstr "ठीक"
 
-#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:250
+#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:260
 msgid "Changes require restart"
 msgstr "बदली लागू करण्यासाठी परत सुरू करा"
 
-#: ../src/controlpanel/gui.py:249
+#: ../src/controlpanel/gui.py:259
 msgid "Warning"
 msgstr "सूचना"
 
-#: ../src/controlpanel/gui.py:253
+#: ../src/controlpanel/gui.py:263
 msgid "Cancel changes"
 msgstr "बदली रद्द करा"
 
-#: ../src/controlpanel/gui.py:257
+#: ../src/controlpanel/gui.py:267
 msgid "Later"
 msgstr "नंतर"
 
-#: ../src/controlpanel/gui.py:261
+#: ../src/controlpanel/gui.py:271
 msgid "Restart now"
 msgstr "परत सुरू करा"
 
@@ -301,31 +318,31 @@ msgstr "परत सुरू करा"
 msgid "You must enter a name."
 msgstr "तुम्ही नाव टाकला पाहिजे"
 
-#: ../src/controlpanel/model/aboutme.py:67
+#: ../src/controlpanel/model/aboutme.py:69
 #, python-format
 msgid "stroke:   color=%s hue=%s"
 msgstr "stroke: color=%s hue=%s"
 
-#: ../src/controlpanel/model/aboutme.py:70
+#: ../src/controlpanel/model/aboutme.py:72
 #, python-format
 msgid "stroke:   %s"
 msgstr "stroke: %s"
 
-#: ../src/controlpanel/model/aboutme.py:72
+#: ../src/controlpanel/model/aboutme.py:74
 #, python-format
 msgid "fill:     color=%s hue=%s"
 msgstr "fill: color=%s hue=%s"
 
-#: ../src/controlpanel/model/aboutme.py:74
+#: ../src/controlpanel/model/aboutme.py:76
 #, python-format
 msgid "fill:     %s"
 msgstr "fill: %s"
 
-#: ../src/controlpanel/model/aboutme.py:85
+#: ../src/controlpanel/model/aboutme.py:87
 msgid "Error in specified color modifiers."
 msgstr "दिल्या गेलेल्या रंग रुपांतरच्या वर्णनात चुक आहे "
 
-#: ../src/controlpanel/model/aboutme.py:88
+#: ../src/controlpanel/model/aboutme.py:90
 msgid "Error in specified colors."
 msgstr "दिलेल्या रंगामध्ये चुक आहे"
 
@@ -366,6 +383,14 @@ msgstr "स्थिती अद्यात आहे"
 #: ../src/controlpanel/model/network.py:83
 msgid "Error in specified radio argument use on/off."
 msgstr "दिलेल्या रेडिओ सारांशमध्ये चुक आहे, चालू/बंद वापरा"
+
+#: ../src/controlpanel/model/power.py:57
+msgid "Error in automatic pm argument, use on/off."
+msgstr ""
+
+#: ../src/controlpanel/model/power.py:86
+msgid "Error in extreme pm argument, use on/off."
+msgstr ""
 
 #: ../src/controlpanel/view/aboutme.py:32
 msgid "About Me"
@@ -461,82 +486,119 @@ msgstr "मेष"
 msgid "Server:"
 msgstr "सर्वर :"
 
-#: ../src/view/devices/network/mesh.py:108
+#: ../src/controlpanel/view/power.py:27
+msgid "Power"
+msgstr ""
+
+#: ../src/controlpanel/view/power.py:51
+msgid "Power management"
+msgstr ""
+
+#: ../src/controlpanel/view/power.py:61
+msgid "Automatic power management (increases battery life)"
+msgstr ""
+
+#: ../src/controlpanel/view/power.py:89
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+
+#: ../src/view/devices/network/mesh.py:111
 msgid "Connected to a School Mesh Portal"
 msgstr "स्कूल मेष पोर्टला जोडत आहे"
 
-#: ../src/view/devices/network/mesh.py:110
+#: ../src/view/devices/network/mesh.py:113
 msgid "Looking for a School Mesh Portal..."
 msgstr " स्कूल मेष पोर्टला शोधत आहे"
 
-#: ../src/view/devices/network/mesh.py:113
+#: ../src/view/devices/network/mesh.py:116
 msgid "Connected to an XO Mesh Portal"
 msgstr "xo मेष पोर्टला जोडत आहे"
 
-#: ../src/view/devices/network/mesh.py:115
+#: ../src/view/devices/network/mesh.py:118
 msgid "Looking for an XO Mesh Portal..."
 msgstr "xo मेष पोर्टला शोधत आहे"
 
-#: ../src/view/devices/network/mesh.py:118
+#: ../src/view/devices/network/mesh.py:121
 msgid "Connected to a Simple Mesh"
 msgstr "साधारण मेषला जोडत आहे"
 
-#: ../src/view/devices/network/mesh.py:120
+#: ../src/view/devices/network/mesh.py:123
 msgid "Starting a Simple Mesh"
 msgstr "साधारण मेष चालू होत आहे"
 
-#: ../src/view/devices/network/mesh.py:127
+#: ../src/view/devices/network/mesh.py:130
 msgid "Unknown Mesh"
 msgstr "अनोळखी मेष"
 
-#: ../src/view/frame/activitiestray.py:224
+#: ../src/view/frame/activitiestray.py:210
 msgid "Decline"
 msgstr "अस्वीकार"
 
-#: ../src/view/home/favoritesview.py:351
+#: ../src/view/home/favoritesview.py:285
+msgid "Registration Failed"
+msgstr ""
+
+#: ../src/view/home/favoritesview.py:286
+#, python-format
+msgid "%s"
+msgstr ""
+
+#: ../src/view/home/favoritesview.py:288
+msgid "Registration Successful"
+msgstr ""
+
+#: ../src/view/home/favoritesview.py:289
+msgid "You are now registered with your school server."
+msgstr ""
+
+#: ../src/view/home/favoritesview.py:405
 msgid "Control Panel"
 msgstr "कंट्रोल पॅनेल "
 
-#: ../src/view/home/favoritesview.py:362
+#: ../src/view/home/favoritesview.py:416
 msgid "Restart"
 msgstr "पुन्हा चालू करा"
 
-#: ../src/view/home/favoritesview.py:367
+#: ../src/view/home/favoritesview.py:421
 msgid "Shutdown"
 msgstr "बंद करा"
 
-#: ../src/view/home/favoritesview.py:373
+#: ../src/view/home/favoritesview.py:427
 msgid "Register"
 msgstr "नोंद"
 
-#: ../src/view/palettes.py:41
+#: ../src/view/palettes.py:42
 msgid "Starting..."
 msgstr "चालू करणे"
 
-#: ../src/view/palettes.py:71
+#: ../src/view/palettes.py:72
 msgid "Stop"
 msgstr "थांबा"
 
-#: ../src/view/palettes.py:96
+#: ../src/view/palettes.py:104
 msgid "Start"
 msgstr "चालू करा"
 
-#: ../src/view/palettes.py:119
+#: ../src/view/palettes.py:132
 msgid "Remove favorite"
-msgstr ""
+msgstr " आवडते काढून टाका"
 
-#: ../src/view/palettes.py:123
+#: ../src/view/palettes.py:136
 msgid "Make favorite"
-msgstr ""
+msgstr " आवडते नोंद करा"
 
-#: ../src/view/palettes.py:169
+#: ../src/view/palettes.py:185
 msgid "Show contents"
 msgstr "आतला दाखवा"
 
-#: ../src/view/palettes.py:193
+#: ../src/view/palettes.py:209
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB फ्री"
+
+#~ msgid "<Ctrl>R"
+#~ msgstr "<ctr>R"
 
 #~ msgid "Ring view"
 #~ msgstr "वर्तुळ दृष्य"
