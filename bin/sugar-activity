@@ -32,19 +32,9 @@ from sugar.activity import activityhandle
 from sugar.bundle.activitybundle import ActivityBundle
 from sugar import logger
 
-activity_instances = []
-
-def activity_destroy_cb(window):
-    activity_instances.remove(window)
-    if len(activity_instances) == 0:
-        gtk.main_quit()
-
 def create_activity_instance(constructor, handle):
     activity = constructor(handle)
-    activity.connect('destroy', activity_destroy_cb)
     activity.show()
-
-    activity_instances.append(activity)
 
 def get_single_process_name(bundle_id):
     return bundle_id
