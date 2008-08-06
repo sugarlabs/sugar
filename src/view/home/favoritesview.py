@@ -157,7 +157,9 @@ class FavoritesView(hippo.Canvas):
 
     def enable_xo_palette(self):
         self._my_icon.enable_palette()
-        self._my_icon.register_menu.connect('activate', self.__register_activate_cb)
+        if self._my_icon.register_menu is not None:
+            self._my_icon.register_menu.connect('activate', 
+                                                self.__register_activate_cb)
 
     # TODO: Dnd methods. This should be merged somehow inside hippo-canvas.
     def __button_press_event_cb(self, widget, event):
