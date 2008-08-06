@@ -269,6 +269,7 @@ msgstr ""
 "    -h key               prikaži informacije za posamezen ključ \n"
 "    -g key               pridobi trenutno vrednost ključa \n"
 "    -s key               nastavi trenutno vrednost za ključ \n"
+"    "
 
 #: ../src/controlpanel/cmd.py:45
 msgid "To apply your changes you have to restart sugar.\n"
