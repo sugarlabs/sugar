@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-07-23 07:44-0400\n"
-"PO-Revision-Date: 2008-07-23 18:12-0400\n"
+"PO-Revision-Date: 2008-08-05 17:45-0400\n"
 "Last-Translator: Markus Schlager <m.slg@gmx.de>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -556,7 +556,6 @@ msgstr "Registrierung fehlgeschlagen"
 
 #: ../src/view/home/favoritesview.py:286
 #, python-format
-#, fuzzy
 msgid "%s"
 msgstr "%s"
 

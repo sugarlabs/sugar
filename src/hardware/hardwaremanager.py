@@ -25,9 +25,9 @@ from hardware.nmclient import NMClient
 from sugar.profile import get_profile
 from sugar import env
 
-_HARDWARE_MANAGER_INTERFACE = 'org.laptop.HardwareManager'
-_HARDWARE_MANAGER_SERVICE = 'org.laptop.HardwareManager'
-_HARDWARE_MANAGER_OBJECT_PATH = '/org/laptop/HardwareManager'
+_HARDWARE_MANAGER_INTERFACE = 'org.freedesktop.ohm.Keystore'
+_HARDWARE_MANAGER_SERVICE = 'org.freedesktop.ohm'
+_HARDWARE_MANAGER_OBJECT_PATH = '/org/freedesktop/ohm/Keystore'
 
 COLOR_MODE = 0
 B_AND_W_MODE = 1
@@ -152,27 +152,27 @@ class HardwareManager(gobject.GObject):
         if not self._service:
             return
 
-        self._service.set_dcon_freeze(frozen)
+        self._service.SetKey("display.dcon_freeze", frozen)
 
     def set_display_mode(self, mode):
         if not self._service:
             return
 
-        self._service.set_display_mode(mode)
+        self._service.SetKey("display.dcon_mode", mode)
 
     def set_display_brightness(self, level):
         if not self._service:
             logging.error('Cannot set display brightness')
             return
 
-        self._service.set_display_brightness(level)
+        self._service.SetKey("backlight.hardware_brightness", level)
 
     def get_display_brightness(self):
         if not self._service:
             logging.error('Cannot get display brightness')
             return
 
-        return self._service.get_display_brightness()
+        return self._service.GetKey("backlight.hardware_brightness")
 
     def toggle_keyboard_brightness(self):
         if not self._service:
