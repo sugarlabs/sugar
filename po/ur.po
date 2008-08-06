@@ -201,7 +201,7 @@ msgstr "پاور بہت کم رہ گئی ہے"
 #: ../src/view/devices/battery.py:123
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
-msgstr "%(گھنٹہ)d:%(منٹ)۔d2 رہ گئے ہيں"
+msgstr "%(hour)d:%(min).2d رہ گئے ہيں"
 
 #: ../src/view/devices/battery.py:127
 msgid "Charged"
@@ -280,6 +280,7 @@ msgstr ""
 "-h key show information about this key \n"
 "-g key get the current value of the key \n"
 "-s key set the current value for the key \n"
+"   "
 
 #: ../src/controlpanel/cmd.py:45
 msgid "To apply your changes you have to restart sugar.\n"
@@ -594,7 +595,7 @@ msgstr "مشمولات دکھائيں"
 #: ../src/view/palettes.py:209
 #, python-format
 msgid "%(free_space)d MB Free"
-msgstr "%(خالی_جگہ)MB dخالی"
+msgstr "%(free_space)d MB dخالی"
 
 #~ msgid "<Ctrl>R"
 #~ msgstr "<Ctrl>R"

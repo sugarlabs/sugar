@@ -198,7 +198,7 @@ msgstr "Απομένει ελάχιστη ενέργεια"
 #: ../src/view/devices/battery.py:123
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
-msgstr "%(ώρες)d:%(λεπτά).2d απομένουν"
+msgstr "%(hour)d:%(min).2d απομένουν"
 
 #: ../src/view/devices/battery.py:127
 msgid "Charged"
@@ -279,10 +279,10 @@ msgstr ""
 "-h κλειδί εμφάνισης πληροφοριών γι' αυτό το κλειδί \n"
 "-g κλειδί που παίρνει την τρέχουσα τιμή του κλειδιού \n"
 "-s κλειδί που καθορίζει την τρέχουσα τιμή του κλειδιού \n"
-
+"  "
 #: ../src/controlpanel/cmd.py:45
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr "Για να εφαρμοστούν οι αλλαγές σου θα πρέπει να επανεκκινήσεις το sugar"
+msgstr "Για να εφαρμοστούν οι αλλαγές σου θα πρέπει να επανεκκινήσεις το sugar\n"
 
 #: ../src/controlpanel/toolbar.py:115
 msgid "Cancel"
@@ -447,7 +447,7 @@ msgstr "στιγμιαίος"
 #: ../src/controlpanel/view/frame.py:32
 #, python-format
 msgid "%s seconds"
-msgstr "%d δεπτερόλεπτα"
+msgstr "%s δεπτερόλεπτα"
 
 #: ../src/controlpanel/view/frame.py:56
 msgid "Activation Delay"
@@ -599,7 +599,7 @@ msgstr "Προβολή περιεχομένων"
 #: ../src/view/palettes.py:209
 #, python-format
 msgid "%(free_space)d MB Free"
-msgstr "%(ελεύθερος_χώρος)d MB ελεύθερα"
+msgstr "%(free_space)d MB ελεύθερα"
 
 #~ msgid "<Ctrl>R"
 #~ msgstr "<Ctrl>R"
