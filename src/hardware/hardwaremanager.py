@@ -47,15 +47,11 @@ class HardwareManager(gobject.GObject):
     def __init__(self):
         gobject.GObject.__init__(self)
 
-        try:
-            bus = dbus.SystemBus()
-            proxy = bus.get_object(_HARDWARE_MANAGER_SERVICE,
-                                   _HARDWARE_MANAGER_OBJECT_PATH,
-                                   follow_name_owner_changes=True)
-            self._service = dbus.Interface(proxy, _HARDWARE_MANAGER_INTERFACE)
-        except dbus.DBusException, err:
-            self._service = None
-            logging.info('Hardware manager service not found: %s' % err)
+        bus = dbus.SystemBus()
+        proxy = bus.get_object(_HARDWARE_MANAGER_SERVICE,
+                                _HARDWARE_MANAGER_OBJECT_PATH,
+                                follow_name_owner_changes=True)
+        self._service = dbus.Interface(proxy, _HARDWARE_MANAGER_INTERFACE)
 
         self._mixer = gst.element_factory_make('alsamixer')
         self._mixer.set_state(gst.STATE_PAUSED)
@@ -150,39 +146,29 @@ class HardwareManager(gobject.GObject):
             profile.save()
 
     def set_dcon_freeze(self, frozen):
-        if not self._service:
-            return
-
-        self._service.SetKey("display.dcon_freeze", frozen)
+        try:
+            self._service.SetKey("display.dcon_freeze", frozen)
+        except dbus.DBusException:
+            logging.error('Cannot unfreeze the DCON')
 
     def set_display_mode(self, mode):
-        if not self._service:
-            return
-
-        self._service.SetKey("display.dcon_mode", mode)
+        try:
+            self._service.SetKey("display.dcon_mode", mode)
+        except dbus.DBusException:
+            logging.error('Cannot change DCON mode')
 
     def set_display_brightness(self, level):
-        if not self._service:
+        try:
+            self._service.SetKey("backlight.hardware_brightness", level)
+        except dbus.DBusException:
             logging.error('Cannot set display brightness')
-            return
-
-        self._service.SetKey("backlight.hardware_brightness", level)
 
     def get_display_brightness(self):
-        if not self._service:
+        try:
+            return self._service.GetKey("backlight.hardware_brightness")
+        except dbus.DBusException:
             logging.error('Cannot get display brightness')
-            return
-
-        return self._service.GetKey("backlight.hardware_brightness")
-
-    def toggle_keyboard_brightness(self):
-        if not self._service:
-            return
-
-        if self._service.get_keyboard_brightness():
-            self._service.set_keyboard_brightness(False)
-        else:
-            self._service.set_keyboard_brightness(True)
+            return 0
 
 def get_manager():
     return _manager
