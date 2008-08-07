@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-07-23 07:44-0400\n"
-"PO-Revision-Date: 2008-07-30 02:49-0400\n"
+"PO-Revision-Date: 2008-08-07 01:30-0400\n"
 "Last-Translator: Odontsetseg Bat-Erdene <obat-erdene@suffolk.edu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -95,12 +95,12 @@ msgstr "Дэлгэцний зураг"
 
 #: ../src/view/home/HomeBox.py:80
 msgid "Confirm erase"
-msgstr ""
+msgstr "Арилгахыг зөвшөөрөх"
 
 #: ../src/view/home/HomeBox.py:82
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
-msgstr ""
+msgstr "Арилгахыг зөвшөөрөх: Та %s бүр мөсөн арилгахыг хүсч байна уу?"
 
 #: ../src/view/home/HomeBox.py:89 ../src/view/palettes.py:120
 msgid "Erase"
@@ -111,18 +111,16 @@ msgid "List view"
 msgstr "Жагсаалтыг харах"
 
 #: ../src/view/home/HomeBox.py:216
-#, fuzzy
 msgid "<Ctrl>2"
-msgstr "<Ctrl>L"
+msgstr "<Ctrl>2"
 
 #: ../src/view/home/HomeBox.py:273
 msgid "Favorites view"
 msgstr "Дуртай зүйлсийг үзэх"
 
 #: ../src/view/home/HomeBox.py:274
-#, fuzzy
 msgid "<Ctrl>1"
-msgstr "<Ctrl>L"
+msgstr "<Ctrl>1"
 
 # TRANS: label for the freeform layout in the favorites view
 #. TRANS: label for the freeform layout in the favorites view
@@ -388,11 +386,11 @@ msgstr "Сонгосон тохиргооны төлөвд алдаа гарла
 
 #: ../src/controlpanel/model/power.py:57
 msgid "Error in automatic pm argument, use on/off."
-msgstr ""
+msgstr "Автомат үүсгүүр зохицуулалтын төлөвд алдаа гарлаа."
 
 #: ../src/controlpanel/model/power.py:86
 msgid "Error in extreme pm argument, use on/off."
-msgstr ""
+msgstr "Хэт үүсгүүр зохицуулалтын төлөвд алдаа гарлаа."
 
 #: ../src/controlpanel/view/aboutme.py:32
 msgid "About Me"
@@ -540,20 +538,20 @@ msgstr "Үл зөвшөөрөх"
 
 #: ../src/view/home/favoritesview.py:285
 msgid "Registration Failed"
-msgstr ""
+msgstr "Бүртгэл бүтэлгүйтлээ"
 
 #: ../src/view/home/favoritesview.py:286
 #, python-format
 msgid "%s"
-msgstr ""
+msgstr "%s"
 
 #: ../src/view/home/favoritesview.py:288
 msgid "Registration Successful"
-msgstr ""
+msgstr "Бүртгэл амжилттай"
 
 #: ../src/view/home/favoritesview.py:289
 msgid "You are now registered with your school server."
-msgstr ""
+msgstr "Та одоо сургуулийн серверт бүртгэгдлээ."
 
 #: ../src/view/home/favoritesview.py:405
 msgid "Control Panel"
