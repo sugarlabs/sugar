@@ -74,6 +74,9 @@ class _NamePage(_Page):
 
         self.append(self._entry)
 
+        if gtk.widget_get_default_direction() == gtk.TEXT_DIR_RTL:
+            self.reverse()
+
     def _text_changed_cb(self, entry, pspec):
         valid = len(entry.props.text.strip()) > 0
         self.set_valid(valid)
@@ -170,6 +173,9 @@ class _IntroBox(hippo.CanvasBox):
         self._current_page.connect('notify::valid',
                                    self._page_valid_changed_cb)
         self.append(button_box)
+
+        if gtk.widget_get_default_direction() == gtk.TEXT_DIR_RTL:
+            button_box.reverse()
 
     def _update_next_button(self):
         widget = self._next_button.props.widget
