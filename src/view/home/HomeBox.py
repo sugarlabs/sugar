@@ -168,6 +168,10 @@ class HomeBox(gtk.VBox):
         if self._favorites_view is not None:
             self._favorites_view.enable_xo_palette()
 
+    def focus_search_entry(self):
+        self._toolbar.search_entry.grab_focus()
+
+
 class HomeToolbar(gtk.Toolbar):
     __gtype_name__ = 'SugarHomeToolbar'
 
@@ -192,15 +196,15 @@ class HomeToolbar(gtk.Toolbar):
         self.insert(tool_item, -1)
         tool_item.show()
 
-        self._search_entry = iconentry.IconEntry()
-        self._search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
+        self.search_entry = iconentry.IconEntry()
+        self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
                                               'system-search')
-        self._search_entry.add_clear_button()
-        self._search_entry.set_width_chars(25)
-        self._search_entry.connect('activate', self.__entry_activated_cb)
-        self._search_entry.connect('changed', self.__entry_changed_cb)
-        tool_item.add(self._search_entry)
-        self._search_entry.show()
+        self.search_entry.add_clear_button()
+        self.search_entry.set_width_chars(25)
+        self.search_entry.connect('activate', self.__entry_activated_cb)
+        self.search_entry.connect('changed', self.__entry_changed_cb)
+        tool_item.add(self.search_entry)
+        self.search_entry.show()
 
         self._add_separator(expand=True)
 
@@ -261,7 +265,7 @@ class HomeToolbar(gtk.Toolbar):
 
     def __autosearch_timer_cb(self):
         self._autosearch_timer = None
-        self._search_entry.activate()
+        self.search_entry.activate()
         return False
 
 class FavoritesButton(RadioToolButton):
