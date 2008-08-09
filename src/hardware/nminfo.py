@@ -16,18 +16,20 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import dbus
-import dbus.service
 import time
 import os
 import binascii
 import ConfigParser
 import logging
 
-import nmclient
-import keydialog
 import gtk
+import dbus
+import dbus.service
+
 from sugar import env
+
+from hardware import nmclient
+from hardware import keydialog
 
 IW_AUTH_KEY_MGMT_802_1X = 0x1
 IW_AUTH_KEY_MGMT_PSK = 0x2

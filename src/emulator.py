@@ -15,7 +15,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
-import sys
 import logging
 import subprocess
 import time
@@ -67,10 +66,13 @@ def _start_xephyr(dpi=None):
     for display in range(100, 110):
         if not _check_xephyr(display):
             _run_xephyr(display, dpi)
-            for i in range(0, 10):
+
+            tries = 10
+            while tries > 0:
                 if _check_xephyr(display):
                     return
                 else:
+                    tries -= 1
                     time.sleep(0.1)
 
 def _start_matchbox():

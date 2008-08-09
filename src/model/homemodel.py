@@ -20,7 +20,7 @@ import gobject
 import wnck
 
 from sugar import wm
-from sugar import activity
+from sugar.activity import get_registry
 
 from model.homeactivity import HomeActivity
 
@@ -161,7 +161,7 @@ class HomeModel(gobject.GObject):
 
             service_name = wm.get_bundle_id(window)
             if service_name:
-                registry = activity.get_registry()
+                registry = get_registry()
                 activity_info = registry.get_activity(service_name)
             else:
                 activity_info = None
@@ -244,7 +244,7 @@ class HomeModel(gobject.GObject):
             logging.error('Model for window %d does not exist.' % xid)
 
     def notify_launch(self, activity_id, service_name):
-        registry = activity.get_registry()
+        registry = get_registry()
         activity_info = registry.get_activity(service_name)
         if not activity_info:
             raise ValueError("Activity service name '%s'" \

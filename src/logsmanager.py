@@ -19,7 +19,6 @@ import time
 
 from sugar import env
 
-"""The maximum number of "old" log directories we should keep around."""
 _MAX_BACKUP_DIRS = 3
 
 def setup():
