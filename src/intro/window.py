@@ -28,7 +28,7 @@ from sugar.graphics.icon import Icon
 from sugar.graphics.entry import CanvasEntry
 from sugar.profile import get_profile
 
-import colorpicker
+from intro import colorpicker
 
 _BACKGROUND_COLOR = style.COLOR_WHITE
 

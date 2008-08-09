@@ -31,7 +31,7 @@ from sugar.profile import get_profile
 import view.Shell
 from shellservice import ShellService
 from hardware import hardwaremanager
-from intro import intro
+from intro.window import IntroWindow
 from session import get_session_manager
 import logsmanager
 import config
@@ -109,7 +109,7 @@ def main():
 
     # Do initial setup if needed
     if not get_profile().is_valid():
-        win = intro.IntroWindow()
+        win = IntroWindow()
         win.show_all()
         gtk.main()
 
