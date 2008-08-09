@@ -18,10 +18,6 @@ import os
 import gettext
 import logging
 
-# HACK we need to import numpy before gtk otherwise we traceback in
-# some locales. See http://dev.laptop.org/ticket/5559.
-import numpy
-
 import pygtk
 pygtk.require('2.0')
 import gtk
