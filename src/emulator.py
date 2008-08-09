@@ -16,8 +16,9 @@
 
 import os
 import sys
-import socket
 import logging
+import subprocess
+import time
 from optparse import OptionParser
 
 log = logging.getLogger( 'sugar-emulator' )
@@ -30,40 +31,8 @@ import gobject
 
 from sugar import env
 
-def _get_display_number():
-    """Find a free display number trying to connect to 6000+ ports"""
-    log.info("Attempting to find free port for X11 (Xephyr)")
-    retries = 20
-    display_number = 1
-    display_is_free = False
-
-    while not display_is_free and retries > 0:
-        lockstr = "/tmp/.X%d-lock" % display_number
-        if not os.path.exists(lockstr):
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            try:
-                s.connect(('127.0.0.1', 6000 + display_number))
-                s.close()
-            except socket.error:
-                display_is_free = True
-                break
-
-        display_number += 1
-        retries -= 1
-
-    if display_is_free:
-        log.info(
-            '  Found free port: #%s (%s)',
-            display_number, display_number+6000
-        )
-        return display_number
-    else:
-        logging.error('Cannot find a free display.')
-        sys.exit(0)
-
-def _start_xephyr(dpi=None):
-    display = _get_display_number()
-    log.info('Starting the Xephyr nested X display on display %s', display)
+def _run_xephyr(display, dpi):
+    log.info('Starting Xephyr on display %s', display)
 
     cmd = [ 'Xephyr' ]
     cmd.append(':%d' % display)
@@ -87,6 +56,22 @@ def _start_xephyr(dpi=None):
 
     os.environ['DISPLAY'] = ":%d" % (display)
     os.environ['SUGAR_EMULATOR_PID'] = str(pid)
+
+def _check_xephyr(display):
+    result = subprocess.call(['xdpyinfo', '-display', ':%d' % display],
+                             stdout=open(os.devnull, "w"),
+                             stderr=open(os.devnull, "w"))
+    return result == 0
+
+def _start_xephyr(dpi=None):
+    for display in range(100, 110):
+        if not _check_xephyr(display):
+            _run_xephyr(display, dpi)
+            for i in range(0, 10):
+                if _check_xephyr(display):
+                    return
+                else:
+                    time.sleep(0.1)
 
 def _start_matchbox():
     log.info('Starting the matchbox window manager')
