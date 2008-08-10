@@ -261,7 +261,7 @@ class FavoriteIcon(CanvasIcon):
                             box_width=style.GRID_CELL_SIZE*3/5,
                             size=style.SMALL_ICON_SIZE)
         self._favorite = None
-        self._set_favorite(favorite)
+        self.set_favorite(favorite)
         self.connect('button-release-event', self.__release_event_cb)
         self.connect('motion-notify-event', self.__motion_notify_event_cb)
 
@@ -280,7 +280,7 @@ class FavoriteIcon(CanvasIcon):
         return self._favorite
 
     favorite = gobject.property(
-        type=bool, getter=get_favorite, setter=set_favorite)
+        type=bool, default=False, getter=get_favorite, setter=set_favorite)
 
     def __release_event_cb(self, icon, event):
         self.props.favorite = not self.props.favorite

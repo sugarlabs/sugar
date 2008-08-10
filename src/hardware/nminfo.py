@@ -1,5 +1,3 @@
-# vi: ts=4 ai noet
-#
 # Copyright (C) 2006-2007 Red Hat, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -28,7 +26,6 @@ import dbus.service
 
 from sugar import env
 
-from hardware import nmclient
 from hardware import keydialog
 
 IW_AUTH_KEY_MGMT_802_1X = 0x1
@@ -486,6 +483,8 @@ class NMInfo(object):
 
     def get_key_for_network(self, dev_op, net_op, ssid, attempt,
                             new_key, async_cb, async_err_cb):
+        from hardware import nmclient
+
         if not isinstance(ssid, unicode):
             raise ValueError("Invalid arguments; ssid must be unicode.")
         if self._allowed_networks.has_key(ssid) and not new_key:
