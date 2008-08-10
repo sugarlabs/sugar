@@ -280,7 +280,7 @@ class FavoriteIcon(CanvasIcon):
         return self._favorite
 
     favorite = gobject.property(
-        type=boolean, getter=get_favorite, setter=set_favorite)
+        type=bool, getter=get_favorite, setter=set_favorite)
 
     def __release_event_cb(self, icon, event):
         self.props.favorite = not self.props.favorite
