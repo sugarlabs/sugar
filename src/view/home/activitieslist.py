@@ -256,11 +256,6 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
         return self._title.lower().find(query) > -1
 
 class FavoriteIcon(CanvasIcon):
-    __gproperties__ = {
-        'favorite' : (bool, None, None, False,
-                  gobject.PARAM_READWRITE)
-    }
-
     def __init__(self, favorite):
         CanvasIcon.__init__(self, icon_name='emblem-favorite',
                             box_width=style.GRID_CELL_SIZE*3/5,
@@ -285,7 +280,7 @@ class FavoriteIcon(CanvasIcon):
         return self._favorite
 
     favorite = gobject.property(
-        type=str, getter=get_favorite, setter=set_favorite)
+        type=boolean, getter=get_favorite, setter=set_favorite)
 
     def __release_event_cb(self, icon, event):
         self.props.favorite = not self.props.favorite
