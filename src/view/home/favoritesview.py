@@ -36,7 +36,6 @@ from view.palettes import CurrentActivityPalette, ActivityPalette
 from view.home.MyIcon import MyIcon
 from view.home import favoriteslayout
 from model import shellmodel
-from model.shellmodel import ShellModel
 from hardware import schoolserver
 from hardware.schoolserver import RegisterError
 from controlpanel.gui import ControlPanel
@@ -288,7 +287,8 @@ class FavoritesView(hippo.Canvas):
             alert.props.msg = _('%s') % e
         else:    
             alert.props.title = _('Registration Successful')
-            alert.props.msg = _('You are now registered with your school server.') 
+            alert.props.msg = _('You are now registered ' \
+                                'with your school server.') 
             palette = self._my_icon.get_palette()
             palette.menu.remove(menuitem)
 

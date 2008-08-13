@@ -53,7 +53,7 @@ class BundleRegistry(gobject.GObject):
 
         try:
             self._load_favorites()
-        except Exception, e:
+        except Exception:
             logging.error('Error while loading favorite_activities\n%s.' \
                     % traceback.format_exc())
 
@@ -105,7 +105,8 @@ class BundleRegistry(gobject.GObject):
                     raise ValueError('Invalid format in %s.' % favorites_path)
 
                 first_value = favorite_bundles.values()[0]
-                if first_value is not None and not isinstance(first_value, dict):
+                if first_value is not None and \
+                   not isinstance(first_value, dict):
                     raise ValueError('Invalid format in %s.' % favorites_path)
 
             self._last_defaults_mtime = float(favorites_data['defaults-mtime'])

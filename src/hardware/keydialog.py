@@ -206,7 +206,7 @@ class WEPKeyDialog(KeyDialog):
 
     def create_security(self):
         (we_cipher, key, auth_alg) = self._get_security()
-        from nminfo import Security
+        from hardware.nminfo import Security
         return Security.new_from_args(we_cipher, (key, auth_alg))
 
     def _update_response_sensitivity(self, ignored=None):
@@ -298,7 +298,7 @@ class WPAKeyDialog(KeyDialog):
 
     def create_security(self):
         (we_cipher, key, wpa_ver) = self._get_security()
-        from nminfo import Security
+        from hardware.nminfo import Security
         return Security.new_from_args(we_cipher,
                                       (key, wpa_ver, IW_AUTH_KEY_MGMT_PSK))
 

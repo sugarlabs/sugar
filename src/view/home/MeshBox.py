@@ -556,22 +556,22 @@ class MeshBox(gtk.VBox):
         if hasattr(icon, 'set_filter'):
             icon.set_filter(self._query)
 
-        self._buddies[buddy_model.get_key()] = icon
+        self._buddies[buddy_model.get_buddy().object_path()] = icon
 
     def _remove_alone_buddy(self, buddy_model):
-        icon = self._buddies[buddy_model.get_key()]
+        icon = self._buddies[buddy_model.get_buddy().object_path()]
         self._layout.remove(icon)
-        del self._buddies[buddy_model.get_key()]
+        del self._buddies[buddy_model.get_buddy().object_path()]
         icon.destroy()
 
     def _remove_buddy(self, buddy_model):
-        key = buddy_model.get_key()
-        if self._buddies.has_key(key):
+        object_path = buddy_model.get_buddy().object_path()
+        if self._buddies.has_key(object_path):
             self._remove_alone_buddy(buddy_model)
         else:
             for activity in self._activities.values():
-                if activity.has_buddy_icon(key):
-                    activity.remove_buddy_icon(key)
+                if activity.has_buddy_icon(object_path):
+                    activity.remove_buddy_icon(object_path)
 
     def _move_buddy(self, buddy_model, activity_model):
         self._remove_buddy(buddy_model)
@@ -582,7 +582,7 @@ class MeshBox(gtk.VBox):
             activity = self._activities[activity_model.get_id()]
 
             icon = BuddyIcon(buddy_model, style.STANDARD_ICON_SIZE)
-            activity.add_buddy_icon(buddy_model.get_key(), icon)
+            activity.add_buddy_icon(buddy_model.get_buddy().object_path(), icon)
 
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(self._query)

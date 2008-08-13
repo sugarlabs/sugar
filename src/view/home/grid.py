@@ -153,7 +153,7 @@ class Grid(gobject.GObject):
         return weight
 
     def __solve_collisions_cb(self):
-        for i in range(_MAX_COLLISIONS_PER_REFRESH):
+        for i_ in range(_MAX_COLLISIONS_PER_REFRESH):
             collision = self._collisions.pop(0)
 
             old_rect = self._child_rects[collision]

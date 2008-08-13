@@ -86,7 +86,8 @@ class Power(SectionView):
 
         box_extreme_pm = gtk.HBox(spacing=style.DEFAULT_SPACING)
         label_extreme_pm = gtk.Label(
-            _('Extreme power management (disables wireless radio, increases battery life)'))
+                             _('Extreme power management (disables' \
+                               'wireless radio, increases battery life)'))
         label_extreme_pm.set_alignment(0, 0.5)
         self._extreme_button = gtk.CheckButton()
         self._extreme_button.set_alignment(0, 0)
