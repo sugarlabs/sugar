@@ -47,7 +47,7 @@ class ShellCheck(Check):
     def start(self):
         Check.start(self)
 
-        self.max_time = 3
+        self.max_time = 10
 
         screen = wnck.screen_get_default()
         screen.connect('window-opened', self._window_opened_cb)
