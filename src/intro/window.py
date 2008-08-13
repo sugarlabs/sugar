@@ -26,11 +26,39 @@ from sugar import env
 from sugar.graphics import style
 from sugar.graphics.icon import Icon
 from sugar.graphics.entry import CanvasEntry
+from sugar.graphics.xocolor import XoColor
 from sugar.profile import get_profile
 
 from intro import colorpicker
 
 _BACKGROUND_COLOR = style.COLOR_WHITE
+
+def create_profile(name, color=None, pixbuf=None):
+    if not pixbuf:
+        path = os.path.join(os.path.dirname(__file__), 'default-picture.png')
+        pixbuf = gtk.gdk.pixbuf_new_from_file(path)
+
+    if not color:
+        color = XoColor()
+
+    icon_path = os.path.join(env.get_profile_path(), "buddy-icon.jpg")
+    pixbuf.save(icon_path, "jpeg", {"quality":"85"})
+
+    profile = get_profile()
+    profile.nick_name = name
+    profile.color = color
+    profile.save()
+
+    # Generate keypair
+    import commands
+    keypath = os.path.join(env.get_profile_path(), "owner.key")
+    if not os.path.isfile(keypath):
+        cmd = "ssh-keygen -q -t dsa -f %s -C '' -N ''" % keypath
+        (s, o) = commands.getstatusoutput(cmd)
+        if s != 0:
+            logging.error("Could not generate key pair: %d %s" % (s, o))
+    else:
+        logging.error("Keypair exists, skip generation.")
 
 class _Page(hippo.CanvasBox):
     __gproperties__ = {
@@ -110,8 +138,7 @@ class _ColorPage(_Page):
 class _IntroBox(hippo.CanvasBox):
     __gsignals__ = {
         'done': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                 ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT,
-                   gobject.TYPE_PYOBJECT]))
+                 ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT]))
     }
 
     PAGE_NAME = 0
@@ -206,12 +233,10 @@ class _IntroBox(hippo.CanvasBox):
         self.done()
 
     def done(self):
-        path = os.path.join(os.path.dirname(__file__), 'default-picture.png')
-        pixbuf = gtk.gdk.pixbuf_new_from_file(path)
         name = self._name_page.get_name()
         color = self._color_page.get_color()
 
-        self.emit('done', pixbuf, name, color)
+        self.emit('done', name, color)
 
 class IntroWindow(gtk.Window):
     def __init__(self):
@@ -226,32 +251,14 @@ class IntroWindow(gtk.Window):
         self._canvas.show()
         self.connect('key-press-event', self.__key_press_cb)
 
-    def _done_cb(self, box, pixbuf, name, color):
+    def _done_cb(self, box, name, color):
         self.hide()
-        gobject.idle_add(self._create_profile, pixbuf, name, color)
+        gobject.idle_add(self._create_profile_cb, name, color)
 
-    def _create_profile(self, pixbuf, name, color):
-        # Save the buddy icon
-        icon_path = os.path.join(env.get_profile_path(), "buddy-icon.jpg")
-        pixbuf.save(icon_path, "jpeg", {"quality":"85"})
-
-        profile = get_profile()
-        profile.nick_name = name
-        profile.color = color
-        profile.save()
-
-        # Generate keypair
-        import commands
-        keypath = os.path.join(env.get_profile_path(), "owner.key")
-        if not os.path.isfile(keypath):
-            cmd = "ssh-keygen -q -t dsa -f %s -C '' -N ''" % keypath
-            (s, o) = commands.getstatusoutput(cmd)
-            if s != 0:
-                logging.error("Could not generate key pair: %d %s" % (s, o))
-        else:
-            logging.error("Keypair exists, skip generation.")
-
+    def _create_profile_cb(self, name, color):
+        create_profile(name, color)
         gtk.main_quit()
+
         return False
 
     def __key_press_cb(self, widget, event):

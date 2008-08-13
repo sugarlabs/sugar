@@ -32,6 +32,7 @@ import view.Shell
 from shellservice import ShellService
 from hardware import hardwaremanager
 from intro.window import IntroWindow
+from intro.window import create_profile
 from session import get_session_manager
 import logsmanager
 import config
@@ -109,9 +110,12 @@ def main():
 
     # Do initial setup if needed
     if not get_profile().is_valid():
-        win = IntroWindow()
-        win.show_all()
-        gtk.main()
+        if 'SUGAR_PROFILE_NAME' in os.environ:
+            create_profile(os.environ['SUGAR_PROFILE_NAME'])
+        else:
+            win = IntroWindow()
+            win.show_all()
+            gtk.main()
 
     # set timezone    
     if os.environ.has_key('TZ'):    
