@@ -16,7 +16,6 @@
 
 import os
 import gettext
-import logging
 
 # HACK we need to import numpy before gtk otherwise we traceback in
 # some locales. See http://dev.laptop.org/ticket/5559.
@@ -73,22 +72,12 @@ def _shell_started_cb():
     hw_manager = hardwaremanager.get_manager()
     hw_manager.set_dcon_freeze(0)
 
-def _open_control_panel_cb(cp_section_name):
-    '''Open the `cp_section_name` control panel module and enable
-    auto-close 
+def _software_update_cb():
+    '''Ask the homeview to display an alert about available software updates
     '''
-    
-    # FIXME: should be replaced by a mechanism based on the notification system,
-    #        once the notification system is in place; clicking on a button
-    #        in the notification window would do the actual control panel open.
-    
-    from controlpanel.gui import ControlPanel
     shell = view.Shell.get_instance()
-    panel = ControlPanel()
-    panel.set_transient_for(shell.home_window)
-    panel.show()
-    panel.show_section_view(cp_section_name)
-    panel.set_section_view_auto_close()
+    home_box = shell.home_window.get_home_box()
+    home_box.show_software_updates_alert()
 
 def main():
     gobject.idle_add(_shell_started_cb)
@@ -160,12 +149,7 @@ def main():
     # to update activities.
     update_trigger_file = os.path.expanduser('~/.sugar-update')
     if os.path.isfile(update_trigger_file):
-        gobject.idle_add(_open_control_panel_cb, 'updater')
-        try:
-            os.unlink(update_trigger_file)
-        except OSError:
-            logging.error('Software-update: Can not remove file %s' % 
-                          update_trigger_file)
+        gobject.idle_add(_software_update_cb)
 
     try:
         gtk.main()
