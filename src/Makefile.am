@@ -7,7 +7,6 @@ sugar_PYTHON =			\
 	logsmanager.py		\
 	main.py			\
 	session.py		\
-	shellservice.py		\
-	uicheck.py
+	shellservice.py
 
 EXTRA_DIST = $(bin_SCRIPTS) $(conf_DATA)

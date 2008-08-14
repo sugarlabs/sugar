@@ -7,8 +7,7 @@ bin_SCRIPTS = 			\
 	sugar-install-bundle	\
 	sugar-launch		\
 	sugar-shell		\
-	sugar-shell-service	\
-	sugar-ui-check
+	sugar-shell-service
 
 EXTRA_DIST = $(bin_SCRIPTS) sugar.in
 

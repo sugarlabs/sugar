@@ -18,6 +18,10 @@ import os
 import gettext
 import logging
 
+# HACK we need to import numpy before gtk otherwise we traceback in
+# some locales. See http://dev.laptop.org/ticket/5559.
+import numpy
+
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -31,8 +35,7 @@ from sugar.profile import get_profile
 import view.Shell
 from shellservice import ShellService
 from hardware import hardwaremanager
-from intro.window import IntroWindow
-from intro.window import create_profile
+from intro import intro
 from session import get_session_manager
 import logsmanager
 import config
@@ -110,12 +113,9 @@ def main():
 
     # Do initial setup if needed
     if not get_profile().is_valid():
-        if 'SUGAR_PROFILE_NAME' in os.environ:
-            create_profile(os.environ['SUGAR_PROFILE_NAME'])
-        else:
-            win = IntroWindow()
-            win.show_all()
-            gtk.main()
+        win = intro.IntroWindow()
+        win.show_all()
+        gtk.main()
 
     # set timezone    
     if os.environ.has_key('TZ'):    

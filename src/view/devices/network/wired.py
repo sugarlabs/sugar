@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# Copyright (C) 2008, Red Hat, Inc.
+# Copyright (C) 2006-2007, Red Hat, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,12 +14,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import sys
+from view.devices import deviceview
 
-sys.path.insert(0, '@prefix@/share/sugar/shell')
+class DeviceView(deviceview.DeviceView):
 
-import uicheck
+    FRAME_POSITION_RELATIVE = 300
 
-uicheck.main()
-
-
+    def __init__(self, model):
+        deviceview.DeviceView.__init__(self, model)
+        self.props.icon_name = 'network-wired'

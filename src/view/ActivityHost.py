@@ -17,7 +17,7 @@
 import gtk
 import logging
 
-from view import OverlayWindow
+import OverlayWindow
 
 class ActivityHost:
     def __init__(self, model):

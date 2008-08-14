@@ -30,7 +30,6 @@ AC_CONFIG_FILES([
 bin/sugar
 bin/sugar-control-panel
 bin/sugar-emulator
-bin/sugar-ui-check
 bin/sugar-shell
 bin/sugar-shell-service
 service/config.py

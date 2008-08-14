@@ -333,7 +333,9 @@ class ModelWrapper(object):
                     self._options[method[4:]] = None
 
     def __getattr__(self, name):
-        return getattr(self._module, name)
+        if name.startswith('get_') or name.startswith('set_') or  \
+                name.startswith('read_'):
+            return getattr(self._module, name)
 
     def undo(self):
         for key in self._options.keys():

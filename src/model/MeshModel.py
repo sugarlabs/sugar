@@ -169,7 +169,7 @@ class MeshModel(gobject.GObject):
         return self._buddies.values()
 
     def _buddy_activity_changed_cb(self, model, cur_activity):
-        if not self._buddies.has_key(model.get_buddy().object_path()):
+        if not self._buddies.has_key(model.get_key()):
             return
         if cur_activity and self._activities.has_key(cur_activity.props.id):
             activity_model = self._activities[cur_activity.props.id]
@@ -178,13 +178,13 @@ class MeshModel(gobject.GObject):
             self.emit('buddy-moved', model, None)
 
     def _buddy_appeared_cb(self, pservice, buddy):
-        if self._buddies.has_key(buddy.object_path()):
+        if self._buddies.has_key(buddy.props.key):
             return
 
         model = BuddyModel(buddy=buddy)
         model.connect('current-activity-changed',
                       self._buddy_activity_changed_cb)
-        self._buddies[buddy.object_path()] = model
+        self._buddies[buddy.props.key] = model
         self.emit('buddy-added', model)
 
         cur_activity = buddy.props.current_activity
@@ -192,10 +192,10 @@ class MeshModel(gobject.GObject):
             self._buddy_activity_changed_cb(model, cur_activity)
 
     def _buddy_disappeared_cb(self, pservice, buddy):
-        if not self._buddies.has_key(buddy.object_path()):
+        if not self._buddies.has_key(buddy.props.key):
             return
-        self.emit('buddy-removed', self._buddies[buddy.object_path()])
-        del self._buddies[buddy.object_path()]
+        self.emit('buddy-removed', self._buddies[buddy.props.key])
+        del self._buddies[buddy.props.key]
 
     def _activity_appeared_cb(self, pservice, act):
         self._check_activity(act)
@@ -225,9 +225,9 @@ class MeshModel(gobject.GObject):
 
         for buddy in self._pservice.get_buddies():
             cur_activity = buddy.props.current_activity
-            object_path = buddy.object_path()
-            if cur_activity == activity and object_path in self._buddies:
-                buddy_model = self._buddies[object_path]
+            key = buddy.props.key
+            if cur_activity == activity and self._buddies.has_key(key):
+                buddy_model = self._buddies[key]
                 self.emit('buddy-moved', buddy_model, model)
 
     def _activity_disappeared_cb(self, pservice, act):

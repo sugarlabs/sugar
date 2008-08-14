@@ -256,16 +256,21 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
         return self._title.lower().find(query) > -1
 
 class FavoriteIcon(CanvasIcon):
+    __gproperties__ = {
+        'favorite' : (bool, None, None, False,
+                  gobject.PARAM_READWRITE)
+    }
+
     def __init__(self, favorite):
         CanvasIcon.__init__(self, icon_name='emblem-favorite',
                             box_width=style.GRID_CELL_SIZE*3/5,
                             size=style.SMALL_ICON_SIZE)
         self._favorite = None
-        self.set_favorite(favorite)
+        self._set_favorite(favorite)
         self.connect('button-release-event', self.__release_event_cb)
         self.connect('motion-notify-event', self.__motion_notify_event_cb)
 
-    def set_favorite(self, favorite):
+    def _set_favorite(self, favorite):
         if favorite == self._favorite:
             return
 
@@ -276,11 +281,17 @@ class FavoriteIcon(CanvasIcon):
             self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
             self.props.fill_color = style.COLOR_WHITE.get_svg()
 
-    def get_favorite(self):
-        return self._favorite
+    def do_set_property(self, pspec, value):
+        if pspec.name == 'favorite':
+            self._set_favorite(value)
+        else:
+            CanvasIcon.do_set_property(self, pspec, value)
 
-    favorite = gobject.property(
-        type=bool, default=False, getter=get_favorite, setter=set_favorite)
+    def do_get_property(self, pspec):
+        if pspec.name == 'favorite':
+            return self._favorite
+        else:
+            return CanvasIcon.do_get_property(self, pspec)
 
     def __release_event_cb(self, icon, event):
         self.props.favorite = not self.props.favorite
