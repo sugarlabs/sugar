@@ -107,7 +107,7 @@ def main():
         gtk.main()
 
     # set timezone    
-    if os.environ.has_key('TZ'):    
+    if get_profile().timezone is not None:    
         os.environ['TZ'] = get_profile().timezone
 
     if os.environ.has_key("SUGAR_TP_DEBUG"):
