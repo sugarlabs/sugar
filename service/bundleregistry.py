@@ -175,20 +175,30 @@ class BundleRegistry(gobject.GObject):
         bundle_dirs.sort(lambda d1, d2: cmp(bundles[d1], bundles[d2]))
         for folder in bundle_dirs:
             try:
-                self.add_bundle(folder)
+                self._add_bundle(folder)
             except Exception, e:
                 logging.error('Error while processing installed activity ' \
                               'bundle: %s, %s, %s' % (folder, e.__class__, e))
 
     def add_bundle(self, bundle_path):
+        bundle = self._add_bundle(bundle_path)
+        if bundle is not None:
+            self._set_bundle_favorite(bundle.get_bundle_id(),
+                                      bundle.get_activity_version(),
+                                      True)
+            self.emit('bundle-added', bundle)
+            return True
+        else:
+            return False
+
+    def _add_bundle(self, bundle_path):
         try:
             bundle = ActivityBundle(bundle_path)
         except MalformedBundleException:
-            return False
+            return None
 
         self._bundles.append(bundle)
-        self.emit('bundle-added', bundle)
-        return True
+        return bundle
 
     def remove_bundle(self, bundle_path):
         for bundle in self._bundles:
@@ -224,17 +234,22 @@ class BundleRegistry(gobject.GObject):
                 (bundle_id, version))
 
     def set_bundle_favorite(self, bundle_id, version, favorite):
+        changed = self._set_bundle_favorite(bundle_id, version, favorite)
+        if changed:
+            bundle = self._find_bundle(bundle_id, version)
+            self.emit('bundle-changed', bundle)
+
+    def _set_bundle_favorite(self, bundle_id, version, favorite):
         key = self._get_favorite_key(bundle_id, version)
         if favorite and not key in self._favorite_bundles:
             self._favorite_bundles[key] = None
         elif not favorite and key in self._favorite_bundles:
             del self._favorite_bundles[key]
         else:
-            return
+            return False
 
         self._write_favorites_file()
-        bundle = self._find_bundle(bundle_id, version)
-        self.emit('bundle-changed', bundle)
+        return True
 
     def is_bundle_favorite(self, bundle_id, version):
         key = self._get_favorite_key(bundle_id, version)
