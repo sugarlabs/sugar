@@ -38,6 +38,7 @@ def cmd_help():
     -h key       show information about this key \n\
     -g key       get the current value of the key \n\
     -s key       set the current value for the key \n\
+    -c key       clear the current value for the key \n\
     ')
 
 def note_restart():
@@ -64,7 +65,7 @@ def load_modules():
 
 def main():
     try:
-        options, args = getopt.getopt(sys.argv[1:], "h:s:g:l", [])
+        options, args = getopt.getopt(sys.argv[1:], "h:s:g:c:l", [])
     except getopt.GetoptError:
         cmd_help()
         sys.exit(2)
@@ -112,6 +113,23 @@ def main():
         if option in ("-s"):
             for module in modules:
                 method = getattr(module, 'set_' + key, None)
+                if method:
+                    note = 0
+                    found += 1
+                    if found == 1:
+                        try:
+                            note = method(*args)
+                        except Exception, detail:
+                            print _(_general_error % detail)
+                        if note == _RESTART:
+                            note_restart()
+                    else:
+                        print _(_same_option_warning % (key, module))
+            if found == 0:            
+                print _(_no_option_error % key)  
+        if option in ("-c"):
+            for module in modules:
+                method = getattr(module, 'clear_' + key, None)
                 if method:
                     note = 0
                     found += 1
