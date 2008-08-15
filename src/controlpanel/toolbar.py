@@ -111,11 +111,11 @@ class SectionToolbar(gtk.Toolbar):
         
         self._add_separator(True)
 
-        cancel_button = ToolButton('dialog-cancel')
-        cancel_button.set_tooltip(_('Cancel'))
-        cancel_button.connect('clicked', self.__cancel_button_clicked_cb)
-        self.insert(cancel_button, -1)
-        cancel_button.show()
+        self.cancel_button = ToolButton('dialog-cancel')
+        self.cancel_button.set_tooltip(_('Cancel'))
+        self.cancel_button.connect('clicked', self.__cancel_button_clicked_cb)
+        self.insert(self.cancel_button, -1)
+        self.cancel_button.show()
 
         self.accept_button = ToolButton('dialog-ok')
         self.accept_button.set_tooltip(_('Ok'))

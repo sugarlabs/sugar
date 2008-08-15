@@ -182,7 +182,6 @@ class ControlPanel(gtk.Window):
         title = self._section_toolbar.get_title()
         title.set_text(self._options[option]['title'])
         self._section_toolbar.show()
-        self._section_toolbar.accept_button.set_sensitive(True)
 
         self._current_option = option
         view_class =  self._options[option]['view']
@@ -262,6 +261,7 @@ class ControlPanel(gtk.Window):
     def __accept_clicked_cb(self, widget):
         if self._section_view.needs_restart:
             self._section_toolbar.accept_button.set_sensitive(False)
+            self._section_toolbar.cancel_button.set_sensitive(False)
             alert = Alert()
             alert.props.title = _('Warning') 
             alert.props.msg = _('Changes require restart') 
@@ -287,12 +287,13 @@ class ControlPanel(gtk.Window):
             self._show_main_view()
 
     def __response_cb(self, alert, response_id):
-        self._vbox.remove(alert)        
+        self._vbox.remove(alert)
+        self._section_toolbar.accept_button.set_sensitive(True)
+        self._section_toolbar.cancel_button.set_sensitive(True)
         if response_id is gtk.RESPONSE_CANCEL:             
             self._section_view.undo()
             self._section_view.setup()
             self._options[self._current_option]['alerts'] = []
-            self._section_toolbar.accept_button.set_sensitive(True)
         elif response_id is gtk.RESPONSE_ACCEPT:             
             self._options[self._current_option]['alerts'] = \
                 self._section_view.restart_alerts
