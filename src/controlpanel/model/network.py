@@ -83,3 +83,11 @@ def set_radio(state):
         raise ValueError(_("Error in specified radio argument use on/off."))
 
     return 0
+
+def clear_registration():
+    """Clear the registration with the schoolserver
+    """
+    pro = profile.get_profile()
+    pro.backup1 = None
+    pro.save()
+    return 1
