@@ -115,8 +115,11 @@ class ControlPanel(gtk.Window):
 
     def _setup_options(self):
         row = 0
-        column = 0
-        for option in self._options:
+        column = 2
+        options = self._options.keys()
+        options.sort()
+
+        for option in options:
             sectionicon = _SectionIcon(icon_name=self._options[option]['icon'],
                                        title=self._options[option]['title'],
                                        xo_color=self._options[option]['color'],
@@ -125,13 +128,20 @@ class ControlPanel(gtk.Window):
                                self.__select_option_cb, option)
             sectionicon.show()
             
-            self._table.attach(sectionicon, column, column + 1, row, row + 1) 
-            self._options[option]['button'] = sectionicon
+            if option == 'aboutme':
+                self._table.attach(sectionicon, 0, 1, 0, 1)
+            elif option == 'aboutxo':
+                self._table.attach(sectionicon, 1, 2, 0, 1)
+            else:
+                self._table.attach(sectionicon,
+                                   column, column + 1,
+                                   row, row + 1)
+                column += 1
+                if column == _MAX_COLUMNS:
+                    column = 0
+                    row += 1
 
-            column += 1
-            if column == _MAX_COLUMNS:
-                column = 0
-                row += 1        
+            self._options[option]['button'] = sectionicon
 
     def _show_main_view(self):
         self._set_toolbar(self._main_toolbar)
@@ -162,7 +172,7 @@ class ControlPanel(gtk.Window):
         self._section_toolbar.connect('accept-clicked', 
                                      self.__accept_clicked_cb)
 
-    def _show_section_view(self, option):
+    def show_section_view(self, option):
         self._set_toolbar(self._section_toolbar)
 
         icon = self._section_toolbar.get_icon()
@@ -183,9 +193,16 @@ class ControlPanel(gtk.Window):
         self._section_view.show()
         self._section_view.connect('notify::is-valid', 
                                    self.__valid_section_cb)
+        self._section_view.connect('request-close',
+                                   self.__close_request_cb)
         self._main_view.modify_bg(gtk.STATE_NORMAL, 
                                   style.COLOR_WHITE.get_gdk_color())
 
+    def set_section_view_auto_close(self):
+        '''Automatically close the control panel if there is "nothing to do"
+        '''
+        self._section_view.auto_close = True
+    
     def _get_options(self):    
         '''Get the available option information from the subfolders 
         model and view.
@@ -197,7 +214,7 @@ class ControlPanel(gtk.Window):
 
         for name in names:
             if name.endswith('.py') and name != '__init__.py':
-                tmp = name.strip('.py')
+                tmp = os.path.splitext(name)[0]
                 mod = __import__('.'.join(subpath) + '.' + tmp, globals(), 
                                  locals(), [tmp]) 
                 view_class_str = getattr(mod, 'CLASS', None)
@@ -224,7 +241,7 @@ class ControlPanel(gtk.Window):
      
         for name in names:
             if name.endswith('.py') and name != '__init__.py':
-                tmp = name.strip('.py')
+                tmp = os.path.splitext(name)[0]
                 if tmp in options:
                     mod = __import__('.'.join(subpath) + '.' + tmp, 
                                      globals(), locals(), [tmp])            
@@ -253,9 +270,10 @@ class ControlPanel(gtk.Window):
             alert.add_button(gtk.RESPONSE_CANCEL, _('Cancel changes'), icon) 
             icon.show() 
 
-            icon = Icon(icon_name='dialog-ok') 
-            alert.add_button(gtk.RESPONSE_ACCEPT, _('Later'), icon) 
-            icon.show() 
+            if self._current_option != 'aboutme':
+                icon = Icon(icon_name='dialog-ok') 
+                alert.add_button(gtk.RESPONSE_ACCEPT, _('Later'), icon) 
+                icon.show()
 
             icon = Icon(icon_name='system-restart') 
             alert.add_button(gtk.RESPONSE_APPLY, _('Restart now'), icon) 
@@ -284,12 +302,15 @@ class ControlPanel(gtk.Window):
             session_manager.logout()
 
     def __select_option_cb(self, button, event, option):
-        self._show_section_view(option)
+        self.show_section_view(option)
 
     def __search_changed_cb(self, maintoolbar, query):
         self._update(query)            
 
     def __stop_clicked_cb(self, widget):
+        self.destroy()
+
+    def __close_request_cb(self, widget, event=None):
         self.destroy()
     
     def __valid_section_cb(self, section_view, pspec):

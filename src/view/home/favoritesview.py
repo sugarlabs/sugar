@@ -17,7 +17,6 @@
 
 import logging
 from gettext import gettext as _
-import math
 
 import gobject
 import gtk
@@ -27,6 +26,7 @@ from sugar.graphics import style
 from sugar.graphics.palette import Palette
 from sugar.graphics.icon import Icon, CanvasIcon
 from sugar.graphics.menuitem import MenuItem
+from sugar.graphics.alert import Alert
 from sugar.profile import get_profile
 from sugar import activity
 
@@ -38,6 +38,7 @@ from view.home import favoriteslayout
 from model import shellmodel
 from model.shellmodel import ShellModel
 from hardware import schoolserver
+from hardware.schoolserver import RegisterError
 from controlpanel.gui import ControlPanel
 from session import get_session_manager
 
@@ -53,6 +54,11 @@ _LAYOUT_MAP = {RING_LAYOUT: favoriteslayout.RingLayout,
 
 class FavoritesView(hippo.Canvas):
     __gtype_name__ = 'SugarFavoritesView'
+
+    __gsignals__ = {
+        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
+                             gobject.TYPE_NONE, ([str])),
+    }
 
     def __init__(self, **kwargs):
         gobject.GObject.__init__(self, **kwargs)
@@ -70,15 +76,12 @@ class FavoritesView(hippo.Canvas):
         self._my_icon = None
         self._current_activity = None
         self._layout = None
-        self._set_layout(RANDOM_LAYOUT)
+        self._alert = None
 
         registry = activity.get_registry()
         registry.connect('activity-added', self.__activity_added_cb)
         registry.connect('activity-removed', self.__activity_removed_cb)
         registry.connect('activity-changed', self.__activity_changed_cb)
-
-        shell_model = shellmodel.get_instance()
-        shell_model.connect('notify::state', self._shell_state_changed_cb)
 
         # More DND stuff
         self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
@@ -92,8 +95,12 @@ class FavoritesView(hippo.Canvas):
 
     def _add_activity(self, activity_info):
         icon = ActivityIcon(activity_info)
+        icon.connect('erase-activated', self.__erase_activated_cb)
         icon.props.size = style.STANDARD_ICON_SIZE
         self._layout.append(icon)
+
+    def __erase_activated_cb(self, activity_icon, bundle_id):
+        self.emit('erase-activated', bundle_id)
 
     def _get_activities_cb(self, activity_list):
         for info in activity_list:
@@ -128,11 +135,6 @@ class FavoritesView(hippo.Canvas):
         if activity_info.favorite:
             self._add_activity(activity_info)
 
-    def _shell_state_changed_cb(self, model, pspec):
-        # FIXME implement this
-        if model.props.state == ShellModel.STATE_SHUTDOWN:
-            pass
-
     def do_size_allocate(self, allocation):
         width = allocation.width        
         height = allocation.height
@@ -155,6 +157,9 @@ class FavoritesView(hippo.Canvas):
 
     def enable_xo_palette(self):
         self._my_icon.enable_palette()
+        if self._my_icon.register_menu is not None:
+            self._my_icon.register_menu.connect('activate', 
+                                                self.__register_activate_cb)
 
     # TODO: Dnd methods. This should be merged somehow inside hippo-canvas.
     def __button_press_event_cb(self, widget, event):
@@ -246,7 +251,6 @@ class FavoritesView(hippo.Canvas):
             self._box.set_layout(self._layout)
 
             self._my_icon = _MyIcon(style.XLARGE_ICON_SIZE)
-            self._my_icon.log = True
             self._layout.append(self._my_icon, locked=True)
 
             self._current_activity = CurrentActivityIcon()
@@ -264,27 +268,78 @@ class FavoritesView(hippo.Canvas):
 
     layout = property(None, _set_layout)
 
+    def add_alert(self, alert):
+        if self._alert is not None:
+            self.remove_alert()
+        alert.set_size_request(gtk.gdk.screen_width(), -1)
+        self._alert = hippo.CanvasWidget(widget=alert)
+        self._box.append(self._alert, hippo.PACK_FIXED)
+
+    def remove_alert(self):
+        self._box.remove(self._alert)
+        self._alert = None
+
+    def __register_activate_cb(self, menuitem):
+        alert = Alert()
+        try:
+            schoolserver.register_laptop()
+        except RegisterError, e:
+            alert.props.title = _('Registration Failed')
+            alert.props.msg = _('%s') % e
+        else:    
+            alert.props.title = _('Registration Successful')
+            alert.props.msg = _('You are now registered with your school server.') 
+            palette = self._my_icon.get_palette()
+            palette.menu.remove(menuitem)
+
+        ok_icon = Icon(icon_name='dialog-ok')
+        alert.add_button(gtk.RESPONSE_OK, _('Ok'), ok_icon)
+
+        self.add_alert(alert)
+        alert.connect('response', self.__register_alert_response_cb)            
+            
+    def __register_alert_response_cb(self, alert, response_id):
+        self.remove_alert()
+
 class ActivityIcon(CanvasIcon):
+    __gtype_name__ = 'SugarFavoriteActivityIcon'
+
+    __gsignals__ = {
+        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
+                             gobject.TYPE_NONE, ([str])),
+    }
+
     def __init__(self, activity_info):
         CanvasIcon.__init__(self, cache=True, file_name=activity_info.icon)
         self._activity_info = activity_info
+        self._uncolor()
         self.connect('hovering-changed', self.__hovering_changed_event_cb)
         self.connect('button-release-event', self.__button_release_event_cb)
 
+    def create_palette(self):
+        palette = ActivityPalette(self._activity_info)
+        palette.connect('erase-activated', self.__erase_activated_cb)
+        return palette
+
+    def __erase_activated_cb(self, palette):
+        self.emit('erase-activated', self._activity_info.bundle_id)
+
+    def _color(self):
+        self.props.xo_color = get_profile().color
+
+    def _uncolor(self):
         self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
         self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
 
-    def create_palette(self):
-        return ActivityPalette(self._activity_info)
-
-    def __hovering_changed_event_cb(self, icon, event):
-        if event:
-            self.props.xo_color = get_profile().color
+    def __hovering_changed_event_cb(self, icon, hovering):
+        if hovering:
+            self._color()
         else:
-            self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
-            self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+            self._uncolor()
 
     def __button_release_event_cb(self, icon, event):
+        self.palette.popdown(immediate=True)
+        self._uncolor()
         view.Shell.get_instance().start_activity(self._activity_info.bundle_id)
 
     def get_bundle_id(self):
@@ -339,6 +394,7 @@ class _MyIcon(MyIcon):
 
         self._power_manager = None
         self._profile = get_profile()
+        self.register_menu = None
 
     def enable_palette(self):
         palette_icon = Icon(icon_name='computer-xo', 
@@ -370,32 +426,20 @@ class _MyIcon(MyIcon):
         item.show()
 
         if not self._profile.is_registered():
-            item = MenuItem(_('Register'), 'media-record')
-            item.connect('activate', self._register_activate_cb)
-            palette.menu.append(item)
-            item.show()
+            self.register_menu = MenuItem(_('Register'), 'media-record')
+            palette.menu.append(self.register_menu)
+            self.register_menu.show()
  
         self.set_palette(palette)
 
     def _reboot_activate_cb(self, menuitem):
-        model = shellmodel.get_instance()
-        model.props.state = ShellModel.STATE_SHUTDOWN
-
         session_manager = get_session_manager()
-        session_manager.shutdown()
+        session_manager.reboot()
 
     def _shutdown_activate_cb(self, menuitem):
-        model = shellmodel.get_instance()
-        model.props.state = ShellModel.STATE_SHUTDOWN
-
         session_manager = get_session_manager()
         session_manager.shutdown()
-
-    def _register_activate_cb(self, menuitem):
-        schoolserver.register_laptop()
-        if self._profile.is_registered():
-            self.get_palette().menu.remove(menuitem)
-
+        
     def get_toplevel(self):
         return hippo.get_canvas_for_item(self).get_toplevel()
 
@@ -403,7 +447,3 @@ class _MyIcon(MyIcon):
         panel = ControlPanel()
         panel.set_transient_for(self.get_toplevel())
         panel.show()
-
-    def _response_cb(self, widget, response_id):
-        if response_id == gtk.RESPONSE_OK:            
-            widget.destroy()

@@ -6,6 +6,7 @@ sugar_DATA =			 \
 	module-date_and_time.svg \
 	module-frame.svg	 \
 	module-language.svg      \
-	module-network.svg	 
+	module-network.svg	 \
+	module-power.svg
 
 EXTRA_DIST = $(sugar_DATA)

@@ -34,6 +34,9 @@ _STATUS_DISCHARGING = 1
 _STATUS_FULLY_CHARGED = 2
 
 class DeviceView(TrayIcon):
+
+    FRAME_POSITION_RELATIVE = 1000
+
     def __init__(self, model):
         TrayIcon.__init__(self, icon_name=_ICON_NAME,
                           xo_color=profile.get_color())
@@ -67,7 +70,7 @@ class DeviceView(TrayIcon):
         else:
             status = _STATUS_FULLY_CHARGED
 
-        self.icon.props.icon_name = get_icon_state(name, current_level)
+        self.icon.props.icon_name = get_icon_state(name, current_level, step=-5)
         self.icon.props.xo_color = xo_color
         self.icon.props.badge_name = badge_name
 

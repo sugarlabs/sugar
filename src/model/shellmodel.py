@@ -25,19 +25,12 @@ from model.Owner import ShellOwner
 from model.devices.devicesmodel import DevicesModel
 
 class ShellModel(gobject.GObject):
-    STATE_STARTUP = 0
-    STATE_RUNNING = 1
-    STATE_SHUTDOWN = 2
-
     ZOOM_MESH = 0
     ZOOM_FRIENDS = 1
     ZOOM_HOME = 2
     ZOOM_ACTIVITY = 3
 
     __gproperties__ = {
-        'state'      : (int, None, None,
-                        0, 2, STATE_RUNNING,
-                        gobject.PARAM_READWRITE),
         'zoom-level' : (int, None, None,
                         0, 3, ZOOM_HOME,
                         gobject.PARAM_READABLE)
@@ -47,7 +40,6 @@ class ShellModel(gobject.GObject):
         gobject.GObject.__init__(self)
 
         self._current_activity = None
-        self._state = self.STATE_RUNNING
         self._zoom_level = self.ZOOM_HOME
         self._showing_desktop = True
 
@@ -74,14 +66,8 @@ class ShellModel(gobject.GObject):
         else:
             return self.ZOOM_ACTIVITY
 
-    def do_set_property(self, pspec, value):
-        if pspec.name == 'state':
-            self._state = value
-
     def do_get_property(self, pspec):
-        if pspec.name == 'state':
-            return self._state
-        elif pspec.name == 'zoom-level':
+        if pspec.name == 'zoom-level':
             return self.get_zoom_level()                
 
     def get_mesh(self):

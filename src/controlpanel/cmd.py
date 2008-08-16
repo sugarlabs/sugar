@@ -55,7 +55,7 @@ def load_modules():
     modules = []
     for file_name in file_names:
         if file_name.endswith('.py') and file_name != '__init__.py':
-            module_name = file_name.strip('.py')
+            module_name = os.path.splitext(file_name)[0]
             module = __import__('.'.join(subpath) + '.' + 
                                 module_name, globals(), locals(), 
                                 [module_name])

@@ -18,6 +18,7 @@ from gettext import gettext as _
 
 import gtk
 
+from hardware import hardwaremanager
 from sugar import profile
 from sugar.graphics import style
 from sugar.graphics.icon import get_icon_state, Icon
@@ -31,6 +32,9 @@ from view.frame.frameinvoker import FrameWidgetInvoker
 _ICON_NAME = 'speaker'
 
 class DeviceView(TrayIcon):
+
+    FRAME_POSITION_RELATIVE = 800
+
     def __init__(self, model):
         TrayIcon.__init__(self,
                           icon_name=_ICON_NAME,
@@ -57,13 +61,13 @@ class DeviceView(TrayIcon):
             xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
                                           style.COLOR_WHITE.get_svg()))
 
-        self.icon.props.icon_name = get_icon_state(name, current_level)
+        self.icon.props.icon_name = get_icon_state(name, current_level, step=-1)
         self.icon.props.xo_color = xo_color
 
-    def __speaker_status_changed_cb(self, pspec, param):
+    def __expose_event_cb(self, *args):
         self._update_info()
 
-    def __expose_event_cb(self, *args):
+    def __speaker_status_changed_cb(self, pspec_, param_):
         self._update_info()
 
 class SpeakerPalette(Palette):
@@ -79,10 +83,13 @@ class SpeakerPalette(Palette):
         self.set_content(vbox)
         vbox.show()
 
+        vol_step = hardwaremanager.VOL_CHANGE_INCREMENT_RECOMMENDATION
         self._adjustment = gtk.Adjustment(value=self._model.props.level,
-                                          lower=0.0, upper=101.0,
-                                          step_incr=1,
-                                          page_incr=1, page_size=1)
+                                          lower=0,
+                                          upper=100 + vol_step,
+                                          step_incr=vol_step,
+                                          page_incr=vol_step,
+                                          page_size=vol_step)
         self._hscale = gtk.HScale(self._adjustment)
         self._hscale.set_digits(0)
         self._hscale.set_draw_value(False)
@@ -95,11 +102,19 @@ class SpeakerPalette(Palette):
         self.menu.append(self._mute_item)
         self._mute_item.show()
 
-        self._adjustment.connect('value_changed', self.__adjustment_changed_cb)
+        self._adjustment_handler_id = \
+            self._adjustment.connect('value_changed',
+                                     self.__adjustment_changed_cb)
+
+        self._model_notify_level_handler_id = \
+            self._model.connect('notify::level', self.__level_changed_cb)
+        self._model.connect('notify::muted', self.__muted_changed_cb)
+
         self._mute_item.connect('activate', self.__mute_activate_cb)
+
         self.connect('popup', self.__popup_cb)
 
-    def _update_info(self):
+    def _update_muted(self):
         if self._model.props.muted:
             mute_item_text = _('Unmute')
             mute_item_icon_name = 'dialog-ok'
@@ -109,13 +124,31 @@ class SpeakerPalette(Palette):
         self._mute_item.get_child().set_text(mute_item_text)
         self._mute_icon.props.icon_name = mute_item_icon_name
 
-    def __adjustment_changed_cb(self, adj_):
-        self._model.props.level = self._adjustment.value
-
-    def __popup_cb(self, palette_):
+    def _update_level(self):
         if self._adjustment.value != self._model.props.level:
-            self._adjustment.value = self._model.props.level
-        self._update_info()
+            self._adjustment.handler_block(self._adjustment_handler_id)
+            try:
+                self._adjustment.value = self._model.props.level
+            finally:
+                self._adjustment.handler_unblock(self._adjustment_handler_id)
+
+    def __adjustment_changed_cb(self, adj_):
+        self._model.handler_block(self._model_notify_level_handler_id)
+        try:
+            self._model.props.level = self._adjustment.value
+        finally:
+            self._model.handler_unblock(self._model_notify_level_handler_id)
+        self._model.props.muted = self._adjustment.value == 0
+
+    def __level_changed_cb(self, pspec_, param_):
+        self._update_level()
 
     def __mute_activate_cb(self, menuitem_):
         self._model.props.muted = not self._model.props.muted
+
+    def __muted_changed_cb(self, pspec_, param_):
+        self._update_muted()
+
+    def __popup_cb(self, palette_):
+        self._update_level()
+        self._update_muted()

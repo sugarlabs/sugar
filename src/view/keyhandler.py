@@ -31,7 +31,7 @@ from view.tabbinghandler import TabbingHandler
 from model.shellmodel import ShellModel
 
 _BRIGHTNESS_STEP = 2
-_VOLUME_STEP = 10
+_VOLUME_STEP = hardwaremanager.VOL_CHANGE_INCREMENT_RECOMMENDATION
 _BRIGHTNESS_MAX = 15
 _VOLUME_MAX = 100
 _TABBING_MODIFIER = gtk.gdk.MOD1_MASK
@@ -123,7 +123,8 @@ class KeyHandler(object):
     def _get_speech_proxy(self):
         if self._speech_proxy is None:
             bus = dbus.SessionBus()
-            speech_obj = bus.get_object(SPEECH_DBUS_SERVICE, SPEECH_DBUS_PATH)
+            speech_obj = bus.get_object(SPEECH_DBUS_SERVICE, SPEECH_DBUS_PATH,
+                                        follow_name_owner_changes=True)
             self._speech_proxy = dbus.Interface(speech_obj,
                                                 SPEECH_DBUS_INTERFACE)
         return self._speech_proxy

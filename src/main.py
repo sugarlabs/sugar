@@ -15,8 +15,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
-from ConfigParser import ConfigParser
 import gettext
+import logging
 
 # HACK we need to import numpy before gtk otherwise we traceback in
 # some locales. See http://dev.laptop.org/ticket/5559.
@@ -27,7 +27,8 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
-from sugar import env
+gtk.gdk.threads_init()
+
 from sugar import logger
 from sugar.profile import get_profile
 
@@ -47,23 +48,6 @@ def _start_matchbox():
     cmd.extend(['-kbdconfig', os.path.join(config.data_path, 'kbdconfig')])
 
     gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
-
-def _save_session_info():
-    # Save our DBus Session Bus address somewhere it can be found
-    #
-    # WARNING!!! this is going away at some near future point, 
-    #            do not rely on it
-    #
-    session_info_file = os.path.join(env.get_profile_path(), "session.info")
-    f = open(session_info_file, "w")
-
-    cp = ConfigParser()
-    cp.add_section('Session')
-    cp.set('Session', 'dbus_address', os.environ['DBUS_SESSION_BUS_ADDRESS'])
-    cp.set('Session', 'display', gtk.gdk.display_get_default().get_name())
-    cp.write(f)
-
-    f.close()
 
 def _setup_translations():
     locale_path = os.path.join(config.prefix, 'share', 'locale')
@@ -89,13 +73,35 @@ def _shell_started_cb():
     hw_manager = hardwaremanager.get_manager()
     hw_manager.set_dcon_freeze(0)
 
+def _open_control_panel_cb(cp_section_name):
+    '''Open the `cp_section_name` control panel module and enable
+    auto-close 
+    '''
+    
+    # FIXME: should be replaced by a mechanism based on the notification system,
+    #        once the notification system is in place; clicking on a button
+    #        in the notification window would do the actual control panel open.
+    
+    from controlpanel.gui import ControlPanel
+    shell = view.Shell.get_instance()
+    panel = ControlPanel()
+    panel.set_transient_for(shell.home_window)
+    panel.show()
+    panel.show_section_view(cp_section_name)
+    panel.set_section_view_auto_close()
+
 def main():
     gobject.idle_add(_shell_started_cb)
 
-    logsmanager.setup()
+    try:
+        logsmanager.setup()
+    except Exception, e:
+        # logs setup is not critical; it should not prevent sugar from
+        # starting if (for example) the disk is full or read-only.
+        print 'Log setup failed: %s' % e
+
     logger.start('shell')
 
-    _save_session_info()
     _start_matchbox()
     _setup_translations()
 
@@ -150,11 +156,18 @@ def main():
     session_manager = get_session_manager()
     session_manager.start()
 
+    # dlo trac #7495: open 'software update' control panel after an upgrade
+    # to update activities.
+    update_trigger_file = os.path.expanduser('~/.sugar-update')
+    if os.path.isfile(update_trigger_file):
+        gobject.idle_add(_open_control_panel_cb, 'updater')
+        try:
+            os.unlink(update_trigger_file)
+        except OSError:
+            logging.error('Software-update: Can not remove file %s' % 
+                          update_trigger_file)
+
     try:
         gtk.main()
     except KeyboardInterrupt:
         print 'Ctrl+C pressed, exiting...'
-
-    session_info_file = os.path.join(env.get_profile_path(), "session.info")
-    os.remove(session_info_file)
-

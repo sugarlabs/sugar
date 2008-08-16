@@ -1,0 +1,535 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-06-21 00:30-0400\n"
+"PO-Revision-Date: 2008-06-23 12:17-0400\n"
+"Last-Translator: Urso Wieske <uwieske@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Pootle 1.1.0rc2\n"
+
+#: ../src/intro/intro.py:65 ../src/controlpanel/view/aboutme.py:100
+msgid "Name:"
+msgstr "Nomber:"
+
+#: ../src/intro/intro.py:94
+msgid "Click to change color:"
+msgstr "Klik pa kambia kolor:"
+
+#: ../src/intro/intro.py:145
+#, fuzzy
+msgid "Back"
+msgstr "Bek"
+
+#: ../src/intro/intro.py:159 ../src/controlpanel/toolbar.py:61
+msgid "Done"
+msgstr "Kla"
+
+#: ../src/intro/intro.py:162
+msgid "Next"
+msgstr "Sigiente"
+
+#: ../src/view/BuddyMenu.py:58
+#, fuzzy
+msgid "Remove friend"
+msgstr "Kita amigu"
+
+#: ../src/view/BuddyMenu.py:61
+#, fuzzy
+msgid "Make friend"
+msgstr "Hasi amigu"
+
+#: ../src/view/BuddyMenu.py:91
+#, python-format
+msgid "Invite to %s"
+msgstr "Invita pa %s"
+
+#: ../src/view/clipboardmenu.py:48
+msgid "Remove"
+msgstr "Elimina"
+
+#: ../src/view/clipboardmenu.py:53 ../src/view/clipboardmenu.py:79
+msgid "Open"
+msgstr "Habri"
+
+#. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
+#. TODO: Implement stopping downloads
+#. self._stop_item.connect('activate', self._stop_item_activate_cb)
+#. self.append_menu_item(self._stop_item)
+#: ../src/view/clipboardmenu.py:63
+msgid "Keep"
+msgstr ""
+
+#: ../src/view/clipboardmenu.py:84
+msgid "Open with"
+msgstr "Habri ku"
+
+#: ../src/view/clipboardmenu.py:212
+#, python-format
+msgid "Clipboard object: %s."
+msgstr "Clipboard obgeto: %s."
+
+#: ../src/hardware/keydialog.py:150
+msgid "Key Type:"
+msgstr "Tip di Tecla"
+
+#: ../src/hardware/keydialog.py:170
+msgid "Authentication Type:"
+msgstr "Tipo di Autentikashon"
+
+#: ../src/hardware/keydialog.py:251
+msgid "Encryption Type:"
+msgstr "Tipo di Enkriptashon:"
+
+#: ../src/view/Shell.py:262
+msgid "Screenshot"
+msgstr "Kaptura di pantaya"
+
+#: ../src/view/home/HomeBox.py:147
+#, fuzzy
+msgid "List view"
+msgstr "Bista di lista"
+
+#: ../src/view/home/HomeBox.py:148
+msgid "<Ctrl>L"
+msgstr "<CTRL>L"
+
+#: ../src/view/home/HomeBox.py:204
+msgid "Favorites view"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:205
+msgid "<Ctrl>R"
+msgstr "<Ctrl>R"
+
+#. TRANS: label for the freeform layout in the favorites view
+#: ../src/view/home/HomeBox.py:211
+msgid "Freeform"
+msgstr ""
+
+#. TRANS: label for the ring layout in the favorites view
+#: ../src/view/home/HomeBox.py:218
+msgid "Ring"
+msgstr ""
+
+#: ../src/view/home/MeshBox.py:97
+msgid "Connect"
+msgstr "Konekta"
+
+#: ../src/view/home/MeshBox.py:106
+msgid "Disconnect"
+msgstr "Diskonekta"
+
+#: ../src/view/home/MeshBox.py:118
+msgid "Disconnecting..."
+msgstr "Deskonektando..."
+
+#: ../src/view/home/MeshBox.py:152
+msgid "Connecting..."
+msgstr "Konektando..."
+
+#. TODO: show the channel number
+#: ../src/view/home/MeshBox.py:159
+msgid "Connected"
+msgstr "Konektá"
+
+#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:38
+#: ../src/view/devices/network/mesh.py:65
+#: ../src/view/devices/network/mesh.py:69
+msgid "Mesh Network"
+msgstr ""
+
+#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:116
+#: ../src/view/devices/network/mesh.py:86
+msgid "Disconnect..."
+msgstr "Deskonekta..."
+
+#: ../src/view/home/MeshBox.py:302 ../src/view/palettes.py:60
+msgid "Resume"
+msgstr "Resumí"
+
+#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:219
+msgid "Join"
+msgstr "Uni"
+
+#: ../src/view/devices/battery.py:42
+msgid "My Battery"
+msgstr "Mi Bateria"
+
+#: ../src/view/devices/battery.py:111
+msgid "Charging"
+msgstr "Kargando"
+
+#: ../src/view/devices/battery.py:114
+msgid "Very little power remaining"
+msgstr "A sobra masha tiki power "
+
+#: ../src/view/devices/battery.py:120
+#, python-format
+msgid "%(hour)d:%(min).2d remaining"
+msgstr "A sobra %(ora)d:%(min).2d "
+
+#: ../src/view/devices/battery.py:124
+msgid "Charged"
+msgstr "Kargá"
+
+#: ../src/view/devices/speaker.py:40
+#, fuzzy
+msgid "My Speakers"
+msgstr "Mi spikernan"
+
+#: ../src/view/devices/speaker.py:104
+msgid "Unmute"
+msgstr ""
+
+#: ../src/view/devices/speaker.py:107
+msgid "Mute"
+msgstr "Silensia"
+
+#: ../src/view/devices/network/wireless.py:64
+msgid "Disconnected"
+msgstr "Deskonektá"
+
+#: ../src/view/devices/network/wireless.py:134
+msgid "Channel"
+msgstr "Kanal"
+
+#: ../src/view/frame/zoomtoolbar.py:34
+msgid "Neighborhood"
+msgstr "Besindario"
+
+#: ../src/view/frame/zoomtoolbar.py:36
+msgid "Group"
+msgstr "Grupo"
+
+#: ../src/view/frame/zoomtoolbar.py:38
+msgid "Home"
+msgstr "Home"
+
+#: ../src/view/frame/zoomtoolbar.py:40
+msgid "Activity"
+msgstr "Aktividad"
+
+#: ../src/controlpanel/cmd.py:26
+#, python-format
+msgid ""
+"sugar-control-panel: WARNING, found more than one option with the same name: "
+"%s module: %r"
+msgstr ""
+"sugar-control-panel: KIDOU, a hanja mas ku un opshon ku e mesun nomber: %s "
+"modulo: %r"
+
+#: ../src/controlpanel/cmd.py:28
+#, python-format
+msgid "sugar-control-panel: key=%s not an available option"
+msgstr "sugar-control-panel: klave=%s no ta un opshon disponibel"
+
+#: ../src/controlpanel/cmd.py:29
+#, python-format
+msgid "sugar-control-panel: %s"
+msgstr "sugar-control-panel: %s"
+
+#: ../src/controlpanel/cmd.py:33
+#, fuzzy
+msgid ""
+"Usage: sugar-control-panel [ option ] key [ args ... ] \n"
+"    Control for the sugar environment. \n"
+"    Options: \n"
+"    -h           show this help message and exit \n"
+"    -l           list all the available options \n"
+"    -h key       show information about this key \n"
+"    -g key       get the current value of the key \n"
+"    -s key       set the current value for the key \n"
+"    "
+msgstr ""
+"Uso: sugar-control-panel [opshon] klave [argumentonan ...] \n"
+"       Control pa e ambiente di sugar.\n"
+"       Opshonnan: \n"
+"       -h             mustra e help mensahe aki i sali       -l "
+"             lista tur opshon disponibel\n"
+"       -h klave     mustra informashon riba e klave aki\n"
+"       -g klave     hanja e bolr koriente di e klave aki\n"
+"       -s klave     sèt e bolor koriente di klave aki\n"
+
+#: ../src/controlpanel/cmd.py:45
+msgid "To apply your changes you have to restart sugar.\n"
+msgstr "Pa aplika bo kambionan bo tin ku restart sugar di nobo.\n"
+
+#: ../src/controlpanel/toolbar.py:115
+msgid "Cancel"
+msgstr "Kansela"
+
+#: ../src/controlpanel/toolbar.py:121
+msgid "Ok"
+msgstr "Ok"
+
+#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:250
+msgid "Changes require restart"
+msgstr "Kambionan ta eksigi restart"
+
+#: ../src/controlpanel/gui.py:249
+msgid "Warning"
+msgstr "Kidou"
+
+#: ../src/controlpanel/gui.py:253
+msgid "Cancel changes"
+msgstr "Kansela kambionan"
+
+#: ../src/controlpanel/gui.py:257
+msgid "Later"
+msgstr "Despues"
+
+#: ../src/controlpanel/gui.py:261
+msgid "Restart now"
+msgstr "Restart aworaki"
+
+#: ../src/controlpanel/model/aboutme.py:44
+#, fuzzy
+msgid "You must enter a name."
+msgstr "Bo mester fill in un nomber."
+
+#: ../src/controlpanel/model/aboutme.py:67
+#, python-format
+msgid "stroke:   color=%s hue=%s"
+msgstr ""
+
+#: ../src/controlpanel/model/aboutme.py:70
+#, python-format
+msgid "stroke:   %s"
+msgstr ""
+
+#: ../src/controlpanel/model/aboutme.py:72
+#, python-format
+msgid "fill:     color=%s hue=%s"
+msgstr ""
+
+#: ../src/controlpanel/model/aboutme.py:74
+#, python-format
+msgid "fill:     %s"
+msgstr ""
+
+#: ../src/controlpanel/model/aboutme.py:85
+msgid "Error in specified color modifiers."
+msgstr ""
+
+#: ../src/controlpanel/model/aboutme.py:88
+msgid "Error in specified colors."
+msgstr ""
+
+#: ../src/controlpanel/model/aboutxo.py:24
+msgid "Not available"
+msgstr ""
+
+#: ../src/controlpanel/model/datetime.py:85
+msgid "Error timezone does not exist."
+msgstr ""
+
+#: ../src/controlpanel/model/frame.py:38 ../src/controlpanel/model/frame.py:60
+msgid "Value must be an integer."
+msgstr ""
+
+#: ../src/controlpanel/model/language.py:28
+msgid "Could not access ~/.i18n. Create standard settings."
+msgstr ""
+
+#: ../src/controlpanel/model/language.py:104
+#, python-format
+msgid "Language for code=%s could not be determined."
+msgstr ""
+
+#: ../src/controlpanel/model/language.py:121
+#, python-format
+msgid "Sorry I do not speak '%s'."
+msgstr ""
+
+#: ../src/controlpanel/model/network.py:48
+#, fuzzy
+msgid "You must enter a server."
+msgstr "Bo mester fill in un nomber."
+
+#: ../src/controlpanel/model/network.py:63
+msgid "State is unknown."
+msgstr ""
+
+#: ../src/controlpanel/model/network.py:83
+msgid "Error in specified radio argument use on/off."
+msgstr ""
+
+#: ../src/controlpanel/view/aboutme.py:32
+msgid "About Me"
+msgstr ""
+
+#: ../src/controlpanel/view/aboutme.py:134
+#, fuzzy
+msgid "Click to change your color:"
+msgstr "Klik pa kambia kolor:"
+
+#: ../src/controlpanel/view/aboutxo.py:26
+msgid "About my XO"
+msgstr ""
+
+#: ../src/controlpanel/view/aboutxo.py:47
+msgid "Identity"
+msgstr ""
+
+#: ../src/controlpanel/view/aboutxo.py:56
+msgid "Serial Number:"
+msgstr ""
+
+#: ../src/controlpanel/view/aboutxo.py:79
+msgid "Software"
+msgstr ""
+
+#: ../src/controlpanel/view/aboutxo.py:88
+msgid "Build:"
+msgstr ""
+
+#: ../src/controlpanel/view/aboutxo.py:103
+msgid "Firmware:"
+msgstr ""
+
+#: ../src/controlpanel/view/datetime.py:29
+msgid "Date & Time"
+msgstr ""
+
+#: ../src/controlpanel/view/datetime.py:72
+msgid "Timezone"
+msgstr ""
+
+#: ../src/controlpanel/view/frame.py:28
+msgid "Frame"
+msgstr ""
+
+#: ../src/controlpanel/view/frame.py:30
+msgid "never"
+msgstr ""
+
+#: ../src/controlpanel/view/frame.py:31
+msgid "instantaneous"
+msgstr ""
+
+#: ../src/controlpanel/view/frame.py:32
+#, python-format
+msgid "%s seconds"
+msgstr ""
+
+#: ../src/controlpanel/view/frame.py:56
+msgid "Activation Delay"
+msgstr ""
+
+#: ../src/controlpanel/view/frame.py:80
+msgid "Corner"
+msgstr ""
+
+#: ../src/controlpanel/view/frame.py:115
+msgid "Edge"
+msgstr ""
+
+#: ../src/controlpanel/view/language.py:29
+#: ../src/controlpanel/view/language.py:74
+msgid "Language"
+msgstr ""
+
+#: ../src/controlpanel/view/network.py:28
+msgid "Network"
+msgstr ""
+
+#: ../src/controlpanel/view/network.py:53
+msgid "Wireless"
+msgstr ""
+
+#: ../src/controlpanel/view/network.py:61
+msgid "Radio:"
+msgstr ""
+
+#: ../src/controlpanel/view/network.py:94
+msgid "Mesh"
+msgstr ""
+
+#: ../src/controlpanel/view/network.py:103
+msgid "Server:"
+msgstr ""
+
+#: ../src/view/devices/network/mesh.py:108
+msgid "Connected to a School Mesh Portal"
+msgstr ""
+
+#: ../src/view/devices/network/mesh.py:110
+msgid "Looking for a School Mesh Portal..."
+msgstr ""
+
+#: ../src/view/devices/network/mesh.py:113
+msgid "Connected to an XO Mesh Portal"
+msgstr ""
+
+#: ../src/view/devices/network/mesh.py:115
+msgid "Looking for an XO Mesh Portal..."
+msgstr ""
+
+#: ../src/view/devices/network/mesh.py:118
+msgid "Connected to a Simple Mesh"
+msgstr ""
+
+#: ../src/view/devices/network/mesh.py:120
+msgid "Starting a Simple Mesh"
+msgstr ""
+
+#: ../src/view/devices/network/mesh.py:127
+msgid "Unknown Mesh"
+msgstr ""
+
+#: ../src/view/frame/activitiestray.py:224
+msgid "Decline"
+msgstr ""
+
+#: ../src/view/home/favoritesview.py:351
+msgid "Control Panel"
+msgstr ""
+
+#: ../src/view/home/favoritesview.py:362
+msgid "Restart"
+msgstr ""
+
+#: ../src/view/home/favoritesview.py:367
+msgid "Shutdown"
+msgstr ""
+
+#: ../src/view/home/favoritesview.py:373
+msgid "Register"
+msgstr ""
+
+#: ../src/view/palettes.py:41
+msgid "Starting..."
+msgstr ""
+
+#: ../src/view/palettes.py:71
+msgid "Stop"
+msgstr ""
+
+#: ../src/view/palettes.py:96
+msgid "Start"
+msgstr ""
+
+#: ../src/view/palettes.py:119
+msgid "Remove favorite"
+msgstr ""
+
+#: ../src/view/palettes.py:123
+msgid "Make favorite"
+msgstr ""
+
+#: ../src/view/palettes.py:169
+msgid "Show contents"
+msgstr ""
+
+#: ../src/view/palettes.py:193
+#, python-format
+msgid "%(free_space)d MB Free"
+msgstr ""

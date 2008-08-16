@@ -18,6 +18,7 @@ import os
 import statvfs
 from gettext import gettext as _
 
+import gobject
 import gtk
 
 from sugar import env
@@ -81,6 +82,13 @@ class CurrentActivityPalette(BasePalette):
 
 
 class ActivityPalette(Palette):
+    __gtype_name__ = 'SugarActivityPalette'
+
+    __gsignals__ = {
+        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
+                             gobject.TYPE_NONE, ([])),
+    }
+
     def __init__(self, activity_info):
         activity_icon = Icon(file=activity_info.icon,
                              xo_color=profile.get_color(),
@@ -108,6 +116,11 @@ class ActivityPalette(Palette):
                                     self.__change_favorite_activate_cb)
         self.menu.append(self._favorite_item)
         self._favorite_item.show()
+
+        menu_item = MenuItem(_('Erase'), 'list-remove')
+        menu_item.connect('activate', self.__erase_activate_cb)
+        self.menu.append(menu_item)
+        menu_item.show()
 
         registry = activity.get_registry()
         registry.connect('activity_changed', self.__activity_changed_cb)
@@ -139,6 +152,9 @@ class ActivityPalette(Palette):
                activity_info.version == self._version:
             self._favorite = activity_info.favorite
             self._update_favorite_item()
+
+    def __erase_activate_cb(self, menu_item):
+        self.emit('erase-activated')
 
 class JournalPalette(BasePalette):
     def __init__(self, home_activity):

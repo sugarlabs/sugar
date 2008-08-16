@@ -30,6 +30,9 @@ class ZoomToolbar(gtk.Toolbar):
     def __init__(self):
         gtk.Toolbar.__init__(self)
 
+        # we shouldn't be mirrored in RTL locales
+        self.set_direction(gtk.TEXT_DIR_LTR)
+
         self._mesh_button = self._add_button('zoom-neighborhood',
                 _('Neighborhood'), shellmodel.ShellModel.ZOOM_MESH)
         self._groups_button = self._add_button('zoom-groups',

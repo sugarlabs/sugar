@@ -1,0 +1,522 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-06-21 00:30-0400\n"
+"PO-Revision-Date: 2008-06-20 18:58-0400\n"
+"Last-Translator: Morgan Collett <morgan.collett@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Pootle 1.1.0rc2\n"
+
+#: ../src/intro/intro.py:65 ../src/controlpanel/view/aboutme.py:100
+msgid "Name:"
+msgstr "Naam:"
+
+#: ../src/intro/intro.py:94
+msgid "Click to change color:"
+msgstr "Kliek om die kleur the verander:"
+
+#: ../src/intro/intro.py:145
+msgid "Back"
+msgstr "Terug"
+
+#: ../src/intro/intro.py:159 ../src/controlpanel/toolbar.py:61
+msgid "Done"
+msgstr "Klaar"
+
+#: ../src/intro/intro.py:162
+msgid "Next"
+msgstr "Volgende"
+
+#: ../src/view/BuddyMenu.py:58
+msgid "Remove friend"
+msgstr "Verwyder vriend"
+
+#: ../src/view/BuddyMenu.py:61
+msgid "Make friend"
+msgstr "Maak vriend"
+
+#: ../src/view/BuddyMenu.py:91
+#, python-format
+msgid "Invite to %s"
+msgstr "Nooi na %s"
+
+#: ../src/view/clipboardmenu.py:48
+msgid "Remove"
+msgstr "Verwyder"
+
+#: ../src/view/clipboardmenu.py:53 ../src/view/clipboardmenu.py:79
+msgid "Open"
+msgstr "Maak oop"
+
+#. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
+#. TODO: Implement stopping downloads
+#. self._stop_item.connect('activate', self._stop_item_activate_cb)
+#. self.append_menu_item(self._stop_item)
+#: ../src/view/clipboardmenu.py:63
+msgid "Keep"
+msgstr "Hou"
+
+#: ../src/view/clipboardmenu.py:84
+msgid "Open with"
+msgstr "Maak oop met"
+
+#: ../src/view/clipboardmenu.py:212
+#, python-format
+msgid "Clipboard object: %s."
+msgstr "Knipbord objek: %s."
+
+#: ../src/hardware/keydialog.py:150
+msgid "Key Type:"
+msgstr "Sleutel Tipe:"
+
+#: ../src/hardware/keydialog.py:170
+msgid "Authentication Type:"
+msgstr "Geldigheidsverklaring Tipe:"
+
+#: ../src/hardware/keydialog.py:251
+msgid "Encryption Type:"
+msgstr "Enkripsie Tipe:"
+
+#: ../src/view/Shell.py:262
+msgid "Screenshot"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:147
+msgid "List view"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:148
+msgid "<Ctrl>L"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:204
+msgid "Favorites view"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:205
+msgid "<Ctrl>R"
+msgstr ""
+
+#. TRANS: label for the freeform layout in the favorites view
+#: ../src/view/home/HomeBox.py:211
+msgid "Freeform"
+msgstr ""
+
+#. TRANS: label for the ring layout in the favorites view
+#: ../src/view/home/HomeBox.py:218
+msgid "Ring"
+msgstr ""
+
+#: ../src/view/home/MeshBox.py:97
+msgid "Connect"
+msgstr "Koppel"
+
+#: ../src/view/home/MeshBox.py:106
+msgid "Disconnect"
+msgstr "Ontkoppel"
+
+#: ../src/view/home/MeshBox.py:118
+msgid "Disconnecting..."
+msgstr "Ontkoppel..."
+
+#: ../src/view/home/MeshBox.py:152
+msgid "Connecting..."
+msgstr "Koppel..."
+
+#. TODO: show the channel number
+#: ../src/view/home/MeshBox.py:159
+msgid "Connected"
+msgstr "Gekoppel"
+
+#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:38
+#: ../src/view/devices/network/mesh.py:65
+#: ../src/view/devices/network/mesh.py:69
+msgid "Mesh Network"
+msgstr ""
+
+#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:116
+#: ../src/view/devices/network/mesh.py:86
+msgid "Disconnect..."
+msgstr "Ontkoppel..."
+
+#: ../src/view/home/MeshBox.py:302 ../src/view/palettes.py:60
+msgid "Resume"
+msgstr "Aangaan"
+
+#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:219
+msgid "Join"
+msgstr "Aansluit"
+
+#: ../src/view/devices/battery.py:42
+msgid "My Battery"
+msgstr ""
+
+#: ../src/view/devices/battery.py:111
+msgid "Charging"
+msgstr ""
+
+#: ../src/view/devices/battery.py:114
+msgid "Very little power remaining"
+msgstr "Baie min krag oor"
+
+#: ../src/view/devices/battery.py:120
+#, python-format
+msgid "%(hour)d:%(min).2d remaining"
+msgstr "%(hour)d:%(min).2d oor"
+
+#: ../src/view/devices/battery.py:124
+msgid "Charged"
+msgstr ""
+
+#: ../src/view/devices/speaker.py:40
+msgid "My Speakers"
+msgstr ""
+
+#: ../src/view/devices/speaker.py:104
+msgid "Unmute"
+msgstr ""
+
+#: ../src/view/devices/speaker.py:107
+msgid "Mute"
+msgstr ""
+
+#: ../src/view/devices/network/wireless.py:64
+msgid "Disconnected"
+msgstr "Ontkoppel"
+
+#: ../src/view/devices/network/wireless.py:134
+msgid "Channel"
+msgstr "Kanaal"
+
+#: ../src/view/frame/zoomtoolbar.py:34
+msgid "Neighborhood"
+msgstr "Buurt"
+
+#: ../src/view/frame/zoomtoolbar.py:36
+msgid "Group"
+msgstr "Groep"
+
+#: ../src/view/frame/zoomtoolbar.py:38
+msgid "Home"
+msgstr "Tuis"
+
+#: ../src/view/frame/zoomtoolbar.py:40
+msgid "Activity"
+msgstr "Aktiwiteit"
+
+#: ../src/controlpanel/cmd.py:26
+#, python-format
+msgid ""
+"sugar-control-panel: WARNING, found more than one option with the same name: "
+"%s module: %r"
+msgstr ""
+
+#: ../src/controlpanel/cmd.py:28
+#, python-format
+msgid "sugar-control-panel: key=%s not an available option"
+msgstr ""
+
+#: ../src/controlpanel/cmd.py:29
+#, python-format
+msgid "sugar-control-panel: %s"
+msgstr ""
+
+#: ../src/controlpanel/cmd.py:33
+msgid ""
+"Usage: sugar-control-panel [ option ] key [ args ... ] \n"
+"    Control for the sugar environment. \n"
+"    Options: \n"
+"    -h           show this help message and exit \n"
+"    -l           list all the available options \n"
+"    -h key       show information about this key \n"
+"    -g key       get the current value of the key \n"
+"    -s key       set the current value for the key \n"
+"    "
+msgstr ""
+
+#: ../src/controlpanel/cmd.py:45
+msgid "To apply your changes you have to restart sugar.\n"
+msgstr "Om jou veranderings te gebruik moet jy sugar herbegin.\n"
+
+#: ../src/controlpanel/toolbar.py:115
+msgid "Cancel"
+msgstr "Kanselleer"
+
+#: ../src/controlpanel/toolbar.py:121
+msgid "Ok"
+msgstr "Reg"
+
+#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:250
+msgid "Changes require restart"
+msgstr "Veranderings het herbegin nodig"
+
+#: ../src/controlpanel/gui.py:249
+msgid "Warning"
+msgstr "Waarskuwing"
+
+#: ../src/controlpanel/gui.py:253
+msgid "Cancel changes"
+msgstr "Kanselleer veranderings"
+
+#: ../src/controlpanel/gui.py:257
+msgid "Later"
+msgstr "Later"
+
+#: ../src/controlpanel/gui.py:261
+msgid "Restart now"
+msgstr "Herbegin nou"
+
+#: ../src/controlpanel/model/aboutme.py:44
+msgid "You must enter a name."
+msgstr "Jy moet 'n naam inskryf."
+
+#: ../src/controlpanel/model/aboutme.py:67
+#, python-format
+msgid "stroke:   color=%s hue=%s"
+msgstr ""
+
+#: ../src/controlpanel/model/aboutme.py:70
+#, python-format
+msgid "stroke:   %s"
+msgstr ""
+
+#: ../src/controlpanel/model/aboutme.py:72
+#, python-format
+msgid "fill:     color=%s hue=%s"
+msgstr ""
+
+#: ../src/controlpanel/model/aboutme.py:74
+#, python-format
+msgid "fill:     %s"
+msgstr ""
+
+#: ../src/controlpanel/model/aboutme.py:85
+msgid "Error in specified color modifiers."
+msgstr ""
+
+#: ../src/controlpanel/model/aboutme.py:88
+msgid "Error in specified colors."
+msgstr "Vout in gespesifiseerde kleure."
+
+#: ../src/controlpanel/model/aboutxo.py:24
+msgid "Not available"
+msgstr "Nie beskikbaar nie"
+
+#: ../src/controlpanel/model/datetime.py:85
+msgid "Error timezone does not exist."
+msgstr ""
+
+#: ../src/controlpanel/model/frame.py:38 ../src/controlpanel/model/frame.py:60
+msgid "Value must be an integer."
+msgstr ""
+
+#: ../src/controlpanel/model/language.py:28
+msgid "Could not access ~/.i18n. Create standard settings."
+msgstr ""
+
+#: ../src/controlpanel/model/language.py:104
+#, python-format
+msgid "Language for code=%s could not be determined."
+msgstr ""
+
+#: ../src/controlpanel/model/language.py:121
+#, python-format
+msgid "Sorry I do not speak '%s'."
+msgstr "Jammer, ek praat nie '%s'."
+
+#: ../src/controlpanel/model/network.py:48
+msgid "You must enter a server."
+msgstr "Jy moet 'n bediener inskryf."
+
+#: ../src/controlpanel/model/network.py:63
+msgid "State is unknown."
+msgstr ""
+
+#: ../src/controlpanel/model/network.py:83
+msgid "Error in specified radio argument use on/off."
+msgstr "Vout in radio waarde: gebruik on/off."
+
+#: ../src/controlpanel/view/aboutme.py:32
+msgid "About Me"
+msgstr "Omtrent My"
+
+#: ../src/controlpanel/view/aboutme.py:134
+msgid "Click to change your color:"
+msgstr "Kliek om jou kleur te verander:"
+
+#: ../src/controlpanel/view/aboutxo.py:26
+msgid "About my XO"
+msgstr "Omtrent my XO"
+
+#: ../src/controlpanel/view/aboutxo.py:47
+msgid "Identity"
+msgstr "Identiteit"
+
+#: ../src/controlpanel/view/aboutxo.py:56
+msgid "Serial Number:"
+msgstr "Seriële Nommer:"
+
+#: ../src/controlpanel/view/aboutxo.py:79
+msgid "Software"
+msgstr "Sagteware"
+
+#: ../src/controlpanel/view/aboutxo.py:88
+msgid "Build:"
+msgstr "Bou:"
+
+#: ../src/controlpanel/view/aboutxo.py:103
+msgid "Firmware:"
+msgstr "Fermware:"
+
+#: ../src/controlpanel/view/datetime.py:29
+msgid "Date & Time"
+msgstr "Datem & Tyd"
+
+#: ../src/controlpanel/view/datetime.py:72
+msgid "Timezone"
+msgstr "Tydsone"
+
+#: ../src/controlpanel/view/frame.py:28
+msgid "Frame"
+msgstr "Raam"
+
+#: ../src/controlpanel/view/frame.py:30
+msgid "never"
+msgstr "nooit"
+
+#: ../src/controlpanel/view/frame.py:31
+msgid "instantaneous"
+msgstr "dadelik"
+
+#: ../src/controlpanel/view/frame.py:32
+#, python-format
+msgid "%s seconds"
+msgstr "%s sekondes"
+
+#: ../src/controlpanel/view/frame.py:56
+msgid "Activation Delay"
+msgstr "Aktiveerings Vertraging"
+
+#: ../src/controlpanel/view/frame.py:80
+msgid "Corner"
+msgstr "Hoekie"
+
+#: ../src/controlpanel/view/frame.py:115
+msgid "Edge"
+msgstr "Snykant"
+
+#: ../src/controlpanel/view/language.py:29
+#: ../src/controlpanel/view/language.py:74
+msgid "Language"
+msgstr "Taal"
+
+#: ../src/controlpanel/view/network.py:28
+msgid "Network"
+msgstr "Netwerk"
+
+#: ../src/controlpanel/view/network.py:53
+msgid "Wireless"
+msgstr "Draadloos"
+
+#: ../src/controlpanel/view/network.py:61
+msgid "Radio:"
+msgstr "Radio:"
+
+#: ../src/controlpanel/view/network.py:94
+msgid "Mesh"
+msgstr ""
+
+#: ../src/controlpanel/view/network.py:103
+msgid "Server:"
+msgstr "Bediener:"
+
+#: ../src/view/devices/network/mesh.py:108
+msgid "Connected to a School Mesh Portal"
+msgstr "Aan 'n Skool Mesh Portal gekoppel"
+
+#: ../src/view/devices/network/mesh.py:110
+msgid "Looking for a School Mesh Portal..."
+msgstr "Op soek na 'n Skool Mesh Portal..."
+
+#: ../src/view/devices/network/mesh.py:113
+msgid "Connected to an XO Mesh Portal"
+msgstr "Aan 'n XO Mesh Portal gekoppel"
+
+#: ../src/view/devices/network/mesh.py:115
+msgid "Looking for an XO Mesh Portal..."
+msgstr "Op soek na 'n XO Mesh Portal..."
+
+#: ../src/view/devices/network/mesh.py:118
+msgid "Connected to a Simple Mesh"
+msgstr "Aan Eenvoudig Mesh gekoppel"
+
+#: ../src/view/devices/network/mesh.py:120
+msgid "Starting a Simple Mesh"
+msgstr "Begin 'n Eenvoidige Mesh"
+
+#: ../src/view/devices/network/mesh.py:127
+msgid "Unknown Mesh"
+msgstr "Vreemde Mesh"
+
+#: ../src/view/frame/activitiestray.py:224
+msgid "Decline"
+msgstr "Weier"
+
+#: ../src/view/home/favoritesview.py:351
+msgid "Control Panel"
+msgstr "Kontrole Paneel"
+
+#: ../src/view/home/favoritesview.py:362
+msgid "Restart"
+msgstr "Herbegin"
+
+#: ../src/view/home/favoritesview.py:367
+msgid "Shutdown"
+msgstr "Uitskakel"
+
+#: ../src/view/home/favoritesview.py:373
+msgid "Register"
+msgstr "Registreer"
+
+#: ../src/view/palettes.py:41
+msgid "Starting..."
+msgstr "Begin..."
+
+#: ../src/view/palettes.py:71
+msgid "Stop"
+msgstr "Stop"
+
+#: ../src/view/palettes.py:96
+msgid "Start"
+msgstr "Begin"
+
+#: ../src/view/palettes.py:119
+msgid "Remove favorite"
+msgstr ""
+
+#: ../src/view/palettes.py:123
+msgid "Make favorite"
+msgstr ""
+
+#: ../src/view/palettes.py:169
+msgid "Show contents"
+msgstr "Wys inhoud"
+
+#: ../src/view/palettes.py:193
+#, python-format
+msgid "%(free_space)d MB Free"
+msgstr ""
+
+#~ msgid "Remove from ring"
+#~ msgstr "Verwyder van ring"
+
+#~ msgid "Add to ring"
+#~ msgstr "Bysit by ring"

@@ -27,21 +27,30 @@ from sugar.graphics.icon import CanvasIcon
 import view.Shell
 from view.palettes import ActivityPalette
 
-class ActivitiesList(gtk.ScrolledWindow):
+class ActivitiesList(gtk.VBox):
     __gtype_name__ = 'SugarActivitiesList'
+
+    __gsignals__ = {
+        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
+                             gobject.TYPE_NONE, ([str])),
+    }
 
     def __init__(self):
         gobject.GObject.__init__(self)
 
-        self.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        self.set_shadow_type(gtk.SHADOW_NONE)
-        self.connect('key-press-event', self.__key_press_event_cb)
+        scrolled_window = gtk.ScrolledWindow()
+        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        scrolled_window.set_shadow_type(gtk.SHADOW_NONE)
+        scrolled_window.connect('key-press-event', self.__key_press_event_cb)
+        self.pack_start(scrolled_window)
+        scrolled_window.show()
 
         canvas = hippo.Canvas()
-        self.add_with_viewport(canvas)
-        self.child.set_shadow_type(gtk.SHADOW_NONE)
+        scrolled_window.add_with_viewport(canvas)
+        scrolled_window.child.set_shadow_type(gtk.SHADOW_NONE)
         canvas.show()
 
+        self._alert = None
         self._query = ''
         self._box = hippo.CanvasBox()
         self._box.props.background_color = style.COLOR_WHITE.get_int()
@@ -65,10 +74,10 @@ class ActivitiesList(gtk.ScrolledWindow):
         self._add_activity(activity_info)
 
     def __activity_removed_cb(self, activity_registry, activity_info):
-        for entry in self.get_children():
+        for entry in self._box.get_children():
             if entry.get_bundle_id() == activity_info.bundle_id and \
                     entry.get_version() == activity_info.version:
-                self.remove(entry)
+                self._box.remove(entry)
                 return
 
     def _compare_activities(self, entry_a, entry_b):
@@ -76,8 +85,12 @@ class ActivitiesList(gtk.ScrolledWindow):
 
     def _add_activity(self, activity_info):
         entry = ActivityEntry(activity_info)
+        entry.icon.connect('erase-activated', self.__erase_activated_cb)
         self._box.insert_sorted(entry, 0, self._compare_activities)
         entry.set_visible(entry.matches(self._query))
+
+    def __erase_activated_cb(self, activity_icon, bundle_id):
+        self.emit('erase-activated', bundle_id)
 
     def set_filter(self, query):
         self._query = query
@@ -102,24 +115,58 @@ class ActivitiesList(gtk.ScrolledWindow):
 
         return True
 
+    def add_alert(self, alert):
+        if self._alert is not None:
+            self.remove_alert()
+        self._alert = alert
+        self.pack_start(alert, False)
+        self.reorder_child(alert, 0)
+
+    def remove_alert(self):
+        self.remove(self._alert)
+        self._alert = None
+
 class ActivityIcon(CanvasIcon):
+    __gtype_name__ = 'SugarListActivityIcon'
+
+    __gsignals__ = {
+        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
+                             gobject.TYPE_NONE, ([str])),
+    }
+
     def __init__(self, activity_info):
         CanvasIcon.__init__(self, size=style.STANDARD_ICON_SIZE, cache=True,
-                            file_name=activity_info.icon,
-                            stroke_color=style.COLOR_BUTTON_GREY.get_svg(),
-                            fill_color=style.COLOR_TRANSPARENT.get_svg())
+                            file_name=activity_info.icon)
         self._activity_info = activity_info
+        self._uncolor()
         self.connect('hovering-changed', self.__hovering_changed_event_cb)
-
-    def __hovering_changed_event_cb(self, icon, event):
-        if event:
-            self.props.xo_color = profile.get_color()
-        else:
-            self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
-            self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+        self.connect('button-release-event', self.__button_release_event_cb)
 
     def create_palette(self):
-        return ActivityPalette(self._activity_info)
+        palette = ActivityPalette(self._activity_info)
+        palette.connect('erase-activated', self.__erase_activated_cb)
+        return palette
+
+    def __erase_activated_cb(self, palette):
+        self.emit('erase-activated', self._activity_info.bundle_id)
+
+    def _color(self):
+        self.props.xo_color = profile.get_color()
+
+    def _uncolor(self):
+        self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
+        self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+
+    def __hovering_changed_event_cb(self, icon, hovering):
+        if hovering:
+            self._color()
+        else:
+            self._uncolor()
+
+    def __button_release_event_cb(self, icon, event):
+        self.palette.popdown(immediate=True)
+        self._uncolor()
+
 
 class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarActivityEntry'
