@@ -16,16 +16,16 @@
 
 import logging
 
-from sugar.graphics.tray import HTray
+from sugar.graphics import tray
 
 from view.devices import deviceview
 from model import shellmodel
 
 _logger = logging.getLogger('DevicesTray')
 
-class DevicesTray(HTray):
+class DevicesTray(tray.HTray):
     def __init__(self):
-        HTray.__init__(self)
+        tray.HTray.__init__(self, align=tray.ALIGN_TO_END)
         self._device_icons = {}
 
         devices_model = shellmodel.get_instance().get_devices()
@@ -41,8 +41,14 @@ class DevicesTray(HTray):
     def _add_device(self, device):
         try:
             view = deviceview.create(device)
-            # TODO: *Tray classes don't allow yet to set the alignment.
-            self.add_item(view)
+            index = 0
+            for item in self.get_children():
+                index = self.get_item_index(item)
+                view_pos = getattr(view, "FRAME_POSITION_RELATIVE", -1)
+                item_pos = getattr(item, "FRAME_POSITION_RELATIVE", 0)
+                if view_pos < item_pos:
+                    break
+            self.add_item(view, index=index)
             view.show()
             self._device_icons[device.get_id()] = view
         except Exception, message:
@@ -58,4 +64,3 @@ class DevicesTray(HTray):
 
     def __device_disappeared_cb(self, model, device):
         self._remove_device(device)
-

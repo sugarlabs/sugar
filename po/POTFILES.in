@@ -2,6 +2,7 @@ src/intro/intro.py
 src/view/BuddyMenu.py
 src/view/clipboardmenu.py
 src/hardware/keydialog.py
+src/hardware/schoolserver.py
 src/view/Shell.py
 src/view/clipboardicon.py
 src/view/home/HomeBox.py
@@ -20,12 +21,14 @@ src/controlpanel/model/datetime.py
 src/controlpanel/model/frame.py
 src/controlpanel/model/language.py
 src/controlpanel/model/network.py
+src/controlpanel/model/power.py
 src/controlpanel/view/aboutme.py
 src/controlpanel/view/aboutxo.py
 src/controlpanel/view/datetime.py
 src/controlpanel/view/frame.py
 src/controlpanel/view/language.py
 src/controlpanel/view/network.py
+src/controlpanel/view/power.py
 src/view/devices/network/mesh.py
 src/view/frame/activitiestray.py
 src/view/home/favoritesview.py

@@ -20,8 +20,12 @@ import time
 from sugar import env
 
 _MAX_BACKUP_DIRS = 3
+"""The maximum number of "old" log directories we should keep around."""
 
 def setup():
+    """Clean up the log directory, moving old logs into a numbered backup
+    directory.  We only keep `_MAX_BACKUP_DIRS` of these backup directories
+    around; the rest are removed."""
     logs_dir = env.get_logs_path()
     if not os.path.isdir(logs_dir):
         os.makedirs(logs_dir)
@@ -50,4 +54,3 @@ def setup():
             source_path = os.path.join(logs_dir, log)
             dest_path = os.path.join(backup_dir, log)
             os.rename(source_path, dest_path)
-

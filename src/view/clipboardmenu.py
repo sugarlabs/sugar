@@ -206,7 +206,11 @@ class ClipboardMenu(Palette):
             else:
                 file_path = self._write_to_temp_file(data['DATA'])
                 transfer_ownership = True
-                mime_type = mime.get_for_file(file_path)
+                sniffed_mime_type = mime.get_for_file(file_path)
+                if sniffed_mime_type == 'application/octet-stream':
+                    mime_type = format
+                else:
+                    mime_type = sniffed_mime_type
 
         jobject = datastore.create()
         jobject.metadata['title'] = _('Clipboard object: %s.') % obj['NAME']

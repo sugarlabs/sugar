@@ -15,15 +15,20 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from gettext import gettext as _
+import logging
 
 import gobject
 import gtk
 
 from sugar.graphics import style
 from sugar.graphics import iconentry
-from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.radiotoolbutton import RadioToolButton
+from sugar.graphics.alert import Alert
+from sugar.graphics.icon import Icon
+from sugar import profile
+from sugar import activity
+from sugar.bundle.activitybundle import ActivityBundle
 
 from view.home import favoritesview
 from view.home.activitieslist import ActivitiesList
@@ -32,6 +37,16 @@ _FAVORITES_VIEW = 0
 _LIST_VIEW = 1
 
 _AUTOSEARCH_TIMEOUT = 1000
+
+def _convert_layout_constant(profile_constant):
+    if profile_constant == profile.RANDOM_LAYOUT:
+        return favoritesview.RANDOM_LAYOUT
+    elif profile_constant == profile.RING_LAYOUT:
+        return favoritesview.RING_LAYOUT
+    else:
+        logging.warning('Incorrect favorites_layout value: %r' % \
+                profile_constant)
+        return favoritesview.RING_LAYOUT
 
 class HomeBox(gtk.VBox):
     __gtype_name__ = 'SugarHomeBox'
@@ -43,22 +58,74 @@ class HomeBox(gtk.VBox):
         self._list_view = ActivitiesList()
         self._enable_xo_palette = False
 
+        self._favorites_view.connect('erase-activated',
+                                     self.__erase_activated_cb)
+        self._list_view.connect('erase-activated', self.__erase_activated_cb)
+
         self._toolbar = HomeToolbar()
         self._toolbar.connect('query-changed', self.__toolbar_query_changed_cb)
         self._toolbar.connect('view-changed', self.__toolbar_view_changed_cb)
         self.pack_start(self._toolbar, expand=False)
         self._toolbar.show()
 
-        self._set_view(_FAVORITES_VIEW, favoritesview.RANDOM_LAYOUT)
+        profile_layout_constant = profile.get_profile().favorites_layout
+        layout = _convert_layout_constant(profile_layout_constant)
+        self._set_view(_FAVORITES_VIEW, layout)
+
+    def __erase_activated_cb(self, view, bundle_id):
+        registry = activity.get_registry()
+        activity_info = registry.get_activity(bundle_id)
+
+        alert = Alert()
+        alert.props.title = _('Confirm erase')
+        alert.props.msg = \
+                _('Confirm erase: Do you want to permanently erase %s?') \
+                % activity_info.name
+
+        cancel_icon = Icon(icon_name='dialog-cancel')
+        alert.add_button(gtk.RESPONSE_CANCEL, _('Keep'), cancel_icon)
+
+        erase_icon = Icon(icon_name='dialog-ok')
+        alert.add_button(gtk.RESPONSE_OK, _('Erase'), erase_icon)
+
+        if self._list_view in self.get_children():
+            self._list_view.add_alert(alert)
+        else:
+            self._favorites_view.add_alert(alert)
+        # TODO: If the favorite layouts didn't hardcoded the box size, we could
+        # just pack an alert between the toolbar and the canvas.
+        #self.pack_start(alert, False)
+        #self.reorder_child(alert, 1)
+        alert.connect('response', self.__erase_confirmation_dialog_response_cb,
+                bundle_id)
+
+    def __erase_confirmation_dialog_response_cb(self, alert, response_id,
+                                                bundle_id):
+        if self._list_view in self.get_children():
+            self._list_view.remove_alert()
+        else:
+            self._favorites_view.remove_alert()
+        if response_id == gtk.RESPONSE_OK:
+            registry = activity.get_registry()
+            activity_info = registry.get_activity(bundle_id)
+            ActivityBundle(activity_info.path).uninstall()
 
     def __toolbar_query_changed_cb(self, toolbar, query):
-        if self._list_view is None:
-            return
         query = query.lower()
         self._list_view.set_filter(query)
 
     def __toolbar_view_changed_cb(self, toolbar, view, layout):
         self._set_view(view, layout)
+        if layout is not None:
+            current_profile = profile.get_profile()
+            if layout == favoritesview.RANDOM_LAYOUT:
+                current_profile.favorites_layout = profile.RANDOM_LAYOUT
+                current_profile.save()
+            elif layout == favoritesview.RING_LAYOUT:
+                current_profile.favorites_layout = profile.RING_LAYOUT
+                current_profile.save()
+            else:
+                logging.warning('Incorrect layout requested: %r' % layout)
 
     def _set_view(self, view, layout):
         if view == _FAVORITES_VIEW:
@@ -77,8 +144,9 @@ class HomeBox(gtk.VBox):
             if self._favorites_view in self.get_children():
                 self.remove(self._favorites_view)
 
-            self.add(self._list_view)
-            self._list_view.show()
+            if self._list_view not in self.get_children():
+                self.add(self._list_view)
+                self._list_view.show()
         else:
             raise ValueError('Invalid view: %r' % view)
 
@@ -142,14 +210,14 @@ class HomeToolbar(gtk.Toolbar):
         self.insert(favorites_button, -1)
         favorites_button.show()
 
-        list_button = RadioToolButton(named_icon='view-list')
-        list_button.props.group = favorites_button
-        list_button.props.tooltip = _('List view')
-        list_button.props.accelerator = _('<Ctrl>L')
-        list_button.connect('toggled', self.__view_button_toggled_cb,
+        self._list_button = RadioToolButton(named_icon='view-list')
+        self._list_button.props.group = favorites_button
+        self._list_button.props.tooltip = _('List view')
+        self._list_button.props.accelerator = _('<Ctrl>2')
+        self._list_button.connect('toggled', self.__view_button_toggled_cb,
                             _LIST_VIEW)
-        self.insert(list_button, -1)
-        list_button.show()
+        self.insert(self._list_button, -1)
+        self._list_button.show()
 
         self._add_separator()
 
@@ -177,6 +245,8 @@ class HomeToolbar(gtk.Toolbar):
         new_query = entry.props.text
         if self._query != new_query:
             self._query = new_query
+
+            self._list_button.props.active = True
             self.emit('query-changed', self._query)
 
     def __entry_changed_cb(self, entry):
@@ -200,15 +270,16 @@ class FavoritesButton(RadioToolButton):
     def __init__(self):
         RadioToolButton.__init__(self)
 
-        self.props.named_icon = 'view-radial'
         self.props.tooltip = _('Favorites view')
-        self.props.accelerator = _('<Ctrl>R')
+        self.props.accelerator = _('<Ctrl>1')
         self.props.group = None
 
-        self._layout = favoritesview.RANDOM_LAYOUT
+        profile_layout_constant = profile.get_profile().favorites_layout
+        self._layout = _convert_layout_constant(profile_layout_constant)
+        self._update_icon()
 
-        # TRANS: label for the free layout in the favorites view
-        menu_item = MenuItem(_('Free'), 'activity-start')
+        # TRANS: label for the freeform layout in the favorites view
+        menu_item = MenuItem(_('Freeform'), 'view-freeform')
         menu_item.connect('activate', self.__layout_activate_cb,
                           favoritesview.RANDOM_LAYOUT)
         self.props.palette.menu.append(menu_item)
@@ -225,17 +296,20 @@ class FavoritesButton(RadioToolButton):
         if self._layout == layout and self.props.active:
             return
         elif self._layout != layout:
-            if layout == favoritesview.RANDOM_LAYOUT:
-                self.props.named_icon = 'activity-start'
-            elif layout == favoritesview.RING_LAYOUT:
-                self.props.named_icon = 'view-radial'
-            else:
-                raise ValueError('Invalid layout: %r' % layout)
             self._layout = layout
+            self._update_icon()
         if not self.props.active:
             self.props.active = True
         else:
             self.emit('toggled')
+
+    def _update_icon(self):
+        if self._layout == favoritesview.RANDOM_LAYOUT:
+            self.props.named_icon = 'view-freeform'
+        elif self._layout == favoritesview.RING_LAYOUT:
+            self.props.named_icon = 'view-radial'
+        else:
+            raise ValueError('Invalid layout: %r' % self._layout)
 
     def _get_layout(self):
         return self._layout

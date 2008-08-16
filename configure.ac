@@ -1,4 +1,4 @@
-AC_INIT([Sugar],[0.81.4],[],[sugar])
+AC_INIT([Sugar],[0.82.0],[],[sugar])
 
 AC_PREREQ([2.59])
 
@@ -13,7 +13,7 @@ PKG_CHECK_MODULES(SHELL, pygtk-2.0 gtk+-2.0)
 
 # Setup GETTEXT
 #
-ALL_LINGUAS="am ar ay bn de dz el en es fa fr ha hi ig is it ja ko mk ml ne nl pa pl pt pt_BR qu ro ru rw th ur yo zh_CN zh_TW"
+ALL_LINGUAS="af am ar ay bg bn bn_IN ca de dz el en es fa fa_AF ff fr gu ha hi ht ig is it ja km ko mk ml mn mr mvo nb ne nl pa pap pis pl ps pt pt_BR qu ro ru rw sd si sl te th tpi tr ur vi yo zh_CN zh_TW"
 GETTEXT_PACKAGE=sugar
 AC_PROG_INTLTOOL([0.33])
 AC_SUBST(GETTEXT_PACKAGE)

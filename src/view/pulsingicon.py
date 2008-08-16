@@ -91,7 +91,8 @@ class PulsingIcon(Icon):
     def _start_pulsing(self, restart=False):
         if restart:
             self._phase = 0
-        self._pulse_hid = gobject.timeout_add(_INTERVAL, self.__pulse_cb)
+        if self._pulse_hid is None:
+            self._pulse_hid = gobject.timeout_add(_INTERVAL, self.__pulse_cb)
 
     def _stop_pulsing(self):
         if self._pulse_hid is not None:
@@ -183,7 +184,8 @@ class CanvasPulsingIcon(CanvasIcon):
     def _start_pulsing(self, restart=False):
         if restart:
             self._phase = 0
-        self._pulse_hid = gobject.timeout_add(_INTERVAL, self.__pulse_cb)
+        if self._pulse_hid is None:
+            self._pulse_hid = gobject.timeout_add(_INTERVAL, self.__pulse_cb)
 
     def _stop_pulsing(self):
         if self._pulse_hid is not None:

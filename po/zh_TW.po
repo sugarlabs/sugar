@@ -6,456 +6,752 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-18 18:19+0000\n"
-"PO-Revision-Date: 2008-02-24 23:55-0500\n"
+"POT-Creation-Date: 2008-07-23 07:44-0400\n"
+"PO-Revision-Date: 2008-08-06 07:26-0400\n"
 "Last-Translator: Yuan Chao <yuanchao@gmail.com>\n"
 "Language-Team: Yuan CHAO <yuanchao@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.0.2\n"
+"X-Generator: Pootle 1.1.0rc2\n"
 
-#: ../shell/intro/intro.py:67
+#: ../src/intro/intro.py:65 ../src/controlpanel/view/aboutme.py:100
 msgid "Name:"
 msgstr "姓名:"
 
-#: ../shell/intro/intro.py:96
+#: ../src/intro/intro.py:94
 msgid "Click to change color:"
 msgstr "點選改變顏色:"
 
-#: ../shell/intro/intro.py:146
+#: ../src/intro/intro.py:145
 msgid "Back"
 msgstr "上一步"
 
-#: ../shell/intro/intro.py:160
+#: ../src/intro/intro.py:159 ../src/controlpanel/toolbar.py:61
 msgid "Done"
 msgstr "完成"
 
-#: ../shell/intro/intro.py:163
+#: ../src/intro/intro.py:162
 msgid "Next"
 msgstr "下一步"
 
-#
-#: ../shell/view/BuddyMenu.py:59
+#: ../src/view/BuddyMenu.py:58
 msgid "Remove friend"
 msgstr "移除好友"
 
-#
-#: ../shell/view/BuddyMenu.py:62
+#: ../src/view/BuddyMenu.py:61
 msgid "Make friend"
 msgstr "結交好友"
 
-#: ../shell/view/BuddyMenu.py:84
+#: ../src/view/BuddyMenu.py:91
 #, python-format
 msgid "Invite to %s"
 msgstr "邀請 %s"
 
-#
-#: ../shell/view/clipboardmenu.py:58
+#: ../src/view/clipboardmenu.py:48
 msgid "Remove"
 msgstr "移除"
 
-#
-#: ../shell/view/clipboardmenu.py:63
+#: ../src/view/clipboardmenu.py:53 ../src/view/clipboardmenu.py:79
 msgid "Open"
 msgstr "開啟"
 
-#
+# self._stop_item = MenuItem(_('Stop download'), 'stock-close')
+# TODO: Implement stopping downloads
+# self._stop_item.connect('activate', self._stop_item_activate_cb)
+# self.append_menu_item(self._stop_item)
 #. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../shell/view/clipboardmenu.py:73
-msgid "Add to journal"
-msgstr "增加到日誌"
+#: ../src/view/clipboardmenu.py:63 ../src/view/home/HomeBox.py:86
+msgid "Keep"
+msgstr "保存"
 
-#: ../shell/view/clipboardmenu.py:213
+#: ../src/view/clipboardmenu.py:84
+msgid "Open with"
+msgstr "開啟使用"
+
+#: ../src/view/clipboardmenu.py:216
 #, python-format
 msgid "Clipboard object: %s."
 msgstr "剪貼簿物件: %s."
 
-#
-#: ../shell/hardware/keydialog.py:149
+#: ../src/hardware/keydialog.py:150
 msgid "Key Type:"
 msgstr "金鑰類型:"
 
-#
-#: ../shell/hardware/keydialog.py:169
+#: ../src/hardware/keydialog.py:170
 msgid "Authentication Type:"
 msgstr "認證類型:"
 
-#
-#: ../shell/hardware/keydialog.py:250
+#: ../src/hardware/keydialog.py:251
 msgid "Encryption Type:"
 msgstr "加密類型:"
 
-#
-#: ../shell/view/home/activitiesdonut.py:90
-msgid "Starting..."
-msgstr "啟動中…"
-
-#
-#: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
-msgid "Resume"
-msgstr "回復"
-
-#
-#: ../shell/view/home/activitiesdonut.py:111
-#: ../lib/sugar/activity/activity.py:132
-msgid "Stop"
-msgstr "停止"
-
-#
-#: ../shell/view/Shell.py:285
+#: ../src/view/Shell.py:240
 msgid "Screenshot"
 msgstr "畫面抓圖"
 
-#
-#: ../shell/view/home/HomeBox.py:159
-msgid "Reboot"
-msgstr "重新啟動"
+#: ../src/view/home/HomeBox.py:80
+msgid "Confirm erase"
+msgstr "確認刪除"
 
-#
-#: ../shell/view/home/HomeBox.py:164
-msgid "Shutdown"
-msgstr "關機"
+#: ../src/view/home/HomeBox.py:82
+#, python-format
+msgid "Confirm erase: Do you want to permanently erase %s?"
+msgstr "確認刪除：您確定要永久地刪除 %s 嗎？"
 
-#: ../shell/view/home/HomeBox.py:170
-msgid "Register"
-msgstr "註冊"
+#: ../src/view/home/HomeBox.py:89 ../src/view/palettes.py:120
+msgid "Erase"
+msgstr "刪除"
 
-#
-#. Only show disconnect when there's a mesh device, because mesh takes
-#. priority over the normal wireless device.  NM doesn't have a "disconnect"
-#. method for a device either (for various reasons) so this doesn't
-#. have a good mapping
-#: ../shell/view/home/MeshBox.py:90 ../shell/view/home/MeshBox.py:197
-#: ../shell/view/devices/network/wireless.py:113
-#: ../shell/view/devices/network/mesh.py:83
-msgid "Disconnect..."
-msgstr "切斷連線…"
+#: ../src/view/home/HomeBox.py:215
+msgid "List view"
+msgstr "檢視清單"
 
-#
-#: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
-#: ../shell/view/devices/network/mesh.py:62
-#: ../shell/view/devices/network/mesh.py:66
+#: ../src/view/home/HomeBox.py:216
+msgid "<Ctrl>2"
+msgstr "<Ctrl>2"
+
+#: ../src/view/home/HomeBox.py:273
+msgid "Favorites view"
+msgstr "偏好檢視"
+
+#: ../src/view/home/HomeBox.py:274
+msgid "<Ctrl>1"
+msgstr "<Ctrl>1"
+
+#. TRANS: label for the freeform layout in the favorites view
+#: ../src/view/home/HomeBox.py:282
+msgid "Freeform"
+msgstr "自由格式"
+
+#. TRANS: label for the ring layout in the favorites view
+#: ../src/view/home/HomeBox.py:289
+msgid "Ring"
+msgstr "活動環"
+
+#: ../src/view/home/MeshBox.py:97
+msgid "Connect"
+msgstr "連線"
+
+#: ../src/view/home/MeshBox.py:106
+msgid "Disconnect"
+msgstr "切斷連線"
+
+# Only show disconnect when there's a mesh device, because mesh takes
+# priority over the normal wireless device.  NM doesn't have a "disconnect"
+# method for a device either (for various reasons) so this doesn't
+# have a good mapping
+#: ../src/view/home/MeshBox.py:118
+msgid "Disconnecting..."
+msgstr "切斷連線中…"
+
+# Only show disconnect when there's a mesh device, because mesh takes
+# priority over the normal wireless device.  NM doesn't have a "disconnect"
+# method for a device either (for various reasons) so this doesn't
+# have a good mapping
+#: ../src/view/home/MeshBox.py:152
+msgid "Connecting..."
+msgstr "連線中…"
+
+#. TODO: show the channel number
+#: ../src/view/home/MeshBox.py:159
+msgid "Connected"
+msgstr "已連線"
+
+#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:41
+#: ../src/view/devices/network/mesh.py:68
+#: ../src/view/devices/network/mesh.py:72
 msgid "Mesh Network"
 msgstr "網狀網路"
 
-#: ../shell/view/home/MeshBox.py:300
+# Only show disconnect when there's a mesh device, because mesh takes
+# priority over the normal wireless device.  NM doesn't have a "disconnect"
+# method for a device either (for various reasons) so this doesn't
+# have a good mapping
+#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:119
+#: ../src/view/devices/network/mesh.py:89
+msgid "Disconnect..."
+msgstr "切斷連線…"
+
+#: ../src/view/home/MeshBox.py:302 ../src/view/palettes.py:61
+msgid "Resume"
+msgstr "回復"
+
+#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:205
 msgid "Join"
 msgstr "加入"
 
-#
-#: ../shell/view/devices/battery.py:38
-msgid "My Battery life"
+#: ../src/view/devices/battery.py:45
+msgid "My Battery"
 msgstr "我的電池狀態"
 
-#
-#: ../shell/view/devices/battery.py:94
-msgid "Battery charging"
-msgstr "電池充電中"
+#: ../src/view/devices/battery.py:114
+msgid "Charging"
+msgstr "充電中"
 
-#
-#: ../shell/view/devices/battery.py:96
-msgid "Battery discharging"
-msgstr "電池放電中"
+#: ../src/view/devices/battery.py:117
+msgid "Very little power remaining"
+msgstr "電池電源即將用完"
 
-#
-#: ../shell/view/devices/battery.py:98
-msgid "Battery fully charged"
-msgstr "電池已充電完成"
+#: ../src/view/devices/battery.py:123
+#, python-format
+msgid "%(hour)d:%(min).2d remaining"
+msgstr "剩餘 %(小時)d:%(分).2d"
 
-#
-#: ../shell/view/devices/network/wireless.py:61
+#: ../src/view/devices/battery.py:127
+msgid "Charged"
+msgstr "充電完成"
+
+#: ../src/view/devices/speaker.py:44
+msgid "My Speakers"
+msgstr "我的喇叭"
+
+#: ../src/view/devices/speaker.py:119
+msgid "Unmute"
+msgstr "取消靜音"
+
+#: ../src/view/devices/speaker.py:122
+msgid "Mute"
+msgstr "喇叭靜音"
+
+#: ../src/view/devices/network/wireless.py:67
 msgid "Disconnected"
 msgstr "已切斷"
 
-#
-#: ../shell/view/devices/network/wireless.py:131
+#: ../src/view/devices/network/wireless.py:137
 msgid "Channel"
 msgstr "頻道"
 
-#
-#: ../shell/view/frame/zoomtoolbar.py:42
+#: ../src/view/frame/zoomtoolbar.py:34
 msgid "Neighborhood"
 msgstr "我的鄰居"
 
-#
-#: ../shell/view/frame/zoomtoolbar.py:54
+#: ../src/view/frame/zoomtoolbar.py:36
 msgid "Group"
 msgstr "我的群組"
 
-#
-#: ../shell/view/frame/zoomtoolbar.py:66
+#: ../src/view/frame/zoomtoolbar.py:38
 msgid "Home"
 msgstr "我的家"
 
-#
-#: ../shell/view/frame/zoomtoolbar.py:78
+#: ../src/view/frame/zoomtoolbar.py:40
 msgid "Activity"
 msgstr "活動"
 
-#
-#: ../lib/sugar/activity/activity.py:115
-msgid "Share with:"
-msgstr "分享給:"
-
-#
-#: ../lib/sugar/activity/activity.py:117
-msgid "Private"
-msgstr "私人"
-
-#
-#: ../lib/sugar/activity/activity.py:118
-msgid "My Neighborhood"
-msgstr "我的鄰居"
-
-#
-#: ../lib/sugar/activity/activity.py:126
-msgid "Keep"
-msgstr "保存"
-
-#
-#: ../lib/sugar/activity/activity.py:245
-msgid "Undo"
-msgstr "復原"
-
-#
-#: ../lib/sugar/activity/activity.py:250
-msgid "Redo"
-msgstr "取消復原"
-
-#
-#: ../lib/sugar/activity/activity.py:260
-msgid "Copy"
-msgstr "複製"
-
-#
-#: ../lib/sugar/activity/activity.py:265
-msgid "Paste"
-msgstr "貼上"
-
-#: ../lib/sugar/activity/activity.py:454
+#: ../src/controlpanel/cmd.py:26
 #, python-format
-msgid "%s Activity"
-msgstr "%s活動"
+msgid ""
+"sugar-control-panel: WARNING, found more than one option with the same name: "
+"%s module: %r"
+msgstr "Sugar控制台：警告，於模組 %r 中發現重複的選項名稱：%s"
 
-#: ../lib/sugar/activity/activity.py:824
-msgid "Keep error"
-msgstr "保存時發生錯誤"
-
-#: ../lib/sugar/activity/activity.py:825
-msgid "Keep error: all changes will be lost"
-msgstr "保存時發生錯誤: 所有的改變將被取消"
-
-#: ../lib/sugar/activity/activity.py:828
-msgid "Don't stop"
-msgstr "取消關閉"
-
-#: ../lib/sugar/activity/activity.py:831
-msgid "Stop anyway"
-msgstr "直接關閉"
-
-#
-#: ../lib/sugar/graphics/alert.py:164 ../lib/sugar/graphics/alert.py:206
-msgid "Cancel"
-msgstr "取消"
-
-#
-#: ../lib/sugar/graphics/alert.py:168
-msgid "Ok"
-msgstr "確定"
-
-#: ../lib/sugar/graphics/alert.py:216
-msgid "Continue"
-msgstr "繼續活動"
-
-#
-#: ../lib/sugar/graphics/alert.py:244
-msgid "OK"
-msgstr "確定"
-
-#: ../lib/sugar/graphics/objectchooser.py:175
+#: ../src/controlpanel/cmd.py:28
 #, python-format
-msgid "%d year"
-msgstr "%d年"
+msgid "sugar-control-panel: key=%s not an available option"
+msgstr "Sugar控制台: 鍵值=%s 並非可用的選項"
 
-#: ../lib/sugar/graphics/objectchooser.py:175
+#: ../src/controlpanel/cmd.py:29
 #, python-format
-msgid "%d years"
-msgstr "%d年"
+msgid "sugar-control-panel: %s"
+msgstr "Sugar控制台: %s"
 
-#: ../lib/sugar/graphics/objectchooser.py:176
-#, python-format
-msgid "%d month"
-msgstr "%d月"
+#: ../src/controlpanel/cmd.py:33
+msgid ""
+"Usage: sugar-control-panel [ option ] key [ args ... ] \n"
+"    Control for the sugar environment. \n"
+"    Options: \n"
+"    -h           show this help message and exit \n"
+"    -l           list all the available options \n"
+"    -h key       show information about this key \n"
+"    -g key       get the current value of the key \n"
+"    -s key       set the current value for the key \n"
+"    "
+msgstr ""
+"用法: sugar-control-panel [ 選項 ] 鍵值 [ 參數 ... ] \n"
+"    Sugar 環境設定工具. \n"
+"    選項: \n"
+"    -h           顯示本說明文字並離開 \n"
+"    -l           列出所有的選項 \n"
+"    -h key       顯示本鍵值的說明 \n"
+"    -g key       取得本件值的資料 \n"
+"    -s key       設定本鍵值的資料 \n"
+"    "
 
-#: ../lib/sugar/graphics/objectchooser.py:176
-#, python-format
-msgid "%d months"
-msgstr "%d月"
-
-#: ../lib/sugar/graphics/objectchooser.py:177
-#, python-format
-msgid "%d week"
-msgstr "%d週"
-
-#: ../lib/sugar/graphics/objectchooser.py:177
-#, python-format
-msgid "%d weeks"
-msgstr "%d週"
-
-#: ../lib/sugar/graphics/objectchooser.py:178
-#, python-format
-msgid "%d day"
-msgstr "%d日"
-
-#: ../lib/sugar/graphics/objectchooser.py:178
-#, python-format
-msgid "%d days"
-msgstr "%d日"
-
-#: ../lib/sugar/graphics/objectchooser.py:179
-#, python-format
-msgid "%d hour"
-msgstr "%d時"
-
-#: ../lib/sugar/graphics/objectchooser.py:179
-#, python-format
-msgid "%d hours"
-msgstr "%d時"
-
-#: ../lib/sugar/graphics/objectchooser.py:180
-#, python-format
-msgid "%d minute"
-msgstr "%d分"
-
-#: ../lib/sugar/graphics/objectchooser.py:180
-#, python-format
-msgid "%d minutes"
-msgstr "%d分"
-
-#: ../lib/sugar/graphics/objectchooser.py:181
-#, python-format
-msgid "%d second"
-msgstr "%d秒"
-
-#: ../lib/sugar/graphics/objectchooser.py:181
-#, python-format
-msgid "%d seconds"
-msgstr "%d秒"
-
-#
-#: ../lib/sugar/graphics/objectchooser.py:191
-msgid " and "
-msgstr "又"
-
-#
-#: ../lib/sugar/graphics/objectchooser.py:193
-msgid ", "
-msgstr ","
-
-#: ../shell/controlpanel/control.py:213
+#: ../src/controlpanel/cmd.py:45
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "需要重新啟動系統使變更生效.\n"
 
-#: ../shell/controlpanel/control.py:267
+#: ../src/controlpanel/toolbar.py:115
+msgid "Cancel"
+msgstr "取消"
+
+#: ../src/controlpanel/toolbar.py:121 ../src/view/home/favoritesview.py:294
+msgid "Ok"
+msgstr "確定"
+
+#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:260
+msgid "Changes require restart"
+msgstr "改變須要重新啟動才能生效"
+
+#: ../src/controlpanel/gui.py:259
+msgid "Warning"
+msgstr "警告"
+
+#: ../src/controlpanel/gui.py:263
+msgid "Cancel changes"
+msgstr "取消改變"
+
+#: ../src/controlpanel/gui.py:267
+msgid "Later"
+msgstr "稍候"
+
+#: ../src/controlpanel/gui.py:271
+msgid "Restart now"
+msgstr "馬上重新啟動"
+
+#: ../src/controlpanel/model/aboutme.py:44
+msgid "You must enter a name."
+msgstr "您必需輸入名稱"
+
+#: ../src/controlpanel/model/aboutme.py:69
+#, python-format
+msgid "stroke:   color=%s hue=%s"
+msgstr "畫筆：   顏色=%s 色澤明暗=%s"
+
+#: ../src/controlpanel/model/aboutme.py:72
+#, python-format
+msgid "stroke:   %s"
+msgstr "畫筆：   %s"
+
+#: ../src/controlpanel/model/aboutme.py:74
+#, python-format
+msgid "fill:     color=%s hue=%s"
+msgstr "填滿：   顏色=%s 色澤明暗=%s"
+
+#: ../src/controlpanel/model/aboutme.py:76
+#, python-format
+msgid "fill:     %s"
+msgstr "填滿：     %s"
+
+#: ../src/controlpanel/model/aboutme.py:87
 msgid "Error in specified color modifiers."
 msgstr "指定增修顏色時發生錯誤"
 
-#: ../shell/controlpanel/control.py:270
+#: ../src/controlpanel/model/aboutme.py:90
 msgid "Error in specified colors."
 msgstr "指定顏色時發生錯誤"
 
-#
-#: ../shell/controlpanel/control.py:307
-msgid "off"
-msgstr "關閉"
+#: ../src/controlpanel/model/aboutxo.py:24
+msgid "Not available"
+msgstr "不存在"
 
-#
-#: ../shell/controlpanel/control.py:309
-msgid "on"
-msgstr "開啟"
-
-#: ../shell/controlpanel/control.py:310
-msgid "State is unknown."
-msgstr "未知狀態"
-
-#: ../shell/controlpanel/control.py:332
-msgid "Error in specified radio argument use on/off."
-msgstr "無線網路信號開關發生錯誤"
-
-#: ../shell/controlpanel/control.py:336
-msgid "Permission denied. You need to be root to run this method."
-msgstr "權限不足, 需要有系統管理員權限才可以執行此功能。"
-
-#: ../shell/controlpanel/control.py:366
-msgid "Error in reading timezone"
-msgstr "讀取時區資料時發生錯誤"
-
-#: ../shell/controlpanel/control.py:397
-#, python-format
-msgid "Error copying timezone (from %s): %s"
-msgstr "複製(%s)時區資料時發生錯誤: %s"
-
-#: ../shell/controlpanel/control.py:402
-#, python-format
-msgid "Changing permission of timezone: %s"
-msgstr "改變時區資料權限: %s"
-
-#: ../shell/controlpanel/control.py:412
+#: ../src/controlpanel/model/datetime.py:85
 msgid "Error timezone does not exist."
 msgstr "錯誤,時區資料不存在."
 
-#: ../shell/controlpanel/control.py:417 ../shell/controlpanel/control.py:436
-#, python-format
-msgid "Could not access %s. Create standard settings."
-msgstr "無法讀取 %s. 建立預設資料."
+#: ../src/controlpanel/model/frame.py:38 ../src/controlpanel/model/frame.py:60
+msgid "Value must be an integer."
+msgstr "指定數值必需為整數"
 
-#: ../shell/controlpanel/control.py:463
+#: ../src/controlpanel/model/language.py:28
+msgid "Could not access ~/.i18n. Create standard settings."
+msgstr "無法讀取 ~/.i18n。 建立標準設定。"
+
+#: ../src/controlpanel/model/language.py:104
 #, python-format
 msgid "Language for code=%s could not be determined."
 msgstr "語系編碼 %s 無法判定"
 
-#: ../shell/controlpanel/control.py:473
+#: ../src/controlpanel/model/language.py:121
 #, python-format
 msgid "Sorry I do not speak '%s'."
 msgstr "抱歉我不會說'%s'."
 
-#: ../shell/view/devices/network/mesh.py:105
+#: ../src/controlpanel/model/network.py:48
+msgid "You must enter a server."
+msgstr "請指定伺服器"
+
+#: ../src/controlpanel/model/network.py:63
+msgid "State is unknown."
+msgstr "未知狀態"
+
+#: ../src/controlpanel/model/network.py:83
+msgid "Error in specified radio argument use on/off."
+msgstr "無線網路信號開關發生錯誤"
+
+#: ../src/controlpanel/model/power.py:57
+msgid "Error in automatic pm argument, use on/off."
+msgstr "自動省電管理開關發生錯誤"
+
+#: ../src/controlpanel/model/power.py:86
+msgid "Error in extreme pm argument, use on/off."
+msgstr "極度省電管理開關發生錯誤"
+
+#: ../src/controlpanel/view/aboutme.py:32
+msgid "About Me"
+msgstr "關於我"
+
+#: ../src/controlpanel/view/aboutme.py:134
+msgid "Click to change your color:"
+msgstr "點選改變顏色"
+
+#: ../src/controlpanel/view/aboutxo.py:26
+msgid "About my XO"
+msgstr "關於我的ＸＯ"
+
+#: ../src/controlpanel/view/aboutxo.py:47
+msgid "Identity"
+msgstr "身份識別"
+
+#: ../src/controlpanel/view/aboutxo.py:56
+msgid "Serial Number:"
+msgstr "序號"
+
+#: ../src/controlpanel/view/aboutxo.py:79
+msgid "Software"
+msgstr "軟體"
+
+#: ../src/controlpanel/view/aboutxo.py:88
+msgid "Build:"
+msgstr "建立："
+
+#: ../src/controlpanel/view/aboutxo.py:103
+msgid "Firmware:"
+msgstr "韌體："
+
+#: ../src/controlpanel/view/datetime.py:29
+msgid "Date & Time"
+msgstr "日期與時間"
+
+#: ../src/controlpanel/view/datetime.py:72
+msgid "Timezone"
+msgstr "時區"
+
+#: ../src/controlpanel/view/frame.py:28
+msgid "Frame"
+msgstr "畫面"
+
+#: ../src/controlpanel/view/frame.py:30
+msgid "never"
+msgstr "永不"
+
+#: ../src/controlpanel/view/frame.py:31
+msgid "instantaneous"
+msgstr "即時"
+
+#: ../src/controlpanel/view/frame.py:32
+#, python-format
+msgid "%s seconds"
+msgstr "%s秒"
+
+#: ../src/controlpanel/view/frame.py:56
+msgid "Activation Delay"
+msgstr "啟用延遲"
+
+#: ../src/controlpanel/view/frame.py:80
+msgid "Corner"
+msgstr "角落"
+
+#: ../src/controlpanel/view/frame.py:115
+msgid "Edge"
+msgstr "邊緣"
+
+#: ../src/controlpanel/view/language.py:29
+#: ../src/controlpanel/view/language.py:74
+msgid "Language"
+msgstr "語言"
+
+#: ../src/controlpanel/view/network.py:28
+msgid "Network"
+msgstr "網路"
+
+#: ../src/controlpanel/view/network.py:53
+msgid "Wireless"
+msgstr "無線網路"
+
+#: ../src/controlpanel/view/network.py:61
+msgid "Radio:"
+msgstr "電波："
+
+#: ../src/controlpanel/view/network.py:94
+msgid "Mesh"
+msgstr "網狀網路"
+
+#: ../src/controlpanel/view/network.py:103
+msgid "Server:"
+msgstr "伺服器"
+
+#: ../src/controlpanel/view/power.py:27
+msgid "Power"
+msgstr "電源"
+
+#: ../src/controlpanel/view/power.py:51
+msgid "Power management"
+msgstr "電源管理"
+
+#: ../src/controlpanel/view/power.py:61
+msgid "Automatic power management (increases battery life)"
+msgstr "自動電源管理模式 (增加電池使用時間)"
+
+#: ../src/controlpanel/view/power.py:89
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr "積極電源管理模式 (關閉無線網路，增加電池使用時間)"
+
+#: ../src/view/devices/network/mesh.py:111
 msgid "Connected to a School Mesh Portal"
 msgstr "已連接到校園網狀網入口"
 
-#: ../shell/view/devices/network/mesh.py:107
+#: ../src/view/devices/network/mesh.py:113
 msgid "Looking for a School Mesh Portal..."
 msgstr "搜尋校園網狀網路中..."
 
-#: ../shell/view/devices/network/mesh.py:110
+#: ../src/view/devices/network/mesh.py:116
 msgid "Connected to an XO Mesh Portal"
 msgstr "已連接到XO網狀網入口"
 
-#: ../shell/view/devices/network/mesh.py:112
+#: ../src/view/devices/network/mesh.py:118
 msgid "Looking for an XO Mesh Portal..."
 msgstr "搜尋XO網狀網路中..."
 
-#: ../shell/view/devices/network/mesh.py:115
+#: ../src/view/devices/network/mesh.py:121
 msgid "Connected to a Simple Mesh"
 msgstr "已連接上簡易網狀網路"
 
-#: ../shell/view/devices/network/mesh.py:117
+#: ../src/view/devices/network/mesh.py:123
 msgid "Starting a Simple Mesh"
 msgstr "建立簡易網狀網路"
 
-#
-#: ../shell/view/devices/network/mesh.py:124
+#: ../src/view/devices/network/mesh.py:130
 msgid "Unknown Mesh"
 msgstr "未知網狀網路"
 
-#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
-msgid "About this XO"
-msgstr "關於ＸＯ"
+#: ../src/view/frame/activitiestray.py:210
+msgid "Decline"
+msgstr "拒絕"
 
-#: ../shell/view/home/HomeBox.py:222
-msgid "Not available"
-msgstr "不存在"
+#: ../src/view/home/favoritesview.py:285
+msgid "Registration Failed"
+msgstr "註冊失敗"
+
+#: ../src/view/home/favoritesview.py:286
+#, python-format
+msgid "%s"
+msgstr "%s"
+
+#: ../src/view/home/favoritesview.py:288
+msgid "Registration Successful"
+msgstr "註冊成功"
+
+#: ../src/view/home/favoritesview.py:289
+msgid "You are now registered with your school server."
+msgstr "您已經成功註冊到校園主機"
+
+#: ../src/view/home/favoritesview.py:405
+msgid "Control Panel"
+msgstr "控制台"
+
+#: ../src/view/home/favoritesview.py:416
+msgid "Restart"
+msgstr "重新啟動"
+
+#: ../src/view/home/favoritesview.py:421
+msgid "Shutdown"
+msgstr "關機"
+
+#: ../src/view/home/favoritesview.py:427
+msgid "Register"
+msgstr "註冊"
+
+#: ../src/view/palettes.py:42
+msgid "Starting..."
+msgstr "啟動中…"
+
+#: ../src/view/palettes.py:72
+msgid "Stop"
+msgstr "停止"
+
+#: ../src/view/palettes.py:104
+msgid "Start"
+msgstr "啟動"
+
+#: ../src/view/palettes.py:132
+msgid "Remove favorite"
+msgstr "移除偏好活動"
+
+#: ../src/view/palettes.py:136
+msgid "Make favorite"
+msgstr "指定偏好活動"
+
+#: ../src/view/palettes.py:185
+msgid "Show contents"
+msgstr "顯示內容"
+
+#: ../src/view/palettes.py:209
+#, python-format
+msgid "%(free_space)d MB Free"
+msgstr "剩餘 %(free_space)d MB 空間"
+
+#~ msgid "<Ctrl>R"
+#~ msgstr "<Ctrl>R"
+
+#~ msgid "off"
+#~ msgstr "關閉"
+
+#~ msgid "on"
+#~ msgstr "開啟"
+
+#~ msgid "Permission denied. You need to be root to run this method."
+#~ msgstr "權限不足, 需要有系統管理員權限才可以執行此功能。"
+
+#~ msgid "Error in reading timezone"
+#~ msgstr "讀取時區資料時發生錯誤"
+
+#, python-format
+#~ msgid "Error copying timezone (from %s): %s"
+#~ msgstr "複製(%s)時區資料時發生錯誤: %s"
+
+#, python-format
+#~ msgid "Changing permission of timezone: %s"
+#~ msgstr "改變時區資料權限: %s"
+
+#~ msgid "About this XO"
+#~ msgstr "關於ＸＯ"
+
+#
+#~ msgid "Add to journal"
+#~ msgstr "增加到日誌"
+
+#
+#~ msgid "Reboot"
+#~ msgstr "重新啟動"
+
+#
+#~ msgid "My Battery life"
+#~ msgstr "我的電池狀態"
+
+#
+#~ msgid "Battery charging"
+#~ msgstr "電池充電中"
+
+#
+#~ msgid "Battery discharging"
+#~ msgstr "電池放電中"
+
+#
+#~ msgid "Battery fully charged"
+#~ msgstr "電池已充電完成"
+
+#
+#~ msgid "Share with:"
+#~ msgstr "分享給:"
+
+#
+#~ msgid "Private"
+#~ msgstr "私人"
+
+#
+#~ msgid "My Neighborhood"
+#~ msgstr "我的鄰居"
+
+#
+#~ msgid "Undo"
+#~ msgstr "復原"
+
+#
+#~ msgid "Redo"
+#~ msgstr "取消復原"
+
+#
+#~ msgid "Copy"
+#~ msgstr "複製"
+
+#
+#~ msgid "Paste"
+#~ msgstr "貼上"
+
+#, python-format
+#~ msgid "%s Activity"
+#~ msgstr "%s活動"
+
+#~ msgid "Keep error"
+#~ msgstr "保存時發生錯誤"
+
+#~ msgid "Keep error: all changes will be lost"
+#~ msgstr "保存時發生錯誤: 所有的改變將被取消"
+
+#~ msgid "Don't stop"
+#~ msgstr "取消關閉"
+
+#~ msgid "Stop anyway"
+#~ msgstr "直接關閉"
+
+#~ msgid "Continue"
+#~ msgstr "繼續活動"
+
+#
+#~ msgid "OK"
+#~ msgstr "確定"
+
+#, python-format
+#~ msgid "%d year"
+#~ msgstr "%d年"
+
+#, python-format
+#~ msgid "%d years"
+#~ msgstr "%d年"
+
+#, python-format
+#~ msgid "%d month"
+#~ msgstr "%d月"
+
+#, python-format
+#~ msgid "%d months"
+#~ msgstr "%d月"
+
+#, python-format
+#~ msgid "%d week"
+#~ msgstr "%d週"
+
+#, python-format
+#~ msgid "%d weeks"
+#~ msgstr "%d週"
+
+#, python-format
+#~ msgid "%d day"
+#~ msgstr "%d日"
+
+#, python-format
+#~ msgid "%d days"
+#~ msgstr "%d日"
+
+#, python-format
+#~ msgid "%d hour"
+#~ msgstr "%d時"
+
+#, python-format
+#~ msgid "%d hours"
+#~ msgstr "%d時"
+
+#, python-format
+#~ msgid "%d minute"
+#~ msgstr "%d分"
+
+#, python-format
+#~ msgid "%d minutes"
+#~ msgstr "%d分"
+
+#, python-format
+#~ msgid "%d second"
+#~ msgstr "%d秒"
+
+#
+#~ msgid " and "
+#~ msgstr "又"
+
+#
+#~ msgid ", "
+#~ msgstr ","

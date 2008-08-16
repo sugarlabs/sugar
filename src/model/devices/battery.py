@@ -39,7 +39,8 @@ class Device(device.Device):
         device.Device.__init__(self, udi)
         
         bus = dbus.Bus(dbus.Bus.TYPE_SYSTEM)
-        proxy = bus.get_object('org.freedesktop.Hal', udi)
+        proxy = bus.get_object('org.freedesktop.Hal', udi,
+                               follow_name_owner_changes=True)
         self._battery = dbus.Interface(proxy, 'org.freedesktop.Hal.Device')
         bus.add_signal_receiver(self._battery_changed,
                                 'PropertyModified',

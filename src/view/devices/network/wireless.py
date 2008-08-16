@@ -33,6 +33,9 @@ from view.frame.frameinvoker import FrameWidgetInvoker
 _ICON_NAME = 'network-wireless'
 
 class DeviceView(TrayIcon):
+
+    FRAME_POSITION_RELATIVE = 300
+
     def __init__(self, model):
         TrayIcon.__init__(self, icon_name=_ICON_NAME)
         self._model = model

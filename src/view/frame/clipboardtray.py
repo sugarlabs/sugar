@@ -22,7 +22,7 @@ import gtk
  
 from sugar import util
 from sugar.clipboard import clipboardservice
-from sugar.graphics.tray import VTray
+from sugar.graphics import tray
 from sugar.graphics import style
 
 from view.clipboardicon import ClipboardIcon
@@ -56,12 +56,12 @@ class _ContextMap:
     def has_context(self, context):
         return context in self._context_map
  
-class ClipboardTray(VTray):
+class ClipboardTray(tray.VTray):
     
     MAX_ITEMS = gtk.gdk.screen_height() / style.GRID_CELL_SIZE - 2
     
     def __init__(self):
-        VTray.__init__(self)
+        tray.VTray.__init__(self, align=tray.ALIGN_TO_END)
         self._icons = {}
         self._context_map = _ContextMap()
 
