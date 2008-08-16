@@ -17,7 +17,7 @@
 
 import sys
 
-sys.path.insert(0, '/home/marco/sugar-jhbuild/install/share/sugar/shell')
+sys.path.insert(0, '/usr/local/share/sugar/shell')
 
 from emulator import main
 

@@ -19,11 +19,11 @@ import sys
 from os import environ
 
 if not environ.has_key('SUGAR_ACTIVITIES'):
-    environ['SUGAR_ACTIVITIES'] = '/home/marco/sugar-jhbuild/install/share/sugar/activities:' \
-                                  '/home/marco/sugar-jhbuild/install/lib64/sugar/activities:' \
-                                  '/home/marco/sugar-jhbuild/install/lib/sugar/activities'
+    environ['SUGAR_ACTIVITIES'] = '/usr/local/share/sugar/activities:' \
+                                  '/usr/local/lib64/sugar/activities:' \
+                                  '/usr/local/lib/sugar/activities'
 
-sys.path.insert(0, '/home/marco/sugar-jhbuild/install/share/sugar/service')
+sys.path.insert(0, '/usr/local/share/sugar/service')
 
 from main import main
 
