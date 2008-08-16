@@ -1,4 +1,4 @@
-sugar (0.82.0-1) UNRELEASED; urgency=low
+sugar (0.82.0-1) unstable; urgency=low
 
   * New upstream release.
   * Update cdbs snippets:
@@ -10,7 +10,7 @@ sugar (0.82.0-1) UNRELEASED; urgency=low
     + Update README.cdbs-tweaks.
   * Add DEB_MAINTAINER_MODE in debian/rules (thanks to Romain Beauxis).
 
- -- Jonas Smedegaard <dr@jones.dk>  Sat, 16 Aug 2008 13:30:19 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 16 Aug 2008 13:49:57 +0200
 
 sugar (0.81.4-1) unstable; urgency=low
 
