@@ -1,4 +1,64 @@
-*No copyright* UNKNOWN []: AUTHORS
+Format-Specification: http://wiki.debian.org/Proposals/CopyrightFormat?action=recall&rev=XXX
+Upstream-Name: Untrusted draft - double-check copyrights yourself!
+
+Files: po/af.po
+	po/am.po
+	po/ar.po
+	po/ay.po
+	po/bg.po
+	po/bn.po
+	po/bn_IN.po
+	po/ca.po
+	po/dz.po
+	po/el.po
+	po/en.po
+	po/es.po
+	po/fa.po
+	po/fa_AF.po
+	po/ff.po
+	po/gu.po
+	po/ha.po
+	po/hi.po
+	po/ht.po
+	po/is.po
+	po/it.po
+	po/ja.po
+	po/km.po
+	po/ko.po
+	po/mk.po
+	po/ml.po
+	po/mn.po
+	po/mr.po
+	po/mvo.po
+	po/nb.po
+	po/ne.po
+	po/nl.po
+	po/pa.po
+	po/pap.po
+	po/pis.po
+	po/ps.po
+	po/pt.po
+	po/pt_BR.po
+	po/qu.po
+	po/ro.po
+	po/ru.po
+	po/rw.po
+	po/sd.po
+	po/si.po
+	po/sl.po
+	po/te.po
+	po/th.po
+	po/tpi.po
+	po/tr.po
+	po/ur.po
+	po/vi.po
+	po/yo.po
+	po/zh_CN.po
+	po/zh_TW.po
+Copyright: YEAR THE PACKAGE'S HOLDER
+License: UNKNOWN
+
+Files: AUTHORS
 	Makefile.am
 	README
 	bin/Makefile.am
@@ -17,6 +77,7 @@
 	data/icons/module-frame.svg
 	data/icons/module-language.svg
 	data/icons/module-network.svg
+	data/icons/module-power.svg
 	data/kbdconfig
 	data/mime.defaults
 	data/sugar-xo.gtkrc
@@ -50,7 +111,12 @@
 	src/view/devices/network/Makefile.am
 	src/view/frame/Makefile.am
 	src/view/home/Makefile.am
-GPL-2+ [2006-2007 Red Hat, Inc]: service/bundleregistry.py
+Copyright: *No copyright*
+License: UNKNOWN
+
+Files: service/bundleregistry.py
+	src/controlpanel/__init__.py
+	src/hardware/__init__.py
 	src/hardware/hardwaremanager.py
 	src/hardware/keydialog.py
 	src/hardware/nmclient.py
@@ -59,8 +125,13 @@ GPL-2+ [2006-2007 Red Hat, Inc]: service/bundleregistry.py
 	src/model/Friends.py
 	src/model/Invites.py
 	src/model/MeshModel.py
+	src/model/__init__.py
 	src/model/accesspointmodel.py
+	src/model/devices/__init__.py
+	src/model/devices/battery.py
+	src/model/devices/network/__init__.py
 	src/model/devices/network/mesh.py
+	src/model/devices/network/wired.py
 	src/model/devices/network/wireless.py
 	src/model/shellmodel.py
 	src/shellservice.py
@@ -69,7 +140,14 @@ GPL-2+ [2006-2007 Red Hat, Inc]: service/bundleregistry.py
 	src/view/BuddyMenu.py
 	src/view/OverlayWindow.py
 	src/view/Shell.py
+	src/view/__init__.py
+	src/view/devices/__init__.py
+	src/view/devices/battery.py
+	src/view/devices/deviceview.py
+	src/view/devices/network/__init__.py
+	src/view/devices/network/wired.py
 	src/view/devices/network/wireless.py
+	src/view/frame/__init__.py
 	src/view/frame/frame.py
 	src/view/frame/framewindow.py
 	src/view/frame/friendstray.py
@@ -79,37 +157,13 @@ GPL-2+ [2006-2007 Red Hat, Inc]: service/bundleregistry.py
 	src/view/home/HomeWindow.py
 	src/view/home/MeshBox.py
 	src/view/home/MyIcon.py
+	src/view/home/__init__.py
 	src/view/home/snowflakelayout.py
-UNKNOWN [YEAR THE PACKAGE'S HOLDER]: po/am.po
-	po/ar.po
-	po/ay.po
-	po/bn.po
-	po/dz.po
-	po/el.po
-	po/en.po
-	po/es.po
-	po/ha.po
-	po/hi.po
-	po/is.po
-	po/it.po
-	po/ja.po
-	po/ko.po
-	po/mk.po
-	po/ml.po
-	po/ne.po
-	po/nl.po
-	po/pa.po
-	po/pt.po
-	po/pt_BR.po
-	po/qu.po
-	po/ro.po
-	po/ru.po
-	po/rw.po
-	po/th.po
-	po/yo.po
-	po/zh_CN.po
-	po/zh_TW.po
-GENERATED FILE [1994-2002]: Makefile.in
+	src/view/keyhandler.py
+Copyright: 2006-2007, Red Hat, Inc
+License: GPL-2+
+
+Files: Makefile.in
 	bin/Makefile.in
 	data/Makefile.in
 	data/icons/Makefile.in
@@ -128,28 +182,16 @@ GENERATED FILE [1994-2002]: Makefile.in
 	src/view/devices/network/Makefile.in
 	src/view/frame/Makefile.in
 	src/view/home/Makefile.in
-GPL-2+ [2006-2007, Red Hat, Inc]: src/controlpanel/__init__.py
-	src/hardware/__init__.py
-	src/model/__init__.py
-	src/model/devices/__init__.py
-	src/model/devices/battery.py
-	src/model/devices/network/__init__.py
-	src/model/devices/network/wired.py
-	src/view/__init__.py
-	src/view/devices/__init__.py
-	src/view/devices/battery.py
-	src/view/devices/deviceview.py
-	src/view/devices/network/__init__.py
-	src/view/devices/network/wired.py
-	src/view/frame/__init__.py
-	src/view/home/__init__.py
-	src/view/keyhandler.py
-GPL-2+ [2008 One Laptop Per Child]: src/controlpanel/gui.py
+Copyright: 1994-2002
+License: UNKNOWN (GENERATED FILE)
+
+Files: src/controlpanel/gui.py
 	src/controlpanel/model/__init__.py
 	src/controlpanel/model/aboutme.py
 	src/controlpanel/model/aboutxo.py
 	src/controlpanel/model/frame.py
 	src/controlpanel/model/network.py
+	src/controlpanel/model/power.py
 	src/controlpanel/view/__init__.py
 	src/view/frame/devicestray.py
 	src/view/frame/notification.py
@@ -158,7 +200,10 @@ GPL-2+ [2008 One Laptop Per Child]: src/controlpanel/gui.py
 	src/view/home/favoriteslayout.py
 	src/view/palettes.py
 	src/view/pulsingicon.py
-GPL-2+ [2008, Red Hat, Inc]: bin/sugar-control-panel
+Copyright: 2008, One Laptop Per Child
+License: GPL-2+
+
+Files: bin/sugar-control-panel
 	bin/sugar-control-panel.in
 	bin/sugar-emulator
 	bin/sugar-emulator.in
@@ -166,9 +211,29 @@ GPL-2+ [2008, Red Hat, Inc]: bin/sugar-control-panel
 	bin/sugar-shell-service
 	bin/sugar-shell-service.in
 	bin/sugar-shell.in
+	service/config.py
+	service/config.py.in
+	src/config.py
+	src/config.py.in
 	src/session.py
-	src/view/home/launchbox.py
-GPL-2+ [2008, OLPC]: src/controlpanel/inlinealert.py
+	src/view/launchwindow.py
+Copyright: 2008, Red Hat, Inc
+License: GPL-2+
+
+Files: bin/sugar-launch
+	src/intro/colorpicker.py
+	src/intro/intro.py
+	src/logsmanager.py
+	src/model/devices/device.py
+	src/model/devices/devicesmodel.py
+	src/view/frame/eventarea.py
+	src/view/home/proc_smaps.py
+	src/view/home/spreadlayout.py
+	src/view/home/transitionbox.py
+Copyright: 2007, Red Hat, Inc
+License: GPL-2+
+
+Files: src/controlpanel/inlinealert.py
 	src/controlpanel/sectionview.py
 	src/controlpanel/view/aboutme.py
 	src/controlpanel/view/aboutxo.py
@@ -176,59 +241,135 @@ GPL-2+ [2008, OLPC]: src/controlpanel/inlinealert.py
 	src/controlpanel/view/frame.py
 	src/controlpanel/view/language.py
 	src/controlpanel/view/network.py
-GPL-2+ [2007, Red Hat, Inc]: bin/sugar-launch
-	src/intro/colorpicker.py
-	src/intro/intro.py
-	src/model/devices/device.py
-	src/model/devices/devicesmodel.py
-	src/view/frame/eventarea.py
-	src/view/home/transitionbox.py
-GPL-2+ [2007, One Laptop Per Child]: service/__init__.py
+	src/controlpanel/view/power.py
+Copyright: 2008, OLPC
+License: GPL-2+
+
+Files: service/__init__.py
 	service/clipboardobject.py
 	src/view/clipboardmenu.py
 	src/view/frame/clipboardpanelwindow.py
 	src/view/frame/clipboardtray.py
-GPL-2+ [2006, Red Hat, Inc]: bin/sugar-activity
+Copyright: 2007, One Laptop Per Child
+License: GPL-2+
+
+Files: bin/sugar-activity
 	service/clipboardservice.py
 	src/emulator.py
 	src/main.py
-GPL-2+ [2007-2008 One Laptop Per Child]: src/controlpanel/cmd.py
+Copyright: 2006, Red Hat, Inc
+License: GPL-2+
+
+Files: src/controlpanel/cmd.py
 	src/controlpanel/model/datetime.py
 	src/controlpanel/model/language.py
 	src/controlpanel/toolbar.py
-GPL-2+ [2008 One Laptop Per Child / 2006-2007 Red Hat, Inc]: src/model/Owner.py
+Copyright: 2007-2008, One Laptop Per Child
+License: GPL-2+
+
+Files: src/model/Owner.py
 	src/view/devices/network/mesh.py
 	src/view/frame/activitiestray.py
 	src/view/home/favoritesview.py
-GPL-2+ [2008 Red Hat, Inc]: service/config.py
-	service/config.py.in
-	src/config.py
-	src/config.py.in
-GPL-2+ [2007 Red Hat, Inc]: src/logsmanager.py
-	src/view/home/proc_smaps.py
-	src/view/home/spreadlayout.py
-GPL-2+ [2008 Martin Dengler]: src/model/devices/speaker.py
+Copyright: 2008, One Laptop Per Child
+	2006-2007, Red Hat, Inc
+License: GPL-2+
+
+Files: src/model/devices/speaker.py
 	src/view/devices/speaker.py
-GENERATED FILE [1992-1996, 1998-2001]: configure
-GENERATED FILE [1995-2002 Free Software Foundation, Inc / 2001-2004 Red Hat, Inc / 1996-2004]: aclocal.m4
-GPL GENERATED FILE [1996-1997, 1999-2000, 2002-2006]: missing
-GPL GENERATED FILE [2000-2001 Eazel, Inc / 2000, 2003 Free Software Foundation]: intltool-merge.in
-GPL GENERATED FILE [2000-2001, 2003-2005 Free Software Foundation, Inc]: py-compile
-GPL GENERATED FILE [2000-2003 Free Software Foundation]: intltool-update.in
-GPL-2+ GENERATED FILE [2000-2001, 2003 Free Software Foundation]: intltool-extract.in
-GPL-2+ GENERATED FILE [2006-2007 Owen Williams]: src/model/homemodel.py
-GPL-2+ [2002-2003 Erik Max Francis']: data/em.py
-GPL-2+ [2006-2007 Owen Williams]: src/model/homeactivity.py
-GPL-2+ [2007 One Laptop Per Child / 2006-2007 Red Hat, Inc]: service/activityregistryservice.py
-GPL-2+ [2007, Eduardo Silva <edsiper@gmail.com>]: src/view/frame/frameinvoker.py
-GPL-2+ [2007, One Laptop Per Child / 2006, Red Hat, Inc]: service/main.py
-GPL-2+ [2007, Red Hat, Inc / 2007, One Laptop Per Child]: src/view/clipboardicon.py
-GPL-2+ [2008 One Laptop Per Child / 2007 Red Hat, Inc]: src/view/home/grid.py
-GPL-2+ [2008, Benjamin Berg <benjamin@sipsolutions.net>]: src/view/tabbinghandler.py
-MIT/X11 (BSD like) [1994 X Consortium]: install-sh
-UNKNOWN [1989, 1991 Free Software Foundation, Inc. / the software, and]: COPYING
-UNKNOWN [1995-1997 by Ulrich Drepper <drepper@gnu.ai.mit.edu> / 2004-2008 Rodney Dawes <dobey.pwns@gmail.com>]: po/Makefile.in.in
-UNKNOWN [2007 the Package Owner]: po/fr.po
-UNKNOWN [YEAR THE PACKAGE'S HOLDER / " / " / :"]: po/fa.po
-UNKNOWN [YEAR THE PACKAGE'S HOLDER / :"]: po/ur.po
-UNKNOWN [YEAR THE PACKAGE'S HOLDER, 2006]: po/ig.po
+Copyright: 2008, Martin Dengler
+License: GPL-2+
+
+Files: missing
+Copyright: 1996-1997, 1999-2000, 2002-2006
+License: GPL (GENERATED FILE)
+
+Files: py-compile
+Copyright: 2000-2001, 2003-2005, Free Software Foundation, Inc
+License: GPL (GENERATED FILE)
+
+Files: intltool-merge.in
+Copyright: 2000-2001, Eazel, Inc
+	2000, 2003, Free Software Foundation
+License: GPL (GENERATED FILE)
+
+Files: intltool-update.in
+Copyright: 2000-2003, Free Software Foundation
+License: GPL (GENERATED FILE)
+
+Files: intltool-extract.in
+Copyright: 2000-2001, 2003, Free Software Foundation
+License: GPL-2+ (GENERATED FILE)
+
+Files: src/model/homemodel.py
+Copyright: 2006-2007, Owen Williams
+License: GPL-2+ (GENERATED FILE)
+
+Files: data/em.py
+Copyright: 2002-2003, Erik Max Francis'
+License: GPL-2+
+
+Files: src/model/homeactivity.py
+Copyright: 2006-2007, Owen Williams
+License: GPL-2+
+
+Files: src/view/frame/frameinvoker.py
+Copyright: 2007, Eduardo Silva <edsiper@gmail.com>
+License: GPL-2+
+
+Files: service/main.py
+Copyright: 2007, One Laptop Per Child
+	2006, Red Hat, Inc
+License: GPL-2+
+
+Files: service/activityregistryservice.py
+Copyright: 2007, One Laptop Per Child
+	2006-2007, Red Hat, Inc
+License: GPL-2+
+
+Files: src/view/clipboardicon.py
+Copyright: 2007, Red Hat, Inc
+	2007, One Laptop Per Child
+License: GPL-2+
+
+Files: src/view/tabbinghandler.py
+Copyright: 2008, Benjamin Berg <benjamin@sipsolutions.net>
+License: GPL-2+
+
+Files: src/view/home/grid.py
+Copyright: 2008, One Laptop Per Child
+	2007, Red Hat, Inc
+License: GPL-2+
+
+Files: install-sh
+Copyright: 1994, X Consortium
+License: MIT/X11 (BSD like)
+
+Files: configure
+Copyright: 1992-1996, 1998-2001
+License: UNKNOWN (GENERATED FILE)
+
+Files: aclocal.m4
+Copyright: 1995-2002, Free Software Foundation, Inc
+	2001-2004, Red Hat, Inc
+	1996-2004
+License: UNKNOWN (GENERATED FILE)
+
+Files: COPYING
+Copyright: 1989, 1991, Free Software Foundation, Inc.
+	the software, and
+License: UNKNOWN
+
+Files: po/Makefile.in.in
+Copyright: 1995-1997, by Ulrich Drepper <drepper@gnu.ai.mit.edu>
+	2004-2008, Rodney Dawes <dobey.pwns@gmail.com>
+License: UNKNOWN
+
+Files: po/fr.po
+Copyright: 2007, the Package Owner
+License: UNKNOWN
+
+Files: po/ig.po
+Copyright: YEAR THE PACKAGE'S HOLDER, 2006
+License: UNKNOWN
+

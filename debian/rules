@@ -5,6 +5,11 @@
 # NB! Local CDBS tweaks in use. More info in README.cdbs-tweaks
 DEB_BUILDDIR = build
 DEB_PYTHON_SYSTEM = pycentral
+ifneq (,$(DEB_MAINTAINER_MODE))
+  # Enable stuff not policy compliant (eg. unsuitable for build daemons)
+  DEB_COPYRIGHT_CHECK_STRICT = yes
+  DEB_AUTO_UPDATE_DEBIAN_CONTROL = yes
+endif
 include debian/cdbs/1/rules/upstream-tarball.mk
 include debian/cdbs/1/rules/copyright-check.mk
 include /usr/share/cdbs/1/rules/patchsys-quilt.mk
@@ -22,5 +27,5 @@ CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, ge
 # Needed for our packaging routines
 CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), python-empy
 
-# Merge duplicate build-dependencies
-CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bcdbs (>= 0.4.39)/ s/ *,* *\bcdbs (>= \(0.4.23-1.1\|0.4.27\)) *,* */, /g' -e 's/^ *, *//' -e 's/ *, *$$//')
+# Resolve, cleanup and apply CDBS-declared dependencies
+include debian/cdbs/1/rules/package-relations.mk

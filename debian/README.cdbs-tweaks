@@ -69,6 +69,13 @@ Handle packaging of Sugar activities.
 
 
 
+New perl-build class
+--------------------
+
+Handle Perl modules using Module::Build.
+
+
+
 New copyright-check rule
 ------------------------
 
@@ -81,6 +88,16 @@ New kernelpatches rule
 ----------------------
 
 Small wrapper around dh-kpatches, taking care of build-dependencies too.
+
+
+
+New package-relations rule
+--------------------------
+
+Improved build-dependency handling (merging multiple dependencies on
+same packages), and add dependency handling for binary packages (to ease
+maintaining identical build-dependencies and dependencies for eg. Perl
+modules meeding runtime stuff for buildtime tests).
 
 
 

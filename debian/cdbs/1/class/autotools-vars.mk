@@ -28,7 +28,7 @@ _cdbs_class_autotools_vars = 1
 #include $(_cdbs_class_path)/makefile.mk$(_cdbs_makefile_suffix)
 include debian/cdbs/1/class/makefile.mk
 
-DEB_MAKE_INSTALL_TARGET = install DESTDIR=$(DEB_DESTDIR)
+DEB_MAKE_INSTALL_TARGET = install DESTDIR=$(cdbs_curpkgdestdir)
 DEB_MAKE_CLEAN_TARGET = distclean
 #DEB_MAKE_CHECK_TARGET = check
 

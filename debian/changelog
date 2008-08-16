@@ -1,6 +1,14 @@
 sugar (0.82.0-1) UNRELEASED; urgency=low
 
   * New upstream release.
+  * Update cdbs snippets:
+    + Move dependency cleanup to new local snippet package-relations.mk.
+    + Update copyright-check output to more closely match proposed new
+      copyright file format.  Update copyright-hints.
+    + Internal restructuring of flavor-enhanced autotools- and makefile-
+      snippets.
+    + Update README.cdbs-tweaks.
+  * Add DEB_MAINTAINER_MODE in debian/rules (thanks to Romain Beauxis).
 
  -- Jonas Smedegaard <dr@jones.dk>  Sat, 16 Aug 2008 13:30:19 +0200
 

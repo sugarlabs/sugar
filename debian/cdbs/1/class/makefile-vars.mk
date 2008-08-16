@@ -42,6 +42,8 @@ DEB_MAKE_BUILD_TARGET = $(DEB_BUILD_MAKE_TARGET)
 # looks like: install DESTDIR=$(DEB_DESTDIR)
 # If you're using automake though, you likely want to be including autotools.mk instead
 # of this file.
+# For multi-flavored builds (see below) installed per-flavor, it looks like this:
+# install DESTDIR=$(cdbs_curpkgdestdir)
 
 # This variable is deprecated.
 DEB_CLEAN_MAKE_TARGET = clean
@@ -57,8 +59,14 @@ _cdbs_deprecated_vars += DEB_MAKE_TEST_TARGET
 # New in 0.4.2.
 DEB_MAKE_CHECK_TARGET = $(DEB_MAKE_TEST_TARGET)
 
-# NB! This needs to be declared _before_ including makefile
-#DEB_MAKE_FLAVORS =
-DEB_MAKE_FLAVORS_BUILDDIRSKEL = $(DEB_BUILDDIR)/@FLAVOR@
+# If DEB_MAKE_FLAVORS is set compilation is done once per flavor.
+# NB! This must be declared _before_ including makefile.mk
+#DEB_MAKE_FLAVORS = light normal enhanced
+
+# If building multiple flavors, skeleton strings are used for
+# DEB_BUILDDIR and DEB_DESTDIR, with @FLAVOR@ expanding to actual
+# flavor.
+DEB_MAKE_BUILDDIRSKEL = $(cdbs_curpkgbuilddir)/@FLAVOR@
+DEB_MAKE_DESTDIRSKEL = $(cdbs_curpkgdestdir)/@FLAVOR@
 
 endif

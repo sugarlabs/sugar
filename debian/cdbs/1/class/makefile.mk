@@ -29,51 +29,55 @@ include $(_cdbs_rules_path)/buildcore.mk$(_cdbs_makefile_suffix)
 #include $(_cdbs_class_path)/makefile-vars.mk$(_cdbs_makefile_suffix)
 include debian/cdbs/1/class/makefile-vars.mk
 
-DEB_PHONY_RULES += makefile-clean
-
-# TODO: Move this to buildvars.mk
+# TODO: Move these to buildcore.mk
 cdbs_curpkgbuilddir = $(if $(DEB_BUILDDIR_$(cdbs_curpkg)),$(DEB_BUILDDIR_$(cdbs_curpkg)),$(DEB_BUILDDIR))
-
+cdbs_curpkgdestdir = $(if $(DEB_DESTDIR_$(cdbs_curpkg)),$(DEB_DESTDIR_$(cdbs_curpkg)),$(DEB_DESTDIR))
+ 
+cdbs_make_multibuilds = $(sort $(DEB_MAKE_FLAVORS))
 cdbs_make_builddir_check = $(if $(call cdbs_streq,$(DEB_BUILDDIR),$(DEB_SRCDIR)),$(error DEB_MAKE_FLAVORS in use: DEB_BUILDDIR must be different from DEB_SRCDIR, and needs to be declared before including makefile.mk))
-cdbs_make_build_targets = $(if $(DEB_MAKE_FLAVORS),$(cdbs_make_builddir_check)$(patsubst %,debian/stamp-makefile-build/%,$(DEB_MAKE_FLAVORS)),debian/stamp-makefile-build)
-cdbs_make_install_targets = $(if $(DEB_MAKE_FLAVORS),$(cdbs_make_builddir_check)$(patsubst %,debian/stamp-makefile-install/%,$(DEB_MAKE_FLAVORS)),debian/stamp-makefile-install)
-cdbs_make_check_targets = $(if $(DEB_MAKE_FLAVORS),$(cdbs_make_builddir_check)$(patsubst %,debian/stamp-makefile-check/%,$(DEB_MAKE_FLAVORS)),debian/stamp-makefile-check)
-cdbs_make_clean_targets = $(if $(DEB_MAKE_CLEAN_TARGET),$(if $(DEB_MAKE_FLAVORS),$(patsubst %,makefile-clean/%,$(DEB_MAKE_FLAVORS)),makefile-clean))
-cdbs_make_curflavor = $(notdir $@)
-cdbs_make_curbuilddir = $(if $(DEB_MAKE_FLAVORS),$(subst @FLAVOR@,$(cdbs_make_curflavor),$(DEB_MAKE_FLAVORS_BUILDDIRSKEL)),$(cdbs_curpkgbuilddir))
+cdbs_make_build_stamps = $(if $(cdbs_make_multibuilds),$(cdbs_make_builddir_check)$(patsubst %,debian/stamp-makefile-build/%,$(cdbs_make_multibuilds)),debian/stamp-makefile-build)
+cdbs_make_install_stamps = $(if $(cdbs_make_multibuilds),$(cdbs_make_builddir_check)$(patsubst %,debian/stamp-makefile-install/%,$(cdbs_make_multibuilds)),debian/stamp-makefile-install)
+cdbs_make_check_stamps = $(if $(cdbs_make_multibuilds),$(cdbs_make_builddir_check)$(patsubst %,debian/stamp-makefile-check/%,$(cdbs_make_multibuilds)),debian/stamp-makefile-check)
+cdbs_make_clean_nonstamps = $(if $(cdbs_make_multibuilds),$(patsubst %,makefile-clean/%,$(cdbs_make_multibuilds)),makefile-clean)
+cdbs_make_curflavor = $(filter-out %/,$(subst /,/ ,$@))
+cdbs_make_curbuilddir = $(if $(cdbs_make_multibuilds),$(subst @FLAVOR@,$(cdbs_make_curflavor),$(DEB_MAKE_BUILDDIRSKEL)),$(cdbs_curpkgbuilddir))
+
+DEB_PHONY_RULES += makefile-clean $(cdbs_make_clean_nonstamps)
 
 pre-build::
-	$(if $(DEB_MAKE_FLAVORS),mkdir -p debian/stamp-makefile-build debian/stamp-makefile-install)
-	$(if $(and $(DEB_MAKE_FLAVORS),$(DEB_MAKE_CHECK_TARGET)),mkdir -p debian/stamp-makefile-check)
+	$(if $(cdbs_make_multibuilds),mkdir -p debian/stamp-makefile-build debian/stamp-makefile-install)
+	$(and $(cdbs_make_multibuilds),$(not $(findstring nocheck,$(DEB_BUILD_OPTIONS))),$(DEB_MAKE_CHECK_TARGET),mkdir -p debian/stamp-makefile-check)
 
-common-build-arch common-build-indep:: $(cdbs_make_build_targets)
-$(cdbs_make_build_targets):
+common-build-arch common-build-indep:: $(cdbs_make_build_stamps)
+$(cdbs_make_build_stamps):
 	+$(DEB_MAKE_INVOKE) $(DEB_MAKE_BUILD_TARGET)
 	touch $@
 
 cleanbuilddir:: makefile-clean
-makefile-clean:: $(cdbs_make_clean_targets)
-	$(if $(DEB_MAKE_CLEAN_TARGET),,@echo "DEB_MAKE_CLEAN_TARGET unset, not running clean")
-	rm -rf debian/stamp-makefile-build debian/stamp-makefile-install
+makefile-clean:: $(if $(cdbs_make_multibuilds),$(cdbs_make_clean_nonstamps))
+	$(if $(cdbs_make_multibuilds),-rmdir --ignore-fail-on-non-empty debian/stamp-makefile-build debian/stamp-makefile-install,rm -f debian/stamp-makefile-build debian/stamp-makefile-install)
 
-DEB_PHONY_RULES += makefile-clean $(cdbs_make_clean_targets)
-$(cdbs_make_clean_targets)::
-	+-$(DEB_MAKE_INVOKE) -k $(DEB_MAKE_CLEAN_TARGET)
+$(cdbs_make_clean_nonstamps)::
+	$(if $(DEB_MAKE_CLEAN_TARGET),+-$(DEB_MAKE_INVOKE) -k $(DEB_MAKE_CLEAN_TARGET),@echo "DEB_MAKE_CLEAN_TARGET unset, not running clean")
+	$(if $(cdbs_make_multibuilds),rm -f $(@:makefile-clean%=debian/stamp-makefile-build%) $(@:makefile-clean%=debian/stamp-makefile-install%))
 
 common-install-arch common-install-indep:: common-install-impl
-common-install-impl:: $(cdbs_make_install_targets)
-$(cdbs_make_install_targets):
+common-install-impl:: $(cdbs_make_install_stamps)
+$(cdbs_make_install_stamps)::
 	$(if $(DEB_MAKE_INSTALL_TARGET),+$(DEB_MAKE_INVOKE) $(DEB_MAKE_INSTALL_TARGET),@echo "DEB_MAKE_INSTALL_TARGET unset, skipping default makefile.mk common-install target")
 	$(if $(DEB_MAKE_INSTALL_TARGET),touch $@)
 
 ifeq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
-common-build-arch common-build-indep:: $(cdbs_make_check_targets)
-$(cdbs_make_check_targets) : debian/stamp-makefile-check% : debian/stamp-makefile-build%
+common-build-arch common-build-indep:: $(cdbs_make_check_stamps)
+$(cdbs_make_check_stamps) : debian/stamp-makefile-check% : debian/stamp-makefile-build%
 	$(if $(DEB_MAKE_CHECK_TARGET),+$(DEB_MAKE_INVOKE) $(DEB_MAKE_CHECK_TARGET),@echo "DEB_MAKE_CHECK_TARGET unset, not running checks")
 	$(if $(DEB_MAKE_CHECK_TARGET),touch $@)
 
-clean::
-	rm -rf debian/stamp-makefile-check
+makefile-clean::
+	$(if $(DEB_MAKE_CHECK_TARGET),rm -f debian/stamp-makefile-check)
+
+$(cdbs_make_clean_nonstamps)::
+	$(if $(cdbs_make_multibuilds),rm -f $(@:makefile-clean%=debian/stamp-makefile-check%))
 endif
 
 endif
