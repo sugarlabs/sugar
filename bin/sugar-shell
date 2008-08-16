@@ -23,9 +23,9 @@ if os.environ.has_key('SUGAR_THEME'):
 else:
     theme = 'sugar'
 
-os.environ['GTK2_RC_FILES'] = '/home/marco/sugar-jhbuild/install/share/sugar/data/%s.gtkrc' % theme
+os.environ['GTK2_RC_FILES'] = '/usr/local/share/sugar/data/%s.gtkrc' % theme
 
-sys.path.insert(0, '/home/marco/sugar-jhbuild/install/share/sugar/shell')
+sys.path.insert(0, '/usr/local/share/sugar/shell')
 
 from main import main
 
