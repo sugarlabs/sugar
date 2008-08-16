@@ -1,6 +1,7 @@
 sugar (0.82.0-1) unstable; urgency=low
 
   * New upstream release.
+  * Unfuzz patch 2991.
   * Update cdbs snippets:
     + Move dependency cleanup to new local snippet package-relations.mk.
     + Update copyright-check output to more closely match proposed new
