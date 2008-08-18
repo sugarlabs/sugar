@@ -177,6 +177,12 @@ class AboutMe(SectionView):
         self._nick_alert.hide()
         self._color_alert.hide()        
 
+    def _validate(self):
+        if self._nick_valid and self._color_valid:
+            self.props.is_valid = True
+        else:
+            self.props.is_valid = False
+
     def __nick_changed_cb(self, widget, data=None):        
         if self._nick_sid:
             gobject.source_remove(self._nick_sid)
@@ -198,12 +204,8 @@ class AboutMe(SectionView):
             self._nick_valid = True            
             self.needs_restart = True
             self.restart_alerts.append('nick')
-                        
-        if self._nick_valid and self._color_valid:
-            self.props.is_valid = True
-        else:    
-            self.props.is_valid = False
 
+        self._validate()
         self._nick_alert.show()
         return False
 
@@ -214,11 +216,7 @@ class AboutMe(SectionView):
         self._color_valid = True
         self.restart_alerts.append('color')
 
-        if self._nick_valid and self._color_valid:
-            self.props.is_valid = True            
-        else:    
-            self.props.is_valid = False
-        
+        self._validate()
         self._color_alert.show()
             
 
