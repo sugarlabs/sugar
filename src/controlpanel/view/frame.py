@@ -178,7 +178,6 @@ class Frame(SectionView):
         except ValueError, detail:
             self._corner_delay_alert.props.msg = detail
             self._corner_delay_is_valid = False
-            self.needs_restart = False
         else:
             self._corner_delay_alert.props.msg = self.restart_msg
             self._corner_delay_is_valid = True            
@@ -216,7 +215,6 @@ class Frame(SectionView):
         except ValueError, detail:
             self._edge_delay_alert.props.msg = detail
             self._edge_delay_is_valid = False
-            self.needs_restart = False
         else:
             self._edge_delay_alert.props.msg = self.restart_msg
             self._edge_delay_is_valid = True            

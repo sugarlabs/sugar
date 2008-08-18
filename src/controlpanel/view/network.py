@@ -193,7 +193,6 @@ class Network(SectionView):
         except ValueError, detail:
             self._jabber_alert.props.msg = detail
             self._jabber_valid = False
-            self.needs_restart = False
         else:
             self._jabber_alert.props.msg = self.restart_msg
             self._jabber_valid = True            
