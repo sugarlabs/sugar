@@ -148,6 +148,12 @@ class Power(SectionView):
         self._extreme_pm_alert.hide()
         self._automatic_pm_alert.hide()
 
+    def _validate(self):
+        if self._extreme_pm_valid and self._extreme_pm_valid:
+            self.props.is_valid = True
+        else:
+            self.props.is_valid = False
+
     def __automatic_pm_toggled_cb(self, widget, data=None):
         state = widget.get_active()
         try:
@@ -158,11 +164,7 @@ class Power(SectionView):
         else:
             self._automatic_pm_valid = True
 
-        if self._automatic_pm_valid and self._extreme_pm_valid:
-            self.props.is_valid = True
-        else:
-            self.props.is_valid = False
-
+        self._validate()
         return False
 
     def __extreme_pm_toggled_cb(self, widget, data=None):
@@ -175,9 +177,5 @@ class Power(SectionView):
         else:
             self._extreme_pm_valid = True
 
-        if self._extreme_pm_valid and self._extreme_pm_valid:
-            self.props.is_valid = True
-        else:
-            self.props.is_valid = False
-
+        self._validate()
         return False

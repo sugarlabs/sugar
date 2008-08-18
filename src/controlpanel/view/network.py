@@ -161,6 +161,12 @@ class Network(SectionView):
         self._jabber_alert.hide()
         self._radio_alert.hide()        
 
+    def _validate(self):
+        if self._jabber_valid and self._radio_valid:
+            self.props.is_valid = True
+        else:
+            self.props.is_valid = False
+
     def __radio_toggled_cb(self, widget, data=None): 
         radio_state = widget.get_active()
         try:
@@ -171,11 +177,7 @@ class Network(SectionView):
         else:
             self._radio_valid = True            
 
-        if self._radio_valid and self._jabber_valid:
-            self.props.is_valid = True
-        else:    
-            self.props.is_valid = False
-
+        self._validate()
         return False
 
     def __jabber_changed_cb(self, widget, data=None):        
@@ -199,10 +201,6 @@ class Network(SectionView):
             self.needs_restart = True
             self.restart_alerts.append('jabber')            
 
-        if self._jabber_valid and self._radio_valid:
-            self.props.is_valid = True
-        else:    
-            self.props.is_valid = False
-
+        self._validate()
         self._jabber_alert.show()        
         return False
