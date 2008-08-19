@@ -148,7 +148,7 @@ class Power(SectionView):
         self._automatic_pm_alert.hide()
 
     def _validate(self):
-        if self._extreme_pm_valid and self._extreme_pm_valid:
+        if self._extreme_pm_valid and self._automatic_pm_valid:
             self.props.is_valid = True
         else:
             self.props.is_valid = False
