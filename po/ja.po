@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-08-19 17:12-0400\n"
-"PO-Revision-Date: 2008-08-19 20:31-0400\n"
+"PO-Revision-Date: 2008-08-21 12:54-0400\n"
 "Last-Translator: korakurider <korakurider@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -124,7 +124,7 @@ msgstr "ソフトウェアの更新"
 
 #: ../src/view/home/HomeBox.py:121
 msgid "Update your activities to ensure compatibility with your new software"
-msgstr "新しいソフトウェアとの互換性を確保できるよう、アクティビティを更新してください"
+msgstr "新しいソフトウェアとの互換性を保つため、アクティビティを更新してください"
 
 #: ../src/view/home/HomeBox.py:125 ../src/controlpanel/toolbar.py:115
 msgid "Cancel"
