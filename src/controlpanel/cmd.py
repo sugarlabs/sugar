@@ -30,6 +30,8 @@ _general_error = _("sugar-control-panel: %s")
 
 def cmd_help():
     '''Print the help to the screen'''
+    # TRANS: Translators, there's a empty line at the end of this string, 
+    # which must appear in the translated string (msgstr) as well.
     print _('Usage: sugar-control-panel [ option ] key [ args ... ] \n\
     Control for the sugar environment. \n\
     Options: \n\
