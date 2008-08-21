@@ -314,6 +314,7 @@ msgstr ""
 "-g key このキーの現在の設定値を取得\n"
 "-s key このキーの値を設定 \n"
 "-c key このキーの設定を消去\n"
+"   "
 
 #: ../src/controlpanel/cmd.py:46
 msgid "To apply your changes you have to restart sugar.\n"
