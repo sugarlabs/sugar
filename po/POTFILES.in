@@ -1,4 +1,4 @@
-src/intro/intro.py
+src/intro/window.py
 src/view/BuddyMenu.py
 src/view/clipboardmenu.py
 src/hardware/keydialog.py
