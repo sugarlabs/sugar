@@ -203,8 +203,13 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
                           self.__icon_button_release_event_cb)
         self.append(self.icon)
 
+        if gtk.widget_get_default_direction() == gtk.TEXT_DIR_RTL:
+           align = hippo.ALIGNMENT_END
+        else:
+           align = hippo.ALIGNMENT_START
+
         title = hippo.CanvasText(text=activity_info.name,
-                                 xalign=hippo.ALIGNMENT_START,
+                                 xalign=align,
                                  font_desc=style.FONT_BOLD.get_pango_desc(),
                                  box_width=ActivityEntry._TITLE_COL_WIDTH)
         self.append(title)
@@ -221,10 +226,13 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
         timestamp = activity_info.installation_time
         date = hippo.CanvasText(
                 text=util.timestamp_to_elapsed_string(timestamp),
-                xalign=hippo.ALIGNMENT_START,
+                xalign=align,
                 font_desc=style.FONT_NORMAL.get_pango_desc(),
                 box_width=ActivityEntry._DATE_COL_WIDTH)
         self.append(date)
+
+        if gtk.widget_get_default_direction() == gtk.TEXT_DIR_RTL:
+            self.reverse()
 
     def __favorite_changed_cb(self, favorite_icon, pspec):
         registry = activity.get_registry()
