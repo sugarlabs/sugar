@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-23 07:44-0400\n"
-"PO-Revision-Date: 2008-07-25 11:08-0400\n"
+"POT-Creation-Date: 2008-08-19 17:18-0400\n"
+"PO-Revision-Date: 2008-08-21 20:28-0400\n"
 "Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -19,19 +19,19 @@ msgstr ""
 msgid "Name:"
 msgstr "Nome:"
 
-#: ../src/intro/intro.py:94
+#: ../src/intro/intro.py:97
 msgid "Click to change color:"
 msgstr "Seleziona per cambiare colore:"
 
-#: ../src/intro/intro.py:145
+#: ../src/intro/intro.py:148
 msgid "Back"
 msgstr "Indietro"
 
-#: ../src/intro/intro.py:159 ../src/controlpanel/toolbar.py:61
+#: ../src/intro/intro.py:162 ../src/controlpanel/toolbar.py:61
 msgid "Done"
 msgstr "Fatto"
 
-#: ../src/intro/intro.py:162
+#: ../src/intro/intro.py:165
 msgid "Next"
 msgstr "Prossimo"
 
@@ -64,7 +64,7 @@ msgstr "Apri"
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../src/view/clipboardmenu.py:63 ../src/view/home/HomeBox.py:86
+#: ../src/view/clipboardmenu.py:63 ../src/view/home/HomeBox.py:87
 msgid "Keep"
 msgstr "Memorizza"
 
@@ -89,49 +89,83 @@ msgstr "Tipo di Autenticazione:"
 msgid "Encryption Type:"
 msgstr "Tipo di Crittografia:"
 
-#: ../src/view/Shell.py:240
+#: ../src/hardware/schoolserver.py:17
+msgid "Cannot obtain data needed for registration."
+msgstr "Non riesco ad ottenere i dati necessari alla registrazione."
+
+#: ../src/hardware/schoolserver.py:31
+msgid "Cannot connect to the server."
+msgstr "Impossibile connettersi al server."
+
+#: ../src/hardware/schoolserver.py:36
+msgid "The server could not complete the request."
+msgstr "Il server non può completare la richiesta."
+
+#: ../src/view/Shell.py:239
 msgid "Screenshot"
 msgstr "Schermata"
 
-#: ../src/view/home/HomeBox.py:80
+#: ../src/view/home/HomeBox.py:81
 msgid "Confirm erase"
 msgstr "Conferma cancellazione"
 
-#: ../src/view/home/HomeBox.py:82
+#: ../src/view/home/HomeBox.py:83
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr ""
 "Conferma cancellazione: Sei sicuro di voler eliminare definitivamente %s?"
 
-#: ../src/view/home/HomeBox.py:89 ../src/view/palettes.py:120
+#: ../src/view/home/HomeBox.py:90 ../src/view/palettes.py:120
 msgid "Erase"
 msgstr "Cancella"
 
-#: ../src/view/home/HomeBox.py:215
+#: ../src/view/home/HomeBox.py:120
+msgid "Software Update"
+msgstr "Aggiornamento software"
+
+#: ../src/view/home/HomeBox.py:121
+msgid "Update your activities to ensure compatibility with your new software"
+msgstr ""
+"Aggiorna le tue attività perchè siano compatibili con il tuo sistema "
+"aggiornato."
+
+#: ../src/view/home/HomeBox.py:125 ../src/controlpanel/toolbar.py:115
+msgid "Cancel"
+msgstr "Annulla"
+
+#: ../src/view/home/HomeBox.py:127 ../src/controlpanel/gui.py:275
+msgid "Later"
+msgstr "Dopo"
+
+#: ../src/view/home/HomeBox.py:130
+msgid "Check now"
+msgstr "Verifica adesso"
+
+#: ../src/view/home/HomeBox.py:266
 msgid "List view"
 msgstr "Vista Elenco"
 
-#: ../src/view/home/HomeBox.py:216
+#: ../src/view/home/HomeBox.py:267
 msgid "<Ctrl>2"
 msgstr "<Ctrl>2"
 
-#: ../src/view/home/HomeBox.py:273
+#: ../src/view/home/HomeBox.py:324
 msgid "Favorites view"
 msgstr "Visualizza i Preferiti"
 
-#: ../src/view/home/HomeBox.py:274
+#: ../src/view/home/HomeBox.py:325
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
 # TRANS: label for the freeform layout in the favorites view
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/view/home/HomeBox.py:282
+#: ../src/view/home/HomeBox.py:333
 msgid "Freeform"
 msgstr "Formato libero"
 
 # TRANS: label for the ring layout in the favorites view
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/view/home/HomeBox.py:289
+#: ../src/view/home/HomeBox.py:340
 msgid "Ring"
 msgstr "Anello"
 
@@ -210,11 +244,11 @@ msgstr "Carica"
 msgid "My Speakers"
 msgstr "I miei Altoparlanti"
 
-#: ../src/view/devices/speaker.py:119
+#: ../src/view/devices/speaker.py:125
 msgid "Unmute"
 msgstr "riAttiva"
 
-#: ../src/view/devices/speaker.py:122
+#: ../src/view/devices/speaker.py:128
 msgid "Mute"
 msgstr "Silenzia"
 
@@ -227,19 +261,19 @@ msgid "Channel"
 msgstr "Canale"
 
 # Letterale "Vicinato",  sperimentale: I miei vicini
-#: ../src/view/frame/zoomtoolbar.py:34
+#: ../src/view/frame/zoomtoolbar.py:37
 msgid "Neighborhood"
 msgstr "I miei vicini"
 
-#: ../src/view/frame/zoomtoolbar.py:36
+#: ../src/view/frame/zoomtoolbar.py:39
 msgid "Group"
 msgstr "Gruppo"
 
-#: ../src/view/frame/zoomtoolbar.py:38
+#: ../src/view/frame/zoomtoolbar.py:41
 msgid "Home"
 msgstr "Casa"
 
-#: ../src/view/frame/zoomtoolbar.py:40
+#: ../src/view/frame/zoomtoolbar.py:43
 msgid "Activity"
 msgstr "Attività"
 
@@ -273,6 +307,7 @@ msgid ""
 "    -h key       show information about this key \n"
 "    -g key       get the current value of the key \n"
 "    -s key       set the current value for the key \n"
+"    -c key       clear the current value for the key \n"
 "    "
 msgstr ""
 "Utilizzo: sugar-control-panel [ opzioni ] key [ args ... ] \n"
@@ -285,35 +320,27 @@ msgstr ""
 "    -s key       assegna il valore corrente alla \"key\" \n"
 "    "
 
-#: ../src/controlpanel/cmd.py:45
+#: ../src/controlpanel/cmd.py:46
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "Per applicare le modifiche è necessario riavviare sugar.\n"
 
-#: ../src/controlpanel/toolbar.py:115
-msgid "Cancel"
-msgstr "Annulla"
-
-#: ../src/controlpanel/toolbar.py:121 ../src/view/home/favoritesview.py:294
+#: ../src/controlpanel/toolbar.py:121 ../src/view/home/favoritesview.py:296
 msgid "Ok"
 msgstr "Ok"
 
-#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:260
+#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:267
 msgid "Changes require restart"
 msgstr "Le modifiche rendono necessario un riavvio"
 
-#: ../src/controlpanel/gui.py:259
+#: ../src/controlpanel/gui.py:266
 msgid "Warning"
 msgstr "Attenzione"
 
-#: ../src/controlpanel/gui.py:263
+#: ../src/controlpanel/gui.py:270
 msgid "Cancel changes"
 msgstr "Annulla modifiche"
 
-#: ../src/controlpanel/gui.py:267
-msgid "Later"
-msgstr "Dopo"
-
-#: ../src/controlpanel/gui.py:271
+#: ../src/controlpanel/gui.py:279
 msgid "Restart now"
 msgstr "Riavvia adesso"
 
@@ -506,7 +533,7 @@ msgstr ""
 
 #: ../src/controlpanel/view/power.py:89
 msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
+"Extreme power management (disableswireless radio, increases battery life)"
 msgstr ""
 "Gestione Risparmio Energetico Estrema (spegne la connessione radio wireless, "
 "incrementa la durata delle batterie)"
@@ -545,36 +572,36 @@ msgstr "Mesh sconosciuto"
 msgid "Decline"
 msgstr "Rinuncia"
 
-#: ../src/view/home/favoritesview.py:285
+#: ../src/view/home/favoritesview.py:286
 msgid "Registration Failed"
 msgstr "Registrazione Fallita"
 
-#: ../src/view/home/favoritesview.py:286
+#: ../src/view/home/favoritesview.py:287
 #, python-format
 msgid "%s"
 msgstr "%s"
 
-#: ../src/view/home/favoritesview.py:288
+#: ../src/view/home/favoritesview.py:289
 msgid "Registration Successful"
 msgstr "Registrazione Effettuata"
 
-#: ../src/view/home/favoritesview.py:289
+#: ../src/view/home/favoritesview.py:290
 msgid "You are now registered with your school server."
 msgstr "Ora sei registrato sul tuo server di scuola"
 
-#: ../src/view/home/favoritesview.py:405
+#: ../src/view/home/favoritesview.py:407
 msgid "Control Panel"
 msgstr "Pannello di Controllo"
 
-#: ../src/view/home/favoritesview.py:416
+#: ../src/view/home/favoritesview.py:418
 msgid "Restart"
 msgstr "Riavvia"
 
-#: ../src/view/home/favoritesview.py:421
+#: ../src/view/home/favoritesview.py:423
 msgid "Shutdown"
 msgstr "Spegni"
 
-#: ../src/view/home/favoritesview.py:427
+#: ../src/view/home/favoritesview.py:429
 msgid "Register"
 msgstr "Registra"
 
