@@ -22,7 +22,7 @@ from sugar.graphics import style
 
 from view.home.grid import Grid
 
-_CELL_SIZE = 4
+_CELL_SIZE = 4.0
 
 class SpreadLayout(gobject.GObject, hippo.CanvasLayout):
     __gtype_name__ = 'SugarSpreadLayout'
@@ -66,10 +66,10 @@ class SpreadLayout(gobject.GObject, hippo.CanvasLayout):
             min_h, child_height = child.get_height_request(child_width)
 
             rect = self._grid.get_child_rect(child.item)
-            child.allocate(rect.x * _CELL_SIZE,
-                           rect.y * _CELL_SIZE,
-                           rect.width * _CELL_SIZE,
-                           rect.height * _CELL_SIZE,
+            child.allocate(int(round(rect.x * _CELL_SIZE)),
+                           int(round(rect.y * _CELL_SIZE)),
+                           child_width,
+                           child_height,
                            origin_changed)
 
     def _get_child_grid_size(self, child):
