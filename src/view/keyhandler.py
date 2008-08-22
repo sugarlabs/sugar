@@ -209,7 +209,7 @@ class KeyHandler(object):
         keycodes = (80, 85, 88, 83, 80, 85, 88, 83)
         keysyms = ("KP_Up", "KP_Right", "KP_Down", "KP_Left")
 
-        self._screen_rotation += 1
+        self._screen_rotation -= 1
         self._screen_rotation %= 4
 
         actual_keycodes = keycodes[self._screen_rotation:self._screen_rotation 
