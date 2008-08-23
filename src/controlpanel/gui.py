@@ -256,6 +256,7 @@ class ControlPanel(gtk.Window):
     def __cancel_clicked_cb(self, widget):
         self._section_view.undo()
         self._options[self._current_option]['alerts'] = [] 
+        self._section_toolbar.accept_button.set_sensitive(True)
         self._show_main_view()
 
     def __accept_clicked_cb(self, widget):
