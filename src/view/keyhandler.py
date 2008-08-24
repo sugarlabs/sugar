@@ -88,8 +88,7 @@ class KeyHandler(object):
 
         self._tabbing_handler = TabbingHandler(_TABBING_MODIFIER)
 
-        for key in _actions_table.keys():
-            self._key_grabber.grab(key)
+        self._key_grabber.grab_keys(_actions_table.keys())
 
     def _change_volume(self, step=None, value=None):
         hw_manager = hardwaremanager.get_manager()
