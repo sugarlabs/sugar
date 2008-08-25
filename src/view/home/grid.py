@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from numpy import array, zeros
+import numpy
 import random
 
 import gobject
@@ -43,7 +43,7 @@ class Grid(gobject.GObject):
         self._collisions = []
         self._collisions_sid = 0
 
-        self._array = zeros((width, height), dtype='b')
+        self._array = numpy.zeros((width, height), dtype='b')
 
     def add(self, child, width, height, x=None, y=None, locked=False):
         if x is not None and y is not None:
