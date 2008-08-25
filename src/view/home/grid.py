@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from numpy import array
+from numpy import array, zeros
 import random
 
 import gobject
@@ -43,8 +43,7 @@ class Grid(gobject.GObject):
         self._collisions = []
         self._collisions_sid = 0
 
-        self._array = array([0], dtype='b')
-        self._array.resize(width * height)
+        self._array = zeros((width, height), dtype='b')
 
     def add(self, child, width, height, x=None, y=None, locked=False):
         if x is not None and y is not None:
@@ -190,34 +189,20 @@ class Grid(gobject.GObject):
             if child not in self._collisions:
                 self._collisions.append(child)
 
-        if len(self._collisions) and not self._collisions_sid:
+        if self._collisions and not self._collisions_sid:
             self._collisions_sid = gobject.timeout_add(_REFRESH_RATE,
                     self.__solve_collisions_cb, priority=gobject.PRIORITY_LOW)
 
     def _add_weight(self, rect):
-        for i in range(rect.x, rect.x + rect.width):
-            for j in range(rect.y, rect.y + rect.height):
-                self[j, i] += 1
+        self._array[rect.x:rect.x+rect.width, rect.y:rect.y+rect.width] += 1
 
     def _remove_weight(self, rect):
-        for i in range(rect.x, rect.x + rect.width):
-            for j in range(rect.y, rect.y + rect.height):
-                self[j, i] -= 1
+        self._array[rect.x:rect.x+rect.width, rect.y:rect.y+rect.width] -= 1
 
     def _compute_weight(self, rect):
-        weight = 0
-
-        for i in range(rect.x, rect.x + rect.width):
-            for j in range(rect.y, rect.y + rect.height):
-                weight += self[j, i]
-
+        weight = self._array[rect.x:rect.x+rect.width,
+                             rect.y:rect.y+rect.width].sum()
         return weight
-    
-    def __getitem__(self, (row, col)):
-        return self._array[col + row * self.width]
-
-    def __setitem__(self, (row, col), value):
-        self._array[col + row * self.width] = value
 
     def get_child_rect(self, child):
         return self._child_rects[child]
