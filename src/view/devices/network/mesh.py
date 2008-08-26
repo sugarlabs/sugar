@@ -27,6 +27,7 @@ from sugar.graphics.palette import Palette
 from model.devices import device
 from model.devices.network import wireless
 from hardware import hardwaremanager
+from view.devices.network.wireless import IP_ADDRESS_TEXT_TEMPLATE
 from view.frame.frameinvoker import FrameWidgetInvoker
 
 class DeviceView(TrayIcon):
@@ -45,10 +46,19 @@ class DeviceView(TrayIcon):
 
         model.connect('notify::state', self._state_changed_cb)
         model.connect('notify::activation-stage', self._state_changed_cb)
+        model.connect('notify::ip-address', self._ip_address_changed_cb)
+
         self._update_state()
+        self._update_ip_address()
+
+    def _ip_address_changed_cb(self, model, pspec):
+        self._update_ip_address()
 
     def _state_changed_cb(self, model, pspec):
         self._update_state()
+
+    def _update_ip_address(self):
+        self.palette.set_ip_address(self._model.props.ip_address)
 
     def _update_state(self):
         # FIXME Change icon colors once we have real icons
@@ -80,9 +90,21 @@ class MeshPalette(Palette):
         self._step_label = gtk.Label()
         self._step_label.show()
 
+        self._ip_address_label = gtk.Label()
+        def _padded(child, xalign=0, yalign=0.5):
+            padder = gtk.Alignment(xalign=xalign, yalign=yalign,
+                                   xscale=1, yscale=0.33)
+            padder.set_padding(style.DEFAULT_SPACING,
+                               style.DEFAULT_SPACING,
+                               style.DEFAULT_SPACING,
+                               style.DEFAULT_SPACING)
+            padder.add(child)
+            return padder
+
         vbox = gtk.VBox()
-        vbox.pack_start(self._step_label)
-        vbox.show()
+        vbox.pack_start(_padded(self._step_label))
+        vbox.pack_start(_padded(self._ip_address_label))
+        vbox.show_all()
 
         self.set_content(vbox)
 
@@ -103,6 +125,13 @@ class MeshPalette(Palette):
         nm_device = self._model.get_nm_device()
         if network_manager and nm_device:
             network_manager.set_active_device(nm_device)
+
+    def set_ip_address(self, ip_address):
+        if ip_address is not None and ip_address != "0.0.0.0":
+            ip_address_text = IP_ADDRESS_TEXT_TEMPLATE % ip_address
+        else:
+            ip_address_text = ""
+        self._ip_address_label.set_text(ip_address_text)
 
     def set_mesh_step(self, step, state):
         label = ""

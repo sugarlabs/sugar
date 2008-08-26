@@ -32,6 +32,8 @@ from view.frame.frameinvoker import FrameWidgetInvoker
 
 _ICON_NAME = 'network-wireless'
 
+IP_ADDRESS_TEXT_TEMPLATE = _("IP address: %s")
+
 class DeviceView(TrayIcon):
 
     FRAME_POSITION_RELATIVE = 300
@@ -56,11 +58,13 @@ class DeviceView(TrayIcon):
         self.palette.set_frequency(self._model.props.frequency)
 
         model.connect('notify::name', self._name_changed_cb)
+        model.connect('notify::ip-address', self._ip_address_changed_cb)
         model.connect('notify::strength', self._strength_changed_cb)
         model.connect('notify::state', self._state_changed_cb)
 
         self._update_icon()
         self._update_state()
+        self._update_ip_address()
 
     def _get_palette_primary_text(self):
         if self._model.props.state == device.STATE_INACTIVE:
@@ -73,6 +77,9 @@ class DeviceView(TrayIcon):
         if self._counter % 4 == 0:
             self.palette.set_frequency(self._model.props.frequency)
         self._counter += 1
+
+    def _ip_address_changed_cb(self, model, pspec):
+        self._update_ip_address()
 
     def _name_changed_cb(self, model, pspec):
         self.palette.set_primary_text(self._get_palette_primary_text())
@@ -103,17 +110,35 @@ class DeviceView(TrayIcon):
             self.icon.props.fill_color = style.COLOR_INACTIVE_FILL.get_svg()
             self.icon.props.stroke_color = style.COLOR_INACTIVE_STROKE.get_svg()
 
+    def _update_ip_address(self):
+        self.palette.set_ip_address(self._model.props.ip_address)
+
 class WirelessPalette(Palette):
     def __init__(self, primary_text, meshdev):
         Palette.__init__(self, primary_text, menu_after_content=True)
         self._meshdev = meshdev
 
         self._chan_label = gtk.Label()
+        self._chan_label.props.xalign = 0.0
         self._chan_label.show()
 
+        self._ip_address_label = gtk.Label()
+
         vbox = gtk.VBox()
-        vbox.pack_start(self._chan_label)
-        vbox.show()
+
+        def _padded(child, xalign=0, yalign=0.5):
+            padder = gtk.Alignment(xalign=xalign, yalign=yalign,
+                                   xscale=1, yscale=0.33)
+            padder.set_padding(style.DEFAULT_SPACING,
+                               style.DEFAULT_SPACING,
+                               style.DEFAULT_SPACING,
+                               style.DEFAULT_SPACING)
+            padder.add(child)
+            return padder
+
+        vbox.pack_start(_padded(self._chan_label))
+        vbox.pack_start(_padded(self._ip_address_label))
+        vbox.show_all()
 
         if meshdev:
             disconnect_item = gtk.MenuItem(_('Disconnect...'))
@@ -136,3 +161,9 @@ class WirelessPalette(Palette):
             chan = 0
         self._chan_label.set_text("%s: %d" % (_("Channel"), chan))
 
+    def set_ip_address(self, ip_address):
+        if ip_address is not None and ip_address != "0.0.0.0":
+            ip_address_text = IP_ADDRESS_TEXT_TEMPLATE % ip_address
+        else:
+            ip_address_text = ""
+        self._ip_address_label.set_text(ip_address_text)
