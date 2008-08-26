@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-08-19 17:12-0400\n"
-"PO-Revision-Date: 2008-08-25 19:04-0400\n"
+"PO-Revision-Date: 2008-08-26 15:14-0400\n"
 "Last-Translator: Eduardo H. Silva <HoboPrimate@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -28,9 +28,8 @@ msgid "Back"
 msgstr "Voltar"
 
 #: ../src/intro/intro.py:162 ../src/controlpanel/toolbar.py:61
-#, fuzzy
 msgid "Done"
-msgstr "Feito"
+msgstr "Terminado"
 
 #: ../src/intro/intro.py:165
 msgid "Next"
@@ -75,7 +74,6 @@ msgstr "Abrir com"
 
 #: ../src/view/clipboardmenu.py:216
 #, python-format
-#, fuzzy
 msgid "Clipboard object: %s."
 msgstr "Objecto da Área de Transferência: %s"
 
@@ -109,12 +107,12 @@ msgstr "Imagem do Ecrã"
 
 #: ../src/view/home/HomeBox.py:81
 msgid "Confirm erase"
-msgstr "Confirma apagar"
+msgstr "Confirmar apagar"
 
 #: ../src/view/home/HomeBox.py:83
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
-msgstr "Confirma apagar: Queres apagar permanentemente %s?"
+msgstr "Confirmar apagar: Queres apagar permanentemente %s?"
 
 #: ../src/view/home/HomeBox.py:90 ../src/view/palettes.py:120
 msgid "Erase"
@@ -389,7 +387,6 @@ msgid "Value must be an integer."
 msgstr "Valor tem que ser um número inteiro."
 
 #: ../src/controlpanel/model/language.py:28
-#, fuzzy
 msgid "Could not access ~/.i18n. Create standard settings."
 msgstr "Não foi possível aceder a ~/.i18n. Cria definições normais."
 
