@@ -204,9 +204,9 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
         self.append(self.icon)
 
         if gtk.widget_get_default_direction() == gtk.TEXT_DIR_RTL:
-           align = hippo.ALIGNMENT_END
+            align = hippo.ALIGNMENT_END
         else:
-           align = hippo.ALIGNMENT_START
+            align = hippo.ALIGNMENT_START
 
         title = hippo.CanvasText(text=activity_info.name,
                                  xalign=align,
