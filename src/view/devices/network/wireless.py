@@ -83,6 +83,7 @@ class DeviceView(TrayIcon):
 
     def _name_changed_cb(self, model, pspec):
         self.palette.set_primary_text(self._get_palette_primary_text())
+        self._update_state()
 
     def _state_changed_cb(self, model, pspec):
         self._update_state()
