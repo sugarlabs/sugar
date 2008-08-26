@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-08-19 17:12-0400\n"
-"PO-Revision-Date: 2008-08-26 17:04-0400\n"
+"PO-Revision-Date: 2008-08-26 19:53-0400\n"
 "Last-Translator: Eduardo H. Silva <HoboPrimate@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -159,12 +159,12 @@ msgstr "<Ctrl>1"
 #. TRANS: label for the freeform layout in the favorites view
 #: ../src/view/home/HomeBox.py:334
 msgid "Freeform"
-msgstr "Disposição Livre"
+msgstr "Livre"
 
 #. TRANS: label for the ring layout in the favorites view
 #: ../src/view/home/HomeBox.py:341
 msgid "Ring"
-msgstr "Disposição em Anel"
+msgstr "Anel"
 
 #: ../src/view/home/MeshBox.py:97
 msgid "Connect"
