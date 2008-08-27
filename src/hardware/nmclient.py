@@ -214,7 +214,9 @@ class Device(gobject.GObject):
                                      ([gobject.TYPE_PYOBJECT])),
         'network-disappeared':      (gobject.SIGNAL_RUN_FIRST,
                                      gobject.TYPE_NONE,
-                                     ([gobject.TYPE_PYOBJECT]))
+                                     ([gobject.TYPE_PYOBJECT])),
+        'ip-changed':               (gobject.SIGNAL_RUN_FIRST,
+                                     gobject.TYPE_NONE, ([])),
     }
 
     def __init__(self, client, op):
@@ -235,6 +237,7 @@ class Device(gobject.GObject):
         self._state = DEVICE_STATE_INACTIVE
         self._active_network = None
         self._active_net_sigid = 0
+        self._ip_address = None
 
         obj = sys_bus.get_object(NM_SERVICE, self._op)
         self.dev = dbus.Interface(obj, NM_IFACE_DEVICES)
@@ -250,6 +253,18 @@ class Device(gobject.GObject):
         if self._active and self._act_stage == 7:
             return True
         return False
+
+    # 6248: remove for NM0.7; http://dev.laptop.org/ticket/6248#comment:2
+    def _getproperties_for_ip_only_reply_cb(self, *props):
+        current_ip = props[6]
+        if current_ip != self._ip_address:
+            self._ip_address = current_ip
+            if self._valid:
+                self.emit('ip-changed')
+
+    # 6248: remove for NM0.7; http://dev.laptop.org/ticket/6248#comment:2
+    def _getproperties_for_ip_only_error_cb(self, err):
+        logging.warning("Device(%s): failed to update. (%s)" % (self._op, err))
 
     def _update_reply_cb(self, *props):
         self._iface = props[1]
@@ -275,6 +290,11 @@ class Device(gobject.GObject):
                     self.emit('strength-changed')
 
         self._valid = True
+
+        # 6248: remove for NM0.7; http://dev.laptop.org/ticket/6248#comment:2
+        if props[6] != self._ip_address:
+            self._ip_address = props[6]
+            self.emit('ip-changed')
 
         if self._is_activating():
             self.set_state(DEVICE_STATE_ACTIVATING)
@@ -352,6 +372,9 @@ class Device(gobject.GObject):
         # Hz -> GHz
         self._freq = freq / 1000000000.0
         return self._freq
+
+    def get_ip_address(self):
+        return self._ip_address
 
     def get_strength(self):
         return self._strength
@@ -454,12 +477,25 @@ class Device(gobject.GObject):
                     self._get_active_net_cb(state, *args),
                     error_handler=self._get_active_net_error_cb)
 
+        if state == DEVICE_STATE_ACTIVATED:
+            # 6248: reimplement for NM0.7
+            #       see http://dev.laptop.org/ticket/6248#comment:2
+            self.dev.getProperties(
+                reply_handler=self._getproperties_for_ip_only_reply_cb,
+                error_handler=self._getproperties_for_ip_only_error_cb)
+
     def set_activation_stage(self, stage):
         if stage == self._act_stage:
             return
         self._act_stage = stage
         if self._valid:
             self.emit('activation-stage-changed')
+
+            # 6248: reimplement for NM0.7
+            #       see http://dev.laptop.org/ticket/6248#comment:2
+            self.dev.getProperties(
+                reply_handler=self._getproperties_for_ip_only_reply_cb,
+                error_handler=self._getproperties_for_ip_only_error_cb)
 
     def get_activation_stage(self):
         return self._act_stage
