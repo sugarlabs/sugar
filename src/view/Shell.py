@@ -54,6 +54,7 @@ class Shell(gobject.GObject):
 
         self._model = shellmodel.get_instance()
         self._hosts = {}
+        self._launchers = {}
         self._screen = wnck.screen_get_default()
         self._screen_rotation = 0
 
@@ -63,8 +64,6 @@ class Shell(gobject.GObject):
 
         self.home_window = HomeWindow()
         self.home_window.show()
-
-        self._launch_window = LaunchWindow()
 
         home_model = self._model.get_home()
         home_model.connect('launch-started', self.__launch_started_cb)
@@ -95,16 +94,31 @@ class Shell(gobject.GObject):
 
     def __launch_started_cb(self, home_model, home_activity):
         if home_activity.get_type() != 'org.laptop.JournalActivity':
-            self._launch_window.show()
+            launch_window = LaunchWindow(home_activity)
+            launch_window.show()
+
+            self._launchers[home_activity.get_activity_id()] = launch_window
+            self._model.set_zoom_level(shellmodel.ShellModel.ZOOM_ACTIVITY)
 
     def __launch_failed_cb(self, home_model, home_activity):
-        self._launch_window.hide()
+        activity_id = home_activity.get_activity_id()
+
+        launch_window = self._launchers[activity_id]
+        if launch_window:
+            launch_window.destroy()
+        else:
+            logging.error('Launcher for %s is missing') % activity_id
 
     def __launch_completed_cb(self, home_model, home_activity):
-        self._launch_window.hide()
-
         activity_host = ActivityHost(home_activity)
         self._hosts[activity_host.get_xid()] = activity_host
+
+        activity_id = home_activity.get_activity_id()
+        launch_window = self._launchers[activity_id]
+        if launch_window:
+            launch_window.destroy()
+        else:
+            logging.error('Launcher for %s is missing') % activity_id
 
     def _activity_removed_cb(self, home_model, home_activity):
         xid = home_activity.get_xid()
