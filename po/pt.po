@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-08-19 17:12-0400\n"
-"PO-Revision-Date: 2008-08-26 19:53-0400\n"
+"PO-Revision-Date: 2008-08-27 05:47-0400\n"
 "Last-Translator: Eduardo H. Silva <HoboPrimate@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -328,7 +328,7 @@ msgstr "Ok"
 
 #: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:267
 msgid "Changes require restart"
-msgstr "As mudanças necessitam que reinicies"
+msgstr "As mudanças necessitam um reiniciar"
 
 #: ../src/controlpanel/gui.py:266
 msgid "Warning"
@@ -479,7 +479,7 @@ msgstr "%s segundos"
 
 #: ../src/controlpanel/view/frame.py:56
 msgid "Activation Delay"
-msgstr "Demora na Activação"
+msgstr "Atraso na Activação"
 
 #: ../src/controlpanel/view/frame.py:80
 msgid "Corner"
@@ -524,13 +524,13 @@ msgstr "Gestão de energia"
 
 #: ../src/controlpanel/view/power.py:61
 msgid "Automatic power management (increases battery life)"
-msgstr "Gestão de energia automática (aumenta o tempo de bateria)"
+msgstr "Gestão automática de energia (aumenta o tempo de bateria)"
 
 #: ../src/controlpanel/view/power.py:89
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
-"Gestão de energia extrema (desliga o rádio da rede sem fios, aumenta o tempo "
+"Gestão extrema de energia (desliga o rádio da rede sem fios, aumenta o tempo "
 "de bateria)"
 
 #: ../src/view/devices/network/mesh.py:111
@@ -620,12 +620,12 @@ msgstr "Tornar favorito"
 
 #: ../src/view/palettes.py:185
 msgid "Show contents"
-msgstr "Mostrar conteúdos"
+msgstr "Mostrar conteúdo"
 
 #: ../src/view/palettes.py:209
 #, python-format
 msgid "%(free_space)d MB Free"
-msgstr "%(free_space)d MB de espaço livre"
+msgstr "%(free_space)d MB Livres"
 
 #~ msgid "off"
 #~ msgstr "desligar"
