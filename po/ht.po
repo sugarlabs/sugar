@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-21 00:30-0400\n"
-"PO-Revision-Date: 2008-03-12 09:14-0400\n"
-"Last-Translator: Jude Augusma <jayme2901@yahoo.com>\n"
+"POT-Creation-Date: 2008-08-19 17:12-0400\n"
+"PO-Revision-Date: 2008-08-18 16:47-0400\n"
+"Last-Translator: lacrete <le_teaseur@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17,36 +17,36 @@ msgstr ""
 
 #: ../src/intro/intro.py:65 ../src/controlpanel/view/aboutme.py:100
 msgid "Name:"
-msgstr "Non"
+msgstr "Non:"
 
-#: ../src/intro/intro.py:94
+#: ../src/intro/intro.py:97
 msgid "Click to change color:"
-msgstr "Klike pou chanje koulè"
+msgstr "Klike pou chanje koulè:"
 
-#: ../src/intro/intro.py:145
+#: ../src/intro/intro.py:148
 msgid "Back"
 msgstr "Retounen"
 
-#: ../src/intro/intro.py:159 ../src/controlpanel/toolbar.py:61
+#: ../src/intro/intro.py:162 ../src/controlpanel/toolbar.py:61
 msgid "Done"
 msgstr "Fini"
 
-#: ../src/intro/intro.py:162
+#: ../src/intro/intro.py:165
 msgid "Next"
-msgstr "Prochen"
+msgstr "Pwochen"
 
 #: ../src/view/BuddyMenu.py:58
 msgid "Remove friend"
-msgstr "Retire zanmi"
+msgstr "Retire zanmi "
 
 #: ../src/view/BuddyMenu.py:61
 msgid "Make friend"
-msgstr "Fè zanmi"
+msgstr "Fè zanmi "
 
 #: ../src/view/BuddyMenu.py:91
 #, python-format
 msgid "Invite to %s"
-msgstr "Envite sou %s"
+msgstr "Envite nan %s"
 
 #: ../src/view/clipboardmenu.py:48
 msgid "Remove"
@@ -54,73 +54,119 @@ msgstr "Retire"
 
 #: ../src/view/clipboardmenu.py:53 ../src/view/clipboardmenu.py:79
 msgid "Open"
-msgstr "Louvri"
+msgstr "Ouvri"
 
 #. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../src/view/clipboardmenu.py:63
+#: ../src/view/clipboardmenu.py:63 ../src/view/home/HomeBox.py:87
 msgid "Keep"
-msgstr ""
+msgstr "Kenbe"
 
 #: ../src/view/clipboardmenu.py:84
 msgid "Open with"
-msgstr ""
+msgstr "Ouvri ak"
 
-#: ../src/view/clipboardmenu.py:212
+#: ../src/view/clipboardmenu.py:216
 #, python-format
 msgid "Clipboard object: %s."
 msgstr "Objè ekritwa: %s."
 
 #: ../src/hardware/keydialog.py:150
 msgid "Key Type:"
-msgstr "Tip kle:"
+msgstr "kalite kle:"
 
 #: ../src/hardware/keydialog.py:170
 msgid "Authentication Type:"
-msgstr "Tip otantifikasyon:"
+msgstr "Kalite otantifikasyon:"
 
 #: ../src/hardware/keydialog.py:251
 msgid "Encryption Type:"
-msgstr "Tip kod sekrè"
+msgstr "Kalite kod sekrè"
 
-#: ../src/view/Shell.py:262
+#: ../src/hardware/schoolserver.py:17
+msgid "Cannot obtain data needed for registration."
+msgstr ""
+
+#: ../src/hardware/schoolserver.py:31
+msgid "Cannot connect to the server."
+msgstr ""
+
+#: ../src/hardware/schoolserver.py:36
+msgid "The server could not complete the request."
+msgstr ""
+
+#: ../src/view/Shell.py:240
 msgid "Screenshot"
 msgstr "Ekran projektwa"
 
-#: ../src/view/home/HomeBox.py:147
+#: ../src/view/home/HomeBox.py:81
+msgid "Confirm erase"
+msgstr "Konfime sa ou efase a"
+
+#: ../src/view/home/HomeBox.py:83
+#, python-format
+msgid "Confirm erase: Do you want to permanently erase %s?"
+msgstr "Konfime sa ou efase a: ou vle retire'l net %s?"
+
+#: ../src/view/home/HomeBox.py:90 ../src/view/palettes.py:120
+msgid "Erase"
+msgstr "Efase"
+
+#: ../src/view/home/HomeBox.py:120
+msgid "Software Update"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:121
+msgid "Update your activities to ensure compatibility with your new software"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:125 ../src/controlpanel/toolbar.py:115
+msgid "Cancel"
+msgstr "Anile"
+
+#: ../src/view/home/HomeBox.py:127 ../src/controlpanel/gui.py:275
+msgid "Later"
+msgstr "Pi ta"
+
+#: ../src/view/home/HomeBox.py:130
+msgid "Check now"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:266
 msgid "List view"
-msgstr ""
+msgstr "Gade lis"
 
-#: ../src/view/home/HomeBox.py:148
-msgid "<Ctrl>L"
-msgstr ""
+#: ../src/view/home/HomeBox.py:267
+msgid "<Ctrl>2"
+msgstr "<Ctrl>2"
 
-#: ../src/view/home/HomeBox.py:204
+#: ../src/view/home/HomeBox.py:325
 msgid "Favorites view"
-msgstr ""
+msgstr "Fas prefere"
 
-#: ../src/view/home/HomeBox.py:205
-msgid "<Ctrl>R"
-msgstr ""
+#: ../src/view/home/HomeBox.py:326
+msgid "<Ctrl>1"
+msgstr "<Ctrl>1"
 
+# TRANS: label for the freeform layout in the favorites view
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/view/home/HomeBox.py:211
+#: ../src/view/home/HomeBox.py:334
 msgid "Freeform"
-msgstr ""
+msgstr "Fòm lib"
 
+# TRANS: label for the ring layout in the favorites view
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/view/home/HomeBox.py:218
+#: ../src/view/home/HomeBox.py:341
 msgid "Ring"
-msgstr ""
+msgstr "Zanno"
 
 #: ../src/view/home/MeshBox.py:97
 msgid "Connect"
-msgstr ""
+msgstr "Konekte"
 
 #: ../src/view/home/MeshBox.py:106
-#, fuzzy
 msgid "Disconnect"
 msgstr "Dekonekte"
 
@@ -129,101 +175,99 @@ msgstr "Dekonekte"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
 #: ../src/view/home/MeshBox.py:118
-#, fuzzy
 msgid "Disconnecting..."
-msgstr "Dekonekte..."
+msgstr "An dekoneksyon..."
 
 # Only show disconnect when there's a mesh device, because mesh takes
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
 #: ../src/view/home/MeshBox.py:152
-#, fuzzy
 msgid "Connecting..."
-msgstr "Dekonekte..."
+msgstr "An koneksyon..."
 
 #. TODO: show the channel number
 #: ../src/view/home/MeshBox.py:159
 msgid "Connected"
-msgstr ""
+msgstr "Konekte"
 
-#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:38
-#: ../src/view/devices/network/mesh.py:65
-#: ../src/view/devices/network/mesh.py:69
+#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:41
+#: ../src/view/devices/network/mesh.py:68
+#: ../src/view/devices/network/mesh.py:72
 msgid "Mesh Network"
-msgstr "Rezo "
+msgstr "Rezo maye"
 
 # Only show disconnect when there's a mesh device, because mesh takes
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:116
-#: ../src/view/devices/network/mesh.py:86
+#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:119
+#: ../src/view/devices/network/mesh.py:89
 msgid "Disconnect..."
 msgstr "Dekonekte..."
 
-#: ../src/view/home/MeshBox.py:302 ../src/view/palettes.py:60
+#: ../src/view/home/MeshBox.py:302 ../src/view/palettes.py:61
 msgid "Resume"
 msgstr "Repwann"
 
-#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:219
+#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:205
 msgid "Join"
-msgstr "Rankontre"
+msgstr "Rejwen'n"
 
-#: ../src/view/devices/battery.py:42
+#: ../src/view/devices/battery.py:45
 msgid "My Battery"
-msgstr ""
-
-#: ../src/view/devices/battery.py:111
-msgid "Charging"
-msgstr ""
+msgstr "Batri-m"
 
 #: ../src/view/devices/battery.py:114
-msgid "Very little power remaining"
-msgstr ""
+msgid "Charging"
+msgstr "Ap chaje"
 
-#: ../src/view/devices/battery.py:120
+#: ../src/view/devices/battery.py:117
+msgid "Very little power remaining"
+msgstr "Yon ti kras chaj ki rete"
+
+#: ../src/view/devices/battery.py:123
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
-msgstr ""
+msgstr "%(hour)d:%(min).2d ki rete"
 
-#: ../src/view/devices/battery.py:124
+#: ../src/view/devices/battery.py:127
 msgid "Charged"
-msgstr ""
+msgstr "Fin chaje"
 
-#: ../src/view/devices/speaker.py:40
+#: ../src/view/devices/speaker.py:44
 msgid "My Speakers"
-msgstr ""
+msgstr "Opalè m' yo"
 
-#: ../src/view/devices/speaker.py:104
+#: ../src/view/devices/speaker.py:119
 msgid "Unmute"
-msgstr ""
+msgstr "Aktive son an"
 
-#: ../src/view/devices/speaker.py:107
+#: ../src/view/devices/speaker.py:122
 msgid "Mute"
-msgstr ""
+msgstr "Dezaktive son an"
 
-#: ../src/view/devices/network/wireless.py:64
+#: ../src/view/devices/network/wireless.py:67
 msgid "Disconnected"
 msgstr "Dekonekte"
 
-#: ../src/view/devices/network/wireless.py:134
+#: ../src/view/devices/network/wireless.py:137
 msgid "Channel"
 msgstr "Chanèl"
 
-#: ../src/view/frame/zoomtoolbar.py:34
+#: ../src/view/frame/zoomtoolbar.py:37
 msgid "Neighborhood"
 msgstr "Vwazinaj"
 
-#: ../src/view/frame/zoomtoolbar.py:36
+#: ../src/view/frame/zoomtoolbar.py:39
 msgid "Group"
 msgstr "Gwoup"
 
-#: ../src/view/frame/zoomtoolbar.py:38
+#: ../src/view/frame/zoomtoolbar.py:41
 msgid "Home"
 msgstr "Lakay"
 
-#: ../src/view/frame/zoomtoolbar.py:40
+#: ../src/view/frame/zoomtoolbar.py:43
 msgid "Activity"
 msgstr "Aktivite"
 
@@ -233,6 +277,8 @@ msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
 msgstr ""
+"Sugar-control-panel: Atansyon, yo jwenn plizyè opsyon ak yon menm non: %s "
+"modil: %r"
 
 #: ../src/controlpanel/cmd.py:28
 #, python-format
@@ -245,6 +291,7 @@ msgid "sugar-control-panel: %s"
 msgstr "Sugar-kontwòl-panèl: %s"
 
 #: ../src/controlpanel/cmd.py:33
+#, fuzzy
 msgid ""
 "Usage: sugar-control-panel [ option ] key [ args ... ] \n"
 "    Control for the sugar environment. \n"
@@ -254,81 +301,74 @@ msgid ""
 "    -h key       show information about this key \n"
 "    -g key       get the current value of the key \n"
 "    -s key       set the current value for the key \n"
+"    -c key       clear the current value for the key \n"
 "    "
 msgstr ""
 "Sèvi: Sugar-Kontwòl-panèl [opsyon] kle [args ... ]\n"
-"	Kontwòl pou anvironman sugar. \n"
-"	opsyon: \n"
-"	-h	montre mesaj èd sa epi soti \n"
-"	-l	fè lis tout opsyon disponib yo \n"
-"	-h kle	montre enfòmasyon sou kle sa \n"
-"	-g kle	pwan valè kouran kle-a \n"
-"	-s kle	fikse valè Kouran pou kle-a \n"
-"	"
+"\tKontwòl pou anvironman sugar. \n"
+"\topsyon: \n"
+"\t-h\tmontre mesaj èd sa epi soti \n"
+"\t-l\tfè lis tout opsyon disponib yo \n"
+"\t-h kle\tmontre enfòmasyon sou kle sa \n"
+"\t-g kle\tpwan valè kouran kle-a \n"
+"\t-s kle\tfikse valè Kouran pou kle-a \n"
+"\t"
 
-#: ../src/controlpanel/cmd.py:45
+#: ../src/controlpanel/cmd.py:46
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "Pou aplike chanjman ou yo ou bezwen reyinisyalize program nan.\n"
 
-#: ../src/controlpanel/toolbar.py:115
-msgid "Cancel"
-msgstr ""
-
-#: ../src/controlpanel/toolbar.py:121
+#: ../src/controlpanel/toolbar.py:121 ../src/view/home/favoritesview.py:296
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
-#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:250
+#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:267
 msgid "Changes require restart"
-msgstr ""
+msgstr "Redemare pou aplike chanjman yo"
 
-#: ../src/controlpanel/gui.py:249
+#: ../src/controlpanel/gui.py:266
 msgid "Warning"
-msgstr ""
+msgstr "Avètisman"
 
-#: ../src/controlpanel/gui.py:253
+#: ../src/controlpanel/gui.py:270
 msgid "Cancel changes"
-msgstr ""
+msgstr "Anile chanjman yo"
 
-#: ../src/controlpanel/gui.py:257
-msgid "Later"
-msgstr ""
-
-#: ../src/controlpanel/gui.py:261
+#: ../src/controlpanel/gui.py:279
 msgid "Restart now"
-msgstr ""
+msgstr "Redemare kounye a menm"
 
 #: ../src/controlpanel/model/aboutme.py:44
 msgid "You must enter a name."
-msgstr ""
+msgstr "Ou dwe rantre yon non."
 
-#: ../src/controlpanel/model/aboutme.py:67
+#: ../src/controlpanel/model/aboutme.py:69
 #, python-format
 msgid "stroke:   color=%s hue=%s"
-msgstr ""
-
-#: ../src/controlpanel/model/aboutme.py:70
-#, python-format
-msgid "stroke:   %s"
-msgstr ""
+msgstr "stroke:_  koulè=%s hue=%s"
 
 #: ../src/controlpanel/model/aboutme.py:72
 #, python-format
-msgid "fill:     color=%s hue=%s"
-msgstr ""
+msgid "stroke:   %s"
+msgstr "stroke:_   %s"
 
 #: ../src/controlpanel/model/aboutme.py:74
 #, python-format
+msgid "fill:     color=%s hue=%s"
+msgstr "fill:_     koulè=%s hue=%s"
+
+#: ../src/controlpanel/model/aboutme.py:76
+#, python-format
 msgid "fill:     %s"
-msgstr ""
+msgstr "fill: _      %s"
 
-#: ../src/controlpanel/model/aboutme.py:85
+#: ../src/controlpanel/model/aboutme.py:87
 msgid "Error in specified color modifiers."
-msgstr "Erè nan modifikatè endike koulè yo"
+msgstr "Erè nan modifikatè koulè espesifye yo"
 
-#: ../src/controlpanel/model/aboutme.py:88
+#: ../src/controlpanel/model/aboutme.py:90
 msgid "Error in specified colors."
-msgstr "Erè nan koulè endike yo"
+msgstr "Erè nan koulè espesifye yo"
 
 #: ../src/controlpanel/model/aboutxo.py:24
 msgid "Not available"
@@ -340,12 +380,11 @@ msgstr "Erè lè lokal pa egziste."
 
 #: ../src/controlpanel/model/frame.py:38 ../src/controlpanel/model/frame.py:60
 msgid "Value must be an integer."
-msgstr ""
+msgstr "Valè-a dwe yon antye."
 
 #: ../src/controlpanel/model/language.py:28
-#, fuzzy
 msgid "Could not access ~/.i18n. Create standard settings."
-msgstr "Pa ka rantre %s. Kreye reglaj estanda"
+msgstr "Aksè enposib ~/.i18n. Kreye paramèt pa defo yo"
 
 #: ../src/controlpanel/model/language.py:104
 #, python-format
@@ -355,11 +394,11 @@ msgstr "Lang pou kod=%s pa ka tèmine."
 #: ../src/controlpanel/model/language.py:121
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr "Mwen regrèt mwen pa pale '%s'."
+msgstr "Dezole mwen pa pale '%s'."
 
 #: ../src/controlpanel/model/network.py:48
 msgid "You must enter a server."
-msgstr ""
+msgstr "Ou dwe endike yon sèvè."
 
 #: ../src/controlpanel/model/network.py:63
 msgid "State is unknown."
@@ -367,179 +406,224 @@ msgstr "Yo pa konnen eta l'"
 
 #: ../src/controlpanel/model/network.py:83
 msgid "Error in specified radio argument use on/off."
-msgstr "Erè nan itilizasyon limen/etenn agiman radio endike-a. "
+msgstr "Agiman radio espesifye-a pa kòrèk sèvi limen/etenn. "
+
+#: ../src/controlpanel/model/power.py:57
+msgid "Error in automatic pm argument, use on/off."
+msgstr "Agiman pou jere alimantasyon otomatik la pa kòrèk sèvi ak limen/etenn"
+
+#: ../src/controlpanel/model/power.py:86
+msgid "Error in extreme pm argument, use on/off."
+msgstr "Agiman pou gere alimantasyon ak dèyo pa kòrèk sèvi ak limen/etenn"
 
 #: ../src/controlpanel/view/aboutme.py:32
 msgid "About Me"
-msgstr ""
+msgstr "Enfòmasyon pèsonèl"
 
 #: ../src/controlpanel/view/aboutme.py:134
-#, fuzzy
 msgid "Click to change your color:"
 msgstr "Klike pou chanje koulè"
 
 #: ../src/controlpanel/view/aboutxo.py:26
 msgid "About my XO"
-msgstr ""
+msgstr "Enfòmasyon sou XO mwen"
 
 #: ../src/controlpanel/view/aboutxo.py:47
 msgid "Identity"
-msgstr ""
+msgstr "Idantite"
 
 #: ../src/controlpanel/view/aboutxo.py:56
 msgid "Serial Number:"
-msgstr ""
+msgstr "Nimero seri:"
 
 #: ../src/controlpanel/view/aboutxo.py:79
 msgid "Software"
-msgstr ""
+msgstr "Pwogram"
 
 #: ../src/controlpanel/view/aboutxo.py:88
 msgid "Build:"
-msgstr ""
+msgstr "Bati:"
 
 #: ../src/controlpanel/view/aboutxo.py:103
 msgid "Firmware:"
-msgstr ""
+msgstr "Mikrolojisyèl:"
 
 #: ../src/controlpanel/view/datetime.py:29
 msgid "Date & Time"
-msgstr ""
+msgstr "Dat ak lè"
 
 #: ../src/controlpanel/view/datetime.py:72
 msgid "Timezone"
-msgstr ""
+msgstr "Lè lokal"
 
 #: ../src/controlpanel/view/frame.py:28
 msgid "Frame"
-msgstr ""
+msgstr "Ankadreman"
 
 #: ../src/controlpanel/view/frame.py:30
 msgid "never"
-msgstr ""
+msgstr "Jamè"
 
 #: ../src/controlpanel/view/frame.py:31
 msgid "instantaneous"
-msgstr ""
+msgstr "imediat"
 
 #: ../src/controlpanel/view/frame.py:32
 #, python-format
 msgid "%s seconds"
-msgstr ""
+msgstr "%s segond"
 
 #: ../src/controlpanel/view/frame.py:56
 msgid "Activation Delay"
-msgstr ""
+msgstr "Reta aktivasyon"
 
 #: ../src/controlpanel/view/frame.py:80
 msgid "Corner"
-msgstr ""
+msgstr "Kwen"
 
 #: ../src/controlpanel/view/frame.py:115
 msgid "Edge"
-msgstr ""
+msgstr "Bò"
 
 #: ../src/controlpanel/view/language.py:29
 #: ../src/controlpanel/view/language.py:74
 msgid "Language"
-msgstr ""
+msgstr "Lang"
 
 #: ../src/controlpanel/view/network.py:28
 msgid "Network"
-msgstr ""
+msgstr "Rezo"
 
 #: ../src/controlpanel/view/network.py:53
 msgid "Wireless"
-msgstr ""
+msgstr "San fil"
 
 #: ../src/controlpanel/view/network.py:61
 msgid "Radio:"
-msgstr ""
+msgstr "Radio"
 
 #: ../src/controlpanel/view/network.py:94
 msgid "Mesh"
-msgstr ""
+msgstr "Rezo maye"
 
 #: ../src/controlpanel/view/network.py:103
 msgid "Server:"
-msgstr ""
+msgstr "Sèvè:"
 
-#: ../src/view/devices/network/mesh.py:108
+#: ../src/controlpanel/view/power.py:27
+msgid "Power"
+msgstr "Alimantasyon"
+
+#: ../src/controlpanel/view/power.py:51
+msgid "Power management"
+msgstr "Jere alimantasyon"
+
+#: ../src/controlpanel/view/power.py:61
+msgid "Automatic power management (increases battery life)"
+msgstr "automatic power management(ogmante tan batri a ap bay)"
+
+#: ../src/controlpanel/view/power.py:89
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr "(retire posibilite capte ond wireless, ogmante tan batri a ap bay)"
+
+#: ../src/view/devices/network/mesh.py:111
 msgid "Connected to a School Mesh Portal"
-msgstr "Konekte sou rezo lekòl la"
-
-#: ../src/view/devices/network/mesh.py:110
-msgid "Looking for a School Mesh Portal..."
-msgstr "Ap chache rezo lekòl la"
+msgstr "Konekte sou pòtay rezo lekòl la"
 
 #: ../src/view/devices/network/mesh.py:113
-msgid "Connected to an XO Mesh Portal"
-msgstr "Konekte sou yon rezo XO"
+msgid "Looking for a School Mesh Portal..."
+msgstr "Ap chache pòtay rezo lekòl la"
 
-#: ../src/view/devices/network/mesh.py:115
+#: ../src/view/devices/network/mesh.py:116
+msgid "Connected to an XO Mesh Portal"
+msgstr "Konekte sou pòtal yon rezo XO"
+
+#: ../src/view/devices/network/mesh.py:118
 msgid "Looking for an XO Mesh Portal..."
 msgstr "Ap chache yon rezo XO..."
 
-#: ../src/view/devices/network/mesh.py:118
+#: ../src/view/devices/network/mesh.py:121
 msgid "Connected to a Simple Mesh"
 msgstr "Konekte sou yon senp rezo"
 
-#: ../src/view/devices/network/mesh.py:120
+#: ../src/view/devices/network/mesh.py:123
 msgid "Starting a Simple Mesh"
 msgstr "Kòmanse yon senp rezo"
 
-#: ../src/view/devices/network/mesh.py:127
+#: ../src/view/devices/network/mesh.py:130
 msgid "Unknown Mesh"
-msgstr "Rezo non idantifye"
+msgstr "Rezo maye inkoni"
 
-#: ../src/view/frame/activitiestray.py:224
+#: ../src/view/frame/activitiestray.py:210
 msgid "Decline"
-msgstr ""
+msgstr "Refize"
 
-#: ../src/view/home/favoritesview.py:351
+#: ../src/view/home/favoritesview.py:287
+msgid "Registration Failed"
+msgstr "enskripsyon an pa fèt"
+
+# se yon kòd enfòmatik li pa dwe chanje
+#: ../src/view/home/favoritesview.py:288
+#, python-format
+msgid "%s"
+msgstr "%s"
+
+#: ../src/view/home/favoritesview.py:290
+msgid "Registration Successful"
+msgstr "enskripsyon an fèt"
+
+#: ../src/view/home/favoritesview.py:291
+msgid "You are now registered with your school server."
+msgstr "ou pa enskri avek sèvè lekol ou a"
+
+#: ../src/view/home/favoritesview.py:407
 msgid "Control Panel"
-msgstr ""
+msgstr "Pano kontwòl"
 
-#: ../src/view/home/favoritesview.py:362
+#: ../src/view/home/favoritesview.py:418
 msgid "Restart"
-msgstr ""
+msgstr "Redemare"
 
-#: ../src/view/home/favoritesview.py:367
+#: ../src/view/home/favoritesview.py:423
 msgid "Shutdown"
-msgstr "Fèmen"
+msgstr "Eten'n"
 
-#: ../src/view/home/favoritesview.py:373
+#: ../src/view/home/favoritesview.py:429
 msgid "Register"
 msgstr "Enskri"
 
-#: ../src/view/palettes.py:41
+#: ../src/view/palettes.py:42
 msgid "Starting..."
-msgstr "ap louvri"
+msgstr "Demaraj...."
 
-#: ../src/view/palettes.py:71
+#: ../src/view/palettes.py:72
 msgid "Stop"
 msgstr "Stope, rete"
 
-#: ../src/view/palettes.py:96
+#: ../src/view/palettes.py:104
 msgid "Start"
-msgstr ""
+msgstr "Demare"
 
-#: ../src/view/palettes.py:119
+#: ../src/view/palettes.py:132
 msgid "Remove favorite"
-msgstr ""
+msgstr "Siprime favori"
 
-#: ../src/view/palettes.py:123
+#: ../src/view/palettes.py:136
 msgid "Make favorite"
-msgstr ""
+msgstr "Ajoute nan favori"
 
-#: ../src/view/palettes.py:169
+#: ../src/view/palettes.py:185
 msgid "Show contents"
-msgstr ""
+msgstr "Afiche kontni yo"
 
-#: ../src/view/palettes.py:193
+#: ../src/view/palettes.py:209
 #, python-format
 msgid "%(free_space)d MB Free"
-msgstr ""
+msgstr "%(free_space)d MB vid"
+
+#~ msgid "<Ctrl>R"
+#~ msgstr "<Ctrl>R"
 
 #~ msgid "off"
 #~ msgstr "Etenn"
