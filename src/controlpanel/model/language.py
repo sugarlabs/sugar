@@ -43,6 +43,12 @@ def read_all_languages():
             if locale.endswith('utf8') and len(lang):
                 locales.append((lang, territory, locale))
 
+    #FIXME: This is a temporary workaround for locales that are essential to 
+    # OLPC, but are not in Glibc yet.
+    locales.append(('Kreyol', 'Haiti', 'ht_HT.utf8'))
+    locales.append(('Dari', 'Afghanistan', 'fa_AF.utf8'))
+    locales.append(('Pashto', 'Afghanistan', 'ps_AF.utf8'))
+
     locales.sort()
     return locales
 
