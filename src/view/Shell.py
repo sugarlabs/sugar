@@ -107,7 +107,7 @@ class Shell(gobject.GObject):
         if launch_window:
             launch_window.destroy()
         else:
-            logging.error('Launcher for %s is missing') % activity_id
+            logging.error('Launcher for %s is missing' % activity_id)
 
     def __launch_completed_cb(self, home_model, home_activity):
         activity_host = ActivityHost(home_activity)
@@ -118,7 +118,7 @@ class Shell(gobject.GObject):
         if launch_window:
             launch_window.destroy()
         else:
-            logging.error('Launcher for %s is missing') % activity_id
+            logging.error('Launcher for %s is missing' % activity_id)
 
     def _activity_removed_cb(self, home_model, home_activity):
         xid = home_activity.get_xid()
