@@ -18,11 +18,20 @@ import logging
 
 import gobject
 import wnck
+import gtk
 
 from sugar import wm
 from sugar.activity import get_registry
 
 from model.homeactivity import HomeActivity
+
+def _get_sugar_window_type(self, window):
+    window = gtk.gdk.window_foreign_new(window.get_xid())
+    prop_info = window.property_get('_SUGAR_WINDOW_TYPE', 'STRING')
+    if prop_info is None:
+        return None
+    else:
+        return prop_info[2]
 
 class HomeModel(gobject.GObject):
     """Model of the "Home" view (activity management)
@@ -152,7 +161,7 @@ class HomeModel(gobject.GObject):
         
     def index(self, obj):
         return self._activities.index(obj)
-        
+
     def _window_opened_cb(self, screen, window):
         if window.get_window_type() == wnck.WINDOW_NORMAL:
             home_activity = None
@@ -175,8 +184,8 @@ class HomeModel(gobject.GObject):
 
             home_activity.set_window(window)
 
-            home_activity.props.launching = False
-            self.emit('launch-completed', home_activity)
+            if self._get_sugar_window_type(window) != 'launcher':
+                self.emit('launch-completed', home_activity)
 
             if self._active_activity is None:
                 self._set_active_activity(home_activity)

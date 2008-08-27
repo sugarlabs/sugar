@@ -73,9 +73,11 @@ class HomeActivity(gobject.GObject):
                                     dbus_interface="org.freedesktop.DBus")
 
     def set_window(self, window):
-        """An activity is 'launched' once we get its window."""
-        if self._window or self._xid:
-            raise RuntimeError("Activity is already launched!")
+        """Set the window for the activity
+
+        We allow resetting the window for an activity so that we
+        can replace the launcher once we get its real window.
+        """
         if not window:
             raise ValueError("window must be valid")
 

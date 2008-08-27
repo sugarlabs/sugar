@@ -19,6 +19,7 @@ import hippo
 import gobject
 import logging
 
+from sugar import wm
 from sugar.graphics import style
 from sugar.graphics import animator
 from sugar.graphics.xocolor import XoColor
@@ -27,14 +28,15 @@ from model import shellmodel
 from view.pulsingicon import CanvasPulsingIcon
 
 class LaunchWindow(hippo.CanvasWindow):
-    def __init__(self):
+    def __init__(self, home_activity):
         gobject.GObject.__init__(
-                self, type_hint=gtk.gdk.WINDOW_TYPE_HINT_SPLASHSCREEN)
+                self, type_hint=gtk.gdk.WINDOW_TYPE_HINT_NORMAL)
 
-        self._box = LaunchBox()
+        self._activity_id = home_activity.get_activity_id()
+        self._box = LaunchBox(home_activity)
         self.set_root(self._box)
 
-        self.connect('focus-out-event', self.__focus_out_event_cb)
+        self.connect('realize', self.__realize_cb)
 
         screen = gtk.gdk.screen_get_default()
         screen.connect('size-changed', self.__size_changed_cb)
@@ -48,18 +50,23 @@ class LaunchWindow(hippo.CanvasWindow):
     def _update_size(self):
         self.resize(gtk.gdk.screen_width(), gtk.gdk.screen_height())
 
-    def __focus_out_event_cb(self, widget, event):
-        self.hide()
-        
+    def __realize_cb(self, widget):
+        wm.set_activity_id(widget.window, str(self._activity_id))
+        widget.window.property_change('_SUGAR_WINDOW_TYPE', 'STRING', 8,
+                                      gtk.gdk.PROP_MODE_REPLACE, 'launcher')
+
     def __size_changed_cb(self, screen):
         self._update_size()
 
 class LaunchBox(hippo.CanvasBox):
-    def __init__(self):
+    def __init__(self, home_activity):
         gobject.GObject.__init__(self, orientation=hippo.ORIENTATION_VERTICAL,
                                  background_color=style.COLOR_WHITE.get_int())
 
-        self._activity_icon = CanvasPulsingIcon()
+        self._home_activity = home_activity
+        self._activity_icon = CanvasPulsingIcon(
+                file_name=home_activity.get_icon_path(),
+                pulse_color=home_activity.get_icon_color())
         self.append(self._activity_icon, hippo.PACK_EXPAND)
 
         # FIXME support non-xo colors in CanvasPulsingIcon
@@ -72,14 +79,8 @@ class LaunchBox(hippo.CanvasBox):
         self._home = shellmodel.get_instance().get_home()
         self._home.connect('active-activity-changed',
                            self.__active_activity_changed_cb)
-        self._home.connect('launch-failed', self.__launch_ended_cb)
-        self._home.connect('launch-completed', self.__launch_ended_cb)
-
-        self._update_icon()
 
     def zoom_in(self):
-        logging.debug('zooming in to activity')
-
         self._activity_icon.props.size = style.STANDARD_ICON_SIZE
 
         self._animator.remove_all()
@@ -87,35 +88,13 @@ class LaunchBox(hippo.CanvasBox):
                                       style.STANDARD_ICON_SIZE,
                                       style.XLARGE_ICON_SIZE))
         self._animator.start()
-
-        logging.debug('starting pulse')
-
         self._activity_icon.props.pulsing = True
 
-    def suspend(self):
-        self._activity_icon.props.paused = True
-
-    def resume(self):
-        self._activity_icon.props.paused = False
-
-    def _update_icon(self):
-        activity = self._home.get_active_activity()
-        if activity is not None:
-            self._activity_icon.props.file_name = activity.get_icon_path()
-            self._activity_icon.props.pulse_color = activity.get_icon_color()
-        else:
-            self._activity_icon.props.file_name = None
-
-        if activity is not None and activity.props.launching:
-            self.resume()
-        else:
-            self.suspend()
-
     def __active_activity_changed_cb(self, model, activity):
-        self._update_icon()
-
-    def __launch_ended_cb(self, model, activity):
-        self._update_icon()
+        if activity == self._home_activity:
+            self._activity_icon.props.paused = False
+        else:
+            self._activity_icon.props.paused = True
 
 class _Animation(animator.Animation):
     def __init__(self, icon, start_size, end_size):
