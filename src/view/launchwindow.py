@@ -17,7 +17,6 @@
 import gtk
 import hippo
 import gobject
-import logging
 
 from sugar import wm
 from sugar.graphics import style
