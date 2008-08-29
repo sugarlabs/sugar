@@ -55,7 +55,7 @@ class ActivityButton(RadioToolButton):
         self.set_icon_widget(self._icon)
         self._icon.show()
 
-        if self._home_activity.get_type() == "org.laptop.JournalActivity":
+        if self._home_activity.is_journal():
             palette = JournalPalette(self._home_activity)
         else:
             palette = CurrentActivityPalette(self._home_activity)

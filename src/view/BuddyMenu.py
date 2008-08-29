@@ -81,8 +81,7 @@ class BuddyMenu(Palette):
         else:
             buddy_activity_id = None
 
-        if activity is None or \
-           activity.get_type() == 'org.laptop.JournalActivity' or \
+        if activity is None or activity.is_journal() or \
            activity.get_activity_id() == buddy_activity_id:
             self._invite_menu.hide()
         else:    

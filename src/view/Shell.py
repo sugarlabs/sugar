@@ -93,14 +93,19 @@ class Shell(gobject.GObject):
             self.start_activity('org.laptop.JournalActivity')
 
     def __launch_started_cb(self, home_model, home_activity):
-        if home_activity.get_type() != 'org.laptop.JournalActivity':
-            launch_window = LaunchWindow(home_activity)
-            launch_window.show()
+        if home_activity.is_journal():
+            return
 
-            self._launchers[home_activity.get_activity_id()] = launch_window
-            self._model.set_zoom_level(shellmodel.ShellModel.ZOOM_ACTIVITY)
+        launch_window = LaunchWindow(home_activity)
+        launch_window.show()
+
+        self._launchers[home_activity.get_activity_id()] = launch_window
+        self._model.set_zoom_level(shellmodel.ShellModel.ZOOM_ACTIVITY)
 
     def __launch_failed_cb(self, home_model, home_activity):
+        if home_activity.is_journal():
+            return
+
         activity_id = home_activity.get_activity_id()
 
         launch_window = self._launchers[activity_id]
@@ -112,6 +117,9 @@ class Shell(gobject.GObject):
     def __launch_completed_cb(self, home_model, home_activity):
         activity_host = ActivityHost(home_activity)
         self._hosts[activity_host.get_xid()] = activity_host
+
+        if home_activity.is_journal():
+            return
 
         activity_id = home_activity.get_activity_id()
         launch_window = self._launchers[activity_id]
@@ -218,7 +226,7 @@ class Shell(gobject.GObject):
 
         home_model = self._model.get_home()
         active_activity = home_model.get_active_activity()
-        if active_activity.get_type() == 'org.laptop.JournalActivity':
+        if active_activity.is_journal():
             return
 
         self.take_activity_screenshot()
