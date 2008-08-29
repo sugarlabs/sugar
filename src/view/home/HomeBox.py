@@ -294,10 +294,11 @@ class HomeToolbar(gtk.Toolbar):
         if self._autosearch_timer:
             gobject.source_remove(self._autosearch_timer)
         new_query = entry.props.text
-        if self._query != new_query and new_query is not '':
+        if self._query != new_query:
             self._query = new_query
 
-            self._list_button.props.active = True
+            if self._query is not '':
+                self._list_button.props.active = True
             self.emit('query-changed', self._query)
 
     def __entry_changed_cb(self, entry):
