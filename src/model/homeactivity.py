@@ -166,6 +166,10 @@ class HomeActivity(gobject.GObject):
         else:
             return None
 
+    def is_journal(self):
+        """Returns boolean if the activity is of type JournalActivity"""
+        return self.get_type() == 'org.laptop.JournalActivity'
+
     def get_launch_time(self):
         """Return the time at which the activity was first launched
         

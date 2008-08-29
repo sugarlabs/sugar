@@ -185,6 +185,7 @@ class HomeModel(gobject.GObject):
             home_activity.set_window(window)
 
             if _get_sugar_window_type(window) != 'launcher':
+                home_activity.props.launching = False
                 self.emit('launch-completed', home_activity)
 
             if self._active_activity is None:
@@ -286,7 +287,12 @@ class HomeModel(gobject.GObject):
 
     def _check_activity_launched(self, activity_id):
         home_activity = self._get_activity_by_id(activity_id)
-        if home_activity and home_activity.props.launching:
+
+        if not home_activity:
+            logging.debug('Activity %s has been closed already.' % activity_id)
+            return False
+
+        if home_activity.props.launching:
             logging.debug('Activity %s still launching, assuming it failed...'
                           % activity_id)
             self.notify_launch_failed(activity_id)
