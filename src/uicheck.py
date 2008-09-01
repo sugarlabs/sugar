@@ -35,6 +35,8 @@ class Check(object):
         self.timeout = None
 
     def start(self):
+        logging.info('Start %s check.' % self.name)
+
         self.start_time = time.time()
 
     def get_failed(self):
@@ -46,11 +48,14 @@ class Check(object):
     failed = property(get_failed)
 
 class ShellCheck(Check):
-    def start(self):
-        Check.start(self)
+    def __init__(self):
+        Check.__init__(self)
 
         self.name = 'Shell'
         self.max_time = 10
+
+    def start(self):
+        Check.start(self)
 
         screen = wnck.screen_get_default()
         screen.connect('window-opened', self._window_opened_cb)
