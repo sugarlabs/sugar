@@ -14,6 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
 import sys
 import time
 
@@ -61,10 +62,10 @@ class ShellCheck(Check):
 def _timeout_cb():
     check = checks_queue[0]
     if check.failed:
-        print '%s check failed.' % (check.name)
+        logging.info('%s check failed.' % (check.name))
         checks_failed.append(checks_queue.pop(0))
     elif check.succeeded:
-        print '%s check succeeded.' % (check.name)
+        logging.info('%s check succeeded.' % (check.name))
         checks_succeeded.append(checks_queue.pop(0))
     else:
         return True
@@ -77,6 +78,9 @@ def _timeout_cb():
     return True
 
 def main():
+    logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s %(levelname)s %(message)s')
+
     checks_queue.append(ShellCheck())
 
     checks_queue[0].start()
