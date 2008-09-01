@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-19 17:12-0400\n"
-"PO-Revision-Date: 2008-08-29 13:30-0400\n"
+"POT-Creation-Date: 2008-09-01 18:31-0400\n"
+"PO-Revision-Date: 2008-09-01 19:07-0400\n"
 "Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "MIME-Version: 1.0\n"
@@ -47,7 +47,7 @@ msgstr "أزل صديق"
 msgid "Make friend"
 msgstr "اصنع صديق"
 
-#: ../src/view/BuddyMenu.py:91
+#: ../src/view/BuddyMenu.py:90
 #, python-format
 msgid "Invite to %s"
 msgstr "ادعُ إلى %s"
@@ -105,7 +105,7 @@ msgstr "تعذّر الاتصال بالخادوم."
 msgid "The server could not complete the request."
 msgstr "لم يستطع الخادوم إكمال الطلب."
 
-#: ../src/view/Shell.py:240
+#: ../src/view/Shell.py:262
 msgid "Screenshot"
 msgstr "لقطة شاشة"
 
@@ -134,7 +134,7 @@ msgstr "حدّث نشاطاتك لتضمن التوافقية مع البرمج�
 msgid "Cancel"
 msgstr "ألغِ"
 
-#: ../src/view/home/HomeBox.py:127 ../src/controlpanel/gui.py:275
+#: ../src/view/home/HomeBox.py:127 ../src/controlpanel/gui.py:276
 msgid "Later"
 msgstr "لاحقا"
 
@@ -196,9 +196,10 @@ msgstr "يجري الاتصال..."
 msgid "Connected"
 msgstr "مُتّصل"
 
-#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:41
-#: ../src/view/devices/network/mesh.py:68
-#: ../src/view/devices/network/mesh.py:72
+#. only temporarily
+#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:51
+#: ../src/view/devices/network/mesh.py:92
+#: ../src/view/devices/network/mesh.py:96
 msgid "Mesh Network"
 msgstr "شبكة عُروِيّة"
 
@@ -206,8 +207,8 @@ msgstr "شبكة عُروِيّة"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:119
-#: ../src/view/devices/network/mesh.py:89
+#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:160
+#: ../src/view/devices/network/mesh.py:125
 msgid "Disconnect..."
 msgstr "افصِل..."
 
@@ -252,11 +253,16 @@ msgstr "افتح"
 msgid "Mute"
 msgstr "أصمِت"
 
-#: ../src/view/devices/network/wireless.py:67
+#: ../src/view/devices/network/wireless.py:37
+#, python-format
+msgid "IP address: %s"
+msgstr "عنوان الإنترنت: %s"
+
+#: ../src/view/devices/network/wireless.py:86
 msgid "Disconnected"
 msgstr "مفصول"
 
-#: ../src/view/devices/network/wireless.py:137
+#: ../src/view/devices/network/wireless.py:178
 msgid "Channel"
 msgstr "قناة"
 
@@ -315,19 +321,19 @@ msgstr "تحتاج لإعادة تشغيل «سُكّر» لتُطبق التغ�
 msgid "Ok"
 msgstr "حسنا"
 
-#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:267
+#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:268
 msgid "Changes require restart"
 msgstr "تتطلب التغييرات إعادة التشغيل"
 
-#: ../src/controlpanel/gui.py:266
+#: ../src/controlpanel/gui.py:267
 msgid "Warning"
 msgstr "تحذير"
 
-#: ../src/controlpanel/gui.py:270
+#: ../src/controlpanel/gui.py:271
 msgid "Cancel changes"
 msgstr "ألغِ التغييرات"
 
-#: ../src/controlpanel/gui.py:279
+#: ../src/controlpanel/gui.py:280
 msgid "Restart now"
 msgstr "أعِد التشغيل الآن"
 
@@ -379,12 +385,12 @@ msgstr "يجب أن تكون القيمة عددا صحيحا."
 msgid "Could not access ~/.i18n. Create standard settings."
 msgstr "تعذّر الوصول إلى ‭~/.i18n‬. سأنشئ إعدادات قياسية."
 
-#: ../src/controlpanel/model/language.py:104
+#: ../src/controlpanel/model/language.py:110
 #, python-format
 msgid "Language for code=%s could not be determined."
 msgstr "لا يمكن تحديد لغة الرمز=%s."
 
-#: ../src/controlpanel/model/language.py:121
+#: ../src/controlpanel/model/language.py:127
 #, python-format
 msgid "Sorry I do not speak '%s'."
 msgstr "آسف، لا أتحدث '%s'."
@@ -417,29 +423,57 @@ msgstr "عنّي"
 msgid "Click to change your color:"
 msgstr "انقر لتغيير اللون:"
 
-#: ../src/controlpanel/view/aboutxo.py:26
+#: ../src/controlpanel/view/aboutxo.py:28
 msgid "About my XO"
 msgstr "عن حاسوبي"
 
-#: ../src/controlpanel/view/aboutxo.py:47
+#: ../src/controlpanel/view/aboutxo.py:59
 msgid "Identity"
 msgstr "المعرّف"
 
-#: ../src/controlpanel/view/aboutxo.py:56
+#: ../src/controlpanel/view/aboutxo.py:68
 msgid "Serial Number:"
 msgstr "الرقم التسلسلي"
 
-#: ../src/controlpanel/view/aboutxo.py:79
+#: ../src/controlpanel/view/aboutxo.py:91
 msgid "Software"
 msgstr "البرمجيات"
 
-#: ../src/controlpanel/view/aboutxo.py:88
+#: ../src/controlpanel/view/aboutxo.py:100
 msgid "Build:"
 msgstr "البناء:"
 
-#: ../src/controlpanel/view/aboutxo.py:103
+#: ../src/controlpanel/view/aboutxo.py:115
+msgid "Sugar:"
+msgstr "سُكّر:"
+
+#: ../src/controlpanel/view/aboutxo.py:130
 msgid "Firmware:"
 msgstr "البرمجيات الثابتة (Firmware):"
+
+#: ../src/controlpanel/view/aboutxo.py:152
+msgid "Copyright and License"
+msgstr "حقوق النشر والترخيص"
+
+#: ../src/controlpanel/view/aboutxo.py:160
+msgid ""
+"© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+msgstr "حقوق النشر محفوظة 2008 لجمعية حاسوب محمول لكل طفل؛ ردهات؛ والمساهمين."
+
+#: ../src/controlpanel/view/aboutxo.py:166
+msgid ""
+"Sugar is the graphical user interface that you are looking at. Sugar is free "
+"software, covered by the GNU General Public License, and you are welcome to "
+"change it and/or distribute copies of it under certain conditions described "
+"therein."
+msgstr ""
+"سُكّر هي واجهة المستخدم الرسومية التي تنظر لها الآن. سُكّر برمجية حرّة تخضع "
+"لرخصة جنو للتأميم عامّة الأغراض، ويمكنك تعديلها و/أو توزيع نسخ منها وفق شروط "
+"معينة مذكورة هنا."
+
+#: ../src/controlpanel/view/aboutxo.py:178
+msgid "Full license:"
+msgstr "الترخيص كاملا:"
 
 #: ../src/controlpanel/view/datetime.py:29
 msgid "Date & Time"
@@ -520,31 +554,31 @@ msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr "إدارة قصوى للطاقة (تعطّل اللاسلكي وتطيل عمر البطارية)"
 
-#: ../src/view/devices/network/mesh.py:111
+#: ../src/view/devices/network/mesh.py:154
 msgid "Connected to a School Mesh Portal"
 msgstr "اتصل ببوابة شبكة مدرسة"
 
-#: ../src/view/devices/network/mesh.py:113
+#: ../src/view/devices/network/mesh.py:156
 msgid "Looking for a School Mesh Portal..."
 msgstr "يبحث عن بوابة شبكة مدرسة..."
 
-#: ../src/view/devices/network/mesh.py:116
+#: ../src/view/devices/network/mesh.py:159
 msgid "Connected to an XO Mesh Portal"
 msgstr "اتصل ببوابة شبكة XO"
 
-#: ../src/view/devices/network/mesh.py:118
+#: ../src/view/devices/network/mesh.py:161
 msgid "Looking for an XO Mesh Portal..."
 msgstr "يبحث عن بوابة شبكة XO..."
 
-#: ../src/view/devices/network/mesh.py:121
+#: ../src/view/devices/network/mesh.py:164
 msgid "Connected to a Simple Mesh"
 msgstr "اتصل بشبكة بسيطة"
 
-#: ../src/view/devices/network/mesh.py:123
+#: ../src/view/devices/network/mesh.py:166
 msgid "Starting a Simple Mesh"
 msgstr "يبدأ شبكة بسيطة"
 
-#: ../src/view/devices/network/mesh.py:130
+#: ../src/view/devices/network/mesh.py:173
 msgid "Unknown Mesh"
 msgstr "شبكة مجهولة"
 
