@@ -27,6 +27,7 @@ checks_succeeded = []
 
 class Check(object):
     def __init__(self):
+        self.name = None
         self.succeeded = False
         self.start_time = None
         self.max_time = None
@@ -47,6 +48,7 @@ class ShellCheck(Check):
     def start(self):
         Check.start(self)
 
+        self.name = 'Shell'
         self.max_time = 10
 
         screen = wnck.screen_get_default()
@@ -57,9 +59,12 @@ class ShellCheck(Check):
             self.succeeded = True
 
 def _timeout_cb():
-    if checks_queue[0].failed:
+    check = checks_queue[0]
+    if check.failed:
+        print '%s check failed.' % (check.name)
         checks_failed.append(checks_queue.pop(0))
-    elif checks_queue[0].succeeded:
+    elif check.succeeded:
+        print '%s check succeeded.' % (check.name)
         checks_succeeded.append(checks_queue.pop(0))
     else:
         return True
