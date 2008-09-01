@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-19 17:18-0400\n"
-"PO-Revision-Date: 2008-08-21 20:28-0400\n"
+"POT-Creation-Date: 2008-08-29 00:30-0400\n"
+"PO-Revision-Date: 2008-09-01 06:02-0400\n"
 "Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -15,23 +15,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Pootle 1.1.0rc2\n"
 
-#: ../src/intro/intro.py:65 ../src/controlpanel/view/aboutme.py:100
+#: ../src/intro/window.py:93 ../src/controlpanel/view/aboutme.py:100
 msgid "Name:"
 msgstr "Nome:"
 
-#: ../src/intro/intro.py:97
+#: ../src/intro/window.py:125
 msgid "Click to change color:"
 msgstr "Seleziona per cambiare colore:"
 
-#: ../src/intro/intro.py:148
+#: ../src/intro/window.py:175
 msgid "Back"
 msgstr "Indietro"
 
-#: ../src/intro/intro.py:162 ../src/controlpanel/toolbar.py:61
+#: ../src/intro/window.py:189 ../src/controlpanel/toolbar.py:61
 msgid "Done"
 msgstr "Fatto"
 
-#: ../src/intro/intro.py:165
+#: ../src/intro/window.py:192
 msgid "Next"
 msgstr "Prossimo"
 
@@ -101,7 +101,7 @@ msgstr "Impossibile connettersi al server."
 msgid "The server could not complete the request."
 msgstr "Il server non può completare la richiesta."
 
-#: ../src/view/Shell.py:239
+#: ../src/view/Shell.py:253
 msgid "Screenshot"
 msgstr "Schermata"
 
@@ -133,7 +133,7 @@ msgstr ""
 msgid "Cancel"
 msgstr "Annulla"
 
-#: ../src/view/home/HomeBox.py:127 ../src/controlpanel/gui.py:275
+#: ../src/view/home/HomeBox.py:127 ../src/controlpanel/gui.py:276
 msgid "Later"
 msgstr "Dopo"
 
@@ -297,7 +297,9 @@ msgstr "sugar-control-panel: key=%s non è una opzione disponibile"
 msgid "sugar-control-panel: %s"
 msgstr "sugar-control-panel: %s"
 
-#: ../src/controlpanel/cmd.py:33
+#. TRANS: Translators, there's a empty line at the end of this string,
+#. which must appear in the translated string (msgstr) as well.
+#: ../src/controlpanel/cmd.py:35
 msgid ""
 "Usage: sugar-control-panel [ option ] key [ args ... ] \n"
 "    Control for the sugar environment. \n"
@@ -320,7 +322,7 @@ msgstr ""
 "    -s key       assegna il valore corrente alla \"key\" \n"
 "    "
 
-#: ../src/controlpanel/cmd.py:46
+#: ../src/controlpanel/cmd.py:48
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "Per applicare le modifiche è necessario riavviare sugar.\n"
 
@@ -328,19 +330,19 @@ msgstr "Per applicare le modifiche è necessario riavviare sugar.\n"
 msgid "Ok"
 msgstr "Ok"
 
-#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:267
+#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:268
 msgid "Changes require restart"
 msgstr "Le modifiche rendono necessario un riavvio"
 
-#: ../src/controlpanel/gui.py:266
+#: ../src/controlpanel/gui.py:267
 msgid "Warning"
 msgstr "Attenzione"
 
-#: ../src/controlpanel/gui.py:270
+#: ../src/controlpanel/gui.py:271
 msgid "Cancel changes"
 msgstr "Annulla modifiche"
 
-#: ../src/controlpanel/gui.py:279
+#: ../src/controlpanel/gui.py:280
 msgid "Restart now"
 msgstr "Riavvia adesso"
 
@@ -392,12 +394,12 @@ msgstr "Valore deve essere un intero."
 msgid "Could not access ~/.i18n. Create standard settings."
 msgstr "Impossibile accedere a ~/.i18n. Creazione configurazione standard."
 
-#: ../src/controlpanel/model/language.py:104
+#: ../src/controlpanel/model/language.py:110
 #, python-format
 msgid "Language for code=%s could not be determined."
 msgstr "Linguaggio con codice=%s sconosciuto."
 
-#: ../src/controlpanel/model/language.py:121
+#: ../src/controlpanel/model/language.py:127
 #, python-format
 msgid "Sorry I do not speak '%s'."
 msgstr "Spiacente, ma non parlo '%s'."
@@ -431,29 +433,49 @@ msgstr "Informazioni su"
 msgid "Click to change your color:"
 msgstr "Seleziona per cambiare il tuo colore:"
 
-#: ../src/controlpanel/view/aboutxo.py:26
+#: ../src/controlpanel/view/aboutxo.py:28
 msgid "About my XO"
 msgstr "Informazioni sul mio XO"
 
-#: ../src/controlpanel/view/aboutxo.py:47
+#: ../src/controlpanel/view/aboutxo.py:59
 msgid "Identity"
 msgstr "Identità"
 
-#: ../src/controlpanel/view/aboutxo.py:56
+#: ../src/controlpanel/view/aboutxo.py:68
 msgid "Serial Number:"
 msgstr "Numero di Serie:"
 
-#: ../src/controlpanel/view/aboutxo.py:79
+#: ../src/controlpanel/view/aboutxo.py:91
 msgid "Software"
 msgstr "Software"
 
-#: ../src/controlpanel/view/aboutxo.py:88
+#: ../src/controlpanel/view/aboutxo.py:100
 msgid "Build:"
 msgstr "Build:"
 
-#: ../src/controlpanel/view/aboutxo.py:103
+#: ../src/controlpanel/view/aboutxo.py:115
+msgid "Sugar:"
+msgstr "Sugar:"
+
+#: ../src/controlpanel/view/aboutxo.py:130
 msgid "Firmware:"
 msgstr "Firmware:"
+
+#: ../src/controlpanel/view/aboutxo.py:152
+msgid "Copyright and License"
+msgstr "Copyright e Licenza"
+
+#: ../src/controlpanel/view/aboutxo.py:160
+msgid "© 2008 One Laptop per Child Assocation "
+msgstr "© 2008 One Laptop per Child Association "
+
+#: ../src/controlpanel/view/aboutxo.py:166
+msgid "Sugar is the graphical user interface that "
+msgstr "Sugar è l'interfaccia grafica utente che "
+
+#: ../src/controlpanel/view/aboutxo.py:177
+msgid "Full license:"
+msgstr "Testo della Licenza:"
 
 #: ../src/controlpanel/view/datetime.py:29
 msgid "Date & Time"
