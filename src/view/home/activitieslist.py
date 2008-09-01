@@ -62,7 +62,8 @@ class ActivitiesList(gtk.VBox):
         registry.connect('activity-removed', self.__activity_removed_cb)
 
     def _get_activities_cb(self, activity_list):
-        gobject.idle_add(self._add_activity_list, activity_list)
+        if activity_list:
+            gobject.idle_add(self._add_activity_list, activity_list)
 
     def _add_activity_list(self, activity_list):
         info = activity_list.pop()
