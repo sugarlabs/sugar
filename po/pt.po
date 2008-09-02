@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-29 00:30-0400\n"
-"PO-Revision-Date: 2008-08-30 15:27-0400\n"
+"POT-Creation-Date: 2008-09-01 18:31-0400\n"
+"PO-Revision-Date: 2008-09-02 05:42-0400\n"
 "Last-Translator: Eduardo H. Silva <HoboPrimate@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -43,7 +43,7 @@ msgstr "Remover amigo"
 msgid "Make friend"
 msgstr "Fazer amigo"
 
-#: ../src/view/BuddyMenu.py:91
+#: ../src/view/BuddyMenu.py:90
 #, python-format
 msgid "Invite to %s"
 msgstr "Convidar para %s"
@@ -101,7 +101,7 @@ msgstr "Não foi possível ligar ao servidor."
 msgid "The server could not complete the request."
 msgstr "Não foi possível ao servidor completar o pedido."
 
-#: ../src/view/Shell.py:254
+#: ../src/view/Shell.py:262
 msgid "Screenshot"
 msgstr "Imagem do Ecrã"
 
@@ -467,14 +467,23 @@ msgid "Copyright and License"
 msgstr "Copyright e Licença"
 
 #: ../src/controlpanel/view/aboutxo.py:160
-msgid "© 2008 One Laptop per Child Assocation "
-msgstr "© 2008 One Laptop per Child Association"
+msgid ""
+"© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+msgstr ""
+"© 2008 One Laptop per Child Association Inc; Red Hat Inc; e Contribuidores."
 
 #: ../src/controlpanel/view/aboutxo.py:166
-msgid "Sugar is the graphical user interface that "
-msgstr "Sugar é a interface gráfica que estás a utilizar."
+msgid ""
+"Sugar is the graphical user interface that you are looking at. Sugar is free "
+"software, covered by the GNU General Public License, and you are welcome to "
+"change it and/or distribute copies of it under certain conditions described "
+"therein."
+msgstr ""
+"Sugar é a interface gráfica que estás a olhar. O Sugar é software livre, "
+"licenciado sob a Licença GNU General Public License, e podes fazer mudanças "
+"e/ou distribuir cópias segundo certas condições descritas a seguir."
 
-#: ../src/controlpanel/view/aboutxo.py:177
+#: ../src/controlpanel/view/aboutxo.py:178
 msgid "Full license:"
 msgstr "Licença Completa:"
 
@@ -530,7 +539,7 @@ msgstr "Rede sem fios"
 
 #: ../src/controlpanel/view/network.py:61
 msgid "Radio:"
-msgstr "Radio:"
+msgstr "Rádio:"
 
 #: ../src/controlpanel/view/network.py:94
 msgid "Mesh"
@@ -652,6 +661,12 @@ msgstr "Mostrar conteúdo"
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB Livres"
+
+#~ msgid "© 2008 One Laptop per Child Assocation "
+#~ msgstr "© 2008 One Laptop per Child Association"
+
+#~ msgid "Sugar is the graphical user interface that "
+#~ msgstr "Sugar é a interface gráfica que estás a utilizar."
 
 #~ msgid "off"
 #~ msgstr "desligar"
