@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-29 00:30-0400\n"
-"PO-Revision-Date: 2008-09-01 06:02-0400\n"
+"POT-Creation-Date: 2008-09-01 18:31-0400\n"
+"PO-Revision-Date: 2008-09-02 04:40-0400\n"
 "Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -43,7 +43,7 @@ msgstr "Rimuovi l'amico"
 msgid "Make friend"
 msgstr "Aggiungi agli amici"
 
-#: ../src/view/BuddyMenu.py:91
+#: ../src/view/BuddyMenu.py:90
 #, python-format
 msgid "Invite to %s"
 msgstr "Invito per %s"
@@ -101,7 +101,7 @@ msgstr "Impossibile connettersi al server."
 msgid "The server could not complete the request."
 msgstr "Il server non può completare la richiesta."
 
-#: ../src/view/Shell.py:253
+#: ../src/view/Shell.py:261
 msgid "Screenshot"
 msgstr "Schermata"
 
@@ -149,23 +149,23 @@ msgstr "Vista Elenco"
 msgid "<Ctrl>2"
 msgstr "<Ctrl>2"
 
-#: ../src/view/home/HomeBox.py:324
+#: ../src/view/home/HomeBox.py:325
 msgid "Favorites view"
 msgstr "Visualizza i Preferiti"
 
-#: ../src/view/home/HomeBox.py:325
+#: ../src/view/home/HomeBox.py:326
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
 # TRANS: label for the freeform layout in the favorites view
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/view/home/HomeBox.py:333
+#: ../src/view/home/HomeBox.py:334
 msgid "Freeform"
 msgstr "Formato libero"
 
 # TRANS: label for the ring layout in the favorites view
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/view/home/HomeBox.py:340
+#: ../src/view/home/HomeBox.py:341
 msgid "Ring"
 msgstr "Anello"
 
@@ -466,14 +466,24 @@ msgid "Copyright and License"
 msgstr "Copyright e Licenza"
 
 #: ../src/controlpanel/view/aboutxo.py:160
-msgid "© 2008 One Laptop per Child Assocation "
-msgstr "© 2008 One Laptop per Child Association "
+msgid ""
+"© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+msgstr ""
+"© 2008 One Laptop per Child Association Inc; Red Hat Inc; e Contributori."
 
 #: ../src/controlpanel/view/aboutxo.py:166
-msgid "Sugar is the graphical user interface that "
-msgstr "Sugar è l'interfaccia grafica utente che "
+msgid ""
+"Sugar is the graphical user interface that you are looking at. Sugar is free "
+"software, covered by the GNU General Public License, and you are welcome to "
+"change it and/or distribute copies of it under certain conditions described "
+"therein."
+msgstr ""
+"Sugar è l'interfaccia utente che stai utilizzando in questo istante. Sugar è "
+"Software Libero, protetto dalla licenza General Public License di GNU, e "
+"chiunque è il benvenuto per apportare modifiche e migliorie e/o distribuirne "
+"copie, alle condizioni descritte nella licenza medesima."
 
-#: ../src/controlpanel/view/aboutxo.py:177
+#: ../src/controlpanel/view/aboutxo.py:178
 msgid "Full license:"
 msgstr "Testo della Licenza:"
 
@@ -655,6 +665,12 @@ msgstr "Mostra i contenuti"
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB Liberi"
+
+#~ msgid "© 2008 One Laptop per Child Assocation "
+#~ msgstr "© 2008 One Laptop per Child Association "
+
+#~ msgid "Sugar is the graphical user interface that "
+#~ msgstr "Sugar è l'interfaccia grafica utente che "
 
 #~ msgid "<Ctrl>R"
 #~ msgstr "<Ctrl>R"
