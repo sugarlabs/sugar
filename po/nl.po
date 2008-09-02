@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-19 17:18-0400\n"
-"PO-Revision-Date: 2008-08-21 02:23-0400\n"
+"POT-Creation-Date: 2008-09-01 18:31-0400\n"
+"PO-Revision-Date: 2008-09-02 14:54-0400\n"
 "Last-Translator: Myckel Habets <myckel@sdf.lonestar.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -15,23 +15,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Pootle 1.1.0rc2\n"
 
-#: ../src/intro/intro.py:65 ../src/controlpanel/view/aboutme.py:100
+#: ../src/intro/window.py:93 ../src/controlpanel/view/aboutme.py:100
 msgid "Name:"
 msgstr "Naam:"
 
-#: ../src/intro/intro.py:97
+#: ../src/intro/window.py:125
 msgid "Click to change color:"
 msgstr "Klik om de kleur te veranderen:"
 
-#: ../src/intro/intro.py:148
+#: ../src/intro/window.py:175
 msgid "Back"
 msgstr "Terug"
 
-#: ../src/intro/intro.py:162 ../src/controlpanel/toolbar.py:61
+#: ../src/intro/window.py:189 ../src/controlpanel/toolbar.py:61
 msgid "Done"
 msgstr "Klaar"
 
-#: ../src/intro/intro.py:165
+#: ../src/intro/window.py:192
 msgid "Next"
 msgstr "Volgende"
 
@@ -43,7 +43,7 @@ msgstr "Verwijder vriend"
 msgid "Make friend"
 msgstr "Maak vriend"
 
-#: ../src/view/BuddyMenu.py:91
+#: ../src/view/BuddyMenu.py:90
 #, python-format
 msgid "Invite to %s"
 msgstr "Nodig uit voor %s"
@@ -103,7 +103,7 @@ msgstr "Kan niet met de server verbinden."
 msgid "The server could not complete the request."
 msgstr "De server kon de aanvraag niet voltooien."
 
-#: ../src/view/Shell.py:239
+#: ../src/view/Shell.py:261
 msgid "Screenshot"
 msgstr "Schermafdruk"
 
@@ -134,7 +134,7 @@ msgstr ""
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: ../src/view/home/HomeBox.py:127 ../src/controlpanel/gui.py:275
+#: ../src/view/home/HomeBox.py:127 ../src/controlpanel/gui.py:276
 msgid "Later"
 msgstr "Later"
 
@@ -150,23 +150,23 @@ msgstr "Lijstweergave"
 msgid "<Ctrl>2"
 msgstr "<Ctrl>2"
 
-#: ../src/view/home/HomeBox.py:324
+#: ../src/view/home/HomeBox.py:325
 msgid "Favorites view"
 msgstr "Favorietenweergave"
 
-#: ../src/view/home/HomeBox.py:325
+#: ../src/view/home/HomeBox.py:326
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
 # TRANS: label for the freeform layout in the favorites view
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/view/home/HomeBox.py:333
+#: ../src/view/home/HomeBox.py:334
 msgid "Freeform"
 msgstr "VrijeVorm"
 
 # TRANS: label for the ring layout in the favorites view
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/view/home/HomeBox.py:340
+#: ../src/view/home/HomeBox.py:341
 msgid "Ring"
 msgstr "Ring"
 
@@ -286,7 +286,9 @@ msgstr "sugar-control-panel: sleutel=%s is geen beschikbare optie"
 msgid "sugar-control-panel: %s"
 msgstr "sugar-control-panel: %s"
 
-#: ../src/controlpanel/cmd.py:33
+#. TRANS: Translators, there's a empty line at the end of this string,
+#. which must appear in the translated string (msgstr) as well.
+#: ../src/controlpanel/cmd.py:35
 msgid ""
 "Usage: sugar-control-panel [ option ] key [ args ... ] \n"
 "    Control for the sugar environment. \n"
@@ -310,7 +312,7 @@ msgstr ""
 "    -c sleutel       wis de huidige waarde van de sleutel \n"
 "    "
 
-#: ../src/controlpanel/cmd.py:46
+#: ../src/controlpanel/cmd.py:48
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "Om uw veranderingen toe te passen moet u sugar herstarten.\r\n"
 
@@ -318,19 +320,19 @@ msgstr "Om uw veranderingen toe te passen moet u sugar herstarten.\r\n"
 msgid "Ok"
 msgstr "Ok"
 
-#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:267
+#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:268
 msgid "Changes require restart"
 msgstr "Verandering vereist een herstart"
 
-#: ../src/controlpanel/gui.py:266
+#: ../src/controlpanel/gui.py:267
 msgid "Warning"
 msgstr "Waarschuwing"
 
-#: ../src/controlpanel/gui.py:270
+#: ../src/controlpanel/gui.py:271
 msgid "Cancel changes"
 msgstr "Veranderingen annuleren"
 
-#: ../src/controlpanel/gui.py:279
+#: ../src/controlpanel/gui.py:280
 msgid "Restart now"
 msgstr "Herstart nu"
 
@@ -382,12 +384,12 @@ msgstr "Waarde moet een geheel getal zijn."
 msgid "Could not access ~/.i18n. Create standard settings."
 msgstr "Kon niet bij ~/.i18n komen. Standaard instellingen aanmaken."
 
-#: ../src/controlpanel/model/language.py:104
+#: ../src/controlpanel/model/language.py:110
 #, python-format
 msgid "Language for code=%s could not be determined."
 msgstr "Taal voor code=%s kon niet bepaald worden."
 
-#: ../src/controlpanel/model/language.py:121
+#: ../src/controlpanel/model/language.py:127
 #, python-format
 msgid "Sorry I do not speak '%s'."
 msgstr "Sorry, I spreek geen '%s'."
@@ -420,29 +422,60 @@ msgstr "Over mij"
 msgid "Click to change your color:"
 msgstr "Klik om de kleur te veranderen:"
 
-#: ../src/controlpanel/view/aboutxo.py:26
+#: ../src/controlpanel/view/aboutxo.py:28
 msgid "About my XO"
 msgstr "Over mijn XO"
 
-#: ../src/controlpanel/view/aboutxo.py:47
+#: ../src/controlpanel/view/aboutxo.py:59
 msgid "Identity"
 msgstr "Identiteit"
 
-#: ../src/controlpanel/view/aboutxo.py:56
+#: ../src/controlpanel/view/aboutxo.py:68
 msgid "Serial Number:"
 msgstr "Serienummer:"
 
-#: ../src/controlpanel/view/aboutxo.py:79
+#: ../src/controlpanel/view/aboutxo.py:91
 msgid "Software"
 msgstr "Software"
 
-#: ../src/controlpanel/view/aboutxo.py:88
+#: ../src/controlpanel/view/aboutxo.py:100
 msgid "Build:"
 msgstr "Bouw:"
 
-#: ../src/controlpanel/view/aboutxo.py:103
+#: ../src/controlpanel/view/aboutxo.py:115
+msgid "Sugar:"
+msgstr "Sugar:"
+
+#: ../src/controlpanel/view/aboutxo.py:130
 msgid "Firmware:"
 msgstr "Firmware:"
+
+#: ../src/controlpanel/view/aboutxo.py:152
+msgid "Copyright and License"
+msgstr "Copyright en licentie"
+
+#: ../src/controlpanel/view/aboutxo.py:160
+msgid ""
+"© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+msgstr ""
+"© 2008 One Laptop per Child Association Inc; Red Hat Inc; en diverse andere "
+"mensen die bijgedragen hebben."
+
+#: ../src/controlpanel/view/aboutxo.py:166
+msgid ""
+"Sugar is the graphical user interface that you are looking at. Sugar is free "
+"software, covered by the GNU General Public License, and you are welcome to "
+"change it and/or distribute copies of it under certain conditions described "
+"therein."
+msgstr ""
+"Sugar is de grafische gebruikersinterface waar je momenteel naar kijkt. "
+"Sugar is vrije software, uitgegeven onder de GNU General Public License,  en "
+"u mag het aanpassen en/of kopieën distribueren onder de condities vermeld "
+"in de licentie."
+
+#: ../src/controlpanel/view/aboutxo.py:178
+msgid "Full license:"
+msgstr "Volledige licentie:"
 
 #: ../src/controlpanel/view/datetime.py:29
 msgid "Date & Time"
