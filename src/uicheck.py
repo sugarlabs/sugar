@@ -52,7 +52,7 @@ class ShellCheck(Check):
         Check.__init__(self)
 
         self.name = 'Shell'
-        self.max_time = 10
+        self.max_time = 30
 
     def start(self):
         Check.start(self)
