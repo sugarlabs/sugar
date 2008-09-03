@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-19 17:12-0400\n"
-"PO-Revision-Date: 2008-08-21 12:54-0400\n"
+"POT-Creation-Date: 2008-09-01 18:31-0400\n"
+"PO-Revision-Date: 2008-09-02 21:44-0400\n"
 "Last-Translator: korakurider <korakurider@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -43,7 +43,7 @@ msgstr "お友だちの登録削除"
 msgid "Make friend"
 msgstr "お友だちを登録"
 
-#: ../src/view/BuddyMenu.py:91
+#: ../src/view/BuddyMenu.py:90
 #, python-format
 msgid "Invite to %s"
 msgstr "%s に招待する"
@@ -101,7 +101,7 @@ msgstr "サーバーに接続できません"
 msgid "The server could not complete the request."
 msgstr "サーバーは要求の処理を完了できませんでした"
 
-#: ../src/view/Shell.py:240
+#: ../src/view/Shell.py:262
 msgid "Screenshot"
 msgstr "スクリーンショット"
 
@@ -130,7 +130,7 @@ msgstr "新しいソフトウェアとの互換性を保つため、アクティ
 msgid "Cancel"
 msgstr "中止"
 
-#: ../src/view/home/HomeBox.py:127 ../src/controlpanel/gui.py:275
+#: ../src/view/home/HomeBox.py:127 ../src/controlpanel/gui.py:276
 msgid "Later"
 msgstr "あとで"
 
@@ -195,9 +195,10 @@ msgstr "接続しています..."
 msgid "Connected"
 msgstr "接続しました"
 
-#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:41
-#: ../src/view/devices/network/mesh.py:68
-#: ../src/view/devices/network/mesh.py:72
+#. only temporarily
+#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:51
+#: ../src/view/devices/network/mesh.py:92
+#: ../src/view/devices/network/mesh.py:96
 msgid "Mesh Network"
 msgstr "メッシュネットワーク"
 
@@ -205,8 +206,8 @@ msgstr "メッシュネットワーク"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:119
-#: ../src/view/devices/network/mesh.py:89
+#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:160
+#: ../src/view/devices/network/mesh.py:125
 msgid "Disconnect..."
 msgstr "切断..."
 
@@ -251,11 +252,16 @@ msgstr "音を出す"
 msgid "Mute"
 msgstr "音を消す"
 
-#: ../src/view/devices/network/wireless.py:67
+#: ../src/view/devices/network/wireless.py:37
+#, python-format
+msgid "IP address: %s"
+msgstr "IPアドレス: %s"
+
+#: ../src/view/devices/network/wireless.py:86
 msgid "Disconnected"
 msgstr "切断されました"
 
-#: ../src/view/devices/network/wireless.py:137
+#: ../src/view/devices/network/wireless.py:178
 msgid "Channel"
 msgstr "チャンネル"
 
@@ -324,19 +330,19 @@ msgstr "変更を適用するにはsugarを再起動しなければいけませ�
 msgid "Ok"
 msgstr "了解"
 
-#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:267
+#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:268
 msgid "Changes require restart"
 msgstr "変更には再起動が必要です"
 
-#: ../src/controlpanel/gui.py:266
+#: ../src/controlpanel/gui.py:267
 msgid "Warning"
 msgstr "注意"
 
-#: ../src/controlpanel/gui.py:270
+#: ../src/controlpanel/gui.py:271
 msgid "Cancel changes"
 msgstr "変更を取りやめる"
 
-#: ../src/controlpanel/gui.py:279
+#: ../src/controlpanel/gui.py:280
 msgid "Restart now"
 msgstr "今すぐ再起動"
 
@@ -388,12 +394,12 @@ msgstr "値は整数でなくてはなりません"
 msgid "Could not access ~/.i18n. Create standard settings."
 msgstr "~/.i18nにアクセスできませんでした。標準設定を作ってください。"
 
-#: ../src/controlpanel/model/language.py:104
+#: ../src/controlpanel/model/language.py:110
 #, python-format
 msgid "Language for code=%s could not be determined."
 msgstr "コード%sの言語が不明です。"
 
-#: ../src/controlpanel/model/language.py:121
+#: ../src/controlpanel/model/language.py:127
 #, python-format
 msgid "Sorry I do not speak '%s'."
 msgstr "ごめんなさい。'%s'は話せません。"
@@ -426,29 +432,58 @@ msgstr "私について"
 msgid "Click to change your color:"
 msgstr "クリックして色を変更:"
 
-#: ../src/controlpanel/view/aboutxo.py:26
+#: ../src/controlpanel/view/aboutxo.py:28
 msgid "About my XO"
 msgstr "私のXOについて"
 
-#: ../src/controlpanel/view/aboutxo.py:47
+#: ../src/controlpanel/view/aboutxo.py:59
 msgid "Identity"
 msgstr "個体の識別"
 
-#: ../src/controlpanel/view/aboutxo.py:56
+#: ../src/controlpanel/view/aboutxo.py:68
 msgid "Serial Number:"
 msgstr "シリアル番号:"
 
-#: ../src/controlpanel/view/aboutxo.py:79
+#: ../src/controlpanel/view/aboutxo.py:91
 msgid "Software"
 msgstr "ソフトウェア"
 
-#: ../src/controlpanel/view/aboutxo.py:88
+#: ../src/controlpanel/view/aboutxo.py:100
 msgid "Build:"
 msgstr "ビルド:"
 
-#: ../src/controlpanel/view/aboutxo.py:103
+#: ../src/controlpanel/view/aboutxo.py:115
+msgid "Sugar:"
+msgstr "Sugar:"
+
+#: ../src/controlpanel/view/aboutxo.py:130
 msgid "Firmware:"
 msgstr "ファームウェア:"
+
+#: ../src/controlpanel/view/aboutxo.py:152
+msgid "Copyright and License"
+msgstr "著作権とライセンス"
+
+#: ../src/controlpanel/view/aboutxo.py:160
+msgid ""
+"© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+msgstr ""
+"(C) 2008 One Laptop per Child Association Inc; Red Hat Inc; and "
+"Contributors."
+
+#: ../src/controlpanel/view/aboutxo.py:166
+msgid ""
+"Sugar is the graphical user interface that you are looking at. Sugar is free "
+"software, covered by the GNU General Public License, and you are welcome to "
+"change it and/or distribute copies of it under certain conditions described "
+"therein."
+msgstr ""
+"Sugarは、あなたが見ているグラフィカルユーザインターフェースです。Sugarはフリーソフトウェアで、GNU General Public Licen"
+"se（一般公衆利用許諾契約書）による保護対象です。ここに記載されている条件の範囲で、Sugarを変更したりコピーを配布することが自由に行えます。"
+
+#: ../src/controlpanel/view/aboutxo.py:178
+msgid "Full license:"
+msgstr "ライセンス全文:"
 
 #: ../src/controlpanel/view/datetime.py:29
 msgid "Date & Time"
@@ -529,31 +564,31 @@ msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr "最大の電源管理（無線の電波を停めて、電池を長持ちさせます）"
 
-#: ../src/view/devices/network/mesh.py:111
+#: ../src/view/devices/network/mesh.py:154
 msgid "Connected to a School Mesh Portal"
 msgstr "スクールメッシュポータルに接続しました。"
 
-#: ../src/view/devices/network/mesh.py:113
+#: ../src/view/devices/network/mesh.py:156
 msgid "Looking for a School Mesh Portal..."
 msgstr "スクールメッシュポータルを探しています..."
 
-#: ../src/view/devices/network/mesh.py:116
+#: ../src/view/devices/network/mesh.py:159
 msgid "Connected to an XO Mesh Portal"
 msgstr "XOメッシュポータルに接続しました"
 
-#: ../src/view/devices/network/mesh.py:118
+#: ../src/view/devices/network/mesh.py:161
 msgid "Looking for an XO Mesh Portal..."
 msgstr "XOメッシュポータルを探しています..."
 
-#: ../src/view/devices/network/mesh.py:121
+#: ../src/view/devices/network/mesh.py:164
 msgid "Connected to a Simple Mesh"
 msgstr "シンプルメッシュに接続しました"
 
-#: ../src/view/devices/network/mesh.py:123
+#: ../src/view/devices/network/mesh.py:166
 msgid "Starting a Simple Mesh"
 msgstr "シンプルメッシュを開始しています"
 
-#: ../src/view/devices/network/mesh.py:130
+#: ../src/view/devices/network/mesh.py:173
 msgid "Unknown Mesh"
 msgstr "不明なメッシュ"
 
