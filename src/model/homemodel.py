@@ -135,17 +135,7 @@ class HomeModel(gobject.GObject):
             return
 
         if self._active_activity:
-            service = self._active_activity.get_service()
-            if service:
-                service.SetActive(False,
-                                  reply_handler=self._set_active_success,
-                                  error_handler=self._set_active_error)
-        if home_activity:
-            service = home_activity.get_service()
-            if service:
-                service.SetActive(True,
-                                  reply_handler=self._set_active_success,
-                                  error_handler=self._set_active_error)
+            self._active_activity.set_active(False)
 
         self._active_activity = home_activity
         self.emit('active-activity-changed', self._active_activity)
@@ -206,12 +196,6 @@ class HomeModel(gobject.GObject):
             if home_activity.get_activity_id() == activity_id:
                 return home_activity
         return None
-
-    def _set_active_success(self):
-        pass
-    
-    def _set_active_error(self, err):
-        logging.error("set_active() failed: %s" % err)
 
     def _active_window_changed_cb(self, screen, previous_window=None):
         window = screen.get_active_window()
