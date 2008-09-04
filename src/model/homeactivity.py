@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import time
+import logging
 
 import gobject
 import dbus
@@ -218,3 +219,18 @@ class HomeActivity(gobject.GObject):
     def _name_owner_changed_cb(self, name, old, new):
         if name == self._get_service_name():
             self._retrieve_service()
+            self.set_active(True)
+
+    def set_active(self, state):
+        """Propagate the current state to the activity object"""
+        if self._service is not None:
+            self._service.SetActive(state,
+                                    reply_handler=self._set_active_success,
+                                    error_handler=self._set_active_error)
+
+    def _set_active_success(self):
+        pass
+    
+    def _set_active_error(self, err):
+        logging.error("set_active() failed: %s" % err)
+
