@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: olpc-sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-19 17:12-0400\n"
-"PO-Revision-Date: 2008-08-26 09:31-0400\n"
-"Last-Translator: Sayamindu Dasgupta <sayamindu@gmail.com>\n"
+"POT-Creation-Date: 2008-09-01 18:31-0400\n"
+"PO-Revision-Date: 2008-08-28 19:35-0400\n"
+"Last-Translator: Rafael Ortiz <rafael@laptop.org>\n"
 "Language-Team: Fedora Spanish <fedora-trans-es@redhat.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,7 +46,7 @@ msgstr "Eliminar amigo"
 msgid "Make friend"
 msgstr "Agregar amigo"
 
-#: ../src/view/BuddyMenu.py:91
+#: ../src/view/BuddyMenu.py:90
 #, python-format
 msgid "Invite to %s"
 msgstr "Invitar a %s"
@@ -104,7 +104,7 @@ msgstr "No se puede conectar al servidor"
 msgid "The server could not complete the request."
 msgstr "El servidor no pudo completar la petición "
 
-#: ../src/view/Shell.py:240
+#: ../src/view/Shell.py:262
 msgid "Screenshot"
 msgstr "Captura de pantalla"
 
@@ -115,7 +115,7 @@ msgstr "Confirmar borrado"
 #: ../src/view/home/HomeBox.py:83
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
-msgstr "Confirmar borrado:Quiere borrar permanentemente%s?"
+msgstr "Confirmar borrado: Quiere borrar permanentemente %s?"
 
 #: ../src/view/home/HomeBox.py:90 ../src/view/palettes.py:120
 msgid "Erase"
@@ -127,15 +127,13 @@ msgstr "Actualización de Software"
 
 #: ../src/view/home/HomeBox.py:121
 msgid "Update your activities to ensure compatibility with your new software"
-msgstr ""
-"Actualice sus actividades para asegurar compatibilidad con su nuevo "
-"software."
+msgstr "Actualice sus actividades para asegurar compatibilidad con su nuevo software."
 
 #: ../src/view/home/HomeBox.py:125 ../src/controlpanel/toolbar.py:115
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: ../src/view/home/HomeBox.py:127 ../src/controlpanel/gui.py:275
+#: ../src/view/home/HomeBox.py:127 ../src/controlpanel/gui.py:276
 msgid "Later"
 msgstr "Después"
 
@@ -198,9 +196,10 @@ msgstr "Conectando..."
 msgid "Connected"
 msgstr "Conectado"
 
-#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:41
-#: ../src/view/devices/network/mesh.py:68
-#: ../src/view/devices/network/mesh.py:72
+#. only temporarily
+#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:51
+#: ../src/view/devices/network/mesh.py:92
+#: ../src/view/devices/network/mesh.py:96
 msgid "Mesh Network"
 msgstr "Red Malla"
 
@@ -208,8 +207,8 @@ msgstr "Red Malla"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:119
-#: ../src/view/devices/network/mesh.py:89
+#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:160
+#: ../src/view/devices/network/mesh.py:125
 msgid "Disconnect..."
 msgstr "Desconectando..."
 
@@ -248,7 +247,6 @@ msgstr "Mis parlantes"
 
 # la traducción la tome del AlsaMixer de Gnome.
 #: ../src/view/devices/speaker.py:119
-#, fuzzy
 msgid "Unmute"
 msgstr "Dar voz"
 
@@ -256,11 +254,16 @@ msgstr "Dar voz"
 msgid "Mute"
 msgstr "Silenciar"
 
-#: ../src/view/devices/network/wireless.py:67
+#: ../src/view/devices/network/wireless.py:37
+#, python-format
+msgid "IP address: %s"
+msgstr ""
+
+#: ../src/view/devices/network/wireless.py:86
 msgid "Disconnected"
 msgstr "Desconectado"
 
-#: ../src/view/devices/network/wireless.py:137
+#: ../src/view/devices/network/wireless.py:178
 msgid "Channel"
 msgstr "Canal"
 
@@ -331,19 +334,19 @@ msgstr "Para aplicar sus cambios tiene que reiniciar sugar.\n"
 msgid "Ok"
 msgstr "Ok"
 
-#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:267
+#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:268
 msgid "Changes require restart"
 msgstr "Los cambios requieren reiniciar"
 
-#: ../src/controlpanel/gui.py:266
+#: ../src/controlpanel/gui.py:267
 msgid "Warning"
 msgstr "Advertencia"
 
-#: ../src/controlpanel/gui.py:270
+#: ../src/controlpanel/gui.py:271
 msgid "Cancel changes"
 msgstr "Cancelar cambios"
 
-#: ../src/controlpanel/gui.py:279
+#: ../src/controlpanel/gui.py:280
 msgid "Restart now"
 msgstr "Reiniciar ahora"
 
@@ -396,12 +399,12 @@ msgid "Could not access ~/.i18n. Create standard settings."
 msgstr ""
 "No se puede acceder a ~/.i18n. Crear configuración internacional estándar."
 
-#: ../src/controlpanel/model/language.py:104
+#: ../src/controlpanel/model/language.py:110
 #, python-format
 msgid "Language for code=%s could not be determined."
 msgstr "El lenguaje del código=%s no pudo ser determinado."
 
-#: ../src/controlpanel/model/language.py:121
+#: ../src/controlpanel/model/language.py:127
 #, python-format
 msgid "Sorry I do not speak '%s'."
 msgstr "Lo siento yo no hablo '%s'."
@@ -434,30 +437,55 @@ msgstr "Acerca de mí."
 msgid "Click to change your color:"
 msgstr "Clic para cambiar su color:"
 
-#: ../src/controlpanel/view/aboutxo.py:26
+#: ../src/controlpanel/view/aboutxo.py:28
 msgid "About my XO"
 msgstr "Acerca de mi XO"
 
-#: ../src/controlpanel/view/aboutxo.py:47
+#: ../src/controlpanel/view/aboutxo.py:59
 msgid "Identity"
 msgstr "Identidad"
 
-#: ../src/controlpanel/view/aboutxo.py:56
+#: ../src/controlpanel/view/aboutxo.py:68
 msgid "Serial Number:"
 msgstr "Número de Serie:"
 
-#: ../src/controlpanel/view/aboutxo.py:79
+#: ../src/controlpanel/view/aboutxo.py:91
 msgid "Software"
 msgstr "Software"
 
 # Por ahora..
-#: ../src/controlpanel/view/aboutxo.py:88
+#: ../src/controlpanel/view/aboutxo.py:100
 msgid "Build:"
 msgstr "Ensamble:"
 
-#: ../src/controlpanel/view/aboutxo.py:103
+#: ../src/controlpanel/view/aboutxo.py:115
+msgid "Sugar:"
+msgstr ""
+
+#: ../src/controlpanel/view/aboutxo.py:130
 msgid "Firmware:"
 msgstr "Firmware"
+
+#: ../src/controlpanel/view/aboutxo.py:152
+msgid "Copyright and License"
+msgstr ""
+
+#: ../src/controlpanel/view/aboutxo.py:160
+msgid ""
+"© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+msgstr ""
+
+#: ../src/controlpanel/view/aboutxo.py:166
+msgid ""
+"Sugar is the graphical user interface that you are looking at. Sugar is free "
+"software, covered by the GNU General Public License, and you are welcome to "
+"change it and/or distribute copies of it under certain conditions described "
+"therein."
+msgstr ""
+
+#: ../src/controlpanel/view/aboutxo.py:178
+msgid "Full license:"
+msgstr ""
 
 #: ../src/controlpanel/view/datetime.py:29
 msgid "Date & Time"
@@ -540,32 +568,32 @@ msgstr ""
 "Manejo extremo de energía (deshabilita el radio wireless, incrementa la vida "
 "de la batería)"
 
-#: ../src/view/devices/network/mesh.py:111
+#: ../src/view/devices/network/mesh.py:154
 msgid "Connected to a School Mesh Portal"
 msgstr "Conectado a un enlace escolar de red malla"
 
 # "portal malla de colegio", en Castellano de España suena fatal... ¿Realmente se quiere decir malla?
-#: ../src/view/devices/network/mesh.py:113
+#: ../src/view/devices/network/mesh.py:156
 msgid "Looking for a School Mesh Portal..."
 msgstr "Buscando un enlace escolar de red malla..."
 
-#: ../src/view/devices/network/mesh.py:116
+#: ../src/view/devices/network/mesh.py:159
 msgid "Connected to an XO Mesh Portal"
 msgstr "Conectado a un Portal Malla XO"
 
-#: ../src/view/devices/network/mesh.py:118
+#: ../src/view/devices/network/mesh.py:161
 msgid "Looking for an XO Mesh Portal..."
 msgstr "Buscando un Portal Malla XO..."
 
-#: ../src/view/devices/network/mesh.py:121
+#: ../src/view/devices/network/mesh.py:164
 msgid "Connected to a Simple Mesh"
 msgstr "Conectado a una Red Malla Simple"
 
-#: ../src/view/devices/network/mesh.py:123
+#: ../src/view/devices/network/mesh.py:166
 msgid "Starting a Simple Mesh"
 msgstr "Empezando una Red Malla Simple"
 
-#: ../src/view/devices/network/mesh.py:130
+#: ../src/view/devices/network/mesh.py:173
 msgid "Unknown Mesh"
 msgstr "Red Malla Desconocida"
 
