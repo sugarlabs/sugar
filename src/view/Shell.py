@@ -103,28 +103,22 @@ class Shell(gobject.GObject):
         self._model.set_zoom_level(shellmodel.ShellModel.ZOOM_ACTIVITY)
 
     def __launch_failed_cb(self, home_model, home_activity):
-        if home_activity.is_journal():
-            return
-
-        activity_id = home_activity.get_activity_id()
-
-        launch_window = self._launchers[activity_id]
-        if launch_window:
-            launch_window.destroy()
-        else:
-            logging.error('Launcher for %s is missing' % activity_id)
+        if not home_activity.is_journal():
+            self._destroy_launcher(home_activity)
 
     def __launch_completed_cb(self, home_model, home_activity):
         activity_host = ActivityHost(home_activity)
         self._hosts[activity_host.get_xid()] = activity_host
 
-        if home_activity.is_journal():
-            return
+        if not home_activity.is_journal():
+            self._destroy_launcher(home_activity)
 
+    def _destroy_launcher(self, home_activity):
         activity_id = home_activity.get_activity_id()
-        launch_window = self._launchers[activity_id]
-        if launch_window:
-            launch_window.destroy()
+
+        if activity_id in self._launchers:
+            self._launchers[activity_id].destroy()
+            del self._launchers[activity_id]
         else:
             logging.error('Launcher for %s is missing' % activity_id)
 
