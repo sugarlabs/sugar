@@ -138,8 +138,8 @@ class ClipboardIcon(RadioToolButton):
         self._name = name
         self._preview = preview
         self._activity = activity
-        self.palette.set_state(name, percent, preview, activity,
-                               self._is_bundle(obj['FORMATS']))
+        self.palette.update_state(name, percent, preview, activity,
+                                  self._is_bundle(obj['FORMATS']))
 
         old_percent = self._percent
         self._percent = percent

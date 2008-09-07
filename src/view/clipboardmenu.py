@@ -139,7 +139,7 @@ class ClipboardMenu(Palette):
             self._progress_bar.props.fraction = self._percent / 100.0
             self._progress_bar.props.text = '%.2f %%' % self._percent
 
-    def set_state(self, name, percent, preview, activities, installable):
+    def update_state(self, name, percent, preview, activities, installable):
         self.set_primary_text(name)
         self._percent = percent
         self._activities = activities
