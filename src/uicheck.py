@@ -136,9 +136,10 @@ def main():
                         format='%(asctime)s %(levelname)s %(message)s')
 
     checks_queue.append(ShellCheck())
-    checks_queue.append(JournalCheck())
 
     if get_dbus_version() >= '1.2.1':
+        checks_queue.append(JournalCheck())
+
         # FIXME needs to get a list of the installed activities
         checks_queue.append(ActivityCheck('org.laptop.Log'))
         checks_queue.append(ActivityCheck('org.laptop.Chat'))
