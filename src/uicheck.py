@@ -17,6 +17,7 @@
 import logging
 import os
 import sys
+import subprocess
 import time
 
 import gobject
@@ -31,6 +32,14 @@ import config
 checks_queue = []
 checks_failed = []
 checks_succeeded = []
+
+def get_dbus_version():
+    p = subprocess.Popen(['dbus-daemon', '--version'], stdout=subprocess.PIPE)
+
+    output = p.communicate()[0]
+    first_line = output.split('\n')[0]
+
+    return first_line.split(' ')[-1]
 
 class Check(object):
     def __init__(self):
@@ -129,15 +138,15 @@ def main():
     checks_queue.append(ShellCheck())
     checks_queue.append(JournalCheck())
 
-
-    # FIXME needs to get a list of the installed activities
-    checks_queue.append(ActivityCheck('org.laptop.Log'))
-    checks_queue.append(ActivityCheck('org.laptop.Chat'))
-    checks_queue.append(ActivityCheck('org.laptop.WebActivity'))
-    checks_queue.append(ActivityCheck('org.laptop.Pippy'))
-    checks_queue.append(ActivityCheck('org.laptop.sugar.ReadActivity'))
-    checks_queue.append(ActivityCheck('org.laptop.Terminal'))
-    checks_queue.append(ActivityCheck('org.laptop.AbiWordActivity'))
+    if get_dbus_version() >= '1.2.1':
+        # FIXME needs to get a list of the installed activities
+        checks_queue.append(ActivityCheck('org.laptop.Log'))
+        checks_queue.append(ActivityCheck('org.laptop.Chat'))
+        checks_queue.append(ActivityCheck('org.laptop.WebActivity'))
+        checks_queue.append(ActivityCheck('org.laptop.Pippy'))
+        checks_queue.append(ActivityCheck('org.laptop.sugar.ReadActivity'))
+        checks_queue.append(ActivityCheck('org.laptop.Terminal'))
+        checks_queue.append(ActivityCheck('org.laptop.AbiWordActivity'))
 
     checks_queue[0].start()
     gobject.timeout_add(500, _timeout_cb)
