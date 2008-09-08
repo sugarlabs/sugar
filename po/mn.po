@@ -91,15 +91,15 @@ msgstr "Нууцлалын төрөл:"
 
 #: ../src/hardware/schoolserver.py:17
 msgid "Cannot obtain data needed for registration."
-msgstr ""
+msgstr "Бүртгүүлэхэд хэрэгтэй мэдээлэл аваж чадахгүй."
 
 #: ../src/hardware/schoolserver.py:31
 msgid "Cannot connect to the server."
-msgstr ""
+msgstr "Серверт холбогдож чадахгүй байна."
 
 #: ../src/hardware/schoolserver.py:36
 msgid "The server could not complete the request."
-msgstr ""
+msgstr "Сервер хүсэлт биэлүүлэж чадаагүй."
 
 #: ../src/view/Shell.py:240
 msgid "Screenshot"
@@ -120,11 +120,11 @@ msgstr "Арилгах"
 
 #: ../src/view/home/HomeBox.py:120
 msgid "Software Update"
-msgstr ""
+msgstr "Хангамж Шинэчлэх"
 
 #: ../src/view/home/HomeBox.py:121
 msgid "Update your activities to ensure compatibility with your new software"
-msgstr ""
+msgstr "Шинэ хангамжид тохируулахыг батлахын тулд үйл ажилагаануудаа шинэчлэх"
 
 #: ../src/view/home/HomeBox.py:125 ../src/controlpanel/toolbar.py:115
 msgid "Cancel"
@@ -136,7 +136,7 @@ msgstr "Дараа"
 
 #: ../src/view/home/HomeBox.py:130
 msgid "Check now"
-msgstr ""
+msgstr "Одоо шалгах"
 
 #: ../src/view/home/HomeBox.py:266
 msgid "List view"
