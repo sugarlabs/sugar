@@ -138,7 +138,6 @@ def main():
     checks_queue.append(ActivityCheck('org.laptop.sugar.ReadActivity'))
     checks_queue.append(ActivityCheck('org.laptop.Terminal'))
     checks_queue.append(ActivityCheck('org.laptop.AbiWordActivity'))
-    checks_queue.append(ActivityCheck('org.vpri.EtoysActivity'))
 
     checks_queue[0].start()
     gobject.timeout_add(500, _timeout_cb)
