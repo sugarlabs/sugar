@@ -369,6 +369,18 @@ class Device(gobject.GObject):
             self.emit('strength-changed')
 
     def network_appeared(self, network):
+        # NM may emit NetworkAppeared messages before the initialization-time
+        # getProperties call completes. This means that we are in danger of
+        # instantiating the "appeared" network here, and then instantiating
+        # the same network later on when getProperties completes
+        # (_update_reply_cb calls _update_networks).
+        # We avoid this race by confirming that getProperties has completed
+        # before listening to any NetworkAppeared messages. We assume that
+        # any networks that get reported as appeared in this race window
+        # will be included in the getProperties response.
+        if not self._valid:
+            return
+
         if self._networks.has_key(network):
             return
         net = Network(self._client, network)
