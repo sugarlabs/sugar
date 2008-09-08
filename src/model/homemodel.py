@@ -25,7 +25,7 @@ from sugar.activity import get_registry
 
 from model.homeactivity import HomeActivity
 
-def _get_sugar_window_type(wnck_window):
+def get_sugar_window_type(wnck_window):
     window = gtk.gdk.window_foreign_new(wnck_window.get_xid())
     prop_info = window.property_get('_SUGAR_WINDOW_TYPE', 'STRING')
     if prop_info is None:
@@ -174,7 +174,7 @@ class HomeModel(gobject.GObject):
 
             home_activity.set_window(window)
 
-            if _get_sugar_window_type(window) != 'launcher':
+            if get_sugar_window_type(window) != 'launcher':
                 home_activity.props.launching = False
                 self.emit('launch-completed', home_activity)
 
