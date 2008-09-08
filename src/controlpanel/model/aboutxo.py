@@ -77,7 +77,7 @@ def _read_file(path):
         return None
 
 def get_license():
-    license_file = "/usr/share/licenses/common-licenses/GPL-2"
+    license_file = "/usr/share/licenses/common-licenses/GPLv2"
     lang = os.environ['LANG']
     if lang.endswith("UTF-8"):
         lang = lang[:-6]
