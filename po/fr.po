@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-09-01 18:31-0400\n"
-"PO-Revision-Date: 2008-09-01 19:38-0400\n"
+"PO-Revision-Date: 2008-09-06 17:53-0400\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -121,7 +121,7 @@ msgstr "Supprimer"
 
 #: ../src/view/home/HomeBox.py:120
 msgid "Software Update"
-msgstr "Mise à jour du logiciel"
+msgstr "Mise à jour logicielle"
 
 #: ../src/view/home/HomeBox.py:121
 msgid "Update your activities to ensure compatibility with your new software"
