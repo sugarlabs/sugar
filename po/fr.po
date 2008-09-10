@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-09-01 18:31-0400\n"
-"PO-Revision-Date: 2008-09-06 17:53-0400\n"
+"PO-Revision-Date: 2008-09-10 00:12-0400\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -91,7 +91,7 @@ msgstr "Type d'encryptage :"
 
 #: ../src/hardware/schoolserver.py:17
 msgid "Cannot obtain data needed for registration."
-msgstr "Impossible d'otenir les données nécessaires à l'enregistrement."
+msgstr "Impossible d'obtenir les données nécessaires à l'enregistrement."
 
 #: ../src/hardware/schoolserver.py:31
 msgid "Cannot connect to the server."
@@ -125,9 +125,7 @@ msgstr "Mise à jour logicielle"
 
 #: ../src/view/home/HomeBox.py:121
 msgid "Update your activities to ensure compatibility with your new software"
-msgstr ""
-"Mettez à jour vos activités pour assurer la compatibilité avec le nouveau "
-"logiciel"
+msgstr "Actualiser les activités pour assurer la compatibilité logicielle"
 
 #: ../src/view/home/HomeBox.py:125 ../src/controlpanel/toolbar.py:115
 msgid "Cancel"
