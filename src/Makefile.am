@@ -1,4 +1,4 @@
-SUBDIRS = controlpanel hardware model view intro
+SUBDIRS = controlpanel hardware journal model view intro
 
 sugardir = $(pkgdatadir)/shell
 sugar_PYTHON =			\

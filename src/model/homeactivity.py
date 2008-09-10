@@ -16,6 +16,7 @@
 
 import time
 import logging
+import os
 
 import gobject
 import dbus
@@ -23,6 +24,9 @@ import dbus
 from sugar.graphics.xocolor import XoColor
 from sugar.presence import presenceservice
 from sugar import profile
+from sugar import wm
+
+import config
 
 _SERVICE_NAME = "org.laptop.Activity"
 _SERVICE_PATH = "/org/laptop/Activity"
@@ -44,7 +48,7 @@ class HomeActivity(gobject.GObject):
                        gobject.PARAM_READWRITE),
     }
 
-    def __init__(self, activity_info, activity_id):
+    def __init__(self, activity_info, activity_id, window=None):
         """Initialise the HomeActivity
         
         activity_info -- sugar.activity.registry.ActivityInfo instance,
@@ -53,10 +57,11 @@ class HomeActivity(gobject.GObject):
             the "type" of activity being created.
         activity_id -- unique identifier for this instance
             of the activity type
+        window -- Main WnckWindow of the activity 
         """
         gobject.GObject.__init__(self)
 
-        self._window = None
+        self._window = window
         self._xid = None
         self._pid = None
         self._service = None
@@ -105,7 +110,9 @@ class HomeActivity(gobject.GObject):
 
     def get_icon_path(self):
         """Retrieve the activity's icon (file) name"""
-        if self._activity_info:
+        if self.is_journal():
+            return os.path.join(config.data_path, 'icons/activity-journal.svg')
+        elif self._activity_info:
             return self._activity_info.icon
         else:
             return None
@@ -162,10 +169,7 @@ class HomeActivity(gobject.GObject):
 
     def get_type(self):
         """Retrieve the activity bundle id for future reference"""
-        if self._activity_info:
-            return self._activity_info.bundle_id
-        else:
-            return None
+        return wm.get_bundle_id(self._window)
 
     def is_journal(self):
         """Returns boolean if the activity is of type JournalActivity"""

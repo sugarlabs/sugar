@@ -39,6 +39,7 @@ from view.keyhandler import KeyHandler
 from view.home.HomeWindow import HomeWindow
 from view.launchwindow import LaunchWindow
 from model import shellmodel
+from journal import journalactivity
 
 # #3903 - this constant can be removed and assumed to be 1 when dbus-python
 # 0.82.3 is the only version used
@@ -78,18 +79,15 @@ class Shell(gobject.GObject):
         try:
             datastore.mount(ds_path, [], timeout=120 * \
                                          DBUS_PYTHON_TIMEOUT_UNITS_PER_SECOND)
-        except Exception:
+        except Exception, e:
             # Don't explode if there's corruption; move the data out of the way
             # and attempt to create a store from scratch.
+            logging.error(e)
             shutil.move(ds_path, os.path.abspath(ds_path) + str(time.time()))
             datastore.mount(ds_path, [], timeout=120 * \
                                          DBUS_PYTHON_TIMEOUT_UNITS_PER_SECOND)
 
-        # Checking for the bundle existence will also ensure
-        # that the shell service is started up.
-        registry = activity.get_registry()
-        if registry.get_activity('org.laptop.JournalActivity'):
-            self.start_activity('org.laptop.JournalActivity')
+        journalactivity.start()
 
     def __launch_started_cb(self, home_model, home_activity):
         if home_activity.is_journal():

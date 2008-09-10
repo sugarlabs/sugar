@@ -243,7 +243,7 @@ class KeyHandler(object):
         bus = dbus.SessionBus()
         obj = bus.get_object(J_DBUS_SERVICE, J_DBUS_PATH)
         journal = dbus.Interface(obj, J_DBUS_INTERFACE)
-        journal.FocusSearch({})
+        journal.FocusSearch()
 
     def handle_open_search(self):
         self.focus_journal_search()

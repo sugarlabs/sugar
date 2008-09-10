@@ -55,14 +55,6 @@ class ActivityButton(RadioToolButton):
         self.set_icon_widget(self._icon)
         self._icon.show()
 
-        if self._home_activity.is_journal():
-            palette = JournalPalette(self._home_activity)
-        else:
-            palette = CurrentActivityPalette(self._home_activity)
-        palette.props.invoker = FrameWidgetInvoker(self)
-        palette.set_group_id('frame')
-        self.set_palette(palette)
-
         if home_activity.props.launching:
             self._icon.props.pulsing = True
             self._notify_launching_hid = home_activity.connect( \
@@ -70,6 +62,15 @@ class ActivityButton(RadioToolButton):
         else:
             self._notify_launching_hid = None
             self._notif_icon = None
+
+    def create_palette(self):
+        if self._home_activity.is_journal():
+            palette = JournalPalette(self._home_activity)
+        else:
+            palette = CurrentActivityPalette(self._home_activity)
+        palette.props.invoker = FrameWidgetInvoker(self)
+        palette.set_group_id('frame')
+        self.set_palette(palette)
 
     def __notify_launching_cb(self, home_activity, pspec):
         if not home_activity.props.launching:

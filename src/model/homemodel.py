@@ -169,10 +169,10 @@ class HomeModel(gobject.GObject):
                 home_activity = self._get_activity_by_id(activity_id)
 
             if not home_activity:
-                home_activity = HomeActivity(activity_info, activity_id)
+                home_activity = HomeActivity(activity_info, activity_id, window)
                 self._add_activity(home_activity)
-
-            home_activity.set_window(window)
+            else:
+                home_activity.set_window(window)
 
             if get_sugar_window_type(window) != 'launcher':
                 home_activity.props.launching = False

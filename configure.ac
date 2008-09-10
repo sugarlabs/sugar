@@ -51,6 +51,7 @@ src/controlpanel/Makefile
 src/controlpanel/model/Makefile
 src/controlpanel/view/Makefile
 src/intro/Makefile
+src/journal/Makefile
 src/hardware/Makefile
 src/view/Makefile
 src/view/devices/Makefile
