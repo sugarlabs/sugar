@@ -134,6 +134,9 @@ class HomeModel(gobject.GObject):
         if self._active_activity == home_activity:
             return
 
+        if home_activity:
+            home_activity.set_active(True)
+
         if self._active_activity:
             self._active_activity.set_active(False)
 
