@@ -310,33 +310,6 @@ class ExpandedEntry(hippo.CanvasBox):
 
         return vbox, text_view
 
-    def _create_version_list(self):
-        vbox = hippo.CanvasBox()
-        vbox.props.spacing = style.DEFAULT_SPACING
-        # TODO: Enable again when we have versions in the DS
-        """
-        jobjects, count = datastore.find({'uid': self._jobject.object_id},
-                                         sorting=['-mtime'])
-        for jobject in jobjects:
-            hbox = hippo.CanvasBox(orientation=hippo.ORIENTATION_HORIZONTAL)
-            hbox.props.spacing = style.DEFAULT_SPACING
-
-            icon = CanvasIcon(file_name=misc.get_icon_name(jobject),
-                              size=style.SMALL_ICON_SIZE)
-            if jobject.metadata.has_key('icon-color') and \
-                    jobject.metadata['icon-color']:
-                icon.props.xo_color = XoColor(jobject.metadata['icon-color'])
-            hbox.append(icon)
-            
-            date = hippo.CanvasText(text=misc.get_date(jobject),
-                    xalign=hippo.ALIGNMENT_START,
-                    font_desc=style.FONT_NORMAL.get_pango_desc())
-            hbox.append(date)
-            
-            vbox.append(hbox)
-        """
-        return vbox
-
     def _title_notify_text_cb(self, entry, pspec):
         if not self._update_title_sid:
             self._update_title_sid = gobject.timeout_add(1000,
