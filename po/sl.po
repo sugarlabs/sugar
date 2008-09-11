@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-09-01 18:31-0400\n"
-"PO-Revision-Date: 2008-07-18 00:32-0400\n"
+"PO-Revision-Date: 2008-09-11 03:30-0400\n"
 "Last-Translator: Denis Oštir <denis.ostir@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -87,15 +87,15 @@ msgstr "Tip kodiranja:"
 
 #: ../src/hardware/schoolserver.py:17
 msgid "Cannot obtain data needed for registration."
-msgstr ""
+msgstr "Ne morem pridobiti podatkov, potrebnih za registracijo."
 
 #: ../src/hardware/schoolserver.py:31
 msgid "Cannot connect to the server."
-msgstr ""
+msgstr "Povezava s strežnikom ni mogoča."
 
 #: ../src/hardware/schoolserver.py:36
 msgid "The server could not complete the request."
-msgstr ""
+msgstr "Strežnik ne more izpolniti zahteve."
 
 #: ../src/view/Shell.py:261
 msgid "Screenshot"
@@ -116,11 +116,12 @@ msgstr "Izbriši"
 
 #: ../src/view/home/HomeBox.py:120
 msgid "Software Update"
-msgstr ""
+msgstr "Nadgradnja programa"
 
 #: ../src/view/home/HomeBox.py:121
 msgid "Update your activities to ensure compatibility with your new software"
 msgstr ""
+"Nadgradite aktivnosti, da zagotovite ustreznost z novo programsko opremo."
 
 #: ../src/view/home/HomeBox.py:125 ../src/controlpanel/toolbar.py:115
 msgid "Cancel"
@@ -132,25 +133,23 @@ msgstr "Kasneje"
 
 #: ../src/view/home/HomeBox.py:130
 msgid "Check now"
-msgstr ""
+msgstr "Preveri zdaj"
 
 #: ../src/view/home/HomeBox.py:266
 msgid "List view"
 msgstr "Seznam"
 
 #: ../src/view/home/HomeBox.py:267
-#, fuzzy
 msgid "<Ctrl>2"
-msgstr "<Ctrl>L"
+msgstr "<Ctrl>2"
 
 #: ../src/view/home/HomeBox.py:325
 msgid "Favorites view"
 msgstr "Priljubljene"
 
 #: ../src/view/home/HomeBox.py:326
-#, fuzzy
 msgid "<Ctrl>1"
-msgstr "<Ctrl>L"
+msgstr "<Ctrl>1"
 
 # TRANS: label for the freeform layout in the favorites view
 #. TRANS: label for the freeform layout in the favorites view
@@ -284,7 +283,6 @@ msgstr "nadzorna plošča programa sugar: %s"
 #. TRANS: Translators, there's a empty line at the end of this string,
 #. which must appear in the translated string (msgstr) as well.
 #: ../src/controlpanel/cmd.py:35
-#, fuzzy
 msgid ""
 "Usage: sugar-control-panel [ option ] key [ args ... ] \n"
 "    Control for the sugar environment. \n"
@@ -297,14 +295,15 @@ msgid ""
 "    -c key       clear the current value for the key \n"
 "    "
 msgstr ""
-"Uporaba: nadzorna plošča programa sugar [ možnost ] key [ ukaz ... ] \n"
+"Uporaba: nadzorna plošča programa sugar [ možnost ] tipka [ ukaz ... ] \n"
 "    Nadzor v okolju sugar. \n"
 "    Možnosti: \n"
 "    -h                    prikaži to sporočilo in končaj \n"
 "    -l                     prikaži vse možnosti, ki so na voljo \n"
-"    -h key               prikaži informacije za posamezen ključ \n"
-"    -g key               pridobi trenutno vrednost ključa \n"
-"    -s key               nastavi trenutno vrednost za ključ \n"
+"    -h tipka               prikaži informacije za to tipko \n"
+"    -g tipka               pridobi trenutno vrednost tipke \n"
+"    -s tipka               nastavi trenutno vrednost tipke \n"
+"    -c tipka               izbriši trenurno vrednost tipke \n"
 "    "
 
 #: ../src/controlpanel/cmd.py:48
@@ -402,7 +401,6 @@ msgid "Error in specified radio argument use on/off."
 msgstr "Napaka pri določanju stanja radijske povezave (vključen/izključen)."
 
 #: ../src/controlpanel/model/power.py:57
-#, fuzzy
 msgid "Error in automatic pm argument, use on/off."
 msgstr "Napaka pri samodejni rabi ukaza pm, uporabi izklop/vklop."
 
@@ -440,7 +438,7 @@ msgstr "Različica:"
 
 #: ../src/controlpanel/view/aboutxo.py:115
 msgid "Sugar:"
-msgstr ""
+msgstr "Sugar:"
 
 #: ../src/controlpanel/view/aboutxo.py:130
 msgid "Firmware:"
@@ -448,12 +446,12 @@ msgstr "Firmware:"
 
 #: ../src/controlpanel/view/aboutxo.py:152
 msgid "Copyright and License"
-msgstr ""
+msgstr "Lastnik pravic"
 
 #: ../src/controlpanel/view/aboutxo.py:160
 msgid ""
 "© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-msgstr ""
+msgstr "© 2008 One Laptop per Child Association Inc, Red Hat Inc in sodelavci."
 
 #: ../src/controlpanel/view/aboutxo.py:166
 msgid ""
@@ -462,10 +460,14 @@ msgid ""
 "change it and/or distribute copies of it under certain conditions described "
 "therein."
 msgstr ""
+"Sugar je grafični vmesnik, ki ga uporabljate. Je brezplačen, avtorske "
+"pravice glede njegove uporabe pa ureja GNU General Public License. Zato ga "
+"lahko spreminjate in/ali distribuirate, a pod nekaterimi pogoji, zapisanimi "
+"v omenjeni licenci."
 
 #: ../src/controlpanel/view/aboutxo.py:178
 msgid "Full license:"
-msgstr ""
+msgstr "Licenčne pravice:"
 
 #: ../src/controlpanel/view/datetime.py:29
 msgid "Date & Time"
@@ -544,7 +546,6 @@ msgstr ""
 "baterije)"
 
 #: ../src/controlpanel/view/power.py:89
-#, fuzzy
 msgid ""
 "Extreme power management (disableswireless radio, increases battery life)"
 msgstr ""
@@ -585,20 +586,20 @@ msgstr "Zavrni"
 
 #: ../src/view/home/favoritesview.py:286
 msgid "Registration Failed"
-msgstr ""
+msgstr "Registracija ni uspela"
 
 #: ../src/view/home/favoritesview.py:287
 #, python-format
 msgid "%s"
-msgstr ""
+msgstr "%s"
 
 #: ../src/view/home/favoritesview.py:289
 msgid "Registration Successful"
-msgstr ""
+msgstr "Uspešna registracija"
 
 #: ../src/view/home/favoritesview.py:290
 msgid "You are now registered with your school server."
-msgstr ""
+msgstr "Vpisan si v šolski strežnik."
 
 #: ../src/view/home/favoritesview.py:407
 msgid "Control Panel"
