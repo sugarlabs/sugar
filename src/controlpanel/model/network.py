@@ -44,8 +44,6 @@ def set_jabber(server):
     """Set the jabber server
     server : e.g. 'olpc.collabora.co.uk'
     """
-    if not server:
-        raise ValueError(_("You must enter a server."))
     pro = profile.get_profile()
     pro.jabber_server = server
     pro.jabber_registered = False
