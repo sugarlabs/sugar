@@ -353,7 +353,7 @@ class EntryToolbar(gtk.Toolbar):
                                 self._clipboard_clear_func_cb)
 
     def _clipboard_get_func_cb(self, clipboard, selection_data, info, data):
-        selection_data.set('text/uri-list', 8, self._jobject.file_path)
+        selection_data.set_uris(['file://' + self._jobject.file_path])
 
     def _clipboard_clear_func_cb(self, clipboard, data):
         pass
