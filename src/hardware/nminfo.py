@@ -332,7 +332,7 @@ class Network:
             config.set(self.ssid, "timestamp", self.timestamp)
             if len(self.bssids) > 0:
                 opt = " "
-                opt.join(self.bssids)
+                opt = opt.join(self.bssids)
                 config.set(self.ssid, "bssids", opt)
             self._security.write_to_config(self.ssid, config)
         except Exception, e:
