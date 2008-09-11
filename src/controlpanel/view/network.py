@@ -38,6 +38,7 @@ class Network(SectionView):
         self._radio_valid = True
         self._jabber_change_handler = None
         self._radio_change_handler = None
+        self._network_configuration_reset_handler = None
 
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
@@ -57,32 +58,50 @@ class Network(SectionView):
         box_wireless = gtk.VBox()
         box_wireless.set_border_width(style.DEFAULT_SPACING * 2)
         box_wireless.set_spacing(style.DEFAULT_SPACING)
+
+        radio_info = gtk.Label(_("Turn of the wireless radio to save " 
+                                 "battery life"))
+        radio_info.set_alignment(0, 0)
+        radio_info.set_line_wrap(True)
+        radio_info.show()
+        box_wireless.pack_start(radio_info, expand=False)
+
         box_radio = gtk.HBox(spacing=style.DEFAULT_SPACING)
-        label_radio = gtk.Label(_('Radio:'))
-        label_radio.set_alignment(1, 0.5)
-        label_radio.modify_fg(gtk.STATE_NORMAL, 
-                              style.COLOR_SELECTION_GREY.get_gdk_color())
-        box_radio.pack_start(label_radio, expand=False)
-        group.add_widget(label_radio)
-        label_radio.show()        
         self._button = gtk.CheckButton()
         self._button.set_alignment(0, 0)
         box_radio.pack_start(self._button, expand=False)
         self._button.show()
+
+        label_radio = gtk.Label(_('Radio'))
+        label_radio.set_alignment(0, 0.5)
+        box_radio.pack_start(label_radio, expand=False)
+        label_radio.show()
+
         box_wireless.pack_start(box_radio, expand=False)
         box_radio.show()
 
         self._radio_alert = InlineAlert()
-        label_radio_error = gtk.Label()
-        group.add_widget(label_radio_error)
-        self._radio_alert_box.pack_start(label_radio_error, expand=False)
-        label_radio_error.show()
         self._radio_alert_box.pack_start(self._radio_alert, expand=False)
-        box_wireless.pack_end(self._radio_alert_box, expand=False)
+        box_radio.pack_end(self._radio_alert_box, expand=False)
         self._radio_alert_box.show()
         if 'radio' in self.restart_alerts:
             self._radio_alert.props.msg = self.restart_msg
             self._radio_alert.show()
+
+        history_info = gtk.Label(_("Discard network history if you " 
+                                   "have trouble connecting to the network"))
+        history_info.set_alignment(0, 0)
+        history_info.set_line_wrap(True)
+        history_info.show()
+        box_wireless.pack_start(history_info, expand=False)
+
+        box_clear_history = gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._clear_history_button = gtk.Button()
+        self._clear_history_button.set_label(_('Discard network history'))
+        box_clear_history.pack_start(self._clear_history_button, expand=False)
+        self._clear_history_button.show()
+        box_wireless.pack_start(box_clear_history, expand=False)
+        box_clear_history.show()
 
         self.pack_start(box_wireless, expand=False)
         box_wireless.show()
@@ -153,6 +172,9 @@ class Network(SectionView):
                 'toggled', self.__radio_toggled_cb)
         self._jabber_change_handler = self._entry.connect( \
                 'changed', self.__jabber_changed_cb)
+        self._network_configuration_reset_handler =  \
+                self._clear_history_button.connect( \
+                        'clicked', self.__network_configuration_reset_cb)
         
     def undo(self):
         self._button.disconnect(self._radio_change_handler)
@@ -204,3 +226,6 @@ class Network(SectionView):
         self._validate()
         self._jabber_alert.show()        
         return False
+
+    def __network_configuration_reset_cb(self, widget):
+        self._model.clear_networks()
