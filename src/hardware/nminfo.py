@@ -549,3 +549,8 @@ class NMInfo(object):
             return
         self._key_dialog_destroy_cb(self._key_dialog)
 
+    # this method is invoked directly in-process (not by DBus).
+    def delete_all_networks(self):
+        self._allowed_networks = {}
+        self.save_config()
+

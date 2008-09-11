@@ -19,6 +19,7 @@ import dbus
 from gettext import gettext as _
 
 from sugar import profile
+from hardware import hardwaremanager
 
 NM_SERVICE_NAME = 'org.freedesktop.NetworkManager'
 NM_SERVICE_PATH = '/org/freedesktop/NetworkManager'
@@ -88,4 +89,13 @@ def clear_registration():
     pro = profile.get_profile()
     pro.backup1 = None
     pro.save()
+    return 1
+
+def clear_networks():
+    """Clear saved passwords and network configurations.
+    """
+    network_manager = hardwaremanager.get_network_manager()
+    if not network_manager:
+        return
+    network_manager.nminfo.delete_all_networks()
     return 1
