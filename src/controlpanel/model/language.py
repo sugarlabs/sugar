@@ -53,6 +53,10 @@ def read_all_languages():
     return locales
 
 def _initialize():      
+    if set_language.__doc__ is None:
+        # when running under 'python -OO', all __doc__ fields are None,
+        # so += would fail -- and this function would be unnecessary anyway.
+        return
     languages = read_all_languages()
     set_language.__doc__ += '\n'
     for lang in languages:
