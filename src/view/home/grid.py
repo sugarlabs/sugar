@@ -15,18 +15,19 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import numpy
 import random
 
 import gobject
 import gtk
+
+from sugar import _sugarext
 
 _PLACE_TRIALS = 20
 _MAX_WEIGHT = 255
 _REFRESH_RATE = 200
 _MAX_COLLISIONS_PER_REFRESH = 20
 
-class Grid(gobject.GObject):
+class Grid(_sugarext.Grid):
     __gsignals__ = {
         'child-changed' : (gobject.SIGNAL_RUN_FIRST,
                            gobject.TYPE_NONE,
@@ -43,12 +44,12 @@ class Grid(gobject.GObject):
         self._collisions = []
         self._collisions_sid = 0
 
-        self._array = numpy.zeros((width, height), dtype='b')
+        self.setup(self.width, self.height)
 
     def add(self, child, width, height, x=None, y=None, locked=False):
         if x is not None and y is not None:
             rect = gtk.gdk.Rectangle(x, y, width, height)
-            weight = self._compute_weight(rect)
+            weight = self.compute_weight(rect)
         else:
             trials = _PLACE_TRIALS
             weight = _MAX_WEIGHT
@@ -57,7 +58,7 @@ class Grid(gobject.GObject):
                 y = int(random.random() * (self.height - height))
 
                 rect = gtk.gdk.Rectangle(x, y, width, height)
-                new_weight = self._compute_weight(rect)
+                new_weight = self.compute_weight(rect)
                 if weight > new_weight:
                     weight = new_weight
 
@@ -65,7 +66,7 @@ class Grid(gobject.GObject):
 
         self._child_rects[child] = rect
         self._children.append(child)
-        self._add_weight(self._child_rects[child])
+        self.add_weight(self._child_rects[child])
         if locked:
             self._locked_children.add(child)
 
@@ -74,19 +75,19 @@ class Grid(gobject.GObject):
 
     def remove(self, child):
         self._children.remove(child)
-        self._remove_weight(self._child_rects[child])
+        self.remove_weight(self._child_rects[child])
         self._locked_children.discard(child)
         del self._child_rects[child]
 
     def move(self, child, x, y, locked=False):
-        self._remove_weight(self._child_rects[child])
+        self.remove_weight(self._child_rects[child])
 
         rect = self._child_rects[child]
         rect.x = x
         rect.y = y
 
-        weight = self._compute_weight(rect)
-        self._add_weight(self._child_rects[child])
+        weight = self.compute_weight(rect)
+        self.add_weight(self._child_rects[child])
 
         if locked:
             self._locked_children.add(child)
@@ -140,7 +141,7 @@ class Grid(gobject.GObject):
 
         best_rect = None
         for new_rect in new_rects:
-            new_weight = self._compute_weight(new_rect)
+            new_weight = self.compute_weight(new_rect)
             if new_weight < weight:
                 best_rect = new_rect
                 weight = new_weight
@@ -156,10 +157,10 @@ class Grid(gobject.GObject):
             collision = self._collisions.pop(0)
 
             old_rect = self._child_rects[collision]
-            self._remove_weight(old_rect)
-            weight = self._compute_weight(old_rect)
+            self.remove_weight(old_rect)
+            weight = self.compute_weight(old_rect)
             weight = self._shift_child(collision, weight)
-            self._add_weight(self._child_rects[collision])
+            self.add_weight(self._child_rects[collision])
 
             # TODO: we shouldn't give up the first time we failed to find a
             # better position.
@@ -192,17 +193,6 @@ class Grid(gobject.GObject):
         if self._collisions and not self._collisions_sid:
             self._collisions_sid = gobject.timeout_add(_REFRESH_RATE,
                     self.__solve_collisions_cb, priority=gobject.PRIORITY_LOW)
-
-    def _add_weight(self, rect):
-        self._array[rect.x:rect.x+rect.width, rect.y:rect.y+rect.width] += 1
-
-    def _remove_weight(self, rect):
-        self._array[rect.x:rect.x+rect.width, rect.y:rect.y+rect.width] -= 1
-
-    def _compute_weight(self, rect):
-        weight = self._array[rect.x:rect.x+rect.width,
-                             rect.y:rect.y+rect.width].sum()
-        return weight
 
     def get_child_rect(self, child):
         return self._child_rects[child]
