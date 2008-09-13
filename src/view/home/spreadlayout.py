@@ -33,7 +33,7 @@ class SpreadLayout(gobject.GObject, hippo.CanvasLayout):
         min_width, width = self.do_get_width_request()
         min_height, height = self.do_get_height_request(width)
 
-        self._grid = Grid(width / _CELL_SIZE, height / _CELL_SIZE)
+        self._grid = Grid(int(width / _CELL_SIZE), int(height / _CELL_SIZE))
         self._grid.connect('child-changed', self._grid_child_changed_cb)
 
     def add(self, child):
