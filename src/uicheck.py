@@ -145,7 +145,6 @@ def main():
         checks_queue.append(ActivityCheck('org.laptop.Chat'))
         checks_queue.append(ActivityCheck('org.laptop.WebActivity'))
         checks_queue.append(ActivityCheck('org.laptop.Pippy'))
-        checks_queue.append(ActivityCheck('org.laptop.sugar.ReadActivity'))
         checks_queue.append(ActivityCheck('org.laptop.Terminal'))
         checks_queue.append(ActivityCheck('org.laptop.AbiWordActivity'))
 
