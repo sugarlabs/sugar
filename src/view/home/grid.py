@@ -79,6 +79,9 @@ class Grid(_sugarext.Grid):
         self._locked_children.discard(child)
         del self._child_rects[child]
 
+        if child in self._collisions:
+            self._collisions.remove(child)
+
     def move(self, child, x, y, locked=False):
         self.remove_weight(self._child_rects[child])
 
