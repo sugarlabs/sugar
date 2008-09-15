@@ -21,10 +21,9 @@ import gtk
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.icon import Icon
 from sugar.graphics.xocolor import XoColor
-from sugar.clipboard import clipboardservice
-from sugar.bundle.activitybundle import ActivityBundle
 from sugar import profile
 
+from model import clipboard
 from view.clipboardmenu import ClipboardMenu
 from view.frame.frameinvoker import FrameWidgetInvoker
 from view.frame.notification import NotificationIcon
@@ -33,66 +32,51 @@ import view.frame.frame
 class ClipboardIcon(RadioToolButton):
     __gtype_name__ = 'SugarClipboardIcon'
 
-    def __init__(self, object_id, name, group):
+    def __init__(self, cb_object, group):
         RadioToolButton.__init__(self, group=group)
-        self._object_id = object_id
-        self._name = name
-        self._percent = 0
-        self._preview = None
-        self._activity = None
+        self._cb_object = cb_object
         self.owns_clipboard = False
         self.props.sensitive = False
         self.props.active = False
         self._notif_icon = None
+        self._current_percent = None
 
         self._icon = Icon()
         self._icon.props.xo_color = profile.get_color()
         self.set_icon_widget(self._icon)
         self._icon.show()
 
-        cb_service = clipboardservice.get_instance()
+        cb_service = clipboard.get_instance()
         cb_service.connect('object-state-changed',
                            self._object_state_changed_cb)
-        obj = cb_service.get_object(self._object_id)
 
-        self.palette = ClipboardMenu(self._object_id, self._name, self._percent,
-                                     self._preview, self._activity,
-                                     self._is_bundle(obj['FORMATS']))
+        self.palette = ClipboardMenu(cb_object)
         self.palette.props.invoker = FrameWidgetInvoker(self)
 
         child = self.get_child()
         child.connect('drag_data_get', self._drag_data_get_cb)
         self.connect('notify::active', self._notify_active_cb)
 
-    def _is_bundle(self, formats):
-        # A bundle will have only one format.
-        return formats and formats[0] in [ActivityBundle.MIME_TYPE,
-                                          ActivityBundle.DEPRECATED_MIME_TYPE]
-
     def get_object_id(self):
-        return self._object_id
+        return self._cb_object.get_id()
 
-    def _drag_data_get_cb(self, widget, context, selection,
-                          targetType, eventTime):
+    def _drag_data_get_cb(self, widget, context, selection, target_type,
+                          event_time):
         logging.debug('_drag_data_get_cb: requested target ' + selection.target)
-
-        cb_service = clipboardservice.get_instance()
-        data = cb_service.get_object_data(self._object_id,
-                                          selection.target)['DATA']
-
+        data = self._cb_object.get_formats()[selection.target].get_data()
         selection.set(selection.target, 8, data)
 
     def _put_in_clipboard(self):
         logging.debug('ClipboardIcon._put_in_clipboard')
 
-        if self._percent < 100:
+        if self._cb_object.get_percent() < 100:
             raise ValueError('Object is not complete,' \
                              ' cannot be put into the clipboard.')
 
         targets = self._get_targets()
         if targets:
-            clipboard = gtk.Clipboard()
-            if not clipboard.set_with_data(targets,
+            x_clipboard = gtk.Clipboard()
+            if not x_clipboard.set_with_data(targets,
                                            self._clipboard_data_get_cb,
                                            self._clipboard_clear_cb,
                                            targets):
@@ -100,32 +84,24 @@ class ClipboardIcon(RadioToolButton):
             else:
                 self.owns_clipboard = True
 
-    def _clipboard_data_get_cb(self, clipboard, selection, info, targets):
+    def _clipboard_data_get_cb(self, x_clipboard, selection, info, targets):
         if not selection.target in [target[0] for target in targets]:
             logging.warning('ClipboardIcon._clipboard_data_get_cb: asked %s' \
                             ' but only have %r.' % (selection.target, targets))
             return
-        cb_service = clipboardservice.get_instance()
-        data = cb_service.get_object_data(self._object_id,
-                                          selection.target)['DATA']
-
+        data = self._cb_object.get_formats()[selection.target].get_data()
         selection.set(selection.target, 8, data)
 
-    def _clipboard_clear_cb(self, clipboard, targets):
+    def _clipboard_clear_cb(self, x_clipboard, targets):
         logging.debug('ClipboardIcon._clipboard_clear_cb')
         self.owns_clipboard = False
 
-    def _object_state_changed_cb(self, cb_service, object_id, name, percent,
-                                 icon_name, preview, activity):
-
-        if object_id != self._object_id:
+    def _object_state_changed_cb(self, cb_service, cb_object):
+        if cb_object != self._cb_object:
             return
 
-        cb_service = clipboardservice.get_instance()
-        obj = cb_service.get_object(self._object_id)
-
-        if icon_name:
-            self._icon.props.icon_name = icon_name
+        if cb_object.get_icon():
+            self._icon.props.icon_name = cb_object.get_icon()
         else:
             self._icon.props.icon_name = 'application-octet-stream'
 
@@ -135,19 +111,11 @@ class ClipboardIcon(RadioToolButton):
                               gtk.gdk.ACTION_COPY)
         child.drag_source_set_icon_name(self._icon.props.icon_name)
 
-        self._name = name
-        self._preview = preview
-        self._activity = activity
-        self.palette.update_state(name, percent, preview, activity,
-                                  self._is_bundle(obj['FORMATS']))
-
-        old_percent = self._percent
-        self._percent = percent
-        if self._percent == 100:
+        if cb_object.get_percent() == 100:
             self.props.sensitive = True
 
         # Clipboard object became complete. Make it the active one.
-        if old_percent < 100 and self._percent == 100:
+        if self._current_percent < 100 and cb_object.get_percent() == 100:
             self.props.active = True
 
             self._notif_icon = NotificationIcon()
@@ -158,6 +126,7 @@ class ClipboardIcon(RadioToolButton):
             frame = view.frame.frame.get_instance()
             frame.add_notification(self._notif_icon, 
                                    view.frame.frame.BOTTOM_LEFT)
+        self._current_percent = cb_object.get_percent()
 
     def _notify_active_cb(self, widget, pspec):
         if self.props.active:
@@ -166,14 +135,8 @@ class ClipboardIcon(RadioToolButton):
             self.owns_clipboard = False
 
     def _get_targets(self):
-        cb_service = clipboardservice.get_instance()
-
-        attrs = cb_service.get_object(self._object_id)
-        format_types = attrs[clipboardservice.FORMATS_KEY]
-
         targets = []
-        for format_type in format_types:
+        for format_type in self._cb_object.get_formats().keys():
             targets.append((format_type, 0, 0))
-
         return targets
 

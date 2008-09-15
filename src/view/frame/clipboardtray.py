@@ -21,10 +21,10 @@ import tempfile
 import gtk
  
 from sugar import util
-from sugar.clipboard import clipboardservice
 from sugar.graphics import tray
 from sugar.graphics import style
 
+from model import clipboard
 from view.clipboardicon import ClipboardIcon
 
 class _ContextMap:
@@ -65,7 +65,7 @@ class ClipboardTray(tray.VTray):
         self._icons = {}
         self._context_map = _ContextMap()
 
-        cb_service = clipboardservice.get_instance()
+        cb_service = clipboard.get_instance()
         cb_service.connect('object-added', self._object_added_cb)
         cb_service.connect('object-deleted', self._object_deleted_cb)
 
@@ -79,9 +79,9 @@ class ClipboardTray(tray.VTray):
         if not selection.data:
             return
 
-        logging.debug('ClipboardTray: adding type ' + selection.type)
+        logging.debug('ClipboardTray: adding type %r' % selection.type)
 
-        cb_service = clipboardservice.get_instance()
+        cb_service = clipboard.get_instance()
         if selection.type == 'text/uri-list':
             uris = selection.data.split('\n')
             if len(uris) > 1:
@@ -98,30 +98,30 @@ class ClipboardTray(tray.VTray):
                                          selection.data,
                                          on_disk=False)
     
-    def _object_added_cb(self, cb_service, object_id, name):
+    def _object_added_cb(self, cb_service, cb_object):
         if self._icons:
             group = self._icons.values()[0]
         else:
             group = None
 
-        icon = ClipboardIcon(object_id, name, group)
+        icon = ClipboardIcon(cb_object, group)
         self.add_item(icon)
         icon.show()
-        self._icons[object_id] = icon
+        self._icons[cb_object.get_id()] = icon
 
         objects_to_delete = self.get_children()[:-self.MAX_ITEMS]
         for icon in objects_to_delete:
             logging.debug('ClipboardTray: deleting surplus object')
-            cb_service = clipboardservice.get_instance()
+            cb_service = clipboard.get_instance()
             cb_service.delete_object(icon.get_object_id())
 
-        logging.debug('ClipboardTray: ' + object_id + ' was added.')
+        logging.debug('ClipboardTray: %r was added' % cb_object.get_id())
 
     def _object_deleted_cb(self, cb_service, object_id):
         icon = self._icons[object_id]
         self.remove_item(icon)
         del self._icons[object_id]
-        logging.debug('ClipboardTray: ' + object_id + ' was deleted.')
+        logging.debug('ClipboardTray: %r was deleted' % object_id)
 
     def drag_motion_cb(self, widget, context, x, y, time):
         logging.debug('ClipboardTray._drag_motion_cb')
@@ -130,7 +130,7 @@ class ClipboardTray(tray.VTray):
 
     def drag_drop_cb(self, widget, context, x, y, time):
         logging.debug('ClipboardTray._drag_drop_cb')
-        cb_service = clipboardservice.get_instance()
+        cb_service = clipboard.get_instance()
         object_id = cb_service.add_object(name="")
 
         self._context_map.add_context(context, object_id, len(context.targets))
@@ -179,8 +179,8 @@ class ClipboardTray(tray.VTray):
                     prop_type, format_, dest = \
                             window.property_get('XdndDirectSave0', 'text/plain')
 
-                    clipboard = clipboardservice.get_instance()
-                    clipboard.add_object_format( \
+                    clipboardservice = clipboard.get_instance()
+                    clipboardservice.add_object_format( \
                             object_id, 'XdndDirectSave0', dest, on_disk=True)
             else:
                 self._add_selection(object_id, selection)
