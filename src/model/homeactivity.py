@@ -61,14 +61,15 @@ class HomeActivity(gobject.GObject):
         """
         gobject.GObject.__init__(self)
 
-        self._window = window
-        self._xid = None
-        self._pid = None
+        self._window = None
         self._service = None
         self._activity_id = activity_id
         self._activity_info = activity_info
         self._launch_time = time.time()
         self._launching = False
+
+        if window is not None:
+            self.set_window(window)
 
         self._retrieve_service()
 
@@ -86,10 +87,7 @@ class HomeActivity(gobject.GObject):
         """
         if not window:
             raise ValueError("window must be valid")
-
         self._window = window
-        self._xid = window.get_xid()
-        self._pid = window.get_pid()
 
     def get_service(self):
         """Get the activity service
@@ -151,7 +149,7 @@ class HomeActivity(gobject.GObject):
 
     def get_xid(self):
         """Retrieve the X-windows ID of our root window"""
-        return self._xid
+        return self._window.get_xid()
 
     def get_window(self):
         """Retrieve the X-windows root window of this application
@@ -185,13 +183,13 @@ class HomeActivity(gobject.GObject):
 
     def get_pid(self):
         """Returns the activity's PID"""
-        return self._pid
+        return self._window.get_pid()
 
     def equals(self, activity):
         if self._activity_id and activity.get_activity_id():
             return self._activity_id == activity.get_activity_id()
-        if self._xid and activity.get_xid():
-            return self._xid == activity.get_xid()
+        if self._window.get_xid() and activity.get_xid():
+            return self._window.get_xid() == activity.get_xid()
         return False
 
     def do_set_property(self, pspec, value):
