@@ -167,7 +167,10 @@ class HomeActivity(gobject.GObject):
 
     def get_type(self):
         """Retrieve the activity bundle id for future reference"""
-        return wm.get_bundle_id(self._window)
+        if self._window is None:
+            return None
+        else:
+            return wm.get_bundle_id(self._window)
 
     def is_journal(self):
         """Returns boolean if the activity is of type JournalActivity"""
