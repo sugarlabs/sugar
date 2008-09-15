@@ -125,12 +125,14 @@ class Shell(gobject.GObject):
             del self._hosts[xid]
 
     def _get_host_from_activity_model(self, activity_model):
-        host = None
-        if activity_model is not None:
-            xid = activity_model.get_xid()
-            if xid:
-                host = self._hosts[activity_model.get_xid()]
-        return host
+        if activity_model is None:
+            raise ValueError('activity_model cannot be None')
+        xid = activity_model.get_xid()
+        if xid:
+            return self._hosts[activity_model.get_xid()]
+        else:
+            logging.debug('Activity %r dont have a window yet' % activity_model)
+            return None
 
     def get_model(self):
         return self._model
@@ -180,14 +182,16 @@ class Shell(gobject.GObject):
 
     def set_zoom_level(self, level):
         if level == self._model.get_zoom_level():
+            logging.debug('Already in the level %r' % level)
             return
 
         self.take_activity_screenshot()
 
         if level == shellmodel.ShellModel.ZOOM_ACTIVITY:
             host = self.get_current_activity()
-            if host is not None:
-                host.present()
+            if host is None:
+                raise ValueError('No current activity')
+            host.present()
         else:
             self._model.set_zoom_level(level)
             self._screen.toggle_showing_desktop(True)
