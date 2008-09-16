@@ -224,7 +224,7 @@ class ClipboardMenu(Palette):
 
         name = self._cb_object.get_name()
         jobject = datastore.create()
-        jobject.metadata['title'] = _('Clipboard object: %s.') % name
+        jobject.metadata['title'] = _('%s clipping') % name
         jobject.metadata['keep'] = '0'
         jobject.metadata['buddies'] = ''
         jobject.metadata['preview'] = ''
