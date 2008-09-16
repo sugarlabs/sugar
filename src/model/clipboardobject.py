@@ -21,7 +21,7 @@ import urlparse
 from sugar import mime
 from sugar.bundle.activitybundle import ActivityBundle
 
-class ClipboardObject:
+class ClipboardObject(object):
 
     def __init__(self, object_path, name):
         self._id = object_path
@@ -89,7 +89,7 @@ class ClipboardObject:
 
         return format
 
-class Format:
+class Format(object):
 
     def __init__(self, mime_type, data, on_disk):
         self.owns_disk_data = False
