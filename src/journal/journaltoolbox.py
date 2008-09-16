@@ -344,7 +344,7 @@ class EntryToolbar(gtk.Toolbar):
 
     def _resume_clicked_cb(self, button):
         if self._jobject:
-            self._jobject.resume()
+            misc.resume(self._jobject)
 
     def _copy_clicked_cb(self, button):
         clipboard = gtk.Clipboard()
@@ -367,7 +367,7 @@ class EntryToolbar(gtk.Toolbar):
 
     def _resume_menu_item_activate_cb(self, menu_item, service_name):
         if self._jobject:
-            self._jobject.resume(service_name)
+            misc.resume(self._jobject, service_name)
 
     def _copy_menu_item_activate_cb(self, menu_item, volume):
         if self._jobject:
@@ -407,7 +407,7 @@ class EntryToolbar(gtk.Toolbar):
             palette.menu.remove(menu_item)
             menu_item.destroy()
 
-        for activity_info in self._jobject.get_activities():
+        for activity_info in misc.get_activities(self._jobject):
             menu_item = MenuItem(activity_info.name)
             menu_item.set_image(Icon(file=activity_info.icon,
                                         icon_size=gtk.ICON_SIZE_MENU))

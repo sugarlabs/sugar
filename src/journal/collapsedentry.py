@@ -340,7 +340,7 @@ class CollapsedEntry(BaseCollapsedEntry):
 
     def __icon_button_release_event_cb(self, button, event):
         logging.debug('__icon_button_release_event_cb')
-        self.jobject.resume()
+        misc.resume(self.jobject)
         return True
 
     def __title_button_release_event_cb(self, button, event):

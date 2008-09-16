@@ -78,7 +78,7 @@ class ObjectPalette(Palette):
         menu_item.show()
 
     def __start_activate_cb(self, menu_item):
-        self._jobject.resume()
+        misc.resume(self._jobject)
 
     def __copy_activate_cb(self, menu_item):
         clipboard = gtk.Clipboard()

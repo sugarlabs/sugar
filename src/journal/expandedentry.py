@@ -375,11 +375,11 @@ class ExpandedEntry(hippo.CanvasBox):
 
     def _icon_button_release_event_cb(self, button, event):
         logging.debug('_icon_button_release_event_cb')
-        self._jobject.resume()
+        misc.resume(self._jobject)
         return True
 
     def _preview_box_button_release_event_cb(self, button, event):
         logging.debug('_preview_box_button_release_event_cb')
-        self._jobject.resume()
+        misc.resume(self._jobject)
         return True
 

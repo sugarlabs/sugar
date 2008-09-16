@@ -24,6 +24,8 @@ from gettext import gettext as _
 import gtk
 
 from sugar import activity
+from sugar.activity import activityfactory
+from sugar.activity.activityhandle import ActivityHandle
 from sugar import mime
 from sugar.bundle.activitybundle import ActivityBundle
 from sugar.bundle.contentbundle import ContentBundle
@@ -106,4 +108,81 @@ def get_bundle(jobject):
     except MalformedBundleException, e:
         logging.warning('Incorrect bundle: %r' % e)
         return None
+
+def _get_activities_for_mime(mime_type):
+    registry = activity.get_registry()
+    result = registry.get_activities_for_type(mime_type)
+    if not result:
+        for parent_mime in mime.get_mime_parents(mime_type):
+            result.extend(registry.get_activities_for_type(parent_mime))
+    return result
+
+def get_activities(jobject):
+    activities = []
+
+    bundle_id = jobject.metadata.get('activity', '')
+    if bundle_id:
+        activity_info = activity.get_registry().get_activity(bundle_id)
+        if activity_info:
+            activities.append(activity_info)
+
+    mime_type = jobject.metadata.get('mime_type', '')
+    if mime_type:
+        activities_info = _get_activities_for_mime(mime_type)
+        for activity_info in activities_info:
+            if activity_info.bundle_id != bundle_id:
+                activities.append(activity_info)
+
+    return activities
+
+def resume(jobject, bundle_id=None):
+    if jobject.is_activity_bundle() and not bundle_id:
+
+        logging.debug('Creating activity bundle')
+        bundle = ActivityBundle(jobject.file_path)
+        if not bundle.is_installed():
+            logging.debug('Installing activity bundle')
+            bundle.install()
+        elif bundle.need_upgrade():
+            logging.debug('Upgrading activity bundle')
+            bundle.upgrade()
+
+        logging.debug('activityfactory.creating bundle with id %r',
+                        bundle.get_bundle_id())
+        activityfactory.create(bundle.get_bundle_id())
+
+    elif jobject.is_content_bundle() and not bundle_id:
+
+        logging.debug('Creating content bundle')
+        bundle = ContentBundle(jobject.file_path)
+        if not bundle.is_installed():
+            logging.debug('Installing content bundle')
+            bundle.install()
+
+        activities = _get_activities_for_mime('text/html')
+        if len(activities) == 0:
+            logging.warning('No activity can open HTML content bundles')
+            return
+
+        uri = bundle.get_start_uri()
+        logging.debug('activityfactory.creating with uri %s', uri)
+        activityfactory.create_with_uri(activities[0].bundle_id,
+                                        bundle.get_start_uri())
+    else:
+        if not get_activities(jobject) and bundle_id is None:
+            logging.warning('No activity can open this object, %s.' %
+                    jobject.metadata.get('mime_type', None))
+            return
+        if bundle_id is None:
+            bundle_id = get_activities(jobject)[0].bundle_id
+
+        activity_id = jobject.metadata['activity_id']
+        object_id = jobject.object_id
+
+        if activity_id:
+            handle = ActivityHandle(object_id=object_id,
+                                    activity_id=activity_id)
+            activityfactory.create(bundle_id, handle)
+        else:
+            activityfactory.create_with_object_id(bundle_id, object_id)
 
