@@ -251,22 +251,19 @@ class Shell(gobject.GObject):
         screenshot.get_from_drawable(window, window.get_colormap(), x_orig,
                                      y_orig, 0, 0, width, height)
         screenshot.save(file_path, "png")
+        jobject = datastore.create()
         try:
-            jobject = datastore.create()
-            try:
-                jobject.metadata['title'] = _('Screenshot')
-                jobject.metadata['keep'] = '0'
-                jobject.metadata['buddies'] = ''
-                jobject.metadata['preview'] = ''
-                jobject.metadata['icon-color'] = profile.get_color().to_string()
-                jobject.metadata['mime_type'] = 'image/png'
-                jobject.file_path = file_path
-                datastore.write(jobject)
-            finally:
-                jobject.destroy()
-                del jobject
+            jobject.metadata['title'] = _('Screenshot')
+            jobject.metadata['keep'] = '0'
+            jobject.metadata['buddies'] = ''
+            jobject.metadata['preview'] = ''
+            jobject.metadata['icon-color'] = profile.get_color().to_string()
+            jobject.metadata['mime_type'] = 'image/png'
+            jobject.file_path = file_path
+            datastore.write(jobject, transfer_ownership=True)
         finally:
-            os.remove(file_path)
+            jobject.destroy()
+            del jobject
 
 _instance = None
 

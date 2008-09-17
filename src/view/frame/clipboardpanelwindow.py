@@ -22,7 +22,8 @@ import hippo
 
 from view.frame.framewindow import FrameWindow
 from view.frame.clipboardtray import ClipboardTray
-from sugar.clipboard import clipboardservice
+
+from model import clipboard
 
 class ClipboardPanelWindow(FrameWindow):
     def __init__(self, frame, orientation):
@@ -47,22 +48,22 @@ class ClipboardPanelWindow(FrameWindow):
         self.connect("drag_data_received",
                      self._clipboard_tray.drag_data_received_cb)
 
-    def _owner_change_cb(self, clipboard, event):
+    def _owner_change_cb(self, x_clipboard, event):
         logging.debug("owner_change_cb")
 
         if self._clipboard_tray.owns_clipboard():
             return
 
-        cb_service = clipboardservice.get_instance()
+        cb_service = clipboard.get_instance()
         key = cb_service.add_object(name="")
         cb_service.set_object_percent(key, percent=0)
         
-        targets = clipboard.wait_for_targets()
+        targets = x_clipboard.wait_for_targets()
         for target in targets:
             if target not in ('TIMESTAMP', 'TARGETS',
                               'MULTIPLE', 'SAVE_TARGETS'):
                 logging.debug('Asking for target %s.' % target)
-                selection = clipboard.wait_for_contents(target)
+                selection = x_clipboard.wait_for_contents(target)
                 if not selection:
                     logging.warning('no data for selection target %s.' % target)
                     continue
@@ -77,7 +78,7 @@ class ClipboardPanelWindow(FrameWindow):
             
         logging.debug('adding type ' + selection.type + '.')
                     
-        cb_service = clipboardservice.get_instance()
+        cb_service = clipboard.get_instance()
         if selection.type == 'text/uri-list':
             uris = selection.get_uris()
 

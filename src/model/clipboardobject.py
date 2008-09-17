@@ -19,10 +19,9 @@ import logging
 import urlparse
 
 from sugar import mime
+from sugar.bundle.activitybundle import ActivityBundle
 
-import bundleregistry
-
-class ClipboardObject:
+class ClipboardObject(object):
 
     def __init__(self, object_path, name):
         self._id = object_path
@@ -53,17 +52,13 @@ class ClipboardObject:
         #return self._get_type_info().get_preview()
         return ''
 
-    def get_activities(self):
-        mime_type = self.get_mime_type()
-        if not mime_type:
-            return ''
-
-        registry = bundleregistry.get_registry()
-        activities = registry.get_activities_for_type(self.get_mime_type())
-        if activities:
-            return [activity.get_bundle_id() for activity in activities]
+    def is_bundle(self):
+        # A bundle will have only one format.
+        if not self._formats:
+            return False
         else:
-            return ''
+            return self._formats.keys()[0] in [ActivityBundle.MIME_TYPE,
+                    ActivityBundle.DEPRECATED_MIME_TYPE]
 
     def get_percent(self):
         return self._percent
@@ -94,7 +89,7 @@ class ClipboardObject:
 
         return format
 
-class Format:
+class Format(object):
 
     def __init__(self, mime_type, data, on_disk):
         self.owns_disk_data = False

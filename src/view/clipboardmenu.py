@@ -25,23 +25,25 @@ import gtk
 from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
-from sugar.clipboard import clipboardservice
 from sugar.datastore import datastore
 from sugar import mime
 from sugar import profile
 from sugar import activity
 
+from model import clipboard
+
 class ClipboardMenu(Palette):
 
-    def __init__(self, object_id, name, percent, preview,
-                 activities, installable):
-        Palette.__init__(self, name)
+    def __init__(self, cb_object):
+        Palette.__init__(self, cb_object.get_name())
 
-        self._object_id = object_id
-        self._percent = percent
-        self._activities = activities
+        self._cb_object = cb_object
 
         self.set_group_id('frame')
+
+        cb_service = clipboard.get_instance()
+        cb_service.connect('object-state-changed',
+                           self._object_state_changed_cb)
 
         self._progress_bar = None
 
@@ -55,11 +57,6 @@ class ClipboardMenu(Palette):
         self.menu.append(self._open_item)
         self._open_item.show()
 
-        #self._stop_item = MenuItem(_('Stop download'), 'stock-close')
-        # TODO: Implement stopping downloads
-        #self._stop_item.connect('activate', self._stop_item_activate_cb)
-        #self.append_menu_item(self._stop_item)
-
         self._journal_item = MenuItem(_('Keep'))
         icon = Icon(icon_name='document-save', icon_size=gtk.ICON_SIZE_MENU,
                 xo_color=profile.get_color())
@@ -69,13 +66,14 @@ class ClipboardMenu(Palette):
         self.menu.append(self._journal_item)
         self._journal_item.show()
 
-        self._update_items_visibility(installable)
+        self._update_items_visibility()
         self._update_open_submenu()
 
     def _update_open_submenu(self):
-        logging.debug('_update_open_submenu: %r' % self._activities)
+        activities = self._get_activities()
+        logging.debug('_update_open_submenu: %r' % activities)
         child = self._open_item.get_child()
-        if self._activities is None or len(self._activities) <= 1:
+        if activities is None or len(activities) <= 1:
             child.set_text(_('Open'))
             if self._open_item.get_submenu() is not None:
                 self._open_item.remove_submenu()
@@ -91,7 +89,7 @@ class ClipboardMenu(Palette):
             for item in submenu.get_children():
                 submenu.remove(item)
 
-        for service_name in self._activities:
+        for service_name in activities:
             registry = activity.get_registry()
             activity_info = registry.get_activity(service_name)
 
@@ -104,29 +102,41 @@ class ClipboardMenu(Palette):
             submenu.append(item)
             item.show()
 
-    def _update_items_visibility(self, installable):
-        if self._percent == 100 and (self._activities or installable):
+    def _update_items_visibility(self):
+        activities = self._get_activities()
+        installable = self._cb_object.is_bundle()
+        percent = self._cb_object.get_percent()
+        
+        if percent == 100 and (activities or installable):
             self._remove_item.props.sensitive = True
             self._open_item.props.sensitive = True
-            #self._stop_item.props.sensitive = False
             self._journal_item.props.sensitive = True
-        elif self._percent == 100 and \
-                    (not self._activities and not installable):
+        elif percent == 100 and (not activities and not installable):
             self._remove_item.props.sensitive = True
             self._open_item.props.sensitive = False
-            #self._stop_item.props.sensitive = False
             self._journal_item.props.sensitive = True
         else:
             self._remove_item.props.sensitive = True
             self._open_item.props.sensitive = False
-            # TODO: reenable the stop item when we implement stoping downloads.
-            #self._stop_item.props.sensitive = True
             self._journal_item.props.sensitive = False
 
         self._update_progress_bar()
 
+    def _get_activities(self):
+        mime_type = self._cb_object.get_mime_type()
+        if not mime_type:
+            return ''
+
+        registry = activity.get_registry()
+        activities = registry.get_activities_for_type(mime_type)
+        if activities:
+            return [activity_info.bundle_id for activity_info in activities]
+        else:
+            return ''
+
     def _update_progress_bar(self):
-        if self._percent == 100.0:
+        percent = self._cb_object.get_percent()
+        if percent == 100.0:
             if self._progress_bar:
                 self._progress_bar = None
                 self.set_content(None)
@@ -136,20 +146,21 @@ class ClipboardMenu(Palette):
                 self._progress_bar.show()
                 self.set_content(self._progress_bar)
 
-            self._progress_bar.props.fraction = self._percent / 100.0
-            self._progress_bar.props.text = '%.2f %%' % self._percent
+            self._progress_bar.props.fraction = percent / 100.0
+            self._progress_bar.props.text = '%.2f %%' % percent
 
-    def update_state(self, name, percent, preview, activities, installable):
-        self.set_primary_text(name)
-        self._percent = percent
-        self._activities = activities
+    def _object_state_changed_cb(self, cb_service, cb_object):
+        if cb_object != self._cb_object:
+            return
+        self.set_primary_text(cb_object.get_name())
         self._update_progress_bar()
-        self._update_items_visibility(installable)
+        self._update_items_visibility()
         self._update_open_submenu()
 
     def _open_item_activate_cb(self, menu_item):
         logging.debug('_open_item_activate_cb')
-        if self._percent < 100 or menu_item.get_submenu() is not None:
+        percent = self._cb_object.get_percent()
+        if percent < 100 or menu_item.get_submenu() is not None:
             return
         jobject = self._copy_to_journal()
         jobject.resume(self._activities[0])
@@ -157,15 +168,16 @@ class ClipboardMenu(Palette):
 
     def _open_submenu_item_activate_cb(self, menu_item, service_name):
         logging.debug('_open_submenu_item_activate_cb')
-        if self._percent < 100:
+        percent = self._cb_object.get_percent()
+        if percent < 100:
             return
         jobject = self._copy_to_journal()
         jobject.resume(service_name)
         jobject.destroy()
 
     def _remove_item_activate_cb(self, menu_item):
-        cb_service = clipboardservice.get_instance()
-        cb_service.delete_object(self._object_id)
+        cb_service = clipboard.get_instance()
+        cb_service.delete_object(self._cb_object.get_id())
 
     def _journal_item_activate_cb(self, menu_item):
         logging.debug('_journal_item_activate_cb')
@@ -181,39 +193,38 @@ class ClipboardMenu(Palette):
         return file_path
 
     def _copy_to_journal(self):
-        cb_service = clipboardservice.get_instance()
-        obj = cb_service.get_object(self._object_id)
-
-        format = mime.choose_most_significant(obj['FORMATS'])
-        data = cb_service.get_object_data(self._object_id, format)
+        formats = self._cb_object.get_formats().keys()
+        most_significant_mime_type = mime.choose_most_significant(formats)
+        format = self._cb_object.get_formats()[most_significant_mime_type]
 
         transfer_ownership = False
-        if format == 'text/uri-list':
-            uris = mime.split_uri_list(data['DATA'])
+        if most_significant_mime_type == 'text/uri-list':
+            uris = mime.split_uri_list(format.get_data())
             if len(uris) == 1 and uris[0].startswith('file://'):
                 file_path = urlparse.urlparse(uris[0]).path
                 transfer_ownership = False
                 mime_type = mime.get_for_file(file_path)
             else:
-                file_path = self._write_to_temp_file(data['DATA'])
+                file_path = self._write_to_temp_file(format.get_data())
                 transfer_ownership = True
                 mime_type = 'text/uri-list'
         else:
-            if data['ON_DISK']:
-                file_path = urlparse.urlparse(data['DATA']).path
+            if format.is_on_disk():
+                file_path = urlparse.urlparse(format.get_data()).path
                 transfer_ownership = False
                 mime_type = mime.get_for_file(file_path)
             else:
-                file_path = self._write_to_temp_file(data['DATA'])
+                file_path = self._write_to_temp_file(format.get_data())
                 transfer_ownership = True
                 sniffed_mime_type = mime.get_for_file(file_path)
                 if sniffed_mime_type == 'application/octet-stream':
-                    mime_type = format
+                    mime_type = most_significant_mime_type
                 else:
                     mime_type = sniffed_mime_type
 
+        name = self._cb_object.get_name()
         jobject = datastore.create()
-        jobject.metadata['title'] = _('Clipboard object: %s.') % obj['NAME']
+        jobject.metadata['title'] = _('%s clipping') % name
         jobject.metadata['keep'] = '0'
         jobject.metadata['buddies'] = ''
         jobject.metadata['preview'] = ''

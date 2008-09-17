@@ -404,13 +404,7 @@ class _MyIcon(MyIcon):
                           #secondary_text='Sample secondary label',
                           icon=palette_icon)
 
-        item = MenuItem(_('Control Panel'))
-
-        icon = Icon(icon_name='computer-xo', icon_size=gtk.ICON_SIZE_MENU,
-                xo_color=self._profile.color)
-        item.set_image(icon)
-        icon.show()
-
+        item = MenuItem(_('Settings'), 'preferences-system')
         item.connect('activate', self.__controlpanel_activate_cb)
         palette.menu.append(item)
         item.show()

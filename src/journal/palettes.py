@@ -15,7 +15,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from gettext import gettext as _
-
+import logging
+        
 import gtk
 
 from sugar import profile
@@ -86,6 +87,7 @@ class ObjectPalette(Palette):
                                 self.__clipboard_clear_func_cb)
 
     def __clipboard_get_func_cb(self, clipboard, selection_data, info, data):
+        logging.debug('__clipboard_get_func_cb %r' % self._jobject.file_path)
         selection_data.set_uris(['file://' + self._jobject.file_path])
 
     def __clipboard_clear_func_cb(self, clipboard, data):
