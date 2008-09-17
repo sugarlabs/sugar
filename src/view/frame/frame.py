@@ -146,8 +146,6 @@ class Frame(object):
         if self._animator:
             self._animator.stop()
 
-        view.Shell.get_instance().take_activity_screenshot()
-
         self.mode = mode
 
         self._animator = animator.Animator(0.5)
