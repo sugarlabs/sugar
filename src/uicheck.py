@@ -104,13 +104,6 @@ class ActivityCheck(Check):
            get_sugar_window_type(window) != 'launcher':
             self.succeeded = True
 
-class JournalCheck(ActivityCheck):
-    def __init__(self):
-        ActivityCheck.__init__(self, 'org.laptop.JournalActivity')
-
-    def launch_activity(self):
-        pass
-
 def _timeout_cb():
     check = checks_queue[0]
     if check.failed:
@@ -138,8 +131,6 @@ def main():
     checks_queue.append(ShellCheck())
 
     if get_dbus_version() >= '1.2.1':
-        checks_queue.append(JournalCheck())
-
         # FIXME needs to get a list of the installed activities
         checks_queue.append(ActivityCheck('org.laptop.Log'))
         checks_queue.append(ActivityCheck('org.laptop.Chat'))
