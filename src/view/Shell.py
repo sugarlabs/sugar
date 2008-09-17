@@ -185,8 +185,6 @@ class Shell(gobject.GObject):
         if level == self._model.get_zoom_level():
             return
 
-        self.take_activity_screenshot()
-
         if level == shellmodel.ShellModel.ZOOM_ACTIVITY:
             host = self.get_current_activity()
             if host is not None:
@@ -203,7 +201,6 @@ class Shell(gobject.GObject):
         home_model = self._model.get_home()
         previous_activity = home_model.get_previous_activity()
         if previous_activity:
-            self.take_activity_screenshot()
             previous_activity.get_window().activate(
 						gtk.get_current_event_time())
 
@@ -211,7 +208,6 @@ class Shell(gobject.GObject):
         home_model = self._model.get_home()
         next_activity = home_model.get_next_activity()
         if next_activity:
-            self.take_activity_screenshot()
             next_activity.get_window().activate(gtk.get_current_event_time())
 
     def close_current_activity(self):
@@ -223,7 +219,6 @@ class Shell(gobject.GObject):
         if active_activity.is_journal():
             return
 
-        self.take_activity_screenshot()
         self.get_current_activity().close()
 
     def get_current_activity(self):
