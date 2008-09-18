@@ -51,6 +51,8 @@ class BuddyMenu(Palette):
         if self._active_activity_changed_hid is not None:
             home_model = self._get_home_model()
             home_model.disconnect(self._active_activity_changed_hid)
+        self._buddy.disconnect_by_func(self._buddy_icon_changed_cb)
+        self._buddy.disconnect_by_func(self._buddy_nick_changed_cb)
 
     def _add_items(self):
         friends = shellmodel.get_instance().get_friends()
