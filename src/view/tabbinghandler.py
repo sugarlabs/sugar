@@ -57,8 +57,6 @@ class TabbingHandler(object):
 
                 self._tabbing = False
             else:
-                shell = view.Shell.get_instance()
-                
                 self._frame.show(self._frame.MODE_NON_INTERACTIVE)
 
     def __timeout_cb(self):

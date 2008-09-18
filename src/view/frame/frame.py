@@ -24,7 +24,6 @@ from sugar.graphics import animator
 from sugar.graphics import style
 from sugar.graphics import palettegroup
 
-import view.Shell
 from view.frame.eventarea import EventArea
 from view.frame.activitiestray import ActivitiesTray
 from view.frame.zoomtoolbar import ZoomToolbar
