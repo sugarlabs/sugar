@@ -46,11 +46,20 @@ _logger = logging.getLogger('FavoritesView')
 
 _ICON_DND_TARGET = ('activity-icon', gtk.TARGET_SAME_WIDGET, 0)
 
-RING_LAYOUT = 0
-RANDOM_LAYOUT = 1
+# enumerate the various layout types we will display in the dropdown palette.
+# add a constant for your layout here, and add it to the _LAYOUT_MAP to get
+# it to appear in the palette.
+RING_LAYOUT, BOX_LAYOUT, TRIANGLE_LAYOUT, SUNFLOWER_LAYOUT, RANDOM_LAYOUT = \
+             xrange(5)
 
 _LAYOUT_MAP = {RING_LAYOUT: favoriteslayout.RingLayout,
+               BOX_LAYOUT: favoriteslayout.BoxLayout,
+               TRIANGLE_LAYOUT: favoriteslayout.TriangleLayout,
+               SUNFLOWER_LAYOUT: favoriteslayout.SunflowerLayout,
                RANDOM_LAYOUT: favoriteslayout.RandomLayout}
+"""Map numeric layout identifiers to uninstantiated subclasses of
+`FavoritesLayout` which implement the layouts.  Additional information
+about the layout can be accessed with fields of the class."""
 
 class FavoritesView(hippo.Canvas):
     __gtype_name__ = 'SugarFavoritesView'
