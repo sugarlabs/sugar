@@ -79,6 +79,11 @@ class LaunchBox(hippo.CanvasBox):
         self._home.connect('active-activity-changed',
                            self.__active_activity_changed_cb)
 
+        self.connect('destroy', self.__destroy_cb)
+
+    def __destroy_cb(self, box):
+        self._home.disconnect_by_func(self.__active_activity_changed_cb)
+
     def zoom_in(self):
         self._activity_icon.props.size = style.STANDARD_ICON_SIZE
 
