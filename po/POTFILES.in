@@ -33,4 +33,19 @@ src/view/devices/network/mesh.py
 src/view/frame/activitiestray.py
 src/view/home/favoritesview.py
 src/view/palettes.py
+src/journal/detailview.py
+src/journal/journaltoolbox.py
+src/journal/collapsedentry.py
+src/journal/keepicon.py
+src/journal/journalentrybundle.py
+src/journal/journalactivity.py
+src/journal/volumesmanager.py
+src/journal/expandedentry.py
+src/journal/objectchooser.py
+src/journal/volumestoolbar.py
+src/journal/query.py
+src/journal/misc.py
+src/journal/palettes.py
+src/journal/listview.py
+src/journal/modalalert.py
 
