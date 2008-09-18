@@ -78,14 +78,20 @@ class DeviceView(TrayIcon):
         self.palette.set_primary_text(self._get_palette_primary_text())
 
     def _state_changed_cb(self, model, pspec):
+        self._update_icon()
         self._update_state()
         self.palette.set_primary_text(self._get_palette_primary_text())
 
     def _update_icon(self):
+        # keep this code in sync with view/home/MeshBox.py
         strength = self._model.props.strength
         if self._model.props.state == device.STATE_INACTIVE:
             strength = 0
-        icon_name = get_icon_state(_ICON_NAME, strength)
+        if self._model.props.state == device.STATE_ACTIVATED:
+            icon_name = '%s-connected' % _ICON_NAME
+        else:
+            icon_name = _ICON_NAME
+        icon_name = get_icon_state(icon_name, strength)
         if icon_name:
             self.icon.props.icon_name = icon_name
 
