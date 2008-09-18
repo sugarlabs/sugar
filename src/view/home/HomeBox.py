@@ -326,13 +326,20 @@ class FavoritesButton(RadioToolButton):
         self._layout = _convert_layout_constant(profile_layout_constant)
         self._update_icon()
 
+        i = 0
         for layoutid, layoutclass in sorted(favoritesview._LAYOUT_MAP.items()):
-            menu_item = MenuItem(layoutclass.palette_name,
-                                 layoutclass.icon_name)
+            menu_item = gtk.MenuItem()
+            menu_item.add(Icon(icon_name=layoutclass.icon_name,
+                               icon_size=gtk.ICON_SIZE_MENU))
             menu_item.connect('activate', self.__layout_activate_cb,
                               layoutid)
-            self.props.palette.menu.append(menu_item)
-            menu_item.show()
+            self.props.palette.menu.attach(menu_item, i, i+1, 0, 1)
+            menu_item.show_all()
+            i += 1
+        # in HEAD, we can have the palette.menu emit('item-inserted'),
+        # but sucrose-0.82 doesn't have that patch, so call a private method =(
+        self.props.palette._update_separators()
+        self.props.palette.menu.show()
 
 
     def __layout_activate_cb(self, menu_item, layout):
