@@ -303,19 +303,17 @@ the XO man in the center.  Since r = _SUNFLOWER_CONSTANT * sqrt(n),
 solve for n when r is (XLARGE_ICON_SIZE + STANDARD_ICON_SIZE)/2.
 """
 
-_GOLDEN_RATIO = (math.sqrt(5) + 1) / 2
+_GOLDEN_RATIO = 1.6180339887498949
 """
 Golden ratio: http://en.wikipedia.org/wiki/Golden_ratio
 Calculation: (math.sqrt(5) + 1) / 2
-Result: 1.6180339887498949
 """
 
-_SUNFLOWER_ANGLE = math.radians(360) / ( _GOLDEN_RATIO * _GOLDEN_RATIO )
+_SUNFLOWER_ANGLE = 2.3999632297286531
 """
 The sunflower angle is approximately 137.5 degrees.
 This is the golden angle: http://en.wikipedia.org/wiki/Golden_angle
 Calculation: math.radians(360) / ( _GOLDEN_RATIO * _GOLDEN_RATIO )
-Result: 2.3999632297286531
 """
 
 class SunflowerLayout(RingLayout):
