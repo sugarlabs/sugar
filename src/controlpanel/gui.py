@@ -51,6 +51,7 @@ class ControlPanel(gtk.Window):
         self._toolbar = None
         self._canvas = None
         self._table = None
+        self._scrolledwindow = None
         self._separator = None
         self._section_view = None
         self._section_toolbar = None
@@ -107,6 +108,14 @@ class ControlPanel(gtk.Window):
         self._table = gtk.Table()
         self._table.set_col_spacings(style.GRID_CELL_SIZE)
         self._table.set_border_width(style.GRID_CELL_SIZE)
+
+        self._scrolledwindow = gtk.ScrolledWindow()
+        self._scrolledwindow.set_policy(gtk.POLICY_AUTOMATIC,
+                                        gtk.POLICY_AUTOMATIC)
+        self._scrolledwindow.add_with_viewport(self._table)
+        child = self._scrolledwindow.get_child()
+        child.modify_bg(gtk.STATE_NORMAL, style.COLOR_BLACK.get_gdk_color())
+
         self._setup_options()
         self._main_toolbar.connect('stop-clicked', 
                                    self.__stop_clicked_cb)
@@ -146,10 +155,11 @@ class ControlPanel(gtk.Window):
     def _show_main_view(self):
         self._set_toolbar(self._main_toolbar)
         self._main_toolbar.show()
-        self._set_canvas(self._table)
+        self._set_canvas(self._scrolledwindow)
         self._main_view.modify_bg(gtk.STATE_NORMAL, 
                                   style.COLOR_BLACK.get_gdk_color())
         self._table.show()
+        self._scrolledwindow.show()
         entry = self._main_toolbar.get_entry()
         entry.grab_focus()
         entry.set_text('')
