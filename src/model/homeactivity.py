@@ -73,11 +73,13 @@ class HomeActivity(gobject.GObject):
 
         self._retrieve_service()
 
+        self._name_owner_changed_handler = None
         if not self._service:
             bus = dbus.SessionBus()
-            bus.add_signal_receiver(self._name_owner_changed_cb,
-                                    signal_name="NameOwnerChanged",
-                                    dbus_interface="org.freedesktop.DBus")
+            self._name_owner_changed_handler = bus.add_signal_receiver(
+                    self._name_owner_changed_cb,
+                    signal_name="NameOwnerChanged",
+                    dbus_interface="org.freedesktop.DBus")
 
     def set_window(self, window):
         """Set the window for the activity
@@ -225,6 +227,8 @@ class HomeActivity(gobject.GObject):
         if name == self._get_service_name():
             self._retrieve_service()
             self.set_active(True)
+            self._name_owner_changed_handler.remove()
+            self._name_owner_changed_handler = None
 
     def set_active(self, state):
         """Propagate the current state to the activity object"""

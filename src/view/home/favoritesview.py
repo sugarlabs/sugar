@@ -379,6 +379,10 @@ class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
         self.props.xo_color = home_activity.get_icon_color()
         self.props.size = style.STANDARD_ICON_SIZE
 
+        if self.palette is not None:
+            self.palette.destroy()
+            self.palette = None
+
         if home_activity.is_journal():
             palette = JournalPalette(home_activity)
         else:
