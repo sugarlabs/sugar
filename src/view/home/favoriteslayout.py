@@ -96,10 +96,13 @@ class RandomLayout(FavoritesLayout):
     """Lay out icons randomly; try to nudge them around to resolve overlaps."""
 
     __gtype_name__ = 'RandomLayout'
+
     icon_name = 'view-freeform'
     """Name of icon used in home view dropdown palette."""
+
     profile_key = 'random-layout'
     """String used in profile to represent this view."""
+
     # TRANS: label for the freeform layout in the favorites view
     palette_name = _('Freeform')
     """String used to identify this layout in home view dropdown palette."""
@@ -290,27 +293,45 @@ class RingLayout(FavoritesLayout):
 
 _SUNFLOWER_CONSTANT = style.STANDARD_ICON_SIZE * .75
 """Chose a constant such that STANDARD_ICON_SIZE icons are nicely spaced."""
+
 _SUNFLOWER_OFFSET = \
-    math.pow( (style.XLARGE_ICON_SIZE / 2 + style.STANDARD_ICON_SIZE) /
-              _SUNFLOWER_CONSTANT, 2)
-"""Compute a starting index for the `SunflowerLayout` which leaves space for
-the XO man in the cener.  Since r = _SUNFLOWER_CONSTANT * sqrt(n),
-solve for n when r is (XLARGE_ICON_SIZE + STANDARD_ICON_SIZE)/2."""
+    math.pow((style.XLARGE_ICON_SIZE / 2 + style.STANDARD_ICON_SIZE) /
+             _SUNFLOWER_CONSTANT, 2)
+"""
+Compute a starting index for the `SunflowerLayout` which leaves space for
+the XO man in the center.  Since r = _SUNFLOWER_CONSTANT * sqrt(n),
+solve for n when r is (XLARGE_ICON_SIZE + STANDARD_ICON_SIZE)/2.
+"""
+
 _GOLDEN_RATIO = (math.sqrt(5) + 1) / 2
-"""Golden ratio: http://en.wikipedia.org/wiki/Golden_ratio"""
+"""
+Golden ratio: http://en.wikipedia.org/wiki/Golden_ratio
+Calculation: (math.sqrt(5) + 1) / 2
+Result: 1.6180339887498949
+"""
+
 _SUNFLOWER_ANGLE = math.radians(360) / ( _GOLDEN_RATIO * _GOLDEN_RATIO )
-"""The sunflower angle is approximately 137.5 degrees.
-This is the golden angle: http://en.wikipedia.org/wiki/Golden_angle"""
+"""
+The sunflower angle is approximately 137.5 degrees.
+This is the golden angle: http://en.wikipedia.org/wiki/Golden_angle
+Calculation: math.radians(360) / ( _GOLDEN_RATIO * _GOLDEN_RATIO )
+Result: 2.3999632297286531
+"""
+
 class SunflowerLayout(RingLayout):
     """Spiral layout based on Fibonacci ratio in phyllotaxis.
 
     See http://algorithmicbotany.org/papers/abop/abop-ch4.pdf
     for details of Vogel's model of florets in a sunflower head."""
+
     __gtype_name__ = 'SunflowerLayout'
+
     icon_name = 'view-spiral'
     """Name of icon used in home view dropdown palette."""
+
     profile_key = 'spiral-layout'
     """String used in profile to represent this view."""
+
     # TRANS: label for the spiral layout in the favorites view
     palette_name = _('Spiral')
     """String used to identify this layout in home view dropdown palette."""
@@ -331,23 +352,30 @@ class SunflowerLayout(RingLayout):
         return i
 
     def _calculate_position(self, radius, icon_size, oindex, children_count):
-        """Calucate the position of sunflower floret number 'oindex'.
+        """Calculate the position of sunflower floret number 'oindex'.
         If the result is outside the bounding box, use the next index which
         is inside the bounding box."""
+
         width, height = self.box.get_allocation()
+
         while True:
+
             index = self.adjust_index(oindex)
+
             # tweak phi to get a nice gap lined up where the "active activity"
             # icon is, below the central XO man.
             phi = index * _SUNFLOWER_ANGLE + math.radians(-130)
+
             # we offset index when computing r to make space for the XO man.
             r = _SUNFLOWER_CONSTANT * math.sqrt(index + _SUNFLOWER_OFFSET)
+
             # x,y are the top-left corner of the icon, so remove icon_size
             # from width/height to compensate.  y has an extra GRID_CELL_SIZE/2
             # removed to make room for the "active activity" icon.
             x = r * math.cos(phi) + (width - icon_size) / 2
             y = r * math.sin(phi) + (height - icon_size - \
                                      (style.GRID_CELL_SIZE / 2) ) / 2
+
             # skip allocations outside the allocation box.
             # give up once we can't fit
             if r < math.hypot(width / 2, height / 2):
@@ -355,16 +383,20 @@ class SunflowerLayout(RingLayout):
                        x < 0 or x > (width - icon_size):
                     self.skipped_indices.append(index)
                     continue # try again
+
             return x, y
 
 class BoxLayout(RingLayout):
     """Lay out icons in a square around the XO man."""
 
     __gtype_name__ = 'BoxLayout'
+
     icon_name = 'view-box'
     """Name of icon used in home view dropdown palette."""
+
     profile_key = 'box-layout'
     """String used in profile to represent this view."""
+
     # TRANS: label for the box layout in the favorites view
     palette_name = _('Box')
     """String used to identify this layout in home view dropdown palette."""
@@ -373,16 +405,20 @@ class BoxLayout(RingLayout):
         RingLayout.__init__(self)
 
     def _calculate_position(self, radius, icon_size, index, children_count):
+
         # use "orthogonal" versions of cos and sin in order to square the
         # circle and turn the 'ring view' into a 'box view'
         def cos_d(d):
-            while d < 0: d += 360
+            while d < 0:
+                d += 360
             if d < 45: return 1
             if d < 135: return (90 - d) / 45.
             if d < 225: return -1
             return cos_d(360 - d) # mirror around 180
-        cos=lambda r: cos_d(math.degrees(r))
-        sin=lambda r: cos_d(math.degrees(r) - 90)
+
+        cos = lambda r: cos_d(math.degrees(r))
+        sin = lambda r: cos_d(math.degrees(r) - 90)
+
         return RingLayout._calculate_position\
                (self, radius, icon_size, index, children_count,
                 sin=sin, cos=cos)
@@ -391,10 +427,13 @@ class TriangleLayout(RingLayout):
     """Lay out icons in a triangle around the XO man."""
 
     __gtype_name__ = 'TriangleLayout'
+
     icon_name = 'view-triangle'
     """Name of icon used in home view dropdown palette."""
+
     profile_key = 'triangle-layout'
     """String used in profile to represent this view."""
+
     # TRANS: label for the box layout in the favorites view
     palette_name = _('Triangle')
     """String used to identify this layout in home view dropdown palette."""
@@ -405,26 +444,33 @@ class TriangleLayout(RingLayout):
     def _calculate_radius_and_icon_size(self, children_count):
         # use slightly larger minimum radius than parent, because sides
         # of triangle come awful close to the center.
-        radius, icon_size = RingLayout._calculate_radius_and_icon_size\
-                            (self, children_count)
+        radius, icon_size = \
+            RingLayout._calculate_radius_and_icon_size(self, children_count)
         return max(radius, _MINIMUM_RADIUS + style.MEDIUM_ICON_SIZE), icon_size
 
     def _calculate_position(self, radius, icon_size, index, children_count):
         # tweak cos and sin in order to make the 'ring' into an equilateral
         # triangle.
+
         def cos_d(d):
-            while d < -90: d += 360
+            while d < -90:
+                d += 360
             if d <= 30: return (d + 90) / 120.
             if d <= 90: return (90 - d) / 60.
             return -cos_d(180 - d) # mirror around 90
+
         sqrt_3 = math.sqrt(3)
+
         def sin_d(d):
-            while d < -90: d += 360
+            while d < -90:
+                d += 360
             if d <= 30: return ((d + 90) / 120.) * sqrt_3 - 1
             if d <= 90: return sqrt_3 - 1
             return sin_d(180 - d) # mirror around 90
-        cos=lambda r: cos_d(math.degrees(r))
-        sin=lambda r: sin_d(math.degrees(r))
+
+        cos = lambda r: cos_d(math.degrees(r))
+        sin = lambda r: sin_d(math.degrees(r))
+
         return RingLayout._calculate_position\
                (self, radius, icon_size, index, children_count,
                 sin=sin, cos=cos)
