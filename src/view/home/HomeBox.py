@@ -326,23 +326,25 @@ class FavoritesButton(RadioToolButton):
         self._layout = _convert_layout_constant(profile_layout_constant)
         self._update_icon()
 
-        i = 0
+        # someday, this will be a gtk.Table()
+        layouts_grid = gtk.HBox()
+        layout_item = None
         for layoutid, layoutclass in sorted(favoritesview._LAYOUT_MAP.items()):
-            menu_item = gtk.MenuItem()
-            menu_item.add(Icon(icon_name=layoutclass.icon_name,
-                               icon_size=gtk.ICON_SIZE_MENU))
-            menu_item.connect('activate', self.__layout_activate_cb,
-                              layoutid)
-            self.props.palette.menu.attach(menu_item, i, i+1, 0, 1)
-            menu_item.show_all()
-            i += 1
-        # in HEAD, we can have the palette.menu emit('item-inserted'),
-        # but sucrose-0.82 doesn't have that patch, so call a private method =(
+            layout_item = RadioToolButton(icon_name=layoutclass.icon_name,
+                                          group=layout_item, active=False)
+            if layoutid == self._layout:
+                layout_item.set_active(True)
+            layouts_grid.add(layout_item)
+            layout_item.connect('toggled', self.__layout_activate_cb,
+                                layoutid)
+        layouts_grid.show_all()
+        self.props.palette.set_content(layouts_grid)
         self.props.palette._update_separators()
-        self.props.palette.menu.show()
 
 
     def __layout_activate_cb(self, menu_item, layout):
+        if not menu_item.get_active():
+            return
         if self._layout == layout and self.props.active:
             return
         elif self._layout != layout:
