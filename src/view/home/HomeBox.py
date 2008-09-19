@@ -339,8 +339,6 @@ class FavoritesButton(RadioToolButton):
                                 layoutid)
         layouts_grid.show_all()
         self.props.palette.set_content(layouts_grid)
-        self.props.palette._update_separators()
-
 
     def __layout_activate_cb(self, menu_item, layout):
         if not menu_item.get_active():
