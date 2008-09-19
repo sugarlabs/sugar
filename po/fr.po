@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-09-18 13:20-0400\n"
-"PO-Revision-Date: 2008-09-18 23:31-0400\n"
+"PO-Revision-Date: 2008-09-18 23:45-0400\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -71,7 +71,7 @@ msgstr "Ouvrir avec"
 #: ../src/view/clipboardmenu.py:227
 #, python-format
 msgid "%s clipping"
-msgstr ""
+msgstr "%s coupure"
 
 #: ../src/hardware/keydialog.py:150
 msgid "Key Type:"
@@ -532,7 +532,6 @@ msgid "Turn of the wireless radio to save battery life"
 msgstr "Désactiver la radio sans fil pour prolonger la batterie"
 
 #: ../src/controlpanel/view/network.py:75
-#, fuzzy
 msgid "Radio"
 msgstr "Radio"
 
