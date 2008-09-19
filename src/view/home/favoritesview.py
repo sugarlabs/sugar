@@ -46,16 +46,16 @@ _logger = logging.getLogger('FavoritesView')
 _ICON_DND_TARGET = ('activity-icon', gtk.TARGET_SAME_WIDGET, 0)
 
 # enumerate the various layout types we will display in the dropdown palette.
-# add a constant for your layout here, and add it to the _LAYOUT_MAP to get
+# add a constant for your layout here, and add it to the LAYOUT_MAP to get
 # it to appear in the palette.
 RING_LAYOUT, BOX_LAYOUT, TRIANGLE_LAYOUT, SUNFLOWER_LAYOUT, RANDOM_LAYOUT = \
              xrange(5)
 
-_LAYOUT_MAP = {RING_LAYOUT: favoriteslayout.RingLayout,
-               BOX_LAYOUT: favoriteslayout.BoxLayout,
-               TRIANGLE_LAYOUT: favoriteslayout.TriangleLayout,
-               SUNFLOWER_LAYOUT: favoriteslayout.SunflowerLayout,
-               RANDOM_LAYOUT: favoriteslayout.RandomLayout}
+LAYOUT_MAP = {RING_LAYOUT: favoriteslayout.RingLayout,
+              BOX_LAYOUT: favoriteslayout.BoxLayout,
+              TRIANGLE_LAYOUT: favoriteslayout.TriangleLayout,
+              SUNFLOWER_LAYOUT: favoriteslayout.SunflowerLayout,
+              RANDOM_LAYOUT: favoriteslayout.RandomLayout}
 """Map numeric layout identifiers to uninstantiated subclasses of
 `FavoritesLayout` which implement the layouts.  Additional information
 about the layout can be accessed with fields of the class."""
@@ -251,11 +251,11 @@ class FavoritesView(hippo.Canvas):
         context.drop_finish(success=True, time=time)
 
     def _set_layout(self, layout):
-        if layout not in _LAYOUT_MAP:
+        if layout not in LAYOUT_MAP:
             raise ValueError('Unknown favorites layout: %r' % layout)
-        if type(self._layout) != _LAYOUT_MAP[layout]:
+        if type(self._layout) != LAYOUT_MAP[layout]:
             self._box.clear()
-            self._layout = _LAYOUT_MAP[layout]()
+            self._layout = LAYOUT_MAP[layout]()
             self._box.set_layout(self._layout)
 
             self._my_icon = _MyIcon(style.XLARGE_ICON_SIZE)

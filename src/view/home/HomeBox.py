@@ -40,7 +40,7 @@ _LIST_VIEW = 1
 _AUTOSEARCH_TIMEOUT = 1000
 
 def _convert_layout_constant(profile_constant):
-    for layoutid, layoutclass in favoritesview._LAYOUT_MAP.items():
+    for layoutid, layoutclass in favoritesview.LAYOUT_MAP.items():
         if profile_constant == layoutclass.profile_key:
             return layoutid
     logging.warning('Incorrect favorites_layout value: %r' % \
@@ -329,7 +329,7 @@ class FavoritesButton(RadioToolButton):
         # someday, this will be a gtk.Table()
         layouts_grid = gtk.HBox()
         layout_item = None
-        for layoutid, layoutclass in sorted(favoritesview._LAYOUT_MAP.items()):
+        for layoutid, layoutclass in sorted(favoritesview.LAYOUT_MAP.items()):
             layout_item = RadioToolButton(icon_name=layoutclass.icon_name,
                                           group=layout_item, active=False)
             if layoutid == self._layout:
@@ -356,7 +356,7 @@ class FavoritesButton(RadioToolButton):
             self.emit('toggled')
 
     def _update_icon(self):
-        self.props.named_icon = favoritesview._LAYOUT_MAP[self._layout]\
+        self.props.named_icon = favoritesview.LAYOUT_MAP[self._layout]\
                                 .icon_name
 
     def _get_layout(self):
