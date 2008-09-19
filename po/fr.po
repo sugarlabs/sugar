@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-01 18:31-0400\n"
-"PO-Revision-Date: 2008-09-10 00:12-0400\n"
+"POT-Creation-Date: 2008-09-18 13:20-0400\n"
+"PO-Revision-Date: 2008-09-18 23:45-0400\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr "Nom :"
 msgid "Click to change color:"
 msgstr "Cliquer pour changer de couleur :"
 
-#: ../src/intro/window.py:175
+#: ../src/intro/window.py:175 ../src/journal/detailview.py:119
 msgid "Back"
 msgstr "Précédent"
 
@@ -35,24 +35,24 @@ msgstr "Accepter"
 msgid "Next"
 msgstr "Suivant"
 
-#: ../src/view/BuddyMenu.py:58
+#: ../src/view/BuddyMenu.py:60
 msgid "Remove friend"
 msgstr "Retirer de mes amis"
 
-#: ../src/view/BuddyMenu.py:61
+#: ../src/view/BuddyMenu.py:63
 msgid "Make friend"
 msgstr "Ajouter à mes amis"
 
-#: ../src/view/BuddyMenu.py:90
+#: ../src/view/BuddyMenu.py:92
 #, python-format
 msgid "Invite to %s"
 msgstr "Inviter à %s"
 
-#: ../src/view/clipboardmenu.py:48
+#: ../src/view/clipboardmenu.py:50
 msgid "Remove"
 msgstr "Retirer"
 
-#: ../src/view/clipboardmenu.py:53 ../src/view/clipboardmenu.py:79
+#: ../src/view/clipboardmenu.py:55 ../src/view/clipboardmenu.py:77
 msgid "Open"
 msgstr "Ouvrir"
 
@@ -60,22 +60,18 @@ msgstr "Ouvrir"
 # TODO: Implement stopping downloads
 # self._stop_item.connect('activate', self._stop_item_activate_cb)
 # self.append_menu_item(self._stop_item)
-#. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
-#. TODO: Implement stopping downloads
-#. self._stop_item.connect('activate', self._stop_item_activate_cb)
-#. self.append_menu_item(self._stop_item)
-#: ../src/view/clipboardmenu.py:63 ../src/view/home/HomeBox.py:87
+#: ../src/view/clipboardmenu.py:60 ../src/view/home/HomeBox.py:87
 msgid "Keep"
 msgstr "Conserver"
 
-#: ../src/view/clipboardmenu.py:84
+#: ../src/view/clipboardmenu.py:82
 msgid "Open with"
 msgstr "Ouvrir avec"
 
-#: ../src/view/clipboardmenu.py:216
+#: ../src/view/clipboardmenu.py:227
 #, python-format
-msgid "Clipboard object: %s."
-msgstr "Objet dans le presse-papier : %s."
+msgid "%s clipping"
+msgstr "%s coupure"
 
 #: ../src/hardware/keydialog.py:150
 msgid "Key Type:"
@@ -101,7 +97,7 @@ msgstr "Impossible de se connecter au serveur."
 msgid "The server could not complete the request."
 msgstr "Le serveur n'a pas pu achever la requête."
 
-#: ../src/view/Shell.py:261
+#: ../src/view/Shell.py:251
 msgid "Screenshot"
 msgstr "Capture d'écran"
 
@@ -116,6 +112,7 @@ msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "Confirmer la suppression : faut-il supprimer %s définitivement ?"
 
 #: ../src/view/home/HomeBox.py:90 ../src/view/palettes.py:120
+#: ../src/journal/journaltoolbox.py:335 ../src/journal/palettes.py:75
 msgid "Erase"
 msgstr "Supprimer"
 
@@ -131,7 +128,7 @@ msgstr "Actualiser les activités pour assurer la compatibilité logicielle"
 msgid "Cancel"
 msgstr "Annuler"
 
-#: ../src/view/home/HomeBox.py:127 ../src/controlpanel/gui.py:276
+#: ../src/view/home/HomeBox.py:127 ../src/controlpanel/gui.py:286
 msgid "Later"
 msgstr "Plus tard"
 
@@ -208,11 +205,13 @@ msgstr "Réseau maillé"
 msgid "Disconnect..."
 msgstr "Déconnexion..."
 
+#. TRANS: Action label for resuming an activity.
 #: ../src/view/home/MeshBox.py:302 ../src/view/palettes.py:61
+#: ../src/journal/journaltoolbox.py:399 ../src/journal/palettes.py:57
 msgid "Resume"
 msgstr "Reprendre"
 
-#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:205
+#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:206
 msgid "Join"
 msgstr "Rejoindre"
 
@@ -325,19 +324,19 @@ msgstr "Redémarrer sugar pour que les changements prennent effet.\n"
 msgid "Ok"
 msgstr "Ok"
 
-#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:268
+#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:278
 msgid "Changes require restart"
 msgstr "Relancer pour valider"
 
-#: ../src/controlpanel/gui.py:267
+#: ../src/controlpanel/gui.py:277
 msgid "Warning"
 msgstr "Attention"
 
-#: ../src/controlpanel/gui.py:271
+#: ../src/controlpanel/gui.py:281
 msgid "Cancel changes"
 msgstr "Abandonner"
 
-#: ../src/controlpanel/gui.py:280
+#: ../src/controlpanel/gui.py:290
 msgid "Restart now"
 msgstr "Maintenant"
 
@@ -377,7 +376,7 @@ msgstr "Erreur dans les couleurs spécifiées."
 msgid "Not available"
 msgstr "Non disponible"
 
-#: ../src/controlpanel/model/datetime.py:85
+#: ../src/controlpanel/model/datetime.py:89
 msgid "Error timezone does not exist."
 msgstr "Erreur : la zone temporelle n'existe pas."
 
@@ -389,25 +388,21 @@ msgstr "La valeur doit être un entier."
 msgid "Could not access ~/.i18n. Create standard settings."
 msgstr "Accès impossible à ~/.i18n. Création de paramètres par défaut."
 
-#: ../src/controlpanel/model/language.py:110
+#: ../src/controlpanel/model/language.py:114
 #, python-format
 msgid "Language for code=%s could not be determined."
 msgstr "La langue associée au code = %s n'a pas pu être déterminée."
 
-#: ../src/controlpanel/model/language.py:127
+#: ../src/controlpanel/model/language.py:131
 #, python-format
 msgid "Sorry I do not speak '%s'."
 msgstr "Désolé je ne parle pas '%s'."
 
-#: ../src/controlpanel/model/network.py:48
-msgid "You must enter a server."
-msgstr "Vous devez indiquer un serveur."
-
-#: ../src/controlpanel/model/network.py:63
+#: ../src/controlpanel/model/network.py:62
 msgid "State is unknown."
 msgstr "État inconnu."
 
-#: ../src/controlpanel/model/network.py:83
+#: ../src/controlpanel/model/network.py:82
 msgid "Error in specified radio argument use on/off."
 msgstr "Argument 'radio' spécifié incorrect. Utiliser marche/arrêt."
 
@@ -466,7 +461,7 @@ msgstr ""
 "© 2008 One Laptop per Child Association Inc ; Red Hat Inc ; et "
 "contributeurs."
 
-#: ../src/controlpanel/view/aboutxo.py:166
+#: ../src/controlpanel/view/aboutxo.py:167
 msgid ""
 "Sugar is the graphical user interface that you are looking at. Sugar is free "
 "software, covered by the GNU General Public License, and you are welcome to "
@@ -478,7 +473,7 @@ msgstr ""
 "License). Vous êtes autorisé à le modifier et/ou à en distribuer des copies "
 "aux conditions spécifiées."
 
-#: ../src/controlpanel/view/aboutxo.py:178
+#: ../src/controlpanel/view/aboutxo.py:179
 msgid "Full license:"
 msgstr "Licence complète :"
 
@@ -528,19 +523,33 @@ msgstr "Langue"
 msgid "Network"
 msgstr "Réseau"
 
-#: ../src/controlpanel/view/network.py:53
+#: ../src/controlpanel/view/network.py:54
 msgid "Wireless"
 msgstr "Réseau sans fil"
 
-#: ../src/controlpanel/view/network.py:61
-msgid "Radio:"
-msgstr "Radio :"
+#: ../src/controlpanel/view/network.py:62
+msgid "Turn of the wireless radio to save battery life"
+msgstr "Désactiver la radio sans fil pour prolonger la batterie"
 
-#: ../src/controlpanel/view/network.py:94
+#: ../src/controlpanel/view/network.py:75
+msgid "Radio"
+msgstr "Radio"
+
+#: ../src/controlpanel/view/network.py:91
+msgid "Discard network history if you have trouble connecting to the network"
+msgstr ""
+"Ignorer l'historique du réseau si vous avez du mal à vous connecter au "
+"réseau"
+
+#: ../src/controlpanel/view/network.py:100
+msgid "Discard network history"
+msgstr "Ignorer l'historique du réseau"
+
+#: ../src/controlpanel/view/network.py:113
 msgid "Mesh"
 msgstr "Réseau maillé"
 
-#: ../src/controlpanel/view/network.py:103
+#: ../src/controlpanel/view/network.py:122
 msgid "Server:"
 msgstr "Serveur :"
 
@@ -591,7 +600,7 @@ msgstr "Démarre un réseau maillé simple"
 msgid "Unknown Mesh"
 msgstr "Réseau maillé inconnu"
 
-#: ../src/view/frame/activitiestray.py:210
+#: ../src/view/frame/activitiestray.py:211
 msgid "Decline"
 msgstr "Refuser"
 
@@ -612,19 +621,19 @@ msgstr "Enregistrement réussi"
 msgid "You are now registered with your school server."
 msgstr "Vous êtes maintenant enregistré sur le serveur de l'école"
 
-#: ../src/view/home/favoritesview.py:407
-msgid "Control Panel"
-msgstr "Panneau de contrôle"
+#: ../src/view/home/favoritesview.py:411
+msgid "Settings"
+msgstr "Configuration"
 
-#: ../src/view/home/favoritesview.py:418
+#: ../src/view/home/favoritesview.py:416
 msgid "Restart"
 msgstr "Redémarrer"
 
-#: ../src/view/home/favoritesview.py:423
+#: ../src/view/home/favoritesview.py:421
 msgid "Shutdown"
 msgstr "Éteindre"
 
-#: ../src/view/home/favoritesview.py:429
+#: ../src/view/home/favoritesview.py:427
 msgid "Register"
 msgstr "S'enregistrer"
 
@@ -636,26 +645,154 @@ msgstr "Démarrage..."
 msgid "Stop"
 msgstr "Arrêter"
 
-#: ../src/view/palettes.py:104
+#. TRANS: Action label for starting an entry.
+#: ../src/view/palettes.py:104 ../src/journal/journaltoolbox.py:402
+#: ../src/journal/palettes.py:59
 msgid "Start"
 msgstr "Lancer"
 
-#: ../src/view/palettes.py:132
+#: ../src/view/palettes.py:138
 msgid "Remove favorite"
 msgstr "Retirer le favori"
 
-#: ../src/view/palettes.py:136
+#: ../src/view/palettes.py:142
 msgid "Make favorite"
 msgstr "Ajouter aux favoris"
 
-#: ../src/view/palettes.py:185
+#: ../src/view/palettes.py:191
 msgid "Show contents"
 msgstr "Afficher les contenus"
 
-#: ../src/view/palettes.py:209
+#: ../src/view/palettes.py:215
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d Mo de libre"
+
+#: ../src/journal/journaltoolbox.py:62
+msgid "Search"
+msgstr "Rechercher"
+
+#: ../src/journal/journaltoolbox.py:119
+msgid "Anytime"
+msgstr "N'importe quand"
+
+#: ../src/journal/journaltoolbox.py:121
+msgid "Today"
+msgstr "Aujourd'hui"
+
+#: ../src/journal/journaltoolbox.py:123
+msgid "Since yesterday"
+msgstr "Depuis hier"
+
+#. TRANS: Filter entries modified during the last 7 days.
+#: ../src/journal/journaltoolbox.py:125
+msgid "Past week"
+msgstr "Depuis une semaine"
+
+#. TRANS: Filter entries modified during the last 30 days.
+#: ../src/journal/journaltoolbox.py:127
+msgid "Past month"
+msgstr "Depuis un mois"
+
+#. TRANS: Filter entries modified during the last 356 days.
+#: ../src/journal/journaltoolbox.py:129
+msgid "Past year"
+msgstr "Depuis une année"
+
+#: ../src/journal/journaltoolbox.py:136
+msgid "Anyone"
+msgstr "Tout le monde"
+
+#: ../src/journal/journaltoolbox.py:138
+msgid "My friends"
+msgstr "Mes amis"
+
+#: ../src/journal/journaltoolbox.py:139
+msgid "My class"
+msgstr "Ma classe"
+
+#. TRANS: Item in a combo box that filters by entry type.
+#: ../src/journal/journaltoolbox.py:255
+msgid "Anything"
+msgstr "Tout"
+
+#. TODO: Add "Start with" menu item
+#: ../src/journal/journaltoolbox.py:325 ../src/journal/palettes.py:67
+msgid "Copy"
+msgstr "Copier"
+
+#: ../src/journal/collapsedentry.py:248 ../src/journal/expandedentry.py:176
+#: ../src/journal/palettes.py:51
+msgid "Untitled"
+msgstr "Sans titre"
+
+#: ../src/journal/journalactivity.py:119 ../src/journal/volumesmanager.py:57
+msgid "Journal"
+msgstr "Log"
+
+#: ../src/journal/expandedentry.py:222
+msgid "No preview"
+msgstr "Pas de prévisualisation"
+
+#: ../src/journal/expandedentry.py:241
+msgid "Participants:"
+msgstr "Participants :"
+
+#: ../src/journal/expandedentry.py:266
+msgid "Description:"
+msgstr "Description :"
+
+#: ../src/journal/expandedentry.py:292
+msgid "Tags:"
+msgstr "Étiquettes :"
+
+#: ../src/journal/objectchooser.py:134
+msgid "Choose an object"
+msgstr "Choisir un objet"
+
+#: ../src/journal/objectchooser.py:139
+msgid "Close"
+msgstr "Fermer"
+
+#: ../src/journal/volumestoolbar.py:93
+msgid "Unmount"
+msgstr "Démonter"
+
+#: ../src/journal/misc.py:93
+msgid "No date"
+msgstr "Sans date"
+
+#: ../src/journal/listview.py:39
+msgid "Your Journal is empty"
+msgstr "Le journal est vide"
+
+#: ../src/journal/listview.py:40
+msgid "No matching entries "
+msgstr "Aucune entrée correspondante_"
+
+#: ../src/journal/modalalert.py:59
+msgid "Your Journal is full"
+msgstr "Votre journal est plein"
+
+#: ../src/journal/modalalert.py:63
+msgid "Please delete some old Journal entries to make space for new ones."
+msgstr ""
+"Effacer des entrées anciennes du Journal pour libérer de la place pour les "
+"nouvelles entrées."
+
+#: ../src/journal/modalalert.py:75
+msgid "Show Journal"
+msgstr "Montre le Journal"
+
+#, python-format
+#~ msgid "Clipboard object: %s."
+#~ msgstr "Objet dans le presse-papier : %s."
+
+#~ msgid "You must enter a server."
+#~ msgstr "Vous devez indiquer un serveur."
+
+#~ msgid "Control Panel"
+#~ msgstr "Panneau de contrôle"
 
 #~ msgid "© 2008 One Laptop per Child Assocation "
 #~ msgstr "© 2008 One Laptop per Child Assocation "
@@ -767,9 +904,6 @@ msgstr "%(free_space)d Mo de libre"
 #~ msgid "Share"
 #~ msgstr "Partager"
 
-#~ msgid "Close"
-#~ msgstr "Fermer"
-
 #, python-format
 #~ msgid "%s Activity"
 #~ msgstr "Activité %s"
@@ -788,9 +922,6 @@ msgstr "%(free_space)d Mo de libre"
 
 #~ msgid "Redo"
 #~ msgstr "Répéter"
-
-#~ msgid "Copy"
-#~ msgstr "Copier"
 
 #~ msgid "Paste"
 #~ msgstr "Coller"
