@@ -51,14 +51,14 @@ _ICON_DND_TARGET = ('activity-icon', gtk.TARGET_SAME_WIDGET, 0)
 RING_LAYOUT, BOX_LAYOUT, TRIANGLE_LAYOUT, SUNFLOWER_LAYOUT, RANDOM_LAYOUT = \
              xrange(5)
 
+# Map numeric layout identifiers to uninstantiated subclasses of
+# `FavoritesLayout` which implement the layouts.  Additional information
+# about the layout can be accessed with fields of the class.
 LAYOUT_MAP = {RING_LAYOUT: favoriteslayout.RingLayout,
               BOX_LAYOUT: favoriteslayout.BoxLayout,
               TRIANGLE_LAYOUT: favoriteslayout.TriangleLayout,
               SUNFLOWER_LAYOUT: favoriteslayout.SunflowerLayout,
               RANDOM_LAYOUT: favoriteslayout.RandomLayout}
-"""Map numeric layout identifiers to uninstantiated subclasses of
-`FavoritesLayout` which implement the layouts.  Additional information
-about the layout can be accessed with fields of the class."""
 
 class FavoritesView(hippo.Canvas):
     __gtype_name__ = 'SugarFavoritesView'

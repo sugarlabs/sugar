@@ -98,14 +98,11 @@ class RandomLayout(FavoritesLayout):
     __gtype_name__ = 'RandomLayout'
 
     icon_name = 'view-freeform'
-    """Name of icon used in home view dropdown palette."""
 
     profile_key = 'random-layout'
-    """String used in profile to represent this view."""
 
     # TRANS: label for the freeform layout in the favorites view
     palette_name = _('Freeform')
-    """String used to identify this layout in home view dropdown palette."""
 
     def __init__(self):
         FavoritesLayout.__init__(self)
@@ -181,13 +178,14 @@ class RingLayout(FavoritesLayout):
     """Lay out icons in a ring around the XO man."""
 
     __gtype_name__ = 'RingLayout'
+
     icon_name = 'view-radial'
-    """Name of icon used in home view dropdown palette."""
+
     profile_key = 'ring-layout'
-    """String used in profile to represent this view."""
+
     # TRANS: label for the ring layout in the favorites view
     palette_name = _('Ring')
-    """String used to identify this layout in home view dropdown palette."""
+
 
     def __init__(self):
         FavoritesLayout.__init__(self)
@@ -291,30 +289,25 @@ class RingLayout(FavoritesLayout):
         else:
             return 0
 
+# Chose a constant such that STANDARD_ICON_SIZE icons are nicely spaced.
 _SUNFLOWER_CONSTANT = style.STANDARD_ICON_SIZE * .75
-"""Chose a constant such that STANDARD_ICON_SIZE icons are nicely spaced."""
 
+
+# Compute a starting index for the `SunflowerLayout` which leaves space for
+# the XO man in the center.  Since r = _SUNFLOWER_CONSTANT * sqrt(n),
+# solve for n when r is (XLARGE_ICON_SIZE + STANDARD_ICON_SIZE)/2.
 _SUNFLOWER_OFFSET = \
     math.pow((style.XLARGE_ICON_SIZE / 2 + style.STANDARD_ICON_SIZE) /
              _SUNFLOWER_CONSTANT, 2)
-"""
-Compute a starting index for the `SunflowerLayout` which leaves space for
-the XO man in the center.  Since r = _SUNFLOWER_CONSTANT * sqrt(n),
-solve for n when r is (XLARGE_ICON_SIZE + STANDARD_ICON_SIZE)/2.
-"""
 
+# Golden ratio: http://en.wikipedia.org/wiki/Golden_ratio
+# Calculation: (math.sqrt(5) + 1) / 2
 _GOLDEN_RATIO = 1.6180339887498949
-"""
-Golden ratio: http://en.wikipedia.org/wiki/Golden_ratio
-Calculation: (math.sqrt(5) + 1) / 2
-"""
 
+# The sunflower angle is approximately 137.5 degrees.
+# This is the golden angle: http://en.wikipedia.org/wiki/Golden_angle
+# Calculation: math.radians(360) / ( _GOLDEN_RATIO * _GOLDEN_RATIO )
 _SUNFLOWER_ANGLE = 2.3999632297286531
-"""
-The sunflower angle is approximately 137.5 degrees.
-This is the golden angle: http://en.wikipedia.org/wiki/Golden_angle
-Calculation: math.radians(360) / ( _GOLDEN_RATIO * _GOLDEN_RATIO )
-"""
 
 class SunflowerLayout(RingLayout):
     """Spiral layout based on Fibonacci ratio in phyllotaxis.
@@ -325,14 +318,11 @@ class SunflowerLayout(RingLayout):
     __gtype_name__ = 'SunflowerLayout'
 
     icon_name = 'view-spiral'
-    """Name of icon used in home view dropdown palette."""
 
     profile_key = 'spiral-layout'
-    """String used in profile to represent this view."""
 
     # TRANS: label for the spiral layout in the favorites view
     palette_name = _('Spiral')
-    """String used to identify this layout in home view dropdown palette."""
 
     def __init__(self):
         RingLayout.__init__(self)
@@ -390,14 +380,11 @@ class BoxLayout(RingLayout):
     __gtype_name__ = 'BoxLayout'
 
     icon_name = 'view-box'
-    """Name of icon used in home view dropdown palette."""
 
     profile_key = 'box-layout'
-    """String used in profile to represent this view."""
 
     # TRANS: label for the box layout in the favorites view
     palette_name = _('Box')
-    """String used to identify this layout in home view dropdown palette."""
 
     def __init__(self):
         RingLayout.__init__(self)
@@ -427,14 +414,11 @@ class TriangleLayout(RingLayout):
     __gtype_name__ = 'TriangleLayout'
 
     icon_name = 'view-triangle'
-    """Name of icon used in home view dropdown palette."""
 
     profile_key = 'triangle-layout'
-    """String used in profile to represent this view."""
 
     # TRANS: label for the box layout in the favorites view
     palette_name = _('Triangle')
-    """String used to identify this layout in home view dropdown palette."""
 
     def __init__(self):
         RingLayout.__init__(self)
