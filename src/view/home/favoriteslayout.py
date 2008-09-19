@@ -340,7 +340,8 @@ class SunflowerLayout(RingLayout):
             i += 1
         return i
 
-    def _calculate_position(self, radius, icon_size, oindex, children_count):
+    def _calculate_position(self, radius, icon_size, oindex, children_count,
+                            sin=math.sin, cos=math.cos):
         """Calculate the position of sunflower floret number 'oindex'.
         If the result is outside the bounding box, use the next index which
         is inside the bounding box."""
@@ -361,9 +362,9 @@ class SunflowerLayout(RingLayout):
             # x,y are the top-left corner of the icon, so remove icon_size
             # from width/height to compensate.  y has an extra GRID_CELL_SIZE/2
             # removed to make room for the "active activity" icon.
-            x = r * math.cos(phi) + (width - icon_size) / 2
-            y = r * math.sin(phi) + (height - icon_size - \
-                                     (style.GRID_CELL_SIZE / 2) ) / 2
+            x = r * cos(phi) + (width - icon_size) / 2
+            y = r * sin(phi) + (height - icon_size - \
+                                (style.GRID_CELL_SIZE / 2) ) / 2
 
             # skip allocations outside the allocation box.
             # give up once we can't fit
@@ -390,7 +391,8 @@ class BoxLayout(RingLayout):
     def __init__(self):
         RingLayout.__init__(self)
 
-    def _calculate_position(self, radius, icon_size, index, children_count):
+    def _calculate_position(self, radius, icon_size, index, children_count,
+                            sin=None, cos=None):
 
         # use "orthogonal" versions of cos and sin in order to square the
         # circle and turn the 'ring view' into a 'box view'
@@ -434,7 +436,8 @@ class TriangleLayout(RingLayout):
             RingLayout._calculate_radius_and_icon_size(self, children_count)
         return max(radius, _MINIMUM_RADIUS + style.MEDIUM_ICON_SIZE), icon_size
 
-    def _calculate_position(self, radius, icon_size, index, children_count):
+    def _calculate_position(self, radius, icon_size, index, children_count,
+                            sin=math.sin, cos=math.cos):
         # tweak cos and sin in order to make the 'ring' into an equilateral
         # triangle.
 

@@ -163,7 +163,7 @@ class HomeBox(gtk.VBox):
         self._set_view(view, layout)
         if layout is not None:
             current_profile = profile.get_profile()
-            profile_key = favoritesview._LAYOUT_MAP[layout].profile_key
+            profile_key = favoritesview.LAYOUT_MAP[layout].profile_key
             if profile_key != current_profile.favorites_layout:
                 current_profile.favorites_layout = profile_key
                 current_profile.save()
