@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-09-01 18:31-0400\n"
-"PO-Revision-Date: 2008-09-18 20:04-0400\n"
+"PO-Revision-Date: 2008-09-18 20:12-0400\n"
 "Last-Translator: Eduardo H. Silva <HoboPrimate@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -342,7 +342,7 @@ msgstr "Aviso"
 
 #: ../src/controlpanel/gui.py:271
 msgid "Cancel changes"
-msgstr "Cancelar mudanças"
+msgstr "Cancelar alterações"
 
 #: ../src/controlpanel/gui.py:280
 msgid "Restart now"
@@ -481,8 +481,8 @@ msgid ""
 msgstr ""
 "O Sugar é a interface gráfica de utilizador que estás a utilizar. O Sugar é "
 "software livre, licenciado sob a GNU General Public License, e és bem vindo "
-"a fazer mudanças a ele e/ou distribuir cópias dele, segundo certas condições "
-"descritas a seguir."
+"a fazer alterações a ele e/ou a distribuir cópias dele, segundo certas "
+"condições descritas a seguir."
 
 #: ../src/controlpanel/view/aboutxo.py:178
 msgid "Full license:"
