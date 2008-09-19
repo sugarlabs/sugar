@@ -227,7 +227,7 @@ class RingLayout(FavoritesLayout):
                         - style.DEFAULT_SPACING
         # limit adjusted icon size.
         icon_size = max(icon_size, style.SMALL_ICON_SIZE)
-        icon_size = min(icon_size, style.LARGE_ICON_SIZE)
+        icon_size = min(icon_size, style.MEDIUM_ICON_SIZE)
         return radius, icon_size
 
     def _calculate_position(self, radius, icon_size, index, children_count,
