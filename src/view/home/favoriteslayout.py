@@ -335,7 +335,8 @@ class SunflowerLayout(RingLayout):
     def adjust_index(self, i):
         """Skip floret indices which end up outside the desired bounding box."""
         for idx in self.skipped_indices:
-            if i < idx: break
+            if i < idx:
+                break
             i += 1
         return i
 
@@ -396,9 +397,12 @@ class BoxLayout(RingLayout):
         def cos_d(d):
             while d < 0:
                 d += 360
-            if d < 45: return 1
-            if d < 135: return (90 - d) / 45.
-            if d < 225: return -1
+            if d < 45:
+                return 1
+            if d < 135:
+                return (90 - d) / 45.
+            if d < 225:
+                return -1
             return cos_d(360 - d) # mirror around 180
 
         cos = lambda r: cos_d(math.degrees(r))
@@ -437,8 +441,10 @@ class TriangleLayout(RingLayout):
         def cos_d(d):
             while d < -90:
                 d += 360
-            if d <= 30: return (d + 90) / 120.
-            if d <= 90: return (90 - d) / 60.
+            if d <= 30:
+                return (d + 90) / 120.
+            if d <= 90:
+                return (90 - d) / 60.
             return -cos_d(180 - d) # mirror around 90
 
         sqrt_3 = math.sqrt(3)
@@ -446,8 +452,10 @@ class TriangleLayout(RingLayout):
         def sin_d(d):
             while d < -90:
                 d += 360
-            if d <= 30: return ((d + 90) / 120.) * sqrt_3 - 1
-            if d <= 90: return sqrt_3 - 1
+            if d <= 30:
+                return ((d + 90) / 120.) * sqrt_3 - 1
+            if d <= 90:
+                return sqrt_3 - 1
             return sin_d(180 - d) # mirror around 90
 
         cos = lambda r: cos_d(math.degrees(r))
