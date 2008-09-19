@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-09-01 18:31-0400\n"
-"PO-Revision-Date: 2008-09-02 10:35-0400\n"
+"PO-Revision-Date: 2008-09-18 20:04-0400\n"
 "Last-Translator: Eduardo H. Silva <HoboPrimate@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -326,7 +326,7 @@ msgstr ""
 
 #: ../src/controlpanel/cmd.py:46
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr "Para aplicar as mudanças tens que reiniciar o sugar.\n"
+msgstr "Para aplicar as alterações tens que reiniciar o sugar.\n"
 
 #: ../src/controlpanel/toolbar.py:121 ../src/view/home/favoritesview.py:296
 msgid "Ok"
@@ -334,7 +334,7 @@ msgstr "Ok"
 
 #: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:268
 msgid "Changes require restart"
-msgstr "As mudanças necessitam que reinicies"
+msgstr "As alterações feitas necessitam que reinicies"
 
 #: ../src/controlpanel/gui.py:267
 msgid "Warning"
