@@ -23,7 +23,6 @@ import gtk
 
 from sugar.graphics import style
 from sugar.graphics import iconentry
-from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.alert import Alert
 from sugar.graphics.icon import Icon
