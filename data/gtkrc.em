@@ -12,3 +12,4 @@ gtk-font-name = "@font_name"
 gtk-cursor-theme-name = "sugar"
 gtk-toolbar-style = GTK_TOOLBAR_ICONS
 gtk-icon-sizes = "@icon_sizes"
+gtk-cursor-blink-timeout = 3
