@@ -103,10 +103,6 @@ class RandomLayout(FavoritesLayout):
     profile_key = 'random-layout'
     """String used in profile to represent this view."""
 
-    # TRANS: label for the freeform layout in the favorites view
-    palette_name = _('Freeform')
-    """String used to identify this layout in home view dropdown palette."""
-
     def __init__(self):
         FavoritesLayout.__init__(self)
 
@@ -185,9 +181,6 @@ class RingLayout(FavoritesLayout):
     """Name of icon used in home view dropdown palette."""
     profile_key = 'ring-layout'
     """String used in profile to represent this view."""
-    # TRANS: label for the ring layout in the favorites view
-    palette_name = _('Ring')
-    """String used to identify this layout in home view dropdown palette."""
 
     def __init__(self):
         FavoritesLayout.__init__(self)
@@ -330,10 +323,6 @@ class SunflowerLayout(RingLayout):
     profile_key = 'spiral-layout'
     """String used in profile to represent this view."""
 
-    # TRANS: label for the spiral layout in the favorites view
-    palette_name = _('Spiral')
-    """String used to identify this layout in home view dropdown palette."""
-
     def __init__(self):
         RingLayout.__init__(self)
         self.skipped_indices = []
@@ -395,10 +384,6 @@ class BoxLayout(RingLayout):
     profile_key = 'box-layout'
     """String used in profile to represent this view."""
 
-    # TRANS: label for the box layout in the favorites view
-    palette_name = _('Box')
-    """String used to identify this layout in home view dropdown palette."""
-
     def __init__(self):
         RingLayout.__init__(self)
 
@@ -431,10 +416,6 @@ class TriangleLayout(RingLayout):
 
     profile_key = 'triangle-layout'
     """String used in profile to represent this view."""
-
-    # TRANS: label for the box layout in the favorites view
-    palette_name = _('Triangle')
-    """String used to identify this layout in home view dropdown palette."""
 
     def __init__(self):
         RingLayout.__init__(self)
