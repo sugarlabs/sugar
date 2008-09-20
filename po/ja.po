@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-19 17:18-0400\n"
-"PO-Revision-Date: 2008-08-21 12:57-0400\n"
+"POT-Creation-Date: 2008-09-18 13:20-0400\n"
+"PO-Revision-Date: 2008-09-20 02:04-0400\n"
 "Last-Translator: korakurider <korakurider@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -15,44 +15,44 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Pootle 1.1.0rc2\n"
 
-#: ../src/intro/intro.py:65 ../src/controlpanel/view/aboutme.py:100
+#: ../src/intro/window.py:93 ../src/controlpanel/view/aboutme.py:100
 msgid "Name:"
 msgstr "名前:"
 
-#: ../src/intro/intro.py:97
+#: ../src/intro/window.py:125
 msgid "Click to change color:"
 msgstr "クリックして色を変更:"
 
-#: ../src/intro/intro.py:148
+#: ../src/intro/window.py:175 ../src/journal/detailview.py:119
 msgid "Back"
 msgstr "戻る"
 
-#: ../src/intro/intro.py:162 ../src/controlpanel/toolbar.py:61
+#: ../src/intro/window.py:189 ../src/controlpanel/toolbar.py:61
 msgid "Done"
 msgstr "完了"
 
-#: ../src/intro/intro.py:165
+#: ../src/intro/window.py:192
 msgid "Next"
 msgstr "進む"
 
-#: ../src/view/BuddyMenu.py:58
+#: ../src/view/BuddyMenu.py:60
 msgid "Remove friend"
 msgstr "お友だちの登録削除"
 
-#: ../src/view/BuddyMenu.py:61
+#: ../src/view/BuddyMenu.py:63
 msgid "Make friend"
 msgstr "お友だちを登録"
 
-#: ../src/view/BuddyMenu.py:91
+#: ../src/view/BuddyMenu.py:92
 #, python-format
 msgid "Invite to %s"
 msgstr "%s に招待する"
 
-#: ../src/view/clipboardmenu.py:48
+#: ../src/view/clipboardmenu.py:50
 msgid "Remove"
 msgstr "削除"
 
-#: ../src/view/clipboardmenu.py:53 ../src/view/clipboardmenu.py:79
+#: ../src/view/clipboardmenu.py:55 ../src/view/clipboardmenu.py:77
 msgid "Open"
 msgstr "開く"
 
@@ -60,22 +60,18 @@ msgstr "開く"
 # TODO: Implement stopping downloads
 # self._stop_item.connect('activate', self._stop_item_activate_cb)
 # self.append_menu_item(self._stop_item)
-#. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
-#. TODO: Implement stopping downloads
-#. self._stop_item.connect('activate', self._stop_item_activate_cb)
-#. self.append_menu_item(self._stop_item)
-#: ../src/view/clipboardmenu.py:63 ../src/view/home/HomeBox.py:87
+#: ../src/view/clipboardmenu.py:60 ../src/view/home/HomeBox.py:87
 msgid "Keep"
 msgstr "ジャーナルに保存"
 
-#: ../src/view/clipboardmenu.py:84
+#: ../src/view/clipboardmenu.py:82
 msgid "Open with"
 msgstr "次のもので開く："
 
-#: ../src/view/clipboardmenu.py:216
+#: ../src/view/clipboardmenu.py:227
 #, python-format
-msgid "Clipboard object: %s."
-msgstr "クリップボードのオブジェクト: %s."
+msgid "%s clipping"
+msgstr ""
 
 #: ../src/hardware/keydialog.py:150
 msgid "Key Type:"
@@ -101,7 +97,7 @@ msgstr "サーバーに接続できません"
 msgid "The server could not complete the request."
 msgstr "サーバーは要求の処理を完了できませんでした"
 
-#: ../src/view/Shell.py:239
+#: ../src/view/Shell.py:251
 msgid "Screenshot"
 msgstr "スクリーンショット"
 
@@ -115,6 +111,7 @@ msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "消去の確認： %s を完全に消去しますか？"
 
 #: ../src/view/home/HomeBox.py:90 ../src/view/palettes.py:120
+#: ../src/journal/journaltoolbox.py:335 ../src/journal/palettes.py:75
 msgid "Erase"
 msgstr "消去する"
 
@@ -130,7 +127,7 @@ msgstr "新しいソフトウェアとの互換性を保つため、アクティ
 msgid "Cancel"
 msgstr "中止"
 
-#: ../src/view/home/HomeBox.py:127 ../src/controlpanel/gui.py:275
+#: ../src/view/home/HomeBox.py:127 ../src/controlpanel/gui.py:286
 msgid "Later"
 msgstr "あとで"
 
@@ -146,23 +143,23 @@ msgstr "リスト表示"
 msgid "<Ctrl>2"
 msgstr "<Ctrl>2"
 
-#: ../src/view/home/HomeBox.py:324
+#: ../src/view/home/HomeBox.py:325
 msgid "Favorites view"
 msgstr "お気に入り"
 
-#: ../src/view/home/HomeBox.py:325
+#: ../src/view/home/HomeBox.py:326
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
 # TRANS: label for the freeform layout in the favorites view
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/view/home/HomeBox.py:333
+#: ../src/view/home/HomeBox.py:334
 msgid "Freeform"
 msgstr "自由に並べる"
 
 # TRANS: label for the ring layout in the favorites view
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/view/home/HomeBox.py:340
+#: ../src/view/home/HomeBox.py:341
 msgid "Ring"
 msgstr "円に並べる"
 
@@ -210,11 +207,13 @@ msgstr "メッシュネットワーク"
 msgid "Disconnect..."
 msgstr "切断..."
 
+#. TRANS: Action label for resuming an activity.
 #: ../src/view/home/MeshBox.py:302 ../src/view/palettes.py:61
+#: ../src/journal/journaltoolbox.py:399 ../src/journal/palettes.py:57
 msgid "Resume"
 msgstr "再開"
 
-#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:205
+#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:206
 msgid "Join"
 msgstr "参加"
 
@@ -292,7 +291,9 @@ msgstr "sugar-control-panel: key=%s は有効なオプションではありま�
 msgid "sugar-control-panel: %s"
 msgstr "sugar-control-panel: %s"
 
-#: ../src/controlpanel/cmd.py:33
+#. TRANS: Translators, there's a empty line at the end of this string,
+#. which must appear in the translated string (msgstr) as well.
+#: ../src/controlpanel/cmd.py:35
 msgid ""
 "Usage: sugar-control-panel [ option ] key [ args ... ] \n"
 "    Control for the sugar environment. \n"
@@ -316,7 +317,7 @@ msgstr ""
 "-c key このキーの設定を消去\n"
 "   "
 
-#: ../src/controlpanel/cmd.py:46
+#: ../src/controlpanel/cmd.py:48
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "変更を適用するにはsugarを再起動しなければいけません。\n"
 
@@ -324,19 +325,19 @@ msgstr "変更を適用するにはsugarを再起動しなければいけませ�
 msgid "Ok"
 msgstr "了解"
 
-#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:267
+#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:278
 msgid "Changes require restart"
 msgstr "変更には再起動が必要です"
 
-#: ../src/controlpanel/gui.py:266
+#: ../src/controlpanel/gui.py:277
 msgid "Warning"
 msgstr "注意"
 
-#: ../src/controlpanel/gui.py:270
+#: ../src/controlpanel/gui.py:281
 msgid "Cancel changes"
 msgstr "変更を取りやめる"
 
-#: ../src/controlpanel/gui.py:279
+#: ../src/controlpanel/gui.py:290
 msgid "Restart now"
 msgstr "今すぐ再起動"
 
@@ -376,7 +377,7 @@ msgstr "色の指定でエラー"
 msgid "Not available"
 msgstr "不明です"
 
-#: ../src/controlpanel/model/datetime.py:85
+#: ../src/controlpanel/model/datetime.py:89
 msgid "Error timezone does not exist."
 msgstr "エラー：そのタイムゾーンは存在しません。"
 
@@ -388,25 +389,21 @@ msgstr "値は整数でなくてはなりません"
 msgid "Could not access ~/.i18n. Create standard settings."
 msgstr "~/.i18nにアクセスできませんでした。標準設定を作ってください。"
 
-#: ../src/controlpanel/model/language.py:104
+#: ../src/controlpanel/model/language.py:114
 #, python-format
 msgid "Language for code=%s could not be determined."
 msgstr "コード%sの言語が不明です。"
 
-#: ../src/controlpanel/model/language.py:121
+#: ../src/controlpanel/model/language.py:131
 #, python-format
 msgid "Sorry I do not speak '%s'."
 msgstr "ごめんなさい。'%s'は話せません。"
 
-#: ../src/controlpanel/model/network.py:48
-msgid "You must enter a server."
-msgstr "サーバーの指定が必要です"
-
-#: ../src/controlpanel/model/network.py:63
+#: ../src/controlpanel/model/network.py:62
 msgid "State is unknown."
 msgstr "状態が不明です"
 
-#: ../src/controlpanel/model/network.py:83
+#: ../src/controlpanel/model/network.py:82
 msgid "Error in specified radio argument use on/off."
 msgstr "radio引数指定でエラー、on/offを使ってください。"
 
@@ -426,29 +423,58 @@ msgstr "私について"
 msgid "Click to change your color:"
 msgstr "クリックして色を変更:"
 
-#: ../src/controlpanel/view/aboutxo.py:26
+#: ../src/controlpanel/view/aboutxo.py:28
 msgid "About my XO"
 msgstr "私のXOについて"
 
-#: ../src/controlpanel/view/aboutxo.py:47
+#: ../src/controlpanel/view/aboutxo.py:59
 msgid "Identity"
 msgstr "個体の識別"
 
-#: ../src/controlpanel/view/aboutxo.py:56
+#: ../src/controlpanel/view/aboutxo.py:68
 msgid "Serial Number:"
 msgstr "シリアル番号:"
 
-#: ../src/controlpanel/view/aboutxo.py:79
+#: ../src/controlpanel/view/aboutxo.py:91
 msgid "Software"
 msgstr "ソフトウェア"
 
-#: ../src/controlpanel/view/aboutxo.py:88
+#: ../src/controlpanel/view/aboutxo.py:100
 msgid "Build:"
 msgstr "ビルド:"
 
-#: ../src/controlpanel/view/aboutxo.py:103
+#: ../src/controlpanel/view/aboutxo.py:115
+msgid "Sugar:"
+msgstr "Sugar:"
+
+#: ../src/controlpanel/view/aboutxo.py:130
 msgid "Firmware:"
 msgstr "ファームウェア:"
+
+#: ../src/controlpanel/view/aboutxo.py:152
+msgid "Copyright and License"
+msgstr "著作権とライセンス"
+
+#: ../src/controlpanel/view/aboutxo.py:160
+msgid ""
+"© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+msgstr ""
+"(C) 2008 One Laptop per Child Association Inc; Red Hat Inc; and "
+"Contributors."
+
+#: ../src/controlpanel/view/aboutxo.py:167
+msgid ""
+"Sugar is the graphical user interface that you are looking at. Sugar is free "
+"software, covered by the GNU General Public License, and you are welcome to "
+"change it and/or distribute copies of it under certain conditions described "
+"therein."
+msgstr ""
+"Sugarは、あなたが見ているグラフィカルユーザインターフェースです。Sugarはフリーソフトウェアで、GNU General Public Licen"
+"se（一般公衆利用許諾契約書）による保護対象です。ここに記載されている条件の範囲で、Sugarを変更したりコピーを配布することが自由に行えます。"
+
+#: ../src/controlpanel/view/aboutxo.py:179
+msgid "Full license:"
+msgstr "ライセンス全文:"
 
 #: ../src/controlpanel/view/datetime.py:29
 msgid "Date & Time"
@@ -496,19 +522,31 @@ msgstr "言語"
 msgid "Network"
 msgstr "ネットワーク"
 
-#: ../src/controlpanel/view/network.py:53
+#: ../src/controlpanel/view/network.py:54
 msgid "Wireless"
 msgstr "無線"
 
-#: ../src/controlpanel/view/network.py:61
-msgid "Radio:"
-msgstr "電波:"
+#: ../src/controlpanel/view/network.py:62
+msgid "Turn of the wireless radio to save battery life"
+msgstr "電池を節約するため、無線を止める"
 
-#: ../src/controlpanel/view/network.py:94
+#: ../src/controlpanel/view/network.py:75
+msgid "Radio"
+msgstr "電波"
+
+#: ../src/controlpanel/view/network.py:91
+msgid "Discard network history if you have trouble connecting to the network"
+msgstr "ネットワーク接続で問題がある場合、接続履歴を破棄します"
+
+#: ../src/controlpanel/view/network.py:100
+msgid "Discard network history"
+msgstr "ネットワーク接続履歴を破棄"
+
+#: ../src/controlpanel/view/network.py:113
 msgid "Mesh"
 msgstr "メッシュ"
 
-#: ../src/controlpanel/view/network.py:103
+#: ../src/controlpanel/view/network.py:122
 msgid "Server:"
 msgstr "サーバー:"
 
@@ -557,7 +595,7 @@ msgstr "シンプルメッシュを開始しています"
 msgid "Unknown Mesh"
 msgstr "不明なメッシュ"
 
-#: ../src/view/frame/activitiestray.py:210
+#: ../src/view/frame/activitiestray.py:211
 msgid "Decline"
 msgstr "断る"
 
@@ -578,19 +616,19 @@ msgstr "登録成功"
 msgid "You are now registered with your school server."
 msgstr "あなたはスクールサーバーに登録されました"
 
-#: ../src/view/home/favoritesview.py:407
-msgid "Control Panel"
-msgstr "コントロールパネル"
+#: ../src/view/home/favoritesview.py:411
+msgid "Settings"
+msgstr ""
 
-#: ../src/view/home/favoritesview.py:418
+#: ../src/view/home/favoritesview.py:416
 msgid "Restart"
 msgstr "再起動"
 
-#: ../src/view/home/favoritesview.py:423
+#: ../src/view/home/favoritesview.py:421
 msgid "Shutdown"
 msgstr "シャットダウン"
 
-#: ../src/view/home/favoritesview.py:429
+#: ../src/view/home/favoritesview.py:427
 msgid "Register"
 msgstr "登録"
 
@@ -602,26 +640,152 @@ msgstr "起動中..."
 msgid "Stop"
 msgstr "停止"
 
-#: ../src/view/palettes.py:104
+#. TRANS: Action label for starting an entry.
+#: ../src/view/palettes.py:104 ../src/journal/journaltoolbox.py:402
+#: ../src/journal/palettes.py:59
 msgid "Start"
 msgstr "開始"
 
-#: ../src/view/palettes.py:132
+#: ../src/view/palettes.py:138
 msgid "Remove favorite"
 msgstr "お気に入りから削除"
 
-#: ../src/view/palettes.py:136
+#: ../src/view/palettes.py:142
 msgid "Make favorite"
 msgstr "お気に入りに登録"
 
-#: ../src/view/palettes.py:185
+#: ../src/view/palettes.py:191
 msgid "Show contents"
 msgstr "内容を表示"
 
-#: ../src/view/palettes.py:209
+#: ../src/view/palettes.py:215
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB 空き"
+
+#: ../src/journal/journaltoolbox.py:62
+msgid "Search"
+msgstr "検索"
+
+#: ../src/journal/journaltoolbox.py:119
+msgid "Anytime"
+msgstr "すべての期間"
+
+#: ../src/journal/journaltoolbox.py:121
+msgid "Today"
+msgstr "今日"
+
+#: ../src/journal/journaltoolbox.py:123
+msgid "Since yesterday"
+msgstr "昨日から後"
+
+#. TRANS: Filter entries modified during the last 7 days.
+#: ../src/journal/journaltoolbox.py:125
+msgid "Past week"
+msgstr "過去１週間"
+
+#. TRANS: Filter entries modified during the last 30 days.
+#: ../src/journal/journaltoolbox.py:127
+msgid "Past month"
+msgstr "過去１ヶ月"
+
+#. TRANS: Filter entries modified during the last 356 days.
+#: ../src/journal/journaltoolbox.py:129
+msgid "Past year"
+msgstr "過去１年"
+
+#: ../src/journal/journaltoolbox.py:136
+msgid "Anyone"
+msgstr "誰でも"
+
+#: ../src/journal/journaltoolbox.py:138
+msgid "My friends"
+msgstr "私の友だち"
+
+#: ../src/journal/journaltoolbox.py:139
+msgid "My class"
+msgstr "私のクラス"
+
+#. TRANS: Item in a combo box that filters by entry type.
+#: ../src/journal/journaltoolbox.py:255
+msgid "Anything"
+msgstr "すべての種類"
+
+#. TODO: Add "Start with" menu item
+#: ../src/journal/journaltoolbox.py:325 ../src/journal/palettes.py:67
+msgid "Copy"
+msgstr "コピー"
+
+#: ../src/journal/collapsedentry.py:248 ../src/journal/expandedentry.py:176
+#: ../src/journal/palettes.py:51
+msgid "Untitled"
+msgstr "タイトル無し"
+
+#: ../src/journal/journalactivity.py:119 ../src/journal/volumesmanager.py:57
+msgid "Journal"
+msgstr "ジャーナル"
+
+#: ../src/journal/expandedentry.py:222
+msgid "No preview"
+msgstr "プレビュー無し"
+
+#: ../src/journal/expandedentry.py:241
+msgid "Participants:"
+msgstr "参加者:"
+
+#: ../src/journal/expandedentry.py:266
+msgid "Description:"
+msgstr "説明:"
+
+#: ../src/journal/expandedentry.py:292
+msgid "Tags:"
+msgstr "タグ:"
+
+#: ../src/journal/objectchooser.py:134
+msgid "Choose an object"
+msgstr "オブジェクトを選ぶ"
+
+#: ../src/journal/objectchooser.py:139
+msgid "Close"
+msgstr "閉じる"
+
+#: ../src/journal/volumestoolbar.py:93
+msgid "Unmount"
+msgstr "取りはずす"
+
+#: ../src/journal/misc.py:93
+msgid "No date"
+msgstr "日付無し"
+
+#: ../src/journal/listview.py:39
+msgid "Your Journal is empty"
+msgstr "ジャーナルが空です"
+
+#: ../src/journal/listview.py:40
+msgid "No matching entries "
+msgstr "あてはまるものが無いです"
+
+#: ../src/journal/modalalert.py:59
+msgid "Your Journal is full"
+msgstr "ジャーナルが満杯です"
+
+#: ../src/journal/modalalert.py:63
+msgid "Please delete some old Journal entries to make space for new ones."
+msgstr "新しいものが入るよう、ジャーナルの中身の古いものをどれか削除してください"
+
+#: ../src/journal/modalalert.py:75
+msgid "Show Journal"
+msgstr "ジャーナルを表示"
+
+#, python-format
+#~ msgid "Clipboard object: %s."
+#~ msgstr "クリップボードのオブジェクト: %s."
+
+#~ msgid "You must enter a server."
+#~ msgstr "サーバーの指定が必要です"
+
+#~ msgid "Control Panel"
+#~ msgstr "コントロールパネル"
 
 #, fuzzy
 #~ msgid "off"
@@ -689,10 +853,6 @@ msgstr "%(free_space)d MB 空き"
 #, fuzzy
 #~ msgid "Redo"
 #~ msgstr "やり直す"
-
-#, fuzzy
-#~ msgid "Copy"
-#~ msgstr "コピー"
 
 #, fuzzy
 #~ msgid "Paste"
