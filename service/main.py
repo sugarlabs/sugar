@@ -23,7 +23,6 @@ import dbus.glib
 from sugar import logger
 
 import activityregistryservice
-import clipboardservice
 
 def main():
     logger.start('shellservice')
@@ -32,7 +31,6 @@ def main():
     gobject.threads_init()
     dbus.glib.threads_init()
     
-    clipboardservice.get_instance()
     activityregistryservice.get_instance()
     
     loop = gobject.MainLoop()
