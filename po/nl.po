@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-01 18:31-0400\n"
-"PO-Revision-Date: 2008-09-02 15:09-0400\n"
+"POT-Creation-Date: 2008-09-18 13:20-0400\n"
+"PO-Revision-Date: 2008-09-23 02:42-0400\n"
 "Last-Translator: Myckel Habets <myckel@sdf.lonestar.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr "Naam:"
 msgid "Click to change color:"
 msgstr "Klik om de kleur te veranderen:"
 
-#: ../src/intro/window.py:175
+#: ../src/intro/window.py:175 ../src/journal/detailview.py:119
 msgid "Back"
 msgstr "Terug"
 
@@ -35,24 +35,24 @@ msgstr "Klaar"
 msgid "Next"
 msgstr "Volgende"
 
-#: ../src/view/BuddyMenu.py:58
+#: ../src/view/BuddyMenu.py:60
 msgid "Remove friend"
 msgstr "Verwijder vriend"
 
-#: ../src/view/BuddyMenu.py:61
+#: ../src/view/BuddyMenu.py:63
 msgid "Make friend"
 msgstr "Maak vriend"
 
-#: ../src/view/BuddyMenu.py:90
+#: ../src/view/BuddyMenu.py:92
 #, python-format
 msgid "Invite to %s"
 msgstr "Nodig uit voor %s"
 
-#: ../src/view/clipboardmenu.py:48
+#: ../src/view/clipboardmenu.py:50
 msgid "Remove"
 msgstr "Verwijderen"
 
-#: ../src/view/clipboardmenu.py:53 ../src/view/clipboardmenu.py:79
+#: ../src/view/clipboardmenu.py:55 ../src/view/clipboardmenu.py:77
 msgid "Open"
 msgstr "Openen"
 
@@ -61,22 +61,18 @@ msgstr "Openen"
 # TODO: Implement stopping downloads
 # self._stop_item.connect('activate', self._stop_item_activate_cb)
 # self.append_menu_item(self._stop_item)
-#. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
-#. TODO: Implement stopping downloads
-#. self._stop_item.connect('activate', self._stop_item_activate_cb)
-#. self.append_menu_item(self._stop_item)
-#: ../src/view/clipboardmenu.py:63 ../src/view/home/HomeBox.py:87
+#: ../src/view/clipboardmenu.py:60 ../src/view/home/HomeBox.py:87
 msgid "Keep"
 msgstr "Bewaar"
 
-#: ../src/view/clipboardmenu.py:84
+#: ../src/view/clipboardmenu.py:82
 msgid "Open with"
 msgstr "Openen met"
 
-#: ../src/view/clipboardmenu.py:216
+#: ../src/view/clipboardmenu.py:227
 #, python-format
-msgid "Clipboard object: %s."
-msgstr "Klembord object: %s."
+msgid "%s clipping"
+msgstr "%s in klembord zetten"
 
 #: ../src/hardware/keydialog.py:150
 msgid "Key Type:"
@@ -103,7 +99,7 @@ msgstr "Kan niet met de server verbinden."
 msgid "The server could not complete the request."
 msgstr "De server kon de aanvraag niet voltooien."
 
-#: ../src/view/Shell.py:261
+#: ../src/view/Shell.py:251
 msgid "Screenshot"
 msgstr "Schermafdruk"
 
@@ -117,6 +113,7 @@ msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "Bevestig wissen: Wilt u permanent %s wissen?"
 
 #: ../src/view/home/HomeBox.py:90 ../src/view/palettes.py:120
+#: ../src/journal/journaltoolbox.py:335 ../src/journal/palettes.py:75
 msgid "Erase"
 msgstr "Wissen"
 
@@ -134,7 +131,7 @@ msgstr ""
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: ../src/view/home/HomeBox.py:127 ../src/controlpanel/gui.py:276
+#: ../src/view/home/HomeBox.py:127 ../src/controlpanel/gui.py:286
 msgid "Later"
 msgstr "Later"
 
@@ -202,11 +199,13 @@ msgstr "Mesh netwerk"
 msgid "Disconnect..."
 msgstr "Verbinding verbreken..."
 
+#. TRANS: Action label for resuming an activity.
 #: ../src/view/home/MeshBox.py:302 ../src/view/palettes.py:61
+#: ../src/journal/journaltoolbox.py:399 ../src/journal/palettes.py:57
 msgid "Resume"
 msgstr "Hervatten"
 
-#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:205
+#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:206
 msgid "Join"
 msgstr "Bijvoegen"
 
@@ -320,19 +319,19 @@ msgstr "Om uw veranderingen toe te passen moet u sugar herstarten.\r\n"
 msgid "Ok"
 msgstr "Ok"
 
-#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:268
+#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:278
 msgid "Changes require restart"
 msgstr "Verandering vereist een herstart"
 
-#: ../src/controlpanel/gui.py:267
+#: ../src/controlpanel/gui.py:277
 msgid "Warning"
 msgstr "Waarschuwing"
 
-#: ../src/controlpanel/gui.py:271
+#: ../src/controlpanel/gui.py:281
 msgid "Cancel changes"
 msgstr "Veranderingen annuleren"
 
-#: ../src/controlpanel/gui.py:280
+#: ../src/controlpanel/gui.py:290
 msgid "Restart now"
 msgstr "Herstart nu"
 
@@ -372,7 +371,7 @@ msgstr "Fout in opgegeven kleuren."
 msgid "Not available"
 msgstr "Niet beschikbaar"
 
-#: ../src/controlpanel/model/datetime.py:85
+#: ../src/controlpanel/model/datetime.py:89
 msgid "Error timezone does not exist."
 msgstr "Fout tijdzone bestaat niet."
 
@@ -384,25 +383,21 @@ msgstr "Waarde moet een geheel getal zijn."
 msgid "Could not access ~/.i18n. Create standard settings."
 msgstr "Kon niet bij ~/.i18n komen. Standaard instellingen aanmaken."
 
-#: ../src/controlpanel/model/language.py:110
+#: ../src/controlpanel/model/language.py:114
 #, python-format
 msgid "Language for code=%s could not be determined."
 msgstr "Taal voor code=%s kon niet bepaald worden."
 
-#: ../src/controlpanel/model/language.py:127
+#: ../src/controlpanel/model/language.py:131
 #, python-format
 msgid "Sorry I do not speak '%s'."
 msgstr "Sorry, I spreek geen '%s'."
 
-#: ../src/controlpanel/model/network.py:48
-msgid "You must enter a server."
-msgstr "U moet een server opgeven."
-
-#: ../src/controlpanel/model/network.py:63
+#: ../src/controlpanel/model/network.py:62
 msgid "State is unknown."
 msgstr "Status is onbekend."
 
-#: ../src/controlpanel/model/network.py:83
+#: ../src/controlpanel/model/network.py:82
 msgid "Error in specified radio argument use on/off."
 msgstr "Fout in opgegeven keuze argument gebruik aan/uit."
 
@@ -461,7 +456,7 @@ msgstr ""
 "© 2008 One Laptop per Child Association Inc; Red Hat Inc; en anderen die "
 "bijgedragen hebben."
 
-#: ../src/controlpanel/view/aboutxo.py:166
+#: ../src/controlpanel/view/aboutxo.py:167
 msgid ""
 "Sugar is the graphical user interface that you are looking at. Sugar is free "
 "software, covered by the GNU General Public License, and you are welcome to "
@@ -473,7 +468,7 @@ msgstr ""
 "u mag het aanpassen en/of kopieën distribueren onder de condities vermeld "
 "in de licentie."
 
-#: ../src/controlpanel/view/aboutxo.py:178
+#: ../src/controlpanel/view/aboutxo.py:179
 msgid "Full license:"
 msgstr "Volledige licentie:"
 
@@ -523,19 +518,33 @@ msgstr "Taal"
 msgid "Network"
 msgstr "Netwerk"
 
-#: ../src/controlpanel/view/network.py:53
+#: ../src/controlpanel/view/network.py:54
 msgid "Wireless"
 msgstr "Draadloos"
 
-#: ../src/controlpanel/view/network.py:61
-msgid "Radio:"
+#: ../src/controlpanel/view/network.py:62
+msgid "Turn of the wireless radio to save battery life"
+msgstr "Draadloze zender uitzetten om de batterij te besparen"
+
+#: ../src/controlpanel/view/network.py:75
+msgid "Radio"
 msgstr "Radio:"
 
-#: ../src/controlpanel/view/network.py:94
+#: ../src/controlpanel/view/network.py:91
+msgid "Discard network history if you have trouble connecting to the network"
+msgstr ""
+"Gooi de netwerkgeschiedenis weg als je problemen hebt om met het netwerk te "
+"verbinden"
+
+#: ../src/controlpanel/view/network.py:100
+msgid "Discard network history"
+msgstr "Netwerkgeschiedenis weggooien"
+
+#: ../src/controlpanel/view/network.py:113
 msgid "Mesh"
 msgstr "Mesh"
 
-#: ../src/controlpanel/view/network.py:103
+#: ../src/controlpanel/view/network.py:122
 msgid "Server:"
 msgstr "Server:"
 
@@ -586,7 +595,7 @@ msgstr "Start een Eenvoudige Mesh"
 msgid "Unknown Mesh"
 msgstr "Onbekende Mesh"
 
-#: ../src/view/frame/activitiestray.py:210
+#: ../src/view/frame/activitiestray.py:211
 msgid "Decline"
 msgstr "Weigeren"
 
@@ -607,19 +616,19 @@ msgstr "Registratie succesvol uitgevoerd"
 msgid "You are now registered with your school server."
 msgstr "Je bent nu geregistreerd bij je schoolserver."
 
-#: ../src/view/home/favoritesview.py:407
-msgid "Control Panel"
-msgstr "Configuratiepaneel"
+#: ../src/view/home/favoritesview.py:411
+msgid "Settings"
+msgstr "Instellingen"
 
-#: ../src/view/home/favoritesview.py:418
+#: ../src/view/home/favoritesview.py:416
 msgid "Restart"
 msgstr "Herstarten"
 
-#: ../src/view/home/favoritesview.py:423
+#: ../src/view/home/favoritesview.py:421
 msgid "Shutdown"
 msgstr "Afsluiten"
 
-#: ../src/view/home/favoritesview.py:429
+#: ../src/view/home/favoritesview.py:427
 msgid "Register"
 msgstr "Registreren"
 
@@ -631,26 +640,152 @@ msgstr "Beginnen..."
 msgid "Stop"
 msgstr "Stop"
 
-#: ../src/view/palettes.py:104
+#. TRANS: Action label for starting an entry.
+#: ../src/view/palettes.py:104 ../src/journal/journaltoolbox.py:402
+#: ../src/journal/palettes.py:59
 msgid "Start"
 msgstr "Start"
 
-#: ../src/view/palettes.py:132
+#: ../src/view/palettes.py:138
 msgid "Remove favorite"
 msgstr "Verwijder favoriet"
 
-#: ../src/view/palettes.py:136
+#: ../src/view/palettes.py:142
 msgid "Make favorite"
 msgstr "Maak favoriet"
 
-#: ../src/view/palettes.py:185
+#: ../src/view/palettes.py:191
 msgid "Show contents"
 msgstr "Inhoud weergeven"
 
-#: ../src/view/palettes.py:209
+#: ../src/view/palettes.py:215
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB vrij"
+
+#: ../src/journal/journaltoolbox.py:62
+msgid "Search"
+msgstr "Zoeken"
+
+#: ../src/journal/journaltoolbox.py:119
+msgid "Anytime"
+msgstr "Willekeurig tijdstip"
+
+#: ../src/journal/journaltoolbox.py:121
+msgid "Today"
+msgstr "Vandaag"
+
+#: ../src/journal/journaltoolbox.py:123
+msgid "Since yesterday"
+msgstr "Sinds gisteren"
+
+#. TRANS: Filter entries modified during the last 7 days.
+#: ../src/journal/journaltoolbox.py:125
+msgid "Past week"
+msgstr "Afgelopen week"
+
+#. TRANS: Filter entries modified during the last 30 days.
+#: ../src/journal/journaltoolbox.py:127
+msgid "Past month"
+msgstr "Afgelopen maand"
+
+#. TRANS: Filter entries modified during the last 356 days.
+#: ../src/journal/journaltoolbox.py:129
+msgid "Past year"
+msgstr "Afgelopen jaar"
+
+#: ../src/journal/journaltoolbox.py:136
+msgid "Anyone"
+msgstr "Iedereen"
+
+#: ../src/journal/journaltoolbox.py:138
+msgid "My friends"
+msgstr "Mijn vrienden"
+
+#: ../src/journal/journaltoolbox.py:139
+msgid "My class"
+msgstr "Mijn klas"
+
+#. TRANS: Item in a combo box that filters by entry type.
+#: ../src/journal/journaltoolbox.py:255
+msgid "Anything"
+msgstr "Alles"
+
+#. TODO: Add "Start with" menu item
+#: ../src/journal/journaltoolbox.py:325 ../src/journal/palettes.py:67
+msgid "Copy"
+msgstr "Kopieer"
+
+#: ../src/journal/collapsedentry.py:248 ../src/journal/expandedentry.py:176
+#: ../src/journal/palettes.py:51
+msgid "Untitled"
+msgstr "Naamloos"
+
+#: ../src/journal/journalactivity.py:119 ../src/journal/volumesmanager.py:57
+msgid "Journal"
+msgstr "Dagboek"
+
+#: ../src/journal/expandedentry.py:222
+msgid "No preview"
+msgstr "Geen voorbeeld"
+
+#: ../src/journal/expandedentry.py:241
+msgid "Participants:"
+msgstr "Deelnemers:"
+
+#: ../src/journal/expandedentry.py:266
+msgid "Description:"
+msgstr "Omschrijving:"
+
+#: ../src/journal/expandedentry.py:292
+msgid "Tags:"
+msgstr "Labels:"
+
+#: ../src/journal/objectchooser.py:134
+msgid "Choose an object"
+msgstr "Kies een object"
+
+#: ../src/journal/objectchooser.py:139
+msgid "Close"
+msgstr "Sluiten"
+
+#: ../src/journal/volumestoolbar.py:93
+msgid "Unmount"
+msgstr "Loskoppelen"
+
+#: ../src/journal/misc.py:93
+msgid "No date"
+msgstr "Geen datum"
+
+#: ../src/journal/listview.py:39
+msgid "Your Journal is empty"
+msgstr "Je dagboek is leeg"
+
+#: ../src/journal/listview.py:40
+msgid "No matching entries "
+msgstr "Geen overeenkomende ingangen "
+
+#: ../src/journal/modalalert.py:59
+msgid "Your Journal is full"
+msgstr "Je dagboek is vol"
+
+#: ../src/journal/modalalert.py:63
+msgid "Please delete some old Journal entries to make space for new ones."
+msgstr "Verwijder a.u.b. oude dagboekingangen om ruimte te maken voor nieuwe."
+
+#: ../src/journal/modalalert.py:75
+msgid "Show Journal"
+msgstr "Dagboek weergeven"
+
+#, python-format
+#~ msgid "Clipboard object: %s."
+#~ msgstr "Klembord object: %s."
+
+#~ msgid "You must enter a server."
+#~ msgstr "U moet een server opgeven."
+
+#~ msgid "Control Panel"
+#~ msgstr "Configuratiepaneel"
 
 #~ msgid "<Ctrl>R"
 #~ msgstr "<Ctrl>R"
@@ -672,9 +807,6 @@ msgstr "%(free_space)d MB vrij"
 
 #~ msgid "Redo"
 #~ msgstr "Doe opnieuw"
-
-#~ msgid "Copy"
-#~ msgstr "Kopieer"
 
 #~ msgid "Paste"
 #~ msgstr "Plak"
