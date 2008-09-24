@@ -23,10 +23,6 @@ from sugar.graphics import style
 from controlpanel.sectionview import SectionView
 from controlpanel.inlinealert import InlineAlert
 
-CLASS = 'Frame'
-ICON = 'module-frame'
-TITLE = _('Frame')
-
 _never =  _('never')
 _instantaneous = _('instantaneous')
 _seconds_label = _('%s seconds')

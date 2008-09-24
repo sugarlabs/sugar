@@ -1,4 +1,4 @@
-SUBDIRS = model view
+SUBDIRS = aboutme aboutxo datetime frame language network power
 
 sugardir = $(pkgdatadir)/shell/controlpanel
 sugar_PYTHON = 				\

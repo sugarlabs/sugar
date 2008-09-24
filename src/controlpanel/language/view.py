@@ -24,10 +24,6 @@ from sugar.graphics import iconentry
 from controlpanel.sectionview import SectionView
 from controlpanel.inlinealert import InlineAlert
 
-CLASS = 'Language'
-ICON = 'module-language'
-TITLE = _('Language')
-
 class Language(SectionView):
     def __init__(self, model, alerts):
         SectionView.__init__(self)

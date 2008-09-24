@@ -22,10 +22,6 @@ from sugar.graphics import style
 from controlpanel.sectionview import SectionView
 from controlpanel.inlinealert import InlineAlert
 
-CLASS = 'Power'
-ICON = 'module-power'
-TITLE = _('Power')
-
 class Power(SectionView):
     def __init__(self, model, alerts):
         SectionView.__init__(self)

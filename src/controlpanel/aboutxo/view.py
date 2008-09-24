@@ -23,10 +23,6 @@ from sugar.graphics import style
 
 from controlpanel.sectionview import SectionView
 
-CLASS = 'AboutXO'
-ICON = 'module-about_my_xo'
-TITLE = _('About my XO')
-
 class AboutXO(SectionView):
     def __init__(self, model, alerts=None):
         SectionView.__init__(self)

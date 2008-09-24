@@ -194,10 +194,18 @@ class ControlPanel(gtk.Window):
         self._section_toolbar.show()
 
         self._current_option = option
-        view_class =  self._options[option]['view']
-        model = self._options[option]['model']
+
+        mod = __import__('.'.join(('controlpanel', option, 'view')), 
+                         globals(), locals(), ['view']) 
+        view_class = getattr(mod, self._options[option]['view'], None)
+
+        mod = __import__('.'.join(('controlpanel', option, 'model')), 
+                         globals(), locals(), ['model'])
+        model = ModelWrapper(mod)        
+
         self._section_view = view_class(model, 
-                                         self._options[option]['alerts'])
+                                        self._options[option]['alerts'])
+
         self._set_canvas(self._section_view)        
         self._section_view.show()
         self._section_view.connect('notify::is-valid', 
@@ -213,55 +221,34 @@ class ControlPanel(gtk.Window):
         self._section_view.auto_close = True
     
     def _get_options(self):    
-        '''Get the available option information from the subfolders 
-        model and view.
+        '''Get the available option information from the extensions
         '''
         options = {}
 
-        subpath = ['controlpanel', 'view']
-        names = os.listdir(os.path.join(config.shell_path, '/'.join(subpath))) 
+        path = os.path.join(config.shell_path, 'controlpanel')
+        folder = os.listdir(path)
 
-        for name in names:
-            if name.endswith('.py') and name != '__init__.py':
-                tmp = os.path.splitext(name)[0]
-                mod = __import__('.'.join(subpath) + '.' + tmp, globals(), 
-                                 locals(), [tmp]) 
-                view_class_str = getattr(mod, 'CLASS', None)
-                if view_class_str:
-                    view_class = getattr(mod, view_class_str, None)
-                    if not view_class:
-                        _logger.error('The CLASS constant \'%s\' does not ' \
-                                          'match a class name.' % view_class)
-                    else:
-                        options[tmp] = {}
-                        options[tmp]['alerts'] = []
-                        options[tmp]['view'] = view_class
-                        options[tmp]['icon'] = getattr(mod, 'ICON', tmp)
-                        options[tmp]['title'] = getattr(mod, 'TITLE', 
-                                                              tmp)
-                        options[tmp]['color'] = getattr(mod, 'COLOR', 
-                                                              None)
+        for item in folder:
+            if os.path.isdir(os.path.join(path, item)) and \
+                    os.path.exists(os.path.join(path, item, '__init__.py')):
+                mod = __import__('.'.join(('controlpanel', item)), 
+                                 globals(), locals(), [item])
+                view_class = getattr(mod, 'CLASS', None)
+                if view_class is not None: 
+                    options[item] = {}
+                    options[item]['alerts'] = []
+                    options[item]['view'] = view_class
+                    options[item]['icon'] = getattr(mod, 'ICON', item)
+                    options[item]['title'] = getattr(mod, 'TITLE', item)
+                    options[item]['color'] = getattr(mod, 'COLOR', None)
+                    keywords = getattr(mod, 'KEYWORDS', [])
+                    keywords.append(options[item]['title'].lower())
+                    if item not in keywords:
+                        keywords.append(item)
                 else:    
                     _logger.error('There is no CLASS constant specified in ' \
-                                      'the view file \'%s\'.' % tmp)
-
-        subpath = ['controlpanel', 'model']
-        names = os.listdir(os.path.join(config.shell_path, '/'.join(subpath)))
-     
-        for name in names:
-            if name.endswith('.py') and name != '__init__.py':
-                tmp = os.path.splitext(name)[0]
-                if tmp in options:
-                    mod = __import__('.'.join(subpath) + '.' + tmp, 
-                                     globals(), locals(), [tmp])            
-                    keywords = getattr(mod, 'KEYWORDS', [])
-                    keywords.append(options[tmp]['title'].lower())
-                    if tmp not in keywords:
-                        keywords.append(tmp)
-                    options[tmp]['model'] = ModelWrapper(mod)
-                    options[tmp]['keywords'] = keywords
-
-        return options
+                                      'the view file \'%s\'.' % item)
+        return options             
 
     def __cancel_clicked_cb(self, widget):
         self._section_view.undo()

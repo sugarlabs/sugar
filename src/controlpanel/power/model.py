@@ -24,8 +24,6 @@ OHM_SERVICE_NAME = 'org.freedesktop.ohm'
 OHM_SERVICE_PATH = '/org/freedesktop/ohm/Keystore'
 OHM_SERVICE_IFACE = 'org.freedesktop.ohm.Keystore'
 
-KEYWORDS = ['automatic', 'extreme', 'power', 'suspend', 'battery']
-
 class ReadError(Exception):
     def __init__(self, value):
         self.value = value

@@ -24,10 +24,6 @@ from sugar.graphics import iconentry
 from controlpanel.sectionview import SectionView
 from controlpanel.inlinealert import InlineAlert
 
-CLASS = 'TimeZone'
-ICON = 'module-date_and_time'
-TITLE = _('Date & Time')
-
 class TimeZone(SectionView):
     def __init__(self, model, alerts):
         SectionView.__init__(self)

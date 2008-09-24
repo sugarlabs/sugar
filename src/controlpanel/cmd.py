@@ -49,20 +49,20 @@ def note_restart():
             'Hit ctrl+alt+erase on the keyboard to trigger a restart.')
 
 def load_modules():    
-    '''Build a list of pointers to available modules in the model directory
-    and load them.
+    '''Build a list of pointers to available modules and import them.
     '''
-    subpath = ['controlpanel', 'model']
-    file_names = os.listdir(os.path.join(config.shell_path, '/'.join(subpath)))
-    
     modules = []
-    for file_name in file_names:
-        if file_name.endswith('.py') and file_name != '__init__.py':
-            module_name = os.path.splitext(file_name)[0]
-            module = __import__('.'.join(subpath) + '.' + 
-                                module_name, globals(), locals(), 
-                                [module_name])
+
+    path = os.path.join(config.shell_path, 'controlpanel')
+    folder = os.listdir(path)
+
+    for item in folder:
+        if os.path.isdir(os.path.join(path, item)) and \
+                os.path.exists(os.path.join(path, item, 'model.py')):
+            module = __import__('.'.join(('controlpanel', item, 'model')), 
+                                globals(), locals(), ['model'])
             modules.append(module)
+            
     return modules        
 
 def main():
@@ -94,7 +94,7 @@ def main():
         if option in ("-l"):            
             for module in modules:
                 methods = dir(module)
-                print '%s:' % module.__name__.split('.')[-1]
+                print '%s:' % module.__name__.split('.')[1]
                 for method in methods:
                     if method.startswith('get_'):
                         print '    %s' % method[4:]

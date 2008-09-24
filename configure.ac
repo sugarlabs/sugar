@@ -48,8 +48,13 @@ data/icons/Makefile
 service/Makefile
 src/Makefile
 src/controlpanel/Makefile
-src/controlpanel/model/Makefile
-src/controlpanel/view/Makefile
+src/controlpanel/aboutme/Makefile
+src/controlpanel/aboutxo/Makefile
+src/controlpanel/datetime/Makefile
+src/controlpanel/frame/Makefile
+src/controlpanel/language/Makefile
+src/controlpanel/network/Makefile
+src/controlpanel/power/Makefile
 src/intro/Makefile
 src/journal/Makefile
 src/hardware/Makefile
