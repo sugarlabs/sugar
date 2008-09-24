@@ -220,7 +220,7 @@ msgstr "çok az şarj kaldı."
 #: ../src/view/devices/battery.py:123
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
-msgstr "%(saat)d:%(dakika).2d kaldı."
+msgstr "%(hour)d:%(min).2d kaldı."
 
 #: ../src/view/devices/battery.py:127
 msgid "Charged"
@@ -652,7 +652,7 @@ msgstr "içeriği gösteriniz."
 #: ../src/view/palettes.py:215
 #, python-format
 msgid "%(free_space)d MB Free"
-msgstr "%(boş alan)d MB boştur."
+msgstr "%(free_space)d MB boştur."
 
 # TRANS: label for the freeform layout in the favorites view
 #~ msgid "Freeform"
