@@ -267,6 +267,7 @@ msgstr ""
 "listeleyiniz.-h anahtarı Bu anahtar hakkındaki bilgileri gösteriniz. \n"
 "-g anahtarı  Bu anahtarın son değerini alınız. \n"
 "-s anahtarı  Bu anahtarın son değerini kurunuz. \n"
+"	"
 
 #: ../src/controlpanel/cmd.py:55 ../src/controlpanel/cmd.py:67
 #: ../src/controlpanel/cmd.py:74
