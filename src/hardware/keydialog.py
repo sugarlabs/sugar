@@ -265,15 +265,13 @@ class WPAKeyDialog(KeyDialog):
             real_key = key
         elif len(key) >= 8 and len(key) <= 63:
             # passphrase
-            import commands
-            command = "/usr/sbin/wpa_passphrase '%s' '%s'" % (ssid, key)
-            (s, o) = commands.getstatusoutput(command)
-            if s != 0:
-                raise RuntimeError("Error hashing passphrase: %s" % o)
-            lines = o.split("\n")
-            for line in lines:
+            from subprocess import Popen, PIPE
+            p = Popen(['/usr/sbin/wpa_passphrase', ssid, key], stdout=PIPE)
+            for line in p.stdout:
                 if line.strip().startswith("psk="):
                     real_key = line.strip()[4:]
+            if p.wait() != 0:
+                raise RuntimeError("Error hashing passphrase")
             if real_key and len(real_key) != 64:
                 real_key = None
 
