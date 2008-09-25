@@ -21,8 +21,10 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import gobject
+import dbus.glib
 
 gtk.gdk.threads_init()
+dbus.glib.threads_init()
 
 from sugar import logger
 from sugar.profile import get_profile
