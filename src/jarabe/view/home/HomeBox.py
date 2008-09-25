@@ -338,7 +338,7 @@ class FavoritesButton(RadioToolButton):
                                           group=layout_item, active=False)
             if layoutid == self._layout:
                 layout_item.set_active(True)
-            layouts_grid.add(layout_item)
+            layouts_grid.pack_start(layout_item, fill=False)
             layout_item.connect('toggled', self.__layout_activate_cb,
                                 layoutid)
         layouts_grid.show_all()
