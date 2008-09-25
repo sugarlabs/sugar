@@ -247,6 +247,7 @@ class HomeToolbar(gtk.Toolbar):
         self.search_entry.connect('activate', self.__entry_activated_cb)
         self.search_entry.connect('changed', self.__entry_changed_cb)
         tool_item.add(self.search_entry)
+        self.search_entry.set_sensitive(False)
         self.search_entry.show()
 
         self._add_separator(expand=True)
@@ -271,8 +272,12 @@ class HomeToolbar(gtk.Toolbar):
     def __view_button_toggled_cb(self, button, view):
         if button.props.active:
             if view == _FAVORITES_VIEW:
+                self.search_entry.set_text('')
+                self.search_entry.set_sensitive(False)
                 self.emit('view-changed', view, button.layout)
             else:
+                self.search_entry.set_sensitive(True)
+                self.search_entry.grab_focus()
                 self.emit('view-changed', view, None)
             
     def _add_separator(self, expand=False):
