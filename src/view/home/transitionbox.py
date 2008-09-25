@@ -55,8 +55,8 @@ class _Layout(gobject.GObject, hippo.CanvasLayout):
             min_width, child_width = child.get_width_request()
             min_height, child_height = child.get_height_request(child_width)
 
-            child.allocate(x + (width - child_width) / 2,
-                           y + (height - child_height) / 2,
+            child.allocate(x + (width - child_width) / 2 - 1,
+                           y + (height - child_height) / 2 - 2,
                            child_width, child_height, origin_changed)
 
 class TransitionBox(hippo.Canvas):
