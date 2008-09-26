@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-18 13:20-0400\n"
-"PO-Revision-Date: 2008-09-18 23:45-0400\n"
+"POT-Creation-Date: 2008-09-25 00:30-0400\n"
+"PO-Revision-Date: 2008-09-26 02:56-0400\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Pootle 1.1.0rc2\n"
 
-#: ../src/intro/window.py:93 ../src/controlpanel/view/aboutme.py:100
+#: ../src/intro/window.py:93 ../src/controlpanel/aboutme/view.py:100
 msgid "Name:"
 msgstr "Nom :"
 
@@ -48,11 +48,11 @@ msgstr "Ajouter à mes amis"
 msgid "Invite to %s"
 msgstr "Inviter à %s"
 
-#: ../src/view/clipboardmenu.py:50
+#: ../src/view/clipboardmenu.py:51
 msgid "Remove"
 msgstr "Retirer"
 
-#: ../src/view/clipboardmenu.py:55 ../src/view/clipboardmenu.py:77
+#: ../src/view/clipboardmenu.py:56 ../src/view/clipboardmenu.py:78
 msgid "Open"
 msgstr "Ouvrir"
 
@@ -60,15 +60,15 @@ msgstr "Ouvrir"
 # TODO: Implement stopping downloads
 # self._stop_item.connect('activate', self._stop_item_activate_cb)
 # self.append_menu_item(self._stop_item)
-#: ../src/view/clipboardmenu.py:60 ../src/view/home/HomeBox.py:87
+#: ../src/view/clipboardmenu.py:61 ../src/view/home/HomeBox.py:84
 msgid "Keep"
 msgstr "Conserver"
 
-#: ../src/view/clipboardmenu.py:82
+#: ../src/view/clipboardmenu.py:83
 msgid "Open with"
 msgstr "Ouvrir avec"
 
-#: ../src/view/clipboardmenu.py:227
+#: ../src/view/clipboardmenu.py:228
 #, python-format
 msgid "%s clipping"
 msgstr "%s coupure"
@@ -101,68 +101,56 @@ msgstr "Le serveur n'a pas pu achever la requête."
 msgid "Screenshot"
 msgstr "Capture d'écran"
 
-#: ../src/view/home/HomeBox.py:81
+#: ../src/view/home/HomeBox.py:78
 msgid "Confirm erase"
 msgstr "Confirmer la suppression"
 
 # Conformer la suppression : faut-il supprimer %s définitivement ?
-#: ../src/view/home/HomeBox.py:83
+#: ../src/view/home/HomeBox.py:80
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "Confirmer la suppression : faut-il supprimer %s définitivement ?"
 
-#: ../src/view/home/HomeBox.py:90 ../src/view/palettes.py:120
+#: ../src/view/home/HomeBox.py:87 ../src/view/palettes.py:120
 #: ../src/journal/journaltoolbox.py:335 ../src/journal/palettes.py:75
 msgid "Erase"
 msgstr "Supprimer"
 
-#: ../src/view/home/HomeBox.py:120
+#: ../src/view/home/HomeBox.py:117
 msgid "Software Update"
 msgstr "Mise à jour logicielle"
 
-#: ../src/view/home/HomeBox.py:121
+#: ../src/view/home/HomeBox.py:118
 msgid "Update your activities to ensure compatibility with your new software"
 msgstr "Actualiser les activités pour assurer la compatibilité logicielle"
 
-#: ../src/view/home/HomeBox.py:125 ../src/controlpanel/toolbar.py:115
+#: ../src/view/home/HomeBox.py:122 ../src/controlpanel/toolbar.py:115
 msgid "Cancel"
 msgstr "Annuler"
 
-#: ../src/view/home/HomeBox.py:127 ../src/controlpanel/gui.py:286
+#: ../src/view/home/HomeBox.py:124 ../src/controlpanel/gui.py:273
 msgid "Later"
 msgstr "Plus tard"
 
-#: ../src/view/home/HomeBox.py:130
+#: ../src/view/home/HomeBox.py:127
 msgid "Check now"
 msgstr "Vérifier maintenant"
 
-#: ../src/view/home/HomeBox.py:266
+#: ../src/view/home/HomeBox.py:261
 msgid "List view"
 msgstr "Écran liste"
 
-#: ../src/view/home/HomeBox.py:267
+#: ../src/view/home/HomeBox.py:262
 msgid "<Ctrl>2"
 msgstr "<Ctrl>2"
 
-#: ../src/view/home/HomeBox.py:325
+#: ../src/view/home/HomeBox.py:320
 msgid "Favorites view"
 msgstr "Écran favoris"
 
-#: ../src/view/home/HomeBox.py:326
+#: ../src/view/home/HomeBox.py:321
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
-
-# TRANS: label for the freeform layout in the favorites view
-#. TRANS: label for the freeform layout in the favorites view
-#: ../src/view/home/HomeBox.py:334
-msgid "Freeform"
-msgstr "Libre"
-
-# TRANS: label for the ring layout in the favorites view
-#. TRANS: label for the ring layout in the favorites view
-#: ../src/view/home/HomeBox.py:341
-msgid "Ring"
-msgstr "Concentrique"
 
 #: ../src/view/home/MeshBox.py:97
 msgid "Connect"
@@ -180,17 +168,17 @@ msgstr "Déconnecter"
 msgid "Disconnecting..."
 msgstr "Déconnexion..."
 
-#: ../src/view/home/MeshBox.py:152
+#: ../src/view/home/MeshBox.py:159
 msgid "Connecting..."
 msgstr "Connexion..."
 
 # TODO: show the channel number
 #. TODO: show the channel number
-#: ../src/view/home/MeshBox.py:159
+#: ../src/view/home/MeshBox.py:166
 msgid "Connected"
 msgstr "Connecté"
 
-#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:41
+#: ../src/view/home/MeshBox.py:218 ../src/view/devices/network/mesh.py:41
 #: ../src/view/devices/network/mesh.py:68
 #: ../src/view/devices/network/mesh.py:72
 msgid "Mesh Network"
@@ -200,18 +188,18 @@ msgstr "Réseau maillé"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:119
+#: ../src/view/home/MeshBox.py:221 ../src/view/devices/network/wireless.py:125
 #: ../src/view/devices/network/mesh.py:89
 msgid "Disconnect..."
 msgstr "Déconnexion..."
 
 #. TRANS: Action label for resuming an activity.
-#: ../src/view/home/MeshBox.py:302 ../src/view/palettes.py:61
+#: ../src/view/home/MeshBox.py:309 ../src/view/palettes.py:61
 #: ../src/journal/journaltoolbox.py:399 ../src/journal/palettes.py:57
 msgid "Resume"
 msgstr "Reprendre"
 
-#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:206
+#: ../src/view/home/MeshBox.py:314 ../src/view/frame/activitiestray.py:206
 msgid "Join"
 msgstr "Rejoindre"
 
@@ -252,7 +240,7 @@ msgstr "Mettre en sourdine"
 msgid "Disconnected"
 msgstr "Déconnecté"
 
-#: ../src/view/devices/network/wireless.py:137
+#: ../src/view/devices/network/wireless.py:143
 msgid "Channel"
 msgstr "Canal"
 
@@ -320,148 +308,107 @@ msgstr ""
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "Redémarrer sugar pour que les changements prennent effet.\n"
 
-#: ../src/controlpanel/toolbar.py:121 ../src/view/home/favoritesview.py:296
+#: ../src/controlpanel/toolbar.py:121 ../src/view/home/favoritesview.py:305
 msgid "Ok"
 msgstr "Ok"
 
-#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:278
+#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:265
 msgid "Changes require restart"
 msgstr "Relancer pour valider"
 
-#: ../src/controlpanel/gui.py:277
+#: ../src/controlpanel/gui.py:264
 msgid "Warning"
 msgstr "Attention"
 
-#: ../src/controlpanel/gui.py:281
+#: ../src/controlpanel/gui.py:268
 msgid "Cancel changes"
 msgstr "Abandonner"
 
-#: ../src/controlpanel/gui.py:290
+#: ../src/controlpanel/gui.py:277
 msgid "Restart now"
 msgstr "Maintenant"
 
-#: ../src/controlpanel/model/aboutme.py:44
+#: ../src/controlpanel/aboutme/model.py:44
 msgid "You must enter a name."
 msgstr "Vous devez indiquer un nom."
 
-#: ../src/controlpanel/model/aboutme.py:69
+#: ../src/controlpanel/aboutme/model.py:69
 #, python-format
 msgid "stroke:   color=%s hue=%s"
 msgstr "stroke:   color=%s hue=%s"
 
-#: ../src/controlpanel/model/aboutme.py:72
+#: ../src/controlpanel/aboutme/model.py:72
 #, python-format
 msgid "stroke:   %s"
 msgstr "stroke:   %s"
 
-#: ../src/controlpanel/model/aboutme.py:74
+#: ../src/controlpanel/aboutme/model.py:74
 #, python-format
 msgid "fill:     color=%s hue=%s"
 msgstr "fill:     color=%s hue=%s"
 
-#: ../src/controlpanel/model/aboutme.py:76
+#: ../src/controlpanel/aboutme/model.py:76
 #, python-format
 msgid "fill:     %s"
 msgstr "fill:     %s"
 
-#: ../src/controlpanel/model/aboutme.py:87
+#: ../src/controlpanel/aboutme/model.py:87
 msgid "Error in specified color modifiers."
 msgstr "Erreur dans les modificateurs de couleur spécifiés."
 
-#: ../src/controlpanel/model/aboutme.py:90
+#: ../src/controlpanel/aboutme/model.py:90
 msgid "Error in specified colors."
 msgstr "Erreur dans les couleurs spécifiées."
 
-#: ../src/controlpanel/model/aboutxo.py:24
-msgid "Not available"
-msgstr "Non disponible"
-
-#: ../src/controlpanel/model/datetime.py:89
-msgid "Error timezone does not exist."
-msgstr "Erreur : la zone temporelle n'existe pas."
-
-#: ../src/controlpanel/model/frame.py:38 ../src/controlpanel/model/frame.py:60
-msgid "Value must be an integer."
-msgstr "La valeur doit être un entier."
-
-#: ../src/controlpanel/model/language.py:28
-msgid "Could not access ~/.i18n. Create standard settings."
-msgstr "Accès impossible à ~/.i18n. Création de paramètres par défaut."
-
-#: ../src/controlpanel/model/language.py:114
-#, python-format
-msgid "Language for code=%s could not be determined."
-msgstr "La langue associée au code = %s n'a pas pu être déterminée."
-
-#: ../src/controlpanel/model/language.py:131
-#, python-format
-msgid "Sorry I do not speak '%s'."
-msgstr "Désolé je ne parle pas '%s'."
-
-#: ../src/controlpanel/model/network.py:62
-msgid "State is unknown."
-msgstr "État inconnu."
-
-#: ../src/controlpanel/model/network.py:82
-msgid "Error in specified radio argument use on/off."
-msgstr "Argument 'radio' spécifié incorrect. Utiliser marche/arrêt."
-
-#: ../src/controlpanel/model/power.py:57
-msgid "Error in automatic pm argument, use on/off."
-msgstr "Erreur dans l'argument gestion de l'alimentation automatique"
-
-#: ../src/controlpanel/model/power.py:86
-msgid "Error in extreme pm argument, use on/off."
-msgstr "Erreur dans l'argument gestion de l'alimentation extrême"
-
-#: ../src/controlpanel/view/aboutme.py:32
+#: ../src/controlpanel/aboutme/view.py:32
+#: ../src/controlpanel/aboutme/__init__.py:22
 msgid "About Me"
 msgstr "Moi"
 
-#: ../src/controlpanel/view/aboutme.py:134
+#: ../src/controlpanel/aboutme/view.py:134
 msgid "Click to change your color:"
 msgstr "Cliquer pour changer de couleur :"
 
-#: ../src/controlpanel/view/aboutxo.py:28
-msgid "About my XO"
-msgstr "Mon XO"
+#: ../src/controlpanel/aboutxo/model.py:24
+msgid "Not available"
+msgstr "Non disponible"
 
-#: ../src/controlpanel/view/aboutxo.py:59
+#: ../src/controlpanel/aboutxo/view.py:55
 msgid "Identity"
 msgstr "Identité"
 
-#: ../src/controlpanel/view/aboutxo.py:68
+#: ../src/controlpanel/aboutxo/view.py:64
 msgid "Serial Number:"
 msgstr "Numéro de série :"
 
-#: ../src/controlpanel/view/aboutxo.py:91
+#: ../src/controlpanel/aboutxo/view.py:87
 msgid "Software"
 msgstr "Logiciel"
 
-#: ../src/controlpanel/view/aboutxo.py:100
+#: ../src/controlpanel/aboutxo/view.py:96
 msgid "Build:"
 msgstr "Version :"
 
-#: ../src/controlpanel/view/aboutxo.py:115
+#: ../src/controlpanel/aboutxo/view.py:111
 msgid "Sugar:"
 msgstr "Sugar :"
 
-#: ../src/controlpanel/view/aboutxo.py:130
+#: ../src/controlpanel/aboutxo/view.py:126
 msgid "Firmware:"
 msgstr "Micrologiciel :"
 
-#: ../src/controlpanel/view/aboutxo.py:152
+#: ../src/controlpanel/aboutxo/view.py:148
 msgid "Copyright and License"
 msgstr "Copyright et licence"
 
-#: ../src/controlpanel/view/aboutxo.py:160
+#: ../src/controlpanel/aboutxo/view.py:156
 msgid ""
 "© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
 msgstr ""
 "© 2008 One Laptop per Child Association Inc ; Red Hat Inc ; et "
 "contributeurs."
 
-#: ../src/controlpanel/view/aboutxo.py:167
+#: ../src/controlpanel/aboutxo/view.py:163
 msgid ""
 "Sugar is the graphical user interface that you are looking at. Sugar is free "
 "software, covered by the GNU General Public License, and you are welcome to "
@@ -473,104 +420,147 @@ msgstr ""
 "License). Vous êtes autorisé à le modifier et/ou à en distribuer des copies "
 "aux conditions spécifiées."
 
-#: ../src/controlpanel/view/aboutxo.py:179
+#: ../src/controlpanel/aboutxo/view.py:175
 msgid "Full license:"
 msgstr "Licence complète :"
 
-#: ../src/controlpanel/view/datetime.py:29
-msgid "Date & Time"
-msgstr "Date & heure"
+#: ../src/controlpanel/aboutxo/__init__.py:21
+msgid "About my XO"
+msgstr "Mon XO"
 
-#: ../src/controlpanel/view/datetime.py:72
+#: ../src/controlpanel/datetime/model.py:89
+msgid "Error timezone does not exist."
+msgstr "Erreur : la zone temporelle n'existe pas."
+
+#: ../src/controlpanel/datetime/view.py:68
 msgid "Timezone"
 msgstr "Fuseau horaire"
 
-#: ../src/controlpanel/view/frame.py:28
-msgid "Frame"
-msgstr "Cadre"
+#: ../src/controlpanel/datetime/__init__.py:21
+msgid "Date & Time"
+msgstr "Date & heure"
 
-#: ../src/controlpanel/view/frame.py:30
+#: ../src/controlpanel/frame/model.py:38 ../src/controlpanel/frame/model.py:60
+msgid "Value must be an integer."
+msgstr "La valeur doit être un entier."
+
+#: ../src/controlpanel/frame/view.py:26
 msgid "never"
 msgstr "jamais"
 
-#: ../src/controlpanel/view/frame.py:31
+#: ../src/controlpanel/frame/view.py:27
 msgid "instantaneous"
 msgstr "immédiat"
 
-#: ../src/controlpanel/view/frame.py:32
+#: ../src/controlpanel/frame/view.py:28
 #, python-format
 msgid "%s seconds"
 msgstr "%s secondes"
 
-#: ../src/controlpanel/view/frame.py:56
+#: ../src/controlpanel/frame/view.py:52
 msgid "Activation Delay"
 msgstr "Délai d'activation"
 
-#: ../src/controlpanel/view/frame.py:80
+#: ../src/controlpanel/frame/view.py:76
 msgid "Corner"
 msgstr "Coin"
 
-#: ../src/controlpanel/view/frame.py:115
+#: ../src/controlpanel/frame/view.py:111
 msgid "Edge"
 msgstr "Bord"
 
-#: ../src/controlpanel/view/language.py:29
-#: ../src/controlpanel/view/language.py:74
+#: ../src/controlpanel/frame/__init__.py:21
+msgid "Frame"
+msgstr "Cadre"
+
+#: ../src/controlpanel/language/model.py:28
+msgid "Could not access ~/.i18n. Create standard settings."
+msgstr "Accès impossible à ~/.i18n. Création de paramètres par défaut."
+
+#: ../src/controlpanel/language/model.py:114
+#, python-format
+msgid "Language for code=%s could not be determined."
+msgstr "La langue associée au code = %s n'a pas pu être déterminée."
+
+#: ../src/controlpanel/language/model.py:131
+#, python-format
+msgid "Sorry I do not speak '%s'."
+msgstr "Désolé je ne parle pas '%s'."
+
+#: ../src/controlpanel/language/view.py:70
+#: ../src/controlpanel/language/__init__.py:21
 msgid "Language"
 msgstr "Langue"
 
-#: ../src/controlpanel/view/network.py:28
+#: ../src/controlpanel/network/model.py:62
+msgid "State is unknown."
+msgstr "État inconnu."
+
+#: ../src/controlpanel/network/model.py:82
+msgid "Error in specified radio argument use on/off."
+msgstr "Argument 'radio' spécifié incorrect. Utiliser marche/arrêt."
+
+#: ../src/controlpanel/network/view.py:28
+#: ../src/controlpanel/network/__init__.py:21
 msgid "Network"
 msgstr "Réseau"
 
-#: ../src/controlpanel/view/network.py:54
+#: ../src/controlpanel/network/view.py:54
 msgid "Wireless"
 msgstr "Réseau sans fil"
 
-#: ../src/controlpanel/view/network.py:62
+#: ../src/controlpanel/network/view.py:62
 msgid "Turn of the wireless radio to save battery life"
 msgstr "Désactiver la radio sans fil pour prolonger la batterie"
 
-#: ../src/controlpanel/view/network.py:75
+#: ../src/controlpanel/network/view.py:75
 msgid "Radio"
 msgstr "Radio"
 
-#: ../src/controlpanel/view/network.py:91
+#: ../src/controlpanel/network/view.py:91
 msgid "Discard network history if you have trouble connecting to the network"
 msgstr ""
 "Ignorer l'historique du réseau si vous avez du mal à vous connecter au "
 "réseau"
 
-#: ../src/controlpanel/view/network.py:100
+#: ../src/controlpanel/network/view.py:100
 msgid "Discard network history"
 msgstr "Ignorer l'historique du réseau"
 
-#: ../src/controlpanel/view/network.py:113
+#: ../src/controlpanel/network/view.py:113
 msgid "Mesh"
 msgstr "Réseau maillé"
 
-#: ../src/controlpanel/view/network.py:122
+#: ../src/controlpanel/network/view.py:122
 msgid "Server:"
 msgstr "Serveur :"
 
-#: ../src/controlpanel/view/power.py:27
-msgid "Power"
-msgstr "Alimentation"
+#: ../src/controlpanel/power/model.py:55
+msgid "Error in automatic pm argument, use on/off."
+msgstr "Erreur dans l'argument gestion de l'alimentation automatique"
 
-#: ../src/controlpanel/view/power.py:51
+#: ../src/controlpanel/power/model.py:84
+msgid "Error in extreme pm argument, use on/off."
+msgstr "Erreur dans l'argument gestion de l'alimentation extrême"
+
+#: ../src/controlpanel/power/view.py:47
 msgid "Power management"
 msgstr "Gestion de l'alimentation"
 
-#: ../src/controlpanel/view/power.py:61
+#: ../src/controlpanel/power/view.py:57
 msgid "Automatic power management (increases battery life)"
 msgstr "Gestion automatique de l'alimentation (prolonge la batterie)"
 
-#: ../src/controlpanel/view/power.py:89
+#: ../src/controlpanel/power/view.py:85
 msgid ""
 "Extreme power management (disableswireless radio, increases battery life)"
 msgstr ""
 "Gestion extrême de l'alimentation (désactive la radio sans fil, prolonge la "
 "durée de vie de la batterie)"
+
+#: ../src/controlpanel/power/__init__.py:21
+msgid "Power"
+msgstr "Alimentation"
 
 #: ../src/view/devices/network/mesh.py:111
 msgid "Connected to a School Mesh Portal"
@@ -604,36 +594,63 @@ msgstr "Réseau maillé inconnu"
 msgid "Decline"
 msgstr "Refuser"
 
-#: ../src/view/home/favoritesview.py:286
+# TRANS: label for the freeform layout in the favorites view
+#. TRANS: label for the freeform layout in the favorites view
+#: ../src/view/home/favoriteslayout.py:107
+msgid "Freeform"
+msgstr "Libre"
+
+# TRANS: label for the ring layout in the favorites view
+#. TRANS: label for the ring layout in the favorites view
+#: ../src/view/home/favoriteslayout.py:189
+msgid "Ring"
+msgstr "Concentrique"
+
+#. TRANS: label for the spiral layout in the favorites view
+#: ../src/view/home/favoriteslayout.py:334
+msgid "Spiral"
+msgstr "Spirale"
+
+#. TRANS: label for the box layout in the favorites view
+#: ../src/view/home/favoriteslayout.py:401
+msgid "Box"
+msgstr "Boîte"
+
+#. TRANS: label for the box layout in the favorites view
+#: ../src/view/home/favoriteslayout.py:442
+msgid "Triangle"
+msgstr "Triangle"
+
+#: ../src/view/home/favoritesview.py:295
 msgid "Registration Failed"
 msgstr "Echec de l'enregistrement"
 
-#: ../src/view/home/favoritesview.py:287
+#: ../src/view/home/favoritesview.py:296
 #, python-format
 msgid "%s"
 msgstr "%s"
 
-#: ../src/view/home/favoritesview.py:289
+#: ../src/view/home/favoritesview.py:298
 msgid "Registration Successful"
 msgstr "Enregistrement réussi"
 
-#: ../src/view/home/favoritesview.py:290
+#: ../src/view/home/favoritesview.py:299
 msgid "You are now registered with your school server."
 msgstr "Vous êtes maintenant enregistré sur le serveur de l'école"
 
-#: ../src/view/home/favoritesview.py:411
+#: ../src/view/home/favoritesview.py:420
 msgid "Settings"
 msgstr "Configuration"
 
-#: ../src/view/home/favoritesview.py:416
+#: ../src/view/home/favoritesview.py:425
 msgid "Restart"
 msgstr "Redémarrer"
 
-#: ../src/view/home/favoritesview.py:421
+#: ../src/view/home/favoritesview.py:430
 msgid "Shutdown"
 msgstr "Éteindre"
 
-#: ../src/view/home/favoritesview.py:427
+#: ../src/view/home/favoritesview.py:436
 msgid "Register"
 msgstr "S'enregistrer"
 
@@ -758,7 +775,7 @@ msgstr "Fermer"
 msgid "Unmount"
 msgstr "Démonter"
 
-#: ../src/journal/misc.py:93
+#: ../src/journal/misc.py:95
 msgid "No date"
 msgstr "Sans date"
 
