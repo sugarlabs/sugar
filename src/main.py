@@ -56,7 +56,6 @@ def _setup_translations():
 
 def check_cm(bus_name):
     try:
-        import dbus
         bus = dbus.SessionBus()
         bus_object = bus.get_object('org.freedesktop.DBus', 
                                     '/org/freedesktop/DBus')
