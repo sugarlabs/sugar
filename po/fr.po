@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-09-25 00:30-0400\n"
-"PO-Revision-Date: 2008-09-26 02:56-0400\n"
+"PO-Revision-Date: 2008-09-27 05:45-0400\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -785,7 +785,7 @@ msgstr "Le journal est vide"
 
 #: ../src/journal/listview.py:40
 msgid "No matching entries "
-msgstr "Aucune entrée correspondante_"
+msgstr "Aucune entrée correspondante"
 
 #: ../src/journal/modalalert.py:59
 msgid "Your Journal is full"
