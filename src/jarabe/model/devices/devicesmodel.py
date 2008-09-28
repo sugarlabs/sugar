@@ -20,8 +20,8 @@ import gobject
 import dbus
 
 from jarabe.model.devices import device
-from jarabe.model.devices.network import wireless
-from jarabe.model.devices.network import mesh
+from jarabe.model.devices import wireless
+from jarabe.model.devices import mesh
 from jarabe.model.devices import battery
 from jarabe.model.devices import speaker
 from jarabe.hardware import hardwaremanager

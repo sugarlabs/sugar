@@ -31,7 +31,7 @@ from sugar.graphics.menuitem import MenuItem
 from sugar import profile
 
 from jarabe.model import accesspointmodel
-from jarabe.model.devices.network import wireless
+from jarabe.model.devices import wireless
 from jarabe.model import shellmodel
 from jarabe.hardware import hardwaremanager
 from jarabe.hardware import nmclient

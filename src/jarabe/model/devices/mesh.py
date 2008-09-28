@@ -19,32 +19,15 @@ import gobject
 
 from jarabe.model.devices import device
 
-def freq_to_channel(freq):
-    ftoc = { 2.412: 1, 2.417: 2, 2.422: 3, 2.427: 4,
-	     2.432: 5, 2.437: 6, 2.442: 7, 2.447: 8,
-	     2.452: 9, 2.457: 10, 2.462: 11, 2.467: 12,
-	     2.472: 13
-	     }
-    return ftoc[freq]
-
-def channel_to_freq(channel):
-    ctof = { 1: 2.412, 2: 2.417, 3: 2.422, 4: 2.427,
-	     5: 2.432, 6: 2.437, 7: 2.442, 8: 2.447,
-	     9: 2.452, 10: 2.457, 11: 2.462, 12: 2.467,
-	     13: 2.472
-	     }
-    return ctof[channel]
-
 class Device(device.Device):
     __gproperties__ = {
-        'name'     : (str, None, None, None,
-                      gobject.PARAM_READABLE),
         'strength' : (int, None, None, 0, 100, 0,
                       gobject.PARAM_READABLE),
         'state'    : (int, None, None, device.STATE_ACTIVATING,
                       device.STATE_INACTIVE, 0, gobject.PARAM_READABLE),
-        'frequency': (float, None, None, 0.0, 9999.99, 0.0,
-                      gobject.PARAM_READABLE)
+        'activation-stage': (int, None, None, 0, 7, 0, gobject.PARAM_READABLE),
+        'frequency': (float, None, None, 0, 2.72, 0, gobject.PARAM_READABLE),
+        'mesh-step': (int, None, None, 0, 4, 0, gobject.PARAM_READABLE),
     }
 
     def __init__(self, nm_device):
@@ -53,43 +36,39 @@ class Device(device.Device):
 
         self._nm_device.connect('strength-changed',
                                 self._strength_changed_cb)
-        self._nm_device.connect('ssid-changed',
-                                self._ssid_changed_cb)
         self._nm_device.connect('state-changed',
                                 self._state_changed_cb)
+        self._nm_device.connect('activation-stage-changed',
+                                self._activation_stage_changed_cb)
 
     def _strength_changed_cb(self, nm_device):
         self.notify('strength')
 
-    def _ssid_changed_cb(self, nm_device):
-        self.notify('name')
-
     def _state_changed_cb(self, nm_device):
         self.notify('state')
+
+    def _activation_stage_changed_cb(self, nm_device):
+        self.notify('activation-stage')
 
     def do_get_property(self, pspec):
         if pspec.name == 'strength':
             return self._nm_device.get_strength()
-        elif pspec.name == 'name':
-            import logging
-            logging.debug('wireless.Device.props.name: %s' %
-                    self._nm_device.get_ssid())
-            return self._nm_device.get_ssid()
         elif pspec.name == 'state':
             nm_state = self._nm_device.get_state()
             return device.nm_state_to_state[nm_state]
+        elif pspec.name == 'activation-stage':
+            return self._nm_device.get_activation_stage()
         elif pspec.name == 'frequency':
             return self._nm_device.get_frequency()
+        elif pspec.name == 'mesh-step':
+            return self._nm_device.get_mesh_step()
 
     def get_type(self):
-        return 'network.wireless'
+        return 'mesh'
 
     def get_id(self):
         return str(self._nm_device.get_op())
 
-    def get_active_network_colors(self):
-        net = self._nm_device.get_active_network()
-        if not net:
-            return (None, None)
-        return net.get_colors()
+    def get_nm_device(self):
+        return self._nm_device
 
