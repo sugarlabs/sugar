@@ -35,6 +35,7 @@ from jarabe.view.palettes import JournalPalette, CurrentActivityPalette
 from jarabe.view.pulsingicon import PulsingIcon
 from jarabe.view.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.view.frame.notification import NotificationIcon
+from jarabe.view import Shell
 import jarabe.view.frame.frame
 
 class ActivityButton(RadioToolButton):

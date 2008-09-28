@@ -30,11 +30,11 @@ from sugar import logger
 from sugar.profile import get_profile
 
 from jarabe.view import Shell
-from shellservice import ShellService
+from jarabe.shellservice import ShellService
 from jarabe.hardware import hardwaremanager
 from jarabe.intro.window import IntroWindow
 from jarabe.intro.window import create_profile
-from session import get_session_manager
+from jarabe.session import get_session_manager
 from jarabe import logsmanager
 from jarabe import config
 
