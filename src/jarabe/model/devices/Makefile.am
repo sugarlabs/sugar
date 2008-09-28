@@ -6,5 +6,4 @@ sugar_PYTHON =			\
 	devicesmodel.py		\
 	speaker.py		\
 	mesh.py			\
-	wired.py		\
 	wireless.py
