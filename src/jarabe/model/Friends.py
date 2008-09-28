@@ -1,0 +1,114 @@
+# Copyright (C) 2006-2007 Red Hat, Inc.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+import dbus
+import os
+from ConfigParser import ConfigParser
+
+import gobject
+
+from jarabe.model.BuddyModel import BuddyModel
+from sugar import env
+import logging
+
+class Friends(gobject.GObject):
+    __gsignals__ = {
+        'friend-added':   (gobject.SIGNAL_RUN_FIRST,
+                           gobject.TYPE_NONE, ([object])),
+        'friend-removed': (gobject.SIGNAL_RUN_FIRST,
+                           gobject.TYPE_NONE, ([str])),
+    }
+
+    def __init__(self):
+        gobject.GObject.__init__(self)
+
+        self._friends = {}
+        self._path = os.path.join(env.get_profile_path(), 'friends')
+
+        self.load()
+
+    def has_buddy(self, buddy):
+        return self._friends.has_key(buddy.get_key())
+
+    def add_friend(self, buddy_info):
+        self._friends[buddy_info.get_key()] = buddy_info
+        self.emit('friend-added', buddy_info)
+
+    def make_friend(self, buddy):
+        if not self.has_buddy(buddy):
+            self.add_friend(buddy)
+            self.save()
+
+    def remove(self, buddy_info):
+        del self._friends[buddy_info.get_key()]
+        self.save()
+        self.emit('friend-removed', buddy_info.get_key())
+
+    def __iter__(self):
+        return self._friends.values().__iter__()
+
+    def load(self):
+        cp = ConfigParser()
+
+        try:
+            success = cp.read([self._path])
+            if success:
+                for key in cp.sections():
+                    # HACK: don't screw up on old friends files
+                    if len(key) < 20:
+                        continue
+                    buddy = BuddyModel(key=key, nick=cp.get(key, 'nick'))
+                    self.add_friend(buddy)
+        except Exception, exc:
+            logging.error("Error parsing friends file: %s" % exc)
+
+    def save(self):
+        cp = ConfigParser()
+
+        for friend in self:
+            section = friend.get_key()
+            cp.add_section(section)
+            cp.set(section, 'nick', friend.get_nick())
+            cp.set(section, 'color', friend.get_color().to_string())
+
+        fileobject = open(self._path, 'w')
+        cp.write(fileobject)
+        fileobject.close()
+
+        self._sync_friends()
+
+    def _sync_friends(self):
+        # XXX: temporary hack
+        # remove this when the shell service has a D-Bus API for buddies
+
+        def friends_synced():
+            pass
+
+        def friends_synced_error(e):
+            logging.error("Error asking presence service to sync friends: %s"
+                % e)
+
+        keys = []
+        for friend in self:
+            keys.append(friend.get_key())
+
+        bus = dbus.SessionBus()
+        ps = bus.get_object('org.laptop.Sugar.Presence',
+            '/org/laptop/Sugar/Presence')
+        psi = dbus.Interface(ps, 'org.laptop.Sugar.Presence')
+        psi.SyncFriends(keys,
+                reply_handler=friends_synced,
+                error_handler=friends_synced_error)
