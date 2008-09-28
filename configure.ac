@@ -30,6 +30,7 @@ AC_ARG_ENABLE(update-mimedb,
 AM_CONDITIONAL(ENABLE_UPDATE_MIMEDB, test x$enable_update_mimedb = xyes)
 
 AC_CONFIG_FILES([
+bin/sugar-shell
 bin/sugar-shell-service
 service/config.py
 src/jarabe/config.py
