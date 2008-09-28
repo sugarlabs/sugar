@@ -22,7 +22,7 @@ import gtk
 from sugar.graphics.palette import Palette
 from sugar.graphics.radiotoolbutton import RadioToolButton
 
-import view.Shell
+from jarabe.view import Shell
 from jarabe.view.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import shellmodel
 
@@ -68,7 +68,7 @@ class ZoomToolbar(gtk.Toolbar):
         if not button.get_active():
             return
         if shellmodel.get_instance().props.zoom_level != level:
-            view.Shell.get_instance().set_zoom_level(level)
+            Shell.get_instance().set_zoom_level(level)
 
     def __notify_zoom_level_cb(self, model, pspec):
         self._set_zoom_level(model.props.zoom_level)

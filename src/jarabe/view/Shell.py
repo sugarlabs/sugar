@@ -34,9 +34,6 @@ from sugar import profile
 from sugar import env
 
 from jarabe.view.ActivityHost import ActivityHost
-from jarabe.view.frame import frame
-from jarabe.view.keyhandler import KeyHandler
-from jarabe.view.home.HomeWindow import HomeWindow
 from jarabe.view.launchwindow import LaunchWindow
 from jarabe.model import shellmodel
 from jarabe.journal import journalactivity
@@ -58,10 +55,13 @@ class Shell(gobject.GObject):
         self._screen = wnck.screen_get_default()
         self._screen_rotation = 0
 
+        from jarabe.view.keyhandler import KeyHandler
         self._key_handler = KeyHandler()
 
+        from jarabe.view.frame import frame
         self._frame = frame.get_instance()
 
+        from jarabe.view.home.HomeWindow import HomeWindow
         self.home_window = HomeWindow()
         self.home_window.show()
 

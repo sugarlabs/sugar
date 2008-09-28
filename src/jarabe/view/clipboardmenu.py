@@ -31,7 +31,7 @@ from sugar import profile
 from sugar import activity
 
 from jarabe.model import clipboard
-import journal.misc
+from jarabe.journal import misc
 
 class ClipboardMenu(Palette):
 
@@ -164,7 +164,7 @@ class ClipboardMenu(Palette):
         if percent < 100 or menu_item.get_submenu() is not None:
             return
         jobject = self._copy_to_journal()
-        journal.misc.resume(jobject, self._activities[0])
+        misc.resume(jobject, self._activities[0])
         jobject.destroy()
 
     def _open_submenu_item_activate_cb(self, menu_item, service_name):
@@ -173,7 +173,7 @@ class ClipboardMenu(Palette):
         if percent < 100:
             return
         jobject = self._copy_to_journal()
-        journal.misc.resume(jobject, service_name)
+        misc.resume(jobject, service_name)
         jobject.destroy()
 
     def _remove_item_activate_cb(self, menu_item):

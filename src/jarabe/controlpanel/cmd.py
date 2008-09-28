@@ -19,7 +19,7 @@ import getopt
 import os
 from gettext import gettext as _
 
-import config
+from jarabe import config
 
 _RESTART = 1
 

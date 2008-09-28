@@ -24,7 +24,7 @@ else:
 
 os.environ['GTK2_RC_FILES'] = '@prefix@/share/sugar/data/%s.gtkrc' % theme
 
-from jarube.main import main
+from jarabe.main import main
 
 main()
 

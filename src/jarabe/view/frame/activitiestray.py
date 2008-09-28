@@ -35,7 +35,7 @@ from jarabe.view.palettes import JournalPalette, CurrentActivityPalette
 from jarabe.view.pulsingicon import PulsingIcon
 from jarabe.view.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.view.frame.notification import NotificationIcon
-import view.frame.frame
+import jarabe.view.frame.frame
 
 class ActivityButton(RadioToolButton):
     def __init__(self, home_activity, group):
@@ -94,7 +94,7 @@ class BaseInviteButton(ToolButton):
 
     def __clicked_cb(self, button):
         if self._notif_icon is not None:
-            frame = view.frame.frame.get_instance()
+            frame = jarabe.view.frame.frame.get_instance()
             frame.remove_notification(self._notif_icon)
             self._notif_icon = None
             self._launch()
@@ -104,7 +104,7 @@ class BaseInviteButton(ToolButton):
         raise NotImplementedError
 
     def __destroy_cb(self, button):
-        frame = view.frame.frame.get_instance()
+        frame = jarabe.view.frame.frame.get_instance()
         frame.remove_notification(self._notif_icon)
 
 class ActivityInviteButton(BaseInviteButton):
@@ -141,13 +141,13 @@ class ActivityInviteButton(BaseInviteButton):
         palette.set_group_id('frame')
         self._notif_icon.palette = palette
 
-        frame = view.frame.frame.get_instance()
+        frame = jarabe.view.frame.frame.get_instance()
         frame.add_notification(self._notif_icon,
-                               view.frame.frame.TOP_LEFT)
+                               jarabe.view.frame.frame.TOP_LEFT)
 
     def _launch(self):
         """Join the activity in the invite."""
-        shell = view.Shell.get_instance()
+        shell = Shell.get_instance()
         shell.join_activity(self._activity_model.get_bundle_id(),
                             self._activity_model.get_id())
 
@@ -187,13 +187,13 @@ class PrivateInviteButton(BaseInviteButton):
         palette.set_group_id('frame')
         self._notif_icon.palette = palette
 
-        frame = view.frame.frame.get_instance()
+        frame = jarabe.view.frame.frame.get_instance()
         frame.add_notification(self._notif_icon,
-                               view.frame.frame.TOP_LEFT)
+                               jarabe.view.frame.frame.TOP_LEFT)
 
     def _launch(self):
         """Start the activity with private channel."""
-        shell = view.Shell.get_instance()
+        shell = Shell.get_instance()
         shell.start_activity_with_uri(self._bundle_id,
                                       self._private_channel)
 
@@ -245,7 +245,7 @@ class ActivityInvitePalette(BaseInvitePalette):
             self.set_primary_text(self._bundle_id)
 
     def _join(self):
-        shell = view.Shell.get_instance()
+        shell = Shell.get_instance()
         shell.join_activity(self._activity_model.get_bundle_id(),
                             self._activity_model.get_id())
 
@@ -272,7 +272,7 @@ class PrivateInvitePalette(BaseInvitePalette):
             self.set_primary_text(self._bundle_id)
 
     def _join(self):
-        shell = view.Shell.get_instance()
+        shell = Shell.get_instance()
         shell.start_activity_with_uri(self._bundle_id,
                                       self._private_channel)
         invites = shellmodel.get_instance().get_invites()

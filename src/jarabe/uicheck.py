@@ -27,7 +27,7 @@ import wnck
 from sugar import wm
 
 from jarabe.model.homemodel import get_sugar_window_type
-import config
+from jarabe import config
 
 checks_queue = []
 checks_failed = []

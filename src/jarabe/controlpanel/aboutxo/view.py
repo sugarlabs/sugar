@@ -18,7 +18,7 @@
 import gtk
 from gettext import gettext as _
 
-import config
+from jarabe import config
 from sugar.graphics import style
 
 from jarabe.controlpanel.sectionview import SectionView

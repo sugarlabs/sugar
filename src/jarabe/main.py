@@ -29,14 +29,14 @@ dbus.glib.threads_init()
 from sugar import logger
 from sugar.profile import get_profile
 
-import view.Shell
+from jarabe.view import Shell
 from shellservice import ShellService
 from jarabe.hardware import hardwaremanager
 from jarabe.intro.window import IntroWindow
 from jarabe.intro.window import create_profile
 from session import get_session_manager
-import logsmanager
-import config
+from jarabe import logsmanager
+from jarabe import config
 
 def _start_matchbox():
     cmd = ['matchbox-window-manager']
@@ -73,7 +73,7 @@ def _shell_started_cb():
 def _software_update_cb():
     '''Ask the homeview to display an alert about available software updates
     '''
-    shell = view.Shell.get_instance()
+    shell = Shell.get_instance()
     home_box = shell.home_window.get_home_box()
     home_box.show_software_updates_alert()
 
@@ -140,7 +140,7 @@ def main():
                     break
 
     # TODO: move initializations from the Shell constructor to a start() method
-    view.Shell.get_instance()
+    Shell.get_instance()
     ShellService()
 
     session_manager = get_session_manager()

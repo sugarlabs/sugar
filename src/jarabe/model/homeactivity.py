@@ -26,7 +26,7 @@ from sugar.presence import presenceservice
 from sugar import profile
 from sugar import wm
 
-import config
+from jarabe import config
 
 _SERVICE_NAME = "org.laptop.Activity"
 _SERVICE_PATH = "/org/laptop/Activity"
