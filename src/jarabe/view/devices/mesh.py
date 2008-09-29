@@ -25,7 +25,7 @@ from sugar.graphics import style
 from sugar.graphics.palette import Palette
 
 from jarabe.model.devices import device
-from jarabe.model.devices.network import wireless
+from jarabe.model.devices import wireless
 from jarabe.hardware import hardwaremanager
 from jarabe.view.frame.frameinvoker import FrameWidgetInvoker
 
