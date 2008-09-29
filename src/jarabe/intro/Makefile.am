@@ -1,4 +1,4 @@
-imagedir = $(pkgdatadir)/shell/intro
+imagedir = $(pythondir)/jarabe/intro
 image_DATA = default-picture.png
 
 EXTRA_DIST = $(conf_DATA) $(image_DATA)
