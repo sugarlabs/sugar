@@ -4,7 +4,6 @@ sugardir = $(pythondir)/jarabe
 sugar_PYTHON =			\
         __init__.py		\
 	config.py           	\
-	emulator.py		\
 	logsmanager.py		\
 	main.py			\
 	session.py		\
