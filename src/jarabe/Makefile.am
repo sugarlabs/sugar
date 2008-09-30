@@ -5,7 +5,6 @@ sugar_PYTHON =			\
         __init__.py		\
 	config.py           	\
 	logsmanager.py		\
-	main.py			\
 	session.py		\
 	shellservice.py
 
