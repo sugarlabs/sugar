@@ -4,8 +4,6 @@ sugar_PYTHON =				\
 	activityhost.py			\
 	buddyicon.py			\
 	buddymenu.py			\
-	clipboardicon.py		\
-	clipboardmenu.py		\
 	keyhandler.py			\
 	launchwindow.py			\
 	pulsingicon.py			\

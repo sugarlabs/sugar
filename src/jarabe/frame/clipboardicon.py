@@ -24,7 +24,7 @@ from sugar.graphics.xocolor import XoColor
 from sugar import profile
 
 from jarabe.model import clipboard
-from jarabe.view.clipboardmenu import ClipboardMenu
+from jarabe.frame.clipboardmenu import ClipboardMenu
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.frame.notification import NotificationIcon
 import jarabe.frame.frame

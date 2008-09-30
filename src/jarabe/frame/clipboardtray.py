@@ -25,7 +25,7 @@ from sugar.graphics import tray
 from sugar.graphics import style
 
 from jarabe.model import clipboard
-from jarabe.view.clipboardicon import ClipboardIcon
+from jarabe.frame.clipboardicon import ClipboardIcon
 
 class _ContextMap(object):
     """Maps a drag context to the clipboard object involved in the dragging."""
