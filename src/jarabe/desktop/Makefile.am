@@ -5,12 +5,12 @@ sugar_PYTHON =			\
 	favoritesview.py	\
 	favoriteslayout.py	\
 	grid.py			\
-	FriendView.py		\
-	FriendsBox.py		\
-	HomeBox.py		\
-	HomeWindow.py		\
-	MeshBox.py		\
-	MyIcon.py		\
+	friendview.py		\
+	friendsbox.py		\
+	homebox.py		\
+	homewindow.py		\
+	meshbox.py		\
+	myicon.py		\
 	proc_smaps.py		\
 	snowflakelayout.py	\
 	spreadlayout.py		\

@@ -24,7 +24,7 @@ from sugar.graphics.icon import CanvasIcon, Icon
 from sugar.graphics.palette import Palette
 
 from jarabe.model import shellmodel
-from jarabe.desktop.FriendView import FriendView
+from jarabe.desktop.friendview import FriendView
 from jarabe.desktop.spreadlayout import SpreadLayout
 
 class FriendsBox(hippo.Canvas):

@@ -19,9 +19,9 @@ import gtk
 from sugar.graphics import style
 from sugar.graphics import palettegroup
 
-from jarabe.desktop.MeshBox import MeshBox
-from jarabe.desktop.HomeBox import HomeBox
-from jarabe.desktop.FriendsBox import FriendsBox
+from jarabe.desktop.meshbox import MeshBox
+from jarabe.desktop.homebox import HomeBox
+from jarabe.desktop.friendsbox import FriendsBox
 from jarabe.desktop.transitionbox import TransitionBox
 from jarabe.model.shellmodel import ShellModel
 from jarabe.model import shellmodel

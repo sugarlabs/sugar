@@ -20,7 +20,7 @@ import gobject
 from sugar.graphics import style
 from sugar.graphics import animator
 
-from jarabe.desktop.MyIcon import MyIcon
+from jarabe.desktop.myicon import MyIcon
 
 class _Animation(animator.Animation):
     def __init__(self, icon, start_size, end_size):
