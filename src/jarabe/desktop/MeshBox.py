@@ -37,8 +37,8 @@ from jarabe.hardware import hardwaremanager
 from jarabe.hardware import nmclient
 from jarabe.view.BuddyIcon import BuddyIcon
 from jarabe.view.pulsingicon import CanvasPulsingIcon
-from jarabe.view.home.snowflakelayout import SnowflakeLayout
-from jarabe.view.home.spreadlayout import SpreadLayout
+from jarabe.desktop.snowflakelayout import SnowflakeLayout
+from jarabe.desktop.spreadlayout import SpreadLayout
 from jarabe.view import Shell
 
 from jarabe.hardware.nmclient import NM_802_11_CAP_PROTO_WEP, \

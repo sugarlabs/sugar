@@ -1,4 +1,4 @@
-SUBDIRS = devices home
+SUBDIRS = devices
 
 sugardir = $(pythondir)/jarabe/view
 sugar_PYTHON =				\

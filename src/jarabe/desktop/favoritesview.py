@@ -33,8 +33,8 @@ from sugar import activity
 from jarabe.view import Shell
 from jarabe.view.palettes import JournalPalette
 from jarabe.view.palettes import CurrentActivityPalette, ActivityPalette
-from jarabe.view.home.MyIcon import MyIcon
-from jarabe.view.home import favoriteslayout
+from jarabe.desktop.MyIcon import MyIcon
+from jarabe.desktop import favoriteslayout
 from jarabe.model import shellmodel
 from jarabe.hardware import schoolserver
 from jarabe.hardware.schoolserver import RegisterError

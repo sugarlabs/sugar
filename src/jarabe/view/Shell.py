@@ -61,7 +61,7 @@ class Shell(gobject.GObject):
         from jarabe.frame import frame
         self._frame = frame.get_instance()
 
-        from jarabe.view.home.HomeWindow import HomeWindow
+        from jarabe.desktop.HomeWindow import HomeWindow
         self.home_window = HomeWindow()
         self.home_window.show()
 

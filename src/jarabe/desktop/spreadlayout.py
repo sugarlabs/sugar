@@ -20,7 +20,7 @@ import gtk
 
 from sugar.graphics import style
 
-from jarabe.view.home.grid import Grid
+from jarabe.desktop.grid import Grid
 
 _CELL_SIZE = 4.0
 

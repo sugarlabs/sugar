@@ -51,13 +51,13 @@ src/jarabe/controlpanel/frame/Makefile
 src/jarabe/controlpanel/language/Makefile
 src/jarabe/controlpanel/network/Makefile
 src/jarabe/controlpanel/power/Makefile
+src/jarabe/desktop/Makefile
 src/jarabe/frame/Makefile
 src/jarabe/intro/Makefile
 src/jarabe/journal/Makefile
 src/jarabe/hardware/Makefile
 src/jarabe/view/Makefile
 src/jarabe/view/devices/Makefile
-src/jarabe/view/home/Makefile
 src/jarabe/model/Makefile
 src/jarabe/model/devices/Makefile
 po/Makefile.in

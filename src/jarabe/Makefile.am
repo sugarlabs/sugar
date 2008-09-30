@@ -1,4 +1,4 @@
-SUBDIRS = controlpanel frame hardware journal model view intro
+SUBDIRS = controlpanel desktop frame hardware journal model view intro
 
 sugardir = $(pythondir)/jarabe
 sugar_PYTHON =			\

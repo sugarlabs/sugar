@@ -26,7 +26,7 @@ import hippo
 from sugar.graphics import style
 from sugar import activity
 
-from jarabe.view.home.grid import Grid
+from jarabe.desktop.grid import Grid
 
 _logger = logging.getLogger('FavoritesLayout')
 

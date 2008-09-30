@@ -1,4 +1,4 @@
-sugardir = $(pythondir)/jarabe/view/home
+sugardir = $(pythondir)/jarabe/desktop
 sugar_PYTHON =			\
 	__init__.py		\
 	activitieslist.py	\

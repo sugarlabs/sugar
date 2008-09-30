@@ -30,8 +30,8 @@ from sugar import profile
 from sugar import activity
 from sugar.bundle.activitybundle import ActivityBundle
 
-from jarabe.view.home import favoritesview
-from jarabe.view.home.activitieslist import ActivitiesList
+from jarabe.desktop import favoritesview
+from jarabe.desktop.activitieslist import ActivitiesList
 
 _FAVORITES_VIEW = 0
 _LIST_VIEW = 1
