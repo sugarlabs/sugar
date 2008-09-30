@@ -1,4 +1,4 @@
-sugardir = $(pythondir)/jarabe/view/frame
+sugardir = $(pythondir)/jarabe/frame
 sugar_PYTHON =				\
 	__init__.py			\
 	activitiestray.py		\

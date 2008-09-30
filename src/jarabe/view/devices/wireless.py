@@ -28,7 +28,7 @@ from jarabe.model.devices import wireless
 from jarabe.model.devices import device
 from jarabe.hardware import hardwaremanager
 from jarabe.hardware import nmclient
-from jarabe.view.frame.frameinvoker import FrameWidgetInvoker
+from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
 _ICON_NAME = 'network-wireless'
 

@@ -19,7 +19,7 @@ from sugar.graphics.tray import VTray, TrayIcon
 
 from jarabe.view import Shell
 from jarabe.view.BuddyMenu import BuddyMenu
-from jarabe.view.frame.frameinvoker import FrameWidgetInvoker
+from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import shellmodel
 from jarabe.model.BuddyModel import BuddyModel
 

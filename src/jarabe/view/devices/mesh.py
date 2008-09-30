@@ -27,7 +27,7 @@ from sugar.graphics.palette import Palette
 from jarabe.model.devices import device
 from jarabe.model.devices import wireless
 from jarabe.hardware import hardwaremanager
-from jarabe.view.frame.frameinvoker import FrameWidgetInvoker
+from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
 class DeviceView(TrayIcon):
 

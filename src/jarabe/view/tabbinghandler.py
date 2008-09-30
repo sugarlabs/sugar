@@ -19,7 +19,7 @@ import gtk
 import gobject
 
 from jarabe.view import Shell
-from jarabe.view.frame import frame
+from jarabe.frame import frame
 from jarabe.model import shellmodel
 
 _RAISE_DELAY = 250

@@ -25,7 +25,7 @@ from sugar.graphics.tray import TrayIcon
 from sugar.graphics.palette import Palette
 from sugar.graphics.xocolor import XoColor
 
-from jarabe.view.frame.frameinvoker import FrameWidgetInvoker
+from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
 _ICON_NAME = 'battery'
 

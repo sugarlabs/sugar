@@ -58,7 +58,7 @@ class Shell(gobject.GObject):
         from jarabe.view.keyhandler import KeyHandler
         self._key_handler = KeyHandler()
 
-        from jarabe.view.frame import frame
+        from jarabe.frame import frame
         self._frame = frame.get_instance()
 
         from jarabe.view.home.HomeWindow import HomeWindow

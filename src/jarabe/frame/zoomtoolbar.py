@@ -23,7 +23,7 @@ from sugar.graphics.palette import Palette
 from sugar.graphics.radiotoolbutton import RadioToolButton
 
 from jarabe.view import Shell
-from jarabe.view.frame.frameinvoker import FrameWidgetInvoker
+from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import shellmodel
 
 class ZoomToolbar(gtk.Toolbar):

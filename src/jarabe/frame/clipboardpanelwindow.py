@@ -20,8 +20,8 @@ from urlparse import urlparse
 import gtk
 import hippo
 
-from jarabe.view.frame.framewindow import FrameWindow
-from jarabe.view.frame.clipboardtray import ClipboardTray
+from jarabe.frame.framewindow import FrameWindow
+from jarabe.frame.clipboardtray import ClipboardTray
 
 from jarabe.model import clipboard
 

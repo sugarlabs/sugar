@@ -33,10 +33,10 @@ from sugar import profile
 from jarabe.model import shellmodel
 from jarabe.view.palettes import JournalPalette, CurrentActivityPalette
 from jarabe.view.pulsingicon import PulsingIcon
-from jarabe.view.frame.frameinvoker import FrameWidgetInvoker
-from jarabe.view.frame.notification import NotificationIcon
+from jarabe.frame.frameinvoker import FrameWidgetInvoker
+from jarabe.frame.notification import NotificationIcon
 from jarabe.view import Shell
-import jarabe.view.frame.frame
+import jarabe.frame.frame
 
 class ActivityButton(RadioToolButton):
     def __init__(self, home_activity, group):
@@ -95,7 +95,7 @@ class BaseInviteButton(ToolButton):
 
     def __clicked_cb(self, button):
         if self._notif_icon is not None:
-            frame = jarabe.view.frame.frame.get_instance()
+            frame = jarabe.frame.frame.get_instance()
             frame.remove_notification(self._notif_icon)
             self._notif_icon = None
             self._launch()
@@ -105,7 +105,7 @@ class BaseInviteButton(ToolButton):
         raise NotImplementedError
 
     def __destroy_cb(self, button):
-        frame = jarabe.view.frame.frame.get_instance()
+        frame = jarabe.frame.frame.get_instance()
         frame.remove_notification(self._notif_icon)
 
 class ActivityInviteButton(BaseInviteButton):
@@ -142,9 +142,9 @@ class ActivityInviteButton(BaseInviteButton):
         palette.set_group_id('frame')
         self._notif_icon.palette = palette
 
-        frame = jarabe.view.frame.frame.get_instance()
+        frame = jarabe.frame.frame.get_instance()
         frame.add_notification(self._notif_icon,
-                               jarabe.view.frame.frame.TOP_LEFT)
+                               jarabe.frame.frame.TOP_LEFT)
 
     def _launch(self):
         """Join the activity in the invite."""
@@ -188,9 +188,9 @@ class PrivateInviteButton(BaseInviteButton):
         palette.set_group_id('frame')
         self._notif_icon.palette = palette
 
-        frame = jarabe.view.frame.frame.get_instance()
+        frame = jarabe.frame.frame.get_instance()
         frame.add_notification(self._notif_icon,
-                               jarabe.view.frame.frame.TOP_LEFT)
+                               jarabe.frame.frame.TOP_LEFT)
 
     def _launch(self):
         """Start the activity with private channel."""

@@ -24,14 +24,14 @@ from sugar.graphics import animator
 from sugar.graphics import style
 from sugar.graphics import palettegroup
 
-from jarabe.view.frame.eventarea import EventArea
-from jarabe.view.frame.activitiestray import ActivitiesTray
-from jarabe.view.frame.zoomtoolbar import ZoomToolbar
-from jarabe.view.frame.friendstray import FriendsTray
-from jarabe.view.frame.devicestray import DevicesTray
-from jarabe.view.frame.framewindow import FrameWindow
-from jarabe.view.frame.clipboardpanelwindow import ClipboardPanelWindow
-from jarabe.view.frame.notification import NotificationIcon, NotificationWindow
+from jarabe.frame.eventarea import EventArea
+from jarabe.frame.activitiestray import ActivitiesTray
+from jarabe.frame.zoomtoolbar import ZoomToolbar
+from jarabe.frame.friendstray import FriendsTray
+from jarabe.frame.devicestray import DevicesTray
+from jarabe.frame.framewindow import FrameWindow
+from jarabe.frame.clipboardpanelwindow import ClipboardPanelWindow
+from jarabe.frame.notification import NotificationIcon, NotificationWindow
 
 TOP_RIGHT = 0
 TOP_LEFT = 1
