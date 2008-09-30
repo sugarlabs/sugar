@@ -18,7 +18,7 @@ import logging
 
 from sugar.graphics import tray
 
-from jarabe.view.devices import deviceview
+from jarabe.frame.devices import deviceview
 from jarabe.model import shellmodel
 
 _logger = logging.getLogger('DevicesTray')

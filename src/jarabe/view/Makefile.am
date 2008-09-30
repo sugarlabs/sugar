@@ -1,5 +1,3 @@
-SUBDIRS = devices
-
 sugardir = $(pythondir)/jarabe/view
 sugar_PYTHON =				\
 	__init__.py			\
