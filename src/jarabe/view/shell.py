@@ -38,13 +38,6 @@ from jarabe.view.launchwindow import LaunchWindow
 from jarabe.model import shellmodel
 from jarabe.journal import journalactivity
 
-# #3903 - this constant can be removed and assumed to be 1 when dbus-python
-# 0.82.3 is the only version used
-if dbus.version >= (0, 82, 3):
-    DBUS_PYTHON_TIMEOUT_UNITS_PER_SECOND = 1
-else:
-    DBUS_PYTHON_TIMEOUT_UNITS_PER_SECOND = 1000
-
 class Shell(gobject.GObject):
     def __init__(self):
         gobject.GObject.__init__(self)
@@ -77,15 +70,13 @@ class Shell(gobject.GObject):
         # Mount the datastore in internal flash
         ds_path = env.get_profile_path('datastore')
         try:
-            datastore.mount(ds_path, [], timeout=120 * \
-                                         DBUS_PYTHON_TIMEOUT_UNITS_PER_SECOND)
+            datastore.mount(ds_path, [], timeout=120)
         except Exception, e:
             # Don't explode if there's corruption; move the data out of the way
             # and attempt to create a store from scratch.
             logging.error(e)
             shutil.move(ds_path, os.path.abspath(ds_path) + str(time.time()))
-            datastore.mount(ds_path, [], timeout=120 * \
-                                         DBUS_PYTHON_TIMEOUT_UNITS_PER_SECOND)
+            datastore.mount(ds_path, [], timeout=120)
 
         journalactivity.start()
 
