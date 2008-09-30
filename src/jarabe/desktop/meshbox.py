@@ -35,11 +35,11 @@ from jarabe.model.devices import wireless
 from jarabe.model import shellmodel
 from jarabe.hardware import hardwaremanager
 from jarabe.hardware import nmclient
-from jarabe.view.BuddyIcon import BuddyIcon
+from jarabe.view.buddyicon import BuddyIcon
 from jarabe.view.pulsingicon import CanvasPulsingIcon
 from jarabe.desktop.snowflakelayout import SnowflakeLayout
 from jarabe.desktop.spreadlayout import SpreadLayout
-from jarabe.view import Shell
+from jarabe.view import shell
 
 from jarabe.hardware.nmclient import NM_802_11_CAP_PROTO_WEP, \
     NM_802_11_CAP_PROTO_WPA, NM_802_11_CAP_PROTO_WPA2
@@ -336,7 +336,7 @@ class ActivityView(hippo.CanvasBox):
 
     def _clicked_cb(self, item):
         bundle_id = self._model.get_bundle_id()
-        Shell.get_instance().join_activity(bundle_id, self._model.get_id())
+        shell.get_instance().join_activity(bundle_id, self._model.get_id())
 
     def set_filter(self, query):
         text_to_check = self._model.activity.props.name.lower() + \

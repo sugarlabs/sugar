@@ -35,7 +35,7 @@ from jarabe.view.palettes import JournalPalette, CurrentActivityPalette
 from jarabe.view.pulsingicon import PulsingIcon
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.frame.notification import NotificationIcon
-from jarabe.view import Shell
+from jarabe.view import shell
 import jarabe.frame.frame
 
 class ActivityButton(RadioToolButton):
@@ -148,9 +148,9 @@ class ActivityInviteButton(BaseInviteButton):
 
     def _launch(self):
         """Join the activity in the invite."""
-        shell = Shell.get_instance()
-        shell.join_activity(self._activity_model.get_bundle_id(),
-                            self._activity_model.get_id())
+        shell_inst = shell.get_instance()
+        shell_inst.join_activity(self._activity_model.get_bundle_id(),
+                                 self._activity_model.get_id())
 
 
 class PrivateInviteButton(BaseInviteButton):
@@ -194,9 +194,9 @@ class PrivateInviteButton(BaseInviteButton):
 
     def _launch(self):
         """Start the activity with private channel."""
-        shell = Shell.get_instance()
-        shell.start_activity_with_uri(self._bundle_id,
-                                      self._private_channel)
+        shell_inst = shell.get_instance()
+        shell_inst.start_activity_with_uri(self._bundle_id,
+                                           self._private_channel)
 
 
 class BaseInvitePalette(Palette):
@@ -246,9 +246,9 @@ class ActivityInvitePalette(BaseInvitePalette):
             self.set_primary_text(self._bundle_id)
 
     def _join(self):
-        shell = Shell.get_instance()
-        shell.join_activity(self._activity_model.get_bundle_id(),
-                            self._activity_model.get_id())
+        shell_inst = shell.get_instance()
+        shell_inst.join_activity(self._activity_model.get_bundle_id(),
+                                 self._activity_model.get_id())
 
     def _decline(self):
         invites = shellmodel.get_instance().get_invites()
@@ -273,9 +273,9 @@ class PrivateInvitePalette(BaseInvitePalette):
             self.set_primary_text(self._bundle_id)
 
     def _join(self):
-        shell = Shell.get_instance()
-        shell.start_activity_with_uri(self._bundle_id,
-                                      self._private_channel)
+        shell_inst = shell.get_instance()
+        shell_inst.start_activity_with_uri(self._bundle_id,
+                                           self._private_channel)
         invites = shellmodel.get_instance().get_invites()
         invites.remove_private_channel(self._private_channel)
 

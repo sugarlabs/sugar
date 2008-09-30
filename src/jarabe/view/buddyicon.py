@@ -17,7 +17,7 @@
 from sugar.graphics.icon import CanvasIcon
 from sugar.graphics import style
 
-from jarabe.view.BuddyMenu import BuddyMenu
+from jarabe.view.buddymenu import BuddyMenu
 
 class BuddyIcon(CanvasIcon):
     def __init__(self, buddy, size=style.STANDARD_ICON_SIZE):

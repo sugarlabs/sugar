@@ -33,7 +33,7 @@ from sugar.datastore import datastore
 from sugar import profile
 from sugar import env
 
-from jarabe.view.ActivityHost import ActivityHost
+from jarabe.view.activityhost import ActivityHost
 from jarabe.view.launchwindow import LaunchWindow
 from jarabe.model import shellmodel
 from jarabe.journal import journalactivity

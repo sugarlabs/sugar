@@ -26,7 +26,7 @@ import gtk
 from sugar._sugarext import KeyGrabber
 
 from jarabe.hardware import hardwaremanager
-from jarabe.view import Shell
+from jarabe.view import shell
 from jarabe.view.tabbinghandler import TabbingHandler
 from jarabe.model.shellmodel import ShellModel
 
@@ -148,19 +148,19 @@ class KeyHandler(object):
         self._tabbing_handler.next_activity()
 
     def handle_close_window(self):
-        Shell.get_instance().close_current_activity()
+        hell.get_instance().close_current_activity()
 
     def handle_zoom_mesh(self):
-        Shell.get_instance().set_zoom_level(ShellModel.ZOOM_MESH)
+        shell.get_instance().set_zoom_level(ShellModel.ZOOM_MESH)
 
     def handle_zoom_friends(self):
-        Shell.get_instance().set_zoom_level(ShellModel.ZOOM_FRIENDS)
+        shell.get_instance().set_zoom_level(ShellModel.ZOOM_FRIENDS)
 
     def handle_zoom_home(self):
-        Shell.get_instance().set_zoom_level(ShellModel.ZOOM_HOME)
+        shell.get_instance().set_zoom_level(ShellModel.ZOOM_HOME)
 
     def handle_zoom_activity(self):
-        Shell.get_instance().set_zoom_level(ShellModel.ZOOM_ACTIVITY)
+        shell.get_instance().set_zoom_level(ShellModel.ZOOM_ACTIVITY)
 
     def handle_brightness_max(self):
         self._change_brightness(value=_BRIGHTNESS_MAX)
@@ -187,10 +187,10 @@ class KeyHandler(object):
         self._change_volume(step=-_VOLUME_STEP)
 
     def handle_screenshot(self):
-        Shell.get_instance().take_screenshot()
+        shell.get_instance().take_screenshot()
 
     def handle_frame(self):
-        Shell.get_instance().get_frame().notify_key_press()
+        shell.get_instance().get_frame().notify_key_press()
 
 
     def handle_rotate(self):

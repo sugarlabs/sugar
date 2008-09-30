@@ -18,7 +18,7 @@ import logging
 import gtk
 import gobject
 
-from jarabe.view import Shell
+from jarabe.view import shell
 from jarabe.frame import frame
 from jarabe.model import shellmodel
 
@@ -102,7 +102,7 @@ class TabbingHandler(object):
             home_model.set_tabbing_activity(activity)
             self._start_timeout()
         else:
-            Shell.get_instance().activate_next_activity()
+            shell.get_instance().activate_next_activity()
 
     def previous_activity(self):
         if not self._tabbing:
@@ -126,7 +126,7 @@ class TabbingHandler(object):
             home_model.set_tabbing_activity(activity)
             self._start_timeout()
         else:
-            Shell.get_instance().activate_next_activity()
+            shell.get_instance().activate_next_activity()
 
     def stop(self):
         gtk.gdk.keyboard_ungrab()

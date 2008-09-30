@@ -18,7 +18,7 @@
 import dbus
 import os
 
-from jarabe.view import Shell
+from jarabe.view import shell
 from jarabe.model import shellmodel
 
 _DBUS_SERVICE = "org.laptop.Shell"
@@ -50,7 +50,7 @@ class ShellService(dbus.service.Object):
     _rainbow = None
 
     def __init__(self):
-        self._shell = Shell.get_instance()
+        self._shell = shell.get_instance()
         self._shell_model = shellmodel.get_instance()
 
         self._owner = self._shell_model.get_owner()

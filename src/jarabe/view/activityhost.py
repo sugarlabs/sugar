@@ -17,18 +17,11 @@
 import gtk
 import logging
 
-from jarabe.view import OverlayWindow
-
 class ActivityHost:
     def __init__(self, model):
         self._model = model
         self._window = model.get_window()
         self._gdk_window = gtk.gdk.window_foreign_new(self.get_xid())
-
-        try:
-            self._overlay_window = OverlayWindow.OverlayWindow(self._gdk_window)
-        except RuntimeError:
-            self._overlay_window = None
 
     def get_id(self):
         return self._model.get_activity_id()

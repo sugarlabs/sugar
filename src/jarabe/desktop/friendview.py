@@ -21,7 +21,7 @@ from sugar.graphics import style
 from sugar.presence import presenceservice
 from sugar import activity
 
-from jarabe.view.BuddyIcon import BuddyIcon
+from jarabe.view.buddyicon import BuddyIcon
 
 class FriendView(hippo.CanvasBox):
     def __init__(self, buddy, **kwargs):

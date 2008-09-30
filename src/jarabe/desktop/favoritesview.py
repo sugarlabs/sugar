@@ -30,7 +30,7 @@ from sugar.graphics.alert import Alert
 from sugar.profile import get_profile
 from sugar import activity
 
-from jarabe.view import Shell
+from jarabe.view import shell
 from jarabe.view.palettes import JournalPalette
 from jarabe.view.palettes import CurrentActivityPalette, ActivityPalette
 from jarabe.desktop.myicon import MyIcon
@@ -349,7 +349,7 @@ class ActivityIcon(CanvasIcon):
     def __button_release_event_cb(self, icon, event):
         self.palette.popdown(immediate=True)
         self._uncolor()
-        Shell.get_instance().start_activity(self._activity_info.bundle_id)
+        shell.get_instance().start_activity(self._activity_info.bundle_id)
 
     def get_bundle_id(self):
         return self._activity_info.bundle_id

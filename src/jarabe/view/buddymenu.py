@@ -23,7 +23,7 @@ from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
 
 from jarabe.model import shellmodel
-from jarabe.view import Shell
+from jarabe.view import shell
 
 class BuddyMenu(Palette):
     def __init__(self, buddy):
@@ -116,6 +116,6 @@ class BuddyMenu(Palette):
         friends.remove(self._buddy)
 
     def _invite_friend_cb(self, menuitem):
-        activity = Shell.get_instance().get_current_activity()
+        activity = shell.get_instance().get_current_activity()
         activity.invite(self._buddy)
 

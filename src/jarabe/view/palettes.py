@@ -30,7 +30,7 @@ from sugar.graphics.icon import Icon
 from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
 
-from jarabe.view import Shell
+from jarabe.view import shell
 
 class BasePalette(Palette):
     def __init__(self, home_activity):
@@ -145,7 +145,7 @@ class ActivityPalette(Palette):
         self._favorite_icon.props.xo_color = xo_color
 
     def __start_activate_cb(self, menu_item):
-        Shell.get_instance().start_activity(self._bundle_id)
+        shell.get_instance().start_activity(self._bundle_id)
 
     def __change_favorite_activate_cb(self, menu_item):
         registry = activity.get_registry()
