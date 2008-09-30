@@ -18,10 +18,10 @@ import wnck
 import gobject
 
 from sugar.presence import presenceservice
-from jarabe.model.Friends import Friends
-from jarabe.model.MeshModel import MeshModel
+from jarabe.model.friends import Friends
+from jarabe.model.meshmodel import MeshModel
 from jarabe.model.homemodel import HomeModel
-from jarabe.model.Owner import ShellOwner
+from jarabe.model.owner import ShellOwner
 from jarabe.model.devices.devicesmodel import DevicesModel
 
 class ShellModel(gobject.GObject):

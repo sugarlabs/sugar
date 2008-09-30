@@ -20,7 +20,7 @@ from sugar.graphics.xocolor import XoColor
 from sugar.presence import presenceservice
 from sugar import activity
 
-from jarabe.model.BuddyModel import BuddyModel
+from jarabe.model.buddymodel import BuddyModel
 from jarabe.model.accesspointmodel import AccessPointModel
 from jarabe.hardware import hardwaremanager
 from jarabe.hardware import nmclient

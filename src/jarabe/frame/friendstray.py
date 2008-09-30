@@ -21,7 +21,7 @@ from jarabe.view import shell
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import shellmodel
-from jarabe.model.BuddyModel import BuddyModel
+from jarabe.model.buddymodel import BuddyModel
 
 class FriendIcon(TrayIcon):
     def __init__(self, buddy):

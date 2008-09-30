@@ -25,7 +25,7 @@ from sugar import env
 from sugar import profile
 from sugar.presence import presenceservice
 from sugar import util
-from jarabe.model.Invites import Invites
+from jarabe.model.invites import Invites
 
 class ShellOwner(gobject.GObject):
     """Class representing the owner of this machine/instance. This class

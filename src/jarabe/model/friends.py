@@ -20,7 +20,7 @@ from ConfigParser import ConfigParser
 
 import gobject
 
-from jarabe.model.BuddyModel import BuddyModel
+from jarabe.model.buddymodel import BuddyModel
 from sugar import env
 import logging
 
