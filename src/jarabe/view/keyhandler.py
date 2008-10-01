@@ -148,7 +148,7 @@ class KeyHandler(object):
         self._tabbing_handler.next_activity()
 
     def handle_close_window(self):
-        hell.get_instance().close_current_activity()
+        shell.get_instance().close_current_activity()
 
     def handle_zoom_mesh(self):
         shell.get_instance().set_zoom_level(ShellModel.ZOOM_MESH)
