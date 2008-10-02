@@ -118,34 +118,6 @@ def main():
     if get_profile().timezone is not None:    
         os.environ['TZ'] = get_profile().timezone
 
-    if os.environ.has_key("SUGAR_TP_DEBUG"):
-        # Allow the user time to start up telepathy connection managers
-        # using the Sugar DBus bus address
-        import time
-        from telepathy.client import ManagerRegistry
-
-        registry = ManagerRegistry()
-        registry.LoadManagers()
-
-        debug_flags = os.environ["SUGAR_TP_DEBUG"].split(',')
-        for cm_name in debug_flags:
-            if cm_name not in ["gabble", "salut"]:
-                continue
-
-            try:
-                cm = registry.services[cm_name]
-            except KeyError:
-                print RuntimeError("%s connection manager not found!" % cm_name)
-
-            while not check_cm(cm['busname']):
-                print "Waiting for %s on: DBUS_SESSION_BUS_ADDRESS=%s" % \
-                    (cm_name, os.environ["DBUS_SESSION_BUS_ADDRESS"])
-                try:
-                    time.sleep(5)
-                except KeyboardInterrupt:
-                    print "Got Ctrl+C, continuing..."
-                    break
-
     # TODO: move initializations from the Shell constructor to a start() method
     shell.get_instance()
     ShellService()
