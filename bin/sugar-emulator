@@ -88,27 +88,24 @@ def main():
     """Script-level operations"""
 
     parser = OptionParser()
-    parser.add_option('-x', '--xo-style', dest='xo_style',
-                      action='store_true', help='use the XO style')
+    parser.add_option('-d', '--dpi', dest='dpi', help='Emulator dpi')
+    parser.add_option('-s', '--scaling', dest='scaling', help='Sugar scaling')
     (options, args) = parser.parse_args()
 
     _setup_env()
 
-    if options.xo_style:
-        _start_xephyr(dpi=201)
+    if options.dpi:
+        _start_xephyr(dpi=options.dpi)
     else:
         _start_xephyr()
 
-    if options.xo_style:
-        os.environ['SUGAR_THEME'] = 'sugar-xo'
-        os.environ['SUGAR_XO_STYLE'] = 'yes'
-    else:
-        os.environ['SUGAR_XO_STYLE'] = 'no'
+    if options.scaling:
+        os.environ['SUGAR_SCALING'] = options.scaling
 
     command = ['dbus-launch', 'dbus-launch', '--exit-with-session']
 
     if not args:
-        command.append('sugar-shell')
+        command.append('sugar')
     else:
         _start_matchbox()
 

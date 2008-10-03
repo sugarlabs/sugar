@@ -1,12 +1,12 @@
 SUBDIRS = icons
 
-sugar.gtkrc: gtkrc.em
-	$(srcdir)/em.py -D theme=\'sugar\' $(srcdir)/gtkrc.em > \
-		$(top_builddir)/data/sugar.gtkrc
+sugar-72.gtkrc: gtkrc.em
+	$(srcdir)/em.py -D scaling=\'72\' $(srcdir)/gtkrc.em > \
+		$(top_builddir)/data/sugar-72.gtkrc
 
-sugar-xo.gtkrc: gtkrc.em
-	$(srcdir)/em.py -D theme=\'sugar-xo\' $(srcdir)/gtkrc.em > \
-		$(top_builddir)/data/sugar-xo.gtkrc
+sugar-100.gtkrc: gtkrc.em
+	$(srcdir)/em.py -D scaling=\'100\' $(srcdir)/gtkrc.em > \
+		$(top_builddir)/data/sugar-100.gtkrc
 
 sugardir = $(pkgdatadir)/data
 sugar_DATA =			\
@@ -16,8 +16,8 @@ sugar_DATA =			\
 	$(GTKRC_FILES)
 
 GTKRC_FILES =		\
-	sugar.gtkrc	\
-	sugar-xo.gtkrc
+	sugar-72.gtkrc	\
+	sugar-100.gtkrc
 
 xsessionsdir = $(datadir)/xsessions
 xsessions_DATA = sugar.desktop

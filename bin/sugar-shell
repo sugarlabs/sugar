@@ -18,15 +18,6 @@
 import os
 import gettext
 
-from jarabe import config
-
-if os.environ.has_key('SUGAR_THEME'):
-    theme = os.environ['SUGAR_THEME']
-else:
-    theme = 'sugar'
-
-os.environ['GTK2_RC_FILES'] = os.path.join(config.data_path, '%s.gtkrc' % theme)
-
 import gtk
 import gobject
 import dbus.glib
