@@ -12,6 +12,7 @@ sugar_PYTHON =			\
 	meshbox.py		\
 	myicon.py		\
 	proc_smaps.py		\
+        schoolserver.py		\
 	snowflakelayout.py	\
 	spreadlayout.py		\
 	transitionbox.py

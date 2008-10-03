@@ -33,13 +33,14 @@ from sugar import activity
 from jarabe.view import shell
 from jarabe.view.palettes import JournalPalette
 from jarabe.view.palettes import CurrentActivityPalette, ActivityPalette
-from jarabe.desktop.myicon import MyIcon
-from jarabe.desktop import favoriteslayout
 from jarabe.model import shellmodel
-from jarabe.hardware import schoolserver
-from jarabe.hardware.schoolserver import RegisterError
 from jarabe.controlpanel.gui import ControlPanel
 from jarabe.session import get_session_manager
+
+from jarabe.desktop import schoolserver
+from jarabe.desktop.schoolserver import RegisterError
+from jarabe.desktop.myicon import MyIcon
+from jarabe.desktop import favoriteslayout
 
 _logger = logging.getLogger('FavoritesView')
 
