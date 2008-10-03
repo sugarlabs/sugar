@@ -16,7 +16,7 @@
 
 import gobject
 
-from jarabe.model import screen
+from jarabe.model import sound
 from jarabe.model.devices import device
 
 class Device(device.Device):
