@@ -22,8 +22,7 @@ from sugar import activity
 
 from jarabe.model.buddymodel import BuddyModel
 from jarabe.model.accesspointmodel import AccessPointModel
-from jarabe.hardware import hardwaremanager
-from jarabe.hardware import nmclient
+from jarabe.model import network
 
 class ActivityModel:
     def __init__(self, act, bundle):
@@ -90,7 +89,7 @@ class MeshModel(gobject.GObject):
         self._pservice.get_activities_async(
                 reply_handler=self._get_activities_cb)
 
-        network_manager = hardwaremanager.get_network_manager()
+        network_manager = network.get_manager()
         if network_manager:
             for nm_device in network_manager.get_devices():
                 self._add_network_device(nm_device)
@@ -123,7 +122,7 @@ class MeshModel(gobject.GObject):
 
     def _add_network_device(self, nm_device):
         dtype = nm_device.get_type()
-        if dtype == nmclient.DEVICE_TYPE_802_11_WIRELESS:
+        if dtype == network.DEVICE_TYPE_802_11_WIRELESS:
             for nm_network in nm_device.get_networks():
                 self._add_access_point(nm_device, nm_network)
 
@@ -131,7 +130,7 @@ class MeshModel(gobject.GObject):
                               self._nm_network_appeared_cb)
             nm_device.connect('network-disappeared',
                               self._nm_network_disappeared_cb)
-        elif dtype == nmclient.DEVICE_TYPE_802_11_MESH_OLPC:
+        elif dtype == network.DEVICE_TYPE_802_11_MESH_OLPC:
             self._mesh = nm_device
             self.emit('mesh-added', self._mesh)
 
@@ -139,7 +138,7 @@ class MeshModel(gobject.GObject):
         if nm_device == self._mesh:
             self._mesh = None
             self.emit('mesh-removed')
-        elif nm_device.get_type() == nmclient.DEVICE_TYPE_802_11_WIRELESS:
+        elif nm_device.get_type() == network.DEVICE_TYPE_802_11_WIRELESS:
             aplist = self._access_points.values()
             for ap in aplist:
                 if ap.get_nm_device() == nm_device:

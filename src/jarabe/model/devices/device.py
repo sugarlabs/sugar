@@ -16,7 +16,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import gobject
-from jarabe.hardware import nmclient
+from jarabe.model import network
 
 from sugar import util
 
@@ -25,9 +25,9 @@ STATE_ACTIVATED  = 1
 STATE_INACTIVE   = 2
 
 nm_state_to_state = {
-    nmclient.DEVICE_STATE_ACTIVATING : STATE_ACTIVATING,
-    nmclient.DEVICE_STATE_ACTIVATED  : STATE_ACTIVATED,
-    nmclient.DEVICE_STATE_INACTIVE   : STATE_INACTIVE
+    network.DEVICE_STATE_ACTIVATING : STATE_ACTIVATING,
+    network.DEVICE_STATE_ACTIVATED  : STATE_ACTIVATED,
+    network.DEVICE_STATE_INACTIVE   : STATE_INACTIVE
 }
 
 class Device(gobject.GObject):

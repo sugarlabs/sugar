@@ -19,7 +19,6 @@ import logging
 import dbus
 import gobject
 
-from jarabe.hardware.nmclient import NMClient
 from sugar.profile import get_profile
 from sugar import env
 from sugar import _sugarext
@@ -111,13 +110,4 @@ class HardwareManager(gobject.GObject):
 def get_manager():
     return _manager
 
-def get_network_manager():
-    return _network_manager
-
 _manager = HardwareManager()
-
-try:
-    _network_manager = NMClient()
-except dbus.DBusException, e:
-    _network_manager = None
-    logging.info('Network manager service not found.')

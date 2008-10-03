@@ -24,8 +24,7 @@ from jarabe.model.devices import wireless
 from jarabe.model.devices import mesh
 from jarabe.model.devices import battery
 from jarabe.model.devices import speaker
-from jarabe.hardware import hardwaremanager
-from jarabe.hardware import nmclient
+from jarabe.model import network
 
 class DevicesModel(gobject.GObject):
     __gsignals__ = {
@@ -62,7 +61,7 @@ class DevicesModel(gobject.GObject):
             self.add_device(battery.Device(udi))
 
     def _observe_network_manager(self):
-        network_manager = hardwaremanager.get_network_manager()
+        network_manager = network.get_manager()
         if not network_manager:
             return
 
@@ -80,8 +79,8 @@ class DevicesModel(gobject.GObject):
 
     def _network_device_added_cb(self, network_manager, nm_device):
         state = nm_device.get_state()
-        if state == nmclient.DEVICE_STATE_ACTIVATING \
-                or state == nmclient.DEVICE_STATE_ACTIVATED:
+        if state == network.DEVICE_STATE_ACTIVATING or \
+           state == network.DEVICE_STATE_ACTIVATED:
             self._check_network_device(nm_device)
 
     def _network_device_activating_cb(self, network_manager, nm_device):
@@ -100,8 +99,8 @@ class DevicesModel(gobject.GObject):
             return
 
         dtype = nm_device.get_type()
-        if dtype == nmclient.DEVICE_TYPE_802_11_WIRELESS \
-           or dtype == nmclient.DEVICE_TYPE_802_11_MESH_OLPC:
+        if dtype == network.DEVICE_TYPE_802_11_WIRELESS \
+           or dtype == network.DEVICE_TYPE_802_11_MESH_OLPC:
             self._add_network_device(nm_device)
 
     def _get_network_device(self, nm_device):
@@ -117,13 +116,13 @@ class DevicesModel(gobject.GObject):
             return
 
         dtype = nm_device.get_type()
-        if dtype == nmclient.DEVICE_TYPE_802_11_WIRELESS:
+        if dtype == network.DEVICE_TYPE_802_11_WIRELESS:
             dev = wireless.Device(nm_device)
             self.add_device(dev)
             sigid = dev.connect('notify::state',
                                 self._network_device_state_changed_cb)
             self._sigids[dev] = sigid
-        if dtype == nmclient.DEVICE_TYPE_802_11_MESH_OLPC:
+        if dtype == network.DEVICE_TYPE_802_11_MESH_OLPC:
             dev = mesh.Device(nm_device)
             self.add_device(dev)
             sigid = dev.connect('notify::state',

@@ -19,7 +19,8 @@ import dbus
 from gettext import gettext as _
 
 from sugar import profile
-from jarabe.hardware import hardwaremanager
+
+from jarabe.model.network import get_manager
 
 NM_SERVICE_NAME = 'org.freedesktop.NetworkManager'
 NM_SERVICE_PATH = '/org/freedesktop/NetworkManager'
@@ -94,7 +95,7 @@ def clear_registration():
 def clear_networks():
     """Clear saved passwords and network configurations.
     """
-    network_manager = hardwaremanager.get_network_manager()
+    network_manager = get_manager()
     if not network_manager:
         return
     network_manager.nminfo.delete_all_networks()

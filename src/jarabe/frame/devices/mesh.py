@@ -15,6 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
 from gettext import gettext as _
 
 import gtk
@@ -26,7 +27,7 @@ from sugar.graphics.palette import Palette
 
 from jarabe.model.devices import device
 from jarabe.model.devices import wireless
-from jarabe.hardware import hardwaremanager
+from jarabe.model import network
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
 class DeviceView(TrayIcon):
@@ -99,7 +100,7 @@ class MeshPalette(Palette):
     def _disconnect_activate_cb(self, menuitem):
         # Disconnection for an mesh means activating the default mesh device
         # again without a channel
-        network_manager = hardwaremanager.get_network_manager()
+        network_manager = network.get_manager()
         nm_device = self._model.get_nm_device()
         if network_manager and nm_device:
             network_manager.set_active_device(nm_device)
@@ -125,7 +126,6 @@ class MeshPalette(Palette):
         if len(label):
             self._step_label.set_text(label)
         else:
-            import logging
             logging.debug("Unhandled mesh step %d" % step)
             self._step_label.set_text(_("Unknown Mesh"))
 

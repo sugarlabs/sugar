@@ -16,16 +16,16 @@
 
 import gobject
 
-from jarabe.hardware import nmclient
+from jarabe.model import network
 
 STATE_CONNECTING   = 0
 STATE_CONNECTED    = 1
 STATE_NOTCONNECTED = 2
 
 _nm_state_to_state = {
-    nmclient.NETWORK_STATE_CONNECTED    : STATE_CONNECTED,
-    nmclient.NETWORK_STATE_CONNECTING   : STATE_CONNECTING,
-    nmclient.NETWORK_STATE_NOTCONNECTED : STATE_NOTCONNECTED
+    network.NETWORK_STATE_CONNECTED    : STATE_CONNECTED,
+    network.NETWORK_STATE_CONNECTING   : STATE_CONNECTING,
+    network.NETWORK_STATE_NOTCONNECTED : STATE_NOTCONNECTED
 }
 
 class AccessPointModel(gobject.GObject):

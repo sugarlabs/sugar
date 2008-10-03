@@ -1,6 +1,4 @@
-# vi: ts=4 ai noet
-#
-# Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2006-2008 Red Hat, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,10 +14,17 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
 import md5
 from gettext import gettext as _
 
+import dbus.service
 import gtk
+
+from jarabe.model import network
+
+NM_INFO_IFACE = 'org.freedesktop.NetworkManagerInfo'
+NM_INFO_PATH = '/org/freedesktop/NetworkManagerInfo'
 
 IW_AUTH_ALG_OPEN_SYSTEM = 0x00000001
 IW_AUTH_ALG_SHARED_KEY  = 0x00000002
@@ -49,6 +54,141 @@ IW_AUTH_CIPHER_WEP104 = 0x00000010
 
 IW_AUTH_KEY_MGMT_802_1X = 0x1
 IW_AUTH_KEY_MGMT_PSK    = 0x2
+
+WEP_PASSPHRASE = 1
+WEP_HEX = 2
+WEP_ASCII = 3
+
+class NoNetworks(dbus.DBusException):
+    def __init__(self):
+        dbus.DBusException.__init__(self)
+        self._dbus_error_name = NM_INFO_IFACE + '.NoNetworks'
+
+class CanceledKeyRequestError(dbus.DBusException):
+    def __init__(self):
+        dbus.DBusException.__init__(self)
+        self._dbus_error_name = NM_INFO_IFACE + '.CanceledError'
+
+class NMService(dbus.service.Object):
+    def __init__(self):
+        self._nmclient = network.get_manager()
+        self._nminfo = self._nmclient.nminfo
+        self._key_dialog = None
+        bus = dbus.SystemBus()
+
+        # If NMI is already around, don't grab the NMI service
+        bus_object = bus.get_object('org.freedesktop.DBus',
+                                    '/org/freedesktop/DBus')
+        name = None
+        try:
+            name = bus_object.GetNameOwner( \
+                    "org.freedesktop.NetworkManagerInfo",
+                    dbus_interface='org.freedesktop.DBus')
+        except dbus.DBusException:
+            logging.debug("Error getting owner of NMI")
+        if name:
+            logging.info("NMI service already owned by %s, won't claim it."
+                          % name)
+
+        bus_name = dbus.service.BusName(NM_INFO_IFACE, bus=bus)
+        dbus.service.Object.__init__(self, bus_name, NM_INFO_PATH)
+
+    @dbus.service.method(NM_INFO_IFACE, in_signature='i', out_signature='as')
+    def getNetworks(self, net_type):
+        ssids = self._nminfo.get_networks(net_type)
+        if len(ssids) > 0:
+            return dbus.Array(ssids)
+
+        raise NoNetworks()
+
+    @dbus.service.method(NM_INFO_IFACE, in_signature='si',
+                         async_callbacks=('async_cb', 'async_err_cb'))
+    def getNetworkProperties(self, ssid, net_type, async_cb, async_err_cb):
+        self._nminfo.get_network_properties(ssid, net_type,
+                                            async_cb, async_err_cb)
+
+    @dbus.service.method(NM_INFO_IFACE)
+    def updateNetworkInfo(self, ssid, bauto, bssid, cipher, *args):
+        self._nminfo.update_network_info(ssid, bauto, bssid, cipher, args)
+
+    @dbus.service.method(NM_INFO_IFACE,
+                         async_callbacks=('async_cb', 'async_err_cb'))
+    def getKeyForNetwork(self, dev_path, net_path, ssid, attempt,
+                         new_key, async_cb, async_err_cb):
+        self._get_key_for_network(dev_path, net_path, ssid,
+                                  attempt, new_key, async_cb, async_err_cb)
+
+    @dbus.service.method(NM_INFO_IFACE)
+    def cancelGetKeyForNetwork(self):
+        self._cancel_get_key_for_network()
+
+    def _get_key_for_network(self, dev_op, net_op, ssid, attempt,
+                             new_key, async_cb, async_err_cb):
+        if not isinstance(ssid, unicode):
+            raise ValueError("Invalid arguments; ssid must be unicode.")
+        if self._nminfo.allowed_networks.has_key(ssid) and not new_key:
+            # We've got the info already
+            net = self._nminfo.allowed_networks[ssid]
+            async_cb(tuple(net.get_security()))
+            return
+
+        # Otherwise, ask the user for it
+        net = None
+        dev = self._nmclient.get_device(dev_op)
+        if not dev:
+            async_err_cb(network.NotFoundError("Device was unknown."))
+            return
+
+        if dev.get_type() == network.DEVICE_TYPE_802_3_ETHERNET:
+            # We don't support wired 802.1x yet...
+            async_err_cb(network.UnsupportedError(
+                                "Device type is unsupported by NMI."))
+            return
+
+        net = dev.get_network(net_op)
+        if not net:
+            async_err_cb(network.NotFoundError("Network was unknown."))
+            return
+
+        self._key_dialog = new_key_dialog(net, async_cb, async_err_cb)
+        self._key_dialog.connect("response", self._key_dialog_response_cb)
+        self._key_dialog.connect("destroy", self._key_dialog_destroy_cb)
+        self._key_dialog.show_all()
+
+    def _key_dialog_destroy_cb(self, widget, data=None):
+        if widget != self._key_dialog:
+            return
+        self._key_dialog_response_cb(widget, gtk.RESPONSE_CANCEL)
+
+    def _key_dialog_response_cb(self, widget, response_id):
+        if widget != self._key_dialog:
+            return
+
+        (async_cb, async_err_cb) = self._key_dialog.get_callbacks()
+        security = None
+        if response_id == gtk.RESPONSE_OK:
+            security = self._key_dialog.create_security()
+        self._key_dialog = None
+        widget.destroy()
+
+        if response_id in [gtk.RESPONSE_CANCEL, gtk.RESPONSE_NONE]:
+            # key dialog dialog was canceled; send the error back to NM
+            async_err_cb(CanceledKeyRequestError())
+        elif response_id == gtk.RESPONSE_OK:
+            if not security:
+                raise RuntimeError("Invalid security arguments.")
+            props = security.get_properties()
+            a = tuple(props)
+            async_cb(*a)
+        else:
+            raise RuntimeError("Unhandled key dialog response %d" % response_id)
+
+    def _cancel_get_key_for_network(self):
+        # Close the wireless key dialog and just have it return
+        # with the 'canceled' argument set to true
+        if not self._key_dialog:
+            return
+        self._key_dialog_destroy_cb(self._key_dialog)
 
 def string_is_hex(key):
     is_hex = True
@@ -124,10 +264,6 @@ class KeyDialog(gtk.Dialog):
 
     def get_callbacks(self):
         return (self._async_cb, self._async_err_cb)
-
-WEP_PASSPHRASE = 1
-WEP_HEX = 2
-WEP_ASCII = 3
 
 class WEPKeyDialog(KeyDialog):
     def __init__(self, net, async_cb, async_err_cb):
@@ -206,8 +342,7 @@ class WEPKeyDialog(KeyDialog):
 
     def create_security(self):
         (we_cipher, key, auth_alg) = self._get_security()
-        from jarabe.hardware.nminfo import Security
-        return Security.new_from_args(we_cipher, (key, auth_alg))
+        return network.Security.new_from_args(we_cipher, (key, auth_alg))
 
     def _update_response_sensitivity(self, ignored=None):
         key = self._entry.get_text()
@@ -296,9 +431,8 @@ class WPAKeyDialog(KeyDialog):
 
     def create_security(self):
         (we_cipher, key, wpa_ver) = self._get_security()
-        from jarabe.hardware.nminfo import Security
-        return Security.new_from_args(we_cipher,
-                                      (key, wpa_ver, IW_AUTH_KEY_MGMT_PSK))
+        return network.Security.new_from_args(
+                        we_cipher, (key, wpa_ver, IW_AUTH_KEY_MGMT_PSK))
 
     def _update_response_sensitivity(self, ignored=None):
         key = self._entry.get_text()
@@ -326,29 +460,3 @@ def new_key_dialog(net, async_cb, async_err_cb):
         return WEPKeyDialog(net, async_cb, async_err_cb)
     else:
         raise RuntimeError("Unhandled network capabilities %x" % caps)
-
-
-
-class FakeNet(object):
-    def get_ssid(self):
-        return "olpcwpa"
-
-    def get_caps(self):
-        return NM_802_11_CAP_CIPHER_CCMP | NM_802_11_CAP_CIPHER_TKIP | \
-                NM_802_11_CAP_PROTO_WPA
-
-def response_cb(widget, response_id):
-    if response_id == gtk.RESPONSE_OK:
-        print dialog.print_security()
-    else:
-        print "canceled"
-    widget.hide()
-    widget.destroy()
-
-
-if __name__ == "__main__":
-    fake_net = FakeNet()
-    dialog = new_key_dialog(fake_net, None, None)
-    dialog.connect("response", response_cb)
-    dialog.run()
-

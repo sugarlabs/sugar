@@ -33,15 +33,14 @@ from sugar import profile
 from jarabe.model import accesspointmodel
 from jarabe.model.devices import wireless
 from jarabe.model import shellmodel
-from jarabe.hardware import hardwaremanager
-from jarabe.hardware import nmclient
+from jarabe.model import network
 from jarabe.view.buddyicon import BuddyIcon
 from jarabe.view.pulsingicon import CanvasPulsingIcon
 from jarabe.desktop.snowflakelayout import SnowflakeLayout
 from jarabe.desktop.spreadlayout import SpreadLayout
 from jarabe.view import shell
 
-from jarabe.hardware.nmclient import NM_802_11_CAP_PROTO_WEP, \
+from jarabe.model.network import NM_802_11_CAP_PROTO_WEP, \
     NM_802_11_CAP_PROTO_WPA, NM_802_11_CAP_PROTO_WPA2
 
 
@@ -112,7 +111,7 @@ class AccessPointView(CanvasPulsingIcon):
 
     def _disconnect_activate_cb(self, menuitem):
         # Disconnection for an AP means activating the default mesh device
-        network_manager = hardwaremanager.get_network_manager()
+        network_manager = network.get_manager()
         if network_manager and self._meshdev:
             network_manager.set_active_device(self._meshdev)
             self._palette.props.secondary_text = _('Disconnecting...')
@@ -129,11 +128,11 @@ class AccessPointView(CanvasPulsingIcon):
         self._update_state()
 
     def _activate_cb(self, icon):
-        network_manager = hardwaremanager.get_network_manager()
+        network_manager = network.get_manager()
         if network_manager:
             device = self._model.get_nm_device()
-            network = self._model.get_nm_network()
-            network_manager.set_active_device(device, network)
+            nm_network = self._model.get_nm_network()
+            network_manager.set_active_device(device, nm_network)
 
     def _update_name(self):
         self._palette.props.primary_text = self._model.props.name
@@ -224,17 +223,17 @@ class MeshDeviceView(CanvasPulsingIcon):
 
         state = self._nm_device.get_state()
         chan = wireless.freq_to_channel(self._nm_device.get_frequency())
-        if state == nmclient.DEVICE_STATE_ACTIVATED and chan == self.channel:
+        if state == network.DEVICE_STATE_ACTIVATED and chan == self.channel:
             self._disconnect_item.show()
         return p
 
     def _disconnect_activate_cb(self, menuitem):
-        network_manager = hardwaremanager.get_network_manager()
+        network_manager = network.get_manager()
         if network_manager:
             network_manager.set_active_device(self._nm_device)
 
     def _activate_cb(self, icon):
-        network_manager = hardwaremanager.get_network_manager()
+        network_manager = network.get_manager()
         if network_manager:
             freq = wireless.channel_to_freq(self.channel)
             network_manager.set_active_device(self._nm_device, mesh_freq=freq)
@@ -245,13 +244,13 @@ class MeshDeviceView(CanvasPulsingIcon):
     def _update_state(self):
         state = self._nm_device.get_state()
         chan = wireless.freq_to_channel(self._nm_device.get_frequency())
-        if state == nmclient.DEVICE_STATE_ACTIVATING and chan == self.channel:
+        if state == network.DEVICE_STATE_ACTIVATING and chan == self.channel:
             self._disconnect_item.hide()
             self.props.pulsing = True
-        elif state == nmclient.DEVICE_STATE_ACTIVATED and chan == self.channel:
+        elif state == network.DEVICE_STATE_ACTIVATED and chan == self.channel:
             self._disconnect_item.show()
             self.props.pulsing = False
-        elif state == nmclient.DEVICE_STATE_INACTIVE or chan != self.channel:
+        elif state == network.DEVICE_STATE_INACTIVE or chan != self.channel:
             self._disconnect_item.hide()
             self.props.pulsing = False
 

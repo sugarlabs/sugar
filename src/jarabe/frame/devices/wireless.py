@@ -26,8 +26,7 @@ from sugar.graphics.palette import Palette
 
 from jarabe.model.devices import wireless
 from jarabe.model.devices import device
-from jarabe.hardware import hardwaremanager
-from jarabe.hardware import nmclient
+from jarabe.model import network
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
 _ICON_NAME = 'network-wireless'
@@ -41,9 +40,9 @@ class DeviceView(TrayIcon):
         self._model = model
 
         meshdev = None
-        network_manager = hardwaremanager.get_network_manager()
+        network_manager = network.get_manager()
         for dev in network_manager.get_devices():
-            if dev.get_type() == nmclient.DEVICE_TYPE_802_11_MESH_OLPC:
+            if dev.get_type() == network.DEVICE_TYPE_802_11_MESH_OLPC:
                 meshdev = dev
                 break
 
@@ -131,7 +130,7 @@ class WirelessPalette(Palette):
 
     def _disconnect_activate_cb(self, menuitem):
         # Disconnection for an AP means activating the default mesh device
-        network_manager = hardwaremanager.get_network_manager()
+        network_manager = network.get_manager()
         if network_manager and self._meshdev:
             network_manager.set_active_device(self._meshdev)
 

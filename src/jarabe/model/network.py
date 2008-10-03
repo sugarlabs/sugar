@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2006-2008 Red Hat, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,6 +15,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import time
+import os
+import binascii
+import ConfigParser
 import logging
 
 import dbus
@@ -22,8 +26,8 @@ import dbus.glib
 import dbus.decorators
 import gobject
 
-from jarabe.hardware import nminfo
 from sugar.graphics import xocolor
+from sugar import env
 
 IW_AUTH_ALG_OPEN_SYSTEM = 0x00000001
 IW_AUTH_ALG_SHARED_KEY  = 0x00000002
@@ -55,8 +59,6 @@ NM_DEVICE_CAP_NM_SUPPORTED = 0x00000001
 NM_DEVICE_CAP_CARRIER_DETECT = 0x00000002
 NM_DEVICE_CAP_WIRELESS_SCAN = 0x00000004
 
-sys_bus = dbus.SystemBus()
-
 NM_802_11_CAP_NONE            = 0x00000000
 NM_802_11_CAP_PROTO_NONE      = 0x00000001
 NM_802_11_CAP_PROTO_WEP       = 0x00000002
@@ -79,6 +81,396 @@ DEVICE_STATE_INACTIVE   = 2
 
 IW_MODE_ADHOC = 1
 IW_MODE_INFRA = 2
+
+IW_AUTH_KEY_MGMT_802_1X = 0x1
+IW_AUTH_KEY_MGMT_PSK = 0x2
+
+IW_AUTH_WPA_VERSION_DISABLED = 0x00000001
+IW_AUTH_WPA_VERSION_WPA      = 0x00000002
+IW_AUTH_WPA_VERSION_WPA2     = 0x00000004
+
+NM_AUTH_TYPE_WPA_PSK_AUTO = 0x00000000
+IW_AUTH_CIPHER_NONE   = 0x00000001
+IW_AUTH_CIPHER_WEP40  = 0x00000002
+IW_AUTH_CIPHER_TKIP   = 0x00000004
+IW_AUTH_CIPHER_CCMP   = 0x00000008
+IW_AUTH_CIPHER_WEP104 = 0x00000010
+
+IW_AUTH_ALG_OPEN_SYSTEM = 0x00000001
+IW_AUTH_ALG_SHARED_KEY  = 0x00000002
+
+NETWORK_TYPE_UNKNOWN = 0
+NETWORK_TYPE_ALLOWED = 1
+NETWORK_TYPE_INVALID = 2
+
+sys_bus = dbus.SystemBus()
+
+class NetworkInvalidError(Exception):
+    pass
+
+class NotFoundError(dbus.DBusException):
+    pass
+
+class UnsupportedError(dbus.DBusException):
+    pass
+
+class NMConfig(ConfigParser.ConfigParser):
+    def get_bool(self, section, name):
+        opt = self.get(section, name)
+        if type(opt) == str:
+            if opt.lower() == 'yes' or opt.lower() == 'true':
+                return True
+            elif opt.lower() == 'no' or opt.lower() == 'false':
+                return False
+        raise ValueError("Invalid format for %s/%s.  Should be one of" \
+                         " [yes, no, true, false]." % (section, name))
+
+    def get_list(self, section, name):
+        opt = self.get(section, name)
+        if type(opt) != str or not len(opt):
+            return []
+        try:
+            return opt.split()
+        except Exception:
+            raise ValueError("Invalid format for %s/%s.  Should be a" \
+                             " space-separate list." % (section, name))
+
+    def get_int(self, section, name):
+        opt = self.get(section, name)
+        try:
+            return int(opt)
+        except ValueError:
+            raise ValueError("Invalid format for %s/%s.  Should be a" \
+                             " valid integer." % (section, name))
+
+    def get_float(self, section, name):
+        opt = self.get(section, name)
+        try:
+            return float(opt)
+        except ValueError:
+            raise ValueError("Invalid format for %s/%s.  Should be a" \
+                             " valid float." % (section, name))
+
+class Security(object):
+    def __init__(self, we_cipher):
+        self._we_cipher = we_cipher
+        self._key = None
+        self._auth_alg = None
+
+    def read_from_config(self, cfg, name):
+        pass
+
+    def read_from_args(self, args):
+        pass
+
+    def new_from_config(cfg, name):
+        security = None
+        we_cipher = cfg.get_int(name, "we_cipher")
+        if we_cipher == IW_AUTH_CIPHER_NONE:
+            security = Security(we_cipher)
+        elif we_cipher == IW_AUTH_CIPHER_WEP40 or \
+                        we_cipher == IW_AUTH_CIPHER_WEP104:
+            security = WEPSecurity(we_cipher)
+        elif we_cipher == NM_AUTH_TYPE_WPA_PSK_AUTO or \
+                        we_cipher == IW_AUTH_CIPHER_CCMP or \
+                        we_cipher == IW_AUTH_CIPHER_TKIP:
+            security = WPASecurity(we_cipher)
+        else:
+            raise ValueError("Unsupported security combo")
+        security.read_from_config(cfg, name)
+        return security
+    new_from_config = staticmethod(new_from_config)
+
+    def new_from_args(we_cipher, args):
+        security = None
+        try:
+            if we_cipher == IW_AUTH_CIPHER_NONE:
+                security = Security(we_cipher)
+            elif we_cipher == IW_AUTH_CIPHER_WEP40 or \
+                            we_cipher == IW_AUTH_CIPHER_WEP104:
+                security = WEPSecurity(we_cipher)
+            elif we_cipher == NM_AUTH_TYPE_WPA_PSK_AUTO or \
+                            we_cipher == IW_AUTH_CIPHER_CCMP or \
+                            we_cipher == IW_AUTH_CIPHER_TKIP:
+                security = WPASecurity(we_cipher)
+            else:
+                raise ValueError("Unsupported security combo")
+            security.read_from_args(args)
+        except ValueError, e:
+            logging.debug("Error reading security information: %s" % e)
+            del security
+            return None
+        return security
+    new_from_args = staticmethod(new_from_args)
+
+    def get_properties(self):
+        return [dbus.Int32(self._we_cipher)]
+
+    def write_to_config(self, section, config):
+        config.set(section, "we_cipher", self._we_cipher)
+
+
+class WEPSecurity(Security):
+    def read_from_args(self, args):
+        if len(args) != 2:
+            raise ValueError("not enough arguments")
+        key = args[0]
+        auth_alg = args[1]
+        if isinstance(key, unicode):
+            key = key.encode()
+        if not isinstance(key, str):
+            raise ValueError("wrong argument type for key")
+        if not isinstance(auth_alg, int):
+            raise ValueError("wrong argument type for auth_alg")
+        self._key = key
+        self._auth_alg = auth_alg
+
+    def read_from_config(self, cfg, name):
+        # Key should be a hex encoded string
+        self._key = cfg.get(name, "key")
+        if self._we_cipher == IW_AUTH_CIPHER_WEP40 and len(self._key) != 10:
+            raise ValueError("Key length not right for 40-bit WEP")
+        if self._we_cipher == IW_AUTH_CIPHER_WEP104 and len(self._key) != 26:
+            raise ValueError("Key length not right for 104-bit WEP")
+
+        try:
+            binascii.a2b_hex(self._key)
+        except TypeError:
+            raise ValueError("Key was not a hexadecimal string.")
+            
+        self._auth_alg = cfg.get_int(name, "auth_alg")
+        if self._auth_alg != IW_AUTH_ALG_OPEN_SYSTEM and \
+                self._auth_alg != IW_AUTH_ALG_SHARED_KEY:
+            raise ValueError("Invalid authentication algorithm %d"
+                             % self._auth_alg)
+
+    def get_properties(self):
+        args = Security.get_properties(self)
+        args.append(dbus.String(self._key))
+        args.append(dbus.Int32(self._auth_alg))
+        return args
+
+    def write_to_config(self, section, config):
+        Security.write_to_config(self, section, config)
+        config.set(section, "key", self._key)
+        config.set(section, "auth_alg", self._auth_alg)
+
+class WPASecurity(Security):
+    def __init__(self, we_cipher):
+        Security.__init__(self, we_cipher)
+        self._wpa_ver = None
+        self._key_mgmt = None
+
+    def read_from_args(self, args):
+        if len(args) != 3:
+            raise ValueError("not enough arguments")
+        key = args[0]
+        if isinstance(key, unicode):
+            key = key.encode()
+        if not isinstance(key, str):
+            raise ValueError("wrong argument type for key")
+
+        wpa_ver = args[1]
+        if not isinstance(wpa_ver, int):
+            raise ValueError("wrong argument type for WPA version")
+
+        key_mgmt = args[2]
+        if not isinstance(key_mgmt, int):
+            raise ValueError("wrong argument type for WPA key management")
+        if not key_mgmt & IW_AUTH_KEY_MGMT_PSK:
+            raise ValueError("Key management types other than" \
+                             " PSK are not supported")
+
+        self._key = key
+        self._wpa_ver = wpa_ver
+        self._key_mgmt = key_mgmt
+
+    def read_from_config(self, cfg, name):
+        # Key should be a hex encoded string
+        self._key = cfg.get(name, "key")
+        if len(self._key) != 64:
+            raise ValueError("Key length not right for WPA-PSK")
+
+        try:
+            binascii.a2b_hex(self._key)
+        except TypeError:
+            raise ValueError("Key was not a hexadecimal string.")
+            
+        self._wpa_ver = cfg.get_int(name, "wpa_ver")
+        if self._wpa_ver != IW_AUTH_WPA_VERSION_WPA and \
+                self._wpa_ver != IW_AUTH_WPA_VERSION_WPA2:
+            raise ValueError("Invalid WPA version %d" % self._wpa_ver)
+
+        self._key_mgmt = cfg.get_int(name, "key_mgmt")
+        if not self._key_mgmt & IW_AUTH_KEY_MGMT_PSK:
+            raise ValueError("Invalid WPA key management option %d"
+                             % self._key_mgmt)
+
+    def get_properties(self):
+        args = Security.get_properties(self)
+        args.append(dbus.String(self._key))
+        args.append(dbus.Int32(self._wpa_ver))
+        args.append(dbus.Int32(self._key_mgmt))
+        return args
+
+    def write_to_config(self, section, config):
+        Security.write_to_config(self, section, config)
+        config.set(section, "key", self._key)
+        config.set(section, "wpa_ver", self._wpa_ver)
+        config.set(section, "key_mgmt", self._key_mgmt)
+
+
+class NetworkInfo:
+    def __init__(self, ssid):
+        self.ssid = ssid
+        self.timestamp = int(time.time())
+        self.bssids = []
+        self.we_cipher = 0
+        self._security = None
+
+    def get_properties(self):
+        bssid_list = dbus.Array([], signature="s")
+        for item in self.bssids:
+            bssid_list.append(dbus.String(item))
+        args = [dbus.String(self.ssid), dbus.Int32(self.timestamp),
+                dbus.Boolean(True), bssid_list]
+        args += self._security.get_properties()
+        return tuple(args)
+
+    def get_security(self):
+        return self._security.get_properties()
+
+    def set_security(self, security):
+        self._security = security
+
+    def read_from_args(self, auto, bssid, we_cipher, args):
+        if auto == False:
+            self.timestamp = int(time.time())
+        if not bssid in self.bssids:
+            self.bssids.append(bssid)
+
+        self._security = Security.new_from_args(we_cipher, args)
+        if not self._security:
+            raise NetworkInvalidError("Invalid security information")
+
+    def read_from_config(self, config):
+        try:
+            self.timestamp = config.get_int(self.ssid, "timestamp")
+        except (ConfigParser.NoOptionError, ValueError), e:
+            raise NetworkInvalidError(e)
+
+        try:
+            self._security = Security.new_from_config(config, self.ssid)
+        except Exception, e:
+            raise NetworkInvalidError(e)
+
+        # The following don't need to be present
+        try:
+            self.bssids = config.get_list(self.ssid, "bssids")
+        except (ConfigParser.NoOptionError, ValueError), e:
+            logging.debug("Error reading bssids: %s" % e)
+
+    def write_to_config(self, config):
+        try:
+            config.add_section(self.ssid)
+            config.set(self.ssid, "timestamp", self.timestamp)
+            if len(self.bssids) > 0:
+                opt = " "
+                opt = opt.join(self.bssids)
+                config.set(self.ssid, "bssids", opt)
+            self._security.write_to_config(self.ssid, config)
+        except Exception, e:
+            logging.debug("Error writing '%s': %s" % (self.ssid, e))
+
+class NMInfo(object):
+    def __init__(self, client):
+        profile_path = env.get_profile_path()
+        self._cfg_file = os.path.join(profile_path, "nm", "networks.cfg")
+        self._nmclient = client
+
+        self.allowed_networks = self._read_config()
+
+    def save_config(self):
+        self._write_config(self.allowed_networks)
+
+    def _read_config(self):
+        if not os.path.exists(os.path.dirname(self._cfg_file)):
+            os.makedirs(os.path.dirname(self._cfg_file), 0755)
+        if not os.path.exists(self._cfg_file):
+            self._write_config({})
+            return {}
+
+        config = NMConfig()
+        config.read(self._cfg_file)
+        networks = {}
+        for name in config.sections():
+            try:
+                net = NetworkInfo(name)
+                net.read_from_config(config)
+                networks[name] = net
+            except Exception, e:
+                logging.error("Error when processing config for" \
+                              " the network %s: %r" % (name, e))
+
+        del config
+        return networks
+
+    def _write_config(self, networks):
+        fp = open(self._cfg_file, 'w')
+        config = NMConfig()
+        for net in networks.values():
+            net.write_to_config(config)
+        config.write(fp)
+        fp.close()
+        del config
+
+    def get_networks(self, net_type):
+        if net_type != NETWORK_TYPE_ALLOWED:
+            raise ValueError("Bad network type")
+        nets = []
+        for net in self.allowed_networks.values():
+            nets.append(net.ssid)
+        logging.debug("Returning networks: %s" % nets)
+        return nets
+
+    def get_network_properties(self, ssid, net_type, async_cb, async_err_cb):
+        if not isinstance(ssid, unicode):
+            async_err_cb(ValueError("Invalid arguments; ssid must be unicode."))
+        if net_type != NETWORK_TYPE_ALLOWED:
+            async_err_cb(ValueError("Bad network type"))
+        if not self.allowed_networks.has_key(ssid):
+            async_err_cb(NotFoundError("Network '%s' not found." % ssid))
+        network = self.allowed_networks[ssid]
+        props = network.get_properties()
+
+        # DBus workaround: the normal method return handler wraps
+        # the returned arguments in a tuple and then converts that to a
+        # struct, but NetworkManager expects a plain list of arguments.
+        # It turns out that the async callback method return code _doesn't_
+        # wrap the returned arguments in a tuple, so as a workaround use
+        # the async callback stuff here even though we're not doing it
+        # asynchronously.
+        async_cb(*props)
+
+    def update_network_info(self, ssid, auto, bssid, we_cipher, args):
+        if not isinstance(ssid, unicode):
+            raise ValueError("Invalid arguments; ssid must be unicode.")
+        if self.allowed_networks.has_key(ssid):
+            del self.allowed_networks[ssid]
+        net = Network(ssid)
+        try:
+            net.read_from_args(auto, bssid, we_cipher, args)
+            logging.debug("Updated network information for '%s'." % ssid)
+            self.allowed_networks[ssid] = net
+            self.save_config()
+        except NetworkInvalidError, e:
+            logging.debug("Error updating network information: %s" % e)
+            del net
+
+    # this method is invoked directly in-process (not by DBus).
+    def delete_all_networks(self):
+        self.allowed_networks = {}
+        self.save_config()
 
 class Network(gobject.GObject):
     __gsignals__ = {
@@ -133,8 +525,7 @@ class Network(gobject.GObject):
 
         fav_nets = []
         if self._client.nminfo:
-            fav_nets = self._client.nminfo.get_networks(
-                    nminfo.NETWORK_TYPE_ALLOWED)
+            fav_nets = self._client.nminfo.get_networks(NETWORK_TYPE_ALLOWED)
         if self._ssid in fav_nets:
             self._favorite = True
 
@@ -524,7 +915,7 @@ class NMClient(gobject.GObject):
         self._update_timer = 0
         self._devices = {}
 
-        self.nminfo = nminfo.NMInfo(self)
+        self.nminfo = NMInfo(self)
         
         self._setup_dbus()
         if self._nm_present:
@@ -757,3 +1148,12 @@ class NMClient(gobject.GObject):
         if not self._devices.has_key(device):
             return
         self._devices[device].set_carrier(False)
+
+def get_manager():
+    return _manager
+
+try:
+    _manager = NMClient()
+except dbus.DBusException:
+    _manager = None
+    logging.info('Network manager service not found.')

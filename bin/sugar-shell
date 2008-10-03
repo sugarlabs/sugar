@@ -17,6 +17,7 @@
 
 import os
 import gettext
+import logging
 
 import gtk
 import gobject
@@ -34,6 +35,7 @@ from jarabe.hardware import hardwaremanager
 from jarabe.intro.window import IntroWindow
 from jarabe.intro.window import create_profile
 from jarabe.session import get_session_manager
+from jarabe.nmservice import NMService
 from jarabe import logsmanager
 from jarabe import config
 
@@ -85,6 +87,11 @@ def main():
 
     session_manager = get_session_manager()
     session_manager.start()
+
+    try:
+        nm_service = NMService()
+    except dbus.DBusException:
+        logging.error("Network manager is already running.")
 
     try:
         gtk.main()
