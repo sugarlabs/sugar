@@ -22,8 +22,6 @@ import signal
 from sugar import session
 from sugar import env
 
-from jarabe.hardware import hardwaremanager
-
 _session_manager = None
 
 class SessionManager(session.SessionManager):
@@ -49,9 +47,6 @@ class SessionManager(session.SessionManager):
 
     def shutdown_completed(self):
         session.SessionManager.shutdown_completed(self)
-
-        hw_manager = hardwaremanager.get_manager()
-        hw_manager.shutdown()
 
         bus = dbus.SystemBus()
         proxy = bus.get_object('org.freedesktop.Hal', 

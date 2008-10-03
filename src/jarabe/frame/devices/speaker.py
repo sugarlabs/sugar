@@ -18,7 +18,6 @@ from gettext import gettext as _
 
 import gtk
 
-from jarabe.hardware import hardwaremanager
 from sugar import profile
 from sugar.graphics import style
 from sugar.graphics.icon import get_icon_state, Icon
@@ -28,6 +27,7 @@ from sugar.graphics.palette import Palette
 from sugar.graphics.xocolor import XoColor
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
+from jarabe.model import sound
 
 _ICON_NAME = 'speaker'
 
@@ -89,7 +89,7 @@ class SpeakerPalette(Palette):
         self.set_content(vbox)
         vbox.show()
 
-        vol_step = hardwaremanager.VOL_CHANGE_INCREMENT_RECOMMENDATION
+        vol_step = sound.VOLUME_STEP
         self._adjustment = gtk.Adjustment(value=self._model.props.level,
                                           lower=0,
                                           upper=100 + vol_step,

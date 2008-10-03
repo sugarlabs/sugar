@@ -16,7 +16,7 @@
 
 import gobject
 
-from jarabe.hardware import hardwaremanager
+from jarabe.model import screen
 from jarabe.model.devices import device
 
 class Device(device.Device):
@@ -27,27 +27,27 @@ class Device(device.Device):
 
     def __init__(self):
         device.Device.__init__(self)
-        self._manager = hardwaremanager.get_manager()
-        self._manager.connect('muted-changed', self.__muted_changed_cb)
-        self._manager.connect('volume-changed', self.__volume_changed_cb)
 
-    def __muted_changed_cb(self, sender_, old_state_, new_state_):
+        sound.muted_changed.connect(self.__muted_changed_cb)
+        sound.volume_changed.connect(self.__volume_changed_cb)
+
+    def __muted_changed_cb(self):
         self.notify('muted')
 
-    def __volume_changed_cb(self, sender_, old_volume_, new_volume_):
+    def __volume_changed_cb(self):
         self.notify('level')
 
     def _get_level(self):
-        return self._manager.get_volume()
+        return sound.get_volume()
 
     def _set_level(self, new_volume):
-        self._manager.set_volume(new_volume)
+        self.sound.set_volume(new_volume)
 
     def _get_muted(self):
-        return self._manager.get_muted()
+        return self.sound.get_muted()
 
     def _set_muted(self, mute):
-        self._manager.set_muted(mute)
+        self.sound.set_muted(mute)
 
     def get_type(self):
         return 'speaker'

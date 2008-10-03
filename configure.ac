@@ -57,7 +57,6 @@ src/jarabe/frame/Makefile
 src/jarabe/frame/devices/Makefile
 src/jarabe/intro/Makefile
 src/jarabe/journal/Makefile
-src/jarabe/hardware/Makefile
 src/jarabe/view/Makefile
 src/jarabe/model/Makefile
 src/jarabe/model/devices/Makefile

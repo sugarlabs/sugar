@@ -25,13 +25,14 @@ import gtk
 
 from sugar._sugarext import KeyGrabber
 
-from jarabe.hardware import hardwaremanager
+from jarabe.model import screen
+from jarabe.model import sound
 from jarabe.view import shell
 from jarabe.view.tabbinghandler import TabbingHandler
 from jarabe.model.shellmodel import ShellModel
 
 _BRIGHTNESS_STEP = 2
-_VOLUME_STEP = hardwaremanager.VOL_CHANGE_INCREMENT_RECOMMENDATION
+_VOLUME_STEP = sound.VOLUME_STEP
 _BRIGHTNESS_MAX = 15
 _VOLUME_MAX = 100
 _TABBING_MODIFIER = gtk.gdk.MOD1_MASK
@@ -91,33 +92,29 @@ class KeyHandler(object):
         self._key_grabber.grab_keys(_actions_table.keys())
 
     def _change_volume(self, step=None, value=None):
-        hw_manager = hardwaremanager.get_manager()
-
         if step is not None:
-            volume = hw_manager.get_volume() + step
+            volume = sound.get_volume() + step
         elif value is not None:
             volume = value
 
         volume = min(max(0, volume), _VOLUME_MAX)
 
-        hw_manager.set_volume(volume)
-        hw_manager.set_muted(volume == 0)
+        sound.set_volume(volume)
+        sound.set_muted(volume == 0)
 
     def _change_brightness(self, step=None, value=None):
-        hw_manager = hardwaremanager.get_manager()
-
         if step is not None:
-            level = hw_manager.get_display_brightness() + step
+            level = screen.get_display_brightness() + step
         elif value is not None:
             level = value
 
         level = min(max(0, level), _BRIGHTNESS_MAX)
 
-        hw_manager.set_display_brightness(level)
+        screen.set_display_brightness(level)
         if level == 0:
-            hw_manager.set_display_mode(hardwaremanager.B_AND_W_MODE)
+            screen.set_display_mode(screen.B_AND_W_MODE)
         else:
-            hw_manager.set_display_mode(hardwaremanager.COLOR_MODE)
+            screen.set_display_mode(screen.COLOR_MODE)
 
     def _get_speech_proxy(self):
         if self._speech_proxy is None:

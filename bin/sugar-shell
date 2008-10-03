@@ -31,17 +31,17 @@ from sugar.profile import get_profile
 
 from jarabe.view import shell
 from jarabe.shellservice import ShellService
-from jarabe.hardware import hardwaremanager
 from jarabe.intro.window import IntroWindow
 from jarabe.intro.window import create_profile
 from jarabe.session import get_session_manager
 from jarabe.nmservice import NMService
+from jarabe.model import sound
+from jarabe.model import screen
 from jarabe import logsmanager
 from jarabe import config
 
 def _shell_started_cb():
-    hw_manager = hardwaremanager.get_manager()
-    hw_manager.set_dcon_freeze(0)
+    screen.set_dcon_freeze(0)
 
     if os.path.isfile(os.path.expanduser('~/.sugar-update')):
         home_box = shell.get_instance().home_window.get_home_box()
@@ -61,9 +61,6 @@ def main():
 
     gettext.bindtextdomain('sugar', config.locale_path)
     gettext.textdomain('sugar')
-
-    hw_manager = hardwaremanager.get_manager()
-    hw_manager.startup()
 
     icons_path = os.path.join(config.data_path, 'icons')
     gtk.icon_theme_get_default().append_search_path(icons_path)
@@ -93,9 +90,13 @@ def main():
     except dbus.DBusException:
         logging.error("Network manager is already running.")
 
+    sound.restore()
+
     try:
         gtk.main()
     except KeyboardInterrupt:
         print 'Ctrl+C pressed, exiting...'
+
+    sound.save()
 
 main()

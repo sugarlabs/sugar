@@ -8,10 +8,12 @@ sugar_PYTHON =			\
 	clipboard.py		\
 	clipboardobject.py	\
 	friends.py		\
+	homeactivity.py		\
+	homemodel.py		\
 	invites.py		\
 	owner.py		\
 	meshmodel.py		\
         network.py              \
 	shellmodel.py		\
-	homeactivity.py		\
-	homemodel.py
+	screen.py		\
+	sound.py
