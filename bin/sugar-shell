@@ -37,15 +37,6 @@ from jarabe.session import get_session_manager
 from jarabe import logsmanager
 from jarabe import config
 
-def _start_matchbox():
-    cmd = ['matchbox-window-manager']
-
-    cmd.extend(['-use_titlebar', 'no'])
-    cmd.extend(['-theme', 'sugar'])
-    cmd.extend(['-kbdconfig', os.path.join(config.data_path, 'kbdconfig')])
-
-    gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
-
 def _setup_translations():
     locale_path = os.path.join(config.prefix, 'share', 'locale')
     domain = 'sugar'
@@ -87,7 +78,6 @@ def main():
 
     logger.start('shell')
 
-    _start_matchbox()
     _setup_translations()
 
     hw_manager = hardwaremanager.get_manager()

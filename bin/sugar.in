@@ -11,4 +11,7 @@ if ! test -f "$GTK2_RC_FILES"; then
     exit 1
 fi
 
+matchbox-window-manager -use_titlebar no -theme sugar \
+                        -kbdconfig @prefix@/share/sugar/data/kbdconfig &
+
 sugar-shell
