@@ -53,13 +53,13 @@ def load_modules():
     '''
     modules = []
 
-    path = os.path.join(config.shell_path, 'controlpanel')
+    path = os.path.join(config.ext_path, 'cpsection')
     folder = os.listdir(path)
 
     for item in folder:
         if os.path.isdir(os.path.join(path, item)) and \
-                os.path.exists(os.path.join(path, item, 'model.py')):
-            module = __import__('.'.join(('controlpanel', item, 'model')), 
+           os.path.exists(os.path.join(path, item, 'model.py')):
+            module = __import__('.'.join(('cpsection', item, 'model')), 
                                 globals(), locals(), ['model'])
             modules.append(module)
             

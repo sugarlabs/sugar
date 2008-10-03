@@ -1,4 +1,4 @@
-sugardir = $(pythondir)/jarabe/controlpanel/datetime
+sugardir = $(pkgdatadir)/extensions/cpsection/datetime
 
 sugar_PYTHON = 		\
 	__init__.py	\

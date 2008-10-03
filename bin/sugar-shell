@@ -15,10 +15,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import sys
 import os
 import gettext
 import logging
-
+import pkg_resources
 import gtk
 import gobject
 import dbus.glib
@@ -58,6 +59,8 @@ def main():
         print 'Log setup failed: %s' % e
 
     logger.start('shell')
+
+    sys.path.append(config.ext_path)
 
     gettext.bindtextdomain('sugar', config.locale_path)
     gettext.textdomain('sugar')

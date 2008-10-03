@@ -27,6 +27,7 @@ from sugar.graphics.alert import Alert
 from jarabe.session import get_session_manager
 from jarabe.controlpanel.toolbar import MainToolbar
 from jarabe.controlpanel.toolbar import SectionToolbar
+from jarabe import config
 
 _logger = logging.getLogger('ControlPanel')
 _MAX_COLUMNS = 5
@@ -194,11 +195,11 @@ class ControlPanel(gtk.Window):
 
         self._current_option = option
 
-        mod = __import__('.'.join(('jarabe.controlpanel', option, 'view')), 
+        mod = __import__('.'.join(('cpsection', option, 'view')), 
                          globals(), locals(), ['view']) 
         view_class = getattr(mod, self._options[option]['view'], None)
 
-        mod = __import__('.'.join(('jarabe.controlpanel', option, 'model')), 
+        mod = __import__('.'.join(('cpsection', option, 'model')), 
                          globals(), locals(), ['model'])
         model = ModelWrapper(mod)        
 
@@ -224,13 +225,13 @@ class ControlPanel(gtk.Window):
         '''
         options = {}
 
-        path = os.path.dirname(__file__)
+        path = os.path.join(config.ext_path, 'cpsection')
         folder = os.listdir(path)
 
         for item in folder:
             if os.path.isdir(os.path.join(path, item)) and \
                     os.path.exists(os.path.join(path, item, '__init__.py')):
-                mod = __import__('.'.join(('jarabe.controlpanel', item)), 
+                mod = __import__('.'.join(('cpsection', item)), 
                                  globals(), locals(), [item])
                 view_class = getattr(mod, 'CLASS', None)
                 if view_class is not None: 

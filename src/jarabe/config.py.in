@@ -20,5 +20,6 @@ prefix = '@prefix@'
 data_path = '@prefix@/share/sugar/data'
 shell_path = '@prefix@/share/sugar/shell'
 locale_path = '@prefix@/share/locale'
+ext_path = '@prefix@/share/sugar/extensions'
 version = '@SUCROSE_VERSION@'
 

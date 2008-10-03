@@ -1,5 +1,3 @@
-SUBDIRS = aboutme aboutxo datetime frame language network power
-
 sugardir = $(pythondir)/jarabe/controlpanel
 sugar_PYTHON = 				\
 	__init__.py			\

@@ -1,4 +1,4 @@
-sugardir = $(pythondir)/jarabe/controlpanel/power
+sugardir = $(pkgdatadir)/extensions/cpsection/aboutme
 
 sugar_PYTHON = 		\
 	__init__.py	\
