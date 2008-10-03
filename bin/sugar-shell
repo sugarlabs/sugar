@@ -44,17 +44,6 @@ def _setup_translations():
     gettext.bindtextdomain(domain, locale_path)
     gettext.textdomain(domain)
 
-def check_cm(bus_name):
-    try:
-        bus = dbus.SessionBus()
-        bus_object = bus.get_object('org.freedesktop.DBus', 
-                                    '/org/freedesktop/DBus')
-        name_ = bus_object.GetNameOwner(bus_name, 
-                                        dbus_interface='org.freedesktop.DBus')
-    except dbus.DBusException:
-        return False
-    return True
-
 def _shell_started_cb():
     # Unfreeze the display
     hw_manager = hardwaremanager.get_manager()
