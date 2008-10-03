@@ -37,13 +37,6 @@ from jarabe.session import get_session_manager
 from jarabe import logsmanager
 from jarabe import config
 
-def _setup_translations():
-    locale_path = os.path.join(config.prefix, 'share', 'locale')
-    domain = 'sugar'
-
-    gettext.bindtextdomain(domain, locale_path)
-    gettext.textdomain(domain)
-
 def _shell_started_cb():
     hw_manager = hardwaremanager.get_manager()
     hw_manager.set_dcon_freeze(0)
@@ -64,7 +57,8 @@ def main():
 
     logger.start('shell')
 
-    _setup_translations()
+    gettext.bindtextdomain('sugar', config.locale_path)
+    gettext.textdomain('sugar')
 
     hw_manager = hardwaremanager.get_manager()
     hw_manager.startup()
