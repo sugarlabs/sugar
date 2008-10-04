@@ -173,10 +173,10 @@ class DeviceModel(gobject.GObject):
         sound.muted_changed.connect(self.__muted_changed_cb)
         sound.volume_changed.connect(self.__volume_changed_cb)
 
-    def __muted_changed_cb(self):
+    def __muted_changed_cb(self, **kwargs):
         self.notify('muted')
 
-    def __volume_changed_cb(self):
+    def __volume_changed_cb(self, **kwargs):
         self.notify('level')
 
     def _get_level(self):
