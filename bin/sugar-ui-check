@@ -124,7 +124,7 @@ def _timeout_cb():
     return True
 
 def main():
-    os.environ['GTK2_RC_FILES'] = os.path.join(config.data_path, 'sugar.gtkrc')
+    os.environ['GTK2_RC_FILES'] = os.path.join(config.data_path, 'sugar-100.gtkrc')
 
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s %(levelname)s %(message)s')
