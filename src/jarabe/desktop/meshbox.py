@@ -31,7 +31,6 @@ from sugar.graphics.menuitem import MenuItem
 from sugar import profile
 
 from jarabe.model import accesspointmodel
-from jarabe.model.devices import wireless
 from jarabe.model import shellmodel
 from jarabe.model import network
 from jarabe.view.buddyicon import BuddyIcon
@@ -222,7 +221,7 @@ class MeshDeviceView(CanvasPulsingIcon):
         p.menu.append(self._disconnect_item)
 
         state = self._nm_device.get_state()
-        chan = wireless.freq_to_channel(self._nm_device.get_frequency())
+        chan = network.freq_to_channel(self._nm_device.get_frequency())
         if state == network.DEVICE_STATE_ACTIVATED and chan == self.channel:
             self._disconnect_item.show()
         return p
@@ -235,7 +234,7 @@ class MeshDeviceView(CanvasPulsingIcon):
     def _activate_cb(self, icon):
         network_manager = network.get_manager()
         if network_manager:
-            freq = wireless.channel_to_freq(self.channel)
+            freq = network.channel_to_freq(self.channel)
             network_manager.set_active_device(self._nm_device, mesh_freq=freq)
 
     def _state_changed_cb(self, model):
@@ -243,7 +242,7 @@ class MeshDeviceView(CanvasPulsingIcon):
 
     def _update_state(self):
         state = self._nm_device.get_state()
-        chan = wireless.freq_to_channel(self._nm_device.get_frequency())
+        chan = network.freq_to_channel(self._nm_device.get_frequency())
         if state == network.DEVICE_STATE_ACTIVATING and chan == self.channel:
             self._disconnect_item.hide()
             self.props.pulsing = True

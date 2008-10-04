@@ -16,6 +16,7 @@
 
 from gettext import gettext as _
 
+import gobject
 import gtk
 
 from sugar import profile
@@ -35,18 +36,19 @@ class DeviceView(TrayIcon):
 
     FRAME_POSITION_RELATIVE = 800
 
-    def __init__(self, model):
+    def __init__(self):
         TrayIcon.__init__(self,
                           icon_name=_ICON_NAME,
                           xo_color=profile.get_color())
 
-        self._model = model
-        self.palette = SpeakerPalette(_('My Speakers'), model=model)
+        self._model = DeviceModel()
+        self.palette = SpeakerPalette(_('My Speakers'), model=self._model)
         self.palette.props.invoker = FrameWidgetInvoker(self)
         self.palette.set_group_id('frame')
 
-        model.connect('notify::level', self.__speaker_status_changed_cb)
-        model.connect('notify::muted', self.__speaker_status_changed_cb)
+        self._model.connect('notify::level', self.__speaker_status_changed_cb)
+        self._model.connect('notify::muted', self.__speaker_status_changed_cb)
+
         self.connect('expose-event', self.__expose_event_cb)
 
         self._icon_widget.connect('button-press-event',
@@ -158,3 +160,51 @@ class SpeakerPalette(Palette):
     def __popup_cb(self, palette_):
         self._update_level()
         self._update_muted()
+
+class DeviceModel(gobject.GObject):
+    __gproperties__ = {
+        'level'   : (int, None, None, 0, 100, 0, gobject.PARAM_READWRITE),
+        'muted'   : (bool, None, None, False, gobject.PARAM_READWRITE),
+    }
+
+    def __init__(self):
+        gobject.GObject.__init__(self)
+
+        sound.muted_changed.connect(self.__muted_changed_cb)
+        sound.volume_changed.connect(self.__volume_changed_cb)
+
+    def __muted_changed_cb(self):
+        self.notify('muted')
+
+    def __volume_changed_cb(self):
+        self.notify('level')
+
+    def _get_level(self):
+        return sound.get_volume()
+
+    def _set_level(self, new_volume):
+        sound.set_volume(new_volume)
+
+    def _get_muted(self):
+        return sound.get_muted()
+
+    def _set_muted(self, mute):
+        sound.set_muted(mute)
+
+    def get_type(self):
+        return 'speaker'
+
+    def do_get_property(self, pspec):
+        if pspec.name == "level":
+            return self._get_level()
+        elif pspec.name == "muted":
+            return self._get_muted()
+
+    def do_set_property(self, pspec, value):
+        if pspec.name == "level":
+            self._set_level(value)
+        elif pspec.name == "muted":
+            self._set_muted(value)
+
+def setup(tray):
+    tray.add_device(DeviceView())

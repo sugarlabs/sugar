@@ -14,9 +14,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
 from gettext import gettext as _
 
+import gobject
 import gtk
+import dbus
 
 from sugar import profile
 from sugar.graphics import style
@@ -33,23 +36,30 @@ _STATUS_CHARGING = 0
 _STATUS_DISCHARGING = 1
 _STATUS_FULLY_CHARGED = 2
 
+_LEVEL_PROP = 'battery.charge_level.percentage'
+_CHARGING_PROP = 'battery.rechargeable.is_charging'
+_DISCHARGING_PROP = 'battery.rechargeable.is_discharging'
+
 class DeviceView(TrayIcon):
 
     FRAME_POSITION_RELATIVE = 1000
 
-    def __init__(self, model):
+    def __init__(self, udi):
         TrayIcon.__init__(self, icon_name=_ICON_NAME,
                           xo_color=profile.get_color())
 
-        self._model = model
+        self._model = DeviceModel(udi)
         self.palette = BatteryPalette(_('My Battery'))
         self.set_palette(self.palette)
         self.palette.props.invoker = FrameWidgetInvoker(self)
         self.palette.set_group_id('frame')
 
-        model.connect('notify::level', self._battery_status_changed_cb)
-        model.connect('notify::charging', self._battery_status_changed_cb)
-        model.connect('notify::discharging', self._battery_status_changed_cb)
+        self._model.connect('notify::level',
+                            self._battery_status_changed_cb)
+        self._model.connect('notify::charging',
+                            self._battery_status_changed_cb)
+        self._model.connect('notify::discharging',
+                            self._battery_status_changed_cb)
         self._update_info()
 
     def _update_info(self):
@@ -128,3 +138,83 @@ class BatteryPalette(Palette):
 
         self.props.secondary_text = secondary_text
         self._status_label.set_text(status_text)
+
+class DeviceModel(gobject.GObject):
+    __gproperties__ = {
+        'level'       : (int, None, None, 0, 100, 0,
+                         gobject.PARAM_READABLE),
+        'charging'    : (bool, None, None, False,
+                         gobject.PARAM_READABLE),
+        'discharging' : (bool, None, None, False,
+                         gobject.PARAM_READABLE)
+    }
+
+    def __init__(self, udi):
+        gobject.GObject.__init__(self)
+        
+        bus = dbus.Bus(dbus.Bus.TYPE_SYSTEM)
+        proxy = bus.get_object('org.freedesktop.Hal', udi,
+                               follow_name_owner_changes=True)
+        self._battery = dbus.Interface(proxy, 'org.freedesktop.Hal.Device')
+        bus.add_signal_receiver(self._battery_changed,
+                                'PropertyModified',
+                                'org.freedesktop.Hal.Device',
+                                'org.freedesktop.Hal',
+                                udi)
+
+        self._level = self._get_level()
+        self._charging = self._get_charging()
+        self._discharging = self._get_discharging()
+
+    def _get_level(self):
+        try:
+            return self._battery.GetProperty(_LEVEL_PROP)
+        except dbus.DBusException:
+            logging.error('Cannot access %s' % _LEVEL_PROP)
+            return 0
+
+    def _get_charging(self):
+        try:
+            return self._battery.GetProperty(_CHARGING_PROP)
+        except dbus.DBusException:
+            logging.error('Cannot access %s' % _CHARGING_PROP)
+            return False
+
+    def _get_discharging(self):
+        try:
+            return self._battery.GetProperty(_DISCHARGING_PROP)
+        except dbus.DBusException:
+            logging.error('Cannot access %s' % _DISCHARGING_PROP)
+            return False
+
+    def do_get_property(self, pspec):
+        if pspec.name == 'level':
+            return self._level 
+        if pspec.name == 'charging':
+            return self._charging
+        if pspec.name == 'discharging':
+            return self._discharging
+
+    def get_type(self):
+        return 'battery'
+
+    def _battery_changed(self, num_changes, changes_list):
+        for change in changes_list:
+            if change[0] == _LEVEL_PROP:
+                self._level = self._get_level()
+                self.notify('level')
+            elif change[0] == _CHARGING_PROP:
+                self._charging = self._get_charging()
+                self.notify('charging')
+            elif change[0] == _DISCHARGING_PROP:
+                self._discharging = self._get_discharging()
+                self.notify('discharging')
+
+def setup(tray):
+    bus = dbus.Bus(dbus.Bus.TYPE_SYSTEM)
+    proxy = bus.get_object('org.freedesktop.Hal',
+                            '/org/freedesktop/Hal/Manager')
+    hal_manager = dbus.Interface(proxy, 'org.freedesktop.Hal.Manager')
+
+    for udi in hal_manager.FindDeviceByCapability('battery'):
+        tray.add_device(DeviceView(udi))

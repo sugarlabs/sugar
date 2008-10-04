@@ -14,53 +14,33 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import logging
+import os
 
 from sugar.graphics import tray
 
-from jarabe.frame.devices import deviceview
-from jarabe.model import shellmodel
-
-_logger = logging.getLogger('DevicesTray')
+from jarabe import config
 
 class DevicesTray(tray.HTray):
     def __init__(self):
         tray.HTray.__init__(self, align=tray.ALIGN_TO_END)
-        self._device_icons = {}
 
-        devices_model = shellmodel.get_instance().get_devices()
+        for f in os.listdir(os.path.join(config.ext_path, 'deviceicon')):
+            if f.endswith('.py') and not f.startswith('__'):
+                module_name = f[:-3]
+                mod = __import__('deviceicon.' + module_name, globals(),
+                                 locals(), [module_name])
+                mod.setup(self)
 
-        for device in devices_model:
-            self._add_device(device)
+    def add_device(self, view):
+        index = 0
+        for item in self.get_children():
+            index = self.get_item_index(item)
+            view_pos = getattr(view, "FRAME_POSITION_RELATIVE", -1)
+            item_pos = getattr(item, "FRAME_POSITION_RELATIVE", 0)
+            if view_pos < item_pos:
+                break
+        self.add_item(view, index=index)
+        view.show()
 
-        devices_model.connect('device-appeared',
-                              self.__device_appeared_cb)
-        devices_model.connect('device-disappeared',
-                              self.__device_disappeared_cb)
-
-    def _add_device(self, device):
-        try:
-            view = deviceview.create(device)
-            index = 0
-            for item in self.get_children():
-                index = self.get_item_index(item)
-                view_pos = getattr(view, "FRAME_POSITION_RELATIVE", -1)
-                item_pos = getattr(item, "FRAME_POSITION_RELATIVE", 0)
-                if view_pos < item_pos:
-                    break
-            self.add_item(view, index=index)
-            view.show()
-            self._device_icons[device.get_id()] = view
-        except Exception, message:
-            _logger.warn("Not able to add icon for device [%r], because of "
-                         "an error (%s). Continuing." % (device, message))
-
-    def _remove_device(self, device):
-        self.remove_item(self._device_icons[device.get_id()])
-        del self._device_icons[device.get_id()]
-
-    def __device_appeared_cb(self, model, device):
-        self._add_device(device)
-
-    def __device_disappeared_cb(self, model, device):
-        self._remove_device(device)
+    def remove_device(self, view):
+        self.remove_item(view)

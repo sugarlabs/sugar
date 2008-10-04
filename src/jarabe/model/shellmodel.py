@@ -22,7 +22,6 @@ from jarabe.model.friends import Friends
 from jarabe.model.meshmodel import MeshModel
 from jarabe.model.homemodel import HomeModel
 from jarabe.model.owner import ShellOwner
-from jarabe.model.devices.devicesmodel import DevicesModel
 
 class ShellModel(gobject.GObject):
     ZOOM_MESH = 0
@@ -50,7 +49,6 @@ class ShellModel(gobject.GObject):
         self._friends = Friends()
         self._mesh = MeshModel()
         self._home = HomeModel()
-        self._devices = DevicesModel()
 
         self._screen = wnck.screen_get_default()
         self._screen.connect('showing-desktop-changed',
@@ -84,9 +82,6 @@ class ShellModel(gobject.GObject):
 
     def get_owner(self):
         return self._owner
-
-    def get_devices(self):
-        return self._devices
 
     def _showing_desktop_changed_cb(self, screen):
         showing_desktop = self._screen.get_showing_desktop()

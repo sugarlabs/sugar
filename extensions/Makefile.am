@@ -1,1 +1,1 @@
-SUBDIRS = cpsection
+SUBDIRS = cpsection deviceicon
