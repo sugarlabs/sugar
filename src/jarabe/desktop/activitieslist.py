@@ -23,8 +23,8 @@ from sugar import activity
 from sugar import util
 from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon
+from sugar.activity import activityfactory
 
-from jarabe.view import shell
 from jarabe.view.palettes import ActivityPalette
 
 class ActivitiesList(gtk.VBox):
@@ -248,7 +248,7 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
             self._favorite_icon.props.favorite = self._favorite
 
     def __icon_button_release_event_cb(self, icon, event):
-        shell.get_instance().start_activity(self._bundle_id)
+        activityfactory.create(self._bundle_id)
 
     def get_bundle_id(self):
         return self._bundle_id

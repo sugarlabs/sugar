@@ -20,10 +20,6 @@ import gobject
 import gtk
 import wnck
 
-from sugar.activity.activityhandle import ActivityHandle
-from sugar import activity
-from sugar.activity import activityfactory
-
 from jarabe.view.launchwindow import LaunchWindow
 from jarabe.model import shell
 
@@ -79,28 +75,6 @@ class Shell(gobject.GObject):
 
     def get_frame(self):
         return self._frame
-
-    def join_activity(self, bundle_id, activity_id):
-        activity_model = self._model.get_activity_by_id(activity_id)
-        activity_model.get_window().activate(gtk.get_current_event_time())
-
-        # Get the service name for this activity, if
-        # we have a bundle on the system capable of handling
-        # this activity type
-        registry = activity.get_registry()
-        bundle = registry.get_activity(bundle_id)
-        if not bundle:
-            logging.error("Couldn't find activity for type %s" % bundle_id)
-            return
-
-        handle = ActivityHandle(activity_id)
-        activityfactory.create(bundle_id, handle)
-
-    def start_activity(self, activity_type):
-        activityfactory.create(activity_type)
-
-    def start_activity_with_uri(self, activity_type, uri):
-        activityfactory.create_with_uri(activity_type, uri)
 
     def set_zoom_level(self, level):
         if level == self._model.get_zoom_level():

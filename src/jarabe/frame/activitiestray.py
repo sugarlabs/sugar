@@ -27,6 +27,8 @@ from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.icon import Icon
 from sugar.graphics.palette import Palette, WidgetInvoker
 from sugar.graphics.menuitem import MenuItem
+from sugar.activity.activityhandle import ActivityHandle
+from sugar.activity import activityfactory
 from sugar import activity
 from sugar import profile
 
@@ -37,7 +39,6 @@ from jarabe.view.palettes import JournalPalette, CurrentActivityPalette
 from jarabe.view.pulsingicon import PulsingIcon
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.frame.notification import NotificationIcon
-from jarabe.view import shell as shellview
 import jarabe.frame.frame
 
 class ActivityButton(RadioToolButton):
@@ -150,10 +151,8 @@ class ActivityInviteButton(BaseInviteButton):
 
     def _launch(self):
         """Join the activity in the invite."""
-        shell_inst = shellview.get_instance()
-        shell_inst.join_activity(self._activity_model.get_bundle_id(),
-                                 self._activity_model.get_id())
-
+        handle = ActivityHandle(self._activity_model.get_id())
+        activityfactory.create(self._activity_model.get_bundle_id(), handle)
 
 class PrivateInviteButton(BaseInviteButton):
     """Invite to a private one to one channel"""
@@ -196,10 +195,7 @@ class PrivateInviteButton(BaseInviteButton):
 
     def _launch(self):
         """Start the activity with private channel."""
-        shell_inst = shellview.get_instance()
-        shell_inst.start_activity_with_uri(self._bundle_id,
-                                           self._private_channel)
-
+        activityfactory.create_with_uri(self._bundle_id, self._private_channel)
 
 class BaseInvitePalette(Palette):
     """Palette for frame or notification icon for invites."""
@@ -248,9 +244,8 @@ class ActivityInvitePalette(BaseInvitePalette):
             self.set_primary_text(self._bundle_id)
 
     def _join(self):
-        shell_inst = shellview.get_instance()
-        shell_inst.join_activity(self._activity_model.get_bundle_id(),
-                                 self._activity_model.get_id())
+        handle = ActivityHandle(self._activity_model.get_id())
+        activityfactory.create(self._activity_model.get_bundle_id(), handle)
 
     def _decline(self):
         invites = owner.get_model().get_invites()
@@ -275,9 +270,8 @@ class PrivateInvitePalette(BaseInvitePalette):
             self.set_primary_text(self._bundle_id)
 
     def _join(self):
-        shell_inst = shellview.get_instance()
-        shell_inst.start_activity_with_uri(self._bundle_id,
-                                           self._private_channel)
+        activityfactory.create_with_uri(self._bundle_id, self._private_channel)
+
         invites = owner.get_model().get_invites()
         invites.remove_private_channel(self._private_channel)
 

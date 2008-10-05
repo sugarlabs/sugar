@@ -28,6 +28,8 @@ from sugar.graphics.icon import get_icon_state
 from sugar.graphics import palette
 from sugar.graphics import iconentry
 from sugar.graphics.menuitem import MenuItem
+from sugar.activity.activityhandle import ActivityHandle
+from sugar.activity import activityfactory
 from sugar import profile
 
 from jarabe.model import accesspoint
@@ -37,7 +39,6 @@ from jarabe.view.buddyicon import BuddyIcon
 from jarabe.view.pulsingicon import CanvasPulsingIcon
 from jarabe.desktop.snowflakelayout import SnowflakeLayout
 from jarabe.desktop.spreadlayout import SpreadLayout
-from jarabe.view import shell
 
 from jarabe.model.network import NM_802_11_CAP_PROTO_WEP, \
     NM_802_11_CAP_PROTO_WPA, NM_802_11_CAP_PROTO_WPA2
@@ -334,7 +335,9 @@ class ActivityView(hippo.CanvasBox):
 
     def _clicked_cb(self, item):
         bundle_id = self._model.get_bundle_id()
-        shell.get_instance().join_activity(bundle_id, self._model.get_id())
+
+        handle = ActivityHandle(self._model.get_id())
+        activityfactory.create(bundle_id, handle)
 
     def set_filter(self, query):
         text_to_check = self._model.activity.props.name.lower() + \
