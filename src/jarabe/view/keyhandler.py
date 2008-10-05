@@ -19,11 +19,16 @@ import signal
 import logging
 import subprocess
 import errno
+import tempfile
+import time
+from gettext import gettext as _
 
 import dbus
 import gtk
 
 from sugar._sugarext import KeyGrabber
+from sugar import profile
+from sugar.datastore import datastore
 
 from jarabe.model import screen
 from jarabe.model import sound
@@ -184,7 +189,31 @@ class KeyHandler(object):
         self._change_volume(step=-_VOLUME_STEP)
 
     def handle_screenshot(self):
-        shell.get_instance().take_screenshot()
+        file_path = os.path.join(tempfile.gettempdir(), '%i' % time.time())
+
+        window = gtk.gdk.get_default_root_window()
+        width, height = window.get_size()
+        x_orig, y_orig = window.get_origin()
+
+        screenshot = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, has_alpha=False,
+                                    bits_per_sample=8, width=width,
+                                    height=height)
+        screenshot.get_from_drawable(window, window.get_colormap(), x_orig,
+                                     y_orig, 0, 0, width, height)
+        screenshot.save(file_path, "png")
+        jobject = datastore.create()
+        try:
+            jobject.metadata['title'] = _('Screenshot')
+            jobject.metadata['keep'] = '0'
+            jobject.metadata['buddies'] = ''
+            jobject.metadata['preview'] = ''
+            jobject.metadata['icon-color'] = profile.get_color().to_string()
+            jobject.metadata['mime_type'] = 'image/png'
+            jobject.file_path = file_path
+            datastore.write(jobject, transfer_ownership=True)
+        finally:
+            jobject.destroy()
+            del jobject
 
     def handle_frame(self):
         shell.get_instance().get_frame().notify_key_press()

@@ -14,9 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from gettext import gettext as _
 import logging
-import tempfile
 import os
 import time
 import shutil
@@ -24,13 +22,11 @@ import shutil
 import gobject
 import gtk
 import wnck
-import dbus
 
 from sugar.activity.activityhandle import ActivityHandle
 from sugar import activity
 from sugar.activity import activityfactory
 from sugar.datastore import datastore
-from sugar import profile
 from sugar import env
 
 from jarabe.view.launchwindow import LaunchWindow
@@ -131,21 +127,6 @@ class Shell(gobject.GObject):
     def start_activity_with_uri(self, activity_type, uri):
         activityfactory.create_with_uri(activity_type, uri)
 
-    def take_activity_screenshot(self):
-        if self._model.get_zoom_level() != shell.ShellModel.ZOOM_ACTIVITY:
-            return
-        if self.get_frame().visible:
-            return
-
-        active_activity = self._model.get_active_activity()
-        if active_activity is not None:
-            service = active_activity.get_service()
-            if service is not None:
-                try:
-                    service.TakeScreenshot(timeout=2.0)
-                except dbus.DBusException, e:
-                    logging.debug('Error raised by TakeScreenshot(): %s', e)
-
     def set_zoom_level(self, level):
         if level == self._model.get_zoom_level():
             logging.debug('Already in the level %r' % level)
@@ -184,33 +165,6 @@ class Shell(gobject.GObject):
             return
 
         self._model.get_active_activity().get_window().close()
-
-    def take_screenshot(self):
-        file_path = os.path.join(tempfile.gettempdir(), '%i' % time.time())
-
-        window = gtk.gdk.get_default_root_window()
-        width, height = window.get_size()
-        x_orig, y_orig = window.get_origin()
-
-        screenshot = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, has_alpha=False,
-                                    bits_per_sample=8, width=width,
-                                    height=height)
-        screenshot.get_from_drawable(window, window.get_colormap(), x_orig,
-                                     y_orig, 0, 0, width, height)
-        screenshot.save(file_path, "png")
-        jobject = datastore.create()
-        try:
-            jobject.metadata['title'] = _('Screenshot')
-            jobject.metadata['keep'] = '0'
-            jobject.metadata['buddies'] = ''
-            jobject.metadata['preview'] = ''
-            jobject.metadata['icon-color'] = profile.get_color().to_string()
-            jobject.metadata['mime_type'] = 'image/png'
-            jobject.file_path = file_path
-            datastore.write(jobject, transfer_ownership=True)
-        finally:
-            jobject.destroy()
-            del jobject
 
 _instance = None
 
