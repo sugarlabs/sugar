@@ -71,6 +71,7 @@ class HomeWindow(gtk.Window):
 
         model = shell.get_model()
         model.connect('notify::zoom-level', self.__zoom_level_changed_cb)
+        print model
 
     def _enter_notify_event_cb(self, window, event):
         if event.x != gtk.gdk.screen_width() / 2 or \

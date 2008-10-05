@@ -18,11 +18,11 @@ from gettext import gettext as _
 import logging
 
 import gtk
+import wnck
 
 from sugar.graphics.palette import Palette
 from sugar.graphics.radiotoolbutton import RadioToolButton
 
-from jarabe.view import shell as shellview
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import shell
 
@@ -68,7 +68,12 @@ class ZoomToolbar(gtk.Toolbar):
         if not button.get_active():
             return
         if shell.get_model().props.zoom_level != level:
-            shellview.get_instance().set_zoom_level(level)
+            if level == shell.ShellModel.ZOOM_ACTIVITY:
+                activity = shell.get_model().get_active_activity()
+                activity.get_window().activate(gtk.get_current_event_time())
+            else:
+                shell.get_model().set_zoom_level(level)
+                wnck.screen_get_default().toggle_showing_desktop(True)
 
     def __notify_zoom_level_cb(self, model, pspec):
         self._set_zoom_level(model.props.zoom_level)

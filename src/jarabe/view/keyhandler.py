@@ -25,6 +25,7 @@ from gettext import gettext as _
 
 import dbus
 import gtk
+import wnck
 
 from sugar._sugarext import KeyGrabber
 from sugar import profile
@@ -158,16 +159,20 @@ class KeyHandler(object):
         active_activity.get_window().close()
 
     def handle_zoom_mesh(self):
-        shellview.get_instance().set_zoom_level(ShellModel.ZOOM_MESH)
+        shell.get_model().set_zoom_level(ShellModel.ZOOM_MESH)
+        wnck.screen_get_default().toggle_showing_desktop(True)
 
     def handle_zoom_friends(self):
-        shellview.get_instance().set_zoom_level(ShellModel.ZOOM_FRIENDS)
+        shell.get_model().set_zoom_level(ShellModel.ZOOM_FRIENDS)
+        wnck.screen_get_default().toggle_showing_desktop(True)
 
     def handle_zoom_home(self):
-        shellview.get_instance().set_zoom_level(ShellModel.ZOOM_HOME)
+        shell.get_model().set_zoom_level(ShellModel.ZOOM_HOME)
+        wnck.screen_get_default().toggle_showing_desktop(True)
 
     def handle_zoom_activity(self):
-        shellview.get_instance().set_zoom_level(ShellModel.ZOOM_ACTIVITY)
+        activity = shell.get_model().get_active_activity()
+        activity.get_window().activate(gtk.get_current_event_time())
 
     def handle_brightness_max(self):
         self._change_brightness(value=_BRIGHTNESS_MAX)

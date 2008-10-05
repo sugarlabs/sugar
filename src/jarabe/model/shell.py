@@ -324,7 +324,6 @@ class ShellModel(gobject.GObject):
         self._screen.connect('active-window-changed',
                              self._active_window_changed_cb)
 
-
     def set_zoom_level(self, level):
         self._zoom_level = level
         self.notify('zoom-level')
