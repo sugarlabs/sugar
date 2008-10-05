@@ -14,15 +14,15 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import dbus
 import os
+import logging
 from ConfigParser import ConfigParser
 
 import gobject
+import dbus
 
-from jarabe.model.buddymodel import BuddyModel
+from jarabe.model.buddy import BuddyModel
 from sugar import env
-import logging
 
 class Friends(gobject.GObject):
     __gsignals__ = {

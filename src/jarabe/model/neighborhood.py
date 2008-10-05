@@ -20,8 +20,8 @@ from sugar.graphics.xocolor import XoColor
 from sugar.presence import presenceservice
 from sugar import activity
 
-from jarabe.model.buddymodel import BuddyModel
-from jarabe.model.accesspointmodel import AccessPointModel
+from jarabe.model.buddy import BuddyModel
+from jarabe.model.accesspoint import AccessPointModel
 from jarabe.model import network
 
 class ActivityModel:

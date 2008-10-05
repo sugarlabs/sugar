@@ -30,7 +30,7 @@ from sugar.graphics import iconentry
 from sugar.graphics.menuitem import MenuItem
 from sugar import profile
 
-from jarabe.model import accesspointmodel
+from jarabe.model import accesspoint
 from jarabe.model import neighborhood
 from jarabe.model import network
 from jarabe.view.buddyicon import BuddyIcon
@@ -139,7 +139,7 @@ class AccessPointView(CanvasPulsingIcon):
     def _update_icon(self):
         # keep this code in sync with view/devices/network/wireless.py
         strength = self._model.props.strength
-        if self._model.props.state == accesspointmodel.STATE_CONNECTED:
+        if self._model.props.state == accesspoint.STATE_CONNECTED:
             icon_name = '%s-connected' % _ICON_NAME
         else:
             icon_name = _ICON_NAME
@@ -150,20 +150,20 @@ class AccessPointView(CanvasPulsingIcon):
             icon.props.icon_name = icon_name
 
     def _update_state(self):
-        if self._model.props.state == accesspointmodel.STATE_CONNECTING:
+        if self._model.props.state == accesspoint.STATE_CONNECTING:
             if self._disconnect_item:
                 self._disconnect_item.show()
             self._connect_item.hide()
             self._palette.props.secondary_text = _('Connecting...')
             self.props.pulsing = True
-        elif self._model.props.state == accesspointmodel.STATE_CONNECTED:
+        elif self._model.props.state == accesspoint.STATE_CONNECTED:
             if self._disconnect_item:
                 self._disconnect_item.show()
             self._connect_item.hide()
             # TODO: show the channel number
             self._palette.props.secondary_text = _('Connected')
             self.props.pulsing = False
-        elif self._model.props.state == accesspointmodel.STATE_NOTCONNECTED:
+        elif self._model.props.state == accesspoint.STATE_NOTCONNECTED:
             if self._disconnect_item:
                 self._disconnect_item.hide()
             self._connect_item.show()
