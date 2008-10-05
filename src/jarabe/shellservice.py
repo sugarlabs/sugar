@@ -20,6 +20,7 @@ import os
 
 from jarabe.view import shell
 from jarabe.model import shellmodel
+from jarabe.model import owner
 
 _DBUS_SERVICE = "org.laptop.Shell"
 _DBUS_SHELL_IFACE = "org.laptop.Shell"
@@ -53,10 +54,10 @@ class ShellService(dbus.service.Object):
         self._shell = shell.get_instance()
         self._shell_model = shellmodel.get_instance()
 
-        self._owner = self._shell_model.get_owner()
-        self._owner.connect('nick-changed', self._owner_nick_changed_cb)
-        self._owner.connect('icon-changed', self._owner_icon_changed_cb)
-        self._owner.connect('color-changed', self._owner_color_changed_cb)
+        owner_model = owner.get_model()
+        owner_model.connect('nick-changed', self._owner_nick_changed_cb)
+        owner_model.connect('icon-changed', self._owner_icon_changed_cb)
+        owner_model.connect('color-changed', self._owner_color_changed_cb)
 
         self._home_model = self._shell_model.get_home()
         self._home_model.connect('active-activity-changed',
@@ -126,7 +127,7 @@ class ShellService(dbus.service.Object):
                     activity_id,
                     dbus_interface=_DBUS_RAINBOW_IFACE)
 
-    def _cur_activity_changed_cb(self, owner, new_activity):
+    def _cur_activity_changed_cb(self, home_model, new_activity):
         new_id = ""
         if new_activity:
             new_id = new_activity.get_activity_id()

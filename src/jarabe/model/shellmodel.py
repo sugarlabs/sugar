@@ -21,7 +21,7 @@ from sugar.presence import presenceservice
 from jarabe.model.friends import Friends
 from jarabe.model.meshmodel import MeshModel
 from jarabe.model.homemodel import HomeModel
-from jarabe.model.owner import ShellOwner
+from jarabe.model import owner
 
 class ShellModel(gobject.GObject):
     ZOOM_MESH = 0
@@ -43,8 +43,6 @@ class ShellModel(gobject.GObject):
         self._showing_desktop = True
 
         self._pservice = presenceservice.get_instance()
-
-        self._owner = ShellOwner()
 
         self._friends = Friends()
         self._mesh = MeshModel()
@@ -75,13 +73,10 @@ class ShellModel(gobject.GObject):
         return self._friends
 
     def get_invites(self):
-        return self._owner.get_invites()
+        return owner.get_model().get_invites()
 
     def get_home(self):
         return self._home
-
-    def get_owner(self):
-        return self._owner
 
     def _showing_desktop_changed_cb(self, screen):
         showing_desktop = self._screen.get_showing_desktop()

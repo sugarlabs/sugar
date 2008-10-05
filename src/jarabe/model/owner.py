@@ -27,7 +27,7 @@ from sugar.presence import presenceservice
 from sugar import util
 from jarabe.model.invites import Invites
 
-class ShellOwner(gobject.GObject):
+class Owner(gobject.GObject):
     """Class representing the owner of this machine/instance. This class
     runs in the shell and serves up the buddy icon and other stuff. It's the
     server portion of the Owner, paired with the client portion in Buddy.py.
@@ -102,3 +102,13 @@ class ShellOwner(gobject.GObject):
 
     def _activity_disappeared_cb(self, pservice, activity):
         self._invites.remove_activity(activity.props.id)
+
+_model = None
+
+def get_model():
+    global _model
+
+    if not _model:
+        _model = Owner()
+
+    return _model

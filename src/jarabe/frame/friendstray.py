@@ -21,6 +21,7 @@ from jarabe.view import shell
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import shellmodel
+from jarabe.model import owner
 from jarabe.model.buddymodel import BuddyModel
 
 class FriendIcon(TrayIcon):
@@ -47,8 +48,6 @@ class FriendsTray(VTray):
         self._pservice.connect('activity-appeared',
                                self.__activity_appeared_cb)
 
-        self._owner = self._pservice.get_owner()
-        
         # Add initial activities the PS knows about
         self._pservice.get_activities_async( \
                 reply_handler=self._get_activities_cb)
@@ -107,7 +106,7 @@ class FriendsTray(VTray):
         self.clear()
 	
         # always display ourselves
-        self.add_buddy(self._owner)
+        self.add_buddy(owner.get_model())
 
         if shared_activity is True: 
             for buddy in activity_ps.get_joined_buddies():
