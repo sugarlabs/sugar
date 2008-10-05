@@ -430,7 +430,7 @@ class ShellModel(gobject.GObject):
                 activity_info = None
 
             if activity_id:
-                home_activity = self._get_activity_by_id(activity_id)
+                home_activity = self.get_activity_by_id(activity_id)
 
             if not home_activity:
                 home_activity = Activity(activity_info, activity_id, window)
@@ -455,7 +455,7 @@ class ShellModel(gobject.GObject):
                 return home_activity
         return None
 
-    def _get_activity_by_id(self, activity_id):
+    def get_activity_by_id(self, activity_id):
         for home_activity in self._activities:
             if home_activity.get_activity_id() == activity_id:
                 return home_activity
@@ -521,7 +521,7 @@ class ShellModel(gobject.GObject):
         gobject.timeout_add(90000, self._check_activity_launched, activity_id)
 
     def notify_launch_failed(self, activity_id):
-        home_activity = self._get_activity_by_id(activity_id)
+        home_activity = self.get_activity_by_id(activity_id)
         if home_activity:
             logging.debug("Activity %s (%s) launch failed" % \
                           (activity_id, home_activity.get_type()))
@@ -534,7 +534,7 @@ class ShellModel(gobject.GObject):
         self.emit('launch-failed', home_activity)
 
     def _check_activity_launched(self, activity_id):
-        home_activity = self._get_activity_by_id(activity_id)
+        home_activity = self.get_activity_by_id(activity_id)
 
         if not home_activity:
             logging.debug('Activity %s has been closed already.' % activity_id)

@@ -14,6 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
 from gettext import gettext as _
 
 import gtk
@@ -24,7 +25,6 @@ from sugar.graphics.icon import Icon
 
 from jarabe.model import shell
 from jarabe.model import friends
-from jarabe.view import shell as shellview
 
 class BuddyMenu(Palette):
     def __init__(self, buddy):
@@ -111,6 +111,10 @@ class BuddyMenu(Palette):
         friends.get_model().remove(self._buddy)
 
     def _invite_friend_cb(self, menuitem):
-        activity = shellview.get_instance().get_current_activity()
-        activity.invite(self._buddy)
-
+        activity = shell.get_model().get_active_activity()
+        service = activity.get_service()
+        if service:
+            buddy = self._buddy.get_buddy()
+            service.Invite(buddy.props.key)
+        else:
+            logging.error('Invite failed, activity service not ')

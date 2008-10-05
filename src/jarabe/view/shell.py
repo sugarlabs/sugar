@@ -33,7 +33,6 @@ from sugar.datastore import datastore
 from sugar import profile
 from sugar import env
 
-from jarabe.view.activityhost import ActivityHost
 from jarabe.view.launchwindow import LaunchWindow
 from jarabe.model import shell
 from jarabe.journal import journalactivity
@@ -43,7 +42,6 @@ class Shell(gobject.GObject):
         gobject.GObject.__init__(self)
 
         self._model = shell.get_model()
-        self._hosts = {}
         self._launchers = {}
         self._screen = wnck.screen_get_default()
         self._screen_rotation = 0
@@ -61,7 +59,6 @@ class Shell(gobject.GObject):
         self._model.connect('launch-started', self.__launch_started_cb)
         self._model.connect('launch-failed', self.__launch_failed_cb)
         self._model.connect('launch-completed', self.__launch_completed_cb)
-        self._model.connect('activity-removed', self._activity_removed_cb)
 
         gobject.idle_add(self._start_journal_idle)
 
@@ -94,9 +91,6 @@ class Shell(gobject.GObject):
             self._destroy_launcher(home_activity)
 
     def __launch_completed_cb(self, home_model, home_activity):
-        activity_host = ActivityHost(home_activity)
-        self._hosts[activity_host.get_xid()] = activity_host
-
         if not home_activity.is_journal():
             self._destroy_launcher(home_activity)
 
@@ -109,21 +103,6 @@ class Shell(gobject.GObject):
         else:
             logging.error('Launcher for %s is missing' % activity_id)
 
-    def _activity_removed_cb(self, home_model, home_activity):
-        xid = home_activity.get_xid()
-        if self._hosts.has_key(xid):
-            del self._hosts[xid]
-
-    def _get_host_from_activity_model(self, activity_model):
-        if activity_model is None:
-            raise ValueError('activity_model cannot be None')
-        xid = activity_model.get_xid()
-        if xid:
-            return self._hosts[activity_model.get_xid()]
-        else:
-            logging.debug('Activity %r dont have a window yet' % activity_model)
-            return None
-
     def get_model(self):
         return self._model
 
@@ -131,10 +110,8 @@ class Shell(gobject.GObject):
         return self._frame
 
     def join_activity(self, bundle_id, activity_id):
-        activity_host = self.get_activity(activity_id)
-        if activity_host:
-            activity_host.present()
-            return
+        activity_model = self._model.get_activity_by_id(activity_id)
+        activity_model.get_window().activate(gtk.get_current_event_time())
 
         # Get the service name for this activity, if
         # we have a bundle on the system capable of handling
@@ -175,17 +152,17 @@ class Shell(gobject.GObject):
             return
 
         if level == shell.ShellModel.ZOOM_ACTIVITY:
-            host = self.get_current_activity()
-            if host is None:
-                raise ValueError('No current activity')
-            host.present()
+            active_activity = self._model.get_active_activity()
+            active_activity.get_window().activate(gtk.get_current_event_time())
         else:
             self._model.set_zoom_level(level)
             self._screen.toggle_showing_desktop(True)
 
     def toggle_activity_fullscreen(self):
         if self._model.get_zoom_level() == shell.ShellModel.ZOOM_ACTIVITY:
-            self.get_current_activity().toggle_fullscreen()
+            active_activity = self._model.get_active_activity()
+            fullscreen = not self._window.is_fullscreen()
+            active_activity.get_window().set_fullscreen(fullscreen)
 
     def activate_previous_activity(self):
         previous_activity = self._model.get_previous_activity()
@@ -206,17 +183,7 @@ class Shell(gobject.GObject):
         if active_activity.is_journal():
             return
 
-        self.get_current_activity().close()
-
-    def get_current_activity(self):
-        active_activity = self._model.get_active_activity()
-        return self._get_host_from_activity_model(active_activity)
-
-    def get_activity(self, activity_id):
-        for host in self._hosts.values():
-            if host.get_id() == activity_id:
-                return host
-        return None
+        self._model.get_active_activity().get_window().close()
 
     def take_screenshot(self):
         file_path = os.path.join(tempfile.gettempdir(), '%i' % time.time())
