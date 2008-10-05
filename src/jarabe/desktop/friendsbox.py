@@ -23,7 +23,7 @@ from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon, Icon
 from sugar.graphics.palette import Palette
 
-from jarabe.model import shellmodel
+from jarabe.model import friends
 from jarabe.desktop.friendview import FriendView
 from jarabe.desktop.spreadlayout import SpreadLayout
 
@@ -52,13 +52,13 @@ class FriendsBox(hippo.Canvas):
         self._owner_icon.set_palette(palette)
         self._layout.add(self._owner_icon)
 
-        friends = shellmodel.get_instance().get_friends()
+        friends_model = friends.get_model()
 
-        for friend in friends:
+        for friend in friends_model:
             self.add_friend(friend)
 
-        friends.connect('friend-added', self._friend_added_cb)
-        friends.connect('friend-removed', self._friend_removed_cb)
+        friends_model.connect('friend-added', self._friend_added_cb)
+        friends_model.connect('friend-removed', self._friend_removed_cb)
 
     def add_friend(self, buddy_info):
         icon = FriendView(buddy_info)

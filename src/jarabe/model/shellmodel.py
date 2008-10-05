@@ -18,7 +18,6 @@ import wnck
 import gobject
 
 from sugar.presence import presenceservice
-from jarabe.model.friends import Friends
 from jarabe.model.homemodel import HomeModel
 
 class ShellModel(gobject.GObject):
@@ -42,7 +41,6 @@ class ShellModel(gobject.GObject):
 
         self._pservice = presenceservice.get_instance()
 
-        self._friends = Friends()
         self._home = HomeModel()
 
         self._screen = wnck.screen_get_default()
@@ -62,9 +60,6 @@ class ShellModel(gobject.GObject):
     def do_get_property(self, pspec):
         if pspec.name == 'zoom-level':
             return self.get_zoom_level()                
-
-    def get_friends(self):
-        return self._friends
 
     def get_home(self):
         return self._home

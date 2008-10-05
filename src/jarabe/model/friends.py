@@ -112,3 +112,13 @@ class Friends(gobject.GObject):
         psi.SyncFriends(keys,
                 reply_handler=friends_synced,
                 error_handler=friends_synced_error)
+
+_model = None
+
+def get_model():
+    global _model
+
+    if not _model:
+        _model = Friends()
+
+    return _model
