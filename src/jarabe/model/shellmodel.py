@@ -20,7 +20,6 @@ import gobject
 from sugar.presence import presenceservice
 from jarabe.model.friends import Friends
 from jarabe.model.homemodel import HomeModel
-from jarabe.model import owner
 
 class ShellModel(gobject.GObject):
     ZOOM_MESH = 0
@@ -66,9 +65,6 @@ class ShellModel(gobject.GObject):
 
     def get_friends(self):
         return self._friends
-
-    def get_invites(self):
-        return owner.get_model().get_invites()
 
     def get_home(self):
         return self._home

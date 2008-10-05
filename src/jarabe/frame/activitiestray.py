@@ -31,6 +31,8 @@ from sugar import activity
 from sugar import profile
 
 from jarabe.model import shellmodel
+from jarabe.model import neighborhood
+from jarabe.model import owner
 from jarabe.view.palettes import JournalPalette, CurrentActivityPalette
 from jarabe.view.pulsingicon import PulsingIcon
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
@@ -112,7 +114,7 @@ class ActivityInviteButton(BaseInviteButton):
     """Invite to shared activity"""
     def __init__(self, invite):
         BaseInviteButton.__init__(self, invite)
-        mesh = shellmodel.get_instance().get_mesh()
+        mesh = neighborhood.get_model()
         activity_model = mesh.get_activity(invite.get_activity_id())
         self._activity_model = activity_model
         self._bundle_id = activity_model.get_bundle_id()
@@ -233,7 +235,7 @@ class ActivityInvitePalette(BaseInvitePalette):
     def __init__(self, invite):
         BaseInvitePalette.__init__(self)
 
-        mesh = shellmodel.get_instance().get_mesh()
+        mesh = neighborhood.get_model()
         activity_model = mesh.get_activity(invite.get_activity_id())
         self._activity_model = activity_model
         self._bundle_id = activity_model.get_bundle_id()
@@ -251,7 +253,7 @@ class ActivityInvitePalette(BaseInvitePalette):
                                  self._activity_model.get_id())
 
     def _decline(self):
-        invites = shellmodel.get_instance().get_invites()
+        invites = owner.get_model().get_invites()
         activity_id = self._activity_model.get_id()
         invites.remove_activity(activity_id)
 
@@ -276,11 +278,11 @@ class PrivateInvitePalette(BaseInvitePalette):
         shell_inst = shell.get_instance()
         shell_inst.start_activity_with_uri(self._bundle_id,
                                            self._private_channel)
-        invites = shellmodel.get_instance().get_invites()
+        invites = owner.get_model().get_invites()
         invites.remove_private_channel(self._private_channel)
 
     def _decline(self):
-        invites = shellmodel.get_instance().get_invites()
+        invites = owner.get_model().get_invites()
         invites.remove_private_channel(self._private_channel)
 
 
@@ -300,7 +302,7 @@ class ActivitiesTray(HTray):
         self._home_model.connect('tabbing-activity-changed',
                                  self.__tabbing_activity_changed_cb)
 
-        self._invites = shellmodel.get_instance().get_invites()
+        self._invites = owner.get_model().get_invites()
         for invite in self._invites:
             self._add_invite(invite)
         self._invites.connect('invite-added', self.__invite_added_cb)
@@ -377,7 +379,7 @@ class ActivitiesTray(HTray):
         """Add an invite (SugarInvite or PrivateInvite)"""
         item = None
         if hasattr(invite, 'get_activity_id'):
-            mesh = shellmodel.get_instance().get_mesh()
+            mesh = neighborhood.get_model()
             activity_model = mesh.get_activity(invite.get_activity_id())
             if activity_model is not None:
                 item = ActivityInviteButton(invite)
