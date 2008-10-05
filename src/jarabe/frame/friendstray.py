@@ -20,7 +20,6 @@ from sugar.graphics.tray import VTray, TrayIcon
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import shell
-from jarabe.model import owner
 from jarabe.model.buddy import BuddyModel
 
 class FriendIcon(TrayIcon):
