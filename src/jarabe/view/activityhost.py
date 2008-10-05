@@ -21,7 +21,6 @@ class ActivityHost:
     def __init__(self, model):
         self._model = model
         self._window = model.get_window()
-        self._gdk_window = gtk.gdk.window_foreign_new(self.get_xid())
 
     def get_id(self):
         return self._model.get_activity_id()
@@ -50,7 +49,3 @@ class ActivityHost:
     def close(self):
         # The "1" is a fake timestamp as with present()
         self._window.close(1)
-
-    def show_dialog(self, dialog):
-        dialog.show()
-        dialog.window.set_transient_for(self._gdk_window)
