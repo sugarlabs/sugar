@@ -8,7 +8,7 @@ sugar_PYTHON =			\
 	homemodel.py		\
 	invites.py		\
 	owner.py		\
-	meshmodel.py		\
+	neighborhood.py		\
         network.py              \
 	shellmodel.py		\
 	screen.py		\

@@ -41,7 +41,7 @@ class ActivityModel:
     def get_bundle_id(self):
         return self.bundle.bundle_id
 
-class MeshModel(gobject.GObject):
+class Neighborhood(gobject.GObject):
     __gsignals__ = {
         'activity-added':       (gobject.SIGNAL_RUN_FIRST,
                                  gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
@@ -234,3 +234,13 @@ class MeshModel(gobject.GObject):
             activity_model = self._activities[act.props.id]
             self.emit('activity-removed', activity_model)
             del self._activities[act.props.id]
+
+_model = None
+
+def get_model():
+    global _model
+
+    if not _model:
+        _model = Neighborhood()
+
+    return _model

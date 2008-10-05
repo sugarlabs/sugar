@@ -31,7 +31,7 @@ from sugar.graphics.menuitem import MenuItem
 from sugar import profile
 
 from jarabe.model import accesspointmodel
-from jarabe.model import shellmodel
+from jarabe.model import neighborhood
 from jarabe.model import network
 from jarabe.view.buddyicon import BuddyIcon
 from jarabe.view.pulsingicon import CanvasPulsingIcon
@@ -439,7 +439,7 @@ class MeshBox(gtk.VBox):
     def __init__(self):
         gobject.GObject.__init__(self)
 
-        self._model = shellmodel.get_instance().get_mesh()
+        self._model = neighborhood.get_model()
         self._buddies = {}
         self._activities = {}
         self._access_points = {}
