@@ -24,7 +24,7 @@ from sugar import util
 from sugar.graphics import tray
 from sugar.graphics import style
 
-from jarabe.model import clipboard
+from jarabe.frame import clipboard
 from jarabe.frame.clipboardicon import ClipboardIcon
 
 class _ContextMap(object):

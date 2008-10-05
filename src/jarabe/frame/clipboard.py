@@ -24,7 +24,7 @@ import gobject
 
 from sugar import mime
 
-from jarabe.model.clipboardobject import ClipboardObject, Format
+from jarabe.frame.clipboardobject import ClipboardObject, Format
 
 class Clipboard(gobject.GObject):
 

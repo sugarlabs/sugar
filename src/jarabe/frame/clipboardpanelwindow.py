@@ -23,7 +23,7 @@ import hippo
 from jarabe.frame.framewindow import FrameWindow
 from jarabe.frame.clipboardtray import ClipboardTray
 
-from jarabe.model import clipboard
+from jarabe.frame import clipboard
 
 class ClipboardPanelWindow(FrameWindow):
     def __init__(self, frame, orientation):

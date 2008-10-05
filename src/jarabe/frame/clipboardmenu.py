@@ -30,7 +30,7 @@ from sugar import mime
 from sugar import profile
 from sugar import activity
 
-from jarabe.model import clipboard
+from jarabe.frame import clipboard
 from jarabe.journal import misc
 
 class ClipboardMenu(Palette):

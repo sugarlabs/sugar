@@ -23,7 +23,7 @@ from sugar.graphics.icon import Icon
 from sugar.graphics.xocolor import XoColor
 from sugar import profile
 
-from jarabe.model import clipboard
+from jarabe.frame import clipboard
 from jarabe.frame.clipboardmenu import ClipboardMenu
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.frame.notification import NotificationIcon

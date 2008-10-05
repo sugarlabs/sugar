@@ -3,8 +3,6 @@ sugar_PYTHON =			\
 	__init__.py		\
 	accesspointmodel.py	\
 	buddymodel.py		\
-	clipboard.py		\
-	clipboardobject.py	\
 	friends.py		\
 	homeactivity.py		\
 	homemodel.py		\
