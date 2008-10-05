@@ -239,8 +239,6 @@ _model = None
 
 def get_model():
     global _model
-
-    if not _model:
+    if _model is None:
         _model = Neighborhood()
-
     return _model
