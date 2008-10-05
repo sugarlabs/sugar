@@ -23,7 +23,7 @@ from sugar.graphics import style
 from sugar.graphics import animator
 from sugar.graphics.xocolor import XoColor
 
-from jarabe.model import shellmodel
+from jarabe.model import shell
 from jarabe.view.pulsingicon import CanvasPulsingIcon
 
 class LaunchWindow(hippo.CanvasWindow):
@@ -75,7 +75,7 @@ class LaunchBox(hippo.CanvasBox):
 
         self._animator = animator.Animator(1.0)
 
-        self._home = shellmodel.get_instance().get_home()
+        self._home = shell.get_model()
         self._home.connect('active-activity-changed',
                            self.__active_activity_changed_cb)
 

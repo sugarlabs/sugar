@@ -29,7 +29,7 @@ from jarabe.model import screen
 from jarabe.model import sound
 from jarabe.view import shell
 from jarabe.view.tabbinghandler import TabbingHandler
-from jarabe.model.shellmodel import ShellModel
+from jarabe.model.shell import ShellModel
 
 _BRIGHTNESS_STEP = 2
 _VOLUME_STEP = sound.VOLUME_STEP

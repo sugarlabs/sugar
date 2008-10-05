@@ -18,8 +18,8 @@
 import dbus
 import os
 
-from jarabe.view import shell
-from jarabe.model import shellmodel
+from jarabe.view import shell as shellview
+from jarabe.model import shell
 from jarabe.model import owner
 
 _DBUS_SERVICE = "org.laptop.Shell"
@@ -51,17 +51,16 @@ class ShellService(dbus.service.Object):
     _rainbow = None
 
     def __init__(self):
-        self._shell = shell.get_instance()
-        self._shell_model = shellmodel.get_instance()
+        self._shell = shellview.get_instance()
+        self._shell_model = shell.get_model()
 
         owner_model = owner.get_model()
         owner_model.connect('nick-changed', self._owner_nick_changed_cb)
         owner_model.connect('icon-changed', self._owner_icon_changed_cb)
         owner_model.connect('color-changed', self._owner_color_changed_cb)
 
-        self._home_model = self._shell_model.get_home()
-        self._home_model.connect('active-activity-changed',
-                                 self._cur_activity_changed_cb)
+        self._shell_model.connect('active-activity-changed',
+                                  self._cur_activity_changed_cb)
 
         bus = dbus.SessionBus()
         bus_name = dbus.service.BusName(_DBUS_SERVICE, bus=bus)
@@ -80,14 +79,12 @@ class ShellService(dbus.service.Object):
     @dbus.service.method(_DBUS_SHELL_IFACE,
                          in_signature="ss", out_signature="")
     def NotifyLaunch(self, bundle_id, activity_id):
-        home = self._shell.get_model().get_home()
-        home.notify_launch(activity_id, bundle_id)
+        shell.get_model().notify_launch(activity_id, bundle_id)
 
     @dbus.service.method(_DBUS_SHELL_IFACE,
                          in_signature="s", out_signature="")
     def NotifyLaunchFailure(self, activity_id):
-        home = self._shell.get_model().get_home()
-        home.notify_launch_failed(activity_id)
+        shell.get_model().notify_launch_failed(activity_id)
 
     @dbus.service.signal(_DBUS_OWNER_IFACE, signature="s")
     def ColorChanged(self, color):
@@ -127,7 +124,7 @@ class ShellService(dbus.service.Object):
                     activity_id,
                     dbus_interface=_DBUS_RAINBOW_IFACE)
 
-    def _cur_activity_changed_cb(self, home_model, new_activity):
+    def _cur_activity_changed_cb(self, shell_model, new_activity):
         new_id = ""
         if new_activity:
             new_id = new_activity.get_activity_id()

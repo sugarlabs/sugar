@@ -22,9 +22,9 @@ import gtk
 from sugar.graphics.palette import Palette
 from sugar.graphics.radiotoolbutton import RadioToolButton
 
-from jarabe.view import shell
+from jarabe.view import shell as shellview
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
-from jarabe.model import shellmodel
+from jarabe.model import shell
 
 class ZoomToolbar(gtk.Toolbar):
     def __init__(self):
@@ -34,15 +34,15 @@ class ZoomToolbar(gtk.Toolbar):
         self.set_direction(gtk.TEXT_DIR_LTR)
 
         self._mesh_button = self._add_button('zoom-neighborhood',
-                _('Neighborhood'), shellmodel.ShellModel.ZOOM_MESH)
+                _('Neighborhood'), shell.ShellModel.ZOOM_MESH)
         self._groups_button = self._add_button('zoom-groups',
-                _('Group'), shellmodel.ShellModel.ZOOM_FRIENDS)
+                _('Group'), shell.ShellModel.ZOOM_FRIENDS)
         self._home_button = self._add_button('zoom-home',
-                _('Home'), shellmodel.ShellModel.ZOOM_HOME)
+                _('Home'), shell.ShellModel.ZOOM_HOME)
         self._activity_button = self._add_button('zoom-activity',
-                _('Activity'), shellmodel.ShellModel.ZOOM_ACTIVITY)
+                _('Activity'), shell.ShellModel.ZOOM_ACTIVITY)
 
-        shell_model = shellmodel.get_instance()
+        shell_model = shell.get_model()
         self._set_zoom_level(shell_model.props.zoom_level)
         shell_model.connect('notify::zoom-level', self.__notify_zoom_level_cb)
 
@@ -67,21 +67,21 @@ class ZoomToolbar(gtk.Toolbar):
     def __level_clicked_cb(self, button, level):
         if not button.get_active():
             return
-        if shellmodel.get_instance().props.zoom_level != level:
-            shell.get_instance().set_zoom_level(level)
+        if shell.get_model().props.zoom_level != level:
+            shellview.get_instance().set_zoom_level(level)
 
     def __notify_zoom_level_cb(self, model, pspec):
         self._set_zoom_level(model.props.zoom_level)
 
     def _set_zoom_level(self, new_level):
         logging.debug('new zoom level: %r' % new_level)
-        if new_level == shellmodel.ShellModel.ZOOM_MESH:
+        if new_level == shell.ShellModel.ZOOM_MESH:
             self._mesh_button.props.active = True
-        elif new_level == shellmodel.ShellModel.ZOOM_FRIENDS:
+        elif new_level == shell.ShellModel.ZOOM_FRIENDS:
             self._groups_button.props.active = True
-        elif new_level == shellmodel.ShellModel.ZOOM_HOME:
+        elif new_level == shell.ShellModel.ZOOM_HOME:
             self._home_button.props.active = True
-        elif new_level == shellmodel.ShellModel.ZOOM_ACTIVITY:
+        elif new_level == shell.ShellModel.ZOOM_ACTIVITY:
             self._activity_button.props.active = True
         else:
             raise ValueError('Invalid zoom level: %r' % (new_level))

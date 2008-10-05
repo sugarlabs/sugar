@@ -17,10 +17,10 @@
 from sugar.presence import presenceservice
 from sugar.graphics.tray import VTray, TrayIcon
 
-from jarabe.view import shell
+from jarabe.view import shell as shellview
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
-from jarabe.model import shellmodel
+from jarabe.model import shell
 from jarabe.model import owner
 from jarabe.model.buddy import BuddyModel
 
@@ -52,9 +52,8 @@ class FriendsTray(VTray):
         self._pservice.get_activities_async( \
                 reply_handler=self._get_activities_cb)
 
-        home_model = shellmodel.get_instance().get_home()
-        home_model.connect('active-activity-changed',
-                           self._active_activity_changed_cb)
+        shell.get_model().connect('active-activity-changed',
+                                  self._active_activity_changed_cb)
 
     def _get_activities_cb(self, activities_list):
         for act in activities_list:
@@ -86,7 +85,7 @@ class FriendsTray(VTray):
         self._buddies = {}
 
     def __activity_appeared_cb(self, pservice, activity_ps):
-        activity = shell.get_instance().get_current_activity()
+        activity = shellview.get_instance().get_current_activity()
         if activity and activity_ps.props.id == activity.get_id():
             self._set_activity_ps(activity_ps, True)
 

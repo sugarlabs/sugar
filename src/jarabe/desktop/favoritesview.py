@@ -30,10 +30,10 @@ from sugar.graphics.alert import Alert
 from sugar.profile import get_profile
 from sugar import activity
 
-from jarabe.view import shell
+from jarabe.view import shell as shellview
 from jarabe.view.palettes import JournalPalette
 from jarabe.view.palettes import CurrentActivityPalette, ActivityPalette
-from jarabe.model import shellmodel
+from jarabe.model import shell
 from jarabe.controlpanel.gui import ControlPanel
 from jarabe.session import get_session_manager
 
@@ -350,7 +350,7 @@ class ActivityIcon(CanvasIcon):
     def __button_release_event_cb(self, icon, event):
         self.palette.popdown(immediate=True)
         self._uncolor()
-        shell.get_instance().start_activity(self._activity_info.bundle_id)
+        shellview.get_instance().start_activity(self._activity_info.bundle_id)
 
     def get_bundle_id(self):
         return self._activity_info.bundle_id
@@ -371,7 +371,7 @@ class ActivityIcon(CanvasIcon):
 class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
     def __init__(self):
         CanvasIcon.__init__(self, cache=True)
-        self._home_model = shellmodel.get_instance().get_home()
+        self._home_model = shell.get_model()
 
         if self._home_model.get_active_activity() is not None:
             self._update(self._home_model.get_active_activity())

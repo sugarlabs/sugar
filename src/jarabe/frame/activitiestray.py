@@ -30,14 +30,14 @@ from sugar.graphics.menuitem import MenuItem
 from sugar import activity
 from sugar import profile
 
-from jarabe.model import shellmodel
+from jarabe.model import shell
 from jarabe.model import neighborhood
 from jarabe.model import owner
 from jarabe.view.palettes import JournalPalette, CurrentActivityPalette
 from jarabe.view.pulsingicon import PulsingIcon
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.frame.notification import NotificationIcon
-from jarabe.view import shell
+from jarabe.view import shell as shellview
 import jarabe.frame.frame
 
 class ActivityButton(RadioToolButton):
@@ -150,7 +150,7 @@ class ActivityInviteButton(BaseInviteButton):
 
     def _launch(self):
         """Join the activity in the invite."""
-        shell_inst = shell.get_instance()
+        shell_inst = shellview.get_instance()
         shell_inst.join_activity(self._activity_model.get_bundle_id(),
                                  self._activity_model.get_id())
 
@@ -196,7 +196,7 @@ class PrivateInviteButton(BaseInviteButton):
 
     def _launch(self):
         """Start the activity with private channel."""
-        shell_inst = shell.get_instance()
+        shell_inst = shellview.get_instance()
         shell_inst.start_activity_with_uri(self._bundle_id,
                                            self._private_channel)
 
@@ -248,7 +248,7 @@ class ActivityInvitePalette(BaseInvitePalette):
             self.set_primary_text(self._bundle_id)
 
     def _join(self):
-        shell_inst = shell.get_instance()
+        shell_inst = shellview.get_instance()
         shell_inst.join_activity(self._activity_model.get_bundle_id(),
                                  self._activity_model.get_id())
 
@@ -275,7 +275,7 @@ class PrivateInvitePalette(BaseInvitePalette):
             self.set_primary_text(self._bundle_id)
 
     def _join(self):
-        shell_inst = shell.get_instance()
+        shell_inst = shellview.get_instance()
         shell_inst.start_activity_with_uri(self._bundle_id,
                                            self._private_channel)
         invites = owner.get_model().get_invites()
@@ -294,7 +294,7 @@ class ActivitiesTray(HTray):
         self._invite_to_item = {}
         self._freeze_button_clicks = False
 
-        self._home_model = shellmodel.get_instance().get_home()
+        self._home_model = shell.get_model()
         self._home_model.connect('activity-added', self.__activity_added_cb)
         self._home_model.connect('activity-removed', self.__activity_removed_cb)
         self._home_model.connect('active-activity-changed',

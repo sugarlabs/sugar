@@ -35,14 +35,14 @@ from sugar import env
 
 from jarabe.view.activityhost import ActivityHost
 from jarabe.view.launchwindow import LaunchWindow
-from jarabe.model import shellmodel
+from jarabe.model import shell
 from jarabe.journal import journalactivity
 
 class Shell(gobject.GObject):
     def __init__(self):
         gobject.GObject.__init__(self)
 
-        self._model = shellmodel.get_instance()
+        self._model = shell.get_model()
         self._hosts = {}
         self._launchers = {}
         self._screen = wnck.screen_get_default()
@@ -58,11 +58,10 @@ class Shell(gobject.GObject):
         self.home_window = HomeWindow()
         self.home_window.show()
 
-        home_model = self._model.get_home()
-        home_model.connect('launch-started', self.__launch_started_cb)
-        home_model.connect('launch-failed', self.__launch_failed_cb)
-        home_model.connect('launch-completed', self.__launch_completed_cb)
-        home_model.connect('activity-removed', self._activity_removed_cb)
+        self._model.connect('launch-started', self.__launch_started_cb)
+        self._model.connect('launch-failed', self.__launch_failed_cb)
+        self._model.connect('launch-completed', self.__launch_completed_cb)
+        self._model.connect('activity-removed', self._activity_removed_cb)
 
         gobject.idle_add(self._start_journal_idle)
 
@@ -88,7 +87,7 @@ class Shell(gobject.GObject):
         launch_window.show()
 
         self._launchers[home_activity.get_activity_id()] = launch_window
-        self._model.set_zoom_level(shellmodel.ShellModel.ZOOM_ACTIVITY)
+        self._model.set_zoom_level(shell.ShellModel.ZOOM_ACTIVITY)
 
     def __launch_failed_cb(self, home_model, home_activity):
         if not home_activity.is_journal():
@@ -156,13 +155,12 @@ class Shell(gobject.GObject):
         activityfactory.create_with_uri(activity_type, uri)
 
     def take_activity_screenshot(self):
-        if self._model.get_zoom_level() != shellmodel.ShellModel.ZOOM_ACTIVITY:
+        if self._model.get_zoom_level() != shell.ShellModel.ZOOM_ACTIVITY:
             return
         if self.get_frame().visible:
             return
 
-        home_model = self._model.get_home()
-        active_activity = home_model.get_active_activity()
+        active_activity = self._model.get_active_activity()
         if active_activity is not None:
             service = active_activity.get_service()
             if service is not None:
@@ -176,7 +174,7 @@ class Shell(gobject.GObject):
             logging.debug('Already in the level %r' % level)
             return
 
-        if level == shellmodel.ShellModel.ZOOM_ACTIVITY:
+        if level == shell.ShellModel.ZOOM_ACTIVITY:
             host = self.get_current_activity()
             if host is None:
                 raise ValueError('No current activity')
@@ -186,36 +184,32 @@ class Shell(gobject.GObject):
             self._screen.toggle_showing_desktop(True)
 
     def toggle_activity_fullscreen(self):
-        if self._model.get_zoom_level() == shellmodel.ShellModel.ZOOM_ACTIVITY:
+        if self._model.get_zoom_level() == shell.ShellModel.ZOOM_ACTIVITY:
             self.get_current_activity().toggle_fullscreen()
 
     def activate_previous_activity(self):
-        home_model = self._model.get_home()
-        previous_activity = home_model.get_previous_activity()
+        previous_activity = self._model.get_previous_activity()
         if previous_activity:
             previous_activity.get_window().activate(
 						gtk.get_current_event_time())
 
     def activate_next_activity(self):
-        home_model = self._model.get_home()
-        next_activity = home_model.get_next_activity()
+        next_activity = self._model.get_next_activity()
         if next_activity:
             next_activity.get_window().activate(gtk.get_current_event_time())
 
     def close_current_activity(self):
-        if self._model.get_zoom_level() != shellmodel.ShellModel.ZOOM_ACTIVITY:
+        if self._model.get_zoom_level() != shell.ShellModel.ZOOM_ACTIVITY:
             return
 
-        home_model = self._model.get_home()
-        active_activity = home_model.get_active_activity()
+        active_activity = self._model.get_active_activity()
         if active_activity.is_journal():
             return
 
         self.get_current_activity().close()
 
     def get_current_activity(self):
-        home_model = self._model.get_home()
-        active_activity = home_model.get_active_activity()
+        active_activity = self._model.get_active_activity()
         return self._get_host_from_activity_model(active_activity)
 
     def get_activity(self, activity_id):

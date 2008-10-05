@@ -23,8 +23,8 @@ from jarabe.desktop.meshbox import MeshBox
 from jarabe.desktop.homebox import HomeBox
 from jarabe.desktop.friendsbox import FriendsBox
 from jarabe.desktop.transitionbox import TransitionBox
-from jarabe.model.shellmodel import ShellModel
-from jarabe.model import shellmodel
+from jarabe.model.shell import ShellModel
+from jarabe.model import shell
 
 _HOME_PAGE       = 0
 _FRIENDS_PAGE    = 1
@@ -69,7 +69,7 @@ class HomeWindow(gtk.Window):
         self._transition_box.connect('completed',
                                      self._transition_completed_cb)
 
-        model = shellmodel.get_instance()
+        model = shell.get_model()
         model.connect('notify::zoom-level', self.__zoom_level_changed_cb)
 
     def _enter_notify_event_cb(self, window, event):

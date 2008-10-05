@@ -18,9 +18,9 @@ import logging
 import gtk
 import gobject
 
-from jarabe.view import shell
+from jarabe.view import shell as shellview
 from jarabe.frame import frame
-from jarabe.model import shellmodel
+from jarabe.model import shell
 
 _RAISE_DELAY = 250
 
@@ -74,8 +74,7 @@ class TabbingHandler(object):
             self._timeout = None
 
     def _activate_current(self):
-        shell_model = shellmodel.get_instance()
-        home_model = shell_model.get_home()
+        home_model = shell.get_model()
         activity = home_model.get_tabbing_activity()
         if activity and activity.get_window():
             activity.get_window().activate(1)
@@ -88,21 +87,20 @@ class TabbingHandler(object):
             first_switch = False
 
         if self._tabbing:
-            shell_model = shellmodel.get_instance()
-            home_model = shell_model.get_home()
+            shell_model = shell.get_model()
             zoom_level = shell_model.get_zoom_level()
-            zoom_activity = (zoom_level == shellmodel.ShellModel.ZOOM_ACTIVITY)
+            zoom_activity = (zoom_level == shell.ShellModel.ZOOM_ACTIVITY)
 
             if not zoom_activity and first_switch:
-                activity = home_model.get_active_activity()
+                activity = shell_model.get_active_activity()
             else:
-                activity = home_model.get_tabbing_activity()
-                activity = home_model.get_next_activity(current=activity)
+                activity = shell_model.get_tabbing_activity()
+                activity = shell_model.get_next_activity(current=activity)
 
-            home_model.set_tabbing_activity(activity)
+            shell_model.set_tabbing_activity(activity)
             self._start_timeout()
         else:
-            shell.get_instance().activate_next_activity()
+            shellview.get_instance().activate_next_activity()
 
     def previous_activity(self):
         if not self._tabbing:
@@ -112,21 +110,20 @@ class TabbingHandler(object):
             first_switch = False
 
         if self._tabbing:
-            shell_model = shellmodel.get_instance()
-            home_model = shell_model.get_home()
+            shell_model = shell.get_model()
             zoom_level = shell_model.get_zoom_level()
-            zoom_activity = (zoom_level == shellmodel.ShellModel.ZOOM_ACTIVITY)
+            zoom_activity = (zoom_level == shell.ShellModel.ZOOM_ACTIVITY)
 
             if not zoom_activity and first_switch:
-                activity = home_model.get_active_activity()
+                activity = shell_model.get_active_activity()
             else:
-                activity = home_model.get_tabbing_activity()
-                activity = home_model.get_previous_activity(current=activity)
+                activity = shell_model.get_tabbing_activity()
+                activity = shell_model.get_previous_activity(current=activity)
 
-            home_model.set_tabbing_activity(activity)
+            shell_model.set_tabbing_activity(activity)
             self._start_timeout()
         else:
-            shell.get_instance().activate_next_activity()
+            shellview.get_instance().activate_next_activity()
 
     def stop(self):
         gtk.gdk.keyboard_ungrab()
@@ -138,7 +135,7 @@ class TabbingHandler(object):
         self._cancel_timeout()
         self._activate_current()
 
-        home_model = shellmodel.get_instance().get_home()
+        home_model = shell.get_model()
         home_model.set_tabbing_activity(None)
 
     def is_tabbing(self):
