@@ -43,6 +43,7 @@ from jarabe.nmservice import NMService
 from jarabe.model import sound
 from jarabe.model import screen
 from jarabe.journal import journalactivity
+from jarabe.view import launcher
 from jarabe import logsmanager
 from jarabe import config
 
@@ -102,6 +103,8 @@ def main():
     # TODO: move initializations from the Shell constructor to a start() method
     shell.get_instance()
     ShellService()
+
+    launcher.setup()
 
     session_manager = get_session_manager()
     session_manager.start()

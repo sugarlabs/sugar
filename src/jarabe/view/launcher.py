@@ -14,6 +14,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
+
 import gtk
 import hippo
 import gobject
@@ -111,3 +113,38 @@ class _Animation(animator.Animation):
     def next_frame(self, current):
         d = (self.end_size - self.start_size) * current
         self._icon.props.size = self.start_size + d
+
+_launchers = {}
+
+def setup():
+    model = shell.get_model()
+    model.connect('launch-started', __launch_started_cb)
+    model.connect('launch-failed', __launch_failed_cb)
+    model.connect('launch-completed', __launch_completed_cb)
+
+def __launch_started_cb(home_model, home_activity):
+    if home_activity.is_journal():
+        return
+
+    launch_window = LaunchWindow(home_activity)
+    launch_window.show()
+
+    _launchers[home_activity.get_activity_id()] = launch_window
+    shell.get_model().set_zoom_level(shell.ShellModel.ZOOM_ACTIVITY)
+
+def __launch_failed_cb(home_model, home_activity):
+    if not home_activity.is_journal():
+        _destroy_launcher(home_activity)
+
+def __launch_completed_cb(home_model, home_activity):
+    if not home_activity.is_journal():
+        _destroy_launcher(home_activity)
+
+def _destroy_launcher(home_activity):
+    activity_id = home_activity.get_activity_id()
+
+    if activity_id in _launchers:
+        _launchers[activity_id].destroy()
+        del _launchers[activity_id]
+    else:
+        logging.error('Launcher for %s is missing' % activity_id)

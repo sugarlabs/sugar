@@ -20,7 +20,6 @@ import gobject
 import gtk
 import wnck
 
-from jarabe.view.launchwindow import LaunchWindow
 from jarabe.model import shell
 
 class Shell(gobject.GObject):
@@ -28,7 +27,6 @@ class Shell(gobject.GObject):
         gobject.GObject.__init__(self)
 
         self._model = shell.get_model()
-        self._launchers = {}
         self._screen = wnck.screen_get_default()
         self._screen_rotation = 0
 
@@ -41,37 +39,6 @@ class Shell(gobject.GObject):
         from jarabe.desktop.homewindow import HomeWindow
         self.home_window = HomeWindow()
         self.home_window.show()
-
-        self._model.connect('launch-started', self.__launch_started_cb)
-        self._model.connect('launch-failed', self.__launch_failed_cb)
-        self._model.connect('launch-completed', self.__launch_completed_cb)
-
-    def __launch_started_cb(self, home_model, home_activity):
-        if home_activity.is_journal():
-            return
-
-        launch_window = LaunchWindow(home_activity)
-        launch_window.show()
-
-        self._launchers[home_activity.get_activity_id()] = launch_window
-        self._model.set_zoom_level(shell.ShellModel.ZOOM_ACTIVITY)
-
-    def __launch_failed_cb(self, home_model, home_activity):
-        if not home_activity.is_journal():
-            self._destroy_launcher(home_activity)
-
-    def __launch_completed_cb(self, home_model, home_activity):
-        if not home_activity.is_journal():
-            self._destroy_launcher(home_activity)
-
-    def _destroy_launcher(self, home_activity):
-        activity_id = home_activity.get_activity_id()
-
-        if activity_id in self._launchers:
-            self._launchers[activity_id].destroy()
-            del self._launchers[activity_id]
-        else:
-            logging.error('Launcher for %s is missing' % activity_id)
 
     def get_frame(self):
         return self._frame
