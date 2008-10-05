@@ -19,6 +19,9 @@ import sys
 import os
 import gettext
 import logging
+import time
+import shutil
+
 import gtk
 import gobject
 import dbus.glib
@@ -28,6 +31,8 @@ dbus.glib.threads_init()
 
 from sugar import logger
 from sugar.profile import get_profile
+from sugar.datastore import datastore
+from sugar import env
 
 from jarabe.view import shell
 from jarabe.shellservice import ShellService
@@ -37,6 +42,7 @@ from jarabe.session import get_session_manager
 from jarabe.nmservice import NMService
 from jarabe.model import sound
 from jarabe.model import screen
+from jarabe.journal import journalactivity
 from jarabe import logsmanager
 from jarabe import config
 
@@ -46,6 +52,19 @@ def _shell_started_cb():
     if os.path.isfile(os.path.expanduser('~/.sugar-update')):
         home_box = shell.get_instance().home_window.get_home_box()
         home_box.show_software_updates_alert()
+
+    # Mount the datastore in internal flash
+    ds_path = env.get_profile_path('datastore')
+    try:
+        datastore.mount(ds_path, [], timeout=120)
+    except Exception, e:
+        # Don't explode if there's corruption; move the data out of the way
+        # and attempt to create a store from scratch.
+        logging.error(e)
+        shutil.move(ds_path, os.path.abspath(ds_path) + str(time.time()))
+        datastore.mount(ds_path, [], timeout=120)
+
+    journalactivity.start()
 
 def main():
     gobject.idle_add(_shell_started_cb)

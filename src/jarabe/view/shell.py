@@ -15,9 +15,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
-import os
-import time
-import shutil
 
 import gobject
 import gtk
@@ -26,12 +23,9 @@ import wnck
 from sugar.activity.activityhandle import ActivityHandle
 from sugar import activity
 from sugar.activity import activityfactory
-from sugar.datastore import datastore
-from sugar import env
 
 from jarabe.view.launchwindow import LaunchWindow
 from jarabe.model import shell
-from jarabe.journal import journalactivity
 
 class Shell(gobject.GObject):
     def __init__(self):
@@ -55,22 +49,6 @@ class Shell(gobject.GObject):
         self._model.connect('launch-started', self.__launch_started_cb)
         self._model.connect('launch-failed', self.__launch_failed_cb)
         self._model.connect('launch-completed', self.__launch_completed_cb)
-
-        gobject.idle_add(self._start_journal_idle)
-
-    def _start_journal_idle(self):
-        # Mount the datastore in internal flash
-        ds_path = env.get_profile_path('datastore')
-        try:
-            datastore.mount(ds_path, [], timeout=120)
-        except Exception, e:
-            # Don't explode if there's corruption; move the data out of the way
-            # and attempt to create a store from scratch.
-            logging.error(e)
-            shutil.move(ds_path, os.path.abspath(ds_path) + str(time.time()))
-            datastore.mount(ds_path, [], timeout=120)
-
-        journalactivity.start()
 
     def __launch_started_cb(self, home_model, home_activity):
         if home_activity.is_journal():
@@ -98,9 +76,6 @@ class Shell(gobject.GObject):
             del self._launchers[activity_id]
         else:
             logging.error('Launcher for %s is missing' % activity_id)
-
-    def get_model(self):
-        return self._model
 
     def get_frame(self):
         return self._frame
