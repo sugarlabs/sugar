@@ -139,33 +139,6 @@ class Shell(gobject.GObject):
             self._model.set_zoom_level(level)
             self._screen.toggle_showing_desktop(True)
 
-    def toggle_activity_fullscreen(self):
-        if self._model.get_zoom_level() == shell.ShellModel.ZOOM_ACTIVITY:
-            active_activity = self._model.get_active_activity()
-            fullscreen = not self._window.is_fullscreen()
-            active_activity.get_window().set_fullscreen(fullscreen)
-
-    def activate_previous_activity(self):
-        previous_activity = self._model.get_previous_activity()
-        if previous_activity:
-            previous_activity.get_window().activate(
-						gtk.get_current_event_time())
-
-    def activate_next_activity(self):
-        next_activity = self._model.get_next_activity()
-        if next_activity:
-            next_activity.get_window().activate(gtk.get_current_event_time())
-
-    def close_current_activity(self):
-        if self._model.get_zoom_level() != shell.ShellModel.ZOOM_ACTIVITY:
-            return
-
-        active_activity = self._model.get_active_activity()
-        if active_activity.is_journal():
-            return
-
-        self._model.get_active_activity().get_window().close()
-
 _instance = None
 
 def get_instance():

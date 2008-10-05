@@ -32,7 +32,8 @@ from sugar.datastore import datastore
 
 from jarabe.model import screen
 from jarabe.model import sound
-from jarabe.view import shell
+from jarabe.model import shell
+from jarabe.view import shell as shellview
 from jarabe.view.tabbinghandler import TabbingHandler
 from jarabe.model.shell import ShellModel
 
@@ -150,19 +151,23 @@ class KeyHandler(object):
         self._tabbing_handler.next_activity()
 
     def handle_close_window(self):
-        shell.get_instance().close_current_activity()
+        active_activity = shell.get_model().get_active_activity()
+        if active_activity.is_journal():
+            return
+
+        active_activity.get_window().close()
 
     def handle_zoom_mesh(self):
-        shell.get_instance().set_zoom_level(ShellModel.ZOOM_MESH)
+        shellview.get_instance().set_zoom_level(ShellModel.ZOOM_MESH)
 
     def handle_zoom_friends(self):
-        shell.get_instance().set_zoom_level(ShellModel.ZOOM_FRIENDS)
+        shellview.get_instance().set_zoom_level(ShellModel.ZOOM_FRIENDS)
 
     def handle_zoom_home(self):
-        shell.get_instance().set_zoom_level(ShellModel.ZOOM_HOME)
+        shellview.get_instance().set_zoom_level(ShellModel.ZOOM_HOME)
 
     def handle_zoom_activity(self):
-        shell.get_instance().set_zoom_level(ShellModel.ZOOM_ACTIVITY)
+        shellview.get_instance().set_zoom_level(ShellModel.ZOOM_ACTIVITY)
 
     def handle_brightness_max(self):
         self._change_brightness(value=_BRIGHTNESS_MAX)
@@ -216,8 +221,7 @@ class KeyHandler(object):
             del jobject
 
     def handle_frame(self):
-        shell.get_instance().get_frame().notify_key_press()
-
+        shellview.get_instance().get_frame().notify_key_press()
 
     def handle_rotate(self):
         """
