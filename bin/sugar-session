@@ -18,9 +18,6 @@
 import sys
 import os
 import gettext
-import logging
-import time
-import shutil
 
 import gtk
 import gobject
@@ -31,48 +28,46 @@ dbus.glib.threads_init()
 
 from sugar import logger
 from sugar.profile import get_profile
-from sugar.datastore import datastore
-from sugar import env
 
-from jarabe.shellservice import ShellService
-from jarabe.session import get_session_manager
-from jarabe.nmservice import NMService
+from jarabe.desktop.homewindow import HomeWindow
 from jarabe.model import sound
-from jarabe.model import screen
-from jarabe.journal import journalactivity
 from jarabe.view import launcher
 from jarabe import intro
-from jarabe import logsmanager
 from jarabe import config
+from jarabe import service
 
-def _shell_started_cb(home_window):
+def uisetup_completed_cb():
+    from jarabe.model import screen
+
     screen.set_dcon_freeze(0)
+
+def uisetup_delayed_cb(home_window):
+    from jarabe.journal import journalactivity
+    from jarabe.view.keyhandler import KeyHandler
+    from jarabe.frame import frame
+
+    frame = frame.get_instance()
+
+    key_handler = KeyHandler(frame)
+
+    journalactivity.start()
 
     if os.path.isfile(os.path.expanduser('~/.sugar-update')):
         home_window.get_home_box().show_software_updates_alert()
 
-    # Mount the datastore in internal flash
-    ds_path = env.get_profile_path('datastore')
-    try:
-        datastore.mount(ds_path, [], timeout=120)
-    except Exception, e:
-        # Don't explode if there's corruption; move the data out of the way
-        # and attempt to create a store from scratch.
-        logging.error(e)
-        shutil.move(ds_path, os.path.abspath(ds_path) + str(time.time()))
-        datastore.mount(ds_path, [], timeout=120)
-
-    journalactivity.start()
-
 def main():
-    try:
-        logsmanager.setup()
-    except Exception, e:
-        # logs setup is not critical; it should not prevent sugar from
-        # starting if (for example) the disk is full or read-only.
-        print 'Log setup failed: %s' % e
+    service.start_logsmanager()
 
     logger.start('shell')
+
+    intro.check_profile()
+
+    if get_profile().timezone is not None:    
+        os.environ['TZ'] = get_profile().timezone
+
+    service.start_all()
+
+    sound.restore()
 
     sys.path.append(config.ext_path)
 
@@ -82,37 +77,13 @@ def main():
     icons_path = os.path.join(config.data_path, 'icons')
     gtk.icon_theme_get_default().append_search_path(icons_path)
 
-    intro.check_profile()
+    launcher.setup()
 
-    # set timezone    
-    if get_profile().timezone is not None:    
-        os.environ['TZ'] = get_profile().timezone
-
-    from jarabe.frame import frame
-    frame = frame.get_instance()
-
-    from jarabe.view.keyhandler import KeyHandler
-    key_handler = KeyHandler(frame)
-
-    from jarabe.desktop.homewindow import HomeWindow
     home_window = HomeWindow()
     home_window.show()
 
-    ShellService()
-
-    launcher.setup()
-
-    session_manager = get_session_manager()
-    session_manager.start()
-
-    try:
-        nm_service = NMService()
-    except dbus.DBusException:
-        logging.error("Network manager is already running.")
-
-    sound.restore()
-
-    gobject.idle_add(_shell_started_cb, home_window)
+    gobject.idle_add(uisetup_delayed_cb, home_window)
+    gobject.idle_add(uisetup_completed_cb)
 
     try:
         gtk.main()

@@ -30,7 +30,7 @@ _DBUS_PATH = "/org/laptop/Shell"
 
 _DBUS_RAINBOW_IFACE = "org.laptop.security.Rainbow"
 
-class ShellService(dbus.service.Object):
+class UIService(dbus.service.Object):
     """Provides d-bus service to script the shell's operations
     
     Uses a shell_model object to observe events such as changes to:
@@ -52,8 +52,13 @@ class ShellService(dbus.service.Object):
     _rainbow = None
 
     def __init__(self):
+        bus = dbus.SessionBus()
+        bus_name = dbus.service.BusName(_DBUS_SERVICE, bus=bus)
+        dbus.service.Object.__init__(self, bus_name, _DBUS_PATH)
+
         self._shell_model = shell.get_model()
 
+    def start(self):
         owner_model = owner.get_model()
         owner_model.connect('nick-changed', self._owner_nick_changed_cb)
         owner_model.connect('icon-changed', self._owner_icon_changed_cb)
@@ -61,10 +66,6 @@ class ShellService(dbus.service.Object):
 
         self._shell_model.connect('active-activity-changed',
                                   self._cur_activity_changed_cb)
-
-        bus = dbus.SessionBus()
-        bus_name = dbus.service.BusName(_DBUS_SERVICE, bus=bus)
-        dbus.service.Object.__init__(self, bus_name, _DBUS_PATH)
 
     @dbus.service.method(_DBUS_SHELL_IFACE,
                          in_signature="s", out_signature="b")

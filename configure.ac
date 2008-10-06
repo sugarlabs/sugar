@@ -61,5 +61,6 @@ src/jarabe/intro/Makefile
 src/jarabe/journal/Makefile
 src/jarabe/view/Makefile
 src/jarabe/model/Makefile
+src/jarabe/service/Makefile
 po/Makefile.in
 ])

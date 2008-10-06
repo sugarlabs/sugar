@@ -24,7 +24,7 @@ from sugar.graphics.icon import Icon
 from sugar.graphics import style
 from sugar.graphics.alert import Alert
 
-from jarabe.session import get_session_manager
+from jarabe.service.session import get_session_manager
 from jarabe.controlpanel.toolbar import MainToolbar
 from jarabe.controlpanel.toolbar import SectionToolbar
 from jarabe import config
