@@ -119,6 +119,4 @@ def main():
     except KeyboardInterrupt:
         print 'Ctrl+C pressed, exiting...'
 
-    sound.save()
-
 main()
