@@ -30,7 +30,6 @@ from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
 from sugar.graphics import iconentry
 from sugar.graphics import style
-from sugar import activity
 from sugar import profile
 from sugar import mime
 from sugar.datastore import datastore

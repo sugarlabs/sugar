@@ -131,7 +131,7 @@ class ClipboardMenu(Palette):
         registry = bundleregistry.get_registry()
         activities = registry.get_activities_for_type(mime_type)
         if activities:
-            return [activity_info.get_bundle_id() for activity_info in activities]
+            return [info.get_bundle_id() for info in activities]
         else:
             return ''
 
