@@ -1,4 +1,4 @@
-python_scripts =
+python_scripts =		\
 	sugar-activity		\
 	sugar-control-panel	\
 	sugar-emulator		\
