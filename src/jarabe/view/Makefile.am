@@ -7,5 +7,4 @@ sugar_PYTHON =				\
 	launcher.py			\
 	pulsingicon.py			\
 	tabbinghandler.py		\
-	palettes.py			\
-	shell.py
+	palettes.py

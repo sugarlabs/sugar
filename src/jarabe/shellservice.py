@@ -15,10 +15,11 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """D-bus service providing access to the shell's functionality"""
-import dbus
 import os
 
-from jarabe.view import shell as shellview
+import dbus
+import gtk
+
 from jarabe.model import shell
 from jarabe.model import owner
 
@@ -51,7 +52,6 @@ class ShellService(dbus.service.Object):
     _rainbow = None
 
     def __init__(self):
-        self._shell = shellview.get_instance()
         self._shell_model = shell.get_model()
 
         owner_model = owner.get_model()
@@ -69,9 +69,9 @@ class ShellService(dbus.service.Object):
     @dbus.service.method(_DBUS_SHELL_IFACE,
                          in_signature="s", out_signature="b")
     def ActivateActivity(self, activity_id):
-        host = self._shell.get_activity(activity_id)
-        if host:
-            host.present()
+        activity = self._shell_model.get_activity_by_id(activity_id)
+        if activity:
+            activity.get_window().activate(gtk.get_current_event_time())
             return True
 
         return False

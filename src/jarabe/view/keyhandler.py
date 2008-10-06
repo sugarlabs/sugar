@@ -34,7 +34,6 @@ from sugar.datastore import datastore
 from jarabe.model import screen
 from jarabe.model import sound
 from jarabe.model import shell
-from jarabe.view import shell as shellview
 from jarabe.view.tabbinghandler import TabbingHandler
 from jarabe.model.shell import ShellModel
 
@@ -81,7 +80,8 @@ SPEECH_DBUS_PATH = '/org/laptop/Speech'
 SPEECH_DBUS_INTERFACE = 'org.laptop.Speech'
 
 class KeyHandler(object):
-    def __init__(self):
+    def __init__(self, frame):
+        self._frame = frame
         self._screen_rotation = 0
         self._key_pressed = None
         self._keycode_pressed = 0
@@ -226,7 +226,7 @@ class KeyHandler(object):
             del jobject
 
     def handle_frame(self):
-        shellview.get_instance().get_frame().notify_key_press()
+        self._frame.notify_key_press()
 
     def handle_rotate(self):
         """

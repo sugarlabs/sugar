@@ -34,7 +34,6 @@ from sugar.profile import get_profile
 from sugar.datastore import datastore
 from sugar import env
 
-from jarabe.view import shell
 from jarabe.shellservice import ShellService
 from jarabe.intro.window import IntroWindow
 from jarabe.intro.window import create_profile
@@ -47,12 +46,11 @@ from jarabe.view import launcher
 from jarabe import logsmanager
 from jarabe import config
 
-def _shell_started_cb():
+def _shell_started_cb(home_window):
     screen.set_dcon_freeze(0)
 
     if os.path.isfile(os.path.expanduser('~/.sugar-update')):
-        home_box = shell.get_instance().home_window.get_home_box()
-        home_box.show_software_updates_alert()
+        home_window.get_home_box().show_software_updates_alert()
 
     # Mount the datastore in internal flash
     ds_path = env.get_profile_path('datastore')
@@ -68,8 +66,6 @@ def _shell_started_cb():
     journalactivity.start()
 
 def main():
-    gobject.idle_add(_shell_started_cb)
-
     try:
         logsmanager.setup()
     except Exception, e:
@@ -100,8 +96,16 @@ def main():
     if get_profile().timezone is not None:    
         os.environ['TZ'] = get_profile().timezone
 
-    # TODO: move initializations from the Shell constructor to a start() method
-    shell.get_instance()
+    from jarabe.frame import frame
+    frame = frame.get_instance()
+
+    from jarabe.view.keyhandler import KeyHandler
+    key_handler = KeyHandler(frame)
+
+    from jarabe.desktop.homewindow import HomeWindow
+    home_window = HomeWindow()
+    home_window.show()
+
     ShellService()
 
     launcher.setup()
@@ -115,6 +119,8 @@ def main():
         logging.error("Network manager is already running.")
 
     sound.restore()
+
+    gobject.idle_add(_shell_started_cb, home_window)
 
     try:
         gtk.main()
