@@ -22,6 +22,7 @@ import gtk
 
 from jarabe.model import shell
 from jarabe.model import owner
+from jarabe.model import bundleregistry
 
 _DBUS_SERVICE = "org.laptop.Shell"
 _DBUS_SHELL_IFACE = "org.laptop.Shell"
@@ -66,6 +67,15 @@ class UIService(dbus.service.Object):
 
         self._shell_model.connect('active-activity-changed',
                                   self._cur_activity_changed_cb)
+
+    @dbus.service.method(_DBUS_SHELL_IFACE,
+                         in_signature="s", out_signature="s")
+    def GetBundlePath(self, bundle_id):
+        bundle = bundleregistry.get_registry().get_bundle(bundle_id)
+        if bundle:
+            return bundle.get_path()
+        else:
+            return ''
 
     @dbus.service.method(_DBUS_SHELL_IFACE,
                          in_signature="s", out_signature="b")
