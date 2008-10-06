@@ -87,7 +87,7 @@ class ActivityCheck(Check):
         Check.__init__(self)
 
         self.name = bundle_id
-        self.max_time = 60
+        self.max_time = 120
 
     def start(self):
         Check.start(self)
