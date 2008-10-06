@@ -5,6 +5,6 @@ bin_SCRIPTS = 			\
 	sugar-emulator		\
 	sugar-install-bundle	\
 	sugar-launch		\
-	sugar-shell		\
+	sugar-session		\
 	sugar-shell-service	\
 	sugar-ui-check

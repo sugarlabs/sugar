@@ -14,4 +14,4 @@ fi
 matchbox-window-manager -use_titlebar no -theme sugar \
                         -kbdconfig @prefix@/share/sugar/data/kbdconfig &
 
-sugar-shell
+sugar-session
