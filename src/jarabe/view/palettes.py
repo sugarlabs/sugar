@@ -99,6 +99,7 @@ class ActivityPalette(Palette):
 
         registry = bundleregistry.get_registry()
 
+        self._bundle = activity_info
         self._bundle_id = activity_info.get_bundle_id()
         self._version = activity_info.get_activity_version()
         self._favorite = registry.is_bundle_favorite(self._bundle_id,
@@ -148,7 +149,7 @@ class ActivityPalette(Palette):
         self._favorite_icon.props.xo_color = xo_color
 
     def __start_activate_cb(self, menu_item):
-        activityfactory.create(self._bundle_id)
+        activityfactory.create(self._bundle)
 
     def __change_favorite_activate_cb(self, menu_item):
         registry = bundleregistry.get_registry()

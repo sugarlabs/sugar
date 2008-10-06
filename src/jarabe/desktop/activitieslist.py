@@ -180,6 +180,7 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
         registry = bundleregistry.get_registry()
         registry.connect('bundle-changed', self.__activity_changed_cb)
 
+        self._bundle = activity_info
         self._bundle_id = activity_info.get_bundle_id()
         self._version = activity_info.get_activity_version()
         self._favorite = registry.is_bundle_favorite(self._bundle_id,
@@ -245,7 +246,7 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
             self._favorite_icon.props.favorite = self._favorite
 
     def __icon_button_release_event_cb(self, icon, event):
-        activityfactory.create(self._bundle_id)
+        activityfactory.create(self._bundle)
 
     def get_bundle_id(self):
         return self._bundle_id

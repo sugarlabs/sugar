@@ -151,8 +151,11 @@ class ActivityInviteButton(BaseInviteButton):
 
     def _launch(self):
         """Join the activity in the invite."""
+        registry = bundleregistry.get_registry()
+        bundle = registry.get_bundle(self._bundle_id)
+
         handle = ActivityHandle(self._activity_model.get_id())
-        activityfactory.create(self._activity_model.get_bundle_id(), handle)
+        activityfactory.create(bundle, handle)
 
 class PrivateInviteButton(BaseInviteButton):
     """Invite to a private one to one channel"""
@@ -163,9 +166,10 @@ class PrivateInviteButton(BaseInviteButton):
 
         self._icon.props.xo_color = profile.get_color()
         registry = bundleregistry.get_registry()
-        activity_info = registry.get_bundle(self._bundle_id)
-        if activity_info:
-            self._icon.props.file = activity_info.get_icon()
+        self._bundle = registry.get_bundle(self._bundle_id)
+
+        if self._bundle:
+            self._icon.props.file = self._bundle.get_icon()
         else:
             self._icon.props.icon_name = 'image-missing'
         self.set_icon_widget(self._icon)
@@ -177,10 +181,9 @@ class PrivateInviteButton(BaseInviteButton):
         self.set_palette(palette)
 
         self._notif_icon.props.xo_color = profile.get_color()
-        registry = bundleregistry.get_registry()
-        activity_info = registry.get_bundle(self._bundle_id)
-        if activity_info:
-            self._notif_icon.props.icon_filename = activity_info.get_icon()
+
+        if self._bundle:
+            self._notif_icon.props.icon_filename = self._bundle.get_icon()
         else:
             self._notif_icon.props.icon_name = 'image-missing'
 
@@ -195,7 +198,7 @@ class PrivateInviteButton(BaseInviteButton):
 
     def _launch(self):
         """Start the activity with private channel."""
-        activityfactory.create_with_uri(self._bundle_id, self._private_channel)
+        activityfactory.create_with_uri(self._bundle, self._private_channel)
 
 class BaseInvitePalette(Palette):
     """Palette for frame or notification icon for invites."""
@@ -237,15 +240,15 @@ class ActivityInvitePalette(BaseInvitePalette):
         self._bundle_id = activity_model.get_bundle_id()
 
         registry = bundleregistry.get_registry()
-        activity_info = registry.get_bundle(self._bundle_id)
-        if activity_info:
-            self.set_primary_text(activity_info.get_name())
+        self._bundle = registry.get_bundle(self._bundle_id)
+        if self._bundle:
+            self.set_primary_text(self._bundle.get_name())
         else:
             self.set_primary_text(self._bundle_id)
 
     def _join(self):
         handle = ActivityHandle(self._activity_model.get_id())
-        activityfactory.create(self._activity_model.get_bundle_id(), handle)
+        activityfactory.create(self._bundle, handle)
 
     def _decline(self):
         invites = owner.get_model().get_invites()
@@ -263,14 +266,14 @@ class PrivateInvitePalette(BaseInvitePalette):
         self._bundle_id = invite.get_bundle_id()
 
         registry = bundleregistry.get_registry()
-        activity_info = registry.get_bundle(self._bundle_id)
-        if activity_info:
-            self.set_primary_text(activity_info.get_name())
+        self._bundle = registry.get_bundle(self._bundle_id)
+        if self._bundle:
+            self.set_primary_text(self._bundle.get_name())
         else:
             self.set_primary_text(self._bundle_id)
 
     def _join(self):
-        activityfactory.create_with_uri(self._bundle_id, self._private_channel)
+        activityfactory.create_with_uri(self._bundle, self._private_channel)
 
         invites = owner.get_model().get_invites()
         invites.remove_private_channel(self._private_channel)

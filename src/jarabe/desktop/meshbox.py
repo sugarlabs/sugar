@@ -39,7 +39,7 @@ from jarabe.view.buddyicon import BuddyIcon
 from jarabe.view.pulsingicon import CanvasPulsingIcon
 from jarabe.desktop.snowflakelayout import SnowflakeLayout
 from jarabe.desktop.spreadlayout import SpreadLayout
-
+from jarabe.model import bundleregistry
 from jarabe.model.network import NM_802_11_CAP_PROTO_WEP, \
     NM_802_11_CAP_PROTO_WPA, NM_802_11_CAP_PROTO_WPA2
 
@@ -337,7 +337,9 @@ class ActivityView(hippo.CanvasBox):
         bundle_id = self._model.get_bundle_id()
 
         handle = ActivityHandle(self._model.get_id())
-        activityfactory.create(bundle_id, handle)
+
+        bundle = bundleregistry.get_registry().get_bundle(bundle_id)
+        activityfactory.create(bundle, handle)
 
     def set_filter(self, query):
         text_to_check = self._model.activity.props.name.lower() + \
@@ -365,7 +367,7 @@ class ActivityView(hippo.CanvasBox):
         self._update_palette()
 
     def _joined_changed_cb(self, widget, event):
-        logging.debug('ActivityView._joined_changed_cb: AAAA!!!!')
+        logging.debug('ActivityView._joined_changed_cb')
 
 _AUTOSEARCH_TIMEOUT = 1000
 

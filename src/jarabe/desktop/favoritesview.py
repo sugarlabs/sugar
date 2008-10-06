@@ -354,7 +354,7 @@ class ActivityIcon(CanvasIcon):
         self.palette.popdown(immediate=True)
         self._uncolor()
 
-        activityfactory.create(self._activity_info.get_bundle_id())
+        activityfactory.create(self._activity_info)
 
     def get_bundle_id(self):
         return self._activity_info.get_bundle_id()
