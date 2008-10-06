@@ -48,7 +48,7 @@ src/jarabe/journal/objectchooser.py
 src/jarabe/journal/palettes.py
 src/jarabe/journal/volumesmanager.py
 src/jarabe/journal/volumestoolbar.py
-src/jarabe/nmservice.py
 src/jarabe/view/buddymenu.py
 src/jarabe/view/keyhandler.py
 src/jarabe/view/palettes.py
+src/jarabe/service/network.py
