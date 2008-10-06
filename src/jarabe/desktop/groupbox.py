@@ -27,8 +27,8 @@ from jarabe.model import friends
 from jarabe.desktop.friendview import FriendView
 from jarabe.desktop.spreadlayout import SpreadLayout
 
-class FriendsBox(hippo.Canvas):
-    __gtype_name__ = 'SugarFriendsBox'
+class GroupBox(hippo.Canvas):
+    __gtype_name__ = 'SugarGroupBox'
     def __init__(self):
         gobject.GObject.__init__(self)
 

@@ -36,7 +36,7 @@ class ZoomToolbar(gtk.Toolbar):
         self._mesh_button = self._add_button('zoom-neighborhood',
                 _('Neighborhood'), shell.ShellModel.ZOOM_MESH)
         self._groups_button = self._add_button('zoom-groups',
-                _('Group'), shell.ShellModel.ZOOM_FRIENDS)
+                _('Group'), shell.ShellModel.ZOOM_GROUP)
         self._home_button = self._add_button('zoom-home',
                 _('Home'), shell.ShellModel.ZOOM_HOME)
         self._activity_button = self._add_button('zoom-activity',
@@ -82,7 +82,7 @@ class ZoomToolbar(gtk.Toolbar):
         logging.debug('new zoom level: %r' % new_level)
         if new_level == shell.ShellModel.ZOOM_MESH:
             self._mesh_button.props.active = True
-        elif new_level == shell.ShellModel.ZOOM_FRIENDS:
+        elif new_level == shell.ShellModel.ZOOM_GROUP:
             self._groups_button.props.active = True
         elif new_level == shell.ShellModel.ZOOM_HOME:
             self._home_button.props.active = True

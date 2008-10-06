@@ -21,13 +21,13 @@ from sugar.graphics import palettegroup
 
 from jarabe.desktop.meshbox import MeshBox
 from jarabe.desktop.homebox import HomeBox
-from jarabe.desktop.friendsbox import FriendsBox
+from jarabe.desktop.groupbox import GroupBox
 from jarabe.desktop.transitionbox import TransitionBox
 from jarabe.model.shell import ShellModel
 from jarabe.model import shell
 
 _HOME_PAGE       = 0
-_FRIENDS_PAGE    = 1
+_GROUP_PAGE    = 1
 _MESH_PAGE       = 2
 _TRANSITION_PAGE = 3
 
@@ -58,7 +58,7 @@ class HomeWindow(gtk.Window):
                                         self._motion_notify_event_cb)
 
         self._home_box = HomeBox()
-        self._friends_box = FriendsBox()
+        self._group_box = GroupBox()
         self._mesh_box = MeshBox()
         self._transition_box = TransitionBox()
 
@@ -127,7 +127,7 @@ class HomeWindow(gtk.Window):
 
         if self._level == ShellModel.ZOOM_HOME:
             size = style.XLARGE_ICON_SIZE
-        elif self._level == ShellModel.ZOOM_FRIENDS:
+        elif self._level == ShellModel.ZOOM_GROUP:
             size = style.LARGE_ICON_SIZE
         elif self._level == ShellModel.ZOOM_MESH:
             size = style.STANDARD_ICON_SIZE
@@ -142,9 +142,9 @@ class HomeWindow(gtk.Window):
             self.add(self._home_box)
             self._home_box.show()
             self._home_box.focus_search_entry()
-        elif self._level == ShellModel.ZOOM_FRIENDS:
-            self.add(self._friends_box)
-            self._friends_box.show()
+        elif self._level == ShellModel.ZOOM_GROUP:
+            self.add(self._group_box)
+            self._group_box.show()
         elif self._level == ShellModel.ZOOM_MESH:
             self.add(self._mesh_box)
             self._mesh_box.show()

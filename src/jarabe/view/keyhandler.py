@@ -45,7 +45,7 @@ _TABBING_MODIFIER = gtk.gdk.MOD1_MASK
 
 _actions_table = {
     'F1'             : 'zoom_mesh',
-    'F2'             : 'zoom_friends',
+    'F2'             : 'zoom_group',
     'F3'             : 'zoom_home',
     'F4'             : 'zoom_activity',
     'F9'             : 'brightness_down',
@@ -162,8 +162,8 @@ class KeyHandler(object):
         shell.get_model().set_zoom_level(ShellModel.ZOOM_MESH)
         wnck.screen_get_default().toggle_showing_desktop(True)
 
-    def handle_zoom_friends(self):
-        shell.get_model().set_zoom_level(ShellModel.ZOOM_FRIENDS)
+    def handle_zoom_group(self):
+        shell.get_model().set_zoom_level(ShellModel.ZOOM_GROUP)
         wnck.screen_get_default().toggle_showing_desktop(True)
 
     def handle_zoom_home(self):

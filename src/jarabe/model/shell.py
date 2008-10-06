@@ -295,7 +295,7 @@ class ShellModel(gobject.GObject):
     }
 
     ZOOM_MESH = 0
-    ZOOM_FRIENDS = 1
+    ZOOM_GROUP = 1
     ZOOM_HOME = 2
     ZOOM_ACTIVITY = 3
 
