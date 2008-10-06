@@ -31,8 +31,6 @@ AM_CONDITIONAL(ENABLE_UPDATE_MIMEDB, test x$enable_update_mimedb = xyes)
 
 AC_CONFIG_FILES([
 bin/sugar
-bin/sugar-shell-service
-service/config.py
 src/jarabe/config.py
 ])
 
@@ -51,7 +49,6 @@ extensions/cpsection/language/Makefile
 extensions/cpsection/network/Makefile
 extensions/cpsection/power/Makefile
 extensions/deviceicon/Makefile
-service/Makefile
 src/Makefile
 src/jarabe/Makefile
 src/jarabe/controlpanel/Makefile

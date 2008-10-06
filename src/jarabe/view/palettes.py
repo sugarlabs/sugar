@@ -23,13 +23,14 @@ import gtk
 
 from sugar import env
 from sugar import profile
-from sugar import activity
 from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
 from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
 from sugar.activity import activityfactory
+
+from jarabe.model import bundleregistry
 
 class BasePalette(Palette):
     def __init__(self, home_activity):
@@ -89,16 +90,19 @@ class ActivityPalette(Palette):
     }
 
     def __init__(self, activity_info):
-        activity_icon = Icon(file=activity_info.icon,
+        activity_icon = Icon(file=activity_info.get_icon(),
                              xo_color=profile.get_color(),
                              icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
 
-        Palette.__init__(self, primary_text=activity_info.name,
+        Palette.__init__(self, primary_text=activity_info.get_name(),
                          icon=activity_icon)
 
-        self._bundle_id = activity_info.bundle_id
-        self._version = activity_info.version
-        self._favorite = activity_info.favorite
+        registry = bundleregistry.get_registry()
+
+        self._bundle_id = activity_info.get_bundle_id()
+        self._version = activity_info.get_activity_version()
+        self._favorite = registry.is_bundle_favorite(self._bundle_id,
+                                                     self._version)
 
         menu_item = MenuItem(_('Start'), 'activity-start')
         menu_item.connect('activate', self.__start_activate_cb)
@@ -121,8 +125,8 @@ class ActivityPalette(Palette):
         self.menu.append(menu_item)
         menu_item.show()
 
-        registry = activity.get_registry()
-        self._activity_changed_sid = registry.connect('activity_changed',
+        registry = bundleregistry.get_registry()
+        self._activity_changed_sid = registry.connect('bundle_changed',
                 self.__activity_changed_cb)
         self._update_favorite_item()
 
@@ -147,15 +151,17 @@ class ActivityPalette(Palette):
         activityfactory.create(self._bundle_id)
 
     def __change_favorite_activate_cb(self, menu_item):
-        registry = activity.get_registry()
-        registry.set_activity_favorite(self._bundle_id,
-                                       self._version,
-                                       not self._favorite)
+        registry = bundleregistry.get_registry()
+        registry.set_bundle_favorite(self._bundle_id,
+                                     self._version,
+                                     not self._favorite)
 
     def __activity_changed_cb(self, activity_registry, activity_info):
-        if activity_info.bundle_id == self._bundle_id and \
-               activity_info.version == self._version:
-            self._favorite = activity_info.favorite
+        if activity_info.get_bundle_id() == self._bundle_id and \
+               activity_info.get_activity_version() == self._version:
+            registry = bundleregistry.get_registry()
+            self._favorite = registry.is_bundle_favorite(self._bundle_id,
+                                                         self._version)
             self._update_favorite_item()
 
     def __erase_activate_cb(self, menu_item):

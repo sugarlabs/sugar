@@ -19,12 +19,12 @@ import gtk
 import hippo
 
 from sugar import profile
-from sugar import activity
 from sugar import util
 from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon
 from sugar.activity import activityfactory
 
+from jarabe.model import bundleregistry
 from jarabe.view.palettes import ActivityPalette
 
 class ActivitiesList(gtk.VBox):
@@ -56,28 +56,20 @@ class ActivitiesList(gtk.VBox):
         self._box.props.background_color = style.COLOR_WHITE.get_int()
         canvas.set_root(self._box)
 
-        registry = activity.get_registry()
-        registry.get_activities_async(reply_handler=self._get_activities_cb)
-        registry.connect('activity-added', self.__activity_added_cb)
-        registry.connect('activity-removed', self.__activity_removed_cb)
-
-    def _get_activities_cb(self, activity_list):
-        if activity_list:
-            gobject.idle_add(self._add_activity_list, activity_list)
-
-    def _add_activity_list(self, activity_list):
-        info = activity_list.pop()
-        if info.bundle_id != 'org.laptop.JournalActivity':
+        registry = bundleregistry.get_registry()
+        for info in registry:
             self._add_activity(info)
-        return len(activity_list) > 0
+
+        registry.connect('bundle-added', self.__activity_added_cb)
+        registry.connect('bundle-removed', self.__activity_removed_cb)
 
     def __activity_added_cb(self, activity_registry, activity_info):
         self._add_activity(activity_info)
 
     def __activity_removed_cb(self, activity_registry, activity_info):
         for entry in self._box.get_children():
-            if entry.get_bundle_id() == activity_info.bundle_id and \
-                    entry.get_version() == activity_info.version:
+            if entry.get_bundle_id() == activity_info.get_bundle_id() and \
+                    entry.get_version() == activity_info.get_activity_version():
                 self._box.remove(entry)
                 return
 
@@ -137,7 +129,7 @@ class ActivityIcon(CanvasIcon):
 
     def __init__(self, activity_info):
         CanvasIcon.__init__(self, size=style.STANDARD_ICON_SIZE, cache=True,
-                            file_name=activity_info.icon)
+                            file_name=activity_info.get_icon())
         self._activity_info = activity_info
         self._uncolor()
         self.connect('hovering-changed', self.__hovering_changed_event_cb)
@@ -149,7 +141,7 @@ class ActivityIcon(CanvasIcon):
         return palette
 
     def __erase_activated_cb(self, palette):
-        self.emit('erase-activated', self._activity_info.bundle_id)
+        self.emit('erase-activated', self._activity_info.get_bundle_id())
 
     def _color(self):
         self.props.xo_color = profile.get_color()
@@ -185,14 +177,15 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
                                  box_height=style.GRID_CELL_SIZE,
                                  orientation=hippo.ORIENTATION_HORIZONTAL)
 
-        registry = activity.get_registry()
-        registry.connect('activity-changed', self.__activity_changed_cb)
+        registry = bundleregistry.get_registry()
+        registry.connect('bundle-changed', self.__activity_changed_cb)
 
-        self._bundle_id = activity_info.bundle_id
-        self._version = activity_info.version
-        self._favorite = activity_info.favorite
-        self._title = activity_info.name
-        self._installation_time = activity_info.installation_time
+        self._bundle_id = activity_info.get_bundle_id()
+        self._version = activity_info.get_activity_version()
+        self._favorite = registry.is_bundle_favorite(self._bundle_id,
+                                                     self._version)
+        self._title = activity_info.get_name()
+        self._installation_time = activity_info.get_installation_time()
 
         self._favorite_icon = FavoriteIcon(self._favorite)
         self._favorite_icon.connect('notify::favorite',
@@ -209,13 +202,13 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
         else:
             align = hippo.ALIGNMENT_START
 
-        title = hippo.CanvasText(text=activity_info.name,
+        title = hippo.CanvasText(text=activity_info.get_name(),
                                  xalign=align,
                                  font_desc=style.FONT_BOLD.get_pango_desc(),
                                  box_width=ActivityEntry._TITLE_COL_WIDTH)
         self.append(title)
 
-        version = hippo.CanvasText(text=activity_info.version,
+        version = hippo.CanvasText(text=activity_info.get_activity_version(),
                                    xalign=hippo.ALIGNMENT_END,
                                    font_desc=style.FONT_NORMAL.get_pango_desc(),
                                    box_width=ActivityEntry._VERSION_COL_WIDTH)
@@ -224,7 +217,7 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
         expander = hippo.CanvasBox()
         self.append(expander, hippo.PACK_EXPAND)
 
-        timestamp = activity_info.installation_time
+        timestamp = activity_info.get_installation_time()
         date = hippo.CanvasText(
                 text=util.timestamp_to_elapsed_string(timestamp),
                 xalign=align,
@@ -236,15 +229,19 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
             self.reverse()
 
     def __favorite_changed_cb(self, favorite_icon, pspec):
-        registry = activity.get_registry()
+        registry = bundleregistry.get_registry()
         registry.set_activity_favorite(self._bundle_id, self._version,
                                        favorite_icon.props.favorite)
 
     def __activity_changed_cb(self, activity_registry, activity_info):
-        if self._bundle_id == activity_info.bundle_id and \
-                self._version == activity_info.version:
-            self._title = activity_info.name
-            self._favorite = activity_info.favorite
+        if self._bundle_id == activity_info.get_bundle_id() and \
+                self._version == activity_info.get_activity_version():
+            self._title = activity_info.get_name()
+
+            registry = bundleregistry.get_registry()
+            self._favorite = registry.is_bundle_favorite(self._bundle_id,
+                                                         self._version)
+
             self._favorite_icon.props.favorite = self._favorite
 
     def __icon_button_release_event_cb(self, icon, event):

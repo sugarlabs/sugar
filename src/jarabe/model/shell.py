@@ -25,11 +25,11 @@ import gtk
 import dbus
 
 from sugar import wm
-from sugar.activity import get_registry
 from sugar.graphics.xocolor import XoColor
 from sugar.presence import presenceservice
 from sugar import profile
 
+from jarabe.model.bundleregistry import get_registry
 from jarabe import config
 
 _SERVICE_NAME = "org.laptop.Activity"
@@ -125,7 +125,7 @@ class Activity(gobject.GObject):
         if self.is_journal():
             return os.path.join(config.data_path, 'icons/activity-journal.svg')
         elif self._activity_info:
-            return self._activity_info.icon
+            return self._activity_info.get_icon()
         else:
             return None
     
@@ -424,7 +424,7 @@ class ShellModel(gobject.GObject):
             service_name = wm.get_bundle_id(window)
             if service_name:
                 registry = get_registry()
-                activity_info = registry.get_activity(service_name)
+                activity_info = registry.get_bundle(service_name)
             else:
                 activity_info = None
 
@@ -502,7 +502,7 @@ class ShellModel(gobject.GObject):
 
     def notify_launch(self, activity_id, service_name):
         registry = get_registry()
-        activity_info = registry.get_activity(service_name)
+        activity_info = registry.get_bundle(service_name)
         if not activity_info:
             raise ValueError("Activity service name '%s'" \
                              " was not found in the bundle registry."

@@ -24,8 +24,8 @@ import gtk
 import hippo
 
 from sugar.graphics import style
-from sugar import activity
 
+from jarabe.model import bundleregistry
 from jarabe.desktop.grid import Grid
 
 _logger = logging.getLogger('FavoritesLayout')
@@ -78,7 +78,7 @@ class FavoritesLayout(gobject.GObject, hippo.CanvasLayout):
         if hasattr(icon, 'get_bundle_id') and hasattr(icon, 'get_version'):
             min_width_, width = self.box.get_width_request()
             min_height_, height = self.box.get_height_request(width)
-            registry = activity.get_registry()
+            registry = bundleregistry.get_registry()
             registry.set_activity_position(
                     icon.get_bundle_id(), icon.get_version(),
                     x * width / float(_BASE_SCALE),

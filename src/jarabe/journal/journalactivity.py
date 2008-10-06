@@ -33,6 +33,7 @@ from sugar import env
 from sugar.activity import activityfactory
 from sugar import wm
 
+from jarabe.model import bundleregistry
 from jarabe.journal.journaltoolbox import MainToolbox, DetailToolbox
 from jarabe.journal.listview import ListView
 from jarabe.journal.detailview import DetailView
@@ -278,14 +279,16 @@ class JournalActivity(Window):
         self._list_view.update_dates()
 
     def _check_for_bundle(self, jobject):
+        registry = bundleregistry.get_registry()
+
         bundle = misc.get_bundle(jobject)
         if bundle is None:
             return
 
-        if bundle.is_installed():
+        if registry.is_installed(bundle):
             return
         try:
-            bundle.install()
+            registry.install(bundle)
         except (ZipExtractException, RegistrationException), e:
             logging.warning('Could not install bundle %s: %r' %
                             (jobject.file_path, e))

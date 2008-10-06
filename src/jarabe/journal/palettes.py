@@ -27,6 +27,7 @@ from sugar.graphics.icon import Icon
 from sugar.datastore import datastore
 from sugar.graphics.xocolor import XoColor
 
+from jarabe.model import bundleregistry
 from jarabe.journal import misc
 
 class ObjectPalette(Palette):
@@ -94,9 +95,11 @@ class ObjectPalette(Palette):
         pass
 
     def __erase_activate_cb(self, menu_item):
+        registry = bundleregistry.get_registry()
+
         bundle = misc.get_bundle(self._jobject)
-        if bundle is not None and bundle.is_installed():
-            bundle.uninstall()
+        if bundle is not None and registry.is_installed(bundle):
+            registry.uninstall(bundle)
         datastore.delete(self._jobject.object_id)
 
 

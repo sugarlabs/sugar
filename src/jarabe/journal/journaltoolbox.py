@@ -35,6 +35,7 @@ from sugar import profile
 from sugar import mime
 from sugar.datastore import datastore
 
+from jarabe.model import bundleregistry
 from jarabe.journal import volumesmanager
 from jarabe.journal import misc
 
@@ -254,22 +255,22 @@ class SearchToolbar(gtk.Toolbar):
             # TRANS: Item in a combo box that filters by entry type.
             self._what_search_combo.append_item(_ACTION_ANYTHING, _('Anything'))
 
-            registry = activity.get_registry()
+            registry = bundleregistry.get_registry()
             appended_separator = False
             for service_name in datastore.get_unique_values('activity'):
-                activity_info = registry.get_activity(service_name)
+                activity_info = registry.get_bundle(service_name)
                 if not activity_info is None:
                     if not appended_separator:
                         self._what_search_combo.append_separator()            
                         appended_separator = True
 
-                    if os.path.exists(activity_info.icon):
+                    if os.path.exists(activity_info.get_icon()):
                         self._what_search_combo.append_item(service_name,
-                                activity_info.name,
-                                file_name=activity_info.icon)
+                                activity_info.get_name(),
+                                file_name=activity_info.get_icon())
                     else:
                         self._what_search_combo.append_item(service_name,
-                                activity_info.name,
+                                activity_info.get_name(),
                                 icon_name='application-octet-stream')
 
                     if service_name == current_value:
@@ -359,10 +360,12 @@ class EntryToolbar(gtk.Toolbar):
         pass
 
     def _erase_button_clicked_cb(self, button):
+        registry = bundleregistry.get_registry()
+
         if self._jobject:
             bundle = misc.get_bundle(self._jobject)
-            if bundle is not None and bundle.is_installed():
-                bundle.uninstall()
+            if bundle is not None and registry.is_installed(bundle):
+                registry.uninstall(bundle)
             datastore.delete(self._jobject.object_id)
 
     def _resume_menu_item_activate_cb(self, menu_item, service_name):
@@ -408,11 +411,11 @@ class EntryToolbar(gtk.Toolbar):
             menu_item.destroy()
 
         for activity_info in misc.get_activities(self._jobject):
-            menu_item = MenuItem(activity_info.name)
-            menu_item.set_image(Icon(file=activity_info.icon,
+            menu_item = MenuItem(activity_info.get_name())
+            menu_item.set_image(Icon(file=activity_info.get_icon(),
                                         icon_size=gtk.ICON_SIZE_MENU))
             menu_item.connect('activate', self._resume_menu_item_activate_cb,
-                                activity_info.bundle_id)
+                                activity_info.get_bundle_id())
             palette.menu.append(menu_item)
             menu_item.show()
 

@@ -28,12 +28,12 @@ from sugar.graphics.icon import Icon, CanvasIcon
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.alert import Alert
 from sugar.profile import get_profile
-from sugar import activity
 from sugar.activity import activityfactory
 
 from jarabe.view.palettes import JournalPalette
 from jarabe.view.palettes import CurrentActivityPalette, ActivityPalette
 from jarabe.model import shell
+from jarabe.model import bundleregistry
 from jarabe.controlpanel.gui import ControlPanel
 from jarabe.service.session import get_session_manager
 
@@ -87,10 +87,10 @@ class FavoritesView(hippo.Canvas):
         self._layout = None
         self._alert = None
 
-        registry = activity.get_registry()
-        registry.connect('activity-added', self.__activity_added_cb)
-        registry.connect('activity-removed', self.__activity_removed_cb)
-        registry.connect('activity-changed', self.__activity_changed_cb)
+        registry = bundleregistry.get_registry()
+        registry.connect('bundle-added', self.__activity_added_cb)
+        registry.connect('bundle-removed', self.__activity_removed_cb)
+        registry.connect('bundle-changed', self.__activity_changed_cb)
 
         # More DND stuff
         self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
@@ -111,14 +111,9 @@ class FavoritesView(hippo.Canvas):
     def __erase_activated_cb(self, activity_icon, bundle_id):
         self.emit('erase-activated', bundle_id)
 
-    def _get_activities_cb(self, activity_list):
-        for info in activity_list:
-            if info.favorite and info.bundle_id != "org.laptop.JournalActivity":
-                self._add_activity(info)
-
     def __activity_added_cb(self, activity_registry, activity_info):
-        if activity_info.favorite and \
-                activity_info.bundle_id != "org.laptop.JournalActivity":
+        registry = bundleregistry.get_registry()
+        if registry.is_bundle_favorite(self._bundle_id, self._version):
             self._add_activity(activity_info)
 
     def _find_activity_icon(self, bundle_id, version):
@@ -129,19 +124,21 @@ class FavoritesView(hippo.Canvas):
         return None
 
     def __activity_removed_cb(self, activity_registry, activity_info):
-        icon = self._find_activity_icon(activity_info.bundle_id,
-                activity_info.version)
+        icon = self._find_activity_icon(activity_info.get_bundle_id(),
+                activity_info.get_activity_version())
         if icon is not None:
             self._layout.remove(icon)
 
     def __activity_changed_cb(self, activity_registry, activity_info):
-        if activity_info.bundle_id == 'org.laptop.JournalActivity':
+        if activity_info.get_bundle_id() == 'org.laptop.JournalActivity':
             return
-        icon = self._find_activity_icon(activity_info.bundle_id,
-                activity_info.version)
+        icon = self._find_activity_icon(activity_info.get_bundle_id(),
+                activity_info.get_activity_version())
         if icon is not None:
             self._box.remove(icon)
-        if activity_info.favorite:
+
+        registry = bundleregistry.get_registry()
+        if registry.is_bundle_favorite(self._bundle_id, self._version):
             self._add_activity(activity_info)
 
     def do_size_allocate(self, allocation):
@@ -265,8 +262,12 @@ class FavoritesView(hippo.Canvas):
             self._current_activity = CurrentActivityIcon()
             self._layout.append(self._current_activity, locked=True)
 
-            registry = activity.get_registry()
-            registry.get_activities_async(reply_handler=self._get_activities_cb)
+            registry = bundleregistry.get_registry()
+            for info in registry:
+                if registry.is_bundle_favorite(info.get_bundle_id(),
+                                               info.get_activity_version()):
+                    self._add_activity(info)
+
 
             if self._layout.allow_dnd():
                 self.drag_source_set(0, [], 0)
@@ -320,7 +321,9 @@ class ActivityIcon(CanvasIcon):
     }
 
     def __init__(self, activity_info):
-        CanvasIcon.__init__(self, cache=True, file_name=activity_info.icon)
+        CanvasIcon.__init__(self, cache=True,
+                            file_name=activity_info.get_icon())
+
         self._activity_info = activity_info
         self._uncolor()
         self.connect('hovering-changed', self.__hovering_changed_event_cb)
@@ -332,7 +335,7 @@ class ActivityIcon(CanvasIcon):
         return palette
 
     def __erase_activated_cb(self, palette):
-        self.emit('erase-activated', self._activity_info.bundle_id)
+        self.emit('erase-activated', self._activity_info.get_bundle_id())
 
     def _color(self):
         self.props.xo_color = get_profile().color
@@ -351,14 +354,14 @@ class ActivityIcon(CanvasIcon):
         self.palette.popdown(immediate=True)
         self._uncolor()
 
-        activityfactory.create(self._activity_info.bundle_id)
+        activityfactory.create(self._activity_info.get_bundle_id())
 
     def get_bundle_id(self):
-        return self._activity_info.bundle_id
+        return self._activity_info.get_bundle_id()
     bundle_id = property(get_bundle_id, None)
 
     def get_version(self):
-        return self._activity_info.version
+        return self._activity_info.get_activity_version()
     version = property(get_version, None)
 
     def _get_installation_time(self):

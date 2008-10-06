@@ -19,9 +19,9 @@ import hippo
 from sugar.graphics.icon import CanvasIcon
 from sugar.graphics import style
 from sugar.presence import presenceservice
-from sugar import activity
 
 from jarabe.view.buddyicon import BuddyIcon
+from jarabe.model import bundleregistry
 
 class FriendView(hippo.CanvasBox):
     def __init__(self, buddy, **kwargs):
@@ -47,10 +47,10 @@ class FriendView(hippo.CanvasBox):
         self._buddy.connect('color-changed', self._buddy_color_changed_cb)
 
     def _get_new_icon_name(self, ps_activity):
-        registry = activity.get_registry()
-        activity_info = registry.get_activity(ps_activity.props.type)
+        registry = bundleregistry.get_registry()
+        activity_info = registry.get_bundle(ps_activity.props.type)
         if activity_info:
-            return activity_info.icon
+            return activity_info.get_icon()
         return None
 
     def _remove_activity_icon(self):

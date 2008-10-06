@@ -22,6 +22,7 @@ from sugar import activity
 
 from jarabe.model.buddy import BuddyModel
 from jarabe.model.accesspoint import AccessPointModel
+from jarabe.model import bundleregistry
 from jarabe.model import network
 
 class ActivityModel:
@@ -200,8 +201,8 @@ class Neighborhood(gobject.GObject):
         self._check_activity(act)
 
     def _check_activity(self, presence_activity):
-        registry = activity.get_registry()
-        bundle = registry.get_activity(presence_activity.props.type)
+        registry = bundleregistry.get_registry()
+        bundle = registry.get_bundle(presence_activity.props.type)
         if not bundle:
             return
         if self.has_activity(presence_activity.props.id):

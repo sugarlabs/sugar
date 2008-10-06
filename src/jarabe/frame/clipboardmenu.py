@@ -28,10 +28,10 @@ from sugar.graphics.icon import Icon
 from sugar.datastore import datastore
 from sugar import mime
 from sugar import profile
-from sugar import activity
 
 from jarabe.frame import clipboard
 from jarabe.journal import misc
+from jarabe.model import bundleregistry
 
 class ClipboardMenu(Palette):
 
@@ -91,13 +91,13 @@ class ClipboardMenu(Palette):
                 submenu.remove(item)
 
         for service_name in activities:
-            registry = activity.get_registry()
-            activity_info = registry.get_activity(service_name)
+            registry = bundleregistry.get_registry()
+            activity_info = registry.get_bundle(service_name)
 
             if not activity_info:
                 logging.warning('Activity %s is unknown.' % service_name)
 
-            item = gtk.MenuItem(activity_info.name)
+            item = gtk.MenuItem(activity_info.get_name())
             item.connect('activate', self._open_submenu_item_activate_cb,
                          service_name)
             submenu.append(item)
@@ -128,10 +128,10 @@ class ClipboardMenu(Palette):
         if not mime_type:
             return ''
 
-        registry = activity.get_registry()
+        registry = bundleregistry.get_registry()
         activities = registry.get_activities_for_type(mime_type)
         if activities:
-            return [activity_info.bundle_id for activity_info in activities]
+            return [activity_info.get_bundle_id() for activity_info in activities]
         else:
             return ''
 

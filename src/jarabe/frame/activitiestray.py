@@ -29,12 +29,12 @@ from sugar.graphics.palette import Palette, WidgetInvoker
 from sugar.graphics.menuitem import MenuItem
 from sugar.activity.activityhandle import ActivityHandle
 from sugar.activity import activityfactory
-from sugar import activity
 from sugar import profile
 
 from jarabe.model import shell
 from jarabe.model import neighborhood
 from jarabe.model import owner
+from jarabe.model import bundleregistry
 from jarabe.view.palettes import JournalPalette, CurrentActivityPalette
 from jarabe.view.pulsingicon import PulsingIcon
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
@@ -162,10 +162,10 @@ class PrivateInviteButton(BaseInviteButton):
         self._bundle_id = invite.get_bundle_id()
 
         self._icon.props.xo_color = profile.get_color()
-        registry = activity.get_registry()
-        activity_info = registry.get_activity(self._bundle_id)
+        registry = bundleregistry.get_registry()
+        activity_info = registry.get_bundle(self._bundle_id)
         if activity_info:
-            self._icon.props.file = activity_info.icon
+            self._icon.props.file = activity_info.get_icon()
         else:
             self._icon.props.icon_name = 'image-missing'
         self.set_icon_widget(self._icon)
@@ -177,10 +177,10 @@ class PrivateInviteButton(BaseInviteButton):
         self.set_palette(palette)
 
         self._notif_icon.props.xo_color = profile.get_color()
-        registry = activity.get_registry()
-        activity_info = registry.get_activity(self._bundle_id)
+        registry = bundleregistry.get_registry()
+        activity_info = registry.get_bundle(self._bundle_id)
         if activity_info:
-            self._notif_icon.props.icon_filename = activity_info.icon
+            self._notif_icon.props.icon_filename = activity_info.get_icon()
         else:
             self._notif_icon.props.icon_name = 'image-missing'
 
@@ -236,10 +236,10 @@ class ActivityInvitePalette(BaseInvitePalette):
         self._activity_model = activity_model
         self._bundle_id = activity_model.get_bundle_id()
 
-        registry = activity.get_registry()
-        activity_info = registry.get_activity(self._bundle_id)
+        registry = bundleregistry.get_registry()
+        activity_info = registry.get_bundle(self._bundle_id)
         if activity_info:
-            self.set_primary_text(activity_info.name)
+            self.set_primary_text(activity_info.get_name())
         else:
             self.set_primary_text(self._bundle_id)
 
@@ -262,10 +262,10 @@ class PrivateInvitePalette(BaseInvitePalette):
         self._private_channel = invite.get_private_channel()
         self._bundle_id = invite.get_bundle_id()
 
-        registry = activity.get_registry()
-        activity_info = registry.get_activity(self._bundle_id)
+        registry = bundleregistry.get_registry()
+        activity_info = registry.get_bundle(self._bundle_id)
         if activity_info:
-            self.set_primary_text(activity_info.name)
+            self.set_primary_text(activity_info.get_name())
         else:
             self.set_primary_text(self._bundle_id)
 

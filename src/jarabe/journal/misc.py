@@ -23,7 +23,6 @@ from gettext import gettext as _
 
 import gtk
 
-from sugar import activity
 from sugar.activity import activityfactory
 from sugar.activity.activityhandle import ActivityHandle
 from sugar import mime
@@ -32,6 +31,7 @@ from sugar.bundle.contentbundle import ContentBundle
 from sugar.bundle.bundle import MalformedBundleException
 from sugar import util
 
+from jarabe.model import bundleregistry
 from jarabe.journal.journalentrybundle import JournalEntryBundle
 
 def _get_icon_file_name(icon_name):
@@ -66,9 +66,9 @@ def get_icon_name(jobject):
 
     if not file_name and jobject.metadata['activity']:
         service_name = jobject.metadata['activity']
-        activity_info = activity.get_registry().get_activity(service_name)
+        activity_info = bundleregistry.get_registry().get_bundle(service_name)
         if activity_info:
-            file_name = activity_info.icon
+            file_name = activity_info.get_icon()
 
     mime_type = jobject.metadata['mime_type']
     if not file_name and mime_type:
@@ -110,7 +110,7 @@ def get_bundle(jobject):
         return None
 
 def _get_activities_for_mime(mime_type):
-    registry = activity.get_registry()
+    registry = bundleregistry.get_registry()
     result = registry.get_activities_for_type(mime_type)
     if not result:
         for parent_mime in mime.get_mime_parents(mime_type):
@@ -122,7 +122,7 @@ def get_activities(jobject):
 
     bundle_id = jobject.metadata.get('activity', '')
     if bundle_id:
-        activity_info = activity.get_registry().get_activity(bundle_id)
+        activity_info = bundleregistry.get_registry().get_bundle(bundle_id)
         if activity_info:
             activities.append(activity_info)
 
@@ -130,22 +130,24 @@ def get_activities(jobject):
     if mime_type:
         activities_info = _get_activities_for_mime(mime_type)
         for activity_info in activities_info:
-            if activity_info.bundle_id != bundle_id:
+            if activity_info.get_bundle_id() != bundle_id:
                 activities.append(activity_info)
 
     return activities
 
 def resume(jobject, bundle_id=None):
+    registry = bundleregistry.get_registry()
+
     if jobject.is_activity_bundle() and not bundle_id:
 
         logging.debug('Creating activity bundle')
         bundle = ActivityBundle(jobject.file_path)
-        if not bundle.is_installed():
+        if not registry.is_installed(bundle):
             logging.debug('Installing activity bundle')
-            bundle.install()
-        elif bundle.need_upgrade():
+            registry.install(bundle)
+        else:
             logging.debug('Upgrading activity bundle')
-            bundle.upgrade()
+            registry.upgrade(bundle)
 
         logging.debug('activityfactory.creating bundle with id %r',
                         bundle.get_bundle_id())

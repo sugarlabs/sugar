@@ -22,10 +22,11 @@ import gobject
 import simplejson
 
 from sugar.bundle.activitybundle import ActivityBundle
-from sugar.bundle.bundle import MalformedBundleException
+from sugar.bundle.bundle import MalformedBundleException, \
+    AlreadyInstalledException, RegistrationException
 from sugar import env
 
-import config
+from jarabe import config
 
 class BundleRegistry(gobject.GObject):
     """Service that tracks the available activity bundles"""
@@ -289,6 +290,52 @@ class BundleRegistry(gobject.GObject):
         favorites_data = {'defaults-mtime': self._last_defaults_mtime,
                           'favorites': self._favorite_bundles}
         simplejson.dump(favorites_data, open(path, 'w'), indent=1)
+
+    def is_installed(self, bundle):
+        return self.get_activity(bundle.get_bundle_id()) is not None
+
+    def install(self, bundle):
+        activities_path = env.get_user_activities_path()
+        if self.is_installed(bundle):
+            raise AlreadyInstalledException
+
+        install_dir = env.get_user_activities_path()
+        install_path = bundle.install(install_dir)
+        
+        if not self.add_bundle(install_path):
+            raise RegistrationException
+
+    def uninstall(self, bundle, force=False):        
+        act = self.get_activity(bundle.get_bundle_id())
+        if not force and act.version != bundle.get_activity_version():
+            logging.warning('Not uninstalling, different bundle present')
+            return
+        elif not act.path.startswith(env.get_user_activities_path()):
+            logging.warning('Not uninstalling system activity')
+            return
+
+        install_path = act.path
+
+        bundle.uninstall(install_path, force)
+        
+        if not self.remove_bundle(install_path):
+            raise RegistrationException
+
+    def upgrade(self, bundle):
+        act = self.get_activity(bundle.get_bundle_id())
+        if act is None:
+            logging.warning('Activity not installed')
+        elif act.path.startswith(env.get_user_activities_path()):
+            try:
+                self.uninstall(bundle, force=True)
+            except Exception, e:
+                logging.warning('Uninstall failed (%s), still trying ' \
+                                'to install newer bundle', e)
+        else:
+            logging.warning('Unable to uninstall system activity, ' \
+                            'installing upgraded version in user activities')
+
+        self.install(bundle)
 
 _instance = None
 

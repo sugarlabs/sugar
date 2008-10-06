@@ -27,9 +27,8 @@ from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.alert import Alert
 from sugar.graphics.icon import Icon
 from sugar import profile
-from sugar import activity
-from sugar.bundle.activitybundle import ActivityBundle
 
+from jarabe.model import bundleregistry
 from jarabe.desktop import favoritesview
 from jarabe.desktop.activitieslist import ActivitiesList
 
@@ -71,14 +70,14 @@ class HomeBox(gtk.VBox):
         self._set_view(_FAVORITES_VIEW, layout)
 
     def __erase_activated_cb(self, view, bundle_id):
-        registry = activity.get_registry()
-        activity_info = registry.get_activity(bundle_id)
+        registry = bundleregistry.get_registry()
+        activity_info = registry.get_bundle(bundle_id)
 
         alert = Alert()
         alert.props.title = _('Confirm erase')
         alert.props.msg = \
                 _('Confirm erase: Do you want to permanently erase %s?') \
-                % activity_info.name
+                % activity_info.get_name()
 
         cancel_icon = Icon(icon_name='dialog-cancel')
         alert.add_button(gtk.RESPONSE_CANCEL, _('Keep'), cancel_icon)
@@ -104,9 +103,9 @@ class HomeBox(gtk.VBox):
         else:
             self._favorites_view.remove_alert()
         if response_id == gtk.RESPONSE_OK:
-            registry = activity.get_registry()
-            activity_info = registry.get_activity(bundle_id)
-            ActivityBundle(activity_info.path).uninstall()
+            registry = bundleregistry.get_registry()
+            bundle = registry.get_bundle(bundle_id)
+            registry.uninstall(bundle)
             
     def show_software_updates_alert(self):
         alert = Alert()
