@@ -35,14 +35,13 @@ from sugar.datastore import datastore
 from sugar import env
 
 from jarabe.shellservice import ShellService
-from jarabe.intro.window import IntroWindow
-from jarabe.intro.window import create_profile
 from jarabe.session import get_session_manager
 from jarabe.nmservice import NMService
 from jarabe.model import sound
 from jarabe.model import screen
 from jarabe.journal import journalactivity
 from jarabe.view import launcher
+from jarabe import intro
 from jarabe import logsmanager
 from jarabe import config
 
@@ -83,14 +82,7 @@ def main():
     icons_path = os.path.join(config.data_path, 'icons')
     gtk.icon_theme_get_default().append_search_path(icons_path)
 
-    # Do initial setup if needed
-    if not get_profile().is_valid():
-        if 'SUGAR_PROFILE_NAME' in os.environ:
-            create_profile(os.environ['SUGAR_PROFILE_NAME'])
-        else:
-            win = IntroWindow()
-            win.show_all()
-            gtk.main()
+    intro.check_profile()
 
     # set timezone    
     if get_profile().timezone is not None:    
