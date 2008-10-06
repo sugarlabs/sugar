@@ -46,7 +46,8 @@ class BundleRegistry(gobject.GObject):
         self._mime_defaults = self._load_mime_defaults()
 
         self._bundles = []
-        for activity_dir in self._get_activity_directories():
+        user_path = env.get_user_activities_path()
+        for activity_dir in [user_path, config.activities_path]:
             self._scan_directory(activity_dir)
 
         self._last_defaults_mtime = -1
@@ -59,15 +60,6 @@ class BundleRegistry(gobject.GObject):
                     % traceback.format_exc())
 
         self._merge_default_favorites()
-
-    def _get_activity_directories(self):
-        directories = []
-        if os.environ.has_key('SUGAR_ACTIVITIES'):
-            directories.extend(os.environ['SUGAR_ACTIVITIES'].split(':'))
-
-        directories.append(env.get_user_activities_path())
-
-        return directories
 
     def _load_mime_defaults(self):
         defaults = {}
