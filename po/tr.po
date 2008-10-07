@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-11 21:39+0530\n"
-"PO-Revision-Date: 2008-09-12 08:48-0400\n"
+"PO-Revision-Date: 2008-09-26 09:44-0400\n"
 "Last-Translator: abdullah kocabas <abdullah.kocabas@abcdizustu.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr "İsim:"
 
 #: ../shell/intro/intro.py:96
 msgid "Click to change color:"
-msgstr "Rengini değiştirmek için tıklayınız:"
+msgstr "Rengi değiştirmek için tıklayınız:"
 
 #: ../shell/intro/intro.py:146
 msgid "Back"
@@ -29,7 +29,7 @@ msgstr "Geri"
 
 #: ../shell/intro/intro.py:160
 msgid "Done"
-msgstr "Tamamlandı."
+msgstr "Kapat"
 
 #: ../shell/intro/intro.py:163
 msgid "Next"
@@ -37,24 +37,24 @@ msgstr "Sonraki"
 
 #: ../shell/view/BuddyMenu.py:84
 msgid "Remove friend"
-msgstr "arkadaş listenizden çıkarınız."
+msgstr "Arkadaşı Kaldır"
 
 #: ../shell/view/BuddyMenu.py:87
 msgid "Make friend"
-msgstr "arkadaş listenize alınız."
+msgstr "Arkadaşı Ekle"
 
 #: ../shell/view/BuddyMenu.py:109
 #, python-format
 msgid "Invite to %s"
-msgstr "%s'e davet ediniz."
+msgstr "%s'e davet et"
 
 #: ../shell/view/clipboardmenu.py:58
 msgid "Remove"
-msgstr "Çıkartınız."
+msgstr "Kaldır"
 
 #: ../shell/view/clipboardmenu.py:63
 msgid "Open"
-msgstr "Açınız."
+msgstr "Aç"
 
 # Also "günlüğe ekle" could be used
 #. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
@@ -63,7 +63,7 @@ msgstr "Açınız."
 #. self.append_menu_item(self._stop_item)
 #: ../shell/view/clipboardmenu.py:73
 msgid "Add to journal"
-msgstr "Günlüğe ekleyiniz."
+msgstr "Günlüğe Ekle"
 
 #: ../shell/view/clipboardmenu.py:213
 #, python-format
@@ -72,15 +72,15 @@ msgstr "Panodaki nesne: %s."
 
 #: ../shell/hardware/keydialog.py:149
 msgid "Key Type:"
-msgstr "şifre biçimi:"
+msgstr "Şifre Çeşidi:"
 
 #: ../shell/hardware/keydialog.py:169
 msgid "Authentication Type:"
-msgstr "onay biçimi:"
+msgstr "Onay Çeşidi:"
 
 #: ../shell/hardware/keydialog.py:250
 msgid "Encryption Type:"
-msgstr "şifreleme biçimi:"
+msgstr "Şifreleme Çeşidi:"
 
 #: ../shell/view/home/activitiesdonut.py:90
 msgid "Starting..."
@@ -88,12 +88,12 @@ msgstr "Başlıyor..."
 
 #: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
 msgid "Resume"
-msgstr "Yeniden başlatınız."
+msgstr "Devam Et"
 
 #: ../shell/view/home/activitiesdonut.py:111
 #: ../lib/sugar/activity/activity.py:128
 msgid "Stop"
-msgstr "Durdurunuz."
+msgstr "Durdur"
 
 #: ../shell/view/Shell.py:276
 msgid "Screenshot"
@@ -101,15 +101,15 @@ msgstr "Ekran resmi"
 
 #: ../shell/view/home/HomeBox.py:159
 msgid "Reboot"
-msgstr "Yeniden başlatınız."
+msgstr "Yeniden Başlat"
 
 #: ../shell/view/home/HomeBox.py:164
 msgid "Shutdown"
-msgstr "Kapatınız."
+msgstr "Bilgisayarı Kapat"
 
 #: ../shell/view/home/HomeBox.py:170
 msgid "Register"
-msgstr "Kayıt olunuz."
+msgstr "Kayıt Ol"
 
 # "Bu xo hakkında" could be used as well
 #: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
@@ -118,7 +118,7 @@ msgstr "Bu bilgisayar hakkında"
 
 #: ../shell/view/home/HomeBox.py:222
 msgid "Not available"
-msgstr "Görünmüyor."
+msgstr "Mevcut Değil"
 
 #. Only show disconnect when there's a mesh device, because mesh takes
 #. priority over the normal wireless device.  NM doesn't have a "disconnect"
@@ -134,11 +134,11 @@ msgstr "Bağlantı kesiliyor..."
 #: ../shell/view/devices/network/mesh.py:62
 #: ../shell/view/devices/network/mesh.py:66
 msgid "Mesh Network"
-msgstr "Mesh bağlantısı"
+msgstr "Mesh Ağ"
 
 #: ../shell/view/home/MeshBox.py:300
 msgid "Join"
-msgstr "Katılınız."
+msgstr "Katıl"
 
 #: ../shell/view/devices/battery.py:38
 msgid "My Battery life"
@@ -146,19 +146,19 @@ msgstr "Pil ömrü"
 
 #: ../shell/view/devices/battery.py:94
 msgid "Battery charging"
-msgstr "Pilin şarjı var."
+msgstr "Pil şarj ediliyor"
 
 #: ../shell/view/devices/battery.py:96
 msgid "Battery discharging"
-msgstr "Pilin şarjı yok."
+msgstr "Pilin şarjı yok"
 
 #: ../shell/view/devices/battery.py:98
 msgid "Battery fully charged"
-msgstr "Pil şarj oldu."
+msgstr "Pil şarj oldu"
 
 #: ../shell/view/devices/network/wireless.py:61
 msgid "Disconnected"
-msgstr "Bağlantı kesildi."
+msgstr "Bağlantı kesildi"
 
 #: ../shell/view/devices/network/wireless.py:131
 msgid "Channel"
@@ -166,7 +166,7 @@ msgstr "Kanal"
 
 #: ../shell/view/frame/zoomtoolbar.py:42
 msgid "Neighborhood"
-msgstr "Komşu"
+msgstr "Komşular"
 
 #: ../shell/view/frame/zoomtoolbar.py:54
 msgid "Group"
@@ -183,7 +183,7 @@ msgstr "Aktivite"
 # Name comes before translation eg "John ile paylaş"
 #: ../lib/sugar/activity/activity.py:111
 msgid "Share with:"
-msgstr "ile paylaşınız:"
+msgstr "Paylaş"
 
 # Kişisel can be used as in personal
 #: ../lib/sugar/activity/activity.py:113
@@ -196,48 +196,48 @@ msgstr "Komşularım"
 
 #: ../lib/sugar/activity/activity.py:122
 msgid "Keep"
-msgstr "Kaydediniz."
+msgstr "Kaydet"
 
 #: ../lib/sugar/activity/activity.py:241
 msgid "Undo"
-msgstr "Geri alınız."
+msgstr "Geri al"
 
 #: ../lib/sugar/activity/activity.py:246
 msgid "Redo"
-msgstr "Yeniden yapınız."
+msgstr "Yeniden yap"
 
 #: ../lib/sugar/activity/activity.py:256
 msgid "Copy"
-msgstr "Kopyalayınız."
+msgstr "Kopyala"
 
 #: ../lib/sugar/activity/activity.py:261
 msgid "Paste"
-msgstr "Yapıştırınız."
+msgstr "Yapıştır"
 
 #: ../lib/sugar/activity/activity.py:450
 #, python-format
 msgid "%s Activity"
-msgstr "%s aktivite"
+msgstr "%s Aktivite"
 
 #: ../lib/sugar/activity/activity.py:820
 msgid "Keep error"
-msgstr "Kaydedilemedi."
+msgstr "Kaydetme hatası"
 
 #: ../lib/sugar/activity/activity.py:821
 msgid "Keep error: all changes will be lost"
-msgstr "Kayıt hatası: Tüm değişiklikler kaybolacaktır."
+msgstr "Kaydetme hatası: Tüm değişiklikler kaybolacaktır"
 
 #: ../lib/sugar/activity/activity.py:824
 msgid "Don't stop"
-msgstr "Durmayınız."
+msgstr "Durma"
 
 #: ../lib/sugar/activity/activity.py:827
 msgid "Stop anyway"
-msgstr "Durunuz."
+msgstr "Dur"
 
 #: ../lib/sugar/graphics/alert.py:164 ../lib/sugar/graphics/alert.py:206
 msgid "Cancel"
-msgstr "İptal ediniz."
+msgstr "İptal "
 
 #: ../lib/sugar/graphics/alert.py:168
 msgid "Ok"
@@ -245,11 +245,11 @@ msgstr "Tamam"
 
 #: ../lib/sugar/graphics/alert.py:216
 msgid "Continue"
-msgstr "Devam ediniz."
+msgstr "Devam "
 
 #: ../lib/sugar/graphics/alert.py:244
 msgid "OK"
-msgstr "Tamam"
+msgstr "TAMAM"
 
 #: ../shell/controlpanel/control.py:213
 msgid "To apply your changes you have to restart sugar.\n"
@@ -265,11 +265,11 @@ msgstr "Seçili renklerde hata"
 
 #: ../shell/controlpanel/control.py:307
 msgid "off"
-msgstr "Kapalı"
+msgstr "kapalı"
 
 #: ../shell/controlpanel/control.py:309
 msgid "on"
-msgstr "Açık"
+msgstr "açık"
 
 #: ../shell/controlpanel/control.py:310
 msgid "State is unknown."
@@ -277,7 +277,7 @@ msgstr "Durum bilinmiyor."
 
 #: ../shell/controlpanel/control.py:332
 msgid "Error in specified radio argument use on/off."
-msgstr "Belirlenmiş radyo argümanında açma/kapama kullanımında hata"
+msgstr "Belirlenmiş kablosuz internet argümanında açma/kapama kullanımında hata"
 
 #: ../shell/controlpanel/control.py:336
 msgid "Permission denied. You need to be root to run this method."
@@ -311,7 +311,7 @@ msgstr "%s' e giremiyor. Standart kurulum oluşturunuz."
 #: ../shell/controlpanel/control.py:466
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr "&s kodu için dil tanımlanamıyor."
+msgstr "%s kodu için dil tanımlanamıyor."
 
 #: ../shell/controlpanel/control.py:476
 #, python-format
@@ -320,28 +320,28 @@ msgstr "'%s' konuşamıyorum, üzgünüm."
 
 #: ../shell/view/devices/network/mesh.py:105
 msgid "Connected to a School Mesh Portal"
-msgstr "Okul mesh portalına bağlıdır."
+msgstr "Okul mesh ağ portalına bağlıdır."
 
 #: ../shell/view/devices/network/mesh.py:107
 msgid "Looking for a School Mesh Portal..."
-msgstr "Okul mesh portalı arıyor..."
+msgstr "Okul mesh ağ portalı arıyor..."
 
 #: ../shell/view/devices/network/mesh.py:110
 msgid "Connected to an XO Mesh Portal"
-msgstr "XO mesh portalına bağlıdır."
+msgstr "XO mesh ağ portalına bağlıdır."
 
 #: ../shell/view/devices/network/mesh.py:112
 msgid "Looking for an XO Mesh Portal..."
-msgstr "XO mesh portalı arıyor..."
+msgstr "XO mesh ağ portalı arıyor..."
 
 #: ../shell/view/devices/network/mesh.py:115
 msgid "Connected to a Simple Mesh"
-msgstr "Basit bir mesh'e bağlıdır."
+msgstr "Basit bir Mesh Ağına bağlıdır."
 
 #: ../shell/view/devices/network/mesh.py:117
 msgid "Starting a Simple Mesh"
-msgstr "Basit bir mesh başlatılıyor."
+msgstr "Basit bir Mesh Ağı başlatılıyor."
 
 #: ../shell/view/devices/network/mesh.py:124
 msgid "Unknown Mesh"
-msgstr "Bilinmeyen mesh"
+msgstr "Bilinmeyen Mesh Ağı"
