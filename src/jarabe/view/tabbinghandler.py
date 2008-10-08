@@ -18,17 +18,16 @@ import logging
 import gtk
 import gobject
 
-from jarabe.frame import frame
 from jarabe.model import shell
 
 _RAISE_DELAY = 250
 
 class TabbingHandler(object):
-    def __init__(self, modifier):
+    def __init__(self, frame, modifier):
+        self._frame = frame
         self._tabbing = False
         self._modifier = modifier
         self._timeout = None
-        self._frame = frame.get_instance()
 
     def _start_tabbing(self):
         if not self._tabbing:

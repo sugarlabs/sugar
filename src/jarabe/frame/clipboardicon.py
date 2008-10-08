@@ -27,7 +27,7 @@ from jarabe.frame import clipboard
 from jarabe.frame.clipboardmenu import ClipboardMenu
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.frame.notification import NotificationIcon
-import jarabe.frame.frame
+import jarabe.frame
 
 class ClipboardIcon(RadioToolButton):
     __gtype_name__ = 'SugarClipboardIcon'
@@ -123,9 +123,9 @@ class ClipboardIcon(RadioToolButton):
             self._notif_icon.props.xo_color = \
                     XoColor('%s,%s' % (self._icon.props.stroke_color,
                                        self._icon.props.fill_color))
-            frame = jarabe.frame.frame.get_instance()
+            frame = jarabe.frame.get_view()
             frame.add_notification(self._notif_icon, 
-                                   jarabe.frame.frame.BOTTOM_LEFT)
+                                   gtk.CORNER_BOTTOM_LEFT)
         self._current_percent = cb_object.get_percent()
 
     def _notify_active_cb(self, widget, pspec):

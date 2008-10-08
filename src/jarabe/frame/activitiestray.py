@@ -39,7 +39,7 @@ from jarabe.view.palettes import JournalPalette, CurrentActivityPalette
 from jarabe.view.pulsingicon import PulsingIcon
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.frame.notification import NotificationIcon
-import jarabe.frame.frame
+import jarabe.frame
 
 class ActivityButton(RadioToolButton):
     def __init__(self, home_activity, group):
@@ -98,7 +98,7 @@ class BaseInviteButton(ToolButton):
 
     def __clicked_cb(self, button):
         if self._notif_icon is not None:
-            frame = jarabe.frame.frame.get_instance()
+            frame = jarabe.frame.get_view()
             frame.remove_notification(self._notif_icon)
             self._notif_icon = None
             self._launch()
@@ -108,7 +108,7 @@ class BaseInviteButton(ToolButton):
         raise NotImplementedError
 
     def __destroy_cb(self, button):
-        frame = jarabe.frame.frame.get_instance()
+        frame = jarabe.frame.get_view()
         frame.remove_notification(self._notif_icon)
 
 class ActivityInviteButton(BaseInviteButton):
@@ -145,9 +145,9 @@ class ActivityInviteButton(BaseInviteButton):
         palette.set_group_id('frame')
         self._notif_icon.palette = palette
 
-        frame = jarabe.frame.frame.get_instance()
+        frame = jarabe.frame.get_view()
         frame.add_notification(self._notif_icon,
-                               jarabe.frame.frame.TOP_LEFT)
+                               gtk.CORNER_TOP_LEFT)
 
     def _launch(self):
         """Join the activity in the invite."""
@@ -192,9 +192,9 @@ class PrivateInviteButton(BaseInviteButton):
         palette.set_group_id('frame')
         self._notif_icon.palette = palette
 
-        frame = jarabe.frame.frame.get_instance()
+        frame = jarabe.frame.get_view()
         frame.add_notification(self._notif_icon,
-                               jarabe.frame.frame.TOP_LEFT)
+                               gtk.CORNER_TOP_LEFT)
 
     def _launch(self):
         """Start the activity with private channel."""

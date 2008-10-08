@@ -43,12 +43,10 @@ def uisetup_completed_cb():
 
 def uisetup_delayed_cb(home_window):
     from jarabe.journal import journalactivity
-    from jarabe.view.keyhandler import KeyHandler
-    from jarabe.frame import frame
+    from jarabe.view import keyhandler
+    from jarabe import frame
 
-    frame = frame.get_instance()
-
-    key_handler = KeyHandler(frame)
+    keyhandler.setup(frame.get_view())
 
     journalactivity.start()
 

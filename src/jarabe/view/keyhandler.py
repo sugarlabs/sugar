@@ -94,7 +94,7 @@ class KeyHandler(object):
         self._key_grabber.connect('key-released',
                                   self._key_released_cb)
 
-        self._tabbing_handler = TabbingHandler(_TABBING_MODIFIER)
+        self._tabbing_handler = TabbingHandler(self._frame, _TABBING_MODIFIER)
 
         self._key_grabber.grab_keys(_actions_table.keys())
 
@@ -322,3 +322,12 @@ class KeyHandler(object):
             return True
         return False
 
+_instance = None
+
+def setup(frame):
+    global _instance
+
+    if _instance:
+        del _instance
+
+    _instance = KeyHandler(frame)    

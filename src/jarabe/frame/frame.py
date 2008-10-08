@@ -275,20 +275,20 @@ class Frame(object):
     def notify_key_press(self):
         self._key_listener.key_press()
 
-    def add_notification(self, icon, corner=TOP_LEFT):
+    def add_notification(self, icon, corner=gtk.CORNER_TOP_LEFT):
         if not isinstance(icon, NotificationIcon):
             raise TypeError('icon must be a NotificationIcon.')
 
         window = NotificationWindow()
 
         screen = gtk.gdk.screen_get_default()
-        if corner == TOP_LEFT:
+        if corner == gtk.CORNER_TOP_LEFT:
             window.move(0, 0)
-        elif corner == TOP_RIGHT:
+        elif corner == gtk.CORNER_TOP_RIGHT:
             window.move(screen.get_width() - style.GRID_CELL_SIZE, 0)
-        elif corner == BOTTOM_LEFT:
+        elif corner == gtk.CORNER_BOTTOM_LEFT:
             window.move(0, screen.get_height() - style.GRID_CELL_SIZE)
-        elif corner == BOTTOM_RIGHT:
+        elif corner == gtk.CORNER_BOTTOM_RIGHT:
             window.move(screen.get_width() - style.GRID_CELL_SIZE,
                         screen.get_height() - style.GRID_CELL_SIZE)
         else:
@@ -316,12 +316,3 @@ class Frame(object):
         del self._notif_by_icon[icon]
 
     visible = property(is_visible, None)
-
-_instance = None
-
-def get_instance():
-    global _instance
-    if not _instance:
-        _instance = Frame()
-    return _instance
-
