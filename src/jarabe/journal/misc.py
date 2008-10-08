@@ -169,7 +169,7 @@ def resume(jobject, bundle_id=None):
         uri = bundle.get_start_uri()
         logging.debug('activityfactory.creating with uri %s', uri)
 
-        activity_bundle = registry.get_bundle(activities[0].bundle_id)
+        activity_bundle = registry.get_bundle(activities[0].get_bundle_id())
         activityfactory.create_with_uri(activity_bundle, bundle.get_start_uri())
     else:
         if not get_activities(jobject) and bundle_id is None:
@@ -177,7 +177,7 @@ def resume(jobject, bundle_id=None):
                     jobject.metadata.get('mime_type', None))
             return
         if bundle_id is None:
-            bundle_id = get_activities(jobject)[0].bundle_id
+            bundle_id = get_activities(jobject)[0].get_bundle_id()
             bundle = registry.get_bundle(bundle_id)
 
         activity_id = jobject.metadata['activity_id']
