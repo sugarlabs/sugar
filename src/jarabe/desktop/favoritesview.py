@@ -113,7 +113,8 @@ class FavoritesView(hippo.Canvas):
 
     def __activity_added_cb(self, activity_registry, activity_info):
         registry = bundleregistry.get_registry()
-        if registry.is_bundle_favorite(self._bundle_id, self._version):
+        if registry.is_bundle_favorite(activity_info.get_bundle_id(),
+                activity_info.get_activity_version()):
             self._add_activity(activity_info)
 
     def _find_activity_icon(self, bundle_id, version):

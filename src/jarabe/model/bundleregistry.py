@@ -284,7 +284,7 @@ class BundleRegistry(gobject.GObject):
         open(path, 'w').write(cjson.encode(favorites_data))
 
     def is_installed(self, bundle):
-        return self.get_activity(bundle.get_bundle_id()) is not None
+        return self.get_bundle(bundle.get_bundle_id()) is not None
 
     def install(self, bundle):
         activities_path = env.get_user_activities_path()
@@ -298,7 +298,7 @@ class BundleRegistry(gobject.GObject):
             raise RegistrationException
 
     def uninstall(self, bundle, force=False):        
-        act = self.get_activity(bundle.get_bundle_id())
+        act = self.get_bundle(bundle.get_bundle_id())
         if not force and act.version != bundle.get_activity_version():
             logging.warning('Not uninstalling, different bundle present')
             return
@@ -314,7 +314,7 @@ class BundleRegistry(gobject.GObject):
             raise RegistrationException
 
     def upgrade(self, bundle):
-        act = self.get_activity(bundle.get_bundle_id())
+        act = self.get_bundle(bundle.get_bundle_id())
         if act is None:
             logging.warning('Activity not installed')
         elif act.path.startswith(env.get_user_activities_path()):
