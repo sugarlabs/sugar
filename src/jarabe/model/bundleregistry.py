@@ -19,7 +19,7 @@ import logging
 import traceback
 
 import gobject
-import simplejson
+import cjson
 
 from sugar.bundle.activitybundle import ActivityBundle
 from sugar.bundle.bundle import MalformedBundleException, \
@@ -87,7 +87,7 @@ class BundleRegistry(gobject.GObject):
     def _load_favorites(self):
         favorites_path = env.get_profile_path('favorite_activities')
         if os.path.exists(favorites_path):
-            favorites_data = simplejson.load(open(favorites_path))
+            favorites_data = cjson.decode(open(favorites_path).read())
 
             favorite_bundles = favorites_data['favorites']
             if not isinstance(favorite_bundles, dict):
@@ -281,7 +281,7 @@ class BundleRegistry(gobject.GObject):
         path = env.get_profile_path('favorite_activities')
         favorites_data = {'defaults-mtime': self._last_defaults_mtime,
                           'favorites': self._favorite_bundles}
-        simplejson.dump(favorites_data, open(path, 'w'), indent=1)
+        open(path, 'w').write(cjson.encode(favorites_data))
 
     def is_installed(self, bundle):
         return self.get_activity(bundle.get_bundle_id()) is not None
