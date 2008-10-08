@@ -15,6 +15,9 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
+import sys
+import traceback
+import logging
 
 from sugar.graphics import tray
 
@@ -27,9 +30,13 @@ class DevicesTray(tray.HTray):
         for f in os.listdir(os.path.join(config.ext_path, 'deviceicon')):
             if f.endswith('.py') and not f.startswith('__'):
                 module_name = f[:-3]
-                mod = __import__('deviceicon.' + module_name, globals(),
-                                 locals(), [module_name])
-                mod.setup(self)
+                try:
+                    mod = __import__('deviceicon.' + module_name, globals(),
+                                     locals(), [module_name])
+                    mod.setup(self)
+                except Exception:
+                    logging.error('Exception while loading extension:\n' + \
+                        ''.join(traceback.format_exception(*sys.exc_info())))
 
     def add_device(self, view):
         index = 0
