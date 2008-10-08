@@ -19,6 +19,7 @@ import getopt
 import os
 from gettext import gettext as _
 import traceback
+import logging
 
 from jarabe import config
 
