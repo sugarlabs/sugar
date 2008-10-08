@@ -17,6 +17,7 @@
 import os
 import logging
 import traceback
+import sys
 
 import gobject
 import cjson
@@ -302,11 +303,11 @@ class BundleRegistry(gobject.GObject):
         if not force and act.version != bundle.get_activity_version():
             logging.warning('Not uninstalling, different bundle present')
             return
-        elif not act.path.startswith(env.get_user_activities_path()):
+        elif not act.get_path().startswith(env.get_user_activities_path()):
             logging.warning('Not uninstalling system activity')
             return
 
-        install_path = act.path
+        install_path = act.get_path()
 
         bundle.uninstall(install_path, force)
         
@@ -317,12 +318,13 @@ class BundleRegistry(gobject.GObject):
         act = self.get_bundle(bundle.get_bundle_id())
         if act is None:
             logging.warning('Activity not installed')
-        elif act.path.startswith(env.get_user_activities_path()):
+        elif act.get_path().startswith(env.get_user_activities_path()):
             try:
                 self.uninstall(bundle, force=True)
-            except Exception, e:
-                logging.warning('Uninstall failed (%s), still trying ' \
-                                'to install newer bundle', e)
+            except Exception:
+                logging.error('Uninstall failed, still trying to install ' \
+                    'newer bundle:\n' + \
+                    ''.join(traceback.format_exception(*sys.exc_info())))
         else:
             logging.warning('Unable to uninstall system activity, ' \
                             'installing upgraded version in user activities')
