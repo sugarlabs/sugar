@@ -231,7 +231,7 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
 
     def __favorite_changed_cb(self, favorite_icon, pspec):
         registry = bundleregistry.get_registry()
-        registry.set_activity_favorite(self._bundle_id, self._version,
+        registry.set_bundle_favorite(self._bundle_id, self._version,
                                        favorite_icon.props.favorite)
 
     def __activity_changed_cb(self, activity_registry, activity_info):

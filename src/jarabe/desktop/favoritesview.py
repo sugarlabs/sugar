@@ -138,7 +138,8 @@ class FavoritesView(hippo.Canvas):
             self._box.remove(icon)
 
         registry = bundleregistry.get_registry()
-        if registry.is_bundle_favorite(self._bundle_id, self._version):
+        if registry.is_bundle_favorite(activity_info.get_bundle_id(),
+                                       activity_info.get_activity_version()):
             self._add_activity(activity_info)
 
     def do_size_allocate(self, allocation):
