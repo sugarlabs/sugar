@@ -151,7 +151,12 @@ def resume(jobject, bundle_id=None):
 
         logging.debug('activityfactory.creating bundle with id %r',
                         bundle.get_bundle_id())
-        activityfactory.create(bundle)
+        installed_bundle = registry.get_bundle(bundle.get_bundle_id())
+        if installed_bundle:
+            activityfactory.create(installed_bundle)
+        else:
+            logging.error('Bundle %r is not installed.',
+                          bundle.get_bundle_id())
 
     elif jobject.is_content_bundle() and not bundle_id:
 
