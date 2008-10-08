@@ -18,6 +18,8 @@ import sys
 import getopt
 import os
 from gettext import gettext as _
+import traceback
+import logging
 
 from jarabe import config
 
@@ -58,10 +60,15 @@ def load_modules():
 
     for item in folder:
         if os.path.isdir(os.path.join(path, item)) and \
-           os.path.exists(os.path.join(path, item, 'model.py')):
-            module = __import__('.'.join(('cpsection', item, 'model')), 
-                                globals(), locals(), ['model'])
-            modules.append(module)
+                os.path.exists(os.path.join(path, item, 'model.py')):
+            try:
+                module = __import__('.'.join(('cpsection', item, 'model')), 
+                                    globals(), locals(), ['model'])
+            except Exception:
+                logging.error('Exception while loading extension:\n' + \
+                    ''.join(traceback.format_exception(*sys.exc_info())))
+            else:
+                modules.append(module)
             
     return modules        
 

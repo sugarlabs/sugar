@@ -14,11 +14,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gtk
 import os
-import gobject
 import logging
 from gettext import gettext as _
+import sys
+import traceback
+
+import gobject
+import gtk
 
 from sugar.graphics.icon import Icon
 from sugar.graphics import style
@@ -231,23 +234,28 @@ class ControlPanel(gtk.Window):
         for item in folder:
             if os.path.isdir(os.path.join(path, item)) and \
                     os.path.exists(os.path.join(path, item, '__init__.py')):
-                mod = __import__('.'.join(('cpsection', item)), 
-                                 globals(), locals(), [item])
-                view_class = getattr(mod, 'CLASS', None)
-                if view_class is not None: 
-                    options[item] = {}
-                    options[item]['alerts'] = []
-                    options[item]['view'] = view_class
-                    options[item]['icon'] = getattr(mod, 'ICON', item)
-                    options[item]['title'] = getattr(mod, 'TITLE', item)
-                    options[item]['color'] = getattr(mod, 'COLOR', None)
-                    keywords = getattr(mod, 'KEYWORDS', [])
-                    keywords.append(options[item]['title'].lower())
-                    if item not in keywords:
-                        keywords.append(item)
-                else:    
-                    _logger.error('There is no CLASS constant specified in ' \
-                                      'the view file \'%s\'.' % item)
+                try:
+                    mod = __import__('.'.join(('cpsection', item)), 
+                                     globals(), locals(), [item])
+                    view_class = getattr(mod, 'CLASS', None)
+                    if view_class is not None: 
+                        options[item] = {}
+                        options[item]['alerts'] = []
+                        options[item]['view'] = view_class
+                        options[item]['icon'] = getattr(mod, 'ICON', item)
+                        options[item]['title'] = getattr(mod, 'TITLE', item)
+                        options[item]['color'] = getattr(mod, 'COLOR', None)
+                        keywords = getattr(mod, 'KEYWORDS', [])
+                        keywords.append(options[item]['title'].lower())
+                        if item not in keywords:
+                            keywords.append(item)
+                    else:    
+                        _logger.error('There is no CLASS constant specifieds ' \
+                                          'in the view file \'%s\'.' % item)
+                except Exception:
+                    logging.error('Exception while loading extension:\n' + \
+                        ''.join(traceback.format_exception(*sys.exc_info())))
+
         return options             
 
     def __cancel_clicked_cb(self, widget):
