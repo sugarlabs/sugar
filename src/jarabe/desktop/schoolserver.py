@@ -5,7 +5,7 @@ import socket
 import os
 import gconf
 
-from sugar import get_profile
+from sugar.profile import get_profile
 
 REGISTER_URL = 'http://schoolserver:8080/'
 
