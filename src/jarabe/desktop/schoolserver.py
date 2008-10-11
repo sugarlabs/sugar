@@ -3,8 +3,9 @@ from gettext import gettext as _
 from xmlrpclib import ServerProxy, Error
 import socket
 import os
+import gconf
 
-from sugar import profile
+from sugar import get_profile
 
 REGISTER_URL = 'http://schoolserver:8080/'
 
@@ -20,6 +21,8 @@ def register_laptop(url=REGISTER_URL):
     uuid = read_ofw('mfg-data/U#')
     sn = sn or 'SHF00000000'
     uuid = uuid or '00000000-0000-0000-0000-000000000000'
+
+    profile = get_profile()
 
     client = gconf.client_get_default()
     nick = client.get_string('/desktop/sugar/user/nick')

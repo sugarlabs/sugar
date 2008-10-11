@@ -23,7 +23,6 @@ import gtk
 from sugar.datastore import datastore
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.palette import Palette
-from sugar.graphics.xocolor import XoColor
 
 from jarabe.journal import volumesmanager
 
