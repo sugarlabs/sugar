@@ -25,18 +25,21 @@ import gobject
 
 from sugar import env
 
-def _run_xephyr(display, dpi):
+def _run_xephyr(display, dpi, dimensions):
     cmd = [ 'Xephyr' ]
     cmd.append(':%d' % display)
     cmd.append('-ac') 
 
-    if gtk.gdk.screen_width() < 1200 or gtk.gdk.screen_height() < 900:
+    if dimensions is not None:
+        cmd.append('-screen')
+        cmd.append(dimensions)
+    elif gtk.gdk.screen_width() < 1200 or gtk.gdk.screen_height() < 900:
         cmd.append('-fullscreen')
     else:
         cmd.append('-screen')
         cmd.append('%dx%d' % (1200, 900))
 
-    if not dpi:
+    if dpi is None:
         dpi = gtk.settings_get_default().get_property('gtk-xft-dpi') / 1024
     if dpi > 0:
         cmd.append('-dpi')
@@ -54,10 +57,10 @@ def _check_xephyr(display):
                              stderr=open(os.devnull, "w"))
     return result == 0
 
-def _start_xephyr(dpi=None):
+def _start_xephyr(dpi, dimensions):
     for display in range(100, 110):
         if not _check_xephyr(display):
-            _run_xephyr(display, dpi)
+            _run_xephyr(display, dpi, dimensions)
 
             tries = 10
             while tries > 0:
@@ -90,14 +93,13 @@ def main():
     parser = OptionParser()
     parser.add_option('-d', '--dpi', dest='dpi', help='Emulator dpi')
     parser.add_option('-s', '--scaling', dest='scaling', help='Sugar scaling')
+    parser.add_option('-i', '--dimensions', dest='dimensions',
+                      help='Emulator dimensions (ex. 1200x900)')
     (options, args) = parser.parse_args()
 
     _setup_env()
 
-    if options.dpi:
-        _start_xephyr(dpi=options.dpi)
-    else:
-        _start_xephyr()
+    _start_xephyr(options.dpi, options.dimensions)
 
     if options.scaling:
         os.environ['SUGAR_SCALING'] = options.scaling
