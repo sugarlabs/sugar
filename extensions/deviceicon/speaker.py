@@ -15,11 +15,11 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from gettext import gettext as _
+import gconf
 
 import gobject
 import gtk
 
-from sugar import profile
 from sugar.graphics import style
 from sugar.graphics.icon import get_icon_state, Icon
 from sugar.graphics.menuitem import MenuItem
@@ -37,9 +37,10 @@ class DeviceView(TrayIcon):
     FRAME_POSITION_RELATIVE = 800
 
     def __init__(self):
-        TrayIcon.__init__(self,
-                          icon_name=_ICON_NAME,
-                          xo_color=profile.get_color())
+        client = gconf.client_get_default()        
+        self._color = XoColor(client.get_string('/desktop/sugar/user/color'))
+
+        TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
 
         self._model = DeviceModel()
         self.palette = SpeakerPalette(_('My Speakers'), model=self._model)
@@ -59,7 +60,7 @@ class DeviceView(TrayIcon):
     def _update_info(self):
         name = _ICON_NAME
         current_level = self._model.props.level
-        xo_color = profile.get_color()
+        xo_color = self._color
 
         if self._model.props.muted:
             name += '-muted'

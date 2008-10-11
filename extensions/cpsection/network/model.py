@@ -17,8 +17,7 @@
 
 import dbus
 from gettext import gettext as _
-
-from sugar import profile
+import gconf
 
 from jarabe.model.network import get_manager
 
@@ -36,8 +35,8 @@ class ReadError(Exception):
         return repr(self.value)
 
 def get_jabber():
-    pro = profile.get_profile()    
-    return pro.jabber_server
+    client = gconf.client_get_default()
+    return client.get_string('/desktop/sugar/collaboration/jabber_server')
 
 def print_jabber():
     print get_jabber()
@@ -46,10 +45,9 @@ def set_jabber(server):
     """Set the jabber server
     server : e.g. 'olpc.collabora.co.uk'
     """
-    pro = profile.get_profile()
-    pro.jabber_server = server
-    pro.jabber_registered = False
-    pro.save()
+    client = gconf.client_get_default()
+    client.set_string('/desktop/sugar/collaboration/jabber_server', server)
+    client.set_bool('/desktop/sugar/collaboration/jabber_registered', False)
     return 1
 
 def get_radio():    
@@ -87,9 +85,8 @@ def set_radio(state):
 def clear_registration():
     """Clear the registration with the schoolserver
     """
-    pro = profile.get_profile()
-    pro.backup1 = None
-    pro.save()
+    client = gconf.client_get_default()
+    client.set_string('/desktop/sugar/backup_url', '')
     return 1
 
 def clear_networks():

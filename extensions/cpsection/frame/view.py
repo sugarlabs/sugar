@@ -26,7 +26,7 @@ from jarabe.controlpanel.inlinealert import InlineAlert
 _never =  _('never')
 _instantaneous = _('instantaneous')
 _seconds_label = _('%s seconds')
-_MAX_DELAY = 1000.0
+_MAX_DELAY = 1000
 
 class Frame(SectionView):
     def __init__(self, model, alerts):
@@ -193,7 +193,7 @@ class Frame(SectionView):
     def __corner_delay_format_cb(self, scale, value):
         if value == _MAX_DELAY:
             return _never
-        elif value == 0.0:
+        elif value == 0:
             return _instantaneous
         else:
             return _seconds_label % (value / _MAX_DELAY)
@@ -226,7 +226,7 @@ class Frame(SectionView):
     def __edge_delay_format_cb(self, scale, value):
         if value == _MAX_DELAY:
             return _never
-        elif value == 0.0:
+        elif value == 0:
             return _instantaneous
         else:
             return _seconds_label % (value / _MAX_DELAY)

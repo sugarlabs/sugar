@@ -19,15 +19,16 @@ import tempfile
 import urlparse
 import os
 import logging
+import gconf
 
 import gtk
 
 from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
+from sugar.graphics.xocolor import XoColor
 from sugar.datastore import datastore
 from sugar import mime
-from sugar import profile
 
 from jarabe.frame import clipboard
 from jarabe.journal import misc
@@ -59,8 +60,10 @@ class ClipboardMenu(Palette):
         self._open_item.show()
 
         self._journal_item = MenuItem(_('Keep'))
-        icon = Icon(icon_name='document-save', icon_size=gtk.ICON_SIZE_MENU,
-                xo_color=profile.get_color())
+        client = gconf.client_get_default()
+        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        icon = Icon(icon_name='document-save', icon_size=gtk.ICON_SIZE_MENU, 
+                    xo_color=color)
         self._journal_item.set_image(icon)
 
         self._journal_item.connect('activate', self._journal_item_activate_cb)
@@ -229,10 +232,11 @@ class ClipboardMenu(Palette):
         jobject.metadata['keep'] = '0'
         jobject.metadata['buddies'] = ''
         jobject.metadata['preview'] = ''
-        jobject.metadata['icon-color'] = profile.get_color().to_string()
+        client = gconf.client_get_default()
+        color = client.get_string('/desktop/sugar/user/color')
+        jobject.metadata['icon-color'] = color
         jobject.metadata['mime_type'] = mime_type
         jobject.file_path = file_path
         datastore.write(jobject, transfer_ownership=transfer_ownership)
 
         return jobject
-

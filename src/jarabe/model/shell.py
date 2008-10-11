@@ -19,6 +19,7 @@ import logging
 import time
 import os
 
+import gconf
 import wnck
 import gobject
 import gtk
@@ -27,7 +28,6 @@ import dbus
 from sugar import wm
 from sugar.graphics.xocolor import XoColor
 from sugar.presence import presenceservice
-from sugar import profile
 
 from jarabe.model.bundleregistry import get_registry
 from jarabe import config
@@ -135,8 +135,7 @@ class Activity(gobject.GObject):
         Uses activity_id to index into the PresenceService's 
         set of activity colours, if the PresenceService does not
         have an entry (implying that this is not a Sugar-shared application)
-        uses the local user's profile.get_color() to determine the
-        colour for the icon.
+        uses the local user's profile colour for the icon.
         """
         pservice = presenceservice.get_instance()
 
@@ -151,7 +150,8 @@ class Activity(gobject.GObject):
         if activity != None:
             return XoColor(activity.props.color)
         else:
-            return profile.get_color()
+            client = gconf.client_get_default()
+            return XoColor(client.get_string("/desktop/sugar/user/color"))
         
     def get_activity_id(self):
         """Retrieve the "activity_id" passed in to our constructor

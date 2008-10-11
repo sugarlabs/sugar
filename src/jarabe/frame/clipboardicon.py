@@ -16,12 +16,13 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
+import gconf
+
 import gtk
 
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.icon import Icon
 from sugar.graphics.xocolor import XoColor
-from sugar import profile
 
 from jarabe.frame import clipboard
 from jarabe.frame.clipboardmenu import ClipboardMenu
@@ -42,7 +43,9 @@ class ClipboardIcon(RadioToolButton):
         self._current_percent = None
 
         self._icon = Icon()
-        self._icon.props.xo_color = profile.get_color()
+        client = gconf.client_get_default()
+        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        self._icon.props.xo_color = color
         self.set_icon_widget(self._icon)
         self._icon.show()
 
@@ -139,4 +142,3 @@ class ClipboardIcon(RadioToolButton):
         for format_type in self._cb_object.get_formats().keys():
             targets.append((format_type, 0, 0))
         return targets
-

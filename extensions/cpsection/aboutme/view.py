@@ -21,15 +21,9 @@ from gettext import gettext as _
 from sugar.graphics.icon import Icon
 from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
-from sugar import profile
 
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
-
-CLASS = 'AboutMe'
-ICON = 'module-about_me'
-COLOR = profile.get_color()
-TITLE = _('About Me')
 
 class EventIcon(gtk.EventBox):
     __gtype_name__ = "SugarEventIcon"    
@@ -49,7 +43,7 @@ class ColorPicker(EventIcon):
     __gsignals__ = {
         'color-changed': (gobject.SIGNAL_RUN_FIRST,
                           gobject.TYPE_NONE,
-                          ([object]))
+                          ([str]))
     }
     def __init__(self, xocolor=None):
         EventIcon.__init__(self)
@@ -64,7 +58,7 @@ class ColorPicker(EventIcon):
     def _set_random_colors(self):
         xocolor = XoColor()
         self.icon.props.xo_color = xocolor
-        self.emit('color-changed', xocolor)
+        self.emit('color-changed', xocolor.to_string())
 
 class AboutMe(SectionView):
     def __init__(self, model, alerts):
@@ -160,7 +154,8 @@ class AboutMe(SectionView):
     
     def setup(self):
         self._nick_entry.set_text(self._model.get_nick())
-        self._color_picker.icon.props.xo_color = self._model.get_color_xo()
+        color = XoColor(self._model.get_color_xo())
+        self._color_picker.icon.props.xo_color = color
 
         self._color_valid = True
         self._nick_valid = True
@@ -198,13 +193,12 @@ class AboutMe(SectionView):
             self._model.set_nick(widget.get_text())
         except ValueError, detail:
             self._nick_alert.props.msg = detail
-            self._nick_valid = False
+            self._nick_valid = False            
         else:
             self._nick_alert.props.msg = self.restart_msg
-            self._nick_valid = True            
+            self._nick_valid = True 
             self.needs_restart = True
             self.restart_alerts.append('nick')
-
         self._validate()
         self._nick_alert.show()
         return False
@@ -218,9 +212,4 @@ class AboutMe(SectionView):
 
         self._validate()
         self._color_alert.show()
-            
-
-
-
-        
-
+        return False

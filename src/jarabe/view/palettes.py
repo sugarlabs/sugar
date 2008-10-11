@@ -17,12 +17,12 @@
 import os
 import statvfs
 from gettext import gettext as _
+import gconf
 
 import gobject
 import gtk
 
 from sugar import env
-from sugar import profile
 from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
@@ -90,8 +90,10 @@ class ActivityPalette(Palette):
     }
 
     def __init__(self, activity_info):
+        client = gconf.client_get_default()
+        color = XoColor(client.get_string("/desktop/sugar/user/color"))
         activity_icon = Icon(file=activity_info.get_icon(),
-                             xo_color=profile.get_color(),
+                             xo_color=color,
                              icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
 
         Palette.__init__(self, primary_text=activity_info.get_name(),
@@ -144,7 +146,8 @@ class ActivityPalette(Palette):
                                          style.COLOR_TRANSPARENT.get_svg()))
         else:
             label.set_text(_('Make favorite'))
-            xo_color = profile.get_color()
+            client = gconf.client_get_default()
+            xo_color = XoColor(client.get_string("/desktop/sugar/user/color"))
 
         self._favorite_icon.props.xo_color = xo_color
 

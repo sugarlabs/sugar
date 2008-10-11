@@ -14,7 +14,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from sugar.profile import get_profile
+import gconf
+
 from sugar import env
 from sugar import _sugarext
 from sugar import dispatch
@@ -46,13 +47,12 @@ def set_muted(new_state):
 
 def save():
     if env.is_emulator() is False:
-        profile = get_profile()
-        profile.sound_volume = get_volume()
-        profile.save()
+        client = gconf.client_get_default()
+        client.set_int('/desktop/sugar/sound/volume', get_volume())
 
 def restore():
     if env.is_emulator() is False:
-        profile = get_profile()
-        set_volume(profile.sound_volume)
+        client = gconf.client_get_default()
+        set_volume(client.get_int('/desktop/sugar/sound/volume'))
 
 _volume = _sugarext.VolumeAlsa()

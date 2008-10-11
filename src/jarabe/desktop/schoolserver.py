@@ -4,7 +4,7 @@ from xmlrpclib import ServerProxy, Error
 import socket
 import os
 
-from sugar.profile import get_profile
+from sugar import profile
 
 REGISTER_URL = 'http://schoolserver:8080/'
 
@@ -21,11 +21,12 @@ def register_laptop(url=REGISTER_URL):
     sn = sn or 'SHF00000000'
     uuid = uuid or '00000000-0000-0000-0000-000000000000'
 
-    profile = get_profile()
+    client = gconf.client_get_default()
+    nick = client.get_string('/desktop/sugar/user/nick')
 
     server = ServerProxy(url)
     try:
-        data = server.register(sn, profile.nick_name, uuid, profile.pubkey)
+        data = server.register(sn, nick, uuid, profile.pubkey)
     except (Error, socket.error), e:
         logging.error('Registration: cannot connect to server: %s' % e)
         raise RegisterError(_('Cannot connect to the server.'))        
@@ -35,9 +36,9 @@ def register_laptop(url=REGISTER_URL):
                       data['error'])
         raise RegisterError(_('The server could not complete the request.'))
 
-    profile.jabber_server = data['jabberserver']
-    profile.backup1 = data['backupurl']
-    profile.save()
+    client.set_string('/desktop/sugar/collaboration/jabber_server',
+                      data['jabberserver'])
+    client.set_string('/desktop/sugar/backup_url', data['backupurl'])
 
     return True
 

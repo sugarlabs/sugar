@@ -16,10 +16,11 @@
 
 import gtk
 from gettext import gettext as _
+import gconf
 
 from sugar.graphics.icon import Icon
 from sugar.graphics import style
-from sugar import profile
+from sugar.graphics.xocolor import XoColor
 
 class ModalAlert(gtk.Window):    
 
@@ -47,9 +48,12 @@ class ModalAlert(gtk.Window):
         self._main_view.add(self._vbox)
         self._vbox.show()
 
+        client = gconf.client_get_default()
+        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+
         icon = Icon(icon_name='activity-journal',
                     pixel_size=style.XLARGE_ICON_SIZE,
-                    xo_color=profile.get_color())
+                    xo_color=color)
         self._vbox.pack_start(icon, False)
         icon.show()
 

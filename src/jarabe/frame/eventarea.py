@@ -17,8 +17,7 @@
 import gtk
 import gobject
 import wnck
-
-from sugar import profile
+import gconf
 
 _MAX_DELAY = 1000
 
@@ -36,43 +35,47 @@ class EventArea(gobject.GObject):
         self._windows = []
         self._hover = False
         self._sids = {}
-        pro = profile.get_profile()            
-        self._hot_delay = int(pro.hot_corners_delay)
-        self._warm_delay = int(pro.warm_edges_delay)
+        client = gconf.client_get_default()
+        self._edge_delay = client.get_int('/desktop/sugar/frame/edge_delay')
+        self._corner_delay = client.get_int('/desktop/sugar/frame/corner_delay')
 
         right = gtk.gdk.screen_width() - 1
         bottom = gtk.gdk.screen_height() -1
         width = gtk.gdk.screen_width() - 2
         height = gtk.gdk.screen_height() - 2
         
-        if self._warm_delay != _MAX_DELAY:    
-            invisible = self._create_invisible(1, 0, width, 1, self._warm_delay)
+        if self._edge_delay != _MAX_DELAY:    
+            invisible = self._create_invisible(1, 0, width, 1, 
+                                               self._edge_delay)
             self._windows.append(invisible)
 
             invisible = self._create_invisible(1, bottom, width, 1, 
-                                               self._warm_delay)
+                                               self._edge_delay)
             self._windows.append(invisible)
 
             invisible = self._create_invisible(0, 1, 1, height, 
-                                               self._warm_delay)
+                                               self._edge_delay)
             self._windows.append(invisible)
 
             invisible = self._create_invisible(right, 1, 1, height, 
-                                               self._warm_delay)
+                                               self._edge_delay)
             self._windows.append(invisible)
 
-        if self._hot_delay != _MAX_DELAY:    
-            invisible = self._create_invisible(0, 0, 1, 1, self._hot_delay)
+        if self._corner_delay != _MAX_DELAY:    
+            invisible = self._create_invisible(0, 0, 1, 1, 
+                                               self._corner_delay)
             self._windows.append(invisible)
 
-            invisible = self._create_invisible(right, 0, 1, 1, self._hot_delay)
+            invisible = self._create_invisible(right, 0, 1, 1, 
+                                               self._corner_delay)
             self._windows.append(invisible)
 
-            invisible = self._create_invisible(0, bottom, 1, 1, self._hot_delay)
+            invisible = self._create_invisible(0, bottom, 1, 1, 
+                                               self._corner_delay)
             self._windows.append(invisible)
 
             invisible = self._create_invisible(right, bottom, 1, 1, 
-                                               self._hot_delay)
+                                               self._corner_delay)
             self._windows.append(invisible)
 
         screen = wnck.screen_get_default()

@@ -16,6 +16,7 @@
 
 from gettext import gettext as _
 import logging
+import gconf
 
 import hippo
 import gobject
@@ -30,7 +31,6 @@ from sugar.graphics import iconentry
 from sugar.graphics.menuitem import MenuItem
 from sugar.activity.activityhandle import ActivityHandle
 from sugar.activity import activityfactory
-from sugar import profile
 
 from jarabe.model import accesspoint
 from jarabe.model import neighborhood
@@ -258,7 +258,9 @@ class MeshDeviceView(CanvasPulsingIcon):
             self.props.pulsing = False
             self.props.base_color = XoColor('#D5D5D5,#D5D5D5')
         else:
-            self.props.base_color = profile.get_color()
+            client = gconf.client_get_default()
+            color = XoColor(client.get_string('/desktop/sugar/user/color'))
+            self.props.base_color = color
 
     def set_filter(self, query):
         self._greyed_out = (query != '')

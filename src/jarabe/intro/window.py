@@ -17,6 +17,7 @@
 import os
 import logging
 from gettext import gettext as _
+import gconf
 
 import gtk
 import gobject
@@ -27,7 +28,6 @@ from sugar.graphics import style
 from sugar.graphics.icon import Icon
 from sugar.graphics.entry import CanvasEntry
 from sugar.graphics.xocolor import XoColor
-from sugar.profile import get_profile
 
 from jarabe.intro import colorpicker
 
@@ -44,10 +44,9 @@ def create_profile(name, color=None, pixbuf=None):
     icon_path = os.path.join(env.get_profile_path(), "buddy-icon.jpg")
     pixbuf.save(icon_path, "jpeg", {"quality":"85"})
 
-    profile = get_profile()
-    profile.nick_name = name
-    profile.color = color
-    profile.save()
+    client = gconf.client_get_default()
+    client.set_string("/desktop/sugar/user/nick", name)
+    client.set_string("/desktop/sugar/user/color", color.to_string())
 
     # Generate keypair
     import commands

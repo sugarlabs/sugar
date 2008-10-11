@@ -16,12 +16,12 @@
 
 import logging
 from gettext import gettext as _
+import gconf
 
 import gobject
 import gtk
 import dbus
 
-from sugar import profile
 from sugar.graphics import style
 from sugar.graphics.icon import get_icon_state
 from sugar.graphics.tray import TrayIcon
@@ -45,8 +45,10 @@ class DeviceView(TrayIcon):
     FRAME_POSITION_RELATIVE = 1000
 
     def __init__(self, udi):
-        TrayIcon.__init__(self, icon_name=_ICON_NAME,
-                          xo_color=profile.get_color())
+        client = gconf.client_get_default()        
+        self._color = XoColor(client.get_string('/desktop/sugar/user/color'))
+
+        TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
 
         self._model = DeviceModel(udi)
         self.palette = BatteryPalette(_('My Battery'))
@@ -65,7 +67,7 @@ class DeviceView(TrayIcon):
     def _update_info(self):
         name = _ICON_NAME
         current_level = self._model.props.level
-        xo_color = profile.get_color()
+        xo_color = self._color
         badge_name = None
 
         if self._model.props.charging:

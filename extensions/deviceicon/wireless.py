@@ -17,15 +17,16 @@
 
 import logging
 from gettext import gettext as _
+import gconf
 
 import gobject
 import gtk
 
 from sugar.graphics.icon import get_icon_state
+from sugar.graphics.xocolor import XoColor
 from sugar.graphics.tray import TrayIcon
 from sugar.graphics import style
 from sugar.graphics.palette import Palette
-from sugar import profile
 
 from jarabe.model import network
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
@@ -169,6 +170,10 @@ class MeshDeviceView(TrayIcon):
 
         self.model.connect('notify::state', self._state_changed_cb)
         self.model.connect('notify::activation-stage', self._state_changed_cb)
+
+        client = gconf.client_get_default()        
+        self._color = XoColor(client.get_string('/desktop/sugar/user/color'))
+
         self._update_state()
 
     def _state_changed_cb(self, model, pspec):
@@ -183,7 +188,7 @@ class MeshDeviceView(TrayIcon):
             self.icon.props.fill_color = style.COLOR_INACTIVE_FILL.get_svg()
             self.icon.props.stroke_color = style.COLOR_INACTIVE_STROKE.get_svg()
         elif state == STATE_ACTIVATED:
-            self.icon.props.xo_color = profile.get_color()
+            self.icon.props.xo_color = self._color
         elif state == STATE_INACTIVE:
             self.icon.props.fill_color = style.COLOR_INACTIVE_FILL.get_svg()
             self.icon.props.stroke_color = style.COLOR_INACTIVE_STROKE.get_svg()

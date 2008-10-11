@@ -12,7 +12,7 @@ AM_INIT_AUTOMAKE([1.9 foreign dist-bzip2 no-dist-gzip])
 
 AM_PATH_PYTHON
 
-PKG_CHECK_MODULES(SHELL, pygtk-2.0 gtk+-2.0)
+PKG_CHECK_MODULES(SHELL, pygtk-2.0 gtk+-2.0 gconf-2.0)
 
 # Setup GETTEXT
 #
@@ -28,6 +28,17 @@ AC_ARG_ENABLE(update-mimedb,
                    [disable the update-mime-database after install [default=no]]),,
     enable_update_mimedb=yes)
 AM_CONDITIONAL(ENABLE_UPDATE_MIMEDB, test x$enable_update_mimedb = xyes)
+
+# Verify that gconftool is installed 
+# 
+AC_PATH_PROG(GCONFTOOL, gconftool-2, no)
+
+if test "$GCONFTOOL" = no; then
+  AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
+fi
+
+AM_GCONF_SOURCE_2
+
 
 AC_CONFIG_FILES([
 bin/sugar
@@ -49,6 +60,7 @@ extensions/cpsection/language/Makefile
 extensions/cpsection/network/Makefile
 extensions/cpsection/power/Makefile
 extensions/deviceicon/Makefile
+schemas/Makefile
 src/Makefile
 src/jarabe/Makefile
 src/jarabe/controlpanel/Makefile

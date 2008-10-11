@@ -16,12 +16,12 @@
 #
 
 from gettext import gettext as _
-
-from sugar import profile
+import gconf
         
 def get_corner_delay():
-    pro = profile.get_profile()    
-    return pro.hot_corners_delay
+    client = gconf.client_get_default()
+    corner_delay = client.get_int('/desktop/sugar/frame/corner_delay')
+    return corner_delay
 
 def print_corner_delay():
     print get_corner_delay()
@@ -35,15 +35,15 @@ def set_corner_delay(delay):
     try:
         int(delay)
     except ValueError:        
-        raise ValueError(_("Value must be an integer."))        
-    pro = profile.get_profile()
-    pro.hot_corners_delay = int(delay) 
-    pro.save()
-    return 1
+        raise ValueError(_("Value must be an integer."))
+    client = gconf.client_get_default()
+    client.set_int('/desktop/sugar/frame/corner_delay', int(delay))
+    return 0
         
 def get_edge_delay():
-    pro = profile.get_profile()    
-    return pro.warm_edges_delay
+    client = gconf.client_get_default()
+    edge_delay = client.get_int('/desktop/sugar/frame/edge_delay')
+    return edge_delay
 
 def print_edge_delay():
     print get_edge_delay()
@@ -57,8 +57,7 @@ def set_edge_delay(delay):
     try:
         int(delay)
     except ValueError:        
-        raise ValueError(_("Value must be an integer."))        
-    pro = profile.get_profile()
-    pro.warm_edges_delay = int(delay) 
-    pro.save()
-    return 1
+        raise ValueError(_("Value must be an integer."))
+    client = gconf.client_get_default()
+    client.set_int('/desktop/sugar/frame/edge_delay', int(delay))
+    return 0

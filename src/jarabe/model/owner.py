@@ -18,11 +18,11 @@
 import gobject
 import os
 import cjson
+import gconf
 
 from telepathy.interfaces import CHANNEL_TYPE_TEXT
 
 from sugar import env
-from sugar import profile
 from sugar.presence import presenceservice
 from sugar import util
 from jarabe.model.invites import Invites
@@ -46,7 +46,8 @@ class Owner(gobject.GObject):
     def __init__(self):
         gobject.GObject.__init__(self)
 
-        self._nick = profile.get_nick_name()
+        client = gconf.client_get_default()
+        self._nick = client.get_string("/desktop/sugar/user/nick")
 
         self._icon = None
         self._icon_hash = ""

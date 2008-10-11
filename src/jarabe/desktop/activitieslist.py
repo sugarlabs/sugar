@@ -17,11 +17,12 @@
 import gobject
 import gtk
 import hippo
+import gconf
 
-from sugar import profile
 from sugar import util
 from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon
+from sugar.graphics.xocolor import XoColor
 from sugar.activity import activityfactory
 
 from jarabe.model import bundleregistry
@@ -135,6 +136,9 @@ class ActivityIcon(CanvasIcon):
         self.connect('hovering-changed', self.__hovering_changed_event_cb)
         self.connect('button-release-event', self.__button_release_event_cb)
 
+        client = gconf.client_get_default()
+        self._xocolor = XoColor(client.get_string("/desktop/sugar/user/color"))
+
     def create_palette(self):
         palette = ActivityPalette(self._activity_info)
         palette.connect('erase-activated', self.__erase_activated_cb)
@@ -144,7 +148,7 @@ class ActivityIcon(CanvasIcon):
         self.emit('erase-activated', self._activity_info.get_bundle_id())
 
     def _color(self):
-        self.props.xo_color = profile.get_color()
+        self.props.xo_color = self._xocolor
 
     def _uncolor(self):
         self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
@@ -159,7 +163,6 @@ class ActivityIcon(CanvasIcon):
     def __button_release_event_cb(self, icon, event):
         self.palette.popdown(immediate=True)
         self._uncolor()
-
 
 class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarActivityEntry'
@@ -278,7 +281,9 @@ class FavoriteIcon(CanvasIcon):
 
         self._favorite = favorite
         if favorite:
-            self.props.xo_color = profile.get_color()
+            client = gconf.client_get_default()
+            color = XoColor(client.get_string('/desktop/sugar/user/color'))
+            self.props.xo_color = color
         else:
             self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
             self.props.fill_color = style.COLOR_WHITE.get_svg()

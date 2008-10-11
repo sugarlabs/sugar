@@ -18,6 +18,7 @@ from gettext import gettext as _
 import logging
 from datetime import datetime, timedelta
 import os
+import gconf
 
 import gobject
 import gtk
@@ -28,9 +29,9 @@ from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.combobox import ComboBox
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
+from sugar.graphics.xocolor import XoColor
 from sugar.graphics import iconentry
 from sugar.graphics import style
-from sugar import profile
 from sugar import mime
 from sugar.datastore import datastore
 
@@ -318,7 +319,9 @@ class EntryToolbar(gtk.Toolbar):
 
         self._copy = ToolButton()
 
-        icon = Icon(icon_name='edit-copy', xo_color=profile.get_color())
+        client = gconf.client_get_default()
+        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        icon = Icon(icon_name='edit-copy', xo_color=color)
         self._copy.set_icon_widget(icon)
         icon.show()
 
@@ -417,4 +420,3 @@ class EntryToolbar(gtk.Toolbar):
                                 activity_info.get_bundle_id())
             palette.menu.append(menu_item)
             menu_item.show()
-

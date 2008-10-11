@@ -16,11 +16,12 @@
 
 import logging
 from gettext import gettext as _
+import gconf
 
 import gobject
 import dbus
 
-from sugar import profile
+from sugar.graphics.xocolor import XoColor
 from sugar.datastore import datastore
 
 HAL_SERVICE_NAME = 'org.freedesktop.Hal'
@@ -52,10 +53,13 @@ class VolumesManager(gobject.GObject):
 
         self._volumes = []
 
+        client = gconf.client_get_default()
+        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+
         # Internal flash is not in HAL
         internal_fash_id = datastore.mounts()[0]['id']
         self._volumes.append(Volume(internal_fash_id, _('Journal'),
-                                    'activity-journal', profile.get_color(),
+                                    'activity-journal', color,
                                     None, False))
 
         bus = dbus.SystemBus()
@@ -227,10 +231,12 @@ class VolumesManager(gobject.GObject):
         volume_name = device.GetProperty('volume.label')
         if not volume_name:
             volume_name = device.GetProperty('volume.uuid')
+        client = gconf.client_get_default()
+        color = XoColor(client.get_string('/desktop/sugar/user/color'))    
         volume = Volume(mount_id,
                         volume_name,
                         self._get_icon_for_volume(udi),
-                        profile.get_color(),
+                        color,
                         udi,
                         True)
         self._volumes.append(volume)

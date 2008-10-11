@@ -16,9 +16,7 @@
 #
 
 from gettext import gettext as _
-
-from sugar import profile
-from sugar.graphics.xocolor import XoColor
+import gconf
 
 _COLORS = {'red': {'dark':'#b20008', 'medium':'#e6000a', 'light':'#ffadce'},
            'orange': {'dark':'#9a5200', 'medium':'#c97e00', 'light':'#ffc169'},
@@ -31,7 +29,8 @@ _COLORS = {'red': {'dark':'#b20008', 'medium':'#e6000a', 'light':'#ffadce'},
 _MODIFIERS = ('dark', 'medium', 'light')
         
 def get_nick():
-    return profile.get_nick_name()
+    client = gconf.client_get_default()
+    return client.get_string("/desktop/sugar/user/nick")
 
 def print_nick():
     print get_nick()
@@ -42,18 +41,18 @@ def set_nick(nick):
     """
     if not nick:
         raise ValueError(_("You must enter a name."))
-    pro = profile.get_profile()
     if not isinstance(nick, unicode):
         nick = unicode(nick, 'utf-8')
-    pro.nick_name = nick
-    pro.save()
+    client = gconf.client_get_default()
+    client.set_string("/desktop/sugar/user/nick", nick)
     return 1
 
-def get_color():    
-    return profile.get_color()    
+def get_color():
+    client = gconf.client_get_default()
+    return client.get_string("/desktop/sugar/user/color")
 
 def print_color():
-    color_string = get_color().to_string()
+    color_string = get_color()
     tmp = color_string.split(',')
 
     stroke_tuple = None
@@ -98,19 +97,19 @@ def set_color(stroke, fill, stroke_modifier='medium', fill_modifier='medium'):
             
     color = _COLORS[stroke][stroke_modifier] + ',' \
             + _COLORS[fill][fill_modifier]
-    pro = profile.get_profile()
-    pro.color = XoColor(color)   
-    pro.save()
+
+    client = gconf.client_get_default()
+    client.set_string("/desktop/sugar/user/color", color)
     return 1
 
-def get_color_xo():    
-    return profile.get_color()    
+def get_color_xo():
+    client = gconf.client_get_default()
+    return client.get_string("/desktop/sugar/user/color")
 
 def set_color_xo(color):
     """Set a color with an XoColor 
     This method is used by the graphical user interface
     """
-    pro = profile.get_profile()
-    pro.color = color
-    pro.save()
+    client = gconf.client_get_default()
+    client.set_string("/desktop/sugar/user/color", color)
     return 1

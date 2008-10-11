@@ -16,8 +16,8 @@
 #
 
 from gettext import gettext as _
+import gconf
 
-from sugar import profile
 import dbus
 
 OHM_SERVICE_NAME = 'org.freedesktop.ohm'
@@ -31,9 +31,8 @@ class ReadError(Exception):
         return repr(self.value)
 
 def get_automatic_pm():
-    pro = profile.get_profile()
-    ret = pro.automatic_pm
-    return ret
+    client = gconf.client_get_default()
+    return client.get_bool('/desktop/sugar/power/automatic')
 
 def print_automatic_pm():
     print ('off', 'on')[get_automatic_pm()]
@@ -54,15 +53,13 @@ def set_automatic_pm(enabled):
     else:
         raise ValueError(_("Error in automatic pm argument, use on/off."))
 
-    pro = profile.get_profile()
-    pro.automatic_pm = enabled
-    pro.save()
+    client = gconf.client_get_default()
+    client.set_bool('/desktop/sugar/power/automatic', enabled)
     return 0
 
 def get_extreme_pm():
-    pro = profile.get_profile()
-    ret = pro.extreme_pm
-    return ret
+    client = gconf.client_get_default()
+    return client.get_bool('/desktop/sugar/power/extreme')
 
 def print_extreme_pm():
     print ('off', 'on')[get_extreme_pm()]
@@ -83,7 +80,6 @@ def set_extreme_pm(enabled):
     else:
         raise ValueError(_("Error in extreme pm argument, use on/off."))
 
-    pro = profile.get_profile()
-    pro.extreme_pm = enabled
-    pro.save()
+    client = gconf.client_get_default()
+    client.set_bool('/desktop/sugar/power/extreme', enabled)
     return 0

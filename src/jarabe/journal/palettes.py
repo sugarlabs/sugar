@@ -16,10 +16,10 @@
 
 from gettext import gettext as _
 import logging
+import gconf
         
 import gtk
 
-from sugar import profile
 from sugar.graphics import style
 from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
@@ -65,8 +65,10 @@ class ObjectPalette(Palette):
 
         # TODO: Add "Start with" menu item
 
+        client = gconf.client_get_default()
+        color = XoColor(client.get_string('/desktop/sugar/user/color'))
         menu_item = MenuItem(_('Copy'))
-        icon = Icon(icon_name='edit-copy', xo_color=profile.get_color(),
+        icon = Icon(icon_name='edit-copy', xo_color=color,
                     icon_size=gtk.ICON_SIZE_MENU)
         menu_item.set_image(icon)
         menu_item.connect('activate', self.__copy_activate_cb)
@@ -101,7 +103,6 @@ class ObjectPalette(Palette):
         if bundle is not None and registry.is_installed(bundle):
             registry.uninstall(bundle)
         datastore.delete(self._jobject.object_id)
-
 
 class BuddyPalette(Palette):
     def __init__(self, buddy):

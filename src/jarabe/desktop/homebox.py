@@ -17,6 +17,7 @@
 from gettext import gettext as _
 import logging
 import os
+import gconf
 
 import gobject
 import gtk
@@ -26,7 +27,6 @@ from sugar.graphics import iconentry
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.alert import Alert
 from sugar.graphics.icon import Icon
-from sugar import profile
 
 from jarabe.model import bundleregistry
 from jarabe.desktop import favoritesview
@@ -34,6 +34,7 @@ from jarabe.desktop.activitieslist import ActivitiesList
 
 _FAVORITES_VIEW = 0
 _LIST_VIEW = 1
+_FAVORITES_KEY = "/desktop/sugar/desktop/favorites_layout"
 
 _AUTOSEARCH_TIMEOUT = 1000
 
@@ -65,8 +66,9 @@ class HomeBox(gtk.VBox):
         self.pack_start(self._toolbar, expand=False)
         self._toolbar.show()
 
-        profile_layout_constant = profile.get_profile().favorites_layout
-        layout = _convert_layout_constant(profile_layout_constant)
+        client = gconf.client_get_default() 
+        layout_constant = client.get_string(_FAVORITES_KEY)
+        layout = _convert_layout_constant(layout_constant)
         self._set_view(_FAVORITES_VIEW, layout)
 
     def __erase_activated_cb(self, view, bundle_id):
@@ -160,11 +162,12 @@ class HomeBox(gtk.VBox):
     def __toolbar_view_changed_cb(self, toolbar, view, layout):
         self._set_view(view, layout)
         if layout is not None:
-            current_profile = profile.get_profile()
+            client = gconf.client_get_default()            
+            layout_profile = client.get_string(_FAVORITES_KEY)
+            layout = _convert_layout_constant(layout_profile)
             profile_key = favoritesview.LAYOUT_MAP[layout].profile_key
-            if profile_key != current_profile.favorites_layout:
-                current_profile.favorites_layout = profile_key
-                current_profile.save()
+            if profile_key != layout:
+                client.set_string(_FAVORITES_KEY, profile_key)
             else:
                 logging.warning('Incorrect layout requested: %r' % layout)
 
@@ -325,8 +328,9 @@ class FavoritesButton(RadioToolButton):
         self.props.accelerator = _('<Ctrl>1')
         self.props.group = None
 
-        profile_layout_constant = profile.get_profile().favorites_layout
-        self._layout = _convert_layout_constant(profile_layout_constant)
+        client = gconf.client_get_default()
+        layout_constant = client.get_string(_FAVORITES_KEY)
+        self._layout = _convert_layout_constant(layout_constant)
         self._update_icon()
 
         # someday, this will be a gtk.Table()

@@ -17,11 +17,12 @@
 import gobject
 import gtk
 import hippo
+import gconf
 
-from sugar import profile
 from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon, Icon
 from sugar.graphics.palette import Palette
+from sugar.graphics.xocolor import XoColor
 
 from jarabe.model import friends
 from jarabe.desktop.friendview import FriendView
@@ -41,14 +42,19 @@ class GroupBox(hippo.Canvas):
         self._layout = SpreadLayout()
         self._box.set_layout(self._layout)
 
+        client = gconf.client_get_default()
+        color = XoColor(client.get_string("/desktop/sugar/user/color"))
+
         self._owner_icon = CanvasIcon(icon_name='computer-xo', cache=True,
-                                      xo_color=profile.get_color())
+                                      xo_color=color)
         self._owner_icon.props.size = style.LARGE_ICON_SIZE
         palette_icon = Icon(icon_name='computer-xo',
-                            xo_color=profile.get_color())
+                            xo_color=color)
         palette_icon.props.icon_size = gtk.ICON_SIZE_LARGE_TOOLBAR
-        palette = Palette(None, primary_text=profile.get_nick_name(),
-                          icon=palette_icon)
+
+        nick = client.get_string("/desktop/sugar/user/nick")        
+        palette = Palette(None, primary_text=nick, icon=palette_icon)
+
         self._owner_icon.set_palette(palette)
         self._layout.add(self._owner_icon)
 
@@ -86,4 +92,3 @@ class GroupBox(hippo.Canvas):
         self._layout.move(self._owner_icon, x, y)
 
         hippo.Canvas.do_size_allocate(self, allocation)
-

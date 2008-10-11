@@ -16,10 +16,11 @@
 
 import gobject
 import hippo
+import gconf
 
 from sugar.graphics.icon import CanvasIcon
 from sugar.graphics import style
-from sugar import profile
+from sugar.graphics.xocolor import XoColor
 
 class KeepIcon(CanvasIcon):
     def __init__(self, keep):
@@ -27,7 +28,7 @@ class KeepIcon(CanvasIcon):
                             box_width=style.GRID_CELL_SIZE * 3 / 5,
                             size=style.SMALL_ICON_SIZE)
         self.connect('motion-notify-event', self.__motion_notify_event_cb)
-
+                
         self._keep = None
         self.set_keep(keep)
 
@@ -37,7 +38,9 @@ class KeepIcon(CanvasIcon):
 
         self._keep = keep
         if keep:
-            self.props.xo_color = profile.get_color()
+            client = gconf.client_get_default()
+            color = XoColor(client.get_string('/desktop/sugar/user/color'))
+            self.props.xo_color = color
         else:
             self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
             self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
@@ -54,4 +57,3 @@ class KeepIcon(CanvasIcon):
                 icon.props.fill_color = style.COLOR_BUTTON_GREY.get_svg()
             elif event.detail == hippo.MOTION_DETAIL_LEAVE:
                 icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
-

@@ -17,6 +17,8 @@
 
 import logging
 from gettext import gettext as _
+import gconf
+
 import gtk
 
 from sugar.graphics import style
@@ -29,7 +31,6 @@ from sugar.graphics.palette import Palette, WidgetInvoker
 from sugar.graphics.menuitem import MenuItem
 from sugar.activity.activityhandle import ActivityHandle
 from sugar.activity import activityfactory
-from sugar import profile
 
 from jarabe.model import shell
 from jarabe.model import neighborhood
@@ -164,7 +165,10 @@ class PrivateInviteButton(BaseInviteButton):
         self._private_channel = invite.get_private_channel()
         self._bundle_id = invite.get_bundle_id()
 
-        self._icon.props.xo_color = profile.get_color()
+        client = gconf.client_get_default()
+        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+
+        self._icon.props.xo_color = color
         registry = bundleregistry.get_registry()
         self._bundle = registry.get_bundle(self._bundle_id)
 
@@ -180,7 +184,7 @@ class PrivateInviteButton(BaseInviteButton):
         palette.set_group_id('frame')
         self.set_palette(palette)
 
-        self._notif_icon.props.xo_color = profile.get_color()
+        self._notif_icon.props.xo_color = color
 
         if self._bundle:
             self._notif_icon.props.icon_filename = self._bundle.get_icon()

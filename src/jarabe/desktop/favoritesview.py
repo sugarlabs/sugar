@@ -17,6 +17,7 @@
 
 import logging
 from gettext import gettext as _
+import gconf
 
 import gobject
 import gtk
@@ -27,7 +28,7 @@ from sugar.graphics.palette import Palette
 from sugar.graphics.icon import Icon, CanvasIcon
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.alert import Alert
-from sugar.profile import get_profile
+from sugar.graphics.xocolor import XoColor
 from sugar.activity import activityfactory
 
 from jarabe.view.palettes import JournalPalette
@@ -331,6 +332,9 @@ class ActivityIcon(CanvasIcon):
         self.connect('hovering-changed', self.__hovering_changed_event_cb)
         self.connect('button-release-event', self.__button_release_event_cb)
 
+        client = gconf.client_get_default()
+        self._xocolor = XoColor(client.get_string("/desktop/sugar/user/color"))
+
     def create_palette(self):
         palette = ActivityPalette(self._activity_info)
         palette.connect('erase-activated', self.__erase_activated_cb)
@@ -340,7 +344,7 @@ class ActivityIcon(CanvasIcon):
         self.emit('erase-activated', self._activity_info.get_bundle_id())
 
     def _color(self):
-        self.props.xo_color = get_profile().color
+        self.props.xo_color = self._xocolor
 
     def _uncolor(self):
         self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
@@ -413,16 +417,17 @@ class _MyIcon(MyIcon):
         MyIcon.__init__(self, scale)
 
         self._power_manager = None
-        self._profile = get_profile()
         self.register_menu = None
 
     def enable_palette(self):
+        client = gconf.client_get_default()
+        nick = client.get_string("/desktop/sugar/user/nick")
+        color = XoColor(client.get_string("/desktop/sugar/user/color"))
+
         palette_icon = Icon(icon_name='computer-xo', 
                             icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR,
-                            xo_color=self._profile.color)
-        palette = Palette(self._profile.nick_name,
-                          #secondary_text='Sample secondary label',
-                          icon=palette_icon)
+                            xo_color=color)
+        palette = Palette(nick, icon=palette_icon)
 
         item = MenuItem(_('Settings'), 'preferences-system')
         item.connect('activate', self.__controlpanel_activate_cb)
@@ -439,11 +444,12 @@ class _MyIcon(MyIcon):
         palette.menu.append(item)
         item.show()
 
-        if not self._profile.is_registered():
+        backup_url = client.get_string('/desktop/sugar/backup_url')
+        if not backup_url:
             self.register_menu = MenuItem(_('Register'), 'media-record')
             palette.menu.append(self.register_menu)
             self.register_menu.show()
- 
+    
         self.set_palette(palette)
 
     def _reboot_activate_cb(self, menuitem):

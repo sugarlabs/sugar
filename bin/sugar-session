@@ -18,6 +18,7 @@
 import sys
 import os
 import gettext
+import gconf
 
 import gtk
 import gobject
@@ -60,8 +61,11 @@ def main():
 
     intro.check_profile()
 
-    if get_profile().timezone is not None:    
-        os.environ['TZ'] = get_profile().timezone
+    client = gconf.client_get_default()
+    timezone = client.get_string('/desktop/sugar/date/timezone')
+
+    if timezone is not '':    
+        os.environ['TZ'] = timezone
 
     service.start_all()
 
