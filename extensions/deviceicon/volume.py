@@ -100,13 +100,12 @@ def _volume_added_cb(volumes_manager, vol, tray):
 def _volume_removed_cb(volumes_manager, vol, tray):
     _remove_device(vol, tray)
 
-def _add_device(volume, tray):
-    icon = DeviceView(volume)
-    _icons[volume] = icon
+def _add_device(vol, tray):
+    icon = DeviceView(vol)
+    _icons[vol] = icon
     tray.add_device(icon)
 
-def _remove_device(volume, tray):
-    icon = _icons[volume]
+def _remove_device(vol, tray):
+    icon = _icons[vol]
     tray.remove_device(icon)
-    del _icons[volume]
-
+    del _icons[vol]
