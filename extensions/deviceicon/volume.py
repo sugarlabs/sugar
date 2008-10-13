@@ -14,17 +14,41 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+from gettext import gettext as _
+
+import gtk
+
 from sugar.graphics.tray import TrayIcon
+from sugar.graphics.palette import Palette
 
 from jarabe.model import volume
 
 _icons = {}
 
 class DeviceView(TrayIcon):
+
     FRAME_POSITION_RELATIVE = 800
-    def __init__(self, volume):
-        TrayIcon.__init__(self, icon_name=volume.icon_name,
-                          xo_color=volume.icon_color)
+
+    def __init__(self, model):
+        TrayIcon.__init__(self, icon_name=model.icon_name,
+                          xo_color=model.icon_color)
+        self._model = model
+
+    def create_palette(self):
+        return VolumePalette(self._model)
+
+class VolumePalette(Palette):
+    def __init__(self, model):
+        Palette.__init__(self, label=model.name)
+        self._model = model
+
+        menu_item = gtk.MenuItem(_('Unmount'))
+        menu_item.connect('activate', self._unmount_activated_cb)
+        self.menu.append(menu_item)
+        menu_item.show()
+
+    def _unmount_activated_cb(self, menu_item):
+        self._model.unmount()
 
 def setup(tray):
     volumes_manager = volume.get_volumes_manager()
