@@ -91,10 +91,10 @@ class ActivitiesList(gtk.VBox):
         for entry in self._box.get_children():
             entry.set_visible(entry.matches(query))
 
-    def __key_press_event_cb(self, widget, event):
+    def __key_press_event_cb(self, scrolled_window, event):
         keyname = gtk.gdk.keyval_name(event.keyval)
 
-        vadjustment = self.props.vadjustment
+        vadjustment = scrolled_window.props.vadjustment
         if keyname == 'Up':
             if vadjustment.props.value > vadjustment.props.lower:
                 vadjustment.props.value -= vadjustment.props.step_increment
