@@ -195,10 +195,14 @@ class VolumesManager(gobject.GObject):
         volume_name = device.GetProperty('volume.label')
         if not volume_name:
             volume_name = device.GetProperty('volume.uuid')
+
+        mount_point = device.GetProperty('volume.mount_point')
+
         volume = Volume(volume_name,
                         self._get_icon_for_volume(device),
                         profile.get_color(),
-                        udi)
+                        udi,
+                        mount_point)
         self._volumes[udi] = volume
 
         logging.debug('mounted volume %s' % udi)
@@ -227,11 +231,12 @@ class VolumesManager(gobject.GObject):
             return 'media-flash-usb'
 
 class Volume(object):
-    def __init__(self, name, icon_name, icon_color, udi):
+    def __init__(self, name, icon_name, icon_color, udi, mount_point):
         self.name = name
         self.icon_name = icon_name
         self.icon_color = icon_color
         self.udi = udi
+        self.mount_point = mount_point
 
     def unmount(self):
         logging.debug('Volumes.unmount: %r', self.udi)

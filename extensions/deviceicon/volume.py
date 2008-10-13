@@ -14,12 +14,16 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import os
+import statvfs
 from gettext import gettext as _
 
 import gtk
 
 from sugar.graphics.tray import TrayIcon
 from sugar.graphics.palette import Palette
+from sugar.graphics.menuitem import MenuItem
+from sugar.graphics.icon import Icon
 
 from jarabe.model import volume
 
@@ -39,16 +43,47 @@ class DeviceView(TrayIcon):
 
 class VolumePalette(Palette):
     def __init__(self, model):
-        Palette.__init__(self, label=model.name)
+        Palette.__init__(self, label=model.name,
+                         secondary_text=model.mount_point)
         self._model = model
 
-        menu_item = gtk.MenuItem(_('Unmount'))
-        menu_item.connect('activate', self._unmount_activated_cb)
+        vbox = gtk.VBox()
+        self.set_content(vbox)
+        vbox.show()
+
+        self._progress_bar = gtk.ProgressBar()
+        vbox.add(self._progress_bar)
+        self._progress_bar.show()
+
+        self._free_space_label = gtk.Label()
+        self._free_space_label.set_alignment(0.5, 0.5)
+        vbox.add(self._free_space_label)
+        self._free_space_label.show()
+
+        self.connect('popup', self.__popup_cb)
+
+        menu_item = MenuItem(_('Unmount'))
+
+        icon = Icon(icon_name='media-eject', icon_size=gtk.ICON_SIZE_MENU)
+        menu_item.set_image(icon)
+        icon.show()
+
+        menu_item.connect('activate', self.__unmount_activate_cb)
         self.menu.append(menu_item)
         menu_item.show()
 
-    def _unmount_activated_cb(self, menu_item):
+    def __unmount_activate_cb(self, menu_item):
         self._model.unmount()
+
+    def __popup_cb(self, palette):
+        stat = os.statvfs(self._model.mount_point)
+        free_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BAVAIL]
+        total_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BLOCKS]
+
+        fraction = (total_space - free_space) / float(total_space)
+        self._progress_bar.props.fraction = fraction
+        self._free_space_label.props.label = _('%(free_space)d MB Free') % \
+                {'free_space': free_space / (1024 * 1024)}
 
 def setup(tray):
     volumes_manager = volume.get_volumes_manager()
