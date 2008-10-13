@@ -48,8 +48,9 @@ class ClipboardObject(object):
         return mime.get_mime_icon(self.get_mime_type())
 
     def get_preview(self):
-        # TODO: should previews really be here?
-        #return self._get_type_info().get_preview()
+        for mime_type in ['text/plain']:
+            if mime_type in self._formats:
+                return self._formats[mime_type].get_data()
         return ''
 
     def is_bundle(self):
