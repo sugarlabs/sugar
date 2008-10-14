@@ -46,5 +46,16 @@ if ENABLE_UPDATE_MIMEDB
 	fi
 endif
 
-EXTRA_DIST = $(sugar_DATA) $(xsessions_DATA) $(nmservice_DATA) $(mime_xml_in_files) em.py gtkrc.em
-CLEANFILES = $(GTKRC_FILES) $(mime_xml_files)
+@INTLTOOL_SCHEMAS_RULE@
+
+schemadir = $(GCONF_SCHEMA_FILE_DIR)
+schema_in_files = sugar.schemas.in
+schema_DATA = $(schema_in_files:.schemas.in=.schemas)
+
+install-data-local: $(schema_DATA)
+if GCONF_SCHEMAS_INSTALL
+	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule sugar.schemas 2>&1 > /dev/null
+endif
+
+EXTRA_DIST = $(sugar_DATA) $(xsessions_DATA) $(nmservice_DATA) $(mime_xml_in_files) em.py gtkrc.em $(schema_in_files)
+CLEANFILES = $(GTKRC_FILES) $(mime_xml_files) $(schema_DATA)
