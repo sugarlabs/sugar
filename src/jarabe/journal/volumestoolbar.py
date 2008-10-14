@@ -24,7 +24,7 @@ from sugar.datastore import datastore
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.palette import Palette
 
-from jarabe.journal import volumesmanager
+from jarabe.model import volume
 
 class VolumesToolbar(gtk.Toolbar):
     __gtype_name__ = 'VolumesToolbar'
@@ -43,43 +43,45 @@ class VolumesToolbar(gtk.Toolbar):
 
         self.connect('destroy', self.__destroy_cb)
 
-        gobject.idle_add(self._set_up_volumes)
+        # TODO: It's unclear now how removable devices will be handled in the
+        # Journal. Disable for now.
+        #gobject.idle_add(self._set_up_volumes)
 
     def __destroy_cb(self, widget):
-        volumes_manager = volumesmanager.get_volumes_manager()
+        volumes_manager = volume.get_volumes_manager()
         volumes_manager.disconnect(self._volume_added_hid)
         volumes_manager.disconnect(self._volume_removed_hid)
 
     def _set_up_volumes(self):
-        volumes_manager = volumesmanager.get_volumes_manager()
+        volumes_manager = volume.get_volumes_manager()
         self._volume_added_hid = \
                 volumes_manager.connect('volume-added', self._volume_added_cb)
         self._volume_removed_hid = \
                 volumes_manager.connect('volume-removed',
                                         self._volume_removed_cb)
 
-        for volume in volumes_manager.get_volumes():
-            self._add_button(volume)
+        for vol in volumes_manager.get_volumes():
+            self._add_button(vol)
 
-    def _volume_added_cb(self, volumes_manager, volume):
-        self._add_button(volume)
+    def _volume_added_cb(self, volumes_manager, vol):
+        self._add_button(vol)
 
-    def _volume_removed_cb(self, volumes_manager, volume):
-        self._remove_button(volume)
+    def _volume_removed_cb(self, volumes_manager, vol):
+        self._remove_button(vol)
 
-    def _add_button(self, volume):
-        logging.debug('VolumeToolbar._add_button: %r' % volume.name)
+    def _add_button(self, vol):
+        logging.debug('VolumeToolbar._add_button: %r' % vol.name)
 
         if self._volume_buttons:
             group = self._volume_buttons[0]
         else:
             group = None
 
-        palette = Palette(volume.name)
+        palette = Palette(vol.name)
 
-        button = VolumeButton(volume, group)
+        button = VolumeButton(vol, group)
         button.set_palette(palette)
-        button.connect('toggled', self._button_toggled_cb, volume)
+        button.connect('toggled', self._button_toggled_cb, vol)
         if self._volume_buttons:
             position = self.get_item_index(self._volume_buttons[-1]) + 1
         else:
@@ -89,26 +91,26 @@ class VolumesToolbar(gtk.Toolbar):
 
         self._volume_buttons.append(button)
 
-        if volume.can_unmount:
+        if vol.can_unmount:
             menu_item = gtk.MenuItem(_('Unmount'))
-            menu_item.connect('activate', self._unmount_activated_cb, volume)
+            menu_item.connect('activate', self._unmount_activated_cb, vol)
             palette.menu.append(menu_item)
             menu_item.show()
 
         if len(self.get_children()) > 1:
             self.show()
 
-    def _button_toggled_cb(self, button, volume):
+    def _button_toggled_cb(self, button, vol):
         if button.props.active:
-            self.emit('volume-changed', volume.id)
+            self.emit('volume-changed', vol.id)
 
-    def _unmount_activated_cb(self, menu_item, volume):
-        logging.debug('VolumesToolbar._unmount_activated_cb: %r', volume.udi)
-        volume.unmount()
+    def _unmount_activated_cb(self, menu_item, vol):
+        logging.debug('VolumesToolbar._unmount_activated_cb: %r', vol.udi)
+        vol.unmount()
 
-    def _remove_button(self, volume):
+    def _remove_button(self, vol):
         for button in self.get_children():
-            if button.volume.id == volume.id:
+            if button.volume.id == vol.id:
                 self._volume_buttons.remove(button)
                 self.remove(button)
                 self.get_children()[0].props.active = True
@@ -118,13 +120,13 @@ class VolumesToolbar(gtk.Toolbar):
                 return
 
 class VolumeButton(RadioToolButton):
-    def __init__(self, volume, group):
+    def __init__(self, vol, group):
         RadioToolButton.__init__(self)
-        self.props.named_icon = volume.icon_name
-        self.props.xo_color = volume.icon_color
+        self.props.named_icon = vol.icon_name
+        self.props.xo_color = vol.icon_color
         self.props.group = group
 
-        self.volume = volume
+        self.volume = vol
         self.drag_dest_set(gtk.DEST_DEFAULT_ALL,
                            [('journal-object-id', 0, 0)],
                            gtk.gdk.ACTION_COPY)

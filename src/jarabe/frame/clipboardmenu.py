@@ -37,7 +37,7 @@ from jarabe.model import bundleregistry
 class ClipboardMenu(Palette):
 
     def __init__(self, cb_object):
-        Palette.__init__(self, cb_object.get_name())
+        Palette.__init__(self, text_maxlen=100)
 
         self._cb_object = cb_object
 
@@ -70,8 +70,7 @@ class ClipboardMenu(Palette):
         self.menu.append(self._journal_item)
         self._journal_item.show()
 
-        self._update_items_visibility()
-        self._update_open_submenu()
+        self._update()
 
     def _update_open_submenu(self):
         activities = self._get_activities()
@@ -156,7 +155,13 @@ class ClipboardMenu(Palette):
     def _object_state_changed_cb(self, cb_service, cb_object):
         if cb_object != self._cb_object:
             return
-        self.set_primary_text(cb_object.get_name())
+        self._update()
+
+    def _update(self):
+        self.props.primary_text = self._cb_object.get_name()
+        preview = self._cb_object.get_preview()
+        if preview:
+            self.props.secondary_text = preview
         self._update_progress_bar()
         self._update_items_visibility()
         self._update_open_submenu()

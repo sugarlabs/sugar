@@ -11,4 +11,5 @@ sugar_PYTHON =			\
         network.py              \
 	shell.py		\
 	screen.py		\
-	sound.py
+	sound.py		\
+	volume.py

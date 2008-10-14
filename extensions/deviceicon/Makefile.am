@@ -4,4 +4,5 @@ sugar_PYTHON = 		\
 	__init__.py	\
 	wireless.py	\
 	battery.py	\
-	speaker.py
+	speaker.py	\
+	volume.py

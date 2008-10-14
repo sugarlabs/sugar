@@ -36,7 +36,7 @@ from sugar import mime
 from sugar.datastore import datastore
 
 from jarabe.model import bundleregistry
-from jarabe.journal import volumesmanager
+from jarabe.model import volume
 from jarabe.journal import misc
 
 _AUTOSEARCH_TIMEOUT = 1000
@@ -374,9 +374,9 @@ class EntryToolbar(gtk.Toolbar):
         if self._jobject:
             misc.resume(self._jobject, service_name)
 
-    def _copy_menu_item_activate_cb(self, menu_item, volume):
+    def _copy_menu_item_activate_cb(self, menu_item, vol):
         if self._jobject:
-            datastore.copy(self._jobject, volume.id)
+            datastore.copy(self._jobject, vol.id)
 
     def _refresh_copy_palette(self):
         palette = self._copy.get_palette()
@@ -385,16 +385,16 @@ class EntryToolbar(gtk.Toolbar):
             palette.menu.remove(menu_item)
             menu_item.destroy()
 
-        volumes_manager = volumesmanager.get_volumes_manager()
-        for volume in volumes_manager.get_volumes():
-            if self._jobject.metadata['mountpoint'] == volume.id:
+        volumes_manager = volume.get_volumes_manager()
+        for vol in volumes_manager.get_volumes():
+            if self._jobject.metadata['mountpoint'] == vol.id:
                 continue
-            menu_item = MenuItem(volume.name)
-            menu_item.set_image(Icon(icon_name=volume.icon_name,
+            menu_item = MenuItem(vol.name)
+            menu_item.set_image(Icon(icon_name=vol.icon_name,
                                      icon_size=gtk.ICON_SIZE_MENU))
             menu_item.connect('activate',
                               self._copy_menu_item_activate_cb,
-                              volume)
+                              vol)
             palette.menu.append(menu_item)
             menu_item.show()
         

@@ -14,5 +14,4 @@ sugar_PYTHON =				\
 	objectchooser.py		\
 	palettes.py			\
 	query.py			\
-	volumesmanager.py		\
 	volumestoolbar.py
