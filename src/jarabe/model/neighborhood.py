@@ -40,7 +40,7 @@ class ActivityModel:
         return XoColor(self.activity.props.color)
 
     def get_bundle_id(self):
-        return self.bundle.bundle_id
+        return self.bundle.get_bundle_id()
 
 class Neighborhood(gobject.GObject):
     __gsignals__ = {
