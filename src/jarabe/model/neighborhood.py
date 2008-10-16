@@ -34,7 +34,7 @@ class ActivityModel:
         return self.activity.props.id
         
     def get_icon_name(self):
-        return self.bundle.icon
+        return self.bundle.get_icon()
     
     def get_color(self):
         return XoColor(self.activity.props.color)
