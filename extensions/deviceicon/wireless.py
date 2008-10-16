@@ -378,7 +378,7 @@ def setup(tray):
         return
 
     for dev in network_manager.get_devices():
-        _check_network_device(dev)
+        _check_network_device(tray, dev)
 
     network_manager.connect('device-added',
                             _network_device_added_cb, tray)
