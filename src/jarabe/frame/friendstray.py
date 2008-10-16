@@ -86,7 +86,7 @@ class FriendsTray(VTray):
 
     def __activity_appeared_cb(self, pservice, activity_ps):
         activity = shell.get_model().get_active_activity()
-        if activity and activity_ps.props.id == activity.get_id():
+        if activity and activity_ps.props.id == activity.get_activity_id():
             self._set_activity_ps(activity_ps, True)
 
     def _set_activity_ps(self, activity_ps, shared_activity):
