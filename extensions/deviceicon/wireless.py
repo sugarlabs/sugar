@@ -65,25 +65,25 @@ class WirelessDeviceView(TrayIcon):
         self.set_palette(self.palette)
         self.palette.props.invoker = FrameWidgetInvoker(self)
         self.palette.set_group_id('frame')
-        self.palette.set_frequency(self._model.props.frequency)
+        self.palette.set_frequency(self.model.props.frequency)
 
-        self._model.connect('notify::name', self._name_changed_cb)
-        self._model.connect('notify::strength', self._strength_changed_cb)
-        self._model.connect('notify::state', self._state_changed_cb)
+        self.model.connect('notify::name', self._name_changed_cb)
+        self.model.connect('notify::strength', self._strength_changed_cb)
+        self.model.connect('notify::state', self._state_changed_cb)
 
         self._update_icon()
         self._update_state()
 
     def _get_palette_primary_text(self):
-        if self._model.props.state == STATE_INACTIVE:
+        if self.model.props.state == STATE_INACTIVE:
             return _("Disconnected")
-        return self._model.props.name
+        return self.model.props.name
 
     def _strength_changed_cb(self, model, pspec):
         self._update_icon()
         # Only update frequency periodically
         if self._counter % 4 == 0:
-            self.palette.set_frequency(self._model.props.frequency)
+            self.palette.set_frequency(self.model.props.frequency)
         self._counter += 1
 
     def _name_changed_cb(self, model, pspec):
@@ -96,10 +96,10 @@ class WirelessDeviceView(TrayIcon):
 
     def _update_icon(self):
         # keep this code in sync with view/home/MeshBox.py
-        strength = self._model.props.strength
-        if self._model.props.state == STATE_INACTIVE:
+        strength = self.model.props.strength
+        if self.model.props.state == STATE_INACTIVE:
             strength = 0
-        if self._model.props.state == STATE_ACTIVATED:
+        if self.model.props.state == STATE_ACTIVATED:
             icon_name = '%s-connected' % _ICON_NAME
         else:
             icon_name = _ICON_NAME
@@ -109,12 +109,12 @@ class WirelessDeviceView(TrayIcon):
 
     def _update_state(self):
         # FIXME Change icon colors once we have real icons
-        state = self._model.props.state
+        state = self.model.props.state
         if state == STATE_ACTIVATING:
             self.icon.props.fill_color = style.COLOR_INACTIVE_FILL.get_svg()
             self.icon.props.stroke_color = style.COLOR_INACTIVE_STROKE.get_svg()
         elif state == STATE_ACTIVATED:
-            (stroke, fill) = self._model.get_active_network_colors()
+            (stroke, fill) = self.model.get_active_network_colors()
             self.icon.props.stroke_color = stroke
             self.icon.props.fill_color = fill
         elif state == STATE_INACTIVE:
@@ -378,7 +378,7 @@ def setup(tray):
         return
 
     for dev in network_manager.get_devices():
-        _check_network_device(dev)
+        _check_network_device(tray, dev)
 
     network_manager.connect('device-added',
                             _network_device_added_cb, tray)

@@ -60,7 +60,6 @@ extensions/cpsection/language/Makefile
 extensions/cpsection/network/Makefile
 extensions/cpsection/power/Makefile
 extensions/deviceicon/Makefile
-schemas/Makefile
 src/Makefile
 src/jarabe/Makefile
 src/jarabe/controlpanel/Makefile
