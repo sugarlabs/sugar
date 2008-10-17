@@ -159,20 +159,16 @@ class KeyHandler(object):
         active_activity.get_window().close()
 
     def handle_zoom_mesh(self):
-        shell.get_model().set_zoom_level(ShellModel.ZOOM_MESH)
-        wnck.screen_get_default().toggle_showing_desktop(True)
+        shell.get_model().zoom_level = ShellModel.ZOOM_MESH
 
     def handle_zoom_group(self):
-        shell.get_model().set_zoom_level(ShellModel.ZOOM_GROUP)
-        wnck.screen_get_default().toggle_showing_desktop(True)
+        shell.get_model().zoom_level = ShellModel.ZOOM_GROUP
 
     def handle_zoom_home(self):
-        shell.get_model().set_zoom_level(ShellModel.ZOOM_HOME)
-        wnck.screen_get_default().toggle_showing_desktop(True)
+        shell.get_model().zoom_level = ShellModel.ZOOM_HOME
 
     def handle_zoom_activity(self):
-        activity = shell.get_model().get_active_activity()
-        activity.get_window().activate(gtk.get_current_event_time())
+        shell.get_model().zoom_level = ShellModel.ZOOM_ACTIVITY
 
     def handle_brightness_max(self):
         self._change_brightness(value=_BRIGHTNESS_MAX)

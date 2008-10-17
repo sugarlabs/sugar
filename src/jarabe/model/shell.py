@@ -26,6 +26,7 @@ import gtk
 import dbus
 
 from sugar import wm
+from sugar import dispatch
 from sugar.graphics.xocolor import XoColor
 from sugar.presence import presenceservice
 
@@ -299,50 +300,57 @@ class ShellModel(gobject.GObject):
     ZOOM_HOME = 2
     ZOOM_ACTIVITY = 3
 
-    __gproperties__ = {
-        'zoom-level' : (int, None, None,
-                        0, 3, ZOOM_HOME,
-                        gobject.PARAM_READABLE)
-    }
-
     def __init__(self):
         gobject.GObject.__init__(self)
 
-        self._current_activity = None
+        self._screen = wnck.screen_get_default()
+        self._screen.connect('window-opened', self._window_opened_cb)
+        self._screen.connect('window-closed', self._window_closed_cb)
+        self._screen.connect('active-window-changed',
+                             self._active_window_changed_cb)
+
+        self.zoom_level_changed = dispatch.Signal()
+
+        self._desktop_level = self.ZOOM_HOME
         self._zoom_level = self.ZOOM_HOME
-        self._showing_desktop = True
+        self._current_activity = None
         self._activities = []
         self._active_activity = None
         self._tabbing_activity = None
         self._pservice = presenceservice.get_instance()
 
-        self._screen = wnck.screen_get_default()
-        self._screen.connect('window-opened', self._window_opened_cb)
-        self._screen.connect('window-closed', self._window_closed_cb)
-        self._screen.connect('showing-desktop-changed',
-                             self._showing_desktop_changed_cb)
-        self._screen.connect('active-window-changed',
-                             self._active_window_changed_cb)
+        self._screen.toggle_showing_desktop(True)
 
-    def set_zoom_level(self, level):
-        self._zoom_level = level
-        self.notify('zoom-level')
-
-    def get_zoom_level(self):
-        if self._screen.get_showing_desktop():
-            return self._zoom_level
+    def _update_zoom_level(self, window):
+        if window.get_window_type() == wnck.WINDOW_DESKTOP:
+            zoom_level = self._desktop_level
         else:
-            return self.ZOOM_ACTIVITY
+            zoom_level = self.ZOOM_ACTIVITY
 
-    def do_get_property(self, pspec):
-        if pspec.name == 'zoom-level':
-            return self.get_zoom_level()                
+        if self._zoom_level != zoom_level:
+            self._zoom_level = zoom_level
+            self.zoom_level_changed.send(self, old_level=self._zoom_level,
+                                         new_level=zoom_level)
 
-    def _showing_desktop_changed_cb(self, screen):
-        showing_desktop = self._screen.get_showing_desktop()
-        if self._showing_desktop != showing_desktop:
-            self._showing_desktop = showing_desktop
-            self.notify('zoom-level')
+    def _set_zoom_level(self, new_level):
+        old_level = self.zoom_level
+        if old_level == new_level:
+            return
+
+        self._zoom_level = new_level
+        if new_level is not self.ZOOM_ACTIVITY:
+            self._desktop_level = new_level
+
+        self.zoom_level_changed.send(self, old_level=old_level,
+                                     new_level=new_level)
+
+        show_desktop = new_level is not self.ZOOM_ACTIVITY
+        self._screen.toggle_showing_desktop(show_desktop)
+
+    def _get_zoom_level(self):
+        return self._zoom_level
+
+    zoom_level = property(_get_zoom_level, _set_zoom_level)
 
     def _get_activities_with_window(self):
         ret = []
@@ -472,6 +480,8 @@ class ShellModel(gobject.GObject):
         act = self._get_activity_by_xid(window.get_xid())
         if act is not None:
             self._set_active_activity(act)
+
+        self._update_zoom_level(window)
 
     def _add_activity(self, home_activity):
         self._activities.append(home_activity)

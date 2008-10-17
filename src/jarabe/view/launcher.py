@@ -130,7 +130,6 @@ def __launch_started_cb(home_model, home_activity):
     launch_window.show()
 
     _launchers[home_activity.get_activity_id()] = launch_window
-    shell.get_model().set_zoom_level(shell.ShellModel.ZOOM_ACTIVITY)
 
 def __launch_failed_cb(home_model, home_activity):
     if not home_activity.is_journal():

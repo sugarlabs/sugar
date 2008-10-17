@@ -74,12 +74,10 @@ class TransitionBox(hippo.Canvas):
         self._box.props.background_color = style.COLOR_WHITE.get_int()
         self.set_root(self._box)
 
-        self._size = style.XLARGE_ICON_SIZE
-
         self._layout = _Layout()
         self._box.set_layout(self._layout)
 
-        self._my_icon = MyIcon(self._size)
+        self._my_icon = MyIcon(style.XLARGE_ICON_SIZE)
         self._box.append(self._my_icon)
 
         self._animator = animator.Animator(0.3)
@@ -88,10 +86,9 @@ class TransitionBox(hippo.Canvas):
     def _animation_completed_cb(self, anim):
         self.emit('completed')
 
-    def set_size(self, size):
-        self._animator.remove_all()
-        self._animator.add(_Animation(self._my_icon, self._size, size))
-        self._animator.start()
-        
-        self._size = size
+    def start_transition(self, start_size, end_size):
+        self._my_icon.props.size = start_size
 
+        self._animator.remove_all()
+        self._animator.add(_Animation(self._my_icon, start_size, end_size))
+        self._animator.start()
