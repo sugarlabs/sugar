@@ -18,6 +18,7 @@ import os
 import logging
 import urlparse
 
+from gettext import gettext as _
 from sugar import mime
 from sugar.bundle.activitybundle import ActivityBundle
 
@@ -39,9 +40,12 @@ class ClipboardObject(object):
     def get_name(self):
         name = self._name
         if not name:
-            name = mime.get_mime_description(self.get_mime_type())
-        if not name:
-            name = ''
+            type = mime.get_mime_description(self.get_mime_type())
+
+            if not type:
+                type = 'Data'
+            name = _('%s clipping') % type
+
         return name
 
     def get_icon(self):
