@@ -323,14 +323,15 @@ class ShellModel(gobject.GObject):
 
     def _update_zoom_level(self, window):
         if window.get_window_type() == wnck.WINDOW_NORMAL:
-            zoom_level = self.ZOOM_ACTIVITY
+            new_level = self.ZOOM_ACTIVITY
         else:
-            zoom_level = self._desktop_level
+            new_level = self._desktop_level
 
-        if self._zoom_level != zoom_level:
-            self._zoom_level = zoom_level
-            self.zoom_level_changed.send(self, old_level=self._zoom_level,
-                                         new_level=zoom_level)
+        if self._zoom_level != new_level:
+            old_level = self._zoom_level
+            self._zoom_level = new_level
+            self.zoom_level_changed.send(self, old_level=old_level,
+                                         new_level=new_level)
 
     def _set_zoom_level(self, new_level):
         old_level = self.zoom_level
