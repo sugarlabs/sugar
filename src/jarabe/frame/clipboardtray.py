@@ -125,8 +125,13 @@ class ClipboardTray(tray.VTray):
 
     def drag_motion_cb(self, widget, context, x, y, time):
         logging.debug('ClipboardTray._drag_motion_cb')
-        context.drag_status(gtk.gdk.ACTION_COPY, time)
-        self.props.drag_active = True
+
+        if self._internal_drag(context):
+            context.drag_status(gtk.gdk.ACTION_MOVE, time)
+        else:
+            context.drag_status(gtk.gdk.ACTION_COPY, time)
+            self.props.drag_active = True
+
         return True
 
     def drag_leave_cb(self, widget, context, time):
@@ -134,6 +139,13 @@ class ClipboardTray(tray.VTray):
 
     def drag_drop_cb(self, widget, context, x, y, time):
         logging.debug('ClipboardTray._drag_drop_cb')
+
+        if self._internal_drag(context):
+            # TODO: We should move the object within the clipboard here
+            if not self._context_map.has_context(context):
+                context.drop_finish(False, gtk.get_current_event_time())
+            return False
+
         cb_service = clipboard.get_instance()
         object_id = cb_service.add_object(name="")
 
@@ -194,4 +206,11 @@ class ClipboardTray(tray.VTray):
             # the dnd transaction
             if not self._context_map.has_context(context):
                 context.drop_finish(True, gtk.get_current_event_time())
+
+    def _internal_drag(self, context):
+        view_ancestor = context.get_source_widget().get_ancestor(gtk.Viewport)
+        if view_ancestor is self._viewport:
+            return True
+        else:
+            return False
 
