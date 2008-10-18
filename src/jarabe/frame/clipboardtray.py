@@ -126,7 +126,11 @@ class ClipboardTray(tray.VTray):
     def drag_motion_cb(self, widget, context, x, y, time):
         logging.debug('ClipboardTray._drag_motion_cb')
         context.drag_status(gtk.gdk.ACTION_COPY, time)
+        self.props.drag_active = True
         return True
+
+    def drag_leave_cb(self, widget, context, time):
+        self.props.drag_active = False
 
     def drag_drop_cb(self, widget, context, x, y, time):
         logging.debug('ClipboardTray._drag_drop_cb')
