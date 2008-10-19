@@ -14,6 +14,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-prefix = '/usr/local'
-data_path = '/usr/local/share/sugar/data'
-shell_path = '/usr/local/share/sugar/shell'
+prefix = '/home/marco/sucrose-0.82/install'
+data_path = '/home/marco/sucrose-0.82/install/share/sugar/data'
+shell_path = '/home/marco/sucrose-0.82/install/share/sugar/shell'
+version = '0.82.1'
+

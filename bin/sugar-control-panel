@@ -17,7 +17,7 @@
 
 import sys
 
-sys.path.insert(0, '/usr/local/share/sugar/shell')
+sys.path.insert(0, '/home/marco/sucrose-0.82/install/share/sugar/shell')
 
 from controlpanel.cmd import main
 
