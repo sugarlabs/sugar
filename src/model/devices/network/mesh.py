@@ -28,11 +28,14 @@ class Device(device.Device):
         'activation-stage': (int, None, None, 0, 7, 0, gobject.PARAM_READABLE),
         'frequency': (float, None, None, 0, 2.72, 0, gobject.PARAM_READABLE),
         'mesh-step': (int, None, None, 0, 4, 0, gobject.PARAM_READABLE),
+        'ip-address' : (str, None, None, None, gobject.PARAM_READABLE),
     }
 
     def __init__(self, nm_device):
         device.Device.__init__(self)
         self._nm_device = nm_device
+        self._nm_device.connect('ip-changed', self._ip_changed_cb)
+        self.notify('ip-address')
 
         self._nm_device.connect('strength-changed',
                                 self._strength_changed_cb)
@@ -46,6 +49,9 @@ class Device(device.Device):
 
     def _state_changed_cb(self, nm_device):
         self.notify('state')
+
+    def _ip_changed_cb(self, nm_device):
+        self.notify('ip-address')
 
     def _activation_stage_changed_cb(self, nm_device):
         self.notify('activation-stage')
@@ -62,6 +68,12 @@ class Device(device.Device):
             return self._nm_device.get_frequency()
         elif pspec.name == 'mesh-step':
             return self._nm_device.get_mesh_step()
+        elif pspec.name == 'ip-address':
+            return self.get_ip_address()
+
+    def get_ip_address(self):
+        if self._nm_device is not None:
+            return self._nm_device.get_ip_address()
 
     def get_type(self):
         return 'network.mesh'

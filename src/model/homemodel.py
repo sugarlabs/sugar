@@ -18,11 +18,20 @@ import logging
 
 import gobject
 import wnck
+import gtk
 
 from sugar import wm
 from sugar import activity
 
 from model.homeactivity import HomeActivity
+
+def _get_sugar_window_type(wnck_window):
+    window = gtk.gdk.window_foreign_new(wnck_window.get_xid())
+    prop_info = window.property_get('_SUGAR_WINDOW_TYPE', 'STRING')
+    if prop_info is None:
+        return None
+    else:
+        return prop_info[2]
 
 class HomeModel(gobject.GObject):
     """Model of the "Home" view (activity management)
@@ -125,18 +134,11 @@ class HomeModel(gobject.GObject):
         if self._active_activity == home_activity:
             return
 
-        if self._active_activity:
-            service = self._active_activity.get_service()
-            if service:
-                service.SetActive(False,
-                                  reply_handler=self._set_active_success,
-                                  error_handler=self._set_active_error)
         if home_activity:
-            service = home_activity.get_service()
-            if service:
-                service.SetActive(True,
-                                  reply_handler=self._set_active_success,
-                                  error_handler=self._set_active_error)
+            home_activity.set_active(True)
+
+        if self._active_activity:
+            self._active_activity.set_active(False)
 
         self._active_activity = home_activity
         self.emit('active-activity-changed', self._active_activity)
@@ -152,7 +154,7 @@ class HomeModel(gobject.GObject):
         
     def index(self, obj):
         return self._activities.index(obj)
-        
+
     def _window_opened_cb(self, screen, window):
         if window.get_window_type() == wnck.WINDOW_NORMAL:
             home_activity = None
@@ -175,8 +177,9 @@ class HomeModel(gobject.GObject):
 
             home_activity.set_window(window)
 
-            home_activity.props.launching = False
-            self.emit('launch-completed', home_activity)
+            if _get_sugar_window_type(window) != 'launcher':
+                home_activity.props.launching = False
+                self.emit('launch-completed', home_activity)
 
             if self._active_activity is None:
                 self._set_active_activity(home_activity)
@@ -196,12 +199,6 @@ class HomeModel(gobject.GObject):
             if home_activity.get_activity_id() == activity_id:
                 return home_activity
         return None
-
-    def _set_active_success(self):
-        pass
-    
-    def _set_active_error(self, err):
-        logging.error("set_active() failed: %s" % err)
 
     def _active_window_changed_cb(self, screen, previous_window=None):
         window = screen.get_active_window()
@@ -277,7 +274,12 @@ class HomeModel(gobject.GObject):
 
     def _check_activity_launched(self, activity_id):
         home_activity = self._get_activity_by_id(activity_id)
-        if home_activity and home_activity.props.launching:
+
+        if not home_activity:
+            logging.debug('Activity %s has been closed already.' % activity_id)
+            return False
+
+        if home_activity.props.launching:
             logging.debug('Activity %s still launching, assuming it failed...'
                           % activity_id)
             self.notify_launch_failed(activity_id)

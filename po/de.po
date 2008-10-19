@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-23 07:44-0400\n"
-"PO-Revision-Date: 2008-08-05 17:45-0400\n"
+"POT-Creation-Date: 2008-09-01 18:31-0400\n"
+"PO-Revision-Date: 2008-09-07 17:38-0400\n"
 "Last-Translator: Markus Schlager <m.slg@gmx.de>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -18,19 +18,19 @@ msgstr ""
 msgid "Name:"
 msgstr "Name:"
 
-#: ../src/intro/intro.py:94
+#: ../src/intro/intro.py:97
 msgid "Click to change color:"
 msgstr "Klicken zum Wechseln der Farbe:"
 
-#: ../src/intro/intro.py:145
+#: ../src/intro/intro.py:148
 msgid "Back"
 msgstr "Zurück"
 
-#: ../src/intro/intro.py:159 ../src/controlpanel/toolbar.py:61
+#: ../src/intro/intro.py:162 ../src/controlpanel/toolbar.py:61
 msgid "Done"
 msgstr "Fertig"
 
-#: ../src/intro/intro.py:162
+#: ../src/intro/intro.py:165
 msgid "Next"
 msgstr "Nächste"
 
@@ -42,7 +42,7 @@ msgstr "Freund entfernen"
 msgid "Make friend"
 msgstr "Freunde werden"
 
-#: ../src/view/BuddyMenu.py:91
+#: ../src/view/BuddyMenu.py:90
 #, python-format
 msgid "Invite to %s"
 msgstr "Einladen zu %s"
@@ -63,7 +63,7 @@ msgstr "Öffnen"
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../src/view/clipboardmenu.py:63 ../src/view/home/HomeBox.py:86
+#: ../src/view/clipboardmenu.py:63 ../src/view/home/HomeBox.py:87
 msgid "Keep"
 msgstr "Behalten"
 
@@ -88,48 +88,82 @@ msgstr "Authentifizierungstyp:"
 msgid "Encryption Type:"
 msgstr "Verschlüsselungstyp:"
 
-#: ../src/view/Shell.py:240
+#: ../src/hardware/schoolserver.py:17
+msgid "Cannot obtain data needed for registration."
+msgstr "Notwendige Daten für die Registrierung sind nicht verfügbar."
+
+#: ../src/hardware/schoolserver.py:31
+msgid "Cannot connect to the server."
+msgstr "Kann nicht mit dem Server verbinden."
+
+#: ../src/hardware/schoolserver.py:36
+msgid "The server could not complete the request."
+msgstr "Der Server konnte die Anforderung nicht erfüllen."
+
+#: ../src/view/Shell.py:262
 msgid "Screenshot"
 msgstr "Bildschirmfoto"
 
-#: ../src/view/home/HomeBox.py:80
+#: ../src/view/home/HomeBox.py:81
 msgid "Confirm erase"
 msgstr "Löschen bestätigen"
 
-#: ../src/view/home/HomeBox.py:82
+#: ../src/view/home/HomeBox.py:83
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "Löschen bestätigen: Willst du %s wirklich dauerhaft löschen?"
 
-#: ../src/view/home/HomeBox.py:89 ../src/view/palettes.py:120
+#: ../src/view/home/HomeBox.py:90 ../src/view/palettes.py:120
 msgid "Erase"
 msgstr "Löschen"
 
-#: ../src/view/home/HomeBox.py:215
+#: ../src/view/home/HomeBox.py:120
+msgid "Software Update"
+msgstr "Software-Aktualisierung"
+
+#: ../src/view/home/HomeBox.py:121
+msgid "Update your activities to ensure compatibility with your new software"
+msgstr ""
+"Aktualisiere deine Aktivitäten, um die Kompatibilität mit deiner neuen "
+"Software sicher zu stellen."
+
+#: ../src/view/home/HomeBox.py:125 ../src/controlpanel/toolbar.py:115
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: ../src/view/home/HomeBox.py:127 ../src/controlpanel/gui.py:276
+msgid "Later"
+msgstr "Später"
+
+#: ../src/view/home/HomeBox.py:130
+msgid "Check now"
+msgstr "Jetzt prüfen"
+
+#: ../src/view/home/HomeBox.py:266
 msgid "List view"
 msgstr "Listenansicht"
 
-#: ../src/view/home/HomeBox.py:216
+#: ../src/view/home/HomeBox.py:267
 msgid "<Ctrl>2"
 msgstr "<Ctrl>2"
 
-#: ../src/view/home/HomeBox.py:273
+#: ../src/view/home/HomeBox.py:325
 msgid "Favorites view"
 msgstr "Favoritenansicht"
 
-#: ../src/view/home/HomeBox.py:274
+#: ../src/view/home/HomeBox.py:326
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
 # TRANS: label for the freeform layout in the favorites view
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/view/home/HomeBox.py:282
+#: ../src/view/home/HomeBox.py:334
 msgid "Freeform"
 msgstr "Freie Form"
 
 # TRANS: label for the ring layout in the favorites view
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/view/home/HomeBox.py:289
+#: ../src/view/home/HomeBox.py:341
 msgid "Ring"
 msgstr "Ring"
 
@@ -164,9 +198,10 @@ msgstr "Verbinde..."
 msgid "Connected"
 msgstr "Verbunden"
 
-#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:41
-#: ../src/view/devices/network/mesh.py:68
-#: ../src/view/devices/network/mesh.py:72
+#. only temporarily
+#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:51
+#: ../src/view/devices/network/mesh.py:92
+#: ../src/view/devices/network/mesh.py:96
 msgid "Mesh Network"
 msgstr "Maschennetzwerk"
 
@@ -174,8 +209,8 @@ msgstr "Maschennetzwerk"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:119
-#: ../src/view/devices/network/mesh.py:89
+#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:160
+#: ../src/view/devices/network/mesh.py:125
 msgid "Disconnect..."
 msgstr "Verbindung trennen..."
 
@@ -220,27 +255,32 @@ msgstr "Laut schalten"
 msgid "Mute"
 msgstr "Stumm schalten"
 
-#: ../src/view/devices/network/wireless.py:67
+#: ../src/view/devices/network/wireless.py:37
+#, python-format
+msgid "IP address: %s"
+msgstr "IP-Addresse: %s"
+
+#: ../src/view/devices/network/wireless.py:86
 msgid "Disconnected"
 msgstr "Nicht verbunden"
 
-#: ../src/view/devices/network/wireless.py:137
+#: ../src/view/devices/network/wireless.py:178
 msgid "Channel"
 msgstr "Kanal"
 
-#: ../src/view/frame/zoomtoolbar.py:34
+#: ../src/view/frame/zoomtoolbar.py:37
 msgid "Neighborhood"
 msgstr "Umgebung"
 
-#: ../src/view/frame/zoomtoolbar.py:36
+#: ../src/view/frame/zoomtoolbar.py:39
 msgid "Group"
 msgstr "Gruppe"
 
-#: ../src/view/frame/zoomtoolbar.py:38
+#: ../src/view/frame/zoomtoolbar.py:41
 msgid "Home"
 msgstr "Zuhause"
 
-#: ../src/view/frame/zoomtoolbar.py:40
+#: ../src/view/frame/zoomtoolbar.py:43
 msgid "Activity"
 msgstr "Aktivität"
 
@@ -263,6 +303,7 @@ msgstr "sugar-control-panel: key=%s ist keine verfügbare Option"
 msgid "sugar-control-panel: %s"
 msgstr "sugar-control-panel: %s"
 
+# (Markus S.) war 'Benutzung: sugar-control-panel [ option ] key [ args ... ] \n'; 'Parameter' war 'Key'.
 #: ../src/controlpanel/cmd.py:33
 msgid ""
 "Usage: sugar-control-panel [ option ] key [ args ... ] \n"
@@ -273,47 +314,41 @@ msgid ""
 "    -h key       show information about this key \n"
 "    -g key       get the current value of the key \n"
 "    -s key       set the current value for the key \n"
+"    -c key       clear the current value for the key \n"
 "    "
 msgstr ""
-"Benutzung: sugar-control-panel [ option ] key [ args ... ] \n"
+"Benutzung: sugar-control-panel [ Option ] Parameter [ Argumente ... ] \n"
 "    Einstellungen für Sugar. \n"
 "    Optionen: \n"
-"    -h           Diese Hilfe anzeigen und beenden\n"
-"    -l            Alle verfügbaren Optionen auflisten\n"
-"    -h key       Informationen zu diesem Key zeigen\n"
-"    -g key       Den aktuellen Wert für diesen Key auslesen\n"
-"    -s key       Den aktuellen Wert für diesen Key festlegen\n"
+"    -h                Diese Hilfe anzeigen und beenden\n"
+"    -l                 Alle verfügbaren Optionen auflisten\n"
+"    -h Parameter       Informationen zu diesem Parameter zeigen\n"
+"    -g Parameter       Den aktuellen Wert für diesen Parameter auslesen\n"
+"    -s Parameter       Den aktuellen Wert für diesen Parameter festlegen\n"
+"    -c Parameter       Den aktuellen Wert für diesen Parameter zurücksetzen\n"
 "    "
 
-#: ../src/controlpanel/cmd.py:45
+#: ../src/controlpanel/cmd.py:46
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "Um die Änderungen zu übernehmen, muss Sugar neu gestartet werden.\n"
 
-#: ../src/controlpanel/toolbar.py:115
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#: ../src/controlpanel/toolbar.py:121 ../src/view/home/favoritesview.py:294
+#: ../src/controlpanel/toolbar.py:121 ../src/view/home/favoritesview.py:296
 msgid "Ok"
 msgstr "Ok"
 
-#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:260
+#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:268
 msgid "Changes require restart"
 msgstr "Neustart zur Übernahme der Änderungen notwendig"
 
-#: ../src/controlpanel/gui.py:259
+#: ../src/controlpanel/gui.py:267
 msgid "Warning"
 msgstr "Warnung"
 
-#: ../src/controlpanel/gui.py:263
+#: ../src/controlpanel/gui.py:271
 msgid "Cancel changes"
 msgstr "Änderungen aufheben"
 
-#: ../src/controlpanel/gui.py:267
-msgid "Later"
-msgstr "Später"
-
-#: ../src/controlpanel/gui.py:271
+#: ../src/controlpanel/gui.py:280
 msgid "Restart now"
 msgstr "Jetzt neustarten"
 
@@ -365,12 +400,12 @@ msgstr "Der Wert muss ganzzahlig sein."
 msgid "Could not access ~/.i18n. Create standard settings."
 msgstr "Zugriff auf %s nicht möglich. Erzeuge daher Standardeinstellungen."
 
-#: ../src/controlpanel/model/language.py:104
+#: ../src/controlpanel/model/language.py:110
 #, python-format
 msgid "Language for code=%s could not be determined."
 msgstr "Sprache für Code=%s konnte nicht ermittelt werden."
 
-#: ../src/controlpanel/model/language.py:121
+#: ../src/controlpanel/model/language.py:127
 #, python-format
 msgid "Sorry I do not speak '%s'."
 msgstr "Entschuldigung, ich spreche nicht '%s'."
@@ -385,7 +420,6 @@ msgstr "Status ist nicht bekannt."
 
 # (Markus S.) vgl. http://lists.laptop.org/pipermail/localization/2008-July/001232.html
 #: ../src/controlpanel/model/network.py:83
-#, fuzzy
 msgid "Error in specified radio argument use on/off."
 msgstr "Fehler im angegebenen radio-Parameter (Funknetz) -- on/off verwenden."
 
@@ -408,29 +442,59 @@ msgstr "Über mich"
 msgid "Click to change your color:"
 msgstr "Klicken, um deine Farbe zu wechseln:"
 
-#: ../src/controlpanel/view/aboutxo.py:26
+#: ../src/controlpanel/view/aboutxo.py:28
 msgid "About my XO"
 msgstr "Über meinen XO"
 
-#: ../src/controlpanel/view/aboutxo.py:47
+#: ../src/controlpanel/view/aboutxo.py:59
 msgid "Identity"
 msgstr "Identität"
 
-#: ../src/controlpanel/view/aboutxo.py:56
+#: ../src/controlpanel/view/aboutxo.py:68
 msgid "Serial Number:"
 msgstr "Seriennummer:"
 
-#: ../src/controlpanel/view/aboutxo.py:79
+#: ../src/controlpanel/view/aboutxo.py:91
 msgid "Software"
 msgstr "Software"
 
-#: ../src/controlpanel/view/aboutxo.py:88
+#: ../src/controlpanel/view/aboutxo.py:100
 msgid "Build:"
 msgstr "Version:"
 
-#: ../src/controlpanel/view/aboutxo.py:103
+#: ../src/controlpanel/view/aboutxo.py:115
+msgid "Sugar:"
+msgstr "Sugar:"
+
+#: ../src/controlpanel/view/aboutxo.py:130
 msgid "Firmware:"
 msgstr "Firmware:"
+
+#: ../src/controlpanel/view/aboutxo.py:152
+msgid "Copyright and License"
+msgstr "Copyright und Lizenz"
+
+#: ../src/controlpanel/view/aboutxo.py:160
+msgid ""
+"© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+msgstr ""
+"© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+
+#: ../src/controlpanel/view/aboutxo.py:166
+msgid ""
+"Sugar is the graphical user interface that you are looking at. Sugar is free "
+"software, covered by the GNU General Public License, and you are welcome to "
+"change it and/or distribute copies of it under certain conditions described "
+"therein."
+msgstr ""
+"Sugar ist die grafische Benutzeroberfläche, die du vor die siehst. Sugar ist "
+"freie Software und unterliegt der GNU General Public License. Im Rahmen der "
+"darin festgelegten Bedingungen ist es erlaubt, die Software zu verändern "
+"und/oder Kopien davon zu erstellen und zu verteilen."
+
+#: ../src/controlpanel/view/aboutxo.py:178
+msgid "Full license:"
+msgstr "Vollständige Lizenz:"
 
 #: ../src/controlpanel/view/datetime.py:29
 msgid "Date & Time"
@@ -486,7 +550,6 @@ msgstr "Drahtlosnetzwerk"
 
 # (Markus S,) war 'Radio:'
 #: ../src/controlpanel/view/network.py:61
-#, fuzzy
 msgid "Radio:"
 msgstr "Funknetz:"
 
@@ -518,31 +581,31 @@ msgstr ""
 "Extreme Energieverwaltung (deaktiviert das Funknetz, erhöht die Lebensdauer "
 "der Batterie)"
 
-#: ../src/view/devices/network/mesh.py:111
+#: ../src/view/devices/network/mesh.py:154
 msgid "Connected to a School Mesh Portal"
 msgstr "Verbunden mit einem Schul-Maschennetzwerk-Portal"
 
-#: ../src/view/devices/network/mesh.py:113
+#: ../src/view/devices/network/mesh.py:156
 msgid "Looking for a School Mesh Portal..."
 msgstr "Suche Schul-Maschennetzwerk-Portal..."
 
-#: ../src/view/devices/network/mesh.py:116
+#: ../src/view/devices/network/mesh.py:159
 msgid "Connected to an XO Mesh Portal"
 msgstr "Verbunden mit einem XO Maschennetzwerk-Portal"
 
-#: ../src/view/devices/network/mesh.py:118
+#: ../src/view/devices/network/mesh.py:161
 msgid "Looking for an XO Mesh Portal..."
 msgstr "Suche XO Maschennetzwerk-Portal..."
 
-#: ../src/view/devices/network/mesh.py:121
+#: ../src/view/devices/network/mesh.py:164
 msgid "Connected to a Simple Mesh"
 msgstr "Verbunden mit einem einfachen Maschennetzwerk"
 
-#: ../src/view/devices/network/mesh.py:123
+#: ../src/view/devices/network/mesh.py:166
 msgid "Starting a Simple Mesh"
 msgstr "Starte ein einfaches Maschennetzwerk"
 
-#: ../src/view/devices/network/mesh.py:130
+#: ../src/view/devices/network/mesh.py:173
 msgid "Unknown Mesh"
 msgstr "Unbekanntes Maschennetzwerk"
 
@@ -550,37 +613,37 @@ msgstr "Unbekanntes Maschennetzwerk"
 msgid "Decline"
 msgstr "Ablehnen"
 
-#: ../src/view/home/favoritesview.py:285
+#: ../src/view/home/favoritesview.py:287
 msgid "Registration Failed"
 msgstr "Registrierung fehlgeschlagen"
 
-#: ../src/view/home/favoritesview.py:286
+#: ../src/view/home/favoritesview.py:288
 #, python-format
 msgid "%s"
 msgstr "%s"
 
-#: ../src/view/home/favoritesview.py:288
+#: ../src/view/home/favoritesview.py:290
 msgid "Registration Successful"
 msgstr "Registrierung erfolgreich"
 
-#: ../src/view/home/favoritesview.py:289
+#: ../src/view/home/favoritesview.py:291
 msgid "You are now registered with your school server."
 msgstr "Du bist nun bei deinem Schulserver registriert."
 
 # (Markus S.) war 'Kontrollfeld'
-#: ../src/view/home/favoritesview.py:405
+#: ../src/view/home/favoritesview.py:407
 msgid "Control Panel"
 msgstr "Kontrollleiste"
 
-#: ../src/view/home/favoritesview.py:416
+#: ../src/view/home/favoritesview.py:418
 msgid "Restart"
 msgstr "Neustart"
 
-#: ../src/view/home/favoritesview.py:421
+#: ../src/view/home/favoritesview.py:423
 msgid "Shutdown"
 msgstr "Ausschalten"
 
-#: ../src/view/home/favoritesview.py:427
+#: ../src/view/home/favoritesview.py:429
 msgid "Register"
 msgstr "Registrieren"
 

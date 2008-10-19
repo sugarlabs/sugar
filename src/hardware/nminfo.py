@@ -333,7 +333,7 @@ class Network:
             config.set(self.ssid, "timestamp", self.timestamp)
             if len(self.bssids) > 0:
                 opt = " "
-                opt.join(self.bssids)
+                opt = opt.join(self.bssids)
                 config.set(self.ssid, "bssids", opt)
             self._security.write_to_config(self.ssid, config)
         except Exception, e:
@@ -548,4 +548,9 @@ class NMInfo(object):
         if not self._key_dialog:
             return
         self._key_dialog_destroy_cb(self._key_dialog)
+
+    # this method is invoked directly in-process (not by DBus).
+    def delete_all_networks(self):
+        self._allowed_networks = {}
+        self.save_config()
 

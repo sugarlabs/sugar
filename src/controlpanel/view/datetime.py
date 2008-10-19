@@ -113,15 +113,11 @@ class TimeZone(SectionView):
     def __realize_cb(self, widget):
         self._entry.grab_focus()
 
-    def _search(self, model, column_, key, iter_, data=None):
-        for row in model:
-            if key.lower() in row[0].lower():
-                self._treeview.set_cursor(row.path, self._timezone_column, 
-                                          False)
-                self._treeview.scroll_to_cell(row.path, self._timezone_column, 
-                                              True, 0.5, 0.5)
-                return True
-        return False
+    def _search(self, model, column, key, iterator, data=None):
+        value = model.get_value(iterator, column)
+        if key.lower() in value.lower():
+            return False
+        return True
 
     def __zone_changed_cd(self, treeview, data=None):
         list_, row = treeview.get_selection().get_selected()

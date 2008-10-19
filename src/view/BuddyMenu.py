@@ -51,6 +51,8 @@ class BuddyMenu(Palette):
         if self._active_activity_changed_hid is not None:
             home_model = self._get_home_model()
             home_model.disconnect(self._active_activity_changed_hid)
+        self._buddy.disconnect_by_func(self._buddy_icon_changed_cb)
+        self._buddy.disconnect_by_func(self._buddy_nick_changed_cb)
 
     def _add_items(self):
         friends = shellmodel.get_instance().get_friends()
@@ -81,8 +83,7 @@ class BuddyMenu(Palette):
         else:
             buddy_activity_id = None
 
-        if activity is None or \
-           activity.get_type() == 'org.laptop.JournalActivity' or \
+        if activity is None or activity.is_journal() or \
            activity.get_activity_id() == buddy_activity_id:
             self._invite_menu.hide()
         else:    

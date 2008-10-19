@@ -125,6 +125,7 @@ class AccessPointView(CanvasPulsingIcon):
         self._update_name()
 
     def _state_changed_cb(self, model, pspec):
+        self._update_icon()
         self._update_state()
 
     def _activate_cb(self, icon):
@@ -138,7 +139,13 @@ class AccessPointView(CanvasPulsingIcon):
         self._palette.props.primary_text = self._model.props.name
 
     def _update_icon(self):
-        icon_name = get_icon_state(_ICON_NAME, self._model.props.strength)
+        # keep this code in sync with view/devices/network/wireless.py
+        strength = self._model.props.strength
+        if self._model.props.state == accesspointmodel.STATE_CONNECTED:
+            icon_name = '%s-connected' % _ICON_NAME
+        else:
+            icon_name = _ICON_NAME
+        icon_name = get_icon_state(icon_name, strength)
         if icon_name:
             self.props.icon_name = icon_name
             icon = self._palette.props.icon

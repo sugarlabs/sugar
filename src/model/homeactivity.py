@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import time
+import logging
 
 import gobject
 import dbus
@@ -66,16 +67,20 @@ class HomeActivity(gobject.GObject):
 
         self._retrieve_service()
 
+        self._name_owner_changed_handler = None
         if not self._service:
             bus = dbus.SessionBus()
-            bus.add_signal_receiver(self._name_owner_changed_cb,
-                                    signal_name="NameOwnerChanged",
-                                    dbus_interface="org.freedesktop.DBus")
+            self._name_owner_changed_handler = bus.add_signal_receiver(
+                    self._name_owner_changed_cb,
+                    signal_name="NameOwnerChanged",
+                    dbus_interface="org.freedesktop.DBus")
 
     def set_window(self, window):
-        """An activity is 'launched' once we get its window."""
-        if self._window or self._xid:
-            raise RuntimeError("Activity is already launched!")
+        """Set the window for the activity
+
+        We allow resetting the window for an activity so that we
+        can replace the launcher once we get its real window.
+        """
         if not window:
             raise ValueError("window must be valid")
 
@@ -164,6 +169,10 @@ class HomeActivity(gobject.GObject):
         else:
             return None
 
+    def is_journal(self):
+        """Returns boolean if the activity is of type JournalActivity"""
+        return self.get_type() == 'org.laptop.JournalActivity'
+
     def get_launch_time(self):
         """Return the time at which the activity was first launched
         
@@ -212,3 +221,20 @@ class HomeActivity(gobject.GObject):
     def _name_owner_changed_cb(self, name, old, new):
         if name == self._get_service_name():
             self._retrieve_service()
+            self.set_active(True)
+            self._name_owner_changed_handler.remove()
+            self._name_owner_changed_handler = None
+
+    def set_active(self, state):
+        """Propagate the current state to the activity object"""
+        if self._service is not None:
+            self._service.SetActive(state,
+                                    reply_handler=self._set_active_success,
+                                    error_handler=self._set_active_error)
+
+    def _set_active_success(self):
+        pass
+    
+    def _set_active_error(self, err):
+        logging.error("set_active() failed: %s" % err)
+

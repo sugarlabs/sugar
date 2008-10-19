@@ -140,6 +140,7 @@ class HomeWindow(gtk.Window):
         if self._level == ShellModel.ZOOM_HOME:
             self.add(self._home_box)
             self._home_box.show()
+            self._home_box.focus_search_entry()
         elif self._level == ShellModel.ZOOM_FRIENDS:
             self.add(self._friends_box)
             self._friends_box.show()

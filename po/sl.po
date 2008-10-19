@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-23 07:44-0400\n"
-"PO-Revision-Date: 2008-07-18 00:32-0400\n"
+"POT-Creation-Date: 2008-09-01 18:31-0400\n"
+"PO-Revision-Date: 2008-09-11 03:30-0400\n"
 "Last-Translator: Denis Oštir <denis.ostir@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -15,23 +15,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Pootle 1.1.0rc2\n"
 
-#: ../src/intro/intro.py:65 ../src/controlpanel/view/aboutme.py:100
+#: ../src/intro/window.py:93 ../src/controlpanel/view/aboutme.py:100
 msgid "Name:"
 msgstr "Ime:"
 
-#: ../src/intro/intro.py:94
+#: ../src/intro/window.py:125
 msgid "Click to change color:"
 msgstr "Klikni za spremembo barve:"
 
-#: ../src/intro/intro.py:145
+#: ../src/intro/window.py:175
 msgid "Back"
 msgstr "Nazaj"
 
-#: ../src/intro/intro.py:159 ../src/controlpanel/toolbar.py:61
+#: ../src/intro/window.py:189 ../src/controlpanel/toolbar.py:61
 msgid "Done"
 msgstr "Končano"
 
-#: ../src/intro/intro.py:162
+#: ../src/intro/window.py:192
 msgid "Next"
 msgstr "Naslednji"
 
@@ -43,7 +43,7 @@ msgstr "Odstrani prijatelja"
 msgid "Make friend"
 msgstr "Dodaj prijatelja"
 
-#: ../src/view/BuddyMenu.py:91
+#: ../src/view/BuddyMenu.py:90
 #, python-format
 msgid "Invite to %s"
 msgstr "Povabi na %s"
@@ -60,7 +60,7 @@ msgstr "Odpri"
 #. TODO: Implement stopping downloads
 #. self._stop_item.connect('activate', self._stop_item_activate_cb)
 #. self.append_menu_item(self._stop_item)
-#: ../src/view/clipboardmenu.py:63 ../src/view/home/HomeBox.py:86
+#: ../src/view/clipboardmenu.py:63 ../src/view/home/HomeBox.py:87
 msgid "Keep"
 msgstr "Obdrži"
 
@@ -85,50 +85,81 @@ msgstr "Tip prepoznave:"
 msgid "Encryption Type:"
 msgstr "Tip kodiranja:"
 
-#: ../src/view/Shell.py:240
+#: ../src/hardware/schoolserver.py:17
+msgid "Cannot obtain data needed for registration."
+msgstr "Ne morem pridobiti podatkov, potrebnih za registracijo."
+
+#: ../src/hardware/schoolserver.py:31
+msgid "Cannot connect to the server."
+msgstr "Povezava s strežnikom ni mogoča."
+
+#: ../src/hardware/schoolserver.py:36
+msgid "The server could not complete the request."
+msgstr "Strežnik ne more izpolniti zahteve."
+
+#: ../src/view/Shell.py:261
 msgid "Screenshot"
 msgstr "Slika zaslona"
 
-#: ../src/view/home/HomeBox.py:80
+#: ../src/view/home/HomeBox.py:81
 msgid "Confirm erase"
 msgstr "Potrdi brisanje"
 
-#: ../src/view/home/HomeBox.py:82
+#: ../src/view/home/HomeBox.py:83
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "Potrdi brisanje: Želiš dokočno izbrisati %s?"
 
-#: ../src/view/home/HomeBox.py:89 ../src/view/palettes.py:120
+#: ../src/view/home/HomeBox.py:90 ../src/view/palettes.py:120
 msgid "Erase"
 msgstr "Izbriši"
 
-#: ../src/view/home/HomeBox.py:215
+#: ../src/view/home/HomeBox.py:120
+msgid "Software Update"
+msgstr "Nadgradnja programa"
+
+#: ../src/view/home/HomeBox.py:121
+msgid "Update your activities to ensure compatibility with your new software"
+msgstr ""
+"Nadgradite aktivnosti, da zagotovite ustreznost z novo programsko opremo."
+
+#: ../src/view/home/HomeBox.py:125 ../src/controlpanel/toolbar.py:115
+msgid "Cancel"
+msgstr "Prekliči"
+
+#: ../src/view/home/HomeBox.py:127 ../src/controlpanel/gui.py:276
+msgid "Later"
+msgstr "Kasneje"
+
+#: ../src/view/home/HomeBox.py:130
+msgid "Check now"
+msgstr "Preveri zdaj"
+
+#: ../src/view/home/HomeBox.py:266
 msgid "List view"
 msgstr "Seznam"
 
-#: ../src/view/home/HomeBox.py:216
-#, fuzzy
+#: ../src/view/home/HomeBox.py:267
 msgid "<Ctrl>2"
-msgstr "<Ctrl>L"
+msgstr "<Ctrl>2"
 
-#: ../src/view/home/HomeBox.py:273
+#: ../src/view/home/HomeBox.py:325
 msgid "Favorites view"
 msgstr "Priljubljene"
 
-#: ../src/view/home/HomeBox.py:274
-#, fuzzy
+#: ../src/view/home/HomeBox.py:326
 msgid "<Ctrl>1"
-msgstr "<Ctrl>L"
+msgstr "<Ctrl>1"
 
 # TRANS: label for the freeform layout in the favorites view
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/view/home/HomeBox.py:282
+#: ../src/view/home/HomeBox.py:334
 msgid "Freeform"
 msgstr "Prostoročno"
 
 # TRANS: label for the ring layout in the favorites view
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/view/home/HomeBox.py:289
+#: ../src/view/home/HomeBox.py:341
 msgid "Ring"
 msgstr "Obroč"
 
@@ -198,11 +229,11 @@ msgid "My Speakers"
 msgstr "Moji zvočniki"
 
 # malo težko je UNMUTE prevest drugače
-#: ../src/view/devices/speaker.py:119
+#: ../src/view/devices/speaker.py:125
 msgid "Unmute"
 msgstr "Glasno"
 
-#: ../src/view/devices/speaker.py:122
+#: ../src/view/devices/speaker.py:128
 msgid "Mute"
 msgstr "Tiho"
 
@@ -214,19 +245,19 @@ msgstr "Odklopljen"
 msgid "Channel"
 msgstr "Kanal"
 
-#: ../src/view/frame/zoomtoolbar.py:34
+#: ../src/view/frame/zoomtoolbar.py:37
 msgid "Neighborhood"
 msgstr "Soseščina"
 
-#: ../src/view/frame/zoomtoolbar.py:36
+#: ../src/view/frame/zoomtoolbar.py:39
 msgid "Group"
 msgstr "Skupina"
 
-#: ../src/view/frame/zoomtoolbar.py:38
+#: ../src/view/frame/zoomtoolbar.py:41
 msgid "Home"
 msgstr "Domov"
 
-#: ../src/view/frame/zoomtoolbar.py:40
+#: ../src/view/frame/zoomtoolbar.py:43
 msgid "Activity"
 msgstr "Aktivnost"
 
@@ -249,7 +280,9 @@ msgstr "nadzorna plošča programa sugar: ključ=%s ni veljavna možnost"
 msgid "sugar-control-panel: %s"
 msgstr "nadzorna plošča programa sugar: %s"
 
-#: ../src/controlpanel/cmd.py:33
+#. TRANS: Translators, there's a empty line at the end of this string,
+#. which must appear in the translated string (msgstr) as well.
+#: ../src/controlpanel/cmd.py:35
 msgid ""
 "Usage: sugar-control-panel [ option ] key [ args ... ] \n"
 "    Control for the sugar environment. \n"
@@ -259,47 +292,41 @@ msgid ""
 "    -h key       show information about this key \n"
 "    -g key       get the current value of the key \n"
 "    -s key       set the current value for the key \n"
+"    -c key       clear the current value for the key \n"
 "    "
 msgstr ""
-"Uporaba: nadzorna plošča programa sugar [ možnost ] key [ ukaz ... ] \n"
+"Uporaba: nadzorna plošča programa sugar [ možnost ] tipka [ ukaz ... ] \n"
 "    Nadzor v okolju sugar. \n"
 "    Možnosti: \n"
 "    -h                    prikaži to sporočilo in končaj \n"
 "    -l                     prikaži vse možnosti, ki so na voljo \n"
-"    -h key               prikaži informacije za posamezen ključ \n"
-"    -g key               pridobi trenutno vrednost ključa \n"
-"    -s key               nastavi trenutno vrednost za ključ \n"
+"    -h tipka               prikaži informacije za to tipko \n"
+"    -g tipka               pridobi trenutno vrednost tipke \n"
+"    -s tipka               nastavi trenutno vrednost tipke \n"
+"    -c tipka               izbriši trenurno vrednost tipke \n"
 "    "
 
-#: ../src/controlpanel/cmd.py:45
+#: ../src/controlpanel/cmd.py:48
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "Za uveljavitev sprememb je potreben ponovni zagon programa sugar.\n"
 
-#: ../src/controlpanel/toolbar.py:115
-msgid "Cancel"
-msgstr "Prekliči"
-
-#: ../src/controlpanel/toolbar.py:121 ../src/view/home/favoritesview.py:294
+#: ../src/controlpanel/toolbar.py:121 ../src/view/home/favoritesview.py:296
 msgid "Ok"
 msgstr "V redu"
 
-#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:260
+#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:268
 msgid "Changes require restart"
 msgstr "Sprembe zahtevajo ponovni zagon"
 
-#: ../src/controlpanel/gui.py:259
+#: ../src/controlpanel/gui.py:267
 msgid "Warning"
 msgstr "Opozorilo"
 
-#: ../src/controlpanel/gui.py:263
+#: ../src/controlpanel/gui.py:271
 msgid "Cancel changes"
 msgstr "Prekliči spremembe"
 
-#: ../src/controlpanel/gui.py:267
-msgid "Later"
-msgstr "Kasneje"
-
-#: ../src/controlpanel/gui.py:271
+#: ../src/controlpanel/gui.py:280
 msgid "Restart now"
 msgstr "Ponovni zagon"
 
@@ -351,12 +378,12 @@ msgstr "Vrednost mora biti številka."
 msgid "Could not access ~/.i18n. Create standard settings."
 msgstr "Dostop do ~/.i18n ni mogoče. Ustvari standardne nastavitve."
 
-#: ../src/controlpanel/model/language.py:104
+#: ../src/controlpanel/model/language.py:110
 #, python-format
 msgid "Language for code=%s could not be determined."
 msgstr "Jezika za kodo=%s ni bilo mogoče določiti."
 
-#: ../src/controlpanel/model/language.py:121
+#: ../src/controlpanel/model/language.py:127
 #, python-format
 msgid "Sorry I do not speak '%s'."
 msgstr "Oprosti, ne govorim '%s'."
@@ -374,7 +401,6 @@ msgid "Error in specified radio argument use on/off."
 msgstr "Napaka pri določanju stanja radijske povezave (vključen/izključen)."
 
 #: ../src/controlpanel/model/power.py:57
-#, fuzzy
 msgid "Error in automatic pm argument, use on/off."
 msgstr "Napaka pri samodejni rabi ukaza pm, uporabi izklop/vklop."
 
@@ -390,29 +416,58 @@ msgstr "O meni"
 msgid "Click to change your color:"
 msgstr "Klikni za spremembo barve:"
 
-#: ../src/controlpanel/view/aboutxo.py:26
+#: ../src/controlpanel/view/aboutxo.py:28
 msgid "About my XO"
 msgstr "O mojem XO"
 
-#: ../src/controlpanel/view/aboutxo.py:47
+#: ../src/controlpanel/view/aboutxo.py:59
 msgid "Identity"
 msgstr "Identiteta"
 
-#: ../src/controlpanel/view/aboutxo.py:56
+#: ../src/controlpanel/view/aboutxo.py:68
 msgid "Serial Number:"
 msgstr "Serijska številka:"
 
-#: ../src/controlpanel/view/aboutxo.py:79
+#: ../src/controlpanel/view/aboutxo.py:91
 msgid "Software"
 msgstr "Program"
 
-#: ../src/controlpanel/view/aboutxo.py:88
+#: ../src/controlpanel/view/aboutxo.py:100
 msgid "Build:"
 msgstr "Različica:"
 
-#: ../src/controlpanel/view/aboutxo.py:103
+#: ../src/controlpanel/view/aboutxo.py:115
+msgid "Sugar:"
+msgstr "Sugar:"
+
+#: ../src/controlpanel/view/aboutxo.py:130
 msgid "Firmware:"
 msgstr "Firmware:"
+
+#: ../src/controlpanel/view/aboutxo.py:152
+msgid "Copyright and License"
+msgstr "Lastnik pravic"
+
+#: ../src/controlpanel/view/aboutxo.py:160
+msgid ""
+"© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+msgstr "© 2008 One Laptop per Child Association Inc, Red Hat Inc in sodelavci."
+
+#: ../src/controlpanel/view/aboutxo.py:166
+msgid ""
+"Sugar is the graphical user interface that you are looking at. Sugar is free "
+"software, covered by the GNU General Public License, and you are welcome to "
+"change it and/or distribute copies of it under certain conditions described "
+"therein."
+msgstr ""
+"Sugar je grafični vmesnik, ki ga uporabljate. Je brezplačen, avtorske "
+"pravice glede njegove uporabe pa ureja GNU General Public License. Zato ga "
+"lahko spreminjate in/ali distribuirate, a pod nekaterimi pogoji, zapisanimi "
+"v omenjeni licenci."
+
+#: ../src/controlpanel/view/aboutxo.py:178
+msgid "Full license:"
+msgstr "Licenčne pravice:"
 
 #: ../src/controlpanel/view/datetime.py:29
 msgid "Date & Time"
@@ -492,7 +547,7 @@ msgstr ""
 
 #: ../src/controlpanel/view/power.py:89
 msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
+"Extreme power management (disableswireless radio, increases battery life)"
 msgstr ""
 "Ekstremni nadzor porabe električne energije (ugasnjen radijski del, podaljša "
 "življenjsko dobo baterije)"
@@ -529,36 +584,36 @@ msgstr "Neznano Mesh omrežje"
 msgid "Decline"
 msgstr "Zavrni"
 
-#: ../src/view/home/favoritesview.py:285
-msgid "Registration Failed"
-msgstr ""
-
 #: ../src/view/home/favoritesview.py:286
+msgid "Registration Failed"
+msgstr "Registracija ni uspela"
+
+#: ../src/view/home/favoritesview.py:287
 #, python-format
 msgid "%s"
-msgstr ""
-
-#: ../src/view/home/favoritesview.py:288
-msgid "Registration Successful"
-msgstr ""
+msgstr "%s"
 
 #: ../src/view/home/favoritesview.py:289
-msgid "You are now registered with your school server."
-msgstr ""
+msgid "Registration Successful"
+msgstr "Uspešna registracija"
 
-#: ../src/view/home/favoritesview.py:405
+#: ../src/view/home/favoritesview.py:290
+msgid "You are now registered with your school server."
+msgstr "Vpisan si v šolski strežnik."
+
+#: ../src/view/home/favoritesview.py:407
 msgid "Control Panel"
 msgstr "Nadzorna plošča"
 
-#: ../src/view/home/favoritesview.py:416
+#: ../src/view/home/favoritesview.py:418
 msgid "Restart"
 msgstr "Ponovni zagon"
 
-#: ../src/view/home/favoritesview.py:421
+#: ../src/view/home/favoritesview.py:423
 msgid "Shutdown"
 msgstr "Zaustavitev"
 
-#: ../src/view/home/favoritesview.py:427
+#: ../src/view/home/favoritesview.py:429
 msgid "Register"
 msgstr "Registracija"
 
