@@ -51,6 +51,7 @@ class ControlPanel(gtk.Window):
         self._toolbar = None
         self._canvas = None
         self._table = None
+        self._scrolledwindow = None
         self._separator = None
         self._section_view = None
         self._section_toolbar = None
@@ -107,6 +108,14 @@ class ControlPanel(gtk.Window):
         self._table = gtk.Table()
         self._table.set_col_spacings(style.GRID_CELL_SIZE)
         self._table.set_border_width(style.GRID_CELL_SIZE)
+
+        self._scrolledwindow = gtk.ScrolledWindow()
+        self._scrolledwindow.set_policy(gtk.POLICY_AUTOMATIC,
+                                        gtk.POLICY_AUTOMATIC)
+        self._scrolledwindow.add_with_viewport(self._table)
+        child = self._scrolledwindow.get_child()
+        child.modify_bg(gtk.STATE_NORMAL, style.COLOR_BLACK.get_gdk_color())
+
         self._setup_options()
         self._main_toolbar.connect('stop-clicked', 
                                    self.__stop_clicked_cb)
@@ -146,10 +155,11 @@ class ControlPanel(gtk.Window):
     def _show_main_view(self):
         self._set_toolbar(self._main_toolbar)
         self._main_toolbar.show()
-        self._set_canvas(self._table)
+        self._set_canvas(self._scrolledwindow)
         self._main_view.modify_bg(gtk.STATE_NORMAL, 
                                   style.COLOR_BLACK.get_gdk_color())
         self._table.show()
+        self._scrolledwindow.show()
         entry = self._main_toolbar.get_entry()
         entry.grab_focus()
         entry.set_text('')
@@ -182,7 +192,6 @@ class ControlPanel(gtk.Window):
         title = self._section_toolbar.get_title()
         title.set_text(self._options[option]['title'])
         self._section_toolbar.show()
-        self._section_toolbar.accept_button.set_sensitive(True)
 
         self._current_option = option
         view_class =  self._options[option]['view']
@@ -257,11 +266,13 @@ class ControlPanel(gtk.Window):
     def __cancel_clicked_cb(self, widget):
         self._section_view.undo()
         self._options[self._current_option]['alerts'] = [] 
+        self._section_toolbar.accept_button.set_sensitive(True)
         self._show_main_view()
 
     def __accept_clicked_cb(self, widget):
         if self._section_view.needs_restart:
             self._section_toolbar.accept_button.set_sensitive(False)
+            self._section_toolbar.cancel_button.set_sensitive(False)
             alert = Alert()
             alert.props.title = _('Warning') 
             alert.props.msg = _('Changes require restart') 
@@ -287,12 +298,13 @@ class ControlPanel(gtk.Window):
             self._show_main_view()
 
     def __response_cb(self, alert, response_id):
-        self._vbox.remove(alert)        
+        self._vbox.remove(alert)
+        self._section_toolbar.accept_button.set_sensitive(True)
+        self._section_toolbar.cancel_button.set_sensitive(True)
         if response_id is gtk.RESPONSE_CANCEL:             
             self._section_view.undo()
             self._section_view.setup()
             self._options[self._current_option]['alerts'] = []
-            self._section_toolbar.accept_button.set_sensitive(True)
         elif response_id is gtk.RESPONSE_ACCEPT:             
             self._options[self._current_option]['alerts'] = \
                 self._section_view.restart_alerts
@@ -333,9 +345,7 @@ class ModelWrapper(object):
                     self._options[method[4:]] = None
 
     def __getattr__(self, name):
-        if name.startswith('get_') or name.startswith('set_') or  \
-                name.startswith('read_'):
-            return getattr(self._module, name)
+        return getattr(self._module, name)
 
     def undo(self):
         for key in self._options.keys():

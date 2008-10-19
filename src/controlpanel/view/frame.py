@@ -163,6 +163,12 @@ class Frame(SectionView):
         self._corner_delay_alert.hide()        
         self._edge_delay_alert.hide()        
 
+    def _validate(self):
+        if self._edge_delay_is_valid and self._corner_delay_is_valid:
+            self.props.is_valid = True
+        else:
+            self.props.is_valid = False
+
     def __corner_delay_changed_cb(self, scale, data=None):        
         if self._corner_delay_sid:
             gobject.source_remove(self._corner_delay_sid)
@@ -178,18 +184,13 @@ class Frame(SectionView):
         except ValueError, detail:
             self._corner_delay_alert.props.msg = detail
             self._corner_delay_is_valid = False
-            self.needs_restart = False
         else:
             self._corner_delay_alert.props.msg = self.restart_msg
             self._corner_delay_is_valid = True            
             self.needs_restart = True
             self.restart_alerts.append('corner_delay')
                         
-        if self._corner_delay_is_valid:
-            self.props.is_valid = True
-        else:    
-            self.props.is_valid = False
-
+        self._validate()
         self._corner_delay_alert.show()        
         return False
 
@@ -216,18 +217,13 @@ class Frame(SectionView):
         except ValueError, detail:
             self._edge_delay_alert.props.msg = detail
             self._edge_delay_is_valid = False
-            self.needs_restart = False
         else:
             self._edge_delay_alert.props.msg = self.restart_msg
             self._edge_delay_is_valid = True            
             self.needs_restart = True
             self.restart_alerts.append('edge_delay')
                         
-        if self._edge_delay_is_valid:
-            self.props.is_valid = True
-        else:    
-            self.props.is_valid = False
-
+        self._validate()
         self._edge_delay_alert.show()        
         return False
 

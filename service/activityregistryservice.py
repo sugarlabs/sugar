@@ -37,7 +37,8 @@ class ActivityRegistry(dbus.service.Object):
         bundle_registry.connect('bundle-changed', self._bundle_changed_cb)
 
     @dbus.service.method(_ACTIVITY_REGISTRY_IFACE,
-                         in_signature='s', out_signature='b')
+                         in_signature='s', out_signature='b',
+                         utf8_strings=True)
     def AddBundle(self, bundle_path):
         '''Register the activity bundle with the global registry 
         
@@ -52,7 +53,8 @@ class ActivityRegistry(dbus.service.Object):
         return registry.add_bundle(bundle_path)
 
     @dbus.service.method(_ACTIVITY_REGISTRY_IFACE,
-                         in_signature='s', out_signature='b')
+                         in_signature='s', out_signature='b',
+                         utf8_strings=True)
     def RemoveBundle(self, bundle_path):
         '''Unregister the activity bundle with the global registry 
         

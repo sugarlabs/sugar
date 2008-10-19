@@ -54,6 +54,7 @@ class Shell(gobject.GObject):
 
         self._model = shellmodel.get_instance()
         self._hosts = {}
+        self._launchers = {}
         self._screen = wnck.screen_get_default()
         self._screen_rotation = 0
 
@@ -63,8 +64,6 @@ class Shell(gobject.GObject):
 
         self.home_window = HomeWindow()
         self.home_window.show()
-
-        self._launch_window = LaunchWindow()
 
         home_model = self._model.get_home()
         home_model.connect('launch-started', self.__launch_started_cb)
@@ -94,17 +93,34 @@ class Shell(gobject.GObject):
             self.start_activity('org.laptop.JournalActivity')
 
     def __launch_started_cb(self, home_model, home_activity):
-        if home_activity.get_type() != 'org.laptop.JournalActivity':
-            self._launch_window.show()
+        if home_activity.is_journal():
+            return
+
+        launch_window = LaunchWindow(home_activity)
+        launch_window.show()
+
+        self._launchers[home_activity.get_activity_id()] = launch_window
+        self._model.set_zoom_level(shellmodel.ShellModel.ZOOM_ACTIVITY)
 
     def __launch_failed_cb(self, home_model, home_activity):
-        self._launch_window.hide()
+        if not home_activity.is_journal():
+            self._destroy_launcher(home_activity)
 
     def __launch_completed_cb(self, home_model, home_activity):
-        self._launch_window.hide()
-
         activity_host = ActivityHost(home_activity)
         self._hosts[activity_host.get_xid()] = activity_host
+
+        if not home_activity.is_journal():
+            self._destroy_launcher(home_activity)
+
+    def _destroy_launcher(self, home_activity):
+        activity_id = home_activity.get_activity_id()
+
+        if activity_id in self._launchers:
+            self._launchers[activity_id].destroy()
+            del self._launchers[activity_id]
+        else:
+            logging.error('Launcher for %s is missing' % activity_id)
 
     def _activity_removed_cb(self, home_model, home_activity):
         xid = home_activity.get_xid()
@@ -169,8 +185,6 @@ class Shell(gobject.GObject):
         if level == self._model.get_zoom_level():
             return
 
-        self.take_activity_screenshot()
-
         if level == shellmodel.ShellModel.ZOOM_ACTIVITY:
             host = self.get_current_activity()
             if host is not None:
@@ -187,7 +201,6 @@ class Shell(gobject.GObject):
         home_model = self._model.get_home()
         previous_activity = home_model.get_previous_activity()
         if previous_activity:
-            self.take_activity_screenshot()
             previous_activity.get_window().activate(
 						gtk.get_current_event_time())
 
@@ -195,7 +208,6 @@ class Shell(gobject.GObject):
         home_model = self._model.get_home()
         next_activity = home_model.get_next_activity()
         if next_activity:
-            self.take_activity_screenshot()
             next_activity.get_window().activate(gtk.get_current_event_time())
 
     def close_current_activity(self):
@@ -204,10 +216,9 @@ class Shell(gobject.GObject):
 
         home_model = self._model.get_home()
         active_activity = home_model.get_active_activity()
-        if active_activity.get_type() == 'org.laptop.JournalActivity':
+        if active_activity.is_journal():
             return
 
-        self.take_activity_screenshot()
         self.get_current_activity().close()
 
     def get_current_activity(self):

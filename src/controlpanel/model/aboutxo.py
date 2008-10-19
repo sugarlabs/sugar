@@ -75,3 +75,27 @@ def _read_file(path):
     else:
         _logger.debug('No information in file or directory: %s' % path)
         return None
+
+def get_license():
+    license_file = "/usr/share/licenses/common-licenses/GPL-2"
+    lang = os.environ['LANG']
+    if lang.endswith("UTF-8"):
+        lang = lang[:-6]
+
+    try_file = license_file + "." + lang
+    if os.path.isfile(try_file):
+        license_file = try_file
+    else:
+        try_file = license_file + "." + lang.split("_")[0]
+        if os.path.isfile(try_file):
+            license_file = try_file
+
+    try:
+        fd = open(license_file)
+        # remove 0x0c page breaks which can't be rendered in text views
+        license_text = fd.read().replace('\x0c', '')
+        fd.close()
+    except IOError:
+        license_text = _not_available
+    return license_text
+

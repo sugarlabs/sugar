@@ -18,12 +18,11 @@ import logging
 
 import dbus
 import gobject
-import gst
-import gst.interfaces
 
 from hardware.nmclient import NMClient
 from sugar.profile import get_profile
 from sugar import env
+from sugar import _sugarext
 
 _HARDWARE_MANAGER_INTERFACE = 'org.freedesktop.ohm.Keystore'
 _HARDWARE_MANAGER_SERVICE = 'org.freedesktop.ohm'
@@ -53,85 +52,24 @@ class HardwareManager(gobject.GObject):
                                 follow_name_owner_changes=True)
         self._service = dbus.Interface(proxy, _HARDWARE_MANAGER_INTERFACE)
 
-        self._mixer = gst.element_factory_make('alsamixer')
-        self._mixer.set_state(gst.STATE_PAUSED)
-
-        self._master = None
-        for track in self._mixer.list_tracks():
-            if track.flags & gst.interfaces.MIXER_TRACK_MASTER:
-                self._master = track
-
-    def __muted_changed_cb(self, old_state, new_state):
-        if old_state != new_state:
-            self.emit('muted-changed', old_state, new_state)
-
-    def __volume_changed_cb(self, old_volume, new_volume):
-        if old_volume != new_volume:
-            self.emit('volume-changed', old_volume, new_volume)
+        self._volume = _sugarext.VolumeAlsa()
 
     def get_muted(self):
-        if not self._mixer or not self._master:
-            logging.error('Cannot get the mute status')
-            return True
-        return self._master.flags & gst.interfaces.MIXER_TRACK_MUTE \
-                 == gst.interfaces.MIXER_TRACK_MUTE
+        return self._volume.get_mute()
 
     def get_volume(self):
-        if not self._mixer or not self._master:
-            logging.error('Cannot get the volume')
-            return 0
-
-        max_volume = self._master.max_volume
-        min_volume = self._master.min_volume
-
-        volumes = self._mixer.get_volume(self._master)
-
-        #sometimes we get a spurious zero from one/more channel(s)
-        #TODO: consider removing this when trac #6933 is resolved
-        nonzero_volumes = [v for v in volumes if v > 0]
-
-        if len(nonzero_volumes) > 0:
-            #we could just pick the first nonzero volume, but this converges
-            volume = sum(nonzero_volumes) / len(nonzero_volumes)
-            return volume * 100.0 / (max_volume - min_volume) + min_volume
-        else:
-            return 0
+        return self._volume.get_volume()
 
     def set_volume(self, new_volume):
-        if not self._mixer or not self._master:
-            logging.error('Cannot set the volume')
-            return
-
-        if new_volume < 0 or new_volume > 100:
-            logging.error('Trying to set an invalid volume value.')
-            return
-
-        old_volume = self.get_volume()
-        max_volume = self._master.max_volume
-        min_volume = self._master.min_volume
-
-        new_volume_mixer_range = min_volume + \
-            (new_volume * ((max_volume - min_volume) / 100.0))
-        volume_list = [ new_volume_mixer_range ] * self._master.num_channels
-
-        #sometimes alsa sets one/more channels' volume to zero instead
-        # of what we asked for, so try a few times
-        #TODO: consider removing this loop when trac #6934 is resolved
-        last_volumes_read = [0]
-        read_count = 0
-        while (0 in last_volumes_read) and (read_count < 3):
-            self._mixer.set_volume(self._master, tuple(volume_list))
-            last_volumes_read = self._mixer.get_volume(self._master)
-            read_count += 1
+        old_volume = self._volume.get_volume()
+        self._volume.set_volume(new_volume)
 
         self.emit('volume-changed', old_volume, new_volume)
 
     def set_muted(self, new_state):
-        if not self._mixer or not self._master:
-            logging.error('Cannot mute the audio channel')
-            return
-        old_state = self.get_muted()
-        self._mixer.set_mute(self._master, new_state)
+        old_state = self._volume.get_mute()
+        self._volume.set_mute(new_state)
+
         self.emit('muted-changed', old_state, new_state)
 
     def startup(self):

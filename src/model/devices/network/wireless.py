@@ -44,7 +44,8 @@ class Device(device.Device):
         'state'    : (int, None, None, device.STATE_ACTIVATING,
                       device.STATE_INACTIVE, 0, gobject.PARAM_READABLE),
         'frequency': (float, None, None, 0.0, 9999.99, 0.0,
-                      gobject.PARAM_READABLE)
+                      gobject.PARAM_READABLE),
+        'ip-address' : (str, None, None, None, gobject.PARAM_READABLE),
     }
 
     def __init__(self, nm_device):
@@ -57,6 +58,7 @@ class Device(device.Device):
                                 self._ssid_changed_cb)
         self._nm_device.connect('state-changed',
                                 self._state_changed_cb)
+        self._nm_device.connect('ip-changed', self._ip_changed_cb)
 
     def _strength_changed_cb(self, nm_device):
         self.notify('strength')
@@ -66,6 +68,9 @@ class Device(device.Device):
 
     def _state_changed_cb(self, nm_device):
         self.notify('state')
+
+    def _ip_changed_cb(self, nm_device):
+        self.notify('ip-address')
 
     def do_get_property(self, pspec):
         if pspec.name == 'strength':
@@ -80,6 +85,8 @@ class Device(device.Device):
             return device.nm_state_to_state[nm_state]
         elif pspec.name == 'frequency':
             return self._nm_device.get_frequency()
+        elif pspec.name == 'ip-address':
+            return self._nm_device.get_ip_address()
 
     def get_type(self):
         return 'network.wireless'

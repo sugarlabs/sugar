@@ -46,11 +46,20 @@ _logger = logging.getLogger('FavoritesView')
 
 _ICON_DND_TARGET = ('activity-icon', gtk.TARGET_SAME_WIDGET, 0)
 
-RING_LAYOUT = 0
-RANDOM_LAYOUT = 1
+# enumerate the various layout types we will display in the dropdown palette.
+# add a constant for your layout here, and add it to the _LAYOUT_MAP to get
+# it to appear in the palette.
+RING_LAYOUT, BOX_LAYOUT, TRIANGLE_LAYOUT, SUNFLOWER_LAYOUT, RANDOM_LAYOUT = \
+             xrange(5)
 
 _LAYOUT_MAP = {RING_LAYOUT: favoriteslayout.RingLayout,
+               #BOX_LAYOUT: favoriteslayout.BoxLayout,
+               #TRIANGLE_LAYOUT: favoriteslayout.TriangleLayout,
+               #SUNFLOWER_LAYOUT: favoriteslayout.SunflowerLayout,
                RANDOM_LAYOUT: favoriteslayout.RandomLayout}
+"""Map numeric layout identifiers to uninstantiated subclasses of
+`FavoritesLayout` which implement the layouts.  Additional information
+about the layout can be accessed with fields of the class."""
 
 class FavoritesView(hippo.Canvas):
     __gtype_name__ = 'SugarFavoritesView'
@@ -379,7 +388,11 @@ class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
         self.props.xo_color = home_activity.get_icon_color()
         self.props.size = style.STANDARD_ICON_SIZE
 
-        if home_activity.get_type() == 'org.laptop.JournalActivity':
+        if self.palette is not None:
+            self.palette.destroy()
+            self.palette = None
+
+        if home_activity.is_journal():
             palette = JournalPalette(home_activity)
         else:
             palette = CurrentActivityPalette(home_activity)
@@ -404,13 +417,7 @@ class _MyIcon(MyIcon):
                           #secondary_text='Sample secondary label',
                           icon=palette_icon)
 
-        item = MenuItem(_('Control Panel'))
-
-        icon = Icon(icon_name='computer-xo', icon_size=gtk.ICON_SIZE_MENU,
-                xo_color=self._profile.color)
-        item.set_image(icon)
-        icon.show()
-
+        item = MenuItem(_('Control Panel'), 'preferences-system')
         item.connect('activate', self.__controlpanel_activate_cb)
         palette.menu.append(item)
         item.show()

@@ -29,6 +29,10 @@ _zone_tab = '/usr/share/zoneinfo/zone.tab'
 
 def _initialize():
     '''Initialize the docstring of the set function'''
+    if set_timezone.__doc__ is None:
+        # when running under 'python -OO', all __doc__ fields are None,
+        # so += would fail -- and this function would be unnecessary anyway.
+        return
     timezones = read_all_timezones()    
     for timezone in timezones:
         set_timezone.__doc__ += timezone + '\n'                        

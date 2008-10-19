@@ -19,6 +19,7 @@ import dbus
 from gettext import gettext as _
 
 from sugar import profile
+from hardware import hardwaremanager
 
 NM_SERVICE_NAME = 'org.freedesktop.NetworkManager'
 NM_SERVICE_PATH = '/org/freedesktop/NetworkManager'
@@ -44,8 +45,6 @@ def set_jabber(server):
     """Set the jabber server
     server : e.g. 'olpc.collabora.co.uk'
     """
-    if not server:
-        raise ValueError(_("You must enter a server."))
     pro = profile.get_profile()
     pro.jabber_server = server
     pro.jabber_registered = False
@@ -83,3 +82,20 @@ def set_radio(state):
         raise ValueError(_("Error in specified radio argument use on/off."))
 
     return 0
+
+def clear_registration():
+    """Clear the registration with the schoolserver
+    """
+    pro = profile.get_profile()
+    pro.backup1 = None
+    pro.save()
+    return 1
+
+def clear_networks():
+    """Clear saved passwords and network configurations.
+    """
+    network_manager = hardwaremanager.get_network_manager()
+    if not network_manager:
+        return
+    network_manager.nminfo.delete_all_networks()
+    return 1

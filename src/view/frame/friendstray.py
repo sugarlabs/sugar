@@ -83,6 +83,7 @@ class FriendsTray(VTray):
     def clear(self):
         for item in self.get_children():
             self.remove_item(item)
+            item.destroy()
         self._buddies = {}
 
     def __activity_appeared_cb(self, pservice, activity_ps):

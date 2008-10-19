@@ -123,8 +123,14 @@ class ActivityPalette(Palette):
         menu_item.show()
 
         registry = activity.get_registry()
-        registry.connect('activity_changed', self.__activity_changed_cb)
+        self._activity_changed_sid = registry.connect('activity_changed',
+                self.__activity_changed_cb)
         self._update_favorite_item()
+
+        self.connect('destroy', self.__destroy_cb)
+
+    def __destroy_cb(self, palette):
+        self.disconnect(self._activity_changed_sid)
 
     def _update_favorite_item(self):
         label = self._favorite_item.child
