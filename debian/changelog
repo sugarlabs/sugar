@@ -1,3 +1,13 @@
+sugar (0.82.8-2) unstable; urgency=low
+
+  * Update cdbs snippets:
+    + Fix python-autotools.mk to run dh_py* scripts before
+      dh_installinit.  See bug#494288.
+    + Fix makefile.mk to create check stamp dir for flavored builds.
+    + Several minor improvements to upstream-tarball.mk.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sun, 19 Oct 2008 20:57:02 +0200
+
 sugar (0.82.8-1) unstable; urgency=low
 
   * New upstream release.

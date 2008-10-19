@@ -55,7 +55,8 @@ DEB_CONFIGURE_SCRIPT_ENV += PYTHON="python$(cdbs_make_curflavor)"
 
 # This class can optionally use debhelper's commands.
 # (if not, this build target should simply be ignored)
-$(patsubst %,binary-install/%,$(DEB_PACKAGES)) :: binary-install/%:
+$(patsubst %,binary-install/%,$(DEB_PACKAGES)) :: binary-install/%: binary-install-python/%
+$(patsubst %,binary-install-python/%,$(DEB_PACKAGES)) :: binary-install-python/%:
 ifeq (pysupport, $(DEB_PYTHON_SYSTEM))
 	dh_pysupport -p$(cdbs_curpkg) $(DEB_PYTHON_PRIVATE_MODULES_DIRS) $(DEB_PYTHON_PRIVATE_MODULES_DIRS_$(cdbs_curpkg))
 else
