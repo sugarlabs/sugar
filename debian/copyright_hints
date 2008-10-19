@@ -253,13 +253,6 @@ Files: service/__init__.py
 Copyright: 2007, One Laptop Per Child
 License: GPL-2+
 
-Files: bin/sugar-activity
-	service/clipboardservice.py
-	src/emulator.py
-	src/main.py
-Copyright: 2006, Red Hat, Inc
-License: GPL-2+
-
 Files: src/controlpanel/cmd.py
 	src/controlpanel/model/datetime.py
 	src/controlpanel/model/language.py
@@ -273,6 +266,12 @@ Files: src/model/Owner.py
 	src/view/home/favoritesview.py
 Copyright: 2008, One Laptop Per Child
 	2006-2007, Red Hat, Inc
+License: GPL-2+
+
+Files: service/clipboardservice.py
+	src/emulator.py
+	src/main.py
+Copyright: 2006, Red Hat, Inc
 License: GPL-2+
 
 Files: src/model/devices/speaker.py
@@ -311,6 +310,10 @@ License: GPL-2+
 
 Files: src/model/homeactivity.py
 Copyright: 2006-2007, Owen Williams
+License: GPL-2+
+
+Files: bin/sugar-activity
+Copyright: 2006-2008, Red Hat, Inc
 License: GPL-2+
 
 Files: src/view/frame/frameinvoker.py

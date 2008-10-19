@@ -62,7 +62,7 @@ Files: bin/sugar-launch, maint-helper.py
 Copyright: © 2007, Red Hat, Inc.
 License: GPL-2+
 
-Files: bin/sugar-activity, sugar-emulator service/clipboardservice.py
+Files: service/clipboardservice.py, src/emulator.py, src/main.py
 Copyright: © 2006, Red Hat, Inc.
 License: GPL-2+
 
@@ -104,6 +104,10 @@ License: GPL-2+
 
 Files: src/model/homeactivity.py, src/model/homemodel.py
 Copyright: © 2006-2007 Owen Williams.
+License: GPL-2+
+
+Files: bin/sugar-activity
+Copyright: 2006-2008, Red Hat, Inc
 License: GPL-2+
 
 Files: src/view/frame/frameinvoker.py

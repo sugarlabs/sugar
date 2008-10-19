@@ -2,6 +2,8 @@ sugar (0.82.8-1) UNRELEASED; urgency=low
 
   * New upstream release.
   * Depend on ${misc:Depends}.
+  * Update debian/copyright (copyright year bumped). Update copyright
+    hints.
 
  -- Jonas Smedegaard <dr@jones.dk>  Sun, 19 Oct 2008 14:06:08 +0200
 
