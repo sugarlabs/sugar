@@ -1,6 +1,7 @@
 sugar (0.82.8-1) UNRELEASED; urgency=low
 
   * New upstream release.
+  * Unfuzz patch 2991.
   * Depend on ${misc:Depends}.
   * Update debian/copyright (copyright year bumped). Update copyright
     hints.
