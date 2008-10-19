@@ -14,4 +14,4 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-data_path = '/usr/local/share/sugar/data'
+data_path = '/home/marco/sucrose-0.82/install/share/sugar/data'
