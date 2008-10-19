@@ -1,4 +1,4 @@
-sugar (0.82.8-1) UNRELEASED; urgency=low
+sugar (0.82.8-1) unstable; urgency=low
 
   * New upstream release.
   * Update patch 1001.
@@ -7,7 +7,7 @@ sugar (0.82.8-1) UNRELEASED; urgency=low
   * Update debian/copyright (copyright year bumped). Update copyright
     hints.
 
- -- Jonas Smedegaard <dr@jones.dk>  Sun, 19 Oct 2008 14:06:08 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Sun, 19 Oct 2008 17:07:11 +0200
 
 sugar (0.82.0-1) unstable; urgency=low
 
