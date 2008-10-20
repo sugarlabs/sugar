@@ -26,7 +26,6 @@ import gconf
 
 import dbus
 import gtk
-import wnck
 
 from sugar._sugarext import KeyGrabber
 from sugar.datastore import datastore

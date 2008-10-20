@@ -42,6 +42,7 @@ class BundleRegistry(gobject.GObject):
     }
 
     def __init__(self):
+        logging.debug('STARTUP: Loading the bundle registry')
         gobject.GObject.__init__(self)
 
         self._mime_defaults = self._load_mime_defaults()
@@ -186,9 +187,12 @@ class BundleRegistry(gobject.GObject):
             return False
 
     def _add_bundle(self, bundle_path):
+        logging.debug('STARTUP: Adding bundle %r' % bundle_path)
         try:
             bundle = ActivityBundle(bundle_path)
         except MalformedBundleException:
+            logging.error('Error loading bundle %r:\n%s' % (bundle_path,
+                ''.join(traceback.format_exception(*sys.exc_info()))))
             return None
 
         self._bundles.append(bundle)

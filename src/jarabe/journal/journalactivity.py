@@ -115,6 +115,7 @@ class JournalActivityDBusService(dbus.service.Object):
 
 class JournalActivity(Window):
     def __init__(self):
+        logging.debug("STARTUP: Loading the journal")
         Window.__init__(self)
 
         self.set_title(_('Journal'))
