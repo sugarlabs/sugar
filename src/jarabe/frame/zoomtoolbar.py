@@ -43,8 +43,8 @@ class ZoomToolbar(gtk.Toolbar):
                 _('Activity'), shell.ShellModel.ZOOM_ACTIVITY)
 
         shell_model = shell.get_model()
-        self._set_zoom_level(shell_model.props.zoom_level)
-        shell_model.connect('notify::zoom-level', self.__notify_zoom_level_cb)
+        self._set_zoom_level(shell_model.zoom_level)
+        shell_model.zoom_level_changed.connect(self.__zoom_level_changed_cb)
 
     def _add_button(self, icon_name, label, zoom_level):
         if self.get_children():
@@ -67,16 +67,11 @@ class ZoomToolbar(gtk.Toolbar):
     def __level_clicked_cb(self, button, level):
         if not button.get_active():
             return
-        if shell.get_model().props.zoom_level != level:
-            if level == shell.ShellModel.ZOOM_ACTIVITY:
-                activity = shell.get_model().get_active_activity()
-                activity.get_window().activate(gtk.get_current_event_time())
-            else:
-                shell.get_model().set_zoom_level(level)
-                wnck.screen_get_default().toggle_showing_desktop(True)
 
-    def __notify_zoom_level_cb(self, model, pspec):
-        self._set_zoom_level(model.props.zoom_level)
+        shell.get_model().zoom_level = level
+
+    def __zoom_level_changed_cb(self, **kwargs):
+        self._set_zoom_level(kwargs['new_level'])
 
     def _set_zoom_level(self, new_level):
         logging.debug('new zoom level: %r' % new_level)
