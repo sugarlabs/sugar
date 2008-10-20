@@ -14,6 +14,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
+
 import gtk
 
 from sugar.graphics import style
@@ -27,12 +29,13 @@ from jarabe.model.shell import ShellModel
 from jarabe.model import shell
 
 _HOME_PAGE       = 0
-_GROUP_PAGE    = 1
+_GROUP_PAGE      = 1
 _MESH_PAGE       = 2
 _TRANSITION_PAGE = 3
 
 class HomeWindow(gtk.Window):
     def __init__(self):
+        logging.debug('STARTUP: Loading the desktop window')
         gtk.Window.__init__(self)
 
         accel_group = gtk.AccelGroup()

@@ -14,6 +14,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
+
 import gobject
 import gtk
 import hippo
@@ -37,6 +39,8 @@ class ActivitiesList(gtk.VBox):
     }
 
     def __init__(self):
+        logging.debug('STARTUP: Loading the activities list')
+
         gobject.GObject.__init__(self)
 
         scrolled_window = gtk.ScrolledWindow()
@@ -57,10 +61,12 @@ class ActivitiesList(gtk.VBox):
         self._box.props.background_color = style.COLOR_WHITE.get_int()
         canvas.set_root(self._box)
 
+        gobject.idle_add(self.__connect_to_bundle_registry_cb)
+
+    def __connect_to_bundle_registry_cb(self):
         registry = bundleregistry.get_registry()
         for info in registry:
             self._add_activity(info)
-
         registry.connect('bundle-added', self.__activity_added_cb)
         registry.connect('bundle-removed', self.__activity_removed_cb)
 

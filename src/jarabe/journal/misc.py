@@ -177,13 +177,15 @@ def resume(jobject, bundle_id=None):
         activity_bundle = registry.get_bundle(activities[0].get_bundle_id())
         activityfactory.create_with_uri(activity_bundle, bundle.get_start_uri())
     else:
-        if not get_activities(jobject) and bundle_id is None:
-            logging.warning('No activity can open this object, %s.' %
-                    jobject.metadata.get('mime_type', None))
-            return
         if bundle_id is None:
-            bundle_id = get_activities(jobject)[0].get_bundle_id()
-            bundle = registry.get_bundle(bundle_id)
+            activities = get_activities(jobject)
+            if not activities:
+                logging.warning('No activity can open this object, %s.' %
+                        jobject.metadata.get('mime_type', None))
+                return
+            bundle_id = activities[0].get_bundle_id()
+
+        bundle = registry.get_bundle(bundle_id)
 
         activity_id = jobject.metadata['activity_id']
         object_id = jobject.object_id
