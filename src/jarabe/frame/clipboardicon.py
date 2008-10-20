@@ -142,8 +142,8 @@ class ClipboardIcon(RadioToolButton):
         icon_theme = gtk.icon_theme_get_default()
         pixbuf = icon_theme.load_icon(self._icon.props.icon_name,
                                       style.STANDARD_ICON_SIZE, 0)
-        context.set_icon_pixbuf(pixbuf, pixbuf.props.width / 2,
-                                pixbuf.props.height / 2)
+        context.set_icon_pixbuf(pixbuf, hot_x=pixbuf.props.width / 2,
+                                hot_y=pixbuf.props.height / 2)
 
     def _notify_active_cb(self, widget, pspec):
         if self.props.active:
