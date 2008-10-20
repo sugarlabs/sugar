@@ -94,6 +94,7 @@ class Frame(object):
     MODE_NON_INTERACTIVE = 2
 
     def __init__(self):
+        logging.debug("STARTUP: Loading the frame")
         self.mode = None
 
         self._palette_group = palettegroup.get_group('frame')

@@ -71,6 +71,8 @@ class FavoritesView(hippo.Canvas):
     }
 
     def __init__(self, **kwargs):
+        logging.debug('STARTUP: Loading the favorites view')
+
         gobject.GObject.__init__(self, **kwargs)
 
         # DND stuff
@@ -88,11 +90,6 @@ class FavoritesView(hippo.Canvas):
         self._layout = None
         self._alert = None
 
-        registry = bundleregistry.get_registry()
-        registry.connect('bundle-added', self.__activity_added_cb)
-        registry.connect('bundle-removed', self.__activity_removed_cb)
-        registry.connect('bundle-changed', self.__activity_changed_cb)
-
         # More DND stuff
         self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
                         gtk.gdk.POINTER_MOTION_HINT_MASK)
@@ -102,6 +99,14 @@ class FavoritesView(hippo.Canvas):
         self.connect('drag-motion', self.__drag_motion_cb)
         self.connect('drag-drop', self.__drag_drop_cb)
         self.connect('drag-data-received', self.__drag_data_received_cb)
+
+        gobject.idle_add(self.__connect_to_bundle_registry_cb)
+
+    def __connect_to_bundle_registry_cb(self):
+        registry = bundleregistry.get_registry()
+        registry.connect('bundle-added', self.__activity_added_cb)
+        registry.connect('bundle-removed', self.__activity_removed_cb)
+        registry.connect('bundle-changed', self.__activity_changed_cb)
 
     def _add_activity(self, activity_info):
         icon = ActivityIcon(activity_info)

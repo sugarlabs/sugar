@@ -17,9 +17,15 @@
 
 import sys
 import os
-import gettext
-import gconf
+if os.environ.get('SUGAR_LOGGER_LEVEL', '') == 'debug':
+    import time
+    print '%r STARTUP: Starting the shell' % time.time()
+    sys.stdout.flush()
 
+import gettext
+import logging
+
+import gconf
 import gtk
 import gobject
 import dbus.glib
@@ -38,11 +44,13 @@ from jarabe import config
 from jarabe import service
 
 def uisetup_completed_cb():
+    logging.debug('STARTUP: --- uisetup_completed_cb ---')
     from jarabe.model import screen
 
     screen.set_dcon_freeze(0)
 
 def uisetup_delayed_cb(home_window):
+    logging.debug('STARTUP: --- uisetup_delayed_cb ---')
     from jarabe.journal import journalactivity
     from jarabe.view import keyhandler
     from jarabe import frame
@@ -56,7 +64,6 @@ def uisetup_delayed_cb(home_window):
 
 def main():
     service.start_logsmanager()
-
     logger.start('shell')
 
     intro.check_profile()
@@ -84,8 +91,8 @@ def main():
     home_window = HomeWindow()
     home_window.show()
 
-    gobject.idle_add(uisetup_delayed_cb, home_window)
     gobject.idle_add(uisetup_completed_cb)
+    gobject.idle_add(uisetup_delayed_cb, home_window)
 
     try:
         gtk.main()

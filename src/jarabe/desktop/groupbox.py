@@ -14,6 +14,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
+
 import gobject
 import gtk
 import hippo
@@ -31,6 +33,8 @@ from jarabe.desktop.spreadlayout import SpreadLayout
 class GroupBox(hippo.Canvas):
     __gtype_name__ = 'SugarGroupBox'
     def __init__(self):
+        logging.debug("STARTUP: Loading the group view")
+
         gobject.GObject.__init__(self)
 
         self._box = hippo.CanvasBox()

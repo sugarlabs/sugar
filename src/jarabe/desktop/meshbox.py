@@ -444,6 +444,8 @@ class MeshToolbar(gtk.Toolbar):
 class MeshBox(gtk.VBox):
     __gtype_name__ = 'SugarMeshBox'
     def __init__(self):
+        logging.debug("STARTUP: Loading the mesh view")
+
         gobject.GObject.__init__(self)
 
         self._model = neighborhood.get_model()
