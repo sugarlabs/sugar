@@ -120,17 +120,6 @@
         <long>Url of the jabber server to use.</long>
       </locale>
     </schema>
-    <schema>
-      <key>/schemas/desktop/sugar/collaboration/jabber_registered</key>
-      <applyto>/desktop/sugar/collaboration/jabber_registered</applyto>
-      <owner>sugar</owner>
-      <type>bool</type>
-      <default>false</default>
-      <locale name="C">
-        <short>Jabber Registered</short>
-        <long>Flag to keep track of the registration status with the jabber server.</long>
-      </locale>
-    </schema>
 
     <schema>
       <key>/schemas/desktop/sugar/power/automatic</key>

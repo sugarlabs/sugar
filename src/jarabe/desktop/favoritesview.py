@@ -87,8 +87,12 @@ class FavoritesView(hippo.Canvas):
         self._box.props.background_color = style.COLOR_WHITE.get_int()
         self.set_root(self._box)
 
-        self._my_icon = None
-        self._current_activity = None
+        self._my_icon = _MyIcon(style.XLARGE_ICON_SIZE)
+        self._box.append(self._my_icon)
+
+        self._current_activity = CurrentActivityIcon()
+        self._box.append(self._current_activity)
+
         self._layout = None
         self._alert = None
 
@@ -106,6 +110,12 @@ class FavoritesView(hippo.Canvas):
 
     def __connect_to_bundle_registry_cb(self):
         registry = bundleregistry.get_registry()
+
+        for info in registry:
+            if registry.is_bundle_favorite(info.get_bundle_id(),
+                                           info.get_activity_version()):
+                self._add_activity(info)
+
         registry.connect('bundle-added', self.__activity_added_cb)
         registry.connect('bundle-removed', self.__activity_removed_cb)
         registry.connect('bundle-changed', self.__activity_changed_cb)
@@ -114,6 +124,7 @@ class FavoritesView(hippo.Canvas):
         icon = ActivityIcon(activity_info)
         icon.connect('erase-activated', self.__erase_activated_cb)
         icon.props.size = style.STANDARD_ICON_SIZE
+        self._box.insert_sorted(icon, 0, self._layout.compare_activities)
         self._layout.append(icon)
 
     def __erase_activated_cb(self, activity_icon, bundle_id):
@@ -137,6 +148,7 @@ class FavoritesView(hippo.Canvas):
                 activity_info.get_activity_version())
         if icon is not None:
             self._layout.remove(icon)
+            self._box.remove(icon)
 
     def __activity_changed_cb(self, activity_registry, activity_info):
         if activity_info.get_bundle_id() == 'org.laptop.JournalActivity':
@@ -265,30 +277,36 @@ class FavoritesView(hippo.Canvas):
     def _set_layout(self, layout):
         if layout not in LAYOUT_MAP:
             raise ValueError('Unknown favorites layout: %r' % layout)
-        if type(self._layout) != LAYOUT_MAP[layout]:
+
+        if type(self._layout) == LAYOUT_MAP[layout]:
+            return
+
+        self._layout = LAYOUT_MAP[layout]()
+        self._box.set_layout(self._layout)
+        
+        #TODO: compatibility hack while sort() gets added to the hippo
+        # python bindings
+        if hasattr(self._box, 'sort'):
+            self._box.sort(self._layout.compare_activities)
+        else:
+            icons = self._box.get_children()
             self._box.clear()
-            self._layout = LAYOUT_MAP[layout]()
-            self._box.set_layout(self._layout)
+            for icon in icons:
+                self._box.insert_sorted(icon, 0, self._layout.compare_activities)
 
-            self._my_icon = _MyIcon(style.XLARGE_ICON_SIZE)
-            self._layout.append(self._my_icon, locked=True)
+        for icon in self._box.get_children():
+            if icon not in [self._my_icon, self._current_activity]:
+                self._layout.append(icon)
 
-            self._current_activity = CurrentActivityIcon()
-            self._layout.append(self._current_activity, locked=True)
+        self._layout.append(self._my_icon, locked=True)
+        self._layout.append(self._current_activity, locked=True)
 
-            registry = bundleregistry.get_registry()
-            for info in registry:
-                if registry.is_bundle_favorite(info.get_bundle_id(),
-                                               info.get_activity_version()):
-                    self._add_activity(info)
-
-
-            if self._layout.allow_dnd():
-                self.drag_source_set(0, [], 0)
-                self.drag_dest_set(0, [], 0)
-            else:
-                self.drag_source_unset()
-                self.drag_dest_unset()
+        if self._layout.allow_dnd():
+            self.drag_source_set(0, [], 0)
+            self.drag_dest_set(0, [], 0)
+        else:
+            self.drag_source_unset()
+            self.drag_dest_unset()
 
     layout = property(None, _set_layout)
 

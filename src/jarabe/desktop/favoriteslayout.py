@@ -56,7 +56,6 @@ class FavoritesLayout(gobject.GObject, hippo.CanvasLayout):
         return 0
 
     def append(self, icon, locked=False):
-        self.box.insert_sorted(icon, 0, self.compare_activities)
         if hasattr(icon, 'fixed_position'):
             relative_x, relative_y = icon.fixed_position
             if relative_x >= 0 and relative_y >= 0:
@@ -69,7 +68,6 @@ class FavoritesLayout(gobject.GObject, hippo.CanvasLayout):
     def remove(self, icon):
         if icon in self.fixed_positions:
             del self.fixed_positions[icon]
-        self.box.remove(icon)
 
     def move_icon(self, icon, x, y, locked=False):
         if icon not in self.box.get_children():
