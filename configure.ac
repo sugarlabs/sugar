@@ -70,5 +70,7 @@ src/jarabe/journal/Makefile
 src/jarabe/view/Makefile
 src/jarabe/model/Makefile
 src/jarabe/service/Makefile
+src/jarabe/util/Makefile
+src/jarabe/util/telepathy/Makefile
 po/Makefile.in
 ])

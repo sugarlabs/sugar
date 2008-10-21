@@ -6,7 +6,8 @@ SUBDIRS = 		\
 	model		\
 	view		\
 	intro		\
-	service
+	service		\
+	util
 
 sugardir = $(pythondir)/jarabe
 sugar_PYTHON =			\
