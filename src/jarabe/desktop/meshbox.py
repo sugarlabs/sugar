@@ -35,16 +35,12 @@ from sugar.graphics.menuitem import MenuItem
 from sugar.activity.activityhandle import ActivityHandle
 from sugar.activity import activityfactory
 
-from jarabe.model import accesspoint
 from jarabe.model import neighborhood
-from jarabe.model import network
 from jarabe.view.buddyicon import BuddyIcon
 from jarabe.view.pulsingicon import CanvasPulsingIcon
 from jarabe.desktop.snowflakelayout import SnowflakeLayout
 from jarabe.desktop.spreadlayout import SpreadLayout
 from jarabe.model import bundleregistry
-from jarabe.model.network import NM_802_11_CAP_PROTO_WEP, \
-    NM_802_11_CAP_PROTO_WPA, NM_802_11_CAP_PROTO_WPA2
 
 _NM_SERVICE = 'org.freedesktop.NetworkManager'
 _NM_IFACE = 'org.freedesktop.NetworkManager'
@@ -149,12 +145,8 @@ class AccessPointView(CanvasPulsingIcon):
        logging.debug('Error getting the access point properties: %s', err)
 
     def _update(self):
-        if False:
-            self.props.badge_name = "emblem-favorite"
-        elif (self._caps & NM_802_11_CAP_PROTO_WEP) or \
-             (self._caps & NM_802_11_CAP_PROTO_WPA) or \
-             (self._caps & NM_802_11_CAP_PROTO_WPA2):
-            self.props.badge_name = "emblem-locked"
+        #self.props.badge_name = "emblem-favorite"
+        #self.props.badge_name = "emblem-locked"
 
         self._update_icon()
         self._update_name()
@@ -181,20 +173,11 @@ class AccessPointView(CanvasPulsingIcon):
 
         return p
 
-    def _disconnect_activate_cb(self, menuitem):
-        # Disconnection for an AP means activating the default mesh device
-        network_manager = network.get_manager()
-        if network_manager and self._meshdev:
-            network_manager.set_active_device(self._meshdev)
-            self._palette.props.secondary_text = _('Disconnecting...')
-            self.props.pulsing = False
+    def _disconnect_activate_cb(self, item):
+        pass
 
     def _activate_cb(self, icon):
-        network_manager = network.get_manager()
-        if network_manager:
-            device = self._model.get_nm_device()
-            nm_network = self._model.get_nm_network()
-            network_manager.set_active_device(device, nm_network)
+        pass
 
     def _update_name(self):
         self._palette.props.primary_text = self._name

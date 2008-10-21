@@ -22,7 +22,6 @@ from sugar import activity
 
 from jarabe.model.buddy import BuddyModel
 from jarabe.model import bundleregistry
-from jarabe.model import network
 
 class ActivityModel:
     def __init__(self, act, bundle):

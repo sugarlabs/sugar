@@ -9,7 +9,6 @@ from sugar.datastore import datastore
 from sugar import env
 
 from jarabe.service.session import get_session_manager
-from jarabe.service.network import NMService
 from jarabe.service.gui import UIService
 from jarabe.service import logsmanager
 
@@ -41,9 +40,3 @@ def start_all():
 
     session_manager = get_session_manager()
     session_manager.start()
-
-    try:
-        nm_service = NMService()
-    except dbus.DBusException:
-        logging.error("Network manager is already running.")
-

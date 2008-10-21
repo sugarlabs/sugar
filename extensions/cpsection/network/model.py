@@ -19,8 +19,6 @@ import dbus
 from gettext import gettext as _
 import gconf
 
-from jarabe.model.network import get_manager
-
 NM_SERVICE_NAME = 'org.freedesktop.NetworkManager'
 NM_SERVICE_PATH = '/org/freedesktop/NetworkManager'
 NM_SERVICE_IFACE = 'org.freedesktop.NetworkManager'
@@ -92,8 +90,4 @@ def clear_registration():
 def clear_networks():
     """Clear saved passwords and network configurations.
     """
-    network_manager = get_manager()
-    if not network_manager:
-        return
-    network_manager.nminfo.delete_all_networks()
-    return 1
+    pass
