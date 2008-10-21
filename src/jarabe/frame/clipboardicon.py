@@ -23,6 +23,7 @@ import gtk
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.icon import Icon
 from sugar.graphics.xocolor import XoColor
+from sugar.graphics import style
 
 from jarabe.frame import clipboard
 from jarabe.frame.clipboardmenu import ClipboardMenu
@@ -114,10 +115,10 @@ class ClipboardIcon(RadioToolButton):
             self._icon.props.icon_name = 'application-octet-stream'
 
         child = self.get_child()
+        child.connect('drag-begin', self._drag_begin_cb)
         child.drag_source_set(gtk.gdk.BUTTON1_MASK,
                               self._get_targets(),
                               gtk.gdk.ACTION_COPY)
-        child.drag_source_set_icon_name(self._icon.props.icon_name)
 
         if cb_object.get_percent() == 100:
             self.props.sensitive = True
@@ -135,6 +136,14 @@ class ClipboardIcon(RadioToolButton):
             frame.add_notification(self._notif_icon, 
                                    gtk.CORNER_BOTTOM_LEFT)
         self._current_percent = cb_object.get_percent()
+
+    def _drag_begin_cb(self, widget, context):
+        # TODO: We should get the pixbuf from the icon, with colors, etc.
+        icon_theme = gtk.icon_theme_get_default()
+        pixbuf = icon_theme.load_icon(self._icon.props.icon_name,
+                                      style.STANDARD_ICON_SIZE, 0)
+        context.set_icon_pixbuf(pixbuf, hot_x=pixbuf.props.width / 2,
+                                hot_y=pixbuf.props.height / 2)
 
     def _notify_active_cb(self, widget, pspec):
         if self.props.active:

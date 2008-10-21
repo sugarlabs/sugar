@@ -86,7 +86,7 @@ class TabbingHandler(object):
 
         if self._tabbing:
             shell_model = shell.get_model()
-            zoom_level = shell_model.get_zoom_level()
+            zoom_level = shell_model.zoom_level
             zoom_activity = (zoom_level == shell.ShellModel.ZOOM_ACTIVITY)
 
             if not zoom_activity and first_switch:
@@ -109,7 +109,7 @@ class TabbingHandler(object):
 
         if self._tabbing:
             shell_model = shell.get_model()
-            zoom_level = shell_model.get_zoom_level()
+            zoom_level = shell_model.zoom_level
             zoom_activity = (zoom_level == shell.ShellModel.ZOOM_ACTIVITY)
 
             if not zoom_activity and first_switch:

@@ -44,6 +44,7 @@ class ClipboardPanelWindow(FrameWindow):
         # Receiving dnd drops
         self.drag_dest_set(0, [], 0)
         self.connect("drag_motion", self._clipboard_tray.drag_motion_cb)
+        self.connect("drag_leave", self._clipboard_tray.drag_leave_cb)
         self.connect("drag_drop", self._clipboard_tray.drag_drop_cb)
         self.connect("drag_data_received",
                      self._clipboard_tray.drag_data_received_cb)

@@ -79,6 +79,8 @@ class FavoritesView(hippo.Canvas):
         self._pressed_button = None
         self._press_start_x = None
         self._press_start_y = None
+        self._hot_x = None
+        self._hot_y = None
         self._last_clicked_icon = None
 
         self._box = hippo.CanvasBox()
@@ -227,8 +229,9 @@ class FavoritesView(hippo.Canvas):
         # TODO: we should get the pixbuf from the widget, so it has colors, etc
         pixbuf = gtk.gdk.pixbuf_new_from_file(icon_file_name)
         
-        hot_spot = style.zoom(10)
-        context.set_icon_pixbuf(pixbuf, hot_spot, hot_spot)
+        self._hot_x = pixbuf.props.width / 2
+        self._hot_y = pixbuf.props.height / 2
+        context.set_icon_pixbuf(pixbuf, self._hot_x, self._hot_y)
 
     def __drag_motion_cb(self, widget, context, x, y, time):
         if self._last_clicked_icon is not None:
@@ -241,11 +244,14 @@ class FavoritesView(hippo.Canvas):
         if self._last_clicked_icon is not None:
             self.drag_get_data(context, _ICON_DND_TARGET[0])
 
-            self._layout.move_icon(self._last_clicked_icon, x, y)
+            self._layout.move_icon(self._last_clicked_icon,
+                                   x - self._hot_x, y - self._hot_y)
 
             self._pressed_button = None
             self._press_start_x = None
             self._press_start_y = None
+            self._hot_x = None
+            self._hot_y = None
             self._last_clicked_icon = None
 
             return True
