@@ -18,7 +18,6 @@ from gettext import gettext as _
 import logging
 
 import gtk
-import wnck
 
 from sugar.graphics.palette import Palette
 from sugar.graphics.radiotoolbutton import RadioToolButton
