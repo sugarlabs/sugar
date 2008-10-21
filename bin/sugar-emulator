@@ -91,8 +91,10 @@ def main():
     """Script-level operations"""
 
     parser = OptionParser()
-    parser.add_option('-d', '--dpi', dest='dpi', help='Emulator dpi')
-    parser.add_option('-s', '--scaling', dest='scaling', help='Sugar scaling')
+    parser.add_option('-d', '--dpi', dest='dpi', type="int",
+                      help='Emulator dpi')
+    parser.add_option('-s', '--scaling', dest='scaling',
+                      help='Sugar scaling in %')
     parser.add_option('-i', '--dimensions', dest='dimensions',
                       help='Emulator dimensions (ex. 1200x900)')
     (options, args) = parser.parse_args()

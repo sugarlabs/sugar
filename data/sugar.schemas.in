@@ -120,17 +120,6 @@
         <long>Url of the jabber server to use.</long>
       </locale>
     </schema>
-    <schema>
-      <key>/schemas/desktop/sugar/collaboration/jabber_registered</key>
-      <applyto>/desktop/sugar/collaboration/jabber_registered</applyto>
-      <owner>sugar</owner>
-      <type>bool</type>
-      <default>false</default>
-      <locale name="C">
-        <short>Jabber Registered</short>
-        <long>Flag to keep track of the registration status with the jabber server.</long>
-      </locale>
-    </schema>
 
     <schema>
       <key>/schemas/desktop/sugar/power/automatic</key>
@@ -152,6 +141,18 @@
       <locale name="C">
         <short>Power Extreme</short>
         <long>Power Extreme. </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/collaboration/publish_gadget</key>
+      <applyto>/desktop/sugar/collaboration/publish_gadget</applyto>
+      <owner>sugar</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Publish to Gadget</short>
+        <long>If TRUE, Sugar will make us searchable for the other users of the Jabber server.</long>
       </locale>
     </schema>
 
