@@ -144,5 +144,17 @@
       </locale>
     </schema>
 
+    <schema>
+      <key>/schemas/desktop/sugar/collaboration/publish_gadget</key>
+      <applyto>/desktop/sugar/collaboration/publish_gadget</applyto>
+      <owner>sugar</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Publish to Gadget</short>
+        <long>If TRUE, Sugar will make us searchable for the other users of the Jabber server.</long>
+      </locale>
+    </schema>
+
   </schemalist>
 </gconfschemafile>
