@@ -64,7 +64,8 @@ class AccessPointView(CanvasPulsingIcon):
         self._name = ''
         self._strength = 0
         self._flags = 0
-        self._state = None
+        self._device_state = None
+        self._active = True
 
         self.connect('activated', self._activate_cb)
 
@@ -80,19 +81,26 @@ class AccessPointView(CanvasPulsingIcon):
                            reply_handler=self.__get_all_props_reply_cb,
                            error_handler=self.__get_all_props_error_cb)
 
-        self._bus.add_signal_receiver(self.__properties_changed_cb,
+        self._bus.add_signal_receiver(self.__ap_properties_changed_cb,
                                       signal_name='PropertiesChanged',
-                                      path=device.object_path,
+                                      path=model.object_path,
                                       dbus_interface=_NM_ACCESSPOINT_IFACE)
 
         self._device.Get(_NM_DEVICE_IFACE, 'State',
                          reply_handler=self.__get_device_state_reply_cb,
                          error_handler=self.__get_device_state_error_cb)
+        self._device.Get(_NM_WIRELESS_IFACE, 'ActiveAccessPoint',
+                         reply_handler=self.__get_active_ap_reply_cb,
+                         error_handler=self.__get_active_ap_error_cb)
 
-        self._bus.add_signal_receiver(self.__state_changed_cb,
+        self._bus.add_signal_receiver(self.__device_state_changed_cb,
                                       signal_name='StateChanged',
                                       path=device.object_path,
                                       dbus_interface=_NM_DEVICE_IFACE)
+        self._bus.add_signal_receiver(self.__wireless_properties_changed_cb,
+                                      signal_name='PropertiesChanged',
+                                      path=device.object_path,
+                                      dbus_interface=_NM_WIRELESS_IFACE)
 
     def _create_palette(self):
         icon_name = get_icon_state(_ICON_NAME, self._strength)
@@ -115,17 +123,26 @@ class AccessPointView(CanvasPulsingIcon):
 
         return p
 
-    def __state_changed_cb(self, state):
-        self._state = state
+    def __device_state_changed_cb(self, state):
+        self._device_state = state
         self._update()
 
-    def __properties_changed_cb(self, properties):
+    def __ap_properties_changed_cb(self, properties):
         self._update_properties(properties)
 
+    def __wireless_properties_changed_cb(self, properties):
+        if 'ActiveAccessPoint' in props:
+            ap = props['ActiveAccessPoint']
+            self._active = (ap == self._model.object_path)
+            self._update_state()
+
     def _update_properties(self, props):
-        self._name = props['Ssid']
-        self._strength = props['Strength']
-        self._flags = props['Flags']
+        if 'Ssid' in props:
+            self._name = props['Ssid']
+        if 'Strength' in props:
+            self._strength = props['Strength']
+        if 'Flags' in props:
+            self._flags = props['Flags']
 
         self._update()
 
@@ -139,8 +156,15 @@ class AccessPointView(CanvasPulsingIcon):
         # stroke, fill
         return (xocolor.colors[idx][0], xocolor.colors[idx][1])
 
+    def __get_active_ap_reply_cb(self, ap):
+        self._active = (ap == self._model.object_path)
+        self._update_state()
+
+    def __get_active_ap_error_cb(self, err):
+        logging.debug('Error getting the active access point: %s', err)
+
     def __get_device_state_reply_cb(self, state):
-        self._state = state
+        self._device_state = state
         self._update()
 
     def __get_device_state_error_cb(self, err):
@@ -153,18 +177,6 @@ class AccessPointView(CanvasPulsingIcon):
         logging.debug('Error getting the access point properties: %s', err)
 
     def _update(self):
-        print self._name, self._state
-        if self._state == network.DEVICE_STATE_ACTIVATED:
-            icon_name = '%s-connected' % _ICON_NAME
-        else:
-            icon_name = _ICON_NAME
-
-        icon_name = get_icon_state(icon_name, self._strength)
-        if icon_name:
-            self.props.icon_name = icon_name
-            icon = self._palette.props.icon
-            icon.props.icon_name = icon_name
-
         if self._flags == network.AP_FLAGS_802_11_PRIVACY:
             self.props.badge_name = "emblem-locked"
         else:
@@ -175,16 +187,32 @@ class AccessPointView(CanvasPulsingIcon):
         self._update_state()
 
     def _update_state(self):
-        if self._state is network.DEVICE_STATE_PREPARE or \
-           self._state is network.DEVICE_STATE_CONFIG or \
-           self._state is network.DEVICE_STATE_NEED_AUTH or \
-           self._state is network.DEVICE_STATE_IP_CONFIG:
+        if self._active:
+            state = self._device_state
+        else:
+            state = network.DEVICE_STATE_UNKNOWN
+
+        if state == network.DEVICE_STATE_ACTIVATED:
+            icon_name = '%s-connected' % _ICON_NAME
+        else:
+            icon_name = _ICON_NAME
+
+        icon_name = get_icon_state(icon_name, self._strength)
+        if icon_name:
+            self.props.icon_name = icon_name
+            icon = self._palette.props.icon
+            icon.props.icon_name = icon_name
+
+        if state == network.DEVICE_STATE_PREPARE or \
+           state == network.DEVICE_STATE_CONFIG or \
+           state == network.DEVICE_STATE_NEED_AUTH or \
+           state == network.DEVICE_STATE_IP_CONFIG:
             if self._disconnect_item:
                 self._disconnect_item.show()
             self._connect_item.hide()
             self._palette.props.secondary_text = _('Connecting...')
             self.props.pulsing = True
-        elif self._state == network.DEVICE_STATE_ACTIVATED:
+        elif state == network.DEVICE_STATE_ACTIVATED:
             if self._disconnect_item:
                 self._disconnect_item.show()
             self._connect_item.hide()
@@ -214,15 +242,19 @@ class AccessPointView(CanvasPulsingIcon):
         self._update_state()
 
     def disconnect(self):
-        self._bus.remove_signal_receiver(self.__properties_changed_cb,
+        self._bus.remove_signal_receiver(self.__ap_properties_changed_cb,
                                          signal_name='PropertiesChanged',
-                                         path=self._device.object_path,
+                                         path=self._model.object_path,
                                          dbus_interface=_NM_ACCESSPOINT_IFACE)
-        self._bus.remove_signal_receiver(self.__state_changed_cb,
+
+        self._bus.remove_signal_receiver(self.__device_state_changed_cb,
                                          signal_name='StateChanged',
                                          path=self._device.object_path,
                                          dbus_interface=_NM_DEVICE_IFACE)
-
+        self._bus.remove_signal_receiver(self.__wireless_properties_changed_cb,
+                                         signal_name='PropertiesChanged',
+                                         path=self._device.object_path,
+                                         dbus_interface=_NM_WIRELESS_IFACE)
 
 class ActivityView(hippo.CanvasBox):
     def __init__(self, model):
