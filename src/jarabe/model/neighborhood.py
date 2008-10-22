@@ -27,7 +27,6 @@ from jarabe.model import bundleregistry
 from jarabe.util.telepathy import connection_watcher
 
 from dbus import PROPERTIES_IFACE
-import telepathy
 from telepathy.interfaces import CONNECTION_INTERFACE_REQUESTS
 
 CONN_INTERFACE_GADGET = 'org.laptop.Telepathy.Gadget'
