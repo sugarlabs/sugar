@@ -124,7 +124,7 @@ class AccessPointView(CanvasPulsingIcon):
 
         return p
 
-    def __device_state_changed_cb(self, old_state, new_state, reason):
+    def __device_state_changed_cb(self, new_state, old_state, reason):
         self._device_state = new_state
         self._update_state()
 
