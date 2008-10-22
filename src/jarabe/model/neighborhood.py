@@ -109,7 +109,8 @@ class Neighborhood(gobject.GObject):
         # FIXME: watch change of the gconf key
         client = gconf.client_get_default()
         publish = client.get_bool('/desktop/sugar/collaboration/publish_gadget')
-        logging.debug("Gadget discovered on connection %s. Publish our status: %r" %
+        logging.debug("Gadget discovered on connection %s."
+                " Publish our status: %r" %
                 (conn.service_name.split('.')[-1], publish))
         conn[CONN_INTERFACE_GADGET].Publish(publish)
 
