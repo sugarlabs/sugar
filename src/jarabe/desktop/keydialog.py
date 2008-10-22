@@ -1,5 +1,3 @@
-# vi: ts=4 ai noet
-#
 # Copyright (C) 2006-2007 Red Hat, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -20,6 +18,9 @@ import md5
 from gettext import gettext as _
 
 import gtk
+import dbus
+
+from jarabe.model import network
 
 IW_AUTH_ALG_OPEN_SYSTEM = 0x00000001
 IW_AUTH_ALG_SHARED_KEY  = 0x00000002
@@ -79,6 +80,11 @@ def hash_passphrase(passphrase):
             passphrase += passphrase[:64 - len(passphrase)]
     passphrase = md5.new(passphrase).digest()
     return string_to_hex(passphrase)[:26]
+
+class CanceledKeyRequestError(dbus.DBusException):
+    def __init__(self):
+        dbus.DBusException.__init__(self)
+        self._dbus_error_name = network.NM_SETTINGS_IFACE + '.CanceledError'
 
 class KeyDialog(gtk.Dialog):
     def __init__(self, ssid, caps, async_cb, async_err_cb):
@@ -291,10 +297,7 @@ class WPAKeyDialog(KeyDialog):
         print "WPA Ver: %d" % wpa_ver
 
     def create_security(self):
-        (we_cipher, key, wpa_ver) = self._get_security()
-        from nminfo import Security
-        return Security.new_from_args(we_cipher,
-                                      (key, wpa_ver, IW_AUTH_KEY_MGMT_PSK))
+        pass
 
     def _update_response_sensitivity(self, ignored=None):
         key = self._entry.get_text()
