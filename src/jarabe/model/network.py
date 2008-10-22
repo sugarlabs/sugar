@@ -34,6 +34,8 @@ DEVICE_STATE_FAILED = 9
 AP_FLAGS_802_11_NONE = 0
 AP_FLAGS_802_11_PRIVACY = 1
 
+SETTINGS_SERVICE = 'org.freedesktop.NetworkManagerUserSettings'
+
 NM_SETTINGS_PATH = '/org/freedesktop/NetworkManagerSettings'
 NM_SETTINGS_IFACE = 'org.freedesktop.NetworkManagerSettings'
 NM_CONNECTION_IFACE = 'org.freedesktop.NetworkManagerSettings.Connection'
@@ -45,7 +47,9 @@ class NMSettings(dbus.service.Object):
     connections = []
 
     def __init__(self):
-        dbus.service.Object.__init__(self, dbus.SystemBus(), NM_SETTINGS_PATH)
+        bus = dbus.SystemBus()
+        bus_name = dbus.service.BusName(SETTINGS_SERVICE, bus=bus)
+        dbus.service.Object.__init__(self, bus_name, NM_SETTINGS_PATH)
         connections = []
 
     @dbus.service.method(dbus_interface=NM_SETTINGS_IFACE,
@@ -58,7 +62,7 @@ class NMSettings(dbus.service.Object):
         pass
 
     def add_connection(self, conn):
-        self.connections.append(conn.path)
+        self.connections.append(conn)
         self.NewConnection(conn.path)
 
 class NMSettingsConnection(dbus.service.Object):
@@ -68,7 +72,9 @@ class NMSettingsConnection(dbus.service.Object):
         self.path = NM_SETTINGS_PATH + '/' + str(self._counter)
         self._counter += 1
 
-        dbus.service.Object.__init__(self, dbus.SystemBus(), self.path)
+        bus = dbus.SystemBus()
+        bus_name = dbus.service.BusName(SETTINGS_SERVICE, bus=bus)
+        dbus.service.Object.__init__(self, bus_name, self.path)
 
         self.secrets_request = dispatch.Signal()
 

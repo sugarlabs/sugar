@@ -33,6 +33,7 @@ from sugar.graphics import iconentry
 from sugar.graphics.menuitem import MenuItem
 from sugar.activity.activityhandle import ActivityHandle
 from sugar.activity import activityfactory
+from sugar.util import unique_id
 
 from jarabe.model import neighborhood
 from jarabe.view.buddyicon import BuddyIcon
@@ -123,16 +124,16 @@ class AccessPointView(CanvasPulsingIcon):
 
         return p
 
-    def __device_state_changed_cb(self, state):
-        self._device_state = state
+    def __device_state_changed_cb(self, old_state, new_state, reason):
+        self._device_state = new_state
         self._update()
 
     def __ap_properties_changed_cb(self, properties):
         self._update_properties(properties)
 
     def __wireless_properties_changed_cb(self, properties):
-        if 'ActiveAccessPoint' in props:
-            ap = props['ActiveAccessPoint']
+        if 'ActiveAccessPoint' in properties:
+            ap = properties['ActiveAccessPoint']
             self._active = (ap == self._model.object_path)
             self._update_state()
 
@@ -235,16 +236,26 @@ class AccessPointView(CanvasPulsingIcon):
         pass
 
     def _activate_cb(self, icon):
-        info = { "connection": { "type": "802-11-wireless" } ,
-                 "802-11-wireless": { "ssid": self._name }
+        info = { 'connection': { 'id' : 'Auto ' + self._name,
+                                 'uuid' : unique_id(),
+                                 'type' : '802-11-wireless' } ,
+                 '802-11-wireless' : { 'ssid': self._name }
                }
         conn = network.add_connection(info)
 
         obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
         netmgr = dbus.Interface(obj, _NM_IFACE)
-        netmgr.ActivateConnection('org.freedesktop.NetworkManagerSettings',
-                                  conn.path, self._device.object_path,
-                                  self._model.object_path)
+        netmgr.ActivateConnection(network.SETTINGS_SERVICE, conn.path,
+                                  self._device.object_path,
+                                  self._model.object_path,
+                                  reply_handler=self.__activate_reply_cb,
+                                  error_handler=self.__activate_error_cb)
+
+    def __activate_reply_cb(self, connection):
+        logging.debug('Connection activated: %s', connection)
+
+    def __activate_error_cb(self, err):
+        logging.debug('Failed to activate connection: %s', err)
 
     def set_filter(self, query):
         self._greyed_out = self._name.lower().find(query) == -1
