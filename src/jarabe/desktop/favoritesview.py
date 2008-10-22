@@ -283,17 +283,11 @@ class FavoritesView(hippo.Canvas):
 
         self._layout = LAYOUT_MAP[layout]()
         self._box.set_layout(self._layout)
-        
-        #TODO: compatibility hack while sort() gets added to the hippo
-        # python bindings
+
+        #TODO: compatibility hack while sort() gets added to the hippo python
+        # bindings
         if hasattr(self._box, 'sort'):
             self._box.sort(self._layout.compare_activities)
-        else:
-            icons = self._box.get_children()
-            self._box.clear()
-            for icon in icons:
-                self._box.insert_sorted(
-                        icon, 0, self._layout.compare_activities)
 
         for icon in self._box.get_children():
             if icon not in [self._my_icon, self._current_activity]:
@@ -435,7 +429,7 @@ class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
             self.palette = None
 
     def create_palette(self):
-        if home_activity.is_journal():
+        if self._home_activity.is_journal():
             palette = JournalPalette(self._home_activity)
         else:
             palette = CurrentActivityPalette(self._home_activity)
