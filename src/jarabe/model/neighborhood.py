@@ -93,12 +93,12 @@ class Neighborhood(gobject.GObject):
                 reply_handler=self._get_activities_cb)
 
         self._conn_watcher = connection_watcher.ConnectionWatcher()
-        self._conn_watcher.connect('connection-added', self._conn_addded_cb)
+        self._conn_watcher.connect('connection-added', self.__conn_addded_cb)
 
         for conn in self._conn_watcher.get_connections():
-            self._conn_addded_cb(self._conn_watcher, conn)
+            self.__conn_addded_cb(self._conn_watcher, conn)
 
-    def _conn_addded_cb(self, watcher, conn):
+    def __conn_addded_cb(self, watcher, conn):
         if CONN_INTERFACE_GADGET not in conn:
             return
 
