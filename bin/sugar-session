@@ -35,13 +35,72 @@ dbus.glib.threads_init()
 
 from sugar import logger
 from sugar.profile import get_profile
+from sugar import env
 
 from jarabe.desktop.homewindow import HomeWindow
 from jarabe.model import sound
 from jarabe.view import launcher
 from jarabe import intro
 from jarabe import config
-from jarabe import service
+
+def cleanup_logs():
+    """Clean up the log directory, moving old logs into a numbered backup
+    directory.  We only keep `_MAX_BACKUP_DIRS` of these backup directories
+    around; the rest are removed."""
+    logs_dir = env.get_logs_path()
+    if not os.path.isdir(logs_dir):
+        os.makedirs(logs_dir)
+
+    backup_logs = []
+    backup_dirs = []
+    for f in os.listdir(logs_dir):
+        path = os.path.join(logs_dir, f)
+        if os.path.isfile(path):
+            backup_logs.append(f)
+        elif os.path.isdir(path):
+            backup_dirs.append(path)    
+
+    if len(backup_dirs) > 3:
+        backup_dirs.sort()
+        root = backup_dirs[0]
+        for f in os.listdir(root):
+            os.remove(os.path.join(root, f))
+        os.rmdir(root)
+
+    if len(backup_logs) > 0:
+        name = str(int(time.time()))
+        backup_dir = os.path.join(logs_dir, name)
+        os.mkdir(backup_dir)
+        for log in backup_logs:
+            source_path = os.path.join(logs_dir, log)
+            dest_path = os.path.join(backup_dir, log)
+            os.rename(source_path, dest_path)
+
+def start_datastore():
+    from sugar.datastore import datastore
+
+    # Mount the datastore in internal flash
+    ds_path = env.get_profile_path('datastore')
+    try:
+        datastore.mount(ds_path, [], timeout=120)
+    except Exception, e:
+        # Don't explode if there's corruption; move the data out of the way
+        # and attempt to create a store from scratch.
+        logging.error(e)
+        shutil.move(ds_path, os.path.abspath(ds_path) + str(time.time()))
+        datastore.mount(ds_path, [], timeout=120)
+
+def start_ui_service():
+    from jarabe.view.service import UIService
+
+    ui_service = UIService()
+    ui_service.start()
+
+def start_session_manager():
+    from jarabe.model.session import get_session_manager
+
+    session_manager = get_session_manager()
+    session_manager.start()
 
 def uisetup_completed_cb():
     logging.debug('STARTUP: --- uisetup_completed_cb ---')
@@ -63,7 +122,7 @@ def uisetup_delayed_cb(home_window):
         home_window.get_home_box().show_software_updates_alert()
 
 def main():
-    service.start_logsmanager()
+    cleanup_logs()
     logger.start('shell')
 
     intro.check_profile()
@@ -74,7 +133,9 @@ def main():
     if timezone is not '':    
         os.environ['TZ'] = timezone
 
-    service.start_all()
+    start_datastore()
+    start_ui_service()
+    start_session_manager()
 
     sound.restore()
 

@@ -9,5 +9,6 @@ sugar_PYTHON =			\
 	neighborhood.py		\
 	shell.py		\
 	screen.py		\
+        session.py		\
 	sound.py		\
 	volume.py

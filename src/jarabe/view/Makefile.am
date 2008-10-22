@@ -5,6 +5,7 @@ sugar_PYTHON =				\
 	buddymenu.py			\
 	keyhandler.py			\
 	launcher.py			\
+	palettes.py			\
 	pulsingicon.py			\
-	tabbinghandler.py		\
-	palettes.py
+	service.py			\
+	tabbinghandler.py
