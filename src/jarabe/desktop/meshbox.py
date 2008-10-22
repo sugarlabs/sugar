@@ -21,7 +21,6 @@ import sha
 import dbus
 import hippo
 import gobject
-import gconf
 import gtk
 
 from sugar.graphics.icon import CanvasIcon, Icon
@@ -136,13 +135,13 @@ class AccessPointView(CanvasPulsingIcon):
         self._update()
 
     def __get_device_state_error_cb(self, err):
-       logging.debug('Error getting the access point properties: %s', err)
+        logging.debug('Error getting the access point properties: %s', err)
 
     def __get_all_props_reply_cb(self, properties):
         self._update_properties(properties)
 
     def __get_all_props_error_cb(self, err):
-       logging.debug('Error getting the access point properties: %s', err)
+        logging.debug('Error getting the access point properties: %s', err)
 
     def _update(self):
         #self.props.badge_name = "emblem-favorite"
@@ -230,7 +229,7 @@ class AccessPointView(CanvasPulsingIcon):
         self._greyed_out = self._name.lower().find(query) == -1
         self._update_state()
 
-    def disconnect():
+    def disconnect(self):
         self._bus.add_signal_receiver(self.__properties_changed_cb,
                                         signal_name='PropertiesChanged',
                                         path=self._device.object_path,
@@ -445,20 +444,23 @@ class DeviceObserver(object):
 
     def __access_point_added_cb(self, access_point_o):
         ap = self._bus.get_object(_NM_SERVICE, access_point_o)
-        self._box.add_access_point(device, ap)
+        self._box.add_access_point(self._device, ap)
 
     def __access_point_removed_cb(self, access_point_o):
         self._box.remove_access_point(access_point_o)
 
     def disconnect(self):
+        pass #make something usefule here
+        '''
         self._bus.add_signal_receiver(self.__device_added_cb,
                                       signal_name='AccessPointAdded',
-                                      path=device.object_path,
+                                      path=self._device.object_path,
                                       dbus_interface=_NM_WIRELESS_IFACE)
         self._bus.add_signal_receiver(self.__device_removed_cb,
                                       signal_name='AccessPointRemoved',
-                                      path=device.object_path,
+                                      path=self._device.object_path,
                                       dbus_interface=_NM_WIRELESS_IFACE)
+        '''
 
 class NetworkManagerObserver(object):
     def __init__(self, box):
@@ -502,7 +504,7 @@ class NetworkManagerObserver(object):
     def __device_removed_cb(self, device_o):
         if device_o in self._devices:
             observer = self._devices[device_o]
-            obsever.disconnect()
+            observer.disconnect()
             del self._devices[device_o]
 
 class MeshBox(gtk.VBox):
