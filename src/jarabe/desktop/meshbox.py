@@ -125,8 +125,9 @@ class AccessPointView(CanvasPulsingIcon):
         return p
 
     def __device_state_changed_cb(self, old_state, new_state, reason):
+        print new_state
         self._device_state = new_state
-        self._update()
+        self._update_state()
 
     def __ap_properties_changed_cb(self, properties):
         self._update_properties(properties)
@@ -236,12 +237,14 @@ class AccessPointView(CanvasPulsingIcon):
         pass
 
     def _activate_cb(self, icon):
-        info = { 'connection': { 'id' : 'Auto ' + self._name,
-                                 'uuid' : unique_id(),
-                                 'type' : '802-11-wireless' } ,
-                 '802-11-wireless' : { 'ssid': self._name }
-               }
-        conn = network.add_connection(info)
+        conn = network.find_connection(self._name)
+        if conn is None:
+            info = { 'connection': { 'id' : 'Auto ' + self._name,
+                                        'uuid' : unique_id(),
+                                        'type' : '802-11-wireless' } ,
+                        '802-11-wireless' : { 'ssid': self._name }
+                   }
+            conn = network.add_connection(self._name, info)
 
         obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
         netmgr = dbus.Interface(obj, _NM_IFACE)

@@ -44,25 +44,23 @@ NM_SECRETS_IFACE = 'org.freedesktop.NetworkManagerSettings.Connection.Secrets'
 _nm_settings = None
 
 class NMSettings(dbus.service.Object):
-    connections = []
-
     def __init__(self):
         bus = dbus.SystemBus()
         bus_name = dbus.service.BusName(SETTINGS_SERVICE, bus=bus)
         dbus.service.Object.__init__(self, bus_name, NM_SETTINGS_PATH)
-        connections = []
+        self.connections = {}
 
     @dbus.service.method(dbus_interface=NM_SETTINGS_IFACE,
                          in_signature='', out_signature='ao')
     def ListConnections(self):
-        return self.connections
+        return self.connections.values()
 
     @dbus.service.signal(NM_SETTINGS_IFACE, signature='o')
     def NewConnection(self, connection_path):
         pass
 
-    def add_connection(self, conn):
-        self.connections.append(conn)
+    def add_connection(self, ssid, conn):
+        self.connections[ssid] = conn
         self.NewConnection(conn.path)
 
 class NMSettingsConnection(dbus.service.Object):
@@ -94,13 +92,23 @@ class NMSettingsConnection(dbus.service.Object):
 
         return self._secrets
 
-def add_connection(settings, secrets=None):
+def get_settings():
     global _nm_settings
     if _nm_settings is None:
         _nm_settings = NMSettings()
+    return _nm_settings
+
+def find_connection(ssid):
+    connections = get_settings().connections
+    if ssid in connections:
+        return connections[ssid]
+    else:
+        return None
+
+def add_connection(ssid, settings, secrets=None):
 
     conn = NMSettingsConnection(settings, secrets)
-    _nm_settings.add_connection(conn)
+    _nm_settings.add_connection(ssid, conn)
 
     return conn
 
