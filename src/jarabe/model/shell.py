@@ -203,6 +203,10 @@ class Activity(gobject.GObject):
         """Returns the activity's PID"""
         return self._window.get_pid()
 
+    def get_bundle_path(self):
+        """Returns the activity's bundle directory"""
+        return self._activity_info.get_path()
+
     def equals(self, activity):
         if self._activity_id and activity.get_activity_id():
             return self._activity_id == activity.get_activity_id()
