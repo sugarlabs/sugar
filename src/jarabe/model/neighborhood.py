@@ -15,6 +15,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import gobject
+import gconf
+import logging
 
 from sugar.graphics.xocolor import XoColor
 from sugar.presence import presenceservice
@@ -22,6 +24,13 @@ from sugar import activity
 
 from jarabe.model.buddy import BuddyModel
 from jarabe.model import bundleregistry
+from jarabe.util.telepathy import connection_watcher
+
+from dbus import PROPERTIES_IFACE
+import telepathy
+from telepathy.interfaces import CONNECTION_INTERFACE_REQUESTS
+
+CONN_INTERFACE_GADGET = 'org.laptop.Telepathy.Gadget'
 
 class ActivityModel:
     def __init__(self, act, bundle):
@@ -77,6 +86,32 @@ class Neighborhood(gobject.GObject):
 
         self._pservice.get_activities_async(
                 reply_handler=self._get_activities_cb)
+
+        self._conn_watcher = connection_watcher.ConnectionWatcher()
+        self._conn_watcher.connect('connection-added', self._conn_addded_cb)
+
+        for conn in self._conn_watcher.get_connections():
+            self._conn_addded_cb(self._conn_watcher, conn)
+
+    def _conn_addded_cb(self, watcher, conn):
+        if CONN_INTERFACE_GADGET not in conn:
+            return
+
+        conn[CONN_INTERFACE_GADGET].connect_to_signal('GadgetDiscovered',
+                lambda: self._gadget_discovered(conn))
+
+        gadget_discovered = conn[PROPERTIES_IFACE].Get(CONN_INTERFACE_GADGET,
+                'GadgetAvailable')
+        if gadget_discovered:
+            self._gadget_discovered(conn)
+
+    def _gadget_discovered(self, conn):
+        # FIXME: watch change of the gconf key
+        client = gconf.client_get_default()
+        publish = client.get_bool('/desktop/sugar/collaboration/publish_gadget')
+        logging.debug("Gadget discovered on connection %s. Publish our status: %r" %
+                (conn.service_name.split('.')[-1], publish))
+        conn[CONN_INTERFACE_GADGET].Publish(publish)
 
     def _get_buddies_cb(self, buddy_list):
         for buddy in buddy_list:
