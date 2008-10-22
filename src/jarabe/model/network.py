@@ -58,17 +58,17 @@ class NMSettings(dbus.service.Object):
         pass
 
     def add_connection(self, conn):
-        self.connections.append(conn.object_path)
-        self.NewConnection(conn.object_path)
+        self.connections.append(conn.path)
+        self.NewConnection(conn.path)
 
 class NMSettingsConnection(dbus.service.Object):
     _counter = 0
 
     def __init__(self, settings, secrets):
-        path = NM_SETTINGS_PATH + '/' + self._counter
+        self.path = NM_SETTINGS_PATH + '/' + str(self._counter)
         self._counter += 1
 
-        dbus.service.Object.__init__(self, dbus.SystemBus(), path)
+        dbus.service.Object.__init__(self, dbus.SystemBus(), self.path)
 
         self.secrets_request = dispatch.Signal()
 
@@ -93,8 +93,10 @@ def add_connection(settings, secrets=None):
     if _nm_settings is None:
         _nm_settings = NMSettings()
 
-    conn = NMSettingsConnection()
+    conn = NMSettingsConnection(settings, secrets)
     _nm_settings.add_connection(conn)
+
+    return conn
 
 def load_connections():
     pass

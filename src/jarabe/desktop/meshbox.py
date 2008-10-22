@@ -235,7 +235,16 @@ class AccessPointView(CanvasPulsingIcon):
         pass
 
     def _activate_cb(self, icon):
-        pass
+        info = { "connection": { "type": "802-11-wireless" } ,
+                 "802-11-wireless": { "ssid": self._name }
+               }
+        conn = network.add_connection(info)
+
+        obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
+        netmgr = dbus.Interface(obj, _NM_IFACE)
+        netmgr.ActivateConnection('org.freedesktop.NetworkManagerSettings',
+                                  conn.path, self._device.object_path,
+                                  self._model.object_path)
 
     def set_filter(self, query):
         self._greyed_out = self._name.lower().find(query) == -1
