@@ -539,6 +539,9 @@ class NetworkManagerObserver(object):
         settings.secrets_request.connect(self.__secrets_request_cb)
 
     def __secrets_request_cb(self, **kwargs):
+        # FIXME It would be better to do all of this async, but I cannot think
+        # of a good way to. NM could really use some love here.
+
         netmgr_props = dbus.Interface(
                             self._netmgr, 'org.freedesktop.DBus.Properties')
         active_connections_o = netmgr_props.Get(_NM_IFACE, 'ActiveConnections')
