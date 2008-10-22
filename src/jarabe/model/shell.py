@@ -205,7 +205,10 @@ class Activity(gobject.GObject):
 
     def get_bundle_path(self):
         """Returns the activity's bundle directory"""
-        return self._activity_info.get_path()
+        if self._activity_info is None:
+            return None
+        else:
+            return self._activity_info.get_path()
 
     def equals(self, activity):
         if self._activity_id and activity.get_activity_id():
