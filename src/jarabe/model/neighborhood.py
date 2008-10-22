@@ -27,10 +27,15 @@ from jarabe.model import bundleregistry
 from jarabe.util.telepathy import connection_watcher
 
 from dbus import PROPERTIES_IFACE
-import telepathy
 from telepathy.interfaces import CONNECTION_INTERFACE_REQUESTS
 
 CONN_INTERFACE_GADGET = 'org.laptop.Telepathy.Gadget'
+CHAN_INTERFACE_VIEW = 'org.laptop.Telepathy.Channel.Interface.View'
+CHAN_INTERFACE_BUDBY_VIEW = 'org.laptop.Telepathy.Channel.Type.BuddyView'
+CHAN_INTERFACE_ACTIVITY_VIEW = 'org.laptop.Telepathy.Channel.Type.ActivityView'
+
+NB_RANDOM_BUDDIES = 20
+NB_RANDOM_ACTIVITIES = 40
 
 class ActivityModel:
     def __init__(self, act, bundle):
@@ -88,12 +93,12 @@ class Neighborhood(gobject.GObject):
                 reply_handler=self._get_activities_cb)
 
         self._conn_watcher = connection_watcher.ConnectionWatcher()
-        self._conn_watcher.connect('connection-added', self._conn_addded_cb)
+        self._conn_watcher.connect('connection-added', self.__conn_addded_cb)
 
         for conn in self._conn_watcher.get_connections():
-            self._conn_addded_cb(self._conn_watcher, conn)
+            self.__conn_addded_cb(self._conn_watcher, conn)
 
-    def _conn_addded_cb(self, watcher, conn):
+    def __conn_addded_cb(self, watcher, conn):
         if CONN_INTERFACE_GADGET not in conn:
             return
 
@@ -113,6 +118,27 @@ class Neighborhood(gobject.GObject):
                 " Publish our status: %r" %
                 (conn.service_name.split('.')[-1], publish))
         conn[CONN_INTERFACE_GADGET].Publish(publish)
+
+        self._request_random_buddies(conn, NB_RANDOM_BUDDIES)
+        self._request_random_activities(conn, NB_RANDOM_ACTIVITIES)
+
+    def _request_random_buddies(self, conn, nb):
+        logging.debug("Request %d random buddies" % nb)
+
+        conn[CONNECTION_INTERFACE_REQUESTS].CreateChannel(
+            { 'org.freedesktop.Telepathy.Channel.ChannelType':
+                'org.laptop.Telepathy.Channel.Type.BuddyView',
+               'org.laptop.Telepathy.Channel.Interface.View.MaxSize': nb
+          })
+
+    def _request_random_activities(self, conn, nb):
+        logging.debug("Request %d random activities" % nb)
+
+        conn[CONNECTION_INTERFACE_REQUESTS].CreateChannel(
+            { 'org.freedesktop.Telepathy.Channel.ChannelType':
+                'org.laptop.Telepathy.Channel.Type.ActivityView',
+               'org.laptop.Telepathy.Channel.Interface.View.MaxSize': nb
+          })
 
     def _get_buddies_cb(self, buddy_list):
         for buddy in buddy_list:
