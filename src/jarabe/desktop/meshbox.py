@@ -465,8 +465,14 @@ class NetworkManagerObserver(object):
         self._bus = dbus.SystemBus()
         self._devices = {}
 
-        obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
-        netmgr = dbus.Interface(obj, _NM_IFACE)
+    def listen(self):
+        try:
+            obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
+            netmgr = dbus.Interface(obj, _NM_IFACE)
+        except dbus.DBusException:
+            logging.debug('%s service not available', _NM_SERVICE)
+            return
+
         netmgr.GetDevices(reply_handler=self._get_devices_reply_cb,
                           error_handler=self._get_devices_error_cb)
 
@@ -552,6 +558,7 @@ class MeshBox(gtk.VBox):
         self._model.connect('activity-removed', self._activity_removed_cb)
 
         netmgr_observer = NetworkManagerObserver(self)
+        netmgr_observer.listen()
 
     def do_size_allocate(self, allocation):
         width = allocation.width        
