@@ -14,6 +14,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
+
 import dbus
 
 from sugar import dispatch
@@ -49,7 +51,9 @@ class NMSettings(dbus.service.Object):
         bus = dbus.SystemBus()
         bus_name = dbus.service.BusName(SETTINGS_SERVICE, bus=bus)
         dbus.service.Object.__init__(self, bus_name, NM_SETTINGS_PATH)
+
         self.connections = {}
+        self.secrets_request = dispatch.Signal()
 
     @dbus.service.method(dbus_interface=NM_SETTINGS_IFACE,
                          in_signature='', out_signature='ao')
@@ -62,7 +66,13 @@ class NMSettings(dbus.service.Object):
 
     def add_connection(self, ssid, conn):
         self.connections[ssid] = conn
+        conn.secrets_request.connect(self.__secrets_request_cb)
         self.NewConnection(conn.path)
+
+    def __secrets_request_cb(self, sender, **kwargs):
+        self.secrets_request.send(self, connection=sender,
+                                  reply=kwargs['reply'],
+                                  error=kwargs['error'])
 
 class NMSettingsConnection(dbus.service.Object):
     def __init__(self, path, settings, secrets):
@@ -82,12 +92,18 @@ class NMSettingsConnection(dbus.service.Object):
         return self._settings
 
     @dbus.service.method(dbus_interface=NM_SECRETS_IFACE,
+                         async_callbacks=('reply', 'error'),
                          in_signature='sasb', out_signature='a{sa{sv}}')
-    def GetSecrets(self, setting_name, hints, request_new):
-        if request_new or self._secrets is None:
-            self.secrets_request.send(self)
+    def GetSecrets(self, setting_name, hints, request_new, reply, error):
+        logging.debug('Secrets requested for connection %s', self.path)
 
-        return self._secrets
+        if request_new or self._secrets is None:
+            try:
+                self.secrets_request.send(self, reply=reply, error=error)
+            except Exception, e:
+                logging.error(e)
+        else:
+            reply(self._secrets)
 
 def get_settings():
     global _nm_settings

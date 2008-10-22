@@ -9,6 +9,7 @@ sugar_PYTHON =			\
 	groupbox.py		\
 	homebox.py		\
 	homewindow.py		\
+        keydialog.py		\
 	meshbox.py		\
 	myicon.py		\
 	proc_smaps.py		\

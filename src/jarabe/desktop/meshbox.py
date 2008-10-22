@@ -40,6 +40,7 @@ from jarabe.view.buddyicon import BuddyIcon
 from jarabe.view.pulsingicon import CanvasPulsingIcon
 from jarabe.desktop.snowflakelayout import SnowflakeLayout
 from jarabe.desktop.spreadlayout import SpreadLayout
+from jarabe.desktop import keydialog
 from jarabe.model import bundleregistry
 from jarabe.model import network
 
@@ -49,6 +50,7 @@ _NM_PATH = '/org/freedesktop/NetworkManager'
 _NM_DEVICE_IFACE = 'org.freedesktop.NetworkManager.Device'
 _NM_WIRELESS_IFACE = 'org.freedesktop.NetworkManager.Device.Wireless'
 _NM_ACCESSPOINT_IFACE = 'org.freedesktop.NetworkManager.AccessPoint'
+_NM_ACTIVE_CONN_IFACE = 'org.freedesktop.NetworkManager.Connection.Active'
 
 _ICON_NAME = 'network-wireless'
 
@@ -65,6 +67,7 @@ class AccessPointView(CanvasPulsingIcon):
         self._name = ''
         self._strength = 0
         self._flags = 0
+        self._wpa_flags = 0
         self._device_state = None
         self._active = True
 
@@ -138,12 +141,15 @@ class AccessPointView(CanvasPulsingIcon):
             self._update_state()
 
     def _update_properties(self, props):
+        logging.debug(props)
         if 'Ssid' in props:
             self._name = props['Ssid']
         if 'Strength' in props:
             self._strength = props['Strength']
         if 'Flags' in props:
             self._flags = props['Flags']
+        if 'WpaFlags' in props:
+            self._wpa_flags = props['WpaFlags']
 
         self._update()
 
@@ -239,10 +245,14 @@ class AccessPointView(CanvasPulsingIcon):
         conn = network.find_connection(self._name)
         if conn is None:
             info = { 'connection': { 'id' : 'Auto ' + self._name,
-                                        'uuid' : unique_id(),
-                                        'type' : '802-11-wireless' } ,
-                        '802-11-wireless' : { 'ssid': self._name }
+                                     'uuid' : unique_id(),
+                                     'type' : '802-11-wireless' } ,
+                     '802-11-wireless' : { 'ssid': self._name }
                    }
+
+            if self._flags == network.AP_FLAGS_802_11_PRIVACY:
+                info["802-11-wireless-security"] = { "key-mgmt": "none" }
+
             conn = network.add_connection(self._name, info)
 
         obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
@@ -262,6 +272,9 @@ class AccessPointView(CanvasPulsingIcon):
     def set_filter(self, query):
         self._greyed_out = self._name.lower().find(query) == -1
         self._update_state()
+
+    def create_keydialog(self, reply, error):
+        keydialog.create(self._name, self._wpa_flags, reply, error)
 
     def disconnect(self):
         self._bus.remove_signal_receiver(self.__ap_properties_changed_cb,
@@ -502,17 +515,18 @@ class NetworkManagerObserver(object):
         self._box = box
         self._bus = dbus.SystemBus()
         self._devices = {}
+        self._netmgr = None
 
     def listen(self):
         try:
             obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
-            netmgr = dbus.Interface(obj, _NM_IFACE)
+            self._netmgr = dbus.Interface(obj, _NM_IFACE)
         except dbus.DBusException:
             logging.debug('%s service not available', _NM_SERVICE)
             return
 
-        netmgr.GetDevices(reply_handler=self._get_devices_reply_cb,
-                          error_handler=self._get_devices_error_cb)
+        self._netmgr.GetDevices(reply_handler=self.__get_devices_reply_cb,
+                                error_handler=self.__get_devices_error_cb)
 
         self._bus.add_signal_receiver(self.__device_added_cb,
                                       signal_name='DeviceAdded',
@@ -521,11 +535,27 @@ class NetworkManagerObserver(object):
                                       signal_name='DeviceRemoved',
                                       dbus_interface=_NM_DEVICE_IFACE)
 
-    def _get_devices_reply_cb(self, devices_o):
+        settings = network.get_settings()
+        settings.secrets_request.connect(self.__secrets_request_cb)
+
+    def __secrets_request_cb(self, **kwargs):
+        netmgr_props = dbus.Interface(
+                            self._netmgr, 'org.freedesktop.DBus.Properties')
+        active_connections_o = netmgr_props.Get(_NM_IFACE, 'ActiveConnections')
+
+        for conn_o in active_connections_o:
+            obj = self._bus.get_object(_NM_IFACE, conn_o)
+            props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
+            ap_o = props.Get(_NM_ACTIVE_CONN_IFACE, 'SpecificObject')
+
+            ap_view = self._box.access_points[ap_o]
+            ap_view.create_keydialog(kwargs['reply'], kwargs['error'])
+
+    def __get_devices_reply_cb(self, devices_o):
         for dev_o in devices_o:
             self._check_device(dev_o)
 
-    def _get_devices_error_cb(self, err):
+    def __get_devices_error_cb(self, err):
         logging.error('Failed to get devices: %s', err)
 
     def _check_device(self, device_o):
@@ -556,10 +586,11 @@ class MeshBox(gtk.VBox):
 
         gobject.GObject.__init__(self)
 
+        self.access_points = {}
+
         self._model = neighborhood.get_model()
         self._buddies = {}
         self._activities = {}
-        self._access_points = {}
         self._mesh = {}
         self._buddy_to_activity = {}
         self._suspended = True
@@ -696,24 +727,24 @@ class MeshBox(gtk.VBox):
         if hasattr(icon, 'set_filter'):
             icon.set_filter(self._query)
 
-        self._access_points[ap.object_path] = icon
+        self.access_points[ap.object_path] = icon
 
     def remove_access_point(self, ap_o):
-        icon = self._access_points[ap_o]
+        icon = self.access_points[ap_o]
         icon.disconnect()
         self._layout.remove(icon)
-        del self._access_points[ap_o]
+        del self.access_points[ap_o]
 
     def suspend(self):
         if not self._suspended:
             self._suspended = True
-            for ap in self._access_points.values():
+            for ap in self.access_points.values():
                 ap.props.paused = True
 
     def resume(self):
         if self._suspended:
             self._suspended = False
-            for ap in self._access_points.values():
+            for ap in self.access_points.values():
                 ap.props.paused = False
 
     def _toolbar_query_changed_cb(self, toolbar, query):
