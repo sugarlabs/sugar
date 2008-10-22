@@ -40,6 +40,7 @@ from jarabe.view.pulsingicon import CanvasPulsingIcon
 from jarabe.desktop.snowflakelayout import SnowflakeLayout
 from jarabe.desktop.spreadlayout import SpreadLayout
 from jarabe.model import bundleregistry
+from jarabe.model import network
 
 _NM_SERVICE = 'org.freedesktop.NetworkManager'
 _NM_IFACE = 'org.freedesktop.NetworkManager'
@@ -47,19 +48,6 @@ _NM_PATH = '/org/freedesktop/NetworkManager'
 _NM_DEVICE_IFACE = 'org.freedesktop.NetworkManager.Device'
 _NM_WIRELESS_IFACE = 'org.freedesktop.NetworkManager.Device.Wireless'
 _NM_ACCESSPOINT_IFACE = 'org.freedesktop.NetworkManager.AccessPoint'
-
-_DEVICE_TYPE_802_11_WIRELESS = 2
-
-_DEVICE_STATE_UNKNOWN = 0
-_DEVICE_STATE_UNMANAGED = 1
-_DEVICE_STATE_UNAVAILABLE = 2
-_DEVICE_STATE_DISCONNECTED = 3
-_DEVICE_STATE_PREPARE = 4
-_DEVICE_STATE_CONFIG = 5
-_DEVICE_STATE_NEED_AUTH = 6
-_DEVICE_STATE_IP_CONFIG = 7
-_DEVICE_STATE_ACTIVATED = 8
-_DEVICE_STATE_FAILED = 9
 
 _ICON_NAME = 'network-wireless'
 
@@ -75,7 +63,7 @@ class AccessPointView(CanvasPulsingIcon):
         self._greyed_out = False
         self._name = ''
         self._strength = 0
-        self._caps = 0
+        self._flags = 0
         self._state = None
 
         self.connect('activated', self._activate_cb)
@@ -106,51 +94,6 @@ class AccessPointView(CanvasPulsingIcon):
                                       path=device.object_path,
                                       dbus_interface=_NM_DEVICE_IFACE)
 
-    def __state_changed_cb(self, state):
-        self._state = state
-        self._update()
-
-    def __properties_changed_cb(self, properties):
-        self._update_properties(properties)
-
-    def _update_properties(self, props):
-        self._name = props['Ssid']
-        self._strength = props['Strength']
-        self._caps = props['Flags']
-
-        self._update()
-
-    def _compute_color(self):
-        sh = sha.new()
-        data = self._name + hex(self._caps)
-        sh.update(data)
-        h = hash(sh.digest())
-        idx = h % len(xocolor.colors)
-
-        # stroke, fill
-        return (xocolor.colors[idx][0], xocolor.colors[idx][1])
-
-    def __get_device_state_reply_cb(self, state):
-        self._state = state
-        self._update()
-
-    def __get_device_state_error_cb(self, err):
-        logging.debug('Error getting the access point properties: %s', err)
-
-    def __get_all_props_reply_cb(self, properties):
-        self._update_properties(properties)
-
-    def __get_all_props_error_cb(self, err):
-        logging.debug('Error getting the access point properties: %s', err)
-
-    def _update(self):
-        #self.props.badge_name = "emblem-favorite"
-        #self.props.badge_name = "emblem-locked"
-
-        self._update_icon()
-        self._update_name()
-        self._update_state()
-
     def _create_palette(self):
         icon_name = get_icon_state(_ICON_NAME, self._strength)
         palette_icon = Icon(icon_name=icon_name,
@@ -172,50 +115,85 @@ class AccessPointView(CanvasPulsingIcon):
 
         return p
 
-    def _disconnect_activate_cb(self, item):
-        pass
+    def __state_changed_cb(self, state):
+        self._state = state
+        self._update()
 
-    def _activate_cb(self, icon):
-        pass
+    def __properties_changed_cb(self, properties):
+        self._update_properties(properties)
 
-    def _update_name(self):
-        self._palette.props.primary_text = self._name
+    def _update_properties(self, props):
+        self._name = props['Ssid']
+        self._strength = props['Strength']
+        self._flags = props['Flags']
 
-    def _update_icon(self):
-        # keep this code in sync with view/devices/network/wireless.py
-        strength = self._strength
-        if self._state == _DEVICE_STATE_ACTIVATED:
+        self._update()
+
+    def _compute_color(self):
+        sh = sha.new()
+        data = self._name + hex(self._flags)
+        sh.update(data)
+        h = hash(sh.digest())
+        idx = h % len(xocolor.colors)
+
+        # stroke, fill
+        return (xocolor.colors[idx][0], xocolor.colors[idx][1])
+
+    def __get_device_state_reply_cb(self, state):
+        self._state = state
+        self._update()
+
+    def __get_device_state_error_cb(self, err):
+        logging.debug('Error getting the access point properties: %s', err)
+
+    def __get_all_props_reply_cb(self, properties):
+        self._update_properties(properties)
+
+    def __get_all_props_error_cb(self, err):
+        logging.debug('Error getting the access point properties: %s', err)
+
+    def _update(self):
+        print self._name, self._state
+        if self._state == network.DEVICE_STATE_ACTIVATED:
             icon_name = '%s-connected' % _ICON_NAME
         else:
             icon_name = _ICON_NAME
-        icon_name = get_icon_state(icon_name, strength)
+
+        icon_name = get_icon_state(icon_name, self._strength)
         if icon_name:
             self.props.icon_name = icon_name
             icon = self._palette.props.icon
             icon.props.icon_name = icon_name
 
+        if self._flags == network.AP_FLAGS_802_11_PRIVACY:
+            self.props.badge_name = "emblem-locked"
+        else:
+            self.props.badge_name = None
+
+        self._palette.props.primary_text = self._name
+
+        self._update_state()
+
     def _update_state(self):
-        if self._state is _DEVICE_STATE_PREPARE or \
-           self._state is _DEVICE_STATE_CONFIG or \
-           self._state is _DEVICE_STATE_NEED_AUTH or \
-           self._state is _DEVICE_STATE_IP_CONFIG:
+        if self._state is network.DEVICE_STATE_PREPARE or \
+           self._state is network.DEVICE_STATE_CONFIG or \
+           self._state is network.DEVICE_STATE_NEED_AUTH or \
+           self._state is network.DEVICE_STATE_IP_CONFIG:
             if self._disconnect_item:
                 self._disconnect_item.show()
             self._connect_item.hide()
             self._palette.props.secondary_text = _('Connecting...')
             self.props.pulsing = True
-        elif self._state == _DEVICE_STATE_ACTIVATED:
+        elif self._state == network.DEVICE_STATE_ACTIVATED:
             if self._disconnect_item:
                 self._disconnect_item.show()
             self._connect_item.hide()
-            # TODO: show the channel number
             self._palette.props.secondary_text = _('Connected')
             self.props.pulsing = False
         else:
             if self._disconnect_item:
                 self._disconnect_item.hide()
             self._connect_item.show()
-            # TODO: show the channel number
             self._palette.props.secondary_text = None
             self.props.pulsing = False
 
@@ -224,6 +202,12 @@ class AccessPointView(CanvasPulsingIcon):
             self.props.base_color = XoColor('#D5D5D5,#D5D5D5')
         else:
             self.props.base_color = XoColor('%s,%s' % self._compute_color())
+
+    def _disconnect_activate_cb(self, item):
+        pass
+
+    def _activate_cb(self, icon):
+        pass
 
     def set_filter(self, query):
         self._greyed_out = self._name.lower().find(query) == -1
@@ -495,7 +479,7 @@ class NetworkManagerObserver(object):
         props = dbus.Interface(device, 'org.freedesktop.DBus.Properties')
 
         device_type = props.Get(_NM_DEVICE_IFACE, 'DeviceType')
-        if device_type == _DEVICE_TYPE_802_11_WIRELESS:
+        if device_type == network.DEVICE_TYPE_802_11_WIRELESS:
             self._devices[device_o] = DeviceObserver(self._box, device)
 
     def _get_device_path_error_cb(self, err):
