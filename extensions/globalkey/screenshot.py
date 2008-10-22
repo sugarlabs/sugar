@@ -21,8 +21,10 @@ from gettext import gettext as _
 
 import gtk
 import gconf
+import dbus
 
 from sugar.datastore import datastore
+from sugar.graphics import style
 
 BOUND_KEYS = ['<alt>1']
 
@@ -48,7 +50,7 @@ def handle_key_press(key):
         jobject.metadata['title'] = _('Screenshot')
         jobject.metadata['keep'] = '0'
         jobject.metadata['buddies'] = ''
-        jobject.metadata['preview'] = ''            
+        jobject.metadata['preview'] = _get_preview_data(screenshot)
         jobject.metadata['icon-color'] = color
         jobject.metadata['mime_type'] = 'image/png'
         jobject.file_path = file_path
@@ -56,4 +58,15 @@ def handle_key_press(key):
     finally:
         jobject.destroy()
         del jobject
+
+def _get_preview_data(screenshot):
+    preview = screenshot.scale_simple(style.zoom(300), style.zoom(225),
+                                      gtk.gdk.INTERP_BILINEAR)
+    preview_data = []
+    def save_func(buf, data):
+        data.append(buf)
+
+    preview.save_to_callback(save_func, 'png', user_data=preview_data)
+
+    return dbus.ByteArray(''.join(preview_data))
 
