@@ -45,7 +45,6 @@ def set_jabber(server):
     """
     client = gconf.client_get_default()
     client.set_string('/desktop/sugar/collaboration/jabber_server', server)
-    client.set_bool('/desktop/sugar/collaboration/jabber_registered', False)
     return 1
 
 def get_radio():    
@@ -91,3 +90,25 @@ def clear_networks():
     """Clear saved passwords and network configurations.
     """
     pass
+
+def get_publish_information():
+    client = gconf.client_get_default()
+    publish = client.get_bool('/desktop/sugar/collaboration/publish_gadget')
+    return publish
+	
+def print_publish_information():
+    print get_publish_information()
+
+def set_publish_information(value):
+    """ If set to true, Sugar will make you searchable for 
+    the other users of the Jabber server.
+    value: 0/1
+    """
+    try:
+        value = (False,True)[int(value)]
+    except:
+        raise ValueError(_("Error in specified argument use 0/1."))
+
+    client = gconf.client_get_default()
+    client.set_bool('/desktop/sugar/collaboration/publish_gadget', value)
+    return 0
