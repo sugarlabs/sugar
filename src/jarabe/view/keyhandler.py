@@ -19,22 +19,20 @@ import signal
 import logging
 import subprocess
 import errno
-import tempfile
-import time
-from gettext import gettext as _
-import gconf
+import traceback
+import sys
 
 import dbus
 import gtk
 
 from sugar._sugarext import KeyGrabber
-from sugar.datastore import datastore
 
 from jarabe.model import screen
 from jarabe.model import sound
 from jarabe.model import shell
 from jarabe.view.tabbinghandler import TabbingHandler
 from jarabe.model.shell import ShellModel
+from jarabe import config
 
 _BRIGHTNESS_STEP = 2
 _VOLUME_STEP = sound.VOLUME_STEP
@@ -55,7 +53,6 @@ _actions_table = {
     'F12'            : 'volume_up',
     '<alt>F11'       : 'volume_min',
     '<alt>F12'       : 'volume_max',
-    '<alt>1'         : 'screenshot',
     '0x93'           : 'frame',
     '0xEB'           : 'rotate',
     '<alt>Tab'       : 'next_window',
@@ -94,6 +91,21 @@ class KeyHandler(object):
                                   self._key_released_cb)
 
         self._tabbing_handler = TabbingHandler(self._frame, _TABBING_MODIFIER)
+
+        for f in os.listdir(os.path.join(config.ext_path, 'globalkey')):
+            if f.endswith('.py') and not f.startswith('__'):
+                module_name = f[:-3]
+                try:
+                    logging.debug('Loading module %r' % module_name)
+                    module = __import__('globalkey.' + module_name, globals(),
+                                        locals(), [module_name])
+                    for key in module.BOUND_KEYS:
+                        if key in _actions_table:
+                            raise ValueError('Key %r is already bound' % key)
+                        _actions_table[key] = module
+                except Exception:
+                    logging.error('Exception while loading extension:\n' + \
+                        ''.join(traceback.format_exception(*sys.exc_info())))
 
         self._key_grabber.grab_keys(_actions_table.keys())
 
@@ -193,37 +205,6 @@ class KeyHandler(object):
     def handle_volume_down(self):
         self._change_volume(step=-_VOLUME_STEP)
 
-    def handle_screenshot(self):
-        file_path = os.path.join(tempfile.gettempdir(), '%i' % time.time())
-
-        window = gtk.gdk.get_default_root_window()
-        width, height = window.get_size()
-        x_orig, y_orig = window.get_origin()
-
-        screenshot = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, has_alpha=False,
-                                    bits_per_sample=8, width=width,
-                                    height=height)
-        screenshot.get_from_drawable(window, window.get_colormap(), x_orig,
-                                     y_orig, 0, 0, width, height)
-        screenshot.save(file_path, "png")
-
-        client = gconf.client_get_default()
-        color = client.get_string('/desktop/sugar/user/color')
-
-        jobject = datastore.create()
-        try:
-            jobject.metadata['title'] = _('Screenshot')
-            jobject.metadata['keep'] = '0'
-            jobject.metadata['buddies'] = ''
-            jobject.metadata['preview'] = ''            
-            jobject.metadata['icon-color'] = color
-            jobject.metadata['mime_type'] = 'image/png'
-            jobject.file_path = file_path
-            datastore.write(jobject, transfer_ownership=True)
-        finally:
-            jobject.destroy()
-            del jobject
-
     def handle_frame(self):
         self._frame.notify_key_press()
 
@@ -298,8 +279,13 @@ class KeyHandler(object):
                     self._tabbing_handler.stop()
                     return True
 
-            method = getattr(self, 'handle_' + action)
-            method()
+            if hasattr(action, 'handle_key_press'):
+                action.handle_key_press(key)
+            elif isinstance(action, basestring):
+                method = getattr(self, 'handle_' + action)
+                method()
+            else:
+                raise TypeError('Invalid action %r' % action)
 
             return True
         else:
@@ -329,4 +315,5 @@ def setup(frame):
     if _instance:
         del _instance
 
-    _instance = KeyHandler(frame)    
+    _instance = KeyHandler(frame)
+
