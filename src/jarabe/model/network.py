@@ -42,6 +42,7 @@ NM_CONNECTION_IFACE = 'org.freedesktop.NetworkManagerSettings.Connection'
 NM_SECRETS_IFACE = 'org.freedesktop.NetworkManagerSettings.Connection.Secrets'
 
 _nm_settings = None
+_conn_counter = 0
 
 class NMSettings(dbus.service.Object):
     def __init__(self):
@@ -64,16 +65,12 @@ class NMSettings(dbus.service.Object):
         self.NewConnection(conn.path)
 
 class NMSettingsConnection(dbus.service.Object):
-    _counter = 0
-
-    def __init__(self, settings, secrets):
-        self.path = NM_SETTINGS_PATH + '/' + str(self._counter)
-        self._counter += 1
-
+    def __init__(self, path, settings, secrets):
         bus = dbus.SystemBus()
         bus_name = dbus.service.BusName(SETTINGS_SERVICE, bus=bus)
-        dbus.service.Object.__init__(self, bus_name, self.path)
+        dbus.service.Object.__init__(self, bus_name, path)
 
+        self.path = path
         self.secrets_request = dispatch.Signal()
 
         self._settings = settings
@@ -106,8 +103,12 @@ def find_connection(ssid):
         return None
 
 def add_connection(ssid, settings, secrets=None):
+    global _conn_counter
 
-    conn = NMSettingsConnection(settings, secrets)
+    path = NM_SETTINGS_PATH + '/' + str(_conn_counter)
+    _conn_counter += 1
+
+    conn = NMSettingsConnection(path, settings, secrets)
     _nm_settings.add_connection(ssid, conn)
 
     return conn
