@@ -230,6 +230,17 @@ class AccessPointView(CanvasPulsingIcon):
         self._greyed_out = self._name.lower().find(query) == -1
         self._update_state()
 
+    def disconnect():
+        self._bus.add_signal_receiver(self.__properties_changed_cb,
+                                        signal_name='PropertiesChanged',
+                                        path=self._device.object_path,
+                                        dbus_interface=_NM_ACCESSPOINT_IFACE)
+        self._bus.add_signal_receiver(self.__state_changed_cb,
+                                        signal_name='StateChanged',
+                                        path=self._device.object_path,
+                                        dbus_interface=_NM_DEVICE_IFACE)
+
+
 class ActivityView(hippo.CanvasBox):
     def __init__(self, model):
         hippo.CanvasBox.__init__(self)
@@ -645,6 +656,7 @@ class MeshBox(gtk.VBox):
 
     def remove_access_point(self, ap_o):
         icon = self._access_points[ap_o]
+        icon.disconnect()
         self._layout.remove(icon)
         del self._access_points[ap_o]
 
