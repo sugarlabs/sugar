@@ -7,6 +7,7 @@ sugar_PYTHON =			\
 	invites.py		\
 	owner.py		\
 	neighborhood.py		\
+        network.py              \
 	shell.py		\
 	screen.py		\
         session.py		\

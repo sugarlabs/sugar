@@ -18,6 +18,22 @@ import dbus
 
 from sugar import dispatch
 
+DEVICE_TYPE_802_11_WIRELESS = 2
+
+DEVICE_STATE_UNKNOWN = 0
+DEVICE_STATE_UNMANAGED = 1
+DEVICE_STATE_UNAVAILABLE = 2
+DEVICE_STATE_DISCONNECTED = 3
+DEVICE_STATE_PREPARE = 4
+DEVICE_STATE_CONFIG = 5
+DEVICE_STATE_NEED_AUTH = 6
+DEVICE_STATE_IP_CONFIG = 7
+DEVICE_STATE_ACTIVATED = 8
+DEVICE_STATE_FAILED = 9
+
+AP_FLAGS_802_11_NONE = 0
+AP_FLAGS_802_11_PRIVACY = 1
+
 NM_SETTINGS_PATH = '/org/freedesktop/NetworkManagerSettings'
 NM_SETTINGS_IFACE = 'org.freedesktop.NetworkManagerSettings'
 NM_CONNECTION_IFACE = 'org.freedesktop.NetworkManagerSettings.Connection'
@@ -42,17 +58,17 @@ class NMSettings(dbus.service.Object):
         pass
 
     def add_connection(self, conn):
-        self.connections.append(conn.object_path)
-        self.NewConnection(conn.object_path)
+        self.connections.append(conn.path)
+        self.NewConnection(conn.path)
 
 class NMSettingsConnection(dbus.service.Object):
     _counter = 0
 
     def __init__(self, settings, secrets):
-        path = NM_SETTINGS_PATH + '/' + self._counter
+        self.path = NM_SETTINGS_PATH + '/' + str(self._counter)
         self._counter += 1
 
-        dbus.service.Object.__init__(self, dbus.SystemBus(), path)
+        dbus.service.Object.__init__(self, dbus.SystemBus(), self.path)
 
         self.secrets_request = dispatch.Signal()
 
@@ -77,8 +93,10 @@ def add_connection(settings, secrets=None):
     if _nm_settings is None:
         _nm_settings = NMSettings()
 
-    conn = NMSettingsConnection()
+    conn = NMSettingsConnection(settings, secrets)
     _nm_settings.add_connection(conn)
+
+    return conn
 
 def load_connections():
     pass
