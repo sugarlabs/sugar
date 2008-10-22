@@ -230,14 +230,14 @@ class AccessPointView(CanvasPulsingIcon):
         self._update_state()
 
     def disconnect(self):
-        self._bus.add_signal_receiver(self.__properties_changed_cb,
-                                        signal_name='PropertiesChanged',
-                                        path=self._device.object_path,
-                                        dbus_interface=_NM_ACCESSPOINT_IFACE)
-        self._bus.add_signal_receiver(self.__state_changed_cb,
-                                        signal_name='StateChanged',
-                                        path=self._device.object_path,
-                                        dbus_interface=_NM_DEVICE_IFACE)
+        self._bus.remove_signal_receiver(self.__properties_changed_cb,
+                                         signal_name='PropertiesChanged',
+                                         path=self._device.object_path,
+                                         dbus_interface=_NM_ACCESSPOINT_IFACE)
+        self._bus.remove_signal_receiver(self.__state_changed_cb,
+                                         signal_name='StateChanged',
+                                         path=self._device.object_path,
+                                         dbus_interface=_NM_DEVICE_IFACE)
 
 
 class ActivityView(hippo.CanvasBox):
@@ -450,17 +450,14 @@ class DeviceObserver(object):
         self._box.remove_access_point(access_point_o)
 
     def disconnect(self):
-        pass #make something usefule here
-        '''
-        self._bus.add_signal_receiver(self.__device_added_cb,
-                                      signal_name='AccessPointAdded',
-                                      path=self._device.object_path,
-                                      dbus_interface=_NM_WIRELESS_IFACE)
-        self._bus.add_signal_receiver(self.__device_removed_cb,
-                                      signal_name='AccessPointRemoved',
-                                      path=self._device.object_path,
-                                      dbus_interface=_NM_WIRELESS_IFACE)
-        '''
+        self._bus.remove_signal_receiver(self.__access_point_added_cb,
+                                         signal_name='AccessPointAdded',
+                                         path=self._device.object_path,
+                                         dbus_interface=_NM_WIRELESS_IFACE)
+        self._bus.remove_signal_receiver(self.__access_point_removed_cb,
+                                         signal_name='AccessPointRemoved',
+                                         path=self._device.object_path,
+                                         dbus_interface=_NM_WIRELESS_IFACE)
 
 class NetworkManagerObserver(object):
     def __init__(self, box):
