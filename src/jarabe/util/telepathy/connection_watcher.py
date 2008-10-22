@@ -15,7 +15,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-# FIXME: should we really put this in sugar-toolkit/src/sugar/presence ?
+# FIXME: this sould go upstream, in telepathy-python
+
+import logging
 
 import dbus
 import dbus.mainloop.glib
@@ -23,7 +25,8 @@ import gobject
 
 from telepathy.client import Connection
 from telepathy.interfaces import CONN_INTERFACE
-from telepathy.constants import CONNECTION_STATUS_CONNECTED, CONNECTION_STATUS_DISCONNECTED
+from telepathy.constants import CONNECTION_STATUS_CONNECTED, \
+                                CONNECTION_STATUS_DISCONNECTED
 
 class ConnectionWatcher(gobject.GObject):
     __gsignals__ = {
@@ -56,7 +59,7 @@ class ConnectionWatcher(gobject.GObject):
         if not path.startswith('/org/freedesktop/Telepathy/Connection/'):
             return
 
-        status, reason = args
+        status, reason_ = args
         service_name = path.replace('/', '.')[1:]
 
         if status == CONNECTION_STATUS_CONNECTED:
@@ -78,8 +81,7 @@ class ConnectionWatcher(gobject.GObject):
         try:
             Connection(service_name, path, ready_handler=self._conn_ready_cb)
         except dbus.exceptions.DBusException:
-            # The service is probably already gone
-            pass
+            logging.debug('%s is propably already gone.', service_name)
 
     def _remove_connection(self, service_name, path):
         conn = self._connections.pop(path, None)
@@ -94,10 +96,10 @@ class ConnectionWatcher(gobject.GObject):
 if __name__ == '__main__':
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
-    def connection_added_cb(watcher, conn):
+    def connection_added_cb(conn_watcher, conn):
         print "new connection", conn.service_name
 
-    def connection_removed_cb(watcher, conn):
+    def connection_removed_cb(conn_watcher, conn):
         print "removed connection", conn.service_name
 
     watcher = ConnectionWatcher()
