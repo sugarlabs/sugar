@@ -40,10 +40,10 @@ class ClipboardObject(object):
     def get_name(self):
         name = self._name
         if not name:
-            type = mime.get_mime_description(self.get_mime_type())
+            mime_type = mime.get_mime_description(self.get_mime_type())
 
-            if not type:
-                type = 'Data'
+            if not mime_type:
+                mime_type = 'Data'
             name = _('%s clipping') % type
 
         return name

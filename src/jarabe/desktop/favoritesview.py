@@ -292,7 +292,8 @@ class FavoritesView(hippo.Canvas):
             icons = self._box.get_children()
             self._box.clear()
             for icon in icons:
-                self._box.insert_sorted(icon, 0, self._layout.compare_activities)
+                self._box.insert_sorted(
+                        icon, 0, self._layout.compare_activities)
 
         for icon in self._box.get_children():
             if icon not in [self._my_icon, self._current_activity]:
