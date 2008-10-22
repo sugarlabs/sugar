@@ -412,9 +412,10 @@ class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
     def __init__(self):
         CanvasIcon.__init__(self, cache=True)
         self._home_model = shell.get_model()
+        self._home_activity = self._home_model.get_active_activity()
 
-        if self._home_model.get_active_activity() is not None:
-            self._update(self._home_model.get_active_activity())
+        if self._home_activity is not None:
+            self._update()
 
         self._home_model.connect('active-activity-changed',
                                  self.__active_activity_changed_cb)
@@ -424,23 +425,25 @@ class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
     def __button_release_event_cb(self, icon, event):
         self._home_model.get_active_activity().get_window().activate(1)
 
-    def _update(self, home_activity):
-        self.props.file_name = home_activity.get_icon_path()
-        self.props.xo_color = home_activity.get_icon_color()
+    def _update(self):
+        self.props.file_name = self._home_activity.get_icon_path()
+        self.props.xo_color = self._home_activity.get_icon_color()
         self.props.size = style.STANDARD_ICON_SIZE
 
         if self.palette is not None:
             self.palette.destroy()
             self.palette = None
 
+    def create_palette(self):
         if home_activity.is_journal():
-            palette = JournalPalette(home_activity)
+            palette = JournalPalette(self._home_activity)
         else:
-            palette = CurrentActivityPalette(home_activity)
-        self.set_palette(palette)
+            palette = CurrentActivityPalette(self._home_activity)
+        return palette
 
     def __active_activity_changed_cb(self, home_model, home_activity):
-        self._update(home_activity)
+        self._home_activity = home_activity
+        self._update()
 
 class _MyIcon(MyIcon):
     def __init__(self, scale):
