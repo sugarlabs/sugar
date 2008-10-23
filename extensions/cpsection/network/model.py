@@ -105,7 +105,7 @@ def set_publish_information(value):
     value: 0/1
     """
     try:
-        value = (False,True)[int(value)]
+        value = (False, True)[int(value)]
     except:
         raise ValueError(_("Error in specified argument use 0/1."))
 
