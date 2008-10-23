@@ -536,7 +536,8 @@ class NetworkManagerObserver(object):
                                       dbus_interface=_NM_DEVICE_IFACE)
 
         settings = network.get_settings()
-        settings.secrets_request.connect(self.__secrets_request_cb)
+        if settings:
+            settings.secrets_request.connect(self.__secrets_request_cb)
 
     def __secrets_request_cb(self, **kwargs):
         # FIXME It would be better to do all of this async, but I cannot think

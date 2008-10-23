@@ -108,7 +108,10 @@ class NMSettingsConnection(dbus.service.Object):
 def get_settings():
     global _nm_settings
     if _nm_settings is None:
-        _nm_settings = NMSettings()
+        try:
+            _nm_settings = NMSettings()
+        except dbus.DBusException, e:
+            logging.error('Cannot create the UserSettings service %s.', e)
     return _nm_settings
 
 def find_connection(ssid):
