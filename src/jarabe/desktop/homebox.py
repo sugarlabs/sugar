@@ -56,7 +56,6 @@ class HomeBox(gtk.VBox):
 
         self._favorites_view = favoritesview.FavoritesView()
         self._list_view = ActivitiesList()
-        self._enable_xo_palette = False
 
         self._favorites_view.connect('erase-activated',
                                      self.__erase_activated_cb)
@@ -180,9 +179,6 @@ class HomeBox(gtk.VBox):
 
             self._favorites_view.layout = layout
 
-            if self._enable_xo_palette:
-                self._favorites_view.enable_xo_palette()
-
             if self._favorites_view not in self.get_children():
                 self.add(self._favorites_view)
                 self._favorites_view.show()
@@ -208,11 +204,6 @@ class HomeBox(gtk.VBox):
         # TODO: Do we need this?
         #return self._donut.has_activities()
         return False
-
-    def enable_xo_palette(self):
-        self._enable_xo_palette = True
-        if self._favorites_view is not None:
-            self._favorites_view.enable_xo_palette()
 
     def focus_search_entry(self):
         self._toolbar.search_entry.grab_focus()

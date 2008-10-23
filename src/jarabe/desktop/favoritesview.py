@@ -88,6 +88,7 @@ class FavoritesView(hippo.Canvas):
         self.set_root(self._box)
 
         self._my_icon = _MyIcon(style.XLARGE_ICON_SIZE)
+        self._my_icon.connect('register-activate', self.__register_activate_cb)
         self._box.append(self._my_icon)
 
         self._current_activity = CurrentActivityIcon()
@@ -182,12 +183,6 @@ class FavoritesView(hippo.Canvas):
         self._layout.move_icon(self._current_activity, x, y, locked=True)
 
         hippo.Canvas.do_size_allocate(self, allocation)
-
-    def enable_xo_palette(self):
-        self._my_icon.enable_palette()
-        if self._my_icon.register_menu is not None:
-            self._my_icon.register_menu.connect('activate', 
-                                                self.__register_activate_cb)
 
     # TODO: Dnd methods. This should be merged somehow inside hippo-canvas.
     def __button_press_event_cb(self, widget, event):
@@ -316,7 +311,7 @@ class FavoritesView(hippo.Canvas):
         self._box.remove(self._alert)
         self._alert = None
 
-    def __register_activate_cb(self, menuitem):
+    def __register_activate_cb(self, icon):
         alert = Alert()
         try:
             schoolserver.register_laptop()
@@ -326,9 +321,8 @@ class FavoritesView(hippo.Canvas):
         else:    
             alert.props.title = _('Registration Successful')
             alert.props.msg = _('You are now registered ' \
-                                'with your school server.') 
-            palette = self._my_icon.get_palette()
-            palette.menu.remove(menuitem)
+                                'with your school server.')
+            self._my_icon.remove_register_menu()
 
         ok_icon = Icon(icon_name='dialog-ok')
         alert.add_button(gtk.RESPONSE_OK, _('Ok'), ok_icon)
@@ -440,13 +434,24 @@ class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
         self._update()
 
 class _MyIcon(MyIcon):
+    __gtype_name__ = 'SugarFavoritesMyIcon'
+
+    __gsignals__ = {
+        'register-activate' : (gobject.SIGNAL_RUN_FIRST,
+                                gobject.TYPE_NONE, ([])),
+    }
     def __init__(self, scale):
         MyIcon.__init__(self, scale)
 
         self._power_manager = None
-        self.register_menu = None
+        self._palette_enabled = False
+        self._register_menu = None
 
-    def enable_palette(self):
+    def create_palette(self):
+        if not self._palette_enabled:
+            self._palette_enabled = True
+            return
+
         client = gconf.client_get_default()
         nick = client.get_string("/desktop/sugar/user/nick")
         color = XoColor(client.get_string("/desktop/sugar/user/color"))
@@ -473,11 +478,12 @@ class _MyIcon(MyIcon):
 
         backup_url = client.get_string('/desktop/sugar/backup_url')
         if not backup_url:
-            self.register_menu = MenuItem(_('Register'), 'media-record')
-            palette.menu.append(self.register_menu)
-            self.register_menu.show()
+            self._register_menu = MenuItem(_('Register'), 'media-record')
+            self._register_menu.connect('activate', self.__register_activate_cb)
+            palette.menu.append(self._register_menu)
+            self._register_menu.show()
     
-        self.set_palette(palette)
+        return palette
 
     def _reboot_activate_cb(self, menuitem):
         session_manager = get_session_manager()
@@ -494,3 +500,10 @@ class _MyIcon(MyIcon):
         panel = ControlPanel()
         panel.set_transient_for(self.get_toplevel())
         panel.show()
+
+    def __register_activate_cb(self, menuitem):
+        self.emit('register-activate')
+
+    def remove_register_menu(self):
+        self.palette.remove(self._register_menu)
+
