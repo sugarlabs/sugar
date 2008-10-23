@@ -30,7 +30,7 @@ mimedir = $(datadir)/mime/packages
 mime_DATA = $(mime_xml_files)
 
 nmservicedir = $(sysconfdir)/dbus-1/system.d/
-nmservice_DATA = NetworkManagerInfo.conf
+nmservice_DATA = nm-user-settings.conf
 
 install-data-hook:
 if ENABLE_UPDATE_MIMEDB
