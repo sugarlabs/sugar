@@ -536,7 +536,7 @@ class NetworkManagerObserver(object):
                                       dbus_interface=_NM_DEVICE_IFACE)
 
         settings = network.get_settings()
-        if settings:
+        if settings is not None:
             settings.secrets_request.connect(self.__secrets_request_cb)
 
     def __secrets_request_cb(self, **kwargs):
