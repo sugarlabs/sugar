@@ -98,6 +98,11 @@ class Neighborhood(gobject.GObject):
         for conn in self._conn_watcher.get_connections():
             self.__conn_addded_cb(self._conn_watcher, conn)
 
+        self.gconf_client = gconf.client_get_default()
+        self.gconf_client.add_dir('/desktop/sugar/user', gconf.CLIENT_PRELOAD_NONE)
+        self.gconf_client.notify_add('/desktop/sugar/collaboration/publish_gadget',
+            self.__publish_gadget_changed_cb)
+
     def __conn_addded_cb(self, watcher, conn):
         if CONN_INTERFACE_GADGET not in conn:
             return
@@ -111,9 +116,7 @@ class Neighborhood(gobject.GObject):
             self._gadget_discovered(conn)
 
     def _gadget_discovered(self, conn):
-        # FIXME: watch change of the gconf key
-        client = gconf.client_get_default()
-        publish = client.get_bool('/desktop/sugar/collaboration/publish_gadget')
+        publish = self.gconf_client.get_bool('/desktop/sugar/collaboration/publish_gadget')
         logging.debug("Gadget discovered on connection %s."
                 " Publish our status: %r" %
                 (conn.service_name.split('.')[-1], publish))
@@ -139,6 +142,22 @@ class Neighborhood(gobject.GObject):
                 'org.laptop.Telepathy.Channel.Type.ActivityView',
                'org.laptop.Telepathy.Channel.Interface.View.MaxSize': nb
           })
+
+    def __publish_gadget_changed_cb(self, client_, cnxn_id_, entry, user_data=None):
+        if entry.value.type == gconf.VALUE_BOOL:
+            publish = entry.value.get_bool()
+
+            for conn in self._conn_watcher.get_connections():
+                if CONN_INTERFACE_GADGET not in conn:
+                    continue
+
+                gadget_discovered = conn[PROPERTIES_IFACE].Get(CONN_INTERFACE_GADGET,
+                    'GadgetAvailable')
+                if gadget_discovered:
+                    logging.debug("publish_gadget gconf key changed."
+                            " Publish our status: %r" %
+                            (conn.service_name.split('.')[-1], publish))
+                    conn[CONN_INTERFACE_GADGET].Publish(publish)
 
     def _get_buddies_cb(self, buddy_list):
         for buddy in buddy_list:
