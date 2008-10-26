@@ -40,12 +40,12 @@ class DevicesTray(tray.HTray):
 
     def add_device(self, view):
         index = 0
+        relative_index = getattr(view, "FRAME_POSITION_RELATIVE", -1)
         for item in self.get_children():
-            index = self.get_item_index(item)
-            view_pos = getattr(view, "FRAME_POSITION_RELATIVE", -1)
-            item_pos = getattr(item, "FRAME_POSITION_RELATIVE", 0)
-            if view_pos < item_pos:
+            current_relative_index = getattr(item, "FRAME_POSITION_RELATIVE", 0)
+            if current_relative_index >= relative_index:
                 break
+            index += 1
         self.add_item(view, index=index)
         view.show()
 
