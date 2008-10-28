@@ -84,6 +84,7 @@ class LaunchBox(hippo.CanvasBox):
         self.connect('destroy', self.__destroy_cb)
 
     def __destroy_cb(self, box):
+        self._activity_icon.props.pulsing = False
         self._home.disconnect_by_func(self.__active_activity_changed_cb)
 
     def zoom_in(self):
