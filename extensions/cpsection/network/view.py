@@ -59,7 +59,7 @@ class Network(SectionView):
         box_wireless.set_border_width(style.DEFAULT_SPACING * 2)
         box_wireless.set_spacing(style.DEFAULT_SPACING)
 
-        radio_info = gtk.Label(_("Turn of the wireless radio to save " 
+        radio_info = gtk.Label(_("Turn off the wireless radio to save " 
                                  "battery life"))
         radio_info.set_alignment(0, 0)
         radio_info.set_line_wrap(True)
@@ -110,13 +110,22 @@ class Network(SectionView):
         self.pack_start(separator_mesh, False)
         separator_mesh.show()
 
-        label_mesh = gtk.Label(_('Mesh'))
+        label_mesh = gtk.Label(_('Collaboration'))
         label_mesh.set_alignment(0, 0)
         self.pack_start(label_mesh, expand=False)
         label_mesh.show()
         box_mesh = gtk.VBox()
         box_mesh.set_border_width(style.DEFAULT_SPACING * 2)
         box_mesh.set_spacing(style.DEFAULT_SPACING)
+
+        server_info = gtk.Label(_("The server is the equivalent of what"
+                                  " room you are in; people on the same server"
+                                  " will be able to see each other, even when"
+                                  " they aren't on the same network."))
+        server_info.set_alignment(0, 0)
+        server_info.set_line_wrap(True)
+        box_mesh.pack_start(server_info, expand=False)
+        server_info.show()
 
         box_server = gtk.HBox(spacing=style.DEFAULT_SPACING)
         label_server = gtk.Label(_('Server:'))
