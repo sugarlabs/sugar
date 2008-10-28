@@ -27,7 +27,8 @@ from jarabe.model import bundleregistry
 from jarabe.util.telepathy import connection_watcher
 
 from dbus import PROPERTIES_IFACE
-from telepathy.interfaces import CONNECTION_INTERFACE_REQUESTS
+from telepathy.interfaces import CONNECTION_INTERFACE_REQUESTS, CHANNEL_INTERFACE
+from telepathy.client import Channel
 
 CONN_INTERFACE_GADGET = 'org.laptop.Telepathy.Gadget'
 CHAN_INTERFACE_VIEW = 'org.laptop.Telepathy.Channel.Interface.View'
@@ -125,20 +126,37 @@ class Neighborhood(gobject.GObject):
     def _request_random_buddies(self, conn, nb):
         logging.debug("Request %d random buddies" % nb)
 
-        conn[CONNECTION_INTERFACE_REQUESTS].CreateChannel(
+        path, props = conn[CONNECTION_INTERFACE_REQUESTS].CreateChannel(
             { 'org.freedesktop.Telepathy.Channel.ChannelType':
                 'org.laptop.Telepathy.Channel.Type.BuddyView',
                'org.laptop.Telepathy.Channel.Interface.View.MaxSize': nb
           })
 
+        view = Channel(conn.service_name, path)
+        view[CHANNEL_INTERFACE].connect_to_signal('Closed',
+            lambda: self.__respawnable_view_closed_cb(
+                lambda: self._request_random_buddies(conn, nb)))
+
     def _request_random_activities(self, conn, nb):
         logging.debug("Request %d random activities" % nb)
 
-        conn[CONNECTION_INTERFACE_REQUESTS].CreateChannel(
+        path, props = conn[CONNECTION_INTERFACE_REQUESTS].CreateChannel(
             { 'org.freedesktop.Telepathy.Channel.ChannelType':
                 'org.laptop.Telepathy.Channel.Type.ActivityView',
                'org.laptop.Telepathy.Channel.Interface.View.MaxSize': nb
           })
+
+        view = Channel(conn.service_name, path)
+        view[CHANNEL_INTERFACE].connect_to_signal('Closed',
+                lambda: self.__respawnable_view_closed_cb(
+                    lambda: self._request_random_activities(conn, nb)))
+
+    def __respawnable_view_closed_cb(self, request_fct):
+        # Views are closed if the Gadget component is restarted. As we always
+        # want to have the random views opened, we re-request them if they are
+        # closed.
+        logging.debug('View closed. Re-request it')
+        request_fct()
 
     def _get_buddies_cb(self, buddy_list):
         for buddy in buddy_list:
