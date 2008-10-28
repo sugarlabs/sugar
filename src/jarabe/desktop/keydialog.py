@@ -333,7 +333,6 @@ def _key_dialog_response_cb(key_dialog, response_id):
     security = None
     if response_id == gtk.RESPONSE_OK:
         security = key_dialog.create_security()
-    key_dialog.destroy()
 
     if response_id in [gtk.RESPONSE_CANCEL, gtk.RESPONSE_NONE]:
         # key dialog dialog was canceled; send the error back to NM
@@ -344,4 +343,6 @@ def _key_dialog_response_cb(key_dialog, response_id):
         async_cb(security)
     else:
         raise RuntimeError("Unhandled key dialog response %d" % response_id)
+
+    key_dialog.destroy()
 
