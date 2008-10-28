@@ -159,6 +159,7 @@ class PulsingIcon(Icon):
     palette = property(_get_palette, _set_palette)
 
     def __destroy_cb(self, icon):
+        self._pulser.stop()
         if self._palette is not None:
             self._palette.destroy()
 
@@ -173,6 +174,11 @@ class CanvasPulsingIcon(CanvasIcon):
         self._pulsing = False
 
         CanvasIcon.__init__(self, **kwargs)
+
+        self.connect('destroy', self.__destroy_cb)
+
+    def __destroy_cb(self, box):
+        self._pulser.stop()    
 
     def set_pulse_color(self, pulse_color):
         self._pulse_color = pulse_color
