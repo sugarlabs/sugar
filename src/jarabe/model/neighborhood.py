@@ -99,7 +99,7 @@ class Neighborhood(gobject.GObject):
             self.__conn_addded_cb(self._conn_watcher, conn)
 
         self.gconf_client = gconf.client_get_default()
-        self.gconf_client.add_dir('/desktop/sugar/user', gconf.CLIENT_PRELOAD_NONE)
+        self.gconf_client.add_dir('/desktop/sugar/collaboration', gconf.CLIENT_PRELOAD_NONE)
         self.gconf_client.notify_add('/desktop/sugar/collaboration/publish_gadget',
             self.__publish_gadget_changed_cb)
 
