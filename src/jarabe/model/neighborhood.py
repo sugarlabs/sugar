@@ -155,7 +155,7 @@ class Neighborhood(gobject.GObject):
                     'GadgetAvailable')
                 if gadget_discovered:
                     logging.debug("publish_gadget gconf key changed."
-                            " Publish our status: %r" %
+                            " Publish our status on %s: %r" %
                             (conn.service_name.split('.')[-1], publish))
                     conn[CONN_INTERFACE_GADGET].Publish(publish)
 
