@@ -98,9 +98,9 @@ class Neighborhood(gobject.GObject):
         for conn in self._conn_watcher.get_connections():
             self.__conn_addded_cb(self._conn_watcher, conn)
 
-        self.gconf_client = gconf.client_get_default()
-        self.gconf_client.add_dir('/desktop/sugar/collaboration', gconf.CLIENT_PRELOAD_NONE)
-        self.gconf_client.notify_add('/desktop/sugar/collaboration/publish_gadget',
+        gconf_client = gconf.client_get_default()
+        gconf_client.add_dir('/desktop/sugar/collaboration', gconf.CLIENT_PRELOAD_NONE)
+        gconf_client.notify_add('/desktop/sugar/collaboration/publish_gadget',
             self.__publish_gadget_changed_cb)
 
     def __conn_addded_cb(self, watcher, conn):
@@ -116,7 +116,8 @@ class Neighborhood(gobject.GObject):
             self._gadget_discovered(conn)
 
     def _gadget_discovered(self, conn):
-        publish = self.gconf_client.get_bool('/desktop/sugar/collaboration/publish_gadget')
+        gconf_client = gconf.client_get_default()
+        publish = gconf_client.get_bool('/desktop/sugar/collaboration/publish_gadget')
         logging.debug("Gadget discovered on connection %s."
                 " Publish our status: %r" %
                 (conn.service_name.split('.')[-1], publish))
