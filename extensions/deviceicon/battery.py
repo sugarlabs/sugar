@@ -35,10 +35,12 @@ _ICON_NAME = 'battery'
 _STATUS_CHARGING = 0
 _STATUS_DISCHARGING = 1
 _STATUS_FULLY_CHARGED = 2
+_STATUS_NOT_PRESENT = 3
 
 _LEVEL_PROP = 'battery.charge_level.percentage'
 _CHARGING_PROP = 'battery.rechargeable.is_charging'
 _DISCHARGING_PROP = 'battery.rechargeable.is_discharging'
+_PRESENT_PROP = 'battery.present'
 
 class DeviceView(TrayIcon):
 
@@ -62,6 +64,8 @@ class DeviceView(TrayIcon):
                             self._battery_status_changed_cb)
         self._model.connect('notify::discharging',
                             self._battery_status_changed_cb)
+        self._model.connect('notify::present',
+                            self._battery_status_changed_cb)
         self._update_info()
 
     def _update_info(self):
@@ -70,7 +74,12 @@ class DeviceView(TrayIcon):
         xo_color = self._color
         badge_name = None
 
-        if self._model.props.charging:
+        if not self._model.props.present:
+            status = _STATUS_NOT_PRESENT
+            badge_name = None
+            xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
+                                          style.COLOR_WHITE.get_svg()))
+        elif self._model.props.charging:
             status = _STATUS_CHARGING
             name += '-charging'
             xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
@@ -110,7 +119,8 @@ class BatteryPalette(Palette):
         vbox.pack_start(self._status_label)
         vbox.show()
 
-        self.set_content(vbox)
+        self._progress_widget = vbox
+        self.set_content(self._progress_widget)
 
     def set_level(self, percent):
         self._level = percent
@@ -122,7 +132,11 @@ class BatteryPalette(Palette):
         secondary_text = ''
         status_text = '%s%%' % current_level
 
-        if status == _STATUS_CHARGING:
+        progress_widget = self._progress_widget
+        if status == _STATUS_NOT_PRESENT:
+            secondary_text = _('Removed')
+            progress_widget = None
+        elif status == _STATUS_CHARGING:
             secondary_text = _('Charging')
         elif status == _STATUS_DISCHARGING:
             if current_level <= 15:
@@ -137,6 +151,7 @@ class BatteryPalette(Palette):
                                        'min': remaining_minpart})
         else:
             secondary_text = _('Charged')
+        self.set_content(progress_widget)
 
         self.props.secondary_text = secondary_text
         self._status_label.set_text(status_text)
@@ -148,6 +163,8 @@ class DeviceModel(gobject.GObject):
         'charging'    : (bool, None, None, False,
                          gobject.PARAM_READABLE),
         'discharging' : (bool, None, None, False,
+                         gobject.PARAM_READABLE),
+        'present'     : (bool, None, None, False,
                          gobject.PARAM_READABLE)
     }
 
@@ -167,6 +184,7 @@ class DeviceModel(gobject.GObject):
         self._level = self._get_level()
         self._charging = self._get_charging()
         self._discharging = self._get_discharging()
+        self._present = self._get_present()
 
     def _get_level(self):
         try:
@@ -189,6 +207,13 @@ class DeviceModel(gobject.GObject):
             logging.error('Cannot access %s' % _DISCHARGING_PROP)
             return False
 
+    def _get_present(self):
+        try:
+            return self._battery.GetProperty(_PRESENT_PROP)
+        except dbus.DBusException:
+            logging.error('Cannot access %s' % _PRESENT_PROP)
+            return False
+
     def do_get_property(self, pspec):
         if pspec.name == 'level':
             return self._level 
@@ -196,6 +221,8 @@ class DeviceModel(gobject.GObject):
             return self._charging
         if pspec.name == 'discharging':
             return self._discharging
+        if pspec.name == 'present':
+            return self._present
 
     def get_type(self):
         return 'battery'
@@ -211,6 +238,9 @@ class DeviceModel(gobject.GObject):
             elif change[0] == _DISCHARGING_PROP:
                 self._discharging = self._get_discharging()
                 self.notify('discharging')
+            elif change[0] == _PRESENT_PROP:
+                self._present = self._get_present()
+                self.notify('present')
 
 def setup(tray):
     bus = dbus.Bus(dbus.Bus.TYPE_SYSTEM)
