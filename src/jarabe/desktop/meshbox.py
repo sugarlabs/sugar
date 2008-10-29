@@ -141,7 +141,6 @@ class AccessPointView(CanvasPulsingIcon):
             self._update_state()
 
     def _update_properties(self, props):
-        logging.debug(props)
         if 'Ssid' in props:
             self._name = props['Ssid']
         if 'Strength' in props:
@@ -273,8 +272,8 @@ class AccessPointView(CanvasPulsingIcon):
         self._greyed_out = self._name.lower().find(query) == -1
         self._update_state()
 
-    def create_keydialog(self, reply, error):
-        keydialog.create(self._name, self._wpa_flags, reply, error)
+    def create_keydialog(self, response):
+        keydialog.create(self._name, self._wpa_flags, response)
 
     def disconnect(self):
         self._bus.remove_signal_receiver(self.__ap_properties_changed_cb,
@@ -553,7 +552,7 @@ class NetworkManagerObserver(object):
             ap_o = props.Get(_NM_ACTIVE_CONN_IFACE, 'SpecificObject')
 
             ap_view = self._box.access_points[ap_o]
-            ap_view.create_keydialog(kwargs['reply'], kwargs['error'])
+            ap_view.create_keydialog(kwargs['response'])
 
     def __get_devices_reply_cb(self, devices_o):
         for dev_o in devices_o:

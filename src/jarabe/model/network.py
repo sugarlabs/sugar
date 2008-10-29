@@ -71,8 +71,23 @@ class NMSettings(dbus.service.Object):
 
     def __secrets_request_cb(self, sender, **kwargs):
         self.secrets_request.send(self, connection=sender,
-                                  reply=kwargs['reply'],
-                                  error=kwargs['error'])
+                                  response=kwargs['response'])
+
+class SecretsResponse(object):
+    ''' Intermediate object to report the secrets from the dialog
+    back to the connection object and which will inform NM
+    '''
+    def __init__(self, connection, reply_cb, error_cb):
+        self._connection = connection
+        self._reply_cb = reply_cb
+        self._error_cb = error_cb
+
+    def set_secrets(self, secrets):
+        self._connection.set_secrets(secrets)
+        self._reply_cb(secrets)
+
+    def set_error(self, error):
+        self._error_cb(error)
 
 class NMSettingsConnection(dbus.service.Object):
     def __init__(self, path, settings, secrets):
@@ -86,6 +101,9 @@ class NMSettingsConnection(dbus.service.Object):
         self._settings = settings
         self._secrets = secrets
 
+    def set_secrets(self, secrets):
+        self._secrets = secrets
+
     @dbus.service.method(dbus_interface=NM_CONNECTION_IFACE,
                          in_signature='', out_signature='a{sa{sv}}')
     def GetSettings(self):
@@ -95,13 +113,16 @@ class NMSettingsConnection(dbus.service.Object):
                          async_callbacks=('reply', 'error'),
                          in_signature='sasb', out_signature='a{sa{sv}}')
     def GetSecrets(self, setting_name, hints, request_new, reply, error):
-        logging.debug('Secrets requested for connection %s', self.path)
+        logging.debug('Secrets requested for connection %s request_new=%s'
+                      % (self.path, request_new))
 
         if request_new or self._secrets is None:
+            # request_new is for example the case when the pw on the AP changes
+            response = SecretsResponse(self, reply, error)
             try:
-                self.secrets_request.send(self, reply=reply, error=error)
+                self.secrets_request.send(self, response=response)
             except Exception, e:
-                logging.error(e)
+                logging.error('Error requesting the secrets via dialog: %s' % e)
         else:
             reply(self._secrets)
 

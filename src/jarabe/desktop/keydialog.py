@@ -87,12 +87,11 @@ class CanceledKeyRequestError(dbus.DBusException):
         self._dbus_error_name = network.NM_SETTINGS_IFACE + '.CanceledError'
 
 class KeyDialog(gtk.Dialog):
-    def __init__(self, ssid, caps, async_cb, async_err_cb):
+    def __init__(self, ssid, caps, response):
         gtk.Dialog.__init__(self, flags=gtk.DIALOG_MODAL)
         self.set_title("Wireless Key Required")
 
-        self._async_cb = async_cb
-        self._async_err_cb = async_err_cb
+        self._response = response
         self._entry = None
         self._ssid = ssid
         self._caps = caps
@@ -126,16 +125,16 @@ class KeyDialog(gtk.Dialog):
     def create_security(self):
         raise NotImplementedError
 
-    def get_callbacks(self):
-        return (self._async_cb, self._async_err_cb)
+    def get_response_object(self):
+        return self._response
 
 WEP_PASSPHRASE = 1
 WEP_HEX = 2
 WEP_ASCII = 3
 
 class WEPKeyDialog(KeyDialog):
-    def __init__(self, ssid, caps, async_cb, async_err_cb):
-        KeyDialog.__init__(self, ssid, caps, async_cb, async_err_cb)
+    def __init__(self, ssid, caps, response):
+        KeyDialog.__init__(self, ssid, caps, response)
 
         # WEP key type
         self.key_store = gtk.ListStore(str, int)
@@ -233,8 +232,8 @@ class WEPKeyDialog(KeyDialog):
         self.set_response_sensitive(gtk.RESPONSE_OK, valid)
 
 class WPAKeyDialog(KeyDialog):
-    def __init__(self, ssid, caps, async_cb, async_err_cb):
-        KeyDialog.__init__(self, ssid, caps, async_cb, async_err_cb)
+    def __init__(self, ssid, caps, response):
+        KeyDialog.__init__(self, ssid, caps, response)
         self.add_key_entry()
 
         self.store = gtk.ListStore(str, int)
@@ -313,13 +312,13 @@ class WPAKeyDialog(KeyDialog):
         self.set_response_sensitive(gtk.RESPONSE_OK, valid)
         return False
 
-def create(ssid, caps, async_cb, async_err_cb):
+def create(ssid, caps, response):
     if (caps & NM_802_11_CAP_CIPHER_TKIP or caps & NM_802_11_CAP_CIPHER_CCMP) \
             and (caps & NM_802_11_CAP_PROTO_WPA or \
                 caps & NM_802_11_CAP_PROTO_WPA2):
-        key_dialog = WPAKeyDialog(ssid, caps, async_cb, async_err_cb)
+        key_dialog = WPAKeyDialog(ssid, caps, response)
     else:
-        key_dialog = WEPKeyDialog(ssid, caps, async_cb, async_err_cb)
+        key_dialog = WEPKeyDialog(ssid, caps, response)
 
     key_dialog.connect("response", _key_dialog_response_cb)
     key_dialog.connect("destroy", _key_dialog_destroy_cb)
@@ -329,18 +328,18 @@ def _key_dialog_destroy_cb(key_dialog, data=None):
     _key_dialog_response_cb(key_dialog, gtk.RESPONSE_CANCEL)
 
 def _key_dialog_response_cb(key_dialog, response_id):
-    (async_cb, async_err_cb) = key_dialog.get_callbacks()
+    response = key_dialog.get_response_object()
     security = None
     if response_id == gtk.RESPONSE_OK:
         security = key_dialog.create_security()
 
     if response_id in [gtk.RESPONSE_CANCEL, gtk.RESPONSE_NONE]:
         # key dialog dialog was canceled; send the error back to NM
-        async_err_cb(CanceledKeyRequestError())
+        response.set_error(CanceledKeyRequestError())
     elif response_id == gtk.RESPONSE_OK:
         if not security:
             raise RuntimeError("Invalid security arguments.")
-        async_cb(security)
+        response.set_secrets(security)
     else:
         raise RuntimeError("Unhandled key dialog response %d" % response_id)
 
