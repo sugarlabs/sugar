@@ -27,7 +27,8 @@ from jarabe.model import bundleregistry
 from jarabe.util.telepathy import connection_watcher
 
 from dbus import PROPERTIES_IFACE
-from telepathy.interfaces import CONNECTION_INTERFACE_REQUESTS, CHANNEL_INTERFACE
+from telepathy.interfaces import CONNECTION_INTERFACE_REQUESTS
+from telepathy.interfaces import CHANNEL_INTERFACE
 from telepathy.client import Channel
 
 CONN_INTERFACE_GADGET = 'org.laptop.Telepathy.Gadget'
@@ -100,7 +101,8 @@ class Neighborhood(gobject.GObject):
             self.__conn_addded_cb(self._conn_watcher, conn)
 
         gconf_client = gconf.client_get_default()
-        gconf_client.add_dir('/desktop/sugar/collaboration', gconf.CLIENT_PRELOAD_NONE)
+        gconf_client.add_dir('/desktop/sugar/collaboration', 
+                             gconf.CLIENT_PRELOAD_NONE)
         gconf_client.notify_add('/desktop/sugar/collaboration/publish_gadget',
             self.__publish_gadget_changed_cb)
 
@@ -118,7 +120,8 @@ class Neighborhood(gobject.GObject):
 
     def _gadget_discovered(self, conn):
         gconf_client = gconf.client_get_default()
-        publish = gconf_client.get_bool('/desktop/sugar/collaboration/publish_gadget')
+        key = '/desktop/sugar/collaboration/publish_gadget'
+        publish = gconf_client.get_bool(key)
         logging.debug("Gadget discovered on connection %s."
                 " Publish our status: %r" %
                 (conn.service_name.split('.')[-1], publish))
@@ -130,7 +133,7 @@ class Neighborhood(gobject.GObject):
     def _request_random_buddies(self, conn, nb):
         logging.debug("Request %d random buddies" % nb)
 
-        path, props = conn[CONNECTION_INTERFACE_REQUESTS].CreateChannel(
+        path, props_ = conn[CONNECTION_INTERFACE_REQUESTS].CreateChannel(
             { 'org.freedesktop.Telepathy.Channel.ChannelType':
                 'org.laptop.Telepathy.Channel.Type.BuddyView',
                'org.laptop.Telepathy.Channel.Interface.View.MaxSize': nb
@@ -144,7 +147,7 @@ class Neighborhood(gobject.GObject):
     def _request_random_activities(self, conn, nb):
         logging.debug("Request %d random activities" % nb)
 
-        path, props = conn[CONNECTION_INTERFACE_REQUESTS].CreateChannel(
+        path, props_ = conn[CONNECTION_INTERFACE_REQUESTS].CreateChannel(
             { 'org.freedesktop.Telepathy.Channel.ChannelType':
                 'org.laptop.Telepathy.Channel.Type.ActivityView',
                'org.laptop.Telepathy.Channel.Interface.View.MaxSize': nb
@@ -155,7 +158,8 @@ class Neighborhood(gobject.GObject):
                 lambda: self.__respawnable_view_closed_cb(
                     lambda: self._request_random_activities(conn, nb)))
 
-    def __publish_gadget_changed_cb(self, client_, cnxn_id_, entry, user_data=None):
+    def __publish_gadget_changed_cb(self, client_, cnxn_id_, entry, 
+                                    user_data=None):
         if entry.value.type == gconf.VALUE_BOOL:
             publish = entry.value.get_bool()
 
@@ -163,8 +167,8 @@ class Neighborhood(gobject.GObject):
                 if CONN_INTERFACE_GADGET not in conn:
                     continue
 
-                gadget_discovered = conn[PROPERTIES_IFACE].Get(CONN_INTERFACE_GADGET,
-                    'GadgetAvailable')
+                gadget_discovered = conn[PROPERTIES_IFACE].Get(
+                    CONN_INTERFACE_GADGET, 'GadgetAvailable')
                 if gadget_discovered:
                     logging.debug("publish_gadget gconf key changed."
                             " Publish our status on %s: %r" %
