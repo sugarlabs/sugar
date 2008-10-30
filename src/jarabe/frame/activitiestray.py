@@ -46,6 +46,8 @@ class ActivityButton(RadioToolButton):
     def __init__(self, home_activity, group):
         RadioToolButton.__init__(self, group=group)
 
+        self.set_palette_invoker(FrameWidgetInvoker(self))
+
         self._home_activity = home_activity
 
         self._icon = PulsingIcon()
@@ -73,7 +75,6 @@ class ActivityButton(RadioToolButton):
             palette = JournalPalette(self._home_activity)
         else:
             palette = CurrentActivityPalette(self._home_activity)
-        palette.props.invoker = FrameWidgetInvoker(self)
         palette.set_group_id('frame')
         self.set_palette(palette)
 
