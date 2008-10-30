@@ -21,7 +21,9 @@ extensions/cpsection/power/model.py
 extensions/cpsection/power/view.py
 extensions/deviceicon/battery.py
 extensions/deviceicon/speaker.py
-extensions/deviceicon/wireless.py
+extensions/deviceicon/volume.py
+extensions/globalkey/screenshot.py
+data/sugar.schemas.in
 src/jarabe/controlpanel/cmd.py
 src/jarabe/controlpanel/gui.py
 src/jarabe/controlpanel/sectionview.py
@@ -29,10 +31,12 @@ src/jarabe/controlpanel/toolbar.py
 src/jarabe/desktop/favoriteslayout.py
 src/jarabe/desktop/favoritesview.py
 src/jarabe/desktop/homebox.py
+src/jarabe/desktop/keydialog.py
 src/jarabe/desktop/meshbox.py
 src/jarabe/desktop/schoolserver.py
 src/jarabe/frame/activitiestray.py
 src/jarabe/frame/clipboardmenu.py
+src/jarabe/frame/clipboardobject.py
 src/jarabe/frame/devicestray.py
 src/jarabe/frame/zoomtoolbar.py
 src/jarabe/intro/window.py
@@ -46,9 +50,8 @@ src/jarabe/journal/misc.py
 src/jarabe/journal/modalalert.py
 src/jarabe/journal/objectchooser.py
 src/jarabe/journal/palettes.py
-src/jarabe/journal/volumesmanager.py
 src/jarabe/journal/volumestoolbar.py
 src/jarabe/view/buddymenu.py
 src/jarabe/view/keyhandler.py
 src/jarabe/view/palettes.py
-src/jarabe/service/network.py
+
