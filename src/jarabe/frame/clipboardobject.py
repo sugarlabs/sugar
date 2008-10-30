@@ -44,7 +44,7 @@ class ClipboardObject(object):
 
             if not mime_type:
                 mime_type = 'Data'
-            name = _('%s clipping') % type
+            name = _('%s clipping') % mime_type
 
         return name
 
