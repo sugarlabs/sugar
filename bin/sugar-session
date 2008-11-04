@@ -130,6 +130,10 @@ def show_software_updates_cb(home_window):
     if os.path.isfile(os.path.expanduser('~/.sugar-update')):
         home_window.get_home_box().show_software_updates_alert()
 
+def setup_notification_service_cb():
+    from jarabe.model import notifications
+    notifications.init()
+
 def main():
     cleanup_logs()
     logger.start('shell')
@@ -165,6 +169,7 @@ def main():
     gobject.idle_add(setup_frame_cb)
     gobject.idle_add(setup_keyhandler_cb)
     gobject.idle_add(setup_journal_cb)
+    gobject.idle_add(setup_notification_service_cb)
     gobject.idle_add(show_software_updates_cb, home_window)
 
     try:
