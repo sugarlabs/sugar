@@ -102,22 +102,30 @@ def start_session_manager():
     session_manager = get_session_manager()
     session_manager.start()
 
-def uisetup_completed_cb():
-    logging.debug('STARTUP: --- uisetup_completed_cb ---')
+def unfreeze_dcon_cb():
+    logging.debug('STARTUP: unfreeze_dcon_cb')
     from jarabe.model import screen
 
     screen.set_dcon_freeze(0)
 
-def uisetup_delayed_cb(home_window):
-    logging.debug('STARTUP: --- uisetup_delayed_cb ---')
-    from jarabe.journal import journalactivity
+def setup_frame_cb():
+    logging.debug('STARTUP: setup_frame_cb')
+    from jarabe import frame
+    frame.get_view()
+
+def setup_keyhandler_cb():
+    logging.debug('STARTUP: setup_keyhandler_cb')
     from jarabe.view import keyhandler
     from jarabe import frame
-
     keyhandler.setup(frame.get_view())
 
+def setup_journal_cb():
+    logging.debug('STARTUP: setup_journal_cb')
+    from jarabe.journal import journalactivity
     journalactivity.start()
 
+def show_software_updates_cb(home_window):
+    logging.debug('STARTUP: show_software_updates_cb')
     if os.path.isfile(os.path.expanduser('~/.sugar-update')):
         home_window.get_home_box().show_software_updates_alert()
 
@@ -152,8 +160,11 @@ def main():
     home_window = HomeWindow()
     home_window.show()
 
-    gobject.idle_add(uisetup_completed_cb)
-    gobject.idle_add(uisetup_delayed_cb, home_window)
+    gobject.idle_add(unfreeze_dcon_cb)
+    gobject.idle_add(setup_frame_cb)
+    gobject.idle_add(setup_keyhandler_cb)
+    gobject.idle_add(setup_journal_cb)
+    gobject.idle_add(show_software_updates_cb, home_window)
 
     try:
         gtk.main()
