@@ -471,9 +471,9 @@ class DeviceObserver(object):
         self._bus = dbus.SystemBus()
         self._device = device
 
-        self._device.GetAccessPoints(
-                               reply_handler=self._get_access_points_reply_cb,
-                               error_handler=self._get_access_points_error_cb)
+        wireless = dbus.Interface(self._device, _NM_WIRELESS_IFACE)
+        wireless.GetAccessPoints(reply_handler=self._get_access_points_reply_cb,
+                                 error_handler=self._get_access_points_error_cb)
 
         self._bus.add_signal_receiver(self.__access_point_added_cb,
                                       signal_name='AccessPointAdded',
