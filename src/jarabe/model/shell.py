@@ -457,6 +457,10 @@ class ShellModel(gobject.GObject):
                 home_activity.props.launching = False
                 self.emit('launch-completed', home_activity)
 
+            startup_time = time.time() - home_activity.get_launch_time()
+            logging.debug('%s launched in %f seconds.' %
+                               (home_activity.get_type(), startup_time))
+
             if self._active_activity is None:
                 self._set_active_activity(home_activity)
 
