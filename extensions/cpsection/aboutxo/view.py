@@ -137,6 +137,21 @@ class AboutXO(SectionView):
         box_software.pack_start(box_firmware, expand=False)
         box_firmware.show()
 
+        box_wireless_fw = gtk.HBox(spacing=style.DEFAULT_SPACING)
+        label_wireless_fw = gtk.Label(_('Wireless Firmware:'))
+        label_wireless_fw.set_alignment(1, 0)
+        label_wireless_fw.modify_fg(gtk.STATE_NORMAL,
+                              style.COLOR_SELECTION_GREY.get_gdk_color())
+        box_wireless_fw.pack_start(label_wireless_fw, expand=False)
+        self._group.add_widget(label_wireless_fw)
+        label_wireless_fw.show()
+        label_wireless_fw_no = gtk.Label(self._model.get_wireless_firmware())
+        label_wireless_fw_no.set_alignment(0, 0)
+        box_wireless_fw.pack_start(label_wireless_fw_no, expand=False)
+        label_wireless_fw_no.show()
+        box_software.pack_start(box_wireless_fw, expand=False)
+        box_wireless_fw.show()
+
         self._vbox.pack_start(box_software, expand=False)
         box_software.show()
 

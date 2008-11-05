@@ -18,6 +18,7 @@
 import os
 import logging
 import re
+import subprocess
 from gettext import gettext as _
 
 _logger = logging.getLogger('ControlPanel - AboutXO')
@@ -61,6 +62,22 @@ def get_firmware_number():
 
 def print_firmware_number():    
     print get_firmware_number()
+
+def get_wireless_firmware():
+    try:
+        info = subprocess.Popen(["/usr/sbin/ethtool", "-i", "eth0"],
+                                stdout=subprocess.PIPE).stdout.readlines()
+    except OSError:
+        return _not_available
+    try:
+        wireless_firmware = [line for line in info
+                             if line.startswith('firmware')][0].split()[1]
+    except IndexError:
+        wireless_firmware = _not_available
+    return wireless_firmware
+
+def print_wireless_firmware():
+    print get_wireless_firmware()
 
 def _read_file(path):
     if os.access(path, os.R_OK) == 0:
