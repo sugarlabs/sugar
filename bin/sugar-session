@@ -15,13 +15,15 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import sys
 import os
+import sys
+import time
+
 if os.environ.get('SUGAR_LOGGER_LEVEL', '') == 'debug':
-    import time
     print '%r STARTUP: Starting the shell' % time.time()
     sys.stdout.flush()
 
+import shutil
 import gettext
 import logging
 
@@ -34,7 +36,6 @@ gtk.gdk.threads_init()
 dbus.glib.threads_init()
 
 from sugar import logger
-from sugar.profile import get_profile
 from sugar import env
 
 from jarabe.desktop.homewindow import HomeWindow
@@ -102,24 +103,36 @@ def start_session_manager():
     session_manager = get_session_manager()
     session_manager.start()
 
-def uisetup_completed_cb():
-    logging.debug('STARTUP: --- uisetup_completed_cb ---')
+def unfreeze_dcon_cb():
+    logging.debug('STARTUP: unfreeze_dcon_cb')
     from jarabe.model import screen
 
     screen.set_dcon_freeze(0)
 
-def uisetup_delayed_cb(home_window):
-    logging.debug('STARTUP: --- uisetup_delayed_cb ---')
-    from jarabe.journal import journalactivity
+def setup_frame_cb():
+    logging.debug('STARTUP: setup_frame_cb')
+    from jarabe import frame
+    frame.get_view()
+
+def setup_keyhandler_cb():
+    logging.debug('STARTUP: setup_keyhandler_cb')
     from jarabe.view import keyhandler
     from jarabe import frame
-
     keyhandler.setup(frame.get_view())
 
+def setup_journal_cb():
+    logging.debug('STARTUP: setup_journal_cb')
+    from jarabe.journal import journalactivity
     journalactivity.start()
 
+def show_software_updates_cb(home_window):
+    logging.debug('STARTUP: show_software_updates_cb')
     if os.path.isfile(os.path.expanduser('~/.sugar-update')):
         home_window.get_home_box().show_software_updates_alert()
+
+def setup_notification_service_cb():
+    from jarabe.model import notifications
+    notifications.init()
 
 def main():
     cleanup_logs()
@@ -152,8 +165,12 @@ def main():
     home_window = HomeWindow()
     home_window.show()
 
-    gobject.idle_add(uisetup_completed_cb)
-    gobject.idle_add(uisetup_delayed_cb, home_window)
+    gobject.idle_add(unfreeze_dcon_cb)
+    gobject.idle_add(setup_frame_cb)
+    gobject.idle_add(setup_keyhandler_cb)
+    gobject.idle_add(setup_journal_cb)
+    gobject.idle_add(setup_notification_service_cb)
+    gobject.idle_add(show_software_updates_cb, home_window)
 
     try:
         gtk.main()

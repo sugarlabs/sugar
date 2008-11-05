@@ -23,6 +23,7 @@ import hippo
 from sugar.graphics import animator
 from sugar.graphics import style
 from sugar.graphics import palettegroup
+from sugar import profile
 
 from jarabe.frame.eventarea import EventArea
 from jarabe.frame.activitiestray import ActivitiesTray
@@ -32,6 +33,7 @@ from jarabe.frame.devicestray import DevicesTray
 from jarabe.frame.framewindow import FrameWindow
 from jarabe.frame.clipboardpanelwindow import ClipboardPanelWindow
 from jarabe.frame.notification import NotificationIcon, NotificationWindow
+from jarabe.model import notifications
 
 TOP_RIGHT = 0
 TOP_LEFT = 1
@@ -125,8 +127,16 @@ class Frame(object):
 
         self._notif_by_icon = {}
 
+        notification_service = notifications.get_service()
+        notification_service.notification_received.connect(
+                self.__notification_received_cb)
+        notification_service.notification_cancelled.connect(
+                self.__notification_cancelled_cb)
+
     def is_visible(self):
         return self.current_position != 0.0
+
+    visible = property(is_visible, None)
 
     def hide(self):
         if self._animator:
@@ -276,7 +286,9 @@ class Frame(object):
     def notify_key_press(self):
         self._key_listener.key_press()
 
-    def add_notification(self, icon, corner=gtk.CORNER_TOP_LEFT):
+    def add_notification(self, icon, corner=gtk.CORNER_TOP_LEFT,
+                         duration=_NOTIFICATION_DURATION):
+
         if not isinstance(icon, NotificationIcon):
             raise TypeError('icon must be a NotificationIcon.')
 
@@ -301,7 +313,7 @@ class Frame(object):
 
         self._notif_by_icon[icon] = window
 
-        gobject.timeout_add(_NOTIFICATION_DURATION,
+        gobject.timeout_add(duration,
                         lambda: self.remove_notification(icon))
 
     def remove_notification(self, icon):
@@ -316,4 +328,31 @@ class Frame(object):
         window.destroy()
         del self._notif_by_icon[icon]
 
-    visible = property(is_visible, None)
+    def __notification_received_cb(self, **kwargs):
+        logging.debug('__notification_received_cb %r' % kwargs)
+        icon = NotificationIcon()
+
+        hints = kwargs['hints']
+
+        icon_file_name = hints.get('x-sugar-icon-file-name', '')
+        if icon_file_name:
+            icon.props.icon_filename = icon_file_name
+        else:
+            icon.props.icon_name = 'application-octet-stream'
+
+        icon_colors = hints.get('x-sugar-icon-colors', '')
+        if not icon_colors:
+            icon_colors = profile.get_color()
+        icon.props.xo_color = icon_colors
+
+        duration = kwargs.get('expire_timeout', -1)
+        if duration == -1:
+            duration = _NOTIFICATION_DURATION
+
+        self.add_notification(icon, gtk.CORNER_TOP_RIGHT, duration)
+
+    def __notification_cancelled_cb(self, **kwargs):
+        # Do nothing for now. Our notification UI is so simple, there's no
+        # point yet.
+        pass
+
