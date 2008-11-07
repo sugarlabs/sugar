@@ -109,7 +109,7 @@ class ViewSource(gtk.Window):
         self._parent_window_xid = window_xid
 
         self.connect('realize', self.__realize_cb)
-        self.connect('destroy', self.__destroy_cb)
+        self.connect('destroy', self.__destroy_cb, document_path)
         self.connect('key-press-event', self.__key_press_event_cb)
 
         vbox = gtk.VBox()
@@ -170,8 +170,10 @@ class ViewSource(gtk.Window):
             self._file_viewer.set_path(path)
             self._file_viewer.get_parent().show()
 
-    def __destroy_cb(self, window):
+    def __destroy_cb(self, window, document_path):
         del map_activity_to_window[self._parent_window_xid]
+        if document_path is not None and os.path.exists(document_path):
+            os.unlink(document_path)
 
     def __key_press_event_cb(self, window, event):
         keyname = gtk.gdk.keyval_name(event.keyval)
