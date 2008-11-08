@@ -156,10 +156,10 @@ class ViewSource(gtk.Window):
     def __source_selected_cb(self, widget, path):
         if os.path.isfile(path):
             self._source_display.file_path = path
-            self._file_viewer.get_parent().hide()
+            self._file_viewer.hide()
         else:
             self._file_viewer.set_path(path)
-            self._file_viewer.get_parent().show()
+            self._file_viewer.show()
 
     def __destroy_cb(self, window, document_path):
         del map_activity_to_window[self._parent_window_xid]
