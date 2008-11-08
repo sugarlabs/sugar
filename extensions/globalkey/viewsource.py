@@ -122,27 +122,18 @@ class ViewSource(gtk.Window):
         toolbar.connect('source-selected', self.__source_selected_cb)
         toolbar.show()
 
-        hbox = gtk.HBox()
-        vbox.pack_start(hbox)
-        hbox.show()
-
-        scrolled_window = gtk.ScrolledWindow()
-        scrolled_window.set_size_request(style.GRID_CELL_SIZE * 3, -1)
-        hbox.pack_start(scrolled_window, expand=False)
-        scrolled_window.show()
+        pane = gtk.HPaned()
+        vbox.pack_start(pane)
+        pane.show()
         
         self._file_viewer = FileViewer(bundle_path)
         self._file_viewer.connect('file-selected', self.__file_selected_cb)
-        scrolled_window.add(self._file_viewer)
+        pane.add1(self._file_viewer)
         self._file_viewer.show()
 
-        scrolled_window = gtk.ScrolledWindow()
-        #scrolled_window.set_size_request(self._calculate_char_width(80), -1)
-        hbox.pack_start(scrolled_window, expand=True)
-        scrolled_window.show()
-
         self._source_display = SourceDisplay()
-        scrolled_window.add(self._source_display)
+        #self._source_display.set_size_request(self._calculate_char_width(80), -1)
+        pane.pack2(self._source_display)
         self._source_display.show()
 
     def _calculate_char_width(self, char_count):
@@ -252,7 +243,7 @@ class Toolbar(gtk.Toolbar):
         if button.props.active:
             self.emit('source-selected', path)
 
-class FileViewer(gtk.TreeView):
+class FileViewer(gtk.ScrolledWindow):
     __gtype_name__ = 'SugarFileViewer'
 
     __gsignals__ = {
@@ -262,19 +253,28 @@ class FileViewer(gtk.TreeView):
     }
 
     def __init__(self, path):
-        gtk.TreeView.__init__(self)
+        gtk.ScrolledWindow.__init__(self)
+
+        self.props.hscrollbar_policy = gtk.POLICY_AUTOMATIC
+        self.props.vscrollbar_policy = gtk.POLICY_AUTOMATIC
+        self.set_size_request(style.GRID_CELL_SIZE * 3, -1)
 
         self._path = None
 
-        self.props.headers_visible = False
-        self.get_selection().connect('changed', self.__selection_changed_cb)
-        
+        self._tree_view = gtk.TreeView()
+        self.add(self._tree_view)
+        self._tree_view.show()
+
+        self._tree_view.props.headers_visible = False
+        selection = self._tree_view.get_selection()
+        selection.connect('changed', self.__selection_changed_cb)
+
         cell = gtk.CellRendererText()
         column = gtk.TreeViewColumn()
         column.pack_start(cell, True)
         column.add_attribute(cell, 'text', 0)
-        self.append_column(column)
-        self.set_search_column(0)
+        self._tree_view.append_column(column)
+        self._tree_view.set_search_column(0)
 
         self.set_path(path)
 
@@ -283,11 +283,11 @@ class FileViewer(gtk.TreeView):
         if self._path == path:
             return
         self._path = path
-        self.set_model(gtk.TreeStore(str, str))
+        self._tree_view.set_model(gtk.TreeStore(str, str))
         self._add_dir_to_model(path)
 
     def _add_dir_to_model(self, dir_path, parent=None):
-        model = self.get_model()
+        model = self._tree_view.get_model()
         for f in os.listdir(dir_path):
             full_path = os.path.join(dir_path, f)
             if os.path.isdir(full_path):
@@ -304,32 +304,36 @@ class FileViewer(gtk.TreeView):
             file_path = model.get_value(tree_iter, 1)
         self.emit('file-selected', file_path)
 
-class SourceDisplay(gtksourceview2.View):
+class SourceDisplay(gtk.ScrolledWindow):
     __gtype_name__ = 'SugarSourceDisplay'
 
     def __init__(self):
-        self._buffer = gtksourceview2.Buffer()
-        gtksourceview2.View.__init__(self, self._buffer)
+        gtk.ScrolledWindow.__init__(self)
 
+        self.props.hscrollbar_policy = gtk.POLICY_AUTOMATIC
+        self.props.vscrollbar_policy = gtk.POLICY_AUTOMATIC
+
+        self._buffer = gtksourceview2.Buffer()        
         self._buffer.set_highlight_syntax(True)
+
+        self._source_view = gtksourceview2.View(self._buffer)
+        self._source_view.set_editable(False)
+        self._source_view.set_cursor_visible(True)
+        self._source_view.set_show_line_numbers(True)
+        self._source_view.set_show_right_margin(True)
+        self._source_view.set_right_margin_position(80)
+        #self._source_view.set_highlight_current_line(True) #FIXME: Ugly color
+        self._source_view.modify_font(_SOURCE_FONT)
+        self.add(self._source_view)
+        self._source_view.show()
+
         self._file_path = None
-
-        self.set_editable(False)
-        self.set_cursor_visible(True)
-        self.set_show_line_numbers(True)
-        self.set_show_right_margin(True)
-        self.set_right_margin_position(80)
-        
-        # TODO: Activate again when we get a better style scheme
-        #self.set_highlight_current_line(True)
-
-        self.modify_font(_SOURCE_FONT)
 
     def _set_file_path(self, file_path):
         if file_path == self._file_path:
             return
         self._file_path = file_path
-        
+
         if self._file_path is None:
             self._buffer.set_text('')
             return
