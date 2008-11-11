@@ -1,3 +1,12 @@
+sugar (0.82.8-3) unstable; urgency=low
+
+  * Update CDBS snippet makefile.mk: Cleanup check stamp dir for
+    flavored builds. Fixing failure to build twice in a row.
+  * Update CDBS snippet copyright-check.mk: Compact simple licenses
+    (those without ' or later').
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 11 Nov 2008 18:47:52 +0100
+
 sugar (0.82.8-2) unstable; urgency=low
 
   * Update cdbs snippets:
