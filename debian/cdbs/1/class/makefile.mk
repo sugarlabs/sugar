@@ -74,7 +74,7 @@ $(cdbs_make_check_stamps) : debian/stamp-makefile-check% : debian/stamp-makefile
 	$(if $(DEB_MAKE_CHECK_TARGET),touch $@)
 
 makefile-clean::
-	$(if $(DEB_MAKE_CHECK_TARGET),rm -f debian/stamp-makefile-check)
+	$(if $(DEB_MAKE_CHECK_TARGET),$(if $(cdbs_make_multibuilds),-rmdir --ignore-fail-on-non-empty debian/stamp-makefile-check,rm -f debian/stamp-makefile-check))
 
 $(cdbs_make_clean_nonstamps)::
 	$(if $(cdbs_make_multibuilds),rm -f $(@:makefile-clean%=debian/stamp-makefile-check%))
