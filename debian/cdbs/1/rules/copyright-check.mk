@@ -63,6 +63,7 @@ debian/stamp-copyright-check:
 	'foreach $$file (@files) {'\
 	'	$$file->{license} =~ s/\s*\(with incorrect FSF address\)//;'\
 	'	$$file->{license} =~ s/\s+\(v([^)]+) or later\)/-$$1+/;'\
+	'	$$file->{license} =~ s/\s+\(v([^)]+)\)/-$$1/;'\
 	'	$$file->{license} =~ s/\s*(\*No copyright\*)\s*// and $$file->{copyright} = $$1;'\
 	'	$$file->{license} =~ s/^\s*(GENERATED FILE)/UNKNOWN ($$1)/;'\
 	'	$$file->{license} =~ s/\s+(GENERATED FILE)/ ($$1)/;'\
