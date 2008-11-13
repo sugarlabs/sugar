@@ -63,6 +63,7 @@ class AccessPointView(CanvasPulsingIcon):
         self._bus = dbus.SystemBus()
         self._device = device
         self._model = model
+        self._palette_icon = None
         self._disconnect_item = None
         self._connect_item = None
         self._greyed_out = False
@@ -76,6 +77,7 @@ class AccessPointView(CanvasPulsingIcon):
         self._device_state = None
         self._connection = None
         self._active = True
+        self._color = None
 
         self.connect('activated', self._activate_cb)
 
@@ -117,13 +119,12 @@ class AccessPointView(CanvasPulsingIcon):
 
     def _create_palette(self):
         icon_name = get_icon_state(_ICON_NAME, self._strength)
-        palette_icon = Icon(icon_name=icon_name,
-                            icon_size=style.STANDARD_ICON_SIZE,
-                            badge_name=self.props.badge_name)
-        palette_icon.props.xo_color = XoColor('%s,%s' % self._compute_color())
+        self._palette_icon = Icon(icon_name=icon_name,
+                                  icon_size=style.STANDARD_ICON_SIZE,
+                                  badge_name=self.props.badge_name)
                                               
         p = palette.Palette(primary_text=self._name,
-                            icon=palette_icon)
+                            icon=self._palette_icon)
 
         self._connect_item = MenuItem(_('Connect'), 'dialog-ok')
         self._connect_item.connect('activate', self._activate_cb)
@@ -162,17 +163,17 @@ class AccessPointView(CanvasPulsingIcon):
             self._rsn_flags = properties['RsnFlags']
         if 'Mode' in properties:
             self._mode = properties['Mode']
-        self._update()
 
-    def _compute_color(self):
         sh = sha.new()
         data = self._name + hex(self._flags)
         sh.update(data)
         h = hash(sh.digest())
         idx = h % len(xocolor.colors)
 
-        # stroke, fill
-        return (xocolor.colors[idx][0], xocolor.colors[idx][1])
+        self._color = XoColor('%s,%s' % (xocolor.colors[idx][0],
+                                         xocolor.colors[idx][1]))
+
+        self._update()
 
     def __get_active_ap_reply_cb(self, ap):
         self._active = (ap == self._model.object_path)
@@ -203,12 +204,15 @@ class AccessPointView(CanvasPulsingIcon):
     def _update(self):
         if self._flags == network.NM_802_11_AP_FLAGS_PRIVACY:
             self.props.badge_name = "emblem-locked"
+            self._palette_icon.props.badge_name = "emblem-locked"
         else:
             self.props.badge_name = None
+            self._palette_icon.props.badge_name = None
 
         self._palette.props.primary_text = self._name
 
         self._update_state()
+        self._update_color()
 
     def _update_state(self):
         if self._active:
@@ -249,11 +253,14 @@ class AccessPointView(CanvasPulsingIcon):
             self._palette.props.secondary_text = None
             self.props.pulsing = False
 
+    def _update_color(self):        
         if self._greyed_out:
             self.props.pulsing = False
             self.props.base_color = XoColor('#D5D5D5,#D5D5D5')
         else:
-            self.props.base_color = XoColor('%s,%s' % self._compute_color())
+            self.props.base_color = self._color
+
+        self._palette_icon.props.xo_color = self._color
 
     def _disconnect_activate_cb(self, item):
         pass
