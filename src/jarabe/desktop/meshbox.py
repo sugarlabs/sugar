@@ -43,6 +43,8 @@ from jarabe.desktop.spreadlayout import SpreadLayout
 from jarabe.desktop import keydialog
 from jarabe.model import bundleregistry
 from jarabe.model import network
+from jarabe.model.network import Settings
+from jarabe.model.network import WirelessSecurity
 
 _NM_SERVICE = 'org.freedesktop.NetworkManager'
 _NM_IFACE = 'org.freedesktop.NetworkManager'
@@ -61,6 +63,7 @@ class AccessPointView(CanvasPulsingIcon):
         self._bus = dbus.SystemBus()
         self._device = device
         self._model = model
+        self._palette_icon = None
         self._disconnect_item = None
         self._connect_item = None
         self._greyed_out = False
@@ -68,8 +71,13 @@ class AccessPointView(CanvasPulsingIcon):
         self._strength = 0
         self._flags = 0
         self._wpa_flags = 0
+        self._rsn_flags = 0
+        self._mode = 0
+        self._device_caps = 0
         self._device_state = None
+        self._connection = None
         self._active = True
+        self._color = None
 
         self.connect('activated', self._activate_cb)
 
@@ -93,6 +101,9 @@ class AccessPointView(CanvasPulsingIcon):
         self._device.Get(_NM_DEVICE_IFACE, 'State',
                          reply_handler=self.__get_device_state_reply_cb,
                          error_handler=self.__get_device_state_error_cb)
+        self._device.Get(_NM_WIRELESS_IFACE, 'WirelessCapabilities',
+                         reply_handler=self.__get_device_caps_reply_cb,
+                         error_handler=self.__get_device_caps_error_cb)
         self._device.Get(_NM_WIRELESS_IFACE, 'ActiveAccessPoint',
                          reply_handler=self.__get_active_ap_reply_cb,
                          error_handler=self.__get_active_ap_error_cb)
@@ -108,13 +119,12 @@ class AccessPointView(CanvasPulsingIcon):
 
     def _create_palette(self):
         icon_name = get_icon_state(_ICON_NAME, self._strength)
-        palette_icon = Icon(icon_name=icon_name,
-                            icon_size=style.STANDARD_ICON_SIZE,
-                            badge_name=self.props.badge_name)
-        palette_icon.props.xo_color = XoColor('%s,%s' % self._compute_color())
+        self._palette_icon = Icon(icon_name=icon_name,
+                                  icon_size=style.STANDARD_ICON_SIZE,
+                                  badge_name=self.props.badge_name)
                                               
         p = palette.Palette(primary_text=self._name,
-                            icon=palette_icon)
+                            icon=self._palette_icon)
 
         self._connect_item = MenuItem(_('Connect'), 'dialog-ok')
         self._connect_item.connect('activate', self._activate_cb)
@@ -140,27 +150,30 @@ class AccessPointView(CanvasPulsingIcon):
             self._active = (ap == self._model.object_path)
             self._update_state()
 
-    def _update_properties(self, props):
-        if 'Ssid' in props:
-            self._name = props['Ssid']
-        if 'Strength' in props:
-            self._strength = props['Strength']
-        if 'Flags' in props:
-            self._flags = props['Flags']
-        if 'WpaFlags' in props:
-            self._wpa_flags = props['WpaFlags']
+    def _update_properties(self, properties):
+        if 'Ssid' in properties:
+            self._name = properties['Ssid']
+        if 'Strength' in properties:
+            self._strength = properties['Strength']
+        if 'Flags' in properties:
+            self._flags = properties['Flags']
+        if 'WpaFlags' in properties:
+            self._wpa_flags = properties['WpaFlags']
+        if 'RsnFlags' in properties:
+            self._rsn_flags = properties['RsnFlags']
+        if 'Mode' in properties:
+            self._mode = properties['Mode']
 
-        self._update()
-
-    def _compute_color(self):
         sh = sha.new()
         data = self._name + hex(self._flags)
         sh.update(data)
         h = hash(sh.digest())
         idx = h % len(xocolor.colors)
 
-        # stroke, fill
-        return (xocolor.colors[idx][0], xocolor.colors[idx][1])
+        self._color = XoColor('%s,%s' % (xocolor.colors[idx][0],
+                                         xocolor.colors[idx][1]))
+
+        self._update()
 
     def __get_active_ap_reply_cb(self, ap):
         self._active = (ap == self._model.object_path)
@@ -168,6 +181,12 @@ class AccessPointView(CanvasPulsingIcon):
 
     def __get_active_ap_error_cb(self, err):
         logging.debug('Error getting the active access point: %s', err)
+
+    def __get_device_caps_reply_cb(self, caps):
+        self._device_caps = caps
+
+    def __get_device_caps_error_cb(self, err):
+        logging.debug('Error getting the wireless device properties: %s', err)
 
     def __get_device_state_reply_cb(self, state):
         self._device_state = state
@@ -183,14 +202,17 @@ class AccessPointView(CanvasPulsingIcon):
         logging.debug('Error getting the access point properties: %s', err)
 
     def _update(self):
-        if self._flags == network.AP_FLAGS_802_11_PRIVACY:
+        if self._flags == network.NM_802_11_AP_FLAGS_PRIVACY:
             self.props.badge_name = "emblem-locked"
+            self._palette_icon.props.badge_name = "emblem-locked"
         else:
             self.props.badge_name = None
+            self._palette_icon.props.badge_name = None
 
         self._palette.props.primary_text = self._name
 
         self._update_state()
+        self._update_color()
 
     def _update_state(self):
         if self._active:
@@ -231,38 +253,111 @@ class AccessPointView(CanvasPulsingIcon):
             self._palette.props.secondary_text = None
             self.props.pulsing = False
 
+    def _update_color(self):        
         if self._greyed_out:
             self.props.pulsing = False
             self.props.base_color = XoColor('#D5D5D5,#D5D5D5')
         else:
-            self.props.base_color = XoColor('%s,%s' % self._compute_color())
+            self.props.base_color = self._color
+
+        self._palette_icon.props.xo_color = self._color
 
     def _disconnect_activate_cb(self, item):
         pass
 
+
+    def _add_ciphers_from_flags(self, flags, pairwise):
+        ciphers = []
+        if pairwise:
+            if flags & network.NM_802_11_AP_SEC_PAIR_TKIP:
+                ciphers.append("tkip")
+            if flags & network.NM_802_11_AP_SEC_PAIR_CCMP:
+                ciphers.append("ccmp")
+        else:
+            if flags & network.NM_802_11_AP_SEC_GROUP_WEP40:
+                ciphers.append("wep40")
+            if flags & network.NM_802_11_AP_SEC_GROUP_WEP104:
+                ciphers.append("wep104")
+            if flags & network.NM_802_11_AP_SEC_GROUP_TKIP:
+                ciphers.append("tkip")
+            if flags & network.NM_802_11_AP_SEC_GROUP_CCMP:
+                ciphers.append("ccmp")
+        return ciphers
+
+    def _get_security(self):
+        if not (self._flags & network.NM_802_11_AP_FLAGS_PRIVACY) and \
+                (self._wpa_flags == network.NM_802_11_AP_SEC_NONE) and \
+                (self._rsn_flags == network.NM_802_11_AP_SEC_NONE):
+            # No security
+            return None
+
+        if (self._flags & network.NM_802_11_AP_FLAGS_PRIVACY) and \
+                (self._wpa_flags == network.NM_802_11_AP_SEC_NONE) and \
+                (self._rsn_flags == network.NM_802_11_AP_SEC_NONE):
+            # Static WEP, Dynamic WEP, or LEAP
+            wireless_security = WirelessSecurity()
+            wireless_security.key_mgmt = 'none'
+            return wireless_security
+
+        if (self._mode != network.NM_802_11_MODE_INFRA):
+            # Stuff after this point requires infrastructure
+            logging.error('The infrastructure mode is not supoorted'
+                          ' by your wireless device.')
+            return None
+
+        if (self._rsn_flags & network.NM_802_11_AP_SEC_KEY_MGMT_PSK) and \
+                (self._dev_caps & network.NM_802_11_DEVICE_CAP_RSN):
+            # WPA2 PSK first
+            pairwise = self._add_ciphers_from_flags(self._rsn_flags, True)
+            group = self._add_ciphers_from_flags(self._rsn_flags, False)
+            wireless_security = WirelessSecurity()
+            wireless_security.key_mgmt = 'wpa-psk'
+            wireless_security.proto = 'rsn'
+            wireless_security.pairwise = pairwise
+            wireless_security.group = group
+            return wireless_security
+
+        if (self._wpa_flags & network.NM_802_11_AP_SEC_KEY_MGMT_PSK) and \
+                (self._dev_caps & network.NM_802_11_DEVICE_CAP_WPA):
+            # WPA PSK
+            pairwise = self._add_ciphers_from_flags(self._wpa_flags, True)
+            group = self._add_ciphers_from_flags(self._wpa_flags, False)
+            wireless_security = WirelessSecurity()
+            wireless_security.key_mgmt = 'wpa-psk'
+            wireless_security.proto = 'wpa'
+            wireless_security.pairwise = pairwise
+            wireless_security.group = group
+            return wireless_security
+
     def _activate_cb(self, icon):
-        conn = network.find_connection(self._name)
-        if conn is None:
-            info = { 'connection': { 'id' : 'Auto ' + self._name,
-                                     'uuid' : unique_id(),
-                                     'type' : '802-11-wireless' } ,
-                     '802-11-wireless' : { 'ssid': self._name }
-                   }
+        connection = network.find_connection(self._name)
+        if connection is None:
+            settings = Settings()            
+            settings.connection.id = 'Auto ' + self._name
+            settings.connection.uuid = unique_id()
+            settings.connection.type = '802-11-wireless'
+            settings.wireless.ssid = self._name
 
-            if self._flags == network.AP_FLAGS_802_11_PRIVACY:
-                info["802-11-wireless-security"] = { "key-mgmt": "none" }
+            wireless_security = self._get_security()
+            settings.wireless_security = wireless_security
 
-            conn = network.add_connection(self._name, info)
+            connection = network.add_connection(self._name, settings)
+
+            if wireless_security is None:
+                self._connection = connection
 
         obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
         netmgr = dbus.Interface(obj, _NM_IFACE)
-        netmgr.ActivateConnection(network.SETTINGS_SERVICE, conn.path,
+
+        netmgr.ActivateConnection(network.SETTINGS_SERVICE, connection.path,
                                   self._device.object_path,
                                   self._model.object_path,
                                   reply_handler=self.__activate_reply_cb,
                                   error_handler=self.__activate_error_cb)
 
     def __activate_reply_cb(self, connection):
+        if self._connection:
+            self._connection.save()
         logging.debug('Connection activated: %s', connection)
 
     def __activate_error_cb(self, err):
@@ -273,7 +368,8 @@ class AccessPointView(CanvasPulsingIcon):
         self._update_state()
 
     def create_keydialog(self, response):
-        keydialog.create(self._name, self._wpa_flags, response)
+        keydialog.create(self._name, self._flags, self._wpa_flags,
+                         self._rsn_flags, self._device_caps, response)
 
     def disconnect(self):
         self._bus.remove_signal_receiver(self.__ap_properties_changed_cb,
@@ -661,12 +757,6 @@ class MeshBox(gtk.VBox):
 
     def _activity_removed_cb(self, model, activity_model):
         self._remove_activity(activity_model) 
-
-    def _access_point_added_cb(self, model, ap_model):
-        self._add_access_point(ap_model)
-
-    def _access_point_removed_cb(self, model, ap_model):
-        self._remove_access_point(ap_model) 
 
     def _add_alone_buddy(self, buddy_model):
         icon = BuddyIcon(buddy_model)

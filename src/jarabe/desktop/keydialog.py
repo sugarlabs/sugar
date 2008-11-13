@@ -21,35 +21,10 @@ import gtk
 import dbus
 
 from jarabe.model import network
+from jarabe.model.network import Secrets
 
-IW_AUTH_ALG_OPEN_SYSTEM = 0x00000001
-IW_AUTH_ALG_SHARED_KEY  = 0x00000002
-
-IW_AUTH_WPA_VERSION_DISABLED = 0x00000001
-IW_AUTH_WPA_VERSION_WPA      = 0x00000002
-IW_AUTH_WPA_VERSION_WPA2     = 0x00000004
-
-NM_802_11_CAP_NONE            = 0x00000000
-NM_802_11_CAP_PROTO_NONE      = 0x00000001
-NM_802_11_CAP_PROTO_WEP       = 0x00000002
-NM_802_11_CAP_PROTO_WPA       = 0x00000004
-NM_802_11_CAP_PROTO_WPA2      = 0x00000008
-NM_802_11_CAP_KEY_MGMT_PSK    = 0x00000040
-NM_802_11_CAP_KEY_MGMT_802_1X = 0x00000080
-NM_802_11_CAP_CIPHER_WEP40    = 0x00001000
-NM_802_11_CAP_CIPHER_WEP104   = 0x00002000
-NM_802_11_CAP_CIPHER_TKIP     = 0x00004000
-NM_802_11_CAP_CIPHER_CCMP     = 0x00008000
-
-NM_AUTH_TYPE_WPA_PSK_AUTO = 0x00000000
-IW_AUTH_CIPHER_NONE   = 0x00000001
-IW_AUTH_CIPHER_WEP40  = 0x00000002
-IW_AUTH_CIPHER_TKIP   = 0x00000004
-IW_AUTH_CIPHER_CCMP   = 0x00000008
-IW_AUTH_CIPHER_WEP104 = 0x00000010
-
-IW_AUTH_KEY_MGMT_802_1X = 0x1
-IW_AUTH_KEY_MGMT_PSK    = 0x2
+IW_AUTH_ALG_OPEN_SYSTEM = 'open'
+IW_AUTH_ALG_SHARED_KEY  = 'shared'
 
 def string_is_hex(key):
     is_hex = True
@@ -87,14 +62,17 @@ class CanceledKeyRequestError(dbus.DBusException):
         self._dbus_error_name = network.NM_SETTINGS_IFACE + '.CanceledError'
 
 class KeyDialog(gtk.Dialog):
-    def __init__(self, ssid, caps, response):
+    def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, response):
         gtk.Dialog.__init__(self, flags=gtk.DIALOG_MODAL)
         self.set_title("Wireless Key Required")
 
         self._response = response
         self._entry = None
         self._ssid = ssid
-        self._caps = caps
+        self._flags = flags
+        self._wpa_flags = wpa_flags
+        self._rsn_flags = rsn_flags
+        self._dev_caps = dev_caps
 
         self.set_has_separator(False)        
 
@@ -109,7 +87,6 @@ class KeyDialog(gtk.Dialog):
 
     def add_key_entry(self):
         self._entry = gtk.Entry()
-        #self._entry.props.visibility = False
         self._entry.connect('changed', self._update_response_sensitivity)
         self._entry.connect('activate', self._entry_activate_cb)
         self.vbox.pack_start(self._entry)
@@ -133,8 +110,9 @@ WEP_HEX = 2
 WEP_ASCII = 3
 
 class WEPKeyDialog(KeyDialog):
-    def __init__(self, ssid, caps, response):
-        KeyDialog.__init__(self, ssid, caps, response)
+    def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, response):
+        KeyDialog.__init__(self, ssid, flags, wpa_flags, rsn_flags,
+                           dev_caps, response)
 
         # WEP key type
         self.key_store = gtk.ListStore(str, int)
@@ -159,7 +137,7 @@ class WEPKeyDialog(KeyDialog):
         self.add_key_entry()
 
         # WEP authentication mode
-        self.auth_store = gtk.ListStore(str, int)
+        self.auth_store = gtk.ListStore(str, str)
         self.auth_store.append(["Open System", IW_AUTH_ALG_OPEN_SYSTEM])
         self.auth_store.append(["Shared Key", IW_AUTH_ALG_SHARED_KEY])
 
@@ -193,23 +171,19 @@ class WEPKeyDialog(KeyDialog):
         it = self.auth_combo.get_active_iter()
         (auth_alg, ) = self.auth_store.get(it, 1)
 
-        we_cipher = None
-        if len(key) == 26:
-            we_cipher = IW_AUTH_CIPHER_WEP104
-        elif len(key) == 10:
-            we_cipher = IW_AUTH_CIPHER_WEP40
-
-        return (we_cipher, key, auth_alg)
+        return (key, auth_alg)
 
     def print_security(self):
-        (we_cipher, key, auth_alg) = self._get_security()
-        print "Cipher: %d" % we_cipher
+        (key, auth_alg) = self._get_security()
         print "Key: %s" % key
         print "Auth: %d" % auth_alg
 
     def create_security(self):
-        (we_cipher, key, auth_alg) = self._get_security()
-        return { "802-11-wireless-security": { "wep-key0": key } }
+        (key, auth_alg) = self._get_security()
+        secrets = Secrets()
+        secrets.wep_key = key
+        secrets.auth_alg = auth_alg
+        return secrets
 
     def _update_response_sensitivity(self, ignored=None):
         key = self._entry.get_text()
@@ -232,16 +206,13 @@ class WEPKeyDialog(KeyDialog):
         self.set_response_sensitive(gtk.RESPONSE_OK, valid)
 
 class WPAKeyDialog(KeyDialog):
-    def __init__(self, ssid, caps, response):
-        KeyDialog.__init__(self, ssid, caps, response)
+    def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, response):
+        KeyDialog.__init__(self, ssid, flags, wpa_flags, rsn_flags,
+                           dev_caps, response)
         self.add_key_entry()
 
-        self.store = gtk.ListStore(str, int)
-        self.store.append(["Automatic", NM_AUTH_TYPE_WPA_PSK_AUTO])
-        if caps & NM_802_11_CAP_CIPHER_CCMP:
-            self.store.append(["AES-CCMP", IW_AUTH_CIPHER_CCMP])
-        if caps & NM_802_11_CAP_CIPHER_TKIP:
-            self.store.append(["TKIP", IW_AUTH_CIPHER_TKIP])
+        self.store = gtk.ListStore(str)
+        self.store.append([_("WPA & WPA2 Personal")])
 
         self.combo = gtk.ComboBox(self.store)
         cell = gtk.CellRendererText()
@@ -250,7 +221,7 @@ class WPAKeyDialog(KeyDialog):
         self.combo.set_active(0)
 
         self.hbox = gtk.HBox()
-        self.hbox.pack_start(gtk.Label(_("Encryption Type:")))
+        self.hbox.pack_start(gtk.Label(_("Wireless Security:")))
         self.hbox.pack_start(self.combo)
         self.hbox.show_all()
 
@@ -280,23 +251,16 @@ class WPAKeyDialog(KeyDialog):
         if not real_key:
             raise RuntimeError("Invalid key")
 
-        it = self.combo.get_active_iter()
-        (we_cipher, ) = self.store.get(it, 1)
-
-        wpa_ver = IW_AUTH_WPA_VERSION_WPA
-        if self._caps & NM_802_11_CAP_PROTO_WPA2:
-            wpa_ver = IW_AUTH_WPA_VERSION_WPA2
-
-        return (we_cipher, real_key, wpa_ver)
+        return real_key
 
     def print_security(self):
-        (we_cipher, key, wpa_ver) = self._get_security()
-        print "Cipher: %d" % we_cipher
+        key = self._get_security()
         print "Key: %s" % key
-        print "WPA Ver: %d" % wpa_ver
 
     def create_security(self):
-        pass
+        secrets = Secrets()
+        secrets.psk = self._get_security()
+        return secrets
 
     def _update_response_sensitivity(self, ignored=None):
         key = self._entry.get_text()
@@ -312,13 +276,14 @@ class WPAKeyDialog(KeyDialog):
         self.set_response_sensitive(gtk.RESPONSE_OK, valid)
         return False
 
-def create(ssid, caps, response):
-    if (caps & NM_802_11_CAP_CIPHER_TKIP or caps & NM_802_11_CAP_CIPHER_CCMP) \
-            and (caps & NM_802_11_CAP_PROTO_WPA or \
-                caps & NM_802_11_CAP_PROTO_WPA2):
-        key_dialog = WPAKeyDialog(ssid, caps, response)
+def create(ssid, flags, wpa_flags, rsn_flags, dev_caps, response):
+    if wpa_flags == network.NM_802_11_AP_SEC_NONE and \
+            rsn_flags == network.NM_802_11_AP_SEC_NONE:
+        key_dialog = WEPKeyDialog(ssid, flags, wpa_flags, rsn_flags,
+                                  dev_caps, response)
     else:
-        key_dialog = WEPKeyDialog(ssid, caps, response)
+        key_dialog = WPAKeyDialog(ssid, flags, wpa_flags, rsn_flags,
+                                  dev_caps, response)
 
     key_dialog.connect("response", _key_dialog_response_cb)
     key_dialog.connect("destroy", _key_dialog_destroy_cb)
@@ -329,17 +294,17 @@ def _key_dialog_destroy_cb(key_dialog, data=None):
 
 def _key_dialog_response_cb(key_dialog, response_id):
     response = key_dialog.get_response_object()
-    security = None
+    secrets = None
     if response_id == gtk.RESPONSE_OK:
-        security = key_dialog.create_security()
+        secrets = key_dialog.create_security()
 
     if response_id in [gtk.RESPONSE_CANCEL, gtk.RESPONSE_NONE]:
         # key dialog dialog was canceled; send the error back to NM
         response.set_error(CanceledKeyRequestError())
     elif response_id == gtk.RESPONSE_OK:
-        if not security:
+        if not secrets:
             raise RuntimeError("Invalid security arguments.")
-        response.set_secrets(security)
+        response.set_secrets(secrets)
     else:
         raise RuntimeError("Unhandled key dialog response %d" % response_id)
 
