@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-09-19 00:30-0400\n"
-"PO-Revision-Date: 2008-09-30 12:22-0400\n"
+"PO-Revision-Date: 2008-11-14 12:15-0500\n"
 "Last-Translator: Markus Schlager <m.slg@gmx.de>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -264,9 +264,10 @@ msgstr "Umgebung"
 msgid "Group"
 msgstr "Gruppe"
 
+# (Markus S.) war 'Zuhause', vgl. stuffer-sheet
 #: ../src/view/frame/zoomtoolbar.py:41
 msgid "Home"
-msgstr "Zuhause"
+msgstr "Startbildschirm"
 
 #: ../src/view/frame/zoomtoolbar.py:43
 msgid "Activity"
@@ -488,10 +489,10 @@ msgstr "Datum & Uhrzeit"
 msgid "Timezone"
 msgstr "Zeitzone"
 
+# Rahmenleiste?
 #: ../src/controlpanel/view/frame.py:28
-#, fuzzy
 msgid "Frame"
-msgstr "Frame"
+msgstr "Rahmen"
 
 #: ../src/controlpanel/view/frame.py:30
 msgid "never"
@@ -539,7 +540,6 @@ msgstr ""
 
 # (Markus S,) war 'Radio:'
 #: ../src/controlpanel/view/network.py:75
-#, fuzzy
 msgid "Radio"
 msgstr "Funknetz"
 
