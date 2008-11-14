@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-09-25 00:30-0400\n"
-"PO-Revision-Date: 2008-09-25 15:59-0400\n"
+"PO-Revision-Date: 2008-11-14 12:15-0500\n"
 "Last-Translator: Markus Schlager <m.slg@gmx.de>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -68,6 +68,7 @@ msgstr "Behalten"
 msgid "Open with"
 msgstr "Öffnen mit"
 
+# (Markus S.) 'clipping', nicht 'clipped'
 #: ../src/view/clipboardmenu.py:228
 #, python-format
 #, fuzzy
@@ -259,9 +260,10 @@ msgstr "Umgebung"
 msgid "Group"
 msgstr "Gruppe"
 
+# (Markus S.) war 'Zuhause', vgl. stuffer-sheet
 #: ../src/view/frame/zoomtoolbar.py:41
 msgid "Home"
-msgstr "Zuhause"
+msgstr "Startbildschirm"
 
 #: ../src/view/frame/zoomtoolbar.py:43
 msgid "Activity"
@@ -478,6 +480,7 @@ msgstr "Ecke"
 msgid "Edge"
 msgstr "Kante"
 
+# (Markus S.) 'Rahmen'? (Vorschlag von hmeyer)
 #: ../src/controlpanel/frame/__init__.py:21
 #, fuzzy
 msgid "Frame"
@@ -521,7 +524,6 @@ msgid "Wireless"
 msgstr "Drahtlosnetzwerk"
 
 #: ../src/controlpanel/network/view.py:62
-#, fuzzy
 msgid "Turn of the wireless radio to save battery life"
 msgstr "Schalte das Funknetz aus, um die Lebensdauer der Batterie zu erhöhen"
 
@@ -532,16 +534,14 @@ msgid "Radio"
 msgstr "Funknetz"
 
 #: ../src/controlpanel/network/view.py:91
-#, fuzzy
 msgid "Discard network history if you have trouble connecting to the network"
 msgstr ""
-"Verwirf die Netzwerk-Historie, wenn du Schwierigkeiten hast, dich mit dem "
+"Verwirf die Netzwerk-Chronik, wenn du Schwierigkeiten hast, dich mit dem "
 "Netzwerk zu verbinden"
 
 #: ../src/controlpanel/network/view.py:100
-#, fuzzy
 msgid "Discard network history"
-msgstr "Netzwerk-Historie verwerfen"
+msgstr "Netzwerk-Chronik verwerfen"
 
 # (Markus S.) 'Zelle'?
 #: ../src/controlpanel/network/view.py:113
@@ -633,7 +633,6 @@ msgstr "Spirale"
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/view/home/favoriteslayout.py:401
-#, fuzzy
 msgid "Box"
 msgstr "Rechteck"
 
