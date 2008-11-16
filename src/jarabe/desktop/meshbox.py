@@ -366,6 +366,7 @@ class AccessPointView(CanvasPulsingIcon):
     def set_filter(self, query):
         self._greyed_out = self._name.lower().find(query) == -1
         self._update_state()
+        self._update_color()
 
     def create_keydialog(self, response):
         keydialog.create(self._name, self._flags, self._wpa_flags,
