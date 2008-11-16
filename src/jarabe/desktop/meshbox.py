@@ -306,7 +306,7 @@ class AccessPointView(CanvasPulsingIcon):
             return None
 
         if (self._rsn_flags & network.NM_802_11_AP_SEC_KEY_MGMT_PSK) and \
-                (self._dev_caps & network.NM_802_11_DEVICE_CAP_RSN):
+                (self._device_caps & network.NM_802_11_DEVICE_CAP_RSN):
             # WPA2 PSK first
             pairwise = self._add_ciphers_from_flags(self._rsn_flags, True)
             group = self._add_ciphers_from_flags(self._rsn_flags, False)
@@ -318,7 +318,7 @@ class AccessPointView(CanvasPulsingIcon):
             return wireless_security
 
         if (self._wpa_flags & network.NM_802_11_AP_SEC_KEY_MGMT_PSK) and \
-                (self._dev_caps & network.NM_802_11_DEVICE_CAP_WPA):
+                (self._device_caps & network.NM_802_11_DEVICE_CAP_WPA):
             # WPA PSK
             pairwise = self._add_ciphers_from_flags(self._wpa_flags, True)
             group = self._add_ciphers_from_flags(self._wpa_flags, False)
