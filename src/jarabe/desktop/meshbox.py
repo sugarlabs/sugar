@@ -625,10 +625,10 @@ class NetworkManagerObserver(object):
 
         self._bus.add_signal_receiver(self.__device_added_cb,
                                       signal_name='DeviceAdded',
-                                      dbus_interface=_NM_DEVICE_IFACE)
+                                      dbus_interface=_NM_IFACE)
         self._bus.add_signal_receiver(self.__device_removed_cb,
                                       signal_name='DeviceRemoved',
-                                      dbus_interface=_NM_DEVICE_IFACE)
+                                      dbus_interface=_NM_IFACE)
 
         settings = network.get_settings()
         if settings is not None:
