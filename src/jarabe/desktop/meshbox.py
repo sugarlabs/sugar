@@ -823,10 +823,13 @@ class MeshBox(gtk.VBox):
         self.access_points[ap.object_path] = icon
 
     def remove_access_point(self, ap_o):
-        icon = self.access_points[ap_o]
-        icon.disconnect()
-        self._layout.remove(icon)
-        del self.access_points[ap_o]
+        if ap_o in self.access_points:
+            icon = self.access_points[ap_o]
+            icon.disconnect()
+            self._layout.remove(icon)
+            del self.access_points[ap_o]
+        else:
+            logging.error('Can not remove access point %s' % ap_o)
 
     def suspend(self):
         if not self._suspended:
