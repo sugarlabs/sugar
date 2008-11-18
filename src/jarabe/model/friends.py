@@ -29,7 +29,7 @@ class Friends(gobject.GObject):
         'friend-added':   (gobject.SIGNAL_RUN_FIRST,
                            gobject.TYPE_NONE, ([object])),
         'friend-removed': (gobject.SIGNAL_RUN_FIRST,
-                           gobject.TYPE_NONE, ([str])),
+                           gobject.TYPE_NONE, ([str]))
     }
 
     def __init__(self):

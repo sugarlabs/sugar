@@ -33,7 +33,7 @@ class ConnectionWatcher(gobject.GObject):
         'connection-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                         ([gobject.TYPE_PYOBJECT])),
         'connection-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                        ([gobject.TYPE_PYOBJECT])),
+                        ([gobject.TYPE_PYOBJECT]))
     }
 
     def __init__(self, bus=None):

@@ -35,7 +35,7 @@ class ActivitiesList(gtk.VBox):
 
     __gsignals__ = {
         'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([str])),
+                             gobject.TYPE_NONE, ([str]))
     }
 
     def __init__(self):
@@ -131,7 +131,7 @@ class ActivityIcon(CanvasIcon):
 
     __gsignals__ = {
         'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([str])),
+                             gobject.TYPE_NONE, ([str]))
     }
 
     def __init__(self, activity_info):

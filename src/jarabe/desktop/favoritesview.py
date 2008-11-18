@@ -67,7 +67,7 @@ class FavoritesView(hippo.Canvas):
 
     __gsignals__ = {
         'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([str])),
+                             gobject.TYPE_NONE, ([str]))
     }
 
     def __init__(self, **kwargs):
@@ -338,7 +338,7 @@ class ActivityIcon(CanvasIcon):
 
     __gsignals__ = {
         'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([str])),
+                             gobject.TYPE_NONE, ([str]))
     }
 
     def __init__(self, activity_info):
@@ -438,7 +438,7 @@ class _MyIcon(MyIcon):
 
     __gsignals__ = {
         'register-activate' : (gobject.SIGNAL_RUN_FIRST,
-                                gobject.TYPE_NONE, ([])),
+                                gobject.TYPE_NONE, ([]))
     }
     def __init__(self, scale):
         MyIcon.__init__(self, scale)

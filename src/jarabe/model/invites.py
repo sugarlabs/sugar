@@ -66,7 +66,7 @@ class Invites(gobject.GObject):
         'invite-added':   (gobject.SIGNAL_RUN_FIRST,
                            gobject.TYPE_NONE, ([object])),
         'invite-removed': (gobject.SIGNAL_RUN_FIRST,
-                           gobject.TYPE_NONE, ([object])),
+                           gobject.TYPE_NONE, ([object]))
     }
 
     def __init__(self):

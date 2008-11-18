@@ -86,7 +86,7 @@ class ActivityPalette(Palette):
 
     __gsignals__ = {
         'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([])),
+                             gobject.TYPE_NONE, ([]))
     }
 
     def __init__(self, activity_info):
