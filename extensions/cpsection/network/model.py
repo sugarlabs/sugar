@@ -19,10 +19,9 @@ import dbus
 from gettext import gettext as _
 import gconf
 
-NM_SERVICE_NAME = 'org.freedesktop.NetworkManager'
-NM_SERVICE_PATH = '/org/freedesktop/NetworkManager'
-NM_SERVICE_IFACE = 'org.freedesktop.NetworkManager'
-NM_ASLEEP = 1
+_NM_SERVICE = 'org.freedesktop.NetworkManager'
+_NM_PATH = '/org/freedesktop/NetworkManager'
+_NM_IFACE = 'org.freedesktop.NetworkManager'
 
 KEYWORDS = ['network', 'jabber', 'radio', 'server']
 
@@ -47,16 +46,20 @@ def set_jabber(server):
     client.set_string('/desktop/sugar/collaboration/jabber_server', server)
     return 1
 
-def get_radio():    
+def get_radio():
     bus = dbus.SystemBus()
-    proxy = bus.get_object(NM_SERVICE_NAME, NM_SERVICE_PATH)
-    nm = dbus.Interface(proxy, NM_SERVICE_IFACE)
-    state = nm.getWirelessEnabled()	
+    try:
+        obj = bus.get_object(_NM_SERVICE, _NM_PATH)
+        nm_props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
+    except dbus.DBusException:
+        raise ReadError('%s service not available', _NM_SERVICE)
+
+    state = nm_props.Get(_NM_IFACE, 'WirelessEnabled')
     if state in (0, 1):
         return state
     else:
         raise ReadError(_('State is unknown.'))
-	
+
 def print_radio():
     print ('off', 'on')[get_radio()]
     
@@ -66,14 +69,20 @@ def set_radio(state):
     """    
     if state == 'on' or state == 1:
         bus = dbus.SystemBus()
-        proxy = bus.get_object(NM_SERVICE_NAME, NM_SERVICE_PATH)
-        nm = dbus.Interface(proxy, NM_SERVICE_IFACE)
-        nm.setWirelessEnabled(True)        
+        try:
+            obj = bus.get_object(_NM_SERVICE, _NM_PATH)
+            nm_props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
+        except dbus.DBusException:
+            raise ReadError('%s service not available', _NM_SERVICE)
+        nm_props.Set(_NM_IFACE, 'WirelessEnabled', True)
     elif state == 'off' or state == 0:
         bus = dbus.SystemBus()
-        proxy = bus.get_object(NM_SERVICE_NAME, NM_SERVICE_PATH)
-        nm = dbus.Interface(proxy, NM_SERVICE_IFACE)
-        nm.setWirelessEnabled(False)
+        try:
+            obj = bus.get_object(_NM_SERVICE, _NM_PATH)
+            nm_props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
+        except dbus.DBusException:
+            raise ReadError('%s service not available', _NM_SERVICE)
+        nm_props.Set(_NM_IFACE, 'WirelessEnabled', False)
     else:
         raise ValueError(_("Error in specified radio argument use on/off."))
 
