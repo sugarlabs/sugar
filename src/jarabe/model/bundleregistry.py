@@ -304,7 +304,8 @@ class BundleRegistry(gobject.GObject):
 
     def uninstall(self, bundle, force=False):        
         act = self.get_bundle(bundle.get_bundle_id())
-        if not force and act.version != bundle.get_activity_version():
+        if not force and \
+                act.get_activity_version() != bundle.get_activity_version():
             logging.warning('Not uninstalling, different bundle present')
             return
         elif not act.get_path().startswith(env.get_user_activities_path()):
