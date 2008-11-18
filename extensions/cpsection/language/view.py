@@ -19,7 +19,6 @@ import gobject
 import gettext
 
 from sugar.graphics import style
-from sugar.graphics import iconentry
 from sugar.graphics.icon import Icon
 
 from jarabe.controlpanel.sectionview import SectionView
@@ -121,10 +120,12 @@ class Language(SectionView):
 
         combobox.show()
 
-    def _attach_to_table(self, widget, row, column, padding=20, yoptions=gtk.FILL):
+    def _attach_to_table(self, widget, row, column, padding=20, \
+            yoptions=gtk.FILL):
         self._table.attach(widget, row, column, \
             self._selected_lang_count - 1, self._selected_lang_count, \
-            xoptions=gtk.FILL, yoptions=yoptions, xpadding=padding, ypadding=padding)
+            xoptions=gtk.FILL, yoptions=yoptions, xpadding=padding, \
+                ypadding=padding)
 
     def _delete_last_row(self):
         '''Deletes the last row of the table'''
