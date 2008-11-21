@@ -17,9 +17,11 @@
 
 import sys
 
-sys.path.insert(0, '/home/marco/sucrose-0.82/install/share/sugar/shell')
+from jarabe import config
 
-from controlpanel.cmd import main
+sys.path.append(config.ext_path)
+
+from jarabe.controlpanel.cmd import main
 
 main()
 

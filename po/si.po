@@ -1,341 +1,899 @@
-# SOME DESCRIPTIVE TITLE.
+# translation of sugar.po to Sinhala
+# Rashan Anushka <rashan.uoc@gmail.com>, 2008.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-18 18:19+0000\n"
-"PO-Revision-Date: 2008-02-07 08:42-0500\n"
+"POT-Creation-Date: 2008-09-25 00:30-0400\n"
+"PO-Revision-Date: 2008-09-30 07:45-0400\n"
 "Last-Translator: Rashan Anushka <rashan.uoc@gmail.com>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language-Team: Sinhala <si@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.0.2\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 1.1.0rc2\n"
 
-#: ../shell/intro/intro.py:67
+#: ../src/intro/window.py:93 ../src/controlpanel/aboutme/view.py:100
 msgid "Name:"
 msgstr "නම:"
 
-#: ../shell/intro/intro.py:96
+#: ../src/intro/window.py:125
 msgid "Click to change color:"
 msgstr "පාට වෙනස් කිරීමට ක්ලික් කරන්න:"
 
-#: ../shell/intro/intro.py:146
+#: ../src/intro/window.py:175 ../src/journal/detailview.py:119
 msgid "Back"
 msgstr "ආපසු"
 
-#: ../shell/intro/intro.py:160
+#: ../src/intro/window.py:189 ../src/controlpanel/toolbar.py:61
 msgid "Done"
-msgstr ""
+msgstr "කළා"
 
-#: ../shell/intro/intro.py:163
+#: ../src/intro/window.py:192
 msgid "Next"
 msgstr "ඊළඟ"
 
-#: ../shell/view/BuddyMenu.py:59
+#: ../src/view/BuddyMenu.py:60
 msgid "Remove friend"
 msgstr "මිතුරා ඉවත් කරන්න"
 
-#: ../shell/view/BuddyMenu.py:62
+#: ../src/view/BuddyMenu.py:63
 msgid "Make friend"
 msgstr "මිතුරු වන්න"
 
-#: ../shell/view/BuddyMenu.py:84
+#: ../src/view/BuddyMenu.py:92
 #, python-format
 msgid "Invite to %s"
 msgstr "%s ට අඬගහන්න"
 
-#: ../shell/view/clipboardmenu.py:58
+#: ../src/view/clipboardmenu.py:51
 msgid "Remove"
 msgstr "ඉවත් කරන්න"
 
-#: ../shell/view/clipboardmenu.py:63
+#: ../src/view/clipboardmenu.py:56 ../src/view/clipboardmenu.py:78
 msgid "Open"
 msgstr "විවෘත කරන්න"
 
-#. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
-#. TODO: Implement stopping downloads
-#. self._stop_item.connect('activate', self._stop_item_activate_cb)
-#. self.append_menu_item(self._stop_item)
-#: ../shell/view/clipboardmenu.py:73
-msgid "Add to journal"
-msgstr "ජර්නලයට එක් කරන්න"
-
-#: ../shell/view/clipboardmenu.py:213
-#, python-format
-msgid "Clipboard object: %s."
-msgstr ""
-
-#: ../shell/hardware/keydialog.py:149
-msgid "Key Type:"
-msgstr "යතුරු වර්ගය:"
-
-#: ../shell/hardware/keydialog.py:169
-msgid "Authentication Type:"
-msgstr "සත්‍යාපන වර්ගය:"
-
-#: ../shell/hardware/keydialog.py:250
-msgid "Encryption Type:"
-msgstr "සංකේතන වර්ගය:"
-
-#: ../shell/view/home/activitiesdonut.py:90
-msgid "Starting..."
-msgstr "ආරම්භවේ..."
-
-#: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
-msgid "Resume"
-msgstr "නැවත ආරම්භ කරන්න"
-
-#: ../shell/view/home/activitiesdonut.py:111
-#: ../lib/sugar/activity/activity.py:132
-msgid "Stop"
-msgstr "නවත්වන්න"
-
-#: ../shell/view/Shell.py:285
-msgid "Screenshot"
-msgstr ""
-
-#: ../shell/view/home/HomeBox.py:159
-msgid "Reboot"
-msgstr "යළි අරඹන්න"
-
-#: ../shell/view/home/HomeBox.py:164
-msgid "Shutdown"
-msgstr "වසා දමන්න"
-
-#: ../shell/view/home/HomeBox.py:170
-msgid "Register"
-msgstr "ලියාපදිංචි කරන්න"
-
-#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
-msgid "About this XO"
-msgstr "මෙම XO ගැන"
-
-#: ../shell/view/home/HomeBox.py:222
-msgid "Not available"
-msgstr "නොපවතී"
-
-#. Only show disconnect when there's a mesh device, because mesh takes
-#. priority over the normal wireless device.  NM doesn't have a "disconnect"
-#. method for a device either (for various reasons) so this doesn't
-#. have a good mapping
-#: ../shell/view/home/MeshBox.py:90 ../shell/view/home/MeshBox.py:197
-#: ../shell/view/devices/network/wireless.py:113
-#: ../shell/view/devices/network/mesh.py:83
-msgid "Disconnect..."
-msgstr "විසන්ධි කරන්න..."
-
-#: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
-#: ../shell/view/devices/network/mesh.py:62
-#: ../shell/view/devices/network/mesh.py:66
-msgid "Mesh Network"
-msgstr "දැලැස ජාලය"
-
-#: ../shell/view/home/MeshBox.py:300
-msgid "Join"
-msgstr "සම්බන්ධ වෙන්න"
-
-#: ../shell/view/devices/battery.py:38
-msgid "My Battery life"
-msgstr "මගේ බැටරි ආයු කාලය"
-
-#: ../shell/view/devices/battery.py:94
-msgid "Battery charging"
-msgstr "බැටරිය ආරෝපණය වේ"
-
-#: ../shell/view/devices/battery.py:96
-msgid "Battery discharging"
-msgstr "බැටරිය විසර්ජනය වේ"
-
-#: ../shell/view/devices/battery.py:98
-msgid "Battery fully charged"
-msgstr "බැටරිය සම්පූර්ණයෙන්ම ආරෝපිතයි"
-
-#: ../shell/view/devices/network/wireless.py:61
-msgid "Disconnected"
-msgstr "විසන්ධිවී ඇත"
-
-#: ../shell/view/devices/network/wireless.py:131
-msgid "Channel"
-msgstr "නාලිකාව"
-
-#: ../shell/view/frame/zoomtoolbar.py:42
-msgid "Neighborhood"
-msgstr "වටපිටාව"
-
-#: ../shell/view/frame/zoomtoolbar.py:54
-msgid "Group"
-msgstr "සමූහය"
-
-#: ../shell/view/frame/zoomtoolbar.py:66
-msgid "Home"
-msgstr "නිවස"
-
-#: ../shell/view/frame/zoomtoolbar.py:78
-msgid "Activity"
-msgstr "ක්‍රියාකාරකම"
-
-#: ../lib/sugar/activity/activity.py:115
-msgid "Share with:"
-msgstr "සමඟ බෙදාගන්න:"
-
-#: ../lib/sugar/activity/activity.py:117
-msgid "Private"
-msgstr "පුද්ගලික"
-
-#: ../lib/sugar/activity/activity.py:118
-msgid "My Neighborhood"
-msgstr "මගේ වටපිටාව"
-
-#: ../lib/sugar/activity/activity.py:126
+# self._stop_item = MenuItem(_('Stop download'), 'stock-close')
+# TODO: Implement stopping downloads
+# self._stop_item.connect('activate', self._stop_item_activate_cb)
+# self.append_menu_item(self._stop_item)
+#: ../src/view/clipboardmenu.py:61 ../src/view/home/HomeBox.py:84
 msgid "Keep"
 msgstr "තබාගන්න"
 
-#: ../lib/sugar/activity/activity.py:245
-msgid "Undo"
-msgstr "පෙර ලෙස"
+#: ../src/view/clipboardmenu.py:83
+msgid "Open with"
+msgstr "විවෘත කළ යුත්තේ"
 
-#: ../lib/sugar/activity/activity.py:250
-msgid "Redo"
-msgstr "නැවත කරන්න"
-
-#: ../lib/sugar/activity/activity.py:260
-msgid "Copy"
-msgstr "පිටපත් කරන්න"
-
-#: ../lib/sugar/activity/activity.py:265
-msgid "Paste"
-msgstr "අලවන්න"
-
-#: ../lib/sugar/activity/activity.py:454
+#: ../src/view/clipboardmenu.py:228
 #, python-format
-msgid "%s Activity"
-msgstr "%s ක්‍රියාකාරකම"
+msgid "%s clipping"
+msgstr "කප්පාදුව %s"
 
-#: ../lib/sugar/activity/activity.py:824
-msgid "Keep error"
-msgstr "නබා ගැනීමේ දෝෂයකි"
+#: ../src/hardware/keydialog.py:150
+msgid "Key Type:"
+msgstr "යතුරු වර්ගය:"
 
-#: ../lib/sugar/activity/activity.py:825
-msgid "Keep error: all changes will be lost"
-msgstr "තබා ගැනීමේ දෝෂයකි: සියළු වෙනස් කිරීම් නැතිවනු ඇත"
+#: ../src/hardware/keydialog.py:170
+msgid "Authentication Type:"
+msgstr "සත්‍යාපන වර්ගය:"
 
-#: ../lib/sugar/activity/activity.py:828
-msgid "Don't stop"
-msgstr "නවත්වන්න එපා"
+#: ../src/hardware/keydialog.py:251
+msgid "Encryption Type:"
+msgstr "සංකේතන වර්ගය:"
 
-#: ../lib/sugar/activity/activity.py:831
-msgid "Stop anyway"
-msgstr "කෙසේ හෝ නවත්වන්න"
+#: ../src/hardware/schoolserver.py:17
+msgid "Cannot obtain data needed for registration."
+msgstr "ලියාපදිංචිය සඳහා අවශ්‍ය දත්ත ලබා ගත නොහැක."
 
-#: ../lib/sugar/graphics/alert.py:164 ../lib/sugar/graphics/alert.py:206
+#: ../src/hardware/schoolserver.py:31
+msgid "Cannot connect to the server."
+msgstr "සේවාදායකයට සම්බන්ධ විය නොහැක."
+
+#: ../src/hardware/schoolserver.py:36
+msgid "The server could not complete the request."
+msgstr "සේවාදායකයට අයදුම සම්පූර්ණ කළ නොහැක."
+
+#: ../src/view/Shell.py:251
+msgid "Screenshot"
+msgstr "තිරසටහන"
+
+#: ../src/view/home/HomeBox.py:78
+msgid "Confirm erase"
+msgstr "මකා දැමීම ස්ථීර කරන්න"
+
+#: ../src/view/home/HomeBox.py:80
+#, python-format
+msgid "Confirm erase: Do you want to permanently erase %s?"
+msgstr "මකා දැමීම ස්ථීරයි: ඔබට %s සදහටම මකා දැමීමට අවශ්‍යයද?"
+
+#: ../src/view/home/HomeBox.py:87 ../src/view/palettes.py:120
+#: ../src/journal/journaltoolbox.py:335 ../src/journal/palettes.py:75
+msgid "Erase"
+msgstr "මකන්න"
+
+#: ../src/view/home/HomeBox.py:117
+msgid "Software Update"
+msgstr "මෘදුකාංග යාවත්කාල කිරීම"
+
+#: ../src/view/home/HomeBox.py:118
+msgid "Update your activities to ensure compatibility with your new software"
+msgstr "ඔබගේ නව මෘදුකාංගය සමඟ අනුකූලතාව සඳහා ඔබගේ ක්‍රියාකාරකම් යාවත්කාල කරන්න"
+
+#: ../src/view/home/HomeBox.py:122 ../src/controlpanel/toolbar.py:115
 msgid "Cancel"
 msgstr "අවලංගු කරන්න"
 
-#: ../lib/sugar/graphics/alert.py:168
-msgid "Ok"
-msgstr "හරි"
+#: ../src/view/home/HomeBox.py:124 ../src/controlpanel/gui.py:273
+msgid "Later"
+msgstr "පසුව"
 
-#: ../lib/sugar/graphics/alert.py:216
-msgid "Continue"
-msgstr "පවත්වාගෙන යන්න"
+#: ../src/view/home/HomeBox.py:127
+msgid "Check now"
+msgstr "දැන් පරික්ෂා කරන්න"
 
-#: ../lib/sugar/graphics/alert.py:244
-msgid "OK"
-msgstr "හරි"
+#: ../src/view/home/HomeBox.py:261
+msgid "List view"
+msgstr "ලැයිස්තු දසුන"
 
-#: ../shell/controlpanel/control.py:213
+#: ../src/view/home/HomeBox.py:262
+msgid "<Ctrl>2"
+msgstr "<Ctrl>2"
+
+#: ../src/view/home/HomeBox.py:320
+msgid "Favorites view"
+msgstr "කැමති දසුන"
+
+#: ../src/view/home/HomeBox.py:321
+msgid "<Ctrl>1"
+msgstr "<Ctrl>1"
+
+#: ../src/view/home/MeshBox.py:97
+msgid "Connect"
+msgstr "සම්බන්ධ වෙන්න"
+
+#: ../src/view/home/MeshBox.py:106
+msgid "Disconnect"
+msgstr "විසන්ධි වන්න"
+
+# Only show disconnect when there's a mesh device, because mesh takes
+# priority over the normal wireless device.  NM doesn't have a "disconnect"
+# method for a device either (for various reasons) so this doesn't
+# have a good mapping
+#: ../src/view/home/MeshBox.py:118
+msgid "Disconnecting..."
+msgstr "විසන්ධිවේ..."
+
+# Only show disconnect when there's a mesh device, because mesh takes
+# priority over the normal wireless device.  NM doesn't have a "disconnect"
+# method for a device either (for various reasons) so this doesn't
+# have a good mapping
+#: ../src/view/home/MeshBox.py:159
+msgid "Connecting..."
+msgstr "සම්බන්ධවේ..."
+
+# TODO: show the channel number
+#. TODO: show the channel number
+#: ../src/view/home/MeshBox.py:166
+msgid "Connected"
+msgstr "සම්බන්ධ විය"
+
+#: ../src/view/home/MeshBox.py:218 ../src/view/devices/network/mesh.py:41
+#: ../src/view/devices/network/mesh.py:68
+#: ../src/view/devices/network/mesh.py:72
+msgid "Mesh Network"
+msgstr "දැලැස ජාලය"
+
+# Only show disconnect when there's a mesh device, because mesh takes
+# priority over the normal wireless device.  NM doesn't have a "disconnect"
+# method for a device either (for various reasons) so this doesn't
+# have a good mapping
+#: ../src/view/home/MeshBox.py:221 ../src/view/devices/network/wireless.py:125
+#: ../src/view/devices/network/mesh.py:89
+msgid "Disconnect..."
+msgstr "විසන්ධි කරන්න..."
+
+#. TRANS: Action label for resuming an activity.
+#: ../src/view/home/MeshBox.py:309 ../src/view/palettes.py:61
+#: ../src/journal/journaltoolbox.py:399 ../src/journal/palettes.py:57
+msgid "Resume"
+msgstr "නැවත ආරම්භ කරන්න"
+
+#: ../src/view/home/MeshBox.py:314 ../src/view/frame/activitiestray.py:206
+msgid "Join"
+msgstr "සම්බන්ධ වෙන්න"
+
+#: ../src/view/devices/battery.py:45
+msgid "My Battery"
+msgstr "මගේ බැටරිය"
+
+#: ../src/view/devices/battery.py:114
+msgid "Charging"
+msgstr "ආරෝපනය වේ"
+
+#: ../src/view/devices/battery.py:117
+msgid "Very little power remaining"
+msgstr "ඉතා සුළු බලයක් පවතී"
+
+#: ../src/view/devices/battery.py:123
+#, python-format
+msgid "%(hour)d:%(min).2d remaining"
+msgstr "%(hour)d:%(min).2d ඉතිරියි"
+
+#: ../src/view/devices/battery.py:127
+msgid "Charged"
+msgstr "ආරෝපිතයි"
+
+#: ../src/view/devices/speaker.py:44
+msgid "My Speakers"
+msgstr "මගේ ස්පීකරය"
+
+#: ../src/view/devices/speaker.py:125
+msgid "Unmute"
+msgstr "නිෂ්ශබ්ධතාව නවතන්න"
+
+#: ../src/view/devices/speaker.py:128
+msgid "Mute"
+msgstr "නිශ්ශබ්ද කරන්න"
+
+#: ../src/view/devices/network/wireless.py:67
+msgid "Disconnected"
+msgstr "විසන්ධිවී ඇත"
+
+#: ../src/view/devices/network/wireless.py:143
+msgid "Channel"
+msgstr "නාලිකාව"
+
+#: ../src/view/frame/zoomtoolbar.py:37
+msgid "Neighborhood"
+msgstr "වටපිටාව"
+
+#: ../src/view/frame/zoomtoolbar.py:39
+msgid "Group"
+msgstr "සමූහය"
+
+#: ../src/view/frame/zoomtoolbar.py:41
+msgid "Home"
+msgstr "නිවස"
+
+#: ../src/view/frame/zoomtoolbar.py:43
+msgid "Activity"
+msgstr "ක්‍රියාකාරකම"
+
+#: ../src/controlpanel/cmd.py:26
+#, python-format
+msgid ""
+"sugar-control-panel: WARNING, found more than one option with the same name: "
+"%s module: %r"
+msgstr ""
+"sugar-control-panel: අවවාදයයි, එකම නම (%s) සහිත විකල්ප කිහිපයක් හමු විය.: "
+"මොඩියුලය: %r"
+
+#: ../src/controlpanel/cmd.py:28
+#, python-format
+msgid "sugar-control-panel: key=%s not an available option"
+msgstr "sugar-control-panel: key=%s පවතින විකල්පයක් නොවේ"
+
+#: ../src/controlpanel/cmd.py:29
+#, python-format
+msgid "sugar-control-panel: %s"
+msgstr "sugar-control-panel: %s"
+
+#. TRANS: Translators, there's a empty line at the end of this string,
+#. which must appear in the translated string (msgstr) as well.
+#: ../src/controlpanel/cmd.py:35
+msgid ""
+"Usage: sugar-control-panel [ option ] key [ args ... ] \n"
+"    Control for the sugar environment. \n"
+"    Options: \n"
+"    -h           show this help message and exit \n"
+"    -l           list all the available options \n"
+"    -h key       show information about this key \n"
+"    -g key       get the current value of the key \n"
+"    -s key       set the current value for the key \n"
+"    -c key       clear the current value for the key \n"
+"    "
+msgstr ""
+"භාවිතාව: sugar-control-panel [ විකල්පය ] key [ තර්ක ... ] \n"
+"    ශුගර් පරිසරය සඳහා පාලනය. \n"
+"    විකල්ප: \n"
+"    -h          මෙම උදව් පණිවිඩය පෙන්වා පිටවන්න\n"
+"    -l           සියළු විකල්ප ලැයිස්තුගත කරන්න\n"
+"    -h key     key ගැන විස්තර පෙන්වන්න \n"
+"    -g key     key හි පවතින අගය පෙන්වන්න \n"
+"    -s key      key හි අගය සිටුචම් කරන්න \n"
+"    "
+
+#: ../src/controlpanel/cmd.py:48
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "ඔබගේ වෙනස්කිරීම් බලපෑම සඳහා ෂුගර් යළි ඇරඹිය යුතුය.\n"
 
-#: ../shell/controlpanel/control.py:267
+#: ../src/controlpanel/toolbar.py:121 ../src/view/home/favoritesview.py:305
+msgid "Ok"
+msgstr "හරි"
+
+#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:265
+msgid "Changes require restart"
+msgstr "වෙනස්කිරීම සඳහා යළි ඇරඹුමක් අවශ්‍යවේ"
+
+#: ../src/controlpanel/gui.py:264
+msgid "Warning"
+msgstr "අවවාදයයි"
+
+#: ../src/controlpanel/gui.py:268
+msgid "Cancel changes"
+msgstr "වෙනස් කිරීම් අවලංගු කරන්න"
+
+#: ../src/controlpanel/gui.py:277
+msgid "Restart now"
+msgstr "දැන් යළි ආරම්භ කරන්න"
+
+#: ../src/controlpanel/aboutme/model.py:44
+msgid "You must enter a name."
+msgstr "ඔබ විසින් නමක් ඇතුලත් කළ යුතුය."
+
+#: ../src/controlpanel/aboutme/model.py:69
+#, python-format
+msgid "stroke:   color=%s hue=%s"
+msgstr "පහර:   වර්ණය=%s පැහැය=%s"
+
+#: ../src/controlpanel/aboutme/model.py:72
+#, python-format
+msgid "stroke:   %s"
+msgstr "පහර:   %s"
+
+#: ../src/controlpanel/aboutme/model.py:74
+#, python-format
+msgid "fill:     color=%s hue=%s"
+msgstr "පිරවුම:     වර්ණය=%s පැහැය=%s"
+
+#: ../src/controlpanel/aboutme/model.py:76
+#, python-format
+msgid "fill:     %s"
+msgstr "පිරවුම:     %s"
+
+#: ../src/controlpanel/aboutme/model.py:87
 msgid "Error in specified color modifiers."
 msgstr "සැපයූ වර්ණ විකරණකාරකයේ දෝෂයකි"
 
-#: ../shell/controlpanel/control.py:270
+#: ../src/controlpanel/aboutme/model.py:90
 msgid "Error in specified colors."
 msgstr "සැපයූ වර්ණවල දෝෂයකි"
 
-#: ../shell/controlpanel/control.py:307
-msgid "off"
-msgstr "අක්‍රීය කරන්න"
+#: ../src/controlpanel/aboutme/view.py:32
+#: ../src/controlpanel/aboutme/__init__.py:22
+msgid "About Me"
+msgstr "මම ගැන"
 
-#: ../shell/controlpanel/control.py:309
-msgid "on"
-msgstr "සක්‍රීය කරන්න"
+#: ../src/controlpanel/aboutme/view.py:134
+msgid "Click to change your color:"
+msgstr "ඔබගේ පාට වෙනස් කිරීමට ක්ලික් කරන්න:"
 
-#: ../shell/controlpanel/control.py:310
-msgid "State is unknown."
-msgstr "තත්ත්වය නොදනී."
+#: ../src/controlpanel/aboutxo/model.py:24
+msgid "Not available"
+msgstr "නොපවතී"
 
-#: ../shell/controlpanel/control.py:332
-msgid "Error in specified radio argument use on/off."
-msgstr "සැපයූ විකල්ප විස්තාරකයේ දෝෂයකි සක්‍රීයයි/අක්‍රීයයි භාවිතා කරන්න"
+#: ../src/controlpanel/aboutxo/view.py:55
+msgid "Identity"
+msgstr "අනන්‍යතාව"
 
-#: ../shell/controlpanel/control.py:336
-msgid "Permission denied. You need to be root to run this method."
-msgstr "අවසර දිය නොහැක. මෙම විධිය ක්‍රියාත්මක කිරීමට ඔබ root විය යුතුය."
+#: ../src/controlpanel/aboutxo/view.py:64
+msgid "Serial Number:"
+msgstr "අනුක්‍රමික අංකය:"
 
-#: ../shell/controlpanel/control.py:366
-msgid "Error in reading timezone"
-msgstr "වේලා කලාපය කියවීමේ දෝෂයකි"
+#: ../src/controlpanel/aboutxo/view.py:87
+msgid "Software"
+msgstr "මෘදුකාංගය"
 
-#: ../shell/controlpanel/control.py:397
-#, python-format
-msgid "Error copying timezone (from %s): %s"
-msgstr "වේලා කලාපය පිටපත් කිරීමේ දෝෂයකි (%s ගෙන්): %s"
+#: ../src/controlpanel/aboutxo/view.py:96
+msgid "Build:"
+msgstr "ගොඩ නැඟුම:"
 
-#: ../shell/controlpanel/control.py:402
-#, python-format
-msgid "Changing permission of timezone: %s"
-msgstr "වේලා කලාපයේ අවසර වෙනස් කෙරේ: %s"
+#: ../src/controlpanel/aboutxo/view.py:111
+msgid "Sugar:"
+msgstr "ශුගර්:"
 
-#: ../shell/controlpanel/control.py:412
+#: ../src/controlpanel/aboutxo/view.py:126
+msgid "Firmware:"
+msgstr "ස්ථීරාංගය:"
+
+#: ../src/controlpanel/aboutxo/view.py:148
+msgid "Copyright and License"
+msgstr "කතු හිමිකම හා වරපත"
+
+#: ../src/controlpanel/aboutxo/view.py:156
+msgid ""
+"© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+msgstr ""
+"© 2008 One Laptop per Child Association Inc; Red Hat Inc; හා සහදායකයින්."
+
+#: ../src/controlpanel/aboutxo/view.py:163
+msgid ""
+"Sugar is the graphical user interface that you are looking at. Sugar is free "
+"software, covered by the GNU General Public License, and you are welcome to "
+"change it and/or distribute copies of it under certain conditions described "
+"therein."
+msgstr ""
+"ශුගර් යනු ඔබ බලා සිටින මෙම චිත්‍රක පරිශීලක අතුරුමුහුණතයි. ශුගර් GNU සාධාරණ "
+"පොදු වරපත මගින් ආවරණය වන නිදහස් මෘදුකාංගයක් වන අතර එහි සඳහන් ඇතැම් කොන්දේසි "
+"වලට යටත්ව මෙය වෙනස් කිරීමට හා/හෝ පිටපත් බෙදාහැරීමට ඔබට හැකිය."
+
+#: ../src/controlpanel/aboutxo/view.py:175
+msgid "Full license:"
+msgstr "සම්පූර්ණ වරපත:"
+
+#: ../src/controlpanel/aboutxo/__init__.py:21
+msgid "About my XO"
+msgstr "මගේ XO ගැන"
+
+#: ../src/controlpanel/datetime/model.py:89
 msgid "Error timezone does not exist."
 msgstr "දෝෂයකි වේලාකලාපය නොපවතී."
 
-#: ../shell/controlpanel/control.py:417 ../shell/controlpanel/control.py:436
-#, python-format
-msgid "Could not access %s. Create standard settings."
-msgstr "%s වෙත ප්‍රවේශ විය නොහැක. සම්මත සිටුවම් සාදන්න."
+#: ../src/controlpanel/datetime/view.py:68
+msgid "Timezone"
+msgstr "වේලා කලාපය"
 
-#: ../shell/controlpanel/control.py:463
+#: ../src/controlpanel/datetime/__init__.py:21
+msgid "Date & Time"
+msgstr "දිනය හා වේලාව"
+
+#: ../src/controlpanel/frame/model.py:38 ../src/controlpanel/frame/model.py:60
+msgid "Value must be an integer."
+msgstr "අගය නිඛිලයක් විය යුතුය."
+
+#: ../src/controlpanel/frame/view.py:26
+msgid "never"
+msgstr "කිසිම දිනෙක"
+
+#: ../src/controlpanel/frame/view.py:27
+msgid "instantaneous"
+msgstr "ක්ෂණිකව"
+
+#: ../src/controlpanel/frame/view.py:28
+#, python-format
+msgid "%s seconds"
+msgstr "තත්පර %s"
+
+#: ../src/controlpanel/frame/view.py:52
+msgid "Activation Delay"
+msgstr "සක්‍රියනය ප්‍රමාදය"
+
+#: ../src/controlpanel/frame/view.py:76
+msgid "Corner"
+msgstr "මුල්ල"
+
+#: ../src/controlpanel/frame/view.py:111
+msgid "Edge"
+msgstr "අයින"
+
+#: ../src/controlpanel/frame/__init__.py:21
+msgid "Frame"
+msgstr "කවුළුව"
+
+#: ../src/controlpanel/language/model.py:28
+msgid "Could not access ~/.i18n. Create standard settings."
+msgstr "~/.i18n වෙත ප්‍රවේශ විය නොහැක. සම්මත සිටුවම් සාදන්න."
+
+#: ../src/controlpanel/language/model.py:114
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr "code=%s වන භාෂාව නිර්ණය කළ නොහැක."
+msgstr "කේතය=%s වන භාෂාව නිර්ණය කළ නොහැක."
 
-#: ../shell/controlpanel/control.py:473
+#: ../src/controlpanel/language/model.py:131
 #, python-format
 msgid "Sorry I do not speak '%s'."
 msgstr "සමාවන්න මම '%s' කථා නොකරමි."
 
-#: ../shell/view/devices/network/mesh.py:105
+#: ../src/controlpanel/language/view.py:70
+#: ../src/controlpanel/language/__init__.py:21
+msgid "Language"
+msgstr "භාෂාව"
+
+#: ../src/controlpanel/network/model.py:62
+msgid "State is unknown."
+msgstr "තත්ත්වය නොදනී."
+
+#: ../src/controlpanel/network/model.py:82
+msgid "Error in specified radio argument use on/off."
+msgstr "සැපයූ විකල්ප විස්තාරකයේ දෝෂයකි. සක්‍රීයයි/අක්‍රීයයි භාවිතා කරන්න."
+
+#: ../src/controlpanel/network/view.py:28
+#: ../src/controlpanel/network/__init__.py:21
+msgid "Network"
+msgstr "ජාලය"
+
+#: ../src/controlpanel/network/view.py:54
+msgid "Wireless"
+msgstr "රැහැන් රහිත"
+
+#: ../src/controlpanel/network/view.py:62
+msgid "Turn of the wireless radio to save battery life"
+msgstr "බැටරි ආයු කාලය සුරැකීම සඳහා රැහැන් රහිත රේඩියෝව නිවා දමන්න"
+
+#: ../src/controlpanel/network/view.py:75
+msgid "Radio"
+msgstr "රේඩියෝව"
+
+#: ../src/controlpanel/network/view.py:91
+msgid "Discard network history if you have trouble connecting to the network"
+msgstr "ොබට ජාලයට සම්බන්ධ වීමේ ගැටළු ඇතිනම් ජාල ඉතිහාසය ඉවතලන්න"
+
+#: ../src/controlpanel/network/view.py:100
+msgid "Discard network history"
+msgstr "ජාල ඉතිහාසය ඉවතලන්න"
+
+#: ../src/controlpanel/network/view.py:113
+msgid "Mesh"
+msgstr "දැලැස"
+
+#: ../src/controlpanel/network/view.py:122
+msgid "Server:"
+msgstr "සේවාදායකය:"
+
+#: ../src/controlpanel/power/model.py:55
+msgid "Error in automatic pm argument, use on/off."
+msgstr "ස්වයංක්‍රීය pm විස්තාරකයේ දෝෂයකි, සක්‍රීයයි/අක්‍රීයයි භාවිතා කරන්න."
+
+#: ../src/controlpanel/power/model.py:84
+msgid "Error in extreme pm argument, use on/off."
+msgstr "ආන්තික pm විස්තාරකයේ දෝෂයකි, සක්‍රීයයි/අක්‍රීයයි භාවිතා කරන්න."
+
+#: ../src/controlpanel/power/view.py:47
+msgid "Power management"
+msgstr "බල කළමණාකරනය"
+
+#: ../src/controlpanel/power/view.py:57
+msgid "Automatic power management (increases battery life)"
+msgstr "ස්වයංක්‍රීය බල කළමණාකරනය (බැටරි ආයු කාලය වැඩි කරයි)"
+
+#: ../src/controlpanel/power/view.py:85
+msgid ""
+"Extreme power management (disableswireless radio, increases battery life)"
+msgstr ""
+"උපරිම බල කළමණාකරනය ( රැහැන් රහිත රේඩියෝව අක්‍රිය කරයි, බැටරි ආයු කාලය වැඩි "
+"කරයි)"
+
+#: ../src/controlpanel/power/__init__.py:21
+msgid "Power"
+msgstr "ශක්තිය"
+
+#: ../src/view/devices/network/mesh.py:111
 msgid "Connected to a School Mesh Portal"
 msgstr "පාසල් දැලැස් බිහිදොරකට සම්බන්ධ විය"
 
-#: ../shell/view/devices/network/mesh.py:107
+#: ../src/view/devices/network/mesh.py:113
 msgid "Looking for a School Mesh Portal..."
 msgstr "පාසල් දැලැස් බිහිදොරක් සොයයි..."
 
-#: ../shell/view/devices/network/mesh.py:110
+#: ../src/view/devices/network/mesh.py:116
 msgid "Connected to an XO Mesh Portal"
 msgstr "XO දැලැස් බිහිදොරකට සම්බන්ධ විය"
 
-#: ../shell/view/devices/network/mesh.py:112
+#: ../src/view/devices/network/mesh.py:118
 msgid "Looking for an XO Mesh Portal..."
 msgstr "XO දැලැස් බිහිදොරක් සොයයි..."
 
-#: ../shell/view/devices/network/mesh.py:115
+#: ../src/view/devices/network/mesh.py:121
 msgid "Connected to a Simple Mesh"
 msgstr "සරල දැලැස් බිහිදොරකට සම්බන්ධ විය"
 
-#: ../shell/view/devices/network/mesh.py:117
+#: ../src/view/devices/network/mesh.py:123
 msgid "Starting a Simple Mesh"
 msgstr "සරල දැලැස් බිහිදොරක් ආරම්භ කෙරේ"
 
-#: ../shell/view/devices/network/mesh.py:124
+#: ../src/view/devices/network/mesh.py:130
 msgid "Unknown Mesh"
 msgstr "නොදන්නා දැලැසකි"
+
+#: ../src/view/frame/activitiestray.py:211
+msgid "Decline"
+msgstr "ක්‍රමයෙන් පිරිහෙනවා"
+
+# TRANS: label for the freeform layout in the favorites view
+#. TRANS: label for the freeform layout in the favorites view
+#: ../src/view/home/favoriteslayout.py:107
+msgid "Freeform"
+msgstr "නිදහස් පෝර්මය"
+
+# TRANS: label for the ring layout in the favorites view
+#. TRANS: label for the ring layout in the favorites view
+#: ../src/view/home/favoriteslayout.py:189
+msgid "Ring"
+msgstr "කවය"
+
+#. TRANS: label for the spiral layout in the favorites view
+#: ../src/view/home/favoriteslayout.py:334
+msgid "Spiral"
+msgstr "සර්පිලය"
+
+#. TRANS: label for the box layout in the favorites view
+#: ../src/view/home/favoriteslayout.py:401
+msgid "Box"
+msgstr "පෙට්ටිය"
+
+#. TRANS: label for the box layout in the favorites view
+#: ../src/view/home/favoriteslayout.py:442
+msgid "Triangle"
+msgstr "ත්‍රිකෝණය"
+
+#: ../src/view/home/favoritesview.py:295
+msgid "Registration Failed"
+msgstr "ලියාපදිංචිය අසමත් විය"
+
+#: ../src/view/home/favoritesview.py:296
+#, python-format
+msgid "%s"
+msgstr "%s"
+
+#: ../src/view/home/favoritesview.py:298
+msgid "Registration Successful"
+msgstr "ලියාපදිංචිය සාර්ථක විය"
+
+#: ../src/view/home/favoritesview.py:299
+msgid "You are now registered with your school server."
+msgstr "ඔබ දැන් ඔබගේ පාසල් සේවාදායකය සමඟ ලියාපදිංචි වී ඇත."
+
+#: ../src/view/home/favoritesview.py:420
+msgid "Settings"
+msgstr "සිටුවම්"
+
+#: ../src/view/home/favoritesview.py:425
+msgid "Restart"
+msgstr "යළි ආරම්භ කරන්න"
+
+#: ../src/view/home/favoritesview.py:430
+msgid "Shutdown"
+msgstr "වසා දමන්න"
+
+#: ../src/view/home/favoritesview.py:436
+msgid "Register"
+msgstr "ලියාපදිංචි කරන්න"
+
+#: ../src/view/palettes.py:42
+msgid "Starting..."
+msgstr "ආරම්භවේ..."
+
+#: ../src/view/palettes.py:72
+msgid "Stop"
+msgstr "නවත්වන්න"
+
+#. TRANS: Action label for starting an entry.
+#: ../src/view/palettes.py:104 ../src/journal/journaltoolbox.py:402
+#: ../src/journal/palettes.py:59
+msgid "Start"
+msgstr "ආරම්භ කරන්න"
+
+#: ../src/view/palettes.py:138
+msgid "Remove favorite"
+msgstr "අභිරුචිය ඉවත් කරන්න"
+
+#: ../src/view/palettes.py:142
+msgid "Make favorite"
+msgstr "අභිරුචියක් කරන්න"
+
+#: ../src/view/palettes.py:191
+msgid "Show contents"
+msgstr "අන්තර්ගතය පෙන්වන්න"
+
+#: ../src/view/palettes.py:215
+#, python-format
+msgid "%(free_space)d MB Free"
+msgstr "%(free_space)d MB ඉතිරියි"
+
+#: ../src/journal/journaltoolbox.py:62
+msgid "Search"
+msgstr "සෙවිමට"
+
+#: ../src/journal/journaltoolbox.py:119
+msgid "Anytime"
+msgstr "ඕනෑම වෙලාවක"
+
+#: ../src/journal/journaltoolbox.py:121
+msgid "Today"
+msgstr "අද"
+
+#: ../src/journal/journaltoolbox.py:123
+msgid "Since yesterday"
+msgstr "ඊයේ සිට"
+
+#. TRANS: Filter entries modified during the last 7 days.
+#: ../src/journal/journaltoolbox.py:125
+msgid "Past week"
+msgstr "පසුගිය සතිය"
+
+#. TRANS: Filter entries modified during the last 30 days.
+#: ../src/journal/journaltoolbox.py:127
+msgid "Past month"
+msgstr "පසුගිය මාසය"
+
+#. TRANS: Filter entries modified during the last 356 days.
+#: ../src/journal/journaltoolbox.py:129
+msgid "Past year"
+msgstr "පසුගිය වසර"
+
+#: ../src/journal/journaltoolbox.py:136
+msgid "Anyone"
+msgstr "ඕනෑම අයෙක්"
+
+#: ../src/journal/journaltoolbox.py:138
+msgid "My friends"
+msgstr "මාගේ මිතුරන්"
+
+#: ../src/journal/journaltoolbox.py:139
+msgid "My class"
+msgstr "මාගේ පන්තිය"
+
+#. TRANS: Item in a combo box that filters by entry type.
+#: ../src/journal/journaltoolbox.py:255
+msgid "Anything"
+msgstr "ඕනෑ දෙයක්"
+
+#. TODO: Add "Start with" menu item
+#: ../src/journal/journaltoolbox.py:325 ../src/journal/palettes.py:67
+msgid "Copy"
+msgstr "පිටපත් කරන්න"
+
+#: ../src/journal/collapsedentry.py:248 ../src/journal/expandedentry.py:176
+#: ../src/journal/palettes.py:51
+msgid "Untitled"
+msgstr "ශීර්ෂ පාඨ නොමැති"
+
+#: ../src/journal/journalactivity.py:119 ../src/journal/volumesmanager.py:57
+msgid "Journal"
+msgstr "ජ'නලය"
+
+#: ../src/journal/expandedentry.py:222
+msgid "No preview"
+msgstr "පූර්වදර්ශනයක් නැත"
+
+#: ../src/journal/expandedentry.py:241
+msgid "Participants:"
+msgstr "සහභාගිවන්නන්:"
+
+#: ../src/journal/expandedentry.py:266
+msgid "Description:"
+msgstr "විස්තරය:"
+
+#: ../src/journal/expandedentry.py:292
+msgid "Tags:"
+msgstr "හැඳුනුම් වදන්:"
+
+#: ../src/journal/objectchooser.py:134
+msgid "Choose an object"
+msgstr "වස්තුවක් තෝරන්න"
+
+#: ../src/journal/objectchooser.py:139
+msgid "Close"
+msgstr "චසාදමන්න"
+
+#: ../src/journal/volumestoolbar.py:93
+msgid "Unmount"
+msgstr "ගලවන්න"
+
+#: ../src/journal/misc.py:95
+msgid "No date"
+msgstr "දිනයක් නැත"
+
+#: ../src/journal/listview.py:39
+msgid "Your Journal is empty"
+msgstr "ඔබගේ ජර්නලය හිස්ය"
+
+#: ../src/journal/listview.py:40
+msgid "No matching entries "
+msgstr "ගැළපෙන නිවේශන නොමැත "
+
+#: ../src/journal/modalalert.py:59
+msgid "Your Journal is full"
+msgstr "ඔබගේ ජර්නලය සම්පූර්ණයෙන් පිරී ඇත"
+
+#: ../src/journal/modalalert.py:63
+msgid "Please delete some old Journal entries to make space for new ones."
+msgstr ""
+"කරුණාකර නව නිවේශන සඳහා ඉඩ ලබා ගැනීමට පැරණි ජර්නල නිවේශන කිහිපයක් මකා දමන්න."
+
+#: ../src/journal/modalalert.py:75
+msgid "Show Journal"
+msgstr "ජර්නලය පෙන්වන්න"
+
+#, python-format
+#~ msgid "Clipboard object: %s."
+#~ msgstr "පසුරු පුවරු වස්තුව: %s."
+
+#~ msgid "You must enter a server."
+#~ msgstr "ඔබ විසින් සේවාදායකයක් ඇතුලත් කළ යුතුය."
+
+#~ msgid "Control Panel"
+#~ msgstr "පාලක පුවරුව"
+
+#~ msgid "<Ctrl>R"
+#~ msgstr "<Ctrl>R"
+
+#~ msgid "off"
+#~ msgstr "අක්‍රීය කරන්න"
+
+#~ msgid "on"
+#~ msgstr "සක්‍රීය කරන්න"
+
+#~ msgid "Permission denied. You need to be root to run this method."
+#~ msgstr "අවසර දිය නොහැක. මෙම විධිය ක්‍රියාත්මක කිරීමට ඔබ root විය යුතුය."
+
+#~ msgid "Error in reading timezone"
+#~ msgstr "වේලා කලාපය කියවීමේ දෝෂයකි"
+
+#, python-format
+#~ msgid "Error copying timezone (from %s): %s"
+#~ msgstr "වේලා කලාපය පිටපත් කිරීමේ දෝෂයකි (%s ගෙන්): %s"
+
+#, python-format
+#~ msgid "Changing permission of timezone: %s"
+#~ msgstr "වේලා කලාපයේ අවසර වෙනස් කෙරේ: %s"
+
+#~ msgid "About this XO"
+#~ msgstr "මෙම XO ගැන"
+
+# self._stop_item = MenuItem(_('Stop download'), 'stock-close')
+# TODO: Implement stopping downloads
+# self._stop_item.connect('activate', self._stop_item_activate_cb)
+# self.append_menu_item(self._stop_item)
+#~ msgid "Add to journal"
+#~ msgstr "ජර්නලයට එක් කරන්න"
+
+#~ msgid "Reboot"
+#~ msgstr "යළි අරඹන්න"
+
+#~ msgid "My Battery life"
+#~ msgstr "මගේ බැටරි ආයු කාලය"
+
+#~ msgid "Battery charging"
+#~ msgstr "බැටරිය ආරෝපණය වේ"
+
+#~ msgid "Battery discharging"
+#~ msgstr "බැටරිය විසර්ජනය වේ"
+
+#~ msgid "Battery fully charged"
+#~ msgstr "බැටරිය සම්පූර්ණයෙන්ම ආරෝපිතයි"
+
+#~ msgid "Share with:"
+#~ msgstr "සමඟ බෙදාගන්න:"
+
+#~ msgid "Private"
+#~ msgstr "පුද්ගලික"
+
+#~ msgid "My Neighborhood"
+#~ msgstr "මගේ වටපිටාව"
+
+#~ msgid "Undo"
+#~ msgstr "පෙර ලෙස"
+
+#~ msgid "Redo"
+#~ msgstr "නැවත කරන්න"
+
+#~ msgid "Paste"
+#~ msgstr "අලවන්න"
+
+#, python-format
+#~ msgid "%s Activity"
+#~ msgstr "%s ක්‍රියාකාරකම"
+
+#~ msgid "Keep error"
+#~ msgstr "නබා ගැනීමේ දෝෂයකි"
+
+#~ msgid "Keep error: all changes will be lost"
+#~ msgstr "තබා ගැනීමේ දෝෂයකි: සියළු වෙනස් කිරීම් නැතිවනු ඇත"
+
+#~ msgid "Don't stop"
+#~ msgstr "නවත්වන්න එපා"
+
+#~ msgid "Stop anyway"
+#~ msgstr "කෙසේ හෝ නවත්වන්න"
+
+#~ msgid "Continue"
+#~ msgstr "පවත්වාගෙන යන්න"
+
+#~ msgid "OK"
+#~ msgstr "හරි"

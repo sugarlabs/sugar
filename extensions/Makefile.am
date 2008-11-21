@@ -1,0 +1,1 @@
+SUBDIRS = cpsection deviceicon globalkey
