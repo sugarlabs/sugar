@@ -20,6 +20,7 @@ extensions/cpsection/power/__init__.py
 extensions/cpsection/power/model.py
 extensions/cpsection/power/view.py
 extensions/deviceicon/battery.py
+extensions/deviceicon/network.py
 extensions/deviceicon/speaker.py
 extensions/deviceicon/volume.py
 extensions/globalkey/screenshot.py
