@@ -1,14 +1,14 @@
-bin_SCRIPTS = 			\
-	sugar			\
+python_scripts =		\
 	sugar-activity		\
-	sugar-backup		\
 	sugar-control-panel	\
 	sugar-emulator		\
 	sugar-install-bundle	\
 	sugar-launch		\
-	sugar-shell		\
-	sugar-shell-service
+	sugar-session		\
+	sugar-ui-check
 
-EXTRA_DIST = $(bin_SCRIPTS) sugar.in
+bin_SCRIPTS = 			\
+	sugar			\
+	$(python_scripts)
 
-DISTCLEANFILES = sugar
+EXTRA_DIST = $(python_scripts) sugar.in

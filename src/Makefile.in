@@ -30,14 +30,13 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 subdir = src
-DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	$(srcdir)/config.py.in $(sugar_PYTHON)
+DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
-CONFIG_CLEAN_FILES = config.py
+CONFIG_CLEAN_FILES =
 SOURCES =
 DIST_SOURCES =
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
@@ -47,15 +46,6 @@ RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	install-pdf-recursive install-ps-recursive install-recursive \
 	installcheck-recursive installdirs-recursive pdf-recursive \
 	ps-recursive uninstall-recursive
-am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
-am__vpath_adj = case $$p in \
-    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
-    *) f=$$p;; \
-  esac;
-am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
-am__installdirs = "$(DESTDIR)$(sugardir)"
-sugarPYTHON_INSTALL = $(INSTALL_DATA)
-py_compile = $(top_srcdir)/py-compile
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 ETAGS = etags
@@ -85,6 +75,9 @@ ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
+GCONFTOOL = @GCONFTOOL@
+GCONF_SCHEMA_CONFIG_SOURCE = @GCONF_SCHEMA_CONFIG_SOURCE@
+GCONF_SCHEMA_FILE_DIR = @GCONF_SCHEMA_FILE_DIR@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
@@ -201,17 +194,7 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-SUBDIRS = controlpanel hardware model view intro
-sugardir = $(pkgdatadir)/shell
-sugar_PYTHON = \
-	config.py           	\
-	emulator.py		\
-	logsmanager.py		\
-	main.py			\
-	session.py		\
-	shellservice.py
-
-EXTRA_DIST = $(bin_SCRIPTS) $(conf_DATA)
+SUBDIRS = jarabe
 all: all-recursive
 
 .SUFFIXES:
@@ -244,36 +227,6 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
-config.py: $(top_builddir)/config.status $(srcdir)/config.py.in
-	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
-install-sugarPYTHON: $(sugar_PYTHON)
-	@$(NORMAL_INSTALL)
-	test -z "$(sugardir)" || $(MKDIR_P) "$(DESTDIR)$(sugardir)"
-	@list='$(sugar_PYTHON)'; dlist=''; for p in $$list; do\
-	  if test -f "$$p"; then b=; else b="$(srcdir)/"; fi; \
-	  if test -f $$b$$p; then \
-	    f=$(am__strip_dir) \
-	    dlist="$$dlist $$f"; \
-	    echo " $(sugarPYTHON_INSTALL) '$$b$$p' '$(DESTDIR)$(sugardir)/$$f'"; \
-	    $(sugarPYTHON_INSTALL) "$$b$$p" "$(DESTDIR)$(sugardir)/$$f"; \
-	  else :; fi; \
-	done; \
-	if test -n "$$dlist"; then \
-	  if test -z "$(DESTDIR)"; then \
-	    PYTHON=$(PYTHON) $(py_compile) --basedir "$(sugardir)" $$dlist; \
-	  else \
-	    PYTHON=$(PYTHON) $(py_compile) --destdir "$(DESTDIR)" --basedir "$(sugardir)" $$dlist; \
-	  fi; \
-	else :; fi
-
-uninstall-sugarPYTHON:
-	@$(NORMAL_UNINSTALL)
-	@list='$(sugar_PYTHON)'; dlist=''; for p in $$list; do\
-	  f=$(am__strip_dir) \
-	  rm -f "$(DESTDIR)$(sugardir)/$$f"; \
-	  rm -f "$(DESTDIR)$(sugardir)/$${f}c"; \
-	  rm -f "$(DESTDIR)$(sugardir)/$${f}o"; \
-	done
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run `make' without going through this Makefile.
@@ -453,9 +406,6 @@ check: check-recursive
 all-am: Makefile
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(sugardir)"; do \
-	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
-	done
 install: install-recursive
 install-exec: install-exec-recursive
 install-data: install-data-recursive
@@ -498,7 +448,7 @@ info: info-recursive
 
 info-am:
 
-install-data-am: install-sugarPYTHON
+install-data-am:
 
 install-dvi: install-dvi-recursive
 
@@ -532,7 +482,7 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-sugarPYTHON
+uninstall-am:
 
 .MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) install-am \
 	install-strip
@@ -545,11 +495,10 @@ uninstall-am: uninstall-sugarPYTHON
 	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-info install-info-am install-man \
 	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip install-sugarPYTHON installcheck installcheck-am \
-	installdirs installdirs-am maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
-	pdf-am ps ps-am tags tags-recursive uninstall uninstall-am \
-	uninstall-sugarPYTHON
+	install-strip installcheck installcheck-am installdirs \
+	installdirs-am maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-generic pdf pdf-am ps ps-am tags \
+	tags-recursive uninstall uninstall-am
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

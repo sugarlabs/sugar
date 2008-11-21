@@ -1,4 +1,0 @@
-[D-BUS Service]
-Name = org.laptop.Clipboard
-Exec = @bindir@/sugar-shell-service
-
