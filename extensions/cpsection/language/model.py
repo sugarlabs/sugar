@@ -101,7 +101,7 @@ def get_languages():
             lang = lang.strip()
             langlist = lang.split(':')
         elif line.startswith("LANG="):
-            lang = line[9:].replace('"', '')
+            lang = line[5:].replace('"', '')
 
     # There might be cases where .i18n may not contain a LANGUAGE field
     if langlist == None:
