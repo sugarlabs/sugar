@@ -132,12 +132,11 @@ class Language(SectionView):
 
         self._selected_lang_count -= 1
 
-        label, add_remove_box, combobox, store = self._get_last_row()
+        label, add_remove_box, combobox, store_ = self._get_last_row()
         
         label.destroy()
         add_remove_box.destroy()
         combobox.destroy()
-        del(store)
 
         self._table.resize(self._selected_lang_count, 3)
 
@@ -220,9 +219,9 @@ class Language(SectionView):
     def _get_selected_langs(self):
         new_codes = []
         for combobox in self._comboboxes:
-            iter = combobox.get_active_iter()
+            it = combobox.get_active_iter()
             model = combobox.get_model()
-            lang_code = model.get(iter, 0)[0]
+            lang_code = model.get(it, 0)[0]
             new_codes.append(lang_code)
         
         return new_codes
