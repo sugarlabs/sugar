@@ -277,12 +277,16 @@ def get_file(object_id):
 def get_unique_values(key):
     """Returns a list with the different values a property has taken
     """
-    return []
+    empty_dict = dbus.Dictionary({}, signature='ss')
+    return _get_datastore().get_uniquevaluesfor(key, empty_dict)
 
 def delete(object_id):
     """Removes an object from persistent storage
     """
-    pass
+    if os.path.exists(object_id):
+        os.unlink(object_id)
+    else:
+        _get_datastore().delete(object_id)
 
 def copy(metadata, mount_point):
     """Copies an object to another mount point
