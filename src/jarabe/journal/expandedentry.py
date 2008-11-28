@@ -28,11 +28,11 @@ from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics.entry import CanvasEntry
-from sugar.datastore import datastore
 
 from jarabe.journal.keepicon import KeepIcon
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import misc
+from jarabe.journal import model
 
 class Separator(hippo.CanvasBox, hippo.CanvasItem):
     def __init__(self, orientation):
@@ -63,11 +63,11 @@ class CanvasTextView(hippo.CanvasWidget):
         self.props.widget = scrolled_window
 
 class BuddyList(hippo.CanvasBox):
-    def __init__(self, model):
+    def __init__(self, buddies):
         hippo.CanvasBox.__init__(self, xalign=hippo.ALIGNMENT_START,
                                  orientation=hippo.ORIENTATION_HORIZONTAL)
 
-        for buddy in model:
+        for buddy in buddies:
             nick_, color = buddy
             hbox = hippo.CanvasBox(orientation=hippo.ORIENTATION_HORIZONTAL)
             icon = CanvasIcon(icon_name='computer-xo',
@@ -78,13 +78,13 @@ class BuddyList(hippo.CanvasBox):
             self.append(hbox)
 
 class ExpandedEntry(hippo.CanvasBox):
-    def __init__(self, object_id):
+    def __init__(self, metadata):
         hippo.CanvasBox.__init__(self)
         self.props.orientation = hippo.ORIENTATION_VERTICAL
         self.props.background_color = style.COLOR_WHITE.get_int()
         self.props.padding_top = style.DEFAULT_SPACING * 3
 
-        self._jobject = datastore.get(object_id)
+        self._metadata = metadata
         self._update_title_sid = None
 
         # Create header
@@ -147,33 +147,33 @@ class ExpandedEntry(hippo.CanvasBox):
         second_column.append(self._buddy_list)
 
     def _create_keep_icon(self):
-        keep = int(self._jobject.metadata.get('keep', 0)) == 1
+        keep = int(self._metadata.get('keep', 0)) == 1
         keep_icon = KeepIcon(keep)
         keep_icon.connect('activated', self._keep_icon_activated_cb)
         return keep_icon
 
     def _create_icon(self):
-        icon = CanvasIcon(file_name=misc.get_icon_name(self._jobject))
+        icon = CanvasIcon(file_name=misc.get_icon_name(self._metadata))
         icon.connect_after('button-release-event',
                            self._icon_button_release_event_cb)
 
-        if self._jobject.is_activity_bundle():
+        if misc.is_activity_bundle(self._metadata):
             icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
             icon.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
         else:
-            if self._jobject.metadata.has_key('icon-color') and \
-                   self._jobject.metadata['icon-color']:
+            if self._metadata.has_key('icon-color') and \
+                   self._metadata['icon-color']:
                 icon.props.xo_color = XoColor( \
-                    self._jobject.metadata['icon-color'])
+                    self._metadata['icon-color'])
 
-        icon.set_palette(ObjectPalette(self._jobject))
+        icon.set_palette(ObjectPalette(self._metadata))
 
         return icon
 
     def _create_title(self):
         title = CanvasEntry()
         title.set_background(style.COLOR_WHITE.get_html())
-        title.props.text = self._jobject.metadata.get('title', _('Untitled'))
+        title.props.text = self._metadata.get('title', _('Untitled'))
         title.props.widget.connect('focus-out-event',
                                    self._title_focus_out_event_cb)
         return title
@@ -181,7 +181,7 @@ class ExpandedEntry(hippo.CanvasBox):
     def _create_date(self):
         date = hippo.CanvasText(xalign=hippo.ALIGNMENT_START,
                                 font_desc=style.FONT_NORMAL.get_pango_desc(),
-                                text = misc.get_date(self._jobject))
+                                text = misc.get_date(self._metadata))
         return date
 
     def _create_preview(self):
@@ -189,16 +189,16 @@ class ExpandedEntry(hippo.CanvasBox):
         height = style.zoom(240)
         box = hippo.CanvasBox()
 
-        if self._jobject.metadata.has_key('preview') and \
-                len(self._jobject.metadata['preview']) > 4:
+        if self._metadata.has_key('preview') and \
+                len(self._metadata['preview']) > 4:
             
-            if self._jobject.metadata['preview'][1:4] == 'PNG':
-                preview_data = self._jobject.metadata['preview']
+            if self._metadata['preview'][1:4] == 'PNG':
+                preview_data = self._metadata['preview']
             else:
                 # TODO: We are close to be able to drop this.
                 import base64
                 preview_data = base64.b64decode(
-                        self._jobject.metadata['preview'])
+                        self._metadata['preview'])
 
             png_file = StringIO.StringIO(preview_data)
             try:
@@ -249,9 +249,9 @@ class ExpandedEntry(hippo.CanvasBox):
 
         vbox.append(text)
 
-        if self._jobject.metadata.has_key('buddies') and \
-                self._jobject.metadata['buddies']:
-            buddies = cjson.decode(self._jobject.metadata['buddies']).values()
+        if self._metadata.has_key('buddies') and \
+                self._metadata['buddies']:
+            buddies = cjson.decode(self._metadata['buddies']).values()
             vbox.append(BuddyList(buddies))
             return vbox
         else:
@@ -272,7 +272,7 @@ class ExpandedEntry(hippo.CanvasBox):
 
         vbox.append(text)
 
-        description = self._jobject.metadata.get('description', '')
+        description = self._metadata.get('description', '')
         text_view = CanvasTextView(description,
                                    box_height=style.GRID_CELL_SIZE * 2)
         vbox.append(text_view, hippo.PACK_EXPAND)
@@ -298,7 +298,7 @@ class ExpandedEntry(hippo.CanvasBox):
 
         vbox.append(text)
         
-        tags = self._jobject.metadata.get('tags', '')
+        tags = self._metadata.get('tags', '')
         text_view = CanvasTextView(tags, box_height=style.GRID_CELL_SIZE * 2)
         vbox.append(text_view, hippo.PACK_EXPAND)
 
@@ -313,12 +313,6 @@ class ExpandedEntry(hippo.CanvasBox):
             self._update_title_sid = gobject.timeout_add(1000,
                                                          self._update_title_cb)
 
-    def _datastore_write_cb(self):
-        pass
-
-    def _datastore_write_error_cb(self, error):
-        logging.error('ExpandedEntry._datastore_write_error_cb: %r' % error)
-
     def _title_focus_out_event_cb(self, entry, event):
         self._update_entry()
 
@@ -331,53 +325,51 @@ class ExpandedEntry(hippo.CanvasBox):
     def _update_entry(self):
         needs_update = False
 
-        old_title = self._jobject.metadata.get('title', None)
+        old_title = self._metadata.get('title', None)
         if old_title != self._title.props.text:
             self._icon.palette.props.primary_text = self._title.props.text
-            self._jobject.metadata['title'] = self._title.props.text
-            self._jobject.metadata['title_set_by_user'] = '1'
+            self._metadata['title'] = self._title.props.text
+            self._metadata['title_set_by_user'] = '1'
             needs_update = True
 
-        old_tags = self._jobject.metadata.get('tags', None)
+        old_tags = self._metadata.get('tags', None)
         new_tags = self._tags.text_view_widget.props.buffer.props.text
         if old_tags != new_tags:
-            self._jobject.metadata['tags'] = new_tags
+            self._metadata['tags'] = new_tags
             needs_update = True
 
-        old_description = self._jobject.metadata.get('description', None)
+        old_description = self._metadata.get('description', None)
         new_description = \
                 self._description.text_view_widget.props.buffer.props.text
         if old_description != new_description:
-            self._jobject.metadata['description'] = new_description
+            self._metadata['description'] = new_description
             needs_update = True
 
         if needs_update:
-            datastore.write(self._jobject, update_mtime=False,
-                            reply_handler=self._datastore_write_cb,
-                            error_handler=self._datastore_write_error_cb)
+            model.write(self._metadata, update_mtime=False)
  
         self._update_title_sid = None
  
     def get_keep(self):
-        return self._jobject.metadata.has_key('keep') and \
-               self._jobject.metadata['keep'] == 1
+        return self._metadata.has_key('keep') and \
+               self._metadata['keep'] == 1
 
     def _keep_icon_activated_cb(self, keep_icon):
         if self.get_keep():
-            self._jobject.metadata['keep'] = 0
+            self._metadata['keep'] = 0
         else:
-            self._jobject.metadata['keep'] = 1
-        datastore.write(self._jobject, update_mtime=False)
+            self._metadata['keep'] = 1
+        model.write(self._metadata, update_mtime=False)
 
         keep_icon.props.keep = self.get_keep()
 
     def _icon_button_release_event_cb(self, button, event):
         logging.debug('_icon_button_release_event_cb')
-        misc.resume(self._jobject)
+        misc.resume(self._metadata)
         return True
 
     def _preview_box_button_release_event_cb(self, button, event):
         logging.debug('_preview_box_button_release_event_cb')
-        misc.resume(self._jobject)
+        misc.resume(self._metadata)
         return True
 

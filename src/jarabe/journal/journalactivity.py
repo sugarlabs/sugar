@@ -28,7 +28,6 @@ import os
 
 from sugar.graphics.window import Window
 from sugar.bundle.bundle import ZipExtractException, RegistrationException
-from sugar.datastore import datastore
 from sugar import env
 from sugar.activity import activityfactory
 from sugar import wm
@@ -42,10 +41,7 @@ from jarabe.journal import misc
 from jarabe.journal.journalentrybundle import JournalEntryBundle
 from jarabe.journal.objectchooser import ObjectChooser
 from jarabe.journal.modalalert import ModalAlert
-
-DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
-DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
-DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
+from jarabe.journal import model
 
 J_DBUS_SERVICE = 'org.laptop.Journal'
 J_DBUS_INTERFACE = 'org.laptop.Journal'
@@ -126,6 +122,7 @@ class JournalActivity(Window):
         self._detail_view = None
         self._main_toolbox = None
         self._detail_toolbox = None
+        self._volumes_toolbar = None
 
         self._setup_main_view()
         self._setup_secondary_view()
@@ -139,12 +136,9 @@ class JournalActivity(Window):
         self.connect('key-press-event', self._key_press_event_cb)
         self.connect('focus-in-event', self._focus_in_event_cb)
 
-        bus = dbus.SessionBus()
-        data_store = dbus.Interface(
-            bus.get_object(DS_DBUS_SERVICE, DS_DBUS_PATH), DS_DBUS_INTERFACE)
-        data_store.connect_to_signal('Created', self.__data_store_created_cb)
-        data_store.connect_to_signal('Updated', self.__data_store_updated_cb)
-        data_store.connect_to_signal('Deleted', self.__data_store_deleted_cb)
+        model.created.connect(self.__model_created_cb)
+        model.updated.connect(self.__model_updated_cb)
+        model.deleted.connect(self.__model_deleted_cb)
 
         self._dbus_service = JournalActivityDBusService(self)        
 
@@ -172,13 +166,14 @@ class JournalActivity(Window):
         self._main_view.pack_start(self._list_view)
         self._list_view.show()
 
-        volumes_toolbar = VolumesToolbar()
-        volumes_toolbar.connect('volume-changed', self._volume_changed_cb)
-        self._main_view.pack_start(volumes_toolbar, expand=False)
+        self._volumes_toolbar = VolumesToolbar()
+        self._volumes_toolbar.connect('volume-changed',
+                                      self.__volume_changed_cb)
+        self._main_view.pack_start(self._volumes_toolbar, expand=False)
 
         search_toolbar = self._main_toolbox.search_toolbar
         search_toolbar.connect('query-changed', self._query_changed_cb)
-        search_toolbar.set_volume_id(datastore.mounts()[0]['id'])
+        search_toolbar.set_mount_point('/')
 
     def _setup_secondary_view(self):
         self._secondary_view = gtk.VBox()
@@ -199,7 +194,7 @@ class JournalActivity(Window):
             self.show_main_view()
 
     def __detail_clicked_cb(self, list_view, entry):
-        self._show_secondary_view(entry.jobject)
+        self._show_secondary_view(entry.metadata)
     
     def __go_back_clicked_cb(self, detail_view):
         self.show_main_view()
@@ -217,9 +212,9 @@ class JournalActivity(Window):
             self.set_canvas(self._main_view)
             self._main_view.show()
 
-    def _show_secondary_view(self, jobject):
+    def _show_secondary_view(self, metadata):
         try:
-            self._detail_toolbox.entry_toolbar.set_jobject(jobject)
+            self._detail_toolbox.entry_toolbar.set_metadata(metadata)
         except Exception:
             logging.error('Exception while displaying entry:\n' + \
                 ''.join(traceback.format_exception(*sys.exc_info())))
@@ -228,7 +223,7 @@ class JournalActivity(Window):
         self._detail_toolbox.show()
 
         try:
-            self._detail_view.props.jobject = jobject
+            self._detail_view.props.metadata = metadata
         except Exception:
             logging.error('Exception while displaying entry:\n' + \
                 ''.join(traceback.format_exception(*sys.exc_info())))
@@ -237,52 +232,40 @@ class JournalActivity(Window):
         self._secondary_view.show()
 
     def show_object(self, object_id):
-        jobject = datastore.get(object_id)
-        if jobject is None:
+        metadata = model.get(object_id)
+        if metadata is None:
             return False
         else:
-            self._show_secondary_view(jobject)
+            self._show_secondary_view(metadata)
             return True
 
-    def _volume_changed_cb(self, volume_toolbar, volume_id):
-        logging.debug('Selected volume: %r.' % volume_id)
-        self._main_toolbox.search_toolbar.set_volume_id(volume_id)
+    def __volume_changed_cb(self, volume_toolbar, volume):
+        logging.debug('Selected volume: %r.' % volume.udi)
+        self._main_toolbox.search_toolbar.set_mount_point(volume.mount_point)
         self._main_toolbox.set_current_toolbar(0)
 
-    def __data_store_created_cb(self, uid):
-        jobject = datastore.get(uid)
-        if jobject is None:
-            return
-        try:
-            self._check_for_bundle(jobject)
-        finally:
-            jobject.destroy()
+    def __model_created_cb(self, object_id):
+        self._check_for_bundle(object_id)
         self._main_toolbox.search_toolbar.refresh_filters()
         self._check_available_space()
 
-    def __data_store_updated_cb(self, uid):
-        jobject = datastore.get(uid)
-        if jobject is None:
-            return
-        try:
-            self._check_for_bundle(jobject)
-        finally:
-            jobject.destroy()
+    def __model_updated_cb(self, object_id):
+        self._check_for_bundle(object_id)
         self._check_available_space()
 
-    def __data_store_deleted_cb(self, uid):
+    def __model_deleted_cb(self, object_id):
         if self.canvas == self._secondary_view and \
-                uid == self._detail_view.props.jobject.object_id:
+                object_id == self._detail_view.props.metadata['uid']:
             self.show_main_view()
 
     def _focus_in_event_cb(self, window, event):
         self.search_grab_focus()
         self._list_view.update_dates()
 
-    def _check_for_bundle(self, jobject):
+    def _check_for_bundle(self, object_id):
         registry = bundleregistry.get_registry()
 
-        bundle = misc.get_bundle(jobject)
+        bundle = misc.get_bundle(object_id)
         if bundle is None:
             return
 
@@ -292,11 +275,12 @@ class JournalActivity(Window):
             registry.install(bundle)
         except (ZipExtractException, RegistrationException), e:
             logging.warning('Could not install bundle %s: %r' %
-                            (jobject.file_path, e))
+                            (bundle.get_path(), e))
             return
 
-        if jobject.metadata['mime_type'] == JournalEntryBundle.MIME_TYPE:
-            datastore.delete(jobject.object_id)
+        metadata = model.get(object_id)
+        if metadata['mime_type'] == JournalEntryBundle.MIME_TYPE:
+            model.delete(object_id)
 
     def search_grab_focus(self):
         search_toolbar = self._main_toolbox.search_toolbar
@@ -336,7 +320,18 @@ class JournalActivity(Window):
         self.present()
         self._critical_space_alert = None
 
+    def set_active_volume(self, mount_point):
+        self._volumes_toolbar.set_active_volume(mount_point)
+
+_journal = None
+
+def get_journal():
+    global _journal
+    if _journal is None:
+        _journal = JournalActivity()
+        _journal.show()
+    return _journal
+
 def start():
-    journal = JournalActivity()
-    journal.show()
+    get_journal()
 

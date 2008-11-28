@@ -11,7 +11,7 @@ sugar_PYTHON =				\
 	listview.py			\
 	misc.py				\
 	modalalert.py			\
+	model.py			\
 	objectchooser.py		\
 	palettes.py			\
-	query.py			\
 	volumestoolbar.py

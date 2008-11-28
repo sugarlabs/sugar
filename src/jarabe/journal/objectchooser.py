@@ -23,7 +23,6 @@ import hippo
 
 from sugar.graphics import style
 from sugar.graphics.toolbutton import ToolButton
-from sugar.datastore import datastore
 
 from jarabe.journal.listview import ListView
 from jarabe.journal.collapsedentry import BaseCollapsedEntry
@@ -84,7 +83,7 @@ class ObjectChooser(gtk.Window):
         vbox.pack_start(self._list_view)
         self._list_view.show()
 
-        self._toolbar.set_volume_id(datastore.mounts()[0]['id'])
+        self._toolbar.set_mount_point('/')
         
         width = gtk.gdk.screen_width() - style.GRID_CELL_SIZE * 2
         height = gtk.gdk.screen_height() - style.GRID_CELL_SIZE * 2        
@@ -95,7 +94,7 @@ class ObjectChooser(gtk.Window):
         # TODO: Should we disconnect the signal here?
 
     def __entry_activated_cb(self, list_view, entry):
-        self._selected_object_id = entry.jobject.object_id
+        self._selected_object_id = entry.metadata['uid']
         self.emit('response', gtk.RESPONSE_ACCEPT)
 
     def __delete_event_cb(self, chooser, event):

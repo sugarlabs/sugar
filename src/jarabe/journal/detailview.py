@@ -23,24 +23,19 @@ import hippo
 
 from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon
-from sugar.datastore import datastore
 
 from jarabe.journal.expandedentry import ExpandedEntry
+from jarabe.journal import model
 
 class DetailView(gtk.VBox):
     __gtype_name__ = 'DetailView'
-
-    __gproperties__ = {
-        'jobject'        : (object, None, None,
-                            gobject.PARAM_READWRITE)
-    }
 
     __gsignals__ = {
         'go-back-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
     }
 
     def __init__(self, **kwargs):
-        self._jobject = None
+        self._metadata = None
         self._expanded_entry = None
 
         canvas = hippo.Canvas()
@@ -76,29 +71,23 @@ class DetailView(gtk.VBox):
             self._expanded_entry.remove_all()
             import gc
             gc.collect()
-        if self._jobject:
-            self._expanded_entry = ExpandedEntry(self._jobject.object_id)
-            self._root.append(self._expanded_entry, hippo.PACK_EXPAND)
+        self._expanded_entry = ExpandedEntry(self._metadata)
+        self._root.append(self._expanded_entry, hippo.PACK_EXPAND)
 
     def refresh(self):
         logging.debug('DetailView.refresh')
-        if self._jobject:
-            self._jobject = datastore.get(self._jobject.object_id)
-            self._update_view()
+        self._metadata = model.get(self._metadata['uid'])
+        self._update_view()
 
-    def do_set_property(self, pspec, value):
-        if pspec.name == 'jobject':
-            self._jobject = value
-            self._update_view()
-        else:
-            raise AssertionError
+    def get_metadata(self):
+        return self._metadata
 
-    def do_get_property(self, pspec):
-        if pspec.name == 'jobject':
-            return self._jobject
-        else:
-            raise AssertionError
+    def set_metadata(self, metadata):
+        self._metadata = metadata
+        self._update_view()
 
+    metadata = gobject.property(
+            type=object, getter=get_metadata, setter=set_metadata)
 
 class BackBar(hippo.CanvasBox):
     def __init__(self):

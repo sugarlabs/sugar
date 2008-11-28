@@ -24,37 +24,37 @@ from sugar.graphics import style
 from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
-from sugar.datastore import datastore
 from sugar.graphics.xocolor import XoColor
 
 from jarabe.model import bundleregistry
 from jarabe.journal import misc
+from jarabe.journal import model
 
 class ObjectPalette(Palette):
-    def __init__(self, jobject):
+    def __init__(self, metadata):
 
-        self._jobject = jobject
+        self._metadata = metadata
 
         activity_icon = Icon(icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
-        activity_icon.props.file = misc.get_icon_name(jobject)
-        if jobject.metadata.has_key('icon-color') and \
-                jobject.metadata['icon-color']:
+        activity_icon.props.file = misc.get_icon_name(metadata)
+        if metadata.has_key('icon-color') and \
+                metadata['icon-color']:
             activity_icon.props.xo_color = \
-                XoColor(jobject.metadata['icon-color'])
+                XoColor(metadata['icon-color'])
         else:
             activity_icon.props.xo_color = \
                 XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
                                    style.COLOR_TRANSPARENT.get_svg()))
         
-        if jobject.metadata.has_key('title'):
-            title = jobject.metadata['title']
+        if metadata.has_key('title'):
+            title = metadata['title']
         else:
             title = _('Untitled')
 
         Palette.__init__(self, primary_text=title,
                          icon=activity_icon)
 
-        if jobject.metadata.get('activity_id', ''):
+        if metadata.get('activity_id', ''):
             resume_label = _('Resume')
         else:
             resume_label = _('Start')
@@ -81,7 +81,7 @@ class ObjectPalette(Palette):
         menu_item.show()
 
     def __start_activate_cb(self, menu_item):
-        misc.resume(self._jobject)
+        misc.resume(self._metadata)
 
     def __copy_activate_cb(self, menu_item):
         clipboard = gtk.Clipboard()
@@ -90,19 +90,21 @@ class ObjectPalette(Palette):
                                 self.__clipboard_clear_func_cb)
 
     def __clipboard_get_func_cb(self, clipboard, selection_data, info, data):
-        logging.debug('__clipboard_get_func_cb %r' % self._jobject.file_path)
-        selection_data.set_uris(['file://' + self._jobject.file_path])
+        file_path = model.get_file(self._metadata['uid'])
+        logging.debug('__clipboard_get_func_cb %r' % file_path)
+        selection_data.set_uris(['file://' + file_path])
 
     def __clipboard_clear_func_cb(self, clipboard, data):
+        #TODO: should we remove here the temp file created before?
         pass
 
     def __erase_activate_cb(self, menu_item):
         registry = bundleregistry.get_registry()
 
-        bundle = misc.get_bundle(self._jobject)
+        bundle = misc.get_bundle(self._metadata)
         if bundle is not None and registry.is_installed(bundle):
             registry.uninstall(bundle)
-        datastore.delete(self._jobject.object_id)
+        model.delete(self._metadata['uid'])
 
 class BuddyPalette(Palette):
     def __init__(self, buddy):

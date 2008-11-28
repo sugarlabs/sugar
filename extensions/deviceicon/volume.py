@@ -26,6 +26,7 @@ from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
 
 from jarabe.model import volume
+from jarabe.journal import journalactivity
 
 _icons = {}
 
@@ -37,9 +38,16 @@ class DeviceView(TrayIcon):
         TrayIcon.__init__(self, icon_name=model.icon_name,
                           xo_color=model.icon_color)
         self._model = model
+        self.connect('button-release-event', self.__button_release_event_cb)
 
     def create_palette(self):
         return VolumePalette(self._model)
+
+    def __button_release_event_cb(self, widget, event):
+        journal = journalactivity.get_journal()
+        journal.set_active_volume(self._model.mount_point)
+        journal.present()
+        return True
 
 class VolumePalette(Palette):
     def __init__(self, model):
@@ -89,13 +97,15 @@ def setup(tray):
     volumes_manager = volume.get_volumes_manager()
 
     for vol in volumes_manager.get_volumes():
-        _add_device(vol, tray)
+        if vol.mount_point != '/':
+            _add_device(vol, tray)
 
     volumes_manager.connect('volume-added', _volume_added_cb, tray)
     volumes_manager.connect('volume-removed', _volume_removed_cb, tray)
 
 def _volume_added_cb(volumes_manager, vol, tray):
-    _add_device(vol, tray)
+    if vol.mount_point != '/':
+        _add_device(vol, tray)
 
 def _volume_removed_cb(volumes_manager, vol, tray):
     _remove_device(vol, tray)

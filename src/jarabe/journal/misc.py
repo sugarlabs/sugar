@@ -33,6 +33,7 @@ from sugar import util
 
 from jarabe.model import bundleregistry
 from jarabe.journal.journalentrybundle import JournalEntryBundle
+from jarabe.journal import model
 
 def _get_icon_file_name(icon_name):
     icon_theme = gtk.icon_theme_get_default()
@@ -47,30 +48,31 @@ def _get_icon_file_name(icon_name):
 
 _icon_cache = util.LRU(50)
 
-def get_icon_name(jobject):
-
-    cache_key = (jobject.object_id, jobject.metadata.get('timestamp', None))
+def get_icon_name(metadata):
+    cache_key = (metadata['uid'], metadata.get('timestamp', None))
     if cache_key in _icon_cache:
         return _icon_cache[cache_key]
 
     file_name = None
 
-    if jobject.is_activity_bundle() and jobject.file_path:
+    #TODO: figure out the best place to get rid of that temp file
+    file_path = model.get_file(metadata['uid'])
+    if is_activity_bundle(metadata) and os.path.exists(file_path):
         try:
-            bundle = ActivityBundle(jobject.file_path)
+            bundle = ActivityBundle(file_path)
             file_name = bundle.get_icon()
         except Exception:
             logging.warning('Could not read bundle:\n' + \
                 ''.join(traceback.format_exception(*sys.exc_info())))
             file_name = _get_icon_file_name('application-octet-stream')
 
-    if not file_name and jobject.metadata['activity']:
-        service_name = jobject.metadata['activity']
+    if not file_name and metadata['activity']:
+        service_name = metadata['activity']
         activity_info = bundleregistry.get_registry().get_bundle(service_name)
         if activity_info:
             file_name = activity_info.get_icon()
 
-    mime_type = jobject.metadata['mime_type']
+    mime_type = metadata['mime_type']
     if not file_name and mime_type:
         icon_name = mime.get_mime_icon(mime_type)
         if icon_name:
@@ -83,26 +85,27 @@ def get_icon_name(jobject):
 
     return file_name
 
-def get_date(jobject):
+def get_date(metadata):
     """ Convert from a string in iso format to a more human-like format. """
-    if jobject.metadata.has_key('timestamp'):
-        timestamp = float(jobject.metadata['timestamp'])
+    if metadata.has_key('timestamp'):
+        timestamp = float(metadata['timestamp'])
         return util.timestamp_to_elapsed_string(timestamp)
-    elif jobject.metadata.has_key('mtime'):
-        ti = time.strptime(jobject.metadata['mtime'], "%Y-%m-%dT%H:%M:%S")
+    elif metadata.has_key('mtime'):
+        ti = time.strptime(metadata['mtime'], "%Y-%m-%dT%H:%M:%S")
         return util.timestamp_to_elapsed_string(time.mktime(ti))
     else:
         return _('No date')
 
-def get_bundle(jobject):
+def get_bundle(metadata):
     try:
-        if jobject.is_activity_bundle() and jobject.file_path:
-            return ActivityBundle(jobject.file_path)
-        elif jobject.is_content_bundle() and jobject.file_path:
-            return ContentBundle(jobject.file_path)
-        elif jobject.metadata['mime_type'] == JournalEntryBundle.MIME_TYPE \
-                and jobject.file_path:
-            return JournalEntryBundle(jobject.file_path)
+        #TODO: figure out the best place to get rid of that temp file
+        file_path = model.get_file(metadata['uid'])
+        if is_activity_bundle(metadata) and os.path.exists(file_path):
+            return ActivityBundle(file_path)
+        elif is_content_bundle(metadata) and os.path.exists(file_path):
+            return ContentBundle(file_path)
+        elif is_journal_bundle(metadata) and os.path.exists(file_path):
+            return JournalEntryBundle(file_path)
         else:
             return None
     except MalformedBundleException, e:
@@ -117,16 +120,16 @@ def _get_activities_for_mime(mime_type):
             result.extend(registry.get_activities_for_type(parent_mime))
     return result
 
-def get_activities(jobject):
+def get_activities(metadata):
     activities = []
 
-    bundle_id = jobject.metadata.get('activity', '')
+    bundle_id = metadata.get('activity', '')
     if bundle_id:
         activity_info = bundleregistry.get_registry().get_bundle(bundle_id)
         if activity_info:
             activities.append(activity_info)
 
-    mime_type = jobject.metadata.get('mime_type', '')
+    mime_type = metadata.get('mime_type', '')
     if mime_type:
         activities_info = _get_activities_for_mime(mime_type)
         for activity_info in activities_info:
@@ -135,13 +138,15 @@ def get_activities(jobject):
 
     return activities
 
-def resume(jobject, bundle_id=None):
+def resume(metadata, bundle_id=None):
     registry = bundleregistry.get_registry()
 
-    if jobject.is_activity_bundle() and not bundle_id:
+    if is_activity_bundle(metadata) and bundle_id is None:
 
         logging.debug('Creating activity bundle')
-        bundle = ActivityBundle(jobject.file_path)
+        #TODO: figure out the best place to get rid of that temp file
+        file_path = model.get_file(metadata['uid'])
+        bundle = ActivityBundle(file_path)
         if not registry.is_installed(bundle):
             logging.debug('Installing activity bundle')
             registry.install(bundle)
@@ -158,10 +163,12 @@ def resume(jobject, bundle_id=None):
             logging.error('Bundle %r is not installed.',
                           bundle.get_bundle_id())
 
-    elif jobject.is_content_bundle() and not bundle_id:
+    elif is_content_bundle(metadata) and bundle_id is None:
 
         logging.debug('Creating content bundle')
-        bundle = ContentBundle(jobject.file_path)
+        #TODO: figure out the best place to get rid of that temp file
+        file_path = model.get_file(metadata['uid'])
+        bundle = ContentBundle(file_path)
         if not bundle.is_installed():
             logging.debug('Installing content bundle')
             bundle.install()
@@ -178,22 +185,40 @@ def resume(jobject, bundle_id=None):
         activityfactory.create_with_uri(activity_bundle, bundle.get_start_uri())
     else:
         if bundle_id is None:
-            activities = get_activities(jobject)
+            activities = get_activities(metadata)
             if not activities:
                 logging.warning('No activity can open this object, %s.' %
-                        jobject.metadata.get('mime_type', None))
+                        metadata.get('mime_type', None))
                 return
             bundle_id = activities[0].get_bundle_id()
 
         bundle = registry.get_bundle(bundle_id)
 
-        activity_id = jobject.metadata['activity_id']
-        object_id = jobject.object_id
+        activity_id = metadata['activity_id']
 
-        if activity_id:
+        if metadata['mountpoint'] == '/':
+            object_id = metadata['uid']
+        else:
+            object_id = model.copy(metadata, '/')
+
+        if activity_id is None:
             handle = ActivityHandle(object_id=object_id,
                                     activity_id=activity_id)
             activityfactory.create(bundle, handle)
         else:
             activityfactory.create_with_object_id(bundle, object_id)
+
+def is_activity_bundle(metadata):
+    return metadata['mime_type'] in \
+            [ActivityBundle.MIME_TYPE, ActivityBundle.DEPRECATED_MIME_TYPE]
+
+def is_content_bundle(metadata):
+    return metadata['mime_type'] == ContentBundle.MIME_TYPE
+
+def is_journal_bundle(metadata):
+    return metadata['mime_type'] == JournalEntryBundle.MIME_TYPE
+
+def is_bundle(metadata):
+    return is_activity_bundle(metadata) or is_content_bundle(metadata) or \
+            is_journal_bundle(metadata)
 

@@ -33,11 +33,11 @@ from sugar.graphics.xocolor import XoColor
 from sugar.graphics import iconentry
 from sugar.graphics import style
 from sugar import mime
-from sugar.datastore import datastore
 
 from jarabe.model import bundleregistry
 from jarabe.model import volume
 from jarabe.journal import misc
+from jarabe.journal import model
 
 _AUTOSEARCH_TIMEOUT = 1000
 
@@ -79,7 +79,7 @@ class SearchToolbar(gtk.Toolbar):
     def __init__(self):
         gtk.Toolbar.__init__(self)
 
-        self._volume_id = None
+        self._mount_point = None
 
         self._search_entry = iconentry.IconEntry()
         self._search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
@@ -159,8 +159,8 @@ class SearchToolbar(gtk.Toolbar):
 
     def _build_query(self):
         query = {}
-        if self._volume_id:
-            query['mountpoints'] = [self._volume_id]
+        if self._mount_point:
+            query['mountpoints'] = [self._mount_point]
         if self._what_search_combo.props.value:
             value = self._what_search_combo.props.value
             generic_type = mime.get_generic_type(value)
@@ -238,8 +238,8 @@ class SearchToolbar(gtk.Toolbar):
         self._search_entry.activate()
         return False
 
-    def set_volume_id(self, volume_id):
-        self._volume_id = volume_id
+    def set_mount_point(self, mount_point):
+        self._mount_point = mount_point
         new_query = self._build_query()
         if self._query != new_query:
             self._query = new_query
@@ -257,7 +257,7 @@ class SearchToolbar(gtk.Toolbar):
 
             registry = bundleregistry.get_registry()
             appended_separator = False
-            for service_name in datastore.get_unique_values('activity'):
+            for service_name in model.get_unique_values('activity'):
                 activity_info = registry.get_bundle(service_name)
                 if not activity_info is None:
                     if not appended_separator:
@@ -310,7 +310,7 @@ class EntryToolbar(gtk.Toolbar):
     def __init__(self):
         gtk.Toolbar.__init__(self)
 
-        self._jobject = None
+        self._metadata = None
 
         self._resume = ToolButton('activity-start')
         self._resume.connect('clicked', self._resume_clicked_cb)
@@ -340,43 +340,41 @@ class EntryToolbar(gtk.Toolbar):
         self.add(erase_button)
         erase_button.show()
 
-    def set_jobject(self, jobject):
-        self._jobject = jobject
+    def set_metadata(self, metadata):
+        self._metadata = metadata
         self._refresh_copy_palette()
         self._refresh_resume_palette()
 
     def _resume_clicked_cb(self, button):
-        if self._jobject:
-            misc.resume(self._jobject)
+        misc.resume(self._metadata)
 
     def _copy_clicked_cb(self, button):
         clipboard = gtk.Clipboard()
         clipboard.set_with_data([('text/uri-list', 0, 0)],
-                                self._clipboard_get_func_cb,
-                                self._clipboard_clear_func_cb)
+                                self.__clipboard_get_func_cb,
+                                self.__clipboard_clear_func_cb)
 
-    def _clipboard_get_func_cb(self, clipboard, selection_data, info, data):
-        selection_data.set_uris(['file://' + self._jobject.file_path])
+    def __clipboard_get_func_cb(self, clipboard, selection_data, info, data):
+        file_path = model.get_file(self._metadata['uid'])
+        selection_data.set_uris(['file://' + file_path])
 
-    def _clipboard_clear_func_cb(self, clipboard, data):
+    def __clipboard_clear_func_cb(self, clipboard, data):
+        #TODO: should we remove here the temp file created before?
         pass
 
     def _erase_button_clicked_cb(self, button):
         registry = bundleregistry.get_registry()
 
-        if self._jobject:
-            bundle = misc.get_bundle(self._jobject)
-            if bundle is not None and registry.is_installed(bundle):
-                registry.uninstall(bundle)
-            datastore.delete(self._jobject.object_id)
+        bundle = misc.get_bundle(self._metadata['uid'])
+        if bundle is not None and registry.is_installed(bundle):
+            registry.uninstall(bundle)
+        model.delete(self._metadata['uid'])
 
     def _resume_menu_item_activate_cb(self, menu_item, service_name):
-        if self._jobject:
-            misc.resume(self._jobject, service_name)
+        misc.resume(self._metadata, service_name)
 
     def _copy_menu_item_activate_cb(self, menu_item, vol):
-        if self._jobject:
-            datastore.copy(self._jobject, vol.id)
+        model.copy(self._metadata, vol.mount_point)
 
     def _refresh_copy_palette(self):
         palette = self._copy.get_palette()
@@ -387,7 +385,7 @@ class EntryToolbar(gtk.Toolbar):
 
         volumes_manager = volume.get_volumes_manager()
         for vol in volumes_manager.get_volumes():
-            if self._jobject.metadata['mountpoint'] == vol.id:
+            if self._metadata['mountpoint'] == vol.mount_point:
                 continue
             menu_item = MenuItem(vol.name)
             menu_item.set_image(Icon(icon_name=vol.icon_name,
@@ -397,9 +395,9 @@ class EntryToolbar(gtk.Toolbar):
                               vol)
             palette.menu.append(menu_item)
             menu_item.show()
-        
+
     def _refresh_resume_palette(self):
-        if self._jobject.metadata.get('activity_id', ''):
+        if self._metadata.get('activity_id', ''):
             # TRANS: Action label for resuming an activity.
             self._resume.set_tooltip(_('Resume'))
         else:
@@ -412,7 +410,7 @@ class EntryToolbar(gtk.Toolbar):
             palette.menu.remove(menu_item)
             menu_item.destroy()
 
-        for activity_info in misc.get_activities(self._jobject):
+        for activity_info in misc.get_activities(self._metadata):
             menu_item = MenuItem(activity_info.get_name())
             menu_item.set_image(Icon(file=activity_info.get_icon(),
                                         icon_size=gtk.ICON_SIZE_MENU))

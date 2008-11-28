@@ -84,17 +84,6 @@ class VolumesManager(gobject.GObject):
         # Ignore volumes without a filesystem.
         if device.GetProperty('volume.fsusage') != 'filesystem':
             return False
-        # Ignore root.
-        if device.GetProperty('volume.mount_point') == '/':
-            return False
-
-        storage_udi = device.GetProperty('block.storage_device')
-        obj = bus.get_object(HAL_SERVICE_NAME, storage_udi)
-        storage_device = dbus.Interface(obj, HAL_DEVICE_IFACE)
-
-        # Ignore non-removable storage.        
-        if not storage_device.GetProperty('storage.hotpluggable'):
-            return False
 
         return True
             
@@ -188,6 +177,7 @@ class VolumesManager(gobject.GObject):
                     self._remove_volume(udi)
 
     def _add_volume(self, udi):
+        logging.debug('_add_volume %r' % udi)
         bus = dbus.SystemBus()
         device_object = bus.get_object(HAL_SERVICE_NAME, udi)
         device = dbus.Interface(device_object, HAL_DEVICE_IFACE)
@@ -198,11 +188,17 @@ class VolumesManager(gobject.GObject):
 
         mount_point = device.GetProperty('volume.mount_point')
 
+        storage_udi = device.GetProperty('block.storage_device')
+        obj = bus.get_object(HAL_SERVICE_NAME, storage_udi)
+        storage_device = dbus.Interface(obj, HAL_DEVICE_IFACE)
+        can_eject = storage_device.GetProperty('storage.hotpluggable')
+
         volume = Volume(volume_name,
                         self._get_icon_for_volume(device),
                         profile.get_color(),
                         udi,
-                        mount_point)
+                        mount_point,
+                        can_eject)
         self._volumes[udi] = volume
 
         logging.debug('mounted volume %s' % udi)
@@ -227,16 +223,20 @@ class VolumesManager(gobject.GObject):
         storage_drive_type = storage_device.GetProperty('storage.drive_type')
         if storage_drive_type == 'sd_mmc':
             return 'media-flash-sd-mmc'
+        elif device.GetProperty('volume.mount_point') == '/':
+            return 'computer-xo'
         else:
             return 'media-flash-usb'
 
 class Volume(object):
-    def __init__(self, name, icon_name, icon_color, udi, mount_point):
+    def __init__(self, name, icon_name, icon_color, udi, mount_point,
+                 can_eject):
         self.name = name
         self.icon_name = icon_name
         self.icon_color = icon_color
         self.udi = udi
         self.mount_point = mount_point
+        self.can_eject = can_eject
 
     def unmount(self):
         logging.debug('Volumes.unmount: %r', self.udi)

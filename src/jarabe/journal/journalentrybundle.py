@@ -19,10 +19,11 @@ import tempfile
 import shutil
 
 import cjson
-
 import dbus
-from sugar.datastore import datastore
+
 from sugar.bundle.bundle import Bundle, MalformedBundleException
+
+from jarabe.journal import model
 
 class JournalEntryBundle(Bundle):
     """A Journal entry bundle
@@ -50,20 +51,14 @@ class JournalEntryBundle(Bundle):
         self._unzip(install_dir)
         try:
             metadata = self._read_metadata(bundle_dir)
-            jobject = datastore.create()
-            try:
-                for key, value in metadata.iteritems():
-                    jobject.metadata[key] = value
+            metadata['uid'] = ''
 
-                preview = self._read_preview(uid, bundle_dir)
-                if preview is not None:
-                    jobject.metadata['preview'] = dbus.ByteArray(preview)
+            preview = self._read_preview(uid, bundle_dir)
+            if preview is not None:
+                metadata['preview'] = dbus.ByteArray(preview)
 
-                jobject.metadata['uid'] = ''
-                jobject.file_path = os.path.join(bundle_dir, uid)
-                datastore.write(jobject)
-            finally:
-                jobject.destroy()
+            file_path = os.path.join(bundle_dir, uid)
+            model.write(metadata, file_path)
         finally:
             shutil.rmtree(bundle_dir, ignore_errors=True)
 

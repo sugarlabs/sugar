@@ -20,11 +20,11 @@ from gettext import gettext as _
 import gobject
 import gtk
 
-from sugar.datastore import datastore
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.palette import Palette
 
 from jarabe.model import volume
+from jarabe.journal import model
 
 class VolumesToolbar(gtk.Toolbar):
     __gtype_name__ = 'VolumesToolbar'
@@ -32,7 +32,7 @@ class VolumesToolbar(gtk.Toolbar):
     __gsignals__ = {
         'volume-changed': (gobject.SIGNAL_RUN_FIRST,
                            gobject.TYPE_NONE,
-                           ([str]))
+                           ([object]))
     }
 
     def __init__(self):
@@ -43,9 +43,7 @@ class VolumesToolbar(gtk.Toolbar):
 
         self.connect('destroy', self.__destroy_cb)
 
-        # TODO: It's unclear now how removable devices will be handled in the
-        # Journal. Disable for now.
-        #gobject.idle_add(self._set_up_volumes)
+        gobject.idle_add(self._set_up_volumes)
 
     def __destroy_cb(self, widget):
         volumes_manager = volume.get_volumes_manager()
@@ -91,7 +89,7 @@ class VolumesToolbar(gtk.Toolbar):
 
         self._volume_buttons.append(button)
 
-        if vol.can_unmount:
+        if vol.can_eject:
             menu_item = gtk.MenuItem(_('Unmount'))
             menu_item.connect('activate', self._unmount_activated_cb, vol)
             palette.menu.append(menu_item)
@@ -102,7 +100,7 @@ class VolumesToolbar(gtk.Toolbar):
 
     def _button_toggled_cb(self, button, vol):
         if button.props.active:
-            self.emit('volume-changed', vol.id)
+            self.emit('volume-changed', vol)
 
     def _unmount_activated_cb(self, menu_item, vol):
         logging.debug('VolumesToolbar._unmount_activated_cb: %r', vol.udi)
@@ -110,7 +108,7 @@ class VolumesToolbar(gtk.Toolbar):
 
     def _remove_button(self, vol):
         for button in self.get_children():
-            if button.volume.id == vol.id:
+            if button.volume.udi == vol.udi:
                 self._volume_buttons.remove(button)
                 self.remove(button)
                 self.get_children()[0].props.active = True
@@ -118,6 +116,15 @@ class VolumesToolbar(gtk.Toolbar):
                 if len(self.get_children()) < 2:
                     self.hide()
                 return
+        logging.error('Couldnt find volume with udi %r' % vol.udi)
+
+    def set_active_volume(self, mount_point):
+        for button in self.get_children():
+            logging.error('udi %r' % button.volume.mount_point)
+            if button.volume.mount_point == mount_point:
+                button.props.active = True
+                return
+        logging.error('Couldnt find volume with mount_point %r' % mount_point)
 
 class VolumeButton(RadioToolButton):
     def __init__(self, vol, group):
@@ -134,5 +141,7 @@ class VolumeButton(RadioToolButton):
 
     def _drag_data_received_cb(self, widget, drag_context, x, y, selection_data,
                                info, timestamp):
-        jobject = datastore.get(selection_data.data)
-        datastore.copy(jobject, self.volume.id)
+        object_id = selection_data.data
+        metadata = model.get(object_id)
+        model.copy(metadata, self.volume.mount_point)
+

@@ -28,7 +28,7 @@ from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon
 
 from jarabe.journal.collapsedentry import CollapsedEntry
-from jarabe.journal import query
+from jarabe.journal import model
 
 DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
 DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
@@ -118,9 +118,6 @@ class BaseListView(gtk.HBox):
         self._datastore_updated_handler.remove()
         self._datastore_deleted_handler.remove()
 
-        if self._result_set:
-            self._result_set.destroy()
-
     def _vadjustment_changed_cb(self, vadjustment):
         if vadjustment.props.upper > self._page_size:
             self._vscrollbar.show()
@@ -141,38 +138,38 @@ class BaseListView(gtk.HBox):
         self._last_value = value
 
         self._result_set.seek(value)
-        jobjects = self._result_set.read(self._page_size)
+        metadata_list = self._result_set.read(self._page_size)
 
         if self._result_set.length != self._vadjustment.props.upper:
             self._vadjustment.props.upper = self._result_set.length
             self._vadjustment.changed()
 
-        self._refresh_view(jobjects)
+        self._refresh_view(metadata_list)
         self._dirty = False
         
         logging.debug('_do_scroll %r %r\n' % (value, (time.time() - t)))
         
         return False
 
-    def _refresh_view(self, jobjects):
+    def _refresh_view(self, metadata_list):
         logging.debug('ListView %r' % self)
         # Indicate when the Journal is empty
-        if len(jobjects) == 0:
+        if len(metadata_list) == 0:
             self._show_message(EMPTY_JOURNAL)
             return
 
         # Refresh view and create the entries if they don't exist yet.
         for i in range(0, self._page_size):
             try:
-                if i < len(jobjects):
+                if i < len(metadata_list):
                     if i >= len(self._entries):
                         entry = self.create_entry()
                         self._box.append(entry)
                         self._entries.append(entry)
-                        entry.jobject = jobjects[i]
+                        entry.metadata = metadata_list[i]
                     else:
                         entry = self._entries[i]
-                        entry.jobject = jobjects[i]
+                        entry.metadata = metadata_list[i]
                         entry.set_visible(True)
                 elif i < len(self._entries):
                     entry = self._entries[i]
@@ -193,9 +190,8 @@ class BaseListView(gtk.HBox):
             self.refresh()
 
     def refresh(self):
-        if self._result_set:
-            self._result_set.destroy()
-        self._result_set = query.find(self._query)
+        logging.debug('ListView.refresh query %r' % self._query)
+        self._result_set = model.find(self._query)
         self._vadjustment.props.upper = self._result_set.length
         self._vadjustment.changed()
 
@@ -283,7 +279,7 @@ class BaseListView(gtk.HBox):
         self._vadjustment.changed()
 
         if self._result_set is None:
-            self._result_set = query.find(self._query)
+            self._result_set = model.find(self._query)
 
         max_value = max(0, self._result_set.length - self._page_size)
         if self._vadjustment.props.value > max_value:
@@ -353,11 +349,13 @@ class BaseListView(gtk.HBox):
                           event_time):
         logging.debug("drag_data_get_cb: requested target " + selection.target)
 
-        jobject = self._last_clicked_entry.jobject
+        metadata = self._last_clicked_entry.metadata
         if selection.target == 'text/uri-list':
-            selection.set(selection.target, 8, jobject.file_path)
+            #TODO: figure out the best place to get rid of that temp file
+            file_path = model.get_file(metadata)
+            selection.set(selection.target, 8, file_path)
         elif selection.target == 'journal-object-id':
-            selection.set(selection.target, 8, jobject.object_id)
+            selection.set(selection.target, 8, metadata['uid'])
 
     def _canvas_button_press_event_cb(self, widget, event):
         logging.debug("button_press_event_cb")
@@ -385,7 +383,8 @@ class BaseListView(gtk.HBox):
     def update_dates(self):
         logging.debug('ListView.update_dates')
         for entry in self._entries:
-            entry.update_date()
+            if entry.get_visible():
+                entry.update_date()
 
     def __datastore_created_cb(self, uid):
         self._set_dirty()
