@@ -206,29 +206,37 @@ def _get_file_metadata(path):
             'activity_id': '',
             'icon-color': client.get_string('/desktop/sugar/user/color')}
 
-def _get_all_files(dir_path, mount_point):
+def _get_all_files(dir_path):
     files = []
     for entry in os.listdir(dir_path):
         full_path = os.path.join(dir_path, entry)
         if os.path.isdir(full_path):
-            files.extend(_get_all_files(full_path, mount_point))
+            files.extend(_get_all_files(full_path))
         elif os.path.isfile(full_path):
-            metadata = _get_file_metadata(full_path)
-            metadata['mountpoint'] = mount_point
-            files.append(metadata)
+            stat = os.stat(full_path)
+            files.append((full_path, stat.st_mtime))
     return files
 
 def _query_mount_point(mount_point, query):
     t = time.time()
 
-    files = _get_all_files(mount_point, mount_point)
+    files = _get_all_files(mount_point)
     offset = int(query.get('offset', 0))
     limit  = int(query.get('limit', len(files)))
-    result = files[offset:offset + limit], len(files)
+
+    total_count = len(files)
+    files.sort(lambda a, b: int(b[1] - a[1]))
+    files = files[offset:offset + limit]
+
+    result = []
+    for file_path, timestamp in files:
+        metadata = _get_file_metadata(file_path)
+        metadata['mountpoint'] = mount_point
+        result.append(metadata)
 
     logging.debug('_query_mount_point took %f s.' % (time.time() - t))
 
-    return result
+    return result, total_count
 
 _datastore = None
 def _get_datastore():
