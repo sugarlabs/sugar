@@ -2,5 +2,5 @@
 Encoding=UTF-8
 Name=Sugar
 GenericName=Sugar
-Exec=sugar-shell
+Exec=sugar
 Type=Application
