@@ -239,8 +239,7 @@ class JournalActivity(Window):
             self._show_secondary_view(metadata)
             return True
 
-    def __volume_changed_cb(self, volume_toolbar, mount):
-        mount_point = mount.get_root().get_path()
+    def __volume_changed_cb(self, volume_toolbar, mount_point):
         logging.debug('Selected volume: %r.' % mount_point)
         self._main_toolbox.search_toolbar.set_mount_point(mount_point)
         self._main_toolbox.set_current_toolbar(0)

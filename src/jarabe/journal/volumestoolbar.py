@@ -34,14 +34,20 @@ class VolumesToolbar(gtk.Toolbar):
     __gsignals__ = {
         'volume-changed': (gobject.SIGNAL_RUN_FIRST,
                            gobject.TYPE_NONE,
-                           ([object]))
+                           ([str]))
     }
 
     def __init__(self):
         gtk.Toolbar.__init__(self)
-        self._volume_buttons = []
         self._mount_added_hid = None
         self._mount_removed_hid = None
+
+        button = JournalButton()
+        button.set_palette(Palette(_('Journal')))
+        button.connect('toggled', self._button_toggled_cb)
+        self.insert(button, 0)
+        button.show()
+        self._volume_buttons = [button]
 
         self.connect('destroy', self.__destroy_cb)
 
@@ -71,20 +77,13 @@ class VolumesToolbar(gtk.Toolbar):
     def _add_button(self, mount):
         logging.debug('VolumeToolbar._add_button: %r' % mount.get_name())
 
-        if self._volume_buttons:
-            group = self._volume_buttons[0]
-        else:
-            group = None
-
         palette = Palette(mount.get_name())
 
-        button = VolumeButton(mount, group)
+        button = VolumeButton(mount)
+        button.props.group = self._volume_buttons[0]
         button.set_palette(palette)
-        button.connect('toggled', self._button_toggled_cb, mount)
-        if self._volume_buttons:
-            position = self.get_item_index(self._volume_buttons[-1]) + 1
-        else:
-            position = 0
+        button.connect('toggled', self._button_toggled_cb)
+        position = self.get_item_index(self._volume_buttons[-1]) + 1
         self.insert(button, position)
         button.show()
 
@@ -99,9 +98,9 @@ class VolumesToolbar(gtk.Toolbar):
         if len(self.get_children()) > 1:
             self.show()
 
-    def _button_toggled_cb(self, button, mount):
+    def _button_toggled_cb(self, button):
         if button.props.active:
-            self.emit('volume-changed', mount)
+            self.emit('volume-changed', button.mount_point)
 
     def _unmount_activated_cb(self, menu_item, mount):
         logging.debug('VolumesToolbar._unmount_activated_cb: %r', mount)
@@ -111,10 +110,11 @@ class VolumesToolbar(gtk.Toolbar):
         logging.debug('__unmount_cb %r %r' % (source, result))
 
     def _get_button_for_mount(self, mount):
+        mount_point = mount.get_root().get_path()    
         for button in self.get_children():
-            if button.mount == mount:
+            if button.mount_point == mount_point:
                 return button
-        logging.error('Couldnt find volume with mount %r' % mount)
+        logging.error('Couldnt find button with mount_point %r' % mount_point)
         return None
 
     def _remove_button(self, mount):
@@ -130,21 +130,12 @@ class VolumesToolbar(gtk.Toolbar):
         button = self._get_button_for_mount(mount)
         button.props.active = True
 
-class VolumeButton(RadioToolButton):
-    def __init__(self, mount, group):
+class BaseButton(RadioToolButton):
+    def __init__(self, mount_point):
         RadioToolButton.__init__(self)
 
-        # TODO: fallback to the more generic icons when needed
-        self.props.named_icon = mount.get_icon().props.names[0]
-        
-        # TODO: retrieve the colors from the owner of the device
-        client = gconf.client_get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
-        self.props.xo_color = color
+        self.mount_point = mount_point
 
-        self.props.group = group
-
-        self.mount = mount
         self.drag_dest_set(gtk.DEST_DEFAULT_ALL,
                            [('journal-object-id', 0, 0)],
                            gtk.gdk.ACTION_COPY)
@@ -154,5 +145,28 @@ class VolumeButton(RadioToolButton):
                                info, timestamp):
         object_id = selection_data.data
         metadata = model.get(object_id)
-        model.copy(metadata, self.mount.get_root().get_path())
+        model.copy(metadata, self.mount_point)
+
+class VolumeButton(BaseButton):
+    def __init__(self, mount):
+        mount_point = mount.get_root().get_path()
+        BaseButton.__init__(self, mount_point)
+
+        # TODO: fallback to the more generic icons when needed
+        self.props.named_icon = mount.get_icon().props.names[0]
+        
+        # TODO: retrieve the colors from the owner of the device
+        client = gconf.client_get_default()
+        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        self.props.xo_color = color
+
+class JournalButton(BaseButton):
+    def __init__(self):
+        BaseButton.__init__(self, mount_point='/')
+
+        self.props.named_icon = 'computer-xo'
+
+        client = gconf.client_get_default()
+        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        self.props.xo_color = color
 
