@@ -54,9 +54,9 @@ class VolumesToolbar(gtk.Toolbar):
 
     def _set_up_volumes(self):
         volume_monitor = gio.volume_monitor_get()
-        self._volume_added_hid = \
+        self._mount_added_hid = \
                 volume_monitor.connect('mount-added', self.__mount_added_cb)
-        self._volume_removed_hid = \
+        self._mount_removed_hid = \
                 volume_monitor.connect('mount-removed', self.__mount_removed_cb)
 
         for mount in volume_monitor.get_mounts():
