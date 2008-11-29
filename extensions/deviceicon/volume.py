@@ -19,8 +19,9 @@ import statvfs
 from gettext import gettext as _
 import logging
 
-import gtk
+import gobject
 import gio
+import gtk
 import gconf
 
 from sugar.graphics.tray import TrayIcon
@@ -110,7 +111,13 @@ class VolumePalette(Palette):
                 {'free_space': free_space / (1024 * 1024)}
 
 def setup(tray):
+    gobject.idle_add(_setup_volumes, tray)
+
+def _setup_volumes(tray):
     volume_monitor = gio.volume_monitor_get()
+
+    for volume in volume_monitor.get_volumes():
+        _mount(volume, tray)
 
     for mount in volume_monitor.get_mounts():
         _add_device(mount, tray)
@@ -120,6 +127,9 @@ def setup(tray):
     volume_monitor.connect('mount-removed', _mount_removed_cb, tray)
 
 def _volume_added_cb(volume_monitor, volume, tray):
+    _mount(volume, tray)
+
+def _mount(volume, tray):
     #TODO: this should be done by some other process, like gvfs-hal-volume-monitor
     #TODO: use volume.should_automount() when it gets into pygtk
     if volume.get_mount() is None and volume.can_mount():
