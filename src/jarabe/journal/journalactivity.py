@@ -239,9 +239,10 @@ class JournalActivity(Window):
             self._show_secondary_view(metadata)
             return True
 
-    def __volume_changed_cb(self, volume_toolbar, volume):
-        logging.debug('Selected volume: %r.' % volume.udi)
-        self._main_toolbox.search_toolbar.set_mount_point(volume.mount_point)
+    def __volume_changed_cb(self, volume_toolbar, mount):
+        mount_point = mount.get_root().get_path()
+        logging.debug('Selected volume: %r.' % mount_point)
+        self._main_toolbox.search_toolbar.set_mount_point(mount_point)
         self._main_toolbox.set_current_toolbar(0)
 
     def __model_created_cb(self, object_id):
@@ -320,8 +321,8 @@ class JournalActivity(Window):
         self.present()
         self._critical_space_alert = None
 
-    def set_active_volume(self, mount_point):
-        self._volumes_toolbar.set_active_volume(mount_point)
+    def set_active_volume(self, mount):
+        self._volumes_toolbar.set_active_volume(mount)
 
 _journal = None
 

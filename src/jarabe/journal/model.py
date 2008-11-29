@@ -229,7 +229,7 @@ def _query_mount_point(mount_point, query):
     files = files[offset:offset + limit]
 
     result = []
-    for file_path, timestamp in files:
+    for file_path, timestamp_ in files:
         metadata = _get_file_metadata(file_path)
         metadata['mountpoint'] = mount_point
         result.append(metadata)

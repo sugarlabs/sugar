@@ -21,6 +21,7 @@ import os
 import gconf
 
 import gobject
+import gio
 import gtk
 
 from sugar.graphics.toolbox import Toolbox
@@ -35,7 +36,6 @@ from sugar.graphics import style
 from sugar import mime
 
 from jarabe.model import bundleregistry
-from jarabe.model import volume
 from jarabe.journal import misc
 from jarabe.journal import model
 
@@ -373,8 +373,8 @@ class EntryToolbar(gtk.Toolbar):
     def _resume_menu_item_activate_cb(self, menu_item, service_name):
         misc.resume(self._metadata, service_name)
 
-    def _copy_menu_item_activate_cb(self, menu_item, vol):
-        model.copy(self._metadata, vol.mount_point)
+    def _copy_menu_item_activate_cb(self, menu_item, mount):
+        model.copy(self._metadata, mount.get_root().get_path())
 
     def _refresh_copy_palette(self):
         palette = self._copy.get_palette()
@@ -383,16 +383,19 @@ class EntryToolbar(gtk.Toolbar):
             palette.menu.remove(menu_item)
             menu_item.destroy()
 
-        volumes_manager = volume.get_volumes_manager()
-        for vol in volumes_manager.get_volumes():
-            if self._metadata['mountpoint'] == vol.mount_point:
+        volume_monitor = gio.volume_monitor_get()
+        for mount in volume_monitor.get_mounts():
+            if self._metadata['mountpoint'] == mount.get_root().get_path():
                 continue
-            menu_item = MenuItem(vol.name)
-            menu_item.set_image(Icon(icon_name=vol.icon_name,
+            menu_item = MenuItem(mount.get_name())
+
+            # TODO: fallback to the more generic icons when needed
+            menu_item.set_image(Icon(icon_name=mount.get_icon().props.names[0],
                                      icon_size=gtk.ICON_SIZE_MENU))
+
             menu_item.connect('activate',
                               self._copy_menu_item_activate_cb,
-                              vol)
+                              mount)
             palette.menu.append(menu_item)
             menu_item.show()
 
