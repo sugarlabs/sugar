@@ -95,14 +95,54 @@ class ResultSet(object):
 
     length = property(get_length)
 
+    def _get_all_files(self, dir_path):
+        files = []
+        for entry in os.listdir(dir_path):
+            full_path = os.path.join(dir_path, entry)
+            if os.path.isdir(full_path):
+                files.extend(self._get_all_files(full_path))
+            elif os.path.isfile(full_path):
+                stat = os.stat(full_path)
+                files.append((full_path, stat.st_mtime))
+        return files
+
+    def _query_mount_point(self, mount_point, query):
+        t = time.time()
+
+        files = self._get_all_files(mount_point)
+        offset = int(query.get('offset', 0))
+        limit  = int(query.get('limit', len(files)))
+
+        total_count = len(files)
+        files.sort(lambda a, b: int(b[1] - a[1]))
+        files = files[offset:offset + limit]
+
+        result = []
+        for file_path, timestamp_ in files:
+            metadata = _get_file_metadata(file_path)
+            result.append(metadata)
+
+        logging.debug('_query_mount_point took %f s.' % (time.time() - t))
+
+        return result, total_count
+
     def _find(self, query):
         mount_points = query.get('mountpoints', ['/'])
         if mount_points is None or len(mount_points) != 1:
             raise ValueError('Exactly one mount point must be specified')
+
         if mount_points[0] == '/':
-            return _get_datastore().find(query, PROPERTIES, byte_arrays=True)
+            data_store = _get_datastore()
+            entries, total_count = _get_datastore().find(query, PROPERTIES,
+                                                         byte_arrays=True)
         else:
-            return _query_mount_point(mount_points[0], query)
+            entries, total_count = self._query_mount_point(mount_points[0],
+                                                           query)
+
+        for entry in entries:
+            entry['mountpoint'] = mount_points[0]
+
+        return entries, total_count
 
     def seek(self, position):
         self._position = position
@@ -206,38 +246,6 @@ def _get_file_metadata(path):
             'activity_id': '',
             'icon-color': client.get_string('/desktop/sugar/user/color')}
 
-def _get_all_files(dir_path):
-    files = []
-    for entry in os.listdir(dir_path):
-        full_path = os.path.join(dir_path, entry)
-        if os.path.isdir(full_path):
-            files.extend(_get_all_files(full_path))
-        elif os.path.isfile(full_path):
-            stat = os.stat(full_path)
-            files.append((full_path, stat.st_mtime))
-    return files
-
-def _query_mount_point(mount_point, query):
-    t = time.time()
-
-    files = _get_all_files(mount_point)
-    offset = int(query.get('offset', 0))
-    limit  = int(query.get('limit', len(files)))
-
-    total_count = len(files)
-    files.sort(lambda a, b: int(b[1] - a[1]))
-    files = files[offset:offset + limit]
-
-    result = []
-    for file_path, timestamp_ in files:
-        metadata = _get_file_metadata(file_path)
-        metadata['mountpoint'] = mount_point
-        result.append(metadata)
-
-    logging.debug('_query_mount_point took %f s.' % (time.time() - t))
-
-    return result, total_count
-
 _datastore = None
 def _get_datastore():
     global _datastore
@@ -327,7 +335,7 @@ def write(metadata, file_path='', update_mtime=True):
                                                  file_path,
                                                  True)
     else:
-        pass
+        raise NotImplementedError(metadata['mountpoint'])
 
     return object_id
 
