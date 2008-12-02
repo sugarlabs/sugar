@@ -122,7 +122,7 @@ def _setup_volumes(tray):
     for mount in volume_monitor.get_mounts():
         _add_device(mount, tray)
 
-    volume_monitor.connect('volume-added', _volume_added_cb, tray)
+    #volume_monitor.connect('volume-added', _volume_added_cb, tray)
     volume_monitor.connect('mount-added', _mount_added_cb, tray)
     volume_monitor.connect('mount-removed', _mount_removed_cb, tray)
 
