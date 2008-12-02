@@ -18,6 +18,7 @@ import logging
 import os
 from datetime import datetime
 import time
+import shutil
 
 import dbus
 import gconf
@@ -286,8 +287,10 @@ def get_file(object_id):
     """Returns the file for an object
     """
     if os.path.exists(object_id):
+        logging.debug('get_file asked for file with path %r' % object_id)
         return object_id
     else:
+        logging.debug('get_file asked for entry with id %r' % object_id)
         return _get_datastore().get_filename(object_id)
 
 def get_unique_values(key):
@@ -315,11 +318,13 @@ def copy(metadata, mount_point):
     metadata['mountpoint'] = mount_point
     del metadata['uid']
 
+    #TODO: should we transfer ownership?
     return write(metadata, file_path)
 
 def write(metadata, file_path='', update_mtime=True):
     """Creates or updates an entry for that id
     """
+    logging.debug('model.write %r %r %r' % (metadata, file_path, update_mtime))
     if update_mtime:
         metadata['mtime'] = datetime.now().isoformat()
         metadata['timestamp'] = int(time.time())
@@ -335,9 +340,20 @@ def write(metadata, file_path='', update_mtime=True):
                                                  file_path,
                                                  True)
     else:
-        raise NotImplementedError(metadata['mountpoint'])
+        if not os.path.exists(file_path):
+            raise ValueError('Entries without a file cannot be copied to '
+                             'removable devices')
+        file_name = _get_file_name(metadata['title'], metadata['mime_type'])
+        destination_path = os.path.join(metadata['mountpoint'], file_name)
+        shutil.copy(file_path, destination_path)
+        object_id = destination_path
 
     return object_id
+
+def _get_file_name(title, mime_type):
+    # TODO: sanitize title and make as robust as possible, this function should
+    # never fail
+    return '%s.%s' % (title, mime.get_primary_extension(mime_type))
 
 created = dispatch.Signal()
 updated = dispatch.Signal()
