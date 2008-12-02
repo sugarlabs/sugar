@@ -351,8 +351,9 @@ def write(metadata, file_path='', update_mtime=True):
     return object_id
 
 def _get_file_name(title, mime_type):
-    # TODO: sanitize title and make as robust as possible, this function should
-    # never fail
+    # TODO: sanitize title for common filesystems
+    # TODO: make as robust as possible, this function should never fail.
+    # TODO: don't append the same extension again and again
     return '%s.%s' % (title, mime.get_primary_extension(mime_type))
 
 created = dispatch.Signal()
