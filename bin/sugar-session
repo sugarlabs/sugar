@@ -77,20 +77,6 @@ def cleanup_logs():
             dest_path = os.path.join(backup_dir, log)
             os.rename(source_path, dest_path)
 
-def start_datastore():
-    from sugar.datastore import datastore
-
-    # Mount the datastore in internal flash
-    ds_path = env.get_profile_path('datastore')
-    try:
-        datastore.mount(ds_path, [], timeout=120)
-    except Exception, e:
-        # Don't explode if there's corruption; move the data out of the way
-        # and attempt to create a store from scratch.
-        logging.error(e)
-        shutil.move(ds_path, os.path.abspath(ds_path) + str(time.time()))
-        datastore.mount(ds_path, [], timeout=120)
-
 def start_ui_service():
     from jarabe.view.service import UIService
 
@@ -146,7 +132,6 @@ def main():
     if timezone is not '':    
         os.environ['TZ'] = timezone
 
-    start_datastore()
     start_ui_service()
     start_session_manager()
 

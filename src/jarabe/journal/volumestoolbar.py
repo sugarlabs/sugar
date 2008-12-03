@@ -18,12 +18,14 @@ import logging
 from gettext import gettext as _
 
 import gobject
+import gio
 import gtk
+import gconf
 
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.palette import Palette
+from sugar.graphics.xocolor import XoColor
 
-from jarabe.model import volume
 from jarabe.journal import model
 
 class VolumesToolbar(gtk.Toolbar):
@@ -32,108 +34,108 @@ class VolumesToolbar(gtk.Toolbar):
     __gsignals__ = {
         'volume-changed': (gobject.SIGNAL_RUN_FIRST,
                            gobject.TYPE_NONE,
-                           ([object]))
+                           ([str]))
     }
 
     def __init__(self):
         gtk.Toolbar.__init__(self)
-        self._volume_buttons = []
-        self._volume_added_hid = None
-        self._volume_removed_hid = None
+        self._mount_added_hid = None
+        self._mount_removed_hid = None
+
+        button = JournalButton()
+        button.set_palette(Palette(_('Journal')))
+        button.connect('toggled', self._button_toggled_cb)
+        self.insert(button, 0)
+        button.show()
+        self._volume_buttons = [button]
 
         self.connect('destroy', self.__destroy_cb)
 
         gobject.idle_add(self._set_up_volumes)
 
     def __destroy_cb(self, widget):
-        volumes_manager = volume.get_volumes_manager()
-        volumes_manager.disconnect(self._volume_added_hid)
-        volumes_manager.disconnect(self._volume_removed_hid)
+        volume_monitor = gio.volume_monitor_get()
+        volume_monitor.disconnect(self._mount_added_hid)
+        volume_monitor.disconnect(self._mount_removed_hid)
 
     def _set_up_volumes(self):
-        volumes_manager = volume.get_volumes_manager()
-        self._volume_added_hid = \
-                volumes_manager.connect('volume-added', self._volume_added_cb)
-        self._volume_removed_hid = \
-                volumes_manager.connect('volume-removed',
-                                        self._volume_removed_cb)
+        volume_monitor = gio.volume_monitor_get()
+        self._mount_added_hid = \
+                volume_monitor.connect('mount-added', self.__mount_added_cb)
+        self._mount_removed_hid = \
+                volume_monitor.connect('mount-removed', self.__mount_removed_cb)
 
-        for vol in volumes_manager.get_volumes():
-            self._add_button(vol)
+        for mount in volume_monitor.get_mounts():
+            self._add_button(mount)
 
-    def _volume_added_cb(self, volumes_manager, vol):
-        self._add_button(vol)
+    def __mount_added_cb(self, volume_monitor, mount):
+        self._add_button(mount)
 
-    def _volume_removed_cb(self, volumes_manager, vol):
-        self._remove_button(vol)
+    def __mount_removed_cb(self, volume_monitor, mount):
+        self._remove_button(mount)
 
-    def _add_button(self, vol):
-        logging.debug('VolumeToolbar._add_button: %r' % vol.name)
+    def _add_button(self, mount):
+        logging.debug('VolumeToolbar._add_button: %r' % mount.get_name())
 
-        if self._volume_buttons:
-            group = self._volume_buttons[0]
-        else:
-            group = None
+        palette = Palette(mount.get_name())
 
-        palette = Palette(vol.name)
-
-        button = VolumeButton(vol, group)
+        button = VolumeButton(mount)
+        button.props.group = self._volume_buttons[0]
         button.set_palette(palette)
-        button.connect('toggled', self._button_toggled_cb, vol)
-        if self._volume_buttons:
-            position = self.get_item_index(self._volume_buttons[-1]) + 1
-        else:
-            position = 0
+        button.connect('toggled', self._button_toggled_cb)
+        position = self.get_item_index(self._volume_buttons[-1]) + 1
         self.insert(button, position)
         button.show()
 
         self._volume_buttons.append(button)
 
-        if vol.can_eject:
+        if mount.can_unmount():
             menu_item = gtk.MenuItem(_('Unmount'))
-            menu_item.connect('activate', self._unmount_activated_cb, vol)
+            menu_item.connect('activate', self._unmount_activated_cb, mount)
             palette.menu.append(menu_item)
             menu_item.show()
 
         if len(self.get_children()) > 1:
             self.show()
 
-    def _button_toggled_cb(self, button, vol):
+    def _button_toggled_cb(self, button):
         if button.props.active:
-            self.emit('volume-changed', vol)
+            self.emit('volume-changed', button.mount_point)
 
-    def _unmount_activated_cb(self, menu_item, vol):
-        logging.debug('VolumesToolbar._unmount_activated_cb: %r', vol.udi)
-        vol.unmount()
+    def _unmount_activated_cb(self, menu_item, mount):
+        logging.debug('VolumesToolbar._unmount_activated_cb: %r', mount)
+        mount.unmount(self.__unmount_cb)
 
-    def _remove_button(self, vol):
+    def __unmount_cb(self, source, result):
+        logging.debug('__unmount_cb %r %r' % (source, result))
+
+    def _get_button_for_mount(self, mount):
+        mount_point = mount.get_root().get_path()    
         for button in self.get_children():
-            if button.volume.udi == vol.udi:
-                self._volume_buttons.remove(button)
-                self.remove(button)
-                self.get_children()[0].props.active = True
-                
-                if len(self.get_children()) < 2:
-                    self.hide()
-                return
-        logging.error('Couldnt find volume with udi %r' % vol.udi)
+            if button.mount_point == mount_point:
+                return button
+        logging.error('Couldnt find button with mount_point %r' % mount_point)
+        return None
 
-    def set_active_volume(self, mount_point):
-        for button in self.get_children():
-            logging.error('udi %r' % button.volume.mount_point)
-            if button.volume.mount_point == mount_point:
-                button.props.active = True
-                return
-        logging.error('Couldnt find volume with mount_point %r' % mount_point)
+    def _remove_button(self, mount):
+        button = self._get_button_for_mount(mount)
+        self._volume_buttons.remove(button)
+        self.remove(button)
+        self.get_children()[0].props.active = True
 
-class VolumeButton(RadioToolButton):
-    def __init__(self, vol, group):
+        if len(self.get_children()) < 2:
+            self.hide()
+
+    def set_active_volume(self, mount):
+        button = self._get_button_for_mount(mount)
+        button.props.active = True
+
+class BaseButton(RadioToolButton):
+    def __init__(self, mount_point):
         RadioToolButton.__init__(self)
-        self.props.named_icon = vol.icon_name
-        self.props.xo_color = vol.icon_color
-        self.props.group = group
 
-        self.volume = vol
+        self.mount_point = mount_point
+
         self.drag_dest_set(gtk.DEST_DEFAULT_ALL,
                            [('journal-object-id', 0, 0)],
                            gtk.gdk.ACTION_COPY)
@@ -143,5 +145,28 @@ class VolumeButton(RadioToolButton):
                                info, timestamp):
         object_id = selection_data.data
         metadata = model.get(object_id)
-        model.copy(metadata, self.volume.mount_point)
+        model.copy(metadata, self.mount_point)
+
+class VolumeButton(BaseButton):
+    def __init__(self, mount):
+        mount_point = mount.get_root().get_path()
+        BaseButton.__init__(self, mount_point)
+
+        # TODO: fallback to the more generic icons when needed
+        self.props.named_icon = mount.get_icon().props.names[0]
+        
+        # TODO: retrieve the colors from the owner of the device
+        client = gconf.client_get_default()
+        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        self.props.xo_color = color
+
+class JournalButton(BaseButton):
+    def __init__(self):
+        BaseButton.__init__(self, mount_point='/')
+
+        self.props.named_icon = 'computer-xo'
+
+        client = gconf.client_get_default()
+        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        self.props.xo_color = color
 
