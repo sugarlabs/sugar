@@ -58,6 +58,12 @@ def _check_xephyr(display):
     return result == 0
 
 def _start_xephyr(dpi, dimensions):
+    # FIXME evil workaround until F10 Xephyr is fixed
+    if os.path.exists('/etc/fedora-release'):
+        if open('/etc/fedora-release').read().startswith('Fedora release 10'):
+            _run_xephyr(100, dpi, dimensions)
+            return
+
     for display in range(100, 110):
         if not _check_xephyr(display):
             _run_xephyr(display, dpi, dimensions)
