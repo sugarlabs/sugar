@@ -53,16 +53,12 @@ am__vpath_adj = case $$p in \
     *) f=$$p;; \
   esac;
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
-am__installdirs = "$(DESTDIR)$(mimedir)" "$(DESTDIR)$(nmservicedir)" \
-	"$(DESTDIR)$(schemadir)" "$(DESTDIR)$(sugardir)" \
+am__installdirs = "$(DESTDIR)$(mimedir)" "$(DESTDIR)$(sugardir)" \
 	"$(DESTDIR)$(xsessionsdir)"
 mimeDATA_INSTALL = $(INSTALL_DATA)
-nmserviceDATA_INSTALL = $(INSTALL_DATA)
-schemaDATA_INSTALL = $(INSTALL_DATA)
 sugarDATA_INSTALL = $(INSTALL_DATA)
 xsessionsDATA_INSTALL = $(INSTALL_DATA)
-DATA = $(mime_DATA) $(nmservice_DATA) $(schema_DATA) $(sugar_DATA) \
-	$(xsessions_DATA)
+DATA = $(mime_DATA) $(sugar_DATA) $(xsessions_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 ETAGS = etags
@@ -92,9 +88,6 @@ ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
-GCONFTOOL = @GCONFTOOL@
-GCONF_SCHEMA_CONFIG_SOURCE = @GCONF_SCHEMA_CONFIG_SOURCE@
-GCONF_SCHEMA_FILE_DIR = @GCONF_SCHEMA_FILE_DIR@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
@@ -220,8 +213,8 @@ sugar_DATA = \
 	$(GTKRC_FILES)
 
 GTKRC_FILES = \
-	sugar-72.gtkrc	\
-	sugar-100.gtkrc
+	sugar.gtkrc	\
+	sugar-xo.gtkrc
 
 xsessionsdir = $(datadir)/xsessions
 xsessions_DATA = sugar.desktop
@@ -229,13 +222,8 @@ mime_xml_in_files = sugar.xml.in
 mime_xml_files = $(mime_xml_in_files:.xml.in=.xml)
 mimedir = $(datadir)/mime/packages
 mime_DATA = $(mime_xml_files)
-nmservicedir = $(sysconfdir)/dbus-1/system.d/
-nmservice_DATA = nm-user-settings.conf
-schemadir = $(GCONF_SCHEMA_FILE_DIR)
-schema_in_files = sugar.schemas.in
-schema_DATA = $(schema_in_files:.schemas.in=.schemas)
-EXTRA_DIST = $(sugar_DATA) $(xsessions_DATA) $(nmservice_DATA) $(mime_xml_in_files) em.py gtkrc.em $(schema_in_files)
-CLEANFILES = $(GTKRC_FILES) $(mime_xml_files) $(schema_DATA)
+EXTRA_DIST = $(sugar_DATA) $(xsessions_DATA) $(mime_xml_in_files) em.py gtkrc.em
+CLEANFILES = $(GTKRC_FILES) $(mime_xml_files)
 all: all-recursive
 
 .SUFFIXES:
@@ -284,40 +272,6 @@ uninstall-mimeDATA:
 	  f=$(am__strip_dir) \
 	  echo " rm -f '$(DESTDIR)$(mimedir)/$$f'"; \
 	  rm -f "$(DESTDIR)$(mimedir)/$$f"; \
-	done
-install-nmserviceDATA: $(nmservice_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(nmservicedir)" || $(MKDIR_P) "$(DESTDIR)$(nmservicedir)"
-	@list='$(nmservice_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(nmserviceDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(nmservicedir)/$$f'"; \
-	  $(nmserviceDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(nmservicedir)/$$f"; \
-	done
-
-uninstall-nmserviceDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(nmservice_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(nmservicedir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(nmservicedir)/$$f"; \
-	done
-install-schemaDATA: $(schema_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(schemadir)" || $(MKDIR_P) "$(DESTDIR)$(schemadir)"
-	@list='$(schema_DATA)'; for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  f=$(am__strip_dir) \
-	  echo " $(schemaDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(schemadir)/$$f'"; \
-	  $(schemaDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(schemadir)/$$f"; \
-	done
-
-uninstall-schemaDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(schema_DATA)'; for p in $$list; do \
-	  f=$(am__strip_dir) \
-	  echo " rm -f '$(DESTDIR)$(schemadir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(schemadir)/$$f"; \
 	done
 install-sugarDATA: $(sugar_DATA)
 	@$(NORMAL_INSTALL)
@@ -532,7 +486,7 @@ check: check-recursive
 all-am: Makefile $(DATA)
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(mimedir)" "$(DESTDIR)$(nmservicedir)" "$(DESTDIR)$(schemadir)" "$(DESTDIR)$(sugardir)" "$(DESTDIR)$(xsessionsdir)"; do \
+	for dir in "$(DESTDIR)$(mimedir)" "$(DESTDIR)$(sugardir)" "$(DESTDIR)$(xsessionsdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-recursive
@@ -578,8 +532,7 @@ info: info-recursive
 
 info-am:
 
-install-data-am: install-data-local install-mimeDATA \
-	install-nmserviceDATA install-schemaDATA install-sugarDATA \
+install-data-am: install-mimeDATA install-sugarDATA \
 	install-xsessionsDATA
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) install-data-hook
@@ -616,8 +569,7 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-mimeDATA uninstall-nmserviceDATA \
-	uninstall-schemaDATA uninstall-sugarDATA \
+uninstall-am: uninstall-mimeDATA uninstall-sugarDATA \
 	uninstall-xsessionsDATA
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) uninstall-hook
@@ -630,27 +582,24 @@ uninstall-am: uninstall-mimeDATA uninstall-nmserviceDATA \
 	ctags-recursive distclean distclean-generic distclean-tags \
 	distdir dvi dvi-am html html-am info info-am install \
 	install-am install-data install-data-am install-data-hook \
-	install-data-local install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-mimeDATA \
-	install-nmserviceDATA install-pdf install-pdf-am install-ps \
-	install-ps-am install-schemaDATA install-strip \
-	install-sugarDATA install-xsessionsDATA installcheck \
-	installcheck-am installdirs installdirs-am maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
-	pdf-am ps ps-am tags tags-recursive uninstall uninstall-am \
-	uninstall-hook uninstall-mimeDATA uninstall-nmserviceDATA \
-	uninstall-schemaDATA uninstall-sugarDATA \
-	uninstall-xsessionsDATA
+	install-dvi install-dvi-am install-exec install-exec-am \
+	install-html install-html-am install-info install-info-am \
+	install-man install-mimeDATA install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip install-sugarDATA \
+	install-xsessionsDATA installcheck installcheck-am installdirs \
+	installdirs-am maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-generic pdf pdf-am ps ps-am tags \
+	tags-recursive uninstall uninstall-am uninstall-hook \
+	uninstall-mimeDATA uninstall-sugarDATA uninstall-xsessionsDATA
 
 
-sugar-72.gtkrc: gtkrc.em
-	$(srcdir)/em.py -D scaling=\'72\' $(srcdir)/gtkrc.em > \
-		$(top_builddir)/data/sugar-72.gtkrc
+sugar.gtkrc: gtkrc.em
+	$(srcdir)/em.py -D theme=\'sugar\' $(srcdir)/gtkrc.em > \
+		$(top_builddir)/data/sugar.gtkrc
 
-sugar-100.gtkrc: gtkrc.em
-	$(srcdir)/em.py -D scaling=\'100\' $(srcdir)/gtkrc.em > \
-		$(top_builddir)/data/sugar-100.gtkrc
+sugar-xo.gtkrc: gtkrc.em
+	$(srcdir)/em.py -D theme=\'sugar-xo\' $(srcdir)/gtkrc.em > \
+		$(top_builddir)/data/sugar-xo.gtkrc
 @INTLTOOL_XML_RULE@
 
 install-data-hook:
@@ -662,11 +611,6 @@ uninstall-hook:
 @ENABLE_UPDATE_MIMEDB_TRUE@	if [ -z "$$DESTDIR" ]; then \
 @ENABLE_UPDATE_MIMEDB_TRUE@		update-mime-database "$(datadir)/mime"; \
 @ENABLE_UPDATE_MIMEDB_TRUE@	fi
-
-@INTLTOOL_SCHEMAS_RULE@
-
-install-data-local: $(schema_DATA)
-@GCONF_SCHEMAS_INSTALL_TRUE@	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule sugar.schemas 2>&1 > /dev/null
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

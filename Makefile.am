@@ -1,4 +1,4 @@
-SUBDIRS = bin data po src extensions
+SUBDIRS = bin data po src service
 
 DISTCLEANFILES =		\
 	intltool-extract	\

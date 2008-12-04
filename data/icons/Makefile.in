@@ -73,9 +73,6 @@ ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
-GCONFTOOL = @GCONFTOOL@
-GCONF_SCHEMA_CONFIG_SOURCE = @GCONF_SCHEMA_CONFIG_SOURCE@
-GCONF_SCHEMA_FILE_DIR = @GCONF_SCHEMA_FILE_DIR@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
@@ -194,7 +191,6 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 sugardir = $(pkgdatadir)/data/icons
 sugar_DATA = \
-	activity-journal.svg     \
 	module-about_me.svg      \
 	module-about_my_xo.svg   \
 	module-date_and_time.svg \

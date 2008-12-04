@@ -1,12 +1,12 @@
 SUBDIRS = icons
 
-sugar-72.gtkrc: gtkrc.em
-	$(srcdir)/em.py -D scaling=\'72\' $(srcdir)/gtkrc.em > \
-		$(top_builddir)/data/sugar-72.gtkrc
+sugar.gtkrc: gtkrc.em
+	$(srcdir)/em.py -D theme=\'sugar\' $(srcdir)/gtkrc.em > \
+		$(top_builddir)/data/sugar.gtkrc
 
-sugar-100.gtkrc: gtkrc.em
-	$(srcdir)/em.py -D scaling=\'100\' $(srcdir)/gtkrc.em > \
-		$(top_builddir)/data/sugar-100.gtkrc
+sugar-xo.gtkrc: gtkrc.em
+	$(srcdir)/em.py -D theme=\'sugar-xo\' $(srcdir)/gtkrc.em > \
+		$(top_builddir)/data/sugar-xo.gtkrc
 
 sugardir = $(pkgdatadir)/data
 sugar_DATA =			\
@@ -16,8 +16,8 @@ sugar_DATA =			\
 	$(GTKRC_FILES)
 
 GTKRC_FILES =		\
-	sugar-72.gtkrc	\
-	sugar-100.gtkrc
+	sugar.gtkrc	\
+	sugar-xo.gtkrc
 
 xsessionsdir = $(datadir)/xsessions
 xsessions_DATA = sugar.desktop
@@ -28,9 +28,6 @@ mime_xml_files = $(mime_xml_in_files:.xml.in=.xml)
 
 mimedir = $(datadir)/mime/packages
 mime_DATA = $(mime_xml_files)
-
-nmservicedir = $(sysconfdir)/dbus-1/system.d/
-nmservice_DATA = nm-user-settings.conf
 
 install-data-hook:
 if ENABLE_UPDATE_MIMEDB
@@ -46,16 +43,5 @@ if ENABLE_UPDATE_MIMEDB
 	fi
 endif
 
-@INTLTOOL_SCHEMAS_RULE@
-
-schemadir = $(GCONF_SCHEMA_FILE_DIR)
-schema_in_files = sugar.schemas.in
-schema_DATA = $(schema_in_files:.schemas.in=.schemas)
-
-install-data-local: $(schema_DATA)
-if GCONF_SCHEMAS_INSTALL
-	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule sugar.schemas 2>&1 > /dev/null
-endif
-
-EXTRA_DIST = $(sugar_DATA) $(xsessions_DATA) $(nmservice_DATA) $(mime_xml_in_files) em.py gtkrc.em $(schema_in_files)
-CLEANFILES = $(GTKRC_FILES) $(mime_xml_files) $(schema_DATA)
+EXTRA_DIST = $(sugar_DATA) $(xsessions_DATA) $(mime_xml_in_files) em.py gtkrc.em
+CLEANFILES = $(GTKRC_FILES) $(mime_xml_files)
