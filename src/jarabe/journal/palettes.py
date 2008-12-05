@@ -16,9 +16,10 @@
 
 from gettext import gettext as _
 import logging
-import gconf
         
+import gobject
 import gtk
+import gconf
 
 from sugar.graphics import style
 from sugar.graphics.palette import Palette
@@ -27,6 +28,7 @@ from sugar.graphics.icon import Icon
 from sugar.graphics.xocolor import XoColor
 
 from jarabe.model import bundleregistry
+from jarabe.model import friends
 from jarabe.journal import misc
 from jarabe.journal import model
 
@@ -75,6 +77,12 @@ class ObjectPalette(Palette):
         self.menu.append(menu_item)
         menu_item.show()
 
+        menu_item = MenuItem(_('Send to'), 'list-remove')
+        #menu_item.connect('activate', self.__sendto_activate_cb)
+        self.menu.append(menu_item)
+        menu_item.set_submenu(FriendsMenu())
+        menu_item.show()
+
         menu_item = MenuItem(_('Erase'), 'list-remove')
         menu_item.connect('activate', self.__erase_activate_cb)
         self.menu.append(menu_item)
@@ -105,6 +113,36 @@ class ObjectPalette(Palette):
         if bundle is not None and registry.is_installed(bundle):
             registry.uninstall(bundle)
         model.delete(self._metadata['uid'])
+
+class FriendsMenu(gtk.Menu):
+    __gtype_name__ = 'JournalFriendsMenu'
+
+    __gsignals__ = {
+        'friend-selected'  : (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                              ([object])),
+    }
+
+    def __init__(self):
+        gobject.GObject.__init__(self)
+
+        friends_model = friends.get_model()
+        for friend in friends_model:
+            if friend.is_present():
+                menu_item = MenuItem(text_label=friend.get_nick(), 
+                                     icon_name='computer-xo',
+                                     xo_color=friend.get_color())
+                menu_item.connect('activate', self.__item_activate_cb, friend)
+                self.append(menu_item)
+                menu_item.show()
+
+        if not self.get_children():
+            menu_item = MenuItem(_('No friends present'))
+            menu_item.set_sensitive(False)
+            self.append(menu_item)
+            menu_item.show()            
+
+    def __item_activate_cb(self, menu_item, friend):
+        self.emit('friend-selected', friend)
 
 class BuddyPalette(Palette):
     def __init__(self, buddy):
