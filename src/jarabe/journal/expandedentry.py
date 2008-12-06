@@ -310,7 +310,7 @@ class ExpandedEntry(hippo.CanvasBox):
 
     def _title_notify_text_cb(self, entry, pspec):
         if not self._update_title_sid:
-            self._update_title_sid = gobject.timeout_add(1000,
+            self._update_title_sid = gobject.timeout_add_seconds(1,
                                                          self._update_title_cb)
 
     def _title_focus_out_event_cb(self, entry, event):

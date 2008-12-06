@@ -31,7 +31,7 @@ class NotificationIcon(gtk.EventBox):
         'icon-filename' : (str, None, None, None, gobject.PARAM_READWRITE)
     }
 
-    _PULSE_TIMEOUT = 3000
+    _PULSE_TIMEOUT = 3
 
     def __init__(self, **kwargs):
         self._icon = PulsingIcon(pixel_size=style.STANDARD_ICON_SIZE)
@@ -45,7 +45,7 @@ class NotificationIcon(gtk.EventBox):
         self.add(self._icon)
         self._icon.show()
         
-        gobject.timeout_add(self._PULSE_TIMEOUT, self.__stop_pulsing_cb)
+        gobject.timeout_add_seconds(self._PULSE_TIMEOUT, self.__stop_pulsing_cb)
 
         self.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
 

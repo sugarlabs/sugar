@@ -34,7 +34,7 @@ DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
 DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
 DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
 
-UPDATE_INTERVAL = 300000
+UPDATE_INTERVAL = 300
 
 EMPTY_JOURNAL = _("Your Journal is empty")
 NO_MATCH = _("No matching entries ")
@@ -424,7 +424,7 @@ class BaseListView(gtk.HBox):
             if self._update_dates_timer is None:
                 logging.debug('Adding date updating timer')
                 self._update_dates_timer = \
-                        gobject.timeout_add(UPDATE_INTERVAL,
+                        gobject.timeout_add_seconds(UPDATE_INTERVAL,
                                             self.__update_dates_timer_cb)
         else:
             self._fully_obscured = True

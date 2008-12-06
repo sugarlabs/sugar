@@ -539,7 +539,8 @@ class ShellModel(gobject.GObject):
 
         # FIXME: better learn about finishing processes by receiving a signal.
         # Now just check whether an activity has a window after ~90sec
-        gobject.timeout_add(90000, self._check_activity_launched, activity_id)
+        gobject.timeout_add_seconds(90, self._check_activity_launched,
+                                    activity_id)
 
     def notify_launch_failed(self, activity_id):
         home_activity = self.get_activity_by_id(activity_id)
