@@ -205,7 +205,7 @@ class CanvasPulsingIcon(CanvasIcon):
 
         if self._paused:
             self._pulser.stop()
-        else:
+        elif self._pulsing:
             self._pulser.start(restart=False)
 
     def get_paused(self):
@@ -216,6 +216,8 @@ class CanvasPulsingIcon(CanvasIcon):
 
     def set_pulsing(self, pulsing):
         self._pulsing = pulsing
+        if self._paused:
+            return
 
         if self._pulsing:
             self._pulser.start(restart=True)
