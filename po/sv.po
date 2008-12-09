@@ -1,0 +1,814 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-09-25 00:30-0400\n"
+"PO-Revision-Date: 2008-10-14 08:00-0400\n"
+"Last-Translator: Mattias Ohlsson <mattias_oh@yahoo.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Pootle 1.1.0rc2\n"
+
+#: ../src/intro/window.py:93 ../src/controlpanel/aboutme/view.py:100
+msgid "Name:"
+msgstr "Namn:"
+
+#: ../src/intro/window.py:125
+msgid "Click to change color:"
+msgstr "Klicka för att ändra färg:"
+
+#: ../src/intro/window.py:175 ../src/journal/detailview.py:119
+msgid "Back"
+msgstr "Tillbaka"
+
+#: ../src/intro/window.py:189 ../src/controlpanel/toolbar.py:61
+msgid "Done"
+msgstr "Klar"
+
+#: ../src/intro/window.py:192
+msgid "Next"
+msgstr "Nästa"
+
+#: ../src/view/BuddyMenu.py:60
+msgid "Remove friend"
+msgstr "Ta bort kompis"
+
+#: ../src/view/BuddyMenu.py:63
+msgid "Make friend"
+msgstr "Bli kompis med"
+
+#: ../src/view/BuddyMenu.py:92
+#, python-format
+msgid "Invite to %s"
+msgstr "Bjud in till %s"
+
+#: ../src/view/clipboardmenu.py:51
+msgid "Remove"
+msgstr "Ta bort"
+
+#: ../src/view/clipboardmenu.py:56 ../src/view/clipboardmenu.py:78
+msgid "Open"
+msgstr "Öppna"
+
+# self._stop_item = MenuItem(_('Stop download'), 'stock-close')
+# TODO: Implement stopping downloads
+# self._stop_item.connect('activate', self._stop_item_activate_cb)
+# self.append_menu_item(self._stop_item)
+#: ../src/view/clipboardmenu.py:61 ../src/view/home/HomeBox.py:84
+msgid "Keep"
+msgstr "Spara"
+
+#: ../src/view/clipboardmenu.py:83
+msgid "Open with"
+msgstr "Öppna med"
+
+#: ../src/view/clipboardmenu.py:228
+#, python-format
+msgid "%s clipping"
+msgstr ""
+
+#: ../src/hardware/keydialog.py:150
+msgid "Key Type:"
+msgstr "Huvudtyp:"
+
+#: ../src/hardware/keydialog.py:170
+msgid "Authentication Type:"
+msgstr "Verifieringstyp:"
+
+#: ../src/hardware/keydialog.py:251
+msgid "Encryption Type:"
+msgstr "Krypteringstyp:"
+
+#: ../src/hardware/schoolserver.py:17
+msgid "Cannot obtain data needed for registration."
+msgstr ""
+"Kunde inte komma åt den data som krävs för att genomföra registreringen."
+
+#: ../src/hardware/schoolserver.py:31
+msgid "Cannot connect to the server."
+msgstr "Kunde inte komma åter servern."
+
+#: ../src/hardware/schoolserver.py:36
+msgid "The server could not complete the request."
+msgstr "Servern misslyckades med att fullfölja förfrågan."
+
+#: ../src/view/Shell.py:251
+msgid "Screenshot"
+msgstr "Skärmbild"
+
+#: ../src/view/home/HomeBox.py:78
+msgid "Confirm erase"
+msgstr "Bekräfta borttagning"
+
+#: ../src/view/home/HomeBox.py:80
+#, python-format
+msgid "Confirm erase: Do you want to permanently erase %s?"
+msgstr "Bekräfta borttagning: Vill du verkligen ta bort %s för alltid?"
+
+#: ../src/view/home/HomeBox.py:87 ../src/view/palettes.py:120
+#: ../src/journal/journaltoolbox.py:335 ../src/journal/palettes.py:75
+msgid "Erase"
+msgstr "Ta bort"
+
+#: ../src/view/home/HomeBox.py:117
+msgid "Software Update"
+msgstr "Aktivitetsuppdatering"
+
+#: ../src/view/home/HomeBox.py:118
+msgid "Update your activities to ensure compatibility with your new software"
+msgstr ""
+"Uppdaterar dina aktiviteter för att på så sätt ge dig tillgång till nya "
+"funktioner"
+
+#: ../src/view/home/HomeBox.py:122 ../src/controlpanel/toolbar.py:115
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: ../src/view/home/HomeBox.py:124 ../src/controlpanel/gui.py:273
+msgid "Later"
+msgstr "Senare"
+
+#: ../src/view/home/HomeBox.py:127
+msgid "Check now"
+msgstr "Kontrollera nu"
+
+#: ../src/view/home/HomeBox.py:261
+msgid "List view"
+msgstr "Listvy"
+
+#: ../src/view/home/HomeBox.py:262
+msgid "<Ctrl>2"
+msgstr "<Ctrl> + 2"
+
+#: ../src/view/home/HomeBox.py:320
+msgid "Favorites view"
+msgstr "Favoritvy"
+
+#: ../src/view/home/HomeBox.py:321
+msgid "<Ctrl>1"
+msgstr "<Ctrl> + 1"
+
+#: ../src/view/home/MeshBox.py:97
+msgid "Connect"
+msgstr "Anslut"
+
+#: ../src/view/home/MeshBox.py:106
+msgid "Disconnect"
+msgstr "Avbryt anslutning"
+
+#: ../src/view/home/MeshBox.py:118
+msgid "Disconnecting..."
+msgstr "Kopplar ned..."
+
+#: ../src/view/home/MeshBox.py:159
+msgid "Connecting..."
+msgstr "Kopplar upp..."
+
+# TODO: show the channel number
+#. TODO: show the channel number
+#: ../src/view/home/MeshBox.py:166
+msgid "Connected"
+msgstr "Ansluten"
+
+# only temporarily
+#: ../src/view/home/MeshBox.py:218 ../src/view/devices/network/mesh.py:41
+#: ../src/view/devices/network/mesh.py:68
+#: ../src/view/devices/network/mesh.py:72
+msgid "Mesh Network"
+msgstr "Meshnätverk"
+
+#: ../src/view/home/MeshBox.py:221 ../src/view/devices/network/wireless.py:125
+#: ../src/view/devices/network/mesh.py:89
+msgid "Disconnect..."
+msgstr "Avbryt anslutning..."
+
+#. TRANS: Action label for resuming an activity.
+#: ../src/view/home/MeshBox.py:309 ../src/view/palettes.py:61
+#: ../src/journal/journaltoolbox.py:399 ../src/journal/palettes.py:57
+msgid "Resume"
+msgstr "Återuppta"
+
+#: ../src/view/home/MeshBox.py:314 ../src/view/frame/activitiestray.py:206
+msgid "Join"
+msgstr "Gå med i"
+
+#: ../src/view/devices/battery.py:45
+msgid "My Battery"
+msgstr "Mitt batteri"
+
+#: ../src/view/devices/battery.py:114
+msgid "Charging"
+msgstr "Laddar"
+
+#: ../src/view/devices/battery.py:117
+msgid "Very little power remaining"
+msgstr "Batteriet är nästan slut"
+
+#: ../src/view/devices/battery.py:123
+#, python-format
+msgid "%(hour)d:%(min).2d remaining"
+msgstr "%(hour)d:%(min).2d återstår"
+
+#: ../src/view/devices/battery.py:127
+msgid "Charged"
+msgstr "Fulladdad"
+
+#: ../src/view/devices/speaker.py:44
+msgid "My Speakers"
+msgstr "Mina högtalare"
+
+#: ../src/view/devices/speaker.py:125
+msgid "Unmute"
+msgstr "Slå på ljud"
+
+#: ../src/view/devices/speaker.py:128
+msgid "Mute"
+msgstr "Stäng av ljud"
+
+#: ../src/view/devices/network/wireless.py:67
+msgid "Disconnected"
+msgstr "Inte ansluten"
+
+#: ../src/view/devices/network/wireless.py:143
+msgid "Channel"
+msgstr "Kanal"
+
+#: ../src/view/frame/zoomtoolbar.py:37
+msgid "Neighborhood"
+msgstr "Grannar"
+
+#: ../src/view/frame/zoomtoolbar.py:39
+msgid "Group"
+msgstr "Grupp"
+
+#: ../src/view/frame/zoomtoolbar.py:41
+msgid "Home"
+msgstr "Hem"
+
+#: ../src/view/frame/zoomtoolbar.py:43
+msgid "Activity"
+msgstr "Aktivitet"
+
+#: ../src/controlpanel/cmd.py:26
+#, python-format
+msgid ""
+"sugar-control-panel: WARNING, found more than one option with the same name: "
+"%s module: %r"
+msgstr ""
+"sugar-control-panel: VARNING, Hittade mer än ett alternativ med samma namn: "
+"%s modul: %r"
+
+#: ../src/controlpanel/cmd.py:28
+#, python-format
+msgid "sugar-control-panel: key=%s not an available option"
+msgstr "sugar-control-panel: key=%s är inte ett giltigt val."
+
+#: ../src/controlpanel/cmd.py:29
+#, python-format
+msgid "sugar-control-panel: %s"
+msgstr "sugar-control-panel: %s"
+
+# TRANS: Translators, there's a empty line at the end of this string,
+# which must appear in the translated string (msgstr) as well.
+#. TRANS: Translators, there's a empty line at the end of this string,
+#. which must appear in the translated string (msgstr) as well.
+#: ../src/controlpanel/cmd.py:35
+msgid ""
+"Usage: sugar-control-panel [ option ] key [ args ... ] \n"
+"    Control for the sugar environment. \n"
+"    Options: \n"
+"    -h           show this help message and exit \n"
+"    -l           list all the available options \n"
+"    -h key       show information about this key \n"
+"    -g key       get the current value of the key \n"
+"    -s key       set the current value for the key \n"
+"    -c key       clear the current value for the key \n"
+"    "
+msgstr ""
+"Användning: sugar-control-panel [ val ] nyckel [ parametrar ... ] \n"
+"    Ställ in Sockermiljön. \n"
+"    Val: \n"
+"    -h           visar hjälpmeddelande och avslutar. \n"
+"    -l           listar upp alla möjliga val \n"
+"    -h nyckel    Visar information om nyckeln \n"
+"    -g nyckel    Hämtar nuvarande värde på nyckel \n"
+"    -s nyckel    Sätter nuvarande värde på nyckel \n"
+"    -c nyckel    Rensar nuvarande värde på nyckel \n"
+"    "
+
+#: ../src/controlpanel/cmd.py:48
+msgid "To apply your changes you have to restart sugar.\n"
+msgstr "För att förändringarna ska träda i kraft behöver du starta om Socker."
+
+#: ../src/controlpanel/toolbar.py:121 ../src/view/home/favoritesview.py:305
+msgid "Ok"
+msgstr "Ok"
+
+#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:265
+msgid "Changes require restart"
+msgstr "Ändringarna kräver omstart"
+
+#: ../src/controlpanel/gui.py:264
+msgid "Warning"
+msgstr "Varning"
+
+#: ../src/controlpanel/gui.py:268
+msgid "Cancel changes"
+msgstr "Ångra ändringar"
+
+#: ../src/controlpanel/gui.py:277
+msgid "Restart now"
+msgstr "Starta om nu"
+
+#: ../src/controlpanel/aboutme/model.py:44
+msgid "You must enter a name."
+msgstr "Du måste ange ett namn."
+
+# Varför ska detta översättas? Är det inte direkta kommandon till grafikuppritaren?
+#: ../src/controlpanel/aboutme/model.py:69
+#, python-format
+msgid "stroke:   color=%s hue=%s"
+msgstr "stroke:   color=%s hue=%s"
+
+#: ../src/controlpanel/aboutme/model.py:72
+#, python-format
+msgid "stroke:   %s"
+msgstr "stroke:   %s"
+
+#: ../src/controlpanel/aboutme/model.py:74
+#, python-format
+msgid "fill:     color=%s hue=%s"
+msgstr "fill:     color=%s hue=%s"
+
+#: ../src/controlpanel/aboutme/model.py:76
+#, python-format
+msgid "fill:     %s"
+msgstr "fill:     %s"
+
+#: ../src/controlpanel/aboutme/model.py:87
+msgid "Error in specified color modifiers."
+msgstr "Error in specified color modifiers."
+
+#: ../src/controlpanel/aboutme/model.py:90
+msgid "Error in specified colors."
+msgstr "Fel i angivna färger."
+
+#: ../src/controlpanel/aboutme/view.py:32
+#: ../src/controlpanel/aboutme/__init__.py:22
+msgid "About Me"
+msgstr "Om mig"
+
+#: ../src/controlpanel/aboutme/view.py:134
+msgid "Click to change your color:"
+msgstr "Klicka för att ändra din färg:"
+
+#: ../src/controlpanel/aboutxo/model.py:24
+msgid "Not available"
+msgstr "Finns inte tillgänglig"
+
+#: ../src/controlpanel/aboutxo/view.py:55
+msgid "Identity"
+msgstr "Identitet"
+
+#: ../src/controlpanel/aboutxo/view.py:64
+msgid "Serial Number:"
+msgstr "Serienummer:"
+
+#: ../src/controlpanel/aboutxo/view.py:87
+msgid "Software"
+msgstr "Programvara"
+
+#: ../src/controlpanel/aboutxo/view.py:96
+msgid "Build:"
+msgstr "Byggnummer:"
+
+#: ../src/controlpanel/aboutxo/view.py:111
+msgid "Sugar:"
+msgstr "Sockerversion:"
+
+#: ../src/controlpanel/aboutxo/view.py:126
+msgid "Firmware:"
+msgstr "Firmware:"
+
+#: ../src/controlpanel/aboutxo/view.py:148
+msgid "Copyright and License"
+msgstr "Copyright och Licens"
+
+#: ../src/controlpanel/aboutxo/view.py:156
+msgid ""
+"© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+msgstr ""
+"© 2008 One Laptop per Child Association Inc; Red Hat Inc; och andra "
+"bidragare."
+
+#: ../src/controlpanel/aboutxo/view.py:163
+msgid ""
+"Sugar is the graphical user interface that you are looking at. Sugar is free "
+"software, covered by the GNU General Public License, and you are welcome to "
+"change it and/or distribute copies of it under certain conditions described "
+"therein."
+msgstr ""
+"Socker är det grafiska användargränssnittet som du använder just nu. Socker "
+"är fri programvara och licenserad under GNU GPL vilket innebär att du fritt "
+"får ändra programmet och/eller sprida vidare kopior av programmet."
+
+#: ../src/controlpanel/aboutxo/view.py:175
+msgid "Full license:"
+msgstr "Detaljerad licens:"
+
+#: ../src/controlpanel/aboutxo/__init__.py:21
+msgid "About my XO"
+msgstr "Om min XO"
+
+#: ../src/controlpanel/datetime/model.py:89
+msgid "Error timezone does not exist."
+msgstr "Fel: Tidszonen finns inte."
+
+#: ../src/controlpanel/datetime/view.py:68
+msgid "Timezone"
+msgstr "Tidszon"
+
+#: ../src/controlpanel/datetime/__init__.py:21
+msgid "Date & Time"
+msgstr "Datum och tid"
+
+#: ../src/controlpanel/frame/model.py:38 ../src/controlpanel/frame/model.py:60
+msgid "Value must be an integer."
+msgstr "Talet måste vara ett heltal."
+
+#: ../src/controlpanel/frame/view.py:26
+msgid "never"
+msgstr "aldrig"
+
+#: ../src/controlpanel/frame/view.py:27
+msgid "instantaneous"
+msgstr "direkt"
+
+#: ../src/controlpanel/frame/view.py:28
+#, python-format
+msgid "%s seconds"
+msgstr "efter %s sekunder"
+
+#: ../src/controlpanel/frame/view.py:52
+msgid "Activation Delay"
+msgstr "Tid tills aktivering"
+
+#: ../src/controlpanel/frame/view.py:76
+msgid "Corner"
+msgstr "Hörn"
+
+#: ../src/controlpanel/frame/view.py:111
+msgid "Edge"
+msgstr "Kant"
+
+#: ../src/controlpanel/frame/__init__.py:21
+msgid "Frame"
+msgstr "Ram"
+
+#: ../src/controlpanel/language/model.py:28
+msgid "Could not access ~/.i18n. Create standard settings."
+msgstr "Kunde inte komma åt ~/.i18n. Skapar standardinställningar."
+
+#: ../src/controlpanel/language/model.py:114
+#, python-format
+msgid "Language for code=%s could not be determined."
+msgstr "Kunde inte avgöra vilket språk det är som förkortas %s."
+
+#: ../src/controlpanel/language/model.py:131
+#, python-format
+msgid "Sorry I do not speak '%s'."
+msgstr "Tyvärr så pratar jag inte '%s'."
+
+#: ../src/controlpanel/language/view.py:70
+#: ../src/controlpanel/language/__init__.py:21
+msgid "Language"
+msgstr "Språk"
+
+#: ../src/controlpanel/network/model.py:62
+msgid "State is unknown."
+msgstr "Status är okänd."
+
+#: ../src/controlpanel/network/model.py:82
+msgid "Error in specified radio argument use on/off."
+msgstr "Fel i angiven trådlös nätverksinställning. Använd på eller av."
+
+#: ../src/controlpanel/network/view.py:28
+#: ../src/controlpanel/network/__init__.py:21
+msgid "Network"
+msgstr "Nätverk"
+
+#: ../src/controlpanel/network/view.py:54
+msgid "Wireless"
+msgstr "Trådlöst nätverk"
+
+#: ../src/controlpanel/network/view.py:62
+msgid "Turn of the wireless radio to save battery life"
+msgstr "Stäng av det trådlösa nätverket för att få batteriet att räcka längre"
+
+#: ../src/controlpanel/network/view.py:75
+msgid "Radio"
+msgstr "Trådlöst nätverk"
+
+#: ../src/controlpanel/network/view.py:91
+msgid "Discard network history if you have trouble connecting to the network"
+msgstr ""
+"Ta bort nätverkshistoriken om du har problem med att ansluta till ett "
+"nätverk"
+
+#: ../src/controlpanel/network/view.py:100
+msgid "Discard network history"
+msgstr "Ta bort nätverkshistorik"
+
+#: ../src/controlpanel/network/view.py:113
+msgid "Mesh"
+msgstr "Mesh"
+
+#: ../src/controlpanel/network/view.py:122
+msgid "Server:"
+msgstr "Server:"
+
+#: ../src/controlpanel/power/model.py:55
+msgid "Error in automatic pm argument, use on/off."
+msgstr "Fel i angiven strömbestparingsinställning. Använd på eller av."
+
+#: ../src/controlpanel/power/model.py:84
+msgid "Error in extreme pm argument, use on/off."
+msgstr "Fel i angiven extrem strömbestparingsinställning. Använd på eller av."
+
+#: ../src/controlpanel/power/view.py:47
+msgid "Power management"
+msgstr "Strömhantering"
+
+#: ../src/controlpanel/power/view.py:57
+msgid "Automatic power management (increases battery life)"
+msgstr "Automatisk strömhantering (förbättrar tiden som batteriet håller)"
+
+#: ../src/controlpanel/power/view.py:85
+msgid ""
+"Extreme power management (disableswireless radio, increases battery life)"
+msgstr ""
+"Extrem strömhantering (stänger av det trådlösa nätverket, ökar "
+"batterilivslängden)"
+
+#: ../src/controlpanel/power/__init__.py:21
+msgid "Power"
+msgstr "Ström"
+
+#: ../src/view/devices/network/mesh.py:111
+msgid "Connected to a School Mesh Portal"
+msgstr "Ansluten till en skolportal"
+
+#: ../src/view/devices/network/mesh.py:113
+msgid "Looking for a School Mesh Portal..."
+msgstr "Letar efter en skolportal..."
+
+#: ../src/view/devices/network/mesh.py:116
+msgid "Connected to an XO Mesh Portal"
+msgstr "Ansluten till en XO-portal"
+
+#: ../src/view/devices/network/mesh.py:118
+msgid "Looking for an XO Mesh Portal..."
+msgstr "Letar efter en XO-portal..."
+
+#: ../src/view/devices/network/mesh.py:121
+msgid "Connected to a Simple Mesh"
+msgstr "Ansluten till ett enkelt meshnätverk"
+
+#: ../src/view/devices/network/mesh.py:123
+msgid "Starting a Simple Mesh"
+msgstr "Startar ett enkelt meshnätverk..."
+
+#: ../src/view/devices/network/mesh.py:130
+msgid "Unknown Mesh"
+msgstr "Okänt meshnätverk"
+
+#: ../src/view/frame/activitiestray.py:211
+msgid "Decline"
+msgstr "Avstå"
+
+#. TRANS: label for the freeform layout in the favorites view
+#: ../src/view/home/favoriteslayout.py:107
+msgid "Freeform"
+msgstr "Frihand"
+
+#. TRANS: label for the ring layout in the favorites view
+#: ../src/view/home/favoriteslayout.py:189
+msgid "Ring"
+msgstr "Ring"
+
+#. TRANS: label for the spiral layout in the favorites view
+#: ../src/view/home/favoriteslayout.py:334
+msgid "Spiral"
+msgstr "Spiral"
+
+#. TRANS: label for the box layout in the favorites view
+#: ../src/view/home/favoriteslayout.py:401
+#, fuzzy
+msgid "Box"
+msgstr "Låda"
+
+#. TRANS: label for the box layout in the favorites view
+#: ../src/view/home/favoriteslayout.py:442
+msgid "Triangle"
+msgstr "Triangel"
+
+#: ../src/view/home/favoritesview.py:295
+msgid "Registration Failed"
+msgstr "Registreringen misslyckades"
+
+#: ../src/view/home/favoritesview.py:296
+#, python-format
+msgid "%s"
+msgstr "%s"
+
+#: ../src/view/home/favoritesview.py:298
+msgid "Registration Successful"
+msgstr "Registreringen lyckades"
+
+#: ../src/view/home/favoritesview.py:299
+msgid "You are now registered with your school server."
+msgstr "Du är nu registread hos din skolserver"
+
+#: ../src/view/home/favoritesview.py:420
+msgid "Settings"
+msgstr "Inställningar"
+
+#: ../src/view/home/favoritesview.py:425
+msgid "Restart"
+msgstr "Starta om"
+
+#: ../src/view/home/favoritesview.py:430
+msgid "Shutdown"
+msgstr "Stäng av"
+
+#: ../src/view/home/favoritesview.py:436
+msgid "Register"
+msgstr "Registrera"
+
+#: ../src/view/palettes.py:42
+msgid "Starting..."
+msgstr "Startar..."
+
+#: ../src/view/palettes.py:72
+msgid "Stop"
+msgstr "Avsluta"
+
+#. TRANS: Action label for starting an entry.
+#: ../src/view/palettes.py:104 ../src/journal/journaltoolbox.py:402
+#: ../src/journal/palettes.py:59
+msgid "Start"
+msgstr "Starta"
+
+#: ../src/view/palettes.py:138
+msgid "Remove favorite"
+msgstr "Ta bort från favoriter"
+
+#: ../src/view/palettes.py:142
+msgid "Make favorite"
+msgstr "Lägg till till favoriter"
+
+#: ../src/view/palettes.py:191
+msgid "Show contents"
+msgstr "Visa innehåll"
+
+#: ../src/view/palettes.py:215
+#, python-format
+msgid "%(free_space)d MB Free"
+msgstr "%(free_space)d MB ledigt"
+
+#: ../src/journal/journaltoolbox.py:62
+msgid "Search"
+msgstr "Sök"
+
+#: ../src/journal/journaltoolbox.py:119
+msgid "Anytime"
+msgstr "När som helst"
+
+#: ../src/journal/journaltoolbox.py:121
+msgid "Today"
+msgstr "Idag"
+
+#: ../src/journal/journaltoolbox.py:123
+msgid "Since yesterday"
+msgstr "Sedan igår"
+
+#. TRANS: Filter entries modified during the last 7 days.
+#: ../src/journal/journaltoolbox.py:125
+msgid "Past week"
+msgstr "Förra veckan"
+
+#. TRANS: Filter entries modified during the last 30 days.
+#: ../src/journal/journaltoolbox.py:127
+msgid "Past month"
+msgstr "Senaste månaden"
+
+#. TRANS: Filter entries modified during the last 356 days.
+#: ../src/journal/journaltoolbox.py:129
+msgid "Past year"
+msgstr "Senaste året"
+
+#: ../src/journal/journaltoolbox.py:136
+msgid "Anyone"
+msgstr "Vem som helst"
+
+#: ../src/journal/journaltoolbox.py:138
+msgid "My friends"
+msgstr "Mina vänner"
+
+#: ../src/journal/journaltoolbox.py:139
+msgid "My class"
+msgstr "Mina klasskompisar"
+
+#. TRANS: Item in a combo box that filters by entry type.
+#: ../src/journal/journaltoolbox.py:255
+msgid "Anything"
+msgstr "Vad som helst"
+
+#. TODO: Add "Start with" menu item
+#: ../src/journal/journaltoolbox.py:325 ../src/journal/palettes.py:67
+msgid "Copy"
+msgstr "Kopiera"
+
+#: ../src/journal/collapsedentry.py:248 ../src/journal/expandedentry.py:176
+#: ../src/journal/palettes.py:51
+msgid "Untitled"
+msgstr "Ingen titel"
+
+#: ../src/journal/journalactivity.py:119 ../src/journal/volumesmanager.py:57
+msgid "Journal"
+msgstr "Dagbok"
+
+#: ../src/journal/expandedentry.py:222
+msgid "No preview"
+msgstr "Ingen förhandsvisning"
+
+#: ../src/journal/expandedentry.py:241
+msgid "Participants:"
+msgstr "Medverkande:"
+
+#: ../src/journal/expandedentry.py:266
+msgid "Description:"
+msgstr "Beskrivning:"
+
+#: ../src/journal/expandedentry.py:292
+msgid "Tags:"
+msgstr "Nyckelord:"
+
+#: ../src/journal/objectchooser.py:134
+msgid "Choose an object"
+msgstr "Välj ett objekt"
+
+#: ../src/journal/objectchooser.py:139
+msgid "Close"
+msgstr "Stäng"
+
+#: ../src/journal/volumestoolbar.py:93
+msgid "Unmount"
+msgstr "Avmontera"
+
+#: ../src/journal/misc.py:95
+msgid "No date"
+msgstr "Inget datum"
+
+#: ../src/journal/listview.py:39
+msgid "Your Journal is empty"
+msgstr "Din dagbok är tom."
+
+#: ../src/journal/listview.py:40
+msgid "No matching entries "
+msgstr "Kunde inte hitta några matchande filer "
+
+#: ../src/journal/modalalert.py:59
+msgid "Your Journal is full"
+msgstr "Din dagbok är full"
+
+#: ../src/journal/modalalert.py:63
+msgid "Please delete some old Journal entries to make space for new ones."
+msgstr "Ta bort gamla dagboksinlägg för att få plats med nya."
+
+#: ../src/journal/modalalert.py:75
+msgid "Show Journal"
+msgstr "Visa Dagbok"
+
+#, python-format
+#~ msgid "Clipboard object: %s."
+#~ msgstr "Kopieringsminne: %s."
+
+#, python-format
+#~ msgid "IP address: %s"
+#~ msgstr "IP-adress: %s"
+
+#~ msgid ""
+#~ "Extreme power management (disables wireless radio, increases battery life)"
+#~ msgstr ""
+#~ "Extrem strömsparning (stänger av det trådlösa nätverket, allt för att öka "
+#~ "tiden innan batteriet laddas ur)"
+
+#~ msgid "Control Panel"
+#~ msgstr "Kontrollpanel"
