@@ -1,0 +1,764 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-09-25 00:30-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.1.1rc4\n"
+
+#: ../src/intro/window.py:93 ../src/controlpanel/aboutme/view.py:100
+msgid "Name:"
+msgstr ""
+
+#: ../src/intro/window.py:125
+msgid "Click to change color:"
+msgstr ""
+
+#: ../src/intro/window.py:175 ../src/journal/detailview.py:119
+msgid "Back"
+msgstr ""
+
+#: ../src/intro/window.py:189 ../src/controlpanel/toolbar.py:61
+msgid "Done"
+msgstr ""
+
+#: ../src/intro/window.py:192
+msgid "Next"
+msgstr ""
+
+#: ../src/view/BuddyMenu.py:60
+msgid "Remove friend"
+msgstr ""
+
+#: ../src/view/BuddyMenu.py:63
+msgid "Make friend"
+msgstr ""
+
+#: ../src/view/BuddyMenu.py:92
+#, python-format
+msgid "Invite to %s"
+msgstr ""
+
+#: ../src/view/clipboardmenu.py:51
+msgid "Remove"
+msgstr ""
+
+#: ../src/view/clipboardmenu.py:56 ../src/view/clipboardmenu.py:78
+msgid "Open"
+msgstr ""
+
+#: ../src/view/clipboardmenu.py:61 ../src/view/home/HomeBox.py:84
+msgid "Keep"
+msgstr ""
+
+#: ../src/view/clipboardmenu.py:83
+msgid "Open with"
+msgstr ""
+
+#: ../src/view/clipboardmenu.py:228
+#, python-format
+msgid "%s clipping"
+msgstr ""
+
+#: ../src/hardware/keydialog.py:150
+msgid "Key Type:"
+msgstr ""
+
+#: ../src/hardware/keydialog.py:170
+msgid "Authentication Type:"
+msgstr ""
+
+#: ../src/hardware/keydialog.py:251
+msgid "Encryption Type:"
+msgstr ""
+
+#: ../src/hardware/schoolserver.py:17
+msgid "Cannot obtain data needed for registration."
+msgstr ""
+
+#: ../src/hardware/schoolserver.py:31
+msgid "Cannot connect to the server."
+msgstr ""
+
+#: ../src/hardware/schoolserver.py:36
+msgid "The server could not complete the request."
+msgstr ""
+
+#: ../src/view/Shell.py:251
+msgid "Screenshot"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:78
+msgid "Confirm erase"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:80
+#, python-format
+msgid "Confirm erase: Do you want to permanently erase %s?"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:87 ../src/view/palettes.py:120
+#: ../src/journal/journaltoolbox.py:335 ../src/journal/palettes.py:75
+msgid "Erase"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:117
+msgid "Software Update"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:118
+msgid "Update your activities to ensure compatibility with your new software"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:122 ../src/controlpanel/toolbar.py:115
+msgid "Cancel"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:124 ../src/controlpanel/gui.py:273
+msgid "Later"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:127
+msgid "Check now"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:261
+msgid "List view"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:262
+msgid "<Ctrl>2"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:320
+msgid "Favorites view"
+msgstr ""
+
+#: ../src/view/home/HomeBox.py:321
+msgid "<Ctrl>1"
+msgstr ""
+
+#: ../src/view/home/MeshBox.py:97
+msgid "Connect"
+msgstr ""
+
+#: ../src/view/home/MeshBox.py:106
+msgid "Disconnect"
+msgstr ""
+
+#: ../src/view/home/MeshBox.py:118
+msgid "Disconnecting..."
+msgstr ""
+
+#: ../src/view/home/MeshBox.py:159
+msgid "Connecting..."
+msgstr ""
+
+#. TODO: show the channel number
+#: ../src/view/home/MeshBox.py:166
+msgid "Connected"
+msgstr ""
+
+#: ../src/view/home/MeshBox.py:218 ../src/view/devices/network/mesh.py:41
+#: ../src/view/devices/network/mesh.py:68
+#: ../src/view/devices/network/mesh.py:72
+msgid "Mesh Network"
+msgstr ""
+
+#: ../src/view/home/MeshBox.py:221 ../src/view/devices/network/wireless.py:125
+#: ../src/view/devices/network/mesh.py:89
+msgid "Disconnect..."
+msgstr ""
+
+#. TRANS: Action label for resuming an activity.
+#: ../src/view/home/MeshBox.py:309 ../src/view/palettes.py:61
+#: ../src/journal/journaltoolbox.py:399 ../src/journal/palettes.py:57
+msgid "Resume"
+msgstr ""
+
+#: ../src/view/home/MeshBox.py:314 ../src/view/frame/activitiestray.py:206
+msgid "Join"
+msgstr ""
+
+#: ../src/view/devices/battery.py:45
+msgid "My Battery"
+msgstr ""
+
+#: ../src/view/devices/battery.py:114
+msgid "Charging"
+msgstr ""
+
+#: ../src/view/devices/battery.py:117
+msgid "Very little power remaining"
+msgstr ""
+
+#: ../src/view/devices/battery.py:123
+#, python-format
+msgid "%(hour)d:%(min).2d remaining"
+msgstr ""
+
+#: ../src/view/devices/battery.py:127
+msgid "Charged"
+msgstr ""
+
+#: ../src/view/devices/speaker.py:44
+msgid "My Speakers"
+msgstr ""
+
+#: ../src/view/devices/speaker.py:125
+msgid "Unmute"
+msgstr ""
+
+#: ../src/view/devices/speaker.py:128
+msgid "Mute"
+msgstr ""
+
+#: ../src/view/devices/network/wireless.py:67
+msgid "Disconnected"
+msgstr ""
+
+#: ../src/view/devices/network/wireless.py:143
+msgid "Channel"
+msgstr ""
+
+#: ../src/view/frame/zoomtoolbar.py:37
+msgid "Neighborhood"
+msgstr ""
+
+#: ../src/view/frame/zoomtoolbar.py:39
+msgid "Group"
+msgstr ""
+
+#: ../src/view/frame/zoomtoolbar.py:41
+msgid "Home"
+msgstr ""
+
+#: ../src/view/frame/zoomtoolbar.py:43
+msgid "Activity"
+msgstr ""
+
+#: ../src/controlpanel/cmd.py:26
+#, python-format
+msgid ""
+"sugar-control-panel: WARNING, found more than one option with the same name: "
+"%s module: %r"
+msgstr ""
+
+#: ../src/controlpanel/cmd.py:28
+#, python-format
+msgid "sugar-control-panel: key=%s not an available option"
+msgstr ""
+
+#: ../src/controlpanel/cmd.py:29
+#, python-format
+msgid "sugar-control-panel: %s"
+msgstr ""
+
+#. TRANS: Translators, there's a empty line at the end of this string,
+#. which must appear in the translated string (msgstr) as well.
+#: ../src/controlpanel/cmd.py:35
+msgid ""
+"Usage: sugar-control-panel [ option ] key [ args ... ] \n"
+"    Control for the sugar environment. \n"
+"    Options: \n"
+"    -h           show this help message and exit \n"
+"    -l           list all the available options \n"
+"    -h key       show information about this key \n"
+"    -g key       get the current value of the key \n"
+"    -s key       set the current value for the key \n"
+"    -c key       clear the current value for the key \n"
+"    "
+msgstr ""
+
+#: ../src/controlpanel/cmd.py:48
+msgid "To apply your changes you have to restart sugar.\n"
+msgstr ""
+
+#: ../src/controlpanel/toolbar.py:121 ../src/view/home/favoritesview.py:305
+msgid "Ok"
+msgstr ""
+
+#: ../src/controlpanel/sectionview.py:42 ../src/controlpanel/gui.py:265
+msgid "Changes require restart"
+msgstr ""
+
+#: ../src/controlpanel/gui.py:264
+msgid "Warning"
+msgstr ""
+
+#: ../src/controlpanel/gui.py:268
+msgid "Cancel changes"
+msgstr ""
+
+#: ../src/controlpanel/gui.py:277
+msgid "Restart now"
+msgstr ""
+
+#: ../src/controlpanel/aboutme/model.py:44
+msgid "You must enter a name."
+msgstr ""
+
+#: ../src/controlpanel/aboutme/model.py:69
+#, python-format
+msgid "stroke:   color=%s hue=%s"
+msgstr ""
+
+#: ../src/controlpanel/aboutme/model.py:72
+#, python-format
+msgid "stroke:   %s"
+msgstr ""
+
+#: ../src/controlpanel/aboutme/model.py:74
+#, python-format
+msgid "fill:     color=%s hue=%s"
+msgstr ""
+
+#: ../src/controlpanel/aboutme/model.py:76
+#, python-format
+msgid "fill:     %s"
+msgstr ""
+
+#: ../src/controlpanel/aboutme/model.py:87
+msgid "Error in specified color modifiers."
+msgstr ""
+
+#: ../src/controlpanel/aboutme/model.py:90
+msgid "Error in specified colors."
+msgstr ""
+
+#: ../src/controlpanel/aboutme/view.py:32
+#: ../src/controlpanel/aboutme/__init__.py:22
+msgid "About Me"
+msgstr ""
+
+#: ../src/controlpanel/aboutme/view.py:134
+msgid "Click to change your color:"
+msgstr ""
+
+#: ../src/controlpanel/aboutxo/model.py:24
+msgid "Not available"
+msgstr ""
+
+#: ../src/controlpanel/aboutxo/view.py:55
+msgid "Identity"
+msgstr ""
+
+#: ../src/controlpanel/aboutxo/view.py:64
+msgid "Serial Number:"
+msgstr ""
+
+#: ../src/controlpanel/aboutxo/view.py:87
+msgid "Software"
+msgstr ""
+
+#: ../src/controlpanel/aboutxo/view.py:96
+msgid "Build:"
+msgstr ""
+
+#: ../src/controlpanel/aboutxo/view.py:111
+msgid "Sugar:"
+msgstr ""
+
+#: ../src/controlpanel/aboutxo/view.py:126
+msgid "Firmware:"
+msgstr ""
+
+#: ../src/controlpanel/aboutxo/view.py:148
+msgid "Copyright and License"
+msgstr ""
+
+#: ../src/controlpanel/aboutxo/view.py:156
+msgid ""
+"© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+msgstr ""
+
+#: ../src/controlpanel/aboutxo/view.py:163
+msgid ""
+"Sugar is the graphical user interface that you are looking at. Sugar is free "
+"software, covered by the GNU General Public License, and you are welcome to "
+"change it and/or distribute copies of it under certain conditions described "
+"therein."
+msgstr ""
+
+#: ../src/controlpanel/aboutxo/view.py:175
+msgid "Full license:"
+msgstr ""
+
+#: ../src/controlpanel/aboutxo/__init__.py:21
+msgid "About my XO"
+msgstr ""
+
+#: ../src/controlpanel/datetime/model.py:89
+msgid "Error timezone does not exist."
+msgstr ""
+
+#: ../src/controlpanel/datetime/view.py:68
+msgid "Timezone"
+msgstr ""
+
+#: ../src/controlpanel/datetime/__init__.py:21
+msgid "Date & Time"
+msgstr ""
+
+#: ../src/controlpanel/frame/model.py:38 ../src/controlpanel/frame/model.py:60
+msgid "Value must be an integer."
+msgstr ""
+
+#: ../src/controlpanel/frame/view.py:26
+msgid "never"
+msgstr ""
+
+#: ../src/controlpanel/frame/view.py:27
+msgid "instantaneous"
+msgstr ""
+
+#: ../src/controlpanel/frame/view.py:28
+#, python-format
+msgid "%s seconds"
+msgstr ""
+
+#: ../src/controlpanel/frame/view.py:52
+msgid "Activation Delay"
+msgstr ""
+
+#: ../src/controlpanel/frame/view.py:76
+msgid "Corner"
+msgstr ""
+
+#: ../src/controlpanel/frame/view.py:111
+msgid "Edge"
+msgstr ""
+
+#: ../src/controlpanel/frame/__init__.py:21
+msgid "Frame"
+msgstr ""
+
+#: ../src/controlpanel/language/model.py:28
+msgid "Could not access ~/.i18n. Create standard settings."
+msgstr ""
+
+#: ../src/controlpanel/language/model.py:114
+#, python-format
+msgid "Language for code=%s could not be determined."
+msgstr ""
+
+#: ../src/controlpanel/language/model.py:131
+#, python-format
+msgid "Sorry I do not speak '%s'."
+msgstr ""
+
+#: ../src/controlpanel/language/view.py:70
+#: ../src/controlpanel/language/__init__.py:21
+msgid "Language"
+msgstr ""
+
+#: ../src/controlpanel/network/model.py:62
+msgid "State is unknown."
+msgstr ""
+
+#: ../src/controlpanel/network/model.py:82
+msgid "Error in specified radio argument use on/off."
+msgstr ""
+
+#: ../src/controlpanel/network/view.py:28
+#: ../src/controlpanel/network/__init__.py:21
+msgid "Network"
+msgstr ""
+
+#: ../src/controlpanel/network/view.py:54
+msgid "Wireless"
+msgstr ""
+
+#: ../src/controlpanel/network/view.py:62
+msgid "Turn of the wireless radio to save battery life"
+msgstr ""
+
+#: ../src/controlpanel/network/view.py:75
+msgid "Radio"
+msgstr ""
+
+#: ../src/controlpanel/network/view.py:91
+msgid "Discard network history if you have trouble connecting to the network"
+msgstr ""
+
+#: ../src/controlpanel/network/view.py:100
+msgid "Discard network history"
+msgstr ""
+
+#: ../src/controlpanel/network/view.py:113
+msgid "Mesh"
+msgstr ""
+
+#: ../src/controlpanel/network/view.py:122
+msgid "Server:"
+msgstr ""
+
+#: ../src/controlpanel/power/model.py:55
+msgid "Error in automatic pm argument, use on/off."
+msgstr ""
+
+#: ../src/controlpanel/power/model.py:84
+msgid "Error in extreme pm argument, use on/off."
+msgstr ""
+
+#: ../src/controlpanel/power/view.py:47
+msgid "Power management"
+msgstr ""
+
+#: ../src/controlpanel/power/view.py:57
+msgid "Automatic power management (increases battery life)"
+msgstr ""
+
+#: ../src/controlpanel/power/view.py:85
+msgid ""
+"Extreme power management (disableswireless radio, increases battery life)"
+msgstr ""
+
+#: ../src/controlpanel/power/__init__.py:21
+msgid "Power"
+msgstr ""
+
+#: ../src/view/devices/network/mesh.py:111
+msgid "Connected to a School Mesh Portal"
+msgstr ""
+
+#: ../src/view/devices/network/mesh.py:113
+msgid "Looking for a School Mesh Portal..."
+msgstr ""
+
+#: ../src/view/devices/network/mesh.py:116
+msgid "Connected to an XO Mesh Portal"
+msgstr ""
+
+#: ../src/view/devices/network/mesh.py:118
+msgid "Looking for an XO Mesh Portal..."
+msgstr ""
+
+#: ../src/view/devices/network/mesh.py:121
+msgid "Connected to a Simple Mesh"
+msgstr ""
+
+#: ../src/view/devices/network/mesh.py:123
+msgid "Starting a Simple Mesh"
+msgstr ""
+
+#: ../src/view/devices/network/mesh.py:130
+msgid "Unknown Mesh"
+msgstr ""
+
+#: ../src/view/frame/activitiestray.py:211
+msgid "Decline"
+msgstr ""
+
+#. TRANS: label for the freeform layout in the favorites view
+#: ../src/view/home/favoriteslayout.py:107
+msgid "Freeform"
+msgstr ""
+
+#. TRANS: label for the ring layout in the favorites view
+#: ../src/view/home/favoriteslayout.py:189
+msgid "Ring"
+msgstr ""
+
+#. TRANS: label for the spiral layout in the favorites view
+#: ../src/view/home/favoriteslayout.py:334
+msgid "Spiral"
+msgstr ""
+
+#. TRANS: label for the box layout in the favorites view
+#: ../src/view/home/favoriteslayout.py:401
+msgid "Box"
+msgstr ""
+
+#. TRANS: label for the box layout in the favorites view
+#: ../src/view/home/favoriteslayout.py:442
+msgid "Triangle"
+msgstr ""
+
+#: ../src/view/home/favoritesview.py:295
+msgid "Registration Failed"
+msgstr ""
+
+#: ../src/view/home/favoritesview.py:296
+#, python-format
+msgid "%s"
+msgstr ""
+
+#: ../src/view/home/favoritesview.py:298
+msgid "Registration Successful"
+msgstr ""
+
+#: ../src/view/home/favoritesview.py:299
+msgid "You are now registered with your school server."
+msgstr ""
+
+#: ../src/view/home/favoritesview.py:420
+msgid "Settings"
+msgstr ""
+
+#: ../src/view/home/favoritesview.py:425
+msgid "Restart"
+msgstr ""
+
+#: ../src/view/home/favoritesview.py:430
+msgid "Shutdown"
+msgstr ""
+
+#: ../src/view/home/favoritesview.py:436
+msgid "Register"
+msgstr ""
+
+#: ../src/view/palettes.py:42
+msgid "Starting..."
+msgstr ""
+
+#: ../src/view/palettes.py:72
+msgid "Stop"
+msgstr ""
+
+#. TRANS: Action label for starting an entry.
+#: ../src/view/palettes.py:104 ../src/journal/journaltoolbox.py:402
+#: ../src/journal/palettes.py:59
+msgid "Start"
+msgstr ""
+
+#: ../src/view/palettes.py:138
+msgid "Remove favorite"
+msgstr ""
+
+#: ../src/view/palettes.py:142
+msgid "Make favorite"
+msgstr ""
+
+#: ../src/view/palettes.py:191
+msgid "Show contents"
+msgstr ""
+
+#: ../src/view/palettes.py:215
+#, python-format
+msgid "%(free_space)d MB Free"
+msgstr ""
+
+#: ../src/journal/journaltoolbox.py:62
+msgid "Search"
+msgstr ""
+
+#: ../src/journal/journaltoolbox.py:119
+msgid "Anytime"
+msgstr ""
+
+#: ../src/journal/journaltoolbox.py:121
+msgid "Today"
+msgstr ""
+
+#: ../src/journal/journaltoolbox.py:123
+msgid "Since yesterday"
+msgstr ""
+
+#. TRANS: Filter entries modified during the last 7 days.
+#: ../src/journal/journaltoolbox.py:125
+msgid "Past week"
+msgstr ""
+
+#. TRANS: Filter entries modified during the last 30 days.
+#: ../src/journal/journaltoolbox.py:127
+msgid "Past month"
+msgstr ""
+
+#. TRANS: Filter entries modified during the last 356 days.
+#: ../src/journal/journaltoolbox.py:129
+msgid "Past year"
+msgstr ""
+
+#: ../src/journal/journaltoolbox.py:136
+msgid "Anyone"
+msgstr ""
+
+#: ../src/journal/journaltoolbox.py:138
+msgid "My friends"
+msgstr ""
+
+#: ../src/journal/journaltoolbox.py:139
+msgid "My class"
+msgstr ""
+
+#. TRANS: Item in a combo box that filters by entry type.
+#: ../src/journal/journaltoolbox.py:255
+msgid "Anything"
+msgstr ""
+
+#. TODO: Add "Start with" menu item
+#: ../src/journal/journaltoolbox.py:325 ../src/journal/palettes.py:67
+msgid "Copy"
+msgstr ""
+
+#: ../src/journal/collapsedentry.py:248 ../src/journal/expandedentry.py:176
+#: ../src/journal/palettes.py:51
+msgid "Untitled"
+msgstr ""
+
+#: ../src/journal/journalactivity.py:119 ../src/journal/volumesmanager.py:57
+msgid "Journal"
+msgstr ""
+
+#: ../src/journal/expandedentry.py:222
+msgid "No preview"
+msgstr ""
+
+#: ../src/journal/expandedentry.py:241
+msgid "Participants:"
+msgstr ""
+
+#: ../src/journal/expandedentry.py:266
+msgid "Description:"
+msgstr ""
+
+#: ../src/journal/expandedentry.py:292
+msgid "Tags:"
+msgstr ""
+
+#: ../src/journal/objectchooser.py:134
+msgid "Choose an object"
+msgstr ""
+
+#: ../src/journal/objectchooser.py:139
+msgid "Close"
+msgstr ""
+
+#: ../src/journal/volumestoolbar.py:93
+msgid "Unmount"
+msgstr ""
+
+#: ../src/journal/misc.py:95
+msgid "No date"
+msgstr ""
+
+#: ../src/journal/listview.py:39
+msgid "Your Journal is empty"
+msgstr ""
+
+#: ../src/journal/listview.py:40
+msgid "No matching entries "
+msgstr ""
+
+#: ../src/journal/modalalert.py:59
+msgid "Your Journal is full"
+msgstr ""
+
+#: ../src/journal/modalalert.py:63
+msgid "Please delete some old Journal entries to make space for new ones."
+msgstr ""
+
+#: ../src/journal/modalalert.py:75
+msgid "Show Journal"
+msgstr ""
