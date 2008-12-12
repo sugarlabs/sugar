@@ -16,6 +16,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
+import random
 import subprocess
 import time
 from optparse import OptionParser
@@ -61,7 +62,7 @@ def _start_xephyr(dpi, dimensions):
     # FIXME evil workaround until F10 Xephyr is fixed
     if os.path.exists('/etc/fedora-release'):
         if open('/etc/fedora-release').read().startswith('Fedora release 10'):
-            _run_xephyr(100, dpi, dimensions)
+            _run_xephyr(random.randint(100, 500), dpi, dimensions)
             return
 
     for display in range(100, 110):
