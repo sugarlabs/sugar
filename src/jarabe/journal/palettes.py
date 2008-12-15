@@ -16,7 +16,7 @@
 
 from gettext import gettext as _
 import logging
-        
+
 import gobject
 import gtk
 import gconf
@@ -26,9 +26,11 @@ from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
 from sugar.graphics.xocolor import XoColor
+from sugar import mime
 
 from jarabe.model import bundleregistry
 from jarabe.model import friends
+from jarabe.model import filetransfer
 from jarabe.journal import misc
 from jarabe.journal import model
 
@@ -78,10 +80,12 @@ class ObjectPalette(Palette):
         menu_item.show()
 
         menu_item = MenuItem(_('Send to'), 'list-remove')
-        #menu_item.connect('activate', self.__sendto_activate_cb)
         self.menu.append(menu_item)
-        menu_item.set_submenu(FriendsMenu())
         menu_item.show()
+
+        friends_menu = FriendsMenu()
+        friends_menu.connect('friend-selected', self.__friend_selected_cb)
+        menu_item.set_submenu(friends_menu)
 
         menu_item = MenuItem(_('Erase'), 'list-remove')
         menu_item.connect('activate', self.__erase_activate_cb)
@@ -113,6 +117,21 @@ class ObjectPalette(Palette):
         if bundle is not None and registry.is_installed(bundle):
             registry.uninstall(bundle)
         model.delete(self._metadata['uid'])
+
+    def __friend_selected_cb(self, menu_item, buddy):
+        logging.debug('__friend_selected_cb')
+        #TODO: figure out the best place to get rid of that temp file
+        file_name = model.get_file(self._metadata['uid'])
+
+        title = str(self._metadata['title'])
+        description = str(self._metadata.get('description', ''))
+        mime_type = str(self._metadata['mime_type'])
+
+        if not mime_type:
+            mime_type = mime.get_for_file(file_name)
+
+        filetransfer.start_transfer(buddy, file_name, title, description,
+                                    mime_type)
 
 class FriendsMenu(gtk.Menu):
     __gtype_name__ = 'JournalFriendsMenu'

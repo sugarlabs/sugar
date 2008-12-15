@@ -3,6 +3,7 @@ sugar_PYTHON =			\
 	__init__.py		\
 	buddy.py		\
 	bundleregistry.py	\
+	filetransfer.py		\
 	friends.py		\
 	invites.py		\
 	owner.py		\

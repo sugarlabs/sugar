@@ -120,6 +120,10 @@ def setup_notification_service_cb():
     from jarabe.model import notifications
     notifications.init()
 
+def setup_file_transfer_cb():
+    from jarabe.model import filetransfer
+    filetransfer.init()
+
 def main():
     cleanup_logs()
     logger.start('shell')
@@ -155,6 +159,7 @@ def main():
     gobject.idle_add(setup_keyhandler_cb)
     gobject.idle_add(setup_journal_cb)
     gobject.idle_add(setup_notification_service_cb)
+    gobject.idle_add(setup_file_transfer_cb)
     gobject.idle_add(show_software_updates_cb, home_window)
 
     try:
