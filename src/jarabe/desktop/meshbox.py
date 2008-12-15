@@ -96,7 +96,8 @@ class AccessPointView(CanvasPulsingIcon):
         self._bus.add_signal_receiver(self.__ap_properties_changed_cb,
                                       signal_name='PropertiesChanged',
                                       path=model.object_path,
-                                      dbus_interface=_NM_ACCESSPOINT_IFACE)
+                                      dbus_interface=_NM_ACCESSPOINT_IFACE,
+                                      byte_arrays=True)
 
         self._device.Get(_NM_DEVICE_IFACE, 'State',
                          reply_handler=self.__get_device_state_reply_cb,
