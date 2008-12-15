@@ -66,7 +66,7 @@ def get_icon_name(metadata):
                 ''.join(traceback.format_exception(*sys.exc_info())))
             file_name = _get_icon_file_name('application-octet-stream')
 
-    if not file_name and metadata['activity']:
+    if not file_name and metadata.get('activity', ''):
         service_name = metadata['activity']
         activity_info = bundleregistry.get_registry().get_bundle(service_name)
         if activity_info:
@@ -194,14 +194,14 @@ def resume(metadata, bundle_id=None):
 
         bundle = registry.get_bundle(bundle_id)
 
-        activity_id = metadata['activity_id']
+        activity_id = metadata.get('activity_id', '')
 
         if metadata['mountpoint'] == '/':
             object_id = metadata['uid']
         else:
             object_id = model.copy(metadata, '/')
 
-        if activity_id is None:
+        if activity_id:
             handle = ActivityHandle(object_id=object_id,
                                     activity_id=activity_id)
             activityfactory.create(bundle, handle)
