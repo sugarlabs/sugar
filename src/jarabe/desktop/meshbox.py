@@ -647,10 +647,15 @@ class NetworkManagerObserver(object):
         for conn_o in active_connections_o:
             obj = self._bus.get_object(_NM_IFACE, conn_o)
             props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
-            ap_o = props.Get(_NM_ACTIVE_CONN_IFACE, 'SpecificObject')
-
-            ap_view = self._box.access_points[ap_o]
-            ap_view.create_keydialog(kwargs['response'])
+            state = props.Get(_NM_ACTIVE_CONN_IFACE, 'State')
+            if state == network.NM_ACTIVE_CONNECTION_STATE_ACTIVATING:
+                ap_o = props.Get(_NM_ACTIVE_CONN_IFACE, 'SpecificObject')
+                if ap_o != '/':
+                    ap_view = self._box.access_points[ap_o]
+                    ap_view.create_keydialog(kwargs['response'])
+                else:
+                    logging.error('Could not determine AP for'
+                                  ' specific object %s' % conn_o)
 
     def __get_devices_reply_cb(self, devices_o):
         for dev_o in devices_o:
