@@ -612,7 +612,9 @@ class BaseTransferPalette(Palette):
             return _('%dMB') % (size / 1048576)
 
     def update_progress(self):
-        logging.debug('update_progress: %r' % self.file_transfer.props.transferred_bytes)
+        logging.debug('update_progress: %r' %
+                      self.file_transfer.props.transferred_bytes)
+
         if self.progress_bar is None:
             return
 
