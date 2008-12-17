@@ -130,7 +130,7 @@ def _volume_added_cb(volume_monitor, volume, tray):
     _mount(volume, tray)
 
 def _mount(volume, tray):
-    #TODO: this should be done by some other process, like gvfs-hal-volume-monitor
+    #TODO: should be done by some other process, like gvfs-hal-volume-monitor
     #TODO: use volume.should_automount() when it gets into pygtk
     if volume.get_mount() is None and volume.can_mount():
         #TODO: pass None as mount_operation, or better, SugarMountOperation

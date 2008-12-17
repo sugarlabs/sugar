@@ -732,6 +732,9 @@ class OutgoingTransferPalette(Palette):
     def __init__(self, file_transfer):
         BaseTransferPalette.__init__(self, file_transfer)
 
+        self.progress_bar = None
+        self.progress_label = None
+
         self.file_transfer.connect('notify::state', self.__notify_state_cb)
 
         nick = file_transfer.buddy.props.nick
