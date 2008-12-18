@@ -34,8 +34,7 @@ def read_all_languages():
 
     for line in lines:
         if line.find('locale:') != -1:
-            locale = line.lstrip('locale:')
-            locale = locale.split('archive:')[0].strip()
+            locale = line.split()[1]
         elif line.find('language |') != -1:
             lang = line.lstrip('language |')
         elif line.find('territory |') != -1:
