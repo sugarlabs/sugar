@@ -114,7 +114,7 @@
       <applyto>/desktop/sugar/collaboration/jabber_server</applyto>
       <owner>sugar</owner>
       <type>string</type>
-      <default>""</default>
+      <default>jabber.sugarlabs.org</default>
       <locale name="C">
         <short>Jabber Server</short>
         <long>Url of the jabber server to use.</long>
