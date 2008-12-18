@@ -18,22 +18,24 @@
 from gettext import gettext as _
 import logging
 import sha
+import socket
+import struct
 
 import gtk
 import gobject
+import gconf
 import dbus
 
 from sugar.graphics.icon import get_icon_state
 from sugar.graphics import style
 from sugar.graphics.palette import Palette
 from sugar.graphics.toolbutton import ToolButton
+from sugar.graphics.tray import TrayIcon
 from sugar.graphics import xocolor
 
 from jarabe.model import network
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.view.pulsingicon import PulsingIcon
-
-_ICON_NAME = 'network-wireless'
 
 IP_ADDRESS_TEXT_TEMPLATE = _("IP address: %s")
 
@@ -41,6 +43,7 @@ _NM_SERVICE = 'org.freedesktop.NetworkManager'
 _NM_IFACE = 'org.freedesktop.NetworkManager'
 _NM_PATH = '/org/freedesktop/NetworkManager'
 _NM_DEVICE_IFACE = 'org.freedesktop.NetworkManager.Device'
+_NM_WIRED_IFACE = 'org.freedesktop.NetworkManager.Device.Wired'
 _NM_WIRELESS_IFACE = 'org.freedesktop.NetworkManager.Device.Wireless'
 _NM_ACCESSPOINT_IFACE = 'org.freedesktop.NetworkManager.AccessPoint'
 _NM_ACTIVE_CONN_IFACE = 'org.freedesktop.NetworkManager.Connection.Active'
@@ -102,8 +105,6 @@ class WirelessPalette(Palette):
         self._disconnect_item.connect('activate', self.__disconnect_activate_cb)
         self.menu.append(self._disconnect_item)
 
-        self.set_disconnected()
-
     def set_connecting(self):
         self.props.secondary_text = _('Connecting...')
 
@@ -114,18 +115,8 @@ class WirelessPalette(Palette):
         self._set_ip_address(iaddress)
         self._disconnect_item.show()
 
-    def set_disconnected(self):
-        self.props.primary_text = ''
-        self.props.secondary_text = _('Not connected')
-        self.set_content(None)
-        self._disconnect_item.hide()
-
     def __disconnect_activate_cb(self, menuitem):
         self.emit('deactivate-connection')
-
-    def _inet_ntoa(self, iaddress):
-        address = ['%s' % ((iaddress >> i) % 256) for i in [0, 8, 16, 24]]
-        return ".".join(address)
 
     def _set_channel(self, frequency):
         try:
@@ -137,7 +128,7 @@ class WirelessPalette(Palette):
     def _set_ip_address(self, ip_address):
         if ip_address is not None:
             ip_address_text = IP_ADDRESS_TEXT_TEMPLATE % \
-                self._inet_ntoa(ip_address)
+                socket.inet_ntoa(struct.pack('I', ip_address))
         else:
             ip_address_text = ""
         self._ip_address_label.set_text(ip_address_text)
@@ -145,6 +136,7 @@ class WirelessPalette(Palette):
 
 class WirelessDeviceView(ToolButton):
 
+    _ICON_NAME = 'network-wireless'
     FRAME_POSITION_RELATIVE = 300
 
     def __init__(self, device):
@@ -161,7 +153,7 @@ class WirelessDeviceView(ToolButton):
         self._active_ap_op = None
 
         self._icon = PulsingIcon()
-        self._icon.props.icon_name = get_icon_state(_ICON_NAME, 0)
+        self._icon.props.icon_name = get_icon_state(self._ICON_NAME, 0)
         self._inactive_color = xocolor.XoColor( \
             "%s,%s" % (style.COLOR_BUTTON_GREY.get_svg(),
                        style.COLOR_TRANSPARENT.get_svg()))
@@ -172,11 +164,16 @@ class WirelessDeviceView(ToolButton):
         self._icon.show()
 
         self._palette = WirelessPalette(self._name)
-        self._palette.connect('deactivate-connection', 
-                              self.__deactivate_connection)  
+        self._palette.connect('deactivate-connection',
+                              self.__deactivate_connection)
         self.set_palette(self._palette)
         self._palette.props.invoker = FrameWidgetInvoker(self)
         self._palette.set_group_id('frame')
+
+        props = dbus.Interface(self._device, 'org.freedesktop.DBus.Properties')
+        props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True,
+                     reply_handler=self.__get_device_props_reply_cb,
+                     error_handler=self.__get_device_props_error_cb)
 
         self._device.Get(_NM_WIRELESS_IFACE, 'ActiveAccessPoint',
                          reply_handler=self.__get_active_ap_reply_cb,
@@ -192,6 +189,14 @@ class WirelessDeviceView(ToolButton):
                                          signal_name='StateChanged',
                                          path=self._device.object_path,
                                          dbus_interface=_NM_DEVICE_IFACE)
+
+    def __get_device_props_reply_cb(self, properties):
+        if 'State' in properties:
+            self._device_state = properties['State']
+            self._update_state()
+
+    def __get_device_props_error_cb(self, err):
+        logging.error('Error getting the device properties: %s', err)
 
     def __get_active_ap_reply_cb(self, active_ap_op):
         if self._active_ap_op != active_ap_op:
@@ -209,8 +214,8 @@ class WirelessDeviceView(ToolButton):
             props = dbus.Interface(active_ap, 'org.freedesktop.DBus.Properties')
 
             props.GetAll(_NM_ACCESSPOINT_IFACE, byte_arrays=True,
-                         reply_handler=self.__get_all_props_reply_cb,
-                         error_handler=self.__get_all_props_error_cb)
+                         reply_handler=self.__get_all_ap_props_reply_cb,
+                         error_handler=self.__get_all_ap_props_error_cb)
 
             self._bus.add_signal_receiver(self.__ap_properties_changed_cb,
                                           signal_name='PropertiesChanged',
@@ -218,7 +223,7 @@ class WirelessDeviceView(ToolButton):
                                           dbus_interface=_NM_ACCESSPOINT_IFACE)
 
     def __get_active_ap_error_cb(self, err):
-        logging.debug('Error getting the active access point: %s', err)
+        logging.error('Error getting the active access point: %s', err)
 
     def __state_changed_cb(self, new_state, old_state, reason):
         self._device_state = new_state
@@ -251,11 +256,11 @@ class WirelessDeviceView(ToolButton):
                                                  xocolor.colors[idx][1]))
         self._update()
 
-    def __get_all_props_reply_cb(self, properties):
+    def __get_all_ap_props_reply_cb(self, properties):
         self._update_properties(properties)
 
-    def __get_all_props_error_cb(self, err):
-        logging.debug('Error getting the access point properties: %s', err)
+    def __get_all_ap_props_error_cb(self, err):
+        logging.error('Error getting the access point properties: %s', err)
 
     def _update(self):
         if self._flags == network.NM_802_11_AP_FLAGS_PRIVACY:
@@ -275,9 +280,9 @@ class WirelessDeviceView(ToolButton):
             state = network.DEVICE_STATE_UNKNOWN
 
         if state == network.DEVICE_STATE_ACTIVATED:
-            icon_name = '%s-connected' % _ICON_NAME
+            icon_name = '%s-connected' % self._ICON_NAME
         else:
-            icon_name = _ICON_NAME
+            icon_name = self._ICON_NAME
 
         icon_name = get_icon_state(icon_name, self._strength)
         if icon_name:
@@ -295,12 +300,6 @@ class WirelessDeviceView(ToolButton):
             address = props.Get(_NM_DEVICE_IFACE, 'Ip4Address')
             self._palette.set_connected(self._frequency, address)
             self._icon.props.pulsing = False
-        else:
-            self._palette.set_disconnected()
-            self._icon.props.pulsing = False
-            self._icon.props.base_color = self._inactive_color
-            self._icon.props.badge_name = None
-            self._name = ''
 
     def _update_color(self):
         self._icon.props.base_color = self._color
@@ -322,6 +321,57 @@ class WirelessDeviceView(ToolButton):
                     netmgr.DeactivateConnection(conn_o)
                     break
 
+
+class WirelessDeviceObserver(object):
+    def __init__(self, device, tray):
+        self._bus = dbus.SystemBus()
+        self._device = device
+        self._device_view = None
+        self._tray = tray
+
+        props = dbus.Interface(self._device, 'org.freedesktop.DBus.Properties')
+        props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True,
+                     reply_handler=self.__get_device_props_reply_cb,
+                     error_handler=self.__get_device_props_error_cb)
+
+        self._bus.add_signal_receiver(self.__state_changed_cb,
+                                      signal_name='StateChanged',
+                                      path=self._device.object_path,
+                                      dbus_interface=_NM_DEVICE_IFACE)
+
+    def disconnect(self):
+        self._bus.remove_signal_receiver(self.__state_changed_cb,
+                                         signal_name='StateChanged',
+                                         path=self._device.object_path,
+                                         dbus_interface=_NM_DEVICE_IFACE)
+
+    def __get_device_props_reply_cb(self, properties):
+        if 'State' in properties:
+            self._update_state(properties['State'])
+
+    def __get_device_props_error_cb(self, err):
+        logging.error('Error getting the device properties: %s', err)
+
+    def __state_changed_cb(self, new_state, old_state, reason):
+        self._update_state(new_state)
+
+    def _update_state(self, state):
+        if state == network.DEVICE_STATE_PREPARE or \
+           state == network.DEVICE_STATE_CONFIG or \
+           state == network.DEVICE_STATE_NEED_AUTH or \
+           state == network.DEVICE_STATE_IP_CONFIG or \
+           state == network.DEVICE_STATE_ACTIVATED:
+            if self._device_view is None:
+                self._device_view = WirelessDeviceView(self._device)
+                self._tray.add_device(self._device_view)
+        else:
+            if self._device_view is not None:
+                self._device_view.disconnect()
+                self._tray.remove_device(self._device_view)
+                del self._device_view
+                self._device_view = None
+
+
 class NetworkManagerObserver(object):
     def __init__(self, tray):
         self._bus = dbus.SystemBus()
@@ -333,7 +383,7 @@ class NetworkManagerObserver(object):
             obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
             self._netmgr = dbus.Interface(obj, _NM_IFACE)
         except dbus.DBusException:
-            logging.debug('%s service not available', _NM_SERVICE)
+            logging.error('%s service not available', _NM_SERVICE)
             return
 
         self._netmgr.GetDevices(reply_handler=self.__get_devices_reply_cb,
@@ -359,9 +409,8 @@ class NetworkManagerObserver(object):
 
         device_type = props.Get(_NM_DEVICE_IFACE, 'DeviceType')
         if device_type == network.DEVICE_TYPE_802_11_WIRELESS:
-            device = WirelessDeviceView(nm_device)
+            device = WirelessDeviceObserver(nm_device, self._tray)
             self._devices[device_op] = device
-            self._tray.add_device(device)
 
     def __device_added_cb(self, device_op):
         self._check_device(device_op)
@@ -370,7 +419,6 @@ class NetworkManagerObserver(object):
         if device_op in self._devices:
             device = self._devices[device_op]
             device.disconnect()
-            self._tray.remove_device(device)
             del self._devices[device_op]
 
 def setup(tray):
