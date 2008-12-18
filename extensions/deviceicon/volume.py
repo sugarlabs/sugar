@@ -36,7 +36,7 @@ _icons = {}
 
 class DeviceView(TrayIcon):
 
-    FRAME_POSITION_RELATIVE = 800
+    FRAME_POSITION_RELATIVE = 500
 
     def __init__(self, mount):
         TrayIcon.__init__(self)

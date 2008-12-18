@@ -185,7 +185,7 @@ class WiredPalette(Palette):
 class WirelessDeviceView(ToolButton):
 
     _ICON_NAME = 'network-wireless'
-    FRAME_POSITION_RELATIVE = 300
+    FRAME_POSITION_RELATIVE = 302
 
     def __init__(self, device):
         ToolButton.__init__(self)
@@ -373,7 +373,7 @@ class WirelessDeviceView(ToolButton):
 class WiredDeviceView(TrayIcon):
 
     _ICON_NAME = 'network-wired'
-    FRAME_POSITION_RELATIVE = 300
+    FRAME_POSITION_RELATIVE = 301
 
     def __init__(self, speed, address):
         client = gconf.client_get_default()

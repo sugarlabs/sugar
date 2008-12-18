@@ -44,8 +44,9 @@ class DevicesTray(tray.HTray):
         for item in self.get_children():
             current_relative_index = getattr(item, "FRAME_POSITION_RELATIVE", 0)
             if current_relative_index >= relative_index:
+                index += 1
+            else:
                 break
-            index += 1
         self.add_item(view, index=index)
         view.show()
 
