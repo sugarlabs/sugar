@@ -134,6 +134,54 @@ class WirelessPalette(Palette):
         self._ip_address_label.set_text(ip_address_text)
 
 
+class WiredPalette(Palette):
+    __gtype_name__ = 'SugarWiredPalette'
+
+    def __init__(self):
+        Palette.__init__(self, label=_('Wired Network'))
+
+        self._speed_label = gtk.Label()
+        self._speed_label.props.xalign = 0.0
+        self._speed_label.show()
+
+        self._ip_address_label = gtk.Label()
+
+        self._info = gtk.VBox()
+
+        def _padded(child, xalign=0, yalign=0.5):
+            padder = gtk.Alignment(xalign=xalign, yalign=yalign,
+                                   xscale=1, yscale=0.33)
+            padder.set_padding(style.DEFAULT_SPACING,
+                               style.DEFAULT_SPACING,
+                               style.DEFAULT_SPACING,
+                               style.DEFAULT_SPACING)
+            padder.add(child)
+            return padder
+
+        self._info.pack_start(_padded(self._speed_label))
+        self._info.pack_start(_padded(self._ip_address_label))
+        self._info.show_all()
+
+        self.set_content(self._info)
+        self.props.secondary_text = _('Connected')
+
+    def set_connected(self, speed, iaddress):
+        self._speed_label.set_text('%s: %d Mb/s' % (_('Speed'), speed))
+        self._set_ip_address(iaddress)
+
+    def _inet_ntoa(self, iaddress):
+        address = ['%s' % ((iaddress >> i) % 256) for i in [0, 8, 16, 24]]
+        return ".".join(address)
+
+    def _set_ip_address(self, ip_address):
+        if ip_address is not None:
+            ip_address_text = IP_ADDRESS_TEXT_TEMPLATE % \
+                socket.inet_ntoa(struct.pack('I', ip_address))
+        else:
+            ip_address_text = ""
+        self._ip_address_label.set_text(ip_address_text)
+
+
 class WirelessDeviceView(ToolButton):
 
     _ICON_NAME = 'network-wireless'
@@ -322,6 +370,24 @@ class WirelessDeviceView(ToolButton):
                     break
 
 
+class WiredDeviceView(TrayIcon):
+
+    _ICON_NAME = 'network-wired'
+    FRAME_POSITION_RELATIVE = 300
+
+    def __init__(self, speed, address):
+        client = gconf.client_get_default()
+        color = xocolor.XoColor(client.get_string('/desktop/sugar/user/color'))
+
+        TrayIcon.__init__(self, icon_name=self._ICON_NAME, xo_color=color)
+
+        self._palette = WiredPalette()
+        self.set_palette(self._palette)
+        self._palette.props.invoker = FrameWidgetInvoker(self)
+        self._palette.set_group_id('frame')
+        self._palette.set_connected(speed, address)
+
+
 class WirelessDeviceObserver(object):
     def __init__(self, device, tray):
         self._bus = dbus.SystemBus()
@@ -372,6 +438,55 @@ class WirelessDeviceObserver(object):
                 self._device_view = None
 
 
+class WiredDeviceObserver(object):
+    def __init__(self, device, tray):
+        self._bus = dbus.SystemBus()
+        self._device = device
+        self._device_state = None
+        self._device_view = None
+        self._tray = tray
+
+        props = dbus.Interface(self._device, 'org.freedesktop.DBus.Properties')
+        props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True,
+                     reply_handler=self.__get_device_props_reply_cb,
+                     error_handler=self.__get_device_props_error_cb)
+
+        self._bus.add_signal_receiver(self.__state_changed_cb,
+                                      signal_name='StateChanged',
+                                      path=self._device.object_path,
+                                      dbus_interface=_NM_DEVICE_IFACE)
+
+    def disconnect(self):
+        self._bus.remove_signal_receiver(self.__state_changed_cb,
+                                         signal_name='StateChanged',
+                                         path=self._device.object_path,
+                                         dbus_interface=_NM_DEVICE_IFACE)
+
+    def __get_device_props_reply_cb(self, properties):
+        if 'State' in properties:
+            self._update_state(properties['State'])
+
+    def __get_device_props_error_cb(self, err):
+        logging.error('Error getting the device properties: %s', err)
+
+    def __state_changed_cb(self, new_state, old_state, reason):
+        self._update_state(new_state)
+
+    def _update_state(self, state):
+        if state == network.DEVICE_STATE_ACTIVATED:
+            props = dbus.Interface(self._device,
+                                   'org.freedesktop.DBus.Properties')
+            address = props.Get(_NM_DEVICE_IFACE, 'Ip4Address')
+            speed = props.Get(_NM_WIRED_IFACE, 'Speed')
+            self._device_view = WiredDeviceView(speed, address)
+            self._tray.add_device(self._device_view)
+        else:
+            if self._device_view is not None:
+                self._tray.remove_device(self._device_view)
+                del self._device_view
+                self._device_view = None
+
+
 class NetworkManagerObserver(object):
     def __init__(self, tray):
         self._bus = dbus.SystemBus()
@@ -408,7 +523,10 @@ class NetworkManagerObserver(object):
         props = dbus.Interface(nm_device, 'org.freedesktop.DBus.Properties')
 
         device_type = props.Get(_NM_DEVICE_IFACE, 'DeviceType')
-        if device_type == network.DEVICE_TYPE_802_11_WIRELESS:
+        if device_type == network.DEVICE_TYPE_802_3_ETHERNET:
+            device = WiredDeviceObserver(nm_device, self._tray)
+            self._devices[device_op] = device
+        elif device_type == network.DEVICE_TYPE_802_11_WIRELESS:
             device = WirelessDeviceObserver(nm_device, self._tray)
             self._devices[device_op] = device
 

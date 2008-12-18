@@ -23,6 +23,7 @@ import ConfigParser
 from sugar import dispatch
 from sugar import env
 
+DEVICE_TYPE_802_3_ETHERNET = 1
 DEVICE_TYPE_802_11_WIRELESS = 2
 
 DEVICE_STATE_UNKNOWN = 0
