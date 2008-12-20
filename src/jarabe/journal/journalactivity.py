@@ -213,6 +213,8 @@ class JournalActivity(Window):
             self._main_view.show()
 
     def _show_secondary_view(self, metadata):
+        # Need to get the full set of properties
+        metadata = model.get(metadata['uid'])
         try:
             self._detail_toolbox.entry_toolbar.set_metadata(metadata)
         except Exception:

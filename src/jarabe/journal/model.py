@@ -324,7 +324,8 @@ def copy(metadata, mount_point):
 def write(metadata, file_path='', update_mtime=True):
     """Creates or updates an entry for that id
     """
-    logging.debug('model.write %r %r %r' % (metadata, file_path, update_mtime))
+    logging.debug('model.write %r %r %r' % (metadata['uid'], file_path,
+                                            update_mtime))
     if update_mtime:
         metadata['mtime'] = datetime.now().isoformat()
         metadata['timestamp'] = int(time.time())
