@@ -17,11 +17,8 @@
 from gettext import gettext as _
 import gconf
 
-import gobject
 import gtk
-import hippo
 
-from sugar.graphics import style
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.tray import TrayIcon
 from sugar.graphics.palette import Palette
@@ -40,29 +37,19 @@ class SystemView(TrayIcon):
 
     def __init__(self):
         client = gconf.client_get_default()        
-        self._color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        color = XoColor(client.get_string('/desktop/sugar/user/color'))
 
-        TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
+        TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=color)
 
-        self.palette = SystemPalette(_('System functions') )
-        self.palette.props.invoker = FrameWidgetInvoker(self)
-        self.palette.set_group_id('frame')
-
-        name = _ICON_NAME
-        self.icon.props.icon_name = _ICON_NAME
-
-    def controlpanel_activate_cb(self, *args):
-        panel = ControlPanel()
-        panel.set_transient_for(self.get_toplevel())
-        panel.show()
-
+    def create_palette(self):
+        palette = SystemPalette(_('System functions') )
+        palette.props.invoker = FrameWidgetInvoker(self)
+        palette.set_group_id('frame')
+        return palette
 
 class SystemPalette(Palette):
     def __init__(self, primary_text):
         Palette.__init__(self, label=primary_text)
-        vbox = gtk.VBox()
-        self.set_content(vbox)
-        vbox.show()
 
         item = MenuItem(_('Settings'), 'preferences-system')
         item.connect('activate', self.__controlpanel_activate_cb)
@@ -70,25 +57,24 @@ class SystemPalette(Palette):
         item.show()
 
         item = MenuItem(_('Restart'), 'system-restart')
-        item.connect('activate', self._reboot_activate_cb)
+        item.connect('activate', self.__reboot_activate_cb)
         self.menu.append(item)
         item.show()
 
         item = MenuItem(_('Shutdown'), 'system-shutdown')
-        item.connect('activate', self._shutdown_activate_cb)
+        item.connect('activate', self.__shutdown_activate_cb)
         self.menu.append(item)
         item.show()
 
-
-    def _reboot_activate_cb(self, menuitem):
+    def __reboot_activate_cb(self, menu_item):
         session_manager = get_session_manager()
         session_manager.reboot()
 
-    def _shutdown_activate_cb(self, menuitem):
+    def __shutdown_activate_cb(self, menu_item):
         session_manager = get_session_manager()
         session_manager.shutdown()
         
-    def __controlpanel_activate_cb(self, menuitem):
+    def __controlpanel_activate_cb(self, menu_item):
         panel = ControlPanel()
         panel.set_transient_for(self.get_toplevel())
         panel.show()
