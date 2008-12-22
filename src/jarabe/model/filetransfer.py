@@ -44,7 +44,7 @@ CHANNEL_TYPE_FILE_TRANSFER = \
         'org.freedesktop.Telepathy.Channel.Type.FileTransfer.DRAFT'
 
 class StreamSplicer(gobject.GObject):
-    _CHUNK_SIZE = 102400 # 100K
+    _CHUNK_SIZE = 1024 # 1K
     __gsignals__ = {
         'finished': (gobject.SIGNAL_RUN_FIRST,
                      gobject.TYPE_NONE,
