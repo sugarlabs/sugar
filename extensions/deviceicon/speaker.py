@@ -34,7 +34,7 @@ _ICON_NAME = 'speaker'
 
 class DeviceView(TrayIcon):
 
-    FRAME_POSITION_RELATIVE = 102
+    FRAME_POSITION_RELATIVE = 103
 
     def __init__(self):
         client = gconf.client_get_default()        
