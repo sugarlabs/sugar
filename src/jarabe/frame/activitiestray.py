@@ -742,11 +742,6 @@ class OutgoingTransferPalette(BaseTransferPalette):
         nick = file_transfer.buddy.props.nick
         self.props.secondary_text = _('Transfer to %r') % nick
 
-        menu_item = MenuItem(_('Cancel'), icon_name='dialog-cancel')
-        menu_item.connect('activate', self.__cancel_activate_cb)
-        self.menu.append(menu_item)
-        menu_item.show()
-
         self._update()
 
     def __notify_state_cb(self, file_transfer, pspec):
