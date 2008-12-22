@@ -728,7 +728,7 @@ class IncomingTransferPalette(BaseTransferPalette):
     def __cancel_activate_cb(self, menu_item):
         self.file_transfer.cancel()
 
-class OutgoingTransferPalette(Palette):
+class OutgoingTransferPalette(BaseTransferPalette):
     """Palette for frame or notification icon for outgoing file transfers
     """
     def __init__(self, file_transfer):
