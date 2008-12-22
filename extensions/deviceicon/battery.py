@@ -44,7 +44,7 @@ _PRESENT_PROP = 'battery.present'
 
 class DeviceView(TrayIcon):
 
-    FRAME_POSITION_RELATIVE = 101
+    FRAME_POSITION_RELATIVE = 102
 
     def __init__(self, udi):
         client = gconf.client_get_default()        

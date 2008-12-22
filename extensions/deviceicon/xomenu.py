@@ -17,8 +17,6 @@
 from gettext import gettext as _
 import gconf
 
-import gtk
-
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.tray import TrayIcon
 from sugar.graphics.palette import Palette
@@ -33,7 +31,7 @@ _ICON_NAME = 'computer-xo'
 
 class SystemView(TrayIcon):
 
-    FRAME_POSITION_RELATIVE = 800
+    FRAME_POSITION_RELATIVE = 101
 
     def __init__(self):
         client = gconf.client_get_default()        
