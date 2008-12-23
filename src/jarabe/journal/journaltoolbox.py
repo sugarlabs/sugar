@@ -365,7 +365,7 @@ class EntryToolbar(gtk.Toolbar):
     def _erase_button_clicked_cb(self, button):
         registry = bundleregistry.get_registry()
 
-        bundle = misc.get_bundle(self._metadata['uid'])
+        bundle = misc.get_bundle(self._metadata)
         if bundle is not None and registry.is_installed(bundle):
             registry.uninstall(bundle)
         model.delete(self._metadata['uid'])
