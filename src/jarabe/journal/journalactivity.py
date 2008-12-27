@@ -267,7 +267,8 @@ class JournalActivity(Window):
     def _check_for_bundle(self, object_id):
         registry = bundleregistry.get_registry()
 
-        bundle = misc.get_bundle(object_id)
+        metadata = model.get(object_id)
+        bundle = misc.get_bundle(metadata)
         if bundle is None:
             return
 
@@ -280,7 +281,6 @@ class JournalActivity(Window):
                             (bundle.get_path(), e))
             return
 
-        metadata = model.get(object_id)
         if metadata['mime_type'] == JournalEntryBundle.MIME_TYPE:
             model.delete(object_id)
 
