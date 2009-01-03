@@ -39,9 +39,7 @@ def _get_icon_file_name(icon_name):
     icon_theme = gtk.icon_theme_get_default()
     info = icon_theme.lookup_icon(icon_name, gtk.ICON_SIZE_LARGE_TOOLBAR, 0)
     if not info:
-        # display standard icon when icon for mime type is not found
-        info = icon_theme.lookup_icon('application-octet-stream',
-                                      gtk.ICON_SIZE_LARGE_TOOLBAR, 0)
+        return None
     fname = info.get_filename()
     del info
     return fname
