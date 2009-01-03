@@ -55,22 +55,22 @@ def get_icon_name(metadata):
 
     file_name = None
 
-    #TODO: figure out the best place to get rid of that temp file
-    file_path = model.get_file(metadata['uid'])
-    if is_activity_bundle(metadata) and os.path.exists(file_path):
-        try:
-            bundle = ActivityBundle(file_path)
-            file_name = bundle.get_icon()
-        except Exception:
-            logging.warning('Could not read bundle:\n' + \
-                ''.join(traceback.format_exception(*sys.exc_info())))
-            file_name = _get_icon_file_name('application-octet-stream')
-
     if not file_name and metadata.get('activity', ''):
         service_name = metadata['activity']
         activity_info = bundleregistry.get_registry().get_bundle(service_name)
         if activity_info:
             file_name = activity_info.get_icon()
+
+    if is_activity_bundle(metadata):
+        file_path = model.get_file(metadata['uid'])
+        if os.path.exists(file_path):
+            try:
+                bundle = ActivityBundle(file_path)
+                file_name = bundle.get_icon()
+            except Exception:
+                logging.warning('Could not read bundle:\n' + \
+                    ''.join(traceback.format_exception(*sys.exc_info())))
+                file_name = _get_icon_file_name('application-octet-stream')
 
     mime_type = metadata['mime_type']
     if not file_name and mime_type:
@@ -98,8 +98,7 @@ def get_date(metadata):
 
 def get_bundle(metadata):
     try:
-        #TODO: figure out the best place to get rid of that temp file
-        file_path = model.get_file(metadata['uid'])
+        file_path = util.TempFilePath(model.get_file(metadata['uid']))
         if is_activity_bundle(metadata) and os.path.exists(file_path):
             return ActivityBundle(file_path)
         elif is_content_bundle(metadata) and os.path.exists(file_path):
@@ -144,7 +143,7 @@ def resume(metadata, bundle_id=None):
     if is_activity_bundle(metadata) and bundle_id is None:
 
         logging.debug('Creating activity bundle')
-        #TODO: figure out the best place to get rid of that temp file
+
         file_path = model.get_file(metadata['uid'])
         bundle = ActivityBundle(file_path)
         if not registry.is_installed(bundle):
@@ -166,7 +165,7 @@ def resume(metadata, bundle_id=None):
     elif is_content_bundle(metadata) and bundle_id is None:
 
         logging.debug('Creating content bundle')
-        #TODO: figure out the best place to get rid of that temp file
+
         file_path = model.get_file(metadata['uid'])
         bundle = ContentBundle(file_path)
         if not bundle.is_installed():

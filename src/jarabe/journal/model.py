@@ -25,6 +25,7 @@ import gconf
 
 from sugar import dispatch
 from sugar import mime
+from sugar import util
 
 DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
 DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
@@ -291,7 +292,11 @@ def get_file(object_id):
         return object_id
     else:
         logging.debug('get_file asked for entry with id %r' % object_id)
-        return _get_datastore().get_filename(object_id)
+        file_path = _get_datastore().get_filename(object_id)
+        if file_path:
+            return util.TempFilePath(file_path)
+        else:
+            return None
 
 def get_unique_values(key):
     """Returns a list with the different values a property has taken
@@ -312,13 +317,12 @@ def copy(metadata, mount_point):
     """
     metadata = get(metadata['uid'])
 
-    #TODO: figure out the best place to get rid of that temp file
     file_path = get_file(metadata['uid'])
+    file_path.delete = False
 
     metadata['mountpoint'] = mount_point
     del metadata['uid']
 
-    #TODO: should we transfer ownership?
     return write(metadata, file_path)
 
 def write(metadata, file_path='', update_mtime=True):

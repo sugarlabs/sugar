@@ -311,6 +311,7 @@ class EntryToolbar(gtk.Toolbar):
         gtk.Toolbar.__init__(self)
 
         self._metadata = None
+        self._temp_file_path = None
 
         self._resume = ToolButton('activity-start')
         self._resume.connect('clicked', self._resume_clicked_cb)
@@ -355,12 +356,13 @@ class EntryToolbar(gtk.Toolbar):
                                 self.__clipboard_clear_func_cb)
 
     def __clipboard_get_func_cb(self, clipboard, selection_data, info, data):
-        file_path = model.get_file(self._metadata['uid'])
-        selection_data.set_uris(['file://' + file_path])
+        # Get hold of a reference so the temp file doesn't get deleted
+        self._temp_file_path = model.get_file(self._metadata['uid'])
+        selection_data.set_uris(['file://' + self._temp_file_path])
 
     def __clipboard_clear_func_cb(self, clipboard, data):
-        #TODO: should we remove here the temp file created before?
-        pass
+        # Release and delete the temp file
+        self._temp_file_path = None
 
     def _erase_button_clicked_cb(self, button):
         registry = bundleregistry.get_registry()

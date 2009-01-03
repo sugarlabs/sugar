@@ -38,6 +38,7 @@ class ObjectPalette(Palette):
     def __init__(self, metadata):
 
         self._metadata = metadata
+        self._temp_file_path = None
 
         activity_icon = Icon(icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
         activity_icon.props.file = misc.get_icon_name(metadata)
@@ -102,13 +103,14 @@ class ObjectPalette(Palette):
                                 self.__clipboard_clear_func_cb)
 
     def __clipboard_get_func_cb(self, clipboard, selection_data, info, data):
-        file_path = model.get_file(self._metadata['uid'])
+        # Get hold of a reference so the temp file doesn't get deleted
+        self._temp_file_path = model.get_file(self._metadata['uid'])
         logging.debug('__clipboard_get_func_cb %r' % file_path)
         selection_data.set_uris(['file://' + file_path])
 
     def __clipboard_clear_func_cb(self, clipboard, data):
-        #TODO: should we remove here the temp file created before?
-        pass
+        # Release and delete the temp file
+        self._temp_file_path = None
 
     def __erase_activate_cb(self, menu_item):
         registry = bundleregistry.get_registry()
@@ -120,7 +122,6 @@ class ObjectPalette(Palette):
 
     def __friend_selected_cb(self, menu_item, buddy):
         logging.debug('__friend_selected_cb')
-        #TODO: figure out the best place to get rid of that temp file
         file_name = model.get_file(self._metadata['uid'])
 
         title = str(self._metadata['title'])

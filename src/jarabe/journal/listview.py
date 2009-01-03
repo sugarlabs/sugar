@@ -79,6 +79,7 @@ class BaseListView(gtk.HBox):
         self.connect('destroy', self.__destroy_cb)
 
         # DND stuff
+        self._temp_file_path = None
         self._pressed_button = None
         self._press_start_x = None
         self._press_start_y = None
@@ -345,14 +346,17 @@ class BaseListView(gtk.HBox):
         self._press_start_y = None
         self._last_clicked_entry = None
 
+        # Release and delete the temp file
+        self._temp_file_path = None
+
     def _drag_data_get_cb(self, widget, context, selection, target_type,
                           event_time):
         logging.debug("drag_data_get_cb: requested target " + selection.target)
 
         metadata = self._last_clicked_entry.metadata
         if selection.target == 'text/uri-list':
-            #TODO: figure out the best place to get rid of that temp file
-            file_path = model.get_file(metadata)
+            # Get hold of a reference so the temp file doesn't get deleted
+            self._temp_file_path = model.get_file(metadata)
             selection.set(selection.target, 8, file_path)
         elif selection.target == 'journal-object-id':
             selection.set(selection.target, 8, metadata['uid'])
