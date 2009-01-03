@@ -44,22 +44,16 @@ def _get_icon_file_name(icon_name):
     del info
     return fname
 
-_icon_cache = util.LRU(50)
-
 def get_icon_name(metadata):
-    cache_key = (metadata['uid'], metadata.get('timestamp', None))
-    if cache_key in _icon_cache:
-        return _icon_cache[cache_key]
-
     file_name = None
 
-    if not file_name and metadata.get('activity', ''):
+    if metadata.get('activity', ''):
         service_name = metadata['activity']
         activity_info = bundleregistry.get_registry().get_bundle(service_name)
         if activity_info:
             file_name = activity_info.get_icon()
 
-    if is_activity_bundle(metadata):
+    if not file_name and is_activity_bundle(metadata):
         file_path = model.get_file(metadata['uid'])
         if os.path.exists(file_path):
             try:
@@ -68,9 +62,8 @@ def get_icon_name(metadata):
             except Exception:
                 logging.warning('Could not read bundle:\n' + \
                     ''.join(traceback.format_exception(*sys.exc_info())))
-                file_name = _get_icon_file_name('application-octet-stream')
 
-    mime_type = metadata['mime_type']
+    mime_type = metadata.get('mime_type', '')
     if not file_name and mime_type:
         icon_name = mime.get_mime_icon(mime_type)
         if icon_name:
@@ -78,8 +71,6 @@ def get_icon_name(metadata):
 
     if not file_name or not os.path.exists(file_name):
         file_name = _get_icon_file_name('application-octet-stream')
-
-    _icon_cache[cache_key] = file_name
 
     return file_name
 
