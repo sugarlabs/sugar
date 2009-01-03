@@ -703,7 +703,12 @@ class IncomingTransferPalette(BaseTransferPalette):
             # TODO: What to do here?
             self.update_progress()
         elif self.file_transfer.props.state == filetransfer.FT_STATE_CANCELLED:
-            # TODO: What to do here?
+
+            menu_item = MenuItem(_('Resume'), icon_name='dialog-cancel')
+            menu_item.connect('activate', self.__resume_activate_cb)
+            self.menu.append(menu_item)
+            menu_item.show()
+
             self.update_progress()
 
     def __accept_activate_cb(self, menu_item):
@@ -727,6 +732,9 @@ class IncomingTransferPalette(BaseTransferPalette):
 
     def __cancel_activate_cb(self, menu_item):
         self.file_transfer.cancel()
+
+    def __resume_activate_cb(self, menu_item):
+        self.file_transfer.resume()
 
 class OutgoingTransferPalette(BaseTransferPalette):
     """Palette for frame or notification icon for outgoing file transfers
