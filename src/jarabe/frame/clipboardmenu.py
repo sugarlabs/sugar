@@ -231,9 +231,8 @@ class ClipboardMenu(Palette):
                 else:
                     mime_type = sniffed_mime_type
 
-        name = self._cb_object.get_name()
         jobject = datastore.create()
-        jobject.metadata['title'] = _('%s clipping') % name
+        jobject.metadata['title'] = self._cb_object.get_name()
         jobject.metadata['keep'] = '0'
         jobject.metadata['buddies'] = ''
         jobject.metadata['preview'] = ''
@@ -242,6 +241,9 @@ class ClipboardMenu(Palette):
         jobject.metadata['icon-color'] = color
         jobject.metadata['mime_type'] = mime_type
         jobject.file_path = file_path
-        datastore.write(jobject, transfer_ownership=transfer_ownership)
+
+        uid = datastore.write(jobject, transfer_ownership=transfer_ownership)
+
+        jobject.metadata['uid'] = uid
 
         return jobject

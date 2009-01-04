@@ -347,7 +347,7 @@ def write(metadata, file_path='', update_mtime=True):
         metadata['mtime'] = datetime.now().isoformat()
         metadata['timestamp'] = int(time.time())
 
-    if metadata['mountpoint'] == '/':
+    if metadata.get('mountpoint', '/') == '/':
         if metadata.get('uid', ''):
             object_id = _get_datastore().update(metadata['uid'],
                                                  dbus.Dictionary(metadata),

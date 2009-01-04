@@ -197,7 +197,7 @@ def resume(metadata, bundle_id=None):
 
         activity_id = metadata.get('activity_id', '')
 
-        if metadata['mountpoint'] == '/':
+        if metadata.get('mountpoint', '/') == '/':
             object_id = metadata['uid']
         else:
             object_id = model.copy(metadata, '/')
