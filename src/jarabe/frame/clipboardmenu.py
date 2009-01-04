@@ -242,8 +242,6 @@ class ClipboardMenu(Palette):
         jobject.metadata['mime_type'] = mime_type
         jobject.file_path = file_path
 
-        uid = datastore.write(jobject, transfer_ownership=transfer_ownership)
-
-        jobject.metadata['uid'] = uid
+        datastore.write(jobject, transfer_ownership=transfer_ownership)
 
         return jobject

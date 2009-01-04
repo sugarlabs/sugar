@@ -105,8 +105,8 @@ class ObjectPalette(Palette):
     def __clipboard_get_func_cb(self, clipboard, selection_data, info, data):
         # Get hold of a reference so the temp file doesn't get deleted
         self._temp_file_path = model.get_file(self._metadata['uid'])
-        logging.debug('__clipboard_get_func_cb %r' % file_path)
-        selection_data.set_uris(['file://' + file_path])
+        logging.debug('__clipboard_get_func_cb %r' % self._temp_file_path)
+        selection_data.set_uris(['file://' + self._temp_file_path])
 
     def __clipboard_clear_func_cb(self, clipboard, data):
         # Release and delete the temp file
