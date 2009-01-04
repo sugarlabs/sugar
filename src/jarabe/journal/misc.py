@@ -210,14 +210,15 @@ def resume(metadata, bundle_id=None):
             activityfactory.create_with_object_id(bundle, object_id)
 
 def is_activity_bundle(metadata):
-    return metadata['mime_type'] == ActivityBundle.MIME_TYPE or \
-           metadata['mime_type'] == ActivityBundle.DEPRECATED_MIME_TYPE
+    mime_type = metadata.get('mime_type', '')
+    return mime_type == ActivityBundle.MIME_TYPE or \
+           mime_type == ActivityBundle.DEPRECATED_MIME_TYPE
 
 def is_content_bundle(metadata):
-    return metadata['mime_type'] == ContentBundle.MIME_TYPE
+    return metadata.get('mime_type', '') == ContentBundle.MIME_TYPE
 
 def is_journal_bundle(metadata):
-    return metadata['mime_type'] == JournalEntryBundle.MIME_TYPE
+    return metadata.get('mime_type', '') == JournalEntryBundle.MIME_TYPE
 
 def is_bundle(metadata):
     return is_activity_bundle(metadata) or is_content_bundle(metadata) or \
