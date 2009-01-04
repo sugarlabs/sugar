@@ -1,0 +1,24 @@
+diff --git a/src/hardware/NetworkManagerInfo.conf b/src/hardware/NetworkManagerInfo.conf
+index 4fb8270..fc12166 100644
+--- a/src/hardware/NetworkManagerInfo.conf
++++ b/src/hardware/NetworkManagerInfo.conf
+@@ -6,19 +6,16 @@
+ 		<allow own="org.freedesktop.NetworkManagerInfo"/>
+ 
+ 		<allow send_destination="org.freedesktop.NetworkManagerInfo"/>
+-                <allow send_interface="org.freedesktop.NetworkManagerInfo"/>
+ 	</policy>
+ 	<policy at_console="true">
+ 		<allow own="org.freedesktop.NetworkManagerInfo"/>
+ 
+ 		<allow send_destination="org.freedesktop.NetworkManagerInfo"/>
+-                <allow send_interface="org.freedesktop.NetworkManagerInfo"/>
+ 	</policy>
+ 	<policy context="default">
+ 		<deny own="org.freedesktop.NetworkManagerInfo"/>
+ 
+ 		<deny send_destination="org.freedesktop.NetworkManagerInfo"/>
+-		<deny send_interface="org.freedesktop.NetworkManagerInfo"/>
+ 	</policy>
+ 
+         <limit name="max_replies_per_connection">512</limit>
