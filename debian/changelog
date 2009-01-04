@@ -1,3 +1,11 @@
+sugar (0.82.8-4) unstable; urgency=high
+
+  * Drop send_interface dbus hints. Closes:bug#510657, thanks to Simon
+    McVittie.
+  * Set urgency=high as is related to security bugs #503532 and #508032.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sun, 04 Jan 2009 21:20:18 +0100
+
 sugar (0.82.8-3) unstable; urgency=low
 
   * Update CDBS snippet makefile.mk: Cleanup check stamp dir for
