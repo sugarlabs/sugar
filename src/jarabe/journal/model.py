@@ -256,7 +256,20 @@ def _get_datastore():
         remote_object = bus.get_object(DS_DBUS_SERVICE, DS_DBUS_PATH)
         _datastore = dbus.Interface(remote_object, DS_DBUS_INTERFACE)
 
+        _datastore.connect_to_signal('Created', _datastore_created_cb)
+        _datastore.connect_to_signal('Updated', _datastore_updated_cb)
+        _datastore.connect_to_signal('Deleted', _datastore_deleted_cb)
+
     return _datastore
+
+def _datastore_created_cb(object_id):
+    created.send(None, object_id=object_id)
+
+def _datastore_updated_cb(object_id):
+    updated.send(None, object_id=object_id)
+
+def _datastore_deleted_cb(object_id):
+    deleted.send(None, object_id=object_id)
 
 def find(query):
     """Returns a ResultSet

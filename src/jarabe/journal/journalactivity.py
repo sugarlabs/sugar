@@ -246,18 +246,18 @@ class JournalActivity(Window):
         self._main_toolbox.search_toolbar.set_mount_point(mount_point)
         self._main_toolbox.set_current_toolbar(0)
 
-    def __model_created_cb(self, object_id):
-        self._check_for_bundle(object_id)
+    def __model_created_cb(self, sender, **kwargs):
+        self._check_for_bundle(kwargs['object_id'])
         self._main_toolbox.search_toolbar.refresh_filters()
         self._check_available_space()
 
-    def __model_updated_cb(self, object_id):
-        self._check_for_bundle(object_id)
+    def __model_updated_cb(self, sender, **kwargs):
+        self._check_for_bundle(kwargs['object_id'])
         self._check_available_space()
 
-    def __model_deleted_cb(self, object_id):
+    def __model_deleted_cb(self, sender, **kwargs):
         if self.canvas == self._secondary_view and \
-                object_id == self._detail_view.props.metadata['uid']:
+                kwargs['object_id'] == self._detail_view.props.metadata['uid']:
             self.show_main_view()
 
     def _focus_in_event_cb(self, window, event):
@@ -268,6 +268,10 @@ class JournalActivity(Window):
         registry = bundleregistry.get_registry()
 
         metadata = model.get(object_id)
+        if metadata.get('progress', '').isdigit():
+            if int(metadata['progress']) < 100:
+                return
+
         bundle = misc.get_bundle(metadata)
         if bundle is None:
             return

@@ -87,12 +87,25 @@ def get_date(metadata):
 
 def get_bundle(metadata):
     try:
-        file_path = util.TempFilePath(model.get_file(metadata['uid']))
-        if is_activity_bundle(metadata) and os.path.exists(file_path):
+        if is_activity_bundle(metadata):
+            file_path = util.TempFilePath(model.get_file(metadata['uid']))
+            if not os.path.exists(file_path):
+                logging.warning('Invalid path: %r' % file_path)
+                return None
             return ActivityBundle(file_path)
-        elif is_content_bundle(metadata) and os.path.exists(file_path):
+
+        elif is_content_bundle(metadata):
+            file_path = util.TempFilePath(model.get_file(metadata['uid']))
+            if not os.path.exists(file_path):
+                logging.warning('Invalid path: %r' % file_path)
+                return None
             return ContentBundle(file_path)
-        elif is_journal_bundle(metadata) and os.path.exists(file_path):
+
+        elif is_journal_bundle(metadata):
+            file_path = util.TempFilePath(model.get_file(metadata['uid']))
+            if not os.path.exists(file_path):
+                logging.warning('Invalid path: %r' % file_path)
+                return None
             return JournalEntryBundle(file_path)
         else:
             return None
@@ -197,8 +210,8 @@ def resume(metadata, bundle_id=None):
             activityfactory.create_with_object_id(bundle, object_id)
 
 def is_activity_bundle(metadata):
-    return metadata['mime_type'] in \
-            [ActivityBundle.MIME_TYPE, ActivityBundle.DEPRECATED_MIME_TYPE]
+    return metadata['mime_type'] == ActivityBundle.MIME_TYPE or \
+           metadata['mime_type'] == ActivityBundle.DEPRECATED_MIME_TYPE
 
 def is_content_bundle(metadata):
     return metadata['mime_type'] == ContentBundle.MIME_TYPE
