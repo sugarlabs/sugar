@@ -317,9 +317,6 @@ class Frame(object):
                         lambda: self.remove_notification(icon))
 
     def remove_notification(self, icon):
-        if not isinstance(icon, NotificationIcon):
-            raise TypeError('icon must be a NotificationIcon.')
-
         if icon not in self._notif_by_icon:
             logging.debug('icon %r not in list of notifications.' % icon)
             return
