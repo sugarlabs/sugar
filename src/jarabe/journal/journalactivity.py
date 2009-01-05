@@ -60,15 +60,6 @@ class JournalActivityDBusService(dbus.service.Object):
         dbus.service.Object.__init__(self, bus_name, J_DBUS_PATH)
 
     @dbus.service.method(J_DBUS_INTERFACE,
-        in_signature='', out_signature='')
-    def FocusSearch(self):
-        """Become visible and give focus to the search entry
-        """
-        self._parent.present()
-        self._parent.show_main_view()
-        self._parent.search_grab_focus()
-
-    @dbus.service.method(J_DBUS_INTERFACE,
         in_signature='s', out_signature='')
     def ShowObject(self, object_id):
         """Pop-up journal and show object with object_id"""
@@ -331,6 +322,13 @@ class JournalActivity(Window):
 
     def set_active_volume(self, mount):
         self._volumes_toolbar.set_active_volume(mount)
+
+    def focus_search(self):
+        """Become visible and give focus to the search entry
+        """
+        self.present()
+        self.show_main_view()
+        self.search_grab_focus()
 
 _journal = None
 
