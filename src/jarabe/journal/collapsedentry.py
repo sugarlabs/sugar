@@ -361,6 +361,8 @@ class CollapsedEntry(BaseCollapsedEntry):
             self._cancel_title_change()
         elif self.title.props.text != title:
             self.title.props.text = title
+            
+            self._metadata = model.get(self._metadata['uid'])
             self._metadata['title'] = title
             self._metadata['title_set_by_user'] = '1'
             model.write(self._metadata, update_mtime=False)
