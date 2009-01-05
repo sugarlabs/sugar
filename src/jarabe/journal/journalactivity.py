@@ -244,6 +244,11 @@ class JournalActivity(Window):
 
     def __model_updated_cb(self, sender, **kwargs):
         self._check_for_bundle(kwargs['object_id'])
+
+        if self.canvas == self._secondary_view and \
+                kwargs['object_id'] == self._detail_view.props.metadata['uid']:
+            self._detail_view.refresh()
+
         self._check_available_space()
 
     def __model_deleted_cb(self, sender, **kwargs):
