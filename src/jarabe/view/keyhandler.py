@@ -33,7 +33,7 @@ from jarabe.model import shell
 from jarabe.view.tabbinghandler import TabbingHandler
 from jarabe.model.shell import ShellModel
 from jarabe import config
-from jarabe.journal.journalactivity import get_journal
+from jarabe.journal import journalactivity
 
 _BRIGHTNESS_STEP = 2
 _VOLUME_STEP = sound.VOLUME_STEP
@@ -251,7 +251,7 @@ class KeyHandler(object):
             os.kill(pid, signal.SIGTERM)
 
     def handle_open_search(self):
-        get_journal().focus_search()
+        journalactivity.get_journal().focus_search()
 
     def _key_pressed_cb(self, grabber, keycode, state):
         key = grabber.get_key(keycode, state)
