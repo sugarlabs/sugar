@@ -32,6 +32,7 @@ from sugar.graphics.xocolor import XoColor
 from sugar.graphics import style
 
 from jarabe.journal import journalactivity
+from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
 _icons = {}
 
@@ -63,7 +64,10 @@ class DeviceView(TrayIcon):
         self.connect('button-release-event', self.__button_release_event_cb)
 
     def create_palette(self):
-        return VolumePalette(self._mount)
+        palette = VolumePalette(self._mount)
+        palette.props.invoker = FrameWidgetInvoker(self)
+        palette.set_group_id('frame')
+        return palette
 
     def __button_release_event_cb(self, widget, event):
         journal = journalactivity.get_journal()
