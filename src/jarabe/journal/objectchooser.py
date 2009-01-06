@@ -39,7 +39,7 @@ class ObjectChooser(gtk.Window):
                      ([int]))
     }
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, data_type):
         gtk.Window.__init__(self)
         self.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
         self.set_decorated(False)
@@ -88,6 +88,9 @@ class ObjectChooser(gtk.Window):
         width = gtk.gdk.screen_width() - style.GRID_CELL_SIZE * 2
         height = gtk.gdk.screen_height() - style.GRID_CELL_SIZE * 2        
         self.set_size_request(width, height)
+
+        if data_type:
+            self._toolbar.set_data_type(data_type)
 
     def __realize_cb(self, chooser, parent):
         self.window.set_transient_for(parent)
