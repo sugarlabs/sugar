@@ -245,18 +245,18 @@ class SearchToolbar(gtk.Toolbar):
             self._query = new_query
             self.emit('query-changed', self._query)
 
-    def set_data_type(self, data_type):
+    def set_what_filter(self, what_filter):
         model = self._what_search_combo.get_model()
-        data_type_index = -1
+        what_filter_index = -1
         for i in range(0, len(model) - 1):
-            if model[i][0] == data_type:
-                data_type_index = i
+            if model[i][0] == what_filter:
+                what_filter = i
                 break
 
-        if data_type_index == -1:
-            logging.warning('data_type %r not known' % data_type)
+        if what_filter_index == -1:
+            logging.warning('what_filter %r not known' % what_filter)
         else:
-            self._what_search_combo.set_active(data_type_index)
+            self._what_search_combo.set_active(what_filter_index)
 
     def refresh_filters(self):
         current_value = self._what_search_combo.props.value
