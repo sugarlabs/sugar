@@ -39,7 +39,7 @@ class ObjectChooser(gtk.Window):
                      ([int]))
     }
 
-    def __init__(self, parent=None, data_type):
+    def __init__(self, parent=None, data_type=''):
         gtk.Window.__init__(self)
         self.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
         self.set_decorated(False)
