@@ -232,7 +232,7 @@ class InplaceResultSet(BaseResultSet):
             if S_IFMT(stat.st_mode) == S_IFDIR:
                 files.extend(self._get_all_files(full_path))
             elif S_IFMT(stat.st_mode) == S_IFREG:
-                files.append((full_path, stat))
+                files.append((full_path, stat, int(stat.st_mtime)))
 
         return files
 
@@ -241,7 +241,7 @@ class InplaceResultSet(BaseResultSet):
 
         if self._file_list is None:
             files = self._get_all_files(mount_point)
-            files.sort(lambda a, b: int(b[1].st_mtime - a[1].st_mtime))
+            files.sort(lambda a, b: b[2] - a[2])
             self._file_list = files
 
         offset = int(query.get('offset', 0))
@@ -251,7 +251,7 @@ class InplaceResultSet(BaseResultSet):
         files = self._file_list[offset:offset + limit]
 
         result = []
-        for file_path, stat in files:
+        for file_path, stat, mtime_ in files:
             metadata = _get_file_metadata(file_path, stat)
             result.append(metadata)
 
