@@ -47,8 +47,8 @@ class BaseListView(gtk.HBox):
         self._result_set = None
         self._entries = []
         self._page_size = 0
-        self._last_value = -1
         self._reflow_sid = 0
+        self._do_scroll_hid = None
 
         gtk.HBox.__init__(self)
         self.set_flags(gtk.HAS_FOCUS|gtk.CAN_FOCUS)
@@ -126,19 +126,13 @@ class BaseListView(gtk.HBox):
             self._vscrollbar.hide()
 
     def _vadjustment_value_changed_cb(self, vadjustment):
-        gobject.idle_add(self._do_scroll)
+        if self._do_scroll_hid is None:
+            self._do_scroll_hid = gobject.idle_add(self._do_scroll)
 
-    def _do_scroll(self, force=False):
-        import time
-        t = time.time()
+    def _do_scroll(self):
+        current_position = int(self._vadjustment.props.value)
 
-        value = int(self._vadjustment.props.value)
-
-        if value == self._last_value and not force:
-            return
-        self._last_value = value
-
-        self._result_set.seek(value)
+        self._result_set.seek(current_position)
         metadata_list = self._result_set.read(self._page_size)
 
         if self._result_set.length != self._vadjustment.props.upper:
@@ -147,9 +141,8 @@ class BaseListView(gtk.HBox):
 
         self._refresh_view(metadata_list)
         self._dirty = False
-        
-        logging.debug('_do_scroll %r %r\n' % (value, (time.time() - t)))
-        
+
+        self._do_scroll_hid = None                
         return False
 
     def _refresh_view(self, metadata_list):
@@ -207,7 +200,7 @@ class BaseListView(gtk.HBox):
                 self._show_message(EMPTY_JOURNAL)
         else:
             self._clear_message()
-            self._do_scroll(force=True)
+            self._do_scroll()
 
     def _scroll_event_cb(self, hbox, event):
         if event.direction == gtk.gdk.SCROLL_UP:
@@ -286,7 +279,7 @@ class BaseListView(gtk.HBox):
         if self._vadjustment.props.value > max_value:
             self._vadjustment.props.value = max_value
         else:
-            self._do_scroll(force=True)
+            self._do_scroll()
 
         self._reflow_sid = 0
 
