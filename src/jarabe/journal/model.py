@@ -213,6 +213,7 @@ class InplaceResultSet(BaseResultSet):
     def __init__(self, query, mount_point):
         BaseResultSet.__init__(self, query)
         self._mount_point = mount_point
+        self._file_list = None
 
     def find(self, query):
         entries, total_count = self._query_mount_point(self._mount_point, query)
@@ -238,13 +239,16 @@ class InplaceResultSet(BaseResultSet):
     def _query_mount_point(self, mount_point, query):
         t = time.time()
 
-        files = self._get_all_files(mount_point)
-        offset = int(query.get('offset', 0))
-        limit  = int(query.get('limit', len(files)))
+        if self._file_list is None:
+            files = self._get_all_files(mount_point)
+            files.sort(lambda a, b: int(b[1].st_mtime - a[1].st_mtime))
+            self._file_list = files
 
-        total_count = len(files)
-        files.sort(lambda a, b: int(b[1].st_mtime - a[1].st_mtime))
-        files = files[offset:offset + limit]
+        offset = int(query.get('offset', 0))
+        limit  = int(query.get('limit', len(self._file_list)))
+        total_count = len(self._file_list)
+
+        files = self._file_list[offset:offset + limit]
 
         result = []
         for file_path, stat in files:
