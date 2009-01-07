@@ -292,7 +292,7 @@ def get(object_id):
     """Returns the metadata for an object
     """
     if os.path.exists(object_id):
-        stat = os.stat(path)
+        stat = os.stat(object_id)
         metadata = _get_file_metadata(object_id, stat)
         metadata['mountpoint'] = _get_mount_point(object_id)
     else:
