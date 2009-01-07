@@ -73,7 +73,7 @@ class _Cache(object):
         else:
             return self._array[key]
 
-class ResultSet(object):
+class BaseResultSet(object):
     """Encapsulates the result of a query
     """
 
@@ -90,13 +90,137 @@ class ResultSet(object):
     def get_length(self):
         if self._total_count == -1:
             query = self._query.copy()
-            query['limit'] = ResultSet._CACHE_LIMIT
-            entries, self._total_count = self._find(query)
+            query['limit'] = BaseResultSet._CACHE_LIMIT
+            entries, self._total_count = self.find(query)
             self._cache.append_all(entries)
             self._offset = 0
         return self._total_count
 
     length = property(get_length)
+
+    def find(self, query):
+        raise NotImplementedError()
+
+    def seek(self, position):
+        self._position = position
+
+    def read(self, max_count):
+        logging.debug('ResultSet.read position: %r' % self._position)
+
+        if max_count * 5 > BaseResultSet._CACHE_LIMIT:
+            raise RuntimeError(
+                    'max_count (%i) too big for BaseResultSet._CACHE_LIMIT'
+                    ' (%i).' % (max_count, BaseResultSet._CACHE_LIMIT))
+
+        if self._position == -1:
+            self.seek(0)
+
+        if self._position < self._offset:
+            remaining_forward_entries = 0
+        else:
+            remaining_forward_entries = self._offset + len(self._cache) - \
+                                        self._position
+
+        if self._position > self._offset + len(self._cache):
+            remaining_backwards_entries = 0
+        else:
+            remaining_backwards_entries = self._position - self._offset
+
+        last_cached_entry = self._offset + len(self._cache)
+
+        if (remaining_forward_entries <= 0 and
+                    remaining_backwards_entries <= 0) or \
+                max_count > BaseResultSet._CACHE_LIMIT:
+
+            # Total cache miss: remake it
+            offset = max(0, self._position - max_count)
+            logging.debug('remaking cache, offset: %r limit: %r' % \
+                          (offset, max_count * 2))
+            query = self._query.copy()
+            query['limit'] = BaseResultSet._CACHE_LIMIT
+            query['offset'] = offset
+            entries, self._total_count = self.find(query)
+
+            self._cache.remove_all(self._cache)
+            self._cache.append_all(entries)
+            self._offset = offset
+            
+        elif remaining_forward_entries < 2 * max_count and \
+             last_cached_entry < self._total_count:
+
+            # Add one page to the end of cache
+            logging.debug('appending one more page, offset: %r' % \
+                          last_cached_entry)
+            query = self._query.copy()
+            query['limit'] = max_count
+            query['offset'] = last_cached_entry
+            entries, self._total_count = self.find(query)
+
+            # update cache
+            self._cache.append_all(entries)
+
+            # apply the cache limit
+            objects_excess = len(self._cache) - BaseResultSet._CACHE_LIMIT
+            if objects_excess > 0:
+                self._offset += objects_excess
+                self._cache.remove_all(self._cache[:objects_excess])
+
+        elif remaining_backwards_entries < 2 * max_count and self._offset > 0:
+
+            # Add one page to the beginning of cache
+            limit = min(self._offset, max_count)
+            self._offset = max(0, self._offset - max_count)
+
+            logging.debug('prepending one more page, offset: %r limit: %r' % 
+                          (self._offset, limit))
+            query = self._query.copy()
+            query['limit'] = limit
+            query['offset'] = self._offset
+            entries, self._total_count = self.find(query)
+
+            # update cache
+            self._cache.prepend_all(entries)
+
+            # apply the cache limit
+            objects_excess = len(self._cache) - BaseResultSet._CACHE_LIMIT
+            if objects_excess > 0:
+                self._cache.remove_all(self._cache[-objects_excess:])
+        else:
+            logging.debug('cache hit and no need to grow the cache')
+
+        first_pos = self._position - self._offset
+        last_pos = self._position - self._offset + max_count
+        return self._cache[first_pos:last_pos]
+
+class DatastoreResultSet(BaseResultSet):
+    """Encapsulates the result of a query on the datastore
+    """
+    def __init__(self, query):
+        BaseResultSet.__init__(self, query)
+
+    def find(self, query):
+        entries, total_count = _get_datastore().find(query, PROPERTIES,
+                                                     byte_arrays=True)
+
+        for entry in entries:
+            entry['mountpoint'] = '/'
+
+        return entries, total_count
+
+class InplaceResultSet(BaseResultSet):
+    """Encapsulates the result of a query on a mount point
+    """
+    def __init__(self, query, mount_point):
+        BaseResultSet.__init__(self, query)
+        self._mount_point = mount_point
+
+    def find(self, query):
+        entries, total_count = self._query_mount_point(self._mount_point, query)
+
+        for entry in entries:
+            entry['mountpoint'] = self._mount_point
+
+        return entries, total_count
 
     def _get_all_files(self, dir_path):
         files = []
@@ -130,115 +254,6 @@ class ResultSet(object):
         logging.debug('_query_mount_point took %f s.' % (time.time() - t))
 
         return result, total_count
-
-    def _find(self, query):
-        mount_points = query.get('mountpoints', ['/'])
-        if mount_points is None or len(mount_points) != 1:
-            raise ValueError('Exactly one mount point must be specified')
-
-        if mount_points[0] == '/':
-            data_store = _get_datastore()
-            entries, total_count = _get_datastore().find(query, PROPERTIES,
-                                                         byte_arrays=True)
-        else:
-            entries, total_count = self._query_mount_point(mount_points[0],
-                                                           query)
-
-        for entry in entries:
-            entry['mountpoint'] = mount_points[0]
-
-        return entries, total_count
-
-    def seek(self, position):
-        self._position = position
-
-    def read(self, max_count):
-        logging.debug('ResultSet.read position: %r' % self._position)
-
-        if max_count * 5 > ResultSet._CACHE_LIMIT:
-            raise RuntimeError(
-                    'max_count (%i) too big for ResultSet._CACHE_LIMIT'
-                    ' (%i).' % (max_count, ResultSet._CACHE_LIMIT))
-
-        if self._position == -1:
-            self.seek(0)
-
-        if self._position < self._offset:
-            remaining_forward_entries = 0
-        else:
-            remaining_forward_entries = self._offset + len(self._cache) - \
-                                        self._position
-
-        if self._position > self._offset + len(self._cache):
-            remaining_backwards_entries = 0
-        else:
-            remaining_backwards_entries = self._position - self._offset
-
-        last_cached_entry = self._offset + len(self._cache)
-
-        if (remaining_forward_entries <= 0 and
-                    remaining_backwards_entries <= 0) or \
-                max_count > ResultSet._CACHE_LIMIT:
-
-            # Total cache miss: remake it
-            offset = max(0, self._position - max_count)
-            logging.debug('remaking cache, offset: %r limit: %r' % \
-                          (offset, max_count * 2))
-            query = self._query.copy()
-            query['limit'] = ResultSet._CACHE_LIMIT
-            query['offset'] = offset
-            entries, self._total_count = self._find(query)
-
-            self._cache.remove_all(self._cache)
-            self._cache.append_all(entries)
-            self._offset = offset
-            
-        elif remaining_forward_entries < 2 * max_count and \
-             last_cached_entry < self._total_count:
-
-            # Add one page to the end of cache
-            logging.debug('appending one more page, offset: %r' % \
-                          last_cached_entry)
-            query = self._query.copy()
-            query['limit'] = max_count
-            query['offset'] = last_cached_entry
-            entries, self._total_count = self._find(query)
-
-            # update cache
-            self._cache.append_all(entries)
-
-            # apply the cache limit
-            objects_excess = len(self._cache) - ResultSet._CACHE_LIMIT
-            if objects_excess > 0:
-                self._offset += objects_excess
-                self._cache.remove_all(self._cache[:objects_excess])
-
-        elif remaining_backwards_entries < 2 * max_count and self._offset > 0:
-
-            # Add one page to the beginning of cache
-            limit = min(self._offset, max_count)
-            self._offset = max(0, self._offset - max_count)
-
-            logging.debug('prepending one more page, offset: %r limit: %r' % 
-                          (self._offset, limit))
-            query = self._query.copy()
-            query['limit'] = limit
-            query['offset'] = self._offset
-            entries, self._total_count = self._find(query)
-
-            # update cache
-            self._cache.prepend_all(entries)
-
-            # apply the cache limit
-            objects_excess = len(self._cache) - ResultSet._CACHE_LIMIT
-            if objects_excess > 0:
-                self._cache.remove_all(self._cache[-objects_excess:])
-        else:
-            logging.debug('cache hit and no need to grow the cache')
-
-        first_pos = self._position - self._offset
-        last_pos = self._position - self._offset + max_count
-        return self._cache[first_pos:last_pos]
 
 def _get_file_metadata(path, stat):
     client = gconf.client_get_default()
@@ -278,7 +293,15 @@ def find(query):
     """
     if 'order_by' not in query:
         query['order_by'] = ['-mtime']
-    return ResultSet(query)
+    
+    mount_points = query.pop('mountpoints', ['/'])
+    if mount_points is None or len(mount_points) != 1:
+        raise ValueError('Exactly one mount point must be specified')
+
+    if mount_points[0] == '/':
+        return DatastoreResultSet(query)
+    else:
+        return InplaceResultSet(query, mount_points[0])
 
 def _get_mount_point(path):
     dir_path = os.path.dirname(path)
