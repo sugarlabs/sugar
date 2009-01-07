@@ -364,7 +364,10 @@ def write(metadata, file_path='', update_mtime=True):
         if not os.path.exists(file_path):
             raise ValueError('Entries without a file cannot be copied to '
                              'removable devices')
+
         file_name = _get_file_name(metadata['title'], metadata['mime_type'])
+        file_name = _get_unique_file_name(metadata['mountpoint'], file_name)
+
         destination_path = os.path.join(metadata['mountpoint'], file_name)
         shutil.copy(file_path, destination_path)
         object_id = destination_path
@@ -372,10 +375,38 @@ def write(metadata, file_path='', update_mtime=True):
     return object_id
 
 def _get_file_name(title, mime_type):
-    # TODO: sanitize title for common filesystems
-    # TODO: make as robust as possible, this function should never fail.
-    # TODO: don't append the same extension again and again
-    return '%s.%s' % (title, mime.get_primary_extension(mime_type))
+    file_name = title
+
+    extension = '.' + mime.get_primary_extension(mime_type)
+    if not file_name.endswith(extension):
+        file_name += extension
+
+    # Invalid characters in VFAT filenames. From
+    # http://en.wikipedia.org/wiki/File_Allocation_Table
+    invalid_chars = ['/', '\\', ':', '*', '?', '"', '<', '>', '|', '\x7F']
+    invalid_chars.extend([chr(x) for x in range(0, 32)])
+    for char in invalid_chars:
+        file_name = file_name.replace(char, '_')
+
+    # FAT limit is 255, leave some space for uniqueness
+    max_len = 250
+    if len(file_name) > max_len:
+        name, extension = os.path.splitext(file_name)
+        file_name = name[0:max_len - extension] + extension
+    
+    return file_name
+
+def _get_unique_file_name(mount_point, file_name):
+    if os.path.exists(os.path.join(mount_point, file_name)):
+        i = 1
+        while len(file_name) <= 255:
+            name, extension = os.path.splitext(file_name)
+            file_name = name + '_' + str(i) + extension
+            if not os.path.exists(os.path.join(mount_point, file_name)):
+                break
+            i += 1
+
+    return file_name
 
 created = dispatch.Signal()
 updated = dispatch.Signal()
