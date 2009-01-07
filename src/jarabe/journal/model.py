@@ -359,9 +359,7 @@ def copy(metadata, mount_point):
     """Copies an object to another mount point
     """
     metadata = get(metadata['uid'])
-
     file_path = get_file(metadata['uid'])
-    file_path.delete = False
 
     metadata['mountpoint'] = mount_point
     del metadata['uid']
