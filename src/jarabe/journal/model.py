@@ -19,6 +19,7 @@ import os
 from datetime import datetime
 import time
 import shutil
+from stat import S_IFMT, S_IFDIR, S_IFREG
 
 import dbus
 import gconf
@@ -101,11 +102,13 @@ class ResultSet(object):
         files = []
         for entry in os.listdir(dir_path):
             full_path = os.path.join(dir_path, entry)
-            if os.path.isdir(full_path):
+
+            stat = os.stat(full_path)
+            if S_IFMT(stat.st_mode) == S_IFDIR:
                 files.extend(self._get_all_files(full_path))
-            elif os.path.isfile(full_path):
-                stat = os.stat(full_path)
-                files.append((full_path, stat.st_mtime))
+            elif S_IFMT(stat.st_mode) == S_IFREG:
+                files.append((full_path, stat))
+
         return files
 
     def _query_mount_point(self, mount_point, query):
@@ -116,12 +119,12 @@ class ResultSet(object):
         limit  = int(query.get('limit', len(files)))
 
         total_count = len(files)
-        files.sort(lambda a, b: int(b[1] - a[1]))
+        files.sort(lambda a, b: int(b[1].st_mtime - a[1].st_mtime))
         files = files[offset:offset + limit]
 
         result = []
-        for file_path, timestamp_ in files:
-            metadata = _get_file_metadata(file_path)
+        for file_path, stat in files:
+            metadata = _get_file_metadata(file_path, stat)
             result.append(metadata)
 
         logging.debug('_query_mount_point took %f s.' % (time.time() - t))
@@ -237,8 +240,7 @@ class ResultSet(object):
         last_pos = self._position - self._offset + max_count
         return self._cache[first_pos:last_pos]
 
-def _get_file_metadata(path):
-    stat = os.stat(path)
+def _get_file_metadata(path, stat):
     client = gconf.client_get_default()
     return {'uid': path,
             'title': os.path.basename(path),
@@ -290,7 +292,8 @@ def get(object_id):
     """Returns the metadata for an object
     """
     if os.path.exists(object_id):
-        metadata = _get_file_metadata(object_id)
+        stat = os.stat(path)
+        metadata = _get_file_metadata(object_id, stat)
         metadata['mountpoint'] = _get_mount_point(object_id)
     else:
         metadata = _get_datastore().get_properties(object_id, byte_arrays=True)
@@ -341,7 +344,7 @@ def copy(metadata, mount_point):
 def write(metadata, file_path='', update_mtime=True):
     """Creates or updates an entry for that id
     """
-    logging.debug('model.write %r %r %r' % (metadata['uid'], file_path,
+    logging.debug('model.write %r %r %r' % (metadata.get('uid', ''), file_path,
                                             update_mtime))
     if update_mtime:
         metadata['mtime'] = datetime.now().isoformat()
