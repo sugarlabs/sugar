@@ -226,7 +226,7 @@ class InplaceResultSet(BaseResultSet):
     def _get_all_files(self, dir_path):
         files = []
         for entry in os.listdir(dir_path):
-            full_path = os.path.join(dir_path, entry)
+            full_path = dir_path + '/' + entry
 
             stat = os.stat(full_path)
             if S_IFMT(stat.st_mode) == S_IFDIR:
