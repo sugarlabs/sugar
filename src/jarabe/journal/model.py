@@ -223,26 +223,23 @@ class InplaceResultSet(BaseResultSet):
 
         return entries, total_count
 
-    def _get_all_files(self, dir_path):
-        files = []
+    def _build_file_list(self, dir_path):
         for entry in os.listdir(dir_path):
             full_path = dir_path + '/' + entry
 
             stat = os.stat(full_path)
             if S_IFMT(stat.st_mode) == S_IFDIR:
-                files.extend(self._get_all_files(full_path))
+                self._build_file_list(full_path)
             elif S_IFMT(stat.st_mode) == S_IFREG:
-                files.append((full_path, stat, int(stat.st_mtime)))
-
-        return files
+                self._file_list.append((full_path, stat, int(stat.st_mtime)))
 
     def _query_mount_point(self, mount_point, query):
         t = time.time()
 
         if self._file_list is None:
-            files = self._get_all_files(mount_point)
-            files.sort(lambda a, b: b[2] - a[2])
-            self._file_list = files
+            self._file_list = []
+            self._build_file_list(mount_point)
+            self._file_list.sort(lambda a, b: b[2] - a[2])
 
         offset = int(query.get('offset', 0))
         limit  = int(query.get('limit', len(self._file_list)))
