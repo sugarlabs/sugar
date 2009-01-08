@@ -27,6 +27,7 @@ import gtk
 from sugar.graphics.toolbox import Toolbox
 from sugar.graphics.toolcombobox import ToolComboBox
 from sugar.graphics.toolbutton import ToolButton
+from sugar.graphics.toggletoolbutton import ToggleToolButton
 from sugar.graphics.combobox import ComboBox
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
@@ -62,10 +63,6 @@ class MainToolbox(Toolbox):
         self.search_toolbar.set_size_request(-1, style.GRID_CELL_SIZE)
         self.add_toolbar(_('Search'), self.search_toolbar)
         self.search_toolbar.show()
-        
-        #self.manage_toolbar = ManageToolbar()
-        #self.add_toolbar(_('Manage'), self.manage_toolbar)
-        #self.manage_toolbar.show()
 
 class SearchToolbar(gtk.Toolbar):
     __gtype_name__ = 'SearchToolbar'
@@ -89,6 +86,12 @@ class SearchToolbar(gtk.Toolbar):
         self._search_entry.add_clear_button()
         self._autosearch_timer = None
         self._add_widget(self._search_entry, expand=True)
+
+        self._favorite_button = ToggleToolButton('emblem-favorite')
+        self._favorite_button.connect('toggled',
+                                      self.__favorite_button_toggled_cb)
+        self.insert(self._favorite_button, -1)
+        self._favorite_button.show()
 
         self._what_search_combo = ComboBox()
         self._what_combo_changed_sid = self._what_search_combo.connect(
@@ -159,8 +162,13 @@ class SearchToolbar(gtk.Toolbar):
 
     def _build_query(self):
         query = {}
+
         if self._mount_point:
             query['mountpoints'] = [self._mount_point]
+
+        if self._favorite_button.props.active:
+            query['keep'] = 1
+
         if self._what_search_combo.props.value:
             value = self._what_search_combo.props.value
             generic_type = mime.get_generic_type(value)
@@ -209,6 +217,9 @@ class SearchToolbar(gtk.Toolbar):
                 date_range[1].isoformat())
 
     def _combo_changed_cb(self, combo):
+        self._update_if_needed()
+
+    def _update_if_needed(self):
         new_query = self._build_query()
         if self._query != new_query:
             self._query = new_query
@@ -305,11 +316,8 @@ class SearchToolbar(gtk.Toolbar):
             self._what_search_combo.handler_unblock(
                     self._what_combo_changed_sid)
 
-class ManageToolbar(gtk.Toolbar):
-    __gtype_name__ = 'ManageToolbar'
-
-    def __init__(self):
-        gtk.Toolbar.__init__(self)
+    def __favorite_button_toggled_cb(self, favorite_button):
+        self._update_if_needed()
 
 class DetailToolbox(Toolbox):
     def __init__(self):
