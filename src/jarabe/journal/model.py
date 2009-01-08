@@ -20,6 +20,7 @@ from datetime import datetime
 import time
 import shutil
 from stat import S_IFMT, S_IFDIR, S_IFREG
+import traceback
 
 import dbus
 import gconf
@@ -226,12 +227,15 @@ class InplaceResultSet(BaseResultSet):
     def _build_file_list(self, dir_path):
         for entry in os.listdir(dir_path):
             full_path = dir_path + '/' + entry
-
-            stat = os.stat(full_path)
-            if S_IFMT(stat.st_mode) == S_IFDIR:
-                self._build_file_list(full_path)
-            elif S_IFMT(stat.st_mode) == S_IFREG:
-                self._file_list.append((full_path, stat, int(stat.st_mtime)))
+            try:
+                stat = os.stat(full_path)
+                if S_IFMT(stat.st_mode) == S_IFDIR:
+                    self._build_file_list(full_path)
+                elif S_IFMT(stat.st_mode) == S_IFREG:
+                    self._file_list.append((full_path, stat, int(stat.st_mtime)))
+            except Exception, e:
+                logging.error('Error reading file %r: %r' % \
+                              (full_path, traceback.format_exc()))
 
     def _query_mount_point(self, mount_point, query):
         t = time.time()
