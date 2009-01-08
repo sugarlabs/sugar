@@ -192,8 +192,11 @@ class BaseListView(gtk.HBox):
         self._vadjustment.props.value = min(self._vadjustment.props.value,
                 self._result_set.length - self._page_size)
         if self._result_set.length == 0:
+            # FIXME: This is a hack, we shouldn't have to update this every time
+            # a new search term is added.
             if self._query.get('query', '') or \
                    self._query.get('mime_type', '') or \
+                   self._query.get('keep', '') or \
                    self._query.get('mtime', ''):
                 self._show_message(NO_MATCH)
             else:
