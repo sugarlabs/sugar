@@ -66,11 +66,6 @@ class DetailView(gtk.VBox):
     def _update_view(self):
         if self._expanded_entry:
             self._root.remove(self._expanded_entry)
-
-            # Work around pygobject bug #479227
-            self._expanded_entry.remove_all()
-            import gc
-            gc.collect()
         self._expanded_entry = ExpandedEntry(self._metadata)
         self._root.append(self._expanded_entry, hippo.PACK_EXPAND)
 
