@@ -22,6 +22,7 @@ import shutil
 from stat import S_IFMT, S_IFDIR, S_IFREG
 import traceback
 
+import gobject
 import dbus
 import gconf
 
@@ -87,6 +88,12 @@ class BaseResultSet(object):
 
         self._offset = 0
         self._cache = _Cache()
+
+        self.ready = dispatch.Signal()
+        self.progress = dispatch.Signal()
+
+    def setup(self):
+        self.ready.send(self)
 
     def get_length(self):
         if self._total_count == -1:
@@ -215,35 +222,21 @@ class InplaceResultSet(BaseResultSet):
         BaseResultSet.__init__(self, query)
         self._mount_point = mount_point
         self._file_list = None
+        self._pending_directories = 0
+
+    def setup(self):
+        self._file_list = []
+        self._recurse_dir(self._mount_point)
+
+    def setup_ready(self):
+        self._file_list.sort(lambda a, b: b[2] - a[2])
+        self.ready.send(self)
 
     def find(self, query):
-        entries, total_count = self._query_mount_point(self._mount_point, query)
-
-        for entry in entries:
-            entry['mountpoint'] = self._mount_point
-
-        return entries, total_count
-
-    def _build_file_list(self, dir_path):
-        for entry in os.listdir(dir_path):
-            full_path = dir_path + '/' + entry
-            try:
-                stat = os.stat(full_path)
-                if S_IFMT(stat.st_mode) == S_IFDIR:
-                    self._build_file_list(full_path)
-                elif S_IFMT(stat.st_mode) == S_IFREG:
-                    self._file_list.append((full_path, stat, int(stat.st_mtime)))
-            except Exception, e:
-                logging.error('Error reading file %r: %r' % \
-                              (full_path, traceback.format_exc()))
-
-    def _query_mount_point(self, mount_point, query):
-        t = time.time()
-
         if self._file_list is None:
-            self._file_list = []
-            self._build_file_list(mount_point)
-            self._file_list.sort(lambda a, b: b[2] - a[2])
+            raise ValueError('Need to call setup() first')
+
+        t = time.time()
 
         offset = int(query.get('offset', 0))
         limit  = int(query.get('limit', len(self._file_list)))
@@ -251,14 +244,37 @@ class InplaceResultSet(BaseResultSet):
 
         files = self._file_list[offset:offset + limit]
 
-        result = []
+        entries = []
         for file_path, stat, mtime_ in files:
             metadata = _get_file_metadata(file_path, stat)
-            result.append(metadata)
+            metadata['mountpoint'] = self._mount_point
+            entries.append(metadata)
 
-        logging.debug('_query_mount_point took %f s.' % (time.time() - t))
+        logging.debug('InplaceResultSet.find took %f s.' % (time.time() - t))
 
-        return result, total_count
+        return entries, total_count
+
+    def _recurse_dir(self, dir_path):
+        for entry in os.listdir(dir_path):
+            full_path = dir_path + '/' + entry
+            try:
+                stat = os.stat(full_path)
+                if S_IFMT(stat.st_mode) == S_IFDIR:
+                    self._pending_directories += 1
+                    gobject.idle_add(lambda s=full_path: self._recurse_dir(s))
+
+                elif S_IFMT(stat.st_mode) == S_IFREG:
+                    self._file_list.append((full_path, stat, int(stat.st_mtime)))
+                    self.progress.send(self)
+
+            except Exception, e:
+                logging.error('Error reading file %r: %r' % \
+                              (full_path, traceback.format_exc()))
+
+        if self._pending_directories == 0:
+            self.setup_ready()
+        else:
+            self._pending_directories -= 1
 
 def _get_file_metadata(path, stat):
     client = gconf.client_get_default()

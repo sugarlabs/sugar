@@ -18,6 +18,7 @@ import logging
 import traceback
 import sys
 from gettext import gettext as _
+import time
 
 import hippo
 import gobject
@@ -49,6 +50,8 @@ class BaseListView(gtk.HBox):
         self._page_size = 0
         self._reflow_sid = 0
         self._do_scroll_hid = None
+        self._progress_bar = None
+        self._last_progress_bar_pulse = None
 
         gtk.HBox.__init__(self)
         self.set_flags(gtk.HAS_FOCUS|gtk.CAN_FOCUS)
@@ -185,7 +188,17 @@ class BaseListView(gtk.HBox):
 
     def refresh(self):
         logging.debug('ListView.refresh query %r' % self._query)
+        self._stop_progress_bar()
+        self._start_progress_bar()
+
         self._result_set = model.find(self._query)
+        self._result_set.ready.connect(self.__result_set_ready_cb)
+        self._result_set.progress.connect(self.__result_set_progress_cb)
+        self._result_set.setup()
+
+    def __result_set_ready_cb(self, **kwargs):
+        self._stop_progress_bar()
+
         self._vadjustment.props.upper = self._result_set.length
         self._vadjustment.changed()
 
@@ -204,6 +217,33 @@ class BaseListView(gtk.HBox):
         else:
             self._clear_message()
             self._do_scroll()
+
+    def __result_set_progress_cb(self, **kwargs):
+        if time.time() - self._last_progress_bar_pulse > 0.05:
+            if self._progress_bar is not None:
+                self._progress_bar.pulse()
+                self._last_progress_bar_pulse = time.time()
+
+    def _start_progress_bar(self):
+        self.remove(self._canvas)
+        self.remove(self._vscrollbar)
+
+        alignment = gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0.5)
+        self.pack_start(alignment)
+        alignment.show()
+
+        self._progress_bar = gtk.ProgressBar()
+        self._progress_bar.props.pulse_step = 0.01
+        self._last_progress_bar_pulse = time.time()
+        alignment.add(self._progress_bar)
+        self._progress_bar.show()
+
+    def _stop_progress_bar(self):
+        self.remove(self.get_children()[0])
+        self._progress_bar = None
+
+        self.pack_start(self._canvas)
+        self.pack_end(self._vscrollbar, expand=False, fill=False)
 
     def _scroll_event_cb(self, hbox, event):
         if event.direction == gtk.gdk.SCROLL_UP:
