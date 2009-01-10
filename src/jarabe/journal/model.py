@@ -25,6 +25,7 @@ import traceback
 import gobject
 import dbus
 import gconf
+import gio
 
 from sugar import dispatch
 from sugar import mime
@@ -294,7 +295,7 @@ def _get_file_metadata(path, stat):
     return {'uid': path,
             'title': os.path.basename(path),
             'timestamp': stat.st_mtime,
-            'mime_type': mime.get_for_file(path),
+            'mime_type': gio.content_type_guess(filename=path),
             'activity': '',
             'activity_id': '',
             'icon-color': client.get_string('/desktop/sugar/user/color')}
