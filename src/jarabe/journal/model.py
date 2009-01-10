@@ -95,6 +95,9 @@ class BaseResultSet(object):
     def setup(self):
         self.ready.send(self)
 
+    def stop(self):
+        pass
+
     def get_length(self):
         if self._total_count == -1:
             query = self._query.copy()
@@ -223,10 +226,14 @@ class InplaceResultSet(BaseResultSet):
         self._mount_point = mount_point
         self._file_list = None
         self._pending_directories = 0
+        self._stopped = False
 
     def setup(self):
         self._file_list = []
         self._recurse_dir(self._mount_point)
+
+    def stop(self):
+        self._stopped = True
 
     def setup_ready(self):
         self._file_list.sort(lambda a, b: b[2] - a[2])
@@ -235,6 +242,9 @@ class InplaceResultSet(BaseResultSet):
     def find(self, query):
         if self._file_list is None:
             raise ValueError('Need to call setup() first')
+
+        if self._stopped:
+            raise ValueError('InplaceResultSet already stopped')
 
         t = time.time()
 
@@ -255,6 +265,9 @@ class InplaceResultSet(BaseResultSet):
         return entries, total_count
 
     def _recurse_dir(self, dir_path):
+        if self._stopped:
+            return
+
         for entry in os.listdir(dir_path):
             full_path = dir_path + '/' + entry
             try:

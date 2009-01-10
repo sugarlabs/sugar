@@ -190,6 +190,8 @@ class BaseListView(gtk.HBox):
         logging.debug('ListView.refresh query %r' % self._query)
         self._stop_progress_bar()
         self._start_progress_bar()
+        if self._result_set is not None:
+            self._result_set.stop()
 
         self._result_set = model.find(self._query)
         self._result_set.ready.connect(self.__result_set_ready_cb)
@@ -197,6 +199,9 @@ class BaseListView(gtk.HBox):
         self._result_set.setup()
 
     def __result_set_ready_cb(self, **kwargs):
+        if kwargs['sender'] != self._result_set:
+            return
+
         self._stop_progress_bar()
 
         self._vadjustment.props.upper = self._result_set.length
