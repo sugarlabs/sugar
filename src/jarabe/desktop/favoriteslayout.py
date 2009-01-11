@@ -77,7 +77,7 @@ class FavoritesLayout(gobject.GObject, hippo.CanvasLayout):
             min_width_, width = self.box.get_width_request()
             min_height_, height = self.box.get_height_request(width)
             registry = bundleregistry.get_registry()
-            registry.set_activity_position(
+            registry.set_bundle_position(
                     icon.get_bundle_id(), icon.get_version(),
                     x * width / float(_BASE_SCALE),
                     y * height / float(_BASE_SCALE))
