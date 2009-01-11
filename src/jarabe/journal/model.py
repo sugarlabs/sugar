@@ -248,9 +248,7 @@ class InplaceResultSet(BaseResultSet):
         elif query_text:
             expression = ''
             for word in query_text.split(' '):
-                if expression:
-                    expression += '|'
-                expression += '.*%s.*' % word
+                expression += '(?=.*%s.*)' % word
             self._regex = re.compile(expression, re.IGNORECASE)
         else:
             self._regex = None
@@ -296,6 +294,8 @@ class InplaceResultSet(BaseResultSet):
             return
 
         for entry in os.listdir(dir_path):
+            if entry.startswith('.'):
+                continue
             full_path = dir_path + '/' + entry
             try:
                 stat = os.stat(full_path)
@@ -304,9 +304,14 @@ class InplaceResultSet(BaseResultSet):
                     gobject.idle_add(lambda s=full_path: self._recurse_dir(s))
 
                 elif S_IFMT(stat.st_mode) == S_IFREG:
+                    add_to_list = False
                     if self._regex is None or self._regex.match(full_path):
+                        add_to_list = True
+
+                    if add_to_list:
                         file_info = (full_path, stat, int(stat.st_mtime))
                         self._file_list.append(file_info)
+
                     self.progress.send(self)
 
             except Exception, e:
