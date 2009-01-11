@@ -18,6 +18,7 @@ import logging
 import traceback
 import sys
 from gettext import gettext as _
+import time
 
 import hippo
 import gobject
@@ -47,8 +48,10 @@ class BaseListView(gtk.HBox):
         self._result_set = None
         self._entries = []
         self._page_size = 0
-        self._last_value = -1
         self._reflow_sid = 0
+        self._do_scroll_hid = None
+        self._progress_bar = None
+        self._last_progress_bar_pulse = None
 
         gtk.HBox.__init__(self)
         self.set_flags(gtk.HAS_FOCUS|gtk.CAN_FOCUS)
@@ -126,19 +129,13 @@ class BaseListView(gtk.HBox):
             self._vscrollbar.hide()
 
     def _vadjustment_value_changed_cb(self, vadjustment):
-        gobject.idle_add(self._do_scroll)
+        if self._do_scroll_hid is None:
+            self._do_scroll_hid = gobject.idle_add(self._do_scroll)
 
-    def _do_scroll(self, force=False):
-        import time
-        t = time.time()
+    def _do_scroll(self):
+        current_position = int(self._vadjustment.props.value)
 
-        value = int(self._vadjustment.props.value)
-
-        if value == self._last_value and not force:
-            return
-        self._last_value = value
-
-        self._result_set.seek(value)
+        self._result_set.seek(current_position)
         metadata_list = self._result_set.read(self._page_size)
 
         if self._result_set.length != self._vadjustment.props.upper:
@@ -147,9 +144,8 @@ class BaseListView(gtk.HBox):
 
         self._refresh_view(metadata_list)
         self._dirty = False
-        
-        logging.debug('_do_scroll %r %r\n' % (value, (time.time() - t)))
-        
+
+        self._do_scroll_hid = None                
         return False
 
     def _refresh_view(self, metadata_list):
@@ -192,22 +188,68 @@ class BaseListView(gtk.HBox):
 
     def refresh(self):
         logging.debug('ListView.refresh query %r' % self._query)
+        self._stop_progress_bar()
+        self._start_progress_bar()
+        if self._result_set is not None:
+            self._result_set.stop()
+
         self._result_set = model.find(self._query)
+        self._result_set.ready.connect(self.__result_set_ready_cb)
+        self._result_set.progress.connect(self.__result_set_progress_cb)
+        self._result_set.setup()
+
+    def __result_set_ready_cb(self, **kwargs):
+        if kwargs['sender'] != self._result_set:
+            return
+
+        self._stop_progress_bar()
+
         self._vadjustment.props.upper = self._result_set.length
         self._vadjustment.changed()
 
         self._vadjustment.props.value = min(self._vadjustment.props.value,
                 self._result_set.length - self._page_size)
         if self._result_set.length == 0:
+            # FIXME: This is a hack, we shouldn't have to update this every time
+            # a new search term is added.
             if self._query.get('query', '') or \
                    self._query.get('mime_type', '') or \
+                   self._query.get('keep', '') or \
                    self._query.get('mtime', ''):
                 self._show_message(NO_MATCH)
             else:
                 self._show_message(EMPTY_JOURNAL)
         else:
             self._clear_message()
-            self._do_scroll(force=True)
+            self._do_scroll()
+
+    def __result_set_progress_cb(self, **kwargs):
+        if time.time() - self._last_progress_bar_pulse > 0.05:
+            if self._progress_bar is not None:
+                self._progress_bar.pulse()
+                self._last_progress_bar_pulse = time.time()
+
+    def _start_progress_bar(self):
+        self.remove(self._canvas)
+        self.remove(self._vscrollbar)
+
+        alignment = gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0.5)
+        self.pack_start(alignment)
+        alignment.show()
+
+        self._progress_bar = gtk.ProgressBar()
+        self._progress_bar.props.pulse_step = 0.01
+        self._last_progress_bar_pulse = time.time()
+        alignment.add(self._progress_bar)
+        self._progress_bar.show()
+
+    def _stop_progress_bar(self):
+        for widget in self.get_children():
+            self.remove(widget)
+        self._progress_bar = None
+
+        self.pack_start(self._canvas)
+        self.pack_end(self._vscrollbar, expand=False, fill=False)
 
     def _scroll_event_cb(self, hbox, event):
         if event.direction == gtk.gdk.SCROLL_UP:
@@ -286,7 +328,7 @@ class BaseListView(gtk.HBox):
         if self._vadjustment.props.value > max_value:
             self._vadjustment.props.value = max_value
         else:
-            self._do_scroll(force=True)
+            self._do_scroll()
 
         self._reflow_sid = 0
 

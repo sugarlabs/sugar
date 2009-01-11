@@ -19,6 +19,7 @@ import logging
 from datetime import datetime, timedelta
 import os
 import gconf
+import time
 
 import gobject
 import gio
@@ -27,6 +28,7 @@ import gtk
 from sugar.graphics.toolbox import Toolbox
 from sugar.graphics.toolcombobox import ToolComboBox
 from sugar.graphics.toolbutton import ToolButton
+from sugar.graphics.toggletoolbutton import ToggleToolButton
 from sugar.graphics.combobox import ComboBox
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
@@ -62,10 +64,6 @@ class MainToolbox(Toolbox):
         self.search_toolbar.set_size_request(-1, style.GRID_CELL_SIZE)
         self.add_toolbar(_('Search'), self.search_toolbar)
         self.search_toolbar.show()
-        
-        #self.manage_toolbar = ManageToolbar()
-        #self.add_toolbar(_('Manage'), self.manage_toolbar)
-        #self.manage_toolbar.show()
 
 class SearchToolbar(gtk.Toolbar):
     __gtype_name__ = 'SearchToolbar'
@@ -89,6 +87,12 @@ class SearchToolbar(gtk.Toolbar):
         self._search_entry.add_clear_button()
         self._autosearch_timer = None
         self._add_widget(self._search_entry, expand=True)
+
+        self._favorite_button = ToggleToolButton('emblem-favorite')
+        self._favorite_button.connect('toggled',
+                                      self.__favorite_button_toggled_cb)
+        self.insert(self._favorite_button, -1)
+        self._favorite_button.show()
 
         self._what_search_combo = ComboBox()
         self._what_combo_changed_sid = self._what_search_combo.connect(
@@ -159,8 +163,13 @@ class SearchToolbar(gtk.Toolbar):
 
     def _build_query(self):
         query = {}
+
         if self._mount_point:
             query['mountpoints'] = [self._mount_point]
+
+        if self._favorite_button.props.active:
+            query['keep'] = 1
+
         if self._what_search_combo.props.value:
             value = self._what_search_combo.props.value
             generic_type = mime.get_generic_type(value)
@@ -169,25 +178,15 @@ class SearchToolbar(gtk.Toolbar):
                 query['mime_type'] = mime_types
             else:
                 query['activity'] = self._what_search_combo.props.value
+
         if self._when_search_combo.props.value:
             date_from, date_to = self._get_date_range()
-            query['mtime'] = {'start': date_from, 'end': date_to}
+            query['timestamp'] = {'start': date_from, 'end': date_to}
+
         if self._search_entry.props.text:
             text = self._search_entry.props.text.strip()
-
-            if not text.startswith('"'):
-                query_text = ''
-                words = text.split(' ')
-                for word in words:
-                    if word:
-                        if query_text:
-                            query_text += ' '
-                        query_text += word + '*'
-            else:
-                query_text = text
-
-            if query_text:
-                query['query'] = query_text
+            if text:
+                query['query'] = text
 
         return query
 
@@ -205,10 +204,13 @@ class SearchToolbar(gtk.Toolbar):
         elif self._when_search_combo.props.value == _ACTION_PAST_YEAR:
             date_range = (today_start - timedelta(356), right_now)
         
-        return (date_range[0].isoformat(),
-                date_range[1].isoformat())
+        return (time.mktime(date_range[0].timetuple()),
+                time.mktime(date_range[1].timetuple()))
 
     def _combo_changed_cb(self, combo):
+        self._update_if_needed()
+
+    def _update_if_needed(self):
         new_query = self._build_query()
         if self._query != new_query:
             self._query = new_query
@@ -244,6 +246,19 @@ class SearchToolbar(gtk.Toolbar):
         if self._query != new_query:
             self._query = new_query
             self.emit('query-changed', self._query)
+
+    def set_what_filter(self, what_filter):
+        combo_model = self._what_search_combo.get_model()
+        what_filter_index = -1
+        for i in range(0, len(combo_model) - 1):
+            if combo_model[i][0] == what_filter:
+                what_filter = i
+                break
+
+        if what_filter_index == -1:
+            logging.warning('what_filter %r not known' % what_filter)
+        else:
+            self._what_search_combo.set_active(what_filter_index)
 
     def refresh_filters(self):
         current_value = self._what_search_combo.props.value
@@ -292,11 +307,8 @@ class SearchToolbar(gtk.Toolbar):
             self._what_search_combo.handler_unblock(
                     self._what_combo_changed_sid)
 
-class ManageToolbar(gtk.Toolbar):
-    __gtype_name__ = 'ManageToolbar'
-
-    def __init__(self):
-        gtk.Toolbar.__init__(self)
+    def __favorite_button_toggled_cb(self, favorite_button):
+        self._update_if_needed()
 
 class DetailToolbox(Toolbox):
     def __init__(self):

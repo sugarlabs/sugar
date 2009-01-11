@@ -19,9 +19,14 @@ import os
 from datetime import datetime
 import time
 import shutil
+from stat import S_IFMT, S_IFDIR, S_IFREG
+import traceback
+import re
 
+import gobject
 import dbus
 import gconf
+import gio
 
 from sugar import dispatch
 from sugar import mime
@@ -72,7 +77,7 @@ class _Cache(object):
         else:
             return self._array[key]
 
-class ResultSet(object):
+class BaseResultSet(object):
     """Encapsulates the result of a query
     """
 
@@ -86,65 +91,28 @@ class ResultSet(object):
         self._offset = 0
         self._cache = _Cache()
 
+        self.ready = dispatch.Signal()
+        self.progress = dispatch.Signal()
+
+    def setup(self):
+        self.ready.send(self)
+
+    def stop(self):
+        pass
+
     def get_length(self):
         if self._total_count == -1:
             query = self._query.copy()
-            query['limit'] = ResultSet._CACHE_LIMIT
-            entries, self._total_count = self._find(query)
+            query['limit'] = BaseResultSet._CACHE_LIMIT
+            entries, self._total_count = self.find(query)
             self._cache.append_all(entries)
             self._offset = 0
         return self._total_count
 
     length = property(get_length)
 
-    def _get_all_files(self, dir_path):
-        files = []
-        for entry in os.listdir(dir_path):
-            full_path = os.path.join(dir_path, entry)
-            if os.path.isdir(full_path):
-                files.extend(self._get_all_files(full_path))
-            elif os.path.isfile(full_path):
-                stat = os.stat(full_path)
-                files.append((full_path, stat.st_mtime))
-        return files
-
-    def _query_mount_point(self, mount_point, query):
-        t = time.time()
-
-        files = self._get_all_files(mount_point)
-        offset = int(query.get('offset', 0))
-        limit  = int(query.get('limit', len(files)))
-
-        total_count = len(files)
-        files.sort(lambda a, b: int(b[1] - a[1]))
-        files = files[offset:offset + limit]
-
-        result = []
-        for file_path, timestamp_ in files:
-            metadata = _get_file_metadata(file_path)
-            result.append(metadata)
-
-        logging.debug('_query_mount_point took %f s.' % (time.time() - t))
-
-        return result, total_count
-
-    def _find(self, query):
-        mount_points = query.get('mountpoints', ['/'])
-        if mount_points is None or len(mount_points) != 1:
-            raise ValueError('Exactly one mount point must be specified')
-
-        if mount_points[0] == '/':
-            data_store = _get_datastore()
-            entries, total_count = _get_datastore().find(query, PROPERTIES,
-                                                         byte_arrays=True)
-        else:
-            entries, total_count = self._query_mount_point(mount_points[0],
-                                                           query)
-
-        for entry in entries:
-            entry['mountpoint'] = mount_points[0]
-
-        return entries, total_count
+    def find(self, query):
+        raise NotImplementedError()
 
     def seek(self, position):
         self._position = position
@@ -152,10 +120,10 @@ class ResultSet(object):
     def read(self, max_count):
         logging.debug('ResultSet.read position: %r' % self._position)
 
-        if max_count * 5 > ResultSet._CACHE_LIMIT:
+        if max_count * 5 > BaseResultSet._CACHE_LIMIT:
             raise RuntimeError(
-                    'max_count (%i) too big for ResultSet._CACHE_LIMIT'
-                    ' (%i).' % (max_count, ResultSet._CACHE_LIMIT))
+                    'max_count (%i) too big for BaseResultSet._CACHE_LIMIT'
+                    ' (%i).' % (max_count, BaseResultSet._CACHE_LIMIT))
 
         if self._position == -1:
             self.seek(0)
@@ -175,16 +143,16 @@ class ResultSet(object):
 
         if (remaining_forward_entries <= 0 and
                     remaining_backwards_entries <= 0) or \
-                max_count > ResultSet._CACHE_LIMIT:
+                max_count > BaseResultSet._CACHE_LIMIT:
 
             # Total cache miss: remake it
             offset = max(0, self._position - max_count)
             logging.debug('remaking cache, offset: %r limit: %r' % \
                           (offset, max_count * 2))
             query = self._query.copy()
-            query['limit'] = ResultSet._CACHE_LIMIT
+            query['limit'] = BaseResultSet._CACHE_LIMIT
             query['offset'] = offset
-            entries, self._total_count = self._find(query)
+            entries, self._total_count = self.find(query)
 
             self._cache.remove_all(self._cache)
             self._cache.append_all(entries)
@@ -199,13 +167,13 @@ class ResultSet(object):
             query = self._query.copy()
             query['limit'] = max_count
             query['offset'] = last_cached_entry
-            entries, self._total_count = self._find(query)
+            entries, self._total_count = self.find(query)
 
             # update cache
             self._cache.append_all(entries)
 
             # apply the cache limit
-            objects_excess = len(self._cache) - ResultSet._CACHE_LIMIT
+            objects_excess = len(self._cache) - BaseResultSet._CACHE_LIMIT
             if objects_excess > 0:
                 self._offset += objects_excess
                 self._cache.remove_all(self._cache[:objects_excess])
@@ -221,13 +189,13 @@ class ResultSet(object):
             query = self._query.copy()
             query['limit'] = limit
             query['offset'] = self._offset
-            entries, self._total_count = self._find(query)
+            entries, self._total_count = self.find(query)
 
             # update cache
             self._cache.prepend_all(entries)
 
             # apply the cache limit
-            objects_excess = len(self._cache) - ResultSet._CACHE_LIMIT
+            objects_excess = len(self._cache) - BaseResultSet._CACHE_LIMIT
             if objects_excess > 0:
                 self._cache.remove_all(self._cache[-objects_excess:])
         else:
@@ -237,16 +205,134 @@ class ResultSet(object):
         last_pos = self._position - self._offset + max_count
         return self._cache[first_pos:last_pos]
 
-def _get_file_metadata(path):
-    stat = os.stat(path)
+class DatastoreResultSet(BaseResultSet):
+    """Encapsulates the result of a query on the datastore
+    """
+    def __init__(self, query):
+
+        if query.get('query', '') and not query['query'].startswith('"'):
+            query_text = ''
+            words = query['query'].split(' ')
+            for word in words:
+                if word:
+                    if query_text:
+                        query_text += ' '
+                    query_text += word + '*'
+
+            query['query'] = query_text
+
+        BaseResultSet.__init__(self, query)
+
+    def find(self, query):
+        entries, total_count = _get_datastore().find(query, PROPERTIES,
+                                                     byte_arrays=True)
+
+        for entry in entries:
+            entry['mountpoint'] = '/'
+
+        return entries, total_count
+
+class InplaceResultSet(BaseResultSet):
+    """Encapsulates the result of a query on a mount point
+    """
+    def __init__(self, query, mount_point):
+        BaseResultSet.__init__(self, query)
+        self._mount_point = mount_point
+        self._file_list = None
+        self._pending_directories = 0
+        self._stopped = False
+
+        query_text = query.get('query', '')
+        if query_text.startswith('"') and query_text.endswith('"'):
+            self._regex = re.compile('*%s*' % query_text.strip(['"']))
+        elif query_text:
+            expression = ''
+            for word in query_text.split(' '):
+                expression += '(?=.*%s.*)' % word
+            self._regex = re.compile(expression, re.IGNORECASE)
+        else:
+            self._regex = None
+
+    def setup(self):
+        self._file_list = []
+        self._recurse_dir(self._mount_point)
+
+    def stop(self):
+        self._stopped = True
+
+    def setup_ready(self):
+        self._file_list.sort(lambda a, b: b[2] - a[2])
+        self.ready.send(self)
+
+    def find(self, query):
+        if self._file_list is None:
+            raise ValueError('Need to call setup() first')
+
+        if self._stopped:
+            raise ValueError('InplaceResultSet already stopped')
+
+        t = time.time()
+
+        offset = int(query.get('offset', 0))
+        limit  = int(query.get('limit', len(self._file_list)))
+        total_count = len(self._file_list)
+
+        files = self._file_list[offset:offset + limit]
+
+        entries = []
+        for file_path, stat, mtime_ in files:
+            metadata = _get_file_metadata(file_path, stat)
+            metadata['mountpoint'] = self._mount_point
+            entries.append(metadata)
+
+        logging.debug('InplaceResultSet.find took %f s.' % (time.time() - t))
+
+        return entries, total_count
+
+    def _recurse_dir(self, dir_path):
+        if self._stopped:
+            return
+
+        for entry in os.listdir(dir_path):
+            if entry.startswith('.'):
+                continue
+            full_path = dir_path + '/' + entry
+            try:
+                stat = os.stat(full_path)
+                if S_IFMT(stat.st_mode) == S_IFDIR:
+                    self._pending_directories += 1
+                    gobject.idle_add(lambda s=full_path: self._recurse_dir(s))
+
+                elif S_IFMT(stat.st_mode) == S_IFREG:
+                    add_to_list = False
+                    if self._regex is None or self._regex.match(full_path):
+                        add_to_list = True
+
+                    if add_to_list:
+                        file_info = (full_path, stat, int(stat.st_mtime))
+                        self._file_list.append(file_info)
+
+                    self.progress.send(self)
+
+            except Exception:
+                logging.error('Error reading file %r: %r' % \
+                              (full_path, traceback.format_exc()))
+
+        if self._pending_directories == 0:
+            self.setup_ready()
+        else:
+            self._pending_directories -= 1
+
+def _get_file_metadata(path, stat):
     client = gconf.client_get_default()
     return {'uid': path,
             'title': os.path.basename(path),
             'timestamp': stat.st_mtime,
-            'mime_type': mime.get_for_file(path),
+            'mime_type': gio.content_type_guess(filename=path),
             'activity': '',
             'activity_id': '',
-            'icon-color': client.get_string('/desktop/sugar/user/color')}
+            'icon-color': client.get_string('/desktop/sugar/user/color'),
+            'description': path}
 
 _datastore = None
 def _get_datastore():
@@ -276,7 +362,15 @@ def find(query):
     """
     if 'order_by' not in query:
         query['order_by'] = ['-mtime']
-    return ResultSet(query)
+    
+    mount_points = query.pop('mountpoints', ['/'])
+    if mount_points is None or len(mount_points) != 1:
+        raise ValueError('Exactly one mount point must be specified')
+
+    if mount_points[0] == '/':
+        return DatastoreResultSet(query)
+    else:
+        return InplaceResultSet(query, mount_points[0])
 
 def _get_mount_point(path):
     dir_path = os.path.dirname(path)
@@ -290,7 +384,8 @@ def get(object_id):
     """Returns the metadata for an object
     """
     if os.path.exists(object_id):
-        metadata = _get_file_metadata(object_id)
+        stat = os.stat(object_id)
+        metadata = _get_file_metadata(object_id, stat)
         metadata['mountpoint'] = _get_mount_point(object_id)
     else:
         metadata = _get_datastore().get_properties(object_id, byte_arrays=True)
@@ -329,9 +424,7 @@ def copy(metadata, mount_point):
     """Copies an object to another mount point
     """
     metadata = get(metadata['uid'])
-
     file_path = get_file(metadata['uid'])
-    file_path.delete = False
 
     metadata['mountpoint'] = mount_point
     del metadata['uid']
@@ -341,7 +434,7 @@ def copy(metadata, mount_point):
 def write(metadata, file_path='', update_mtime=True):
     """Creates or updates an entry for that id
     """
-    logging.debug('model.write %r %r %r' % (metadata['uid'], file_path,
+    logging.debug('model.write %r %r %r' % (metadata.get('uid', ''), file_path,
                                             update_mtime))
     if update_mtime:
         metadata['mtime'] = datetime.now().isoformat()
@@ -361,7 +454,10 @@ def write(metadata, file_path='', update_mtime=True):
         if not os.path.exists(file_path):
             raise ValueError('Entries without a file cannot be copied to '
                              'removable devices')
+
         file_name = _get_file_name(metadata['title'], metadata['mime_type'])
+        file_name = _get_unique_file_name(metadata['mountpoint'], file_name)
+
         destination_path = os.path.join(metadata['mountpoint'], file_name)
         shutil.copy(file_path, destination_path)
         object_id = destination_path
@@ -369,10 +465,38 @@ def write(metadata, file_path='', update_mtime=True):
     return object_id
 
 def _get_file_name(title, mime_type):
-    # TODO: sanitize title for common filesystems
-    # TODO: make as robust as possible, this function should never fail.
-    # TODO: don't append the same extension again and again
-    return '%s.%s' % (title, mime.get_primary_extension(mime_type))
+    file_name = title
+
+    extension = '.' + mime.get_primary_extension(mime_type)
+    if not file_name.endswith(extension):
+        file_name += extension
+
+    # Invalid characters in VFAT filenames. From
+    # http://en.wikipedia.org/wiki/File_Allocation_Table
+    invalid_chars = ['/', '\\', ':', '*', '?', '"', '<', '>', '|', '\x7F']
+    invalid_chars.extend([chr(x) for x in range(0, 32)])
+    for char in invalid_chars:
+        file_name = file_name.replace(char, '_')
+
+    # FAT limit is 255, leave some space for uniqueness
+    max_len = 250
+    if len(file_name) > max_len:
+        name, extension = os.path.splitext(file_name)
+        file_name = name[0:max_len - extension] + extension
+    
+    return file_name
+
+def _get_unique_file_name(mount_point, file_name):
+    if os.path.exists(os.path.join(mount_point, file_name)):
+        i = 1
+        while len(file_name) <= 255:
+            name, extension = os.path.splitext(file_name)
+            file_name = name + '_' + str(i) + extension
+            if not os.path.exists(os.path.join(mount_point, file_name)):
+                break
+            i += 1
+
+    return file_name
 
 created = dispatch.Signal()
 updated = dispatch.Signal()

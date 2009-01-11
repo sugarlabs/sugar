@@ -79,14 +79,14 @@ class JournalActivityDBusService(dbus.service.Object):
         chooser.destroy()
         del chooser
 
-    @dbus.service.method(J_DBUS_INTERFACE, in_signature='i', out_signature='s')
-    def ChooseObject(self, parent_xid):
+    @dbus.service.method(J_DBUS_INTERFACE, in_signature='is', out_signature='s')
+    def ChooseObject(self, parent_xid, what_filter=''):
         chooser_id = uuid.uuid4().hex
         if parent_xid > 0:
             parent = gtk.gdk.window_foreign_new(parent_xid)
         else:
             parent = None
-        chooser = ObjectChooser(parent)
+        chooser = ObjectChooser(parent, what_filter)
         chooser.connect('response', self._chooser_response_cb, chooser_id)
         chooser.show()
 

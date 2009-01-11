@@ -21,6 +21,7 @@ import sys
 import os
 from gettext import gettext as _
 
+import gio
 import gtk
 
 from sugar.activity import activityfactory
@@ -65,11 +66,13 @@ def get_icon_name(metadata):
 
     mime_type = metadata.get('mime_type', '')
     if not file_name and mime_type:
-        icon_name = mime.get_mime_icon(mime_type)
-        if icon_name:
+        icons = gio.content_type_get_icon(mime_type)
+        for icon_name in icons.props.names:
             file_name = _get_icon_file_name(icon_name)
+            if file_name is not None:
+                break
 
-    if not file_name or not os.path.exists(file_name):
+    if file_name is None or not os.path.exists(file_name):
         file_name = _get_icon_file_name('application-octet-stream')
 
     return file_name

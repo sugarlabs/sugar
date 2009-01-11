@@ -29,8 +29,10 @@ from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
 from sugar.graphics.xocolor import XoColor
+from sugar.graphics import style
 
 from jarabe.journal import journalactivity
+from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
 _icons = {}
 
@@ -42,8 +44,17 @@ class DeviceView(TrayIcon):
         TrayIcon.__init__(self)
         self._mount = mount
 
-        # TODO: fallback to the more generic icons when needed
-        self.get_icon().props.icon_name = self._mount.get_icon().props.names[0]
+        icon_theme = gtk.icon_theme_get_default()
+        for icon_name in self._mount.get_icon().props.names:
+            icon_info = icon_theme.lookup_icon(icon_name,
+                                               style.STANDARD_ICON_SIZE, 0)
+            if icon_info is not None:
+                self.get_icon().props.icon_name = icon_name
+                icon_info.free()
+                break
+
+        if self.get_icon().props.icon_name is None:
+            self.get_icon().props.icon_name = 'drive'
 
         # TODO: retrieve the colors from the owner of the device
         client = gconf.client_get_default()
@@ -53,7 +64,10 @@ class DeviceView(TrayIcon):
         self.connect('button-release-event', self.__button_release_event_cb)
 
     def create_palette(self):
-        return VolumePalette(self._mount)
+        palette = VolumePalette(self._mount)
+        palette.props.invoker = FrameWidgetInvoker(self)
+        palette.set_group_id('frame')
+        return palette
 
     def __button_release_event_cb(self, widget, event):
         journal = journalactivity.get_journal()
