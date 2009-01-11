@@ -253,6 +253,13 @@ class InplaceResultSet(BaseResultSet):
         else:
             self._regex = None
 
+        if query.get('timestamp', ''):
+            self._date_start = int(query['timestamp']['start'])
+            self._date_end = int(query['timestamp']['end'])
+        else:
+            self._date_start = None
+            self._date_end = None
+
     def setup(self):
         self._file_list = []
         self._recurse_dir(self._mount_point)
@@ -304,9 +311,16 @@ class InplaceResultSet(BaseResultSet):
                     gobject.idle_add(lambda s=full_path: self._recurse_dir(s))
 
                 elif S_IFMT(stat.st_mode) == S_IFREG:
-                    add_to_list = False
-                    if self._regex is None or self._regex.match(full_path):
-                        add_to_list = True
+                    add_to_list = True
+
+                    if self._regex is not None and not self._regex.match(full_path):
+                        add_to_list = False
+
+
+                    if None not in [self._date_start, self._date_end] and \
+                            (stat.st_mtime < self._date_start or
+                             stat.st_mtime > self._date_end):
+                        add_to_list = False
 
                     if add_to_list:
                         file_info = (full_path, stat, int(stat.st_mtime))
