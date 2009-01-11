@@ -244,7 +244,8 @@ class BaseListView(gtk.HBox):
         self._progress_bar.show()
 
     def _stop_progress_bar(self):
-        self.remove(self.get_children()[0])
+        for widget in self.get_children():
+            self.remove(widget)
         self._progress_bar = None
 
         self.pack_start(self._canvas)

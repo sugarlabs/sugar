@@ -177,25 +177,15 @@ class SearchToolbar(gtk.Toolbar):
                 query['mime_type'] = mime_types
             else:
                 query['activity'] = self._what_search_combo.props.value
+
         if self._when_search_combo.props.value:
             date_from, date_to = self._get_date_range()
             query['mtime'] = {'start': date_from, 'end': date_to}
+
         if self._search_entry.props.text:
             text = self._search_entry.props.text.strip()
-
-            if not text.startswith('"'):
-                query_text = ''
-                words = text.split(' ')
-                for word in words:
-                    if word:
-                        if query_text:
-                            query_text += ' '
-                        query_text += word + '*'
-            else:
-                query_text = text
-
-            if query_text:
-                query['query'] = query_text
+            if text:
+                query['query'] = text
 
         return query
 

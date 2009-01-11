@@ -21,6 +21,7 @@ import time
 import shutil
 from stat import S_IFMT, S_IFDIR, S_IFREG
 import traceback
+import re
 
 import gobject
 import dbus
@@ -208,6 +209,18 @@ class DatastoreResultSet(BaseResultSet):
     """Encapsulates the result of a query on the datastore
     """
     def __init__(self, query):
+
+        if query.get('query', '') and not query['query'].startswith('"'):
+            query_text = ''
+            words = query['query'].split(' ')
+            for word in words:
+                if word:
+                    if query_text:
+                        query_text += ' '
+                    query_text += word + '*'
+
+            query['query'] = query_text
+
         BaseResultSet.__init__(self, query)
 
     def find(self, query):
@@ -228,6 +241,19 @@ class InplaceResultSet(BaseResultSet):
         self._file_list = None
         self._pending_directories = 0
         self._stopped = False
+
+        query_text = query.get('query', '')
+        if query_text.startswith('"') and query_text.endswith('"'):
+            self._regex = re.compile('*%s*' % query_text.strip(['"']))
+        elif query_text:
+            expression = ''
+            for word in query_text.split(' '):
+                if expression:
+                    expression += '|'
+                expression += '.*%s.*' % word
+            self._regex = re.compile(expression, re.IGNORECASE)
+        else:
+            self._regex = None
 
     def setup(self):
         self._file_list = []
@@ -278,7 +304,9 @@ class InplaceResultSet(BaseResultSet):
                     gobject.idle_add(lambda s=full_path: self._recurse_dir(s))
 
                 elif S_IFMT(stat.st_mode) == S_IFREG:
-                    self._file_list.append((full_path, stat, int(stat.st_mtime)))
+                    if self._regex is None or self._regex.match(full_path):
+                        file_info = (full_path, stat, int(stat.st_mtime))
+                        self._file_list.append(file_info)
                     self.progress.send(self)
 
             except Exception, e:
@@ -298,7 +326,8 @@ def _get_file_metadata(path, stat):
             'mime_type': gio.content_type_guess(filename=path),
             'activity': '',
             'activity_id': '',
-            'icon-color': client.get_string('/desktop/sugar/user/color')}
+            'icon-color': client.get_string('/desktop/sugar/user/color'),
+            'description': path}
 
 _datastore = None
 def _get_datastore():
