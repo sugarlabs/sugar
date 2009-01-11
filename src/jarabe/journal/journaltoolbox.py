@@ -19,6 +19,7 @@ import logging
 from datetime import datetime, timedelta
 import os
 import gconf
+import time
 
 import gobject
 import gio
@@ -180,7 +181,7 @@ class SearchToolbar(gtk.Toolbar):
 
         if self._when_search_combo.props.value:
             date_from, date_to = self._get_date_range()
-            query['mtime'] = {'start': date_from, 'end': date_to}
+            query['timestamp'] = {'start': date_from, 'end': date_to}
 
         if self._search_entry.props.text:
             text = self._search_entry.props.text.strip()
@@ -203,8 +204,8 @@ class SearchToolbar(gtk.Toolbar):
         elif self._when_search_combo.props.value == _ACTION_PAST_YEAR:
             date_range = (today_start - timedelta(356), right_now)
         
-        return (date_range[0].isoformat(),
-                date_range[1].isoformat())
+        return (time.mktime(date_range[0].timetuple()),
+                time.mktime(date_range[1].timetuple()))
 
     def _combo_changed_cb(self, combo):
         self._update_if_needed()
