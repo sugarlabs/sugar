@@ -314,7 +314,7 @@ class InplaceResultSet(BaseResultSet):
 
                     self.progress.send(self)
 
-            except Exception, e:
+            except Exception:
                 logging.error('Error reading file %r: %r' % \
                               (full_path, traceback.format_exc()))
 
