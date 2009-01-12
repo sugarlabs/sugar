@@ -391,6 +391,8 @@ class DatastoreListener(object):
 class ActivityIcon(CanvasIcon):
     __gtype_name__ = 'SugarFavoriteActivityIcon'
 
+    _BORDER_WIDTH = 4
+
     __gsignals__ = {
         'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
                              gobject.TYPE_NONE, ([str]))
@@ -402,7 +404,9 @@ class ActivityIcon(CanvasIcon):
 
         self._activity_info = activity_info
         self._journal_entries = []
+        self._hovering = False
 
+        self.connect('hovering-changed', self.__hovering_changed_event_cb)
         self.connect('button-release-event', self.__button_release_event_cb)
 
         self._datastore_listener = datastore_listener
@@ -453,6 +457,47 @@ class ActivityIcon(CanvasIcon):
 
     def __erase_activated_cb(self, palette):
         self.emit('erase-activated', self._activity_info.get_bundle_id())
+
+    def __hovering_changed_event_cb(self, icon, hovering):
+        self._hovering = hovering
+        self.emit_paint_needed(0, 0, -1, -1)
+
+    def do_paint_above_children(self, cr, damaged_box):
+        if self._hovering:
+            width, height = self.get_allocation()
+
+            color = style.COLOR_SELECTION_GREY.get_int()
+            hippo.cairo_set_source_rgba32(cr, color)
+
+            x = ActivityIcon._BORDER_WIDTH / 2
+            y = ActivityIcon._BORDER_WIDTH / 2
+            width -= ActivityIcon._BORDER_WIDTH
+            height -= ActivityIcon._BORDER_WIDTH
+
+            cr.move_to(0, y)
+            cr.line_to(width, y)
+
+            cr.move_to(width, 0)
+            cr.line_to(width, height + ActivityIcon._BORDER_WIDTH / 2)
+
+            cr.move_to(width, height)
+            cr.line_to(0, height)
+
+            cr.move_to(x, height)
+            cr.line_to(x, 0)
+
+            cr.set_line_width(style.zoom(ActivityIcon._BORDER_WIDTH))
+            cr.stroke()
+
+    def do_get_content_height_request(self, for_width):
+        height, height = CanvasIcon.do_get_content_height_request(self, for_width)
+        height += ActivityIcon._BORDER_WIDTH * 2
+        return height, height
+
+    def do_get_content_width_request(self):
+        width, width = CanvasIcon.do_get_content_width_request(self)
+        width += ActivityIcon._BORDER_WIDTH * 2
+        return width, width
 
     def __button_release_event_cb(self, icon, event):
         self.palette.popdown(immediate=True)
