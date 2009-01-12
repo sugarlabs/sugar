@@ -260,6 +260,8 @@ class InplaceResultSet(BaseResultSet):
             self._date_start = None
             self._date_end = None
 
+        self._mime_types = query.get('mime_type', [])
+
     def setup(self):
         self._file_list = []
         self._recurse_dir(self._mount_point)
@@ -313,14 +315,19 @@ class InplaceResultSet(BaseResultSet):
                 elif S_IFMT(stat.st_mode) == S_IFREG:
                     add_to_list = True
 
-                    if self._regex is not None and not self._regex.match(full_path):
+                    if self._regex is not None and \
+                            not self._regex.match(full_path):
                         add_to_list = False
-
 
                     if None not in [self._date_start, self._date_end] and \
                             (stat.st_mtime < self._date_start or
                              stat.st_mtime > self._date_end):
                         add_to_list = False
+
+                    if self._mime_types:
+                        mime_type = gio.content_type_guess(filename=full_path)
+                        if mime_type not in self._mime_types:
+                            add_to_list = False
 
                     if add_to_list:
                         file_info = (full_path, stat, int(stat.st_mtime))
