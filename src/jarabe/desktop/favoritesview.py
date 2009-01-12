@@ -22,6 +22,7 @@ import gconf
 import gobject
 import gtk
 import hippo
+import dbus
 
 from sugar.graphics import style
 from sugar.graphics.palette import Palette
@@ -30,11 +31,13 @@ from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.alert import Alert
 from sugar.graphics.xocolor import XoColor
 from sugar.activity import activityfactory
+from sugar import dispatch
 
 from jarabe.view.palettes import JournalPalette
 from jarabe.view.palettes import CurrentActivityPalette, ActivityPalette
 from jarabe.model import shell
 from jarabe.model import bundleregistry
+from jarabe import journal
 
 from jarabe.desktop import schoolserver
 from jarabe.desktop.schoolserver import RegisterError
@@ -94,6 +97,7 @@ class FavoritesView(hippo.Canvas):
 
         self._layout = None
         self._alert = None
+        self._datastore_listener = DatastoreListener()
 
         # More DND stuff
         self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
@@ -120,7 +124,7 @@ class FavoritesView(hippo.Canvas):
         registry.connect('bundle-changed', self.__activity_changed_cb)
 
     def _add_activity(self, activity_info):
-        icon = ActivityIcon(activity_info)
+        icon = ActivityIcon(activity_info, self._datastore_listener)
         icon.connect('erase-activated', self.__erase_activated_cb)
         icon.props.size = style.STANDARD_ICON_SIZE
         self._box.insert_sorted(icon, 0, self._layout.compare_activities)
@@ -331,6 +335,59 @@ class FavoritesView(hippo.Canvas):
     def __register_alert_response_cb(self, alert, response_id):
         self.remove_alert()
 
+DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
+DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
+DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
+
+class DatastoreListener(object):
+    def __init__(self):
+        bus = dbus.SessionBus()
+        remote_object = bus.get_object(DS_DBUS_SERVICE, DS_DBUS_PATH)
+        self._datastore = dbus.Interface(remote_object, DS_DBUS_INTERFACE)
+        self._datastore.connect_to_signal('Created',
+                                          self.__datastore_created_cb)
+        self._datastore.connect_to_signal('Updated',
+                                          self.__datastore_updated_cb)
+        self._datastore.connect_to_signal('Deleted',
+                                          self.__datastore_deleted_cb)
+
+        self.updated = dispatch.Signal()
+        self.deleted = dispatch.Signal()
+
+    def __datastore_created_cb(self, object_id):
+        metadata = self._datastore.get_properties(object_id, byte_arrays=True)
+        self.updated.send(self, metadata=metadata)
+
+    def __datastore_updated_cb(self, object_id):
+        metadata = self._datastore.get_properties(object_id, byte_arrays=True)
+        self.updated.send(self, metadata=metadata)
+
+    def __datastore_deleted_cb(self, object_id):
+        self.deleted.send(self, object_id=object_id)
+
+    def get_last_activity_async(self, bundle_id, properties, callback_cb):
+        query = {'activity': bundle_id,
+                 'limit': 5,
+                 'order_by': ['-mtime']}
+
+        reply_handler = lambda entries, total_count: self.__reply_handler_cb(
+                entries, total_count, callback_cb)
+
+        error_handler = lambda error: self.__error_handler_cb(
+                error, callback_cb)
+
+        self._datastore.find(query, properties, byte_arrays=True,
+                               reply_handler=reply_handler,
+                               error_handler=error_handler)
+
+    def __reply_handler_cb(self, entries, total_count, callback_cb):
+        logging.debug('__reply_handler_cb')
+        callback_cb(entries)
+
+    def __error_handler_cb(self, error, callback_cb):
+        logging.debug('__error_handler_cb')
+        callback_cb(None, error)
+
 class ActivityIcon(CanvasIcon):
     __gtype_name__ = 'SugarFavoriteActivityIcon'
 
@@ -339,44 +396,71 @@ class ActivityIcon(CanvasIcon):
                              gobject.TYPE_NONE, ([str]))
     }
 
-    def __init__(self, activity_info):
+    def __init__(self, activity_info, datastore_listener):
         CanvasIcon.__init__(self, cache=True,
                             file_name=activity_info.get_icon())
 
         self._activity_info = activity_info
-        self._uncolor()
-        self.connect('hovering-changed', self.__hovering_changed_event_cb)
+        self._journal_entries = []
+
         self.connect('button-release-event', self.__button_release_event_cb)
 
-        client = gconf.client_get_default()
-        self._xocolor = XoColor(client.get_string("/desktop/sugar/user/color"))
+        self._datastore_listener = datastore_listener
+        datastore_listener.updated.connect(self.__datastore_listener_updated_cb)
+        datastore_listener.deleted.connect(self.__datastore_listener_deleted_cb)
+
+        self._refresh()
+        self._update()
+
+    def _refresh(self):
+        bundle_id = self._activity_info.get_bundle_id()
+        properties = ['uid', 'title', 'icon-color', 'activity', 'activity_id',
+                      'mime_type']
+        self._datastore_listener.get_last_activity_async(bundle_id, properties,
+                self.__get_last_activity_async_cb)
+
+    def __datastore_listener_updated_cb(self, **kwargs):
+        bundle_id = self._activity_info.get_bundle_id()
+        if kwargs['metadata'].get('activity', '') == bundle_id:
+            self._refresh()
+
+    def __datastore_listener_deleted_cb(self, **kwargs):
+        for entry in self._journal_entries:
+            if entry['uid'] == kwargs['object_id']:
+                self._refresh()
+                break
+
+    def __get_last_activity_async_cb(self, entries, error=None):
+        if error is not None:
+            logging.error('Error retrieving most recent activities: %r' % error)
+
+        self._journal_entries = entries
+        self._update()
+
+    def _update(self):
+        self.palette = None
+        if not self._journal_entries:
+            self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
+            self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+        else:
+            first_entry = self._journal_entries[0]
+            self.props.xo_color = XoColor(first_entry['icon-color'])
 
     def create_palette(self):
-        palette = ActivityPalette(self._activity_info)
+        palette = FavoritePalette(self._activity_info, self._journal_entries)
         palette.connect('erase-activated', self.__erase_activated_cb)
         return palette
 
     def __erase_activated_cb(self, palette):
         self.emit('erase-activated', self._activity_info.get_bundle_id())
 
-    def _color(self):
-        self.props.xo_color = self._xocolor
-
-    def _uncolor(self):
-        self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
-        self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
-
-    def __hovering_changed_event_cb(self, icon, hovering):
-        if hovering:
-            self._color()
-        else:
-            self._uncolor()
-
     def __button_release_event_cb(self, icon, event):
         self.palette.popdown(immediate=True)
-        self._uncolor()
-
-        activityfactory.create(self._activity_info)
+        if self._journal_entries:
+            activityfactory.create_with_object_id(self._activity_info,
+                    self._journal_entries[0]['uid'])
+        else:
+            activityfactory.create(self._activity_info)
 
     def get_bundle_id(self):
         return self._activity_info.get_bundle_id()
@@ -393,6 +477,47 @@ class ActivityIcon(CanvasIcon):
     def _get_fixed_position(self):
         return self._activity_info.position
     fixed_position = property(_get_fixed_position, None)
+
+class FavoritePalette(ActivityPalette):
+    __gtype_name__ = 'SugarFavoritePalette'
+
+    def __init__(self, activity_info, journal_entries):
+        ActivityPalette.__init__(self, activity_info)
+
+        if journal_entries and journal_entries[0].get('icon-color', ''):
+            color = XoColor(journal_entries[0]['icon-color'])
+        else:
+            color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
+                                       style.COLOR_WHITE.get_svg()))
+
+        self.props.icon = Icon(file=activity_info.get_icon(),
+                               xo_color=color,
+                               icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
+
+        if journal_entries:
+            self.props.secondary_text = journal_entries[0]['title']
+
+            menu_items = []
+
+            entries = journal_entries[1:]
+            for entry in entries:
+
+                icon_file_name = journal.misc.get_icon_name(entry)
+                color = XoColor(entry.get('icon-color', None))
+
+                menu_item = MenuItem(text_label=entry['title'],
+                                     file_name=icon_file_name,
+                                     xo_color=color)
+                menu_items.append(menu_item)
+                menu_item.show()
+
+            if entries:
+                separator = gtk.SeparatorMenuItem()
+                menu_items.append(separator)
+                separator.show()
+
+            for i in range(0, len(menu_items)):
+                self.menu.insert(menu_items[i], i)
 
 class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
     def __init__(self):
