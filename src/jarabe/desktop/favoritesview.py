@@ -611,6 +611,7 @@ class _MyIcon(MyIcon):
     def __init__(self, scale):
         MyIcon.__init__(self, scale)
 
+        self._power_manager = None
         self._palette_enabled = False
         self._register_menu = None
 
@@ -628,6 +629,21 @@ class _MyIcon(MyIcon):
                             xo_color=color)
         palette = Palette(nick, icon=palette_icon)
 
+        item = MenuItem(_('Settings'), 'preferences-system')
+        item.connect('activate', self.__controlpanel_activate_cb)
+        palette.menu.append(item)
+        item.show()
+
+        item = MenuItem(_('Restart'), 'system-restart')
+        item.connect('activate', self._reboot_activate_cb)
+        palette.menu.append(item)
+        item.show()
+
+        item = MenuItem(_('Shutdown'), 'system-shutdown')
+        item.connect('activate', self._shutdown_activate_cb)
+        palette.menu.append(item)
+        item.show()
+
         backup_url = client.get_string('/desktop/sugar/backup_url')
         if not backup_url:
             self._register_menu = MenuItem(_('Register'), 'media-record')
@@ -636,6 +652,22 @@ class _MyIcon(MyIcon):
             self._register_menu.show()
     
         return palette
+
+    def _reboot_activate_cb(self, menuitem):
+        session_manager = get_session_manager()
+        session_manager.reboot()
+
+    def _shutdown_activate_cb(self, menuitem):
+        session_manager = get_session_manager()
+        session_manager.shutdown()
+        
+    def get_toplevel(self):
+        return hippo.get_canvas_for_item(self).get_toplevel()
+
+    def __controlpanel_activate_cb(self, menuitem):
+        panel = ControlPanel()
+        panel.set_transient_for(self.get_toplevel())
+        panel.show()
 
     def __register_activate_cb(self, menuitem):
         self.emit('register-activate')
