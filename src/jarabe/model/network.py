@@ -104,7 +104,7 @@ class Wireless(object):
         self.security = None
 
     def get_dict(self):
-        wireless = {'ssid': self.ssid}                                                                                                     
+        wireless = {'ssid': self.ssid}
         if self.security:
             wireless['security'] = self.security
         return wireless
