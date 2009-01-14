@@ -16,6 +16,7 @@
 
 import logging
 import os
+import time
 
 import dbus
 import ConfigParser
@@ -87,7 +88,6 @@ class WirelessSecurity(object):
 
     def get_dict(self):
         wireless_security = {}
-
         if self.key_mgmt is not None:
             wireless_security['key-mgmt'] = self.key_mgmt
         if self.proto is not None:
@@ -96,26 +96,35 @@ class WirelessSecurity(object):
             wireless_security['pairwise'] = self.pairwise
         if self.group is not None:
             wireless_security['group'] = self.group
-
         return wireless_security
 
 class Wireless(object):
     def __init__(self):
         self.ssid = None
+        self.security = None
 
     def get_dict(self):
-        return {'ssid': self.ssid}
+        wireless = {'ssid': self.ssid}                                                                                                     
+        if self.security:
+            wireless['security'] = self.security
+        return wireless
 
 class Connection(object):
     def __init__(self):
         self.id = None
         self.uuid = None
         self.type = None
+        self.autoconnect = False
+        self.timestamp = None
 
     def get_dict(self):
-        return {'id': self.id,
-                'uuid': self.uuid,
-                'type': self.type}
+        connection = {'id': self.id,
+                      'uuid': self.uuid,
+                      'type': self.type,
+                      'autoconnect': self.autoconnect}
+        if self.timestamp:
+            connection['timestamp'] = self.timestamp
+        return connection
 
 class Settings(object):
     def __init__(self):
@@ -205,6 +214,11 @@ class NMSettingsConnection(dbus.service.Object):
         self._settings = settings
         self._secrets = secrets
 
+    def set_connected(self):
+        self._settings.connection.autoconnect = True
+        self._settings.connection.timestamp = int(time.time())
+        self.save()
+
     def set_secrets(self, secrets):
         self._secrets = secrets
         self.save()
@@ -229,6 +243,10 @@ class NMSettingsConnection(dbus.service.Object):
             config.set(identifier, 'type', self._settings.connection.type)
             config.set(identifier, 'ssid', self._settings.wireless.ssid)
             config.set(identifier, 'uuid', self._settings.connection.uuid)
+            config.set(identifier, 'autoconnect', 
+                       self._settings.connection.autoconnect)
+            config.set(identifier, 'timestamp', 
+                       self._settings.connection.timestamp)
 
             if self._settings.wireless_security is not None:
                 if self._settings.wireless_security.key_mgmt is not None:
@@ -243,6 +261,9 @@ class NMSettingsConnection(dbus.service.Object):
                 if self._settings.wireless_security.group is not None:
                     config.set(identifier, 'group',
                                self._settings.wireless_security.group)
+                if self._settings.wireless.security is not None:
+                    config.set(identifier, 'security',
+                               self._settings.wireless.security)
             if self._secrets is not None:
                 if self._settings.wireless_security.key_mgmt == 'none':
                     config.set(identifier, 'key', self._secrets.wep_key)
@@ -339,6 +360,10 @@ def load_connections():
             settings.connection.uuid = uuid
             nmtype = config.get(section, 'type')
             settings.connection.type = nmtype
+            autoconnect = bool(config.get(section, 'autoconnect'))
+            settings.connection.autoconnect = autoconnect
+            timestamp = int(config.get(section, 'timestamp'))
+            settings.connection.timestamp = timestamp
 
             secrets = None
             if config.has_option(section, 'key-mgmt'):
@@ -346,6 +371,8 @@ def load_connections():
                 settings.wireless_security = WirelessSecurity()
                 mgmt = config.get(section, 'key-mgmt')
                 settings.wireless_security.key_mgmt = mgmt
+                security = config.get(section, 'security')
+                settings.wireless.security = security
                 key = config.get(section, 'key')
                 if mgmt == 'none':
                     secrets.wep_key = key

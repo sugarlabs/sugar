@@ -222,6 +222,10 @@ class AccessPointView(CanvasPulsingIcon):
             state = network.DEVICE_STATE_UNKNOWN
 
         if state == network.DEVICE_STATE_ACTIVATED:
+            connection = network.find_connection(self._name)
+            if connection:
+                connection.set_connected()
+
             icon_name = '%s-connected' % _ICON_NAME
         else:
             icon_name = _ICON_NAME
@@ -342,10 +346,10 @@ class AccessPointView(CanvasPulsingIcon):
             wireless_security = self._get_security()
             settings.wireless_security = wireless_security
 
-            connection = network.add_connection(self._name, settings)
+            if wireless_security is not None:
+                settings.wireless.security = '802-11-wireless-security'
 
-            if wireless_security is None:
-                self._connection = connection
+            connection = network.add_connection(self._name, settings)
 
         obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
         netmgr = dbus.Interface(obj, _NM_IFACE)
@@ -357,8 +361,6 @@ class AccessPointView(CanvasPulsingIcon):
                                   error_handler=self.__activate_error_cb)
 
     def __activate_reply_cb(self, connection):
-        if self._connection:
-            self._connection.save()
         logging.debug('Connection activated: %s', connection)
 
     def __activate_error_cb(self, err):
