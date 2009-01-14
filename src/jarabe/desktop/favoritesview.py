@@ -438,7 +438,14 @@ class ActivityIcon(CanvasIcon):
         if error is not None:
             logging.error('Error retrieving most recent activities: %r' % error)
 
-        self._journal_entries = entries
+        # If there's a problem with the DS index, we may get entries not related
+        # to this activity.
+        checked_entries = []
+        for entry in entries:
+            if entry['activity'] == self.bundle_id:
+                checked_entries.append(entry)
+
+        self._journal_entries = checked_entries
         self._update()
 
     def _update(self):
