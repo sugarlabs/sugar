@@ -31,10 +31,13 @@ from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.alert import Alert
 from sugar.graphics.xocolor import XoColor
 from sugar.activity import activityfactory
+from sugar.presence import presenceservice
 from sugar import dispatch
 
 from jarabe.view.palettes import JournalPalette
 from jarabe.view.palettes import CurrentActivityPalette, ActivityPalette
+from jarabe.view.buddymenu import BuddyMenu
+from jarabe.model.buddy import BuddyModel
 from jarabe.model import shell
 from jarabe.model import bundleregistry
 from jarabe import journal
@@ -620,30 +623,11 @@ class _MyIcon(MyIcon):
             self._palette_enabled = True
             return
 
+        presence_service = presenceservice.get_instance()
+        owner = BuddyModel(buddy=presence_service.get_owner())
+        palette = BuddyMenu(owner)
+
         client = gconf.client_get_default()
-        nick = client.get_string("/desktop/sugar/user/nick")
-        color = XoColor(client.get_string("/desktop/sugar/user/color"))
-
-        palette_icon = Icon(icon_name='computer-xo', 
-                            icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR,
-                            xo_color=color)
-        palette = Palette(nick, icon=palette_icon)
-
-        item = MenuItem(_('Settings'), 'preferences-system')
-        item.connect('activate', self.__controlpanel_activate_cb)
-        palette.menu.append(item)
-        item.show()
-
-        item = MenuItem(_('Restart'), 'system-restart')
-        item.connect('activate', self._reboot_activate_cb)
-        palette.menu.append(item)
-        item.show()
-
-        item = MenuItem(_('Shutdown'), 'system-shutdown')
-        item.connect('activate', self._shutdown_activate_cb)
-        palette.menu.append(item)
-        item.show()
-
         backup_url = client.get_string('/desktop/sugar/backup_url')
         if not backup_url:
             self._register_menu = MenuItem(_('Register'), 'media-record')

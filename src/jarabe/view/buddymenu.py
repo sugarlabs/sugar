@@ -42,8 +42,10 @@ class BuddyMenu(Palette):
         self._buddy.connect('icon-changed', self._buddy_icon_changed_cb)
         self._buddy.connect('nick-changed', self._buddy_nick_changed_cb)
 
-        if not buddy.is_owner():
-            self._add_items()
+        if buddy.is_owner():
+            self._add_my_items()
+        else:
+            self._add_buddy_items()
 
     def __destroy_cb(self, menu):
         if self._active_activity_changed_hid is not None:
@@ -52,7 +54,7 @@ class BuddyMenu(Palette):
         self._buddy.disconnect_by_func(self._buddy_icon_changed_cb)
         self._buddy.disconnect_by_func(self._buddy_nick_changed_cb)
 
-    def _add_items(self):
+    def _add_buddy_items(self):
         if friends.get_model().has_buddy(self._buddy):
             menu_item = MenuItem(_('Remove friend'), 'list-remove')
             menu_item.connect('activate', self._remove_friend_cb)
@@ -72,7 +74,36 @@ class BuddyMenu(Palette):
                 'active-activity-changed', self._cur_activity_changed_cb)
         activity = home_model.get_active_activity()
         self._update_invite_menu(activity)
-            
+    
+    def _add_my_items(self):
+        item = MenuItem(_('My Settings'), 'preferences-system')
+        item.connect('activate', self.__controlpanel_activate_cb)
+        self.menu.append(item)
+        item.show()
+
+        item = MenuItem(_('Restart'), 'system-restart')
+        item.connect('activate', self.__reboot_activate_cb)
+        self.menu.append(item)
+        item.show()
+
+        item = MenuItem(_('Shutdown'), 'system-shutdown')
+        item.connect('activate', self.__shutdown_activate_cb)
+        self.menu.append(item)
+        item.show()
+
+    def __reboot_activate_cb(self, menu_item):
+        session_manager = get_session_manager()
+        session_manager.reboot()
+
+    def __shutdown_activate_cb(self, menu_item):
+        session_manager = get_session_manager()
+        session_manager.shutdown()
+
+    def __controlpanel_activate_cb(self, menu_item):
+        panel = ControlPanel()
+        panel.set_transient_for(self.get_toplevel())
+        panel.show()
+
     def _update_invite_menu(self, activity):
         buddy_activity = self._buddy.get_current_activity()
         if buddy_activity is not None:

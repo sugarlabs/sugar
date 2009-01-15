@@ -25,7 +25,10 @@ from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon, Icon
 from sugar.graphics.palette import Palette
 from sugar.graphics.xocolor import XoColor
+from sugar.presence import presenceservice
 
+from jarabe.view.buddymenu import BuddyMenu
+from jarabe.model.buddy import BuddyModel
 from jarabe.model import friends
 from jarabe.desktop.friendview import FriendView
 from jarabe.desktop.spreadlayout import SpreadLayout
@@ -52,14 +55,10 @@ class GroupBox(hippo.Canvas):
         self._owner_icon = CanvasIcon(icon_name='computer-xo', cache=True,
                                       xo_color=color)
         self._owner_icon.props.size = style.LARGE_ICON_SIZE
-        palette_icon = Icon(icon_name='computer-xo',
-                            xo_color=color)
-        palette_icon.props.icon_size = gtk.ICON_SIZE_LARGE_TOOLBAR
 
-        nick = client.get_string("/desktop/sugar/user/nick")        
-        palette = Palette(None, primary_text=nick, icon=palette_icon)
-
-        self._owner_icon.set_palette(palette)
+        presence_service = presenceservice.get_instance()
+        owner = BuddyModel(buddy=presence_service.get_owner())
+        self._owner_icon.set_palette(BuddyMenu(owner))
         self._layout.add(self._owner_icon)
 
         friends_model = friends.get_model()
