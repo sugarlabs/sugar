@@ -38,6 +38,7 @@ from jarabe.view.palettes import CurrentActivityPalette, ActivityPalette
 from jarabe.model import shell
 from jarabe.model import bundleregistry
 from jarabe import journal
+from jarabe.controlpanel.gui import ControlPanel
 
 from jarabe.desktop import schoolserver
 from jarabe.desktop.schoolserver import RegisterError
