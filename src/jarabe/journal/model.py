@@ -336,7 +336,7 @@ class InplaceResultSet(BaseResultSet):
                     self.progress.send(self)
 
             except Exception:
-                logging.error('Error reading file %r: %r' % \
+                logging.error('Error reading file %r: %s' % \
                               (full_path, traceback.format_exc()))
 
         if self._pending_directories == 0:

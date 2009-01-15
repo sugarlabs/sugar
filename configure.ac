@@ -53,7 +53,7 @@ data/icons/Makefile
 extensions/Makefile
 extensions/cpsection/Makefile
 extensions/cpsection/aboutme/Makefile
-extensions/cpsection/aboutxo/Makefile
+extensions/cpsection/aboutcomputer/Makefile
 extensions/cpsection/datetime/Makefile
 extensions/cpsection/frame/Makefile
 extensions/cpsection/language/Makefile

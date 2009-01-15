@@ -142,7 +142,7 @@ class ControlPanel(gtk.Window):
             
             if option == 'aboutme':
                 self._table.attach(sectionicon, 0, 1, 0, 1)
-            elif option == 'aboutxo':
+            elif option == 'aboutcomputer':
                 self._table.attach(sectionicon, 1, 2, 0, 1)
             else:
                 self._table.attach(sectionicon,

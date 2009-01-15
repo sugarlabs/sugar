@@ -27,6 +27,8 @@ CLASS = 'Network'
 ICON = 'module-network'
 TITLE = _('Network')
 
+_APPLY_TIMEOUT = 3000
+
 class Network(SectionView):
     def __init__(self, model, alerts):
         SectionView.__init__(self)
@@ -214,7 +216,7 @@ class Network(SectionView):
     def __jabber_changed_cb(self, widget, data=None):        
         if self._jabber_sid:
             gobject.source_remove(self._jabber_sid)
-        self._jabber_sid = gobject.timeout_add(self._APPLY_TIMEOUT, 
+        self._jabber_sid = gobject.timeout_add(_APPLY_TIMEOUT, 
                                                self.__jabber_timeout_cb, widget)
                 
     def __jabber_timeout_cb(self, widget):        
@@ -223,17 +225,16 @@ class Network(SectionView):
             return
         try:
             self._model.set_jabber(widget.get_text())
-        except ValueError, detail:
+        except ReadError, detail:
             self._jabber_alert.props.msg = detail
             self._jabber_valid = False
+            self._jabber_alert.show()
+            self.restart_alerts.append('jabber')
         else:
-            self._jabber_alert.props.msg = self.restart_msg
             self._jabber_valid = True            
-            self.needs_restart = True
-            self.restart_alerts.append('jabber')            
+            self._jabber_alert.hide()
 
         self._validate()
-        self._jabber_alert.show()        
         return False
 
     def __network_configuration_reset_cb(self, widget):

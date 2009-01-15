@@ -23,7 +23,7 @@ from sugar.graphics import style
 
 from jarabe.controlpanel.sectionview import SectionView
 
-class AboutXO(SectionView):
+class AboutComputer(SectionView):
     def __init__(self, model, alerts=None):
         SectionView.__init__(self)
 

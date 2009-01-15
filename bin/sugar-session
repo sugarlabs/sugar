@@ -133,7 +133,7 @@ def main():
     client = gconf.client_get_default()
     timezone = client.get_string('/desktop/sugar/date/timezone')
 
-    if timezone is not '':    
+    if timezone is not None and timezone:
         os.environ['TZ'] = timezone
 
     start_ui_service()
