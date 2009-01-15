@@ -25,6 +25,8 @@ from sugar.graphics.icon import Icon
 
 from jarabe.model import shell
 from jarabe.model import friends
+from jarabe.model.session import get_session_manager
+from jarabe.controlpanel.gui import ControlPanel
 
 class BuddyMenu(Palette):
     def __init__(self, buddy):

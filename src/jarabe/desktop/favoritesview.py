@@ -41,7 +41,6 @@ from jarabe.model.buddy import BuddyModel
 from jarabe.model import shell
 from jarabe.model import bundleregistry
 from jarabe import journal
-from jarabe.controlpanel.gui import ControlPanel
 
 from jarabe.desktop import schoolserver
 from jarabe.desktop.schoolserver import RegisterError
@@ -645,21 +644,8 @@ class _MyIcon(MyIcon):
     
         return palette
 
-    def _reboot_activate_cb(self, menuitem):
-        session_manager = get_session_manager()
-        session_manager.reboot()
-
-    def _shutdown_activate_cb(self, menuitem):
-        session_manager = get_session_manager()
-        session_manager.shutdown()
-        
     def get_toplevel(self):
         return hippo.get_canvas_for_item(self).get_toplevel()
-
-    def __controlpanel_activate_cb(self, menuitem):
-        panel = ControlPanel()
-        panel.set_transient_for(self.get_toplevel())
-        panel.show()
 
     def __register_activate_cb(self, menuitem):
         self.emit('register-activate')
