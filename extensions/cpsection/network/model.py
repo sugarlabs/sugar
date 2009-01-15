@@ -44,7 +44,24 @@ def set_jabber(server):
     """
     client = gconf.client_get_default()
     client.set_string('/desktop/sugar/collaboration/jabber_server', server)
-    return 1
+
+    self._restart_jabber()
+    return 0
+
+def _restart_jabber():
+    """Call Sugar Presence Service to restart Telepathy CMs.
+
+    This allows restarting the jabber server connection when we change it.
+    """
+    _PS_SERVICE = "org.laptop.Sugar.Presence"
+    _PS_INTERFACE = "org.laptop.Sugar.Presence"
+    _PS_PATH = "/org/laptop/Sugar/Presence"
+    bus = dbus.SessionBus()
+    try:
+        ps = dbus.Interface(bus.get_object(_PS_SERVICE, _PS_PATH), _PS_INTERFACE)
+    except dbus.DBusException:
+        raise ReadError('%s service not available', _PS_SERVICE)
+    ps.RestartServerConnection()
 
 def get_radio():
     bus = dbus.SystemBus()
