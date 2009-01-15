@@ -16,7 +16,7 @@
 
 from gettext import gettext as _
 
-CLASS = 'AboutXO'
-ICON = 'module-about_my_xo'
-TITLE = _('About my XO')
+CLASS = 'AboutComputer'
+ICON = 'module-about_my_computer'
+TITLE = _('About my Computer')
 

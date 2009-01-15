@@ -21,16 +21,16 @@ import re
 import subprocess
 from gettext import gettext as _
 
-_logger = logging.getLogger('ControlPanel - AboutXO')
+_logger = logging.getLogger('ControlPanel - AboutComputer')
 _not_available = _('Not available')
 
-def get_aboutxo():        
+def get_aboutcomputer():
     msg = 'Serial Number: %s \nBuild Number: %s \nFirmware Number: %s \n' \
             % (get_serial_number(), get_build_number(), get_firmware_number())
     return msg
 
-def print_aboutxo():
-    print get_aboutxo()
+def print_aboutcomputer():
+    print get_aboutcomputer()
 
 def get_serial_number():
     serial_no = _read_file('/ofw/serial-number')
@@ -115,4 +115,3 @@ def get_license():
     except IOError:
         license_text = _not_available
     return license_text
-
