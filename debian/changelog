@@ -19,6 +19,8 @@ sugar (0.82.9-1) unstable; urgency=high
   * Unfuzz patch 2002.
   * Set urgency=high as changes are only minimal while fixing major
     issues.
+  * Add git-buildpackage configfile to hint at our using non-default
+    upstream-0.82 branch for this release.
 
  -- Jonas Smedegaard <dr@jones.dk>  Fri, 16 Jan 2009 18:37:48 +0100
 
