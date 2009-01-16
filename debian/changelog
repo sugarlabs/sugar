@@ -16,6 +16,7 @@ sugar (0.82.9-1) unstable; urgency=low
     + Update locales de, it, nl, sl, tr.
     + Explicitly stop the pulsing icon when an activity finishes
       launching.
+  * Unfuzz patch 2002.
 
  -- Jonas Smedegaard <dr@jones.dk>  Fri, 16 Jan 2009 16:50:38 +0100
 

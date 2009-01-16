@@ -3,9 +3,9 @@
 @@ -266,7 +266,7 @@
          elif len(key) >= 8 and len(key) <= 63:
              # passphrase
-             import commands
--            command = "/usr/sbin/wpa_passphrase '%s' '%s'" % (ssid, key)
-+            command = "/usr/bin/wpa_passphrase '%s' '%s'" % (ssid, key)
-             (s, o) = commands.getstatusoutput(command)
-             if s != 0:
-                 raise RuntimeError("Error hashing passphrase: %s" % o)
+             from subprocess import Popen, PIPE
+-            p = Popen(['/usr/sbin/wpa_passphrase', ssid, key], stdout=PIPE)
++            p = Popen(['/usr/bin/wpa_passphrase', ssid, key], stdout=PIPE)
+             for line in p.stdout:
+                 if line.strip().startswith("psk="):
+                     real_key = line.strip()[4:]
