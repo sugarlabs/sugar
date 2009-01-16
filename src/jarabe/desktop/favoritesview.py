@@ -25,7 +25,6 @@ import hippo
 import dbus
 
 from sugar.graphics import style
-from sugar.graphics.palette import Palette
 from sugar.graphics.icon import Icon, CanvasIcon
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.alert import Alert
@@ -500,7 +499,8 @@ class ActivityIcon(CanvasIcon):
             cr.stroke()
 
     def do_get_content_height_request(self, for_width):
-        height, height = CanvasIcon.do_get_content_height_request(self, for_width)
+        height, height = CanvasIcon.do_get_content_height_request(self, 
+                                                                  for_width)
         height += ActivityIcon._BORDER_WIDTH * 2
         return height, height
 
@@ -641,7 +641,7 @@ class _MyIcon(MyIcon):
             self._register_menu.connect('activate', self.__register_activate_cb)
             palette.menu.append(self._register_menu)
             self._register_menu.show()
-    
+
         return palette
 
     def get_toplevel(self):
@@ -652,4 +652,3 @@ class _MyIcon(MyIcon):
 
     def remove_register_menu(self):
         self.palette.remove(self._register_menu)
-
