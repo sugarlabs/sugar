@@ -48,9 +48,12 @@ def _get_icon_file_name(icon_name):
 def get_icon_name(metadata):
     file_name = None
 
-    if metadata.get('activity', ''):
-        service_name = metadata['activity']
-        activity_info = bundleregistry.get_registry().get_bundle(service_name)
+    bundle_id = metadata.get('activity', '')
+    if not bundle_id:
+        bundle_id = metadata.get('bundle_id', '')
+
+    if bundle_id:
+        activity_info = bundleregistry.get_registry().get_bundle(bundle_id)
         if activity_info:
             file_name = activity_info.get_icon()
 
