@@ -45,7 +45,7 @@ def set_jabber(server):
     client = gconf.client_get_default()
     client.set_string('/desktop/sugar/collaboration/jabber_server', server)
 
-    self._restart_jabber()
+    _restart_jabber()
     return 0
 
 def _restart_jabber():
@@ -58,7 +58,8 @@ def _restart_jabber():
     _PS_PATH = "/org/laptop/Sugar/Presence"
     bus = dbus.SessionBus()
     try:
-        ps = dbus.Interface(bus.get_object(_PS_SERVICE, _PS_PATH), _PS_INTERFACE)
+        ps = dbus.Interface(bus.get_object(_PS_SERVICE, _PS_PATH), 
+                            _PS_INTERFACE)
     except dbus.DBusException:
         raise ReadError('%s service not available', _PS_SERVICE)
     ps.RestartServerConnection()

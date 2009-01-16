@@ -225,7 +225,7 @@ class Network(SectionView):
             return
         try:
             self._model.set_jabber(widget.get_text())
-        except ReadError, detail:
+        except Exception, detail:
             self._jabber_alert.props.msg = detail
             self._jabber_valid = False
             self._jabber_alert.show()
