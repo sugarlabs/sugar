@@ -284,7 +284,7 @@ class JournalActivity(Window):
         if metadata['mime_type'] == JournalEntryBundle.MIME_TYPE:
             model.delete(object_id)
 
-        metadata['activity'] = bundle.get_bundle_id()
+        metadata['bundle_id'] = bundle.get_bundle_id()
         model.write(metadata)
 
     def search_grab_focus(self):
