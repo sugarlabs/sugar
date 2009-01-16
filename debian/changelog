@@ -1,3 +1,20 @@
+sugar (0.82.9-1) unstable; urgency=low
+
+  * New upstream release.
+    + Update locales es, fr, nl, pt and tr.
+    + Initialize dbus threads (fix X11 crashes during software update).
+      Closes: olpc#8234.
+    + Resync default favorites list with G1G1 activities list.
+      Closes: olpc#8657
+    + Fix WPA key dialog handling passwords with shell metacharacters.
+      Closes: olpc#8642.
+    + Fix the jumpy xo man.
+      Closes: olpc#8662.
+    + Fix accidental searches leading to a "blank" Home screen.
+      Closes: olpc#7969.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 16 Jan 2009 16:50:38 +0100
+
 sugar (0.82.8-4) unstable; urgency=high
 
   * Drop send_interface dbus hints. Closes:bug#510657, thanks to Simon
