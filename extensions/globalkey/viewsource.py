@@ -61,12 +61,12 @@ def handle_key_press(key):
         _logger.error('Activity without a window xid')
         return
 
+    bundle_path = activity.get_bundle_path()
+
     if window_xid in map_activity_to_window:
         _logger.debug('Viewsource window already open for %s %s' % \
                 (window_xid, bundle_path))
         return
-
-    bundle_path = activity.get_bundle_path()
 
     document_path = None
     if service is not None:
@@ -132,7 +132,8 @@ class ViewSource(gtk.Window):
         self._file_viewer.show()
 
         self._source_display = SourceDisplay()
-        #self._source_display.set_size_request(self._calculate_char_width(80), -1)
+        #self._source_display.set_size_request(self._calculate_char_width(80),
+        #                                      -1)
         pane.pack2(self._source_display)
         self._source_display.show()
 
@@ -202,14 +203,16 @@ class Toolbar(gtk.Toolbar):
                 os.path.exists(bundle_path) and os.path.exists(document_path):
             activity_button = RadioToolButton(named_icon='printer')
             activity_button.props.tooltip = _('Activity')
-            activity_button.connect('toggled', self.__button_toggled_cb, bundle_path)
+            activity_button.connect('toggled', self.__button_toggled_cb, 
+                                    bundle_path)
             self.insert(activity_button, -1)
             activity_button.show()
 
             document_button = RadioToolButton(named_icon='view-radial')
             document_button.props.tooltip = _('Document')
             document_button.props.group = activity_button
-            document_button.connect('toggled', self.__button_toggled_cb, document_path)
+            document_button.connect('toggled', self.__button_toggled_cb, 
+                                    document_path)
             self.insert(document_button, -1)
             document_button.show()
 
