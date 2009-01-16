@@ -12,6 +12,10 @@ sugar (0.82.9-1) unstable; urgency=low
       Closes: olpc#8662.
     + Fix accidental searches leading to a "blank" Home screen.
       Closes: olpc#7969.
+  * Add patch 0001 syncing with head of upstream (sucrose-0.82 branch):
+    + Update locales de, it, nl, sl, tr.
+    + Explicitly stop the pulsing icon when an activity finishes
+      launching.
 
  -- Jonas Smedegaard <dr@jones.dk>  Fri, 16 Jan 2009 16:50:38 +0100
 
