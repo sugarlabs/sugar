@@ -83,6 +83,11 @@ class BuddyMenu(Palette):
         self.menu.append(item)
         item.show()
 
+        item = MenuItem(_('Logout'), 'system-logout')
+        item.connect('activate', self.__logout_activate_cb)
+        self.menu.append(item)
+        item.show()
+
         item = MenuItem(_('Restart'), 'system-restart')
         item.connect('activate', self.__reboot_activate_cb)
         self.menu.append(item)
@@ -92,6 +97,10 @@ class BuddyMenu(Palette):
         item.connect('activate', self.__shutdown_activate_cb)
         self.menu.append(item)
         item.show()
+
+    def __logout_activate_cb(self, menu_item):
+        session_manager = get_session_manager()
+        session_manager.logout()
 
     def __reboot_activate_cb(self, menu_item):
         session_manager = get_session_manager()
