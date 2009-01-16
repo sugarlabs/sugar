@@ -1,4 +1,4 @@
-sugar (0.82.9-1) unstable; urgency=low
+sugar (0.82.9-1) unstable; urgency=high
 
   * New upstream release.
     + Update locales es, fr, nl, pt and tr.
@@ -17,8 +17,10 @@ sugar (0.82.9-1) unstable; urgency=low
     + Explicitly stop the pulsing icon when an activity finishes
       launching.
   * Unfuzz patch 2002.
+  * Set urgency=high as changes are only minimal while fixing major
+    issues.
 
- -- Jonas Smedegaard <dr@jones.dk>  Fri, 16 Jan 2009 16:50:38 +0100
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 16 Jan 2009 18:37:48 +0100
 
 sugar (0.82.8-4) unstable; urgency=high
 
