@@ -67,7 +67,7 @@
       <applyto>/desktop/sugar/date/timezone</applyto>
       <owner>sugar</owner>
       <type>string</type>
-      <default>"UTC"</default>
+      <default>UTC</default>
       <locale name="C">
         <short>Timezone</short>
         <long>Timezone setting for the system.</long>
@@ -79,7 +79,7 @@
       <applyto>/desktop/sugar/desktop/favorites_layout</applyto>
       <owner>sugar</owner>
       <type>string</type>
-      <default>"ring-layout"</default>
+      <default>ring-layout</default>
       <locale name="C">
         <short>Favorites Layout</short>
         <long>Layout of the favorites view.</long>
