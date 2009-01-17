@@ -50,17 +50,11 @@ _logger = logging.getLogger('FavoritesView')
 
 _ICON_DND_TARGET = ('activity-icon', gtk.TARGET_SAME_WIDGET, 0)
 
-# enumerate the various layout types we will display in the dropdown palette.
-# add a constant for your layout here, and add it to the LAYOUT_MAP to get
-# it to appear in the palette.
-RING_LAYOUT, BOX_LAYOUT, TRIANGLE_LAYOUT, SUNFLOWER_LAYOUT, RANDOM_LAYOUT = \
-             xrange(5)
-
-LAYOUT_MAP = {RING_LAYOUT: favoriteslayout.RingLayout,
-              #BOX_LAYOUT: favoriteslayout.BoxLayout,
-              #TRIANGLE_LAYOUT: favoriteslayout.TriangleLayout,
-              #SUNFLOWER_LAYOUT: favoriteslayout.SunflowerLayout,
-              RANDOM_LAYOUT: favoriteslayout.RandomLayout}
+LAYOUT_MAP = {favoriteslayout.RingLayout.key: favoriteslayout.RingLayout,
+        #favoriteslayout.BoxLayout.key: favoriteslayout.BoxLayout,
+        #favoriteslayout.TriangleLayout.key: favoriteslayout.TriangleLayout,
+        #favoriteslayout.SunflowerLayout.key: favoriteslayout.SunflowerLayout,
+        favoriteslayout.RandomLayout.key: favoriteslayout.RandomLayout}
 """Map numeric layout identifiers to uninstantiated subclasses of
 `FavoritesLayout` which implement the layouts.  Additional information
 about the layout can be accessed with fields of the class."""
@@ -667,21 +661,12 @@ class FavoritesSetting(object):
 
     def __init__(self):
         client = gconf.client_get_default() 
-        layout_constant = client.get_string(self._FAVORITES_KEY)
-        self._layout = self._convert_layout_constant(layout_constant)
+        self._layout = client.get_string(self._FAVORITES_KEY)
         logging.debug('FavoritesSetting layout %r' % (self._layout))
 
         self._mode = None
 
         self.changed = dispatch.Signal()
-
-    def _convert_layout_constant(self, profile_constant):
-        for layoutid, layoutclass in LAYOUT_MAP.items():
-            if profile_constant == layoutclass.profile_key:
-                return layoutid
-        logging.warning('Incorrect favorites_layout value: %r' % \
-                        profile_constant)
-        return RING_LAYOUT
 
     def get_layout(self):
         return self._layout
@@ -691,9 +676,8 @@ class FavoritesSetting(object):
         if layout != self._layout:
             self._layout = layout
 
-            client = gconf.client_get_default()            
-            profile_key = LAYOUT_MAP[layout].profile_key
-            client.set_string(self._FAVORITES_KEY, profile_key)
+            client = gconf.client_get_default()
+            client.set_string(self._FAVORITES_KEY, layout)
 
             self.changed.send(self)
 

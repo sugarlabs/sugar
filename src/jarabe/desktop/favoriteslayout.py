@@ -98,7 +98,7 @@ class RandomLayout(FavoritesLayout):
     icon_name = 'view-freeform'
     """Name of icon used in home view dropdown palette."""
 
-    profile_key = 'random-layout'
+    key = 'random-layout'
     """String used in profile to represent this view."""
 
     # TRANS: label for the freeform layout in the favorites view
@@ -181,7 +181,7 @@ class RingLayout(FavoritesLayout):
     __gtype_name__ = 'RingLayout'
     icon_name = 'view-radial'
     """Name of icon used in home view dropdown palette."""
-    profile_key = 'ring-layout'
+    key = 'ring-layout'
     """String used in profile to represent this view."""
     # TRANS: label for the ring layout in the favorites view
     palette_name = _('Ring')
@@ -325,7 +325,7 @@ class SunflowerLayout(RingLayout):
     icon_name = 'view-spiral'
     """Name of icon used in home view dropdown palette."""
 
-    profile_key = 'spiral-layout'
+    key = 'spiral-layout'
     """String used in profile to represent this view."""
 
     # TRANS: label for the spiral layout in the favorites view
@@ -392,7 +392,7 @@ class BoxLayout(RingLayout):
     icon_name = 'view-box'
     """Name of icon used in home view dropdown palette."""
 
-    profile_key = 'box-layout'
+    key = 'box-layout'
     """String used in profile to represent this view."""
 
     # TRANS: label for the box layout in the favorites view
@@ -433,7 +433,7 @@ class TriangleLayout(RingLayout):
     icon_name = 'view-triangle'
     """Name of icon used in home view dropdown palette."""
 
-    profile_key = 'triangle-layout'
+    key = 'triangle-layout'
     """String used in profile to represent this view."""
 
     # TRANS: label for the box layout in the favorites view
