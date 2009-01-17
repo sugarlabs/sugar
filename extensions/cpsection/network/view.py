@@ -23,6 +23,8 @@ from sugar.graphics import style
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
 
+from model import ReadError
+
 CLASS = 'Network'
 ICON = 'module-network'
 TITLE = _('Network')
@@ -170,7 +172,7 @@ class Network(SectionView):
         self._entry.set_text(self._model.get_jabber())        
         try:                        
             radio_state = self._model.get_radio()        
-        except Exception, detail:
+        except ReadError, detail:
             self._radio_alert.props.msg = detail                    
             self._radio_alert.show()
         else:    
