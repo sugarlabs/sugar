@@ -1,7 +1,6 @@
 sugardir = $(pkgdatadir)/data/icons
 
 sugar_DATA =			 	\
-	activity-journal.svg     	\	
 	module-about_me.svg     	\	
 	module-about_my_computer.svg   	\
 	module-date_and_time.svg 	\

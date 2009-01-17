@@ -124,7 +124,14 @@ class Activity(gobject.GObject):
     def get_icon_path(self):
         """Retrieve the activity's icon (file) name"""
         if self.is_journal():
-            return os.path.join(config.data_path, 'icons/activity-journal.svg')
+            icon_theme = gtk.icon_theme_get_default()
+            info = icon_theme.lookup_icon('activity-journal', 
+                                          gtk.ICON_SIZE_SMALL_TOOLBAR, 0)
+            if not info:
+                return None
+            fname = info.get_filename()
+            del info
+            return fname
         elif self._activity_info:
             return self._activity_info.get_icon()
         else:
