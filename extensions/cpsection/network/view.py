@@ -206,7 +206,7 @@ class Network(SectionView):
         radio_state = widget.get_active()
         try:
             self._model.set_radio(radio_state)
-        except Exception, detail:
+        except ReadError, detail:
             self._radio_alert.props.msg = detail
             self._radio_valid = False
         else:
@@ -227,7 +227,7 @@ class Network(SectionView):
             return
         try:
             self._model.set_jabber(widget.get_text())
-        except Exception, detail:
+        except ReadError, detail:
             self._jabber_alert.props.msg = detail
             self._jabber_valid = False
             self._jabber_alert.show()
