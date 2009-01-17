@@ -3,6 +3,7 @@ sugar_PYTHON =				\
 	__init__.py			\
 	buddyicon.py			\
 	buddymenu.py			\
+	canvastextview.py		\
 	keyhandler.py			\
 	launcher.py			\
 	palettes.py			\

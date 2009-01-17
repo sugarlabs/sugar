@@ -33,6 +33,7 @@ from jarabe.journal.keepicon import KeepIcon
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import misc
 from jarabe.journal import model
+from jarabe.view.canvastextview import CanvasTextView
 
 class Separator(hippo.CanvasBox, hippo.CanvasItem):
     def __init__(self, orientation):
@@ -43,24 +44,6 @@ class Separator(hippo.CanvasBox, hippo.CanvasItem):
             self.props.box_width = style.LINE_WIDTH
         else:
             self.props.box_height = style.LINE_WIDTH
-
-class CanvasTextView(hippo.CanvasWidget):
-    def __init__(self, text, **kwargs):
-        hippo.CanvasWidget.__init__(self, **kwargs)
-        self.text_view_widget = gtk.TextView()
-        self.text_view_widget.props.buffer.props.text = text
-        self.text_view_widget.props.left_margin = style.DEFAULT_SPACING
-        self.text_view_widget.props.right_margin = style.DEFAULT_SPACING
-        self.text_view_widget.props.wrap_mode = gtk.WRAP_WORD
-        self.text_view_widget.show()
-        
-        # TODO: These fields should expand vertically instead of scrolling
-        scrolled_window = gtk.ScrolledWindow()
-        scrolled_window.set_shadow_type(gtk.SHADOW_OUT)
-        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        scrolled_window.add(self.text_view_widget)
-        
-        self.props.widget = scrolled_window
 
 class BuddyList(hippo.CanvasBox):
     def __init__(self, buddies):
