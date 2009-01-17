@@ -17,7 +17,6 @@
 from gettext import gettext as _
 import logging
 import os
-import gconf
 
 import gobject
 import gtk
@@ -34,17 +33,8 @@ from jarabe.desktop.activitieslist import ActivitiesList
 
 _FAVORITES_VIEW = 0
 _LIST_VIEW = 1
-_FAVORITES_KEY = "/desktop/sugar/desktop/favorites_layout"
 
 _AUTOSEARCH_TIMEOUT = 1000
-
-def _convert_layout_constant(profile_constant):
-    for layoutid, layoutclass in favoritesview.LAYOUT_MAP.items():
-        if profile_constant == layoutclass.profile_key:
-            return layoutid
-    logging.warning('Incorrect favorites_layout value: %r' % \
-                    profile_constant)
-    return favoritesview.RING_LAYOUT
 
 class HomeBox(gtk.VBox):
     __gtype_name__ = 'SugarHomeBox'
@@ -67,10 +57,7 @@ class HomeBox(gtk.VBox):
         self.pack_start(self._toolbar, expand=False)
         self._toolbar.show()
 
-        client = gconf.client_get_default() 
-        layout_constant = client.get_string(_FAVORITES_KEY)
-        layout = _convert_layout_constant(layout_constant)
-        self._set_view(_FAVORITES_VIEW, layout)
+        self._set_view(_FAVORITES_VIEW)
 
     def __erase_activated_cb(self, view, bundle_id):
         registry = bundleregistry.get_registry()
@@ -160,24 +147,13 @@ class HomeBox(gtk.VBox):
         query = query.lower()
         self._list_view.set_filter(query)
 
-    def __toolbar_view_changed_cb(self, toolbar, view, layout):
-        self._set_view(view, layout)
-        if layout is not None:
-            client = gconf.client_get_default()            
-            layout_profile = client.get_string(_FAVORITES_KEY)
-            layout = _convert_layout_constant(layout_profile)
-            profile_key = favoritesview.LAYOUT_MAP[layout].profile_key
-            if profile_key != layout:
-                client.set_string(_FAVORITES_KEY, profile_key)
-            else:
-                logging.warning('Incorrect layout requested: %r' % layout)
+    def __toolbar_view_changed_cb(self, toolbar, view):
+        self._set_view(view)
 
-    def _set_view(self, view, layout):
+    def _set_view(self, view):
         if view == _FAVORITES_VIEW:
             if self._list_view in self.get_children():
                 self.remove(self._list_view)
-
-            self._favorites_view.layout = layout
 
             if self._favorites_view not in self.get_children():
                 self.add(self._favorites_view)
@@ -218,7 +194,7 @@ class HomeToolbar(gtk.Toolbar):
                           ([str])),
         'view-changed':  (gobject.SIGNAL_RUN_FIRST,
                           gobject.TYPE_NONE,
-                          ([object, object]))
+                          ([object]))
     }
 
     def __init__(self):
@@ -268,11 +244,11 @@ class HomeToolbar(gtk.Toolbar):
             if view == _FAVORITES_VIEW:
                 self.search_entry.set_text('')
                 self.search_entry.set_sensitive(False)
-                self.emit('view-changed', view, button.layout)
+                self.emit('view-changed', view)
             else:
                 self.search_entry.set_sensitive(True)
                 self.search_entry.grab_focus()
-                self.emit('view-changed', view, None)
+                self.emit('view-changed', view)
             
     def _add_separator(self, expand=False):
         separator = gtk.SeparatorToolItem()
@@ -321,9 +297,8 @@ class FavoritesButton(RadioToolButton):
         self.props.accelerator = _('<Ctrl>1')
         self.props.group = None
 
-        client = gconf.client_get_default()
-        layout_constant = client.get_string(_FAVORITES_KEY)
-        self._layout = _convert_layout_constant(layout_constant)
+        favorites_settings = favoritesview.get_settings()
+        self._layout = favorites_settings.layout
         self._update_icon()
 
         # someday, this will be a gtk.Table()
@@ -345,9 +320,14 @@ class FavoritesButton(RadioToolButton):
             return
         if self._layout == layout and self.props.active:
             return
-        elif self._layout != layout:
+
+        if self._layout != layout:
             self._layout = layout
             self._update_icon()
+
+            favorites_settings = favoritesview.get_settings()
+            favorites_settings.layout = layout
+
         if not self.props.active:
             self.props.active = True
         else:
@@ -356,8 +336,4 @@ class FavoritesButton(RadioToolButton):
     def _update_icon(self):
         self.props.named_icon = favoritesview.LAYOUT_MAP[self._layout]\
                                 .icon_name
-
-    def _get_layout(self):
-        return self._layout
-    layout = property(_get_layout, None)
 

@@ -113,6 +113,14 @@ class FavoritesView(hippo.Canvas):
 
         gobject.idle_add(self.__connect_to_bundle_registry_cb)
 
+        favorites_settings = get_settings()
+        favorites_settings.changed.connect(self.__settings_changed_cb)
+        self._set_layout(favorites_settings.layout)
+
+    def __settings_changed_cb(self, **kwargs):
+        favorites_settings = get_settings()
+        self._set_layout(favorites_settings.layout)        
+
     def __connect_to_bundle_registry_cb(self):
         registry = bundleregistry.get_registry()
 
@@ -652,3 +660,50 @@ class _MyIcon(MyIcon):
 
     def remove_register_menu(self):
         self.palette.remove(self._register_menu)
+
+class FavoritesSetting(object):
+
+    _FAVORITES_KEY = "/desktop/sugar/desktop/favorites_layout"
+
+    def __init__(self):
+        client = gconf.client_get_default() 
+        layout_constant = client.get_string(self._FAVORITES_KEY)
+        self._layout = self._convert_layout_constant(layout_constant)
+        logging.debug('FavoritesSetting layout %r' % (self._layout))
+
+        self._mode = None
+
+        self.changed = dispatch.Signal()
+
+    def _convert_layout_constant(self, profile_constant):
+        for layoutid, layoutclass in LAYOUT_MAP.items():
+            if profile_constant == layoutclass.profile_key:
+                return layoutid
+        logging.warning('Incorrect favorites_layout value: %r' % \
+                        profile_constant)
+        return RING_LAYOUT
+
+    def get_layout(self):
+        return self._layout
+
+    def set_layout(self, layout):
+        logging.debug('set_layout %r %r' % (layout, self._layout))
+        if layout != self._layout:
+            self._layout = layout
+
+            client = gconf.client_get_default()            
+            profile_key = LAYOUT_MAP[layout].profile_key
+            client.set_string(self._FAVORITES_KEY, profile_key)
+
+            self.changed.send(self)
+
+    layout = property(get_layout, set_layout)
+
+_favorites_settings = None
+
+def get_settings():
+    global _favorites_settings
+    if _favorites_settings is None:
+        _favorites_settings = FavoritesSetting()
+    return _favorites_settings
+
