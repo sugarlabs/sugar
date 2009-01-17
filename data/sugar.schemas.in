@@ -87,6 +87,18 @@
     </schema>
 
     <schema>
+      <key>/schemas/desktop/sugar/desktop/favorites_mode</key>
+      <applyto>/desktop/sugar/desktop/favorites_mode</applyto>
+      <owner>sugar</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+        <short>Favorites resume mode</short>
+        <long>When in resume mode, clicking on a favorite icon will cause the last entry for that activity to be resumed.</long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/desktop/sugar/frame/edge_delay</key>
       <applyto>/desktop/sugar/frame/edge_delay</applyto>
       <owner>sugar</owner>
