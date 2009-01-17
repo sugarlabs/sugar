@@ -301,17 +301,23 @@ class FavoritesButton(RadioToolButton):
         self._layout = favorites_settings.layout
         self._update_icon()
 
+        menu_item = gtk.CheckMenuItem(_('Resume by default'))
+        menu_item.props.active = favorites_settings.resume_mode
+        self.props.palette.menu.append(menu_item)
+        menu_item.connect('activate', self.__mode_activate_cb)
+        menu_item.show()
+
         # someday, this will be a gtk.Table()
         layouts_grid = gtk.HBox()
         layout_item = None
-        for layoutid, layoutclass in sorted(favoritesview.LAYOUT_MAP.items()):
-            layout_item = RadioToolButton(icon_name=layoutclass.icon_name,
+        for layout_id, layout_class in sorted(favoritesview.LAYOUT_MAP.items()):
+            layout_item = RadioToolButton(icon_name=layout_class.icon_name,
                                           group=layout_item, active=False)
-            if layoutid == self._layout:
+            if layout_id == self._layout:
                 layout_item.set_active(True)
             layouts_grid.pack_start(layout_item, fill=False)
-            layout_item.connect('toggled', self.__layout_activate_cb,
-                                layoutid)
+            layout_item.connect('toggled', self.__layout_activate_cb, layout_id)
+
         layouts_grid.show_all()
         self.props.palette.set_content(layouts_grid)
 
@@ -333,7 +339,11 @@ class FavoritesButton(RadioToolButton):
         else:
             self.emit('toggled')
 
+    def __mode_activate_cb(self, menu_item):
+        favorites_settings = favoritesview.get_settings()
+        favorites_settings.resume_mode = menu_item.props.active
+
     def _update_icon(self):
-        self.props.named_icon = favoritesview.LAYOUT_MAP[self._layout]\
-                                .icon_name
+        layout_class = favoritesview.LAYOUT_MAP[self._layout]
+        self.props.named_icon = layout_class.icon_name
 
