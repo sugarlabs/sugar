@@ -28,12 +28,12 @@ from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics.entry import CanvasEntry
+from sugar.graphics.canvastextview import CanvasTextView
 
 from jarabe.journal.keepicon import KeepIcon
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import misc
 from jarabe.journal import model
-from jarabe.view.canvastextview import CanvasTextView
 
 class Separator(hippo.CanvasBox, hippo.CanvasItem):
     def __init__(self, orientation):
