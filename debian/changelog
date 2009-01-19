@@ -1,3 +1,15 @@
+sugar (0.82.9-2) unstable; urgency=low
+
+  * Limit watch file to track stable 0.82 branch.
+  * Add patches 0002 (from upstream Git) and 2992 to avoid unused
+    glive.py. Drop depending on python-gst0.10 or recommending
+    gstreamer0.10-plugins-good.
+  * Declare dependencies in debian/rules (not debian/control{,in}).
+  * Semi-auto-update debian/control to update dependencies:
+    DEB_MAINTAINER_MODE=1 fakeroot debian/rules clean
+
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 19 Jan 2009 18:47:45 +0100
+
 sugar (0.82.9-1) unstable; urgency=high
 
   * New upstream release.
