@@ -584,6 +584,7 @@ class FavoritePalette(ActivityPalette):
                 menu_item = MenuItem(text_label=entry['title'],
                                      file_name=icon_file_name,
                                      xo_color=color)
+                menu_item.connect('activate', self.__resume_entry_cb, entry)
                 menu_items.append(menu_item)
                 menu_item.show()
 
@@ -594,6 +595,10 @@ class FavoritePalette(ActivityPalette):
 
             for i in range(0, len(menu_items)):
                 self.menu.insert(menu_items[i], i)
+
+    def __resume_entry_cb(self, menu_item, entry):
+        if entry is not None:
+            activityfactory.create_with_object_id(self._bundle, entry['uid'])
 
 class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
     def __init__(self):
