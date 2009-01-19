@@ -1,3 +1,11 @@
+sugar (0.82.9-3) unstable; urgency=low
+
+  * Fix dependencies declared in debian/rules.
+  * Semi-auto-update debian/control to update dependencies:
+    DEB_MAINTAINER_MODE=1 fakeroot debian/rules clean
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 20 Jan 2009 00:25:36 +0100
+
 sugar (0.82.9-2) unstable; urgency=low
 
   * Limit watch file to track stable 0.82 branch.
