@@ -17,13 +17,11 @@
 import logging
 
 import gobject
-import gtk
 import hippo
 import gconf
 
 from sugar.graphics import style
-from sugar.graphics.icon import CanvasIcon, Icon
-from sugar.graphics.palette import Palette
+from sugar.graphics.icon import CanvasIcon
 from sugar.graphics.xocolor import XoColor
 from sugar.presence import presenceservice
 

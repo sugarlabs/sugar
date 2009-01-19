@@ -17,7 +17,6 @@
 
 import logging
 import time
-import os
 
 import gconf
 import wnck
@@ -31,7 +30,6 @@ from sugar.graphics.xocolor import XoColor
 from sugar.presence import presenceservice
 
 from jarabe.model.bundleregistry import get_registry
-from jarabe import config
 
 _SERVICE_NAME = "org.laptop.Activity"
 _SERVICE_PATH = "/org/laptop/Activity"
