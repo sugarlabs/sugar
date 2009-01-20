@@ -36,7 +36,7 @@ Copyright: 2006-2007, Owen Williams
 License: GPL-2+
 
 Files: data/em.py
-Copyright: © 2002-2003 Erik Max Francis <max@alcyone.com>
+Copyright: 2002-2003 Erik Max Francis <max@alcyone.com>
 License: GPL-2+
 
 Files: src/model/homeactivity.py
