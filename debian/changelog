@@ -1,3 +1,9 @@
+sugar (0.82.9-4) unstable; urgency=low
+
+  * Add (not yet used) sugarlabs URL to watch file.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 20 Jan 2009 03:33:22 +0100
+
 sugar (0.82.9-3) unstable; urgency=low
 
   * Fix dependencies declared in debian/rules.
