@@ -1,6 +1,84 @@
 Format-Specification: http://wiki.debian.org/Proposals/CopyrightFormat?action=recall&rev=XXX
 Upstream-Name: Untrusted draft - double-check copyrights yourself!
 
+Files: AUTHORS
+	Makefile.am
+	README
+	bin/Makefile.am
+	bin/sugar
+	bin/sugar-backup
+	bin/sugar-install-bundle
+	bin/sugar.in
+	configure.ac
+	data/Makefile.am
+	data/activities.defaults
+	data/gtkrc.em
+	data/icons/Makefile.am
+	data/icons/module-about_me.svg
+	data/icons/module-about_my_xo.svg
+	data/icons/module-date_and_time.svg
+	data/icons/module-frame.svg
+	data/icons/module-language.svg
+	data/icons/module-network.svg
+	data/icons/module-power.svg
+	data/kbdconfig
+	data/mime.defaults
+	data/sugar-xo.gtkrc
+	data/sugar.desktop
+	data/sugar.gtkrc
+	data/sugar.xml.in
+	debian/README.cdbs-tweaks
+	debian/README.packaging
+	debian/compat
+	debian/control
+	debian/control.in
+	debian/gbp.conf
+	debian/patches/0001_sync_git_head.patch
+	debian/patches/0002_remove_unused_glive.py.patch
+	debian/patches/2001_empy_from_system.patch
+	debian/patches/2002_wpa_passphrase_in_usr-bin.patch
+	debian/patches/2003_fix_tz_config_path.patch
+	debian/patches/2004_strip_dbus_interface_hints.patch
+	debian/patches/2991_enable_danish_l10n.patch
+	debian/patches/2992_remove_unused_glive.py.patch
+	debian/patches/README
+	debian/patches/series
+	debian/pycompat
+	debian/sugar-emulator.desktop
+	debian/sugar.desktop
+	debian/sugar.install
+	debian/sugar.menu
+	debian/watch
+	po/ChangeLog
+	po/POTFILES.in
+	po/POTFILES.skip
+	po/de.po
+	po/pl.po
+	service/Makefile.am
+	service/org.laptop.ActivityRegistry.service.in
+	service/org.laptop.Clipboard.service.in
+	src/Makefile.am
+	src/controlpanel/Makefile.am
+	src/controlpanel/model/Makefile.am
+	src/controlpanel/view/Makefile.am
+	src/hardware/Makefile.am
+	src/hardware/NetworkManagerInfo.conf
+	src/hardware/schoolserver.py
+	src/intro/Makefile.am
+	src/intro/__init__.py
+	src/intro/default-picture.png
+	src/intro/glive.py
+	src/model/Makefile.am
+	src/model/devices/Makefile.am
+	src/model/devices/network/Makefile.am
+	src/view/Makefile.am
+	src/view/devices/Makefile.am
+	src/view/devices/network/Makefile.am
+	src/view/frame/Makefile.am
+	src/view/home/Makefile.am
+Copyright: *No copyright*
+License: UNKNOWN
+
 Files: po/af.po
 	po/am.po
 	po/ar.po
@@ -56,62 +134,6 @@ Files: po/af.po
 	po/zh_CN.po
 	po/zh_TW.po
 Copyright: YEAR THE PACKAGE'S HOLDER
-License: UNKNOWN
-
-Files: AUTHORS
-	Makefile.am
-	README
-	bin/Makefile.am
-	bin/sugar
-	bin/sugar-backup
-	bin/sugar-install-bundle
-	bin/sugar.in
-	configure.ac
-	data/Makefile.am
-	data/activities.defaults
-	data/gtkrc.em
-	data/icons/Makefile.am
-	data/icons/module-about_me.svg
-	data/icons/module-about_my_xo.svg
-	data/icons/module-date_and_time.svg
-	data/icons/module-frame.svg
-	data/icons/module-language.svg
-	data/icons/module-network.svg
-	data/icons/module-power.svg
-	data/kbdconfig
-	data/mime.defaults
-	data/sugar-xo.gtkrc
-	data/sugar.desktop
-	data/sugar.gtkrc
-	data/sugar.xml.in
-	po/ChangeLog
-	po/POTFILES.in
-	po/POTFILES.skip
-	po/de.po
-	po/pl.po
-	service/Makefile.am
-	service/org.laptop.ActivityRegistry.service.in
-	service/org.laptop.Clipboard.service.in
-	src/Makefile.am
-	src/controlpanel/Makefile.am
-	src/controlpanel/model/Makefile.am
-	src/controlpanel/view/Makefile.am
-	src/hardware/Makefile.am
-	src/hardware/NetworkManagerInfo.conf
-	src/hardware/schoolserver.py
-	src/intro/Makefile.am
-	src/intro/__init__.py
-	src/intro/default-picture.png
-	src/intro/glive.py
-	src/model/Makefile.am
-	src/model/devices/Makefile.am
-	src/model/devices/network/Makefile.am
-	src/view/Makefile.am
-	src/view/devices/Makefile.am
-	src/view/devices/network/Makefile.am
-	src/view/frame/Makefile.am
-	src/view/home/Makefile.am
-Copyright: *No copyright*
 License: UNKNOWN
 
 Files: service/bundleregistry.py
@@ -274,6 +296,23 @@ Files: service/clipboardservice.py
 Copyright: 2006, Red Hat, Inc
 License: GPL-2+
 
+Files: debian/cdbs/1/class/autotools-vars.mk
+	debian/cdbs/1/class/makefile.mk
+Copyright: 2002-2003, Colin Walters <walters@debian.org>
+	2003,2008, Jonas Smedegaard <dr@jones.dk>
+License: GPL
+
+Files: debian/cdbs/1/class/autotools.mk
+	debian/cdbs/1/class/makefile-vars.mk
+Copyright: 2002-2003, Colin Walters <walters@debian.org>
+	2008, Jonas Smedegaard <dr@jones.dk>
+License: GPL
+
+Files: debian/cdbs/1/class/python-autotools.mk
+	debian/cdbs/1/rules/package-relations.mk
+Copyright: 2008, Jonas Smedegaard <dr@jones.dk>
+License: GPL
+
 Files: src/model/devices/speaker.py
 	src/view/devices/speaker.py
 Copyright: 2008, Martin Dengler
@@ -295,6 +334,22 @@ License: GPL (GENERATED FILE)
 Files: intltool-update.in
 Copyright: 2000-2003, Free Software Foundation
 License: GPL (GENERATED FILE)
+
+Files: debian/cdbs/1/class/python-vars.mk
+Copyright: 2003,2008, Jonas Smedegaard <dr@jones.dk>
+License: GPL
+
+Files: debian/cdbs/1/rules/buildinfo.mk
+Copyright: 2004-2007, Jonas Smedegaard <dr@jones.dk>
+License: GPL
+
+Files: debian/cdbs/1/rules/upstream-tarball.mk
+Copyright: 2007-2008, Jonas Smedegaard <dr@jones.dk>
+License: GPL
+
+Files: debian/cdbs/1/rules/copyright-check.mk
+Copyright: \s*(\S.*?)\s*\
+License: GPL
 
 Files: intltool-extract.in
 Copyright: 2000-2001, 2003, Free Software Foundation
@@ -370,6 +425,14 @@ License: UNKNOWN
 
 Files: po/fr.po
 Copyright: 2007, the Package Owner
+License: UNKNOWN
+
+Files: debian/rules
+Copyright: 2007-2008, Jonas Smedegaard <dr@jones.dk>
+License: UNKNOWN
+
+Files: debian/patches/1001_danish_l10n.patch
+Copyright: 2008, Jonas Smedegaard <dr@jones.dk>
 License: UNKNOWN
 
 Files: po/ig.po
