@@ -2,6 +2,7 @@ Format-Specification: http://wiki.debian.org/Proposals/CopyrightFormat?action=re
 Upstream-Name: sugar
 Upstream-Maintainer: Sugarlabs <sugar-devel@lists.sugarlabs.org>
 	http://lists.sugarlabs.org/listinfo/sugar-devel
+	irc://irc.freenode.net/sugar
 Upstream-Source: http://dev.laptop.org/pub/sugar/sources/sugar/
 	git://dev.laptop.org/sugar
 	http://download.sugarlabs.org/sources/sucrose/glucose/sugar
