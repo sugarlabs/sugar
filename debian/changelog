@@ -1,3 +1,21 @@
+sugar (0.82.9-5) unstable; urgency=medium
+
+  * Update CDBS snippets:
+    + Simplify internal variables
+    + Ignore no files by default in copyright-check.mk
+    + Correct and update copyright hints of the snippets themselves
+  * Update debian/copyright and copyright hints:
+    + Rewrite debian/copyright using new file format, version 428
+    + Add info on CDBS snippets (new owners, no new licenses)
+    + Set Sugarlabs (not Redhat) as upstream maintainer, and add both
+      old laptop.org and new sugarlabs.org source URLs.
+    + Update copyright years
+    + Fix licensing change LGPL -> GPL (changed at 0.79.x)
+    + Include GAP licenses verbatim.
+  * Set urgency=medium due to opyright and licensing corrections.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 20 Jan 2009 05:38:42 +0100
+
 sugar (0.82.9-4) unstable; urgency=low
 
   * Add (not yet used) sugarlabs URL to watch file.
