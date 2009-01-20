@@ -21,8 +21,8 @@ _cdbs_scripts_path ?= /usr/lib/cdbs
 _cdbs_rules_path ?= /usr/share/cdbs/1/rules
 _cdbs_class_path ?= /usr/share/cdbs/1/class
 
-ifndef _cdbs_rules_copyright-check
-_cdbs_rules_copyright-check := 1
+ifndef _cdbs_rules_copyright_check
+_cdbs_rules_copyright_check := 1
 
 include $(_cdbs_rules_path)/buildcore.mk$(_cdbs_makefile_suffix)
 
@@ -33,7 +33,8 @@ CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), devscripts (>= 2.10.7)
 
 # Single regular expression for files to include or ignore
 DEB_COPYRIGHT_CHECK_REGEX = .*
-DEB_COPYRIGHT_CHECK_IGNORE_REGEX = ^(debian/.*|(.*/)?config\.(guess|sub|rpath)(\..*)?)$
+#DEB_COPYRIGHT_CHECK_IGNORE_REGEX = ^(debian/.*|(.*/)?config\.(guess|sub|rpath)(\..*)?)$
+DEB_COPYRIGHT_CHECK_IGNORE_REGEX = ^debian/(changelog|copyright(|_hints|_newhints))$
 
 pre-build:: debian/stamp-copyright-check
 

@@ -1,6 +1,5 @@
 # -*- mode: makefile; coding: utf-8 -*-
-# Copyright © 2008 Jonas Smedegaard <dr@jones.dk>
-# Copyright © 2008 Jonas Smedegaard <dr@jones.dk>
+# Copyright © 2003,2008 Jonas Smedegaard <dr@jones.dk>
 # Description: Defines useful variables for Python packages
 #
 # This program is free software; you can redistribute it and/or

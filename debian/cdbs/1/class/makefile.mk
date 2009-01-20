@@ -1,6 +1,6 @@
 # -*- mode: makefile; coding: utf-8 -*-
 # Copyright © 2002,2003 Colin Walters <walters@debian.org>
-# Copyright © 2008 Jonas Smedegaard <dr@jones.dk>
+# Copyright © 2003,2008 Jonas Smedegaard <dr@jones.dk>
 # Description: Builds and cleans packages which have a Makefile
 #
 # This program is free software; you can redistribute it and/or

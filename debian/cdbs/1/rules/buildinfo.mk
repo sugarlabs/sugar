@@ -1,5 +1,5 @@
 # -*- mode: makefile; coding: utf-8 -*-
-# Copyright © 2004-2006 Jonas Smedegaard <dr@jones.dk>
+# Copyright © 2004-2007 Jonas Smedegaard <dr@jones.dk>
 # Description: Generate and include build information
 #
 # This program is free software; you can redistribute it and/or

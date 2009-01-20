@@ -1,5 +1,5 @@
 # -*- mode: makefile; coding: utf-8 -*-
-# Copyright © 2004-2006 Jonas Smedegaard <dr@jones.dk>
+# Copyright © 2008 Jonas Smedegaard <dr@jones.dk>
 # Description: Resolve, cleanup and apply package relationships
 #
 # This program is free software; you can redistribute it and/or
