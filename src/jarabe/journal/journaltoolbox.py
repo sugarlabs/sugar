@@ -252,7 +252,7 @@ class SearchToolbar(gtk.Toolbar):
         what_filter_index = -1
         for i in range(0, len(combo_model) - 1):
             if combo_model[i][0] == what_filter:
-                what_filter = i
+                what_filter_index = i
                 break
 
         if what_filter_index == -1:
