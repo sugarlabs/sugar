@@ -315,17 +315,38 @@ def _monitor_connection(connection):
 def _connection_addded_cb(conn_watcher, connection):
     _monitor_connection(connection)
 
-def init():
-    conn_watcher = connection_watcher.ConnectionWatcher()
-    conn_watcher.connect('connection-added', _connection_addded_cb)
+_conn_watcher = None
 
-    for connection in conn_watcher.get_connections():
+def init():
+    global _conn_watcher
+    _conn_watcher = connection_watcher.ConnectionWatcher()
+    _conn_watcher.connect('connection-added', _connection_addded_cb)
+
+    for connection in _conn_watcher.get_connections():
         _monitor_connection(connection)
 
 def start_transfer(buddy, file_name, title, description, mime_type):
     outgoing_file_transfer = OutgoingFileTransfer(buddy, file_name, title,
                                                   description, mime_type)
     new_file_transfer.send(None, file_transfer=outgoing_file_transfer)
+
+def file_transfer_available():
+    for connection in _conn_watcher.get_connections():
+
+        properties_iface = connection[dbus.PROPERTIES_IFACE]
+        properties = properties_iface.GetAll(CONNECTION_INTERFACE_REQUESTS)
+        classes = properties['RequestableChannelClasses']
+        for prop, allowed_prop in classes:
+
+            channel_type = prop.get(CHANNEL + '.ChannelType', '')
+            target_handle_type = prop.get(CHANNEL + '.TargetHandleType', '')
+
+            if len(prop) == 2 and \
+                    channel_type == CHANNEL_TYPE_FILE_TRANSFER and \
+                    target_handle_type == CONNECTION_HANDLE_TYPE_CONTACT:
+                return True
+
+        return False
 
 new_file_transfer = dispatch.Signal()
 

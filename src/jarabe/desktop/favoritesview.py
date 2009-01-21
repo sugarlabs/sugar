@@ -546,7 +546,8 @@ class ActivityIcon(CanvasIcon):
     installation_time = property(_get_installation_time, None)
 
     def _get_fixed_position(self):
-        return self._activity_info.position
+        registry = bundleregistry.get_registry()
+        return registry.get_bundle_position(self.bundle_id, self.version)
     fixed_position = property(_get_fixed_position, None)
 
 class FavoritePalette(ActivityPalette):
