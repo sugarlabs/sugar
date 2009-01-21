@@ -57,7 +57,7 @@ class FavoritesLayout(gobject.GObject, hippo.CanvasLayout):
 
     def append(self, icon, locked=False):
         if not hasattr(type(icon), 'fixed_position'):
-            logging.debug('Icon without fixed_position: %r %r' % (icon, dir(icon)))
+            logging.debug('Icon without fixed_position: %r' % icon)
             return
 
         relative_x, relative_y = icon.fixed_position
