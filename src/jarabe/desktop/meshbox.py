@@ -79,7 +79,7 @@ class AccessPointView(CanvasPulsingIcon):
         self._active = True
         self._color = None
 
-        self.connect('activated', self._activate_cb)
+        self.connect('button-release-event', self.__button_release_event_cb)
 
         pulse_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
                                          style.COLOR_TRANSPARENT.get_svg()))
@@ -128,7 +128,7 @@ class AccessPointView(CanvasPulsingIcon):
                             icon=self._palette_icon)
 
         self._connect_item = MenuItem(_('Connect'), 'dialog-ok')
-        self._connect_item.connect('activate', self._activate_cb)
+        self._connect_item.connect('activate', self.__connect_activate_cb)
         p.menu.append(self._connect_item)
 
         self._disconnect_item = MenuItem(_('Disconnect'), 'media-eject')
@@ -334,7 +334,13 @@ class AccessPointView(CanvasPulsingIcon):
             wireless_security.group = group
             return wireless_security
 
-    def _activate_cb(self, icon):
+    def __connect_activate_cb(self, icon):
+        self._connect()
+
+    def __button_release_event_cb(self, icon, event):
+        self._connect()
+
+    def _connect(self):
         connection = network.find_connection(self._name)
         if connection is None:
             settings = Settings()            
