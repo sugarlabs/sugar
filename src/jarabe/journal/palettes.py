@@ -61,14 +61,20 @@ class ObjectPalette(Palette):
 
         if metadata.get('activity_id', ''):
             resume_label = _('Resume')
+            resume_with_label = _('Resume with')
         else:
             resume_label = _('Start')
+            resume_with_label = _('Start with')
         menu_item = MenuItem(resume_label, 'activity-start')
         menu_item.connect('activate', self.__start_activate_cb)
         self.menu.append(menu_item)
         menu_item.show()
 
-        # TODO: Add "Start with" menu item
+        menu_item = MenuItem(resume_with_label, 'activity-start')
+        self.menu.append(menu_item)
+        menu_item.show()
+        start_with_menu = StartWithMenu(self._metadata)
+        menu_item.set_submenu(start_with_menu)
 
         client = gconf.client_get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
@@ -163,6 +169,38 @@ class FriendsMenu(gtk.Menu):
 
     def __item_activate_cb(self, menu_item, friend):
         self.emit('friend-selected', friend)
+
+
+class StartWithMenu(gtk.Menu):
+    __gtype_name__ = 'JournalStartWithMenu'
+
+    def __init__(self, metadata):
+        gobject.GObject.__init__(self)
+
+        self._metadata = metadata
+
+        for activity_info in misc.get_activities(metadata):
+            menu_item = MenuItem(activity_info.get_name())
+            menu_item.set_image(Icon(file=activity_info.get_icon(),
+                                     icon_size=gtk.ICON_SIZE_MENU))
+            menu_item.connect('activate', self.__item_activate_cb,
+                              activity_info.get_bundle_id())
+            self.append(menu_item)
+            menu_item.show()
+
+        if not self.get_children():
+            if metadata.get('activity_id', ''):
+                resume_label = _('No activity to resume entry')
+            else:
+                resume_label = _('No activity to start entry')
+            menu_item = MenuItem(resume_label)
+            menu_item.set_sensitive(False)
+            self.append(menu_item)
+            menu_item.show()            
+
+    def __item_activate_cb(self, menu_item, service_name):
+        misc.resume(self._metadata, service_name)
+
 
 class BuddyPalette(Palette):
     def __init__(self, buddy):
