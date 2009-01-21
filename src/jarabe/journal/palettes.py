@@ -145,18 +145,25 @@ class FriendsMenu(gtk.Menu):
     def __init__(self):
         gobject.GObject.__init__(self)
 
-        friends_model = friends.get_model()
-        for friend in friends_model:
-            if friend.is_present():
-                menu_item = MenuItem(text_label=friend.get_nick(), 
-                                     icon_name='computer-xo',
-                                     xo_color=friend.get_color())
-                menu_item.connect('activate', self.__item_activate_cb, friend)
-                self.append(menu_item)
-                menu_item.show()
+        if filetransfer.file_transfer_available():
+            friends_model = friends.get_model()
+            for friend in friends_model:
+                if friend.is_present():
+                    menu_item = MenuItem(text_label=friend.get_nick(), 
+                                         icon_name='computer-xo',
+                                         xo_color=friend.get_color())
+                    menu_item.connect('activate', self.__item_activate_cb,
+                                      friend)
+                    self.append(menu_item)
+                    menu_item.show()
 
-        if not self.get_children():
-            menu_item = MenuItem(_('No friends present'))
+            if not self.get_children():
+                menu_item = MenuItem(_('No friends present'))
+                menu_item.set_sensitive(False)
+                self.append(menu_item)
+                menu_item.show()            
+        else:
+            menu_item = MenuItem(_('No valid connection found'))
             menu_item.set_sensitive(False)
             self.append(menu_item)
             menu_item.show()            
