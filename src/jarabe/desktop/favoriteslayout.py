@@ -56,14 +56,20 @@ class FavoritesLayout(gobject.GObject, hippo.CanvasLayout):
         return 0
 
     def append(self, icon, locked=False):
-        if hasattr(icon, 'fixed_position'):
-            relative_x, relative_y = icon.fixed_position
-            if relative_x >= 0 and relative_y >= 0:
-                min_width_, width = self.box.get_width_request()
-                min_height_, height = self.box.get_height_request(width)
-                self.fixed_positions[icon] = \
-                        (int(relative_x * _BASE_SCALE / float(width)),
-                         int(relative_y * _BASE_SCALE / float(height)))
+        if not hasattr(type(icon), 'fixed_position'):
+            logging.debug('Icon without fixed_position: %r %r' % (icon, dir(icon)))
+            return
+
+        relative_x, relative_y = icon.fixed_position
+        if relative_x < 0 or relative_y < 0:
+            logging.debug('Icon out of bounds: %r' % icon)
+            return
+
+        min_width_, width = self.box.get_width_request()
+        min_height_, height = self.box.get_height_request(width)
+        self.fixed_positions[icon] = \
+                (int(relative_x * _BASE_SCALE / float(width)),
+                    int(relative_y * _BASE_SCALE / float(height)))
 
     def remove(self, icon):
         if icon in self.fixed_positions:
@@ -73,15 +79,18 @@ class FavoritesLayout(gobject.GObject, hippo.CanvasLayout):
         if icon not in self.box.get_children():
             raise ValueError('Child not in box.')
 
-        if hasattr(icon, 'get_bundle_id') and hasattr(icon, 'get_version'):
-            min_width_, width = self.box.get_width_request()
-            min_height_, height = self.box.get_height_request(width)
-            registry = bundleregistry.get_registry()
-            registry.set_bundle_position(
-                    icon.get_bundle_id(), icon.get_version(),
-                    x * width / float(_BASE_SCALE),
-                    y * height / float(_BASE_SCALE))
-            self.fixed_positions[icon] = (x, y)
+        if not(hasattr(icon, 'get_bundle_id') and hasattr(icon, 'get_version')):
+            logging.debug('Not an activity icon %r' % icon)
+            return
+
+        min_width_, width = self.box.get_width_request()
+        min_height_, height = self.box.get_height_request(width)
+        registry = bundleregistry.get_registry()
+        registry.set_bundle_position(
+                icon.get_bundle_id(), icon.get_version(),
+                x * width / float(_BASE_SCALE),
+                y * height / float(_BASE_SCALE))
+        self.fixed_positions[icon] = (x, y)
 
     def do_allocate(self, x, y, width, height, req_width, req_height,
                     origin_changed):
