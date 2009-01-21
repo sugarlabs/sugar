@@ -334,7 +334,9 @@ class ShellModel(gobject.GObject):
         self._screen.toggle_showing_desktop(True)
 
     def _update_zoom_level(self, window):
-        if window.get_window_type() == wnck.WINDOW_NORMAL:
+        if window.get_window_type() == wnck.WINDOW_DIALOG:
+            return
+        elif window.get_window_type() == wnck.WINDOW_NORMAL:
             new_level = self.ZOOM_ACTIVITY
         else:
             new_level = self._desktop_level

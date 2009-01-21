@@ -27,6 +27,7 @@ from sugar.graphics.palette import Palette
 from sugar.graphics.xocolor import XoColor
 
 from jarabe.journal import model
+from jarabe.view.palettes import VolumePalette
 
 class VolumesToolbar(gtk.Toolbar):
     __gtype_name__ = 'VolumesToolbar'
@@ -77,23 +78,14 @@ class VolumesToolbar(gtk.Toolbar):
     def _add_button(self, mount):
         logging.debug('VolumeToolbar._add_button: %r' % mount.get_name())
 
-        palette = Palette(mount.get_name())
-
         button = VolumeButton(mount)
         button.props.group = self._volume_buttons[0]
-        button.set_palette(palette)
         button.connect('toggled', self._button_toggled_cb)
         position = self.get_item_index(self._volume_buttons[-1]) + 1
         self.insert(button, position)
         button.show()
 
         self._volume_buttons.append(button)
-
-        if mount.can_unmount():
-            menu_item = gtk.MenuItem(_('Unmount'))
-            menu_item.connect('activate', self._unmount_activated_cb, mount)
-            palette.menu.append(menu_item)
-            menu_item.show()
 
         if len(self.get_children()) > 1:
             self.show()
@@ -149,6 +141,7 @@ class BaseButton(RadioToolButton):
 
 class VolumeButton(BaseButton):
     def __init__(self, mount):
+        self._mount = mount
         mount_point = mount.get_root().get_path()
         BaseButton.__init__(self, mount_point)
 
@@ -159,6 +152,12 @@ class VolumeButton(BaseButton):
         client = gconf.client_get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
         self.props.xo_color = color
+
+    def create_palette(self):
+        palette = VolumePalette(self._mount)
+        #palette.props.invoker = FrameWidgetInvoker(self)
+        #palette.set_group_id('frame')
+        return palette
 
 class JournalButton(BaseButton):
     def __init__(self):

@@ -398,7 +398,7 @@ class BaseListView(gtk.HBox):
         metadata = self._last_clicked_entry.metadata
         if selection.target == 'text/uri-list':
             # Get hold of a reference so the temp file doesn't get deleted
-            self._temp_file_path = model.get_file(metadata)
+            self._temp_file_path = model.get_file(metadata['uid'])
             selection.set(selection.target, 8, self._temp_file_path)
         elif selection.target == 'journal-object-id':
             selection.set(selection.target, 8, metadata['uid'])

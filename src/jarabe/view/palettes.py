@@ -18,6 +18,7 @@ import os
 import statvfs
 from gettext import gettext as _
 import gconf
+import logging
 
 import gobject
 import gtk
@@ -213,9 +214,56 @@ class JournalPalette(BasePalette):
         self._home_activity.get_window().activate(gtk.get_current_event_time())
 
     def __popup_cb(self, palette):
-        # TODO: we should be able to ask the datastore this info, as that's the
-        # component that knows about mount points.
         stat = os.statvfs(env.get_profile_path())
+        free_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BAVAIL]
+        total_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BLOCKS]
+
+        fraction = (total_space - free_space) / float(total_space)
+        self._progress_bar.props.fraction = fraction
+        self._free_space_label.props.label = _('%(free_space)d MB Free') % \
+                {'free_space': free_space / (1024 * 1024)}
+
+class VolumePalette(Palette):
+    def __init__(self, mount):
+        Palette.__init__(self, label=mount.get_name())
+        self._mount = mount
+
+        self.props.secondary_text = mount.get_root().get_path()
+
+        vbox = gtk.VBox()
+        self.set_content(vbox)
+        vbox.show()
+
+        self._progress_bar = gtk.ProgressBar()
+        vbox.add(self._progress_bar)
+        self._progress_bar.show()
+
+        self._free_space_label = gtk.Label()
+        self._free_space_label.set_alignment(0.5, 0.5)
+        vbox.add(self._free_space_label)
+        self._free_space_label.show()
+
+        self.connect('popup', self.__popup_cb)
+
+        menu_item = MenuItem(_('Unmount'))
+
+        icon = Icon(icon_name='media-eject', icon_size=gtk.ICON_SIZE_MENU)
+        menu_item.set_image(icon)
+        icon.show()
+
+        menu_item.connect('activate', self.__unmount_activate_cb)
+        self.menu.append(menu_item)
+        menu_item.show()
+
+    def __unmount_activate_cb(self, menu_item):
+        self._mount.unmount(self.__unmount_cb)
+
+    def __unmount_cb(self, source, result):
+        logging.debug('__unmount_cb %r %r' % (source, result))
+
+    def __popup_cb(self, palette):
+        mount_point = self._mount.get_root().get_path()
+        stat = os.statvfs(mount_point)
         free_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BAVAIL]
         total_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BLOCKS]
 
