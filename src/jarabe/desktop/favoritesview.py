@@ -428,7 +428,7 @@ class ActivityIcon(CanvasIcon):
     def _refresh(self):
         bundle_id = self._activity_info.get_bundle_id()
         properties = ['uid', 'title', 'icon-color', 'activity', 'activity_id',
-                      'mime_type']
+                      'mime_type', 'mountpoint']
         self._datastore_listener.get_last_activity_async(bundle_id, properties,
                 self.__get_last_activity_async_cb)
 
@@ -528,8 +528,7 @@ class ActivityIcon(CanvasIcon):
     def __button_release_event_cb(self, icon, event):
         self.palette.popdown(immediate=True)
         if get_settings().resume_mode and self._journal_entries:
-            activityfactory.create_with_object_id(self._activity_info,
-                    self._journal_entries[0]['uid'])
+            journal.misc.resume(self._journal_entries[0])
         else:
             activityfactory.create(self._activity_info)
 
