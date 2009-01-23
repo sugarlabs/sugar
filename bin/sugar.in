@@ -7,7 +7,7 @@ fi
 export GTK2_RC_FILES="@prefix@/share/sugar/data/sugar-$SUGAR_SCALING.gtkrc"
 
 if ! test -f "$GTK2_RC_FILES"; then
-    echo "sugar: ERROR: Gtk theme for scaling $SUGAR_SCALING not available."
+    echo "sugar: ERROR: Gtk theme for scaling $SUGAR_SCALING not available in path $GTK2_RC_FILES"
     exit 1
 fi
 
