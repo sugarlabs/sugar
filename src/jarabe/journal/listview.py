@@ -152,7 +152,10 @@ class BaseListView(gtk.HBox):
         logging.debug('ListView %r' % self)
         # Indicate when the Journal is empty
         if len(metadata_list) == 0:
-            self._show_message(EMPTY_JOURNAL)
+            if self._is_query_empty():
+                self._show_message(EMPTY_JOURNAL)
+            else:
+                self._show_message(NO_MATCH)
             return
 
         # Refresh view and create the entries if they don't exist yet.
@@ -210,18 +213,23 @@ class BaseListView(gtk.HBox):
         self._vadjustment.props.value = min(self._vadjustment.props.value,
                 self._result_set.length - self._page_size)
         if self._result_set.length == 0:
-            # FIXME: This is a hack, we shouldn't have to update this every time
-            # a new search term is added.
-            if self._query.get('query', '') or \
-                   self._query.get('mime_type', '') or \
-                   self._query.get('keep', '') or \
-                   self._query.get('mtime', ''):
-                self._show_message(NO_MATCH)
-            else:
+            if self._is_query_empty():
                 self._show_message(EMPTY_JOURNAL)
+            else:
+                self._show_message(NO_MATCH)
         else:
             self._clear_message()
             self._do_scroll()
+
+    def _is_query_empty(self):
+        # FIXME: This is a hack, we shouldn't have to update this every time
+        # a new search term is added.
+        if self._query.get('query', '') or self._query.get('mime_type', '') or \
+                self._query.get('keep', '') or self._query.get('mtime', '') or \
+                self._query.get('activity', ''):
+            return False
+        else:
+            return True
 
     def __result_set_progress_cb(self, **kwargs):
         if time.time() - self._last_progress_bar_pulse > 0.05:
