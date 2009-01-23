@@ -20,6 +20,7 @@ import logging
 import re
 import subprocess
 from gettext import gettext as _
+import errno
 
 _logger = logging.getLogger('ControlPanel - AboutComputer')
 _not_available = _('Not available')
@@ -39,12 +40,30 @@ def get_serial_number():
     return serial_no
     
 def print_serial_number():
-    print get_serial_number()
+    serial_no = get_serial_number()
+    if serial_no is None:
+        serial_no = _not_available
+    print serial_no
 
 def get_build_number():
     build_no = _read_file('/boot/olpc_build')
+
     if build_no is None:
+        build_no = _read_file('/etc/redhat-release')
+
+    if build_no is None:
+        try:
+            popen = subprocess.Popen(['lsb_release', '-ds'],
+                                     stdout=subprocess.PIPE)
+        except OSError, e:
+            if e.errno != errno.ENOENT:
+                raise
+        else:
+            build_no, stderr_ = popen.communicate()
+
+    if build_no is None or not build_no:
         build_no = _not_available
+
     return build_no
 
 def print_build_number():

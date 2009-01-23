@@ -15,12 +15,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-import gtk
+import os
 from gettext import gettext as _
 
-from jarabe import config
+import gtk
+
 from sugar.graphics import style
 
+from jarabe import config
 from jarabe.controlpanel.sectionview import SectionView
 
 class AboutComputer(SectionView):
@@ -43,7 +45,9 @@ class AboutComputer(SectionView):
         scrollwindow.add_with_viewport(self._vbox)
         self._vbox.show()
 
-        self._setup_identity()
+        if os.path.exists('/ofw'):
+            self._setup_identity()
+
         self._setup_software()
         self._setup_copyright()
 
@@ -77,7 +81,6 @@ class AboutComputer(SectionView):
 
         self._vbox.pack_start(vbox_identity, expand=False)
         vbox_identity.show()
-    
 
     def _setup_software(self):   
         separator_software = gtk.HSeparator()
@@ -122,35 +125,37 @@ class AboutComputer(SectionView):
         box_software.pack_start(box_sugar, expand=False)
         box_sugar.show()
 
-        box_firmware = gtk.HBox(spacing=style.DEFAULT_SPACING)
-        label_firmware = gtk.Label(_('Firmware:'))
-        label_firmware.set_alignment(1, 0)
-        label_firmware.modify_fg(gtk.STATE_NORMAL, 
-                              style.COLOR_SELECTION_GREY.get_gdk_color())
-        box_firmware.pack_start(label_firmware, expand=False)
-        self._group.add_widget(label_firmware)
-        label_firmware.show()
-        label_firmware_no = gtk.Label(self._model.get_firmware_number())
-        label_firmware_no.set_alignment(0, 0)
-        box_firmware.pack_start(label_firmware_no, expand=False)
-        label_firmware_no.show()
-        box_software.pack_start(box_firmware, expand=False)
-        box_firmware.show()
+        if os.path.exists('/ofw'):
+            box_firmware = gtk.HBox(spacing=style.DEFAULT_SPACING)
+            label_firmware = gtk.Label(_('Firmware:'))
+            label_firmware.set_alignment(1, 0)
+            label_firmware.modify_fg(gtk.STATE_NORMAL, 
+                                  style.COLOR_SELECTION_GREY.get_gdk_color())
+            box_firmware.pack_start(label_firmware, expand=False)
+            self._group.add_widget(label_firmware)
+            label_firmware.show()
+            label_firmware_no = gtk.Label(self._model.get_firmware_number())
+            label_firmware_no.set_alignment(0, 0)
+            box_firmware.pack_start(label_firmware_no, expand=False)
+            label_firmware_no.show()
+            box_software.pack_start(box_firmware, expand=False)
+            box_firmware.show()
 
-        box_wireless_fw = gtk.HBox(spacing=style.DEFAULT_SPACING)
-        label_wireless_fw = gtk.Label(_('Wireless Firmware:'))
-        label_wireless_fw.set_alignment(1, 0)
-        label_wireless_fw.modify_fg(gtk.STATE_NORMAL,
-                              style.COLOR_SELECTION_GREY.get_gdk_color())
-        box_wireless_fw.pack_start(label_wireless_fw, expand=False)
-        self._group.add_widget(label_wireless_fw)
-        label_wireless_fw.show()
-        label_wireless_fw_no = gtk.Label(self._model.get_wireless_firmware())
-        label_wireless_fw_no.set_alignment(0, 0)
-        box_wireless_fw.pack_start(label_wireless_fw_no, expand=False)
-        label_wireless_fw_no.show()
-        box_software.pack_start(box_wireless_fw, expand=False)
-        box_wireless_fw.show()
+            box_wireless_fw = gtk.HBox(spacing=style.DEFAULT_SPACING)
+            label_wireless_fw = gtk.Label(_('Wireless Firmware:'))
+            label_wireless_fw.set_alignment(1, 0)
+            label_wireless_fw.modify_fg(gtk.STATE_NORMAL,
+                                  style.COLOR_SELECTION_GREY.get_gdk_color())
+            box_wireless_fw.pack_start(label_wireless_fw, expand=False)
+            self._group.add_widget(label_wireless_fw)
+            label_wireless_fw.show()
+            wireless_fw_no = self._model.get_wireless_firmware()
+            label_wireless_fw_no = gtk.Label(wireless_fw_no)
+            label_wireless_fw_no.set_alignment(0, 0)
+            box_wireless_fw.pack_start(label_wireless_fw_no, expand=False)
+            label_wireless_fw_no.show()
+            box_software.pack_start(box_wireless_fw, expand=False)
+            box_wireless_fw.show()
 
         self._vbox.pack_start(box_software, expand=False)
         box_software.show()
