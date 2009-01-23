@@ -310,6 +310,12 @@ class SearchToolbar(gtk.Toolbar):
     def __favorite_button_toggled_cb(self, favorite_button):
         self._update_if_needed()
 
+    def clear_query(self):
+        self._search_entry.props.text = ''
+        self._what_search_combo.set_active(0)
+        self._when_search_combo.set_active(0)
+        self._favorite_button.props.active = False
+
 class DetailToolbox(Toolbox):
     def __init__(self):
         Toolbox.__init__(self)

@@ -154,6 +154,7 @@ class JournalActivity(Window):
 
         self._list_view = ListView()
         self._list_view.connect('detail-clicked', self.__detail_clicked_cb)
+        self._list_view.connect('clear-clicked', self.__clear_clicked_cb)
         self._main_view.pack_start(self._list_view)
         self._list_view.show()
 
@@ -186,7 +187,10 @@ class JournalActivity(Window):
 
     def __detail_clicked_cb(self, list_view, entry):
         self._show_secondary_view(entry.metadata)
-    
+
+    def __clear_clicked_cb(self, list_view):
+        self._main_toolbox.search_toolbar.clear_query()
+
     def __go_back_clicked_cb(self, detail_view):
         self.show_main_view()
 

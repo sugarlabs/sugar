@@ -26,7 +26,7 @@ import gtk
 import dbus
 
 from sugar.graphics import style
-from sugar.graphics.icon import CanvasIcon
+from sugar.graphics.icon import CanvasIcon, Icon
 
 from jarabe.journal.collapsedentry import CollapsedEntry
 from jarabe.journal import model
@@ -42,6 +42,12 @@ NO_MATCH = _("No matching entries ")
 
 class BaseListView(gtk.HBox):
     __gtype_name__ = 'BaseListView'
+
+    __gsignals__ = {
+        'clear-clicked': (gobject.SIGNAL_RUN_FIRST,
+                          gobject.TYPE_NONE,
+                          ([]))
+    }
 
     def __init__(self):
         self._query = {}
@@ -343,19 +349,33 @@ class BaseListView(gtk.HBox):
     def _show_message(self, message):
         box = hippo.CanvasBox(orientation=hippo.ORIENTATION_VERTICAL,
                               background_color=style.COLOR_WHITE.get_int(),
-                              yalign=hippo.ALIGNMENT_CENTER)
+                              yalign=hippo.ALIGNMENT_CENTER,
+                              spacing=style.DEFAULT_SPACING,
+                              padding_bottom=style.GRID_CELL_SIZE)
+        self._canvas.set_root(box)
+
         icon = CanvasIcon(size=style.LARGE_ICON_SIZE,
                           icon_name='activity-journal',
                           stroke_color = style.COLOR_BUTTON_GREY.get_svg(),
                           fill_color = style.COLOR_TRANSPARENT.get_svg())
+        box.append(icon)
+
         text = hippo.CanvasText(text=message,
                 xalign=hippo.ALIGNMENT_CENTER,
-                font_desc=style.FONT_NORMAL.get_pango_desc(),
+                font_desc=style.FONT_BOLD.get_pango_desc(),
                 color = style.COLOR_BUTTON_GREY.get_int())
-
-        box.append(icon)
         box.append(text)
-        self._canvas.set_root(box)
+
+        button = gtk.Button(label=_('Clear search'))
+        button.connect('clicked', self.__clear_button_clicked_cb)
+        button.props.image = Icon(icon_name='dialog-cancel',
+                                  icon_size=gtk.ICON_SIZE_BUTTON)
+        canvas_button = hippo.CanvasWidget(widget=button,
+                                           xalign=hippo.ALIGNMENT_CENTER)
+        box.append(canvas_button)
+
+    def __clear_button_clicked_cb(self, button):
+        self.emit('clear-clicked')
 
     def _clear_message(self):
         self._canvas.set_root(self._box)
