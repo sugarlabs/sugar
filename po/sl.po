@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-27 13:34-0500\n"
-"PO-Revision-Date: 2008-12-08 09:34-0500\n"
+"PO-Revision-Date: 2009-01-28 16:33-0500\n"
 "Last-Translator: Denis Oštir <denis.ostir@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -61,7 +61,7 @@ msgstr "Klikni za spremembo barve:"
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
-msgstr ""
+msgstr "O mojem računalniku"
 
 #: ../extensions/cpsection/aboutcomputer/model.py:26
 msgid "Not available"
@@ -93,7 +93,7 @@ msgstr "Firmware:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:145
 msgid "Wireless Firmware:"
-msgstr ""
+msgstr "Brezžična oprema:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:168
 msgid "Copyright and License"
@@ -199,19 +199,16 @@ msgid "Error in specified radio argument use on/off."
 msgstr "Napaka pri določanju stanja radijske povezave (vključen/izključen)."
 
 #: ../extensions/cpsection/network/model.py:137
-#, fuzzy
 msgid "Error in specified argument use 0/1."
-msgstr "Napaka pri določanju stanja radijske povezave (vključen/izključen)."
+msgstr "Napaka pri uporabi podatka 0/1."
 
 #: ../extensions/cpsection/network/view.py:56
 msgid "Wireless"
 msgstr "Brezžično"
 
 #: ../extensions/cpsection/network/view.py:64
-#, fuzzy
 msgid "Turn off the wireless radio to save battery life"
-msgstr ""
-"Izklopi brezžično radijsko povezavo za podaljšanje življenjske dobe baterije"
+msgstr "Izklopi brezžično radijsko povezavo za podaljšanje trajanja baterije"
 
 #: ../extensions/cpsection/network/view.py:77
 msgid "Radio"
@@ -227,7 +224,7 @@ msgstr "Zavrži zgodovino mreže"
 
 #: ../extensions/cpsection/network/view.py:115
 msgid "Collaboration"
-msgstr ""
+msgstr "Sodelovanje"
 
 #: ../extensions/cpsection/network/view.py:123
 msgid ""
@@ -235,6 +232,8 @@ msgid ""
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr ""
+"Strežnik predstavlja sobo v kateri se nahajate. Uporabniki na istem "
+"strežniku se lahko vidijo, tudi če niso priključeni na isto omrežje."
 
 #: ../extensions/cpsection/network/view.py:133
 msgid "Server:"
@@ -274,9 +273,8 @@ msgid "My Battery"
 msgstr "Moja baterija"
 
 #: ../extensions/deviceicon/battery.py:137
-#, fuzzy
 msgid "Removed"
-msgstr "Odstrani"
+msgstr "Odstranjeno"
 
 #: ../extensions/deviceicon/battery.py:140
 msgid "Charging"
@@ -298,7 +296,7 @@ msgstr "Polno"
 #: ../extensions/deviceicon/network.py:40
 #, python-format
 msgid "IP address: %s"
-msgstr ""
+msgstr "IP naslov: %s"
 
 #: ../extensions/deviceicon/network.py:104
 msgid "Disconnect..."
@@ -322,11 +320,11 @@ msgstr "Kanal"
 
 #: ../extensions/deviceicon/network.py:141
 msgid "Wired Network"
-msgstr ""
+msgstr "Žično omrežje"
 
 #: ../extensions/deviceicon/network.py:169
 msgid "Speed"
-msgstr ""
+msgstr "Hitrost"
 
 #: ../extensions/deviceicon/speaker.py:46
 msgid "My Speakers"
@@ -348,7 +346,7 @@ msgstr "Slika zaslona"
 #: ../extensions/globalkey/viewsource.py:196
 #, python-format
 msgid "View source: %r"
-msgstr ""
+msgstr "Poglej vir: %r"
 
 #: ../extensions/globalkey/viewsource.py:205
 #: ../src/jarabe/frame/zoomtoolbar.py:42
@@ -357,7 +355,7 @@ msgstr "Aktivnost"
 
 #: ../extensions/globalkey/viewsource.py:212
 msgid "Document"
-msgstr ""
+msgstr "Dokument"
 
 #: ../extensions/globalkey/viewsource.py:226
 #: ../src/jarabe/journal/objectchooser.py:141
@@ -366,7 +364,7 @@ msgstr "Zapri"
 
 #: ../data/sugar.schemas.in.h:1
 msgid "Backup URL"
-msgstr ""
+msgstr "Nadomestni spletni naslov"
 
 #: ../data/sugar.schemas.in.h:2
 msgid ""
@@ -374,110 +372,118 @@ msgid ""
 "composed of the stroke color and fill color, format is that of rbg colors. "
 "Example: #AC32FF,#9A5200"
 msgstr ""
+"Barva ikone XO, ki jo uporabljate na celotnem namizju. Zaporedje je "
+"sestavljeno iz barve črte in barve polnila v formatu RGB. Primer: "
+"#AC32FF,#9A5200"
 
 #: ../data/sugar.schemas.in.h:3
 msgid "Corner Delay"
-msgstr ""
+msgstr "Zamik pri kotu"
 
 #: ../data/sugar.schemas.in.h:4
 msgid "Delay for the activation of the frame using the corners."
-msgstr ""
+msgstr "Zamik pri prikazu okvirja ob premiku v kot"
 
 #: ../data/sugar.schemas.in.h:5
 msgid "Delay for the activation of the frame using the edges."
-msgstr ""
+msgstr "Zamik pri prikazu okvirja ob premiku na rob"
 
 #: ../data/sugar.schemas.in.h:6
 msgid "Edge Delay"
-msgstr ""
+msgstr "Zamik ob robu"
 
 #: ../data/sugar.schemas.in.h:7
 msgid "Favorites Layout"
-msgstr ""
+msgstr "Izgled priljubljenih"
 
 #: ../data/sugar.schemas.in.h:8
 msgid "Favorites resume mode"
-msgstr ""
+msgstr "Način ponovitve priljubljenih"
 
 #: ../data/sugar.schemas.in.h:9
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
+"Če je oznaka DA, bo Sugar omogočil vidnost drugim uporabnikom na strežniku "
+"Jabber"
 
 #: ../data/sugar.schemas.in.h:10
 msgid "Jabber Server"
-msgstr ""
+msgstr "Strežnik Jabber"
 
 #: ../data/sugar.schemas.in.h:11
 msgid "Layout of the favorites view."
-msgstr ""
+msgstr "Izgled pogleda priljubljenih"
 
 #: ../data/sugar.schemas.in.h:12
 msgid "Power Automatic"
-msgstr ""
+msgstr "Samodejno upravljanje z elektriko"
 
 #: ../data/sugar.schemas.in.h:13
 msgid "Power Automatic."
-msgstr ""
+msgstr "Samodejno upravljanje z elektriko"
 
 #: ../data/sugar.schemas.in.h:14
 msgid "Power Extreme"
-msgstr ""
+msgstr "Ekstremno upravljanje z elektriko"
 
 #: ../data/sugar.schemas.in.h:15
 msgid "Power Extreme."
-msgstr ""
+msgstr "Ekstremno upravljanje z elektriko"
 
 #: ../data/sugar.schemas.in.h:16
+#, fuzzy
 msgid "Publish to Gadget"
-msgstr ""
+msgstr "Objavi "
 
 #: ../data/sugar.schemas.in.h:17
 msgid "Setting for muting the sound device."
-msgstr ""
+msgstr "Nastavitev utišanja zvočne naprave"
 
 #: ../data/sugar.schemas.in.h:18
 msgid "Sound Muted"
-msgstr ""
+msgstr "Zvok utišan"
 
 #: ../data/sugar.schemas.in.h:20
 msgid "Timezone setting for the system."
-msgstr ""
+msgstr "Nastavitev časovnega pasu za sistem"
 
 #: ../data/sugar.schemas.in.h:21
 msgid "Url of the jabber server to use."
-msgstr ""
+msgstr "Spletni naslov uporabljenega strežnika jabber"
 
 #: ../data/sugar.schemas.in.h:22
 msgid "Url where the backup is saved to."
-msgstr ""
+msgstr "Spletni naslov arhiva"
 
 #: ../data/sugar.schemas.in.h:23
 msgid "User Color"
-msgstr ""
+msgstr "Barva uporabnika"
 
 #: ../data/sugar.schemas.in.h:24
 msgid "User Name"
-msgstr ""
+msgstr "Uporabnikovo ime"
 
 #: ../data/sugar.schemas.in.h:25
 msgid "User name that is used throughout the desktop."
-msgstr ""
+msgstr "Uporabnikovo ime, ki se uporablja po celotnem namizju."
 
 #: ../data/sugar.schemas.in.h:26
 msgid "Volume Level"
-msgstr ""
+msgstr "Raven glasnosti"
 
 #: ../data/sugar.schemas.in.h:27
 msgid "Volume level for the sound device."
-msgstr ""
+msgstr "Raven glasnosti za zvočno napravo."
 
 #: ../data/sugar.schemas.in.h:28
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
 msgstr ""
+"V načinu nadaljevanja s klikom na priljubljeno ikono v aktivnosti "
+"nadaljujete pri zadnji shranjeni spremembi."
 
 #: ../src/jarabe/controlpanel/cmd.py:28
 #, python-format
@@ -669,7 +675,7 @@ msgstr "<Ctrl>1"
 
 #: ../src/jarabe/desktop/homebox.py:304
 msgid "Resume by default"
-msgstr ""
+msgstr "Vedno nadaljuj"
 
 #: ../src/jarabe/desktop/keydialog.py:131
 msgid "Key Type:"
@@ -681,11 +687,11 @@ msgstr "Tip prepoznave:"
 
 #: ../src/jarabe/desktop/keydialog.py:215
 msgid "WPA & WPA2 Personal"
-msgstr ""
+msgstr "WPA in WPA2 Osebni ključ"
 
 #: ../src/jarabe/desktop/keydialog.py:224
 msgid "Wireless Security:"
-msgstr ""
+msgstr "Varovanje brezžičnega omrežja:"
 
 #: ../src/jarabe/desktop/meshbox.py:130
 msgid "Connect"
@@ -729,42 +735,42 @@ msgstr "Zavrni"
 #: ../src/jarabe/frame/activitiestray.py:608
 #, python-format
 msgid "%dB"
-msgstr ""
+msgstr "%dB"
 
 #: ../src/jarabe/frame/activitiestray.py:610
 #, python-format
 msgid "%dKB"
-msgstr ""
+msgstr "%dKB"
 
 #: ../src/jarabe/frame/activitiestray.py:612
 #, python-format
 msgid "%dMB"
-msgstr ""
+msgstr "%dMB"
 
 #: ../src/jarabe/frame/activitiestray.py:629
 #, python-format
 msgid "%s of %s"
-msgstr ""
+msgstr "%s od %s"
 
 #: ../src/jarabe/frame/activitiestray.py:640
 #, python-format
 msgid "Transfer from %r"
-msgstr ""
+msgstr "Prenesi z %r"
 
 #: ../src/jarabe/frame/activitiestray.py:650
 msgid "Accept"
-msgstr ""
+msgstr "Sprejmi"
 
 #: ../src/jarabe/frame/activitiestray.py:673
 #: ../src/jarabe/frame/activitiestray.py:780
 #, python-format
 msgid "%s (%s)"
-msgstr ""
+msgstr "%s (%s)"
 
 #: ../src/jarabe/frame/activitiestray.py:751
 #, python-format
 msgid "Transfer to %r"
-msgstr ""
+msgstr "Prenesi na %r"
 
 #: ../src/jarabe/frame/clipboardmenu.py:52
 msgid "Remove"
@@ -910,7 +916,7 @@ msgstr "Ne najdem vsebine za "
 
 #: ../src/jarabe/journal/listview.py:369
 msgid "Clear search"
-msgstr ""
+msgstr "Počisti iskanje"
 
 #: ../src/jarabe/journal/misc.py:92
 msgid "No date"
@@ -934,31 +940,31 @@ msgstr "Izberi predmet"
 
 #: ../src/jarabe/journal/palettes.py:64
 msgid "Resume with"
-msgstr ""
+msgstr "Nadaljuj z"
 
 #: ../src/jarabe/journal/palettes.py:67
 msgid "Start with"
-msgstr ""
+msgstr "Začni z"
 
 #: ../src/jarabe/journal/palettes.py:89
 msgid "Send to"
-msgstr ""
+msgstr "Pošlji"
 
 #: ../src/jarabe/journal/palettes.py:167
 msgid "No friends present"
-msgstr ""
+msgstr "Prisoten ni noben prijatelj"
 
 #: ../src/jarabe/journal/palettes.py:172
 msgid "No valid connection found"
-msgstr ""
+msgstr "Na voljo ni nobena veljavna povezava"
 
 #: ../src/jarabe/journal/palettes.py:200
 msgid "No activity to resume entry"
-msgstr ""
+msgstr "Ni aktivnosti za nadaljevanje"
 
 #: ../src/jarabe/journal/palettes.py:202
 msgid "No activity to start entry"
-msgstr ""
+msgstr "Ni aktivnosti za začetek"
 
 #: ../src/jarabe/view/buddymenu.py:61
 msgid "Remove friend"
@@ -970,11 +976,11 @@ msgstr "Dodaj prijatelja"
 
 #: ../src/jarabe/view/buddymenu.py:81
 msgid "My Settings"
-msgstr ""
+msgstr "Moje nastavitve"
 
 #: ../src/jarabe/view/buddymenu.py:86
 msgid "Logout"
-msgstr ""
+msgstr "Odjava"
 
 #: ../src/jarabe/view/buddymenu.py:91
 msgid "Restart"
