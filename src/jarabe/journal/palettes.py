@@ -35,7 +35,16 @@ from jarabe.journal import misc
 from jarabe.journal import model
 
 class ObjectPalette(Palette):
-    def __init__(self, metadata):
+
+    __gtype_name__ = 'ObjectPalette'
+
+    __gsignals__ = {
+        'detail-clicked': (gobject.SIGNAL_RUN_FIRST,
+                           gobject.TYPE_NONE,
+                           ([]))
+    }
+
+    def __init__(self, metadata, detail=False):
 
         self._metadata = metadata
         self._temp_file_path = None
@@ -94,6 +103,12 @@ class ObjectPalette(Palette):
         friends_menu.connect('friend-selected', self.__friend_selected_cb)
         menu_item.set_submenu(friends_menu)
 
+        if detail == True:
+            menu_item = MenuItem(_('View Details'), 'go-right')
+            menu_item.connect('activate', self.__detail_activate_cb)
+            self.menu.append(menu_item)
+            menu_item.show()
+
         menu_item = MenuItem(_('Erase'), 'list-remove')
         menu_item.connect('activate', self.__erase_activate_cb)
         self.menu.append(menu_item)
@@ -125,6 +140,9 @@ class ObjectPalette(Palette):
         if bundle is not None and registry.is_installed(bundle):
             registry.uninstall(bundle)
         model.delete(self._metadata['uid'])
+
+    def __detail_activate_cb(self, menu_item):
+        self.emit('detail-clicked')
 
     def __friend_selected_cb(self, menu_item, buddy):
         logging.debug('__friend_selected_cb')

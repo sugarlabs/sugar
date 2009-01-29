@@ -61,6 +61,15 @@ class BuddyList(hippo.CanvasBox):
             self.append(icon)
 
 class EntryIcon(CanvasIcon):
+
+    __gtype_name__ = 'EntryIcon'
+
+    __gsignals__ = {
+        'detail-clicked': (gobject.SIGNAL_RUN_FIRST,
+                           gobject.TYPE_NONE,
+                           ([]))
+    }
+
     def __init__(self, **kwargs):
         CanvasIcon.__init__(self, **kwargs)
         self._metadata = None
@@ -72,9 +81,15 @@ class EntryIcon(CanvasIcon):
 
     def create_palette(self):
         if self.show_palette:
-            return ObjectPalette(self._metadata)
+            palette = ObjectPalette(self._metadata, detail=True)
+            palette.connect('detail-clicked',
+                            self.__detail_clicked_cb)
+            return palette
         else:
             return None
+
+    def __detail_clicked_cb(self, event):
+        self.emit('detail-clicked')
 
     show_palette = gobject.property(type=bool, default=False)
 
@@ -275,6 +290,8 @@ class CollapsedEntry(BaseCollapsedEntry):
         self.icon.props.show_palette = True
         self.icon.connect('button-release-event',
                           self.__icon_button_release_event_cb)
+        self.icon.connect('detail-clicked',
+                          self.__detail_clicked_palette_cb)
 
         self.title.connect('button_release_event',
                            self.__title_button_release_event_cb)
@@ -321,10 +338,16 @@ class CollapsedEntry(BaseCollapsedEntry):
 
     metadata = property(BaseCollapsedEntry.get_metadata, set_metadata)
 
-    def __detail_button_release_event_cb(self, button, event):
-        logging.debug('_detail_button_release_event_cb')
+    def _detail_clicked(self):
         if not self.is_in_progress():
             self.emit('detail-clicked')
+
+    def __detail_clicked_palette_cb(self, entry):
+        self._detail_clicked()
+
+    def __detail_button_release_event_cb(self, button, event):
+        logging.debug('_detail_button_release_event_cb')
+        self._detail_clicked()
         return True
 
     def __detail_button_motion_notify_event_cb(self, button, event):
