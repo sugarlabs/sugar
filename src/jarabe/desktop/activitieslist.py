@@ -84,6 +84,8 @@ class ActivitiesList(gtk.VBox):
         return entry_b.get_installation_time() - entry_a.get_installation_time()
 
     def _add_activity(self, activity_info):
+        if activity_info.get_bundle_id() == 'org.laptop.JournalActivity':
+            return
         entry = ActivityEntry(activity_info)
         entry.icon.connect('erase-activated', self.__erase_activated_cb)
         self._box.insert_sorted(entry, 0, self._compare_activities)
