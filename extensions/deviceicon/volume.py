@@ -41,25 +41,27 @@ class DeviceView(TrayIcon):
     FRAME_POSITION_RELATIVE = 500
 
     def __init__(self, mount):
-        TrayIcon.__init__(self)
+
         self._mount = mount
 
+        icon_name = None
         icon_theme = gtk.icon_theme_get_default()
         for icon_name in self._mount.get_icon().props.names:
             icon_info = icon_theme.lookup_icon(icon_name,
-                                               style.STANDARD_ICON_SIZE, 0)
+                                               gtk.ICON_SIZE_LARGE_TOOLBAR, 0)
             if icon_info is not None:
-                self.get_icon().props.icon_name = icon_name
+                icon_name = icon_name
                 icon_info.free()
                 break
 
-        if self.get_icon().props.icon_name is None:
-            self.get_icon().props.icon_name = 'drive'
+        if icon_name is None:
+            icon_name = 'drive'
 
         # TODO: retrieve the colors from the owner of the device
         client = gconf.client_get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
-        self.get_icon().props.xo_color = color
+
+        TrayIcon.__init__(self, icon_name=icon_name, xo_color=color)
 
         self.connect('button-release-event', self.__button_release_event_cb)
 
