@@ -17,6 +17,8 @@
 import os
 import logging
 import urlparse
+import gio
+import gtk
 
 from gettext import gettext as _
 from sugar import mime
@@ -49,7 +51,21 @@ class ClipboardObject(object):
         return name
 
     def get_icon(self):
-        return mime.get_mime_icon(self.get_mime_type())
+        icons = gio.content_type_get_icon(self.get_mime_type())
+        icon_name = None
+        if icons is not None:
+            icon_theme = gtk.icon_theme_get_default()
+            for icon_name in icons.props.names:
+                icon_info = icon_theme.lookup_icon(icon_name,
+                                                gtk.ICON_SIZE_LARGE_TOOLBAR, 0)
+                if icon_info is not None:
+                    icon_info.free()
+                    break
+
+        if icon_name is None:
+            icon_name = 'application-octet-stream'
+
+        return icon_name
 
     def get_preview(self):
         for mime_type in ['text/plain']:

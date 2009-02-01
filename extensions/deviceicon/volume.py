@@ -50,7 +50,6 @@ class DeviceView(TrayIcon):
             icon_info = icon_theme.lookup_icon(icon_name,
                                                gtk.ICON_SIZE_LARGE_TOOLBAR, 0)
             if icon_info is not None:
-                icon_name = icon_name
                 icon_info.free()
                 break
 
