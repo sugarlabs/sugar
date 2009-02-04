@@ -29,12 +29,12 @@ from jarabe.model import shell
 from jarabe.view.pulsingicon import CanvasPulsingIcon
 
 class LaunchWindow(hippo.CanvasWindow):
-    def __init__(self, home_activity):
+    def __init__(self, activity_id, icon_path, icon_color):
         gobject.GObject.__init__(
                 self, type_hint=gtk.gdk.WINDOW_TYPE_HINT_NORMAL)
 
-        self._activity_id = home_activity.get_activity_id()
-        self._box = LaunchBox(home_activity)
+        self._activity_id = activity_id
+        self._box = LaunchBox(activity_id, icon_path, icon_color)
         self.set_root(self._box)
 
         self.connect('realize', self.__realize_cb)
@@ -60,14 +60,13 @@ class LaunchWindow(hippo.CanvasWindow):
         self._update_size()
 
 class LaunchBox(hippo.CanvasBox):
-    def __init__(self, home_activity):
+    def __init__(self, activity_id, icon_path, icon_color):
         gobject.GObject.__init__(self, orientation=hippo.ORIENTATION_VERTICAL,
                                  background_color=style.COLOR_WHITE.get_int())
 
-        self._home_activity = home_activity
-        self._activity_icon = CanvasPulsingIcon(
-                file_name=home_activity.get_icon_path(),
-                pulse_color=home_activity.get_icon_color())
+        self._activity_id = activity_id
+        self._activity_icon = CanvasPulsingIcon(file_name=icon_path,
+                                                pulse_color=icon_color)
         self.append(self._activity_icon, hippo.PACK_EXPAND)
 
         # FIXME support non-xo colors in CanvasPulsingIcon
@@ -98,7 +97,7 @@ class LaunchBox(hippo.CanvasBox):
         self._activity_icon.props.pulsing = True
 
     def __active_activity_changed_cb(self, model, activity):
-        if activity == self._home_activity:
+        if activity.get_activity_id() == self._activity_id:
             self._activity_icon.props.paused = False
         else:
             self._activity_icon.props.paused = True
@@ -123,22 +122,25 @@ def setup():
     model.connect('launch-failed', __launch_failed_cb)
     model.connect('launch-completed', __launch_completed_cb)
 
-def __launch_started_cb(home_model, home_activity):
-    if home_activity.is_journal():
+def add_launcher(activity_id, icon_path, icon_color):
+
+    if activity_id in _launchers:
         return
 
-    launch_window = LaunchWindow(home_activity)
+    launch_window = LaunchWindow(activity_id, icon_path, icon_color)
     launch_window.show()
 
-    _launchers[home_activity.get_activity_id()] = launch_window
+    _launchers[activity_id] = launch_window
+
+def __launch_started_cb(home_model, home_activity):
+    add_launcher(home_activity.get_activity_id(), home_activity.get_icon_path(),
+                 home_activity.get_icon_color())
 
 def __launch_failed_cb(home_model, home_activity):
-    if not home_activity.is_journal():
-        _destroy_launcher(home_activity)
+    _destroy_launcher(home_activity)
 
 def __launch_completed_cb(home_model, home_activity):
-    if not home_activity.is_journal():
-        _destroy_launcher(home_activity)
+    _destroy_launcher(home_activity)
 
 def _destroy_launcher(home_activity):
     activity_id = home_activity.get_activity_id()

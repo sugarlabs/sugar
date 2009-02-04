@@ -26,9 +26,11 @@ from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon
 from sugar.graphics.xocolor import XoColor
 from sugar.activity import activityfactory
+from sugar.activity.activityhandle import ActivityHandle
 
 from jarabe.model import bundleregistry
 from jarabe.view.palettes import ActivityPalette
+from jarabe.view import launcher
 
 class ActivitiesList(gtk.VBox):
     __gtype_name__ = 'SugarActivitiesList'
@@ -257,7 +259,16 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
             self._favorite_icon.props.favorite = self._favorite
 
     def __icon_button_release_event_cb(self, icon, event):
-        activityfactory.create(self._bundle)
+        activity_id = activityfactory.create_activity_id()
+
+        client = gconf.client_get_default()
+        xo_color = XoColor(client.get_string('/desktop/sugar/user/color'))
+
+        launcher.add_launcher(activity_id,
+                              self._bundle.get_icon(),
+                              xo_color)
+
+        activityfactory.create(self._bundle, ActivityHandle(activity_id))
 
     def get_bundle_id(self):
         return self._bundle_id

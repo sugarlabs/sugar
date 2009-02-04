@@ -30,12 +30,14 @@ from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.alert import Alert
 from sugar.graphics.xocolor import XoColor
 from sugar.activity import activityfactory
+from sugar.activity.activityhandle import ActivityHandle
 from sugar.presence import presenceservice
 from sugar import dispatch
 
 from jarabe.view.palettes import JournalPalette
 from jarabe.view.palettes import CurrentActivityPalette, ActivityPalette
 from jarabe.view.buddymenu import BuddyMenu
+from jarabe.view import launcher
 from jarabe.model.buddy import BuddyModel
 from jarabe.model import shell
 from jarabe.model import bundleregistry
@@ -530,9 +532,22 @@ class ActivityIcon(CanvasIcon):
     def __button_release_event_cb(self, icon, event):
         self.palette.popdown(immediate=True)
         if get_settings().resume_mode and self._journal_entries:
-            journal.misc.resume(self._journal_entries[0])
+            entry = self._journal_entries[0]
+            launcher.add_launcher(entry['activity_id'],
+                                  self._activity_info.get_icon(),
+                                  XoColor(entry.get('icon-color', '')))
+            journal.misc.resume(entry)
         else:
-            activityfactory.create(self._activity_info)
+            client = gconf.client_get_default()
+            xo_color = XoColor(client.get_string('/desktop/sugar/user/color'))
+
+            activity_id = activityfactory.create_activity_id()
+            launcher.add_launcher(activity_id,
+                                  self._activity_info.get_icon(),
+                                  xo_color)
+
+            handle = ActivityHandle(activity_id)
+            activityfactory.create(self._activity_info, handle)
 
     def get_bundle_id(self):
         return self._activity_info.get_bundle_id()

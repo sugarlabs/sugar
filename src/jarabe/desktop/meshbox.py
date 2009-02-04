@@ -38,6 +38,7 @@ from sugar.util import unique_id
 from jarabe.model import neighborhood
 from jarabe.view.buddyicon import BuddyIcon
 from jarabe.view.pulsingicon import CanvasPulsingIcon
+from jarabe.view import launcher
 from jarabe.desktop.snowflakelayout import SnowflakeLayout
 from jarabe.desktop.spreadlayout import SpreadLayout
 from jarabe.desktop import keydialog
@@ -471,6 +472,11 @@ class ActivityView(hippo.CanvasBox):
         handle = ActivityHandle(self._model.get_id())
 
         bundle = bundleregistry.get_registry().get_bundle(bundle_id)
+
+        launcher.add_launcher(self._model.get_id(),
+                              bundle.get_icon(),
+                              self._model.get_color())
+
         activityfactory.create(bundle, handle)
 
     def set_filter(self, query):

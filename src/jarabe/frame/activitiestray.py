@@ -43,6 +43,7 @@ from jarabe.model import bundleregistry
 from jarabe.model import filetransfer
 from jarabe.view.palettes import JournalPalette, CurrentActivityPalette
 from jarabe.view.pulsingicon import PulsingIcon
+from jarabe.view import launcher
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.frame.notification import NotificationIcon
 import jarabe.frame
@@ -165,6 +166,10 @@ class ActivityInviteButton(BaseInviteButton):
         """Join the activity in the invite."""
         registry = bundleregistry.get_registry()
         bundle = registry.get_bundle(self._bundle_id)
+
+        launcher.add_launcher(self._activity_model.get_id(),
+                              bundle.get_icon(),
+                              self._activity_model.get_color())
 
         handle = ActivityHandle(self._activity_model.get_id())
         activityfactory.create(bundle, handle)
