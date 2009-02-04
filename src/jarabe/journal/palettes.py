@@ -95,7 +95,7 @@ class ObjectPalette(Palette):
         self.menu.append(menu_item)
         menu_item.show()
 
-        menu_item = MenuItem(_('Send to'), 'list-remove')
+        menu_item = MenuItem(_('Send to'), 'document-send')
         self.menu.append(menu_item)
         menu_item.show()
 
