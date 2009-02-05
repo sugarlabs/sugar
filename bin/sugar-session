@@ -144,6 +144,7 @@ def main():
     sys.path.append(config.ext_path)
 
     gettext.bindtextdomain('sugar', config.locale_path)
+    gettext.bindtextdomain('sugar-toolkit', config.locale_path)
     gettext.textdomain('sugar')
 
     icons_path = os.path.join(config.data_path, 'icons')
