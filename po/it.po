@@ -292,7 +292,7 @@ msgstr "Pochissima carica rimanente"
 #: ../extensions/deviceicon/battery.py:149
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
-msgstr "%(ore)d:%(min).2d rimanenti"
+msgstr "%(hour)d:%(min).2d rimanenti"
 
 #: ../extensions/deviceicon/battery.py:153
 msgid "Charged"
