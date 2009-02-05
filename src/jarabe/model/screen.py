@@ -28,15 +28,15 @@ B_AND_W_MODE = 1
 _ohm_service = None
 
 def _get_ohm():
-    if _ohm_service:
-        return _ohm_service
+    global _ohm_service
+    if _ohm_service is None:
+        bus = dbus.SystemBus()
+        proxy = bus.get_object(_HARDWARE_MANAGER_SERVICE,
+                                _HARDWARE_MANAGER_OBJECT_PATH,
+                                follow_name_owner_changes=True)
+        _ohm_service = dbus.Interface(proxy, _HARDWARE_MANAGER_INTERFACE)
 
-    bus = dbus.SystemBus()
-    proxy = bus.get_object(_HARDWARE_MANAGER_SERVICE,
-                            _HARDWARE_MANAGER_OBJECT_PATH,
-                            follow_name_owner_changes=True)
-
-    return dbus.Interface(proxy, _HARDWARE_MANAGER_INTERFACE)
+    return _ohm_service
 
 def set_dcon_freeze(frozen):
     try:
