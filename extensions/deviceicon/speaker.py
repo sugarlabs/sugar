@@ -52,8 +52,8 @@ class DeviceView(TrayIcon):
 
         self.connect('expose-event', self.__expose_event_cb)
 
-        self._icon_widget.connect('button-press-event',
-                                  self.__update_mute_status)
+        self._icon_widget.connect('button-release-event',
+                                  self.__button_release_event_cb)
 
         self._update_info()
 
@@ -70,7 +70,7 @@ class DeviceView(TrayIcon):
         self.icon.props.icon_name = get_icon_state(name, current_level, step=-1)
         self.icon.props.xo_color = xo_color
 
-    def __update_mute_status(self, *args):
+    def __button_release_event_cb(self, widget, event):
         self._model.props.muted = not self._model.props.muted
 
     def __expose_event_cb(self, *args):
