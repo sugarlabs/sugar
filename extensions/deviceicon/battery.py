@@ -146,9 +146,8 @@ class BatteryPalette(Palette):
                 minutes_remaining = int(current_level / 0.59)
                 remaining_hourpart = minutes_remaining / 60
                 remaining_minpart = minutes_remaining % 60
-                secondary_text = _('%(hour)d:%(min).2d remaining'
-                                   % { 'hour': remaining_hourpart,
-                                       'min': remaining_minpart})
+                secondary_text = _('%(hour)d:%(min).2d remaining') % \
+                        {'hour': remaining_hourpart, 'min': remaining_minpart}
         else:
             secondary_text = _('Charged')
         self.set_content(progress_widget)
