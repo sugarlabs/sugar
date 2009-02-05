@@ -38,11 +38,17 @@ dbus.glib.threads_init()
 from sugar import logger
 from sugar import env
 
+# NOTE: This needs to happen so early because some modules register translatable
+# strings in the module scope.
+from jarabe import config
+gettext.bindtextdomain('sugar', config.locale_path)
+gettext.bindtextdomain('sugar-toolkit', config.locale_path)
+gettext.textdomain('sugar')
+
 from jarabe.desktop.homewindow import HomeWindow
 from jarabe.model import sound
 from jarabe.view import launcher
 from jarabe import intro
-from jarabe import config
 
 def cleanup_logs():
     """Clean up the log directory, moving old logs into a numbered backup
@@ -142,10 +148,6 @@ def main():
     sound.restore()
 
     sys.path.append(config.ext_path)
-
-    gettext.bindtextdomain('sugar', config.locale_path)
-    gettext.bindtextdomain('sugar-toolkit', config.locale_path)
-    gettext.textdomain('sugar')
 
     icons_path = os.path.join(config.data_path, 'icons')
     gtk.icon_theme_get_default().append_search_path(icons_path)
