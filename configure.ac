@@ -58,6 +58,7 @@ extensions/cpsection/datetime/Makefile
 extensions/cpsection/frame/Makefile
 extensions/cpsection/language/Makefile
 extensions/cpsection/network/Makefile
+extensions/cpsection/power/Makefile
 extensions/deviceicon/Makefile
 extensions/globalkey/Makefile
 src/Makefile
