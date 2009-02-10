@@ -131,6 +131,9 @@ class ControlPanel(gtk.Window):
         options = self._options.keys()
         options.sort()
 
+        if not os.path.exists('/ofw'):
+            options.remove('power')
+
         for option in options:
             sectionicon = _SectionIcon(icon_name=self._options[option]['icon'],
                                        title=self._options[option]['title'],
@@ -139,7 +142,7 @@ class ControlPanel(gtk.Window):
             sectionicon.connect('button_press_event', 
                                self.__select_option_cb, option)
             sectionicon.show()
-            
+
             if option == 'aboutme':
                 self._table.attach(sectionicon, 0, 1, 0, 1)
             elif option == 'aboutcomputer':
