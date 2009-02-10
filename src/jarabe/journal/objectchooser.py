@@ -20,6 +20,7 @@ import logging
 import gobject
 import gtk
 import hippo
+import wnck
 
 from sugar.graphics import style
 from sugar.graphics.toolbutton import ToolButton
@@ -53,8 +54,14 @@ class ObjectChooser(gtk.Window):
                      self.__visibility_notify_event_cb)
         self.connect('delete-event', self.__delete_event_cb)
         self.connect('key-press-event', self.__key_press_event_cb)
-        if parent is not None:
+
+        if parent is None:
+            logging.warning('ObjectChooser: No parent window specified')
+        else:
             self.connect('realize', self.__realize_cb, parent)
+
+            screen = wnck.screen_get_default()
+            screen.connect('window-closed', self.__window_closed_cb, parent)
 
         vbox = gtk.VBox()
         self.add(vbox)
@@ -95,6 +102,10 @@ class ObjectChooser(gtk.Window):
     def __realize_cb(self, chooser, parent):
         self.window.set_transient_for(parent)
         # TODO: Should we disconnect the signal here?
+
+    def __window_closed_cb(self, screen, window, parent):
+        if window.get_xid() == parent.xid:
+            self.destroy()
 
     def __entry_activated_cb(self, list_view, entry):
         self._selected_object_id = entry.metadata['uid']
