@@ -110,7 +110,11 @@ class ActivityPalette(Palette):
         self._favorite = registry.is_bundle_favorite(self._bundle_id,
                                                      self._version)
 
-        menu_item = MenuItem(_('Start'), 'activity-start')
+        xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
+                                      style.COLOR_TRANSPARENT.get_svg()))
+        menu_item = MenuItem(text_label=_('Start'),
+                             file_name=activity_info.get_icon(),
+                             xo_color=xo_color)
         menu_item.connect('activate', self.__start_activate_cb)
         self.menu.append(menu_item)
         menu_item.show()
