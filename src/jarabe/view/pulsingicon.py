@@ -16,6 +16,7 @@
 
 import math
 
+import gtk
 import gobject
 
 from sugar.graphics.icon import Icon, CanvasIcon
@@ -41,42 +42,40 @@ class Pulser(object):
         if self._pulse_hid is not None:
             gobject.source_remove(self._pulse_hid)
             self._pulse_hid = None
-        self._icon.xo_color = self._icon.base_color
+        self._icon.xo_color = self._icon.get_base_color()
 
     def update(self):
-        if self._icon.pulsing:
-            base_color = self._icon.base_color
-            pulse_color = self._icon.pulse_color
+        if self._icon.get_pulsing():
+            base_color = self._icon.get_base_color()
+            pulse_color = self._icon.get_pulse_color()
 
             base_stroke = self._get_as_rgba(base_color.get_stroke_color())
             pulse_stroke = self._get_as_rgba(pulse_color.get_stroke_color())
             base_fill = self._get_as_rgba(base_color.get_fill_color())
             pulse_fill = self._get_as_rgba(pulse_color.get_fill_color())
 
-            self._icon.stroke_color = \
-                    self._get_color(base_stroke, pulse_stroke).get_svg()
-            self._icon.fill_color = \
-                    self._get_color(base_fill, pulse_fill).get_svg()
+            self._icon.set_stroke_color(
+                self._get_color_string(base_stroke, pulse_stroke))
+            self._icon.set_fill_color(
+                self._get_color_string(base_fill, pulse_fill))
         else:
             self._icon.xo_color = self._icon.base_color
 
     def _get_as_rgba(self, html_color):
         if html_color == 'none':
-            return Color('#FFFFFF', alpha=1.0).get_rgba()
+            return 1.0, 1.0, 1.0
         else:
-            return Color(html_color).get_rgba()
+            color = gtk.gdk.color_parse(html_color)
+            return color.red / 65535.0,     \
+                   color.green / 65535.0,   \
+                   color.blue / 65535.0
 
-    def _get_color(self, orig_color, target_color):
-        next_point = (orig_color[0] +
-                      self._level * (target_color[0] - orig_color[0]),
-                      orig_color[1] +
-                      self._level * (target_color[1] - orig_color[1]),
-                      orig_color[2] +
-                      self._level * (target_color[2] - orig_color[2]))
+    def _get_color_string(self, orig_color, target_color):
+        r = orig_color[0] + self._level * (target_color[0] - orig_color[0])
+        g = orig_color[1] + self._level * (target_color[1] - orig_color[1])
+        b = orig_color[2] + self._level * (target_color[2] - orig_color[2])
 
-        return Color('#%02x%02x%02x' % (int(next_point[0] * 255),
-                                        int(next_point[1] * 255),
-                                        int(next_point[2] * 255)))
+        return '#%02x%02x%02x' % (int(r * 255), int(g * 255), int(b * 255))
 
     def __pulse_cb(self):
         self._phase += _STEP

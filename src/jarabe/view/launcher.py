@@ -65,8 +65,10 @@ class LaunchBox(hippo.CanvasBox):
                                  background_color=style.COLOR_WHITE.get_int())
 
         self._activity_id = activity_id
-        self._activity_icon = CanvasPulsingIcon(file_name=icon_path,
-                                                pulse_color=icon_color)
+        self._activity_icon = CanvasPulsingIcon(
+            file_name=icon_path,
+            pulse_color=icon_color,
+            background_color=style.COLOR_WHITE.get_gdk_color())
         self.append(self._activity_icon, hippo.PACK_EXPAND)
 
         # FIXME support non-xo colors in CanvasPulsingIcon
