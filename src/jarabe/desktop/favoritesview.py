@@ -472,11 +472,15 @@ class ActivityIcon(CanvasIcon):
 
     def create_palette(self):
         palette = FavoritePalette(self._activity_info, self._journal_entries)
+        palette.connect('activate', self.__palette_activate_cb)
         palette.connect('erase-activated', self.__erase_activated_cb)
         return palette
 
     def __erase_activated_cb(self, palette):
         self.emit('erase-activated', self._activity_info.get_bundle_id())
+
+    def __palette_activate_cb(self, palette):
+        self._activate()
 
     def __hovering_changed_event_cb(self, icon, hovering):
         self._hovering = hovering
@@ -530,6 +534,9 @@ class ActivityIcon(CanvasIcon):
         return width, width
 
     def __button_release_event_cb(self, icon, event):
+        self._activate()
+
+    def _activate(self):
         self.palette.popdown(immediate=True)
         if get_settings().resume_mode and self._journal_entries:
             entry = self._journal_entries[0]
