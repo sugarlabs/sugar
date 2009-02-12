@@ -61,7 +61,7 @@ def _restart_jabber():
         ps = dbus.Interface(bus.get_object(_PS_SERVICE, _PS_PATH), 
                             _PS_INTERFACE)
     except dbus.DBusException:
-        raise ReadError('%s service not available', _PS_SERVICE)
+        raise ReadError('%s service not available' % _PS_SERVICE)
     ps.RestartServerConnection()
 
 def get_radio():
@@ -70,7 +70,7 @@ def get_radio():
         obj = bus.get_object(_NM_SERVICE, _NM_PATH)
         nm_props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
     except dbus.DBusException:
-        raise ReadError('%s service not available', _NM_SERVICE)
+        raise ReadError('%s service not available' % _NM_SERVICE)
 
     state = nm_props.Get(_NM_IFACE, 'WirelessEnabled')
     if state in (0, 1):
@@ -91,7 +91,7 @@ def set_radio(state):
             obj = bus.get_object(_NM_SERVICE, _NM_PATH)
             nm_props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
         except dbus.DBusException:
-            raise ReadError('%s service not available', _NM_SERVICE)
+            raise ReadError('%s service not available' % _NM_SERVICE)
         nm_props.Set(_NM_IFACE, 'WirelessEnabled', True)
     elif state == 'off' or state == 0:
         bus = dbus.SystemBus()
@@ -99,7 +99,7 @@ def set_radio(state):
             obj = bus.get_object(_NM_SERVICE, _NM_PATH)
             nm_props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
         except dbus.DBusException:
-            raise ReadError('%s service not available', _NM_SERVICE)
+            raise ReadError('%s service not available' % _NM_SERVICE)
         nm_props.Set(_NM_IFACE, 'WirelessEnabled', False)
     else:
         raise ValueError(_("Error in specified radio argument use on/off."))
