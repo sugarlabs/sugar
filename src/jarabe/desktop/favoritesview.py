@@ -595,13 +595,7 @@ class FavoritePalette(ActivityPalette):
                 self.props.secondary_text = journal_entries[0]['title']
 
             menu_items = []
-
-            if get_settings().resume_mode:
-                entries = journal_entries[1:]
-            else:
-                entries = journal_entries
-            for entry in entries:
-
+            for entry in journal_entries:
                 icon_file_name = journal.misc.get_icon_name(entry)
                 color = XoColor(entry.get('icon-color', None))
 
@@ -612,7 +606,7 @@ class FavoritePalette(ActivityPalette):
                 menu_items.append(menu_item)
                 menu_item.show()
 
-            if entries:
+            if journal_entries:
                 separator = gtk.SeparatorMenuItem()
                 menu_items.append(separator)
                 separator.show()
