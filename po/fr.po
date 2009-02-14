@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-27 13:34-0500\n"
-"PO-Revision-Date: 2009-01-27 16:39-0500\n"
+"PO-Revision-Date: 2009-02-13 19:02-0500\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -276,7 +276,6 @@ msgid "My Battery"
 msgstr "Ma batterie"
 
 #: ../extensions/deviceicon/battery.py:137
-#, fuzzy
 msgid "Removed"
 msgstr "Retirer"
 
@@ -370,7 +369,6 @@ msgid "Close"
 msgstr "Fermer"
 
 #: ../data/sugar.schemas.in.h:1
-#, fuzzy
 msgid "Backup URL"
 msgstr "Sauvegarde de l'URL"
 
@@ -405,7 +403,6 @@ msgid "Favorites Layout"
 msgstr "Disposition favorite"
 
 #: ../data/sugar.schemas.in.h:8
-#, fuzzy
 msgid "Favorites resume mode"
 msgstr "Mode de reprise favori "
 
@@ -422,12 +419,10 @@ msgid "Jabber Server"
 msgstr "Serveur Jabber"
 
 #: ../data/sugar.schemas.in.h:11
-#, fuzzy
 msgid "Layout of the favorites view."
 msgstr "Disposition de la vue favorite."
 
 #: ../data/sugar.schemas.in.h:12
-#, fuzzy
 msgid "Power Automatic"
 msgstr "Alimentation automatique"
 
@@ -444,7 +439,6 @@ msgid "Power Extreme."
 msgstr "Alimentation extrême."
 
 #: ../data/sugar.schemas.in.h:16
-#, fuzzy
 msgid "Publish to Gadget"
 msgstr "Publication vers Gadget"
 
@@ -748,7 +742,6 @@ msgstr "Refuser"
 
 #: ../src/jarabe/frame/activitiestray.py:608
 #, python-format
-#, fuzzy
 msgid "%dB"
 msgstr "%do"
 
@@ -976,7 +969,6 @@ msgid "No valid connection found"
 msgstr "Aucune connexion valide trouvée"
 
 #: ../src/jarabe/journal/palettes.py:200
-#, fuzzy
 msgid "No activity to resume entry"
 msgstr "Aucune activité pour reprendre l'entrée"
 
