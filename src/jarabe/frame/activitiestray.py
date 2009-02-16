@@ -22,6 +22,7 @@ import os
 
 import gconf
 import dbus
+import gio
 import gtk
 
 from sugar.graphics import style
@@ -29,7 +30,7 @@ from sugar.graphics.tray import HTray
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.toolbutton import ToolButton
-from sugar.graphics.icon import Icon
+from sugar.graphics.icon import Icon, get_icon_file_name
 from sugar.graphics.palette import Palette, WidgetInvoker
 from sugar.graphics.menuitem import MenuItem
 from sugar.activity.activityhandle import ActivityHandle
@@ -457,19 +458,18 @@ class IncomingTransferButton(BaseTransferButton):
         self._file_transfer.connect('notify::transferred-bytes',
                                     self.__notify_transferred_bytes_cb)
 
-        icon_name = mime.get_mime_icon(file_transfer.mime_type)
-        icon_theme = gtk.icon_theme_get_default()
-        info = icon_theme.lookup_icon(icon_name, gtk.ICON_SIZE_LARGE_TOOLBAR, 0)
-        if not info:
-            # display standard icon when icon for mime type is not found
-            icon_name = 'application-octet-stream'
+        icons = gio.content_type_get_icon(file_transfer.mime_type).props.names
+        icons.append('application-octet-stream')
+        for icon_name in icons:
+            icon_name = 'transfer-from-%s' % icon_name
+            file_name = get_icon_file_name(icon_name)
+            if file_name is not None:
+                self.props.icon_widget.props.icon_name = icon_name
+                self.notif_icon.props.icon_name = icon_name
+                break
 
         icon_color = XoColor(file_transfer.buddy.props.color)
-
-        self.props.icon_widget.props.icon_name = icon_name
         self.props.icon_widget.props.xo_color = icon_color
-
-        self.notif_icon.props.icon_name = icon_name
         self.notif_icon.props.xo_color = icon_color
 
         frame = jarabe.frame.get_view()
@@ -552,20 +552,19 @@ class OutgoingTransferButton(BaseTransferButton):
 
         self._file_transfer = file_transfer
 
-        icon_name = mime.get_mime_icon(file_transfer.mime_type)
-        icon_theme = gtk.icon_theme_get_default()
-        info = icon_theme.lookup_icon(icon_name, gtk.ICON_SIZE_LARGE_TOOLBAR, 0)
-        if not info:
-            # display standard icon when icon for mime type is not found
-            icon_name = 'application-octet-stream'
+        icons = gio.content_type_get_icon(file_transfer.mime_type).props.names
+        icons.append('application-octet-stream')
+        for icon_name in icons:
+            icon_name = 'transfer-to-%s' % icon_name
+            file_name = get_icon_file_name(icon_name)
+            if file_name is not None:
+                self.props.icon_widget.props.icon_name = icon_name
+                self.notif_icon.props.icon_name = icon_name
+                break
 
         client = gconf.client_get_default()
         icon_color = XoColor(client.get_string("/desktop/sugar/user/color"))
-
-        self.props.icon_widget.props.icon_name = icon_name
         self.props.icon_widget.props.xo_color = icon_color
-
-        self.notif_icon.props.icon_name = icon_name
         self.notif_icon.props.xo_color = icon_color
 
         frame = jarabe.frame.get_view()
