@@ -26,6 +26,7 @@ import gtk
 
 from sugar.activity import activityfactory
 from sugar.activity.activityhandle import ActivityHandle
+from sugar.graphics.icon import get_icon_file_name
 from sugar import mime
 from sugar.bundle.activitybundle import ActivityBundle
 from sugar.bundle.contentbundle import ContentBundle
@@ -35,15 +36,6 @@ from sugar import util
 from jarabe.model import bundleregistry
 from jarabe.journal.journalentrybundle import JournalEntryBundle
 from jarabe.journal import model
-
-def _get_icon_file_name(icon_name):
-    icon_theme = gtk.icon_theme_get_default()
-    info = icon_theme.lookup_icon(icon_name, gtk.ICON_SIZE_LARGE_TOOLBAR, 0)
-    if not info:
-        return None
-    fname = info.get_filename()
-    del info
-    return fname
 
 def get_icon_name(metadata):
     file_name = None
@@ -71,12 +63,12 @@ def get_icon_name(metadata):
     if not file_name and mime_type:
         icons = gio.content_type_get_icon(mime_type)
         for icon_name in icons.props.names:
-            file_name = _get_icon_file_name(icon_name)
+            file_name = get_icon_file_name(icon_name)
             if file_name is not None:
                 break
 
     if file_name is None or not os.path.exists(file_name):
-        file_name = _get_icon_file_name('application-octet-stream')
+        file_name = get_icon_file_name('application-octet-stream')
 
     return file_name
 
