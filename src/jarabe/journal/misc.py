@@ -37,6 +37,21 @@ from jarabe.model import bundleregistry
 from jarabe.journal.journalentrybundle import JournalEntryBundle
 from jarabe.journal import model
 
+def _get_icon_for_mime(mime_type):
+    generic_types = mime.get_all_generic_types()
+    for generic_type in generic_types:
+        if mime_type in generic_type.mime_types:
+            file_name = get_icon_file_name(generic_type.icon)
+            if file_name is not None:
+                return file_name
+
+    icons = gio.content_type_get_icon(mime_type)
+    logging.debug('icons for this file: %r' % icons.props.names)
+    for icon_name in icons.props.names:
+        file_name = get_icon_file_name(icon_name)
+        if file_name is not None:
+            return file_name
+
 def get_icon_name(metadata):
     file_name = None
 
@@ -49,7 +64,7 @@ def get_icon_name(metadata):
         if activity_info:
             file_name = activity_info.get_icon()
 
-    if not file_name and is_activity_bundle(metadata):
+    if file_name is None and is_activity_bundle(metadata):
         file_path = model.get_file(metadata['uid'])
         if os.path.exists(file_path):
             try:
@@ -59,16 +74,8 @@ def get_icon_name(metadata):
                 logging.warning('Could not read bundle:\n' + \
                     ''.join(traceback.format_exception(*sys.exc_info())))
 
-    mime_type = metadata.get('mime_type', '')
-    if not file_name and mime_type:
-        icons = gio.content_type_get_icon(mime_type)
-        for icon_name in icons.props.names:
-            file_name = get_icon_file_name(icon_name)
-            if file_name is not None:
-                break
-
-    if file_name is None or not os.path.exists(file_name):
-        file_name = get_icon_file_name('application-octet-stream')
+    if file_name is None:
+        file_name = _get_icon_for_mime(metadata.get('mime_type', ''))
 
     return file_name
 
