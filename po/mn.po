@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-27 13:34-0500\n"
-"PO-Revision-Date: 2009-01-27 15:27-0500\n"
+"PO-Revision-Date: 2009-02-17 16:37-0500\n"
 "Last-Translator: Odontsetseg Bat-Erdene <obat-erdene@suffolk.edu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -912,7 +912,7 @@ msgstr "Огноо байхгүй"
 
 #: ../src/jarabe/journal/modalalert.py:63
 msgid "Your Journal is full"
-msgstr "Таны Журнал хоосон байна"
+msgstr "Таны Журнал дүүрэн байна"
 
 #: ../src/jarabe/journal/modalalert.py:67
 msgid "Please delete some old Journal entries to make space for new ones."
