@@ -292,12 +292,13 @@ class FileViewer(gtk.ScrolledWindow):
     def _add_dir_to_model(self, dir_path, parent=None):
         model = self._tree_view.get_model()
         for f in os.listdir(dir_path):
-            full_path = os.path.join(dir_path, f)
-            if os.path.isdir(full_path):
-                new_iter = model.append(parent, [f, full_path])
-                self._add_dir_to_model(full_path, new_iter)
-            else:
-                model.append(parent, [f, full_path])
+            if not f.endswith('.pyc'):
+                full_path = os.path.join(dir_path, f)
+                if os.path.isdir(full_path):
+                    new_iter = model.append(parent, [f, full_path])
+                    self._add_dir_to_model(full_path, new_iter)
+                else:
+                    model.append(parent, [f, full_path])
 
     def __selection_changed_cb(self, selection):
         model, tree_iter = selection.get_selected()
