@@ -206,7 +206,7 @@ class Toolbar(gtk.Toolbar):
             self._add_separator()
 
         if document_path is not None and os.path.exists(document_path):    
-            document_button = RadioToolButton(named_icon='view-radial')
+            document_button = RadioToolButton(named_icon='document-generic')
             document_button.props.tooltip = _('Document')
             document_button.props.group = activity_button
             document_button.connect('toggled', self.__button_toggled_cb, 
