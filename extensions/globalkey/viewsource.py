@@ -27,8 +27,10 @@ import gtksourceview2
 import dbus
 
 from sugar.graphics import style
+from sugar.graphics.icon import Icon
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.radiotoolbutton import RadioToolButton
+from sugar.bundle.activitybundle import ActivityBundle
 from sugar import mime
 
 from jarabe.model import shell
@@ -196,8 +198,14 @@ class Toolbar(gtk.Toolbar):
 
         self._add_separator()
 
-        if bundle_path is not None and os.path.exists(bundle_path):    
-            activity_button = RadioToolButton(named_icon='printer')
+        if bundle_path is not None and os.path.exists(bundle_path):
+            activity_bundle = ActivityBundle(bundle_path)
+            file_name = activity_bundle.get_icon()
+            activity_button = RadioToolButton()
+            icon = Icon(file=file_name,
+                        icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
+            activity_button.set_icon_widget(icon)
+            icon.show()
             activity_button.props.tooltip = _('Activity')
             activity_button.connect('toggled', self.__button_toggled_cb, 
                                     bundle_path)
@@ -205,7 +213,7 @@ class Toolbar(gtk.Toolbar):
             activity_button.show()
             self._add_separator()
 
-        if document_path is not None and os.path.exists(document_path):    
+        if document_path is not None and os.path.exists(document_path):
             document_button = RadioToolButton(named_icon='document-generic')
             document_button.props.tooltip = _('Document')
             document_button.props.group = activity_button
