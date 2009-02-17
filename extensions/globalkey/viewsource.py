@@ -1,4 +1,5 @@
 # Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -193,21 +194,18 @@ class Toolbar(gtk.Toolbar):
     def __init__(self, title, bundle_path, document_path):
         gtk.Toolbar.__init__(self)
 
-        text = _('View source: %r') % title
-        label = gtk.Label()
-        label.set_markup('<b>%s</b>' % text)
-        label.set_alignment(0, 0.5)
-        self._add_widget(label)
+        self._add_separator()
 
-        if bundle_path is not None and document_path is not None and \
-                os.path.exists(bundle_path) and os.path.exists(document_path):
+        if bundle_path is not None and os.path.exists(bundle_path):    
             activity_button = RadioToolButton(named_icon='printer')
             activity_button.props.tooltip = _('Activity')
             activity_button.connect('toggled', self.__button_toggled_cb, 
                                     bundle_path)
             self.insert(activity_button, -1)
             activity_button.show()
+            self._add_separator()
 
+        if document_path is not None and os.path.exists(document_path):    
             document_button = RadioToolButton(named_icon='view-radial')
             document_button.props.tooltip = _('Document')
             document_button.props.group = activity_button
@@ -215,19 +213,32 @@ class Toolbar(gtk.Toolbar):
                                     document_path)
             self.insert(document_button, -1)
             document_button.show()
+            self._add_separator()
 
-        separator = gtk.SeparatorToolItem()
-        separator.props.draw = False
-        separator.set_expand(True)
-        self.insert(separator, -1)
-        separator.show()
+        text = _('View source: %r') % title
+        label = gtk.Label()
+        label.set_markup('<b>%s</b>' % text)
+        label.set_alignment(0, 0.5)
+        self._add_widget(label)
 
+        self._add_separator(True)
+        
         stop = ToolButton(icon_name='dialog-cancel')
         stop.set_tooltip(_('Close'))
         stop.connect('clicked', self.__stop_clicked_cb)
         stop.show()
         self.insert(stop, -1)
         stop.show()
+
+    def _add_separator(self, expand=False):
+        separator = gtk.SeparatorToolItem()
+        separator.props.draw = False
+        if expand:
+            separator.set_expand(True)
+        else:
+            separator.set_size_request(style.DEFAULT_SPACING, -1)
+        self.insert(separator, -1)
+        separator.show()
 
     def _add_widget(self, widget, expand=False):
         tool_item = gtk.ToolItem()
