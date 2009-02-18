@@ -25,9 +25,11 @@ import pango
 import gtk
 import gtksourceview2
 import dbus
+import gconf
 
 from sugar.graphics import style
 from sugar.graphics.icon import Icon
+from sugar.graphics.xocolor import XoColor
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.bundle.activitybundle import ActivityBundle
@@ -128,17 +130,18 @@ class ViewSource(gtk.Window):
         pane = gtk.HPaned()
         vbox.pack_start(pane)
         pane.show()
-        
+
         self._file_viewer = FileViewer(bundle_path)
         self._file_viewer.connect('file-selected', self.__file_selected_cb)
         pane.add1(self._file_viewer)
         self._file_viewer.show()
 
         self._source_display = SourceDisplay()
-        #self._source_display.set_size_request(self._calculate_char_width(80),
-        #                                      -1)
-        pane.pack2(self._source_display)
+        pane.add2(self._source_display)
         self._source_display.show()
+        
+        if document_path is not None:
+            self._select_source(document_path)
 
     def _calculate_char_width(self, char_count):
         widget = gtk.Label('')
@@ -158,6 +161,9 @@ class ViewSource(gtk.Window):
         self.destroy()
 
     def __source_selected_cb(self, widget, path):
+        self._select_source(path)
+
+    def _select_source(self, path):
         if os.path.isfile(path):
             self._source_display.file_path = path
             self._file_viewer.hide()
@@ -198,29 +204,40 @@ class Toolbar(gtk.Toolbar):
 
         self._add_separator()
 
+        client = gconf.client_get_default()
+        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        activity_bundle = ActivityBundle(bundle_path)
+        file_name = activity_bundle.get_icon()
+
+        if document_path is not None and os.path.exists(document_path):
+            document_button = RadioToolButton()
+            icon = Icon(file=file_name,
+                        icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR,
+                        xo_color=color)
+            document_button.set_icon_widget(icon)
+            icon.show()
+            document_button.props.tooltip = _('Document')            
+            document_button.connect('toggled', self.__button_toggled_cb, 
+                                    document_path)
+            self.insert(document_button, -1)
+            document_button.show()
+            self._add_separator()
+
         if bundle_path is not None and os.path.exists(bundle_path):
-            activity_bundle = ActivityBundle(bundle_path)
-            file_name = activity_bundle.get_icon()
             activity_button = RadioToolButton()
             icon = Icon(file=file_name,
-                        icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
+                        icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR,
+                        fill_color=style.COLOR_TRANSPARENT.get_svg(),
+                        stroke_color=style.COLOR_WHITE.get_svg())
             activity_button.set_icon_widget(icon)
             icon.show()
+            if document_path is not None:
+                activity_button.props.group = document_button
             activity_button.props.tooltip = _('Activity')
             activity_button.connect('toggled', self.__button_toggled_cb, 
                                     bundle_path)
             self.insert(activity_button, -1)
             activity_button.show()
-            self._add_separator()
-
-        if document_path is not None and os.path.exists(document_path):
-            document_button = RadioToolButton(named_icon='document-generic')
-            document_button.props.tooltip = _('Document')
-            document_button.props.group = activity_button
-            document_button.connect('toggled', self.__button_toggled_cb, 
-                                    document_path)
-            self.insert(document_button, -1)
-            document_button.show()
             self._add_separator()
 
         text = _('View source: %r') % title
