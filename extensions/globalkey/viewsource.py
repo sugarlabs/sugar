@@ -131,7 +131,17 @@ class ViewSource(gtk.Window):
         vbox.pack_start(pane)
         pane.show()
 
-        self._file_viewer = FileViewer(bundle_path)
+        self._selected_file = None
+
+        activity_bundle = ActivityBundle(bundle_path)
+        command =  activity_bundle.get_command()
+        if len(command.split(' ')) > 1:
+            name = command.split(' ')[1].split('.')[0]
+            file_name =  name + '.py'
+            path = os.path.join(activity_bundle.get_path(), file_name)
+            self._selected_file = path
+
+        self._file_viewer = FileViewer(bundle_path, file_name)
         self._file_viewer.connect('file-selected', self.__file_selected_cb)
         pane.add1(self._file_viewer)
         self._file_viewer.show()
@@ -139,6 +149,7 @@ class ViewSource(gtk.Window):
         self._source_display = SourceDisplay()
         pane.add2(self._source_display)
         self._source_display.show()
+        self._source_display.file_path = self._selected_file
         
         if document_path is not None:
             self._select_source(document_path)
@@ -169,6 +180,7 @@ class ViewSource(gtk.Window):
             self._file_viewer.hide()
         else:
             self._file_viewer.set_path(path)
+            self._source_display.file_path = self._selected_file
             self._file_viewer.show()
 
     def __destroy_cb(self, window, document_path):
@@ -184,6 +196,7 @@ class ViewSource(gtk.Window):
     def __file_selected_cb(self, file_viewer, file_path):
         if file_path is not None and os.path.isfile(file_path):
             self._source_display.file_path = file_path
+            self._selected_file = file_path
         else:
             self._source_display.file_path = None
     
@@ -291,7 +304,7 @@ class FileViewer(gtk.ScrolledWindow):
                            ([str])),
     }
 
-    def __init__(self, path):
+    def __init__(self, path, initial_filename):
         gtk.ScrolledWindow.__init__(self)
 
         self.props.hscrollbar_policy = gtk.POLICY_AUTOMATIC
@@ -299,6 +312,7 @@ class FileViewer(gtk.ScrolledWindow):
         self.set_size_request(style.GRID_CELL_SIZE * 3, -1)
 
         self._path = None
+        self._initial_filename = initial_filename
 
         self._tree_view = gtk.TreeView()
         self.add(self._tree_view)
@@ -333,8 +347,11 @@ class FileViewer(gtk.ScrolledWindow):
                 if os.path.isdir(full_path):
                     new_iter = model.append(parent, [f, full_path])
                     self._add_dir_to_model(full_path, new_iter)
-                else:
-                    model.append(parent, [f, full_path])
+                else:                    
+                    current_iter = model.append(parent, [f, full_path])
+                    if f == self._initial_filename:
+                        selection = self._tree_view.get_selection()
+                        selection.select_iter(current_iter)
 
     def __selection_changed_cb(self, selection):
         model, tree_iter = selection.get_selected()
