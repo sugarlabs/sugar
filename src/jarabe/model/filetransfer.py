@@ -41,7 +41,7 @@ FT_STATE_CANCELLED = 5
 
 # FIXME: use constants from tp-python once the spec is undrafted
 CHANNEL_TYPE_FILE_TRANSFER = \
-        'org.freedesktop.Telepathy.Channel.Type.FileTransfer.DRAFT'
+        'org.freedesktop.Telepathy.Channel.Type.FileTransfer'
 
 class StreamSplicer(gobject.GObject):
     _CHUNK_SIZE = 1024 # 1K
