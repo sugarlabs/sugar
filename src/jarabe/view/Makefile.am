@@ -8,4 +8,5 @@ sugar_PYTHON =				\
 	palettes.py			\
 	pulsingicon.py			\
 	service.py			\
-	tabbinghandler.py
+	tabbinghandler.py		\
+	viewsource.py
