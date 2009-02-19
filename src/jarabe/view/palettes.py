@@ -33,7 +33,9 @@ from sugar.activity import activityfactory
 from sugar.activity.activityhandle import ActivityHandle
 
 from jarabe.model import bundleregistry
+from jarabe.model import shell
 from jarabe.view import launcher
+from jarabe.view.viewsource import setup_view_source
 
 class BasePalette(Palette):
     def __init__(self, home_activity):
@@ -68,6 +70,12 @@ class CurrentActivityPalette(BasePalette):
 
         # TODO: share-with, keep
 
+        accelerator = ' (Alt+Shift+v)'
+        menu_item = MenuItem(_('View Source') + accelerator, 'view-source')
+        menu_item.connect('activate', self.__view_source__cb)
+        self.menu.append(menu_item)
+        menu_item.show()
+
         separator = gtk.SeparatorMenuItem()
         self.menu.append(separator)
         separator.show()
@@ -79,6 +87,17 @@ class CurrentActivityPalette(BasePalette):
 
     def __resume_activate_cb(self, menu_item):
         self._home_activity.get_window().activate(gtk.get_current_event_time())
+
+    def __view_source__cb(self, menu_item):
+        setup_view_source(self._home_activity)
+        shell_model = shell.get_model()
+        if self._home_activity is not shell_model.get_active_activity():
+            self._home_activity.get_window().activate( \
+                gtk.get_current_event_time())
+
+    def __active_window_changed_cb(self, screen, previous_window=None):
+        setup_view_source()
+        self._screen.disconnect(self._active_window_changed_sid)
 
     def __stop_activate_cb(self, menu_item):
         self._home_activity.get_window().close(1)
