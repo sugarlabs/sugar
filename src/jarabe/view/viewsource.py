@@ -125,7 +125,8 @@ class ViewSource(gtk.Window):
         vbox.pack_start(pane)
         pane.show()
 
-        self._selected_file = None
+        self._selected_file = None        
+        file_name = ''
 
         activity_bundle = ActivityBundle(bundle_path)
         command =  activity_bundle.get_command()
