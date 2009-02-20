@@ -421,13 +421,8 @@ class ActivityIcon(CanvasIcon):
         datastore_listener.updated.connect(self.__datastore_listener_updated_cb)
         datastore_listener.deleted.connect(self.__datastore_listener_deleted_cb)
 
-        get_settings().changed.connect(self.__settings_changed_cb)
-
         self._refresh()
         self._update()
-
-    def __settings_changed_cb(self, **kwargs):
-        self._refresh()
 
     def _refresh(self):
         bundle_id = self._activity_info.get_bundle_id()
@@ -463,7 +458,7 @@ class ActivityIcon(CanvasIcon):
 
     def _update(self):
         self.palette = None
-        if not get_settings().resume_mode or not self._journal_entries:
+        if not self._journal_entries:
             self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
             self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
         else:
@@ -529,7 +524,7 @@ class ActivityIcon(CanvasIcon):
 
     def _activate(self):
         self.palette.popdown(immediate=True)
-        if get_settings().resume_mode and self._journal_entries:
+        if self._journal_entries:
             entry = self._journal_entries[0]
             launcher.add_launcher(entry['activity_id'],
                                   self._activity_info.get_icon(),
@@ -570,8 +565,7 @@ class FavoritePalette(ActivityPalette):
     def __init__(self, activity_info, journal_entries):
         ActivityPalette.__init__(self, activity_info)
 
-        if get_settings().resume_mode and journal_entries and \
-                journal_entries[0].get('icon-color', ''):
+        if journal_entries and journal_entries[0].get('icon-color', ''):
             color = XoColor(journal_entries[0]['icon-color'])
         else:
             color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
@@ -582,8 +576,7 @@ class FavoritePalette(ActivityPalette):
                                icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
 
         if journal_entries:
-            if get_settings().resume_mode:
-                self.props.secondary_text = journal_entries[0]['title']
+            self.props.secondary_text = journal_entries[0]['title']
 
             menu_items = []
             for entry in journal_entries:
@@ -690,13 +683,14 @@ class _MyIcon(MyIcon):
 
 class FavoritesSetting(object):
 
-    _FAVORITES_LAYOUT_KEY = '/desktop/sugar/desktop/favorites_layout'
-    _FAVORITES_MODE_KEY = '/desktop/sugar/desktop/favorites_mode'
+    _FAVORITES_KEY = "/desktop/sugar/desktop/favorites_layout"
 
     def __init__(self):
         client = gconf.client_get_default() 
-        self._layout = client.get_string(self._FAVORITES_LAYOUT_KEY)
-        self._resume_mode = client.get_bool(self._FAVORITES_MODE_KEY)
+        self._layout = client.get_string(self._FAVORITES_KEY)
+        logging.debug('FavoritesSetting layout %r' % (self._layout))
+
+        self._mode = None
 
         self.changed = dispatch.Signal()
 
@@ -709,25 +703,11 @@ class FavoritesSetting(object):
             self._layout = layout
 
             client = gconf.client_get_default()
-            client.set_string(self._FAVORITES_LAYOUT_KEY, layout)
+            client.set_string(self._FAVORITES_KEY, layout)
 
             self.changed.send(self)
 
     layout = property(get_layout, set_layout)
-
-    def is_resume_mode(self):
-        return self._resume_mode
-
-    def set_resume_mode(self, resume_mode):
-        if resume_mode != self._resume_mode:
-            self._resume_mode = resume_mode
-
-            client = gconf.client_get_default()
-            client.set_bool(self._FAVORITES_MODE_KEY, resume_mode)
-
-            self.changed.send(self)
-
-    resume_mode = property(is_resume_mode, set_resume_mode)
 
 _favorites_settings = None
 
