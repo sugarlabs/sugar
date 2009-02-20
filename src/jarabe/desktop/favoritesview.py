@@ -565,7 +565,7 @@ class ActivityIcon(CanvasIcon):
     version = property(get_version, None)
 
     def _get_installation_time(self):
-        return self._activity_info.installation_time
+        return self._activity_info.get_installation_time()
     installation_time = property(_get_installation_time, None)
 
     def _get_fixed_position(self):

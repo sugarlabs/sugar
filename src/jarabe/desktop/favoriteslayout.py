@@ -251,15 +251,6 @@ class RingLayout(FavoritesLayout):
                 if child not in self._locked_children]
         return children_in_ring
 
-    def _update_icon_sizes(self):
-        # XXX: THIS METHOD IS NEVER CALLED
-        children_in_ring = self._get_children_in_ring()
-        radius_, icon_size = \
-                self._calculate_radius_and_icon_size(len(children_in_ring))
-
-        for child in children_in_ring:
-            child.item.props.size = icon_size
-
     def do_allocate(self, x, y, width, height, req_width, req_height,
                     origin_changed):
         children_in_ring = self._get_children_in_ring()
