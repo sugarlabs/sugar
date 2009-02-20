@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-27 13:34-0500\n"
-"PO-Revision-Date: 2009-02-15 09:02-0500\n"
+"PO-Revision-Date: 2009-02-20 13:50-0500\n"
 "Last-Translator: Eduardo H. Silva <HoboPrimate@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
-msgstr "Sobre Mim"
+msgstr "Sobre mim"
 
 #: ../extensions/cpsection/aboutme/model.py:43
 msgid "You must enter a name."
@@ -85,7 +85,7 @@ msgstr "Versão do software:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:114
 msgid "Sugar:"
-msgstr "Sugar:"
+msgstr "Açúcar (Sugar):"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:130
 msgid "Firmware:"
@@ -93,7 +93,7 @@ msgstr "Firmware:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:145
 msgid "Wireless Firmware:"
-msgstr "Firmware do Wireless"
+msgstr "Firmware da rede sem fios"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:168
 msgid "Copyright and License"
@@ -112,10 +112,10 @@ msgid ""
 "change it and/or distribute copies of it under certain conditions described "
 "therein."
 msgstr ""
-"O Sugar é a interface gráfica de utilizador que estás a utilizar. O Sugar é "
-"software livre, licenciado sob a GNU General Public License, e és bem vindo "
-"a fazer alterações a ele e/ou a distribuir cópias dele, segundo certas "
-"condições descritas a seguir."
+"O Açúcar (Sugar) é a interface gráfica de utilizador que estás a utilizar. O "
+"Açúcar é software livre, licenciado sob a GNU General Public License, e és "
+"bem vindo a fazer alterações a ele e/ou a distribuir cópias dele, segundo "
+"certas condições descritas a seguir."
 
 #: ../extensions/cpsection/aboutcomputer/view.py:195
 msgid "Full license:"
@@ -148,7 +148,7 @@ msgstr "nunca"
 
 #: ../extensions/cpsection/frame/view.py:27
 msgid "instantaneous"
-msgstr "instantaneamente "
+msgstr "instantâneo"
 
 #: ../extensions/cpsection/frame/view.py:28
 #, python-format
@@ -209,7 +209,7 @@ msgstr "Rede sem fios"
 
 #: ../extensions/cpsection/network/view.py:64
 msgid "Turn off the wireless radio to save battery life"
-msgstr "Desliga o rádio da rede sem fios para poupar a carga da bateria"
+msgstr "Desliga o rádio da rede sem fios para poupar na carga da bateria"
 
 #: ../extensions/cpsection/network/view.py:77
 msgid "Radio"
@@ -234,7 +234,7 @@ msgid ""
 "network."
 msgstr ""
 "O servidor é equivalente ao quarto em que estás; pessoas no mesmo servidor "
-"poderão ver-se umas às ouras, mesmo que não estejam na mesma rede."
+"poderão ver-se umas às outras, mesmo que não estejam na mesma rede."
 
 #: ../extensions/cpsection/network/view.py:133
 msgid "Server:"
@@ -352,7 +352,7 @@ msgstr "Imagem do ecrã"
 #: ../extensions/globalkey/viewsource.py:196
 #, python-format
 msgid "View source: %r"
-msgstr "Ver fonte: %r"
+msgstr "Ver o código-fonte: %r"
 
 #: ../extensions/globalkey/viewsource.py:205
 #: ../src/jarabe/frame/zoomtoolbar.py:42
@@ -369,9 +369,8 @@ msgid "Close"
 msgstr "Fechar"
 
 #: ../data/sugar.schemas.in.h:1
-#, fuzzy
 msgid "Backup URL"
-msgstr "URL de reserva"
+msgstr "URL da cópia de segurança"
 
 #: ../data/sugar.schemas.in.h:2
 msgid ""
@@ -380,24 +379,24 @@ msgid ""
 "Example: #AC32FF,#9A5200"
 msgstr ""
 "A cor do ícone XO que é utilizada em todo o ambiente gráfico. O texto é "
-"composto pela cor de traço e de preenchimento, e o formato é o das cores "
+"composto pela cor de traço e a de preenchimento, e o formato é o das cores "
 "rgb. Por exemplo: #AC32FF, #9A5200"
 
 #: ../data/sugar.schemas.in.h:3
 msgid "Corner Delay"
-msgstr "Demora nos cantos"
+msgstr "Atraso nos cantos"
 
 #: ../data/sugar.schemas.in.h:4
 msgid "Delay for the activation of the frame using the corners."
-msgstr "Demora na activação da moldura utilizando os cantos."
+msgstr "Atraso na activação da moldura utilizando os cantos."
 
 #: ../data/sugar.schemas.in.h:5
 msgid "Delay for the activation of the frame using the edges."
-msgstr "Demore na activação da moldura utilizando os lados."
+msgstr "Atraso na activação da moldura utilizando os lados."
 
 #: ../data/sugar.schemas.in.h:6
 msgid "Edge Delay"
-msgstr "Demora nos lados"
+msgstr "Atraso nos lados"
 
 #: ../data/sugar.schemas.in.h:7
 msgid "Favorites Layout"
@@ -405,15 +404,15 @@ msgstr "Posicionamento dos favoritos"
 
 #: ../data/sugar.schemas.in.h:8
 msgid "Favorites resume mode"
-msgstr "Modo de continuar dos favoritos"
+msgstr "Modo de continuação dos favoritos"
 
 #: ../data/sugar.schemas.in.h:9
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
-"Se verdade, o Sugar irá tornar-nos pesquisáveis pelos outros utilizadores do "
-"servidor Jabber."
+"Se VERDADE, o Açúcar (Sugar) irá tornar-nos pesquisáveis pelos outros "
+"utilizadores do servidor Jabber."
 
 #: ../data/sugar.schemas.in.h:10
 msgid "Jabber Server"
@@ -488,7 +487,7 @@ msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
 msgstr ""
-"Quando está no modo de continuar, clicar num ícone favorito irá fazer com "
+"Quando está no modo de continuação, clicar num ícone favorito irá fazer com "
 "que seja continuada a última entrada dessa actividade."
 
 #: ../src/jarabe/controlpanel/cmd.py:28
@@ -540,7 +539,7 @@ msgstr ""
 
 #: ../src/jarabe/controlpanel/cmd.py:50
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr "Para aplicar as alterações tens que reiniciar o sugar.\n"
+msgstr "Para aplicar as alterações tens que reiniciar o açúcar (sugar).\n"
 
 #: ../src/jarabe/controlpanel/gui.py:272
 msgid "Warning"
@@ -618,7 +617,7 @@ msgstr "%s"
 
 #: ../src/jarabe/desktop/favoritesview.py:328
 msgid "Registration Successful"
-msgstr "O Registo teve Sucesso"
+msgstr "O Registo teve sucesso"
 
 #: ../src/jarabe/desktop/favoritesview.py:329
 msgid "You are now registered with your school server."
@@ -653,13 +652,13 @@ msgstr "Apagar"
 
 #: ../src/jarabe/desktop/homebox.py:106
 msgid "Software Update"
-msgstr "Actualização do Software"
+msgstr "Actualização do software"
 
 #: ../src/jarabe/desktop/homebox.py:107
 msgid "Update your activities to ensure compatibility with your new software"
 msgstr ""
-"Actualiza as tuas actividades para assegurar compatibilidade com o teu novo "
-"software"
+"Actualiza as tuas actividades para assegurar a compatibilidade com o teu "
+"novo software"
 
 #: ../src/jarabe/desktop/homebox.py:116
 msgid "Check now"
@@ -667,7 +666,7 @@ msgstr "Verificar agora"
 
 #: ../src/jarabe/desktop/homebox.py:233
 msgid "List view"
-msgstr "Vista de Lista"
+msgstr "Vista de lista"
 
 #: ../src/jarabe/desktop/homebox.py:234
 msgid "<Ctrl>2"
@@ -675,7 +674,7 @@ msgstr "<Ctrl>2"
 
 #: ../src/jarabe/desktop/homebox.py:296
 msgid "Favorites view"
-msgstr "Vista de Favoritos"
+msgstr "Vista de favoritos"
 
 #: ../src/jarabe/desktop/homebox.py:297
 msgid "<Ctrl>1"
@@ -696,7 +695,7 @@ msgstr "Tipo de Autenticação:"
 #: ../src/jarabe/desktop/keydialog.py:215
 #, fuzzy
 msgid "WPA & WPA2 Personal"
-msgstr "WPA e WPA2 pessoais"
+msgstr "WPA e WPA2 pessoal"
 
 #: ../src/jarabe/desktop/keydialog.py:224
 msgid "Wireless Security:"
@@ -726,7 +725,7 @@ msgstr "Juntar-se"
 
 #: ../src/jarabe/desktop/schoolserver.py:18
 msgid "Cannot obtain data needed for registration."
-msgstr "Não foi possível obter os dados necessários para o registro."
+msgstr "Não foi possível obter os dados necessários para o registo."
 
 #: ../src/jarabe/desktop/schoolserver.py:35
 msgid "Cannot connect to the server."
@@ -797,7 +796,7 @@ msgstr "Abrir com"
 #: ../src/jarabe/frame/clipboardobject.py:47
 #, python-format
 msgid "%s clipping"
-msgstr "Recorte %s"
+msgstr "Recorte de %s"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:36
 msgid "Neighborhood"
@@ -921,7 +920,7 @@ msgstr "O teu Diário está vazio"
 
 #: ../src/jarabe/journal/listview.py:41
 msgid "No matching entries "
-msgstr "Nenhum item encontrado "
+msgstr "Nenhuma entrada encontrada "
 
 #: ../src/jarabe/journal/listview.py:369
 msgid "Clear search"
@@ -963,7 +962,7 @@ msgstr "Enviar para"
 
 #: ../src/jarabe/journal/palettes.py:167
 msgid "No friends present"
-msgstr "Nenhum amigo está presente"
+msgstr "Não está presente nenhum amigo"
 
 #: ../src/jarabe/journal/palettes.py:172
 msgid "No valid connection found"
@@ -971,11 +970,11 @@ msgstr "Não foi encontrada uma ligação válida"
 
 #: ../src/jarabe/journal/palettes.py:200
 msgid "No activity to resume entry"
-msgstr "Nenhuma actividade para continuar a entrada"
+msgstr "Não existe nenhuma actividade para continuar a entrada"
 
 #: ../src/jarabe/journal/palettes.py:202
 msgid "No activity to start entry"
-msgstr "Nenhuma activitidade para iniciar a entrada"
+msgstr "Não existe nenhuma actividade para iniciar a entrada"
 
 #: ../src/jarabe/view/buddymenu.py:61
 msgid "Remove friend"
