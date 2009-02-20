@@ -279,7 +279,7 @@ msgstr "電池電源即將用完"
 #: ../extensions/deviceicon/battery.py:149
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
-msgstr "剩餘 %(小時)d:%(分).2d"
+msgstr "剩餘 %(hour)d:%(min).2d"
 
 #: ../extensions/deviceicon/battery.py:153
 msgid "Charged"
@@ -519,6 +519,7 @@ msgstr ""
 "    -g key       取得本件值的資料 \n"
 "    -s key       設定本鍵值的資料 \n"
 "    -c key       清除本鍵值的資料 \n"
+"    "
 
 #: ../src/jarabe/controlpanel/cmd.py:50
 msgid "To apply your changes you have to restart sugar.\n"

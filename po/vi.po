@@ -527,6 +527,7 @@ msgstr ""
 "    -g khoá       lấy giá trị hiện thời của khoá này\n"
 "     -s khoá       đặt giá trị hiện thời của khoá này\n"
 "     -c khoá       xoá giá trị hiện thời của khoá\n"
+"    "
 
 #: ../src/jarabe/controlpanel/cmd.py:50
 msgid "To apply your changes you have to restart sugar.\n"

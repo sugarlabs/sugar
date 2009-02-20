@@ -24,7 +24,6 @@ extensions/deviceicon/network.py
 extensions/deviceicon/speaker.py
 extensions/deviceicon/volume.py
 extensions/globalkey/screenshot.py
-extensions/globalkey/viewsource.py
 data/sugar.schemas.in
 src/jarabe/controlpanel/cmd.py
 src/jarabe/controlpanel/gui.py
@@ -56,4 +55,5 @@ src/jarabe/journal/volumestoolbar.py
 src/jarabe/view/buddymenu.py
 src/jarabe/view/keyhandler.py
 src/jarabe/view/palettes.py
+src/jarabe/view/viewsource.py
 
