@@ -484,19 +484,10 @@ class ActivityIcon(CanvasIcon):
 
     def __hovering_changed_event_cb(self, icon, hovering):
         self._hovering = hovering
-
-        if get_settings().resume_mode:
-            self.emit_paint_needed(0, 0, -1, -1)
-        elif hovering:
-            client = gconf.client_get_default()
-            xo_color = XoColor(client.get_string('/desktop/sugar/user/color'))
-            self.props.xo_color = xo_color
-        else:
-            self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
-            self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+        self.emit_paint_needed(0, 0, -1, -1)
 
     def do_paint_above_children(self, cr, damaged_box):
-        if get_settings().resume_mode and self._hovering:
+        if self._hovering:
             width, height = self.get_allocation()
 
             color = style.COLOR_SELECTION_GREY.get_int()
