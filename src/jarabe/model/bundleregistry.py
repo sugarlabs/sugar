@@ -20,6 +20,7 @@ import traceback
 import sys
 
 import gobject
+import gio
 import cjson
 
 from sugar.bundle.activitybundle import ActivityBundle
@@ -30,7 +31,7 @@ from sugar import env
 from jarabe import config
 
 class BundleRegistry(gobject.GObject):
-    """Service that tracks the available activity bundles"""
+    """Tracks the available activity bundles"""
 
     __gsignals__ = {
         'bundle-added':   (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
@@ -51,6 +52,9 @@ class BundleRegistry(gobject.GObject):
         user_path = env.get_user_activities_path()
         for activity_dir in [user_path, config.activities_path]:
             self._scan_directory(activity_dir)
+            directory = gio.File(activity_dir)
+            monitor = directory.monitor_directory()
+            monitor.connect('changed', self.__file_monitor_changed_cb)
 
         self._last_defaults_mtime = -1
         self._favorite_bundles = {}
@@ -62,6 +66,15 @@ class BundleRegistry(gobject.GObject):
                     % traceback.format_exc())
 
         self._merge_default_favorites()
+
+    def __file_monitor_changed_cb(self, monitor, one_file, other_file, event_type):
+        logging.debug('__file_monitor_changed_cb %r' % ((monitor, one_file, other_file, event_type),))
+        if not one_file.get_path().endswith('.activity'):
+            return
+        if event_type == gio.FILE_MONITOR_EVENT_CREATED:
+            self.add_bundle(one_file.get_path())
+        elif event_type == gio.FILE_MONITOR_EVENT_DELETED:
+            self.remove_bundle(one_file.get_path())
 
     def _load_mime_defaults(self):
         defaults = {}
