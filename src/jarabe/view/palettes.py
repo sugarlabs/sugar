@@ -70,8 +70,9 @@ class CurrentActivityPalette(BasePalette):
 
         # TODO: share-with, keep
 
-        accelerator = ' (Alt+Shift+v)'
-        menu_item = MenuItem(_('View Source') + accelerator, 'view-source')
+        menu_item = MenuItem(_('View Source'), 'view-source')
+        # TODO Make this accelerator translatable
+        menu_item.props.accelerator = '<Alt><Shift>v'
         menu_item.connect('activate', self.__view_source__cb)
         self.menu.append(menu_item)
         menu_item.show()
