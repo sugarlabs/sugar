@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-27 13:34-0500\n"
-"PO-Revision-Date: 2009-02-20 13:50-0500\n"
+"PO-Revision-Date: 2009-02-22 12:50-0500\n"
 "Last-Translator: Eduardo H. Silva <HoboPrimate@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -682,7 +682,7 @@ msgstr "<Ctrl>1"
 
 #: ../src/jarabe/desktop/homebox.py:304
 msgid "Resume by default"
-msgstr "Por omissão continuar"
+msgstr "Continuar por omissão"
 
 #: ../src/jarabe/desktop/keydialog.py:131
 msgid "Key Type:"
