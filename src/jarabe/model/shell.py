@@ -169,7 +169,10 @@ class Activity(gobject.GObject):
 
     def get_xid(self):
         """Retrieve the X-windows ID of our root window"""
-        return self._window.get_xid()
+        if self._window is not None:
+            return self._window.get_xid()
+        else:
+            return None
 
     def get_window(self):
         """Retrieve the X-windows root window of this application

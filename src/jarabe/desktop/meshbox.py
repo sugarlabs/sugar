@@ -44,6 +44,7 @@ from jarabe.desktop.spreadlayout import SpreadLayout
 from jarabe.desktop import keydialog
 from jarabe.model import bundleregistry
 from jarabe.model import network
+from jarabe.model import shell
 from jarabe.model.network import Settings
 from jarabe.model.network import WirelessSecurity
 
@@ -467,16 +468,20 @@ class ActivityView(hippo.CanvasBox):
         icon.destroy()
 
     def _clicked_cb(self, item):
+        shell_model = shell.get_model()
+        activity = shell_model.get_activity_by_id(self._model.get_id())
+        if activity:
+            activity.get_window().activate(gtk.get_current_event_time())
+            return
+
         bundle_id = self._model.get_bundle_id()
-
-        handle = ActivityHandle(self._model.get_id())
-
         bundle = bundleregistry.get_registry().get_bundle(bundle_id)
 
         launcher.add_launcher(self._model.get_id(),
                               bundle.get_icon(),
                               self._model.get_color())
 
+        handle = ActivityHandle(self._model.get_id())
         activityfactory.create(bundle, handle)
 
     def set_filter(self, query):
