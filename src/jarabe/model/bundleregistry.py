@@ -67,8 +67,8 @@ class BundleRegistry(gobject.GObject):
 
         self._merge_default_favorites()
 
-    def __file_monitor_changed_cb(self, monitor, one_file, other_file, event_type):
-        logging.debug('__file_monitor_changed_cb %r' % ((monitor, one_file, other_file, event_type),))
+    def __file_monitor_changed_cb(self, monitor, one_file, other_file,
+                                  event_type):
         if not one_file.get_path().endswith('.activity'):
             return
         if event_type == gio.FILE_MONITOR_EVENT_CREATED:

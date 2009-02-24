@@ -22,7 +22,6 @@ import os
 from gettext import gettext as _
 
 import gio
-import gtk
 
 from sugar.activity import activityfactory
 from sugar.activity.activityhandle import ActivityHandle
