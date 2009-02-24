@@ -52,10 +52,10 @@ class DeviceView(TrayIcon):
 
         TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
 
+        self.set_palette_invoker(FrameWidgetInvoker(self))
+
         self._model = DeviceModel(udi)
         self.palette = BatteryPalette(_('My Battery'))
-        self.set_palette(self.palette)
-        self.palette.props.invoker = FrameWidgetInvoker(self)
         self.palette.set_group_id('frame')
 
         self._model.connect('notify::level',

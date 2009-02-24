@@ -61,11 +61,12 @@ class DeviceView(TrayIcon):
 
         TrayIcon.__init__(self, icon_name=icon_name, xo_color=color)
 
+        self.set_palette_invoker(FrameWidgetInvoker(self))
+
         self.connect('button-release-event', self.__button_release_event_cb)
 
     def create_palette(self):
         palette = VolumePalette(self._mount)
-        palette.props.invoker = FrameWidgetInvoker(self)
         palette.set_group_id('frame')
         return palette
 

@@ -42,11 +42,9 @@ class DeviceView(TrayIcon):
 
         TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
 
-        self._model = DeviceModel()
-        self.palette = SpeakerPalette(_('My Speakers'), model=self._model)
-        self.palette.props.invoker = FrameWidgetInvoker(self)
-        self.palette.set_group_id('frame')
+        self.set_palette_invoker(FrameWidgetInvoker(self))
 
+        self._model = DeviceModel()
         self._model.connect('notify::level', self.__speaker_status_changed_cb)
         self._model.connect('notify::muted', self.__speaker_status_changed_cb)
 
@@ -56,6 +54,11 @@ class DeviceView(TrayIcon):
                                   self.__button_release_event_cb)
 
         self._update_info()
+
+    def create_palette(self):
+        palette = SpeakerPalette(_('My Speakers'), model=self._model)
+        palette.set_group_id('frame')
+        return palette
 
     def _update_info(self):
         name = _ICON_NAME
@@ -71,7 +74,11 @@ class DeviceView(TrayIcon):
         self.icon.props.xo_color = xo_color
 
     def __button_release_event_cb(self, widget, event):
-        self._model.props.muted = not self._model.props.muted
+        if event.button == 1:
+            self._model.props.muted = not self._model.props.muted
+            return True
+        else:
+            return False
 
     def __expose_event_cb(self, *args):
         self._update_info()
