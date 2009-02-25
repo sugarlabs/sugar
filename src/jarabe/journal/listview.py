@@ -202,7 +202,7 @@ class BaseListView(gtk.HBox):
         if self._result_set is not None:
             self._result_set.stop()
 
-        self._result_set = model.find(self._query)
+        self._result_set = model.find(self._query, self._page_size)
         self._result_set.ready.connect(self.__result_set_ready_cb)
         self._result_set.progress.connect(self.__result_set_progress_cb)
         self._result_set.setup()
@@ -336,7 +336,7 @@ class BaseListView(gtk.HBox):
         self._vadjustment.changed()
 
         if self._result_set is None:
-            self._result_set = model.find(self._query)
+            self._result_set = model.find(self._query, self._page_size)
 
         max_value = max(0, self._result_set.length - self._page_size)
         if self._vadjustment.props.value > max_value:

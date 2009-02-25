@@ -41,6 +41,8 @@ PROPERTIES = ['uid', 'title', 'mtime', 'timestamp', 'keep', 'buddies',
               'icon-color', 'mime_type', 'progress', 'activity', 'mountpoint',
               'activity_id']
 
+PAGES_TO_CACHE = 5
+
 class _Cache(object):
 
     __gtype_name__ = 'model_Cache'
@@ -81,12 +83,11 @@ class BaseResultSet(object):
     """Encapsulates the result of a query
     """
 
-    _CACHE_LIMIT = 80
-
-    def __init__(self, query):
+    def __init__(self, query, cache_limit):
         self._total_count  = -1
         self._position = -1
         self._query = query
+        self._cache_limit = cache_limit
 
         self._offset = 0
         self._cache = _Cache()
@@ -103,7 +104,7 @@ class BaseResultSet(object):
     def get_length(self):
         if self._total_count == -1:
             query = self._query.copy()
-            query['limit'] = BaseResultSet._CACHE_LIMIT
+            query['limit'] = self._cache_limit
             entries, self._total_count = self.find(query)
             self._cache.append_all(entries)
             self._offset = 0
@@ -120,10 +121,10 @@ class BaseResultSet(object):
     def read(self, max_count):
         logging.debug('ResultSet.read position: %r' % self._position)
 
-        if max_count * 5 > BaseResultSet._CACHE_LIMIT:
+        if max_count * PAGES_TO_CACHE > self._cache_limit:
             raise RuntimeError(
-                    'max_count (%i) too big for BaseResultSet._CACHE_LIMIT'
-                    ' (%i).' % (max_count, BaseResultSet._CACHE_LIMIT))
+                    'max_count (%i) too big for self._cache_limit'
+                    ' (%i).' % (max_count, self._cache_limit))
 
         if self._position == -1:
             self.seek(0)
@@ -143,14 +144,14 @@ class BaseResultSet(object):
 
         if (remaining_forward_entries <= 0 and
                     remaining_backwards_entries <= 0) or \
-                max_count > BaseResultSet._CACHE_LIMIT:
+                max_count > self._cache_limit:
 
             # Total cache miss: remake it
             offset = max(0, self._position - max_count)
             logging.debug('remaking cache, offset: %r limit: %r' % \
                           (offset, max_count * 2))
             query = self._query.copy()
-            query['limit'] = BaseResultSet._CACHE_LIMIT
+            query['limit'] = self._cache_limit
             query['offset'] = offset
             entries, self._total_count = self.find(query)
 
@@ -173,7 +174,7 @@ class BaseResultSet(object):
             self._cache.append_all(entries)
 
             # apply the cache limit
-            objects_excess = len(self._cache) - BaseResultSet._CACHE_LIMIT
+            objects_excess = len(self._cache) - self._cache_limit
             if objects_excess > 0:
                 self._offset += objects_excess
                 self._cache.remove_all(self._cache[:objects_excess])
@@ -195,7 +196,7 @@ class BaseResultSet(object):
             self._cache.prepend_all(entries)
 
             # apply the cache limit
-            objects_excess = len(self._cache) - BaseResultSet._CACHE_LIMIT
+            objects_excess = len(self._cache) - self._cache_limit
             if objects_excess > 0:
                 self._cache.remove_all(self._cache[-objects_excess:])
         else:
@@ -208,7 +209,7 @@ class BaseResultSet(object):
 class DatastoreResultSet(BaseResultSet):
     """Encapsulates the result of a query on the datastore
     """
-    def __init__(self, query):
+    def __init__(self, query, cache_limit):
 
         if query.get('query', '') and not query['query'].startswith('"'):
             query_text = ''
@@ -221,7 +222,7 @@ class DatastoreResultSet(BaseResultSet):
 
             query['query'] = query_text
 
-        BaseResultSet.__init__(self, query)
+        BaseResultSet.__init__(self, query, cache_limit)
 
     def find(self, query):
         entries, total_count = _get_datastore().find(query, PROPERTIES,
@@ -235,8 +236,8 @@ class DatastoreResultSet(BaseResultSet):
 class InplaceResultSet(BaseResultSet):
     """Encapsulates the result of a query on a mount point
     """
-    def __init__(self, query, mount_point):
-        BaseResultSet.__init__(self, query)
+    def __init__(self, query, cache_limit, mount_point):
+        BaseResultSet.__init__(self, query, cache_limit)
         self._mount_point = mount_point
         self._file_list = None
         self._pending_directories = 0
@@ -378,7 +379,7 @@ def _datastore_updated_cb(object_id):
 def _datastore_deleted_cb(object_id):
     deleted.send(None, object_id=object_id)
 
-def find(query):
+def find(query, page_size):
     """Returns a ResultSet
     """
     if 'order_by' not in query:
@@ -388,10 +389,11 @@ def find(query):
     if mount_points is None or len(mount_points) != 1:
         raise ValueError('Exactly one mount point must be specified')
 
+    cache_limit = page_size * PAGES_TO_CACHE
     if mount_points[0] == '/':
-        return DatastoreResultSet(query)
+        return DatastoreResultSet(query, cache_limit)
     else:
-        return InplaceResultSet(query, mount_points[0])
+        return InplaceResultSet(query, cache_limit, mount_points[0])
 
 def _get_mount_point(path):
     dir_path = os.path.dirname(path)
