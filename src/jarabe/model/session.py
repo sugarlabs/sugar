@@ -18,6 +18,7 @@ import gtk
 import dbus
 import os
 import signal
+import sys
 
 from sugar import session
 from sugar import env
@@ -65,9 +66,15 @@ class SessionManager(session.SessionManager):
             gtk.main_quit()
 
     def _close_emulator(self):
+        gtk.main_quit()
+
         if os.environ.has_key('SUGAR_EMULATOR_PID'):
             pid = int(os.environ['SUGAR_EMULATOR_PID'])
             os.kill(pid, signal.SIGTERM)
+
+        # Need to call this ASAP so the atexit handlers get called before we get
+        # killed by the X (dis)connection
+        sys.exit()
 
 def get_session_manager():
     global _session_manager

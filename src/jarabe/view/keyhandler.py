@@ -31,6 +31,7 @@ from sugar._sugarext import KeyGrabber
 from jarabe.model import screen
 from jarabe.model import sound
 from jarabe.model import shell
+from jarabe.model import session
 from jarabe.view.tabbinghandler import TabbingHandler
 from jarabe.model.shell import ShellModel
 from jarabe import config
@@ -253,9 +254,7 @@ class KeyHandler(object):
                 raise
 
     def handle_quit_emulator(self):
-        if os.environ.has_key('SUGAR_EMULATOR_PID'):
-            pid = int(os.environ['SUGAR_EMULATOR_PID'])
-            os.kill(pid, signal.SIGTERM)
+        session.get_session_manager().shutdown()
 
     def handle_open_search(self):
         journalactivity.get_journal().focus_search()
