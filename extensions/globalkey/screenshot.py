@@ -1,4 +1,5 @@
 # Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2009 Simon Schampijer
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,7 +27,7 @@ import dbus
 from sugar.datastore import datastore
 from sugar.graphics import style
 
-BOUND_KEYS = ['<alt>1']
+BOUND_KEYS = ['<alt>1', 'Print']
 
 def handle_key_press(key):
     file_path = os.path.join(tempfile.gettempdir(), '%i' % time.time())
