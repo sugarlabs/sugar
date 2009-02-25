@@ -1,4 +1,5 @@
 # Copyright (C) 2006-2007, Red Hat, Inc.
+# Copyright (C) 2009 Simon Schampijer
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -42,30 +43,33 @@ _VOLUME_MAX = 100
 _TABBING_MODIFIER = gtk.gdk.MOD1_MASK
 
 _actions_table = {
-    'F1'             : 'zoom_mesh',
-    'F2'             : 'zoom_group',
-    'F3'             : 'zoom_home',
-    'F4'             : 'zoom_activity',
-    'F9'             : 'brightness_down',
-    'F10'            : 'brightness_up',
-    '<alt>F9'        : 'brightness_min',
-    '<alt>F10'       : 'brightness_max',
-    'F11'            : 'volume_down',
-    'F12'            : 'volume_up',
-    '<alt>F11'       : 'volume_min',
-    '<alt>F12'       : 'volume_max',
-    '0x93'           : 'frame',
-    '0xEB'           : 'rotate',
-    '<alt>Tab'       : 'next_window',
-    '<alt><shift>Tab': 'previous_window',
-    '<alt>Escape'    : 'close_window',
-    '0xDC'           : 'open_search',
+    'F1'                   : 'zoom_mesh',
+    'F2'                   : 'zoom_group',
+    'F3'                   : 'zoom_home',
+    'F4'                   : 'zoom_activity',
+    'F9'                   : 'brightness_down',
+    'F10'                  : 'brightness_up',
+    '<alt>F9'              : 'brightness_min',
+    '<alt>F10'             : 'brightness_max',
+    'XF86AudioMute'        : 'volume_mute',
+    'F11'                  : 'volume_down',
+    'XF86AudioLowerVolume' : 'volume_down',
+    'F12'                  : 'volume_up',
+    'XF86AudioRaiseVolume' : 'volume_down',
+    '<alt>F11'             : 'volume_min',
+    '<alt>F12'             : 'volume_max',
+    '0x93'                 : 'frame',
+    '0xEB'                 : 'rotate',
+    '<alt>Tab'             : 'next_window',
+    '<alt><shift>Tab'      : 'previous_window',
+    '<alt>Escape'          : 'close_window',
+    '0xDC'                 : 'open_search',
 # the following are intended for emulator users
-    '<alt><shift>f'  : 'frame',
-    '<alt><shift>q'  : 'quit_emulator',
-    '<alt><shift>o'  : 'open_search',
-    '<alt><shift>r'  : 'rotate',
-    '<alt><shift>s'  : 'say_text',
+    '<alt><shift>f'        : 'frame',
+    '<alt><shift>q'        : 'quit_emulator',
+    '<alt><shift>o'        : 'open_search',
+    '<alt><shift>r'        : 'rotate',
+    '<alt><shift>s'        : 'say_text',
 }
 
 SPEECH_DBUS_SERVICE = 'org.laptop.Speech'
@@ -195,6 +199,9 @@ class KeyHandler(object):
 
     def handle_brightness_down(self):
         self._change_brightness(step=-_BRIGHTNESS_STEP)
+
+    def handle_volume_mute(self):
+        self._change_volume(value=0)
 
     def handle_volume_up(self):
         self._change_volume(step=_VOLUME_STEP)
