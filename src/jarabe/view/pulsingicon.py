@@ -20,7 +20,6 @@ import gtk
 import gobject
 
 from sugar.graphics.icon import Icon, CanvasIcon
-from sugar.graphics.style import Color
 
 _INTERVAL = 100
 _STEP = math.pi / 10  # must be a fraction of pi, for clean caching
