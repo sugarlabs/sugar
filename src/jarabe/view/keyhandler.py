@@ -56,7 +56,7 @@ _actions_table = {
     'F11'                  : 'volume_down',
     'XF86AudioLowerVolume' : 'volume_down',
     'F12'                  : 'volume_up',
-    'XF86AudioRaiseVolume' : 'volume_down',
+    'XF86AudioRaiseVolume' : 'volume_up',
     '<alt>F11'             : 'volume_min',
     '<alt>F12'             : 'volume_max',
     '0x93'                 : 'frame',
