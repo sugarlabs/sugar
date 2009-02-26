@@ -16,7 +16,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
-import signal
 import logging
 import subprocess
 import errno
@@ -106,9 +105,9 @@ class KeyHandler(object):
                         if key in _actions_table:
                             raise ValueError('Key %r is already bound' % key)
                         _actions_table[key] = module
-                except Exception:
+                except:
                     logging.error('Exception while loading extension:\n' + \
-                        ''.join(traceback.format_exception(*sys.exc_info())))
+                                  traceback.format_exc())
 
         self._key_grabber.grab_keys(_actions_table.keys())
 
