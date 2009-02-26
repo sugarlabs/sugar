@@ -202,7 +202,10 @@ class KeyHandler(object):
         self._change_brightness(step=-_BRIGHTNESS_STEP)
 
     def handle_volume_mute(self):
-        self._change_volume(value=0)
+        if sound.get_muted() is True:
+            sound.set_muted(False)
+        else:
+            sound.set_muted(True)
 
     def handle_volume_up(self):
         self._change_volume(step=_VOLUME_STEP)
