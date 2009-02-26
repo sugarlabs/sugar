@@ -68,6 +68,7 @@ _actions_table = {
 # the following are intended for emulator users
     '<alt><shift>f'        : 'frame',
     '<alt><shift>q'        : 'quit_emulator',
+    'XF86Search'           : 'open_search',
     '<alt><shift>o'        : 'open_search',
     '<alt><shift>r'        : 'rotate',
     '<alt><shift>s'        : 'say_text',
