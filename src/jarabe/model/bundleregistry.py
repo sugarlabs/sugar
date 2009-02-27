@@ -72,7 +72,15 @@ class BundleRegistry(gobject.GObject):
         if not one_file.get_path().endswith('.activity'):
             return
         if event_type == gio.FILE_MONITOR_EVENT_CREATED:
-            self.add_bundle(one_file.get_path())
+            try:
+                bundle = ActivityBundle(one_file.get_path())
+            except MalformedBundleException:
+                logging.error('Error loading bundle %r:\n%s' % (
+                        one_file.get_path(),
+                        ''.join(traceback.format_exception(*sys.exc_info()))))
+                return
+            if not self.is_installed(bundle):
+                self.add_bundle(one_file.get_path())
         elif event_type == gio.FILE_MONITOR_EVENT_DELETED:
             self.remove_bundle(one_file.get_path())
 
