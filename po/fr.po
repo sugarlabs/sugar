@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-02-21 00:30-0500\n"
-"PO-Revision-Date: 2009-02-27 17:45-0500\n"
+"PO-Revision-Date: 2009-02-28 10:21-0500\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -1031,9 +1031,8 @@ msgid "Unmount"
 msgstr "Démonter"
 
 #: ../src/jarabe/view/viewsource.py:208
-#, fuzzy
 msgid "Instance Source"
-msgstr "Instancier source"
+msgstr "Instancie source"
 
 #: ../src/jarabe/view/viewsource.py:233
 msgid "Source"
@@ -1041,7 +1040,7 @@ msgstr "Source"
 
 #: ../src/jarabe/view/viewsource.py:292
 msgid "Activity Bundle Source"
-msgstr ""
+msgstr "Source du paquet activité"
 
 #: ../src/jarabe/view/viewsource.py:299
 #, python-format
