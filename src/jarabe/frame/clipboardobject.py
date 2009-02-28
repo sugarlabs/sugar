@@ -51,7 +51,14 @@ class ClipboardObject(object):
         return name
 
     def get_icon(self):
-        icons = gio.content_type_get_icon(self.get_mime_type())
+        mime_type = self.get_mime_type()
+
+        generic_types = mime.get_all_generic_types()
+        for generic_type in generic_types:
+            if mime_type in generic_type.mime_types:
+                return generic_type.icon
+
+        icons = gio.content_type_get_icon(mime_type)
         icon_name = None
         if icons is not None:
             icon_theme = gtk.icon_theme_get_default()
@@ -60,12 +67,9 @@ class ClipboardObject(object):
                                                 gtk.ICON_SIZE_LARGE_TOOLBAR, 0)
                 if icon_info is not None:
                     icon_info.free()
-                    break
+                    return icon_name
 
-        if icon_name is None:
-            icon_name = 'application-octet-stream'
-
-        return icon_name
+        return 'application-octet-stream'
 
     def get_preview(self):
         for mime_type in ['text/plain']:
