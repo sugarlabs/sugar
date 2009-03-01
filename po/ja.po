@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-02-21 00:30-0500\n"
-"PO-Revision-Date: 2009-02-15 09:52-0500\n"
+"PO-Revision-Date: 2009-03-01 17:27-0500\n"
 "Last-Translator: korakurider <korakurider@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -934,7 +934,7 @@ msgstr "次に送る"
 
 #: ../src/jarabe/journal/palettes.py:107
 msgid "View Details"
-msgstr ""
+msgstr "詳細を表示"
 
 #: ../src/jarabe/journal/palettes.py:185
 msgid "No friends present"
@@ -988,7 +988,7 @@ msgstr "起動中..."
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:73
 msgid "View Source"
-msgstr ""
+msgstr "ソースコードを表示"
 
 #: ../src/jarabe/view/palettes.py:84
 msgid "Stop"
@@ -1017,15 +1017,15 @@ msgstr "取りはずす"
 
 #: ../src/jarabe/view/viewsource.py:208
 msgid "Instance Source"
-msgstr ""
+msgstr "インスタンスのソースコード"
 
 #: ../src/jarabe/view/viewsource.py:233
 msgid "Source"
-msgstr ""
+msgstr "ソースコード"
 
 #: ../src/jarabe/view/viewsource.py:292
 msgid "Activity Bundle Source"
-msgstr ""
+msgstr "アクティビティバンドルのソースコード"
 
 #: ../src/jarabe/view/viewsource.py:299
 #, python-format
