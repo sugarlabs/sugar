@@ -65,13 +65,13 @@ def get_icon_name(metadata):
 
     if file_name is None and is_activity_bundle(metadata):
         file_path = model.get_file(metadata['uid'])
-        if os.path.exists(file_path):
+        if file_path is not None and os.path.exists(file_path):
             try:
                 bundle = ActivityBundle(file_path)
                 file_name = bundle.get_icon()
-            except Exception:
+            except:
                 logging.warning('Could not read bundle:\n' + \
-                    ''.join(traceback.format_exception(*sys.exc_info())))
+                                traceback.format_exc())
 
     if file_name is None:
         file_name = _get_icon_for_mime(metadata.get('mime_type', ''))
