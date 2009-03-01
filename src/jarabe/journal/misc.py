@@ -76,6 +76,9 @@ def get_icon_name(metadata):
     if file_name is None:
         file_name = _get_icon_for_mime(metadata.get('mime_type', ''))
 
+    if file_name is None:
+        file_name = get_icon_file_name('application-octet-stream')
+
     return file_name
 
 def get_date(metadata):
